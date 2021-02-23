@@ -31,6 +31,7 @@ namespace LabBilling.Forms
         private InvoiceHistoryRepository historyRepository;
         private ClientRepository clientRepository;
         private List<Client> clientList;
+     
 
         private void InvoiceHistoryPage_Enter(object sender, EventArgs e)
         {
@@ -42,12 +43,12 @@ namespace LabBilling.Forms
             RefreshInvoiceHistoryGrid(null);
         }
 
-        private void RefreshInvoiceHistoryGrid(string clientMnem, string fromDate = null, string throughDate= null)
+        private void RefreshInvoiceHistoryGrid(string clientMnem, DateTime? fromDate = null, DateTime? throughDate= null)
         {
             InvoiceHistoryDGV.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             
 
-            InvoiceHistoryDGV.DataSource = historyRepository.GetWithSort(clientMnem);
+            InvoiceHistoryDGV.DataSource = historyRepository.GetWithSort(clientMnem, fromDate, throughDate);
 
             InvoiceHistoryDGV.Columns["ClientName"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             InvoiceHistoryDGV.Columns["bal_forward"].DefaultCellStyle.Format = "c2";
@@ -289,7 +290,7 @@ namespace LabBilling.Forms
             }
             else
             {
-                RefreshInvoiceHistoryGrid(ClientFilter.SelectedValue.ToString(), FromDate.Text, ThroughDate.Text);
+                RefreshInvoiceHistoryGrid(ClientFilter.SelectedValue?.ToString(), fd, td);
             }
         }
 
@@ -306,7 +307,7 @@ namespace LabBilling.Forms
             }
             else
             {
-                RefreshInvoiceHistoryGrid(ClientFilter.SelectedValue?.ToString(), FromDate.Text, ThroughDate.Text);
+                RefreshInvoiceHistoryGrid(ClientFilter.SelectedValue?.ToString(), fd, td);
             }
         }
     }

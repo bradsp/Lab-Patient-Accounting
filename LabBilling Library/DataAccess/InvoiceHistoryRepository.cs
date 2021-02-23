@@ -36,9 +36,9 @@ namespace LabBilling.DataAccess
                     sql.Append($"cl_mnem = '{clientMnem}'");
 
                 if (fromDate != null && throughDate != null)
-                    sql.Append($"mod_date between '{fromDate}' and '{throughDate}'");
+                    sql.Append($"{_tableName}.mod_date between '{fromDate}' and '{throughDate}'");
             }
-            sql.Append("order by mod_date DESC");
+            sql.Append($"order by {_tableName}.mod_date DESC");
 
             return dbConnection.Fetch<InvoiceHistory>(sql);
         }
