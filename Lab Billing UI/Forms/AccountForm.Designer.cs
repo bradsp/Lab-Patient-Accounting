@@ -1,0 +1,2283 @@
+﻿namespace LabBilling.Forms
+{
+    partial class AccountForm
+    {
+        /// <summary>
+        /// Required designer variable.
+        /// </summary>
+        private System.ComponentModel.IContainer components = null;
+
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
+        #region Windows Form Designer generated code
+
+        /// <summary>
+        /// Required method for Designer support - do not modify
+        /// the contents of this method with the code editor.
+        /// </summary>
+        private void InitializeComponent()
+        {
+            this.components = new System.ComponentModel.Container();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AccountForm));
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.summaryTab = new System.Windows.Forms.TabPage();
+            this.summaryTable = new System.Windows.Forms.TableLayoutPanel();
+            this.tabDemographics = new System.Windows.Forms.TabPage();
+            this.lGuarCopyPatient = new System.Windows.Forms.LinkLabel();
+            this.label46 = new System.Windows.Forms.Label();
+            this.tbGuarSuffix = new System.Windows.Forms.TextBox();
+            this.tbGuarMiddleName = new System.Windows.Forms.TextBox();
+            this.label44 = new System.Windows.Forms.Label();
+            this.tbGuarFirstName = new System.Windows.Forms.TextBox();
+            this.label43 = new System.Windows.Forms.Label();
+            this.label40 = new System.Windows.Forms.Label();
+            this.cbGuarState = new System.Windows.Forms.ComboBox();
+            this.label39 = new System.Windows.Forms.Label();
+            this.label26 = new System.Windows.Forms.Label();
+            this.cbGuarantorRelation = new System.Windows.Forms.ComboBox();
+            this.tbGuarantorPhone = new System.Windows.Forms.TextBox();
+            this.label27 = new System.Windows.Forms.Label();
+            this.tbGuarCity = new System.Windows.Forms.TextBox();
+            this.label28 = new System.Windows.Forms.Label();
+            this.tbGuarantorAddress = new System.Windows.Forms.TextBox();
+            this.label29 = new System.Windows.Forms.Label();
+            this.tbGuarantorLastName = new System.Windows.Forms.TextBox();
+            this.label30 = new System.Windows.Forms.Label();
+            this.label71 = new System.Windows.Forms.Label();
+            this.label70 = new System.Windows.Forms.Label();
+            this.SaveDemographics = new System.Windows.Forms.Button();
+            this.tbZipcode = new System.Windows.Forms.MaskedTextBox();
+            this.cbMaritalStatus = new System.Windows.Forms.ComboBox();
+            this.label20 = new System.Windows.Forms.Label();
+            this.label18 = new System.Windows.Forms.Label();
+            this.tbEmailAddress = new System.Windows.Forms.TextBox();
+            this.tbSuffix = new System.Windows.Forms.TextBox();
+            this.label15 = new System.Windows.Forms.Label();
+            this.tbMiddleName = new System.Windows.Forms.TextBox();
+            this.tbFirstName = new System.Windows.Forms.TextBox();
+            this.label14 = new System.Windows.Forms.Label();
+            this.label13 = new System.Windows.Forms.Label();
+            this.label12 = new System.Windows.Forms.Label();
+            this.label11 = new System.Windows.Forms.Label();
+            this.cbState = new System.Windows.Forms.ComboBox();
+            this.tbSSN = new System.Windows.Forms.MaskedTextBox();
+            this.tbDateOfBirth = new System.Windows.Forms.MaskedTextBox();
+            this.label16 = new System.Windows.Forms.Label();
+            this.label17 = new System.Windows.Forms.Label();
+            this.label19 = new System.Windows.Forms.Label();
+            this.label21 = new System.Windows.Forms.Label();
+            this.tbPhone = new System.Windows.Forms.TextBox();
+            this.tbCity = new System.Windows.Forms.TextBox();
+            this.tbAddress2 = new System.Windows.Forms.TextBox();
+            this.cbSex = new System.Windows.Forms.ComboBox();
+            this.label22 = new System.Windows.Forms.Label();
+            this.label23 = new System.Windows.Forms.Label();
+            this.label24 = new System.Windows.Forms.Label();
+            this.label25 = new System.Windows.Forms.Label();
+            this.tbAddress1 = new System.Windows.Forms.TextBox();
+            this.tbLastName = new System.Windows.Forms.TextBox();
+            this.tbGuarZip = new System.Windows.Forms.MaskedTextBox();
+            this.tabInsurance = new System.Windows.Forms.TabPage();
+            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.label31 = new System.Windows.Forms.Label();
+            this.dgvInsurance = new System.Windows.Forms.DataGridView();
+            this.bSaveInsurance = new System.Windows.Forms.Button();
+            this.lInsCopyPatient = new System.Windows.Forms.LinkLabel();
+            this.cbPlanFinCode = new System.Windows.Forms.ComboBox();
+            this.label48 = new System.Windows.Forms.Label();
+            this.tbCertSSN = new System.Windows.Forms.TextBox();
+            this.tbHolderLastName = new System.Windows.Forms.TextBox();
+            this.label35 = new System.Windows.Forms.Label();
+            this.tbGroupName = new System.Windows.Forms.TextBox();
+            this.label36 = new System.Windows.Forms.Label();
+            this.label32 = new System.Windows.Forms.Label();
+            this.cbInsCode = new MTGCComboBox();
+            this.tbHolderZip = new System.Windows.Forms.TextBox();
+            this.tbGroupNumber = new System.Windows.Forms.TextBox();
+            this.label42 = new System.Windows.Forms.Label();
+            this.label34 = new System.Windows.Forms.Label();
+            this.tbPlanAddress2 = new System.Windows.Forms.TextBox();
+            this.cbInsRelation = new System.Windows.Forms.ComboBox();
+            this.label33 = new System.Windows.Forms.Label();
+            this.tbPolicyNumber = new System.Windows.Forms.TextBox();
+            this.label41 = new System.Windows.Forms.Label();
+            this.tbHolderDOB = new System.Windows.Forms.MaskedTextBox();
+            this.label47 = new System.Windows.Forms.Label();
+            this.label49 = new System.Windows.Forms.Label();
+            this.cbHolderState = new System.Windows.Forms.ComboBox();
+            this.tbHolderFirstName = new System.Windows.Forms.TextBox();
+            this.label50 = new System.Windows.Forms.Label();
+            this.label51 = new System.Windows.Forms.Label();
+            this.cbInsOrder = new System.Windows.Forms.ComboBox();
+            this.cbHolderSex = new System.Windows.Forms.ComboBox();
+            this.label52 = new System.Windows.Forms.Label();
+            this.label53 = new System.Windows.Forms.Label();
+            this.tbHolderMiddleName = new System.Windows.Forms.TextBox();
+            this.label54 = new System.Windows.Forms.Label();
+            this.tbPlanName = new System.Windows.Forms.TextBox();
+            this.label55 = new System.Windows.Forms.Label();
+            this.tbHolderAddress = new System.Windows.Forms.TextBox();
+            this.tbPlanCitySt = new System.Windows.Forms.TextBox();
+            this.label56 = new System.Windows.Forms.Label();
+            this.label57 = new System.Windows.Forms.Label();
+            this.tbPlanAddress = new System.Windows.Forms.TextBox();
+            this.tbHolderCity = new System.Windows.Forms.TextBox();
+            this.label58 = new System.Windows.Forms.Label();
+            this.label59 = new System.Windows.Forms.Label();
+            this.tabDiagnosis = new System.Windows.Forms.TabPage();
+            this.btnDxDelete = new System.Windows.Forms.PictureBox();
+            this.btnSaveDx = new System.Windows.Forms.Button();
+            this.label3 = new System.Windows.Forms.Label();
+            this.txtDxQuickAdd = new System.Windows.Forms.TextBox();
+            this.txtSearchDx = new System.Windows.Forms.TextBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.dgvDxSearch = new System.Windows.Forms.DataGridView();
+            this.label1 = new System.Windows.Forms.Label();
+            this.dgvDiagnosis = new System.Windows.Forms.DataGridView();
+            this.btnDxSearch = new System.Windows.Forms.PictureBox();
+            this.tabCharges = new System.Windows.Forms.TabPage();
+            this.label45 = new System.Windows.Forms.Label();
+            this.btnAddCharge = new System.Windows.Forms.Button();
+            this.tbTotalCharges = new System.Windows.Forms.TextBox();
+            this.label6 = new System.Windows.Forms.Label();
+            this.ckShowCreditedChrg = new System.Windows.Forms.CheckBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.dgvChrgDetail = new System.Windows.Forms.DataGridView();
+            this.dgvCharges = new System.Windows.Forms.DataGridView();
+            this.menuCharges = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.toolStripCreditCharge = new System.Windows.Forms.ToolStripMenuItem();
+            this.tabPayments = new System.Windows.Forms.TabPage();
+            this.label10 = new System.Windows.Forms.Label();
+            this.tbTotalPmtAll = new System.Windows.Forms.TextBox();
+            this.label9 = new System.Windows.Forms.Label();
+            this.tbTotalWriteOff = new System.Windows.Forms.TextBox();
+            this.label8 = new System.Windows.Forms.Label();
+            this.tbTotalContractual = new System.Windows.Forms.TextBox();
+            this.label7 = new System.Windows.Forms.Label();
+            this.tbTotalPayment = new System.Windows.Forms.TextBox();
+            this.dgvPayments = new System.Windows.Forms.DataGridView();
+            this.tabNotes = new System.Windows.Forms.TabPage();
+            this.btnNoteAdd = new System.Windows.Forms.Button();
+            this.tbNotesDisplay = new System.Windows.Forms.RichTextBox();
+            this.tabBillingActivity = new System.Windows.Forms.TabPage();
+            this.dgvBillActivity = new System.Windows.Forms.DataGridView();
+            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.accountToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.changeDateOfServiceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.changeFinancialClassToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.changeClientToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.viewAuditInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.clearHoldStatusToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.billingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.personSearchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.tbBannerMRN = new System.Windows.Forms.TextBox();
+            this.tbBannerAccount = new System.Windows.Forms.TextBox();
+            this.tbBannerSex = new System.Windows.Forms.TextBox();
+            this.tbBannerDob = new System.Windows.Forms.TextBox();
+            this.tbBannerName = new System.Windows.Forms.TextBox();
+            this.label38 = new System.Windows.Forms.Label();
+            this.label37 = new System.Windows.Forms.Label();
+            this.btnRefresh = new System.Windows.Forms.PictureBox();
+            this.tbBannerClient = new System.Windows.Forms.TextBox();
+            this.tbBannerFinClass = new System.Windows.Forms.TextBox();
+            this.label60 = new System.Windows.Forms.Label();
+            this.tabControl1.SuspendLayout();
+            this.summaryTab.SuspendLayout();
+            this.tabDemographics.SuspendLayout();
+            this.tabInsurance.SuspendLayout();
+            this.tableLayoutPanel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvInsurance)).BeginInit();
+            this.tabDiagnosis.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.btnDxDelete)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvDxSearch)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvDiagnosis)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.btnDxSearch)).BeginInit();
+            this.tabCharges.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvChrgDetail)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvCharges)).BeginInit();
+            this.menuCharges.SuspendLayout();
+            this.tabPayments.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvPayments)).BeginInit();
+            this.tabNotes.SuspendLayout();
+            this.tabBillingActivity.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvBillActivity)).BeginInit();
+            this.menuStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.btnRefresh)).BeginInit();
+            this.SuspendLayout();
+            // 
+            // tabControl1
+            // 
+            this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tabControl1.Controls.Add(this.summaryTab);
+            this.tabControl1.Controls.Add(this.tabDemographics);
+            this.tabControl1.Controls.Add(this.tabInsurance);
+            this.tabControl1.Controls.Add(this.tabDiagnosis);
+            this.tabControl1.Controls.Add(this.tabCharges);
+            this.tabControl1.Controls.Add(this.tabPayments);
+            this.tabControl1.Controls.Add(this.tabNotes);
+            this.tabControl1.Controls.Add(this.tabBillingActivity);
+            this.tabControl1.Location = new System.Drawing.Point(0, 89);
+            this.tabControl1.Name = "tabControl1";
+            this.tabControl1.SelectedIndex = 0;
+            this.tabControl1.Size = new System.Drawing.Size(1159, 582);
+            this.tabControl1.TabIndex = 2;
+            // 
+            // summaryTab
+            // 
+            this.summaryTab.Controls.Add(this.summaryTable);
+            this.summaryTab.Location = new System.Drawing.Point(4, 22);
+            this.summaryTab.Name = "summaryTab";
+            this.summaryTab.Padding = new System.Windows.Forms.Padding(3);
+            this.summaryTab.Size = new System.Drawing.Size(1151, 556);
+            this.summaryTab.TabIndex = 0;
+            this.summaryTab.Text = "Summary";
+            this.summaryTab.UseVisualStyleBackColor = true;
+            // 
+            // summaryTable
+            // 
+            this.summaryTable.ColumnCount = 4;
+            this.summaryTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.summaryTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.summaryTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.summaryTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.summaryTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.summaryTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.summaryTable.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.summaryTable.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.summaryTable.Location = new System.Drawing.Point(3, 3);
+            this.summaryTable.Name = "summaryTable";
+            this.summaryTable.RowCount = 1;
+            this.summaryTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.summaryTable.Size = new System.Drawing.Size(1145, 550);
+            this.summaryTable.TabIndex = 0;
+            // 
+            // tabDemographics
+            // 
+            this.tabDemographics.Controls.Add(this.lGuarCopyPatient);
+            this.tabDemographics.Controls.Add(this.label46);
+            this.tabDemographics.Controls.Add(this.tbGuarSuffix);
+            this.tabDemographics.Controls.Add(this.tbGuarMiddleName);
+            this.tabDemographics.Controls.Add(this.label44);
+            this.tabDemographics.Controls.Add(this.tbGuarFirstName);
+            this.tabDemographics.Controls.Add(this.label43);
+            this.tabDemographics.Controls.Add(this.label40);
+            this.tabDemographics.Controls.Add(this.cbGuarState);
+            this.tabDemographics.Controls.Add(this.label39);
+            this.tabDemographics.Controls.Add(this.label26);
+            this.tabDemographics.Controls.Add(this.cbGuarantorRelation);
+            this.tabDemographics.Controls.Add(this.tbGuarantorPhone);
+            this.tabDemographics.Controls.Add(this.label27);
+            this.tabDemographics.Controls.Add(this.tbGuarCity);
+            this.tabDemographics.Controls.Add(this.label28);
+            this.tabDemographics.Controls.Add(this.tbGuarantorAddress);
+            this.tabDemographics.Controls.Add(this.label29);
+            this.tabDemographics.Controls.Add(this.tbGuarantorLastName);
+            this.tabDemographics.Controls.Add(this.label30);
+            this.tabDemographics.Controls.Add(this.label71);
+            this.tabDemographics.Controls.Add(this.label70);
+            this.tabDemographics.Controls.Add(this.SaveDemographics);
+            this.tabDemographics.Controls.Add(this.tbZipcode);
+            this.tabDemographics.Controls.Add(this.cbMaritalStatus);
+            this.tabDemographics.Controls.Add(this.label20);
+            this.tabDemographics.Controls.Add(this.label18);
+            this.tabDemographics.Controls.Add(this.tbEmailAddress);
+            this.tabDemographics.Controls.Add(this.tbSuffix);
+            this.tabDemographics.Controls.Add(this.label15);
+            this.tabDemographics.Controls.Add(this.tbMiddleName);
+            this.tabDemographics.Controls.Add(this.tbFirstName);
+            this.tabDemographics.Controls.Add(this.label14);
+            this.tabDemographics.Controls.Add(this.label13);
+            this.tabDemographics.Controls.Add(this.label12);
+            this.tabDemographics.Controls.Add(this.label11);
+            this.tabDemographics.Controls.Add(this.cbState);
+            this.tabDemographics.Controls.Add(this.tbSSN);
+            this.tabDemographics.Controls.Add(this.tbDateOfBirth);
+            this.tabDemographics.Controls.Add(this.label16);
+            this.tabDemographics.Controls.Add(this.label17);
+            this.tabDemographics.Controls.Add(this.label19);
+            this.tabDemographics.Controls.Add(this.label21);
+            this.tabDemographics.Controls.Add(this.tbPhone);
+            this.tabDemographics.Controls.Add(this.tbCity);
+            this.tabDemographics.Controls.Add(this.tbAddress2);
+            this.tabDemographics.Controls.Add(this.cbSex);
+            this.tabDemographics.Controls.Add(this.label22);
+            this.tabDemographics.Controls.Add(this.label23);
+            this.tabDemographics.Controls.Add(this.label24);
+            this.tabDemographics.Controls.Add(this.label25);
+            this.tabDemographics.Controls.Add(this.tbAddress1);
+            this.tabDemographics.Controls.Add(this.tbLastName);
+            this.tabDemographics.Controls.Add(this.tbGuarZip);
+            this.tabDemographics.Location = new System.Drawing.Point(4, 22);
+            this.tabDemographics.Name = "tabDemographics";
+            this.tabDemographics.Padding = new System.Windows.Forms.Padding(3);
+            this.tabDemographics.Size = new System.Drawing.Size(1151, 556);
+            this.tabDemographics.TabIndex = 9;
+            this.tabDemographics.Text = "Demographics/Guarantor";
+            this.tabDemographics.UseVisualStyleBackColor = true;
+            // 
+            // lGuarCopyPatient
+            // 
+            this.lGuarCopyPatient.AutoSize = true;
+            this.lGuarCopyPatient.Location = new System.Drawing.Point(737, 25);
+            this.lGuarCopyPatient.Name = "lGuarCopyPatient";
+            this.lGuarCopyPatient.Size = new System.Drawing.Size(88, 13);
+            this.lGuarCopyPatient.TabIndex = 31;
+            this.lGuarCopyPatient.TabStop = true;
+            this.lGuarCopyPatient.Text = "Copy Patient Info";
+            this.lGuarCopyPatient.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LGuarCopyPatient_LinkClicked);
+            // 
+            // label46
+            // 
+            this.label46.AutoSize = true;
+            this.label46.Location = new System.Drawing.Point(799, 83);
+            this.label46.Name = "label46";
+            this.label46.Size = new System.Drawing.Size(33, 13);
+            this.label46.TabIndex = 137;
+            this.label46.Text = "Suffix";
+            // 
+            // tbGuarSuffix
+            // 
+            this.tbGuarSuffix.Location = new System.Drawing.Point(802, 99);
+            this.tbGuarSuffix.Name = "tbGuarSuffix";
+            this.tbGuarSuffix.Size = new System.Drawing.Size(50, 20);
+            this.tbGuarSuffix.TabIndex = 37;
+            // 
+            // tbGuarMiddleName
+            // 
+            this.tbGuarMiddleName.Location = new System.Drawing.Point(499, 175);
+            this.tbGuarMiddleName.Name = "tbGuarMiddleName";
+            this.tbGuarMiddleName.Size = new System.Drawing.Size(297, 20);
+            this.tbGuarMiddleName.TabIndex = 41;
+            // 
+            // label44
+            // 
+            this.label44.AutoSize = true;
+            this.label44.Location = new System.Drawing.Point(499, 159);
+            this.label44.Name = "label44";
+            this.label44.Size = new System.Drawing.Size(69, 13);
+            this.label44.TabIndex = 40;
+            this.label44.Text = "Middle Name";
+            // 
+            // tbGuarFirstName
+            // 
+            this.tbGuarFirstName.Location = new System.Drawing.Point(499, 136);
+            this.tbGuarFirstName.Name = "tbGuarFirstName";
+            this.tbGuarFirstName.Size = new System.Drawing.Size(297, 20);
+            this.tbGuarFirstName.TabIndex = 39;
+            // 
+            // label43
+            // 
+            this.label43.AutoSize = true;
+            this.label43.Location = new System.Drawing.Point(499, 120);
+            this.label43.Name = "label43";
+            this.label43.Size = new System.Drawing.Size(57, 13);
+            this.label43.TabIndex = 38;
+            this.label43.Text = "First Name";
+            // 
+            // label40
+            // 
+            this.label40.AutoSize = true;
+            this.label40.Location = new System.Drawing.Point(499, 282);
+            this.label40.Name = "label40";
+            this.label40.Size = new System.Drawing.Size(32, 13);
+            this.label40.TabIndex = 46;
+            this.label40.Text = "State";
+            // 
+            // cbGuarState
+            // 
+            this.cbGuarState.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
+            this.cbGuarState.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this.cbGuarState.BackColor = System.Drawing.Color.White;
+            this.cbGuarState.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbGuarState.FormattingEnabled = true;
+            this.cbGuarState.Location = new System.Drawing.Point(499, 298);
+            this.cbGuarState.Name = "cbGuarState";
+            this.cbGuarState.Size = new System.Drawing.Size(183, 21);
+            this.cbGuarState.TabIndex = 47;
+            // 
+            // label39
+            // 
+            this.label39.AutoSize = true;
+            this.label39.Location = new System.Drawing.Point(685, 282);
+            this.label39.Name = "label39";
+            this.label39.Size = new System.Drawing.Size(47, 13);
+            this.label39.TabIndex = 48;
+            this.label39.Text = "ZipCode";
+            // 
+            // label26
+            // 
+            this.label26.AutoSize = true;
+            this.label26.Location = new System.Drawing.Point(499, 45);
+            this.label26.Name = "label26";
+            this.label26.Size = new System.Drawing.Size(94, 13);
+            this.label26.TabIndex = 33;
+            this.label26.Text = "Relation to Patient";
+            // 
+            // cbGuarantorRelation
+            // 
+            this.cbGuarantorRelation.FormattingEnabled = true;
+            this.cbGuarantorRelation.Location = new System.Drawing.Point(499, 61);
+            this.cbGuarantorRelation.Name = "cbGuarantorRelation";
+            this.cbGuarantorRelation.Size = new System.Drawing.Size(277, 21);
+            this.cbGuarantorRelation.TabIndex = 34;
+            // 
+            // tbGuarantorPhone
+            // 
+            this.tbGuarantorPhone.Location = new System.Drawing.Point(499, 341);
+            this.tbGuarantorPhone.Name = "tbGuarantorPhone";
+            this.tbGuarantorPhone.Size = new System.Drawing.Size(297, 20);
+            this.tbGuarantorPhone.TabIndex = 51;
+            // 
+            // label27
+            // 
+            this.label27.AutoSize = true;
+            this.label27.Location = new System.Drawing.Point(499, 325);
+            this.label27.Name = "label27";
+            this.label27.Size = new System.Drawing.Size(38, 13);
+            this.label27.TabIndex = 50;
+            this.label27.Text = "Phone";
+            // 
+            // tbGuarCity
+            // 
+            this.tbGuarCity.Location = new System.Drawing.Point(499, 258);
+            this.tbGuarCity.Name = "tbGuarCity";
+            this.tbGuarCity.Size = new System.Drawing.Size(297, 20);
+            this.tbGuarCity.TabIndex = 45;
+            // 
+            // label28
+            // 
+            this.label28.AutoSize = true;
+            this.label28.Location = new System.Drawing.Point(499, 242);
+            this.label28.Name = "label28";
+            this.label28.Size = new System.Drawing.Size(24, 13);
+            this.label28.TabIndex = 44;
+            this.label28.Text = "City";
+            // 
+            // tbGuarantorAddress
+            // 
+            this.tbGuarantorAddress.Location = new System.Drawing.Point(499, 219);
+            this.tbGuarantorAddress.Name = "tbGuarantorAddress";
+            this.tbGuarantorAddress.Size = new System.Drawing.Size(297, 20);
+            this.tbGuarantorAddress.TabIndex = 43;
+            // 
+            // label29
+            // 
+            this.label29.AutoSize = true;
+            this.label29.Location = new System.Drawing.Point(499, 203);
+            this.label29.Name = "label29";
+            this.label29.Size = new System.Drawing.Size(45, 13);
+            this.label29.TabIndex = 42;
+            this.label29.Text = "Address";
+            // 
+            // tbGuarantorLastName
+            // 
+            this.tbGuarantorLastName.Location = new System.Drawing.Point(499, 99);
+            this.tbGuarantorLastName.Name = "tbGuarantorLastName";
+            this.tbGuarantorLastName.Size = new System.Drawing.Size(297, 20);
+            this.tbGuarantorLastName.TabIndex = 36;
+            // 
+            // label30
+            // 
+            this.label30.AutoSize = true;
+            this.label30.Location = new System.Drawing.Point(499, 83);
+            this.label30.Name = "label30";
+            this.label30.Size = new System.Drawing.Size(58, 13);
+            this.label30.TabIndex = 35;
+            this.label30.Text = "Last Name";
+            // 
+            // label71
+            // 
+            this.label71.AutoSize = true;
+            this.label71.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label71.Location = new System.Drawing.Point(33, 17);
+            this.label71.Name = "label71";
+            this.label71.Size = new System.Drawing.Size(247, 26);
+            this.label71.TabIndex = 0;
+            this.label71.Text = "Patient Demographics";
+            // 
+            // label70
+            // 
+            this.label70.AutoSize = true;
+            this.label70.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label70.Location = new System.Drawing.Point(494, 16);
+            this.label70.Name = "label70";
+            this.label70.Size = new System.Drawing.Size(245, 26);
+            this.label70.TabIndex = 32;
+            this.label70.Text = "Guarantor Information";
+            // 
+            // SaveDemographics
+            // 
+            this.SaveDemographics.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.SaveDemographics.Location = new System.Drawing.Point(1036, 506);
+            this.SaveDemographics.Name = "SaveDemographics";
+            this.SaveDemographics.Size = new System.Drawing.Size(107, 44);
+            this.SaveDemographics.TabIndex = 52;
+            this.SaveDemographics.Text = "Save Changes";
+            this.SaveDemographics.UseVisualStyleBackColor = true;
+            this.SaveDemographics.Click += new System.EventHandler(this.SaveDemographics_Click);
+            // 
+            // tbZipcode
+            // 
+            this.tbZipcode.Location = new System.Drawing.Point(202, 297);
+            this.tbZipcode.Mask = "00000-9999";
+            this.tbZipcode.Name = "tbZipcode";
+            this.tbZipcode.Size = new System.Drawing.Size(103, 20);
+            this.tbZipcode.TabIndex = 18;
+            // 
+            // cbMaritalStatus
+            // 
+            this.cbMaritalStatus.BackColor = System.Drawing.Color.White;
+            this.cbMaritalStatus.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbMaritalStatus.FormattingEnabled = true;
+            this.cbMaritalStatus.Items.AddRange(new object[] {
+            "Unknown",
+            "Single",
+            "Married",
+            "Divorced",
+            "Widowed"});
+            this.cbMaritalStatus.Location = new System.Drawing.Point(216, 470);
+            this.cbMaritalStatus.Name = "cbMaritalStatus";
+            this.cbMaritalStatus.Size = new System.Drawing.Size(157, 21);
+            this.cbMaritalStatus.TabIndex = 30;
+            // 
+            // label20
+            // 
+            this.label20.AutoSize = true;
+            this.label20.Location = new System.Drawing.Point(216, 455);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(71, 13);
+            this.label20.TabIndex = 29;
+            this.label20.Text = "Marital Status";
+            // 
+            // label18
+            // 
+            this.label18.AutoSize = true;
+            this.label18.Location = new System.Drawing.Point(33, 367);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(73, 13);
+            this.label18.TabIndex = 21;
+            this.label18.Text = "Email Address";
+            // 
+            // tbEmailAddress
+            // 
+            this.tbEmailAddress.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.tbEmailAddress.Location = new System.Drawing.Point(33, 383);
+            this.tbEmailAddress.Name = "tbEmailAddress";
+            this.tbEmailAddress.Size = new System.Drawing.Size(340, 20);
+            this.tbEmailAddress.TabIndex = 22;
+            // 
+            // tbSuffix
+            // 
+            this.tbSuffix.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.tbSuffix.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
+            this.tbSuffix.Location = new System.Drawing.Point(320, 62);
+            this.tbSuffix.Name = "tbSuffix";
+            this.tbSuffix.Size = new System.Drawing.Size(53, 20);
+            this.tbSuffix.TabIndex = 8;
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(317, 46);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(33, 13);
+            this.label15.TabIndex = 7;
+            this.label15.Text = "Suffix";
+            // 
+            // tbMiddleName
+            // 
+            this.tbMiddleName.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.tbMiddleName.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
+            this.tbMiddleName.Location = new System.Drawing.Point(33, 136);
+            this.tbMiddleName.Name = "tbMiddleName";
+            this.tbMiddleName.Size = new System.Drawing.Size(281, 20);
+            this.tbMiddleName.TabIndex = 6;
+            // 
+            // tbFirstName
+            // 
+            this.tbFirstName.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.tbFirstName.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
+            this.tbFirstName.Location = new System.Drawing.Point(33, 99);
+            this.tbFirstName.Name = "tbFirstName";
+            this.tbFirstName.Size = new System.Drawing.Size(281, 20);
+            this.tbFirstName.TabIndex = 4;
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(33, 120);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(69, 13);
+            this.label14.TabIndex = 5;
+            this.label14.Text = "Middle Name";
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(33, 83);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(57, 13);
+            this.label13.TabIndex = 3;
+            this.label13.Text = "First Name";
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(200, 281);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(50, 13);
+            this.label12.TabIndex = 17;
+            this.label12.Text = "Zip Code";
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(33, 281);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(32, 13);
+            this.label11.TabIndex = 15;
+            this.label11.Text = "State";
+            // 
+            // cbState
+            // 
+            this.cbState.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
+            this.cbState.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this.cbState.BackColor = System.Drawing.Color.White;
+            this.cbState.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbState.FormattingEnabled = true;
+            this.cbState.Location = new System.Drawing.Point(33, 297);
+            this.cbState.Name = "cbState";
+            this.cbState.Size = new System.Drawing.Size(163, 21);
+            this.cbState.TabIndex = 16;
+            // 
+            // tbSSN
+            // 
+            this.tbSSN.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.tbSSN.Location = new System.Drawing.Point(33, 427);
+            this.tbSSN.Mask = "000-00-0000";
+            this.tbSSN.Name = "tbSSN";
+            this.tbSSN.Size = new System.Drawing.Size(177, 20);
+            this.tbSSN.TabIndex = 24;
+            // 
+            // tbDateOfBirth
+            // 
+            this.tbDateOfBirth.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.tbDateOfBirth.Location = new System.Drawing.Point(33, 471);
+            this.tbDateOfBirth.Mask = "00/00/0000";
+            this.tbDateOfBirth.Name = "tbDateOfBirth";
+            this.tbDateOfBirth.Size = new System.Drawing.Size(177, 20);
+            this.tbDateOfBirth.TabIndex = 26;
+            this.tbDateOfBirth.ValidatingType = typeof(System.DateTime);
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(33, 325);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(38, 13);
+            this.label16.TabIndex = 19;
+            this.label16.Text = "Phone";
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Location = new System.Drawing.Point(33, 242);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(24, 13);
+            this.label17.TabIndex = 13;
+            this.label17.Text = "City";
+            // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.Location = new System.Drawing.Point(33, 203);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(51, 13);
+            this.label19.TabIndex = 11;
+            this.label19.Text = "Address2";
+            // 
+            // label21
+            // 
+            this.label21.AutoSize = true;
+            this.label21.Location = new System.Drawing.Point(33, 159);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(45, 13);
+            this.label21.TabIndex = 9;
+            this.label21.Text = "Address";
+            // 
+            // tbPhone
+            // 
+            this.tbPhone.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.tbPhone.Location = new System.Drawing.Point(33, 341);
+            this.tbPhone.Name = "tbPhone";
+            this.tbPhone.Size = new System.Drawing.Size(340, 20);
+            this.tbPhone.TabIndex = 20;
+            // 
+            // tbCity
+            // 
+            this.tbCity.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.tbCity.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
+            this.tbCity.Location = new System.Drawing.Point(33, 258);
+            this.tbCity.Name = "tbCity";
+            this.tbCity.Size = new System.Drawing.Size(340, 20);
+            this.tbCity.TabIndex = 14;
+            // 
+            // tbAddress2
+            // 
+            this.tbAddress2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.tbAddress2.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
+            this.tbAddress2.Location = new System.Drawing.Point(33, 219);
+            this.tbAddress2.Name = "tbAddress2";
+            this.tbAddress2.Size = new System.Drawing.Size(340, 20);
+            this.tbAddress2.TabIndex = 12;
+            // 
+            // cbSex
+            // 
+            this.cbSex.BackColor = System.Drawing.Color.White;
+            this.cbSex.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbSex.FormattingEnabled = true;
+            this.cbSex.Items.AddRange(new object[] {
+            "Male",
+            "Female",
+            "Unknown"});
+            this.cbSex.Location = new System.Drawing.Point(216, 426);
+            this.cbSex.Name = "cbSex";
+            this.cbSex.Size = new System.Drawing.Size(157, 21);
+            this.cbSex.TabIndex = 28;
+            // 
+            // label22
+            // 
+            this.label22.AutoSize = true;
+            this.label22.Location = new System.Drawing.Point(216, 410);
+            this.label22.Name = "label22";
+            this.label22.Size = new System.Drawing.Size(25, 13);
+            this.label22.TabIndex = 27;
+            this.label22.Text = "Sex";
+            // 
+            // label23
+            // 
+            this.label23.AutoSize = true;
+            this.label23.Location = new System.Drawing.Point(33, 455);
+            this.label23.Name = "label23";
+            this.label23.Size = new System.Drawing.Size(66, 13);
+            this.label23.TabIndex = 25;
+            this.label23.Text = "Date of Birth";
+            // 
+            // label24
+            // 
+            this.label24.AutoSize = true;
+            this.label24.Location = new System.Drawing.Point(33, 411);
+            this.label24.Name = "label24";
+            this.label24.Size = new System.Drawing.Size(29, 13);
+            this.label24.TabIndex = 23;
+            this.label24.Text = "SSN";
+            // 
+            // label25
+            // 
+            this.label25.AutoSize = true;
+            this.label25.Location = new System.Drawing.Point(33, 46);
+            this.label25.Name = "label25";
+            this.label25.Size = new System.Drawing.Size(58, 13);
+            this.label25.TabIndex = 1;
+            this.label25.Text = "Last Name";
+            // 
+            // tbAddress1
+            // 
+            this.tbAddress1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.tbAddress1.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
+            this.tbAddress1.Location = new System.Drawing.Point(33, 175);
+            this.tbAddress1.Name = "tbAddress1";
+            this.tbAddress1.Size = new System.Drawing.Size(340, 20);
+            this.tbAddress1.TabIndex = 10;
+            // 
+            // tbLastName
+            // 
+            this.tbLastName.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.tbLastName.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
+            this.tbLastName.Location = new System.Drawing.Point(33, 62);
+            this.tbLastName.Name = "tbLastName";
+            this.tbLastName.Size = new System.Drawing.Size(281, 20);
+            this.tbLastName.TabIndex = 2;
+            // 
+            // tbGuarZip
+            // 
+            this.tbGuarZip.Location = new System.Drawing.Point(688, 298);
+            this.tbGuarZip.Mask = "00000-9999";
+            this.tbGuarZip.Name = "tbGuarZip";
+            this.tbGuarZip.Size = new System.Drawing.Size(108, 20);
+            this.tbGuarZip.TabIndex = 49;
+            // 
+            // tabInsurance
+            // 
+            this.tabInsurance.Controls.Add(this.tableLayoutPanel1);
+            this.tabInsurance.Location = new System.Drawing.Point(4, 22);
+            this.tabInsurance.Name = "tabInsurance";
+            this.tabInsurance.Padding = new System.Windows.Forms.Padding(3);
+            this.tabInsurance.Size = new System.Drawing.Size(1151, 556);
+            this.tabInsurance.TabIndex = 11;
+            this.tabInsurance.Text = "Insurance";
+            this.tabInsurance.UseVisualStyleBackColor = true;
+            // 
+            // tableLayoutPanel1
+            // 
+            this.tableLayoutPanel1.ColumnCount = 4;
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 110F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 110F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel1.Controls.Add(this.label31, 0, 2);
+            this.tableLayoutPanel1.Controls.Add(this.dgvInsurance, 0, 0);
+            this.tableLayoutPanel1.Controls.Add(this.bSaveInsurance, 0, 13);
+            this.tableLayoutPanel1.Controls.Add(this.lInsCopyPatient, 1, 1);
+            this.tableLayoutPanel1.Controls.Add(this.cbPlanFinCode, 3, 8);
+            this.tableLayoutPanel1.Controls.Add(this.label48, 2, 8);
+            this.tableLayoutPanel1.Controls.Add(this.tbCertSSN, 3, 12);
+            this.tableLayoutPanel1.Controls.Add(this.tbHolderLastName, 1, 2);
+            this.tableLayoutPanel1.Controls.Add(this.label35, 2, 12);
+            this.tableLayoutPanel1.Controls.Add(this.tbGroupName, 3, 11);
+            this.tableLayoutPanel1.Controls.Add(this.label36, 2, 11);
+            this.tableLayoutPanel1.Controls.Add(this.label32, 0, 3);
+            this.tableLayoutPanel1.Controls.Add(this.cbInsCode, 3, 3);
+            this.tableLayoutPanel1.Controls.Add(this.tbHolderZip, 1, 8);
+            this.tableLayoutPanel1.Controls.Add(this.tbGroupNumber, 3, 10);
+            this.tableLayoutPanel1.Controls.Add(this.label42, 0, 8);
+            this.tableLayoutPanel1.Controls.Add(this.label34, 2, 10);
+            this.tableLayoutPanel1.Controls.Add(this.tbPlanAddress2, 3, 6);
+            this.tableLayoutPanel1.Controls.Add(this.cbInsRelation, 1, 11);
+            this.tableLayoutPanel1.Controls.Add(this.label33, 0, 11);
+            this.tableLayoutPanel1.Controls.Add(this.tbPolicyNumber, 3, 9);
+            this.tableLayoutPanel1.Controls.Add(this.label41, 0, 7);
+            this.tableLayoutPanel1.Controls.Add(this.tbHolderDOB, 1, 10);
+            this.tableLayoutPanel1.Controls.Add(this.label47, 2, 9);
+            this.tableLayoutPanel1.Controls.Add(this.label49, 0, 10);
+            this.tableLayoutPanel1.Controls.Add(this.cbHolderState, 1, 7);
+            this.tableLayoutPanel1.Controls.Add(this.tbHolderFirstName, 1, 3);
+            this.tableLayoutPanel1.Controls.Add(this.label50, 2, 3);
+            this.tableLayoutPanel1.Controls.Add(this.label51, 2, 2);
+            this.tableLayoutPanel1.Controls.Add(this.cbInsOrder, 3, 2);
+            this.tableLayoutPanel1.Controls.Add(this.cbHolderSex, 1, 9);
+            this.tableLayoutPanel1.Controls.Add(this.label52, 0, 4);
+            this.tableLayoutPanel1.Controls.Add(this.label53, 0, 9);
+            this.tableLayoutPanel1.Controls.Add(this.tbHolderMiddleName, 1, 4);
+            this.tableLayoutPanel1.Controls.Add(this.label54, 2, 4);
+            this.tableLayoutPanel1.Controls.Add(this.tbPlanName, 3, 4);
+            this.tableLayoutPanel1.Controls.Add(this.label55, 0, 5);
+            this.tableLayoutPanel1.Controls.Add(this.tbHolderAddress, 1, 5);
+            this.tableLayoutPanel1.Controls.Add(this.tbPlanCitySt, 3, 7);
+            this.tableLayoutPanel1.Controls.Add(this.label56, 2, 5);
+            this.tableLayoutPanel1.Controls.Add(this.label57, 2, 7);
+            this.tableLayoutPanel1.Controls.Add(this.tbPlanAddress, 3, 5);
+            this.tableLayoutPanel1.Controls.Add(this.tbHolderCity, 1, 6);
+            this.tableLayoutPanel1.Controls.Add(this.label58, 0, 6);
+            this.tableLayoutPanel1.Controls.Add(this.label59, 3, 1);
+            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(3, 3);
+            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+            this.tableLayoutPanel1.RowCount = 14;
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 110F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(1145, 550);
+            this.tableLayoutPanel1.TabIndex = 2;
+            // 
+            // label31
+            // 
+            this.label31.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.label31.AutoSize = true;
+            this.label31.Location = new System.Drawing.Point(3, 138);
+            this.label31.Name = "label31";
+            this.label31.Size = new System.Drawing.Size(92, 13);
+            this.label31.TabIndex = 1;
+            this.label31.Text = "Holder Last Name";
+            // 
+            // dgvInsurance
+            // 
+            this.dgvInsurance.AllowUserToAddRows = false;
+            this.dgvInsurance.AllowUserToDeleteRows = false;
+            this.dgvInsurance.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvInsurance.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            this.dgvInsurance.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.tableLayoutPanel1.SetColumnSpan(this.dgvInsurance, 4);
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dgvInsurance.DefaultCellStyle = dataGridViewCellStyle2;
+            this.dgvInsurance.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnF2;
+            this.dgvInsurance.Location = new System.Drawing.Point(3, 3);
+            this.dgvInsurance.MultiSelect = false;
+            this.dgvInsurance.Name = "dgvInsurance";
+            this.dgvInsurance.ReadOnly = true;
+            this.dgvInsurance.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dgvInsurance.Size = new System.Drawing.Size(1139, 104);
+            this.dgvInsurance.TabIndex = 0;
+            this.dgvInsurance.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DgvInsurance_CellClick);
+            // 
+            // bSaveInsurance
+            // 
+            this.bSaveInsurance.BackColor = System.Drawing.Color.SkyBlue;
+            this.bSaveInsurance.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.bSaveInsurance.Location = new System.Drawing.Point(3, 443);
+            this.bSaveInsurance.Name = "bSaveInsurance";
+            this.bSaveInsurance.Size = new System.Drawing.Size(99, 52);
+            this.bSaveInsurance.TabIndex = 2;
+            this.bSaveInsurance.Text = "Save Insurance";
+            this.bSaveInsurance.UseVisualStyleBackColor = false;
+            this.bSaveInsurance.Click += new System.EventHandler(this.BSaveInsurance_Click_1);
+            // 
+            // lInsCopyPatient
+            // 
+            this.lInsCopyPatient.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.lInsCopyPatient.AutoSize = true;
+            this.lInsCopyPatient.Location = new System.Drawing.Point(113, 113);
+            this.lInsCopyPatient.Name = "lInsCopyPatient";
+            this.lInsCopyPatient.Size = new System.Drawing.Size(88, 13);
+            this.lInsCopyPatient.TabIndex = 0;
+            this.lInsCopyPatient.TabStop = true;
+            this.lInsCopyPatient.Text = "Copy Patient Info";
+            this.lInsCopyPatient.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LInsCopyPatient_LinkClicked_1);
+            // 
+            // cbPlanFinCode
+            // 
+            this.cbPlanFinCode.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.cbPlanFinCode.FormattingEnabled = true;
+            this.cbPlanFinCode.Location = new System.Drawing.Point(685, 310);
+            this.cbPlanFinCode.Name = "cbPlanFinCode";
+            this.cbPlanFinCode.Size = new System.Drawing.Size(230, 21);
+            this.cbPlanFinCode.TabIndex = 33;
+            // 
+            // label48
+            // 
+            this.label48.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.label48.AutoSize = true;
+            this.label48.Location = new System.Drawing.Point(575, 314);
+            this.label48.Name = "label48";
+            this.label48.Size = new System.Drawing.Size(101, 13);
+            this.label48.TabIndex = 32;
+            this.label48.Text = "Plan Financial Code";
+            // 
+            // tbCertSSN
+            // 
+            this.tbCertSSN.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.tbCertSSN.Location = new System.Drawing.Point(685, 417);
+            this.tbCertSSN.Name = "tbCertSSN";
+            this.tbCertSSN.Size = new System.Drawing.Size(230, 20);
+            this.tbCertSSN.TabIndex = 41;
+            // 
+            // tbHolderLastName
+            // 
+            this.tbHolderLastName.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.tbHolderLastName.Location = new System.Drawing.Point(113, 135);
+            this.tbHolderLastName.Name = "tbHolderLastName";
+            this.tbHolderLastName.Size = new System.Drawing.Size(230, 20);
+            this.tbHolderLastName.TabIndex = 2;
+            // 
+            // label35
+            // 
+            this.label35.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.label35.AutoSize = true;
+            this.label35.Location = new System.Drawing.Point(575, 420);
+            this.label35.Name = "label35";
+            this.label35.Size = new System.Drawing.Size(53, 13);
+            this.label35.TabIndex = 40;
+            this.label35.Text = "Cert/SSN";
+            // 
+            // tbGroupName
+            // 
+            this.tbGroupName.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.tbGroupName.Location = new System.Drawing.Point(685, 390);
+            this.tbGroupName.Name = "tbGroupName";
+            this.tbGroupName.Size = new System.Drawing.Size(230, 20);
+            this.tbGroupName.TabIndex = 39;
+            // 
+            // label36
+            // 
+            this.label36.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.label36.AutoSize = true;
+            this.label36.Location = new System.Drawing.Point(575, 394);
+            this.label36.Name = "label36";
+            this.label36.Size = new System.Drawing.Size(67, 13);
+            this.label36.TabIndex = 38;
+            this.label36.Text = "Group Name";
+            // 
+            // label32
+            // 
+            this.label32.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.label32.AutoSize = true;
+            this.label32.Location = new System.Drawing.Point(3, 168);
+            this.label32.Name = "label32";
+            this.label32.Size = new System.Drawing.Size(91, 13);
+            this.label32.TabIndex = 3;
+            this.label32.Text = "Holder First Name";
+            // 
+            // cbInsCode
+            // 
+            this.cbInsCode.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.cbInsCode.ArrowBoxColor = System.Drawing.SystemColors.Control;
+            this.cbInsCode.ArrowColor = System.Drawing.Color.Black;
+            this.cbInsCode.BindedControl = ((MTGCComboBox.ControlloAssociato)(resources.GetObject("cbInsCode.BindedControl")));
+            this.cbInsCode.BorderStyle = MTGCComboBox.TipiBordi.FlatXP;
+            this.cbInsCode.CharacterCasing = System.Windows.Forms.CharacterCasing.Normal;
+            this.cbInsCode.ColumnNum = 1;
+            this.cbInsCode.ColumnWidth = "121";
+            this.cbInsCode.DisabledArrowBoxColor = System.Drawing.SystemColors.Control;
+            this.cbInsCode.DisabledArrowColor = System.Drawing.Color.LightGray;
+            this.cbInsCode.DisabledBackColor = System.Drawing.SystemColors.Control;
+            this.cbInsCode.DisabledBorderColor = System.Drawing.SystemColors.InactiveBorder;
+            this.cbInsCode.DisabledForeColor = System.Drawing.SystemColors.GrayText;
+            this.cbInsCode.DisplayMember = "Text";
+            this.cbInsCode.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+            this.cbInsCode.DropDownArrowBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(136)))), ((int)(((byte)(169)))), ((int)(((byte)(223)))));
+            this.cbInsCode.DropDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(193)))), ((int)(((byte)(210)))), ((int)(((byte)(238)))));
+            this.cbInsCode.DropDownForeColor = System.Drawing.Color.Black;
+            this.cbInsCode.DropDownStyle = MTGCComboBox.CustomDropDownStyle.DropDown;
+            this.cbInsCode.DropDownWidth = 141;
+            this.cbInsCode.GridLineColor = System.Drawing.Color.LightGray;
+            this.cbInsCode.GridLineHorizontal = false;
+            this.cbInsCode.GridLineVertical = false;
+            this.cbInsCode.HighlightBorderColor = System.Drawing.Color.Blue;
+            this.cbInsCode.HighlightBorderOnMouseEvents = true;
+            this.cbInsCode.LoadingType = MTGCComboBox.CaricamentoCombo.ComboBoxItem;
+            this.cbInsCode.Location = new System.Drawing.Point(685, 164);
+            this.cbInsCode.ManagingFastMouseMoving = true;
+            this.cbInsCode.ManagingFastMouseMovingInterval = 30;
+            this.cbInsCode.Name = "cbInsCode";
+            this.cbInsCode.NormalBorderColor = System.Drawing.Color.Black;
+            this.cbInsCode.SelectedItem = null;
+            this.cbInsCode.SelectedValue = null;
+            this.cbInsCode.Size = new System.Drawing.Size(232, 21);
+            this.cbInsCode.TabIndex = 24;
+            this.cbInsCode.SelectedIndexChanged += new System.EventHandler(this.CbInsCode_SelectedIndexChanged_1);
+            // 
+            // tbHolderZip
+            // 
+            this.tbHolderZip.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.tbHolderZip.Location = new System.Drawing.Point(113, 310);
+            this.tbHolderZip.Name = "tbHolderZip";
+            this.tbHolderZip.Size = new System.Drawing.Size(153, 20);
+            this.tbHolderZip.TabIndex = 14;
+            // 
+            // tbGroupNumber
+            // 
+            this.tbGroupNumber.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.tbGroupNumber.Location = new System.Drawing.Point(685, 364);
+            this.tbGroupNumber.Name = "tbGroupNumber";
+            this.tbGroupNumber.Size = new System.Drawing.Size(230, 20);
+            this.tbGroupNumber.TabIndex = 37;
+            // 
+            // label42
+            // 
+            this.label42.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.label42.AutoSize = true;
+            this.label42.Location = new System.Drawing.Point(3, 314);
+            this.label42.Name = "label42";
+            this.label42.Size = new System.Drawing.Size(46, 13);
+            this.label42.TabIndex = 13;
+            this.label42.Text = "Zipcode";
+            // 
+            // label34
+            // 
+            this.label34.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.label34.AutoSize = true;
+            this.label34.Location = new System.Drawing.Point(575, 367);
+            this.label34.Name = "label34";
+            this.label34.Size = new System.Drawing.Size(76, 13);
+            this.label34.TabIndex = 36;
+            this.label34.Text = "Group Number";
+            // 
+            // tbPlanAddress2
+            // 
+            this.tbPlanAddress2.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.tbPlanAddress2.Location = new System.Drawing.Point(685, 255);
+            this.tbPlanAddress2.Name = "tbPlanAddress2";
+            this.tbPlanAddress2.Size = new System.Drawing.Size(230, 20);
+            this.tbPlanAddress2.TabIndex = 29;
+            // 
+            // cbInsRelation
+            // 
+            this.cbInsRelation.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.cbInsRelation.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbInsRelation.FormattingEnabled = true;
+            this.cbInsRelation.Location = new System.Drawing.Point(113, 390);
+            this.cbInsRelation.Name = "cbInsRelation";
+            this.cbInsRelation.Size = new System.Drawing.Size(230, 21);
+            this.cbInsRelation.TabIndex = 20;
+            // 
+            // label33
+            // 
+            this.label33.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.label33.AutoSize = true;
+            this.label33.Location = new System.Drawing.Point(3, 394);
+            this.label33.Name = "label33";
+            this.label33.Size = new System.Drawing.Size(94, 13);
+            this.label33.TabIndex = 19;
+            this.label33.Text = "Relation to Patient";
+            // 
+            // tbPolicyNumber
+            // 
+            this.tbPolicyNumber.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.tbPolicyNumber.Location = new System.Drawing.Point(685, 337);
+            this.tbPolicyNumber.Name = "tbPolicyNumber";
+            this.tbPolicyNumber.Size = new System.Drawing.Size(230, 20);
+            this.tbPolicyNumber.TabIndex = 35;
+            // 
+            // label41
+            // 
+            this.label41.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.label41.AutoSize = true;
+            this.label41.Location = new System.Drawing.Point(3, 287);
+            this.label41.Name = "label41";
+            this.label41.Size = new System.Drawing.Size(32, 13);
+            this.label41.TabIndex = 11;
+            this.label41.Text = "State";
+            // 
+            // tbHolderDOB
+            // 
+            this.tbHolderDOB.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.tbHolderDOB.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.tbHolderDOB.Location = new System.Drawing.Point(113, 364);
+            this.tbHolderDOB.Mask = "00/00/0000";
+            this.tbHolderDOB.Name = "tbHolderDOB";
+            this.tbHolderDOB.Size = new System.Drawing.Size(230, 20);
+            this.tbHolderDOB.TabIndex = 18;
+            this.tbHolderDOB.ValidatingType = typeof(System.DateTime);
+            // 
+            // label47
+            // 
+            this.label47.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.label47.AutoSize = true;
+            this.label47.Location = new System.Drawing.Point(575, 341);
+            this.label47.Name = "label47";
+            this.label47.Size = new System.Drawing.Size(75, 13);
+            this.label47.TabIndex = 34;
+            this.label47.Text = "Policy Number";
+            // 
+            // label49
+            // 
+            this.label49.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.label49.AutoSize = true;
+            this.label49.Location = new System.Drawing.Point(3, 367);
+            this.label49.Name = "label49";
+            this.label49.Size = new System.Drawing.Size(66, 13);
+            this.label49.TabIndex = 17;
+            this.label49.Text = "Date of Birth";
+            // 
+            // cbHolderState
+            // 
+            this.cbHolderState.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.cbHolderState.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
+            this.cbHolderState.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this.cbHolderState.BackColor = System.Drawing.Color.White;
+            this.cbHolderState.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbHolderState.FormattingEnabled = true;
+            this.cbHolderState.Location = new System.Drawing.Point(113, 283);
+            this.cbHolderState.Name = "cbHolderState";
+            this.cbHolderState.Size = new System.Drawing.Size(153, 21);
+            this.cbHolderState.TabIndex = 12;
+            // 
+            // tbHolderFirstName
+            // 
+            this.tbHolderFirstName.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.tbHolderFirstName.Location = new System.Drawing.Point(113, 165);
+            this.tbHolderFirstName.Name = "tbHolderFirstName";
+            this.tbHolderFirstName.Size = new System.Drawing.Size(230, 20);
+            this.tbHolderFirstName.TabIndex = 4;
+            // 
+            // label50
+            // 
+            this.label50.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.label50.AutoSize = true;
+            this.label50.Location = new System.Drawing.Point(575, 168);
+            this.label50.Name = "label50";
+            this.label50.Size = new System.Drawing.Size(78, 13);
+            this.label50.TabIndex = 23;
+            this.label50.Text = "Insurance Plan";
+            // 
+            // label51
+            // 
+            this.label51.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.label51.AutoSize = true;
+            this.label51.Location = new System.Drawing.Point(575, 138);
+            this.label51.Name = "label51";
+            this.label51.Size = new System.Drawing.Size(83, 13);
+            this.label51.TabIndex = 21;
+            this.label51.Text = "Insurance Order";
+            // 
+            // cbInsOrder
+            // 
+            this.cbInsOrder.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.cbInsOrder.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbInsOrder.FormattingEnabled = true;
+            this.cbInsOrder.Location = new System.Drawing.Point(685, 134);
+            this.cbInsOrder.Name = "cbInsOrder";
+            this.cbInsOrder.Size = new System.Drawing.Size(230, 21);
+            this.cbInsOrder.TabIndex = 22;
+            // 
+            // cbHolderSex
+            // 
+            this.cbHolderSex.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.cbHolderSex.BackColor = System.Drawing.Color.White;
+            this.cbHolderSex.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbHolderSex.FormattingEnabled = true;
+            this.cbHolderSex.Items.AddRange(new object[] {
+            "Male",
+            "Female",
+            "Unknown"});
+            this.cbHolderSex.Location = new System.Drawing.Point(113, 337);
+            this.cbHolderSex.Name = "cbHolderSex";
+            this.cbHolderSex.Size = new System.Drawing.Size(230, 21);
+            this.cbHolderSex.TabIndex = 16;
+            // 
+            // label52
+            // 
+            this.label52.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.label52.AutoSize = true;
+            this.label52.Location = new System.Drawing.Point(3, 198);
+            this.label52.Name = "label52";
+            this.label52.Size = new System.Drawing.Size(103, 13);
+            this.label52.TabIndex = 5;
+            this.label52.Text = "Holder Middle Name";
+            // 
+            // label53
+            // 
+            this.label53.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.label53.AutoSize = true;
+            this.label53.Location = new System.Drawing.Point(3, 341);
+            this.label53.Name = "label53";
+            this.label53.Size = new System.Drawing.Size(25, 13);
+            this.label53.TabIndex = 15;
+            this.label53.Text = "Sex";
+            // 
+            // tbHolderMiddleName
+            // 
+            this.tbHolderMiddleName.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.tbHolderMiddleName.Location = new System.Drawing.Point(113, 195);
+            this.tbHolderMiddleName.Name = "tbHolderMiddleName";
+            this.tbHolderMiddleName.Size = new System.Drawing.Size(230, 20);
+            this.tbHolderMiddleName.TabIndex = 6;
+            // 
+            // label54
+            // 
+            this.label54.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.label54.AutoSize = true;
+            this.label54.Location = new System.Drawing.Point(575, 198);
+            this.label54.Name = "label54";
+            this.label54.Size = new System.Drawing.Size(59, 13);
+            this.label54.TabIndex = 25;
+            this.label54.Text = "Plan Name";
+            // 
+            // tbPlanName
+            // 
+            this.tbPlanName.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.tbPlanName.Location = new System.Drawing.Point(685, 195);
+            this.tbPlanName.Name = "tbPlanName";
+            this.tbPlanName.ReadOnly = true;
+            this.tbPlanName.Size = new System.Drawing.Size(230, 20);
+            this.tbPlanName.TabIndex = 26;
+            // 
+            // label55
+            // 
+            this.label55.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.label55.AutoSize = true;
+            this.label55.Location = new System.Drawing.Point(3, 228);
+            this.label55.Name = "label55";
+            this.label55.Size = new System.Drawing.Size(45, 13);
+            this.label55.TabIndex = 7;
+            this.label55.Text = "Address";
+            // 
+            // tbHolderAddress
+            // 
+            this.tbHolderAddress.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.tbHolderAddress.Location = new System.Drawing.Point(113, 225);
+            this.tbHolderAddress.Name = "tbHolderAddress";
+            this.tbHolderAddress.Size = new System.Drawing.Size(230, 20);
+            this.tbHolderAddress.TabIndex = 8;
+            // 
+            // tbPlanCitySt
+            // 
+            this.tbPlanCitySt.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.tbPlanCitySt.Location = new System.Drawing.Point(685, 283);
+            this.tbPlanCitySt.Name = "tbPlanCitySt";
+            this.tbPlanCitySt.Size = new System.Drawing.Size(230, 20);
+            this.tbPlanCitySt.TabIndex = 31;
+            // 
+            // label56
+            // 
+            this.label56.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.label56.AutoSize = true;
+            this.label56.Location = new System.Drawing.Point(575, 228);
+            this.label56.Name = "label56";
+            this.label56.Size = new System.Drawing.Size(69, 13);
+            this.label56.TabIndex = 27;
+            this.label56.Text = "Plan Address";
+            // 
+            // label57
+            // 
+            this.label57.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.label57.AutoSize = true;
+            this.label57.Location = new System.Drawing.Point(575, 287);
+            this.label57.Name = "label57";
+            this.label57.Size = new System.Drawing.Size(79, 13);
+            this.label57.TabIndex = 30;
+            this.label57.Text = "Plan City St Zip";
+            // 
+            // tbPlanAddress
+            // 
+            this.tbPlanAddress.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.tbPlanAddress.Location = new System.Drawing.Point(685, 225);
+            this.tbPlanAddress.Name = "tbPlanAddress";
+            this.tbPlanAddress.Size = new System.Drawing.Size(230, 20);
+            this.tbPlanAddress.TabIndex = 28;
+            // 
+            // tbHolderCity
+            // 
+            this.tbHolderCity.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.tbHolderCity.Location = new System.Drawing.Point(113, 255);
+            this.tbHolderCity.Name = "tbHolderCity";
+            this.tbHolderCity.Size = new System.Drawing.Size(230, 20);
+            this.tbHolderCity.TabIndex = 10;
+            // 
+            // label58
+            // 
+            this.label58.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.label58.AutoSize = true;
+            this.label58.Location = new System.Drawing.Point(3, 258);
+            this.label58.Name = "label58";
+            this.label58.Size = new System.Drawing.Size(24, 13);
+            this.label58.TabIndex = 9;
+            this.label58.Text = "City";
+            // 
+            // label59
+            // 
+            this.label59.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.label59.AutoSize = true;
+            this.label59.Location = new System.Drawing.Point(685, 113);
+            this.label59.Name = "label59";
+            this.label59.Size = new System.Drawing.Size(136, 13);
+            this.label59.TabIndex = 42;
+            this.label59.Text = "Select an insurance to edit.";
+            // 
+            // tabDiagnosis
+            // 
+            this.tabDiagnosis.Controls.Add(this.btnDxDelete);
+            this.tabDiagnosis.Controls.Add(this.btnSaveDx);
+            this.tabDiagnosis.Controls.Add(this.label3);
+            this.tabDiagnosis.Controls.Add(this.txtDxQuickAdd);
+            this.tabDiagnosis.Controls.Add(this.txtSearchDx);
+            this.tabDiagnosis.Controls.Add(this.label2);
+            this.tabDiagnosis.Controls.Add(this.dgvDxSearch);
+            this.tabDiagnosis.Controls.Add(this.label1);
+            this.tabDiagnosis.Controls.Add(this.dgvDiagnosis);
+            this.tabDiagnosis.Controls.Add(this.btnDxSearch);
+            this.tabDiagnosis.Location = new System.Drawing.Point(4, 22);
+            this.tabDiagnosis.Name = "tabDiagnosis";
+            this.tabDiagnosis.Padding = new System.Windows.Forms.Padding(3);
+            this.tabDiagnosis.Size = new System.Drawing.Size(1151, 556);
+            this.tabDiagnosis.TabIndex = 8;
+            this.tabDiagnosis.Text = "Diagnosis";
+            this.tabDiagnosis.UseVisualStyleBackColor = true;
+            // 
+            // btnDxDelete
+            // 
+            this.btnDxDelete.Image = global::LabBilling.Properties.Resources.hiclipart_com_id_dbhyp;
+            this.btnDxDelete.Location = new System.Drawing.Point(371, 61);
+            this.btnDxDelete.Name = "btnDxDelete";
+            this.btnDxDelete.Size = new System.Drawing.Size(20, 24);
+            this.btnDxDelete.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.btnDxDelete.TabIndex = 9;
+            this.btnDxDelete.TabStop = false;
+            this.btnDxDelete.Click += new System.EventHandler(this.BtnDxDelete_Click);
+            // 
+            // btnSaveDx
+            // 
+            this.btnSaveDx.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btnSaveDx.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnSaveDx.Location = new System.Drawing.Point(290, 274);
+            this.btnSaveDx.Name = "btnSaveDx";
+            this.btnSaveDx.Size = new System.Drawing.Size(75, 28);
+            this.btnSaveDx.TabIndex = 8;
+            this.btnSaveDx.Text = "Save Diagnoses";
+            this.btnSaveDx.UseVisualStyleBackColor = true;
+            this.btnSaveDx.Click += new System.EventHandler(this.BtnSaveDx_Click);
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(202, 15);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(57, 13);
+            this.label3.TabIndex = 7;
+            this.label3.Text = "Quick Add";
+            // 
+            // txtDxQuickAdd
+            // 
+            this.txtDxQuickAdd.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
+            this.txtDxQuickAdd.Location = new System.Drawing.Point(265, 12);
+            this.txtDxQuickAdd.Name = "txtDxQuickAdd";
+            this.txtDxQuickAdd.Size = new System.Drawing.Size(100, 20);
+            this.txtDxQuickAdd.TabIndex = 6;
+            this.txtDxQuickAdd.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TxtDxQuickAdd_KeyPress);
+            // 
+            // txtSearchDx
+            // 
+            this.txtSearchDx.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
+            this.txtSearchDx.Location = new System.Drawing.Point(516, 7);
+            this.txtSearchDx.Name = "txtSearchDx";
+            this.txtSearchDx.Size = new System.Drawing.Size(218, 20);
+            this.txtSearchDx.TabIndex = 4;
+            this.txtSearchDx.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TxtSearchDx_KeyPress);
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(417, 10);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(90, 13);
+            this.label2.TabIndex = 3;
+            this.label2.Text = "Diagnosis Search";
+            // 
+            // dgvDxSearch
+            // 
+            this.dgvDxSearch.AllowUserToAddRows = false;
+            this.dgvDxSearch.AllowUserToDeleteRows = false;
+            this.dgvDxSearch.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.dgvDxSearch.BackgroundColor = System.Drawing.Color.White;
+            this.dgvDxSearch.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvDxSearch.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
+            this.dgvDxSearch.Location = new System.Drawing.Point(420, 35);
+            this.dgvDxSearch.Name = "dgvDxSearch";
+            this.dgvDxSearch.RowHeadersVisible = false;
+            this.dgvDxSearch.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dgvDxSearch.Size = new System.Drawing.Size(412, 328);
+            this.dgvDxSearch.TabIndex = 2;
+            this.dgvDxSearch.CellMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.DgvDxSearch_CellMouseDoubleClick);
+            this.dgvDxSearch.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.DgvDxSearch_DataBindingComplete);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(6, 19);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(102, 13);
+            this.label1.TabIndex = 1;
+            this.label1.Text = "Selected Diagnoses";
+            // 
+            // dgvDiagnosis
+            // 
+            this.dgvDiagnosis.AllowUserToAddRows = false;
+            this.dgvDiagnosis.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.dgvDiagnosis.BackgroundColor = System.Drawing.Color.White;
+            this.dgvDiagnosis.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvDiagnosis.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
+            this.dgvDiagnosis.Location = new System.Drawing.Point(7, 61);
+            this.dgvDiagnosis.Name = "dgvDiagnosis";
+            this.dgvDiagnosis.RowHeadersVisible = false;
+            this.dgvDiagnosis.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dgvDiagnosis.Size = new System.Drawing.Size(358, 207);
+            this.dgvDiagnosis.TabIndex = 0;
+            this.dgvDiagnosis.CellMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dgvDiagnosis_CellMouseDoubleClick);
+            this.dgvDiagnosis.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.DgvDiagnosis_DataBindingComplete);
+            this.dgvDiagnosis.UserDeletingRow += new System.Windows.Forms.DataGridViewRowCancelEventHandler(this.DgvDiagnosis_UserDeletingRow);
+            // 
+            // btnDxSearch
+            // 
+            this.btnDxSearch.Image = global::LabBilling.Properties.Resources.lookup_icon_png_and_vector_for_free_download_pngtree_lookup_png_512_512;
+            this.btnDxSearch.Location = new System.Drawing.Point(739, 4);
+            this.btnDxSearch.Name = "btnDxSearch";
+            this.btnDxSearch.Size = new System.Drawing.Size(26, 24);
+            this.btnDxSearch.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.btnDxSearch.TabIndex = 5;
+            this.btnDxSearch.TabStop = false;
+            this.btnDxSearch.Click += new System.EventHandler(this.BtnDxSearch_Click);
+            // 
+            // tabCharges
+            // 
+            this.tabCharges.Controls.Add(this.label45);
+            this.tabCharges.Controls.Add(this.btnAddCharge);
+            this.tabCharges.Controls.Add(this.tbTotalCharges);
+            this.tabCharges.Controls.Add(this.label6);
+            this.tabCharges.Controls.Add(this.ckShowCreditedChrg);
+            this.tabCharges.Controls.Add(this.label5);
+            this.tabCharges.Controls.Add(this.label4);
+            this.tabCharges.Controls.Add(this.dgvChrgDetail);
+            this.tabCharges.Controls.Add(this.dgvCharges);
+            this.tabCharges.Location = new System.Drawing.Point(4, 22);
+            this.tabCharges.Name = "tabCharges";
+            this.tabCharges.Padding = new System.Windows.Forms.Padding(3);
+            this.tabCharges.Size = new System.Drawing.Size(1151, 556);
+            this.tabCharges.TabIndex = 6;
+            this.tabCharges.Text = "Charges";
+            this.tabCharges.UseVisualStyleBackColor = true;
+            // 
+            // label45
+            // 
+            this.label45.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.label45.AutoSize = true;
+            this.label45.Location = new System.Drawing.Point(675, 424);
+            this.label45.Name = "label45";
+            this.label45.Size = new System.Drawing.Size(153, 13);
+            this.label45.TabIndex = 8;
+            this.label45.Text = "Todo: Diagnosis Code Pointers";
+            // 
+            // btnAddCharge
+            // 
+            this.btnAddCharge.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnAddCharge.Location = new System.Drawing.Point(1008, 445);
+            this.btnAddCharge.Name = "btnAddCharge";
+            this.btnAddCharge.Size = new System.Drawing.Size(137, 23);
+            this.btnAddCharge.TabIndex = 7;
+            this.btnAddCharge.Text = "Add Charge";
+            this.btnAddCharge.UseVisualStyleBackColor = true;
+            this.btnAddCharge.Click += new System.EventHandler(this.BtnAddCharge_Click);
+            // 
+            // tbTotalCharges
+            // 
+            this.tbTotalCharges.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.tbTotalCharges.Location = new System.Drawing.Point(1008, 400);
+            this.tbTotalCharges.Name = "tbTotalCharges";
+            this.tbTotalCharges.ReadOnly = true;
+            this.tbTotalCharges.Size = new System.Drawing.Size(137, 20);
+            this.tbTotalCharges.TabIndex = 6;
+            this.tbTotalCharges.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // label6
+            // 
+            this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.label6.AutoSize = true;
+            this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label6.Location = new System.Drawing.Point(916, 403);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(86, 13);
+            this.label6.TabIndex = 5;
+            this.label6.Text = "Total Charges";
+            // 
+            // ckShowCreditedChrg
+            // 
+            this.ckShowCreditedChrg.AutoSize = true;
+            this.ckShowCreditedChrg.Location = new System.Drawing.Point(98, 12);
+            this.ckShowCreditedChrg.Name = "ckShowCreditedChrg";
+            this.ckShowCreditedChrg.Size = new System.Drawing.Size(88, 17);
+            this.ckShowCreditedChrg.TabIndex = 4;
+            this.ckShowCreditedChrg.Text = "Show Credits";
+            this.ckShowCreditedChrg.UseVisualStyleBackColor = true;
+            this.ckShowCreditedChrg.CheckedChanged += new System.EventHandler(this.CkShowCreditedChrg_CheckedChanged);
+            // 
+            // label5
+            // 
+            this.label5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(6, 384);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(76, 13);
+            this.label5.TabIndex = 3;
+            this.label5.Text = "Charge Details";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(7, 17);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(46, 13);
+            this.label4.TabIndex = 2;
+            this.label4.Text = "Charges";
+            // 
+            // dgvChrgDetail
+            // 
+            this.dgvChrgDetail.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.dgvChrgDetail.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvChrgDetail.Location = new System.Drawing.Point(5, 400);
+            this.dgvChrgDetail.Name = "dgvChrgDetail";
+            this.dgvChrgDetail.RowHeadersVisible = false;
+            this.dgvChrgDetail.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dgvChrgDetail.Size = new System.Drawing.Size(626, 150);
+            this.dgvChrgDetail.TabIndex = 1;
+            // 
+            // dgvCharges
+            // 
+            this.dgvCharges.AllowUserToAddRows = false;
+            this.dgvCharges.AllowUserToDeleteRows = false;
+            this.dgvCharges.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvCharges.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle3;
+            this.dgvCharges.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvCharges.ContextMenuStrip = this.menuCharges;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dgvCharges.DefaultCellStyle = dataGridViewCellStyle4;
+            this.dgvCharges.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
+            this.dgvCharges.Location = new System.Drawing.Point(5, 36);
+            this.dgvCharges.Name = "dgvCharges";
+            this.dgvCharges.RowHeadersVisible = false;
+            this.dgvCharges.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dgvCharges.Size = new System.Drawing.Size(1142, 336);
+            this.dgvCharges.TabIndex = 0;
+            this.dgvCharges.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DgvCharges_CellDoubleClick);
+            this.dgvCharges.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.DgvCharges_CellFormatting);
+            this.dgvCharges.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.DgvCharges_CellMouseClick);
+            // 
+            // menuCharges
+            // 
+            this.menuCharges.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripCreditCharge});
+            this.menuCharges.Name = "menuCharges";
+            this.menuCharges.Size = new System.Drawing.Size(148, 26);
+            // 
+            // toolStripCreditCharge
+            // 
+            this.toolStripCreditCharge.Name = "toolStripCreditCharge";
+            this.toolStripCreditCharge.Size = new System.Drawing.Size(147, 22);
+            this.toolStripCreditCharge.Text = "Credit Charge";
+            this.toolStripCreditCharge.Click += new System.EventHandler(this.ToolStripCreditCharge_Click);
+            // 
+            // tabPayments
+            // 
+            this.tabPayments.Controls.Add(this.label10);
+            this.tabPayments.Controls.Add(this.tbTotalPmtAll);
+            this.tabPayments.Controls.Add(this.label9);
+            this.tabPayments.Controls.Add(this.tbTotalWriteOff);
+            this.tabPayments.Controls.Add(this.label8);
+            this.tabPayments.Controls.Add(this.tbTotalContractual);
+            this.tabPayments.Controls.Add(this.label7);
+            this.tabPayments.Controls.Add(this.tbTotalPayment);
+            this.tabPayments.Controls.Add(this.dgvPayments);
+            this.tabPayments.Location = new System.Drawing.Point(4, 22);
+            this.tabPayments.Name = "tabPayments";
+            this.tabPayments.Size = new System.Drawing.Size(1151, 556);
+            this.tabPayments.TabIndex = 7;
+            this.tabPayments.Text = "Payments / Adjustments";
+            this.tabPayments.UseVisualStyleBackColor = true;
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(222, 25);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(115, 13);
+            this.label10.TabIndex = 8;
+            this.label10.Text = "Total Pmt & Adjustments";
+            // 
+            // tbTotalPmtAll
+            // 
+            this.tbTotalPmtAll.Location = new System.Drawing.Point(347, 22);
+            this.tbTotalPmtAll.Name = "tbTotalPmtAll";
+            this.tbTotalPmtAll.ReadOnly = true;
+            this.tbTotalPmtAll.Size = new System.Drawing.Size(100, 20);
+            this.tbTotalPmtAll.TabIndex = 7;
+            this.tbTotalPmtAll.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(24, 77);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(76, 13);
+            this.label9.TabIndex = 6;
+            this.label9.Text = "Total Write Off";
+            // 
+            // tbTotalWriteOff
+            // 
+            this.tbTotalWriteOff.Location = new System.Drawing.Point(106, 74);
+            this.tbTotalWriteOff.Name = "tbTotalWriteOff";
+            this.tbTotalWriteOff.ReadOnly = true;
+            this.tbTotalWriteOff.Size = new System.Drawing.Size(100, 20);
+            this.tbTotalWriteOff.TabIndex = 5;
+            this.tbTotalWriteOff.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(12, 51);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(88, 13);
+            this.label8.TabIndex = 4;
+            this.label8.Text = "Total Contractual";
+            // 
+            // tbTotalContractual
+            // 
+            this.tbTotalContractual.Location = new System.Drawing.Point(106, 48);
+            this.tbTotalContractual.Name = "tbTotalContractual";
+            this.tbTotalContractual.ReadOnly = true;
+            this.tbTotalContractual.Size = new System.Drawing.Size(100, 20);
+            this.tbTotalContractual.TabIndex = 3;
+            this.tbTotalContractual.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(25, 25);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(75, 13);
+            this.label7.TabIndex = 2;
+            this.label7.Text = "Total Payment";
+            // 
+            // tbTotalPayment
+            // 
+            this.tbTotalPayment.Location = new System.Drawing.Point(106, 22);
+            this.tbTotalPayment.Name = "tbTotalPayment";
+            this.tbTotalPayment.ReadOnly = true;
+            this.tbTotalPayment.Size = new System.Drawing.Size(100, 20);
+            this.tbTotalPayment.TabIndex = 1;
+            this.tbTotalPayment.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // dgvPayments
+            // 
+            this.dgvPayments.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvPayments.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle5;
+            this.dgvPayments.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dgvPayments.DefaultCellStyle = dataGridViewCellStyle6;
+            this.dgvPayments.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
+            this.dgvPayments.Location = new System.Drawing.Point(3, 115);
+            this.dgvPayments.Name = "dgvPayments";
+            this.dgvPayments.RowHeadersVisible = false;
+            this.dgvPayments.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dgvPayments.Size = new System.Drawing.Size(1145, 438);
+            this.dgvPayments.TabIndex = 0;
+            this.dgvPayments.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DgvPayments_CellDoubleClick);
+            // 
+            // tabNotes
+            // 
+            this.tabNotes.Controls.Add(this.btnNoteAdd);
+            this.tabNotes.Controls.Add(this.tbNotesDisplay);
+            this.tabNotes.Location = new System.Drawing.Point(4, 22);
+            this.tabNotes.Name = "tabNotes";
+            this.tabNotes.Size = new System.Drawing.Size(1151, 556);
+            this.tabNotes.TabIndex = 5;
+            this.tabNotes.Text = "Notes";
+            this.tabNotes.UseVisualStyleBackColor = true;
+            // 
+            // btnNoteAdd
+            // 
+            this.btnNoteAdd.Location = new System.Drawing.Point(604, 3);
+            this.btnNoteAdd.Name = "btnNoteAdd";
+            this.btnNoteAdd.Size = new System.Drawing.Size(75, 23);
+            this.btnNoteAdd.TabIndex = 1;
+            this.btnNoteAdd.Text = "Add Note";
+            this.btnNoteAdd.UseVisualStyleBackColor = true;
+            this.btnNoteAdd.Click += new System.EventHandler(this.BtnNoteAdd_Click);
+            // 
+            // tbNotesDisplay
+            // 
+            this.tbNotesDisplay.Dock = System.Windows.Forms.DockStyle.Left;
+            this.tbNotesDisplay.Location = new System.Drawing.Point(0, 0);
+            this.tbNotesDisplay.Name = "tbNotesDisplay";
+            this.tbNotesDisplay.ReadOnly = true;
+            this.tbNotesDisplay.Size = new System.Drawing.Size(598, 556);
+            this.tbNotesDisplay.TabIndex = 0;
+            this.tbNotesDisplay.Text = "";
+            // 
+            // tabBillingActivity
+            // 
+            this.tabBillingActivity.Controls.Add(this.dgvBillActivity);
+            this.tabBillingActivity.Location = new System.Drawing.Point(4, 22);
+            this.tabBillingActivity.Name = "tabBillingActivity";
+            this.tabBillingActivity.Padding = new System.Windows.Forms.Padding(3);
+            this.tabBillingActivity.Size = new System.Drawing.Size(1151, 556);
+            this.tabBillingActivity.TabIndex = 12;
+            this.tabBillingActivity.Text = "Billing Activity";
+            this.tabBillingActivity.UseVisualStyleBackColor = true;
+            // 
+            // dgvBillActivity
+            // 
+            this.dgvBillActivity.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dgvBillActivity.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvBillActivity.Location = new System.Drawing.Point(6, 24);
+            this.dgvBillActivity.Name = "dgvBillActivity";
+            this.dgvBillActivity.Size = new System.Drawing.Size(1115, 150);
+            this.dgvBillActivity.TabIndex = 0;
+            // 
+            // menuStrip1
+            // 
+            this.menuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.accountToolStripMenuItem,
+            this.billingToolStripMenuItem,
+            this.personSearchToolStripMenuItem});
+            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip1.Name = "menuStrip1";
+            this.menuStrip1.Size = new System.Drawing.Size(1159, 24);
+            this.menuStrip1.TabIndex = 8;
+            this.menuStrip1.Text = "menuStrip1";
+            // 
+            // accountToolStripMenuItem
+            // 
+            this.accountToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.changeDateOfServiceToolStripMenuItem,
+            this.changeFinancialClassToolStripMenuItem,
+            this.changeClientToolStripMenuItem,
+            this.viewAuditInfoToolStripMenuItem,
+            this.clearHoldStatusToolStripMenuItem});
+            this.accountToolStripMenuItem.Name = "accountToolStripMenuItem";
+            this.accountToolStripMenuItem.Size = new System.Drawing.Size(64, 20);
+            this.accountToolStripMenuItem.Text = "Account";
+            // 
+            // changeDateOfServiceToolStripMenuItem
+            // 
+            this.changeDateOfServiceToolStripMenuItem.Name = "changeDateOfServiceToolStripMenuItem";
+            this.changeDateOfServiceToolStripMenuItem.Size = new System.Drawing.Size(196, 22);
+            this.changeDateOfServiceToolStripMenuItem.Text = "Change Date of Service";
+            this.changeDateOfServiceToolStripMenuItem.Click += new System.EventHandler(this.ChangeDateOfServiceToolStripMenuItem_Click);
+            // 
+            // changeFinancialClassToolStripMenuItem
+            // 
+            this.changeFinancialClassToolStripMenuItem.Name = "changeFinancialClassToolStripMenuItem";
+            this.changeFinancialClassToolStripMenuItem.Size = new System.Drawing.Size(196, 22);
+            this.changeFinancialClassToolStripMenuItem.Text = "Change Financial Class";
+            this.changeFinancialClassToolStripMenuItem.Click += new System.EventHandler(this.ChangeFinancialClassToolStripMenuItem_Click);
+            // 
+            // changeClientToolStripMenuItem
+            // 
+            this.changeClientToolStripMenuItem.Name = "changeClientToolStripMenuItem";
+            this.changeClientToolStripMenuItem.Size = new System.Drawing.Size(196, 22);
+            this.changeClientToolStripMenuItem.Text = "Change Client";
+            this.changeClientToolStripMenuItem.Click += new System.EventHandler(this.ChangeClientToolStripMenuItem_Click);
+            // 
+            // viewAuditInfoToolStripMenuItem
+            // 
+            this.viewAuditInfoToolStripMenuItem.Name = "viewAuditInfoToolStripMenuItem";
+            this.viewAuditInfoToolStripMenuItem.Size = new System.Drawing.Size(196, 22);
+            this.viewAuditInfoToolStripMenuItem.Text = "View Audit Info";
+            // 
+            // clearHoldStatusToolStripMenuItem
+            // 
+            this.clearHoldStatusToolStripMenuItem.Name = "clearHoldStatusToolStripMenuItem";
+            this.clearHoldStatusToolStripMenuItem.Size = new System.Drawing.Size(196, 22);
+            this.clearHoldStatusToolStripMenuItem.Text = "Clear Hold Status";
+            this.clearHoldStatusToolStripMenuItem.Click += new System.EventHandler(this.ClearHoldStatusToolStripMenuItem_Click);
+            // 
+            // billingToolStripMenuItem
+            // 
+            this.billingToolStripMenuItem.Name = "billingToolStripMenuItem";
+            this.billingToolStripMenuItem.Size = new System.Drawing.Size(52, 20);
+            this.billingToolStripMenuItem.Text = "Billing";
+            // 
+            // personSearchToolStripMenuItem
+            // 
+            this.personSearchToolStripMenuItem.Name = "personSearchToolStripMenuItem";
+            this.personSearchToolStripMenuItem.Size = new System.Drawing.Size(93, 20);
+            this.personSearchToolStripMenuItem.Text = "Person Search";
+            this.personSearchToolStripMenuItem.Click += new System.EventHandler(this.PersonSearchToolStripMenuItem_Click);
+            // 
+            // tbBannerMRN
+            // 
+            this.tbBannerMRN.BackColor = System.Drawing.Color.Blue;
+            this.tbBannerMRN.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.tbBannerMRN.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbBannerMRN.ForeColor = System.Drawing.Color.White;
+            this.tbBannerMRN.Location = new System.Drawing.Point(686, 32);
+            this.tbBannerMRN.Name = "tbBannerMRN";
+            this.tbBannerMRN.ReadOnly = true;
+            this.tbBannerMRN.Size = new System.Drawing.Size(94, 22);
+            this.tbBannerMRN.TabIndex = 26;
+            // 
+            // tbBannerAccount
+            // 
+            this.tbBannerAccount.BackColor = System.Drawing.Color.Blue;
+            this.tbBannerAccount.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.tbBannerAccount.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbBannerAccount.ForeColor = System.Drawing.Color.White;
+            this.tbBannerAccount.Location = new System.Drawing.Point(586, 32);
+            this.tbBannerAccount.Name = "tbBannerAccount";
+            this.tbBannerAccount.ReadOnly = true;
+            this.tbBannerAccount.Size = new System.Drawing.Size(94, 22);
+            this.tbBannerAccount.TabIndex = 25;
+            // 
+            // tbBannerSex
+            // 
+            this.tbBannerSex.BackColor = System.Drawing.Color.Blue;
+            this.tbBannerSex.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.tbBannerSex.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbBannerSex.ForeColor = System.Drawing.Color.White;
+            this.tbBannerSex.Location = new System.Drawing.Point(435, 34);
+            this.tbBannerSex.Name = "tbBannerSex";
+            this.tbBannerSex.ReadOnly = true;
+            this.tbBannerSex.Size = new System.Drawing.Size(43, 19);
+            this.tbBannerSex.TabIndex = 24;
+            // 
+            // tbBannerDob
+            // 
+            this.tbBannerDob.BackColor = System.Drawing.Color.Blue;
+            this.tbBannerDob.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.tbBannerDob.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbBannerDob.ForeColor = System.Drawing.Color.White;
+            this.tbBannerDob.Location = new System.Drawing.Point(340, 34);
+            this.tbBannerDob.Name = "tbBannerDob";
+            this.tbBannerDob.ReadOnly = true;
+            this.tbBannerDob.Size = new System.Drawing.Size(94, 19);
+            this.tbBannerDob.TabIndex = 23;
+            // 
+            // tbBannerName
+            // 
+            this.tbBannerName.BackColor = System.Drawing.Color.Blue;
+            this.tbBannerName.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.tbBannerName.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbBannerName.ForeColor = System.Drawing.Color.White;
+            this.tbBannerName.Location = new System.Drawing.Point(12, 34);
+            this.tbBannerName.Name = "tbBannerName";
+            this.tbBannerName.ReadOnly = true;
+            this.tbBannerName.Size = new System.Drawing.Size(251, 19);
+            this.tbBannerName.TabIndex = 22;
+            // 
+            // label38
+            // 
+            this.label38.AutoSize = true;
+            this.label38.ForeColor = System.Drawing.Color.White;
+            this.label38.Location = new System.Drawing.Point(278, 37);
+            this.label38.Name = "label38";
+            this.label38.Size = new System.Drawing.Size(56, 13);
+            this.label38.TabIndex = 21;
+            this.label38.Text = "DOB/Sex:";
+            // 
+            // label37
+            // 
+            this.label37.AutoSize = true;
+            this.label37.ForeColor = System.Drawing.Color.White;
+            this.label37.Location = new System.Drawing.Point(500, 37);
+            this.label37.Name = "label37";
+            this.label37.Size = new System.Drawing.Size(80, 13);
+            this.label37.TabIndex = 20;
+            this.label37.Text = "Account/MRN:";
+            // 
+            // btnRefresh
+            // 
+            this.btnRefresh.BackColor = System.Drawing.Color.LightSteelBlue;
+            this.btnRefresh.Image = global::LabBilling.Properties.Resources.refresh_icon;
+            this.btnRefresh.Location = new System.Drawing.Point(836, 32);
+            this.btnRefresh.Name = "btnRefresh";
+            this.btnRefresh.Size = new System.Drawing.Size(20, 22);
+            this.btnRefresh.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.btnRefresh.TabIndex = 28;
+            this.btnRefresh.TabStop = false;
+            this.btnRefresh.Click += new System.EventHandler(this.BtnRefresh_Click);
+            // 
+            // tbBannerClient
+            // 
+            this.tbBannerClient.BackColor = System.Drawing.Color.Blue;
+            this.tbBannerClient.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.tbBannerClient.ForeColor = System.Drawing.Color.White;
+            this.tbBannerClient.Location = new System.Drawing.Point(12, 60);
+            this.tbBannerClient.Name = "tbBannerClient";
+            this.tbBannerClient.Size = new System.Drawing.Size(251, 13);
+            this.tbBannerClient.TabIndex = 29;
+            // 
+            // tbBannerFinClass
+            // 
+            this.tbBannerFinClass.BackColor = System.Drawing.Color.Blue;
+            this.tbBannerFinClass.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.tbBannerFinClass.ForeColor = System.Drawing.Color.White;
+            this.tbBannerFinClass.Location = new System.Drawing.Point(349, 60);
+            this.tbBannerFinClass.Name = "tbBannerFinClass";
+            this.tbBannerFinClass.Size = new System.Drawing.Size(100, 13);
+            this.tbBannerFinClass.TabIndex = 30;
+            // 
+            // label60
+            // 
+            this.label60.AutoSize = true;
+            this.label60.ForeColor = System.Drawing.Color.White;
+            this.label60.Location = new System.Drawing.Point(269, 60);
+            this.label60.Name = "label60";
+            this.label60.Size = new System.Drawing.Size(80, 13);
+            this.label60.TabIndex = 31;
+            this.label60.Text = "Financial Class:";
+            // 
+            // AccountForm
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScroll = true;
+            this.BackColor = System.Drawing.Color.Blue;
+            this.ClientSize = new System.Drawing.Size(1159, 681);
+            this.Controls.Add(this.label60);
+            this.Controls.Add(this.tbBannerFinClass);
+            this.Controls.Add(this.tbBannerClient);
+            this.Controls.Add(this.btnRefresh);
+            this.Controls.Add(this.tbBannerMRN);
+            this.Controls.Add(this.tbBannerAccount);
+            this.Controls.Add(this.tbBannerSex);
+            this.Controls.Add(this.tbBannerDob);
+            this.Controls.Add(this.tbBannerName);
+            this.Controls.Add(this.label38);
+            this.Controls.Add(this.label37);
+            this.Controls.Add(this.tabControl1);
+            this.Controls.Add(this.menuStrip1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MainMenuStrip = this.menuStrip1;
+            this.Name = "AccountForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.Text = "Lab Billing Account";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.AccountForm_FormClosing);
+            this.Load += new System.EventHandler(this.AccountForm_Load);
+            this.tabControl1.ResumeLayout(false);
+            this.summaryTab.ResumeLayout(false);
+            this.tabDemographics.ResumeLayout(false);
+            this.tabDemographics.PerformLayout();
+            this.tabInsurance.ResumeLayout(false);
+            this.tableLayoutPanel1.ResumeLayout(false);
+            this.tableLayoutPanel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvInsurance)).EndInit();
+            this.tabDiagnosis.ResumeLayout(false);
+            this.tabDiagnosis.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.btnDxDelete)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvDxSearch)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvDiagnosis)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.btnDxSearch)).EndInit();
+            this.tabCharges.ResumeLayout(false);
+            this.tabCharges.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvChrgDetail)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvCharges)).EndInit();
+            this.menuCharges.ResumeLayout(false);
+            this.tabPayments.ResumeLayout(false);
+            this.tabPayments.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvPayments)).EndInit();
+            this.tabNotes.ResumeLayout(false);
+            this.tabBillingActivity.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dgvBillActivity)).EndInit();
+            this.menuStrip1.ResumeLayout(false);
+            this.menuStrip1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.btnRefresh)).EndInit();
+            this.ResumeLayout(false);
+            this.PerformLayout();
+
+        }
+
+        #endregion
+        private System.Windows.Forms.TabControl tabControl1;
+        private System.Windows.Forms.TabPage summaryTab;
+        private System.Windows.Forms.TabPage tabNotes;
+        private System.Windows.Forms.TableLayoutPanel summaryTable;
+        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem accountToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem changeDateOfServiceToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem changeFinancialClassToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem changeClientToolStripMenuItem;
+        private System.Windows.Forms.TabPage tabCharges;
+        private System.Windows.Forms.TabPage tabPayments;
+        private System.Windows.Forms.TextBox tbBannerMRN;
+        private System.Windows.Forms.TextBox tbBannerAccount;
+        private System.Windows.Forms.TextBox tbBannerSex;
+        private System.Windows.Forms.TextBox tbBannerDob;
+        private System.Windows.Forms.TextBox tbBannerName;
+        private System.Windows.Forms.Label label38;
+        private System.Windows.Forms.Label label37;
+        private System.Windows.Forms.ToolStripMenuItem personSearchToolStripMenuItem;
+        private System.Windows.Forms.DataGridView dgvCharges;
+        private System.Windows.Forms.DataGridView dgvPayments;
+        private System.Windows.Forms.TabPage tabDiagnosis;
+        private System.Windows.Forms.DataGridView dgvDiagnosis;
+        private System.Windows.Forms.PictureBox btnDxSearch;
+        private System.Windows.Forms.TextBox txtSearchDx;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.DataGridView dgvDxSearch;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.TextBox txtDxQuickAdd;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Button btnSaveDx;
+        private System.Windows.Forms.PictureBox btnDxDelete;
+        private System.Windows.Forms.PictureBox btnRefresh;
+        private System.Windows.Forms.DataGridView dgvChrgDetail;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.ContextMenuStrip menuCharges;
+        private System.Windows.Forms.ToolStripMenuItem toolStripCreditCharge;
+        private System.Windows.Forms.CheckBox ckShowCreditedChrg;
+        private System.Windows.Forms.TextBox tbTotalCharges;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.TextBox tbTotalPayment;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.TextBox tbTotalWriteOff;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.TextBox tbTotalContractual;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.TextBox tbTotalPmtAll;
+        private System.Windows.Forms.Button btnAddCharge;
+        private System.Windows.Forms.RichTextBox tbNotesDisplay;
+        private System.Windows.Forms.Button btnNoteAdd;
+        private System.Windows.Forms.TabPage tabDemographics;
+        private System.Windows.Forms.TabPage tabInsurance;
+        private System.Windows.Forms.MaskedTextBox tbZipcode;
+        private System.Windows.Forms.ComboBox cbMaritalStatus;
+        private System.Windows.Forms.Label label20;
+        private System.Windows.Forms.Label label18;
+        private System.Windows.Forms.TextBox tbEmailAddress;
+        private System.Windows.Forms.TextBox tbSuffix;
+        private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.TextBox tbMiddleName;
+        private System.Windows.Forms.TextBox tbFirstName;
+        private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.ComboBox cbState;
+        private System.Windows.Forms.MaskedTextBox tbSSN;
+        private System.Windows.Forms.MaskedTextBox tbDateOfBirth;
+        private System.Windows.Forms.Label label16;
+        private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.Label label19;
+        private System.Windows.Forms.Label label21;
+        private System.Windows.Forms.TextBox tbPhone;
+        private System.Windows.Forms.TextBox tbCity;
+        private System.Windows.Forms.TextBox tbAddress2;
+        private System.Windows.Forms.ComboBox cbSex;
+        private System.Windows.Forms.Label label22;
+        private System.Windows.Forms.Label label23;
+        private System.Windows.Forms.Label label24;
+        private System.Windows.Forms.Label label25;
+        private System.Windows.Forms.TextBox tbAddress1;
+        private System.Windows.Forms.TextBox tbLastName;
+        private System.Windows.Forms.MaskedTextBox tbGuarZip;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+        private System.Windows.Forms.Label label31;
+        private System.Windows.Forms.DataGridView dgvInsurance;
+        private System.Windows.Forms.Button bSaveInsurance;
+        private System.Windows.Forms.LinkLabel lInsCopyPatient;
+        private System.Windows.Forms.ComboBox cbPlanFinCode;
+        private System.Windows.Forms.Label label48;
+        private System.Windows.Forms.TextBox tbCertSSN;
+        private System.Windows.Forms.TextBox tbHolderLastName;
+        private System.Windows.Forms.Label label35;
+        private System.Windows.Forms.TextBox tbGroupName;
+        private System.Windows.Forms.Label label36;
+        private System.Windows.Forms.Label label32;
+        private MTGCComboBox cbInsCode;
+        private System.Windows.Forms.TextBox tbHolderZip;
+        private System.Windows.Forms.TextBox tbGroupNumber;
+        private System.Windows.Forms.Label label42;
+        private System.Windows.Forms.Label label34;
+        private System.Windows.Forms.TextBox tbPlanAddress2;
+        private System.Windows.Forms.ComboBox cbInsRelation;
+        private System.Windows.Forms.Label label33;
+        private System.Windows.Forms.TextBox tbPolicyNumber;
+        private System.Windows.Forms.Label label41;
+        private System.Windows.Forms.MaskedTextBox tbHolderDOB;
+        private System.Windows.Forms.Label label47;
+        private System.Windows.Forms.Label label49;
+        private System.Windows.Forms.ComboBox cbHolderState;
+        private System.Windows.Forms.TextBox tbHolderFirstName;
+        private System.Windows.Forms.Label label50;
+        private System.Windows.Forms.Label label51;
+        private System.Windows.Forms.ComboBox cbInsOrder;
+        private System.Windows.Forms.ComboBox cbHolderSex;
+        private System.Windows.Forms.Label label52;
+        private System.Windows.Forms.Label label53;
+        private System.Windows.Forms.TextBox tbHolderMiddleName;
+        private System.Windows.Forms.Label label54;
+        private System.Windows.Forms.TextBox tbPlanName;
+        private System.Windows.Forms.Label label55;
+        private System.Windows.Forms.TextBox tbHolderAddress;
+        private System.Windows.Forms.TextBox tbPlanCitySt;
+        private System.Windows.Forms.Label label56;
+        private System.Windows.Forms.Label label57;
+        private System.Windows.Forms.TextBox tbPlanAddress;
+        private System.Windows.Forms.TextBox tbHolderCity;
+        private System.Windows.Forms.Label label58;
+        private System.Windows.Forms.Label label59;
+        private System.Windows.Forms.Button SaveDemographics;
+        private System.Windows.Forms.Label label71;
+        private System.Windows.Forms.Label label70;
+        private System.Windows.Forms.Label label46;
+        private System.Windows.Forms.TextBox tbGuarSuffix;
+        private System.Windows.Forms.TextBox tbGuarMiddleName;
+        private System.Windows.Forms.Label label44;
+        private System.Windows.Forms.TextBox tbGuarFirstName;
+        private System.Windows.Forms.Label label43;
+        private System.Windows.Forms.Label label40;
+        private System.Windows.Forms.ComboBox cbGuarState;
+        private System.Windows.Forms.Label label39;
+        private System.Windows.Forms.Label label26;
+        private System.Windows.Forms.ComboBox cbGuarantorRelation;
+        private System.Windows.Forms.TextBox tbGuarantorPhone;
+        private System.Windows.Forms.Label label27;
+        private System.Windows.Forms.TextBox tbGuarCity;
+        private System.Windows.Forms.Label label28;
+        private System.Windows.Forms.TextBox tbGuarantorAddress;
+        private System.Windows.Forms.Label label29;
+        private System.Windows.Forms.TextBox tbGuarantorLastName;
+        private System.Windows.Forms.Label label30;
+        private System.Windows.Forms.LinkLabel lGuarCopyPatient;
+        private System.Windows.Forms.Label label45;
+        private System.Windows.Forms.TabPage tabBillingActivity;
+        private System.Windows.Forms.ToolStripMenuItem viewAuditInfoToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem clearHoldStatusToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem billingToolStripMenuItem;
+        private System.Windows.Forms.TextBox tbBannerClient;
+        private System.Windows.Forms.TextBox tbBannerFinClass;
+        private System.Windows.Forms.Label label60;
+        private System.Windows.Forms.DataGridView dgvBillActivity;
+    }
+}
+

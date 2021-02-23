@@ -1,0 +1,81 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace LabBilling.Library
+{
+    public class StateComboBox : ComboBox
+    {
+        public StateComboBox() 
+        {
+            this.DataSource = new BindingSource(stateSource, null);
+            this.DisplayMember = "Value";
+            this.ValueMember = "Key";
+        }
+
+        private static Dictionary<string, string> stateSource = new Dictionary<string, string>
+            {
+                { "", "--Select--" },
+                { "AL", "Alabama" },
+                { "AK", "Alaska" },
+                { "AS", "American Samoa" },
+                { "AZ", "Arizona" },
+                { "AR", "Arkansas" },
+                { "CA", "California" },
+                { "CO", "Colorado" },
+                { "CT", "Connecticut" },
+                { "DE", "Delaware" },
+                { "DC", "District of Columbia" },
+                { "FL", "Florida" },
+                { "GA", "Georgia" },
+                { "GU", "Guam" },
+                { "HI", "Hawaii" },
+                { "ID", "Idaho" },
+                { "IL", "Illinois" },
+                { "IN", "Indiana" },
+                { "IA", "Iowa" },
+                { "KS", "Kansas" },
+                { "KY", "Kentucky" },
+                { "LA", "Louisiana" },
+                { "ME", "Maine" },
+                { "MD", "Maryland" },
+                { "MA", "Massachusetts" },
+                { "MI", "Michigan" },
+                { "MN", "Minnesota" },
+                { "UM", "Minor Outlying Islands" },
+                { "MS", "Mississippi" },
+                { "MO", "Missouri" },
+                { "MT", "Montana" },
+                { "NE", "Nebraska" },
+                { "NV", "Nevada" },
+                { "NH", "New Hampshire" },
+                { "NJ", "New Jersey" },
+                { "NM", "New Mexico" },
+                { "NY", "New York" },
+                { "NC", "North Carolina" },
+                { "ND", "North Dakota" },
+                { "MP", "Northern Mariana Islands" },
+                { "OH", "Ohio" },
+                { "OK", "Oklahoma" },
+                { "OR", "Oregon" },
+                { "PA", "Pennsylvania" },
+                { "PR", "Puerto Rico" },
+                { "RI", "Rhode Island" },
+                { "SC", "South Carolina" },
+                { "SD", "South Dakota" },
+                { "TN", "Tennessee" },
+                { "TX", "Texas" },
+                { "VI", "U.S. Virgin Islands" },
+                { "UT", "Utah" },
+                { "VT", "Vermont" },
+                { "VA", "Virginia" },
+                { "WA", "Washington" },
+                { "WV", "West Virginia" },
+                { "WI", "Wisconsin" },
+                { "WY", "Wyoming" }
+            };
+    }
+}

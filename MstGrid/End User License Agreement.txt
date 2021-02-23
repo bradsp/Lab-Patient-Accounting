@@ -1,0 +1,23 @@
+END-USER LICENSE AGREEMENT
+
+IMPORTANT-READ CAREFULLY: This End-User License Agreement ("EULA") is a legal agreement between you (either an individual or a single entity) and BaiqiSoft for the software MstGrid Control for NET later referred to as 'SOFTWARE'. By installing, copying, or otherwise using the SOFTWARE you agree to be bound by the terms of this EULA. If you do not agree to the terms of this EULA, do not install or use the SOFTWARE.
+
+SOFTWARE LICENSE
+
+1. The SOFTWARE is licensed, not sold. Copyright laws and international copyright treaties, as well as other intellectual property laws and treaties protect the SOFTWARE.
+
+2. GRANT OF LICENSE.
+
+(a) Trial Version: The trial version of the SOFTWARE can be used for evaluation only. If you find this SOFTWARE useful and want to use it in your software products, you must purchase Developer License based on the number of developers in your development team who are using this control to develop your applications.
+   
+(b) Full Version: After you have purchased the license from BaiqiSoft, we will send you the License Key and Full Version download link via email, once this information is emailed to you, no refunds will be given. You can develop unlimited numbers of COMMERCIAL applications using the full version and distribute the applications along with the full version without paying any royalty.
+
+3. RESTRICTIONS. You may not reverse engineer, decompile or disassemble this SOFTWARE, except and only to the extent that such activity is expressly permitted by applicable law notwithstanding this limitation. You shall not sale, lease or transfer this SOFTWARE. You shall use this SOFTWARE in compliance with all applicable laws of software products. 
+
+4. WARRANTY. BaiqiSoft warrants that this SOFTWARE does not embody any malignant code. To the maximum extent permitted by applicable law, in no event shall BaiqiSoft be liable to you for any consequential, special, incidental or indirect damages of any kind (Including, but not limited to, damages for program run-time error, for loss of usability, for loss of profit, for business interruption) or for any claim for compensation, arising out of the use of this SOFTWARE, even if BaiqiSoft has been advised of the possibility of such damages.
+
+5. TERMINATION. If you are in breach of any of the terms and conditions of this agreement, BaiqiSoft can terminate the license at any time. Upon termination, you shall immediately destroy all copies of the Software and its documentation.
+
+6. COPYRIGHT. The SOFTWARE is protected by copyright law and international treaty provisions. You acknowledge that no title to the intellectual property in the SOFTWARE is transferred to you. You further acknowledge that title and full ownership rights to the SOFTWARE will remain the exclusive property of BaiqiSoft and you will not acquire any rights to the SOFTWARE except as expressly set forth in this license. You agree that any copies of the SOFTWARE will contain the same proprietary notices which appear on and in the SOFTWARE.
+
+BaiqiSoft reserves all rights not expressly granted here.

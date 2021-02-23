@@ -1,0 +1,550 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{F8C8C4A8-005A-49DB-A560-9A78141665B5}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>LabBilling</RootNamespace>
+    <AssemblyName>LabBilling</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>x64</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="MDIWindowManager, Version=2.1.2521.32075, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MDIWindowManager.2.1.0\lib\MDIWindowManager.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="MstGrid, Version=4.20.12.4, Culture=neutral, PublicKeyToken=8ee81cea60080003, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\MstGrid\MstGrid.dll</HintPath>
+    </Reference>
+    <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <HintPath>..\packages\NLog.4.7.7\lib\net45\NLog.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.SqlClient, Version=4.6.1.2, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Data.SqlClient.4.8.2\lib\net461\System.Data.SqlClient.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Design" />
+    <Reference Include="System.IO.Compression, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Forms\ClientInvoiceForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ClientInvoiceForm.Designer.cs">
+      <DependentUpon>ClientInvoiceForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Legacy Forms\CDMMaintenance.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Legacy Forms\CDMMaintenance.Designer.cs">
+      <DependentUpon>CDMMaintenance.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Legacy Forms\ClientBillForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Legacy Forms\ClientBillForm.Designer.cs">
+      <DependentUpon>ClientBillForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Legacy Forms\DuplicateAccountForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Legacy Forms\DuplicateAccountForm.Designer.cs">
+      <DependentUpon>DuplicateAccountForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Legacy Forms\FormDataCollection.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Legacy Forms\FormDataCollection.Designer.cs">
+      <DependentUpon>FormDataCollection.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Legacy Forms\GlobalBillingForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Legacy Forms\GlobalBillingForm.Designer.cs">
+      <DependentUpon>GlobalBillingForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Legacy Forms\InsuranceReportForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Legacy Forms\InsuranceReportForm.Designer.cs">
+      <DependentUpon>InsuranceReportForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Legacy Forms\MonthlyReportsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Legacy Forms\MonthlyReportsForm.Designer.cs">
+      <DependentUpon>MonthlyReportsForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Legacy Forms\Posting835.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Legacy Forms\Posting835.Designer.cs">
+      <DependentUpon>Posting835.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Legacy Forms\SSIForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Legacy Forms\SSIForm.Designer.cs">
+      <DependentUpon>SSIForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Legacy Forms\SSISortForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Legacy Forms\SSISortForm.Designer.cs">
+      <DependentUpon>SSISortForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Legacy Forms\ViewerHistoryForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Legacy Forms\ViewerHistoryForm.Designer.cs">
+      <DependentUpon>ViewerHistoryForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Legacy Forms\ViewerQuestCorrection.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Legacy Forms\ViewerQuestCorrection.Designer.cs">
+      <DependentUpon>ViewerQuestCorrection.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Legacy Forms\ViewerQuestForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Legacy Forms\ViewerQuestForm.Designer.cs">
+      <DependentUpon>ViewerQuestForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Library\LabeledTextBox.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Library\LabeledTextBox.Designer.cs">
+      <DependentUpon>LabeledTextBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Library\Opulos.Core\Accordion.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Library\DisplayPOCOForm.cs" />
+    <Compile Include="Library\Opulos.Core\FontEx.cs" />
+    <Compile Include="Library\Opulos.Core\FontExWPF.cs" />
+    <Compile Include="Library\InputBox.cs" />
+    <Compile Include="Library\Opulos.Core\IToolTips.cs" />
+    <Compile Include="Library\LookupBox.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Library\LookupBox.Designer.cs">
+      <DependentUpon>LookupBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Library\Opulos.Core\MultiKey.cs" />
+    <Compile Include="Library\Opulos.Core\OpacityEx.cs" />
+    <Compile Include="Library\Opulos.Core\ResizeBar.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Library\StateComboBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Library\Opulos.Core\StreamEx.cs" />
+    <Compile Include="SystemSettings.cs" />
+    <Compile Include="Forms\AboutBox.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\AboutBox.Designer.cs">
+      <DependentUpon>AboutBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\AskCloseTabForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\AskCloseTabForm.Designer.cs">
+      <DependentUpon>AskCloseTabForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\BadDebtEditForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\BadDebtEditForm.Designer.cs">
+      <DependentUpon>BadDebtEditForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\BadDebtForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\BadDebtForm.Designer.cs">
+      <DependentUpon>BadDebtForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\BatchChargeEntry.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\BatchChargeEntry.Designer.cs">
+      <DependentUpon>BatchChargeEntry.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\BatchRemittance.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\BatchRemittance.Designer.cs">
+      <DependentUpon>BatchRemittance.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ChargeEntryForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ChargeEntryForm.Designer.cs">
+      <DependentUpon>ChargeEntryForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ChargeMasterMaintenance.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ChargeMasterMaintenance.Designer.cs">
+      <DependentUpon>ChargeMasterMaintenance.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ClientsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ClientsForm.Designer.cs">
+      <DependentUpon>ClientsForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Dashboard.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Dashboard.Designer.cs">
+      <DependentUpon>Dashboard.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Library\Helper.cs" />
+    <Compile Include="Forms\AccountForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\AccountForm.Designer.cs">
+      <DependentUpon>AccountForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ErrorsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ErrorsForm.Designer.cs">
+      <DependentUpon>ErrorsForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\InterfaceMapping.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\InterfaceMapping.Designer.cs">
+      <DependentUpon>InterfaceMapping.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\NewAccountForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\NewAccountForm.Designer.cs">
+      <DependentUpon>NewAccountForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\PatBillForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\PatBillForm.Designer.cs">
+      <DependentUpon>PatBillForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\PhysicianMaintenanceForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\PhysicianMaintenanceForm.Designer.cs">
+      <DependentUpon>PhysicianMaintenanceForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\SummaryData.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\WorkQueue.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\WorkQueue.Designer.cs">
+      <DependentUpon>WorkQueue.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Login.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Login.Designer.cs">
+      <DependentUpon>Login.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\PersonSearchForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\PersonSearchForm.Designer.cs">
+      <DependentUpon>PersonSearchForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Forms\SystemParametersForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\SystemParametersForm.Designer.cs">
+      <DependentUpon>SystemParametersForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\UserSecurity.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\UserSecurity.Designer.cs">
+      <DependentUpon>UserSecurity.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\PhysicianMaintenanceView.cs" />
+    <None Include="NLog.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Resources\refresh-icon.png" />
+    <None Include="Resources\hiclipart.com-id_dbhyp.png" />
+    <None Include="Resources\lookup-icon-png-and-vector-for-free-download-pngtree-lookup-png-512_512.png" />
+    <EmbeddedResource Include="Forms\ClientInvoiceForm.resx">
+      <DependentUpon>ClientInvoiceForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Legacy Forms\CDMMaintenance.resx">
+      <DependentUpon>CDMMaintenance.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Legacy Forms\ClientBillForm.resx">
+      <DependentUpon>ClientBillForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Legacy Forms\DuplicateAccountForm.resx">
+      <DependentUpon>DuplicateAccountForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Legacy Forms\FormDataCollection.resx">
+      <DependentUpon>FormDataCollection.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Legacy Forms\GlobalBillingForm.resx">
+      <DependentUpon>GlobalBillingForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Legacy Forms\InsuranceReportForm.resx">
+      <DependentUpon>InsuranceReportForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Legacy Forms\MonthlyReportsForm.resx">
+      <DependentUpon>MonthlyReportsForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Legacy Forms\Posting835.resx">
+      <DependentUpon>Posting835.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Legacy Forms\SSIForm.resx">
+      <DependentUpon>SSIForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Legacy Forms\SSISortForm.resx">
+      <DependentUpon>SSISortForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Legacy Forms\ViewerHistoryForm.resx">
+      <DependentUpon>ViewerHistoryForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Legacy Forms\ViewerQuestCorrection.resx">
+      <DependentUpon>ViewerQuestCorrection.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Legacy Forms\ViewerQuestForm.resx">
+      <DependentUpon>ViewerQuestForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Library\LabeledTextBox.resx">
+      <DependentUpon>LabeledTextBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Library\LookupBox.resx">
+      <DependentUpon>LookupBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\AboutBox.resx">
+      <DependentUpon>AboutBox.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\AccountForm.resx">
+      <DependentUpon>AccountForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\AskCloseTabForm.resx">
+      <DependentUpon>AskCloseTabForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\BadDebtEditForm.resx">
+      <DependentUpon>BadDebtEditForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\BadDebtForm.resx">
+      <DependentUpon>BadDebtForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\BatchChargeEntry.resx">
+      <DependentUpon>BatchChargeEntry.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\BatchRemittance.resx">
+      <DependentUpon>BatchRemittance.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ChargeEntryForm.resx">
+      <DependentUpon>ChargeEntryForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ClientsForm.resx">
+      <DependentUpon>ClientsForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Dashboard.resx">
+      <DependentUpon>Dashboard.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ErrorsForm.resx">
+      <DependentUpon>ErrorsForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\InterfaceMapping.resx">
+      <DependentUpon>InterfaceMapping.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\NewAccountForm.resx">
+      <DependentUpon>NewAccountForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\PatBillForm.resx">
+      <DependentUpon>PatBillForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\PhysicianMaintenanceForm.resx">
+      <DependentUpon>PhysicianMaintenanceForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\WorkQueue.resx">
+      <DependentUpon>WorkQueue.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Login.resx">
+      <DependentUpon>Login.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\PersonSearchForm.resx">
+      <DependentUpon>PersonSearchForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <EmbeddedResource Include="Forms\SystemParametersForm.resx">
+      <DependentUpon>SystemParametersForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\UserSecurity.resx">
+      <DependentUpon>UserSecurity.cs</DependentUpon>
+    </EmbeddedResource>
+    <Content Include="MstGrid.dll" />
+    <Content Include="NLog.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.6.1">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.6.1 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\LabBilling Library\LabBilling Library.csproj">
+      <Project>{0890d249-b319-46be-8b8a-354687c334e8}</Project>
+      <Name>LabBilling Library</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MCL\MCL.csproj">
+      <Project>{f54e006c-aa33-48f2-9e2f-46cfb5d7ee47}</Project>
+      <Name>MCL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MTGCCombobox\MTGCCombobox.vbproj">
+      <Project>{109aa2e9-2903-44a6-a006-8ec12890c473}</Project>
+      <Name>MTGCCombobox</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PetaPoco\PetaPoco.csproj">
+      <Project>{98f3083d-2ce1-43e6-8ed5-cc91555763ac}</Project>
+      <Name>PetaPoco</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RFClassLibrary\RFClassLibrary.csproj">
+      <Project>{b15474ed-9185-437e-bac5-a19779cbe721}</Project>
+      <Name>RFClassLibrary</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\MCLctr.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\iconfinder_8_375259.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\iconfinder_checklist_job_seeker_employee_unemployee_work_2620529.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\contact.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\wthLogo.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="MDIWindowManager.xml" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

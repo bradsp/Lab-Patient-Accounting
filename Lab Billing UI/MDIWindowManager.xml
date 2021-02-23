@@ -1,0 +1,380 @@
+﻿<?xml version="1.0"?>
+<doc>
+<assembly>
+<name>
+MDIWindowManager
+</name>
+</assembly>
+<members>
+<member name="T:MDIWindowManager.IWrappedWindow">
+	<summary>
+ Implemented by child windows that need or want to be aware of the MDI Window Manager. (Optional)
+ </summary>
+	<remarks></remarks>
+</member><member name="T:MDIWindowManager.WindowsForm">
+	<summary>
+     Window List Dialog.
+ </summary>
+	<remarks>
+     Used by WindowManager to allow the
+     the display of a "Windows List" that can be manipulated directly by 
+     the end-user.
+ </remarks>
+</member><member name="T:MDIWindowManager.WrappedWindow">
+	<summary>
+ MDI Child Window Wrapper.
+ </summary>
+	<remarks>Used by WindowManagerPanel to
+ facilitate managing an MDI Child
+ window. This class controls the
+ appearance of the window and
+ intercepts events on behalf of the
+ child window.
+ </remarks>
+</member><member name="T:MDIWindowManager.DrawPanel">
+	<summary>
+ Drawing canvas preinitialized with double-buffering, etc.
+ </summary>
+	<remarks></remarks>
+</member><member name="P:MDIWindowManager.My.Resources.Resources.ResourceManager">
+	<summary>
+  Returns the cached ResourceManager instance used by this class.
+</summary>
+</member><member name="P:MDIWindowManager.My.Resources.Resources.Culture">
+	<summary>
+  Overrides the current thread's CurrentUICulture property for all
+  resource lookups using this strongly typed resource class.
+</summary>
+</member><member name="T:MDIWindowManager.My.Resources.Resources">
+	<summary>
+  A strongly-typed resource class, for looking up localized strings, etc.
+</summary>
+</member><member name="P:MDIWindowManager.WindowManagerPanel.Text">
+	<summary>
+ The text that will appear in the titlebar of the panel.
+ </summary>
+</member><member name="P:MDIWindowManager.WindowManagerPanel.TitleBackColor">
+	<summary>
+ The background color of the title.
+ </summary>
+</member><member name="P:MDIWindowManager.WindowManagerPanel.TitleForeColor">
+	<summary>
+ The foreground color of the title used to display text.
+ </summary>
+</member><member name="P:MDIWindowManager.WindowManagerPanel.ShowTitle">
+	<summary>
+ Show or hide the panel's titlebar.
+ </summary>
+</member><member name="P:MDIWindowManager.WindowManagerPanel.Anchor">
+	<summary>
+ Not supported.
+ </summary>
+</member><member name="P:MDIWindowManager.WindowManagerPanel.Dock">
+	<summary>
+ Not supported (See Orientation property).
+ </summary>
+</member><member name="P:MDIWindowManager.WindowManagerPanel.Orientation">
+	<summary>
+ Placement of the panel on the MDI parent form.
+ </summary>
+</member><member name="P:MDIWindowManager.WindowManagerPanel.Style">
+	<summary>
+ Look and feel of the tabs that represent the windows.
+ </summary>
+</member><member name="P:MDIWindowManager.WindowManagerPanel.ShowIcons">
+	<summary>
+ Show the icon of the associated window in its corresponding tab.
+ </summary>
+</member><member name="P:MDIWindowManager.WindowManagerPanel.AllowUserVerticalRepositioning">
+	<summary>
+ Allow user to reposition (up/down) the panel.
+ </summary>
+</member><member name="P:MDIWindowManager.WindowManagerPanel.AutoHide">
+	<summary>
+ Allows the panel to disappear when no windows exist.
+ </summary>
+</member><member name="P:MDIWindowManager.WindowManagerPanel.MinMode">
+	<summary>
+ Put the panel in a minimized mode.
+ </summary>
+</member><member name="P:MDIWindowManager.WindowManagerPanel.TabStrips">
+	<summary>
+ Gets the collection of horizontally tiled strips that currently exist in the panel.
+ </summary>
+</member><member name="P:MDIWindowManager.WindowManagerPanel.SelectedTabStrip">
+	<summary>
+ Gets or sets the tabstrip with the focus.
+ </summary>
+</member><member name="P:MDIWindowManager.WindowManagerPanel.AuxiliaryWindow">
+	<summary>
+ Gets or sets a window that will act as side-by-side pane.
+ </summary>
+</member><member name="P:MDIWindowManager.WindowManagerPanel.AutoDetectMdiChildWindows">
+	<summary>
+ Allows MDIWindowManager to automatically take control of MDI child windows.
+ </summary>
+</member><member name="P:MDIWindowManager.WindowManagerPanel.ShowLayoutButtons">
+	<summary>
+ Show or hide the window layout options buttons.
+ </summary>
+</member><member name="P:MDIWindowManager.WindowManagerPanel.ShowCloseButton">
+	<summary>
+ Show or hide the Close Window button.
+ </summary>
+</member><member name="P:MDIWindowManager.WindowManagerPanel.TabRenderMode">
+	<summary>
+ Allows you to select from a list of predefined TabProviders at design-time instead of using the CustomTabsProvider property.
+ </summary>
+</member><member name="P:MDIWindowManager.WindowManagerPanel.ButtonRenderMode">
+	<summary>
+ Specifies the look and feel for the buttons.
+ </summary>
+</member><member name="P:MDIWindowManager.WindowManagerPanel.CustomTabsProviderType">
+	<summary>
+ Allows you to specify a different provider for the look and feel of the tabs. (Set at design-time or app start only).
+ </summary>
+</member><member name="P:MDIWindowManager.WindowManagerPanel.EnableTabPaintEvent">
+	<summary>
+ Enables the TabPaint event to allow owner drawing of tabs.
+ </summary>
+</member><member name="P:MDIWindowManager.WindowManagerPanel.DisableCloseAction">
+	<summary>
+ Disable the Close action button and menu items.
+ </summary>
+</member><member name="P:MDIWindowManager.WindowManagerPanel.DisableTileAction">
+	<summary>
+ Disable the Tile action button and menu items.
+ </summary>
+</member><member name="P:MDIWindowManager.WindowManagerPanel.DisableHTileAction">
+	<summary>
+ Disable the New Horizontral Group action button and menu items.
+ </summary>
+</member><member name="P:MDIWindowManager.WindowManagerPanel.DisablePopoutAction">
+	<summary>
+ Disable the Popout Window action button and menu items.
+ </summary>
+</member><member name="M:MDIWindowManager.WindowManagerPanel.IsActivePanel">
+	<summary>
+ Determine whether this is the currently focused WindowManagerPanel.
+ </summary>
+</member><member name="M:MDIWindowManager.WindowManagerPanel.IsPrimaryPanel">
+	<summary>
+ Determine if this is the top primary panel on an MDI form.
+ </summary>
+</member><member name="M:MDIWindowManager.WindowManagerPanel.GetPrimaryPanel">
+	<summary>
+ (Reserved. Not intended for normal use. The Primary Panel is always the one created at design-time).
+ </summary>
+</member><member name="M:MDIWindowManager.WindowManagerPanel.GetAllWindows(System.Boolean)">
+	<summary>
+ Get all the windows being managed.
+ </summary>
+</member><member name="M:MDIWindowManager.WindowManagerPanel.GetAllSubPanels">
+	<summary>
+ Returns a collection containing all subpanels.
+ </summary>
+</member><member name="M:MDIWindowManager.WindowManagerPanel.GetActivePanel">
+	<summary>
+ Get the currently active panel.
+ </summary>
+</member><member name="M:MDIWindowManager.WindowManagerPanel.AddWindow(MDIWindowManager.WrappedWindow)">
+	<summary>
+ Add a window to the WindowManagerPanel.
+ </summary>
+</member><member name="M:MDIWindowManager.WindowManagerPanel.AddWindow(System.Windows.Forms.Form)">
+	<summary>
+ Add a window to the WindowManagerPanel.
+ </summary>
+</member><member name="M:MDIWindowManager.WindowManagerPanel.RemoveWindow(MDIWindowManager.WrappedWindow)">
+	<summary>
+ Remove a window from the WindowManagerPanel.
+ </summary>
+</member><member name="M:MDIWindowManager.WindowManagerPanel.RemoveWindow(System.Windows.Forms.Form)">
+	<summary>
+ Remove a window from the WindowManagerPanel.
+ </summary>
+</member><member name="M:MDIWindowManager.WindowManagerPanel.SetActiveWindow(MDIWindowManager.WrappedWindow)">
+	<summary>
+ Set the active window.
+ </summary>
+</member><member name="M:MDIWindowManager.WindowManagerPanel.SetActiveWindow(System.Windows.Forms.Form)">
+	<summary>
+ Set the active window.
+ </summary>
+</member><member name="M:MDIWindowManager.WindowManagerPanel.SetActiveWindow(System.Int32)">
+	<summary>
+ Set the active window.
+ </summary>
+</member><member name="M:MDIWindowManager.WindowManagerPanel.GetActiveWindow">
+	<summary>
+ Get the currently active window.
+ </summary>
+</member><member name="M:MDIWindowManager.WindowManagerPanel.UserCloseWindow(MDIWindowManager.WrappedWindow)">
+	<summary>
+ Helper method to close a window as if done by the user in order to get the desired Reason code in the window's Unload events.
+ </summary>
+</member><member name="M:MDIWindowManager.WindowManagerPanel.UserCloseWindow(System.Windows.Forms.IWin32Window)">
+	<summary>
+ Helper method to close a window as if done by the user in order to get the desired Reason code in the window's Unload events.
+ </summary>
+</member><member name="M:MDIWindowManager.WindowManagerPanel.IsTemporaryPanel">
+	<summary>
+ Determine if this panel will be automatically be unloaded when all its windows are closed 
+ </summary>
+</member><member name="M:MDIWindowManager.WindowManagerPanel.GetWrapperForWindow(System.Windows.Forms.Form,System.Boolean)">
+	<summary>
+ Find the wrapper object for a given window.
+ </summary>
+</member><member name="M:MDIWindowManager.WindowManagerPanel.GetWrappedWindowPanel(MDIWindowManager.WrappedWindow)">
+	<summary>
+ Search this panel and all subpanels to identify the panel that contains the specified wrapped window.
+ </summary>
+</member><member name="M:MDIWindowManager.WindowManagerPanel.GetWrappedWindowTabStrip(MDIWindowManager.WrappedWindow,System.Boolean)">
+	<summary>
+ Search this panel and all subpanels to identify the tabstrip that contains the specified wrapped window.
+ </summary>
+</member><member name="M:MDIWindowManager.WindowManagerPanel.IsWrappedWindowTiled(MDIWindowManager.WrappedWindow)">
+	<summary>
+ Determine if a wrapped window is alone in a tabstrip.
+ </summary>
+</member><member name="M:MDIWindowManager.WindowManagerPanel.IsWrappedWindowHTiled(MDIWindowManager.WrappedWindow)">
+	<summary>
+ Determine if a wrapped window is on a temporarily chained subpanel.
+ </summary>
+</member><member name="M:MDIWindowManager.WindowManagerPanel.IsWrappedWindowPoppedOut(MDIWindowManager.WrappedWindow)">
+	<summary>
+ Determine if a wrapped window is removed from the MDI parent and overlapping on the desktop.
+ </summary>
+</member><member name="M:MDIWindowManager.WindowManagerPanel.TileOrUntileWrappedWindow(MDIWindowManager.WrappedWindow)">
+	<summary>
+ Toggle tiling or untiling of a wrapped window.
+ </summary>
+</member><member name="M:MDIWindowManager.WindowManagerPanel.TileWrappedWindow(MDIWindowManager.WrappedWindow)">
+	<summary>
+ Create a new tabstrip and put a wrapped window in it.
+ </summary>
+</member><member name="M:MDIWindowManager.WindowManagerPanel.UntileWrappedWindow(MDIWindowManager.WrappedWindow)">
+	<summary>
+ Return the wrapped window to main tabstrip.
+ </summary>
+</member><member name="M:MDIWindowManager.WindowManagerPanel.HTileWrappedWindow(MDIWindowManager.WrappedWindow)">
+	<summary>
+ Add a new subpanel and put a wrapped window in it.
+ </summary>
+	<remarks></remarks>
+</member><member name="M:MDIWindowManager.WindowManagerPanel.PopOutWrappedWindow(MDIWindowManager.WrappedWindow)">
+	<summary>
+ Remove the wrapped window from the panel and place it on the desktop as an overlapping window.
+ </summary>
+</member><member name="M:MDIWindowManager.WindowManagerPanel.PopInWrappedWindow(MDIWindowManager.WrappedWindow)">
+	<summary>
+ Return an overlapping wrapped window to WindowManagerPanel.
+ </summary>
+</member><member name="M:MDIWindowManager.WindowManagerPanel.CloseAllWindows(System.Boolean)">
+	<summary>
+ Close all windows being managed.
+ </summary>
+	<remarks></remarks>
+</member><member name="M:MDIWindowManager.WindowManagerPanel.GetMDIClientAreaBounds">
+	<summary>
+ Helper function to easily get the adjusted MDIClient area bounds of the parent form.
+ </summary>
+</member><member name="M:MDIWindowManager.WindowManagerPanel.ToggleMinMode">
+	<summary>
+ Minimize the WindowManagerPanel.
+ </summary>
+</member><member name="M:MDIWindowManager.WindowManagerPanel.SnapToMinimumSize(System.Boolean)">
+	<summary>
+ Collapse the WindowManagerPanel to its smallest vertical size.
+ </summary>
+</member><member name="M:MDIWindowManager.WindowManagerPanel.ShowAllWindowsDialog">
+	<summary>
+ Display a dialog that displays all the windows in all panels.
+ </summary>
+</member><member name="M:MDIWindowManager.WindowManagerPanel.ShowAllWindowsDialog(System.Windows.Forms.IWin32Window)">
+	<summary>
+ Display a dialog that displays all the windows in all panels.
+ </summary>
+</member><member name="M:MDIWindowManager.WindowManagerPanel.GetAllWindowsMenu(System.Boolean)">
+	<summary>
+ Retrieve an array of menu items representing all open windows.
+ </summary>
+</member><member name="M:MDIWindowManager.WindowManagerPanel.GetAllWindowsMenu(System.Int32,System.Boolean)">
+	<summary>
+ Retrieve an array of menu items representing all open windows.
+ </summary>
+</member><member name="T:MDIWindowManager.WindowManagerPanel">
+	<summary>
+ Provides Tabbed MDI management for MDI Parent windows.
+ </summary>
+	<remarks></remarks>
+</member><member name="T:MDIWindowManager.WrappedWindowSplitter">
+	<summary>
+ Splitter class for WindowTabStrips.
+ </summary>
+	<remarks>Used to resize multiple WindowTabStrips (tiled windows).</remarks>
+</member><member name="T:MDIWindowManager.PoppedOutWindowsManager">
+	<summary>
+ Used to keep track of windows that are overlapping on the desktop and not directly managed by WindowManagerPanel.
+ </summary>
+	<remarks></remarks>
+</member><member name="T:MDIWindowManager.SystemTabsProvider">
+	<summary>
+ Alternative TabsProvider that uses the intrinsic .NET TabControl.
+ </summary>
+	<remarks>This class inherits from TabsProviderBase</remarks>
+</member><member name="T:MDIWindowManager.Global">
+	<summary>
+ Global helper procs and instantiated objects.
+ </summary>
+	<remarks></remarks>
+</member><member name="T:MDIWindowManager.WindowManagerButton">
+	<summary>
+ Custom drawn button used by MDIWindowManager.
+ </summary>
+	<remarks></remarks>
+</member><member name="T:MDIWindowManager.WindowTabStrip">
+	<summary>
+ Tabbed Windows Strip 
+ </summary>
+	<remarks>Facilitates vertical "tiling." Used by WindowManagerPanel to present multiple sets of tabbed windows.</remarks>
+</member><member name="T:MDIWindowManager.DummyForm">
+	<summary>
+ Blank flat form.
+ </summary>
+	<remarks>Used to create a blank area on the sides of wrapped windows where the MDI background shows through.</remarks>
+</member><member name="T:MDIWindowManager.StandardTabsProvider">
+	<summary>
+ Built-in default tabs provider.
+ </summary>
+	<remarks>Inherits from TabsProviderBase.</remarks>
+</member><member name="T:MDIWindowManager.WrappedWindowMenuItem">
+	<summary>
+ Custom MenuItem provided to help display wrapped windows in menus
+ </summary>
+	<remarks></remarks>
+</member><member name="T:MDIWindowManager.ButtonR">
+	<summary>
+ Rotated button control.
+ </summary>
+	<remarks>Used by WindowManagerPanel when in minimized mode.</remarks>
+</member><member name="T:MDIWindowManager.WindowManagerSplitter">
+	<summary>
+ Splitter class for WindowManagerPanel.
+ </summary>
+	<remarks>Allows for user repositioning of the borderless WindowManagerPanel.</remarks>
+</member><member name="T:MDIWindowManager.TabsProviderBase">
+	<summary>
+ Provides a starting point and contains a lot of the plumbing for TabsProviders.
+ </summary>
+	<remarks>By inheriting from this class instead of simply implementing ITabsProvider 
+ all a TabsProvider has to to do is drop some Tab control in the designer and 
+ respond to a couple of events.</remarks>
+</member><member name="T:MDIWindowManager.ITabsProvider">
+	<summary>
+ Interface that custom tab providers must implement.
+ </summary>
+	<remarks>See TabsProviderBase for a starting point to creating TabProviders.</remarks>
+</member>
+</members>
+</doc>

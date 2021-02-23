@@ -1,0 +1,22 @@
+﻿using LabBilling.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace LabBilling.DataAccess
+{
+    public class FinRepository : RepositoryBase<Fin>
+    {
+        public FinRepository(string connection) : base("fin", connection)
+        {
+
+        }
+
+        public override Fin GetById(int id)
+        {
+            throw new NotImplementedException();
+        }
+    }
+}

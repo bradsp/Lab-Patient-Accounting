@@ -1,0 +1,23 @@
+Microsoft Visual Studio Solution File, Format Version 8.00
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "MTGCCombobox", "MTGCCombobox.vbproj", "{109AA2E9-2903-44A6-A006-8EC12890C473}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfiguration) = preSolution
+		Debug = Debug
+		Release = Release
+	EndGlobalSection
+	GlobalSection(ProjectDependencies) = postSolution
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{109AA2E9-2903-44A6-A006-8EC12890C473}.Debug.ActiveCfg = Debug|.NET
+		{109AA2E9-2903-44A6-A006-8EC12890C473}.Debug.Build.0 = Debug|.NET
+		{109AA2E9-2903-44A6-A006-8EC12890C473}.Release.ActiveCfg = Release|.NET
+		{109AA2E9-2903-44A6-A006-8EC12890C473}.Release.Build.0 = Release|.NET
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal

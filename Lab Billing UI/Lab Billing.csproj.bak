@@ -1,0 +1,359 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{F8C8C4A8-005A-49DB-A560-9A78141665B5}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>LabBilling</RootNamespace>
+    <AssemblyName>LabBilling</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="MDIWindowManager, Version=2.1.2521.32075, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MDIWindowManager.2.1.0\lib\MDIWindowManager.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <HintPath>..\packages\NLog.4.6.7\lib\net45\NLog.dll</HintPath>
+    </Reference>
+    <Reference Include="PetaPoco, Version=6.0.415.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\PetaPoco.Compiled.6.0.415\lib\net45\PetaPoco.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.SqlClient, Version=4.6.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Data.SqlClient.4.7.0\lib\net461\System.Data.SqlClient.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Design" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DAL\AccountRepository.cs" />
+    <Compile Include="DAL\AmtRepository.cs" />
+    <Compile Include="DAL\ChkRepository.cs" />
+    <Compile Include="DAL\ChrgRepository.cs" />
+    <Compile Include="DAL\ClientRepository.cs" />
+    <Compile Include="DAL\DictDxRepository.cs" />
+    <Compile Include="DAL\FunctionRepository.cs" />
+    <Compile Include="DAL\GLCodeRepository.cs" />
+    <Compile Include="DAL\InsCompanyRepository.cs" />
+    <Compile Include="Library\LookupBox.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Library\LookupBox.Designer.cs">
+      <DependentUpon>LookupBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DictDx.cs" />
+    <Compile Include="DAL\EmpRepository.cs" />
+    <Compile Include="DAL\InsRepository.cs" />
+    <Compile Include="DAL\PatDxRepository.cs" />
+    <Compile Include="DAL\PatRepository.cs" />
+    <Compile Include="DAL\RepositoryBase.cs" />
+    <Compile Include="DAL\SystemParametersRepository.cs" />
+    <Compile Include="Library\Logging.cs" />
+    <Compile Include="Models\Amt.cs" />
+    <Compile Include="Models\Chk.cs" />
+    <Compile Include="Models\Chrg.cs" />
+    <Compile Include="Models\Dictionaries.cs" />
+    <Compile Include="Models\GLCode.cs" />
+    <Compile Include="Models\InsCompany.cs" />
+    <Compile Include="Models\Mapping.cs" />
+    <Compile Include="Models\PatDx.cs" />
+    <Compile Include="Models\SystemParameters.cs" />
+    <Compile Include="SystemSettings.cs" />
+    <Compile Include="UI\AboutBox.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\AboutBox.Designer.cs">
+      <DependentUpon>AboutBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\ClientsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\ClientsForm.Designer.cs">
+      <DependentUpon>ClientsForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Dashboard.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Dashboard.Designer.cs">
+      <DependentUpon>Dashboard.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Library\Helper.cs" />
+    <Compile Include="UI\AccountForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\AccountForm.Designer.cs">
+      <DependentUpon>AccountForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\DemographicsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\DemographicsForm.Designer.cs">
+      <DependentUpon>DemographicsForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\frmErrors.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\frmErrors.Designer.cs">
+      <DependentUpon>frmErrors.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\SummaryData.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\WorkQueue.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\WorkQueue.Designer.cs">
+      <DependentUpon>WorkQueue.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Login.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Login.Designer.cs">
+      <DependentUpon>Login.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Account.cs" />
+    <Compile Include="Models\AccountSearch.cs" />
+    <Compile Include="Models\Client.cs" />
+    <Compile Include="Models\Emp.cs" />
+    <Compile Include="Models\Ins.cs" />
+    <Compile Include="Models\Pat.cs" />
+    <Compile Include="UI\PersonSearchForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\PersonSearchForm.Designer.cs">
+      <DependentUpon>PersonSearchForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UI\SystemParametersForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\SystemParametersForm.Designer.cs">
+      <DependentUpon>SystemParametersForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\UserSecurity.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\UserSecurity.Designer.cs">
+      <DependentUpon>UserSecurity.cs</DependentUpon>
+    </Compile>
+    <None Include="Resources\hiclipart.com-id_dbhyp.png" />
+    <None Include="Resources\lookup-icon-png-and-vector-for-free-download-pngtree-lookup-png-512_512.png" />
+    <EmbeddedResource Include="Library\LookupBox.resx">
+      <DependentUpon>LookupBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\AboutBox.resx">
+      <DependentUpon>AboutBox.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\AccountForm.resx">
+      <DependentUpon>AccountForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\ClientsForm.resx">
+      <DependentUpon>ClientsForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Dashboard.resx">
+      <DependentUpon>Dashboard.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\DemographicsForm.resx">
+      <DependentUpon>DemographicsForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\frmErrors.resx">
+      <DependentUpon>frmErrors.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\WorkQueue.resx">
+      <DependentUpon>WorkQueue.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Login.resx">
+      <DependentUpon>Login.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\PersonSearchForm.resx">
+      <DependentUpon>PersonSearchForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <EmbeddedResource Include="UI\SystemParametersForm.resx">
+      <DependentUpon>SystemParametersForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\UserSecurity.resx">
+      <DependentUpon>UserSecurity.cs</DependentUpon>
+    </EmbeddedResource>
+    <Content Include="NLog.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Include="NLog.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.6.1">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.6.1 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MCL\MCL.csproj">
+      <Project>{f54e006c-aa33-48f2-9e2f-46cfb5d7ee47}</Project>
+      <Name>MCL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MonthlyReports\MonthlyReports.csproj">
+      <Project>{e5d60804-8e7c-40e6-a2aa-0205c320c98c}</Project>
+      <Name>MonthlyReports</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MTGCCombobox\MTGCCombobox.vbproj">
+      <Project>{109AA2E9-2903-44A6-A006-8EC12890C473}</Project>
+      <Name>MTGCCombobox</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ReportByInsuranceCompany\ReportByInsuranceCompany.csproj">
+      <Project>{efa6a1a6-64c8-4f83-ad4a-bec42807d706}</Project>
+      <Name>ReportByInsuranceCompany</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RFClassLibrary\RFClassLibrary.csproj">
+      <Project>{b15474ed-9185-437e-bac5-a19779cbe721}</Project>
+      <Name>RFClassLibrary</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ViewerBadDebt\ViewerBadDebt.csproj">
+      <Project>{fdaece75-5034-48df-a644-3402a2a1841a}</Project>
+      <Name>ViewerBadDebt</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ViewerCDM\ViewerCDM.csproj">
+      <Project>{062baa47-430d-4f23-b74c-3e4a12a14bf2}</Project>
+      <Name>ViewerCDM</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ViewerClientBill\ViewerClientBill.csproj">
+      <Project>{7fcd1379-2d14-481b-8fb9-5b28b67112f3}</Project>
+      <Name>ViewerClientBill</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ViewerDupAcc\ViewerDupAcc.csproj">
+      <Project>{4b7cc166-0cf2-4e42-bbd3-41de3c46c51f}</Project>
+      <Name>ViewerDupAcc</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ViewerGlobalBilling\ViewerGlobalBilling.csproj">
+      <Project>{96690b91-f5cf-4f92-ba58-77266ca07694}</Project>
+      <Name>ViewerGlobalBilling</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ViewerQuestCorrection\ViewerQuestCorrection.csproj">
+      <Project>{cb89e37f-b033-4212-a2ac-7ea4426fa31e}</Project>
+      <Name>ViewerQuestCorrection</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ViewerQuest\ViewerQuest.csproj">
+      <Project>{3adc475a-0808-4708-91e6-ff12f287a7c0}</Project>
+      <Name>ViewerQuest</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ViewerSSISort\ViewerSSISort.csproj">
+      <Project>{7699f0c5-4444-4a3b-9ed0-ff6274e34435}</Project>
+      <Name>ViewerSSISort</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ViewerSSI\ViewerSSI.csproj">
+      <Project>{5fd45ad3-3fea-4edc-ab51-89fd06a137d7}</Project>
+      <Name>ViewerSSI</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\MCLctr.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\iconfinder_8_375259.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\iconfinder_checklist_job_seeker_employee_unemployee_work_2620529.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\contact.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\wthLogo.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="MDIWindowManager.xml" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
