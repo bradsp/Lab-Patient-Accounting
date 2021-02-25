@@ -40,7 +40,7 @@ namespace LabBilling.DataAccess
             
             var queryResult = dbConnection.Fetch<T>(sql);
 
-            Log.Instance.Trace("$Exiting");
+            Log.Instance.Trace("Exiting");
             return queryResult;
         }
 
