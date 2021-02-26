@@ -44,15 +44,15 @@ namespace LabBilling.Forms
             this.InvoiceHistoryTabControl = new System.Windows.Forms.TabControl();
             this.GenerateInvoicesTabPage = new System.Windows.Forms.TabPage();
             this.InvoiceHistoryTabPage = new System.Windows.Forms.TabPage();
+            this.label6 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.ThroughDate = new System.Windows.Forms.MaskedTextBox();
+            this.FromDate = new System.Windows.Forms.MaskedTextBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.ClientFilter = new System.Windows.Forms.ComboBox();
             this.ViewInvoice = new System.Windows.Forms.Button();
             this.PrintInvoice = new System.Windows.Forms.Button();
             this.InvoiceHistoryDGV = new System.Windows.Forms.DataGridView();
-            this.ClientFilter = new System.Windows.Forms.ComboBox();
-            this.label4 = new System.Windows.Forms.Label();
-            this.FromDate = new System.Windows.Forms.MaskedTextBox();
-            this.ThroughDate = new System.Windows.Forms.MaskedTextBox();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.InvoicesDGV)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.UnbilledAccountsDGV)).BeginInit();
             this.InvoiceHistoryTabControl.SuspendLayout();
@@ -244,6 +244,62 @@ namespace LabBilling.Forms
             this.InvoiceHistoryTabPage.Text = "Invoice History";
             this.InvoiceHistoryTabPage.UseVisualStyleBackColor = true;
             // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(591, 21);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(43, 13);
+            this.label6.TabIndex = 7;
+            this.label6.Text = "through";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(382, 20);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(90, 13);
+            this.label5.TabIndex = 6;
+            this.label5.Text = "From Create Date";
+            // 
+            // ThroughDate
+            // 
+            this.ThroughDate.Location = new System.Drawing.Point(640, 18);
+            this.ThroughDate.Mask = "00/00/0000";
+            this.ThroughDate.Name = "ThroughDate";
+            this.ThroughDate.Size = new System.Drawing.Size(100, 20);
+            this.ThroughDate.TabIndex = 5;
+            this.ThroughDate.ValidatingType = typeof(System.DateTime);
+            this.ThroughDate.TextChanged += new System.EventHandler(this.ThroughDate_TextChanged);
+            // 
+            // FromDate
+            // 
+            this.FromDate.Location = new System.Drawing.Point(478, 18);
+            this.FromDate.Mask = "00/00/0000";
+            this.FromDate.Name = "FromDate";
+            this.FromDate.Size = new System.Drawing.Size(100, 20);
+            this.FromDate.TabIndex = 5;
+            this.FromDate.ValidatingType = typeof(System.DateTime);
+            this.FromDate.TextChanged += new System.EventHandler(this.FromDate_TextChanged);
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(9, 20);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(72, 13);
+            this.label4.TabIndex = 4;
+            this.label4.Text = "Filter by Client";
+            // 
+            // ClientFilter
+            // 
+            this.ClientFilter.FormattingEnabled = true;
+            this.ClientFilter.Location = new System.Drawing.Point(87, 17);
+            this.ClientFilter.Name = "ClientFilter";
+            this.ClientFilter.Size = new System.Drawing.Size(252, 21);
+            this.ClientFilter.TabIndex = 3;
+            this.ClientFilter.SelectedIndexChanged += new System.EventHandler(this.ClientFilter_SelectedIndexChanged);
+            // 
             // ViewInvoice
             // 
             this.ViewInvoice.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -264,75 +320,23 @@ namespace LabBilling.Forms
             this.PrintInvoice.TabIndex = 1;
             this.PrintInvoice.Text = "Print Selected Invoice";
             this.PrintInvoice.UseVisualStyleBackColor = true;
+            this.PrintInvoice.Visible = false;
             this.PrintInvoice.Click += new System.EventHandler(this.PrintInvoice_Click);
             // 
             // InvoiceHistoryDGV
             // 
+            this.InvoiceHistoryDGV.AllowUserToAddRows = false;
+            this.InvoiceHistoryDGV.AllowUserToDeleteRows = false;
             this.InvoiceHistoryDGV.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.InvoiceHistoryDGV.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.InvoiceHistoryDGV.Location = new System.Drawing.Point(8, 47);
             this.InvoiceHistoryDGV.Name = "InvoiceHistoryDGV";
+            this.InvoiceHistoryDGV.ReadOnly = true;
             this.InvoiceHistoryDGV.Size = new System.Drawing.Size(892, 501);
             this.InvoiceHistoryDGV.TabIndex = 0;
             this.InvoiceHistoryDGV.CellMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.InvoiceHistoryDGV_CellMouseDoubleClick);
-            // 
-            // ClientFilter
-            // 
-            this.ClientFilter.FormattingEnabled = true;
-            this.ClientFilter.Location = new System.Drawing.Point(87, 17);
-            this.ClientFilter.Name = "ClientFilter";
-            this.ClientFilter.Size = new System.Drawing.Size(252, 21);
-            this.ClientFilter.TabIndex = 3;
-            this.ClientFilter.SelectedIndexChanged += new System.EventHandler(this.ClientFilter_SelectedIndexChanged);
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(9, 20);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(72, 13);
-            this.label4.TabIndex = 4;
-            this.label4.Text = "Filter by Client";
-            // 
-            // FromDate
-            // 
-            this.FromDate.Location = new System.Drawing.Point(478, 18);
-            this.FromDate.Mask = "00/00/0000";
-            this.FromDate.Name = "FromDate";
-            this.FromDate.Size = new System.Drawing.Size(100, 20);
-            this.FromDate.TabIndex = 5;
-            this.FromDate.ValidatingType = typeof(System.DateTime);
-            this.FromDate.TextChanged += new System.EventHandler(this.FromDate_TextChanged);
-            // 
-            // ThroughDate
-            // 
-            this.ThroughDate.Location = new System.Drawing.Point(640, 18);
-            this.ThroughDate.Mask = "00/00/0000";
-            this.ThroughDate.Name = "ThroughDate";
-            this.ThroughDate.Size = new System.Drawing.Size(100, 20);
-            this.ThroughDate.TabIndex = 5;
-            this.ThroughDate.ValidatingType = typeof(System.DateTime);
-            this.ThroughDate.TextChanged += new System.EventHandler(this.ThroughDate_TextChanged);
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(382, 20);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(90, 13);
-            this.label5.TabIndex = 6;
-            this.label5.Text = "From Create Date";
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(591, 21);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(43, 13);
-            this.label6.TabIndex = 7;
-            this.label6.Text = "through";
             // 
             // ClientInvoiceForm
             // 
