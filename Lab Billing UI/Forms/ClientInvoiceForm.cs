@@ -30,7 +30,7 @@ namespace LabBilling.Forms
         private ClientRepository clientRepository;
         private List<Client> clientList;
 
-        private void ClientInvoiceForm_Load(object sender, EventArgs e)
+        private async void ClientInvoiceForm_Load(object sender, EventArgs e)
         {
             clientInvoices = new ClientInvoices(Helper.ConnVal);
             historyRepository = new InvoiceHistoryRepository(Helper.ConnVal);
@@ -50,7 +50,7 @@ namespace LabBilling.Forms
             else
                 _thruDate = DateTime.Today;
 
-            RefreshUnbilledGrid();
+            await RefreshUnbilledGridAsync();
 
             InvoicesDGV.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             InvoicesDGV.MultiSelect = false;
@@ -82,6 +82,35 @@ namespace LabBilling.Forms
 
             Cursor.Current = Cursors.Default;
         }
+
+        private async Task RefreshUnbilledGridAsync()
+        {
+            progressBar2.Visible = true;
+            progressBar2.Style = ProgressBarStyle.Marquee;
+
+            InvoicesDGV.DataSource = await Task.Run(() => clientInvoices.GetUnbilledClients(_thruDate));
+
+            InvoicesDGV.Columns["UnbilledAmount"].DefaultCellStyle.Format = "c2";
+            InvoicesDGV.Columns["UnbilledAmount"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            InvoicesDGV.Columns["ClientMnem"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            InvoicesDGV.Columns["UnbilledAmount"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            InvoicesDGV.Columns["SelectForInvoice"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            InvoicesDGV.Columns["ClientName"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+
+            double sum = 0;
+            foreach (DataGridViewRow row in InvoicesDGV.Rows)
+            {
+                sum += Convert.ToDouble(row.Cells["UnbilledAmount"].Value);
+            }
+
+            TotalUnbilledCharges.Text = sum.ToString("C");
+            TotalUnbilledCharges.TextAlign = HorizontalAlignment.Right;
+
+            progressBar2.Style = ProgressBarStyle.Continuous;
+            progressBar2.Visible = false;
+
+        }
+
 
         private void RefreshUnbilledAccountsGrid(string clientMnem)
         {
@@ -205,7 +234,7 @@ namespace LabBilling.Forms
         }
 
         #region InvoiceHistory Tab functions
-        private void InvoiceHistoryPage_Enter(object sender, EventArgs e)
+        private async void InvoiceHistoryPage_Enter(object sender, EventArgs e)
         {
             FromDate.Text = DateTime.Today.AddDays(-30).ToString("MM/dd/yyyy");
             ThroughDate.Text = DateTime.Today.ToString("MM/dd/yyyy");
@@ -214,12 +243,40 @@ namespace LabBilling.Forms
             ClientFilter.ValueMember = "cli_mnem";
             DateTime.TryParse(FromDate.Text, out DateTime fd);
             DateTime.TryParse(ThroughDate.Text, out DateTime td);
-            RefreshInvoiceHistoryGrid(null, fd, td);
+            await RefreshInvoiceHistoryGridAsync(null, fd, td);
         }
 
         private void RefreshInvoiceHistoryGrid(string clientMnem, DateTime? fromDate = null, DateTime? throughDate = null)
         {
             InvoiceHistoryDGV.DataSource = historyRepository.GetWithSort(clientMnem, fromDate, throughDate);
+
+            InvoiceHistoryDGV.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            InvoiceHistoryDGV.Columns["ClientName"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            InvoiceHistoryDGV.Columns["bal_forward"].DefaultCellStyle.Format = "c2";
+            InvoiceHistoryDGV.Columns["bal_forward"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            InvoiceHistoryDGV.Columns["total_chrg"].DefaultCellStyle.Format = "c2";
+            InvoiceHistoryDGV.Columns["total_chrg"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            InvoiceHistoryDGV.Columns["discount"].DefaultCellStyle.Format = "c2";
+            InvoiceHistoryDGV.Columns["discount"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            InvoiceHistoryDGV.Columns["balance_due"].DefaultCellStyle.Format = "c2";
+            InvoiceHistoryDGV.Columns["balance_due"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            InvoiceHistoryDGV.Columns["payments"].DefaultCellStyle.Format = "c2";
+            InvoiceHistoryDGV.Columns["payments"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            InvoiceHistoryDGV.Columns["true_balance_due"].DefaultCellStyle.Format = "c2";
+            InvoiceHistoryDGV.Columns["true_balance_due"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            InvoiceHistoryDGV.Columns["cbill_filestream"].Visible = false;
+            InvoiceHistoryDGV.Columns["mod_user"].Visible = false;
+            InvoiceHistoryDGV.Columns["mod_date"].Visible = false;
+            InvoiceHistoryDGV.Columns["mod_prg"].Visible = false;
+            InvoiceHistoryDGV.Columns["mod_host"].Visible = false;
+            InvoiceHistoryDGV.Columns["rowguid"].Visible = false;
+
+        }
+
+        private async Task RefreshInvoiceHistoryGridAsync(string clientMnem, DateTime? fromDate = null, DateTime? throughDate = null)
+        {
+
+            InvoiceHistoryDGV.DataSource = await Task.Run( () => historyRepository.GetWithSort(clientMnem, fromDate, throughDate));
 
             InvoiceHistoryDGV.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             InvoiceHistoryDGV.Columns["ClientName"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;

@@ -69,19 +69,20 @@ namespace LabBilling.Forms
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.InvoicesDGV.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
+            this.InvoicesDGV.BackgroundColor = System.Drawing.SystemColors.ControlLightLight;
             this.InvoicesDGV.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.InvoicesDGV.Location = new System.Drawing.Point(6, 34);
             this.InvoicesDGV.Name = "InvoicesDGV";
-            this.InvoicesDGV.Size = new System.Drawing.Size(763, 420);
+            this.InvoicesDGV.Size = new System.Drawing.Size(763, 372);
             this.InvoicesDGV.TabIndex = 0;
             this.InvoicesDGV.SelectionChanged += new System.EventHandler(this.InvoicesDGV_SelectionChanged);
             // 
             // GenerateInvoicesBtn
             // 
             this.GenerateInvoicesBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.GenerateInvoicesBtn.Location = new System.Drawing.Point(880, 35);
+            this.GenerateInvoicesBtn.Location = new System.Drawing.Point(877, 76);
             this.GenerateInvoicesBtn.Name = "GenerateInvoicesBtn";
-            this.GenerateInvoicesBtn.Size = new System.Drawing.Size(113, 23);
+            this.GenerateInvoicesBtn.Size = new System.Drawing.Size(115, 23);
             this.GenerateInvoicesBtn.TabIndex = 1;
             this.GenerateInvoicesBtn.Text = "Generate Invoices";
             this.GenerateInvoicesBtn.UseVisualStyleBackColor = true;
@@ -90,7 +91,7 @@ namespace LabBilling.Forms
             // progressBar1
             // 
             this.progressBar1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.progressBar1.Location = new System.Drawing.Point(776, 81);
+            this.progressBar1.Location = new System.Drawing.Point(775, 122);
             this.progressBar1.Name = "progressBar1";
             this.progressBar1.Size = new System.Drawing.Size(217, 23);
             this.progressBar1.TabIndex = 2;
@@ -133,7 +134,7 @@ namespace LabBilling.Forms
             // 
             this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(879, 133);
+            this.label2.Location = new System.Drawing.Point(876, 34);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(114, 13);
             this.label2.TabIndex = 9;
@@ -142,7 +143,7 @@ namespace LabBilling.Forms
             // TotalUnbilledCharges
             // 
             this.TotalUnbilledCharges.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.TotalUnbilledCharges.Location = new System.Drawing.Point(880, 149);
+            this.TotalUnbilledCharges.Location = new System.Drawing.Point(877, 50);
             this.TotalUnbilledCharges.Name = "TotalUnbilledCharges";
             this.TotalUnbilledCharges.Size = new System.Drawing.Size(113, 20);
             this.TotalUnbilledCharges.TabIndex = 10;
@@ -153,11 +154,12 @@ namespace LabBilling.Forms
             this.UnbilledAccountsDGV.AllowUserToDeleteRows = false;
             this.UnbilledAccountsDGV.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.UnbilledAccountsDGV.BackgroundColor = System.Drawing.SystemColors.ControlLightLight;
             this.UnbilledAccountsDGV.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.UnbilledAccountsDGV.Location = new System.Drawing.Point(6, 460);
+            this.UnbilledAccountsDGV.Location = new System.Drawing.Point(6, 412);
             this.UnbilledAccountsDGV.Name = "UnbilledAccountsDGV";
             this.UnbilledAccountsDGV.ReadOnly = true;
-            this.UnbilledAccountsDGV.Size = new System.Drawing.Size(989, 164);
+            this.UnbilledAccountsDGV.Size = new System.Drawing.Size(989, 212);
             this.UnbilledAccountsDGV.TabIndex = 11;
             this.UnbilledAccountsDGV.RowHeaderMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.UnbilledAccountsDGV_RowHeaderMouseDoubleClick);
             // 
@@ -186,7 +188,7 @@ namespace LabBilling.Forms
             // progressBar2
             // 
             this.progressBar2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.progressBar2.Location = new System.Drawing.Point(776, 64);
+            this.progressBar2.Location = new System.Drawing.Point(775, 105);
             this.progressBar2.Name = "progressBar2";
             this.progressBar2.Size = new System.Drawing.Size(217, 11);
             this.progressBar2.TabIndex = 14;
@@ -330,6 +332,7 @@ namespace LabBilling.Forms
             this.InvoiceHistoryDGV.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.InvoiceHistoryDGV.BackgroundColor = System.Drawing.SystemColors.ControlLightLight;
             this.InvoiceHistoryDGV.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.InvoiceHistoryDGV.Location = new System.Drawing.Point(8, 47);
             this.InvoiceHistoryDGV.Name = "InvoiceHistoryDGV";
