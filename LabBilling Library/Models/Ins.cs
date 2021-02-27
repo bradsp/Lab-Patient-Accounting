@@ -1,7 +1,7 @@
 ﻿using System;
 using PetaPoco;
 
-namespace LabBilling.Models
+namespace LabBilling.Core.Models
 {
     [TableName("ins")]
     [PrimaryKey("rowguid", AutoIncrement = false)]

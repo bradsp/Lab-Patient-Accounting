@@ -16,8 +16,8 @@ using System.Collections;  // billing
 // Move these two lines to the header space
 using System.Reflection;
 using System.Diagnostics;
-using LabBilling.Models;
-using LabBilling.Library;
+using LabBilling.Core.Models;
+using LabBilling.Core;
 
 namespace LabBilling.Legacy
 {

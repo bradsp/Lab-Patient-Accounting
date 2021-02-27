@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace LabBilling.Library
+namespace LabBilling.Core
 {
     public class DisplayPOCOForm<C> where C : class
     {

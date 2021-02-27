@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using PetaPoco;
 
-namespace LabBilling.Models
+namespace LabBilling.Core.Models
 {
     [TableName("fin")]
     [PrimaryKey("fin_code", AutoIncrement = false)]

@@ -1,5 +1,5 @@
-﻿using LabBilling.DataAccess;
-using LabBilling.Models;
+﻿using LabBilling.Core.DataAccess;
+using LabBilling.Core.Models;
 using System;
 using System.Windows.Forms;
 using LabBilling.Logging;

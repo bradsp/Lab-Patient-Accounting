@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace LabBilling.Models
+namespace LabBilling.Core.Models
 { 
     /// <summary>
     /// 

@@ -53,6 +53,7 @@ namespace LabBilling.Forms
             this.ViewInvoice = new System.Windows.Forms.Button();
             this.PrintInvoice = new System.Windows.Forms.Button();
             this.InvoiceHistoryDGV = new System.Windows.Forms.DataGridView();
+            this.StatusText = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.InvoicesDGV)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.UnbilledAccountsDGV)).BeginInit();
             this.InvoiceHistoryTabControl.SuspendLayout();
@@ -207,6 +208,7 @@ namespace LabBilling.Forms
             // 
             // GenerateInvoicesTabPage
             // 
+            this.GenerateInvoicesTabPage.Controls.Add(this.StatusText);
             this.GenerateInvoicesTabPage.Controls.Add(this.InvoicesDGV);
             this.GenerateInvoicesTabPage.Controls.Add(this.label3);
             this.GenerateInvoicesTabPage.Controls.Add(this.progressBar2);
@@ -341,6 +343,15 @@ namespace LabBilling.Forms
             this.InvoiceHistoryDGV.TabIndex = 0;
             this.InvoiceHistoryDGV.CellMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.InvoiceHistoryDGV_CellMouseDoubleClick);
             // 
+            // StatusText
+            // 
+            this.StatusText.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.StatusText.Location = new System.Drawing.Point(775, 152);
+            this.StatusText.Multiline = true;
+            this.StatusText.Name = "StatusText";
+            this.StatusText.Size = new System.Drawing.Size(215, 254);
+            this.StatusText.TabIndex = 15;
+            // 
             // ClientInvoiceForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -388,5 +399,6 @@ namespace LabBilling.Forms
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.MaskedTextBox ThroughDate;
         private System.Windows.Forms.MaskedTextBox FromDate;
+        private System.Windows.Forms.TextBox StatusText;
     }
 }

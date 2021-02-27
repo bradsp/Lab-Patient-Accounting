@@ -2,7 +2,7 @@
 using PetaPoco;
 using ColumnAttribute = PetaPoco.ColumnAttribute;
 
-namespace LabBilling.Models
+namespace LabBilling.Core.Models
 {
     [PetaPoco.TableName("emp")]
     [PetaPoco.PrimaryKey("name", AutoIncrement=false)]

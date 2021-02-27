@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LabBilling.Models
+namespace LabBilling.Core.Models
 {
     [TableName("chk_batch")]
     [PrimaryKey("BatchNo", AutoIncrement = true)]

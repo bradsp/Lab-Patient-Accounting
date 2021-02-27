@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using LabBilling.Models;
+﻿using LabBilling.Core.Models;
 
-namespace LabBilling.DataAccess
+namespace LabBilling.Core.DataAccess
 {
     public class ChkBatchRepository : RepositoryBase<ChkBatch>
     {

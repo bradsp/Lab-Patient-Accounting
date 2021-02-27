@@ -1,5 +1,5 @@
 ﻿
-namespace LabBilling.Library
+namespace LabBilling.Core
 {
     partial class LabeledTextBox
     {

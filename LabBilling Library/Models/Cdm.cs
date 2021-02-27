@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LabBilling.Models
+namespace LabBilling.Core.Models
 {
     [PetaPoco.TableName("cdm")]
     [PetaPoco.PrimaryKey("cdm", AutoIncrement = false)]

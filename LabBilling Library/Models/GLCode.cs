@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using PetaPoco;
 
-namespace LabBilling.Models
+namespace LabBilling.Core.Models
 {
     [TableName("dict_general_ledger_codes")]
     [PrimaryKey("level_1",AutoIncrement = false)]

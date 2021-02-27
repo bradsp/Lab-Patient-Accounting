@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace LabBilling.Library
+namespace LabBilling.Core
 {
     public partial class LabeledTextBox : UserControl
     {

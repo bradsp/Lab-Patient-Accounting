@@ -1,7 +1,7 @@
-﻿using LabBilling.DataAccess;
-using LabBilling.Library;
+﻿using LabBilling.Core.DataAccess;
+using LabBilling.Core;
 using LabBilling.Logging;
-using LabBilling.Models;
+using LabBilling.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;

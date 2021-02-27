@@ -504,9 +504,9 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\LabBilling Library\LabBilling Library.csproj">
+    <ProjectReference Include="..\LabBilling Library\LabBilling Core.csproj">
       <Project>{0890d249-b319-46be-8b8a-354687c334e8}</Project>
-      <Name>LabBilling Library</Name>
+      <Name>LabBilling Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\MCL\MCL.csproj">
       <Project>{f54e006c-aa33-48f2-9e2f-46cfb5d7ee47}</Project>

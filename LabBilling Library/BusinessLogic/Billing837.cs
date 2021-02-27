@@ -7,10 +7,10 @@ using MCL;
 using System.Collections;
 using System.Data;
 using EdiTools;
-using LabBilling.DataAccess;
+using LabBilling.Core.DataAccess;
 using System.Data.Common;
 
-namespace LabBilling.Library
+namespace LabBilling.Core
 {
     public class Billing837
     {

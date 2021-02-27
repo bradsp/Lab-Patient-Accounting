@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using LabBilling.Logging;
-using LabBilling.Models;
+using LabBilling.Core.Models;
 
-namespace LabBilling.DataAccess
+namespace LabBilling.Core.DataAccess
 {
     public class ChrgRepository : RepositoryBase<Chrg>
     {

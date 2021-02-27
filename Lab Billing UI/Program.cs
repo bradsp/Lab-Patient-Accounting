@@ -1,5 +1,5 @@
 ﻿using LabBilling.Logging;
-using LabBilling.Models;
+using LabBilling.Core.Models;
 using System;
 using System.Threading;
 using System.Windows.Forms;

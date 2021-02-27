@@ -1,8 +1,8 @@
 ﻿using System;
 using LabBilling.Logging;
-using LabBilling.Models;
+using LabBilling.Core.Models;
 
-namespace LabBilling.DataAccess
+namespace LabBilling.Core.DataAccess
 {
     public class SystemParametersRepository : RepositoryBase<SystemParameters>
     {

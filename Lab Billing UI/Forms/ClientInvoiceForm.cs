@@ -9,9 +9,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Serialization;
-using LabBilling.DataAccess;
-using LabBilling.Library;
-using LabBilling.Models;
+using LabBilling.Core.DataAccess;
+using LabBilling.Core;
+using LabBilling.Core.Models;
 
 namespace LabBilling.Forms
 {

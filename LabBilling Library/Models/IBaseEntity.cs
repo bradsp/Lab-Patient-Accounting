@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace LabBilling.Models
+namespace LabBilling.Core.Models
 {
     public interface IBaseEntity
     {

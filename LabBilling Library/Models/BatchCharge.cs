@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LabBilling.Models
+namespace LabBilling.Core.Models
 {
     public class BatchCharge
     {

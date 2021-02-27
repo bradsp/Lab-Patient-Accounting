@@ -4,10 +4,10 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using LabBilling.DataAccess;
-using LabBilling.Library;
+using LabBilling.Core.DataAccess;
+using LabBilling.Core;
 using LabBilling.Logging;
-using LabBilling.Models;
+using LabBilling.Core.Models;
 using RFClassLibrary;
 
 namespace LabBilling.Forms

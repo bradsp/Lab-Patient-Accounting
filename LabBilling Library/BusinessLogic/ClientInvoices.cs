@@ -1,16 +1,14 @@
-﻿using LabBilling.DataAccess;
+﻿using LabBilling.Core.DataAccess;
 using LabBilling.Logging;
-using LabBilling.Models;
+using LabBilling.Core.Models;
 using PetaPoco.Providers;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
-using System.Xml;
 using System.Xml.Serialization;
 
-namespace LabBilling.Library
+namespace LabBilling.Core
 {
     /// <summary>
     /// 
@@ -39,11 +37,11 @@ namespace LabBilling.Library
             foreach (UnbilledClient unbilledClient in unbilledClients)
             {
                 GenerateInvoice(unbilledClient.ClientMnem, thruDate);
-                if(progress != null)
+                tempCount++;
+                if (progress != null)
                 {
                     progress.Report((tempCount * 100 / clientCount));
                 }
-                tempCount++;
             }
 
             return tempCount;

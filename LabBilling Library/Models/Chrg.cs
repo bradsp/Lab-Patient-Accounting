@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using PetaPoco;
 
-namespace LabBilling.Models
+namespace LabBilling.Core.Models
 {
     [TableName("chrg")]
     [PrimaryKey("chrg_num", AutoIncrement = true)]

@@ -1,11 +1,11 @@
-﻿using LabBilling.Models;
+﻿using LabBilling.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LabBilling.DataAccess
+namespace LabBilling.Core.DataAccess
 {
     public class GLCodeRepository : RepositoryBase<GLCode>
     {

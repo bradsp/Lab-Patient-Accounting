@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LabBilling.Models
+namespace LabBilling.Core.Models
 {
     [TableName("vw_billing_activity")]
     [PrimaryKey("rowguid", AutoIncrement = false)]

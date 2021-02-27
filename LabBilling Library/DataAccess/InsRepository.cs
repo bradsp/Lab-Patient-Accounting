@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using LabBilling.Logging;
-using LabBilling.Models;
+using LabBilling.Core.Models;
 
-namespace LabBilling.DataAccess
+namespace LabBilling.Core.DataAccess
 {
     public class InsRepository : RepositoryBase<Ins>
     {

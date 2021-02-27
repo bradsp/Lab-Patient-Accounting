@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LabBilling.DataAccess
+namespace LabBilling.Core.DataAccess
 {
     public interface IRepository<T>
     {

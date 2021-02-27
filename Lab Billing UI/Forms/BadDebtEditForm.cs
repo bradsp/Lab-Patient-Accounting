@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
-using LabBilling.Models;
-using LabBilling.DataAccess;
+using LabBilling.Core.Models;
+using LabBilling.Core.DataAccess;
 using LabBilling.Logging;
 
 namespace LabBilling.Forms

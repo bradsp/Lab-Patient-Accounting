@@ -1,8 +1,8 @@
-﻿using LabBilling.Models;
+﻿using LabBilling.Core.Models;
 using System;
 using LabBilling.Logging;
 
-namespace LabBilling.DataAccess
+namespace LabBilling.Core.DataAccess
 {
     public class EmpRepository : RepositoryBase<Emp>
     {

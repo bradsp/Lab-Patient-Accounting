@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using LabBilling.DataAccess;
-using LabBilling.Models;
-using LabBilling.Library;
+using LabBilling.Core.DataAccess;
+using LabBilling.Core.Models;
+using LabBilling.Core;
 using LabBilling.Logging;
 using LabBilling.Views;
 

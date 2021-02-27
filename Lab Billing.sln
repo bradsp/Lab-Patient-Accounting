@@ -33,7 +33,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PetaPoco", "PetaPoco\PetaPo
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libraries", "Libraries", "{C33E528B-87FE-4032-B44C-CB7A3B9D76A2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LabBilling Library", "LabBilling Library\LabBilling Library.csproj", "{0890D249-B319-46BE-8B8A-354687C334E8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LabBilling Core", "LabBilling Library\LabBilling Core.csproj", "{0890D249-B319-46BE-8B8A-354687C334E8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lab Billing UI", "Lab Billing UI\Lab Billing UI.csproj", "{F8C8C4A8-005A-49DB-A560-9A78141665B5}"
 EndProject

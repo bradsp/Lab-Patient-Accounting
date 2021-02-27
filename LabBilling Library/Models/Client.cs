@@ -1,7 +1,7 @@
 ﻿using PetaPoco;
 using System;
 
-namespace LabBilling.Models
+namespace LabBilling.Core.Models
 {
     [TableName("client")]
     [PrimaryKey("cli_mnem",AutoIncrement = false)]

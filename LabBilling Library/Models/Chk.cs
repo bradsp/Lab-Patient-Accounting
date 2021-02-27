@@ -1,7 +1,7 @@
 ﻿using System;
 using PetaPoco;
 
-namespace LabBilling.Models
+namespace LabBilling.Core.Models
 {
     [TableName("chk")]
     [PrimaryKey("pay_no",AutoIncrement = true)]

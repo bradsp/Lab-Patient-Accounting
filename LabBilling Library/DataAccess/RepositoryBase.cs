@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using LabBilling.Logging;
-using LabBilling.Models;
+using LabBilling.Core.Models;
 using PetaPoco.Providers;
 
-namespace LabBilling.DataAccess
+namespace LabBilling.Core.DataAccess
 {
     public abstract class RepositoryBase<T> where T : IBaseEntity
     {

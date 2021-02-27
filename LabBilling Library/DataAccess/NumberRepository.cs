@@ -1,10 +1,10 @@
 ﻿using LabBilling.Logging;
-using LabBilling.Models;
+using LabBilling.Core.Models;
 using PetaPoco;
 using System;
 using System.Data.SqlClient;
 
-namespace LabBilling.DataAccess
+namespace LabBilling.Core.DataAccess
 {
     public class NumberRepository : RepositoryBase<Number>
     {
