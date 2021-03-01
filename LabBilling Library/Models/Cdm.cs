@@ -35,5 +35,17 @@ namespace LabBilling.Core.Models
         [Ignore]
         public Guid rowguid { get; set; }
 
+        [Ignore]
+        public List<CdmFeeSchedule1> cdmFeeSchedule1 { get; set; }
+        [Ignore]
+        public List<CdmFeeSchedule2> cdmFeeSchedule2 { get; set; }
+        [Ignore]
+        public List<CdmFeeSchedule3> cdmFeeSchedule3 { get; set; }
+        [Ignore]
+        public List<CdmFeeSchedule4> cdmFeeSchedule4 { get; set; }
+        [Ignore]
+        public List<CdmFeeSchedule5> cdmFeeSchedule5 { get; set; }
+
+
     }
 }

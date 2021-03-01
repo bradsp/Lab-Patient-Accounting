@@ -44,6 +44,11 @@ namespace LabBilling.Core.DataAccess
         public Cdm GetCdm(string cdm)
         {
             var result = dbConnection.SingleOrDefault<Cdm>("where cdm = @0", cdm);
+            result.cdmFeeSchedule1 = dbConnection.Fetch<CdmFeeSchedule1>("where cdm = @0 and deleted = 0", cdm);
+            result.cdmFeeSchedule2 = dbConnection.Fetch<CdmFeeSchedule2>("where cdm = @0 and deleted = 0", cdm);
+            result.cdmFeeSchedule3 = dbConnection.Fetch<CdmFeeSchedule3>("where cdm = @0 and deleted = 0", cdm);
+            result.cdmFeeSchedule4 = dbConnection.Fetch<CdmFeeSchedule4>("where cdm = @0 and deleted = 0", cdm);
+            result.cdmFeeSchedule5 = dbConnection.Fetch<CdmFeeSchedule5>("where cdm = @0 and deleted = 0", cdm);
 
             return result;
         }

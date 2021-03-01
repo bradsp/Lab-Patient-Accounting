@@ -20,6 +20,10 @@ namespace LabBilling.Core
 
         public ClientInvoices(string connection)
         {
+            if(connection == "" || connection == null)
+            {
+                throw new ArgumentException("Must have a valid connection string", "connection");
+            }
             _connection = connection;
             dbConnection = new PetaPoco.Database(connection, new CustomSqlServerDatabaseProvider());
         }
@@ -240,7 +244,6 @@ namespace LabBilling.Core
 
             InvoicePrint.CreatePDF(invoiceModel, $"c:\\temp\\{invoiceModel.InvoiceNo}.pdf");
 
-            return;
         }
 
         /// <summary>
@@ -276,8 +279,6 @@ namespace LabBilling.Core
 
                 accdb.Add(account);
             }
-
-            return;
 
         }
 

@@ -18,5 +18,10 @@ namespace LabBilling.Core.DataAccess
         {
             throw new NotImplementedException();
         }
+
+        public Fin GetFin(string finCode)
+        {
+            return dbConnection.SingleOrDefault<Fin>("where fin_code = @0", finCode);
+        }
     }
 }

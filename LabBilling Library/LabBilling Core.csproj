@@ -89,8 +89,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BusinessLogic\Billing837.cs" />
+    <Compile Include="BusinessLogic\ChargeProcessing.cs" />
     <Compile Include="BusinessLogic\ClientInvoices.cs" />
+    <Compile Include="BusinessLogic\Exceptions.cs" />
     <Compile Include="BusinessLogic\InvoicePrint.cs" />
+    <Compile Include="BusinessLogic\PatientBilling.cs" />
     <Compile Include="DataAccess\AccountRepository.cs" />
     <Compile Include="DataAccess\AmtRepository.cs" />
     <Compile Include="DataAccess\BadDebtRepository.cs" />
@@ -126,6 +129,7 @@
     <Compile Include="Models\BatchCharge.cs" />
     <Compile Include="Models\BillingActivity.cs" />
     <Compile Include="Models\Cdm.cs" />
+    <Compile Include="Models\CdmDetail.cs" />
     <Compile Include="Models\Chk.cs" />
     <Compile Include="Models\ChkBatch.cs" />
     <Compile Include="Models\Chrg.cs" />

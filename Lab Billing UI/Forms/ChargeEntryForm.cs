@@ -1,5 +1,6 @@
 ﻿using LabBilling.Core.DataAccess;
 using LabBilling.Core.Models;
+using LabBilling.Core;
 using System;
 using System.Windows.Forms;
 using LabBilling.Logging;
@@ -58,13 +59,35 @@ namespace LabBilling.Forms
             Log.Instance.Trace($"Entering");
             Chrg newChrg = new Chrg();
 
-            newChrg.account = _currentAccount.account;
-            newChrg.service_date = _currentAccount.trans_date;
-            newChrg.cdm = cbChargeItem.SelectedValue;
-            newChrg.qty = Convert.ToInt32(nQty.Value);
-            newChrg.comment = tbComment.Text;
+            //newChrg.account = _currentAccount.account;
+            //newChrg.service_date = _currentAccount.trans_date;
+            //newChrg.cdm = cbChargeItem.SelectedValue;
+            //newChrg.qty = Convert.ToInt32(nQty.Value);
+            //newChrg.comment = tbComment.Text;
 
-            dbChrg.AddCharge(newChrg);
+            //dbChrg.AddCharge(newChrg);
+            ChargeProcessing cp = new ChargeProcessing(Helper.ConnVal);
+
+            try
+            {
+                cp.AddCharge(_currentAccount.account,
+                    cbChargeItem.SelectedValue,
+                    Convert.ToInt32(nQty.Value),
+                    _currentAccount.trans_date ?? DateTime.Today,
+                    tbComment.Text);
+            }
+            catch(CdmNotFoundException)
+            {
+
+            }
+            catch(AccountNotFoundException)
+            {
+
+            }
+            catch(Exception)
+            {
+
+            }
 
             DialogResult = DialogResult.OK;
             return;

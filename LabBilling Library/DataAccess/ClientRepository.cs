@@ -16,6 +16,10 @@ namespace LabBilling.Core.DataAccess
         public Client GetClient(string clientMnem)
         {
             Log.Instance.Debug($"Entering");
+            if (clientMnem == null)
+            {
+                throw new ArgumentNullException("clientMnem");
+            }
 
             var record = dbConnection.SingleOrDefault<Client>("where cli_mnem = @0", clientMnem);
 
@@ -38,6 +42,11 @@ namespace LabBilling.Core.DataAccess
         public double Balance(string clientMnem)
         {
             Log.Instance.Debug($"Entering");
+
+            if(clientMnem == null)
+            {
+                throw new ArgumentNullException("clientMnem");
+            }
 
             //var chrgTotal = new SqlParameter("@Total", System.Data.SqlDbType.Money)
             //{

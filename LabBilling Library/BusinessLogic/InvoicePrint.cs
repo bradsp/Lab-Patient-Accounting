@@ -125,10 +125,7 @@ namespace LabBilling.Core
                     .SetBorder(new SolidBorder(ColorConstants.WHITE, 2));
 
                 document.Add(headerTable);
-                //document.Add(newline);
 
-                //LineSeparator ls = new LineSeparator(new SolidLine());
-                //document.Add(ls);
                 Border detailBorder = new SolidBorder(ColorConstants.WHITE, 2);
                 Color tableHeaderColor = WebColors.GetRGBColor("RoyalBlue");
                 Table table = new Table(8, false)
@@ -307,9 +304,6 @@ namespace LabBilling.Core
                     .SetTextAlignment(TextAlignment.RIGHT)
                     .Add(new Paragraph(model.BalanceDue.ToString("0.00")).SetFontSize(11)));
 
-
-
-                //document.Add(newline);
                 document.Add(table);
 
                 // Page numbers
