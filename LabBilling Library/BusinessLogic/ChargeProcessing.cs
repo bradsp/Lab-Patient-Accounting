@@ -75,7 +75,7 @@ namespace LabBilling.Core
             chrg.fname = fn;
             chrg.lname = ln;
             chrg.mname = mn;
-            chrg.mt_mnem = "";
+            chrg.mt_mnem = cdmData.mnem;
             chrg.mt_req_no = "";
             chrg.order_site = "";
             chrg.pat_dob = accData.Pat.dob_yyyy;
@@ -86,7 +86,7 @@ namespace LabBilling.Core
             chrg.qty = qty;
             chrg.service_date = serviceDate;
             chrg.status = "NEW";
-            chrg.unitno = "";
+            chrg.unitno = accData.HNE_NUMBER;
 
             //need to determine the correct fee schedule - for now default to 1
             double ztotal = 0.0;
@@ -114,7 +114,8 @@ namespace LabBilling.Core
                         break;
                     default:
                         amt.amount = fee.mprice;
-                        retailTotal = fee.mprice;
+                        retailTotal += fee.mprice;
+                        ztotal += fee.zprice;
                         break;
                 }
 
@@ -123,9 +124,10 @@ namespace LabBilling.Core
                 amt.modi = fee.modi;
                 amt.revcode = fee.rev_code;
                 amt.mt_req_no = "";
-                amt.order_code = "";
+                amt.order_code = fee.billcode;
                 amt.bill_type = "";
                 amt.bill_method = "";
+                amt.diagnosis_code_ptr = "1:";
 
                 chrg.ChrgDetails.Add(amt);
                 

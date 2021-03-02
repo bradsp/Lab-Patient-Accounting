@@ -60,6 +60,8 @@ namespace LabBilling.Forms
                 _selectedAccount = account;
         }
 
+        #region MainForm
+
         private void AccountForm_Load(object sender, EventArgs e)
         {
             Log.Instance.Trace("Entering");
@@ -73,6 +75,21 @@ namespace LabBilling.Forms
                 AddOnChangeHandlerToInputControls(tabDemographics);
             }
         }
+
+        private void AccountForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            Log.Instance.Trace($"Entering");
+        }
+
+        private void BtnRefresh_Click(object sender, EventArgs e)
+        {
+            Log.Instance.Trace($"Entering");
+            LoadAccountData();
+        }
+
+        #endregion
+
+        #region SummaryTab
 
         private void LoadAccountData()
         {
@@ -395,473 +412,9 @@ namespace LabBilling.Forms
 
         }
 
-        private void LoadCharges()
-        {
-            Log.Instance.Trace("Entering");
-           
-            //charges = chrgdb.GetByAccount(SelectedAccount, ckShowCreditedChrg.Checked).ToList();
-            //Log.Instance.Trace($"GetCharges returned {charges.Count} rows.");
-            dgvCharges.DataSource = chrgdb.GetByAccount(SelectedAccount, ckShowCreditedChrg.Checked);
+        #endregion
 
-            foreach(DataGridViewColumn col in dgvCharges.Columns)
-            {
-                col.Visible = false;
-            }
-
-            dgvCharges.Columns[nameof(Chrg.credited)].Visible = true;
-            dgvCharges.Columns[nameof(Chrg.cdm)].Visible = true;
-            dgvCharges.Columns[nameof(Chrg.cdm_desc)].Visible = true;
-            dgvCharges.Columns[nameof(Chrg.qty)].Visible = true;
-            dgvCharges.Columns[nameof(Chrg.net_amt)].Visible = true;
-            dgvCharges.Columns[nameof(Chrg.service_date)].Visible = true;
-            dgvCharges.Columns[nameof(Chrg.status)].Visible = true;
-            dgvCharges.Columns[nameof(Chrg.comment)].Visible = true;
-            dgvCharges.Columns[nameof(Chrg.chrg_num)].Visible = true;
-            dgvCharges.Columns[nameof(Chrg.invoice)].Visible = true;
-
-            dgvCharges.Columns[nameof(Chrg.net_amt)].DefaultCellStyle.Format = "N2";
-            dgvCharges.Columns[nameof(Chrg.net_amt)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-            dgvCharges.Columns[nameof(Chrg.calc_amt)].DefaultCellStyle.Format = "N2";
-            dgvCharges.Columns[nameof(Chrg.calc_amt)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-            dgvCharges.Columns[nameof(Chrg.qty)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-
-            dgvCharges.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
-            dgvCharges.Columns[nameof(Chrg.cdm_desc)].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            dgvCharges.BackgroundColor = Color.AntiqueWhite;
-            dgvChrgDetail.BackgroundColor = Color.AntiqueWhite;
-
-        }
-
-        private void LoadPayments()
-        {
-            Log.Instance.Trace("Entering");
-
-            tbTotalPayment.Text = currentAccountSummary.TotalPayments.ToString("c");
-            tbTotalContractual.Text = currentAccountSummary.TotalContractual.ToString("c");
-            tbTotalWriteOff.Text = currentAccountSummary.TotalWriteOff.ToString("c");
-            tbTotalPmtAll.Text = (currentAccountSummary.TotalPayments + currentAccountSummary.TotalContractual + currentAccountSummary.TotalWriteOff).ToString("c");
-
-            //payments = chkdb.GetByAccount(SelectedAccount);
-            //Log.Instance.Debug($"GetPayments returned {payments.Count} rows.");
-            dgvPayments.DataSource = chkdb.GetByAccount(SelectedAccount);
-
-            foreach (DataGridViewColumn col in dgvPayments.Columns)
-            {
-                col.Visible = false;
-            }
-
-            dgvPayments.Columns[nameof(Chk.amt_paid)].Visible = true;
-            dgvPayments.Columns[nameof(Chk.chk_date)].Visible = true;
-            dgvPayments.Columns[nameof(Chk.chk_no)].Visible = true;
-            dgvPayments.Columns[nameof(Chk.comment)].Visible = true;
-            dgvPayments.Columns[nameof(Chk.contractual)].Visible = true;
-            dgvPayments.Columns[nameof(Chk.date_rec)].Visible = true;
-            dgvPayments.Columns[nameof(Chk.invoice)].Visible = true;
-            dgvPayments.Columns[nameof(Chk.source)].Visible = true;
-            dgvPayments.Columns[nameof(Chk.status)].Visible = true;
-            dgvPayments.Columns[nameof(Chk.write_off)].Visible = true;
-            dgvPayments.Columns[nameof(Chk.write_off_code)].Visible = true;
-            dgvPayments.Columns[nameof(Chk.w_off_date)].Visible = true;
-            
-            dgvPayments.Columns[nameof(Chk.amt_paid)].DefaultCellStyle.Format = "N2";
-            dgvPayments.Columns[nameof(Chk.amt_paid)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-            dgvPayments.Columns[nameof(Chk.contractual)].DefaultCellStyle.Format = "N2";
-            dgvPayments.Columns[nameof(Chk.contractual)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-            dgvPayments.Columns[nameof(Chk.write_off)].DefaultCellStyle.Format = "N2";
-            dgvPayments.Columns[nameof(Chk.write_off)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-
-            dgvPayments.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
-            dgvPayments.BackgroundColor = Color.AntiqueWhite;
-        }
-
-        private void LoadDx()
-        {
-            Log.Instance.Trace("Entering");
-            dgvDiagnosis.DataSource = new BindingSource(dxBindingList, null);
-        }
-
-        private void LoadNotes()
-        {
-            Log.Instance.Trace("Entering");
-            notes = notesdb.GetByAccount(currentAccountSummary.account).ToList();
-            tbNotesDisplay.Text = "";
-            tbNotesDisplay.BackColor = Color.AntiqueWhite;
-            foreach(Notes note in notes)
-            {
-                tbNotesDisplay.DeselectAll();
-                tbNotesDisplay.SelectionFont = new Font(tbNotesDisplay.SelectionFont, FontStyle.Bold);
-                tbNotesDisplay.AppendText(note.mod_date + " - " + note.mod_user);
-                tbNotesDisplay.SelectionFont = new Font(tbNotesDisplay.SelectionFont, FontStyle.Regular);
-                tbNotesDisplay.AppendText(Environment.NewLine + note.comment + Environment.NewLine + Environment.NewLine);
-            }
-        }
-
-        private void LoadBillingActivity()
-        {
-            Log.Instance.Trace("Entering");
-
-            //billingActivities = dbBillingActivity.GetByAccount(currentAccountSummary.account);
-            dgvBillActivity.DataSource = dbBillingActivity.GetByAccount(currentAccountSummary.account);
-           
-        }
-
-        private void AccountForm_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            Log.Instance.Trace($"Entering");
-        }
-
-        //private void DemographicsButton_Click(object sender, EventArgs e)
-        //{
-        //    Log.Instance.Trace($"Entering");
-        //    //DemographicsForm frm = new DemographicsForm(SelectedAccount);
-        //    //frm.Show();
-        //}
-
-        private void PersonSearchToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Log.Instance.Trace($"Entering");
-            PersonSearchForm frm = new PersonSearchForm();
-            frm.ShowDialog();
-            if(frm.SelectedAccount != "" && frm.SelectedAccount != null)
-            {
-                _selectedAccount = frm.SelectedAccount;
-                LoadAccountData();
-            }
-            else
-            {
-                Log.Instance.Error($"Person search returned an empty selected account.");
-                MessageBox.Show("A valid account number was not returned from search. Please try again. If problem persists, report issue to an administrator.");
-            }
-        }
-
-        private void BtnDxSearch_Click(object sender, EventArgs e)
-        {
-            Log.Instance.Trace($"Entering");
-            var dictRecords = dictDxDb.Search(txtSearchDx.Text, currentAccount.trans_date.GetValueOrDefault(DateTime.Now));
-
-            dgvDxSearch.DataSource = dictRecords;
-            dgvDxSearch.Columns[nameof(DictDx.mod_date)].Visible = false;
-            dgvDxSearch.Columns[nameof(DictDx.mod_user)].Visible = false;
-            dgvDxSearch.Columns[nameof(DictDx.mod_prg)].Visible = false;
-            dgvDxSearch.Columns[nameof(DictDx.mod_host)].Visible = false;
-            dgvDxSearch.Columns[nameof(DictDx.deleted)].Visible = false;
-            dgvDxSearch.Columns[nameof(DictDx.AMA_year)].Visible = false;
-            dgvDxSearch.Columns[nameof(DictDx.id)].Visible = false;
-            dgvDxSearch.Columns[nameof(DictDx.version)].Visible = false;
-            dgvDxSearch.Columns[nameof(DictDx.rowguid)].Visible = false;
-        }
-
-        private void DgvDxSearch_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
-        {
-            Log.Instance.Trace($"Entering");
-            dgvDxSearch.Columns[nameof(DictDx.icd9_desc)].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            dgvDxSearch.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
-            dgvDxSearch.Columns[1].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-        }
-
-        private void DgvDiagnosis_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
-        {
-            Log.Instance.Trace($"Entering");
-            dgvDiagnosis.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
-            dgvDiagnosis.Columns[2].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-        }
-
-        private void DgvDxSearch_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
-        {
-            Log.Instance.Trace($"Entering");
-            int selectedRows = dgvDxSearch.Rows.GetRowCount(DataGridViewElementStates.Selected);
-            if (selectedRows > 0)
-            {
-                //add selected diagnosis to account dx grid
-                
-                string selectedCode = dgvDxSearch.SelectedRows[0].Cells[nameof(DictDx.icd9_num)].Value.ToString();
-                string selectedDesc = dgvDxSearch.SelectedRows[0].Cells[nameof(DictDx.icd9_desc)].Value.ToString();
-
-                if (dxBindingList.FirstOrDefault(n => n.Code == selectedCode) != null)
-                {
-                    //this code already exists in the list
-                    MessageBox.Show("Diagnosis already entered for this account", "Record Exists", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
-                    return;
-                }
-
-                int maxNo = 0;
-                if (dxBindingList.Count > 0)
-                    maxNo = dxBindingList.Max<PatDiag>(n => n.No);
-
-                if (maxNo >= 9)
-                {
-                    MessageBox.Show("Maximum number of diagnosis reached.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                }
-                else
-                {
-                    dxBindingList.Add(new PatDiag { No = maxNo + 1, Code = selectedCode, Description = selectedDesc });
-                }
-            }
-        }
-
-        private void TxtSearchDx_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            Log.Instance.Trace($"Entering");
-            if (e.KeyChar == (char)13)
-            {
-                Log.Instance.Debug("Enter key pressed");
-                BtnDxSearch_Click(sender, e);
-            }
-        }
-
-        private void TxtDxQuickAdd_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            Log.Instance.Trace($"Entering");
-            if (e.KeyChar == (char)13)
-            {
-                Log.Instance.Debug("Enter key pressed");
-                if(txtDxQuickAdd.Text != "")
-                {
-                    //check to see if the text entered is a valid DX code - if so, add the code and description to the selected grid
-
-                    if(dxBindingList.First<PatDiag>(n => n.Code == txtDxQuickAdd.Text) != null)
-                    {
-                        //this code already exists in the list
-                        MessageBox.Show("Diagnosis already entered for this account","Record Exists",MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
-                        txtDxQuickAdd.Text = "";
-                        return;
-                    }
-                    
-                    var record = dictDxDb.GetByCode(txtDxQuickAdd.Text, currentAccount.trans_date.GetValueOrDefault(DateTime.Now));
-                    if(record != null)
-                    {
-                        //this is a valid entry
-                        int maxNo = 0;
-                        if(dxBindingList.Count > 0)
-                            maxNo = dxBindingList.Max<PatDiag>(n => n.No);
-
-                        if(maxNo >= 9)
-                        {
-                            MessageBox.Show("Maximum number of diagnosis reached.","Error",MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                            txtDxQuickAdd.Text = "";
-                            return;
-                        }
-                        dxBindingList.Add(new PatDiag { No = maxNo+1, Code = record.icd9_num, Description = record.icd9_desc });
-                        txtDxQuickAdd.Text = "";
-                    }
-                    else
-                    {
-                        //not valid - clear box and do nothing
-                        txtDxQuickAdd.Text = "";
-                        //System.Media.SystemSounds.Beep.Play();
-                    }
-                }
-            }
-        }
-
-        private void BtnDxDelete_Click(object sender, EventArgs e)
-        {
-            Log.Instance.Trace($"Entering");
-            int selectedRows = dgvDiagnosis.Rows.GetRowCount(DataGridViewElementStates.Selected);
-            if (selectedRows > 0)
-            {
-                //add selected diagnosis to account dx grid
-
-                string selectedCode = dgvDiagnosis.SelectedRows[0].Cells[nameof(PatDiag.Code)].Value.ToString();
-                string selectedNo = dgvDiagnosis.SelectedRows[0].Cells[nameof(PatDiag.No)].Value.ToString();
-                                
-                var record = dxBindingList.IndexOf(dxBindingList.First<PatDiag>(n => n.Code == selectedCode));
-
-                dxBindingList.RemoveAt(record);
-
-                //loop through and renumber
-                for(int i=0; i < dxBindingList.Count; i++)
-                {
-                    dxBindingList[i].No = i + 1;
-                }
-
-            }
-        }
-
-        private void DgvDiagnosis_UserDeletingRow(object sender, DataGridViewRowCancelEventArgs e)
-        {
-            Log.Instance.Trace($"Entering");
-            e.Cancel = true;
-            BtnDxDelete_Click(sender, e);
-        }
-
-        private void BtnSaveDx_Click(object sender, EventArgs e)
-        {
-            Log.Instance.Trace($"Entering");
-
-            if (patDB.SaveDiagnoses(currentPat) == true)
-                MessageBox.Show("Diagnoses updated successfully.");
-            else
-                MessageBox.Show("Diagnosis update failed.");
-        }
-
-        private void BtnRefresh_Click(object sender, EventArgs e)
-        {
-            Log.Instance.Trace($"Entering");
-            LoadAccountData();
-        }
-
-        private void DgvCharges_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
-        {
-            Log.Instance.Trace($"Entering");
-            int selectedRows = dgvCharges.Rows.GetRowCount(DataGridViewElementStates.Selected);
-            if (selectedRows > 0)
-            {
-                   
-                DataGridViewRow row = dgvCharges.SelectedRows[0];
-                var chrg = chrgdb.GetById(Convert.ToInt32(row.Cells[nameof(Chrg.chrg_num)].Value.ToString()));
-
-                DisplayPOCOForm<Chrg> frm = new DisplayPOCOForm<Chrg>(chrg)
-                {
-                    Title = "Charge Details"
-                };
-                frm.Show();
-            }
-        }
-
-        /// <summary>
-        /// Single Click on charge table will display charge details for the clicked row in the
-        /// charge details grid.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void DgvCharges_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
-        {
-            Log.Instance.Trace($"Entering");
-            int selectedRows = dgvCharges.Rows.GetRowCount(DataGridViewElementStates.Selected);
-            if(selectedRows > 0)
-            {
-                DataGridViewRow row = dgvCharges.SelectedRows[0];
-                var chrg = chrgdb.GetById(Convert.ToInt32(row.Cells[nameof(Chrg.chrg_num)].Value.ToString()));
-
-                dgvChrgDetail.DataSource = chrg.ChrgDetails;
-
-                foreach (DataGridViewColumn col in dgvChrgDetail.Columns)
-                {
-                    col.Visible = false;
-                }
-
-                dgvChrgDetail.Columns[nameof(Amt.cpt4)].Visible = true;
-                dgvChrgDetail.Columns[nameof(Amt.bill_type)].Visible = true;
-                dgvChrgDetail.Columns[nameof(Amt.diagnosis_code_ptr)].Visible = true;
-                dgvChrgDetail.Columns[nameof(Amt.modi)].Visible = true;
-                dgvChrgDetail.Columns[nameof(Amt.modi2)].Visible = true;
-                dgvChrgDetail.Columns[nameof(Amt.revcode)].Visible = true;
-                dgvChrgDetail.Columns[nameof(Amt.type)].Visible = true;
-                dgvChrgDetail.Columns[nameof(Amt.bill_method)].Visible = true;
-                dgvChrgDetail.Columns[nameof(Amt.order_code)].Visible = true;
-                dgvChrgDetail.Columns[nameof(Amt.amount)].Visible = true;
-
-                dgvChrgDetail.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
-                dgvChrgDetail.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
-
-                dgvChrgDetail.Columns[nameof(Amt.amount)].DefaultCellStyle.Format = "N2";
-                
-            }
-        }
-
-        private void DgvCharges_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
-        {
-            Log.Instance.Trace($"Entering");
-            if (e.ColumnIndex == dgvCharges.Columns[nameof(Chrg.credited)].Index && e.Value.ToString() == "True" )
-            {
-                dgvCharges.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.Red;
-                dgvCharges.Rows[e.RowIndex].DefaultCellStyle.ForeColor = Color.White;
-            }
-        }
-
-        /// <summary>
-        /// Function will credit the charge selected in the charge grid.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void ToolStripCreditCharge_Click(object sender, EventArgs e)
-        {
-            Log.Instance.Trace($"Entering");
-            int selectedRows = dgvCharges.Rows.GetRowCount(DataGridViewElementStates.Selected);
-            if(selectedRows > 0)
-            {
-                DataGridViewRow row = dgvCharges.SelectedRows[0];
-
-                InputBoxResult prompt = InputBox.Show(string.Format("Credit Charge Number {0}?\nEnter credit reason.", 
-                    row.Cells[nameof(Chrg.chrg_num)].Value.ToString()),
-                    "Credit Charge", "");
-
-                if(prompt.ReturnCode == DialogResult.OK)
-                {
-                    chrgdb.CreditCharge(Convert.ToInt32(row.Cells[nameof(Chrg.chrg_num)].Value.ToString()), prompt.Text);
-                    //reload charge grids to pick up changes
-                    LoadCharges();
-                }
-            }
-        }
-
-        private void CkShowCreditedChrg_CheckedChanged(object sender, EventArgs e)
-        {
-            Log.Instance.Trace($"Entering");
-            LoadCharges();
-        }
-
-        private void DgvPayments_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
-        {
-            Log.Instance.Trace($"Entering");
-            int selectedRows = dgvPayments.Rows.GetRowCount(DataGridViewElementStates.Selected);
-            if (selectedRows > 0)
-            {
-
-                DataGridViewRow row = dgvPayments.SelectedRows[0];
-                var chk = chkdb.GetById(Convert.ToInt32(row.Cells[nameof(Chk.pay_no)].Value.ToString()));
-
-                DisplayPOCOForm<Chk> frm = new DisplayPOCOForm<Chk>(chk)
-                {
-                    Title = "Payment Details"
-                };
-                frm.Show();
-            }
-        }
-
-        private void BtnAddCharge_Click(object sender, EventArgs e)
-        {
-            Log.Instance.Trace($"Entering");
-            ChargeEntryForm frm = new ChargeEntryForm(currentAccountSummary);
-
-            if(frm.ShowDialog() == DialogResult.OK)
-            {
-                LoadAccountData();
-            }
-        }
-
-        private void BtnNoteAdd_Click(object sender, EventArgs e)
-        {
-            Log.Instance.Trace($"Entering");
-            InputBoxResult prompt = InputBox.Show("Enter note:","New Note");
-            Notes note = new Notes();
-
-            if (prompt.ReturnCode == DialogResult.OK)
-            {
-                note.account = currentAccountSummary.account;
-                note.comment = prompt.Text;
-                notesdb.Add(note);
-                //reload notes to pick up changes
-                LoadNotes();
-            }
-
-        }
-
-        private void ChangeDateOfServiceToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Log.Instance.Trace($"Entering");
-        }
-
-        private void ChangeFinancialClassToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Log.Instance.Trace($"Entering");
-        }
-
-        private void ChangeClientToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Log.Instance.Trace($"Entering");
-        }
+        #region DemographicTab
 
         private void LGuarCopyPatient_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
@@ -894,6 +447,54 @@ namespace LabBilling.Forms
             cbHolderSex.SelectedValue = cbSex.SelectedValue;
             cbInsRelation.SelectedValue = "01";
         }
+
+        private void SaveDemographics_Click(object sender, EventArgs e)
+        {
+            Log.Instance.Trace($"Entering");
+
+            currentAccount.pat_name = string.Format("{0} {1},{2} {3}", tbLastName.Text, tbSuffix.Text, tbFirstName.Text, tbMiddleName.Text);
+            currentAccount.ssn = tbSSN.Text;
+
+            accDB.Update(currentAccount);
+
+            currentPat.city_st_zip = string.Format("{0}, {1} {2}", tbCity.Text, cbState.SelectedValue.ToString(), tbZipcode.Text);
+            currentPat.pat_city = tbCity.Text;
+            currentPat.pat_addr1 = tbAddress1.Text;
+            currentPat.pat_addr2 = tbAddress2.Text;
+            currentPat.pat_email = tbEmailAddress.Text;
+            currentPat.pat_marital = cbMaritalStatus.SelectedValue.ToString();
+            currentPat.pat_phone = tbPhone.Text;
+            currentPat.pat_state = cbState.SelectedValue.ToString();
+            currentPat.pat_zip = tbZipcode.Text;
+            currentPat.pat_full_name = string.Format("{0},{1} {2}", tbLastName.Text, tbFirstName.Text, tbMiddleName.Text);
+            currentPat.dob_yyyy = DateTime.Parse(tbDateOfBirth.Text);
+            currentPat.guarantor = string.Format("{0} {1},{2} {3}",
+                tbGuarantorLastName.Text, tbGuarSuffix.Text, tbGuarFirstName.Text, tbGuarMiddleName.Text);
+            currentPat.guar_addr = tbGuarantorAddress.Text;
+            currentPat.guar_city = tbGuarCity.Text;
+            currentPat.guar_phone = tbGuarantorPhone.Text;
+            currentPat.guar_state = cbGuarState.SelectedValue.ToString();
+            currentPat.guar_zip = tbGuarZip.Text;
+            currentPat.g_city_st = string.Format("{0}, {1} {2}", tbGuarCity.Text, cbGuarState.SelectedValue.ToString(), tbGuarZip.Text);
+            currentPat.sex = cbSex.SelectedValue.ToString();
+            currentPat.relation = cbGuarantorRelation.SelectedValue.ToString();
+            currentPat.ssn = tbSSN.Text;
+
+            patDB.SaveAll(currentPat);
+
+            var controls = tabDemographics.Controls;
+
+            foreach (Control control in controls)
+            {
+                //set background back to white to indicate change has been saved to database
+                control.BackColor = Color.White;
+            }
+
+        }
+
+        #endregion
+
+        #region InsuranceTab
 
         private void BSaveInsurance_Click_1(object sender, EventArgs e)
         {
@@ -1161,6 +762,550 @@ namespace LabBilling.Forms
 
         }
 
+        #endregion
+
+        #region ChargeTab
+        private void LoadCharges()
+        {
+            Log.Instance.Trace("Entering");
+
+            //charges = chrgdb.GetByAccount(SelectedAccount, ckShowCreditedChrg.Checked).ToList();
+            //Log.Instance.Trace($"GetCharges returned {charges.Count} rows.");
+            dgvCharges.DataSource = chrgdb.GetByAccount(SelectedAccount, ckShowCreditedChrg.Checked);
+
+            foreach (DataGridViewColumn col in dgvCharges.Columns)
+            {
+                col.Visible = false;
+            }
+
+            dgvCharges.Columns[nameof(Chrg.credited)].Visible = true;
+            dgvCharges.Columns[nameof(Chrg.cdm)].Visible = true;
+            dgvCharges.Columns[nameof(Chrg.cdm_desc)].Visible = true;
+            dgvCharges.Columns[nameof(Chrg.qty)].Visible = true;
+            dgvCharges.Columns[nameof(Chrg.net_amt)].Visible = true;
+            dgvCharges.Columns[nameof(Chrg.service_date)].Visible = true;
+            dgvCharges.Columns[nameof(Chrg.status)].Visible = true;
+            dgvCharges.Columns[nameof(Chrg.comment)].Visible = true;
+            dgvCharges.Columns[nameof(Chrg.chrg_num)].Visible = true;
+            dgvCharges.Columns[nameof(Chrg.invoice)].Visible = true;
+
+            dgvCharges.Columns[nameof(Chrg.net_amt)].DefaultCellStyle.Format = "N2";
+            dgvCharges.Columns[nameof(Chrg.net_amt)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            dgvCharges.Columns[nameof(Chrg.calc_amt)].DefaultCellStyle.Format = "N2";
+            dgvCharges.Columns[nameof(Chrg.calc_amt)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            dgvCharges.Columns[nameof(Chrg.qty)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+
+            dgvCharges.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
+            dgvCharges.Columns[nameof(Chrg.cdm_desc)].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            dgvCharges.BackgroundColor = Color.AntiqueWhite;
+            dgvChrgDetail.BackgroundColor = Color.AntiqueWhite;
+
+        }
+
+        private void DgvCharges_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            Log.Instance.Trace($"Entering");
+            int selectedRows = dgvCharges.Rows.GetRowCount(DataGridViewElementStates.Selected);
+            if (selectedRows > 0)
+            {
+
+                DataGridViewRow row = dgvCharges.SelectedRows[0];
+                var chrg = chrgdb.GetById(Convert.ToInt32(row.Cells[nameof(Chrg.chrg_num)].Value.ToString()));
+
+                DisplayPOCOForm<Chrg> frm = new DisplayPOCOForm<Chrg>(chrg)
+                {
+                    Title = "Charge Details"
+                };
+                frm.Show();
+            }
+        }
+
+        /// <summary>
+        /// Single Click on charge table will display charge details for the clicked row in the
+        /// charge details grid.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void DgvCharges_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            Log.Instance.Trace($"Entering");
+            int selectedRows = dgvCharges.Rows.GetRowCount(DataGridViewElementStates.Selected);
+            if (selectedRows > 0)
+            {
+                DataGridViewRow row = dgvCharges.SelectedRows[0];
+                var chrg = chrgdb.GetById(Convert.ToInt32(row.Cells[nameof(Chrg.chrg_num)].Value.ToString()));
+
+                dgvChrgDetail.DataSource = chrg.ChrgDetails;
+
+                foreach (DataGridViewColumn col in dgvChrgDetail.Columns)
+                {
+                    col.Visible = false;
+                }
+
+                dgvChrgDetail.Columns[nameof(Amt.cpt4)].Visible = true;
+                dgvChrgDetail.Columns[nameof(Amt.bill_type)].Visible = true;
+                dgvChrgDetail.Columns[nameof(Amt.diagnosis_code_ptr)].Visible = true;
+                dgvChrgDetail.Columns[nameof(Amt.modi)].Visible = true;
+                dgvChrgDetail.Columns[nameof(Amt.modi2)].Visible = true;
+                dgvChrgDetail.Columns[nameof(Amt.revcode)].Visible = true;
+                dgvChrgDetail.Columns[nameof(Amt.type)].Visible = true;
+                dgvChrgDetail.Columns[nameof(Amt.bill_method)].Visible = true;
+                dgvChrgDetail.Columns[nameof(Amt.order_code)].Visible = true;
+                dgvChrgDetail.Columns[nameof(Amt.amount)].Visible = true;
+
+                dgvChrgDetail.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+                dgvChrgDetail.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
+
+                dgvChrgDetail.Columns[nameof(Amt.amount)].DefaultCellStyle.Format = "N2";
+
+            }
+        }
+
+        private void DgvCharges_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            Log.Instance.Trace($"Entering");
+            if (e.ColumnIndex == dgvCharges.Columns[nameof(Chrg.credited)].Index && e.Value.ToString() == "True")
+            {
+                dgvCharges.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.Red;
+                dgvCharges.Rows[e.RowIndex].DefaultCellStyle.ForeColor = Color.White;
+            }
+        }
+
+        /// <summary>
+        /// Function will credit the charge selected in the charge grid.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ToolStripCreditCharge_Click(object sender, EventArgs e)
+        {
+            Log.Instance.Trace($"Entering");
+            int selectedRows = dgvCharges.Rows.GetRowCount(DataGridViewElementStates.Selected);
+            if (selectedRows > 0)
+            {
+                DataGridViewRow row = dgvCharges.SelectedRows[0];
+
+                InputBoxResult prompt = InputBox.Show(string.Format("Credit Charge Number {0}?\nEnter credit reason.",
+                    row.Cells[nameof(Chrg.chrg_num)].Value.ToString()),
+                    "Credit Charge", "");
+
+                if (prompt.ReturnCode == DialogResult.OK)
+                {
+                    chrgdb.CreditCharge(Convert.ToInt32(row.Cells[nameof(Chrg.chrg_num)].Value.ToString()), prompt.Text);
+                    //reload charge grids to pick up changes
+                    LoadCharges();
+                }
+            }
+        }
+
+        private void CkShowCreditedChrg_CheckedChanged(object sender, EventArgs e)
+        {
+            Log.Instance.Trace($"Entering");
+            LoadCharges();
+        }
+
+        private void BtnAddCharge_Click(object sender, EventArgs e)
+        {
+            Log.Instance.Trace($"Entering");
+            ChargeEntryForm frm = new ChargeEntryForm(currentAccountSummary);
+
+            if (frm.ShowDialog() == DialogResult.OK)
+            {
+                LoadAccountData();
+            }
+        }
+
+        private void dgvChrgDetail_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            Log.Instance.Trace($"Entering");
+            //load dx into listbox
+            DxCodePointers.Items.Clear();
+            foreach (PatDiag diag in currentPat.Diagnoses)
+            {
+                DxCodePointers.Items.Add(diag.Code, CheckState.Unchecked);
+            }
+
+            //load dx pointers
+            int selectedRows = dgvChrgDetail.Rows.GetRowCount(DataGridViewElementStates.Selected);
+            if (selectedRows > 0)
+            {
+                DataGridViewRow row = dgvChrgDetail.SelectedRows[0];
+
+                string dxPtr = row.Cells["diagnosis_code_ptr"].Value.ToString();
+
+                string[] ptrs = dxPtr.Split(':');
+
+                foreach (var ptr in ptrs)
+                {
+                    if (ptr == "")
+                        break;
+
+                    int iPtr = Convert.ToInt32(ptr);
+
+                    DxCodePointers.SetItemChecked(iPtr - 1, true);
+                }
+
+            }
+
+        }
+
+        private void dgvChrgDetail_SelectionChanged(object sender, EventArgs e)
+        {
+            Log.Instance.Trace($"Entering");
+            //load dx into listbox
+            DxCodePointers.Items.Clear();
+            foreach (PatDiag diag in currentPat.Diagnoses)
+            {
+                DxCodePointers.Items.Add(diag.Code, CheckState.Unchecked);
+            }
+
+            //load dx pointers
+            int selectedRows = dgvChrgDetail.Rows.GetRowCount(DataGridViewElementStates.Selected);
+            if (selectedRows > 0)
+            {
+                DataGridViewRow row = dgvChrgDetail.SelectedRows[0];
+
+                string dxPtr = row.Cells["diagnosis_code_ptr"].Value.ToString();
+
+                string[] ptrs = dxPtr.Split(':');
+
+                foreach (var ptr in ptrs)
+                {
+                    if (ptr == "")
+                        break;
+
+                    int iPtr = Convert.ToInt32(ptr);
+
+                    DxCodePointers.SetItemChecked(iPtr - 1, true);
+                }
+
+            }
+
+        }
+
+        #endregion
+
+        #region PaymentsTab
+
+        private void LoadPayments()
+        {
+            Log.Instance.Trace("Entering");
+
+            tbTotalPayment.Text = currentAccountSummary.TotalPayments.ToString("c");
+            tbTotalContractual.Text = currentAccountSummary.TotalContractual.ToString("c");
+            tbTotalWriteOff.Text = currentAccountSummary.TotalWriteOff.ToString("c");
+            tbTotalPmtAll.Text = (currentAccountSummary.TotalPayments + currentAccountSummary.TotalContractual + currentAccountSummary.TotalWriteOff).ToString("c");
+
+            //payments = chkdb.GetByAccount(SelectedAccount);
+            //Log.Instance.Debug($"GetPayments returned {payments.Count} rows.");
+            dgvPayments.DataSource = chkdb.GetByAccount(SelectedAccount);
+
+            foreach (DataGridViewColumn col in dgvPayments.Columns)
+            {
+                col.Visible = false;
+            }
+
+            dgvPayments.Columns[nameof(Chk.amt_paid)].Visible = true;
+            dgvPayments.Columns[nameof(Chk.chk_date)].Visible = true;
+            dgvPayments.Columns[nameof(Chk.chk_no)].Visible = true;
+            dgvPayments.Columns[nameof(Chk.comment)].Visible = true;
+            dgvPayments.Columns[nameof(Chk.contractual)].Visible = true;
+            dgvPayments.Columns[nameof(Chk.date_rec)].Visible = true;
+            dgvPayments.Columns[nameof(Chk.invoice)].Visible = true;
+            dgvPayments.Columns[nameof(Chk.source)].Visible = true;
+            dgvPayments.Columns[nameof(Chk.status)].Visible = true;
+            dgvPayments.Columns[nameof(Chk.write_off)].Visible = true;
+            dgvPayments.Columns[nameof(Chk.write_off_code)].Visible = true;
+            dgvPayments.Columns[nameof(Chk.w_off_date)].Visible = true;
+            
+            dgvPayments.Columns[nameof(Chk.amt_paid)].DefaultCellStyle.Format = "N2";
+            dgvPayments.Columns[nameof(Chk.amt_paid)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            dgvPayments.Columns[nameof(Chk.contractual)].DefaultCellStyle.Format = "N2";
+            dgvPayments.Columns[nameof(Chk.contractual)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            dgvPayments.Columns[nameof(Chk.write_off)].DefaultCellStyle.Format = "N2";
+            dgvPayments.Columns[nameof(Chk.write_off)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+
+            dgvPayments.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
+            dgvPayments.BackgroundColor = Color.AntiqueWhite;
+        }
+
+        private void DgvPayments_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            Log.Instance.Trace($"Entering");
+            int selectedRows = dgvPayments.Rows.GetRowCount(DataGridViewElementStates.Selected);
+            if (selectedRows > 0)
+            {
+
+                DataGridViewRow row = dgvPayments.SelectedRows[0];
+                var chk = chkdb.GetById(Convert.ToInt32(row.Cells[nameof(Chk.pay_no)].Value.ToString()));
+
+                DisplayPOCOForm<Chk> frm = new DisplayPOCOForm<Chk>(chk)
+                {
+                    Title = "Payment Details"
+                };
+                frm.Show();
+            }
+        }
+
+        #endregion
+
+        #region DiagnosisTab
+
+        private void LoadDx()
+        {
+            Log.Instance.Trace("Entering");
+            dgvDiagnosis.DataSource = new BindingSource(dxBindingList, null);
+        }
+        private void BtnDxSearch_Click(object sender, EventArgs e)
+        {
+            Log.Instance.Trace($"Entering");
+            var dictRecords = dictDxDb.Search(txtSearchDx.Text, currentAccount.trans_date.GetValueOrDefault(DateTime.Now));
+
+            dgvDxSearch.DataSource = dictRecords;
+            dgvDxSearch.Columns[nameof(DictDx.mod_date)].Visible = false;
+            dgvDxSearch.Columns[nameof(DictDx.mod_user)].Visible = false;
+            dgvDxSearch.Columns[nameof(DictDx.mod_prg)].Visible = false;
+            dgvDxSearch.Columns[nameof(DictDx.mod_host)].Visible = false;
+            dgvDxSearch.Columns[nameof(DictDx.deleted)].Visible = false;
+            dgvDxSearch.Columns[nameof(DictDx.AMA_year)].Visible = false;
+            dgvDxSearch.Columns[nameof(DictDx.id)].Visible = false;
+            dgvDxSearch.Columns[nameof(DictDx.version)].Visible = false;
+            dgvDxSearch.Columns[nameof(DictDx.rowguid)].Visible = false;
+        }
+
+        private void DgvDxSearch_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
+        {
+            Log.Instance.Trace($"Entering");
+            dgvDxSearch.Columns[nameof(DictDx.icd9_desc)].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            dgvDxSearch.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
+            dgvDxSearch.Columns[1].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+        }
+
+        private void DgvDiagnosis_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
+        {
+            Log.Instance.Trace($"Entering");
+            dgvDiagnosis.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
+            dgvDiagnosis.Columns[2].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+        }
+
+        private void DgvDxSearch_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            Log.Instance.Trace($"Entering");
+            int selectedRows = dgvDxSearch.Rows.GetRowCount(DataGridViewElementStates.Selected);
+            if (selectedRows > 0)
+            {
+                //add selected diagnosis to account dx grid
+
+                string selectedCode = dgvDxSearch.SelectedRows[0].Cells[nameof(DictDx.icd9_num)].Value.ToString();
+                string selectedDesc = dgvDxSearch.SelectedRows[0].Cells[nameof(DictDx.icd9_desc)].Value.ToString();
+
+                if (dxBindingList.FirstOrDefault(n => n.Code == selectedCode) != null)
+                {
+                    //this code already exists in the list
+                    MessageBox.Show("Diagnosis already entered for this account", "Record Exists", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+                    return;
+                }
+
+                int maxNo = 0;
+                if (dxBindingList.Count > 0)
+                    maxNo = dxBindingList.Max<PatDiag>(n => n.No);
+
+                if (maxNo >= 9)
+                {
+                    MessageBox.Show("Maximum number of diagnosis reached.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                }
+                else
+                {
+                    dxBindingList.Add(new PatDiag { No = maxNo + 1, Code = selectedCode, Description = selectedDesc });
+                }
+            }
+        }
+
+        private void TxtSearchDx_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            Log.Instance.Trace($"Entering");
+            if (e.KeyChar == (char)13)
+            {
+                Log.Instance.Debug("Enter key pressed");
+                BtnDxSearch_Click(sender, e);
+            }
+        }
+
+        private void TxtDxQuickAdd_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            Log.Instance.Trace($"Entering");
+            if (e.KeyChar == (char)13)
+            {
+                Log.Instance.Debug("Enter key pressed");
+                if (txtDxQuickAdd.Text != "")
+                {
+                    //check to see if the text entered is a valid DX code - if so, add the code and description to the selected grid
+
+                    if (dxBindingList.First<PatDiag>(n => n.Code == txtDxQuickAdd.Text) != null)
+                    {
+                        //this code already exists in the list
+                        MessageBox.Show("Diagnosis already entered for this account", "Record Exists", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+                        txtDxQuickAdd.Text = "";
+                        return;
+                    }
+
+                    var record = dictDxDb.GetByCode(txtDxQuickAdd.Text, currentAccount.trans_date.GetValueOrDefault(DateTime.Now));
+                    if (record != null)
+                    {
+                        //this is a valid entry
+                        int maxNo = 0;
+                        if (dxBindingList.Count > 0)
+                            maxNo = dxBindingList.Max<PatDiag>(n => n.No);
+
+                        if (maxNo >= 9)
+                        {
+                            MessageBox.Show("Maximum number of diagnosis reached.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                            txtDxQuickAdd.Text = "";
+                            return;
+                        }
+                        dxBindingList.Add(new PatDiag { No = maxNo + 1, Code = record.icd9_num, Description = record.icd9_desc });
+                        txtDxQuickAdd.Text = "";
+                    }
+                    else
+                    {
+                        //not valid - clear box and do nothing
+                        txtDxQuickAdd.Text = "";
+                        //System.Media.SystemSounds.Beep.Play();
+                    }
+                }
+            }
+        }
+
+        private void BtnDxDelete_Click(object sender, EventArgs e)
+        {
+            Log.Instance.Trace($"Entering");
+            int selectedRows = dgvDiagnosis.Rows.GetRowCount(DataGridViewElementStates.Selected);
+            if (selectedRows > 0)
+            {
+                //add selected diagnosis to account dx grid
+
+                string selectedCode = dgvDiagnosis.SelectedRows[0].Cells[nameof(PatDiag.Code)].Value.ToString();
+                string selectedNo = dgvDiagnosis.SelectedRows[0].Cells[nameof(PatDiag.No)].Value.ToString();
+
+                var record = dxBindingList.IndexOf(dxBindingList.First<PatDiag>(n => n.Code == selectedCode));
+
+                dxBindingList.RemoveAt(record);
+
+                //loop through and renumber
+                for (int i = 0; i < dxBindingList.Count; i++)
+                {
+                    dxBindingList[i].No = i + 1;
+                }
+
+            }
+        }
+
+        private void DgvDiagnosis_UserDeletingRow(object sender, DataGridViewRowCancelEventArgs e)
+        {
+            Log.Instance.Trace($"Entering");
+            e.Cancel = true;
+            BtnDxDelete_Click(sender, e);
+        }
+
+        private void BtnSaveDx_Click(object sender, EventArgs e)
+        {
+            Log.Instance.Trace($"Entering");
+
+            if (patDB.SaveDiagnoses(currentPat) == true)
+                MessageBox.Show("Diagnoses updated successfully.");
+            else
+                MessageBox.Show("Diagnosis update failed.");
+        }
+
+        private void dgvDiagnosis_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+
+        }
+
+        #endregion
+
+        #region NotesTab
+
+        private void LoadNotes()
+        {
+            Log.Instance.Trace("Entering");
+            notes = notesdb.GetByAccount(currentAccountSummary.account).ToList();
+            tbNotesDisplay.Text = "";
+            tbNotesDisplay.BackColor = Color.AntiqueWhite;
+            foreach(Notes note in notes)
+            {
+                tbNotesDisplay.DeselectAll();
+                tbNotesDisplay.SelectionFont = new Font(tbNotesDisplay.SelectionFont, FontStyle.Bold);
+                tbNotesDisplay.AppendText(note.mod_date + " - " + note.mod_user);
+                tbNotesDisplay.SelectionFont = new Font(tbNotesDisplay.SelectionFont, FontStyle.Regular);
+                tbNotesDisplay.AppendText(Environment.NewLine + note.comment + Environment.NewLine + Environment.NewLine);
+            }
+        }
+
+        private void BtnNoteAdd_Click(object sender, EventArgs e)
+        {
+            Log.Instance.Trace($"Entering");
+            InputBoxResult prompt = InputBox.Show("Enter note:", "New Note");
+            Notes note = new Notes();
+
+            if (prompt.ReturnCode == DialogResult.OK)
+            {
+                note.account = currentAccountSummary.account;
+                note.comment = prompt.Text;
+                notesdb.Add(note);
+                //reload notes to pick up changes
+                LoadNotes();
+            }
+
+        }
+
+        #endregion
+
+        #region BillingActivityTab
+
+        private void LoadBillingActivity()
+        {
+            Log.Instance.Trace("Entering");
+
+            //billingActivities = dbBillingActivity.GetByAccount(currentAccountSummary.account);
+            dgvBillActivity.DataSource = dbBillingActivity.GetByAccount(currentAccountSummary.account);
+           
+        }
+
+        #endregion
+
+
+        private void PersonSearchToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Log.Instance.Trace($"Entering");
+            PersonSearchForm frm = new PersonSearchForm();
+            frm.ShowDialog();
+            if(frm.SelectedAccount != "" && frm.SelectedAccount != null)
+            {
+                _selectedAccount = frm.SelectedAccount;
+                LoadAccountData();
+            }
+            else
+            {
+                Log.Instance.Error($"Person search returned an empty selected account.");
+                MessageBox.Show("A valid account number was not returned from search. Please try again. If problem persists, report issue to an administrator.");
+            }
+        }
+
+        private void ChangeDateOfServiceToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Log.Instance.Trace($"Entering");
+        }
+
+        private void ChangeFinancialClassToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Log.Instance.Trace($"Entering");
+        }
+
+        private void ChangeClientToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Log.Instance.Trace($"Entering");
+        }
+
         private void AddOnChangeHandlerToInputControls(Control ctrl)
         {
             Log.Instance.Trace($"Entering");
@@ -1203,50 +1348,6 @@ namespace LabBilling.Forms
 
         }
 
-        private void SaveDemographics_Click(object sender, EventArgs e)
-        {
-            Log.Instance.Trace($"Entering");
-
-            currentAccount.pat_name = string.Format("{0} {1},{2} {3}", tbLastName.Text, tbSuffix.Text, tbFirstName.Text, tbMiddleName.Text);
-            currentAccount.ssn = tbSSN.Text;
-
-            accDB.Update(currentAccount);
-
-            currentPat.city_st_zip = string.Format("{0}, {1} {2}", tbCity.Text, cbState.SelectedValue.ToString(), tbZipcode.Text);
-            currentPat.pat_city = tbCity.Text;
-            currentPat.pat_addr1 = tbAddress1.Text;
-            currentPat.pat_addr2 = tbAddress2.Text;
-            currentPat.pat_email = tbEmailAddress.Text;
-            currentPat.pat_marital = cbMaritalStatus.SelectedValue.ToString();
-            currentPat.pat_phone = tbPhone.Text;
-            currentPat.pat_state = cbState.SelectedValue.ToString();
-            currentPat.pat_zip = tbZipcode.Text;
-            currentPat.pat_full_name = string.Format("{0},{1} {2}", tbLastName.Text, tbFirstName.Text, tbMiddleName.Text);
-            currentPat.dob_yyyy = DateTime.Parse(tbDateOfBirth.Text);
-            currentPat.guarantor = string.Format("{0} {1},{2} {3}",
-                tbGuarantorLastName.Text, tbGuarSuffix.Text, tbGuarFirstName.Text, tbGuarMiddleName.Text);
-            currentPat.guar_addr = tbGuarantorAddress.Text;
-            currentPat.guar_city = tbGuarCity.Text;
-            currentPat.guar_phone = tbGuarantorPhone.Text;
-            currentPat.guar_state = cbGuarState.SelectedValue.ToString();
-            currentPat.guar_zip = tbGuarZip.Text;
-            currentPat.g_city_st = string.Format("{0}, {1} {2}", tbGuarCity.Text, cbGuarState.SelectedValue.ToString(), tbGuarZip.Text);
-            currentPat.sex = cbSex.SelectedValue.ToString();
-            currentPat.relation = cbGuarantorRelation.SelectedValue.ToString();
-            currentPat.ssn = tbSSN.Text;
-
-            patDB.SaveAll(currentPat);
-
-            var controls = tabDemographics.Controls;
-
-            foreach (Control control in controls)
-            {
-                //set background back to white to indicate change has been saved to database
-                control.BackColor = Color.White;
-            }
-
-        }
-
         private void ClearHoldStatusToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Log.Instance.Trace($"Entering");
@@ -1273,11 +1374,6 @@ namespace LabBilling.Forms
             //AccountRepository accDB = new AccountRepository();
             currentAccount.status = "NEW";
             accDB.Update(currentAccount);
-
-        }
-
-        private void dgvDiagnosis_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
-        {
 
         }
     }

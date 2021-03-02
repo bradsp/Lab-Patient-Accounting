@@ -13,6 +13,8 @@ namespace LabBilling.Forms
         private AccountSummary _currentAccount = new AccountSummary();
         private readonly CdmRepository cdmRepository = new CdmRepository(Helper.ConnVal);
         private readonly ChrgRepository dbChrg = new ChrgRepository(Helper.ConnVal);
+        MTGCComboBoxItem[] cdmItemsByNo;
+        MTGCComboBoxItem[] cdmItemsByDesc;
 
         public ChargeEntryForm(AccountSummary currentAccount)
         {
@@ -32,24 +34,28 @@ namespace LabBilling.Forms
             #region Setup Charge Item Combobox
             var chrgItems = cdmRepository.GetAll().ToList();
 
-            MTGCComboBoxItem[] items = new MTGCComboBoxItem[chrgItems.Count];
+            cdmItemsByNo = new MTGCComboBoxItem[chrgItems.Count];
+            cdmItemsByDesc = new MTGCComboBoxItem[chrgItems.Count];
             int i = 0;
 
             foreach (Cdm cdm in chrgItems)
             {
-                items[i] = new MTGCComboBoxItem(cdm.descript, cdm.cdm);
+                cdmItemsByDesc[i] = new MTGCComboBoxItem(cdm.descript, cdm.cdm);
+                cdmItemsByNo[i] = new MTGCComboBoxItem(cdm.cdm, cdm.descript);
                 i++;
             }
 
+            Array.Sort(cdmItemsByNo);
+            Array.Sort(cdmItemsByDesc);
+            
             cbChargeItem.ColumnNum = 2;
             cbChargeItem.GridLineHorizontal = true;
             cbChargeItem.GridLineVertical = true;
-            cbChargeItem.ColumnWidth = "200;75";
-            //cbInsCode.DropDownStyle = MTGCComboBox.CustomDropDownStyle.DropDown;
+            cbChargeItem.ColumnWidth = "75; 200";
             cbChargeItem.SelectedIndex = -1;
             cbChargeItem.Items.Clear();
             cbChargeItem.LoadingType = MTGCComboBox.CaricamentoCombo.ComboBoxItem;
-            cbChargeItem.Items.AddRange(items);
+            cbChargeItem.Items.AddRange(cdmItemsByNo);
             #endregion
 
         }
@@ -57,36 +63,37 @@ namespace LabBilling.Forms
         private void btnSubmit_Click(object sender, EventArgs e)
         {
             Log.Instance.Trace($"Entering");
-            Chrg newChrg = new Chrg();
 
-            //newChrg.account = _currentAccount.account;
-            //newChrg.service_date = _currentAccount.trans_date;
-            //newChrg.cdm = cbChargeItem.SelectedValue;
-            //newChrg.qty = Convert.ToInt32(nQty.Value);
-            //newChrg.comment = tbComment.Text;
-
-            //dbChrg.AddCharge(newChrg);
             ChargeProcessing cp = new ChargeProcessing(Helper.ConnVal);
 
             try
             {
+                string cdm = "";
+
+                if (SearchByCdm.Checked)
+                    cdm = cbChargeItem.SelectedItem.Col1.ToString();
+                if (SearchByDescription.Checked)
+                    cdm = cbChargeItem.SelectedItem.Col1.ToString();
+
                 cp.AddCharge(_currentAccount.account,
-                    cbChargeItem.SelectedValue,
+                    cdm,
                     Convert.ToInt32(nQty.Value),
                     _currentAccount.trans_date ?? DateTime.Today,
                     tbComment.Text);
             }
             catch(CdmNotFoundException)
             {
-
+                // this should not happen
+                MessageBox.Show("CDM number is not valid.");
             }
             catch(AccountNotFoundException)
             {
-
+                MessageBox.Show("Account number is not valid.");
             }
-            catch(Exception)
+            catch(Exception ex)
             {
-
+                MessageBox.Show(ex.Message);
+                return;
             }
 
             DialogResult = DialogResult.OK;
@@ -98,6 +105,27 @@ namespace LabBilling.Forms
             Log.Instance.Trace($"Entering");
             DialogResult = DialogResult.Cancel;
             return;
+        }
+
+        private void SearchByCheckChanged (object sender, EventArgs e)
+        {
+            if(SearchByCdm.Checked)
+            {
+                cbChargeItem.ColumnWidth = "75; 200";
+                cbChargeItem.SelectedIndex = -1;
+                cbChargeItem.Items.Clear();
+                cbChargeItem.LoadingType = MTGCComboBox.CaricamentoCombo.ComboBoxItem;
+                cbChargeItem.Items.AddRange(cdmItemsByNo);
+            }
+            else if(SearchByDescription.Checked)
+            {
+                cbChargeItem.ColumnWidth = "200; 75";
+                cbChargeItem.SelectedIndex = -1;
+                cbChargeItem.Items.Clear();
+                cbChargeItem.LoadingType = MTGCComboBox.CaricamentoCombo.ComboBoxItem;
+                cbChargeItem.Items.AddRange(cdmItemsByDesc);
+            }
+
         }
     }
 }

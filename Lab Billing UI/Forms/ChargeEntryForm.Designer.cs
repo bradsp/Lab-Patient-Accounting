@@ -43,7 +43,11 @@
             this.cbChargeItem = new MTGCComboBox();
             this.tbDateOfService = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
+            this.SearchByCdm = new System.Windows.Forms.RadioButton();
+            this.SearchByDescription = new System.Windows.Forms.RadioButton();
+            this.SearchBy = new System.Windows.Forms.GroupBox();
             ((System.ComponentModel.ISupportInitialize)(this.nQty)).BeginInit();
+            this.SearchBy.SuspendLayout();
             this.SuspendLayout();
             // 
             // tbBannerMRN
@@ -51,7 +55,7 @@
             this.tbBannerMRN.BackColor = System.Drawing.SystemColors.Control;
             this.tbBannerMRN.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.tbBannerMRN.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbBannerMRN.Location = new System.Drawing.Point(233, 37);
+            this.tbBannerMRN.Location = new System.Drawing.Point(233, 13);
             this.tbBannerMRN.Name = "tbBannerMRN";
             this.tbBannerMRN.ReadOnly = true;
             this.tbBannerMRN.Size = new System.Drawing.Size(94, 22);
@@ -63,7 +67,7 @@
             this.tbBannerAccount.BackColor = System.Drawing.SystemColors.Control;
             this.tbBannerAccount.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.tbBannerAccount.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbBannerAccount.Location = new System.Drawing.Point(99, 37);
+            this.tbBannerAccount.Location = new System.Drawing.Point(99, 13);
             this.tbBannerAccount.Name = "tbBannerAccount";
             this.tbBannerAccount.ReadOnly = true;
             this.tbBannerAccount.Size = new System.Drawing.Size(128, 22);
@@ -75,17 +79,17 @@
             this.tbBannerName.BackColor = System.Drawing.SystemColors.Control;
             this.tbBannerName.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.tbBannerName.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbBannerName.Location = new System.Drawing.Point(12, 12);
+            this.tbBannerName.Location = new System.Drawing.Point(12, 41);
             this.tbBannerName.Name = "tbBannerName";
             this.tbBannerName.ReadOnly = true;
-            this.tbBannerName.Size = new System.Drawing.Size(573, 19);
+            this.tbBannerName.Size = new System.Drawing.Size(547, 19);
             this.tbBannerName.TabIndex = 28;
             this.tbBannerName.TabStop = false;
             // 
             // label37
             // 
             this.label37.AutoSize = true;
-            this.label37.Location = new System.Drawing.Point(13, 42);
+            this.label37.Location = new System.Drawing.Point(13, 18);
             this.label37.Name = "label37";
             this.label37.Size = new System.Drawing.Size(80, 13);
             this.label37.TabIndex = 27;
@@ -94,7 +98,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(37, 111);
+            this.label1.Location = new System.Drawing.Point(28, 154);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(64, 13);
             this.label1.TabIndex = 31;
@@ -103,7 +107,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(55, 147);
+            this.label2.Location = new System.Drawing.Point(46, 190);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(46, 13);
             this.label2.TabIndex = 33;
@@ -111,7 +115,7 @@
             // 
             // nQty
             // 
-            this.nQty.Location = new System.Drawing.Point(108, 145);
+            this.nQty.Location = new System.Drawing.Point(99, 188);
             this.nQty.Minimum = new decimal(new int[] {
             1,
             0,
@@ -129,7 +133,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(50, 183);
+            this.label3.Location = new System.Drawing.Point(41, 226);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(51, 13);
             this.label3.TabIndex = 35;
@@ -137,14 +141,14 @@
             // 
             // tbComment
             // 
-            this.tbComment.Location = new System.Drawing.Point(108, 180);
+            this.tbComment.Location = new System.Drawing.Point(99, 223);
             this.tbComment.Name = "tbComment";
             this.tbComment.Size = new System.Drawing.Size(451, 20);
             this.tbComment.TabIndex = 2;
             // 
             // btnSubmit
             // 
-            this.btnSubmit.Location = new System.Drawing.Point(108, 229);
+            this.btnSubmit.Location = new System.Drawing.Point(101, 274);
             this.btnSubmit.Name = "btnSubmit";
             this.btnSubmit.Size = new System.Drawing.Size(75, 23);
             this.btnSubmit.TabIndex = 3;
@@ -154,7 +158,7 @@
             // 
             // btnCancel
             // 
-            this.btnCancel.Location = new System.Drawing.Point(201, 229);
+            this.btnCancel.Location = new System.Drawing.Point(194, 274);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 4;
@@ -182,13 +186,14 @@
             this.cbChargeItem.DropDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(193)))), ((int)(((byte)(210)))), ((int)(((byte)(238)))));
             this.cbChargeItem.DropDownForeColor = System.Drawing.Color.Black;
             this.cbChargeItem.DropDownStyle = MTGCComboBox.CustomDropDownStyle.DropDown;
+            this.cbChargeItem.DropDownWidth = 141;
             this.cbChargeItem.GridLineColor = System.Drawing.Color.LightGray;
             this.cbChargeItem.GridLineHorizontal = false;
             this.cbChargeItem.GridLineVertical = false;
             this.cbChargeItem.HighlightBorderColor = System.Drawing.Color.Blue;
             this.cbChargeItem.HighlightBorderOnMouseEvents = true;
             this.cbChargeItem.LoadingType = MTGCComboBox.CaricamentoCombo.ComboBoxItem;
-            this.cbChargeItem.Location = new System.Drawing.Point(108, 107);
+            this.cbChargeItem.Location = new System.Drawing.Point(99, 150);
             this.cbChargeItem.ManagingFastMouseMoving = true;
             this.cbChargeItem.ManagingFastMouseMovingInterval = 30;
             this.cbChargeItem.Name = "cbChargeItem";
@@ -203,7 +208,7 @@
             this.tbDateOfService.BackColor = System.Drawing.SystemColors.Control;
             this.tbDateOfService.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.tbDateOfService.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbDateOfService.Location = new System.Drawing.Point(457, 37);
+            this.tbDateOfService.Location = new System.Drawing.Point(431, 13);
             this.tbDateOfService.Name = "tbDateOfService";
             this.tbDateOfService.ReadOnly = true;
             this.tbDateOfService.Size = new System.Drawing.Size(128, 22);
@@ -213,17 +218,55 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(371, 42);
+            this.label4.Location = new System.Drawing.Point(345, 18);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(81, 13);
             this.label4.TabIndex = 40;
             this.label4.Text = "Date of Service";
             // 
+            // SearchByCdm
+            // 
+            this.SearchByCdm.AutoSize = true;
+            this.SearchByCdm.Checked = true;
+            this.SearchByCdm.Location = new System.Drawing.Point(8, 23);
+            this.SearchByCdm.Name = "SearchByCdm";
+            this.SearchByCdm.Size = new System.Drawing.Size(89, 17);
+            this.SearchByCdm.TabIndex = 42;
+            this.SearchByCdm.TabStop = true;
+            this.SearchByCdm.Text = "CDM Number";
+            this.SearchByCdm.UseVisualStyleBackColor = true;
+            this.SearchByCdm.CheckedChanged += new System.EventHandler(this.SearchByCheckChanged);
+            // 
+            // SearchByDescription
+            // 
+            this.SearchByDescription.AutoSize = true;
+            this.SearchByDescription.Location = new System.Drawing.Point(103, 23);
+            this.SearchByDescription.Name = "SearchByDescription";
+            this.SearchByDescription.Size = new System.Drawing.Size(78, 17);
+            this.SearchByDescription.TabIndex = 42;
+            this.SearchByDescription.TabStop = true;
+            this.SearchByDescription.Text = "Description";
+            this.SearchByDescription.UseVisualStyleBackColor = true;
+            this.SearchByDescription.CheckedChanged += new System.EventHandler(this.SearchByCheckChanged);
+            // 
+            // SearchBy
+            // 
+            this.SearchBy.Controls.Add(this.SearchByCdm);
+            this.SearchBy.Controls.Add(this.SearchByDescription);
+            this.SearchBy.Location = new System.Drawing.Point(99, 95);
+            this.SearchBy.Name = "SearchBy";
+            this.SearchBy.Size = new System.Drawing.Size(188, 49);
+            this.SearchBy.TabIndex = 43;
+            this.SearchBy.TabStop = false;
+            this.SearchBy.Text = "Search By";
+            // 
             // ChargeEntryForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(597, 264);
+            this.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.ClientSize = new System.Drawing.Size(571, 349);
+            this.Controls.Add(this.SearchBy);
             this.Controls.Add(this.tbDateOfService);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.cbChargeItem);
@@ -239,11 +282,17 @@
             this.Controls.Add(this.tbBannerName);
             this.Controls.Add(this.label37);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "ChargeEntryForm";
+            this.ShowInTaskbar = false;
+            this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Add Charge";
             this.Load += new System.EventHandler(this.ChargeEntryForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.nQty)).EndInit();
+            this.SearchBy.ResumeLayout(false);
+            this.SearchBy.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -265,5 +314,8 @@
         private MTGCComboBox cbChargeItem;
         private System.Windows.Forms.TextBox tbDateOfService;
         private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.RadioButton SearchByCdm;
+        private System.Windows.Forms.RadioButton SearchByDescription;
+        private System.Windows.Forms.GroupBox SearchBy;
     }
 }
