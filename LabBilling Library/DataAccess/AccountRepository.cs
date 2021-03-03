@@ -35,6 +35,7 @@ namespace LabBilling.Core.DataAccess
             Log.Instance.Debug($"Entering");
 
             var record = dbConnection.SingleOrDefault<Account>("where account = @0", account);
+            record.Pat = dbConnection.SingleOrDefault<Pat>("where account = @0", account);
 
             return record;
         }

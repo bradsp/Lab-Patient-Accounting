@@ -29,13 +29,13 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle23 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle24 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AccountForm));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle27 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle28 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle29 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle30 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle15 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle16 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle17 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle18 = new System.Windows.Forms.DataGridViewCellStyle();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.summaryTab = new System.Windows.Forms.TabPage();
             this.summaryTable = new System.Windows.Forms.TableLayoutPanel();
@@ -153,7 +153,6 @@
             this.dgvDiagnosis = new System.Windows.Forms.DataGridView();
             this.btnDxSearch = new System.Windows.Forms.PictureBox();
             this.tabCharges = new System.Windows.Forms.TabPage();
-            this.label45 = new System.Windows.Forms.Label();
             this.btnAddCharge = new System.Windows.Forms.Button();
             this.tbTotalCharges = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
@@ -199,7 +198,10 @@
             this.tbBannerClient = new System.Windows.Forms.TextBox();
             this.tbBannerFinClass = new System.Windows.Forms.TextBox();
             this.label60 = new System.Windows.Forms.Label();
-            this.DxCodePointers = new System.Windows.Forms.CheckedListBox();
+            this.DiagnosisPointerDGV = new System.Windows.Forms.DataGridView();
+            this.label45 = new System.Windows.Forms.Label();
+            this.AddPayment = new System.Windows.Forms.Button();
+            this.UpdateDxPointers = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.summaryTab.SuspendLayout();
             this.tabDemographics.SuspendLayout();
@@ -222,6 +224,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.dgvBillActivity)).BeginInit();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.btnRefresh)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.DiagnosisPointerDGV)).BeginInit();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -928,24 +931,24 @@
             this.dgvInsurance.AllowUserToDeleteRows = false;
             this.dgvInsurance.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            dataGridViewCellStyle23.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle23.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle23.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle23.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle23.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle23.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle23.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvInsurance.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle23;
+            dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle11.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle11.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle11.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle11.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle11.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle11.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvInsurance.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle11;
             this.dgvInsurance.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.tableLayoutPanel1.SetColumnSpan(this.dgvInsurance, 4);
-            dataGridViewCellStyle24.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle24.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle24.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle24.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle24.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle24.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle24.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dgvInsurance.DefaultCellStyle = dataGridViewCellStyle24;
+            dataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle12.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle12.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle12.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle12.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle12.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle12.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dgvInsurance.DefaultCellStyle = dataGridViewCellStyle12;
             this.dgvInsurance.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnF2;
             this.dgvInsurance.Location = new System.Drawing.Point(3, 3);
             this.dgvInsurance.MultiSelect = false;
@@ -1537,8 +1540,9 @@
             // 
             // tabCharges
             // 
-            this.tabCharges.Controls.Add(this.DxCodePointers);
+            this.tabCharges.Controls.Add(this.UpdateDxPointers);
             this.tabCharges.Controls.Add(this.label45);
+            this.tabCharges.Controls.Add(this.DiagnosisPointerDGV);
             this.tabCharges.Controls.Add(this.btnAddCharge);
             this.tabCharges.Controls.Add(this.tbTotalCharges);
             this.tabCharges.Controls.Add(this.label6);
@@ -1555,20 +1559,10 @@
             this.tabCharges.Text = "Charges";
             this.tabCharges.UseVisualStyleBackColor = true;
             // 
-            // label45
-            // 
-            this.label45.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.label45.AutoSize = true;
-            this.label45.Location = new System.Drawing.Point(718, 384);
-            this.label45.Name = "label45";
-            this.label45.Size = new System.Drawing.Size(122, 13);
-            this.label45.TabIndex = 8;
-            this.label45.Text = "Diagnosis Code Pointers";
-            // 
             // btnAddCharge
             // 
-            this.btnAddCharge.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnAddCharge.Location = new System.Drawing.Point(1008, 445);
+            this.btnAddCharge.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnAddCharge.Location = new System.Drawing.Point(1006, 6);
             this.btnAddCharge.Name = "btnAddCharge";
             this.btnAddCharge.Size = new System.Drawing.Size(137, 23);
             this.btnAddCharge.TabIndex = 7;
@@ -1629,6 +1623,8 @@
             // 
             // dgvChrgDetail
             // 
+            this.dgvChrgDetail.AllowUserToAddRows = false;
+            this.dgvChrgDetail.AllowUserToDeleteRows = false;
             this.dgvChrgDetail.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dgvChrgDetail.BackgroundColor = System.Drawing.SystemColors.ControlLightLight;
@@ -1637,7 +1633,7 @@
             this.dgvChrgDetail.Name = "dgvChrgDetail";
             this.dgvChrgDetail.RowHeadersVisible = false;
             this.dgvChrgDetail.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvChrgDetail.Size = new System.Drawing.Size(671, 154);
+            this.dgvChrgDetail.Size = new System.Drawing.Size(597, 154);
             this.dgvChrgDetail.TabIndex = 1;
             this.dgvChrgDetail.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dgvChrgDetail_CellMouseClick);
             this.dgvChrgDetail.SelectionChanged += new System.EventHandler(this.dgvChrgDetail_SelectionChanged);
@@ -1650,24 +1646,24 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dgvCharges.BackgroundColor = System.Drawing.SystemColors.ControlLightLight;
-            dataGridViewCellStyle27.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle27.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle27.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle27.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle27.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle27.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle27.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvCharges.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle27;
+            dataGridViewCellStyle15.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle15.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle15.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle15.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle15.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle15.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle15.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvCharges.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle15;
             this.dgvCharges.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvCharges.ContextMenuStrip = this.menuCharges;
-            dataGridViewCellStyle28.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle28.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle28.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle28.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle28.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle28.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle28.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dgvCharges.DefaultCellStyle = dataGridViewCellStyle28;
+            dataGridViewCellStyle16.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle16.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle16.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle16.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle16.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle16.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle16.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dgvCharges.DefaultCellStyle = dataGridViewCellStyle16;
             this.dgvCharges.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.dgvCharges.Location = new System.Drawing.Point(5, 36);
             this.dgvCharges.Name = "dgvCharges";
@@ -1695,6 +1691,7 @@
             // 
             // tabPayments
             // 
+            this.tabPayments.Controls.Add(this.AddPayment);
             this.tabPayments.Controls.Add(this.label10);
             this.tabPayments.Controls.Add(this.tbTotalPmtAll);
             this.tabPayments.Controls.Add(this.label9);
@@ -1785,29 +1782,32 @@
             // 
             // dgvPayments
             // 
+            this.dgvPayments.AllowUserToAddRows = false;
+            this.dgvPayments.AllowUserToDeleteRows = false;
             this.dgvPayments.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            dataGridViewCellStyle29.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle29.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle29.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle29.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle29.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle29.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle29.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvPayments.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle29;
+            dataGridViewCellStyle17.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle17.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle17.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle17.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle17.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle17.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle17.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvPayments.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle17;
             this.dgvPayments.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle30.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle30.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle30.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle30.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle30.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle30.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle30.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dgvPayments.DefaultCellStyle = dataGridViewCellStyle30;
+            dataGridViewCellStyle18.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle18.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle18.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle18.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle18.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle18.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle18.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dgvPayments.DefaultCellStyle = dataGridViewCellStyle18;
             this.dgvPayments.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.dgvPayments.Location = new System.Drawing.Point(3, 115);
             this.dgvPayments.Name = "dgvPayments";
+            this.dgvPayments.ReadOnly = true;
             this.dgvPayments.RowHeadersVisible = false;
             this.dgvPayments.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvPayments.Size = new System.Drawing.Size(1145, 438);
@@ -2061,14 +2061,50 @@
             this.label60.TabIndex = 31;
             this.label60.Text = "Financial Class:";
             // 
-            // DxCodePointers
+            // DiagnosisPointerDGV
             // 
-            this.DxCodePointers.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.DxCodePointers.FormattingEnabled = true;
-            this.DxCodePointers.Location = new System.Drawing.Point(720, 400);
-            this.DxCodePointers.Name = "DxCodePointers";
-            this.DxCodePointers.Size = new System.Drawing.Size(120, 154);
-            this.DxCodePointers.TabIndex = 9;
+            this.DiagnosisPointerDGV.AllowUserToAddRows = false;
+            this.DiagnosisPointerDGV.AllowUserToDeleteRows = false;
+            this.DiagnosisPointerDGV.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.DiagnosisPointerDGV.BackgroundColor = System.Drawing.SystemColors.ControlLightLight;
+            this.DiagnosisPointerDGV.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.DiagnosisPointerDGV.Location = new System.Drawing.Point(608, 400);
+            this.DiagnosisPointerDGV.Name = "DiagnosisPointerDGV";
+            this.DiagnosisPointerDGV.Size = new System.Drawing.Size(302, 156);
+            this.DiagnosisPointerDGV.TabIndex = 8;
+            this.DiagnosisPointerDGV.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DiagnosisPointerDGV_CellContentClick);
+            // 
+            // label45
+            // 
+            this.label45.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.label45.AutoSize = true;
+            this.label45.Location = new System.Drawing.Point(605, 384);
+            this.label45.Name = "label45";
+            this.label45.Size = new System.Drawing.Size(94, 13);
+            this.label45.TabIndex = 9;
+            this.label45.Text = "Diagnosis Pointers";
+            // 
+            // AddPayment
+            // 
+            this.AddPayment.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.AddPayment.Location = new System.Drawing.Point(1068, 15);
+            this.AddPayment.Name = "AddPayment";
+            this.AddPayment.Size = new System.Drawing.Size(75, 23);
+            this.AddPayment.TabIndex = 9;
+            this.AddPayment.Text = "Add Payment";
+            this.AddPayment.UseVisualStyleBackColor = true;
+            this.AddPayment.Click += new System.EventHandler(this.AddPayment_Click);
+            // 
+            // UpdateDxPointers
+            // 
+            this.UpdateDxPointers.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.UpdateDxPointers.Location = new System.Drawing.Point(783, 374);
+            this.UpdateDxPointers.Name = "UpdateDxPointers";
+            this.UpdateDxPointers.Size = new System.Drawing.Size(127, 25);
+            this.UpdateDxPointers.TabIndex = 10;
+            this.UpdateDxPointers.Text = "Update Dx Pointers";
+            this.UpdateDxPointers.UseVisualStyleBackColor = true;
+            this.UpdateDxPointers.Click += new System.EventHandler(this.UpdateDxPointers_Click);
             // 
             // AccountForm
             // 
@@ -2125,6 +2161,7 @@
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.btnRefresh)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.DiagnosisPointerDGV)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -2285,7 +2322,6 @@
         private System.Windows.Forms.TextBox tbGuarantorLastName;
         private System.Windows.Forms.Label label30;
         private System.Windows.Forms.LinkLabel lGuarCopyPatient;
-        private System.Windows.Forms.Label label45;
         private System.Windows.Forms.TabPage tabBillingActivity;
         private System.Windows.Forms.ToolStripMenuItem viewAuditInfoToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem clearHoldStatusToolStripMenuItem;
@@ -2294,7 +2330,10 @@
         private System.Windows.Forms.TextBox tbBannerFinClass;
         private System.Windows.Forms.Label label60;
         private System.Windows.Forms.DataGridView dgvBillActivity;
-        private System.Windows.Forms.CheckedListBox DxCodePointers;
+        private System.Windows.Forms.DataGridView DiagnosisPointerDGV;
+        private System.Windows.Forms.Label label45;
+        private System.Windows.Forms.Button AddPayment;
+        private System.Windows.Forms.Button UpdateDxPointers;
     }
 }
 

@@ -9,6 +9,8 @@ using LabBilling.Core;
 using LabBilling.Logging;
 using LabBilling.Core.Models;
 using RFClassLibrary;
+using System.Data;
+using System.Text;
 
 namespace LabBilling.Forms
 {
@@ -74,6 +76,8 @@ namespace LabBilling.Forms
 
                 AddOnChangeHandlerToInputControls(tabDemographics);
             }
+
+            UpdateDxPointers.Enabled = false; // start disabled until a box has been checked.
         }
 
         private void AccountForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -854,6 +858,7 @@ namespace LabBilling.Forms
                 dgvChrgDetail.Columns[nameof(Amt.amount)].Visible = true;
 
                 dgvChrgDetail.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+                dgvChrgDetail.Columns[nameof(Amt.cpt4)].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
                 dgvChrgDetail.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
 
                 dgvChrgDetail.Columns[nameof(Amt.amount)].DefaultCellStyle.Format = "N2";
@@ -917,46 +922,22 @@ namespace LabBilling.Forms
         private void dgvChrgDetail_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
             Log.Instance.Trace($"Entering");
-            //load dx into listbox
-            DxCodePointers.Items.Clear();
-            foreach (PatDiag diag in currentPat.Diagnoses)
-            {
-                DxCodePointers.Items.Add(diag.Code, CheckState.Unchecked);
-            }
-
-            //load dx pointers
-            int selectedRows = dgvChrgDetail.Rows.GetRowCount(DataGridViewElementStates.Selected);
-            if (selectedRows > 0)
-            {
-                DataGridViewRow row = dgvChrgDetail.SelectedRows[0];
-
-                string dxPtr = row.Cells["diagnosis_code_ptr"].Value.ToString();
-
-                string[] ptrs = dxPtr.Split(':');
-
-                foreach (var ptr in ptrs)
-                {
-                    if (ptr == "")
-                        break;
-
-                    int iPtr = Convert.ToInt32(ptr);
-
-                    DxCodePointers.SetItemChecked(iPtr - 1, true);
-                }
-
-            }
-
         }
 
         private void dgvChrgDetail_SelectionChanged(object sender, EventArgs e)
         {
-            Log.Instance.Trace($"Entering");
-            //load dx into listbox
-            DxCodePointers.Items.Clear();
-            foreach (PatDiag diag in currentPat.Diagnoses)
+            if(UpdateDxPointers.Enabled == true)
             {
-                DxCodePointers.Items.Add(diag.Code, CheckState.Unchecked);
+                if(MessageBox.Show("Changes were made to diagnosis pointers. Save changes?", "Save Changes?", 
+                    MessageBoxButtons.YesNo, MessageBoxIcon.Question) 
+                    == DialogResult.Yes)
+                {
+                    UpdateDxPointers_Click(sender, e);                    
+                }
+                UpdateDxPointers.Enabled = false;
             }
+
+            Log.Instance.Trace($"Entering");
 
             //load dx pointers
             int selectedRows = dgvChrgDetail.Rows.GetRowCount(DataGridViewElementStates.Selected);
@@ -968,18 +949,137 @@ namespace LabBilling.Forms
 
                 string[] ptrs = dxPtr.Split(':');
 
-                foreach (var ptr in ptrs)
+                DataTable dt = new DataTable("DxPointer");
+                dt.Columns.Add("DxNo", typeof(int));
+                dt.Columns.Add("DxCode", typeof(string));
+                dt.Columns.Add("Ptr1", typeof(bool));
+                dt.Columns.Add("Ptr2", typeof(bool));
+                dt.Columns.Add("Ptr3", typeof(bool));
+                dt.Columns.Add("Ptr4", typeof(bool));
+
+                try
                 {
-                    if (ptr == "")
-                        break;
+                    int iDx = 1;
+                    foreach (PatDiag diag in currentPat.Diagnoses)
+                    {
+                        dt.Rows.Add(new object[] { iDx++, diag.Code, false, false, false, false });
+                    }
 
-                    int iPtr = Convert.ToInt32(ptr);
+                    int i = 1;
+                    foreach (string ptr in ptrs)
+                    {
+                        if (ptr == null || ptr == "")
+                            continue;
+                        int iPtr = Convert.ToInt32(ptr);
+                        switch (i)
+                        {
+                            case 1:
+                                dt.Rows[iPtr - 1]["Ptr1"] = true;
+                                break;
+                            case 2:
+                                dt.Rows[iPtr - 1]["Ptr2"] = true;
+                                break;
+                            case 3:
+                                dt.Rows[iPtr - 1]["Ptr3"] = true;
+                                break;
+                            case 4:
+                                dt.Rows[iPtr - 1]["Ptr4"] = true;
+                                break;
+                            default:
+                                break;
+                        }
+                        i++;
+                    }
 
-                    DxCodePointers.SetItemChecked(iPtr - 1, true);
+                    DiagnosisPointerDGV.DataSource = dt;
+                    DiagnosisPointerDGV.Columns["DxCode"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill; 
+                    DiagnosisPointerDGV.AutoResizeColumns();
                 }
+                catch(Exception ex)
+                {
+                    Log.Instance.Error(ex.Message);
+                    MessageBox.Show("Error loading Diagnosis Code Pointer. Exception has been logged. Report to Administrator.");
+                }
+            }
+        }
 
+        private void UpdateDxPointers_Click(object sender, EventArgs e)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            for (int c = 2; c < DiagnosisPointerDGV.ColumnCount; c++)
+            {
+                for (int r = 0; r < DiagnosisPointerDGV.RowCount; r++)
+                {
+                    if((bool)DiagnosisPointerDGV.Rows[r].Cells[c].Value == true)
+                    {
+                        sb.Append(DiagnosisPointerDGV.Rows[r].Cells[0].Value.ToString() + ":");
+                    }
+                }
             }
 
+            string dxPtr = sb.ToString();
+
+
+            //update amt record
+
+            Amt amt = new Amt();
+
+            amt.uri = Convert.ToInt32(dgvChrgDetail.SelectedRows[0].Cells[nameof(amt.uri)].Value);
+            amt.amount = Convert.ToDouble(dgvChrgDetail.SelectedRows[0].Cells[nameof(amt.amount)].Value?? 0.0);
+            amt.bill_method = dgvChrgDetail.SelectedRows[0].Cells[nameof(amt.bill_method)].Value?.ToString();
+            amt.bill_type = dgvChrgDetail.SelectedRows[0].Cells[nameof(amt.bill_type)].Value?.ToString();
+            amt.chrg_num = Convert.ToDouble(dgvChrgDetail.SelectedRows[0].Cells[nameof(amt.chrg_num)].Value ?? 0.0);
+            amt.cpt4 = dgvChrgDetail.SelectedRows[0].Cells[nameof(amt.cpt4)].Value?.ToString();
+            amt.diagnosis_code_ptr = dxPtr;
+            amt.modi = dgvChrgDetail.SelectedRows[0].Cells[nameof(amt.modi)].Value?.ToString();
+            amt.modi2 = dgvChrgDetail.SelectedRows[0].Cells[nameof(amt.modi2)].Value?.ToString();
+            amt.mt_req_no = dgvChrgDetail.SelectedRows[0].Cells[nameof(amt.mt_req_no)].Value?.ToString();
+            amt.order_code = dgvChrgDetail.SelectedRows[0].Cells[nameof(amt.order_code)].Value?.ToString();
+            amt.pointer_set = true;
+            amt.revcode = dgvChrgDetail.SelectedRows[0].Cells[nameof(amt.revcode)].Value?.ToString();
+            amt.type = dgvChrgDetail.SelectedRows[0].Cells[nameof(amt.type)].Value?.ToString();
+
+            AmtRepository amtRepository = new AmtRepository(Helper.ConnVal);
+            try
+            {
+                amtRepository.Update(amt);
+            }
+            catch(Exception ex)
+            {
+                Log.Instance.Error(ex.Message);
+                MessageBox.Show("Error updating charge detail record. Please try again. If error continues, report error to Administrator.");
+                return;
+            }
+
+            UpdateDxPointers.Enabled = false;
+            LoadCharges();
+            dgvChrgDetail.DataSource = null;
+        }
+
+        private void DiagnosisPointerDGV_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            DiagnosisPointerDGV.EndEdit();
+
+            if(e.ColumnIndex > 1 )
+            {
+                UpdateDxPointers.Enabled = true;
+
+                DataGridViewCheckBoxCell cbCell = DiagnosisPointerDGV.Rows[e.RowIndex].Cells[e.ColumnIndex] as DataGridViewCheckBoxCell;
+                bool checkedValue = (bool)cbCell.Value;
+
+                if (checkedValue == true)
+                {
+                    //loop through the column entries and ensure only one is checked
+                    for (int i = 0; i < DiagnosisPointerDGV.RowCount; i++)
+                    {
+                        if(i != e.RowIndex)
+                        {
+                            DiagnosisPointerDGV.Rows[i].Cells[e.ColumnIndex].Value = false;
+                        }
+                    }
+                }
+            }
         }
 
         #endregion
@@ -1044,6 +1144,11 @@ namespace LabBilling.Forms
                 };
                 frm.Show();
             }
+        }
+
+        private void AddPayment_Click(object sender, EventArgs e)
+        {
+
         }
 
         #endregion
@@ -1376,5 +1481,6 @@ namespace LabBilling.Forms
             accDB.Update(currentAccount);
 
         }
+
     }
 }

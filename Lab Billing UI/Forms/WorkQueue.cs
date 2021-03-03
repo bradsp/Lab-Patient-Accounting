@@ -616,30 +616,6 @@ namespace LabBilling.Forms
 
                 SqlCommand cmdSelectBilling = new SqlCommand(
                     string.Format("exec usp_ViewerAcc_Billing_Table @acc = '{0}'", strAcc)
-                     //    new SqlCommand(
-                     // string.Format("with cte as ( "+
-                     //    "select  chrg.account, sum(qty) over (partition by chrg.account,cpt4,modi,modi2)  as [qty], " +//chrg.cdm, 
-                     // "cpt4, type, sum(amount)   over (partition by chrg.account,cpt4,modi,modi2)as [amount]  " +
-                     // ", case when modi <> '' " +
-                     // " then modi " +
-                     // " else " +
-                     // " case when lmrp is null " +
-                     // " then null else " +
-                     // " case when lmrp = 0 " +
-                     // " then 'GA' else 'GZ' end " +
-                     // " end end as modi " +
-                     // ", revcode, modi2, diagnosis_code_ptr " +
-                     // " from chrg  " +
-                     // " inner join amt on amt.chrg_num = chrg.chrg_num  " +
-                     // " left outer join abn on abn.account = chrg.account and chrg.cdm = abn.cdm " +
-                     // " where chrg.account = '{0}' " +
-                     // " and chrg.cdm <> 'CBILL' and credited = 0 " +
-                     //" ) "+
-                     //"select * from cte "+
-                     //"where qty <> 0 and qty*amount > 0"+
-                     // " order by account, cpt4, modi, modi2" 
-
-                     // , strAcc)
                      , connection);
 
                 daAcc.SelectCommand = cmdSelectBilling;
@@ -5198,63 +5174,63 @@ namespace LabBilling.Forms
                         newErr = strErr.Insert(0, string.Format("{0} | ", "LMRP"));
                     }
                     else
-                        if (strErr.ToUpper().Contains("FINCODE")
-                            || strErr.ToUpper().Contains("FIN_CODE")
-                            )
+                    if (strErr.ToUpper().Contains("FINCODE")
+                        || strErr.ToUpper().Contains("FIN_CODE")
+                        )
                     {
                         newErr = strErr.Insert(0, string.Format("{0} | ", "FINCODE"));
                     }
                     else
-                            if (strErr.Contains("DO NOT BILL. This insurance requires diagnosis pointers (dictionary edit)")
-                                || strErr.Contains("DO NOT BILL. Policy Number is not all Numeric. (dictionary edit)")
-                                || strErr.Contains("DO NOT BILL. Insurance does not accept behavioral codes. (dictionary edit)")
-                                || strErr.ToUpper().Contains("INSURANCE POLICY NUMBER")
-                                || strErr.Contains("Insurance A policy and group number is missing.")
-                                || strErr.Contains("BlueCross Policy number is null or blank.")
-                                || strErr.Contains("Primary Insurance policy number is not within the range 9 - 11.")
-                                || strErr.Contains("Primary Insurance policy number must be between 7 and 12 characters long.")
-                                || strErr.Contains("DO NOT BILL. Medicare does not allow these tests. '83880','G0479','G0480'(dictionary edit)")
-                                || strErr.Contains("is not a letter, digit or space in policy number.")
-                                || strErr.Contains("Insurance does not accept obesity codes. (dictionary edit)")
-                                )
+                    if (strErr.Contains("DO NOT BILL. This insurance requires diagnosis pointers (dictionary edit)")
+                        || strErr.Contains("DO NOT BILL. Policy Number is not all Numeric. (dictionary edit)")
+                        || strErr.Contains("DO NOT BILL. Insurance does not accept behavioral codes. (dictionary edit)")
+                        || strErr.ToUpper().Contains("INSURANCE POLICY NUMBER")
+                        || strErr.Contains("Insurance A policy and group number is missing.")
+                        || strErr.Contains("BlueCross Policy number is null or blank.")
+                        || strErr.Contains("Primary Insurance policy number is not within the range 9 - 11.")
+                        || strErr.Contains("Primary Insurance policy number must be between 7 and 12 characters long.")
+                        || strErr.Contains("DO NOT BILL. Medicare does not allow these tests. '83880','G0479','G0480'(dictionary edit)")
+                        || strErr.Contains("is not a letter, digit or space in policy number.")
+                        || strErr.Contains("Insurance does not accept obesity codes. (dictionary edit)")
+                        )
                     {
                         newErr = strErr.Insert(0, string.Format("{0} | ", "INS"));
                     }
                     else
-                                if (strErr.Contains("Zip directory has city as [")
-                                    || strErr.Contains("Pat relations listed as [01] not compatable with Ins relation of [02].")
-                                    || strErr.Contains("Zip code")
-                                    || strErr.Contains("Physicians NPI is blank for this patient.")
-                                    || strErr.Contains("DO NOT BILL. No physician on record. (dictionary edit)")
-                                    || strErr.Contains("has a non alpha character in the last name.")
-                                    )
+                    if (strErr.Contains("Zip directory has city as [")
+                        || strErr.Contains("Pat relations listed as [01] not compatable with Ins relation of [02].")
+                        || strErr.Contains("Zip code")
+                        || strErr.Contains("Physicians NPI is blank for this patient.")
+                        || strErr.Contains("DO NOT BILL. No physician on record. (dictionary edit)")
+                        || strErr.Contains("has a non alpha character in the last name.")
+                        )
                     {
                         newErr = strErr.Insert(0, string.Format("{0} | ", "DEMO"));
                     }
                     else
-                                    if (strErr.Contains("DO NOT BILL. Has no ICD codes. (dictionary edit)")
-                                        || strErr.Contains("Diagnosis contains routine codes. (dictionary edit)")
-                                        || strErr.Contains("Diagnosis contains dental codes. (dictionary edit)")
-                                        )
+                    if (strErr.Contains("DO NOT BILL. Has no ICD codes. (dictionary edit)")
+                        || strErr.Contains("Diagnosis contains routine codes. (dictionary edit)")
+                        || strErr.Contains("Diagnosis contains dental codes. (dictionary edit)")
+                        )
                     {
                         newErr = strErr.Insert(0, string.Format("{0} | ", "DIAG"));
                     }
                     else
-                                        if (strErr.Contains("Charges contain CPT 83516 with a qty of [")
-                                            || strErr.Contains("Charges contain CPT 83519 with a qty of [")
-                                            || strErr.Contains("Charges contain CPT 82607 with a qty of [")
-                                            || strErr.Contains("Charges contain CPT 36415 with a qty of [")
-                                            || strErr.Contains("Charges contain CPT 86611 with a qty of [")
-                                            || strErr.Contains("Charges contain CPT 86665 with a qty of [")
-                                            || strErr.Contains("[Acute Hepatitis Panel]")
-                                            || strErr.Contains("Account has multiple Venipunctures.")
-                                            )
+                    if (strErr.Contains("Charges contain CPT 83516 with a qty of [")
+                        || strErr.Contains("Charges contain CPT 83519 with a qty of [")
+                        || strErr.Contains("Charges contain CPT 82607 with a qty of [")
+                        || strErr.Contains("Charges contain CPT 36415 with a qty of [")
+                        || strErr.Contains("Charges contain CPT 86611 with a qty of [")
+                        || strErr.Contains("Charges contain CPT 86665 with a qty of [")
+                        || strErr.Contains("[Acute Hepatitis Panel]")
+                        || strErr.Contains("Account has multiple Venipunctures.")
+                        )
                     {
                         newErr = strErr.Insert(0, string.Format("{0} | ", "CHRG"));
                     }
                     else
-                                            if (strErr.Contains("are mutually exclusive. And, have a CCI indicator of 0.")
-                                                || strErr.Contains("are invalid together. And, have a CCI indicator of 1."))
+                    if (strErr.Contains("are mutually exclusive. And, have a CCI indicator of 0.")
+                        || strErr.Contains("are invalid together. And, have a CCI indicator of 1."))
                     {
                         newErr = strErr.Insert(0, string.Format("{0} | ", "MUTEX"));
                     }
@@ -5262,13 +5238,6 @@ namespace LabBilling.Forms
                     {
                         newErr = strErr.Insert(0, string.Format("{0} | ", "UNK"));
                     }
-
-
-
-
-
-
-
 
 
                     if (m_dicErrorTotals.TryGetValue(newErr, out nVal))
@@ -5432,13 +5401,6 @@ namespace LabBilling.Forms
         {
             Log.Instance.Debug($"Entering");
             tsslAccounts.Text = string.Format("ACCOUNTS: {0}", dgvAccount.Rows.Count);
-        }
-
-        private void tsbAbout_Click(object sender, EventArgs e)
-        {
-            Log.Instance.Debug($"Entering");
-            AboutBox ab = new AboutBox();
-            ab.ShowDialog();
         }
 
         private void tsbPrintGrid_Click(object sender, EventArgs e)

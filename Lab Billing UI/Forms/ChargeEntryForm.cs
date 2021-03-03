@@ -79,7 +79,8 @@ namespace LabBilling.Forms
                     cdm,
                     Convert.ToInt32(nQty.Value),
                     _currentAccount.trans_date ?? DateTime.Today,
-                    tbComment.Text);
+                    tbComment.Text,
+                    ReferenceNumber.Text);
             }
             catch(CdmNotFoundException)
             {

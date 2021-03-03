@@ -83,6 +83,16 @@ namespace LabBilling.Core.DataAccess
         public virtual bool Update(T table)
         {
             Log.Instance.Trace("Entering");
+
+            if (table.mod_date == null)
+                table.mod_date = DateTime.Now;
+            if (table.mod_host == "" || table.mod_host == null)
+                table.mod_host = Environment.MachineName;
+            if (table.mod_prg == "" || table.mod_prg == null)
+                table.mod_prg = System.AppDomain.CurrentDomain.FriendlyName;
+            if (table.mod_user == "" || table.mod_user == null)
+                table.mod_user = Environment.UserName.ToString();
+
             dbConnection.Update(table);
             Log.Instance.Trace("Exiting");
             return true;

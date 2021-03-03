@@ -39,7 +39,7 @@ namespace LabBilling.Core
         /// <param name="qty"></param>
         /// <param name="comment"></param>
         /// <returns>Charge number of newly entered charge or < 0 if an error occurs.</returns>
-        public int AddCharge(string account, string cdm, int qty, DateTime serviceDate, string comment = null)
+        public int AddCharge(string account, string cdm, int qty, DateTime serviceDate, string comment = null, string refNumber = null)
         {
             //verify the account exists - if not return -1
             Account accData = accountRepository.GetByAccount(account);
@@ -76,7 +76,7 @@ namespace LabBilling.Core
             chrg.lname = ln;
             chrg.mname = mn;
             chrg.mt_mnem = cdmData.mnem;
-            chrg.mt_req_no = "";
+            chrg.mt_req_no = refNumber;
             chrg.order_site = "";
             chrg.pat_dob = accData.Pat.dob_yyyy;
             chrg.pat_name = accData.pat_name;
@@ -87,6 +87,8 @@ namespace LabBilling.Core
             chrg.service_date = serviceDate;
             chrg.status = "NEW";
             chrg.unitno = accData.HNE_NUMBER;
+            chrg.responsiblephy = "";
+
 
             //need to determine the correct fee schedule - for now default to 1
             double ztotal = 0.0;

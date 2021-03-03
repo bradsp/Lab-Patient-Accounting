@@ -20,11 +20,8 @@ namespace LabBilling.Core.Models
         public string bill_type { get; set; }
         public string bill_method { get; set; }
         public bool pointer_set { get; set; }
-        [ResultColumn]
         public DateTime? mod_date { get; set; }
-        [ResultColumn]
         public string mod_user { get; set; }
-        [ResultColumn]
         public string mod_prg { get; set; }
         public bool deleted { get; set; }
 

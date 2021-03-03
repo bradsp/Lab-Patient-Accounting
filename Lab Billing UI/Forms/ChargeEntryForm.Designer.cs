@@ -46,6 +46,8 @@
             this.SearchByCdm = new System.Windows.Forms.RadioButton();
             this.SearchByDescription = new System.Windows.Forms.RadioButton();
             this.SearchBy = new System.Windows.Forms.GroupBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.ReferenceNumber = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.nQty)).BeginInit();
             this.SearchBy.SuspendLayout();
             this.SuspendLayout();
@@ -59,7 +61,7 @@
             this.tbBannerMRN.Name = "tbBannerMRN";
             this.tbBannerMRN.ReadOnly = true;
             this.tbBannerMRN.Size = new System.Drawing.Size(94, 22);
-            this.tbBannerMRN.TabIndex = 30;
+            this.tbBannerMRN.TabIndex = 2;
             this.tbBannerMRN.TabStop = false;
             // 
             // tbBannerAccount
@@ -71,7 +73,7 @@
             this.tbBannerAccount.Name = "tbBannerAccount";
             this.tbBannerAccount.ReadOnly = true;
             this.tbBannerAccount.Size = new System.Drawing.Size(128, 22);
-            this.tbBannerAccount.TabIndex = 29;
+            this.tbBannerAccount.TabIndex = 1;
             this.tbBannerAccount.TabStop = false;
             // 
             // tbBannerName
@@ -83,7 +85,7 @@
             this.tbBannerName.Name = "tbBannerName";
             this.tbBannerName.ReadOnly = true;
             this.tbBannerName.Size = new System.Drawing.Size(547, 19);
-            this.tbBannerName.TabIndex = 28;
+            this.tbBannerName.TabIndex = 5;
             this.tbBannerName.TabStop = false;
             // 
             // label37
@@ -92,7 +94,7 @@
             this.label37.Location = new System.Drawing.Point(13, 18);
             this.label37.Name = "label37";
             this.label37.Size = new System.Drawing.Size(80, 13);
-            this.label37.TabIndex = 27;
+            this.label37.TabIndex = 0;
             this.label37.Text = "Account/MRN:";
             // 
             // label1
@@ -101,7 +103,7 @@
             this.label1.Location = new System.Drawing.Point(28, 154);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(64, 13);
-            this.label1.TabIndex = 31;
+            this.label1.TabIndex = 7;
             this.label1.Text = "Charge Item";
             // 
             // label2
@@ -110,7 +112,7 @@
             this.label2.Location = new System.Drawing.Point(46, 190);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(46, 13);
-            this.label2.TabIndex = 33;
+            this.label2.TabIndex = 9;
             this.label2.Text = "Quantity";
             // 
             // nQty
@@ -123,7 +125,7 @@
             0});
             this.nQty.Name = "nQty";
             this.nQty.Size = new System.Drawing.Size(120, 20);
-            this.nQty.TabIndex = 1;
+            this.nQty.TabIndex = 10;
             this.nQty.Value = new decimal(new int[] {
             1,
             0,
@@ -136,7 +138,7 @@
             this.label3.Location = new System.Drawing.Point(41, 226);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(51, 13);
-            this.label3.TabIndex = 35;
+            this.label3.TabIndex = 13;
             this.label3.Text = "Comment";
             // 
             // tbComment
@@ -144,14 +146,14 @@
             this.tbComment.Location = new System.Drawing.Point(99, 223);
             this.tbComment.Name = "tbComment";
             this.tbComment.Size = new System.Drawing.Size(451, 20);
-            this.tbComment.TabIndex = 2;
+            this.tbComment.TabIndex = 14;
             // 
             // btnSubmit
             // 
             this.btnSubmit.Location = new System.Drawing.Point(101, 274);
             this.btnSubmit.Name = "btnSubmit";
             this.btnSubmit.Size = new System.Drawing.Size(75, 23);
-            this.btnSubmit.TabIndex = 3;
+            this.btnSubmit.TabIndex = 15;
             this.btnSubmit.Text = "Submit";
             this.btnSubmit.UseVisualStyleBackColor = true;
             this.btnSubmit.Click += new System.EventHandler(this.btnSubmit_Click);
@@ -161,7 +163,7 @@
             this.btnCancel.Location = new System.Drawing.Point(194, 274);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
-            this.btnCancel.TabIndex = 4;
+            this.btnCancel.TabIndex = 16;
             this.btnCancel.Text = "Cancel";
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
@@ -201,7 +203,7 @@
             this.cbChargeItem.SelectedItem = null;
             this.cbChargeItem.SelectedValue = null;
             this.cbChargeItem.Size = new System.Drawing.Size(273, 21);
-            this.cbChargeItem.TabIndex = 0;
+            this.cbChargeItem.TabIndex = 8;
             // 
             // tbDateOfService
             // 
@@ -212,7 +214,7 @@
             this.tbDateOfService.Name = "tbDateOfService";
             this.tbDateOfService.ReadOnly = true;
             this.tbDateOfService.Size = new System.Drawing.Size(128, 22);
-            this.tbDateOfService.TabIndex = 41;
+            this.tbDateOfService.TabIndex = 4;
             this.tbDateOfService.TabStop = false;
             // 
             // label4
@@ -221,7 +223,7 @@
             this.label4.Location = new System.Drawing.Point(345, 18);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(81, 13);
-            this.label4.TabIndex = 40;
+            this.label4.TabIndex = 3;
             this.label4.Text = "Date of Service";
             // 
             // SearchByCdm
@@ -231,7 +233,7 @@
             this.SearchByCdm.Location = new System.Drawing.Point(8, 23);
             this.SearchByCdm.Name = "SearchByCdm";
             this.SearchByCdm.Size = new System.Drawing.Size(89, 17);
-            this.SearchByCdm.TabIndex = 42;
+            this.SearchByCdm.TabIndex = 0;
             this.SearchByCdm.TabStop = true;
             this.SearchByCdm.Text = "CDM Number";
             this.SearchByCdm.UseVisualStyleBackColor = true;
@@ -243,7 +245,7 @@
             this.SearchByDescription.Location = new System.Drawing.Point(103, 23);
             this.SearchByDescription.Name = "SearchByDescription";
             this.SearchByDescription.Size = new System.Drawing.Size(78, 17);
-            this.SearchByDescription.TabIndex = 42;
+            this.SearchByDescription.TabIndex = 1;
             this.SearchByDescription.TabStop = true;
             this.SearchByDescription.Text = "Description";
             this.SearchByDescription.UseVisualStyleBackColor = true;
@@ -256,9 +258,25 @@
             this.SearchBy.Location = new System.Drawing.Point(99, 95);
             this.SearchBy.Name = "SearchBy";
             this.SearchBy.Size = new System.Drawing.Size(188, 49);
-            this.SearchBy.TabIndex = 43;
+            this.SearchBy.TabIndex = 6;
             this.SearchBy.TabStop = false;
             this.SearchBy.Text = "Search By";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(230, 190);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(67, 13);
+            this.label5.TabIndex = 11;
+            this.label5.Text = "Reference #";
+            // 
+            // ReferenceNumber
+            // 
+            this.ReferenceNumber.Location = new System.Drawing.Point(303, 188);
+            this.ReferenceNumber.Name = "ReferenceNumber";
+            this.ReferenceNumber.Size = new System.Drawing.Size(100, 20);
+            this.ReferenceNumber.TabIndex = 12;
             // 
             // ChargeEntryForm
             // 
@@ -266,6 +284,8 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.ClientSize = new System.Drawing.Size(571, 349);
+            this.Controls.Add(this.ReferenceNumber);
+            this.Controls.Add(this.label5);
             this.Controls.Add(this.SearchBy);
             this.Controls.Add(this.tbDateOfService);
             this.Controls.Add(this.label4);
@@ -317,5 +337,7 @@
         private System.Windows.Forms.RadioButton SearchByCdm;
         private System.Windows.Forms.RadioButton SearchByDescription;
         private System.Windows.Forms.GroupBox SearchBy;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.TextBox ReferenceNumber;
     }
 }
