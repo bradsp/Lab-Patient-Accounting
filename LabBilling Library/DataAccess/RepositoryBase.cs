@@ -18,17 +18,8 @@ namespace LabBilling.Core.DataAccess
         {
             Log.Instance.Trace("Entering");
             _tableName = tableName;
-            //dbConnection = new SqlConnection(Helper.ConnVal());
             dbConnection = new PetaPoco.Database(connectionString, new CustomSqlServerDatabaseProvider());
 
-            //_fields = new List<string>();
-
-            //Type type = typeof(T);
-            //foreach (PropertyInfo propertyInfo in type.GetProperties())
-            //{
-            //    // Get name and add to field list. 
-            //    _fields.Add(propertyInfo.Name.ToString());
-            //}
             Log.Instance.Trace("Exiting");
         }
 

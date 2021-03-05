@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using System.Xml;
+using System.Text.RegularExpressions;
+using RFClassLibrary;
 
 namespace LabBilling.Forms
 {
@@ -22,7 +24,7 @@ namespace LabBilling.Forms
 
         private void OpenBatch_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Log.Instance.Trace("$Entering");
+            Log.Instance.Trace($"Entering");
             if (OpenBatch.SelectedIndex <= 0)
             {
                 Clear();
@@ -65,7 +67,7 @@ namespace LabBilling.Forms
 
         private void SaveBatch_Click(object sender, EventArgs e)
         {
-            Log.Instance.Trace("$Entering");
+            Log.Instance.Trace($"Entering");
             //saves an open batch for later use
 
 
@@ -175,7 +177,7 @@ namespace LabBilling.Forms
 
         private void LoadOpenBatches()
         {
-            Log.Instance.Trace("$Entering");
+            Log.Instance.Trace($"Entering");
             #region Setup OpenBatch Combobox
             List<ChkBatch> chkBatches = new List<ChkBatch>();
             chkBatches = chkBatchRepository.GetAll().ToList();
@@ -205,7 +207,7 @@ namespace LabBilling.Forms
 
         private void SubmitPayments_Click(object sender, EventArgs e)
         {
-            Log.Instance.Trace("$Entering");
+            Log.Instance.Trace($"Entering");
 
             List<Chk> chks = new List<Chk>();
 
@@ -255,7 +257,7 @@ namespace LabBilling.Forms
 
         private void Clear()
         {
-            Log.Instance.Trace("$Entering");
+            Log.Instance.Trace($"Entering");
             dgvPayments.Rows.Clear();
             AmountTotal.Text = "0.00";
             ContractualTotal.Text = "0.00";
@@ -266,7 +268,7 @@ namespace LabBilling.Forms
 
         private void BatchRemittance_Load(object sender, EventArgs e)
         {
-            Log.Instance.Trace("$Entering");
+            Log.Instance.Trace($"Entering");
             dgvPayments.AutoResizeColumns();
 
             // reference the combobox column
@@ -283,6 +285,8 @@ namespace LabBilling.Forms
             dgvPayments.Columns["Contractual"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             dgvPayments.Columns["WriteOff"].DefaultCellStyle.Format = "N2";
             dgvPayments.Columns["WriteOff"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            dgvPayments.Columns["Balance"].DefaultCellStyle.Format = "N2";
+            dgvPayments.Columns["Balance"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
 
             dgvPayments.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
             dgvPayments.Columns["PatientName"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
@@ -298,7 +302,7 @@ namespace LabBilling.Forms
 
         private void EntryMode_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Log.Instance.Trace("$Entering");
+            Log.Instance.Trace($"Entering");
             // changes which entry columns are active for quicker data entry
 
             switch (EntryMode.Text)
@@ -351,7 +355,7 @@ namespace LabBilling.Forms
 
         private void dgvPayments_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-            Log.Instance.Trace("$Entering");
+                Log.Instance.Trace($"Entering");
             var senderGrid = (DataGridView)sender;
 
             if (senderGrid.Columns[e.ColumnIndex] is DataGridViewButtonColumn &&
@@ -376,7 +380,7 @@ namespace LabBilling.Forms
 
         private void dgvPayments_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
-            Log.Instance.Trace("$Entering");
+            Log.Instance.Trace($"Entering");
             if (dgvPayments.Columns[e.ColumnIndex].Name == "Account")
             {
                 // get account information to populate patient name and balance info
@@ -389,11 +393,36 @@ namespace LabBilling.Forms
                 dgvPayments.CurrentCell = dgvPayments.Rows[e.RowIndex].Cells["CheckNo"];
             }
 
+            if(dgvPayments.Columns[e.ColumnIndex].Name == "CheckDate")
+            {
+                string expression = dgvPayments["CheckDate", e.RowIndex].Value.ToString();
+                DateTime tmp = new DateTime();
+                
+                if(tmp.IsExpression(expression))
+                {
+                    string converted = tmp.ParseExpression(expression).ToShortDateString();
+                    dgvPayments["CheckDate", e.RowIndex].Value = converted;
+                }
+            }
+
+            if (dgvPayments.Columns[e.ColumnIndex].Name == "DateReceived")
+            {
+                string expression = dgvPayments["DateReceived", e.RowIndex].Value.ToString();
+                DateTime tmp = new DateTime();
+
+                if (tmp.IsExpression(expression))
+                {
+                    string converted = tmp.ParseExpression(expression).ToShortDateString();
+                    dgvPayments["DateReceived", e.RowIndex].Value = converted;
+                }
+            }
+
+
         }
 
         private void dgvPayments_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
         {
-            Log.Instance.Trace("$Entering");
+            Log.Instance.Trace($"Entering");
             //disable the ability to change the entry mode once a row has been added.
             //This will protect against invalid data being written to the database if columns containing data are hidden.
             if (dgvPayments.Rows.Count > 0)
@@ -403,7 +432,7 @@ namespace LabBilling.Forms
 
         private void TotalPayments()
         {
-            Log.Instance.Trace("$Entering");
+            Log.Instance.Trace($"Entering");
             double a = 0, c = 0, w = 0;
 
             for (int i = 0; i < dgvPayments.Rows.Count; i++)
@@ -417,15 +446,15 @@ namespace LabBilling.Forms
                 }
             }
 
-            AmountTotal.Text = a.ToString();
-            ContractualTotal.Text = c.ToString();
-            WriteoffTotal.Text = w.ToString();
+            AmountTotal.Text = a.ToString("0.00");
+            ContractualTotal.Text = c.ToString("0.00");
+            WriteoffTotal.Text = w.ToString("0.00");
 
         }
 
         private void dgvPayments_RowLeave(object sender, DataGridViewCellEventArgs e)
         {
-            Log.Instance.Trace("$Entering");
+            Log.Instance.Trace($"Entering");
             TotalPayments();
         }
     }

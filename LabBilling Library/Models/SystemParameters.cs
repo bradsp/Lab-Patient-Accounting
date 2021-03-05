@@ -13,6 +13,9 @@ namespace LabBilling.Core.Models
         public string comment { get; set; }
         public string update_prg { get; set; }
         public string button { get; set; }
+        public string category { get; set; }
+        public string description { get; set; }
+        public string dataType { get; set; }
 
         [ResultColumn]
         public DateTime? mod_date { get; set; }

@@ -48,24 +48,13 @@ namespace LabBilling.Core.DataAccess
                 throw new ArgumentNullException("clientMnem");
             }
 
-            //var chrgTotal = new SqlParameter("@Total", System.Data.SqlDbType.Money)
-            //{
-            //    Direction = System.Data.ParameterDirection.Output
-            //};
-
             var c = Sql.Builder.Append("SELECT total FROM vw_chrg_bal_cbill WHERE account = @0", clientMnem);
 
             double chrgResult = dbConnection.ExecuteScalar<double?>(c) ?? 0.0;
 
-            //var chkTotal = new SqlParameter("@Total", System.Data.SqlDbType.Money)
-            //{
-            //    Direction = System.Data.ParameterDirection.Output
-            //};
-
             var p = Sql.Builder.Append("SELECT total FROM vw_chk_bal_cbill WHERE account = @0", clientMnem);
 
             double chkResult = dbConnection.ExecuteScalar<double?>(p) ?? 0.0;
-
 
             double BalanceReturn = chrgResult - chkResult;
 

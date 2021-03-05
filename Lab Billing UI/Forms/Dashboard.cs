@@ -24,7 +24,6 @@ namespace LabBilling
         public Dashboard()
         {
             InitializeComponent();
-            
         }
 
         private void userSecurityToolStripMenuItem_Click(object sender, EventArgs e)
@@ -85,10 +84,34 @@ namespace LabBilling
 
             //enable menu items based on permissions
             systemAdministrationToolStripMenuItem.Enabled = Program.LoggedInUser.IsAdministrator;
-            paymentProcessingToolStripMenuItem.Enabled = Program.LoggedInUser.CanAddPayments;
-            batchRemittanceToolStripMenuItem.Enabled = Program.LoggedInUser.CanAddPayments;
-            batchChargeEntryToolStripMenuItem.Enabled = Program.LoggedInUser.CanSubmitCharges;
-            sSISubmissionToolStripMenuItem.Enabled = Program.LoggedInUser.CanSubmitBilling;
+
+            if (systemParametersRepository.GetByKey("allow_chk_entry") == "1")
+            {
+                paymentProcessingToolStripMenuItem.Enabled = Program.LoggedInUser.CanAddPayments;
+                batchRemittanceToolStripMenuItem.Enabled = Program.LoggedInUser.CanAddPayments;
+            }
+            else
+            {
+                paymentProcessingToolStripMenuItem.Enabled = false;
+                batchRemittanceToolStripMenuItem.Enabled = false;
+            }
+            if (systemParametersRepository.GetByKey("allow_chrg_entry") == "1")
+            {
+                batchChargeEntryToolStripMenuItem.Enabled = Program.LoggedInUser.CanSubmitCharges;
+            }
+            else
+            {
+                batchChargeEntryToolStripMenuItem.Enabled = false;
+            }
+            if (systemParametersRepository.GetByKey("allow_edit") == "1")
+            {
+                sSISubmissionToolStripMenuItem.Enabled = Program.LoggedInUser.CanSubmitBilling;
+            }
+            else
+            {
+                sSISubmissionToolStripMenuItem.Enabled = false;
+                MessageBox.Show("System is in read-only mode.");
+            }
             #endregion
 
             #region load accordion menu
@@ -207,10 +230,10 @@ namespace LabBilling
             Log.Instance.Trace($"Entering");
 
             SystemParametersForm frm = new SystemParametersForm();
-            frm.MdiParent = this;
-            frm.AutoScroll = true;
-            frm.WindowState = FormWindowState.Normal;
-            frm.Show();
+            //frm.MdiParent = this;
+            //frm.AutoScroll = true;
+            //frm.WindowState = FormWindowState.Normal;
+            frm.ShowDialog();
         }
 
         private void monthlyReportsToolStripMenuItem_Click(object sender, EventArgs e)

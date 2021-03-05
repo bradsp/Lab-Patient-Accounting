@@ -28,41 +28,34 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.SystemParmDGV = new System.Windows.Forms.DataGridView();
-            ((System.ComponentModel.ISupportInitialize)(this.SystemParmDGV)).BeginInit();
+            this.propertyGrid = new System.Windows.Forms.PropertyGrid();
             this.SuspendLayout();
             // 
-            // SystemParmDGV
+            // propertyGrid
             // 
-            this.SystemParmDGV.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.SystemParmDGV.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.SystemParmDGV.Location = new System.Drawing.Point(9, 10);
-            this.SystemParmDGV.Margin = new System.Windows.Forms.Padding(2);
-            this.SystemParmDGV.Name = "SystemParmDGV";
-            this.SystemParmDGV.RowTemplate.Height = 24;
-            this.SystemParmDGV.Size = new System.Drawing.Size(708, 546);
-            this.SystemParmDGV.TabIndex = 0;
+            this.propertyGrid.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.propertyGrid.Location = new System.Drawing.Point(0, 0);
+            this.propertyGrid.Name = "propertyGrid";
+            this.propertyGrid.Size = new System.Drawing.Size(832, 566);
+            this.propertyGrid.TabIndex = 1;
+            this.propertyGrid.PropertyValueChanged += new System.Windows.Forms.PropertyValueChangedEventHandler(this.propertyGrid_PropertyValueChanged);
             // 
             // SystemParametersForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(833, 566);
-            this.Controls.Add(this.SystemParmDGV);
+            this.ClientSize = new System.Drawing.Size(832, 566);
+            this.Controls.Add(this.propertyGrid);
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "SystemParametersForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "SystemParametersForm";
             this.Load += new System.EventHandler(this.SystemParametersForm_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.SystemParmDGV)).EndInit();
             this.ResumeLayout(false);
 
         }
 
         #endregion
-
-        private System.Windows.Forms.DataGridView SystemParmDGV;
+        private System.Windows.Forms.PropertyGrid propertyGrid;
     }
 }

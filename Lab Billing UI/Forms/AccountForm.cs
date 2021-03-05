@@ -46,6 +46,7 @@ namespace LabBilling.Forms
         private readonly NotesRepository notesdb = new NotesRepository(Helper.ConnVal);
         private readonly BillingActivityRepository dbBillingActivity = new BillingActivityRepository(Helper.ConnVal);
         private readonly DictDxRepository dictDxDb = new DictDxRepository(Helper.ConnVal);
+        private readonly SystemParametersRepository systemParametersRepository = new SystemParametersRepository(Helper.ConnVal);
 
         private string _selectedAccount;
         public string SelectedAccount
@@ -67,6 +68,61 @@ namespace LabBilling.Forms
         private void AccountForm_Load(object sender, EventArgs e)
         {
             Log.Instance.Trace("Entering");
+
+            #region Process permissions and enable controls
+
+            Helper.SetControlsAccess(tabCharges.Controls, false);
+            if (systemParametersRepository.GetByKey("allow_chrg_entry") == "1")
+            {
+                if (Program.LoggedInUser.CanSubmitCharges)
+                {
+                    Helper.SetControlsAccess(tabCharges.Controls, true);
+                }
+            }
+
+            Helper.SetControlsAccess(tabPayments.Controls, false);
+            if(systemParametersRepository.GetByKey("allow_chk_entry") == "1")
+            {
+                if(Program.LoggedInUser.CanAddPayments)
+                {
+                    Helper.SetControlsAccess(tabPayments.Controls, false);
+                }
+            }
+
+            Helper.SetControlsAccess(tabDemographics.Controls, false);
+            Helper.SetControlsAccess(tabInsurance.Controls, false);
+            Helper.SetControlsAccess(tableLayoutPanel1.Controls, false);
+            Helper.SetControlsAccess(tabDiagnosis.Controls, false);
+            Helper.SetControlsAccess(tabNotes.Controls, false);
+            Helper.SetControlsAccess(tabCharges.Controls, false);
+            Helper.SetControlsAccess(tabPayments.Controls, false);
+            lGuarCopyPatient.Enabled = false;
+            lInsCopyPatient.Enabled = false;
+            changeClientToolStripMenuItem.Enabled = false;
+            changeDateOfServiceToolStripMenuItem.Enabled = false;
+            changeFinancialClassToolStripMenuItem.Enabled = false;
+            clearHoldStatusToolStripMenuItem.Enabled = false;
+            if(systemParametersRepository.GetByKey("allow_edit") == "1")
+            {
+                if(Program.LoggedInUser.Access == "ENTER/EDIT")
+                {
+                    Helper.SetControlsAccess(tabDemographics.Controls, true);
+                    Helper.SetControlsAccess(tabInsurance.Controls, true);
+                    Helper.SetControlsAccess(tableLayoutPanel1.Controls, true);
+                    Helper.SetControlsAccess(tabDiagnosis.Controls, true);
+                    Helper.SetControlsAccess(tabNotes.Controls, true);
+                    Helper.SetControlsAccess(tabCharges.Controls, true);
+                    Helper.SetControlsAccess(tabPayments.Controls, true);
+                    lGuarCopyPatient.Enabled = true;
+                    lInsCopyPatient.Enabled = true;
+                    changeClientToolStripMenuItem.Enabled = true;
+                    changeDateOfServiceToolStripMenuItem.Enabled = true;
+                    changeFinancialClassToolStripMenuItem.Enabled = true;
+                    clearHoldStatusToolStripMenuItem.Enabled = true;
+                }
+            }
+
+            #endregion
 
             if (SelectedAccount != null || SelectedAccount != "")
             {
@@ -772,9 +828,6 @@ namespace LabBilling.Forms
         private void LoadCharges()
         {
             Log.Instance.Trace("Entering");
-
-            //charges = chrgdb.GetByAccount(SelectedAccount, ckShowCreditedChrg.Checked).ToList();
-            //Log.Instance.Trace($"GetCharges returned {charges.Count} rows.");
             dgvCharges.DataSource = chrgdb.GetByAccount(SelectedAccount, ckShowCreditedChrg.Checked);
 
             foreach (DataGridViewColumn col in dgvCharges.Columns)

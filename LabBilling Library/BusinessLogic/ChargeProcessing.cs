@@ -105,14 +105,17 @@ namespace LabBilling.Core
                     case "M":
                         amt.amount = fee.mprice;
                         retailTotal += fee.mprice;
+                        ztotal += fee.zprice;
                         break;
                     case "C":
                         amt.amount = fee.cprice;
                         retailTotal += fee.cprice;
+                        ztotal += fee.zprice;
                         break;
                     case "Z":
                         amt.amount = fee.zprice;
                         retailTotal += fee.zprice;
+                        ztotal += fee.zprice;
                         break;
                     default:
                         amt.amount = fee.mprice;
@@ -132,7 +135,6 @@ namespace LabBilling.Core
                 amt.diagnosis_code_ptr = "1:";
 
                 chrg.ChrgDetails.Add(amt);
-                
             }
 
             chrg.net_amt = amtTotal;
