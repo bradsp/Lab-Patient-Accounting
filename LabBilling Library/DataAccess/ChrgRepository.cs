@@ -71,7 +71,7 @@ namespace LabBilling.Core.DataAccess
             //function will add charge
             int chrg_num = Convert.ToInt32(this.Add(chrg));
             
-            foreach(Amt amt in chrg.ChrgDetails)
+            foreach(ChrgDetails amt in chrg.ChrgDetails)
             {
                 amt.chrg_num = chrg_num;
 

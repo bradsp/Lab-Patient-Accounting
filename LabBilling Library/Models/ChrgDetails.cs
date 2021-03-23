@@ -5,7 +5,7 @@ namespace LabBilling.Core.Models
 {
     [TableName("amt")]
     [PrimaryKey("uri",AutoIncrement = true)]
-    public class Amt : IBaseEntity
+    public class ChrgDetails : IBaseEntity
     {
         public double chrg_num { get; set; }
         public string revcode { get; set; }

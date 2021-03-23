@@ -63,4 +63,18 @@ namespace LabBilling.Core
         }
     }
 
+    [Serializable]
+    public class InvalidParameterValueException : Exception
+    {
+        public InvalidParameterValueException()
+        {
+
+        }
+
+        public InvalidParameterValueException(string message) : base(message)
+        {
+
+        }
+    }
+
 }

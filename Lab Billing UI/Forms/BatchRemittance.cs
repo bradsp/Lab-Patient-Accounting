@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using System.Xml;
-using System.Text.RegularExpressions;
 using RFClassLibrary;
 
 namespace LabBilling.Forms
@@ -225,8 +224,8 @@ namespace LabBilling.Forms
                 else
                     chk.batch = -1;
                 chk.amt_paid = Double.TryParse(row.Cells["AmountPaid"].Value?.ToString(), out temp) ? temp : 0.00;
-                chk.chk_date = Convert.ToDateTime(row.Cells["CheckDate"].Value.ToString());
-                chk.date_rec = Convert.ToDateTime(row.Cells["DateReceived"].Value.ToString());
+                chk.chk_date = DateTimeExtension.ValidateDateNullable(row.Cells["CheckDate"].Value?.ToString());
+                chk.date_rec = DateTimeExtension.ValidateDateNullable(row.Cells["DateReceived"].Value?.ToString());
                 chk.chk_no = row.Cells["CheckNo"].Value.ToString();
                 chk.comment = row.Cells["Comment"].Value.ToString();
                 chk.contractual = Double.TryParse(row.Cells["Contractual"].Value?.ToString(), out temp) ? temp : 0.00;
@@ -456,6 +455,11 @@ namespace LabBilling.Forms
         {
             Log.Instance.Trace($"Entering");
             TotalPayments();
+        }
+
+        private void DeleteBatch_Click(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -36,6 +36,7 @@ namespace LabBilling.Core.DataAccess
 
             var record = dbConnection.SingleOrDefault<Account>("where account = @0", account);
             record.Pat = dbConnection.SingleOrDefault<Pat>("where account = @0", account);
+            record.Insurances = dbConnection.Fetch<Ins>("where account = @0", account);
 
             return record;
         }

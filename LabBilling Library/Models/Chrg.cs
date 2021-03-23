@@ -66,7 +66,7 @@ namespace LabBilling.Core.Models
         public Guid rowguid { get; set; }
 
         [Ignore]
-        public List<Amt> ChrgDetails { get; set; } = new List<Amt>();
+        public List<ChrgDetails> ChrgDetails { get; set; } = new List<ChrgDetails>();
     }
 
     [TableName("InvoiceChargeView")]

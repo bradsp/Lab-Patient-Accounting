@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using PetaPoco;
 
+
 namespace LabBilling.Core.Models
 {
     [TableName("acc")]
@@ -43,7 +44,10 @@ namespace LabBilling.Core.Models
         public Pat Pat { get; set; } = new Pat();
         [Ignore]
         public List<Ins> Insurances { get; set; } = new List<Ins>();
-
+        [Ignore]
+        public List<Chrg> Charges { get; set; } = new List<Chrg>();
+        [Ignore]
+        public List<Chk> Payments { get; set; } = new List<Chk>();
         [Ignore]
         public Guid rowguid { get; set; }
 

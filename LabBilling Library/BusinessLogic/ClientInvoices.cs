@@ -184,7 +184,7 @@ namespace LabBilling.Core
                 accChrg.fin_type = "C";
                 accChrg.fin_code = account.fin_code;
                 accChrg.service_date = DateTime.Today;
-                accChrg.ChrgDetails.Add(new Amt()
+                accChrg.ChrgDetails.Add(new ChrgDetails()
                 {
                     cpt4 = "NONE",
                     type = "NORM",
@@ -208,7 +208,7 @@ namespace LabBilling.Core
             invoiceChrg.fin_type = "C";
             invoiceChrg.fin_code = "CLIENT";
             invoiceChrg.service_date = DateTime.Today;
-            invoiceChrg.ChrgDetails.Add(new Amt()
+            invoiceChrg.ChrgDetails.Add(new ChrgDetails()
             {
                 cpt4 = "NONE",
                 type = "NORM",

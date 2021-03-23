@@ -91,6 +91,8 @@
     <Compile Include="BusinessLogic\AccountValidation.cs" />
     <Compile Include="BusinessLogic\Billing837.cs" />
     <Compile Include="BusinessLogic\ChargeProcessing.cs" />
+    <Compile Include="BusinessLogic\ClaimData.cs" />
+    <Compile Include="BusinessLogic\ClaimGenerator.cs" />
     <Compile Include="BusinessLogic\ClientInvoices.cs" />
     <Compile Include="BusinessLogic\Exceptions.cs" />
     <Compile Include="BusinessLogic\InvoicePrint.cs" />
@@ -125,7 +127,7 @@
     <Compile Include="Logging.cs" />
     <Compile Include="Models\Account.cs" />
     <Compile Include="Models\AccountSearch.cs" />
-    <Compile Include="Models\Amt.cs" />
+    <Compile Include="Models\ChrgDetails.cs" />
     <Compile Include="Models\BadDebt.cs" />
     <Compile Include="Models\BatchCharge.cs" />
     <Compile Include="Models\BillingActivity.cs" />

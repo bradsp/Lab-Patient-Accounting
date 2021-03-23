@@ -899,22 +899,22 @@ namespace LabBilling.Forms
                     col.Visible = false;
                 }
 
-                dgvChrgDetail.Columns[nameof(Amt.cpt4)].Visible = true;
-                dgvChrgDetail.Columns[nameof(Amt.bill_type)].Visible = true;
-                dgvChrgDetail.Columns[nameof(Amt.diagnosis_code_ptr)].Visible = true;
-                dgvChrgDetail.Columns[nameof(Amt.modi)].Visible = true;
-                dgvChrgDetail.Columns[nameof(Amt.modi2)].Visible = true;
-                dgvChrgDetail.Columns[nameof(Amt.revcode)].Visible = true;
-                dgvChrgDetail.Columns[nameof(Amt.type)].Visible = true;
-                dgvChrgDetail.Columns[nameof(Amt.bill_method)].Visible = true;
-                dgvChrgDetail.Columns[nameof(Amt.order_code)].Visible = true;
-                dgvChrgDetail.Columns[nameof(Amt.amount)].Visible = true;
+                dgvChrgDetail.Columns[nameof(ChrgDetails.cpt4)].Visible = true;
+                dgvChrgDetail.Columns[nameof(ChrgDetails.bill_type)].Visible = true;
+                dgvChrgDetail.Columns[nameof(ChrgDetails.diagnosis_code_ptr)].Visible = true;
+                dgvChrgDetail.Columns[nameof(ChrgDetails.modi)].Visible = true;
+                dgvChrgDetail.Columns[nameof(ChrgDetails.modi2)].Visible = true;
+                dgvChrgDetail.Columns[nameof(ChrgDetails.revcode)].Visible = true;
+                dgvChrgDetail.Columns[nameof(ChrgDetails.type)].Visible = true;
+                dgvChrgDetail.Columns[nameof(ChrgDetails.bill_method)].Visible = true;
+                dgvChrgDetail.Columns[nameof(ChrgDetails.order_code)].Visible = true;
+                dgvChrgDetail.Columns[nameof(ChrgDetails.amount)].Visible = true;
 
                 dgvChrgDetail.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
-                dgvChrgDetail.Columns[nameof(Amt.cpt4)].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+                dgvChrgDetail.Columns[nameof(ChrgDetails.cpt4)].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
                 dgvChrgDetail.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
 
-                dgvChrgDetail.Columns[nameof(Amt.amount)].DefaultCellStyle.Format = "N2";
+                dgvChrgDetail.Columns[nameof(ChrgDetails.amount)].DefaultCellStyle.Format = "N2";
 
             }
         }
@@ -1076,7 +1076,7 @@ namespace LabBilling.Forms
 
             //update amt record
 
-            Amt amt = new Amt();
+            ChrgDetails amt = new ChrgDetails();
 
             amt.uri = Convert.ToInt32(dgvChrgDetail.SelectedRows[0].Cells[nameof(amt.uri)].Value);
             amt.amount = Convert.ToDouble(dgvChrgDetail.SelectedRows[0].Cells[nameof(amt.amount)].Value?? 0.0);

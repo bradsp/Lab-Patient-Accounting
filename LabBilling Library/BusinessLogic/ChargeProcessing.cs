@@ -97,7 +97,7 @@ namespace LabBilling.Core
 
             foreach(CdmFeeSchedule1 fee in cdmData.cdmFeeSchedule1)
             {
-                Amt amt = new Amt();
+                ChrgDetails amt = new ChrgDetails();
                 amt.cpt4 = fee.cpt4;
                 amt.type = fee.type;
                 switch(fin.type)

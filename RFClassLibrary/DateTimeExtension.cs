@@ -29,7 +29,7 @@ namespace RFClassLibrary
 
             if(m.Success)
             {
-                if (expression == "T")
+                if (expression == "T" || expression == "t")
                 {
                     dt = DateTime.Today;
                 }
@@ -50,20 +50,49 @@ namespace RFClassLibrary
         }
 
         /// <summary>
-        /// Tests the provided string to see if it is a valid shorthand expression (T, T-n, T+n). Returns true if it matches.
+        /// Tests the provided string to see if it is a valid shorthand expression (T, T-n, T+n). 
         /// </summary>
         /// <param name="dt"></param>
         /// <param name="expression"></param>
-        /// <returns></returns>
+        /// <returns>Returns true if it matches.</returns>
         public static bool IsExpression(this DateTime dt, string expression)
         {
-            string pattern = @"(Tt)([+-]\d+)?";
+            string pattern = @"([Tt])([+-]\d+)?";
             if (Regex.IsMatch(expression, pattern))
                 return true;
             else
                 return false;
 
         }
+
+        /// <summary>
+        /// Takes a date string and parses the date. 
+        /// </summary>
+        /// <param name="datestring"></param>
+        /// <returns>Valid dates are returned as DateTime. Invalid returns null.</returns>
+        public static DateTime? ValidateDateNullable(string datestring)
+        {
+            DateTime dt;
+            if (DateTime.TryParse(datestring, out dt))
+                return dt;
+            else
+                return null;
+        }
+
+        /// <summary>
+        /// Takes a date string and parses the date.
+        /// </summary>
+        /// <param name="datestring"></param>
+        /// <returns>Valid dates are returned as DateTime. Invalid date returns DateTime.MinValue</returns>
+        public static DateTime ValidateDate(string datestring)
+        {
+            DateTime dt;
+            if (DateTime.TryParse(datestring, out dt))
+                return dt;
+            else
+                return DateTime.MinValue;
+        }
+
 
     }
 }
