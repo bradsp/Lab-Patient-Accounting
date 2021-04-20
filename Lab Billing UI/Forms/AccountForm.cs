@@ -284,6 +284,7 @@ namespace LabBilling.Forms
         private void LoadDemographics()
         {
             Log.Instance.Trace("Entering");
+            DemoStatusMessages.Text = String.Empty;
             #region populate combo boxes
 
             cbState.DataSource = new BindingSource(Dictionaries.stateSource, null);
@@ -368,13 +369,19 @@ namespace LabBilling.Forms
             if (!Str.ParseName(currentAccount.pat_name, out string strLname, out string strFname, out string strMidName, out string strSuffix))
             {
                 Log.Instance.Debug($"Entering");
-                MessageBox.Show("Error parsing patient name. Parsed data will not be shown.");
+                Log.Instance.Warn("Error parsing patient name. Parsed data will not be shown.");
+                DemoStatusMessages.AppendText("Error parsing patient name. Parsed data will not be shown.");
+                DemoStatusMessages.AppendText(Environment.NewLine);
+                DemoStatusMessages.BackColor = Color.Yellow;
             }
 
             if (!Str.ParseCityStZip(currentPat.city_st_zip, out string strCity, out string strState, out string strZip))
             {
                 Log.Instance.Debug($"Entering");
-                MessageBox.Show("Error parsing City St Zip. Data will not be shown.");
+                Log.Instance.Warn("Error parsing City St Zip. Data will not be shown.");
+                DemoStatusMessages.AppendText("Error parsing City St Zip. Data will not be shown.");
+                DemoStatusMessages.AppendText(Environment.NewLine);
+                DemoStatusMessages.BackColor = Color.Yellow;
             }
 
             tbLastName.Text = strLname;
@@ -411,7 +418,10 @@ namespace LabBilling.Forms
             if (!Str.ParseName(currentPat.guarantor, out strLname, out strFname, out strMidName, out strSuffix))
             {
                 Log.Instance.Info($"Guarantor name could not be parsed. {currentPat.guarantor}");
-                MessageBox.Show("Error parsing guarantor name. Name may be blank. Parsed data will not be shown.");
+                Log.Instance.Warn("Error parsing guarantor name. Name may be blank. Parsed data will not be shown.");
+                DemoStatusMessages.AppendText("Error parsing guarantor name. Name may be blank. Parsed data will not be shown.");
+                DemoStatusMessages.AppendText(Environment.NewLine);
+                DemoStatusMessages.BackColor = Color.Yellow;
             }
 
             tbGuarantorLastName.Text = strLname;
@@ -471,6 +481,7 @@ namespace LabBilling.Forms
             }
 
         }
+
 
         #endregion
 
@@ -621,7 +632,6 @@ namespace LabBilling.Forms
             //call method to update the record in the database
             if (currentIns[selectedIns].rowguid == Guid.Empty)
             {
-                currentIns[selectedIns].rowguid = Guid.NewGuid();
                 insDB.Add(currentIns[selectedIns]);
             }
             else
@@ -820,6 +830,13 @@ namespace LabBilling.Forms
                 }
             }
 
+        }
+
+        private void AddInsurance_Click(object sender, EventArgs e)
+        {
+            //clear the insurance table selection and data entry fields.
+            dgvInsurance.ClearSelection();
+            ClearInsEntryFields();
         }
 
         #endregion

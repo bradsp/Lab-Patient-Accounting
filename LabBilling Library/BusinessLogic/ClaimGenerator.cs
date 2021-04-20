@@ -14,10 +14,8 @@ namespace LabBilling.Core.BusinessLogic
     {
         private SystemParametersRepository parametersdb;
 
-        string interchageControlNumber = null;
         string dBserverName = null;
         string dBName = null;
-        string submitterId = null;
         ArrayList m_alNameSuffix = new ArrayList() { "JR", "SR", "I", "II", "III", "IV", "V", "VI", "VII" };
 
         public string propProductionEnvironment { get; set; }
@@ -43,7 +41,6 @@ namespace LabBilling.Core.BusinessLogic
             parametersdb = new SystemParametersRepository(_connectionString);
 
             propProductionEnvironment = dBName.Contains("LIVE") ? "P" : "T";
-            submitterId = parametersdb.GetByKey("fed_tax_id") ?? "626010402";
             string[] strArgs = new string[3];
             strArgs[0] = dBName.Contains("LIVE") ? "/LIVE" : "/TEST";
             strArgs[1] = dBserverName;
@@ -83,6 +80,18 @@ namespace LabBilling.Core.BusinessLogic
             claimData.claimAccount.Charges = chrgRepository.GetByAccount(account, false).ToList();
             claimData.claimAccount.Payments = chkRepository.GetByAccount(account).ToList();
 
+            try
+            {
+                claimData.SubmitterId = parametersdb.GetByKey("fed_tax_id");
+                claimData.SubmitterName = parametersdb.GetByKey("billing_entity_name");
+                claimData.SubmitterContactName = parametersdb.GetByKey("billing_contact");
+                claimData.SubmitterContactEmail = parametersdb.GetByKey("billing_phone");
+                claimData.SubmitterContactPhone = parametersdb.GetByKey("billing_email");
+            }
+            catch(InvalidParameterValueException ex)
+            {
+                throw new InvalidParameterValueException("Parameter value not found", ex);
+            }
 
 
             return claimData;

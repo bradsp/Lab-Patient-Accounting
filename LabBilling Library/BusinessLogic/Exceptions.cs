@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace LabBilling.Core
 {
+
     [Serializable]
     public class CdmNotFoundException : Exception
     {
@@ -66,14 +67,29 @@ namespace LabBilling.Core
     [Serializable]
     public class InvalidParameterValueException : Exception
     {
+        public string ParameterName { get; }
+
         public InvalidParameterValueException()
         {
 
         }
 
-        public InvalidParameterValueException(string message) : base(message)
+        public InvalidParameterValueException(string message)
+            : base(message)
         {
 
+        }
+
+        public InvalidParameterValueException(string parameterName, Exception inner)
+            : base(parameterName, inner)
+        {
+
+        }
+
+        public InvalidParameterValueException(string message, string parameterName)
+            : this(message)
+        {
+            ParameterName = parameterName;         
         }
     }
 

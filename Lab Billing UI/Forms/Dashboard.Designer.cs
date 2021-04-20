@@ -47,6 +47,7 @@
             this.clientBillsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.globalBillingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.posting835RemitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.clientBillsNewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dictionariesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.chargeMasterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.clientsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -80,7 +81,6 @@
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.windowManagerPanel1 = new MDIWindowManager.WindowManagerPanel();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.clientBillsNewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.DashboardMenu.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -215,6 +215,12 @@
             this.posting835RemitToolStripMenuItem.Name = "posting835RemitToolStripMenuItem";
             resources.ApplyResources(this.posting835RemitToolStripMenuItem, "posting835RemitToolStripMenuItem");
             this.posting835RemitToolStripMenuItem.Click += new System.EventHandler(this.posting835RemitToolStripMenuItem_Click);
+            // 
+            // clientBillsNewToolStripMenuItem
+            // 
+            this.clientBillsNewToolStripMenuItem.Name = "clientBillsNewToolStripMenuItem";
+            resources.ApplyResources(this.clientBillsNewToolStripMenuItem, "clientBillsNewToolStripMenuItem");
+            this.clientBillsNewToolStripMenuItem.Click += new System.EventHandler(this.clientBillsNewToolStripMenuItem_Click);
             // 
             // dictionariesToolStripMenuItem
             // 
@@ -441,12 +447,6 @@
             // 
             resources.ApplyResources(this.panel1, "panel1");
             this.panel1.Name = "panel1";
-            // 
-            // clientBillsNewToolStripMenuItem
-            // 
-            this.clientBillsNewToolStripMenuItem.Name = "clientBillsNewToolStripMenuItem";
-            resources.ApplyResources(this.clientBillsNewToolStripMenuItem, "clientBillsNewToolStripMenuItem");
-            this.clientBillsNewToolStripMenuItem.Click += new System.EventHandler(this.clientBillsNewToolStripMenuItem_Click);
             // 
             // Dashboard
             // 

@@ -91,7 +91,7 @@ namespace LabBilling.Core.DataAccess
         public void AddAccount(Account acc)
         {
             this.Add(acc);
-            patRepository.Add(acc.Pat);
+            //patRepository.Add(acc.Pat);
         }
 
         public IEnumerable<InvoiceSelect> GetInvoiceAccounts(string clientMnem, DateTime thruDate)

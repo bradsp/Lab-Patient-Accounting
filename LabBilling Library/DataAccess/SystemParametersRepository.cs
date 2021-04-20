@@ -20,8 +20,13 @@ namespace LabBilling.Core.DataAccess
         {
             Log.Instance.Debug($"Entering");
 
-            var record = dbConnection.SingleOrDefault<SystemParameters>("where key_name = @0", key);
-                       
+            SystemParameters record;
+
+            record = dbConnection.SingleOrDefault<SystemParameters>("where key_name = @0", key);
+  
+            if(string.IsNullOrEmpty(record.value))
+                throw new InvalidParameterValueException("Parameter not defined", key);
+  
             return record.value;
         }
     }

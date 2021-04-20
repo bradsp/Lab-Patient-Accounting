@@ -959,6 +959,12 @@
   <data name="&gt;&gt;posting835RemitToolStripMenuItem.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="&gt;&gt;clientBillsNewToolStripMenuItem.Name" xml:space="preserve">
+    <value>clientBillsNewToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;clientBillsNewToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="&gt;&gt;dictionariesToolStripMenuItem.Name" xml:space="preserve">
     <value>dictionariesToolStripMenuItem</value>
   </data>
@@ -1143,12 +1149,6 @@
     <value>exitToolStripMenuItem</value>
   </data>
   <data name="&gt;&gt;exitToolStripMenuItem.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;clientBillsNewToolStripMenuItem.Name" xml:space="preserve">
-    <value>clientBillsNewToolStripMenuItem</value>
-  </data>
-  <data name="&gt;&gt;clientBillsNewToolStripMenuItem.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">

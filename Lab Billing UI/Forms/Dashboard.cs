@@ -230,9 +230,6 @@ namespace LabBilling
             Log.Instance.Trace($"Entering");
 
             SystemParametersForm frm = new SystemParametersForm();
-            //frm.MdiParent = this;
-            //frm.AutoScroll = true;
-            //frm.WindowState = FormWindowState.Normal;
             frm.ShowDialog();
         }
 

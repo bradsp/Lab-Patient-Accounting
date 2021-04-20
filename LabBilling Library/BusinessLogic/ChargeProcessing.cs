@@ -59,8 +59,7 @@ namespace LabBilling.Core
             Chrg chrg = new Chrg();
 
             //split the patient name
-            string fn, mn, ln, suffix;
-            RFClassLibrary.Str.ParseName(accData.pat_name, out ln, out fn, out mn, out suffix);
+            RFClassLibrary.Str.ParseName(accData.pat_name, out string ln, out string fn, out string mn, out string suffix);
 
             //now build the charge & detail records
             chrg.account = account;
