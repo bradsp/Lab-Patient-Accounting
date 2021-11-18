@@ -15,6 +15,8 @@
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageId>PetaPoco.Compiled</PackageId>
     <DefineConstants Condition="'$(TargetFramework)' != 'net40'">ASYNC</DefineConstants>
+    <AssemblyVersion>1.0.2.21322</AssemblyVersion>
+    <FileVersion>1.0.2.21322</FileVersion>
   </PropertyGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' != 'netstandard2.0'">

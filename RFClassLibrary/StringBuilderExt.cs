@@ -46,5 +46,27 @@ namespace RFClassLibrary
 
             return sb.AppendFixed(length, value);
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sb"></param>
+        /// <param name="text"></param>
+        /// <param name="delim"></param>
+        /// <param name="writeEmptyString"></param>
+        public static void AppendDelim(this StringBuilder sb, string text, string delim = ", ", bool writeEmptyString = true)
+        {
+            if (writeEmptyString || !String.IsNullOrWhiteSpace(text))
+            {
+                if (sb.Length != 0)
+                {
+                    sb.Append(delim + text);
+                }
+                else
+                {
+                    sb.Append(text);
+                }
+            }
+        }
     }
 }

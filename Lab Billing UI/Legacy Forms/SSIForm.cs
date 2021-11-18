@@ -77,6 +77,8 @@ namespace LabBilling.Legacy
         string m_strProductionEnvironment;
         string m_strServer = null;
         string m_strDatabase = null;
+        const string m_837i_version = "005010X223A2";
+        const string m_837p_version = "004010X098A1";
         #endregion
 
         public string PropProductionEnvironment
@@ -403,6 +405,7 @@ namespace LabBilling.Legacy
 
         private void Load_frmSSI(object sender, EventArgs e)
         {
+
             CreatePrintButtons();
             m_dsBilling = new DataSet();
             m_dsBilling.Tables.Add("ACC");
@@ -2971,8 +2974,9 @@ namespace LabBilling.Legacy
 
         private void CreateUB_Header()
         {
-            m_strST = string.Format("ST*837*{0}*~",
-                string.Format("{0:D6}", m_nST++));
+            m_strST = string.Format("ST*837*{0}*{1}~",
+                string.Format("{0:D6}", m_nST++),
+                m_837i_version);
             rtbDoc.Text += Environment.NewLine;
             rtbDoc.Text += m_strST;
             m_alFile.Add(m_strST);
@@ -3018,11 +3022,12 @@ namespace LabBilling.Legacy
             m_alFile.Add(m_strISA);
             m_sbUBHeader.AppendFormat("{0}\r\n", m_strISA);
 
-            m_strGS = string.Format("GS*HC*{0}*ZMIXED*{1}*{2}*{3}*X*005010X223~",
+            m_strGS = string.Format("GS*HC*{0}*ZMIXED*{1}*{2}*{3}*X*{4}~",
                 m_strSubmitterId.PadRight(10),
                     DateTime.Now.ToString("yyyyMMdd"),
                         DateTime.Now.ToString("HHmm"),
-                            m_strInterchageControlNumber);
+                            m_strInterchageControlNumber,
+                            m_837i_version);
 
             rtbDoc.Text += Environment.NewLine;
             rtbDoc.Text += m_strGS;

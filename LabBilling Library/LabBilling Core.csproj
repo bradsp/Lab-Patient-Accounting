@@ -128,6 +128,7 @@
     <Compile Include="DataAccess\IBaseRepository.cs" />
     <Compile Include="DataAccess\InsCompanyRepository.cs" />
     <Compile Include="DataAccess\InsRepository.cs" />
+    <Compile Include="DataAccess\MessagesInboundRepository.cs" />
     <Compile Include="DataAccess\InvoiceHistoryRepository.cs" />
     <Compile Include="DataAccess\MappingRepository.cs" />
     <Compile Include="DataAccess\NotesRepository.cs" />
@@ -160,6 +161,7 @@
     <Compile Include="Models\IBaseEntity.cs" />
     <Compile Include="Models\Ins.cs" />
     <Compile Include="Models\InsCompany.cs" />
+    <Compile Include="Models\Interface.cs" />
     <Compile Include="Models\InvoiceHistory.cs" />
     <Compile Include="Models\InvoiceModel.cs" />
     <Compile Include="Models\Mapping.cs" />

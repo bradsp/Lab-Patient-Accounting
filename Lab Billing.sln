@@ -27,6 +27,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LabBilling Core", "LabBilli
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lab Billing UI", "Lab Billing UI\Lab Billing UI.csproj", "{F8C8C4A8-005A-49DB-A560-9A78141665B5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LabBillingService", "LabBillingService\LabBillingService.csproj", "{A38E5412-1194-42CE-8CA2-CF509EAE7828}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -121,6 +123,14 @@ Global
 		{F8C8C4A8-005A-49DB-A560-9A78141665B5}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F8C8C4A8-005A-49DB-A560-9A78141665B5}.Release|x86.ActiveCfg = Release|Any CPU
 		{F8C8C4A8-005A-49DB-A560-9A78141665B5}.Release|x86.Build.0 = Release|Any CPU
+		{A38E5412-1194-42CE-8CA2-CF509EAE7828}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A38E5412-1194-42CE-8CA2-CF509EAE7828}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A38E5412-1194-42CE-8CA2-CF509EAE7828}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{A38E5412-1194-42CE-8CA2-CF509EAE7828}.Debug|x86.Build.0 = Debug|Any CPU
+		{A38E5412-1194-42CE-8CA2-CF509EAE7828}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A38E5412-1194-42CE-8CA2-CF509EAE7828}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A38E5412-1194-42CE-8CA2-CF509EAE7828}.Release|x86.ActiveCfg = Release|Any CPU
+		{A38E5412-1194-42CE-8CA2-CF509EAE7828}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

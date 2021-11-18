@@ -508,5 +508,14 @@ namespace LabBilling
             frm.Show();
 
         }
+
+        private void interfaceMonitorToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Log.Instance.Trace("Entering");
+            InterfaceMonitor frm = new InterfaceMonitor();
+
+            frm.ShowDialog();
+            
+        }
     }
 }
