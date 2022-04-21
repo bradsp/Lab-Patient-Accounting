@@ -1385,6 +1385,8 @@ namespace LabBilling.Forms
         {
             Log.Instance.Trace($"Entering");
 
+            currentPat.Diagnoses = dxBindingList.ToList<PatDiag>();
+
             if (patDB.SaveDiagnoses(currentPat) == true)
                 MessageBox.Show("Diagnoses updated successfully.");
             else
