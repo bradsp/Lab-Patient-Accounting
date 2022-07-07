@@ -18,7 +18,7 @@ namespace LabBilling.Core.Models
         public string description { get; set; }
 
         [Ignore]
-        public DateTime? mod_date { get; set; }
+        public DateTime mod_date { get; set; }
         [Ignore]
         public string mod_user { get; set; }
         [Ignore]

@@ -2,16 +2,28 @@
 using System.Collections.Generic;
 using LabBilling.Logging;
 using LabBilling.Core.Models;
+using RFClassLibrary;
 
 namespace LabBilling.Core.DataAccess
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class PatRepository : RepositoryBase<Pat>
     {
         private readonly DictDxRepository dictDxDb;
+        private readonly PhyRepository phyRepository;
 
         public PatRepository(string connection) : base("pat", connection)
         {
             dictDxDb = new DictDxRepository(connection);
+            phyRepository = new PhyRepository(connection);
+        }
+
+        public PatRepository(string connection, PetaPoco.Database db) : base("pat", connection, db)
+        {
+            dictDxDb = new DictDxRepository(connection);
+            phyRepository = new PhyRepository(connection);
         }
 
         public override Pat GetById(int id)
@@ -25,6 +37,7 @@ namespace LabBilling.Core.DataAccess
 
             var record = dbConnection.SingleOrDefault<Pat>("where account = @0", account);
             var accRecord = dbConnection.SingleOrDefault<Account>("where account = @0", account);
+            record.Physician = phyRepository.GetByNPI(record.phy_id);
 
             if(record == null)
             {
@@ -35,7 +48,34 @@ namespace LabBilling.Core.DataAccess
             if (accRecord.trans_date == null)
             {
                 Log.Instance.Fatal("Transaction date was not valid.");
-                throw new ArgumentOutOfRangeException("Transaction date cannot be null.");
+                this.Errors = "Transaction date is not valid.";
+            }
+
+            if(!Str.ParseName(record.pat_full_name, out string strLastName, out string strFirstName, out string strMidName, out string strSuffix))
+            {
+                this.Errors = string.Format("Patient name could not be parsed. {0} {1}", record.pat_full_name, record.account);
+            }
+            else
+            {
+                record.pat_last_name = strLastName;
+                record.pat_first_name = strFirstName;
+                record.pat_middle_name = strMidName;
+                record.pat_name_suffix = strSuffix;
+            }
+
+            if(!Str.ParseName(record.guarantor, out string strGuarLastName, out string strGuarFirstName, out string strGuarMidName, out string strGuarSuffix))
+            {
+                if (!string.IsNullOrEmpty(this.Errors))
+                    this.Errors += Environment.NewLine;
+
+                this.Errors += string.Format("Guarantor name could not be parsed. {0} {1}", record.guarantor, record.account);
+            }
+            else
+            {
+                record.GuarantorLastName = strGuarLastName;
+                record.GuarantorFirstName = strGuarFirstName;
+                record.GuarantorMiddleName = strGuarMidName;
+                record.GuarantorNameSuffix = strGuarSuffix;
             }
 
             string amaYear = FunctionRepository.GetAMAYear(accRecord.trans_date.GetValueOrDefault(DateTime.Now));
@@ -155,6 +195,28 @@ namespace LabBilling.Core.DataAccess
             else
                 return false;
 
+        }
+
+        public override bool Update(Pat table)
+        {
+            //generate full name from name parts
+            table.pat_full_name =
+                String.Format("{0},{1} {2} {3}",
+                table.pat_last_name,
+                table.pat_first_name,
+                table.pat_middle_name,
+                table.pat_name_suffix);
+            table.pat_full_name = table.pat_full_name.Trim();
+
+            table.guarantor =
+                String.Format("{0},{1} {2} {3}",
+                table.GuarantorLastName,
+                table.GuarantorFirstName,
+                table.GuarantorMiddleName,
+                table.GuarantorNameSuffix);
+            table.guarantor = table.guarantor.Trim();
+
+            return base.Update(table);
         }
 
         public void SaveAll(Pat pat)

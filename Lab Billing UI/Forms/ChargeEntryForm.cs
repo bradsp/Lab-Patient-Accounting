@@ -10,13 +10,13 @@ namespace LabBilling.Forms
 {
     public partial class ChargeEntryForm : Form
     {
-        private AccountSummary _currentAccount = new AccountSummary();
+        private Account _currentAccount = new Account();
         private readonly CdmRepository cdmRepository = new CdmRepository(Helper.ConnVal);
         private readonly ChrgRepository dbChrg = new ChrgRepository(Helper.ConnVal);
         MTGCComboBoxItem[] cdmItemsByNo;
         MTGCComboBoxItem[] cdmItemsByDesc;
 
-        public ChargeEntryForm(AccountSummary currentAccount)
+        public ChargeEntryForm(Account currentAccount)
         {
             Log.Instance.Trace($"Entering");
             _currentAccount = currentAccount;

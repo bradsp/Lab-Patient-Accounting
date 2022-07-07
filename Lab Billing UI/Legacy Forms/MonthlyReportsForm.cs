@@ -15,7 +15,7 @@ namespace LabBilling.Legacy
     public partial class frmReports : Form
     {
        
-        SqlDataReader m_sqlReader = null;
+        //SqlDataReader m_sqlReader = null;
         DataTable m_dtRecords = null;
         ERR m_Err = null;
         // wdk 20100916 added
@@ -1274,8 +1274,7 @@ order by c.account
 
         private void m_dgvReport_DataError(object sender, DataGridViewDataErrorEventArgs e)
         {
-            int x;
-            x = 9;
+
             Application.DoEvents();
         }
 

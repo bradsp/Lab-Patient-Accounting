@@ -18,7 +18,7 @@ namespace LabBilling.Core.Models
         public string dataType { get; set; }
 
         [ResultColumn]
-        public DateTime? mod_date { get; set; }
+        public DateTime mod_date { get; set; }
         [ResultColumn]
         public string mod_user { get; set; }
         [ResultColumn]

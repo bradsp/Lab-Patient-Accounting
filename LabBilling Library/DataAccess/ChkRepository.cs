@@ -12,6 +12,11 @@ namespace LabBilling.Core.DataAccess
 
         }
 
+        public ChkRepository(string connection, PetaPoco.Database db) : base("chk", connection, db)
+        {
+
+        }
+
         public override Chk GetById(int id)
         {
             Log.Instance.Trace("$Entering");
@@ -26,7 +31,7 @@ namespace LabBilling.Core.DataAccess
 
         }
 
-        public IEnumerable<Chk> GetByAccount(string account)
+        public List<Chk> GetByAccount(string account)
         {
             Log.Instance.Trace("$Entering");
 
@@ -42,7 +47,7 @@ namespace LabBilling.Core.DataAccess
             return records;
         }
 
-        public IEnumerable<Chk> GetByAccount(string account, bool includeInvoiced)
+        public List<Chk> GetByAccount(string account, bool includeInvoiced)
         {
             Log.Instance.Trace("$Entering");
             if (includeInvoiced)

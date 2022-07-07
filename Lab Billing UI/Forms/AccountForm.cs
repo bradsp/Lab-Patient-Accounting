@@ -8,6 +8,7 @@ using LabBilling.Core.DataAccess;
 using LabBilling.Core;
 using LabBilling.Logging;
 using LabBilling.Core.Models;
+using LabBilling.Library;
 using RFClassLibrary;
 using System.Data;
 using System.Text;
@@ -16,23 +17,14 @@ namespace LabBilling.Forms
 {
     public partial class AccountForm : Form
     {
-
-        //private List<AccountSummary> accounts; // = new List<AccountSummary>();
-        private AccountSummary currentAccountSummary; // = new AccountSummary();
-        private Pat currentPat;
-        private List<Ins> currentIns;
-        private List<Chrg> charges; // = new List<Chrg>();
-        private List<Chk> payments; // = new List<Chk>();
-        private List<Notes> notes; // = new List<Notes>();
-        private List<BillingActivity> billingActivities; // = new List<BillingActivity>();
         private BindingList<PatDiag> dxBindingList;
 
-        //private List<Ins> currentIns = null;
         private List<InsCompany> insCompanies = null;
         private Account currentAccount = null;
-        //private Pat currentPat = null;
         private BindingSource insGridSource = null;
         private bool InEditMode = false;
+        private List<string> changedControls = new List<string>();
+        private Dictionary<Control, string> controlColumnMap = new Dictionary<Control, string>();
 
         private readonly InsRepository insDB = new InsRepository(Helper.ConnVal);
         private readonly AccountRepository accDB = new AccountRepository(Helper.ConnVal);
@@ -91,7 +83,7 @@ namespace LabBilling.Forms
 
             Helper.SetControlsAccess(tabDemographics.Controls, false);
             Helper.SetControlsAccess(tabInsurance.Controls, false);
-            Helper.SetControlsAccess(tableLayoutPanel1.Controls, false);
+            Helper.SetControlsAccess(insTabLayoutPanel.Controls, false);
             Helper.SetControlsAccess(tabDiagnosis.Controls, false);
             Helper.SetControlsAccess(tabNotes.Controls, false);
             Helper.SetControlsAccess(tabCharges.Controls, false);
@@ -108,7 +100,7 @@ namespace LabBilling.Forms
                 {
                     Helper.SetControlsAccess(tabDemographics.Controls, true);
                     Helper.SetControlsAccess(tabInsurance.Controls, true);
-                    Helper.SetControlsAccess(tableLayoutPanel1.Controls, true);
+                    Helper.SetControlsAccess(insTabLayoutPanel.Controls, true);
                     Helper.SetControlsAccess(tabDiagnosis.Controls, true);
                     Helper.SetControlsAccess(tabNotes.Controls, true);
                     Helper.SetControlsAccess(tabCharges.Controls, true);
@@ -124,6 +116,55 @@ namespace LabBilling.Forms
 
             #endregion
 
+            //load controlColumnMap
+
+            controlColumnMap.Add(tbZipcode, nameof(Pat.pat_zip));
+            controlColumnMap.Add(cbMaritalStatus, nameof(Pat.pat_marital));
+            controlColumnMap.Add(tbEmailAddress, nameof(Pat.pat_email));
+            controlColumnMap.Add(tbSuffix, nameof(Pat.pat_name_suffix));
+            controlColumnMap.Add(tbLastName, nameof(Pat.pat_name_suffix));
+            controlColumnMap.Add(tbMiddleName, nameof(Pat.pat_middle_name));
+            controlColumnMap.Add(tbFirstName, nameof(Pat.pat_first_name));
+            controlColumnMap.Add(cbState, nameof(Pat.pat_state));
+            controlColumnMap.Add(tbSSN, nameof(Account.ssn));
+            controlColumnMap.Add(tbDateOfBirth, nameof(Pat.dob_yyyy));
+            controlColumnMap.Add(tbPhone, nameof(Pat.pat_phone));
+            controlColumnMap.Add(tbCity, nameof(Pat.pat_city));
+            controlColumnMap.Add(tbAddress2, nameof(Pat.pat_addr2));
+            controlColumnMap.Add(cbSex, nameof(Pat.sex));
+            controlColumnMap.Add(tbAddress1, nameof(Pat.pat_addr1));
+            controlColumnMap.Add(tbGuarZip, nameof(Pat.guar_zip));
+            controlColumnMap.Add(cbPlanFinCode, nameof(Ins.FinCode));
+            controlColumnMap.Add(tbCertSSN, nameof(Ins.CertSSN));
+            controlColumnMap.Add(tbHolderLastName, nameof(Ins.HolderLastName));
+            controlColumnMap.Add(tbGroupName, nameof(Ins.GroupName));
+            controlColumnMap.Add(cbInsCode, nameof(Ins.InsCode));
+            controlColumnMap.Add(tbHolderZip, nameof(Ins.HolderZip));
+            controlColumnMap.Add(tbGroupNumber, nameof(Ins.GroupNumber));
+            controlColumnMap.Add(tbPlanAddress2, nameof(Ins.PlanAddress2));
+            controlColumnMap.Add(cbInsRelation, nameof(Ins.Relation));
+            controlColumnMap.Add(tbPolicyNumber, nameof(Ins.PolicyNumber));
+            controlColumnMap.Add(tbHolderDOB, nameof(Ins.HolderBirthDate));
+            controlColumnMap.Add(cbHolderState, nameof(Ins.HolderState));
+            controlColumnMap.Add(tbHolderFirstName, nameof(Ins.HolderFirstName));
+            controlColumnMap.Add(cbInsOrder, nameof(Ins.Coverage));
+            controlColumnMap.Add(cbHolderSex, nameof(Ins.HolderSex));
+            controlColumnMap.Add(tbHolderMiddleName, nameof(Ins.HolderMiddleName));
+            controlColumnMap.Add(tbPlanName, nameof(Ins.PlanName));
+            controlColumnMap.Add(tbHolderAddress, nameof(Ins.HolderAddress));
+            controlColumnMap.Add(tbPlanCitySt, nameof(Ins.PlanCityState));
+            controlColumnMap.Add(tbPlanAddress, nameof(Ins.PlanAddress1));
+            controlColumnMap.Add(tbHolderCity, nameof(Ins.HolderCity));
+            controlColumnMap.Add(tbGuarSuffix, nameof(Pat.GuarantorNameSuffix));
+            controlColumnMap.Add(tbGuarMiddleName, nameof(Pat.GuarantorMiddleName));
+            controlColumnMap.Add(tbGuarFirstName, nameof(Pat.GuarantorFirstName));
+            controlColumnMap.Add(cbGuarState, nameof(Pat.guar_state));
+            controlColumnMap.Add(cbGuarantorRelation, nameof(Pat.relation));
+            controlColumnMap.Add(tbGuarantorPhone, nameof(Pat.guar_phone));
+            controlColumnMap.Add(tbGuarCity, nameof(Pat.guar_city));
+            controlColumnMap.Add(tbGuarantorAddress, nameof(Pat.guar_addr));
+            controlColumnMap.Add(tbGuarantorLastName, nameof(Pat.GuarantorLastName));
+
             if (SelectedAccount != null || SelectedAccount != "")
             {
                 Log.Instance.Debug($"Loading account data for {SelectedAccount}");
@@ -131,6 +172,7 @@ namespace LabBilling.Forms
                 LoadAccountData();
 
                 AddOnChangeHandlerToInputControls(tabDemographics);
+                AddOnChangeHandlerToInputControls(tabInsurance);
             }
 
             UpdateDxPointers.Enabled = false; // start disabled until a box has been checked.
@@ -149,28 +191,25 @@ namespace LabBilling.Forms
 
         #endregion
 
-        #region SummaryTab
-
         private void LoadAccountData()
         {
-            Log.Instance.Trace("Entering");
+            Log.Instance.Trace($"Entering");
+            currentAccount = accDB.GetByAccount(SelectedAccount);
+            this.Text = $"{currentAccount.pat_name}";
 
-            currentAccountSummary = accDB.GetAccountSummary(SelectedAccount);
-            currentPat = patDB.GetByAccount(SelectedAccount);
-            currentIns = insDB.GetByAccount(SelectedAccount).ToList();
+            dxBindingList = new BindingList<PatDiag>(currentAccount.Pat.Diagnoses);
+            ckShowCreditedChrg.Checked = false;
+            LoadSummaryTab();
+            LoadDemographics();
+            LoadCharges();
+            LoadPayments();
+            LoadDx();
+            LoadNotes();
+            LoadBillingActivity();
+        }
 
-            this.Text = $"{currentAccountSummary.pat_name}";
-
-            tbBannerName.Text = currentAccountSummary.pat_name;
-            tbBannerDob.Text = currentPat.dob_yyyy.GetValueOrDefault().ToShortDateString();
-            tbBannerSex.Text = currentPat.sex;
-            tbBannerAccount.Text = SelectedAccount;
-            tbBannerMRN.Text = currentAccountSummary.mri;
-            tbBannerClient.Text = currentAccountSummary.ClientName;
-            tbBannerFinClass.Text = currentAccountSummary.fin_code;
-
-            tbTotalCharges.Text = currentAccountSummary.TotalCharges.ToString("c");
-
+        private void LoadSummaryTab()
+        {
             // note: when adding new items to the summary data list, be sure to enter the items in the order they
             // should appear. In other words, keep the group types together and the individual items in the order
             // they should be displayed.
@@ -179,39 +218,39 @@ namespace LabBilling.Forms
             {
                 new SummaryData("Demographics","",SummaryData.GroupType.Demographics,1,1,true),
                 new SummaryData("Account", SelectedAccount, SummaryData.GroupType.Demographics,2,1),
-                new SummaryData("EMR Account", currentAccountSummary.meditech_account, SummaryData.GroupType.Demographics,3,1),
-                new SummaryData("Status", currentAccountSummary.status,SummaryData.GroupType.Demographics,4,1),
-                new SummaryData("MRN", currentAccountSummary.mri, SummaryData.GroupType.Demographics,5,1),
-                new SummaryData("Client", currentAccountSummary.ClientName, SummaryData.GroupType.Demographics,7,1),
-                new SummaryData("Address", currentPat.AddressLine, SummaryData.GroupType.Demographics,9,1),
-                new SummaryData("Phone", currentPat.pat_phone.FormatPhone(), SummaryData.GroupType.Demographics,10,1),
-                new SummaryData("Email", currentPat.pat_email, SummaryData.GroupType.Demographics,11,1),
+                new SummaryData("EMR Account", currentAccount.meditech_account, SummaryData.GroupType.Demographics,3,1),
+                new SummaryData("Status", currentAccount.status,SummaryData.GroupType.Demographics,4,1),
+                new SummaryData("MRN", currentAccount.mri, SummaryData.GroupType.Demographics,5,1),
+                new SummaryData("Client", currentAccount.ClientName, SummaryData.GroupType.Demographics,7,1),
+                new SummaryData("Address", currentAccount.Pat.AddressLine, SummaryData.GroupType.Demographics,9,1),
+                new SummaryData("Phone", currentAccount.Pat.pat_phone.FormatPhone(), SummaryData.GroupType.Demographics,10,1),
+                new SummaryData("Email", currentAccount.Pat.pat_email, SummaryData.GroupType.Demographics,11,1),
 
                 new SummaryData("Financial","",SummaryData.GroupType.Financial,1,2,true),
-                new SummaryData("Financial Class", currentAccountSummary.fin_code, SummaryData.GroupType.Financial,2,2),
-                new SummaryData("Date of Service", currentAccountSummary.trans_date?.ToShortDateString(), SummaryData.GroupType.Financial,3,2),
-                new SummaryData("Total Charges", currentAccountSummary.TotalCharges.ToString("c"),SummaryData.GroupType.Financial,4,2),
-                new SummaryData("Total Payments", (currentAccountSummary.TotalPayments+currentAccountSummary.TotalContractual+currentAccountSummary.TotalWriteOff).ToString("c"), 
+                new SummaryData("Financial Class", currentAccount.fin_code, SummaryData.GroupType.Financial,2,2),
+                new SummaryData("Date of Service", currentAccount.trans_date?.ToShortDateString(), SummaryData.GroupType.Financial,3,2),
+                new SummaryData("Total Charges", currentAccount.TotalCharges.ToString("c"),SummaryData.GroupType.Financial,4,2),
+                new SummaryData("Total Payments", (currentAccount.TotalPayments+currentAccount.TotalContractual+currentAccount.TotalWriteOff).ToString("c"),
                     SummaryData.GroupType.Financial,5,2),
-                new SummaryData("Balance", currentAccountSummary.Balance.ToString("c"), SummaryData.GroupType.Financial,6,2)
+                new SummaryData("Balance", currentAccount.Balance.ToString("c"), SummaryData.GroupType.Financial,6,2)
             };
             //this data is not relevant if this is a CLIENT account
-            if(currentAccountSummary.fin_code != "CLIENT")
+            if (currentAccount.fin_code != "CLIENT")
             {
-                sd.Add(new SummaryData("SSN", currentAccountSummary.ssn.FormatSSN(), SummaryData.GroupType.Demographics, 6, 1));
-                sd.Add(new SummaryData("DOB/Sex", currentPat.DOBSex, SummaryData.GroupType.Demographics, 8, 1));
+                sd.Add(new SummaryData("SSN", currentAccount.ssn.FormatSSN(), SummaryData.GroupType.Demographics, 6, 1));
+                sd.Add(new SummaryData("DOB/Sex", currentAccount.Pat.DOBSex, SummaryData.GroupType.Demographics, 8, 1));
                 sd.Add(new SummaryData("Diagnoses", "", SummaryData.GroupType.Diagnoses, 12, 1, true));
-                sd.Add(new SummaryData(currentPat.icd9_1, currentPat.Dx1Desc, SummaryData.GroupType.Diagnoses, 13, 1));
-                sd.Add(new SummaryData(currentPat.icd9_2, currentPat.Dx2Desc, SummaryData.GroupType.Diagnoses, 14, 1));
-                sd.Add(new SummaryData(currentPat.icd9_3, currentPat.Dx3Desc, SummaryData.GroupType.Diagnoses, 15, 1));
-                sd.Add(new SummaryData(currentPat.icd9_4, currentPat.Dx4Desc, SummaryData.GroupType.Diagnoses, 16, 1));
-                sd.Add(new SummaryData(currentPat.icd9_5, currentPat.Dx5Desc, SummaryData.GroupType.Diagnoses, 17, 1));
-                sd.Add(new SummaryData(currentPat.icd9_6, currentPat.Dx6Desc, SummaryData.GroupType.Diagnoses, 18, 1));
-                sd.Add(new SummaryData(currentPat.icd9_7, currentPat.Dx7Desc, SummaryData.GroupType.Diagnoses, 19, 1));
-                sd.Add(new SummaryData(currentPat.icd9_8, currentPat.Dx8Desc, SummaryData.GroupType.Diagnoses, 20, 1));
-                sd.Add(new SummaryData(currentPat.icd9_9, currentPat.Dx9Desc, SummaryData.GroupType.Diagnoses, 21, 1));
+                sd.Add(new SummaryData(currentAccount.Pat.icd9_1, currentAccount.Pat.Dx1Desc, SummaryData.GroupType.Diagnoses, 13, 1));
+                sd.Add(new SummaryData(currentAccount.Pat.icd9_2, currentAccount.Pat.Dx2Desc, SummaryData.GroupType.Diagnoses, 14, 1));
+                sd.Add(new SummaryData(currentAccount.Pat.icd9_3, currentAccount.Pat.Dx3Desc, SummaryData.GroupType.Diagnoses, 15, 1));
+                sd.Add(new SummaryData(currentAccount.Pat.icd9_4, currentAccount.Pat.Dx4Desc, SummaryData.GroupType.Diagnoses, 16, 1));
+                sd.Add(new SummaryData(currentAccount.Pat.icd9_5, currentAccount.Pat.Dx5Desc, SummaryData.GroupType.Diagnoses, 17, 1));
+                sd.Add(new SummaryData(currentAccount.Pat.icd9_6, currentAccount.Pat.Dx6Desc, SummaryData.GroupType.Diagnoses, 18, 1));
+                sd.Add(new SummaryData(currentAccount.Pat.icd9_7, currentAccount.Pat.Dx7Desc, SummaryData.GroupType.Diagnoses, 19, 1));
+                sd.Add(new SummaryData(currentAccount.Pat.icd9_8, currentAccount.Pat.Dx8Desc, SummaryData.GroupType.Diagnoses, 20, 1));
+                sd.Add(new SummaryData(currentAccount.Pat.icd9_9, currentAccount.Pat.Dx9Desc, SummaryData.GroupType.Diagnoses, 21, 1));
 
-                foreach (Ins ins in currentIns)
+                foreach (Ins ins in currentAccount.Insurances)
                 {
                     if (ins.Coverage == "A")
                     {
@@ -251,15 +290,15 @@ namespace LabBilling.Forms
             summaryTable.RowCount = sd.Max(x => x.RowPos);
 
             summaryTable.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
-            summaryTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent,50));
+            summaryTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50));
             summaryTable.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
-            summaryTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent,50));
+            summaryTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50));
 
             foreach (SummaryData sdi in sd)
             {
                 summaryTable.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-                summaryTable.Controls.Add(sdi.DisplayLabel, sdi.ColPos == 1 ? 0 : 2, sdi.RowPos-1);
-                if(sdi.IsHeader)
+                summaryTable.Controls.Add(sdi.DisplayLabel, sdi.ColPos == 1 ? 0 : 2, sdi.RowPos - 1);
+                if (sdi.IsHeader)
                 {
                     summaryTable.SetColumnSpan(summaryTable.GetControlFromPosition(sdi.ColPos == 1 ? 0 : 2, sdi.RowPos - 1), 2);
                 }
@@ -267,18 +306,9 @@ namespace LabBilling.Forms
                 {
                     summaryTable.Controls.Add(sdi.ValueLabel, sdi.ColPos == 1 ? 1 : 3, sdi.RowPos - 1);
                 }
-                
+
             }
             #endregion
-
-            dxBindingList = new BindingList<PatDiag>(currentPat.Diagnoses);
-            ckShowCreditedChrg.Checked = false;
-            LoadCharges();
-            LoadPayments();
-            LoadDx();
-            LoadNotes();
-            LoadDemographics();
-            LoadBillingActivity();
         }
 
         private void LoadDemographics()
@@ -330,10 +360,15 @@ namespace LabBilling.Forms
 
             #endregion
 
-            currentAccount = new Account();
-            currentAccount = accDB.GetByAccount(_selectedAccount);
-            currentPat = new Pat();
-            currentPat = patDB.GetByAccount(_selectedAccount);
+            tbBannerName.Text = currentAccount.pat_name;
+            tbBannerDob.Text = currentAccount.Pat.dob_yyyy.GetValueOrDefault().ToShortDateString();
+            tbBannerSex.Text = currentAccount.Pat.sex;
+            tbBannerAccount.Text = SelectedAccount;
+            tbBannerMRN.Text = currentAccount.mri;
+            tbBannerClient.Text = currentAccount.ClientName;
+            tbBannerFinClass.Text = currentAccount.fin_code;
+
+            tbTotalCharges.Text = currentAccount.TotalCharges.ToString("c");
 
             #region Setup Insurance Company Combobox
             insCompanies = insCompanyRepository.GetAll(true).ToList();
@@ -362,10 +397,10 @@ namespace LabBilling.Forms
 
             tbBannerName.Text = currentAccount.pat_name;
             tbBannerAccount.Text = _selectedAccount;
-            tbBannerDob.Text = currentPat.dob_yyyy.Value.ToShortDateString();
-            tbBannerSex.Text = currentPat.sex;
+            tbBannerDob.Text = currentAccount.Pat.dob_yyyy.Value.ToShortDateString();
+            tbBannerSex.Text = currentAccount.Pat.sex;
             tbBannerMRN.Text = currentAccount.mri;
-
+            
             if (!Str.ParseName(currentAccount.pat_name, out string strLname, out string strFname, out string strMidName, out string strSuffix))
             {
                 Log.Instance.Debug($"Entering");
@@ -375,7 +410,7 @@ namespace LabBilling.Forms
                 DemoStatusMessages.BackColor = Color.Yellow;
             }
 
-            if (!Str.ParseCityStZip(currentPat.city_st_zip, out string strCity, out string strState, out string strZip))
+            if (!Str.ParseCityStZip(currentAccount.Pat.city_st_zip, out string strCity, out string strState, out string strZip))
             {
                 Log.Instance.Debug($"Entering");
                 Log.Instance.Warn("Error parsing City St Zip. Data will not be shown.");
@@ -383,7 +418,7 @@ namespace LabBilling.Forms
                 DemoStatusMessages.AppendText(Environment.NewLine);
                 DemoStatusMessages.BackColor = Color.Yellow;
             }
-
+            lblPatientFullName.Text = currentAccount.pat_name;
             tbLastName.Text = strLname;
             tbLastName.BackColor = Color.White;
             tbFirstName.Text = strFname;
@@ -392,32 +427,32 @@ namespace LabBilling.Forms
             tbMiddleName.BackColor = Color.White;
             tbSuffix.Text = strSuffix;
             tbSuffix.BackColor = Color.White;
-            tbAddress1.Text = currentPat.pat_addr1;
+            tbAddress1.Text = currentAccount.Pat.pat_addr1;
             tbAddress1.BackColor = Color.White;
-            tbAddress2.Text = currentPat.pat_addr2;
+            tbAddress2.Text = currentAccount.Pat.pat_addr2;
             tbAddress2.BackColor = Color.White;
-            tbCity.Text = currentPat.pat_city != null ? currentPat.pat_city : strCity;
+            tbCity.Text = currentAccount.Pat.pat_city != null ? currentAccount.Pat.pat_city : strCity;
             tbCity.BackColor = Color.White;
-            cbState.SelectedValue = currentPat.pat_state != null ? currentPat.pat_state : strState;
+            cbState.SelectedValue = currentAccount.Pat.pat_state != null ? currentAccount.Pat.pat_state : strState;
             cbState.BackColor = Color.White;
-            tbZipcode.Text = currentPat.pat_zip != null ? currentPat.pat_zip : strZip;
+            tbZipcode.Text = currentAccount.Pat.pat_zip != null ? currentAccount.Pat.pat_zip : strZip;
             tbZipcode.BackColor = Color.White;
-            tbPhone.Text = currentPat.pat_phone;
+            tbPhone.Text = currentAccount.Pat.pat_phone;
             tbPhone.BackColor = Color.White;
             tbSSN.Text = currentAccount.ssn;
             tbSSN.BackColor = Color.White;
-            tbEmailAddress.Text = currentPat.pat_email;
+            tbEmailAddress.Text = currentAccount.Pat.pat_email;
             tbEmailAddress.BackColor = Color.White;
-            tbDateOfBirth.Text = currentPat.dob_yyyy.Value.ToString("MM/dd/yyyy");
+            tbDateOfBirth.Text = currentAccount.Pat.dob_yyyy.Value.ToString("MM/dd/yyyy");
             tbDateOfBirth.BackColor = Color.White;
-            cbSex.SelectedValue = currentPat.sex;
+            cbSex.SelectedValue = currentAccount.Pat.sex;
             cbSex.BackColor = Color.White;
-            cbMaritalStatus.SelectedValue = currentPat.pat_marital != null ? currentPat.pat_marital : "";
+            cbMaritalStatus.SelectedValue = currentAccount.Pat.pat_marital != null ? currentAccount.Pat.pat_marital : "";
             cbMaritalStatus.BackColor = Color.White;
 
-            if (!Str.ParseName(currentPat.guarantor, out strLname, out strFname, out strMidName, out strSuffix))
+            if (!Str.ParseName(currentAccount.Pat.guarantor, out strLname, out strFname, out strMidName, out strSuffix))
             {
-                Log.Instance.Info($"Guarantor name could not be parsed. {currentPat.guarantor}");
+                Log.Instance.Info($"Guarantor name could not be parsed. {currentAccount.Pat.guarantor}");
                 Log.Instance.Warn("Error parsing guarantor name. Name may be blank. Parsed data will not be shown.");
                 DemoStatusMessages.AppendText("Error parsing guarantor name. Name may be blank. Parsed data will not be shown.");
                 DemoStatusMessages.AppendText(Environment.NewLine);
@@ -428,18 +463,14 @@ namespace LabBilling.Forms
             tbGuarFirstName.Text = strFname;
             tbGuarMiddleName.Text = strMidName;
             tbGuarSuffix.Text = strSuffix;
-            tbGuarantorAddress.Text = currentPat.guar_addr;
-            tbGuarCity.Text = currentPat.guar_city;
-            cbGuarState.SelectedValue = currentPat.guar_state != null ? currentPat.guar_state : "";
-            tbGuarZip.Text = currentPat.guar_zip;
-            tbGuarantorPhone.Text = currentPat.guar_phone;
-            cbGuarantorRelation.SelectedValue = currentPat.relation != null ? currentPat.relation : "";
+            tbGuarantorAddress.Text = currentAccount.Pat.guar_addr;
+            tbGuarCity.Text = currentAccount.Pat.guar_city;
+            cbGuarState.SelectedValue = currentAccount.Pat.guar_state != null ? currentAccount.Pat.guar_state : "";
+            tbGuarZip.Text = currentAccount.Pat.guar_zip;
+            tbGuarantorPhone.Text = currentAccount.Pat.guar_phone;
+            cbGuarantorRelation.SelectedValue = currentAccount.Pat.relation != null ? currentAccount.Pat.relation : "";
 
-            
-            currentIns = new List<Ins>();
-            currentIns = insDB.GetByAccount(_selectedAccount).ToList();
-
-            if (currentIns.Count > 0)
+            if (currentAccount.Insurances.Count() > 0)
             {
                 DataGridViewButtonColumn deleteCol = new DataGridViewButtonColumn
                 {
@@ -447,11 +478,12 @@ namespace LabBilling.Forms
                     HeaderText = "Delete",
                     Text = "Delete",
                     UseColumnTextForButtonValue = true,
-                    Width = 50
+                    Width = 50,
+                    DisplayIndex = 0
                 };
                 this.dgvInsurance.Columns.Add(deleteCol);
 
-                var insBindingList = new BindingList<Ins>(currentIns);
+                var insBindingList = new BindingList<Ins>(currentAccount.Insurances);
                 insGridSource = new BindingSource(insBindingList, null);
 
                 dgvInsurance.DataSource = insGridSource;
@@ -470,6 +502,10 @@ namespace LabBilling.Forms
                 dgvInsurance.Columns[nameof(Ins.Account)].Visible = false;
                 dgvInsurance.Columns[nameof(Ins.InsCompany)].Visible = false;
 
+                dgvInsurance.Columns[nameof(Ins.PlanName)].DisplayIndex = 1;
+                dgvInsurance.Columns[nameof(Ins.PlanAddress1)].DisplayIndex = 2;
+                dgvInsurance.Columns[nameof(Ins.PolicyNumber)].DisplayIndex = 3;
+
                 dgvInsurance.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCellsExceptHeader);
                 //dgvInsurance.Columns[nameof(Ins.HolderName)].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
 
@@ -481,9 +517,6 @@ namespace LabBilling.Forms
             }
 
         }
-
-
-        #endregion
 
         #region DemographicTab
 
@@ -528,30 +561,30 @@ namespace LabBilling.Forms
 
             accDB.Update(currentAccount);
 
-            currentPat.city_st_zip = string.Format("{0}, {1} {2}", tbCity.Text, cbState.SelectedValue.ToString(), tbZipcode.Text);
-            currentPat.pat_city = tbCity.Text;
-            currentPat.pat_addr1 = tbAddress1.Text;
-            currentPat.pat_addr2 = tbAddress2.Text;
-            currentPat.pat_email = tbEmailAddress.Text;
-            currentPat.pat_marital = cbMaritalStatus.SelectedValue.ToString();
-            currentPat.pat_phone = tbPhone.Text;
-            currentPat.pat_state = cbState.SelectedValue.ToString();
-            currentPat.pat_zip = tbZipcode.Text;
-            currentPat.pat_full_name = string.Format("{0},{1} {2}", tbLastName.Text, tbFirstName.Text, tbMiddleName.Text);
-            currentPat.dob_yyyy = DateTime.Parse(tbDateOfBirth.Text);
-            currentPat.guarantor = string.Format("{0} {1},{2} {3}",
+            currentAccount.Pat.city_st_zip = string.Format("{0}, {1} {2}", tbCity.Text, cbState.SelectedValue.ToString(), tbZipcode.Text);
+            currentAccount.Pat.pat_city = tbCity.Text;
+            currentAccount.Pat.pat_addr1 = tbAddress1.Text;
+            currentAccount.Pat.pat_addr2 = tbAddress2.Text;
+            currentAccount.Pat.pat_email = tbEmailAddress.Text;
+            currentAccount.Pat.pat_marital = cbMaritalStatus.SelectedValue.ToString();
+            currentAccount.Pat.pat_phone = tbPhone.Text;
+            currentAccount.Pat.pat_state = cbState.SelectedValue.ToString();
+            currentAccount.Pat.pat_zip = tbZipcode.Text;
+            currentAccount.Pat.pat_full_name = string.Format("{0},{1} {2}", tbLastName.Text, tbFirstName.Text, tbMiddleName.Text);
+            currentAccount.Pat.dob_yyyy = DateTime.Parse(tbDateOfBirth.Text);
+            currentAccount.Pat.guarantor = string.Format("{0} {1},{2} {3}",
                 tbGuarantorLastName.Text, tbGuarSuffix.Text, tbGuarFirstName.Text, tbGuarMiddleName.Text);
-            currentPat.guar_addr = tbGuarantorAddress.Text;
-            currentPat.guar_city = tbGuarCity.Text;
-            currentPat.guar_phone = tbGuarantorPhone.Text;
-            currentPat.guar_state = cbGuarState.SelectedValue.ToString();
-            currentPat.guar_zip = tbGuarZip.Text;
-            currentPat.g_city_st = string.Format("{0}, {1} {2}", tbGuarCity.Text, cbGuarState.SelectedValue.ToString(), tbGuarZip.Text);
-            currentPat.sex = cbSex.SelectedValue.ToString();
-            currentPat.relation = cbGuarantorRelation.SelectedValue.ToString();
-            currentPat.ssn = tbSSN.Text;
+            currentAccount.Pat.guar_addr = tbGuarantorAddress.Text;
+            currentAccount.Pat.guar_city = tbGuarCity.Text;
+            currentAccount.Pat.guar_phone = tbGuarantorPhone.Text;
+            currentAccount.Pat.guar_state = cbGuarState.SelectedValue.ToString();
+            currentAccount.Pat.guar_zip = tbGuarZip.Text;
+            currentAccount.Pat.g_city_st = string.Format("{0}, {1} {2}", tbGuarCity.Text, cbGuarState.SelectedValue.ToString(), tbGuarZip.Text);
+            currentAccount.Pat.sex = cbSex.SelectedValue.ToString();
+            currentAccount.Pat.relation = cbGuarantorRelation.SelectedValue.ToString();
+            currentAccount.Pat.ssn = tbSSN.Text;
 
-            patDB.SaveAll(currentPat);
+            patDB.SaveAll(currentAccount.Pat);
 
             var controls = tabDemographics.Controls;
 
@@ -596,43 +629,49 @@ namespace LabBilling.Forms
                 return;
             }
 
-            if (currentIns.Count - 1 < selectedIns)
+            if (currentAccount.Insurances.Count() - 1 < selectedIns)
             {
                 //This is a new record
-                currentIns.Insert(selectedIns, new Ins());
-                currentIns[selectedIns].Account = _selectedAccount;
+                currentAccount.Insurances.Insert(selectedIns, new Ins());
+                currentAccount.Insurances[selectedIns].Account = _selectedAccount;
             }
 
-            currentIns[selectedIns].CertSSN = tbCertSSN.Text;
-            currentIns[selectedIns].GroupName = tbGroupName.Text;
-            currentIns[selectedIns].GroupNumber = tbGroupNumber.Text;
-            currentIns[selectedIns].HolderAddress = tbHolderAddress.Text;
-            currentIns[selectedIns].HolderCityStZip = string.Format("{0}, {1} {2}",
+            currentAccount.Insurances[selectedIns].CertSSN = tbCertSSN.Text;
+            currentAccount.Insurances[selectedIns].GroupName = tbGroupName.Text;
+            currentAccount.Insurances[selectedIns].GroupNumber = tbGroupNumber.Text;
+            currentAccount.Insurances[selectedIns].HolderAddress = tbHolderAddress.Text;
+            currentAccount.Insurances[selectedIns].HolderCityStZip = string.Format("{0}, {1} {2}",
                 tbHolderCity.Text,
-                cbHolderState.SelectedValue.ToString(),
+                cbHolderState.SelectedValue == null ? "" : cbHolderState.SelectedValue.ToString(),
                 tbHolderZip.Text);
-            currentIns[selectedIns].HolderBirthDate = DateTime.Parse(tbHolderDOB.Text);
-            currentIns[selectedIns].HolderFirstName = tbHolderFirstName.Text;
-            currentIns[selectedIns].HolderLastName = tbHolderLastName.Text;
-            currentIns[selectedIns].HolderMiddleName = tbHolderMiddleName.Text;
-            currentIns[selectedIns].HolderName = string.Format("{0},{1} {2}",
-                tbHolderLastName.Text, tbHolderFirstName.Text, tbHolderMiddleName.Text);
-            currentIns[selectedIns].HolderSex = cbHolderSex.SelectedValue.ToString();
-            currentIns[selectedIns].PolicyNumber = tbPolicyNumber.Text;
-            currentIns[selectedIns].PlanAddress1 = tbPlanAddress.Text;
-            currentIns[selectedIns].PlanAddress2 = tbPlanAddress2.Text;
-            currentIns[selectedIns].PlanName = tbPlanName.Text;
-            currentIns[selectedIns].PlanCityState = tbPlanCitySt.Text;
-            currentIns[selectedIns].Relation = cbInsRelation.SelectedValue.ToString();
-            currentIns[selectedIns].Coverage = cbInsOrder.SelectedValue.ToString();
-            currentIns[selectedIns].FinCode = cbPlanFinCode.SelectedValue.ToString();
+            if (currentAccount.Insurances[selectedIns].HolderCityStZip.Trim() == ",")
+            {
+                currentAccount.Insurances[selectedIns].HolderCityStZip = String.Empty;
+            }
+            if(tbHolderDOB.MaskCompleted)
+                currentAccount.Insurances[selectedIns].HolderBirthDate = DateTime.Parse(tbHolderDOB.Text);
 
-            currentIns[selectedIns].InsCode = cbInsCode.SelectedItem.Col2;
+            currentAccount.Insurances[selectedIns].HolderFirstName = tbHolderFirstName.Text;
+            currentAccount.Insurances[selectedIns].HolderLastName = tbHolderLastName.Text;
+            currentAccount.Insurances[selectedIns].HolderMiddleName = tbHolderMiddleName.Text;
+            currentAccount.Insurances[selectedIns].HolderName = string.Format("{0},{1} {2}",
+                tbHolderLastName.Text, tbHolderFirstName.Text, tbHolderMiddleName.Text);
+            currentAccount.Insurances[selectedIns].HolderSex = cbHolderSex.SelectedValue.ToString();
+            currentAccount.Insurances[selectedIns].PolicyNumber = tbPolicyNumber.Text;
+            currentAccount.Insurances[selectedIns].PlanAddress1 = tbPlanAddress.Text;
+            currentAccount.Insurances[selectedIns].PlanAddress2 = tbPlanAddress2.Text;
+            currentAccount.Insurances[selectedIns].PlanName = tbPlanName.Text;
+            currentAccount.Insurances[selectedIns].PlanCityState = tbPlanCitySt.Text;
+            currentAccount.Insurances[selectedIns].Relation = cbInsRelation.SelectedValue.ToString();
+            currentAccount.Insurances[selectedIns].Coverage = cbInsOrder.SelectedValue.ToString();
+            currentAccount.Insurances[selectedIns].FinCode = cbPlanFinCode.SelectedValue.ToString();
+
+            currentAccount.Insurances[selectedIns].InsCode = cbInsCode.SelectedItem.Col2;
 
             //call method to update the record in the database
-            if (currentIns[selectedIns].rowguid == Guid.Empty)
+            if (currentAccount.Insurances[selectedIns].rowguid == Guid.Empty)
             {
-                insDB.Add(currentIns[selectedIns]);
+                insDB.Add(currentAccount.Insurances[selectedIns]);
             }
             else
             {
@@ -641,12 +680,29 @@ namespace LabBilling.Forms
                     if (MessageBox.Show(string.Format("You are adding a new {0} insurance {1}. This will replace the existing {2} insurance. OK to update?",
                         cbInsOrder.SelectedValue, tbPlanName.Text, cbInsOrder.SelectedValue), "Existing Insurance", MessageBoxButtons.YesNo) == DialogResult.Yes)
                     {
-                        insDB.Update(currentIns[selectedIns]);
+                        insDB.Update(currentAccount.Insurances[selectedIns]);
                     }
                     else
                     {
                         return;
                     }
+                }
+                else
+                {
+                    List<string> updatedColumns = new List<string>();
+
+                    foreach(Control control in insTabLayoutPanel.Controls)
+                    {
+                        if(changedControls.Contains(control.Name))
+                        {
+                            //get field name from map
+                            string field = controlColumnMap[control].ToString();
+                            if (!string.IsNullOrEmpty(field))
+                                updatedColumns.Add(field);
+                        }
+                    }
+
+                    insDB.Update(currentAccount.Insurances[selectedIns], updatedColumns);
                 }
 
             }
@@ -682,13 +738,12 @@ namespace LabBilling.Forms
             cbInsCode.SelectedIndex = -1;
             cbInsOrder.SelectedIndex = 0;
             cbPlanFinCode.SelectedIndex = -1;
-
         }
 
         private void DgvInsurance_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             Log.Instance.Trace($"Entering");
-
+            tbInsTabMessage.Text = String.Empty;
             if (e.ColumnIndex == 0)
             {
                 #region delete button was clicked
@@ -716,12 +771,12 @@ namespace LabBilling.Forms
                     return;
                 }
 
-                if (MessageBox.Show(string.Format("Delete {0} insurance {1} for this patient?", currentIns[selectedIns].Coverage, currentIns[selectedIns].PlanName),
+                if (MessageBox.Show(string.Format("Delete {0} insurance {1} for this patient?", currentAccount.Insurances[selectedIns].Coverage, currentAccount.Insurances[selectedIns].PlanName),
                     "Delete Insurance", MessageBoxButtons.YesNo)
                     == DialogResult.Yes)
                 {
-                    if (insDB.Delete(currentIns[selectedIns]))
-                        currentIns.RemoveAt(selectedIns);
+                    if (insDB.Delete(currentAccount.Insurances[selectedIns]))
+                        currentAccount.Insurances.RemoveAt(selectedIns);
                 }
                 insGridSource.ResetBindings(false);
                 ClearInsEntryFields();
@@ -743,7 +798,9 @@ namespace LabBilling.Forms
             {
                 //error parsing name
                 Log.Instance.Info($"Insurance holder name could not be parsed. {dgvInsurance.SelectedRows[0].Cells[nameof(Ins.HolderName)].Value.ToString()}");
-                MessageBox.Show("Error while parsing name into its parts. Name will not be shown in fields.");
+                tbInsTabMessage.Text += "Error while parsing name into its parts. Name will not be shown in fields.";
+                tbInsTabMessage.Text += Environment.NewLine;
+                tbInsTabMessage.BackColor = Color.Yellow;
             }
 
             tbHolderLastName.Text = dgvInsurance.SelectedRows[0].Cells[nameof(Ins.HolderLastName)].Value?.ToString() ?? lname;
@@ -751,12 +808,13 @@ namespace LabBilling.Forms
             tbHolderMiddleName.Text = dgvInsurance.SelectedRows[0].Cells[nameof(Ins.HolderMiddleName)].Value?.ToString() ?? mname;
             tbHolderAddress.Text = dgvInsurance.SelectedRows[0].Cells[nameof(Ins.HolderAddress)].Value != null ? dgvInsurance.SelectedRows[0].Cells[nameof(Ins.HolderAddress)].Value.ToString() : "";
 
-            if (dgvInsurance.SelectedRows[0].Cells[nameof(Ins.HolderCityStZip)].Value != null)
+            if (dgvInsurance.SelectedRows[0].Cells[nameof(Ins.HolderCityStZip)].Value != null 
+                && dgvInsurance.SelectedRows[0].Cells[nameof(Ins.HolderCityStZip)].Value.ToString() != "")
             {
                 if (!Str.ParseCityStZip(dgvInsurance.SelectedRows[0].Cells[nameof(Ins.HolderCityStZip)].Value.ToString(),
                     out string city, out string state, out string zip))
                 {
-                    Log.Instance.Info($"Insurance holder city, st, zip could not be parsed. {dgvInsurance.SelectedRows[0].Cells[nameof(Ins.HolderCityStZip)].Value.ToString()}");
+                    Log.Instance.Info($"Insurance holder city, st, zip could not be parsed. {dgvInsurance.SelectedRows[0].Cells[nameof(Ins.HolderCityStZip)].Value}");
                     MessageBox.Show("Error parsing City, st zip into its parts. Will not be shown in fields.");
                 }
                 tbHolderCity.Text = city;
@@ -764,9 +822,12 @@ namespace LabBilling.Forms
                 tbHolderZip.Text = zip;
             }
 
-            cbHolderSex.SelectedValue = dgvInsurance.SelectedRows[0].Cells[nameof(Ins.HolderSex)].Value?.ToString();
-            tbHolderDOB.Text = DateTime.Parse(dgvInsurance.SelectedRows[0].Cells[nameof(Ins.HolderBirthDate)].Value?.ToString()).ToString(@"MM/dd/yyyy");
-            cbInsRelation.SelectedValue = dgvInsurance.SelectedRows[0].Cells[nameof(Ins.Relation)].Value?.ToString();
+            cbHolderSex.SelectedValue = dgvInsurance.SelectedRows[0].Cells[nameof(Ins.HolderSex)].Value?.ToString() ?? "";
+            if (!string.IsNullOrEmpty(dgvInsurance.SelectedRows[0].Cells[nameof(Ins.HolderBirthDate)].Value?.ToString()))
+                tbHolderDOB.Text = DateTime.Parse(dgvInsurance.SelectedRows[0].Cells[nameof(Ins.HolderBirthDate)].Value?.ToString()).ToString(@"MM/dd/yyyy");
+            else
+                tbHolderDOB.Text = "";
+            cbInsRelation.SelectedValue = dgvInsurance.SelectedRows[0].Cells[nameof(Ins.Relation)].Value?.ToString() ?? "";
 
             // set ins Code combo box
             cbInsCode.ItemSelect(2, dgvInsurance.SelectedRows[0].Cells[nameof(Ins.InsCode)].Value?.ToString(), false, true);
@@ -779,7 +840,17 @@ namespace LabBilling.Forms
             tbGroupNumber.Text = dgvInsurance.SelectedRows[0].Cells[nameof(Ins.GroupNumber)].Value?.ToString();
             tbGroupName.Text = dgvInsurance.SelectedRows[0].Cells[nameof(Ins.GroupName)].Value?.ToString();
             tbCertSSN.Text = dgvInsurance.SelectedRows[0].Cells[nameof(Ins.CertSSN)].Value?.ToString();
-            cbPlanFinCode.SelectedValue = dgvInsurance.SelectedRows[0].Cells[nameof(Ins.FinCode)].Value?.ToString();
+            cbPlanFinCode.SelectedValue = dgvInsurance.SelectedRows[0].Cells[nameof(Ins.FinCode)].Value?.ToString() ?? "";
+
+            //reset changed flag & colors
+            foreach(Control ctrl in insTabLayoutPanel.Controls)
+            {
+                if (ctrl is TextBox || ctrl is ComboBox || ctrl is FlatCombo || ctrl is MaskedTextBox)
+                {
+                    ctrl.BackColor = Color.White;
+                }
+                changedControls.Remove(ctrl.Name);
+            }
 
         }
 
@@ -845,7 +916,8 @@ namespace LabBilling.Forms
         private void LoadCharges()
         {
             Log.Instance.Trace("Entering");
-            dgvCharges.DataSource = chrgdb.GetByAccount(SelectedAccount, ckShowCreditedChrg.Checked);
+            //dgvCharges.DataSource = chrgdb.GetByAccount(SelectedAccount, ckShowCreditedChrg.Checked);
+            dgvCharges.DataSource = currentAccount.Charges;
 
             foreach (DataGridViewColumn col in dgvCharges.Columns)
             {
@@ -909,29 +981,35 @@ namespace LabBilling.Forms
                 DataGridViewRow row = dgvCharges.SelectedRows[0];
                 var chrg = chrgdb.GetById(Convert.ToInt32(row.Cells[nameof(Chrg.chrg_num)].Value.ToString()));
 
-                dgvChrgDetail.DataSource = chrg.ChrgDetails;
-
+                try
+                {
+                    dgvChrgDetail.DataSource = chrg.ChrgDetails;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(string.Format("Exception {0}", ex.Message));
+                }
                 foreach (DataGridViewColumn col in dgvChrgDetail.Columns)
                 {
                     col.Visible = false;
                 }
 
-                dgvChrgDetail.Columns[nameof(ChrgDetails.cpt4)].Visible = true;
-                dgvChrgDetail.Columns[nameof(ChrgDetails.bill_type)].Visible = true;
-                dgvChrgDetail.Columns[nameof(ChrgDetails.diagnosis_code_ptr)].Visible = true;
-                dgvChrgDetail.Columns[nameof(ChrgDetails.modi)].Visible = true;
-                dgvChrgDetail.Columns[nameof(ChrgDetails.modi2)].Visible = true;
-                dgvChrgDetail.Columns[nameof(ChrgDetails.revcode)].Visible = true;
-                dgvChrgDetail.Columns[nameof(ChrgDetails.type)].Visible = true;
-                dgvChrgDetail.Columns[nameof(ChrgDetails.bill_method)].Visible = true;
-                dgvChrgDetail.Columns[nameof(ChrgDetails.order_code)].Visible = true;
-                dgvChrgDetail.Columns[nameof(ChrgDetails.amount)].Visible = true;
+                dgvChrgDetail.Columns[nameof(ChrgDetail.cpt4)].Visible = true;
+                dgvChrgDetail.Columns[nameof(ChrgDetail.bill_type)].Visible = true;
+                dgvChrgDetail.Columns[nameof(ChrgDetail.diagnosis_code_ptr)].Visible = true;
+                dgvChrgDetail.Columns[nameof(ChrgDetail.modi)].Visible = true;
+                dgvChrgDetail.Columns[nameof(ChrgDetail.modi2)].Visible = true;
+                dgvChrgDetail.Columns[nameof(ChrgDetail.revcode)].Visible = true;
+                dgvChrgDetail.Columns[nameof(ChrgDetail.type)].Visible = true;
+                dgvChrgDetail.Columns[nameof(ChrgDetail.bill_method)].Visible = true;
+                dgvChrgDetail.Columns[nameof(ChrgDetail.order_code)].Visible = true;
+                dgvChrgDetail.Columns[nameof(ChrgDetail.amount)].Visible = true;
 
                 dgvChrgDetail.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
-                dgvChrgDetail.Columns[nameof(ChrgDetails.cpt4)].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+                dgvChrgDetail.Columns[nameof(ChrgDetail.cpt4)].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
                 dgvChrgDetail.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
 
-                dgvChrgDetail.Columns[nameof(ChrgDetails.amount)].DefaultCellStyle.Format = "N2";
+                dgvChrgDetail.Columns[nameof(ChrgDetail.amount)].DefaultCellStyle.Format = "N2";
 
             }
         }
@@ -981,7 +1059,7 @@ namespace LabBilling.Forms
         private void BtnAddCharge_Click(object sender, EventArgs e)
         {
             Log.Instance.Trace($"Entering");
-            ChargeEntryForm frm = new ChargeEntryForm(currentAccountSummary);
+            ChargeEntryForm frm = new ChargeEntryForm(currentAccount);
 
             if (frm.ShowDialog() == DialogResult.OK)
             {
@@ -1030,37 +1108,39 @@ namespace LabBilling.Forms
                 try
                 {
                     int iDx = 1;
-                    foreach (PatDiag diag in currentPat.Diagnoses)
+                    if (currentAccount.Pat.Diagnoses.Count > 0)
                     {
-                        dt.Rows.Add(new object[] { iDx++, diag.Code, false, false, false, false });
-                    }
-
-                    int i = 1;
-                    foreach (string ptr in ptrs)
-                    {
-                        if (ptr == null || ptr == "")
-                            continue;
-                        int iPtr = Convert.ToInt32(ptr);
-                        switch (i)
+                        foreach (PatDiag diag in currentAccount.Pat.Diagnoses)
                         {
-                            case 1:
-                                dt.Rows[iPtr - 1]["Ptr1"] = true;
-                                break;
-                            case 2:
-                                dt.Rows[iPtr - 1]["Ptr2"] = true;
-                                break;
-                            case 3:
-                                dt.Rows[iPtr - 1]["Ptr3"] = true;
-                                break;
-                            case 4:
-                                dt.Rows[iPtr - 1]["Ptr4"] = true;
-                                break;
-                            default:
-                                break;
+                            dt.Rows.Add(new object[] { iDx++, diag.Code, false, false, false, false });
                         }
-                        i++;
-                    }
 
+                        int i = 1;
+                        foreach (string ptr in ptrs)
+                        {
+                            if (ptr == null || ptr == "")
+                                continue;
+                            int iPtr = Convert.ToInt32(ptr);
+                            switch (i)
+                            {
+                                case 1:
+                                    dt.Rows[iPtr - 1]["Ptr1"] = true;
+                                    break;
+                                case 2:
+                                    dt.Rows[iPtr - 1]["Ptr2"] = true;
+                                    break;
+                                case 3:
+                                    dt.Rows[iPtr - 1]["Ptr3"] = true;
+                                    break;
+                                case 4:
+                                    dt.Rows[iPtr - 1]["Ptr4"] = true;
+                                    break;
+                                default:
+                                    break;
+                            }
+                            i++;
+                        }
+                    }
                     DiagnosisPointerDGV.DataSource = dt;
                     DiagnosisPointerDGV.Columns["DxCode"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill; 
                     DiagnosisPointerDGV.AutoResizeColumns();
@@ -1093,13 +1173,13 @@ namespace LabBilling.Forms
 
             //update amt record
 
-            ChrgDetails amt = new ChrgDetails();
+            ChrgDetail amt = new ChrgDetail();
 
             amt.uri = Convert.ToInt32(dgvChrgDetail.SelectedRows[0].Cells[nameof(amt.uri)].Value);
             amt.amount = Convert.ToDouble(dgvChrgDetail.SelectedRows[0].Cells[nameof(amt.amount)].Value?? 0.0);
             amt.bill_method = dgvChrgDetail.SelectedRows[0].Cells[nameof(amt.bill_method)].Value?.ToString();
             amt.bill_type = dgvChrgDetail.SelectedRows[0].Cells[nameof(amt.bill_type)].Value?.ToString();
-            amt.chrg_num = Convert.ToDouble(dgvChrgDetail.SelectedRows[0].Cells[nameof(amt.chrg_num)].Value ?? 0.0);
+            amt.chrg_num = Convert.ToInt32(dgvChrgDetail.SelectedRows[0].Cells[nameof(amt.chrg_num)].Value ?? 0.0);
             amt.cpt4 = dgvChrgDetail.SelectedRows[0].Cells[nameof(amt.cpt4)].Value?.ToString();
             amt.diagnosis_code_ptr = dxPtr;
             amt.modi = dgvChrgDetail.SelectedRows[0].Cells[nameof(amt.modi)].Value?.ToString();
@@ -1160,14 +1240,14 @@ namespace LabBilling.Forms
         {
             Log.Instance.Trace("Entering");
 
-            tbTotalPayment.Text = currentAccountSummary.TotalPayments.ToString("c");
-            tbTotalContractual.Text = currentAccountSummary.TotalContractual.ToString("c");
-            tbTotalWriteOff.Text = currentAccountSummary.TotalWriteOff.ToString("c");
-            tbTotalPmtAll.Text = (currentAccountSummary.TotalPayments + currentAccountSummary.TotalContractual + currentAccountSummary.TotalWriteOff).ToString("c");
+            tbTotalPayment.Text = currentAccount.TotalPayments.ToString("c");
+            tbTotalContractual.Text = currentAccount.TotalContractual.ToString("c");
+            tbTotalWriteOff.Text = currentAccount.TotalWriteOff.ToString("c");
+            tbTotalPmtAll.Text = (currentAccount.TotalPayments + currentAccount.TotalContractual + currentAccount.TotalWriteOff).ToString("c");
 
             //payments = chkdb.GetByAccount(SelectedAccount);
             //Log.Instance.Debug($"GetPayments returned {payments.Count} rows.");
-            dgvPayments.DataSource = chkdb.GetByAccount(SelectedAccount);
+            dgvPayments.DataSource = currentAccount.Payments.ToList();
 
             foreach (DataGridViewColumn col in dgvPayments.Columns)
             {
@@ -1385,9 +1465,9 @@ namespace LabBilling.Forms
         {
             Log.Instance.Trace($"Entering");
 
-            currentPat.Diagnoses = dxBindingList.ToList<PatDiag>();
+            currentAccount.Pat.Diagnoses = dxBindingList.ToList<PatDiag>();
 
-            if (patDB.SaveDiagnoses(currentPat) == true)
+            if (patDB.SaveDiagnoses(currentAccount.Pat) == true)
                 MessageBox.Show("Diagnoses updated successfully.");
             else
                 MessageBox.Show("Diagnosis update failed.");
@@ -1405,10 +1485,9 @@ namespace LabBilling.Forms
         private void LoadNotes()
         {
             Log.Instance.Trace("Entering");
-            notes = notesdb.GetByAccount(currentAccountSummary.account).ToList();
             tbNotesDisplay.Text = "";
             tbNotesDisplay.BackColor = Color.AntiqueWhite;
-            foreach(Notes note in notes)
+            foreach(Notes note in currentAccount.Notes)
             {
                 tbNotesDisplay.DeselectAll();
                 tbNotesDisplay.SelectionFont = new Font(tbNotesDisplay.SelectionFont, FontStyle.Bold);
@@ -1426,10 +1505,11 @@ namespace LabBilling.Forms
 
             if (prompt.ReturnCode == DialogResult.OK)
             {
-                note.account = currentAccountSummary.account;
+                note.account = currentAccount.account;
                 note.comment = prompt.Text;
                 notesdb.Add(note);
                 //reload notes to pick up changes
+                currentAccount.Notes = notesdb.GetByAccount(currentAccount.account);
                 LoadNotes();
             }
 
@@ -1444,7 +1524,7 @@ namespace LabBilling.Forms
             Log.Instance.Trace("Entering");
 
             //billingActivities = dbBillingActivity.GetByAccount(currentAccountSummary.account);
-            dgvBillActivity.DataSource = dbBillingActivity.GetByAccount(currentAccountSummary.account);
+            dgvBillActivity.DataSource = currentAccount.BillingActivities.ToList();
            
         }
 
@@ -1523,6 +1603,9 @@ namespace LabBilling.Forms
 
             ctrl.BackColor = Color.Orange;
 
+            if(!changedControls.Contains(ctrl.Name))
+                changedControls.Add(ctrl.Name);
+
         }
 
         private void ClearHoldStatusToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1541,7 +1624,7 @@ namespace LabBilling.Forms
 
             if (prompt.ReturnCode == DialogResult.OK)
             {
-                note.account = currentAccountSummary.account;
+                note.account = currentAccount.account;
                 note.comment = prompt.Text;
                 notesdb.Add(note);
                 //reload notes to pick up changes
@@ -1553,6 +1636,5 @@ namespace LabBilling.Forms
             accDB.Update(currentAccount);
 
         }
-
     }
 }

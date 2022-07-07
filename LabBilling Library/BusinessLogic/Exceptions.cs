@@ -93,4 +93,35 @@ namespace LabBilling.Core
         }
     }
 
+    [Serializable]
+    public class PatientNameParseException : Exception
+    {
+        public string PatientName { get; }
+        public string Account { get; }
+
+        public PatientNameParseException()
+        {
+
+        }
+
+        public PatientNameParseException(string message)
+            : base(message)
+        {
+
+        }
+
+        public PatientNameParseException(string patientName, Exception inner)
+            : base(patientName, inner)
+        {
+
+        }
+
+        public PatientNameParseException(string message, string patientName, string account)
+            : this(message)
+        {
+            PatientName = patientName;
+            Account = account;
+        }
+    }
+
 }

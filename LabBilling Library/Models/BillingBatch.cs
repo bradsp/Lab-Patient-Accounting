@@ -7,22 +7,19 @@ using PetaPoco;
 
 namespace LabBilling.Core.Models
 {
-    [TableName("pth")]
-    [PrimaryKey("pc_code", AutoIncrement = true)]
-    public class Pth : IBaseEntity
+    [TableName("data_billing_batch")]
+    [PrimaryKey("batch", AutoIncrement = false)]
+    public class BillingBatch : IBaseEntity
     {
-        public bool deleted { get; set; }
-        public int pc_code { get; set; }
-        public string name { get; set; }
-        public string mc_pin { get; set; }
-        public string bc_pin { get; set; }
-        public string tlc_num { get; set; }
+        public double batch { get; set; }
+        public DateTime run_date { get; set; }
+        public string run_user { get; set; }
+        public string x12_text { get; set; }
+        public int claim_count { get; set; }
         public DateTime mod_date { get; set; }
         public string mod_user { get; set; }
         public string mod_prg { get; set; }
-        [Ignore]
         public string mod_host { get; set; }
-        [Ignore]
         public Guid rowguid { get; set; }
     }
 }

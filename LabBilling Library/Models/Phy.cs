@@ -31,7 +31,7 @@ namespace LabBilling.Core.Models
         public string phone { get; set; }
         public string reserved { get; set; }
         public int num_labels { get; set; }
-        public DateTime? mod_date { get; set; }
+        public DateTime mod_date { get; set; }
         public string mod_user { get; set; }
         public string mod_prg { get; set; }
         public double uri { get; set; }

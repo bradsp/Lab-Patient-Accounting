@@ -15,42 +15,53 @@ namespace LabBilling.Core.DataAccess
             amtRepository = new AmtRepository(connection);
         }
 
-        public override Chrg GetById(int id)
+        public ChrgRepository(string connection, PetaPoco.Database db) : base("chrg", connection, db)
         {
-            
-            var sql = PetaPoco.Sql.Builder
-                .Append("SELECT chrg.*, cdm.descript as 'cdm_desc' ")
-                .Append("FROM chrg left outer join cdm on chrg.cdm = cdm.cdm ")
-                .Append("WHERE chrg_num = @0", id);
-
-            var result = dbConnection.SingleOrDefault<Chrg>(sql);
-
-            //load the amt records
-            result.ChrgDetails = amtRepository.GetByCharge(result.chrg_num).ToList();
-            
-            return result;
+            amtRepository = new AmtRepository(connection, db);
         }
 
-        public IEnumerable<Chrg> GetByAccount(string account, bool showCredited = true, bool includeInvoiced = true)
+        public override Chrg GetById(int id)
+        {
+
+            var sql = PetaPoco.Sql.Builder
+                .Select("chrg.*, cdm.descript as 'cdm_desc', amt.*")
+                .From("chrg")
+                .LeftJoin("cdm").On("chrg.cdm = cdm.cdm")
+                .InnerJoin("amt").On("amt.chrg_num = chrg.chrg_num")
+                .Where("chrg.chrg_num = @0", id);
+
+            var result = dbConnection.Fetch<Chrg, ChrgDetail, Chrg>(new ChrgChrgDetailRelator().MapIt, sql);
+
+            Chrg chrg = result.First<Chrg>();
+
+            //load the amt records
+            //result.ChrgDetails = amtRepository.GetByCharge(result.chrg_num).ToList();
+            
+            return chrg;
+        }
+
+        public List<Chrg> GetByAccount(string account, bool showCredited = true, bool includeInvoiced = true)
         {
             Log.Instance.Debug($"Entering");
 
             var sql = PetaPoco.Sql.Builder
-                .Append("SELECT chrg.*, cdm.descript as 'cdm_desc' ")
-                .Append("FROM chrg left outer join cdm on chrg.cdm = cdm.cdm ")
-                .Append("WHERE account = @0 ", account);
+                .Select("chrg.*, cdm.descript as 'cdm_desc', amt.*")
+                .From("chrg")
+                .LeftJoin("cdm").On("chrg.cdm = cdm.cdm")
+                .InnerJoin("amt").On("amt.chrg_num = chrg.chrg_num")
+                .Where("account = @0", account);
             
             if(!showCredited)
-                sql.Append("AND credited = 0 ");
+                sql.Where("credited = 0");
 
             if (!includeInvoiced)
-                sql.Append("AND invoice is null");
+                sql.Where("invoice is null");
 
-            sql.Append("order by chrg_num");
+            sql.OrderBy("chrg.chrg_num");
 
-            List<Chrg> records = dbConnection.Fetch<Chrg>(sql);
+            var result = dbConnection.Fetch<Chrg, ChrgDetail, Chrg>(new ChrgChrgDetailRelator().MapIt, sql);
 
-            return records;
+            return result;
         }
 
         public int CreditCharge(int chrgNum, string comment = "")
@@ -71,7 +82,7 @@ namespace LabBilling.Core.DataAccess
             //function will add charge
             int chrg_num = Convert.ToInt32(this.Add(chrg));
             
-            foreach(ChrgDetails amt in chrg.ChrgDetails)
+            foreach(ChrgDetail amt in chrg.ChrgDetails)
             {
                 amt.chrg_num = chrg_num;
 

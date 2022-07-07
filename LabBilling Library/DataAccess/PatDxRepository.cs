@@ -14,6 +14,11 @@ namespace LabBilling.Core.DataAccess
 
         }
 
+        public PatDxRepository(string connection, PetaPoco.Database db) : base("patdx", connection)
+        {
+
+        }
+
         public override PatDx GetById(int id)
         {
             throw new NotImplementedException();

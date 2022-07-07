@@ -10,6 +10,7 @@ using System.Linq;
 using Opulos.Core.UI;
 using System.Text;
 using System.Collections.Generic;
+using LabBilling.Core.BusinessLogic;
 
 namespace LabBilling
 {
@@ -127,7 +128,7 @@ namespace LabBilling
 
             foreach (UserProfile up in recentAccounts)
             {
-                var ar = accountRepository.GetByAccount(up.ParameterData);
+                var ar = accountRepository.GetByAccount(up.ParameterData,true);
                 if(ar != null)
                 {
                     LinkLabel a1 = new LinkLabel { Text = ar.pat_name, Tag = up.ParameterData };
@@ -516,6 +517,21 @@ namespace LabBilling
 
             frm.ShowDialog();
             
+        }
+
+        private void pathologistsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void professionalBillingToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ClaimGenerator claims = new ClaimGenerator(Helper.ConnVal);
+
+            claims.CompileProfessionalBilling();
+
+            MessageBox.Show("File generated.");
+
         }
     }
 }

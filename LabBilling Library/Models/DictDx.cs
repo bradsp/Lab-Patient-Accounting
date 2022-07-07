@@ -13,7 +13,7 @@ namespace LabBilling.Core.Models
     {
         public string icd9_num { get; set; }
         public string icd9_desc { get; set; }
-        public DateTime? mod_date { get; set; }
+        public DateTime mod_date { get; set; }
         public string mod_user { get; set; }
         public string mod_prg { get; set; }
         public string version { get; set; }

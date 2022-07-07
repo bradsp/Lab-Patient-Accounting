@@ -85,7 +85,7 @@ namespace LabBilling.Forms
         int nFilterColumn = -1;
         ArrayList m_alDiagnosis = new ArrayList();
         //  private R_lmrp m_rLmrp = null;
-        private DateTime m_dtStartSSI;
+        private DateTime m_dtStartSSI = DateTime.MinValue;
         //  private R_mutually_excl m_rMutex = null;
         //  private R_acc m_rAcc = null;
         private R_VW_LMRP m_rVwLmrp = null;
@@ -194,9 +194,6 @@ namespace LabBilling.Forms
             Log.Instance.Debug("Timer Stop Creating Array Lists");
             Application.DoEvents();
 
-            //m_sqlConn = new SqlConnection(string.Format("Data Source={0}; Initial Catalog = {1};"
-            //       + "Integrated Security = 'SSPI'", m_strServer, m_strDatabase));
-
             m_sqlConn = new SqlConnection(_connectionString);
 
             SqlDataAdapter sda = new SqlDataAdapter();
@@ -204,24 +201,7 @@ namespace LabBilling.Forms
             Log.Instance.Debug("Timer Start Creating DateTimes");
             CreateDateTimes();
             Log.Instance.Debug("Timer Stop Creating DateTimes");
-            // TimeSpan ts = new TimeSpan();
-            // DateTime dteStart = DateTime.Now;
-            //ArrayList alTimes = new ArrayList();
-            //using (SqlConnection connection = new SqlConnection(m_sqlConn.ConnectionString))
-            //{
-            //    Application.DoEvents();
-            //    tsslNote.Text = "Loading Start Date";
-            //    // get the operating date range for queries.
 
-            //    SqlCommand cdmStartDate = new SqlCommand("select value from dbo.system where key_name = 'ssi_start_date'", connection);
-            //    sda.SelectCommand = cdmStartDate;
-            //    Application.DoEvents();
-            //    tsslNote.Text = "Loading Select Command";
-            //    DataTable dtStart = new DataTable();
-            //    Application.DoEvents();
-            //    sda.Fill(dtStart);
-            //    m_dtStartSSI = DateTime.Parse(dtStart.Rows[0]["value"].ToString());
-            //}
             using (SqlConnection connection = new SqlConnection(m_sqlConn.ConnectionString))
             {
                 Application.DoEvents();

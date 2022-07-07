@@ -5,9 +5,9 @@ namespace LabBilling.Core.Models
 {
     [TableName("amt")]
     [PrimaryKey("uri",AutoIncrement = true)]
-    public class ChrgDetails : IBaseEntity
+    public class ChrgDetail : IBaseEntity
     {
-        public double chrg_num { get; set; }
+        public int chrg_num { get; set; }
         public string revcode { get; set; }
         public string cpt4 { get; set; }
         public string modi { get; set; }
@@ -20,7 +20,7 @@ namespace LabBilling.Core.Models
         public string bill_type { get; set; }
         public string bill_method { get; set; }
         public bool pointer_set { get; set; }
-        public DateTime? mod_date { get; set; }
+        public DateTime mod_date { get; set; }
         public string mod_user { get; set; }
         public string mod_prg { get; set; }
         public bool deleted { get; set; }

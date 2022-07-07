@@ -14,12 +14,17 @@ namespace LabBilling.Core.DataAccess
 
         }
 
+        public NotesRepository(string connection, PetaPoco.Database db) : base("notes", connection, db)
+        {
+
+        }
+
         public override Notes GetById(int id)
         {
             throw new NotImplementedException();
         }
 
-        public IEnumerable<Notes> GetByAccount(string account)
+        public List<Notes> GetByAccount(string account)
         {
             var sql = PetaPoco.Sql.Builder
                 .Select("*")

@@ -15,7 +15,7 @@ namespace LabBilling.Core.Models
         public decimal? cnt { get; set; } // numeric(15,0), null
 
         [Ignore]
-        DateTime? IBaseEntity.mod_date { get; set; }
+        DateTime IBaseEntity.mod_date { get; set; }
         [Ignore] 
         string IBaseEntity.mod_user { get; set; }
         [Ignore] 

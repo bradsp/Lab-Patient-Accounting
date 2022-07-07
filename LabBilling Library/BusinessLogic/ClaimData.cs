@@ -11,6 +11,8 @@ namespace LabBilling.Core
     {
         public Account claimAccount;
 
+        public string TransactionTypeCode { get; set; }
+
         public string SubmitterId { get; set; }
         public string SubmitterName { get; set; }
         public string SubmitterContactName { get; set; }
@@ -28,6 +30,7 @@ namespace LabBilling.Core
         public string BillingProviderCountry { get; set; }
         public string BillingProviderTaxId { get; set; }
         public string BillingProviderUPIN { get; set; }
+        public string BillingProviderNPI { get; set; }
         public string BillingProviderContactName { get; set; }
         public string BillingProviderContactPhone { get; set; }
         public string BillingProviderContactEmail { get; set; }
@@ -78,8 +81,8 @@ namespace LabBilling.Core
         public string ReferringProviderSuffix { get; set; }
         public string ReferringProviderNPI { get; set; }
 
-        public IEnumerable<ClaimSubscriber> Subscribers { get; set; }
-        public IEnumerable<ClaimLine> ClaimLines { get; set; }
+        public List<ClaimSubscriber> Subscribers { get; set; } = new List<ClaimSubscriber>();
+        public List<ClaimLine> ClaimLines { get; set; } = new List<ClaimLine>();
 
         public ClaimData()
         {
@@ -101,7 +104,7 @@ namespace LabBilling.Core
         public string NameSuffix { get; set; }
         public string NamePrefix { get; set; }
         public string PrimaryIdentifier { get; set; }
-        public DateTime DateOfBirth { get; set; }
+        public DateTime? DateOfBirth { get; set; }
         public string Gender { get; set; }
         public string SocSecNumber { get; set; }
 

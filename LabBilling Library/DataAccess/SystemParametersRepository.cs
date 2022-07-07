@@ -11,6 +11,11 @@ namespace LabBilling.Core.DataAccess
                 
         }
 
+        public SystemParametersRepository(string connection, PetaPoco.Database db) : base("system", connection, db)
+        {
+
+        }
+
         public override SystemParameters GetById(int id)
         {
             throw new NotImplementedException();

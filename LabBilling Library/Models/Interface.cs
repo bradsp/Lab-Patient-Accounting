@@ -21,7 +21,7 @@ namespace LabBilling.Core.Models
         public string processStatusMsg { get; set; } // varchar(250), null
         public decimal systemMsgId { get; set; } // numeric(18,0), not null
         public bool? dx_processed { get; set; } // bit, null
-        public DateTime? mod_date { get; set; } // datetime, null
+        public DateTime mod_date { get; set; } // datetime, null
         public string order_pat_id { get; set; } // varchar(50), null
         public string order_visit_id { get; set; } // varchar(50), null
         public DateTime? DOS { get; set; } // datetime, null
@@ -52,7 +52,7 @@ namespace LabBilling.Core.Models
         public string processStatusMsg { get; set; } // varchar(250), null
         public decimal systemMsgId { get; set; } // numeric(18,0), not null
         public bool? dx_processed { get; set; } // bit, null
-        public DateTime? mod_date { get; set; } // datetime, null
+        public DateTime mod_date { get; set; } // datetime, null
         public string order_pat_id { get; set; } // varchar(50), null
         public string order_visit_id { get; set; } // varchar(50), null
         public DateTime? DOS { get; set; } // datetime, null
@@ -81,7 +81,7 @@ namespace LabBilling.Core.Models
         public string processStatusMsg { get; set; } // varchar(250), null
         public decimal systemMsgId { get; set; } // numeric(18,0), not null
         public bool? dx_processed { get; set; } // bit, null
-        public DateTime? mod_date { get; set; } // datetime, null
+        public DateTime mod_date { get; set; } // datetime, null
         public string order_pat_id { get; set; } // varchar(50), null
         public string order_visit_id { get; set; } // varchar(50), null
         public DateTime? DOS { get; set; } // datetime, null
@@ -109,7 +109,7 @@ namespace LabBilling.Core.Models
         public string processStatusMsg { get; set; } // varchar(250), null
         public decimal systemMsgId { get; set; } // numeric(18,0), not null
         public bool? dx_processed { get; set; } // bit, null
-        public DateTime? mod_date { get; set; } // datetime, null
+        public DateTime mod_date { get; set; } // datetime, null
         public string order_pat_id { get; set; } // varchar(50), null
         public string order_visit_id { get; set; } // varchar(50), null
         public DateTime? DOS { get; set; } // datetime, null
@@ -144,7 +144,7 @@ namespace LabBilling.Core.Models
         public string visit_id { get; set; } // varchar(40), null
         public string xmlContents { get; set; } // XML(.), null
         [Ignore]
-        public DateTime? mod_date { get; set; }
+        public DateTime mod_date { get; set; }
         [Ignore]
         public string mod_user { get; set; }
         [Ignore]

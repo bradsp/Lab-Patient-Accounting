@@ -62,13 +62,20 @@ namespace LabBilling.Core.Models
         public bool deleted { get; set; }
 
         [ResultColumn]
-        public DateTime? mod_date { get; set; }
+        public DateTime mod_date { get; set; }
         [ResultColumn]
         public string mod_user { get; set; }
         [ResultColumn]
         public string mod_prg { get; set; }
         [ResultColumn]
         public string mod_host { get; set; }
+
+        [Ignore]
+        public string HolderCity { get; set; }
+        [Ignore] 
+        public string HolderState { get; set; }
+        [Ignore] 
+        public string HolderZip { get; set; }
 
         [Ignore]
         public InsCompany InsCompany { get; set; }

@@ -15,8 +15,8 @@ using LabBilling.Views;
 
 namespace LabBilling.Forms
 {
-    public partial class PhysicianMaintenanceForm : Form, IPhysicianMaintenanceView
-    {
+    public partial class PhysicianMaintenanceForm : Form
+    { 
         public PhysicianMaintenanceForm()
         {
             InitializeComponent();
@@ -46,10 +46,6 @@ namespace LabBilling.Forms
         public string DocNo { get; set; }
         public string Pathologist { get; set; }
 
-        public event EventHandler NewProvider;
-        public event EventHandler ProviderSelected;
-        public event EventHandler SaveProvider;
-
         private readonly PhyRepository phydb = new PhyRepository(Helper.ConnVal);
 
         private void PhysicianMaintenanceForm_Load(object sender, EventArgs e)
@@ -70,6 +66,21 @@ namespace LabBilling.Forms
             PhysicianDGV.Columns["mod_host"].Visible = false;
 
             PhysicianDGV.AutoResizeColumns();
+        }
+
+        private void btnNew_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnDelete_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void buttonSearch_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

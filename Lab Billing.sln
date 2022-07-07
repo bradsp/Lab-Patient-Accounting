@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30907.101
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32421.90
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RFClassLibrary", "RFClassLibrary\RFClassLibrary.csproj", "{B15474ED-9185-437E-BAC5-A19779CBE721}"
 EndProject
@@ -19,8 +19,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OopFactory.X12.Validation",
 EndProject
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "MTGCCombobox", "MTGCCombobox\MTGCCombobox.vbproj", "{109AA2E9-2903-44A6-A006-8EC12890C473}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PetaPoco", "PetaPoco\PetaPoco.csproj", "{98F3083D-2CE1-43E6-8ED5-CC91555763AC}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libraries", "Libraries", "{C33E528B-87FE-4032-B44C-CB7A3B9D76A2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LabBilling Core", "LabBilling Library\LabBilling Core.csproj", "{0890D249-B319-46BE-8B8A-354687C334E8}"
@@ -28,6 +26,11 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lab Billing UI", "Lab Billing UI\Lab Billing UI.csproj", "{F8C8C4A8-005A-49DB-A560-9A78141665B5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LabBillingService", "LabBillingService\LabBillingService.csproj", "{A38E5412-1194-42CE-8CA2-CF509EAE7828}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A2023807-DB07-4D12-BD42-1AAE04DA7D62}"
+	ProjectSection(SolutionItems) = preProject
+		labbilling db build script.sql = labbilling db build script.sql
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -99,14 +102,6 @@ Global
 		{109AA2E9-2903-44A6-A006-8EC12890C473}.Release|Any CPU.Build.0 = Release|Any CPU
 		{109AA2E9-2903-44A6-A006-8EC12890C473}.Release|x86.ActiveCfg = Release|Any CPU
 		{109AA2E9-2903-44A6-A006-8EC12890C473}.Release|x86.Build.0 = Release|Any CPU
-		{98F3083D-2CE1-43E6-8ED5-CC91555763AC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{98F3083D-2CE1-43E6-8ED5-CC91555763AC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{98F3083D-2CE1-43E6-8ED5-CC91555763AC}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{98F3083D-2CE1-43E6-8ED5-CC91555763AC}.Debug|x86.Build.0 = Debug|Any CPU
-		{98F3083D-2CE1-43E6-8ED5-CC91555763AC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{98F3083D-2CE1-43E6-8ED5-CC91555763AC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{98F3083D-2CE1-43E6-8ED5-CC91555763AC}.Release|x86.ActiveCfg = Release|Any CPU
-		{98F3083D-2CE1-43E6-8ED5-CC91555763AC}.Release|x86.Build.0 = Release|Any CPU
 		{0890D249-B319-46BE-8B8A-354687C334E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{0890D249-B319-46BE-8B8A-354687C334E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0890D249-B319-46BE-8B8A-354687C334E8}.Debug|x86.ActiveCfg = Debug|Any CPU
@@ -144,7 +139,6 @@ Global
 		{1E3BD8A3-21EA-4B71-8A55-31910211A316} = {C33E528B-87FE-4032-B44C-CB7A3B9D76A2}
 		{65B52E5E-4105-4A4B-AB14-D16DFC3942A4} = {C33E528B-87FE-4032-B44C-CB7A3B9D76A2}
 		{109AA2E9-2903-44A6-A006-8EC12890C473} = {C33E528B-87FE-4032-B44C-CB7A3B9D76A2}
-		{98F3083D-2CE1-43E6-8ED5-CC91555763AC} = {C33E528B-87FE-4032-B44C-CB7A3B9D76A2}
 		{0890D249-B319-46BE-8B8A-354687C334E8} = {C33E528B-87FE-4032-B44C-CB7A3B9D76A2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution

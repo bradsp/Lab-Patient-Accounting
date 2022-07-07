@@ -13,6 +13,11 @@ namespace LabBilling.Core.DataAccess
 
         }
 
+        public CdmRepository(string connection, PetaPoco.Database db) : base("cdm", connection, db)
+        {
+
+        }
+
         public override IEnumerable<Cdm> GetAll()
         {
             return GetAll(false);

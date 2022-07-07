@@ -17,7 +17,7 @@ namespace LabBilling.Core.Models
         public string ParameterData { get; set; }   
         
         [ResultColumn]
-        public DateTime? ModDate { get; set; }
+        public DateTime ModDate { get; set; }
         [ResultColumn]
         public string ModUser { get; set; }
         [ResultColumn]
@@ -26,7 +26,7 @@ namespace LabBilling.Core.Models
         public string ModHost { get; set; }
 
         [Ignore]
-        public DateTime? mod_date { get { return ModDate; } set { ModDate = value; } }
+        public DateTime mod_date { get { return ModDate; } set { ModDate = value; } }
         [Ignore]
         public string mod_user { get { return ModUser; } set { ModUser = value; } }
         [Ignore]

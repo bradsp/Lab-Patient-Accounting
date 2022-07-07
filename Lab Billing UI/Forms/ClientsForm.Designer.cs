@@ -109,7 +109,7 @@
             this.dgvClients.Name = "dgvClients";
             this.dgvClients.ReadOnly = true;
             this.dgvClients.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvClients.Size = new System.Drawing.Size(468, 414);
+            this.dgvClients.Size = new System.Drawing.Size(468, 582);
             this.dgvClients.TabIndex = 0;
             this.dgvClients.VirtualMode = true;
             this.dgvClients.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dgvClients_CellMouseClick);
@@ -371,7 +371,7 @@
             this.tabControl1.Controls.Add(this.tabClientPreferences);
             this.tabControl1.Controls.Add(this.tabClientMRO);
             this.tabControl1.Controls.Add(this.tabComment);
-            this.tabControl1.Location = new System.Drawing.Point(513, 281);
+            this.tabControl1.Location = new System.Drawing.Point(514, 442);
             this.tabControl1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
@@ -632,7 +632,7 @@
             // 
             this.btnSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnSave.BackColor = System.Drawing.Color.PaleGreen;
-            this.btnSave.Location = new System.Drawing.Point(1002, 384);
+            this.btnSave.Location = new System.Drawing.Point(1255, 552);
             this.btnSave.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(83, 31);
@@ -643,7 +643,7 @@
             // btnCancel
             // 
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnCancel.Location = new System.Drawing.Point(1002, 419);
+            this.btnCancel.Location = new System.Drawing.Point(1255, 587);
             this.btnCancel.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(83, 30);
@@ -653,17 +653,18 @@
             // 
             // tbContact
             // 
-            this.tbContact.Location = new System.Drawing.Point(817, 201);
+            this.tbContact.Location = new System.Drawing.Point(515, 286);
             this.tbContact.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.tbContact.Multiline = true;
             this.tbContact.Name = "tbContact";
-            this.tbContact.Size = new System.Drawing.Size(261, 64);
+            this.tbContact.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.tbContact.Size = new System.Drawing.Size(429, 152);
             this.tbContact.TabIndex = 35;
             // 
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(815, 186);
+            this.label5.Location = new System.Drawing.Point(515, 271);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(44, 13);
             this.label5.TabIndex = 36;
@@ -673,7 +674,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1097, 466);
+            this.ClientSize = new System.Drawing.Size(1350, 634);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.tbContact);
             this.Controls.Add(this.btnCancel);

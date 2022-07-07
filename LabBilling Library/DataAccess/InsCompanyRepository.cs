@@ -2,12 +2,18 @@
 using LabBilling.Core.Models;
 using System;
 using System.Collections.Generic;
+using RFClassLibrary;
 
 namespace LabBilling.Core.DataAccess
 {
     public class InsCompanyRepository : RepositoryBase<InsCompany>
     {
         public InsCompanyRepository(string connection) : base("insc", connection)
+        {
+
+        }
+
+        public InsCompanyRepository(string connection, PetaPoco.Database db) : base("insc", connection, db)
         {
 
         }
@@ -22,6 +28,14 @@ namespace LabBilling.Core.DataAccess
             Log.Instance.Debug($"Entering");
 
             var record = dbConnection.SingleOrDefault<InsCompany>("where code = @0", code);
+
+            if(record != null)
+            {
+                Str.ParseCityStZip(record.citystzip, out string strCity, out string strState, out string strZip);
+                record.City = strCity;
+                record.State = strState;
+                record.Zip = strZip;
+            }
 
             return record;
         }

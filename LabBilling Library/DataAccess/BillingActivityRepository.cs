@@ -15,7 +15,12 @@ namespace LabBilling.Core.DataAccess
 
         }
 
-        public IEnumerable<BillingActivity> GetByAccount(string account)
+        public BillingActivityRepository(string connection, PetaPoco.Database db) : base("vw_billing_activity", connection, db)
+        {
+
+        }
+
+        public List<BillingActivity> GetByAccount(string account)
         {
             Log.Instance.Debug($"Entering");
 

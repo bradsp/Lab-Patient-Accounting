@@ -13,7 +13,7 @@ namespace LabBilling.Core.Models
     {
         public string account { get; set; }
         public string comment { get; set; }
-        public DateTime? mod_date { get; set; }
+        public DateTime mod_date { get; set; }
         public string mod_user { get; set; }
         public string mod_prg { get; set; }
         public string mod_host { get; set; }

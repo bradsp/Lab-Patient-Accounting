@@ -71,6 +71,7 @@
             this.userSecurityToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.systemParametersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.interfaceMappingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.interfaceMonitorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.windowsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cascadeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tileHorizontalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -81,7 +82,7 @@
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.windowManagerPanel1 = new MDIWindowManager.WindowManagerPanel();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.interfaceMonitorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.professionalBillingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.DashboardMenu.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -114,7 +115,8 @@
             this.clientBillsToolStripMenuItem,
             this.globalBillingToolStripMenuItem,
             this.posting835RemitToolStripMenuItem,
-            this.clientBillsNewToolStripMenuItem});
+            this.clientBillsNewToolStripMenuItem,
+            this.professionalBillingToolStripMenuItem});
             this.billingToolStripMenuItem.Name = "billingToolStripMenuItem";
             resources.ApplyResources(this.billingToolStripMenuItem, "billingToolStripMenuItem");
             // 
@@ -274,6 +276,7 @@
             // 
             this.pathologistsToolStripMenuItem.Name = "pathologistsToolStripMenuItem";
             resources.ApplyResources(this.pathologistsToolStripMenuItem, "pathologistsToolStripMenuItem");
+            this.pathologistsToolStripMenuItem.Click += new System.EventHandler(this.pathologistsToolStripMenuItem_Click);
             // 
             // zipCodesToolStripMenuItem
             // 
@@ -371,6 +374,12 @@
             resources.ApplyResources(this.interfaceMappingToolStripMenuItem, "interfaceMappingToolStripMenuItem");
             this.interfaceMappingToolStripMenuItem.Click += new System.EventHandler(this.interfaceMappingToolStripMenuItem_Click);
             // 
+            // interfaceMonitorToolStripMenuItem
+            // 
+            this.interfaceMonitorToolStripMenuItem.Name = "interfaceMonitorToolStripMenuItem";
+            resources.ApplyResources(this.interfaceMonitorToolStripMenuItem, "interfaceMonitorToolStripMenuItem");
+            this.interfaceMonitorToolStripMenuItem.Click += new System.EventHandler(this.interfaceMonitorToolStripMenuItem_Click);
+            // 
             // windowsToolStripMenuItem
             // 
             this.windowsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -450,11 +459,11 @@
             resources.ApplyResources(this.panel1, "panel1");
             this.panel1.Name = "panel1";
             // 
-            // interfaceMonitorToolStripMenuItem
+            // professionalBillingToolStripMenuItem
             // 
-            this.interfaceMonitorToolStripMenuItem.Name = "interfaceMonitorToolStripMenuItem";
-            resources.ApplyResources(this.interfaceMonitorToolStripMenuItem, "interfaceMonitorToolStripMenuItem");
-            this.interfaceMonitorToolStripMenuItem.Click += new System.EventHandler(this.interfaceMonitorToolStripMenuItem_Click);
+            this.professionalBillingToolStripMenuItem.Name = "professionalBillingToolStripMenuItem";
+            resources.ApplyResources(this.professionalBillingToolStripMenuItem, "professionalBillingToolStripMenuItem");
+            this.professionalBillingToolStripMenuItem.Click += new System.EventHandler(this.professionalBillingToolStripMenuItem_Click);
             // 
             // Dashboard
             // 
@@ -533,5 +542,6 @@
         private System.Windows.Forms.ToolStripMenuItem interfaceMappingToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem clientBillsNewToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem interfaceMonitorToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem professionalBillingToolStripMenuItem;
     }
 }

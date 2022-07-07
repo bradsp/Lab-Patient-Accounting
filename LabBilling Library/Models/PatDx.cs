@@ -15,7 +15,7 @@ namespace LabBilling.Core.Models
         public string code_qualifier { get; set; }
         public bool is_error { get; set; }
         public string import_file { get; set; }
-        public DateTime? mod_date { get; set; }
+        public DateTime mod_date { get; set; }
         public string mod_prg { get; set; }
         public string mod_user { get; set; }
         public string mod_host { get; set; }

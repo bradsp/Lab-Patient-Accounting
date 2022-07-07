@@ -14,6 +14,11 @@ namespace LabBilling.Core.DataAccess
 
         }
 
+        public UserProfileRepository(string connection, PetaPoco.Database db) : base("UserProfile", connection)
+        {
+
+        }
+
         public override UserProfile GetById(int id)
         {
             throw new NotImplementedException();

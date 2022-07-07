@@ -28,7 +28,7 @@ namespace LabBilling.Core.Models
         public string ref_lab_id { get; set; }
         public string ref_lab_bill_code { get; set; }
         public double ref_lab_payment { get; set; }
-        public DateTime? mod_date { get; set; }
+        public DateTime mod_date { get; set; }
         public string mod_user { get; set; }
         public string mod_prg { get; set; }
         public string mod_host { get; set; }

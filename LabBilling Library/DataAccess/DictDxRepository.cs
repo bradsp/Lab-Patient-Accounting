@@ -12,6 +12,11 @@ namespace LabBilling.Core.DataAccess
 
         }
 
+        public DictDxRepository(string connection, PetaPoco.Database db) : base("icd9desc", connection, db)
+        {
+
+        }
+
         public override DictDx GetById(int id)
         {
             throw new NotImplementedException();

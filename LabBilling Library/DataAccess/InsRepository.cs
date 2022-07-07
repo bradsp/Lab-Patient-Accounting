@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using LabBilling.Logging;
 using LabBilling.Core.Models;
+using RFClassLibrary;
 
 namespace LabBilling.Core.DataAccess
 {
@@ -12,12 +13,17 @@ namespace LabBilling.Core.DataAccess
 
         }
 
+        public InsRepository(string connection, PetaPoco.Database db) : base("ins", connection, db)
+        {
+
+        }
+
         public override Ins GetById(int id)
         {
             throw new NotImplementedException();
         }
 
-        public IEnumerable<Ins> GetByAccount(string account)
+        public List<Ins> GetByAccount(string account)
         {
             Log.Instance.Debug("$Entering");
 
@@ -26,6 +32,13 @@ namespace LabBilling.Core.DataAccess
             foreach(Ins ins in records)
             {
                 ins.InsCompany = dbConnection.SingleOrDefault<InsCompany>("where code = @0", ins.InsCode);
+                if (ins.InsCompany == null)
+                    ins.InsCompany = new InsCompany();
+
+                Str.ParseCityStZip(ins.HolderCityStZip, out string strCity, out string strState, out string strZip);
+                ins.HolderCity = strCity;
+                ins.HolderState = strState;
+                ins.HolderZip = strZip;
             }
 
             return records;
@@ -35,5 +48,12 @@ namespace LabBilling.Core.DataAccess
         {
             return base.Update(table);
         }
+
+        public override bool Update(Ins table, IEnumerable<string> columns)
+        {
+            return base.Update(table, columns);
+        }
+
+        
     }
 }

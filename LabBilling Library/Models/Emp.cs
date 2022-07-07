@@ -40,14 +40,14 @@ namespace LabBilling.Core.Models
         [PetaPoco.ResultColumn("mod_prg")]
         public string LastModifiedWith { get; set; }
         [PetaPoco.ResultColumn("mod_date")]
-        public DateTime? LastModifiedDate { get; set; }
+        public DateTime LastModifiedDate { get; set; }
         [PetaPoco.Column("password")]
         public string Password { get; set; }
         //[Column(Name = "mainmenu")]
         //public string MainMenu { get; set; }
 
         [Ignore]
-        public DateTime? mod_date { get { return LastModifiedDate; } set { LastModifiedDate = value; } }
+        public DateTime mod_date { get { return LastModifiedDate; } set { LastModifiedDate = value; } }
         [Ignore]
         public string mod_user { get { return LastModifiedBy;  } set { LastModifiedBy = value; } }
         [Ignore]

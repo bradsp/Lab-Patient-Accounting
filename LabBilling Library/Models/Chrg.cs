@@ -55,7 +55,7 @@ namespace LabBilling.Core.Models
         public double calc_amt { get; set; }
 
         [ResultColumn]
-        public DateTime? mod_date { get; set; }
+        public DateTime mod_date { get; set; }
         [ResultColumn]
         public string mod_user { get; set; }
         [ResultColumn]
@@ -66,7 +66,7 @@ namespace LabBilling.Core.Models
         public Guid rowguid { get; set; }
 
         [Ignore]
-        public List<ChrgDetails> ChrgDetails { get; set; } = new List<ChrgDetails>();
+        public List<ChrgDetail> ChrgDetails { get; set; } = new List<ChrgDetail>();
     }
 
     [TableName("InvoiceChargeView")]
@@ -82,7 +82,7 @@ namespace LabBilling.Core.Models
         public string descript { get; set; }
 
         [Ignore]
-        public DateTime? mod_date { get; set; }
+        public DateTime mod_date { get; set; }
         [Ignore]
         public string mod_user { get; set; }
         [Ignore]
@@ -91,5 +91,31 @@ namespace LabBilling.Core.Models
         public string mod_host { get; set; }
         [Ignore]
         public Guid rowguid { get; set; }
+    }
+
+    public class ChrgChrgDetailRelator
+    {
+        public Chrg current;
+
+        public Chrg MapIt(Chrg chrg, ChrgDetail a)
+        {
+            if (chrg == null)
+                return current;
+
+            if(current != null && current.chrg_num == chrg.chrg_num)
+            {
+                current.ChrgDetails.Add(a);
+
+                return null;
+            }
+
+            var prev = current;
+
+            current = chrg;
+            current.ChrgDetails = new List<ChrgDetail>();
+            current.ChrgDetails.Add(a);
+
+            return prev;
+        }
     }
 }

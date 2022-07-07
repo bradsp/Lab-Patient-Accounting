@@ -7,6 +7,9 @@ using LabBilling.Core.Models;
 using LabBilling.Core.DataAccess;
 using System.Data.Common;
 using System.Collections;
+using PetaPoco;
+using PetaPoco.Providers;
+using RFClassLibrary;
 
 namespace LabBilling.Core.BusinessLogic
 {
@@ -21,12 +24,16 @@ namespace LabBilling.Core.BusinessLogic
         public string propProductionEnvironment { get; set; }
         private string _connectionString;
 
-        private Account currentAccount;
+        private PetaPoco.Database db; 
+
         private AccountRepository accountRepository;
-        private List<Chrg> accountCharges;
         private ChrgRepository chrgRepository;
         private ChkRepository chkRepository;
-
+        private List<ClaimData> claims;
+        private Billing837 billing837;
+        private NumberRepository numberRepository;
+        private BillingHistoryRepository billingHistoryRepository;
+        private BillingBatchRepository billingBatchRepository;
 
         public ClaimGenerator(string connectionString)
         {
@@ -38,7 +45,9 @@ namespace LabBilling.Core.BusinessLogic
             dBserverName = (string)dbConnectionStringBuilder["Server"];
             dBName = (string)dbConnectionStringBuilder["Database"];
 
-            parametersdb = new SystemParametersRepository(_connectionString);
+            db = new Database(connectionString, new SqlServerDatabaseProvider());
+
+            parametersdb = new SystemParametersRepository(_connectionString, db);
 
             propProductionEnvironment = dBName.Contains("LIVE") ? "P" : "T";
             string[] strArgs = new string[3];
@@ -46,28 +55,92 @@ namespace LabBilling.Core.BusinessLogic
             strArgs[1] = dBserverName;
             strArgs[2] = dBName;
 
-            accountRepository = new AccountRepository(_connectionString);
-            chrgRepository = new ChrgRepository(_connectionString);
-            chkRepository = new ChkRepository(_connectionString);
+            accountRepository = new AccountRepository(_connectionString, db);
+            chrgRepository = new ChrgRepository(_connectionString, db);
+            chkRepository = new ChkRepository(_connectionString, db);
+            numberRepository = new NumberRepository(_connectionString);
+            billingHistoryRepository = new BillingHistoryRepository(_connectionString, db);
+            billingBatchRepository = new BillingBatchRepository(_connectionString, db);
+
+            claims = new List<ClaimData>();
 
         }
 
-
         public void CompileProfessionalBilling()
         {
+            //compile list of accounts to have claims generated
+            billing837 = new Billing837(_connectionString);
+            string batchSubmitterID = parametersdb.GetByKey("fed_tax_id");
+            decimal strNum = numberRepository.GetNumber("ssi_batch");
+            string interchangeControlNumber = string.Format("{0:D9}", int.Parse(string.Format("{0}{1}", DateTime.Now.Year, strNum)));
+
+            
+
+            //acc records where status = "1500" and primary insurance is not "CHAMPUS"
+            var list = accountRepository.GetAccountsForClaims(AccountRepository.ClaimType.Professional);
+            ClaimData claim;
+
+            
+
+            foreach (ClaimItem item in list)
+            {
+                claim = GenerateProfessionalClaim(item.account);
+                claims.Add(claim);
+
+                //update status and activity date fields
+                claim.claimAccount.status = "SSI1500";
+
+                db.Update(claim.claimAccount, new [] { nameof(Account.status) });
+
+
+                claim.claimAccount.Pat.h1500_date = DateTime.Today;
+                claim.claimAccount.Pat.ssi_batch = interchangeControlNumber;
+
+                db.Update(claim.claimAccount.Pat, new [] { nameof(Pat.h1500_date), nameof(Pat.ssi_batch)});
+
+                BillingHistory billingHistory = new BillingHistory();
+                billingHistory.pat_name = claim.claimAccount.pat_name;
+                billingHistory.run_date = DateTime.Today;
+                billingHistory.account = claim.claimAccount.account;
+                billingHistory.batch = Convert.ToDouble(interchangeControlNumber);
+                billingHistory.ebill_batch = Convert.ToDouble(interchangeControlNumber);
+                billingHistory.ebill_status = "1500";
+                billingHistory.fin_code = claim.claimAccount.fin_code;
+                billingHistory.ins_abc = claim.claimAccount.Insurances[0].Coverage;
+                billingHistory.ins_code = claim.claimAccount.Insurances[0].InsCode;
+                billingHistory.ins_complete = DateTime.MinValue;
+                billingHistory.trans_date = claim.claimAccount.trans_date;
+                billingHistory.run_user = OS.GetUserName();
+
+                billingHistoryRepository.Add(billingHistory);
+
+            }
+
+            string x12Text = billing837.Generate837pClaimBatch(claims, interchangeControlNumber, propProductionEnvironment, batchSubmitterID);
+
+            BillingBatch billingBatch = new BillingBatch();
+            billingBatch.batch = Convert.ToDouble(interchangeControlNumber);
+            billingBatch.run_date = DateTime.Today;
+            billingBatch.run_user = OS.GetUserName();
+            billingBatch.x12_text = x12Text;
+            billingBatch.claim_count = claims.Count;
+            
+            billingBatchRepository.Add(billingBatch);
 
         }
 
         public void CompileInstituationalBilling()
         {
-
+            throw new NotImplementedException();
         }
 
 
         /// <summary>
-        /// Generates single professional claim
+        /// Generates the claim structure for a single account. Adds the entry to the ClaimsData list.
         /// </summary>
         /// <param name="account"></param>
+        /// <returns></returns>
+        /// <exception cref="InvalidParameterValueException"></exception>
         public ClaimData GenerateProfessionalClaim(string account)
         {
             //do all the fun work of building the ClaimData object & return it.
@@ -82,25 +155,217 @@ namespace LabBilling.Core.BusinessLogic
 
             try
             {
+                claimData.TransactionTypeCode = "CH";
                 claimData.SubmitterId = parametersdb.GetByKey("fed_tax_id");
                 claimData.SubmitterName = parametersdb.GetByKey("billing_entity_name");
                 claimData.SubmitterContactName = parametersdb.GetByKey("billing_contact");
                 claimData.SubmitterContactEmail = parametersdb.GetByKey("billing_phone");
                 claimData.SubmitterContactPhone = parametersdb.GetByKey("billing_email");
+
+                claimData.ReceiverOrgName = parametersdb.GetByKey("billing_entity_name");
+                claimData.ProviderTaxonomyCode = "282N00000X";
+                claimData.BillingProviderName = parametersdb.GetByKey("billing_entity_name"); ;
+                claimData.BillingProviderAddress = parametersdb.GetByKey("billing_entity_street");
+                claimData.BillingProviderCity = parametersdb.GetByKey("billing_entity_city");
+                claimData.BillingProviderState = parametersdb.GetByKey("billing_entity_state");
+                claimData.BillingProviderZipCode = parametersdb.GetByKey("billing_entity_zip");
+                claimData.BillingProviderCountry = parametersdb.GetByKey("billing_entity_country");
+                claimData.BillingProviderTaxId = parametersdb.GetByKey("fed_tax_id");
+                claimData.BillingProviderUPIN = "";
+                claimData.BillingProviderNPI = parametersdb.GetByKey("wth_npi");
+                claimData.BillingProviderContactName = parametersdb.GetByKey("billing_contact");
+                claimData.BillingProviderContactPhone = parametersdb.GetByKey("billing_phone");
+                claimData.BillingProviderContactEmail = parametersdb.GetByKey("billing_email");
+
+                claimData.PayToAddress = parametersdb.GetByKey("remit_to_address");
+                claimData.PayToCity = parametersdb.GetByKey("remit_to_city");
+                claimData.PayToState = parametersdb.GetByKey("remit_to_state");
+                claimData.PayToZipCode = parametersdb.GetByKey("remit_to_zip");
+                claimData.PayToCountry = parametersdb.GetByKey("remit_to_country");
+
+                //not needed currently
+                //2010AC — PAY-TO PLAN NAME Loop Repeat: 1
+                //Required when willing trading partners agree to use this implementation
+                //for their subrogation payment requests.
+                //1. This loop may only be used when BHT06 = 31.
+                claimData.PayToPlanName = "";
+                claimData.PayToPlanAddress = "";
+                claimData.PayToPlanCity = "";
+                claimData.PaytoPlanState = "";
+                claimData.PaytoPlanZipCode = "";
+                claimData.PayToPlanCountry = "";
+                claimData.PayToPlanPrimaryIdentifier = "";
+                claimData.PayToPlanSecondaryIdentifier = "";
+                claimData.PayToPlanTaxId = "";
+
+                //claim information
+                claimData.ClaimIdentifier = account;
+                claimData.TotalChargeAmount = claimData.claimAccount.TotalCharges.ToString();
+                claimData.FacilityCode = "14";
+                claimData.ClaimFrequency = "1";
+                claimData.ProviderSignatureIndicator = "Y"; //default to Yes
+                claimData.ProviderAcceptAssignmentCode = "C";
+                claimData.BenefitAssignmentCertificationIndicator = "Y";
+                claimData.ReleaseOfInformationCode = "Y";
+                claimData.PatientSignatureSourceCode = "";
+                claimData.RelatedCausesCode1 = "";
+                claimData.RelatedCausesCode2 = "";
+                claimData.RelatedCausesCode3 = "";
+                claimData.RelatedCausesStateCode = "";
+                claimData.RelatedCausesCountryCode = "";
+                claimData.SpecialProgramIndicator = "";
+                claimData.DelayReasonCode = ""; // do we need to accommodate this potential?
+
+                claimData.OnsetOfCurrentIllness = claimData.claimAccount.trans_date;
+                claimData.InitialTreatmentDate = claimData.claimAccount.trans_date;
+                claimData.DateOfAccident = null;
+
+                claimData.PatientAmountPaid = claimData.claimAccount.TotalPayments;
+                claimData.CliaNumber = parametersdb.GetByKey("primary_clia_no");
+
+                claimData.ReferringProviderLastName = claimData.claimAccount.Pat.Physician.last_name;
+                claimData.ReferringProviderFirstName = claimData.claimAccount.Pat.Physician.first_name;
+                claimData.ReferringProviderMiddleName = claimData.claimAccount.Pat.Physician.mid_init;
+                claimData.ReferringProviderSuffix = "";
+                claimData.ReferringProviderNPI = claimData.claimAccount.Pat.Physician.tnh_num;
+                Dictionary<string, string> dicOP = new Dictionary<string, string>();
+                dicOP.Add("MC", "440002");
+                dicOP.Add("BC", "1000427");
+                dicOP.Add("TNBC", "1000427");
+                dicOP.Add("UHC", "626010402");
+                foreach (Ins ins in claimData.claimAccount.Insurances)
+                {
+                    //        public IEnumerable<ClaimSubscriber> Subscribers { get; set; }
+                    ClaimSubscriber subscriber = new ClaimSubscriber();
+                    switch(ins.Coverage)
+                    {
+                        case "A":
+                            subscriber.PayerResponsibilitySequenceCode = "P";
+                            break;
+                        case "B":
+                            subscriber.PayerResponsibilitySequenceCode = "S";
+                            break;
+                        case "C":
+                            subscriber.PayerResponsibilitySequenceCode = "T";
+                            break;
+                        default:
+                            throw new InvalidParameterValueException();
+                    }
+                    subscriber.IndividualRelationshipCode = ins.Relation == "01" ? "18" : "";
+                    subscriber.ReferenceIdentification = ins.GroupNumber;
+                    subscriber.PlanName = string.IsNullOrEmpty(ins.GroupName) ? ins.PlanName : ins.GroupName;
+
+                    subscriber.LastName = ins.HolderLastName;
+                    subscriber.FirstName = ins.HolderFirstName;
+                    subscriber.MiddleName = ins.HolderMiddleName;
+                    subscriber.NameSuffix = "";
+                    subscriber.NamePrefix = "";
+                    subscriber.PrimaryIdentifier = ins.PolicyNumber;
+                    subscriber.DateOfBirth = ins.HolderBirthDate;
+                    subscriber.Gender = ins.HolderSex;
+                    subscriber.SocSecNumber = ins.CertSSN;
+
+                    subscriber.Address = ins.HolderAddress;
+                    subscriber.Address2 = "";
+                    subscriber.City = ins.HolderCity;
+                    subscriber.State = ins.HolderState;
+                    subscriber.ZipCode = ins.HolderZip;
+                    subscriber.Country = "US";
+
+                    subscriber.PayerName = ins.InsCompany.name;
+                    subscriber.PayerAddress = ins.InsCompany.addr1;
+                    subscriber.PayerAddress2 = ins.InsCompany.addr2;
+                    subscriber.PayerCity = ins.InsCompany.City;
+                    subscriber.PayerState = ins.InsCompany.State;
+                    subscriber.PayerZipCode = ins.InsCompany.Zip;
+                    subscriber.PayerCountry = "US";
+                    string strPayer = ins.InsCompany.payer_no;
+                    if(dicOP.ContainsKey(ins.InsCode))
+                    {
+                        if(!dicOP.TryGetValue(ins.InsCode, out strPayer))
+                        {
+                            strPayer = ins.InsCompany.payer_no;
+                        }
+                    }
+                    if (strPayer == string.Empty)
+                    {
+                        strPayer = "UKNOWN";
+                    }
+                    subscriber.PayerIdentifier = strPayer;
+                    subscriber.InsuranceTypeCode = "";
+                    subscriber.CoordinationOfBenefitsCode = "";
+                    subscriber.ConditionResponseCode = "";
+                    subscriber.EmployementStatusCode = "";
+
+                    string strClaimFilingIndicatorCode = null;
+
+                    if (!string.IsNullOrEmpty(ins.InsCompany.provider_no_qualifier))
+                    {
+                        if (!ClaimFilingIndicatorCode.TryGetValue(ins.InsCompany.provider_no_qualifier, out strClaimFilingIndicatorCode))
+                        {
+                            strClaimFilingIndicatorCode = "CI";
+                        }
+                    }
+                    else
+                    {
+                        strClaimFilingIndicatorCode = "CI";
+                    }
+                    subscriber.ClaimFilingIndicatorCode = strClaimFilingIndicatorCode;
+
+                    subscriber.PayerIdentificationQualifier = ins.InsCompany.provider_no_qualifier;
+                    subscriber.BillingProviderSecondaryIdentifier = ins.InsCompany.provider_no;
+
+                    claimData.Subscribers.Add(subscriber);
+
+                }
+
+                foreach (Chrg chrg in claimData.claimAccount.Charges)
+                {
+                    // public IEnumerable<ClaimLine> ClaimLines { get; set; }
+                    foreach (ChrgDetail detail in chrg.ChrgDetails)
+                    {
+                        ClaimLine claimLine = new ClaimLine();
+                        claimLine.ProcedureCode = detail.cpt4;
+                        claimLine.ProcedureModifier1 = detail.modi;
+                        claimLine.ProcedureModifier2 = detail.modi2;
+                        claimLine.ProcedureModifier3 = "";
+                        claimLine.Description = chrg.cdm_desc;
+                        claimLine.Amount = detail.amount;
+                        claimLine.Quantity = chrg.qty;
+                        string[] dxptr = detail.diagnosis_code_ptr.Split(':');
+                        if(dxptr.Length >= 1)
+                            claimLine.DxPtr1 = dxptr[0] ?? "";
+                        if (dxptr.Length >= 2) 
+                            claimLine.DxPtr2 = dxptr[1] ?? "";
+                        if (dxptr.Length >= 3) 
+                            claimLine.DxPtr3 = dxptr[2] ?? "";
+                        if (dxptr.Length >= 4) 
+                            claimLine.DxPtr4 = dxptr[3] ?? "";
+                        claimLine.EPSDTIndicator = "";
+                        claimLine.FamilyPlanningIndicator = "";
+                        claimLine.ServiceDate = chrg.service_date;
+                        claimLine.ControlNumber = chrg.cdm;
+
+                        claimData.ClaimLines.Add(claimLine);
+                    }
+                }
+
             }
-            catch(InvalidParameterValueException ex)
+            catch (InvalidParameterValueException ex)
             {
                 throw new InvalidParameterValueException("Parameter value not found", ex);
             }
 
-
             return claimData;
         }
 
-
-
-
-
+        readonly Dictionary<string, string> ClaimFilingIndicatorCode = new Dictionary<string, string>()
+        {
+            { "1B", "BL"},
+            { "1H", "CH"},
+            { "HM", "HM"},
+            { "1D", "MC"}
+        };
 
     }
 }

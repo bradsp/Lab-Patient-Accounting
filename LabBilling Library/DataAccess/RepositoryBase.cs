@@ -8,17 +8,40 @@ using PetaPoco.Providers;
 
 namespace LabBilling.Core.DataAccess
 {
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public abstract class RepositoryBase<T> where T : IBaseEntity
     {
         protected PetaPoco.Database dbConnection = null; 
         protected readonly string _tableName;
         protected IList<string> _fields;
+        /// <summary>
+        /// Contains error messages as a result of actions.
+        /// </summary>
+        public string Errors { get; internal set; }
 
         public RepositoryBase(string tableName, string connectionString)
         {
             Log.Instance.Trace("Entering");
             _tableName = tableName;
-            dbConnection = new PetaPoco.Database(connectionString, new CustomSqlServerDatabaseProvider());
+            dbConnection = new PetaPoco.Database(connectionString, new SqlServerDatabaseProvider());
+
+            Log.Instance.Trace("Exiting");
+        }
+
+        /// <summary>
+        /// Allows passing in an existing database connection to allow for connection pooling.
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <param name="connectionString"></param>
+        /// <param name="db"></param>
+        public RepositoryBase(string tableName, string connectionString, PetaPoco.Database db)
+        {
+            Log.Instance.Trace("Entering");
+            _tableName = tableName;
+            dbConnection = db;
 
             Log.Instance.Trace("Exiting");
         }
@@ -85,6 +108,24 @@ namespace LabBilling.Core.DataAccess
                 table.mod_user = Environment.UserName.ToString();
 
             dbConnection.Update(table);
+            Log.Instance.Trace("Exiting");
+            return true;
+        }
+
+        public virtual bool Update(T table, IEnumerable<string> columns)
+        {
+            Log.Instance.Trace("Entering");
+
+            if (table.mod_date == null)
+                table.mod_date = DateTime.Now;
+            if (table.mod_host == "" || table.mod_host == null)
+                table.mod_host = Environment.MachineName;
+            if (table.mod_prg == "" || table.mod_prg == null)
+                table.mod_prg = System.AppDomain.CurrentDomain.FriendlyName;
+            if (table.mod_user == "" || table.mod_user == null)
+                table.mod_user = Environment.UserName.ToString();
+
+            dbConnection.Update(table, columns);
             Log.Instance.Trace("Exiting");
             return true;
         }

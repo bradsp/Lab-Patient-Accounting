@@ -25,7 +25,7 @@ namespace LabBilling.Core
                 throw new ArgumentException("Must have a valid connection string", "connection");
             }
             _connection = connection;
-            dbConnection = new PetaPoco.Database(connection, new CustomSqlServerDatabaseProvider());
+            dbConnection = new PetaPoco.Database(connection, new SqlServerDatabaseProvider());
         }
 
         public int Compile(DateTime thruDate, IList<UnbilledClient> unbilledClients, IProgress<int> progress)
@@ -184,7 +184,7 @@ namespace LabBilling.Core
                 accChrg.fin_type = "C";
                 accChrg.fin_code = account.fin_code;
                 accChrg.service_date = DateTime.Today;
-                accChrg.ChrgDetails.Add(new ChrgDetails()
+                accChrg.ChrgDetails.Add(new ChrgDetail()
                 {
                     cpt4 = "NONE",
                     type = "NORM",
@@ -208,7 +208,7 @@ namespace LabBilling.Core
             invoiceChrg.fin_type = "C";
             invoiceChrg.fin_code = "CLIENT";
             invoiceChrg.service_date = DateTime.Today;
-            invoiceChrg.ChrgDetails.Add(new ChrgDetails()
+            invoiceChrg.ChrgDetails.Add(new ChrgDetail()
             {
                 cpt4 = "NONE",
                 type = "NORM",

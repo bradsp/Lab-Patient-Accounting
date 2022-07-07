@@ -13,6 +13,11 @@ namespace LabBilling.Core.DataAccess
 
         }
 
+        public ClientRepository(string connection, PetaPoco.Database db) : base("client", connection, db)
+        {
+
+        }
+
         public Client GetClient(string clientMnem)
         {
             Log.Instance.Debug($"Entering");
