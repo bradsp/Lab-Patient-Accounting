@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using LabBilling.Logging;
 using LabBilling.Core.Models;
 using PetaPoco.Providers;
+using PetaPoco.Core;
+
 
 namespace LabBilling.Core.DataAccess
 {
@@ -125,7 +127,14 @@ namespace LabBilling.Core.DataAccess
             if (table.mod_user == "" || table.mod_user == null)
                 table.mod_user = Environment.UserName.ToString();
 
-            dbConnection.Update(table, columns);
+            List<string> cColumns = new List<string>();
+            foreach (string column in columns)
+            {
+                var pocoData = PocoData.ForType(table.GetType(), dbConnection.DefaultMapper);
+                cColumns.Add(pocoData.GetColumnName(column));
+            }
+
+            dbConnection.Update(table, cColumns);
             Log.Instance.Trace("Exiting");
             return true;
         }
