@@ -527,10 +527,16 @@ namespace LabBilling
         private void professionalBillingToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ClaimGenerator claims = new ClaimGenerator(Helper.ConnVal);
+            int claims_processed = claims.CompileProfessionalBilling();
 
-            claims.CompileProfessionalBilling();
-
-            MessageBox.Show("File generated.");
+            if (claims_processed < 0)
+            {
+                MessageBox.Show("Error processing claims. No file generated.", "Process Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            else
+            {
+                MessageBox.Show($"File generated. {claims_processed} claims generated.");
+            }
 
         }
     }

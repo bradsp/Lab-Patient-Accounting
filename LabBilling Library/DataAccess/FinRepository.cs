@@ -14,6 +14,11 @@ namespace LabBilling.Core.DataAccess
 
         }
 
+        public FinRepository(string connection, PetaPoco.Database db) : base("fin", connection, db)
+        {
+
+        }
+
         public override Fin GetById(int id)
         {
             throw new NotImplementedException();

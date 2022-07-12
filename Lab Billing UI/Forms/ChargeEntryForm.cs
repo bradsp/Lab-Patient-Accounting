@@ -5,6 +5,7 @@ using System;
 using System.Windows.Forms;
 using LabBilling.Logging;
 using System.Linq;
+using System.Data;
 
 namespace LabBilling.Forms
 {
@@ -12,9 +13,9 @@ namespace LabBilling.Forms
     {
         private Account _currentAccount = new Account();
         private readonly CdmRepository cdmRepository = new CdmRepository(Helper.ConnVal);
-        private readonly ChrgRepository dbChrg = new ChrgRepository(Helper.ConnVal);
-        MTGCComboBoxItem[] cdmItemsByNo;
-        MTGCComboBoxItem[] cdmItemsByDesc;
+        private readonly AccountRepository accountRepository = new AccountRepository(Helper.ConnVal);
+        private DataTable cdmSortedByCdm;
+        private DataTable cdmSortedByDesc;
 
         public ChargeEntryForm(Account currentAccount)
         {
@@ -34,28 +35,33 @@ namespace LabBilling.Forms
             #region Setup Charge Item Combobox
             var chrgItems = cdmRepository.GetAll().ToList();
 
-            cdmItemsByNo = new MTGCComboBoxItem[chrgItems.Count];
-            cdmItemsByDesc = new MTGCComboBoxItem[chrgItems.Count];
-            int i = 0;
-
+            DataTable cdmDataTable = new DataTable(typeof(Cdm).Name);
+            cdmDataTable.Columns.Add("cdm");
+            cdmDataTable.Columns.Add("descript");
+            var values = new object[2];
+            //add a null row value
+            values[0] = "";
+            values[1] = "<select a charge item>";
+            cdmDataTable.Rows.Add(values);
             foreach (Cdm cdm in chrgItems)
             {
-                cdmItemsByDesc[i] = new MTGCComboBoxItem(cdm.descript, cdm.cdm);
-                cdmItemsByNo[i] = new MTGCComboBoxItem(cdm.cdm, cdm.descript);
-                i++;
+                values[0] = cdm.cdm;
+                values[1] = cdm.descript;
+                cdmDataTable.Rows.Add(values);
             }
+            cdmDataTable.DefaultView.Sort = "cdm asc";
 
-            Array.Sort(cdmItemsByNo);
-            Array.Sort(cdmItemsByDesc);
-            
-            cbChargeItem.ColumnNum = 2;
-            cbChargeItem.GridLineHorizontal = true;
-            cbChargeItem.GridLineVertical = true;
-            cbChargeItem.ColumnWidth = "75; 200";
-            cbChargeItem.SelectedIndex = -1;
+            cdmSortedByCdm = cdmDataTable.DefaultView.ToTable();
+
+            cdmDataTable.DefaultView.Sort = "descript asc";
+            cdmSortedByDesc = cdmDataTable.DefaultView.ToTable();
+
             cbChargeItem.Items.Clear();
-            cbChargeItem.LoadingType = MTGCComboBox.CaricamentoCombo.ComboBoxItem;
-            cbChargeItem.Items.AddRange(cdmItemsByNo);
+            cbChargeItem.DataSource = cdmSortedByCdm;
+            
+            cbChargeItem.DisplayMember = "cdm";
+            cbChargeItem.ValueMember = "cdm";
+          
             #endregion
 
         }
@@ -64,18 +70,19 @@ namespace LabBilling.Forms
         {
             Log.Instance.Trace($"Entering");
 
-            ChargeProcessing cp = new ChargeProcessing(Helper.ConnVal);
-
             try
             {
                 string cdm = "";
 
-                if (SearchByCdm.Checked)
-                    cdm = cbChargeItem.SelectedItem.Col1.ToString();
-                if (SearchByDescription.Checked)
-                    cdm = cbChargeItem.SelectedItem.Col1.ToString();
+                cdm = cbChargeItem.SelectedValue.ToString();
 
-                cp.AddCharge(_currentAccount.account,
+                if(string.IsNullOrEmpty(cdm))
+                {
+                    MessageBox.Show("Please select a charge item.", "Incomplete request", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    return;
+                }
+
+                accountRepository.AddCharge(_currentAccount.account,
                     cdm,
                     Convert.ToInt32(nQty.Value),
                     _currentAccount.trans_date ?? DateTime.Today,
@@ -85,7 +92,7 @@ namespace LabBilling.Forms
             catch(CdmNotFoundException)
             {
                 // this should not happen
-                MessageBox.Show("CDM number is not valid.");
+                MessageBox.Show("CDM number is not valid. Charge entry failed.");
             }
             catch(AccountNotFoundException)
             {
@@ -93,7 +100,7 @@ namespace LabBilling.Forms
             }
             catch(Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message + "\nCharge not written.","Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -103,7 +110,7 @@ namespace LabBilling.Forms
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
-            Log.Instance.Trace($"Entering");
+            Log.Instance.Trace($"Cancel action in ChargeEntryForm");
             DialogResult = DialogResult.Cancel;
             return;
         }
@@ -112,19 +119,15 @@ namespace LabBilling.Forms
         {
             if(SearchByCdm.Checked)
             {
-                cbChargeItem.ColumnWidth = "75; 200";
-                cbChargeItem.SelectedIndex = -1;
-                cbChargeItem.Items.Clear();
-                cbChargeItem.LoadingType = MTGCComboBox.CaricamentoCombo.ComboBoxItem;
-                cbChargeItem.Items.AddRange(cdmItemsByNo);
+                cbChargeItem.DataSource = cdmSortedByCdm;
+                cbChargeItem.DisplayMember = "cdm";
+                cbChargeItem.ValueMember = "cdm";
             }
             else if(SearchByDescription.Checked)
             {
-                cbChargeItem.ColumnWidth = "200; 75";
-                cbChargeItem.SelectedIndex = -1;
-                cbChargeItem.Items.Clear();
-                cbChargeItem.LoadingType = MTGCComboBox.CaricamentoCombo.ComboBoxItem;
-                cbChargeItem.Items.AddRange(cdmItemsByDesc);
+                cbChargeItem.DataSource = cdmSortedByDesc;
+                cbChargeItem.DisplayMember = "descript";
+                cbChargeItem.ValueMember = "cdm";
             }
 
         }

@@ -38,6 +38,13 @@ namespace LabBilling.Core.DataAccess
             return base.Update(table);
         }
 
+        public override bool Update(BadDebt table, IEnumerable<string> columns)
+        {
+            table.state_zip = string.Format("{0} {1}", table.State, table.Zip);
+
+            return base.Update(table, columns);
+        }
+
         public IEnumerable<BadDebt> GetRecords(bool sent)
         {
             List<BadDebt> records = new List<BadDebt>();

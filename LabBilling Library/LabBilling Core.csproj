@@ -106,6 +106,9 @@
     <Reference Include="NLog, Version=5.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
       <HintPath>..\packages\NLog.5.0.1\lib\net46\NLog.dll</HintPath>
     </Reference>
+    <Reference Include="NLog.WindowsEventLog, Version=5.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <HintPath>..\packages\NLog.WindowsEventLog.5.0.1\lib\netstandard2.0\NLog.WindowsEventLog.dll</HintPath>
+    </Reference>
     <Reference Include="NPOI, Version=2.5.6.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
       <HintPath>..\packages\NPOI.2.5.6\lib\net45\NPOI.dll</HintPath>
     </Reference>
@@ -128,13 +131,19 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data.OracleClient" />
     <Reference Include="System.Diagnostics.DiagnosticSource, Version=6.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Diagnostics.DiagnosticSource.6.0.0\lib\net461\System.Diagnostics.DiagnosticSource.dll</HintPath>
     </Reference>
+    <Reference Include="System.Diagnostics.EventLog, Version=6.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Diagnostics.EventLog.6.0.0\lib\net461\System.Diagnostics.EventLog.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Drawing" />
     <Reference Include="System.IO.Compression, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL" />
     <Reference Include="System.Memory, Version=4.0.1.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Memory.4.5.5\lib\net461\System.Memory.dll</HintPath>
     </Reference>
+    <Reference Include="System.Net" />
     <Reference Include="System.Numerics" />
     <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
@@ -143,7 +152,18 @@
       <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.6.0.0\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
     </Reference>
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Security.AccessControl, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.AccessControl.6.0.0\lib\net461\System.Security.AccessControl.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security.Permissions, Version=6.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Permissions.6.0.0\lib\net461\System.Security.Permissions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security.Principal.Windows, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Principal.Windows.5.0.0\lib\net461\System.Security.Principal.Windows.dll</HintPath>
+    </Reference>
     <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Threading.Tasks.Extensions.4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll</HintPath>
     </Reference>
@@ -157,11 +177,11 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BusinessLogic\AccountValidation.cs" />
     <Compile Include="BusinessLogic\Billing837.cs" />
-    <Compile Include="BusinessLogic\ChargeProcessing.cs" />
     <Compile Include="BusinessLogic\ClaimData.cs" />
     <Compile Include="BusinessLogic\ClaimGenerator.cs" />
     <Compile Include="BusinessLogic\ClientInvoices.cs" />
@@ -179,6 +199,7 @@
     <Compile Include="DataAccess\ChkRepository.cs" />
     <Compile Include="DataAccess\ChrgRepository.cs" />
     <Compile Include="DataAccess\ClientRepository.cs" />
+    <Compile Include="DataAccess\CustomSqlDatabaseProvider.cs" />
     <Compile Include="DataAccess\DictDxRepository.cs" />
     <Compile Include="DataAccess\EmpRepository.cs" />
     <Compile Include="DataAccess\FinRepository.cs" />
@@ -189,7 +210,7 @@
     <Compile Include="DataAccess\MessagesInboundRepository.cs" />
     <Compile Include="DataAccess\InvoiceHistoryRepository.cs" />
     <Compile Include="DataAccess\MappingRepository.cs" />
-    <Compile Include="DataAccess\NotesRepository.cs" />
+    <Compile Include="DataAccess\AccountNoteRepository.cs" />
     <Compile Include="DataAccess\NumberRepository.cs" />
     <Compile Include="DataAccess\PatDxRepository.cs" />
     <Compile Include="DataAccess\PatRepository.cs" />
@@ -227,7 +248,7 @@
     <Compile Include="Models\InvoiceHistory.cs" />
     <Compile Include="Models\InvoiceModel.cs" />
     <Compile Include="Models\Mapping.cs" />
-    <Compile Include="Models\Notes.cs" />
+    <Compile Include="Models\AccountNote.cs" />
     <Compile Include="Models\Number.cs" />
     <Compile Include="Models\Pat.cs" />
     <Compile Include="Models\PatDx.cs" />

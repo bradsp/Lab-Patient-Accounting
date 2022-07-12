@@ -36,7 +36,7 @@ namespace LabBilling.Core
         /// <param name="componentSeparator"></param>
         /// <param name="repetitionSeparator"></param>
         public string Generate837pClaimBatch(IEnumerable<ClaimData> claims, string interchangeControlNumber, string environment, string batchSubmitterId, 
-            char segmentTerminator = '~', char elementTerminator = '*', char componentSeparator = ':', char repetitionSeparator = '^')
+            string file_location, char segmentTerminator = '~', char elementTerminator = '*', char componentSeparator = ':', char repetitionSeparator = '^')
         {
             var ediDocument = new EdiDocument();
 
@@ -718,7 +718,10 @@ namespace LabBilling.Core
                 [02] = interchangeControlNumber
             });
 
-            ediDocument.Save("c:\\temp\\MCL-837p.txt");
+            //ensure file location ends with \
+            if (!file_location.EndsWith("\\"))
+                file_location = file_location + "\\";
+            ediDocument.Save($"{file_location}MCL-837p.txt");
 
             return ediDocument.ToString();
         }

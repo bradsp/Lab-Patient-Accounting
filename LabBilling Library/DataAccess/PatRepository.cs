@@ -219,6 +219,29 @@ namespace LabBilling.Core.DataAccess
             return base.Update(table);
         }
 
+        public override bool Update(Pat table, IEnumerable<string> columns)
+        {
+            //generate full name from name parts
+            table.pat_full_name =
+                String.Format("{0},{1} {2} {3}",
+                table.pat_last_name,
+                table.pat_first_name,
+                table.pat_middle_name,
+                table.pat_name_suffix);
+            table.pat_full_name = table.pat_full_name.Trim();
+
+            table.guarantor =
+                String.Format("{0},{1} {2} {3}",
+                table.GuarantorLastName,
+                table.GuarantorFirstName,
+                table.GuarantorMiddleName,
+                table.GuarantorNameSuffix);
+            table.guarantor = table.guarantor.Trim();
+
+            return base.Update(table, columns);
+        }
+
+
         public void SaveAll(Pat pat)
         {
             dbConnection.Save(pat);

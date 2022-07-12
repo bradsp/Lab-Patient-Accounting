@@ -64,5 +64,16 @@ namespace RFClassLibrary
             }
             return temp;
         }
+
+        /// <summary>
+        /// Performs a case-insenstive string comparison
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="substring"></param>
+        /// <returns></returns>
+        public static bool ContainsCaseInsensitive(this string source, string substring)
+        {
+            return source?.IndexOf(substring, System.StringComparison.OrdinalIgnoreCase) > -1;
+        }
     }
 }

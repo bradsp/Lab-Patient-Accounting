@@ -25,6 +25,14 @@ namespace LabBilling.Core.DataAccess
             throw new NotImplementedException();
         }
 
+        public override object Add(BillingHistory table)
+        {
+            if (table.ins_complete == DateTime.MinValue)
+                table.ins_complete = null;
+
+            return base.Add(table);
+        }
+
 
     }
 }

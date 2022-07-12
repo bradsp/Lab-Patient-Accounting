@@ -33,7 +33,11 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(BatchRemittance));
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
             this.dgvPayments = new System.Windows.Forms.DataGridView();
             this.Account = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.AccountSearch = new System.Windows.Forms.DataGridViewButtonColumn();
@@ -62,8 +66,19 @@
             this.label6 = new System.Windows.Forms.Label();
             this.EntryMode = new System.Windows.Forms.ComboBox();
             this.label7 = new System.Windows.Forms.Label();
-            this.OpenBatch = new MTGCComboBox();
             this.DeleteBatch = new System.Windows.Forms.Button();
+            this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn5 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn6 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn7 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn8 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn9 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn10 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn11 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.OpenBatch = new MultiColumnCombo.MultiColumnComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.dgvPayments)).BeginInit();
             this.SuspendLayout();
             // 
@@ -87,7 +102,7 @@
             this.WriteOff,
             this.WriteOffCode,
             this.Comment});
-            this.dgvPayments.Location = new System.Drawing.Point(12, 33);
+            this.dgvPayments.Location = new System.Drawing.Point(12, 40);
             this.dgvPayments.Name = "dgvPayments";
             this.dgvPayments.Size = new System.Drawing.Size(939, 427);
             this.dgvPayments.TabIndex = 0;
@@ -330,44 +345,6 @@
             this.label7.TabIndex = 9;
             this.label7.Text = "Entry Mode";
             // 
-            // OpenBatch
-            // 
-            this.OpenBatch.ArrowBoxColor = System.Drawing.SystemColors.Control;
-            this.OpenBatch.ArrowColor = System.Drawing.Color.Black;
-            this.OpenBatch.BindedControl = ((MTGCComboBox.ControlloAssociato)(resources.GetObject("OpenBatch.BindedControl")));
-            this.OpenBatch.BorderStyle = MTGCComboBox.TipiBordi.FlatXP;
-            this.OpenBatch.CharacterCasing = System.Windows.Forms.CharacterCasing.Normal;
-            this.OpenBatch.ColumnNum = 1;
-            this.OpenBatch.ColumnWidth = "121";
-            this.OpenBatch.DisabledArrowBoxColor = System.Drawing.SystemColors.Control;
-            this.OpenBatch.DisabledArrowColor = System.Drawing.Color.LightGray;
-            this.OpenBatch.DisabledBackColor = System.Drawing.SystemColors.Control;
-            this.OpenBatch.DisabledBorderColor = System.Drawing.SystemColors.InactiveBorder;
-            this.OpenBatch.DisabledForeColor = System.Drawing.SystemColors.GrayText;
-            this.OpenBatch.DisplayMember = "Text";
-            this.OpenBatch.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-            this.OpenBatch.DropDownArrowBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(136)))), ((int)(((byte)(169)))), ((int)(((byte)(223)))));
-            this.OpenBatch.DropDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(193)))), ((int)(((byte)(210)))), ((int)(((byte)(238)))));
-            this.OpenBatch.DropDownForeColor = System.Drawing.Color.Black;
-            this.OpenBatch.DropDownStyle = MTGCComboBox.CustomDropDownStyle.DropDown;
-            this.OpenBatch.DropDownWidth = 141;
-            this.OpenBatch.GridLineColor = System.Drawing.Color.LightGray;
-            this.OpenBatch.GridLineHorizontal = false;
-            this.OpenBatch.GridLineVertical = false;
-            this.OpenBatch.HighlightBorderColor = System.Drawing.Color.Blue;
-            this.OpenBatch.HighlightBorderOnMouseEvents = true;
-            this.OpenBatch.LoadingType = MTGCComboBox.CaricamentoCombo.ComboBoxItem;
-            this.OpenBatch.Location = new System.Drawing.Point(121, 6);
-            this.OpenBatch.ManagingFastMouseMoving = true;
-            this.OpenBatch.ManagingFastMouseMovingInterval = 30;
-            this.OpenBatch.Name = "OpenBatch";
-            this.OpenBatch.NormalBorderColor = System.Drawing.Color.Black;
-            this.OpenBatch.SelectedItem = null;
-            this.OpenBatch.SelectedValue = null;
-            this.OpenBatch.Size = new System.Drawing.Size(187, 21);
-            this.OpenBatch.TabIndex = 10;
-            this.OpenBatch.SelectedIndexChanged += new System.EventHandler(this.OpenBatch_SelectedIndexChanged);
-            // 
             // DeleteBatch
             // 
             this.DeleteBatch.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
@@ -379,6 +356,89 @@
             this.DeleteBatch.Text = "Delete Batch";
             this.DeleteBatch.UseVisualStyleBackColor = false;
             this.DeleteBatch.Click += new System.EventHandler(this.DeleteBatch_Click);
+            // 
+            // dataGridViewTextBoxColumn1
+            // 
+            this.dataGridViewTextBoxColumn1.HeaderText = "Account";
+            this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
+            // 
+            // dataGridViewTextBoxColumn2
+            // 
+            this.dataGridViewTextBoxColumn2.HeaderText = "Patient Name";
+            this.dataGridViewTextBoxColumn2.Name = "dataGridViewTextBoxColumn2";
+            // 
+            // dataGridViewTextBoxColumn3
+            // 
+            this.dataGridViewTextBoxColumn3.HeaderText = "Balance";
+            this.dataGridViewTextBoxColumn3.Name = "dataGridViewTextBoxColumn3";
+            // 
+            // dataGridViewTextBoxColumn4
+            // 
+            this.dataGridViewTextBoxColumn4.HeaderText = "Check No";
+            this.dataGridViewTextBoxColumn4.Name = "dataGridViewTextBoxColumn4";
+            // 
+            // dataGridViewTextBoxColumn5
+            // 
+            dataGridViewCellStyle6.Format = "d";
+            dataGridViewCellStyle6.NullValue = null;
+            this.dataGridViewTextBoxColumn5.DefaultCellStyle = dataGridViewCellStyle6;
+            this.dataGridViewTextBoxColumn5.HeaderText = "Check Date";
+            this.dataGridViewTextBoxColumn5.Name = "dataGridViewTextBoxColumn5";
+            // 
+            // dataGridViewTextBoxColumn6
+            // 
+            dataGridViewCellStyle7.Format = "d";
+            dataGridViewCellStyle7.NullValue = null;
+            this.dataGridViewTextBoxColumn6.DefaultCellStyle = dataGridViewCellStyle7;
+            this.dataGridViewTextBoxColumn6.HeaderText = "DateReceived";
+            this.dataGridViewTextBoxColumn6.Name = "dataGridViewTextBoxColumn6";
+            // 
+            // dataGridViewTextBoxColumn7
+            // 
+            this.dataGridViewTextBoxColumn7.HeaderText = "Payment Source";
+            this.dataGridViewTextBoxColumn7.Name = "dataGridViewTextBoxColumn7";
+            // 
+            // dataGridViewTextBoxColumn8
+            // 
+            dataGridViewCellStyle8.Format = "N2";
+            dataGridViewCellStyle8.NullValue = "0.00";
+            this.dataGridViewTextBoxColumn8.DefaultCellStyle = dataGridViewCellStyle8;
+            this.dataGridViewTextBoxColumn8.HeaderText = "Amount Paid";
+            this.dataGridViewTextBoxColumn8.Name = "dataGridViewTextBoxColumn8";
+            // 
+            // dataGridViewTextBoxColumn9
+            // 
+            dataGridViewCellStyle9.Format = "N2";
+            dataGridViewCellStyle9.NullValue = "0.00";
+            this.dataGridViewTextBoxColumn9.DefaultCellStyle = dataGridViewCellStyle9;
+            this.dataGridViewTextBoxColumn9.HeaderText = "Contractual";
+            this.dataGridViewTextBoxColumn9.Name = "dataGridViewTextBoxColumn9";
+            // 
+            // dataGridViewTextBoxColumn10
+            // 
+            dataGridViewCellStyle10.Format = "N2";
+            dataGridViewCellStyle10.NullValue = "0.00";
+            this.dataGridViewTextBoxColumn10.DefaultCellStyle = dataGridViewCellStyle10;
+            this.dataGridViewTextBoxColumn10.HeaderText = "Write Off";
+            this.dataGridViewTextBoxColumn10.Name = "dataGridViewTextBoxColumn10";
+            // 
+            // dataGridViewTextBoxColumn11
+            // 
+            this.dataGridViewTextBoxColumn11.HeaderText = "Comment";
+            this.dataGridViewTextBoxColumn11.Name = "dataGridViewTextBoxColumn11";
+            this.dataGridViewTextBoxColumn11.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridViewTextBoxColumn11.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
+            // OpenBatch
+            // 
+            this.OpenBatch.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
+            this.OpenBatch.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.OpenBatch.Location = new System.Drawing.Point(121, 6);
+            this.OpenBatch.Name = "OpenBatch";
+            this.OpenBatch.Size = new System.Drawing.Size(354, 21);
+            this.OpenBatch.TabIndex = 12;
+            this.OpenBatch.SelectionChangeCommitted += new System.EventHandler(this.OpenBatch_SelectionChangeCommitted);
+            this.OpenBatch.SelectedValueChanged += new System.EventHandler(this.OpenBatch_SelectedValueChanged);
             // 
             // BatchRemittance
             // 
@@ -428,7 +488,7 @@
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.ComboBox EntryMode;
         private System.Windows.Forms.Label label7;
-        private MTGCComboBox OpenBatch;
+        private MultiColumnCombo.MultiColumnComboBox OpenBatch;
         private System.Windows.Forms.DataGridViewTextBoxColumn Account;
         private System.Windows.Forms.DataGridViewButtonColumn AccountSearch;
         private System.Windows.Forms.DataGridViewTextBoxColumn PatientName;
@@ -443,5 +503,16 @@
         private System.Windows.Forms.DataGridViewComboBoxColumn WriteOffCode;
         private System.Windows.Forms.DataGridViewTextBoxColumn Comment;
         private System.Windows.Forms.Button DeleteBatch;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn2;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn3;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn4;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn5;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn6;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn7;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn8;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn9;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn10;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn11;
     }
 }

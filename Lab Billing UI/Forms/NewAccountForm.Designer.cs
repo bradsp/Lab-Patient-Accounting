@@ -30,7 +30,6 @@ namespace LabBilling.Forms
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(NewAccountForm));
             this.AccountNo = new System.Windows.Forms.TextBox();
             this.LastName = new System.Windows.Forms.TextBox();
             this.FirstName = new System.Windows.Forms.TextBox();
@@ -48,7 +47,7 @@ namespace LabBilling.Forms
             this.label7 = new System.Windows.Forms.Label();
             this.ServiceDate = new System.Windows.Forms.MaskedTextBox();
             this.label8 = new System.Windows.Forms.Label();
-            this.FinancialClass = new MTGCComboBox();
+            this.FinancialClass = new MultiColumnCombo.MultiColumnComboBox();
             this.label9 = new System.Windows.Forms.Label();
             this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
@@ -214,40 +213,11 @@ namespace LabBilling.Forms
             // 
             // FinancialClass
             // 
-            this.FinancialClass.ArrowBoxColor = System.Drawing.SystemColors.Control;
-            this.FinancialClass.ArrowColor = System.Drawing.Color.Black;
-            this.FinancialClass.BindedControl = ((MTGCComboBox.ControlloAssociato)(resources.GetObject("FinancialClass.BindedControl")));
-            this.FinancialClass.BorderStyle = MTGCComboBox.TipiBordi.FlatXP;
-            this.FinancialClass.CharacterCasing = System.Windows.Forms.CharacterCasing.Normal;
-            this.FinancialClass.ColumnNum = 1;
-            this.FinancialClass.ColumnWidth = "121";
-            this.FinancialClass.DisabledArrowBoxColor = System.Drawing.SystemColors.Control;
-            this.FinancialClass.DisabledArrowColor = System.Drawing.Color.LightGray;
-            this.FinancialClass.DisabledBackColor = System.Drawing.SystemColors.Control;
-            this.FinancialClass.DisabledBorderColor = System.Drawing.SystemColors.InactiveBorder;
-            this.FinancialClass.DisabledForeColor = System.Drawing.SystemColors.GrayText;
-            this.FinancialClass.DisplayMember = "Text";
-            this.FinancialClass.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-            this.FinancialClass.DropDownArrowBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(136)))), ((int)(((byte)(169)))), ((int)(((byte)(223)))));
-            this.FinancialClass.DropDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(193)))), ((int)(((byte)(210)))), ((int)(((byte)(238)))));
-            this.FinancialClass.DropDownForeColor = System.Drawing.Color.Black;
-            this.FinancialClass.DropDownStyle = MTGCComboBox.CustomDropDownStyle.DropDown;
-            this.FinancialClass.GridLineColor = System.Drawing.Color.LightGray;
-            this.FinancialClass.GridLineHorizontal = false;
-            this.FinancialClass.GridLineVertical = false;
-            this.FinancialClass.HighlightBorderColor = System.Drawing.Color.Blue;
-            this.FinancialClass.HighlightBorderOnMouseEvents = true;
-            this.FinancialClass.LoadingType = MTGCComboBox.CaricamentoCombo.ComboBoxItem;
+            this.FinancialClass.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
             this.FinancialClass.Location = new System.Drawing.Point(110, 212);
-            this.FinancialClass.ManagingFastMouseMoving = true;
-            this.FinancialClass.ManagingFastMouseMovingInterval = 30;
             this.FinancialClass.Name = "FinancialClass";
-            this.FinancialClass.NormalBorderColor = System.Drawing.Color.Black;
-            this.FinancialClass.SelectedItem = null;
-            this.FinancialClass.SelectedValue = null;
             this.FinancialClass.Size = new System.Drawing.Size(253, 21);
-            this.FinancialClass.TabIndex = 16;
-            this.FinancialClass.Validating += new System.ComponentModel.CancelEventHandler(this.FinancialClass_Validating);
+            this.FinancialClass.TabIndex = 0;
             // 
             // label9
             // 
@@ -286,6 +256,7 @@ namespace LabBilling.Forms
             this.Controls.Add(this.FirstName);
             this.Controls.Add(this.LastName);
             this.Controls.Add(this.AccountNo);
+            this.Location = new System.Drawing.Point(110, 188);
             this.Name = "NewAccountForm";
             this.Text = "New Account";
             this.Load += new System.EventHandler(this.NewAccountForm_Load);
@@ -314,7 +285,7 @@ namespace LabBilling.Forms
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.MaskedTextBox ServiceDate;
         private System.Windows.Forms.Label label8;
-        private MTGCComboBox FinancialClass;
+        private MultiColumnCombo.MultiColumnComboBox FinancialClass;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.ErrorProvider errorProvider1;
     }

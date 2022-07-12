@@ -156,8 +156,4 @@
   <metadata name="Comment.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
-  <assembly alias="MTGCCombobox" name="MTGCCombobox, Version=1.3.0.0, Culture=neutral, PublicKeyToken=null" />
-  <data name="OpenBatch.BindedControl" type="MTGCComboBox+ControlloAssociato, MTGCCombobox">
-    <value>False; ; </value>
-  </data>
 </root>

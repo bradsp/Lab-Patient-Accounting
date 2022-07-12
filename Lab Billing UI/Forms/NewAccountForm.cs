@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows.Forms;
+using System.Data;
 
 namespace LabBilling.Forms
 {
@@ -57,7 +58,7 @@ namespace LabBilling.Forms
                 acc.trans_date = Convert.ToDateTime(ServiceDate.Text);
                 acc.Pat.account = AccountNo.Text;
                 acc.Pat.sex = PatientSex.SelectedValue.ToString();
-                acc.fin_code = FinancialClass.SelectedValue;
+                acc.fin_code = FinancialClass.SelectedValue.ToString(); ;
 
                 accDB.AddAccount(acc);
 
@@ -76,24 +77,24 @@ namespace LabBilling.Forms
             #region Setup Financial Code Combobox
             List<Fin> fins = finRepository.GetAll().ToList();
 
-            MTGCComboBoxItem[] finItems = new MTGCComboBoxItem[fins.Count];
-            int i = 0;
+            DataTable finDataTable = new DataTable(typeof(Fin).Name);
+
+            finDataTable.Columns.Add("fin_code");
+            finDataTable.Columns.Add("res_party");
+            var values = new object[2];
 
             foreach (Fin fin in fins)
             {
-                finItems[i] = new MTGCComboBoxItem(fin.fin_code, fin.res_party);
-                i++;
+                values[0] = fin.fin_code;
+                values[1] = fin.res_party;
             }
 
-            FinancialClass.ColumnNum = 2;
-            FinancialClass.GridLineHorizontal = true;
-            FinancialClass.GridLineVertical = true;
-            FinancialClass.ColumnWidth = "75;200";
-            //cbInsCode.DropDownStyle = MTGCComboBox.CustomDropDownStyle.DropDown;
-            FinancialClass.SelectedIndex = -1;
             FinancialClass.Items.Clear();
-            FinancialClass.LoadingType = MTGCComboBox.CaricamentoCombo.ComboBoxItem;
-            FinancialClass.Items.AddRange(finItems);
+            FinancialClass.DisplayMember = "res_party";
+            FinancialClass.ValueMember = "fin_code";
+            FinancialClass.DataSource = finDataTable;
+            FinancialClass.SelectedIndex = -1;
+
             #endregion
 
         }

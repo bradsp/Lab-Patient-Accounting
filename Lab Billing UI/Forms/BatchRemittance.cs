@@ -7,6 +7,7 @@ using System.Linq;
 using System.Windows.Forms;
 using System.Xml;
 using RFClassLibrary;
+using System.Data;
 
 namespace LabBilling.Forms
 {
@@ -23,44 +24,6 @@ namespace LabBilling.Forms
 
         private void OpenBatch_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Log.Instance.Trace($"Entering");
-            if (OpenBatch.SelectedIndex <= 0)
-            {
-                Clear();
-                return;
-            }
-            //opens a previously open batch for updating and completion
-            //read batch data from database
-            ChkBatch chkBatch = new ChkBatch();
-            chkBatch = chkBatchRepository.GetById(Convert.ToInt32(OpenBatch.SelectedItem.Col1));
-
-            Clear();
-
-            //load data into data grid view
-            XmlDocument xmlDoc = new XmlDocument();
-
-            xmlDoc.LoadXml(chkBatch.BatchData);
-
-            XmlNodeList nodes = xmlDoc.DocumentElement.SelectNodes("/Batch/Payment");
-            foreach(XmlNode node in nodes)
-            {
-                //we have to get the index of a last row id:
-                var index = dgvPayments.Rows.Add();
-
-                //and count +1 to get a new row id:
-                dgvPayments["Account", index].Value = node.Attributes["Account"].Value;
-                dgvPayments["CheckNo", index].Value = node.Attributes["CheckNo"].Value;
-                dgvPayments["PaymentSource", index].Value = node.Attributes["PaymentSource"].Value;
-                dgvPayments["Contractual", index].Value = node.Attributes["Contractual"].Value ?? "0";
-                dgvPayments["AmountPaid", index].Value = node.Attributes["AmountPaid"].Value ?? "0";
-                dgvPayments["WriteOff", index].Value = node.Attributes["WriteOff"].Value ?? "0";
-                dgvPayments["WriteOffCode", index].Value = node.Attributes["WriteOffCode"].Value;
-                dgvPayments["Comment", index].Value = node.Attributes["Comment"].Value;
-                dgvPayments["CheckDate", index].Value = node.Attributes["CheckDate"].Value;
-                dgvPayments["DateReceived", index].Value = node.Attributes["DateReceived"].Value;
-            }
-            var idx = dgvPayments.Rows.Count;
-            dgvPayments.CurrentCell = dgvPayments.Rows[idx-1].Cells["Account"];
 
         }
 
@@ -142,7 +105,7 @@ namespace LabBilling.Forms
             if (OpenBatch.SelectedIndex > 0)
             {
                 //updated existing
-                chkBatch.BatchNo = Convert.ToInt32(OpenBatch.SelectedItem.Col1);
+                chkBatch.BatchNo = Convert.ToInt32(OpenBatch.SelectedValue);
                 if (chkBatchRepository.Update(chkBatch))
                 {
                     MessageBox.Show("Batch saved");
@@ -177,31 +140,33 @@ namespace LabBilling.Forms
         private void LoadOpenBatches()
         {
             Log.Instance.Trace($"Entering");
+
             #region Setup OpenBatch Combobox
             List<ChkBatch> chkBatches = new List<ChkBatch>();
             chkBatches = chkBatchRepository.GetAll().ToList();
 
-            MTGCComboBoxItem[] chkBatchItems = new MTGCComboBoxItem[chkBatches.Count + 1];
-            int i = 0;
-            chkBatchItems[i++] = new MTGCComboBoxItem("<new>", "", "");
+            DataTable chkBatchDataTable = new DataTable(typeof(ChkBatch).Name);
+            chkBatchDataTable.Columns.Add("BatchNo");
+            chkBatchDataTable.Columns.Add("BatchDate");
+            chkBatchDataTable.Columns.Add("User");
+            var values = new object[3];
+            values[0] = "";
+            values[1] = "";
+            values[2] = "";
+            chkBatchDataTable.Rows.Add(values);
             foreach (ChkBatch batch in chkBatches)
             {
-                chkBatchItems[i] = new MTGCComboBoxItem(batch.BatchNo.ToString(), batch.BatchDate.ToShortDateString(), batch.User);
-                i++;
+                values[0] = batch.BatchNo;
+                values[1] = batch.BatchDate;
+                values[2] = batch.User;
+                chkBatchDataTable.Rows.Add(values);
             }
-
-            OpenBatch.ColumnNum = 3;
-            OpenBatch.GridLineHorizontal = true;
-            OpenBatch.GridLineVertical = true;
-            OpenBatch.ColumnWidth = "50;75;75";
-            //cbInsCode.DropDownStyle = MTGCComboBox.CustomDropDownStyle.DropDown;
-            OpenBatch.SelectedIndex = -1;
             OpenBatch.Items.Clear();
-            OpenBatch.LoadingType = MTGCComboBox.CaricamentoCombo.ComboBoxItem;
-            OpenBatch.Items.AddRange(chkBatchItems);
-            #endregion
-            OpenBatch.SelectedIndex = 0;
+            OpenBatch.DataSource = chkBatchDataTable;
+            OpenBatch.DisplayMember = "BatchDate";
+            OpenBatch.ValueMember = "BatchNo";
 
+            #endregion
         }
 
         private void SubmitPayments_Click(object sender, EventArgs e)
@@ -245,7 +210,7 @@ namespace LabBilling.Forms
                 //if this was a saved batch, delete the batch record
                 if (OpenBatch.SelectedIndex > 0)
                 {
-                    ChkBatch chkBatch = chkBatchRepository.GetById(Convert.ToInt32(((MTGCComboBoxItem)OpenBatch.SelectedItem).Col1));
+                    ChkBatch chkBatch = chkBatchRepository.GetById(Convert.ToInt32(OpenBatch.SelectedValue));
                     chkBatchRepository.Delete(chkBatch);
                     LoadOpenBatches();
                 }
@@ -261,7 +226,6 @@ namespace LabBilling.Forms
             AmountTotal.Text = "0.00";
             ContractualTotal.Text = "0.00";
             WriteoffTotal.Text = "0.00";
-            //OpenBatch.SelectedIndex = -1;
             EntryMode.Enabled = true;
         }
 
@@ -354,7 +318,7 @@ namespace LabBilling.Forms
 
         private void dgvPayments_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-                Log.Instance.Trace($"Entering");
+            Log.Instance.Trace($"Entering");
             var senderGrid = (DataGridView)sender;
 
             if (senderGrid.Columns[e.ColumnIndex] is DataGridViewButtonColumn &&
@@ -415,8 +379,6 @@ namespace LabBilling.Forms
                     dgvPayments["DateReceived", e.RowIndex].Value = converted;
                 }
             }
-
-
         }
 
         private void dgvPayments_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
@@ -426,7 +388,6 @@ namespace LabBilling.Forms
             //This will protect against invalid data being written to the database if columns containing data are hidden.
             if (dgvPayments.Rows.Count > 0)
                 EntryMode.Enabled = false;
-
         }
 
         private void TotalPayments()
@@ -460,6 +421,52 @@ namespace LabBilling.Forms
         private void DeleteBatch_Click(object sender, EventArgs e)
         {
             throw new NotImplementedException();
+        }
+
+        private void OpenBatch_SelectedValueChanged(object sender, EventArgs e)
+        {
+        }
+
+        private void OpenBatch_SelectionChangeCommitted(object sender, EventArgs e)
+        {
+            Log.Instance.Trace($"Entering");
+
+            if (Int32.TryParse(OpenBatch.SelectedValue.ToString(), out Int32 number) && OpenBatch.SelectedValue != null)
+            {
+                //opens a previously open batch for updating and completion
+                //read batch data from database
+                ChkBatch chkBatch = new ChkBatch();
+                chkBatch = chkBatchRepository.GetById(number);
+
+                Clear();
+
+                //load data into data grid view
+                XmlDocument xmlDoc = new XmlDocument();
+
+                xmlDoc.LoadXml(chkBatch.BatchData);
+
+                XmlNodeList nodes = xmlDoc.DocumentElement.SelectNodes("/Batch/Payment");
+                foreach (XmlNode node in nodes)
+                {
+                    //we have to get the index of a last row id:
+                    var index = dgvPayments.Rows.Add();
+
+                    //and count +1 to get a new row id:
+                    dgvPayments["Account", index].Value = node.Attributes["Account"].Value;
+                    dgvPayments["CheckNo", index].Value = node.Attributes["CheckNo"].Value;
+                    dgvPayments["PaymentSource", index].Value = node.Attributes["PaymentSource"].Value;
+                    dgvPayments["Contractual", index].Value = node.Attributes["Contractual"].Value ?? "0";
+                    dgvPayments["AmountPaid", index].Value = node.Attributes["AmountPaid"].Value ?? "0";
+                    dgvPayments["WriteOff", index].Value = node.Attributes["WriteOff"].Value ?? "0";
+                    dgvPayments["WriteOffCode", index].Value = node.Attributes["WriteOffCode"].Value;
+                    dgvPayments["Comment", index].Value = node.Attributes["Comment"].Value;
+                    dgvPayments["CheckDate", index].Value = node.Attributes["CheckDate"].Value;
+                    dgvPayments["DateReceived", index].Value = node.Attributes["DateReceived"].Value;
+                }
+                var idx = dgvPayments.Rows.Count;
+                dgvPayments.CurrentCell = dgvPayments.Rows[idx - 1].Cells["Account"];
+            }
+
         }
     }
 }

@@ -14,7 +14,7 @@ namespace LabBilling.Core.DataAccess
         private readonly ChrgRepository chrgRepository;
         private readonly ChkRepository chkRepository;
         private readonly ClientRepository clientRepository;
-        private readonly NotesRepository notesRepository;
+        private readonly AccountNoteRepository accountNoteRepository;
         private readonly BillingActivityRepository billingActivityRepository;
 
         public AccountRepository(string connectionString) : base("acc", connectionString)
@@ -25,7 +25,7 @@ namespace LabBilling.Core.DataAccess
             chrgRepository = new ChrgRepository(_connection);
             chkRepository = new ChkRepository(_connection);
             clientRepository = new ClientRepository(_connection);
-            notesRepository = new NotesRepository(_connection);
+            accountNoteRepository = new AccountNoteRepository(_connection);
             billingActivityRepository = new BillingActivityRepository(_connection);
         }
 
@@ -37,7 +37,7 @@ namespace LabBilling.Core.DataAccess
             chrgRepository = new ChrgRepository(_connection, db);
             chkRepository = new ChkRepository(_connection, db);
             clientRepository = new ClientRepository(_connection, db);
-            notesRepository = new NotesRepository(_connection, db);
+            accountNoteRepository = new AccountNoteRepository(_connection, db);
             billingActivityRepository = new BillingActivityRepository(_connection, db);
         }
 
@@ -79,7 +79,7 @@ namespace LabBilling.Core.DataAccess
                 record.Insurances = insRepository.GetByAccount(account);
                 record.Charges = chrgRepository.GetByAccount(account);
                 record.Payments = chkRepository.GetByAccount(account);
-                record.Notes = notesRepository.GetByAccount(account);
+                record.Notes = accountNoteRepository.GetByAccount(account);
                 record.BillingActivities = billingActivityRepository.GetByAccount(account);
             }
             Client client;
@@ -216,6 +216,7 @@ namespace LabBilling.Core.DataAccess
 
         public override bool Update(Account table)
         {
+            Log.Instance.Trace($"Entering");
             //generate full name field from name parts
             table.pat_name = String.Format("{0},{1} {2} {3}",
                 table.pat_name_last,
@@ -225,8 +226,273 @@ namespace LabBilling.Core.DataAccess
 
             table.pat_name = table.pat_name.Trim();
 
+            Log.Instance.Trace("$Exiting");
             return base.Update(table);
         }
+
+        public override bool Update(Account table, IEnumerable<string> columns)
+        {
+            Log.Instance.Trace($"Entering");
+            //generate full name field from name parts
+            table.pat_name = String.Format("{0},{1} {2} {3}",
+                table.pat_name_last,
+                table.pat_name_first,
+                table.pat_name_middle,
+                table.pat_name_suffix);
+
+            table.pat_name = table.pat_name.Trim();
+
+            Log.Instance.Trace($"Exiting");
+            return base.Update(table, columns);
+        }
+
+        public bool ChangeDateOfService(ref Account table, DateTime newDate, string reason_comment)
+        {
+            Log.Instance.Trace($"Entering");
+
+            if(table == null)
+                throw new ArgumentNullException("table");
+            else if(newDate == null)
+                throw new ArgumentNullException("newDate");
+            else if (reason_comment == null)
+                throw new ArgumentNullException("reason_comment");
+
+            bool updateSuccess = false;
+            DateTime oldServiceDate = DateTime.MinValue;
+
+            // update trans_date on acc table
+            if (table.trans_date != newDate)
+            {
+                oldServiceDate = (DateTime)table.trans_date;
+                table.trans_date = newDate;
+                Update(table, new[] { nameof(Account.trans_date) });
+
+                if (AddNote(table.account, $"Service Date changed from {oldServiceDate} to {newDate}"))
+                {
+                    table.Notes = accountNoteRepository.GetByAccount(table.account);
+                }
+
+                //determine if charges need to be reprocessed.
+
+                //TODO: is there any reason a date of service change should result in changing all charges --
+                // except: the date of service on charges will not match new date.
+                // option: reprocess all charges, or update service date on charge records
+
+            }
+            else
+            {
+                // error - current date is same as new date
+                updateSuccess = false;
+            }
+
+            Log.Instance.Trace($"Exiting - return value {updateSuccess}");
+            //return true if successful - false if error
+            return updateSuccess;
+
+        }
+
+        public bool AddNote(string account, string noteText)
+        {
+            Log.Instance.Trace($"Entering");
+            bool addSuccess = true;
+
+            AccountNote accountNote = new AccountNote()
+            {
+                account = account,
+                comment = noteText
+            };
+            try
+            {
+                accountNoteRepository.Add(accountNote);
+            }
+            catch(Exception ex)
+            {
+                addSuccess = false;
+                Log.Instance.Error(ex, "Error adding account note.");
+                throw new ApplicationException("Error adding account note.", ex);
+            }
+
+            Log.Instance.Trace($"Exiting");
+            return addSuccess;
+        }
+
+        public bool ChangeFinancialClass(ref Account table, string newFinCode)
+        {
+            Log.Instance.Trace($"Entering");
+            if (table == null)
+                throw new ArgumentNullException("table");
+            else if (newFinCode == null)
+                throw new ArgumentNullException("newDate");
+
+            bool updateSuccess = true;
+            string oldFinCode = table.fin_code;
+
+            //check that newFincode is a valid fincode
+            FinRepository finRepository = new FinRepository(_connection, dbConnection);
+
+            Fin newFin = finRepository.GetFin(newFinCode);
+            Fin oldFin = finRepository.GetFin(oldFinCode);
+            
+            if(newFin == null)
+            {
+                throw new ArgumentException($"Financial code {newFinCode} is not valid code.", "newFinCode");
+            }
+
+            if(oldFinCode != newFinCode)
+            {
+                table.fin_code = newFinCode;
+                try
+                {
+                    Update(table, new[] { nameof(Account.fin_code) });
+                }
+                catch(Exception ex)
+                {
+                    Log.Instance.Error(ex);
+                    throw new ApplicationException($"Exception updating fin code for {table.account}.", ex);
+                }
+                AddNote(table.account, $"Financial code updated from {oldFinCode} to {newFinCode}.");
+
+                //reprocess charges if needed due to financial code change.
+                if(newFin.type != oldFin.type)
+                {
+                    try
+                    {
+                        chrgRepository.ReprocessCharges(table.account);
+                    }
+                    catch(Exception ex)
+                    {
+                        throw new ApplicationException("Error reprocessing charges.", ex);
+                    }
+                }
+            }
+            else
+            {
+                updateSuccess = false;
+            }
+
+            Log.Instance.Trace($"Exiting");
+            return updateSuccess;
+        }
+
+        /// <summary>
+        /// Add a charge to an account. The account must exist.
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="cdm"></param>
+        /// <param name="qty"></param>
+        /// <param name="comment"></param>
+        /// <returns>Charge number of newly entered charge or < 0 if an error occurs.</returns>
+        public int AddCharge(string account, string cdm, int qty, DateTime serviceDate, string comment = null, string refNumber = null)
+        {
+            Log.Instance.Trace($"Entering");
+            CdmRepository cdmRepository = new CdmRepository(_connection, dbConnection);
+            FinRepository finRepository = new FinRepository(_connection, dbConnection);
+
+
+            //verify the account exists - if not return -1
+            Account accData = GetByAccount(account);
+            if (accData == null)
+            {
+                Log.Instance.Error($"Account {account} not found");
+                throw new AccountNotFoundException("Account not found.", account);
+            } 
+            //get the cdm number - if cdm number is not found - abort
+            Cdm cdmData = cdmRepository.GetCdm(cdm);
+            if (cdmData == null)
+            {
+                Log.Instance.Error($"CDM {cdm} not found.");
+                throw new CdmNotFoundException("CDM not found.", cdm);
+            }
+
+            Fin fin = finRepository.GetFin(accData.fin_code);
+
+            Chrg chrg = new Chrg();
+
+            //split the patient name
+            RFClassLibrary.Str.ParseName(accData.pat_name, out string ln, out string fn, out string mn, out string suffix);
+
+            //now build the charge & detail records
+            chrg.account = account;
+            chrg.action = "";
+            chrg.bill_method = fin.form_type;
+            chrg.cdm = cdm;
+            chrg.comment = comment;
+            chrg.credited = false;
+            chrg.facility = "";
+            chrg.fin_code = accData.fin_code;
+            chrg.fin_type = fin.type;
+            chrg.fname = fn;
+            chrg.lname = ln;
+            chrg.mname = mn;
+            chrg.mt_mnem = cdmData.mnem;
+            chrg.mt_req_no = refNumber;
+            chrg.order_site = "";
+            chrg.pat_dob = accData.Pat.dob_yyyy;
+            chrg.pat_name = accData.pat_name;
+            chrg.pat_ssn = accData.Pat.ssn;
+            chrg.performing_site = "";
+            chrg.post_date = DateTime.Today;
+            chrg.qty = qty;
+            chrg.service_date = serviceDate;
+            chrg.status = "NEW";
+            chrg.unitno = accData.HNE_NUMBER;
+            chrg.responsiblephy = "";
+
+            //need to determine the correct fee schedule - for now default to 1
+            double ztotal = 0.0;
+            double amtTotal = 0.0;
+            double retailTotal = 0.0;
+
+            foreach (CdmFeeSchedule1 fee in cdmData.cdmFeeSchedule1)
+            {
+                ChrgDetail amt = new ChrgDetail();
+                amt.cpt4 = fee.cpt4;
+                amt.type = fee.type;
+                switch (fin.type)
+                {
+                    case "M":
+                        amt.amount = fee.mprice;
+                        retailTotal += fee.mprice;
+                        ztotal += fee.zprice;
+                        break;
+                    case "C":
+                        amt.amount = fee.cprice;
+                        retailTotal += fee.cprice;
+                        ztotal += fee.zprice;
+                        break;
+                    case "Z":
+                        amt.amount = fee.zprice;
+                        retailTotal += fee.zprice;
+                        ztotal += fee.zprice;
+                        break;
+                    default:
+                        amt.amount = fee.mprice;
+                        retailTotal += fee.mprice;
+                        ztotal += fee.zprice;
+                        break;
+                }
+
+                amtTotal += amt.amount;
+
+                amt.modi = fee.modi;
+                amt.revcode = fee.rev_code;
+                amt.mt_req_no = "";
+                amt.order_code = fee.billcode;
+                amt.bill_type = "";
+                amt.bill_method = "";
+                amt.diagnosis_code_ptr = "1:";
+
+                chrg.ChrgDetails.Add(amt);
+            }
+
+            chrg.net_amt = amtTotal;
+            chrg.inp_price = ztotal;
+            chrg.retail = retailTotal;
+
+            Log.Instance.Trace($"Exiting");
+            return chrgRepository.AddCharge(chrg);
+        }
+
 
     }
 }

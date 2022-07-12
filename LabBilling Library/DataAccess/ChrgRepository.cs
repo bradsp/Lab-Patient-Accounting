@@ -8,21 +8,26 @@ namespace LabBilling.Core.DataAccess
 {
     public class ChrgRepository : RepositoryBase<Chrg>
     {
+        private CdmRepository cdmRepository;
+        //private FinRepository finRepository;
         private readonly AmtRepository amtRepository;
 
         public ChrgRepository(string connection) : base("chrg", connection)
         {
             amtRepository = new AmtRepository(connection);
+            cdmRepository = new CdmRepository(connection);
+            //finRepository = new FinRepository(connection);
         }
 
         public ChrgRepository(string connection, PetaPoco.Database db) : base("chrg", connection, db)
         {
             amtRepository = new AmtRepository(connection, db);
+            cdmRepository = new CdmRepository(connection, db);
+            //finRepository = new FinRepository(connection, db);
         }
 
         public override Chrg GetById(int id)
         {
-
             var sql = PetaPoco.Sql.Builder
                 .Select("chrg.*, cdm.descript as 'cdm_desc', amt.*")
                 .From("chrg")
@@ -79,17 +84,27 @@ namespace LabBilling.Core.DataAccess
         /// <returns></returns>
         public int AddCharge(Chrg chrg)
         {
+            Log.Instance.Trace("Entering");
             //function will add charge
-            int chrg_num = Convert.ToInt32(this.Add(chrg));
-            
-            foreach(ChrgDetail amt in chrg.ChrgDetails)
+            try
             {
-                amt.chrg_num = chrg_num;
+                int chrg_num = Convert.ToInt32(this.Add(chrg));
 
-                amtRepository.Add(amt);
+                foreach (ChrgDetail amt in chrg.ChrgDetails)
+                {
+                    amt.chrg_num = chrg_num;
+
+                    amtRepository.Add(amt);
+                }
+
+                return chrg_num;
+            }
+            catch (Exception ex)
+            {
+                Log.Instance.Fatal("Error in AddCharge", ex);
+                throw new ApplicationException("Error in AddCharge", ex);
             }
 
-            return chrg_num;
         }
 
         public List<InvoiceChargeView> GetInvoiceCharges(string account)
@@ -117,11 +132,45 @@ namespace LabBilling.Core.DataAccess
                     //chrg.status = "CBILL";
                     chrg.invoice = invoiceNo;
 
-                    Update(chrg);
+                    try
+                    {
+                        Update(chrg);
+                    }
+                    catch(Exception ex)
+                    {
+                        Log.Instance.Error(ex);
+                        throw new ApplicationException("Error in SetChargeInvoiceStatus", ex);
+                    }
 
                 }
             }
 
         }
+
+        /// <summary>
+        /// Reprocess all open charges on an account. Usually done as a result of a financial code or client change to reprice charges.
+        /// </summary>
+        /// <param name="account"></param>
+        /// <returns>Number of charges reprocessed.</returns>
+        public int ReprocessCharges(string account)
+        {
+            Log.Instance.Trace($"Entering");
+            int chrgCount = 0;
+
+            //call stored procedure [dbo].[usp_prg_ReCharge_Acc_Transaction]
+            try
+            {
+                chrgCount = dbConnection.ExecuteNonQueryProc("dbo.usp_prg_ReCharge_Acc_Transaction", new { @account = account });
+            }
+            catch(Exception ex)
+            {
+                Log.Instance.Error(ex);
+                throw new ApplicationException("Error reprocessing charges.", ex);
+            }
+
+            Log.Instance.Trace($"Exiting");
+            return chrgCount;
+        }
+
     }
 }

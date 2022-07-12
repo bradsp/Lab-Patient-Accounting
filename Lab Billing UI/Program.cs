@@ -24,6 +24,9 @@ namespace LabBilling
             AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
             Log.Instance.Info($"Launching LabBilling - connection {Helper.ConnVal}");
 
+            Application.ApplicationExit += new EventHandler(OnApplicationExit);
+
+
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new Dashboard());
@@ -39,9 +42,15 @@ namespace LabBilling
         static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
             //log the exception
-            Log.Instance.Fatal(e.ExceptionObject.ToString(), "Unhandled exception");
+            Log.Instance.Fatal((Exception)e.ExceptionObject, "Unhandled exception");
             MessageBox.Show(e.ExceptionObject.ToString(), "Unhandled Exception", MessageBoxButtons.OK, MessageBoxIcon.Stop);
         }
 
+        static void OnApplicationExit(object sender, EventArgs e)
+        {
+
+            NLog.LogManager.Shutdown();
+
+        }
     }
 }

@@ -27,7 +27,7 @@ namespace LabBilling.Core.Models
         public string ebill_status { get; set; }
         public double ebill_batch { get; set; }
         public string text { get; set; }
-        public DateTime ins_complete { get; set; }
+        public DateTime? ins_complete { get; set; }
         public DateTime mod_date { get; set; }
         public string mod_user { get; set; }
         public string mod_prg { get; set; }

@@ -42,18 +42,6 @@ namespace LabBilling.Core.DataAccess
             }
 
             return records;
-        }
-
-        public override bool Update(Ins table)
-        {
-            return base.Update(table);
-        }
-
-        public override bool Update(Ins table, IEnumerable<string> columns)
-        {
-            return base.Update(table, columns);
-        }
-
-        
+        }        
     }
 }

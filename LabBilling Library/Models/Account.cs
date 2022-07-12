@@ -62,7 +62,7 @@ namespace LabBilling.Core.Models
         [Ignore]
         public List<Chk> Payments { get; set; } = new List<Chk>();
         [Ignore]
-        public List<Notes> Notes { get; set; } = new List<Notes>();
+        public List<AccountNote> Notes { get; set; } = new List<AccountNote>();
         [Ignore]
         public List<BillingActivity> BillingActivities { get; set; } = new List<BillingActivity>();
         [Ignore]

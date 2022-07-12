@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ChargeEntryForm));
             this.tbBannerMRN = new System.Windows.Forms.TextBox();
             this.tbBannerAccount = new System.Windows.Forms.TextBox();
             this.tbBannerName = new System.Windows.Forms.TextBox();
@@ -40,7 +39,7 @@
             this.tbComment = new System.Windows.Forms.TextBox();
             this.btnSubmit = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
-            this.cbChargeItem = new MTGCComboBox();
+            this.cbChargeItem = new MultiColumnCombo.MultiColumnComboBox();
             this.tbDateOfService = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.SearchByCdm = new System.Windows.Forms.RadioButton();
@@ -170,40 +169,14 @@
             // 
             // cbChargeItem
             // 
-            this.cbChargeItem.ArrowBoxColor = System.Drawing.SystemColors.Control;
-            this.cbChargeItem.ArrowColor = System.Drawing.Color.Black;
-            this.cbChargeItem.BindedControl = ((MTGCComboBox.ControlloAssociato)(resources.GetObject("cbChargeItem.BindedControl")));
-            this.cbChargeItem.BorderStyle = MTGCComboBox.TipiBordi.FlatXP;
-            this.cbChargeItem.CharacterCasing = System.Windows.Forms.CharacterCasing.Normal;
-            this.cbChargeItem.ColumnNum = 1;
-            this.cbChargeItem.ColumnWidth = "121";
-            this.cbChargeItem.DisabledArrowBoxColor = System.Drawing.SystemColors.Control;
-            this.cbChargeItem.DisabledArrowColor = System.Drawing.Color.LightGray;
-            this.cbChargeItem.DisabledBackColor = System.Drawing.SystemColors.Control;
-            this.cbChargeItem.DisabledBorderColor = System.Drawing.SystemColors.InactiveBorder;
-            this.cbChargeItem.DisabledForeColor = System.Drawing.SystemColors.GrayText;
-            this.cbChargeItem.DisplayMember = "Text";
-            this.cbChargeItem.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-            this.cbChargeItem.DropDownArrowBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(136)))), ((int)(((byte)(169)))), ((int)(((byte)(223)))));
-            this.cbChargeItem.DropDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(193)))), ((int)(((byte)(210)))), ((int)(((byte)(238)))));
-            this.cbChargeItem.DropDownForeColor = System.Drawing.Color.Black;
-            this.cbChargeItem.DropDownStyle = MTGCComboBox.CustomDropDownStyle.DropDown;
-            this.cbChargeItem.DropDownWidth = 141;
-            this.cbChargeItem.GridLineColor = System.Drawing.Color.LightGray;
-            this.cbChargeItem.GridLineHorizontal = false;
-            this.cbChargeItem.GridLineVertical = false;
-            this.cbChargeItem.HighlightBorderColor = System.Drawing.Color.Blue;
-            this.cbChargeItem.HighlightBorderOnMouseEvents = true;
-            this.cbChargeItem.LoadingType = MTGCComboBox.CaricamentoCombo.ComboBoxItem;
-            this.cbChargeItem.Location = new System.Drawing.Point(99, 150);
-            this.cbChargeItem.ManagingFastMouseMoving = true;
-            this.cbChargeItem.ManagingFastMouseMovingInterval = 30;
+            this.cbChargeItem.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
+            this.cbChargeItem.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this.cbChargeItem.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
+            this.cbChargeItem.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbChargeItem.Location = new System.Drawing.Point(99, 154);
             this.cbChargeItem.Name = "cbChargeItem";
-            this.cbChargeItem.NormalBorderColor = System.Drawing.Color.Black;
-            this.cbChargeItem.SelectedItem = null;
-            this.cbChargeItem.SelectedValue = null;
-            this.cbChargeItem.Size = new System.Drawing.Size(273, 21);
-            this.cbChargeItem.TabIndex = 8;
+            this.cbChargeItem.Size = new System.Drawing.Size(451, 21);
+            this.cbChargeItem.TabIndex = 13;
             // 
             // tbDateOfService
             // 
@@ -331,7 +304,7 @@
         private System.Windows.Forms.TextBox tbComment;
         private System.Windows.Forms.Button btnSubmit;
         private System.Windows.Forms.Button btnCancel;
-        private MTGCComboBox cbChargeItem;
+        private MultiColumnCombo.MultiColumnComboBox cbChargeItem;
         private System.Windows.Forms.TextBox tbDateOfService;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.RadioButton SearchByCdm;

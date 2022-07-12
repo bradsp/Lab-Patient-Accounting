@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using LabBilling.Core.Models;
 using LabBilling.Core.DataAccess;
+using LabBilling.Logging;
 using System.Data.Common;
 using System.Collections;
 using PetaPoco;
@@ -27,6 +28,7 @@ namespace LabBilling.Core.BusinessLogic
         private PetaPoco.Database db; 
 
         private AccountRepository accountRepository;
+        private PatRepository patRepository;
         private ChrgRepository chrgRepository;
         private ChkRepository chkRepository;
         private List<ClaimData> claims;
@@ -56,6 +58,7 @@ namespace LabBilling.Core.BusinessLogic
             strArgs[2] = dBName;
 
             accountRepository = new AccountRepository(_connectionString, db);
+            patRepository = new PatRepository(_connectionString, db);
             chrgRepository = new ChrgRepository(_connectionString, db);
             chkRepository = new ChkRepository(_connectionString, db);
             numberRepository = new NumberRepository(_connectionString);
@@ -66,7 +69,11 @@ namespace LabBilling.Core.BusinessLogic
 
         }
 
-        public void CompileProfessionalBilling()
+        /// <summary>
+        /// Compiles claims for professional (837p) billing.
+        /// </summary>
+        /// <returns>Number of claims generated. Returns -1 if there was an error.</returns>
+        public int CompileProfessionalBilling()
         {
             //compile list of accounts to have claims generated
             billing837 = new Billing837(_connectionString);
@@ -74,59 +81,68 @@ namespace LabBilling.Core.BusinessLogic
             decimal strNum = numberRepository.GetNumber("ssi_batch");
             string interchangeControlNumber = string.Format("{0:D9}", int.Parse(string.Format("{0}{1}", DateTime.Now.Year, strNum)));
 
-            
-
             //acc records where status = "1500" and primary insurance is not "CHAMPUS"
             var list = accountRepository.GetAccountsForClaims(AccountRepository.ClaimType.Professional);
             ClaimData claim;
 
-            
-
-            foreach (ClaimItem item in list)
+            db.BeginTransaction();
+            try
             {
-                claim = GenerateProfessionalClaim(item.account);
-                claims.Add(claim);
+                foreach (ClaimItem item in list)
+                {
+                    claim = GenerateProfessionalClaim(item.account);
+                    claims.Add(claim);
 
-                //update status and activity date fields
-                claim.claimAccount.status = "SSI1500";
+                    //update status and activity date fields
+                    claim.claimAccount.status = "SSI1500";
 
-                db.Update(claim.claimAccount, new [] { nameof(Account.status) });
+                    accountRepository.Update(claim.claimAccount, new[] { nameof(Account.status) });
 
+                    claim.claimAccount.Pat.h1500_date = DateTime.Today;
+                    claim.claimAccount.Pat.ssi_batch = interchangeControlNumber;
 
-                claim.claimAccount.Pat.h1500_date = DateTime.Today;
-                claim.claimAccount.Pat.ssi_batch = interchangeControlNumber;
+                    patRepository.Update(claim.claimAccount.Pat, new[] { nameof(Pat.h1500_date), nameof(Pat.ssi_batch) });
 
-                db.Update(claim.claimAccount.Pat, new [] { nameof(Pat.h1500_date), nameof(Pat.ssi_batch)});
+                    BillingHistory billingHistory = new BillingHistory();
+                    billingHistory.pat_name = claim.claimAccount.pat_name;
+                    billingHistory.run_date = DateTime.Today;
+                    billingHistory.account = claim.claimAccount.account;
+                    billingHistory.batch = Convert.ToDouble(interchangeControlNumber);
+                    billingHistory.ebill_batch = Convert.ToDouble(interchangeControlNumber);
+                    billingHistory.ebill_status = "1500";
+                    billingHistory.fin_code = claim.claimAccount.fin_code;
+                    billingHistory.ins_abc = claim.claimAccount.Insurances[0].Coverage;
+                    billingHistory.ins_code = claim.claimAccount.Insurances[0].InsCode;
+                    billingHistory.ins_complete = DateTime.MinValue;
+                    billingHistory.trans_date = claim.claimAccount.trans_date;
+                    billingHistory.run_user = OS.GetUserName();
 
-                BillingHistory billingHistory = new BillingHistory();
-                billingHistory.pat_name = claim.claimAccount.pat_name;
-                billingHistory.run_date = DateTime.Today;
-                billingHistory.account = claim.claimAccount.account;
-                billingHistory.batch = Convert.ToDouble(interchangeControlNumber);
-                billingHistory.ebill_batch = Convert.ToDouble(interchangeControlNumber);
-                billingHistory.ebill_status = "1500";
-                billingHistory.fin_code = claim.claimAccount.fin_code;
-                billingHistory.ins_abc = claim.claimAccount.Insurances[0].Coverage;
-                billingHistory.ins_code = claim.claimAccount.Insurances[0].InsCode;
-                billingHistory.ins_complete = DateTime.MinValue;
-                billingHistory.trans_date = claim.claimAccount.trans_date;
-                billingHistory.run_user = OS.GetUserName();
+                    billingHistoryRepository.Add(billingHistory);
 
-                billingHistoryRepository.Add(billingHistory);
+                }
 
+                string x12Text = billing837.Generate837pClaimBatch(claims, interchangeControlNumber, propProductionEnvironment, batchSubmitterID, parametersdb.GetByKey("837p_file_loation"));
+
+                BillingBatch billingBatch = new BillingBatch();
+                billingBatch.batch = Convert.ToDouble(interchangeControlNumber);
+                billingBatch.run_date = DateTime.Today;
+                billingBatch.run_user = OS.GetUserName();
+                billingBatch.x12_text = x12Text;
+                billingBatch.claim_count = claims.Count;
+
+                billingBatchRepository.Add(billingBatch);
+
+                db.CompleteTransaction();
+
+                return claims.Count;
+            }
+            catch (Exception ex)
+            {
+                Log.Instance.Fatal(ex, "Exception processing Professional Claims. Batch has been rolled back. Report error to the Application Administrator.");
+                db.AbortTransaction();
             }
 
-            string x12Text = billing837.Generate837pClaimBatch(claims, interchangeControlNumber, propProductionEnvironment, batchSubmitterID);
-
-            BillingBatch billingBatch = new BillingBatch();
-            billingBatch.batch = Convert.ToDouble(interchangeControlNumber);
-            billingBatch.run_date = DateTime.Today;
-            billingBatch.run_user = OS.GetUserName();
-            billingBatch.x12_text = x12Text;
-            billingBatch.claim_count = claims.Count;
-            
-            billingBatchRepository.Add(billingBatch);
-
+            return -1;
         }
 
         public void CompileInstituationalBilling()

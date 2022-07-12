@@ -12,6 +12,7 @@ using LabBilling.Library;
 using RFClassLibrary;
 using System.Data;
 using System.Text;
+using System.Reflection;
 
 namespace LabBilling.Forms
 {
@@ -35,7 +36,7 @@ namespace LabBilling.Forms
         private readonly UserProfileRepository userProfileDB = new UserProfileRepository(Helper.ConnVal);
         private readonly FinRepository finDB = new FinRepository(Helper.ConnVal);
         private readonly ChkRepository chkdb = new ChkRepository(Helper.ConnVal);
-        private readonly NotesRepository notesdb = new NotesRepository(Helper.ConnVal);
+        private readonly AccountNoteRepository notesdb = new AccountNoteRepository(Helper.ConnVal);
         private readonly BillingActivityRepository dbBillingActivity = new BillingActivityRepository(Helper.ConnVal);
         private readonly DictDxRepository dictDxDb = new DictDxRepository(Helper.ConnVal);
         private readonly SystemParametersRepository systemParametersRepository = new SystemParametersRepository(Helper.ConnVal);
@@ -116,7 +117,7 @@ namespace LabBilling.Forms
 
             #endregion
 
-            //load controlColumnMap
+            #region load controlColumnMap
 
             controlColumnMap.Add(tbZipcode, nameof(Pat.pat_zip));
             controlColumnMap.Add(cbMaritalStatus, nameof(Pat.pat_marital));
@@ -164,6 +165,76 @@ namespace LabBilling.Forms
             controlColumnMap.Add(tbGuarCity, nameof(Pat.guar_city));
             controlColumnMap.Add(tbGuarantorAddress, nameof(Pat.guar_addr));
             controlColumnMap.Add(tbGuarantorLastName, nameof(Pat.GuarantorLastName));
+            #endregion
+
+            #region Setup Insurance Company Combobox
+            insCompanies = insCompanyRepository.GetAll(true).ToList();
+
+            DataTable inscDataTable = new DataTable(typeof(InsCompany).Name);
+            inscDataTable.Columns.Add("Code");
+            inscDataTable.Columns.Add("Name");
+            var values = new object[2];
+            // add no selection row
+            values[0] = "";
+            values[1] = "<select plan>";
+            inscDataTable.Rows.Add(values);
+            foreach (InsCompany insc in insCompanies)
+            {
+                values[0] = insc.code;
+                values[1] = insc.name;
+                inscDataTable.Rows.Add(values);
+            }
+
+            cbInsCode.DataSource = inscDataTable;
+            cbInsCode.DisplayMember = "Name";
+            cbInsCode.ValueMember = "Code";
+
+            #endregion
+
+            #region populate combo boxes
+
+            cbState.DataSource = new BindingSource(Dictionaries.stateSource, null);
+            cbState.DisplayMember = "Value";
+            cbState.ValueMember = "Key";
+
+            cbSex.DataSource = new BindingSource(Dictionaries.sexSource, null);
+            cbSex.DisplayMember = "Value";
+            cbSex.ValueMember = "Key";
+
+            cbMaritalStatus.DataSource = new BindingSource(Dictionaries.maritalSource, null);
+            cbMaritalStatus.DisplayMember = "Value";
+            cbMaritalStatus.ValueMember = "Key";
+
+            cbGuarState.DataSource = new BindingSource(Dictionaries.stateSource, null);
+            cbGuarState.DisplayMember = "Value";
+            cbGuarState.ValueMember = "Key";
+
+            cbHolderState.DataSource = new BindingSource(Dictionaries.stateSource, null);
+            cbHolderState.DisplayMember = "Value";
+            cbHolderState.ValueMember = "Key";
+
+            cbGuarantorRelation.DataSource = new BindingSource(Dictionaries.relationSource, null);
+            cbGuarantorRelation.DisplayMember = "Value";
+            cbGuarantorRelation.ValueMember = "Key";
+
+            cbInsRelation.DataSource = new BindingSource(Dictionaries.relationSource, null);
+            cbInsRelation.DisplayMember = "Value";
+            cbInsRelation.ValueMember = "Key";
+
+            cbInsOrder.DataSource = new BindingSource(Dictionaries.payorOrderSource, null);
+            cbInsOrder.DisplayMember = "Value";
+            cbInsOrder.ValueMember = "Key";
+
+            cbHolderSex.DataSource = new BindingSource(Dictionaries.sexSource, null);
+            cbHolderSex.DisplayMember = "Value";
+            cbHolderSex.ValueMember = "Key";
+
+            cbPlanFinCode.DataSource = finDB.GetAll();
+            cbPlanFinCode.DisplayMember = "res_party";
+            cbPlanFinCode.ValueMember = "fin_code";
+            cbPlanFinCode.SelectedIndex = -1;
+
+            #endregion
 
             if (SelectedAccount != null || SelectedAccount != "")
             {
@@ -315,50 +386,6 @@ namespace LabBilling.Forms
         {
             Log.Instance.Trace("Entering");
             DemoStatusMessages.Text = String.Empty;
-            #region populate combo boxes
-
-            cbState.DataSource = new BindingSource(Dictionaries.stateSource, null);
-            cbState.DisplayMember = "Value";
-            cbState.ValueMember = "Key";
-
-            cbSex.DataSource = new BindingSource(Dictionaries.sexSource, null);
-            cbSex.DisplayMember = "Value";
-            cbSex.ValueMember = "Key";
-
-            cbMaritalStatus.DataSource = new BindingSource(Dictionaries.maritalSource, null);
-            cbMaritalStatus.DisplayMember = "Value";
-            cbMaritalStatus.ValueMember = "Key";
-
-            cbGuarState.DataSource = new BindingSource(Dictionaries.stateSource, null);
-            cbGuarState.DisplayMember = "Value";
-            cbGuarState.ValueMember = "Key";
-
-            cbHolderState.DataSource = new BindingSource(Dictionaries.stateSource, null);
-            cbHolderState.DisplayMember = "Value";
-            cbHolderState.ValueMember = "Key";
-
-            cbGuarantorRelation.DataSource = new BindingSource(Dictionaries.relationSource, null);
-            cbGuarantorRelation.DisplayMember = "Value";
-            cbGuarantorRelation.ValueMember = "Key";
-
-            cbInsRelation.DataSource = new BindingSource(Dictionaries.relationSource, null);
-            cbInsRelation.DisplayMember = "Value";
-            cbInsRelation.ValueMember = "Key";
-
-            cbInsOrder.DataSource = new BindingSource(Dictionaries.payorOrderSource, null);
-            cbInsOrder.DisplayMember = "Value";
-            cbInsOrder.ValueMember = "Key";
-
-            cbHolderSex.DataSource = new BindingSource(Dictionaries.sexSource, null);
-            cbHolderSex.DisplayMember = "Value";
-            cbHolderSex.ValueMember = "Key";
-
-            cbPlanFinCode.DataSource = finDB.GetAll();
-            cbPlanFinCode.DisplayMember = "res_party";
-            cbPlanFinCode.ValueMember = "fin_code";
-            cbPlanFinCode.SelectedIndex = -1;
-
-            #endregion
 
             tbBannerName.Text = currentAccount.pat_name;
             tbBannerDob.Text = currentAccount.Pat.dob_yyyy.GetValueOrDefault().ToShortDateString();
@@ -369,29 +396,6 @@ namespace LabBilling.Forms
             tbBannerFinClass.Text = currentAccount.fin_code;
 
             tbTotalCharges.Text = currentAccount.TotalCharges.ToString("c");
-
-            #region Setup Insurance Company Combobox
-            insCompanies = insCompanyRepository.GetAll(true).ToList();
-
-            MTGCComboBoxItem[] insItems = new MTGCComboBoxItem[insCompanies.Count];
-            int i = 0;
-
-            foreach (InsCompany ins in insCompanies)
-            {
-                insItems[i] = new MTGCComboBoxItem(ins.name, ins.code, ins.addr1 ?? "", ins.citystzip ?? "");
-                i++;
-            }
-
-            cbInsCode.ColumnNum = 4;
-            cbInsCode.GridLineHorizontal = true;
-            cbInsCode.GridLineVertical = true;
-            cbInsCode.ColumnWidth = "200;75;75;75";
-            //cbInsCode.DropDownStyle = MTGCComboBox.CustomDropDownStyle.DropDown;
-            cbInsCode.SelectedIndex = -1;
-            cbInsCode.Items.Clear();
-            cbInsCode.LoadingType = MTGCComboBox.CaricamentoCombo.ComboBoxItem;
-            cbInsCode.Items.AddRange(insItems);
-            #endregion
 
             //this.Text = $" {currentAccount.pat_name} - Demographics";
 
@@ -514,6 +518,8 @@ namespace LabBilling.Forms
                 cbHolderSex.SelectedIndex = 0;
 
                 dgvInsurance.ClearSelection();
+
+                ResetControls(demoTabLayoutPanel.Controls);
             }
 
         }
@@ -666,7 +672,7 @@ namespace LabBilling.Forms
             currentAccount.Insurances[selectedIns].Coverage = cbInsOrder.SelectedValue.ToString();
             currentAccount.Insurances[selectedIns].FinCode = cbPlanFinCode.SelectedValue.ToString();
 
-            currentAccount.Insurances[selectedIns].InsCode = cbInsCode.SelectedItem.Col2;
+            currentAccount.Insurances[selectedIns].InsCode = cbInsCode.SelectedValue.ToString();
 
             //call method to update the record in the database
             if (currentAccount.Insurances[selectedIns].rowguid == Guid.Empty)
@@ -781,6 +787,8 @@ namespace LabBilling.Forms
                 insGridSource.ResetBindings(false);
                 ClearInsEntryFields();
 
+                ResetControls(insTabLayoutPanel.Controls);
+                                
                 return;
                 #endregion
             }
@@ -830,7 +838,7 @@ namespace LabBilling.Forms
             cbInsRelation.SelectedValue = dgvInsurance.SelectedRows[0].Cells[nameof(Ins.Relation)].Value?.ToString() ?? "";
 
             // set ins Code combo box
-            cbInsCode.ItemSelect(2, dgvInsurance.SelectedRows[0].Cells[nameof(Ins.InsCode)].Value?.ToString(), false, true);
+            cbInsCode.SelectedValue = dgvInsurance.SelectedRows[0].Cells[nameof(Ins.InsCode)].Value?.ToString() ?? "";
 
             tbPlanName.Text = dgvInsurance.SelectedRows[0].Cells[nameof(Ins.PlanName)].Value?.ToString();
             tbPlanAddress.Text = dgvInsurance.SelectedRows[0].Cells[nameof(Ins.PlanAddress1)].Value?.ToString();
@@ -873,34 +881,6 @@ namespace LabBilling.Forms
                 tbPlanCitySt.Text = record.citystzip;
                 cbPlanFinCode.SelectedValue = record.fin_code;
             }
-        }
-
-        private void CbInsCode_SelectedIndexChanged_1(object sender, EventArgs e)
-        {
-            Log.Instance.Trace($"Entering");
-            if (cbInsCode.SelectedIndex >= 0)
-            {
-                string insCode = ((MTGCComboBoxItem)cbInsCode.SelectedItem).Col2;
-                LookupInsCode(insCode);
-
-                if (insCode == "MISC")
-                {
-                    tbPlanName.ReadOnly = false;
-                    tbPlanAddress.ReadOnly = false;
-                    tbPlanAddress2.ReadOnly = false;
-                    tbPlanCitySt.ReadOnly = false;
-                    cbPlanFinCode.Enabled = true;
-                }
-                else
-                {
-                    tbPlanName.ReadOnly = true;
-                    tbPlanAddress.ReadOnly = true;
-                    tbPlanAddress2.ReadOnly = true;
-                    tbPlanCitySt.ReadOnly = true;
-                    cbPlanFinCode.Enabled = false;
-                }
-            }
-
         }
 
         private void AddInsurance_Click(object sender, EventArgs e)
@@ -1487,7 +1467,7 @@ namespace LabBilling.Forms
             Log.Instance.Trace("Entering");
             tbNotesDisplay.Text = "";
             tbNotesDisplay.BackColor = Color.AntiqueWhite;
-            foreach(Notes note in currentAccount.Notes)
+            foreach(AccountNote note in currentAccount.Notes)
             {
                 tbNotesDisplay.DeselectAll();
                 tbNotesDisplay.SelectionFont = new Font(tbNotesDisplay.SelectionFont, FontStyle.Bold);
@@ -1501,7 +1481,7 @@ namespace LabBilling.Forms
         {
             Log.Instance.Trace($"Entering");
             InputBoxResult prompt = InputBox.Show("Enter note:", "New Note");
-            Notes note = new Notes();
+            AccountNote note = new AccountNote();
 
             if (prompt.ReturnCode == DialogResult.OK)
             {
@@ -1551,11 +1531,172 @@ namespace LabBilling.Forms
         private void ChangeDateOfServiceToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Log.Instance.Trace($"Entering");
+            DateTime newDate = DateTime.MinValue;
+
+            Form frm = new Form()
+            {
+                Text = "Change Date of Service",
+                DialogResult = DialogResult.OK,
+                Width = 400
+            };
+            Label lbl2 = new Label()
+            {
+                Text = "Choose the new date of service",
+                Location = new Point(10, 10),
+                Width = 130
+            };
+            DateTimePicker dateTimePicker = new DateTimePicker()
+            {
+                Name = "newDateFrm",
+                Location = new Point(lbl2.Width + 10,10),
+                Format = DateTimePickerFormat.Short,
+                Width = 100,
+                Value = (DateTime)currentAccount.trans_date
+            };
+            Label lbl1 = new Label()
+            {
+                Text = "Enter Reason for date change",
+                Location = new Point(10, 50),
+                Width = 130
+            };
+            TextBox tbReason = new TextBox()
+            {
+                Location = new Point(lbl1.Width + 10,50),
+                Width = 200,
+                Multiline = true
+            };
+            Button btnOK = new Button()
+            {
+                Text = "OK",
+                Location = new System.Drawing.Point(10, 80)
+            };
+            Button btnCanel = new Button()
+            {
+                Text = "Cancel",
+                Location = new Point(btnOK.Width + 20, 80)
+            };
+
+
+            btnOK.Click += (o, s) =>
+            {
+                if(string.IsNullOrEmpty(tbReason.Text))
+                {
+                    MessageBox.Show("Must enter a reason.");
+                    return;
+                }
+                frm.DialogResult = DialogResult.OK;
+                frm.Close();
+            };
+            btnCanel.Click += (o, s) =>
+            {
+                frm.DialogResult = DialogResult.Cancel;
+                frm.Close();
+            };
+
+            frm.Controls.Add(dateTimePicker);
+            frm.Controls.Add(tbReason);
+            frm.Controls.Add(lbl2);
+            frm.Controls.Add(lbl1);
+            frm.Controls.Add(btnOK);
+            frm.Controls.Add(btnCanel);
+            if(frm.ShowDialog() == DialogResult.OK)
+            {
+                MessageBox.Show($"New date is {dateTimePicker}. Reason is {tbReason.Text}");
+                try
+                {
+                    accDB.ChangeDateOfService(ref currentAccount, dateTimePicker.Value, tbReason.Text);
+                }
+                catch (ArgumentNullException anex)
+                {
+                    Log.Instance.Error(anex, $"Change date of service parameter {anex.ParamName} must contain a value.");
+                    MessageBox.Show($"{anex.ParamName} must contain a value. Date of service was not changed.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                catch(Exception ex)
+                {
+                    Log.Instance.Error(ex, $"Error changing date of service.");
+                    MessageBox.Show($"Error changing date of service. Date of service was not changed.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+
+            Log.Instance.Trace($"Exiting");
+
         }
 
         private void ChangeFinancialClassToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Log.Instance.Trace($"Entering");
+
+            //create form to capture new financial code with dropdownlist of codes.
+            string newFinCode = string.Empty;
+
+            Form frm = new Form()
+            {
+                Text = "Change Financial Code",
+                DialogResult = DialogResult.OK,
+                Width = 400
+            };
+            Label lbl1 = new Label()
+            {
+                Text = "Choose new financial class",
+                Location = new Point(10, 10),
+                Width = 130
+            };
+            ComboBox cbNewFinCode = new ComboBox()
+            {
+                Location = new Point(lbl1.Width + 10, 10),
+                Width = 200,
+            };
+
+            cbNewFinCode.DataSource = finDB.GetAll();
+            cbNewFinCode.DisplayMember = "res_party";
+            cbNewFinCode.ValueMember = "fin_code";
+            cbNewFinCode.SelectedIndex = -1;
+
+            Button btnOK = new Button()
+            {
+                Text = "OK",
+                Location = new System.Drawing.Point(10, 80)
+            };
+            Button btnCanel = new Button()
+            {
+                Text = "Cancel",
+                Location = new Point(btnOK.Width + 20, 80)
+            };
+
+            btnOK.Click += (o, s) =>
+            {
+
+                frm.DialogResult = DialogResult.OK;
+                frm.Close();
+            };
+            btnCanel.Click += (o, s) =>
+            {
+                frm.DialogResult = DialogResult.Cancel;
+                frm.Close();
+            };
+
+            frm.Controls.Add(cbNewFinCode);
+            frm.Controls.Add(lbl1);
+            frm.Controls.Add(btnOK);
+            frm.Controls.Add(btnCanel);
+            if (frm.ShowDialog() == DialogResult.OK)
+            {
+                MessageBox.Show($"New financial class is {cbNewFinCode.SelectedValue}");
+                try
+                {
+                    accDB.ChangeFinancialClass(ref currentAccount, cbNewFinCode.SelectedValue.ToString());
+                }
+                catch (ArgumentException anex)
+                {
+                    Log.Instance.Error(anex, $"Financial code {anex.ParamName} is not valid.");
+                    MessageBox.Show($"{anex.ParamName} is not a valid financial code. Financial code was not changed.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                catch (Exception ex)
+                {
+                    Log.Instance.Error(ex, $"Error changing financial class.");
+                    MessageBox.Show($"Error changing financial class. Financial code was not changed.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
         }
 
         private void ChangeClientToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1620,7 +1761,7 @@ namespace LabBilling.Forms
             //Reason must be entered for changing status
 
             InputBoxResult prompt = InputBox.Show("Enter reason for setting status back to New:", "New Note");
-            Notes note = new Notes();
+            AccountNote note = new AccountNote();
 
             if (prompt.ReturnCode == DialogResult.OK)
             {
@@ -1634,6 +1775,47 @@ namespace LabBilling.Forms
             //AccountRepository accDB = new AccountRepository();
             currentAccount.status = "NEW";
             accDB.Update(currentAccount);
+
+        }
+
+        private void ResetControls(TableLayoutControlCollection controls)
+        {
+            //reset changed flag & colors
+            foreach (Control ctrl in controls)
+            {
+                if (ctrl is TextBox || ctrl is ComboBox || ctrl is FlatCombo || ctrl is MaskedTextBox)
+                {
+                    ctrl.BackColor = Color.White;
+                }
+                changedControls.Remove(ctrl.Name);
+            }
+        }
+
+        private void cbInsCode_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            Log.Instance.Trace($"Entering");
+            if (cbInsCode.SelectedIndex >= 0)
+            {
+                string insCode = cbInsCode.SelectedValue.ToString();
+                LookupInsCode(insCode);
+
+                if (insCode == "MISC")
+                {
+                    tbPlanName.ReadOnly = false;
+                    tbPlanAddress.ReadOnly = false;
+                    tbPlanAddress2.ReadOnly = false;
+                    tbPlanCitySt.ReadOnly = false;
+                    cbPlanFinCode.Enabled = true;
+                }
+                else
+                {
+                    tbPlanName.ReadOnly = true;
+                    tbPlanAddress.ReadOnly = true;
+                    tbPlanAddress2.ReadOnly = true;
+                    tbPlanCitySt.ReadOnly = true;
+                    cbPlanFinCode.Enabled = false;
+                }
+            }
 
         }
     }

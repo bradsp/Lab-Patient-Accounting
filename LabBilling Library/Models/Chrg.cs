@@ -64,9 +64,8 @@ namespace LabBilling.Core.Models
         public string mod_host { get; set; }
         
         public Guid rowguid { get; set; }
-
-        [Ignore]
-        public List<ChrgDetail> ChrgDetails { get; set; } = new List<ChrgDetail>();
+                
+        public List<ChrgDetail> ChrgDetails = new List<ChrgDetail>();
     }
 
     [TableName("InvoiceChargeView")]

@@ -28,7 +28,7 @@ namespace LabBilling.Core.DataAccess
         {
             Log.Instance.Trace("Entering");
             _tableName = tableName;
-            dbConnection = new PetaPoco.Database(connectionString, new SqlServerDatabaseProvider());
+            dbConnection = new PetaPoco.Database(connectionString, new CustomSqlDatabaseProvider());
 
             Log.Instance.Trace("Exiting");
         }
@@ -76,7 +76,7 @@ namespace LabBilling.Core.DataAccess
         {
             Log.Instance.Trace("Entering");
 
-            if (table.mod_date == null)
+            if (table.mod_date == null || table.mod_date == DateTime.MinValue)
                 table.mod_date = DateTime.Now;
             if (table.mod_host == "" || table.mod_host == null)
                 table.mod_host = Environment.MachineName;
