@@ -1,0 +1,3 @@
+﻿CREATE SCHEMA [infce]
+    AUTHORIZATION [dbo];
+

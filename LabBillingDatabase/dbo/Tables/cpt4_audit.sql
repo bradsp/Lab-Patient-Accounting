@@ -1,0 +1,25 @@
+﻿CREATE TABLE [dbo].[cpt4_audit] (
+    [deleted]    BIT          NOT NULL,
+    [cdm]        VARCHAR (7)  NULL,
+    [link]       INT          NULL,
+    [cpt4]       VARCHAR (5)  NULL,
+    [descript]   VARCHAR (50) NULL,
+    [mprice]     MONEY        NULL,
+    [cprice]     MONEY        NULL,
+    [zprice]     MONEY        NULL,
+    [rev_code]   VARCHAR (4)  NULL,
+    [type]       VARCHAR (4)  NULL,
+    [modi]       VARCHAR (2)  NULL,
+    [mod_date]   DATETIME     NULL,
+    [mod_user]   VARCHAR (50) NULL,
+    [mod_prg]    VARCHAR (50) NULL,
+    [mod_host]   VARCHAR (50) NULL,
+    [billcode]   VARCHAR (7)  NULL,
+    [audit_date] DATETIME     NULL,
+    [audit_user] VARCHAR (50) NULL,
+    [audit_host] VARCHAR (50) NULL,
+    [uri]        NUMERIC (18) IDENTITY (1, 1) NOT NULL,
+    [audit_prg]  VARCHAR (50) NULL,
+    CONSTRAINT [PK_cpt4_audit] PRIMARY KEY CLUSTERED ([uri] ASC) WITH (FILLFACTOR = 90)
+);
+

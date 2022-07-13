@@ -214,6 +214,7 @@ namespace LabBilling.Forms
             // FinancialClass
             // 
             this.FinancialClass.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
+            this.FinancialClass.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.FinancialClass.Location = new System.Drawing.Point(110, 212);
             this.FinancialClass.Name = "FinancialClass";
             this.FinancialClass.Size = new System.Drawing.Size(253, 21);

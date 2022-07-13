@@ -1,0 +1,93 @@
+﻿CREATE TABLE [dbo].[patbill_enctr] (
+    [record_type]                     VARCHAR (4)    NOT NULL,
+    [record_cnt]                      BIGINT         NULL,
+    [statement_number]                FLOAT (53)     NULL,
+    [enctr_nbr]                       VARCHAR (15)   NOT NULL,
+    [pft_encntr_id]                   VARCHAR (50)   NULL,
+    [place_of_service]                VARCHAR (50)   NULL,
+    [pft_encntr_dates_of_service]     VARCHAR (10)   NULL,
+    [pft_encntr_amt_due]              VARCHAR (10)   NULL,
+    [pft_encntr_prov_name]            VARCHAR (1)    NOT NULL,
+    [pft_encntr_prov_org_name]        VARCHAR (1)    NOT NULL,
+    [pft_encntr_prov_org_str_addr_]   VARCHAR (1)    NOT NULL,
+    [pft_encntr_prov_org_str_addr_2]  VARCHAR (1)    NOT NULL,
+    [pft_encntr_prov_org_str_addr_3]  VARCHAR (1)    NOT NULL,
+    [pft_encntr_prov_org_str_addr_4]  VARCHAR (1)    NOT NULL,
+    [pft_encntr_prov_org_city]        VARCHAR (1)    NOT NULL,
+    [pft_encntr_prov_org_state]       VARCHAR (1)    NOT NULL,
+    [pft_encntr_prov_org_zip]         VARCHAR (1)    NOT NULL,
+    [pft_encntr_prov_org_phone]       VARCHAR (1)    NOT NULL,
+    [pft_encntr_prov_hrs]             VARCHAR (1)    NOT NULL,
+    [pft_encntr_unpaid_bal]           VARCHAR (1)    NOT NULL,
+    [pft_encntr_patient_bal]          NUMERIC (2, 2) NOT NULL,
+    [pft_encntr_paid_since_last_stmt] NUMERIC (2, 2) NOT NULL,
+    [pft_encntr_ins_discount]         VARCHAR (1)    NOT NULL,
+    [pft_encntr_ord_mgmt_act_type]    VARCHAR (1)    NOT NULL,
+    [pft_encntr_ord_mgmt_cat_type]    VARCHAR (1)    NOT NULL,
+    [pft_encntr_health_plan_name]     VARCHAR (1)    NOT NULL,
+    [pft_encntr_in_pending]           NUMERIC (2, 2) NOT NULL,
+    [pft_encntr_total]                VARCHAR (10)   NULL,
+    [encntr_admit_dt_tm]              VARCHAR (10)   NULL,
+    [encntr_discharge_dt_tm]          VARCHAR (10)   NULL,
+    [encntr_medical_service]          VARCHAR (1)    NOT NULL,
+    [encntr_type]                     VARCHAR (20)   NOT NULL,
+    [encntr_financial_class]          VARCHAR (1)    NOT NULL,
+    [encntr_vip]                      VARCHAR (1)    NOT NULL,
+    [pft_encntr_qualifier]            VARCHAR (1)    NOT NULL,
+    [pft_encntr_total_charges]        VARCHAR (10)   NULL,
+    [total_patient_payments]          NUMERIC (2, 2) NOT NULL,
+    [total_patient_adjustments]       NUMERIC (2, 2) NOT NULL,
+    [total_insurance_payments]        VARCHAR (1)    NOT NULL,
+    [total_insurance_adjustments]     VARCHAR (1)    NOT NULL,
+    [pft_encntr_assigned_agency]      VARCHAR (1)    NOT NULL,
+    [pft_encntr_pay_plan_flag]        VARCHAR (1)    NOT NULL,
+    [pft_encntr_pay_plan_status]      VARCHAR (1)    NOT NULL,
+    [pft_encntr_pay_plan_orig_amt]    VARCHAR (1)    NOT NULL,
+    [pft_encntr_pay_plan_pay_amt]     VARCHAR (1)    NOT NULL,
+    [pft_encntr_pay_plan_begin_dttm]  VARCHAR (1)    NOT NULL,
+    [pft_encntr_pay_plan_delinq_amt]  VARCHAR (1)    NOT NULL,
+    [pftectr_pri_clm_orig_trans_dttm] VARCHAR (1)    NOT NULL,
+    [pftectr_pri_clm_cur_trans_dttm]  VARCHAR (1)    NOT NULL,
+    [pftectr_sec_clm_orig_trans_dttm] VARCHAR (1)    NOT NULL,
+    [pftectr_sec_clm_cur_trans_dttm]  VARCHAR (1)    NOT NULL,
+    [pftectr_ter_clm_orig_trans_dttm] VARCHAR (1)    NOT NULL,
+    [pftectr_ter_clm_cur_trans_dttm]  VARCHAR (1)    NOT NULL,
+    [pft_ectr_prim_insr_balance]      VARCHAR (1)    NOT NULL,
+    [pft_ectr_sec_insr_balance]       VARCHAR (1)    NOT NULL,
+    [pft_ectr_tert_insr_balance]      VARCHAR (1)    NOT NULL,
+    [pft_ectr_self_pay_balance]       VARCHAR (1)    NOT NULL,
+    [attending_physician_name]        VARCHAR (1)    NOT NULL,
+    [includes_est_pat_liab]           INT            NOT NULL,
+    [total_charge_amount]             INT            NOT NULL,
+    [non_covered_charge_amt]          INT            NOT NULL,
+    [ABN_charge_amt]                  INT            NOT NULL,
+    [est_contract_allowance_amt_ind]  INT            NOT NULL,
+    [est_contract_allowance_amt]      INT            NOT NULL,
+    [encntr_deductible_rem_amt_ind]   INT            NOT NULL,
+    [encntr_deductible_rem_amt]       INT            NOT NULL,
+    [deductible_applied_amt]          INT            NOT NULL,
+    [encntr_copay_amt_ind]            INT            NOT NULL,
+    [encntr_copay_amt]                INT            NOT NULL,
+    [encntr_coinsurance_pct_ind]      INT            NOT NULL,
+    [encntr_coinsurance_pct]          INT            NOT NULL,
+    [encntr_coinsurance_amt]          INT            NOT NULL,
+    [maximum_out_of_pocket_amt_ind]   INT            NOT NULL,
+    [maximum_out_of_pocket_amt]       INT            NOT NULL,
+    [amt_over_max_out_of_pocket]      INT            NOT NULL,
+    [est_patient_liab_amt]            INT            NOT NULL,
+    [batch_id]                        VARCHAR (50)   NOT NULL
+);
+
+
+GO
+CREATE CLUSTERED INDEX [CDX_statement_number]
+    ON [dbo].[patbill_enctr]([statement_number] ASC, [enctr_nbr] ASC, [pft_encntr_id] ASC, [place_of_service] ASC) WITH (FILLFACTOR = 90);
+
+
+GO
+EXECUTE sp_addextendedproperty @name = N'MS_Description', @value = N'Acct''s Patient account number', @level0type = N'SCHEMA', @level0name = N'dbo', @level1type = N'TABLE', @level1name = N'patbill_enctr', @level2type = N'COLUMN', @level2name = N'enctr_nbr';
+
+
+GO
+EXECUTE sp_addextendedproperty @name = N'MS_Description', @value = N'Acct''s Account_id', @level0type = N'SCHEMA', @level0name = N'dbo', @level1type = N'TABLE', @level1name = N'patbill_enctr', @level2type = N'COLUMN', @level2name = N'pft_encntr_id';
+

@@ -41,14 +41,14 @@ namespace LabBilling.Core.DataAccess
 
         public IEnumerable<UserProfile> GetRecentAccount(string user, int numEntries = 10)
         {
-            string select = "select TOP " + numEntries + " *";
+            string select = "TOP " + numEntries + " *";
 
             var command = PetaPoco.Sql.Builder
-                .Append(select)
-                .Append("from UserProfile")
-                .Append("where UserName = @0 ", user)
-                .Append("and Parameter = @0", "RecentAccount")
-                .Append("order by ModDate desc");
+                .Select(select)
+                .From("UserProfile")
+                .Where("UserName = @0 ", user)
+                .Where("Parameter = @0", "RecentAccount")
+                .OrderBy("ModDate desc");
 
             return dbConnection.Fetch<UserProfile>(command);
         }

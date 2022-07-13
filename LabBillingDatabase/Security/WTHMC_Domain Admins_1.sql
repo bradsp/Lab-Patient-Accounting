@@ -1,0 +1,3 @@
+﻿CREATE LOGIN [WTHMC\Domain Admins]
+    FROM WINDOWS WITH DEFAULT_LANGUAGE = [us_english];
+

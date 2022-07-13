@@ -1,12 +1,24 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Text.RegularExpressions;
 
 namespace RFClassLibrary
 {
+    /// <summary>
+    /// DateTime Helper methods
+    /// </summary>
+    public static class DateTimeHelper
+    {
+        /// <summary>
+        /// Returns a datetime object for yesterday at the same time.
+        /// </summary>
+        /// <returns>Yesterday date at same time.</returns>
+        public static DateTime Yesterday()
+        {
+
+            return DateTime.Now.AddDays(-1);
+        }
+    }
+
 
     /// <summary>
     /// Extension methods for DateTime
@@ -27,7 +39,7 @@ namespace RFClassLibrary
             Regex rgx = new Regex(pattern);
             Match m = rgx.Match(expression);
 
-            if(m.Success)
+            if (m.Success)
             {
                 if (expression == "T" || expression == "t")
                 {
@@ -82,9 +94,10 @@ namespace RFClassLibrary
         /// <summary>
         /// Takes a date string and parses the date.
         /// </summary>
+        /// <param name="dateTime"></param>
         /// <param name="datestring"></param>
         /// <returns>Valid dates are returned as DateTime. Invalid date returns DateTime.MinValue</returns>
-        public static DateTime ValidateDate(string datestring)
+        public static DateTime ValidateDate(this DateTime dateTime, string datestring)
         {
             DateTime dt;
             if (DateTime.TryParse(datestring, out dt))
@@ -93,6 +106,107 @@ namespace RFClassLibrary
                 return DateTime.MinValue;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="currentDate"></param>
+        /// <param name="weeks"></param>
+        /// <returns></returns>
+        public static DateTime AddWeeks(this DateTime currentDate, int weeks)
+        {
+            return DateTime.Now.AddDays(weeks * 7);
+        }
+
+        /// <summary>
+        /// Gets the last date of the month of the DateTime.
+        /// </summary>
+        /// <param name="dateTime"></param>
+        /// <returns></returns>
+        public static DateTime GetLastDayOfMonth(this DateTime dateTime)
+        {
+            return new DateTime(dateTime.Year, dateTime.Month, 1).AddMonths(1).AddDays(-1);
+        }
+
+        /// <summary>
+        /// Returns datetime corresponding to last day of the month
+        /// </summary>
+        /// <param name="date"></param>
+        /// <returns></returns>
+        public static DateTime EndOfTheMonth(this DateTime date)
+        {
+            var endOfTheMonth = new DateTime(date.Year, date.Month, 1)
+                .AddMonths(1)
+                .AddDays(-1);
+
+            return endOfTheMonth;
+        }
+
+        /// <summary>
+        /// Adds time to existing DateTime
+        /// </summary>
+        /// <param name="date"></param>
+        /// <param name="hour"></param>
+        /// <param name="minutes"></param>
+        /// <returns></returns>
+        public static DateTime AddTime(this DateTime date, int hour, int minutes)
+        {
+            return date + new TimeSpan(hour, minutes, 0);
+        }
+
+        /// <summary>
+        /// Inspiration for this extension method was another DateTime extension that determines difference in current time and a DateTime object. That one returned a string and it is more useful for my applications to have a TimeSpan reference instead. That is what I did with this extension method.
+        /// </summary>
+        /// <param name="date"></param>
+        /// <returns></returns>
+        public static TimeSpan TimeElapsed(this DateTime date)
+        {
+            return DateTime.Now - date;
+        }
+
+        /// <summary>
+        /// Prints out a nullable datetime's value (if its not null) in the string format specified as a parameter. A final parameter is specified for what to print if the nullable datetime was, in fact, null.
+        /// </summary>
+        /// <param name="dt"></param>
+        /// <param name="format"></param>
+        /// <param name="nullResult"></param>
+        /// <returns></returns>
+        public static string NullDateToString(this DateTime? dt, string format = "M/d/yyyy", string nullResult = "")
+        {
+            if (dt.HasValue)
+                return dt.Value.ToString(format);
+            else
+                return nullResult;
+        }
+
+        /// <summary>
+        /// Returns datetime corresponding to first day of the month
+        /// </summary>
+        /// <param name="date"></param>
+        /// <returns></returns>
+        public static DateTime BeginningOfTheMonth(this DateTime date)
+        {
+            return new DateTime(date.Year, date.Month, 1);
+        }
+
+        /// <summary>
+        /// Returns datetime corresponding to day beginning
+        /// </summary>
+        /// <param name="date"></param>
+        /// <returns></returns>
+        public static DateTime BeginningOfTheDay(this DateTime date)
+        {
+            return new DateTime(date.Year, date.Month, date.Day);
+        }
+
+        /// <summary>
+        /// Returns whether the given date is the last day of the month.
+        /// </summary>
+        /// <param name="dateTime"></param>
+        /// <returns></returns>
+        public static bool IsLastDayOfTheMonth(this DateTime dateTime)
+        {
+            return dateTime == new DateTime(dateTime.Year, dateTime.Month, 1).AddMonths(1).AddDays(-1);
+        }
 
     }
 }

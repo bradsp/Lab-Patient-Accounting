@@ -1,0 +1,2 @@
+﻿CREATE USER [WTHMC\Outreach] FOR LOGIN [WTHMC\Outreach];
+

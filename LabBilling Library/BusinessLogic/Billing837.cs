@@ -479,7 +479,7 @@ namespace LabBilling.Core
                     ediDocument.Segments.Add(new EdiSegment("AMT")
                     {
                         [01] = "F5",
-                        [02] = claim.PatientAmountPaid.ToString()
+                        [02] = claim.PatientAmountPaid.ToString("c")
                     });
                     segmentCount++;
                 }

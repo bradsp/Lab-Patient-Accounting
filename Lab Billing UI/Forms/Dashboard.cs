@@ -133,7 +133,7 @@ namespace LabBilling
                 {
                     LinkLabel a1 = new LinkLabel { Text = ar.pat_name, Tag = up.ParameterData };
                     a1.LinkClicked += new LinkLabelLinkClickedEventHandler(RecentLabelClicked);
-                    tlpRecentAccounts.Controls.Add(a1, 0, 0);
+                    tlpRecentAccounts.Controls.Add(a1);
                     a1.Dock = DockStyle.Fill;
                 }
             }

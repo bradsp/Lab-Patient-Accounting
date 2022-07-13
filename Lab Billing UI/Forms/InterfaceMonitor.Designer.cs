@@ -37,6 +37,11 @@ namespace LabBilling.Forms
             this.label1 = new System.Windows.Forms.Label();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.hl7Message = new System.Windows.Forms.TextBox();
+            this.FromDate = new System.Windows.Forms.DateTimePicker();
+            this.ThruDate = new System.Windows.Forms.DateTimePicker();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.FilterButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.MessagesGrid)).BeginInit();
             this.GridContextMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -129,11 +134,62 @@ namespace LabBilling.Forms
             this.hl7Message.TabIndex = 0;
             this.hl7Message.WordWrap = false;
             // 
+            // FromDate
+            // 
+            this.FromDate.CustomFormat = "M/d/yy HH:mm";
+            this.FromDate.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
+            this.FromDate.Location = new System.Drawing.Point(378, 13);
+            this.FromDate.Name = "FromDate";
+            this.FromDate.Size = new System.Drawing.Size(145, 20);
+            this.FromDate.TabIndex = 5;
+            // 
+            // ThruDate
+            // 
+            this.ThruDate.CustomFormat = "M/d/yy HH:mm";
+            this.ThruDate.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
+            this.ThruDate.Location = new System.Drawing.Point(551, 13);
+            this.ThruDate.Name = "ThruDate";
+            this.ThruDate.Size = new System.Drawing.Size(142, 20);
+            this.ThruDate.TabIndex = 5;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(307, 16);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(65, 13);
+            this.label2.TabIndex = 6;
+            this.label2.Text = "Date Range";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(529, 16);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(16, 13);
+            this.label3.TabIndex = 7;
+            this.label3.Text = " - ";
+            // 
+            // FilterButton
+            // 
+            this.FilterButton.Location = new System.Drawing.Point(699, 13);
+            this.FilterButton.Name = "FilterButton";
+            this.FilterButton.Size = new System.Drawing.Size(75, 23);
+            this.FilterButton.TabIndex = 8;
+            this.FilterButton.Text = "Filter";
+            this.FilterButton.UseVisualStyleBackColor = true;
+            this.FilterButton.Click += new System.EventHandler(this.FilterButton_Click);
+            // 
             // InterfaceMonitor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1213, 707);
+            this.Controls.Add(this.FilterButton);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.ThruDate);
+            this.Controls.Add(this.FromDate);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.MessageTypeSelect);
@@ -161,5 +217,10 @@ namespace LabBilling.Forms
         private System.Windows.Forms.TextBox hl7Message;
         private System.Windows.Forms.ContextMenuStrip GridContextMenu;
         private System.Windows.Forms.ToolStripMenuItem ReprocessMessage;
+        private System.Windows.Forms.DateTimePicker FromDate;
+        private System.Windows.Forms.DateTimePicker ThruDate;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Button FilterButton;
     }
 }

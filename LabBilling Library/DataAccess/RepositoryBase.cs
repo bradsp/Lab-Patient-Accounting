@@ -16,7 +16,7 @@ namespace LabBilling.Core.DataAccess
     /// <typeparam name="T"></typeparam>
     public abstract class RepositoryBase<T> where T : IBaseEntity
     {
-        protected PetaPoco.Database dbConnection = null; 
+        protected readonly PetaPoco.Database dbConnection = null; 
         protected readonly string _tableName;
         protected IList<string> _fields;
         /// <summary>
@@ -147,5 +147,21 @@ namespace LabBilling.Core.DataAccess
             Log.Instance.Trace("Exiting");
             return count > 0;
         }
+
+        public virtual void BeginTransaction()
+        {
+            dbConnection.BeginTransaction();
+        }
+
+        public virtual void CompleteTransaction()
+        {
+            dbConnection.CompleteTransaction();
+        }
+
+        public virtual void AbortTransaction()
+        {
+            dbConnection.AbortTransaction();
+        }
+        
     }
 }

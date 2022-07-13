@@ -115,7 +115,7 @@ namespace LabBilling.Forms
                 }
                 else
                 {
-                    MessageBox.Show("Error saving batch");
+                    MessageBox.Show("Error saving batch", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             else
@@ -123,7 +123,7 @@ namespace LabBilling.Forms
                 // add new batch
                 if ((int)chkBatchRepository.Add(chkBatch) > 0)
                 {
-                    MessageBox.Show("Batch saved");
+                    MessageBox.Show("Batch saved", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     //ToDo: Clear entry screen for next batch
                     Clear();
                 }
@@ -161,7 +161,6 @@ namespace LabBilling.Forms
                 values[2] = batch.User;
                 chkBatchDataTable.Rows.Add(values);
             }
-            OpenBatch.Items.Clear();
             OpenBatch.DataSource = chkBatchDataTable;
             OpenBatch.DisplayMember = "BatchDate";
             OpenBatch.ValueMember = "BatchNo";
@@ -174,7 +173,7 @@ namespace LabBilling.Forms
             Log.Instance.Trace($"Entering");
 
             List<Chk> chks = new List<Chk>();
-
+            chkdb.BeginTransaction();
             foreach(DataGridViewRow row in dgvPayments.Rows)
             {
                 if (row.IsNewRow)
@@ -197,16 +196,20 @@ namespace LabBilling.Forms
                 chk.write_off_code = row.Cells["WriteOffCode"].Value?.ToString();
                 chk.write_off = Double.TryParse(row.Cells["WriteOff"].Value?.ToString(), out temp) ? temp : 0.00;
                 chk.source = row.Cells["PaymentSource"].Value.ToString();
-
-                chks.Add(chk);
+                try
+                {
+                    chks.Add(chk);
+                }
+                catch (Exception ex)
+                {
+                    Log.Instance.Error("Error posting pmt/adj batch.", ex);
+                    MessageBox.Show("Batch failed to post.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
 
-            if(!chkdb.AddBatch(chks))
+            try
             {
-                MessageBox.Show("Batch failed to post.");
-            }
-            else
-            {
+                chkdb.AddBatch(chks);
                 //if this was a saved batch, delete the batch record
                 if (OpenBatch.SelectedIndex > 0)
                 {
@@ -214,9 +217,16 @@ namespace LabBilling.Forms
                     chkBatchRepository.Delete(chkBatch);
                     LoadOpenBatches();
                 }
+                chkdb.CompleteTransaction();
                 //clear entry screen for next batch
                 Clear();
             }
+            catch (Exception ex)
+            {
+                Log.Instance.Error($"Error posting payment batch", ex);
+                MessageBox.Show("Error occurred. Batch not posted.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
         }
 
         private void Clear()
@@ -420,7 +430,32 @@ namespace LabBilling.Forms
 
         private void DeleteBatch_Click(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            if (OpenBatch.SelectedIndex > 0)
+            {
+                if (MessageBox.Show($"Batch {OpenBatch.SelectedValue} will be permanently deleted. This cannot be undone. Delete?", "Confirm Batch Delete",
+                    MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                {
+                    try
+                    {
+                        ChkBatch chkBatch = chkBatchRepository.GetById(Convert.ToInt32(OpenBatch.SelectedValue));
+                        if (chkBatch != null)
+                        {
+                            chkBatchRepository.Delete(chkBatch);
+                            Clear();
+                        }
+                        else
+                        {
+                            MessageBox.Show($"Batch {OpenBatch.SelectedValue} not found.", "Batch Not Found", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Instance.Error($"Error deleting payment batch {OpenBatch.SelectedValue}", ex);
+                        MessageBox.Show("Error occurred. Batch not deleted.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                    LoadOpenBatches();
+                }
+            }
         }
 
         private void OpenBatch_SelectedValueChanged(object sender, EventArgs e)

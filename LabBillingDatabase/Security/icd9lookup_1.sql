@@ -1,0 +1,3 @@
+﻿CREATE LOGIN [icd9lookup]
+    WITH PASSWORD = N'nqmwb{fj%A|icdiazlcfmidqmsFT7_&#$!~<zgedzoQlumhc', SID = 0xB51C40BBF9866742954822411147B786, DEFAULT_DATABASE = [MCLLIVE], DEFAULT_LANGUAGE = [us_english], CHECK_POLICY = OFF;
+

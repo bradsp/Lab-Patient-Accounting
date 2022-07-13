@@ -404,6 +404,10 @@ namespace LabBilling.Forms
             tbBannerDob.Text = currentAccount.Pat.dob_yyyy.Value.ToShortDateString();
             tbBannerSex.Text = currentAccount.Pat.sex;
             tbBannerMRN.Text = currentAccount.mri;
+
+            lblTotalCharges.Text = currentAccount.TotalCharges.ToString("c");
+            lblTotalPmtAdj.Text = (currentAccount.TotalContractual + currentAccount.TotalPayments + currentAccount.TotalWriteOff).ToString("c");
+            lblBalance.Text = currentAccount.Balance.ToString("c");
             
             if (!Str.ParseName(currentAccount.pat_name, out string strLname, out string strFname, out string strMidName, out string strSuffix))
             {
@@ -1818,5 +1822,7 @@ namespace LabBilling.Forms
             }
 
         }
+
+
     }
 }

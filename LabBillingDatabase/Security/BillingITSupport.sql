@@ -1,0 +1,11 @@
+﻿CREATE ROLE [BillingITSupport]
+    AUTHORIZATION [dbo];
+
+
+GO
+ALTER ROLE [BillingITSupport] ADD MEMBER [WTHMC\LISANALYSTS];
+
+
+GO
+ALTER ROLE [BillingITSupport] ADD MEMBER [WTHMC\Domain Admins];
+

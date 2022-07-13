@@ -1,0 +1,13 @@
+﻿/****** Object:  Stored Procedure dbo.update_stats    Script Date: 9/19/2001 10:47:26 AM ******/
+CREATE PROCEDURE [dbo].[update_stats] AS
+UPDATE STATISTICS acc
+UPDATE STATISTICS pat
+UPDATE STATISTICS ins
+UPDATE STATISTICS chrg
+UPDATE STATISTICS amt
+UPDATE STATISTICS acc_comment
+UPDATE STATISTICS chk
+UPDATE STATISTICS chrg_err
+UPDATE STATISTICS abn
+UPDATE STATISTICS chrg_rev_trk
+UPDATE STATISTICS chrg_pa

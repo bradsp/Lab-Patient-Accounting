@@ -47,7 +47,7 @@ namespace LabBilling.Core.BusinessLogic
             dBserverName = (string)dbConnectionStringBuilder["Server"];
             dBName = (string)dbConnectionStringBuilder["Database"];
 
-            db = new Database(connectionString, new SqlServerDatabaseProvider());
+            db = new Database(connectionString, new CustomSqlDatabaseProvider());
 
             parametersdb = new SystemParametersRepository(_connectionString, db);
 
@@ -187,7 +187,7 @@ namespace LabBilling.Core.BusinessLogic
                 claimData.BillingProviderZipCode = parametersdb.GetByKey("billing_entity_zip");
                 claimData.BillingProviderCountry = parametersdb.GetByKey("billing_entity_country");
                 claimData.BillingProviderTaxId = parametersdb.GetByKey("fed_tax_id");
-                claimData.BillingProviderUPIN = "";
+                claimData.BillingProviderUPIN = String.Empty;
                 claimData.BillingProviderNPI = parametersdb.GetByKey("wth_npi");
                 claimData.BillingProviderContactName = parametersdb.GetByKey("billing_contact");
                 claimData.BillingProviderContactPhone = parametersdb.GetByKey("billing_phone");
@@ -267,15 +267,15 @@ namespace LabBilling.Core.BusinessLogic
                         default:
                             throw new InvalidParameterValueException();
                     }
-                    subscriber.IndividualRelationshipCode = ins.Relation == "01" ? "18" : "";
+                    subscriber.IndividualRelationshipCode = ins.Relation == "01" ? "18" : String.Empty;
                     subscriber.ReferenceIdentification = ins.GroupNumber;
                     subscriber.PlanName = string.IsNullOrEmpty(ins.GroupName) ? ins.PlanName : ins.GroupName;
 
                     subscriber.LastName = ins.HolderLastName;
                     subscriber.FirstName = ins.HolderFirstName;
                     subscriber.MiddleName = ins.HolderMiddleName;
-                    subscriber.NameSuffix = "";
-                    subscriber.NamePrefix = "";
+                    subscriber.NameSuffix = String.Empty;
+                    subscriber.NamePrefix = String.Empty;
                     subscriber.PrimaryIdentifier = ins.PolicyNumber;
                     subscriber.DateOfBirth = ins.HolderBirthDate;
                     subscriber.Gender = ins.HolderSex;

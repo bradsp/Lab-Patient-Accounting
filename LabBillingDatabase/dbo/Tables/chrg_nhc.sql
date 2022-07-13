@@ -1,0 +1,26 @@
+﻿CREATE TABLE [dbo].[chrg_nhc] (
+    [rowguid]      UNIQUEIDENTIFIER NOT NULL,
+    [credited]     BIT              NOT NULL,
+    [chrg_num]     NUMERIC (15)     IDENTITY (1, 1) NOT NULL,
+    [account]      VARCHAR (15)     NULL,
+    [status]       VARCHAR (15)     NULL,
+    [service_date] DATETIME         NULL,
+    [hist_date]    DATETIME         NULL,
+    [cdm]          VARCHAR (7)      NULL,
+    [qty]          NUMERIC (4)      NULL,
+    [retail]       MONEY            NULL,
+    [inp_price]    MONEY            NULL,
+    [comment]      VARCHAR (50)     NULL,
+    [invoice]      VARCHAR (15)     NULL,
+    [mod_date]     DATETIME         NULL,
+    [mod_user]     VARCHAR (50)     NULL,
+    [mod_prg]      VARCHAR (50)     NULL,
+    [net_amt]      MONEY            NULL,
+    [fin_type]     VARCHAR (1)      NULL,
+    [mod_host]     VARCHAR (50)     NULL,
+    [mt_req_no]    VARCHAR (50)     NULL,
+    [post_date]    DATETIME         NULL,
+    [fin_code]     VARCHAR (50)     NULL,
+    CONSTRAINT [PK_chrg_nhc] PRIMARY KEY CLUSTERED ([chrg_num] ASC) WITH (FILLFACTOR = 90)
+);
+

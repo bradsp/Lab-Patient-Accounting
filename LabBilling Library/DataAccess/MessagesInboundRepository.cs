@@ -27,5 +27,15 @@ namespace LabBilling.Core.DataAccess
             return (record);
 
         }
+
+        /// <summary>
+        /// Reprocess a DFT HL7 message
+        /// </summary>
+        /// <param name="msgID"></param>
+        /// <returns></returns>
+        public int ReprocessDFTMessage(int msgID)
+        {
+            return dbConnection.ExecuteNonQueryProc("usp_cerner_chrg_reprocess", new { @msgID = msgID });
+        }
     }
 }

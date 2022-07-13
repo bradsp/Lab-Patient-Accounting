@@ -27,7 +27,7 @@ namespace LabBilling.Core.DataAccess
         {
             Log.Instance.Debug("$Entering");
 
-            var records = dbConnection.Fetch<Ins>("where account = @0", account);
+            var records = dbConnection.Fetch<Ins>("where account = @0 order by ins_a_b_c", account);
 
             foreach(Ins ins in records)
             {
