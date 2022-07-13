@@ -4,13 +4,11 @@ using LabBilling.Logging;
 
 namespace LabBilling.Forms
 {
-    public partial class AccountForm
-    {
         #region SummaryData Class
         /// <summary>
         /// Class to group data in sections for placement in a panel
         /// </summary>
-        private class SummaryData
+        public class SummaryData
         {
             public string Label { get; set; }
             public string Value { get; set; }
@@ -69,6 +67,17 @@ namespace LabBilling.Forms
             }
         }
         #endregion
- 
-    }
+
+        //private void InitializeComponent()
+        //{
+        //    this.SuspendLayout();
+
+        //    AccountForm
+
+
+        //    this.ClientSize = new System.Drawing.Size(539, 322);
+        //    this.Name = "AccountForm";
+        //    this.ResumeLayout(false);
+
+        //}
 }

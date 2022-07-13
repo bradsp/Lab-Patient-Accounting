@@ -44,9 +44,9 @@
             this.tsbPrint,
             this.toolStripSeparator1,
             this.tsbClose});
-            this.tsMain.Location = new System.Drawing.Point(0, 0);
+            this.tsMain.Location = new System.Drawing.Point(20, 60);
             this.tsMain.Name = "tsMain";
-            this.tsMain.Size = new System.Drawing.Size(292, 25);
+            this.tsMain.Size = new System.Drawing.Size(349, 25);
             this.tsMain.TabIndex = 0;
             this.tsMain.Text = "toolStrip1";
             // 
@@ -79,22 +79,22 @@
             // rtbErrors
             // 
             this.rtbErrors.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.rtbErrors.Location = new System.Drawing.Point(0, 25);
+            this.rtbErrors.Location = new System.Drawing.Point(20, 85);
             this.rtbErrors.Name = "rtbErrors";
             this.rtbErrors.ReadOnly = true;
-            this.rtbErrors.Size = new System.Drawing.Size(292, 241);
+            this.rtbErrors.Size = new System.Drawing.Size(349, 234);
             this.rtbErrors.TabIndex = 1;
             this.rtbErrors.Text = "";
             // 
-            // frmErrors
+            // ErrorsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(292, 266);
+            this.ClientSize = new System.Drawing.Size(389, 339);
             this.ControlBox = false;
             this.Controls.Add(this.rtbErrors);
             this.Controls.Add(this.tsMain);
-            this.Name = "frmErrors";
+            this.Name = "ErrorsForm";
             this.Text = "Errors";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmErrors_FormClosing);
             this.Load += new System.EventHandler(this.frmErrors_Load);

@@ -1336,10 +1336,6 @@
       <AnsiNulls>On</AnsiNulls>
       <QuotedIdentifier>On</QuotedIdentifier>
     </Build>
-    <Build Include="dbo\Views\Billed Test Counts.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
     <Build Include="dbo\Views\vw_billing_activity.sql">
       <AnsiNulls>On</AnsiNulls>
       <QuotedIdentifier>On</QuotedIdentifier>
@@ -1666,10 +1662,6 @@
       <AnsiNulls>On</AnsiNulls>
       <QuotedIdentifier>On</QuotedIdentifier>
     </Build>
-    <Build Include="dbo\Views\vw_ssi_batch_list.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
     <Build Include="dbo\Views\vw_prg_client_cdm_byMonth_2004.sql">
       <AnsiNulls>On</AnsiNulls>
       <QuotedIdentifier>On</QuotedIdentifier>
@@ -1792,16 +1784,8 @@
       <AnsiNulls>On</AnsiNulls>
       <QuotedIdentifier>On</QuotedIdentifier>
     </Build>
-    <Build Include="dbo\Views\vw_prg_business_plan_3rdParty_rollup.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
     <Build Include="dbo\Views\vw_net_amt.sql" />
     <Build Include="dbo\Views\vw_ins_acc_pat_cnb.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="dbo\Views\vw_prg_BusinessPlan_TestCounts_rollup.sql">
       <AnsiNulls>On</AnsiNulls>
       <QuotedIdentifier>On</QuotedIdentifier>
     </Build>
@@ -1870,10 +1854,6 @@
       <AnsiNulls>On</AnsiNulls>
       <QuotedIdentifier>On</QuotedIdentifier>
     </Build>
-    <Build Include="dbo\Views\vw_cdm_cost_cnb.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
     <Build Include="dbo\Views\vw_chk_bal.sql" />
     <Build Include="dbo\Views\vw_UOS_cnb.sql">
       <AnsiNulls>On</AnsiNulls>
@@ -1909,10 +1889,6 @@
     </Build>
     <Build Include="dbo\Views\vw_cdm_with_del_2.sql">
       <AnsiNulls>On</AnsiNulls>
-    </Build>
-    <Build Include="dbo\Views\vw_reg_test_cnb.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
     </Build>
     <Build Include="dbo\Views\vw_chrg_bal_test.sql">
       <AnsiNulls>On</AnsiNulls>
@@ -1985,7 +1961,6 @@
     <Build Include="Security\BillingDictionaryEdit.sql" />
     <Build Include="Security\BillingITSupport.sql" />
     <Build Include="Security\ANALYST.sql" />
-    <Build Include="Security\paperwise.sql" />
     <Build Include="Security\WTHMC_Pathology.sql" />
     <Build Include="Security\WTHMC_Pathology_1.sql" />
     <Build Include="Security\WTHMC_Outreach.sql" />
@@ -1998,23 +1973,14 @@
     <Build Include="Security\interface_1.sql" />
     <Build Include="Security\WTHMC_WTHMCLBILL_.sql" />
     <Build Include="Security\WTHMC_WTHMCLBILL__1.sql" />
-    <Build Include="Security\WTHMC_chburton.sql" />
-    <Build Include="Security\WTHMC_chburton_1.sql" />
     <Build Include="Security\WTHMC_mclbill.sql" />
     <Build Include="Security\WTHMC_mclbill_1.sql" />
-    <Build Include="Security\bpowers.sql" />
-    <Build Include="Security\csellars.sql" />
     <Build Include="Security\infce.sql" />
     <Build Include="Security\infce_1.sql" />
     <Build Include="Security\psainfce.sql" />
     <Build Include="Security\psainfce_1.sql" />
     <Build Include="Security\WTHMC_mcl_sqlManager.sql" />
     <Build Include="Security\WTHMC_mcl_sqlManager_1.sql" />
-    <Build Include="Security\WTHMC_MCLINET_.sql" />
-    <Build Include="Security\WTHMC_MCLINET__1.sql" />
-    <Build Include="Security\autoservice.sql" />
-    <Build Include="Security\WTHMC_bpowers.sql" />
-    <Build Include="Security\WTHMC_bpowers_1.sql" />
     <Build Include="Security\WTHMC_LISANALYSTS.sql" />
     <Build Include="Security\WTHMC_LISANALYSTS_1.sql" />
     <Build Include="Security\WTHMC_Domain Admins.sql" />
@@ -2069,10 +2035,6 @@
       <QuotedIdentifier>On</QuotedIdentifier>
     </Build>
     <Build Include="dbo\Functions\GetAmountTotal.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="dbo\Functions\GetNewFeeSchedPrice.sql">
       <AnsiNulls>On</AnsiNulls>
       <QuotedIdentifier>On</QuotedIdentifier>
     </Build>
@@ -2413,10 +2375,6 @@
       <QuotedIdentifier>On</QuotedIdentifier>
     </Build>
     <Build Include="dbo\Functions\GetInvoiceCharges.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="dbo\Functions\GetAccMcloeDiagnosis.sql">
       <AnsiNulls>On</AnsiNulls>
       <QuotedIdentifier>On</QuotedIdentifier>
     </Build>
@@ -3193,5 +3151,17 @@
       <SqlOwnerName>dbo</SqlOwnerName>
       <SqlPermissionSet>SAFE</SqlPermissionSet>
     </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ArtifactReference Include="C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\Extensions\Microsoft\SQLDB\Extensions\SqlServer\120\SQLSchemas\master.dacpac">
+      <HintPath>C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\Extensions\Microsoft\SQLDB\Extensions\SqlServer\120\SQLSchemas\master.dacpac</HintPath>
+      <DatabaseSqlCmdVariable>master</DatabaseSqlCmdVariable>
+    </ArtifactReference>
+  </ItemGroup>
+  <ItemGroup>
+    <SqlCmdVariable Include="master">
+      <DefaultValue>master</DefaultValue>
+      <Value>$(SqlCmdVar__1)</Value>
+    </SqlCmdVariable>
   </ItemGroup>
 </Project>

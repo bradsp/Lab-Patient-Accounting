@@ -6,6 +6,6 @@ select chrg.chrg_num,chrg.account,acc.cl_mnem,chrg.cdm,chrg.status,chrg.qty,chrg
 from acc JOIN chrg on acc.account = chrg.account
 JOIN amt on chrg.chrg_num = amt.chrg_num
 where amt.type <> 'N/A' and chrg.invoice between '4262' and '4412'
-	and fin_code <> 'W' and chrg.cdm <> 'CBILL'
+	and acc.fin_code <> 'W' and chrg.cdm <> 'CBILL'
 group by chrg.account,chrg.cdm,chrg.status,chrg.qty,chrg.service_date,chrg.retail,
 	chrg.chrg_num,acc.cl_mnem

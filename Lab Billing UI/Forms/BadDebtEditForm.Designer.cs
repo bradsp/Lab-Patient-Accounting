@@ -79,7 +79,7 @@ namespace LabBilling.Forms
             // 
             // PatientName
             // 
-            this.PatientName.Location = new System.Drawing.Point(472, 53);
+            this.PatientName.Location = new System.Drawing.Point(485, 87);
             this.PatientName.Name = "PatientName";
             this.PatientName.Size = new System.Drawing.Size(267, 20);
             this.PatientName.TabIndex = 25;
@@ -87,7 +87,7 @@ namespace LabBilling.Forms
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(387, 56);
+            this.label1.Location = new System.Drawing.Point(400, 90);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(71, 13);
             this.label1.TabIndex = 24;
@@ -95,7 +95,7 @@ namespace LabBilling.Forms
             // 
             // FirstName
             // 
-            this.FirstName.Location = new System.Drawing.Point(98, 53);
+            this.FirstName.Location = new System.Drawing.Point(111, 87);
             this.FirstName.Name = "FirstName";
             this.FirstName.Size = new System.Drawing.Size(267, 20);
             this.FirstName.TabIndex = 3;
@@ -103,7 +103,7 @@ namespace LabBilling.Forms
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(13, 56);
+            this.label2.Location = new System.Drawing.Point(26, 90);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(57, 13);
             this.label2.TabIndex = 2;
@@ -111,7 +111,7 @@ namespace LabBilling.Forms
             // 
             // Address1
             // 
-            this.Address1.Location = new System.Drawing.Point(98, 79);
+            this.Address1.Location = new System.Drawing.Point(111, 113);
             this.Address1.Name = "Address1";
             this.Address1.Size = new System.Drawing.Size(267, 20);
             this.Address1.TabIndex = 5;
@@ -119,7 +119,7 @@ namespace LabBilling.Forms
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(13, 82);
+            this.label3.Location = new System.Drawing.Point(26, 116);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(54, 13);
             this.label3.TabIndex = 4;
@@ -127,7 +127,7 @@ namespace LabBilling.Forms
             // 
             // Address2
             // 
-            this.Address2.Location = new System.Drawing.Point(98, 105);
+            this.Address2.Location = new System.Drawing.Point(111, 139);
             this.Address2.Name = "Address2";
             this.Address2.Size = new System.Drawing.Size(267, 20);
             this.Address2.TabIndex = 7;
@@ -135,7 +135,7 @@ namespace LabBilling.Forms
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(13, 108);
+            this.label4.Location = new System.Drawing.Point(26, 142);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(54, 13);
             this.label4.TabIndex = 6;
@@ -143,7 +143,7 @@ namespace LabBilling.Forms
             // 
             // City
             // 
-            this.City.Location = new System.Drawing.Point(98, 131);
+            this.City.Location = new System.Drawing.Point(111, 165);
             this.City.Name = "City";
             this.City.Size = new System.Drawing.Size(267, 20);
             this.City.TabIndex = 9;
@@ -151,7 +151,7 @@ namespace LabBilling.Forms
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(13, 134);
+            this.label5.Location = new System.Drawing.Point(26, 168);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(24, 13);
             this.label5.TabIndex = 8;
@@ -159,7 +159,7 @@ namespace LabBilling.Forms
             // 
             // State
             // 
-            this.State.Location = new System.Drawing.Point(98, 157);
+            this.State.Location = new System.Drawing.Point(111, 191);
             this.State.Name = "State";
             this.State.Size = new System.Drawing.Size(267, 20);
             this.State.TabIndex = 11;
@@ -167,7 +167,7 @@ namespace LabBilling.Forms
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(13, 160);
+            this.label6.Location = new System.Drawing.Point(26, 194);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(32, 13);
             this.label6.TabIndex = 10;
@@ -176,7 +176,7 @@ namespace LabBilling.Forms
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(13, 186);
+            this.label7.Location = new System.Drawing.Point(26, 220);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(50, 13);
             this.label7.TabIndex = 12;
@@ -184,7 +184,7 @@ namespace LabBilling.Forms
             // 
             // Spouse
             // 
-            this.Spouse.Location = new System.Drawing.Point(98, 209);
+            this.Spouse.Location = new System.Drawing.Point(111, 243);
             this.Spouse.Name = "Spouse";
             this.Spouse.Size = new System.Drawing.Size(267, 20);
             this.Spouse.TabIndex = 15;
@@ -192,7 +192,7 @@ namespace LabBilling.Forms
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(13, 212);
+            this.label8.Location = new System.Drawing.Point(26, 246);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(43, 13);
             this.label8.TabIndex = 14;
@@ -200,7 +200,7 @@ namespace LabBilling.Forms
             // 
             // Phone
             // 
-            this.Phone.Location = new System.Drawing.Point(98, 235);
+            this.Phone.Location = new System.Drawing.Point(111, 269);
             this.Phone.Name = "Phone";
             this.Phone.Size = new System.Drawing.Size(267, 20);
             this.Phone.TabIndex = 17;
@@ -208,7 +208,7 @@ namespace LabBilling.Forms
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(13, 238);
+            this.label9.Location = new System.Drawing.Point(26, 272);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(38, 13);
             this.label9.TabIndex = 16;
@@ -216,7 +216,7 @@ namespace LabBilling.Forms
             // 
             // License
             // 
-            this.License.Location = new System.Drawing.Point(98, 261);
+            this.License.Location = new System.Drawing.Point(111, 295);
             this.License.Name = "License";
             this.License.Size = new System.Drawing.Size(267, 20);
             this.License.TabIndex = 19;
@@ -224,7 +224,7 @@ namespace LabBilling.Forms
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(13, 264);
+            this.label10.Location = new System.Drawing.Point(26, 298);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(84, 13);
             this.label10.TabIndex = 18;
@@ -232,7 +232,7 @@ namespace LabBilling.Forms
             // 
             // Employment
             // 
-            this.Employment.Location = new System.Drawing.Point(98, 287);
+            this.Employment.Location = new System.Drawing.Point(111, 321);
             this.Employment.Name = "Employment";
             this.Employment.Size = new System.Drawing.Size(267, 20);
             this.Employment.TabIndex = 21;
@@ -240,7 +240,7 @@ namespace LabBilling.Forms
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(13, 290);
+            this.label11.Location = new System.Drawing.Point(26, 324);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(64, 13);
             this.label11.TabIndex = 20;
@@ -248,7 +248,7 @@ namespace LabBilling.Forms
             // 
             // Remarks
             // 
-            this.Remarks.Location = new System.Drawing.Point(472, 209);
+            this.Remarks.Location = new System.Drawing.Point(485, 243);
             this.Remarks.Name = "Remarks";
             this.Remarks.Size = new System.Drawing.Size(267, 20);
             this.Remarks.TabIndex = 35;
@@ -256,7 +256,7 @@ namespace LabBilling.Forms
             // label12
             // 
             this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(387, 212);
+            this.label12.Location = new System.Drawing.Point(400, 246);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(49, 13);
             this.label12.TabIndex = 34;
@@ -264,7 +264,7 @@ namespace LabBilling.Forms
             // 
             // Misc
             // 
-            this.Misc.Location = new System.Drawing.Point(472, 79);
+            this.Misc.Location = new System.Drawing.Point(485, 113);
             this.Misc.Name = "Misc";
             this.Misc.Size = new System.Drawing.Size(267, 20);
             this.Misc.TabIndex = 27;
@@ -272,7 +272,7 @@ namespace LabBilling.Forms
             // label13
             // 
             this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(387, 82);
+            this.label13.Location = new System.Drawing.Point(400, 116);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(29, 13);
             this.label13.TabIndex = 26;
@@ -281,7 +281,7 @@ namespace LabBilling.Forms
             // label14
             // 
             this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(387, 108);
+            this.label14.Location = new System.Drawing.Point(400, 142);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(46, 13);
             this.label14.TabIndex = 28;
@@ -289,7 +289,7 @@ namespace LabBilling.Forms
             // 
             // ServiceDate
             // 
-            this.ServiceDate.Location = new System.Drawing.Point(472, 131);
+            this.ServiceDate.Location = new System.Drawing.Point(485, 165);
             this.ServiceDate.Mask = "00/00/0000";
             this.ServiceDate.Name = "ServiceDate";
             this.ServiceDate.Size = new System.Drawing.Size(100, 20);
@@ -299,7 +299,7 @@ namespace LabBilling.Forms
             // label15
             // 
             this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(387, 134);
+            this.label15.Location = new System.Drawing.Point(400, 168);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(69, 13);
             this.label15.TabIndex = 30;
@@ -308,7 +308,7 @@ namespace LabBilling.Forms
             // label16
             // 
             this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(387, 160);
+            this.label16.Location = new System.Drawing.Point(400, 194);
             this.label16.Name = "label16";
             this.label16.Size = new System.Drawing.Size(74, 13);
             this.label16.TabIndex = 32;
@@ -316,7 +316,7 @@ namespace LabBilling.Forms
             // 
             // PaymentDate
             // 
-            this.PaymentDate.Location = new System.Drawing.Point(472, 157);
+            this.PaymentDate.Location = new System.Drawing.Point(485, 191);
             this.PaymentDate.Mask = "00/00/0000";
             this.PaymentDate.Name = "PaymentDate";
             this.PaymentDate.Size = new System.Drawing.Size(100, 20);
@@ -325,7 +325,7 @@ namespace LabBilling.Forms
             // 
             // Balance
             // 
-            this.Balance.Location = new System.Drawing.Point(472, 105);
+            this.Balance.Location = new System.Drawing.Point(485, 139);
             this.Balance.Name = "Balance";
             this.Balance.Size = new System.Drawing.Size(267, 20);
             this.Balance.TabIndex = 29;
@@ -333,7 +333,7 @@ namespace LabBilling.Forms
             // label17
             // 
             this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(13, 361);
+            this.label17.Location = new System.Drawing.Point(26, 395);
             this.label17.Name = "label17";
             this.label17.Size = new System.Drawing.Size(70, 13);
             this.label17.TabIndex = 38;
@@ -341,7 +341,7 @@ namespace LabBilling.Forms
             // 
             // DateEntered
             // 
-            this.DateEntered.Location = new System.Drawing.Point(98, 358);
+            this.DateEntered.Location = new System.Drawing.Point(111, 392);
             this.DateEntered.Mask = "00/00/0000";
             this.DateEntered.Name = "DateEntered";
             this.DateEntered.ReadOnly = true;
@@ -352,7 +352,7 @@ namespace LabBilling.Forms
             // label18
             // 
             this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(13, 387);
+            this.label18.Location = new System.Drawing.Point(26, 421);
             this.label18.Name = "label18";
             this.label18.Size = new System.Drawing.Size(55, 13);
             this.label18.TabIndex = 40;
@@ -360,7 +360,7 @@ namespace LabBilling.Forms
             // 
             // DateSent
             // 
-            this.DateSent.Location = new System.Drawing.Point(98, 384);
+            this.DateSent.Location = new System.Drawing.Point(111, 418);
             this.DateSent.Mask = "00/00/0000";
             this.DateSent.Name = "DateSent";
             this.DateSent.ReadOnly = true;
@@ -370,7 +370,7 @@ namespace LabBilling.Forms
             // 
             // ZipCode
             // 
-            this.ZipCode.Location = new System.Drawing.Point(98, 183);
+            this.ZipCode.Location = new System.Drawing.Point(111, 217);
             this.ZipCode.Mask = "00000-9999";
             this.ZipCode.Name = "ZipCode";
             this.ZipCode.Size = new System.Drawing.Size(100, 20);
@@ -378,7 +378,7 @@ namespace LabBilling.Forms
             // 
             // AccountNo
             // 
-            this.AccountNo.Location = new System.Drawing.Point(472, 27);
+            this.AccountNo.Location = new System.Drawing.Point(485, 61);
             this.AccountNo.Name = "AccountNo";
             this.AccountNo.ReadOnly = true;
             this.AccountNo.Size = new System.Drawing.Size(122, 20);
@@ -387,7 +387,7 @@ namespace LabBilling.Forms
             // label19
             // 
             this.label19.AutoSize = true;
-            this.label19.Location = new System.Drawing.Point(387, 30);
+            this.label19.Location = new System.Drawing.Point(400, 64);
             this.label19.Name = "label19";
             this.label19.Size = new System.Drawing.Size(47, 13);
             this.label19.TabIndex = 22;
@@ -395,7 +395,7 @@ namespace LabBilling.Forms
             // 
             // Remarks2
             // 
-            this.Remarks2.Location = new System.Drawing.Point(472, 235);
+            this.Remarks2.Location = new System.Drawing.Point(485, 269);
             this.Remarks2.Name = "Remarks2";
             this.Remarks2.Size = new System.Drawing.Size(267, 20);
             this.Remarks2.TabIndex = 37;
@@ -403,7 +403,7 @@ namespace LabBilling.Forms
             // label20
             // 
             this.label20.AutoSize = true;
-            this.label20.Location = new System.Drawing.Point(387, 238);
+            this.label20.Location = new System.Drawing.Point(400, 272);
             this.label20.Name = "label20";
             this.label20.Size = new System.Drawing.Size(49, 13);
             this.label20.TabIndex = 36;
@@ -411,7 +411,7 @@ namespace LabBilling.Forms
             // 
             // LastName
             // 
-            this.LastName.Location = new System.Drawing.Point(98, 27);
+            this.LastName.Location = new System.Drawing.Point(111, 61);
             this.LastName.Name = "LastName";
             this.LastName.Size = new System.Drawing.Size(267, 20);
             this.LastName.TabIndex = 1;
@@ -419,7 +419,7 @@ namespace LabBilling.Forms
             // label21
             // 
             this.label21.AutoSize = true;
-            this.label21.Location = new System.Drawing.Point(13, 30);
+            this.label21.Location = new System.Drawing.Point(26, 64);
             this.label21.Name = "label21";
             this.label21.Size = new System.Drawing.Size(58, 13);
             this.label21.TabIndex = 0;
@@ -427,7 +427,7 @@ namespace LabBilling.Forms
             // 
             // Save
             // 
-            this.Save.Location = new System.Drawing.Point(611, 390);
+            this.Save.Location = new System.Drawing.Point(575, 421);
             this.Save.Name = "Save";
             this.Save.Size = new System.Drawing.Size(75, 23);
             this.Save.TabIndex = 42;
@@ -437,7 +437,7 @@ namespace LabBilling.Forms
             // 
             // Cancel
             // 
-            this.Cancel.Location = new System.Drawing.Point(713, 390);
+            this.Cancel.Location = new System.Drawing.Point(677, 421);
             this.Cancel.Name = "Cancel";
             this.Cancel.Size = new System.Drawing.Size(75, 23);
             this.Cancel.TabIndex = 43;
@@ -447,7 +447,7 @@ namespace LabBilling.Forms
             // 
             // SocSecNo
             // 
-            this.SocSecNo.Location = new System.Drawing.Point(112, 313);
+            this.SocSecNo.Location = new System.Drawing.Point(125, 347);
             this.SocSecNo.Mask = "000-00-0000";
             this.SocSecNo.Name = "SocSecNo";
             this.SocSecNo.Size = new System.Drawing.Size(100, 20);
@@ -457,7 +457,7 @@ namespace LabBilling.Forms
             // label22
             // 
             this.label22.AutoSize = true;
-            this.label22.Location = new System.Drawing.Point(12, 316);
+            this.label22.Location = new System.Drawing.Point(25, 350);
             this.label22.Name = "label22";
             this.label22.Size = new System.Drawing.Size(94, 13);
             this.label22.TabIndex = 20;
@@ -467,7 +467,7 @@ namespace LabBilling.Forms
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 425);
+            this.ClientSize = new System.Drawing.Size(800, 476);
             this.Controls.Add(this.SocSecNo);
             this.Controls.Add(this.Cancel);
             this.Controls.Add(this.Save);

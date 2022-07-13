@@ -239,6 +239,7 @@
             // dgvAccounts
             // 
             this.dgvAccounts.AllowUserToAddRows = false;
+            this.dgvAccounts.BackgroundColor = System.Drawing.SystemColors.ControlLightLight;
             this.dgvAccounts.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.EnableAlwaysIncludeHeaderText;
             dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
@@ -257,7 +258,8 @@
             dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
             this.dgvAccounts.DefaultCellStyle = dataGridViewCellStyle2;
-            this.dgvAccounts.Location = new System.Drawing.Point(0, 28);
+            this.dgvAccounts.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dgvAccounts.Location = new System.Drawing.Point(0, 25);
             this.dgvAccounts.Name = "dgvAccounts";
             dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
@@ -267,7 +269,7 @@
             dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
             this.dgvAccounts.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
-            this.dgvAccounts.Size = new System.Drawing.Size(1010, 537);
+            this.dgvAccounts.Size = new System.Drawing.Size(1010, 605);
             this.dgvAccounts.TabIndex = 2;
             this.dgvAccounts.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvAccounts_CellClick);
             this.dgvAccounts.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dgvAccounts_CellFormatting);

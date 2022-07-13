@@ -5,10 +5,11 @@ using System.Drawing;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
+using MetroFramework.Forms;
 
 namespace LabBilling.Forms
 {
-    partial class AboutBox : Form
+    partial class AboutBox : MetroForm
     {
         public AboutBox()
         {

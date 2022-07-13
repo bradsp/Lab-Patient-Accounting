@@ -16,10 +16,11 @@ using NHapi.Base;
 using NHapi.Base.Parser;
 using NHapi.Model.V23.Message;
 using RFClassLibrary;
+using MetroFramework.Forms;
 
 namespace LabBilling.Forms
 {
-    public partial class InterfaceMonitor : Form
+    public partial class InterfaceMonitor : MetroForm
     {
         public InterfaceMonitor()
         {

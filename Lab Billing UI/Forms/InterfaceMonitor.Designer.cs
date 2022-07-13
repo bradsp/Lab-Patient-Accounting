@@ -61,7 +61,7 @@ namespace LabBilling.Forms
             this.MessagesGrid.Name = "MessagesGrid";
             this.MessagesGrid.ReadOnly = true;
             this.MessagesGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.MessagesGrid.Size = new System.Drawing.Size(1187, 409);
+            this.MessagesGrid.Size = new System.Drawing.Size(1187, 389);
             this.MessagesGrid.TabIndex = 0;
             this.MessagesGrid.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.MessagesGrid_CellClick);
             this.MessagesGrid.SelectionChanged += new System.EventHandler(this.MessagesGrid_SelectionChanged);
@@ -82,12 +82,13 @@ namespace LabBilling.Forms
             // 
             // MessageTypeSelect
             // 
+            this.MessageTypeSelect.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.MessageTypeSelect.FormattingEnabled = true;
             this.MessageTypeSelect.Items.AddRange(new object[] {
             "ADT",
             "DFT",
             "MFN"});
-            this.MessageTypeSelect.Location = new System.Drawing.Point(94, 12);
+            this.MessageTypeSelect.Location = new System.Drawing.Point(596, 39);
             this.MessageTypeSelect.Name = "MessageTypeSelect";
             this.MessageTypeSelect.Size = new System.Drawing.Size(121, 21);
             this.MessageTypeSelect.TabIndex = 2;
@@ -95,8 +96,9 @@ namespace LabBilling.Forms
             // 
             // label1
             // 
+            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(11, 15);
+            this.label1.Location = new System.Drawing.Point(513, 42);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(77, 13);
             this.label1.TabIndex = 3;
@@ -107,7 +109,7 @@ namespace LabBilling.Forms
             this.splitContainer1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.splitContainer1.Location = new System.Drawing.Point(14, 50);
+            this.splitContainer1.Location = new System.Drawing.Point(14, 80);
             this.splitContainer1.Name = "splitContainer1";
             this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
@@ -118,8 +120,8 @@ namespace LabBilling.Forms
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.hl7Message);
-            this.splitContainer1.Size = new System.Drawing.Size(1187, 645);
-            this.splitContainer1.SplitterDistance = 409;
+            this.splitContainer1.Size = new System.Drawing.Size(1187, 614);
+            this.splitContainer1.SplitterDistance = 389;
             this.splitContainer1.TabIndex = 4;
             // 
             // hl7Message
@@ -130,32 +132,35 @@ namespace LabBilling.Forms
             this.hl7Message.Multiline = true;
             this.hl7Message.Name = "hl7Message";
             this.hl7Message.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.hl7Message.Size = new System.Drawing.Size(1187, 232);
+            this.hl7Message.Size = new System.Drawing.Size(1187, 221);
             this.hl7Message.TabIndex = 0;
             this.hl7Message.WordWrap = false;
             // 
             // FromDate
             // 
+            this.FromDate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.FromDate.CustomFormat = "M/d/yy HH:mm";
             this.FromDate.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.FromDate.Location = new System.Drawing.Point(378, 13);
+            this.FromDate.Location = new System.Drawing.Point(794, 40);
             this.FromDate.Name = "FromDate";
             this.FromDate.Size = new System.Drawing.Size(145, 20);
             this.FromDate.TabIndex = 5;
             // 
             // ThruDate
             // 
+            this.ThruDate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.ThruDate.CustomFormat = "M/d/yy HH:mm";
             this.ThruDate.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.ThruDate.Location = new System.Drawing.Point(551, 13);
+            this.ThruDate.Location = new System.Drawing.Point(967, 40);
             this.ThruDate.Name = "ThruDate";
             this.ThruDate.Size = new System.Drawing.Size(142, 20);
             this.ThruDate.TabIndex = 5;
             // 
             // label2
             // 
+            this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(307, 16);
+            this.label2.Location = new System.Drawing.Point(723, 43);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(65, 13);
             this.label2.TabIndex = 6;
@@ -163,8 +168,9 @@ namespace LabBilling.Forms
             // 
             // label3
             // 
+            this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(529, 16);
+            this.label3.Location = new System.Drawing.Point(945, 43);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(16, 13);
             this.label3.TabIndex = 7;
@@ -172,7 +178,8 @@ namespace LabBilling.Forms
             // 
             // FilterButton
             // 
-            this.FilterButton.Location = new System.Drawing.Point(699, 13);
+            this.FilterButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.FilterButton.Location = new System.Drawing.Point(1115, 40);
             this.FilterButton.Name = "FilterButton";
             this.FilterButton.Size = new System.Drawing.Size(75, 23);
             this.FilterButton.TabIndex = 8;
@@ -186,13 +193,14 @@ namespace LabBilling.Forms
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1213, 707);
             this.Controls.Add(this.FilterButton);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.label2);
             this.Controls.Add(this.ThruDate);
-            this.Controls.Add(this.FromDate);
             this.Controls.Add(this.splitContainer1);
-            this.Controls.Add(this.label1);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.FromDate);
             this.Controls.Add(this.MessageTypeSelect);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.label2);
+            this.MinimumSize = new System.Drawing.Size(950, 600);
             this.Name = "InterfaceMonitor";
             this.Text = "InterfaceMonitor";
             this.Load += new System.EventHandler(this.InterfaceMonitor_Load);

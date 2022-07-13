@@ -34,7 +34,7 @@ Test:
     Select @sql = 'SELECT * FROM
     (Select '+Cast(database_id as varchar(9))+' as DBID, ''master'' as DBName, '
                      + Replace(@DB_objects, '%D%', [name])
-     From master.sys.databases
+     From sys.databases
      Where [name] = 'master'
 
     Select @sql = @sql + 'UNION ALL Select '+Cast(database_id as varchar(9))+', '''+[name]+''', '

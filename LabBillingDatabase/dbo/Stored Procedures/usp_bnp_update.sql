@@ -17,7 +17,7 @@ BEGIN
 ; with cteNeedHold
 as
 (
-	select acc.cl_mnem, chrg.account, pat_name,service_date--, acc.status
+	select acc.cl_mnem, chrg.account, chrg.pat_name, service_date  --, acc.status
 	,sum(qty) over (partition by chrg.account, cdm) as [qty]
 	 from chrg
 	inner join acc on acc.account = chrg.account
@@ -34,7 +34,7 @@ select * from cteNeedHold where qty <> 0
 ; with cteNeedHold
 as
 (
-	select acc.cl_mnem, chrg.account, pat_name,service_date--, acc.status
+	select acc.cl_mnem, chrg.account, acc.pat_name, service_date--, acc.status
 	,sum(qty) over (partition by chrg.account, cdm) as [qty]
 	 from chrg
 	inner join acc on acc.account = chrg.account
@@ -58,9 +58,9 @@ where acc.account in (select account from cteNeedHold where qty <> 0)
 ; with cteNeedHoldRemoved
 as
 (
-select acc.cl_mnem, chrg.account, pat_name,service_date--, acc.status
-,sum(qty) over (partition by chrg.account, cdm) as [qty]
- from chrg
+select acc.cl_mnem, chrg.account, acc.pat_name, chrg.service_date  --, acc.status
+	,sum(qty) over (partition by chrg.account, cdm) as [qty]
+from chrg
 inner join acc on acc.account = chrg.account
 where cdm in ('5325048','5325094','5322126')
 and chrg.account in 
@@ -73,7 +73,7 @@ select * from cteNeedHoldRemoved where qty = 0
 ; with cteRemoveHold
 as
 (
-select acc.cl_mnem, chrg.account, pat_name,service_date--, acc.status
+select acc.cl_mnem, chrg.account, acc.pat_name, chrg.service_date   --, acc.status
 ,sum(qty) over (partition by chrg.account, cdm) as [qty]
  from chrg
 inner join acc on acc.account = chrg.account

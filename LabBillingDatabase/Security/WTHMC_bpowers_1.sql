@@ -1,3 +1,0 @@
-﻿CREATE LOGIN [WTHMC\bpowers]
-    FROM WINDOWS WITH DEFAULT_LANGUAGE = [us_english];
-

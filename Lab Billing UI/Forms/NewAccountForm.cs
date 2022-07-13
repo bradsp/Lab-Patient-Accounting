@@ -7,10 +7,11 @@ using System.ComponentModel;
 using System.Linq;
 using System.Windows.Forms;
 using System.Data;
+using MetroFramework.Forms;
 
 namespace LabBilling.Forms
 {
-    public partial class NewAccountForm : Form
+    public partial class NewAccountForm : MetroForm
     {
         public NewAccountForm()
         {

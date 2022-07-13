@@ -76,6 +76,6 @@ BEGIN
 				else 'EXCLUSION'  
 				end 
 		  end = 'GAP' 
-	order by [DOS],cteChrg.status, account, cdm
+	order by [DOS],cteChrg.status, account, cteChrg.cdm
 
 END

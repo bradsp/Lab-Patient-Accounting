@@ -22,31 +22,31 @@ BEGIN
 SELECT account, [billed]
 FROM(
 SELECT TOP 1000 
-		MCLLIVE.dbo.pat.account ,
-		MCLLIVE.dbo.pat.last_dm AS [day0],
-		MCLLIVE.dbo.pat.dbill_date AS [day1] ,
-		MCLLIVE.dbo.pat.ub_date AS [day2] ,
-		MCLLIVE.dbo.pat.h1500_date  AS [day3],
-		MCLLIVE.dbo.pat.colltr_date  AS [day4],
-		MCLLIVE.dbo.pat.baddebt_date  AS [day5],
-		MCLLIVE.dbo.pat.batch_date  AS [day6],
-		MCLLIVE.dbo.pat.bd_list_date  AS [day7],
-		MCLLIVE.dbo.pat.ebill_batch_date  AS [day8],
-		MCLLIVE.dbo.pat.ebill_batch_1500  AS [day9],
-		MCLLIVE.dbo.pat.e_ub_demand_date  AS [day10],
-		MCLLIVE.dbo.pat.claimsnet_1500_batch_date AS [day11] ,
-		MCLLIVE.dbo.pat.claimsnet_ub_batch_date AS [day12] 		
-FROM MCLLIVE.dbo.pat 
+		dbo.pat.account ,
+		dbo.pat.last_dm AS [day0],
+		dbo.pat.dbill_date AS [day1] ,
+		dbo.pat.ub_date AS [day2] ,
+		dbo.pat.h1500_date  AS [day3],
+		dbo.pat.colltr_date  AS [day4],
+		dbo.pat.baddebt_date  AS [day5],
+		dbo.pat.batch_date  AS [day6],
+		dbo.pat.bd_list_date  AS [day7],
+		dbo.pat.ebill_batch_date  AS [day8],
+		dbo.pat.ebill_batch_1500  AS [day9],
+		dbo.pat.e_ub_demand_date  AS [day10],
+		dbo.pat.claimsnet_1500_batch_date AS [day11] ,
+		dbo.pat.claimsnet_ub_batch_date AS [day12] 		
+FROM dbo.pat 
 --INNER JOIN (SELECT dbo.chrg.account FROM chrg INNER JOIN amt ON dbo.amt.chrg_num = dbo.chrg.chrg_num
 --WHERE amt.mod_date BETWEEN @startDate AND @endDate) AS [caSelect] 
 --	ON caSelect.account = dbo.pat.account
-WHERE dbo.pat.account = @acc AND COALESCE(MCLLIVE.dbo.pat.last_dm ,
-		MCLLIVE.dbo.pat.dbill_date,MCLLIVE.dbo.pat.ub_date ,
-		MCLLIVE.dbo.pat.h1500_date,	MCLLIVE.dbo.pat.colltr_date,
-		MCLLIVE.dbo.pat.baddebt_date,	MCLLIVE.dbo.pat.batch_date,
-		MCLLIVE.dbo.pat.bd_list_date,	MCLLIVE.dbo.pat.ebill_batch_date,
-		MCLLIVE.dbo.pat.ebill_batch_1500,MCLLIVE.dbo.pat.e_ub_demand_date,
-		MCLLIVE.dbo.pat.claimsnet_1500_batch_date,	MCLLIVE.dbo.pat.claimsnet_ub_batch_date ) IS NOT NULL
+WHERE dbo.pat.account = @acc AND COALESCE(dbo.pat.last_dm ,
+		dbo.pat.dbill_date,dbo.pat.ub_date ,
+		dbo.pat.h1500_date,	dbo.pat.colltr_date,
+		dbo.pat.baddebt_date,	dbo.pat.batch_date,
+		dbo.pat.bd_list_date,	dbo.pat.ebill_batch_date,
+		dbo.pat.ebill_batch_1500,dbo.pat.e_ub_demand_date,
+		dbo.pat.claimsnet_1500_batch_date,	dbo.pat.claimsnet_ub_batch_date ) IS NOT NULL
 ) AS bill
 UNPIVOT
 (

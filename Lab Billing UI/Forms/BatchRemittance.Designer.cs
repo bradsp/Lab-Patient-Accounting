@@ -87,6 +87,7 @@
             this.dgvPayments.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.dgvPayments.BackgroundColor = System.Drawing.SystemColors.ControlLightLight;
             this.dgvPayments.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvPayments.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Account,
@@ -102,9 +103,9 @@
             this.WriteOff,
             this.WriteOffCode,
             this.Comment});
-            this.dgvPayments.Location = new System.Drawing.Point(12, 40);
+            this.dgvPayments.Location = new System.Drawing.Point(12, 39);
             this.dgvPayments.Name = "dgvPayments";
-            this.dgvPayments.Size = new System.Drawing.Size(939, 427);
+            this.dgvPayments.Size = new System.Drawing.Size(939, 406);
             this.dgvPayments.TabIndex = 0;
             this.dgvPayments.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvPayments_CellContentClick);
             this.dgvPayments.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvPayments_CellValueChanged);
@@ -202,7 +203,7 @@
             // AmountTotal
             // 
             this.AmountTotal.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.AmountTotal.Location = new System.Drawing.Point(57, 502);
+            this.AmountTotal.Location = new System.Drawing.Point(57, 484);
             this.AmountTotal.Name = "AmountTotal";
             this.AmountTotal.ReadOnly = true;
             this.AmountTotal.Size = new System.Drawing.Size(100, 20);
@@ -211,7 +212,7 @@
             // ContractualTotal
             // 
             this.ContractualTotal.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.ContractualTotal.Location = new System.Drawing.Point(163, 502);
+            this.ContractualTotal.Location = new System.Drawing.Point(163, 484);
             this.ContractualTotal.Name = "ContractualTotal";
             this.ContractualTotal.ReadOnly = true;
             this.ContractualTotal.Size = new System.Drawing.Size(100, 20);
@@ -220,7 +221,7 @@
             // WriteoffTotal
             // 
             this.WriteoffTotal.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.WriteoffTotal.Location = new System.Drawing.Point(269, 502);
+            this.WriteoffTotal.Location = new System.Drawing.Point(269, 484);
             this.WriteoffTotal.Name = "WriteoffTotal";
             this.WriteoffTotal.ReadOnly = true;
             this.WriteoffTotal.Size = new System.Drawing.Size(100, 20);
@@ -229,7 +230,7 @@
             // GrandTotal
             // 
             this.GrandTotal.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.GrandTotal.Location = new System.Drawing.Point(375, 502);
+            this.GrandTotal.Location = new System.Drawing.Point(375, 484);
             this.GrandTotal.Name = "GrandTotal";
             this.GrandTotal.ReadOnly = true;
             this.GrandTotal.Size = new System.Drawing.Size(100, 20);
@@ -239,7 +240,7 @@
             // 
             this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(54, 486);
+            this.label1.Location = new System.Drawing.Point(54, 468);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(67, 13);
             this.label1.TabIndex = 2;
@@ -249,7 +250,7 @@
             // 
             this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(160, 486);
+            this.label2.Location = new System.Drawing.Point(160, 468);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(61, 13);
             this.label2.TabIndex = 2;
@@ -259,7 +260,7 @@
             // 
             this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(266, 486);
+            this.label3.Location = new System.Drawing.Point(266, 468);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(46, 13);
             this.label3.TabIndex = 2;
@@ -269,7 +270,7 @@
             // 
             this.label4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(372, 486);
+            this.label4.Location = new System.Drawing.Point(372, 468);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(63, 13);
             this.label4.TabIndex = 2;
@@ -279,7 +280,7 @@
             // 
             this.label5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(15, 509);
+            this.label5.Location = new System.Drawing.Point(15, 491);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(36, 13);
             this.label5.TabIndex = 3;
@@ -289,7 +290,7 @@
             // 
             this.SaveBatch.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.SaveBatch.BackColor = System.Drawing.Color.Yellow;
-            this.SaveBatch.Location = new System.Drawing.Point(775, 479);
+            this.SaveBatch.Location = new System.Drawing.Point(775, 461);
             this.SaveBatch.Name = "SaveBatch";
             this.SaveBatch.Size = new System.Drawing.Size(75, 43);
             this.SaveBatch.TabIndex = 4;
@@ -301,7 +302,7 @@
             // 
             this.SubmitPayments.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.SubmitPayments.BackColor = System.Drawing.Color.LightGreen;
-            this.SubmitPayments.Location = new System.Drawing.Point(856, 479);
+            this.SubmitPayments.Location = new System.Drawing.Point(856, 461);
             this.SubmitPayments.Name = "SubmitPayments";
             this.SubmitPayments.Size = new System.Drawing.Size(95, 43);
             this.SubmitPayments.TabIndex = 5;
@@ -312,7 +313,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(17, 9);
+            this.label6.Location = new System.Drawing.Point(12, 15);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(98, 13);
             this.label6.TabIndex = 7;
@@ -329,7 +330,7 @@
             "Amount Paid",
             "Contractual",
             "Write Off"});
-            this.EntryMode.Location = new System.Drawing.Point(809, 6);
+            this.EntryMode.Location = new System.Drawing.Point(543, 12);
             this.EntryMode.Name = "EntryMode";
             this.EntryMode.Size = new System.Drawing.Size(142, 21);
             this.EntryMode.TabIndex = 8;
@@ -339,7 +340,7 @@
             // 
             this.label7.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(742, 9);
+            this.label7.Location = new System.Drawing.Point(476, 15);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(61, 13);
             this.label7.TabIndex = 9;
@@ -349,7 +350,7 @@
             // 
             this.DeleteBatch.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.DeleteBatch.BackColor = System.Drawing.Color.Red;
-            this.DeleteBatch.Location = new System.Drawing.Point(694, 479);
+            this.DeleteBatch.Location = new System.Drawing.Point(694, 461);
             this.DeleteBatch.Name = "DeleteBatch";
             this.DeleteBatch.Size = new System.Drawing.Size(75, 43);
             this.DeleteBatch.TabIndex = 11;
@@ -433,7 +434,7 @@
             // 
             this.OpenBatch.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
             this.OpenBatch.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.OpenBatch.Location = new System.Drawing.Point(121, 6);
+            this.OpenBatch.Location = new System.Drawing.Point(116, 12);
             this.OpenBatch.Name = "OpenBatch";
             this.OpenBatch.Size = new System.Drawing.Size(354, 21);
             this.OpenBatch.TabIndex = 12;
@@ -444,7 +445,8 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(963, 534);
+            this.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.ClientSize = new System.Drawing.Size(963, 527);
             this.Controls.Add(this.DeleteBatch);
             this.Controls.Add(this.OpenBatch);
             this.Controls.Add(this.label7);

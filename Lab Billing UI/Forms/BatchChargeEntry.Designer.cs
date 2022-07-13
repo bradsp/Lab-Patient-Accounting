@@ -62,6 +62,7 @@
             this.dgvBatchEntry.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.dgvBatchEntry.BackgroundColor = System.Drawing.SystemColors.ControlLight;
             this.dgvBatchEntry.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvBatchEntry.Location = new System.Drawing.Point(11, 98);
             this.dgvBatchEntry.Name = "dgvBatchEntry";
@@ -277,6 +278,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.ClientSize = new System.Drawing.Size(1160, 637);
             this.Controls.Add(this.cdmDesc);
             this.Controls.Add(this.AddChargeToGrid);

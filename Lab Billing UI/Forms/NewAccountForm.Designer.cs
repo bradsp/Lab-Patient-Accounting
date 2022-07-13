@@ -36,26 +36,26 @@ namespace LabBilling.Forms
             this.MiddleName = new System.Windows.Forms.TextBox();
             this.DateOfBirth = new System.Windows.Forms.MaskedTextBox();
             this.PatientSex = new System.Windows.Forms.ComboBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
+            this.label1 = new MetroFramework.Controls.MetroLabel();
+            this.label2 = new MetroFramework.Controls.MetroLabel();
+            this.label3 = new MetroFramework.Controls.MetroLabel();
+            this.label4 = new MetroFramework.Controls.MetroLabel();
+            this.label5 = new MetroFramework.Controls.MetroLabel();
+            this.label6 = new MetroFramework.Controls.MetroLabel();
             this.AddAccount = new System.Windows.Forms.Button();
             this.Cancel = new System.Windows.Forms.Button();
-            this.label7 = new System.Windows.Forms.Label();
+            this.label7 = new MetroFramework.Controls.MetroLabel();
             this.ServiceDate = new System.Windows.Forms.MaskedTextBox();
-            this.label8 = new System.Windows.Forms.Label();
+            this.label8 = new MetroFramework.Controls.MetroLabel();
             this.FinancialClass = new MultiColumnCombo.MultiColumnComboBox();
-            this.label9 = new System.Windows.Forms.Label();
+            this.label9 = new MetroFramework.Controls.MetroLabel();
             this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
             this.SuspendLayout();
             // 
             // AccountNo
             // 
-            this.AccountNo.Location = new System.Drawing.Point(110, 28);
+            this.AccountNo.Location = new System.Drawing.Point(124, 69);
             this.AccountNo.Name = "AccountNo";
             this.AccountNo.Size = new System.Drawing.Size(121, 20);
             this.AccountNo.TabIndex = 1;
@@ -63,7 +63,7 @@ namespace LabBilling.Forms
             // LastName
             // 
             this.LastName.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
-            this.LastName.Location = new System.Drawing.Point(110, 54);
+            this.LastName.Location = new System.Drawing.Point(124, 95);
             this.LastName.Name = "LastName";
             this.LastName.Size = new System.Drawing.Size(253, 20);
             this.LastName.TabIndex = 4;
@@ -72,7 +72,7 @@ namespace LabBilling.Forms
             // FirstName
             // 
             this.FirstName.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
-            this.FirstName.Location = new System.Drawing.Point(110, 80);
+            this.FirstName.Location = new System.Drawing.Point(124, 121);
             this.FirstName.Name = "FirstName";
             this.FirstName.Size = new System.Drawing.Size(253, 20);
             this.FirstName.TabIndex = 6;
@@ -81,14 +81,14 @@ namespace LabBilling.Forms
             // MiddleName
             // 
             this.MiddleName.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
-            this.MiddleName.Location = new System.Drawing.Point(110, 106);
+            this.MiddleName.Location = new System.Drawing.Point(124, 147);
             this.MiddleName.Name = "MiddleName";
             this.MiddleName.Size = new System.Drawing.Size(253, 20);
             this.MiddleName.TabIndex = 8;
             // 
             // DateOfBirth
             // 
-            this.DateOfBirth.Location = new System.Drawing.Point(110, 132);
+            this.DateOfBirth.Location = new System.Drawing.Point(124, 173);
             this.DateOfBirth.Mask = "00/00/0000";
             this.DateOfBirth.Name = "DateOfBirth";
             this.DateOfBirth.Size = new System.Drawing.Size(100, 20);
@@ -102,7 +102,7 @@ namespace LabBilling.Forms
             this.PatientSex.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this.PatientSex.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.PatientSex.FormattingEnabled = true;
-            this.PatientSex.Location = new System.Drawing.Point(110, 158);
+            this.PatientSex.Location = new System.Drawing.Point(124, 199);
             this.PatientSex.Name = "PatientSex";
             this.PatientSex.Size = new System.Drawing.Size(121, 21);
             this.PatientSex.TabIndex = 12;
@@ -111,62 +111,62 @@ namespace LabBilling.Forms
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 31);
+            this.label1.Location = new System.Drawing.Point(26, 72);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(57, 13);
+            this.label1.Size = new System.Drawing.Size(68, 19);
             this.label1.TabIndex = 0;
             this.label1.Text = "Account #";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(12, 57);
+            this.label2.Location = new System.Drawing.Point(26, 98);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(58, 13);
+            this.label2.Size = new System.Drawing.Size(71, 19);
             this.label2.TabIndex = 3;
             this.label2.Text = "Last Name";
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(12, 83);
+            this.label3.Location = new System.Drawing.Point(26, 124);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(57, 13);
+            this.label3.Size = new System.Drawing.Size(73, 19);
             this.label3.TabIndex = 5;
             this.label3.Text = "First Name";
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(12, 109);
+            this.label4.Location = new System.Drawing.Point(26, 150);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(69, 13);
+            this.label4.Size = new System.Drawing.Size(90, 19);
             this.label4.TabIndex = 7;
             this.label4.Text = "Middle Name";
             // 
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(12, 135);
+            this.label5.Location = new System.Drawing.Point(26, 176);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(66, 13);
+            this.label5.Size = new System.Drawing.Size(84, 19);
             this.label5.TabIndex = 9;
             this.label5.Text = "Date of Birth";
             // 
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(12, 161);
+            this.label6.Location = new System.Drawing.Point(26, 202);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(25, 13);
+            this.label6.Size = new System.Drawing.Size(29, 19);
             this.label6.TabIndex = 11;
             this.label6.Text = "Sex";
             // 
             // AddAccount
             // 
-            this.AddAccount.Location = new System.Drawing.Point(110, 280);
+            this.AddAccount.Location = new System.Drawing.Point(124, 291);
             this.AddAccount.Name = "AddAccount";
-            this.AddAccount.Size = new System.Drawing.Size(75, 23);
+            this.AddAccount.Size = new System.Drawing.Size(100, 35);
             this.AddAccount.TabIndex = 17;
             this.AddAccount.Text = "Add Account";
             this.AddAccount.UseVisualStyleBackColor = true;
@@ -175,9 +175,9 @@ namespace LabBilling.Forms
             // Cancel
             // 
             this.Cancel.CausesValidation = false;
-            this.Cancel.Location = new System.Drawing.Point(191, 280);
+            this.Cancel.Location = new System.Drawing.Point(231, 291);
             this.Cancel.Name = "Cancel";
-            this.Cancel.Size = new System.Drawing.Size(75, 23);
+            this.Cancel.Size = new System.Drawing.Size(100, 35);
             this.Cancel.TabIndex = 18;
             this.Cancel.Text = "Cancel";
             this.Cancel.UseVisualStyleBackColor = true;
@@ -186,15 +186,15 @@ namespace LabBilling.Forms
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(237, 31);
+            this.label7.Location = new System.Drawing.Point(251, 72);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(107, 13);
+            this.label7.Size = new System.Drawing.Size(130, 19);
             this.label7.TabIndex = 2;
             this.label7.Text = "(blank to assign new)";
             // 
             // ServiceDate
             // 
-            this.ServiceDate.Location = new System.Drawing.Point(110, 185);
+            this.ServiceDate.Location = new System.Drawing.Point(124, 226);
             this.ServiceDate.Mask = "00/00/0000";
             this.ServiceDate.Name = "ServiceDate";
             this.ServiceDate.Size = new System.Drawing.Size(100, 20);
@@ -205,9 +205,9 @@ namespace LabBilling.Forms
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(12, 188);
+            this.label8.Location = new System.Drawing.Point(26, 229);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(69, 13);
+            this.label8.Size = new System.Drawing.Size(82, 19);
             this.label8.TabIndex = 13;
             this.label8.Text = "Service Date";
             // 
@@ -215,7 +215,7 @@ namespace LabBilling.Forms
             // 
             this.FinancialClass.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
             this.FinancialClass.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.FinancialClass.Location = new System.Drawing.Point(110, 212);
+            this.FinancialClass.Location = new System.Drawing.Point(124, 253);
             this.FinancialClass.Name = "FinancialClass";
             this.FinancialClass.Size = new System.Drawing.Size(253, 21);
             this.FinancialClass.TabIndex = 0;
@@ -223,9 +223,9 @@ namespace LabBilling.Forms
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(12, 212);
+            this.label9.Location = new System.Drawing.Point(26, 253);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(77, 13);
+            this.label9.Size = new System.Drawing.Size(92, 19);
             this.label9.TabIndex = 15;
             this.label9.Text = "Financial Class";
             // 
@@ -237,7 +237,7 @@ namespace LabBilling.Forms
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(378, 344);
+            this.ClientSize = new System.Drawing.Size(392, 364);
             this.Controls.Add(this.FinancialClass);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.Cancel);
@@ -268,26 +268,25 @@ namespace LabBilling.Forms
         }
 
         #endregion
-
+        private System.Windows.Forms.MaskedTextBox DateOfBirth;
+        private MetroFramework.Controls.MetroLabel label1;
+        private MetroFramework.Controls.MetroLabel label2;
+        private MetroFramework.Controls.MetroLabel label3;
+        private MetroFramework.Controls.MetroLabel label4;
+        private MetroFramework.Controls.MetroLabel label5;
+        private MetroFramework.Controls.MetroLabel label6;
+        private MetroFramework.Controls.MetroLabel label7;
+        private System.Windows.Forms.MaskedTextBox ServiceDate;
+        private MetroFramework.Controls.MetroLabel label8;
+        private MultiColumnCombo.MultiColumnComboBox FinancialClass;
+        private MetroFramework.Controls.MetroLabel label9;
+        private System.Windows.Forms.ErrorProvider errorProvider1;
         private System.Windows.Forms.TextBox AccountNo;
         private System.Windows.Forms.TextBox LastName;
         private System.Windows.Forms.TextBox FirstName;
         private System.Windows.Forms.TextBox MiddleName;
-        private System.Windows.Forms.MaskedTextBox DateOfBirth;
         private System.Windows.Forms.ComboBox PatientSex;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Button AddAccount;
         private System.Windows.Forms.Button Cancel;
-        private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.MaskedTextBox ServiceDate;
-        private System.Windows.Forms.Label label8;
-        private MultiColumnCombo.MultiColumnComboBox FinancialClass;
-        private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.ErrorProvider errorProvider1;
     }
 }

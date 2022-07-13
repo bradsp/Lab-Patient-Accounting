@@ -11,10 +11,13 @@ using Opulos.Core.UI;
 using System.Text;
 using System.Collections.Generic;
 using LabBilling.Core.BusinessLogic;
+using MetroFramework.Forms;
+using MetroFramework.Controls;
+
 
 namespace LabBilling
 {
-    public partial class Dashboard : Form
+    public partial class Dashboard : MetroForm
     {
 
         private Accordion accordion = new Accordion();
@@ -146,12 +149,12 @@ namespace LabBilling
             tlpBilling.ColumnCount = 1;
             tlpBilling.RowCount = 3;
 
-            Button b1 = new Button { Text = "Workqueue", Name = "btnWorkQueue" };
+            MetroButton b1 = new MetroButton { Text = "Workqueue", Name = "btnWorkQueue" };
             b1.Click += new EventHandler(workqueuesToolStripMenuItem_Click);
             tlpBilling.Controls.Add(b1, 0, 0);
             b1.Dock = DockStyle.Fill;
 
-            Button b2 = new Button { Text = "Account", Name = "btnAccount" };
+            MetroButton b2 = new MetroButton { Text = "Account", Name = "btnAccount" };
             b2.Click += new EventHandler(accountToolStripMenuItem_Click);
             tlpBilling.Controls.Add(b2, 0, 1);
             b2.Dock = DockStyle.Fill;
@@ -161,12 +164,12 @@ namespace LabBilling
             //tlpBilling.Controls.Add(b3, 0, 2);
             //b3.Dock = DockStyle.Fill;
 
-            Button b4 = new Button { Text = "Batch Charge Entry", Name = "btnBatchChargeEntry" };
+            MetroButton b4 = new MetroButton { Text = "Batch Charge Entry", Name = "btnBatchChargeEntry" };
             b4.Click += new EventHandler(batchChargeEntryToolStripMenuItem_Click);
             tlpBilling.Controls.Add(b4, 0, 3);
             b4.Dock = DockStyle.Fill;
 
-            Button b5 = new Button { Text = "Batch Remittance", Name = "btnBatchRemittance" };
+            MetroButton b5 = new MetroButton { Text = "Batch Remittance", Name = "btnBatchRemittance" };
             b5.Click += new EventHandler(batchRemittanceToolStripMenuItem_Click);
             tlpBilling.Controls.Add(b5, 0, 4);
             b5.Dock = DockStyle.Fill;
@@ -178,12 +181,12 @@ namespace LabBilling
             tlpReports.ColumnCount = 1;
             tlpReports.RowCount = 1;
 
-            Button r1 = new Button { Text = "Monthly Reports", Name = "btnMonthlyReports" };
+            MetroButton r1 = new MetroButton { Text = "Monthly Reports", Name = "btnMonthlyReports" };
             r1.Click += new EventHandler(monthlyReportsToolStripMenuItem_Click);
             tlpReports.Controls.Add(r1, 0, 0);
             r1.Dock = DockStyle.Fill;
 
-            Button r2 = new Button { Text = "Reporting Portal", Name = "btnReportingPortal" };
+            MetroButton r2 = new MetroButton { Text = "Reporting Portal", Name = "btnReportingPortal" };
             r2.Click += new EventHandler(reportingPortalToolStripMenuItem_Click);
             tlpReports.Controls.Add(r2, 0, 0);
             r2.Dock = DockStyle.Fill;
@@ -261,7 +264,17 @@ namespace LabBilling
         {
             Log.Instance.Trace($"Entering");
 
+            string url = systemParametersRepository.GetByKey("report_portal_url");
+            ReportingPortalForm frm = new ReportingPortalForm(url);
+
+            frm.MdiParent = this;
+            frm.AutoScroll = true;
+            frm.WindowState = FormWindowState.Normal;
+            frm.Show();
+            return;
+
             //SystemParametersRepository da = new SystemParametersRepository();
+            /*
             string url = systemParametersRepository.GetByKey("report_portal_url");
             if(url != "")
             {
@@ -271,7 +284,7 @@ namespace LabBilling
             {
                 MessageBox.Show("Reporting Portal System Parameter not set or not valid. Please contact your administrator","Application Error");
             }
-            
+            */
         }
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)

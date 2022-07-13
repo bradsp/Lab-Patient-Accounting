@@ -1,7 +1,7 @@
 ﻿CREATE VIEW dbo.vw_phy_sanc_mcltest
 AS
 SELECT     lastname, firstname, midname, busname, general, specialty, upin, dob, address, city, state, zip, sanctype, sancdate, reindate, uri
-FROM         MCLTEST.dbo.phy_sanc
+FROM         dbo.phy_sanc
 
 GO
 EXECUTE sp_addextendedproperty @name = N'MS_DiagramPane1', @value = N'[0E232FF0-B466-11cf-A24F-00AA00A3EFFF, 1.00]

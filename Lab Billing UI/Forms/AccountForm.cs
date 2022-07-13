@@ -1484,7 +1484,7 @@ namespace LabBilling.Forms
         private void BtnNoteAdd_Click(object sender, EventArgs e)
         {
             Log.Instance.Trace($"Entering");
-            InputBoxResult prompt = InputBox.Show("Enter note:", "New Note");
+            InputBoxResult prompt = InputBox.Show("Enter note:", "New Note", true);
             AccountNote note = new AccountNote();
 
             if (prompt.ReturnCode == DialogResult.OK)

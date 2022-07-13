@@ -173,6 +173,8 @@ namespace LabBilling.Core
             txtInput.SelectionLength = txtInput.Text.Length;
             if (_passwordMask)
                 txtInput.PasswordChar = '*';
+            if(_multiline)
+                txtInput.Multiline = true;
             txtInput.Focus();
         }
 
@@ -198,9 +200,10 @@ namespace LabBilling.Core
 
         #region Public Static Show functions
 
-        static public InputBoxResult Show(string Prompt)
+        static public InputBoxResult Show(string Prompt, bool multiline = false)
         {
             InitializeComponent();
+            Multiline = multiline;
             FormPrompt = Prompt;
 
             // Display the form as a modal dialog box.
@@ -209,10 +212,10 @@ namespace LabBilling.Core
             return OutputResponse;
         }
 
-        static public InputBoxResult ShowPassword(string Prompt, string Title)
+        static public InputBoxResult ShowPassword(string Prompt, string Title, bool multiline = false)
         {
             InitializeComponent();
-
+            Multiline = multiline;
             FormCaption = Title;
             FormPrompt = Prompt;
             PasswordMask = true;
@@ -223,10 +226,10 @@ namespace LabBilling.Core
             return OutputResponse;
         }
 
-        static public InputBoxResult Show(string Prompt, string Title)
+        static public InputBoxResult Show(string Prompt, string Title, bool multiline = false)
         {
             InitializeComponent();
-
+            Multiline = multiline;
             FormCaption = Title;
             FormPrompt = Prompt;
 
@@ -236,10 +239,10 @@ namespace LabBilling.Core
             return OutputResponse;
         }
 
-        static public InputBoxResult Show(string Prompt, string Title, string Default)
+        static public InputBoxResult Show(string Prompt, string Title, string Default, bool multiline = false)
         {
             InitializeComponent();
-
+            Multiline = multiline;
             FormCaption = Title;
             FormPrompt = Prompt;
             DefaultValue = Default;
@@ -250,9 +253,10 @@ namespace LabBilling.Core
             return OutputResponse;
         }
 
-        static public InputBoxResult Show(string Prompt, string Title, string Default, int XPos, int YPos)
+        static public InputBoxResult Show(string Prompt, string Title, string Default, int XPos, int YPos, bool multiline = false)
         {
             InitializeComponent();
+            Multiline = multiline;
             FormCaption = Title;
             FormPrompt = Prompt;
             DefaultValue = Default;
@@ -328,6 +332,14 @@ namespace LabBilling.Core
             set
             {
                 _passwordMask = value;
+            }
+        }
+
+        static private bool Multiline
+        {
+            set
+            {
+                _multiline = value;
             }
         }
 

@@ -19,9 +19,5 @@ ALTER ROLE [BillingClerk] ADD MEMBER [WTHMC\mclbill];
 
 
 GO
-ALTER ROLE [BillingClerk] ADD MEMBER [csellars];
-
-
-GO
 ALTER ROLE [BillingClerk] ADD MEMBER [WTHMC\LISANALYSTS];
 

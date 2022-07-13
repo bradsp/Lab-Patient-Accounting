@@ -10,4 +10,4 @@
 CREATE VIEW [dbo].[vw_med_stat] AS
 select acc.fin_code, chk.date_rec, chk.account, chk.amt_paid, chk.write_off, chk.contractual
 from chk JOIN acc on chk.account = acc.account
-where fin_code = 'A'
+where acc.fin_code = 'A'

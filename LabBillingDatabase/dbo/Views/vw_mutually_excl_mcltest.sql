@@ -1,7 +1,7 @@
 ﻿CREATE VIEW dbo.vw_mutually_excl_mcltest
 AS
 SELECT     cpt4_1, cpt4_2, version, mod_user, mod_date, mod_prg, mod_host, modi_indicator
-FROM         MCLTEST.dbo.mutually_excl
+FROM         dbo.mutually_excl
 
 GO
 EXECUTE sp_addextendedproperty @name = N'MS_DiagramPane1', @value = N'[0E232FF0-B466-11cf-A24F-00AA00A3EFFF, 1.00]

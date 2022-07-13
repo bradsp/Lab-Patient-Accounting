@@ -16,7 +16,7 @@ BEGIN
     -- Insert statements for procedure here
 	--SELECT @Client, @Invoice
 
-	select cl_mnem, invoice,service_date as [date], chrg.account, pat_name, chrg.cdm as [Charge Code]
+	select cl_mnem, invoice,service_date as [date], chrg.account, acc.pat_name, chrg.cdm as [Charge Code]
 		, qty, descript as [Charge Description] 
         , sum(qty*net_amt) over (partition by chrg.account, chrg.cdm) as [Amount] 
         from chrg 

@@ -48,6 +48,7 @@
             this.globalBillingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.posting835RemitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.clientBillsNewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.professionalBillingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dictionariesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.chargeMasterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.clientsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -82,12 +83,12 @@
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.windowManagerPanel1 = new MDIWindowManager.WindowManagerPanel();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.professionalBillingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.DashboardMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // DashboardMenu
             // 
+            this.DashboardMenu.BackColor = System.Drawing.Color.Transparent;
             this.DashboardMenu.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.DashboardMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.billingToolStripMenuItem,
@@ -224,6 +225,12 @@
             this.clientBillsNewToolStripMenuItem.Name = "clientBillsNewToolStripMenuItem";
             resources.ApplyResources(this.clientBillsNewToolStripMenuItem, "clientBillsNewToolStripMenuItem");
             this.clientBillsNewToolStripMenuItem.Click += new System.EventHandler(this.clientBillsNewToolStripMenuItem_Click);
+            // 
+            // professionalBillingToolStripMenuItem
+            // 
+            this.professionalBillingToolStripMenuItem.Name = "professionalBillingToolStripMenuItem";
+            resources.ApplyResources(this.professionalBillingToolStripMenuItem, "professionalBillingToolStripMenuItem");
+            this.professionalBillingToolStripMenuItem.Click += new System.EventHandler(this.professionalBillingToolStripMenuItem_Click);
             // 
             // dictionariesToolStripMenuItem
             // 
@@ -459,23 +466,17 @@
             resources.ApplyResources(this.panel1, "panel1");
             this.panel1.Name = "panel1";
             // 
-            // professionalBillingToolStripMenuItem
-            // 
-            this.professionalBillingToolStripMenuItem.Name = "professionalBillingToolStripMenuItem";
-            resources.ApplyResources(this.professionalBillingToolStripMenuItem, "professionalBillingToolStripMenuItem");
-            this.professionalBillingToolStripMenuItem.Click += new System.EventHandler(this.professionalBillingToolStripMenuItem_Click);
-            // 
             // Dashboard
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.White;
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.windowManagerPanel1);
             this.Controls.Add(this.DashboardMenu);
             this.IsMdiContainer = true;
             this.MainMenuStrip = this.DashboardMenu;
             this.Name = "Dashboard";
+            this.TransparencyKey = System.Drawing.Color.Empty;
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Dashboard_FormClosing);
             this.Load += new System.EventHandler(this.Dashboard_Load);

@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.UserListDGV = new System.Windows.Forms.DataGridView();
             this.UserNameLabel = new System.Windows.Forms.Label();
             this.UserName = new System.Windows.Forms.TextBox();
@@ -64,11 +64,12 @@
             // 
             this.UserListDGV.AllowUserToAddRows = false;
             this.UserListDGV.AllowUserToDeleteRows = false;
-            dataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.UserListDGV.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.UserListDGV.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
             this.UserListDGV.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.UserListDGV.BackgroundColor = System.Drawing.SystemColors.ControlLightLight;
             this.UserListDGV.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.UserListDGV.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.UserListDGV.Location = new System.Drawing.Point(378, 33);
@@ -352,6 +353,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
+            this.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.ClientSize = new System.Drawing.Size(819, 477);
             this.Controls.Add(this.ResetPassword);
             this.Controls.Add(this.ShowInactive);

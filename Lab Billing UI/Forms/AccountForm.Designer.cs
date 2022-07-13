@@ -2540,17 +2540,12 @@ namespace LabBilling.Forms
         }
 
         #endregion
-        private System.Windows.Forms.TabControl tabControl1;
-        private System.Windows.Forms.TabPage summaryTab;
-        private System.Windows.Forms.TabPage tabNotes;
         private System.Windows.Forms.TableLayoutPanel summaryTable;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem accountToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem changeDateOfServiceToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem changeFinancialClassToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem changeClientToolStripMenuItem;
-        private System.Windows.Forms.TabPage tabCharges;
-        private System.Windows.Forms.TabPage tabPayments;
         private System.Windows.Forms.TextBox tbBannerMRN;
         private System.Windows.Forms.TextBox tbBannerAccount;
         private System.Windows.Forms.TextBox tbBannerSex;
@@ -2561,7 +2556,6 @@ namespace LabBilling.Forms
         private System.Windows.Forms.ToolStripMenuItem personSearchToolStripMenuItem;
         private System.Windows.Forms.DataGridView dgvCharges;
         private System.Windows.Forms.DataGridView dgvPayments;
-        private System.Windows.Forms.TabPage tabDiagnosis;
         private System.Windows.Forms.DataGridView dgvDiagnosis;
         private System.Windows.Forms.PictureBox btnDxSearch;
         private System.Windows.Forms.TextBox txtSearchDx;
@@ -2592,8 +2586,6 @@ namespace LabBilling.Forms
         private System.Windows.Forms.Button btnAddCharge;
         private System.Windows.Forms.RichTextBox tbNotesDisplay;
         private System.Windows.Forms.Button btnNoteAdd;
-        private System.Windows.Forms.TabPage tabDemographics;
-        private System.Windows.Forms.TabPage tabInsurance;
         private System.Windows.Forms.MaskedTextBox tbZipcode;
         private LabBilling.Library.FlatCombo cbMaritalStatus;
         private System.Windows.Forms.Label label20;
@@ -2694,7 +2686,6 @@ namespace LabBilling.Forms
         private System.Windows.Forms.TextBox tbGuarantorLastName;
         private System.Windows.Forms.Label label30;
         private System.Windows.Forms.LinkLabel lGuarCopyPatient;
-        private System.Windows.Forms.TabPage tabBillingActivity;
         private System.Windows.Forms.ToolStripMenuItem viewAuditInfoToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem clearHoldStatusToolStripMenuItem;
         private System.Windows.Forms.TextBox tbBannerClient;
@@ -2716,6 +2707,15 @@ namespace LabBilling.Forms
         private System.Windows.Forms.Label lblTotalPmtAdj;
         private System.Windows.Forms.Label lblBalance;
         private System.Windows.Forms.Label lblTotalCharges;
+        private System.Windows.Forms.TabControl tabControl1;
+        private System.Windows.Forms.TabPage summaryTab;
+        private System.Windows.Forms.TabPage tabNotes;
+        private System.Windows.Forms.TabPage tabCharges;
+        private System.Windows.Forms.TabPage tabPayments;
+        private System.Windows.Forms.TabPage tabDiagnosis;
+        private System.Windows.Forms.TabPage tabDemographics;
+        private System.Windows.Forms.TabPage tabInsurance;
+        private System.Windows.Forms.TabPage tabBillingActivity;
     }
 }
 

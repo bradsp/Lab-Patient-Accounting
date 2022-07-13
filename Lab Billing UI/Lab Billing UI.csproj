@@ -52,6 +52,15 @@
     <Reference Include="MDIWindowManager, Version=2.1.2521.32075, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MDIWindowManager.2.1.0\lib\MDIWindowManager.dll</HintPath>
     </Reference>
+    <Reference Include="MetroFramework, Version=1.4.0.0, Culture=neutral, PublicKeyToken=5f91a84759bf584a, processorArchitecture=MSIL">
+      <HintPath>..\packages\MetroModernUI.1.4.0.0\lib\net\MetroFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="MetroFramework.Design, Version=1.4.0.0, Culture=neutral, PublicKeyToken=5f91a84759bf584a, processorArchitecture=MSIL">
+      <HintPath>..\packages\MetroModernUI.1.4.0.0\lib\net\MetroFramework.Design.dll</HintPath>
+    </Reference>
+    <Reference Include="MetroFramework.Fonts, Version=1.4.0.0, Culture=neutral, PublicKeyToken=5f91a84759bf584a, processorArchitecture=MSIL">
+      <HintPath>..\packages\MetroModernUI.1.4.0.0\lib\net\MetroFramework.Fonts.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="MstGrid, Version=4.20.12.4, Culture=neutral, PublicKeyToken=8ee81cea60080003, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -136,6 +145,12 @@
     </Compile>
     <Compile Include="Forms\InterfaceMonitor.Designer.cs">
       <DependentUpon>InterfaceMonitor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ReportingPortalForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ReportingPortalForm.Designer.cs">
+      <DependentUpon>ReportingPortalForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Legacy Forms\CDMMaintenance.cs">
       <SubType>Form</SubType>
@@ -372,9 +387,7 @@
     <Compile Include="Forms\PhysicianMaintenanceForm.Designer.cs">
       <DependentUpon>PhysicianMaintenanceForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\SummaryData.cs">
-      <SubType>Form</SubType>
-    </Compile>
+    <Compile Include="Forms\SummaryData.cs" />
     <Compile Include="Forms\WorkQueue.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -408,6 +421,7 @@
       <DependentUpon>UserSecurity.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\PhysicianMaintenanceView.cs" />
+    <None Include="Resources\client-login-icon-4.gif" />
     <None Include="Resources\collapsed.bmp" />
     <None Include="NLog.xsd">
       <SubType>Designer</SubType>
@@ -420,6 +434,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\InterfaceMonitor.resx">
       <DependentUpon>InterfaceMonitor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ReportingPortalForm.resx">
+      <DependentUpon>ReportingPortalForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Legacy Forms\CDMMaintenance.resx">
       <DependentUpon>CDMMaintenance.cs</DependentUpon>

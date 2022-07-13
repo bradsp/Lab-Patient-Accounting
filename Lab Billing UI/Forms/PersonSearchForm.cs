@@ -6,10 +6,11 @@ using System.Windows.Forms;
 using LabBilling.Core.DataAccess;
 using LabBilling.Logging;
 using LabBilling.Core.Models;
+using MetroFramework.Forms;
 
 namespace LabBilling.Forms
 {
-    public partial class PersonSearchForm : Form
+    public partial class PersonSearchForm : MetroForm
     {
         List<AccountSearch> searchResults = new List<AccountSearch>();
 

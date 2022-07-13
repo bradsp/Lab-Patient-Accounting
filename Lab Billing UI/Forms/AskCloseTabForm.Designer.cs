@@ -39,7 +39,7 @@ namespace LabBilling.Forms
             // 
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.label1.Location = new System.Drawing.Point(54, 9);
+            this.label1.Location = new System.Drawing.Point(75, 72);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(317, 63);
             this.label1.TabIndex = 0;
@@ -49,32 +49,37 @@ namespace LabBilling.Forms
             // OpenTabsList
             // 
             this.OpenTabsList.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.OpenTabsList.FormattingEnabled = true;
             this.OpenTabsList.ItemHeight = 16;
-            this.OpenTabsList.Location = new System.Drawing.Point(58, 75);
+            this.OpenTabsList.Location = new System.Drawing.Point(77, 151);
             this.OpenTabsList.Name = "OpenTabsList";
             this.OpenTabsList.Size = new System.Drawing.Size(313, 116);
             this.OpenTabsList.TabIndex = 1;
             // 
             // OKbutton
             // 
-            this.OKbutton.Location = new System.Drawing.Point(116, 216);
+            this.OKbutton.BackColor = System.Drawing.Color.LightSkyBlue;
+            this.OKbutton.FlatAppearance.BorderSize = 0;
+            this.OKbutton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.OKbutton.Location = new System.Drawing.Point(119, 300);
             this.OKbutton.Name = "OKbutton";
-            this.OKbutton.Size = new System.Drawing.Size(75, 23);
+            this.OKbutton.Size = new System.Drawing.Size(90, 37);
             this.OKbutton.TabIndex = 2;
             this.OKbutton.Text = "OK";
-            this.OKbutton.UseVisualStyleBackColor = true;
+            this.OKbutton.UseVisualStyleBackColor = false;
             this.OKbutton.Click += new System.EventHandler(this.OKbutton_Click);
             // 
             // CancelBtn
             // 
+            this.CancelBtn.BackColor = System.Drawing.Color.LightSkyBlue;
             this.CancelBtn.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.CancelBtn.Location = new System.Drawing.Point(228, 216);
+            this.CancelBtn.FlatAppearance.BorderSize = 0;
+            this.CancelBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.CancelBtn.Location = new System.Drawing.Point(248, 300);
             this.CancelBtn.Name = "CancelBtn";
-            this.CancelBtn.Size = new System.Drawing.Size(75, 23);
+            this.CancelBtn.Size = new System.Drawing.Size(88, 37);
             this.CancelBtn.TabIndex = 3;
             this.CancelBtn.Text = "Cancel";
-            this.CancelBtn.UseVisualStyleBackColor = true;
+            this.CancelBtn.UseVisualStyleBackColor = false;
             this.CancelBtn.Click += new System.EventHandler(this.CancelButton_Click);
             // 
             // AskCloseTabForm
@@ -82,7 +87,7 @@ namespace LabBilling.Forms
             this.AcceptButton = this.OKbutton;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(426, 265);
+            this.ClientSize = new System.Drawing.Size(464, 360);
             this.ControlBox = false;
             this.Controls.Add(this.CancelBtn);
             this.Controls.Add(this.OKbutton);

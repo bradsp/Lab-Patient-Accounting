@@ -114,7 +114,7 @@ group by acc.cl_mnem, convert(datetime,convert(varchar(10),service_date,101)), c
 	, chrg.chrg_num, chrg.credited,  convert(datetime,convert(varchar(10),amt.mod_date,101))
 	, acc.fin_code, client.type
 having sum(qty*amount) <> 0
-order by convert(datetime,convert(varchar(10),service_date,101)), account, cdm, cpt4
+order by convert(datetime,convert(varchar(10),service_date,101)), chrg.account, cdm, cpt4
 
 	
 	

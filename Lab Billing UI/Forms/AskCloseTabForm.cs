@@ -7,10 +7,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using MetroFramework.Forms;
 
 namespace LabBilling.Forms
 {
-    public partial class AskCloseTabForm : Form
+    public partial class AskCloseTabForm : MetroForm
     {
         public List<string> OpenTabs { get; set; }
         public string SelectedForm { get; set; }

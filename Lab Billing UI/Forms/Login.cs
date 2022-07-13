@@ -5,10 +5,12 @@ using LabBilling.Core.DataAccess;
 using System.Runtime.InteropServices;
 using System.Configuration;
 using LabBilling.Logging;
+using MetroFramework.Forms;
+using MetroFramework.Controls;
 
 namespace LabBilling
 {
-    public partial class Login : Form
+    public partial class Login : MetroForm
     {
         public Login()
         {

@@ -28,7 +28,7 @@ Declare @Unused_Indexes Table (
 
 DECLARE cr_db CURSOR static FOR  
 SELECT  [name]
-FROM  Master.sys.Databases SD  
+FROM  sys.Databases SD  
 WHERE SD.User_Access = 0 --MultiUser  
  AND SD.[State] = 0 --Online  
  And ([Name] = @Database or @Database = 'ALL')

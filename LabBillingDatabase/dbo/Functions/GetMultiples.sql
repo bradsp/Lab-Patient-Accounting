@@ -74,7 +74,7 @@ select DISTINCT cte.account ,
 			AND cte.qty <> 1
 where qty <> 0 and qty*amount > 0 
 AND cte.cpt4 IS null
-order by account, cpt4, modi, modi2
+order by account, cte.cpt4, modi, modi2
 	
 	
 	RETURN 

@@ -102,6 +102,7 @@
             this.dgvClients.AllowUserToResizeRows = false;
             this.dgvClients.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
+            this.dgvClients.BackgroundColor = System.Drawing.SystemColors.ControlLightLight;
             this.dgvClients.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvClients.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.dgvClients.Location = new System.Drawing.Point(12, 38);
@@ -674,6 +675,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.ClientSize = new System.Drawing.Size(1350, 634);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.tbContact);
