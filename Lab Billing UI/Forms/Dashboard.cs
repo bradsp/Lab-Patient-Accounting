@@ -89,7 +89,7 @@ namespace LabBilling
             //enable menu items based on permissions
             systemAdministrationToolStripMenuItem.Enabled = Program.LoggedInUser.IsAdministrator;
 
-            if (systemParametersRepository.GetByKey("allow_chk_entry") == "1")
+            if (Convert.ToBoolean(systemParametersRepository.GetByKey("allow_chk_entry")))
             {
                 paymentProcessingToolStripMenuItem.Enabled = Program.LoggedInUser.CanAddPayments;
                 batchRemittanceToolStripMenuItem.Enabled = Program.LoggedInUser.CanAddPayments;
@@ -99,7 +99,7 @@ namespace LabBilling
                 paymentProcessingToolStripMenuItem.Enabled = false;
                 batchRemittanceToolStripMenuItem.Enabled = false;
             }
-            if (systemParametersRepository.GetByKey("allow_chrg_entry") == "1")
+            if (Convert.ToBoolean(systemParametersRepository.GetByKey("allow_chrg_entry")))
             {
                 batchChargeEntryToolStripMenuItem.Enabled = Program.LoggedInUser.CanSubmitCharges;
             }
@@ -107,7 +107,7 @@ namespace LabBilling
             {
                 batchChargeEntryToolStripMenuItem.Enabled = false;
             }
-            if (systemParametersRepository.GetByKey("allow_edit") == "1")
+            if (Convert.ToBoolean(systemParametersRepository.GetByKey("allow_edit")))
             {
                 sSISubmissionToolStripMenuItem.Enabled = Program.LoggedInUser.CanSubmitBilling;
             }

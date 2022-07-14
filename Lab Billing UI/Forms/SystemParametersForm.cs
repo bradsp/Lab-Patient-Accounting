@@ -26,14 +26,13 @@ namespace LabBilling.Forms
         {
             Log.Instance.Trace($"Entering");
             //List<SystemParameters> results = new List<SystemParameters>();
-
             
-
             propertyGrid.SelectedObject = BuildDynamicClass();
         }
 
         protected object BuildDynamicClass()
         {
+            Log.Instance.Trace($"Entering");
             // Define the dynamic assembly, module and type
             AssemblyName assemblyName = new AssemblyName("SystemParametersAssembly");
             AssemblyBuilder assemblyBuilder =
@@ -51,7 +50,15 @@ namespace LabBilling.Forms
                 string description = row["description"]?.ToString();
                 Type dataType = Type.GetType(row["dataType"]?.ToString());
 
-                this.BuildProperty(typeBuilder, name, category, description, dataType);
+                if (dataType != null)
+                {
+                    this.BuildProperty(typeBuilder, name, category, description, dataType);
+                }
+                else
+                {
+                    Log.Instance.Error($"System parameter {name} has an invalid type.");
+                    MessageBox.Show($"System parameter {name} has an invalid type.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
 
             // Create and instantiate the dynamic type
@@ -64,8 +71,23 @@ namespace LabBilling.Forms
                 string name = row["key_name"].ToString();
                 Type dataType = Type.GetType(row["dataType"].ToString());
                 object value = row["value"];
+                if (dataType == typeof(bool))
+                {
+                    bool boolValue;
+                    if (bool.TryParse(value.ToString(), out boolValue))
+                        value = boolValue;
+                    else
+                    {
+                        int intValue;
+                        if (int.TryParse(value.ToString(), out intValue))
+                            value = System.Convert.ChangeType(intValue, dataType);
+                    }
 
-                value = (Convert.IsDBNull(value)) ? null : Convert.ChangeType(value, dataType);
+                }
+                else
+                {
+                    value = (Convert.IsDBNull(value)) ? null : Convert.ChangeType(value, dataType);
+                }
                 type.InvokeMember(name,
                                     BindingFlags.SetProperty,
                                     null,
@@ -154,6 +176,20 @@ namespace LabBilling.Forms
                 e.ChangedItem.Label,
                 e.OldValue, 
                 e.ChangedItem.Value));
+
+            SystemParameters systemParameters = new SystemParameters();
+            systemParameters.key_name = e.ChangedItem.Label;
+            systemParameters.value = e.ChangedItem.Value.ToString();
+
+            try
+            {
+                paramsdb.Update(systemParameters, new[] { "key_name", "value" });
+            }
+            catch(Exception ex)
+            {
+                Log.Instance.Error("Error updating system parameter.", ex);
+                MessageBox.Show("Error during update. Parameter was not updated.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }
