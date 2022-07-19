@@ -5089,7 +5089,6 @@ namespace LabBilling.Forms
 
             tsbValidate.Enabled = false;
 
-
             tscbFinCodes.Enabled = false;
             tspbCount.Value = 0;
             tspbCount.Step = 1;

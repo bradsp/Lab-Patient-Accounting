@@ -3,6 +3,10 @@ using LabBilling.Core.Models;
 using System;
 using System.Collections.Generic;
 using RFClassLibrary;
+using System.Text;
+using System.IO;
+using LabBilling.Core.BusinessLogic;
+using System.Text.Json;
 
 namespace LabBilling.Core.DataAccess
 {
@@ -16,6 +20,9 @@ namespace LabBilling.Core.DataAccess
         private readonly ClientRepository clientRepository;
         private readonly AccountNoteRepository accountNoteRepository;
         private readonly BillingActivityRepository billingActivityRepository;
+        private readonly AccountValidationRuleRepository accountValidationRuleRepository;
+        private readonly AccountValidationCriteriaRepository accountValidationCriteriaRepository;
+        private readonly AccountValidationStatusRepository accountValidationStatusRepository;
 
         public AccountRepository(string connectionString) : base("acc", connectionString)
         {
@@ -27,6 +34,9 @@ namespace LabBilling.Core.DataAccess
             clientRepository = new ClientRepository(_connection);
             accountNoteRepository = new AccountNoteRepository(_connection);
             billingActivityRepository = new BillingActivityRepository(_connection);
+            accountValidationRuleRepository = new AccountValidationRuleRepository(_connection);
+            accountValidationCriteriaRepository = new AccountValidationCriteriaRepository(_connection);
+            accountValidationStatusRepository = new AccountValidationStatusRepository(_connection);
         }
 
         public AccountRepository(string connectionString, PetaPoco.Database db) : base("acc", connectionString, db)
@@ -39,6 +49,9 @@ namespace LabBilling.Core.DataAccess
             clientRepository = new ClientRepository(_connection, db);
             accountNoteRepository = new AccountNoteRepository(_connection, db);
             billingActivityRepository = new BillingActivityRepository(_connection, db);
+            accountValidationRuleRepository = new AccountValidationRuleRepository(_connection, db);
+            accountValidationCriteriaRepository = new AccountValidationCriteriaRepository(_connection, db);
+            accountValidationStatusRepository = new AccountValidationStatusRepository(_connection, db);
         }
 
         public override Account GetById(int id)
@@ -81,6 +94,7 @@ namespace LabBilling.Core.DataAccess
                 record.Payments = chkRepository.GetByAccount(account);
                 record.Notes = accountNoteRepository.GetByAccount(account);
                 record.BillingActivities = billingActivityRepository.GetByAccount(account);
+                record.AccountValidationStatus = accountValidationStatusRepository.GetByAccount(account);
             }
             Client client;
             if (record.cl_mnem != null)
@@ -166,7 +180,6 @@ namespace LabBilling.Core.DataAccess
             Log.Instance.Trace("Entering");
 
             return dbConnection.Fetch<InvoiceSelect>("where cl_mnem = @0 and trans_date <= @1", clientMnem, thruDate);
-
         }
 
         public IEnumerable<ClaimItem> GetAccountsForClaims(ClaimType claimType)
@@ -493,6 +506,71 @@ namespace LabBilling.Core.DataAccess
             return chrgRepository.AddCharge(chrg);
         }
 
+        /// <summary>
+        /// Runs all validation checks needed for generating a claim.
+        /// </summary>
+        /// <param name="account"></param>
+        /// <returns>string containing list of errors</returns>
+        //public string Validate2(Account account)
+        //{
+        //    Log.Instance.Trace($"Entering account validate with {account.account}.");
+
+        //    StringBuilder errorList = new StringBuilder();
+
+        //    var rules = accountValidationRuleRepository.GetAll();
+
+        //    foreach(var rule in rules)
+        //    {
+        //        //TODO: determine if rule should be checked based on criteria
+
+
+        //        string fromDate = "01/01/2002"; // DateTimeExtension.AddWeeks(DateTime.Today, -52).ToShortDateString();
+        //        string thruDate = DateTime.Today.ToShortDateString();
+        //        string sqlText = rule.strSql.Replace("{0}", account.account);
+        //        sqlText = sqlText.Replace("{1}", fromDate);
+        //        sqlText = sqlText.Replace("{2}", thruDate);
+        //        sqlText = sqlText.Replace("@", "@@");
+        //        var result = dbConnection.Execute(sqlText);
+        //        if(rule.valid)
+        //        {
+        //            //returning no rows is an error
+        //            if(result <= 0)
+        //            {
+        //                errorList.AppendLine(rule.error);
+        //            }
+        //        }
+        //        else
+        //        {
+        //            //returning rows is an error
+        //            if(result > 0)
+        //            {
+        //                errorList.AppendLine(rule.error);
+        //            }
+        //        }
+
+        //    }
+
+        //    return errorList.ToString();
+        //}
+
+
+        public bool Validate(Account account)
+        {
+            ClaimRulesEngine engine = new ClaimRulesEngine(_connection);
+            bool retVal = false;
+            try
+            {
+                retVal = engine.Evaluate(account, out StringBuilder errorList);
+            }
+            catch(RuleProcessException rpex)
+            {
+                retVal = false;
+                //TODO: write error message to account
+                string error = rpex.Message;
+            }
+
+            return retVal;
+        }
 
     }
 }

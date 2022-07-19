@@ -166,17 +166,17 @@ namespace LabBilling
         {
             foreach (Control c in controls)
             {
-                if (c is TextBox)
+                if (c is TextBox || c is MetroFramework.Controls.MetroTextBox)
                     ((TextBox)c).ReadOnly = !allowAccess;
-                if (c is CheckBox)
+                if (c is CheckBox || c is MetroFramework.Controls.MetroCheckBox)
                     ((CheckBox)c).Enabled = allowAccess;
-                if (c is ComboBox)
+                if (c is ComboBox || c is MetroFramework.Controls.MetroComboBox)
                     ((ComboBox)c).Enabled = allowAccess;
                 if (c is MaskedTextBox)
                     ((MaskedTextBox)c).ReadOnly = !allowAccess;
-                if (c is Button)
+                if (c is Button || c is MetroFramework.Controls.MetroButton)
                     ((Button)c).Enabled = allowAccess;
-                if (c is DataGridView)
+                if (c is DataGridView || c is MetroFramework.Controls.MetroGrid)
                     ((DataGridView)c).Enabled = allowAccess;
             }
         }

@@ -14,9 +14,9 @@ namespace LabBilling.Core.DataAccess
     /// 
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public abstract class RepositoryBase<T> where T : IBaseEntity
+    public abstract class RepositoryBase<T> : IRepositoryBase<T> where T : IBaseEntity
     {
-        protected readonly PetaPoco.Database dbConnection = null; 
+        protected readonly PetaPoco.Database dbConnection = null;
         protected readonly string _tableName;
         protected IList<string> _fields;
         /// <summary>
@@ -53,7 +53,7 @@ namespace LabBilling.Core.DataAccess
             Log.Instance.Trace("Entering");
 
             string sql = $"SELECT * FROM {_tableName}";
-            
+
             var queryResult = dbConnection.Fetch<T>(sql);
 
             Log.Instance.Trace("Exiting");
@@ -136,6 +136,31 @@ namespace LabBilling.Core.DataAccess
 
             dbConnection.Update(table, cColumns);
             Log.Instance.Trace("Exiting");
+            return true;        
+        }
+
+        public virtual bool Save(T table)
+        {
+            Log.Instance.Trace("Entering");
+
+            if (table.mod_date == null)
+                table.mod_date = DateTime.Now;
+            if (table.mod_host == "" || table.mod_host == null)
+                table.mod_host = Environment.MachineName;
+            if (table.mod_prg == "" || table.mod_prg == null)
+                table.mod_prg = System.AppDomain.CurrentDomain.FriendlyName;
+            if (table.mod_user == "" || table.mod_user == null)
+                table.mod_user = Environment.UserName.ToString();
+            try
+            {
+                dbConnection.Save(table);
+            }
+            catch(Exception ex)
+            {
+                Log.Instance.Error("Error saving account validation record to database.", ex);
+                return false;
+            }
+            Log.Instance.Trace("Exiting");
             return true;
         }
 
@@ -162,6 +187,6 @@ namespace LabBilling.Core.DataAccess
         {
             dbConnection.AbortTransaction();
         }
-        
+
     }
 }

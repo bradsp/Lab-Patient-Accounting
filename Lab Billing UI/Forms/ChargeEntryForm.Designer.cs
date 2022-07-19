@@ -39,7 +39,6 @@
             this.tbComment = new System.Windows.Forms.TextBox();
             this.btnSubmit = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
-            this.cbChargeItem = new MultiColumnCombo.MultiColumnComboBox();
             this.tbDateOfService = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.SearchByCdm = new System.Windows.Forms.RadioButton();
@@ -47,6 +46,7 @@
             this.SearchBy = new System.Windows.Forms.GroupBox();
             this.label5 = new System.Windows.Forms.Label();
             this.ReferenceNumber = new System.Windows.Forms.TextBox();
+            this.cbChargeItem = new MultiColumnCombo.MultiColumnComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.nQty)).BeginInit();
             this.SearchBy.SuspendLayout();
             this.SuspendLayout();
@@ -55,11 +55,11 @@
             // 
             this.tbBannerMRN.BackColor = System.Drawing.SystemColors.Control;
             this.tbBannerMRN.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.tbBannerMRN.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbBannerMRN.Location = new System.Drawing.Point(233, 13);
+            this.tbBannerMRN.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbBannerMRN.Location = new System.Drawing.Point(157, 25);
             this.tbBannerMRN.Name = "tbBannerMRN";
             this.tbBannerMRN.ReadOnly = true;
-            this.tbBannerMRN.Size = new System.Drawing.Size(94, 22);
+            this.tbBannerMRN.Size = new System.Drawing.Size(172, 19);
             this.tbBannerMRN.TabIndex = 2;
             this.tbBannerMRN.TabStop = false;
             // 
@@ -68,10 +68,10 @@
             this.tbBannerAccount.BackColor = System.Drawing.SystemColors.Control;
             this.tbBannerAccount.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.tbBannerAccount.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbBannerAccount.Location = new System.Drawing.Point(99, 13);
+            this.tbBannerAccount.Location = new System.Drawing.Point(12, 25);
             this.tbBannerAccount.Name = "tbBannerAccount";
             this.tbBannerAccount.ReadOnly = true;
-            this.tbBannerAccount.Size = new System.Drawing.Size(128, 22);
+            this.tbBannerAccount.Size = new System.Drawing.Size(139, 22);
             this.tbBannerAccount.TabIndex = 1;
             this.tbBannerAccount.TabStop = false;
             // 
@@ -80,7 +80,7 @@
             this.tbBannerName.BackColor = System.Drawing.SystemColors.Control;
             this.tbBannerName.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.tbBannerName.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbBannerName.Location = new System.Drawing.Point(12, 41);
+            this.tbBannerName.Location = new System.Drawing.Point(12, 56);
             this.tbBannerName.Name = "tbBannerName";
             this.tbBannerName.ReadOnly = true;
             this.tbBannerName.Size = new System.Drawing.Size(547, 19);
@@ -90,7 +90,7 @@
             // label37
             // 
             this.label37.AutoSize = true;
-            this.label37.Location = new System.Drawing.Point(13, 18);
+            this.label37.Location = new System.Drawing.Point(9, 9);
             this.label37.Name = "label37";
             this.label37.Size = new System.Drawing.Size(80, 13);
             this.label37.TabIndex = 0;
@@ -167,33 +167,22 @@
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
-            // cbChargeItem
-            // 
-            this.cbChargeItem.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
-            this.cbChargeItem.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
-            this.cbChargeItem.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
-            this.cbChargeItem.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbChargeItem.Location = new System.Drawing.Point(99, 154);
-            this.cbChargeItem.Name = "cbChargeItem";
-            this.cbChargeItem.Size = new System.Drawing.Size(451, 21);
-            this.cbChargeItem.TabIndex = 13;
-            // 
             // tbDateOfService
             // 
             this.tbDateOfService.BackColor = System.Drawing.SystemColors.Control;
             this.tbDateOfService.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.tbDateOfService.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbDateOfService.Location = new System.Drawing.Point(431, 13);
+            this.tbDateOfService.Location = new System.Drawing.Point(348, 25);
             this.tbDateOfService.Name = "tbDateOfService";
             this.tbDateOfService.ReadOnly = true;
-            this.tbDateOfService.Size = new System.Drawing.Size(128, 22);
+            this.tbDateOfService.Size = new System.Drawing.Size(211, 22);
             this.tbDateOfService.TabIndex = 4;
             this.tbDateOfService.TabStop = false;
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(345, 18);
+            this.label4.Location = new System.Drawing.Point(345, 9);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(81, 13);
             this.label4.TabIndex = 3;
@@ -250,6 +239,17 @@
             this.ReferenceNumber.Name = "ReferenceNumber";
             this.ReferenceNumber.Size = new System.Drawing.Size(100, 20);
             this.ReferenceNumber.TabIndex = 12;
+            // 
+            // cbChargeItem
+            // 
+            this.cbChargeItem.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
+            this.cbChargeItem.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this.cbChargeItem.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
+            this.cbChargeItem.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbChargeItem.Location = new System.Drawing.Point(99, 154);
+            this.cbChargeItem.Name = "cbChargeItem";
+            this.cbChargeItem.Size = new System.Drawing.Size(451, 21);
+            this.cbChargeItem.TabIndex = 13;
             // 
             // ChargeEntryForm
             // 

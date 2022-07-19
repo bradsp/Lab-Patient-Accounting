@@ -29,7 +29,17 @@ namespace LabBilling
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Dashboard());
+            Login loginFrm = new Login();
+            if(loginFrm.ShowDialog() == DialogResult.OK)
+            {
+                Application.Run(new MainForm());
+            }
+            else
+            {
+                Application.Exit();
+            }
+
+            
         }
 
         static void Application_ThreadException(object sender, ThreadExceptionEventArgs e)
@@ -48,6 +58,7 @@ namespace LabBilling
 
         static void OnApplicationExit(object sender, EventArgs e)
         {
+            Cursor.Current = Cursors.WaitCursor;
 
             NLog.LogManager.Shutdown();
 

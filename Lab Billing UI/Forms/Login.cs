@@ -59,7 +59,9 @@ namespace LabBilling
             {
                 IsLoggedIn = true;
                 LoggedInUser = db.GetByUsername(username.Text);
-                if(LoggedInUser == null)
+                Program.LoggedInUser = LoggedInUser;
+                Program.LoggedInUser.Password = "";
+                if (LoggedInUser == null)
                 {
                     IsLoggedIn = false;
                     Log.Instance.Info(string.Format("Username {0} is not authorized for billing system access.", systemUser));
@@ -78,6 +80,8 @@ namespace LabBilling
                 {
                     IsLoggedIn = true;
                     LoggedInUser = db.GetByUsername(username.Text);
+                    Program.LoggedInUser = LoggedInUser;
+                    Program.LoggedInUser.Password = "";
                     Log.Instance.Info(string.Format("Login Success - {0}", LoggedInUser.UserName));
                     this.DialogResult = DialogResult.OK;
                 }
@@ -89,6 +93,7 @@ namespace LabBilling
                     return;
                 }
             }
+
         }
 
         private void pictureBox1_Click(object sender, EventArgs e)

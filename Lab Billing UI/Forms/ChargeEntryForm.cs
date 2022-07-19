@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using LabBilling.Logging;
 using System.Linq;
 using System.Data;
+using System.Threading.Tasks;
 
 namespace LabBilling.Forms
 {
@@ -32,7 +33,11 @@ namespace LabBilling.Forms
             tbBannerMRN.Text = _currentAccount.mri;
             tbDateOfService.Text = _currentAccount.trans_date.Value.ToShortDateString();
 
-            #region Setup Charge Item Combobox
+            BuildCargeItemCombo();
+        }
+
+        private void BuildCargeItemCombo()
+        {
             var chrgItems = cdmRepository.GetAll().ToList();
 
             DataTable cdmDataTable = new DataTable(typeof(Cdm).Name);
@@ -58,12 +63,9 @@ namespace LabBilling.Forms
 
             cbChargeItem.Items.Clear();
             cbChargeItem.DataSource = cdmSortedByCdm;
-            
+
             cbChargeItem.DisplayMember = "cdm";
             cbChargeItem.ValueMember = "cdm";
-          
-            #endregion
-
         }
 
         private void btnSubmit_Click(object sender, EventArgs e)
@@ -117,19 +119,21 @@ namespace LabBilling.Forms
 
         private void SearchByCheckChanged (object sender, EventArgs e)
         {
-            if(SearchByCdm.Checked)
+            if (cbChargeItem != null)
             {
-                cbChargeItem.DataSource = cdmSortedByCdm;
-                cbChargeItem.DisplayMember = "cdm";
-                cbChargeItem.ValueMember = "cdm";
+                if (SearchByCdm.Checked)
+                {
+                    cbChargeItem.DataSource = cdmSortedByCdm;
+                    cbChargeItem.DisplayMember = "cdm";
+                    cbChargeItem.ValueMember = "cdm";
+                }
+                else if (SearchByDescription.Checked)
+                {
+                    cbChargeItem.DataSource = cdmSortedByDesc;
+                    cbChargeItem.DisplayMember = "descript";
+                    cbChargeItem.ValueMember = "cdm";
+                }
             }
-            else if(SearchByDescription.Checked)
-            {
-                cbChargeItem.DataSource = cdmSortedByDesc;
-                cbChargeItem.DisplayMember = "descript";
-                cbChargeItem.ValueMember = "cdm";
-            }
-
         }
     }
 }

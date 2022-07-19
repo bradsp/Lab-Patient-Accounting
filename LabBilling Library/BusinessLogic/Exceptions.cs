@@ -8,7 +8,7 @@ namespace LabBilling.Core
 {
 
     [Serializable]
-    public class CdmNotFoundException : Exception
+    public class CdmNotFoundException : ApplicationException
     {
         public string Cdm { get; }
 
@@ -37,7 +37,7 @@ namespace LabBilling.Core
     }
 
     [Serializable]
-    public class AccountNotFoundException : Exception
+    public class AccountNotFoundException : ApplicationException
     {
         public string AccountNumber { get; }
 
@@ -65,7 +65,7 @@ namespace LabBilling.Core
     }
 
     [Serializable]
-    public class InvalidParameterValueException : Exception
+    public class InvalidParameterValueException : ApplicationException
     {
         public string ParameterName { get; }
 
@@ -94,7 +94,7 @@ namespace LabBilling.Core
     }
 
     [Serializable]
-    public class PatientNameParseException : Exception
+    public class PatientNameParseException : ApplicationException
     {
         public string PatientName { get; }
         public string Account { get; }
@@ -121,6 +121,28 @@ namespace LabBilling.Core
         {
             PatientName = patientName;
             Account = account;
+        }
+    }
+
+    public class RuleProcessException : ApplicationException
+    {
+        public string RuleName { get; }
+
+        public RuleProcessException()
+        {
+
+        }
+
+        public RuleProcessException(string message, Exception innerException)
+            : base(message, innerException)
+        {
+
+        }
+
+        public RuleProcessException(string message, string ruleName)
+            : base(message)
+        {
+            RuleName = ruleName;
         }
     }
 

@@ -90,6 +90,11 @@ namespace LabBilling.Core.BusinessLogic
             {
                 foreach (ClaimItem item in list)
                 {
+                    //validate account data before starting - if there are errors do not process claim.
+                    // primary ins holder name is empty
+                    // no dx codes
+
+
                     claim = GenerateProfessionalClaim(item.account);
                     claims.Add(claim);
 
@@ -121,7 +126,7 @@ namespace LabBilling.Core.BusinessLogic
 
                 }
 
-                string x12Text = billing837.Generate837pClaimBatch(claims, interchangeControlNumber, propProductionEnvironment, batchSubmitterID, parametersdb.GetByKey("837p_file_loation"));
+                string x12Text = billing837.Generate837ClaimBatch(claims, interchangeControlNumber, propProductionEnvironment, batchSubmitterID, parametersdb.GetByKey("837p_file_loation"), Billing837.ClaimType.Professional);
 
                 BillingBatch billingBatch = new BillingBatch();
                 billingBatch.batch = Convert.ToDouble(interchangeControlNumber);
@@ -159,6 +164,9 @@ namespace LabBilling.Core.BusinessLogic
         /// <exception cref="InvalidParameterValueException"></exception>
         public ClaimData GenerateProfessionalClaim(string account)
         {
+            
+
+            
             //do all the fun work of building the ClaimData object & return it.
 
             ClaimData claimData = new ClaimData
@@ -270,7 +278,7 @@ namespace LabBilling.Core.BusinessLogic
                     subscriber.IndividualRelationshipCode = ins.Relation == "01" ? "18" : String.Empty;
                     subscriber.ReferenceIdentification = ins.GroupNumber;
                     subscriber.PlanName = string.IsNullOrEmpty(ins.GroupName) ? ins.PlanName : ins.GroupName;
-
+                   
                     subscriber.LastName = ins.HolderLastName;
                     subscriber.FirstName = ins.HolderFirstName;
                     subscriber.MiddleName = ins.HolderMiddleName;

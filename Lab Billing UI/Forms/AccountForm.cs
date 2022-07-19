@@ -13,6 +13,7 @@ using RFClassLibrary;
 using System.Data;
 using System.Text;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace LabBilling.Forms
 {
@@ -82,7 +83,7 @@ namespace LabBilling.Forms
                 }
             }
 
-            Helper.SetControlsAccess(tabDemographics.Controls, false);
+            Helper.SetControlsAccess(demoTabLayoutPanel.Controls, false);
             Helper.SetControlsAccess(tabInsurance.Controls, false);
             Helper.SetControlsAccess(insTabLayoutPanel.Controls, false);
             Helper.SetControlsAccess(tabDiagnosis.Controls, false);
@@ -95,11 +96,11 @@ namespace LabBilling.Forms
             changeDateOfServiceToolStripMenuItem.Enabled = false;
             changeFinancialClassToolStripMenuItem.Enabled = false;
             clearHoldStatusToolStripMenuItem.Enabled = false;
-            if(systemParametersRepository.GetByKey("allow_edit") == "1")
+            if(Convert.ToBoolean(systemParametersRepository.GetByKey("allow_edit")))
             {
                 if(Program.LoggedInUser.Access == "ENTER/EDIT")
                 {
-                    Helper.SetControlsAccess(tabDemographics.Controls, true);
+                    Helper.SetControlsAccess(demoTabLayoutPanel.Controls, true);
                     Helper.SetControlsAccess(tabInsurance.Controls, true);
                     Helper.SetControlsAccess(insTabLayoutPanel.Controls, true);
                     Helper.SetControlsAccess(tabDiagnosis.Controls, true);
@@ -168,6 +169,7 @@ namespace LabBilling.Forms
             #endregion
 
             #region Setup Insurance Company Combobox
+
             insCompanies = insCompanyRepository.GetAll(true).ToList();
 
             DataTable inscDataTable = new DataTable(typeof(InsCompany).Name);
@@ -242,7 +244,7 @@ namespace LabBilling.Forms
                 userProfileDB.InsertRecentAccount(SelectedAccount, Program.LoggedInUser.UserName);
                 LoadAccountData();
 
-                AddOnChangeHandlerToInputControls(tabDemographics);
+                AddOnChangeHandlerToInputControls(demoTabLayoutPanel);
                 AddOnChangeHandlerToInputControls(tabInsurance);
             }
 
@@ -1509,6 +1511,9 @@ namespace LabBilling.Forms
 
             //billingActivities = dbBillingActivity.GetByAccount(currentAccountSummary.account);
             dgvBillActivity.DataSource = currentAccount.BillingActivities.ToList();
+
+            tbValidationResults.Text = currentAccount.AccountValidationStatus.validation_text;
+            lblLastValidated.Text = currentAccount.AccountValidationStatus.mod_date.ToString("G");
            
         }
 
@@ -1823,6 +1828,20 @@ namespace LabBilling.Forms
 
         }
 
+        private async void btnValidateAccount_Click(object sender, EventArgs e)
+        {
+            if (!await Task.Run(() => accDB.Validate(currentAccount)))
+            {
+                //has validation errors - do not bill
+                tbValidationResults.Text = currentAccount.AccountValidationStatus.validation_text;
+                lblLastValidated.Text = currentAccount.AccountValidationStatus.mod_date.ToString("G");
+            }
+            else
+            {
+                //ok to bill
+                tbValidationResults.Text = "No validation errors.";
+            }
 
+        }
     }
 }

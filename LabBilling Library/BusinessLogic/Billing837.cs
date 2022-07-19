@@ -35,8 +35,8 @@ namespace LabBilling.Core
         /// <param name="elementTerminator"></param>
         /// <param name="componentSeparator"></param>
         /// <param name="repetitionSeparator"></param>
-        public string Generate837pClaimBatch(IEnumerable<ClaimData> claims, string interchangeControlNumber, string environment, string batchSubmitterId, 
-            string file_location, char segmentTerminator = '~', char elementTerminator = '*', char componentSeparator = ':', char repetitionSeparator = '^')
+        public string Generate837ClaimBatch(IEnumerable<ClaimData> claims, string interchangeControlNumber, string environment, string batchSubmitterId, 
+            string file_location, ClaimType claimType, char segmentTerminator = '~', char elementTerminator = '*', char componentSeparator = ':', char repetitionSeparator = '^')
         {
             var ediDocument = new EdiDocument();
 
@@ -44,6 +44,21 @@ namespace LabBilling.Core
             ediDocument.Options.ElementSeparator = elementTerminator;
             ediDocument.Options.ComponentSeparator = componentSeparator;
             ediDocument.Options.RepetitionSeparator = repetitionSeparator;
+
+            string versionReleaseSpecifierCode;
+
+            switch (claimType)
+            {
+                case ClaimType.Insitutuional:
+                    versionReleaseSpecifierCode = "005010X223";
+                    break;
+                case ClaimType.Professional:
+                    versionReleaseSpecifierCode = "005010X222";
+                    break;
+                default:
+                    versionReleaseSpecifierCode = String.Empty;
+                    break;
+            }
 
 
             ediDocument.Segments.Add(new EdiSegment("ISA")
@@ -75,7 +90,7 @@ namespace LabBilling.Core
                 [05] = EdiValue.Time(4, DateTime.Now), //time 
                 [06] = interchangeControlNumber, // group control number 
                 [07] = "X", //responsible agency code
-                [08] = "005010X222" // version / release/ industry identifier code
+                [08] = versionReleaseSpecifierCode // version / release/ industry identifier code
             });
             //loop through accounts - generate loops for each claim
             int transactionSets = 0;
@@ -369,24 +384,34 @@ namespace LabBilling.Core
                         segmentCount++;
                     }
                     // -- N4 - Payer City State Zip
-                    ediDocument.Segments.Add(new EdiSegment("N4")
+                    if (!string.IsNullOrEmpty(subscriber.PayerCity))
                     {
-                        [01] = subscriber.PayerCity,
-                        [02] = subscriber.PayerState,
-                        [03] = subscriber.PayerZipCode,
-                        [04] = subscriber.PayerCountry
-                    });
-                    segmentCount++;
+                        //payer city is a required field if populating N4 segment
+                        ediDocument.Segments.Add(new EdiSegment("N4")
+                        {
+                            [01] = subscriber.PayerCity,
+                            [02] = subscriber.PayerState,
+                            [03] = subscriber.PayerZipCode,
+                            [04] = subscriber.PayerCountry
+                        });
+                        segmentCount++;
+                    }
                     // -- REF - Payer Secondary Identification
                     if (!string.IsNullOrEmpty(subscriber.PayerIdentificationQualifier) 
                         && !string.IsNullOrEmpty(subscriber.BillingProviderSecondaryIdentifier))
                     {
-                        ediDocument.Segments.Add(new EdiSegment("REF")
+                        string[] invalidQualifiers = new string[3] { "1B", "1D", "CI" };
+                        //1B is not a valid qualifier for professional claims
+                        if (!invalidQualifiers.Contains(subscriber.PayerIdentificationQualifier)
+                            && claimType == ClaimType.Professional)
                         {
-                            [01] = subscriber.PayerIdentificationQualifier,
-                            [02] = subscriber.BillingProviderSecondaryIdentifier
-                        });
-                        segmentCount++;
+                            ediDocument.Segments.Add(new EdiSegment("REF")
+                            {
+                                [01] = subscriber.PayerIdentificationQualifier,
+                                [02] = subscriber.BillingProviderSecondaryIdentifier
+                            });
+                            segmentCount++;
+                        }
                     }
 
                     // -- REF - Billing Provider Secondary Identification
@@ -500,8 +525,10 @@ namespace LabBilling.Core
                 int dxcnt = 1;
                 foreach(PatDiag diag in claim.claimAccount.Pat.Diagnoses)
                 {
+                    //per spec "ABK" is code for ICD-10, but does not pass validation
+                    //using "BK" for icd9
                     var hiElement = new EdiElement();
-                    hiElement[1] = "ABK";
+                    hiElement[1] = "BK";
                     hiElement[2] = diag.Code;
 
                     hi.Element(dxcnt, hiElement);
@@ -857,6 +884,12 @@ namespace LabBilling.Core
             AdministrationDelayInPriorApprovalProcess,
             Other,
             NaturalDisaster
+        };
+
+        public enum ClaimType
+        {
+            Insitutuional,
+            Professional
         };
 
         readonly Dictionary<DelayReason, string> DelayReasonCode = new Dictionary<DelayReason, string>()

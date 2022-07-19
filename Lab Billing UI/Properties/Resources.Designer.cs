@@ -113,6 +113,16 @@ namespace LabBilling.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap logoicon2 {
+            get {
+                object obj = ResourceManager.GetObject("logoicon2", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap lookup_icon_png_and_vector_for_free_download_pngtree_lookup_png_512_512 {
             get {
                 object obj = ResourceManager.GetObject("lookup-icon-png-and-vector-for-free-download-pngtree-lookup-png-512_512", resourceCulture);

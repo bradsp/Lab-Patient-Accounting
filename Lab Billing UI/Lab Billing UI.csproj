@@ -140,6 +140,12 @@
     <Compile Include="Forms\ClientInvoiceForm.Designer.cs">
       <DependentUpon>ClientInvoiceForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\DashboardForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\DashboardForm.Designer.cs">
+      <DependentUpon>DashboardForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\InterfaceMonitor.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -344,11 +350,11 @@
     <Compile Include="Forms\ClientsForm.Designer.cs">
       <DependentUpon>ClientsForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Dashboard.cs">
+    <Compile Include="Forms\MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\Dashboard.Designer.cs">
-      <DependentUpon>Dashboard.cs</DependentUpon>
+    <Compile Include="Forms\MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Library\Helper.cs" />
     <Compile Include="Forms\AccountForm.cs">
@@ -421,6 +427,7 @@
       <DependentUpon>UserSecurity.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\PhysicianMaintenanceView.cs" />
+    <None Include="Resources\logoicon2.png" />
     <None Include="Resources\client-login-icon-4.gif" />
     <None Include="Resources\collapsed.bmp" />
     <None Include="NLog.xsd">
@@ -431,6 +438,9 @@
     <None Include="Resources\lookup-icon-png-and-vector-for-free-download-pngtree-lookup-png-512_512.png" />
     <EmbeddedResource Include="Forms\ClientInvoiceForm.resx">
       <DependentUpon>ClientInvoiceForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\DashboardForm.resx">
+      <DependentUpon>DashboardForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\InterfaceMonitor.resx">
       <DependentUpon>InterfaceMonitor.cs</DependentUpon>
@@ -526,8 +536,8 @@
     <EmbeddedResource Include="Forms\ClientsForm.resx">
       <DependentUpon>ClientsForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Dashboard.resx">
-      <DependentUpon>Dashboard.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ErrorsForm.resx">
       <DependentUpon>ErrorsForm.cs</DependentUpon>

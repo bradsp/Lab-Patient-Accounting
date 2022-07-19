@@ -13,11 +13,11 @@ using System.Collections.Generic;
 using LabBilling.Core.BusinessLogic;
 using MetroFramework.Forms;
 using MetroFramework.Controls;
-
+using System.Drawing;
 
 namespace LabBilling
 {
-    public partial class Dashboard : MetroForm
+    public partial class MainForm : MetroForm
     {
 
         private Accordion accordion = new Accordion();
@@ -25,7 +25,7 @@ namespace LabBilling
         private readonly AccountRepository accountRepository = new AccountRepository(Helper.ConnVal);
         private readonly SystemParametersRepository systemParametersRepository = new SystemParametersRepository(Helper.ConnVal);
 
-        public Dashboard()
+        public MainForm()
         {
             InitializeComponent();
         }
@@ -60,30 +60,15 @@ namespace LabBilling
         private void Dashboard_Load(object sender, EventArgs e)
         {
             Log.Instance.Trace($"Entering");
+            
 
             #region user authentication
 
-            Login frm = new Login();
-            
-            if (frm.ShowDialog() == DialogResult.OK)
+            if(Program.LoggedInUser == null)
             {
-                if (frm.IsLoggedIn)
-                {
-                    Program.LoggedInUser = frm.LoggedInUser;
-                    Program.LoggedInUser.Password = "";
-                }
-                else
-                {
-                    this.Close();
-                    Application.Exit();
-                    return;
-                }
-            }
-            else
-            {
-                this.Close();
+                Log.Instance.Fatal("There is not a valid user object.");
+                MessageBox.Show("Application error with user object. Aborting.", "Fatal Error", MessageBoxButtons.OK, MessageBoxIcon.Stop);
                 Application.Exit();
-                return;
             }
 
             //enable menu items based on permissions
@@ -128,7 +113,14 @@ namespace LabBilling
             tlpRecentAccounts.ColumnCount = 1;
 
             this.Text += " " + Helper.Environment;
-
+            
+            if (!Convert.ToBoolean(systemParametersRepository.GetByKey("allow_edit")))
+                this.Text += " | READ ONLY MODE";
+            if (!Convert.ToBoolean(systemParametersRepository.GetByKey("allow_chrg_entry")))
+                this.Text += " | Charge entry disabled";
+            if (!Convert.ToBoolean(systemParametersRepository.GetByKey("allow_chk_entry")))
+                this.Text += " | Pmt/Adj entry disabled";
+            
             foreach (UserProfile up in recentAccounts)
             {
                 var ar = accountRepository.GetByAccount(up.ParameterData,true);
@@ -199,6 +191,12 @@ namespace LabBilling
             accordion.PerformLayout();
             #endregion
 
+            DashboardForm frm = new DashboardForm();
+            frm.MdiParent = this;
+            frm.WindowState = FormWindowState.Normal;
+            frm.AutoScroll = true;
+            frm.Show();
+
         }
 
         private void RecentLabelClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -224,7 +222,9 @@ namespace LabBilling
             {
                 AccountForm frm = new AccountForm(linkLabel.Tag.ToString());
                 frm.MdiParent = this;
+                Cursor.Current = Cursors.WaitCursor;
                 frm.Show();
+                Cursor.Current = Cursors.Default;
             }
 
         }
@@ -427,8 +427,8 @@ namespace LabBilling
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Log.Instance.Trace($"Entering");
-
-            Application.Exit();
+            this.Close();
+            //Application.Exit();
         }
 
         private void clientsToolStripMenuItem_Click(object sender, EventArgs e)

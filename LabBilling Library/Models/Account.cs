@@ -66,6 +66,8 @@ namespace LabBilling.Core.Models
         [Ignore]
         public List<BillingActivity> BillingActivities { get; set; } = new List<BillingActivity>();
         [Ignore]
+        public AccountValidationStatus AccountValidationStatus { get; set; } = new AccountValidationStatus();
+        [Ignore]
         public Guid rowguid { get; set; }
 
         [Ignore]
@@ -85,6 +87,34 @@ namespace LabBilling.Core.Models
         public string FullInfo => $"{account} {pat_name} {cl_mnem} {trans_date}";
         [Ignore]
         public string ClientName { get; set; }
+
+        [Ignore]
+        public List<string> cpt4List
+        {
+            get
+            {
+                List<string> cpt4List = new List<string>();
+                foreach(var chrg in Charges)
+                {
+                    foreach(var detail in chrg.ChrgDetails)
+                    {
+                        cpt4List.Add(detail.cpt4);
+                    }
+                }
+                return cpt4List;
+            }
+        }
+
+        [Ignore]
+        public string PrimaryInsuranceCode
+        {
+            get
+            {
+                return this.Insurances.Find(x => x.Coverage == "A").InsCode;
+            }
+        }
+            
+
 
     }
 
@@ -139,40 +169,6 @@ namespace LabBilling.Core.Models
         public string FullInfo => $"{ account } { pat_name } { cl_mnem } { trans_date }";
         [ResultColumn]
         public string ClientName { get; set; }
-    }
-
-    [TableName("vw_cbill_select")]
-    public class InvoiceSelect : IBaseEntity
-    {
-        public string account { get; set; }
-        public string cl_mnem { get; set; }
-        public DateTime trans_date { get; set; }
-        public string pat_name { get; set; }
-        public string fin_code { get; set; }
-
-        [Ignore]
-        public DateTime mod_date { get; set; }
-        [Ignore]
-        public string mod_user { get; set; }
-        [Ignore]
-        public string mod_prg { get; set; }
-        [Ignore]
-        public string mod_host { get; set; }
-        [Ignore]
-        public Guid rowguid { get; set; }
-    }
-
-    [TableName("vw_cbill_select")]
-    public class UnbilledAccounts
-    {
-
-        public string cl_mnem { get; set; }
-        public string account { get; set; }
-        public DateTime trans_date { get; set; }
-        public string pat_name { get; set; }
-        public string fin_code { get; set; }
-        public double UnbilledAmount { get; set; }
-
     }
 
 }
