@@ -1830,7 +1830,7 @@ namespace LabBilling.Forms
 
         private async void btnValidateAccount_Click(object sender, EventArgs e)
         {
-            if (!await Task.Run(() => accDB.Validate(currentAccount)))
+            if (!await Task.Run(() => accDB.Validate(ref currentAccount)))
             {
                 //has validation errors - do not bill
                 tbValidationResults.Text = currentAccount.AccountValidationStatus.validation_text;
@@ -1840,6 +1840,7 @@ namespace LabBilling.Forms
             {
                 //ok to bill
                 tbValidationResults.Text = "No validation errors.";
+                lblLastValidated.Text = currentAccount.AccountValidationStatus.mod_date.ToString("G");
             }
 
         }

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using LabBilling.Core.BusinessLogic;
 using LabBilling.Core.Models;
+using MicroRuleEngine;
 using Xunit;
 
 namespace LabBillingUnitTesting
@@ -51,6 +52,8 @@ namespace LabBillingUnitTesting
 
 
         }
+
+ 
 
     }
 }

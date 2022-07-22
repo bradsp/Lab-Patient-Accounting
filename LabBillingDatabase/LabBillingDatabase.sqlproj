@@ -3121,6 +3121,8 @@
     <Build Include="dbo\Synonyms\lmrp.sql" />
     <Build Include="ExtendedProperties.sql" />
     <Build Include="dbo\Tables\acc_validation_status.sql" />
+    <Build Include="dbo\Tables\dict_claim_validation_rules.sql" />
+    <Build Include="dbo\Tables\dict_claim_validation_rule_criteria.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assemblies\SqlServerProject1.dll" />

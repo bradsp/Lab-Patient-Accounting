@@ -136,9 +136,6 @@
     <Reference Include="PetaPoco, Version=6.0.524.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\PetaPoco.Compiled.6.0.524\lib\net45\PetaPoco.dll</HintPath>
     </Reference>
-    <Reference Include="RulesEngine, Version=3.5.0.0, Culture=neutral, PublicKeyToken=147cfe0bc87241c8, processorArchitecture=MSIL">
-      <HintPath>..\packages\RulesEngine.3.5.0\lib\netstandard2.0\RulesEngine.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
@@ -216,7 +213,9 @@
     <Compile Include="BusinessLogic\ClientInvoices.cs" />
     <Compile Include="BusinessLogic\Exceptions.cs" />
     <Compile Include="BusinessLogic\InvoicePrint.cs" />
+    <Compile Include="BusinessLogic\MicroRuleEngine.cs" />
     <Compile Include="BusinessLogic\PatientBilling.cs" />
+    <Compile Include="BusinessLogic\PrepareClaimRules.cs" />
     <Compile Include="DataAccess\AccountRepository.cs" />
     <Compile Include="DataAccess\AccountValidationCriteriaRepository.cs" />
     <Compile Include="DataAccess\AccountValidationRuleRepository.cs" />
@@ -230,6 +229,7 @@
     <Compile Include="DataAccess\ChkBatchRepository.cs" />
     <Compile Include="DataAccess\ChkRepository.cs" />
     <Compile Include="DataAccess\ChrgRepository.cs" />
+    <Compile Include="DataAccess\ClaimValidationRuleRepository.cs" />
     <Compile Include="DataAccess\ClientRepository.cs" />
     <Compile Include="DataAccess\CustomSqlDatabaseProvider.cs" />
     <Compile Include="DataAccess\DictDxRepository.cs" />
@@ -268,6 +268,7 @@
     <Compile Include="Models\ChkBatch.cs" />
     <Compile Include="Models\Chrg.cs" />
     <Compile Include="Models\ClaimItem.cs" />
+    <Compile Include="Models\ClaimValidationRule.cs" />
     <Compile Include="Models\Client.cs" />
     <Compile Include="Models\DictAccValidation.cs" />
     <Compile Include="Models\DictDx.cs" />

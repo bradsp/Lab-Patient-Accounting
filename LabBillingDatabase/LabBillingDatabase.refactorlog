@@ -7,4 +7,18 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="account" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="8d9de734-1edf-429a-b7c2-9bb437aeb7cf" ChangeDateTime="07/22/2022 17:38:33">
+    <Property Name="ElementName" Value="[dbo].[dict_claim_validation_rules].[Id]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[dict_claim_validation_rules]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="RuleId" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="593b9ffb-1bf8-49fe-87b9-7676e8735c1f" ChangeDateTime="07/22/2022 17:41:27">
+    <Property Name="ElementName" Value="[dbo].[dict_claim_validation_rule_criteria].[Id]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[dict_claim_validation_rule_criteria]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="RuleId" />
+  </Operation>
 </Operations>

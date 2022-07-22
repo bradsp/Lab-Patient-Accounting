@@ -3,10 +3,7 @@ using LabBilling.Core.Models;
 using System;
 using System.Collections.Generic;
 using RFClassLibrary;
-using System.Text;
-using System.IO;
 using LabBilling.Core.BusinessLogic;
-using System.Text.Json;
 
 namespace LabBilling.Core.DataAccess
 {
@@ -57,15 +54,6 @@ namespace LabBilling.Core.DataAccess
         public override Account GetById(int id)
         {
             throw new NotImplementedException();
-        }
-
-        public AccountSummary GetAccountSummary(string account)
-        {
-            Log.Instance.Debug($"Entering");
-
-            var records = dbConnection.FetchProc<AccountSummary>("GetAccountSummary", new { accno = account });
-
-            return records[0];
         }
 
         public Account GetByAccount(string account, bool demographicsOnly = false)
@@ -554,22 +542,37 @@ namespace LabBilling.Core.DataAccess
         //}
 
 
-        public bool Validate(Account account)
+        public bool Validate(ref Account account)
         {
-            ClaimRulesEngine engine = new ClaimRulesEngine(_connection);
-            bool retVal = false;
+            ClaimRulesEngine engine = new ClaimRulesEngine(_connection, dbConnection);
+            bool isAccountValid = false;
             try
             {
-                retVal = engine.Evaluate(account, out StringBuilder errorList);
+                isAccountValid = engine.ValidateAccount(account, out string errorList);
+                if(!isAccountValid)
+                {
+                    //write error list to account
+                    account.AccountValidationStatus.validation_text = errorList;
+                    account.AccountValidationStatus.account = account.account;
+                    account.AccountValidationStatus.mod_date = DateTime.Now;
+                }
+                else
+                {
+                    account.AccountValidationStatus.validation_text = "No validation errors.";
+                    account.AccountValidationStatus.account = account.account;
+                    account.AccountValidationStatus.mod_date = DateTime.Now;
+                }
+
+                accountValidationStatusRepository.Save(account.AccountValidationStatus);
             }
             catch(RuleProcessException rpex)
             {
-                retVal = false;
+                isAccountValid = false;
                 //TODO: write error message to account
                 string error = rpex.Message;
             }
 
-            return retVal;
+            return isAccountValid;
         }
 
     }

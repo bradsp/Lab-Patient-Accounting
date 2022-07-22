@@ -358,12 +358,14 @@ namespace LabBilling.Forms
             if (dgvPayments.Columns[e.ColumnIndex].Name == "Account")
             {
                 // get account information to populate patient name and balance info
-                AccountSummary accountSummary = new AccountSummary();
+                Account account = new Account();
+                string strAccount = dgvPayments["Account", e.RowIndex].Value.ToString();
+                strAccount = strAccount.ToUpper();
+                account = accdb.GetByAccount(strAccount, true);
+                //dgvPayments["Account", e.RowIndex].Value = strAccount;
 
-                accountSummary = accdb.GetAccountSummary(dgvPayments["Account", e.RowIndex].Value.ToString());
-
-                dgvPayments["PatientName", e.RowIndex].Value = accountSummary.pat_name;
-                dgvPayments["Balance", e.RowIndex].Value = accountSummary.Balance;
+                dgvPayments["PatientName", e.RowIndex].Value = account.pat_name;
+                dgvPayments["Balance", e.RowIndex].Value = account.Balance;
                 dgvPayments.CurrentCell = dgvPayments.Rows[e.RowIndex].Cells["CheckNo"];
             }
 

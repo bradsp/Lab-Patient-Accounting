@@ -1,132 +1,287 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Linq.Dynamic.Core;
+﻿using System.Collections.Generic;
 using System.Text;
-using System.Text.Json;
-using System.Threading.Tasks;
 using LabBilling.Core.Models;
-using PetaPoco;
-using RulesEngine;
-using RulesEngine.Models;
-using RulesEngine.Actions;
-using LabBilling.Logging;
 using LabBilling.Core.DataAccess;
+using MicroRuleEngine;
+using System.Text.Json;
+using System.IO;
 
 namespace LabBilling.Core.BusinessLogic
 {
     public class ClaimRulesEngine
     {
-        private List<Rule> dbRules;
-        private string _connection;
+        //public static List<MRERule> dbRules = new List<MRERule>()
+        //{
+        //   new MRERule()
+        //   {
+        //        RuleName = "CPT 80101",
+        //        Description = "Do not bill 80101",
+        //        ErrorText = "DO NOT BILL. Has 80101 cpt4 (dictionary edit)",
+        //        Rule = ClaimValidationRules.GetRule()
+        //   }
+        //};
 
-        public ClaimRulesEngine(string connection)
+        private List<ClaimValidationRule> _rules;
+
+        public ClaimRulesEngine(string connectionstring)
         {
-            dbRules = new List<Rule>
-            {
-                new Rule()
-                {
-                    RuleName = "80101",
-                    Description = "Do not bill 80101",
-                    ErrorText = "DO NOT BILL. Has 80101 cpt4 (dictionary edit)",
-                    Trigger = "",
-                    ruleConditions = new List<RuleCondition>
-                    {
-                        new RuleCondition() { PropertyName = "Charges", Operation = "Lambda", Value = "input1.cpt4List.Contains(\"80101\")", ValueType = "string" },
-                        new RuleCondition() { PropertyName = "PrimaryInsuranceCode", Operation = "Lambda", Value = "input1.PrimaryInsuranceCode == \"AM\"", ValueType = "string" },
-                        new RuleCondition() { PropertyName = "fin_code", Operation = "Lambda", Value = "input1.fin_code == \"A\" || input1.fin_code == \"M\"", ValueType = "string" },
-                        //new RuleCondition() { PropertyName = "Insurances[0].InsCode", Operation = "Equals", Value = "HUM", ValueType = "string" },
-                    },
-                }
-            };
-            _connection = connection;
+            ClaimValidationRuleRepository claimRuleRepository = new ClaimValidationRuleRepository(connectionstring);
+
+            _rules = claimRuleRepository.GetRules();
+            
         }
 
+        public ClaimRulesEngine(string connectionstring, PetaPoco.Database db)
+        {
+            ClaimValidationRuleRepository claimRuleRepository = new ClaimValidationRuleRepository(connectionstring, db);
+
+            _rules = claimRuleRepository.GetRules();
+
+        }
+
+        //public static List<ClaimValidationRule> claimValidationRules = new List<ClaimValidationRule>()
+        //{
+        //    new ClaimValidationRule()
+        //    {
+        //        RuleId = 1,
+        //        RuleName = "CPT 80101",
+        //        Description = "Do not bill 80101",
+        //        ErrorText = "DO NOT BILL. Has 80101 cpt4 (dictionary edit)",
+        //        claimValidationRuleCriteria = new List<ClaimValidationRuleCriterion>()
+        //        {
+        //            new ClaimValidationRuleCriterion()
+        //            {
+        //                RuleId = 1,
+        //                LineType = "Header",
+        //                GroupId = 0,
+        //                ParentGroupId = 0,
+        //                Operator = "AndAlso"
+        //            },
+        //            new ClaimValidationRuleCriterion()
+        //            {
+        //                RuleId = 1,
+        //                LineType = "Group",
+        //                GroupId = 1,
+        //                ParentGroupId = 0,
+        //                MemberName = "",
+        //                Operator = "Or",
+        //                TargetValue = ""
+        //            },
+        //            new ClaimValidationRuleCriterion()
+        //            {
+        //                RuleId = 1,
+        //                LineType = "Detail",
+        //                GroupId = 1,
+        //                ParentGroupId = 0,
+        //                MemberName = "fin_code",
+        //                Operator = "Equal",
+        //                TargetValue = "A"
+        //            },
+        //            new ClaimValidationRuleCriterion()
+        //            {
+        //                RuleId = 1,
+        //                LineType = "Detail",
+        //                GroupId = 1,
+        //                ParentGroupId = 0,
+        //                MemberName = "fin_code",
+        //                Operator = "Equal",
+        //                TargetValue = "M"
+        //            },
+        //            new ClaimValidationRuleCriterion()
+        //            {
+        //                RuleId = 1,
+        //                LineType = "Group",
+        //                GroupId = 2,
+        //                ParentGroupId = 0,
+        //                Operator = "Or"
+        //            },
+        //            new ClaimValidationRuleCriterion()
+        //            {
+        //                RuleId = 1,
+        //                LineType = "Detail",
+        //                GroupId = 2,
+        //                ParentGroupId = 0,
+        //                MemberName = "Insurances[0].InsCode",
+        //                Operator = "Equal",
+        //                TargetValue = "AM"
+        //            },
+        //            new ClaimValidationRuleCriterion()
+        //            {
+        //                RuleId = 1,
+        //                LineType = "Detail",
+        //                GroupId = 2,
+        //                ParentGroupId = 0,
+        //                MemberName = "Insurances[0].InsCode",
+        //                Operator = "Equal",
+        //                TargetValue = "WIN"
+        //            },
+        //            new ClaimValidationRuleCriterion()
+        //            {
+        //                RuleId = 1,
+        //                GroupId = 3,
+        //                LineType = "Group",
+        //                ParentGroupId = 0,
+        //                Operator = "Any",
+        //                MemberName = "Charges",
+        //            },
+        //            new ClaimValidationRuleCriterion()
+        //            {
+        //                RuleId = 1,
+        //                LineType = "SubGroup",
+        //                GroupId = 4,
+        //                ParentGroupId = 3,
+        //                Operator = "Any",
+        //                MemberName = "ChrgDetails"
+        //            },
+        //            new ClaimValidationRuleCriterion()
+        //            {
+        //                RuleId = 1,
+        //                LineType = "Detail",
+        //                GroupId = 4,
+        //                ParentGroupId = 3,
+        //                MemberName = "cpt4",
+        //                Operator = "Equal",
+        //                TargetValue = "80101"
+        //            }
+        //        }
+        //    }
+        //};
+
+
         /// <summary>
-        /// 
+        /// Runs claim validation rules against account.
         /// </summary>
         /// <param name="account"></param>
-        /// <param name="sb">Contains a list of all validation errors.</param>
-        /// <returns></returns>
-        /// <exception cref="RuleProcessException"></exception>        
-        public bool Evaluate(Account account, out StringBuilder sb)
-        {
-            //var insCodeMatch = account.Insurances.All(x => x.InsCode == "WIN");
-            //var cptMatch = account.Charges.All(x => x.ChrgDetails.All(y => y.cpt4 == "80101"));
-            sb = new StringBuilder();
-            List<RulesEngine.Models.Rule> rules = new List<RulesEngine.Models.Rule>();
+        /// <param name="errorList"></param>
+        /// <returns>True if no validation errors; False if errors. Errors will be in errorList.</returns>        
+        public bool ValidateAccount(Account account, out string errorList)
+        {            
+            
 
-            foreach (var rule in this.dbRules)
+            var lRules = PrepareClaimRules.PrepareRules(_rules);
+
+            //string fileNameJson = @"c:\temp\lrules.json";
+
+            //using (FileStream createStream = File.Create(fileNameJson))
+            //{
+            //    JsonSerializer.Serialize(createStream, lRules);
+            //    createStream.Dispose();
+            //}
+
+            //string fileName2Json = @"c:\temp\rules.json";
+
+            //using (FileStream createStream = File.Create(fileName2Json))
+            //{
+            //    JsonSerializer.Serialize(createStream, dbRules);
+            //    createStream.Dispose();
+            //}
+
+            errorList = null;
+            StringBuilder sbErrors = new StringBuilder();
+
+            MRE engine = new MRE();
+
+
+            foreach (var rule in lRules)
             {
-                foreach(var condition in rule.ruleConditions)
+                var compiledRule = engine.CompileRule<Account>(rule.Rule);
+                if (compiledRule(account))
                 {
-                    rules.Add(new RulesEngine.Models.Rule()
-                    {
-                        RuleName = rule.Description + condition.PropertyName,
-                        SuccessEvent = condition.PropertyName + " meets criteria.",
-                        ErrorMessage = condition.PropertyName + " does not meet criteria.",
-                        ErrorType = ErrorType.Error,
-                        RuleExpressionType = RuleExpressionType.LambdaExpression,
-                        Expression = condition.Value
-                    });
+                    sbErrors.AppendLine(rule.ErrorText);
                 }
-
-                var workflows = new List<Workflow>();
-
-                Workflow workflow = new Workflow();
-                workflow.WorkflowName = rule.Description;
-                workflow.Rules = rules;
-
-                workflows.Add(workflow);
-
-                var bre = new RulesEngine.RulesEngine(workflows.ToArray(), null);
-
-                var resultList = bre.ExecuteAllRulesAsync(rule.Description, account);
-                bool meetsAllCriteria = true;
-                foreach (var result in resultList.Result)
-                {
-                    if(!result.IsSuccess)
-                    {
-                        meetsAllCriteria = false;
-                    }
-                }
-
-                if(resultList.IsFaulted)
-                {
-                    //this is a rule processing error
-                    Log.Instance.Error("Error processing claim validation rule.");
-                    throw new RuleProcessException("Error processing claim validation rule.", rule.RuleName);
-                }
-
-                if (meetsAllCriteria)
-                    sb.AppendLine(rule.ErrorText);
             }
 
-            //add/update validation status in database
-
-            AccountValidationStatusRepository accountValidationStatusRepository = new AccountValidationStatusRepository(_connection);
-            if(sb.Length > 0)
+            if (sbErrors.Length > 0)
             {
-                account.AccountValidationStatus.account = account.account;
-                account.AccountValidationStatus.mod_date = DateTime.Now;
-                account.AccountValidationStatus.validation_text = sb.ToString();
-                try
-                {
-                    accountValidationStatusRepository.Save(account.AccountValidationStatus);
-                }
-                catch(Exception ex)
-                {
-                    Log.Instance.Error(ex.ToString(), ex);
-                    throw new RuleProcessException("Error writing account validation status.", ex);
-                }
+                errorList = sbErrors.ToString();
                 return false;
             }
             return true;
+
         }
+
+
     }
 
-    public class Rule
+    //public static class ClaimValidationRules
+    //{
+
+    //    public static MicroRuleEngine.Rule GetRule()
+    //    {
+    //        return rule;
+    //    }
+
+    //    static MicroRuleEngine.Rule rule = new MicroRuleEngine.Rule()
+    //    {
+    //        Operator = "AndAlso",
+    //        Rules = new List<MicroRuleEngine.Rule>()
+    //        {
+    //            new MicroRuleEngine.Rule()
+    //            {
+    //                Operator = "Or",
+    //                Rules = new []
+    //                {
+    //                    new MicroRuleEngine.Rule()
+    //                    {
+    //                        MemberName = "fin_code",
+    //                        Operator = System.Linq.Expressions.ExpressionType.Equal.ToString(),
+    //                        TargetValue = "A"
+    //                    },
+    //                    new MicroRuleEngine.Rule()
+    //                    {
+    //                        MemberName = "fin_code",
+    //                        Operator = System.Linq.Expressions.ExpressionType.Equal.ToString(),
+    //                        TargetValue = "M"
+    //                    }
+    //                }
+    //            },
+    //            new MicroRuleEngine.Rule()
+    //            {
+    //                Operator = "Or",
+    //                Rules = new []
+    //                {
+    //                    new MicroRuleEngine.Rule()
+    //                    {
+    //                        MemberName = "Insurances[0].InsCode",
+    //                        Operator = System.Linq.Expressions.ExpressionType.Equal.ToString(),
+    //                        TargetValue = "AM"
+    //                    },
+    //                    new MicroRuleEngine.Rule()
+    //                    {
+    //                        MemberName = "Insurances[0].InsCode",
+    //                        Operator = System.Linq.Expressions.ExpressionType.Equal.ToString(),
+    //                        TargetValue = "WIN"
+    //                    }
+    //                }
+    //            },
+    //            new MicroRuleEngine.Rule()
+    //            {
+    //                MemberName = "Charges",
+    //                Operator = "Any",
+    //                Rules = new []
+    //                {
+    //                    new MicroRuleEngine.Rule()
+    //                    {
+    //                        MemberName = "ChrgDetails",
+    //                        Operator = "Any",
+    //                        Rules = new []
+    //                        {
+    //                            new MicroRuleEngine.Rule()
+    //                            {
+    //                                MemberName = "cpt4",
+    //                                Operator = "Equal",
+    //                                TargetValue = "80101"
+    //                            }
+    //                        }
+    //                    }
+    //                }
+    //            }
+    //        }
+    //    };
+    //}
+
+
+    public class MRERule
     {
         public string RuleId { get; set; }
         public string RuleName { get; set; }
@@ -134,18 +289,8 @@ namespace LabBilling.Core.BusinessLogic
         public string ErrorText { get; set; }
         public string Trigger { get; set; }
         public string Action { get; set; }
+        public MicroRuleEngine.Rule Rule { get; set; }
 
-        public List<RuleCondition> ruleConditions = new List<RuleCondition>();
-
-    }
-
-    public class RuleCondition
-    {
-        public string RuleId { get; set; }
-        public string PropertyName { get; set; }
-        public string Operation { get; set; }
-        public string Value { get; set; }
-        public string ValueType { get; set; }
     }
 
 
