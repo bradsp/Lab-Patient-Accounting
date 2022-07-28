@@ -240,49 +240,49 @@
     <value>&amp;Billing</value>
   </data>
   <data name="chargeMasterToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>156, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="chargeMasterToolStripMenuItem.Text" xml:space="preserve">
     <value>Charge Master</value>
   </data>
   <data name="clientsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>156, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="clientsToolStripMenuItem.Text" xml:space="preserve">
     <value>Clients</value>
   </data>
   <data name="financialClassToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>156, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="financialClassToolStripMenuItem.Text" xml:space="preserve">
     <value>Financial Class</value>
   </data>
   <data name="iCDDxCodesToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>156, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="iCDDxCodesToolStripMenuItem.Text" xml:space="preserve">
     <value>ICD Dx Codes</value>
   </data>
   <data name="insurancePlansToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>156, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="insurancePlansToolStripMenuItem.Text" xml:space="preserve">
     <value>Insurance Plans</value>
   </data>
   <data name="physiciansToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>156, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="physiciansToolStripMenuItem.Text" xml:space="preserve">
     <value>Providers</value>
   </data>
   <data name="pathologistsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>156, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="pathologistsToolStripMenuItem.Text" xml:space="preserve">
     <value>Pathologists</value>
   </data>
   <data name="zipCodesToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>156, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="zipCodesToolStripMenuItem.Text" xml:space="preserve">
     <value>Zip Codes</value>
@@ -354,28 +354,34 @@
     <value>&amp;Reports</value>
   </data>
   <data name="userSecurityToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>174, 22</value>
+    <value>191, 22</value>
   </data>
   <data name="userSecurityToolStripMenuItem.Text" xml:space="preserve">
     <value>User Security</value>
   </data>
   <data name="systemParametersToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>174, 22</value>
+    <value>191, 22</value>
   </data>
   <data name="systemParametersToolStripMenuItem.Text" xml:space="preserve">
     <value>System Parameters</value>
   </data>
   <data name="interfaceMappingToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>174, 22</value>
+    <value>191, 22</value>
   </data>
   <data name="interfaceMappingToolStripMenuItem.Text" xml:space="preserve">
     <value>Interface Mapping</value>
   </data>
   <data name="interfaceMonitorToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>174, 22</value>
+    <value>191, 22</value>
   </data>
   <data name="interfaceMonitorToolStripMenuItem.Text" xml:space="preserve">
     <value>Interface Monitor</value>
+  </data>
+  <data name="claimValidationRulesToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>191, 22</value>
+  </data>
+  <data name="claimValidationRulesToolStripMenuItem.Text" xml:space="preserve">
+    <value>Claim Validation Rules</value>
   </data>
   <data name="systemAdministrationToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>139, 20</value>
@@ -3905,8 +3911,14 @@
   <data name="&gt;&gt;exitToolStripMenuItem.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="&gt;&gt;claimValidationRulesToolStripMenuItem.Name" xml:space="preserve">
+    <value>claimValidationRulesToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;claimValidationRulesToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
-    <value>Dashboard</value>
+    <value>MainForm</value>
   </data>
   <data name="&gt;&gt;$this.Type" xml:space="preserve">
     <value>MetroFramework.Forms.MetroForm, MetroFramework, Version=1.4.0.0, Culture=neutral, PublicKeyToken=5f91a84759bf584a</value>

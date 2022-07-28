@@ -7,27 +7,47 @@ namespace LabBilling.Core.Models
     [PrimaryKey("uri",AutoIncrement = true)]
     public class ChrgDetail : IBaseEntity
     {
-        public int chrg_num { get; set; }
-        public string revcode { get; set; }
-        public string cpt4 { get; set; }
-        public string modi { get; set; }
-        public string modi2 { get; set; }
-        public string type { get; set; }
-        public double amount { get; set; }
-        public string diagnosis_code_ptr { get; set; }
-        public string mt_req_no { get; set; }
-        public string order_code { get; set; }
-        public string bill_type { get; set; }
-        public string bill_method { get; set; }
-        public bool pointer_set { get; set; }
-        public DateTime mod_date { get; set; }
-        public string mod_user { get; set; }
-        public string mod_prg { get; set; }
-        public bool deleted { get; set; }
 
+        [Column("chrg_num")]
+        public int ChrgNo { get; set; }
+        [Column("revcode")]
+        public string RevenueCode { get; set; }
+        [Column("cpt4")]
+        public string Cpt4 { get; set; }
+        [Column("modi")]
+        public string Modifier { get; set; }
+        [Column("modi2")]
+        public string Modifer2 { get; set; }
+        [Column("type")]
+        public string Type { get; set; }
+        [Column("amount")]
+        public double Amount { get; set; }
+        [Column("diagnosis_code_ptr")]
+        public string DiagCodePointer { get; set; }
+        [Column("mt_req_no")]
+        public string LISReqNo { get; set; }
+        [Column("order_code")]
+        public string OrderCode { get; set; }
+        [Column("bill_type")]
+        public string BillType { get; set; }
+        [Column("bill_method")]
+        public string BillMethod { get; set; }
+        [Column("pointer_set")]
+        public bool PointerSet { get; set; }
+        [Column("mod_date")]
+        public DateTime mod_date { get; set; }
+        [Column("mod_user")]
+        public string mod_user { get; set; }
+        [Column("mod_prg")]
+        public string mod_prg { get; set; }
+        [Column("deleted")]
+        public bool IsDeleted { get; set; }
+
+        [Column("uri")]
         public int uri { get; set; }
 
         [Ignore]
+        [Column("mod_host")]
         public string mod_host { get; set; }
         [Ignore]
         public Guid rowguid { get; set; }

@@ -4,14 +4,14 @@ using LabBilling.Core.Models;
 
 namespace LabBilling.Core.DataAccess
 {
-    public class AmtRepository : RepositoryBase<ChrgDetail>
+    public class ChrgDetailRepository : RepositoryBase<ChrgDetail>
     {
-        public AmtRepository(string connection) : base("amt", connection)
+        public ChrgDetailRepository(string connection) : base("amt", connection)
         {
 
         }
 
-        public AmtRepository(string connection, PetaPoco.Database db) : base("amt", connection, db)
+        public ChrgDetailRepository(string connection, PetaPoco.Database db) : base("amt", connection, db)
         {
 
         }
@@ -24,9 +24,8 @@ namespace LabBilling.Core.DataAccess
         public IEnumerable<ChrgDetail> GetByCharge(int chrg_num)
         {
             var sql = PetaPoco.Sql.Builder
-                .Append("SELECT * ")
-                .Append("FROM amt ")
-                .Append("WHERE chrg_num = @0", chrg_num);
+                .From($"{_tableName}")
+                .Where($"{this.GetRealColumn(typeof(ChrgDetail), nameof(ChrgDetail.ChrgNo))} = @0", chrg_num);
 
             var result = dbConnection.Fetch<ChrgDetail>(sql);
 

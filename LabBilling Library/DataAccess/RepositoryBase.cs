@@ -6,7 +6,8 @@ using LabBilling.Logging;
 using LabBilling.Core.Models;
 using PetaPoco.Providers;
 using PetaPoco.Core;
-
+using System.Reflection;
+using PetaPoco;
 
 namespace LabBilling.Core.DataAccess
 {
@@ -14,11 +15,12 @@ namespace LabBilling.Core.DataAccess
     /// 
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public abstract class RepositoryBase<T> : IRepositoryBase<T> where T : IBaseEntity
+    public abstract class RepositoryBase<Tpoco> : IRepositoryBase<Tpoco> where Tpoco : IBaseEntity
     {
         protected readonly PetaPoco.Database dbConnection = null;
         protected readonly string _tableName;
         protected IList<string> _fields;
+        protected TableInfo _tableInfo;
         /// <summary>
         /// Contains error messages as a result of actions.
         /// </summary>
@@ -27,9 +29,11 @@ namespace LabBilling.Core.DataAccess
         public RepositoryBase(string tableName, string connectionString)
         {
             Log.Instance.Trace("Entering");
-            _tableName = tableName;
+            _tableInfo = GetTableInfo(typeof(Tpoco));
+            _tableName = _tableInfo.TableName;
+            //_tableName = tableName;
             dbConnection = new PetaPoco.Database(connectionString, new CustomSqlDatabaseProvider());
-
+            
             Log.Instance.Trace("Exiting");
         }
 
@@ -42,37 +46,39 @@ namespace LabBilling.Core.DataAccess
         public RepositoryBase(string tableName, string connectionString, PetaPoco.Database db)
         {
             Log.Instance.Trace("Entering");
-            _tableName = tableName;
+            _tableInfo = GetTableInfo(typeof(Tpoco));
+            _tableName = _tableInfo.TableName;
+            //_tableName = tableName;
             dbConnection = db;
 
             Log.Instance.Trace("Exiting");
         }
 
-        public virtual IEnumerable<T> GetAll()
+        public virtual IEnumerable<Tpoco> GetAll()
         {
             Log.Instance.Trace("Entering");
 
             string sql = $"SELECT * FROM {_tableName}";
 
-            var queryResult = dbConnection.Fetch<T>(sql);
+            var queryResult = dbConnection.Fetch<Tpoco>(sql);
 
             Log.Instance.Trace("Exiting");
             return queryResult;
         }
 
-        public virtual async Task<IEnumerable<T>> GetAllAsync()
+        public virtual async Task<IEnumerable<Tpoco>> GetAllAsync()
         {
             Log.Instance.Trace("Entering");
 
             string sql = $"SELECT * FROM {_tableName}";
 
-            var queryResult = await dbConnection.FetchAsync<T>(sql);
+            var queryResult = await dbConnection.FetchAsync<Tpoco>(sql);
 
             Log.Instance.Trace("Exiting");
-            return queryResult.ToList<T>();
+            return queryResult.ToList<Tpoco>();
         }
 
-        public virtual object Add(T table)
+        public virtual object Add(Tpoco table)
         {
             Log.Instance.Trace("Entering");
 
@@ -92,11 +98,11 @@ namespace LabBilling.Core.DataAccess
             return identity;
         }
 
-        public abstract T GetById(int id);
+        public abstract Tpoco GetById(int id);
 
-        //public abstract T GetByPrimaryKey();
+        //public abstract Tpoco GetByPrimaryKey();
 
-        public virtual bool Update(T table)
+        public virtual bool Update(Tpoco table)
         {
             Log.Instance.Trace("Entering");
 
@@ -114,7 +120,7 @@ namespace LabBilling.Core.DataAccess
             return true;
         }
 
-        public virtual bool Update(T table, IEnumerable<string> columns)
+        public virtual bool Update(Tpoco table, IEnumerable<string> columns)
         {
             Log.Instance.Trace("Entering");
 
@@ -139,7 +145,7 @@ namespace LabBilling.Core.DataAccess
             return true;        
         }
 
-        public virtual bool Save(T table)
+        public virtual bool Save(Tpoco table)
         {
             Log.Instance.Trace("Entering");
 
@@ -164,13 +170,58 @@ namespace LabBilling.Core.DataAccess
             return true;
         }
 
-        public virtual bool Delete(T table)
+        public virtual bool Delete(Tpoco table)
         {
             Log.Instance.Trace("Entering");
 
             var count = dbConnection.Delete(table);
             Log.Instance.Trace("Exiting");
             return count > 0;
+        }
+
+        public string GetRealColumn(Type poco, string propertyName)
+        {
+            return this.GetRealColumn(poco.AssemblyQualifiedName, propertyName);
+        }
+
+        public string GetRealColumn(string objectName, string propertyName)
+        {
+            //this can throw if invalid type names are used, or return null of there is no such type
+            Type t = Type.GetType(objectName);
+            if (t == null)
+                return null;
+            //this will only find public instance properties, or return null if no such property is found
+            PropertyInfo pi = t.GetProperty(propertyName);
+            //this returns an array of the applied attributes (will be 0-length if no attributes are applied
+            var attributes = pi.GetCustomAttributes(typeof(ColumnAttribute), false).ToArray();
+
+            if (attributes.Length == 0)
+                return propertyName;
+            else
+            {
+                foreach(ColumnAttribute attribute in attributes)
+                {
+                    if(attribute.GetType() != typeof(ResultColumnAttribute))
+                    {
+                        return attribute.Name;
+                    }
+                }
+            }
+
+            return propertyName;
+
+        }
+
+        public static TableInfo GetTableInfo(Type t)
+        {
+            TableInfo tableInfo = new TableInfo();
+            object[] customAttributes = t.GetCustomAttributes(typeof(TableNameAttribute), true);
+            tableInfo.TableName = (customAttributes.Length == 0) ? t.Name : (customAttributes[0] as TableNameAttribute).Value;
+            customAttributes = t.GetCustomAttributes(typeof(PrimaryKeyAttribute), true);
+            tableInfo.PrimaryKey = (customAttributes.Length == 0) ? "ID" : (customAttributes[0] as PrimaryKeyAttribute).Value;
+            tableInfo.SequenceName = (customAttributes.Length == 0) ? null : (customAttributes[0] as PrimaryKeyAttribute).SequenceName;
+            tableInfo.AutoIncrement = customAttributes.Length != 0 && (customAttributes[0] as PrimaryKeyAttribute).AutoIncrement;
+            return tableInfo;
         }
 
         public virtual void BeginTransaction()

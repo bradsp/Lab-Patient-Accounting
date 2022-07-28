@@ -17,7 +17,6 @@ namespace LabBilling.Core.Models
         public string ErrorText { get; set; }
         public DateTime EffectiveDate { get; set; }
         public DateTime EndEffectiveDate { get; set; }
-        public string Operator { get; set; }
 
         [Ignore]
         public List<ClaimValidationRuleCriterion> claimValidationRuleCriteria { get; set; }
@@ -37,6 +36,7 @@ namespace LabBilling.Core.Models
         public string LineType { get; set; }
         public int GroupId { get; set; }
         public int ParentGroupId { get; set; }
+        public string Class { get; set; }
         public string MemberName { get; set; }
         public string Operator { get; set; }
         public string TargetValue { get; set; }
@@ -67,8 +67,10 @@ namespace LabBilling.Core.Models
             var prev = current;
 
             current = rule;
-            current.claimValidationRuleCriteria = new List<ClaimValidationRuleCriterion>();
-            current.claimValidationRuleCriteria.Add(c);
+            current.claimValidationRuleCriteria = new List<ClaimValidationRuleCriterion>
+            {
+                c
+            };
 
             return prev;
         }

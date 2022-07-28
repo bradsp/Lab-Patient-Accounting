@@ -99,27 +99,27 @@ namespace LabBilling.Core.BusinessLogic
                     claims.Add(claim);
 
                     //update status and activity date fields
-                    claim.claimAccount.status = "SSI1500";
+                    claim.claimAccount.Status = "SSI1500";
 
-                    accountRepository.Update(claim.claimAccount, new[] { nameof(Account.status) });
+                    accountRepository.Update(claim.claimAccount, new[] { nameof(Account.Status) });
 
-                    claim.claimAccount.Pat.h1500_date = DateTime.Today;
-                    claim.claimAccount.Pat.ssi_batch = interchangeControlNumber;
+                    claim.claimAccount.Pat.ProfessionalClaimDate = DateTime.Today;
+                    claim.claimAccount.Pat.SSIBatch = interchangeControlNumber;
 
-                    patRepository.Update(claim.claimAccount.Pat, new[] { nameof(Pat.h1500_date), nameof(Pat.ssi_batch) });
+                    patRepository.Update(claim.claimAccount.Pat, new[] { nameof(Pat.ProfessionalClaimDate), nameof(Pat.SSIBatch) });
 
                     BillingHistory billingHistory = new BillingHistory();
-                    billingHistory.pat_name = claim.claimAccount.pat_name;
+                    billingHistory.pat_name = claim.claimAccount.PatFullName;
                     billingHistory.run_date = DateTime.Today;
-                    billingHistory.account = claim.claimAccount.account;
+                    billingHistory.account = claim.claimAccount.AccountNo;
                     billingHistory.batch = Convert.ToDouble(interchangeControlNumber);
                     billingHistory.ebill_batch = Convert.ToDouble(interchangeControlNumber);
                     billingHistory.ebill_status = "1500";
-                    billingHistory.fin_code = claim.claimAccount.fin_code;
+                    billingHistory.fin_code = claim.claimAccount.FinCode;
                     billingHistory.ins_abc = claim.claimAccount.Insurances[0].Coverage;
                     billingHistory.ins_code = claim.claimAccount.Insurances[0].InsCode;
                     billingHistory.ins_complete = DateTime.MinValue;
-                    billingHistory.trans_date = claim.claimAccount.trans_date;
+                    billingHistory.trans_date = claim.claimAccount.TransactionDate;
                     billingHistory.run_user = OS.GetUserName();
 
                     billingHistoryRepository.Add(billingHistory);
@@ -240,8 +240,8 @@ namespace LabBilling.Core.BusinessLogic
                 claimData.SpecialProgramIndicator = "";
                 claimData.DelayReasonCode = ""; // do we need to accommodate this potential?
 
-                claimData.OnsetOfCurrentIllness = claimData.claimAccount.trans_date;
-                claimData.InitialTreatmentDate = claimData.claimAccount.trans_date;
+                claimData.OnsetOfCurrentIllness = claimData.claimAccount.TransactionDate;
+                claimData.InitialTreatmentDate = claimData.claimAccount.TransactionDate;
                 claimData.DateOfAccident = null;
 
                 claimData.PatientAmountPaid = claimData.claimAccount.TotalPayments;
@@ -349,14 +349,14 @@ namespace LabBilling.Core.BusinessLogic
                     foreach (ChrgDetail detail in chrg.ChrgDetails)
                     {
                         ClaimLine claimLine = new ClaimLine();
-                        claimLine.ProcedureCode = detail.cpt4;
-                        claimLine.ProcedureModifier1 = detail.modi;
-                        claimLine.ProcedureModifier2 = detail.modi2;
+                        claimLine.ProcedureCode = detail.Cpt4;
+                        claimLine.ProcedureModifier1 = detail.Modifier;
+                        claimLine.ProcedureModifier2 = detail.Modifer2;
                         claimLine.ProcedureModifier3 = "";
-                        claimLine.Description = chrg.cdm_desc;
-                        claimLine.Amount = detail.amount;
-                        claimLine.Quantity = chrg.qty;
-                        string[] dxptr = detail.diagnosis_code_ptr.Split(':');
+                        claimLine.Description = chrg.CDMDescription;
+                        claimLine.Amount = detail.Amount;
+                        claimLine.Quantity = chrg.Quantity;
+                        string[] dxptr = detail.DiagCodePointer.Split(':');
                         if(dxptr.Length >= 1)
                             claimLine.DxPtr1 = dxptr[0] ?? "";
                         if (dxptr.Length >= 2) 
@@ -367,8 +367,8 @@ namespace LabBilling.Core.BusinessLogic
                             claimLine.DxPtr4 = dxptr[3] ?? "";
                         claimLine.EPSDTIndicator = "";
                         claimLine.FamilyPlanningIndicator = "";
-                        claimLine.ServiceDate = chrg.service_date;
-                        claimLine.ControlNumber = chrg.cdm;
+                        claimLine.ServiceDate = chrg.ServiceDate;
+                        claimLine.ControlNumber = chrg.CDMCode;
 
                         claimData.ClaimLines.Add(claimLine);
                     }

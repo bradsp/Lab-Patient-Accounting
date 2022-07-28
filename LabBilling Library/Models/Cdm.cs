@@ -11,40 +11,61 @@ namespace LabBilling.Core.Models
     [PetaPoco.PrimaryKey("cdm", AutoIncrement = false)]
     public class Cdm : IBaseEntity
     {
-        public bool deleted { get; set; }
-        public string cdm { get; set; }
-        public string descript { get; set; }
-        public string mtype { get; set; }
-        public double m_pa_amt { get; set; }
-        public string ctype { get; set; }
-        public double c_pa_amt { get; set; }
-        public string ztype { get; set; }
-        public double z_pa_amt { get; set; }
-        public int orderable { get; set; }
-        public int cbill_detail { get; set; }
-        public string comments { get; set; }
-        public string mnem { get; set; }
-        public double cost { get; set; }
-        public string ref_lab_id { get; set; }
-        public string ref_lab_bill_code { get; set; }
-        public double ref_lab_payment { get; set; }
+        [Column("deleted")]
+        public bool IsDeleted { get; set; }
+        [Column("cdm")]
+        public string ChargeId { get; set; }
+        [Column("descript")]
+        public string Description { get; set; }
+        [Column("mtype")]
+        public string MClassType { get; set; }
+        [Column("m_pa_amt")]
+        public double MClassPaAmount { get; set; }
+        [Column("ctype")]
+        public string CClassType { get; set; }
+        [Column("c_pa_amt")]
+        public double CClassPaAmount { get; set; }
+        [Column("ztype")]
+        public string ZClassType { get; set; }
+        [Column("z_pa_amt")]
+        public double ZClassPaAmount { get; set; }
+        [Column("orderable")]
+        public int IsOrderable { get; set; }
+        [Column("cbill_detail")]
+        public int CBillDetail { get; set; }
+        [Column("comments")]
+        public string Comments { get; set; }
+        [Column("mnem")]
+        public string Mnem { get; set; }
+        [Column("cost")]
+        public double Cost { get; set; }
+        [Column("ref_lab_id")]
+        public string RefLabId { get; set; }
+        [Column("ref_lab_bill_code")]
+        public string RefLabBillCode { get; set; }
+        [Column("ref_lab_payment")]
+        public double RefLabPayment { get; set; }
+        [Column("mod_date")]
         public DateTime mod_date { get; set; }
+        [Column("mod_user")]
         public string mod_user { get; set; }
+        [Column("mod_prg")]
         public string mod_prg { get; set; }
+        [Column("mod_host")]
         public string mod_host { get; set; }
         [Ignore]
         public Guid rowguid { get; set; }
 
         [Ignore]
-        public List<CdmFeeSchedule1> cdmFeeSchedule1 { get; set; }
+        public List<CdmFeeSchedule1> CdmFeeSchedule1 { get; set; }
         [Ignore]
-        public List<CdmFeeSchedule2> cdmFeeSchedule2 { get; set; }
+        public List<CdmFeeSchedule2> CdmFeeSchedule2 { get; set; }
         [Ignore]
-        public List<CdmFeeSchedule3> cdmFeeSchedule3 { get; set; }
+        public List<CdmFeeSchedule3> CdmFeeSchedule3 { get; set; }
         [Ignore]
-        public List<CdmFeeSchedule4> cdmFeeSchedule4 { get; set; }
+        public List<CdmFeeSchedule4> CdmFeeSchedule4 { get; set; }
         [Ignore]
-        public List<CdmFeeSchedule5> cdmFeeSchedule5 { get; set; }
+        public List<CdmFeeSchedule5> CdmFeeSchedule5 { get; set; }
 
 
     }

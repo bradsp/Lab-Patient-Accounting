@@ -7,34 +7,63 @@ namespace LabBilling.Core.Models
     [PrimaryKey("pay_no",AutoIncrement = true)]
     public class Chk : IBaseEntity
     {
-        public bool deleted { get; set; }
-        public double pay_no { get; set; }
-        public string account { get; set; }
-        public DateTime? chk_date { get; set; }
-        public DateTime? date_rec { get; set; }
-        public string chk_no { get; set; }
-        public double amt_paid { get; set; }
-        public double write_off { get; set; }
-        public double contractual { get; set; }
-        public string status { get; set; } = "NEW";
-        public string source { get; set; }
-        public string fin_code { get; set; }
-        public DateTime? w_off_date { get; set; }
-        public string invoice { get; set; }
-        public double batch { get; set; }
-        public string comment { get; set; }
-        public bool bad_debt { get; set; }
-        public string cpt4Code { get; set; }
-        public string post_file { get; set; }
-        public string write_off_code { get; set; }
-        public DateTime? eft_date { get; set; }
-        public string eft_number { get; set; }
-        public DateTime? post_date { get; set; }
-        public string ins_code { get; set; }
-        public string claim_adj_code { get; set; }
-        public string claim_adj_group_code { get; set; }
-        public string facility_code { get; set; }
-        public string claim_no { get; set; }
+
+        [Column("deleted")]
+        public bool IsDeleted { get; set; }
+        [Column("pay_no")]
+        public double PaymentNo { get; set; }
+        [Column("account")]
+        public string AccountNo { get; set; }
+        [Column("chk_date")]
+        public DateTime? ChkDate { get; set; }
+        [Column("date_rec")]
+        public DateTime? DateReceived { get; set; }
+        [Column("chk_no")]
+        public string CheckNo { get; set; }
+        [Column("amt_paid")]
+        public double PaidAmount { get; set; }
+        [Column("write_off")]
+        public double WriteOffAmount { get; set; }
+        [Column("contractual")]
+        public double ContractualAmount { get; set; }
+        [Column("status")]
+        public string Status { get; set; } = "NEW"; 
+        [Column("source")]
+        public string Source { get; set; }
+        [Column("fin_code")]
+        public string FinCode { get; set; }
+        [Column("w_off_date")]
+        public DateTime? WriteOffDate { get; set; }
+        [Column("invoice")]
+        public string Invoice { get; set; }
+        [Column("batch")]
+        public double Batch { get; set; }
+        [Column("comment")]
+        public string Comment { get; set; }
+        [Column("bad_debt")]
+        public bool IsCollectionPmt { get; set; }
+        [Column("cpt4Code")]
+        public string Cpt4Code { get; set; }
+        [Column("post_file")]
+        public string PostingFile { get; set; }
+        [Column("write_off_code")]
+        public string WriteOffCode { get; set; }
+        [Column("eft_date")]
+        public DateTime? EftDate { get; set; }
+        [Column("eft_number")]
+        public string EftNumber { get; set; }
+        [Column("post_date")]
+        public DateTime? PostingDate { get; set; }
+        [Column("ins_code")]
+        public string InsCode { get; set; }
+        [Column("claim_adj_code")]
+        public string ClaimAdjCode { get; set; }
+        [Column("claim_adj_group_code")]
+        public string ClaimAdjGroupCode { get; set; }
+        [Column("facility_code")]
+        public string FacilityCode { get; set; }
+        [Column("claim_no")]
+        public string ClaimNo { get; set; }
 
         [ResultColumn]
         public DateTime mod_date { get; set; }

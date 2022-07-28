@@ -7,9 +7,10 @@ using RFClassLibrary;
 using System.Data;
 namespace MCL
 {
-   /// <summary>
-   /// Chg class
-   /// </summary>
+    /// <summary>
+    /// Chg class
+    /// </summary>
+    [Obsolete("This class is obsolete. New code should be written using LabBilling.Core libraries.")]
     public class CChrg : RFCObject
     {
         /// <summary>

@@ -6,6 +6,7 @@ using MicroRuleEngine;
 using System.Text.Json;
 using System.IO;
 
+
 namespace LabBilling.Core.BusinessLogic
 {
     public class ClaimRulesEngine
@@ -39,6 +40,7 @@ namespace LabBilling.Core.BusinessLogic
 
         }
 
+        #region Testdata
         //public static List<ClaimValidationRule> claimValidationRules = new List<ClaimValidationRule>()
         //{
         //    new ClaimValidationRule()
@@ -146,7 +148,7 @@ namespace LabBilling.Core.BusinessLogic
         //        }
         //    }
         //};
-
+        #endregion
 
         /// <summary>
         /// Runs claim validation rules against account.
@@ -159,22 +161,6 @@ namespace LabBilling.Core.BusinessLogic
             
 
             var lRules = PrepareClaimRules.PrepareRules(_rules);
-
-            //string fileNameJson = @"c:\temp\lrules.json";
-
-            //using (FileStream createStream = File.Create(fileNameJson))
-            //{
-            //    JsonSerializer.Serialize(createStream, lRules);
-            //    createStream.Dispose();
-            //}
-
-            //string fileName2Json = @"c:\temp\rules.json";
-
-            //using (FileStream createStream = File.Create(fileName2Json))
-            //{
-            //    JsonSerializer.Serialize(createStream, dbRules);
-            //    createStream.Dispose();
-            //}
 
             errorList = null;
             StringBuilder sbErrors = new StringBuilder();

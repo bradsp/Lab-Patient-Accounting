@@ -183,20 +183,20 @@ namespace LabBilling.Forms
                 Chk chk = new Chk();
 
                 double temp = 0.00;
-                chk.account = row.Cells["Account"].Value.ToString();
+                chk.AccountNo = row.Cells["Account"].Value.ToString();
                 if (OpenBatch.SelectedIndex > 0)
-                    chk.batch = Convert.ToInt16(OpenBatch.SelectedValue.ToString());
+                    chk.Batch = Convert.ToInt16(OpenBatch.SelectedValue.ToString());
                 else
-                    chk.batch = -1;
-                chk.amt_paid = Double.TryParse(row.Cells["AmountPaid"].Value?.ToString(), out temp) ? temp : 0.00;
-                chk.chk_date = DateTimeExtension.ValidateDateNullable(row.Cells["CheckDate"].Value?.ToString());
-                chk.date_rec = DateTimeExtension.ValidateDateNullable(row.Cells["DateReceived"].Value?.ToString());
-                chk.chk_no = row.Cells["CheckNo"].Value.ToString();
-                chk.comment = row.Cells["Comment"].Value.ToString();
-                chk.contractual = Double.TryParse(row.Cells["Contractual"].Value?.ToString(), out temp) ? temp : 0.00;
-                chk.write_off_code = row.Cells["WriteOffCode"].Value?.ToString();
-                chk.write_off = Double.TryParse(row.Cells["WriteOff"].Value?.ToString(), out temp) ? temp : 0.00;
-                chk.source = row.Cells["PaymentSource"].Value.ToString();
+                    chk.Batch = -1;
+                chk.PaidAmount = Double.TryParse(row.Cells["AmountPaid"].Value?.ToString(), out temp) ? temp : 0.00;
+                chk.ChkDate = DateTimeExtension.ValidateDateNullable(row.Cells["CheckDate"].Value?.ToString());
+                chk.DateReceived = DateTimeExtension.ValidateDateNullable(row.Cells["DateReceived"].Value?.ToString());
+                chk.CheckNo = row.Cells["CheckNo"].Value.ToString();
+                chk.Comment = row.Cells["Comment"].Value.ToString();
+                chk.ContractualAmount = Double.TryParse(row.Cells["Contractual"].Value?.ToString(), out temp) ? temp : 0.00;
+                chk.WriteOffCode = row.Cells["WriteOffCode"].Value?.ToString();
+                chk.WriteOffAmount = Double.TryParse(row.Cells["WriteOff"].Value?.ToString(), out temp) ? temp : 0.00;
+                chk.Source = row.Cells["PaymentSource"].Value.ToString();
                 try
                 {
                     chks.Add(chk);
@@ -364,7 +364,7 @@ namespace LabBilling.Forms
                 account = accdb.GetByAccount(strAccount, true);
                 //dgvPayments["Account", e.RowIndex].Value = strAccount;
 
-                dgvPayments["PatientName", e.RowIndex].Value = account.pat_name;
+                dgvPayments["PatientName", e.RowIndex].Value = account.PatFullName;
                 dgvPayments["Balance", e.RowIndex].Value = account.Balance;
                 dgvPayments.CurrentCell = dgvPayments.Rows[e.RowIndex].Cells["CheckNo"];
             }

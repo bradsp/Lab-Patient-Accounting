@@ -54,7 +54,7 @@ namespace LabBilling.Forms
                 //look up cdm number and get amount
                 cdm = dbCdm.GetCdm(dgvBatchEntry[e.ColumnIndex, e.RowIndex].Value.ToString());
 
-                MessageBox.Show(string.Format("CDM Description: {0}",cdm.descript));
+                MessageBox.Show(string.Format("CDM Description: {0}",cdm.Description));
 
                 //if cdm is not valid, show an error
 
@@ -80,7 +80,7 @@ namespace LabBilling.Forms
             }
             else
             {
-                MessageBox.Show(string.Format("CDM Description: {0}", cdm.descript));
+                MessageBox.Show(string.Format("CDM Description: {0}", cdm.Description));
                 CDM.BackColor = Color.White;
             }
 

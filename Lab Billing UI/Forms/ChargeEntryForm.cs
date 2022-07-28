@@ -28,10 +28,10 @@ namespace LabBilling.Forms
         private void ChargeEntryForm_Load(object sender, EventArgs e)
         {
             Log.Instance.Trace($"Entering");
-            tbBannerAccount.Text = _currentAccount.account;
-            tbBannerName.Text = _currentAccount.pat_name;
-            tbBannerMRN.Text = _currentAccount.mri;
-            tbDateOfService.Text = _currentAccount.trans_date.Value.ToShortDateString();
+            tbBannerAccount.Text = _currentAccount.AccountNo;
+            tbBannerName.Text = _currentAccount.PatFullName;
+            tbBannerMRN.Text = _currentAccount.MRN;
+            tbDateOfService.Text = _currentAccount.TransactionDate.Value.ToShortDateString();
 
             BuildCargeItemCombo();
         }
@@ -50,8 +50,8 @@ namespace LabBilling.Forms
             cdmDataTable.Rows.Add(values);
             foreach (Cdm cdm in chrgItems)
             {
-                values[0] = cdm.cdm;
-                values[1] = cdm.descript;
+                values[0] = cdm.ChargeId;
+                values[1] = cdm.Description;
                 cdmDataTable.Rows.Add(values);
             }
             cdmDataTable.DefaultView.Sort = "cdm asc";
@@ -84,10 +84,10 @@ namespace LabBilling.Forms
                     return;
                 }
 
-                accountRepository.AddCharge(_currentAccount.account,
+                accountRepository.AddCharge(_currentAccount.AccountNo,
                     cdm,
                     Convert.ToInt32(nQty.Value),
-                    _currentAccount.trans_date ?? DateTime.Today,
+                    _currentAccount.TransactionDate ?? DateTime.Today,
                     tbComment.Text,
                     ReferenceNumber.Text);
             }

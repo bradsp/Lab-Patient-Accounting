@@ -102,7 +102,7 @@ namespace LabBilling.Core
                 ediDocument.Segments.Add(new EdiSegment("ST")
                 {
                     [01] = "837",
-                    [02] = claim.claimAccount.account, // transaction set control number - must match SE02
+                    [02] = claim.claimAccount.AccountNo, // transaction set control number - must match SE02
                     [03] = "005010X222", //implementation convention reference
                 });
                 segmentCount++;
@@ -112,7 +112,7 @@ namespace LabBilling.Core
                 {
                     [01] = "0019", //hierarchical structure code
                     [02] = "00", //transaction set purpose 00 - original; 18 - reissue
-                    [03] = claim.claimAccount.account, //reference identification
+                    [03] = claim.claimAccount.AccountNo, //reference identification
                     [04] = EdiValue.Date(8, DateTime.Today), // date claim file is create - should be today
                     [05] = EdiValue.Time(4, DateTime.Now), //time transaction set is created
                     [06] = claim.TransactionTypeCode //transaction type code - CH = chargable
@@ -726,7 +726,7 @@ namespace LabBilling.Core
                 ediDocument.Segments.Add(new EdiSegment("SE")
                 {
                     [01] = segmentCount.ToString(),
-                    [02] = claim.claimAccount.account
+                    [02] = claim.claimAccount.AccountNo
                 });
                 transactionSets++;
             }
@@ -747,7 +747,7 @@ namespace LabBilling.Core
 
             //ensure file location ends with \
             if (!file_location.EndsWith("\\"))
-                file_location = file_location + "\\";
+                file_location += "\\";
             ediDocument.Save($"{file_location}MCL-837p.txt");
 
             return ediDocument.ToString();

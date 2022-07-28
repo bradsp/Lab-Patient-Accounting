@@ -11,6 +11,7 @@ namespace MCL
     /// 
     /// 01/22/2008 wdk
     /// </summary>
+    [Obsolete("This class is obsolete. New code should be written using LabBilling.Core libraries.")]
     public class CChk : RFCObject
     {
         private MCL.R_acc m_Racc; // validity checking for an existing account

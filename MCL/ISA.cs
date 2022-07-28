@@ -9,6 +9,7 @@ using RFClassLibrary;
 
 namespace MCL
 {
+    [Obsolete("This class is obsolete. New code should be written using LabBilling.Core libraries.")]
     class X12_ISA
     {
         /// <summary>

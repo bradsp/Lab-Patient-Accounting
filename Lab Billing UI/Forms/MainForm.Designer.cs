@@ -83,6 +83,7 @@
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.windowManagerPanel1 = new MDIWindowManager.WindowManagerPanel();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.claimValidationRulesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.DashboardMenu.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -359,7 +360,8 @@
             this.userSecurityToolStripMenuItem,
             this.systemParametersToolStripMenuItem,
             this.interfaceMappingToolStripMenuItem,
-            this.interfaceMonitorToolStripMenuItem});
+            this.interfaceMonitorToolStripMenuItem,
+            this.claimValidationRulesToolStripMenuItem});
             this.systemAdministrationToolStripMenuItem.Name = "systemAdministrationToolStripMenuItem";
             resources.ApplyResources(this.systemAdministrationToolStripMenuItem, "systemAdministrationToolStripMenuItem");
             // 
@@ -466,7 +468,13 @@
             resources.ApplyResources(this.panel1, "panel1");
             this.panel1.Name = "panel1";
             // 
-            // Dashboard
+            // claimValidationRulesToolStripMenuItem
+            // 
+            this.claimValidationRulesToolStripMenuItem.Name = "claimValidationRulesToolStripMenuItem";
+            resources.ApplyResources(this.claimValidationRulesToolStripMenuItem, "claimValidationRulesToolStripMenuItem");
+            this.claimValidationRulesToolStripMenuItem.Click += new System.EventHandler(this.claimValidationRulesToolStripMenuItem_Click);
+            // 
+            // MainForm
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -475,7 +483,7 @@
             this.Controls.Add(this.DashboardMenu);
             this.IsMdiContainer = true;
             this.MainMenuStrip = this.DashboardMenu;
-            this.Name = "Dashboard";
+            this.Name = "MainForm";
             this.TransparencyKey = System.Drawing.Color.Empty;
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Dashboard_FormClosing);
@@ -544,5 +552,6 @@
         private System.Windows.Forms.ToolStripMenuItem clientBillsNewToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem interfaceMonitorToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem professionalBillingToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem claimValidationRulesToolStripMenuItem;
     }
 }

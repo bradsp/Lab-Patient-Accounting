@@ -207,7 +207,7 @@ namespace RFClassLibrary
             if (PageNumber == 0)
             // Just calculate once
             {
-                SizeF tmpSize = new SizeF();
+                SizeF tmpSize; 
                 Font tmpFont;
                 float tmpWidth;
 

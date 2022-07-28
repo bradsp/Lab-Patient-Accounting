@@ -10,6 +10,7 @@ namespace MCL
     /// <summary>
     /// 
     /// </summary>
+    [Obsolete("This class is obsolete. New code should be written using LabBilling.Core libraries.")]
     public class R_accAudit : RCRecordset
     {
         private bool m_bArchive;

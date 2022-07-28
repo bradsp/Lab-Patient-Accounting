@@ -37,7 +37,7 @@ namespace LabBilling.Core.DataAccess
 
             var record = dbConnection.SingleOrDefault<Pat>("where account = @0", account);
             var accRecord = dbConnection.SingleOrDefault<Account>("where account = @0", account);
-            record.Physician = phyRepository.GetByNPI(record.phy_id);
+            record.Physician = phyRepository.GetByNPI(record.ProviderId);
 
             if(record == null)
             {
@@ -45,30 +45,30 @@ namespace LabBilling.Core.DataAccess
                 return new Pat();
             }
 
-            if (accRecord.trans_date == null)
+            if (accRecord.TransactionDate == null)
             {
                 Log.Instance.Fatal("Transaction date was not valid.");
                 this.Errors = "Transaction date is not valid.";
             }
 
-            if(!Str.ParseName(record.pat_full_name, out string strLastName, out string strFirstName, out string strMidName, out string strSuffix))
+            if(!Str.ParseName(record.PatFullName, out string strLastName, out string strFirstName, out string strMidName, out string strSuffix))
             {
-                this.Errors = string.Format("Patient name could not be parsed. {0} {1}", record.pat_full_name, record.account);
+                this.Errors = string.Format("Patient name could not be parsed. {0} {1}", record.PatFullName, record.AccountNo);
             }
             else
             {
-                record.pat_last_name = strLastName;
-                record.pat_first_name = strFirstName;
-                record.pat_middle_name = strMidName;
-                record.pat_name_suffix = strSuffix;
+                record.PatLastName = strLastName;
+                record.PatFirstName = strFirstName;
+                record.PatMiddleName = strMidName;
+                record.PatNameSuffix = strSuffix;
             }
 
-            if(!Str.ParseName(record.guarantor, out string strGuarLastName, out string strGuarFirstName, out string strGuarMidName, out string strGuarSuffix))
+            if(!Str.ParseName(record.GuarantorFullName, out string strGuarLastName, out string strGuarFirstName, out string strGuarMidName, out string strGuarSuffix))
             {
                 if (!string.IsNullOrEmpty(this.Errors))
                     this.Errors += Environment.NewLine;
 
-                this.Errors += string.Format("Guarantor name could not be parsed. {0} {1}", record.guarantor, record.account);
+                this.Errors += string.Format("Guarantor name could not be parsed. {0} {1}", record.GuarantorFullName, record.AccountNo);
             }
             else
             {
@@ -78,61 +78,61 @@ namespace LabBilling.Core.DataAccess
                 record.GuarantorNameSuffix = strGuarSuffix;
             }
 
-            string amaYear = FunctionRepository.GetAMAYear(accRecord.trans_date.GetValueOrDefault(DateTime.Now));
+            string amaYear = FunctionRepository.GetAMAYear(accRecord.TransactionDate.GetValueOrDefault(DateTime.Now));
             record.Diagnoses = new List<PatDiag>();
-            if (record.icd9_1 != null && record.icd9_1 != "")
+            if (record.Dx1 != null && record.Dx1 != "")
             {
-                var dictRecord = dictDxDb.GetByCode(record.icd9_1, amaYear);
+                var dictRecord = dictDxDb.GetByCode(record.Dx1, amaYear);
                 record.Dx1Desc = dictRecord.icd9_desc;
-                record.Diagnoses.Add(new PatDiag { No = 1, Code = record.icd9_1, Description = dictRecord.icd9_desc });
+                record.Diagnoses.Add(new PatDiag { No = 1, Code = record.Dx1, Description = dictRecord.icd9_desc });
             }
-            if (record.icd9_2 != null && record.icd9_2 != "")
+            if (record.Dx2 != null && record.Dx2 != "")
             {
-                var dictRecord = dictDxDb.GetByCode(record.icd9_2, amaYear);
+                var dictRecord = dictDxDb.GetByCode(record.Dx2, amaYear);
                 record.Dx2Desc = dictRecord.icd9_desc;
-                record.Diagnoses.Add(new PatDiag { No = 2, Code = record.icd9_2, Description = dictRecord.icd9_desc });
+                record.Diagnoses.Add(new PatDiag { No = 2, Code = record.Dx2, Description = dictRecord.icd9_desc });
             }
-            if (record.icd9_3 != null && record.icd9_3 != "")
+            if (record.Dx3 != null && record.Dx3 != "")
             {
-                var dictRecord = dictDxDb.GetByCode(record.icd9_3, amaYear);
+                var dictRecord = dictDxDb.GetByCode(record.Dx3, amaYear);
                 record.Dx3Desc = dictRecord.icd9_desc;
-                record.Diagnoses.Add(new PatDiag { No = 3, Code = record.icd9_3, Description = dictRecord.icd9_desc });
+                record.Diagnoses.Add(new PatDiag { No = 3, Code = record.Dx3, Description = dictRecord.icd9_desc });
             }
-            if (record.icd9_4 != null && record.icd9_4 != "")
+            if (record.Dx4 != null && record.Dx4 != "")
             {
-                var dictRecord = dictDxDb.GetByCode(record.icd9_4, amaYear);
+                var dictRecord = dictDxDb.GetByCode(record.Dx4, amaYear);
                 record.Dx4Desc = dictRecord.icd9_desc;
-                record.Diagnoses.Add(new PatDiag { No = 4, Code = record.icd9_4, Description = dictRecord.icd9_desc });
+                record.Diagnoses.Add(new PatDiag { No = 4, Code = record.Dx4, Description = dictRecord.icd9_desc });
             }
-            if (record.icd9_5 != null && record.icd9_5 != "")
+            if (record.Dx5 != null && record.Dx5 != "")
             {
-                var dictRecord = dictDxDb.GetByCode(record.icd9_5, amaYear);
+                var dictRecord = dictDxDb.GetByCode(record.Dx5, amaYear);
                 record.Dx5Desc = dictRecord.icd9_desc;
-                record.Diagnoses.Add(new PatDiag { No = 5, Code = record.icd9_5, Description = dictRecord.icd9_desc });
+                record.Diagnoses.Add(new PatDiag { No = 5, Code = record.Dx5, Description = dictRecord.icd9_desc });
             }
-            if (record.icd9_6 != null && record.icd9_6 != "")
+            if (record.Dx6 != null && record.Dx6 != "")
             {
-                var dictRecord = dictDxDb.GetByCode(record.icd9_6, amaYear);
+                var dictRecord = dictDxDb.GetByCode(record.Dx6, amaYear);
                 record.Dx6Desc = dictRecord.icd9_desc;
-                record.Diagnoses.Add(new PatDiag { No = 6, Code = record.icd9_6, Description = dictRecord.icd9_desc });
+                record.Diagnoses.Add(new PatDiag { No = 6, Code = record.Dx6, Description = dictRecord.icd9_desc });
             }
-            if (record.icd9_7 != null && record.icd9_7 != "")
+            if (record.Dx7 != null && record.Dx7 != "")
             {
-                var dictRecord = dictDxDb.GetByCode(record.icd9_7, amaYear);
+                var dictRecord = dictDxDb.GetByCode(record.Dx7, amaYear);
                 record.Dx7Desc = dictRecord.icd9_desc;
-                record.Diagnoses.Add(new PatDiag { No = 7, Code = record.icd9_7, Description = dictRecord.icd9_desc });
+                record.Diagnoses.Add(new PatDiag { No = 7, Code = record.Dx7, Description = dictRecord.icd9_desc });
             }
-            if (record.icd9_8 != null && record.icd9_8 != "")
+            if (record.Dx8 != null && record.Dx8 != "")
             {
-                var dictRecord = dictDxDb.GetByCode(record.icd9_8, amaYear);
+                var dictRecord = dictDxDb.GetByCode(record.Dx8, amaYear);
                 record.Dx8Desc = dictRecord.icd9_desc;
-                record.Diagnoses.Add(new PatDiag { No = 8, Code = record.icd9_8, Description = dictRecord.icd9_desc });
+                record.Diagnoses.Add(new PatDiag { No = 8, Code = record.Dx8, Description = dictRecord.icd9_desc });
             }
-            if (record.icd9_9 != null && record.icd9_9 != "")
+            if (record.Dx9 != null && record.Dx9 != "")
             {
-                var dictRecord = dictDxDb.GetByCode(record.icd9_9, amaYear);
+                var dictRecord = dictDxDb.GetByCode(record.Dx9, amaYear);
                 record.Dx9Desc = dictRecord.icd9_desc;
-                record.Diagnoses.Add(new PatDiag { No = 9, Code = record.icd9_9, Description = dictRecord.icd9_desc });
+                record.Diagnoses.Add(new PatDiag { No = 9, Code = record.Dx9, Description = dictRecord.icd9_desc });
             }
 
             return record;
@@ -144,15 +144,15 @@ namespace LabBilling.Core.DataAccess
 
             //first - the updated diagnoses is in the PatDiag object. We need to update the individual fields in the Pat object from this
             // clear the individual fields
-            pat.icd9_1 = "";
-            pat.icd9_2 = "";
-            pat.icd9_3 = "";
-            pat.icd9_4 = "";
-            pat.icd9_5 = "";
-            pat.icd9_6 = "";
-            pat.icd9_7 = "";
-            pat.icd9_8 = "";
-            pat.icd9_9 = "";
+            pat.Dx1 = "";
+            pat.Dx2 = "";
+            pat.Dx3 = "";
+            pat.Dx4 = "";
+            pat.Dx5 = "";
+            pat.Dx6 = "";
+            pat.Dx7 = "";
+            pat.Dx8 = "";
+            pat.Dx9 = "";
 
             foreach (PatDiag dx in pat.Diagnoses)
             {
@@ -160,31 +160,31 @@ namespace LabBilling.Core.DataAccess
                 switch(dx.No)
                 {
                     case 1:
-                        pat.icd9_1 = dx.Code;
+                        pat.Dx1 = dx.Code;
                         break;
                     case 2:
-                        pat.icd9_2 = dx.Code;
+                        pat.Dx2 = dx.Code;
                         break;
                     case 3:
-                        pat.icd9_3 = dx.Code;
+                        pat.Dx3 = dx.Code;
                         break;
                     case 4:
-                        pat.icd9_4 = dx.Code;
+                        pat.Dx4 = dx.Code;
                         break;
                     case 5:
-                        pat.icd9_5 = dx.Code;
+                        pat.Dx5 = dx.Code;
                         break;
                     case 6:
-                        pat.icd9_6 = dx.Code;
+                        pat.Dx6 = dx.Code;
                         break;
                     case 7:
-                        pat.icd9_7 = dx.Code;
+                        pat.Dx7 = dx.Code;
                         break;
                     case 8:
-                        pat.icd9_8 = dx.Code;
+                        pat.Dx8 = dx.Code;
                         break;
                     case 9:
-                        pat.icd9_9 = dx.Code;
+                        pat.Dx9 = dx.Code;
                         break;
                     default:
                         break;
@@ -200,21 +200,21 @@ namespace LabBilling.Core.DataAccess
         public override bool Update(Pat table)
         {
             //generate full name from name parts
-            table.pat_full_name =
+            table.PatFullName =
                 String.Format("{0},{1} {2} {3}",
-                table.pat_last_name,
-                table.pat_first_name,
-                table.pat_middle_name,
-                table.pat_name_suffix);
-            table.pat_full_name = table.pat_full_name.Trim();
+                table.PatLastName,
+                table.PatFirstName,
+                table.PatMiddleName,
+                table.PatNameSuffix);
+            table.PatFullName = table.PatFullName.Trim();
 
-            table.guarantor =
+            table.GuarantorFullName =
                 String.Format("{0},{1} {2} {3}",
                 table.GuarantorLastName,
                 table.GuarantorFirstName,
                 table.GuarantorMiddleName,
                 table.GuarantorNameSuffix);
-            table.guarantor = table.guarantor.Trim();
+            table.GuarantorFullName = table.GuarantorFullName.Trim();
 
             return base.Update(table);
         }
@@ -222,21 +222,21 @@ namespace LabBilling.Core.DataAccess
         public override bool Update(Pat table, IEnumerable<string> columns)
         {
             //generate full name from name parts
-            table.pat_full_name =
+            table.PatFullName =
                 String.Format("{0},{1} {2} {3}",
-                table.pat_last_name,
-                table.pat_first_name,
-                table.pat_middle_name,
-                table.pat_name_suffix);
-            table.pat_full_name = table.pat_full_name.Trim();
+                table.PatLastName,
+                table.PatFirstName,
+                table.PatMiddleName,
+                table.PatNameSuffix);
+            table.PatFullName = table.PatFullName.Trim();
 
-            table.guarantor =
+            table.GuarantorFullName =
                 String.Format("{0},{1} {2} {3}",
                 table.GuarantorLastName,
                 table.GuarantorFirstName,
                 table.GuarantorMiddleName,
                 table.GuarantorNameSuffix);
-            table.guarantor = table.guarantor.Trim();
+            table.GuarantorFullName = table.GuarantorFullName.Trim();
 
             return base.Update(table, columns);
         }

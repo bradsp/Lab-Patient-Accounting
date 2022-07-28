@@ -21,6 +21,7 @@ namespace RFClassLibrary
         /// Public constructor for this class
         /// </summary>
         /// <param name="strDatabase"></param>
+        [Obsolete("This method is obsolete and will be removed in an upcoming release.")]
         public LaunchAcc(string strDatabase)
         {
             m_strDatabase = strDatabase;
@@ -31,6 +32,7 @@ namespace RFClassLibrary
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
+        [Obsolete("This method is obsolete and will be removed in an upcoming release.")]
         static public void LaunchAcc_EventHandler(object sender, DataGridViewCellMouseEventArgs e)
         {
             DataGridView dgvGrid = (DataGridView)sender;
@@ -116,6 +118,7 @@ namespace RFClassLibrary
         /// <param name="e"></param>
         /// <param name="strSServer"></param>
         /// <param name="strSDatabase"></param>
+        [Obsolete("This method is obsolete and will be removed in an upcoming release.")]
         static public void LaunchAcc_EventHandler(object sender, DataGridViewCellMouseEventArgs e, string strSServer, string strSDatabase)
         {
             DataGridView dgvGrid = (DataGridView)sender;
@@ -180,6 +183,7 @@ namespace RFClassLibrary
         /// This is a non static that must be created through instination with a database name.
         /// </summary>
         /// <param name="strAccount">The account number to search for.</param>
+        [Obsolete("This method is obsolete and will be removed in an upcoming release.")]
         public void LaunchAccount(string strAccount)
         {
             if (string.IsNullOrEmpty(strAccount))
@@ -205,6 +209,7 @@ namespace RFClassLibrary
         /// 08/23/2007 rgc/wdk
         /// </summary>
         /// <param name="strName">Patients Name</param>
+        [Obsolete("This method is obsolete and will be removed in an upcoming release.")]
         public void LaunchAccByName(string strName)
         {
             m_strErrMsg = "Not available at this time.";

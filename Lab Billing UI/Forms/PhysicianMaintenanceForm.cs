@@ -22,42 +22,18 @@ namespace LabBilling.Forms
             InitializeComponent();
         }
 
-        public string Upin { get; set; }
-        public string UP_upin { get; set; }
-        public string TNH_num { get; set; }
-        public string BillingNPI { get; set; }
-        public string pc_code { get; set; }
-        public string Client { get; set; }
-        public string LastName { get; set; }
-        public string FirstName { get; set; }
-        public string MidInit { get; set; }
-        public string Group { get; set; }
-        public string Address1 { get; set; }
-        public string Address2 { get; set; }
-        public string City { get; set; }
-        public string State { get; set; }
-        public string ZipCode { get; set; }
-        public string phone { get; set; }
-        public int LabelCount { get; set; }
-        public double uri { get; set; }
-        public string AliasMnem { get; set; }
-        public string Credentials { get; set; }
-        public string OVcode { get; set; }
-        public string DocNo { get; set; }
-        public string Pathologist { get; set; }
-
         private readonly PhyRepository phydb = new PhyRepository(Helper.ConnVal);
+        private List<Phy> physicians = new List<Phy>();
 
         private void PhysicianMaintenanceForm_Load(object sender, EventArgs e)
         {
             Log.Instance.Trace("Entering");
 
-            List<Phy> physicians = new List<Phy>();
+            //PhysicianDGV.DataSource = phydb.GetAll();
+        }
 
-            //physicians = phydb.GetAll();
-
-            PhysicianDGV.DataSource = phydb.GetAll();
-
+        private void LoadProviderGrid()
+        {
             PhysicianDGV.Columns["rowguid"].Visible = false;
             PhysicianDGV.Columns["reserved"].Visible = false;
             PhysicianDGV.Columns["mod_user"].Visible = false;
@@ -66,6 +42,7 @@ namespace LabBilling.Forms
             PhysicianDGV.Columns["mod_host"].Visible = false;
 
             PhysicianDGV.AutoResizeColumns();
+
         }
 
         private void btnNew_Click(object sender, EventArgs e)
@@ -80,7 +57,8 @@ namespace LabBilling.Forms
 
         private void buttonSearch_Click(object sender, EventArgs e)
         {
-
+            PhysicianDGV.DataSource = phydb.GetByName(searchText.Text, "");
+            LoadProviderGrid();
         }
     }
 }

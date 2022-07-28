@@ -60,18 +60,18 @@ namespace LabBilling.Core.DataAccess
         {
             Log.Instance.Debug($"Entering");
 
-            var record = dbConnection.SingleOrDefault<Account>("where account = @0", account);
+            var record = dbConnection.SingleOrDefault<Account>($"where {this.GetRealColumn(typeof(Account), nameof(Account.AccountNo))} = @0", account);
 
-            if(!Str.ParseName(record.pat_name, out string strLastName, out string strFirstName, out string strMiddleName, out string strSuffix))
+            if(!Str.ParseName(record.PatFullName, out string strLastName, out string strFirstName, out string strMiddleName, out string strSuffix))
             {
-                this.Errors = string.Format("Patient name could not be parsed. {0} {1}\n", record.pat_name, record.account);
+                this.Errors = string.Format("Patient name could not be parsed. {0} {1}\n", record.PatFullName, record.AccountNo);
             }
             else
             {
-                record.pat_name_last = strLastName;
-                record.pat_name_first = strFirstName;
-                record.pat_name_middle = strMiddleName;
-                record.pat_name_suffix = strSuffix;
+                record.PatLastName = strLastName;
+                record.PatFirstName = strFirstName;
+                record.PatMiddleName = strMiddleName;
+                record.PatNameSuffix = strSuffix;
             }
 
             if (!demographicsOnly)
@@ -85,9 +85,9 @@ namespace LabBilling.Core.DataAccess
                 record.AccountValidationStatus = accountValidationStatusRepository.GetByAccount(account);
             }
             Client client;
-            if (record.cl_mnem != null)
+            if (record.ClientMnem != null)
             {
-                client = clientRepository.GetClient(record.cl_mnem);
+                client = clientRepository.GetClient(record.ClientMnem);
                 record.ClientName = client.cli_nme;
             }
 
@@ -129,16 +129,17 @@ namespace LabBilling.Core.DataAccess
                     nameSearch = string.Format("{0}%,{1}%", lastNameSearchText, firstNameSearchText);
 
                 var command = PetaPoco.Sql.Builder
-                    .Append("select acc.account, acc.trans_date, acc.pat_name, isnull(acc.ssn, pat.ssn) as 'SSN', pat.dob_yyyy, pat.sex, acc.mri")
-                    .Append("from acc left outer join pat on acc.account = pat.account")
-                    .Append("where acc.deleted = 0 ")
-                    .Append("and (acc.pat_name like @0 or @1 = '')", nameSearch, nameSearch)
-                    .Append("and (acc.account = @0 or @1 = '')", accountSearchText, accountSearchText)
-                    .Append("and (acc.mri = @0 or @1 = '')", mrnSearchText, mrnSearchText)
-                    .Append("and (pat.sex = @0 or @1 = '')", sexSearch, sexSearch)
-                    .Append("and (acc.ssn = @0 or @1 = '')", ssnSearchText, ssnSearchText)
-                    .Append("and (dob_yyyy = @0 or @1 = '')", dobSearch, dobSearch)
-                    .Append("order by acc.trans_date desc");
+                    .Select("acc.account, acc.trans_date, acc.pat_name, isnull(acc.ssn, pat.ssn) as 'SSN', pat.dob_yyyy, pat.sex, acc.mri")
+                    .From("acc")
+                    .LeftJoin("pat").On("acc.account = pat.account")
+                    .Where("acc.deleted = 0 ")
+                    .Where("(acc.pat_name like @0 or @1 = '')", nameSearch, nameSearch)
+                    .Where("(acc.account = @0 or @1 = '')", accountSearchText, accountSearchText)
+                    .Where("(acc.mri = @0 or @1 = '')", mrnSearchText, mrnSearchText)
+                    .Where("(pat.sex = @0 or @1 = '')", sexSearch, sexSearch)
+                    .Where("(acc.ssn = @0 or @1 = '')", ssnSearchText, ssnSearchText)
+                    .Where("(dob_yyyy = @0 or @1 = '')", dobSearch, dobSearch)
+                    .OrderBy("acc.trans_date desc");
 
                 return dbConnection.Fetch<AccountSearch>(command);
             }
@@ -167,7 +168,8 @@ namespace LabBilling.Core.DataAccess
         {
             Log.Instance.Trace("Entering");
 
-            return dbConnection.Fetch<InvoiceSelect>("where cl_mnem = @0 and trans_date <= @1", clientMnem, thruDate);
+            return dbConnection.Fetch<InvoiceSelect>($"where {this.GetRealColumn(typeof(InvoiceSelect), nameof(InvoiceSelect.cl_mnem))} = @0 " + 
+                $"and {this.GetRealColumn(typeof(InvoiceSelect), nameof(InvoiceSelect.trans_date))} <= @1", clientMnem, thruDate);
         }
 
         public IEnumerable<ClaimItem> GetAccountsForClaims(ClaimType claimType)
@@ -186,7 +188,7 @@ namespace LabBilling.Core.DataAccess
                     case ClaimType.Professional:
                         command = PetaPoco.Sql.Builder
                             .Select("status, acc.account, pat_name, ssn, cl_mnem, acc.fin_code, trans_date, ins.plan_nme")
-                            .From("acc")
+                            .From(_tableName)
                             .InnerJoin("ins").On("ins.account = acc.account and ins_a_b_c = 'a'")
                             .Where("status = '1500'")
                             .Where("ins_code not in ('CHAMPUS')");
@@ -219,13 +221,13 @@ namespace LabBilling.Core.DataAccess
         {
             Log.Instance.Trace($"Entering");
             //generate full name field from name parts
-            table.pat_name = String.Format("{0},{1} {2} {3}",
-                table.pat_name_last,
-                table.pat_name_first,
-                table.pat_name_middle,
-                table.pat_name_suffix);
+            table.PatFullName = String.Format("{0},{1} {2} {3}",
+                table.PatLastName,
+                table.PatFirstName,
+                table.PatMiddleName,
+                table.PatNameSuffix);
 
-            table.pat_name = table.pat_name.Trim();
+            table.PatFullName = table.PatFullName.Trim();
 
             Log.Instance.Trace("$Exiting");
             return base.Update(table);
@@ -235,13 +237,13 @@ namespace LabBilling.Core.DataAccess
         {
             Log.Instance.Trace($"Entering");
             //generate full name field from name parts
-            table.pat_name = String.Format("{0},{1} {2} {3}",
-                table.pat_name_last,
-                table.pat_name_first,
-                table.pat_name_middle,
-                table.pat_name_suffix);
+            table.PatFullName = String.Format("{0},{1} {2} {3}",
+                table.PatLastName,
+                table.PatFirstName,
+                table.PatMiddleName,
+                table.PatNameSuffix);
 
-            table.pat_name = table.pat_name.Trim();
+            table.PatFullName = table.PatFullName.Trim();
 
             Log.Instance.Trace($"Exiting");
             return base.Update(table, columns);
@@ -262,15 +264,15 @@ namespace LabBilling.Core.DataAccess
             DateTime oldServiceDate = DateTime.MinValue;
 
             // update trans_date on acc table
-            if (table.trans_date != newDate)
+            if (table.TransactionDate != newDate)
             {
-                oldServiceDate = (DateTime)table.trans_date;
-                table.trans_date = newDate;
-                Update(table, new[] { nameof(Account.trans_date) });
+                oldServiceDate = (DateTime)table.TransactionDate;
+                table.TransactionDate = newDate;
+                Update(table, new[] { nameof(Account.TransactionDate) });
 
-                if (AddNote(table.account, $"Service Date changed from {oldServiceDate} to {newDate}"))
+                if (AddNote(table.AccountNo, $"Service Date changed from {oldServiceDate} to {newDate}"))
                 {
-                    table.Notes = accountNoteRepository.GetByAccount(table.account);
+                    table.Notes = accountNoteRepository.GetByAccount(table.AccountNo);
                 }
 
                 //determine if charges need to be reprocessed.
@@ -326,7 +328,7 @@ namespace LabBilling.Core.DataAccess
                 throw new ArgumentNullException("newDate");
 
             bool updateSuccess = true;
-            string oldFinCode = table.fin_code;
+            string oldFinCode = table.FinCode;
 
             //check that newFincode is a valid fincode
             FinRepository finRepository = new FinRepository(_connection, dbConnection);
@@ -341,24 +343,24 @@ namespace LabBilling.Core.DataAccess
 
             if(oldFinCode != newFinCode)
             {
-                table.fin_code = newFinCode;
+                table.FinCode = newFinCode;
                 try
                 {
-                    Update(table, new[] { nameof(Account.fin_code) });
+                    Update(table, new[] { nameof(Account.FinCode) });
                 }
                 catch(Exception ex)
                 {
                     Log.Instance.Error(ex);
-                    throw new ApplicationException($"Exception updating fin code for {table.account}.", ex);
+                    throw new ApplicationException($"Exception updating fin code for {table.AccountNo}.", ex);
                 }
-                AddNote(table.account, $"Financial code updated from {oldFinCode} to {newFinCode}.");
+                AddNote(table.AccountNo, $"Financial code updated from {oldFinCode} to {newFinCode}.");
 
                 //reprocess charges if needed due to financial code change.
                 if(newFin.type != oldFin.type)
                 {
                     try
                     {
-                        chrgRepository.ReprocessCharges(table.account);
+                        chrgRepository.ReprocessCharges(table.AccountNo);
                     }
                     catch(Exception ex)
                     {
@@ -405,90 +407,90 @@ namespace LabBilling.Core.DataAccess
                 throw new CdmNotFoundException("CDM not found.", cdm);
             }
 
-            Fin fin = finRepository.GetFin(accData.fin_code);
+            Fin fin = finRepository.GetFin(accData.FinCode);
 
             Chrg chrg = new Chrg();
 
             //split the patient name
-            RFClassLibrary.Str.ParseName(accData.pat_name, out string ln, out string fn, out string mn, out string suffix);
+            RFClassLibrary.Str.ParseName(accData.PatFullName, out string ln, out string fn, out string mn, out string suffix);
 
             //now build the charge & detail records
-            chrg.account = account;
-            chrg.action = "";
-            chrg.bill_method = fin.form_type;
-            chrg.cdm = cdm;
-            chrg.comment = comment;
-            chrg.credited = false;
-            chrg.facility = "";
-            chrg.fin_code = accData.fin_code;
-            chrg.fin_type = fin.type;
-            chrg.fname = fn;
-            chrg.lname = ln;
-            chrg.mname = mn;
-            chrg.mt_mnem = cdmData.mnem;
-            chrg.mt_req_no = refNumber;
-            chrg.order_site = "";
-            chrg.pat_dob = accData.Pat.dob_yyyy;
-            chrg.pat_name = accData.pat_name;
-            chrg.pat_ssn = accData.Pat.ssn;
-            chrg.performing_site = "";
-            chrg.post_date = DateTime.Today;
-            chrg.qty = qty;
-            chrg.service_date = serviceDate;
-            chrg.status = "NEW";
-            chrg.unitno = accData.HNE_NUMBER;
-            chrg.responsiblephy = "";
+            chrg.AccountNo = account;
+            chrg.Action = "";
+            chrg.BillMethod = fin.form_type;
+            chrg.CDMCode = cdm;
+            chrg.Comment = comment;
+            chrg.IsCredited = false;
+            chrg.Facility = "";
+            chrg.FinCode = accData.FinCode;
+            chrg.FinancialType = fin.type;
+            chrg.PatFirstName = fn;
+            chrg.PatLastName = ln;
+            chrg.PatMiddleName = mn;
+            chrg.OrderMnem = cdmData.Mnem;
+            chrg.LISReqNo = refNumber;
+            chrg.OrderingSite = "";
+            chrg.PatBirthDate = accData.Pat.BirthDate;
+            chrg.PatFullName = accData.PatFullName;
+            chrg.PatSocSecNo = accData.Pat.SocSecNo;
+            chrg.PerformingSite = "";
+            chrg.PostingDate = DateTime.Today;
+            chrg.Quantity = qty;
+            chrg.ServiceDate = serviceDate;
+            chrg.Status = "NEW";
+            chrg.UnitNo = accData.EMPINumber;
+            chrg.ResponsibleProvider = "";
 
             //need to determine the correct fee schedule - for now default to 1
             double ztotal = 0.0;
             double amtTotal = 0.0;
             double retailTotal = 0.0;
 
-            foreach (CdmFeeSchedule1 fee in cdmData.cdmFeeSchedule1)
+            foreach (CdmFeeSchedule1 fee in cdmData.CdmFeeSchedule1)
             {
-                ChrgDetail amt = new ChrgDetail();
-                amt.cpt4 = fee.cpt4;
-                amt.type = fee.type;
+                ChrgDetail chrgDetail = new ChrgDetail();
+                chrgDetail.Cpt4 = fee.Cpt4;
+                chrgDetail.Type = fee.Type;
                 switch (fin.type)
                 {
                     case "M":
-                        amt.amount = fee.mprice;
-                        retailTotal += fee.mprice;
-                        ztotal += fee.zprice;
+                        chrgDetail.Amount = fee.MClassPrice;
+                        retailTotal += fee.MClassPrice;
+                        ztotal += fee.ZClassPrice;
                         break;
                     case "C":
-                        amt.amount = fee.cprice;
-                        retailTotal += fee.cprice;
-                        ztotal += fee.zprice;
+                        chrgDetail.Amount = fee.CClassPrice;
+                        retailTotal += fee.CClassPrice;
+                        ztotal += fee.ZClassPrice;
                         break;
                     case "Z":
-                        amt.amount = fee.zprice;
-                        retailTotal += fee.zprice;
-                        ztotal += fee.zprice;
+                        chrgDetail.Amount = fee.ZClassPrice;
+                        retailTotal += fee.ZClassPrice;
+                        ztotal += fee.ZClassPrice;
                         break;
                     default:
-                        amt.amount = fee.mprice;
-                        retailTotal += fee.mprice;
-                        ztotal += fee.zprice;
+                        chrgDetail.Amount = fee.MClassPrice;
+                        retailTotal += fee.MClassPrice;
+                        ztotal += fee.ZClassPrice;
                         break;
                 }
 
-                amtTotal += amt.amount;
+                amtTotal += chrgDetail.Amount;
 
-                amt.modi = fee.modi;
-                amt.revcode = fee.rev_code;
-                amt.mt_req_no = "";
-                amt.order_code = fee.billcode;
-                amt.bill_type = "";
-                amt.bill_method = "";
-                amt.diagnosis_code_ptr = "1:";
+                chrgDetail.Modifier = fee.Modifier;
+                chrgDetail.RevenueCode = fee.RevenueCode;
+                chrgDetail.LISReqNo = "";
+                chrgDetail.OrderCode = fee.BillCode;
+                chrgDetail.BillType = "";
+                chrgDetail.BillMethod = "";
+                chrgDetail.DiagCodePointer = "1:";
 
-                chrg.ChrgDetails.Add(amt);
+                chrg.ChrgDetails.Add(chrgDetail);
             }
 
-            chrg.net_amt = amtTotal;
-            chrg.inp_price = ztotal;
-            chrg.retail = retailTotal;
+            chrg.NetAmount = amtTotal;
+            chrg.HospAmount = ztotal;
+            chrg.RetailAmount = retailTotal;
 
             Log.Instance.Trace($"Exiting");
             return chrgRepository.AddCharge(chrg);
@@ -553,13 +555,13 @@ namespace LabBilling.Core.DataAccess
                 {
                     //write error list to account
                     account.AccountValidationStatus.validation_text = errorList;
-                    account.AccountValidationStatus.account = account.account;
+                    account.AccountValidationStatus.account = account.AccountNo;
                     account.AccountValidationStatus.mod_date = DateTime.Now;
                 }
                 else
                 {
                     account.AccountValidationStatus.validation_text = "No validation errors.";
-                    account.AccountValidationStatus.account = account.account;
+                    account.AccountValidationStatus.account = account.AccountNo;
                     account.AccountValidationStatus.mod_date = DateTime.Now;
                 }
 

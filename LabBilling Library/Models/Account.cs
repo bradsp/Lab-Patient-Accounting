@@ -9,48 +9,73 @@ namespace LabBilling.Core.Models
     [PrimaryKey("account", AutoIncrement = false)]
     public class Account : IBaseEntity
     {
-        public bool deleted { get; set; }
-        public string account { get; set; }
-        public string meditech_account { get; set; }
-        public string HNE_NUMBER { get; set; }
-        public string ssn { get; set; }
-        public string mri { get; set; }
+        [Column("deleted")]
+        public bool IsDeleted { get; set; }
+        [Column("account")]
+        public string AccountNo { get; set; }
+        [Column("meditech_account")]
+        public string MeditechAccount { get; set; }
+        [Column("HNE_NUMBER")]
+        public string EMPINumber { get; set; }
+        [Column("ssn")]
+        public string SocSecNo { get; set; }
+        [Column("mri")]
+        public string MRN { get; set; }
 
-        public string pat_name { get; set; }
+        [Column("pat_name")]
+        public string PatFullName { get; set; }
         [Ignore]
-        public string pat_name_last { get; set; }
+        public string PatLastName { get; set; }
         [Ignore]
-        public string pat_name_first { get; set; }
+        public string PatFirstName { get; set; }
         [Ignore]
-        public string pat_name_middle { get; set; }
+        public string PatMiddleName { get; set; }
         [Ignore]
-        public string pat_name_suffix { get; set; }
+        public string PatNameSuffix { get; set; }
 
-        public string cl_mnem { get; set; }
-        public string fin_code { get; set; }
-        public string original_fincode { get; set; }
+        [Column("cl_mnem")]
+        public string ClientMnem { get; set; }
+        [Column("fin_code")]
+        public string FinCode { get; set; }
+        [Column("original_fincode")]
+        public string OriginalFinCode { get; set; }
 
-        public DateTime? trans_date { get; set; }
-        public DateTime? cbill_date { get; set; }
-        public DateTime? post_date { get; set; }
-        public DateTime? trans_date_time { get; set; }
+        [Column("trans_date")]
+        public DateTime? TransactionDate { get; set; }
+        [Column("cbill_date")]
+        public DateTime? ClientBillDate { get; set; }
+        [Column("post_date")]
+        public DateTime? PostingDate { get; set; }
+        [Column("trans_date_time")]
+        public DateTime? TransactionDateTime { get; set; }
 
-        public int bill_priority { get; set; }
-        public string oereqno { get; set; }
-        public string ov_order_id { get; set; }
-        public string ov_pat_id { get; set; }
-        public string guarantorID { get; set; }
+        [Column("bill_priority")]
+        public int BillPriority { get; set; }
+        [Column("oereqno")]
+        public string OEReqNo { get; set; }
+        [Column("ov_order_id")]
+        public string OVOrderId { get; set; }
+        [Column("ov_pat_id")]
+        public string OVPatId { get; set; }
+        [Column("guarantorID")]
+        public string GuarantorId { get; set; }
 
-        public string status { get; set; }
-        public int num_comments { get; set; }
+        [Column("status")]
+        public string Status { get; set; }
+        [Column("num_comments")]
+        public int CommentCount { get; set; }
 
         [ResultColumn]
+        [Column("mod_date")]
         public DateTime mod_date { get; set; }
         [ResultColumn]
+        [Column("mod_date")]
         public string mod_user { get; set; }
         [ResultColumn]
+        [Column("mod_prg")]
         public string mod_prg { get; set; }
         [ResultColumn]
+        [Column("mod_host")]
         public string mod_host { get; set; }
 
         [Ignore]
@@ -84,7 +109,7 @@ namespace LabBilling.Core.Models
         public double TotalBadDebt { get; set; }
 
         [Ignore]
-        public string FullInfo => $"{account} {pat_name} {cl_mnem} {trans_date}";
+        public string FullInfo => $"{AccountNo} {PatFullName} {ClientMnem} {TransactionDate}";
         [Ignore]
         public string ClientName { get; set; }
 
@@ -98,7 +123,7 @@ namespace LabBilling.Core.Models
                 {
                     foreach(var detail in chrg.ChrgDetails)
                     {
-                        cpt4List.Add(detail.cpt4);
+                        cpt4List.Add(detail.Cpt4);
                     }
                 }
                 return cpt4List;

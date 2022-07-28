@@ -11,9 +11,10 @@ using System.Drawing;
 
 namespace MCL
 {
-/// <summary>
-/// 
-/// </summary>
+    /// <summary>
+    /// 
+    /// </summary>
+    [Obsolete("This class is obsolete. New code should be written using LabBilling.Core libraries.")]
     public class CEob : RFCObject
     {
         private R_system m_rSystem;

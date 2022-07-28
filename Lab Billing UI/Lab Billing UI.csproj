@@ -134,6 +134,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Forms\ClaimRuleEditorForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ClaimRuleEditorForm.Designer.cs">
+      <DependentUpon>ClaimRuleEditorForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\ClientInvoiceForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -436,6 +442,9 @@
     <None Include="Resources\refresh-icon.png" />
     <None Include="Resources\hiclipart.com-id_dbhyp.png" />
     <None Include="Resources\lookup-icon-png-and-vector-for-free-download-pngtree-lookup-png-512_512.png" />
+    <EmbeddedResource Include="Forms\ClaimRuleEditorForm.resx">
+      <DependentUpon>ClaimRuleEditorForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\ClientInvoiceForm.resx">
       <DependentUpon>ClientInvoiceForm.cs</DependentUpon>
     </EmbeddedResource>

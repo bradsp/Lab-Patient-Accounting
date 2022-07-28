@@ -183,7 +183,7 @@ where dbo.ins.account is null))
 
 	--2. Insert the new credited charge to get the chrg_num for the amt record
 	--		before setting this records credited flag to credited.
-	INSERT INTO MCLLIVE.dbo.chrg
+	INSERT INTO dbo.chrg
 	(credited, account, service_date, hist_date
 	, cdm, qty, retail, inp_price, comment--, invoice
 	, mod_date, mod_user, mod_prg, mod_host
@@ -211,11 +211,11 @@ where dbo.ins.account is null))
 	UPDATE dbo.Temp_GlobalBilling
 	SET colNewChrgNum = c.chrg_num
 	FROM dbo.Temp_GlobalBilling t
-	CROSS APPLY MCLLIVE.dbo.chrg c 
+	CROSS APPLY dbo.chrg c 
 	where c.rowguid = t.rowguid
 		
 	
-	INSERT INTO MCLLIVE.dbo.amt
+	INSERT INTO dbo.amt
 	(
 	chrg_num, cpt4, type, amount, mod_date, mod_user, mod_prg, deleted
 	,  modi, revcode, modi2, diagnosis_code_ptr, mt_req_no, order_code, 
@@ -233,7 +233,7 @@ where dbo.ins.account is null))
 	
 	
 	-- 3. Insert the new charge record for the new client
-	INSERT INTO MCLLIVE.dbo.chrg
+	INSERT INTO dbo.chrg
 	(
 		rowguid,account, service_date, hist_date, cdm, qty, retail, comment
 		, mod_date, mod_user, mod_prg, mod_host
@@ -257,13 +257,13 @@ where dbo.ins.account is null))
 	SET colNewChrgNum = c.chrg_num
 	, colPrice = c.net_amt
 	FROM dbo.Temp_GlobalBilling t
-	CROSS APPLY MCLLIVE.dbo.chrg c 
+	CROSS APPLY dbo.chrg c 
 	where c.rowguid = t.rowguid AND c.account = 
 	REPLACE(REPLACE(REPLACE(t.colAcc,'C','J'),'D','J'),'L','J')	
 
 DECLARE @fintype VARCHAR(1)
 SET @fintype = 'C'
-INSERT INTO MCLLIVE.dbo.amt
+INSERT INTO dbo.amt
 (
 	chrg_num, cpt4, type, amount, mod_date, mod_user, mod_prg
 	,  modi, revcode, order_code 
@@ -272,7 +272,7 @@ SELECT t.colNewChrgNum, t.colCPT,s.colType,s.colCptPrice
 , GETDATE() AS [mod_date], RIGHT(SUSER_SNAME(),50) AS [mod_user]
 , RIGHT(ISNULL(OBJECT_NAME(@@PROCID),'SQL QUERY'),50) AS [mod_prg]
 ,s.colModi, s.colRevCode, t.colCdm
-FROM MCLLIVE.dbo.temp_GlobalBilling t
+FROM dbo.temp_GlobalBilling t
 CROSS APPLY dbo.SplitCdmPriceByCpt(t.colCdm,t.colPrice,@fintype) s
 
 -- if the "J" account is paid out update the status to 'NEW'

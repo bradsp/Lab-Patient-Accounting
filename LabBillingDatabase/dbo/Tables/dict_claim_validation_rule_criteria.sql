@@ -4,6 +4,7 @@
     [LineType] NVARCHAR(50) NULL, 
     [GroupId] INT NULL, 
     [ParentGroupId] INT NULL, 
+    [Class] NVARCHAR(50) NULL,
     [MemberName] NVARCHAR(50) NULL, 
     [Operator] NVARCHAR(50) NULL, 
     [TargetValue] NVARCHAR(50) NULL, 

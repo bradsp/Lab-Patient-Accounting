@@ -712,10 +712,12 @@ namespace RFClassLibrary
             }
             // build the connection
             System.Data.SqlClient.SqlConnectionStringBuilder builder =
-                  new System.Data.SqlClient.SqlConnectionStringBuilder();
-            builder["Data Source"] = m_dsOBR.Tables["DEFAULTS"].Rows[0]["SERVER"];
-            builder["integrated Security"] = true;
-            builder["Initial Catalog"] = m_dsOBR.Tables["DEFAULTS"].Rows[0]["DATABASE"];
+                  new System.Data.SqlClient.SqlConnectionStringBuilder
+                  {
+                      ["Data Source"] = m_dsOBR.Tables["DEFAULTS"].Rows[0]["SERVER"],
+                      ["integrated Security"] = true,
+                      ["Initial Catalog"] = m_dsOBR.Tables["DEFAULTS"].Rows[0]["DATABASE"]
+                  };
             // create the connection
             System.Data.SqlClient.SqlConnection sqlConnect =
                 new System.Data.SqlClient.SqlConnection(builder.ConnectionString);
@@ -747,10 +749,12 @@ namespace RFClassLibrary
             {
                 // build the connection
                 System.Data.SqlClient.SqlConnectionStringBuilder builder =
-                      new System.Data.SqlClient.SqlConnectionStringBuilder();
-                builder["Data Source"] = m_dsOBR.Tables["DEFAULTS"].Rows[0]["SERVER"];
-                builder["integrated Security"] = true;
-                builder["Initial Catalog"] = m_dsOBR.Tables["DEFAULTS"].Rows[0]["DATABASE"];
+                      new System.Data.SqlClient.SqlConnectionStringBuilder
+                      {
+                          ["Data Source"] = m_dsOBR.Tables["DEFAULTS"].Rows[0]["SERVER"],
+                          ["integrated Security"] = true,
+                          ["Initial Catalog"] = m_dsOBR.Tables["DEFAULTS"].Rows[0]["DATABASE"]
+                      };
                 // create the connection
                 System.Data.SqlClient.SqlConnection sqlConnect =
                     new System.Data.SqlClient.SqlConnection(builder.ConnectionString);
@@ -1269,7 +1273,6 @@ namespace RFClassLibrary
         /// <returns></returns>
         private static string ConvertDateTimeToHL7DateString(string strDate)
         {
-            string strRetVal = string.Empty;
             if (string.IsNullOrEmpty(strDate))
             {
                 return string.Empty;
@@ -1279,8 +1282,8 @@ namespace RFClassLibrary
             {
                 case 8:
                     {
-                        strRetVal = string.Format("{0}{1}", strDate.Substring(4, 4), strDate.Substring(0, 4));
-                        break;
+                    _ = string.Format("{0}{1}", strDate.Substring(4, 4), strDate.Substring(0, 4));
+                    break;
                     }
             }
             return strDate;
@@ -1821,12 +1824,6 @@ namespace RFClassLibrary
 
             }
             m_arrMessageSegments = strHL7Msg.Split(new Char[] { HL7.CR }, StringSplitOptions.RemoveEmptyEntries);
-            //if (!ValidateHL7Msg(arrSegment))
-            //{
-
-            //    return false;
-            //}
-            string strSegType = "";
             foreach (string strSegment in m_arrMessageSegments)
             {
                 if (strSegment.Length < 3)
@@ -1835,7 +1832,12 @@ namespace RFClassLibrary
                     continue; // nothing we can identify.
                 }
 
-                strSegType = strSegment.Substring(0, 3);
+                //if (!ValidateHL7Msg(arrSegment))
+                //{
+
+                //    return false;
+                //}
+                string strSegType = strSegment.Substring(0, 3);
                 switch (strSegType)
                 {
                     case "MSH":
@@ -2062,12 +2064,6 @@ namespace RFClassLibrary
 
             }
             m_arrMessageSegments = strHL7Msg.Split(new Char[] { HL7.CR }, StringSplitOptions.RemoveEmptyEntries);
-            //if (!ValidateHL7Msg(arrSegment))
-            //{
-
-            //    return false;
-            //}
-            string strSegType = "";
             foreach (string strSegment in m_arrMessageSegments)
             {
                 if (strSegment.Length < 3)
@@ -2076,7 +2072,12 @@ namespace RFClassLibrary
                     continue; // nothing we can identify.
                 }
 
-                strSegType = strSegment.Substring(0, 3);
+                //if (!ValidateHL7Msg(arrSegment))
+                //{
+
+                //    return false;
+                //}
+                string strSegType = strSegment.Substring(0, 3);
                 switch (strSegType)
                 {
                     case "MSH":
@@ -4027,8 +4028,7 @@ namespace RFClassLibrary
              TS          Time stamp  2.8.42      YYYY[MM[DD[HHMM[SS[.S[S[S[S]]]]]]]][+/-ZZZZ] ^ <degree of precision>
              */
 
-            string strRetVal = string.Empty;
-
+            string strRetVal;
             switch (str.Length)
             {
                 case 8:
@@ -4135,7 +4135,7 @@ namespace RFClassLibrary
             if (!string.IsNullOrEmpty(strHNENumber) && strHNENumber != strPIDParts[2].ToString())
             {
                 m_ERR.m_Email.Send("HL7@UpdatePID.SRV", "david.kelly@wth.org", "HNE Numbers don't match",
-                    string.Format("{PatRecord {0}. ResultMessage {1}", strHNENumber, strPIDParts[2].ToString()));
+                    string.Format("PatRecord {0}. ResultMessage {1}", strHNENumber, strPIDParts[2].ToString()));
 
             }
             strHNENumber = strPIDParts[2].ToString();

@@ -16,6 +16,7 @@ namespace MCL
     /// <summary>
     /// Class to create a client invoice
     /// </summary>
+    [Obsolete("This class is obsolete. New code should be written using LabBilling.Core libraries.")]
     public class CInvoice
     {
         
@@ -529,11 +530,16 @@ namespace MCL
 
             #endregion details
             #region Details Info
-            int nLinesPerPage = 0;
-            int nCharsPerLine = 0;
+
+            #endregion details
+            #region Details Info
+
+            #endregion details
+
+            #region Details Info
             stringSize = graphics.MeasureString("THIS", fontInvRegular,
                 rectBody.Size, StringFormat.GenericTypographic,
-                out nCharsPerLine, out nLinesPerPage);
+                out int nCharsPerLine, out int nLinesPerPage);
             CurrentY = rectBody.Top + rectDetailTDateLabel.Height;
             #endregion Details Info
      

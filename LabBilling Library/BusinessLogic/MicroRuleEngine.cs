@@ -99,8 +99,7 @@ namespace MicroRuleEngine
         // Build() in some forks
         protected static Expression GetExpressionForRule(Type type, Rule rule, ParameterExpression parameterExpression, bool useTryCatchForNulls = true)
         {
-            ExpressionType nestedOperator;
-            if (ExpressionType.TryParse(rule.Operator, out nestedOperator) &&
+            if (ExpressionType.TryParse(rule.Operator, out ExpressionType nestedOperator) &&
                 _nestedOperators.Contains(nestedOperator) && rule.Rules != null && rule.Rules.Any())
                 return BuildNestedExpression(type, rule.Rules, parameterExpression, nestedOperator, useTryCatchForNulls);
             else
@@ -248,7 +247,7 @@ namespace MicroRuleEngine
             {
                 param = Expression.TypeAs(param, type);
             }
-            var drule = rule as DataRule;
+            DataRule drule = rule as DataRule;
 
             if (string.IsNullOrEmpty(rule.MemberName)) //check is against the object itself
             {
@@ -276,9 +275,8 @@ namespace MicroRuleEngine
             }
 
             // is the operator a known .NET operator?
-            ExpressionType tBinary;
 
-            if (ExpressionType.TryParse(rule.Operator, out tBinary))
+            if (ExpressionType.TryParse(rule.Operator, out ExpressionType tBinary))
             {
                 Expression right;
                 var txt = rule.TargetValue as string;
@@ -578,14 +576,12 @@ namespace MicroRuleEngine
                     var properties = type.GetProperties(Member.flags);
                     foreach (var field in fields)
                     {
-                        string useParentName = null;
-                        var name = Member.ValidateName(field.Name, type, memberName, fi.Name, parentPath, out useParentName);
+                        var name = Member.ValidateName(field.Name, type, memberName, fi.Name, parentPath, out string useParentName);
                         toReturn.AddRange(GetFields(field.FieldType, name, useParentName));
                     }
                     foreach (var prop in properties)
                     {
-                        string useParentName = null;
-                        var name = Member.ValidateName(prop.Name, type, memberName, fi.Name, parentPath, out useParentName);
+                        var name = Member.ValidateName(prop.Name, type, memberName, fi.Name, parentPath, out string useParentName);
                         toReturn.AddRange(GetFields(prop.PropertyType, name, useParentName));
                     }
                 }

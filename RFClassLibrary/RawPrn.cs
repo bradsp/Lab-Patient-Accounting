@@ -11,6 +11,7 @@ namespace RFClassLibrary
     /// <summary>
     /// rgc/wdk 20090422 this class is to duplicate the capabilites that exist in RFC library in the CRawPrn class.
     /// </summary>
+    [Obsolete("This class is obsolete and will be removed in an upcoming release.")]
     public class RawPrn
     {
         IntPtr hPrn;

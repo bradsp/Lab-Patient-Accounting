@@ -52,14 +52,14 @@ namespace LabBilling.Forms
                 //create the account
 
                 Account acc = new Account();
-                acc.account = AccountNo.Text;
-                acc.pat_name = string.Format("{0},{1} {2}", LastName.Text, FirstName.Text, MiddleName.Text);
-                acc.Pat.pat_full_name = string.Format("{0},{1} {2}", LastName.Text, FirstName.Text, MiddleName.Text);
-                acc.Pat.dob_yyyy = Convert.ToDateTime(DateOfBirth.Text);
-                acc.trans_date = Convert.ToDateTime(ServiceDate.Text);
-                acc.Pat.account = AccountNo.Text;
-                acc.Pat.sex = PatientSex.SelectedValue.ToString();
-                acc.fin_code = FinancialClass.SelectedValue.ToString(); ;
+                acc.AccountNo = AccountNo.Text;
+                acc.PatFullName = string.Format("{0},{1} {2}", LastName.Text, FirstName.Text, MiddleName.Text);
+                acc.Pat.PatFullName = string.Format("{0},{1} {2}", LastName.Text, FirstName.Text, MiddleName.Text);
+                acc.Pat.BirthDate = Convert.ToDateTime(DateOfBirth.Text);
+                acc.TransactionDate = Convert.ToDateTime(ServiceDate.Text);
+                acc.Pat.AccountNo = AccountNo.Text;
+                acc.Pat.Sex = PatientSex.SelectedValue.ToString();
+                acc.FinCode = FinancialClass.SelectedValue.ToString(); ;
 
                 accDB.AddAccount(acc);
 

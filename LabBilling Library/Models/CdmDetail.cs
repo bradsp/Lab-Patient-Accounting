@@ -11,24 +11,60 @@ namespace LabBilling.Core.Models
     public class CdmFeeSchedule1
     {
         public Guid rowguid { get; set; }
-        public bool deleted { get; set; }
-        public string cdm { get; set; }
-        public int link { get; set; }
-        public string code_flag { get; set; }
-        public string cpt4 { get; set; }
-        public string descript { get; set; }
-        public double mprice { get; set; }
-        public double cprice { get; set; }
-        public double zprice { get; set; }
-        public string rev_code { get; set; }
-        public string type { get; set; }
-        public string modi { get; set; }
-        public string billcode { get; set; }
+
+        [Column("deleted")]
+        public bool IsDeleted { get; set; }
+
+        [Column("cdm")]
+        public string ChargeItemId { get; set; }
+
+        [Column("link")]
+        public int Link { get; set; }
+
+        [Column("code_falg")]
+        public string CodeFlag { get; set; }
+
+        [Column("cpt4")]
+        public string Cpt4 { get; set; }
+
+        [Column("descript")]
+        public string Description { get; set; }
+
+        [Column("mprice")]
+        public double MClassPrice { get; set; }
+
+        [Column("cprice")]
+        public double CClassPrice { get; set; }
+
+        [Column("zprice")]
+        public double ZClassPrice { get; set; }
+
+        [Column("rev_code")]
+        public string RevenueCode { get; set; }
+
+        [Column("type")]
+        public string Type { get; set; }
+
+        [Column("modi")]
+        public string Modifier { get; set; }
+
+        [Column("billcode")]
+        public string BillCode { get; set; }
+
+        [Column("mod_date")]
         public DateTime? mod_date { get; set; }
+
+        [Column("mod_user")]
         public string mod_user { get; set; }
+
+        [Column("mod_prg")]
         public string mod_prg { get; set; }
+
+        [Column("mod_host")]
         public string mod_host { get; set; }
-        public decimal cost { get; set; }
+
+        [Column("cost")]
+        public decimal Cost { get; set; }
 
     }
 
@@ -36,24 +72,60 @@ namespace LabBilling.Core.Models
     public class CdmFeeSchedule2
     {
         public Guid rowguid { get; set; }
-        public bool deleted { get; set; }
-        public string cdm { get; set; }
-        public int link { get; set; }
-        public string code_flag { get; set; }
-        public string cpt4 { get; set; }
-        public string descript { get; set; }
-        public double mprice { get; set; }
-        public double cprice { get; set; }
-        public double zprice { get; set; }
-        public string rev_code { get; set; }
-        public string type { get; set; }
-        public string modi { get; set; }
-        public string billcode { get; set; }
+
+        [Column("deleted")]
+        public bool IsDeleted { get; set; }
+
+        [Column("cdm")]
+        public string ChargeItemId { get; set; }
+
+        [Column("link")]
+        public int Link { get; set; }
+
+        [Column("code_falg")]
+        public string CodeFlag { get; set; }
+
+        [Column("cpt4")]
+        public string Cpt4 { get; set; }
+
+        [Column("descript")]
+        public string Description { get; set; }
+
+        [Column("mprice")]
+        public double MClassPrice { get; set; }
+
+        [Column("cprice")]
+        public double CClassPrice { get; set; }
+
+        [Column("zprice")]
+        public double ZClassPrice { get; set; }
+
+        [Column("rev_code")]
+        public string RevenueCode { get; set; }
+
+        [Column("type")]
+        public string Type { get; set; }
+
+        [Column("modi")]
+        public string Modifier { get; set; }
+
+        [Column("billcode")]
+        public string BillCode { get; set; }
+
+        [Column("mod_date")]
         public DateTime? mod_date { get; set; }
+
+        [Column("mod_user")]
         public string mod_user { get; set; }
+
+        [Column("mod_prg")]
         public string mod_prg { get; set; }
+
+        [Column("mod_host")]
         public string mod_host { get; set; }
-        public decimal cost { get; set; }
+
+        [Column("cost")]
+        public decimal Cost { get; set; }
 
     }
 
@@ -61,24 +133,60 @@ namespace LabBilling.Core.Models
     public class CdmFeeSchedule3
     {
         public Guid rowguid { get; set; }
-        public bool deleted { get; set; }
-        public string cdm { get; set; }
-        public int link { get; set; }
-        public string code_flag { get; set; }
-        public string cpt4 { get; set; }
-        public string descript { get; set; }
-        public double mprice { get; set; }
-        public double cprice { get; set; }
-        public double zprice { get; set; }
-        public string rev_code { get; set; }
-        public string type { get; set; }
-        public string modi { get; set; }
-        public string billcode { get; set; }
+
+        [Column("deleted")]
+        public bool IsDeleted { get; set; }
+
+        [Column("cdm")]
+        public string ChargeItemId { get; set; }
+
+        [Column("link")]
+        public int Link { get; set; }
+
+        [Column("code_falg")]
+        public string CodeFlag { get; set; }
+
+        [Column("cpt4")]
+        public string Cpt4 { get; set; }
+
+        [Column("descript")]
+        public string Description { get; set; }
+
+        [Column("mprice")]
+        public double MClassPrice { get; set; }
+
+        [Column("cprice")]
+        public double CClassPrice { get; set; }
+
+        [Column("zprice")]
+        public double ZClassPrice { get; set; }
+
+        [Column("rev_code")]
+        public string RevenueCode { get; set; }
+
+        [Column("type")]
+        public string Type { get; set; }
+
+        [Column("modi")]
+        public string Modifier { get; set; }
+
+        [Column("billcode")]
+        public string BillCode { get; set; }
+
+        [Column("mod_date")]
         public DateTime? mod_date { get; set; }
+
+        [Column("mod_user")]
         public string mod_user { get; set; }
+
+        [Column("mod_prg")]
         public string mod_prg { get; set; }
+
+        [Column("mod_host")]
         public string mod_host { get; set; }
-        public decimal cost { get; set; }
+
+        [Column("cost")]
+        public decimal Cost { get; set; }
 
     }
 
@@ -86,24 +194,60 @@ namespace LabBilling.Core.Models
     public class CdmFeeSchedule4
     {
         public Guid rowguid { get; set; }
-        public bool deleted { get; set; }
-        public string cdm { get; set; }
-        public int link { get; set; }
-        public string code_flag { get; set; }
-        public string cpt4 { get; set; }
-        public string descript { get; set; }
-        public double mprice { get; set; }
-        public double cprice { get; set; }
-        public double zprice { get; set; }
-        public string rev_code { get; set; }
-        public string type { get; set; }
-        public string modi { get; set; }
-        public string billcode { get; set; }
+
+        [Column("deleted")]
+        public bool IsDeleted { get; set; }
+
+        [Column("cdm")]
+        public string ChargeItemId { get; set; }
+
+        [Column("link")]
+        public int Link { get; set; }
+
+        [Column("code_falg")]
+        public string CodeFlag { get; set; }
+
+        [Column("cpt4")]
+        public string Cpt4 { get; set; }
+
+        [Column("descript")]
+        public string Description { get; set; }
+
+        [Column("mprice")]
+        public double MClassPrice { get; set; }
+
+        [Column("cprice")]
+        public double CClassPrice { get; set; }
+
+        [Column("zprice")]
+        public double ZClassPrice { get; set; }
+
+        [Column("rev_code")]
+        public string RevenueCode { get; set; }
+
+        [Column("type")]
+        public string Type { get; set; }
+
+        [Column("modi")]
+        public string Modifier { get; set; }
+
+        [Column("billcode")]
+        public string BillCode { get; set; }
+
+        [Column("mod_date")]
         public DateTime? mod_date { get; set; }
+
+        [Column("mod_user")]
         public string mod_user { get; set; }
+
+        [Column("mod_prg")]
         public string mod_prg { get; set; }
+
+        [Column("mod_host")]
         public string mod_host { get; set; }
-        public decimal cost { get; set; }
+
+        [Column("cost")]
+        public decimal Cost { get; set; }
 
     }
 
@@ -111,24 +255,60 @@ namespace LabBilling.Core.Models
     public class CdmFeeSchedule5
     {
         public Guid rowguid { get; set; }
-        public bool deleted { get; set; }
-        public string cdm { get; set; }
-        public int link { get; set; }
-        public string code_flag { get; set; }
-        public string cpt4 { get; set; }
-        public string descript { get; set; }
-        public double mprice { get; set; }
-        public double cprice { get; set; }
-        public double zprice { get; set; }
-        public string rev_code { get; set; }
-        public string type { get; set; }
-        public string modi { get; set; }
-        public string billcode { get; set; }
+
+        [Column("deleted")]
+        public bool IsDeleted { get; set; }
+
+        [Column("cdm")]
+        public string ChargeItemId { get; set; }
+
+        [Column("link")]
+        public int Link { get; set; }
+
+        [Column("code_falg")]
+        public string CodeFlag { get; set; }
+
+        [Column("cpt4")]
+        public string Cpt4 { get; set; }
+
+        [Column("descript")]
+        public string Description { get; set; }
+
+        [Column("mprice")]
+        public double MClassPrice { get; set; }
+
+        [Column("cprice")]
+        public double CClassPrice { get; set; }
+
+        [Column("zprice")]
+        public double ZClassPrice { get; set; }
+
+        [Column("rev_code")]
+        public string RevenueCode { get; set; }
+
+        [Column("type")]
+        public string Type { get; set; }
+
+        [Column("modi")]
+        public string Modifier { get; set; }
+
+        [Column("billcode")]
+        public string BillCode { get; set; }
+
+        [Column("mod_date")]
         public DateTime? mod_date { get; set; }
+
+        [Column("mod_user")]
         public string mod_user { get; set; }
+
+        [Column("mod_prg")]
         public string mod_prg { get; set; }
+
+        [Column("mod_host")]
         public string mod_host { get; set; }
-        public decimal cost { get; set; }
+
+        [Column("cost")]
+        public decimal Cost { get; set; }
 
     }
 }

@@ -84,8 +84,7 @@ namespace RFClassLibrary
         /// <returns>Valid dates are returned as DateTime. Invalid returns null.</returns>
         public static DateTime? ValidateDateNullable(string datestring)
         {
-            DateTime dt;
-            if (DateTime.TryParse(datestring, out dt))
+            if (DateTime.TryParse(datestring, out DateTime dt))
                 return dt;
             else
                 return null;
@@ -99,8 +98,7 @@ namespace RFClassLibrary
         /// <returns>Valid dates are returned as DateTime. Invalid date returns DateTime.MinValue</returns>
         public static DateTime ValidateDate(this DateTime dateTime, string datestring)
         {
-            DateTime dt;
-            if (DateTime.TryParse(datestring, out dt))
+            if (DateTime.TryParse(datestring, out DateTime dt))
                 return dt;
             else
                 return DateTime.MinValue;

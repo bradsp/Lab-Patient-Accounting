@@ -11,7 +11,7 @@ namespace LabBilling.Core.DataAccess
     {
         public UserProfileRepository(string connection) : base("UserProfile", connection)
         {
-
+            
         }
 
         public UserProfileRepository(string connection, PetaPoco.Database db) : base("UserProfile", connection)
@@ -28,7 +28,7 @@ namespace LabBilling.Core.DataAccess
         {
             UserProfile userProfile = new UserProfile();
 
-            dbConnection.Delete<UserProfile>("where UserName = @0 and Parameter = @1 and ParameterData = @2",
+            dbConnection.Delete<UserProfile>($"where {this.GetRealColumn(typeof(UserProfile), nameof(UserProfile.UserName))} = @0 and Parameter = @1 and ParameterData = @2",
                 user, "RecentAccount", account);
            
 
@@ -41,14 +41,16 @@ namespace LabBilling.Core.DataAccess
 
         public IEnumerable<UserProfile> GetRecentAccount(string user, int numEntries = 10)
         {
+            UserProfile userProfile = new UserProfile();
             string select = "TOP " + numEntries + " *";
+            string sortColumn = this.GetRealColumn(typeof(UserProfile), nameof(UserProfile.ModDate));
 
             var command = PetaPoco.Sql.Builder
                 .Select(select)
-                .From("UserProfile")
+                .From(_tableName) 
                 .Where("UserName = @0 ", user)
                 .Where("Parameter = @0", "RecentAccount")
-                .OrderBy("ModDate desc");
+                .OrderBy($"{sortColumn} desc");
 
             return dbConnection.Fetch<UserProfile>(command);
         }

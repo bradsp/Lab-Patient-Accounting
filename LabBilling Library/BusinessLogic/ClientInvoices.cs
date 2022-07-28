@@ -104,13 +104,13 @@ namespace LabBilling.Core
             {
                 invoiceModel.InvoiceDetails.Add(new InvoiceDetailModel()
                 {
-                    ServiceDate = chk.date_rec,
-                    Description = string.Format("Payment Received - {0}", chk.source),
-                    Amount = chk.amt_paid + chk.write_off + chk.contractual
+                    ServiceDate = chk.DateReceived,
+                    Description = string.Format("Payment Received - {0}", chk.Source),
+                    Amount = chk.PaidAmount + chk.WriteOffAmount + chk.ContractualAmount
                 });
-                payments += chk.amt_paid + chk.write_off + chk.contractual;
+                payments += chk.PaidAmount + chk.WriteOffAmount + chk.ContractualAmount;
                 //update chk record with new invoice number
-                chk.invoice = invoiceModel.InvoiceNo;
+                chk.Invoice = invoiceModel.InvoiceNo;
                 chkdb.Update(chk);
             }
 
@@ -122,13 +122,13 @@ namespace LabBilling.Core
             {
                 invoiceModel.InvoiceDetails.Add(new InvoiceDetailModel()
                 {
-                    ServiceDate = chrg.trans_date,
-                    Description = chrg.descript,
-                    Qty = chrg.qty,
-                    CDM = chrg.cdm,
-                    Amount = chrg.amount
+                    ServiceDate = chrg.TransactionDate,
+                    Description = chrg.ChargeDescription,
+                    Qty = chrg.Quantity,
+                    CDM = chrg.ChargeItemId,
+                    Amount = chrg.Amount
                 });
-                adjustments += chrg.amount;
+                adjustments += chrg.Amount;
             }
 
             chrgdb.SetChargeInvoiceStatus(clientMnemonic, invoiceModel.InvoiceNo);
@@ -156,17 +156,17 @@ namespace LabBilling.Core
                     {
                         Account = account.account,
                         PatientName = account.pat_name,
-                        ServiceDate = chrg.trans_date,
-                        CDM = chrg.cdm,
+                        ServiceDate = chrg.TransactionDate,
+                        CDM = chrg.ChargeItemId,
                         CPT = "",
-                        Description = chrg.descript,
-                        Qty = chrg.qty,
-                        Amount = chrg.amount
+                        Description = chrg.ChargeDescription,
+                        Qty = chrg.Quantity,
+                        Amount = chrg.Amount
                     }) ;
-                    amountTotal += chrg.amount;
-                    inpTotal += chrg.inp_amt;
-                    retailTotal += chrg.retail;
-                    discountTotal += chrg.retail - chrg.amount;
+                    amountTotal += chrg.Amount;
+                    inpTotal += chrg.HospAmount;
+                    retailTotal += chrg.RetailAmount;
+                    discountTotal += chrg.RetailAmount - chrg.Amount;
                 }
                 //write cbill transfer chrg to account
                 invoiceAmountTotal += amountTotal;
@@ -174,21 +174,21 @@ namespace LabBilling.Core
                 invoiceRetailTotal += retailTotal;
 
                 Chrg accChrg = new Chrg();
-                accChrg.account = account.account;
-                accChrg.cdm = "CBILL";
-                accChrg.invoice = invoiceModel.InvoiceNo;
-                accChrg.qty = -1;
-                accChrg.inp_price = inpTotal;
-                accChrg.retail = retailTotal;
-                accChrg.net_amt = amountTotal;
-                accChrg.fin_type = "C";
-                accChrg.fin_code = account.fin_code;
-                accChrg.service_date = DateTime.Today;
+                accChrg.AccountNo = account.account;
+                accChrg.CDMCode = "CBILL";
+                accChrg.Invoice = invoiceModel.InvoiceNo;
+                accChrg.Quantity = -1;
+                accChrg.HospAmount = inpTotal;
+                accChrg.RetailAmount = retailTotal;
+                accChrg.NetAmount = amountTotal;
+                accChrg.FinancialType = "C";
+                accChrg.FinCode = account.fin_code;
+                accChrg.ServiceDate = DateTime.Today;
                 accChrg.ChrgDetails.Add(new ChrgDetail()
                 {
-                    cpt4 = "NONE",
-                    type = "NORM",
-                    amount = amountTotal
+                    Cpt4 = "NONE",
+                    Type = "NORM",
+                    Amount = amountTotal
                 });
                 chrgdb.AddCharge(accChrg);
 
@@ -198,21 +198,21 @@ namespace LabBilling.Core
             //write client invoice transaction on client account
 
             Chrg invoiceChrg = new Chrg();
-            invoiceChrg.account = clientMnemonic;
-            invoiceChrg.cdm = "CBILL";
-            invoiceChrg.invoice = invoiceModel.InvoiceNo;
-            invoiceChrg.qty = 1;
-            invoiceChrg.inp_price = invoiceInpTotal;
-            invoiceChrg.retail = invoiceRetailTotal;
-            invoiceChrg.net_amt = invoiceAmountTotal;
-            invoiceChrg.fin_type = "C";
-            invoiceChrg.fin_code = "CLIENT";
-            invoiceChrg.service_date = DateTime.Today;
+            invoiceChrg.AccountNo = clientMnemonic;
+            invoiceChrg.CDMCode = "CBILL";
+            invoiceChrg.Invoice = invoiceModel.InvoiceNo;
+            invoiceChrg.Quantity = 1;
+            invoiceChrg.HospAmount = invoiceInpTotal;
+            invoiceChrg.RetailAmount = invoiceRetailTotal;
+            invoiceChrg.NetAmount = invoiceAmountTotal;
+            invoiceChrg.FinancialType = "C";
+            invoiceChrg.FinCode = "CLIENT";
+            invoiceChrg.ServiceDate = DateTime.Today;
             invoiceChrg.ChrgDetails.Add(new ChrgDetail()
             {
-                cpt4 = "NONE",
-                type = "NORM",
-                amount = invoiceAmountTotal
+                Cpt4 = "NONE",
+                Type = "NORM",
+                Amount = invoiceAmountTotal
             });
             chrgdb.AddCharge(invoiceChrg);
             invoiceModel.InvoiceTotal = invoiceAmountTotal;
@@ -270,12 +270,12 @@ namespace LabBilling.Core
             {
                 //account does not exist - add the account
                 account = new Account();
-                account.account = clientMnem;
-                account.pat_name = client.cli_nme;
-                account.meditech_account = clientMnem;
-                account.fin_code = "CLIENT";
-                account.trans_date = DateTime.Today;
-                account.cl_mnem = clientMnem;
+                account.AccountNo = clientMnem;
+                account.PatFullName = client.cli_nme;
+                account.MeditechAccount = clientMnem;
+                account.FinCode = "CLIENT";
+                account.TransactionDate = DateTime.Today;
+                account.ClientMnem = clientMnem;
 
                 accdb.Add(account);
             }

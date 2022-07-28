@@ -12,6 +12,7 @@ namespace MCL
     /// Document each additional function as it is added.
     /// 08/08/2007 wdk/rgc
     /// </summary>
+    [Obsolete("This class is obsolete. New code should be written using LabBilling.Core libraries.")]
     public class CAcc : RFCObject
     {
         /// <summary>

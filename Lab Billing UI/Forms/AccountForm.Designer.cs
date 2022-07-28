@@ -206,6 +206,8 @@ namespace LabBilling.Forms
             this.btnNoteAdd = new System.Windows.Forms.Button();
             this.tbNotesDisplay = new System.Windows.Forms.RichTextBox();
             this.tabBillingActivity = new System.Windows.Forms.TabPage();
+            this.lblLastValidated = new MetroFramework.Controls.MetroLabel();
+            this.metroLabel1 = new MetroFramework.Controls.MetroLabel();
             this.tbValidationResults = new MetroFramework.Controls.MetroTextBox();
             this.btnValidateAccount = new MetroFramework.Controls.MetroButton();
             this.dgvBillActivity = new System.Windows.Forms.DataGridView();
@@ -234,8 +236,6 @@ namespace LabBilling.Forms
             this.lblTotalPmtAdj = new System.Windows.Forms.Label();
             this.lblBalance = new System.Windows.Forms.Label();
             this.lblTotalCharges = new System.Windows.Forms.Label();
-            this.metroLabel1 = new MetroFramework.Controls.MetroLabel();
-            this.lblLastValidated = new MetroFramework.Controls.MetroLabel();
             this.tabControl1.SuspendLayout();
             this.summaryTab.SuspendLayout();
             this.tabDemographics.SuspendLayout();
@@ -1841,7 +1841,7 @@ namespace LabBilling.Forms
             dataGridViewCellStyle12.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             dataGridViewCellStyle12.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
             this.DiagnosisPointerDGV.RowHeadersDefaultCellStyle = dataGridViewCellStyle12;
-            this.DiagnosisPointerDGV.Size = new System.Drawing.Size(302, 58);
+            this.DiagnosisPointerDGV.Size = new System.Drawing.Size(302, 109);
             this.DiagnosisPointerDGV.TabIndex = 8;
             this.DiagnosisPointerDGV.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DiagnosisPointerDGV_CellContentClick);
             // 
@@ -1943,7 +1943,7 @@ namespace LabBilling.Forms
             this.dgvChrgDetail.RowHeadersDefaultCellStyle = dataGridViewCellStyle15;
             this.dgvChrgDetail.RowHeadersVisible = false;
             this.dgvChrgDetail.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvChrgDetail.Size = new System.Drawing.Size(597, 58);
+            this.dgvChrgDetail.Size = new System.Drawing.Size(597, 109);
             this.dgvChrgDetail.TabIndex = 1;
             this.dgvChrgDetail.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dgvChrgDetail_CellMouseClick);
             this.dgvChrgDetail.SelectionChanged += new System.EventHandler(this.dgvChrgDetail_SelectionChanged);
@@ -2196,6 +2196,24 @@ namespace LabBilling.Forms
             this.tabBillingActivity.TabIndex = 12;
             this.tabBillingActivity.Text = "Billing Activity";
             this.tabBillingActivity.UseVisualStyleBackColor = true;
+            // 
+            // lblLastValidated
+            // 
+            this.lblLastValidated.AutoSize = true;
+            this.lblLastValidated.Location = new System.Drawing.Point(225, 323);
+            this.lblLastValidated.Name = "lblLastValidated";
+            this.lblLastValidated.Size = new System.Drawing.Size(24, 19);
+            this.lblLastValidated.TabIndex = 3;
+            this.lblLastValidated.Text = ".....";
+            // 
+            // metroLabel1
+            // 
+            this.metroLabel1.AutoSize = true;
+            this.metroLabel1.Location = new System.Drawing.Point(128, 323);
+            this.metroLabel1.Name = "metroLabel1";
+            this.metroLabel1.Size = new System.Drawing.Size(91, 19);
+            this.metroLabel1.TabIndex = 3;
+            this.metroLabel1.Text = "Last Validated:";
             // 
             // tbValidationResults
             // 
@@ -2521,24 +2539,6 @@ namespace LabBilling.Forms
             this.lblTotalCharges.TabIndex = 20;
             this.lblTotalCharges.Text = "0.00";
             this.lblTotalCharges.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // metroLabel1
-            // 
-            this.metroLabel1.AutoSize = true;
-            this.metroLabel1.Location = new System.Drawing.Point(128, 323);
-            this.metroLabel1.Name = "metroLabel1";
-            this.metroLabel1.Size = new System.Drawing.Size(91, 19);
-            this.metroLabel1.TabIndex = 3;
-            this.metroLabel1.Text = "Last Validated:";
-            // 
-            // lblLastValidated
-            // 
-            this.lblLastValidated.AutoSize = true;
-            this.lblLastValidated.Location = new System.Drawing.Point(225, 323);
-            this.lblLastValidated.Name = "lblLastValidated";
-            this.lblLastValidated.Size = new System.Drawing.Size(24, 19);
-            this.lblLastValidated.TabIndex = 3;
-            this.lblLastValidated.Text = ".....";
             // 
             // AccountForm
             // 

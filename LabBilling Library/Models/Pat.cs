@@ -8,51 +8,71 @@ namespace LabBilling.Core.Models
     [PrimaryKey("account",AutoIncrement = false)]
     public class Pat : IBaseEntity
     {
-        public Pat()
-        {
-            //Diagnoses = new List<PatDiag>();
-        }
-
-        public bool deleted { get; set; }
-        public string account { get; set; }
-        public string ssn { get; set; }
-        public string hne_epi_number { get; set; }
-
-        public string pat_full_name { get; set; }
+        [Column("deleted")]
+        public bool IsDeleted { get; set; }
+        [Column("account")]
+        public string AccountNo { get; set; }
+        [Column("ssn")]
+        public string SocSecNo { get; set; }
+        [Column("hne_epi_number")]
+        public string EMPIId { get; set; }
+        [Column("pat_full_name")]
+        public string PatFullName { get; set; }
         [Ignore]
-        public string pat_first_name { get; set; }
+        public string PatFirstName { get; set; }
         [Ignore]
-        public string pat_middle_name { get; set; }
+        public string PatMiddleName { get; set; }
         [Ignore]
-        public string pat_last_name { get; set; }
+        public string PatLastName { get; set; }
         [Ignore]
-        public string pat_name_suffix { get; set; }
+        public string PatNameSuffix { get; set; }
 
-        public DateTime? dob_yyyy { get; set; }
-        public string sex { get; set; }
-        public string pat_marital { get; set; }
+        [Column("dob_yyyy")]
+        public DateTime? BirthDate { get; set; }
+        [Column("sex")]
+        public string Sex { get; set; }
+        [Column("pat_marital")]
+        public string MaritalStatus { get; set; }
 
-        public string pat_addr1 { get; set; }
-        public string pat_addr2 { get; set; }
-        public string city_st_zip { get; set; }
+        [Column("pat_addr1")]
+        public string Address1 { get; set; }
+        [Column("pat_addr2")]
+        public string Address2 { get; set; }
+        [Column("city_st_zip")]
+        public string CityStateZip { get; set; }
 
-        public string pat_city { get; set; }
-        public string pat_state { get; set; }
-        public string pat_zip { get; set; }
-        public string pat_race { get; set; }
-        public string pat_phone { get; set; }
-        public string pat_email { get; set; }
+        [Column("pat_city")]
+        public string City { get; set; }
+        [Column("pat_state")]
+        public string State { get; set; }
+        [Column("pat_zip")]
+        public string ZipCode { get; set; }
+        [Column("pat_race")]
+        public string Race { get; set; }
+        [Column("pat_phone")]
+        public string PrimaryPhone { get; set; }
+        [Column("pat_email")]
+        public string EmailAddress { get; set; }
 
-        public string location { get; set; }
+        [Column("location")]
+        public string Location { get; set; }
 
-        public string relation { get; set; }
-        public string guarantor { get; set; }
-        public string guar_addr { get; set; }
-        public string g_city_st { get; set; }
-        public string guar_city { get; set; }
-        public string guar_state { get; set; }
-        public string guar_zip { get; set; }
-        public string guar_phone { get; set; }
+        [Column("relation")]
+        public string GuarRelationToPatient { get; set; }
+        [Column("guarantor")]
+        public string GuarantorFullName { get; set; }
+        [Column("guar_addr")]
+        public string GuarantorAddress { get; set; }
+        [Column("g_city_st")]
+        public string GuarantorCityState { get; set; }
+        [Column("guar_city")]
+        public string GuarantorCity { get; set; }
+        [Column("guar_state")]
+        public string GuarantorState { get; set; }
+        [Column("guar_zip")]
+        public string GuarantorZipCode { get; set; }
+        [Column("guar_phone")]
+        public string GuarantorPrimaryPhone { get; set; }
         [Ignore]
         public string GuarantorLastName { get; set; }
         [Ignore]
@@ -62,45 +82,74 @@ namespace LabBilling.Core.Models
         [Ignore]
         public string GuarantorNameSuffix { get; set; }
 
+        [Column("icd9_1")]
+        public string Dx1 { get; set; }
+        [Column("icd9_2")]
+        public string Dx2 { get; set; }
+        [Column("icd9_3")]
+        public string Dx3 { get; set; }
+        [Column("icd9_4")]
+        public string Dx4 { get; set; }
+        [Column("icd9_5")]
+        public string Dx5 { get; set; }
+        [Column("icd9_6")]
+        public string Dx6 { get; set; }
+        [Column("icd9_7")]
+        public string Dx7 { get; set; }
+        [Column("icd9_8")]
+        public string Dx8 { get; set; }
+        [Column("icd9_9")]
+        public string Dx9 { get; set; }
+        [Column("icd_indicator")]
+        public string ICDIndicator { get; set; }
 
-        public string icd9_1 { get; set; }
-        public string icd9_2 { get; set; }
-        public string icd9_3 { get; set; }
-        public string icd9_4 { get; set; }
-        public string icd9_5 { get; set; }
-        public string icd9_6 { get; set; }
-        public string icd9_7 { get; set; }
-        public string icd9_8 { get; set; }
-        public string icd9_9 { get; set; }
-        public string icd_indicator { get; set; }
+        [Column("pc_code")]
+        public string ProfessionalComponentCode { get; set; }
+        [Column("phy_id")]
+        public string ProviderId { get; set; }
 
-        public string pc_code { get; set; }
-        public string phy_id { get; set; }
+        [Column("mailer")]
+        public string StatementFlag { get; set; }
+        [Column("first_dm")]
+        public DateTime? FirstStatementDate { get; set; }
+        [Column("last_dm")]
+        public DateTime? LastStatementDate { get; set; }
+        [Column("min_amt")]
+        public double MinimumPaymentAmount { get; set; }
 
-        public string mailer { get; set; }
-        public DateTime? first_dm { get; set; }
-        public DateTime? last_dm { get; set; }
-        public double min_amt { get; set; }
+        [Column("dbill_date")]
+        public DateTime? DetailBillDate { get; set; }
+        [Column("ub_date")]
+        public DateTime? InstitutionalClaimDate { get; set; }
+        [Column("h1500_date")]
+        public DateTime? ProfessionalClaimDate { get; set; }
+        [Column("ssi_batch")]
+        public string SSIBatch { get; set; }
+        [Column("colltr_date")]
+        public DateTime? CollectionLetterDate { get; set; }
+        [Column("baddebt_date")]
+        public DateTime? SentToCollectionsDate { get; set; }
+        [Column("batch_date")]
+        public DateTime? BatchDate { get; set; }
+        [Column("bd_list_date")]
+        public DateTime? BadDebtListDate { get; set; }
+        [Column("ebill_batch_date")]
+        public DateTime? EBillBatchDate { get; set; }
+        [Column("ebill_batch_1500")]
+        public DateTime? EbillBatch1500 { get; set; }
+        [Column("e_ub_demand")]
+        public bool EUBDemand { get; set; }
+        [Column("e_ub_demand_date")]
+        public DateTime? EUBDemandDate { get; set; }
+        [Column("claimsnet_1500_batch_date")]
+        public DateTime? Claimsnet1500BatchDate { get; set; }
+        [Column("claimsnet_ub_batch_date")]
+        public DateTime? ClaimsnetUbBatchDate { get; set; }
 
-        public DateTime? dbill_date { get; set; }
-        public DateTime? ub_date { get; set; }
-        public DateTime? h1500_date { get; set; }
-        public string ssi_batch { get; set; }
-        public DateTime? colltr_date { get; set; }
-        public DateTime? baddebt_date { get; set; }
-        public DateTime? batch_date { get; set; }
-        public DateTime? bd_list_date { get; set; }
-        public DateTime? ebill_batch_date { get; set; }
-        public DateTime? ebill_batch_1500 { get; set; }
-        public bool e_ub_demand { get; set; }
-        public DateTime? e_ub_demand_date { get; set; }
-        public DateTime? claimsnet_1500_batch_date { get; set; }
-        public DateTime? claimsnet_ub_batch_date { get; set; }
-
-        public string phy_comment { get; set; }
-        public string dx_update_prg { get; set; }
-
-
+        [Column("phy_comment")]
+        public string ProviderComment { get; set; }
+        [Column("dx_update_prg")]
+        public string DxUpdatePrg { get; set; }
 
         [ResultColumn]
         public DateTime mod_date { get; set; }
@@ -113,10 +162,10 @@ namespace LabBilling.Core.Models
 
 
         [Ignore]
-        public string DOBSex => $"{ dob_yyyy.GetValueOrDefault().ToShortDateString() } - { sex }";
+        public string DOBSex => $"{ BirthDate.GetValueOrDefault().ToShortDateString() } - { Sex }";
 
         [Ignore]
-        public string AddressLine => $"{ pat_addr1 }, { pat_addr2 }, { city_st_zip }";
+        public string AddressLine => $"{ Address1 }, { Address2 }, { CityStateZip }";
 
         [Ignore]
         public string Dx1Desc { get; set; }

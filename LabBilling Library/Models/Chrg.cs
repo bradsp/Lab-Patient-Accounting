@@ -8,51 +8,92 @@ namespace LabBilling.Core.Models
     [PrimaryKey("chrg_num", AutoIncrement = true)]
     public class Chrg : IBaseEntity
     {
+        [Column("credited")]
+        public bool IsCredited { get; set; }
+        [Column("chrg_num")]
+        public int ChrgId { get; set; }
+        [Column("account")]
+        public string AccountNo { get; set; }
+        [Column("status")]
+        public string Status { get; set; }
+        [Column("service_date")]
+        public DateTime? ServiceDate { get; set; }
+        [Column("hist_date")]
+        public DateTime? HistoryDate { get; set; }
+        [Column("cdm")]
+        public string CDMCode { get; set; }
+        [ResultColumn]
+        [Column("cdm_desc")]
+        public string CDMDescription { get; set; }
+        [Column("qty")]
+        public int Quantity { get; set; }
+        [Column("net_amt")]
+        public double NetAmount { get; set; }
+        [Column("comment")]
+        public string Comment { get; set; }
+        [Column("invoice")]
+        public string Invoice { get; set; }
+        [Column("fin_type")]
+        public string FinancialType { get; set; }
+        [Column("mt_req_no")]
+        public string LISReqNo { get; set; }
+        [Column("post_date")]
+        public DateTime? PostingDate { get; set; }
+        [Column("fin_code")]
+        public string FinCode { get; set; }
+        [Column("performing_site")]
+        public string PerformingSite { get; set; }
+        [Column("bill_method")]
+        public string BillMethod { get; set; }
+        [Column("post_file")]
+        public string PostingFile { get; set; }
+        [Column("lname")]
+        public string PatLastName { get; set; }
+        [Column("fname")]
+        public string PatFirstName { get; set; }
+        [Column("mname")]
+        public string PatMiddleName { get; set; }
+        [Column("name_suffix")]
+        public string PatNameSuffix { get; set; }
+        [Column("name_prefix")]
+        public string PatNamePrefix { get; set; }
+        [Column("pat_name")]
+        public string PatFullName { get; set; }
+        [Column("order_site")]
+        public string OrderingSite { get; set; }
+        [Column("pat_ssn")]
+        public string PatSocSecNo { get; set; }
+        [Column("unitno")]
+        public string UnitNo { get; set; }
+        [Column("location")]
+        public string Location { get; set; }
+        [Column("responsiblephy")]
+        public string ResponsibleProvider { get; set; }
+        [Column("mt_mnem")]
+        public string OrderMnem { get; set; }
+        [Column("action")]
+        public string Action { get; set; }
+        [Column("facility")]
+        public string Facility { get; set; }
+        [Column("referencereq")]
+        public string ReferenceReq { get; set; }
+        [Column("pat_dob")]
+        public DateTime? PatBirthDate { get; set; }
+        [Column("chrg_err")]
+        public string ChrgError { get; set; }
+        [Column("istemp")]
+        public string IsTemp { get; set; }
 
-        public bool credited { get; set; }
-        public int chrg_num { get; set; }
-        public string account { get; set; }
-        public string status { get; set; }
-        public DateTime? service_date { get; set; }
-        public DateTime? hist_date { get; set; }
-        public string cdm { get; set; }
         [ResultColumn]
-        public string cdm_desc { get; set; }
-        public int qty { get; set; }
-        public double net_amt { get; set; }
-        public string comment { get; set; }
-        public string invoice { get; set; }
-        public string fin_type { get; set; }
-        public string mt_req_no { get; set; }
-        public DateTime? post_date { get; set; }
-        public string fin_code { get; set; }
-        public string performing_site { get; set; }
-        public string bill_method { get; set; }
-        public string post_file { get; set; }
-        public string lname { get; set; }
-        public string fname { get; set; }
-        public string mname { get; set; }
-        public string name_suffix { get; set; }
-        public string name_prefix { get; set; }
-        public string pat_name { get; set; }
-        public string order_site { get; set; }
-        public string pat_ssn { get; set; }
-        public string unitno { get; set; }
-        public string location { get; set; }
-        public string responsiblephy { get; set; }
-        public string mt_mnem { get; set; }
-        public string action { get; set; }
-        public string facility { get; set; }
-        public string referencereq { get; set; }
-        public DateTime? pat_dob { get; set; }
-        public string chrg_err { get; set; }
-        public string istemp { get; set; }
+        [Column("age_on_date_of_service")]
+        public int AgeOnDateOfService { get; set; }
+        [Column("retail")]
+        public double RetailAmount { get; set; }
+        [Column("inp_price")]
+        public double HospAmount { get; set; }
         [ResultColumn]
-        public int age_on_date_of_service { get; set; }
-        public double retail { get; set; }
-        public double inp_price { get; set; }
-        [ResultColumn]
-        public double calc_amt { get; set; }
+        [Column("calc_amt")]
+        public double CalculatedAmount { get; set; }
 
         [ResultColumn]
         public DateTime mod_date { get; set; }
@@ -64,6 +105,7 @@ namespace LabBilling.Core.Models
         public string mod_host { get; set; }
         
         public Guid rowguid { get; set; }
+
         [Ignore]        
         public List<ChrgDetail> ChrgDetails { get; set; } = new List<ChrgDetail>();
     }
@@ -71,14 +113,22 @@ namespace LabBilling.Core.Models
     [TableName("InvoiceChargeView")]
     public class InvoiceChargeView : IBaseEntity
     {
-        public string account { get; set; }
-        public DateTime trans_date { get; set; }
-        public int qty { get; set; }
-        public double inp_amt { get; set; }
-        public double retail { get; set; }
-        public double amount { get; set; }
-        public string cdm { get; set; }
-        public string descript { get; set; }
+        [Column("account")]
+        public string AccountNo { get; set; }
+        [Column("trans_date")]
+        public DateTime TransactionDate { get; set; }
+        [Column("qty")]
+        public int Quantity { get; set; }
+        [Column("inp_amt")]
+        public double HospAmount { get; set; }
+        [Column("retail")]
+        public double RetailAmount { get; set; }
+        [Column("amount")]
+        public double Amount { get; set; }
+        [Column("cdm")]
+        public string ChargeItemId { get; set; }
+        [Column("descript")]
+        public string ChargeDescription { get; set; }
 
         [Ignore]
         public DateTime mod_date { get; set; }
@@ -101,7 +151,7 @@ namespace LabBilling.Core.Models
             if (chrg == null)
                 return current;
 
-            if(current != null && current.chrg_num == chrg.chrg_num)
+            if(current != null && current.ChrgId == chrg.ChrgId)
             {
                 current.ChrgDetails.Add(a);
 
@@ -111,8 +161,10 @@ namespace LabBilling.Core.Models
             var prev = current;
 
             current = chrg;
-            current.ChrgDetails = new List<ChrgDetail>();
-            current.ChrgDetails.Add(a);
+            current.ChrgDetails = new List<ChrgDetail>
+            {
+                a
+            };
 
             return prev;
         }

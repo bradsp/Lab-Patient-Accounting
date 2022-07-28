@@ -598,11 +598,8 @@ namespace RFClassLibrary
             /// Raises the OnProgressChange event for the parent form. 
             public virtual void OnProgressChange(ProgressEventArgs e)
             {
-                if (prg != null)
-                {
-                    // Invokes the delegates. 
-                    prg(this, e);
-                }
+                // Invokes the delegates. 
+                prg?.Invoke(this, e);
             }
             #endregion
         }

@@ -126,7 +126,7 @@ namespace LabBilling
                 var ar = accountRepository.GetByAccount(up.ParameterData,true);
                 if(ar != null)
                 {
-                    LinkLabel a1 = new LinkLabel { Text = ar.pat_name, Tag = up.ParameterData };
+                    LinkLabel a1 = new LinkLabel { Text = ar.PatFullName, Tag = up.ParameterData };
                     a1.LinkClicked += new LinkLabelLinkClickedEventHandler(RecentLabelClicked);
                     tlpRecentAccounts.Controls.Add(a1);
                     a1.Dock = DockStyle.Fill;
@@ -551,6 +551,14 @@ namespace LabBilling
                 MessageBox.Show($"File generated. {claims_processed} claims generated.");
             }
 
+        }
+
+        private void claimValidationRulesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Log.Instance.Trace("Entering");
+            ClaimRuleEditorForm frm = new ClaimRuleEditorForm();
+
+            frm.ShowDialog();
         }
     }
 }

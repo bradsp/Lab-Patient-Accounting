@@ -36,15 +36,15 @@ namespace LabBillingUnitTesting
             };
             account.Charges = new List<Chrg>();
             Chrg myChrg = new Chrg();
-            myChrg.cdm = "5525154";
+            myChrg.CDMCode = "5525154";
             myChrg.ChrgDetails = new List<ChrgDetail>()
             {
-                new ChrgDetail { cpt4 = "85100"}
+                new ChrgDetail { Cpt4 = "85100"}
             };
             account.Charges.Add(myChrg);
 
             var insCodeMatch = account.Insurances.All(x => x.InsCode == "WIN");
-            var cptMatch = account.Charges.All(x => x.ChrgDetails.All(y => y.cpt4 == "80101"));
+            var cptMatch = account.Charges.All(x => x.ChrgDetails.All(y => y.Cpt4 == "80101"));
 
             Assert.False(insCodeMatch);
 

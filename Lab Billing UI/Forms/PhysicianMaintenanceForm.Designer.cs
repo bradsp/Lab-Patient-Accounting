@@ -45,15 +45,12 @@ namespace LabBilling.Forms
             // 
             // PhysicianDGV
             // 
-            this.PhysicianDGV.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.PhysicianDGV.BackgroundColor = System.Drawing.SystemColors.ControlLightLight;
             this.PhysicianDGV.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.tableLayoutPanel1.SetColumnSpan(this.PhysicianDGV, 3);
+            this.PhysicianDGV.Dock = System.Windows.Forms.DockStyle.Fill;
             this.PhysicianDGV.Location = new System.Drawing.Point(3, 33);
             this.PhysicianDGV.Name = "PhysicianDGV";
-            this.PhysicianDGV.Size = new System.Drawing.Size(971, 445);
+            this.PhysicianDGV.Size = new System.Drawing.Size(319, 445);
             this.PhysicianDGV.TabIndex = 0;
             // 
             // tableLayoutPanel1

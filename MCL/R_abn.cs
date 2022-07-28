@@ -10,6 +10,7 @@ namespace MCL
     /// <summary>
     /// Representation of the abn class
     /// </summary>
+    [Obsolete("This class is obsolete. New code should be written using LabBilling.Core libraries.")]
     public class R_abn : RCRecordset
     {
         /// <summary>

@@ -31,10 +31,30 @@ namespace LabBilling.Core.DataAccess
             if (!string.IsNullOrEmpty(phy.pc_code))
             {
                 pth = dbConnection.SingleOrDefault<Pth>(phy.pc_code);
-                phy.pth = pth;
+                phy.Pathologist = pth;
             }
 
             return phy;
+        }
+
+        public List<Phy> GetByName(string lastName, string firstName)
+        {
+            List<Phy> phy = new List<Phy>();
+            Pth pth = new Pth();
+
+            if(!string.IsNullOrEmpty(lastName) || !string.IsNullOrEmpty(firstName))
+            {
+                var command = PetaPoco.Sql.Builder
+                    .From(_tableName)
+                    .Where($"{this.GetRealColumn(typeof(Phy), nameof(Phy.last_name))} like @1%", lastName)
+                    .Where($"{this.GetRealColumn(typeof(Phy), nameof(Phy.first_name))} like @1%", firstName);
+
+                phy = dbConnection.Fetch<Phy>(command);
+
+                return phy;
+            }
+
+            return null;
         }
 
         public override Phy GetById(int id)
@@ -46,7 +66,7 @@ namespace LabBilling.Core.DataAccess
             if (phy.pc_code != null)
             {
                 pth = dbConnection.SingleOrDefault<Pth>(phy.pc_code);
-                phy.pth = pth;
+                phy.Pathologist = pth;
             }
             
             return phy;

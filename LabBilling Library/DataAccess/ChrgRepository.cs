@@ -10,18 +10,18 @@ namespace LabBilling.Core.DataAccess
     {
         private CdmRepository cdmRepository;
         //private FinRepository finRepository;
-        private readonly AmtRepository amtRepository;
+        private readonly ChrgDetailRepository amtRepository;
 
         public ChrgRepository(string connection) : base("chrg", connection)
         {
-            amtRepository = new AmtRepository(connection);
+            amtRepository = new ChrgDetailRepository(connection);
             cdmRepository = new CdmRepository(connection);
             //finRepository = new FinRepository(connection);
         }
 
         public ChrgRepository(string connection, PetaPoco.Database db) : base("chrg", connection, db)
         {
-            amtRepository = new AmtRepository(connection, db);
+            amtRepository = new ChrgDetailRepository(connection, db);
             cdmRepository = new CdmRepository(connection, db);
             //finRepository = new FinRepository(connection, db);
         }
@@ -92,7 +92,7 @@ namespace LabBilling.Core.DataAccess
 
                 foreach (ChrgDetail amt in chrg.ChrgDetails)
                 {
-                    amt.chrg_num = chrg_num;
+                    amt.ChrgNo = chrg_num;
 
                     amtRepository.Add(amt);
                 }
@@ -127,10 +127,10 @@ namespace LabBilling.Core.DataAccess
 
             foreach (Chrg chrg in chrgs)
             {
-                if(chrg.cdm != "CBILL" && (chrg.invoice == "" || chrg.invoice == null))
+                if(chrg.CDMCode != "CBILL" && (chrg.Invoice == "" || chrg.Invoice == null))
                 {
                     //chrg.status = "CBILL";
-                    chrg.invoice = invoiceNo;
+                    chrg.Invoice = invoiceNo;
 
                     try
                     {

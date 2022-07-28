@@ -14,8 +14,8 @@ namespace LabBilling.Core.Models
         public int Id { get; set; }
         public string UserName { get; set; }
         public string Parameter { get; set; }
-        public string ParameterData { get; set; }   
-        
+        public string ParameterData { get; set; }
+
         [ResultColumn]
         public DateTime ModDate { get; set; }
         [ResultColumn]

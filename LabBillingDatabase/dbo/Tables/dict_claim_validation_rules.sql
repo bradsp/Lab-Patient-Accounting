@@ -6,7 +6,6 @@
     [ErrorText] NVARCHAR(100) NULL, 
     [EffectiveDate] DATE NULL, 
     [EndEffectiveDate] DATE NULL, 
-    [Operator] NVARCHAR(20) NULL, 
     [mod_user] NVARCHAR(100) NULL DEFAULT suser_sname(), 
     [mod_prg] NVARCHAR(100) NULL DEFAULT app_name(), 
     [mod_date] DATETIME NULL DEFAULT getdate(), 
