@@ -46,8 +46,8 @@
     <Reference Include="EdiTools, Version=1.0.6.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\EdiTools.1.0.6\lib\netstandard2.0\EdiTools.dll</HintPath>
     </Reference>
-    <Reference Include="FastExpressionCompiler, Version=3.3.2.0, Culture=neutral, PublicKeyToken=dfbf2bd50fcf7768, processorArchitecture=MSIL">
-      <HintPath>..\packages\FastExpressionCompiler.3.3.2\lib\net45\FastExpressionCompiler.dll</HintPath>
+    <Reference Include="FastExpressionCompiler, Version=3.3.3.0, Culture=neutral, PublicKeyToken=dfbf2bd50fcf7768, processorArchitecture=MSIL">
+      <HintPath>..\packages\FastExpressionCompiler.3.3.3\lib\net45\FastExpressionCompiler.dll</HintPath>
     </Reference>
     <Reference Include="FluentValidation, Version=11.0.0.0, Culture=neutral, PublicKeyToken=7de548da2fbae0f0, processorArchitecture=MSIL">
       <HintPath>..\packages\FluentValidation.11.1.0\lib\netstandard2.0\FluentValidation.dll</HintPath>
@@ -236,6 +236,7 @@
     <Compile Include="DataAccess\EmpRepository.cs" />
     <Compile Include="DataAccess\FinRepository.cs" />
     <Compile Include="DataAccess\GLCodeRepository.cs" />
+    <Compile Include="DataAccess\IDBConnection.cs" />
     <Compile Include="DataAccess\InsCompanyRepository.cs" />
     <Compile Include="DataAccess\InsRepository.cs" />
     <Compile Include="DataAccess\IRepository.cs" />
@@ -286,11 +287,12 @@
     <Compile Include="Models\Mapping.cs" />
     <Compile Include="Models\AccountNote.cs" />
     <Compile Include="Models\Number.cs" />
+    <Compile Include="Models\Parameters.cs" />
     <Compile Include="Models\Pat.cs" />
     <Compile Include="Models\PatDx.cs" />
     <Compile Include="Models\Phy.cs" />
     <Compile Include="Models\Pth.cs" />
-    <Compile Include="Models\SystemParameters.cs" />
+    <Compile Include="Models\SysParameter.cs" />
     <Compile Include="Models\UnbilledAccounts.cs" />
     <Compile Include="Models\UserProfile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

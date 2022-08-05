@@ -21,13 +21,20 @@ namespace LabBilling.Forms
         }
 
         private readonly SystemParametersRepository paramsdb = new SystemParametersRepository(Helper.ConnVal);
+        private Parameters parameters = new Parameters();
 
         private void SystemParametersForm_Load(object sender, EventArgs e)
         {
             Log.Instance.Trace($"Entering");
-            //List<SystemParameters> results = new List<SystemParameters>();
-            
-            propertyGrid.SelectedObject = BuildDynamicClass();
+
+
+            List<Core.Models.SysParameter> results = (List<Core.Models.SysParameter>)paramsdb.GetAll();
+
+            parameters.LoadSystemParameters(results);
+            //propertyGrid.SelectedObject = BuildDynamicClass();
+
+            propertyGrid.SelectedObject = parameters;
+
         }
 
         protected object BuildDynamicClass()
@@ -45,14 +52,15 @@ namespace LabBilling.Forms
             // Create dynamic properties corresponding to query results
             foreach (DataRow row in dt.Rows)
             {
-                string name = row["key_name"]?.ToString();
-                string category = row["category"]?.ToString();
-                string description = row["description"]?.ToString();
-                Type dataType = Type.GetType(row["dataType"]?.ToString());
+                string name = row[nameof(SysParameter.KeyName)]?.ToString();
+                string category = row[nameof(SysParameter.Category)]?.ToString();
+                string description = row[nameof(SysParameter.Description)]?.ToString();
+                string defaultValue = row[nameof(SysParameter.Value)]?.ToString();
+                Type dataType = Type.GetType(row[nameof(Core.Models.SysParameter.DataType)]?.ToString());
 
                 if (dataType != null)
                 {
-                    this.BuildProperty(typeBuilder, name, category, description, dataType);
+                    this.BuildProperty(typeBuilder, name, category, description, defaultValue, dataType);
                 }
                 else
                 {
@@ -68,9 +76,9 @@ namespace LabBilling.Forms
             // Set each property's default value
             foreach (DataRow row in dt.Rows)
             {
-                string name = row["key_name"].ToString();
+                string name = row[nameof(SysParameter.KeyName)].ToString();
                 Type dataType = Type.GetType(row["dataType"].ToString());
-                object value = row["value"];
+                object value = row[nameof(SysParameter.Value)];
                 if (dataType == typeof(bool))
                 {
                     bool boolValue;
@@ -102,6 +110,7 @@ namespace LabBilling.Forms
                                         string name,
                                         string category,
                                         string description,
+                                        object defaultValue,
                                         Type fieldType)
         {
             // Generate the private field/public property name pair 
@@ -166,24 +175,28 @@ namespace LabBilling.Forms
                 new CustomAttributeBuilder(
                     typeof(DescriptionAttribute).GetConstructor(
                         new Type[] { typeof(string) }), new object[] { description }));
+            propertyBuilder.SetCustomAttribute(
+                new CustomAttributeBuilder(
+                    typeof(DefaultValueAttribute).GetConstructor(
+                        new Type[] { typeof(object) }), new object[] { defaultValue }));
         }
 
         private void propertyGrid_PropertyValueChanged(object s, PropertyValueChangedEventArgs e)
         {
             // Update System Parameter when a value changes
 
-            MessageBox.Show(string.Format("{0} changed from {1} to {2}",
-                e.ChangedItem.Label,
-                e.OldValue, 
-                e.ChangedItem.Value));
+            //MessageBox.Show(string.Format("{0} changed from {1} to {2}",
+            //    e.ChangedItem.Label,
+            //    e.OldValue, 
+            //    e.ChangedItem.Value));
 
-            SystemParameters systemParameters = new SystemParameters();
-            systemParameters.key_name = e.ChangedItem.Label;
-            systemParameters.value = e.ChangedItem.Value.ToString();
+            Core.Models.SysParameter systemParameters = new Core.Models.SysParameter();
+            systemParameters.KeyName = e.ChangedItem.Label;
+            systemParameters.Value = e.ChangedItem.Value.ToString();
 
             try
             {
-                paramsdb.Update(systemParameters, new[] { "key_name", "value" });
+                paramsdb.Update(systemParameters, new[] { nameof(SysParameter.key_name), nameof(SysParameter.KeyName), nameof(SysParameter.Value) });
             }
             catch(Exception ex)
             {

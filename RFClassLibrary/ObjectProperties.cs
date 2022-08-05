@@ -63,14 +63,15 @@ namespace RFClassLibrary
         /// Returns a list of properties for the given type. Does not drill into List&lt;object&gt; instances.
         /// </summary>
         /// <param name="t"></param>
+        /// <param name="propName"></param>
         /// <param name="prefix"></param>
         /// <returns></returns>
-        public static IEnumerable<string> GetPropertiesRecursive(Type t, string prefix = "")
+        public static IEnumerable<string> GetPropertiesRecursive(Type t, string propName = "", string prefix = "")
         {
             if (!string.IsNullOrEmpty(prefix) && !prefix.EndsWith("."))
                 prefix += ".";
 
-            prefix += t.Name + ".";
+            prefix += (propName ?? t.Name) + ".";
 
             var flags = BindingFlags.Public | BindingFlags.Instance;
             // enumerate the properties of the type
@@ -80,9 +81,9 @@ namespace RFClassLibrary
 
                 if (p.PropertyType.Module.ScopeName != "CommonLanguageRuntimeLibrary")
                 {
-                    foreach (var propName in GetPropertiesRecursive(p.PropertyType, prefix))
+                    foreach (var pName in GetPropertiesRecursive(p.PropertyType, prefix))
                     {
-                        yield return propName;
+                        yield return pName;
                     }
                 }
                 else
@@ -120,7 +121,7 @@ namespace RFClassLibrary
 
                 if (p.PropertyType.Module.ScopeName != "CommonLanguageRuntimeLibrary")
                 {
-                    foreach (var propName in GetPropertiesRecursive(p.PropertyType))
+                    foreach (var propName in GetPropertiesRecursive(p.PropertyType, p.Name))
                     {
                         yield return propName;
                     }

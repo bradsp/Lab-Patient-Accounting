@@ -26,6 +26,11 @@ namespace LabBilling.Core.Models
         public string mod_prg { get; set; }
         public string mod_host { get; set; }
         public Guid rowguid { get; set; }
+
+        public override string ToString()
+        {
+            return RuleName;
+        }
     }
 
     [TableName("dict_claim_validation_rule_criteria")]
@@ -46,6 +51,11 @@ namespace LabBilling.Core.Models
         public string mod_prg { get; set; }
         public string mod_host { get; set; }
         public Guid rowguid { get; set; }
+
+        public override string ToString()
+        {
+            return $"{GroupId} {LineType} {MemberName} {Operator} {TargetValue}";
+        }
     }
 
     public class ClaimValidationRuleCriteriaRelator

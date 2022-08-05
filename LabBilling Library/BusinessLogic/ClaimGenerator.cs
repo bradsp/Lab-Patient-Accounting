@@ -247,11 +247,11 @@ namespace LabBilling.Core.BusinessLogic
                 claimData.PatientAmountPaid = claimData.claimAccount.TotalPayments;
                 claimData.CliaNumber = parametersdb.GetByKey("primary_clia_no");
 
-                claimData.ReferringProviderLastName = claimData.claimAccount.Pat.Physician.last_name;
-                claimData.ReferringProviderFirstName = claimData.claimAccount.Pat.Physician.first_name;
-                claimData.ReferringProviderMiddleName = claimData.claimAccount.Pat.Physician.mid_init;
+                claimData.ReferringProviderLastName = claimData.claimAccount.Pat.Physician.LastName;
+                claimData.ReferringProviderFirstName = claimData.claimAccount.Pat.Physician.FirstName;
+                claimData.ReferringProviderMiddleName = claimData.claimAccount.Pat.Physician.MiddleInitial;
                 claimData.ReferringProviderSuffix = "";
-                claimData.ReferringProviderNPI = claimData.claimAccount.Pat.Physician.tnh_num;
+                claimData.ReferringProviderNPI = claimData.claimAccount.Pat.Physician.NpiId;
                 Dictionary<string, string> dicOP = new Dictionary<string, string>();
                 dicOP.Add("MC", "440002");
                 dicOP.Add("BC", "1000427");

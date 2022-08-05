@@ -40,7 +40,7 @@ namespace LabBilling.Forms
 
             foreach (ClaimValidationRule rule in claimRules)
             {
-                ListViewItem lvi = new ListViewItem(rule.RuleName);
+                ListViewItem lvi = new ListViewItem(rule.ToString());
                 lvi.SubItems.Add(rule.RuleId.ToString());
 
                 listRules.Items.Add(lvi);
@@ -65,7 +65,7 @@ namespace LabBilling.Forms
 
                 foreach (var group in groups)
                 {
-                    TreeNode groupNode = new TreeNode($"{group.GroupId} {group.MemberName} {group.Operator} {group.TargetValue}")
+                    TreeNode groupNode = new TreeNode(group.ToString())
                     {
                         Tag = group
                     };
@@ -74,7 +74,7 @@ namespace LabBilling.Forms
 
                     foreach(var detail in details)
                     {
-                        TreeNode detailNode = new TreeNode($"{detail.MemberName} {detail.Operator} {detail.TargetValue}")
+                        TreeNode detailNode = new TreeNode(detail.ToString())
                         {
                             Tag = detail
                         };
@@ -86,7 +86,7 @@ namespace LabBilling.Forms
 
                     foreach (var subGroup in subGroups)
                     {
-                        TreeNode subgroupNode = new TreeNode($"{subGroup.MemberName} {subGroup.Operator} {subGroup.TargetValue}")
+                        TreeNode subgroupNode = new TreeNode(subGroup.ToString())
                         {
                             Tag = subGroup
                         };
@@ -96,7 +96,7 @@ namespace LabBilling.Forms
                         {
                             foreach (var detail in sgDetails)
                             {
-                                TreeNode detailNode = new TreeNode($"{detail.MemberName} {detail.Operator} {detail.TargetValue}")
+                                TreeNode detailNode = new TreeNode(detail.ToString())
                                 {
                                     Tag = detail
                                 };
@@ -117,27 +117,30 @@ namespace LabBilling.Forms
 
         private void tvRuleHierarchy_AfterSelect(object sender, TreeViewEventArgs e)
         {
-            var detail = (ClaimValidationRuleCriterion)tvRuleHierarchy.SelectedNode.Tag;
             var rule = (ClaimValidationRule)tvRuleHierarchy.Nodes[0].Tag;
 
             tbErrorText.Text = rule.ErrorText;
             tbRuleName.Text = rule.RuleName;
             tbRuleDescription.Text = rule.Description;
-            tbMemberName.Text = detail.MemberName;
-            cbMemberName.SelectedItem = detail.MemberName;
             effectiveDate.Value = rule.EffectiveDate;
             endEffectiveDate.Value = rule.EndEffectiveDate;
-            cbLineType.SelectedItem = detail.LineType;
-            cbOperator.SelectedItem = detail.Operator;
-            tbTargetValue.Text = detail.TargetValue;
 
-            Type type = Type.GetType($"LabBilling.Core.Models.{detail.Class},LabBilling Core");
+            if (tvRuleHierarchy.SelectedNode.Level > 0)
+            {
+                var detail = (ClaimValidationRuleCriterion)tvRuleHierarchy.SelectedNode.Tag;
+                cbMemberName.SelectedItem = detail.MemberName;
+                cbLineType.SelectedItem = detail.LineType;
+                cbOperator.SelectedItem = detail.Operator;
+                tbTargetValue.Text = detail.TargetValue;
 
-            propertyList = ObjectProperties.GetProperties(type).ToList();
+                Type type = Type.GetType($"LabBilling.Core.Models.{detail.Class},LabBilling Core");
+                if(type != null)
+                    propertyList = ObjectProperties.GetProperties(type).ToList();
 
-            cbMemberName.Items.Clear();
-            cbMemberName.Items.AddRange(propertyList.ToArray());
-            cbMemberName.SelectedItem = detail.MemberName;
+                cbMemberName.Items.Clear();
+                cbMemberName.Items.AddRange(propertyList.ToArray());
+                cbMemberName.SelectedItem = detail.MemberName;
+            }
 
         }
 
@@ -163,6 +166,77 @@ namespace LabBilling.Forms
 
         private void saveRuleButton_Click(object sender, EventArgs e)
         {
+
+        }
+
+        private void removeDetailButton_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void addDetailButton_Click(object sender, EventArgs e)
+        {
+            var selectedNode = tvRuleHierarchy.SelectedNode;
+
+            ClaimValidationRuleCriterion newCriterion = new ClaimValidationRuleCriterion();
+
+            TreeNode newNode = new TreeNode();
+
+            if (tvRuleHierarchy.SelectedNode.Level == 0) //this is the root node
+            {
+                ClaimValidationRule rule = (ClaimValidationRule)tvRuleHierarchy.SelectedNode.Tag;
+                newCriterion.RuleId = rule.RuleId;
+                newCriterion.Class = "Account";
+
+                newNode.Tag = newCriterion;
+                selectedNode.Nodes.Add(newNode);
+            }
+            else
+            {
+                //get parent node
+                var selectedTag = (ClaimValidationRuleCriterion)tvRuleHierarchy.SelectedNode.Tag;
+
+                newCriterion.RuleId = selectedTag.RuleId;
+                newCriterion.ParentGroupId = selectedTag.ParentGroupId;
+                newCriterion.GroupId = selectedTag.GroupId;
+                newCriterion.Class = selectedTag.Class;
+
+                newNode.Tag = newCriterion;
+
+                if (selectedTag.LineType == "Group" || selectedTag.LineType == "SubGroup") // add a detail node
+                {
+                    selectedNode.Nodes.Add(newNode);
+                }
+                else if (selectedTag.LineType == "Detail") // add a detail node to parent node
+                {
+                    var parentNode = tvRuleHierarchy.SelectedNode.Parent;
+                    parentNode.Nodes.Add(newNode);
+                }
+            }
+
+            cbLineType.SelectedIndex = -1;
+            cbMemberName.SelectedIndex = -1;
+            cbOperator.SelectedIndex = -1;
+            tbTargetValue.Text = String.Empty;
+
+            tvRuleHierarchy.SelectedNode = newNode;
+            newNode.EnsureVisible();
+
+        }
+
+        private void saveCriteraButton_Click(object sender, EventArgs e)
+        {
+            ClaimValidationRuleCriterion detail = new ClaimValidationRuleCriterion();
+            var selectedNode = tvRuleHierarchy.SelectedNode;
+            var selectedTag = (ClaimValidationRuleCriterion)tvRuleHierarchy.SelectedNode.Tag;
+
+            selectedTag.TargetValue = tbTargetValue.Text;
+            selectedTag.LineType = cbLineType.SelectedItem.ToString();
+            selectedTag.MemberName = cbMemberName.SelectedItem.ToString();
+            selectedTag.Operator = cbOperator.SelectedItem.ToString();
+
+            selectedNode.Tag = selectedTag;
+            selectedNode.Text = selectedTag.ToString();
 
         }
     }

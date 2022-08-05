@@ -78,6 +78,9 @@ namespace LabBilling.Core.DataAccess
             {
                 record.Pat = patRepository.GetByAccount(account);
                 record.Insurances = insRepository.GetByAccount(account);
+                record.InsurancePrimary = insRepository.GetByAccount(account, InsCoverage.Primary);
+                record.InsuranceSecondary = insRepository.GetByAccount(account, InsCoverage.Secondary);
+                record.InsuranceTertiary = insRepository.GetByAccount(account, InsCoverage.Tertiary);
                 record.Charges = chrgRepository.GetByAccount(account);
                 record.Payments = chkRepository.GetByAccount(account);
                 record.Notes = accountNoteRepository.GetByAccount(account);

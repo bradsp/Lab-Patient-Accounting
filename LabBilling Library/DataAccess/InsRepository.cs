@@ -42,6 +42,34 @@ namespace LabBilling.Core.DataAccess
             }
 
             return records;
-        }        
+        }
+        
+        public Ins GetByAccount(string account, InsCoverage coverage)
+        {
+            var record = dbConnection.SingleOrDefault<Ins>("where account = @0 and ins_a_b_c = @1", account, coverage.Value);
+
+            record.InsCompany = dbConnection.SingleOrDefault<InsCompany>("where code = @0", record.InsCode);
+            if(record.InsCompany == null)
+                record.InsCompany = new InsCompany();
+
+            Str.ParseCityStZip(record.HolderCityStZip, out string strCity, out string strState, out string strZip);
+            record.HolderCity = strCity;
+            record.HolderState = strState;
+            record.HolderZip = strZip;
+
+            return record;
+        }
+    }
+
+    public class InsCoverage
+    {
+        private InsCoverage(string value) { Value = value; }
+
+        public string Value { get; private set; }
+
+        public static InsCoverage Primary => new InsCoverage("A");
+        public static InsCoverage Secondary => new InsCoverage("B");
+        public static InsCoverage Tertiary => new InsCoverage("C");
+
     }
 }

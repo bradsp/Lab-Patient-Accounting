@@ -58,7 +58,7 @@ namespace LabBilling
 
         static void OnApplicationExit(object sender, EventArgs e)
         {
-            Cursor.Current = Cursors.WaitCursor;
+            //Cursor.Current = Cursors.WaitCursor;
 
             NLog.LogManager.Shutdown();
 

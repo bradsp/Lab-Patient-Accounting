@@ -4,7 +4,7 @@ using LabBilling.Core.Models;
 
 namespace LabBilling.Core.DataAccess
 {
-    public class SystemParametersRepository : RepositoryBase<SystemParameters>
+    public class SystemParametersRepository : RepositoryBase<SysParameter>
     {
         public SystemParametersRepository(string connection) : base("system", connection)
         {
@@ -16,7 +16,7 @@ namespace LabBilling.Core.DataAccess
 
         }
 
-        public override SystemParameters GetById(int id)
+        public override SysParameter GetById(int id)
         {
             throw new NotImplementedException();
         }
@@ -25,14 +25,14 @@ namespace LabBilling.Core.DataAccess
         {
             Log.Instance.Debug($"Entering");
 
-            SystemParameters record;
+            SysParameter record;
 
-            record = dbConnection.SingleOrDefault<SystemParameters>("where key_name = @0", key);
+            record = dbConnection.SingleOrDefault<SysParameter>("where key_name = @0", key);
   
-            if(string.IsNullOrEmpty(record.value))
+            if(string.IsNullOrEmpty(record.Value))
                 throw new InvalidParameterValueException("Parameter not defined", key);
   
-            return record.value;
+            return record.Value;
         }
     }
 }

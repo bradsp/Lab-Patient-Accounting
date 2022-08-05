@@ -21,7 +21,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libraries", "Libraries", "{
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LabBilling Core", "LabBilling Library\LabBilling Core.csproj", "{0890D249-B319-46BE-8B8A-354687C334E8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lab Billing UI", "Lab Billing UI\Lab Billing UI.csproj", "{F8C8C4A8-005A-49DB-A560-9A78141665B5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lab Billing WinForms UI", "Lab Billing UI\Lab Billing WinForms UI.csproj", "{F8C8C4A8-005A-49DB-A560-9A78141665B5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LabBillingService", "LabBillingService\LabBillingService.csproj", "{A38E5412-1194-42CE-8CA2-CF509EAE7828}"
 EndProject

@@ -28,9 +28,9 @@ namespace LabBilling.Core.DataAccess
             if (!string.IsNullOrEmpty(npi))
                 phy = dbConnection.SingleOrDefault<Phy>("where tnh_num = @0", npi);
 
-            if (!string.IsNullOrEmpty(phy.pc_code))
+            if (!string.IsNullOrEmpty(phy.PathologistCode))
             {
-                pth = dbConnection.SingleOrDefault<Pth>(phy.pc_code);
+                pth = dbConnection.SingleOrDefault<Pth>(phy.PathologistCode);
                 phy.Pathologist = pth;
             }
 
@@ -46,8 +46,9 @@ namespace LabBilling.Core.DataAccess
             {
                 var command = PetaPoco.Sql.Builder
                     .From(_tableName)
-                    .Where($"{this.GetRealColumn(typeof(Phy), nameof(Phy.last_name))} like @1%", lastName)
-                    .Where($"{this.GetRealColumn(typeof(Phy), nameof(Phy.first_name))} like @1%", firstName);
+                    .Where($"{this.GetRealColumn(typeof(Phy), nameof(Phy.LastName))} like @0+'%'", lastName)
+                    .Where($"{this.GetRealColumn(typeof(Phy), nameof(Phy.FirstName))} like @0+'%'", firstName)
+                    .OrderBy($"{this.GetRealColumn(typeof(Phy), nameof(Phy.LastName))}, {this.GetRealColumn(typeof(Phy), nameof(Phy.FirstName))}");
 
                 phy = dbConnection.Fetch<Phy>(command);
 
@@ -63,9 +64,9 @@ namespace LabBilling.Core.DataAccess
             Pth pth = new Pth();
 
             phy = dbConnection.SingleOrDefault<Phy>(id);
-            if (phy.pc_code != null)
+            if (phy.PathologistCode != null)
             {
-                pth = dbConnection.SingleOrDefault<Pth>(phy.pc_code);
+                pth = dbConnection.SingleOrDefault<Pth>(phy.PathologistCode);
                 phy.Pathologist = pth;
             }
             

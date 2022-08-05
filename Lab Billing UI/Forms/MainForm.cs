@@ -14,6 +14,7 @@ using LabBilling.Core.BusinessLogic;
 using MetroFramework.Forms;
 using MetroFramework.Controls;
 using System.Drawing;
+using MetroFramework;
 
 namespace LabBilling
 {
@@ -57,17 +58,19 @@ namespace LabBilling
             
         }
 
-        private void Dashboard_Load(object sender, EventArgs e)
+        private void MainForm_Load(object sender, EventArgs e)
         {
             Log.Instance.Trace($"Entering");
-            
+
+            //set shadowtype to none to resolve access after dispose error
+            this.ShadowType = MetroFormShadowType.None;
 
             #region user authentication
 
             if(Program.LoggedInUser == null)
             {
                 Log.Instance.Fatal("There is not a valid user object.");
-                MessageBox.Show("Application error with user object. Aborting.", "Fatal Error", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                MetroMessageBox.Show(this, "Application error with user object. Aborting.", "Fatal Error", MessageBoxButtons.OK, MessageBoxIcon.Stop);
                 Application.Exit();
             }
 
@@ -99,7 +102,7 @@ namespace LabBilling
             else
             {
                 sSISubmissionToolStripMenuItem.Enabled = false;
-                MessageBox.Show("System is in read-only mode.");
+                MetroMessageBox.Show(this, "System is in read-only mode.", "Read Only Mode", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             #endregion
 
@@ -544,11 +547,11 @@ namespace LabBilling
 
             if (claims_processed < 0)
             {
-                MessageBox.Show("Error processing claims. No file generated.", "Process Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MetroMessageBox.Show(this, "Error processing claims. No file generated.", "Process Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             else
             {
-                MessageBox.Show($"File generated. {claims_processed} claims generated.");
+                MetroMessageBox.Show(this, $"File generated. {claims_processed} claims generated.");
             }
 
         }

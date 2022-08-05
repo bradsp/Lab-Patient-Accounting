@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using PetaPoco;
 
-
 namespace LabBilling.Core.Models
 {
     [TableName("acc")]
@@ -119,9 +118,9 @@ namespace LabBilling.Core.Models
             get
             {
                 List<string> cpt4List = new List<string>();
-                foreach(var chrg in Charges)
+                foreach (var chrg in Charges)
                 {
-                    foreach(var detail in chrg.ChrgDetails)
+                    foreach (var detail in chrg.ChrgDetails)
                     {
                         cpt4List.Add(detail.Cpt4);
                     }
@@ -138,6 +137,13 @@ namespace LabBilling.Core.Models
                 return this.Insurances.Find(x => x.Coverage == "A").InsCode;
             }
         }
-     }
+
+        [Ignore]
+        public Ins InsurancePrimary { get; set; } = new Ins();
+        [Ignore]
+        public Ins InsuranceSecondary { get; set; } = new Ins();
+        [Ignore]
+        public Ins InsuranceTertiary { get; set; } = new Ins();
+    }
 
 }

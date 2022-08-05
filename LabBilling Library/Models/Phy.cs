@@ -13,43 +13,43 @@ namespace LabBilling.Core.Models
     {
         public Guid rowguid { get; set; }
         [Column("deleted")]
-        public bool deleted { get; set; }
+        public bool IsDeleted { get; set; }
         [Column("upin")]
-        public string upin { get; set; }
+        public string Upin { get; set; }
         [Column("ub92_upin")]
-        public string ub92_upin { get; set; }
+        public string Ub92Upin { get; set; }
         [Column("tnh_num")]
-        public string tnh_num { get; set; }
+        public string NpiId { get; set; }
         [Column("billing_npi")]
-        public string billing_npi { get; set; }
+        public string BillingNpi { get; set; }
         [Column("pc_code")]
-        public string pc_code { get; set; }
+        public string PathologistCode { get; set; }
         [Column("cl_mnem")]
-        public string cl_mnem { get; set; }
+        public string ClientMnem { get; set; }
         [Column("last_name")]
-        public string last_name { get; set; }
+        public string LastName { get; set; }
         [Column("first_name")]
-        public string first_name { get; set; }
-        [Column("mid_ini")]
-        public string mid_init { get; set; }
+        public string FirstName { get; set; }
+        [Column("mid_init")]
+        public string MiddleInitial { get; set; }
         [Column("group1")]
-        public string group1 { get; set; }
+        public string ProviderGroup { get; set; }
         [Column("addr_1")]
-        public string addr_1 { get; set; }
+        public string Address1 { get; set; }
         [Column("addr_2")]
-        public string addr_2 { get; set; }
+        public string Address2 { get; set; }
         [Column("city")]
-        public string city { get; set; }
+        public string City { get; set; }
         [Column("state")]
-        public string state { get; set; }
+        public string State { get; set; }
         [Column("zip")]
-        public string zip { get; set; }
+        public string ZipCode { get; set; }
         [Column("phone")]
-        public string phone { get; set; }
+        public string Phone { get; set; }
         [Column("reserved")]
         public string reserved { get; set; }
         [Column("num_labels")]
-        public int num_labels { get; set; }
+        public int LabelPrintCount { get; set; }
         [Column("mod_date")]
         public DateTime mod_date { get; set; }
         [Column("mod_user")]
@@ -59,17 +59,18 @@ namespace LabBilling.Core.Models
         [Column("uri")]
         public double uri { get; set; }
         [Column("mt_mnem")]
-        public string mt_mnem { get; set; }
+        public string LISMnem { get; set; }
         [Column("credentials")]
-        public string credentials { get; set; }
+        public string Credentials { get; set; }
         [Column("ov_code")]
-        public string ov_code { get; set; }
+        public string OvCode { get; set; }
         [Column("docnbr")]
-        public string docnbr { get; set; }
+        public string DoctorNumber { get; set; }
         [Ignore]
         [Column("mod_host")]
         public string mod_host { get; set; }
 
+        [Ignore]
         public Pth Pathologist { get; set; } = new Pth();
 
     }
