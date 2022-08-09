@@ -46,33 +46,6 @@ namespace LabBilling.Core.DataAccess
             Log.Instance.Trace("Exiting");
         }
 
-        public RepositoryBase(string tableName, string connectionString)
-        {
-            Log.Instance.Trace("Entering");
-            _tableInfo = GetTableInfo(typeof(Tpoco));
-            _tableName = _tableInfo.TableName;
-            //_tableName = tableName;
-            dbConnection = new PetaPoco.Database(connectionString, new CustomSqlDatabaseProvider());
-            
-            Log.Instance.Trace("Exiting");
-        }
-
-        /// <summary>
-        /// Allows passing in an existing database connection to allow for connection pooling.
-        /// </summary>
-        /// <param name="tableName"></param>
-        /// <param name="connectionString"></param>
-        /// <param name="db"></param>
-        public RepositoryBase(string tableName, string connectionString, PetaPoco.Database db)
-        {
-            Log.Instance.Trace("Entering");
-            _tableInfo = GetTableInfo(typeof(Tpoco));
-            _tableName = _tableInfo.TableName;
-            dbConnection = db;
-
-            Log.Instance.Trace("Exiting");
-        }
-
         public virtual IEnumerable<Tpoco> GetAll()
         {
             Log.Instance.Trace("Entering");
