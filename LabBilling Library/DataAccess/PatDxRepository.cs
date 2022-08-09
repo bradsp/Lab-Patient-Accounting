@@ -9,12 +9,12 @@ namespace LabBilling.Core.DataAccess
 {
     public class PatDxRepository : RepositoryBase<PatDx>
     {
-        public PatDxRepository(string connection) : base("patdx", connection)
+        public PatDxRepository(string connection) : base(connection)
         {
 
         }
 
-        public PatDxRepository(string connection, PetaPoco.Database db) : base("patdx", connection)
+        public PatDxRepository(PetaPoco.Database db) : base(db)
         {
 
         }

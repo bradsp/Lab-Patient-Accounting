@@ -21,7 +21,7 @@ namespace LabBilling.Core.DataAccess
         private readonly AccountValidationCriteriaRepository accountValidationCriteriaRepository;
         private readonly AccountValidationStatusRepository accountValidationStatusRepository;
 
-        public AccountRepository(string connectionString) : base("acc", connectionString)
+        public AccountRepository(string connectionString) : base(connectionString)
         {
             _connection = connectionString;
             patRepository = new PatRepository(_connection);
@@ -36,19 +36,19 @@ namespace LabBilling.Core.DataAccess
             accountValidationStatusRepository = new AccountValidationStatusRepository(_connection);
         }
 
-        public AccountRepository(string connectionString, PetaPoco.Database db) : base("acc", connectionString, db)
+        public AccountRepository(PetaPoco.Database db) : base(db)
         {
-            _connection = connectionString;
-            patRepository = new PatRepository(_connection, db);
-            insRepository = new InsRepository(_connection, db);
-            chrgRepository = new ChrgRepository(_connection, db);
-            chkRepository = new ChkRepository(_connection, db);
-            clientRepository = new ClientRepository(_connection, db);
-            accountNoteRepository = new AccountNoteRepository(_connection, db);
-            billingActivityRepository = new BillingActivityRepository(_connection, db);
-            accountValidationRuleRepository = new AccountValidationRuleRepository(_connection, db);
-            accountValidationCriteriaRepository = new AccountValidationCriteriaRepository(_connection, db);
-            accountValidationStatusRepository = new AccountValidationStatusRepository(_connection, db);
+            _connection = string.Empty;
+            patRepository = new PatRepository(db);
+            insRepository = new InsRepository(db);
+            chrgRepository = new ChrgRepository(db);
+            chkRepository = new ChkRepository(db);
+            clientRepository = new ClientRepository(db);
+            accountNoteRepository = new AccountNoteRepository(db);
+            billingActivityRepository = new BillingActivityRepository(db);
+            accountValidationRuleRepository = new AccountValidationRuleRepository(db);
+            accountValidationCriteriaRepository = new AccountValidationCriteriaRepository(db);
+            accountValidationStatusRepository = new AccountValidationStatusRepository(db);
         }
 
         public override Account GetById(int id)
@@ -334,7 +334,7 @@ namespace LabBilling.Core.DataAccess
             string oldFinCode = table.FinCode;
 
             //check that newFincode is a valid fincode
-            FinRepository finRepository = new FinRepository(_connection, dbConnection);
+            FinRepository finRepository = new FinRepository(dbConnection);
 
             Fin newFin = finRepository.GetFin(newFinCode);
             Fin oldFin = finRepository.GetFin(oldFinCode);
@@ -391,8 +391,8 @@ namespace LabBilling.Core.DataAccess
         public int AddCharge(string account, string cdm, int qty, DateTime serviceDate, string comment = null, string refNumber = null)
         {
             Log.Instance.Trace($"Entering");
-            CdmRepository cdmRepository = new CdmRepository(_connection, dbConnection);
-            FinRepository finRepository = new FinRepository(_connection, dbConnection);
+            CdmRepository cdmRepository = new CdmRepository(dbConnection);
+            FinRepository finRepository = new FinRepository(dbConnection);
 
 
             //verify the account exists - if not return -1
@@ -549,7 +549,7 @@ namespace LabBilling.Core.DataAccess
 
         public bool Validate(ref Account account)
         {
-            ClaimRulesEngine engine = new ClaimRulesEngine(_connection, dbConnection);
+            ClaimRulesEngine engine = new ClaimRulesEngine(dbConnection);
             bool isAccountValid = false;
             try
             {

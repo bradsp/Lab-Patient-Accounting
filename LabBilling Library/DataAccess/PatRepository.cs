@@ -14,16 +14,16 @@ namespace LabBilling.Core.DataAccess
         private readonly DictDxRepository dictDxDb;
         private readonly PhyRepository phyRepository;
 
-        public PatRepository(string connection) : base("pat", connection)
+        public PatRepository(string connection) : base(connection)
         {
             dictDxDb = new DictDxRepository(connection);
             phyRepository = new PhyRepository(connection);
         }
 
-        public PatRepository(string connection, PetaPoco.Database db) : base("pat", connection, db)
+        public PatRepository(PetaPoco.Database db) : base(db)
         {
-            dictDxDb = new DictDxRepository(connection);
-            phyRepository = new PhyRepository(connection);
+            dictDxDb = new DictDxRepository(db);
+            phyRepository = new PhyRepository(db);
         }
 
         public override Pat GetById(int id)

@@ -8,12 +8,12 @@ namespace LabBilling.Core.DataAccess
 {
     public class ClientRepository : RepositoryBase<Client>
     {
-        public ClientRepository(string connection) : base("client", connection)
+        public ClientRepository(string connection) : base(connection)
         {
 
         }
 
-        public ClientRepository(string connection, PetaPoco.Database db) : base("client", connection, db)
+        public ClientRepository(PetaPoco.Database db) : base(db)
         {
 
         }

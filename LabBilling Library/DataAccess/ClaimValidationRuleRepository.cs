@@ -9,14 +9,12 @@ namespace LabBilling.Core.DataAccess
 {
     public class ClaimValidationRuleRepository : RepositoryBase<ClaimValidationRule>
     {
-        public ClaimValidationRuleRepository(string connection) : base("dict_claim_validation_rule", connection)
+        public ClaimValidationRuleRepository(string connection) : base(connection)
         {
-
         }
 
-        public ClaimValidationRuleRepository(string connection, PetaPoco.Database db) : base("dict_claim_validation_rule", connection, db)
+        public ClaimValidationRuleRepository(PetaPoco.Database db) : base(db)
         {
-
         }
 
         public override ClaimValidationRule GetById(int id)
@@ -40,5 +38,52 @@ namespace LabBilling.Core.DataAccess
             return result;
 
         }
+
+        public override bool Save(ClaimValidationRule table)
+        {
+            ClaimValidationRuleCriterionRepository criterionRepository = new ClaimValidationRuleCriterionRepository(dbConnection);
+
+            //if RuleId == 0 - add new rule, otherwise update       
+            if(table.RuleId == 0)
+                table.RuleId = (int)Add(table);
+            else
+                Update(table);
+
+            //loop through rule criteria
+            foreach(var criterion in table.claimValidationRuleCriteria)
+            {
+                criterion.RuleId = table.RuleId;
+
+                if (criterion.GroupId == 0)
+                    criterionRepository.Add(criterion);
+                else
+                    criterionRepository.Update(criterion);
+
+
+            }
+
+            return base.Save(table);
+        }
     }
+
+    public class ClaimValidationRuleCriterionRepository : RepositoryBase<ClaimValidationRuleCriterion>
+    {
+        public ClaimValidationRuleCriterionRepository(string connectionString) : base(connectionString)
+        {
+
+        }
+        public ClaimValidationRuleCriterionRepository(PetaPoco.Database db) : base(db)
+        {
+
+        }
+
+        public override ClaimValidationRuleCriterion GetById(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+
+    }
+
+
 }

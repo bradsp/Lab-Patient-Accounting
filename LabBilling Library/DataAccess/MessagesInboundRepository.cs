@@ -7,7 +7,12 @@ namespace LabBilling.Core.DataAccess
 {
     public class MessagesInboundRepository : RepositoryBase<MessagesInbound>
     {
-        public MessagesInboundRepository(string connection) : base("infce.messages_inbound", connection)
+        public MessagesInboundRepository(string connection) : base(connection)
+        {
+
+        }
+
+        public MessagesInboundRepository(PetaPoco.Database db) : base(db)
         {
 
         }

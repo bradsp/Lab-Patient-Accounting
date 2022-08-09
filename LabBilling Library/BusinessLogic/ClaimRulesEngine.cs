@@ -32,9 +32,9 @@ namespace LabBilling.Core.BusinessLogic
             
         }
 
-        public ClaimRulesEngine(string connectionstring, PetaPoco.Database db)
+        public ClaimRulesEngine(PetaPoco.Database db)
         {
-            ClaimValidationRuleRepository claimRuleRepository = new ClaimValidationRuleRepository(connectionstring, db);
+            ClaimValidationRuleRepository claimRuleRepository = new ClaimValidationRuleRepository(db);
 
             _rules = claimRuleRepository.GetRules();
 

@@ -6,12 +6,12 @@ namespace LabBilling.Core.DataAccess
 {
     public class ChrgDetailRepository : RepositoryBase<ChrgDetail>
     {
-        public ChrgDetailRepository(string connection) : base("amt", connection)
+        public ChrgDetailRepository(string connection) : base(connection)
         {
 
         }
 
-        public ChrgDetailRepository(string connection, PetaPoco.Database db) : base("amt", connection, db)
+        public ChrgDetailRepository(PetaPoco.Database db) : base(db)
         {
 
         }

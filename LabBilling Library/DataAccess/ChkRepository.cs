@@ -7,12 +7,12 @@ namespace LabBilling.Core.DataAccess
 {
     public class ChkRepository : RepositoryBase<Chk>
     {
-        public ChkRepository(string connection) : base("chk", connection)
+        public ChkRepository(string connection) : base(connection)
         {
 
         }
 
-        public ChkRepository(string connection, PetaPoco.Database db) : base("chk", connection, db)
+        public ChkRepository(PetaPoco.Database db) : base(db)
         {
 
         }

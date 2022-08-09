@@ -276,6 +276,8 @@
             // 
             // cbLineType
             // 
+            this.cbLineType.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this.cbLineType.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
             this.cbLineType.FormattingEnabled = true;
             this.cbLineType.ItemHeight = 23;
             this.cbLineType.Items.AddRange(new object[] {
@@ -330,6 +332,8 @@
             // 
             // cbOperator
             // 
+            this.cbOperator.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this.cbOperator.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
             this.cbOperator.FormattingEnabled = true;
             this.cbOperator.ItemHeight = 23;
             this.cbOperator.Items.AddRange(new object[] {
@@ -394,6 +398,8 @@
             // 
             // cbMemberName
             // 
+            this.cbMemberName.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this.cbMemberName.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
             this.cbMemberName.FormattingEnabled = true;
             this.cbMemberName.ItemHeight = 23;
             this.cbMemberName.Location = new System.Drawing.Point(540, 311);

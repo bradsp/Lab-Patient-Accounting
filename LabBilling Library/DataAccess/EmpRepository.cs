@@ -6,8 +6,13 @@ namespace LabBilling.Core.DataAccess
 {
     public class EmpRepository : RepositoryBase<Emp>
     {
-        public EmpRepository(string connection) : base("emp", connection)
+        public EmpRepository(string connection) : base(connection)
         {
+        }
+
+        public EmpRepository(PetaPoco.Database db) : base(db)
+        {
+
         }
 
         public override Emp GetById(int Id)

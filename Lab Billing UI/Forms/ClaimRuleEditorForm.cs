@@ -1,12 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using MetroFramework.Forms;
 using System.Windows.Forms;
 using LabBilling.Core.DataAccess;
@@ -24,11 +19,11 @@ namespace LabBilling.Forms
 
         private List<ClaimValidationRule> claimRules;
         private List<string> propertyList;
+        ClaimValidationRuleRepository claimRuleRepository = new ClaimValidationRuleRepository(Helper.ConnVal);
 
         private void ClaimRuleEditorForm_Load(object sender, EventArgs e)
         {
-            ClaimValidationRuleRepository claimRuleRepository = new ClaimValidationRuleRepository(Helper.ConnVal);
-
+            
             claimRules = claimRuleRepository.GetRules();
 
             listRules.View = View.Details;
@@ -133,14 +128,26 @@ namespace LabBilling.Forms
                 cbOperator.SelectedItem = detail.Operator;
                 tbTargetValue.Text = detail.TargetValue;
 
-                Type type = Type.GetType($"LabBilling.Core.Models.{detail.Class},LabBilling Core");
-                if(type != null)
-                    propertyList = ObjectProperties.GetProperties(type).ToList();
+                LoadMemberItems(detail.Class);
 
-                cbMemberName.Items.Clear();
-                cbMemberName.Items.AddRange(propertyList.ToArray());
                 cbMemberName.SelectedItem = detail.MemberName;
             }
+
+        }
+
+        private void LoadMemberItems(string itemClass)
+        {
+            if(string.IsNullOrEmpty(itemClass))
+                throw new ArgumentNullException(nameof(itemClass));
+
+            Type type = Type.GetType($"LabBilling.Core.Models.{itemClass},LabBilling Core");
+            if (type != null)
+                propertyList = ObjectProperties.GetProperties(type).ToList();
+
+            propertyList.Sort();
+
+            cbMemberName.Items.Clear();
+            cbMemberName.Items.AddRange(propertyList.ToArray());
 
         }
 
@@ -166,7 +173,34 @@ namespace LabBilling.Forms
 
         private void saveRuleButton_Click(object sender, EventArgs e)
         {
+            //loop through tree control and update/save nodes
+            //if group id or detail id is 0, it is a new node
 
+            ClaimValidationRule rule = (ClaimValidationRule)tvRuleHierarchy.Tag;
+
+            rule.claimValidationRuleCriteria = new List<ClaimValidationRuleCriterion>();
+
+            foreach(TreeNode node in tvRuleHierarchy.Nodes)
+            {
+                rule.claimValidationRuleCriteria.AddRange(ReadRuleNodes(node));
+            }
+
+            claimRuleRepository.Save(rule);
+
+        }
+
+        private List<ClaimValidationRuleCriterion> ReadRuleNodes(TreeNode node)
+        {
+            List<ClaimValidationRuleCriterion> result = new List<ClaimValidationRuleCriterion>();
+
+            result.Add((ClaimValidationRuleCriterion)node.Tag);
+
+            foreach(TreeNode childNode in node.Nodes)
+            {
+                result.AddRange(ReadRuleNodes(childNode));
+            }
+
+            return result;
         }
 
         private void removeDetailButton_Click(object sender, EventArgs e)
@@ -188,6 +222,8 @@ namespace LabBilling.Forms
                 newCriterion.RuleId = rule.RuleId;
                 newCriterion.Class = "Account";
 
+                LoadMemberItems(newCriterion.Class);
+
                 newNode.Tag = newCriterion;
                 selectedNode.Nodes.Add(newNode);
             }
@@ -200,6 +236,18 @@ namespace LabBilling.Forms
                 newCriterion.ParentGroupId = selectedTag.ParentGroupId;
                 newCriterion.GroupId = selectedTag.GroupId;
                 newCriterion.Class = selectedTag.Class;
+
+                //if selectedTag.MemberName property is a List<class> -this becomes of the class of the child node
+                var memberNameType = ObjectProperties.GetProperty(Type.GetType($"LabBilling.Core.Models.{selectedTag.Class},LabBilling Core"), selectedTag.MemberName);
+                if (memberNameType.Name == "List`1")
+                {
+                    //get the type from the property
+                    Type genericType = memberNameType.GetGenericArguments()[0];
+                    newCriterion.Class = genericType.Name;
+                }
+
+
+                LoadMemberItems(newCriterion.Class);
 
                 newNode.Tag = newCriterion;
 
@@ -232,8 +280,8 @@ namespace LabBilling.Forms
 
             selectedTag.TargetValue = tbTargetValue.Text;
             selectedTag.LineType = cbLineType.SelectedItem.ToString();
-            selectedTag.MemberName = cbMemberName.SelectedItem.ToString();
-            selectedTag.Operator = cbOperator.SelectedItem.ToString();
+            selectedTag.MemberName = cbMemberName.SelectedItem != null ? cbMemberName.SelectedItem.ToString() : string.Empty;
+            selectedTag.Operator = cbOperator.SelectedItem != null ? cbOperator.SelectedItem.ToString() : string.Empty;
 
             selectedNode.Tag = selectedTag;
             selectedNode.Text = selectedTag.ToString();

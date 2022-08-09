@@ -6,12 +6,12 @@ namespace LabBilling.Core.DataAccess
 {
     public class SystemParametersRepository : RepositoryBase<SysParameter>
     {
-        public SystemParametersRepository(string connection) : base("system", connection)
+        public SystemParametersRepository(string connection) : base(connection)
         {
                 
         }
 
-        public SystemParametersRepository(string connection, PetaPoco.Database db) : base("system", connection, db)
+        public SystemParametersRepository(PetaPoco.Database db) : base(db)
         {
 
         }

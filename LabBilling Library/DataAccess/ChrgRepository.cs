@@ -12,18 +12,16 @@ namespace LabBilling.Core.DataAccess
         //private FinRepository finRepository;
         private readonly ChrgDetailRepository amtRepository;
 
-        public ChrgRepository(string connection) : base("chrg", connection)
+        public ChrgRepository(string connection) : base(connection)
         {
             amtRepository = new ChrgDetailRepository(connection);
             cdmRepository = new CdmRepository(connection);
-            //finRepository = new FinRepository(connection);
         }
 
-        public ChrgRepository(string connection, PetaPoco.Database db) : base("chrg", connection, db)
+        public ChrgRepository(PetaPoco.Database db) : base(db)
         {
-            amtRepository = new ChrgDetailRepository(connection, db);
-            cdmRepository = new CdmRepository(connection, db);
-            //finRepository = new FinRepository(connection, db);
+            amtRepository = new ChrgDetailRepository(db);
+            cdmRepository = new CdmRepository(db);
         }
 
         public override Chrg GetById(int id)

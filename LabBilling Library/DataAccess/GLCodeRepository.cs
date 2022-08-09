@@ -9,11 +9,15 @@ namespace LabBilling.Core.DataAccess
 {
     public class GLCodeRepository : RepositoryBase<GLCode>
     {
-        public GLCodeRepository(string connection) : base("dict_general_ledger_codes", connection)
+        public GLCodeRepository(string connection) : base(connection)
         {
 
         }
 
+        public GLCodeRepository(PetaPoco.Database db) : base(db)
+        {
+
+        }
 
         public override GLCode GetById(int id)
         {

@@ -8,12 +8,12 @@ namespace LabBilling.Core.DataAccess
 {
     public class InsCompanyRepository : RepositoryBase<InsCompany>
     {
-        public InsCompanyRepository(string connection) : base("insc", connection)
+        public InsCompanyRepository(string connection) : base(connection)
         {
 
         }
 
-        public InsCompanyRepository(string connection, PetaPoco.Database db) : base("insc", connection, db)
+        public InsCompanyRepository(PetaPoco.Database db) : base(db)
         {
 
         }

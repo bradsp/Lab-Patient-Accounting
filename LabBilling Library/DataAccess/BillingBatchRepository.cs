@@ -9,12 +9,12 @@ namespace LabBilling.Core.DataAccess
 {
     public class BillingBatchRepository : RepositoryBase<BillingBatch>
     {
-        public BillingBatchRepository(string connection) : base("data_billing_batch", connection)
+        public BillingBatchRepository(string connection) : base(connection)
         {
 
         }
 
-        public BillingBatchRepository(string connection, PetaPoco.Database db) : base("data_billing_batch", connection, db)
+        public BillingBatchRepository(PetaPoco.Database db) : base(db)
         {
 
         }

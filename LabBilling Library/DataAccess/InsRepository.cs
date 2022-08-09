@@ -8,12 +8,12 @@ namespace LabBilling.Core.DataAccess
 {
     public class InsRepository : RepositoryBase<Ins>
     {
-        public InsRepository(string connection) : base("ins", connection)
+        public InsRepository(string connection) : base(connection)
         {
 
         }
 
-        public InsRepository(string connection, PetaPoco.Database db) : base("ins", connection, db)
+        public InsRepository(PetaPoco.Database db) : base(db)
         {
 
         }
@@ -47,16 +47,17 @@ namespace LabBilling.Core.DataAccess
         public Ins GetByAccount(string account, InsCoverage coverage)
         {
             var record = dbConnection.SingleOrDefault<Ins>("where account = @0 and ins_a_b_c = @1", account, coverage.Value);
+            if (record != null)
+            {
+                record.InsCompany = dbConnection.SingleOrDefault<InsCompany>("where code = @0", record.InsCode);
+                if (record.InsCompany == null)
+                    record.InsCompany = new InsCompany();
 
-            record.InsCompany = dbConnection.SingleOrDefault<InsCompany>("where code = @0", record.InsCode);
-            if(record.InsCompany == null)
-                record.InsCompany = new InsCompany();
-
-            Str.ParseCityStZip(record.HolderCityStZip, out string strCity, out string strState, out string strZip);
-            record.HolderCity = strCity;
-            record.HolderState = strState;
-            record.HolderZip = strZip;
-
+                Str.ParseCityStZip(record.HolderCityStZip, out string strCity, out string strState, out string strZip);
+                record.HolderCity = strCity;
+                record.HolderState = strState;
+                record.HolderZip = strZip;
+            }
             return record;
         }
     }

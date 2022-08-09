@@ -9,12 +9,12 @@ namespace LabBilling.Core.DataAccess
 {
     public class FinRepository : RepositoryBase<Fin>
     {
-        public FinRepository(string connection) : base("fin", connection)
+        public FinRepository(string connection) : base(connection)
         {
 
         }
 
-        public FinRepository(string connection, PetaPoco.Database db) : base("fin", connection, db)
+        public FinRepository(PetaPoco.Database db) : base(db)
         {
 
         }

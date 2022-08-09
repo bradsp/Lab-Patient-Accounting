@@ -10,7 +10,12 @@ namespace LabBilling.Core.DataAccess
 {
     public class InvoiceHistoryRepository : RepositoryBase<InvoiceHistory>
     {
-        public InvoiceHistoryRepository(string connection) : base("cbill_hist", connection)
+        public InvoiceHistoryRepository(string connection) : base(connection)
+        {
+
+        }
+
+        public InvoiceHistoryRepository(PetaPoco.Database db) : base(db)
         {
 
         }

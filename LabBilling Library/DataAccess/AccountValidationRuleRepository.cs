@@ -12,19 +12,16 @@ namespace LabBilling.Core.DataAccess
 {
     public class AccountValidationRuleRepository : RepositoryBase<AccountValidationRule>
     {
-        private string _connection;
         private AccountValidationCriteriaRepository accountValidationCriteriaRepository;
 
-        public AccountValidationRuleRepository(string connection) : base("dict_acc_validation", connection)
+        public AccountValidationRuleRepository(string connection) : base(connection)
         {
-            _connection = connection;
-            accountValidationCriteriaRepository = new AccountValidationCriteriaRepository(_connection, dbConnection);
+            accountValidationCriteriaRepository = new AccountValidationCriteriaRepository(dbConnection);
         }
 
-        public AccountValidationRuleRepository(string connection, PetaPoco.Database db) : base("dict_acc_valiation", connection, db)
+        public AccountValidationRuleRepository(PetaPoco.Database db) : base(db)
         {
-            _connection = connection;
-            accountValidationCriteriaRepository = new AccountValidationCriteriaRepository(_connection, dbConnection);
+            accountValidationCriteriaRepository = new AccountValidationCriteriaRepository(dbConnection);
         }
 
         public override AccountValidationRule GetById(int id)

@@ -10,9 +10,14 @@ namespace LabBilling.Core.DataAccess
 {
     public class MappingRepository : RepositoryBase<Mapping>
     {
-        public MappingRepository(string connection) : base("dictionary.mapping", connection)
+        public MappingRepository(string connection) : base(connection)
         {
                 
+        }
+
+        public MappingRepository(PetaPoco.Database db) : base(db)
+        {
+
         }
 
         public override Mapping GetById(int id)

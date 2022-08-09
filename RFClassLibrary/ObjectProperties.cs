@@ -142,6 +142,16 @@ namespace RFClassLibrary
             }
         }
 
+        public static Type GetProperty(Type t, string propName)
+        {
+            var flags = BindingFlags.Public | BindingFlags.Instance;
+
+            var propInfo = t.GetProperty(propName, flags);
+
+            return propInfo.PropertyType;
+
+        }
+
 
     }
 }

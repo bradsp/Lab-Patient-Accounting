@@ -9,7 +9,12 @@ namespace LabBilling.Core.DataAccess
 {
     public class BadDebtRepository : RepositoryBase<BadDebt>
     {
-        public BadDebtRepository(string connection) : base("bad_debt", connection)
+        public BadDebtRepository(string connection) : base(connection)
+        {
+
+        }
+
+        public BadDebtRepository(PetaPoco.Database db) : base(db)
         {
 
         }

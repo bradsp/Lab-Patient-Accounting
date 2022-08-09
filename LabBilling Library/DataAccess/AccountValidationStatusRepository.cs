@@ -10,16 +10,13 @@ namespace LabBilling.Core.DataAccess
 {
     public class AccountValidationStatusRepository : RepositoryBase<AccountValidationStatus>
     {
-        private string _connection;
 
-        public AccountValidationStatusRepository(string connectionString) : base("acc_validation_status", connectionString)
+        public AccountValidationStatusRepository(string connectionString) : base(connectionString)
         {
-            _connection = connectionString;
         }
 
-        public AccountValidationStatusRepository(string connectionString, PetaPoco.Database db) : base("acc_validation_status", connectionString, db)
+        public AccountValidationStatusRepository(PetaPoco.Database db) : base(db)
         {
-            _connection = connectionString;
         }
 
         public AccountValidationStatus GetByAccount(string account)

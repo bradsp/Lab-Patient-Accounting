@@ -10,12 +10,12 @@ namespace LabBilling.Core.DataAccess
 {
     public class BillingActivityRepository : RepositoryBase<BillingActivity>
     {
-        public BillingActivityRepository(string connection) : base("vw_billing_activity", connection)
+        public BillingActivityRepository(string connection) : base(connection)
         {
 
         }
 
-        public BillingActivityRepository(string connection, PetaPoco.Database db) : base("vw_billing_activity", connection, db)
+        public BillingActivityRepository(PetaPoco.Database db) : base(db)
         {
 
         }

@@ -12,16 +12,13 @@ namespace LabBilling.Core.DataAccess
 {
     public class AccountValidationCriteriaRepository : RepositoryBase<AccountValidationCriteria>
     {
-        private string _connectionString;
 
-        public AccountValidationCriteriaRepository(string connectionString) : base("dict_acc_validation_criteria", connectionString)
+        public AccountValidationCriteriaRepository(string connectionString) : base(connectionString)
         {
-            _connectionString = connectionString;
         }
 
-        public AccountValidationCriteriaRepository(string connectionString, PetaPoco.Database db) : base("dict_acc_validation_criteria", connectionString, db)
+        public AccountValidationCriteriaRepository(PetaPoco.Database db) : base(db)
         {
-            _connectionString=connectionString;
         }
 
         public override AccountValidationCriteria GetById(int id)

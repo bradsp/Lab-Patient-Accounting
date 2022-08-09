@@ -10,12 +10,12 @@ namespace LabBilling.Core.DataAccess
 {
     public class PhyRepository : RepositoryBase<Phy>
     {
-        public PhyRepository(string connection) : base("phy", connection)
+        public PhyRepository(string connection) : base(connection)
         {
                 
         }
 
-        public PhyRepository(string connection, PetaPoco.Database db) : base("phy", connection, db)
+        public PhyRepository(PetaPoco.Database db) : base(db)
         {
 
         }

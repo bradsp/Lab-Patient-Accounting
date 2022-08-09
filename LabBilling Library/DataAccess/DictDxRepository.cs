@@ -7,12 +7,12 @@ namespace LabBilling.Core.DataAccess
 {
     public class DictDxRepository : RepositoryBase<DictDx>
     {
-        public DictDxRepository(string connection) : base("icd9desc", connection)
+        public DictDxRepository(string connection) : base(connection)
         {
 
         }
 
-        public DictDxRepository(string connection, PetaPoco.Database db) : base("icd9desc", connection, db)
+        public DictDxRepository(PetaPoco.Database db) : base(db)
         {
 
         }

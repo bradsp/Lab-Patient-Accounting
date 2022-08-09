@@ -9,12 +9,12 @@ namespace LabBilling.Core.DataAccess
 {
     public class AccountNoteRepository : RepositoryBase<AccountNote>
     {
-        public AccountNoteRepository(string connection) : base("notes", connection)
+        public AccountNoteRepository(string connection) : base(connection)
         {
 
         }
 
-        public AccountNoteRepository(string connection, PetaPoco.Database db) : base("notes", connection, db)
+        public AccountNoteRepository(PetaPoco.Database db) : base(db)
         {
 
         }

@@ -9,12 +9,12 @@ namespace LabBilling.Core.DataAccess
 {
     public class UserProfileRepository : RepositoryBase<UserProfile>
     {
-        public UserProfileRepository(string connection) : base("UserProfile", connection)
+        public UserProfileRepository(string connection) : base(connection)
         {
             
         }
 
-        public UserProfileRepository(string connection, PetaPoco.Database db) : base("UserProfile", connection)
+        public UserProfileRepository(PetaPoco.Database db) : base(db)
         {
 
         }

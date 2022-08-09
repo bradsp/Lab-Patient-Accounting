@@ -49,7 +49,7 @@ namespace LabBilling.Core.BusinessLogic
 
             db = new Database(connectionString, new CustomSqlDatabaseProvider());
 
-            parametersdb = new SystemParametersRepository(_connectionString, db);
+            parametersdb = new SystemParametersRepository(db);
 
             propProductionEnvironment = dBName.Contains("LIVE") ? "P" : "T";
             string[] strArgs = new string[3];
@@ -57,13 +57,13 @@ namespace LabBilling.Core.BusinessLogic
             strArgs[1] = dBserverName;
             strArgs[2] = dBName;
 
-            accountRepository = new AccountRepository(_connectionString, db);
-            patRepository = new PatRepository(_connectionString, db);
-            chrgRepository = new ChrgRepository(_connectionString, db);
-            chkRepository = new ChkRepository(_connectionString, db);
-            numberRepository = new NumberRepository(_connectionString);
-            billingHistoryRepository = new BillingHistoryRepository(_connectionString, db);
-            billingBatchRepository = new BillingBatchRepository(_connectionString, db);
+            accountRepository = new AccountRepository(db);
+            patRepository = new PatRepository(db);
+            chrgRepository = new ChrgRepository(db);
+            chkRepository = new ChkRepository(db);
+            numberRepository = new NumberRepository(db);
+            billingHistoryRepository = new BillingHistoryRepository(db);
+            billingBatchRepository = new BillingBatchRepository(db);
 
             claims = new List<ClaimData>();
 
