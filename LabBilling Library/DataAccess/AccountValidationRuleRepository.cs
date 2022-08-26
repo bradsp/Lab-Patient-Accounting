@@ -29,7 +29,7 @@ namespace LabBilling.Core.DataAccess
             throw new NotImplementedException();
         }
 
-        public override IEnumerable<AccountValidationRule> GetAll()
+        public override List<AccountValidationRule> GetAll()
         {
             Log.Instance.Trace($"Entering");
             var results = base.GetAll();

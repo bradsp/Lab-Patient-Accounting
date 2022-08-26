@@ -46,7 +46,7 @@ namespace LabBilling.Core.DataAccess
             Log.Instance.Trace("Exiting");
         }
 
-        public virtual IEnumerable<Tpoco> GetAll()
+        public virtual List<Tpoco> GetAll()
         {
             Log.Instance.Trace("Entering");
 

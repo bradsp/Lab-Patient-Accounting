@@ -14,12 +14,9 @@ namespace LabBilling.Forms
     {
         List<AccountSearch> searchResults = new List<AccountSearch>();
 
-        //public string NameSearch { get; set; }
-        //public string MRNSearch { get; set; }
-        //public string AccNoSearch { get; set; }
-        //public string DOBSearch { get; set; }
         public string SelectedAccount { get; set; }
         private readonly AccountRepository accdb = new AccountRepository(Helper.ConnVal);
+        private readonly AccountSearchRepository accountSearchRepository = new AccountSearchRepository(Helper.ConnVal);
 
         public PersonSearchForm()
         {
@@ -36,7 +33,7 @@ namespace LabBilling.Forms
             if (dobSearchText.MaskFull)
                 dobText = dobSearchText.Text;
 
-            searchResults = accdb.GetBySearch(txtLastName.Text, txtFirstName.Text, mrnSearchText.Text, ssnSearchText.Text, dobText, 
+            searchResults = accountSearchRepository.GetBySearch(txtLastName.Text, txtFirstName.Text, mrnSearchText.Text, ssnSearchText.Text, dobText, 
                 cbSexSearch.SelectedIndex < 0 ? "" : cbSexSearch.SelectedValue.ToString(), accountSearchText.Text).ToList();
 
             var searchBindingList = new BindingList<AccountSearch>(searchResults);

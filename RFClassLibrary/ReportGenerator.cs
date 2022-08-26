@@ -13,6 +13,7 @@ namespace RFClassLibrary
     /// Creates a ReportGenerator with a DataGridViewPrinter object for setting up the printing for various reports.
     /// 08/22/2007 rgc/wdk
     /// </summary>
+    [Obsolete]
     public class ReportGenerator
     {
         /// <summary>

@@ -14,6 +14,7 @@ using MCL;
 using System.Drawing.Printing;
 using System.Reflection;
 using LabBilling.Logging;
+using LabBilling.Core.BusinessLogic.Validators;
 using System.Data.Common;
 
 namespace LabBilling.Forms
@@ -941,7 +942,7 @@ namespace LabBilling.Forms
 
             if (strFinCode == "A")
             {
-                CheckForInfertitityOrDentalCodes(sbRetVal);
+                CheckForInfertilityOrDentalCodes(sbRetVal);
                 CheckForPatientRelationAsSelf(sbRetVal);
                 CheckForGroupNumberMustBeBlank(sbRetVal);
                 CheckForPatientNameSameAsPolicyHolderName(strAccount, sbRetVal);
@@ -960,7 +961,7 @@ namespace LabBilling.Forms
             }
             if (strFinCode == "B")
             {
-                CheckForInfertitityOrDentalCodes(sbRetVal);
+                CheckForInfertilityOrDentalCodes(sbRetVal);
                 CheckForDiagCodeV72_31(sbRetVal);
                 CheckForObesityCodes(sbRetVal);
                 CheckForV70Diag(sbRetVal);
@@ -989,7 +990,7 @@ namespace LabBilling.Forms
             }
             if (strFinCode == "C")
             {
-                CheckForInfertitityOrDentalCodes(sbRetVal);
+                CheckForInfertilityOrDentalCodes(sbRetVal);
                 CheckForGroupNumberMustBeBlank(sbRetVal);
                 CheckForDiagCodeStartsWithV(sbRetVal);
                 // wdk 20120521 if Outpatient don't check this as the form will be ub not 1500
@@ -1006,7 +1007,7 @@ namespace LabBilling.Forms
             }
             if (strFinCode == "D")
             {
-                CheckForInfertitityOrDentalCodes(sbRetVal);
+                CheckForInfertilityOrDentalCodes(sbRetVal);
                 CheckForPatientRelationAsSelf(sbRetVal);
                 CheckForPatientNameSameAsPolicyHolderName(strAccount, sbRetVal);
                 CheckForObesityCodes(sbRetVal);
@@ -1046,7 +1047,7 @@ namespace LabBilling.Forms
                     is_cpt4_icd9_ok(sbRetVal, strFinCode); // rgc/wdk 20120412 added per carols request
                     CheckFor80299(sbRetVal);
                     // csp/wdk 20120816 added 
-                    CheckForInfertitityOrDentalCodes(sbRetVal);
+                    CheckForInfertilityOrDentalCodes(sbRetVal);
                     CheckForPatientRelationAsSelf(sbRetVal);
                     //CheckForGroupNumberMustBeBlank(sbRetVal); // wdk 20131017 removed
                     CheckForPatientNameSameAsPolicyHolderName(strAccount, sbRetVal);
@@ -1064,7 +1065,7 @@ namespace LabBilling.Forms
             }
             if (strFinCode == "M")
             {
-                CheckForInfertitityOrDentalCodes(sbRetVal);
+                CheckForInfertilityOrDentalCodes(sbRetVal);
                 CheckForOBPanel(sbRetVal);
                 CheckForGHPPanel(sbRetVal);
                 CheckForPatientRelationAsSelf(sbRetVal);
@@ -1090,7 +1091,7 @@ namespace LabBilling.Forms
                 }
                 if (strInsCode == "HP")
                 {
-                    CheckForInfertitityOrDentalCodes(sbRetVal);
+                    CheckForInfertilityOrDentalCodes(sbRetVal);
                     CheckForDiagCodeV72_31(sbRetVal);
                     CheckForInsGroupNumber(sbRetVal);
                     // wdk 20120521 if Outpatient don't check this as the form will be ub not 1500
@@ -1099,7 +1100,7 @@ namespace LabBilling.Forms
                     //    CheckForDiagCodePointers(sbRetVal);
                     //}
                     CheckForObesityCodes(sbRetVal);
-                    CheckForAbnormalWeigthGain(sbRetVal);
+                    CheckForAbnormalWeightGain(sbRetVal);
                     CheckForV70Diag(sbRetVal);
                     //CheckForV70_3Diag(sbRetVal);
                     CheckForV70_9Diag(sbRetVal);
@@ -1109,7 +1110,7 @@ namespace LabBilling.Forms
                 }
                 if (strInsCode == "AETNA")
                 {
-                    CheckForInfertitityOrDentalCodes(sbRetVal);
+                    CheckForInfertilityOrDentalCodes(sbRetVal);
                     CheckForOBPanel(sbRetVal);
                     CheckForGHPPanel(sbRetVal);
                     CheckForDiagCodeV72_31(sbRetVal);
@@ -1200,7 +1201,7 @@ namespace LabBilling.Forms
                     //    CheckForDiagCodePointers(sbRetVal);
                     //}
                     // csp/wdk 20120816 added 
-                    CheckForInfertitityOrDentalCodes(sbRetVal);
+                    CheckForInfertilityOrDentalCodes(sbRetVal);
                     CheckForPatientRelationAsSelf(sbRetVal);
                     //CheckForGroupNumberMustBeBlank(sbRetVal); // wdk 20131017 removed
                     CheckForPatientNameSameAsPolicyHolderName(strAccount, sbRetVal);
@@ -2862,7 +2863,7 @@ namespace LabBilling.Forms
         /// MODIFIED
         /// </summary>
         /// <param name="sbRetVal"></param>
-        private void CheckForAbnormalWeigthGain(StringBuilder sbRetVal)
+        private void CheckForAbnormalWeightGain(StringBuilder sbRetVal)
         {
             Log.Instance.Debug($"Entering");
             // wdk 20151109 set the restricted_users are pipe delimited mehods to exclude if set to true.
@@ -3628,7 +3629,7 @@ namespace LabBilling.Forms
         /// MODIFIED
         /// </summary>
         /// <param name="sbRetVal"></param>
-        private void CheckForInfertitityOrDentalCodes(StringBuilder sbRetVal)
+        private void CheckForInfertilityOrDentalCodes(StringBuilder sbRetVal)
         {
             Log.Instance.Debug($"Entering");
             // wdk 20151109 set the restricted_users are pipe delimited mehods to exclude if set to true.
@@ -5067,6 +5068,44 @@ namespace LabBilling.Forms
 
         private delegate string DelegateValidateData(DataRow drAcc);
 
+        private void ValidateAccountsClick(object sender, EventArgs e)
+        {
+            Log.Instance.Debug($"Entering");
+            if (dgvAccount.Rows.Count <= 0)
+            {
+                tsslNote.Text = "Nothing in grid.";
+                Application.DoEvents();
+                return;
+            }
+            tsslNote.Text = "Clearing Error Totals";
+            m_dicErrorTotals.Clear();
+
+            tsbValidate.Enabled = false;
+
+            tscbFinCodes.Enabled = false;
+            tspbCount.Value = 0;
+            tspbCount.Step = 1;
+            tspbCount.Maximum = dgvAccount.Rows.Count;
+
+            DataGridViewCellStyle styleInfoLMRP = new DataGridViewCellStyle();
+            styleInfoLMRP.BackColor = Color.PaleVioletRed;
+            DataGridViewCellStyle styleInfoErr = new DataGridViewCellStyle();
+            styleInfoErr.BackColor = Color.PaleGoldenrod;
+            int nLmrp = 0;
+            int nErr = 0;
+            int nValid = 0;
+
+            DataRow[] drArray = m_dsAccount.Tables["ACC"].Select(m_strRequery, "pat_name");
+
+            foreach (DataGridViewRow dr in dgvAccount.Rows)
+            {
+
+
+            }
+
+        }
+
+
         private void Validate_Accounts_Click(object sender, EventArgs e)
         {
             Log.Instance.Debug($"Entering");
@@ -5136,8 +5175,6 @@ namespace LabBilling.Forms
                 }
 
                 m_drCur.RowError = strResult;
-
-
 
                 dr.ErrorText = strResult;
                 dr.Cells["ERRORS"].Value = strResult.Replace(Environment.NewLine, "\t");

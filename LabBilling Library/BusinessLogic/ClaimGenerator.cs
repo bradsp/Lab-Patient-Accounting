@@ -353,7 +353,7 @@ namespace LabBilling.Core.BusinessLogic
                         claimLine.ProcedureModifier1 = detail.Modifier;
                         claimLine.ProcedureModifier2 = detail.Modifer2;
                         claimLine.ProcedureModifier3 = "";
-                        claimLine.Description = chrg.CDMDescription;
+                        claimLine.Description = chrg.Cdm.Description;
                         claimLine.Amount = detail.Amount;
                         claimLine.Quantity = chrg.Quantity;
                         string[] dxptr = detail.DiagCodePointer.Split(':');

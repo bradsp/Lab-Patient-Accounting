@@ -8,6 +8,7 @@ using MCL;
 using System.Collections;
 using System.Drawing.Printing;
 using System.Reflection;
+using LabBilling.Forms;
 
 namespace LabBilling.Legacy
 {
@@ -178,8 +179,16 @@ namespace LabBilling.Legacy
 
         private void dgvAccounts_RowHeaderMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
         {
-            LaunchAcc la = new LaunchAcc(m_strDatabase);
-            la.LaunchAccount(dgvAccounts["ACCOUNT", e.RowIndex].FormattedValue.ToString());
+
+            //LaunchAcc la = new LaunchAcc(m_strDatabase);
+            //la.LaunchAccount(dgvAccounts["ACCOUNT", e.RowIndex].FormattedValue.ToString());
+
+            string strAccount = dgvAccounts["ACCOUNT", e.RowIndex].FormattedValue.ToString();
+            AccountForm frm = new AccountForm(strAccount)
+            {
+                MdiParent = this.ParentForm
+            };
+            frm.Show();
         }
 
         private void tsbLoad_Click(object sender, EventArgs e)

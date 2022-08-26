@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Lab Billing")]
-[assembly: AssemblyDescription("WTH Outreach Lab Billing Application")]
+[assembly: AssemblyDescription("Outreach Lab Billing Application")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("West Tennessee Healthcare")]
 [assembly: AssemblyProduct("Lab Billing")]

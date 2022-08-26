@@ -338,7 +338,6 @@
             // 
             // tstbCDM1
             // 
-            this.tstbCDM1.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.tstbCDM1.Name = "tstbCDM1";
             this.tstbCDM1.Size = new System.Drawing.Size(100, 23);
             this.tstbCDM1.ToolTipText = "Add first CDM to be compaired";
@@ -346,7 +345,6 @@
             // 
             // tstbCDM2
             // 
-            this.tstbCDM2.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.tstbCDM2.Name = "tstbCDM2";
             this.tstbCDM2.Size = new System.Drawing.Size(100, 23);
             this.tstbCDM2.ToolTipText = "Add second CDM to be compaired";
@@ -413,7 +411,6 @@
             // 
             // tstbExcelFileName
             // 
-            this.tstbExcelFileName.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.tstbExcelFileName.Name = "tstbExcelFileName";
             this.tstbExcelFileName.Size = new System.Drawing.Size(152, 23);
             this.tstbExcelFileName.Text = "EXCEL";
@@ -428,7 +425,6 @@
             // 
             // tstbExcelWorkSheetName
             // 
-            this.tstbExcelWorkSheetName.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.tstbExcelWorkSheetName.Name = "tstbExcelWorkSheetName";
             this.tstbExcelWorkSheetName.Size = new System.Drawing.Size(152, 23);
             this.tstbExcelWorkSheetName.Text = "Sheet1";
@@ -501,6 +497,7 @@
             this.m_dgvReport.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.m_dgvReport_CellMouseClick);
             this.m_dgvReport.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.m_dgvReport_ColumnHeaderMouseClick);
             this.m_dgvReport.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.m_dgvReport_DataError);
+            this.m_dgvReport.RowHeaderMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.m_dgvReport_RowHeaderMouseDoubleClick);
             this.m_dgvReport.RowsAdded += new System.Windows.Forms.DataGridViewRowsAddedEventHandler(this.m_dgvReport_RowsAdded);
             // 
             // cmsRecords

@@ -18,12 +18,12 @@ namespace LabBilling.Core.DataAccess
 
         }
 
-        public override IEnumerable<Cdm> GetAll()
+        public override List<Cdm> GetAll()
         {
             return GetAll(false);
         }
 
-        public IEnumerable<Cdm> GetAll(bool includeDeleted = false)
+        public List<Cdm> GetAll(bool includeDeleted = false)
         {
             Log.Instance.Debug($"Entering");
 
@@ -49,16 +49,18 @@ namespace LabBilling.Core.DataAccess
         public Cdm GetCdm(string cdm)
         {
             string cdmRealName = this.GetRealColumn(typeof(Cdm), nameof(Cdm.ChargeId));
-            string isDeletedRealName = this.GetRealColumn(typeof(Cdm), nameof(Cdm.ChargeId));
+            string isDeletedRealName = this.GetRealColumn(typeof(Cdm), nameof(Cdm.IsDeleted));
 
             var result = dbConnection.SingleOrDefault<Cdm>($"where {cdmRealName} = @0", cdm);
             if(result != null)
             {
-                result.CdmFeeSchedule1 = dbConnection.Fetch<CdmFeeSchedule1>($"where {cdmRealName} = @0 and {isDeletedRealName} = 0", cdm);
-                result.CdmFeeSchedule2 = dbConnection.Fetch<CdmFeeSchedule2>($"where {cdmRealName} = @0 and {isDeletedRealName} = 0", cdm);
-                result.CdmFeeSchedule3 = dbConnection.Fetch<CdmFeeSchedule3>($"where {cdmRealName} = @0 and {isDeletedRealName} = 0", cdm);
-                result.CdmFeeSchedule4 = dbConnection.Fetch<CdmFeeSchedule4>($"where {cdmRealName} = @0 and {isDeletedRealName} = 0", cdm);
-                result.CdmFeeSchedule5 = dbConnection.Fetch<CdmFeeSchedule5>($"where {cdmRealName} = @0 and {isDeletedRealName} = 0", cdm);
+                string cdmColName = this.GetRealColumn(typeof(CdmFeeSchedule1), nameof(CdmFeeSchedule1.ChargeItemId));
+                string isDeletedColName = this.GetRealColumn(typeof(CdmFeeSchedule1), nameof(CdmFeeSchedule1.IsDeleted));
+                result.CdmFeeSchedule1 = dbConnection.Fetch<CdmFeeSchedule1>($"where {cdmColName} = @0 and {isDeletedColName} = 0", cdm);
+                result.CdmFeeSchedule2 = dbConnection.Fetch<CdmFeeSchedule2>($"where {cdmColName} = @0 and {isDeletedColName} = 0", cdm);
+                result.CdmFeeSchedule3 = dbConnection.Fetch<CdmFeeSchedule3>($"where {cdmColName} = @0 and {isDeletedColName} = 0", cdm);
+                result.CdmFeeSchedule4 = dbConnection.Fetch<CdmFeeSchedule4>($"where {cdmColName} = @0 and {isDeletedColName} = 0", cdm);
+                result.CdmFeeSchedule5 = dbConnection.Fetch<CdmFeeSchedule5>($"where {cdmColName} = @0 and {isDeletedColName} = 0", cdm);
             }
 
             return result;

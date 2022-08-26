@@ -36,7 +36,8 @@ namespace LabBilling.Core.DataAccess
             Log.Instance.Debug($"Entering");
 
             var record = dbConnection.SingleOrDefault<DictDx>("where icd9_num = @0 and AMA_year = @1", dxCode, AMA_year);
-
+            if(record == null)
+                record = new DictDx();
             return record;
         }
 

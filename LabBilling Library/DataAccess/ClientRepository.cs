@@ -27,6 +27,8 @@ namespace LabBilling.Core.DataAccess
             }
 
             var record = dbConnection.SingleOrDefault<Client>("where cli_mnem = @0", clientMnem);
+            if (record == null)
+                record = new Client();
 
             return record;
         }

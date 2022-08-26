@@ -11,8 +11,7 @@ using RFClassLibrary;
 using MCL;
 using System.Data.SqlClient;
 using System.Drawing.Printing;  // billing
-
-          
+using LabBilling.Forms;
 
 namespace LabBilling.Legacy
 {
@@ -533,18 +532,40 @@ namespace LabBilling.Legacy
         {
             try
             {
-                LaunchAcc la = new LaunchAcc(m_strDatabase);
+                //LaunchAcc la = new LaunchAcc(m_strDatabase);
                 string strAcc = ((DataGridView)sender).Rows[e.RowIndex].Cells["account"].Value.ToString();
+                //if (strAcc.StartsWith("C"))
+                //{
+                //    la.LaunchAccount(strAcc);
+                //    la.LaunchAccount(strAcc.Replace('C', 'J'));
+                //}
+                //else
+                //{
+                //    la.LaunchAccount(strAcc);
+                //    la.LaunchAccount(strAcc.Replace('J', 'C'));
+                //}
+
+                AccountForm frm = new AccountForm(strAcc)
+                {
+                    MdiParent = this.ParentForm
+                };
+                frm.Show();
+
                 if (strAcc.StartsWith("C"))
                 {
-                    la.LaunchAccount(strAcc);
-                    la.LaunchAccount(strAcc.Replace('C', 'J'));
+                    new AccountForm(strAcc) { MdiParent = this.ParentForm }.Show();
+                    new AccountForm(strAcc.Replace('C', 'J')) { MdiParent = this.ParentForm }.Show();
+                    //la.LaunchAccount(strAcc);
+                    //la.LaunchAccount(strAcc.Replace('C', 'J'));
                 }
                 else
                 {
-                    la.LaunchAccount(strAcc);
-                    la.LaunchAccount(strAcc.Replace('J', 'C'));
+                    new AccountForm(strAcc) { MdiParent = this.ParentForm }.Show();
+                    new AccountForm(strAcc.Replace('J', 'C')) { MdiParent = this.ParentForm }.Show();
+                    //la.LaunchAccount(strAcc);
+                    //la.LaunchAccount(strAcc.Replace('J', 'C'));
                 }
+
             }
             catch (Exception)
             {

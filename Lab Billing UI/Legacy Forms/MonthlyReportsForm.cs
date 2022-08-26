@@ -66,9 +66,12 @@ namespace LabBilling.Legacy
             m_Err = new ERR(argErr);
 
             CreateConnectionString();
-            m_dgvReport.RowHeaderMouseDoubleClick += new DataGridViewCellMouseEventHandler(LaunchAcc.LaunchAcc_EventHandler);
+            //m_dgvReport.RowHeaderMouseDoubleClick += new DataGridViewCellMouseEventHandler(LaunchAcc.LaunchAcc_EventHandler);
+
             //this.Text += " PRODUCTION ENVIRONMENT LIVE";
         }
+
+        
 
         private void CreateConnectionString()
         {
@@ -1283,16 +1286,38 @@ order by c.account
             Application.DoEvents();
         }
 
+        private void m_dgvReport_RowHeaderMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
 
-
-
-
-       
-  
-       
-      
-
-       
+            DataGridView dgvGrid = (DataGridView)sender;
+            if (e.RowIndex < 0)
+            {
+                MessageBox.Show("You did not selected a current row.");
+                return;
+            }
+            string strAcc = "";
+            try
+            {
+                strAcc = dgvGrid["ACCOUNT", e.RowIndex].Value.ToString();
+            }
+            catch (ArgumentException ae)
+            {
+                MessageBox.Show(ae.Message);
+                return;
+            }
+            if (strAcc.Length < 2)
+            {
+                MessageBox.Show("Account not long enough"); // don't expect this to happen.
+                return;
+            }
+            if (strAcc[1] == '0' || strAcc[1] == 'A') // if the seconds character is 0 or A remove 
+            {
+                strAcc = strAcc.Remove(1, 1);
+            }
+            //string strAccount = "";
+            LabBilling.Forms.AccountForm frm = new Forms.AccountForm(strAcc, this.ParentForm);
+            frm.Show();
+        }
     }
 }
 

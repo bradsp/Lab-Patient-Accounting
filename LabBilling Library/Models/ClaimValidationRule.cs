@@ -25,6 +25,7 @@ namespace LabBilling.Core.Models
         public string mod_user { get; set; }
         public string mod_prg { get; set; }
         public string mod_host { get; set; }
+        [Ignore]
         public Guid rowguid { get; set; }
 
         public override string ToString()
@@ -50,6 +51,7 @@ namespace LabBilling.Core.Models
         public string mod_user { get; set; }
         public string mod_prg { get; set; }
         public string mod_host { get; set; }
+        [Ignore]
         public Guid rowguid { get; set; }
 
         public override string ToString()

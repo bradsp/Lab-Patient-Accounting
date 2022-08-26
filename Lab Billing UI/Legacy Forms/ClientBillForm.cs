@@ -18,6 +18,7 @@ using System.Reflection;
 using System.Diagnostics;
 using LabBilling.Core.Models;
 using LabBilling.Core;
+using LabBilling.Forms;
 
 namespace LabBilling.Legacy
 {
@@ -422,9 +423,16 @@ namespace LabBilling.Legacy
         {
             try
             {
-                LaunchAcc la = new LaunchAcc(m_strDatabase);
-                string strAcc = ((DataGridView)sender).Rows[e.RowIndex].Cells["account"].Value.ToString();
-                la.LaunchAccount(strAcc);
+                string strAccount = ((DataGridView)sender).Rows[e.RowIndex].Cells["account"].Value.ToString();
+                AccountForm frm = new AccountForm(strAccount)
+                {
+                    MdiParent = this.ParentForm
+                };
+                frm.Show();
+
+                //LaunchAcc la = new LaunchAcc(m_strDatabase);
+                //string strAcc = ((DataGridView)sender).Rows[e.RowIndex].Cells["account"].Value.ToString();
+                //la.LaunchAccount(strAcc);
             }
             catch (Exception ex)
             {

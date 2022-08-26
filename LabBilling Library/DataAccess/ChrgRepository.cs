@@ -37,8 +37,9 @@ namespace LabBilling.Core.DataAccess
 
             Chrg chrg = result.First<Chrg>();
 
-            //load the amt records
-            //result.ChrgDetails = amtRepository.GetByCharge(result.chrg_num).ToList();
+            //load the cdm record
+            CdmRepository cdmRepository = new CdmRepository(dbConnection);
+            chrg.Cdm = cdmRepository.GetCdm(chrg.CDMCode);
             
             return chrg;
         }
@@ -48,9 +49,8 @@ namespace LabBilling.Core.DataAccess
             Log.Instance.Debug($"Entering");
 
             var sql = PetaPoco.Sql.Builder
-                .Select("chrg.*, cdm.descript as 'cdm_desc', amt.*")
+                .Select("chrg.*, amt.*")
                 .From("chrg")
-                .LeftJoin("cdm").On("chrg.cdm = cdm.cdm")
                 .InnerJoin("amt").On("amt.chrg_num = chrg.chrg_num")
                 .Where("account = @0", account);
             
@@ -63,6 +63,13 @@ namespace LabBilling.Core.DataAccess
             sql.OrderBy("chrg.chrg_num");
 
             var result = dbConnection.Fetch<Chrg, ChrgDetail, Chrg>(new ChrgChrgDetailRelator().MapIt, sql);
+
+            CdmRepository cdmRepository = new CdmRepository(dbConnection);
+            
+            foreach(Chrg chrg in result)
+            {
+                chrg.Cdm = cdmRepository.GetCdm(chrg.CDMCode);
+            }
 
             return result;
         }

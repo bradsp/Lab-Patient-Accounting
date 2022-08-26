@@ -144,6 +144,12 @@ namespace LabBilling.Core.Models
         public Ins InsuranceSecondary { get; set; } = new Ins();
         [Ignore]
         public Ins InsuranceTertiary { get; set; } = new Ins();
+
+        [Ignore]
+        public List<string> LmrpErrors { get; set; } = new List<string>();
+
+        [Ignore]
+        public Fin Fin { get; set; } = new Fin();
     }
 
 }

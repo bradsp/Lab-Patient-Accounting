@@ -40,12 +40,12 @@ namespace LabBilling.Core.DataAccess
             return record;
         }
 
-        public override IEnumerable<InsCompany> GetAll()
+        public override List<InsCompany> GetAll()
         {
             return GetAll(true);
         }
 
-        public IEnumerable<InsCompany> GetAll(bool excludeDeleted)
+        public List<InsCompany> GetAll(bool excludeDeleted)
         {
             Log.Instance.Debug($"Entering");
 

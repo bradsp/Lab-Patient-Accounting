@@ -49,13 +49,26 @@ namespace LabBilling.Forms
             get { return _selectedAccount; }
         } 
 
-        public AccountForm(string account = null)
+        /// <summary>
+        /// Construct form with an account to open and optionally send the MDI parent form.
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="parentForm"></param>
+        public AccountForm(string account, Form parentForm = null) : this() 
+        {
+            Log.Instance.Trace("Entering");
+            
+            if (account != null)
+                _selectedAccount = account;
+
+            if (parentForm != null)
+                this.MdiParent = parentForm;
+        }
+
+        public AccountForm()
         {
             Log.Instance.Trace("Entering");
             InitializeComponent();
-
-            if (account != null)
-                _selectedAccount = account;
         }
 
         #region MainForm
@@ -233,8 +246,8 @@ namespace LabBilling.Forms
             cbHolderSex.ValueMember = "Key";
 
             cbPlanFinCode.DataSource = finDB.GetAll();
-            cbPlanFinCode.DisplayMember = "res_party";
-            cbPlanFinCode.ValueMember = "fin_code";
+            cbPlanFinCode.DisplayMember = nameof(Fin.res_party);
+            cbPlanFinCode.ValueMember = nameof(Fin.fin_code);
             cbPlanFinCode.SelectedIndex = -1;
 
             #endregion
@@ -595,7 +608,7 @@ namespace LabBilling.Forms
             currentAccount.Pat.GuarantorCityState = string.Format("{0}, {1} {2}", tbGuarCity.Text, cbGuarState.SelectedValue.ToString(), tbGuarZip.Text);
             currentAccount.Pat.Sex = cbSex.SelectedValue.ToString();
             currentAccount.Pat.GuarRelationToPatient = cbGuarantorRelation.SelectedValue.ToString();
-            currentAccount.Pat.SocSecNo = tbSSN.Text;
+            //currentAccount.Pat.SocSecNo = tbSSN.Text;
 
             patDB.SaveAll(currentAccount.Pat);
 
@@ -913,7 +926,7 @@ namespace LabBilling.Forms
 
             dgvCharges.Columns[nameof(Chrg.IsCredited)].Visible = true;
             dgvCharges.Columns[nameof(Chrg.CDMCode)].Visible = true;
-            dgvCharges.Columns[nameof(Chrg.CDMDescription)].Visible = true;
+            dgvCharges.Columns[nameof(Chrg.CdmDescription)].Visible = true;
             dgvCharges.Columns[nameof(Chrg.Quantity)].Visible = true;
             dgvCharges.Columns[nameof(Chrg.NetAmount)].Visible = true;
             dgvCharges.Columns[nameof(Chrg.ServiceDate)].Visible = true;
@@ -929,7 +942,7 @@ namespace LabBilling.Forms
             dgvCharges.Columns[nameof(Chrg.Quantity)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
 
             dgvCharges.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
-            dgvCharges.Columns[nameof(Chrg.CDMDescription)].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            dgvCharges.Columns[nameof(Chrg.CdmDescription)].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             dgvCharges.BackgroundColor = Color.AntiqueWhite;
             dgvChrgDetail.BackgroundColor = Color.AntiqueWhite;
 

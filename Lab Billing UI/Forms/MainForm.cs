@@ -255,7 +255,8 @@ namespace LabBilling
         {
             Log.Instance.Trace($"Entering");
 
-            WorkqueueForm frm = new WorkqueueForm(Helper.ConnVal);
+            //WorkqueueForm frm = new WorkqueueForm(Helper.ConnVal);
+            WorkListForm frm = new WorkListForm(Helper.ConnVal);
             frm.MdiParent = this;
             frm.AutoScroll = true;
             frm.WindowState = FormWindowState.Normal;

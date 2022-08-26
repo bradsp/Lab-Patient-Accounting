@@ -311,16 +311,19 @@ namespace LabBilling.Legacy
         {
             try
             {
-                LaunchAcc la = new LaunchAcc(m_strDatabase);
+                //LaunchAcc la = new LaunchAcc(m_strDatabase);
                 string strAcc = ((DataGridView)sender).Rows[e.RowIndex].Cells["account"].Value.ToString();
-                la.LaunchAccount(strAcc);
+                //la.LaunchAccount(strAcc);
+                new LabBilling.Forms.AccountForm(strAcc, this.ParentForm);
                 if (!strAcc.StartsWith("Q"))
                 {
-                    la.LaunchAccount(strAcc.Replace('C', 'Q'));
-
-                    LaunchAcc la2 = new LaunchAcc(m_strDatabase);
+                    //la.LaunchAccount(strAcc.Replace('C', 'Q'));
+                    new LabBilling.Forms.AccountForm(strAcc.Replace('C', 'Q'), this.ParentForm);
+                    
+                    //LaunchAcc la2 = new LaunchAcc(m_strDatabase);
                     string strAcc2 = ((DataGridView)sender).Rows[e.RowIndex].Cells["account"].Value.ToString();
-                    la.LaunchAccount(strAcc.Replace("C", "QR"));
+                    //la.LaunchAccount(strAcc.Replace("C", "QR"));
+                    new LabBilling.Forms.AccountForm(strAcc2.Replace("C", "QR"));
                 }
             }
             catch (Exception)

@@ -7,6 +7,7 @@ using RFClassLibrary;
 using System.Data.SqlClient;
 using System.Drawing.Printing;
 using System.Collections;
+using LabBilling.Forms;
 
 namespace LabBilling.ReportByInsuranceCompany
 {
@@ -164,10 +165,14 @@ namespace LabBilling.ReportByInsuranceCompany
         void dgReportInsurance_RowHeaderMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
         {
             //throw new NotImplementedException();
-            LaunchAcc la = new LaunchAcc(m_strDBase);
+            //LaunchAcc la = new LaunchAcc(m_strDBase);
             
-            la.LaunchAccount(dgvReportInsurance["account", e.RowIndex].Value.ToString());
-            
+            //la.LaunchAccount(dgvReportInsurance["account", e.RowIndex].Value.ToString());
+
+            string strAccount = dgvReportInsurance["account", e.RowIndex].Value.ToString();
+            AccountForm frm = new AccountForm(strAccount, this.ParentForm);
+            frm.Show();
+
         }
 
         private void CreateDateTimes()

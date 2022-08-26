@@ -22,6 +22,7 @@ namespace RFClassLibrary
     /// 
     /// 10/12/2007 David Kelly
     /// </summary>
+    [Obsolete]
     public partial class ViewerBase : Form
     {
         #region VARIABLES

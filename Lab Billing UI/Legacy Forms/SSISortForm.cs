@@ -420,9 +420,11 @@ namespace LabBilling.Legacy
         {
             try
             {
-                LaunchAcc la = new LaunchAcc(m_strDatabase);
+                //LaunchAcc la = new LaunchAcc(m_strDatabase);
                 string strAcc = ((DataGridView)sender).Rows[e.RowIndex].Cells["account"].Value.ToString();
-                la.LaunchAccount(strAcc);
+                //la.LaunchAccount(strAcc);
+
+                new LabBilling.Forms.AccountForm(strAcc, this.ParentForm);
             }
             catch (Exception ex)
             {

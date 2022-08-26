@@ -13,7 +13,7 @@ namespace LabBilling.Core.DataAccess
         void BeginTransaction();
         void CompleteTransaction();
         bool Delete(Tpoco table);
-        IEnumerable<Tpoco> GetAll();
+        List<Tpoco> GetAll();
         Task<IEnumerable<Tpoco>> GetAllAsync();
         Tpoco GetById(int id);
         bool Update(Tpoco table);

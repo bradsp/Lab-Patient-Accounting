@@ -112,8 +112,5 @@ namespace LabBilling.Core.BusinessLogic
 
             return rules;
         }
-
-
-
     }
 }

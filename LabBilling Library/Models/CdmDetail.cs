@@ -21,7 +21,7 @@ namespace LabBilling.Core.Models
         [Column("link")]
         public int Link { get; set; }
 
-        [Column("code_falg")]
+        [Column("code_flag")]
         public string CodeFlag { get; set; }
 
         [Column("cpt4")]
@@ -82,7 +82,7 @@ namespace LabBilling.Core.Models
         [Column("link")]
         public int Link { get; set; }
 
-        [Column("code_falg")]
+        [Column("code_flag")]
         public string CodeFlag { get; set; }
 
         [Column("cpt4")]
@@ -143,7 +143,7 @@ namespace LabBilling.Core.Models
         [Column("link")]
         public int Link { get; set; }
 
-        [Column("code_falg")]
+        [Column("code_flag")]
         public string CodeFlag { get; set; }
 
         [Column("cpt4")]
@@ -204,7 +204,7 @@ namespace LabBilling.Core.Models
         [Column("link")]
         public int Link { get; set; }
 
-        [Column("code_falg")]
+        [Column("code_flag")]
         public string CodeFlag { get; set; }
 
         [Column("cpt4")]
@@ -265,7 +265,7 @@ namespace LabBilling.Core.Models
         [Column("link")]
         public int Link { get; set; }
 
-        [Column("code_falg")]
+        [Column("code_flag")]
         public string CodeFlag { get; set; }
 
         [Column("cpt4")]

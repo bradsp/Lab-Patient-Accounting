@@ -12,8 +12,8 @@ namespace LabBilling.Core.Models
         public bool IsDeleted { get; set; }
         [Column("account")]
         public string AccountNo { get; set; }
-        [Column("ssn")]
-        public string SocSecNo { get; set; }
+//        [Column("ssn")]
+//       public string SocSecNo { get; set; }
         [Column("hne_epi_number")]
         public string EMPIId { get; set; }
         [Column("pat_full_name")]

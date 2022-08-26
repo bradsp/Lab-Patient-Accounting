@@ -4,6 +4,10 @@ using System;
 using System.Collections.Generic;
 using RFClassLibrary;
 using LabBilling.Core.BusinessLogic;
+using System.Text;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Reflection;
 
 namespace LabBilling.Core.DataAccess
 {
@@ -20,6 +24,8 @@ namespace LabBilling.Core.DataAccess
         private readonly AccountValidationRuleRepository accountValidationRuleRepository;
         private readonly AccountValidationCriteriaRepository accountValidationCriteriaRepository;
         private readonly AccountValidationStatusRepository accountValidationStatusRepository;
+        private readonly LMRPRuleRepository lmrpRuleRepository;
+        private readonly FinRepository finRepository;
 
         public AccountRepository(string connectionString) : base(connectionString)
         {
@@ -34,6 +40,8 @@ namespace LabBilling.Core.DataAccess
             accountValidationRuleRepository = new AccountValidationRuleRepository(_connection);
             accountValidationCriteriaRepository = new AccountValidationCriteriaRepository(_connection);
             accountValidationStatusRepository = new AccountValidationStatusRepository(_connection);
+            lmrpRuleRepository = new LMRPRuleRepository(_connection);
+            finRepository = new FinRepository(_connection);
         }
 
         public AccountRepository(PetaPoco.Database db) : base(db)
@@ -49,6 +57,8 @@ namespace LabBilling.Core.DataAccess
             accountValidationRuleRepository = new AccountValidationRuleRepository(db);
             accountValidationCriteriaRepository = new AccountValidationCriteriaRepository(db);
             accountValidationStatusRepository = new AccountValidationStatusRepository(db);
+            lmrpRuleRepository = new LMRPRuleRepository(db);
+            finRepository = new FinRepository(db);
         }
 
         public override Account GetById(int id)
@@ -86,6 +96,7 @@ namespace LabBilling.Core.DataAccess
                 record.Notes = accountNoteRepository.GetByAccount(account);
                 record.BillingActivities = billingActivityRepository.GetByAccount(account);
                 record.AccountValidationStatus = accountValidationStatusRepository.GetByAccount(account);
+                record.Fin = finRepository.GetFin(record.FinCode);
             }
             Client client;
             if (record.ClientMnem != null)
@@ -94,66 +105,31 @@ namespace LabBilling.Core.DataAccess
                 record.ClientName = client.cli_nme;
             }
 
-            double? result;
+            object result;
 
             //populate properties
-            result = dbConnection.ExecuteScalar<double>("SELECT dbo.GetAccBalByDate(@0, @1)", account, DateTime.Today);
-            record.Balance = result == null ? 0.00 : (double)result;
-            result = dbConnection.ExecuteScalar<double?>("SELECT dbo.GetBadDebtByAccount(@0)", account);
-            record.TotalBadDebt = result == null ? 0.00 : (double)result;
-            result = dbConnection.ExecuteScalar<double?>("SELECT dbo.GetAccTotalCharges(@0)", account);
-            record.TotalCharges = result == null ? 0.00 : (double)result;
-            result = dbConnection.ExecuteScalar<double?>("SELECT dbo.GetContractualByAccount(@0)", account);
-            record.TotalContractual = result == null ? 0.00 : (double)result;
-            result = dbConnection.ExecuteScalar<double?>("SELECT dbo.GetAmtPaidByAccount(@0)", account);
-            record.TotalPayments = result == null ? 0.00 : (double)result;
-            result = dbConnection.ExecuteScalar<double?>("SELECT dbo.GetWriteOffByAccount(@0)", account);
-            record.TotalWriteOff = result == null ? 0.00 : (double)result;
-            
+            result = dbConnection.ExecuteScalar<object>("SELECT dbo.GetAccBalByDate(@0, @1)", account, DateTime.Today);
+            if (result != DBNull.Value && result != null)
+                record.Balance = Convert.ToDouble(result); // == null ? 0.00 : (double)result;
+            result = dbConnection.ExecuteScalar<object>("SELECT dbo.GetBadDebtByAccount(@0)", account);
+            if (result != DBNull.Value && result != null)
+                record.TotalBadDebt = Convert.ToDouble(result); // == null ? 0.00 : (double)result;
+            result = dbConnection.ExecuteScalar<object>("SELECT dbo.GetAccTotalCharges(@0)", account);
+            if (result != DBNull.Value && result != null)
+                record.TotalCharges = Convert.ToDouble(result); // == null ? 0.00 : (double)result;
+            result = dbConnection.ExecuteScalar<object>("SELECT dbo.GetContractualByAccount(@0)", account);
+            if (result != DBNull.Value && result != null)
+                record.TotalContractual = Convert.ToDouble(result); // == null ? 0.00 : (double)result;
+            result = dbConnection.ExecuteScalar<object>("SELECT dbo.GetAmtPaidByAccount(@0)", account);
+            if (result != DBNull.Value && result != null)
+                record.TotalPayments = Convert.ToDouble(result); // == null ? 0.00 : (double)result;
+            result = dbConnection.ExecuteScalar<object>("SELECT dbo.GetWriteOffByAccount(@0)", account);
+            if (result != DBNull.Value && result != null)
+                record.TotalWriteOff = Convert.ToDouble(result); // == null ? 0.00 : (double)result;
+
             return record;
         }
 
-        public IEnumerable<AccountSearch> GetBySearch(string lastNameSearchText, string firstNameSearchText, string mrnSearchText, string ssnSearchText, string dobSearch, string sexSearch, string accountSearchText)
-        {
-            Log.Instance.Debug($"Entering");
-
-            if ((lastNameSearchText == string.Empty) && (firstNameSearchText == string.Empty) && (mrnSearchText == string.Empty) 
-                && (ssnSearchText == string.Empty)
-                && (dobSearch == string.Empty) && (sexSearch == string.Empty) && (accountSearchText == string.Empty))
-            {
-                return new List<AccountSearch>();
-            }
-
-            try
-            {
-
-                string nameSearch = "";
-                if(!(lastNameSearchText == "" && firstNameSearchText == ""))
-                    nameSearch = string.Format("{0}%,{1}%", lastNameSearchText, firstNameSearchText);
-
-                var command = PetaPoco.Sql.Builder
-                    .Select("acc.account, acc.trans_date, acc.pat_name, isnull(acc.ssn, pat.ssn) as 'SSN', pat.dob_yyyy, pat.sex, acc.mri")
-                    .From("acc")
-                    .LeftJoin("pat").On("acc.account = pat.account")
-                    .Where("acc.deleted = 0 ")
-                    .Where("(acc.pat_name like @0 or @1 = '')", nameSearch, nameSearch)
-                    .Where("(acc.account = @0 or @1 = '')", accountSearchText, accountSearchText)
-                    .Where("(acc.mri = @0 or @1 = '')", mrnSearchText, mrnSearchText)
-                    .Where("(pat.sex = @0 or @1 = '')", sexSearch, sexSearch)
-                    .Where("(acc.ssn = @0 or @1 = '')", ssnSearchText, ssnSearchText)
-                    .Where("(dob_yyyy = @0 or @1 = '')", dobSearch, dobSearch)
-                    .OrderBy("acc.trans_date desc");
-
-                return dbConnection.Fetch<AccountSearch>(command);
-            }
-            catch (Exception ex)
-            {
-                Log.Instance.Fatal(ex, $"Exception in");
-            }
-
-            return new List<AccountSearch>();
-
-        }
 
         public override object Add(Account table)
         {
@@ -435,7 +411,7 @@ namespace LabBilling.Core.DataAccess
             chrg.OrderingSite = "";
             chrg.PatBirthDate = accData.Pat.BirthDate;
             chrg.PatFullName = accData.PatFullName;
-            chrg.PatSocSecNo = accData.Pat.SocSecNo;
+            chrg.PatSocSecNo = accData.SocSecNo;
             chrg.PerformingSite = "";
             chrg.PostingDate = DateTime.Today;
             chrg.Quantity = qty;
@@ -549,36 +525,81 @@ namespace LabBilling.Core.DataAccess
 
         public bool Validate(ref Account account)
         {
-            ClaimRulesEngine engine = new ClaimRulesEngine(dbConnection);
-            bool isAccountValid = false;
-            try
-            {
-                isAccountValid = engine.ValidateAccount(account, out string errorList);
-                if(!isAccountValid)
-                {
-                    //write error list to account
-                    account.AccountValidationStatus.validation_text = errorList;
-                    account.AccountValidationStatus.account = account.AccountNo;
-                    account.AccountValidationStatus.mod_date = DateTime.Now;
-                }
-                else
-                {
-                    account.AccountValidationStatus.validation_text = "No validation errors.";
-                    account.AccountValidationStatus.account = account.AccountNo;
-                    account.AccountValidationStatus.mod_date = DateTime.Now;
-                }
+            BusinessLogic.Validators.ClaimValidator claimValidator = new BusinessLogic.Validators.ClaimValidator();
 
-                accountValidationStatusRepository.Save(account.AccountValidationStatus);
+            account.LmrpErrors = ValidateLMRP(account);
+
+            var validationResult = claimValidator.Validate(account);
+            bool isAccountValid = false;
+
+            foreach (var error in account.LmrpErrors)
+            {
+                account.AccountValidationStatus.validation_text += error + "\n";
             }
-            catch(RuleProcessException rpex)
+            account.AccountValidationStatus.account = account.AccountNo;
+            account.AccountValidationStatus.mod_date = DateTime.Now;
+
+            if (!validationResult.IsValid)
             {
                 isAccountValid = false;
-                //TODO: write error message to account
-                string error = rpex.Message;
+                account.AccountValidationStatus.validation_text = validationResult.ToString();
             }
+            else if (account.LmrpErrors.Count > 0)
+            {
+                isAccountValid = false;
+            }
+            else
+            {
+                isAccountValid=true;
+                account.AccountValidationStatus.validation_text = "No validation errors.";
+            }
+
+            accountValidationStatusRepository.Save(account.AccountValidationStatus);
 
             return isAccountValid;
         }
 
+        private List<string> ValidateLMRP(Account account)
+        {
+            List<string> errorList = new List<string>();
+
+            //determine if there are any rules for ama_year
+            if(lmrpRuleRepository.RulesLoaded((DateTime)account.TransactionDate) <= 0)
+            {
+                // no lmrp rules loaded for this ama year. 
+                errorList.Add("Rules not loaded for AMA_Year. DO NOT BILL.");
+                return errorList;
+            }
+
+            foreach(var cpt4 in account.cpt4List.Distinct())
+            {
+                if (cpt4 == null)
+                    continue;
+                var ruleDef = lmrpRuleRepository.GetRuleDefinition(cpt4, (DateTime)account.TransactionDate);
+                if (ruleDef == null)
+                    continue;
+
+                bool dxIsValid = ruleDef.DxIsValid == 0 ? false : true;
+                bool dxSupported = false;
+
+                foreach (var dx in account.Pat.Diagnoses)
+                {
+                    var rule = lmrpRuleRepository.GetRule(cpt4, dx.Code, (DateTime)account.TransactionDate);
+                    if (dxIsValid && rule != null)
+                        dxSupported = true;
+
+                    if (!dxIsValid && rule == null)
+                        dxSupported = true;
+
+                }
+
+                if(!dxSupported)
+                {
+                    errorList.Add($"LMRP Violation - No dx codes support medical necessity for cpt {cpt4}.");
+                }
+            }
+
+            return errorList;
+        }
     }
 }

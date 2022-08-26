@@ -106,7 +106,7 @@
       <HintPath>..\packages\nhapi.3.1.1\lib\net35\NHapi.Model.V281.dll</HintPath>
     </Reference>
     <Reference Include="NLog, Version=5.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
-      <HintPath>..\packages\NLog.5.0.1\lib\net46\NLog.dll</HintPath>
+      <HintPath>..\packages\NLog.5.0.2\lib\net46\NLog.dll</HintPath>
     </Reference>
     <Reference Include="PetaPoco, Version=6.0.524.0, Culture=neutral, PublicKeyToken=null" />
     <Reference Include="PresentationCore" />
@@ -164,6 +164,12 @@
     </Compile>
     <Compile Include="Forms\ReportingPortalForm.Designer.cs">
       <DependentUpon>ReportingPortalForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\WorkListForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\WorkListForm.Designer.cs">
+      <DependentUpon>WorkListForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Legacy Forms\CDMMaintenance.cs">
       <SubType>Form</SubType>
@@ -246,6 +252,7 @@
     <Compile Include="Library\FlatCombo.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Library\FormExtensions.cs" />
     <Compile Include="Library\LabeledTextBox.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -434,12 +441,12 @@
       <DependentUpon>UserSecurity.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\PhysicianMaintenanceView.cs" />
-    <None Include="Resources\logoicon2.png" />
-    <None Include="Resources\client-login-icon-4.gif" />
-    <None Include="Resources\collapsed.bmp" />
     <None Include="NLog.xsd">
       <SubType>Designer</SubType>
     </None>
+    <None Include="Resources\logoicon2.png" />
+    <None Include="Resources\client-login-icon-4.gif" />
+    <None Include="Resources\collapsed.bmp" />
     <None Include="Resources\refresh-icon.png" />
     <None Include="Resources\hiclipart.com-id_dbhyp.png" />
     <None Include="Resources\lookup-icon-png-and-vector-for-free-download-pngtree-lookup-png-512_512.png" />
@@ -457,6 +464,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ReportingPortalForm.resx">
       <DependentUpon>ReportingPortalForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\WorkListForm.resx">
+      <DependentUpon>WorkListForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Legacy Forms\CDMMaintenance.resx">
       <DependentUpon>CDMMaintenance.cs</DependentUpon>

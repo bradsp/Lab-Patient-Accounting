@@ -20,7 +20,7 @@ using System.Globalization;
 using System.Linq;
 // Move these two lines to the header space
 using System.Reflection;
-
+using LabBilling.Library;
 
 
 namespace LabBilling.Legacy
@@ -456,15 +456,24 @@ namespace LabBilling.Legacy
 
             // add the LaunchAcc event handler to the grids. This allows any data grid view with a column named 
             // account to load the Acc.exe
-            LaunchAcc la = new LaunchAcc(m_strDatabase);
+            //LaunchAcc la = new LaunchAcc(m_strDatabase);
+            //dgvEOB.RowHeaderMouseDoubleClick +=
+            //        new System.Windows.Forms.DataGridViewCellMouseEventHandler(LaunchAcc.LaunchAcc_EventHandler);
+            //dgvProcessed.RowHeaderMouseDoubleClick +=
+            //        new System.Windows.Forms.DataGridViewCellMouseEventHandler(LaunchAcc.LaunchAcc_EventHandler);
+            //dgvNotProcessed.RowHeaderMouseDoubleClick +=
+            //       new System.Windows.Forms.DataGridViewCellMouseEventHandler(LaunchAcc.LaunchAcc_EventHandler);
+            //dgvDenieds.RowHeaderMouseDoubleClick +=
+            //       new System.Windows.Forms.DataGridViewCellMouseEventHandler(LaunchAcc.LaunchAcc_EventHandler);
+
             dgvEOB.RowHeaderMouseDoubleClick +=
-                    new System.Windows.Forms.DataGridViewCellMouseEventHandler(LaunchAcc.LaunchAcc_EventHandler);
+                    new System.Windows.Forms.DataGridViewCellMouseEventHandler(FormExtensions.LaunchAcc_EventHandler);
             dgvProcessed.RowHeaderMouseDoubleClick +=
-                    new System.Windows.Forms.DataGridViewCellMouseEventHandler(LaunchAcc.LaunchAcc_EventHandler);
+                    new System.Windows.Forms.DataGridViewCellMouseEventHandler(FormExtensions.LaunchAcc_EventHandler);
             dgvNotProcessed.RowHeaderMouseDoubleClick +=
-                   new System.Windows.Forms.DataGridViewCellMouseEventHandler(LaunchAcc.LaunchAcc_EventHandler);
+                    new System.Windows.Forms.DataGridViewCellMouseEventHandler(FormExtensions.LaunchAcc_EventHandler);
             dgvDenieds.RowHeaderMouseDoubleClick +=
-                   new System.Windows.Forms.DataGridViewCellMouseEventHandler(LaunchAcc.LaunchAcc_EventHandler);
+                    new System.Windows.Forms.DataGridViewCellMouseEventHandler(FormExtensions.LaunchAcc_EventHandler);
 
             m_ERR = new ERR(new string[] { m_strDatabase.Contains("LIVE") ? "/LIVE" : "/TEST", m_strServer, m_strDatabase }); // ERR class needs /LIVE or /TEST to be the first argument in the command line.
             // rgc/wdk 20120425 moved to remove the spid overload in sql.

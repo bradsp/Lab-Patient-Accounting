@@ -22,9 +22,6 @@ namespace LabBilling.Core.Models
         public DateTime? HistoryDate { get; set; }
         [Column("cdm")]
         public string CDMCode { get; set; }
-        [ResultColumn]
-        [Column("cdm_desc")]
-        public string CDMDescription { get; set; }
         [Column("qty")]
         public int Quantity { get; set; }
         [Column("net_amt")]
@@ -103,11 +100,22 @@ namespace LabBilling.Core.Models
         public string mod_prg { get; set; }
         [ResultColumn]
         public string mod_host { get; set; }
-        
+
         public Guid rowguid { get; set; }
 
+        [Ignore]
+        public string CdmDescription
+        {
+            get
+            {
+                return this.Cdm.Description;
+            }
+        }
+    
         [Ignore]        
         public List<ChrgDetail> ChrgDetails { get; set; } = new List<ChrgDetail>();
+        [Ignore]
+        public Cdm Cdm { get; set; } = new Cdm();
     }
 
     [TableName("InvoiceChargeView")]
