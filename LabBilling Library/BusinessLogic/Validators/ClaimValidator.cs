@@ -17,14 +17,14 @@ namespace LabBilling.Core.BusinessLogic.Validators
 
             RuleFor(a => a.TransactionDate)
                 .NotNull()
-                .NotEmpty();
+                .NotEmpty().WithMessage("{PropertyName} is empty.");
             RuleFor(a => a.PatLastName)
                 .Cascade(CascadeMode.Stop)
-                .NotEmpty()
+                .NotEmpty().WithMessage("{PropertyName} is empty.")
                 .Must(BeAValidName).WithMessage("{PropertyName} contains invalid characters");
             RuleFor(a => a.PatFirstName)
                 .Cascade(CascadeMode.Stop)
-                .NotEmpty()
+                .NotEmpty().WithMessage("{PropertyName} is empty.")
                 .Must(BeAValidName).WithMessage("{PropertyName} contains invalid characters");
             RuleFor(a => a.Charges.Count)
                 .GreaterThan(0).WithMessage("No charges to bill.");
@@ -46,7 +46,7 @@ namespace LabBilling.Core.BusinessLogic.Validators
 
                     RuleFor(a => a.FinCode)
                         .Cascade(CascadeMode.Stop)
-                        .NotEmpty()
+                        .NotEmpty().WithMessage("{PropertyName} is empty.")
                         .Must((a, f) => f == a.InsurancePrimary.FinCode)
                         .WithMessage("Account fin code does not equal insurance fin code")
                         .When(ac => ac.InsurancePrimary != null);

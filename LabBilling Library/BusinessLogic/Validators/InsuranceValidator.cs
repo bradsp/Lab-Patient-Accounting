@@ -13,20 +13,20 @@ namespace LabBilling.Core.BusinessLogic.Validators
         public InsuranceValidator()
         {
             RuleFor(a => a.HolderLastName)
-                .NotEmpty();
+                .NotEmpty().WithMessage("Ins {PropertyName} is empty.");
             RuleFor(a => a.HolderFirstName)
-                .NotEmpty();
+                .NotEmpty().WithMessage("Ins {PropertyName} is empty.");
             RuleFor(a => a.PolicyNumber)
                 .Cascade(CascadeMode.Stop)
-                .NotEmpty()
+                .NotEmpty().WithMessage("Ins {PropertyName} is empty.")
                 .Must(BeAValidPolicyNumber);
             RuleFor(a => a.GroupNumber)
                 .Cascade(CascadeMode.Stop)
-                .NotEmpty()
+                .NotEmpty().WithMessage("Ins {PropertyName} is empty.")
                 .Must(BeAValidGroupNumber);
             RuleFor(a => a.PlanName)
                 .Must(BeAValidName)
-                .NotEmpty();
+                .NotEmpty().WithMessage("Ins {PropertyName} is empty.");
         }
 
         private bool BeAValidName(string name)

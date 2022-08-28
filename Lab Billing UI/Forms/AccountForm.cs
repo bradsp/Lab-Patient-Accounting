@@ -674,7 +674,8 @@ namespace LabBilling.Forms
             {
                 currentAccount.Insurances[selectedIns].HolderCityStZip = String.Empty;
             }
-            if(tbHolderDOB.MaskCompleted)
+
+            if (tbHolderDOB.MaskCompleted)
                 currentAccount.Insurances[selectedIns].HolderBirthDate = DateTime.Parse(tbHolderDOB.Text);
 
             currentAccount.Insurances[selectedIns].HolderFirstName = tbHolderFirstName.Text;
@@ -724,7 +725,9 @@ namespace LabBilling.Forms
                             //get field name from map
                             string field = controlColumnMap[control].ToString();
                             if (!string.IsNullOrEmpty(field))
+                            {
                                 updatedColumns.Add(field);
+                            }
                         }
                     }
 
@@ -761,9 +764,11 @@ namespace LabBilling.Forms
             tbCertSSN.Text = "";
             cbHolderSex.SelectedIndex = 0;
             cbHolderState.SelectedIndex = 0;
-            cbInsCode.SelectedIndex = -1;
+            cbInsCode.SelectedIndex = 0;
             cbInsOrder.SelectedIndex = 0;
             cbPlanFinCode.SelectedIndex = -1;
+
+            ResetControls(insTabLayoutPanel.Controls);
         }
 
         private void DgvInsurance_CellClick(object sender, DataGridViewCellEventArgs e)

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using LabBilling.Logging;
 using LabBilling.Core.Models;
 using RFClassLibrary;
+using System.Linq;
 
 namespace LabBilling.Core.DataAccess
 {
@@ -59,6 +60,21 @@ namespace LabBilling.Core.DataAccess
                 record.HolderZip = strZip;
             }
             return record;
+        }
+
+        public override bool Update(Ins table, IEnumerable<string> columns)
+        {
+
+            List<string> cols = columns.ToList();
+
+            if(cols.Contains("HolderState") || cols.Contains("HolderCity") || cols.Contains("HolderZip"))
+            {
+                cols.Add("HolderCityStZip");
+                cols.Remove("HolderState");
+                cols.Remove("HolderCity");
+                cols.Remove("HolderZip");
+            }
+            return base.Update(table, cols);
         }
     }
 

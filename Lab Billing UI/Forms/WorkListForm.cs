@@ -80,33 +80,112 @@ namespace LabBilling.Forms
             Cursor.Current = Cursors.Default;
         }
 
-        private void ValidateButton_Click(object sender, EventArgs e)
+        private async void ValidateButton_Click(object sender, EventArgs e)
         {
+            ValidateButton.Enabled = false;
+            PostButton.Enabled = false;
             int cnt = accountGrid.Rows.Count;
             progressBar.Minimum = 0;
             progressBar.Maximum = cnt;
             Cursor.Current = Cursors.WaitCursor;
-            foreach (DataGridViewRow row in accountGrid.Rows)
+            var accountList = (List<AccountSearch>)accountGrid.DataSource;
+
+
+            foreach (var acc in accountList)
             {
-                Application.DoEvents();
-                string accountNo = row.Cells[nameof(AccountSearch.Account)].Value.ToString();
-                if(!string.IsNullOrEmpty(accountNo))
-                {
-                    var account = accountRepository.GetByAccount(accountNo);
-                    if(!accountRepository.Validate(ref account))
-                    {
-                        //account has validation errors - update grid
-                        accountGrid["ValidationErrors", row.Index].Value = account.AccountValidationStatus.validation_text;
-                        accountGrid[nameof(AccountSearch.Status), row.Index].Value = "ERROR";
-                    }
-                    else
-                    {
-                        accountGrid[nameof(AccountSearch.Status), row.Index].Value = "OK";
-                    }
-                }
+                await RunValidationAsync(acc.Account);
                 progressBar.Increment(1);
+
             }
+
+
             Cursor.Current = Cursors.Default;
+            ValidateButton.Enabled = true;
+            PostButton.Enabled = true;
+        }
+
+
+        private void RunValidation(string accountNo)
+        {
+            if (!string.IsNullOrEmpty(accountNo))
+            {
+                int rowIndex =  -1;
+                bool tempAllowUserToAddRows = accountGrid.AllowUserToAddRows;
+                accountGrid.AllowUserToAddRows = false; // Turn off or .Value below will throw null exception
+                DataGridViewRow row = accountGrid.Rows
+                    .Cast<DataGridViewRow>()
+                    .Where(r => r.Cells["Account"].Value.ToString().Equals(accountNo))
+                    .First();
+                rowIndex = row.Index;
+                accountGrid.AllowUserToAddRows = tempAllowUserToAddRows;
+
+                Account account;
+                account =  accountRepository.GetByAccount(accountNo);
+                if (!accountRepository.Validate(ref account))
+                {
+                    //account has validation errors - update grid
+                    accountGrid["ValidationErrors", rowIndex].Value = account.AccountValidationStatus.validation_text;
+                    accountGrid[nameof(AccountSearch.Status), rowIndex].Value = "ERROR";
+                }
+                else
+                {
+                    accountGrid[nameof(AccountSearch.Status), rowIndex].Value = "OK";
+                }
+
+            }
+        }
+
+        private async Task RunValidationAsync(string accountNo)
+        {
+            if (!string.IsNullOrEmpty(accountNo))
+            {
+                int rowIndex = await Task<int>.Run(() =>
+                {
+                    rowIndex = -1;
+                    bool tempAllowUserToAddRows = accountGrid.AllowUserToAddRows;
+                    accountGrid.AllowUserToAddRows = false; // Turn off or .Value below will throw null exception
+                    DataGridViewRow row = accountGrid.Rows
+                        .Cast<DataGridViewRow>()
+                        .Where(r => r.Cells["Account"].Value.ToString().Equals(accountNo))
+                        .First();
+                    rowIndex = row.Index;
+                    accountGrid.AllowUserToAddRows = tempAllowUserToAddRows;
+                    return rowIndex;
+                });
+
+                var (isValid, validationText) = await ValidateAccountAsync(accountNo);
+
+                if (!isValid)
+                {
+                    //account has validation errors - update grid
+                    accountGrid["ValidationErrors", rowIndex].Value = validationText;
+                    accountGrid[nameof(AccountSearch.Status), rowIndex].Value = "ERROR";
+                }
+                else
+                {
+                    accountGrid[nameof(AccountSearch.Status), rowIndex].Value = "OK";
+                }
+            }
+            
+        }
+
+        private async Task<(bool isValid, string validationText)> ValidateAccountAsync(string accountNo)
+        {
+            Account account;
+            account = await Task<Account>.Run(() =>
+            {
+                return accountRepository.GetByAccount(accountNo);
+            });
+
+            if(!accountRepository.Validate(ref account))
+            {
+                return (false, account.AccountValidationStatus.validation_text);
+            }
+            else
+            {
+                return (true, string.Empty);
+            }
+
         }
 
         private void PostButton_Click(object sender, EventArgs e)

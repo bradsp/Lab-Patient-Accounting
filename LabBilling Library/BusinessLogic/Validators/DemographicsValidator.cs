@@ -16,39 +16,40 @@ namespace LabBilling.Core.BusinessLogic.Validators
                 .Cascade(CascadeMode.Stop)
                 .NotEmpty()
                 .Must(BeAValidAddress).WithMessage("{PropertyName} has invalid characters.");
-            RuleFor(a => a.CityStateZip)
-                .Cascade(CascadeMode.Stop)
-                .NotEmpty().WithMessage("{PropertyName} does not have a value")
-                .Equal(",").WithMessage("{PropertyName} has no value");
+            //RuleFor(a => a.CityStateZip)
+            //    .Cascade(CascadeMode.Stop)
+            //    .NotEmpty().WithMessage("Patient Demographic {PropertyName} does not have a value")
+            //    .Equal(",").WithMessage("Patient Demographic {PropertyName} has no value");
             RuleFor(a => a.State)
                 .Cascade(CascadeMode.Stop)
                 .NotEmpty()
-                .Length(2).WithMessage("{PropertyName} must have 2 characters.");
-            RuleFor(a => a.City).NotEmpty();
-            RuleFor(a => a.ZipCode).NotEmpty();
+                .Length(2).WithMessage("Patient State {PropertyName} must have 2 characters.");
+            RuleFor(a => a.City).NotEmpty().WithMessage("Patient {PropertyName} is empty.");
+            RuleFor(a => a.ZipCode).NotEmpty().WithMessage("Patient {PropertyName} is empty.");
             RuleFor(a => a.BirthDate).NotNull();
             RuleFor(a => a.Sex)
                 .Must(sex => sex == "M" || sex == "F")
                 .WithMessage("{PropertyName} is not a valid value.");
-            RuleFor(a => a.GuarRelationToPatient).NotEmpty();
+            RuleFor(a => a.GuarRelationToPatient)
+                .NotEmpty().WithMessage("{PropertyName} is empty.");
             RuleFor(a => a.GuarantorLastName)
-                .NotEmpty();
+                .NotEmpty().WithMessage("{PropertyName} is empty.");
             RuleFor(a => a.GuarantorFirstName)
-                .NotEmpty();
+                .NotEmpty().WithMessage("{PropertyName} is empty.");
             RuleFor(a => a.GuarantorAddress)
                 .Cascade(CascadeMode.Stop)
                 .NotEmpty()
                 .Must(BeAValidAddress).WithMessage("{PropertyName} has invalid characters.");
             RuleFor(a => a.GuarantorCity)
-                .NotEmpty();
+                .NotEmpty().WithMessage("Guarantor {PropertyName} is empty.");
             RuleFor(a => a.GuarantorState)
                 .Cascade(CascadeMode.Stop)
                 .NotEmpty()
-                .Length(2).WithMessage("{PropertyName} must have 2 characters.");
+                .Length(2).WithMessage("Guarantor {PropertyName} must have 2 characters.");
             RuleFor(a => a.GuarantorZipCode)
                 .NotEmpty();
             RuleFor(a => a.ProviderId)
-                .NotEmpty();
+                .NotEmpty().WithMessage("{PropertyName} is empty.");
             RuleFor(a => a.Physician).SetValidator(new PhysicianValidator());
 
         }
