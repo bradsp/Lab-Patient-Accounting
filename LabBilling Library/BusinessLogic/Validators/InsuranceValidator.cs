@@ -16,14 +16,20 @@ namespace LabBilling.Core.BusinessLogic.Validators
                 .NotEmpty().WithMessage("Ins {PropertyName} is empty.");
             RuleFor(a => a.HolderFirstName)
                 .NotEmpty().WithMessage("Ins {PropertyName} is empty.");
+            RuleFor(a => a)
+                .Must((a) =>
+                {
+                    if (string.IsNullOrEmpty(a.PolicyNumber) && string.IsNullOrEmpty(a.GroupNumber))
+                        return false;
+                    else
+                        return true;
+                }).WithMessage("Both Policy Number and Group Number are empty.");
             RuleFor(a => a.PolicyNumber)
-                .Cascade(CascadeMode.Stop)
-                .NotEmpty().WithMessage("Ins {PropertyName} is empty.")
-                .Must(BeAValidPolicyNumber);
+                .Must(BeAValidPolicyNumber).WithMessage("{PropertyName} is not correct format.")
+                .When(a => !string.IsNullOrEmpty(a.PolicyNumber));
             RuleFor(a => a.GroupNumber)
-                .Cascade(CascadeMode.Stop)
-                .NotEmpty().WithMessage("Ins {PropertyName} is empty.")
-                .Must(BeAValidGroupNumber);
+                .Must(BeAValidGroupNumber).WithMessage("{PropertyName} is not a valid format.")
+                .When(a => !string.IsNullOrEmpty(a.GroupNumber));
             RuleFor(a => a.PlanName)
                 .Must(BeAValidName)
                 .NotEmpty().WithMessage("Ins {PropertyName} is empty.");

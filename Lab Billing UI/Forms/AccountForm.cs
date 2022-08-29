@@ -826,34 +826,14 @@ namespace LabBilling.Forms
             cbHolderSex.SelectedText = "--Select--";
             cbInsOrder.SelectedValue = dgvInsurance.SelectedRows[0].Cells[nameof(Ins.Coverage)].Value.ToString();
 
-            if (!Str.ParseName(dgvInsurance.SelectedRows[0].Cells[nameof(Ins.HolderName)].Value.ToString(),
-                out string lname, out string fname, out string mname, out string suffix))
-            {
-                //error parsing name
-                Log.Instance.Info($"Insurance holder name could not be parsed. {dgvInsurance.SelectedRows[0].Cells[nameof(Ins.HolderName)].Value}");
-                tbInsTabMessage.Text += "Error while parsing name into its parts. Name will not be shown in fields.";
-                tbInsTabMessage.Text += Environment.NewLine;
-                tbInsTabMessage.BackColor = Color.Yellow;
-            }
-
-            tbHolderLastName.Text = dgvInsurance.SelectedRows[0].Cells[nameof(Ins.HolderLastName)].Value?.ToString() ?? lname;
-            tbHolderFirstName.Text = dgvInsurance.SelectedRows[0].Cells[nameof(Ins.HolderFirstName)].Value?.ToString() ?? fname;
-            tbHolderMiddleName.Text = dgvInsurance.SelectedRows[0].Cells[nameof(Ins.HolderMiddleName)].Value?.ToString() ?? mname;
+            tbHolderLastName.Text = dgvInsurance.SelectedRows[0].Cells[nameof(Ins.HolderLastName)].Value?.ToString(); // ?? lname;
+            tbHolderFirstName.Text = dgvInsurance.SelectedRows[0].Cells[nameof(Ins.HolderFirstName)].Value?.ToString(); // ?? fname;
+            tbHolderMiddleName.Text = dgvInsurance.SelectedRows[0].Cells[nameof(Ins.HolderMiddleName)].Value?.ToString(); // ?? mname;
             tbHolderAddress.Text = dgvInsurance.SelectedRows[0].Cells[nameof(Ins.HolderAddress)].Value != null ? dgvInsurance.SelectedRows[0].Cells[nameof(Ins.HolderAddress)].Value.ToString() : "";
 
-            if (dgvInsurance.SelectedRows[0].Cells[nameof(Ins.HolderCityStZip)].Value != null 
-                && dgvInsurance.SelectedRows[0].Cells[nameof(Ins.HolderCityStZip)].Value.ToString() != "")
-            {
-                if (!Str.ParseCityStZip(dgvInsurance.SelectedRows[0].Cells[nameof(Ins.HolderCityStZip)].Value.ToString(),
-                    out string city, out string state, out string zip))
-                {
-                    Log.Instance.Info($"Insurance holder city, st, zip could not be parsed. {dgvInsurance.SelectedRows[0].Cells[nameof(Ins.HolderCityStZip)].Value}");
-                    MetroMessageBox.Show(this, "Error parsing City, st zip into its parts. Will not be shown in fields.");
-                }
-                tbHolderCity.Text = city;
-                cbHolderState.SelectedValue = state;
-                tbHolderZip.Text = zip;
-            }
+            tbHolderCity.Text = dgvInsurance.SelectedRows[0].Cells[nameof(Ins.HolderCity)].Value.ToString();
+            cbHolderState.SelectedValue = dgvInsurance.SelectedRows[0].Cells[nameof(Ins.HolderState)].Value.ToString();
+            tbHolderZip.Text = dgvInsurance.SelectedRows[0].Cells[nameof(Ins.HolderZip)].Value.ToString();
 
             cbHolderSex.SelectedValue = dgvInsurance.SelectedRows[0].Cells[nameof(Ins.HolderSex)].Value?.ToString() ?? "";
             if (!string.IsNullOrEmpty(dgvInsurance.SelectedRows[0].Cells[nameof(Ins.HolderBirthDate)].Value?.ToString()))
@@ -1849,17 +1829,24 @@ namespace LabBilling.Forms
 
         private async void btnValidateAccount_Click(object sender, EventArgs e)
         {
-            if (!await Task.Run(() => accDB.Validate(ref currentAccount)))
+            try
             {
-                //has validation errors - do not bill
-                tbValidationResults.Text = currentAccount.AccountValidationStatus.validation_text;
-                lblLastValidated.Text = currentAccount.AccountValidationStatus.mod_date.ToString("G");
+                if (!await Task.Run(() => accDB.Validate(ref currentAccount)))
+                {
+                    //has validation errors - do not bill
+                    tbValidationResults.Text = currentAccount.AccountValidationStatus.validation_text;
+                    lblLastValidated.Text = currentAccount.AccountValidationStatus.mod_date.ToString("G");
+                }
+                else
+                {
+                    //ok to bill
+                    tbValidationResults.Text = "No validation errors.";
+                    lblLastValidated.Text = currentAccount.AccountValidationStatus.mod_date.ToString("G");
+                }
             }
-            else
+            catch(Exception ex)
             {
-                //ok to bill
-                tbValidationResults.Text = "No validation errors.";
-                lblLastValidated.Text = currentAccount.AccountValidationStatus.mod_date.ToString("G");
+                tbValidationResults.Text = $"Exception in validation - report to support. {ex.Message}";
             }
 
         }

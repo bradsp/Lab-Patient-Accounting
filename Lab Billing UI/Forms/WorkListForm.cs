@@ -78,6 +78,8 @@ namespace LabBilling.Forms
             accountGrid.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
             accountGrid.Columns["ValidationErrors"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             Cursor.Current = Cursors.Default;
+
+            statusLabel1.Text = accountGrid.Rows.Count.ToString() + $" records.";
         }
 
         private async void ValidateButton_Click(object sender, EventArgs e)
@@ -93,11 +95,12 @@ namespace LabBilling.Forms
 
             foreach (var acc in accountList)
             {
+                statusLabel2.Text = $"Validating {progressBar.Value} of {accountList.Count}.";
                 await RunValidationAsync(acc.Account);
                 progressBar.Increment(1);
 
             }
-
+            statusLabel2.Text = "Validation complete.";
 
             Cursor.Current = Cursors.Default;
             ValidateButton.Enabled = true;
@@ -129,7 +132,8 @@ namespace LabBilling.Forms
                 }
                 else
                 {
-                    accountGrid[nameof(AccountSearch.Status), rowIndex].Value = "OK";
+                    accountGrid[nameof(AccountSearch.Status), rowIndex].Value = account.Fin.form_type;
+                    accountRepository.UpdateStatus(account.AccountNo, account.Fin.form_type);
                 }
 
             }
@@ -153,37 +157,48 @@ namespace LabBilling.Forms
                     return rowIndex;
                 });
 
-                var (isValid, validationText) = await ValidateAccountAsync(accountNo);
+                var (isValid, validationText, formType) = await ValidateAccountAsync(accountNo);
 
                 if (!isValid)
                 {
                     //account has validation errors - update grid
                     accountGrid["ValidationErrors", rowIndex].Value = validationText;
                     accountGrid[nameof(AccountSearch.Status), rowIndex].Value = "ERROR";
+                    accountGrid[nameof(AccountSearch.Status), rowIndex].Style.BackColor = Color.Red;
+                    accountGrid["ValidationErrors", rowIndex].Style.BackColor = Color.LightPink;
+                    accountGrid[nameof(AccountSearch.Status), rowIndex].Style.ForeColor = Color.White;
                 }
                 else
                 {
-                    accountGrid[nameof(AccountSearch.Status), rowIndex].Value = "OK";
+                    accountGrid[nameof(AccountSearch.Status), rowIndex].Value = formType;
+                    accountRepository.UpdateStatus(accountNo, formType);
+                    accountGrid[nameof(AccountSearch.Status), rowIndex].Style.BackColor = Color.LightGreen;
                 }
             }
-            
         }
 
-        private async Task<(bool isValid, string validationText)> ValidateAccountAsync(string accountNo)
+        private async Task<(bool isValid, string validationText, string formType)> ValidateAccountAsync(string accountNo)
         {
             Account account;
             account = await Task<Account>.Run(() =>
             {
                 return accountRepository.GetByAccount(accountNo);
             });
-
-            if(!accountRepository.Validate(ref account))
+            try
             {
-                return (false, account.AccountValidationStatus.validation_text);
+                if (!accountRepository.Validate(ref account))
+                {
+                    return (false, account.AccountValidationStatus.validation_text, 
+                        account.InsurancePrimary.InsCompany.bill_form ?? account.Fin.form_type);
+                }
+                else
+                {
+                    return (true, string.Empty, account.InsurancePrimary.InsCompany.bill_form ?? account.Fin.form_type);
+                }
             }
-            else
+            catch(Exception ex)
             {
-                return (true, string.Empty);
+                return (false, $"Exception in validation - {ex.Message}", String.Empty);
             }
 
         }
@@ -227,6 +242,7 @@ namespace LabBilling.Forms
             if (selectedValue != null)
             {
                 accountGrid.DataSource = accounts.Where(a => a.FinCode == selectedValue.ToString()).ToList();
+                statusLabel1.Text = accountGrid.Rows.Count.ToString() + $" rows.";
             }
         }
     }

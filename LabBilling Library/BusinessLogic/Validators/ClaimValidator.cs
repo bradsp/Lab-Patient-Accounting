@@ -8,7 +8,7 @@ using LabBilling.Core.Models;
 using LabBilling.Core.DataAccess;
 
 
-namespace LabBilling.Core.BusinessLogic.Validators 
+namespace LabBilling.Core.BusinessLogic.Validators
 {
     public class ClaimValidator : AbstractValidator<Account>
     {
@@ -30,48 +30,51 @@ namespace LabBilling.Core.BusinessLogic.Validators
                 .GreaterThan(0).WithMessage("No charges to bill.");
 
 
-            When(a => a.Fin.type == "M", () => {
+            When(a => a.Fin.type == "M", () =>
+            {
+                RuleFor(a => a.Pat)
+                    .SetValidator(new DemographicsValidator());
 
-                    RuleFor(a => a.Pat)
-                        .SetValidator(new DemographicsValidator());
-                    RuleForEach(a => a.Insurances)
-                        .SetValidator(new InsuranceValidator());
+                RuleForEach(a => a.Insurances)
+                    .SetValidator(new InsuranceValidator()).When(a => a.FinCode != "E");
 
-                    RuleFor(a => a.Charges.Sum(x => x.Quantity))
-                        .GreaterThan(0).WithMessage("Charge qty nets zero")
-                        .When(ac => ac.Charges.Count > 0);
-                    RuleForEach(a => a.Charges)
-                        .SetValidator(new ChargeValidator())
-                        .When(ac => ac.Charges.Count > 0);
+                RuleFor(a => a.FinCode)
+                    .Cascade(CascadeMode.Stop)
+                    .NotEmpty().WithMessage("{PropertyName} is empty.")
+                    .Must((a, f) => f == a.InsurancePrimary.FinCode)
+                    .WithMessage("Account fin code does not equal insurance fin code")
+                    .When(ac => ac.InsurancePrimary != null);
 
-                    RuleFor(a => a.FinCode)
-                        .Cascade(CascadeMode.Stop)
-                        .NotEmpty().WithMessage("{PropertyName} is empty.")
-                        .Must((a, f) => f == a.InsurancePrimary.FinCode)
-                        .WithMessage("Account fin code does not equal insurance fin code")
-                        .When(ac => ac.InsurancePrimary != null);
+                RuleFor(a => a.TotalCharges)
+                    .GreaterThan(0);
+                RuleFor(a => a.Charges.Sum(x => x.Quantity))
+                    .GreaterThan(0).WithMessage("Charge qty nets zero")
+                    .When(ac => ac.Charges.Count > 0);
+                RuleForEach(a => a.Charges)
+                    .SetValidator(new ChargeValidator())
+                    .When(ac => ac.Charges.Count > 0);
 
-                    RuleFor(c => c)
-                        .Must(NotContainOnlyVenipunctureCharge)
-                        .WithMessage("Venipuncture is only charge on account");
+                RuleFor(c => c)
+                    .Must(NotContainOnlyVenipunctureCharge)
+                    .WithMessage("Venipuncture is only charge on account");
 
-                    RuleFor(a => a.Charges)
-                        .Must(NotContainMultipleVenipunctures).WithMessage("Multiple venipuncture charges on account")
-                        .When(a => a.Charges != null);
+                RuleFor(a => a.Charges)
+                    .Must(NotContainMultipleVenipunctures).WithMessage("Multiple venipuncture charges on account")
+                    .When(a => a.Charges != null);
 
-                    RuleFor(a => a)
-                        .Must(HaveMatchingPersonAndInsRelation).WithMessage("Person relation and insurance relation do not match")
-                        .Must(MatchPatientNameAndInsuranceHolderName).WithMessage("Person Name and Insurance Holder Name do not match")
-                        .When(a => a.Pat != null && a.InsurancePrimary != null);
+                RuleFor(a => a)
+                    .Must(HaveMatchingPersonAndInsRelation).WithMessage("Person relation and insurance relation do not match")
+                    .Must(MatchPatientNameAndInsuranceHolderName).WithMessage("Person Name and Insurance Holder Name do not match")
+                    .When(a => a.Pat != null && a.InsurancePrimary != null);
 
-                    RuleFor(a => a.LmrpErrors)
-                        .Empty().WithMessage("LMRP Rule Violation");
+                RuleFor(a => a.LmrpErrors)
+                    .Empty().WithMessage("LMRP Rule Violation");
             });
 
             When(a => a.Fin.type != "M", () =>
             {
-                
-                
+
+
             });
 
         }
@@ -85,7 +88,7 @@ namespace LabBilling.Core.BusinessLogic.Validators
 
         private bool NotContainOnlyVenipunctureCharge(Account account)
         {
-            if(account.cpt4List.Distinct().Count() == 1)
+            if (account.cpt4List.Distinct().Count() == 1)
             {
                 if (account.cpt4List[0] == "36415")
                 {
@@ -103,7 +106,7 @@ namespace LabBilling.Core.BusinessLogic.Validators
             if (total > 1)
                 return false;
             else
-                return true;          
+                return true;
         }
 
         private bool HaveMatchingPersonAndInsRelation(Account account)
@@ -139,6 +142,6 @@ namespace LabBilling.Core.BusinessLogic.Validators
             }
             return true;
         }
-       
+
     }
 }

@@ -228,6 +228,17 @@ namespace LabBilling.Core.DataAccess
             return base.Update(table, columns);
         }
 
+        public int UpdateStatus(string accountNo, string status)
+        {
+            return dbConnection.Update<Account>("set status = @0, mod_date = @1, mod_user = @2, mod_prg = @3, mod_host = @4 where account = @5",
+                status,
+                DateTime.Now,
+                Environment.UserName.ToString(),
+                System.AppDomain.CurrentDomain.FriendlyName,
+                Environment.MachineName,
+                accountNo);
+        }
+
         public bool ChangeDateOfService(ref Account table, DateTime newDate, string reason_comment)
         {
             Log.Instance.Trace($"Entering");

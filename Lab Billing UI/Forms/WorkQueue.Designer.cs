@@ -128,7 +128,7 @@
             this.tsbViewErrList});
             this.tsMain.Location = new System.Drawing.Point(0, 0);
             this.tsMain.Name = "tsMain";
-            this.tsMain.Size = new System.Drawing.Size(749, 25);
+            this.tsMain.Size = new System.Drawing.Size(749, 27);
             this.tsMain.TabIndex = 0;
             this.tsMain.Text = "toolStrip1";
             this.tsMain.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.tsMain_ItemClicked);
@@ -139,14 +139,14 @@
             this.tsbValidate.Image = ((System.Drawing.Image)(resources.GetObject("tsbValidate.Image")));
             this.tsbValidate.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbValidate.Name = "tsbValidate";
-            this.tsbValidate.Size = new System.Drawing.Size(105, 22);
+            this.tsbValidate.Size = new System.Drawing.Size(105, 24);
             this.tsbValidate.Text = "Validate Accounts";
             this.tsbValidate.Click += new System.EventHandler(this.Validate_Accounts_Click);
             // 
             // toolStripSeparator5
             // 
             this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(6, 25);
+            this.toolStripSeparator5.Size = new System.Drawing.Size(6, 27);
             // 
             // tssbLoad
             // 
@@ -171,7 +171,7 @@
             this.tsbPost.Image = ((System.Drawing.Image)(resources.GetObject("tsbPost.Image")));
             this.tsbPost.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbPost.Name = "tsbPost";
-            this.tsbPost.Size = new System.Drawing.Size(66, 22);
+            this.tsbPost.Size = new System.Drawing.Size(66, 24);
             this.tsbPost.Text = "Post to SSI";
             this.tsbPost.Click += new System.EventHandler(this.tsbPost_Click);
             // 
@@ -179,13 +179,13 @@
             // 
             this.tscbFinCodes.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.tscbFinCodes.Name = "tscbFinCodes";
-            this.tscbFinCodes.Size = new System.Drawing.Size(121, 25);
+            this.tscbFinCodes.Size = new System.Drawing.Size(121, 27);
             this.tscbFinCodes.SelectedIndexChanged += new System.EventHandler(this.tscbFinCodes_SelectedIndexChanged);
             // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 25);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 27);
             // 
             // toolStripButton1
             // 
@@ -202,7 +202,7 @@
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 27);
             // 
             // tsbPrintGrid
             // 
@@ -210,14 +210,14 @@
             this.tsbPrintGrid.Image = ((System.Drawing.Image)(resources.GetObject("tsbPrintGrid.Image")));
             this.tsbPrintGrid.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbPrintGrid.Name = "tsbPrintGrid";
-            this.tsbPrintGrid.Size = new System.Drawing.Size(61, 22);
+            this.tsbPrintGrid.Size = new System.Drawing.Size(61, 24);
             this.tsbPrintGrid.Text = "Print Grid";
             this.tsbPrintGrid.Click += new System.EventHandler(this.tsbPrintGrid_Click);
             // 
             // toolStripSeparator6
             // 
             this.toolStripSeparator6.Name = "toolStripSeparator6";
-            this.toolStripSeparator6.Size = new System.Drawing.Size(6, 25);
+            this.toolStripSeparator6.Size = new System.Drawing.Size(6, 27);
             // 
             // tsbViewErrList
             // 
@@ -225,7 +225,7 @@
             this.tsbViewErrList.Image = ((System.Drawing.Image)(resources.GetObject("tsbViewErrList.Image")));
             this.tsbViewErrList.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbViewErrList.Name = "tsbViewErrList";
-            this.tsbViewErrList.Size = new System.Drawing.Size(85, 22);
+            this.tsbViewErrList.Size = new System.Drawing.Size(85, 24);
             this.tsbViewErrList.Text = "View Error List";
             this.tsbViewErrList.ToolTipText = "Displays the results of the last Validation with the number of occurances.";
             this.tsbViewErrList.Click += new System.EventHandler(this.tsbViewErrList_Click);
@@ -283,7 +283,7 @@
             // scMain
             // 
             this.scMain.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.scMain.Location = new System.Drawing.Point(0, 25);
+            this.scMain.Location = new System.Drawing.Point(0, 27);
             this.scMain.Name = "scMain";
             // 
             // scMain.Panel1
@@ -294,7 +294,7 @@
             // 
             this.scMain.Panel2.Controls.Add(this.scCombo);
             this.scMain.Panel2Collapsed = true;
-            this.scMain.Size = new System.Drawing.Size(749, 420);
+            this.scMain.Size = new System.Drawing.Size(749, 418);
             this.scMain.SplitterDistance = 300;
             this.scMain.TabIndex = 2;
             // 
@@ -339,7 +339,7 @@
             this.dgvAccount.RowTemplate.DefaultCellStyle.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.dgvAccount.RowTemplate.Height = 24;
             this.dgvAccount.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvAccount.Size = new System.Drawing.Size(749, 420);
+            this.dgvAccount.Size = new System.Drawing.Size(749, 418);
             this.dgvAccount.TabIndex = 1;
             this.dgvAccount.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dgvAccount_ColumnHeaderMouseClick);
             this.dgvAccount.RowHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dgvAccount_RowHeaderMouseClick);
@@ -565,6 +565,7 @@
             // tstbSearchInfo
             // 
             this.tstbSearchInfo.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
+            this.tstbSearchInfo.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.tstbSearchInfo.Name = "tstbSearchInfo";
             this.tstbSearchInfo.Size = new System.Drawing.Size(100, 23);
             // 

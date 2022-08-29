@@ -32,6 +32,20 @@ namespace LabBilling.Core.DataAccess
 
             foreach(Ins ins in records)
             {
+                if(string.IsNullOrEmpty(ins.HolderLastName) || string.IsNullOrEmpty(ins.HolderFirstName))
+                {
+                    if (!Str.ParseName(ins.HolderName.ToString(),
+                        out string lname, out string fname, out string mname, out string suffix))
+                    {
+                        //error parsing name
+                        Log.Instance.Info($"Insurance holder name could not be parsed. {ins.HolderName}");
+                    }
+
+                    ins.HolderLastName = lname;
+                    ins.HolderFirstName = fname;
+                    ins.HolderMiddleName = mname;
+                }
+
                 ins.InsCompany = dbConnection.SingleOrDefault<InsCompany>("where code = @0", ins.InsCode);
                 if (ins.InsCompany == null)
                     ins.InsCompany = new InsCompany();

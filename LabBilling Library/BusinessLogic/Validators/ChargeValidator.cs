@@ -13,7 +13,8 @@ namespace LabBilling.Core.BusinessLogic.Validators
         public ChargeValidator()
         {
             RuleFor(c => c.NetAmount)
-                .GreaterThan(0);
+                .GreaterThan(0)
+                .When(c => !c.IsCredited);
 
             RuleForEach(c => c.ChrgDetails)
                 .SetValidator(new ChargeDetailValidator());

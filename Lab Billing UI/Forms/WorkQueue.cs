@@ -5068,43 +5068,6 @@ namespace LabBilling.Forms
 
         private delegate string DelegateValidateData(DataRow drAcc);
 
-        private void ValidateAccountsClick(object sender, EventArgs e)
-        {
-            Log.Instance.Debug($"Entering");
-            if (dgvAccount.Rows.Count <= 0)
-            {
-                tsslNote.Text = "Nothing in grid.";
-                Application.DoEvents();
-                return;
-            }
-            tsslNote.Text = "Clearing Error Totals";
-            m_dicErrorTotals.Clear();
-
-            tsbValidate.Enabled = false;
-
-            tscbFinCodes.Enabled = false;
-            tspbCount.Value = 0;
-            tspbCount.Step = 1;
-            tspbCount.Maximum = dgvAccount.Rows.Count;
-
-            DataGridViewCellStyle styleInfoLMRP = new DataGridViewCellStyle();
-            styleInfoLMRP.BackColor = Color.PaleVioletRed;
-            DataGridViewCellStyle styleInfoErr = new DataGridViewCellStyle();
-            styleInfoErr.BackColor = Color.PaleGoldenrod;
-            int nLmrp = 0;
-            int nErr = 0;
-            int nValid = 0;
-
-            DataRow[] drArray = m_dsAccount.Tables["ACC"].Select(m_strRequery, "pat_name");
-
-            foreach (DataGridViewRow dr in dgvAccount.Rows)
-            {
-
-
-            }
-
-        }
-
 
         private void Validate_Accounts_Click(object sender, EventArgs e)
         {
