@@ -1,4 +1,6 @@
-﻿using System.Text.RegularExpressions;
+﻿using System;
+using System.Text.RegularExpressions;
+using System.Linq;
 
 namespace RFClassLibrary
 {
@@ -74,6 +76,21 @@ namespace RFClassLibrary
         public static bool ContainsCaseInsensitive(this string source, string substring)
         {
             return source?.IndexOf(substring, System.StringComparison.OrdinalIgnoreCase) > -1;
+        }
+
+        /// <summary>
+        /// Determines if string is included in a list of items.
+        /// </summary>
+        /// <param name="item"></param>
+        /// <param name="items"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        public static bool In(this string item, params string[] items)
+        {
+            if (items == null)
+                throw new ArgumentNullException("items");
+
+            return items.Contains(item);
         }
     }
 }

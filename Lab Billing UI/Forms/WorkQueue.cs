@@ -5351,7 +5351,6 @@ namespace LabBilling.Forms
                     ((DataRowView)dgvAccount.Rows[e.RowIndex].DataBoundItem).Row.RowError = "";
 
                 }
-
             }
         }
 

@@ -53,7 +53,7 @@ namespace LabBilling.Core.DataAccess
 
             if(!Str.ParseName(record.PatFullName, out string strLastName, out string strFirstName, out string strMidName, out string strSuffix))
             {
-                this.Errors = string.Format("Patient name could not be parsed. {0} {1}", record.PatFullName, record.AccountNo);
+                this.Errors = $"Patient name could not be parsed. {record.PatFullName} {record.AccountNo}";
             }
             else
             {
@@ -68,7 +68,7 @@ namespace LabBilling.Core.DataAccess
                 if (!string.IsNullOrEmpty(this.Errors))
                     this.Errors += Environment.NewLine;
 
-                this.Errors += string.Format("Guarantor name could not be parsed. {0} {1}", record.GuarantorFullName, record.AccountNo);
+                this.Errors += $"Guarantor name could not be parsed. {record.GuarantorFullName} {record.AccountNo}";
             }
             else
             {
@@ -76,6 +76,17 @@ namespace LabBilling.Core.DataAccess
                 record.GuarantorFirstName = strGuarFirstName;
                 record.GuarantorMiddleName = strGuarMidName;
                 record.GuarantorNameSuffix = strGuarSuffix;
+            }
+
+            if (!Str.ParseCityStZip(record.CityStateZip, out string strCity, out string strState, out string strZip))
+            {
+                this.Errors += $"Patient CityStZip could not be parsed. {record.CityStateZip} - {record.AccountNo}";
+            }
+            else
+            {
+                record.City = strCity;
+                record.State = strState;
+                record.ZipCode = strZip;
             }
 
             string amaYear = FunctionRepository.GetAMAYear(accRecord.TransactionDate.GetValueOrDefault(DateTime.Now));

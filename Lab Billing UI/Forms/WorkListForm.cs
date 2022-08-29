@@ -30,6 +30,8 @@ namespace LabBilling.Forms
         AccountSearchRepository accountSearchRepository;
         SystemParametersRepository systemParametersRepository;
         List<AccountSearch> accounts;
+        bool tasksRunning = false;
+        bool requestAbort = false;
 
         private void WorkListForm_Load(object sender, EventArgs e)
         {
@@ -92,14 +94,22 @@ namespace LabBilling.Forms
             Cursor.Current = Cursors.WaitCursor;
             var accountList = (List<AccountSearch>)accountGrid.DataSource;
 
-
+            tasksRunning = true;
             foreach (var acc in accountList)
             {
+                if (requestAbort)
+                {
+                    statusLabel2.Text = "Aborting...";
+                    tasksRunning = false;
+                    this.Close();
+                    break;
+                }
                 statusLabel2.Text = $"Validating {progressBar.Value} of {accountList.Count}.";
                 await RunValidationAsync(acc.Account);
                 progressBar.Increment(1);
 
             }
+            tasksRunning = false;
             statusLabel2.Text = "Validation complete.";
 
             Cursor.Current = Cursors.Default;
@@ -189,11 +199,11 @@ namespace LabBilling.Forms
                 if (!accountRepository.Validate(ref account))
                 {
                     return (false, account.AccountValidationStatus.validation_text, 
-                        account.InsurancePrimary.InsCompany.bill_form ?? account.Fin.form_type);
+                        account.BillForm);
                 }
                 else
                 {
-                    return (true, string.Empty, account.InsurancePrimary.InsCompany.bill_form ?? account.Fin.form_type);
+                    return (true, string.Empty, account.BillForm);
                 }
             }
             catch(Exception ex)
@@ -243,6 +253,30 @@ namespace LabBilling.Forms
             {
                 accountGrid.DataSource = accounts.Where(a => a.FinCode == selectedValue.ToString()).ToList();
                 statusLabel1.Text = accountGrid.Rows.Count.ToString() + $" rows.";
+            }
+        }
+
+        private void WorkListForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if(tasksRunning)
+            {
+                if(MessageBox.Show("Validation process is running. Do you want to abort?", "Abort Validation?", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
+                    == DialogResult.Yes)
+                {
+                    //code to abort process
+                    requestAbort = true;
+                    e.Cancel = true;
+                    return;
+                }
+                else
+                {
+                    e.Cancel = true;
+                    return;
+                }
+            }
+            else
+            {
+                this.Close();
             }
         }
     }

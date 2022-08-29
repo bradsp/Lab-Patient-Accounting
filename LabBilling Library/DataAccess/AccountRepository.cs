@@ -26,6 +26,7 @@ namespace LabBilling.Core.DataAccess
         private readonly AccountValidationStatusRepository accountValidationStatusRepository;
         private readonly LMRPRuleRepository lmrpRuleRepository;
         private readonly FinRepository finRepository;
+        private readonly SystemParametersRepository systemParametersRepository;
 
         public AccountRepository(string connectionString) : base(connectionString)
         {
@@ -42,6 +43,7 @@ namespace LabBilling.Core.DataAccess
             accountValidationStatusRepository = new AccountValidationStatusRepository(_connection);
             lmrpRuleRepository = new LMRPRuleRepository(_connection);
             finRepository = new FinRepository(_connection);
+            systemParametersRepository = new SystemParametersRepository(_connection);
         }
 
         public AccountRepository(PetaPoco.Database db) : base(db)
@@ -59,6 +61,7 @@ namespace LabBilling.Core.DataAccess
             accountValidationStatusRepository = new AccountValidationStatusRepository(db);
             lmrpRuleRepository = new LMRPRuleRepository(db);
             finRepository = new FinRepository(db);
+            systemParametersRepository = new SystemParametersRepository(db);
         }
 
         public override Account GetById(int id)
@@ -84,6 +87,12 @@ namespace LabBilling.Core.DataAccess
                 record.PatNameSuffix = strSuffix;
             }
 
+            if (record.ClientMnem != null)
+            {
+                record.Client = clientRepository.GetClient(record.ClientMnem);
+                record.ClientName = record.Client.cli_nme;
+            }
+
             if (!demographicsOnly)
             {
                 record.Pat = patRepository.GetByAccount(account);
@@ -97,12 +106,52 @@ namespace LabBilling.Core.DataAccess
                 record.BillingActivities = billingActivityRepository.GetByAccount(account);
                 record.AccountValidationStatus = accountValidationStatusRepository.GetByAccount(account);
                 record.Fin = finRepository.GetFin(record.FinCode);
-            }
-            Client client;
-            if (record.ClientMnem != null)
-            {
-                client = clientRepository.GetClient(record.ClientMnem);
-                record.ClientName = client.cli_nme;
+
+                DateTime outpBillStartDate;
+                DateTime questStartDate = new DateTime(2012,10,1);
+                DateTime questEndDate = new DateTime(2020,5,31);
+                DateTime arbitraryEndDate = new DateTime(2016, 12, 31);
+
+                if(!DateTime.TryParse(systemParametersRepository.GetByKey("outpatient_bill_start"), out outpBillStartDate))
+                {
+                    //set default date
+                    outpBillStartDate = new DateTime(2012, 4, 1);
+                }
+                if(record.Client.outpatient_billing)
+                {
+                    record.BillingType = "REF LAB";
+                    
+                    if(record.TransactionDate.IsBetween(outpBillStartDate, arbitraryEndDate)
+                        && record.TransactionDate.IsBetween(questStartDate, questEndDate))
+                    {
+                        if (record.PrimaryInsuranceCode.In("BC", "UMR", "GOLDEN1", "HP", "AETNA", "AG", "HUM", "SECP", "BCA"))
+                            record.BillForm = "UBOP";
+                        else if (record.FinCode == "D")
+                            record.BillForm = "QUEST";
+                        else
+                            record.BillForm = "UNDEFINED";
+                    }
+
+                }
+                else
+                {
+                    record.BillingType = "REF LAB";
+                    if(record.FinCode == "B" && record.InsurancePrimary.PolicyNumber.StartsWith("ZXK"))
+                    {
+                        record.BillForm = "QUEST";
+                    }
+                    else if(record.FinCode == "D" && record.TransactionDate.IsBetween(questStartDate, questEndDate))
+                    {
+                        record.BillForm = "QUEST";
+                    }
+                    else
+                    {
+                        if (record.InsurancePrimary == null)
+                            record.BillForm = "UNDEFINED";
+                        else
+                            record.BillForm = record.InsurancePrimary.InsCompany.bill_form;
+                    }
+                }
             }
 
             object result;

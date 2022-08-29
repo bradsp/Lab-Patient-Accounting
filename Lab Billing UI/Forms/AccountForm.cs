@@ -425,41 +425,24 @@ namespace LabBilling.Forms
             lblTotalPmtAdj.Text = (currentAccount.TotalContractual + currentAccount.TotalPayments + currentAccount.TotalWriteOff).ToString("c");
             lblBalance.Text = currentAccount.Balance.ToString("c");
             
-            if (!Str.ParseName(currentAccount.PatFullName, out string strLname, out string strFname, out string strMidName, out string strSuffix))
-            {
-                Log.Instance.Debug($"Entering");
-                Log.Instance.Warn("Error parsing patient name. Parsed data will not be shown.");
-                DemoStatusMessages.AppendText("Error parsing patient name. Parsed data will not be shown.");
-                DemoStatusMessages.AppendText(Environment.NewLine);
-                DemoStatusMessages.BackColor = Color.Yellow;
-            }
-
-            if (!Str.ParseCityStZip(currentAccount.Pat.CityStateZip, out string strCity, out string strState, out string strZip))
-            {
-                Log.Instance.Debug($"Entering");
-                Log.Instance.Warn("Error parsing City St Zip. Data will not be shown.");
-                DemoStatusMessages.AppendText("Error parsing City St Zip. Data will not be shown.");
-                DemoStatusMessages.AppendText(Environment.NewLine);
-                DemoStatusMessages.BackColor = Color.Yellow;
-            }
             lblPatientFullName.Text = currentAccount.PatFullName;
-            tbLastName.Text = strLname;
+            tbLastName.Text = currentAccount.PatLastName;
             tbLastName.BackColor = Color.White;
-            tbFirstName.Text = strFname;
+            tbFirstName.Text = currentAccount.PatFirstName;
             tbFirstName.BackColor = Color.White;
-            tbMiddleName.Text = strMidName;
+            tbMiddleName.Text = currentAccount.PatMiddleName;
             tbMiddleName.BackColor = Color.White;
-            tbSuffix.Text = strSuffix;
+            tbSuffix.Text = currentAccount.PatNameSuffix;
             tbSuffix.BackColor = Color.White;
             tbAddress1.Text = currentAccount.Pat.Address1;
             tbAddress1.BackColor = Color.White;
             tbAddress2.Text = currentAccount.Pat.Address2;
             tbAddress2.BackColor = Color.White;
-            tbCity.Text = currentAccount.Pat.City != null ? currentAccount.Pat.City : strCity;
+            tbCity.Text = currentAccount.Pat.City; // != null ? currentAccount.Pat.City : strCity;
             tbCity.BackColor = Color.White;
-            cbState.SelectedValue = currentAccount.Pat.State != null ? currentAccount.Pat.State : strState;
+            cbState.SelectedValue = currentAccount.Pat.State; // != null ? currentAccount.Pat.State : strState;
             cbState.BackColor = Color.White;
-            tbZipcode.Text = currentAccount.Pat.ZipCode != null ? currentAccount.Pat.ZipCode : strZip;
+            tbZipcode.Text = currentAccount.Pat.ZipCode; // != null ? currentAccount.Pat.ZipCode : strZip;
             tbZipcode.BackColor = Color.White;
             tbPhone.Text = currentAccount.Pat.PrimaryPhone;
             tbPhone.BackColor = Color.White;
@@ -474,19 +457,10 @@ namespace LabBilling.Forms
             cbMaritalStatus.SelectedValue = currentAccount.Pat.MaritalStatus != null ? currentAccount.Pat.MaritalStatus : "";
             cbMaritalStatus.BackColor = Color.White;
 
-            if (!Str.ParseName(currentAccount.Pat.GuarantorFullName, out strLname, out strFname, out strMidName, out strSuffix))
-            {
-                Log.Instance.Info($"Guarantor name could not be parsed. {currentAccount.Pat.GuarantorFullName}");
-                Log.Instance.Warn("Error parsing guarantor name. Name may be blank. Parsed data will not be shown.");
-                DemoStatusMessages.AppendText("Error parsing guarantor name. Name may be blank. Parsed data will not be shown.");
-                DemoStatusMessages.AppendText(Environment.NewLine);
-                DemoStatusMessages.BackColor = Color.Yellow;
-            }
-
-            tbGuarantorLastName.Text = strLname;
-            tbGuarFirstName.Text = strFname;
-            tbGuarMiddleName.Text = strMidName;
-            tbGuarSuffix.Text = strSuffix;
+            tbGuarantorLastName.Text = currentAccount.Pat.GuarantorLastName;
+            tbGuarFirstName.Text = currentAccount.Pat.GuarantorFirstName;
+            tbGuarMiddleName.Text = currentAccount.Pat.GuarantorMiddleName;
+            tbGuarSuffix.Text = currentAccount.Pat.GuarantorNameSuffix;
             tbGuarantorAddress.Text = currentAccount.Pat.GuarantorAddress;
             tbGuarCity.Text = currentAccount.Pat.GuarantorCity;
             cbGuarState.SelectedValue = currentAccount.Pat.GuarantorState != null ? currentAccount.Pat.GuarantorState : "";
@@ -496,6 +470,7 @@ namespace LabBilling.Forms
 
             if (currentAccount.Insurances.Count() > 0)
             {
+                dgvInsurance.Rows.Clear();
                 DataGridViewButtonColumn deleteCol = new DataGridViewButtonColumn
                 {
                     Name = "delete",
@@ -525,12 +500,13 @@ namespace LabBilling.Forms
                 dgvInsurance.Columns[nameof(Ins.rowguid)].Visible = false;
                 dgvInsurance.Columns[nameof(Ins.Account)].Visible = false;
                 dgvInsurance.Columns[nameof(Ins.InsCompany)].Visible = false;
+                dgvInsurance.Columns[nameof(Ins.deleted)].Visible = false;
 
                 dgvInsurance.Columns[nameof(Ins.PlanName)].DisplayIndex = 1;
                 dgvInsurance.Columns[nameof(Ins.PlanAddress1)].DisplayIndex = 2;
                 dgvInsurance.Columns[nameof(Ins.PolicyNumber)].DisplayIndex = 3;
 
-                dgvInsurance.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCellsExceptHeader);
+                dgvInsurance.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
                 //dgvInsurance.Columns[nameof(Ins.HolderName)].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
 
                 cbInsOrder.SelectedIndex = 0;

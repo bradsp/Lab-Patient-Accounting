@@ -92,6 +92,8 @@ namespace LabBilling.Core.Models
         [Ignore]
         public AccountValidationStatus AccountValidationStatus { get; set; } = new AccountValidationStatus();
         [Ignore]
+        public Client Client { get; set; }
+        [Ignore]
         public Guid rowguid { get; set; }
 
         [Ignore]
@@ -150,6 +152,11 @@ namespace LabBilling.Core.Models
 
         [Ignore]
         public Fin Fin { get; set; } = new Fin();
+
+        [Ignore]
+        public string BillForm { get; set; }
+        [Ignore]
+        public string BillingType { get; set; }
     }
 
 }

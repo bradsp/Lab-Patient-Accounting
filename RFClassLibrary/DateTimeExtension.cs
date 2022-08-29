@@ -206,5 +206,34 @@ namespace RFClassLibrary
             return dateTime == new DateTime(dateTime.Year, dateTime.Month, 1).AddMonths(1).AddDays(-1);
         }
 
+        /// <summary>
+        /// Compares date with start and end dates.
+        /// </summary>
+        /// <param name="date"></param>
+        /// <param name="start"></param>
+        /// <param name="end"></param>
+        /// <returns>Return True if date is between start and end dates, otherwise False.</returns>
+        public static bool IsBetween(this DateTime? date, DateTime start, DateTime end)
+        {
+            if (date == null)
+                return false;
+
+            return date >= start && date <= end;
+        }
+
+        /// <summary>
+        /// Compares date with start and end dates.
+        /// </summary>
+        /// <param name="date"></param>
+        /// <param name="start"></param>
+        /// <param name="end"></param>
+        /// <returns>Return True if date is between start and end dates, otherwise False.</returns>
+        public static bool IsBetween(this DateTime date, DateTime start, DateTime end)
+        {
+            return date >= start && date <= end;
+        }
+
+
+
     }
 }
