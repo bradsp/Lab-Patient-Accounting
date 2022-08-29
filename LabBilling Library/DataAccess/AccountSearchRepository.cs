@@ -91,7 +91,7 @@ namespace LabBilling.Core.DataAccess
                     }
                     command.Where($"{propName} {op} '{searchText}'");
                 }
-
+                command.OrderBy(GetRealColumn(typeof(AccountSearch), nameof(AccountSearch.Name)));
                 return dbConnection.Fetch<AccountSearch>(command);
             }
             catch (NullReferenceException nre)

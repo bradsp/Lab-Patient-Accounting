@@ -131,7 +131,6 @@ namespace LabBilling.Core.DataAccess
                         else
                             record.BillForm = "UNDEFINED";
                     }
-
                 }
                 else
                 {

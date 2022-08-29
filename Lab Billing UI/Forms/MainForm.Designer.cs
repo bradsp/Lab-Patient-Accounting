@@ -73,6 +73,7 @@
             this.systemParametersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.interfaceMappingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.interfaceMonitorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.claimValidationRulesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.windowsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cascadeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tileHorizontalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -83,7 +84,7 @@
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.windowManagerPanel1 = new MDIWindowManager.WindowManagerPanel();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.claimValidationRulesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.worklistToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.DashboardMenu.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -106,6 +107,7 @@
             // 
             this.billingToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.accountToolStripMenuItem,
+            this.worklistToolStripMenuItem,
             this.workqueuesToolStripMenuItem,
             this.duplicateAccountsToolStripMenuItem,
             this.paymentProcessingToolStripMenuItem,
@@ -389,6 +391,12 @@
             resources.ApplyResources(this.interfaceMonitorToolStripMenuItem, "interfaceMonitorToolStripMenuItem");
             this.interfaceMonitorToolStripMenuItem.Click += new System.EventHandler(this.interfaceMonitorToolStripMenuItem_Click);
             // 
+            // claimValidationRulesToolStripMenuItem
+            // 
+            this.claimValidationRulesToolStripMenuItem.Name = "claimValidationRulesToolStripMenuItem";
+            resources.ApplyResources(this.claimValidationRulesToolStripMenuItem, "claimValidationRulesToolStripMenuItem");
+            this.claimValidationRulesToolStripMenuItem.Click += new System.EventHandler(this.claimValidationRulesToolStripMenuItem_Click);
+            // 
             // windowsToolStripMenuItem
             // 
             this.windowsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -468,11 +476,11 @@
             resources.ApplyResources(this.panel1, "panel1");
             this.panel1.Name = "panel1";
             // 
-            // claimValidationRulesToolStripMenuItem
+            // worklistToolStripMenuItem
             // 
-            this.claimValidationRulesToolStripMenuItem.Name = "claimValidationRulesToolStripMenuItem";
-            resources.ApplyResources(this.claimValidationRulesToolStripMenuItem, "claimValidationRulesToolStripMenuItem");
-            this.claimValidationRulesToolStripMenuItem.Click += new System.EventHandler(this.claimValidationRulesToolStripMenuItem_Click);
+            this.worklistToolStripMenuItem.Name = "worklistToolStripMenuItem";
+            resources.ApplyResources(this.worklistToolStripMenuItem, "worklistToolStripMenuItem");
+            this.worklistToolStripMenuItem.Click += new System.EventHandler(this.worklistToolStripMenuItem_Click);
             // 
             // MainForm
             // 
@@ -553,5 +561,6 @@
         private System.Windows.Forms.ToolStripMenuItem interfaceMonitorToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem professionalBillingToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem claimValidationRulesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem worklistToolStripMenuItem;
     }
 }

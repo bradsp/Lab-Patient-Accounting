@@ -127,11 +127,17 @@
   <data name="accountToolStripMenuItem.Text" xml:space="preserve">
     <value>Account</value>
   </data>
+  <data name="worklistToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>194, 22</value>
+  </data>
+  <data name="worklistToolStripMenuItem.Text" xml:space="preserve">
+    <value>Worklist</value>
+  </data>
   <data name="workqueuesToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>194, 22</value>
   </data>
   <data name="workqueuesToolStripMenuItem.Text" xml:space="preserve">
-    <value>Workqueues</value>
+    <value>Workqueues (legacy)</value>
   </data>
   <data name="duplicateAccountsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>194, 22</value>
@@ -163,35 +169,11 @@
   <data name="badDebtMaintenanceToolStripMenuItem.Text" xml:space="preserve">
     <value>Bad Debt Maintenance</value>
   </data>
-  <data name="sSISortToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>153, 22</value>
-  </data>
-  <data name="sSISortToolStripMenuItem.Text" xml:space="preserve">
-    <value>SSI Sort</value>
-  </data>
-  <data name="sSISubmissionToolStripMenuItem1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>153, 22</value>
-  </data>
-  <data name="sSISubmissionToolStripMenuItem1.Text" xml:space="preserve">
-    <value>SSI Submission</value>
-  </data>
   <data name="sSISubmissionToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>194, 22</value>
   </data>
   <data name="sSISubmissionToolStripMenuItem.Text" xml:space="preserve">
     <value>SSI Submission</value>
-  </data>
-  <data name="questCorrectionsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>169, 22</value>
-  </data>
-  <data name="questCorrectionsToolStripMenuItem.Text" xml:space="preserve">
-    <value>Quest Corrections</value>
-  </data>
-  <data name="questProcessingToolStripMenuItem1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>169, 22</value>
-  </data>
-  <data name="questProcessingToolStripMenuItem1.Text" xml:space="preserve">
-    <value>Quest Processing</value>
   </data>
   <data name="questProcessingToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>194, 22</value>
@@ -239,59 +221,135 @@
   <data name="billingToolStripMenuItem.Text" xml:space="preserve">
     <value>&amp;Billing</value>
   </data>
-  <data name="chargeMasterToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>180, 22</value>
-  </data>
-  <data name="chargeMasterToolStripMenuItem.Text" xml:space="preserve">
-    <value>Charge Master</value>
-  </data>
-  <data name="clientsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>180, 22</value>
-  </data>
-  <data name="clientsToolStripMenuItem.Text" xml:space="preserve">
-    <value>Clients</value>
-  </data>
-  <data name="financialClassToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>180, 22</value>
-  </data>
-  <data name="financialClassToolStripMenuItem.Text" xml:space="preserve">
-    <value>Financial Class</value>
-  </data>
-  <data name="iCDDxCodesToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>180, 22</value>
-  </data>
-  <data name="iCDDxCodesToolStripMenuItem.Text" xml:space="preserve">
-    <value>ICD Dx Codes</value>
-  </data>
-  <data name="insurancePlansToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>180, 22</value>
-  </data>
-  <data name="insurancePlansToolStripMenuItem.Text" xml:space="preserve">
-    <value>Insurance Plans</value>
-  </data>
-  <data name="physiciansToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>180, 22</value>
-  </data>
-  <data name="physiciansToolStripMenuItem.Text" xml:space="preserve">
-    <value>Providers</value>
-  </data>
-  <data name="pathologistsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>180, 22</value>
-  </data>
-  <data name="pathologistsToolStripMenuItem.Text" xml:space="preserve">
-    <value>Pathologists</value>
-  </data>
-  <data name="zipCodesToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>180, 22</value>
-  </data>
-  <data name="zipCodesToolStripMenuItem.Text" xml:space="preserve">
-    <value>Zip Codes</value>
-  </data>
   <data name="dictionariesToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>81, 20</value>
   </data>
   <data name="dictionariesToolStripMenuItem.Text" xml:space="preserve">
     <value>&amp;Dictionaries</value>
+  </data>
+  <data name="reportsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>59, 20</value>
+  </data>
+  <data name="reportsToolStripMenuItem.Text" xml:space="preserve">
+    <value>&amp;Reports</value>
+  </data>
+  <data name="systemAdministrationToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>139, 20</value>
+  </data>
+  <data name="systemAdministrationToolStripMenuItem.Text" xml:space="preserve">
+    <value>&amp;System Administration</value>
+  </data>
+  <data name="windowsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>68, 20</value>
+  </data>
+  <data name="windowsToolStripMenuItem.Text" xml:space="preserve">
+    <value>&amp;Windows</value>
+  </data>
+  <data name="helpToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>44, 20</value>
+  </data>
+  <data name="helpToolStripMenuItem.Text" xml:space="preserve">
+    <value>&amp;Help</value>
+  </data>
+  <data name="DashboardMenu.Location" type="System.Drawing.Point, System.Drawing">
+    <value>20, 60</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="DashboardMenu.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>7, 2, 0, 2</value>
+  </data>
+  <data name="DashboardMenu.Size" type="System.Drawing.Size, System.Drawing">
+    <value>1164, 24</value>
+  </data>
+  <data name="DashboardMenu.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="DashboardMenu.Text" xml:space="preserve">
+    <value>menuStrip1</value>
+  </data>
+  <data name="&gt;&gt;DashboardMenu.Name" xml:space="preserve">
+    <value>DashboardMenu</value>
+  </data>
+  <data name="&gt;&gt;DashboardMenu.Type" xml:space="preserve">
+    <value>System.Windows.Forms.MenuStrip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;DashboardMenu.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;DashboardMenu.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="sSISortToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>153, 22</value>
+  </data>
+  <data name="sSISortToolStripMenuItem.Text" xml:space="preserve">
+    <value>SSI Sort</value>
+  </data>
+  <data name="sSISubmissionToolStripMenuItem1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>153, 22</value>
+  </data>
+  <data name="sSISubmissionToolStripMenuItem1.Text" xml:space="preserve">
+    <value>SSI Submission</value>
+  </data>
+  <data name="questCorrectionsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>169, 22</value>
+  </data>
+  <data name="questCorrectionsToolStripMenuItem.Text" xml:space="preserve">
+    <value>Quest Corrections</value>
+  </data>
+  <data name="questProcessingToolStripMenuItem1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>169, 22</value>
+  </data>
+  <data name="questProcessingToolStripMenuItem1.Text" xml:space="preserve">
+    <value>Quest Processing</value>
+  </data>
+  <data name="chargeMasterToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>156, 22</value>
+  </data>
+  <data name="chargeMasterToolStripMenuItem.Text" xml:space="preserve">
+    <value>Charge Master</value>
+  </data>
+  <data name="clientsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>156, 22</value>
+  </data>
+  <data name="clientsToolStripMenuItem.Text" xml:space="preserve">
+    <value>Clients</value>
+  </data>
+  <data name="financialClassToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>156, 22</value>
+  </data>
+  <data name="financialClassToolStripMenuItem.Text" xml:space="preserve">
+    <value>Financial Class</value>
+  </data>
+  <data name="iCDDxCodesToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>156, 22</value>
+  </data>
+  <data name="iCDDxCodesToolStripMenuItem.Text" xml:space="preserve">
+    <value>ICD Dx Codes</value>
+  </data>
+  <data name="insurancePlansToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>156, 22</value>
+  </data>
+  <data name="insurancePlansToolStripMenuItem.Text" xml:space="preserve">
+    <value>Insurance Plans</value>
+  </data>
+  <data name="physiciansToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>156, 22</value>
+  </data>
+  <data name="physiciansToolStripMenuItem.Text" xml:space="preserve">
+    <value>Providers</value>
+  </data>
+  <data name="pathologistsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>156, 22</value>
+  </data>
+  <data name="pathologistsToolStripMenuItem.Text" xml:space="preserve">
+    <value>Pathologists</value>
+  </data>
+  <data name="zipCodesToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>156, 22</value>
+  </data>
+  <data name="zipCodesToolStripMenuItem.Text" xml:space="preserve">
+    <value>Zip Codes</value>
   </data>
   <data name="codingStatsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>234, 22</value>
@@ -347,12 +405,6 @@
   <data name="reportByInsuranceCompanyToolStripMenuItem.Text" xml:space="preserve">
     <value>Report by Insurance Company</value>
   </data>
-  <data name="reportsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>59, 20</value>
-  </data>
-  <data name="reportsToolStripMenuItem.Text" xml:space="preserve">
-    <value>&amp;Reports</value>
-  </data>
   <data name="userSecurityToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>191, 22</value>
   </data>
@@ -383,12 +435,6 @@
   <data name="claimValidationRulesToolStripMenuItem.Text" xml:space="preserve">
     <value>Claim Validation Rules</value>
   </data>
-  <data name="systemAdministrationToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>139, 20</value>
-  </data>
-  <data name="systemAdministrationToolStripMenuItem.Text" xml:space="preserve">
-    <value>&amp;System Administration</value>
-  </data>
   <data name="cascadeToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>150, 22</value>
   </data>
@@ -413,12 +459,6 @@
   <data name="arrangeIconsToolStripMenuItem.Text" xml:space="preserve">
     <value>Arrange Icons</value>
   </data>
-  <data name="windowsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>68, 20</value>
-  </data>
-  <data name="windowsToolStripMenuItem.Text" xml:space="preserve">
-    <value>&amp;Windows</value>
-  </data>
   <data name="aboutToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>116, 22</value>
   </data>
@@ -430,40 +470,6 @@
   </data>
   <data name="exitToolStripMenuItem.Text" xml:space="preserve">
     <value>E&amp;xit</value>
-  </data>
-  <data name="helpToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>44, 20</value>
-  </data>
-  <data name="helpToolStripMenuItem.Text" xml:space="preserve">
-    <value>&amp;Help</value>
-  </data>
-  <data name="DashboardMenu.Location" type="System.Drawing.Point, System.Drawing">
-    <value>20, 60</value>
-  </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="DashboardMenu.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>7, 2, 0, 2</value>
-  </data>
-  <data name="DashboardMenu.Size" type="System.Drawing.Size, System.Drawing">
-    <value>1164, 24</value>
-  </data>
-  <data name="DashboardMenu.TabIndex" type="System.Int32, mscorlib">
-    <value>0</value>
-  </data>
-  <data name="DashboardMenu.Text" xml:space="preserve">
-    <value>menuStrip1</value>
-  </data>
-  <data name="&gt;&gt;DashboardMenu.Name" xml:space="preserve">
-    <value>DashboardMenu</value>
-  </data>
-  <data name="&gt;&gt;DashboardMenu.Type" xml:space="preserve">
-    <value>System.Windows.Forms.MenuStrip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;DashboardMenu.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;DashboardMenu.ZOrder" xml:space="preserve">
-    <value>2</value>
   </data>
   <data name="windowManagerPanel1.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -3863,6 +3869,12 @@
   <data name="&gt;&gt;interfaceMonitorToolStripMenuItem.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="&gt;&gt;claimValidationRulesToolStripMenuItem.Name" xml:space="preserve">
+    <value>claimValidationRulesToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;claimValidationRulesToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="&gt;&gt;windowsToolStripMenuItem.Name" xml:space="preserve">
     <value>windowsToolStripMenuItem</value>
   </data>
@@ -3911,10 +3923,10 @@
   <data name="&gt;&gt;exitToolStripMenuItem.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;claimValidationRulesToolStripMenuItem.Name" xml:space="preserve">
-    <value>claimValidationRulesToolStripMenuItem</value>
+  <data name="&gt;&gt;worklistToolStripMenuItem.Name" xml:space="preserve">
+    <value>worklistToolStripMenuItem</value>
   </data>
-  <data name="&gt;&gt;claimValidationRulesToolStripMenuItem.Type" xml:space="preserve">
+  <data name="&gt;&gt;worklistToolStripMenuItem.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">

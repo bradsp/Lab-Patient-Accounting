@@ -25,6 +25,8 @@ namespace LabBilling
         private readonly UserProfileRepository userProfile = new UserProfileRepository(Helper.ConnVal);
         private readonly AccountRepository accountRepository = new AccountRepository(Helper.ConnVal);
         private readonly SystemParametersRepository systemParametersRepository = new SystemParametersRepository(Helper.ConnVal);
+        private WorkListForm worklistForm = null;
+        private WorkqueueForm workqueueForm = null;
 
         public MainForm()
         {
@@ -144,14 +146,19 @@ namespace LabBilling
             tlpBilling.ColumnCount = 1;
             tlpBilling.RowCount = 3;
 
-            MetroButton b1 = new MetroButton { Text = "Workqueue", Name = "btnWorkQueue" };
-            b1.Click += new EventHandler(workqueuesToolStripMenuItem_Click);
+            MetroButton b1 = new MetroButton { Text = "Worklist", Name = "btnWorkList" };
+            b1.Click += new EventHandler(worklistToolStripMenuItem_Click);
             tlpBilling.Controls.Add(b1, 0, 0);
             b1.Dock = DockStyle.Fill;
 
+            MetroButton b3 = new MetroButton { Text = "Workqueue", Name = "btnWorkQueue" };
+            b3.Click += new EventHandler(workqueuesToolStripMenuItem_Click);
+            tlpBilling.Controls.Add(b3, 0, 1);
+            b3.Dock = DockStyle.Fill;
+
             MetroButton b2 = new MetroButton { Text = "Account", Name = "btnAccount" };
             b2.Click += new EventHandler(accountToolStripMenuItem_Click);
-            tlpBilling.Controls.Add(b2, 0, 1);
+            tlpBilling.Controls.Add(b2, 0, 2);
             b2.Dock = DockStyle.Fill;
 
             //Button b3 = new Button { Text = "Demographics", Name = "btnDemographics" };
@@ -255,12 +262,33 @@ namespace LabBilling
         {
             Log.Instance.Trace($"Entering");
 
-            //WorkqueueForm frm = new WorkqueueForm(Helper.ConnVal);
-            WorkListForm frm = new WorkListForm(Helper.ConnVal);
-            frm.MdiParent = this;
-            frm.AutoScroll = true;
-            frm.WindowState = FormWindowState.Normal;
-            frm.Show();
+            if (workqueueForm == null)
+            {
+                workqueueForm = new WorkqueueForm(Helper.ConnVal);
+                workqueueForm.MdiParent = this;
+                workqueueForm.AutoScroll = true;
+                workqueueForm.WindowState = FormWindowState.Normal;
+                workqueueForm.Show();
+            }
+            else
+                workqueueForm.BringToFront();
+
+        }
+
+        private void worklistToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Log.Instance.Trace($"Entering");
+
+            if (worklistForm == null)
+            {
+                worklistForm = new WorkListForm(Helper.ConnVal);
+                worklistForm.MdiParent = this;
+                worklistForm.AutoScroll = true;
+                worklistForm.WindowState = FormWindowState.Normal;
+                worklistForm.Show();
+            }
+            else
+                worklistForm.BringToFront();
 
         }
 
@@ -564,5 +592,7 @@ namespace LabBilling
 
             frm.ShowDialog();
         }
+
+
     }
 }

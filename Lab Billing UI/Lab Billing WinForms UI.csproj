@@ -408,11 +408,11 @@
       <DependentUpon>PhysicianMaintenanceForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\SummaryData.cs" />
-    <Compile Include="Forms\WorkQueue.cs">
+    <Compile Include="Forms\WorkQueueForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\WorkQueue.Designer.cs">
-      <DependentUpon>WorkQueue.cs</DependentUpon>
+    <Compile Include="Forms\WorkQueueForm.Designer.cs">
+      <DependentUpon>WorkQueueForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Login.cs">
       <SubType>Form</SubType>
@@ -577,8 +577,8 @@
     <EmbeddedResource Include="Forms\PhysicianMaintenanceForm.resx">
       <DependentUpon>PhysicianMaintenanceForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\WorkQueue.resx">
-      <DependentUpon>WorkQueue.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\WorkQueueForm.resx">
+      <DependentUpon>WorkQueueForm.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Login.resx">
