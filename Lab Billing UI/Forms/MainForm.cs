@@ -572,22 +572,6 @@ namespace LabBilling
             throw new NotImplementedException();
         }
 
-        private void professionalBillingToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            ClaimGenerator claims = new ClaimGenerator(Helper.ConnVal);
-            int claims_processed = claims.CompileProfessionalBilling();
-
-            if (claims_processed < 0)
-            {
-                MetroMessageBox.Show(this, "Error processing claims. No file generated.", "Process Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            else
-            {
-                MetroMessageBox.Show(this, $"File generated. {claims_processed} claims generated.");
-            }
-
-        }
-
         private void claimValidationRulesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Log.Instance.Trace("Entering");
@@ -611,5 +595,46 @@ namespace LabBilling
             return bValue;
         }
 
+        private void professionalToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+   
+            ClaimGenerator claims = new ClaimGenerator(Helper.ConnVal);
+            Progress<ProgressReportModel> progress = new Progress<ProgressReportModel>();
+            int claims_processed = claims.CompileProfessionalBilling(progress);
+            progress.ProgressChanged += ReportProgress;
+
+            if (claims_processed < 0)
+            {
+                MetroMessageBox.Show(this, "Error processing claims. No file generated.", "Process Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            else
+            {
+                MetroMessageBox.Show(this, $"File generated. {claims_processed} claims generated.");
+            }
+        }
+
+        private void institutionalToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ClaimGenerator claims = new ClaimGenerator(Helper.ConnVal);
+
+            Progress<ProgressReportModel> progress = new Progress<ProgressReportModel>();
+            progress.ProgressChanged += ReportProgress;
+
+            int claims_processed = claims.CompileInstituationalBilling(progress);
+
+            if (claims_processed < 0)
+            {
+                MetroMessageBox.Show(this, "Error processing claims. No file generated.", "Process Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            else
+            {
+                MetroMessageBox.Show(this, $"File generated. {claims_processed} claims generated.");
+            }
+        }
+
+        private void ReportProgress(object sender, ProgressReportModel e)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

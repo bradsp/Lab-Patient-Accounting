@@ -302,6 +302,7 @@
     <Compile Include="Models\Pat.cs" />
     <Compile Include="Models\PatDx.cs" />
     <Compile Include="Models\Phy.cs" />
+    <Compile Include="Models\ProgressReportModel.cs" />
     <Compile Include="Models\Pth.cs" />
     <Compile Include="Models\SysParameter.cs" />
     <Compile Include="Models\UnbilledAccounts.cs" />

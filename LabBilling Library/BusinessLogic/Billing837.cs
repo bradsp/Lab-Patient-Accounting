@@ -49,7 +49,7 @@ namespace LabBilling.Core
 
             switch (claimType)
             {
-                case ClaimType.Insitutuional:
+                case ClaimType.Institutional:
                     versionReleaseSpecifierCode = "005010X223";
                     break;
                 case ClaimType.Professional:
@@ -68,7 +68,7 @@ namespace LabBilling.Core
                 [03] = "00", // security information qualifier
                 [04] = "".PadRight(10), // security information
                 [05] = "ZZ", // interchange id qualifier
-                [06] = "SENDER".PadRight(15), //sender id
+                [06] = batchSubmitterId.PadRight(15), //sender id
                 [07] = "ZZ", //interchnage id qualifier
                 [08] = "ZMIXED".PadRight(15), //receiver id
                 [09] = EdiValue.Date(6, DateTime.Now), // interchange date
@@ -103,7 +103,7 @@ namespace LabBilling.Core
                 {
                     [01] = "837",
                     [02] = claim.claimAccount.AccountNo, // transaction set control number - must match SE02
-                    [03] = "005010X222", //implementation convention reference
+                    [03] = versionReleaseSpecifierCode //implementation convention reference
                 });
                 segmentCount++;
 
@@ -111,7 +111,7 @@ namespace LabBilling.Core
                 ediDocument.Segments.Add(new EdiSegment("BHT")
                 {
                     [01] = "0019", //hierarchical structure code
-                    [02] = "00", //transaction set purpose 00 - original; 18 - reissue
+                    [02] = claim.TransactionSetPurpose, //transaction set purpose 00 - original; 18 - reissue
                     [03] = claim.claimAccount.AccountNo, //reference identification
                     [04] = EdiValue.Date(8, DateTime.Today), // date claim file is create - should be today
                     [05] = EdiValue.Time(4, DateTime.Now), //time transaction set is created
@@ -234,7 +234,7 @@ namespace LabBilling.Core
                 });
                 segmentCount++;
 
-# region Loop 2010AC - Pay to Plan Name
+                #region Loop 2010AC - Pay to Plan Name
                 //Required when willing trading partners agree to use this implementation
                 //for their subrogation payment requests.
                 //1. This loop may only be used when BHT06 = 31.
@@ -618,35 +618,63 @@ namespace LabBilling.Core
                         [01] = lineCnt++.ToString()
                     });
                     segmentCount++;
-                    // - SV1 - professional service
-                    var sv1 = new EdiSegment("SV1");
+
+                    switch (claimType)
+                    {
+                        case ClaimType.Institutional:
+                            var sv2 = new EdiSegment("SV2");
+                            sv2[1] = ""; //revenue code
+                            
+                            var sv2_2 = new EdiElement();
+                            sv2_2[1] = "HC"; //HC for cpt4/hcpcs codeset
+                            sv2_2[2] = line.ProcedureCode;
+                            sv2_2[3] = line.ProcedureModifier1;
+                            sv2_2[4] = line.ProcedureModifier2;
+                            sv2_2[5] = line.ProcedureModifier3;
+                            sv2_2[7] = line.Description;
+                            sv2.Element(2, sv2_2);
+
+                            sv2[3] = line.Amount.ToString();
+                            sv2[4] = "UN";
+                            sv2[5] = line.Quantity.ToString();
+                            sv2[7] = ""; //non-covered amount - if needed
+                            
+                            ediDocument.Segments.Add(sv2);
+                            segmentCount++;
+                            break;
+                        case ClaimType.Professional:
+                            var sv1 = new EdiSegment("SV1");
+
+                            var sv1_1 = new EdiElement();
+                            sv1_1[1] = "HC";
+                            sv1_1[2] = line.ProcedureCode;
+                            sv1_1[3] = line.ProcedureModifier1;
+                            sv1_1[4] = line.ProcedureModifier2;
+                            sv1_1[5] = line.ProcedureModifier3;
+                            sv1_1[7] = line.Description;
+                            sv1.Element(1, sv1_1);
+
+                            sv1[2] = line.Amount.ToString();
+                            sv1[3] = "UN";
+                            sv1[4] = line.Quantity.ToString();
+
+                            var sv1_7 = new EdiElement();
+                            sv1_7[1] = line.DxPtr1;
+                            sv1_7[2] = line.DxPtr2;
+                            sv1_7[3] = line.DxPtr3;
+                            sv1_7[4] = line.DxPtr4;
+                            sv1.Element(7, sv1_7);
+
+                            sv1[11] = line.EPSDTIndicator;
+                            sv1[12] = line.FamilyPlanningIndicator;
+
+                            ediDocument.Segments.Add(sv1);
+                            segmentCount++;
+                            break;
+                        default:
+                            break;
+                    }
                     
-                    var sv1_1 = new EdiElement();
-                    sv1_1[1] = "HC";
-                    sv1_1[2] = line.ProcedureCode;
-                    sv1_1[3] = line.ProcedureModifier1;
-                    sv1_1[4] = line.ProcedureModifier2;
-                    sv1_1[5] = line.ProcedureModifier3;
-                    sv1_1[7] = line.Description;
-                    sv1.Element(1, sv1_1);
-
-                    sv1[2] = line.Amount.ToString();
-                    sv1[3] = "UN";
-                    sv1[4] = line.Quantity.ToString();
-
-                    var sv1_7 = new EdiElement();
-                    sv1_7[1] = line.DxPtr1;
-                    sv1_7[2] = line.DxPtr2;
-                    sv1_7[3] = line.DxPtr3;
-                    sv1_7[4] = line.DxPtr4;
-                    sv1.Element(7, sv1_7);
-
-                    sv1[11] = line.EPSDTIndicator;
-                    sv1[12] = line.FamilyPlanningIndicator;
-
-                    ediDocument.Segments.Add(sv1);
-
-                    segmentCount++;
                     // - PWK - Line supplemental information
                     // - DTP - date - service line
                     ediDocument.Segments.Add(new EdiSegment("DTP")
@@ -748,7 +776,13 @@ namespace LabBilling.Core
             //ensure file location ends with \
             if (!file_location.EndsWith("\\"))
                 file_location += "\\";
-            ediDocument.Save($"{file_location}MCL-837p.txt");
+            string fileName = $"MCL837-{interchangeControlNumber}.txt";
+            if (claimType == ClaimType.Institutional)
+                fileName = $"MCL837i-{interchangeControlNumber}.txt";
+            if (claimType == ClaimType.Professional)
+                fileName = $"MCL837p-{interchangeControlNumber}.txt";
+            
+            ediDocument.Save($"{file_location}{fileName}");
 
             return ediDocument.ToString();
         }
@@ -799,16 +833,16 @@ namespace LabBilling.Core
                     edi[09] = claim.SubmitterId; //identification code (our tax id)
                     break;
                 case EntityIdentifier.Receiver:
-                    edi[01] = EntityIdentifierCode[EntityIdentifier.Receiver];
+                    edi[01] = EntityIdentifierCode[EntityIdentifier.Receiver]; // 40
                     edi[02] = "2";
                     edi[03] = claim.ReceiverOrgName; //organization name
                     edi[08] = "46"; //identification code qualifier - 46 = ETIN
-                    edi[09] = claim.SubmitterId; //identification code (tax-id) 
+                    edi[09] = claim.ReceiverId; //identification code (tax-id) 
                     break;
                 case EntityIdentifier.BillingProvider:
                     edi[01] = EntityIdentifierCode[EntityIdentifier.BillingProvider];
                     edi[02] = "2";
-                    edi[03] = claim.BillingProviderContactName;
+                    edi[03] = claim.BillingProviderName;
                     edi[08] = "XX";
                     edi[09] = claim.BillingProviderNPI; // is this the correct code?
                     break;
@@ -888,7 +922,7 @@ namespace LabBilling.Core
 
         public enum ClaimType
         {
-            Insitutuional,
+            Institutional,
             Professional
         };
 

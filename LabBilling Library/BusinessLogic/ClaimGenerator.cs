@@ -73,8 +73,10 @@ namespace LabBilling.Core.BusinessLogic
         /// Compiles claims for professional (837p) billing.
         /// </summary>
         /// <returns>Number of claims generated. Returns -1 if there was an error.</returns>
-        public int CompileProfessionalBilling()
+        public int CompileProfessionalBilling(IProgress<ProgressReportModel> progress)
         {
+            ProgressReportModel report = new ProgressReportModel();
+
             //compile list of accounts to have claims generated
             billing837 = new Billing837(_connectionString);
             string batchSubmitterID = parametersdb.GetByKey("fed_tax_id");
@@ -88,14 +90,14 @@ namespace LabBilling.Core.BusinessLogic
             db.BeginTransaction();
             try
             {
+                report.TotalRecords = list.Count();
                 foreach (ClaimItem item in list)
                 {
                     //validate account data before starting - if there are errors do not process claim.
                     // primary ins holder name is empty
                     // no dx codes
 
-
-                    claim = GenerateProfessionalClaim(item.account);
+                    claim = GenerateClaim(item.account);
                     claims.Add(claim);
 
                     //update status and activity date fields
@@ -124,9 +126,12 @@ namespace LabBilling.Core.BusinessLogic
 
                     billingHistoryRepository.Add(billingHistory);
 
+                    report.RecordsProcessed++;
+                    report.PercentageComplete = Convert.ToInt16((report.RecordsProcessed / report.TotalRecords) * 100);
+                    progress.Report(report);
                 }
 
-                string x12Text = billing837.Generate837ClaimBatch(claims, interchangeControlNumber, propProductionEnvironment, batchSubmitterID, parametersdb.GetByKey("837p_file_loation"), Billing837.ClaimType.Professional);
+                string x12Text = billing837.Generate837ClaimBatch(claims, interchangeControlNumber, propProductionEnvironment, batchSubmitterID, parametersdb.GetByKey("claim_837p_file_loation"), Billing837.ClaimType.Professional);
 
                 BillingBatch billingBatch = new BillingBatch();
                 billingBatch.batch = Convert.ToDouble(interchangeControlNumber);
@@ -150,9 +155,85 @@ namespace LabBilling.Core.BusinessLogic
             return -1;
         }
 
-        public void CompileInstituationalBilling()
+        public int CompileInstituationalBilling(IProgress<ProgressReportModel> progress)
         {
-            throw new NotImplementedException();
+            ProgressReportModel report = new ProgressReportModel();
+            //compile list of accounts to have claims generated
+            billing837 = new Billing837(_connectionString);
+            string batchSubmitterID = parametersdb.GetByKey("fed_tax_id");
+            decimal strNum = numberRepository.GetNumber("ssi_batch");
+            string interchangeControlNumber = string.Format("{0:D9}", int.Parse(string.Format("{0}{1}", DateTime.Now.Year, strNum)));
+
+            //acc records where status = "UB" and primary insurance is not "CHAMPUS"
+            var list = accountRepository.GetAccountsForClaims(AccountRepository.ClaimType.Institutional);
+            ClaimData claim;
+
+            db.BeginTransaction();
+            try
+            {
+                report.TotalRecords = list.Count();
+                foreach (ClaimItem item in list)
+                {
+                    //validate account data before starting - if there are errors do not process claim.
+                    // primary ins holder name is empty
+                    // no dx codes
+
+                    claim = GenerateClaim(item.account);
+                    claims.Add(claim);
+
+                    //update status and activity date fields
+                    claim.claimAccount.Status = "SSI1500";
+
+                    accountRepository.Update(claim.claimAccount, new[] { nameof(Account.Status) });
+
+                    claim.claimAccount.Pat.ProfessionalClaimDate = DateTime.Today;
+                    claim.claimAccount.Pat.SSIBatch = interchangeControlNumber;
+
+                    patRepository.Update(claim.claimAccount.Pat, new[] { nameof(Pat.InstitutionalClaimDate), nameof(Pat.SSIBatch) });
+
+                    BillingHistory billingHistory = new BillingHistory();
+                    billingHistory.pat_name = claim.claimAccount.PatFullName;
+                    billingHistory.run_date = DateTime.Today;
+                    billingHistory.account = claim.claimAccount.AccountNo;
+                    billingHistory.batch = Convert.ToDouble(interchangeControlNumber);
+                    billingHistory.ebill_batch = Convert.ToDouble(interchangeControlNumber);
+                    billingHistory.ebill_status = "UB";
+                    billingHistory.fin_code = claim.claimAccount.FinCode;
+                    billingHistory.ins_abc = claim.claimAccount.Insurances[0].Coverage;
+                    billingHistory.ins_code = claim.claimAccount.Insurances[0].InsCode;
+                    billingHistory.ins_complete = DateTime.MinValue;
+                    billingHistory.trans_date = claim.claimAccount.TransactionDate;
+                    billingHistory.run_user = OS.GetUserName();
+
+                    billingHistoryRepository.Add(billingHistory);
+
+                    report.RecordsProcessed++;
+                    report.PercentageComplete = Convert.ToInt16((report.RecordsProcessed / report.TotalRecords) * 100);
+                    progress.Report(report);
+                }
+
+                string x12Text = billing837.Generate837ClaimBatch(claims, interchangeControlNumber, propProductionEnvironment, batchSubmitterID, parametersdb.GetByKey("claim_837i_file_loation"), Billing837.ClaimType.Institutional);
+
+                BillingBatch billingBatch = new BillingBatch();
+                billingBatch.batch = Convert.ToDouble(interchangeControlNumber);
+                billingBatch.run_date = DateTime.Today;
+                billingBatch.run_user = OS.GetUserName();
+                billingBatch.x12_text = x12Text;
+                billingBatch.claim_count = claims.Count;
+
+                billingBatchRepository.Add(billingBatch);
+
+                db.CompleteTransaction();
+
+                return claims.Count;
+            }
+            catch (Exception ex)
+            {
+                Log.Instance.Fatal(ex, "Exception processing Institutional Claims. Batch has been rolled back. Report error to the Application Administrator.");
+                db.AbortTransaction();
+            }
+
+            return -1;
         }
 
 
@@ -162,10 +243,8 @@ namespace LabBilling.Core.BusinessLogic
         /// <param name="account"></param>
         /// <returns></returns>
         /// <exception cref="InvalidParameterValueException"></exception>
-        public ClaimData GenerateProfessionalClaim(string account)
+        public ClaimData GenerateClaim(string account)
         {
-            
-
             
             //do all the fun work of building the ClaimData object & return it.
 
@@ -180,15 +259,17 @@ namespace LabBilling.Core.BusinessLogic
             try
             {
                 claimData.TransactionTypeCode = "CH";
+                claimData.TransactionSetPurpose = "00";  // 00 = original, 18 - reissue
                 claimData.SubmitterId = parametersdb.GetByKey("fed_tax_id");
                 claimData.SubmitterName = parametersdb.GetByKey("billing_entity_name");
                 claimData.SubmitterContactName = parametersdb.GetByKey("billing_contact");
                 claimData.SubmitterContactEmail = parametersdb.GetByKey("billing_phone");
                 claimData.SubmitterContactPhone = parametersdb.GetByKey("billing_email");
 
-                claimData.ReceiverOrgName = parametersdb.GetByKey("billing_entity_name");
+                claimData.ReceiverOrgName = parametersdb.GetByKey("billing_receiver_name");
+                claimData.ReceiverId = parametersdb.GetByKey("billing_receiver_id");
                 claimData.ProviderTaxonomyCode = "282N00000X";
-                claimData.BillingProviderName = parametersdb.GetByKey("billing_entity_name"); ;
+                claimData.BillingProviderName = parametersdb.GetByKey("billing_entity_name");
                 claimData.BillingProviderAddress = parametersdb.GetByKey("billing_entity_street");
                 claimData.BillingProviderCity = parametersdb.GetByKey("billing_entity_city");
                 claimData.BillingProviderState = parametersdb.GetByKey("billing_entity_state");
@@ -369,6 +450,7 @@ namespace LabBilling.Core.BusinessLogic
                         claimLine.FamilyPlanningIndicator = "";
                         claimLine.ServiceDate = chrg.ServiceDate;
                         claimLine.ControlNumber = chrg.CDMCode;
+                        claimLine.RevenueCode = detail.RevenueCode;
 
                         claimData.ClaimLines.Add(claimLine);
                     }

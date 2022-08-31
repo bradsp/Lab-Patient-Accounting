@@ -64,7 +64,6 @@ namespace LabBilling.Forms
             this.PatDemogTitleLabel = new System.Windows.Forms.Label();
             this.GuarTitleLabel = new System.Windows.Forms.Label();
             this.PatRelationLabel = new System.Windows.Forms.Label();
-            this.cbGuarantorRelation = new LabBilling.Library.FlatCombo();
             this.GuarFirstNameLabel = new System.Windows.Forms.Label();
             this.tbGuarFirstName = new System.Windows.Forms.TextBox();
             this.GuarSuffixLabel = new System.Windows.Forms.Label();
@@ -79,7 +78,6 @@ namespace LabBilling.Forms
             this.GuarCityLabel = new System.Windows.Forms.Label();
             this.tbGuarCity = new System.Windows.Forms.TextBox();
             this.GuarStateLabel = new System.Windows.Forms.Label();
-            this.cbGuarState = new LabBilling.Library.FlatCombo();
             this.GuarZipCodeLabel = new System.Windows.Forms.Label();
             this.tbGuarZip = new System.Windows.Forms.MaskedTextBox();
             this.GuarPhoneLabel = new System.Windows.Forms.Label();
@@ -89,9 +87,7 @@ namespace LabBilling.Forms
             this.PatSSNLabel = new System.Windows.Forms.Label();
             this.tbSSN = new System.Windows.Forms.MaskedTextBox();
             this.PatMaritalStatusLabel = new System.Windows.Forms.Label();
-            this.cbMaritalStatus = new LabBilling.Library.FlatCombo();
             this.PatSexLabel = new System.Windows.Forms.Label();
-            this.cbSex = new LabBilling.Library.FlatCombo();
             this.PatEmailLabel = new System.Windows.Forms.Label();
             this.tbEmailAddress = new System.Windows.Forms.TextBox();
             this.PatPhoneLabel = new System.Windows.Forms.Label();
@@ -99,7 +95,6 @@ namespace LabBilling.Forms
             this.PatZipLabel = new System.Windows.Forms.Label();
             this.tbZipcode = new System.Windows.Forms.MaskedTextBox();
             this.PatStateLabel = new System.Windows.Forms.Label();
-            this.cbState = new LabBilling.Library.FlatCombo();
             this.PatCityLabel = new System.Windows.Forms.Label();
             this.tbCity = new System.Windows.Forms.TextBox();
             this.PatAddress2Label = new System.Windows.Forms.Label();
@@ -123,7 +118,6 @@ namespace LabBilling.Forms
             this.dgvInsurance = new System.Windows.Forms.DataGridView();
             this.bSaveInsurance = new System.Windows.Forms.Button();
             this.lInsCopyPatient = new System.Windows.Forms.LinkLabel();
-            this.cbPlanFinCode = new LabBilling.Library.FlatCombo();
             this.label48 = new System.Windows.Forms.Label();
             this.tbCertSSN = new System.Windows.Forms.TextBox();
             this.tbHolderLastName = new System.Windows.Forms.TextBox();
@@ -131,25 +125,20 @@ namespace LabBilling.Forms
             this.tbGroupName = new System.Windows.Forms.TextBox();
             this.label36 = new System.Windows.Forms.Label();
             this.label32 = new System.Windows.Forms.Label();
-            this.cbInsCode = new MultiColumnCombo.MultiColumnComboBox();
             this.tbHolderZip = new System.Windows.Forms.TextBox();
             this.tbGroupNumber = new System.Windows.Forms.TextBox();
             this.label42 = new System.Windows.Forms.Label();
             this.label34 = new System.Windows.Forms.Label();
             this.tbPlanAddress2 = new System.Windows.Forms.TextBox();
-            this.cbInsRelation = new LabBilling.Library.FlatCombo();
             this.label33 = new System.Windows.Forms.Label();
             this.tbPolicyNumber = new System.Windows.Forms.TextBox();
             this.label41 = new System.Windows.Forms.Label();
             this.tbHolderDOB = new System.Windows.Forms.MaskedTextBox();
             this.label47 = new System.Windows.Forms.Label();
             this.label49 = new System.Windows.Forms.Label();
-            this.cbHolderState = new LabBilling.Library.FlatCombo();
             this.tbHolderFirstName = new System.Windows.Forms.TextBox();
             this.label50 = new System.Windows.Forms.Label();
             this.label51 = new System.Windows.Forms.Label();
-            this.cbInsOrder = new LabBilling.Library.FlatCombo();
-            this.cbHolderSex = new LabBilling.Library.FlatCombo();
             this.label52 = new System.Windows.Forms.Label();
             this.label53 = new System.Windows.Forms.Label();
             this.tbHolderMiddleName = new System.Windows.Forms.TextBox();
@@ -236,6 +225,19 @@ namespace LabBilling.Forms
             this.lblTotalPmtAdj = new System.Windows.Forms.Label();
             this.lblBalance = new System.Windows.Forms.Label();
             this.lblTotalCharges = new System.Windows.Forms.Label();
+            this.label11 = new System.Windows.Forms.Label();
+            this.tbBannerBillStatus = new System.Windows.Forms.TextBox();
+            this.cbGuarantorRelation = new LabBilling.Library.FlatCombo();
+            this.cbGuarState = new LabBilling.Library.FlatCombo();
+            this.cbMaritalStatus = new LabBilling.Library.FlatCombo();
+            this.cbSex = new LabBilling.Library.FlatCombo();
+            this.cbState = new LabBilling.Library.FlatCombo();
+            this.cbPlanFinCode = new LabBilling.Library.FlatCombo();
+            this.cbInsCode = new MultiColumnCombo.MultiColumnComboBox();
+            this.cbInsRelation = new LabBilling.Library.FlatCombo();
+            this.cbHolderState = new LabBilling.Library.FlatCombo();
+            this.cbInsOrder = new LabBilling.Library.FlatCombo();
+            this.cbHolderSex = new LabBilling.Library.FlatCombo();
             this.tabControl1.SuspendLayout();
             this.summaryTab.SuspendLayout();
             this.tabDemographics.SuspendLayout();
@@ -442,17 +444,6 @@ namespace LabBilling.Forms
             this.PatRelationLabel.Text = "Relation to Patient";
             this.PatRelationLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // cbGuarantorRelation
-            // 
-            this.cbGuarantorRelation.BorderColor = System.Drawing.Color.Blue;
-            this.cbGuarantorRelation.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbGuarantorRelation.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.cbGuarantorRelation.FormattingEnabled = true;
-            this.cbGuarantorRelation.Location = new System.Drawing.Point(617, 33);
-            this.cbGuarantorRelation.Name = "cbGuarantorRelation";
-            this.cbGuarantorRelation.Size = new System.Drawing.Size(277, 21);
-            this.cbGuarantorRelation.TabIndex = 34;
-            // 
             // GuarFirstNameLabel
             // 
             this.GuarFirstNameLabel.AutoSize = true;
@@ -583,20 +574,6 @@ namespace LabBilling.Forms
             this.GuarStateLabel.Text = "State";
             this.GuarStateLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
-            // cbGuarState
-            // 
-            this.cbGuarState.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
-            this.cbGuarState.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
-            this.cbGuarState.BackColor = System.Drawing.Color.White;
-            this.cbGuarState.BorderColor = System.Drawing.Color.Blue;
-            this.cbGuarState.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbGuarState.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.cbGuarState.FormattingEnabled = true;
-            this.cbGuarState.Location = new System.Drawing.Point(617, 273);
-            this.cbGuarState.Name = "cbGuarState";
-            this.cbGuarState.Size = new System.Drawing.Size(183, 21);
-            this.cbGuarState.TabIndex = 47;
-            // 
             // GuarZipCodeLabel
             // 
             this.GuarZipCodeLabel.AutoSize = true;
@@ -688,25 +665,6 @@ namespace LabBilling.Forms
             this.PatMaritalStatusLabel.Text = "Marital Status";
             this.PatMaritalStatusLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
-            // cbMaritalStatus
-            // 
-            this.cbMaritalStatus.BackColor = System.Drawing.Color.White;
-            this.cbMaritalStatus.BorderColor = System.Drawing.Color.Blue;
-            this.cbMaritalStatus.Dock = System.Windows.Forms.DockStyle.Left;
-            this.cbMaritalStatus.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbMaritalStatus.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.cbMaritalStatus.FormattingEnabled = true;
-            this.cbMaritalStatus.Items.AddRange(new object[] {
-            "Unknown",
-            "Single",
-            "Married",
-            "Divorced",
-            "Widowed"});
-            this.cbMaritalStatus.Location = new System.Drawing.Point(133, 423);
-            this.cbMaritalStatus.Name = "cbMaritalStatus";
-            this.cbMaritalStatus.Size = new System.Drawing.Size(157, 21);
-            this.cbMaritalStatus.TabIndex = 30;
-            // 
             // PatSexLabel
             // 
             this.PatSexLabel.AutoSize = true;
@@ -717,23 +675,6 @@ namespace LabBilling.Forms
             this.PatSexLabel.TabIndex = 27;
             this.PatSexLabel.Text = "Sex";
             this.PatSexLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // cbSex
-            // 
-            this.cbSex.BackColor = System.Drawing.Color.White;
-            this.cbSex.BorderColor = System.Drawing.Color.Blue;
-            this.cbSex.Dock = System.Windows.Forms.DockStyle.Left;
-            this.cbSex.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbSex.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.cbSex.FormattingEnabled = true;
-            this.cbSex.Items.AddRange(new object[] {
-            "Male",
-            "Female",
-            "Unknown"});
-            this.cbSex.Location = new System.Drawing.Point(133, 393);
-            this.cbSex.Name = "cbSex";
-            this.cbSex.Size = new System.Drawing.Size(157, 21);
-            this.cbSex.TabIndex = 28;
             // 
             // PatEmailLabel
             // 
@@ -805,21 +746,6 @@ namespace LabBilling.Forms
             this.PatStateLabel.TabIndex = 15;
             this.PatStateLabel.Text = "State";
             this.PatStateLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // cbState
-            // 
-            this.cbState.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
-            this.cbState.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
-            this.cbState.BackColor = System.Drawing.Color.White;
-            this.cbState.BorderColor = System.Drawing.Color.Blue;
-            this.cbState.Dock = System.Windows.Forms.DockStyle.Left;
-            this.cbState.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbState.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.cbState.FormattingEnabled = true;
-            this.cbState.Location = new System.Drawing.Point(133, 273);
-            this.cbState.Name = "cbState";
-            this.cbState.Size = new System.Drawing.Size(163, 21);
-            this.cbState.TabIndex = 16;
             // 
             // PatCityLabel
             // 
@@ -1162,17 +1088,6 @@ namespace LabBilling.Forms
             this.lInsCopyPatient.Text = "Copy Patient Info";
             this.lInsCopyPatient.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LInsCopyPatient_LinkClicked_1);
             // 
-            // cbPlanFinCode
-            // 
-            this.cbPlanFinCode.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.cbPlanFinCode.BorderColor = System.Drawing.Color.Blue;
-            this.cbPlanFinCode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbPlanFinCode.FormattingEnabled = true;
-            this.cbPlanFinCode.Location = new System.Drawing.Point(705, 299);
-            this.cbPlanFinCode.Name = "cbPlanFinCode";
-            this.cbPlanFinCode.Size = new System.Drawing.Size(230, 21);
-            this.cbPlanFinCode.TabIndex = 33;
-            // 
             // label48
             // 
             this.label48.Anchor = System.Windows.Forms.AnchorStyles.Left;
@@ -1237,16 +1152,6 @@ namespace LabBilling.Forms
             this.label32.TabIndex = 3;
             this.label32.Text = "Holder First Name";
             // 
-            // cbInsCode
-            // 
-            this.cbInsCode.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
-            this.cbInsCode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbInsCode.Location = new System.Drawing.Point(705, 167);
-            this.cbInsCode.Name = "cbInsCode";
-            this.cbInsCode.Size = new System.Drawing.Size(380, 21);
-            this.cbInsCode.TabIndex = 42;
-            this.cbInsCode.SelectedIndexChanged += new System.EventHandler(this.cbInsCode_SelectedIndexChanged);
-            // 
             // tbHolderZip
             // 
             this.tbHolderZip.Anchor = System.Windows.Forms.AnchorStyles.Left;
@@ -1290,18 +1195,6 @@ namespace LabBilling.Forms
             this.tbPlanAddress2.Name = "tbPlanAddress2";
             this.tbPlanAddress2.Size = new System.Drawing.Size(230, 20);
             this.tbPlanAddress2.TabIndex = 29;
-            // 
-            // cbInsRelation
-            // 
-            this.cbInsRelation.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.cbInsRelation.BorderColor = System.Drawing.Color.Blue;
-            this.cbInsRelation.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbInsRelation.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.cbInsRelation.FormattingEnabled = true;
-            this.cbInsRelation.Location = new System.Drawing.Point(133, 379);
-            this.cbInsRelation.Name = "cbInsRelation";
-            this.cbInsRelation.Size = new System.Drawing.Size(230, 21);
-            this.cbInsRelation.TabIndex = 20;
             // 
             // label33
             // 
@@ -1362,21 +1255,6 @@ namespace LabBilling.Forms
             this.label49.TabIndex = 17;
             this.label49.Text = "Date of Birth";
             // 
-            // cbHolderState
-            // 
-            this.cbHolderState.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.cbHolderState.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
-            this.cbHolderState.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
-            this.cbHolderState.BackColor = System.Drawing.Color.White;
-            this.cbHolderState.BorderColor = System.Drawing.Color.Blue;
-            this.cbHolderState.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbHolderState.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.cbHolderState.FormattingEnabled = true;
-            this.cbHolderState.Location = new System.Drawing.Point(133, 272);
-            this.cbHolderState.Name = "cbHolderState";
-            this.cbHolderState.Size = new System.Drawing.Size(153, 21);
-            this.cbHolderState.TabIndex = 12;
-            // 
             // tbHolderFirstName
             // 
             this.tbHolderFirstName.Anchor = System.Windows.Forms.AnchorStyles.Left;
@@ -1404,35 +1282,6 @@ namespace LabBilling.Forms
             this.label51.Size = new System.Drawing.Size(83, 13);
             this.label51.TabIndex = 21;
             this.label51.Text = "Insurance Order";
-            // 
-            // cbInsOrder
-            // 
-            this.cbInsOrder.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.cbInsOrder.BorderColor = System.Drawing.Color.Blue;
-            this.cbInsOrder.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbInsOrder.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.cbInsOrder.FormattingEnabled = true;
-            this.cbInsOrder.Location = new System.Drawing.Point(705, 140);
-            this.cbInsOrder.Name = "cbInsOrder";
-            this.cbInsOrder.Size = new System.Drawing.Size(230, 21);
-            this.cbInsOrder.TabIndex = 22;
-            // 
-            // cbHolderSex
-            // 
-            this.cbHolderSex.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.cbHolderSex.BackColor = System.Drawing.Color.White;
-            this.cbHolderSex.BorderColor = System.Drawing.Color.Blue;
-            this.cbHolderSex.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbHolderSex.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.cbHolderSex.FormattingEnabled = true;
-            this.cbHolderSex.Items.AddRange(new object[] {
-            "Male",
-            "Female",
-            "Unknown"});
-            this.cbHolderSex.Location = new System.Drawing.Point(133, 326);
-            this.cbHolderSex.Name = "cbHolderSex";
-            this.cbHolderSex.Size = new System.Drawing.Size(230, 21);
-            this.cbHolderSex.TabIndex = 16;
             // 
             // label52
             // 
@@ -2540,6 +2389,181 @@ namespace LabBilling.Forms
             this.lblTotalCharges.Text = "0.00";
             this.lblTotalCharges.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.ForeColor = System.Drawing.Color.White;
+            this.label11.Location = new System.Drawing.Point(500, 60);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(70, 13);
+            this.label11.TabIndex = 32;
+            this.label11.Text = "Billing Status:";
+            // 
+            // tbBannerBillStatus
+            // 
+            this.tbBannerBillStatus.BackColor = System.Drawing.Color.Blue;
+            this.tbBannerBillStatus.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.tbBannerBillStatus.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbBannerBillStatus.ForeColor = System.Drawing.Color.White;
+            this.tbBannerBillStatus.Location = new System.Drawing.Point(586, 58);
+            this.tbBannerBillStatus.Name = "tbBannerBillStatus";
+            this.tbBannerBillStatus.ReadOnly = true;
+            this.tbBannerBillStatus.Size = new System.Drawing.Size(94, 16);
+            this.tbBannerBillStatus.TabIndex = 25;
+            // 
+            // cbGuarantorRelation
+            // 
+            this.cbGuarantorRelation.BorderColor = System.Drawing.Color.Blue;
+            this.cbGuarantorRelation.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbGuarantorRelation.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.cbGuarantorRelation.FormattingEnabled = true;
+            this.cbGuarantorRelation.Location = new System.Drawing.Point(617, 33);
+            this.cbGuarantorRelation.Name = "cbGuarantorRelation";
+            this.cbGuarantorRelation.Size = new System.Drawing.Size(277, 21);
+            this.cbGuarantorRelation.TabIndex = 34;
+            // 
+            // cbGuarState
+            // 
+            this.cbGuarState.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
+            this.cbGuarState.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this.cbGuarState.BackColor = System.Drawing.Color.White;
+            this.cbGuarState.BorderColor = System.Drawing.Color.Blue;
+            this.cbGuarState.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbGuarState.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.cbGuarState.FormattingEnabled = true;
+            this.cbGuarState.Location = new System.Drawing.Point(617, 273);
+            this.cbGuarState.Name = "cbGuarState";
+            this.cbGuarState.Size = new System.Drawing.Size(183, 21);
+            this.cbGuarState.TabIndex = 47;
+            // 
+            // cbMaritalStatus
+            // 
+            this.cbMaritalStatus.BackColor = System.Drawing.Color.White;
+            this.cbMaritalStatus.BorderColor = System.Drawing.Color.Blue;
+            this.cbMaritalStatus.Dock = System.Windows.Forms.DockStyle.Left;
+            this.cbMaritalStatus.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbMaritalStatus.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.cbMaritalStatus.FormattingEnabled = true;
+            this.cbMaritalStatus.Items.AddRange(new object[] {
+            "Unknown",
+            "Single",
+            "Married",
+            "Divorced",
+            "Widowed"});
+            this.cbMaritalStatus.Location = new System.Drawing.Point(133, 423);
+            this.cbMaritalStatus.Name = "cbMaritalStatus";
+            this.cbMaritalStatus.Size = new System.Drawing.Size(157, 21);
+            this.cbMaritalStatus.TabIndex = 30;
+            // 
+            // cbSex
+            // 
+            this.cbSex.BackColor = System.Drawing.Color.White;
+            this.cbSex.BorderColor = System.Drawing.Color.Blue;
+            this.cbSex.Dock = System.Windows.Forms.DockStyle.Left;
+            this.cbSex.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbSex.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.cbSex.FormattingEnabled = true;
+            this.cbSex.Items.AddRange(new object[] {
+            "Male",
+            "Female",
+            "Unknown"});
+            this.cbSex.Location = new System.Drawing.Point(133, 393);
+            this.cbSex.Name = "cbSex";
+            this.cbSex.Size = new System.Drawing.Size(157, 21);
+            this.cbSex.TabIndex = 28;
+            // 
+            // cbState
+            // 
+            this.cbState.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
+            this.cbState.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this.cbState.BackColor = System.Drawing.Color.White;
+            this.cbState.BorderColor = System.Drawing.Color.Blue;
+            this.cbState.Dock = System.Windows.Forms.DockStyle.Left;
+            this.cbState.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbState.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.cbState.FormattingEnabled = true;
+            this.cbState.Location = new System.Drawing.Point(133, 273);
+            this.cbState.Name = "cbState";
+            this.cbState.Size = new System.Drawing.Size(163, 21);
+            this.cbState.TabIndex = 16;
+            // 
+            // cbPlanFinCode
+            // 
+            this.cbPlanFinCode.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.cbPlanFinCode.BorderColor = System.Drawing.Color.Blue;
+            this.cbPlanFinCode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbPlanFinCode.FormattingEnabled = true;
+            this.cbPlanFinCode.Location = new System.Drawing.Point(705, 299);
+            this.cbPlanFinCode.Name = "cbPlanFinCode";
+            this.cbPlanFinCode.Size = new System.Drawing.Size(230, 21);
+            this.cbPlanFinCode.TabIndex = 33;
+            // 
+            // cbInsCode
+            // 
+            this.cbInsCode.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
+            this.cbInsCode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbInsCode.Location = new System.Drawing.Point(705, 167);
+            this.cbInsCode.Name = "cbInsCode";
+            this.cbInsCode.Size = new System.Drawing.Size(380, 21);
+            this.cbInsCode.TabIndex = 42;
+            this.cbInsCode.SelectedIndexChanged += new System.EventHandler(this.cbInsCode_SelectedIndexChanged);
+            // 
+            // cbInsRelation
+            // 
+            this.cbInsRelation.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.cbInsRelation.BorderColor = System.Drawing.Color.Blue;
+            this.cbInsRelation.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbInsRelation.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.cbInsRelation.FormattingEnabled = true;
+            this.cbInsRelation.Location = new System.Drawing.Point(133, 379);
+            this.cbInsRelation.Name = "cbInsRelation";
+            this.cbInsRelation.Size = new System.Drawing.Size(230, 21);
+            this.cbInsRelation.TabIndex = 20;
+            // 
+            // cbHolderState
+            // 
+            this.cbHolderState.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.cbHolderState.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
+            this.cbHolderState.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this.cbHolderState.BackColor = System.Drawing.Color.White;
+            this.cbHolderState.BorderColor = System.Drawing.Color.Blue;
+            this.cbHolderState.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbHolderState.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.cbHolderState.FormattingEnabled = true;
+            this.cbHolderState.Location = new System.Drawing.Point(133, 272);
+            this.cbHolderState.Name = "cbHolderState";
+            this.cbHolderState.Size = new System.Drawing.Size(153, 21);
+            this.cbHolderState.TabIndex = 12;
+            // 
+            // cbInsOrder
+            // 
+            this.cbInsOrder.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.cbInsOrder.BorderColor = System.Drawing.Color.Blue;
+            this.cbInsOrder.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbInsOrder.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.cbInsOrder.FormattingEnabled = true;
+            this.cbInsOrder.Location = new System.Drawing.Point(705, 140);
+            this.cbInsOrder.Name = "cbInsOrder";
+            this.cbInsOrder.Size = new System.Drawing.Size(230, 21);
+            this.cbInsOrder.TabIndex = 22;
+            // 
+            // cbHolderSex
+            // 
+            this.cbHolderSex.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.cbHolderSex.BackColor = System.Drawing.Color.White;
+            this.cbHolderSex.BorderColor = System.Drawing.Color.Blue;
+            this.cbHolderSex.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbHolderSex.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.cbHolderSex.FormattingEnabled = true;
+            this.cbHolderSex.Items.AddRange(new object[] {
+            "Male",
+            "Female",
+            "Unknown"});
+            this.cbHolderSex.Location = new System.Drawing.Point(133, 326);
+            this.cbHolderSex.Name = "cbHolderSex";
+            this.cbHolderSex.Size = new System.Drawing.Size(230, 21);
+            this.cbHolderSex.TabIndex = 16;
+            // 
             // AccountForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2547,11 +2571,13 @@ namespace LabBilling.Forms
             this.AutoScroll = true;
             this.BackColor = System.Drawing.Color.Blue;
             this.ClientSize = new System.Drawing.Size(1159, 753);
+            this.Controls.Add(this.label11);
             this.Controls.Add(this.label60);
             this.Controls.Add(this.tbBannerFinClass);
             this.Controls.Add(this.tbBannerClient);
             this.Controls.Add(this.btnRefresh);
             this.Controls.Add(this.tbBannerMRN);
+            this.Controls.Add(this.tbBannerBillStatus);
             this.Controls.Add(this.tbBannerAccount);
             this.Controls.Add(this.tbBannerSex);
             this.Controls.Add(this.tbBannerDob);
@@ -2790,6 +2816,8 @@ namespace LabBilling.Forms
         private MetroFramework.Controls.MetroButton btnValidateAccount;
         private MetroFramework.Controls.MetroLabel lblLastValidated;
         private MetroFramework.Controls.MetroLabel metroLabel1;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.TextBox tbBannerBillStatus;
     }
 }
 

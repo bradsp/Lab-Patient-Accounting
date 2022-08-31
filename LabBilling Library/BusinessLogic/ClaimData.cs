@@ -12,6 +12,7 @@ namespace LabBilling.Core
         public Account claimAccount;
 
         public string TransactionTypeCode { get; set; }
+        public string TransactionSetPurpose { get; set; }
 
         public string SubmitterId { get; set; }
         public string SubmitterName { get; set; }
@@ -20,6 +21,7 @@ namespace LabBilling.Core
         public string SubmitterContactEmail { get; set; }
 
         public string ReceiverOrgName { get; set; }
+        public string ReceiverId { get; set; }
         public string ProviderTaxonomyCode { get; set; }
 
         public string BillingProviderName { get; set; }
@@ -140,6 +142,7 @@ namespace LabBilling.Core
         public string ProcedureModifier1 { get; set; }
         public string ProcedureModifier2 { get; set; }
         public string ProcedureModifier3 { get; set; }
+        public string RevenueCode { get; set; }
         public string Description { get; set; }
         public double Amount { get; set; }
         public int Quantity { get; set; }

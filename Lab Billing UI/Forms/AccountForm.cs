@@ -410,6 +410,7 @@ namespace LabBilling.Forms
             tbBannerMRN.Text = currentAccount.MRN;
             tbBannerClient.Text = currentAccount.ClientName;
             tbBannerFinClass.Text = currentAccount.FinCode;
+            tbBannerBillStatus.Text = currentAccount.Status;
 
             tbTotalCharges.Text = currentAccount.TotalCharges.ToString("c");
 

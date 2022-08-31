@@ -210,15 +210,19 @@ namespace LabBilling.Core.DataAccess
                 switch (claimType)
                 {
                     case ClaimType.Institutional:
-                        command = PetaPoco.Sql.Builder;
+                        command = PetaPoco.Sql.Builder
+                            .Select("status, acc.account, pat_name, ssn, cl_mnem, acc.fin_code, trans_date, ins.plan_nme")
+                            .From(_tableName)
+                            .InnerJoin("ins").On("ins.account = acc.account and ins_a_b_c = 'a'")
+                            .Where("status = 'UB'");
                         break;
                     case ClaimType.Professional:
                         command = PetaPoco.Sql.Builder
                             .Select("status, acc.account, pat_name, ssn, cl_mnem, acc.fin_code, trans_date, ins.plan_nme")
                             .From(_tableName)
                             .InnerJoin("ins").On("ins.account = acc.account and ins_a_b_c = 'a'")
-                            .Where("status = '1500'")
-                            .Where("ins_code not in ('CHAMPUS')");
+                            .Where("status = '1500'");
+                            //.Where("ins_code not in ('CHAMPUS')");
                         break;
                     default:
                         command = PetaPoco.Sql.Builder;

@@ -49,7 +49,6 @@
             this.globalBillingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.posting835RemitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.clientBillsNewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.professionalBillingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dictionariesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.chargeMasterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.clientsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -85,6 +84,9 @@
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.windowManagerPanel1 = new MDIWindowManager.WindowManagerPanel();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.generateClaimsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.institutionalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.professionalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.DashboardMenu.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -120,7 +122,7 @@
             this.globalBillingToolStripMenuItem,
             this.posting835RemitToolStripMenuItem,
             this.clientBillsNewToolStripMenuItem,
-            this.professionalBillingToolStripMenuItem});
+            this.generateClaimsToolStripMenuItem});
             this.billingToolStripMenuItem.Name = "billingToolStripMenuItem";
             resources.ApplyResources(this.billingToolStripMenuItem, "billingToolStripMenuItem");
             // 
@@ -234,12 +236,6 @@
             this.clientBillsNewToolStripMenuItem.Name = "clientBillsNewToolStripMenuItem";
             resources.ApplyResources(this.clientBillsNewToolStripMenuItem, "clientBillsNewToolStripMenuItem");
             this.clientBillsNewToolStripMenuItem.Click += new System.EventHandler(this.clientBillsNewToolStripMenuItem_Click);
-            // 
-            // professionalBillingToolStripMenuItem
-            // 
-            this.professionalBillingToolStripMenuItem.Name = "professionalBillingToolStripMenuItem";
-            resources.ApplyResources(this.professionalBillingToolStripMenuItem, "professionalBillingToolStripMenuItem");
-            this.professionalBillingToolStripMenuItem.Click += new System.EventHandler(this.professionalBillingToolStripMenuItem_Click);
             // 
             // dictionariesToolStripMenuItem
             // 
@@ -482,6 +478,26 @@
             resources.ApplyResources(this.panel1, "panel1");
             this.panel1.Name = "panel1";
             // 
+            // generateClaimsToolStripMenuItem
+            // 
+            this.generateClaimsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.institutionalToolStripMenuItem,
+            this.professionalToolStripMenuItem});
+            this.generateClaimsToolStripMenuItem.Name = "generateClaimsToolStripMenuItem";
+            resources.ApplyResources(this.generateClaimsToolStripMenuItem, "generateClaimsToolStripMenuItem");
+            // 
+            // institutionalToolStripMenuItem
+            // 
+            this.institutionalToolStripMenuItem.Name = "institutionalToolStripMenuItem";
+            resources.ApplyResources(this.institutionalToolStripMenuItem, "institutionalToolStripMenuItem");
+            this.institutionalToolStripMenuItem.Click += new System.EventHandler(this.institutionalToolStripMenuItem_Click);
+            // 
+            // professionalToolStripMenuItem
+            // 
+            this.professionalToolStripMenuItem.Name = "professionalToolStripMenuItem";
+            resources.ApplyResources(this.professionalToolStripMenuItem, "professionalToolStripMenuItem");
+            this.professionalToolStripMenuItem.Click += new System.EventHandler(this.professionalToolStripMenuItem_Click);
+            // 
             // MainForm
             // 
             resources.ApplyResources(this, "$this");
@@ -559,8 +575,10 @@
         private System.Windows.Forms.ToolStripMenuItem interfaceMappingToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem clientBillsNewToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem interfaceMonitorToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem professionalBillingToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem claimValidationRulesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem worklistToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem generateClaimsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem institutionalToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem professionalToolStripMenuItem;
     }
 }
