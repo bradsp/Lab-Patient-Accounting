@@ -32,6 +32,7 @@
             this.DashboardMenu = new System.Windows.Forms.MenuStrip();
             this.billingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.accountToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.worklistToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.workqueuesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.duplicateAccountsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.paymentProcessingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -84,7 +85,6 @@
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.windowManagerPanel1 = new MDIWindowManager.WindowManagerPanel();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.worklistToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.DashboardMenu.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -129,6 +129,12 @@
             this.accountToolStripMenuItem.Name = "accountToolStripMenuItem";
             resources.ApplyResources(this.accountToolStripMenuItem, "accountToolStripMenuItem");
             this.accountToolStripMenuItem.Click += new System.EventHandler(this.accountToolStripMenuItem_Click);
+            // 
+            // worklistToolStripMenuItem
+            // 
+            this.worklistToolStripMenuItem.Name = "worklistToolStripMenuItem";
+            resources.ApplyResources(this.worklistToolStripMenuItem, "worklistToolStripMenuItem");
+            this.worklistToolStripMenuItem.Click += new System.EventHandler(this.worklistToolStripMenuItem_Click);
             // 
             // workqueuesToolStripMenuItem
             // 
@@ -475,12 +481,6 @@
             // 
             resources.ApplyResources(this.panel1, "panel1");
             this.panel1.Name = "panel1";
-            // 
-            // worklistToolStripMenuItem
-            // 
-            this.worklistToolStripMenuItem.Name = "worklistToolStripMenuItem";
-            resources.ApplyResources(this.worklistToolStripMenuItem, "worklistToolStripMenuItem");
-            this.worklistToolStripMenuItem.Click += new System.EventHandler(this.worklistToolStripMenuItem_Click);
             // 
             // MainForm
             // 

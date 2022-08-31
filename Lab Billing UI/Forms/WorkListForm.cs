@@ -36,53 +36,35 @@ namespace LabBilling.Forms
 
         private void WorkListForm_Load(object sender, EventArgs e)
         {
-            Cursor.Current = Cursors.WaitCursor;
-            finRepository = new FinRepository(_connectionString);
+            //Cursor.Current = Cursors.WaitCursor;
+            //finRepository = new FinRepository(_connectionString);
             accountRepository = new AccountRepository(_connectionString);
             accountSearchRepository = new AccountSearchRepository(_connectionString);
             systemParametersRepository = new SystemParametersRepository(_connectionString);
 
             //load filter combobox
-            ClaimFilter.DataSource = finRepository.GetAll();
-            ClaimFilter.DisplayMember = nameof(Fin.res_party);
-            ClaimFilter.ValueMember = nameof(Fin.fin_code);
-            ClaimFilter.SelectedIndex = -1;
+            //ClaimFilter.DataSource = finRepository.GetAll();
+            //ClaimFilter.DisplayMember = nameof(Fin.res_party);
+            //ClaimFilter.ValueMember = nameof(Fin.fin_code);
+            //ClaimFilter.SelectedIndex = -1;
 
-            //thru date is ssi_bill_thru_date
-            DateTime.TryParse(systemParametersRepository.GetByKey("ssi_bill_thru_date"), out DateTime thruDate);
-            
-            accounts = accountSearchRepository.GetBySearch(new[] { (nameof(AccountSearch.ServiceDate), AccountSearchRepository.operation.LessThanOrEqual, thruDate.ToString()),
-                                                                    (nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "PAID_OUT"),
-                                                                    (nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "CLOSED"),
-                                                                    (nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "SSI1500"),
-                                                                    (nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "SSIUB"),
-                                                                    (nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "UB"),
-                                                                    (nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "1500"),
-                                                                    (nameof(AccountSearch.FinCode), AccountSearchRepository.operation.NotEqual, "CLIENT")}).ToList();
-
-            if (accounts == null || accounts.Count == 0)
+            // load the treeview with worklists
+            TreeNode[] worklists = new TreeNode[]
             {
-                MessageBox.Show("No records returned.", "Alert", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+                new TreeNode("Medicare/Cigna"),
+                new TreeNode("BlueCross"),
+                new TreeNode("Champus"),
+                new TreeNode("Tenncare BC/BS"),
+                new TreeNode("Commercial UB"),
+                new TreeNode("Commercial 1500"),
+                new TreeNode("UHC Community Plan"),
+                new TreeNode("Pathways TNCare"),
+                new TreeNode("Amerigroup")
+            };
 
-            //accountData = Helper.ConvertToDataTable(accounts);
-            //accountData.Columns.Add("Validation Errors");
-
-            accountGrid.DataSource = accounts;
-            accountGrid.ForeColor = Color.Black;
-            accountGrid.Columns[nameof(AccountSearch.mod_date)].Visible = false;
-            accountGrid.Columns[nameof(AccountSearch.mod_host)].Visible = false;
-            accountGrid.Columns[nameof(AccountSearch.mod_prg)].Visible = false;
-            accountGrid.Columns[nameof(AccountSearch.mod_user)].Visible = false;
-            accountGrid.Columns[nameof(AccountSearch.rowguid)].Visible = false;
-
-            accountGrid.Columns.Add("ValidationErrors", "Validation Errors");
-
-            accountGrid.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
-            accountGrid.Columns["ValidationErrors"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            Cursor.Current = Cursors.Default;
-
-            statusLabel1.Text = accountGrid.Rows.Count.ToString() + $" records.";
+            TreeNode rootNode = new TreeNode("Worklists", worklists);
+            workqueues.Nodes.Add(rootNode);
+            workqueues.ExpandAll();
         }
 
         private async void ValidateButton_Click(object sender, EventArgs e)
@@ -117,7 +99,6 @@ namespace LabBilling.Forms
             ValidateButton.Enabled = true;
             PostButton.Enabled = true;
         }
-
 
         private void RunValidation(string accountNo)
         {
@@ -182,7 +163,8 @@ namespace LabBilling.Forms
                 else
                 {
                     accountGrid[nameof(AccountSearch.Status), rowIndex].Value = formType;
-                    accountRepository.UpdateStatus(accountNo, formType);
+                    if(formType != "UNDEFINED")
+                        accountRepository.UpdateStatus(accountNo, formType);
                     accountGrid[nameof(AccountSearch.Status), rowIndex].Style.BackColor = Color.LightGreen;
                 }
             }
@@ -200,11 +182,11 @@ namespace LabBilling.Forms
                 if (!accountRepository.Validate(ref account))
                 {
                     return (false, account.AccountValidationStatus.validation_text, 
-                        account.BillForm);
+                        account.BillForm ?? "UNDEFINED");
                 }
                 else
                 {
-                    return (true, string.Empty, account.BillForm);
+                    return (true, string.Empty, account.BillForm ?? "UNDEFINED");
                 }
             }
             catch(Exception ex)
@@ -215,11 +197,6 @@ namespace LabBilling.Forms
         }
 
         private void PostButton_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void OutpatientBilling_CheckedChanged(object sender, EventArgs e)
         {
 
         }
@@ -247,19 +224,9 @@ namespace LabBilling.Forms
 
         }
 
-        private void ClaimFilter_SelectionChangeCommitted(object sender, EventArgs e)
-        {
-            var selectedValue = ClaimFilter.SelectedValue;
-            if (selectedValue != null)
-            {
-                accountGrid.DataSource = accounts.Where(a => a.FinCode == selectedValue.ToString()).ToList();
-                statusLabel1.Text = accountGrid.Rows.Count.ToString() + $" rows.";
-            }
-        }
-
         private void WorkListForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if(tasksRunning)
+            if (tasksRunning)
             {
                 if(MessageBox.Show("Validation process is running. Do you want to abort?", "Abort Validation?", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
                     == DialogResult.Yes)
@@ -275,10 +242,88 @@ namespace LabBilling.Forms
                     return;
                 }
             }
-            else
+        }
+
+        private async void workqueues_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
+        {
+            DateTime.TryParse(systemParametersRepository.GetByKey("ssi_bill_thru_date"), out DateTime thruDate);
+            (string propertyName, AccountSearchRepository.operation oper, string searchText)[] parameters = 
             {
-                this.Close();
+                (nameof(AccountSearch.ServiceDate), AccountSearchRepository.operation.LessThanOrEqual, thruDate.ToString()),
+                (nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "PAID_OUT"),
+                (nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "CLOSED"),
+                (nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "SSI1500"),
+                (nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "SSIUB"),
+                (nameof(AccountSearch.FinCode), AccountSearchRepository.operation.NotEqual, "CLIENT")
+            };
+
+            var selectedQueue = workqueues.SelectedNode.Text;
+            switch (selectedQueue)
+            {
+                case "Medicare/Cigna":
+                    parameters = parameters.Append((nameof(AccountSearch.FinCode), AccountSearchRepository.operation.Equal, "A")).ToArray();
+                    break;
+                case "BlueCross":
+                    parameters = parameters.Append((nameof(AccountSearch.FinCode), AccountSearchRepository.operation.Equal, "B")).ToArray();
+                    break;
+                case "Champus":
+                    parameters = parameters.Append((nameof(AccountSearch.FinCode), AccountSearchRepository.operation.Equal, "C")).ToArray();
+                    break;
+                case "Tenncare BC/BS":
+                    parameters = parameters.Append((nameof(AccountSearch.FinCode), AccountSearchRepository.operation.Equal, "D")).ToArray();
+                    break;
+                case "Commercial UB":
+                    parameters = parameters.Append((nameof(AccountSearch.FinCode), AccountSearchRepository.operation.Equal, "H")).ToArray();
+                    break;
+                case "Commercial 1500":
+                    parameters = parameters.Append((nameof(AccountSearch.FinCode), AccountSearchRepository.operation.Equal, "L")).ToArray();
+                    break;
+                case "UHC Community Plan":
+                    parameters = parameters.Append((nameof(AccountSearch.FinCode), AccountSearchRepository.operation.Equal, "M")).ToArray();
+                    break;
+                case "Pathways TNCare":
+                    parameters = parameters.Append((nameof(AccountSearch.FinCode), AccountSearchRepository.operation.Equal, "P")).ToArray();
+                    break;
+                case "Amerigroup":
+                    parameters = parameters.Append((nameof(AccountSearch.FinCode), AccountSearchRepository.operation.Equal, "Q")).ToArray();
+                    break;
+                default:
+                    break;
             }
+
+            accountGrid.DataSource = null;
+            accountGrid.Columns.Clear();
+            accountGrid.Rows.Clear();
+
+            statusLabel1.Text = "Loading Accounts ... ";
+            progressBar.ProgressBarStyle = ProgressBarStyle.Marquee;
+            accounts = await Task.Run(() =>
+            {
+                return accountSearchRepository.GetBySearch(parameters).ToList();
+            });
+
+            if (accounts == null || accounts.Count == 0)
+            {
+                MessageBox.Show("No records returned.", "Alert", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+            accountGrid.DataSource = accounts;
+            accountGrid.ForeColor = Color.Black;
+            accountGrid.Columns[nameof(AccountSearch.mod_date)].Visible = false;
+            accountGrid.Columns[nameof(AccountSearch.mod_host)].Visible = false;
+            accountGrid.Columns[nameof(AccountSearch.mod_prg)].Visible = false;
+            accountGrid.Columns[nameof(AccountSearch.mod_user)].Visible = false;
+            accountGrid.Columns[nameof(AccountSearch.rowguid)].Visible = false;
+
+            accountGrid.Columns.Add("ValidationErrors", "Validation Errors");
+
+            accountGrid.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
+            accountGrid.Columns["ValidationErrors"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            Cursor.Current = Cursors.Default;
+
+            statusLabel1.Text = accountGrid.Rows.Count.ToString() + $" records.";
+            progressBar.ProgressBarStyle = ProgressBarStyle.Continuous;
+
         }
     }
 }

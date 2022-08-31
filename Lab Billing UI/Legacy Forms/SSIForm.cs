@@ -606,7 +606,6 @@ namespace LabBilling.Legacy
             string strFilterAcc;
             using (SqlConnection connection = new SqlConnection(m_sqlConnection.ConnectionString))
             {
-
                 // if you don't have any valid ub's set the date to today to bypass the selection filter
                 SqlCommand cmdSelectAcc = new SqlCommand();
                 string strWhere = "";
@@ -626,7 +625,7 @@ namespace LabBilling.Legacy
                 }
                 if (m_strFilter.Contains("CHAMPUS"))
                 {
-                    // strWhere = "where status = '1500' and plan_nme like 'CHAMPUS%'";
+                    //strWhere = "where status = '1500' and plan_nme like 'CHAMPUS%'";
                     strWhere = "where status = '1500' and ins_code like 'CHAMPUS%'";
                 }
                 if (m_strFilter.Contains("1500"))

@@ -34,7 +34,9 @@ namespace LabBilling.Core.Models
         [Column("status")]
         [ResultColumn]
         public string Status { get; set; }
-
+        [Column("ins_code")]
+        [ResultColumn]
+        public string PrimaryInsCode { get; set; }
         [Ignore]
         public DateTime mod_date { get; set; }
         [Ignore]

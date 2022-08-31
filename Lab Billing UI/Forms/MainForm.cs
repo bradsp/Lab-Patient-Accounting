@@ -25,8 +25,7 @@ namespace LabBilling
         private readonly UserProfileRepository userProfile = new UserProfileRepository(Helper.ConnVal);
         private readonly AccountRepository accountRepository = new AccountRepository(Helper.ConnVal);
         private readonly SystemParametersRepository systemParametersRepository = new SystemParametersRepository(Helper.ConnVal);
-        private WorkListForm worklistForm = null;
-        private WorkqueueForm workqueueForm = null;
+
 
         public MainForm()
         {
@@ -262,34 +261,38 @@ namespace LabBilling
         {
             Log.Instance.Trace($"Entering");
 
-            if (workqueueForm == null)
+            if (Application.OpenForms.OfType<WorkqueueForm>().Count() > 0)
             {
-                workqueueForm = new WorkqueueForm(Helper.ConnVal);
+                WorkqueueForm workqueueform = Application.OpenForms.OfType<WorkqueueForm>().First();
+                workqueueform.Focus();
+            }
+            else
+            {
+                WorkqueueForm workqueueForm = new WorkqueueForm(Helper.ConnVal);
                 workqueueForm.MdiParent = this;
                 workqueueForm.AutoScroll = true;
                 workqueueForm.WindowState = FormWindowState.Normal;
                 workqueueForm.Show();
             }
-            else
-                workqueueForm.BringToFront();
-
         }
 
         private void worklistToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Log.Instance.Trace($"Entering");
 
-            if (worklistForm == null)
+            if(Application.OpenForms.OfType<WorkListForm>().Count() > 0)
             {
-                worklistForm = new WorkListForm(Helper.ConnVal);
+                WorkListForm workListForm = Application.OpenForms.OfType<WorkListForm>().First();
+                workListForm.Focus();
+            }
+            else
+            {
+                WorkListForm worklistForm = new WorkListForm(Helper.ConnVal);
                 worklistForm.MdiParent = this;
                 worklistForm.AutoScroll = true;
                 worklistForm.WindowState = FormWindowState.Normal;
                 worklistForm.Show();
             }
-            else
-                worklistForm.BringToFront();
-
         }
 
         private void reportingPortalToolStripMenuItem_Click(object sender, EventArgs e)
@@ -593,6 +596,20 @@ namespace LabBilling
             frm.ShowDialog();
         }
 
+        private bool CheckForDuplicate(Form newForm)
+        {
+            bool bValue = false;
+            foreach (Form fm in this.MdiChildren)
+            {
+                if (fm.GetType() == newForm.GetType())
+                {
+                    fm.Activate();
+                    fm.WindowState = FormWindowState.Maximized;
+                    bValue = true;
+                }
+            }
+            return bValue;
+        }
 
     }
 }

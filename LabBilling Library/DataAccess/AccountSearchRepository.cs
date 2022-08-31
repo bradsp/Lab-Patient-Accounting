@@ -8,6 +8,7 @@ using System.Text;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace LabBilling.Core.DataAccess
 {
@@ -39,8 +40,88 @@ namespace LabBilling.Core.DataAccess
             OneOf,
             NotOneOf
         }
+
+
+
         public IEnumerable<AccountSearch> GetBySearch((string propertyName, operation oper, string searchText)[] searchValues)
         {
+            InsRepository insRepository = new InsRepository(dbConnection);
+            try
+            {
+                var command = PetaPoco.Sql.Builder;
+
+                foreach (var searchValue in searchValues)
+                {
+                    Type accounttype = typeof(AccountSearch);
+                    var prop = accounttype.GetProperty(searchValue.propertyName);
+
+                    string propName = GetRealColumn(typeof(AccountSearch), prop.Name);
+                    string op;
+                    string searchText = searchValue.searchText;
+
+                    switch (searchValue.oper)
+                    {
+                        case operation.Equal:
+                            op = "=";
+                            break;
+                        case operation.Like:
+                            op = "like";
+                            searchText += "%";
+                            break;
+                        case operation.GreaterThanOrEqual:
+                            op = ">=";
+                            break;
+                        case operation.GreaterThan:
+                            op = ">";
+                            break;
+                        case operation.LessThanOrEqual:
+                            op = "<=";
+                            break;
+                        case operation.LessThan:
+                            op = "<";
+                            break;
+                        case operation.NotEqual:
+                            op = "<>";
+                            break;
+                        case operation.OneOf:
+                            op = "in";
+                            break;
+                        case operation.NotOneOf:
+                            op = "not in";
+                            break;
+                        default:
+                            op = "=";
+                            break;
+                    }
+                    command.Where($"{propName} {op} '{searchText}'");
+                }
+                command.OrderBy(GetRealColumn(typeof(AccountSearch), nameof(AccountSearch.Name)));
+                var results = dbConnection.Fetch<AccountSearch>(command);
+
+                //foreach(var result in results)
+                //{
+                //    var ins = insRepository.GetByAccount(result.Account, InsCoverage.Primary);
+                //    if (ins != null)
+                //        result.PrimaryInsCode = ins.InsCode;
+                //}
+
+                return results;
+            }
+            catch (NullReferenceException nre)
+            {
+                Log.Instance.Fatal(nre, $"Exception in");
+            }
+            catch (Exception ex)
+            {
+                Log.Instance.Fatal(ex, $"Exception in");
+            }
+
+            return new List<AccountSearch>();
+        }
+
+        public async Task<IEnumerable<AccountSearch>> GetBySearchAsync((string propertyName, operation oper, string searchText)[] searchValues)
+        {
+            InsRepository insRepository = new InsRepository(dbConnection);
             try
             {
                 var command = PetaPoco.Sql.Builder;
@@ -92,7 +173,16 @@ namespace LabBilling.Core.DataAccess
                     command.Where($"{propName} {op} '{searchText}'");
                 }
                 command.OrderBy(GetRealColumn(typeof(AccountSearch), nameof(AccountSearch.Name)));
-                return dbConnection.Fetch<AccountSearch>(command);
+                var results = dbConnection.Fetch<AccountSearch>(command);
+
+                foreach (var result in results)
+                {
+                    var ins = insRepository.GetByAccount(result.Account, InsCoverage.Primary);
+                    if (ins != null)
+                        result.PrimaryInsCode = ins.InsCode;
+                }
+
+                return results;
             }
             catch (NullReferenceException nre)
             {
@@ -105,6 +195,8 @@ namespace LabBilling.Core.DataAccess
 
             return new List<AccountSearch>();
         }
+
+
 
         public IEnumerable<AccountSearch> GetBySearch(string lastNameSearchText, string firstNameSearchText, string mrnSearchText, string ssnSearchText, string dobSearch, string sexSearch, string accountSearchText)
         {

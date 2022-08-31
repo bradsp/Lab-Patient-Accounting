@@ -256,6 +256,7 @@
     <Compile Include="DataAccess\PatDxRepository.cs" />
     <Compile Include="DataAccess\PatRepository.cs" />
     <Compile Include="DataAccess\PhyRepository.cs" />
+    <Compile Include="DataAccess\ReportingRepository.cs" />
     <Compile Include="DataAccess\RepositoryBase.cs" />
     <Compile Include="DataAccess\SystemParametersRepository.cs" />
     <Compile Include="DataAccess\UserProfileRepository.cs" />
