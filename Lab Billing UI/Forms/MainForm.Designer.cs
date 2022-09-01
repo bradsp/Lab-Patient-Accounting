@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-            this.DashboardMenu = new System.Windows.Forms.MenuStrip();
+            this.MainFormMenu = new System.Windows.Forms.MenuStrip();
             this.billingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.accountToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.worklistToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -87,23 +87,23 @@
             this.generateClaimsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.institutionalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.professionalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.DashboardMenu.SuspendLayout();
+            this.MainFormMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // DashboardMenu
             // 
-            this.DashboardMenu.BackColor = System.Drawing.Color.Transparent;
-            this.DashboardMenu.ImageScalingSize = new System.Drawing.Size(20, 20);
-            this.DashboardMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.MainFormMenu.BackColor = System.Drawing.Color.Transparent;
+            this.MainFormMenu.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.MainFormMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.billingToolStripMenuItem,
             this.dictionariesToolStripMenuItem,
             this.reportsToolStripMenuItem,
             this.systemAdministrationToolStripMenuItem,
             this.windowsToolStripMenuItem,
             this.helpToolStripMenuItem});
-            resources.ApplyResources(this.DashboardMenu, "DashboardMenu");
-            this.DashboardMenu.MdiWindowListItem = this.windowsToolStripMenuItem;
-            this.DashboardMenu.Name = "DashboardMenu";
+            resources.ApplyResources(this.MainFormMenu, "DashboardMenu");
+            this.MainFormMenu.MdiWindowListItem = this.windowsToolStripMenuItem;
+            this.MainFormMenu.Name = "DashboardMenu";
             // 
             // billingToolStripMenuItem
             // 
@@ -504,17 +504,17 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.windowManagerPanel1);
-            this.Controls.Add(this.DashboardMenu);
+            this.Controls.Add(this.MainFormMenu);
             this.IsMdiContainer = true;
-            this.MainMenuStrip = this.DashboardMenu;
+            this.MainMenuStrip = this.MainFormMenu;
             this.Name = "MainForm";
             this.TransparencyKey = System.Drawing.Color.Empty;
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Dashboard_FormClosing);
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.MdiChildActivate += new System.EventHandler(this.Dashboard_MdiChildActivate);
-            this.DashboardMenu.ResumeLayout(false);
-            this.DashboardMenu.PerformLayout();
+            this.MainFormMenu.ResumeLayout(false);
+            this.MainFormMenu.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -522,7 +522,7 @@
 
         #endregion
 
-        private System.Windows.Forms.MenuStrip DashboardMenu;
+        private System.Windows.Forms.MenuStrip MainFormMenu;
         private System.Windows.Forms.ToolStripMenuItem billingToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem accountToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem workqueuesToolStripMenuItem;

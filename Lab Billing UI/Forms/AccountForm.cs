@@ -97,15 +97,15 @@ namespace LabBilling.Forms
                 }
             }
 
-            Helper.SetControlsAccess(demoTabLayoutPanel.Controls, false);
+            Helper.SetControlsAccess(DemographicsTabLayoutPanel.Controls, false);
             Helper.SetControlsAccess(tabInsurance.Controls, false);
             Helper.SetControlsAccess(insTabLayoutPanel.Controls, false);
             Helper.SetControlsAccess(tabDiagnosis.Controls, false);
             Helper.SetControlsAccess(tabNotes.Controls, false);
             Helper.SetControlsAccess(tabCharges.Controls, false);
             Helper.SetControlsAccess(tabPayments.Controls, false);
-            lGuarCopyPatient.Enabled = false;
-            lInsCopyPatient.Enabled = false;
+            GuarCopyPatientLink.Enabled = false;
+            InsCopyPatientLink.Enabled = false;
             changeClientToolStripMenuItem.Enabled = false;
             changeDateOfServiceToolStripMenuItem.Enabled = false;
             changeFinancialClassToolStripMenuItem.Enabled = false;
@@ -114,15 +114,15 @@ namespace LabBilling.Forms
             {
                 if(Program.LoggedInUser.Access == "ENTER/EDIT")
                 {
-                    Helper.SetControlsAccess(demoTabLayoutPanel.Controls, true);
+                    Helper.SetControlsAccess(DemographicsTabLayoutPanel.Controls, true);
                     Helper.SetControlsAccess(tabInsurance.Controls, true);
                     Helper.SetControlsAccess(insTabLayoutPanel.Controls, true);
                     Helper.SetControlsAccess(tabDiagnosis.Controls, true);
                     Helper.SetControlsAccess(tabNotes.Controls, true);
                     Helper.SetControlsAccess(tabCharges.Controls, true);
                     Helper.SetControlsAccess(tabPayments.Controls, true);
-                    lGuarCopyPatient.Enabled = true;
-                    lInsCopyPatient.Enabled = true;
+                    GuarCopyPatientLink.Enabled = true;
+                    InsCopyPatientLink.Enabled = true;
                     changeClientToolStripMenuItem.Enabled = true;
                     changeDateOfServiceToolStripMenuItem.Enabled = true;
                     changeFinancialClassToolStripMenuItem.Enabled = true;
@@ -134,52 +134,52 @@ namespace LabBilling.Forms
 
             #region load controlColumnMap
 
-            controlColumnMap.Add(tbZipcode, nameof(Pat.ZipCode));
-            controlColumnMap.Add(cbMaritalStatus, nameof(Pat.MaritalStatus));
-            controlColumnMap.Add(tbEmailAddress, nameof(Pat.EmailAddress));
-            controlColumnMap.Add(tbSuffix, nameof(Pat.PatNameSuffix));
-            controlColumnMap.Add(tbLastName, nameof(Pat.PatNameSuffix));
-            controlColumnMap.Add(tbMiddleName, nameof(Pat.PatMiddleName));
-            controlColumnMap.Add(tbFirstName, nameof(Pat.PatFirstName));
-            controlColumnMap.Add(cbState, nameof(Pat.State));
-            controlColumnMap.Add(tbSSN, nameof(Account.SocSecNo));
-            controlColumnMap.Add(tbDateOfBirth, nameof(Pat.BirthDate));
-            controlColumnMap.Add(tbPhone, nameof(Pat.PrimaryPhone));
-            controlColumnMap.Add(tbCity, nameof(Pat.City));
-            controlColumnMap.Add(tbAddress2, nameof(Pat.Address2));
-            controlColumnMap.Add(cbSex, nameof(Pat.Sex));
-            controlColumnMap.Add(tbAddress1, nameof(Pat.Address1));
-            controlColumnMap.Add(tbGuarZip, nameof(Pat.GuarantorZipCode));
-            controlColumnMap.Add(cbPlanFinCode, nameof(Ins.FinCode));
-            controlColumnMap.Add(tbCertSSN, nameof(Ins.CertSSN));
-            controlColumnMap.Add(tbHolderLastName, nameof(Ins.HolderLastName));
-            controlColumnMap.Add(tbGroupName, nameof(Ins.GroupName));
-            controlColumnMap.Add(cbInsCode, nameof(Ins.InsCode));
-            controlColumnMap.Add(tbHolderZip, nameof(Ins.HolderZip));
-            controlColumnMap.Add(tbGroupNumber, nameof(Ins.GroupNumber));
-            controlColumnMap.Add(tbPlanAddress2, nameof(Ins.PlanAddress2));
-            controlColumnMap.Add(cbInsRelation, nameof(Ins.Relation));
-            controlColumnMap.Add(tbPolicyNumber, nameof(Ins.PolicyNumber));
-            controlColumnMap.Add(tbHolderDOB, nameof(Ins.HolderBirthDate));
-            controlColumnMap.Add(cbHolderState, nameof(Ins.HolderState));
-            controlColumnMap.Add(tbHolderFirstName, nameof(Ins.HolderFirstName));
-            controlColumnMap.Add(cbInsOrder, nameof(Ins.Coverage));
-            controlColumnMap.Add(cbHolderSex, nameof(Ins.HolderSex));
-            controlColumnMap.Add(tbHolderMiddleName, nameof(Ins.HolderMiddleName));
-            controlColumnMap.Add(tbPlanName, nameof(Ins.PlanName));
-            controlColumnMap.Add(tbHolderAddress, nameof(Ins.HolderAddress));
-            controlColumnMap.Add(tbPlanCitySt, nameof(Ins.PlanCityState));
-            controlColumnMap.Add(tbPlanAddress, nameof(Ins.PlanAddress1));
-            controlColumnMap.Add(tbHolderCity, nameof(Ins.HolderCity));
-            controlColumnMap.Add(tbGuarSuffix, nameof(Pat.GuarantorNameSuffix));
-            controlColumnMap.Add(tbGuarMiddleName, nameof(Pat.GuarantorMiddleName));
-            controlColumnMap.Add(tbGuarFirstName, nameof(Pat.GuarantorFirstName));
-            controlColumnMap.Add(cbGuarState, nameof(Pat.GuarantorState));
-            controlColumnMap.Add(cbGuarantorRelation, nameof(Pat.GuarRelationToPatient));
-            controlColumnMap.Add(tbGuarantorPhone, nameof(Pat.GuarantorPrimaryPhone));
-            controlColumnMap.Add(tbGuarCity, nameof(Pat.GuarantorCity));
-            controlColumnMap.Add(tbGuarantorAddress, nameof(Pat.GuarantorAddress));
-            controlColumnMap.Add(tbGuarantorLastName, nameof(Pat.GuarantorLastName));
+            controlColumnMap.Add(ZipcodeTextBox, nameof(Pat.ZipCode));
+            controlColumnMap.Add(MaritalStatusComboBox, nameof(Pat.MaritalStatus));
+            controlColumnMap.Add(EmailAddressTextBox, nameof(Pat.EmailAddress));
+            controlColumnMap.Add(SuffixTextBox, nameof(Pat.PatNameSuffix));
+            controlColumnMap.Add(LastNameTextBox, nameof(Pat.PatNameSuffix));
+            controlColumnMap.Add(MiddleNameTextBox, nameof(Pat.PatMiddleName));
+            controlColumnMap.Add(FirstNameTextBox, nameof(Pat.PatFirstName));
+            controlColumnMap.Add(StateComboBox, nameof(Pat.State));
+            controlColumnMap.Add(SocSecNoTextBox, nameof(Account.SocSecNo));
+            controlColumnMap.Add(DateOfBirthTextBox, nameof(Pat.BirthDate));
+            controlColumnMap.Add(PhoneTextBox, nameof(Pat.PrimaryPhone));
+            controlColumnMap.Add(CityTextBox, nameof(Pat.City));
+            controlColumnMap.Add(Address2TextBox, nameof(Pat.Address2));
+            controlColumnMap.Add(SexComboBox, nameof(Pat.Sex));
+            controlColumnMap.Add(Address1TextBox, nameof(Pat.Address1));
+            controlColumnMap.Add(GuarZipTextBox, nameof(Pat.GuarantorZipCode));
+            controlColumnMap.Add(PlanFinCodeComboBox, nameof(Ins.FinCode));
+            controlColumnMap.Add(CertSSNTextBox, nameof(Ins.CertSSN));
+            controlColumnMap.Add(HolderLastNameTextBox, nameof(Ins.HolderLastName));
+            controlColumnMap.Add(GroupNameTextBox, nameof(Ins.GroupName));
+            controlColumnMap.Add(InsCodeComboBox, nameof(Ins.InsCode));
+            controlColumnMap.Add(HolderZipTextBox, nameof(Ins.HolderZip));
+            controlColumnMap.Add(GroupNumberTextBox, nameof(Ins.GroupNumber));
+            controlColumnMap.Add(PlanAddress2TextBox, nameof(Ins.PlanAddress2));
+            controlColumnMap.Add(InsRelationComboBox, nameof(Ins.Relation));
+            controlColumnMap.Add(PolicyNumberTextBox, nameof(Ins.PolicyNumber));
+            controlColumnMap.Add(HolderDOBTextBox, nameof(Ins.HolderBirthDate));
+            controlColumnMap.Add(HolderStateComboBox, nameof(Ins.HolderState));
+            controlColumnMap.Add(HolderFirstNameTextBox, nameof(Ins.HolderFirstName));
+            controlColumnMap.Add(InsOrderComboBox, nameof(Ins.Coverage));
+            controlColumnMap.Add(HolderSexComboBox, nameof(Ins.HolderSex));
+            controlColumnMap.Add(HolderMiddleNameTextBox, nameof(Ins.HolderMiddleName));
+            controlColumnMap.Add(PlanNameTextBox, nameof(Ins.PlanName));
+            controlColumnMap.Add(HolderAddressTextBox, nameof(Ins.HolderAddress));
+            controlColumnMap.Add(PlanCityStTextBox, nameof(Ins.PlanCityState));
+            controlColumnMap.Add(PlanAddressTextBox, nameof(Ins.PlanAddress1));
+            controlColumnMap.Add(HolderCityTextBox, nameof(Ins.HolderCity));
+            controlColumnMap.Add(GuarSuffixTextBox, nameof(Pat.GuarantorNameSuffix));
+            controlColumnMap.Add(GuarMiddleNameTextBox, nameof(Pat.GuarantorMiddleName));
+            controlColumnMap.Add(GuarFirstNameTextBox, nameof(Pat.GuarantorFirstName));
+            controlColumnMap.Add(GuarStateComboBox, nameof(Pat.GuarantorState));
+            controlColumnMap.Add(GuarantorRelationComboBox, nameof(Pat.GuarRelationToPatient));
+            controlColumnMap.Add(GuarantorPhoneTextBox, nameof(Pat.GuarantorPrimaryPhone));
+            controlColumnMap.Add(GuarCityTextBox, nameof(Pat.GuarantorCity));
+            controlColumnMap.Add(GuarantorAddressTextBox, nameof(Pat.GuarantorAddress));
+            controlColumnMap.Add(GuarantorLastNameTextBox, nameof(Pat.GuarantorLastName));
             #endregion
 
             #region Setup Insurance Company Combobox
@@ -201,54 +201,54 @@ namespace LabBilling.Forms
                 inscDataTable.Rows.Add(values);
             }
 
-            cbInsCode.DataSource = inscDataTable;
-            cbInsCode.DisplayMember = "Name";
-            cbInsCode.ValueMember = "Code";
+            InsCodeComboBox.DataSource = inscDataTable;
+            InsCodeComboBox.DisplayMember = "Name";
+            InsCodeComboBox.ValueMember = "Code";
 
             #endregion
 
             #region populate combo boxes
 
-            cbState.DataSource = new BindingSource(Dictionaries.stateSource, null);
-            cbState.DisplayMember = "Value";
-            cbState.ValueMember = "Key";
+            StateComboBox.DataSource = new BindingSource(Dictionaries.stateSource, null);
+            StateComboBox.DisplayMember = "Value";
+            StateComboBox.ValueMember = "Key";
 
-            cbSex.DataSource = new BindingSource(Dictionaries.sexSource, null);
-            cbSex.DisplayMember = "Value";
-            cbSex.ValueMember = "Key";
+            SexComboBox.DataSource = new BindingSource(Dictionaries.sexSource, null);
+            SexComboBox.DisplayMember = "Value";
+            SexComboBox.ValueMember = "Key";
 
-            cbMaritalStatus.DataSource = new BindingSource(Dictionaries.maritalSource, null);
-            cbMaritalStatus.DisplayMember = "Value";
-            cbMaritalStatus.ValueMember = "Key";
+            MaritalStatusComboBox.DataSource = new BindingSource(Dictionaries.maritalSource, null);
+            MaritalStatusComboBox.DisplayMember = "Value";
+            MaritalStatusComboBox.ValueMember = "Key";
 
-            cbGuarState.DataSource = new BindingSource(Dictionaries.stateSource, null);
-            cbGuarState.DisplayMember = "Value";
-            cbGuarState.ValueMember = "Key";
+            GuarStateComboBox.DataSource = new BindingSource(Dictionaries.stateSource, null);
+            GuarStateComboBox.DisplayMember = "Value";
+            GuarStateComboBox.ValueMember = "Key";
 
-            cbHolderState.DataSource = new BindingSource(Dictionaries.stateSource, null);
-            cbHolderState.DisplayMember = "Value";
-            cbHolderState.ValueMember = "Key";
+            HolderStateComboBox.DataSource = new BindingSource(Dictionaries.stateSource, null);
+            HolderStateComboBox.DisplayMember = "Value";
+            HolderStateComboBox.ValueMember = "Key";
 
-            cbGuarantorRelation.DataSource = new BindingSource(Dictionaries.relationSource, null);
-            cbGuarantorRelation.DisplayMember = "Value";
-            cbGuarantorRelation.ValueMember = "Key";
+            GuarantorRelationComboBox.DataSource = new BindingSource(Dictionaries.relationSource, null);
+            GuarantorRelationComboBox.DisplayMember = "Value";
+            GuarantorRelationComboBox.ValueMember = "Key";
 
-            cbInsRelation.DataSource = new BindingSource(Dictionaries.relationSource, null);
-            cbInsRelation.DisplayMember = "Value";
-            cbInsRelation.ValueMember = "Key";
+            InsRelationComboBox.DataSource = new BindingSource(Dictionaries.relationSource, null);
+            InsRelationComboBox.DisplayMember = "Value";
+            InsRelationComboBox.ValueMember = "Key";
 
-            cbInsOrder.DataSource = new BindingSource(Dictionaries.payorOrderSource, null);
-            cbInsOrder.DisplayMember = "Value";
-            cbInsOrder.ValueMember = "Key";
+            InsOrderComboBox.DataSource = new BindingSource(Dictionaries.payorOrderSource, null);
+            InsOrderComboBox.DisplayMember = "Value";
+            InsOrderComboBox.ValueMember = "Key";
 
-            cbHolderSex.DataSource = new BindingSource(Dictionaries.sexSource, null);
-            cbHolderSex.DisplayMember = "Value";
-            cbHolderSex.ValueMember = "Key";
+            HolderSexComboBox.DataSource = new BindingSource(Dictionaries.sexSource, null);
+            HolderSexComboBox.DisplayMember = "Value";
+            HolderSexComboBox.ValueMember = "Key";
 
-            cbPlanFinCode.DataSource = finDB.GetAll();
-            cbPlanFinCode.DisplayMember = nameof(Fin.res_party);
-            cbPlanFinCode.ValueMember = nameof(Fin.fin_code);
-            cbPlanFinCode.SelectedIndex = -1;
+            PlanFinCodeComboBox.DataSource = finDB.GetAll();
+            PlanFinCodeComboBox.DisplayMember = nameof(Fin.res_party);
+            PlanFinCodeComboBox.ValueMember = nameof(Fin.fin_code);
+            PlanFinCodeComboBox.SelectedIndex = -1;
 
             #endregion
 
@@ -258,11 +258,11 @@ namespace LabBilling.Forms
                 userProfileDB.InsertRecentAccount(SelectedAccount, Program.LoggedInUser.UserName);
                 LoadAccountData();
 
-                AddOnChangeHandlerToInputControls(demoTabLayoutPanel);
+                AddOnChangeHandlerToInputControls(DemographicsTabLayoutPanel);
                 AddOnChangeHandlerToInputControls(tabInsurance);
             }
 
-            UpdateDxPointers.Enabled = false; // start disabled until a box has been checked.
+            UpdateDxPointersButton.Enabled = false; // start disabled until a box has been checked.
         }
 
         private void AccountForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -270,7 +270,7 @@ namespace LabBilling.Forms
             Log.Instance.Trace($"Entering");
         }
 
-        private void BtnRefresh_Click(object sender, EventArgs e)
+        private void RefreshButton_Click(object sender, EventArgs e)
         {
             Log.Instance.Trace($"Entering");
             LoadAccountData();
@@ -285,7 +285,7 @@ namespace LabBilling.Forms
             this.Text = $"{currentAccount.PatFullName}";
 
             dxBindingList = new BindingList<PatDiag>(currentAccount.Pat.Diagnoses);
-            ckShowCreditedChrg.Checked = false;
+            ShowCreditedChrgCheckBox.Checked = false;
             LoadSummaryTab();
             LoadDemographics();
             LoadCharges();
@@ -401,77 +401,77 @@ namespace LabBilling.Forms
         private void LoadDemographics()
         {
             Log.Instance.Trace("Entering");
-            DemoStatusMessages.Text = String.Empty;
+            DemoStatusMessagesTextBox.Text = String.Empty;
 
-            tbBannerName.Text = currentAccount.PatFullName;
-            tbBannerDob.Text = currentAccount.Pat.BirthDate.GetValueOrDefault().ToShortDateString();
-            tbBannerSex.Text = currentAccount.Pat.Sex;
-            tbBannerAccount.Text = SelectedAccount;
-            tbBannerMRN.Text = currentAccount.MRN;
-            tbBannerClient.Text = currentAccount.ClientName;
-            tbBannerFinClass.Text = currentAccount.FinCode;
-            tbBannerBillStatus.Text = currentAccount.Status;
+            BannerNameTextBox.Text = currentAccount.PatFullName;
+            BannerDobTextBox.Text = currentAccount.Pat.BirthDate.GetValueOrDefault().ToShortDateString();
+            BannerSexTextBox.Text = currentAccount.Pat.Sex;
+            BannerAccountTextBox.Text = SelectedAccount;
+            BannerMRNTextBox.Text = currentAccount.MRN;
+            BannerClientTextBox.Text = currentAccount.ClientName;
+            BannerFinClassTextBox.Text = currentAccount.FinCode;
+            BannerBillStatusTextBox.Text = currentAccount.Status;
 
-            tbTotalCharges.Text = currentAccount.TotalCharges.ToString("c");
+            TotalChargesTextBox.Text = currentAccount.TotalCharges.ToString("c");
 
             //this.Text = $" {currentAccount.pat_name} - Demographics";
 
-            tbBannerName.Text = currentAccount.PatFullName;
-            tbBannerAccount.Text = _selectedAccount;
-            tbBannerDob.Text = currentAccount.Pat.BirthDate.Value.ToShortDateString();
-            tbBannerSex.Text = currentAccount.Pat.Sex;
-            tbBannerMRN.Text = currentAccount.MRN;
+            BannerNameTextBox.Text = currentAccount.PatFullName;
+            BannerAccountTextBox.Text = _selectedAccount;
+            BannerDobTextBox.Text = currentAccount.Pat.BirthDate.Value.ToShortDateString();
+            BannerSexTextBox.Text = currentAccount.Pat.Sex;
+            BannerMRNTextBox.Text = currentAccount.MRN;
 
-            lblTotalCharges.Text = currentAccount.TotalCharges.ToString("c");
-            lblTotalPmtAdj.Text = (currentAccount.TotalContractual + currentAccount.TotalPayments + currentAccount.TotalWriteOff).ToString("c");
-            lblBalance.Text = currentAccount.Balance.ToString("c");
+            TotalChargesLabel.Text = currentAccount.TotalCharges.ToString("c");
+            TotalPmtAdjLabel.Text = (currentAccount.TotalContractual + currentAccount.TotalPayments + currentAccount.TotalWriteOff).ToString("c");
+            BalanceLabel.Text = currentAccount.Balance.ToString("c");
             
-            lblPatientFullName.Text = currentAccount.PatFullName;
-            tbLastName.Text = currentAccount.PatLastName;
-            tbLastName.BackColor = Color.White;
-            tbFirstName.Text = currentAccount.PatFirstName;
-            tbFirstName.BackColor = Color.White;
-            tbMiddleName.Text = currentAccount.PatMiddleName;
-            tbMiddleName.BackColor = Color.White;
-            tbSuffix.Text = currentAccount.PatNameSuffix;
-            tbSuffix.BackColor = Color.White;
-            tbAddress1.Text = currentAccount.Pat.Address1;
-            tbAddress1.BackColor = Color.White;
-            tbAddress2.Text = currentAccount.Pat.Address2;
-            tbAddress2.BackColor = Color.White;
-            tbCity.Text = currentAccount.Pat.City; // != null ? currentAccount.Pat.City : strCity;
-            tbCity.BackColor = Color.White;
-            cbState.SelectedValue = currentAccount.Pat.State; // != null ? currentAccount.Pat.State : strState;
-            cbState.BackColor = Color.White;
-            tbZipcode.Text = currentAccount.Pat.ZipCode; // != null ? currentAccount.Pat.ZipCode : strZip;
-            tbZipcode.BackColor = Color.White;
-            tbPhone.Text = currentAccount.Pat.PrimaryPhone;
-            tbPhone.BackColor = Color.White;
-            tbSSN.Text = currentAccount.SocSecNo;
-            tbSSN.BackColor = Color.White;
-            tbEmailAddress.Text = currentAccount.Pat.EmailAddress;
-            tbEmailAddress.BackColor = Color.White;
-            tbDateOfBirth.Text = currentAccount.Pat.BirthDate.Value.ToString("MM/dd/yyyy");
-            tbDateOfBirth.BackColor = Color.White;
-            cbSex.SelectedValue = currentAccount.Pat.Sex;
-            cbSex.BackColor = Color.White;
-            cbMaritalStatus.SelectedValue = currentAccount.Pat.MaritalStatus != null ? currentAccount.Pat.MaritalStatus : "";
-            cbMaritalStatus.BackColor = Color.White;
+            PatientFullNameLabel.Text = currentAccount.PatFullName;
+            LastNameTextBox.Text = currentAccount.PatLastName;
+            LastNameTextBox.BackColor = Color.White;
+            FirstNameTextBox.Text = currentAccount.PatFirstName;
+            FirstNameTextBox.BackColor = Color.White;
+            MiddleNameTextBox.Text = currentAccount.PatMiddleName;
+            MiddleNameTextBox.BackColor = Color.White;
+            SuffixTextBox.Text = currentAccount.PatNameSuffix;
+            SuffixTextBox.BackColor = Color.White;
+            Address1TextBox.Text = currentAccount.Pat.Address1;
+            Address1TextBox.BackColor = Color.White;
+            Address2TextBox.Text = currentAccount.Pat.Address2;
+            Address2TextBox.BackColor = Color.White;
+            CityTextBox.Text = currentAccount.Pat.City; // != null ? currentAccount.Pat.City : strCity;
+            CityTextBox.BackColor = Color.White;
+            StateComboBox.SelectedValue = currentAccount.Pat.State; // != null ? currentAccount.Pat.State : strState;
+            StateComboBox.BackColor = Color.White;
+            ZipcodeTextBox.Text = currentAccount.Pat.ZipCode; // != null ? currentAccount.Pat.ZipCode : strZip;
+            ZipcodeTextBox.BackColor = Color.White;
+            PhoneTextBox.Text = currentAccount.Pat.PrimaryPhone;
+            PhoneTextBox.BackColor = Color.White;
+            SocSecNoTextBox.Text = currentAccount.SocSecNo;
+            SocSecNoTextBox.BackColor = Color.White;
+            EmailAddressTextBox.Text = currentAccount.Pat.EmailAddress;
+            EmailAddressTextBox.BackColor = Color.White;
+            DateOfBirthTextBox.Text = currentAccount.Pat.BirthDate.Value.ToString("MM/dd/yyyy");
+            DateOfBirthTextBox.BackColor = Color.White;
+            SexComboBox.SelectedValue = currentAccount.Pat.Sex;
+            SexComboBox.BackColor = Color.White;
+            MaritalStatusComboBox.SelectedValue = currentAccount.Pat.MaritalStatus != null ? currentAccount.Pat.MaritalStatus : "";
+            MaritalStatusComboBox.BackColor = Color.White;
 
-            tbGuarantorLastName.Text = currentAccount.Pat.GuarantorLastName;
-            tbGuarFirstName.Text = currentAccount.Pat.GuarantorFirstName;
-            tbGuarMiddleName.Text = currentAccount.Pat.GuarantorMiddleName;
-            tbGuarSuffix.Text = currentAccount.Pat.GuarantorNameSuffix;
-            tbGuarantorAddress.Text = currentAccount.Pat.GuarantorAddress;
-            tbGuarCity.Text = currentAccount.Pat.GuarantorCity;
-            cbGuarState.SelectedValue = currentAccount.Pat.GuarantorState != null ? currentAccount.Pat.GuarantorState : "";
-            tbGuarZip.Text = currentAccount.Pat.GuarantorZipCode;
-            tbGuarantorPhone.Text = currentAccount.Pat.GuarantorPrimaryPhone;
-            cbGuarantorRelation.SelectedValue = currentAccount.Pat.GuarRelationToPatient != null ? currentAccount.Pat.GuarRelationToPatient : "";
+            GuarantorLastNameTextBox.Text = currentAccount.Pat.GuarantorLastName;
+            GuarFirstNameTextBox.Text = currentAccount.Pat.GuarantorFirstName;
+            GuarMiddleNameTextBox.Text = currentAccount.Pat.GuarantorMiddleName;
+            GuarSuffixTextBox.Text = currentAccount.Pat.GuarantorNameSuffix;
+            GuarantorAddressTextBox.Text = currentAccount.Pat.GuarantorAddress;
+            GuarCityTextBox.Text = currentAccount.Pat.GuarantorCity;
+            GuarStateComboBox.SelectedValue = currentAccount.Pat.GuarantorState != null ? currentAccount.Pat.GuarantorState : "";
+            GuarZipTextBox.Text = currentAccount.Pat.GuarantorZipCode;
+            GuarantorPhoneTextBox.Text = currentAccount.Pat.GuarantorPrimaryPhone;
+            GuarantorRelationComboBox.SelectedValue = currentAccount.Pat.GuarRelationToPatient != null ? currentAccount.Pat.GuarRelationToPatient : "";
 
             if (currentAccount.Insurances.Count() > 0)
             {
-                dgvInsurance.Rows.Clear();
+                InsuranceDataGrid.Rows.Clear();
                 DataGridViewButtonColumn deleteCol = new DataGridViewButtonColumn
                 {
                     Name = "delete",
@@ -481,110 +481,110 @@ namespace LabBilling.Forms
                     Width = 50,
                     DisplayIndex = 0
                 };
-                this.dgvInsurance.Columns.Add(deleteCol);
+                this.InsuranceDataGrid.Columns.Add(deleteCol);
 
                 var insBindingList = new BindingList<Ins>(currentAccount.Insurances);
                 insGridSource = new BindingSource(insBindingList, null);
 
-                dgvInsurance.DataSource = insGridSource;
-                dgvInsurance.Columns[nameof(Ins.mod_prg)].Visible = false;
-                dgvInsurance.Columns[nameof(Ins.mod_user)].Visible = false;
-                dgvInsurance.Columns[nameof(Ins.mod_date)].Visible = false;
-                dgvInsurance.Columns[nameof(Ins.mod_host)].Visible = false;
-                dgvInsurance.Columns[nameof(Ins.Employer)].Visible = false;
-                dgvInsurance.Columns[nameof(Ins.EmployerCityState)].Visible = false;
-                dgvInsurance.Columns[nameof(Ins.HolderLastName)].Visible = false;
-                dgvInsurance.Columns[nameof(Ins.HolderFirstName)].Visible = false;
-                dgvInsurance.Columns[nameof(Ins.HolderMiddleName)].Visible = false;
-                dgvInsurance.Columns[nameof(Ins.PlanEffectiveDate)].Visible = false;
-                dgvInsurance.Columns[nameof(Ins.PlanExpirationDate)].Visible = false;
-                dgvInsurance.Columns[nameof(Ins.rowguid)].Visible = false;
-                dgvInsurance.Columns[nameof(Ins.Account)].Visible = false;
-                dgvInsurance.Columns[nameof(Ins.InsCompany)].Visible = false;
-                dgvInsurance.Columns[nameof(Ins.deleted)].Visible = false;
+                InsuranceDataGrid.DataSource = insGridSource;
+                InsuranceDataGrid.Columns[nameof(Ins.mod_prg)].Visible = false;
+                InsuranceDataGrid.Columns[nameof(Ins.mod_user)].Visible = false;
+                InsuranceDataGrid.Columns[nameof(Ins.mod_date)].Visible = false;
+                InsuranceDataGrid.Columns[nameof(Ins.mod_host)].Visible = false;
+                InsuranceDataGrid.Columns[nameof(Ins.Employer)].Visible = false;
+                InsuranceDataGrid.Columns[nameof(Ins.EmployerCityState)].Visible = false;
+                InsuranceDataGrid.Columns[nameof(Ins.HolderLastName)].Visible = false;
+                InsuranceDataGrid.Columns[nameof(Ins.HolderFirstName)].Visible = false;
+                InsuranceDataGrid.Columns[nameof(Ins.HolderMiddleName)].Visible = false;
+                InsuranceDataGrid.Columns[nameof(Ins.PlanEffectiveDate)].Visible = false;
+                InsuranceDataGrid.Columns[nameof(Ins.PlanExpirationDate)].Visible = false;
+                InsuranceDataGrid.Columns[nameof(Ins.rowguid)].Visible = false;
+                InsuranceDataGrid.Columns[nameof(Ins.Account)].Visible = false;
+                InsuranceDataGrid.Columns[nameof(Ins.InsCompany)].Visible = false;
+                InsuranceDataGrid.Columns[nameof(Ins.deleted)].Visible = false;
 
-                dgvInsurance.Columns[nameof(Ins.PlanName)].DisplayIndex = 1;
-                dgvInsurance.Columns[nameof(Ins.PlanAddress1)].DisplayIndex = 2;
-                dgvInsurance.Columns[nameof(Ins.PolicyNumber)].DisplayIndex = 3;
+                InsuranceDataGrid.Columns[nameof(Ins.PlanName)].DisplayIndex = 1;
+                InsuranceDataGrid.Columns[nameof(Ins.PlanAddress1)].DisplayIndex = 2;
+                InsuranceDataGrid.Columns[nameof(Ins.PolicyNumber)].DisplayIndex = 3;
 
-                dgvInsurance.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
+                InsuranceDataGrid.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
                 //dgvInsurance.Columns[nameof(Ins.HolderName)].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
 
-                cbInsOrder.SelectedIndex = 0;
-                cbHolderState.SelectedIndex = 0;
-                cbHolderSex.SelectedIndex = 0;
+                InsOrderComboBox.SelectedIndex = 0;
+                HolderStateComboBox.SelectedIndex = 0;
+                HolderSexComboBox.SelectedIndex = 0;
 
-                dgvInsurance.ClearSelection();
+                InsuranceDataGrid.ClearSelection();
 
-                ResetControls(demoTabLayoutPanel.Controls);
+                ResetControls(DemographicsTabLayoutPanel.Controls);
             }
 
         }
 
         #region DemographicTab
 
-        private void LGuarCopyPatient_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void GuarCopyPatientLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             Log.Instance.Trace($"Entering");
-            tbGuarantorLastName.Text = tbLastName.Text;
-            tbGuarFirstName.Text = tbFirstName.Text;
-            tbGuarMiddleName.Text = tbMiddleName.Text;
-            tbGuarSuffix.Text = tbSuffix.Text;
-            tbGuarantorAddress.Text = tbAddress1.Text;
-            tbGuarCity.Text = tbCity.Text;
-            cbGuarState.SelectedValue = cbState.SelectedValue;
-            tbGuarZip.Text = tbZipcode.Text;
-            tbGuarantorPhone.Text = tbPhone.Text;
-            cbGuarantorRelation.SelectedValue = "01";
+            GuarantorLastNameTextBox.Text = LastNameTextBox.Text;
+            GuarFirstNameTextBox.Text = FirstNameTextBox.Text;
+            GuarMiddleNameTextBox.Text = MiddleNameTextBox.Text;
+            GuarSuffixTextBox.Text = SuffixTextBox.Text;
+            GuarantorAddressTextBox.Text = Address1TextBox.Text;
+            GuarCityTextBox.Text = CityTextBox.Text;
+            GuarStateComboBox.SelectedValue = StateComboBox.SelectedValue;
+            GuarZipTextBox.Text = ZipcodeTextBox.Text;
+            GuarantorPhoneTextBox.Text = PhoneTextBox.Text;
+            GuarantorRelationComboBox.SelectedValue = "01";
         }
 
-        private void LInsCopyPatient_LinkClicked_1(object sender, LinkLabelLinkClickedEventArgs e)
+        private void InsCopyPatientLink_LinkClicked_1(object sender, LinkLabelLinkClickedEventArgs e)
         {
             Log.Instance.Trace($"Entering");
             Log.Instance.Debug($"Copying patient data to insurance holder.");
             //copy patient data for insurance holder info
-            tbHolderLastName.Text = tbLastName.Text;
-            tbHolderFirstName.Text = tbFirstName.Text;
-            tbHolderMiddleName.Text = tbMiddleName.Text;
-            tbHolderAddress.Text = tbAddress1.Text;
-            tbHolderCity.Text = tbCity.Text;
-            cbHolderState.SelectedValue = cbState.SelectedValue;
-            tbHolderZip.Text = tbZipcode.Text;
-            tbHolderDOB.Text = tbDateOfBirth.Text;
-            cbHolderSex.SelectedValue = cbSex.SelectedValue;
-            cbInsRelation.SelectedValue = "01";
+            HolderLastNameTextBox.Text = LastNameTextBox.Text;
+            HolderFirstNameTextBox.Text = FirstNameTextBox.Text;
+            HolderMiddleNameTextBox.Text = MiddleNameTextBox.Text;
+            HolderAddressTextBox.Text = Address1TextBox.Text;
+            HolderCityTextBox.Text = CityTextBox.Text;
+            HolderStateComboBox.SelectedValue = StateComboBox.SelectedValue;
+            HolderZipTextBox.Text = ZipcodeTextBox.Text;
+            HolderDOBTextBox.Text = DateOfBirthTextBox.Text;
+            HolderSexComboBox.SelectedValue = SexComboBox.SelectedValue;
+            InsRelationComboBox.SelectedValue = "01";
         }
 
         private void SaveDemographics_Click(object sender, EventArgs e)
         {
             Log.Instance.Trace($"Entering");
 
-            currentAccount.PatFullName = string.Format("{0} {1},{2} {3}", tbLastName.Text, tbSuffix.Text, tbFirstName.Text, tbMiddleName.Text);
-            currentAccount.SocSecNo = tbSSN.Text;
+            currentAccount.PatFullName = string.Format("{0} {1},{2} {3}", LastNameTextBox.Text, SuffixTextBox.Text, FirstNameTextBox.Text, MiddleNameTextBox.Text);
+            currentAccount.SocSecNo = SocSecNoTextBox.Text;
 
             accDB.Update(currentAccount);
 
-            currentAccount.Pat.CityStateZip = string.Format("{0}, {1} {2}", tbCity.Text, cbState.SelectedValue.ToString(), tbZipcode.Text);
-            currentAccount.Pat.City = tbCity.Text;
-            currentAccount.Pat.Address1 = tbAddress1.Text;
-            currentAccount.Pat.Address2 = tbAddress2.Text;
-            currentAccount.Pat.EmailAddress = tbEmailAddress.Text;
-            currentAccount.Pat.MaritalStatus = cbMaritalStatus.SelectedValue.ToString();
-            currentAccount.Pat.PrimaryPhone = tbPhone.Text;
-            currentAccount.Pat.State = cbState.SelectedValue.ToString();
-            currentAccount.Pat.ZipCode = tbZipcode.Text;
-            currentAccount.Pat.PatFullName = string.Format("{0},{1} {2}", tbLastName.Text, tbFirstName.Text, tbMiddleName.Text);
-            currentAccount.Pat.BirthDate = DateTime.Parse(tbDateOfBirth.Text);
+            currentAccount.Pat.CityStateZip = string.Format("{0}, {1} {2}", CityTextBox.Text, StateComboBox.SelectedValue.ToString(), ZipcodeTextBox.Text);
+            currentAccount.Pat.City = CityTextBox.Text;
+            currentAccount.Pat.Address1 = Address1TextBox.Text;
+            currentAccount.Pat.Address2 = Address2TextBox.Text;
+            currentAccount.Pat.EmailAddress = EmailAddressTextBox.Text;
+            currentAccount.Pat.MaritalStatus = MaritalStatusComboBox.SelectedValue.ToString();
+            currentAccount.Pat.PrimaryPhone = PhoneTextBox.Text;
+            currentAccount.Pat.State = StateComboBox.SelectedValue.ToString();
+            currentAccount.Pat.ZipCode = ZipcodeTextBox.Text;
+            currentAccount.Pat.PatFullName = string.Format("{0},{1} {2}", LastNameTextBox.Text, FirstNameTextBox.Text, MiddleNameTextBox.Text);
+            currentAccount.Pat.BirthDate = DateTime.Parse(DateOfBirthTextBox.Text);
             currentAccount.Pat.GuarantorFullName = string.Format("{0} {1},{2} {3}",
-                tbGuarantorLastName.Text, tbGuarSuffix.Text, tbGuarFirstName.Text, tbGuarMiddleName.Text);
-            currentAccount.Pat.GuarantorAddress = tbGuarantorAddress.Text;
-            currentAccount.Pat.GuarantorCity = tbGuarCity.Text;
-            currentAccount.Pat.GuarantorPrimaryPhone = tbGuarantorPhone.Text;
-            currentAccount.Pat.GuarantorState = cbGuarState.SelectedValue.ToString();
-            currentAccount.Pat.GuarantorZipCode = tbGuarZip.Text;
-            currentAccount.Pat.GuarantorCityState = string.Format("{0}, {1} {2}", tbGuarCity.Text, cbGuarState.SelectedValue.ToString(), tbGuarZip.Text);
-            currentAccount.Pat.Sex = cbSex.SelectedValue.ToString();
-            currentAccount.Pat.GuarRelationToPatient = cbGuarantorRelation.SelectedValue.ToString();
+                GuarantorLastNameTextBox.Text, GuarSuffixTextBox.Text, GuarFirstNameTextBox.Text, GuarMiddleNameTextBox.Text);
+            currentAccount.Pat.GuarantorAddress = GuarantorAddressTextBox.Text;
+            currentAccount.Pat.GuarantorCity = GuarCityTextBox.Text;
+            currentAccount.Pat.GuarantorPrimaryPhone = GuarantorPhoneTextBox.Text;
+            currentAccount.Pat.GuarantorState = GuarStateComboBox.SelectedValue.ToString();
+            currentAccount.Pat.GuarantorZipCode = GuarZipTextBox.Text;
+            currentAccount.Pat.GuarantorCityState = string.Format("{0}, {1} {2}", GuarCityTextBox.Text, GuarStateComboBox.SelectedValue.ToString(), GuarZipTextBox.Text);
+            currentAccount.Pat.Sex = SexComboBox.SelectedValue.ToString();
+            currentAccount.Pat.GuarRelationToPatient = GuarantorRelationComboBox.SelectedValue.ToString();
             //currentAccount.Pat.SocSecNo = tbSSN.Text;
 
             patDB.SaveAll(currentAccount.Pat);
@@ -603,14 +603,14 @@ namespace LabBilling.Forms
 
         #region InsuranceTab
 
-        private void BSaveInsurance_Click_1(object sender, EventArgs e)
+        private void SaveInsuranceButton_Click_1(object sender, EventArgs e)
         {
             // saves the insurance info back to the grid
             Log.Instance.Trace($"Entering");
 
             int selectedIns = -1;
 
-            switch (cbInsOrder.SelectedValue)
+            switch (InsOrderComboBox.SelectedValue)
             {
                 case "A":
                     selectedIns = 0;
@@ -639,38 +639,38 @@ namespace LabBilling.Forms
                 currentAccount.Insurances[selectedIns].Account = _selectedAccount;
             }
 
-            currentAccount.Insurances[selectedIns].CertSSN = tbCertSSN.Text;
-            currentAccount.Insurances[selectedIns].GroupName = tbGroupName.Text;
-            currentAccount.Insurances[selectedIns].GroupNumber = tbGroupNumber.Text;
-            currentAccount.Insurances[selectedIns].HolderAddress = tbHolderAddress.Text;
+            currentAccount.Insurances[selectedIns].CertSSN = CertSSNTextBox.Text;
+            currentAccount.Insurances[selectedIns].GroupName = GroupNameTextBox.Text;
+            currentAccount.Insurances[selectedIns].GroupNumber = GroupNumberTextBox.Text;
+            currentAccount.Insurances[selectedIns].HolderAddress = HolderAddressTextBox.Text;
             currentAccount.Insurances[selectedIns].HolderCityStZip = string.Format("{0}, {1} {2}",
-                tbHolderCity.Text,
-                cbHolderState.SelectedValue == null ? "" : cbHolderState.SelectedValue.ToString(),
-                tbHolderZip.Text);
+                HolderCityTextBox.Text,
+                HolderStateComboBox.SelectedValue == null ? "" : HolderStateComboBox.SelectedValue.ToString(),
+                HolderZipTextBox.Text);
             if (currentAccount.Insurances[selectedIns].HolderCityStZip.Trim() == ",")
             {
                 currentAccount.Insurances[selectedIns].HolderCityStZip = String.Empty;
             }
 
-            if (tbHolderDOB.MaskCompleted)
-                currentAccount.Insurances[selectedIns].HolderBirthDate = DateTime.Parse(tbHolderDOB.Text);
+            if (HolderDOBTextBox.MaskCompleted)
+                currentAccount.Insurances[selectedIns].HolderBirthDate = DateTime.Parse(HolderDOBTextBox.Text);
 
-            currentAccount.Insurances[selectedIns].HolderFirstName = tbHolderFirstName.Text;
-            currentAccount.Insurances[selectedIns].HolderLastName = tbHolderLastName.Text;
-            currentAccount.Insurances[selectedIns].HolderMiddleName = tbHolderMiddleName.Text;
+            currentAccount.Insurances[selectedIns].HolderFirstName = HolderFirstNameTextBox.Text;
+            currentAccount.Insurances[selectedIns].HolderLastName = HolderLastNameTextBox.Text;
+            currentAccount.Insurances[selectedIns].HolderMiddleName = HolderMiddleNameTextBox.Text;
             currentAccount.Insurances[selectedIns].HolderName = string.Format("{0},{1} {2}",
-                tbHolderLastName.Text, tbHolderFirstName.Text, tbHolderMiddleName.Text);
-            currentAccount.Insurances[selectedIns].HolderSex = cbHolderSex.SelectedValue.ToString();
-            currentAccount.Insurances[selectedIns].PolicyNumber = tbPolicyNumber.Text;
-            currentAccount.Insurances[selectedIns].PlanAddress1 = tbPlanAddress.Text;
-            currentAccount.Insurances[selectedIns].PlanAddress2 = tbPlanAddress2.Text;
-            currentAccount.Insurances[selectedIns].PlanName = tbPlanName.Text;
-            currentAccount.Insurances[selectedIns].PlanCityState = tbPlanCitySt.Text;
-            currentAccount.Insurances[selectedIns].Relation = cbInsRelation.SelectedValue.ToString();
-            currentAccount.Insurances[selectedIns].Coverage = cbInsOrder.SelectedValue.ToString();
-            currentAccount.Insurances[selectedIns].FinCode = cbPlanFinCode.SelectedValue.ToString();
+                HolderLastNameTextBox.Text, HolderFirstNameTextBox.Text, HolderMiddleNameTextBox.Text);
+            currentAccount.Insurances[selectedIns].HolderSex = HolderSexComboBox.SelectedValue.ToString();
+            currentAccount.Insurances[selectedIns].PolicyNumber = PolicyNumberTextBox.Text;
+            currentAccount.Insurances[selectedIns].PlanAddress1 = PlanAddressTextBox.Text;
+            currentAccount.Insurances[selectedIns].PlanAddress2 = PlanAddress2TextBox.Text;
+            currentAccount.Insurances[selectedIns].PlanName = PlanNameTextBox.Text;
+            currentAccount.Insurances[selectedIns].PlanCityState = PlanCityStTextBox.Text;
+            currentAccount.Insurances[selectedIns].Relation = InsRelationComboBox.SelectedValue.ToString();
+            currentAccount.Insurances[selectedIns].Coverage = InsOrderComboBox.SelectedValue.ToString();
+            currentAccount.Insurances[selectedIns].FinCode = PlanFinCodeComboBox.SelectedValue.ToString();
 
-            currentAccount.Insurances[selectedIns].InsCode = cbInsCode.SelectedValue.ToString();
+            currentAccount.Insurances[selectedIns].InsCode = InsCodeComboBox.SelectedValue.ToString();
 
             //call method to update the record in the database
             if (currentAccount.Insurances[selectedIns].rowguid == Guid.Empty)
@@ -682,7 +682,7 @@ namespace LabBilling.Forms
                 if (!InEditMode)
                 {
                     if (MetroMessageBox.Show(this, string.Format("You are adding a new {0} insurance {1}. This will replace the existing {2} insurance. OK to update?",
-                        cbInsOrder.SelectedValue, tbPlanName.Text, cbInsOrder.SelectedValue), "Existing Insurance", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                        InsOrderComboBox.SelectedValue, PlanNameTextBox.Text, InsOrderComboBox.SelectedValue), "Existing Insurance", MessageBoxButtons.YesNo) == DialogResult.Yes)
                     {
                         insDB.Update(currentAccount.Insurances[selectedIns]);
                     }
@@ -724,40 +724,40 @@ namespace LabBilling.Forms
         {
             Log.Instance.Trace($"Entering");
             InEditMode = false;
-            tbPlanAddress.Text = "";
-            tbPlanAddress2.Text = "";
-            tbPlanCitySt.Text = "";
-            tbPlanName.Text = "";
-            tbHolderAddress.Text = "";
-            tbHolderCity.Text = "";
-            tbHolderDOB.Text = "";
-            tbHolderFirstName.Text = "";
-            tbHolderLastName.Text = "";
-            tbHolderMiddleName.Text = "";
-            tbHolderZip.Text = "";
-            tbPolicyNumber.Text = "";
-            tbGroupName.Text = "";
-            tbGroupNumber.Text = "";
-            tbCertSSN.Text = "";
-            cbHolderSex.SelectedIndex = 0;
-            cbHolderState.SelectedIndex = 0;
-            cbInsCode.SelectedIndex = 0;
-            cbInsOrder.SelectedIndex = 0;
-            cbPlanFinCode.SelectedIndex = -1;
+            PlanAddressTextBox.Text = "";
+            PlanAddress2TextBox.Text = "";
+            PlanCityStTextBox.Text = "";
+            PlanNameTextBox.Text = "";
+            HolderAddressTextBox.Text = "";
+            HolderCityTextBox.Text = "";
+            HolderDOBTextBox.Text = "";
+            HolderFirstNameTextBox.Text = "";
+            HolderLastNameTextBox.Text = "";
+            HolderMiddleNameTextBox.Text = "";
+            HolderZipTextBox.Text = "";
+            PolicyNumberTextBox.Text = "";
+            GroupNameTextBox.Text = "";
+            GroupNumberTextBox.Text = "";
+            CertSSNTextBox.Text = "";
+            HolderSexComboBox.SelectedIndex = 0;
+            HolderStateComboBox.SelectedIndex = 0;
+            InsCodeComboBox.SelectedIndex = 0;
+            InsOrderComboBox.SelectedIndex = 0;
+            PlanFinCodeComboBox.SelectedIndex = -1;
 
             ResetControls(insTabLayoutPanel.Controls);
         }
 
-        private void DgvInsurance_CellClick(object sender, DataGridViewCellEventArgs e)
+        private void InsuranceDataGrid_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             Log.Instance.Trace($"Entering");
-            tbInsTabMessage.Text = String.Empty;
+            InsTabMessageTextBox.Text = String.Empty;
             if (e.ColumnIndex == 0)
             {
                 #region delete button was clicked
                 int selectedIns = -1;
 
-                switch (dgvInsurance.SelectedRows[0].Cells[nameof(Ins.Coverage)].Value.ToString())
+                switch (InsuranceDataGrid.SelectedRows[0].Cells[nameof(Ins.Coverage)].Value.ToString())
                 {
                     case "A":
                         selectedIns = 0;
@@ -797,40 +797,40 @@ namespace LabBilling.Forms
 
             //populate edit boxes
             InEditMode = true;
-            cbHolderState.SelectedItem = null;
-            cbHolderState.SelectedText = "--Select--";
-            cbHolderSex.SelectedItem = null;
-            cbHolderSex.SelectedText = "--Select--";
-            cbInsOrder.SelectedValue = dgvInsurance.SelectedRows[0].Cells[nameof(Ins.Coverage)].Value.ToString();
+            HolderStateComboBox.SelectedItem = null;
+            HolderStateComboBox.SelectedText = "--Select--";
+            HolderSexComboBox.SelectedItem = null;
+            HolderSexComboBox.SelectedText = "--Select--";
+            InsOrderComboBox.SelectedValue = InsuranceDataGrid.SelectedRows[0].Cells[nameof(Ins.Coverage)].Value.ToString();
 
-            tbHolderLastName.Text = dgvInsurance.SelectedRows[0].Cells[nameof(Ins.HolderLastName)].Value?.ToString(); // ?? lname;
-            tbHolderFirstName.Text = dgvInsurance.SelectedRows[0].Cells[nameof(Ins.HolderFirstName)].Value?.ToString(); // ?? fname;
-            tbHolderMiddleName.Text = dgvInsurance.SelectedRows[0].Cells[nameof(Ins.HolderMiddleName)].Value?.ToString(); // ?? mname;
-            tbHolderAddress.Text = dgvInsurance.SelectedRows[0].Cells[nameof(Ins.HolderAddress)].Value != null ? dgvInsurance.SelectedRows[0].Cells[nameof(Ins.HolderAddress)].Value.ToString() : "";
+            HolderLastNameTextBox.Text = InsuranceDataGrid.SelectedRows[0].Cells[nameof(Ins.HolderLastName)].Value?.ToString(); // ?? lname;
+            HolderFirstNameTextBox.Text = InsuranceDataGrid.SelectedRows[0].Cells[nameof(Ins.HolderFirstName)].Value?.ToString(); // ?? fname;
+            HolderMiddleNameTextBox.Text = InsuranceDataGrid.SelectedRows[0].Cells[nameof(Ins.HolderMiddleName)].Value?.ToString(); // ?? mname;
+            HolderAddressTextBox.Text = InsuranceDataGrid.SelectedRows[0].Cells[nameof(Ins.HolderAddress)].Value != null ? InsuranceDataGrid.SelectedRows[0].Cells[nameof(Ins.HolderAddress)].Value.ToString() : "";
 
-            tbHolderCity.Text = dgvInsurance.SelectedRows[0].Cells[nameof(Ins.HolderCity)].Value.ToString();
-            cbHolderState.SelectedValue = dgvInsurance.SelectedRows[0].Cells[nameof(Ins.HolderState)].Value.ToString();
-            tbHolderZip.Text = dgvInsurance.SelectedRows[0].Cells[nameof(Ins.HolderZip)].Value.ToString();
+            HolderCityTextBox.Text = InsuranceDataGrid.SelectedRows[0].Cells[nameof(Ins.HolderCity)].Value.ToString();
+            HolderStateComboBox.SelectedValue = InsuranceDataGrid.SelectedRows[0].Cells[nameof(Ins.HolderState)].Value.ToString();
+            HolderZipTextBox.Text = InsuranceDataGrid.SelectedRows[0].Cells[nameof(Ins.HolderZip)].Value.ToString();
 
-            cbHolderSex.SelectedValue = dgvInsurance.SelectedRows[0].Cells[nameof(Ins.HolderSex)].Value?.ToString() ?? "";
-            if (!string.IsNullOrEmpty(dgvInsurance.SelectedRows[0].Cells[nameof(Ins.HolderBirthDate)].Value?.ToString()))
-                tbHolderDOB.Text = DateTime.Parse(dgvInsurance.SelectedRows[0].Cells[nameof(Ins.HolderBirthDate)].Value?.ToString()).ToString(@"MM/dd/yyyy");
+            HolderSexComboBox.SelectedValue = InsuranceDataGrid.SelectedRows[0].Cells[nameof(Ins.HolderSex)].Value?.ToString() ?? "";
+            if (!string.IsNullOrEmpty(InsuranceDataGrid.SelectedRows[0].Cells[nameof(Ins.HolderBirthDate)].Value?.ToString()))
+                HolderDOBTextBox.Text = DateTime.Parse(InsuranceDataGrid.SelectedRows[0].Cells[nameof(Ins.HolderBirthDate)].Value?.ToString()).ToString(@"MM/dd/yyyy");
             else
-                tbHolderDOB.Text = "";
-            cbInsRelation.SelectedValue = dgvInsurance.SelectedRows[0].Cells[nameof(Ins.Relation)].Value?.ToString() ?? "";
+                HolderDOBTextBox.Text = "";
+            InsRelationComboBox.SelectedValue = InsuranceDataGrid.SelectedRows[0].Cells[nameof(Ins.Relation)].Value?.ToString() ?? "";
 
             // set ins Code combo box
-            cbInsCode.SelectedValue = dgvInsurance.SelectedRows[0].Cells[nameof(Ins.InsCode)].Value?.ToString() ?? "";
+            InsCodeComboBox.SelectedValue = InsuranceDataGrid.SelectedRows[0].Cells[nameof(Ins.InsCode)].Value?.ToString() ?? "";
 
-            tbPlanName.Text = dgvInsurance.SelectedRows[0].Cells[nameof(Ins.PlanName)].Value?.ToString();
-            tbPlanAddress.Text = dgvInsurance.SelectedRows[0].Cells[nameof(Ins.PlanAddress1)].Value?.ToString();
-            tbPlanAddress2.Text = dgvInsurance.SelectedRows[0].Cells[nameof(Ins.PlanAddress2)].Value?.ToString();
-            tbPlanCitySt.Text = dgvInsurance.SelectedRows[0].Cells[nameof(Ins.PlanCityState)].Value?.ToString();
-            tbPolicyNumber.Text = dgvInsurance.SelectedRows[0].Cells[nameof(Ins.PolicyNumber)].Value?.ToString();
-            tbGroupNumber.Text = dgvInsurance.SelectedRows[0].Cells[nameof(Ins.GroupNumber)].Value?.ToString();
-            tbGroupName.Text = dgvInsurance.SelectedRows[0].Cells[nameof(Ins.GroupName)].Value?.ToString();
-            tbCertSSN.Text = dgvInsurance.SelectedRows[0].Cells[nameof(Ins.CertSSN)].Value?.ToString();
-            cbPlanFinCode.SelectedValue = dgvInsurance.SelectedRows[0].Cells[nameof(Ins.FinCode)].Value?.ToString() ?? "";
+            PlanNameTextBox.Text = InsuranceDataGrid.SelectedRows[0].Cells[nameof(Ins.PlanName)].Value?.ToString();
+            PlanAddressTextBox.Text = InsuranceDataGrid.SelectedRows[0].Cells[nameof(Ins.PlanAddress1)].Value?.ToString();
+            PlanAddress2TextBox.Text = InsuranceDataGrid.SelectedRows[0].Cells[nameof(Ins.PlanAddress2)].Value?.ToString();
+            PlanCityStTextBox.Text = InsuranceDataGrid.SelectedRows[0].Cells[nameof(Ins.PlanCityState)].Value?.ToString();
+            PolicyNumberTextBox.Text = InsuranceDataGrid.SelectedRows[0].Cells[nameof(Ins.PolicyNumber)].Value?.ToString();
+            GroupNumberTextBox.Text = InsuranceDataGrid.SelectedRows[0].Cells[nameof(Ins.GroupNumber)].Value?.ToString();
+            GroupNameTextBox.Text = InsuranceDataGrid.SelectedRows[0].Cells[nameof(Ins.GroupName)].Value?.ToString();
+            CertSSNTextBox.Text = InsuranceDataGrid.SelectedRows[0].Cells[nameof(Ins.CertSSN)].Value?.ToString();
+            PlanFinCodeComboBox.SelectedValue = InsuranceDataGrid.SelectedRows[0].Cells[nameof(Ins.FinCode)].Value?.ToString() ?? "";
 
             //reset changed flag & colors
             foreach(Control ctrl in insTabLayoutPanel.Controls)
@@ -857,18 +857,18 @@ namespace LabBilling.Forms
             if (record != null)
             {
                 //this is a valid code
-                tbPlanName.Text = record.name;
-                tbPlanAddress.Text = record.addr1;
-                tbPlanAddress2.Text = record.addr2;
-                tbPlanCitySt.Text = record.citystzip;
-                cbPlanFinCode.SelectedValue = record.fin_code;
+                PlanNameTextBox.Text = record.name;
+                PlanAddressTextBox.Text = record.addr1;
+                PlanAddress2TextBox.Text = record.addr2;
+                PlanCityStTextBox.Text = record.citystzip;
+                PlanFinCodeComboBox.SelectedValue = record.fin_code;
             }
         }
 
-        private void AddInsurance_Click(object sender, EventArgs e)
+        private void AddInsuranceButton_Click(object sender, EventArgs e)
         {
             //clear the insurance table selection and data entry fields.
-            dgvInsurance.ClearSelection();
+            InsuranceDataGrid.ClearSelection();
             ClearInsEntryFields();
         }
 
@@ -879,45 +879,45 @@ namespace LabBilling.Forms
         {
             Log.Instance.Trace("Entering");
             //dgvCharges.DataSource = chrgdb.GetByAccount(SelectedAccount, ckShowCreditedChrg.Checked);
-            dgvCharges.DataSource = currentAccount.Charges;
+            ChargesDataGrid.DataSource = currentAccount.Charges;
 
-            foreach (DataGridViewColumn col in dgvCharges.Columns)
+            foreach (DataGridViewColumn col in ChargesDataGrid.Columns)
             {
                 col.Visible = false;
             }
 
-            dgvCharges.Columns[nameof(Chrg.IsCredited)].Visible = true;
-            dgvCharges.Columns[nameof(Chrg.CDMCode)].Visible = true;
-            dgvCharges.Columns[nameof(Chrg.CdmDescription)].Visible = true;
-            dgvCharges.Columns[nameof(Chrg.Quantity)].Visible = true;
-            dgvCharges.Columns[nameof(Chrg.NetAmount)].Visible = true;
-            dgvCharges.Columns[nameof(Chrg.ServiceDate)].Visible = true;
-            dgvCharges.Columns[nameof(Chrg.Status)].Visible = true;
-            dgvCharges.Columns[nameof(Chrg.Comment)].Visible = true;
-            dgvCharges.Columns[nameof(Chrg.ChrgId)].Visible = true;
-            dgvCharges.Columns[nameof(Chrg.Invoice)].Visible = true;
+            ChargesDataGrid.Columns[nameof(Chrg.IsCredited)].Visible = true;
+            ChargesDataGrid.Columns[nameof(Chrg.CDMCode)].Visible = true;
+            ChargesDataGrid.Columns[nameof(Chrg.CdmDescription)].Visible = true;
+            ChargesDataGrid.Columns[nameof(Chrg.Quantity)].Visible = true;
+            ChargesDataGrid.Columns[nameof(Chrg.NetAmount)].Visible = true;
+            ChargesDataGrid.Columns[nameof(Chrg.ServiceDate)].Visible = true;
+            ChargesDataGrid.Columns[nameof(Chrg.Status)].Visible = true;
+            ChargesDataGrid.Columns[nameof(Chrg.Comment)].Visible = true;
+            ChargesDataGrid.Columns[nameof(Chrg.ChrgId)].Visible = true;
+            ChargesDataGrid.Columns[nameof(Chrg.Invoice)].Visible = true;
 
-            dgvCharges.Columns[nameof(Chrg.NetAmount)].DefaultCellStyle.Format = "N2";
-            dgvCharges.Columns[nameof(Chrg.NetAmount)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-            dgvCharges.Columns[nameof(Chrg.CalculatedAmount)].DefaultCellStyle.Format = "N2";
-            dgvCharges.Columns[nameof(Chrg.CalculatedAmount)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-            dgvCharges.Columns[nameof(Chrg.Quantity)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            ChargesDataGrid.Columns[nameof(Chrg.NetAmount)].DefaultCellStyle.Format = "N2";
+            ChargesDataGrid.Columns[nameof(Chrg.NetAmount)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            ChargesDataGrid.Columns[nameof(Chrg.CalculatedAmount)].DefaultCellStyle.Format = "N2";
+            ChargesDataGrid.Columns[nameof(Chrg.CalculatedAmount)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            ChargesDataGrid.Columns[nameof(Chrg.Quantity)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
 
-            dgvCharges.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
-            dgvCharges.Columns[nameof(Chrg.CdmDescription)].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            dgvCharges.BackgroundColor = Color.AntiqueWhite;
-            dgvChrgDetail.BackgroundColor = Color.AntiqueWhite;
+            ChargesDataGrid.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
+            ChargesDataGrid.Columns[nameof(Chrg.CdmDescription)].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            ChargesDataGrid.BackgroundColor = Color.AntiqueWhite;
+            ChrgDetailDataGrid.BackgroundColor = Color.AntiqueWhite;
 
         }
 
         private void DgvCharges_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
             Log.Instance.Trace($"Entering");
-            int selectedRows = dgvCharges.Rows.GetRowCount(DataGridViewElementStates.Selected);
+            int selectedRows = ChargesDataGrid.Rows.GetRowCount(DataGridViewElementStates.Selected);
             if (selectedRows > 0)
             {
 
-                DataGridViewRow row = dgvCharges.SelectedRows[0];
+                DataGridViewRow row = ChargesDataGrid.SelectedRows[0];
                 var chrg = chrgdb.GetById(Convert.ToInt32(row.Cells[nameof(Chrg.ChrgId)].Value.ToString()));
 
                 DisplayPOCOForm<Chrg> frm = new DisplayPOCOForm<Chrg>(chrg)
@@ -934,55 +934,55 @@ namespace LabBilling.Forms
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void DgvCharges_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        private void ChargesDataGrid_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
             Log.Instance.Trace($"Entering");
-            int selectedRows = dgvCharges.Rows.GetRowCount(DataGridViewElementStates.Selected);
+            int selectedRows = ChargesDataGrid.Rows.GetRowCount(DataGridViewElementStates.Selected);
             if (selectedRows > 0)
             {
-                DataGridViewRow row = dgvCharges.SelectedRows[0];
+                DataGridViewRow row = ChargesDataGrid.SelectedRows[0];
                 var chrg = chrgdb.GetById(Convert.ToInt32(row.Cells[nameof(Chrg.ChrgId)].Value.ToString()));
 
                 try
                 {
-                    dgvChrgDetail.DataSource = chrg.ChrgDetails;
+                    ChrgDetailDataGrid.DataSource = chrg.ChrgDetails;
                 }
                 catch (Exception ex)
                 {
                     MetroMessageBox.Show(this, string.Format("Exception {0}", ex.Message));
                 }
-                foreach (DataGridViewColumn col in dgvChrgDetail.Columns)
+                foreach (DataGridViewColumn col in ChrgDetailDataGrid.Columns)
                 {
                     col.Visible = false;
                 }
 
-                dgvChrgDetail.Columns[nameof(ChrgDetail.Cpt4)].Visible = true;
-                dgvChrgDetail.Columns[nameof(ChrgDetail.BillType)].Visible = true;
-                dgvChrgDetail.Columns[nameof(ChrgDetail.DiagCodePointer)].Visible = true;
-                dgvChrgDetail.Columns[nameof(ChrgDetail.Modifier)].Visible = true;
-                dgvChrgDetail.Columns[nameof(ChrgDetail.Modifer2)].Visible = true;
-                dgvChrgDetail.Columns[nameof(ChrgDetail.RevenueCode)].Visible = true;
-                dgvChrgDetail.Columns[nameof(ChrgDetail.Type)].Visible = true;
-                dgvChrgDetail.Columns[nameof(ChrgDetail.BillMethod)].Visible = true;
-                dgvChrgDetail.Columns[nameof(ChrgDetail.OrderCode)].Visible = true;
-                dgvChrgDetail.Columns[nameof(ChrgDetail.Amount)].Visible = true;
+                ChrgDetailDataGrid.Columns[nameof(ChrgDetail.Cpt4)].Visible = true;
+                ChrgDetailDataGrid.Columns[nameof(ChrgDetail.BillType)].Visible = true;
+                ChrgDetailDataGrid.Columns[nameof(ChrgDetail.DiagCodePointer)].Visible = true;
+                ChrgDetailDataGrid.Columns[nameof(ChrgDetail.Modifier)].Visible = true;
+                ChrgDetailDataGrid.Columns[nameof(ChrgDetail.Modifer2)].Visible = true;
+                ChrgDetailDataGrid.Columns[nameof(ChrgDetail.RevenueCode)].Visible = true;
+                ChrgDetailDataGrid.Columns[nameof(ChrgDetail.Type)].Visible = true;
+                ChrgDetailDataGrid.Columns[nameof(ChrgDetail.BillMethod)].Visible = true;
+                ChrgDetailDataGrid.Columns[nameof(ChrgDetail.OrderCode)].Visible = true;
+                ChrgDetailDataGrid.Columns[nameof(ChrgDetail.Amount)].Visible = true;
 
-                dgvChrgDetail.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
-                dgvChrgDetail.Columns[nameof(ChrgDetail.Cpt4)].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-                dgvChrgDetail.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
+                ChrgDetailDataGrid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+                ChrgDetailDataGrid.Columns[nameof(ChrgDetail.Cpt4)].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+                ChrgDetailDataGrid.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
 
-                dgvChrgDetail.Columns[nameof(ChrgDetail.Amount)].DefaultCellStyle.Format = "N2";
+                ChrgDetailDataGrid.Columns[nameof(ChrgDetail.Amount)].DefaultCellStyle.Format = "N2";
 
             }
         }
 
-        private void DgvCharges_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        private void ChargesDataGrid_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
             Log.Instance.Trace($"Entering");
-            if (e.ColumnIndex == dgvCharges.Columns[nameof(Chrg.IsCredited)].Index && e.Value.ToString() == "True")
+            if (e.ColumnIndex == ChargesDataGrid.Columns[nameof(Chrg.IsCredited)].Index && e.Value.ToString() == "True")
             {
-                dgvCharges.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.Red;
-                dgvCharges.Rows[e.RowIndex].DefaultCellStyle.ForeColor = Color.White;
+                ChargesDataGrid.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.Red;
+                ChargesDataGrid.Rows[e.RowIndex].DefaultCellStyle.ForeColor = Color.White;
             }
         }
 
@@ -994,10 +994,10 @@ namespace LabBilling.Forms
         private void ToolStripCreditCharge_Click(object sender, EventArgs e)
         {
             Log.Instance.Trace($"Entering");
-            int selectedRows = dgvCharges.Rows.GetRowCount(DataGridViewElementStates.Selected);
+            int selectedRows = ChargesDataGrid.Rows.GetRowCount(DataGridViewElementStates.Selected);
             if (selectedRows > 0)
             {
-                DataGridViewRow row = dgvCharges.SelectedRows[0];
+                DataGridViewRow row = ChargesDataGrid.SelectedRows[0];
 
                 InputBoxResult prompt = InputBox.Show(string.Format("Credit Charge Number {0}?\nEnter credit reason.",
                     row.Cells[nameof(Chrg.ChrgId)].Value.ToString()),
@@ -1012,13 +1012,13 @@ namespace LabBilling.Forms
             }
         }
 
-        private void CkShowCreditedChrg_CheckedChanged(object sender, EventArgs e)
+        private void ShowCreditedChrgCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             Log.Instance.Trace($"Entering");
             LoadCharges();
         }
 
-        private void BtnAddCharge_Click(object sender, EventArgs e)
+        private void AddChargeButton_Click(object sender, EventArgs e)
         {
             Log.Instance.Trace($"Entering");
             ChargeEntryForm frm = new ChargeEntryForm(currentAccount);
@@ -1029,31 +1029,31 @@ namespace LabBilling.Forms
             }
         }
 
-        private void dgvChrgDetail_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        private void ChrgDetailDataGrid_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
             Log.Instance.Trace($"Entering");
         }
 
-        private void dgvChrgDetail_SelectionChanged(object sender, EventArgs e)
+        private void ChrgDetailDataGrid_SelectionChanged(object sender, EventArgs e)
         {
-            if(UpdateDxPointers.Enabled == true)
+            if(UpdateDxPointersButton.Enabled == true)
             {
                 if(MetroMessageBox.Show(this, "Changes were made to diagnosis pointers. Save changes?", "Save Changes?", 
                     MessageBoxButtons.YesNo, MessageBoxIcon.Question) 
                     == DialogResult.Yes)
                 {
-                    UpdateDxPointers_Click(sender, e);                    
+                    UpdateDxPointersButton_Click(sender, e);                    
                 }
-                UpdateDxPointers.Enabled = false;
+                UpdateDxPointersButton.Enabled = false;
             }
 
             Log.Instance.Trace($"Entering");
 
             //load dx pointers
-            int selectedRows = dgvChrgDetail.Rows.GetRowCount(DataGridViewElementStates.Selected);
+            int selectedRows = ChrgDetailDataGrid.Rows.GetRowCount(DataGridViewElementStates.Selected);
             if (selectedRows > 0)
             {
-                DataGridViewRow row = dgvChrgDetail.SelectedRows[0];
+                DataGridViewRow row = ChrgDetailDataGrid.SelectedRows[0];
 
                 string dxPtr = row.Cells[nameof(ChrgDetail.DiagCodePointer)].Value.ToString();
 
@@ -1103,9 +1103,9 @@ namespace LabBilling.Forms
                             i++;
                         }
                     }
-                    DiagnosisPointerDGV.DataSource = dt;
-                    DiagnosisPointerDGV.Columns["DxCode"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill; 
-                    DiagnosisPointerDGV.AutoResizeColumns();
+                    DiagnosisPointerDataGrid.DataSource = dt;
+                    DiagnosisPointerDataGrid.Columns["DxCode"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill; 
+                    DiagnosisPointerDataGrid.AutoResizeColumns();
                 }
                 catch(Exception ex)
                 {
@@ -1115,17 +1115,17 @@ namespace LabBilling.Forms
             }
         }
 
-        private void UpdateDxPointers_Click(object sender, EventArgs e)
+        private void UpdateDxPointersButton_Click(object sender, EventArgs e)
         {
             StringBuilder sb = new StringBuilder();
 
-            for (int c = 2; c < DiagnosisPointerDGV.ColumnCount; c++)
+            for (int c = 2; c < DiagnosisPointerDataGrid.ColumnCount; c++)
             {
-                for (int r = 0; r < DiagnosisPointerDGV.RowCount; r++)
+                for (int r = 0; r < DiagnosisPointerDataGrid.RowCount; r++)
                 {
-                    if((bool)DiagnosisPointerDGV.Rows[r].Cells[c].Value == true)
+                    if((bool)DiagnosisPointerDataGrid.Rows[r].Cells[c].Value == true)
                     {
-                        sb.Append(DiagnosisPointerDGV.Rows[r].Cells[0].Value.ToString() + ":");
+                        sb.Append(DiagnosisPointerDataGrid.Rows[r].Cells[0].Value.ToString() + ":");
                     }
                 }
             }
@@ -1137,20 +1137,20 @@ namespace LabBilling.Forms
 
             ChrgDetail amt = new ChrgDetail();
 
-            amt.uri = Convert.ToInt32(dgvChrgDetail.SelectedRows[0].Cells[nameof(amt.uri)].Value);
-            amt.Amount = Convert.ToDouble(dgvChrgDetail.SelectedRows[0].Cells[nameof(amt.Amount)].Value?? 0.0);
-            amt.BillMethod = dgvChrgDetail.SelectedRows[0].Cells[nameof(amt.BillMethod)].Value?.ToString();
-            amt.BillType = dgvChrgDetail.SelectedRows[0].Cells[nameof(amt.BillType)].Value?.ToString();
-            amt.ChrgNo = Convert.ToInt32(dgvChrgDetail.SelectedRows[0].Cells[nameof(amt.ChrgNo)].Value ?? 0.0);
-            amt.Cpt4 = dgvChrgDetail.SelectedRows[0].Cells[nameof(amt.Cpt4)].Value?.ToString();
+            amt.uri = Convert.ToInt32(ChrgDetailDataGrid.SelectedRows[0].Cells[nameof(amt.uri)].Value);
+            amt.Amount = Convert.ToDouble(ChrgDetailDataGrid.SelectedRows[0].Cells[nameof(amt.Amount)].Value?? 0.0);
+            amt.BillMethod = ChrgDetailDataGrid.SelectedRows[0].Cells[nameof(amt.BillMethod)].Value?.ToString();
+            amt.BillType = ChrgDetailDataGrid.SelectedRows[0].Cells[nameof(amt.BillType)].Value?.ToString();
+            amt.ChrgNo = Convert.ToInt32(ChrgDetailDataGrid.SelectedRows[0].Cells[nameof(amt.ChrgNo)].Value ?? 0.0);
+            amt.Cpt4 = ChrgDetailDataGrid.SelectedRows[0].Cells[nameof(amt.Cpt4)].Value?.ToString();
             amt.DiagCodePointer = dxPtr;
-            amt.Modifier = dgvChrgDetail.SelectedRows[0].Cells[nameof(amt.Modifier)].Value?.ToString();
-            amt.Modifer2 = dgvChrgDetail.SelectedRows[0].Cells[nameof(amt.Modifer2)].Value?.ToString();
-            amt.LISReqNo = dgvChrgDetail.SelectedRows[0].Cells[nameof(amt.LISReqNo)].Value?.ToString();
-            amt.OrderCode = dgvChrgDetail.SelectedRows[0].Cells[nameof(amt.OrderCode)].Value?.ToString();
+            amt.Modifier = ChrgDetailDataGrid.SelectedRows[0].Cells[nameof(amt.Modifier)].Value?.ToString();
+            amt.Modifer2 = ChrgDetailDataGrid.SelectedRows[0].Cells[nameof(amt.Modifer2)].Value?.ToString();
+            amt.LISReqNo = ChrgDetailDataGrid.SelectedRows[0].Cells[nameof(amt.LISReqNo)].Value?.ToString();
+            amt.OrderCode = ChrgDetailDataGrid.SelectedRows[0].Cells[nameof(amt.OrderCode)].Value?.ToString();
             amt.PointerSet = true;
-            amt.RevenueCode = dgvChrgDetail.SelectedRows[0].Cells[nameof(amt.RevenueCode)].Value?.ToString();
-            amt.Type = dgvChrgDetail.SelectedRows[0].Cells[nameof(amt.Type)].Value?.ToString();
+            amt.RevenueCode = ChrgDetailDataGrid.SelectedRows[0].Cells[nameof(amt.RevenueCode)].Value?.ToString();
+            amt.Type = ChrgDetailDataGrid.SelectedRows[0].Cells[nameof(amt.Type)].Value?.ToString();
 
             ChrgDetailRepository amtRepository = new ChrgDetailRepository(Helper.ConnVal);
             try
@@ -1164,30 +1164,30 @@ namespace LabBilling.Forms
                 return;
             }
 
-            UpdateDxPointers.Enabled = false;
+            UpdateDxPointersButton.Enabled = false;
             LoadCharges();
-            dgvChrgDetail.DataSource = null;
+            ChrgDetailDataGrid.DataSource = null;
         }
 
-        private void DiagnosisPointerDGV_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        private void DiagnosisPointerDataGrid_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-            DiagnosisPointerDGV.EndEdit();
+            DiagnosisPointerDataGrid.EndEdit();
 
             if(e.ColumnIndex > 1 )
             {
-                UpdateDxPointers.Enabled = true;
+                UpdateDxPointersButton.Enabled = true;
 
-                DataGridViewCheckBoxCell cbCell = DiagnosisPointerDGV.Rows[e.RowIndex].Cells[e.ColumnIndex] as DataGridViewCheckBoxCell;
+                DataGridViewCheckBoxCell cbCell = DiagnosisPointerDataGrid.Rows[e.RowIndex].Cells[e.ColumnIndex] as DataGridViewCheckBoxCell;
                 bool checkedValue = (bool)cbCell.Value;
 
                 if (checkedValue == true)
                 {
                     //loop through the column entries and ensure only one is checked
-                    for (int i = 0; i < DiagnosisPointerDGV.RowCount; i++)
+                    for (int i = 0; i < DiagnosisPointerDataGrid.RowCount; i++)
                     {
                         if(i != e.RowIndex)
                         {
-                            DiagnosisPointerDGV.Rows[i].Cells[e.ColumnIndex].Value = false;
+                            DiagnosisPointerDataGrid.Rows[i].Cells[e.ColumnIndex].Value = false;
                         }
                     }
                 }
@@ -1202,52 +1202,52 @@ namespace LabBilling.Forms
         {
             Log.Instance.Trace("Entering");
 
-            tbTotalPayment.Text = currentAccount.TotalPayments.ToString("c");
-            tbTotalContractual.Text = currentAccount.TotalContractual.ToString("c");
-            tbTotalWriteOff.Text = currentAccount.TotalWriteOff.ToString("c");
-            tbTotalPmtAll.Text = (currentAccount.TotalPayments + currentAccount.TotalContractual + currentAccount.TotalWriteOff).ToString("c");
+            TotalPaymentTextBox.Text = currentAccount.TotalPayments.ToString("c");
+            TotalContractualTextBox.Text = currentAccount.TotalContractual.ToString("c");
+            TotalWriteOffTextBox.Text = currentAccount.TotalWriteOff.ToString("c");
+            TotalPmtAllTextBox.Text = (currentAccount.TotalPayments + currentAccount.TotalContractual + currentAccount.TotalWriteOff).ToString("c");
 
             //payments = chkdb.GetByAccount(SelectedAccount);
             //Log.Instance.Debug($"GetPayments returned {payments.Count} rows.");
-            dgvPayments.DataSource = currentAccount.Payments.ToList();
+            PaymentsDataGrid.DataSource = currentAccount.Payments.ToList();
 
-            foreach (DataGridViewColumn col in dgvPayments.Columns)
+            foreach (DataGridViewColumn col in PaymentsDataGrid.Columns)
             {
                 col.Visible = false;
             }
 
-            dgvPayments.Columns[nameof(Chk.PaidAmount)].Visible = true;
-            dgvPayments.Columns[nameof(Chk.ChkDate)].Visible = true;
-            dgvPayments.Columns[nameof(Chk.CheckNo)].Visible = true;
-            dgvPayments.Columns[nameof(Chk.Comment)].Visible = true;
-            dgvPayments.Columns[nameof(Chk.ContractualAmount)].Visible = true;
-            dgvPayments.Columns[nameof(Chk.DateReceived)].Visible = true;
-            dgvPayments.Columns[nameof(Chk.Invoice)].Visible = true;
-            dgvPayments.Columns[nameof(Chk.Source)].Visible = true;
-            dgvPayments.Columns[nameof(Chk.Status)].Visible = true;
-            dgvPayments.Columns[nameof(Chk.WriteOffAmount)].Visible = true;
-            dgvPayments.Columns[nameof(Chk.WriteOffCode)].Visible = true;
-            dgvPayments.Columns[nameof(Chk.WriteOffDate)].Visible = true;
+            PaymentsDataGrid.Columns[nameof(Chk.PaidAmount)].Visible = true;
+            PaymentsDataGrid.Columns[nameof(Chk.ChkDate)].Visible = true;
+            PaymentsDataGrid.Columns[nameof(Chk.CheckNo)].Visible = true;
+            PaymentsDataGrid.Columns[nameof(Chk.Comment)].Visible = true;
+            PaymentsDataGrid.Columns[nameof(Chk.ContractualAmount)].Visible = true;
+            PaymentsDataGrid.Columns[nameof(Chk.DateReceived)].Visible = true;
+            PaymentsDataGrid.Columns[nameof(Chk.Invoice)].Visible = true;
+            PaymentsDataGrid.Columns[nameof(Chk.Source)].Visible = true;
+            PaymentsDataGrid.Columns[nameof(Chk.Status)].Visible = true;
+            PaymentsDataGrid.Columns[nameof(Chk.WriteOffAmount)].Visible = true;
+            PaymentsDataGrid.Columns[nameof(Chk.WriteOffCode)].Visible = true;
+            PaymentsDataGrid.Columns[nameof(Chk.WriteOffDate)].Visible = true;
             
-            dgvPayments.Columns[nameof(Chk.PaidAmount)].DefaultCellStyle.Format = "N2";
-            dgvPayments.Columns[nameof(Chk.PaidAmount)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-            dgvPayments.Columns[nameof(Chk.ContractualAmount)].DefaultCellStyle.Format = "N2";
-            dgvPayments.Columns[nameof(Chk.ContractualAmount)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-            dgvPayments.Columns[nameof(Chk.WriteOffAmount)].DefaultCellStyle.Format = "N2";
-            dgvPayments.Columns[nameof(Chk.WriteOffAmount)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            PaymentsDataGrid.Columns[nameof(Chk.PaidAmount)].DefaultCellStyle.Format = "N2";
+            PaymentsDataGrid.Columns[nameof(Chk.PaidAmount)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            PaymentsDataGrid.Columns[nameof(Chk.ContractualAmount)].DefaultCellStyle.Format = "N2";
+            PaymentsDataGrid.Columns[nameof(Chk.ContractualAmount)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            PaymentsDataGrid.Columns[nameof(Chk.WriteOffAmount)].DefaultCellStyle.Format = "N2";
+            PaymentsDataGrid.Columns[nameof(Chk.WriteOffAmount)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
 
-            dgvPayments.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
-            dgvPayments.BackgroundColor = Color.AntiqueWhite;
+            PaymentsDataGrid.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
+            PaymentsDataGrid.BackgroundColor = Color.AntiqueWhite;
         }
 
-        private void DgvPayments_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        private void PaymentsDataGrid_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
             Log.Instance.Trace($"Entering");
-            int selectedRows = dgvPayments.Rows.GetRowCount(DataGridViewElementStates.Selected);
+            int selectedRows = PaymentsDataGrid.Rows.GetRowCount(DataGridViewElementStates.Selected);
             if (selectedRows > 0)
             {
 
-                DataGridViewRow row = dgvPayments.SelectedRows[0];
+                DataGridViewRow row = PaymentsDataGrid.SelectedRows[0];
                 var chk = chkdb.GetById(Convert.ToInt32(row.Cells[nameof(Chk.PaymentNo)].Value.ToString()));
 
                 DisplayPOCOForm<Chk> frm = new DisplayPOCOForm<Chk>(chk)
@@ -1258,9 +1258,9 @@ namespace LabBilling.Forms
             }
         }
 
-        private void AddPayment_Click(object sender, EventArgs e)
+        private void AddPaymentButton_Click(object sender, EventArgs e)
         {
-
+            throw new NotImplementedException();
         }
 
         #endregion
@@ -1270,50 +1270,50 @@ namespace LabBilling.Forms
         private void LoadDx()
         {
             Log.Instance.Trace("Entering");
-            dgvDiagnosis.DataSource = new BindingSource(dxBindingList, null);
+            DiagnosisDataGrid.DataSource = new BindingSource(dxBindingList, null);
         }
-        private void BtnDxSearch_Click(object sender, EventArgs e)
+        private void DxSearchButton_Click(object sender, EventArgs e)
         {
             Log.Instance.Trace($"Entering");
             var dictRecords = dictDxDb.Search(txtSearchDx.Text, currentAccount.TransactionDate.GetValueOrDefault(DateTime.Now));
 
-            dgvDxSearch.DataSource = dictRecords;
-            dgvDxSearch.Columns[nameof(DictDx.mod_date)].Visible = false;
-            dgvDxSearch.Columns[nameof(DictDx.mod_user)].Visible = false;
-            dgvDxSearch.Columns[nameof(DictDx.mod_prg)].Visible = false;
-            dgvDxSearch.Columns[nameof(DictDx.mod_host)].Visible = false;
-            dgvDxSearch.Columns[nameof(DictDx.deleted)].Visible = false;
-            dgvDxSearch.Columns[nameof(DictDx.AMA_year)].Visible = false;
-            dgvDxSearch.Columns[nameof(DictDx.id)].Visible = false;
-            dgvDxSearch.Columns[nameof(DictDx.version)].Visible = false;
-            dgvDxSearch.Columns[nameof(DictDx.rowguid)].Visible = false;
+            DxSearchDataGrid.DataSource = dictRecords;
+            DxSearchDataGrid.Columns[nameof(DictDx.mod_date)].Visible = false;
+            DxSearchDataGrid.Columns[nameof(DictDx.mod_user)].Visible = false;
+            DxSearchDataGrid.Columns[nameof(DictDx.mod_prg)].Visible = false;
+            DxSearchDataGrid.Columns[nameof(DictDx.mod_host)].Visible = false;
+            DxSearchDataGrid.Columns[nameof(DictDx.deleted)].Visible = false;
+            DxSearchDataGrid.Columns[nameof(DictDx.AMA_year)].Visible = false;
+            DxSearchDataGrid.Columns[nameof(DictDx.id)].Visible = false;
+            DxSearchDataGrid.Columns[nameof(DictDx.version)].Visible = false;
+            DxSearchDataGrid.Columns[nameof(DictDx.rowguid)].Visible = false;
         }
 
-        private void DgvDxSearch_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
+        private void DxSearchDataGrid_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
         {
             Log.Instance.Trace($"Entering");
-            dgvDxSearch.Columns[nameof(DictDx.icd9_desc)].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            dgvDxSearch.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
-            dgvDxSearch.Columns[1].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            DxSearchDataGrid.Columns[nameof(DictDx.icd9_desc)].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            DxSearchDataGrid.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
+            DxSearchDataGrid.Columns[1].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
         }
 
-        private void DgvDiagnosis_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
+        private void DiagnosisDataGrid_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
         {
             Log.Instance.Trace($"Entering");
-            dgvDiagnosis.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
-            dgvDiagnosis.Columns[2].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            DiagnosisDataGrid.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
+            DiagnosisDataGrid.Columns[2].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
         }
 
-        private void DgvDxSearch_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
+        private void DxSearchDataGrid_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
         {
             Log.Instance.Trace($"Entering");
-            int selectedRows = dgvDxSearch.Rows.GetRowCount(DataGridViewElementStates.Selected);
+            int selectedRows = DxSearchDataGrid.Rows.GetRowCount(DataGridViewElementStates.Selected);
             if (selectedRows > 0)
             {
                 //add selected diagnosis to account dx grid
 
-                string selectedCode = dgvDxSearch.SelectedRows[0].Cells[nameof(DictDx.icd9_num)].Value.ToString();
-                string selectedDesc = dgvDxSearch.SelectedRows[0].Cells[nameof(DictDx.icd9_desc)].Value.ToString();
+                string selectedCode = DxSearchDataGrid.SelectedRows[0].Cells[nameof(DictDx.icd9_num)].Value.ToString();
+                string selectedDesc = DxSearchDataGrid.SelectedRows[0].Cells[nameof(DictDx.icd9_desc)].Value.ToString();
 
                 if (dxBindingList.FirstOrDefault(n => n.Code == selectedCode) != null)
                 {
@@ -1337,35 +1337,35 @@ namespace LabBilling.Forms
             }
         }
 
-        private void TxtSearchDx_KeyPress(object sender, KeyPressEventArgs e)
+        private void SearchDxTextBox_KeyPress(object sender, KeyPressEventArgs e)
         {
             Log.Instance.Trace($"Entering");
             if (e.KeyChar == (char)13)
             {
                 Log.Instance.Debug("Enter key pressed");
-                BtnDxSearch_Click(sender, e);
+                DxSearchButton_Click(sender, e);
             }
         }
 
-        private void TxtDxQuickAdd_KeyPress(object sender, KeyPressEventArgs e)
+        private void DxQuickAddTextBox_KeyPress(object sender, KeyPressEventArgs e)
         {
             Log.Instance.Trace($"Entering");
             if (e.KeyChar == (char)13)
             {
                 Log.Instance.Debug("Enter key pressed");
-                if (txtDxQuickAdd.Text != "")
+                if (DxQuickAddTextBox.Text != "")
                 {
                     //check to see if the text entered is a valid DX code - if so, add the code and description to the selected grid
 
-                    if (dxBindingList.First<PatDiag>(n => n.Code == txtDxQuickAdd.Text) != null)
+                    if (dxBindingList.FirstOrDefault<PatDiag>(n => n.Code == DxQuickAddTextBox.Text) != null)
                     {
                         //this code already exists in the list
                         MetroMessageBox.Show(this, "Diagnosis already entered for this account", "Record Exists", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
-                        txtDxQuickAdd.Text = "";
+                        DxQuickAddTextBox.Text = "";
                         return;
                     }
 
-                    var record = dictDxDb.GetByCode(txtDxQuickAdd.Text, currentAccount.TransactionDate.GetValueOrDefault(DateTime.Now));
+                    var record = dictDxDb.GetByCode(DxQuickAddTextBox.Text, currentAccount.TransactionDate.GetValueOrDefault(DateTime.Now));
                     if (record != null)
                     {
                         //this is a valid entry
@@ -1376,32 +1376,32 @@ namespace LabBilling.Forms
                         if (maxNo >= 9)
                         {
                             MetroMessageBox.Show(this, "Maximum number of diagnosis reached.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                            txtDxQuickAdd.Text = "";
+                            DxQuickAddTextBox.Text = "";
                             return;
                         }
                         dxBindingList.Add(new PatDiag { No = maxNo + 1, Code = record.icd9_num, Description = record.icd9_desc });
-                        txtDxQuickAdd.Text = "";
+                        DxQuickAddTextBox.Text = "";
                     }
                     else
                     {
                         //not valid - clear box and do nothing
-                        txtDxQuickAdd.Text = "";
+                        DxQuickAddTextBox.Text = "";
                         //System.Media.SystemSounds.Beep.Play();
                     }
                 }
             }
         }
 
-        private void BtnDxDelete_Click(object sender, EventArgs e)
+        private void DxDeleteButton_Click(object sender, EventArgs e)
         {
             Log.Instance.Trace($"Entering");
-            int selectedRows = dgvDiagnosis.Rows.GetRowCount(DataGridViewElementStates.Selected);
+            int selectedRows = DiagnosisDataGrid.Rows.GetRowCount(DataGridViewElementStates.Selected);
             if (selectedRows > 0)
             {
                 //add selected diagnosis to account dx grid
 
-                string selectedCode = dgvDiagnosis.SelectedRows[0].Cells[nameof(PatDiag.Code)].Value.ToString();
-                string selectedNo = dgvDiagnosis.SelectedRows[0].Cells[nameof(PatDiag.No)].Value.ToString();
+                string selectedCode = DiagnosisDataGrid.SelectedRows[0].Cells[nameof(PatDiag.Code)].Value.ToString();
+                string selectedNo = DiagnosisDataGrid.SelectedRows[0].Cells[nameof(PatDiag.No)].Value.ToString();
 
                 var record = dxBindingList.IndexOf(dxBindingList.First<PatDiag>(n => n.Code == selectedCode));
 
@@ -1416,14 +1416,14 @@ namespace LabBilling.Forms
             }
         }
 
-        private void DgvDiagnosis_UserDeletingRow(object sender, DataGridViewRowCancelEventArgs e)
+        private void DiagnosisDataGrid_UserDeletingRow(object sender, DataGridViewRowCancelEventArgs e)
         {
             Log.Instance.Trace($"Entering");
             e.Cancel = true;
-            BtnDxDelete_Click(sender, e);
+            DxDeleteButton_Click(sender, e);
         }
 
-        private void BtnSaveDx_Click(object sender, EventArgs e)
+        private void SaveDxButton_Click(object sender, EventArgs e)
         {
             Log.Instance.Trace($"Entering");
 
@@ -1435,7 +1435,7 @@ namespace LabBilling.Forms
                 MetroMessageBox.Show(this, "Diagnosis update failed.");
         }
 
-        private void dgvDiagnosis_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
+        private void DiagnosisDataGrid_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
         {
 
         }
@@ -1447,19 +1447,19 @@ namespace LabBilling.Forms
         private void LoadNotes()
         {
             Log.Instance.Trace("Entering");
-            tbNotesDisplay.Text = "";
-            tbNotesDisplay.BackColor = Color.AntiqueWhite;
+            NotesDisplayTextBox.Text = "";
+            NotesDisplayTextBox.BackColor = Color.AntiqueWhite;
             foreach(AccountNote note in currentAccount.Notes)
             {
-                tbNotesDisplay.DeselectAll();
-                tbNotesDisplay.SelectionFont = new Font(tbNotesDisplay.SelectionFont, FontStyle.Bold);
-                tbNotesDisplay.AppendText(note.mod_date + " - " + note.mod_user);
-                tbNotesDisplay.SelectionFont = new Font(tbNotesDisplay.SelectionFont, FontStyle.Regular);
-                tbNotesDisplay.AppendText(Environment.NewLine + note.comment + Environment.NewLine + Environment.NewLine);
+                NotesDisplayTextBox.DeselectAll();
+                NotesDisplayTextBox.SelectionFont = new Font(NotesDisplayTextBox.SelectionFont, FontStyle.Bold);
+                NotesDisplayTextBox.AppendText(note.mod_date + " - " + note.mod_user);
+                NotesDisplayTextBox.SelectionFont = new Font(NotesDisplayTextBox.SelectionFont, FontStyle.Regular);
+                NotesDisplayTextBox.AppendText(Environment.NewLine + note.comment + Environment.NewLine + Environment.NewLine);
             }
         }
 
-        private void BtnNoteAdd_Click(object sender, EventArgs e)
+        private void AddNoteButton_Click(object sender, EventArgs e)
         {
             Log.Instance.Trace($"Entering");
             InputBoxResult prompt = InputBox.Show("Enter note:", "New Note", true);
@@ -1486,10 +1486,10 @@ namespace LabBilling.Forms
             Log.Instance.Trace("Entering");
 
             //billingActivities = dbBillingActivity.GetByAccount(currentAccountSummary.account);
-            dgvBillActivity.DataSource = currentAccount.BillingActivities.ToList();
+            BillActivityDataGrid.DataSource = currentAccount.BillingActivities.ToList();
 
-            tbValidationResults.Text = currentAccount.AccountValidationStatus.validation_text;
-            lblLastValidated.Text = currentAccount.AccountValidationStatus.mod_date.ToString("G");
+            ValidationResultsTextBox.Text = currentAccount.AccountValidationStatus.validation_text;
+            LastValidatedLabel.Text = currentAccount.AccountValidationStatus.mod_date.ToString("G");
            
         }
 
@@ -1776,54 +1776,54 @@ namespace LabBilling.Forms
             }
         }
 
-        private void cbInsCode_SelectedIndexChanged(object sender, EventArgs e)
+        private void InsCodeComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             Log.Instance.Trace($"Entering");
-            if (cbInsCode.SelectedIndex >= 0)
+            if (InsCodeComboBox.SelectedIndex >= 0)
             {
-                string insCode = cbInsCode.SelectedValue.ToString();
+                string insCode = InsCodeComboBox.SelectedValue.ToString();
                 LookupInsCode(insCode);
 
                 if (insCode == "MISC")
                 {
-                    tbPlanName.ReadOnly = false;
-                    tbPlanAddress.ReadOnly = false;
-                    tbPlanAddress2.ReadOnly = false;
-                    tbPlanCitySt.ReadOnly = false;
-                    cbPlanFinCode.Enabled = true;
+                    PlanNameTextBox.ReadOnly = false;
+                    PlanAddressTextBox.ReadOnly = false;
+                    PlanAddress2TextBox.ReadOnly = false;
+                    PlanCityStTextBox.ReadOnly = false;
+                    PlanFinCodeComboBox.Enabled = true;
                 }
                 else
                 {
-                    tbPlanName.ReadOnly = true;
-                    tbPlanAddress.ReadOnly = true;
-                    tbPlanAddress2.ReadOnly = true;
-                    tbPlanCitySt.ReadOnly = true;
-                    cbPlanFinCode.Enabled = false;
+                    PlanNameTextBox.ReadOnly = true;
+                    PlanAddressTextBox.ReadOnly = true;
+                    PlanAddress2TextBox.ReadOnly = true;
+                    PlanCityStTextBox.ReadOnly = true;
+                    PlanFinCodeComboBox.Enabled = false;
                 }
             }
 
         }
 
-        private async void btnValidateAccount_Click(object sender, EventArgs e)
+        private async void ValidateAccountButton_Click(object sender, EventArgs e)
         {
             try
             {
                 if (!await Task.Run(() => accDB.Validate(ref currentAccount)))
                 {
                     //has validation errors - do not bill
-                    tbValidationResults.Text = currentAccount.AccountValidationStatus.validation_text;
-                    lblLastValidated.Text = currentAccount.AccountValidationStatus.mod_date.ToString("G");
+                    ValidationResultsTextBox.Text = currentAccount.AccountValidationStatus.validation_text;
+                    LastValidatedLabel.Text = currentAccount.AccountValidationStatus.mod_date.ToString("G");
                 }
                 else
                 {
                     //ok to bill
-                    tbValidationResults.Text = "No validation errors.";
-                    lblLastValidated.Text = currentAccount.AccountValidationStatus.mod_date.ToString("G");
+                    ValidationResultsTextBox.Text = "No validation errors.";
+                    LastValidatedLabel.Text = currentAccount.AccountValidationStatus.mod_date.ToString("G");
                 }
             }
             catch(Exception ex)
             {
-                tbValidationResults.Text = $"Exception in validation - report to support. {ex.Message}";
+                ValidationResultsTextBox.Text = $"Exception in validation - report to support. {ex.Message}";
             }
 
         }
