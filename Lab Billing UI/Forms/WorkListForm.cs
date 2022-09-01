@@ -59,7 +59,8 @@ namespace LabBilling.Forms
                 new TreeNode("Commercial 1500"),
                 new TreeNode("UHC Community Plan"),
                 new TreeNode("Pathways TNCare"),
-                new TreeNode("Amerigroup")
+                new TreeNode("Amerigroup"),
+                new TreeNode("Manual Hold")
             };
 
             TreeNode rootNode = new TreeNode("Worklists", worklists);
@@ -71,14 +72,16 @@ namespace LabBilling.Forms
         {
             ValidateButton.Enabled = false;
             PostButton.Enabled = false;
+            workqueues.Enabled = false;
+            
             int cnt = accountGrid.Rows.Count;
             progressBar.Minimum = 0;
             progressBar.Maximum = cnt;
             Cursor.Current = Cursors.WaitCursor;
-            var accountList = (List<AccountSearch>)accountGrid.DataSource;
+            //var accountList = (List<AccountSearch>)accountGrid.DataSource;
 
             tasksRunning = true;
-            foreach (var acc in accountList)
+            foreach (var acc in accounts)
             {
                 if (requestAbort)
                 {
@@ -87,10 +90,9 @@ namespace LabBilling.Forms
                     this.Close();
                     break;
                 }
-                statusLabel2.Text = $"Validating {progressBar.Value} of {accountList.Count}.";
+                statusLabel2.Text = $"Validating {progressBar.Value} of {accounts.Count}.";
                 await RunValidationAsync(acc.Account);
                 progressBar.Increment(1);
-
             }
             tasksRunning = false;
             statusLabel2.Text = "Validation complete.";
@@ -98,6 +100,7 @@ namespace LabBilling.Forms
             Cursor.Current = Cursors.Default;
             ValidateButton.Enabled = true;
             PostButton.Enabled = true;
+            workqueues.Enabled = true;
         }
 
         private void RunValidation(string accountNo)
@@ -121,6 +124,7 @@ namespace LabBilling.Forms
                     //account has validation errors - update grid
                     accountGrid["ValidationErrors", rowIndex].Value = account.AccountValidationStatus.validation_text;
                     accountGrid[nameof(AccountSearch.Status), rowIndex].Value = "ERROR";
+                    accountRepository.UpdateStatus(accountNo, "NEW");
                 }
                 else
                 {
@@ -135,37 +139,51 @@ namespace LabBilling.Forms
         {
             if (!string.IsNullOrEmpty(accountNo))
             {
+
                 int rowIndex = await Task<int>.Run(() =>
                 {
                     rowIndex = -1;
-                    bool tempAllowUserToAddRows = accountGrid.AllowUserToAddRows;
                     accountGrid.AllowUserToAddRows = false; // Turn off or .Value below will throw null exception
                     DataGridViewRow row = accountGrid.Rows
                         .Cast<DataGridViewRow>()
                         .Where(r => r.Cells["Account"].Value.ToString().Equals(accountNo))
                         .First();
                     rowIndex = row.Index;
-                    accountGrid.AllowUserToAddRows = tempAllowUserToAddRows;
+                    if(row.Index > (accountGrid.FirstDisplayedScrollingRowIndex + accountGrid.DisplayedRowCount(false)-2))
+                        accountGrid.FirstDisplayedScrollingRowIndex = row.Index-5;
                     return rowIndex;
                 });
-
-                var (isValid, validationText, formType) = await ValidateAccountAsync(accountNo);
-
-                if (!isValid)
+                try
                 {
-                    //account has validation errors - update grid
-                    accountGrid["ValidationErrors", rowIndex].Value = validationText;
+                    var (isValid, validationText, formType) = await ValidateAccountAsync(accountNo);
+
+                    if (!isValid)
+                    {
+                        //account has validation errors - update grid
+                        accountGrid["ValidationErrors", rowIndex].Value = validationText;
+                        accountGrid[nameof(AccountSearch.Status), rowIndex].Value = "ERROR";
+                        accountGrid[nameof(AccountSearch.Status), rowIndex].Style.BackColor = Color.Red;
+                        accountGrid["ValidationErrors", rowIndex].Style.BackColor = Color.LightPink;
+                        accountGrid[nameof(AccountSearch.Status), rowIndex].Style.ForeColor = Color.White;
+                        accountRepository.UpdateStatus(accountNo, "NEW");
+                    }
+                    else
+                    {
+                        accountGrid[nameof(AccountSearch.Status), rowIndex].Value = formType;
+                        if (formType != "UNDEFINED")
+                            accountRepository.UpdateStatus(accountNo, formType);
+                        accountGrid[nameof(AccountSearch.Status), rowIndex].Style.BackColor = Color.LightGreen;
+                    }
+                }
+                catch(Exception ex)
+                {
+                    Log.Instance.Error($"Error validating account {accountNo} - {ex.Message}");
+                    accountGrid["ValidationErrors", rowIndex].Value = "Error validating account. Notify support.";
                     accountGrid[nameof(AccountSearch.Status), rowIndex].Value = "ERROR";
                     accountGrid[nameof(AccountSearch.Status), rowIndex].Style.BackColor = Color.Red;
                     accountGrid["ValidationErrors", rowIndex].Style.BackColor = Color.LightPink;
                     accountGrid[nameof(AccountSearch.Status), rowIndex].Style.ForeColor = Color.White;
-                }
-                else
-                {
-                    accountGrid[nameof(AccountSearch.Status), rowIndex].Value = formType;
-                    if(formType != "UNDEFINED")
-                        accountRepository.UpdateStatus(accountNo, formType);
-                    accountGrid[nameof(AccountSearch.Status), rowIndex].Style.BackColor = Color.LightGreen;
+                    accountRepository.UpdateStatus(accountNo, "NEW");
                 }
             }
         }
@@ -246,6 +264,8 @@ namespace LabBilling.Forms
 
         private async void workqueues_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
         {
+            workqueues.Enabled = false;
+
             DateTime.TryParse(systemParametersRepository.GetByKey("ssi_bill_thru_date"), out DateTime thruDate);
             (string propertyName, AccountSearchRepository.operation oper, string searchText)[] parameters = 
             {
@@ -287,6 +307,9 @@ namespace LabBilling.Forms
                 case "Amerigroup":
                     parameters = parameters.Append((nameof(AccountSearch.FinCode), AccountSearchRepository.operation.Equal, "Q")).ToArray();
                     break;
+                case "Manual Hold":
+                    parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.Equal, "HOLD")).ToArray();
+                    break;
                 default:
                     break;
             }
@@ -294,6 +317,7 @@ namespace LabBilling.Forms
             accountGrid.DataSource = null;
             accountGrid.Columns.Clear();
             accountGrid.Rows.Clear();
+            accountGrid.Refresh();
 
             statusLabel1.Text = "Loading Accounts ... ";
             progressBar.ProgressBarStyle = ProgressBarStyle.Marquee;
@@ -304,9 +328,14 @@ namespace LabBilling.Forms
 
             if (accounts == null || accounts.Count == 0)
             {
-                MessageBox.Show("No records returned.", "Alert", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+                //MessageBox.Show("No records returned.", "Alert", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
+                accounts.Add(new AccountSearch()
+                {
+                    Name = "No records found."
+                });
+            }
+            
             accountGrid.DataSource = accounts;
             accountGrid.ForeColor = Color.Black;
             accountGrid.Columns[nameof(AccountSearch.mod_date)].Visible = false;
@@ -319,11 +348,13 @@ namespace LabBilling.Forms
 
             accountGrid.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
             accountGrid.Columns["ValidationErrors"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            accountGrid.Refresh();
             Cursor.Current = Cursors.Default;
 
             statusLabel1.Text = accountGrid.Rows.Count.ToString() + $" records.";
             progressBar.ProgressBarStyle = ProgressBarStyle.Continuous;
 
+            workqueues.Enabled = true;
         }
     }
 }

@@ -30,6 +30,7 @@
         {
             this.label1 = new System.Windows.Forms.Label();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
+            this.StatusMessageLabel = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // label1
@@ -45,20 +46,33 @@
             // 
             this.progressBar1.Location = new System.Drawing.Point(12, 43);
             this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(250, 23);
+            this.progressBar1.Size = new System.Drawing.Size(438, 23);
             this.progressBar1.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
             this.progressBar1.TabIndex = 1;
+            // 
+            // StatusMessageLabel
+            // 
+            this.StatusMessageLabel.AutoSize = true;
+            this.StatusMessageLabel.Location = new System.Drawing.Point(13, 73);
+            this.StatusMessageLabel.Name = "StatusMessageLabel";
+            this.StatusMessageLabel.Size = new System.Drawing.Size(68, 13);
+            this.StatusMessageLabel.TabIndex = 2;
+            this.StatusMessageLabel.Text = "In progress...";
             // 
             // ProgressForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(274, 101);
+            this.ClientSize = new System.Drawing.Size(462, 107);
             this.ControlBox = false;
+            this.Controls.Add(this.StatusMessageLabel);
             this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.label1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "ProgressForm";
+            this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "ProgressForm";
             this.Load += new System.EventHandler(this.ProgressForm_Load);
@@ -71,5 +85,6 @@
 
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ProgressBar progressBar1;
+        private System.Windows.Forms.Label StatusMessageLabel;
     }
 }

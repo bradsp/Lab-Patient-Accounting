@@ -1282,17 +1282,17 @@ namespace LabBilling.Forms
             DxSearchDataGrid.Columns[nameof(DictDx.mod_user)].Visible = false;
             DxSearchDataGrid.Columns[nameof(DictDx.mod_prg)].Visible = false;
             DxSearchDataGrid.Columns[nameof(DictDx.mod_host)].Visible = false;
-            DxSearchDataGrid.Columns[nameof(DictDx.deleted)].Visible = false;
-            DxSearchDataGrid.Columns[nameof(DictDx.AMA_year)].Visible = false;
-            DxSearchDataGrid.Columns[nameof(DictDx.id)].Visible = false;
-            DxSearchDataGrid.Columns[nameof(DictDx.version)].Visible = false;
+            DxSearchDataGrid.Columns[nameof(DictDx.IsDeleted)].Visible = false;
+            DxSearchDataGrid.Columns[nameof(DictDx.AmaYear)].Visible = false;
+            DxSearchDataGrid.Columns[nameof(DictDx.Id)].Visible = false;
+            DxSearchDataGrid.Columns[nameof(DictDx.Version)].Visible = false;
             DxSearchDataGrid.Columns[nameof(DictDx.rowguid)].Visible = false;
         }
 
         private void DxSearchDataGrid_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
         {
             Log.Instance.Trace($"Entering");
-            DxSearchDataGrid.Columns[nameof(DictDx.icd9_desc)].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            DxSearchDataGrid.Columns[nameof(DictDx.Description)].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             DxSearchDataGrid.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
             DxSearchDataGrid.Columns[1].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
         }
@@ -1312,8 +1312,8 @@ namespace LabBilling.Forms
             {
                 //add selected diagnosis to account dx grid
 
-                string selectedCode = DxSearchDataGrid.SelectedRows[0].Cells[nameof(DictDx.icd9_num)].Value.ToString();
-                string selectedDesc = DxSearchDataGrid.SelectedRows[0].Cells[nameof(DictDx.icd9_desc)].Value.ToString();
+                string selectedCode = DxSearchDataGrid.SelectedRows[0].Cells[nameof(DictDx.DxCode)].Value.ToString();
+                string selectedDesc = DxSearchDataGrid.SelectedRows[0].Cells[nameof(DictDx.Description)].Value.ToString();
 
                 if (dxBindingList.FirstOrDefault(n => n.Code == selectedCode) != null)
                 {
@@ -1379,7 +1379,7 @@ namespace LabBilling.Forms
                             DxQuickAddTextBox.Text = "";
                             return;
                         }
-                        dxBindingList.Add(new PatDiag { No = maxNo + 1, Code = record.icd9_num, Description = record.icd9_desc });
+                        dxBindingList.Add(new PatDiag { No = maxNo + 1, Code = record.DxCode, Description = record.Description });
                         DxQuickAddTextBox.Text = "";
                     }
                     else
@@ -1455,7 +1455,7 @@ namespace LabBilling.Forms
                 NotesDisplayTextBox.SelectionFont = new Font(NotesDisplayTextBox.SelectionFont, FontStyle.Bold);
                 NotesDisplayTextBox.AppendText(note.mod_date + " - " + note.mod_user);
                 NotesDisplayTextBox.SelectionFont = new Font(NotesDisplayTextBox.SelectionFont, FontStyle.Regular);
-                NotesDisplayTextBox.AppendText(Environment.NewLine + note.comment + Environment.NewLine + Environment.NewLine);
+                NotesDisplayTextBox.AppendText(Environment.NewLine + note.Comment + Environment.NewLine + Environment.NewLine);
             }
         }
 
@@ -1467,8 +1467,8 @@ namespace LabBilling.Forms
 
             if (prompt.ReturnCode == DialogResult.OK)
             {
-                note.account = currentAccount.AccountNo;
-                note.comment = prompt.Text;
+                note.Account = currentAccount.AccountNo;
+                note.Comment = prompt.Text;
                 notesdb.Add(note);
                 //reload notes to pick up changes
                 currentAccount.Notes = notesdb.GetByAccount(currentAccount.AccountNo);
@@ -1750,8 +1750,8 @@ namespace LabBilling.Forms
 
             if (prompt.ReturnCode == DialogResult.OK)
             {
-                note.account = currentAccount.AccountNo;
-                note.comment = prompt.Text;
+                note.Account = currentAccount.AccountNo;
+                note.Comment = prompt.Text;
                 notesdb.Add(note);
                 //reload notes to pick up changes
                 LoadNotes();

@@ -27,8 +27,8 @@ namespace LabBilling.Core.DataAccess
 
         public override object Add(BillingHistory table)
         {
-            if (table.ins_complete == DateTime.MinValue)
-                table.ins_complete = null;
+            if (table.InsComplete == DateTime.MinValue)
+                table.InsComplete = null;
 
             return base.Add(table);
         }

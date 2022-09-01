@@ -11,12 +11,24 @@ namespace LabBilling.Core.Models
     [PrimaryKey("pc_code", AutoIncrement = true)]
     public class Pth : IBaseEntity
     {
-        public bool deleted { get; set; }
-        public int pc_code { get; set; }
-        public string name { get; set; }
-        public string mc_pin { get; set; }
-        public string bc_pin { get; set; }
-        public string tlc_num { get; set; }
+
+        [Column("deleted")]
+        public bool IsDeleted { get; set; }
+
+        [Column("pc_code")]
+        public int PathId { get; set; }
+
+        [Column("name")]
+        public string Name { get; set; }
+
+        [Column("mc_pin")]
+        public string MedicarePin { get; set; }
+
+        [Column("bc_pin")]
+        public string BlueCrossPin { get; set; }
+
+        [Column("tlc_num")]
+        public string TLCNumber { get; set; }
         public DateTime mod_date { get; set; }
         public string mod_user { get; set; }
         public string mod_prg { get; set; }

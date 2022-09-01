@@ -11,16 +11,22 @@ namespace LabBilling.Core.Models
     [PrimaryKey("id", AutoIncrement = true)]
     public class DictDx : IBaseEntity
     {
-        public string icd9_num { get; set; }
-        public string icd9_desc { get; set; }
+        [Column("icd9_num")]
+        public string DxCode { get; set; }
+        [Column("icd9_desc")]
+        public string Description { get; set; }
+        [Column("version")] 
+        public string Version { get; set; }
+        [Column("AMA_year")] 
+        public string AmaYear { get; set; }
+        [Column("deleted")]
+        public bool IsDeleted { get; set; }
+        [Column("id")]
+        public int Id { get; set; }
+
         public DateTime mod_date { get; set; }
         public string mod_user { get; set; }
         public string mod_prg { get; set; }
-        public string version { get; set; }
-        public string AMA_year { get; set; }
-        public bool deleted { get; set; }
-        public int id { get; set; }
-
         [Ignore]
         public string mod_host { get; set; }
         [Ignore]

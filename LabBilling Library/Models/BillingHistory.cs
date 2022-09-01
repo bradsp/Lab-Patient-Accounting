@@ -13,21 +13,51 @@ namespace LabBilling.Core.Models
     {
 
         public Guid rowguid { get; set; }
-        public bool deleted { get; set; }
-        public string account { get; set; }
-        public string ins_abc { get; set; }
-        public string pat_name { get; set; }
-        public string fin_code { get; set; }
-        public string ins_code { get; set; }
-        public DateTime? trans_date { get; set; }
-        public DateTime? run_date { get; set; }
-        public bool printed { get; set; }
-        public string run_user { get; set; }
-        public double batch { get; set; }
-        public string ebill_status { get; set; }
-        public double ebill_batch { get; set; }
-        public string text { get; set; }
-        public DateTime? ins_complete { get; set; }
+
+        [Column("deleted")]
+        public bool IsDeleted { get; set; }
+
+        [Column("account")]
+        public string Account { get; set; }
+
+        [Column("ins_abc")]
+        public string InsuranceOrder { get; set; }
+
+        [Column("pat_name")]
+        public string PatientName { get; set; }
+
+        [Column("fin_code")]
+        public string FinancialCode { get; set; }
+
+        [Column("ins_code")]
+        public string InsuranceCode { get; set; }
+
+        [Column("trans_date")]
+        public DateTime? TransactionDate { get; set; }
+
+        [Column("run_date")]
+        public DateTime? RunDate { get; set; }
+
+        [Column("printed")]
+        public bool Printed { get; set; }
+
+        [Column("run_user")]
+        public string RunUser { get; set; }
+
+        [Column("batch")]
+        public double Batch { get; set; }
+
+        [Column("ebill_status")]
+        public string ElectronicBillStatus { get; set; }
+
+        [Column("ebill_batch")]
+        public double ElectronicBillBatch { get; set; }
+
+        [Column("text")]
+        public string Text { get; set; }
+
+        [Column("ins_complete")]
+        public DateTime? InsComplete { get; set; }
         public DateTime mod_date { get; set; }
         public string mod_user { get; set; }
         public string mod_prg { get; set; }

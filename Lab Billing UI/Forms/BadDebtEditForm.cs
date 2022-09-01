@@ -41,53 +41,53 @@ namespace LabBilling.Forms
         private void LoadData()
         {
             Log.Instance.Trace($"Entering");
-            LastName.Text = badDebt.debtor_last_name;
-            FirstName.Text = badDebt.debtor_first_name;
-            Address1.Text = badDebt.st_addr_1;
-            Address2.Text = badDebt.st_addr_2;
-            City.Text = badDebt.city;
+            LastName.Text = badDebt.DebtorLastName;
+            FirstName.Text = badDebt.DebtorFirstName;
+            Address1.Text = badDebt.StreetAddress1;
+            Address2.Text = badDebt.StreetAddress2;
+            City.Text = badDebt.City;
             State.Text = badDebt.State;
             ZipCode.Text = badDebt.Zip;
-            Spouse.Text = badDebt.spouse;
-            Phone.Text = badDebt.phone;
-            SocSecNo.Text = badDebt.soc_security;
-            License.Text = badDebt.license_number;
-            Employment.Text = badDebt.employment;
-            Remarks.Text = badDebt.remarks;
-            Remarks2.Text = badDebt.remarks2;
-            AccountNo.Text = badDebt.account_no;
-            PatientName.Text = badDebt.patient_name;
-            Misc.Text = badDebt.misc;
-            ServiceDate.Text = badDebt.service_date?.ToString("MM/dd/yyyy");
-            PaymentDate.Text = badDebt.payment_date?.ToString("MM/dd/yyyy");
-            Balance.Text = badDebt.balance.ToString();
-            DateEntered.Text = badDebt.date_entered?.ToString("MM/dd/yyyy");
-            DateSent.Text = badDebt.date_sent?.ToString("MM/dd/yyyy");
+            Spouse.Text = badDebt.Spouse;
+            Phone.Text = badDebt.Phone;
+            SocSecNo.Text = badDebt.SocialSecurityNo;
+            License.Text = badDebt.LicenseNumber;
+            Employment.Text = badDebt.Employment;
+            Remarks.Text = badDebt.Remarks;
+            Remarks2.Text = badDebt.Remarks2;
+            AccountNo.Text = badDebt.AccountNo;
+            PatientName.Text = badDebt.PatientName;
+            Misc.Text = badDebt.Misc;
+            ServiceDate.Text = badDebt.ServiceDate?.ToString("MM/dd/yyyy");
+            PaymentDate.Text = badDebt.PaymentDate?.ToString("MM/dd/yyyy");
+            Balance.Text = badDebt.Balance.ToString();
+            DateEntered.Text = badDebt.DateEntered?.ToString("MM/dd/yyyy");
+            DateSent.Text = badDebt.DateSent?.ToString("MM/dd/yyyy");
         }
 
         private void ReadData()
         {
             Log.Instance.Trace($"Entering");
-            badDebt.debtor_last_name = LastName.Text;
-            badDebt.debtor_first_name = FirstName.Text;
-            badDebt.st_addr_1 = Address1.Text;
-            badDebt.st_addr_2 = Address2.Text;
-            badDebt.city = City.Text;
+            badDebt.DebtorLastName = LastName.Text;
+            badDebt.DebtorFirstName = FirstName.Text;
+            badDebt.StreetAddress1 = Address1.Text;
+            badDebt.StreetAddress2 = Address2.Text;
+            badDebt.City = City.Text;
             badDebt.State = State.Text;
             badDebt.Zip = ZipCode.Text;
-            badDebt.spouse = Spouse.Text;
-            badDebt.phone = Phone.Text;
-            badDebt.soc_security = SocSecNo.Text;
-            badDebt.license_number = License.Text;
-            badDebt.employment = Employment.Text;
-            badDebt.remarks = Remarks.Text;
-            badDebt.remarks2 = Remarks2.Text;
-            badDebt.account_no = AccountNo.Text;
-            badDebt.patient_name = PatientName.Text;
-            badDebt.misc = Misc.Text;
-            badDebt.service_date = Convert.ToDateTime(ServiceDate.Text);
-            badDebt.payment_date = Convert.ToDateTime(PaymentDate.Text);
-            badDebt.balance = Convert.ToDouble(Balance.Text);
+            badDebt.Spouse = Spouse.Text;
+            badDebt.Phone = Phone.Text;
+            badDebt.SocialSecurityNo = SocSecNo.Text;
+            badDebt.LicenseNumber = License.Text;
+            badDebt.Employment = Employment.Text;
+            badDebt.Remarks = Remarks.Text;
+            badDebt.Remarks2 = Remarks2.Text;
+            badDebt.AccountNo = AccountNo.Text;
+            badDebt.PatientName = PatientName.Text;
+            badDebt.Misc = Misc.Text;
+            badDebt.ServiceDate = Convert.ToDateTime(ServiceDate.Text);
+            badDebt.PaymentDate = Convert.ToDateTime(PaymentDate.Text);
+            badDebt.Balance = Convert.ToDouble(Balance.Text);
         }
 
         private void Save_Click(object sender, EventArgs e)

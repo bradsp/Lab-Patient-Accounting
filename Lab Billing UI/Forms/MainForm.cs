@@ -15,6 +15,7 @@ using MetroFramework.Forms;
 using MetroFramework.Controls;
 using System.Drawing;
 using MetroFramework;
+using System.Threading.Tasks;
 
 namespace LabBilling
 {
@@ -25,7 +26,13 @@ namespace LabBilling
         private readonly UserProfileRepository userProfile = new UserProfileRepository(Helper.ConnVal);
         private readonly AccountRepository accountRepository = new AccountRepository(Helper.ConnVal);
         private readonly SystemParametersRepository systemParametersRepository = new SystemParametersRepository(Helper.ConnVal);
+        private ProgressBar claimProgress;
+        private Label claimProgressStatusLabel;
 
+        public ProgressReportModel progressReportModel = new ProgressReportModel()
+        {
+            RecordsProcessed = -1
+        };
 
         public MainForm()
         {
@@ -56,7 +63,6 @@ namespace LabBilling
                 accFrm.AutoScroll = true;
                 accFrm.Show();
             }
-            
         }
 
         private void MainForm_Load(object sender, EventArgs e)
@@ -595,13 +601,20 @@ namespace LabBilling
             return bValue;
         }
 
-        private void professionalToolStripMenuItem_Click(object sender, EventArgs e)
+        private async void professionalToolStripMenuItem_Click(object sender, EventArgs e)
         {
-   
+
+            ProgressForm progressForm = new ProgressForm(this);
+            progressForm.ShowDialog();
+
             ClaimGenerator claims = new ClaimGenerator(Helper.ConnVal);
             Progress<ProgressReportModel> progress = new Progress<ProgressReportModel>();
-            int claims_processed = claims.CompileProfessionalBilling(progress);
             progress.ProgressChanged += ReportProgress;
+
+            int claims_processed = await Task.Run(() => 
+            {
+                return claims.CompileProfessionalBilling(progress);
+            });
 
             if (claims_processed < 0)
             {
@@ -613,14 +626,48 @@ namespace LabBilling
             }
         }
 
-        private void institutionalToolStripMenuItem_Click(object sender, EventArgs e)
+        private async void institutionalToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ClaimGenerator claims = new ClaimGenerator(Helper.ConnVal);
+            TableLayoutPanel tlpClaimBatch = new TableLayoutPanel { Dock = DockStyle.Fill };
+            tlpClaimBatch.ColumnCount = 1;
+            tlpClaimBatch.RowCount = 1;
 
+            Label claimProcessTitleLabel = new Label();
+            claimProcessTitleLabel.Text = "Institutional Claims";
+            tlpClaimBatch.Controls.Add(claimProcessTitleLabel, 0, 0);
+            claimProcessTitleLabel.Dock = DockStyle.Fill;
+
+            claimProgress = new ProgressBar();
+            claimProgress.Style = ProgressBarStyle.Continuous;
+            claimProgress.Minimum = 0;
+            tlpClaimBatch.Controls.Add(claimProgress, 0, 1);
+            claimProgress.Dock = DockStyle.Fill;
+
+            claimProgressStatusLabel = new Label();
+            tlpClaimBatch.Controls.Add(claimProgressStatusLabel, 0, 2);
+            claimProgressStatusLabel.Text = "Processing...";
+            claimProgressStatusLabel.Dock = DockStyle.Fill;
+
+            MetroButton cancelButton = new MetroButton { Text = "Cancel", Name = "cancelButton" };
+            cancelButton.Click += new EventHandler(cancelButton_Click);
+            tlpClaimBatch.Controls.Add(cancelButton, 0, 3);
+            cancelButton.Dock = DockStyle.Fill;
+
+            accordion.Add(tlpClaimBatch, "Claim Batch", "Claim Batch", 1, true);
+            accordion.PerformLayout();
+
+            //ProgressForm progressForm = new ProgressForm(this);
+
+            //_ = Task.Run(() => progressForm.ShowDialog());
+
+            ClaimGenerator claims = new ClaimGenerator(Helper.ConnVal);
             Progress<ProgressReportModel> progress = new Progress<ProgressReportModel>();
             progress.ProgressChanged += ReportProgress;
 
-            int claims_processed = claims.CompileInstituationalBilling(progress);
+            int claims_processed = await Task.Run(() =>
+            {
+                return claims.CompileInstitutionalBilling(progress);
+            });
 
             if (claims_processed < 0)
             {
@@ -630,11 +677,18 @@ namespace LabBilling
             {
                 MetroMessageBox.Show(this, $"File generated. {claims_processed} claims generated.");
             }
+        }
+
+        private void cancelButton_Click(object sender, EventArgs e)
+        {
+
         }
 
         private void ReportProgress(object sender, ProgressReportModel e)
         {
-            throw new NotImplementedException();
+            claimProgress.Maximum = e.TotalRecords;
+            claimProgress.Value = e.RecordsProcessed;
+            claimProgressStatusLabel.Text = $"Processing {e.RecordsProcessed} of {e.TotalRecords}";
         }
     }
 }

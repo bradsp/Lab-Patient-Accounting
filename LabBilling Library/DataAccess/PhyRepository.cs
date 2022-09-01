@@ -30,7 +30,7 @@ namespace LabBilling.Core.DataAccess
 
             if (!string.IsNullOrEmpty(phy.PathologistCode))
             {
-                pth = dbConnection.SingleOrDefault<Pth>(phy.PathologistCode);
+                pth = dbConnection.SingleOrDefault<Pth>(Convert.ToInt32(phy.PathologistCode));
                 phy.Pathologist = pth;
             }
 

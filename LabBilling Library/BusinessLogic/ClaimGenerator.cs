@@ -111,18 +111,18 @@ namespace LabBilling.Core.BusinessLogic
                     patRepository.Update(claim.claimAccount.Pat, new[] { nameof(Pat.ProfessionalClaimDate), nameof(Pat.SSIBatch) });
 
                     BillingHistory billingHistory = new BillingHistory();
-                    billingHistory.pat_name = claim.claimAccount.PatFullName;
-                    billingHistory.run_date = DateTime.Today;
-                    billingHistory.account = claim.claimAccount.AccountNo;
-                    billingHistory.batch = Convert.ToDouble(interchangeControlNumber);
-                    billingHistory.ebill_batch = Convert.ToDouble(interchangeControlNumber);
-                    billingHistory.ebill_status = "1500";
-                    billingHistory.fin_code = claim.claimAccount.FinCode;
-                    billingHistory.ins_abc = claim.claimAccount.Insurances[0].Coverage;
-                    billingHistory.ins_code = claim.claimAccount.Insurances[0].InsCode;
-                    billingHistory.ins_complete = DateTime.MinValue;
-                    billingHistory.trans_date = claim.claimAccount.TransactionDate;
-                    billingHistory.run_user = OS.GetUserName();
+                    billingHistory.PatientName = claim.claimAccount.PatFullName;
+                    billingHistory.RunDate = DateTime.Today;
+                    billingHistory.Account = claim.claimAccount.AccountNo;
+                    billingHistory.Batch = Convert.ToDouble(interchangeControlNumber);
+                    billingHistory.ElectronicBillBatch = Convert.ToDouble(interchangeControlNumber);
+                    billingHistory.ElectronicBillStatus = "1500";
+                    billingHistory.FinancialCode = claim.claimAccount.FinCode;
+                    billingHistory.InsuranceOrder = claim.claimAccount.Insurances[0].Coverage;
+                    billingHistory.InsuranceCode = claim.claimAccount.Insurances[0].InsCode;
+                    billingHistory.InsComplete = DateTime.MinValue;
+                    billingHistory.TransactionDate = claim.claimAccount.TransactionDate;
+                    billingHistory.RunUser = OS.GetUserName();
 
                     billingHistoryRepository.Add(billingHistory);
 
@@ -155,7 +155,7 @@ namespace LabBilling.Core.BusinessLogic
             return -1;
         }
 
-        public int CompileInstituationalBilling(IProgress<ProgressReportModel> progress)
+        public int CompileInstitutionalBilling(IProgress<ProgressReportModel> progress)
         {
             ProgressReportModel report = new ProgressReportModel();
             //compile list of accounts to have claims generated
@@ -177,12 +177,19 @@ namespace LabBilling.Core.BusinessLogic
                     //validate account data before starting - if there are errors do not process claim.
                     // primary ins holder name is empty
                     // no dx codes
-
-                    claim = GenerateClaim(item.account);
-                    claims.Add(claim);
+                    try
+                    {
+                        claim = GenerateClaim(item.account);
+                        claims.Add(claim);
+                    }
+                    catch(ApplicationException apex)
+                    {
+                        Log.Instance.Error(apex);
+                        continue;
+                    }
 
                     //update status and activity date fields
-                    claim.claimAccount.Status = "SSI1500";
+                    claim.claimAccount.Status = "SSIUB";
 
                     accountRepository.Update(claim.claimAccount, new[] { nameof(Account.Status) });
 
@@ -192,18 +199,18 @@ namespace LabBilling.Core.BusinessLogic
                     patRepository.Update(claim.claimAccount.Pat, new[] { nameof(Pat.InstitutionalClaimDate), nameof(Pat.SSIBatch) });
 
                     BillingHistory billingHistory = new BillingHistory();
-                    billingHistory.pat_name = claim.claimAccount.PatFullName;
-                    billingHistory.run_date = DateTime.Today;
-                    billingHistory.account = claim.claimAccount.AccountNo;
-                    billingHistory.batch = Convert.ToDouble(interchangeControlNumber);
-                    billingHistory.ebill_batch = Convert.ToDouble(interchangeControlNumber);
-                    billingHistory.ebill_status = "UB";
-                    billingHistory.fin_code = claim.claimAccount.FinCode;
-                    billingHistory.ins_abc = claim.claimAccount.Insurances[0].Coverage;
-                    billingHistory.ins_code = claim.claimAccount.Insurances[0].InsCode;
-                    billingHistory.ins_complete = DateTime.MinValue;
-                    billingHistory.trans_date = claim.claimAccount.TransactionDate;
-                    billingHistory.run_user = OS.GetUserName();
+                    billingHistory.PatientName = claim.claimAccount.PatFullName;
+                    billingHistory.RunDate = DateTime.Today;
+                    billingHistory.Account = claim.claimAccount.AccountNo;
+                    billingHistory.Batch = Convert.ToDouble(interchangeControlNumber);
+                    billingHistory.ElectronicBillBatch = Convert.ToDouble(interchangeControlNumber);
+                    billingHistory.ElectronicBillStatus = "UB";
+                    billingHistory.FinancialCode = claim.claimAccount.FinCode;
+                    billingHistory.InsuranceOrder = claim.claimAccount.Insurances[0].Coverage;
+                    billingHistory.InsuranceCode = claim.claimAccount.Insurances[0].InsCode;
+                    billingHistory.InsComplete = DateTime.MinValue;
+                    billingHistory.TransactionDate = claim.claimAccount.TransactionDate;
+                    billingHistory.RunUser = OS.GetUserName();
 
                     billingHistoryRepository.Add(billingHistory);
 
@@ -354,7 +361,7 @@ namespace LabBilling.Core.BusinessLogic
                             subscriber.PayerResponsibilitySequenceCode = "T";
                             break;
                         default:
-                            throw new InvalidParameterValueException();
+                            throw new InvalidParameterValueException($"Invalid Ins Coverage Code {ins.Coverage}", "Ins.Coverage");
                     }
                     subscriber.IndividualRelationshipCode = ins.Relation == "01" ? "18" : String.Empty;
                     subscriber.ReferenceIdentification = ins.GroupNumber;
@@ -457,9 +464,15 @@ namespace LabBilling.Core.BusinessLogic
                 }
 
             }
-            catch (InvalidParameterValueException ex)
+            catch (InvalidParameterValueException ipve)
             {
-                throw new InvalidParameterValueException("Parameter value not found", ex);
+                Log.Instance.Fatal(ipve, $"{account}");
+                throw new InvalidParameterValueException($"Parameter value not found - account {account}", ipve);
+            }
+            catch(Exception exc)
+            {
+                Log.Instance.Fatal(exc, $"{account}");
+                throw new ApplicationException($"Exception creating claim for {account}", exc);
             }
 
             return claimData;

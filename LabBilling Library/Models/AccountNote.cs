@@ -11,8 +11,12 @@ namespace LabBilling.Core.Models
     [PrimaryKey("rowguid", AutoIncrement = false)]
     public class AccountNote : IBaseEntity
     {
-        public string account { get; set; }
-        public string comment { get; set; }
+
+        [Column("account")]
+        public string Account { get; set; }
+
+        [Column("comment")]
+        public string Comment { get; set; }
         public DateTime mod_date { get; set; }
         public string mod_user { get; set; }
         public string mod_prg { get; set; }

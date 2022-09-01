@@ -343,8 +343,8 @@ namespace LabBilling.Core.DataAccess
 
             AccountNote accountNote = new AccountNote()
             {
-                account = account,
-                comment = noteText
+                Account = account,
+                Comment = noteText
             };
             try
             {

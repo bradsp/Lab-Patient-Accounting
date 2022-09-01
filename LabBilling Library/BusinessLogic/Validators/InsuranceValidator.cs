@@ -33,6 +33,14 @@ namespace LabBilling.Core.BusinessLogic.Validators
             RuleFor(a => a.PlanName)
                 .Must(BeAValidName)
                 .NotEmpty().WithMessage("Ins {PropertyName} is empty.");
+            RuleFor(a => a.Coverage)
+                .Must((a) =>
+                {
+                    if (a != "A" && a != "B" && a != "C")
+                        return false;
+                    else
+                        return true;
+                }).WithMessage("Insurance coverage code is not valid.");
         }
 
         private bool BeAValidName(string name)

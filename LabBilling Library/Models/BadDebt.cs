@@ -12,28 +12,72 @@ namespace LabBilling.Core.Models
     public class BadDebt : IBaseEntity
     {
         public Guid rowguid { get; set; }
-        public bool deleted { get; set; }
-        public string debtor_last_name { get; set; }
-        public string debtor_first_name { get; set; }
-        public string st_addr_1 { get; set; }
-        public string st_addr_2 { get; set; }
-        public string city { get; set; }
-        public string state_zip { get; set; }
-        public string spouse { get; set; }
-        public string phone { get; set; }
-        public string soc_security { get; set; }
-        public string license_number { get; set; }
-        public string employment { get; set; }
-        public string remarks { get; set; }
-        public string account_no { get; set; }
-        public string patient_name { get; set; }
-        public string remarks2 { get; set; }
-        public string misc { get; set; }
-        public DateTime? service_date { get; set; }
-        public DateTime? payment_date { get; set; }
-        public double balance { get; set; }
-        public DateTime? date_entered { get; set; }
-        public DateTime? date_sent { get; set; }
+
+        [Column("deleted")]
+        public bool IsDeleted { get; set; }
+
+        [Column("debtor_last_name")]
+        public string DebtorLastName { get; set; }
+
+        [Column("debtor_first_name")]
+        public string DebtorFirstName { get; set; }
+
+        [Column("st_addr_1")]
+        public string StreetAddress1 { get; set; }
+
+        [Column("st_addr_2")]
+        public string StreetAddress2 { get; set; }
+
+        [Column("city")]
+        public string City { get; set; }
+
+        [Column("state_zip")]
+        public string StateZip { get; set; }
+
+        [Column("spouse")]
+        public string Spouse { get; set; }
+
+        [Column("phone")]
+        public string Phone { get; set; }
+
+        [Column("soc_security")]
+        public string SocialSecurityNo { get; set; }
+
+        [Column("license_number")]
+        public string LicenseNumber { get; set; }
+
+        [Column("employment")]
+        public string Employment { get; set; }
+
+        [Column("remarks")]
+        public string Remarks { get; set; }
+
+        [Column("account_no")]
+        public string AccountNo { get; set; }
+
+        [Column("patient_name")]
+        public string PatientName { get; set; }
+
+        [Column("remarks2")]
+        public string Remarks2 { get; set; }
+
+        [Column("misc")]
+        public string Misc { get; set; }
+
+        [Column("service_date")]
+        public DateTime? ServiceDate { get; set; }
+
+        [Column("payment_date")]
+        public DateTime? PaymentDate { get; set; }
+
+        [Column("balance")]
+        public double Balance { get; set; }
+
+        [Column("date_entered")]
+        public DateTime? DateEntered { get; set; }
+
+        [Column("date_sent")]
+        public DateTime? DateSent { get; set; }
         [ResultColumn]
         public DateTime mod_date { get; set; }
         [ResultColumn]
