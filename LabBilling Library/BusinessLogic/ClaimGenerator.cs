@@ -11,6 +11,7 @@ using System.Collections;
 using PetaPoco;
 using PetaPoco.Providers;
 using RFClassLibrary;
+using System.Threading;
 
 namespace LabBilling.Core.BusinessLogic
 {
@@ -73,7 +74,7 @@ namespace LabBilling.Core.BusinessLogic
         /// Compiles claims for professional (837p) billing.
         /// </summary>
         /// <returns>Number of claims generated. Returns -1 if there was an error.</returns>
-        public int CompileProfessionalBilling(IProgress<ProgressReportModel> progress)
+        public int CompileProfessionalBilling(IProgress<ProgressReportModel> progress, CancellationToken cancellationToken)
         {
             ProgressReportModel report = new ProgressReportModel();
 
@@ -84,7 +85,7 @@ namespace LabBilling.Core.BusinessLogic
             string interchangeControlNumber = string.Format("{0:D9}", int.Parse(string.Format("{0}{1}", DateTime.Now.Year, strNum)));
 
             //acc records where status = "1500" and primary insurance is not "CHAMPUS"
-            var list = accountRepository.GetAccountsForClaims(AccountRepository.ClaimType.Professional);
+            var list = accountRepository.GetAccountsForClaims(AccountRepository.ClaimType.Professional).Take(25);
             ClaimData claim;
 
             db.BeginTransaction();
@@ -93,6 +94,8 @@ namespace LabBilling.Core.BusinessLogic
                 report.TotalRecords = list.Count();
                 foreach (ClaimItem item in list)
                 {
+                    if (cancellationToken.IsCancellationRequested)
+                        throw new TaskCanceledException();
                     //validate account data before starting - if there are errors do not process claim.
                     // primary ins holder name is empty
                     // no dx codes
@@ -131,7 +134,8 @@ namespace LabBilling.Core.BusinessLogic
                     progress.Report(report);
                 }
 
-                string x12Text = billing837.Generate837ClaimBatch(claims, interchangeControlNumber, propProductionEnvironment, batchSubmitterID, parametersdb.GetByKey("claim_837p_file_loation"), Billing837.ClaimType.Professional);
+                string x12Text = billing837.Generate837ClaimBatch(claims, interchangeControlNumber, propProductionEnvironment, 
+                    batchSubmitterID, parametersdb.GetByKey("claim_837p_file_location"), Billing837.ClaimType.Professional);
 
                 BillingBatch billingBatch = new BillingBatch();
                 billingBatch.batch = Convert.ToDouble(interchangeControlNumber);
@@ -146,6 +150,12 @@ namespace LabBilling.Core.BusinessLogic
 
                 return claims.Count;
             }
+            catch(TaskCanceledException tcex)
+            {
+                Log.Instance.Fatal(tcex, "Batch processing cancelled by user. Batch has been rolled back.");
+                db.AbortTransaction();
+                throw new TaskCanceledException();
+            }
             catch (Exception ex)
             {
                 Log.Instance.Fatal(ex, "Exception processing Professional Claims. Batch has been rolled back. Report error to the Application Administrator.");
@@ -155,7 +165,7 @@ namespace LabBilling.Core.BusinessLogic
             return -1;
         }
 
-        public int CompileInstitutionalBilling(IProgress<ProgressReportModel> progress)
+        public int CompileInstitutionalBilling(IProgress<ProgressReportModel> progress, CancellationToken cancellationToken)
         {
             ProgressReportModel report = new ProgressReportModel();
             //compile list of accounts to have claims generated
@@ -165,7 +175,7 @@ namespace LabBilling.Core.BusinessLogic
             string interchangeControlNumber = string.Format("{0:D9}", int.Parse(string.Format("{0}{1}", DateTime.Now.Year, strNum)));
 
             //acc records where status = "UB" and primary insurance is not "CHAMPUS"
-            var list = accountRepository.GetAccountsForClaims(AccountRepository.ClaimType.Institutional);
+            var list = accountRepository.GetAccountsForClaims(AccountRepository.ClaimType.Institutional).Take(25);
             ClaimData claim;
 
             db.BeginTransaction();
@@ -174,6 +184,10 @@ namespace LabBilling.Core.BusinessLogic
                 report.TotalRecords = list.Count();
                 foreach (ClaimItem item in list)
                 {
+                    if (cancellationToken.IsCancellationRequested)
+                    {
+                        throw new TaskCanceledException();
+                    }
                     //validate account data before starting - if there are errors do not process claim.
                     // primary ins holder name is empty
                     // no dx codes
@@ -219,7 +233,8 @@ namespace LabBilling.Core.BusinessLogic
                     progress.Report(report);
                 }
 
-                string x12Text = billing837.Generate837ClaimBatch(claims, interchangeControlNumber, propProductionEnvironment, batchSubmitterID, parametersdb.GetByKey("claim_837i_file_loation"), Billing837.ClaimType.Institutional);
+                string x12Text = billing837.Generate837ClaimBatch(claims, interchangeControlNumber, propProductionEnvironment, 
+                    batchSubmitterID, parametersdb.GetByKey("claim_837i_file_location"), Billing837.ClaimType.Institutional);
 
                 BillingBatch billingBatch = new BillingBatch();
                 billingBatch.batch = Convert.ToDouble(interchangeControlNumber);
@@ -233,6 +248,12 @@ namespace LabBilling.Core.BusinessLogic
                 db.CompleteTransaction();
 
                 return claims.Count;
+            }
+            catch(TaskCanceledException tcex)
+            {
+                Log.Instance.Fatal(tcex, "Batch processing cancelled by user. Batch has been rolled back.");
+                db.AbortTransaction();
+                throw new TaskCanceledException();
             }
             catch (Exception ex)
             {
@@ -384,7 +405,7 @@ namespace LabBilling.Core.BusinessLogic
                     subscriber.ZipCode = ins.HolderZip;
                     subscriber.Country = "US";
 
-                    subscriber.PayerName = ins.InsCompany.name;
+                    subscriber.PayerName = ins.PlanName; // ins.InsCompany.name;
                     subscriber.PayerAddress = ins.InsCompany.addr1;
                     subscriber.PayerAddress2 = ins.InsCompany.addr2;
                     subscriber.PayerCity = ins.InsCompany.City;

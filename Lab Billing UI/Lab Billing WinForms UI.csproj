@@ -312,6 +312,7 @@
     <Compile Include="Library\Opulos.Core\ResizeBar.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="Library\ProgressBarColor.cs" />
     <Compile Include="Library\StateComboBox.cs">
       <SubType>Component</SubType>
     </Compile>

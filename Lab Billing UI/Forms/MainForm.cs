@@ -16,6 +16,7 @@ using MetroFramework.Controls;
 using System.Drawing;
 using MetroFramework;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace LabBilling
 {
@@ -28,6 +29,7 @@ namespace LabBilling
         private readonly SystemParametersRepository systemParametersRepository = new SystemParametersRepository(Helper.ConnVal);
         private ProgressBar claimProgress;
         private Label claimProgressStatusLabel;
+        private CancellationTokenSource cancellationToken;
 
         public ProgressReportModel progressReportModel = new ProgressReportModel()
         {
@@ -601,39 +603,38 @@ namespace LabBilling
             return bValue;
         }
 
-        private async void professionalToolStripMenuItem_Click(object sender, EventArgs e)
+        private void professionalToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
-            ProgressForm progressForm = new ProgressForm(this);
-            progressForm.ShowDialog();
-
-            ClaimGenerator claims = new ClaimGenerator(Helper.ConnVal);
-            Progress<ProgressReportModel> progress = new Progress<ProgressReportModel>();
-            progress.ProgressChanged += ReportProgress;
-
-            int claims_processed = await Task.Run(() => 
-            {
-                return claims.CompileProfessionalBilling(progress);
-            });
-
-            if (claims_processed < 0)
-            {
-                MetroMessageBox.Show(this, "Error processing claims. No file generated.", "Process Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            else
-            {
-                MetroMessageBox.Show(this, $"File generated. {claims_processed} claims generated.");
-            }
+            _ = RunBillingBatch(BillingType.Professional);
         }
 
-        private async void institutionalToolStripMenuItem_Click(object sender, EventArgs e)
+        private enum BillingType
         {
+            Institutional,
+            Professional
+        }
+
+        private async Task RunBillingBatch(BillingType billingType)
+        {
+            cancellationToken = new CancellationTokenSource();
+
             TableLayoutPanel tlpClaimBatch = new TableLayoutPanel { Dock = DockStyle.Fill };
             tlpClaimBatch.ColumnCount = 1;
             tlpClaimBatch.RowCount = 1;
 
             Label claimProcessTitleLabel = new Label();
-            claimProcessTitleLabel.Text = "Institutional Claims";
+            switch (billingType)
+            {
+                case BillingType.Institutional:
+                    claimProcessTitleLabel.Text = "Institutional Claims";
+                    break;
+                case BillingType.Professional:
+                    claimProcessTitleLabel.Text = "Professional Claims";
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(billingType));
+            }
             tlpClaimBatch.Controls.Add(claimProcessTitleLabel, 0, 0);
             claimProcessTitleLabel.Dock = DockStyle.Fill;
 
@@ -656,32 +657,57 @@ namespace LabBilling
             accordion.Add(tlpClaimBatch, "Claim Batch", "Claim Batch", 1, true);
             accordion.PerformLayout();
 
-            //ProgressForm progressForm = new ProgressForm(this);
-
-            //_ = Task.Run(() => progressForm.ShowDialog());
-
             ClaimGenerator claims = new ClaimGenerator(Helper.ConnVal);
             Progress<ProgressReportModel> progress = new Progress<ProgressReportModel>();
             progress.ProgressChanged += ReportProgress;
+            try
+            {
+                int claimsProcessed = 0;
+                if (billingType == BillingType.Institutional)
+                {
+                    claimsProcessed = await Task.Run(() =>
+                    {
+                        return claims.CompileInstitutionalBilling(progress, cancellationToken.Token);
+                    });
+                }
+                else if(billingType == BillingType.Professional)
+                {
+                    claimsProcessed = await Task.Run(() =>
+                    {
+                        return claims.CompileProfessionalBilling(progress, cancellationToken.Token);
+                    });
+                }
 
-            int claims_processed = await Task.Run(() =>
+                if (claimsProcessed < 0)
+                {
+                    MetroMessageBox.Show(this, "Error processing claims. No file generated.", "Process Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else
+                {
+                    MetroMessageBox.Show(this, $"File generated. {claimsProcessed} claims generated.");
+                }
+            }
+            catch (TaskCanceledException tce)
             {
-                return claims.CompileInstitutionalBilling(progress);
-            });
+                Log.Instance.Error(tce, $"{Enum.GetName(typeof(BillingType), billingType)} Claim Batch cancelled by user", tce);
+                MetroMessageBox.Show(this, "Claim batch cancelled by user. No file was generated and batch has been rolled back.");
+                claimProgressStatusLabel.Text = "Job aborted.";
+                claimProgress.Value = claimProgress.Maximum;
+                claimProgress.SetState(2);
+                cancelButton.Enabled = false;
+            }
+        }
 
-            if (claims_processed < 0)
-            {
-                MetroMessageBox.Show(this, "Error processing claims. No file generated.", "Process Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            else
-            {
-                MetroMessageBox.Show(this, $"File generated. {claims_processed} claims generated.");
-            }
+        private void institutionalToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            _ = RunBillingBatch(BillingType.Institutional);
         }
 
         private void cancelButton_Click(object sender, EventArgs e)
         {
-
+            if(MessageBox.Show("This will cancel the claim batch and rollback any changes. Are you sure?", "Cancel Batch?",
+                MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                cancellationToken.Cancel();
         }
 
         private void ReportProgress(object sender, ProgressReportModel e)

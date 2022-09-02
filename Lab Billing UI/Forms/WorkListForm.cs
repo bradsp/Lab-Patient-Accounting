@@ -66,17 +66,25 @@ namespace LabBilling.Forms
             TreeNode rootNode = new TreeNode("Worklists", worklists);
             workqueues.Nodes.Add(rootNode);
             workqueues.ExpandAll();
+
+            CancelValidationButton.Visible = false;
+            CancelValidationButton.Enabled = false;
+
         }
 
         private async void ValidateButton_Click(object sender, EventArgs e)
         {
+            requestAbort = false;
             ValidateButton.Enabled = false;
             PostButton.Enabled = false;
             workqueues.Enabled = false;
+            CancelValidationButton.Enabled = true;
+            CancelValidationButton.Visible = true;
             
-            int cnt = accountGrid.Rows.Count;
+            int cnt = accounts.Count;
             progressBar.Minimum = 0;
             progressBar.Maximum = cnt;
+            progressBar.Value = 0;
             Cursor.Current = Cursors.WaitCursor;
             //var accountList = (List<AccountSearch>)accountGrid.DataSource;
 
@@ -87,7 +95,7 @@ namespace LabBilling.Forms
                 {
                     statusLabel2.Text = "Aborting...";
                     tasksRunning = false;
-                    this.Close();
+                    //this.Close();
                     break;
                 }
                 statusLabel2.Text = $"Validating {progressBar.Value} of {accounts.Count}.";
@@ -101,6 +109,8 @@ namespace LabBilling.Forms
             ValidateButton.Enabled = true;
             PostButton.Enabled = true;
             workqueues.Enabled = true;
+            CancelValidationButton.Visible = false;
+            CancelValidationButton.Enabled = false;
         }
 
         private void RunValidation(string accountNo)
@@ -355,6 +365,17 @@ namespace LabBilling.Forms
             progressBar.ProgressBarStyle = ProgressBarStyle.Continuous;
 
             workqueues.Enabled = true;
+        }
+
+        private void CancelValidationButton_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show("Are you sure you want to abort validation process?", "Abort Validation?", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
+                    == DialogResult.Yes)
+            {
+                //code to abort process
+                requestAbort = true;
+                return;
+            }
         }
     }
 }

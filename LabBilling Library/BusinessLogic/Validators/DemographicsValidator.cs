@@ -12,6 +12,8 @@ namespace LabBilling.Core.BusinessLogic.Validators
     {
         public DemographicsValidator()
         {
+            RuleFor(a => a)
+                .Must(a => a.Diagnoses.Count >= 1).WithMessage("Patient has no diagnosis codes.");
             RuleFor(a => a.Address1)
                 .Cascade(CascadeMode.Stop)
                 .NotEmpty()
