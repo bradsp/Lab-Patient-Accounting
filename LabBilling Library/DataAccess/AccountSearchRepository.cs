@@ -98,13 +98,6 @@ namespace LabBilling.Core.DataAccess
                 command.OrderBy(GetRealColumn(typeof(AccountSearch), nameof(AccountSearch.Name)));
                 var results = dbConnection.Fetch<AccountSearch>(command);
 
-                //foreach(var result in results)
-                //{
-                //    var ins = insRepository.GetByAccount(result.Account, InsCoverage.Primary);
-                //    if (ins != null)
-                //        result.PrimaryInsCode = ins.InsCode;
-                //}
-
                 return results;
             }
             catch (NullReferenceException nre)

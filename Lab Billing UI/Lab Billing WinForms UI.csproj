@@ -106,7 +106,7 @@
       <HintPath>..\packages\nhapi.3.1.1\lib\net35\NHapi.Model.V281.dll</HintPath>
     </Reference>
     <Reference Include="NLog, Version=5.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
-      <HintPath>..\packages\NLog.5.0.2\lib\net46\NLog.dll</HintPath>
+      <HintPath>..\packages\NLog.5.0.4\lib\net46\NLog.dll</HintPath>
     </Reference>
     <Reference Include="PetaPoco, Version=6.0.524.0, Culture=neutral, PublicKeyToken=null" />
     <Reference Include="PresentationCore" />
@@ -658,6 +658,18 @@
     <ProjectReference Include="..\MCL\MCL.csproj">
       <Project>{f54e006c-aa33-48f2-9e2f-46cfb5d7ee47}</Project>
       <Name>MCL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OopFactory.X12.Hipaa.ClaimParser\OopFactory.X12.Hipaa.ClaimParser.csproj">
+      <Project>{1e3bd8a3-21ea-4b71-8a55-31910211a316}</Project>
+      <Name>OopFactory.X12.Hipaa.ClaimParser</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OopFactory.X12.Hipaa\OopFactory.X12.Hipaa.csproj">
+      <Project>{203c0f4b-d1f0-4c20-8968-7dbd84f4a815}</Project>
+      <Name>OopFactory.X12.Hipaa</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OopFactory.X12\OopFactory.X12.csproj">
+      <Project>{afe1bbbc-b957-461c-9022-b45d3db117c9}</Project>
+      <Name>OopFactory.X12</Name>
     </ProjectReference>
     <ProjectReference Include="..\RFClassLibrary\RFClassLibrary.csproj">
       <Project>{b15474ed-9185-437e-bac5-a19779cbe721}</Project>

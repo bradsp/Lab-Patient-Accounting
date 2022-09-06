@@ -31,10 +31,10 @@ namespace LabBilling.Core.DataAccess
 
             if(record != null)
             {
-                Str.ParseCityStZip(record.citystzip, out string strCity, out string strState, out string strZip);
-                record.City = strCity;
-                record.State = strState;
-                record.Zip = strZip;
+                //Str.ParseCityStZip(record.CityStateZip, out string strCity, out string strState, out string strZip);
+                //record.City = strCity;
+                //record.State = strState;
+                //record.Zip = strZip;
             }
 
             return record;

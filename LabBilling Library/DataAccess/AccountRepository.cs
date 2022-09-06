@@ -8,6 +8,7 @@ using System.Text;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace LabBilling.Core.DataAccess
 {
@@ -148,7 +149,7 @@ namespace LabBilling.Core.DataAccess
                         if (record.InsurancePrimary == null)
                             record.BillForm = "UNDEFINED";
                         else
-                            record.BillForm = record.InsurancePrimary.InsCompany.bill_form;
+                            record.BillForm = record.InsurancePrimary.InsCompany.BillForm;
                     }
                 }
             }
@@ -538,54 +539,6 @@ namespace LabBilling.Core.DataAccess
             return chrgRepository.AddCharge(chrg);
         }
 
-        /// <summary>
-        /// Runs all validation checks needed for generating a claim.
-        /// </summary>
-        /// <param name="account"></param>
-        /// <returns>string containing list of errors</returns>
-        //public string Validate2(Account account)
-        //{
-        //    Log.Instance.Trace($"Entering account validate with {account.account}.");
-
-        //    StringBuilder errorList = new StringBuilder();
-
-        //    var rules = accountValidationRuleRepository.GetAll();
-
-        //    foreach(var rule in rules)
-        //    {
-        //        //TODO: determine if rule should be checked based on criteria
-
-
-        //        string fromDate = "01/01/2002"; // DateTimeExtension.AddWeeks(DateTime.Today, -52).ToShortDateString();
-        //        string thruDate = DateTime.Today.ToShortDateString();
-        //        string sqlText = rule.strSql.Replace("{0}", account.account);
-        //        sqlText = sqlText.Replace("{1}", fromDate);
-        //        sqlText = sqlText.Replace("{2}", thruDate);
-        //        sqlText = sqlText.Replace("@", "@@");
-        //        var result = dbConnection.Execute(sqlText);
-        //        if(rule.valid)
-        //        {
-        //            //returning no rows is an error
-        //            if(result <= 0)
-        //            {
-        //                errorList.AppendLine(rule.error);
-        //            }
-        //        }
-        //        else
-        //        {
-        //            //returning rows is an error
-        //            if(result > 0)
-        //            {
-        //                errorList.AppendLine(rule.error);
-        //            }
-        //        }
-
-        //    }
-
-        //    return errorList.ToString();
-        //}
-
-
         public bool Validate(ref Account account)
         {
             BusinessLogic.Validators.ClaimValidator claimValidator = new BusinessLogic.Validators.ClaimValidator();
@@ -664,5 +617,42 @@ namespace LabBilling.Core.DataAccess
 
             return errorList;
         }
+    
+    
+        public async Task ValidateUnbilledAccountsAsync()
+        {
+
+            DateTime.TryParse(systemParametersRepository.GetByKey("ssi_bill_thru_date"), out DateTime thruDate);
+
+            (string propertyName, AccountSearchRepository.operation oper, string searchText)[] parameters = {
+                (nameof(AccountSearch.ServiceDate), AccountSearchRepository.operation.LessThanOrEqual, thruDate.ToString()),
+                (nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "PAID_OUT"),
+                (nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "CLOSED"),
+                (nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "SSI1500"),
+                (nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "SSIUB"),
+                (nameof(AccountSearch.FinCode), AccountSearchRepository.operation.NotEqual, "CLIENT"),
+                (nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "HOLD")
+            };
+
+            AccountSearchRepository accountSearchRepository = new AccountSearchRepository(dbConnection);
+
+            var accounts = await Task.Run(() => accountSearchRepository.GetBySearch(parameters).ToList());
+
+            foreach(var account in accounts)
+            {
+                try
+                {
+                    var accountRecord = this.GetByAccount(account.Account);
+                    this.Validate(ref accountRecord);
+                }
+                catch(Exception e)
+                {
+                    Log.Instance.Error(e, "Error during account validation job.");
+                }
+            }
+
+        }
+    
+    
     }
 }

@@ -26,7 +26,6 @@ namespace LabBilling.Forms
             _connectionString = connValue;
         }
         string _connectionString;
-        FinRepository finRepository;
         AccountRepository accountRepository;
         AccountSearchRepository accountSearchRepository;
         SystemParametersRepository systemParametersRepository;
@@ -37,16 +36,9 @@ namespace LabBilling.Forms
         private void WorkListForm_Load(object sender, EventArgs e)
         {
             //Cursor.Current = Cursors.WaitCursor;
-            //finRepository = new FinRepository(_connectionString);
             accountRepository = new AccountRepository(_connectionString);
             accountSearchRepository = new AccountSearchRepository(_connectionString);
             systemParametersRepository = new SystemParametersRepository(_connectionString);
-
-            //load filter combobox
-            //ClaimFilter.DataSource = finRepository.GetAll();
-            //ClaimFilter.DisplayMember = nameof(Fin.res_party);
-            //ClaimFilter.ValueMember = nameof(Fin.fin_code);
-            //ClaimFilter.SelectedIndex = -1;
 
             // load the treeview with worklists
             TreeNode[] worklists = new TreeNode[]
@@ -132,13 +124,15 @@ namespace LabBilling.Forms
                 if (!accountRepository.Validate(ref account))
                 {
                     //account has validation errors - update grid
-                    accountGrid["ValidationErrors", rowIndex].Value = account.AccountValidationStatus.validation_text;
+                    accountGrid[nameof(AccountSearch.ValidationStatus), rowIndex].Value = account.AccountValidationStatus.validation_text;
+                    accountGrid[nameof(AccountSearch.LastValidationDate), rowIndex].Value = DateTime.Now.ToString();
                     accountGrid[nameof(AccountSearch.Status), rowIndex].Value = "ERROR";
                     accountRepository.UpdateStatus(accountNo, "NEW");
                 }
                 else
                 {
                     accountGrid[nameof(AccountSearch.Status), rowIndex].Value = account.Fin.form_type;
+                    accountGrid[nameof(AccountSearch.LastValidationDate), rowIndex].Value = DateTime.Now.ToString();
                     accountRepository.UpdateStatus(account.AccountNo, account.Fin.form_type);
                 }
 
@@ -170,16 +164,18 @@ namespace LabBilling.Forms
                     if (!isValid)
                     {
                         //account has validation errors - update grid
-                        accountGrid["ValidationErrors", rowIndex].Value = validationText;
+                        accountGrid[nameof(AccountSearch.ValidationStatus), rowIndex].Value = validationText;
                         accountGrid[nameof(AccountSearch.Status), rowIndex].Value = "ERROR";
+                        accountGrid[nameof(AccountSearch.LastValidationDate), rowIndex].Value = DateTime.Now.ToString();
                         accountGrid[nameof(AccountSearch.Status), rowIndex].Style.BackColor = Color.Red;
-                        accountGrid["ValidationErrors", rowIndex].Style.BackColor = Color.LightPink;
+                        accountGrid[nameof(AccountSearch.ValidationStatus), rowIndex].Style.BackColor = Color.LightPink;
                         accountGrid[nameof(AccountSearch.Status), rowIndex].Style.ForeColor = Color.White;
                         accountRepository.UpdateStatus(accountNo, "NEW");
                     }
                     else
                     {
                         accountGrid[nameof(AccountSearch.Status), rowIndex].Value = formType;
+                        accountGrid[nameof(AccountSearch.LastValidationDate), rowIndex].Value = DateTime.Now.ToString();
                         if (formType != "UNDEFINED")
                             accountRepository.UpdateStatus(accountNo, formType);
                         accountGrid[nameof(AccountSearch.Status), rowIndex].Style.BackColor = Color.LightGreen;
@@ -188,10 +184,11 @@ namespace LabBilling.Forms
                 catch(Exception ex)
                 {
                     Log.Instance.Error($"Error validating account {accountNo} - {ex.Message}");
-                    accountGrid["ValidationErrors", rowIndex].Value = "Error validating account. Notify support.";
+                    accountGrid[nameof(AccountSearch.ValidationStatus), rowIndex].Value = "Error validating account. Notify support.";
+                    accountGrid[nameof(AccountSearch.LastValidationDate), rowIndex].Value = DateTime.Now.ToString();
                     accountGrid[nameof(AccountSearch.Status), rowIndex].Value = "ERROR";
                     accountGrid[nameof(AccountSearch.Status), rowIndex].Style.BackColor = Color.Red;
-                    accountGrid["ValidationErrors", rowIndex].Style.BackColor = Color.LightPink;
+                    accountGrid[nameof(AccountSearch.ValidationStatus), rowIndex].Style.BackColor = Color.LightPink;
                     accountGrid[nameof(AccountSearch.Status), rowIndex].Style.ForeColor = Color.White;
                     accountRepository.UpdateStatus(accountNo, "NEW");
                 }
@@ -292,30 +289,39 @@ namespace LabBilling.Forms
             {
                 case "Medicare/Cigna":
                     parameters = parameters.Append((nameof(AccountSearch.FinCode), AccountSearchRepository.operation.Equal, "A")).ToArray();
+                    parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "HOLD")).ToArray();
                     break;
                 case "BlueCross":
                     parameters = parameters.Append((nameof(AccountSearch.FinCode), AccountSearchRepository.operation.Equal, "B")).ToArray();
+                    parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "HOLD")).ToArray();
                     break;
                 case "Champus":
                     parameters = parameters.Append((nameof(AccountSearch.FinCode), AccountSearchRepository.operation.Equal, "C")).ToArray();
+                    parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "HOLD")).ToArray();
                     break;
                 case "Tenncare BC/BS":
                     parameters = parameters.Append((nameof(AccountSearch.FinCode), AccountSearchRepository.operation.Equal, "D")).ToArray();
+                    parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "HOLD")).ToArray();
                     break;
                 case "Commercial UB":
                     parameters = parameters.Append((nameof(AccountSearch.FinCode), AccountSearchRepository.operation.Equal, "H")).ToArray();
+                    parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "HOLD")).ToArray();
                     break;
                 case "Commercial 1500":
                     parameters = parameters.Append((nameof(AccountSearch.FinCode), AccountSearchRepository.operation.Equal, "L")).ToArray();
+                    parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "HOLD")).ToArray();
                     break;
                 case "UHC Community Plan":
                     parameters = parameters.Append((nameof(AccountSearch.FinCode), AccountSearchRepository.operation.Equal, "M")).ToArray();
+                    parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "HOLD")).ToArray();
                     break;
                 case "Pathways TNCare":
                     parameters = parameters.Append((nameof(AccountSearch.FinCode), AccountSearchRepository.operation.Equal, "P")).ToArray();
+                    parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "HOLD")).ToArray();
                     break;
                 case "Amerigroup":
                     parameters = parameters.Append((nameof(AccountSearch.FinCode), AccountSearchRepository.operation.Equal, "Q")).ToArray();
+                    parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "HOLD")).ToArray();
                     break;
                 case "Manual Hold":
                     parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.Equal, "HOLD")).ToArray();
@@ -354,10 +360,10 @@ namespace LabBilling.Forms
             accountGrid.Columns[nameof(AccountSearch.mod_user)].Visible = false;
             accountGrid.Columns[nameof(AccountSearch.rowguid)].Visible = false;
 
-            accountGrid.Columns.Add("ValidationErrors", "Validation Errors");
+            //accountGrid.Columns.Add("ValidationErrors", "Validation Errors");
 
             accountGrid.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
-            accountGrid.Columns["ValidationErrors"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            accountGrid.Columns[nameof(AccountSearch.ValidationStatus)].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             accountGrid.Refresh();
             Cursor.Current = Cursors.Default;
 
@@ -376,6 +382,34 @@ namespace LabBilling.Forms
                 requestAbort = true;
                 return;
             }
+        }
+
+        private void holdToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var selectedAccount = accountGrid.SelectedRows[0].Cells[nameof(AccountSearch.Account)].Value.ToString();
+
+            accountGrid.SelectedRows[0].Cells[nameof(AccountSearch.Status)].Value = "HOLD";
+            accountRepository.UpdateStatus(selectedAccount, "HOLD");
+        }
+
+        private void accountGrid_MouseDown(object sender, MouseEventArgs e)
+        {
+            // If the user pressed something else than mouse right click, return
+            if (e.Button != System.Windows.Forms.MouseButtons.Right) { return; }
+
+            DataGridView dgv = (DataGridView)sender;
+
+            // Use HitTest to resolve the row under the cursor
+            int rowIndex = dgv.HitTest(e.X, e.Y).RowIndex;
+
+            // If there was no DataGridViewRow under the cursor, return
+            if (rowIndex == -1) { return; }
+
+            // Clear all other selections before making a new selection
+            dgv.ClearSelection();
+
+            // Select the found DataGridViewRow
+            dgv.Rows[rowIndex].Selected = true;
         }
     }
 }

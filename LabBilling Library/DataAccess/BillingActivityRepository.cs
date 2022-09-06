@@ -12,12 +12,10 @@ namespace LabBilling.Core.DataAccess
     {
         public BillingActivityRepository(string connection) : base(connection)
         {
-
         }
 
         public BillingActivityRepository(PetaPoco.Database db) : base(db)
         {
-
         }
 
         public List<BillingActivity> GetByAccount(string account)

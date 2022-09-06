@@ -15,6 +15,8 @@ using System.Text;
 using System.Reflection;
 using System.Threading.Tasks;
 using MetroFramework;
+using LabBilling.Core.BusinessLogic;
+using OopFactory.X12.Hipaa.ClaimParser;
 
 namespace LabBilling.Forms
 {
@@ -196,8 +198,8 @@ namespace LabBilling.Forms
             inscDataTable.Rows.Add(values);
             foreach (InsCompany insc in insCompanies)
             {
-                values[0] = insc.code;
-                values[1] = insc.name;
+                values[0] = insc.InsuranceCode;
+                values[1] = insc.PlanName;
                 inscDataTable.Rows.Add(values);
             }
 
@@ -857,11 +859,11 @@ namespace LabBilling.Forms
             if (record != null)
             {
                 //this is a valid code
-                PlanNameTextBox.Text = record.name;
-                PlanAddressTextBox.Text = record.addr1;
-                PlanAddress2TextBox.Text = record.addr2;
-                PlanCityStTextBox.Text = record.citystzip;
-                PlanFinCodeComboBox.SelectedValue = record.fin_code;
+                PlanNameTextBox.Text = record.PlanName;
+                PlanAddressTextBox.Text = record.Address1;
+                PlanAddress2TextBox.Text = record.Address2;
+                PlanCityStTextBox.Text = record.CityStateZip;
+                PlanFinCodeComboBox.SelectedValue = record.FinancialCode;
             }
         }
 
@@ -1484,9 +1486,16 @@ namespace LabBilling.Forms
         private void LoadBillingActivity()
         {
             Log.Instance.Trace("Entering");
-
-            //billingActivities = dbBillingActivity.GetByAccount(currentAccountSummary.account);
+            
             BillActivityDataGrid.DataSource = currentAccount.BillingActivities.ToList();
+            BillActivityDataGrid.Columns[nameof(BillingActivity.rowguid)].Visible = false;
+            BillActivityDataGrid.Columns[nameof(BillingActivity.mod_date)].Visible = false;
+            BillActivityDataGrid.Columns[nameof(BillingActivity.mod_host)].Visible = false;
+            BillActivityDataGrid.Columns[nameof(BillingActivity.mod_prg)].Visible = false;
+            BillActivityDataGrid.Columns[nameof(BillingActivity.mod_user)].Visible = false;
+            BillActivityDataGrid.Columns[nameof(BillingActivity.Text)].Visible = false;
+            BillActivityDataGrid.Columns[nameof(BillingActivity.PatientName)].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            BillActivityDataGrid.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
 
             ValidationResultsTextBox.Text = currentAccount.AccountValidationStatus.validation_text;
             LastValidatedLabel.Text = currentAccount.AccountValidationStatus.mod_date.ToString("G");
@@ -1825,6 +1834,37 @@ namespace LabBilling.Forms
             {
                 ValidationResultsTextBox.Text = $"Exception in validation - report to support. {ex.Message}";
             }
+
+        }
+
+        private void GenerateClaimButton_Click(object sender, EventArgs e)
+        {
+            ClaimGenerator claimGenerator = new ClaimGenerator(Helper.ConnVal);
+
+            claimGenerator.CompileClaim(currentAccount.AccountNo);
+        }
+
+        private void BillActivityDataGrid_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            DataGridView dgv = (DataGridView)sender;
+
+            // Use HitTest to resolve the row under the cursor
+            int rowIndex = dgv.HitTest(e.X, e.Y).RowIndex;
+
+            // If there was no DataGridViewRow under the cursor, return
+            if (rowIndex == -1) { return; }
+
+            // Clear all other selections before making a new selection
+            dgv.ClearSelection();
+
+            // Select the found DataGridViewRow
+            dgv.Rows[rowIndex].Selected = true;
+
+            var x12Text = dgv[nameof(BillingActivity.Text), rowIndex].Value.ToString();
+
+            PrintClaim printClaim = new PrintClaim();
+
+            printClaim.Print(x12Text, false, true);
 
         }
     }

@@ -31,12 +31,18 @@ namespace LabBilling.Core.Models
         [Column("fin_code")]
         [ResultColumn]
         public string FinCode { get; set; }
-        [Column("status")]
-        [ResultColumn]
-        public string Status { get; set; }
         [Column("ins_code")]
         [ResultColumn]
         public string PrimaryInsCode { get; set; }
+        [Column("status")]
+        [ResultColumn]
+        public string Status { get; set; }
+        [Column("last_validation_date")]
+        [ResultColumn]
+        public DateTime LastValidationDate { get; set; }
+        [Column("validation_text")]
+        [ResultColumn]
+        public string ValidationStatus { get; set; }
         [Ignore]
         public DateTime mod_date { get; set; }
         [Ignore]

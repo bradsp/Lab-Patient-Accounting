@@ -206,6 +206,7 @@ namespace LabBilling.Forms
             this.AddNoteButton = new System.Windows.Forms.Button();
             this.NotesDisplayTextBox = new System.Windows.Forms.RichTextBox();
             this.tabBillingActivity = new System.Windows.Forms.TabPage();
+            this.GenerateClaimButton = new MetroFramework.Controls.MetroButton();
             this.LastValidatedLabel = new MetroFramework.Controls.MetroLabel();
             this.BillingLastValidatedLabel = new MetroFramework.Controls.MetroLabel();
             this.ValidationResultsTextBox = new MetroFramework.Controls.MetroTextBox();
@@ -2186,6 +2187,7 @@ namespace LabBilling.Forms
             // 
             // tabBillingActivity
             // 
+            this.tabBillingActivity.Controls.Add(this.GenerateClaimButton);
             this.tabBillingActivity.Controls.Add(this.LastValidatedLabel);
             this.tabBillingActivity.Controls.Add(this.BillingLastValidatedLabel);
             this.tabBillingActivity.Controls.Add(this.ValidationResultsTextBox);
@@ -2199,10 +2201,20 @@ namespace LabBilling.Forms
             this.tabBillingActivity.Text = "Billing Activity";
             this.tabBillingActivity.UseVisualStyleBackColor = true;
             // 
+            // GenerateClaimButton
+            // 
+            this.GenerateClaimButton.Location = new System.Drawing.Point(8, 6);
+            this.GenerateClaimButton.Name = "GenerateClaimButton";
+            this.GenerateClaimButton.Size = new System.Drawing.Size(104, 23);
+            this.GenerateClaimButton.TabIndex = 4;
+            this.GenerateClaimButton.Text = "GenerateCLaim";
+            this.GenerateClaimButton.UseSelectable = true;
+            this.GenerateClaimButton.Click += new System.EventHandler(this.GenerateClaimButton_Click);
+            // 
             // LastValidatedLabel
             // 
             this.LastValidatedLabel.AutoSize = true;
-            this.LastValidatedLabel.Location = new System.Drawing.Point(225, 323);
+            this.LastValidatedLabel.Location = new System.Drawing.Point(382, 10);
             this.LastValidatedLabel.Name = "LastValidatedLabel";
             this.LastValidatedLabel.Size = new System.Drawing.Size(24, 19);
             this.LastValidatedLabel.TabIndex = 3;
@@ -2211,7 +2223,7 @@ namespace LabBilling.Forms
             // BillingLastValidatedLabel
             // 
             this.BillingLastValidatedLabel.AutoSize = true;
-            this.BillingLastValidatedLabel.Location = new System.Drawing.Point(128, 323);
+            this.BillingLastValidatedLabel.Location = new System.Drawing.Point(285, 10);
             this.BillingLastValidatedLabel.Name = "BillingLastValidatedLabel";
             this.BillingLastValidatedLabel.Size = new System.Drawing.Size(91, 19);
             this.BillingLastValidatedLabel.TabIndex = 3;
@@ -2219,13 +2231,15 @@ namespace LabBilling.Forms
             // 
             // ValidationResultsTextBox
             // 
+            this.ValidationResultsTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             // 
             // 
             // 
             this.ValidationResultsTextBox.CustomButton.Image = null;
-            this.ValidationResultsTextBox.CustomButton.Location = new System.Drawing.Point(969, 2);
+            this.ValidationResultsTextBox.CustomButton.Location = new System.Drawing.Point(-147, 1);
             this.ValidationResultsTextBox.CustomButton.Name = "";
-            this.ValidationResultsTextBox.CustomButton.Size = new System.Drawing.Size(141, 141);
+            this.ValidationResultsTextBox.CustomButton.Size = new System.Drawing.Size(583, 583);
             this.ValidationResultsTextBox.CustomButton.Style = MetroFramework.MetroColorStyle.Blue;
             this.ValidationResultsTextBox.CustomButton.TabIndex = 1;
             this.ValidationResultsTextBox.CustomButton.Theme = MetroFramework.MetroThemeStyle.Light;
@@ -2233,7 +2247,7 @@ namespace LabBilling.Forms
             this.ValidationResultsTextBox.CustomButton.Visible = false;
             this.ValidationResultsTextBox.Lines = new string[] {
         "metroTextBox1"};
-            this.ValidationResultsTextBox.Location = new System.Drawing.Point(6, 348);
+            this.ValidationResultsTextBox.Location = new System.Drawing.Point(706, 35);
             this.ValidationResultsTextBox.MaxLength = 32767;
             this.ValidationResultsTextBox.Multiline = true;
             this.ValidationResultsTextBox.Name = "ValidationResultsTextBox";
@@ -2243,7 +2257,7 @@ namespace LabBilling.Forms
             this.ValidationResultsTextBox.SelectionLength = 0;
             this.ValidationResultsTextBox.SelectionStart = 0;
             this.ValidationResultsTextBox.ShortcutsEnabled = true;
-            this.ValidationResultsTextBox.Size = new System.Drawing.Size(1113, 146);
+            this.ValidationResultsTextBox.Size = new System.Drawing.Size(437, 585);
             this.ValidationResultsTextBox.TabIndex = 2;
             this.ValidationResultsTextBox.Text = "metroTextBox1";
             this.ValidationResultsTextBox.UseSelectable = true;
@@ -2252,9 +2266,9 @@ namespace LabBilling.Forms
             // 
             // ValidateAccountButton
             // 
-            this.ValidateAccountButton.Location = new System.Drawing.Point(6, 304);
+            this.ValidateAccountButton.Location = new System.Drawing.Point(133, 6);
             this.ValidateAccountButton.Name = "ValidateAccountButton";
-            this.ValidateAccountButton.Size = new System.Drawing.Size(116, 38);
+            this.ValidateAccountButton.Size = new System.Drawing.Size(116, 23);
             this.ValidateAccountButton.TabIndex = 1;
             this.ValidateAccountButton.Text = "Validate Account";
             this.ValidateAccountButton.UseSelectable = true;
@@ -2282,7 +2296,7 @@ namespace LabBilling.Forms
             dataGridViewCellStyle23.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             dataGridViewCellStyle23.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
             this.BillActivityDataGrid.DefaultCellStyle = dataGridViewCellStyle23;
-            this.BillActivityDataGrid.Location = new System.Drawing.Point(6, 24);
+            this.BillActivityDataGrid.Location = new System.Drawing.Point(8, 35);
             this.BillActivityDataGrid.Name = "BillActivityDataGrid";
             dataGridViewCellStyle24.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle24.BackColor = System.Drawing.SystemColors.Control;
@@ -2292,8 +2306,9 @@ namespace LabBilling.Forms
             dataGridViewCellStyle24.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             dataGridViewCellStyle24.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
             this.BillActivityDataGrid.RowHeadersDefaultCellStyle = dataGridViewCellStyle24;
-            this.BillActivityDataGrid.Size = new System.Drawing.Size(1115, 150);
+            this.BillActivityDataGrid.Size = new System.Drawing.Size(692, 585);
             this.BillActivityDataGrid.TabIndex = 0;
+            this.BillActivityDataGrid.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.BillActivityDataGrid_MouseDoubleClick);
             // 
             // menuStrip1
             // 
@@ -2818,6 +2833,7 @@ namespace LabBilling.Forms
         private MetroFramework.Controls.MetroLabel BillingLastValidatedLabel;
         private System.Windows.Forms.Label BannerBillStatusLabel;
         private System.Windows.Forms.TextBox BannerBillStatusTextBox;
+        private MetroFramework.Controls.MetroButton GenerateClaimButton;
     }
 }
 

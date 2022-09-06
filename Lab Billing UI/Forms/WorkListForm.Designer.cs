@@ -28,9 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            this.components = new System.ComponentModel.Container();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             this.accountGrid = new MetroFramework.Controls.MetroGrid();
             this.ValidateButton = new MetroFramework.Controls.MetroButton();
             this.PostButton = new MetroFramework.Controls.MetroButton();
@@ -40,12 +41,18 @@
             this.statusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
             this.workqueues = new System.Windows.Forms.TreeView();
             this.CancelValidationButton = new MetroFramework.Controls.MetroButton();
+            this.accountGridContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.holdToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.accountGrid)).BeginInit();
             this.statusStrip.SuspendLayout();
+            this.accountGridContextMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // accountGrid
             // 
+            this.accountGrid.AllowUserToAddRows = false;
+            this.accountGrid.AllowUserToDeleteRows = false;
+            this.accountGrid.AllowUserToOrderColumns = true;
             this.accountGrid.AllowUserToResizeRows = false;
             this.accountGrid.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
@@ -54,42 +61,46 @@
             this.accountGrid.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.accountGrid.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.None;
             this.accountGrid.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(174)))), ((int)(((byte)(219)))));
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
-            dataGridViewCellStyle4.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
-            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(198)))), ((int)(((byte)(247)))));
-            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));
-            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.accountGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(174)))), ((int)(((byte)(219)))));
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            dataGridViewCellStyle1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(198)))), ((int)(((byte)(247)))));
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.accountGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.accountGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
-            dataGridViewCellStyle5.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
-            dataGridViewCellStyle5.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(136)))), ((int)(((byte)(136)))), ((int)(((byte)(136)))));
-            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(198)))), ((int)(((byte)(247)))));
-            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));
-            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.accountGrid.DefaultCellStyle = dataGridViewCellStyle5;
+            this.accountGrid.ContextMenuStrip = this.accountGridContextMenu;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            dataGridViewCellStyle2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(136)))), ((int)(((byte)(136)))), ((int)(((byte)(136)))));
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(198)))), ((int)(((byte)(247)))));
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.accountGrid.DefaultCellStyle = dataGridViewCellStyle2;
+            this.accountGrid.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.accountGrid.EnableHeadersVisualStyles = false;
             this.accountGrid.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
             this.accountGrid.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
             this.accountGrid.Location = new System.Drawing.Point(213, 68);
+            this.accountGrid.MultiSelect = false;
             this.accountGrid.Name = "accountGrid";
-            this.accountGrid.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(174)))), ((int)(((byte)(219)))));
-            dataGridViewCellStyle6.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
-            dataGridViewCellStyle6.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
-            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(198)))), ((int)(((byte)(247)))));
-            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));
-            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.accountGrid.RowHeadersDefaultCellStyle = dataGridViewCellStyle6;
+            this.accountGrid.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(174)))), ((int)(((byte)(219)))));
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            dataGridViewCellStyle3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(198)))), ((int)(((byte)(247)))));
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.accountGrid.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
             this.accountGrid.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.accountGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.accountGrid.Size = new System.Drawing.Size(941, 383);
             this.accountGrid.TabIndex = 1;
             this.accountGrid.RowHeaderMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.accountGrid_RowHeaderMouseDoubleClick);
+            this.accountGrid.MouseDown += new System.Windows.Forms.MouseEventHandler(this.accountGrid_MouseDown);
             // 
             // ValidateButton
             // 
@@ -104,12 +115,13 @@
             // PostButton
             // 
             this.PostButton.Enabled = false;
-            this.PostButton.Location = new System.Drawing.Point(132, 13);
+            this.PostButton.Location = new System.Drawing.Point(251, 13);
             this.PostButton.Name = "PostButton";
             this.PostButton.Size = new System.Drawing.Size(94, 23);
             this.PostButton.TabIndex = 3;
             this.PostButton.Text = "Submit Claims";
             this.PostButton.UseSelectable = true;
+            this.PostButton.Visible = false;
             this.PostButton.Click += new System.EventHandler(this.PostButton_Click);
             // 
             // progressBar
@@ -154,13 +166,27 @@
             // 
             // CancelValidationButton
             // 
-            this.CancelValidationButton.Location = new System.Drawing.Point(232, 13);
+            this.CancelValidationButton.Location = new System.Drawing.Point(132, 13);
             this.CancelValidationButton.Name = "CancelValidationButton";
             this.CancelValidationButton.Size = new System.Drawing.Size(113, 23);
             this.CancelValidationButton.TabIndex = 10;
             this.CancelValidationButton.Text = "Cancel Validation";
             this.CancelValidationButton.UseSelectable = true;
             this.CancelValidationButton.Click += new System.EventHandler(this.CancelValidationButton_Click);
+            // 
+            // accountGridContextMenu
+            // 
+            this.accountGridContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.holdToolStripMenuItem});
+            this.accountGridContextMenu.Name = "accountGridContextMenu";
+            this.accountGridContextMenu.Size = new System.Drawing.Size(101, 26);
+            // 
+            // holdToolStripMenuItem
+            // 
+            this.holdToolStripMenuItem.Name = "holdToolStripMenuItem";
+            this.holdToolStripMenuItem.Size = new System.Drawing.Size(100, 22);
+            this.holdToolStripMenuItem.Text = "Hold";
+            this.holdToolStripMenuItem.Click += new System.EventHandler(this.holdToolStripMenuItem_Click);
             // 
             // WorkListForm
             // 
@@ -181,6 +207,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.accountGrid)).EndInit();
             this.statusStrip.ResumeLayout(false);
             this.statusStrip.PerformLayout();
+            this.accountGridContextMenu.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -197,5 +224,7 @@
         private System.Windows.Forms.ToolStripStatusLabel statusLabel2;
         private System.Windows.Forms.TreeView workqueues;
         private MetroFramework.Controls.MetroButton CancelValidationButton;
+        private System.Windows.Forms.ContextMenuStrip accountGridContextMenu;
+        private System.Windows.Forms.ToolStripMenuItem holdToolStripMenuItem;
     }
 }

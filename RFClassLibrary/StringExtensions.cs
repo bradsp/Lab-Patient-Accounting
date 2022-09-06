@@ -92,5 +92,20 @@ namespace RFClassLibrary
 
             return items.Contains(item);
         }
+
+        /// <summary>
+        /// Returns passed string if 1st string is null or empty.
+        /// </summary>
+        /// <param name="item"></param>
+        /// <param name="item2"></param>
+        /// <returns></returns>
+        public static string Coalesce(this string item, string item2)
+        {
+            if (string.IsNullOrEmpty(item))
+                return item2;
+            else
+                return item;
+        }
+
     }
 }

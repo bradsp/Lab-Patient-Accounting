@@ -264,6 +264,68 @@ namespace LabBilling.Core.BusinessLogic
             return -1;
         }
 
+        public void CompileClaim(string accountNo)
+        {
+            //validate account data before starting - if there are errors do not process claim.
+            // primary ins holder name is empty
+            // no dx codes
+            ClaimData claim;
+            string claimx12;
+
+            billing837 = new Billing837(_connectionString);
+            string batchSubmitterID = parametersdb.GetByKey("fed_tax_id");
+            decimal strNum = numberRepository.GetNumber("ssi_batch");
+            string interchangeControlNumber = string.Format("{0:D9}", int.Parse(string.Format("{0}{1}", DateTime.Now.Year, strNum)));
+
+            try
+            {
+                claim = GenerateClaim(accountNo);
+                claimx12 = billing837.Build837Claim(claim, interchangeControlNumber, propProductionEnvironment, batchSubmitterID);
+            }
+            catch (ApplicationException apex)
+            {
+                Log.Instance.Error(apex);
+                return;
+            }
+
+            //update status and activity date fields
+            if (claim.ClaimType == ClaimType.Institutional)
+            {
+                claim.claimAccount.Status = "SSIUB";
+                claim.claimAccount.Pat.InstitutionalClaimDate = DateTime.Today;
+                patRepository.Update(claim.claimAccount.Pat, new[] { nameof(Pat.InstitutionalClaimDate) });
+            }
+            if (claim.ClaimType == ClaimType.Professional)
+            {
+                claim.claimAccount.Status = "SSI1500";
+                claim.claimAccount.Pat.ProfessionalClaimDate = DateTime.Today;
+                patRepository.Update(claim.claimAccount.Pat, new[] { nameof(Pat.ProfessionalClaimDate) });
+            }
+
+            accountRepository.Update(claim.claimAccount, new[] { nameof(Account.Status) });
+
+            //claim.claimAccount.Pat.SSIBatch = interchangeControlNumber;
+
+            BillingHistory billingHistory = new BillingHistory();
+            billingHistory.PatientName = claim.claimAccount.PatFullName;
+            billingHistory.RunDate = DateTime.Today;
+            billingHistory.Account = claim.claimAccount.AccountNo;
+            //billingHistory.Batch = Convert.ToDouble(interchangeControlNumber);
+            //billingHistory.ElectronicBillBatch = Convert.ToDouble(interchangeControlNumber);
+            //billingHistory.ElectronicBillStatus = "UB";
+            billingHistory.FinancialCode = claim.claimAccount.FinCode;
+            billingHistory.InsuranceOrder = claim.claimAccount.Insurances[0].Coverage;
+            billingHistory.InsuranceCode = claim.claimAccount.Insurances[0].InsCode;
+            billingHistory.InsComplete = DateTime.MinValue;
+            billingHistory.TransactionDate = claim.claimAccount.TransactionDate;
+            billingHistory.RunUser = OS.GetUserName();
+            billingHistory.Text = claimx12;
+
+            billingHistoryRepository.Add(billingHistory);
+
+        }
+
+
 
         /// <summary>
         /// Generates the claim structure for a single account. Adds the entry to the ClaimsData list.
@@ -273,9 +335,6 @@ namespace LabBilling.Core.BusinessLogic
         /// <exception cref="InvalidParameterValueException"></exception>
         public ClaimData GenerateClaim(string account)
         {
-            
-            //do all the fun work of building the ClaimData object & return it.
-
             ClaimData claimData = new ClaimData
             {
                 claimAccount = accountRepository.GetByAccount(account)
@@ -394,32 +453,44 @@ namespace LabBilling.Core.BusinessLogic
                     subscriber.NameSuffix = String.Empty;
                     subscriber.NamePrefix = String.Empty;
                     subscriber.PrimaryIdentifier = ins.PolicyNumber;
-                    subscriber.DateOfBirth = ins.HolderBirthDate;
-                    subscriber.Gender = ins.HolderSex;
                     subscriber.SocSecNumber = ins.CertSSN;
-
-                    subscriber.Address = ins.HolderAddress;
-                    subscriber.Address2 = "";
-                    subscriber.City = ins.HolderCity;
-                    subscriber.State = ins.HolderState;
-                    subscriber.ZipCode = ins.HolderZip;
-                    subscriber.Country = "US";
-
+                    if (ins.Relation == "01")
+                    {
+                        subscriber.Gender = ins.HolderSex.Coalesce(claimData.claimAccount.Pat.Sex);
+                        subscriber.DateOfBirth = ins.HolderBirthDate ?? claimData.claimAccount.Pat.BirthDate;
+                        subscriber.Address = ins.HolderAddress.Coalesce(claimData.claimAccount.Pat.Address1);
+                        subscriber.Address2 = string.Empty;
+                        subscriber.City = ins.HolderCity.Coalesce(claimData.claimAccount.Pat.City);
+                        subscriber.State = ins.HolderState.Coalesce(claimData.claimAccount.Pat.State);
+                        subscriber.ZipCode = ins.HolderZip.Coalesce(claimData.claimAccount.Pat.ZipCode);
+                        subscriber.Country = "US";
+                    }
+                    else
+                    {
+                        subscriber.Gender = ins.HolderSex;
+                        subscriber.DateOfBirth = ins.HolderBirthDate;
+                        subscriber.Address = ins.HolderAddress;
+                        subscriber.Address2 = string.Empty;
+                        subscriber.City = ins.HolderCity;
+                        subscriber.State = ins.HolderState;
+                        subscriber.ZipCode = ins.HolderZip;
+                        subscriber.Country = "US";
+                    }
                     subscriber.PayerName = ins.PlanName; // ins.InsCompany.name;
-                    subscriber.PayerAddress = ins.InsCompany.addr1;
-                    subscriber.PayerAddress2 = ins.InsCompany.addr2;
+                    subscriber.PayerAddress = ins.InsCompany.Address1;
+                    subscriber.PayerAddress2 = ins.InsCompany.Address2;
                     subscriber.PayerCity = ins.InsCompany.City;
                     subscriber.PayerState = ins.InsCompany.State;
                     subscriber.PayerZipCode = ins.InsCompany.Zip;
                     subscriber.PayerCountry = "US";
-                    string strPayer = ins.InsCompany.payer_no;
-                    if(dicOP.ContainsKey(ins.InsCode))
-                    {
-                        if(!dicOP.TryGetValue(ins.InsCode, out strPayer))
-                        {
-                            strPayer = ins.InsCompany.payer_no;
-                        }
-                    }
+                    string strPayer = ins.InsCompany.NThrivePayerNo ?? "UKNOWN";
+                    //if(dicOP.ContainsKey(ins.InsCode))
+                    //{
+                    //    if(!dicOP.TryGetValue(ins.InsCode, out strPayer))
+                    //    {
+                    //        strPayer = ins.InsCompany.PayerNo;
+                    //    }
+                    //}
                     if (strPayer == string.Empty)
                     {
                         strPayer = "UKNOWN";
@@ -432,9 +503,9 @@ namespace LabBilling.Core.BusinessLogic
 
                     string strClaimFilingIndicatorCode = null;
 
-                    if (!string.IsNullOrEmpty(ins.InsCompany.provider_no_qualifier))
+                    if (!string.IsNullOrEmpty(ins.InsCompany.ProviderNoQualifer))
                     {
-                        if (!ClaimFilingIndicatorCode.TryGetValue(ins.InsCompany.provider_no_qualifier, out strClaimFilingIndicatorCode))
+                        if (!ClaimFilingIndicatorCode.TryGetValue(ins.InsCompany.ProviderNoQualifer, out strClaimFilingIndicatorCode))
                         {
                             strClaimFilingIndicatorCode = "CI";
                         }
@@ -445,8 +516,8 @@ namespace LabBilling.Core.BusinessLogic
                     }
                     subscriber.ClaimFilingIndicatorCode = strClaimFilingIndicatorCode;
 
-                    subscriber.PayerIdentificationQualifier = ins.InsCompany.provider_no_qualifier;
-                    subscriber.BillingProviderSecondaryIdentifier = ins.InsCompany.provider_no;
+                    subscriber.PayerIdentificationQualifier = ins.InsCompany.ProviderNoQualifer;
+                    subscriber.BillingProviderSecondaryIdentifier = ins.InsCompany.ProviderNo;
 
                     claimData.Subscribers.Add(subscriber);
 

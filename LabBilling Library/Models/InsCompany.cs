@@ -11,26 +11,71 @@ namespace LabBilling.Core.Models
     [PrimaryKey("code", AutoIncrement = false)]
     public class InsCompany : IBaseEntity
     {
-        public string code { get; set; }
-        public string name { get; set; }
-        public string addr1 { get; set; }
-        public string addr2 { get; set; }
-        public string citystzip { get; set; }
-        public string provider_no_qualifier { get; set; }
-        public string provider_no { get; set; }
-        public string payer_no { get; set; }
-        public string claimsnet_payer_id { get; set; }
-        public string bill_form { get; set; }
-        public int num_labels { get; set; }
-        public string fin_code { get; set; }
-        public string comment { get; set; }
-        public bool is_mc_hmo { get; set; }
-        public bool allow_outpatient_billing { get; set; }
-        public string payor_code { get; set; }
-        public string fin_class { get; set; }
-        public bool bill_as_jmcgh { get; set; }
+
+        [Column("code")]
+        public string InsuranceCode { get; set; }
+
+        [Column("name")]
+        public string PlanName { get; set; }
+
+        [Column("addr1")]
+        public string Address1 { get; set; }
+
+        [Column("addr2")]
+        public string Address2 { get; set; }
+
+        [Column("citystzip")]
+        public string CityStateZip { get; set; }
+        [Column("city")]
+        public string City { get; set; }
+        [Column("state")]
+        public string State { get; set; }
+        [Column("zipcode")]
+        public string Zip { get; set; }
+        [Column("provider_no_qualifier")]
+        public string ProviderNoQualifer { get; set; }
+
+        [Column("provider_no")]
+        public string ProviderNo { get; set; }
+
+        [Column("payer_no")]
+        public string PayerNo { get; set; }
+
+        [Column("claimsnet_payer_id")]
+        public string ClaimsNetPayerId { get; set; }
+
+        [Column("bill_form")]
+        public string BillForm { get; set; }
+
+        [Column("fin_code")]
+        public string FinancialCode { get; set; }
+
+        [Column("comment")]
+        public string Comment { get; set; }
+
+        [Column("is_mc_hmo")]
+        public bool IsMedicareHmo { get; set; }
+
+        [Column("allow_outpatient_billing")]
+        public bool AllowOutpatientBilling { get; set; }
+
+        [Column("payor_code")]
+        public string PayorCode { get; set; }
+
+        [Column("nthrive_payer_no")]
+        public string NThrivePayerNo { get; set; }
+
+        [Column("fin_class")]
+        public string FinancialClass { get; set; }
+
+        [Column("bill_as_jmcgh")]
+        public bool BillAsJmcgh { get; set; }
+
         public Guid rowguid { get; set; }
-        public bool deleted { get; set; }
+
+        [Column("deleted")]
+        public bool IsDeleted { get; set; }
+
 
         [ResultColumn]
         public DateTime mod_date { get; set; }
@@ -41,12 +86,7 @@ namespace LabBilling.Core.Models
         [ResultColumn]
         public string mod_host { get; set; }
 
-        [Ignore]
-        public string City { get; set; }
-        [Ignore]
-        public string State { get; set; }
-        [Ignore]
-        public string Zip { get; set; }
+
 
     }
 }

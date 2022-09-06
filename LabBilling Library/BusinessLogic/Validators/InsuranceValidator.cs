@@ -16,6 +16,14 @@ namespace LabBilling.Core.BusinessLogic.Validators
                 .NotEmpty().WithMessage("Ins {PropertyName} is empty.");
             RuleFor(a => a.HolderFirstName)
                 .NotEmpty().WithMessage("Ins {PropertyName} is empty.");
+            RuleFor(a => a.HolderAddress)
+                .NotEmpty().WithMessage("Ins {PropertyName} is empty.");
+            RuleFor(a => a.HolderCity)
+                .NotEmpty().WithMessage("Ins {PropertyName} is empty.");
+            RuleFor(a => a.HolderState)
+                .NotEmpty().WithMessage("Ins {PropertyName} is empty.");
+            RuleFor(a => a.HolderZip)
+                .NotEmpty().WithMessage("Ins {PropertyName} is empty.");
             RuleFor(a => a)
                 .Must((a) =>
                 {
@@ -31,8 +39,18 @@ namespace LabBilling.Core.BusinessLogic.Validators
                 .Must(BeAValidGroupNumber).WithMessage("{PropertyName} is not a valid format.")
                 .When(a => !string.IsNullOrEmpty(a.GroupNumber));
             RuleFor(a => a.PlanName)
-                .Must(BeAValidName)
+                .Must(BeAValidName).WithMessage("{PropertyName} contains invalid characters.")
                 .NotEmpty().WithMessage("Ins {PropertyName} is empty.");
+            RuleFor(a => a.InsCompany)
+                .Must((insc) =>
+                {
+                    if (string.IsNullOrEmpty(insc.Address1) || string.IsNullOrEmpty(insc.CityStateZip))
+                        return false;
+                    else
+                        return true;
+                }).WithMessage("Plan must contain an address.");
+            RuleFor(a => a.InsCompany.NThrivePayerNo)
+                .NotEmpty().WithMessage("NThrive payer code is not defined for this payer.");
             RuleFor(a => a.Coverage)
                 .Must((a) =>
                 {

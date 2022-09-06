@@ -11,6 +11,7 @@ namespace LabBilling.Core
     {
         public Account claimAccount;
 
+        public ClaimType ClaimType { get; set; }
         public string TransactionTypeCode { get; set; }
         public string TransactionSetPurpose { get; set; }
 
@@ -156,4 +157,9 @@ namespace LabBilling.Core
         public string ControlNumber { get; set; }
     }
 
+    public enum ClaimType
+    {
+        Institutional,
+        Professional
+    };
 }
