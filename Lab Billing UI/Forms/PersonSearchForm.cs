@@ -45,6 +45,9 @@ namespace LabBilling.Forms
             PersonAccountResults.Columns[nameof(AccountSearch.mod_prg)].Visible = false;
             PersonAccountResults.Columns[nameof(AccountSearch.mod_user)].Visible = false;
             PersonAccountResults.Columns[nameof(AccountSearch.rowguid)].Visible = false;
+            PersonAccountResults.Columns[nameof(AccountSearch.ValidationStatus)].Visible = false;
+            PersonAccountResults.Columns[nameof(AccountSearch.PrimaryInsCode)].Visible = false;
+            PersonAccountResults.Columns[nameof(AccountSearch.LastValidationDate)].Visible = false;
 
             PersonAccountResults.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
             PersonAccountResults.Columns[nameof(AccountSearch.Name)].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;

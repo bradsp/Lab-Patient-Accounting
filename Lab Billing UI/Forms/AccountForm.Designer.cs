@@ -2207,7 +2207,7 @@ namespace LabBilling.Forms
             this.GenerateClaimButton.Name = "GenerateClaimButton";
             this.GenerateClaimButton.Size = new System.Drawing.Size(104, 23);
             this.GenerateClaimButton.TabIndex = 4;
-            this.GenerateClaimButton.Text = "GenerateCLaim";
+            this.GenerateClaimButton.Text = "GenerateClaim";
             this.GenerateClaimButton.UseSelectable = true;
             this.GenerateClaimButton.Click += new System.EventHandler(this.GenerateClaimButton_Click);
             // 

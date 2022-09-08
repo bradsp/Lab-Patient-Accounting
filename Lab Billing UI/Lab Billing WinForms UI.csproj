@@ -66,6 +66,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\MstGrid\MstGrid.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="NHapi.Base, Version=3.1.1.0, Culture=neutral, PublicKeyToken=d0d8ea960a3440eb, processorArchitecture=MSIL">
       <HintPath>..\packages\nhapi.3.1.1\lib\net35\NHapi.Base.dll</HintPath>
     </Reference>
@@ -153,6 +156,12 @@
     </Compile>
     <Compile Include="Forms\DashboardForm.Designer.cs">
       <DependentUpon>DashboardForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\HealthPlanMaintenanceForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\HealthPlanMaintenanceForm.Designer.cs">
+      <DependentUpon>HealthPlanMaintenanceForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\InterfaceMonitor.cs">
       <SubType>Form</SubType>
@@ -317,7 +326,6 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Library\Opulos.Core\StreamEx.cs" />
-    <Compile Include="SystemSettings.cs" />
     <Compile Include="Forms\AboutBox.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -466,6 +474,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\DashboardForm.resx">
       <DependentUpon>DashboardForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\HealthPlanMaintenanceForm.resx">
+      <DependentUpon>HealthPlanMaintenanceForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\InterfaceMonitor.resx">
       <DependentUpon>InterfaceMonitor.cs</DependentUpon>
@@ -658,10 +669,6 @@
     <ProjectReference Include="..\MCL\MCL.csproj">
       <Project>{f54e006c-aa33-48f2-9e2f-46cfb5d7ee47}</Project>
       <Name>MCL</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\OopFactory.X12.Hipaa.ClaimParser\OopFactory.X12.Hipaa.ClaimParser.csproj">
-      <Project>{1e3bd8a3-21ea-4b71-8a55-31910211a316}</Project>
-      <Name>OopFactory.X12.Hipaa.ClaimParser</Name>
     </ProjectReference>
     <ProjectReference Include="..\OopFactory.X12.Hipaa\OopFactory.X12.Hipaa.csproj">
       <Project>{203c0f4b-d1f0-4c20-8968-7dbd84f4a815}</Project>

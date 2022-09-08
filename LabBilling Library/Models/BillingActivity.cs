@@ -19,19 +19,19 @@ namespace LabBilling.Core.Models
         public string AccountNo { get; set; }
 
         [Column("ins_abc")]
-        public string Coverage { get; set; }
+        public string InsuranceOrder { get; set; }
 
         [Column("pat_name")]
         public string PatientName { get; set; }
 
         [Column("fin_code")]
-        public string FinCode { get; set; }
+        public string FinancialCode { get; set; }
 
         [Column("ins_code")]
-        public string InsCode { get; set; }
+        public string InsuranceCode { get; set; }
 
         [Column("trans_date")]
-        public DateTime TransactionDate { get; set; }
+        public DateTime? TransactionDate { get; set; }
 
         [Column("run_date")]
         public DateTime RunDate { get; set; }
@@ -40,22 +40,22 @@ namespace LabBilling.Core.Models
         public bool IsPrinted { get; set; }
 
         [Column("run_user")]
-        public string Runuser { get; set; }
+        public string RunUser { get; set; }
 
         [Column("batch")]
         public double Batch { get; set; }
 
         [Column("ebill_status")]
-        public string EBillStatus { get; set; }
+        public string ElectronicBillStatus { get; set; }
 
         [Column("ebill_batch")]
-        public double EBillBatch { get; set; }
+        public double ElectronicBillBatch { get; set; }
 
         [Column("text")]
         public string Text { get; set; }
 
         [Column("ins_complete")]
-        public DateTime IsInsComplete { get; set; }
+        public DateTime? InsComplete { get; set; }
         
         public DateTime mod_date { get; set; }
         public string mod_user { get; set; }

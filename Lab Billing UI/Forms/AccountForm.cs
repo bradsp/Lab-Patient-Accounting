@@ -16,7 +16,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using MetroFramework;
 using LabBilling.Core.BusinessLogic;
-using OopFactory.X12.Hipaa.ClaimParser;
+//using OopFactory.X12.Hipaa.ClaimParser;
 
 namespace LabBilling.Forms
 {
@@ -1486,7 +1486,8 @@ namespace LabBilling.Forms
         private void LoadBillingActivity()
         {
             Log.Instance.Trace("Entering");
-            
+
+
             BillActivityDataGrid.DataSource = currentAccount.BillingActivities.ToList();
             BillActivityDataGrid.Columns[nameof(BillingActivity.rowguid)].Visible = false;
             BillActivityDataGrid.Columns[nameof(BillingActivity.mod_date)].Visible = false;
@@ -1494,8 +1495,9 @@ namespace LabBilling.Forms
             BillActivityDataGrid.Columns[nameof(BillingActivity.mod_prg)].Visible = false;
             BillActivityDataGrid.Columns[nameof(BillingActivity.mod_user)].Visible = false;
             BillActivityDataGrid.Columns[nameof(BillingActivity.Text)].Visible = false;
-            BillActivityDataGrid.Columns[nameof(BillingActivity.PatientName)].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+
             BillActivityDataGrid.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
+            //BillActivityDataGrid.Columns[nameof(BillingActivity.PatientName)].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
 
             ValidationResultsTextBox.Text = currentAccount.AccountValidationStatus.validation_text;
             LastValidatedLabel.Text = currentAccount.AccountValidationStatus.mod_date.ToString("G");
@@ -1860,11 +1862,30 @@ namespace LabBilling.Forms
             // Select the found DataGridViewRow
             dgv.Rows[rowIndex].Selected = true;
 
-            var x12Text = dgv[nameof(BillingActivity.Text), rowIndex].Value.ToString();
+            var claimJson = dgv[nameof(BillingActivity.Text), rowIndex].Value.ToString();
 
-            PrintClaim printClaim = new PrintClaim();
+            ClaimData claim = Newtonsoft.Json.JsonConvert.DeserializeObject<ClaimData>(claimJson);
 
-            printClaim.Print(x12Text, false, true);
+            Billing837 billing837 = new Billing837(Helper.ConnVal);
+
+            string fileLocation;
+
+            switch (claim.ClaimType)
+            {
+                case ClaimType.Institutional:
+                    fileLocation = systemParametersRepository.GetByKey("claim_837i_file_location");
+                    break;
+                case ClaimType.Professional:
+                    fileLocation = systemParametersRepository.GetByKey("claim_837p_file_location");
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException("ClaimType is not defined.");
+            }
+
+            string x12Text = billing837.GenerateSingleClaim(claim, fileLocation);
+
+            PrintClaimForm printClaim = new PrintClaimForm(Helper.ConnVal);
+            printClaim.PrintAlt(x12Text); //, false, true);
 
         }
     }

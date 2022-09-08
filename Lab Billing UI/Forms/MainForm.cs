@@ -667,14 +667,14 @@ namespace LabBilling
                 {
                     claimsProcessed = await Task.Run(() =>
                     {
-                        return claims.CompileInstitutionalBilling(progress, cancellationToken.Token);
+                        return claims.CompileBillingBatch(Core.ClaimType.Institutional, progress, cancellationToken.Token);
                     });
                 }
                 else if(billingType == BillingType.Professional)
                 {
                     claimsProcessed = await Task.Run(() =>
                     {
-                        return claims.CompileProfessionalBilling(progress, cancellationToken.Token);
+                        return claims.CompileBillingBatch(Core.ClaimType.Professional, progress, cancellationToken.Token);
                     });
                 }
 
@@ -715,6 +715,17 @@ namespace LabBilling
             claimProgress.Maximum = e.TotalRecords;
             claimProgress.Value = e.RecordsProcessed;
             claimProgressStatusLabel.Text = $"Processing {e.RecordsProcessed} of {e.TotalRecords}";
+        }
+
+        private void insurancePlansToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Log.Instance.Trace("Entering");
+            HealthPlanMaintenanceForm frm = new HealthPlanMaintenanceForm();
+
+            frm.MdiParent = this;
+            frm.WindowState = FormWindowState.Normal;
+            frm.AutoScroll = true;
+            frm.Show();
         }
     }
 }

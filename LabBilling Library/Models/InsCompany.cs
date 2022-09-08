@@ -71,6 +71,9 @@ namespace LabBilling.Core.Models
         [Column("bill_as_jmcgh")]
         public bool BillAsJmcgh { get; set; }
 
+        [Column("claim_filing_indicator_code")]
+        public string ClaimFilingIndicatorCode { get; set; }
+
         public Guid rowguid { get; set; }
 
         [Column("deleted")]

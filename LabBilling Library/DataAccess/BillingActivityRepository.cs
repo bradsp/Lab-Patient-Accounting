@@ -27,9 +27,39 @@ namespace LabBilling.Core.DataAccess
             return record;
         }
 
+        public override bool Save(BillingActivity table)
+        {
+            Log.Instance.Debug($"Entering");
+            var record = dbConnection.SingleOrDefault<BillingActivity>("where account=@0 and run_date = @1", table.AccountNo, table.RunDate);
+
+            if (record == null)
+            {
+                Add(table);
+                return true;
+            }
+            else
+            {
+                if (table.InsComplete == DateTime.MinValue)
+                    table.InsComplete = null;
+                table.rowguid = record.rowguid;
+                return Update(table);
+            }
+        }
+
         public override BillingActivity GetById(int id)
         {
+            Log.Instance.Debug($"Entering");
             throw new NotImplementedException();
         }
+
+        public override object Add(BillingActivity table)
+        {
+            Log.Instance.Debug($"Entering");
+            if (table.InsComplete == DateTime.MinValue)
+                table.InsComplete = null;
+
+            return base.Add(table);
+        }
+
     }
 }

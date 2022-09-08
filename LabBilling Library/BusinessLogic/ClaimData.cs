@@ -11,6 +11,9 @@ namespace LabBilling.Core
     {
         public Account claimAccount;
 
+        public string InterchangeControlNumber { get; set; }
+        public string BatchSubmitterId { get; set; }
+
         public ClaimType ClaimType { get; set; }
         public string TransactionTypeCode { get; set; }
         public string TransactionSetPurpose { get; set; }
@@ -57,6 +60,7 @@ namespace LabBilling.Core
         public string ClaimIdentifier { get; set; }
         public string TotalChargeAmount { get; set; }
         public string FacilityCode { get; set; }
+        public string FacilityCodeQualifier { get; set; }
         public string ClaimFrequency { get; set; }
         public string ProviderSignatureIndicator { get; set; }
         public string ProviderAcceptAssignmentCode { get; set; }
@@ -74,6 +78,8 @@ namespace LabBilling.Core
         public DateTime? OnsetOfCurrentIllness { get; set; }
         public DateTime? InitialTreatmentDate { get; set; }
         public DateTime? DateOfAccident { get; set; }
+        public DateTime? StatementFromDate { get; set; }
+        public DateTime? StatementThruDate { get; set; }
 
         public double PatientAmountPaid { get; set; }
         public string CliaNumber { get; set; }
@@ -83,6 +89,12 @@ namespace LabBilling.Core
         public string ReferringProviderMiddleName { get; set; }
         public string ReferringProviderSuffix { get; set; }
         public string ReferringProviderNPI { get; set; }
+
+        public string AttendingProviderLastName { get; set; }
+        public string AttendingProviderFirstName { get; set; }
+        public string AttendingProviderMiddleName { get; set; }
+        public string AttendingProviderSuffix { get; set; }
+        public string AttendingProviderNPI { get; set; }
 
         public List<ClaimSubscriber> Subscribers { get; set; } = new List<ClaimSubscriber>();
         public List<ClaimLine> ClaimLines { get; set; } = new List<ClaimLine>();

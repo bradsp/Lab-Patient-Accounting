@@ -67,6 +67,7 @@ namespace OopFactory.X12.Hipaa.ClaimParser
                         var driver = Fonet.FonetDriver.Make();
                         driver.Render(foDoc, pdfOutput);
                         pdfOutput.Close();
+                        System.Diagnostics.Process.Start(outputFilename);
                     }
                 }
 

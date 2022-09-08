@@ -49,6 +49,9 @@
             this.globalBillingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.posting835RemitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.clientBillsNewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.generateClaimsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.institutionalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.professionalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dictionariesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.chargeMasterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.clientsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -84,13 +87,10 @@
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.windowManagerPanel1 = new MDIWindowManager.WindowManagerPanel();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.generateClaimsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.institutionalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.professionalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.MainFormMenu.SuspendLayout();
             this.SuspendLayout();
             // 
-            // DashboardMenu
+            // MainFormMenu
             // 
             this.MainFormMenu.BackColor = System.Drawing.Color.Transparent;
             this.MainFormMenu.ImageScalingSize = new System.Drawing.Size(20, 20);
@@ -101,9 +101,9 @@
             this.systemAdministrationToolStripMenuItem,
             this.windowsToolStripMenuItem,
             this.helpToolStripMenuItem});
-            resources.ApplyResources(this.MainFormMenu, "DashboardMenu");
+            resources.ApplyResources(this.MainFormMenu, "MainFormMenu");
             this.MainFormMenu.MdiWindowListItem = this.windowsToolStripMenuItem;
-            this.MainFormMenu.Name = "DashboardMenu";
+            this.MainFormMenu.Name = "MainFormMenu";
             // 
             // billingToolStripMenuItem
             // 
@@ -237,6 +237,26 @@
             resources.ApplyResources(this.clientBillsNewToolStripMenuItem, "clientBillsNewToolStripMenuItem");
             this.clientBillsNewToolStripMenuItem.Click += new System.EventHandler(this.clientBillsNewToolStripMenuItem_Click);
             // 
+            // generateClaimsToolStripMenuItem
+            // 
+            this.generateClaimsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.institutionalToolStripMenuItem,
+            this.professionalToolStripMenuItem});
+            this.generateClaimsToolStripMenuItem.Name = "generateClaimsToolStripMenuItem";
+            resources.ApplyResources(this.generateClaimsToolStripMenuItem, "generateClaimsToolStripMenuItem");
+            // 
+            // institutionalToolStripMenuItem
+            // 
+            this.institutionalToolStripMenuItem.Name = "institutionalToolStripMenuItem";
+            resources.ApplyResources(this.institutionalToolStripMenuItem, "institutionalToolStripMenuItem");
+            this.institutionalToolStripMenuItem.Click += new System.EventHandler(this.institutionalToolStripMenuItem_Click);
+            // 
+            // professionalToolStripMenuItem
+            // 
+            this.professionalToolStripMenuItem.Name = "professionalToolStripMenuItem";
+            resources.ApplyResources(this.professionalToolStripMenuItem, "professionalToolStripMenuItem");
+            this.professionalToolStripMenuItem.Click += new System.EventHandler(this.professionalToolStripMenuItem_Click);
+            // 
             // dictionariesToolStripMenuItem
             // 
             this.dictionariesToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -277,6 +297,7 @@
             // 
             this.insurancePlansToolStripMenuItem.Name = "insurancePlansToolStripMenuItem";
             resources.ApplyResources(this.insurancePlansToolStripMenuItem, "insurancePlansToolStripMenuItem");
+            this.insurancePlansToolStripMenuItem.Click += new System.EventHandler(this.insurancePlansToolStripMenuItem_Click);
             // 
             // physiciansToolStripMenuItem
             // 
@@ -477,26 +498,6 @@
             // 
             resources.ApplyResources(this.panel1, "panel1");
             this.panel1.Name = "panel1";
-            // 
-            // generateClaimsToolStripMenuItem
-            // 
-            this.generateClaimsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.institutionalToolStripMenuItem,
-            this.professionalToolStripMenuItem});
-            this.generateClaimsToolStripMenuItem.Name = "generateClaimsToolStripMenuItem";
-            resources.ApplyResources(this.generateClaimsToolStripMenuItem, "generateClaimsToolStripMenuItem");
-            // 
-            // institutionalToolStripMenuItem
-            // 
-            this.institutionalToolStripMenuItem.Name = "institutionalToolStripMenuItem";
-            resources.ApplyResources(this.institutionalToolStripMenuItem, "institutionalToolStripMenuItem");
-            this.institutionalToolStripMenuItem.Click += new System.EventHandler(this.institutionalToolStripMenuItem_Click);
-            // 
-            // professionalToolStripMenuItem
-            // 
-            this.professionalToolStripMenuItem.Name = "professionalToolStripMenuItem";
-            resources.ApplyResources(this.professionalToolStripMenuItem, "professionalToolStripMenuItem");
-            this.professionalToolStripMenuItem.Click += new System.EventHandler(this.professionalToolStripMenuItem_Click);
             // 
             // MainForm
             // 

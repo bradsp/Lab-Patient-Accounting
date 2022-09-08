@@ -272,6 +272,7 @@ namespace LabBilling.Forms
         private async void workqueues_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
         {
             workqueues.Enabled = false;
+            ValidateButton.Enabled = false;
 
             DateTime.TryParse(systemParametersRepository.GetByKey("ssi_bill_thru_date"), out DateTime thruDate);
             (string propertyName, AccountSearchRepository.operation oper, string searchText)[] parameters = 
@@ -371,6 +372,7 @@ namespace LabBilling.Forms
             progressBar.ProgressBarStyle = ProgressBarStyle.Continuous;
 
             workqueues.Enabled = true;
+            ValidateButton.Enabled = true;
         }
 
         private void CancelValidationButton_Click(object sender, EventArgs e)

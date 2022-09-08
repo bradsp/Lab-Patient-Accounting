@@ -22,9 +22,9 @@ namespace LabBilling.Core
 
         public char SegmentTerminator { get; set; } = '~';
         public char ElementTerminator { get; set; } = '*';
-        public char ComponentSeparator { get; set; } = ':';
+        public char ComponentSeparator { get; set; } = '>';
         public char RepetitionSeparator { get; set; } = '^';
-        public string VersionReleaseSpecifierCodeInstitutional { get; set; } = "005010X223";
+        public string VersionReleaseSpecifierCodeInstitutional { get; set; } = "005010X223A2";
         public string VersionReleaseSpecifierCodeProfessional { get; set; } = "005010X222";
         public string VersionReleaseSpecifierCode { 
             get
@@ -49,6 +49,7 @@ namespace LabBilling.Core
         public string AuthorizationInformation { get; set; } = string.Empty;
         public string ResponsibleAgencyCode { get; set; } = "X";
         public string FunctionalIdentifierCode { get; set; } = "HC";
+        public string ProductionEnvironment { get; set; } = "T";
 
         public const string transactionSetIdentifierCode = "837";
 
@@ -66,19 +67,48 @@ namespace LabBilling.Core
         public EdiDocument ediDocument;
 
         /// <summary>
+        /// Generates an 837 claim for a single claim object. Used primarily for one-off printing of claims.
+        /// </summary>
+        /// <param name="claim"></param>
+        /// <param name="fileLocation"></param>
+        /// <returns></returns>
+        /// <exception cref="InvalidParameterValueException"></exception>
+        public string GenerateSingleClaim(ClaimData claim, string fileLocation)
+        {
+            List<ClaimData> claims = new List<ClaimData>();
+            claims.Add(claim);
+
+            ClaimType claimType;
+
+            switch (claim.ClaimType)
+            {
+                case Core.ClaimType.Institutional:
+                    claimType = ClaimType.Institutional;
+                    break;
+                case Core.ClaimType.Professional:
+                    claimType = ClaimType.Professional;
+                    break;
+                default:
+                    throw new InvalidParameterValueException("ClaimType does not contain a valid value.");
+            }
+
+            return Generate837ClaimBatch(claims, claim.InterchangeControlNumber, claim.BatchSubmitterId, fileLocation, claimType);        
+        }
+
+        /// <summary>
         /// 
         /// </summary>
         /// <param name="claims">List of claims to be compiled.</param>
         /// <param name="interchangeControlNumber"></param>
         /// <param name="environment"></param>
         /// <param name="batchSubmitterId"></param>
-        public string Generate837ClaimBatch(IEnumerable<ClaimData> claims, 
-            string interchangeControlNumber, 
-            string environment, 
-            string batchSubmitterId, 
+        public string Generate837ClaimBatch(IEnumerable<ClaimData> claims,
+            string interchangeControlNumber,
+            string batchSubmitterId,
             string file_location, 
             ClaimType claimType)
         {
+            //EdiDocument ediDocument;
 
             this.claimType = claimType;
 
@@ -104,7 +134,6 @@ namespace LabBilling.Core
                     break;
             }
 
-
             ediDocument.Segments.Add(new EdiSegment("ISA")
             {
                 [01] = this.AuthorizationInformationQualifier, //authorization information qualifier
@@ -121,7 +150,7 @@ namespace LabBilling.Core
                 [12] = this.InterchangeControlVersionNo, // interchange control version number
                 [13] = interchangeControlNumber, // 1.ToString("d9");
                 [14] = this.RequestInterchangeAcknowledgment ? "1" : "0", // acknowledgement requested
-                [15] = environment, //  interchange usage indicator "P";
+                [15] = ProductionEnvironment, //  interchange usage indicator "P";
                 [16] = ediDocument.Options.ComponentSeparator.ToString(), // component element separator
             });
 
@@ -140,7 +169,7 @@ namespace LabBilling.Core
             int transactionSets = 0;
             foreach (ClaimData claim in claims)
             {
-                //ediDocument.Segments.AddRange(Build837Claim(claim, versionReleaseSpecifierCode));
+                Build837Claim(claim);
                 transactionSets++;
             }
             if(transactionSets != ediDocument.TransactionSets.Count)
@@ -174,17 +203,8 @@ namespace LabBilling.Core
             return ediDocument.ToString();
         }
 
-        public string Build837Claim(ClaimData claim,
-            string interchangeControlNumber,
-            string environment,
-            string batchSubmitterId)
+        private string Build837Claim(ClaimData claim)
         {
-
-            EdiDocument document = new EdiDocument();
-            ediDocument.Options.SegmentTerminator = this.SegmentTerminator;
-            ediDocument.Options.ElementSeparator = this.ElementTerminator;
-            ediDocument.Options.ComponentSeparator = this.ComponentSeparator;
-            ediDocument.Options.RepetitionSeparator = this.RepetitionSeparator;
 
             switch (claim.ClaimType)
             {
@@ -199,43 +219,10 @@ namespace LabBilling.Core
                     
             }
 
-            ediDocument.Segments.Add(new EdiSegment("ISA")
-            {
-                [01] = this.AuthorizationInformationQualifier, //authorization information qualifier
-                [02] = this.AuthorizationInformation.PadRight(10), // authorization information
-                [03] = this.SecurityInformationQualifier, // security information qualifier
-                [04] = this.SecurityInformation.PadRight(10), // security information
-                [05] = this.InterchangeIdQualifier, // interchange id qualifier
-                [06] = batchSubmitterId.PadRight(15), //sender id
-                [07] = this.InterchangeIdQualifier, //interchnage id qualifier
-                [08] = this.ReceiverId.PadRight(15), //receiver id
-                [09] = EdiValue.Date(6, DateTime.Now), // interchange date
-                [10] = EdiValue.Time(4, DateTime.Now), //interchange time
-                [11] = ediDocument.Options.RepetitionSeparator.ToString(), // repetition separator
-                [12] = this.InterchangeControlVersionNo, // interchange control version number
-                [13] = interchangeControlNumber, // 1.ToString("d9");
-                [14] = this.RequestInterchangeAcknowledgment ? "1" : "0", // acknowledgement requested
-                [15] = environment, //  interchange usage indicator "P";
-                [16] = ediDocument.Options.ComponentSeparator.ToString(), // component element separator
-            });
-
-            ediDocument.Segments.Add(new EdiSegment("GS")
-            {
-                [01] = this.FunctionalIdentifierCode, //Functional identifier code
-                [02] = batchSubmitterId.PadRight(10), // application sender code "SENDER";
-                [03] = this.ReceiverId, // application receiver code
-                [04] = EdiValue.Date(8, DateTime.Now), // date
-                [05] = EdiValue.Time(4, DateTime.Now), //time 
-                [06] = interchangeControlNumber, // group control number 
-                [07] = this.ResponsibleAgencyCode, //responsible agency code
-                [08] = this.VersionReleaseSpecifierCode // version / release/ industry identifier code
-            });
-
-
             int hlCount = 1;
             int segmentCount = 0;
             // ST - transaction set header
-            document.Segments.Add(new EdiSegment("ST")
+            ediDocument.Segments.Add(new EdiSegment("ST")
             {
                 [01] = transactionSetIdentifierCode,
                 [02] = claim.claimAccount.AccountNo, // transaction set control number - must match SE02
@@ -244,7 +231,7 @@ namespace LabBilling.Core
             segmentCount++;
 
             // BHT - beginning of hierarchical level
-            document.Segments.Add(new EdiSegment("BHT")
+            ediDocument.Segments.Add(new EdiSegment("BHT")
             {
                 [01] = "0019", //hierarchical structure code
                 [02] = claim.TransactionSetPurpose, //transaction set purpose 00 - original; 18 - reissue
@@ -257,11 +244,11 @@ namespace LabBilling.Core
 
             //Loop 1000A - Submitter Name
             // NM1 - Submitter Name
-            document.Segments.Add(BuildNM1(EntityIdentifier.Submitter, claim));
+            ediDocument.Segments.Add(BuildNM1(EntityIdentifier.Submitter, claim));
             segmentCount++;
 
             // PER - submitter EDI Contact information
-            document.Segments.Add(new EdiSegment("PER")
+            ediDocument.Segments.Add(new EdiSegment("PER")
             {
                 [01] = "IC",
                 [02] = claim.SubmitterContactName, //free form name
@@ -274,12 +261,12 @@ namespace LabBilling.Core
 
             //Loop 1000B - Receiver Name
             // NM1 - Receiver Name
-            document.Segments.Add(BuildNM1(EntityIdentifier.Receiver, claim));
+            ediDocument.Segments.Add(BuildNM1(EntityIdentifier.Receiver, claim));
             segmentCount++;
 
             // Loop 2000A - Billing Provider Hierarchical level
             // HL1 - Billing Provider Hierarchical Level
-            document.Segments.Add(new EdiSegment("HL")
+            ediDocument.Segments.Add(new EdiSegment("HL")
             {
                 [01] = hlCount++.ToString(),
                 [03] = "20",
@@ -287,7 +274,7 @@ namespace LabBilling.Core
             });
             segmentCount++;
             // PRV - Billing Provider Specialty Information
-            document.Segments.Add(new EdiSegment("PRV")
+            ediDocument.Segments.Add(new EdiSegment("PRV")
             {
                 [01] = "BI",
                 [02] = "PXC",
@@ -299,19 +286,19 @@ namespace LabBilling.Core
             // Loop 2010A 
             // Loop 2010AA - Billing Provider Name
             // --NM1 - Billing Provider Name
-            document.Segments.Add(BuildNM1(EntityIdentifier.BillingProvider, claim));
+            ediDocument.Segments.Add(BuildNM1(EntityIdentifier.BillingProvider, claim));
             segmentCount++;
             // --N3 - Billing Provider Address
             if (!string.IsNullOrEmpty(claim.BillingProviderAddress))
             {
-                document.Segments.Add(new EdiSegment("N3")
+                ediDocument.Segments.Add(new EdiSegment("N3")
                 {
                     [01] = claim.BillingProviderAddress
                 });
                 segmentCount++;
             }
             // --N4 - Billing Provider City St Zip
-            document.Segments.Add(new EdiSegment("N4")
+            ediDocument.Segments.Add(new EdiSegment("N4")
             {
                 [01] = claim.BillingProviderCity,
                 [02] = claim.BillingProviderState,
@@ -320,7 +307,7 @@ namespace LabBilling.Core
             });
             segmentCount++;
             // --REF - Billing Provider Tax Identification
-            document.Segments.Add(new EdiSegment("REF")
+            ediDocument.Segments.Add(new EdiSegment("REF")
             {
                 [01] = "EI",
                 [02] = claim.SubmitterId
@@ -336,7 +323,7 @@ namespace LabBilling.Core
             segmentCount++;
             */
             // --PER - Billing Provider Contact Information
-            document.Segments.Add(new EdiSegment("PER")
+            ediDocument.Segments.Add(new EdiSegment("PER")
             {
                 [01] = "IC",
                 [02] = claim.BillingProviderContactName,
@@ -349,19 +336,19 @@ namespace LabBilling.Core
 
             // Loop 2010AB - Pay to Address Name
             // --NM1 - Pay to Address Name
-            document.Segments.Add(BuildNM1(EntityIdentifier.PayToProvider, claim));
+            ediDocument.Segments.Add(BuildNM1(EntityIdentifier.PayToProvider, claim));
             segmentCount++;
             // --N3 - Pay to Address ADDRESS
             if (!string.IsNullOrEmpty(claim.PayToAddress))
             {
-                document.Segments.Add(new EdiSegment("N3")
+                ediDocument.Segments.Add(new EdiSegment("N3")
                 {
                     [01] = claim.PayToAddress
                 });
                 segmentCount++;
             }
             // --N4 - Pay to Address City State Zip
-            document.Segments.Add(new EdiSegment("N4")
+            ediDocument.Segments.Add(new EdiSegment("N4")
             {
                 [01] = claim.PayToCity,
                 [02] = claim.PayToState,
@@ -377,19 +364,19 @@ namespace LabBilling.Core
             if (claim.PayToPlanName != null && claim.PayToPlanName != String.Empty && claim.TransactionTypeCode == "31")
             {
                 // - NM1 - Pay to Plan Name
-                document.Segments.Add(BuildNM1(EntityIdentifier.Payee, claim));
+                ediDocument.Segments.Add(BuildNM1(EntityIdentifier.Payee, claim));
                 segmentCount++;
                 // - N3 - Pay to Plan address
                 if (!string.IsNullOrEmpty(claim.PayToPlanAddress))
                 {
-                    document.Segments.Add(new EdiSegment("N3")
+                    ediDocument.Segments.Add(new EdiSegment("N3")
                     {
                         [01] = claim.PayToPlanAddress
                     });
                     segmentCount++;
                 }
                 // - N4 - Pay to Plan City State Zip
-                document.Segments.Add(new EdiSegment("N4")
+                ediDocument.Segments.Add(new EdiSegment("N4")
                 {
                     [01] = claim.PayToPlanCity,
                     [02] = claim.PaytoPlanState,
@@ -398,14 +385,14 @@ namespace LabBilling.Core
                 });
                 segmentCount++;
                 // - REF - Pay to Plan Secondary Information 
-                document.Segments.Add(new EdiSegment("REF")
+                ediDocument.Segments.Add(new EdiSegment("REF")
                 {
                     [01] = "2U",
                     [02] = claim.PayToPlanSecondaryIdentifier
                 });
                 segmentCount++;
                 // - REF - Pay to Plan Tax Identification Number
-                document.Segments.Add(new EdiSegment("REF")
+                ediDocument.Segments.Add(new EdiSegment("REF")
                 {
                     [01] = "EI",
                     [02] = claim.PayToPlanTaxId
@@ -418,7 +405,7 @@ namespace LabBilling.Core
             foreach (ClaimSubscriber subscriber in claim.Subscribers)
             {
                 // --HL - Subscriber Hierarchical Level
-                document.Segments.Add(new EdiSegment("HL")
+                ediDocument.Segments.Add(new EdiSegment("HL")
                 {
                     [01] = hlCount++.ToString(),
                     [02] = "1",
@@ -427,7 +414,7 @@ namespace LabBilling.Core
                 });
                 segmentCount++;
                 // --SBR - Subscriber Information
-                document.Segments.Add(new EdiSegment("SBR")
+                ediDocument.Segments.Add(new EdiSegment("SBR")
                 {
                     [01] = subscriber.PayerResponsibilitySequenceCode, //payer responsibility
                     [02] = subscriber.IndividualRelationshipCode, //individual relationship code
@@ -441,25 +428,15 @@ namespace LabBilling.Core
                 });
                 segmentCount++;
 
-                // - PAT - Patient Information - probably not needed in our case
-                //ediDocument.Segments.Add(new EdiSegment("PAT")
-                //{
-                //    [05] = "", //deceased date time period format qualifier
-                //    [06] = "", //deceased date
-                //    [07] = "", //unit or basis for measurement
-                //    [08] = "", //weight
-                //    [09] = "", //condition or response code
-                //});
-
                 // Loop 2010B
                 // Loop 2010BA - Subscriber Name
                 // --NM1 - Subscriber Name
-                document.Segments.Add(BuildNM1(EntityIdentifier.InsuredOrSubscriber, subscriber));
+                ediDocument.Segments.Add(BuildNM1(EntityIdentifier.InsuredOrSubscriber, subscriber));
                 segmentCount++;
                 // --N3 - Subscriber Address
                 if (!string.IsNullOrEmpty(subscriber.Address) || !string.IsNullOrEmpty(subscriber.Address2))
                 {
-                    document.Segments.Add(new EdiSegment("N3")
+                    ediDocument.Segments.Add(new EdiSegment("N3")
                     {
                         [01] = subscriber.Address,
                         [02] = subscriber.Address2
@@ -467,7 +444,7 @@ namespace LabBilling.Core
                     segmentCount++;
                 }
                 // --N4 - Subscriber City State Zip
-                document.Segments.Add(new EdiSegment("N4")
+                ediDocument.Segments.Add(new EdiSegment("N4")
                 {
                     [01] = subscriber.City,
                     [02] = subscriber.State,
@@ -484,7 +461,7 @@ namespace LabBilling.Core
                 //date of birth must be 8 characters long
                 if (sbsDob.Length == 8)
                 {
-                    document.Segments.Add(new EdiSegment("DMG")
+                    ediDocument.Segments.Add(new EdiSegment("DMG")
                     {
                         [01] = "D8",
                         [02] = sbsDob,
@@ -495,7 +472,7 @@ namespace LabBilling.Core
                 // --REF - Subscriber Secondary Identification - only include if SSN has a value
                 if (subscriber.SocSecNumber != null && subscriber.SocSecNumber.Length > 0)
                 {
-                    document.Segments.Add(new EdiSegment("REF")
+                    ediDocument.Segments.Add(new EdiSegment("REF")
                     {
                         [01] = "SY",
                         [02] = subscriber.SocSecNumber
@@ -507,12 +484,12 @@ namespace LabBilling.Core
 
                 // Loop 2010BB Payer Name
                 // -- NM1 - Payer Name
-                document.Segments.Add(BuildNM1(EntityIdentifier.Payer, subscriber));
+                ediDocument.Segments.Add(BuildNM1(EntityIdentifier.Payer, subscriber));
                 segmentCount++;
                 // -- N3 - Payer Address
                 if (!string.IsNullOrEmpty(subscriber.PayerAddress) || !string.IsNullOrEmpty(subscriber.PayerAddress2))
                 {
-                    document.Segments.Add(new EdiSegment("N3")
+                    ediDocument.Segments.Add(new EdiSegment("N3")
                     {
                         [01] = subscriber.PayerAddress,
                         [02] = subscriber.PayerAddress2
@@ -523,7 +500,7 @@ namespace LabBilling.Core
                 if (!string.IsNullOrEmpty(subscriber.PayerCity))
                 {
                     //payer city is a required field if populating N4 segment
-                    document.Segments.Add(new EdiSegment("N4")
+                    ediDocument.Segments.Add(new EdiSegment("N4")
                     {
                         [01] = subscriber.PayerCity,
                         [02] = subscriber.PayerState,
@@ -541,7 +518,7 @@ namespace LabBilling.Core
                     if (!invalidQualifiers.Contains(subscriber.PayerIdentificationQualifier)
                         && claimType == ClaimType.Professional)
                     {
-                        document.Segments.Add(new EdiSegment("REF")
+                        ediDocument.Segments.Add(new EdiSegment("REF")
                         {
                             [01] = subscriber.PayerIdentificationQualifier,
                             [02] = subscriber.BillingProviderSecondaryIdentifier
@@ -566,6 +543,68 @@ namespace LabBilling.Core
             //Loop 2000C - Patient Hierarchical Level when the patient is not the subscriber
             // Note: Loops 2000c & 2010CA are not sent when the patient is the subscriber
             //Loop 2010CA - Patient Name
+            if (claim.claimAccount.Pat.GuarRelationToPatient != "01")
+            {
+                // - PAT - Patient Information
+                string indRelationCode;
+                switch (claim.claimAccount.InsurancePrimary.Relation)
+                {
+                    case "01":
+                        indRelationCode = "18";
+                        break;
+                    case "02":
+                        indRelationCode = "01";
+                        break;
+                    case "03":
+                        indRelationCode = "19";
+                        break;
+                    case "04":
+                        indRelationCode = "G8";
+                        break;
+                    case "09":
+                        indRelationCode = "21";
+                        break;
+                    default:
+                        indRelationCode = "18";
+                        break;
+                }
+
+                ediDocument.Segments.Add(new EdiSegment("PAT")
+                {
+                    [01] = indRelationCode
+                });
+                segmentCount++;
+
+                ediDocument.Segments.Add(BuildNM1(EntityIdentifier.Patient, claim));
+                segmentCount++;
+
+                ediDocument.Segments.Add(new EdiSegment("N3")
+                {
+                    [01] = claim.claimAccount.Pat.Address1,
+                    [02] = claim.claimAccount.Pat.Address2
+                });
+                segmentCount++;
+
+                ediDocument.Segments.Add(new EdiSegment("N4")
+                {
+                    [01] = claim.claimAccount.Pat.City,
+                    [02] = claim.claimAccount.Pat.State,
+                    [03] = claim.claimAccount.Pat.ZipCode
+                });
+                segmentCount++;
+                string patDob;
+                if (claim.claimAccount.Pat.BirthDate != null)
+                    patDob = EdiValue.Date(8, (DateTime)claim.claimAccount.Pat.BirthDate);
+                else
+                    patDob = "";
+                ediDocument.Segments.Add(new EdiSegment("DMG")
+                {
+                    [01] = "D8",
+                    [02] = patDob,
+                    [03] = claim.claimAccount.Pat.Sex
+                });
+                segmentCount++;
+            }
 
             // Loop 2300
             // --CLM - Claim Information
@@ -574,7 +613,7 @@ namespace LabBilling.Core
             clm.Element(2, new EdiElement(claim.TotalChargeAmount));
             var clm05 = new EdiElement();
             clm05[01] = claim.FacilityCode;
-            clm05[02] = "B";
+            clm05[02] = claim.FacilityCodeQualifier;
             clm05[03] = claim.ClaimFrequency;
             clm.Element(5, clm05);
 
@@ -595,62 +634,106 @@ namespace LabBilling.Core
             clm.Element(12, new EdiElement(claim.SpecialProgramIndicator));
             clm.Element(20, new EdiElement(claim.DelayReasonCode));
 
-            document.Segments.Add(clm);
+            ediDocument.Segments.Add(clm);
             segmentCount++;
-            // --DTP - Date - Onset of Current Symptoms
-            if (claim.OnsetOfCurrentIllness != null)
+            if (claimType == ClaimType.Professional)
             {
-                document.Segments.Add(new EdiSegment("DTP")
+                // --DTP - Date - Onset of Current Symptoms--professional claim
+                if (claim.OnsetOfCurrentIllness != null)
                 {
-                    [01] = "431",
-                    [02] = "D8",
-                    [03] = EdiValue.Date(8, claim.OnsetOfCurrentIllness ?? DateTime.MinValue)
+                    ediDocument.Segments.Add(new EdiSegment("DTP")
+                    {
+                        [01] = "431",
+                        [02] = "D8",
+                        [03] = EdiValue.Date(8, claim.OnsetOfCurrentIllness ?? DateTime.MinValue)
+                    });
+                    segmentCount++;
+                }
+                // --DTP - Date - Initial Treatment Date
+                if (claim.InitialTreatmentDate != null)
+                {
+                    ediDocument.Segments.Add(new EdiSegment("DTP")
+                    {
+                        [01] = "454",
+                        [02] = "D8",
+                        [03] = EdiValue.Date(8, claim.InitialTreatmentDate ?? DateTime.MinValue)
+                    });
+                    segmentCount++;
+                }
+                // --DTP - Date - Last Seen Date
+                // --DTP - Date - Acute Manifestation
+                // --DTP - Date - Accident
+                if (claim.DateOfAccident != null)
+                {
+                    ediDocument.Segments.Add(new EdiSegment("DTP")
+                    {
+                        [01] = "439",
+                        [02] = "D8",
+                        [03] = EdiValue.Date(8, claim.DateOfAccident ?? DateTime.MinValue)
+                    });
+                    segmentCount++;
+                }
+            }
+            
+            if(claimType == ClaimType.Institutional)
+            {
+                //DTP - Discharge Hour - req'd for inpatient claims
+                //DTP - Statement Dates
+                string statementFromDate = EdiValue.Date(8, claim.StatementFromDate ?? DateTime.MinValue);
+                string statementThruDate = EdiValue.Date(8, claim.StatementThruDate ?? DateTime.MinValue);
+                ediDocument.Segments.Add(new EdiSegment("DTP")
+                {
+                    [01] = "434",
+                    [02] = "RD8",
+                    [03] = $"{statementFromDate}-{statementThruDate}"
+                });
+                segmentCount++;
+                //DTP - Admission Date/Hour - req'd for inpatient cliams
+                //DTP - Repricer received date
+                //CL1 - institutional claim code
+                ediDocument.Segments.Add(new EdiSegment("CL1")
+                {
+                    [03] = "01", //patient status code - core source 239 - hardcoding to 01 for now
+
                 });
                 segmentCount++;
             }
-            // --DTP - Date - Initial Treatment Date
-            if (claim.InitialTreatmentDate != null)
-            {
-                document.Segments.Add(new EdiSegment("DTP")
-                {
-                    [01] = "454",
-                    [02] = "D8",
-                    [03] = EdiValue.Date(8, claim.InitialTreatmentDate ?? DateTime.MinValue)
-                });
-                segmentCount++;
-            }
-            // --DTP - Date - Last Seen Date
-            // --DTP - Date - Acute Manifestation
-            // --DTP - Date - Accident
-            if (claim.DateOfAccident != null)
-            {
-                document.Segments.Add(new EdiSegment("DTP")
-                {
-                    [01] = "439",
-                    [02] = "D8",
-                    [03] = EdiValue.Date(8, claim.DateOfAccident ?? DateTime.MinValue)
-                });
-                segmentCount++;
-            }
+            
+
             // --PWK - Claim supplemental information
             // --CN1 - Contact Information
-            // --AMT - Patient Amount Paid
-            if (claim.PatientAmountPaid > 0.0)
+            // --AMT - Estimated patient responsibility - not applicable currently
+            //if (claim.PatientAmountPaid > 0.0)
+            //{
+            //    ediDocument.Segments.Add(new EdiSegment("AMT")
+            //    {
+            //        [01] = "F5",
+            //        [02] = claim.PatientAmountPaid.ToString("G")
+            //    });
+            //    segmentCount++;
+            //}
+            // --REF - several REF segments as needed
+            if (claimType == ClaimType.Professional)
             {
-                document.Segments.Add(new EdiSegment("AMT")
+                //CLIA number
+                ediDocument.Segments.Add(new EdiSegment("REF")
                 {
-                    [01] = "F5",
-                    [02] = claim.PatientAmountPaid.ToString("G")
+                    [01] = "X4",
+                    [02] = claim.CliaNumber
                 });
                 segmentCount++;
             }
-            // --REF - several REF segments as needed
-            document.Segments.Add(new EdiSegment("REF")
+            if(claimType == ClaimType.Institutional)
             {
-                [01] = "X4",
-                [02] = claim.CliaNumber
-            });
-            segmentCount++;
+                // medical record number
+                ediDocument.Segments.Add(new EdiSegment("REF")
+                {
+                    [01] = "EA",
+                    [02] = claim.claimAccount.MRN
+                });
+                segmentCount++;
+            }
+
             // --K3 - file information
             // --NTE - claim note
             // --CR1 - Ambulance Transport information
@@ -666,13 +749,13 @@ namespace LabBilling.Core
                     //per spec "ABK" is code for ICD-10, but does not pass validation
                     //using "BK" for icd9
                     var hiElement = new EdiElement();
-                    hiElement[1] = "BK";
+                    hiElement[1] = "ABK";
                     hiElement[2] = diag.Code;
 
                     hi.Element(dxCnt, hiElement);
                     dxCnt++;
                 }
-                document.Segments.Add(hi);
+                ediDocument.Segments.Add(hi);
                 segmentCount++;
             }
             if (claimType == ClaimType.Professional)
@@ -694,19 +777,30 @@ namespace LabBilling.Core
                     dxCnt++;
                 }
 
-                document.Segments.Add(hi);
+                ediDocument.Segments.Add(hi);
                 segmentCount++;
             }
+
+
             // --HI - Anesthesia related procedure
             // --HI - condition information
             // --HCP - healthcare repricing information
 
             // Loop 2310
-            // Loop 2310A - Referring Provider Name
+            // Loop 2310A - Referring Provider Name or AttendingProvider Name
+            if (claimType == ClaimType.Institutional)
+            {
+                ediDocument.Segments.Add(BuildNM1(EntityIdentifier.AttendingProvider, claim));
+                segmentCount++;
+            }
+            // Loop 2310A - Referring Provider Name or AttendingProvider Name
             // - NM1 - Referring provider name
-            document.Segments.Add(BuildNM1(EntityIdentifier.ReferringProvider, claim));
-            segmentCount++;
-            // - REF - Referring provider secondary information
+            if (claimType == ClaimType.Professional)
+            {
+                ediDocument.Segments.Add(BuildNM1(EntityIdentifier.ReferringProvider, claim));
+                segmentCount++;
+                // - REF - Referring provider secondary information
+            }
 
             // Loop 2310B - Rendering provider name
             // - NM1 - rendering provider name
@@ -774,7 +868,7 @@ namespace LabBilling.Core
             foreach (ClaimLine line in claim.ClaimLines)
             {
                 // - LX - service line number
-                document.Segments.Add(new EdiSegment("LX")
+                ediDocument.Segments.Add(new EdiSegment("LX")
                 {
                     [01] = lineCnt++.ToString()
                 });
@@ -784,7 +878,7 @@ namespace LabBilling.Core
                 {
                     case ClaimType.Institutional:
                         var sv2 = new EdiSegment("SV2");
-                        sv2[1] = ""; //revenue code
+                        sv2[1] = line.RevenueCode; //revenue code
 
                         var sv2_2 = new EdiElement();
                         sv2_2[1] = "HC"; //HC for cpt4/hcpcs codeset
@@ -800,7 +894,7 @@ namespace LabBilling.Core
                         sv2[5] = line.Quantity.ToString();
                         sv2[7] = ""; //non-covered amount - if needed
 
-                        document.Segments.Add(sv2);
+                        ediDocument.Segments.Add(sv2);
                         segmentCount++;
                         break;
                     case ClaimType.Professional:
@@ -829,7 +923,7 @@ namespace LabBilling.Core
                         sv1[11] = line.EPSDTIndicator;
                         sv1[12] = line.FamilyPlanningIndicator;
 
-                        document.Segments.Add(sv1);
+                        ediDocument.Segments.Add(sv1);
                         segmentCount++;
                         break;
                     default:
@@ -838,7 +932,7 @@ namespace LabBilling.Core
 
                 // - PWK - Line supplemental information
                 // - DTP - date - service line
-                document.Segments.Add(new EdiSegment("DTP")
+                ediDocument.Segments.Add(new EdiSegment("DTP")
                 {
                     [01] = "472",
                     [02] = "D8",
@@ -854,7 +948,7 @@ namespace LabBilling.Core
                 // - REF - adjusted repriced line item reference number
                 // - REF - prior authorization
                 // - REF - line item control number
-                document.Segments.Add(new EdiSegment("REF")
+                ediDocument.Segments.Add(new EdiSegment("REF")
                 {
                     [01] = "6R",
                     [02] = line.ControlNumber
@@ -912,31 +1006,28 @@ namespace LabBilling.Core
 
             // SE - Transaction Set Trailer
             segmentCount++;
-            if (segmentCount != document.Segments.Count + 1)
-            {
-                throw new ApplicationException("Segment count does not match x12 structure.");
-            }
-            document.Segments.Add(new EdiSegment("SE")
+
+            ediDocument.Segments.Add(new EdiSegment("SE")
             {
                 [01] = segmentCount.ToString(),
                 [02] = claim.claimAccount.AccountNo
             });
 
-            // Footer
-            // GE
-            ediDocument.Segments.Add(new EdiSegment("GE")
-            {
-                [01] = ediDocument.TransactionSets.Count.ToString(), //number of transaction sets included
-                [02] = interchangeControlNumber, //group control number
-            });
-            // IEA
-            ediDocument.Segments.Add(new EdiSegment("IEA")
-            {
-                [01] = "1", // number of included functional groups
-                [02] = interchangeControlNumber
-            });
+            //// Footer
+            //// GE
+            //document.Segments.Add(new EdiSegment("GE")
+            //{
+            //    [01] = document.TransactionSets.Count.ToString(), //number of transaction sets included
+            //    [02] = interchangeControlNumber, //group control number
+            //});
+            //// IEA
+            //document.Segments.Add(new EdiSegment("IEA")
+            //{
+            //    [01] = "1", // number of included functional groups
+            //    [02] = interchangeControlNumber
+            //});
 
-            return document.ToString();
+            return ediDocument.ToString();
         }
 
         private EdiSegment BuildNM1(EntityIdentifier entityIdentifier, ClaimSubscriber subscriber)
@@ -977,6 +1068,16 @@ namespace LabBilling.Core
             
             switch(entityIdentifier)
             {
+                case EntityIdentifier.AttendingProvider:
+                    edi[01] = EntityIdentifierCode[EntityIdentifier.AttendingProvider];
+                    edi[02] = "1";
+                    edi[03] = claim.AttendingProviderLastName;
+                    edi[04] = claim.AttendingProviderFirstName;
+                    edi[05] = claim.AttendingProviderMiddleName;
+                    edi[06] = claim.AttendingProviderSuffix;
+                    edi[08] = "XX";
+                    edi[09] = claim.AttendingProviderNPI;
+                    break;
                 case EntityIdentifier.Submitter:
                     edi[01] = EntityIdentifierCode[EntityIdentifier.Submitter]; //41 = submitter
                     edi[02] = "2"; // 2 = non-person entity
@@ -1012,6 +1113,14 @@ namespace LabBilling.Core
                 case EntityIdentifier.Person:
                     edi[01] = EntityIdentifierCode[EntityIdentifier.Person];
                     break;
+                case EntityIdentifier.Patient:
+                    edi[01] = EntityIdentifierCode[EntityIdentifier.Patient];
+                    edi[02] = "1";
+                    edi[03] = claim.claimAccount.PatLastName;
+                    edi[04] = claim.claimAccount.PatFirstName;
+                    edi[05] = claim.claimAccount.PatMiddleName;
+                    edi[07] = claim.claimAccount.PatNameSuffix;
+                    break;
                 case EntityIdentifier.ReferringProvider:
                     edi[01] = EntityIdentifierCode[EntityIdentifier.ReferringProvider];
                     edi[02] = "1";
@@ -1040,7 +1149,9 @@ namespace LabBilling.Core
             InsuredOrSubscriber,
             Payer,
             Person,
-            ReferringProvider
+            Patient,
+            ReferringProvider,
+            AttendingProvider
         }
 
         readonly Dictionary<EntityIdentifier, string> EntityIdentifierCode = new Dictionary<EntityIdentifier, string>()
@@ -1053,7 +1164,9 @@ namespace LabBilling.Core
             { EntityIdentifier.InsuredOrSubscriber, "IL" },
             { EntityIdentifier.Payer, "PR" },
             { EntityIdentifier.Person, "1" },
-            { EntityIdentifier.ReferringProvider, "DN" }
+            { EntityIdentifier.ReferringProvider, "DN" },
+            { EntityIdentifier.AttendingProvider, "71" },
+            { EntityIdentifier.Patient, "QC" }
         };
 
         enum DelayReason
