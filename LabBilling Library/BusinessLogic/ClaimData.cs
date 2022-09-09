@@ -58,7 +58,7 @@ namespace LabBilling.Core
         public string PayToPlanTaxId { get; set; }
 
         public string ClaimIdentifier { get; set; }
-        public string TotalChargeAmount { get; set; }
+        public double TotalChargeAmount { get; set; }
         public string FacilityCode { get; set; }
         public string FacilityCodeQualifier { get; set; }
         public string ClaimFrequency { get; set; }
@@ -156,6 +156,7 @@ namespace LabBilling.Core
         public string ProcedureModifier2 { get; set; }
         public string ProcedureModifier3 { get; set; }
         public string RevenueCode { get; set; }
+        public string RevenueCodeDescription { get; set; }
         public string Description { get; set; }
         public double Amount { get; set; }
         public int Quantity { get; set; }

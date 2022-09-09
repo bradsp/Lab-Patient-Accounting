@@ -23,13 +23,19 @@ namespace LabBilling.Core.DataAccess
 
         public IEnumerable<ChrgDetail> GetByCharge(int chrg_num)
         {
+            RevenueCodeRepository revenueCodeRepository = new RevenueCodeRepository(dbConnection);
             var sql = PetaPoco.Sql.Builder
                 .From($"{_tableName}")
                 .Where($"{this.GetRealColumn(typeof(ChrgDetail), nameof(ChrgDetail.ChrgNo))} = @0", chrg_num);
 
-            var result = dbConnection.Fetch<ChrgDetail>(sql);
+            var results = dbConnection.Fetch<ChrgDetail>(sql);
 
-            return result;
+            foreach(var result in results)
+            {
+                result.RevenueCodeDetail = revenueCodeRepository.GetByCode(result.RevenueCode);
+            }
+
+            return results;
         }
     }
 }

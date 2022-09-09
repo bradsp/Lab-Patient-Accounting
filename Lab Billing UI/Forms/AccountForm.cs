@@ -338,6 +338,9 @@ namespace LabBilling.Forms
                 sd.Add(new SummaryData(currentAccount.Pat.Dx7, currentAccount.Pat.Dx7Desc, SummaryData.GroupType.Diagnoses, 19, 1));
                 sd.Add(new SummaryData(currentAccount.Pat.Dx8, currentAccount.Pat.Dx8Desc, SummaryData.GroupType.Diagnoses, 20, 1));
                 sd.Add(new SummaryData(currentAccount.Pat.Dx9, currentAccount.Pat.Dx9Desc, SummaryData.GroupType.Diagnoses, 21, 1));
+                sd.Add(new SummaryData("Ordering Provider",
+                    $"{currentAccount.Pat.Physician.LastName},{currentAccount.Pat.Physician.FirstName}",
+                    SummaryData.GroupType.Demographics, 23, 1));
 
                 foreach (Ins ins in currentAccount.Insurances)
                 {
@@ -1882,10 +1885,10 @@ namespace LabBilling.Forms
                     throw new ArgumentOutOfRangeException("ClaimType is not defined.");
             }
 
-            string x12Text = billing837.GenerateSingleClaim(claim, fileLocation);
+            //string x12Text = billing837.GenerateSingleClaim(claim, fileLocation);
 
             PrintClaimForm printClaim = new PrintClaimForm(Helper.ConnVal);
-            printClaim.PrintAlt(x12Text); //, false, true);
+            printClaim.PrintAlt(claim); //, false, true);
 
         }
     }

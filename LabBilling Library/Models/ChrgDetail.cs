@@ -52,5 +52,8 @@ namespace LabBilling.Core.Models
         [Ignore]
         public Guid rowguid { get; set; }
 
+        [Ignore]
+        public RevenueCode RevenueCodeDetail { get; set; }
+
     }
 }

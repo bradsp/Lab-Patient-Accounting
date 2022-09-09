@@ -610,7 +610,7 @@ namespace LabBilling.Core
             // --CLM - Claim Information
             var clm = new EdiSegment("CLM");
             clm.Element(1, new EdiElement(claim.ClaimIdentifier));
-            clm.Element(2, new EdiElement(claim.TotalChargeAmount));
+            clm.Element(2, new EdiElement(claim.TotalChargeAmount.ToString("G")));
             var clm05 = new EdiElement();
             clm05[01] = claim.FacilityCode;
             clm05[02] = claim.FacilityCodeQualifier;

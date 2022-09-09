@@ -544,7 +544,7 @@ namespace LabBilling.Core.BusinessLogic
 
                 //claim information
                 claimData.ClaimIdentifier = account;
-                claimData.TotalChargeAmount = claimData.claimAccount.TotalCharges.ToString();
+                claimData.TotalChargeAmount = claimData.claimAccount.TotalCharges;
                 if (claimData.ClaimType == ClaimType.Professional)
                 {
                     claimData.FacilityCode = "81";
@@ -705,6 +705,7 @@ namespace LabBilling.Core.BusinessLogic
                         claimLine.ProcedureModifier2 = detail.Modifer2;
                         claimLine.ProcedureModifier3 = "";
                         claimLine.Description = chrg.Cdm.Description;
+                        claimLine.RevenueCodeDescription = detail.RevenueCodeDetail.Description;
                         claimLine.Amount = detail.Amount;
                         claimLine.Quantity = chrg.Quantity;
                         string[] dxptr = detail.DiagCodePointer.Split(':');

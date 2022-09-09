@@ -65,10 +65,15 @@ namespace LabBilling.Core.DataAccess
             var result = dbConnection.Fetch<Chrg, ChrgDetail, Chrg>(new ChrgChrgDetailRelator().MapIt, sql);
 
             CdmRepository cdmRepository = new CdmRepository(dbConnection);
+            RevenueCodeRepository revenueCodeRepository = new RevenueCodeRepository(dbConnection);
             
             foreach(Chrg chrg in result)
             {
                 chrg.Cdm = cdmRepository.GetCdm(chrg.CDMCode);
+                foreach(ChrgDetail detail in chrg.ChrgDetails)
+                {
+                    detail.RevenueCodeDetail = revenueCodeRepository.GetByCode(detail.RevenueCode);
+                }
             }
 
             return result;
