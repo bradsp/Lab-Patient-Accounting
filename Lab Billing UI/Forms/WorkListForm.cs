@@ -19,7 +19,7 @@ namespace LabBilling.Forms
 {
     public partial class WorkListForm : Form
     {
- 
+
         public WorkListForm(string connValue)
         {
             InitializeComponent();
@@ -72,7 +72,7 @@ namespace LabBilling.Forms
             workqueues.Enabled = false;
             CancelValidationButton.Enabled = true;
             CancelValidationButton.Visible = true;
-            
+
             int cnt = accounts.Count;
             progressBar.Minimum = 0;
             progressBar.Maximum = cnt;
@@ -109,7 +109,7 @@ namespace LabBilling.Forms
         {
             if (!string.IsNullOrEmpty(accountNo))
             {
-                int rowIndex =  -1;
+                int rowIndex = -1;
                 bool tempAllowUserToAddRows = accountGrid.AllowUserToAddRows;
                 accountGrid.AllowUserToAddRows = false; // Turn off or .Value below will throw null exception
                 DataGridViewRow row = accountGrid.Rows
@@ -120,7 +120,7 @@ namespace LabBilling.Forms
                 accountGrid.AllowUserToAddRows = tempAllowUserToAddRows;
 
                 Account account;
-                account =  accountRepository.GetByAccount(accountNo);
+                account = accountRepository.GetByAccount(accountNo);
                 if (!accountRepository.Validate(ref account))
                 {
                     //account has validation errors - update grid
@@ -153,8 +153,8 @@ namespace LabBilling.Forms
                         .Where(r => r.Cells["Account"].Value.ToString().Equals(accountNo))
                         .First();
                     rowIndex = row.Index;
-                    if(row.Index > (accountGrid.FirstDisplayedScrollingRowIndex + accountGrid.DisplayedRowCount(false)-2))
-                        accountGrid.FirstDisplayedScrollingRowIndex = row.Index-5;
+                    if (row.Index > (accountGrid.FirstDisplayedScrollingRowIndex + accountGrid.DisplayedRowCount(false) - 2))
+                        accountGrid.FirstDisplayedScrollingRowIndex = row.Index - 5;
                     return rowIndex;
                 });
                 try
@@ -181,7 +181,7 @@ namespace LabBilling.Forms
                         accountGrid[nameof(AccountSearch.Status), rowIndex].Style.BackColor = Color.LightGreen;
                     }
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     Log.Instance.Error($"Error validating account {accountNo} - {ex.Message}");
                     accountGrid[nameof(AccountSearch.ValidationStatus), rowIndex].Value = "Error validating account. Notify support.";
@@ -206,7 +206,7 @@ namespace LabBilling.Forms
             {
                 if (!accountRepository.Validate(ref account))
                 {
-                    return (false, account.AccountValidationStatus.validation_text, 
+                    return (false, account.AccountValidationStatus.validation_text,
                         account.BillForm ?? "UNDEFINED");
                 }
                 else
@@ -214,7 +214,7 @@ namespace LabBilling.Forms
                     return (true, string.Empty, account.BillForm ?? "UNDEFINED");
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return (false, $"Exception in validation - {ex.Message}", String.Empty);
             }
@@ -253,7 +253,7 @@ namespace LabBilling.Forms
         {
             if (tasksRunning)
             {
-                if(MessageBox.Show("Validation process is running. Do you want to abort?", "Abort Validation?", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
+                if (MessageBox.Show("Validation process is running. Do you want to abort?", "Abort Validation?", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
                     == DialogResult.Yes)
                 {
                     //code to abort process
@@ -274,8 +274,10 @@ namespace LabBilling.Forms
             workqueues.Enabled = false;
             ValidateButton.Enabled = false;
 
+            Cursor.Current = Cursors.WaitCursor;
+
             DateTime.TryParse(systemParametersRepository.GetByKey("ssi_bill_thru_date"), out DateTime thruDate);
-            (string propertyName, AccountSearchRepository.operation oper, string searchText)[] parameters = 
+            (string propertyName, AccountSearchRepository.operation oper, string searchText)[] parameters =
             {
                 (nameof(AccountSearch.ServiceDate), AccountSearchRepository.operation.LessThanOrEqual, thruDate.ToString()),
                 (nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "PAID_OUT"),
@@ -345,31 +347,39 @@ namespace LabBilling.Forms
 
             if (accounts == null || accounts.Count == 0)
             {
-                //MessageBox.Show("No records returned.", "Alert", MessageBoxButtons.OK, MessageBoxIcon.Error);
-
                 accounts.Add(new AccountSearch()
                 {
                     Name = "No records found."
                 });
             }
-            
-            accountGrid.DataSource = accounts;
-            accountGrid.ForeColor = Color.Black;
-            accountGrid.Columns[nameof(AccountSearch.mod_date)].Visible = false;
-            accountGrid.Columns[nameof(AccountSearch.mod_host)].Visible = false;
-            accountGrid.Columns[nameof(AccountSearch.mod_prg)].Visible = false;
-            accountGrid.Columns[nameof(AccountSearch.mod_user)].Visible = false;
-            accountGrid.Columns[nameof(AccountSearch.rowguid)].Visible = false;
 
-            //accountGrid.Columns.Add("ValidationErrors", "Validation Errors");
+            await Task.Run(() =>
+            {
+                accountGrid.DataSource = accounts;
 
-            accountGrid.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
-            accountGrid.Columns[nameof(AccountSearch.ValidationStatus)].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            accountGrid.Refresh();
+                accountGrid.ForeColor = Color.Black;
+                accountGrid.Columns[nameof(AccountSearch.mod_date)].Visible = false;
+                accountGrid.Columns[nameof(AccountSearch.mod_host)].Visible = false;
+                accountGrid.Columns[nameof(AccountSearch.mod_prg)].Visible = false;
+                accountGrid.Columns[nameof(AccountSearch.mod_user)].Visible = false;
+                accountGrid.Columns[nameof(AccountSearch.rowguid)].Visible = false;
+
+                //accountGrid.Columns.Add("ValidationErrors", "Validation Errors");
+
+                accountGrid.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
+                accountGrid.Columns[nameof(AccountSearch.ValidationStatus)].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+                accountGrid.Refresh();
+            });
+
+
             Cursor.Current = Cursors.Default;
 
             statusLabel1.Text = accountGrid.Rows.Count.ToString() + $" records.";
+
+
             progressBar.ProgressBarStyle = ProgressBarStyle.Continuous;
+
+            Cursor.Current = Cursors.Default;
 
             workqueues.Enabled = true;
             ValidateButton.Enabled = true;

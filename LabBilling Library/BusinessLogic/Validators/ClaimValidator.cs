@@ -20,11 +20,11 @@ namespace LabBilling.Core.BusinessLogic.Validators
                 .NotEmpty().WithMessage("{PropertyName} is empty.");
             RuleFor(a => a.PatLastName)
                 .Cascade(CascadeMode.Stop)
-                .NotEmpty().WithMessage("{PropertyName} is empty.")
+                .NotEmpty().WithMessage("Patient Last Name is empty.")
                 .Must(BeAValidName).WithMessage("{PropertyName} contains invalid characters");
             RuleFor(a => a.PatFirstName)
                 .Cascade(CascadeMode.Stop)
-                .NotEmpty().WithMessage("{PropertyName} is empty.")
+                .NotEmpty().WithMessage("Patient First Name is empty.")
                 .Must(BeAValidName).WithMessage("{PropertyName} contains invalid characters");
             RuleFor(a => a.Charges.Count)
                 .GreaterThan(0).WithMessage("No charges to bill.");
@@ -58,7 +58,7 @@ namespace LabBilling.Core.BusinessLogic.Validators
                     .When(ac => ac.Charges.Count > 0);
 
                 RuleFor(a => a.TotalPayments)
-                    .GreaterThan(0).WithMessage("Account has payments recorded.");
+                    .LessThanOrEqualTo(0).WithMessage("Account has payments recorded.");
 
                 RuleFor(c => c)
                     .Must(NotContainOnlyVenipunctureCharge)

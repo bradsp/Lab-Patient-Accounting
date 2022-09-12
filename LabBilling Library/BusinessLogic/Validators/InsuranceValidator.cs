@@ -13,17 +13,17 @@ namespace LabBilling.Core.BusinessLogic.Validators
         public InsuranceValidator()
         {
             RuleFor(a => a.HolderLastName)
-                .NotEmpty().WithMessage("Ins {PropertyName} is empty.");
+                .NotEmpty().WithMessage("Ins Holder Last Name is empty.");
             RuleFor(a => a.HolderFirstName)
-                .NotEmpty().WithMessage("Ins {PropertyName} is empty.");
+                .NotEmpty().WithMessage("Ins Holder First Name is empty.");
             RuleFor(a => a.HolderAddress)
-                .NotEmpty().WithMessage("Ins {PropertyName} is empty.");
+                .NotEmpty().WithMessage("Ins Holder Address is empty.");
             RuleFor(a => a.HolderCity)
-                .NotEmpty().WithMessage("Ins {PropertyName} is empty.");
+                .NotEmpty().WithMessage("Ins Holder City is empty.");
             RuleFor(a => a.HolderState)
-                .NotEmpty().WithMessage("Ins {PropertyName} is empty.");
+                .NotEmpty().WithMessage("Ins Holder State is empty.");
             RuleFor(a => a.HolderZip)
-                .NotEmpty().WithMessage("Ins {PropertyName} is empty.");
+                .NotEmpty().WithMessage("Ins Holder Zip is empty.");
             RuleFor(a => a)
                 .Must((a) =>
                 {
@@ -33,14 +33,14 @@ namespace LabBilling.Core.BusinessLogic.Validators
                         return true;
                 }).WithMessage("Both Policy Number and Group Number are empty.");
             RuleFor(a => a.PolicyNumber)
-                .Must(BeAValidPolicyNumber).WithMessage("{PropertyName} is not correct format.")
+                .Must(BeAValidPolicyNumber).WithMessage("Ins Policy Number is not correct format.")
                 .When(a => !string.IsNullOrEmpty(a.PolicyNumber));
             RuleFor(a => a.GroupNumber)
-                .Must(BeAValidGroupNumber).WithMessage("{PropertyName} is not a valid format.")
+                .Must(BeAValidGroupNumber).WithMessage("Ins Group Number is not a valid format.")
                 .When(a => !string.IsNullOrEmpty(a.GroupNumber));
             RuleFor(a => a.PlanName)
-                .Must(BeAValidName).WithMessage("{PropertyName} contains invalid characters.")
-                .NotEmpty().WithMessage("Ins {PropertyName} is empty.");
+                .Must(BeAValidName).WithMessage("Ins Plan Name contains invalid characters.")
+                .NotEmpty().WithMessage("Ins Plan Name is empty.");
             RuleFor(a => a.InsCompany)
                 .Must((insc) =>
                 {

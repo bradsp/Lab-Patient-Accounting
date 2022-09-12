@@ -444,11 +444,11 @@ namespace LabBilling.Forms
             Address1TextBox.BackColor = Color.White;
             Address2TextBox.Text = currentAccount.Pat.Address2;
             Address2TextBox.BackColor = Color.White;
-            CityTextBox.Text = currentAccount.Pat.City; // != null ? currentAccount.Pat.City : strCity;
+            CityTextBox.Text = currentAccount.Pat.City; 
             CityTextBox.BackColor = Color.White;
-            StateComboBox.SelectedValue = currentAccount.Pat.State; // != null ? currentAccount.Pat.State : strState;
+            StateComboBox.SelectedValue = currentAccount.Pat.State; 
             StateComboBox.BackColor = Color.White;
-            ZipcodeTextBox.Text = currentAccount.Pat.ZipCode; // != null ? currentAccount.Pat.ZipCode : strZip;
+            ZipcodeTextBox.Text = currentAccount.Pat.ZipCode; 
             ZipcodeTextBox.BackColor = Color.White;
             PhoneTextBox.Text = currentAccount.Pat.PrimaryPhone;
             PhoneTextBox.BackColor = Color.White;
@@ -477,6 +477,7 @@ namespace LabBilling.Forms
             if (currentAccount.Insurances.Count() > 0)
             {
                 InsuranceDataGrid.Rows.Clear();
+                InsuranceDataGrid.Columns.Clear();
                 DataGridViewButtonColumn deleteCol = new DataGridViewButtonColumn
                 {
                     Name = "delete",
@@ -564,7 +565,10 @@ namespace LabBilling.Forms
         {
             Log.Instance.Trace($"Entering");
 
-            currentAccount.PatFullName = string.Format("{0} {1},{2} {3}", LastNameTextBox.Text, SuffixTextBox.Text, FirstNameTextBox.Text, MiddleNameTextBox.Text);
+            currentAccount.PatFullName = $"{LastNameTextBox.Text} {SuffixTextBox.Text},{FirstNameTextBox.Text} {MiddleNameTextBox.Text}";
+            currentAccount.PatLastName = LastNameTextBox.Text;
+            currentAccount.PatFirstName = FirstNameTextBox.Text;
+            currentAccount.PatMiddleName = MiddleNameTextBox.Text;
             currentAccount.SocSecNo = SocSecNoTextBox.Text;
 
             accDB.Update(currentAccount);
@@ -582,6 +586,10 @@ namespace LabBilling.Forms
             currentAccount.Pat.BirthDate = DateTime.Parse(DateOfBirthTextBox.Text);
             currentAccount.Pat.GuarantorFullName = string.Format("{0} {1},{2} {3}",
                 GuarantorLastNameTextBox.Text, GuarSuffixTextBox.Text, GuarFirstNameTextBox.Text, GuarMiddleNameTextBox.Text);
+            currentAccount.Pat.GuarantorLastName = GuarantorLastNameTextBox.Text;
+            currentAccount.Pat.GuarantorFirstName = GuarFirstNameTextBox.Text;
+            currentAccount.Pat.GuarantorMiddleName = GuarMiddleNameTextBox.Text;
+            currentAccount.Pat.GuarantorNameSuffix = GuarSuffixTextBox.Text;
             currentAccount.Pat.GuarantorAddress = GuarantorAddressTextBox.Text;
             currentAccount.Pat.GuarantorCity = GuarCityTextBox.Text;
             currentAccount.Pat.GuarantorPrimaryPhone = GuarantorPhoneTextBox.Text;
@@ -663,8 +671,7 @@ namespace LabBilling.Forms
             currentAccount.Insurances[selectedIns].HolderFirstName = HolderFirstNameTextBox.Text;
             currentAccount.Insurances[selectedIns].HolderLastName = HolderLastNameTextBox.Text;
             currentAccount.Insurances[selectedIns].HolderMiddleName = HolderMiddleNameTextBox.Text;
-            currentAccount.Insurances[selectedIns].HolderName = string.Format("{0},{1} {2}",
-                HolderLastNameTextBox.Text, HolderFirstNameTextBox.Text, HolderMiddleNameTextBox.Text);
+            currentAccount.Insurances[selectedIns].HolderName = $"{HolderLastNameTextBox.Text},{HolderFirstNameTextBox.Text} {HolderMiddleNameTextBox.Text}";
             currentAccount.Insurances[selectedIns].HolderSex = HolderSexComboBox.SelectedValue.ToString();
             currentAccount.Insurances[selectedIns].PolicyNumber = PolicyNumberTextBox.Text;
             currentAccount.Insurances[selectedIns].PlanAddress1 = PlanAddressTextBox.Text;
@@ -1526,7 +1533,6 @@ namespace LabBilling.Forms
                 MetroMessageBox.Show(this, "A valid account number was not returned from search. Please try again. If problem persists, report issue to an administrator.");
             }
         }
-
         private void ChangeDateOfServiceToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Log.Instance.Trace($"Entering");

@@ -41,8 +41,6 @@ namespace LabBilling.Core.DataAccess
             NotOneOf
         }
 
-
-
         public IEnumerable<AccountSearch> GetBySearch((string propertyName, operation oper, string searchText)[] searchValues)
         {
             InsRepository insRepository = new InsRepository(dbConnection);
@@ -96,6 +94,7 @@ namespace LabBilling.Core.DataAccess
                     command.Where($"{propName} {op} '{searchText}'");
                 }
                 command.OrderBy(GetRealColumn(typeof(AccountSearch), nameof(AccountSearch.Name)));
+                
                 var results = dbConnection.Fetch<AccountSearch>(command);
 
                 return results;

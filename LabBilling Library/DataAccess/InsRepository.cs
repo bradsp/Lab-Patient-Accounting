@@ -45,6 +45,10 @@ namespace LabBilling.Core.DataAccess
                     ins.HolderFirstName = fname;
                     ins.HolderMiddleName = mname;
                 }
+                else
+                {
+                    ins.HolderName = $"{ins.HolderLastName},{ins.HolderFirstName} {ins.HolderMiddleName}";
+                }
 
                 ins.InsCompany = dbConnection.SingleOrDefault<InsCompany>("where code = @0", ins.InsCode);
                 if (ins.InsCompany == null)
@@ -81,12 +85,20 @@ namespace LabBilling.Core.DataAccess
 
             List<string> cols = columns.ToList();
 
-            if(cols.Contains("HolderState") || cols.Contains("HolderCity") || cols.Contains("HolderZip"))
+            if(cols.Contains(nameof(Ins.HolderState)) || 
+                cols.Contains(nameof(Ins.HolderCity)) || 
+                cols.Contains(nameof(Ins.HolderZip)))
             {
-                cols.Add("HolderCityStZip");
-                cols.Remove("HolderState");
-                cols.Remove("HolderCity");
-                cols.Remove("HolderZip");
+                cols.Add(nameof(Ins.HolderCityStZip));
+                cols.Remove(nameof(Ins.HolderState));
+                cols.Remove(nameof(Ins.HolderCity));
+                cols.Remove(nameof(Ins.HolderZip));
+            }
+            if(cols.Contains(nameof(Ins.HolderLastName)) || 
+                cols.Contains(nameof(Ins.HolderFirstName)) || 
+                cols.Contains(nameof(Ins.HolderMiddleName)))
+            {
+                cols.Add(nameof(Ins.HolderName));
             }
             return base.Update(table, cols);
         }

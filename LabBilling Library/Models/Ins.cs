@@ -11,16 +11,35 @@ namespace LabBilling.Core.Models
         public string Account { get; set; }
         [Column("ins_a_b_c")]
         public string Coverage { get; set; }
+
+
+        [Column("holder_lname")]
+        public string HolderLastName { get; set; }
+        [Column("holder_fname")]
+        public string HolderFirstName { get; set; }
+        [Column("holder_mname")]
+        public string HolderMiddleName { get; set; }
         [Column("holder_nme")]
         public string HolderName { get; set; }
         [Column("holder_addr")]
         public string HolderAddress { get; set; }
         [Column("holder_city_st_zip")]
         public string HolderCityStZip { get; set; }
+
+        [Ignore]
+        public string HolderCity { get; set; }
+        [Ignore]
+        public string HolderState { get; set; }
+        [Ignore]
+        public string HolderZip { get; set; }
+        
         [Column("holder_sex")]
         public string HolderSex { get; set; }
         [Column("holder_dob")]
         public DateTime? HolderBirthDate { get; set; }
+
+        [Column("ins_code")]
+        public string InsCode { get; set; }
         [Column("plan_nme")]
         public string PlanName { get; set; }
         [Column("plan_addr1")]
@@ -38,21 +57,15 @@ namespace LabBilling.Core.Models
         [Column("grp_num")]
         public string GroupNumber { get; set; }
         [Column("employer")]
+
         public string Employer { get; set; }
         [Column("e_city_st")]
         public string EmployerCityState { get; set; }
         [Column("fin_code")]
         public string FinCode { get; set; }
-        [Column("ins_code")]
-        public string InsCode { get; set; }
         [Column("relation")]
         public string Relation { get; set; }
-        [Column("holder_lname")]
-        public string HolderLastName { get; set; }
-        [Column("holder_fname")]
-        public string HolderFirstName { get; set; }
-        [Column("holder_mname")]
-        public string HolderMiddleName { get; set; }
+        
         [Column("plan_effective_date")]
         public DateTime? PlanEffectiveDate { get; set; }
         [Column("plan_expiration_date")]
@@ -72,12 +85,6 @@ namespace LabBilling.Core.Models
         [ResultColumn]
         public string mod_host { get; set; }
 
-        [Ignore]
-        public string HolderCity { get; set; }
-        [Ignore] 
-        public string HolderState { get; set; }
-        [Ignore] 
-        public string HolderZip { get; set; }
 
         [Ignore]
         public InsCompany InsCompany { get; set; }

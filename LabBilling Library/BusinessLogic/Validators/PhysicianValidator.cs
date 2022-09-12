@@ -14,11 +14,11 @@ namespace LabBilling.Core.BusinessLogic.Validators
         {
             RuleFor(a => a.LastName)
                 .Cascade(CascadeMode.Stop)
-                .NotEmpty().WithMessage("Ins {PropertyName} is empty.")
+                .NotEmpty().WithMessage("Provider Last Name is empty.")
                 .Must(BeAValidName).WithMessage("{PropertyName} contains invalid characters.");
             RuleFor(a => a.FirstName)
                 .Cascade(CascadeMode.Stop)
-                .NotEmpty().WithMessage("Ins {PropertyName} is empty.")
+                .NotEmpty().WithMessage("Provider First Name is empty.")
                 .Must(BeAValidName).WithMessage("{PropertyName} contains invalid characters.");
             RuleFor(a => a.NpiId)
                 .NotEmpty().WithMessage("Physician does not have valid NPI.");
