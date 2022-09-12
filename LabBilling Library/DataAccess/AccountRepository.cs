@@ -214,14 +214,14 @@ namespace LabBilling.Core.DataAccess
                         command = PetaPoco.Sql.Builder
                             .Select("status, acc.account, pat_name, ssn, cl_mnem, acc.fin_code, trans_date, ins.plan_nme")
                             .From(_tableName)
-                            .InnerJoin("ins").On("ins.account = acc.account and ins_a_b_c = 'a'")
+                            .InnerJoin("ins").On("ins.account = acc.account and ins_a_b_c = 'A'")
                             .Where("status = 'UB'");
                         break;
                     case ClaimType.Professional:
                         command = PetaPoco.Sql.Builder
                             .Select("status, acc.account, pat_name, ssn, cl_mnem, acc.fin_code, trans_date, ins.plan_nme")
                             .From(_tableName)
-                            .InnerJoin("ins").On("ins.account = acc.account and ins_a_b_c = 'a'")
+                            .InnerJoin("ins").On("ins.account = acc.account and ins_a_b_c = 'A'")
                             .Where("status = '1500'");
                             //.Where("ins_code not in ('CHAMPUS')");
                         break;

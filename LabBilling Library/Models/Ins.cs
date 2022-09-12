@@ -59,7 +59,9 @@ namespace LabBilling.Core.Models
         public DateTime? PlanExpirationDate { get; set; }
         
         public Guid rowguid { get; set; }
-        public bool deleted { get; set; }
+
+        [Column("deleted")]
+        public bool IsDeleted { get; set; }
 
         [ResultColumn]
         public DateTime mod_date { get; set; }

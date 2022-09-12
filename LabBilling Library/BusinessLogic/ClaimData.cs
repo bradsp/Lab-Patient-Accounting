@@ -13,6 +13,7 @@ namespace LabBilling.Core
 
         public string InterchangeControlNumber { get; set; }
         public string BatchSubmitterId { get; set; }
+        public DateTime CreatedDate { get; set; }
 
         public ClaimType ClaimType { get; set; }
         public string TransactionTypeCode { get; set; }

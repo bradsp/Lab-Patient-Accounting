@@ -506,7 +506,7 @@ namespace LabBilling.Forms
                 InsuranceDataGrid.Columns[nameof(Ins.rowguid)].Visible = false;
                 InsuranceDataGrid.Columns[nameof(Ins.Account)].Visible = false;
                 InsuranceDataGrid.Columns[nameof(Ins.InsCompany)].Visible = false;
-                InsuranceDataGrid.Columns[nameof(Ins.deleted)].Visible = false;
+                InsuranceDataGrid.Columns[nameof(Ins.IsDeleted)].Visible = false;
 
                 InsuranceDataGrid.Columns[nameof(Ins.PlanName)].DisplayIndex = 1;
                 InsuranceDataGrid.Columns[nameof(Ins.PlanAddress1)].DisplayIndex = 2;
@@ -1885,10 +1885,12 @@ namespace LabBilling.Forms
                     throw new ArgumentOutOfRangeException("ClaimType is not defined.");
             }
 
-            //string x12Text = billing837.GenerateSingleClaim(claim, fileLocation);
-
             PrintClaimForm printClaim = new PrintClaimForm(Helper.ConnVal);
-            printClaim.PrintAlt(claim); //, false, true);
+
+            //string x12Text = billing837.GenerateSingleClaim(claim, fileLocation);
+            //printClaim.Print(x12Text, false, true);
+
+            printClaim.PrintForm(claim); 
 
         }
     }

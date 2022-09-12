@@ -34,118 +34,170 @@ namespace LabBilling.Core.BusinessLogic
             _connectionString = connectionString;
         }
 
-        public void PrintAlt(ClaimData claim)
+        public void PrintForm(ClaimData claim)
         {
-            //string src = @"c:\temp\cms1500_form.pdf";
-            string src = @"c:\temp\ub04-claim-form.pdf";
+            if (claim.ClaimType == ClaimType.Institutional)
+                PrintUB04(claim);
 
-            string dest = @"c:\temp\test_ub.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfReader(src), new PdfWriter(dest));
+            if (claim.ClaimType == ClaimType.Professional)
+                Print1500(claim);
+        }
 
+        private void Print1500(ClaimData claim)
+        {
+            throw new NotImplementedException();
+        }
 
-            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, false);
-
-            IDictionary<string, PdfFormField> fields = form.GetFormFields();
-
-            SetFieldValue(fields, "box1a", claim.BillingProviderName);
-            SetFieldValue(fields, "box1b", claim.BillingProviderAddress);
-            SetFieldValue(fields, "box1c", $"{claim.BillingProviderCity} {claim.BillingProviderState} {claim.BillingProviderZipCode}");
-            SetFieldValue(fields, "box1d", claim.BillingProviderContactPhone);
-
-            SetFieldValue(fields, "box3a", claim.claimAccount.AccountNo);
-            SetFieldValue(fields, "box4", $"{claim.FacilityCode}{claim.FacilityCodeQualifier}");
-            SetFieldValue(fields, "box5", claim.BillingProviderTaxId);
-            SetFieldValue(fields, "box6a", ((DateTime)claim.StatementFromDate).ToString("MMddyy"));
-            SetFieldValue(fields, "box6b", ((DateTime)claim.StatementThruDate).ToString("MMddyy"));
-            SetFieldValue(fields, "box8b", claim.claimAccount.PatFullName);
-            SetFieldValue(fields, "box9a", claim.claimAccount.Pat.Address1);
-            SetFieldValue(fields, "box9b", claim.claimAccount.Pat.City);
-            SetFieldValue(fields, "box9c", claim.claimAccount.Pat.State);
-            SetFieldValue(fields, "box9d", claim.claimAccount.Pat.ZipCode);
-            SetFieldValue(fields, "box10", ((DateTime)claim.claimAccount.Pat.BirthDate).ToString("MMddyyyy"));
-            SetFieldValue(fields, "box11", claim.claimAccount.Pat.Sex);
-
-
-            SetFieldValue(fields, "38a", claim.claimAccount.Pat.GuarantorFullName);
-            SetFieldValue(fields, "38b", claim.claimAccount.Pat.GuarantorAddress);
-            SetFieldValue(fields, "38c", $"{claim.claimAccount.Pat.City}, {claim.claimAccount.Pat.State} {claim.claimAccount.Pat.ZipCode}");
-            SetFieldValue(fields, $"box56", ""); //phy npi
-
-            int j = 0;
-            foreach(var subscriber in claim.Subscribers)
+        private void PrintUB04(ClaimData claim)
+        {
+            if (claim.ClaimType == ClaimType.Institutional)
             {
-                SetFieldValue(fields, $"box50a.{j}", subscriber.PayerName);
-                SetFieldValue(fields, $"box51a.{j}", subscriber.PayerIdentifier);
-                SetFieldValue(fields, $"box52a.{j}", "Y"); //rel info
-                SetFieldValue(fields, $"box53a.{j}", ""); //assign benefits
-                SetFieldValue(fields, $"box54a.{j}", ""); //prior payments
-                SetFieldValue(fields, $"box55a.{j}", ""); //est amt due
-                SetFieldValue(fields, $"box58a.{j}", $"{subscriber.LastName},{subscriber.FirstName} {subscriber.MiddleName}"); //insureds name
-                SetFieldValue(fields, $"box59a.{j}", subscriber.IndividualRelationshipCode); // patient relation
-                SetFieldValue(fields, $"box60a.{j}", subscriber.PrimaryIdentifier); //insureds unique id
-                SetFieldValue(fields, $"box61a.{j}", ""); //group name
-                SetFieldValue(fields, $"box62a.{j}", ""); // ins group number
-                SetFieldValue(fields, $"box63.{j}", ""); //treatment authorization codes
-                SetFieldValue(fields, $"box64.{j}", ""); //document control number
-                SetFieldValue(fields, $"box65.{j}", ""); //employer name
+                //string src = @"c:\temp\cms1500_form.pdf";
+                string src = @"c:\temp\ub04-claim-form.pdf";
+                string path = $"c:\\temp\\";
+                string fileName = $"claim{DateTime.Now.ToString("yyyymmddhhmmss")}.pdf";
 
-                j++;
-            }
+                string outputFilename = $"{path}{fileName}";
 
-            int k = 1;
-            SetFieldValue(fields, $"box66", "X"); //dx type flag
-            foreach (var dx in claim.claimAccount.Pat.Diagnoses)
-            {
-                switch (k)
+                PdfDocument pdfDoc = new PdfDocument(new PdfReader(src), new PdfWriter(outputFilename));
+
+
+
+                PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, false);
+
+                IDictionary<string, PdfFormField> fields = form.GetFormFields();
+
+                SetFieldValue(fields, "box1a", claim.BillingProviderName);
+                SetFieldValue(fields, "box1b", claim.BillingProviderAddress);
+                SetFieldValue(fields, "box1c", $"{claim.BillingProviderCity} {claim.BillingProviderState} {claim.BillingProviderZipCode}");
+                SetFieldValue(fields, "box1d", claim.BillingProviderContactPhone);
+
+                SetFieldValue(fields, "box2b", claim.PayToAddress);
+                SetFieldValue(fields, "box2c", $"{claim.PayToCity} {claim.PayToState} {claim.PayToZipCode}");
+
+                SetFieldValue(fields, "box3a", claim.claimAccount.AccountNo);
+                SetFieldValue(fields, "box3b", claim.claimAccount.MRN);
+                SetFieldValue(fields, "box4", $"{claim.FacilityCode}{claim.ClaimFrequency}");
+                SetFieldValue(fields, "box5", claim.BillingProviderTaxId);
+                SetFieldValue(fields, "box6a", ((DateTime)claim.StatementFromDate).ToString("MMddyyyy"));
+                SetFieldValue(fields, "box6b", ((DateTime)claim.StatementThruDate).ToString("MMddyyyy"));
+                SetFieldValue(fields, "box8b", claim.claimAccount.PatFullName);
+                SetFieldValue(fields, "box9a", claim.claimAccount.Pat.Address1);
+                SetFieldValue(fields, "box9b", claim.claimAccount.Pat.City);
+                SetFieldValue(fields, "box9c", claim.claimAccount.Pat.State);
+                SetFieldValue(fields, "box9d", claim.claimAccount.Pat.ZipCode);
+                SetFieldValue(fields, "box10", ((DateTime)claim.claimAccount.Pat.BirthDate).ToString("MMddyyyy"));
+                SetFieldValue(fields, "box11", claim.claimAccount.Pat.Sex);
+                SetFieldValue(fields, "box17", "01"); //defaulting to 01 for now
+
+                SetFieldValue(fields, "38a", claim.claimAccount.Pat.GuarantorFullName);
+                SetFieldValue(fields, "38b", claim.claimAccount.Pat.GuarantorAddress);
+                SetFieldValue(fields, "38c", $"{claim.claimAccount.Pat.City}, {claim.claimAccount.Pat.State} {claim.claimAccount.Pat.ZipCode}");
+                SetFieldValue(fields, $"box56", claim.BillingProviderNPI); //billing provider npi
+                SetFieldValue(fields, $"box57.0", claim.ProviderTaxonomyCode);
+
+
+                int j = 0;
+                foreach (var subscriber in claim.Subscribers)
                 {
-                    case 1:
-                        SetFieldValue(fields, $"box67", dx.Code); //dx codes
-                        break;
-                    case 2:
-                        SetFieldValue(fields, $"box67a", dx.Code);
-                        break;
-                    case 3:
-                        SetFieldValue(fields, $"box67b", dx.Code);
-                        break;
-                    case 4:
-                        SetFieldValue(fields, $"box67c", dx.Code);
-                        break;
-                    case 5:
-                        SetFieldValue(fields, $"box67d", dx.Code);
-                        break;
-                    case 6:
-                        SetFieldValue(fields, $"box67e", dx.Code);
-                        break;
-                    case 7:
-                        SetFieldValue(fields, $"box67f", dx.Code);
-                        break;
-                    case 8:
-                        SetFieldValue(fields, $"box67g", dx.Code);
-                        break;
-                    case 9:
-                        SetFieldValue(fields, $"box67h", dx.Code);
-                        break;
-                    default:
-                        break;
+                    SetFieldValue(fields, $"box50a.{j}", subscriber.PayerName);
+                    SetFieldValue(fields, $"box51a.{j}", subscriber.PayerIdentifier);
+                    SetFieldValue(fields, $"box52a.{j}", "Y"); //rel info
+                    SetFieldValue(fields, $"box53a.{j}", ""); //assign benefits
+                    SetFieldValue(fields, $"box54a.{j}", ""); //prior payments
+                    SetFieldValue(fields, $"box55a.{j}", ""); //est amt due
+                    SetFieldValue(fields, $"box58a.{j}", $"{subscriber.LastName},{subscriber.FirstName} {subscriber.MiddleName}"); //insureds name
+                    SetFieldValue(fields, $"box59a.{j}", subscriber.IndividualRelationshipCode); // patient relation
+                    SetFieldValue(fields, $"box60a.{j}", subscriber.PrimaryIdentifier); //insureds unique id
+                    switch (subscriber.PayerResponsibilitySequenceCode)
+                    {
+                        case "P":
+                            SetFieldValue(fields, $"box61a.{0}", claim.claimAccount.InsurancePrimary.GroupName ?? ""); //group name
+                            SetFieldValue(fields, $"box62a.{0}", claim.claimAccount.InsurancePrimary.GroupNumber ?? ""); // ins group number
+                            break;
+                        case "S":
+                            SetFieldValue(fields, $"box61a.{1}", claim.claimAccount.InsuranceSecondary.GroupName ?? ""); //group name
+                            SetFieldValue(fields, $"box62a.{1}", claim.claimAccount.InsuranceSecondary.GroupNumber ?? ""); // ins group number
+                            break;
+                        case "T":
+                            SetFieldValue(fields, $"box61a.{2}", claim.claimAccount.InsuranceTertiary.GroupName ?? ""); //group name
+                            SetFieldValue(fields, $"box62a.{2}", claim.claimAccount.InsuranceTertiary.GroupNumber ?? ""); // ins group number
+                            break;
+                        default:
+                            break;
+                    }
+
+                    SetFieldValue(fields, $"box63.{j}", ""); //treatment authorization codes
+                    SetFieldValue(fields, $"box64.{j}", ""); //document control number
+                    SetFieldValue(fields, $"box65.{j}", ""); //employer name
+
+                    j++;
                 }
-                k++;
+
+                int k = 1;
+                SetFieldValue(fields, $"box66", "X"); //dx type flag
+                foreach (var dx in claim.claimAccount.Pat.Diagnoses)
+                {
+                    switch (k)
+                    {
+                        case 1:
+                            SetFieldValue(fields, $"box67", dx.Code); //dx codes
+                            break;
+                        case 2:
+                            SetFieldValue(fields, $"box67a", dx.Code);
+                            break;
+                        case 3:
+                            SetFieldValue(fields, $"box67b", dx.Code);
+                            break;
+                        case 4:
+                            SetFieldValue(fields, $"box67c", dx.Code);
+                            break;
+                        case 5:
+                            SetFieldValue(fields, $"box67d", dx.Code);
+                            break;
+                        case 6:
+                            SetFieldValue(fields, $"box67e", dx.Code);
+                            break;
+                        case 7:
+                            SetFieldValue(fields, $"box67f", dx.Code);
+                            break;
+                        case 8:
+                            SetFieldValue(fields, $"box67g", dx.Code);
+                            break;
+                        case 9:
+                            SetFieldValue(fields, $"box67h", dx.Code);
+                            break;
+                        default:
+                            break;
+                    }
+                    k++;
+                }
+
+                int i = 1;
+                foreach (var line in claim.ClaimLines)
+                {
+                    SetFieldValue(fields, $"box42.{i}", line.RevenueCode);
+                    SetFieldValue(fields, $"box43.{i}", line.RevenueCodeDescription);
+                    SetFieldValue(fields, $"box44.{i}", $"{line.ProcedureCode}{line.ProcedureModifier1}{line.ProcedureModifier2}{line.ProcedureModifier3}");
+                    SetFieldValue(fields, $"box45.{i}", ((DateTime)line.ServiceDate).ToString("MMddyyyy"));
+                    SetFieldValue(fields, $"box46.{i}", "EA");
+                    SetFieldValue(fields, $"box47.{i}", line.Amount.ToString("F2"));
+                    i++;
+                }
+                SetFieldValue(fields, $"covered_totals", claim.TotalChargeAmount.ToString("F2"));
+
+                SetFieldValue(fields, "box78b", claim.claimAccount.Pat.Physician.NpiId);
+                SetFieldValue(fields, "box78e", claim.claimAccount.Pat.Physician.LastName);
+                SetFieldValue(fields, "box78f", claim.claimAccount.Pat.Physician.FirstName);
+
+                SetFieldValue(fields, "PAGE", "1");
+                SetFieldValue(fields, "OF", "1");
+                SetFieldValue(fields, "createdate", claim.CreatedDate.ToString("MMddyyyy"));
+
+                form.FlattenFields();
+                pdfDoc.Close();
+                System.Diagnostics.Process.Start(outputFilename);
             }
-
-            int i = 1;
-            foreach(var line in claim.ClaimLines)
-            {
-                SetFieldValue(fields, $"box42.{i}", line.RevenueCode);
-                SetFieldValue(fields, $"box43.{i}", line.RevenueCodeDescription);
-                SetFieldValue(fields, $"box44.{i}", $"{line.ProcedureCode}{line.ProcedureModifier1}{line.ProcedureModifier2}{line.ProcedureModifier3}");
-                SetFieldValue(fields, $"box45.{i}", ((DateTime)line.ServiceDate).ToString("MMddyy"));
-                SetFieldValue(fields, $"box46.{i}", "EA");
-                SetFieldValue(fields, $"box47.{i}", line.Amount.ToString("F2"));
-                i++;
-            }
-            SetFieldValue(fields, $"covered_totals", claim.TotalChargeAmount.ToString("F2"));
-
-
-            pdfDoc.Close();
         }
 
         private void SetFieldValue(IDictionary<string, PdfFormField> fields, string fieldName, string value)

@@ -35,6 +35,9 @@ namespace LabBilling.Core.BusinessLogic.Validators
                 RuleFor(a => a.Pat)
                     .SetValidator(new DemographicsValidator());
 
+                RuleFor(a => a.Insurances)
+                    .Must(HaveValidInsuranceCoverageCodes).WithMessage("Insurances have invalid or out of order coverage codes.");
+
                 RuleForEach(a => a.Insurances)
                     .SetValidator(new InsuranceValidator()).When(a => a.FinCode != "E");
 
@@ -53,6 +56,9 @@ namespace LabBilling.Core.BusinessLogic.Validators
                 RuleForEach(a => a.Charges)
                     .SetValidator(new ChargeValidator())
                     .When(ac => ac.Charges.Count > 0);
+
+                RuleFor(a => a.TotalPayments)
+                    .GreaterThan(0).WithMessage("Account has payments recorded.");
 
                 RuleFor(c => c)
                     .Must(NotContainOnlyVenipunctureCharge)
@@ -141,6 +147,40 @@ namespace LabBilling.Core.BusinessLogic.Validators
                 }
             }
             return true;
+        }
+
+        private bool HaveValidInsuranceCoverageCodes(List<Ins> insurances)
+        {
+            bool hasA = false;
+            bool hasB = false;
+            bool hasC = false;
+
+            foreach(Ins ins in insurances.Where(i => !i.IsDeleted))
+            {
+                if (ins.IsDeleted)
+                    continue;
+
+                if(ins.Coverage == "A")
+                    hasA = true;
+                if(ins.Coverage == "B")
+                    hasB = true;
+                if (ins.Coverage == "C")
+                    hasC = true;
+            }
+
+            if(insurances.Where(i => !i.IsDeleted).Count() > 0)
+            {
+                if (!hasA)
+                    return false;
+                if (hasC && !hasB)
+                    return false;
+
+                return true;
+            }
+            else
+            {
+                return true;
+            }
         }
 
     }

@@ -565,7 +565,6 @@
             // tstbSearchInfo
             // 
             this.tstbSearchInfo.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
-            this.tstbSearchInfo.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.tstbSearchInfo.Name = "tstbSearchInfo";
             this.tstbSearchInfo.Size = new System.Drawing.Size(100, 23);
             // 
