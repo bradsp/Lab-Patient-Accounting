@@ -118,7 +118,7 @@ namespace LabBilling
                 Environment.Items.Add(connString.Name);
             }
 
-            Environment.SelectedItem = "MCLTEST";
+            Environment.SelectedItem = "LabBillingTest";
             IntegratedAuthentication.Checked = true;
             IntegratedAuthentication_CheckedChanged(sender, e);
         }

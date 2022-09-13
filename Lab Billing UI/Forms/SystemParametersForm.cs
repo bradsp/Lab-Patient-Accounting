@@ -10,6 +10,8 @@ using System.Reflection;
 using System.Threading;
 using System.Data.SqlClient;
 using System.Data;
+using Newtonsoft.Json.Linq;
+using System.ComponentModel.DataAnnotations;
 
 namespace LabBilling.Forms
 {
@@ -27,13 +29,12 @@ namespace LabBilling.Forms
         {
             Log.Instance.Trace($"Entering");
 
+            //List<Core.Models.SysParameter> results = (List<Core.Models.SysParameter>)paramsdb.GetAll();
 
-            List<Core.Models.SysParameter> results = (List<Core.Models.SysParameter>)paramsdb.GetAll();
+            //parameters.LoadSystemParameters(results);
+            propertyGrid.SelectedObject = BuildDynamicClass();
 
-            parameters.LoadSystemParameters(results);
-            //propertyGrid.SelectedObject = BuildDynamicClass();
-
-            propertyGrid.SelectedObject = parameters;
+            //propertyGrid.SelectedObject = parameters;
 
         }
 
@@ -81,13 +82,11 @@ namespace LabBilling.Forms
                 object value = row[nameof(SysParameter.Value)];
                 if (dataType == typeof(bool))
                 {
-                    bool boolValue;
-                    if (bool.TryParse(value.ToString(), out boolValue))
+                    if (bool.TryParse(value.ToString(), out bool boolValue))
                         value = boolValue;
                     else
                     {
-                        int intValue;
-                        if (int.TryParse(value.ToString(), out intValue))
+                        if (int.TryParse(value.ToString(), out int intValue))
                             value = System.Convert.ChangeType(intValue, dataType);
                     }
 
@@ -175,10 +174,27 @@ namespace LabBilling.Forms
                 new CustomAttributeBuilder(
                     typeof(DescriptionAttribute).GetConstructor(
                         new Type[] { typeof(string) }), new object[] { description }));
+
+            object defaultVal = defaultValue;
+            //if (fieldType == typeof(bool))
+            //{
+            //    if (bool.TryParse(defaultVal.ToString(), out bool boolValue))
+            //        defaultVal = boolValue;
+            //    else
+            //    {
+            //        if (int.TryParse(defaultVal.ToString(), out int intValue))
+            //            defaultVal = System.Convert.ChangeType(intValue, fieldType);
+            //    }
+            //}
+            //else
+            //{
+            //    defaultVal = (Convert.IsDBNull(defaultVal)) ? null : Convert.ChangeType(defaultVal, fieldType);
+            //}
+
             propertyBuilder.SetCustomAttribute(
                 new CustomAttributeBuilder(
-                    typeof(DefaultValueAttribute).GetConstructor(
-                        new Type[] { typeof(object) }), new object[] { defaultValue }));
+                typeof(DefaultValueAttribute).GetConstructor(new Type[] { typeof(object) }), 
+                new object[] { defaultVal }));
         }
 
         private void propertyGrid_PropertyValueChanged(object s, PropertyValueChangedEventArgs e)
@@ -196,7 +212,7 @@ namespace LabBilling.Forms
 
             try
             {
-                paramsdb.Update(systemParameters, new[] { nameof(SysParameter.key_name), nameof(SysParameter.KeyName), nameof(SysParameter.Value) });
+                paramsdb.Update(systemParameters, new[] { nameof(SysParameter.Value) });
             }
             catch(Exception ex)
             {

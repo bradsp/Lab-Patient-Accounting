@@ -115,17 +115,29 @@ namespace LabBilling.Core.DataAccess
         public virtual bool Update(Tpoco table, IEnumerable<string> columns)
         {
             Log.Instance.Trace("Entering");
+            List<string> cColumns = new List<string>();
 
             if (table.mod_date == null)
+            {
                 table.mod_date = DateTime.Now;
+                cColumns.Add(nameof(table.mod_date));
+            }
             if (table.mod_host == "" || table.mod_host == null)
+            {
                 table.mod_host = Environment.MachineName;
+                cColumns.Add(nameof(table.mod_host));
+            }
             if (table.mod_prg == "" || table.mod_prg == null)
+            {
                 table.mod_prg = System.AppDomain.CurrentDomain.FriendlyName;
+                cColumns.Add(nameof(table.mod_prg));
+            }
             if (table.mod_user == "" || table.mod_user == null)
+            {
                 table.mod_user = Environment.UserName.ToString();
+                cColumns.Add(nameof(table.mod_user));
+            }
 
-            List<string> cColumns = new List<string>();
             foreach (string column in columns)
             {
                 var pocoData = PocoData.ForType(table.GetType(), dbConnection.DefaultMapper);

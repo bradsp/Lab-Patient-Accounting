@@ -135,7 +135,8 @@ namespace LabBilling.Forms
             m_strServer = (string)dbConnectionStringBuilder["Server"];
             m_strDatabase = (string)dbConnectionStringBuilder["Database"];
 
-            m_strProductionEnvironment = m_strDatabase == "MCLLIVE" ? "LIVE" : "TEST";
+
+            m_strProductionEnvironment = m_strDatabase.ToUpper().Contains("TEST") ? "TEST" : "LIVE";
 
             string[] strArgs = new string[] { string.Format("/{0}", m_strProductionEnvironment),
                 m_strServer, m_strDatabase};

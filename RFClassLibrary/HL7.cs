@@ -25,6 +25,7 @@ namespace RFClassLibrary
     /// orders and results. any use for Hardin County will have to conform to the HL7 structures as documented
     /// by the standards committee.
     /// </summary>
+    [Obsolete]
     public class HL7 : RFCObject
     {
         private string m_strFinalsOnly = "false";
@@ -724,7 +725,7 @@ namespace RFClassLibrary
             sqlConnect.Open();
             string queryString =
             string.Format("select d.test_mnem, d.status, d.abn from wreq inner join worders d on d.wreq_rowguid = wreq.rowguid where wreq.hl7_ov_patid = '{0}' and convert(varchar(10), wreq.coll_date,101) = '{1}' and bill_to = '{2}' and wreq.cli_mnem = '{3}'",
-                            m_strOVPatId, HL7.ConvertHL7DateToSqlDate(m_strCollDateTime.Substring(0, 8)), m_strBillTo, m_strCliMnem);
+                            m_strOVPatId, m_strCollDateTime.Substring(0, 8).ConvertHL7DateToSqlDate(), m_strBillTo, m_strCliMnem);
 
             System.Data.SqlClient.SqlCommand sqlCommandWTests =
                 new System.Data.SqlClient.SqlCommand(queryString, sqlConnect);
