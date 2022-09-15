@@ -21,7 +21,7 @@ namespace RFClassLibrary
     /// <summary>
     /// ET Elasped Time
     /// </summary>
-    public class ET
+    public class ElapsedTime
     {
         //private DateTime ExpirationTime;
         private System.Timers.Timer timer1;
@@ -33,7 +33,7 @@ namespace RFClassLibrary
         /// mod 11/16/2004 rgc
         /// </summary>
         /// <param name="sec"></param>
-        public ET(double sec)
+        public ElapsedTime(double sec)
         {
             bExpired = false;
             timer1 = new System.Timers.Timer();

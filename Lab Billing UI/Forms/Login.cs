@@ -31,14 +31,18 @@ namespace LabBilling
         private void LoginButton_Click(object sender, EventArgs e)
         {
             Log.Instance.Trace($"Entering");
+            if(string.IsNullOrEmpty(Environment.SelectedItem.ToString()))
+            {
+                statustext.Text = "Please select an environment.";
+                return;
+            }
 
             if ((username.Text == string.Empty || password.Text == string.Empty) && !IntegratedAuthentication.Checked)
             {
                 statustext.Text = "Please enter a username and password.";
                 return;
             }
-
-            Helper.ConnVal = (string)Environment.SelectedItem;
+            Program.SelectedEnvironment = Environment.SelectedItem.ToString();
 
             db = new EmpRepository(Helper.ConnVal);
 
@@ -118,7 +122,7 @@ namespace LabBilling
                 Environment.Items.Add(connString.Name);
             }
 
-            Environment.SelectedItem = "LabBillingTest";
+            Environment.SelectedItem = "MCLTEST";
             IntegratedAuthentication.Checked = true;
             IntegratedAuthentication_CheckedChanged(sender, e);
         }

@@ -42,11 +42,13 @@ namespace LabBilling.Core.BusinessLogic
         {
             _connectionString = connectionString;
 
-            DbConnectionStringBuilder dbConnectionStringBuilder = new DbConnectionStringBuilder();
-            dbConnectionStringBuilder.ConnectionString = connectionString;
+            ConnectionString connString = connectionString;
 
-            dBserverName = (string)dbConnectionStringBuilder["Server"];
-            dBName = (string)dbConnectionStringBuilder["Database"];
+            //DbConnectionStringBuilder dbConnectionStringBuilder = new DbConnectionStringBuilder();
+            //dbConnectionStringBuilder.ConnectionString = connectionString;
+
+            dBserverName = connString.ServerName; //(string)dbConnectionStringBuilder["Server"];
+            dBName = connString.DatabaseName;     //(string)dbConnectionStringBuilder["Database"];
 
             db = new Database(connectionString, new CustomSqlDatabaseProvider());
 

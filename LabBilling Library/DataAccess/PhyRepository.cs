@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using LabBilling.Core.Models;
 using LabBilling.Logging;
+using NPOI.XWPF.UserModel;
 
 namespace LabBilling.Core.DataAccess
 {
@@ -56,6 +57,18 @@ namespace LabBilling.Core.DataAccess
             }
 
             return null;
+        }
+
+        public List<Phy> GetActive()
+        {
+            Log.Instance.Trace("Entering");
+
+            string sql = $"SELECT * FROM {_tableName} where deleted = 0";
+
+            var queryResult = dbConnection.Fetch<Phy>(sql);
+
+            Log.Instance.Trace("Exiting");
+            return queryResult;
         }
 
         public override Phy GetById(int id)

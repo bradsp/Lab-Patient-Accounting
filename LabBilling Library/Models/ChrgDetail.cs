@@ -3,7 +3,7 @@ using PetaPoco;
 
 namespace LabBilling.Core.Models
 {
-    [TableName("amt")]
+    [TableName("chrg_details")]
     [PrimaryKey("uri",AutoIncrement = true)]
     public class ChrgDetail : IBaseEntity
     {

@@ -24,7 +24,7 @@ namespace LabBilling
     {
 
         private Accordion accordion = new Accordion();
-        private readonly UserProfileRepository userProfile = new UserProfileRepository(Helper.ConnVal);
+        private readonly UserProfileRepository userProfile = new UserProfileRepository(Helper.ConnVal); 
         private readonly AccountRepository accountRepository = new AccountRepository(Helper.ConnVal);
         private readonly SystemParametersRepository systemParametersRepository = new SystemParametersRepository(Helper.ConnVal);
         private ProgressBar claimProgress;
@@ -124,7 +124,7 @@ namespace LabBilling
             tlpRecentAccounts.RowCount = recentAccounts.Count;
             tlpRecentAccounts.ColumnCount = 1;
 
-            this.Text += " " + Helper.Environment;
+            this.Text += " " + Program.SelectedEnvironment;
             
             if (!Convert.ToBoolean(systemParametersRepository.GetByKey("allow_edit")))
                 this.Text += " | READ ONLY MODE";
@@ -258,7 +258,7 @@ namespace LabBilling
         {
             Log.Instance.Trace($"Entering");
 
-            frmReports frm = new frmReports(Helper.args);
+            frmReports frm = new frmReports(Helper.GetArgs());
             frm.MdiParent = this;
             frm.WindowState = FormWindowState.Normal;
             frm.AutoScroll = true;
@@ -342,7 +342,7 @@ namespace LabBilling
         {
             Log.Instance.Trace($"Entering");
 
-            frmBadDebt frm = new frmBadDebt(Helper.args);
+            frmBadDebt frm = new frmBadDebt(Helper.GetArgs());
             frm.MdiParent = this;
             frm.AutoScroll = true;
             frm.WindowState = FormWindowState.Normal;
@@ -353,7 +353,7 @@ namespace LabBilling
         {
             Log.Instance.Trace($"Entering");
 
-            frmCorrection frm = new frmCorrection(Helper.args);
+            frmCorrection frm = new frmCorrection(Helper.GetArgs());
             frm.MdiParent = this;
             frm.AutoScroll = true;
             frm.WindowState = FormWindowState.Normal;
@@ -364,7 +364,7 @@ namespace LabBilling
         {
             Log.Instance.Trace($"Entering");
 
-            frmQuest frm = new frmQuest(Helper.args);
+            frmQuest frm = new frmQuest(Helper.GetArgs());
             frm.MdiParent = this;
             frm.AutoScroll = true;
             frm.WindowState = FormWindowState.Normal;
@@ -375,7 +375,7 @@ namespace LabBilling
         {
             Log.Instance.Trace($"Entering");
 
-            frmGlobalBilling frm = new frmGlobalBilling(Helper.args);
+            frmGlobalBilling frm = new frmGlobalBilling(Helper.GetArgs());
             frm.MdiParent = this;
             frm.AutoScroll = true;
             frm.WindowState = FormWindowState.Normal;
@@ -385,7 +385,7 @@ namespace LabBilling
         private void chargeMasterToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Log.Instance.Debug($"Entering");
-            frmCDM frm = new frmCDM(Helper.args);
+            frmCDM frm = new frmCDM(Helper.GetArgs());
             frm.MdiParent = this;
             frm.WindowState = FormWindowState.Normal;
             frm.AutoScroll = true;
@@ -396,7 +396,7 @@ namespace LabBilling
         {
             Log.Instance.Trace($"Entering");
 
-            frmViewer frm = new frmViewer(Helper.args);
+            frmViewer frm = new frmViewer(Helper.GetArgs());
             frm.MdiParent = this;
             frm.AutoScroll = true;
             frm.WindowState = FormWindowState.Normal;
@@ -407,7 +407,7 @@ namespace LabBilling
         {
             Log.Instance.Trace($"Entering");
 
-            FrmDupAcc frm = new FrmDupAcc(Helper.args);
+            FrmDupAcc frm = new FrmDupAcc(Helper.GetArgs());
             frm.MdiParent = this;
             frm.AutoScroll = true;
             frm.WindowState = FormWindowState.Normal;
@@ -418,7 +418,7 @@ namespace LabBilling
         {
             Log.Instance.Trace($"Entering");
 
-            frmSSISort frm = new frmSSISort(Helper.args);
+            frmSSISort frm = new frmSSISort(Helper.GetArgs());
             frm.MdiParent = this;
             frm.AutoScroll = true;
             frm.WindowState = FormWindowState.Normal;
@@ -429,7 +429,7 @@ namespace LabBilling
         {
             Log.Instance.Trace($"Entering");
 
-            frmSSI frm = new frmSSI(Helper.args);
+            frmSSI frm = new frmSSI(Helper.GetArgs());
             frm.MdiParent = this;
             frm.AutoScroll = true;
             frm.WindowState = FormWindowState.Normal;
@@ -440,7 +440,7 @@ namespace LabBilling
         {
             Log.Instance.Trace($"Entering");
 
-            frmReport frm = new frmReport(Helper.args);
+            frmReport frm = new frmReport(Helper.GetArgs());
             frm.MdiParent = this;
             frm.AutoScroll = true;
             frm.WindowState = FormWindowState.Normal;
@@ -451,7 +451,7 @@ namespace LabBilling
         {
             Log.Instance.Trace($"Entering");
 
-            Legacy.Posting835 frm = new Legacy.Posting835(Helper.args);
+            Legacy.Posting835 frm = new Legacy.Posting835(Helper.GetArgs());
             frm.MdiParent = this;
             frm.AutoScroll = true;
             frm.WindowState = FormWindowState.Normal;

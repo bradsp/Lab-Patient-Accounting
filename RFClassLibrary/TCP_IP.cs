@@ -393,7 +393,7 @@ namespace RFClassLibrary
             int bytesrecv = 0;
             m_strClientResult = "";
 
-            ET ReadMaxTime = new ET(10);// 10 second to read message or we time out
+            ElapsedTime ReadMaxTime = new ElapsedTime(10);// 10 second to read message or we time out
 
             while (m_ClientSocket.Available > 0)
             {

@@ -333,6 +333,9 @@ namespace LabBilling.Forms
                     break;
             }
 
+            accountGrid.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.DisableResizing;
+            accountGrid.RowHeadersVisible = false;
+
             accountGrid.DataSource = null;
             accountGrid.Columns.Clear();
             accountGrid.Rows.Clear();
@@ -353,24 +356,22 @@ namespace LabBilling.Forms
                 });
             }
 
-            await Task.Run(() =>
-            {
-                accountGrid.DataSource = accounts;
+            accountGrid.DataSource = accounts;
 
-                accountGrid.ForeColor = Color.Black;
-                accountGrid.Columns[nameof(AccountSearch.mod_date)].Visible = false;
-                accountGrid.Columns[nameof(AccountSearch.mod_host)].Visible = false;
-                accountGrid.Columns[nameof(AccountSearch.mod_prg)].Visible = false;
-                accountGrid.Columns[nameof(AccountSearch.mod_user)].Visible = false;
-                accountGrid.Columns[nameof(AccountSearch.rowguid)].Visible = false;
+            accountGrid.ForeColor = Color.Black;
+            accountGrid.Columns[nameof(AccountSearch.mod_date)].Visible = false;
+            accountGrid.Columns[nameof(AccountSearch.mod_host)].Visible = false;
+            accountGrid.Columns[nameof(AccountSearch.mod_prg)].Visible = false;
+            accountGrid.Columns[nameof(AccountSearch.mod_user)].Visible = false;
+            accountGrid.Columns[nameof(AccountSearch.rowguid)].Visible = false;
 
-                //accountGrid.Columns.Add("ValidationErrors", "Validation Errors");
+            //accountGrid.Columns.Add("ValidationErrors", "Validation Errors");
 
-                accountGrid.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
-                accountGrid.Columns[nameof(AccountSearch.ValidationStatus)].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-                accountGrid.Refresh();
-            });
+            accountGrid.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.DisplayedCells);
+            accountGrid.Columns[nameof(AccountSearch.ValidationStatus)].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
 
+            //accountGrid.Refresh();
+            accountGrid.RowHeadersVisible = true;
 
             Cursor.Current = Cursors.Default;
 

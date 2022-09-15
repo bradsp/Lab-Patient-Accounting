@@ -23,6 +23,7 @@ namespace LabBilling.Forms
     public partial class AccountForm : Form
     {
         private BindingList<PatDiag> dxBindingList;
+        private DataTable chargesTable = new DataTable();
 
         private List<InsCompany> insCompanies = null;
         private Account currentAccount = null;
@@ -44,6 +45,7 @@ namespace LabBilling.Forms
         private readonly BillingActivityRepository dbBillingActivity = new BillingActivityRepository(Helper.ConnVal);
         private readonly DictDxRepository dictDxDb = new DictDxRepository(Helper.ConnVal);
         private readonly SystemParametersRepository systemParametersRepository = new SystemParametersRepository(Helper.ConnVal);
+        private readonly PhyRepository phyRepository = new PhyRepository(Helper.ConnVal);
 
         private string _selectedAccount;
         public string SelectedAccount
@@ -311,6 +313,7 @@ namespace LabBilling.Forms
                 new SummaryData("Status", currentAccount.Status,SummaryData.GroupType.Demographics,4,1),
                 new SummaryData("MRN", currentAccount.MRN, SummaryData.GroupType.Demographics,5,1),
                 new SummaryData("Client", currentAccount.ClientName, SummaryData.GroupType.Demographics,7,1),
+                new SummaryData("Ordering Provider", currentAccount.Pat.Physician.FullName, SummaryData.GroupType.Demographics, 23, 1),
                 new SummaryData("Address", currentAccount.Pat.AddressLine, SummaryData.GroupType.Demographics,9,1),
                 new SummaryData("Phone", currentAccount.Pat.PrimaryPhone.FormatPhone(), SummaryData.GroupType.Demographics,10,1),
                 new SummaryData("Email", currentAccount.Pat.EmailAddress, SummaryData.GroupType.Demographics,11,1),
@@ -338,9 +341,6 @@ namespace LabBilling.Forms
                 sd.Add(new SummaryData(currentAccount.Pat.Dx7, currentAccount.Pat.Dx7Desc, SummaryData.GroupType.Diagnoses, 19, 1));
                 sd.Add(new SummaryData(currentAccount.Pat.Dx8, currentAccount.Pat.Dx8Desc, SummaryData.GroupType.Diagnoses, 20, 1));
                 sd.Add(new SummaryData(currentAccount.Pat.Dx9, currentAccount.Pat.Dx9Desc, SummaryData.GroupType.Diagnoses, 21, 1));
-                sd.Add(new SummaryData("Ordering Provider",
-                    $"{currentAccount.Pat.Physician.LastName},{currentAccount.Pat.Physician.FirstName}",
-                    SummaryData.GroupType.Demographics, 23, 1));
 
                 foreach (Ins ins in currentAccount.Insurances)
                 {
@@ -416,6 +416,7 @@ namespace LabBilling.Forms
             BannerClientTextBox.Text = currentAccount.ClientName;
             BannerFinClassTextBox.Text = currentAccount.FinCode;
             BannerBillStatusTextBox.Text = currentAccount.Status;
+            BannerProviderTextBox.Text = currentAccount.Pat.Physician.FullName;
 
             TotalChargesTextBox.Text = currentAccount.TotalCharges.ToString("c");
 
@@ -890,8 +891,18 @@ namespace LabBilling.Forms
         private void LoadCharges()
         {
             Log.Instance.Trace("Entering");
-            //dgvCharges.DataSource = chrgdb.GetByAccount(SelectedAccount, ckShowCreditedChrg.Checked);
-            ChargesDataGrid.DataSource = currentAccount.Charges;
+
+            var chargesList = currentAccount.Charges;
+
+            chargesTable = Helper.ConvertToDataTable(chargesList);
+
+
+            ChargesDataGrid.DataSource = chargesTable;
+            ChargesDataGrid.DataMember = chargesTable.TableName;
+            if(!ShowCreditedChrgCheckBox.Checked)
+            {
+                chargesTable.DefaultView.RowFilter = "IsCredited = false";
+            }
 
             foreach (DataGridViewColumn col in ChargesDataGrid.Columns)
             {
@@ -915,7 +926,7 @@ namespace LabBilling.Forms
             ChargesDataGrid.Columns[nameof(Chrg.CalculatedAmount)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             ChargesDataGrid.Columns[nameof(Chrg.Quantity)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
 
-            ChargesDataGrid.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
+            ChargesDataGrid.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.DisplayedCells);
             ChargesDataGrid.Columns[nameof(Chrg.CdmDescription)].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             ChargesDataGrid.BackgroundColor = Color.AntiqueWhite;
             ChrgDetailDataGrid.BackgroundColor = Color.AntiqueWhite;
@@ -1027,7 +1038,11 @@ namespace LabBilling.Forms
         private void ShowCreditedChrgCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             Log.Instance.Trace($"Entering");
-            LoadCharges();
+            if (ShowCreditedChrgCheckBox.Checked)
+                chargesTable.DefaultView.RowFilter = String.Empty;
+            else
+                chargesTable.DefaultView.RowFilter = "IsCredited = false";
+
         }
 
         private void AddChargeButton_Click(object sender, EventArgs e)

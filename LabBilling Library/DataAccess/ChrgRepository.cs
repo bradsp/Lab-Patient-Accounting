@@ -27,10 +27,10 @@ namespace LabBilling.Core.DataAccess
         public override Chrg GetById(int id)
         {
             var sql = PetaPoco.Sql.Builder
-                .Select("chrg.*, cdm.descript as 'cdm_desc', amt.*")
+                .Select("chrg.*, cdm.descript as 'cdm_desc', chrg_details.*")
                 .From("chrg")
                 .LeftJoin("cdm").On("chrg.cdm = cdm.cdm")
-                .InnerJoin("amt").On("amt.chrg_num = chrg.chrg_num")
+                .InnerJoin("chrg_details").On("chrg_details.chrg_num = chrg.chrg_num")
                 .Where("chrg.chrg_num = @0", id);
 
             var result = dbConnection.Fetch<Chrg, ChrgDetail, Chrg>(new ChrgChrgDetailRelator().MapIt, sql);
@@ -49,9 +49,9 @@ namespace LabBilling.Core.DataAccess
             Log.Instance.Debug($"Entering");
 
             var sql = PetaPoco.Sql.Builder
-                .Select("chrg.*, amt.*")
+                .Select("chrg.*, chrg_details.*")
                 .From("chrg")
-                .InnerJoin("amt").On("amt.chrg_num = chrg.chrg_num")
+                .InnerJoin("chrg_details").On("chrg_details.chrg_num = chrg.chrg_num")
                 .Where("account = @0", account);
             
             if(!showCredited)

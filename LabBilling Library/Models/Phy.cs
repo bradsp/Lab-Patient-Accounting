@@ -73,5 +73,14 @@ namespace LabBilling.Core.Models
         [Ignore]
         public Pth Pathologist { get; set; } = new Pth();
 
+        [Ignore]
+        public string FullName 
+        { 
+            get
+            {
+                return $"{LastName} {Credentials}, {FirstName} {MiddleInitial}";
+            }
+        }
+
     }
 }

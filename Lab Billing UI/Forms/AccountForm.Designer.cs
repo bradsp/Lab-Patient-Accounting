@@ -117,6 +117,8 @@ namespace LabBilling.Forms
             this.PatientFullNameLabel = new System.Windows.Forms.Label();
             this.DemoStatusMessagesTextBox = new System.Windows.Forms.TextBox();
             this.SaveDemographics = new System.Windows.Forms.Button();
+            this.orderingProviderLabel = new System.Windows.Forms.Label();
+            this.orderingProviderComboBox = new System.Windows.Forms.ComboBox();
             this.tabInsurance = new System.Windows.Forms.TabPage();
             this.insTabLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
             this.HolderLastNameLabel = new System.Windows.Forms.Label();
@@ -239,6 +241,7 @@ namespace LabBilling.Forms
             this.TotalChargesLabel = new System.Windows.Forms.Label();
             this.BannerBillStatusLabel = new System.Windows.Forms.Label();
             this.BannerBillStatusTextBox = new System.Windows.Forms.TextBox();
+            this.BannerProviderTextBox = new System.Windows.Forms.TextBox();
             this.tabControl1.SuspendLayout();
             this.summaryTab.SuspendLayout();
             this.tabDemographics.SuspendLayout();
@@ -278,10 +281,10 @@ namespace LabBilling.Forms
             this.tabControl1.Controls.Add(this.tabPayments);
             this.tabControl1.Controls.Add(this.tabNotes);
             this.tabControl1.Controls.Add(this.tabBillingActivity);
-            this.tabControl1.Location = new System.Drawing.Point(0, 89);
+            this.tabControl1.Location = new System.Drawing.Point(0, 100);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(1159, 652);
+            this.tabControl1.Size = new System.Drawing.Size(1159, 641);
             this.tabControl1.TabIndex = 2;
             // 
             // summaryTab
@@ -290,7 +293,7 @@ namespace LabBilling.Forms
             this.summaryTab.Location = new System.Drawing.Point(4, 22);
             this.summaryTab.Name = "summaryTab";
             this.summaryTab.Padding = new System.Windows.Forms.Padding(3);
-            this.summaryTab.Size = new System.Drawing.Size(1151, 626);
+            this.summaryTab.Size = new System.Drawing.Size(1151, 615);
             this.summaryTab.TabIndex = 0;
             this.summaryTab.Text = "Summary";
             this.summaryTab.UseVisualStyleBackColor = true;
@@ -310,7 +313,7 @@ namespace LabBilling.Forms
             this.summaryTable.Name = "summaryTable";
             this.summaryTable.RowCount = 1;
             this.summaryTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.summaryTable.Size = new System.Drawing.Size(1145, 620);
+            this.summaryTable.Size = new System.Drawing.Size(1145, 609);
             this.summaryTable.TabIndex = 0;
             // 
             // tabDemographics
@@ -319,7 +322,7 @@ namespace LabBilling.Forms
             this.tabDemographics.Location = new System.Drawing.Point(4, 22);
             this.tabDemographics.Name = "tabDemographics";
             this.tabDemographics.Padding = new System.Windows.Forms.Padding(3);
-            this.tabDemographics.Size = new System.Drawing.Size(1151, 626);
+            this.tabDemographics.Size = new System.Drawing.Size(1151, 615);
             this.tabDemographics.TabIndex = 9;
             this.tabDemographics.Text = "Demographics/Guarantor";
             this.tabDemographics.UseVisualStyleBackColor = true;
@@ -387,6 +390,8 @@ namespace LabBilling.Forms
             this.DemographicsTabLayoutPanel.Controls.Add(this.PatientFullNameLabel, 1, 1);
             this.DemographicsTabLayoutPanel.Controls.Add(this.DemoStatusMessagesTextBox, 1, 17);
             this.DemographicsTabLayoutPanel.Controls.Add(this.SaveDemographics, 0, 17);
+            this.DemographicsTabLayoutPanel.Controls.Add(this.orderingProviderLabel, 2, 15);
+            this.DemographicsTabLayoutPanel.Controls.Add(this.orderingProviderComboBox, 3, 15);
             this.DemographicsTabLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.DemographicsTabLayoutPanel.Location = new System.Drawing.Point(3, 3);
             this.DemographicsTabLayoutPanel.Name = "DemographicsTabLayoutPanel";
@@ -409,7 +414,7 @@ namespace LabBilling.Forms
             this.DemographicsTabLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
             this.DemographicsTabLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
             this.DemographicsTabLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.DemographicsTabLayoutPanel.Size = new System.Drawing.Size(1145, 620);
+            this.DemographicsTabLayoutPanel.Size = new System.Drawing.Size(1145, 609);
             this.DemographicsTabLayoutPanel.TabIndex = 140;
             // 
             // PatDemogTitleLabel
@@ -985,7 +990,7 @@ namespace LabBilling.Forms
             this.DemoStatusMessagesTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.DemographicsTabLayoutPanel.SetColumnSpan(this.DemoStatusMessagesTextBox, 3);
-            this.DemoStatusMessagesTextBox.Location = new System.Drawing.Point(133, 558);
+            this.DemoStatusMessagesTextBox.Location = new System.Drawing.Point(133, 547);
             this.DemoStatusMessagesTextBox.Multiline = true;
             this.DemoStatusMessagesTextBox.Name = "DemoStatusMessagesTextBox";
             this.DemoStatusMessagesTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
@@ -995,7 +1000,7 @@ namespace LabBilling.Forms
             // SaveDemographics
             // 
             this.SaveDemographics.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.SaveDemographics.Location = new System.Drawing.Point(3, 573);
+            this.SaveDemographics.Location = new System.Drawing.Point(3, 562);
             this.SaveDemographics.Name = "SaveDemographics";
             this.SaveDemographics.Size = new System.Drawing.Size(107, 44);
             this.SaveDemographics.TabIndex = 52;
@@ -1003,13 +1008,32 @@ namespace LabBilling.Forms
             this.SaveDemographics.UseVisualStyleBackColor = true;
             this.SaveDemographics.Click += new System.EventHandler(this.SaveDemographics_Click);
             // 
+            // orderingProviderLabel
+            // 
+            this.orderingProviderLabel.AutoSize = true;
+            this.orderingProviderLabel.Dock = System.Windows.Forms.DockStyle.Right;
+            this.orderingProviderLabel.Location = new System.Drawing.Point(522, 450);
+            this.orderingProviderLabel.Name = "orderingProviderLabel";
+            this.orderingProviderLabel.Size = new System.Drawing.Size(89, 30);
+            this.orderingProviderLabel.TabIndex = 140;
+            this.orderingProviderLabel.Text = "Ordering Provider";
+            this.orderingProviderLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // orderingProviderComboBox
+            // 
+            this.orderingProviderComboBox.FormattingEnabled = true;
+            this.orderingProviderComboBox.Location = new System.Drawing.Point(617, 453);
+            this.orderingProviderComboBox.Name = "orderingProviderComboBox";
+            this.orderingProviderComboBox.Size = new System.Drawing.Size(297, 21);
+            this.orderingProviderComboBox.TabIndex = 141;
+            // 
             // tabInsurance
             // 
             this.tabInsurance.Controls.Add(this.insTabLayoutPanel);
             this.tabInsurance.Location = new System.Drawing.Point(4, 22);
             this.tabInsurance.Name = "tabInsurance";
             this.tabInsurance.Padding = new System.Windows.Forms.Padding(3);
-            this.tabInsurance.Size = new System.Drawing.Size(1151, 626);
+            this.tabInsurance.Size = new System.Drawing.Size(1151, 615);
             this.tabInsurance.TabIndex = 11;
             this.tabInsurance.Text = "Insurance";
             this.tabInsurance.UseVisualStyleBackColor = true;
@@ -1086,7 +1110,7 @@ namespace LabBilling.Forms
             this.insTabLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.insTabLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.insTabLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.insTabLayoutPanel.Size = new System.Drawing.Size(1145, 620);
+            this.insTabLayoutPanel.Size = new System.Drawing.Size(1145, 609);
             this.insTabLayoutPanel.TabIndex = 2;
             // 
             // HolderLastNameLabel
@@ -1580,7 +1604,7 @@ namespace LabBilling.Forms
             // 
             this.insTabLayoutPanel.SetColumnSpan(this.InsTabMessageTextBox, 3);
             this.InsTabMessageTextBox.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.InsTabMessageTextBox.Location = new System.Drawing.Point(133, 533);
+            this.InsTabMessageTextBox.Location = new System.Drawing.Point(133, 522);
             this.InsTabMessageTextBox.Multiline = true;
             this.InsTabMessageTextBox.Name = "InsTabMessageTextBox";
             this.InsTabMessageTextBox.Size = new System.Drawing.Size(1009, 84);
@@ -1601,7 +1625,7 @@ namespace LabBilling.Forms
             this.tabDiagnosis.Location = new System.Drawing.Point(4, 22);
             this.tabDiagnosis.Name = "tabDiagnosis";
             this.tabDiagnosis.Padding = new System.Windows.Forms.Padding(3);
-            this.tabDiagnosis.Size = new System.Drawing.Size(1151, 626);
+            this.tabDiagnosis.Size = new System.Drawing.Size(1151, 615);
             this.tabDiagnosis.TabIndex = 8;
             this.tabDiagnosis.Text = "Diagnosis";
             this.tabDiagnosis.UseVisualStyleBackColor = true;
@@ -1785,7 +1809,7 @@ namespace LabBilling.Forms
             this.tabCharges.Location = new System.Drawing.Point(4, 22);
             this.tabCharges.Name = "tabCharges";
             this.tabCharges.Padding = new System.Windows.Forms.Padding(3);
-            this.tabCharges.Size = new System.Drawing.Size(1151, 626);
+            this.tabCharges.Size = new System.Drawing.Size(1151, 615);
             this.tabCharges.TabIndex = 6;
             this.tabCharges.Text = "Charges";
             this.tabCharges.UseVisualStyleBackColor = true;
@@ -2024,7 +2048,7 @@ namespace LabBilling.Forms
             this.tabPayments.Controls.Add(this.PaymentsDataGrid);
             this.tabPayments.Location = new System.Drawing.Point(4, 22);
             this.tabPayments.Name = "tabPayments";
-            this.tabPayments.Size = new System.Drawing.Size(1151, 626);
+            this.tabPayments.Size = new System.Drawing.Size(1151, 615);
             this.tabPayments.TabIndex = 7;
             this.tabPayments.Text = "Payments / Adjustments";
             this.tabPayments.UseVisualStyleBackColor = true;
@@ -2160,7 +2184,7 @@ namespace LabBilling.Forms
             this.tabNotes.Controls.Add(this.NotesDisplayTextBox);
             this.tabNotes.Location = new System.Drawing.Point(4, 22);
             this.tabNotes.Name = "tabNotes";
-            this.tabNotes.Size = new System.Drawing.Size(1151, 626);
+            this.tabNotes.Size = new System.Drawing.Size(1151, 615);
             this.tabNotes.TabIndex = 5;
             this.tabNotes.Text = "Notes";
             this.tabNotes.UseVisualStyleBackColor = true;
@@ -2181,7 +2205,7 @@ namespace LabBilling.Forms
             this.NotesDisplayTextBox.Location = new System.Drawing.Point(0, 0);
             this.NotesDisplayTextBox.Name = "NotesDisplayTextBox";
             this.NotesDisplayTextBox.ReadOnly = true;
-            this.NotesDisplayTextBox.Size = new System.Drawing.Size(598, 626);
+            this.NotesDisplayTextBox.Size = new System.Drawing.Size(598, 615);
             this.NotesDisplayTextBox.TabIndex = 0;
             this.NotesDisplayTextBox.Text = "";
             // 
@@ -2196,7 +2220,7 @@ namespace LabBilling.Forms
             this.tabBillingActivity.Location = new System.Drawing.Point(4, 22);
             this.tabBillingActivity.Name = "tabBillingActivity";
             this.tabBillingActivity.Padding = new System.Windows.Forms.Padding(3);
-            this.tabBillingActivity.Size = new System.Drawing.Size(1151, 626);
+            this.tabBillingActivity.Size = new System.Drawing.Size(1151, 615);
             this.tabBillingActivity.TabIndex = 12;
             this.tabBillingActivity.Text = "Billing Activity";
             this.tabBillingActivity.UseVisualStyleBackColor = true;
@@ -2579,6 +2603,16 @@ namespace LabBilling.Forms
             this.BannerBillStatusTextBox.Size = new System.Drawing.Size(94, 16);
             this.BannerBillStatusTextBox.TabIndex = 25;
             // 
+            // BannerProviderTextBox
+            // 
+            this.BannerProviderTextBox.BackColor = System.Drawing.Color.Blue;
+            this.BannerProviderTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.BannerProviderTextBox.ForeColor = System.Drawing.Color.White;
+            this.BannerProviderTextBox.Location = new System.Drawing.Point(12, 81);
+            this.BannerProviderTextBox.Name = "BannerProviderTextBox";
+            this.BannerProviderTextBox.Size = new System.Drawing.Size(251, 13);
+            this.BannerProviderTextBox.TabIndex = 29;
+            // 
             // AccountForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2589,6 +2623,7 @@ namespace LabBilling.Forms
             this.Controls.Add(this.BannerBillStatusLabel);
             this.Controls.Add(this.BannerFinClassLabel);
             this.Controls.Add(this.BannerFinClassTextBox);
+            this.Controls.Add(this.BannerProviderTextBox);
             this.Controls.Add(this.BannerClientTextBox);
             this.Controls.Add(this.RefreshButton);
             this.Controls.Add(this.BannerMRNTextBox);
@@ -2834,6 +2869,9 @@ namespace LabBilling.Forms
         private System.Windows.Forms.Label BannerBillStatusLabel;
         private System.Windows.Forms.TextBox BannerBillStatusTextBox;
         private MetroFramework.Controls.MetroButton GenerateClaimButton;
+        private System.Windows.Forms.TextBox BannerProviderTextBox;
+        private System.Windows.Forms.Label orderingProviderLabel;
+        private System.Windows.Forms.ComboBox orderingProviderComboBox;
     }
 }
 

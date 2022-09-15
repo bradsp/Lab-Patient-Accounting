@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Configuration;
 using System.Data;
+using System.Data.Common;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -10,52 +11,32 @@ using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
 using System.Windows.Forms;
+using System.Xml.Linq;
+using RFClassLibrary;
 
 namespace LabBilling
 {
     public static class Helper
     {
-        private static string _environment = "";
+        //private static string _environment = "";
 
         public static string ConnVal
         {
-
             get
             {
-                if (_environment == null || _environment == "") //default to MCLTEST if value has not been set
-                    return ConfigurationManager.ConnectionStrings["MCLTEST"].ConnectionString;
-                else
-                    return ConfigurationManager.ConnectionStrings[_environment].ConnectionString;
-            }
-                
-            set 
-            { 
-                _environment = value;
-                args[1] = "/" + _environment;
-            }
+                if (Program.SelectedEnvironment == null || Program.SelectedEnvironment == "") //default to MCLTEST if value has not been set
+                    throw new ArgumentNullException("Program.SelectedEnvironment");
 
-            //if testing
-            //return ConfigurationManager.ConnectionStrings["MCLTEST"].ConnectionString;
-
-            //if production
-            //return ConfigurationManager.ConnectionStrings["MCLLIVE"].ConnectionString;
-        }
-
-        public static string Environment
-        {
-            get { return _environment; }
-            set 
-            { 
-                _environment = value;
-                args[1] = "/" + _environment;
+                return ConfigurationManager.ConnectionStrings[Program.SelectedEnvironment].ConnectionString;
             }
         }
 
-        public static string[] args = new string[]
+        public static string[] GetArgs()
         {
-            "/WTHMCLBILL",
-            Environment
-        };
+            ConnectionString connString = Helper.ConnVal;
+
+            return connString.ToArray();
+        }
 
         public static string Encrypt(string clearText)
         {

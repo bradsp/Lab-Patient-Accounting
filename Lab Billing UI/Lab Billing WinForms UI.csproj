@@ -310,12 +310,6 @@
     <Compile Include="Library\Opulos.Core\FontExWPF.cs" />
     <Compile Include="Library\InputBox.cs" />
     <Compile Include="Library\Opulos.Core\IToolTips.cs" />
-    <Compile Include="Library\LookupBox.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Library\LookupBox.Designer.cs">
-      <DependentUpon>LookupBox.cs</DependentUpon>
-    </Compile>
     <Compile Include="Library\Opulos.Core\MultiKey.cs" />
     <Compile Include="Library\Opulos.Core\OpacityEx.cs" />
     <Compile Include="Library\Opulos.Core\ResizeBar.cs">
@@ -543,9 +537,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Library\LabeledTextBox.resx">
       <DependentUpon>LabeledTextBox.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Library\LookupBox.resx">
-      <DependentUpon>LookupBox.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\AboutBox.resx">
       <DependentUpon>AboutBox.cs</DependentUpon>

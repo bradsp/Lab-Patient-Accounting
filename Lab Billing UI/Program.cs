@@ -9,8 +9,8 @@ namespace LabBilling
     static class Program
     {
         public static Emp LoggedInUser { get; set; }
-        //public static string SelectedEnvironment { get; set; }
-        //public static string ConnectionString { get; set; }
+        public static string SelectedEnvironment { get; set; }
+        public static string ConnectionString { get; set; }
 
         /// <summary>
         /// The main entry point for the application.
@@ -22,7 +22,7 @@ namespace LabBilling
 
             Application.ThreadException += new System.Threading.ThreadExceptionEventHandler(Application_ThreadException);
             AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
-            Log.Instance.Info($"Launching LabBilling - connection {Helper.ConnVal}");
+            Log.Instance.Info($"Launching LabBilling");
 
             Application.ApplicationExit += new EventHandler(OnApplicationExit);
 
@@ -32,6 +32,7 @@ namespace LabBilling
             Login loginFrm = new Login();
             if(loginFrm.ShowDialog() == DialogResult.OK)
             {
+                Log.Instance.Info($"Login successful - connection {Helper.ConnVal}");
                 Application.Run(new MainForm());
             }
             else

@@ -190,7 +190,7 @@ namespace RFClassLibrary
                         ConnectHostListening();// rgc/wdk 20100126 added
                         if (!m_listener.Pending())
                         {
-                            ET.sWait(30000);
+                            ElapsedTime.sWait(30000);
                             m_ERR.m_Logfile.WriteLogFile("TCP_IP_HOST waiting for pending for 30 seconds");
                             nCount++;
                             continue;
