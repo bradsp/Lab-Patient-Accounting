@@ -118,7 +118,6 @@ namespace LabBilling.Forms
             this.DemoStatusMessagesTextBox = new System.Windows.Forms.TextBox();
             this.SaveDemographics = new System.Windows.Forms.Button();
             this.orderingProviderLabel = new System.Windows.Forms.Label();
-            this.orderingProviderComboBox = new System.Windows.Forms.ComboBox();
             this.tabInsurance = new System.Windows.Forms.TabPage();
             this.insTabLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
             this.HolderLastNameLabel = new System.Windows.Forms.Label();
@@ -242,6 +241,7 @@ namespace LabBilling.Forms
             this.BannerBillStatusLabel = new System.Windows.Forms.Label();
             this.BannerBillStatusTextBox = new System.Windows.Forms.TextBox();
             this.BannerProviderTextBox = new System.Windows.Forms.TextBox();
+            this.orderingProviderComboBox = new MultiColumnCombo.MultiColumnComboBox();
             this.tabControl1.SuspendLayout();
             this.summaryTab.SuspendLayout();
             this.tabDemographics.SuspendLayout();
@@ -1018,14 +1018,6 @@ namespace LabBilling.Forms
             this.orderingProviderLabel.TabIndex = 140;
             this.orderingProviderLabel.Text = "Ordering Provider";
             this.orderingProviderLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // orderingProviderComboBox
-            // 
-            this.orderingProviderComboBox.FormattingEnabled = true;
-            this.orderingProviderComboBox.Location = new System.Drawing.Point(617, 453);
-            this.orderingProviderComboBox.Name = "orderingProviderComboBox";
-            this.orderingProviderComboBox.Size = new System.Drawing.Size(297, 21);
-            this.orderingProviderComboBox.TabIndex = 141;
             // 
             // tabInsurance
             // 
@@ -2613,6 +2605,15 @@ namespace LabBilling.Forms
             this.BannerProviderTextBox.Size = new System.Drawing.Size(251, 13);
             this.BannerProviderTextBox.TabIndex = 29;
             // 
+            // orderingProviderComboBox
+            // 
+            this.orderingProviderComboBox.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
+            this.orderingProviderComboBox.FormattingEnabled = true;
+            this.orderingProviderComboBox.Location = new System.Drawing.Point(617, 453);
+            this.orderingProviderComboBox.Name = "orderingProviderComboBox";
+            this.orderingProviderComboBox.Size = new System.Drawing.Size(297, 21);
+            this.orderingProviderComboBox.TabIndex = 142;
+            // 
             // AccountForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2871,7 +2872,7 @@ namespace LabBilling.Forms
         private MetroFramework.Controls.MetroButton GenerateClaimButton;
         private System.Windows.Forms.TextBox BannerProviderTextBox;
         private System.Windows.Forms.Label orderingProviderLabel;
-        private System.Windows.Forms.ComboBox orderingProviderComboBox;
+        private MultiColumnCombo.MultiColumnComboBox orderingProviderComboBox;
     }
 }
 

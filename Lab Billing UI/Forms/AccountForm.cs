@@ -26,6 +26,7 @@ namespace LabBilling.Forms
         private DataTable chargesTable = new DataTable();
 
         private List<InsCompany> insCompanies = null;
+        private List<Phy> providers = null;
         private Account currentAccount = null;
         private BindingSource insGridSource = null;
         private bool InEditMode = false;
@@ -184,6 +185,7 @@ namespace LabBilling.Forms
             controlColumnMap.Add(GuarCityTextBox, nameof(Pat.GuarantorCity));
             controlColumnMap.Add(GuarantorAddressTextBox, nameof(Pat.GuarantorAddress));
             controlColumnMap.Add(GuarantorLastNameTextBox, nameof(Pat.GuarantorLastName));
+            controlColumnMap.Add(orderingProviderComboBox, nameof(Pat.ProviderId));
             #endregion
 
             #region Setup Insurance Company Combobox
@@ -209,6 +211,29 @@ namespace LabBilling.Forms
             InsCodeComboBox.DisplayMember = "Name";
             InsCodeComboBox.ValueMember = "Code";
 
+            #endregion
+
+            #region Setup ordering provider combo box
+
+            providers = phyRepository.GetActive().OrderBy(x => x.FullName).ToList();
+            DataTable phyDataTable = new DataTable(typeof(Phy).Name);
+            phyDataTable.Columns.Add(nameof(Phy.NpiId));
+            phyDataTable.Columns.Add(nameof(Phy.FullName));
+            var values2 = new object[2];
+            values[0] = "";
+            values[1] = "<select provider>";
+            phyDataTable.Rows.Add(values2);
+
+            foreach(var provider in providers)
+            {
+                values[0] = provider.NpiId;
+                values[1] = provider.FullName;
+                phyDataTable.Rows.Add(values);
+            }
+
+            orderingProviderComboBox.DataSource = phyDataTable;
+            orderingProviderComboBox.DisplayMember = nameof(Phy.FullName);
+            orderingProviderComboBox.ValueMember = nameof(Phy.NpiId);
             #endregion
 
             #region populate combo boxes
@@ -313,10 +338,10 @@ namespace LabBilling.Forms
                 new SummaryData("Status", currentAccount.Status,SummaryData.GroupType.Demographics,4,1),
                 new SummaryData("MRN", currentAccount.MRN, SummaryData.GroupType.Demographics,5,1),
                 new SummaryData("Client", currentAccount.ClientName, SummaryData.GroupType.Demographics,7,1),
-                new SummaryData("Ordering Provider", currentAccount.Pat.Physician.FullName, SummaryData.GroupType.Demographics, 23, 1),
-                new SummaryData("Address", currentAccount.Pat.AddressLine, SummaryData.GroupType.Demographics,9,1),
-                new SummaryData("Phone", currentAccount.Pat.PrimaryPhone.FormatPhone(), SummaryData.GroupType.Demographics,10,1),
-                new SummaryData("Email", currentAccount.Pat.EmailAddress, SummaryData.GroupType.Demographics,11,1),
+                new SummaryData("Ordering Provider", currentAccount.Pat.Physician.FullName, SummaryData.GroupType.Demographics, 8, 1),
+                new SummaryData("Address", currentAccount.Pat.AddressLine, SummaryData.GroupType.Demographics,10,1),
+                new SummaryData("Phone", currentAccount.Pat.PrimaryPhone.FormatPhone(), SummaryData.GroupType.Demographics,11,1),
+                new SummaryData("Email", currentAccount.Pat.EmailAddress, SummaryData.GroupType.Demographics,12,1),
 
                 new SummaryData("Financial","",SummaryData.GroupType.Financial,1,2,true),
                 new SummaryData("Financial Class", currentAccount.FinCode, SummaryData.GroupType.Financial,2,2),
@@ -330,17 +355,17 @@ namespace LabBilling.Forms
             if (currentAccount.FinCode != "CLIENT")
             {
                 sd.Add(new SummaryData("SSN", currentAccount.SocSecNo.FormatSSN(), SummaryData.GroupType.Demographics, 6, 1));
-                sd.Add(new SummaryData("DOB/Sex", currentAccount.Pat.DOBSex, SummaryData.GroupType.Demographics, 8, 1));
-                sd.Add(new SummaryData("Diagnoses", "", SummaryData.GroupType.Diagnoses, 12, 1, true));
-                sd.Add(new SummaryData(currentAccount.Pat.Dx1, currentAccount.Pat.Dx1Desc, SummaryData.GroupType.Diagnoses, 13, 1));
-                sd.Add(new SummaryData(currentAccount.Pat.Dx2, currentAccount.Pat.Dx2Desc, SummaryData.GroupType.Diagnoses, 14, 1));
-                sd.Add(new SummaryData(currentAccount.Pat.Dx3, currentAccount.Pat.Dx3Desc, SummaryData.GroupType.Diagnoses, 15, 1));
-                sd.Add(new SummaryData(currentAccount.Pat.Dx4, currentAccount.Pat.Dx4Desc, SummaryData.GroupType.Diagnoses, 16, 1));
-                sd.Add(new SummaryData(currentAccount.Pat.Dx5, currentAccount.Pat.Dx5Desc, SummaryData.GroupType.Diagnoses, 17, 1));
-                sd.Add(new SummaryData(currentAccount.Pat.Dx6, currentAccount.Pat.Dx6Desc, SummaryData.GroupType.Diagnoses, 18, 1));
-                sd.Add(new SummaryData(currentAccount.Pat.Dx7, currentAccount.Pat.Dx7Desc, SummaryData.GroupType.Diagnoses, 19, 1));
-                sd.Add(new SummaryData(currentAccount.Pat.Dx8, currentAccount.Pat.Dx8Desc, SummaryData.GroupType.Diagnoses, 20, 1));
-                sd.Add(new SummaryData(currentAccount.Pat.Dx9, currentAccount.Pat.Dx9Desc, SummaryData.GroupType.Diagnoses, 21, 1));
+                sd.Add(new SummaryData("DOB/Sex", currentAccount.Pat.DOBSex, SummaryData.GroupType.Demographics, 9, 1));
+                sd.Add(new SummaryData("Diagnoses", "", SummaryData.GroupType.Diagnoses, 13, 1, true));
+                sd.Add(new SummaryData(currentAccount.Pat.Dx1, currentAccount.Pat.Dx1Desc, SummaryData.GroupType.Diagnoses, 14, 1));
+                sd.Add(new SummaryData(currentAccount.Pat.Dx2, currentAccount.Pat.Dx2Desc, SummaryData.GroupType.Diagnoses, 15, 1));
+                sd.Add(new SummaryData(currentAccount.Pat.Dx3, currentAccount.Pat.Dx3Desc, SummaryData.GroupType.Diagnoses, 16, 1));
+                sd.Add(new SummaryData(currentAccount.Pat.Dx4, currentAccount.Pat.Dx4Desc, SummaryData.GroupType.Diagnoses, 17, 1));
+                sd.Add(new SummaryData(currentAccount.Pat.Dx5, currentAccount.Pat.Dx5Desc, SummaryData.GroupType.Diagnoses, 18, 1));
+                sd.Add(new SummaryData(currentAccount.Pat.Dx6, currentAccount.Pat.Dx6Desc, SummaryData.GroupType.Diagnoses, 19, 1));
+                sd.Add(new SummaryData(currentAccount.Pat.Dx7, currentAccount.Pat.Dx7Desc, SummaryData.GroupType.Diagnoses, 20, 1));
+                sd.Add(new SummaryData(currentAccount.Pat.Dx8, currentAccount.Pat.Dx8Desc, SummaryData.GroupType.Diagnoses, 21, 1));
+                sd.Add(new SummaryData(currentAccount.Pat.Dx9, currentAccount.Pat.Dx9Desc, SummaryData.GroupType.Diagnoses, 22, 1));
 
                 foreach (Ins ins in currentAccount.Insurances)
                 {
@@ -463,6 +488,8 @@ namespace LabBilling.Forms
             SexComboBox.BackColor = Color.White;
             MaritalStatusComboBox.SelectedValue = currentAccount.Pat.MaritalStatus != null ? currentAccount.Pat.MaritalStatus : "";
             MaritalStatusComboBox.BackColor = Color.White;
+
+            orderingProviderComboBox.SelectedValue = currentAccount.Pat.ProviderId;
 
             GuarantorLastNameTextBox.Text = currentAccount.Pat.GuarantorLastName;
             GuarFirstNameTextBox.Text = currentAccount.Pat.GuarantorFirstName;
@@ -599,11 +626,12 @@ namespace LabBilling.Forms
             currentAccount.Pat.GuarantorCityState = string.Format("{0}, {1} {2}", GuarCityTextBox.Text, GuarStateComboBox.SelectedValue.ToString(), GuarZipTextBox.Text);
             currentAccount.Pat.Sex = SexComboBox.SelectedValue.ToString();
             currentAccount.Pat.GuarRelationToPatient = GuarantorRelationComboBox.SelectedValue.ToString();
+            currentAccount.Pat.ProviderId = orderingProviderComboBox.SelectedValue.ToString();
             //currentAccount.Pat.SocSecNo = tbSSN.Text;
 
             patDB.SaveAll(currentAccount.Pat);
 
-            var controls = tabDemographics.Controls;
+            var controls = DemographicsTabLayoutPanel.Controls; //tabDemographics.Controls;
 
             foreach (Control control in controls)
             {
