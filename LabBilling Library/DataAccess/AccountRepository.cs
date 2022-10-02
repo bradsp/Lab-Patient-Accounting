@@ -9,6 +9,8 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading.Tasks;
+using System.Data.SqlClient;
+using System.Data;
 
 namespace LabBilling.Core.DataAccess
 {
@@ -74,19 +76,20 @@ namespace LabBilling.Core.DataAccess
         {
             Log.Instance.Debug($"Entering");
 
-            var record = dbConnection.SingleOrDefault<Account>($"where {this.GetRealColumn(typeof(Account), nameof(Account.AccountNo))} = @0", account);
+            var record = dbConnection.SingleOrDefault<Account>($"where {this.GetRealColumn(typeof(Account), nameof(Account.AccountNo))} = @0", 
+                new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account });
 
-            if(!Str.ParseName(record.PatFullName, out string strLastName, out string strFirstName, out string strMiddleName, out string strSuffix))
-            {
-                this.Errors = string.Format("Patient name could not be parsed. {0} {1}\n", record.PatFullName, record.AccountNo);
-            }
-            else
-            {
-                record.PatLastName = strLastName;
-                record.PatFirstName = strFirstName;
-                record.PatMiddleName = strMiddleName;
-                record.PatNameSuffix = strSuffix;
-            }
+            //if(!Str.ParseName(record.PatFullName, out string strLastName, out string strFirstName, out string strMiddleName, out string strSuffix))
+            //{
+            //    this.Errors = string.Format("Patient name could not be parsed. {0} {1}\n", record.PatFullName, record.AccountNo);
+            //}
+            //else
+            //{
+            //    record.PatLastName = strLastName;
+            //    record.PatFirstName = strFirstName;
+            //    record.PatMiddleName = strMiddleName;
+            //    record.PatNameSuffix = strSuffix;
+            //}
 
             if (record.ClientMnem != null)
             {
@@ -159,22 +162,32 @@ namespace LabBilling.Core.DataAccess
             //populate properties
             result = dbConnection.ExecuteScalar<object>("SELECT dbo.GetAccBalByDate(@0, @1)", account, DateTime.Today);
             if (result != DBNull.Value && result != null)
-                record.Balance = Convert.ToDouble(result); // == null ? 0.00 : (double)result;
-            result = dbConnection.ExecuteScalar<object>("SELECT dbo.GetBadDebtByAccount(@0)", account);
+                record.Balance = Convert.ToDouble(result); 
+            
+            result = dbConnection.ExecuteScalar<object>("SELECT dbo.GetBadDebtByAccount(@0)", 
+                new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account });
             if (result != DBNull.Value && result != null)
-                record.TotalBadDebt = Convert.ToDouble(result); // == null ? 0.00 : (double)result;
-            result = dbConnection.ExecuteScalar<object>("SELECT dbo.GetAccTotalCharges(@0)", account);
+                record.TotalBadDebt = Convert.ToDouble(result); 
+            
+            result = dbConnection.ExecuteScalar<object>("SELECT dbo.GetAccTotalCharges(@0)", 
+                new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account });
             if (result != DBNull.Value && result != null)
-                record.TotalCharges = Convert.ToDouble(result); // == null ? 0.00 : (double)result;
-            result = dbConnection.ExecuteScalar<object>("SELECT dbo.GetContractualByAccount(@0)", account);
+                record.TotalCharges = Convert.ToDouble(result); 
+            
+            result = dbConnection.ExecuteScalar<object>("SELECT dbo.GetContractualByAccount(@0)", 
+                new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account });
             if (result != DBNull.Value && result != null)
-                record.TotalContractual = Convert.ToDouble(result); // == null ? 0.00 : (double)result;
-            result = dbConnection.ExecuteScalar<object>("SELECT dbo.GetAmtPaidByAccount(@0)", account);
+                record.TotalContractual = Convert.ToDouble(result); 
+            
+            result = dbConnection.ExecuteScalar<object>("SELECT dbo.GetAmtPaidByAccount(@0)", 
+                new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account });
             if (result != DBNull.Value && result != null)
-                record.TotalPayments = Convert.ToDouble(result); // == null ? 0.00 : (double)result;
-            result = dbConnection.ExecuteScalar<object>("SELECT dbo.GetWriteOffByAccount(@0)", account);
+                record.TotalPayments = Convert.ToDouble(result); 
+            
+            result = dbConnection.ExecuteScalar<object>("SELECT dbo.GetWriteOffByAccount(@0)", 
+                new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account });
             if (result != DBNull.Value && result != null)
-                record.TotalWriteOff = Convert.ToDouble(result); // == null ? 0.00 : (double)result;
+                record.TotalWriteOff = Convert.ToDouble(result);
 
             return record;
         }
@@ -197,7 +210,9 @@ namespace LabBilling.Core.DataAccess
             Log.Instance.Trace("Entering");
 
             return dbConnection.Fetch<InvoiceSelect>($"where {this.GetRealColumn(typeof(InvoiceSelect), nameof(InvoiceSelect.cl_mnem))} = @0 " + 
-                $"and {this.GetRealColumn(typeof(InvoiceSelect), nameof(InvoiceSelect.trans_date))} <= @1", clientMnem, thruDate);
+                $"and {this.GetRealColumn(typeof(InvoiceSelect), nameof(InvoiceSelect.trans_date))} <= @1", 
+                new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = clientMnem }, 
+                new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = thruDate });
         }
 
         public IEnumerable<ClaimItem> GetAccountsForClaims(ClaimType claimType)
@@ -261,7 +276,7 @@ namespace LabBilling.Core.DataAccess
 
             table.PatFullName = table.PatFullName.Trim();
 
-            Log.Instance.Trace("$Exiting");
+            Log.Instance.Trace("Exiting");
             return base.Update(table);
         }
 
@@ -284,12 +299,12 @@ namespace LabBilling.Core.DataAccess
         public int UpdateStatus(string accountNo, string status)
         {
             return dbConnection.Update<Account>("set status = @0, mod_date = @1, mod_user = @2, mod_prg = @3, mod_host = @4 where account = @5",
-                status,
-                DateTime.Now,
-                Environment.UserName.ToString(),
-                System.AppDomain.CurrentDomain.FriendlyName,
-                Environment.MachineName,
-                accountNo);
+                new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = status },
+                new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = DateTime.Now },
+                new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = Environment.UserName.ToString() },
+                new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = System.AppDomain.CurrentDomain.FriendlyName },
+                new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = Environment.MachineName },
+                new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = accountNo });
         }
 
         public bool ChangeDateOfService(ref Account table, DateTime newDate, string reason_comment)
@@ -433,7 +448,6 @@ namespace LabBilling.Core.DataAccess
             Log.Instance.Trace($"Entering");
             CdmRepository cdmRepository = new CdmRepository(dbConnection);
             FinRepository finRepository = new FinRepository(dbConnection);
-
 
             //verify the account exists - if not return -1
             Account accData = GetByAccount(account);
@@ -614,14 +628,12 @@ namespace LabBilling.Core.DataAccess
                     errorList.Add($"LMRP Violation - No dx codes support medical necessity for cpt {cpt4}.");
                 }
             }
-
             return errorList;
         }
     
     
         public async Task ValidateUnbilledAccountsAsync()
         {
-
             DateTime.TryParse(systemParametersRepository.GetByKey("ssi_bill_thru_date"), out DateTime thruDate);
 
             (string propertyName, AccountSearchRepository.operation oper, string searchText)[] parameters = {

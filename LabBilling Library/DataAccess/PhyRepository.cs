@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -27,7 +29,8 @@ namespace LabBilling.Core.DataAccess
             Pth pth = new Pth();
 
             if (!string.IsNullOrEmpty(npi))
-                phy = dbConnection.SingleOrDefault<Phy>("where tnh_num = @0", npi);
+                phy = dbConnection.SingleOrDefault<Phy>("where tnh_num = @0",
+                    new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = npi });
 
             if (!string.IsNullOrEmpty(phy.PathologistCode))
             {
@@ -47,8 +50,10 @@ namespace LabBilling.Core.DataAccess
             {
                 var command = PetaPoco.Sql.Builder
                     .From(_tableName)
-                    .Where($"{this.GetRealColumn(typeof(Phy), nameof(Phy.LastName))} like @0+'%'", lastName)
-                    .Where($"{this.GetRealColumn(typeof(Phy), nameof(Phy.FirstName))} like @0+'%'", firstName)
+                    .Where($"{this.GetRealColumn(typeof(Phy), nameof(Phy.LastName))} like @0+'%'",
+                        new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = lastName })
+                    .Where($"{this.GetRealColumn(typeof(Phy), nameof(Phy.FirstName))} like @0+'%'",
+                        new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = firstName })
                     .OrderBy($"{this.GetRealColumn(typeof(Phy), nameof(Phy.LastName))}, {this.GetRealColumn(typeof(Phy), nameof(Phy.FirstName))}");
 
                 phy = dbConnection.Fetch<Phy>(command);

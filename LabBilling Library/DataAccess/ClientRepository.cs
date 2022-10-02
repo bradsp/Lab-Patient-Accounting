@@ -26,7 +26,7 @@ namespace LabBilling.Core.DataAccess
                 throw new ArgumentNullException("clientMnem");
             }
 
-            var record = dbConnection.SingleOrDefault<Client>("where cli_mnem = @0", clientMnem);
+            var record = dbConnection.SingleOrDefault<Client>("where cli_mnem = @0", new SqlParameter() { SqlDbType = System.Data.SqlDbType.VarChar, Value = clientMnem });
             if (record == null)
                 record = new Client();
 
@@ -55,11 +55,11 @@ namespace LabBilling.Core.DataAccess
                 throw new ArgumentNullException("clientMnem");
             }
 
-            var c = Sql.Builder.Append("SELECT total FROM vw_chrg_bal_cbill WHERE account = @0", clientMnem);
+            var c = Sql.Builder.Append("SELECT total FROM vw_chrg_bal_cbill WHERE account = @0", new SqlParameter() { SqlDbType = System.Data.SqlDbType.VarChar, Value = clientMnem });
 
             double chrgResult = dbConnection.ExecuteScalar<double?>(c) ?? 0.0;
 
-            var p = Sql.Builder.Append("SELECT total FROM vw_chk_bal_cbill WHERE account = @0", clientMnem);
+            var p = Sql.Builder.Append("SELECT total FROM vw_chk_bal_cbill WHERE account = @0", new SqlParameter() { SqlDbType = System.Data.SqlDbType.VarChar, Value = clientMnem });
 
             double chkResult = dbConnection.ExecuteScalar<double?>(p) ?? 0.0;
 

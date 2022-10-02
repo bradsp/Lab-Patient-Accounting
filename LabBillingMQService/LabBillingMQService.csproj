@@ -10,8 +10,8 @@
   <ItemGroup>
     <PackageReference Include="Autofac" Version="6.4.0" />
     <PackageReference Include="Autofac.Extras.Quartz" Version="8.0.0" />
-    <PackageReference Include="PetaPoco.Compiled" Version="6.0.524" />
-    <PackageReference Include="Quartz" Version="3.4.0" />
+    <PackageReference Include="PetaPoco.Compiled" Version="6.0.532" />
+    <PackageReference Include="Quartz" Version="3.5.0" />
     <PackageReference Include="Topshelf" Version="4.3.0" />
     <PackageReference Include="Topshelf.Log4Net" Version="4.3.0" />
   </ItemGroup>

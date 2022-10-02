@@ -23,13 +23,13 @@ namespace LabBilling.Core.Models
 
         [Column("pat_name")]
         public string PatFullName { get; set; }
-        [Ignore]
+        [Column("last_name")]
         public string PatLastName { get; set; }
-        [Ignore]
+        [Column("first_name")]
         public string PatFirstName { get; set; }
-        [Ignore]
+        [Column("middle_name")]
         public string PatMiddleName { get; set; }
-        [Ignore]
+        [Column("name_suffix")]
         public string PatNameSuffix { get; set; }
 
         [Column("cl_mnem")]

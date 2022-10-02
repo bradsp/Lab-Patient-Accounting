@@ -1,6 +1,8 @@
 ﻿using LabBilling.Core.Models;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -29,7 +31,9 @@ namespace LabBilling.Core.DataAccess
             UserProfile userProfile = new UserProfile();
 
             dbConnection.Delete<UserProfile>($"where {this.GetRealColumn(typeof(UserProfile), nameof(UserProfile.UserName))} = @0 and Parameter = @1 and ParameterData = @2",
-                user, "RecentAccount", account);
+                new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = user },
+                new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = "RecentAccount" },
+                new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account });
            
 
             userProfile.UserName = user;
@@ -48,8 +52,8 @@ namespace LabBilling.Core.DataAccess
             var command = PetaPoco.Sql.Builder
                 .Select(select)
                 .From(_tableName) 
-                .Where("UserName = @0 ", user)
-                .Where("Parameter = @0", "RecentAccount")
+                .Where("UserName = @0 ", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = user })
+                .Where("Parameter = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = "RecentAccount" })
                 .OrderBy($"{sortColumn} desc");
 
             return dbConnection.Fetch<UserProfile>(command);

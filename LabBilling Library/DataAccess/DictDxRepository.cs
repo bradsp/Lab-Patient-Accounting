@@ -2,6 +2,8 @@
 using LabBilling.Core.Models;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
+using System.Data;
 
 namespace LabBilling.Core.DataAccess
 {
@@ -35,7 +37,9 @@ namespace LabBilling.Core.DataAccess
         {
             Log.Instance.Debug($"Entering");
 
-            var record = dbConnection.SingleOrDefault<DictDx>("where icd9_num = @0 and AMA_year = @1", dxCode, AMA_year);
+            var record = dbConnection.SingleOrDefault<DictDx>("where icd9_num = @0 and AMA_year = @1", 
+                new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = dxCode },
+                new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = AMA_year });
             if(record == null)
                 record = new DictDx();
             return record;
@@ -53,10 +57,10 @@ namespace LabBilling.Core.DataAccess
             Log.Instance.Debug($"Entering");
 
             var sql = PetaPoco.Sql.Builder
-                .Append("SELECT * FROM icd9desc")
-                .Append("WHERE (icd9_num = @0", searchText)
-                .Append("OR icd9_desc like @0)", "%"+searchText+"%")
-                .Append("AND AMA_year = @0", FunctionRepository.GetAMAYear(transDate));
+                .From("icd9desc")
+                .Append("WHERE (icd9_num = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = searchText })
+                .Append("OR icd9_desc like @0)", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = "%" + searchText + "%" })
+                .Append("AND AMA_year = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = FunctionRepository.GetAMAYear(transDate) });
 
             List<DictDx> records = dbConnection.Fetch<DictDx>(sql);
 

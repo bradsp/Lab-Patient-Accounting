@@ -3,6 +3,8 @@ using LabBilling.Core.Models;
 using System;
 using System.Collections.Generic;
 using RFClassLibrary;
+using System.Data.SqlClient;
+using System.Data;
 
 namespace LabBilling.Core.DataAccess
 {
@@ -27,7 +29,7 @@ namespace LabBilling.Core.DataAccess
         {
             Log.Instance.Debug($"Entering");
 
-            var record = dbConnection.SingleOrDefault<InsCompany>("where code = @0", code);
+            var record = dbConnection.SingleOrDefault<InsCompany>("where code = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = code });
 
             if(record != null)
             {

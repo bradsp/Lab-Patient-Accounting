@@ -78,7 +78,6 @@ namespace LabBilling.Forms
             progressBar.Maximum = cnt;
             progressBar.Value = 0;
             Cursor.Current = Cursors.WaitCursor;
-            //var accountList = (List<AccountSearch>)accountGrid.DataSource;
 
             tasksRunning = true;
             foreach (var acc in accounts)
@@ -87,7 +86,6 @@ namespace LabBilling.Forms
                 {
                     statusLabel2.Text = "Aborting...";
                     tasksRunning = false;
-                    //this.Close();
                     break;
                 }
                 statusLabel2.Text = $"Validating {progressBar.Value} of {accounts.Count}.";

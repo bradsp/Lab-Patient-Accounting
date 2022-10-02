@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using LabBilling.Logging;
 using LabBilling.Core.Models;
 using RFClassLibrary;
+using System.Data.SqlClient;
+using System.Data;
 
 namespace LabBilling.Core.DataAccess
 {
@@ -35,8 +37,10 @@ namespace LabBilling.Core.DataAccess
         {
             Log.Instance.Debug("$Entering");
 
-            var record = dbConnection.SingleOrDefault<Pat>("where account = @0", account);
-            var accRecord = dbConnection.SingleOrDefault<Account>("where account = @0", account);
+            var record = dbConnection.SingleOrDefault<Pat>("where account = @0",
+                new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account });
+            var accRecord = dbConnection.SingleOrDefault<Account>("where account = @0",
+                new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account });
             record.Physician = phyRepository.GetByNPI(record.ProviderId);
 
             if(record == null)

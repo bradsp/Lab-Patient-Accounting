@@ -4,6 +4,8 @@ using LabBilling.Logging;
 using LabBilling.Core.Models;
 using RFClassLibrary;
 using System.Linq;
+using System.Data.SqlClient;
+using System.Data;
 
 namespace LabBilling.Core.DataAccess
 {
@@ -28,7 +30,8 @@ namespace LabBilling.Core.DataAccess
         {
             Log.Instance.Debug("$Entering");
 
-            var records = dbConnection.Fetch<Ins>("where account = @0 and deleted = 0 order by ins_a_b_c", account);
+            var records = dbConnection.Fetch<Ins>("where account = @0 and deleted = 0 order by ins_a_b_c", 
+                new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account });
 
             foreach(Ins ins in records)
             {
@@ -50,7 +53,7 @@ namespace LabBilling.Core.DataAccess
                     ins.HolderName = $"{ins.HolderLastName},{ins.HolderFirstName} {ins.HolderMiddleName}";
                 }
 
-                ins.InsCompany = dbConnection.SingleOrDefault<InsCompany>("where code = @0", ins.InsCode);
+                ins.InsCompany = dbConnection.SingleOrDefault<InsCompany>("where code = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = ins.InsCode });
                 if (ins.InsCompany == null)
                     ins.InsCompany = new InsCompany();
 
@@ -65,10 +68,14 @@ namespace LabBilling.Core.DataAccess
         
         public Ins GetByAccount(string account, InsCoverage coverage)
         {
-            var record = dbConnection.SingleOrDefault<Ins>("where account = @0 and ins_a_b_c = @1", account, coverage.Value);
+
+            var record = dbConnection.SingleOrDefault<Ins>("where account = @0 and ins_a_b_c = @1",
+                new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account },
+                new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = coverage.Value });
             if (record != null)
             {
-                record.InsCompany = dbConnection.SingleOrDefault<InsCompany>("where code = @0", record.InsCode);
+                record.InsCompany = dbConnection.SingleOrDefault<InsCompany>("where code = @0", 
+                    new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = record.InsCode });
                 if (record.InsCompany == null)
                     record.InsCompany = new InsCompany();
 

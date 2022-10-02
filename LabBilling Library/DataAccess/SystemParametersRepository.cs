@@ -1,6 +1,8 @@
 ﻿using System;
 using LabBilling.Logging;
 using LabBilling.Core.Models;
+using System.Data.SqlClient;
+using System.Data;
 
 namespace LabBilling.Core.DataAccess
 {
@@ -27,7 +29,8 @@ namespace LabBilling.Core.DataAccess
 
             SysParameter record;
 
-            record = dbConnection.SingleOrDefault<SysParameter>("where key_name = @0", key);
+            record = dbConnection.SingleOrDefault<SysParameter>("where key_name = @0",
+                new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = key });
   
             if(string.IsNullOrEmpty(record.Value))
                 throw new InvalidParameterValueException("Parameter not defined", key);

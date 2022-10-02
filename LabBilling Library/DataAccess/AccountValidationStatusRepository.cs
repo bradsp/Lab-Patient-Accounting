@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,7 +23,8 @@ namespace LabBilling.Core.DataAccess
 
         public AccountValidationStatus GetByAccount(string account)
         {
-            var record = dbConnection.SingleOrDefault<AccountValidationStatus>("where account = @0", account);
+            var record = dbConnection.SingleOrDefault<AccountValidationStatus>("where account = @0", 
+                new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account });
             if (record == null)
                 record = new AccountValidationStatus();
             return record;

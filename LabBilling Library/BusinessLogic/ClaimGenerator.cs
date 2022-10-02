@@ -110,7 +110,6 @@ namespace LabBilling.Core.BusinessLogic
                     {
                         throw new TaskCanceledException();
                     }
-                    //validate account data before starting - if there are errors do not process claim.
 
                     try
                     {
@@ -118,6 +117,9 @@ namespace LabBilling.Core.BusinessLogic
                         if(claim == null)
                         {
                             //validation failed - skip to next record
+                            report.RecordsProcessed++;
+                            report.PercentageComplete = Convert.ToInt16((report.RecordsProcessed / report.TotalRecords) * 100);
+                            progress.Report(report);
                             continue;
                         }
                         claims.Add(claim);
@@ -222,9 +224,7 @@ namespace LabBilling.Core.BusinessLogic
                 Log.Instance.Fatal(ex, "Exception processing Institutional Claims. Batch has been rolled back. Report error to the Application Administrator.");
                 db.AbortTransaction();
             }
-
             return -1;
-
         }
 
         public void CompileClaim(string accountNo)

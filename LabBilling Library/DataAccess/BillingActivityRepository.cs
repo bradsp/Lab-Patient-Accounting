@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Data.SqlClient;
+using System.Data;
 
 namespace LabBilling.Core.DataAccess
 {
@@ -22,7 +24,7 @@ namespace LabBilling.Core.DataAccess
         {
             Log.Instance.Debug($"Entering");
 
-            var record = dbConnection.Fetch<BillingActivity>("where account = @0", account);
+            var record = dbConnection.Fetch<BillingActivity>("where account = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account });
 
             return record;
         }
@@ -30,7 +32,9 @@ namespace LabBilling.Core.DataAccess
         public override bool Save(BillingActivity table)
         {
             Log.Instance.Debug($"Entering");
-            var record = dbConnection.SingleOrDefault<BillingActivity>("where account=@0 and run_date = @1", table.AccountNo, table.RunDate);
+            var record = dbConnection.SingleOrDefault<BillingActivity>("where account=@0 and run_date = @1", 
+                new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = table.AccountNo }, 
+                new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = table.RunDate });
 
             if (record == null)
             {

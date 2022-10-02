@@ -1,6 +1,8 @@
 ﻿using LabBilling.Core.Models;
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -28,7 +30,7 @@ namespace LabBilling.Core.DataAccess
         {
             BadDebt badDebt = new BadDebt();
 
-            badDebt = dbConnection.SingleOrDefault<BadDebt>("where rowguid = @0", rowguid);
+            badDebt = dbConnection.SingleOrDefault<BadDebt>("where rowguid = @0", new SqlParameter() { SqlDbType = SqlDbType.UniqueIdentifier, Value = rowguid });
 
             badDebt.State = badDebt.StateZip.Substring(0, 2);
             badDebt.Zip = badDebt.StateZip.Substring(3);

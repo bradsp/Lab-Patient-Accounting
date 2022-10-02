@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
 using LabBilling.Core.Models;
 
 namespace LabBilling.Core.DataAccess
@@ -26,7 +28,7 @@ namespace LabBilling.Core.DataAccess
             RevenueCodeRepository revenueCodeRepository = new RevenueCodeRepository(dbConnection);
             var sql = PetaPoco.Sql.Builder
                 .From($"{_tableName}")
-                .Where($"{this.GetRealColumn(typeof(ChrgDetail), nameof(ChrgDetail.ChrgNo))} = @0", chrg_num);
+                .Where($"{this.GetRealColumn(typeof(ChrgDetail), nameof(ChrgDetail.ChrgNo))} = @0", new SqlParameter() { SqlDbType = SqlDbType.Decimal, Value = chrg_num });
 
             var results = dbConnection.Fetch<ChrgDetail>(sql);
 

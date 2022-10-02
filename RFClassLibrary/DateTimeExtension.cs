@@ -233,6 +233,11 @@ namespace RFClassLibrary
             return date >= start && date <= end;
         }
 
+        public static DateTime? Parse(string text)
+        {
+            DateTime date;
+            return DateTime.TryParse(text, out date) ? date : (DateTime?)null;
+        }
 
 
     }

@@ -9,6 +9,8 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading.Tasks;
+using System.Data.SqlClient;
+using System.Data;
 
 namespace LabBilling.Core.DataAccess
 {
@@ -203,20 +205,38 @@ namespace LabBilling.Core.DataAccess
 
             try
             {
-
                 string nameSearch = "";
                 if (!(lastNameSearchText == "" && firstNameSearchText == ""))
                     nameSearch = string.Format("{0}%,{1}%", lastNameSearchText, firstNameSearchText);
 
                 var command = PetaPoco.Sql.Builder
-                    .Where("deleted = 0 ")
-                    .Where("(pat_name like @0 or @1 = '')", nameSearch, nameSearch)
-                    .Where("(account = @0 or @1 = '')", accountSearchText, accountSearchText)
-                    .Where("(mri = @0 or @1 = '')", mrnSearchText, mrnSearchText)
-                    .Where("(sex = @0 or @1 = '')", sexSearch, sexSearch)
-                    .Where("(ssn = @0 or @1 = '')", ssnSearchText, ssnSearchText)
-                    .Where("(dob_yyyy = @0 or @1 = '')", dobSearch, dobSearch)
-                    .OrderBy("trans_date desc");
+                    .Where("deleted = 0 ");
+
+                if (!String.IsNullOrEmpty(lastNameSearchText))
+                    command.Where("last_name like @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = lastNameSearchText+"%" });
+
+                if(!string.IsNullOrEmpty(firstNameSearchText))
+                    command.Where("first_name like @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = firstNameSearchText + "%" });
+
+                if (!string.IsNullOrEmpty(accountSearchText))
+                    command.Where("account = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = accountSearchText });
+
+                if (!string.IsNullOrEmpty(mrnSearchText))
+                    command.Where("mri = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = mrnSearchText });
+
+                if (!string.IsNullOrEmpty(sexSearch))
+                    command.Where("sex = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = sexSearch });
+
+                if (!string.IsNullOrEmpty(ssnSearchText))
+                    command.Where("ssn = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = ssnSearchText });
+
+                if (!string.IsNullOrEmpty(dobSearch))
+                {
+                    _ = DateTime.TryParse(dobSearch, out DateTime dobDt);
+                    command.Where("dob_yyyy = @0", new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = dobDt });
+                }
+                    
+                command.OrderBy("trans_date desc");
 
                 return dbConnection.Fetch<AccountSearch>(command);
             }

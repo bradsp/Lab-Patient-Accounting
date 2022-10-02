@@ -1,6 +1,8 @@
 ﻿using LabBilling.Core.Models;
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -27,9 +29,8 @@ namespace LabBilling.Core.DataAccess
         public List<AccountNote> GetByAccount(string account)
         {
             var sql = PetaPoco.Sql.Builder
-                .Select("*")
                 .From(_tableName)
-                .Where("account = @0", account)
+                .Where("account = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account })
                 .OrderBy("mod_date DESC");
 
             var records = dbConnection.Fetch<AccountNote>(sql);

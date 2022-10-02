@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using LabBilling.Logging;
 using LabBilling.Core.Models;
+using System.Data.SqlClient;
+using System.Data;
 
 namespace LabBilling.Core.DataAccess
 {
     public class ChrgRepository : RepositoryBase<Chrg>
     {
         private CdmRepository cdmRepository;
-        //private FinRepository finRepository;
         private readonly ChrgDetailRepository amtRepository;
 
         public ChrgRepository(string connection) : base(connection)
@@ -31,7 +32,7 @@ namespace LabBilling.Core.DataAccess
                 .From("chrg")
                 .LeftJoin("cdm").On("chrg.cdm = cdm.cdm")
                 .InnerJoin("chrg_details").On("chrg_details.chrg_num = chrg.chrg_num")
-                .Where("chrg.chrg_num = @0", id);
+                .Where("chrg.chrg_num = @0", new SqlParameter() { SqlDbType = SqlDbType.Decimal, Value = id });
 
             var result = dbConnection.Fetch<Chrg, ChrgDetail, Chrg>(new ChrgChrgDetailRelator().MapIt, sql);
 
@@ -52,7 +53,7 @@ namespace LabBilling.Core.DataAccess
                 .Select("chrg.*, chrg_details.*")
                 .From("chrg")
                 .InnerJoin("chrg_details").On("chrg_details.chrg_num = chrg.chrg_num")
-                .Where("account = @0", account);
+                .Where("account = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account });
             
             if(!showCredited)
                 sql.Where("credited = 0");
@@ -82,7 +83,11 @@ namespace LabBilling.Core.DataAccess
         public int CreditCharge(int chrgNum, string comment = "")
         {
             // usp_prg_ReverseCharge            
-            int retVal = dbConnection.ExecuteNonQueryProc("usp_prg_ReverseChargeOnly", new { chrgNum, comment });
+            int retVal = dbConnection.ExecuteNonQueryProc("usp_prg_ReverseChargeOnly", 
+                new { 
+                    parm1 = new SqlParameter() { SqlDbType = SqlDbType.Decimal, Value = chrgNum }, 
+                    parm2 = new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = comment }
+                });
 
             return retVal;
         }
@@ -122,8 +127,9 @@ namespace LabBilling.Core.DataAccess
             Log.Instance.Debug($"Entering");
 
             var sql = PetaPoco.Sql.Builder
-                .Append("SELECT * FROM InvoiceChargeView ")
-                .Append("WHERE account = @0 and cdm <> 'CBILL'", account);
+                .From("InvoiceChargeView")
+                .Where("WHERE account = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account })
+                .Where("cdm <> 'CBILL'");
 
             List<InvoiceChargeView> results = dbConnection.Fetch<InvoiceChargeView>(sql);
 
