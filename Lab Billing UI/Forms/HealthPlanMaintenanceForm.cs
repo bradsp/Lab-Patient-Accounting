@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using LabBilling.Core.DataAccess;
 using LabBilling.Core.Models;
+using LabBilling.Logging;
 
 namespace LabBilling.Forms
 {
@@ -70,6 +71,17 @@ namespace LabBilling.Forms
 
         private void healthPlanGrid_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
         {
+            Log.Instance.Trace($"Entering");
+            int selectedRows = healthPlanGrid.Rows.GetRowCount(DataGridViewElementStates.Selected);
+            if (selectedRows > 0)
+            {
+                string selectedInsCode = healthPlanGrid.SelectedRows[0].Cells[nameof(InsCompany.InsuranceCode)].Value.ToString();
+
+                HealtPlanMaintenanceEditForm form = new HealtPlanMaintenanceEditForm(selectedInsCode);
+                form.ShowDialog();
+
+                return;
+            }
 
         }
     }

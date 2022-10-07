@@ -214,6 +214,7 @@
     <Compile Include="BusinessLogic\ClaimGenerator.cs" />
     <Compile Include="BusinessLogic\ClaimRulesEngine.cs" />
     <Compile Include="BusinessLogic\PrintClaimForm.cs" />
+    <Compile Include="BusinessLogic\Remittance835.cs" />
     <Compile Include="BusinessLogic\Validators\ChargeValidator.cs" />
     <Compile Include="BusinessLogic\Validators\ClaimValidator.cs" />
     <Compile Include="BusinessLogic\ClientInvoices.cs" />
@@ -225,6 +226,7 @@
     <Compile Include="BusinessLogic\Validators\DemographicsValidator.cs" />
     <Compile Include="BusinessLogic\Validators\InsuranceValidator.cs" />
     <Compile Include="BusinessLogic\Validators\PhysicianValidator.cs" />
+    <Compile Include="DataAccess\AccountLmrpErrorRepository.cs" />
     <Compile Include="DataAccess\AccountRepository.cs" />
     <Compile Include="DataAccess\AccountSearchRepository.cs" />
     <Compile Include="DataAccess\AccountValidationCriteriaRepository.cs" />
@@ -272,6 +274,7 @@
     </Compile>
     <Compile Include="Logging.cs" />
     <Compile Include="Models\Account.cs" />
+    <Compile Include="Models\AccountLmrpError.cs" />
     <Compile Include="Models\AccountSearch.cs" />
     <Compile Include="Models\AccountValidationRule.cs" />
     <Compile Include="Models\AccountValidationStatus.cs" />

@@ -190,7 +190,7 @@ namespace LabBilling.Forms
 
             #region Setup Insurance Company Combobox
 
-            insCompanies = insCompanyRepository.GetAll(true).ToList();
+            insCompanies = DataCache.Instance.GetInsCompanies(); //insCompanyRepository.GetAll(true).ToList();
 
             DataTable inscDataTable = new DataTable(typeof(InsCompany).Name);
             inscDataTable.Columns.Add("Code");
@@ -215,7 +215,7 @@ namespace LabBilling.Forms
 
             #region Setup ordering provider combo box
 
-            providers = phyRepository.GetActive().OrderBy(x => x.FullName).ToList();
+            providers = DataCache.Instance.GetProviders(); //phyRepository.GetActive().OrderBy(x => x.FullName).ToList();
             DataTable phyDataTable = new DataTable(typeof(Phy).Name);
             phyDataTable.Columns.Add(nameof(Phy.NpiId));
             phyDataTable.Columns.Add(nameof(Phy.FullName));
@@ -274,7 +274,8 @@ namespace LabBilling.Forms
             HolderSexComboBox.DisplayMember = "Value";
             HolderSexComboBox.ValueMember = "Key";
 
-            PlanFinCodeComboBox.DataSource = finDB.GetAll();
+
+            PlanFinCodeComboBox.DataSource = DataCache.Instance.GetFins(); // finDB.GetAll();
             PlanFinCodeComboBox.DisplayMember = nameof(Fin.res_party);
             PlanFinCodeComboBox.ValueMember = nameof(Fin.fin_code);
             PlanFinCodeComboBox.SelectedIndex = -1;
@@ -820,7 +821,9 @@ namespace LabBilling.Forms
                     return;
                 }
 
-                if (MetroMessageBox.Show(this, string.Format("Delete {0} insurance {1} for this patient?", currentAccount.Insurances[selectedIns].Coverage, currentAccount.Insurances[selectedIns].PlanName),
+                if (MetroMessageBox.Show(this, string.Format("Delete {0} insurance {1} for this patient?", 
+                    currentAccount.Insurances[selectedIns].Coverage, 
+                    currentAccount.Insurances[selectedIns].PlanName),
                     "Delete Insurance", MessageBoxButtons.YesNo)
                     == DialogResult.Yes)
                 {
@@ -911,6 +914,34 @@ namespace LabBilling.Forms
             //clear the insurance table selection and data entry fields.
             InsuranceDataGrid.ClearSelection();
             ClearInsEntryFields();
+        }
+
+        private void InsCodeComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            Log.Instance.Trace($"Entering");
+            if (InsCodeComboBox.SelectedIndex >= 0)
+            {
+                string insCode = InsCodeComboBox.SelectedValue.ToString();
+
+                LookupInsCode(insCode);
+
+                if (insCode == "MISC")
+                {
+                    PlanNameTextBox.ReadOnly = false;
+                    PlanAddressTextBox.ReadOnly = false;
+                    PlanAddress2TextBox.ReadOnly = false;
+                    PlanCityStTextBox.ReadOnly = false;
+                    PlanFinCodeComboBox.Enabled = true;
+                }
+                else
+                {
+                    PlanNameTextBox.ReadOnly = true;
+                    PlanAddressTextBox.ReadOnly = true;
+                    PlanAddress2TextBox.ReadOnly = true;
+                    PlanCityStTextBox.ReadOnly = true;
+                    PlanFinCodeComboBox.Enabled = false;
+                }
+            }
         }
 
         #endregion
@@ -1839,33 +1870,6 @@ namespace LabBilling.Forms
             }
         }
 
-        private void InsCodeComboBox_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            Log.Instance.Trace($"Entering");
-            if (InsCodeComboBox.SelectedIndex >= 0)
-            {
-                string insCode = InsCodeComboBox.SelectedValue.ToString();
-                LookupInsCode(insCode);
-
-                if (insCode == "MISC")
-                {
-                    PlanNameTextBox.ReadOnly = false;
-                    PlanAddressTextBox.ReadOnly = false;
-                    PlanAddress2TextBox.ReadOnly = false;
-                    PlanCityStTextBox.ReadOnly = false;
-                    PlanFinCodeComboBox.Enabled = true;
-                }
-                else
-                {
-                    PlanNameTextBox.ReadOnly = true;
-                    PlanAddressTextBox.ReadOnly = true;
-                    PlanAddress2TextBox.ReadOnly = true;
-                    PlanCityStTextBox.ReadOnly = true;
-                    PlanFinCodeComboBox.Enabled = false;
-                }
-            }
-
-        }
 
         private async void ValidateAccountButton_Click(object sender, EventArgs e)
         {
@@ -1942,5 +1946,6 @@ namespace LabBilling.Forms
             printClaim.PrintForm(claim); 
 
         }
+
     }
 }

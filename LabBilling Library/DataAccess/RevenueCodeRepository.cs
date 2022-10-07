@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using iText.StyledXmlParser.Node;
 using LabBilling.Core.Models;
 using PetaPoco;
+using LabBilling.Logging;
 
 namespace LabBilling.Core.DataAccess
 {
@@ -26,6 +27,13 @@ namespace LabBilling.Core.DataAccess
         public RevenueCode GetByCode(string revenueCode)
         {
             string colName = this.GetRealColumn(typeof(RevenueCode), nameof(RevenueCode.Code));
+
+            if (revenueCode == null)
+            {
+                Log.Instance.Error("Null value passed to Revenue Code GetByCode.");
+                return new RevenueCode();
+            }
+
             return dbConnection.SingleOrDefault<RevenueCode>($"where {colName} = @0",
                 new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = revenueCode });
         }

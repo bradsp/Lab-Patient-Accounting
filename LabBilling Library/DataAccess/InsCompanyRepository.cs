@@ -29,6 +29,11 @@ namespace LabBilling.Core.DataAccess
         {
             Log.Instance.Debug($"Entering");
 
+            if (code == null)
+            {
+                Log.Instance.Error("Null value passed to InsCopyRepository GetByCode.");
+                return new InsCompany();
+            }
             var record = dbConnection.SingleOrDefault<InsCompany>("where code = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = code });
 
             if(record != null)

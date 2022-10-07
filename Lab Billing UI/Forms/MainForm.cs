@@ -17,6 +17,8 @@ using System.Drawing;
 using MetroFramework;
 using System.Threading.Tasks;
 using System.Threading;
+using static System.Net.Mime.MediaTypeNames;
+using System.ServiceModel.Channels;
 
 namespace LabBilling
 {
@@ -80,7 +82,7 @@ namespace LabBilling
             {
                 Log.Instance.Fatal("There is not a valid user object.");
                 MetroMessageBox.Show(this, "Application error with user object. Aborting.", "Fatal Error", MessageBoxButtons.OK, MessageBoxIcon.Stop);
-                Application.Exit();
+                System.Windows.Forms.Application.Exit();
             }
 
             //enable menu items based on permissions
@@ -124,7 +126,7 @@ namespace LabBilling
             tlpRecentAccounts.RowCount = recentAccounts.Count;
             tlpRecentAccounts.ColumnCount = 1;
 
-            this.Text += " " + Program.SelectedEnvironment;
+            this.Text += " " + Program.Database;
             
             if (!Convert.ToBoolean(systemParametersRepository.GetByKey("allow_edit")))
                 this.Text += " | READ ONLY MODE";
@@ -223,9 +225,9 @@ namespace LabBilling
             var linkLabel = (LinkLabel)sender;
 
             bool IsAlreadyOpen = false;
-            if (Application.OpenForms.OfType<AccountForm>().Count() > 0)
+            if (System.Windows.Forms.Application.OpenForms.OfType<AccountForm>().Count() > 0)
             {
-                foreach (AccountForm frm in Application.OpenForms.OfType<AccountForm>())
+                foreach (AccountForm frm in System.Windows.Forms.Application.OpenForms.OfType<AccountForm>())
                 {
                     if (frm.SelectedAccount == linkLabel.Tag.ToString())
                     {
@@ -269,9 +271,9 @@ namespace LabBilling
         {
             Log.Instance.Trace($"Entering");
 
-            if (Application.OpenForms.OfType<WorkqueueForm>().Count() > 0)
+            if (System.Windows.Forms.Application.OpenForms.OfType<WorkqueueForm>().Count() > 0)
             {
-                WorkqueueForm workqueueform = Application.OpenForms.OfType<WorkqueueForm>().First();
+                WorkqueueForm workqueueform = System.Windows.Forms.Application.OpenForms.OfType<WorkqueueForm>().First();
                 workqueueform.Focus();
             }
             else
@@ -288,9 +290,9 @@ namespace LabBilling
         {
             Log.Instance.Trace($"Entering");
 
-            if(Application.OpenForms.OfType<WorkListForm>().Count() > 0)
+            if(System.Windows.Forms.Application.OpenForms.OfType<WorkListForm>().Count() > 0)
             {
-                WorkListForm workListForm = Application.OpenForms.OfType<WorkListForm>().First();
+                WorkListForm workListForm = System.Windows.Forms.Application.OpenForms.OfType<WorkListForm>().First();
                 workListForm.Focus();
             }
             else
@@ -342,7 +344,7 @@ namespace LabBilling
         {
             Log.Instance.Trace($"Entering");
 
-            frmBadDebt frm = new frmBadDebt(Helper.GetArgs());
+            BadDebtForm frm = new BadDebtForm();
             frm.MdiParent = this;
             frm.AutoScroll = true;
             frm.WindowState = FormWindowState.Normal;
@@ -462,9 +464,9 @@ namespace LabBilling
         private void Dashboard_FormClosing(object sender, FormClosingEventArgs e)
         {
             Log.Instance.Trace($"Entering");
-
+            Properties.Settings.Default.Save();
             //if this form is closing, close all other open forms
-            Application.Exit();
+            System.Windows.Forms.Application.Exit();
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -726,6 +728,15 @@ namespace LabBilling
             frm.WindowState = FormWindowState.Normal;
             frm.AutoScroll = true;
             frm.Show();
+        }
+
+        private void remittancePostingToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Remittance835 remittance835 = new Remittance835();
+            string file = @"\\wthmclbill\shared\Billing\TEST\Posting835Remit\MCL_NC_MCR_1093705428_835_11119267.RMT";
+
+            remittance835.Load835(file);
+
         }
     }
 }

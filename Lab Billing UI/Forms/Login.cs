@@ -31,18 +31,21 @@ namespace LabBilling
         private void LoginButton_Click(object sender, EventArgs e)
         {
             Log.Instance.Trace($"Entering");
-            if(string.IsNullOrEmpty(Environment.SelectedItem.ToString()))
-            {
-                statustext.Text = "Please select an environment.";
-                return;
-            }
+            //if(string.IsNullOrEmpty(Environment.SelectedItem.ToString()))
+            //{
+            //    statustext.Text = "Please select an environment.";
+            //    return;
+            //}
 
             if ((username.Text == string.Empty || password.Text == string.Empty) && !IntegratedAuthentication.Checked)
             {
                 statustext.Text = "Please enter a username and password.";
                 return;
             }
-            Program.SelectedEnvironment = Environment.SelectedItem.ToString();
+            //Program.SelectedEnvironment = Environment.SelectedItem.ToString();
+
+            Program.Database = Properties.Settings.Default.DbName;
+            Program.Server = Properties.Settings.Default.DbServer;
 
             db = new EmpRepository(Helper.ConnVal);
 
@@ -117,12 +120,13 @@ namespace LabBilling
             domain.Text = systemDomain = paramsLogin[0].ToString();
 
             //load the available database environments from appconfig
-            foreach (ConnectionStringSettings connString in ConfigurationManager.ConnectionStrings)
-            {
-                Environment.Items.Add(connString.Name);
-            }
+            //foreach (ConnectionStringSettings connString in ConfigurationManager.ConnectionStrings)
+            //{
+            //    Environment.Items.Add(connString.Name);
+            //}
 
-            Environment.SelectedItem = "MCLTEST";
+            //Environment.SelectedItem = "LabBillingTest";
+
             IntegratedAuthentication.Checked = true;
             IntegratedAuthentication_CheckedChanged(sender, e);
         }

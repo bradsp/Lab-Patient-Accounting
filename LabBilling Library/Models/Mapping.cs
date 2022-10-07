@@ -3,7 +3,7 @@ using System;
 
 namespace LabBilling.Core.Models
 {
-    [TableName("mapping")]
+    [TableName("dictionary.mapping")]
     [PrimaryKey("uid",AutoIncrement = true)]
     public class Mapping :IBaseEntity
     {

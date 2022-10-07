@@ -7,7 +7,7 @@ using PetaPoco;
 
 namespace LabBilling.Core.Models
 {
-    [TableName("dict_C_MEEDIT")]
+    [TableName("dictionary.dict_C_MEEDIT")]
     [PrimaryKey("MutexEditId", AutoIncrement = true)]
     public class MutuallyExclusiveEdit : IBaseEntity
     {

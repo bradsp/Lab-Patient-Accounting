@@ -1,6 +1,6 @@
 ﻿namespace LabBilling.Forms
 {
-    partial class HealtPlanMaintenaceEditForm
+    partial class HealtPlanMaintenanceEditForm
     {
         /// <summary>
         /// Required designer variable.
@@ -35,11 +35,11 @@
             this.planNameLabel = new MetroFramework.Controls.MetroLabel();
             this.insCodeLabel = new MetroFramework.Controls.MetroLabel();
             this.planZipCodeTextBox = new MetroFramework.Controls.MetroTextBox();
-            this.metroTextBox5 = new MetroFramework.Controls.MetroTextBox();
+            this.planStateTextBox = new MetroFramework.Controls.MetroTextBox();
             this.planCityTextBox = new MetroFramework.Controls.MetroTextBox();
             this.address2TextBox = new MetroFramework.Controls.MetroTextBox();
             this.address1TextBox = new MetroFramework.Controls.MetroTextBox();
-            this.metroTextBox1 = new MetroFramework.Controls.MetroTextBox();
+            this.planNameTextBox = new MetroFramework.Controls.MetroTextBox();
             this.insCodeTextBox = new MetroFramework.Controls.MetroTextBox();
             this.billAsJmcghCheckBox = new MetroFramework.Controls.MetroCheckBox();
             this.allowOutpatientBillingCheckBox = new MetroFramework.Controls.MetroCheckBox();
@@ -52,7 +52,7 @@
             this.nthrivePayerNoLabel = new MetroFramework.Controls.MetroLabel();
             this.payorCodeTextBox = new MetroFramework.Controls.MetroTextBox();
             this.payorCodeLabel = new MetroFramework.Controls.MetroLabel();
-            this.metroTextBox3 = new MetroFramework.Controls.MetroTextBox();
+            this.payerNoTextBox = new MetroFramework.Controls.MetroTextBox();
             this.payerNoLabel = new MetroFramework.Controls.MetroLabel();
             this.providerNoTextBox = new MetroFramework.Controls.MetroTextBox();
             this.providerNoLabel = new MetroFramework.Controls.MetroLabel();
@@ -152,35 +152,35 @@
             this.planZipCodeTextBox.WaterMarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
             this.planZipCodeTextBox.WaterMarkFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Pixel);
             // 
-            // metroTextBox5
+            // planStateTextBox
             // 
             // 
             // 
             // 
-            this.metroTextBox5.CustomButton.Image = null;
-            this.metroTextBox5.CustomButton.Location = new System.Drawing.Point(191, 1);
-            this.metroTextBox5.CustomButton.Name = "";
-            this.metroTextBox5.CustomButton.Size = new System.Drawing.Size(21, 21);
-            this.metroTextBox5.CustomButton.Style = MetroFramework.MetroColorStyle.Blue;
-            this.metroTextBox5.CustomButton.TabIndex = 1;
-            this.metroTextBox5.CustomButton.Theme = MetroFramework.MetroThemeStyle.Light;
-            this.metroTextBox5.CustomButton.UseSelectable = true;
-            this.metroTextBox5.CustomButton.Visible = false;
-            this.metroTextBox5.Lines = new string[0];
-            this.metroTextBox5.Location = new System.Drawing.Point(159, 237);
-            this.metroTextBox5.MaxLength = 32767;
-            this.metroTextBox5.Name = "metroTextBox5";
-            this.metroTextBox5.PasswordChar = '\0';
-            this.metroTextBox5.ScrollBars = System.Windows.Forms.ScrollBars.None;
-            this.metroTextBox5.SelectedText = "";
-            this.metroTextBox5.SelectionLength = 0;
-            this.metroTextBox5.SelectionStart = 0;
-            this.metroTextBox5.ShortcutsEnabled = true;
-            this.metroTextBox5.Size = new System.Drawing.Size(213, 23);
-            this.metroTextBox5.TabIndex = 25;
-            this.metroTextBox5.UseSelectable = true;
-            this.metroTextBox5.WaterMarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
-            this.metroTextBox5.WaterMarkFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Pixel);
+            this.planStateTextBox.CustomButton.Image = null;
+            this.planStateTextBox.CustomButton.Location = new System.Drawing.Point(191, 1);
+            this.planStateTextBox.CustomButton.Name = "";
+            this.planStateTextBox.CustomButton.Size = new System.Drawing.Size(21, 21);
+            this.planStateTextBox.CustomButton.Style = MetroFramework.MetroColorStyle.Blue;
+            this.planStateTextBox.CustomButton.TabIndex = 1;
+            this.planStateTextBox.CustomButton.Theme = MetroFramework.MetroThemeStyle.Light;
+            this.planStateTextBox.CustomButton.UseSelectable = true;
+            this.planStateTextBox.CustomButton.Visible = false;
+            this.planStateTextBox.Lines = new string[0];
+            this.planStateTextBox.Location = new System.Drawing.Point(159, 237);
+            this.planStateTextBox.MaxLength = 32767;
+            this.planStateTextBox.Name = "planStateTextBox";
+            this.planStateTextBox.PasswordChar = '\0';
+            this.planStateTextBox.ScrollBars = System.Windows.Forms.ScrollBars.None;
+            this.planStateTextBox.SelectedText = "";
+            this.planStateTextBox.SelectionLength = 0;
+            this.planStateTextBox.SelectionStart = 0;
+            this.planStateTextBox.ShortcutsEnabled = true;
+            this.planStateTextBox.Size = new System.Drawing.Size(213, 23);
+            this.planStateTextBox.TabIndex = 25;
+            this.planStateTextBox.UseSelectable = true;
+            this.planStateTextBox.WaterMarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
+            this.planStateTextBox.WaterMarkFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Pixel);
             // 
             // planCityTextBox
             // 
@@ -272,35 +272,35 @@
             this.address1TextBox.WaterMarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
             this.address1TextBox.WaterMarkFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Pixel);
             // 
-            // metroTextBox1
+            // planNameTextBox
             // 
             // 
             // 
             // 
-            this.metroTextBox1.CustomButton.Image = null;
-            this.metroTextBox1.CustomButton.Location = new System.Drawing.Point(191, 1);
-            this.metroTextBox1.CustomButton.Name = "";
-            this.metroTextBox1.CustomButton.Size = new System.Drawing.Size(21, 21);
-            this.metroTextBox1.CustomButton.Style = MetroFramework.MetroColorStyle.Blue;
-            this.metroTextBox1.CustomButton.TabIndex = 1;
-            this.metroTextBox1.CustomButton.Theme = MetroFramework.MetroThemeStyle.Light;
-            this.metroTextBox1.CustomButton.UseSelectable = true;
-            this.metroTextBox1.CustomButton.Visible = false;
-            this.metroTextBox1.Lines = new string[0];
-            this.metroTextBox1.Location = new System.Drawing.Point(159, 121);
-            this.metroTextBox1.MaxLength = 32767;
-            this.metroTextBox1.Name = "metroTextBox1";
-            this.metroTextBox1.PasswordChar = '\0';
-            this.metroTextBox1.ScrollBars = System.Windows.Forms.ScrollBars.None;
-            this.metroTextBox1.SelectedText = "";
-            this.metroTextBox1.SelectionLength = 0;
-            this.metroTextBox1.SelectionStart = 0;
-            this.metroTextBox1.ShortcutsEnabled = true;
-            this.metroTextBox1.Size = new System.Drawing.Size(213, 23);
-            this.metroTextBox1.TabIndex = 18;
-            this.metroTextBox1.UseSelectable = true;
-            this.metroTextBox1.WaterMarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
-            this.metroTextBox1.WaterMarkFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Pixel);
+            this.planNameTextBox.CustomButton.Image = null;
+            this.planNameTextBox.CustomButton.Location = new System.Drawing.Point(191, 1);
+            this.planNameTextBox.CustomButton.Name = "";
+            this.planNameTextBox.CustomButton.Size = new System.Drawing.Size(21, 21);
+            this.planNameTextBox.CustomButton.Style = MetroFramework.MetroColorStyle.Blue;
+            this.planNameTextBox.CustomButton.TabIndex = 1;
+            this.planNameTextBox.CustomButton.Theme = MetroFramework.MetroThemeStyle.Light;
+            this.planNameTextBox.CustomButton.UseSelectable = true;
+            this.planNameTextBox.CustomButton.Visible = false;
+            this.planNameTextBox.Lines = new string[0];
+            this.planNameTextBox.Location = new System.Drawing.Point(159, 121);
+            this.planNameTextBox.MaxLength = 32767;
+            this.planNameTextBox.Name = "planNameTextBox";
+            this.planNameTextBox.PasswordChar = '\0';
+            this.planNameTextBox.ScrollBars = System.Windows.Forms.ScrollBars.None;
+            this.planNameTextBox.SelectedText = "";
+            this.planNameTextBox.SelectionLength = 0;
+            this.planNameTextBox.SelectionStart = 0;
+            this.planNameTextBox.ShortcutsEnabled = true;
+            this.planNameTextBox.Size = new System.Drawing.Size(213, 23);
+            this.planNameTextBox.TabIndex = 18;
+            this.planNameTextBox.UseSelectable = true;
+            this.planNameTextBox.WaterMarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
+            this.planNameTextBox.WaterMarkFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Pixel);
             // 
             // insCodeTextBox
             // 
@@ -479,35 +479,35 @@
             this.payorCodeLabel.TabIndex = 50;
             this.payorCodeLabel.Text = "Payor Code";
             // 
-            // metroTextBox3
+            // payerNoTextBox
             // 
             // 
             // 
             // 
-            this.metroTextBox3.CustomButton.Image = null;
-            this.metroTextBox3.CustomButton.Location = new System.Drawing.Point(119, 1);
-            this.metroTextBox3.CustomButton.Name = "";
-            this.metroTextBox3.CustomButton.Size = new System.Drawing.Size(21, 21);
-            this.metroTextBox3.CustomButton.Style = MetroFramework.MetroColorStyle.Blue;
-            this.metroTextBox3.CustomButton.TabIndex = 1;
-            this.metroTextBox3.CustomButton.Theme = MetroFramework.MetroThemeStyle.Light;
-            this.metroTextBox3.CustomButton.UseSelectable = true;
-            this.metroTextBox3.CustomButton.Visible = false;
-            this.metroTextBox3.Lines = new string[0];
-            this.metroTextBox3.Location = new System.Drawing.Point(304, 425);
-            this.metroTextBox3.MaxLength = 32767;
-            this.metroTextBox3.Name = "metroTextBox3";
-            this.metroTextBox3.PasswordChar = '\0';
-            this.metroTextBox3.ScrollBars = System.Windows.Forms.ScrollBars.None;
-            this.metroTextBox3.SelectedText = "";
-            this.metroTextBox3.SelectionLength = 0;
-            this.metroTextBox3.SelectionStart = 0;
-            this.metroTextBox3.ShortcutsEnabled = true;
-            this.metroTextBox3.Size = new System.Drawing.Size(141, 23);
-            this.metroTextBox3.TabIndex = 49;
-            this.metroTextBox3.UseSelectable = true;
-            this.metroTextBox3.WaterMarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
-            this.metroTextBox3.WaterMarkFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Pixel);
+            this.payerNoTextBox.CustomButton.Image = null;
+            this.payerNoTextBox.CustomButton.Location = new System.Drawing.Point(119, 1);
+            this.payerNoTextBox.CustomButton.Name = "";
+            this.payerNoTextBox.CustomButton.Size = new System.Drawing.Size(21, 21);
+            this.payerNoTextBox.CustomButton.Style = MetroFramework.MetroColorStyle.Blue;
+            this.payerNoTextBox.CustomButton.TabIndex = 1;
+            this.payerNoTextBox.CustomButton.Theme = MetroFramework.MetroThemeStyle.Light;
+            this.payerNoTextBox.CustomButton.UseSelectable = true;
+            this.payerNoTextBox.CustomButton.Visible = false;
+            this.payerNoTextBox.Lines = new string[0];
+            this.payerNoTextBox.Location = new System.Drawing.Point(304, 425);
+            this.payerNoTextBox.MaxLength = 32767;
+            this.payerNoTextBox.Name = "payerNoTextBox";
+            this.payerNoTextBox.PasswordChar = '\0';
+            this.payerNoTextBox.ScrollBars = System.Windows.Forms.ScrollBars.None;
+            this.payerNoTextBox.SelectedText = "";
+            this.payerNoTextBox.SelectionLength = 0;
+            this.payerNoTextBox.SelectionStart = 0;
+            this.payerNoTextBox.ShortcutsEnabled = true;
+            this.payerNoTextBox.Size = new System.Drawing.Size(141, 23);
+            this.payerNoTextBox.TabIndex = 49;
+            this.payerNoTextBox.UseSelectable = true;
+            this.payerNoTextBox.WaterMarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
+            this.payerNoTextBox.WaterMarkFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Pixel);
             // 
             // payerNoLabel
             // 
@@ -648,7 +648,7 @@
             // 
             // 
             this.commentsTextBox.CustomButton.Image = null;
-            this.commentsTextBox.CustomButton.Location = new System.Drawing.Point(283, 2);
+            this.commentsTextBox.CustomButton.Location = new System.Drawing.Point(618, 2);
             this.commentsTextBox.CustomButton.Name = "";
             this.commentsTextBox.CustomButton.Size = new System.Drawing.Size(97, 97);
             this.commentsTextBox.CustomButton.Style = MetroFramework.MetroColorStyle.Blue;
@@ -681,6 +681,7 @@
             this.saveButton.TabIndex = 61;
             this.saveButton.Text = "Save";
             this.saveButton.UseSelectable = true;
+            this.saveButton.Click += new System.EventHandler(this.saveButton_Click);
             // 
             // cancelButton
             // 
@@ -690,8 +691,9 @@
             this.cancelButton.TabIndex = 62;
             this.cancelButton.Text = "Cancel";
             this.cancelButton.UseSelectable = true;
+            this.cancelButton.Click += new System.EventHandler(this.cancelButton_Click);
             // 
-            // HealtPlanMaintenaceEditForm
+            // HealtPlanMaintenanceEditForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -711,7 +713,7 @@
             this.Controls.Add(this.nthrivePayerNoLabel);
             this.Controls.Add(this.payorCodeTextBox);
             this.Controls.Add(this.payorCodeLabel);
-            this.Controls.Add(this.metroTextBox3);
+            this.Controls.Add(this.payerNoTextBox);
             this.Controls.Add(this.payerNoLabel);
             this.Controls.Add(this.providerNoTextBox);
             this.Controls.Add(this.providerNoLabel);
@@ -728,13 +730,13 @@
             this.Controls.Add(this.planNameLabel);
             this.Controls.Add(this.insCodeLabel);
             this.Controls.Add(this.planZipCodeTextBox);
-            this.Controls.Add(this.metroTextBox5);
+            this.Controls.Add(this.planStateTextBox);
             this.Controls.Add(this.planCityTextBox);
             this.Controls.Add(this.address2TextBox);
             this.Controls.Add(this.address1TextBox);
-            this.Controls.Add(this.metroTextBox1);
+            this.Controls.Add(this.planNameTextBox);
             this.Controls.Add(this.insCodeTextBox);
-            this.Name = "HealtPlanMaintenaceEditForm";
+            this.Name = "HealtPlanMaintenanceEditForm";
             this.Text = "Edit Health Plan";
             this.Load += new System.EventHandler(this.HealtPlanMaintenaceEditForm_Load);
             this.ResumeLayout(false);
@@ -751,11 +753,11 @@
         private MetroFramework.Controls.MetroLabel planNameLabel;
         private MetroFramework.Controls.MetroLabel insCodeLabel;
         private MetroFramework.Controls.MetroTextBox planZipCodeTextBox;
-        private MetroFramework.Controls.MetroTextBox metroTextBox5;
+        private MetroFramework.Controls.MetroTextBox planStateTextBox;
         private MetroFramework.Controls.MetroTextBox planCityTextBox;
         private MetroFramework.Controls.MetroTextBox address2TextBox;
         private MetroFramework.Controls.MetroTextBox address1TextBox;
-        private MetroFramework.Controls.MetroTextBox metroTextBox1;
+        private MetroFramework.Controls.MetroTextBox planNameTextBox;
         private MetroFramework.Controls.MetroTextBox insCodeTextBox;
         private MetroFramework.Controls.MetroCheckBox billAsJmcghCheckBox;
         private MetroFramework.Controls.MetroCheckBox allowOutpatientBillingCheckBox;
@@ -768,7 +770,7 @@
         private MetroFramework.Controls.MetroLabel nthrivePayerNoLabel;
         private MetroFramework.Controls.MetroTextBox payorCodeTextBox;
         private MetroFramework.Controls.MetroLabel payorCodeLabel;
-        private MetroFramework.Controls.MetroTextBox metroTextBox3;
+        private MetroFramework.Controls.MetroTextBox payerNoTextBox;
         private MetroFramework.Controls.MetroLabel payerNoLabel;
         private MetroFramework.Controls.MetroTextBox providerNoTextBox;
         private MetroFramework.Controls.MetroLabel providerNoLabel;

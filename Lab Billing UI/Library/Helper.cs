@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Configuration;
 using System.Data;
 using System.Data.Common;
+using System.Data.SqlClient;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -12,6 +13,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Windows.Forms;
 using System.Xml.Linq;
+using PetaPoco;
 using RFClassLibrary;
 
 namespace LabBilling
@@ -24,18 +26,31 @@ namespace LabBilling
         {
             get
             {
-                if (Program.SelectedEnvironment == null || Program.SelectedEnvironment == "") //default to MCLTEST if value has not been set
-                    throw new ArgumentNullException("Program.SelectedEnvironment");
+                //if (Program.SelectedEnvironment == null || Program.SelectedEnvironment == "") //default to MCLTEST if value has not been set
+                //    throw new ArgumentNullException("Program.SelectedEnvironment");
+                //return ConfigurationManager.ConnectionStrings[Program.SelectedEnvironment].ConnectionString;
 
-                return ConfigurationManager.ConnectionStrings[Program.SelectedEnvironment].ConnectionString;
+                SqlConnectionStringBuilder myBuilder = new SqlConnectionStringBuilder();
+
+                myBuilder.InitialCatalog = Program.Database;
+                myBuilder.DataSource = Program.Server;
+                myBuilder.IntegratedSecurity = true;
+                myBuilder.ConnectTimeout = 30;
+
+                return myBuilder.ConnectionString;
             }
         }
 
         public static string[] GetArgs()
         {
-            ConnectionString connString = Helper.ConnVal;
+            //ConnectionString connString = Helper.ConnVal;
+            
+            string[] args = new string[2];
 
-            return connString.ToArray();
+            args[0] = Program.Server;
+            args[1] = Program.Database;
+
+            return args;
         }
 
         public static string Encrypt(string clearText)

@@ -347,14 +347,11 @@ namespace LabBilling.Legacy
             if (diFrom.GetFiles("*.835", SearchOption.TopDirectoryOnly).Count() <= 0)
             {
                 if (MessageBox.Show("No files at this time.\r\n\nSelect 'CANCEL' to exit the application.\r\n\nSelect 'OK' to continue without importing files."
-                        , "FILE IMPORT", MessageBoxButtons.OKCancel) ==
-                                                                DialogResult.Cancel)
+                        , "FILE IMPORT", MessageBoxButtons.OKCancel) == DialogResult.Cancel)
                 {
                     Environment.Exit(0);
                 }
-
                 return;
-
             }
 
             // date last done.
@@ -362,10 +359,7 @@ namespace LabBilling.Legacy
             dtFilesImported = Convert.ToDateTime(dr[0]["value"].ToString());
             if (dtFilesImported >= DateTime.Today)
             {
-
                 return;
-
-
             }
             else
             {

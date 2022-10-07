@@ -11,7 +11,7 @@ using LabBilling.Logging;
 
 namespace LabBilling.Forms
 {
-    public partial class frmBadDebt : Form
+    public partial class BadDebtForm : Form
     {
         private string propAppName
         { get { return string.Format("{0} {1}", Application.ProductName, Application.ProductVersion); } }
@@ -78,21 +78,21 @@ namespace LabBilling.Forms
             tsbSmallBalWriteOff.Enabled = !tsbSmallBalWriteOff.Enabled;
         }
           
-        public frmBadDebt(string[] args)
+        public BadDebtForm()
         {
             Log.Instance.Trace($"Entering");
             InitializeComponent();
-            if (args.GetUpperBound(0) < 1)
-            {
-                MessageBox.Show("Not enough args to start the application.");
-                Environment.Exit(13);
-            }
-            
-            m_strServer = args[0].Remove(0, 1);
-            m_strDatabase = args[1].Remove(0, 1);
-            m_strProductionEnvironment = args[1].Contains("LIVE")? "LIVE":"TEST";
+            //if (args.GetUpperBound(0) < 1)
+            //{
+            //    MessageBox.Show("Not enough args to start the application.");
+            //    Environment.Exit(13);
+            //}
 
-            string[] strArgs = new string[] { m_strProductionEnvironment, args[0], args[1] };
+            m_strServer = Program.Server; // args[0].Remove(0, 1);
+            m_strDatabase = Program.Database; // args[1].Remove(0, 1);
+            m_strProductionEnvironment = m_strDatabase.Contains("LIVE")? "LIVE":"TEST";
+
+            string[] strArgs = new string[] { m_strProductionEnvironment, m_strServer, m_strDatabase };
             m_Err = new ERR(strArgs);
             m_rChk = new R_chk(m_strServer, m_strDatabase, ref m_Err);
             m_rPat = new R_pat(m_strServer, m_strDatabase, ref m_Err);

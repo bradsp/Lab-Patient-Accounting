@@ -118,6 +118,7 @@ namespace LabBilling.Forms
             this.DemoStatusMessagesTextBox = new System.Windows.Forms.TextBox();
             this.SaveDemographics = new System.Windows.Forms.Button();
             this.orderingProviderLabel = new System.Windows.Forms.Label();
+            this.orderingProviderComboBox = new MultiColumnCombo.MultiColumnComboBox();
             this.tabInsurance = new System.Windows.Forms.TabPage();
             this.insTabLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
             this.HolderLastNameLabel = new System.Windows.Forms.Label();
@@ -241,7 +242,6 @@ namespace LabBilling.Forms
             this.BannerBillStatusLabel = new System.Windows.Forms.Label();
             this.BannerBillStatusTextBox = new System.Windows.Forms.TextBox();
             this.BannerProviderTextBox = new System.Windows.Forms.TextBox();
-            this.orderingProviderComboBox = new MultiColumnCombo.MultiColumnComboBox();
             this.tabControl1.SuspendLayout();
             this.summaryTab.SuspendLayout();
             this.tabDemographics.SuspendLayout();
@@ -1019,6 +1019,15 @@ namespace LabBilling.Forms
             this.orderingProviderLabel.Text = "Ordering Provider";
             this.orderingProviderLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
+            // orderingProviderComboBox
+            // 
+            this.orderingProviderComboBox.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
+            this.orderingProviderComboBox.FormattingEnabled = true;
+            this.orderingProviderComboBox.Location = new System.Drawing.Point(617, 453);
+            this.orderingProviderComboBox.Name = "orderingProviderComboBox";
+            this.orderingProviderComboBox.Size = new System.Drawing.Size(297, 21);
+            this.orderingProviderComboBox.TabIndex = 142;
+            // 
             // tabInsurance
             // 
             this.tabInsurance.Controls.Add(this.insTabLayoutPanel);
@@ -1083,11 +1092,11 @@ namespace LabBilling.Forms
             this.insTabLayoutPanel.Controls.Add(this.HolderCityLabel, 0, 6);
             this.insTabLayoutPanel.Controls.Add(this.InsUserInstructionsLabel, 3, 1);
             this.insTabLayoutPanel.Controls.Add(this.AddInsuranceButton, 2, 1);
-            this.insTabLayoutPanel.Controls.Add(this.InsTabMessageTextBox, 1, 13);
+            this.insTabLayoutPanel.Controls.Add(this.InsTabMessageTextBox, 1, 14);
             this.insTabLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.insTabLayoutPanel.Location = new System.Drawing.Point(3, 3);
             this.insTabLayoutPanel.Name = "insTabLayoutPanel";
-            this.insTabLayoutPanel.RowCount = 14;
+            this.insTabLayoutPanel.RowCount = 15;
             this.insTabLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.insTabLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.insTabLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -1102,6 +1111,7 @@ namespace LabBilling.Forms
             this.insTabLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.insTabLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.insTabLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.insTabLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
             this.insTabLayoutPanel.Size = new System.Drawing.Size(1145, 609);
             this.insTabLayoutPanel.TabIndex = 2;
             // 
@@ -2604,15 +2614,6 @@ namespace LabBilling.Forms
             this.BannerProviderTextBox.Name = "BannerProviderTextBox";
             this.BannerProviderTextBox.Size = new System.Drawing.Size(251, 13);
             this.BannerProviderTextBox.TabIndex = 29;
-            // 
-            // orderingProviderComboBox
-            // 
-            this.orderingProviderComboBox.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
-            this.orderingProviderComboBox.FormattingEnabled = true;
-            this.orderingProviderComboBox.Location = new System.Drawing.Point(617, 453);
-            this.orderingProviderComboBox.Name = "orderingProviderComboBox";
-            this.orderingProviderComboBox.Size = new System.Drawing.Size(297, 21);
-            this.orderingProviderComboBox.TabIndex = 142;
             // 
             // AccountForm
             // 

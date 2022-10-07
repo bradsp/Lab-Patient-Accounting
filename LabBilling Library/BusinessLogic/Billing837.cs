@@ -1,17 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
-using System.Text;
-using RFClassLibrary;
-using MCL;
-using System.Collections;
-using System.Data;
 using EdiTools;
-using LabBilling.Core.DataAccess;
 using LabBilling.Core.Models;
-using System.Data.Common;
-using System.Linq;
-using NPOI.SS.Formula.Functions;
 
 namespace LabBilling.Core
 {

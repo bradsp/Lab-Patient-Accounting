@@ -25,11 +25,19 @@ namespace LabBilling.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=WTH014;Initial Catalog=LabBillingTest;Integrated Security=True")]
-        public string TestDb {
+        [global::System.Configuration.DefaultSettingValueAttribute("WTHMCLBILL")]
+        public string DbServer {
             get {
-                return ((string)(this["TestDb"]));
+                return ((string)(this["DbServer"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("LabBillingTest")]
+        public string DbName {
+            get {
+                return ((string)(this["DbName"]));
             }
         }
     }

@@ -92,6 +92,7 @@
             this.label4.Size = new System.Drawing.Size(66, 13);
             this.label4.TabIndex = 10;
             this.label4.Text = "Environment";
+            this.label4.Visible = false;
             // 
             // Environment
             // 
@@ -100,6 +101,7 @@
             this.Environment.Name = "Environment";
             this.Environment.Size = new System.Drawing.Size(144, 21);
             this.Environment.TabIndex = 9;
+            this.Environment.Visible = false;
             // 
             // domain
             // 

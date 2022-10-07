@@ -87,6 +87,7 @@
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.windowManagerPanel1 = new MDIWindowManager.WindowManagerPanel();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.remittancePostingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.MainFormMenu.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -122,7 +123,8 @@
             this.globalBillingToolStripMenuItem,
             this.posting835RemitToolStripMenuItem,
             this.clientBillsNewToolStripMenuItem,
-            this.generateClaimsToolStripMenuItem});
+            this.generateClaimsToolStripMenuItem,
+            this.remittancePostingToolStripMenuItem});
             this.billingToolStripMenuItem.Name = "billingToolStripMenuItem";
             resources.ApplyResources(this.billingToolStripMenuItem, "billingToolStripMenuItem");
             // 
@@ -499,6 +501,12 @@
             resources.ApplyResources(this.panel1, "panel1");
             this.panel1.Name = "panel1";
             // 
+            // remittancePostingToolStripMenuItem
+            // 
+            this.remittancePostingToolStripMenuItem.Name = "remittancePostingToolStripMenuItem";
+            resources.ApplyResources(this.remittancePostingToolStripMenuItem, "remittancePostingToolStripMenuItem");
+            this.remittancePostingToolStripMenuItem.Click += new System.EventHandler(this.remittancePostingToolStripMenuItem_Click);
+            // 
             // MainForm
             // 
             resources.ApplyResources(this, "$this");
@@ -581,5 +589,6 @@
         private System.Windows.Forms.ToolStripMenuItem generateClaimsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem institutionalToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem professionalToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem remittancePostingToolStripMenuItem;
     }
 }

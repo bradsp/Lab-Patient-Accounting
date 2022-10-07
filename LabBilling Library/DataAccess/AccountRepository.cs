@@ -30,6 +30,7 @@ namespace LabBilling.Core.DataAccess
         private readonly LMRPRuleRepository lmrpRuleRepository;
         private readonly FinRepository finRepository;
         private readonly SystemParametersRepository systemParametersRepository;
+        private readonly AccountLmrpErrorRepository accountLmrpErrorRepository;
 
         public AccountRepository(string connectionString) : base(connectionString)
         {
@@ -44,6 +45,7 @@ namespace LabBilling.Core.DataAccess
             accountValidationRuleRepository = new AccountValidationRuleRepository(_connection);
             accountValidationCriteriaRepository = new AccountValidationCriteriaRepository(_connection);
             accountValidationStatusRepository = new AccountValidationStatusRepository(_connection);
+            accountLmrpErrorRepository = new AccountLmrpErrorRepository(_connection);
             lmrpRuleRepository = new LMRPRuleRepository(_connection);
             finRepository = new FinRepository(_connection);
             systemParametersRepository = new SystemParametersRepository(_connection);
@@ -62,6 +64,7 @@ namespace LabBilling.Core.DataAccess
             accountValidationRuleRepository = new AccountValidationRuleRepository(db);
             accountValidationCriteriaRepository = new AccountValidationCriteriaRepository(db);
             accountValidationStatusRepository = new AccountValidationStatusRepository(db);
+            accountLmrpErrorRepository = new AccountLmrpErrorRepository(db);
             lmrpRuleRepository = new LMRPRuleRepository(db);
             finRepository = new FinRepository(db);
             systemParametersRepository = new SystemParametersRepository(db);
@@ -562,10 +565,14 @@ namespace LabBilling.Core.DataAccess
             var validationResult = claimValidator.Validate(account);
             bool isAccountValid = false;
 
+            string lmrperrors = null;
             foreach (var error in account.LmrpErrors)
             {
                 account.AccountValidationStatus.validation_text += error + "\n";
+                lmrperrors += error + "\n";
             }
+
+
             account.AccountValidationStatus.account = account.AccountNo;
             account.AccountValidationStatus.mod_date = DateTime.Now;
 
@@ -585,6 +592,17 @@ namespace LabBilling.Core.DataAccess
             }
 
             accountValidationStatusRepository.Save(account.AccountValidationStatus);
+            if (!string.IsNullOrEmpty(lmrperrors))
+            {
+                AccountLmrpError record = new AccountLmrpError();
+                record.AccountNo = account.AccountNo;
+                record.DateOfService = (DateTime)account.TransactionDate;
+                record.ClientMnem = account.ClientMnem;
+                record.FinancialCode = account.FinCode;
+                record.Error = lmrperrors;
+
+                accountLmrpErrorRepository.Save(record);
+            }
 
             return isAccountValid;
         }
