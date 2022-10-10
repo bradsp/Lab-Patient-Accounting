@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Common;
+using System.Data.SqlClient;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -10,13 +12,32 @@ namespace RFClassLibrary
     /// <summary>
     /// Helper utilities for connection strings.
     /// </summary>
-    public class ConnectionString 
+    public sealed class ConnectionString 
     {
         private readonly string _value;
+        private SqlConnectionStringBuilder dbConnectionStringBuilder;
 
-        public string DatabaseName { get; }
-        public string ServerName { get; }
+        /// <summary>
+        /// Returns the extracted database name from the connection string.
+        /// </summary>
+        public string DatabaseName
+        {
+            get
+            {
+                return dbConnectionStringBuilder.InitialCatalog;
+            }
+        }
 
+        /// <summary>
+        /// Returns the extracted servername from the connection string.
+        /// </summary>
+        public string ServerName
+        {
+            get
+            {
+                return dbConnectionStringBuilder.DataSource;
+            }
+        }
         /// <summary>
         /// Constructs the connection string. 
         /// </summary>
@@ -25,18 +46,20 @@ namespace RFClassLibrary
         {
             _value = connectionString;
 
-            DbConnectionStringBuilder dbConnectionStringBuilder = new DbConnectionStringBuilder();
+            dbConnectionStringBuilder = new SqlConnectionStringBuilder();
             dbConnectionStringBuilder.ConnectionString = _value;
-
-            ServerName = (string)dbConnectionStringBuilder["Server"];
-            DatabaseName = (string)dbConnectionStringBuilder["Database"];
         }
 
-        public static implicit operator ConnectionString(string connectionString)
-        {
-            return new ConnectionString(connectionString);
-        }
+        /// <summary>
+        /// Initialize ConnectionString by assigning a connection string.
+        /// </summary>
+        /// <param name="cs"></param>
+        public static implicit operator ConnectionString(string cs) => new ConnectionString(cs);
 
+        /// <summary>
+        /// Returns a string array with the servername and database name.
+        /// </summary>
+        /// <returns></returns>
         public string[] ToArray()
         {
 
@@ -48,5 +71,6 @@ namespace RFClassLibrary
 
             return args;
         }
+         
     }
 }

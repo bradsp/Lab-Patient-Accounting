@@ -732,7 +732,7 @@ namespace LabBilling
 
         private void remittancePostingToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Remittance835 remittance835 = new Remittance835();
+            Remittance835 remittance835 = new Remittance835(Helper.ConnVal);
             string file = @"\\wthmclbill\shared\Billing\TEST\Posting835Remit\MCL_NC_MCR_1093705428_835_11119267.RMT";
 
             remittance835.Load835(file);

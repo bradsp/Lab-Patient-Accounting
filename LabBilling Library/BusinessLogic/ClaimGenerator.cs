@@ -42,13 +42,10 @@ namespace LabBilling.Core.BusinessLogic
         {
             _connectionString = connectionString;
 
-            ConnectionString connString = connectionString;
+            ConnectionString connString = connectionString; 
 
-            //DbConnectionStringBuilder dbConnectionStringBuilder = new DbConnectionStringBuilder();
-            //dbConnectionStringBuilder.ConnectionString = connectionString;
-
-            dBserverName = connString.ServerName; //(string)dbConnectionStringBuilder["Server"];
-            dBName = connString.DatabaseName;     //(string)dbConnectionStringBuilder["Database"];
+            dBserverName = connString.ServerName; 
+            dBName = connString.DatabaseName; 
 
             db = new Database(connectionString, new CustomSqlDatabaseProvider());
 
@@ -72,7 +69,7 @@ namespace LabBilling.Core.BusinessLogic
 
         }
 
-         public int CompileBillingBatch(ClaimType claimType, IProgress<ProgressReportModel> progress, CancellationToken cancellationToken)
+        public int CompileBillingBatch(ClaimType claimType, IProgress<ProgressReportModel> progress, CancellationToken cancellationToken)
         {
             ProgressReportModel report = new ProgressReportModel();
             //compile list of accounts to have claims generated

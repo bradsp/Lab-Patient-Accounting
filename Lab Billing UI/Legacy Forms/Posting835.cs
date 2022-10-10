@@ -4142,13 +4142,13 @@ namespace LabBilling.Legacy
             }
             catch (IOException ioe)
             {
-                m_ERR.m_Email.Send("PostCheckRecords@Viewer835.ioe", "david.kelly@wth.org", "FILE ERROR", ioe.Message);
+                m_ERR.m_Email.Send("PostCheckRecords@Viewer835.ioe", "bradley.powers@wth.org", "FILE ERROR", ioe.Message);
 
             }
             catch (NullReferenceException nre)
             {
                 //Checks have been posted once and the stream has not been reopened. 
-                m_ERR.m_Email.Send("Viewer835.tsmiPostCheckRecords_click", "david.kelly@wth.org", "FILE ERROR", nre.Message);
+                m_ERR.m_Email.Send("Viewer835.tsmiPostCheckRecords_click", "bradley.powers@wth.org", "FILE ERROR", nre.Message);
             }
             catch (Exception exc)
             {

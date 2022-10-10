@@ -6,15 +6,18 @@ using System.Text;
 using System.Threading.Tasks;
 using EdiTools;
 using LabBilling.Core.Models;
+using LabBilling.Core.DataAccess;
 
 namespace LabBilling.Core.BusinessLogic
 {
     public class Remittance835
     {
-        public Remittance835()
+        public Remittance835(string connString)
         {
-            
+            _connString = connString;
         }
+
+        private string _connString;
 
         public Dictionary<string, string> adjustmentReasonCodes = new Dictionary<string, string>()
         {
@@ -1000,9 +1003,11 @@ namespace LabBilling.Core.BusinessLogic
             {"799","Resubmit a replacement claim, not a new claim."}
         };
 
+        EdiDocument ediDocument = null;
+
         public void Load835(string fileName)
         {
-            EdiDocument ediDocument = EdiDocument.Load(fileName);
+            ediDocument = EdiDocument.Load(fileName);
 
             RemittanceData remittance = new RemittanceData();
             Loop2000 loop2000 = null;
@@ -1032,6 +1037,8 @@ namespace LabBilling.Core.BusinessLogic
                     case "REF":
                         break;
                     case "DTM":
+                        //472 = date of service
+
                         break;
                     case "N1":
                         if (segment[1] == "PR")
@@ -1111,7 +1118,16 @@ namespace LabBilling.Core.BusinessLogic
                         loop2100.ClaimFrequencyCode = segment[9];
                         break;
                     case "AMT":
-
+                        //B6 = PAID AMT
+                        if (segment[1] == "B6")
+                        {
+                            loop2110.PaidAmount = segment[2];
+                        }
+                        //AU = ALLOWED AMT
+                        if (segment[1] == "AU")
+                        {
+                            loop2110.AllowedAmount = segment[2];
+                        }
                         break;
                     case "QTY":
                         break;
@@ -1157,6 +1173,13 @@ namespace LabBilling.Core.BusinessLogic
             var json = Newtonsoft.Json.JsonConvert.SerializeObject(remittance);
 
             System.IO.File.WriteAllText(@"C:\temp\remit.json", json);
+
+        }
+
+        private void ProcessRemittance()
+        {
+            ChkRepository chkRepository = new ChkRepository(_connString);
+
 
         }
 
@@ -1218,6 +1241,8 @@ namespace LabBilling.Core.BusinessLogic
         public string AdjustmentReasonCode { get; set; }
         public string AdjustmentAmount { get; set; }
         public string AdjustmentQuantity { get; set; }
+        public string PaidAmount { get; internal set; }
+        public string AllowedAmount { get; internal set; }
     }
 
 
