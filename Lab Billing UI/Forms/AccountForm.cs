@@ -466,7 +466,7 @@ namespace LabBilling.Forms
             Address2TextBox.BackColor = Color.White;
             CityTextBox.Text = currentAccount.Pat.City;
             CityTextBox.BackColor = Color.White;
-            StateComboBox.SelectedValue = currentAccount.Pat.State;
+            StateComboBox.SelectedValue = currentAccount.Pat.State ?? "";
             StateComboBox.BackColor = Color.White;
             ZipcodeTextBox.Text = currentAccount.Pat.ZipCode;
             ZipcodeTextBox.BackColor = Color.White;
