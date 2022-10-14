@@ -78,8 +78,13 @@ namespace LabBilling.Core.Models
         { 
             get
             {
-                return $"{LastName} {Credentials}, {FirstName} {MiddleInitial}";
+                return $"{LastName}, {FirstName} {MiddleInitial}";
             }
+        }
+
+        public override string ToString()
+        {
+            return $"{FullName} - {NpiId}";
         }
 
     }

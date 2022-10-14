@@ -16,7 +16,6 @@ using System.Reflection;
 using System.Threading.Tasks;
 using MetroFramework;
 using LabBilling.Core.BusinessLogic;
-//using OopFactory.X12.Hipaa.ClaimParser;
 
 namespace LabBilling.Forms
 {
@@ -52,17 +51,19 @@ namespace LabBilling.Forms
         public string SelectedAccount
         {
             get { return _selectedAccount; }
-        } 
+        }
+
+        private ListBox providerSearchListBox = new ListBox();
 
         /// <summary>
         /// Construct form with an account to open and optionally send the MDI parent form.
         /// </summary>
         /// <param name="account"></param>
         /// <param name="parentForm"></param>
-        public AccountForm(string account, Form parentForm = null) : this() 
+        public AccountForm(string account, Form parentForm = null) : this()
         {
             Log.Instance.Trace("Entering");
-            
+
             if (account != null)
                 _selectedAccount = account;
 
@@ -82,6 +83,10 @@ namespace LabBilling.Forms
         {
             Log.Instance.Trace("Entering");
 
+
+            providerSearchListBox.Visible = false;
+            tabDemographics.Controls.Add(providerSearchListBox);
+
             #region Process permissions and enable controls
 
             Helper.SetControlsAccess(tabCharges.Controls, false);
@@ -94,18 +99,20 @@ namespace LabBilling.Forms
             }
 
             Helper.SetControlsAccess(tabPayments.Controls, false);
-            if(systemParametersRepository.GetByKey("allow_chk_entry") == "1")
+            if (systemParametersRepository.GetByKey("allow_chk_entry") == "1")
             {
-                if(Program.LoggedInUser.CanAddPayments)
+                if (Program.LoggedInUser.CanAddPayments)
                 {
                     Helper.SetControlsAccess(tabPayments.Controls, false);
                 }
             }
 
-            Helper.SetControlsAccess(DemographicsTabLayoutPanel.Controls, false);
+            //Helper.SetControlsAccess(DemographicsTabLayoutPanel.Controls, false);
+            Helper.SetControlsAccess(tabDemographics.Controls, false);
             Helper.SetControlsAccess(tabInsurance.Controls, false);
             Helper.SetControlsAccess(insTabLayoutPanel.Controls, false);
             Helper.SetControlsAccess(tabDiagnosis.Controls, false);
+            Helper.SetControlsAccess(tabGuarantor.Controls, false);
             Helper.SetControlsAccess(tabNotes.Controls, false);
             Helper.SetControlsAccess(tabCharges.Controls, false);
             Helper.SetControlsAccess(tabPayments.Controls, false);
@@ -115,14 +122,15 @@ namespace LabBilling.Forms
             changeDateOfServiceToolStripMenuItem.Enabled = false;
             changeFinancialClassToolStripMenuItem.Enabled = false;
             clearHoldStatusToolStripMenuItem.Enabled = false;
-            if(Convert.ToBoolean(systemParametersRepository.GetByKey("allow_edit")))
+            if (Convert.ToBoolean(systemParametersRepository.GetByKey("allow_edit")))
             {
-                if(Program.LoggedInUser.Access == "ENTER/EDIT")
+                if (Program.LoggedInUser.Access == "ENTER/EDIT")
                 {
-                    Helper.SetControlsAccess(DemographicsTabLayoutPanel.Controls, true);
+                    Helper.SetControlsAccess(tabDemographics.Controls, true);
                     Helper.SetControlsAccess(tabInsurance.Controls, true);
                     Helper.SetControlsAccess(insTabLayoutPanel.Controls, true);
                     Helper.SetControlsAccess(tabDiagnosis.Controls, true);
+                    Helper.SetControlsAccess(tabGuarantor.Controls, true);
                     Helper.SetControlsAccess(tabNotes.Controls, true);
                     Helper.SetControlsAccess(tabCharges.Controls, true);
                     Helper.SetControlsAccess(tabPayments.Controls, true);
@@ -185,7 +193,7 @@ namespace LabBilling.Forms
             controlColumnMap.Add(GuarCityTextBox, nameof(Pat.GuarantorCity));
             controlColumnMap.Add(GuarantorAddressTextBox, nameof(Pat.GuarantorAddress));
             controlColumnMap.Add(GuarantorLastNameTextBox, nameof(Pat.GuarantorLastName));
-            controlColumnMap.Add(orderingProviderComboBox, nameof(Pat.ProviderId));
+            controlColumnMap.Add(providerLookup1, nameof(Pat.ProviderId));
             #endregion
 
             #region Setup Insurance Company Combobox
@@ -216,24 +224,8 @@ namespace LabBilling.Forms
             #region Setup ordering provider combo box
 
             providers = DataCache.Instance.GetProviders(); //phyRepository.GetActive().OrderBy(x => x.FullName).ToList();
-            DataTable phyDataTable = new DataTable(typeof(Phy).Name);
-            phyDataTable.Columns.Add(nameof(Phy.NpiId));
-            phyDataTable.Columns.Add(nameof(Phy.FullName));
-            var values2 = new object[2];
-            values[0] = "";
-            values[1] = "<select provider>";
-            phyDataTable.Rows.Add(values2);
+            providerLookup1.Datasource = providers;
 
-            foreach(var provider in providers)
-            {
-                values[0] = provider.NpiId;
-                values[1] = provider.FullName;
-                phyDataTable.Rows.Add(values);
-            }
-
-            orderingProviderComboBox.DataSource = phyDataTable;
-            orderingProviderComboBox.DisplayMember = nameof(Phy.FullName);
-            orderingProviderComboBox.ValueMember = nameof(Phy.NpiId);
             #endregion
 
             #region populate combo boxes
@@ -288,7 +280,8 @@ namespace LabBilling.Forms
                 userProfileDB.InsertRecentAccount(SelectedAccount, Program.LoggedInUser.UserName);
                 LoadAccountData();
 
-                AddOnChangeHandlerToInputControls(DemographicsTabLayoutPanel);
+                AddOnChangeHandlerToInputControls(tabDemographics);
+                AddOnChangeHandlerToInputControls(tabGuarantor);
                 AddOnChangeHandlerToInputControls(tabInsurance);
             }
 
@@ -457,7 +450,7 @@ namespace LabBilling.Forms
             TotalChargesLabel.Text = currentAccount.TotalCharges.ToString("c");
             TotalPmtAdjLabel.Text = (currentAccount.TotalContractual + currentAccount.TotalPayments + currentAccount.TotalWriteOff).ToString("c");
             BalanceLabel.Text = currentAccount.Balance.ToString("c");
-            
+
             PatientFullNameLabel.Text = currentAccount.PatFullName;
             LastNameTextBox.Text = currentAccount.PatLastName;
             LastNameTextBox.BackColor = Color.White;
@@ -471,11 +464,11 @@ namespace LabBilling.Forms
             Address1TextBox.BackColor = Color.White;
             Address2TextBox.Text = currentAccount.Pat.Address2;
             Address2TextBox.BackColor = Color.White;
-            CityTextBox.Text = currentAccount.Pat.City; 
+            CityTextBox.Text = currentAccount.Pat.City;
             CityTextBox.BackColor = Color.White;
-            StateComboBox.SelectedValue = currentAccount.Pat.State; 
+            StateComboBox.SelectedValue = currentAccount.Pat.State;
             StateComboBox.BackColor = Color.White;
-            ZipcodeTextBox.Text = currentAccount.Pat.ZipCode; 
+            ZipcodeTextBox.Text = currentAccount.Pat.ZipCode;
             ZipcodeTextBox.BackColor = Color.White;
             PhoneTextBox.Text = currentAccount.Pat.PrimaryPhone;
             PhoneTextBox.BackColor = Color.White;
@@ -490,7 +483,8 @@ namespace LabBilling.Forms
             MaritalStatusComboBox.SelectedValue = currentAccount.Pat.MaritalStatus != null ? currentAccount.Pat.MaritalStatus : "";
             MaritalStatusComboBox.BackColor = Color.White;
 
-            orderingProviderComboBox.SelectedValue = currentAccount.Pat.ProviderId;
+            providerLookup1.SelectedValue = currentAccount.Pat.ProviderId;
+            providerLookup1.DisplayValue = currentAccount.Pat.Physician.FullName;
 
             GuarantorLastNameTextBox.Text = currentAccount.Pat.GuarantorLastName;
             GuarFirstNameTextBox.Text = currentAccount.Pat.GuarantorFirstName;
@@ -550,8 +544,8 @@ namespace LabBilling.Forms
                 HolderSexComboBox.SelectedIndex = 0;
 
                 InsuranceDataGrid.ClearSelection();
-
-                ResetControls(DemographicsTabLayoutPanel.Controls);
+                SetInsDataEntryAccess(false);
+                ResetControls(tabDemographics.Controls.OfType<Control>().ToArray());
             }
 
         }
@@ -602,43 +596,33 @@ namespace LabBilling.Forms
 
             accDB.Update(currentAccount);
 
-            currentAccount.Pat.CityStateZip = string.Format("{0}, {1} {2}", CityTextBox.Text, StateComboBox.SelectedValue.ToString(), ZipcodeTextBox.Text);
-            currentAccount.Pat.City = CityTextBox.Text;
             currentAccount.Pat.Address1 = Address1TextBox.Text;
             currentAccount.Pat.Address2 = Address2TextBox.Text;
             currentAccount.Pat.EmailAddress = EmailAddressTextBox.Text;
             currentAccount.Pat.MaritalStatus = MaritalStatusComboBox.SelectedValue.ToString();
             currentAccount.Pat.PrimaryPhone = PhoneTextBox.Text;
+            currentAccount.Pat.City = CityTextBox.Text;
             currentAccount.Pat.State = StateComboBox.SelectedValue.ToString();
             currentAccount.Pat.ZipCode = ZipcodeTextBox.Text;
+            currentAccount.Pat.CityStateZip = string.Format("{0}, {1} {2}", CityTextBox.Text, StateComboBox.SelectedValue.ToString(), ZipcodeTextBox.Text);
             currentAccount.Pat.PatFullName = string.Format("{0},{1} {2}", LastNameTextBox.Text, FirstNameTextBox.Text, MiddleNameTextBox.Text);
             currentAccount.Pat.BirthDate = DateTime.Parse(DateOfBirthTextBox.Text);
-            currentAccount.Pat.GuarantorFullName = string.Format("{0} {1},{2} {3}",
-                GuarantorLastNameTextBox.Text, GuarSuffixTextBox.Text, GuarFirstNameTextBox.Text, GuarMiddleNameTextBox.Text);
-            currentAccount.Pat.GuarantorLastName = GuarantorLastNameTextBox.Text;
-            currentAccount.Pat.GuarantorFirstName = GuarFirstNameTextBox.Text;
-            currentAccount.Pat.GuarantorMiddleName = GuarMiddleNameTextBox.Text;
-            currentAccount.Pat.GuarantorNameSuffix = GuarSuffixTextBox.Text;
-            currentAccount.Pat.GuarantorAddress = GuarantorAddressTextBox.Text;
-            currentAccount.Pat.GuarantorCity = GuarCityTextBox.Text;
-            currentAccount.Pat.GuarantorPrimaryPhone = GuarantorPhoneTextBox.Text;
-            currentAccount.Pat.GuarantorState = GuarStateComboBox.SelectedValue.ToString();
-            currentAccount.Pat.GuarantorZipCode = GuarZipTextBox.Text;
-            currentAccount.Pat.GuarantorCityState = string.Format("{0}, {1} {2}", GuarCityTextBox.Text, GuarStateComboBox.SelectedValue.ToString(), GuarZipTextBox.Text);
             currentAccount.Pat.Sex = SexComboBox.SelectedValue.ToString();
-            currentAccount.Pat.GuarRelationToPatient = GuarantorRelationComboBox.SelectedValue.ToString();
-            currentAccount.Pat.ProviderId = orderingProviderComboBox.SelectedValue.ToString();
+            currentAccount.Pat.ProviderId = providerLookup1.SelectedValue;
+
             //currentAccount.Pat.SocSecNo = tbSSN.Text;
 
             patDB.SaveAll(currentAccount.Pat);
 
-            var controls = DemographicsTabLayoutPanel.Controls; //tabDemographics.Controls;
+            var controls = tabDemographics.Controls; //tabDemographics.Controls;
 
             foreach (Control control in controls)
             {
                 //set background back to white to indicate change has been saved to database
                 control.BackColor = Color.White;
             }
+
+            this.LoadAccountData();
 
         }
 
@@ -670,7 +654,7 @@ namespace LabBilling.Forms
             }
             if (selectedIns < 0)
             {
-                MetroMessageBox.Show(this,"Insurance Order is not a valid selection.");
+                MetroMessageBox.Show(this, "Insurance Order is not a valid selection.");
                 Log.Instance.Debug("Insurance Order is not a valid selection.");
                 return;
             }
@@ -686,10 +670,14 @@ namespace LabBilling.Forms
             currentAccount.Insurances[selectedIns].GroupName = GroupNameTextBox.Text;
             currentAccount.Insurances[selectedIns].GroupNumber = GroupNumberTextBox.Text;
             currentAccount.Insurances[selectedIns].HolderAddress = HolderAddressTextBox.Text;
+            currentAccount.Insurances[selectedIns].HolderCity = HolderCityTextBox.Text;
+            currentAccount.Insurances[selectedIns].HolderState = HolderStateComboBox.SelectedValue.ToString();
+            currentAccount.Insurances[selectedIns].HolderZip = HolderZipTextBox.Text;
             currentAccount.Insurances[selectedIns].HolderCityStZip = string.Format("{0}, {1} {2}",
                 HolderCityTextBox.Text,
                 HolderStateComboBox.SelectedValue == null ? "" : HolderStateComboBox.SelectedValue.ToString(),
                 HolderZipTextBox.Text);
+
             if (currentAccount.Insurances[selectedIns].HolderCityStZip.Trim() == ",")
             {
                 currentAccount.Insurances[selectedIns].HolderCityStZip = String.Empty;
@@ -737,9 +725,9 @@ namespace LabBilling.Forms
                 {
                     List<string> updatedColumns = new List<string>();
 
-                    foreach(Control control in insTabLayoutPanel.Controls)
+                    foreach (Control control in insTabLayoutPanel.Controls)
                     {
-                        if(changedControls.Contains(control.Name))
+                        if (changedControls.Contains(control.Name))
                         {
                             //get field name from map
                             string field = controlColumnMap[control].ToString();
@@ -787,7 +775,35 @@ namespace LabBilling.Forms
             InsOrderComboBox.SelectedIndex = 0;
             PlanFinCodeComboBox.SelectedIndex = -1;
 
-            ResetControls(insTabLayoutPanel.Controls);
+            //disable fields
+            SetInsDataEntryAccess(false);
+
+            ResetControls(insTabLayoutPanel.Controls.OfType<Control>().ToArray());
+        }
+
+        private void SetInsDataEntryAccess(bool enable)
+        {
+            PlanAddressTextBox.Enabled = enable;
+            PlanAddress2TextBox.Enabled = enable;
+            PlanCityStTextBox.Enabled = enable;
+            PlanNameTextBox.Enabled = enable;
+            HolderAddressTextBox.Enabled = enable;
+            HolderCityTextBox.Enabled = enable;
+            HolderDOBTextBox.Enabled = enable;
+            HolderFirstNameTextBox.Enabled = enable;
+            HolderLastNameTextBox.Enabled = enable;
+            HolderMiddleNameTextBox.Enabled = enable;
+            HolderZipTextBox.Enabled = enable;
+            PolicyNumberTextBox.Enabled = enable;
+            GroupNameTextBox.Enabled = enable;
+            GroupNumberTextBox.Enabled = enable;
+            CertSSNTextBox.Enabled = enable;
+            HolderStateComboBox.Enabled = enable;
+            HolderSexComboBox.Enabled = enable;
+            InsCodeComboBox.Enabled = enable;
+            InsOrderComboBox.Enabled = enable;
+            PlanFinCodeComboBox.Enabled = enable;
+            InsRelationComboBox.Enabled = enable;
         }
 
         private void InsuranceDataGrid_CellClick(object sender, DataGridViewCellEventArgs e)
@@ -821,8 +837,8 @@ namespace LabBilling.Forms
                     return;
                 }
 
-                if (MetroMessageBox.Show(this, string.Format("Delete {0} insurance {1} for this patient?", 
-                    currentAccount.Insurances[selectedIns].Coverage, 
+                if (MetroMessageBox.Show(this, string.Format("Delete {0} insurance {1} for this patient?",
+                    currentAccount.Insurances[selectedIns].Coverage,
                     currentAccount.Insurances[selectedIns].PlanName),
                     "Delete Insurance", MessageBoxButtons.YesNo)
                     == DialogResult.Yes)
@@ -833,8 +849,8 @@ namespace LabBilling.Forms
                 insGridSource.ResetBindings(false);
                 ClearInsEntryFields();
 
-                ResetControls(insTabLayoutPanel.Controls);
-                                
+                ResetControls(insTabLayoutPanel.Controls.OfType<Control>().ToArray());
+
                 return;
                 #endregion
             }
@@ -877,7 +893,7 @@ namespace LabBilling.Forms
             PlanFinCodeComboBox.SelectedValue = InsuranceDataGrid.SelectedRows[0].Cells[nameof(Ins.FinCode)].Value?.ToString() ?? "";
 
             //reset changed flag & colors
-            foreach(Control ctrl in insTabLayoutPanel.Controls)
+            foreach (Control ctrl in insTabLayoutPanel.Controls)
             {
                 if (ctrl is TextBox || ctrl is ComboBox || ctrl is FlatCombo || ctrl is MaskedTextBox)
                 {
@@ -885,7 +901,8 @@ namespace LabBilling.Forms
                 }
                 changedControls.Remove(ctrl.Name);
             }
-
+            //enable data entry fields
+            SetInsDataEntryAccess(true);
         }
 
         private void LookupInsCode(string code)
@@ -958,7 +975,7 @@ namespace LabBilling.Forms
 
             ChargesDataGrid.DataSource = chargesTable;
             ChargesDataGrid.DataMember = chargesTable.TableName;
-            if(!ShowCreditedChrgCheckBox.Checked)
+            if (!ShowCreditedChrgCheckBox.Checked)
             {
                 chargesTable.DefaultView.RowFilter = "IsCredited = false";
             }
@@ -1122,13 +1139,13 @@ namespace LabBilling.Forms
 
         private void ChrgDetailDataGrid_SelectionChanged(object sender, EventArgs e)
         {
-            if(UpdateDxPointersButton.Enabled == true)
+            if (UpdateDxPointersButton.Enabled == true)
             {
-                if(MetroMessageBox.Show(this, "Changes were made to diagnosis pointers. Save changes?", "Save Changes?", 
-                    MessageBoxButtons.YesNo, MessageBoxIcon.Question) 
+                if (MetroMessageBox.Show(this, "Changes were made to diagnosis pointers. Save changes?", "Save Changes?",
+                    MessageBoxButtons.YesNo, MessageBoxIcon.Question)
                     == DialogResult.Yes)
                 {
-                    UpdateDxPointersButton_Click(sender, e);                    
+                    UpdateDxPointersButton_Click(sender, e);
                 }
                 UpdateDxPointersButton.Enabled = false;
             }
@@ -1190,10 +1207,10 @@ namespace LabBilling.Forms
                         }
                     }
                     DiagnosisPointerDataGrid.DataSource = dt;
-                    DiagnosisPointerDataGrid.Columns["DxCode"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill; 
+                    DiagnosisPointerDataGrid.Columns["DxCode"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
                     DiagnosisPointerDataGrid.AutoResizeColumns();
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     Log.Instance.Error(ex.Message);
                     MetroMessageBox.Show(this, "Error loading Diagnosis Code Pointer. Exception has been logged. Report to Administrator.");
@@ -1209,7 +1226,7 @@ namespace LabBilling.Forms
             {
                 for (int r = 0; r < DiagnosisPointerDataGrid.RowCount; r++)
                 {
-                    if((bool)DiagnosisPointerDataGrid.Rows[r].Cells[c].Value == true)
+                    if ((bool)DiagnosisPointerDataGrid.Rows[r].Cells[c].Value == true)
                     {
                         sb.Append(DiagnosisPointerDataGrid.Rows[r].Cells[0].Value.ToString() + ":");
                     }
@@ -1224,7 +1241,7 @@ namespace LabBilling.Forms
             ChrgDetail amt = new ChrgDetail();
 
             amt.uri = Convert.ToInt32(ChrgDetailDataGrid.SelectedRows[0].Cells[nameof(amt.uri)].Value);
-            amt.Amount = Convert.ToDouble(ChrgDetailDataGrid.SelectedRows[0].Cells[nameof(amt.Amount)].Value?? 0.0);
+            amt.Amount = Convert.ToDouble(ChrgDetailDataGrid.SelectedRows[0].Cells[nameof(amt.Amount)].Value ?? 0.0);
             amt.BillMethod = ChrgDetailDataGrid.SelectedRows[0].Cells[nameof(amt.BillMethod)].Value?.ToString();
             amt.BillType = ChrgDetailDataGrid.SelectedRows[0].Cells[nameof(amt.BillType)].Value?.ToString();
             amt.ChrgNo = Convert.ToInt32(ChrgDetailDataGrid.SelectedRows[0].Cells[nameof(amt.ChrgNo)].Value ?? 0.0);
@@ -1243,7 +1260,7 @@ namespace LabBilling.Forms
             {
                 amtRepository.Update(amt);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Log.Instance.Error(ex.Message);
                 MetroMessageBox.Show(this, "Error updating charge detail record. Please try again. If error continues, report error to Administrator.");
@@ -1259,7 +1276,7 @@ namespace LabBilling.Forms
         {
             DiagnosisPointerDataGrid.EndEdit();
 
-            if(e.ColumnIndex > 1 )
+            if (e.ColumnIndex > 1)
             {
                 UpdateDxPointersButton.Enabled = true;
 
@@ -1271,7 +1288,7 @@ namespace LabBilling.Forms
                     //loop through the column entries and ensure only one is checked
                     for (int i = 0; i < DiagnosisPointerDataGrid.RowCount; i++)
                     {
-                        if(i != e.RowIndex)
+                        if (i != e.RowIndex)
                         {
                             DiagnosisPointerDataGrid.Rows[i].Cells[e.ColumnIndex].Value = false;
                         }
@@ -1314,7 +1331,7 @@ namespace LabBilling.Forms
             PaymentsDataGrid.Columns[nameof(Chk.WriteOffAmount)].Visible = true;
             PaymentsDataGrid.Columns[nameof(Chk.WriteOffCode)].Visible = true;
             PaymentsDataGrid.Columns[nameof(Chk.WriteOffDate)].Visible = true;
-            
+
             PaymentsDataGrid.Columns[nameof(Chk.PaidAmount)].DefaultCellStyle.Format = "N2";
             PaymentsDataGrid.Columns[nameof(Chk.PaidAmount)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             PaymentsDataGrid.Columns[nameof(Chk.ContractualAmount)].DefaultCellStyle.Format = "N2";
@@ -1535,7 +1552,7 @@ namespace LabBilling.Forms
             Log.Instance.Trace("Entering");
             NotesDisplayTextBox.Text = "";
             NotesDisplayTextBox.BackColor = Color.AntiqueWhite;
-            foreach(AccountNote note in currentAccount.Notes)
+            foreach (AccountNote note in currentAccount.Notes)
             {
                 NotesDisplayTextBox.DeselectAll();
                 NotesDisplayTextBox.SelectionFont = new Font(NotesDisplayTextBox.SelectionFont, FontStyle.Bold);
@@ -1585,7 +1602,7 @@ namespace LabBilling.Forms
 
             ValidationResultsTextBox.Text = currentAccount.AccountValidationStatus.validation_text;
             LastValidatedLabel.Text = currentAccount.AccountValidationStatus.mod_date.ToString("G");
-           
+
         }
 
         #endregion
@@ -1596,7 +1613,7 @@ namespace LabBilling.Forms
             Log.Instance.Trace($"Entering");
             PersonSearchForm frm = new PersonSearchForm();
             frm.ShowDialog();
-            if(frm.SelectedAccount != "" && frm.SelectedAccount != null)
+            if (frm.SelectedAccount != "" && frm.SelectedAccount != null)
             {
                 _selectedAccount = frm.SelectedAccount;
                 LoadAccountData();
@@ -1627,7 +1644,7 @@ namespace LabBilling.Forms
             DateTimePicker dateTimePicker = new DateTimePicker()
             {
                 Name = "newDateFrm",
-                Location = new Point(lbl2.Width + 10,10),
+                Location = new Point(lbl2.Width + 10, 10),
                 Format = DateTimePickerFormat.Short,
                 Width = 100,
                 Value = (DateTime)currentAccount.TransactionDate
@@ -1640,7 +1657,7 @@ namespace LabBilling.Forms
             };
             TextBox tbReason = new TextBox()
             {
-                Location = new Point(lbl1.Width + 10,50),
+                Location = new Point(lbl1.Width + 10, 50),
                 Width = 200,
                 Multiline = true
             };
@@ -1658,7 +1675,7 @@ namespace LabBilling.Forms
 
             btnOK.Click += (o, s) =>
             {
-                if(string.IsNullOrEmpty(tbReason.Text))
+                if (string.IsNullOrEmpty(tbReason.Text))
                 {
                     MetroMessageBox.Show(this, "Must enter a reason.");
                     return;
@@ -1678,7 +1695,7 @@ namespace LabBilling.Forms
             frm.Controls.Add(lbl1);
             frm.Controls.Add(btnOK);
             frm.Controls.Add(btnCanel);
-            if(frm.ShowDialog() == DialogResult.OK)
+            if (frm.ShowDialog() == DialogResult.OK)
             {
                 MetroMessageBox.Show(this, $"New date is {dateTimePicker}. Reason is {tbReason.Text}");
                 try
@@ -1690,7 +1707,7 @@ namespace LabBilling.Forms
                     Log.Instance.Error(anex, $"Change date of service parameter {anex.ParamName} must contain a value.");
                     MetroMessageBox.Show(this, $"{anex.ParamName} must contain a value. Date of service was not changed.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     Log.Instance.Error(ex, $"Error changing date of service.");
                     MetroMessageBox.Show(this, $"Error changing date of service. Date of service was not changed.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -1781,6 +1798,7 @@ namespace LabBilling.Forms
         private void ChangeClientToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Log.Instance.Trace($"Entering");
+            MessageBox.Show("Function not implemented.");
         }
 
         private void AddOnChangeHandlerToInputControls(Control ctrl)
@@ -1823,7 +1841,7 @@ namespace LabBilling.Forms
 
             ctrl.BackColor = Color.Orange;
 
-            if(!changedControls.Contains(ctrl.Name))
+            if (!changedControls.Contains(ctrl.Name))
                 changedControls.Add(ctrl.Name);
 
         }
@@ -1857,7 +1875,7 @@ namespace LabBilling.Forms
 
         }
 
-        private void ResetControls(TableLayoutControlCollection controls)
+        private void ResetControls(Control[] controls)
         {
             //reset changed flag & colors
             foreach (Control ctrl in controls)
@@ -1869,7 +1887,6 @@ namespace LabBilling.Forms
                 changedControls.Remove(ctrl.Name);
             }
         }
-
 
         private async void ValidateAccountButton_Click(object sender, EventArgs e)
         {
@@ -1888,7 +1905,7 @@ namespace LabBilling.Forms
                     LastValidatedLabel.Text = currentAccount.AccountValidationStatus.mod_date.ToString("G");
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 ValidationResultsTextBox.Text = $"Exception in validation - report to support. {ex.Message}";
             }
@@ -1943,9 +1960,52 @@ namespace LabBilling.Forms
             //string x12Text = billing837.GenerateSingleClaim(claim, fileLocation);
             //printClaim.Print(x12Text, false, true);
 
-            printClaim.PrintForm(claim); 
+            printClaim.PrintForm(claim);
 
         }
 
+        private void tabControl1_Selected(object sender, TabControlEventArgs e)
+        {
+            if (e.TabPage.Name == tabDemographics.Name)
+            {
+                //load demographics
+
+            }
+        }
+
+        private void GuarantorSaveButton_Click(object sender, EventArgs e)
+        {
+            Log.Instance.Trace($"Entering");
+
+            currentAccount.Pat.GuarantorFullName = string.Format("{0} {1},{2} {3}",
+                GuarantorLastNameTextBox.Text, GuarSuffixTextBox.Text, GuarFirstNameTextBox.Text, GuarMiddleNameTextBox.Text);
+            currentAccount.Pat.GuarantorLastName = GuarantorLastNameTextBox.Text;
+            currentAccount.Pat.GuarantorFirstName = GuarFirstNameTextBox.Text;
+            currentAccount.Pat.GuarantorMiddleName = GuarMiddleNameTextBox.Text;
+            currentAccount.Pat.GuarantorNameSuffix = GuarSuffixTextBox.Text;
+            currentAccount.Pat.GuarantorAddress = GuarantorAddressTextBox.Text;
+            currentAccount.Pat.GuarantorCity = GuarCityTextBox.Text;
+            currentAccount.Pat.GuarantorPrimaryPhone = GuarantorPhoneTextBox.Text;
+            currentAccount.Pat.GuarantorState = GuarStateComboBox.SelectedValue.ToString();
+            currentAccount.Pat.GuarantorZipCode = GuarZipTextBox.Text;
+            currentAccount.Pat.GuarantorCityState = string.Format("{0}, {1} {2}", GuarCityTextBox.Text, GuarStateComboBox.SelectedValue.ToString(), GuarZipTextBox.Text);
+            currentAccount.Pat.GuarRelationToPatient = GuarantorRelationComboBox.SelectedValue.ToString();
+
+            patDB.SaveAll(currentAccount.Pat);
+
+            var controls = tabGuarantor.Controls;
+
+            foreach (Control control in controls)
+            {
+                //set background back to white to indicate change has been saved to database
+                control.BackColor = Color.White;
+            }
+            LoadAccountData();
+        }
+
+        private void providerLookup1_SelectedValueChanged(object source, EventArgs args)
+        {
+            string phy = providerLookup1.SelectedValue;
+        }
     }
 }

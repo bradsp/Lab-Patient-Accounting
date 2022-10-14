@@ -60,11 +60,43 @@ namespace LabBilling.Forms
             this.summaryTab = new System.Windows.Forms.TabPage();
             this.summaryTable = new System.Windows.Forms.TableLayoutPanel();
             this.tabDemographics = new System.Windows.Forms.TabPage();
-            this.DemographicsTabLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
-            this.PatDemogTitleLabel = new System.Windows.Forms.Label();
-            this.GuarTitleLabel = new System.Windows.Forms.Label();
+            this.providerLookup1 = new LabBilling.Library.ProviderLookup();
+            this.DemoStatusMessagesTextBox = new System.Windows.Forms.TextBox();
+            this.SuffixTextBox = new System.Windows.Forms.TextBox();
+            this.SaveDemographics = new System.Windows.Forms.Button();
+            this.PatSuffixLabel = new System.Windows.Forms.Label();
+            this.orderingProviderLabel = new System.Windows.Forms.Label();
+            this.DateOfBirthTextBox = new System.Windows.Forms.MaskedTextBox();
+            this.PatDOBLabel = new System.Windows.Forms.Label();
+            this.SocSecNoTextBox = new System.Windows.Forms.MaskedTextBox();
+            this.PatSSNLabel = new System.Windows.Forms.Label();
+            this.MaritalStatusComboBox = new LabBilling.Library.FlatCombo();
+            this.PatMaritalStatusLabel = new System.Windows.Forms.Label();
+            this.SexComboBox = new LabBilling.Library.FlatCombo();
+            this.PatSexLabel = new System.Windows.Forms.Label();
+            this.EmailAddressTextBox = new System.Windows.Forms.TextBox();
+            this.PatEmailLabel = new System.Windows.Forms.Label();
+            this.PhoneTextBox = new System.Windows.Forms.TextBox();
+            this.PatPhoneLabel = new System.Windows.Forms.Label();
+            this.ZipcodeTextBox = new System.Windows.Forms.MaskedTextBox();
+            this.PatZipLabel = new System.Windows.Forms.Label();
+            this.StateComboBox = new LabBilling.Library.FlatCombo();
+            this.PatStateLabel = new System.Windows.Forms.Label();
+            this.CityTextBox = new System.Windows.Forms.TextBox();
+            this.PatCityLabel = new System.Windows.Forms.Label();
+            this.Address1TextBox = new System.Windows.Forms.TextBox();
+            this.Address2TextBox = new System.Windows.Forms.TextBox();
+            this.PatAddressLabel = new System.Windows.Forms.Label();
+            this.LastNameTextBox = new System.Windows.Forms.TextBox();
+            this.PatientFullNameLabel = new System.Windows.Forms.Label();
+            this.MiddleNameTextBox = new System.Windows.Forms.TextBox();
+            this.PatMiddleNameLabel = new System.Windows.Forms.Label();
+            this.FirstNameTextBox = new System.Windows.Forms.TextBox();
+            this.PatFirstNameLabel = new System.Windows.Forms.Label();
+            this.PatLastNameLabel = new System.Windows.Forms.Label();
+            this.tabGuarantor = new System.Windows.Forms.TabPage();
+            this.GuarantorSaveButton = new System.Windows.Forms.Button();
             this.PatRelationLabel = new System.Windows.Forms.Label();
-            this.GuarantorRelationComboBox = new LabBilling.Library.FlatCombo();
             this.GuarFirstNameLabel = new System.Windows.Forms.Label();
             this.GuarFirstNameTextBox = new System.Windows.Forms.TextBox();
             this.GuarSuffixLabel = new System.Windows.Forms.Label();
@@ -79,46 +111,12 @@ namespace LabBilling.Forms
             this.GuarCityLabel = new System.Windows.Forms.Label();
             this.GuarCityTextBox = new System.Windows.Forms.TextBox();
             this.GuarStateLabel = new System.Windows.Forms.Label();
-            this.GuarStateComboBox = new LabBilling.Library.FlatCombo();
             this.GuarZipCodeLabel = new System.Windows.Forms.Label();
             this.GuarZipTextBox = new System.Windows.Forms.MaskedTextBox();
             this.GuarPhoneLabel = new System.Windows.Forms.Label();
             this.GuarantorPhoneTextBox = new System.Windows.Forms.TextBox();
-            this.PatDOBLabel = new System.Windows.Forms.Label();
-            this.DateOfBirthTextBox = new System.Windows.Forms.MaskedTextBox();
-            this.PatSSNLabel = new System.Windows.Forms.Label();
-            this.SocSecNoTextBox = new System.Windows.Forms.MaskedTextBox();
-            this.PatMaritalStatusLabel = new System.Windows.Forms.Label();
-            this.MaritalStatusComboBox = new LabBilling.Library.FlatCombo();
-            this.PatSexLabel = new System.Windows.Forms.Label();
-            this.SexComboBox = new LabBilling.Library.FlatCombo();
-            this.PatEmailLabel = new System.Windows.Forms.Label();
-            this.EmailAddressTextBox = new System.Windows.Forms.TextBox();
-            this.PatPhoneLabel = new System.Windows.Forms.Label();
-            this.PhoneTextBox = new System.Windows.Forms.TextBox();
-            this.PatZipLabel = new System.Windows.Forms.Label();
-            this.ZipcodeTextBox = new System.Windows.Forms.MaskedTextBox();
-            this.PatStateLabel = new System.Windows.Forms.Label();
-            this.StateComboBox = new LabBilling.Library.FlatCombo();
-            this.PatCityLabel = new System.Windows.Forms.Label();
-            this.CityTextBox = new System.Windows.Forms.TextBox();
-            this.PatAddress2Label = new System.Windows.Forms.Label();
-            this.Address2TextBox = new System.Windows.Forms.TextBox();
-            this.PatAddressLabel = new System.Windows.Forms.Label();
-            this.Address1TextBox = new System.Windows.Forms.TextBox();
-            this.PatMiddleNameLabel = new System.Windows.Forms.Label();
-            this.MiddleNameTextBox = new System.Windows.Forms.TextBox();
-            this.PatFirstNameLabel = new System.Windows.Forms.Label();
-            this.FirstNameTextBox = new System.Windows.Forms.TextBox();
-            this.PatSuffixLabel = new System.Windows.Forms.Label();
-            this.SuffixTextBox = new System.Windows.Forms.TextBox();
-            this.LastNameTextBox = new System.Windows.Forms.TextBox();
-            this.PatLastNameLabel = new System.Windows.Forms.Label();
-            this.PatientFullNameLabel = new System.Windows.Forms.Label();
-            this.DemoStatusMessagesTextBox = new System.Windows.Forms.TextBox();
-            this.SaveDemographics = new System.Windows.Forms.Button();
-            this.orderingProviderLabel = new System.Windows.Forms.Label();
-            this.orderingProviderComboBox = new MultiColumnCombo.MultiColumnComboBox();
+            this.GuarantorRelationComboBox = new LabBilling.Library.FlatCombo();
+            this.GuarStateComboBox = new LabBilling.Library.FlatCombo();
             this.tabInsurance = new System.Windows.Forms.TabPage();
             this.insTabLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
             this.HolderLastNameLabel = new System.Windows.Forms.Label();
@@ -245,7 +243,7 @@ namespace LabBilling.Forms
             this.tabControl1.SuspendLayout();
             this.summaryTab.SuspendLayout();
             this.tabDemographics.SuspendLayout();
-            this.DemographicsTabLayoutPanel.SuspendLayout();
+            this.tabGuarantor.SuspendLayout();
             this.tabInsurance.SuspendLayout();
             this.insTabLayoutPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.InsuranceDataGrid)).BeginInit();
@@ -275,6 +273,7 @@ namespace LabBilling.Forms
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tabControl1.Controls.Add(this.summaryTab);
             this.tabControl1.Controls.Add(this.tabDemographics);
+            this.tabControl1.Controls.Add(this.tabGuarantor);
             this.tabControl1.Controls.Add(this.tabInsurance);
             this.tabControl1.Controls.Add(this.tabDiagnosis);
             this.tabControl1.Controls.Add(this.tabCharges);
@@ -286,9 +285,11 @@ namespace LabBilling.Forms
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(1159, 641);
             this.tabControl1.TabIndex = 2;
+            this.tabControl1.Selected += new System.Windows.Forms.TabControlEventHandler(this.tabControl1_Selected);
             // 
             // summaryTab
             // 
+            this.summaryTab.BackColor = System.Drawing.Color.White;
             this.summaryTab.Controls.Add(this.summaryTable);
             this.summaryTab.Location = new System.Drawing.Point(4, 22);
             this.summaryTab.Name = "summaryTab";
@@ -296,7 +297,6 @@ namespace LabBilling.Forms
             this.summaryTab.Size = new System.Drawing.Size(1151, 615);
             this.summaryTab.TabIndex = 0;
             this.summaryTab.Text = "Summary";
-            this.summaryTab.UseVisualStyleBackColor = true;
             // 
             // summaryTable
             // 
@@ -318,210 +318,508 @@ namespace LabBilling.Forms
             // 
             // tabDemographics
             // 
-            this.tabDemographics.Controls.Add(this.DemographicsTabLayoutPanel);
+            this.tabDemographics.AutoScroll = true;
+            this.tabDemographics.BackColor = System.Drawing.Color.White;
+            this.tabDemographics.Controls.Add(this.providerLookup1);
+            this.tabDemographics.Controls.Add(this.DemoStatusMessagesTextBox);
+            this.tabDemographics.Controls.Add(this.SuffixTextBox);
+            this.tabDemographics.Controls.Add(this.SaveDemographics);
+            this.tabDemographics.Controls.Add(this.PatSuffixLabel);
+            this.tabDemographics.Controls.Add(this.orderingProviderLabel);
+            this.tabDemographics.Controls.Add(this.DateOfBirthTextBox);
+            this.tabDemographics.Controls.Add(this.PatDOBLabel);
+            this.tabDemographics.Controls.Add(this.SocSecNoTextBox);
+            this.tabDemographics.Controls.Add(this.PatSSNLabel);
+            this.tabDemographics.Controls.Add(this.MaritalStatusComboBox);
+            this.tabDemographics.Controls.Add(this.PatMaritalStatusLabel);
+            this.tabDemographics.Controls.Add(this.SexComboBox);
+            this.tabDemographics.Controls.Add(this.PatSexLabel);
+            this.tabDemographics.Controls.Add(this.EmailAddressTextBox);
+            this.tabDemographics.Controls.Add(this.PatEmailLabel);
+            this.tabDemographics.Controls.Add(this.PhoneTextBox);
+            this.tabDemographics.Controls.Add(this.PatPhoneLabel);
+            this.tabDemographics.Controls.Add(this.ZipcodeTextBox);
+            this.tabDemographics.Controls.Add(this.PatZipLabel);
+            this.tabDemographics.Controls.Add(this.StateComboBox);
+            this.tabDemographics.Controls.Add(this.PatStateLabel);
+            this.tabDemographics.Controls.Add(this.CityTextBox);
+            this.tabDemographics.Controls.Add(this.PatCityLabel);
+            this.tabDemographics.Controls.Add(this.Address1TextBox);
+            this.tabDemographics.Controls.Add(this.Address2TextBox);
+            this.tabDemographics.Controls.Add(this.PatAddressLabel);
+            this.tabDemographics.Controls.Add(this.LastNameTextBox);
+            this.tabDemographics.Controls.Add(this.PatientFullNameLabel);
+            this.tabDemographics.Controls.Add(this.MiddleNameTextBox);
+            this.tabDemographics.Controls.Add(this.PatMiddleNameLabel);
+            this.tabDemographics.Controls.Add(this.FirstNameTextBox);
+            this.tabDemographics.Controls.Add(this.PatFirstNameLabel);
+            this.tabDemographics.Controls.Add(this.PatLastNameLabel);
             this.tabDemographics.Location = new System.Drawing.Point(4, 22);
             this.tabDemographics.Name = "tabDemographics";
             this.tabDemographics.Padding = new System.Windows.Forms.Padding(3);
             this.tabDemographics.Size = new System.Drawing.Size(1151, 615);
             this.tabDemographics.TabIndex = 9;
-            this.tabDemographics.Text = "Demographics/Guarantor";
-            this.tabDemographics.UseVisualStyleBackColor = true;
+            this.tabDemographics.Text = "Demographics";
             // 
-            // DemographicsTabLayoutPanel
+            // providerLookup1
             // 
-            this.DemographicsTabLayoutPanel.ColumnCount = 4;
-            this.DemographicsTabLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 130F));
-            this.DemographicsTabLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 40F));
-            this.DemographicsTabLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 130F));
-            this.DemographicsTabLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 60F));
-            this.DemographicsTabLayoutPanel.Controls.Add(this.PatDemogTitleLabel, 0, 0);
-            this.DemographicsTabLayoutPanel.Controls.Add(this.GuarTitleLabel, 2, 0);
-            this.DemographicsTabLayoutPanel.Controls.Add(this.PatRelationLabel, 2, 1);
-            this.DemographicsTabLayoutPanel.Controls.Add(this.GuarantorRelationComboBox, 3, 1);
-            this.DemographicsTabLayoutPanel.Controls.Add(this.GuarFirstNameLabel, 2, 5);
-            this.DemographicsTabLayoutPanel.Controls.Add(this.GuarFirstNameTextBox, 3, 5);
-            this.DemographicsTabLayoutPanel.Controls.Add(this.GuarSuffixLabel, 2, 4);
-            this.DemographicsTabLayoutPanel.Controls.Add(this.GuarSuffixTextBox, 3, 4);
-            this.DemographicsTabLayoutPanel.Controls.Add(this.GuarLastNameLabel, 2, 3);
-            this.DemographicsTabLayoutPanel.Controls.Add(this.GuarantorLastNameTextBox, 3, 3);
-            this.DemographicsTabLayoutPanel.Controls.Add(this.GuarCopyPatientLink, 3, 2);
-            this.DemographicsTabLayoutPanel.Controls.Add(this.GuarMiddleNameLabel, 2, 6);
-            this.DemographicsTabLayoutPanel.Controls.Add(this.GuarMiddleNameTextBox, 3, 6);
-            this.DemographicsTabLayoutPanel.Controls.Add(this.GuarAddressLabel, 2, 7);
-            this.DemographicsTabLayoutPanel.Controls.Add(this.GuarantorAddressTextBox, 3, 7);
-            this.DemographicsTabLayoutPanel.Controls.Add(this.GuarCityLabel, 2, 8);
-            this.DemographicsTabLayoutPanel.Controls.Add(this.GuarCityTextBox, 3, 8);
-            this.DemographicsTabLayoutPanel.Controls.Add(this.GuarStateLabel, 2, 9);
-            this.DemographicsTabLayoutPanel.Controls.Add(this.GuarStateComboBox, 3, 9);
-            this.DemographicsTabLayoutPanel.Controls.Add(this.GuarZipCodeLabel, 2, 10);
-            this.DemographicsTabLayoutPanel.Controls.Add(this.GuarZipTextBox, 3, 10);
-            this.DemographicsTabLayoutPanel.Controls.Add(this.GuarPhoneLabel, 2, 11);
-            this.DemographicsTabLayoutPanel.Controls.Add(this.GuarantorPhoneTextBox, 3, 11);
-            this.DemographicsTabLayoutPanel.Controls.Add(this.PatDOBLabel, 0, 16);
-            this.DemographicsTabLayoutPanel.Controls.Add(this.DateOfBirthTextBox, 1, 16);
-            this.DemographicsTabLayoutPanel.Controls.Add(this.PatSSNLabel, 0, 15);
-            this.DemographicsTabLayoutPanel.Controls.Add(this.SocSecNoTextBox, 1, 15);
-            this.DemographicsTabLayoutPanel.Controls.Add(this.PatMaritalStatusLabel, 0, 14);
-            this.DemographicsTabLayoutPanel.Controls.Add(this.MaritalStatusComboBox, 1, 14);
-            this.DemographicsTabLayoutPanel.Controls.Add(this.PatSexLabel, 0, 13);
-            this.DemographicsTabLayoutPanel.Controls.Add(this.SexComboBox, 1, 13);
-            this.DemographicsTabLayoutPanel.Controls.Add(this.PatEmailLabel, 0, 12);
-            this.DemographicsTabLayoutPanel.Controls.Add(this.EmailAddressTextBox, 1, 12);
-            this.DemographicsTabLayoutPanel.Controls.Add(this.PatPhoneLabel, 0, 11);
-            this.DemographicsTabLayoutPanel.Controls.Add(this.PhoneTextBox, 1, 11);
-            this.DemographicsTabLayoutPanel.Controls.Add(this.PatZipLabel, 0, 10);
-            this.DemographicsTabLayoutPanel.Controls.Add(this.ZipcodeTextBox, 1, 10);
-            this.DemographicsTabLayoutPanel.Controls.Add(this.PatStateLabel, 0, 9);
-            this.DemographicsTabLayoutPanel.Controls.Add(this.StateComboBox, 1, 9);
-            this.DemographicsTabLayoutPanel.Controls.Add(this.PatCityLabel, 0, 8);
-            this.DemographicsTabLayoutPanel.Controls.Add(this.CityTextBox, 1, 8);
-            this.DemographicsTabLayoutPanel.Controls.Add(this.PatAddress2Label, 0, 7);
-            this.DemographicsTabLayoutPanel.Controls.Add(this.Address2TextBox, 1, 7);
-            this.DemographicsTabLayoutPanel.Controls.Add(this.PatAddressLabel, 0, 6);
-            this.DemographicsTabLayoutPanel.Controls.Add(this.Address1TextBox, 1, 6);
-            this.DemographicsTabLayoutPanel.Controls.Add(this.PatMiddleNameLabel, 0, 5);
-            this.DemographicsTabLayoutPanel.Controls.Add(this.MiddleNameTextBox, 1, 5);
-            this.DemographicsTabLayoutPanel.Controls.Add(this.PatFirstNameLabel, 0, 4);
-            this.DemographicsTabLayoutPanel.Controls.Add(this.FirstNameTextBox, 1, 4);
-            this.DemographicsTabLayoutPanel.Controls.Add(this.PatSuffixLabel, 0, 3);
-            this.DemographicsTabLayoutPanel.Controls.Add(this.SuffixTextBox, 1, 3);
-            this.DemographicsTabLayoutPanel.Controls.Add(this.LastNameTextBox, 1, 2);
-            this.DemographicsTabLayoutPanel.Controls.Add(this.PatLastNameLabel, 0, 2);
-            this.DemographicsTabLayoutPanel.Controls.Add(this.PatientFullNameLabel, 1, 1);
-            this.DemographicsTabLayoutPanel.Controls.Add(this.DemoStatusMessagesTextBox, 1, 17);
-            this.DemographicsTabLayoutPanel.Controls.Add(this.SaveDemographics, 0, 17);
-            this.DemographicsTabLayoutPanel.Controls.Add(this.orderingProviderLabel, 2, 15);
-            this.DemographicsTabLayoutPanel.Controls.Add(this.orderingProviderComboBox, 3, 15);
-            this.DemographicsTabLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.DemographicsTabLayoutPanel.Location = new System.Drawing.Point(3, 3);
-            this.DemographicsTabLayoutPanel.Name = "DemographicsTabLayoutPanel";
-            this.DemographicsTabLayoutPanel.RowCount = 18;
-            this.DemographicsTabLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
-            this.DemographicsTabLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
-            this.DemographicsTabLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
-            this.DemographicsTabLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
-            this.DemographicsTabLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
-            this.DemographicsTabLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
-            this.DemographicsTabLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
-            this.DemographicsTabLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
-            this.DemographicsTabLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
-            this.DemographicsTabLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
-            this.DemographicsTabLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
-            this.DemographicsTabLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
-            this.DemographicsTabLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
-            this.DemographicsTabLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
-            this.DemographicsTabLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
-            this.DemographicsTabLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
-            this.DemographicsTabLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
-            this.DemographicsTabLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.DemographicsTabLayoutPanel.Size = new System.Drawing.Size(1145, 609);
-            this.DemographicsTabLayoutPanel.TabIndex = 140;
+            this.providerLookup1.CharacterLookupCountMin = 2;
+            this.providerLookup1.Datasource = null;
+            this.providerLookup1.DisplayValue = null;
+            this.providerLookup1.Location = new System.Drawing.Point(499, 218);
+            this.providerLookup1.Name = "providerLookup1";
+            this.providerLookup1.ResultBoxHeight = 100;
+            this.providerLookup1.SelectedValue = null;
+            this.providerLookup1.Size = new System.Drawing.Size(288, 134);
+            this.providerLookup1.TabIndex = 31;
+            this.providerLookup1.SelectedValueChanged += new LabBilling.Library.ProviderLookup.SelectedValueChangedEventHandler(this.providerLookup1_SelectedValueChanged);
             // 
-            // PatDemogTitleLabel
+            // DemoStatusMessagesTextBox
             // 
-            this.PatDemogTitleLabel.AutoSize = true;
-            this.DemographicsTabLayoutPanel.SetColumnSpan(this.PatDemogTitleLabel, 2);
-            this.PatDemogTitleLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.PatDemogTitleLabel.Location = new System.Drawing.Point(3, 0);
-            this.PatDemogTitleLabel.Name = "PatDemogTitleLabel";
-            this.PatDemogTitleLabel.Size = new System.Drawing.Size(247, 26);
-            this.PatDemogTitleLabel.TabIndex = 0;
-            this.PatDemogTitleLabel.Text = "Patient Demographics";
+            this.DemoStatusMessagesTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.DemoStatusMessagesTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.DemoStatusMessagesTextBox.Location = new System.Drawing.Point(134, 361);
+            this.DemoStatusMessagesTextBox.Multiline = true;
+            this.DemoStatusMessagesTextBox.Name = "DemoStatusMessagesTextBox";
+            this.DemoStatusMessagesTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.DemoStatusMessagesTextBox.Size = new System.Drawing.Size(1009, 59);
+            this.DemoStatusMessagesTextBox.TabIndex = 33;
             // 
-            // GuarTitleLabel
+            // SuffixTextBox
             // 
-            this.GuarTitleLabel.AutoSize = true;
-            this.DemographicsTabLayoutPanel.SetColumnSpan(this.GuarTitleLabel, 2);
-            this.GuarTitleLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.GuarTitleLabel.Location = new System.Drawing.Point(487, 0);
-            this.GuarTitleLabel.Name = "GuarTitleLabel";
-            this.GuarTitleLabel.Size = new System.Drawing.Size(245, 26);
-            this.GuarTitleLabel.TabIndex = 32;
-            this.GuarTitleLabel.Text = "Guarantor Information";
+            this.SuffixTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.SuffixTextBox.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
+            this.SuffixTextBox.Location = new System.Drawing.Point(293, 58);
+            this.SuffixTextBox.Name = "SuffixTextBox";
+            this.SuffixTextBox.Size = new System.Drawing.Size(53, 20);
+            this.SuffixTextBox.TabIndex = 4;
+            // 
+            // SaveDemographics
+            // 
+            this.SaveDemographics.Location = new System.Drawing.Point(13, 361);
+            this.SaveDemographics.Name = "SaveDemographics";
+            this.SaveDemographics.Size = new System.Drawing.Size(107, 44);
+            this.SaveDemographics.TabIndex = 32;
+            this.SaveDemographics.Text = "Save Changes";
+            this.SaveDemographics.UseVisualStyleBackColor = true;
+            this.SaveDemographics.Click += new System.EventHandler(this.SaveDemographics_Click);
+            // 
+            // PatSuffixLabel
+            // 
+            this.PatSuffixLabel.AutoSize = true;
+            this.PatSuffixLabel.Location = new System.Drawing.Point(290, 42);
+            this.PatSuffixLabel.Name = "PatSuffixLabel";
+            this.PatSuffixLabel.Size = new System.Drawing.Size(33, 13);
+            this.PatSuffixLabel.TabIndex = 3;
+            this.PatSuffixLabel.Text = "Suffix";
+            this.PatSuffixLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // orderingProviderLabel
+            // 
+            this.orderingProviderLabel.AutoSize = true;
+            this.orderingProviderLabel.Location = new System.Drawing.Point(502, 202);
+            this.orderingProviderLabel.Name = "orderingProviderLabel";
+            this.orderingProviderLabel.Size = new System.Drawing.Size(89, 13);
+            this.orderingProviderLabel.TabIndex = 30;
+            this.orderingProviderLabel.Text = "Ordering Provider";
+            this.orderingProviderLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // DateOfBirthTextBox
+            // 
+            this.DateOfBirthTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.DateOfBirthTextBox.Location = new System.Drawing.Point(296, 259);
+            this.DateOfBirthTextBox.Mask = "00/00/0000";
+            this.DateOfBirthTextBox.Name = "DateOfBirthTextBox";
+            this.DateOfBirthTextBox.Size = new System.Drawing.Size(177, 20);
+            this.DateOfBirthTextBox.TabIndex = 27;
+            this.DateOfBirthTextBox.ValidatingType = typeof(System.DateTime);
+            // 
+            // PatDOBLabel
+            // 
+            this.PatDOBLabel.AutoSize = true;
+            this.PatDOBLabel.Location = new System.Drawing.Point(293, 242);
+            this.PatDOBLabel.Name = "PatDOBLabel";
+            this.PatDOBLabel.Size = new System.Drawing.Size(66, 13);
+            this.PatDOBLabel.TabIndex = 26;
+            this.PatDOBLabel.Text = "Date of Birth";
+            this.PatDOBLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // SocSecNoTextBox
+            // 
+            this.SocSecNoTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.SocSecNoTextBox.Location = new System.Drawing.Point(13, 299);
+            this.SocSecNoTextBox.Mask = "000-00-0000";
+            this.SocSecNoTextBox.Name = "SocSecNoTextBox";
+            this.SocSecNoTextBox.Size = new System.Drawing.Size(177, 20);
+            this.SocSecNoTextBox.TabIndex = 23;
+            // 
+            // PatSSNLabel
+            // 
+            this.PatSSNLabel.AutoSize = true;
+            this.PatSSNLabel.Location = new System.Drawing.Point(10, 283);
+            this.PatSSNLabel.Name = "PatSSNLabel";
+            this.PatSSNLabel.Size = new System.Drawing.Size(29, 13);
+            this.PatSSNLabel.TabIndex = 22;
+            this.PatSSNLabel.Text = "SSN";
+            this.PatSSNLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // MaritalStatusComboBox
+            // 
+            this.MaritalStatusComboBox.BackColor = System.Drawing.Color.White;
+            this.MaritalStatusComboBox.BorderColor = System.Drawing.Color.Blue;
+            this.MaritalStatusComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.MaritalStatusComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.MaritalStatusComboBox.FormattingEnabled = true;
+            this.MaritalStatusComboBox.Items.AddRange(new object[] {
+            "Unknown",
+            "Single",
+            "Married",
+            "Divorced",
+            "Widowed"});
+            this.MaritalStatusComboBox.Location = new System.Drawing.Point(296, 298);
+            this.MaritalStatusComboBox.Name = "MaritalStatusComboBox";
+            this.MaritalStatusComboBox.Size = new System.Drawing.Size(177, 21);
+            this.MaritalStatusComboBox.TabIndex = 29;
+            // 
+            // PatMaritalStatusLabel
+            // 
+            this.PatMaritalStatusLabel.AutoSize = true;
+            this.PatMaritalStatusLabel.Location = new System.Drawing.Point(293, 282);
+            this.PatMaritalStatusLabel.Name = "PatMaritalStatusLabel";
+            this.PatMaritalStatusLabel.Size = new System.Drawing.Size(71, 13);
+            this.PatMaritalStatusLabel.TabIndex = 28;
+            this.PatMaritalStatusLabel.Text = "Marital Status";
+            this.PatMaritalStatusLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // SexComboBox
+            // 
+            this.SexComboBox.BackColor = System.Drawing.Color.White;
+            this.SexComboBox.BorderColor = System.Drawing.Color.Blue;
+            this.SexComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.SexComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.SexComboBox.FormattingEnabled = true;
+            this.SexComboBox.Items.AddRange(new object[] {
+            "Male",
+            "Female",
+            "Unknown"});
+            this.SexComboBox.Location = new System.Drawing.Point(296, 218);
+            this.SexComboBox.Name = "SexComboBox";
+            this.SexComboBox.Size = new System.Drawing.Size(177, 21);
+            this.SexComboBox.TabIndex = 25;
+            // 
+            // PatSexLabel
+            // 
+            this.PatSexLabel.AutoSize = true;
+            this.PatSexLabel.Location = new System.Drawing.Point(293, 202);
+            this.PatSexLabel.Name = "PatSexLabel";
+            this.PatSexLabel.Size = new System.Drawing.Size(25, 13);
+            this.PatSexLabel.TabIndex = 24;
+            this.PatSexLabel.Text = "Sex";
+            this.PatSexLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // EmailAddressTextBox
+            // 
+            this.EmailAddressTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.EmailAddressTextBox.Location = new System.Drawing.Point(10, 259);
+            this.EmailAddressTextBox.Name = "EmailAddressTextBox";
+            this.EmailAddressTextBox.Size = new System.Drawing.Size(276, 20);
+            this.EmailAddressTextBox.TabIndex = 21;
+            // 
+            // PatEmailLabel
+            // 
+            this.PatEmailLabel.AutoSize = true;
+            this.PatEmailLabel.Location = new System.Drawing.Point(10, 243);
+            this.PatEmailLabel.Name = "PatEmailLabel";
+            this.PatEmailLabel.Size = new System.Drawing.Size(73, 13);
+            this.PatEmailLabel.TabIndex = 20;
+            this.PatEmailLabel.Text = "Email Address";
+            this.PatEmailLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // PhoneTextBox
+            // 
+            this.PhoneTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.PhoneTextBox.Location = new System.Drawing.Point(11, 219);
+            this.PhoneTextBox.Name = "PhoneTextBox";
+            this.PhoneTextBox.Size = new System.Drawing.Size(276, 20);
+            this.PhoneTextBox.TabIndex = 19;
+            // 
+            // PatPhoneLabel
+            // 
+            this.PatPhoneLabel.AutoSize = true;
+            this.PatPhoneLabel.Location = new System.Drawing.Point(8, 203);
+            this.PatPhoneLabel.Name = "PatPhoneLabel";
+            this.PatPhoneLabel.Size = new System.Drawing.Size(38, 13);
+            this.PatPhoneLabel.TabIndex = 18;
+            this.PatPhoneLabel.Text = "Phone";
+            this.PatPhoneLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // ZipcodeTextBox
+            // 
+            this.ZipcodeTextBox.Location = new System.Drawing.Point(499, 171);
+            this.ZipcodeTextBox.Mask = "00000-9999";
+            this.ZipcodeTextBox.Name = "ZipcodeTextBox";
+            this.ZipcodeTextBox.Size = new System.Drawing.Size(103, 20);
+            this.ZipcodeTextBox.TabIndex = 17;
+            // 
+            // PatZipLabel
+            // 
+            this.PatZipLabel.AutoSize = true;
+            this.PatZipLabel.Location = new System.Drawing.Point(496, 155);
+            this.PatZipLabel.Name = "PatZipLabel";
+            this.PatZipLabel.Size = new System.Drawing.Size(50, 13);
+            this.PatZipLabel.TabIndex = 16;
+            this.PatZipLabel.Text = "Zip Code";
+            this.PatZipLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // StateComboBox
+            // 
+            this.StateComboBox.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
+            this.StateComboBox.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this.StateComboBox.BackColor = System.Drawing.Color.White;
+            this.StateComboBox.BorderColor = System.Drawing.Color.Blue;
+            this.StateComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.StateComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.StateComboBox.FormattingEnabled = true;
+            this.StateComboBox.Location = new System.Drawing.Point(296, 170);
+            this.StateComboBox.Name = "StateComboBox";
+            this.StateComboBox.Size = new System.Drawing.Size(177, 21);
+            this.StateComboBox.TabIndex = 15;
+            // 
+            // PatStateLabel
+            // 
+            this.PatStateLabel.AutoSize = true;
+            this.PatStateLabel.Location = new System.Drawing.Point(293, 155);
+            this.PatStateLabel.Name = "PatStateLabel";
+            this.PatStateLabel.Size = new System.Drawing.Size(32, 13);
+            this.PatStateLabel.TabIndex = 14;
+            this.PatStateLabel.Text = "State";
+            this.PatStateLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // CityTextBox
+            // 
+            this.CityTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.CityTextBox.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
+            this.CityTextBox.Location = new System.Drawing.Point(11, 171);
+            this.CityTextBox.Name = "CityTextBox";
+            this.CityTextBox.Size = new System.Drawing.Size(276, 20);
+            this.CityTextBox.TabIndex = 13;
+            // 
+            // PatCityLabel
+            // 
+            this.PatCityLabel.AutoSize = true;
+            this.PatCityLabel.Location = new System.Drawing.Point(8, 155);
+            this.PatCityLabel.Name = "PatCityLabel";
+            this.PatCityLabel.Size = new System.Drawing.Size(24, 13);
+            this.PatCityLabel.TabIndex = 12;
+            this.PatCityLabel.Text = "City";
+            this.PatCityLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // Address1TextBox
+            // 
+            this.Address1TextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.Address1TextBox.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
+            this.Address1TextBox.Location = new System.Drawing.Point(11, 106);
+            this.Address1TextBox.Name = "Address1TextBox";
+            this.Address1TextBox.Size = new System.Drawing.Size(276, 20);
+            this.Address1TextBox.TabIndex = 10;
+            // 
+            // Address2TextBox
+            // 
+            this.Address2TextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.Address2TextBox.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
+            this.Address2TextBox.Location = new System.Drawing.Point(11, 132);
+            this.Address2TextBox.Name = "Address2TextBox";
+            this.Address2TextBox.Size = new System.Drawing.Size(276, 20);
+            this.Address2TextBox.TabIndex = 11;
+            // 
+            // PatAddressLabel
+            // 
+            this.PatAddressLabel.AutoSize = true;
+            this.PatAddressLabel.Location = new System.Drawing.Point(8, 90);
+            this.PatAddressLabel.Name = "PatAddressLabel";
+            this.PatAddressLabel.Size = new System.Drawing.Size(45, 13);
+            this.PatAddressLabel.TabIndex = 9;
+            this.PatAddressLabel.Text = "Address";
+            this.PatAddressLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // LastNameTextBox
+            // 
+            this.LastNameTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.LastNameTextBox.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
+            this.LastNameTextBox.Location = new System.Drawing.Point(8, 58);
+            this.LastNameTextBox.Name = "LastNameTextBox";
+            this.LastNameTextBox.Size = new System.Drawing.Size(276, 20);
+            this.LastNameTextBox.TabIndex = 2;
+            // 
+            // PatientFullNameLabel
+            // 
+            this.PatientFullNameLabel.AutoSize = true;
+            this.PatientFullNameLabel.Location = new System.Drawing.Point(8, 12);
+            this.PatientFullNameLabel.Name = "PatientFullNameLabel";
+            this.PatientFullNameLabel.Size = new System.Drawing.Size(90, 13);
+            this.PatientFullNameLabel.TabIndex = 0;
+            this.PatientFullNameLabel.Text = "Patient Full Name";
+            // 
+            // MiddleNameTextBox
+            // 
+            this.MiddleNameTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.MiddleNameTextBox.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
+            this.MiddleNameTextBox.Location = new System.Drawing.Point(641, 58);
+            this.MiddleNameTextBox.Name = "MiddleNameTextBox";
+            this.MiddleNameTextBox.Size = new System.Drawing.Size(208, 20);
+            this.MiddleNameTextBox.TabIndex = 8;
+            // 
+            // PatMiddleNameLabel
+            // 
+            this.PatMiddleNameLabel.AutoSize = true;
+            this.PatMiddleNameLabel.Location = new System.Drawing.Point(638, 42);
+            this.PatMiddleNameLabel.Name = "PatMiddleNameLabel";
+            this.PatMiddleNameLabel.Size = new System.Drawing.Size(69, 13);
+            this.PatMiddleNameLabel.TabIndex = 7;
+            this.PatMiddleNameLabel.Text = "Middle Name";
+            this.PatMiddleNameLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // FirstNameTextBox
+            // 
+            this.FirstNameTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.FirstNameTextBox.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
+            this.FirstNameTextBox.Location = new System.Drawing.Point(353, 58);
+            this.FirstNameTextBox.Name = "FirstNameTextBox";
+            this.FirstNameTextBox.Size = new System.Drawing.Size(276, 20);
+            this.FirstNameTextBox.TabIndex = 6;
+            // 
+            // PatFirstNameLabel
+            // 
+            this.PatFirstNameLabel.AutoSize = true;
+            this.PatFirstNameLabel.Location = new System.Drawing.Point(350, 42);
+            this.PatFirstNameLabel.Name = "PatFirstNameLabel";
+            this.PatFirstNameLabel.Size = new System.Drawing.Size(57, 13);
+            this.PatFirstNameLabel.TabIndex = 5;
+            this.PatFirstNameLabel.Text = "First Name";
+            this.PatFirstNameLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // PatLastNameLabel
+            // 
+            this.PatLastNameLabel.AutoSize = true;
+            this.PatLastNameLabel.Location = new System.Drawing.Point(5, 42);
+            this.PatLastNameLabel.Name = "PatLastNameLabel";
+            this.PatLastNameLabel.Size = new System.Drawing.Size(58, 13);
+            this.PatLastNameLabel.TabIndex = 1;
+            this.PatLastNameLabel.Text = "Last Name";
+            this.PatLastNameLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // tabGuarantor
+            // 
+            this.tabGuarantor.AutoScroll = true;
+            this.tabGuarantor.BackColor = System.Drawing.Color.White;
+            this.tabGuarantor.Controls.Add(this.GuarantorSaveButton);
+            this.tabGuarantor.Controls.Add(this.PatRelationLabel);
+            this.tabGuarantor.Controls.Add(this.GuarFirstNameLabel);
+            this.tabGuarantor.Controls.Add(this.GuarFirstNameTextBox);
+            this.tabGuarantor.Controls.Add(this.GuarSuffixLabel);
+            this.tabGuarantor.Controls.Add(this.GuarSuffixTextBox);
+            this.tabGuarantor.Controls.Add(this.GuarLastNameLabel);
+            this.tabGuarantor.Controls.Add(this.GuarantorLastNameTextBox);
+            this.tabGuarantor.Controls.Add(this.GuarCopyPatientLink);
+            this.tabGuarantor.Controls.Add(this.GuarMiddleNameLabel);
+            this.tabGuarantor.Controls.Add(this.GuarMiddleNameTextBox);
+            this.tabGuarantor.Controls.Add(this.GuarAddressLabel);
+            this.tabGuarantor.Controls.Add(this.GuarantorAddressTextBox);
+            this.tabGuarantor.Controls.Add(this.GuarCityLabel);
+            this.tabGuarantor.Controls.Add(this.GuarCityTextBox);
+            this.tabGuarantor.Controls.Add(this.GuarStateLabel);
+            this.tabGuarantor.Controls.Add(this.GuarZipCodeLabel);
+            this.tabGuarantor.Controls.Add(this.GuarZipTextBox);
+            this.tabGuarantor.Controls.Add(this.GuarPhoneLabel);
+            this.tabGuarantor.Controls.Add(this.GuarantorPhoneTextBox);
+            this.tabGuarantor.Controls.Add(this.GuarantorRelationComboBox);
+            this.tabGuarantor.Controls.Add(this.GuarStateComboBox);
+            this.tabGuarantor.Location = new System.Drawing.Point(4, 22);
+            this.tabGuarantor.Name = "tabGuarantor";
+            this.tabGuarantor.Size = new System.Drawing.Size(1151, 615);
+            this.tabGuarantor.TabIndex = 13;
+            this.tabGuarantor.Text = "Guarantor";
+            // 
+            // GuarantorSaveButton
+            // 
+            this.GuarantorSaveButton.BackColor = System.Drawing.Color.DeepSkyBlue;
+            this.GuarantorSaveButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.GuarantorSaveButton.Location = new System.Drawing.Point(13, 304);
+            this.GuarantorSaveButton.Name = "GuarantorSaveButton";
+            this.GuarantorSaveButton.Size = new System.Drawing.Size(91, 44);
+            this.GuarantorSaveButton.TabIndex = 22;
+            this.GuarantorSaveButton.Text = "Save";
+            this.GuarantorSaveButton.UseVisualStyleBackColor = false;
+            this.GuarantorSaveButton.Click += new System.EventHandler(this.GuarantorSaveButton_Click);
             // 
             // PatRelationLabel
             // 
             this.PatRelationLabel.AutoSize = true;
-            this.PatRelationLabel.Dock = System.Windows.Forms.DockStyle.Right;
-            this.PatRelationLabel.Location = new System.Drawing.Point(517, 30);
+            this.PatRelationLabel.Location = new System.Drawing.Point(10, 58);
             this.PatRelationLabel.Name = "PatRelationLabel";
-            this.PatRelationLabel.Size = new System.Drawing.Size(94, 30);
-            this.PatRelationLabel.TabIndex = 33;
+            this.PatRelationLabel.Size = new System.Drawing.Size(94, 13);
+            this.PatRelationLabel.TabIndex = 1;
             this.PatRelationLabel.Text = "Relation to Patient";
             this.PatRelationLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // GuarantorRelationComboBox
-            // 
-            this.GuarantorRelationComboBox.BorderColor = System.Drawing.Color.Blue;
-            this.GuarantorRelationComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.GuarantorRelationComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.GuarantorRelationComboBox.FormattingEnabled = true;
-            this.GuarantorRelationComboBox.Location = new System.Drawing.Point(617, 33);
-            this.GuarantorRelationComboBox.Name = "GuarantorRelationComboBox";
-            this.GuarantorRelationComboBox.Size = new System.Drawing.Size(277, 21);
-            this.GuarantorRelationComboBox.TabIndex = 34;
             // 
             // GuarFirstNameLabel
             // 
             this.GuarFirstNameLabel.AutoSize = true;
-            this.GuarFirstNameLabel.Dock = System.Windows.Forms.DockStyle.Right;
-            this.GuarFirstNameLabel.Location = new System.Drawing.Point(554, 150);
+            this.GuarFirstNameLabel.Location = new System.Drawing.Point(373, 108);
             this.GuarFirstNameLabel.Name = "GuarFirstNameLabel";
-            this.GuarFirstNameLabel.Size = new System.Drawing.Size(57, 30);
-            this.GuarFirstNameLabel.TabIndex = 38;
+            this.GuarFirstNameLabel.Size = new System.Drawing.Size(57, 13);
+            this.GuarFirstNameLabel.TabIndex = 8;
             this.GuarFirstNameLabel.Text = "First Name";
             this.GuarFirstNameLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // GuarFirstNameTextBox
             // 
-            this.GuarFirstNameTextBox.Location = new System.Drawing.Point(617, 153);
+            this.GuarFirstNameTextBox.Location = new System.Drawing.Point(375, 124);
             this.GuarFirstNameTextBox.Name = "GuarFirstNameTextBox";
             this.GuarFirstNameTextBox.Size = new System.Drawing.Size(297, 20);
-            this.GuarFirstNameTextBox.TabIndex = 39;
+            this.GuarFirstNameTextBox.TabIndex = 9;
             // 
             // GuarSuffixLabel
             // 
             this.GuarSuffixLabel.AutoSize = true;
-            this.GuarSuffixLabel.Dock = System.Windows.Forms.DockStyle.Right;
-            this.GuarSuffixLabel.Location = new System.Drawing.Point(578, 120);
+            this.GuarSuffixLabel.Location = new System.Drawing.Point(316, 108);
             this.GuarSuffixLabel.Name = "GuarSuffixLabel";
-            this.GuarSuffixLabel.Size = new System.Drawing.Size(33, 30);
-            this.GuarSuffixLabel.TabIndex = 137;
+            this.GuarSuffixLabel.Size = new System.Drawing.Size(33, 13);
+            this.GuarSuffixLabel.TabIndex = 6;
             this.GuarSuffixLabel.Text = "Suffix";
             this.GuarSuffixLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // GuarSuffixTextBox
             // 
-            this.GuarSuffixTextBox.Location = new System.Drawing.Point(617, 123);
+            this.GuarSuffixTextBox.Location = new System.Drawing.Point(316, 124);
             this.GuarSuffixTextBox.Name = "GuarSuffixTextBox";
             this.GuarSuffixTextBox.Size = new System.Drawing.Size(50, 20);
-            this.GuarSuffixTextBox.TabIndex = 37;
+            this.GuarSuffixTextBox.TabIndex = 7;
             // 
             // GuarLastNameLabel
             // 
             this.GuarLastNameLabel.AutoSize = true;
-            this.GuarLastNameLabel.Dock = System.Windows.Forms.DockStyle.Right;
-            this.GuarLastNameLabel.Location = new System.Drawing.Point(553, 90);
+            this.GuarLastNameLabel.Location = new System.Drawing.Point(10, 108);
             this.GuarLastNameLabel.Name = "GuarLastNameLabel";
-            this.GuarLastNameLabel.Size = new System.Drawing.Size(58, 30);
-            this.GuarLastNameLabel.TabIndex = 35;
+            this.GuarLastNameLabel.Size = new System.Drawing.Size(58, 13);
+            this.GuarLastNameLabel.TabIndex = 4;
             this.GuarLastNameLabel.Text = "Last Name";
             this.GuarLastNameLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // GuarantorLastNameTextBox
             // 
-            this.GuarantorLastNameTextBox.Location = new System.Drawing.Point(617, 93);
+            this.GuarantorLastNameTextBox.Location = new System.Drawing.Point(13, 124);
             this.GuarantorLastNameTextBox.Name = "GuarantorLastNameTextBox";
             this.GuarantorLastNameTextBox.Size = new System.Drawing.Size(297, 20);
-            this.GuarantorLastNameTextBox.TabIndex = 36;
+            this.GuarantorLastNameTextBox.TabIndex = 5;
             // 
             // GuarCopyPatientLink
             // 
             this.GuarCopyPatientLink.AutoSize = true;
-            this.GuarCopyPatientLink.Location = new System.Drawing.Point(617, 60);
+            this.GuarCopyPatientLink.Location = new System.Drawing.Point(247, 58);
             this.GuarCopyPatientLink.Name = "GuarCopyPatientLink";
             this.GuarCopyPatientLink.Size = new System.Drawing.Size(88, 13);
-            this.GuarCopyPatientLink.TabIndex = 31;
+            this.GuarCopyPatientLink.TabIndex = 3;
             this.GuarCopyPatientLink.TabStop = true;
             this.GuarCopyPatientLink.Text = "Copy Patient Info";
             this.GuarCopyPatientLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.GuarCopyPatientLink_LinkClicked);
@@ -529,67 +827,109 @@ namespace LabBilling.Forms
             // GuarMiddleNameLabel
             // 
             this.GuarMiddleNameLabel.AutoSize = true;
-            this.GuarMiddleNameLabel.Dock = System.Windows.Forms.DockStyle.Right;
-            this.GuarMiddleNameLabel.Location = new System.Drawing.Point(542, 180);
+            this.GuarMiddleNameLabel.Location = new System.Drawing.Point(679, 108);
             this.GuarMiddleNameLabel.Name = "GuarMiddleNameLabel";
-            this.GuarMiddleNameLabel.Size = new System.Drawing.Size(69, 30);
-            this.GuarMiddleNameLabel.TabIndex = 40;
+            this.GuarMiddleNameLabel.Size = new System.Drawing.Size(69, 13);
+            this.GuarMiddleNameLabel.TabIndex = 10;
             this.GuarMiddleNameLabel.Text = "Middle Name";
             this.GuarMiddleNameLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // GuarMiddleNameTextBox
             // 
-            this.GuarMiddleNameTextBox.Location = new System.Drawing.Point(617, 183);
+            this.GuarMiddleNameTextBox.Location = new System.Drawing.Point(682, 124);
             this.GuarMiddleNameTextBox.Name = "GuarMiddleNameTextBox";
-            this.GuarMiddleNameTextBox.Size = new System.Drawing.Size(297, 20);
-            this.GuarMiddleNameTextBox.TabIndex = 41;
+            this.GuarMiddleNameTextBox.Size = new System.Drawing.Size(240, 20);
+            this.GuarMiddleNameTextBox.TabIndex = 11;
             // 
             // GuarAddressLabel
             // 
             this.GuarAddressLabel.AutoSize = true;
-            this.GuarAddressLabel.Dock = System.Windows.Forms.DockStyle.Right;
-            this.GuarAddressLabel.Location = new System.Drawing.Point(566, 210);
+            this.GuarAddressLabel.Location = new System.Drawing.Point(10, 156);
             this.GuarAddressLabel.Name = "GuarAddressLabel";
-            this.GuarAddressLabel.Size = new System.Drawing.Size(45, 30);
-            this.GuarAddressLabel.TabIndex = 42;
+            this.GuarAddressLabel.Size = new System.Drawing.Size(45, 13);
+            this.GuarAddressLabel.TabIndex = 12;
             this.GuarAddressLabel.Text = "Address";
             this.GuarAddressLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // GuarantorAddressTextBox
             // 
-            this.GuarantorAddressTextBox.Location = new System.Drawing.Point(617, 213);
+            this.GuarantorAddressTextBox.Location = new System.Drawing.Point(13, 172);
             this.GuarantorAddressTextBox.Name = "GuarantorAddressTextBox";
             this.GuarantorAddressTextBox.Size = new System.Drawing.Size(297, 20);
-            this.GuarantorAddressTextBox.TabIndex = 43;
+            this.GuarantorAddressTextBox.TabIndex = 13;
             // 
             // GuarCityLabel
             // 
             this.GuarCityLabel.AutoSize = true;
-            this.GuarCityLabel.Dock = System.Windows.Forms.DockStyle.Right;
-            this.GuarCityLabel.Location = new System.Drawing.Point(587, 240);
+            this.GuarCityLabel.Location = new System.Drawing.Point(10, 197);
             this.GuarCityLabel.Name = "GuarCityLabel";
-            this.GuarCityLabel.Size = new System.Drawing.Size(24, 30);
-            this.GuarCityLabel.TabIndex = 44;
+            this.GuarCityLabel.Size = new System.Drawing.Size(24, 13);
+            this.GuarCityLabel.TabIndex = 14;
             this.GuarCityLabel.Text = "City";
             this.GuarCityLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // GuarCityTextBox
             // 
-            this.GuarCityTextBox.Location = new System.Drawing.Point(617, 243);
+            this.GuarCityTextBox.Location = new System.Drawing.Point(13, 212);
             this.GuarCityTextBox.Name = "GuarCityTextBox";
             this.GuarCityTextBox.Size = new System.Drawing.Size(297, 20);
-            this.GuarCityTextBox.TabIndex = 45;
+            this.GuarCityTextBox.TabIndex = 15;
             // 
             // GuarStateLabel
             // 
             this.GuarStateLabel.AutoSize = true;
-            this.GuarStateLabel.Dock = System.Windows.Forms.DockStyle.Right;
-            this.GuarStateLabel.Location = new System.Drawing.Point(579, 270);
+            this.GuarStateLabel.Location = new System.Drawing.Point(313, 195);
             this.GuarStateLabel.Name = "GuarStateLabel";
-            this.GuarStateLabel.Size = new System.Drawing.Size(32, 30);
-            this.GuarStateLabel.TabIndex = 46;
+            this.GuarStateLabel.Size = new System.Drawing.Size(32, 13);
+            this.GuarStateLabel.TabIndex = 16;
             this.GuarStateLabel.Text = "State";
             this.GuarStateLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // GuarZipCodeLabel
+            // 
+            this.GuarZipCodeLabel.AutoSize = true;
+            this.GuarZipCodeLabel.Location = new System.Drawing.Point(505, 195);
+            this.GuarZipCodeLabel.Name = "GuarZipCodeLabel";
+            this.GuarZipCodeLabel.Size = new System.Drawing.Size(47, 13);
+            this.GuarZipCodeLabel.TabIndex = 18;
+            this.GuarZipCodeLabel.Text = "ZipCode";
+            this.GuarZipCodeLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // GuarZipTextBox
+            // 
+            this.GuarZipTextBox.Location = new System.Drawing.Point(505, 211);
+            this.GuarZipTextBox.Mask = "00000-9999";
+            this.GuarZipTextBox.Name = "GuarZipTextBox";
+            this.GuarZipTextBox.Size = new System.Drawing.Size(108, 20);
+            this.GuarZipTextBox.TabIndex = 19;
+            // 
+            // GuarPhoneLabel
+            // 
+            this.GuarPhoneLabel.AutoSize = true;
+            this.GuarPhoneLabel.Location = new System.Drawing.Point(10, 238);
+            this.GuarPhoneLabel.Name = "GuarPhoneLabel";
+            this.GuarPhoneLabel.Size = new System.Drawing.Size(38, 13);
+            this.GuarPhoneLabel.TabIndex = 20;
+            this.GuarPhoneLabel.Text = "Phone";
+            this.GuarPhoneLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // GuarantorPhoneTextBox
+            // 
+            this.GuarantorPhoneTextBox.Location = new System.Drawing.Point(13, 254);
+            this.GuarantorPhoneTextBox.Name = "GuarantorPhoneTextBox";
+            this.GuarantorPhoneTextBox.Size = new System.Drawing.Size(297, 20);
+            this.GuarantorPhoneTextBox.TabIndex = 21;
+            // 
+            // GuarantorRelationComboBox
+            // 
+            this.GuarantorRelationComboBox.BorderColor = System.Drawing.Color.Blue;
+            this.GuarantorRelationComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.GuarantorRelationComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.GuarantorRelationComboBox.FormattingEnabled = true;
+            this.GuarantorRelationComboBox.Location = new System.Drawing.Point(110, 55);
+            this.GuarantorRelationComboBox.Name = "GuarantorRelationComboBox";
+            this.GuarantorRelationComboBox.Size = new System.Drawing.Size(131, 21);
+            this.GuarantorRelationComboBox.TabIndex = 2;
             // 
             // GuarStateComboBox
             // 
@@ -600,436 +940,15 @@ namespace LabBilling.Forms
             this.GuarStateComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.GuarStateComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.GuarStateComboBox.FormattingEnabled = true;
-            this.GuarStateComboBox.Location = new System.Drawing.Point(617, 273);
+            this.GuarStateComboBox.Location = new System.Drawing.Point(316, 211);
             this.GuarStateComboBox.Name = "GuarStateComboBox";
             this.GuarStateComboBox.Size = new System.Drawing.Size(183, 21);
-            this.GuarStateComboBox.TabIndex = 47;
-            // 
-            // GuarZipCodeLabel
-            // 
-            this.GuarZipCodeLabel.AutoSize = true;
-            this.GuarZipCodeLabel.Dock = System.Windows.Forms.DockStyle.Right;
-            this.GuarZipCodeLabel.Location = new System.Drawing.Point(564, 300);
-            this.GuarZipCodeLabel.Name = "GuarZipCodeLabel";
-            this.GuarZipCodeLabel.Size = new System.Drawing.Size(47, 30);
-            this.GuarZipCodeLabel.TabIndex = 48;
-            this.GuarZipCodeLabel.Text = "ZipCode";
-            this.GuarZipCodeLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // GuarZipTextBox
-            // 
-            this.GuarZipTextBox.Location = new System.Drawing.Point(617, 303);
-            this.GuarZipTextBox.Mask = "00000-9999";
-            this.GuarZipTextBox.Name = "GuarZipTextBox";
-            this.GuarZipTextBox.Size = new System.Drawing.Size(108, 20);
-            this.GuarZipTextBox.TabIndex = 49;
-            // 
-            // GuarPhoneLabel
-            // 
-            this.GuarPhoneLabel.AutoSize = true;
-            this.GuarPhoneLabel.Dock = System.Windows.Forms.DockStyle.Right;
-            this.GuarPhoneLabel.Location = new System.Drawing.Point(573, 330);
-            this.GuarPhoneLabel.Name = "GuarPhoneLabel";
-            this.GuarPhoneLabel.Size = new System.Drawing.Size(38, 30);
-            this.GuarPhoneLabel.TabIndex = 50;
-            this.GuarPhoneLabel.Text = "Phone";
-            this.GuarPhoneLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // GuarantorPhoneTextBox
-            // 
-            this.GuarantorPhoneTextBox.Location = new System.Drawing.Point(617, 333);
-            this.GuarantorPhoneTextBox.Name = "GuarantorPhoneTextBox";
-            this.GuarantorPhoneTextBox.Size = new System.Drawing.Size(297, 20);
-            this.GuarantorPhoneTextBox.TabIndex = 51;
-            // 
-            // PatDOBLabel
-            // 
-            this.PatDOBLabel.AutoSize = true;
-            this.PatDOBLabel.Dock = System.Windows.Forms.DockStyle.Right;
-            this.PatDOBLabel.Location = new System.Drawing.Point(61, 480);
-            this.PatDOBLabel.Name = "PatDOBLabel";
-            this.PatDOBLabel.Size = new System.Drawing.Size(66, 30);
-            this.PatDOBLabel.TabIndex = 25;
-            this.PatDOBLabel.Text = "Date of Birth";
-            this.PatDOBLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // DateOfBirthTextBox
-            // 
-            this.DateOfBirthTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.DateOfBirthTextBox.Dock = System.Windows.Forms.DockStyle.Left;
-            this.DateOfBirthTextBox.Location = new System.Drawing.Point(133, 483);
-            this.DateOfBirthTextBox.Mask = "00/00/0000";
-            this.DateOfBirthTextBox.Name = "DateOfBirthTextBox";
-            this.DateOfBirthTextBox.Size = new System.Drawing.Size(177, 20);
-            this.DateOfBirthTextBox.TabIndex = 26;
-            this.DateOfBirthTextBox.ValidatingType = typeof(System.DateTime);
-            // 
-            // PatSSNLabel
-            // 
-            this.PatSSNLabel.AutoSize = true;
-            this.PatSSNLabel.Dock = System.Windows.Forms.DockStyle.Right;
-            this.PatSSNLabel.Location = new System.Drawing.Point(98, 450);
-            this.PatSSNLabel.Name = "PatSSNLabel";
-            this.PatSSNLabel.Size = new System.Drawing.Size(29, 30);
-            this.PatSSNLabel.TabIndex = 23;
-            this.PatSSNLabel.Text = "SSN";
-            this.PatSSNLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // SocSecNoTextBox
-            // 
-            this.SocSecNoTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.SocSecNoTextBox.Dock = System.Windows.Forms.DockStyle.Left;
-            this.SocSecNoTextBox.Location = new System.Drawing.Point(133, 453);
-            this.SocSecNoTextBox.Mask = "000-00-0000";
-            this.SocSecNoTextBox.Name = "SocSecNoTextBox";
-            this.SocSecNoTextBox.Size = new System.Drawing.Size(177, 20);
-            this.SocSecNoTextBox.TabIndex = 24;
-            // 
-            // PatMaritalStatusLabel
-            // 
-            this.PatMaritalStatusLabel.AutoSize = true;
-            this.PatMaritalStatusLabel.Dock = System.Windows.Forms.DockStyle.Right;
-            this.PatMaritalStatusLabel.Location = new System.Drawing.Point(56, 420);
-            this.PatMaritalStatusLabel.Name = "PatMaritalStatusLabel";
-            this.PatMaritalStatusLabel.Size = new System.Drawing.Size(71, 30);
-            this.PatMaritalStatusLabel.TabIndex = 29;
-            this.PatMaritalStatusLabel.Text = "Marital Status";
-            this.PatMaritalStatusLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // MaritalStatusComboBox
-            // 
-            this.MaritalStatusComboBox.BackColor = System.Drawing.Color.White;
-            this.MaritalStatusComboBox.BorderColor = System.Drawing.Color.Blue;
-            this.MaritalStatusComboBox.Dock = System.Windows.Forms.DockStyle.Left;
-            this.MaritalStatusComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.MaritalStatusComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.MaritalStatusComboBox.FormattingEnabled = true;
-            this.MaritalStatusComboBox.Items.AddRange(new object[] {
-            "Unknown",
-            "Single",
-            "Married",
-            "Divorced",
-            "Widowed"});
-            this.MaritalStatusComboBox.Location = new System.Drawing.Point(133, 423);
-            this.MaritalStatusComboBox.Name = "MaritalStatusComboBox";
-            this.MaritalStatusComboBox.Size = new System.Drawing.Size(157, 21);
-            this.MaritalStatusComboBox.TabIndex = 30;
-            // 
-            // PatSexLabel
-            // 
-            this.PatSexLabel.AutoSize = true;
-            this.PatSexLabel.Dock = System.Windows.Forms.DockStyle.Right;
-            this.PatSexLabel.Location = new System.Drawing.Point(102, 390);
-            this.PatSexLabel.Name = "PatSexLabel";
-            this.PatSexLabel.Size = new System.Drawing.Size(25, 30);
-            this.PatSexLabel.TabIndex = 27;
-            this.PatSexLabel.Text = "Sex";
-            this.PatSexLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // SexComboBox
-            // 
-            this.SexComboBox.BackColor = System.Drawing.Color.White;
-            this.SexComboBox.BorderColor = System.Drawing.Color.Blue;
-            this.SexComboBox.Dock = System.Windows.Forms.DockStyle.Left;
-            this.SexComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.SexComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.SexComboBox.FormattingEnabled = true;
-            this.SexComboBox.Items.AddRange(new object[] {
-            "Male",
-            "Female",
-            "Unknown"});
-            this.SexComboBox.Location = new System.Drawing.Point(133, 393);
-            this.SexComboBox.Name = "SexComboBox";
-            this.SexComboBox.Size = new System.Drawing.Size(157, 21);
-            this.SexComboBox.TabIndex = 28;
-            // 
-            // PatEmailLabel
-            // 
-            this.PatEmailLabel.AutoSize = true;
-            this.PatEmailLabel.Dock = System.Windows.Forms.DockStyle.Right;
-            this.PatEmailLabel.Location = new System.Drawing.Point(54, 360);
-            this.PatEmailLabel.Name = "PatEmailLabel";
-            this.PatEmailLabel.Size = new System.Drawing.Size(73, 30);
-            this.PatEmailLabel.TabIndex = 21;
-            this.PatEmailLabel.Text = "Email Address";
-            this.PatEmailLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // EmailAddressTextBox
-            // 
-            this.EmailAddressTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.EmailAddressTextBox.Dock = System.Windows.Forms.DockStyle.Left;
-            this.EmailAddressTextBox.Location = new System.Drawing.Point(133, 363);
-            this.EmailAddressTextBox.Name = "EmailAddressTextBox";
-            this.EmailAddressTextBox.Size = new System.Drawing.Size(276, 20);
-            this.EmailAddressTextBox.TabIndex = 22;
-            // 
-            // PatPhoneLabel
-            // 
-            this.PatPhoneLabel.AutoSize = true;
-            this.PatPhoneLabel.Dock = System.Windows.Forms.DockStyle.Right;
-            this.PatPhoneLabel.Location = new System.Drawing.Point(89, 330);
-            this.PatPhoneLabel.Name = "PatPhoneLabel";
-            this.PatPhoneLabel.Size = new System.Drawing.Size(38, 30);
-            this.PatPhoneLabel.TabIndex = 19;
-            this.PatPhoneLabel.Text = "Phone";
-            this.PatPhoneLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // PhoneTextBox
-            // 
-            this.PhoneTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.PhoneTextBox.Dock = System.Windows.Forms.DockStyle.Left;
-            this.PhoneTextBox.Location = new System.Drawing.Point(133, 333);
-            this.PhoneTextBox.Name = "PhoneTextBox";
-            this.PhoneTextBox.Size = new System.Drawing.Size(276, 20);
-            this.PhoneTextBox.TabIndex = 20;
-            // 
-            // PatZipLabel
-            // 
-            this.PatZipLabel.AutoSize = true;
-            this.PatZipLabel.Dock = System.Windows.Forms.DockStyle.Right;
-            this.PatZipLabel.Location = new System.Drawing.Point(77, 300);
-            this.PatZipLabel.Name = "PatZipLabel";
-            this.PatZipLabel.Size = new System.Drawing.Size(50, 30);
-            this.PatZipLabel.TabIndex = 17;
-            this.PatZipLabel.Text = "Zip Code";
-            this.PatZipLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // ZipcodeTextBox
-            // 
-            this.ZipcodeTextBox.Dock = System.Windows.Forms.DockStyle.Left;
-            this.ZipcodeTextBox.Location = new System.Drawing.Point(133, 303);
-            this.ZipcodeTextBox.Mask = "00000-9999";
-            this.ZipcodeTextBox.Name = "ZipcodeTextBox";
-            this.ZipcodeTextBox.Size = new System.Drawing.Size(103, 20);
-            this.ZipcodeTextBox.TabIndex = 18;
-            // 
-            // PatStateLabel
-            // 
-            this.PatStateLabel.AutoSize = true;
-            this.PatStateLabel.Dock = System.Windows.Forms.DockStyle.Right;
-            this.PatStateLabel.Location = new System.Drawing.Point(95, 270);
-            this.PatStateLabel.Name = "PatStateLabel";
-            this.PatStateLabel.Size = new System.Drawing.Size(32, 30);
-            this.PatStateLabel.TabIndex = 15;
-            this.PatStateLabel.Text = "State";
-            this.PatStateLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // StateComboBox
-            // 
-            this.StateComboBox.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
-            this.StateComboBox.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
-            this.StateComboBox.BackColor = System.Drawing.Color.White;
-            this.StateComboBox.BorderColor = System.Drawing.Color.Blue;
-            this.StateComboBox.Dock = System.Windows.Forms.DockStyle.Left;
-            this.StateComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.StateComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.StateComboBox.FormattingEnabled = true;
-            this.StateComboBox.Location = new System.Drawing.Point(133, 273);
-            this.StateComboBox.Name = "StateComboBox";
-            this.StateComboBox.Size = new System.Drawing.Size(163, 21);
-            this.StateComboBox.TabIndex = 16;
-            // 
-            // PatCityLabel
-            // 
-            this.PatCityLabel.AutoSize = true;
-            this.PatCityLabel.Dock = System.Windows.Forms.DockStyle.Right;
-            this.PatCityLabel.Location = new System.Drawing.Point(103, 240);
-            this.PatCityLabel.Name = "PatCityLabel";
-            this.PatCityLabel.Size = new System.Drawing.Size(24, 30);
-            this.PatCityLabel.TabIndex = 13;
-            this.PatCityLabel.Text = "City";
-            this.PatCityLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // CityTextBox
-            // 
-            this.CityTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.CityTextBox.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
-            this.CityTextBox.Dock = System.Windows.Forms.DockStyle.Left;
-            this.CityTextBox.Location = new System.Drawing.Point(133, 243);
-            this.CityTextBox.Name = "CityTextBox";
-            this.CityTextBox.Size = new System.Drawing.Size(276, 20);
-            this.CityTextBox.TabIndex = 14;
-            // 
-            // PatAddress2Label
-            // 
-            this.PatAddress2Label.AutoSize = true;
-            this.PatAddress2Label.Dock = System.Windows.Forms.DockStyle.Right;
-            this.PatAddress2Label.Location = new System.Drawing.Point(76, 210);
-            this.PatAddress2Label.Name = "PatAddress2Label";
-            this.PatAddress2Label.Size = new System.Drawing.Size(51, 30);
-            this.PatAddress2Label.TabIndex = 11;
-            this.PatAddress2Label.Text = "Address2";
-            this.PatAddress2Label.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // Address2TextBox
-            // 
-            this.Address2TextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.Address2TextBox.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
-            this.Address2TextBox.Dock = System.Windows.Forms.DockStyle.Left;
-            this.Address2TextBox.Location = new System.Drawing.Point(133, 213);
-            this.Address2TextBox.Name = "Address2TextBox";
-            this.Address2TextBox.Size = new System.Drawing.Size(276, 20);
-            this.Address2TextBox.TabIndex = 12;
-            // 
-            // PatAddressLabel
-            // 
-            this.PatAddressLabel.AutoSize = true;
-            this.PatAddressLabel.Dock = System.Windows.Forms.DockStyle.Right;
-            this.PatAddressLabel.Location = new System.Drawing.Point(82, 180);
-            this.PatAddressLabel.Name = "PatAddressLabel";
-            this.PatAddressLabel.Size = new System.Drawing.Size(45, 30);
-            this.PatAddressLabel.TabIndex = 9;
-            this.PatAddressLabel.Text = "Address";
-            this.PatAddressLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // Address1TextBox
-            // 
-            this.Address1TextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.Address1TextBox.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
-            this.Address1TextBox.Dock = System.Windows.Forms.DockStyle.Left;
-            this.Address1TextBox.Location = new System.Drawing.Point(133, 183);
-            this.Address1TextBox.Name = "Address1TextBox";
-            this.Address1TextBox.Size = new System.Drawing.Size(276, 20);
-            this.Address1TextBox.TabIndex = 10;
-            // 
-            // PatMiddleNameLabel
-            // 
-            this.PatMiddleNameLabel.AutoSize = true;
-            this.PatMiddleNameLabel.Dock = System.Windows.Forms.DockStyle.Right;
-            this.PatMiddleNameLabel.Location = new System.Drawing.Point(58, 150);
-            this.PatMiddleNameLabel.Name = "PatMiddleNameLabel";
-            this.PatMiddleNameLabel.Size = new System.Drawing.Size(69, 30);
-            this.PatMiddleNameLabel.TabIndex = 5;
-            this.PatMiddleNameLabel.Text = "Middle Name";
-            this.PatMiddleNameLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // MiddleNameTextBox
-            // 
-            this.MiddleNameTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.MiddleNameTextBox.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
-            this.MiddleNameTextBox.Dock = System.Windows.Forms.DockStyle.Left;
-            this.MiddleNameTextBox.Location = new System.Drawing.Point(133, 153);
-            this.MiddleNameTextBox.Name = "MiddleNameTextBox";
-            this.MiddleNameTextBox.Size = new System.Drawing.Size(276, 20);
-            this.MiddleNameTextBox.TabIndex = 6;
-            // 
-            // PatFirstNameLabel
-            // 
-            this.PatFirstNameLabel.AutoSize = true;
-            this.PatFirstNameLabel.Dock = System.Windows.Forms.DockStyle.Right;
-            this.PatFirstNameLabel.Location = new System.Drawing.Point(70, 120);
-            this.PatFirstNameLabel.Name = "PatFirstNameLabel";
-            this.PatFirstNameLabel.Size = new System.Drawing.Size(57, 30);
-            this.PatFirstNameLabel.TabIndex = 3;
-            this.PatFirstNameLabel.Text = "First Name";
-            this.PatFirstNameLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // FirstNameTextBox
-            // 
-            this.FirstNameTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.FirstNameTextBox.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
-            this.FirstNameTextBox.Dock = System.Windows.Forms.DockStyle.Left;
-            this.FirstNameTextBox.Location = new System.Drawing.Point(133, 123);
-            this.FirstNameTextBox.Name = "FirstNameTextBox";
-            this.FirstNameTextBox.Size = new System.Drawing.Size(276, 20);
-            this.FirstNameTextBox.TabIndex = 4;
-            // 
-            // PatSuffixLabel
-            // 
-            this.PatSuffixLabel.AutoSize = true;
-            this.PatSuffixLabel.Dock = System.Windows.Forms.DockStyle.Right;
-            this.PatSuffixLabel.Location = new System.Drawing.Point(94, 90);
-            this.PatSuffixLabel.Name = "PatSuffixLabel";
-            this.PatSuffixLabel.Size = new System.Drawing.Size(33, 30);
-            this.PatSuffixLabel.TabIndex = 7;
-            this.PatSuffixLabel.Text = "Suffix";
-            this.PatSuffixLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // SuffixTextBox
-            // 
-            this.SuffixTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.SuffixTextBox.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
-            this.SuffixTextBox.Dock = System.Windows.Forms.DockStyle.Left;
-            this.SuffixTextBox.Location = new System.Drawing.Point(133, 93);
-            this.SuffixTextBox.Name = "SuffixTextBox";
-            this.SuffixTextBox.Size = new System.Drawing.Size(53, 20);
-            this.SuffixTextBox.TabIndex = 8;
-            // 
-            // LastNameTextBox
-            // 
-            this.LastNameTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.LastNameTextBox.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
-            this.LastNameTextBox.Dock = System.Windows.Forms.DockStyle.Left;
-            this.LastNameTextBox.Location = new System.Drawing.Point(133, 63);
-            this.LastNameTextBox.Name = "LastNameTextBox";
-            this.LastNameTextBox.Size = new System.Drawing.Size(276, 20);
-            this.LastNameTextBox.TabIndex = 2;
-            // 
-            // PatLastNameLabel
-            // 
-            this.PatLastNameLabel.AutoSize = true;
-            this.PatLastNameLabel.Dock = System.Windows.Forms.DockStyle.Right;
-            this.PatLastNameLabel.Location = new System.Drawing.Point(69, 60);
-            this.PatLastNameLabel.Name = "PatLastNameLabel";
-            this.PatLastNameLabel.Size = new System.Drawing.Size(58, 30);
-            this.PatLastNameLabel.TabIndex = 1;
-            this.PatLastNameLabel.Text = "Last Name";
-            this.PatLastNameLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // PatientFullNameLabel
-            // 
-            this.PatientFullNameLabel.AutoSize = true;
-            this.PatientFullNameLabel.Location = new System.Drawing.Point(133, 30);
-            this.PatientFullNameLabel.Name = "PatientFullNameLabel";
-            this.PatientFullNameLabel.Size = new System.Drawing.Size(90, 13);
-            this.PatientFullNameLabel.TabIndex = 139;
-            this.PatientFullNameLabel.Text = "Patient Full Name";
-            // 
-            // DemoStatusMessagesTextBox
-            // 
-            this.DemoStatusMessagesTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.DemographicsTabLayoutPanel.SetColumnSpan(this.DemoStatusMessagesTextBox, 3);
-            this.DemoStatusMessagesTextBox.Location = new System.Drawing.Point(133, 547);
-            this.DemoStatusMessagesTextBox.Multiline = true;
-            this.DemoStatusMessagesTextBox.Name = "DemoStatusMessagesTextBox";
-            this.DemoStatusMessagesTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.DemoStatusMessagesTextBox.Size = new System.Drawing.Size(1009, 59);
-            this.DemoStatusMessagesTextBox.TabIndex = 138;
-            // 
-            // SaveDemographics
-            // 
-            this.SaveDemographics.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.SaveDemographics.Location = new System.Drawing.Point(3, 562);
-            this.SaveDemographics.Name = "SaveDemographics";
-            this.SaveDemographics.Size = new System.Drawing.Size(107, 44);
-            this.SaveDemographics.TabIndex = 52;
-            this.SaveDemographics.Text = "Save Changes";
-            this.SaveDemographics.UseVisualStyleBackColor = true;
-            this.SaveDemographics.Click += new System.EventHandler(this.SaveDemographics_Click);
-            // 
-            // orderingProviderLabel
-            // 
-            this.orderingProviderLabel.AutoSize = true;
-            this.orderingProviderLabel.Dock = System.Windows.Forms.DockStyle.Right;
-            this.orderingProviderLabel.Location = new System.Drawing.Point(522, 450);
-            this.orderingProviderLabel.Name = "orderingProviderLabel";
-            this.orderingProviderLabel.Size = new System.Drawing.Size(89, 30);
-            this.orderingProviderLabel.TabIndex = 140;
-            this.orderingProviderLabel.Text = "Ordering Provider";
-            this.orderingProviderLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // orderingProviderComboBox
-            // 
-            this.orderingProviderComboBox.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
-            this.orderingProviderComboBox.FormattingEnabled = true;
-            this.orderingProviderComboBox.Location = new System.Drawing.Point(617, 453);
-            this.orderingProviderComboBox.Name = "orderingProviderComboBox";
-            this.orderingProviderComboBox.Size = new System.Drawing.Size(297, 21);
-            this.orderingProviderComboBox.TabIndex = 142;
+            this.GuarStateComboBox.TabIndex = 17;
             // 
             // tabInsurance
             // 
+            this.tabInsurance.AutoScroll = true;
+            this.tabInsurance.BackColor = System.Drawing.Color.White;
             this.tabInsurance.Controls.Add(this.insTabLayoutPanel);
             this.tabInsurance.Location = new System.Drawing.Point(4, 22);
             this.tabInsurance.Name = "tabInsurance";
@@ -1037,7 +956,6 @@ namespace LabBilling.Forms
             this.tabInsurance.Size = new System.Drawing.Size(1151, 615);
             this.tabInsurance.TabIndex = 11;
             this.tabInsurance.Text = "Insurance";
-            this.tabInsurance.UseVisualStyleBackColor = true;
             // 
             // insTabLayoutPanel
             // 
@@ -1403,7 +1321,7 @@ namespace LabBilling.Forms
             this.HolderStateComboBox.FormattingEnabled = true;
             this.HolderStateComboBox.Location = new System.Drawing.Point(133, 272);
             this.HolderStateComboBox.Name = "HolderStateComboBox";
-            this.HolderStateComboBox.Size = new System.Drawing.Size(153, 21);
+            this.HolderStateComboBox.Size = new System.Drawing.Size(230, 21);
             this.HolderStateComboBox.TabIndex = 12;
             // 
             // HolderFirstNameTextBox
@@ -1614,6 +1532,8 @@ namespace LabBilling.Forms
             // 
             // tabDiagnosis
             // 
+            this.tabDiagnosis.AutoScroll = true;
+            this.tabDiagnosis.BackColor = System.Drawing.Color.White;
             this.tabDiagnosis.Controls.Add(this.DxDeleteButton);
             this.tabDiagnosis.Controls.Add(this.SaveDxButton);
             this.tabDiagnosis.Controls.Add(this.QuickAddLabel);
@@ -1630,7 +1550,6 @@ namespace LabBilling.Forms
             this.tabDiagnosis.Size = new System.Drawing.Size(1151, 615);
             this.tabDiagnosis.TabIndex = 8;
             this.tabDiagnosis.Text = "Diagnosis";
-            this.tabDiagnosis.UseVisualStyleBackColor = true;
             // 
             // DxDeleteButton
             // 
@@ -1797,6 +1716,8 @@ namespace LabBilling.Forms
             // 
             // tabCharges
             // 
+            this.tabCharges.AutoScroll = true;
+            this.tabCharges.BackColor = System.Drawing.Color.White;
             this.tabCharges.Controls.Add(this.UpdateDxPointersButton);
             this.tabCharges.Controls.Add(this.ChargeDxPointerLabel);
             this.tabCharges.Controls.Add(this.DiagnosisPointerDataGrid);
@@ -1814,7 +1735,6 @@ namespace LabBilling.Forms
             this.tabCharges.Size = new System.Drawing.Size(1151, 615);
             this.tabCharges.TabIndex = 6;
             this.tabCharges.Text = "Charges";
-            this.tabCharges.UseVisualStyleBackColor = true;
             // 
             // UpdateDxPointersButton
             // 
@@ -2038,6 +1958,8 @@ namespace LabBilling.Forms
             // 
             // tabPayments
             // 
+            this.tabPayments.AutoScroll = true;
+            this.tabPayments.BackColor = System.Drawing.Color.White;
             this.tabPayments.Controls.Add(this.AddPaymentButton);
             this.tabPayments.Controls.Add(this.PmtTotalPmtAdjLabel);
             this.tabPayments.Controls.Add(this.TotalPmtAllTextBox);
@@ -2053,7 +1975,6 @@ namespace LabBilling.Forms
             this.tabPayments.Size = new System.Drawing.Size(1151, 615);
             this.tabPayments.TabIndex = 7;
             this.tabPayments.Text = "Payments / Adjustments";
-            this.tabPayments.UseVisualStyleBackColor = true;
             // 
             // AddPaymentButton
             // 
@@ -2182,6 +2103,8 @@ namespace LabBilling.Forms
             // 
             // tabNotes
             // 
+            this.tabNotes.AutoScroll = true;
+            this.tabNotes.BackColor = System.Drawing.Color.White;
             this.tabNotes.Controls.Add(this.AddNoteButton);
             this.tabNotes.Controls.Add(this.NotesDisplayTextBox);
             this.tabNotes.Location = new System.Drawing.Point(4, 22);
@@ -2189,7 +2112,6 @@ namespace LabBilling.Forms
             this.tabNotes.Size = new System.Drawing.Size(1151, 615);
             this.tabNotes.TabIndex = 5;
             this.tabNotes.Text = "Notes";
-            this.tabNotes.UseVisualStyleBackColor = true;
             // 
             // AddNoteButton
             // 
@@ -2213,6 +2135,8 @@ namespace LabBilling.Forms
             // 
             // tabBillingActivity
             // 
+            this.tabBillingActivity.AutoScroll = true;
+            this.tabBillingActivity.BackColor = System.Drawing.Color.White;
             this.tabBillingActivity.Controls.Add(this.GenerateClaimButton);
             this.tabBillingActivity.Controls.Add(this.LastValidatedLabel);
             this.tabBillingActivity.Controls.Add(this.BillingLastValidatedLabel);
@@ -2225,7 +2149,6 @@ namespace LabBilling.Forms
             this.tabBillingActivity.Size = new System.Drawing.Size(1151, 615);
             this.tabBillingActivity.TabIndex = 12;
             this.tabBillingActivity.Text = "Billing Activity";
-            this.tabBillingActivity.UseVisualStyleBackColor = true;
             // 
             // GenerateClaimButton
             // 
@@ -2619,7 +2542,6 @@ namespace LabBilling.Forms
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.AutoScroll = true;
             this.BackColor = System.Drawing.Color.Blue;
             this.ClientSize = new System.Drawing.Size(1159, 753);
             this.Controls.Add(this.BannerBillStatusLabel);
@@ -2654,8 +2576,9 @@ namespace LabBilling.Forms
             this.tabControl1.ResumeLayout(false);
             this.summaryTab.ResumeLayout(false);
             this.tabDemographics.ResumeLayout(false);
-            this.DemographicsTabLayoutPanel.ResumeLayout(false);
-            this.DemographicsTabLayoutPanel.PerformLayout();
+            this.tabDemographics.PerformLayout();
+            this.tabGuarantor.ResumeLayout(false);
+            this.tabGuarantor.PerformLayout();
             this.tabInsurance.ResumeLayout(false);
             this.insTabLayoutPanel.ResumeLayout(false);
             this.insTabLayoutPanel.PerformLayout();
@@ -2752,7 +2675,6 @@ namespace LabBilling.Forms
         private System.Windows.Forms.MaskedTextBox DateOfBirthTextBox;
         private System.Windows.Forms.Label PatPhoneLabel;
         private System.Windows.Forms.Label PatCityLabel;
-        private System.Windows.Forms.Label PatAddress2Label;
         private System.Windows.Forms.Label PatAddressLabel;
         private System.Windows.Forms.TextBox PhoneTextBox;
         private System.Windows.Forms.TextBox CityTextBox;
@@ -2764,7 +2686,6 @@ namespace LabBilling.Forms
         private System.Windows.Forms.Label PatLastNameLabel;
         private System.Windows.Forms.TextBox Address1TextBox;
         private System.Windows.Forms.TextBox LastNameTextBox;
-        private System.Windows.Forms.MaskedTextBox GuarZipTextBox;
         private System.Windows.Forms.TableLayoutPanel insTabLayoutPanel;
         private System.Windows.Forms.Label HolderLastNameLabel;
         private System.Windows.Forms.DataGridView InsuranceDataGrid;
@@ -2812,28 +2733,6 @@ namespace LabBilling.Forms
         private System.Windows.Forms.Label HolderCityLabel;
         private System.Windows.Forms.Label InsUserInstructionsLabel;
         private System.Windows.Forms.Button SaveDemographics;
-        private System.Windows.Forms.Label PatDemogTitleLabel;
-        private System.Windows.Forms.Label GuarTitleLabel;
-        private System.Windows.Forms.Label GuarSuffixLabel;
-        private System.Windows.Forms.TextBox GuarSuffixTextBox;
-        private System.Windows.Forms.TextBox GuarMiddleNameTextBox;
-        private System.Windows.Forms.Label GuarMiddleNameLabel;
-        private System.Windows.Forms.TextBox GuarFirstNameTextBox;
-        private System.Windows.Forms.Label GuarFirstNameLabel;
-        private System.Windows.Forms.Label GuarStateLabel;
-        private LabBilling.Library.FlatCombo GuarStateComboBox;
-        private System.Windows.Forms.Label GuarZipCodeLabel;
-        private System.Windows.Forms.Label PatRelationLabel;
-        private LabBilling.Library.FlatCombo GuarantorRelationComboBox;
-        private System.Windows.Forms.TextBox GuarantorPhoneTextBox;
-        private System.Windows.Forms.Label GuarPhoneLabel;
-        private System.Windows.Forms.TextBox GuarCityTextBox;
-        private System.Windows.Forms.Label GuarCityLabel;
-        private System.Windows.Forms.TextBox GuarantorAddressTextBox;
-        private System.Windows.Forms.Label GuarAddressLabel;
-        private System.Windows.Forms.TextBox GuarantorLastNameTextBox;
-        private System.Windows.Forms.Label GuarLastNameLabel;
-        private System.Windows.Forms.LinkLabel GuarCopyPatientLink;
         private System.Windows.Forms.ToolStripMenuItem viewAuditInfoToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem clearHoldStatusToolStripMenuItem;
         private System.Windows.Forms.TextBox BannerClientTextBox;
@@ -2848,7 +2747,6 @@ namespace LabBilling.Forms
         private System.Windows.Forms.Button AddInsuranceButton;
         private System.Windows.Forms.Label PatientFullNameLabel;
         private System.Windows.Forms.TextBox InsTabMessageTextBox;
-        private System.Windows.Forms.TableLayoutPanel DemographicsTabLayoutPanel;
         private System.Windows.Forms.Label BannerTotalPmtLabel;
         private System.Windows.Forms.Label BannerTotalChargesLabel;
         private System.Windows.Forms.Label BannerAccBalanceLabel;
@@ -2873,7 +2771,30 @@ namespace LabBilling.Forms
         private MetroFramework.Controls.MetroButton GenerateClaimButton;
         private System.Windows.Forms.TextBox BannerProviderTextBox;
         private System.Windows.Forms.Label orderingProviderLabel;
-        private MultiColumnCombo.MultiColumnComboBox orderingProviderComboBox;
+        private System.Windows.Forms.TabPage tabGuarantor;
+        private System.Windows.Forms.Button GuarantorSaveButton;
+        private System.Windows.Forms.Label PatRelationLabel;
+        private Library.FlatCombo GuarantorRelationComboBox;
+        private System.Windows.Forms.Label GuarFirstNameLabel;
+        private System.Windows.Forms.TextBox GuarFirstNameTextBox;
+        private System.Windows.Forms.Label GuarSuffixLabel;
+        private System.Windows.Forms.TextBox GuarSuffixTextBox;
+        private System.Windows.Forms.Label GuarLastNameLabel;
+        private System.Windows.Forms.TextBox GuarantorLastNameTextBox;
+        private System.Windows.Forms.LinkLabel GuarCopyPatientLink;
+        private System.Windows.Forms.Label GuarMiddleNameLabel;
+        private System.Windows.Forms.TextBox GuarMiddleNameTextBox;
+        private System.Windows.Forms.Label GuarAddressLabel;
+        private System.Windows.Forms.TextBox GuarantorAddressTextBox;
+        private System.Windows.Forms.Label GuarCityLabel;
+        private System.Windows.Forms.TextBox GuarCityTextBox;
+        private System.Windows.Forms.Label GuarStateLabel;
+        private Library.FlatCombo GuarStateComboBox;
+        private System.Windows.Forms.Label GuarZipCodeLabel;
+        private System.Windows.Forms.MaskedTextBox GuarZipTextBox;
+        private System.Windows.Forms.Label GuarPhoneLabel;
+        private System.Windows.Forms.TextBox GuarantorPhoneTextBox;
+        private Library.ProviderLookup providerLookup1;
     }
 }
 

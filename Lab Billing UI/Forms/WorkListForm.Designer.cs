@@ -33,6 +33,8 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             this.accountGrid = new MetroFramework.Controls.MetroGrid();
+            this.accountGridContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.holdToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ValidateButton = new MetroFramework.Controls.MetroButton();
             this.PostButton = new MetroFramework.Controls.MetroButton();
             this.progressBar = new MetroFramework.Controls.MetroProgressBar();
@@ -41,11 +43,9 @@
             this.statusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
             this.workqueues = new System.Windows.Forms.TreeView();
             this.CancelValidationButton = new MetroFramework.Controls.MetroButton();
-            this.accountGridContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.holdToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.accountGrid)).BeginInit();
-            this.statusStrip.SuspendLayout();
             this.accountGridContextMenu.SuspendLayout();
+            this.statusStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // accountGrid
@@ -99,8 +99,24 @@
             this.accountGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.accountGrid.Size = new System.Drawing.Size(941, 383);
             this.accountGrid.TabIndex = 1;
+            this.accountGrid.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.accountGrid_CellFormatting);
             this.accountGrid.RowHeaderMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.accountGrid_RowHeaderMouseDoubleClick);
+            this.accountGrid.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.accountGrid_MouseDoubleClick);
             this.accountGrid.MouseDown += new System.Windows.Forms.MouseEventHandler(this.accountGrid_MouseDown);
+            // 
+            // accountGridContextMenu
+            // 
+            this.accountGridContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.holdToolStripMenuItem});
+            this.accountGridContextMenu.Name = "accountGridContextMenu";
+            this.accountGridContextMenu.Size = new System.Drawing.Size(101, 26);
+            // 
+            // holdToolStripMenuItem
+            // 
+            this.holdToolStripMenuItem.Name = "holdToolStripMenuItem";
+            this.holdToolStripMenuItem.Size = new System.Drawing.Size(100, 22);
+            this.holdToolStripMenuItem.Text = "Hold";
+            this.holdToolStripMenuItem.Click += new System.EventHandler(this.holdToolStripMenuItem_Click);
             // 
             // ValidateButton
             // 
@@ -174,20 +190,6 @@
             this.CancelValidationButton.UseSelectable = true;
             this.CancelValidationButton.Click += new System.EventHandler(this.CancelValidationButton_Click);
             // 
-            // accountGridContextMenu
-            // 
-            this.accountGridContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.holdToolStripMenuItem});
-            this.accountGridContextMenu.Name = "accountGridContextMenu";
-            this.accountGridContextMenu.Size = new System.Drawing.Size(101, 26);
-            // 
-            // holdToolStripMenuItem
-            // 
-            this.holdToolStripMenuItem.Name = "holdToolStripMenuItem";
-            this.holdToolStripMenuItem.Size = new System.Drawing.Size(100, 22);
-            this.holdToolStripMenuItem.Text = "Hold";
-            this.holdToolStripMenuItem.Click += new System.EventHandler(this.holdToolStripMenuItem_Click);
-            // 
             // WorkListForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -205,9 +207,9 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.WorkListForm_FormClosing);
             this.Load += new System.EventHandler(this.WorkListForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.accountGrid)).EndInit();
+            this.accountGridContextMenu.ResumeLayout(false);
             this.statusStrip.ResumeLayout(false);
             this.statusStrip.PerformLayout();
-            this.accountGridContextMenu.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 

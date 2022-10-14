@@ -159,12 +159,12 @@ namespace LabBilling
             b1.Click += new EventHandler(worklistToolStripMenuItem_Click);
             tlpBilling.Controls.Add(b1, 0, 0);
             b1.Dock = DockStyle.Fill;
-
+            /*
             MetroButton b3 = new MetroButton { Text = "Workqueue", Name = "btnWorkQueue" };
             b3.Click += new EventHandler(workqueuesToolStripMenuItem_Click);
             tlpBilling.Controls.Add(b3, 0, 1);
             b3.Dock = DockStyle.Fill;
-
+            */
             MetroButton b2 = new MetroButton { Text = "Account", Name = "btnAccount" };
             b2.Click += new EventHandler(accountToolStripMenuItem_Click);
             tlpBilling.Controls.Add(b2, 0, 2);
