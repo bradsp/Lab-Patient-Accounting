@@ -103,7 +103,7 @@ namespace LabBilling.Forms
             {
                 if (Program.LoggedInUser.CanAddPayments)
                 {
-                    Helper.SetControlsAccess(tabPayments.Controls, false);
+                    Helper.SetControlsAccess(tabPayments.Controls, true);
                 }
             }
 
@@ -114,14 +114,22 @@ namespace LabBilling.Forms
             Helper.SetControlsAccess(tabDiagnosis.Controls, false);
             Helper.SetControlsAccess(tabGuarantor.Controls, false);
             Helper.SetControlsAccess(tabNotes.Controls, false);
-            Helper.SetControlsAccess(tabCharges.Controls, false);
-            Helper.SetControlsAccess(tabPayments.Controls, false);
-            GuarCopyPatientLink.Enabled = false;
-            InsCopyPatientLink.Enabled = false;
-            changeClientToolStripMenuItem.Enabled = false;
-            changeDateOfServiceToolStripMenuItem.Enabled = false;
-            changeFinancialClassToolStripMenuItem.Enabled = false;
-            clearHoldStatusToolStripMenuItem.Enabled = false;
+            //Helper.SetControlsAccess(tabCharges.Controls, false);
+            //Helper.SetControlsAccess(tabPayments.Controls, false);
+            AddChargeButton.Visible = false;
+            AddPaymentButton.Visible = false;
+            UpdateDxPointersButton.Visible = false;
+            SaveInsuranceButton.Visible = false;
+            SaveDxButton.Visible = false;
+            SaveDemographics.Visible = false;
+            GuarCopyPatientLink.Visible = false;
+            InsCopyPatientLink.Visible = false;
+            changeClientToolStripMenuItem.Visible = false;
+            changeDateOfServiceToolStripMenuItem.Visible = false;
+            changeFinancialClassToolStripMenuItem.Visible = false;
+            clearHoldStatusToolStripMenuItem.Visible = false;
+            ValidateAccountButton.Visible = false;
+            GenerateClaimButton.Visible = false;
             if (Convert.ToBoolean(systemParametersRepository.GetByKey("allow_edit")))
             {
                 if (Program.LoggedInUser.Access == "ENTER/EDIT")
@@ -134,12 +142,20 @@ namespace LabBilling.Forms
                     Helper.SetControlsAccess(tabNotes.Controls, true);
                     Helper.SetControlsAccess(tabCharges.Controls, true);
                     Helper.SetControlsAccess(tabPayments.Controls, true);
-                    GuarCopyPatientLink.Enabled = true;
-                    InsCopyPatientLink.Enabled = true;
-                    changeClientToolStripMenuItem.Enabled = true;
-                    changeDateOfServiceToolStripMenuItem.Enabled = true;
-                    changeFinancialClassToolStripMenuItem.Enabled = true;
-                    clearHoldStatusToolStripMenuItem.Enabled = true;
+                    AddChargeButton.Visible = Program.LoggedInUser.CanSubmitCharges;
+                    AddPaymentButton.Visible = Program.LoggedInUser.CanAddPayments;
+                    UpdateDxPointersButton.Visible = true;
+                    SaveInsuranceButton.Visible = true;
+                    SaveDxButton.Visible = true;
+                    SaveDemographics.Visible = true;
+                    GuarCopyPatientLink.Visible = true;
+                    InsCopyPatientLink.Visible = true;
+                    changeClientToolStripMenuItem.Visible = true;
+                    changeDateOfServiceToolStripMenuItem.Visible = true;
+                    changeFinancialClassToolStripMenuItem.Visible = Program.LoggedInUser.CanModifyAccountFincode;
+                    clearHoldStatusToolStripMenuItem.Visible = true;
+                    ValidateAccountButton.Visible = true;
+                    GenerateClaimButton.Visible = Program.LoggedInUser.CanSubmitBilling;
                 }
             }
 

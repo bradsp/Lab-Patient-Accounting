@@ -31,6 +31,8 @@ namespace LabBilling.Core.Models
         public bool CanAddPayments { get; set; }
         [PetaPoco.Column("reserve4")]
         public bool IsAdministrator { get; set; }
+        [PetaPoco.Column("impersonate")]
+        public bool CanImpersonate { get; set; }
         [PetaPoco.Column("reserve5")]
         public bool reserve5 { get; set; }
         [PetaPoco.Column("reserve6")]
@@ -57,5 +59,7 @@ namespace LabBilling.Core.Models
         [Ignore]
         public Guid rowguid { get; set; }
 
+        [Ignore]
+        public string ImpersonatingUser { get; set; }
     }
 }

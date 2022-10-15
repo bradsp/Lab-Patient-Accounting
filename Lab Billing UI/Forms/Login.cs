@@ -23,6 +23,7 @@ namespace LabBilling
         private EmpRepository db;
         private string systemUser;
         private string systemDomain;
+        private bool skipImpersonateComboSelectionChange = false;
 
         //declare active directory logon method
         [DllImport("advapi32.dll")]
@@ -31,27 +32,18 @@ namespace LabBilling
         private void LoginButton_Click(object sender, EventArgs e)
         {
             Log.Instance.Trace($"Entering");
-            //if(string.IsNullOrEmpty(Environment.SelectedItem.ToString()))
-            //{
-            //    statustext.Text = "Please select an environment.";
-            //    return;
-            //}
 
             if ((username.Text == string.Empty || password.Text == string.Empty) && !IntegratedAuthentication.Checked)
             {
                 statustext.Text = "Please enter a username and password.";
                 return;
             }
-            //Program.SelectedEnvironment = Environment.SelectedItem.ToString();
 
-            Program.Database = Properties.Settings.Default.DbName;
-            Program.Server = Properties.Settings.Default.DbServer;
+            DialogResult = DialogResult.OK;
 
-            db = new EmpRepository(Helper.ConnVal);
+            //bool loginSuccess = false;
 
-            bool loginSuccess = false;
-
-            IntPtr th = IntPtr.Zero;
+/*            IntPtr th = IntPtr.Zero;
             if(IntegratedAuthentication.Checked)
             {
                 username.Text = systemUser;
@@ -64,18 +56,14 @@ namespace LabBilling
 
             if (loginSuccess)
             {
-                IsLoggedIn = true;
-                LoggedInUser = db.GetByUsername(username.Text);
-                Program.LoggedInUser = LoggedInUser;
-                Program.LoggedInUser.Password = "";
-                if (LoggedInUser == null)
+                GetUserProfile();
+                if (!IsLoggedIn)
                 {
-                    IsLoggedIn = false;
                     Log.Instance.Info(string.Format("Username {0} is not authorized for billing system access.", systemUser));
                     statustext.Text = string.Format("Username {0} is not authorized for billing system access.", systemUser);
                     return;
                 }
-                this.DialogResult = DialogResult.OK;
+                DialogResult = DialogResult.OK;
             }
             else
             {
@@ -99,8 +87,7 @@ namespace LabBilling
                     Log.Instance.Error(statustext);
                     return;
                 }
-            }
-
+            } */
         }
 
         private void pictureBox1_Click(object sender, EventArgs e)
@@ -119,16 +106,83 @@ namespace LabBilling
             username.Text = systemUser = paramsLogin[1].ToString();
             domain.Text = systemDomain = paramsLogin[0].ToString();
 
-            //load the available database environments from appconfig
-            //foreach (ConnectionStringSettings connString in ConfigurationManager.ConnectionStrings)
-            //{
-            //    Environment.Items.Add(connString.Name);
-            //}
-
-            //Environment.SelectedItem = "LabBillingTest";
+            Program.Database = Properties.Settings.Default.DbName;
+            Program.Server = Properties.Settings.Default.DbServer;
 
             IntegratedAuthentication.Checked = true;
             IntegratedAuthentication_CheckedChanged(sender, e);
+
+            db = new EmpRepository(Helper.ConnVal);
+
+            //check username now to see if it is valid and has impersonate permissions
+            GetUserProfile();
+            if(IsLoggedIn)
+            {
+                if(LoggedInUser.CanImpersonate)
+                {
+                    impersonateUserLabel.Visible = true;
+                    impersonateUserComboBox.Visible = true;
+                    
+                    //load impersonateUserComboBox
+                    var emps = db.GetActiveUsers();
+
+                    skipImpersonateComboSelectionChange = true;
+                    impersonateUserComboBox.DataSource = emps;
+                    impersonateUserComboBox.DisplayMember = nameof(Emp.FullName);
+                    impersonateUserComboBox.ValueMember = nameof(Emp.UserName);
+
+                    impersonateUserComboBox.SelectedValue = LoggedInUser.UserName;
+
+                    skipImpersonateComboSelectionChange = false;
+                }
+                else
+                {
+                    DialogResult = DialogResult.OK;
+                    this.Close();
+                }
+            }
+        }
+
+        private bool GetUserProfile()
+        {
+
+            IsLoggedIn = true;
+            LoggedInUser = db.GetByUsername(username.Text);
+            Program.LoggedInUser = LoggedInUser;
+            Program.LoggedInUser.Password = "";
+            if (LoggedInUser == null)
+            {
+                IsLoggedIn = false;
+            }
+
+            return IsLoggedIn;
+        }
+
+        private bool LocalLogin()
+        {
+            // if active directory login failed, revert to local login
+            bool loginSuccess = db.LoginCheck(username.Text, Helper.Encrypt(password.Text.Trim()));
+            statustext.Text = "Active Directory login failed. Using local login.";
+            Log.Instance.Error(statustext);
+            if (loginSuccess)
+            {
+                IsLoggedIn = true;
+                LoggedInUser = db.GetByUsername(username.Text);
+                Program.LoggedInUser = LoggedInUser;
+                Program.LoggedInUser.Password = "";
+                Log.Instance.Info(string.Format("Login Success - {0}", LoggedInUser.UserName));
+                this.DialogResult = DialogResult.OK;
+            }
+            else
+            {
+                IsLoggedIn = false;
+                statustext.Text = "Invalid username or password, or access not granted. Please try again.";
+                Log.Instance.Error(statustext);
+                return false;
+            }
+
+            return true;
+
         }
 
         private void IntegratedAuthentication_CheckedChanged(object sender, EventArgs e)
@@ -137,12 +191,42 @@ namespace LabBilling
             {
                 username.Enabled = false;
                 password.Enabled = false;
+                domain.Enabled = false;
                 username.Text = systemUser;
             }
             else
             {
                 username.Enabled = true;
                 password.Enabled = true;
+                domain.Enabled = true;
+            }
+        }
+
+        private void impersonateUserComboBox_SelectedValueChanged(object sender, EventArgs e)
+        {
+            if(!skipImpersonateComboSelectionChange)
+            {
+                string impersonatedUsername = impersonateUserComboBox.SelectedValue.ToString();
+                if(impersonatedUsername != LoggedInUser.UserName)
+                {
+                    //get impersonated user profile
+                    var impersonatedUser = db.GetByUsername(impersonatedUsername);
+                    if(impersonatedUser != null)
+                    {
+                        //copy impersonated user permissions to loggedinuser
+                        LoggedInUser.CanEditDictionary = impersonatedUser.CanEditDictionary;
+                        LoggedInUser.CanAddAdjustments = impersonatedUser.CanAddAdjustments;
+                        LoggedInUser.CanAddPayments = impersonatedUser.CanAddPayments;
+                        LoggedInUser.CanModifyAccountFincode = impersonatedUser.CanModifyAccountFincode;
+                        LoggedInUser.CanModifyBadDebt = impersonatedUser.CanModifyBadDebt;
+                        LoggedInUser.CanSubmitBilling = impersonatedUser.CanSubmitBilling;
+                        LoggedInUser.CanSubmitCharges = impersonatedUser.CanSubmitCharges;
+                        if(LoggedInUser.IsAdministrator)
+                            LoggedInUser.IsAdministrator = impersonatedUser.IsAdministrator;
+                        LoggedInUser.Access = impersonatedUser.Access;
+                        LoggedInUser.ImpersonatingUser = impersonatedUser.UserName;
+                    }
+                }
             }
         }
     }

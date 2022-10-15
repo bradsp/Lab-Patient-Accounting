@@ -1,6 +1,9 @@
 ﻿using LabBilling.Core.Models;
 using System;
 using LabBilling.Logging;
+using iText.Layout.Element;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace LabBilling.Core.DataAccess
 {
@@ -15,6 +18,19 @@ namespace LabBilling.Core.DataAccess
 
         }
 
+        public List<Emp> GetActiveUsers()
+        {
+            Log.Instance.Trace($"Entering");
+
+            var sqlCmd = new PetaPoco.Sql();
+            sqlCmd.Where($"{GetRealColumn(nameof(Emp.Access))} <> 'NONE'");
+            sqlCmd.OrderBy(GetRealColumn(nameof(Emp.FullName)));
+
+            var emps = dbConnection.Fetch<Emp>(sqlCmd);
+
+            return emps;
+        }
+
         public override Emp GetById(int Id)
         {
             throw new NotImplementedException();
@@ -22,7 +38,7 @@ namespace LabBilling.Core.DataAccess
 
         public Emp GetByUsername(string username)
         {
-            Log.Instance.Debug("$Entering");
+            Log.Instance.Trace($"Entering");
 
             Emp emp = null;
 

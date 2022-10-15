@@ -44,6 +44,8 @@
             this.label1 = new System.Windows.Forms.Label();
             this.LoginTitle = new System.Windows.Forms.Label();
             this.username = new System.Windows.Forms.TextBox();
+            this.impersonateUserLabel = new System.Windows.Forms.Label();
+            this.impersonateUserComboBox = new System.Windows.Forms.ComboBox();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
@@ -52,6 +54,8 @@
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.Color.White;
+            this.panel1.Controls.Add(this.impersonateUserComboBox);
+            this.panel1.Controls.Add(this.impersonateUserLabel);
             this.panel1.Controls.Add(this.IntegratedAuthentication);
             this.panel1.Controls.Add(this.label4);
             this.panel1.Controls.Add(this.Environment);
@@ -76,7 +80,8 @@
             this.IntegratedAuthentication.AutoSize = true;
             this.IntegratedAuthentication.Checked = true;
             this.IntegratedAuthentication.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.IntegratedAuthentication.Location = new System.Drawing.Point(13, 239);
+            this.IntegratedAuthentication.Enabled = false;
+            this.IntegratedAuthentication.Location = new System.Drawing.Point(12, 220);
             this.IntegratedAuthentication.Name = "IntegratedAuthentication";
             this.IntegratedAuthentication.Size = new System.Drawing.Size(145, 17);
             this.IntegratedAuthentication.TabIndex = 11;
@@ -87,7 +92,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(10, 264);
+            this.label4.Location = new System.Drawing.Point(-3, 314);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(66, 13);
             this.label4.TabIndex = 10;
@@ -97,9 +102,9 @@
             // Environment
             // 
             this.Environment.FormattingEnabled = true;
-            this.Environment.Location = new System.Drawing.Point(13, 280);
+            this.Environment.Location = new System.Drawing.Point(69, 309);
             this.Environment.Name = "Environment";
-            this.Environment.Size = new System.Drawing.Size(144, 21);
+            this.Environment.Size = new System.Drawing.Size(92, 21);
             this.Environment.TabIndex = 9;
             this.Environment.Visible = false;
             // 
@@ -200,9 +205,9 @@
             this.LoginTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LoginTitle.Location = new System.Drawing.Point(8, 13);
             this.LoginTitle.Name = "LoginTitle";
-            this.LoginTitle.Size = new System.Drawing.Size(171, 25);
+            this.LoginTitle.Size = new System.Drawing.Size(294, 25);
             this.LoginTitle.TabIndex = 0;
-            this.LoginTitle.Text = "Lab Billing Login";
+            this.LoginTitle.Text = "Lab Patient Accounting Login";
             // 
             // username
             // 
@@ -211,6 +216,26 @@
             this.username.Name = "username";
             this.username.Size = new System.Drawing.Size(258, 26);
             this.username.TabIndex = 2;
+            // 
+            // impersonateUserLabel
+            // 
+            this.impersonateUserLabel.AutoSize = true;
+            this.impersonateUserLabel.Location = new System.Drawing.Point(9, 248);
+            this.impersonateUserLabel.Name = "impersonateUserLabel";
+            this.impersonateUserLabel.Size = new System.Drawing.Size(90, 13);
+            this.impersonateUserLabel.TabIndex = 12;
+            this.impersonateUserLabel.Text = "Impersonate User";
+            this.impersonateUserLabel.Visible = false;
+            // 
+            // impersonateUserComboBox
+            // 
+            this.impersonateUserComboBox.FormattingEnabled = true;
+            this.impersonateUserComboBox.Location = new System.Drawing.Point(12, 270);
+            this.impersonateUserComboBox.Name = "impersonateUserComboBox";
+            this.impersonateUserComboBox.Size = new System.Drawing.Size(151, 21);
+            this.impersonateUserComboBox.TabIndex = 13;
+            this.impersonateUserComboBox.Visible = false;
+            this.impersonateUserComboBox.SelectedValueChanged += new System.EventHandler(this.impersonateUserComboBox_SelectedValueChanged);
             // 
             // Login
             // 
@@ -248,5 +273,7 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.ComboBox Environment;
         private System.Windows.Forms.CheckBox IntegratedAuthentication;
+        private System.Windows.Forms.ComboBox impersonateUserComboBox;
+        private System.Windows.Forms.Label impersonateUserLabel;
     }
 }

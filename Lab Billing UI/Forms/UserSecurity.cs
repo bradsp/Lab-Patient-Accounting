@@ -25,6 +25,32 @@ namespace LabBilling
             //empRepository = EmpRepository.Instance;
         }
 
+        private void SetPermissions()
+        {
+            if(!Program.LoggedInUser.IsAdministrator)
+            {
+                AddUserButton.Visible = false;
+                SaveButton.Visible = false;
+                UserName.ReadOnly = true;
+                FullName.ReadOnly = true;
+                Password.Visible = true;
+                ResetPassword.Visible = false;
+                AccessLevelCombo.Enabled = false;
+                CanEditBadDebt.Enabled = false;
+                CanAddAccountAdjustments.Enabled = false;
+                CanAddCharges.Enabled = false;
+                CanAddPayments.Enabled = false;
+                CanChangeAccountFinCode.Enabled = false;
+                CanEditBadDebt.Enabled = false;
+                CanEditDictionaries.Enabled = false;
+                CanSubmitBilling.Enabled = false;
+                IsAdministrator.Enabled = false;
+                Reserved5.Enabled = false;
+                Reserved6.Enabled = false;
+
+            }
+        }
+
         private void UserSecurity_Load(object sender, EventArgs e)
         {
             Log.Instance.Trace($"Entering");

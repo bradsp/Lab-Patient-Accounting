@@ -13,6 +13,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Windows.Forms;
 using System.Xml.Linq;
+using MetroFramework.Controls;
 using PetaPoco;
 using RFClassLibrary;
 
@@ -162,18 +163,28 @@ namespace LabBilling
         {
             foreach (Control c in controls)
             {
-                if (c is TextBox || c is MetroFramework.Controls.MetroTextBox)
-                    ((TextBox)c).ReadOnly = !allowAccess;
-                if (c is CheckBox || c is MetroFramework.Controls.MetroCheckBox)
+                if (c is TextBox)
+                    (c as TextBox).ReadOnly = !allowAccess;
+                if (c is MetroTextBox)
+                    (c as MetroTextBox).ReadOnly = !allowAccess;
+                if (c is CheckBox)
                     ((CheckBox)c).Enabled = allowAccess;
-                if (c is ComboBox || c is MetroFramework.Controls.MetroComboBox)
+                if (c is MetroCheckBox)
+                    ((MetroCheckBox)c).Enabled = allowAccess;
+                if (c is ComboBox)
                     ((ComboBox)c).Enabled = allowAccess;
+                if (c is MetroComboBox)
+                    ((MetroComboBox)c).Enabled = allowAccess;
                 if (c is MaskedTextBox)
                     ((MaskedTextBox)c).ReadOnly = !allowAccess;
-                if (c is Button || c is MetroFramework.Controls.MetroButton)
+                if (c is Button)
                     ((Button)c).Enabled = allowAccess;
-                if (c is DataGridView || c is MetroFramework.Controls.MetroGrid)
-                    ((DataGridView)c).Enabled = allowAccess;
+                if (c is MetroButton)
+                    ((MetroButton)c).Enabled = allowAccess;
+                if (c is DataGridView)
+                    ((DataGridView)c).ReadOnly = !allowAccess;
+                if (c is MetroGrid)
+                    ((MetroGrid)c).ReadOnly = !allowAccess;
             }
         }
 

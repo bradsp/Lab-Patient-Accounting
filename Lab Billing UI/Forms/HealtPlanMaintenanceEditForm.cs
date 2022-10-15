@@ -40,6 +40,14 @@ namespace LabBilling.Forms
             }
 
             LoadData();
+
+            //set permissions
+
+            if(!Program.LoggedInUser.CanEditDictionary)
+            {
+                Helper.SetControlsAccess(this.Controls, false);
+                cancelButton.Enabled = true;
+            }
         }
 
         private void LoadData()

@@ -54,6 +54,9 @@ namespace LabBilling.Forms
             healthPlanGrid.ForeColor = Color.Black;
             healthPlanGrid.Columns[nameof(InsCompany.InsuranceCode)].Frozen = true;
             healthPlanGrid.Columns[nameof(InsCompany.PlanName)].Frozen = true;
+
+            //set permissions
+
         }
 
         private void includeDeletedCheckBox_CheckedChanged(object sender, EventArgs e)

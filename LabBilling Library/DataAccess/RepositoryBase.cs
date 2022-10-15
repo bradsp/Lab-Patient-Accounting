@@ -188,6 +188,11 @@ namespace LabBilling.Core.DataAccess
             return this.GetRealColumn(poco.AssemblyQualifiedName, propertyName);
         }
 
+        public string GetRealColumn(string propertyName)
+        {
+            return GetRealColumn(typeof(Tpoco), propertyName);
+        }
+
         public string GetRealColumn(string objectName, string propertyName)
         {
             //this can throw if invalid type names are used, or return null of there is no such type

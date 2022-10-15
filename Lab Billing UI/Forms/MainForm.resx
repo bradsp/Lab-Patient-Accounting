@@ -234,13 +234,13 @@
     <value>Client Bills (New)</value>
   </data>
   <data name="institutionalToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>180, 22</value>
+    <value>138, 22</value>
   </data>
   <data name="institutionalToolStripMenuItem.Text" xml:space="preserve">
     <value>Institutional</value>
   </data>
   <data name="professionalToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>180, 22</value>
+    <value>138, 22</value>
   </data>
   <data name="professionalToolStripMenuItem.Text" xml:space="preserve">
     <value>Professional</value>
@@ -3627,7 +3627,7 @@
 </value>
   </data>
   <data name="$this.Text" xml:space="preserve">
-    <value>Lab Billing Dashboard</value>
+    <value>Patient Accounting Dashboard</value>
   </data>
   <data name="&gt;&gt;billingToolStripMenuItem.Name" xml:space="preserve">
     <value>billingToolStripMenuItem</value>
@@ -3759,6 +3759,12 @@
     <value>professionalToolStripMenuItem</value>
   </data>
   <data name="&gt;&gt;professionalToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;remittancePostingToolStripMenuItem.Name" xml:space="preserve">
+    <value>remittancePostingToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;remittancePostingToolStripMenuItem.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;dictionariesToolStripMenuItem.Name" xml:space="preserve">
@@ -3957,12 +3963,6 @@
     <value>exitToolStripMenuItem</value>
   </data>
   <data name="&gt;&gt;exitToolStripMenuItem.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;remittancePostingToolStripMenuItem.Name" xml:space="preserve">
-    <value>remittancePostingToolStripMenuItem</value>
-  </data>
-  <data name="&gt;&gt;remittancePostingToolStripMenuItem.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">

@@ -84,37 +84,6 @@ namespace LabBilling
                 MetroMessageBox.Show(this, "Application error with user object. Aborting.", "Fatal Error", MessageBoxButtons.OK, MessageBoxIcon.Stop);
                 System.Windows.Forms.Application.Exit();
             }
-
-            //enable menu items based on permissions
-            systemAdministrationToolStripMenuItem.Enabled = Program.LoggedInUser.IsAdministrator;
-
-            if (Convert.ToBoolean(systemParametersRepository.GetByKey("allow_chk_entry")))
-            {
-                paymentProcessingToolStripMenuItem.Enabled = Program.LoggedInUser.CanAddPayments;
-                batchRemittanceToolStripMenuItem.Enabled = Program.LoggedInUser.CanAddPayments;
-            }
-            else
-            {
-                paymentProcessingToolStripMenuItem.Enabled = false;
-                batchRemittanceToolStripMenuItem.Enabled = false;
-            }
-            if (Convert.ToBoolean(systemParametersRepository.GetByKey("allow_chrg_entry")))
-            {
-                batchChargeEntryToolStripMenuItem.Enabled = Program.LoggedInUser.CanSubmitCharges;
-            }
-            else
-            {
-                batchChargeEntryToolStripMenuItem.Enabled = false;
-            }
-            if (Convert.ToBoolean(systemParametersRepository.GetByKey("allow_edit")))
-            {
-                sSISubmissionToolStripMenuItem.Enabled = Program.LoggedInUser.CanSubmitBilling;
-            }
-            else
-            {
-                sSISubmissionToolStripMenuItem.Enabled = false;
-                MetroMessageBox.Show(this, "System is in read-only mode.", "Read Only Mode", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
             #endregion
 
             #region load accordion menu
@@ -127,6 +96,10 @@ namespace LabBilling
             tlpRecentAccounts.ColumnCount = 1;
 
             this.Text += " " + Program.Database;
+            if(!string.IsNullOrEmpty(Program.LoggedInUser.ImpersonatingUser))
+            {
+                this.Text += $"  *** IMPERSONATING {Program.LoggedInUser.ImpersonatingUser} ***";
+            }
             
             if (!Convert.ToBoolean(systemParametersRepository.GetByKey("allow_edit")))
                 this.Text += " | READ ONLY MODE";
@@ -215,6 +188,68 @@ namespace LabBilling
             frm.WindowState = FormWindowState.Normal;
             frm.AutoScroll = true;
             frm.Show();
+
+            //enable menu items based on permissions
+            systemAdministrationToolStripMenuItem.Visible = Program.LoggedInUser.IsAdministrator;
+
+            if (Convert.ToBoolean(systemParametersRepository.GetByKey("allow_chk_entry")))
+            {
+                paymentProcessingToolStripMenuItem.Visible = Program.LoggedInUser.CanAddPayments;
+                batchRemittanceToolStripMenuItem.Visible = Program.LoggedInUser.CanAddPayments;
+                remittancePostingToolStripMenuItem.Visible = Program.LoggedInUser.CanAddPayments;
+                b5.Visible = Program.LoggedInUser.CanAddPayments;
+            }
+            else
+            {
+                paymentProcessingToolStripMenuItem.Visible = false;
+                batchRemittanceToolStripMenuItem.Visible = false;
+                remittancePostingToolStripMenuItem.Visible = false;
+                b5.Visible = false;
+            }
+            if (Convert.ToBoolean(systemParametersRepository.GetByKey("allow_chrg_entry")))
+            {
+                batchChargeEntryToolStripMenuItem.Visible = Program.LoggedInUser.CanSubmitCharges;
+                b4.Visible = Program.LoggedInUser.CanSubmitCharges;
+            }
+            else
+            {
+                batchChargeEntryToolStripMenuItem.Visible = false;
+                b4.Visible = false;
+            }
+            if (Convert.ToBoolean(systemParametersRepository.GetByKey("allow_edit")))
+            {
+                sSISubmissionToolStripMenuItem.Visible = Program.LoggedInUser.CanSubmitBilling;
+            }
+            else
+            {
+                sSISubmissionToolStripMenuItem.Visible = false;
+                MetroMessageBox.Show(this, "System is in read-only mode.", "Read Only Mode", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            UpdateMenuAccess();
+
+        }
+
+        private void UpdateMenuAccess()
+        {
+            generateClaimsToolStripMenuItem.Visible = Program.LoggedInUser.CanSubmitBilling;
+            systemAdministrationToolStripMenuItem.Visible = Program.LoggedInUser.IsAdministrator;
+            batchRemittanceToolStripMenuItem.Visible = Program.LoggedInUser.CanAddPayments;
+            sSISubmissionToolStripMenuItem.Visible = Program.LoggedInUser.CanSubmitBilling;
+            sSISubmissionToolStripMenuItem1.Visible = Program.LoggedInUser.CanSubmitBilling;
+            badDebtMaintenanceToolStripMenuItem.Visible = Program.LoggedInUser.CanModifyBadDebt;
+            posting835RemitToolStripMenuItem.Visible = Program.LoggedInUser.CanAddPayments;
+            batchChargeEntryToolStripMenuItem.Visible = Program.LoggedInUser.CanSubmitCharges;
+
+            if(Program.LoggedInUser.Access == "VIEW")
+            {
+                duplicateAccountsToolStripMenuItem.Visible = false;
+                questCorrectionsToolStripMenuItem.Visible = false;
+                questProcessingToolStripMenuItem.Visible = false;
+                questProcessingToolStripMenuItem1.Visible = false;
+                globalBillingToolStripMenuItem.Visible = false;
+                clientBillsNewToolStripMenuItem.Visible = false;
+                clientBillsToolStripMenuItem.Visible = false;
+            }
 
         }
 
@@ -398,7 +433,7 @@ namespace LabBilling
         {
             Log.Instance.Trace($"Entering");
 
-            frmViewer frm = new frmViewer(Helper.GetArgs());
+            ClientBillForm frm = new ClientBillForm(Helper.GetArgs());
             frm.MdiParent = this;
             frm.AutoScroll = true;
             frm.WindowState = FormWindowState.Normal;

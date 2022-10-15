@@ -3,7 +3,7 @@
     /// <summary>
     /// Class for the viewer.
     /// </summary>
-    partial class frmViewer
+    partial class ClientBillForm
     {
         /// <summary>
         /// Required designer variable.
@@ -31,7 +31,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmViewer));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ClientBillForm));
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             this.tsMain = new System.Windows.Forms.ToolStrip();

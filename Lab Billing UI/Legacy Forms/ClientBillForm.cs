@@ -22,7 +22,7 @@ using LabBilling.Forms;
 
 namespace LabBilling.Legacy
 {
-    public partial class frmViewer : Form
+    public partial class ClientBillForm : Form
     {
         Dictionary<string, string> m_dicWCExclusions = null;
         string m_strRequery = "";
@@ -117,7 +117,7 @@ namespace LabBilling.Legacy
         /// args[0] = server name
         /// args[1] = database
         /// </param>
-        public frmViewer(string[] args)
+        public ClientBillForm(string[] args)
         {
             InitializeComponent();
             if (args.GetUpperBound(0) < 1)
@@ -125,8 +125,8 @@ namespace LabBilling.Legacy
                 MessageBox.Show("Not enough arguments to start this application");
                 Environment.Exit(13);
             }
-            m_strServer = args[0].Remove(0, 1);
-            m_strDatabase = args[1].Remove(0, 1);
+            m_strServer = args[0];
+            m_strDatabase = args[1];
             m_strProductionEnvironment = m_strDatabase.Contains("LIVE") ? "LIVE" : "TEST";
             string[] strArgs = new string[3];
             strArgs[0] = string.Format("/{0}", m_strProductionEnvironment);
