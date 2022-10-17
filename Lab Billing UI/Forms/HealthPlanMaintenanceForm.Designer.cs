@@ -33,6 +33,7 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             this.includeDeletedCheckBox = new MetroFramework.Controls.MetroCheckBox();
             this.healthPlanGrid = new MetroFramework.Controls.MetroGrid();
+            this.AddPlanButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.healthPlanGrid)).BeginInit();
             this.SuspendLayout();
             // 
@@ -78,7 +79,7 @@
             this.healthPlanGrid.EnableHeadersVisualStyles = false;
             this.healthPlanGrid.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
             this.healthPlanGrid.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
-            this.healthPlanGrid.Location = new System.Drawing.Point(12, 33);
+            this.healthPlanGrid.Location = new System.Drawing.Point(12, 54);
             this.healthPlanGrid.Name = "healthPlanGrid";
             this.healthPlanGrid.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
             dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
@@ -91,10 +92,21 @@
             this.healthPlanGrid.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
             this.healthPlanGrid.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.healthPlanGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.healthPlanGrid.Size = new System.Drawing.Size(1157, 576);
+            this.healthPlanGrid.Size = new System.Drawing.Size(1157, 555);
             this.healthPlanGrid.TabIndex = 1;
             this.healthPlanGrid.CellMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.healthPlanGrid_CellMouseDoubleClick);
             this.healthPlanGrid.RowPrePaint += new System.Windows.Forms.DataGridViewRowPrePaintEventHandler(this.healthPlanGrid_RowPrePaint);
+            // 
+            // AddPlanButton
+            // 
+            this.AddPlanButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.AddPlanButton.Location = new System.Drawing.Point(156, 4);
+            this.AddPlanButton.Name = "AddPlanButton";
+            this.AddPlanButton.Size = new System.Drawing.Size(75, 23);
+            this.AddPlanButton.TabIndex = 2;
+            this.AddPlanButton.Text = "Add Plan";
+            this.AddPlanButton.UseVisualStyleBackColor = true;
+            this.AddPlanButton.Click += new System.EventHandler(this.AddPlanButton_Click);
             // 
             // HealthPlanMaintenanceForm
             // 
@@ -102,6 +114,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(1181, 621);
+            this.Controls.Add(this.AddPlanButton);
             this.Controls.Add(this.healthPlanGrid);
             this.Controls.Add(this.includeDeletedCheckBox);
             this.Name = "HealthPlanMaintenanceForm";
@@ -116,5 +129,6 @@
         #endregion
         private MetroFramework.Controls.MetroCheckBox includeDeletedCheckBox;
         private MetroFramework.Controls.MetroGrid healthPlanGrid;
+        private System.Windows.Forms.Button AddPlanButton;
     }
 }

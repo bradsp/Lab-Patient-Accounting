@@ -1,6 +1,6 @@
 ﻿namespace LabBilling.Forms
 {
-    partial class HealtPlanMaintenanceEditForm
+    partial class HealthPlanMaintenanceEditForm
     {
         /// <summary>
         /// Required designer variable.
@@ -66,6 +66,8 @@
             this.commentsTextBox = new MetroFramework.Controls.MetroTextBox();
             this.saveButton = new MetroFramework.Controls.MetroButton();
             this.cancelButton = new MetroFramework.Controls.MetroButton();
+            this.IsActiveCheckBox = new System.Windows.Forms.CheckBox();
+            this.citystzipLabel = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // planZipCodeLabel
@@ -366,6 +368,9 @@
             // 
             this.insuranceTypeComboBox.FormattingEnabled = true;
             this.insuranceTypeComboBox.ItemHeight = 23;
+            this.insuranceTypeComboBox.Items.AddRange(new object[] {
+            "Institutional",
+            "Professional"});
             this.insuranceTypeComboBox.Location = new System.Drawing.Point(449, 354);
             this.insuranceTypeComboBox.Name = "insuranceTypeComboBox";
             this.insuranceTypeComboBox.Size = new System.Drawing.Size(209, 29);
@@ -381,6 +386,7 @@
             this.finClassComboBox.Size = new System.Drawing.Size(141, 29);
             this.finClassComboBox.TabIndex = 41;
             this.finClassComboBox.UseSelectable = true;
+            this.finClassComboBox.Visible = false;
             // 
             // finCodeComboBox
             // 
@@ -595,6 +601,7 @@
             this.finClassLabel.Size = new System.Drawing.Size(92, 19);
             this.finClassLabel.TabIndex = 40;
             this.finClassLabel.Text = "Financial Class";
+            this.finClassLabel.Visible = false;
             // 
             // providerNoQualifierLabel
             // 
@@ -627,6 +634,11 @@
             // 
             this.claimTypeComboBox.FormattingEnabled = true;
             this.claimTypeComboBox.ItemHeight = 23;
+            this.claimTypeComboBox.Items.AddRange(new object[] {
+            "BL",
+            "CH",
+            "CI",
+            "MA"});
             this.claimTypeComboBox.Location = new System.Drawing.Point(303, 354);
             this.claimTypeComboBox.Name = "claimTypeComboBox";
             this.claimTypeComboBox.Size = new System.Drawing.Size(141, 29);
@@ -693,11 +705,32 @@
             this.cancelButton.UseSelectable = true;
             this.cancelButton.Click += new System.EventHandler(this.cancelButton_Click);
             // 
-            // HealtPlanMaintenanceEditForm
+            // IsActiveCheckBox
+            // 
+            this.IsActiveCheckBox.AutoSize = true;
+            this.IsActiveCheckBox.Location = new System.Drawing.Point(675, 92);
+            this.IsActiveCheckBox.Name = "IsActiveCheckBox";
+            this.IsActiveCheckBox.Size = new System.Drawing.Size(56, 17);
+            this.IsActiveCheckBox.TabIndex = 63;
+            this.IsActiveCheckBox.Text = "Active";
+            this.IsActiveCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // citystzipLabel
+            // 
+            this.citystzipLabel.AutoSize = true;
+            this.citystzipLabel.Location = new System.Drawing.Point(409, 184);
+            this.citystzipLabel.Name = "citystzipLabel";
+            this.citystzipLabel.Size = new System.Drawing.Size(94, 13);
+            this.citystzipLabel.TabIndex = 64;
+            this.citystzipLabel.Text = "citystatezip display";
+            // 
+            // HealthPlanMaintenanceEditForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(754, 628);
+            this.Controls.Add(this.citystzipLabel);
+            this.Controls.Add(this.IsActiveCheckBox);
             this.Controls.Add(this.cancelButton);
             this.Controls.Add(this.saveButton);
             this.Controls.Add(this.commentsLabel);
@@ -736,7 +769,7 @@
             this.Controls.Add(this.address1TextBox);
             this.Controls.Add(this.planNameTextBox);
             this.Controls.Add(this.insCodeTextBox);
-            this.Name = "HealtPlanMaintenanceEditForm";
+            this.Name = "HealthPlanMaintenanceEditForm";
             this.Text = "Edit Health Plan";
             this.Load += new System.EventHandler(this.HealtPlanMaintenaceEditForm_Load);
             this.ResumeLayout(false);
@@ -784,5 +817,7 @@
         private MetroFramework.Controls.MetroTextBox commentsTextBox;
         private MetroFramework.Controls.MetroButton saveButton;
         private MetroFramework.Controls.MetroButton cancelButton;
+        private System.Windows.Forms.CheckBox IsActiveCheckBox;
+        private System.Windows.Forms.Label citystzipLabel;
     }
 }

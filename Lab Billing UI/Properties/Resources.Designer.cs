@@ -113,6 +113,16 @@ namespace LabBilling.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap kisspng_gear_spanners_computer_icons_gear_5abf330af2b385_0314791715224798829941 {
+            get {
+                object obj = ResourceManager.GetObject("kisspng-gear-spanners-computer-icons-gear-5abf330af2b385.0314791715224798829941", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap logoicon2 {
             get {
                 object obj = ResourceManager.GetObject("logoicon2", resourceCulture);
@@ -146,6 +156,16 @@ namespace LabBilling.Properties {
         internal static System.Drawing.Bitmap refresh_icon {
             get {
                 object obj = ResourceManager.GetObject("refresh-icon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap wrench_icon {
+            get {
+                object obj = ResourceManager.GetObject("wrench-icon", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

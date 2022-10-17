@@ -37,6 +37,9 @@ namespace LabBilling.Core.Models
         [Column("status")]
         [ResultColumn]
         public string Status { get; set; }
+        [Column("cl_mnem")]
+        [ResultColumn]
+        public string ClientMnem { get; set; }
         [Column("last_validation_date")]
         [ResultColumn]
         public DateTime LastValidationDate { get; set; }

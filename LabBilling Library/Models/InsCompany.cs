@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -65,8 +66,14 @@ namespace LabBilling.Core.Models
         [Column("nthrive_payer_no")]
         public string NThrivePayerNo { get; set; }
 
-        [Column("fin_class")]
-        public string FinancialClass { get; set; }
+        [Ignore]
+        public string FinancialClass 
+        { 
+            get
+            {
+                return this.FinancialCode;
+            } 
+        }
 
         [Column("bill_as_jmcgh")]
         public bool BillAsJmcgh { get; set; }
@@ -74,6 +81,7 @@ namespace LabBilling.Core.Models
         [Column("claim_filing_indicator_code")]
         public string ClaimFilingIndicatorCode { get; set; }
 
+        [Ignore]
         public Guid rowguid { get; set; }
 
         [Column("deleted")]

@@ -7,6 +7,7 @@ using System.Configuration;
 using LabBilling.Logging;
 using MetroFramework.Forms;
 using MetroFramework.Controls;
+using LabBilling.Forms;
 
 namespace LabBilling
 {
@@ -228,6 +229,15 @@ namespace LabBilling
                     }
                 }
             }
+        }
+
+        private void setupImage_Click(object sender, EventArgs e)
+        {
+            DatabaseSettingsForm dbForm = new DatabaseSettingsForm();
+
+            dbForm.ShowDialog();
+
+
         }
     }
 }

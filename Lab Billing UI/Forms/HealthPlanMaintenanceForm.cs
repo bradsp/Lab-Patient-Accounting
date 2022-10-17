@@ -43,7 +43,7 @@ namespace LabBilling.Forms
             healthPlanGrid.Columns[nameof(InsCompany.mod_host)].Visible = false;
             healthPlanGrid.Columns[nameof(InsCompany.mod_prg)].Visible = false;
             healthPlanGrid.Columns[nameof(InsCompany.mod_user)].Visible = false;
-            healthPlanGrid.Columns[nameof(InsCompany.ClaimFilingIndicatorCode)].Visible = false;
+            //healthPlanGrid.Columns[nameof(InsCompany.ClaimFilingIndicatorCode)].Visible = false;
             healthPlanGrid.Columns[nameof(InsCompany.PayorCode)].Visible = false;
             healthPlanGrid.Columns[nameof(InsCompany.rowguid)].Visible = false;
 
@@ -56,6 +56,7 @@ namespace LabBilling.Forms
             healthPlanGrid.Columns[nameof(InsCompany.PlanName)].Frozen = true;
 
             //set permissions
+            AddPlanButton.Visible = Program.LoggedInUser.CanEditDictionary;
 
         }
 
@@ -80,12 +81,20 @@ namespace LabBilling.Forms
             {
                 string selectedInsCode = healthPlanGrid.SelectedRows[0].Cells[nameof(InsCompany.InsuranceCode)].Value.ToString();
 
-                HealtPlanMaintenanceEditForm form = new HealtPlanMaintenanceEditForm(selectedInsCode);
+                HealthPlanMaintenanceEditForm form = new HealthPlanMaintenanceEditForm(selectedInsCode);
                 form.ShowDialog();
-
+                LoadHealthPlanGrid();
                 return;
             }
 
+        }
+
+        private void AddPlanButton_Click(object sender, EventArgs e)
+        {
+            HealthPlanMaintenanceEditForm form = new HealthPlanMaintenanceEditForm();
+            form.ShowDialog();
+            LoadHealthPlanGrid();
+            return;
         }
     }
 }

@@ -30,13 +30,11 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Login));
             this.panel1 = new System.Windows.Forms.Panel();
+            this.impersonateUserComboBox = new System.Windows.Forms.ComboBox();
+            this.impersonateUserLabel = new System.Windows.Forms.Label();
             this.IntegratedAuthentication = new System.Windows.Forms.CheckBox();
-            this.label4 = new System.Windows.Forms.Label();
-            this.Environment = new System.Windows.Forms.ComboBox();
             this.domain = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.statustext = new System.Windows.Forms.TextBox();
             this.password = new System.Windows.Forms.TextBox();
             this.LoginButton = new System.Windows.Forms.Button();
@@ -44,9 +42,11 @@
             this.label1 = new System.Windows.Forms.Label();
             this.LoginTitle = new System.Windows.Forms.Label();
             this.username = new System.Windows.Forms.TextBox();
-            this.impersonateUserLabel = new System.Windows.Forms.Label();
-            this.impersonateUserComboBox = new System.Windows.Forms.ComboBox();
+            this.setupImage = new System.Windows.Forms.PictureBox();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.setupImage)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.SuspendLayout();
@@ -54,11 +54,10 @@
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.Color.White;
+            this.panel1.Controls.Add(this.setupImage);
             this.panel1.Controls.Add(this.impersonateUserComboBox);
             this.panel1.Controls.Add(this.impersonateUserLabel);
             this.panel1.Controls.Add(this.IntegratedAuthentication);
-            this.panel1.Controls.Add(this.label4);
-            this.panel1.Controls.Add(this.Environment);
             this.panel1.Controls.Add(this.domain);
             this.panel1.Controls.Add(this.label3);
             this.panel1.Controls.Add(this.pictureBox1);
@@ -75,6 +74,26 @@
             this.panel1.Size = new System.Drawing.Size(483, 330);
             this.panel1.TabIndex = 0;
             // 
+            // impersonateUserComboBox
+            // 
+            this.impersonateUserComboBox.FormattingEnabled = true;
+            this.impersonateUserComboBox.Location = new System.Drawing.Point(12, 270);
+            this.impersonateUserComboBox.Name = "impersonateUserComboBox";
+            this.impersonateUserComboBox.Size = new System.Drawing.Size(151, 21);
+            this.impersonateUserComboBox.TabIndex = 13;
+            this.impersonateUserComboBox.Visible = false;
+            this.impersonateUserComboBox.SelectedValueChanged += new System.EventHandler(this.impersonateUserComboBox_SelectedValueChanged);
+            // 
+            // impersonateUserLabel
+            // 
+            this.impersonateUserLabel.AutoSize = true;
+            this.impersonateUserLabel.Location = new System.Drawing.Point(9, 248);
+            this.impersonateUserLabel.Name = "impersonateUserLabel";
+            this.impersonateUserLabel.Size = new System.Drawing.Size(90, 13);
+            this.impersonateUserLabel.TabIndex = 12;
+            this.impersonateUserLabel.Text = "Impersonate User";
+            this.impersonateUserLabel.Visible = false;
+            // 
             // IntegratedAuthentication
             // 
             this.IntegratedAuthentication.AutoSize = true;
@@ -88,25 +107,6 @@
             this.IntegratedAuthentication.Text = "Integrated Authentication";
             this.IntegratedAuthentication.UseVisualStyleBackColor = true;
             this.IntegratedAuthentication.CheckedChanged += new System.EventHandler(this.IntegratedAuthentication_CheckedChanged);
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(-3, 314);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(66, 13);
-            this.label4.TabIndex = 10;
-            this.label4.Text = "Environment";
-            this.label4.Visible = false;
-            // 
-            // Environment
-            // 
-            this.Environment.FormattingEnabled = true;
-            this.Environment.Location = new System.Drawing.Point(69, 309);
-            this.Environment.Name = "Environment";
-            this.Environment.Size = new System.Drawing.Size(92, 21);
-            this.Environment.TabIndex = 9;
-            this.Environment.Visible = false;
             // 
             // domain
             // 
@@ -124,27 +124,6 @@
             this.label3.Size = new System.Drawing.Size(43, 13);
             this.label3.TabIndex = 5;
             this.label3.Text = "Domain";
-            // 
-            // pictureBox1
-            // 
-            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-            this.pictureBox1.Location = new System.Drawing.Point(441, 3);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(17, 17);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pictureBox1.TabIndex = 1;
-            this.pictureBox1.TabStop = false;
-            this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
-            // 
-            // pictureBox2
-            // 
-            this.pictureBox2.Image = global::LabBilling.Properties.Resources.client_login_icon_4;
-            this.pictureBox2.Location = new System.Drawing.Point(13, 68);
-            this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(157, 146);
-            this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox2.TabIndex = 6;
-            this.pictureBox2.TabStop = false;
             // 
             // statustext
             // 
@@ -217,25 +196,37 @@
             this.username.Size = new System.Drawing.Size(258, 26);
             this.username.TabIndex = 2;
             // 
-            // impersonateUserLabel
+            // setupImage
             // 
-            this.impersonateUserLabel.AutoSize = true;
-            this.impersonateUserLabel.Location = new System.Drawing.Point(9, 248);
-            this.impersonateUserLabel.Name = "impersonateUserLabel";
-            this.impersonateUserLabel.Size = new System.Drawing.Size(90, 13);
-            this.impersonateUserLabel.TabIndex = 12;
-            this.impersonateUserLabel.Text = "Impersonate User";
-            this.impersonateUserLabel.Visible = false;
+            this.setupImage.Image = global::LabBilling.Properties.Resources.kisspng_gear_spanners_computer_icons_gear_5abf330af2b385_0314791715224798829941;
+            this.setupImage.Location = new System.Drawing.Point(12, 297);
+            this.setupImage.Name = "setupImage";
+            this.setupImage.Size = new System.Drawing.Size(32, 30);
+            this.setupImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.setupImage.TabIndex = 14;
+            this.setupImage.TabStop = false;
+            this.setupImage.Click += new System.EventHandler(this.setupImage_Click);
             // 
-            // impersonateUserComboBox
+            // pictureBox1
             // 
-            this.impersonateUserComboBox.FormattingEnabled = true;
-            this.impersonateUserComboBox.Location = new System.Drawing.Point(12, 270);
-            this.impersonateUserComboBox.Name = "impersonateUserComboBox";
-            this.impersonateUserComboBox.Size = new System.Drawing.Size(151, 21);
-            this.impersonateUserComboBox.TabIndex = 13;
-            this.impersonateUserComboBox.Visible = false;
-            this.impersonateUserComboBox.SelectedValueChanged += new System.EventHandler(this.impersonateUserComboBox_SelectedValueChanged);
+            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
+            this.pictureBox1.Location = new System.Drawing.Point(441, 3);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(17, 17);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox1.TabIndex = 1;
+            this.pictureBox1.TabStop = false;
+            this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
+            // 
+            // pictureBox2
+            // 
+            this.pictureBox2.Image = global::LabBilling.Properties.Resources.client_login_icon_4;
+            this.pictureBox2.Location = new System.Drawing.Point(13, 68);
+            this.pictureBox2.Name = "pictureBox2";
+            this.pictureBox2.Size = new System.Drawing.Size(157, 146);
+            this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox2.TabIndex = 6;
+            this.pictureBox2.TabStop = false;
             // 
             // Login
             // 
@@ -250,6 +241,7 @@
             this.Load += new System.EventHandler(this.Login_Load);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.setupImage)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             this.ResumeLayout(false);
@@ -270,10 +262,9 @@
         private System.Windows.Forms.TextBox statustext;
         private System.Windows.Forms.TextBox domain;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.ComboBox Environment;
         private System.Windows.Forms.CheckBox IntegratedAuthentication;
         private System.Windows.Forms.ComboBox impersonateUserComboBox;
         private System.Windows.Forms.Label impersonateUserLabel;
+        private System.Windows.Forms.PictureBox setupImage;
     }
 }
