@@ -122,67 +122,67 @@
   </metadata>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="accountToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>194, 22</value>
+    <value>205, 22</value>
   </data>
   <data name="accountToolStripMenuItem.Text" xml:space="preserve">
     <value>Account</value>
   </data>
   <data name="worklistToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>194, 22</value>
+    <value>205, 22</value>
   </data>
   <data name="worklistToolStripMenuItem.Text" xml:space="preserve">
     <value>Worklist</value>
   </data>
   <data name="workqueuesToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>194, 22</value>
+    <value>205, 22</value>
   </data>
   <data name="workqueuesToolStripMenuItem.Text" xml:space="preserve">
     <value>Workqueues (legacy)</value>
   </data>
   <data name="duplicateAccountsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>194, 22</value>
+    <value>205, 22</value>
   </data>
   <data name="duplicateAccountsToolStripMenuItem.Text" xml:space="preserve">
     <value>Duplicate Accounts</value>
   </data>
   <data name="paymentProcessingToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>194, 22</value>
+    <value>205, 22</value>
   </data>
   <data name="paymentProcessingToolStripMenuItem.Text" xml:space="preserve">
     <value>Payment Processing</value>
   </data>
   <data name="batchChargeEntryToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>194, 22</value>
+    <value>205, 22</value>
   </data>
   <data name="batchChargeEntryToolStripMenuItem.Text" xml:space="preserve">
     <value>Batch Charge Entry</value>
   </data>
   <data name="batchRemittanceToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>194, 22</value>
+    <value>205, 22</value>
   </data>
   <data name="batchRemittanceToolStripMenuItem.Text" xml:space="preserve">
     <value>Batch Remittance</value>
   </data>
   <data name="badDebtMaintenanceToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>194, 22</value>
+    <value>205, 22</value>
   </data>
   <data name="badDebtMaintenanceToolStripMenuItem.Text" xml:space="preserve">
-    <value>Bad Debt Maintenance</value>
+    <value>Collections Maintenance</value>
   </data>
   <data name="sSISortToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>153, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="sSISortToolStripMenuItem.Text" xml:space="preserve">
     <value>SSI Sort</value>
   </data>
   <data name="sSISubmissionToolStripMenuItem1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>153, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="sSISubmissionToolStripMenuItem1.Text" xml:space="preserve">
     <value>SSI Submission</value>
   </data>
   <data name="sSISubmissionToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>194, 22</value>
+    <value>205, 22</value>
   </data>
   <data name="sSISubmissionToolStripMenuItem.Text" xml:space="preserve">
     <value>SSI Submission</value>
@@ -200,7 +200,7 @@
     <value>Quest Processing</value>
   </data>
   <data name="questProcessingToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>194, 22</value>
+    <value>205, 22</value>
   </data>
   <data name="questProcessingToolStripMenuItem.Text" xml:space="preserve">
     <value>Quest</value>
@@ -210,25 +210,25 @@
     <value>False</value>
   </data>
   <data name="clientBillsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>194, 22</value>
+    <value>205, 22</value>
   </data>
   <data name="clientBillsToolStripMenuItem.Text" xml:space="preserve">
     <value>Client Bills</value>
   </data>
   <data name="globalBillingToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>194, 22</value>
+    <value>205, 22</value>
   </data>
   <data name="globalBillingToolStripMenuItem.Text" xml:space="preserve">
     <value>Global Billing</value>
   </data>
   <data name="posting835RemitToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>194, 22</value>
+    <value>205, 22</value>
   </data>
   <data name="posting835RemitToolStripMenuItem.Text" xml:space="preserve">
     <value>Posting 835 Remit</value>
   </data>
   <data name="clientBillsNewToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>194, 22</value>
+    <value>205, 22</value>
   </data>
   <data name="clientBillsNewToolStripMenuItem.Text" xml:space="preserve">
     <value>Client Bills (New)</value>
@@ -246,13 +246,13 @@
     <value>Professional</value>
   </data>
   <data name="generateClaimsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>194, 22</value>
+    <value>205, 22</value>
   </data>
   <data name="generateClaimsToolStripMenuItem.Text" xml:space="preserve">
     <value>Generate Claims</value>
   </data>
   <data name="remittancePostingToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>194, 22</value>
+    <value>205, 22</value>
   </data>
   <data name="remittancePostingToolStripMenuItem.Text" xml:space="preserve">
     <value>Remittance Posting</value>
@@ -378,25 +378,25 @@
     <value>&amp;Reports</value>
   </data>
   <data name="userSecurityToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>180, 22</value>
+    <value>174, 22</value>
   </data>
   <data name="userSecurityToolStripMenuItem.Text" xml:space="preserve">
     <value>User Security</value>
   </data>
   <data name="systemParametersToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>180, 22</value>
+    <value>174, 22</value>
   </data>
   <data name="systemParametersToolStripMenuItem.Text" xml:space="preserve">
     <value>System Parameters</value>
   </data>
   <data name="interfaceMappingToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>180, 22</value>
+    <value>174, 22</value>
   </data>
   <data name="interfaceMappingToolStripMenuItem.Text" xml:space="preserve">
     <value>Interface Mapping</value>
   </data>
   <data name="interfaceMonitorToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>180, 22</value>
+    <value>174, 22</value>
   </data>
   <data name="interfaceMonitorToolStripMenuItem.Text" xml:space="preserve">
     <value>Interface Monitor</value>

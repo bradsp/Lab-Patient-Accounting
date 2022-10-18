@@ -30,7 +30,9 @@ namespace LabBilling.Core.DataAccess
         {
             BadDebt badDebt = new BadDebt();
 
-            badDebt = dbConnection.SingleOrDefault<BadDebt>("where rowguid = @0", new SqlParameter() { SqlDbType = SqlDbType.UniqueIdentifier, Value = rowguid });
+            _ = Guid.TryParse(rowguid, out Guid gRowGuid);
+
+            badDebt = dbConnection.SingleOrDefault<BadDebt>("where rowguid = @0", new SqlParameter() { SqlDbType = SqlDbType.UniqueIdentifier, Value = gRowGuid });
 
             badDebt.State = badDebt.StateZip.Substring(0, 2);
             badDebt.Zip = badDebt.StateZip.Substring(3);

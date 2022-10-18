@@ -39,13 +39,9 @@
             this.GenerateCollectionsFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.tsbLoad = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.tsbLoadMailerP = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.tsbWriteOff = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.tsbReadMCLFile = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.tsbPrintGrid = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
             this.tsbSmallBalWriteOff = new System.Windows.Forms.ToolStripButton();
@@ -53,6 +49,11 @@
             this.tspbRecords = new System.Windows.Forms.ToolStripProgressBar();
             this.ssRecords = new System.Windows.Forms.ToolStripStatusLabel();
             this.dgvAccounts = new System.Windows.Forms.DataGridView();
+            this.worklistsToolStripDropDown = new System.Windows.Forms.ToolStripDropDownButton();
+            this.readyForCollectionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.paymentPlanToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.sentToCollectionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.importCollectionsFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tsMain.SuspendLayout();
             this.ssMain.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvAccounts)).BeginInit();
@@ -65,14 +66,11 @@
             this.tsMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsddbtnBadDebt,
             this.toolStripSeparator5,
+            this.worklistsToolStripDropDown,
             this.tsbLoad,
-            this.toolStripSeparator1,
             this.tsbLoadMailerP,
-            this.toolStripSeparator2,
             this.tsbWriteOff,
-            this.toolStripSeparator3,
             this.tsbReadMCLFile,
-            this.toolStripSeparator4,
             this.tsbPrintGrid,
             this.toolStripSeparator6,
             this.tsbSmallBalWriteOff});
@@ -99,7 +97,7 @@
             // 
             this.tsmiSelectAccounts.CheckOnClick = true;
             this.tsmiSelectAccounts.Name = "tsmiSelectAccounts";
-            this.tsmiSelectAccounts.Size = new System.Drawing.Size(204, 22);
+            this.tsmiSelectAccounts.Size = new System.Drawing.Size(194, 22);
             this.tsmiSelectAccounts.Text = "SELECT PAT BILL ACC\'s";
             this.tsmiSelectAccounts.ToolTipText = "Use \"Bad Debt Batch\" on the MCL billing menu";
             this.tsmiSelectAccounts.Visible = false;
@@ -109,15 +107,15 @@
             // 
             this.GeneratePatientBillsToolStripMenuItem.CheckOnClick = true;
             this.GeneratePatientBillsToolStripMenuItem.Name = "GeneratePatientBillsToolStripMenuItem";
-            this.GeneratePatientBillsToolStripMenuItem.Size = new System.Drawing.Size(204, 22);
+            this.GeneratePatientBillsToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
             this.GeneratePatientBillsToolStripMenuItem.Text = "Generate Patient Bills";
             this.GeneratePatientBillsToolStripMenuItem.Click += new System.EventHandler(this.GeneratePatientBillsToolStripMenuItem_Click);
             // 
             // GenerateCollectionsFileToolStripMenuItem
             // 
             this.GenerateCollectionsFileToolStripMenuItem.Name = "GenerateCollectionsFileToolStripMenuItem";
-            this.GenerateCollectionsFileToolStripMenuItem.Size = new System.Drawing.Size(204, 22);
-            this.GenerateCollectionsFileToolStripMenuItem.Text = "Generate Collections File";
+            this.GenerateCollectionsFileToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
+            this.GenerateCollectionsFileToolStripMenuItem.Text = "Send to Collections";
             this.GenerateCollectionsFileToolStripMenuItem.Click += new System.EventHandler(this.GenerateCollectionsFileToolStripMenuItem_Click);
             // 
             // toolStripSeparator5
@@ -133,12 +131,8 @@
             this.tsbLoad.Name = "tsbLoad";
             this.tsbLoad.Size = new System.Drawing.Size(144, 22);
             this.tsbLoad.Text = "Load Grid From Bad Debt";
+            this.tsbLoad.Visible = false;
             this.tsbLoad.Click += new System.EventHandler(this.tsbLoad_Click);
-            // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
             // 
             // tsbLoadMailerP
             // 
@@ -148,12 +142,8 @@
             this.tsbLoadMailerP.Name = "tsbLoadMailerP";
             this.tsbLoadMailerP.Size = new System.Drawing.Size(144, 22);
             this.tsbLoadMailerP.Text = "Load Grid with Mailer \"P\"";
+            this.tsbLoadMailerP.Visible = false;
             this.tsbLoadMailerP.Click += new System.EventHandler(this.tsbLoadMailerP_Click);
-            // 
-            // toolStripSeparator2
-            // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
             // 
             // tsbWriteOff
             // 
@@ -165,11 +155,6 @@
             this.tsbWriteOff.Text = "Write Off";
             this.tsbWriteOff.Click += new System.EventHandler(this.tsbWriteOff_Click);
             // 
-            // toolStripSeparator3
-            // 
-            this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 25);
-            // 
             // tsbReadMCLFile
             // 
             this.tsbReadMCLFile.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
@@ -178,12 +163,8 @@
             this.tsbReadMCLFile.Name = "tsbReadMCLFile";
             this.tsbReadMCLFile.Size = new System.Drawing.Size(64, 22);
             this.tsbReadMCLFile.Text = "READ FILE";
+            this.tsbReadMCLFile.Visible = false;
             this.tsbReadMCLFile.Click += new System.EventHandler(this.tsbReadMCLFile_Click);
-            // 
-            // toolStripSeparator4
-            // 
-            this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(6, 25);
             // 
             // tsbPrintGrid
             // 
@@ -260,6 +241,7 @@
             this.dgvAccounts.DefaultCellStyle = dataGridViewCellStyle2;
             this.dgvAccounts.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dgvAccounts.Location = new System.Drawing.Point(0, 25);
+            this.dgvAccounts.MultiSelect = false;
             this.dgvAccounts.Name = "dgvAccounts";
             dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
@@ -269,10 +251,13 @@
             dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
             this.dgvAccounts.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
+            this.dgvAccounts.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvAccounts.Size = new System.Drawing.Size(1010, 605);
             this.dgvAccounts.TabIndex = 2;
             this.dgvAccounts.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvAccounts_CellClick);
+            this.dgvAccounts.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvAccounts_CellContentClick);
             this.dgvAccounts.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dgvAccounts_CellFormatting);
+            this.dgvAccounts.CellMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dgvAccounts_CellMouseDoubleClick);
             this.dgvAccounts.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dgvAccounts_ColumnHeaderMouseClick);
             this.dgvAccounts.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.dgvAccounts_DataError);
             this.dgvAccounts.RowHeaderMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dgvAccounts_RowHeaderMouseDoubleClick);
@@ -280,7 +265,49 @@
             this.dgvAccounts.RowsRemoved += new System.Windows.Forms.DataGridViewRowsRemovedEventHandler(this.dgvAccounts_RowsRemoved);
             this.dgvAccounts.SelectionChanged += new System.EventHandler(this.DgvAccounts_SelectionChanged);
             // 
-            // frmBadDebt
+            // worklistsToolStripDropDown
+            // 
+            this.worklistsToolStripDropDown.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.worklistsToolStripDropDown.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.readyForCollectionsToolStripMenuItem,
+            this.paymentPlanToolStripMenuItem,
+            this.sentToCollectionsToolStripMenuItem,
+            this.importCollectionsFileToolStripMenuItem});
+            this.worklistsToolStripDropDown.Image = ((System.Drawing.Image)(resources.GetObject("worklistsToolStripDropDown.Image")));
+            this.worklistsToolStripDropDown.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.worklistsToolStripDropDown.Name = "worklistsToolStripDropDown";
+            this.worklistsToolStripDropDown.Size = new System.Drawing.Size(68, 22);
+            this.worklistsToolStripDropDown.Text = "Worklists";
+            // 
+            // readyForCollectionsToolStripMenuItem
+            // 
+            this.readyForCollectionsToolStripMenuItem.Name = "readyForCollectionsToolStripMenuItem";
+            this.readyForCollectionsToolStripMenuItem.Size = new System.Drawing.Size(193, 22);
+            this.readyForCollectionsToolStripMenuItem.Text = "Ready for Collections";
+            this.readyForCollectionsToolStripMenuItem.Click += new System.EventHandler(this.tsbLoad_Click);
+            // 
+            // paymentPlanToolStripMenuItem
+            // 
+            this.paymentPlanToolStripMenuItem.Name = "paymentPlanToolStripMenuItem";
+            this.paymentPlanToolStripMenuItem.Size = new System.Drawing.Size(193, 22);
+            this.paymentPlanToolStripMenuItem.Text = "Payment Plan";
+            this.paymentPlanToolStripMenuItem.Click += new System.EventHandler(this.tsbLoadMailerP_Click);
+            // 
+            // sentToCollectionsToolStripMenuItem
+            // 
+            this.sentToCollectionsToolStripMenuItem.Name = "sentToCollectionsToolStripMenuItem";
+            this.sentToCollectionsToolStripMenuItem.Size = new System.Drawing.Size(193, 22);
+            this.sentToCollectionsToolStripMenuItem.Text = "Sent to Collections";
+            this.sentToCollectionsToolStripMenuItem.Click += new System.EventHandler(this.tsbLoad_Click);
+            // 
+            // importCollectionsFileToolStripMenuItem
+            // 
+            this.importCollectionsFileToolStripMenuItem.Name = "importCollectionsFileToolStripMenuItem";
+            this.importCollectionsFileToolStripMenuItem.Size = new System.Drawing.Size(193, 22);
+            this.importCollectionsFileToolStripMenuItem.Text = "Import Collections File";
+            this.importCollectionsFileToolStripMenuItem.Click += new System.EventHandler(this.tsbReadMCLFile_Click);
+            // 
+            // BadDebtForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -289,8 +316,8 @@
             this.Controls.Add(this.ssMain);
             this.Controls.Add(this.tsMain);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Name = "frmBadDebt";
-            this.Text = "Bad Debt";
+            this.Name = "BadDebtForm";
+            this.Text = "Collection Maintenance";
             this.Load += new System.EventHandler(this.frmBadDebt_Load);
             this.tsMain.ResumeLayout(false);
             this.tsMain.PerformLayout();
@@ -310,12 +337,8 @@
         private System.Windows.Forms.ToolStripButton tsbWriteOff;
         private System.Windows.Forms.ToolStripButton tsbLoad;
         private System.Windows.Forms.ToolStripStatusLabel ssRecords;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripButton tsbLoadMailerP;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripButton tsbReadMCLFile;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
         private System.Windows.Forms.ToolStripButton tsbPrintGrid;
         private System.Windows.Forms.ToolStripProgressBar tspbRecords;
         private System.Windows.Forms.ToolStripDropDownButton tsddbtnBadDebt;
@@ -325,6 +348,11 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
         private System.Windows.Forms.ToolStripButton tsbSmallBalWriteOff;
         private System.Windows.Forms.ToolStripMenuItem GenerateCollectionsFileToolStripMenuItem;
+        private System.Windows.Forms.ToolStripDropDownButton worklistsToolStripDropDown;
+        private System.Windows.Forms.ToolStripMenuItem readyForCollectionsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem paymentPlanToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem sentToCollectionsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem importCollectionsFileToolStripMenuItem;
     }
 }
 

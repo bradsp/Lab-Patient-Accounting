@@ -515,7 +515,7 @@ namespace LabBilling.Forms
             this.Controls.Add(this.AccountNo);
             this.Controls.Add(this.PatientName);
             this.Name = "BadDebtEditForm";
-            this.Text = "Edit Bad Debt Record";
+            this.Text = "Edit Collection Record";
             this.Load += new System.EventHandler(this.BadDebtEditForm_Load);
             this.ResumeLayout(false);
             this.PerformLayout();

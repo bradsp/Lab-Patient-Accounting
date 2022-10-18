@@ -8,6 +8,8 @@ using RFClassLibrary;
 using MCL;
 using System.Drawing.Printing;
 using LabBilling.Logging;
+using LabBilling.Core.Models;
+using Microsoft.Identity.Client;
 
 namespace LabBilling.Forms
 {
@@ -33,44 +35,44 @@ namespace LabBilling.Forms
         ToolStripControlHost m_dpThru;
         ToolStripControlHost m_cboxInclude; // CheckBox
         
-        private void CreateDateTimes()
-        {
-            Log.Instance.Trace($"Entering");
-            int nSert = tsMain.Items.Count;
-            // create the datetime controls for the From and Thru dates
-            m_dpFrom = new ToolStripControlHost(new DateTimePicker());
-            m_dpFrom.Text = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 0, 0, 0).ToString();
-            ((DateTimePicker)m_dpFrom.Control).Format = DateTimePickerFormat.Short;
-            m_dpFrom.Control.Width = 95;
-            m_dpFrom.Control.Refresh();
-            m_dpFrom.Invalidate();
-            tsMain.Items.Insert(tsMain.Items.Count, new ToolStripSeparator());
-            ToolStripLabel tslFrom = new ToolStripLabel("From: ");
-            tsMain.Items.Insert(tsMain.Items.Count, tslFrom);
-            tsMain.Items.Insert(tsMain.Items.Count, m_dpFrom);
+        //private void CreateDateTimes()
+        //{
+        //    Log.Instance.Trace($"Entering");
+        //    int nSert = tsMain.Items.Count;
+        //    // create the datetime controls for the From and Thru dates
+        //    m_dpFrom = new ToolStripControlHost(new DateTimePicker());
+        //    m_dpFrom.Text = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 0, 0, 0).ToString();
+        //    ((DateTimePicker)m_dpFrom.Control).Format = DateTimePickerFormat.Short;
+        //    m_dpFrom.Control.Width = 95;
+        //    m_dpFrom.Control.Refresh();
+        //    m_dpFrom.Invalidate();
+        //    tsMain.Items.Insert(tsMain.Items.Count, new ToolStripSeparator());
+        //    ToolStripLabel tslFrom = new ToolStripLabel("From: ");
+        //    tsMain.Items.Insert(tsMain.Items.Count, tslFrom);
+        //    tsMain.Items.Insert(tsMain.Items.Count, m_dpFrom);
 
-            m_dpThru = new ToolStripControlHost(new DateTimePicker());
-            m_dpThru.Text = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 23, 59, 59).ToString();
-            ((DateTimePicker)m_dpThru.Control).Format = DateTimePickerFormat.Short;
-            m_dpThru.Control.Width = 95;
-            m_dpThru.Control.Refresh();
-            m_dpThru.Invalidate();
+        //    m_dpThru = new ToolStripControlHost(new DateTimePicker());
+        //    m_dpThru.Text = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 23, 59, 59).ToString();
+        //    ((DateTimePicker)m_dpThru.Control).Format = DateTimePickerFormat.Short;
+        //    m_dpThru.Control.Width = 95;
+        //    m_dpThru.Control.Refresh();
+        //    m_dpThru.Invalidate();
 
-            ToolStripLabel tslThru = new ToolStripLabel("Thru: ");
-            tsMain.Items.Insert(tsMain.Items.Count, tslThru);
-            tsMain.Items.Insert(tsMain.Items.Count, m_dpThru);
-            //   tsMain.BackColor = Color.Lavender;
+        //    ToolStripLabel tslThru = new ToolStripLabel("Thru: ");
+        //    tsMain.Items.Insert(tsMain.Items.Count, tslThru);
+        //    tsMain.Items.Insert(tsMain.Items.Count, m_dpThru);
+        //    //   tsMain.BackColor = Color.Lavender;
 
-            // wdk 20100322 added check box
-            ToolStripLabel tslInclude = new ToolStripLabel("COLLECTIONS");
-            m_cboxInclude = new ToolStripControlHost(new CheckBox());
-            m_cboxInclude.Click += new EventHandler(m_cboxInclude_Click);
-            tsMain.Items.Insert(tsMain.Items.Count, tslInclude);
-            tsMain.Items.Insert(tsMain.Items.Count, m_cboxInclude);
+        //    // wdk 20100322 added check box
+        //    ToolStripLabel tslInclude = new ToolStripLabel("COLLECTIONS");
+        //    m_cboxInclude = new ToolStripControlHost(new CheckBox());
+        //    m_cboxInclude.Click += new EventHandler(m_cboxInclude_Click);
+        //    tsMain.Items.Insert(tsMain.Items.Count, tslInclude);
+        //    tsMain.Items.Insert(tsMain.Items.Count, m_cboxInclude);
 
-         //   tsMain.Items.Insert(tsMain.Items.Count, new ToolStripSeparator());
-            tsMain.Refresh();
-        }
+        // //   tsMain.Items.Insert(tsMain.Items.Count, new ToolStripSeparator());
+        //    tsMain.Refresh();
+        //}
 
         void m_cboxInclude_Click(object sender, EventArgs e)
         {
@@ -82,15 +84,11 @@ namespace LabBilling.Forms
         {
             Log.Instance.Trace($"Entering");
             InitializeComponent();
-            //if (args.GetUpperBound(0) < 1)
-            //{
-            //    MessageBox.Show("Not enough args to start the application.");
-            //    Environment.Exit(13);
-            //}
+            
 
-            m_strServer = Program.Server; // args[0].Remove(0, 1);
-            m_strDatabase = Program.Database; // args[1].Remove(0, 1);
-            m_strProductionEnvironment = m_strDatabase.Contains("LIVE")? "LIVE":"TEST";
+            m_strServer = Program.Server; 
+            m_strDatabase = Program.Database;
+            m_strProductionEnvironment = m_strDatabase; //.Contains("LIVE")? "LIVE":"TEST";
 
             string[] strArgs = new string[] { m_strProductionEnvironment, m_strServer, m_strDatabase };
             m_Err = new ERR(strArgs);
@@ -106,7 +104,7 @@ namespace LabBilling.Forms
         private void frmBadDebt_Load(object sender, EventArgs e)
         {
             Log.Instance.Trace($"Entering");
-            CreateDateTimes();
+            //CreateDateTimes();
             m_ViewerPrintDocument = new PrintDocument();
             m_ViewerPrintDocument.DefaultPageSettings.Landscape = false;
             m_rgReport = new ReportGenerator(dgvAccounts, m_ViewerPrintDocument, "BAD DEBT", m_strDatabase);
@@ -136,6 +134,7 @@ namespace LabBilling.Forms
             tspbRecords.Minimum = 0;
             tspbRecords.Maximum = dgvAccounts.Rows.Count;
 
+            #region commented out
             //using (SqlConnection conn = new SqlConnection(
             //string.Format("Data Source={0}; Initial Catalog = {1}; Integrated Security = 'SSPI'",
             //        m_strServer, m_strDatabase)))
@@ -153,7 +152,7 @@ namespace LabBilling.Forms
             //    {
             //        MessageBox.Show(                                                 
             //        string.Format("{0}.\r\n{1}.", MethodBase.GetCurrentMethod().Name, ioe.Message)  , propAppName);
-                    
+
             //    }
             //    catch (SqlException se)
             //    {
@@ -166,9 +165,10 @@ namespace LabBilling.Forms
             //    }
 
             //}
-          
-
             //return;
+
+            #endregion
+
             foreach (DataGridViewRow dr in dgvAccounts.Rows)
             {
                 tspbRecords.PerformStep();
@@ -242,13 +242,12 @@ namespace LabBilling.Forms
                     }
                        
                         
-                    // update notes for this account
-                    m_rNotes.GetRecords(string.Format("account = '{0}'", strAccount));
-                    m_rNotes.propComment = string.Format("Bad debt set by [{0}]", 
-                        System.Environment.UserName);
-                    m_rNotes.AddRecord(string.Format("account = '{0}'", strAccount));
-
-                   
+                // update notes for this account
+                m_rNotes.GetRecords(string.Format("account = '{0}'", strAccount));
+                m_rNotes.propComment = string.Format("Bad debt set by [{0}]", 
+                    System.Environment.UserName);
+                m_rNotes.AddRecord(string.Format("account = '{0}'", strAccount));
+                  
             }
             MessageBox.Show(string.Format("{0} Pat Records Updated",nUpdated), "POSTING FINISHED");
   
@@ -256,11 +255,24 @@ namespace LabBilling.Forms
 
         private void tsbLoad_Click(object sender, EventArgs e)
         {
+            bool sentCollections = false;
+
+            ToolStripMenuItem item = (ToolStripMenuItem)sender;
+
+            if (item.Name == "readyForCollectionsToolStripMenuItem")
+            {
+                sentCollections = false;
+            }
+            else //if(nameof(sender) == "sentToCollectionsToolStripMenuItem")
+            {
+                sentCollections = true;
+            }
+
             Log.Instance.Trace($"Entering");
-            DateTime dtFrom = ((DateTimePicker)m_dpFrom.Control).Value;
-            DateTime dtThru = ((DateTimePicker)m_dpThru.Control).Value;
-            dtFrom = new DateTime(dtFrom.Year, dtFrom.Month, dtFrom.Day, 0, 0, 0);
-            dtThru = new DateTime(dtThru.Year, dtThru.Month, dtThru.Day, 23, 59, 59);
+            //DateTime dtFrom = ((DateTimePicker)m_dpFrom.Control).Value;
+            //DateTime dtThru = ((DateTimePicker)m_dpThru.Control).Value;
+            //dtFrom = new DateTime(dtFrom.Year, dtFrom.Month, dtFrom.Day, 0, 0, 0);
+            //dtThru = new DateTime(dtThru.Year, dtThru.Month, dtThru.Day, 23, 59, 59);
 
             m_dtAccounts = new DataTable("BAD_DEBT");
             m_sdaBadDebt = new SqlDataAdapter();
@@ -269,7 +281,14 @@ namespace LabBilling.Forms
                     m_strServer, m_strDatabase)))
             {
                 string strSelectBadDebt;
-                if (!((CheckBox)m_cboxInclude.Control).Checked)
+                //get last collections sent date
+                SqlCommand cmd = new SqlCommand("select max(cast(date_sent as date)) from bad_debt", conn);
+                conn.Open();
+                var result = cmd.ExecuteScalar();
+                DateTime dtSent = (DateTime)result;
+
+                //if (!((CheckBox)m_cboxInclude.Control).Checked)
+                if(sentCollections)
                 {
                     strSelectBadDebt =
                         string.Format("select datepart(month, date_sent) as [Month], " +
@@ -282,7 +301,7 @@ namespace LabBilling.Forms
                         "inner join pat on pat.account = bad_debt.account_no " +
                         "where date_sent between '{0}' and '{1}' " + //and pat.baddebt_date is null "+
                         "order by service_date ",
-                        dtFrom, dtThru);
+                        dtSent, dtSent.Date.AddHours(23).AddMinutes(59).AddSeconds(59));
                 }
                 else
                 {
@@ -295,9 +314,10 @@ namespace LabBilling.Forms
                     "bad_debt.rowguid " +
                     "from bad_debt " +
                     "inner join pat on pat.account = bad_debt.account_no " +
-                    "where date_sent is null "+
-                    "order by service_date ",
-                    dtFrom, dtThru);
+                    "where date_sent is null " +
+                    "order by service_date ");
+
+                    //dtFrom, dtThru);
 
                 }
                 // special case processing 
@@ -841,6 +861,9 @@ namespace LabBilling.Forms
         private void dgvAccounts_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             Log.Instance.Trace($"Entering");
+            return;
+
+
             if (e.RowIndex == dgvAccounts.NewRowIndex || e.RowIndex < 0)
                 return;
 
@@ -868,6 +891,41 @@ namespace LabBilling.Forms
                     }
                 }
             }    
+        }
+
+        private void dgvAccounts_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            var senderGrid = (DataGridView)sender;
+
+            if (senderGrid.Columns[e.ColumnIndex] is DataGridViewButtonColumn &&
+                e.RowIndex >= 0)
+            {
+                //button clicked
+                //delete the row from the database and grid
+                using (SqlConnection conn = new SqlConnection(Helper.ConnVal))
+                {
+                    if (MessageBox.Show("Are you sure?", "Delete Row", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    {
+                        SqlCommand cmdDelete = new SqlCommand("delete from bad_debt where rowguid = @rowguid", conn);
+                        cmdDelete.Parameters.Add("@rowguid", SqlDbType.UniqueIdentifier).Value = m_dtAccounts.Columns["rowguid"];
+                        cmdDelete.Parameters["@rowguid"].SourceColumn = "rowguid";
+
+                        m_sdaBadDebt.DeleteCommand = cmdDelete;
+
+                        DataRow dr = m_dtAccounts.Rows[e.RowIndex];
+                        dr.Delete();
+
+                        m_sdaBadDebt.Update(m_dtAccounts);
+                    }
+                }
+
+            }
+        }
+
+        private void dgvAccounts_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            Log.Instance.Trace($"Entering");
+            dgvAccounts_RowHeaderMouseDoubleClick(sender, e);
         }
     }
 }
