@@ -37,11 +37,11 @@ namespace LabBilling.Core.DataAccess
             {
                 if(string.IsNullOrEmpty(ins.HolderLastName) || string.IsNullOrEmpty(ins.HolderFirstName))
                 {
-                    if (!Str.ParseName(ins.HolderName.ToString(),
+                    if (!Str.ParseName(ins.HolderFullName.ToString(),
                         out string lname, out string fname, out string mname, out string suffix))
                     {
                         //error parsing name
-                        Log.Instance.Info($"Insurance holder name could not be parsed. {ins.HolderName}");
+                        Log.Instance.Info($"Insurance holder name could not be parsed. {ins.HolderFullName}");
                     }
 
                     ins.HolderLastName = lname;
@@ -50,7 +50,7 @@ namespace LabBilling.Core.DataAccess
                 }
                 else
                 {
-                    ins.HolderName = $"{ins.HolderLastName},{ins.HolderFirstName} {ins.HolderMiddleName}";
+                    ins.HolderFullName = $"{ins.HolderLastName},{ins.HolderFirstName} {ins.HolderMiddleName}";
                 }
 
                 ins.InsCompany = dbConnection.SingleOrDefault<InsCompany>("where code = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = ins.InsCode });
@@ -105,7 +105,7 @@ namespace LabBilling.Core.DataAccess
                 cols.Contains(nameof(Ins.HolderFirstName)) || 
                 cols.Contains(nameof(Ins.HolderMiddleName)))
             {
-                cols.Add(nameof(Ins.HolderName));
+                cols.Add(nameof(Ins.HolderFullName));
             }
             return base.Update(table, cols);
         }

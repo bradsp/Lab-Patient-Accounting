@@ -28,15 +28,12 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.dashboardLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            this.arChart = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.dashboardLayoutPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.arChart)).BeginInit();
             this.SuspendLayout();
             // 
             // dashboardLayoutPanel
@@ -45,7 +42,7 @@
             this.dashboardLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.dashboardLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.dashboardLayoutPanel.Controls.Add(this.pictureBox1, 1, 0);
-            this.dashboardLayoutPanel.Controls.Add(this.chart1, 0, 0);
+            this.dashboardLayoutPanel.Controls.Add(this.arChart, 0, 0);
             this.dashboardLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dashboardLayoutPanel.Location = new System.Drawing.Point(0, 0);
             this.dashboardLayoutPanel.Name = "dashboardLayoutPanel";
@@ -65,22 +62,14 @@
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
             // 
-            // chart1
+            // arChart
             // 
-            chartArea1.Name = "ChartArea1";
-            this.chart1.ChartAreas.Add(chartArea1);
-            this.chart1.Dock = System.Windows.Forms.DockStyle.Fill;
-            legend1.Name = "Legend1";
-            this.chart1.Legends.Add(legend1);
-            this.chart1.Location = new System.Drawing.Point(3, 3);
-            this.chart1.Name = "chart1";
-            series1.ChartArea = "ChartArea1";
-            series1.Legend = "Legend1";
-            series1.Name = "Series1";
-            this.chart1.Series.Add(series1);
-            this.chart1.Size = new System.Drawing.Size(394, 219);
-            this.chart1.TabIndex = 1;
-            this.chart1.Text = "chart1";
+            this.arChart.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.arChart.Location = new System.Drawing.Point(3, 3);
+            this.arChart.Name = "arChart";
+            this.arChart.Size = new System.Drawing.Size(394, 219);
+            this.arChart.TabIndex = 1;
+            this.arChart.Text = "chart1";
             // 
             // DashboardForm
             // 
@@ -94,7 +83,7 @@
             this.Load += new System.EventHandler(this.DashboardForm_Load);
             this.dashboardLayoutPanel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.chart1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.arChart)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -103,6 +92,6 @@
 
         private System.Windows.Forms.TableLayoutPanel dashboardLayoutPanel;
         private System.Windows.Forms.PictureBox pictureBox1;
-        private System.Windows.Forms.DataVisualization.Charting.Chart chart1;
+        private System.Windows.Forms.DataVisualization.Charting.Chart arChart;
     }
 }

@@ -147,7 +147,7 @@ namespace LabBilling.Forms
             insCompany.ProviderNo = providerNoTextBox.Text;
             insCompany.PayerNo = payerNoTextBox.Text;
             insCompany.PayorCode = payorCodeTextBox.Text;
-            insCompany.NThrivePayerNo = nthrivePayerNoLabel.Text;
+            insCompany.NThrivePayerNo = nThrivePayerNoTextBox.Text;
             insCompany.Comment = commentsTextBox.Text;
             insCompany.IsDeleted = !IsActiveCheckBox.Checked;
 

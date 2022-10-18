@@ -11,7 +11,6 @@ using LabBilling.Core.DataAccess;
 using LabBilling.Core.Models;
 using LabBilling.Core;
 using LabBilling.Logging;
-using LabBilling.Views;
 
 namespace LabBilling.Forms
 {

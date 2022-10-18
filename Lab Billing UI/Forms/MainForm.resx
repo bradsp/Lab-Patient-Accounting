@@ -378,34 +378,28 @@
     <value>&amp;Reports</value>
   </data>
   <data name="userSecurityToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>191, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="userSecurityToolStripMenuItem.Text" xml:space="preserve">
     <value>User Security</value>
   </data>
   <data name="systemParametersToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>191, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="systemParametersToolStripMenuItem.Text" xml:space="preserve">
     <value>System Parameters</value>
   </data>
   <data name="interfaceMappingToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>191, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="interfaceMappingToolStripMenuItem.Text" xml:space="preserve">
     <value>Interface Mapping</value>
   </data>
   <data name="interfaceMonitorToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>191, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="interfaceMonitorToolStripMenuItem.Text" xml:space="preserve">
     <value>Interface Monitor</value>
-  </data>
-  <data name="claimValidationRulesToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>191, 22</value>
-  </data>
-  <data name="claimValidationRulesToolStripMenuItem.Text" xml:space="preserve">
-    <value>Claim Validation Rules</value>
   </data>
   <data name="systemAdministrationToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>139, 20</value>
@@ -3909,12 +3903,6 @@
     <value>interfaceMonitorToolStripMenuItem</value>
   </data>
   <data name="&gt;&gt;interfaceMonitorToolStripMenuItem.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;claimValidationRulesToolStripMenuItem.Name" xml:space="preserve">
-    <value>claimValidationRulesToolStripMenuItem</value>
-  </data>
-  <data name="&gt;&gt;claimValidationRulesToolStripMenuItem.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;windowsToolStripMenuItem.Name" xml:space="preserve">

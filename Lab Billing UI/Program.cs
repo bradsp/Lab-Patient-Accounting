@@ -24,7 +24,6 @@ namespace LabBilling
         static void Main()
         {
             LoggedInUser = null;
-
             Application.ThreadException += new System.Threading.ThreadExceptionEventHandler(Application_ThreadException);
             AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
             Log.Instance.Info($"Launching LabBilling");

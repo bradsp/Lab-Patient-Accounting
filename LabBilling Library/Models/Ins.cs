@@ -20,11 +20,19 @@ namespace LabBilling.Core.Models
         [Column("holder_mname")]
         public string HolderMiddleName { get; set; }
         [Column("holder_nme")]
-        public string HolderName { get; set; }
+        public string HolderFullName { get; set; }
         [Column("holder_addr")]
-        public string HolderAddress { get; set; }
+        public string HolderStreetAddress { get; set; }
         [Column("holder_city_st_zip")]
         public string HolderCityStZip { get; set; }
+        [Ignore]
+        public string HolderAddress 
+        { 
+            get
+            {
+                return ($"{HolderStreetAddress}, {HolderCityStZip}");
+            }
+        }
 
         [Ignore]
         public string HolderCity { get; set; }
@@ -43,11 +51,19 @@ namespace LabBilling.Core.Models
         [Column("plan_nme")]
         public string PlanName { get; set; }
         [Column("plan_addr1")]
-        public string PlanAddress1 { get; set; }
+        public string PlanStreetAddress1 { get; set; }
         [Column("plan_addr2")]
-        public string PlanAddress2 { get; set; }
+        public string PlanStreetAddress2 { get; set; }
         [Column("p_city_st")]
         public string PlanCityState { get; set; }
+        [Ignore]
+        public string PlanAddress 
+        { 
+            get
+            {
+                return ($"{PlanStreetAddress1} {PlanStreetAddress2}, {PlanCityState}");
+            } 
+        }
         [Column("policy_num")]
         public string PolicyNumber { get; set; }
         [Column("cert_ssn")]

@@ -28,7 +28,7 @@
     <MapFileExtensions>true</MapFileExtensions>
     <ProductName>Lab Outreach Patient Accounting</ProductName>
     <PublisherName>West Tennessee Healthcare</PublisherName>
-    <ApplicationRevision>5</ApplicationRevision>
+    <ApplicationRevision>6</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
@@ -142,6 +142,12 @@
     </Compile>
     <Compile Include="Forms\InterfaceMonitor.Designer.cs">
       <DependentUpon>InterfaceMonitor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\LookupForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\LookupForm.Designer.cs">
+      <DependentUpon>LookupForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\ProgressForm.cs">
       <SubType>Form</SubType>
@@ -290,6 +296,12 @@
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Library\ProgressBarColor.cs" />
+    <Compile Include="Library\InsuranceLookup.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Library\InsuranceLookup.Designer.cs">
+      <DependentUpon>InsuranceLookup.cs</DependentUpon>
+    </Compile>
     <Compile Include="Library\ProviderLookup.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -431,7 +443,6 @@
       <DependentUpon>UserSecurity.cs</DependentUpon>
     </Compile>
     <Compile Include="Settings.cs" />
-    <Compile Include="Views\PhysicianMaintenanceView.cs" />
     <None Include="Resources\kisspng-gear-spanners-computer-icons-gear-5abf330af2b385.0314791715224798829941.png" />
     <None Include="Resources\wrench-icon.png" />
     <None Include="Lab Billing WinForms UI_TemporaryKey.pfx" />
@@ -461,6 +472,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\InterfaceMonitor.resx">
       <DependentUpon>InterfaceMonitor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\LookupForm.resx">
+      <DependentUpon>LookupForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ProgressForm.resx">
       <DependentUpon>ProgressForm.cs</DependentUpon>
@@ -590,6 +604,9 @@
     <EmbeddedResource Include="Library\MasterGridView\MasterGridViewResource.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>MasterGridViewResource.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Library\InsuranceLookup.resx">
+      <DependentUpon>InsuranceLookup.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Library\ProviderLookup.resx">
       <DependentUpon>ProviderLookup.cs</DependentUpon>

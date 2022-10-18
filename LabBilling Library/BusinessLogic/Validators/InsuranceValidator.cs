@@ -16,7 +16,7 @@ namespace LabBilling.Core.BusinessLogic.Validators
                 .NotEmpty().WithMessage("Ins Holder Last Name is empty.");
             RuleFor(a => a.HolderFirstName)
                 .NotEmpty().WithMessage("Ins Holder First Name is empty.");
-            RuleFor(a => a.HolderAddress)
+            RuleFor(a => a.HolderStreetAddress)
                 .NotEmpty().WithMessage("Ins Holder Address is empty.");
             RuleFor(a => a.HolderCity)
                 .NotEmpty().WithMessage("Ins Holder City is empty.");

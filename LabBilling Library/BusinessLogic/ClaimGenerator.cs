@@ -460,7 +460,7 @@ namespace LabBilling.Core.BusinessLogic
                     {
                         subscriber.Gender = ins.HolderSex.Coalesce(claimData.claimAccount.Pat.Sex);
                         subscriber.DateOfBirth = ins.HolderBirthDate ?? claimData.claimAccount.Pat.BirthDate;
-                        subscriber.Address = ins.HolderAddress.Coalesce(claimData.claimAccount.Pat.Address1);
+                        subscriber.Address = ins.HolderStreetAddress.Coalesce(claimData.claimAccount.Pat.Address1);
                         subscriber.Address2 = string.Empty;
                         subscriber.City = ins.HolderCity.Coalesce(claimData.claimAccount.Pat.City);
                         subscriber.State = ins.HolderState.Coalesce(claimData.claimAccount.Pat.State);
@@ -471,7 +471,7 @@ namespace LabBilling.Core.BusinessLogic
                     {
                         subscriber.Gender = ins.HolderSex;
                         subscriber.DateOfBirth = ins.HolderBirthDate;
-                        subscriber.Address = ins.HolderAddress;
+                        subscriber.Address = ins.HolderStreetAddress;
                         subscriber.Address2 = string.Empty;
                         subscriber.City = ins.HolderCity;
                         subscriber.State = ins.HolderState;

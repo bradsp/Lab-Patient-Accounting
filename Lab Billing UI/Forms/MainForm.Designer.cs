@@ -77,7 +77,6 @@
             this.systemParametersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.interfaceMappingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.interfaceMonitorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.claimValidationRulesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.windowsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cascadeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tileHorizontalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -393,8 +392,7 @@
             this.userSecurityToolStripMenuItem,
             this.systemParametersToolStripMenuItem,
             this.interfaceMappingToolStripMenuItem,
-            this.interfaceMonitorToolStripMenuItem,
-            this.claimValidationRulesToolStripMenuItem});
+            this.interfaceMonitorToolStripMenuItem});
             this.systemAdministrationToolStripMenuItem.Name = "systemAdministrationToolStripMenuItem";
             resources.ApplyResources(this.systemAdministrationToolStripMenuItem, "systemAdministrationToolStripMenuItem");
             // 
@@ -421,12 +419,6 @@
             this.interfaceMonitorToolStripMenuItem.Name = "interfaceMonitorToolStripMenuItem";
             resources.ApplyResources(this.interfaceMonitorToolStripMenuItem, "interfaceMonitorToolStripMenuItem");
             this.interfaceMonitorToolStripMenuItem.Click += new System.EventHandler(this.interfaceMonitorToolStripMenuItem_Click);
-            // 
-            // claimValidationRulesToolStripMenuItem
-            // 
-            this.claimValidationRulesToolStripMenuItem.Name = "claimValidationRulesToolStripMenuItem";
-            resources.ApplyResources(this.claimValidationRulesToolStripMenuItem, "claimValidationRulesToolStripMenuItem");
-            this.claimValidationRulesToolStripMenuItem.Click += new System.EventHandler(this.claimValidationRulesToolStripMenuItem_Click);
             // 
             // windowsToolStripMenuItem
             // 
@@ -584,7 +576,6 @@
         private System.Windows.Forms.ToolStripMenuItem interfaceMappingToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem clientBillsNewToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem interfaceMonitorToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem claimValidationRulesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem worklistToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem generateClaimsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem institutionalToolStripMenuItem;
