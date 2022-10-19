@@ -13,6 +13,7 @@ using LabBilling.Logging;
 using LabBilling.Core.Models;
 using LabBilling.Library;
 using RFClassLibrary;
+using Microsoft.Identity.Client;
 
 
 namespace LabBilling.Forms
@@ -110,40 +111,40 @@ namespace LabBilling.Forms
             CancelValidationButton.Enabled = false;
         }
 
-        private void RunValidation(string accountNo)
-        {
-            if (!string.IsNullOrEmpty(accountNo))
-            {
-                int rowIndex = -1;
-                bool tempAllowUserToAddRows = accountGrid.AllowUserToAddRows;
-                accountGrid.AllowUserToAddRows = false; // Turn off or .Value below will throw null exception
-                DataGridViewRow row = accountGrid.Rows
-                    .Cast<DataGridViewRow>()
-                    .Where(r => r.Cells["Account"].Value.ToString().Equals(accountNo))
-                    .First();
-                rowIndex = row.Index;
-                accountGrid.AllowUserToAddRows = tempAllowUserToAddRows;
+        //private void RunValidation(string accountNo)
+        //{
+        //    if (!string.IsNullOrEmpty(accountNo))
+        //    {
+        //        int rowIndex = -1;
+        //        bool tempAllowUserToAddRows = accountGrid.AllowUserToAddRows;
+        //        accountGrid.AllowUserToAddRows = false; // Turn off or .Value below will throw null exception
+        //        DataGridViewRow row = accountGrid.Rows
+        //            .Cast<DataGridViewRow>()
+        //            .Where(r => r.Cells["Account"].Value.ToString().Equals(accountNo))
+        //            .First();
+        //        rowIndex = row.Index;
+        //        accountGrid.AllowUserToAddRows = tempAllowUserToAddRows;
 
-                Account account;
-                account = accountRepository.GetByAccount(accountNo);
-                if (!accountRepository.Validate(ref account))
-                {
-                    //account has validation errors - update grid
-                    accountGrid[nameof(AccountSearch.ValidationStatus), rowIndex].Value = account.AccountValidationStatus.validation_text;
-                    accountGrid[nameof(AccountSearch.LastValidationDate), rowIndex].Value = DateTime.Now.ToString();
-                    accountGrid[nameof(AccountSearch.Status), rowIndex].Value = "ERROR";
-                    accountRepository.UpdateStatus(accountNo, "NEW");
-                }
-                else
-                {
-                    accountGrid[nameof(AccountSearch.ValidationStatus), rowIndex].Value = "No validation errors";
-                    accountGrid[nameof(AccountSearch.Status), rowIndex].Value = account.Fin.form_type;
-                    accountGrid[nameof(AccountSearch.LastValidationDate), rowIndex].Value = DateTime.Now.ToString();
-                    accountRepository.UpdateStatus(account.AccountNo, account.Fin.form_type);
-                }
+        //        Account account;
+        //        account = accountRepository.GetByAccount(accountNo);
+        //        if (!accountRepository.Validate(ref account))
+        //        {
+        //            //account has validation errors - update grid
+        //            accountGrid[nameof(AccountSearch.ValidationStatus), rowIndex].Value = account.AccountValidationStatus.validation_text;
+        //            accountGrid[nameof(AccountSearch.LastValidationDate), rowIndex].Value = DateTime.Now.ToString();
+        //            accountGrid[nameof(AccountSearch.Status), rowIndex].Value = "ERROR";
+        //            accountRepository.UpdateStatus(accountNo, "NEW");
+        //        }
+        //        else
+        //        {
+        //            accountGrid[nameof(AccountSearch.ValidationStatus), rowIndex].Value = "No validation errors";
+        //            accountGrid[nameof(AccountSearch.Status), rowIndex].Value = account.Fin.ClaimType;
+        //            accountGrid[nameof(AccountSearch.LastValidationDate), rowIndex].Value = DateTime.Now.ToString();
+        //            accountRepository.UpdateStatus(account.AccountNo, account.Fin.ClaimType);
+        //        }
 
-            }
-        }
+        //    }
+        //}
 
         private async Task RunValidationAsync(string accountNo)
         {
@@ -500,6 +501,114 @@ namespace LabBilling.Forms
                 MessageBox.Show("No account selected.");
                 return;
             }
+        }
+
+        private void changeFinancialClassToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Log.Instance.Trace($"Entering");
+
+            var selectedAccount = accountGrid.SelectedRows[0].Cells[nameof(AccountSearch.Account)].Value.ToString();
+            var accts = accounts.FirstOrDefault(x => x.Account == selectedAccount);
+            var account = accountRepository.GetByAccount(selectedAccount);
+
+            string newFinCode = InputDialogs.SelectFinancialCode(accts.FinCode);
+            if (!string.IsNullOrEmpty(newFinCode))
+            {
+
+                //MessageBox.Show(this, $"New financial class is {newFinCode}");
+                try
+                {
+                    accountRepository.ChangeFinancialClass(ref account, newFinCode);
+                    accts.FinCode = account.FinCode;
+                    accountGrid.Refresh();
+                }
+                catch (ArgumentException anex)
+                {
+                    Log.Instance.Error(anex, $"Financial code {anex.ParamName} is not valid.");
+                    MessageBox.Show(this, $"{anex.ParamName} is not a valid financial code. Financial code was not changed.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                catch (Exception ex)
+                {
+                    Log.Instance.Error(ex, $"Error changing financial class.");
+                    MessageBox.Show(this, $"Error changing financial class. Financial code was not changed.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            Log.Instance.Trace($"Exiting");
+        }
+
+        private void changeClientToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Log.Instance.Trace($"Entering");
+            var selectedAccount = accountGrid.SelectedRows[0].Cells[nameof(AccountSearch.Account)].Value.ToString();
+            var accts = accounts.FirstOrDefault(x => x.Account == selectedAccount);
+            var account = accountRepository.GetByAccount(selectedAccount);
+
+            ClientLookupForm clientLookupForm = new ClientLookupForm();
+            ClientRepository clientRepository = new ClientRepository(Helper.ConnVal);
+            clientLookupForm.Datasource = DataCache.Instance.GetClients();
+
+            if (clientLookupForm.ShowDialog() == DialogResult.OK)
+            {
+                string newClient = clientLookupForm.SelectedValue;
+
+                try
+                {
+                    if (accountRepository.ChangeClient(ref account, newClient))
+                    {
+                        accts.ClientMnem = newClient;
+                        accountGrid.Refresh();
+                    }
+                    else
+                    {
+                        MessageBox.Show("Error during update.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error updating client. Client not updated.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    Log.Instance.Error(ex);
+                    return;
+                }
+            }
+
+            Log.Instance.Trace("Exiting");
+        }
+
+        private void changeDateOfServiceToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Log.Instance.Trace($"Entering");
+
+            var selectedAccount = accountGrid.SelectedRows[0].Cells[nameof(AccountSearch.Account)].Value.ToString();
+            var accts = accounts.FirstOrDefault(x => x.Account == selectedAccount);
+            var account = accountRepository.GetByAccount(selectedAccount);
+
+
+            var result = InputDialogs.SelectDateOfService((DateTime)account.TransactionDate);
+
+            try
+            {
+                if (result.newDate != DateTime.MinValue)
+                {
+                    accountRepository.ChangeDateOfService(ref account, result.newDate, result.reason);
+                    accts.ServiceDate = account.TransactionDate;
+                }
+                else
+                {
+                    MessageBox.Show("Date selected is not valid. Date has not been changed.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            catch (ArgumentNullException anex)
+            {
+                Log.Instance.Error(anex, $"Change date of service parameter {anex.ParamName} must contain a value.");
+                MessageBox.Show(this, $"{anex.ParamName} must contain a value. Date of service was not changed.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            catch (Exception ex)
+            {
+                Log.Instance.Error(ex, $"Error changing date of service.");
+                MessageBox.Show(this, $"Error changing date of service. Date of service was not changed.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+            Log.Instance.Trace($"Exiting");
         }
     }
 }

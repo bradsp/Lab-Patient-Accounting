@@ -83,33 +83,33 @@ namespace LabBilling.Forms
             Log.Instance.Trace($"Entering");
             tbClientMnem.Text = dgvClients.SelectedRows[0].Cells["cli_mnem"].Value?.ToString();
             tbClientName.Text = dgvClients.SelectedRows[0].Cells["cli_nme"].Value?.ToString();
-            int cliIndex = _clientList.FindIndex(c => c.cli_mnem == tbClientMnem.Text);
-            tbAddress1.Text = _clientList[cliIndex].addr_1;
-            tbAddress2.Text = _clientList[cliIndex].addr_2;
-            tbCity.Text = _clientList[cliIndex].city;
-            tbContact.Text = _clientList[cliIndex].contact;
-            tbComment.Text = _clientList[cliIndex].comment;
-            tbEmail.Text = _clientList[cliIndex].email;
-            tbPhone.Text = _clientList[cliIndex].phone;
-            tbFax.Text = _clientList[cliIndex].fax;
-            tbZipcode.Text = _clientList[cliIndex].zip;
-            tbMROAddress.Text = _clientList[cliIndex].mro_addr1;
-            tbMROCity.Text = _clientList[cliIndex].mro_city;
-            tbMROName.Text = _clientList[cliIndex].mro_name;
-            tbMROZipcode.Text = _clientList[cliIndex].mro_zip;
-            cbMROState.SelectedValue = _clientList[cliIndex].mro_st ?? "";
-            cbState.SelectedValue = _clientList[cliIndex].st ?? "";
-            cbFeeSched.SelectedValue = _clientList[cliIndex].fee_schedule ?? "";
-            cbEmrType.SelectedValue = _clientList[cliIndex].electronic_billing_type ?? "";
-            cbCounty.SelectedValue = _clientList[cliIndex].county ?? "";
-            cbCostCenter.SelectedValue = _clientList[cliIndex].gl_code ?? "";
-            cbClientType.SelectedValue = _clientList[cliIndex].type.ToString() ?? "";
-            tbClientCode.Text = _clientList[cliIndex].facilityNo;
-            chkBillAtDiscount.Checked = _clientList[cliIndex].bill_at_disc;
+            int cliIndex = _clientList.FindIndex(c => c.ClientMnem == tbClientMnem.Text);
+            tbAddress1.Text = _clientList[cliIndex].StreetAddress1;
+            tbAddress2.Text = _clientList[cliIndex].StreetAddress2;
+            tbCity.Text = _clientList[cliIndex].City;
+            tbContact.Text = _clientList[cliIndex].Contact;
+            tbComment.Text = _clientList[cliIndex].Comment;
+            tbEmail.Text = _clientList[cliIndex].ContactEmail;
+            tbPhone.Text = _clientList[cliIndex].Phone;
+            tbFax.Text = _clientList[cliIndex].Fax;
+            tbZipcode.Text = _clientList[cliIndex].ZipCode;
+            tbMROAddress.Text = _clientList[cliIndex].MroStreetAddress1;
+            tbMROCity.Text = _clientList[cliIndex].MroCity;
+            tbMROName.Text = _clientList[cliIndex].MroName;
+            tbMROZipcode.Text = _clientList[cliIndex].MroZipCode;
+            cbMROState.SelectedValue = _clientList[cliIndex].MroState ?? "";
+            cbState.SelectedValue = _clientList[cliIndex].State ?? "";
+            cbFeeSched.SelectedValue = _clientList[cliIndex].FeeSchedule ?? "";
+            cbEmrType.SelectedValue = _clientList[cliIndex].ElectronicBillingType ?? "";
+            cbCounty.SelectedValue = _clientList[cliIndex].County ?? "";
+            cbCostCenter.SelectedValue = _clientList[cliIndex].GlCode ?? "";
+            cbClientType.SelectedValue = _clientList[cliIndex].Type.ToString() ?? "";
+            tbClientCode.Text = _clientList[cliIndex].FacilityNo;
+            chkBillAtDiscount.Checked = _clientList[cliIndex].ShowDiscountedAmtOnBill;
             chkCCReport.Checked = _clientList[cliIndex].IncludeOnChargeCodeReport;
             chkCOCForms.Checked = false;
             chkDateOrder.Checked = _clientList[cliIndex].PrintInvoiceInDateOrder;
-            chkDoNotBill.Checked = _clientList[cliIndex].do_not_bill;
+            chkDoNotBill.Checked = _clientList[cliIndex].DoNotBill;
             chkPrintCPTonBill.Checked = _clientList[cliIndex].PrintCptOnInvoice;
 
         }
@@ -122,13 +122,13 @@ namespace LabBilling.Forms
             switch(e.ColumnIndex)
             {
                 case 0:
-                    e.Value = client.cli_mnem;
+                    e.Value = client.ClientMnem;
                     break;
                 case 1:
-                    e.Value = client.cli_nme;
+                    e.Value = client.Name;
                     break;
                 case 2:
-                    e.Value = client.deleted;
+                    e.Value = client.IsDeleted;
                     break;
                 default:
                     break;

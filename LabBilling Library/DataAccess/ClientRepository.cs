@@ -3,6 +3,8 @@ using System.Data.SqlClient;
 using LabBilling.Logging;
 using LabBilling.Core.Models;
 using PetaPoco;
+using NPOI.XWPF.UserModel;
+using System.Collections.Generic;
 
 namespace LabBilling.Core.DataAccess
 {
@@ -16,6 +18,18 @@ namespace LabBilling.Core.DataAccess
         public ClientRepository(PetaPoco.Database db) : base(db)
         {
 
+        }
+
+        public List<Client> GetAll(bool includeInactive)
+        {
+            PetaPoco.Sql sql = PetaPoco.Sql.Builder
+                .From(_tableName)
+                .Where($"{GetRealColumn(nameof(Client.IsDeleted))} = @0", includeInactive);
+
+            var queryResult = dbConnection.Fetch<Client>(sql);
+
+            Log.Instance.Trace("Exiting");
+            return queryResult;
         }
 
         public Client GetClient(string clientMnem)

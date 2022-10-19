@@ -1,6 +1,6 @@
 ﻿namespace LabBilling.Forms
 {
-    partial class LookupForm
+    partial class ClientLookupForm
     {
         /// <summary>
         /// Required designer variable.
@@ -80,6 +80,7 @@
             // 
             // cancelButton
             // 
+            this.cancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.cancelButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.cancelButton.Location = new System.Drawing.Point(93, 336);
             this.cancelButton.Name = "cancelButton";
@@ -88,7 +89,7 @@
             this.cancelButton.Text = "&Cancel";
             this.cancelButton.UseVisualStyleBackColor = true;
             // 
-            // LookupForm
+            // ClientLookupForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -104,10 +105,10 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "LookupForm";
+            this.Name = "ClientLookupForm";
             this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "LookupForm";
+            this.Text = "Client Lookup";
             this.Load += new System.EventHandler(this.LookupForm_Load);
             this.Shown += new System.EventHandler(this.LookupForm_Shown);
             ((System.ComponentModel.ISupportInitialize)(this.resultsDataGrid)).EndInit();

@@ -11,20 +11,35 @@ namespace LabBilling.Core.Models
     [PrimaryKey("fin_code", AutoIncrement = false)]
     public class Fin : IBaseEntity
     {
-        public string fin_code { get; set; }
-        public string res_party { get; set; }
-        public string form_type { get; set; }
-        public string chrgsource { get; set; }
-        public string type { get; set; }
-        public string h1500 { get; set; }
-        public string ub92 { get; set; }
+        [Column("fin_code")]
+        public string FinCode { get; set; }
+
+        [Column("res_party")]
+        public string Description { get; set; }
+
+        [Column("form_type")]
+        public string ClaimType { get; set; }
+
+        [Column("chrgsource")]
+        public string ChargeSource { get; set; }
+
+        [Column("type")]
+        public string FinClass { get; set; }
+
+        [Column("h1500")]
+        public string ProfessionalFlag { get; set; }
+
+        [Column("ub92")]
+        public string InstitutionalFlag { get; set; }
         [ResultColumn]
         public DateTime mod_date { get; set; }
         [ResultColumn]
         public string mod_user { get; set; }
         [ResultColumn]
         public string mod_prg { get; set; }
-        public bool deleted { get; set; }
+
+        [Column("deleted")]
+        public bool IsDeleted { get; set; }
         [Ignore]
         public string mod_host { get; set; }
         [Ignore]

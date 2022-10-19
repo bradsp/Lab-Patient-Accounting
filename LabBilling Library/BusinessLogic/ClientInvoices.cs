@@ -81,12 +81,12 @@ namespace LabBilling.Core
             NumberRepository numberdb = new NumberRepository(_connection);
 
             Client client = clientdb.GetClient(clientMnemonic);
-            invoiceModel.ClientName = client.cli_nme;
-            invoiceModel.Address1 = client.addr_1;
-            invoiceModel.Address2 = client.addr_2;
-            invoiceModel.City = client.city;
-            invoiceModel.State = client.st;
-            invoiceModel.ZipCode = client.zip;
+            invoiceModel.ClientName = client.Name;
+            invoiceModel.Address1 = client.StreetAddress1;
+            invoiceModel.Address2 = client.StreetAddress2;
+            invoiceModel.City = client.City;
+            invoiceModel.State = client.State;
+            invoiceModel.ZipCode = client.ZipCode;
             invoiceModel.InvoiceDate = DateTime.Today;
             invoiceModel.InvoiceNo = numberdb.GetNumber("invoice").ToString();
 
@@ -271,7 +271,7 @@ namespace LabBilling.Core
                 //account does not exist - add the account
                 account = new Account();
                 account.AccountNo = clientMnem;
-                account.PatFullName = client.cli_nme;
+                account.PatFullName = client.Name;
                 account.MeditechAccount = clientMnem;
                 account.FinCode = "CLIENT";
                 account.TransactionDate = DateTime.Today;

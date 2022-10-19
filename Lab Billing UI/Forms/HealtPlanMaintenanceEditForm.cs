@@ -40,8 +40,8 @@ namespace LabBilling.Forms
             //load combo boxes
             claimTypeComboBox.DropDownStyle = ComboBoxStyle.DropDown;
 
-            finCodeComboBox.DisplayMember = nameof(Fin.fin_code);
-            finCodeComboBox.ValueMember = nameof(Fin.fin_code);
+            finCodeComboBox.DisplayMember = nameof(Fin.FinCode);
+            finCodeComboBox.ValueMember = nameof(Fin.FinCode);
             finCodeComboBox.DataSource = finRepository.GetAll();
             finCodeComboBox.SelectedIndex = -1;
 

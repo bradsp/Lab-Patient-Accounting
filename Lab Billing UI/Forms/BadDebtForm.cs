@@ -31,9 +31,9 @@ namespace LabBilling.Forms
         string m_strProductionEnvironment = null;
         DataTable m_dtAccounts;
         SqlDataAdapter m_sdaBadDebt; 
-        ToolStripControlHost m_dpFrom;
-        ToolStripControlHost m_dpThru;
-        ToolStripControlHost m_cboxInclude; // CheckBox
+        //ToolStripControlHost m_dpFrom;
+        //ToolStripControlHost m_dpThru;
+        //ToolStripControlHost m_cboxInclude; // CheckBox
         
         //private void CreateDateTimes()
         //{
@@ -98,7 +98,7 @@ namespace LabBilling.Forms
             m_rNotes = new R_notes(m_strServer, m_strDatabase, ref m_Err);
             m_rIns = new R_ins(m_strServer, m_strDatabase, ref m_Err);
 
-            this.Text += string.Format(" {0}", m_strProductionEnvironment);
+            //this.Text += string.Format(" {0}", m_strProductionEnvironment);
         }
 
         private void frmBadDebt_Load(object sender, EventArgs e)
@@ -443,8 +443,8 @@ namespace LabBilling.Forms
             Log.Instance.Trace($"Entering");
             dgvAccounts.Columns.Clear();
 
-            DateTime dtFrom = ((DateTimePicker)m_dpFrom.Control).Value;
-            DateTime dtThru = ((DateTimePicker)m_dpThru.Control).Value;
+            DateTime dtFrom = DateTime.Today; // ((DateTimePicker)m_dpFrom.Control).Value;
+            DateTime dtThru = DateTime.Today.AddHours(23).AddMinutes(59).AddSeconds(59); // ((DateTimePicker)m_dpThru.Control).Value;
 
             m_dtAccounts = new DataTable("BAD_DEBT");
             m_sdaBadDebt = new SqlDataAdapter();
@@ -452,33 +452,33 @@ namespace LabBilling.Forms
             string.Format("Data Source={0}; Initial Catalog = {1}; Integrated Security = 'SSPI'",
                     m_strServer, m_strDatabase)))
             {
-                
+
                 string strSelectBadDebt =
-                    string.Format("with cte as "+
-                    "( select pat.account from pat "+
-                    " inner join acc on acc.account = pat.account "+
-                    " where mailer = 'p' and not acc.status in ('closed','paid_out') ) "+
-                    " , ctepay as ( "+
-                    " select account, convert(varchar(10),max(mod_date),101) as [last chk date] "+
-                    " from chk "+
-                    " group by account ) "+
-                    " , cteBal as ( "+
-                    " select acc.account, cb.total, sum(amt_paid+contractual+write_off)  as [paid] "+
-                    " , cb.total-sum(amt_paid+contractual+write_off) as [BALANCE] "+
-                    " from vw_chrg_bal cb "+
-                    " inner join acc on acc.account = cb.account "+
-                    " left outer join chk on chk.account = cb.account "+
-                    " where not acc.status in ('closed','Paid_out') "+
-                    " group by acc.account, cb.total ) "+
-                    " select cte.account, ctePay.[last chk date] "+
-                    " , cteBal.[BALANCE] "+
-                    " ,datediff(day, ctePay.[last chk date], getdate()) as [Days since payment] "+
-                    " from cte "+
-                    " left outer join ctePay on ctePay.account = cte.account "+
-                    " left outer join cteBal on cteBal.account = cte.account "+
-                    " where datediff(day, ctePay.[last chk date], getdate())  > 110 "+
-                    " order by datediff(day, ctePay.[last chk date], getdate())", 
-                     m_dpFrom, m_dpThru);
+                    string.Format("with cte as " +
+                    "( select pat.account from pat " +
+                    " inner join acc on acc.account = pat.account " +
+                    " where mailer = 'p' and not acc.status in ('closed','paid_out') ) " +
+                    " , ctepay as ( " +
+                    " select account, convert(varchar(10),max(mod_date),101) as [last chk date] " +
+                    " from chk " +
+                    " group by account ) " +
+                    " , cteBal as ( " +
+                    " select acc.account, cb.total, sum(amt_paid+contractual+write_off)  as [paid] " +
+                    " , cb.total-sum(amt_paid+contractual+write_off) as [BALANCE] " +
+                    " from vw_chrg_bal cb " +
+                    " inner join acc on acc.account = cb.account " +
+                    " left outer join chk on chk.account = cb.account " +
+                    " where not acc.status in ('closed','Paid_out') " +
+                    " group by acc.account, cb.total ) " +
+                    " select cte.account, ctePay.[last chk date] " +
+                    " , cteBal.[BALANCE] " +
+                    " ,datediff(day, ctePay.[last chk date], getdate()) as [Days since payment] " +
+                    " from cte " +
+                    " left outer join ctePay on ctePay.account = cte.account " +
+                    " left outer join cteBal on cteBal.account = cte.account " +
+                    " where datediff(day, ctePay.[last chk date], getdate())  > 110 " +
+                    " order by datediff(day, ctePay.[last chk date], getdate())"); 
+                     //dtFrom, dtThru);
 
                 SqlCommand cmdSelect = new SqlCommand(strSelectBadDebt, conn);
                 m_sdaBadDebt.SelectCommand = cmdSelect;

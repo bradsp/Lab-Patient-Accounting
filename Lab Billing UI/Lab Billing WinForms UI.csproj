@@ -143,11 +143,17 @@
     <Compile Include="Forms\InterfaceMonitor.Designer.cs">
       <DependentUpon>InterfaceMonitor.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\LookupForm.cs">
+    <Compile Include="LookupForms\ClientLookupForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\LookupForm.Designer.cs">
-      <DependentUpon>LookupForm.cs</DependentUpon>
+    <Compile Include="LookupForms\ClientLookupForm.Designer.cs">
+      <DependentUpon>ClientLookupForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="LookupForms\InsCompanyLookupForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="LookupForms\InsCompanyLookupForm.Designer.cs">
+      <DependentUpon>InsCompanyLookupForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\ProgressForm.cs">
       <SubType>Form</SubType>
@@ -245,14 +251,15 @@
     <Compile Include="Legacy Forms\ViewerQuestForm.Designer.cs">
       <DependentUpon>ViewerQuestForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Library\FlatCombo.cs">
+    <Compile Include="Library\InputDialogs.cs" />
+    <Compile Include="UserControls\FlatCombo.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Library\FormExtensions.cs" />
-    <Compile Include="Library\LabeledTextBox.cs">
+    <Compile Include="UserControls\LabeledTextBox.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Library\LabeledTextBox.Designer.cs">
+    <Compile Include="UserControls\LabeledTextBox.Designer.cs">
       <DependentUpon>LabeledTextBox.cs</DependentUpon>
     </Compile>
     <Compile Include="Library\MasterGridView\cModule.cs" />
@@ -276,10 +283,10 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Library\MasterGridView\TypeMethods.cs" />
-    <Compile Include="Library\MenuButton.cs">
+    <Compile Include="UserControls\MenuButton.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Library\MultiColumnCombo.cs">
+    <Compile Include="UserControls\MultiColumnCombo.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Library\Opulos.Core\Accordion.cs">
@@ -296,16 +303,16 @@
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Library\ProgressBarColor.cs" />
-    <Compile Include="Library\InsuranceLookup.cs">
+    <Compile Include="UserControls\InsuranceLookup.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Library\InsuranceLookup.Designer.cs">
+    <Compile Include="UserControls\InsuranceLookup.Designer.cs">
       <DependentUpon>InsuranceLookup.cs</DependentUpon>
     </Compile>
-    <Compile Include="Library\ProviderLookup.cs">
+    <Compile Include="UserControls\ProviderLookup.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Library\ProviderLookup.Designer.cs">
+    <Compile Include="UserControls\ProviderLookup.Designer.cs">
       <DependentUpon>ProviderLookup.cs</DependentUpon>
     </Compile>
     <Compile Include="Library\StateComboBox.cs">
@@ -473,8 +480,11 @@
     <EmbeddedResource Include="Forms\InterfaceMonitor.resx">
       <DependentUpon>InterfaceMonitor.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\LookupForm.resx">
-      <DependentUpon>LookupForm.cs</DependentUpon>
+    <EmbeddedResource Include="LookupForms\ClientLookupForm.resx">
+      <DependentUpon>ClientLookupForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LookupForms\InsCompanyLookupForm.resx">
+      <DependentUpon>InsCompanyLookupForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ProgressForm.resx">
       <DependentUpon>ProgressForm.cs</DependentUpon>
@@ -536,7 +546,7 @@
       <DependentUpon>ViewerQuestForm.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Library\LabeledTextBox.resx">
+    <EmbeddedResource Include="UserControls\LabeledTextBox.resx">
       <DependentUpon>LabeledTextBox.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\AboutBox.resx">
@@ -605,10 +615,10 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>MasterGridViewResource.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Library\InsuranceLookup.resx">
+    <EmbeddedResource Include="UserControls\InsuranceLookup.resx">
       <DependentUpon>InsuranceLookup.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Library\ProviderLookup.resx">
+    <EmbeddedResource Include="UserControls\ProviderLookup.resx">
       <DependentUpon>ProviderLookup.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -741,5 +751,6 @@
       <Name>RFClassLibrary</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

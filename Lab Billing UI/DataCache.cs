@@ -18,12 +18,14 @@ namespace LabBilling
         private static FinRepository _finRepository;
         private static InsCompanyRepository _insCompanyRepository;
         private static PhyRepository _phyRepository;
+        private static ClientRepository _clientRepository;
 
         private DataCache() 
         {
             _finRepository = new FinRepository(Helper.ConnVal);
             _insCompanyRepository = new InsCompanyRepository(Helper.ConnVal);
             _phyRepository = new PhyRepository(Helper.ConnVal);
+            _clientRepository = new ClientRepository(Helper.ConnVal);
         }
 
         private static DataCache instance = null;
@@ -65,6 +67,15 @@ namespace LabBilling
             var phys = cache.GetOrAdd("phy", phyGetter);
 
             return phys.ToList();
+        }
+
+        Func<IEnumerable<Client>> clientGetter = () => _clientRepository.GetAll(false);
+
+        public List<Client> GetClients()
+        {
+            var clients = cache.GetOrAdd("client", clientGetter);
+
+            return clients.ToList();
         }
     }
 

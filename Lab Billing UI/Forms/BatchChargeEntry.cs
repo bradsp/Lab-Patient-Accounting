@@ -14,9 +14,12 @@ namespace LabBilling.Forms
 {
     public partial class BatchChargeEntry : Form
     {
-        public List<BatchCharge> Charges { get; set; }
-        private readonly ClientRepository dbClient = new ClientRepository(Helper.ConnVal);
-        private readonly CdmRepository dbCdm = new CdmRepository(Helper.ConnVal);
+        private readonly ClientRepository clientRepository = new ClientRepository(Helper.ConnVal);
+        private readonly CdmRepository cdmRepository = new CdmRepository(Helper.ConnVal);
+        private readonly AccountRepository accountRepository = new AccountRepository(Helper.ConnVal);
+        private List<BatchCharge> charges;
+        private BindingSource chrgBindingSource;
+        private Account currentAccount;
 
         public BatchChargeEntry()
         {
@@ -30,12 +33,10 @@ namespace LabBilling.Forms
 
         private void BatchChargeEntry_Load(object sender, EventArgs e)
         {
-            List<Client> clients = dbClient.GetAll().ToList();
-            Client.DataSource = clients;
-            Client.ValueMember = "cli_mnem";
-            Client.DisplayMember = "cli_nme";
-
-            dgvBatchEntry.DataSource = Charges;
+            charges = new List<BatchCharge>();
+            chrgBindingSource = new BindingSource();
+            chrgBindingSource.DataSource = charges;
+            dgvBatchEntry.DataSource = chrgBindingSource;
 
         }
 
@@ -52,7 +53,7 @@ namespace LabBilling.Forms
                 Cdm cdm = new Cdm();
 
                 //look up cdm number and get amount
-                cdm = dbCdm.GetCdm(dgvBatchEntry[e.ColumnIndex, e.RowIndex].Value.ToString());
+                cdm = cdmRepository.GetCdm(dgvBatchEntry[e.ColumnIndex, e.RowIndex].Value.ToString());
 
                 MessageBox.Show(string.Format("CDM Description: {0}",cdm.Description));
 
@@ -71,17 +72,17 @@ namespace LabBilling.Forms
         private void CDM_Leave(object sender, EventArgs e)
         {
             //look up cdm number and get amount
-            Cdm cdm = dbCdm.GetCdm(CDM.Text);
+            Cdm cdm = cdmRepository.GetCdm(cdmTextBox.Text);
 
             if (cdm == null)
             {
-                MessageBox.Show(string.Format("CDM {0} not found", CDM.Text));
-                CDM.BackColor = Color.Red;
+                MessageBox.Show(string.Format("CDM {0} not found", cdmTextBox.Text));
+                cdmTextBox.BackColor = Color.Red;
             }
             else
             {
                 MessageBox.Show(string.Format("CDM Description: {0}", cdm.Description));
-                CDM.BackColor = Color.White;
+                cdmTextBox.BackColor = Color.White;
             }
 
             //if cdm is not valid, show an error
@@ -90,6 +91,26 @@ namespace LabBilling.Forms
 
         private void AddChargeToGrid_Click(object sender, EventArgs e)
         {
+
+        }
+
+        private void patientSearchButton_Click(object sender, EventArgs e)
+        {
+            PersonSearchForm personSearchForm = new PersonSearchForm();
+            if(personSearchForm.ShowDialog() == DialogResult.OK)
+            {
+                var selectedAccount = personSearchForm.SelectedAccount;
+
+                currentAccount = accountRepository.GetByAccount(selectedAccount);
+
+                AccountNoTextBox.Text = currentAccount.AccountNo;
+                PatientNameTextBox.Text = currentAccount.PatFullName;
+                PatientSSNTextBox.Text = currentAccount.SocSecNo;
+                PatientDOBTextBox.Text = currentAccount.Pat.BirthDate.ToString();
+                clientTextBox.Text = currentAccount.ClientName;
+
+
+            }
 
         }
     }

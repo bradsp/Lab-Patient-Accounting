@@ -35,6 +35,9 @@
             this.accountGrid = new MetroFramework.Controls.MetroGrid();
             this.accountGridContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.holdToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.changeFinancialClassToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.changeClientToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.changeDateOfServiceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ValidateButton = new MetroFramework.Controls.MetroButton();
             this.PostButton = new MetroFramework.Controls.MetroButton();
             this.progressBar = new MetroFramework.Controls.MetroProgressBar();
@@ -107,16 +110,40 @@
             // accountGridContextMenu
             // 
             this.accountGridContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.holdToolStripMenuItem});
+            this.holdToolStripMenuItem,
+            this.changeFinancialClassToolStripMenuItem,
+            this.changeClientToolStripMenuItem,
+            this.changeDateOfServiceToolStripMenuItem});
             this.accountGridContextMenu.Name = "accountGridContextMenu";
-            this.accountGridContextMenu.Size = new System.Drawing.Size(101, 26);
+            this.accountGridContextMenu.Size = new System.Drawing.Size(197, 92);
             // 
             // holdToolStripMenuItem
             // 
             this.holdToolStripMenuItem.Name = "holdToolStripMenuItem";
-            this.holdToolStripMenuItem.Size = new System.Drawing.Size(100, 22);
-            this.holdToolStripMenuItem.Text = "Hold";
+            this.holdToolStripMenuItem.Size = new System.Drawing.Size(196, 22);
+            this.holdToolStripMenuItem.Text = "Hold Claim";
             this.holdToolStripMenuItem.Click += new System.EventHandler(this.holdToolStripMenuItem_Click);
+            // 
+            // changeFinancialClassToolStripMenuItem
+            // 
+            this.changeFinancialClassToolStripMenuItem.Name = "changeFinancialClassToolStripMenuItem";
+            this.changeFinancialClassToolStripMenuItem.Size = new System.Drawing.Size(196, 22);
+            this.changeFinancialClassToolStripMenuItem.Text = "Change Financial Class";
+            this.changeFinancialClassToolStripMenuItem.Click += new System.EventHandler(this.changeFinancialClassToolStripMenuItem_Click);
+            // 
+            // changeClientToolStripMenuItem
+            // 
+            this.changeClientToolStripMenuItem.Name = "changeClientToolStripMenuItem";
+            this.changeClientToolStripMenuItem.Size = new System.Drawing.Size(196, 22);
+            this.changeClientToolStripMenuItem.Text = "Change Client";
+            this.changeClientToolStripMenuItem.Click += new System.EventHandler(this.changeClientToolStripMenuItem_Click);
+            // 
+            // changeDateOfServiceToolStripMenuItem
+            // 
+            this.changeDateOfServiceToolStripMenuItem.Name = "changeDateOfServiceToolStripMenuItem";
+            this.changeDateOfServiceToolStripMenuItem.Size = new System.Drawing.Size(196, 22);
+            this.changeDateOfServiceToolStripMenuItem.Text = "Change Date of Service";
+            this.changeDateOfServiceToolStripMenuItem.Click += new System.EventHandler(this.changeDateOfServiceToolStripMenuItem_Click);
             // 
             // ValidateButton
             // 
@@ -228,5 +255,8 @@
         private MetroFramework.Controls.MetroButton CancelValidationButton;
         private System.Windows.Forms.ContextMenuStrip accountGridContextMenu;
         private System.Windows.Forms.ToolStripMenuItem holdToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem changeFinancialClassToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem changeClientToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem changeDateOfServiceToolStripMenuItem;
     }
 }

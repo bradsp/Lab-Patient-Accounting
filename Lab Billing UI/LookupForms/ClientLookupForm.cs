@@ -1,21 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Configuration;
 using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using LabBilling.Core.Models;
 
 namespace LabBilling.Forms
 {
-    public partial class LookupForm : Form
+    public partial class ClientLookupForm : Form
     {
         public int CharacterLookupCountMin { get; set; } = 3;
-        public List<InsCompany> Datasource { get; set; }
+        public List<Client> Datasource { get; set; }
         public string InitialSearchText { get; set; }
         public string SelectedValue { get; set; }
 
@@ -24,7 +19,7 @@ namespace LabBilling.Forms
         private System.Windows.Forms.Timer _timer;
 
 
-        public LookupForm()
+        public ClientLookupForm()
         {
             InitializeComponent();
             _timer = new System.Windows.Forms.Timer() { Enabled = false, Interval = _timerInterval };
@@ -33,7 +28,7 @@ namespace LabBilling.Forms
 
         private void LookupForm_Load(object sender, EventArgs e)
         {
-
+            searchTextBox.Focus();
         }
 
         private void searchTextBox_KeyUp(object sender, KeyEventArgs e)
@@ -51,21 +46,19 @@ namespace LabBilling.Forms
                 //load box with selectable entries once there are the minumum number of letters in the box
                 if (searchTextBox.Text.Length >= CharacterLookupCountMin)
                 {
-                    var inscQuery =
-                        from insc in Datasource
-                        where insc.PlanName.StartsWith(searchTextBox.Text.ToUpper()) || insc.InsuranceCode.Equals(searchTextBox.Text)
-                        select insc;
+                    var clientQuery =
+                        from client in Datasource
+                        where client.Name.StartsWith(searchTextBox.Text.ToUpper()) || client.ClientMnem.Equals(searchTextBox.Text.ToUpper())
+                        select client;
 
-                    if (inscQuery.Count() > 0)
+                    if (clientQuery.Count() > 0)
                     {
                         skipSelectionChanged = true;
-                        resultsDataGrid.DataSource = inscQuery.ToList();
+                        resultsDataGrid.DataSource = clientQuery.ToList();
                         resultsDataGrid.Columns.OfType<DataGridViewColumn>().ToList().ForEach(col => col.Visible = false);
-                        resultsDataGrid.Columns[nameof(InsCompany.PlanName)].Visible = true;
-                        resultsDataGrid.Columns[nameof(InsCompany.InsuranceCode)].Visible = true;
-                        resultsDataGrid.Columns[nameof(InsCompany.Address1)].Visible = true;
-                        resultsDataGrid.Columns[nameof(InsCompany.CityStateZip)].Visible = true;
-                        resultsDataGrid.Columns[nameof(InsCompany.PlanName)].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+                        resultsDataGrid.Columns[nameof(Client.Name)].Visible = true;
+                        resultsDataGrid.Columns[nameof(Client.ClientMnem)].Visible = true;
+                        resultsDataGrid.Columns[nameof(Client.Name)].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
                         resultsDataGrid.AutoResizeColumns();
                         resultsDataGrid.ClearSelection();
                         skipSelectionChanged = false;
@@ -83,7 +76,7 @@ namespace LabBilling.Forms
                     DataGridViewRow row = resultsDataGrid.SelectedRows[0];
                     if (row != null)
                     {
-                        SelectedValue = row.Cells[nameof(InsCompany.InsuranceCode)].Value.ToString();
+                        SelectedValue = row.Cells[nameof(Client.ClientMnem)].Value.ToString();
                     }
                 }
             }

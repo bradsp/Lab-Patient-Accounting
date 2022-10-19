@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using PetaPoco;
 
 namespace LabBilling.Core.Models
@@ -157,6 +158,8 @@ namespace LabBilling.Core.Models
         public string BillForm { get; set; }
         [Ignore]
         public string BillingType { get; set; }
+
+ 
     }
 
 }

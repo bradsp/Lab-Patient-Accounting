@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Timers;
-using LabBilling.Core.DataAccess;
 using Quartz;
 using Quartz.Impl;
 using Quartz.Impl.Triggers;
@@ -11,7 +10,7 @@ using static Quartz.Logging.OperationName;
 
 namespace LabBillingMQService
 {
-    public class JobProcessor
+    public partial class JobProcessor
     {
         private IScheduler scheduler;
         private const string Group1 = "BusinessTasks";
@@ -69,33 +68,6 @@ namespace LabBillingMQService
             Console.WriteLine($"Account Validation Job initialized. Next run time - {nextFireTime}");
             //if (nextFireTime != null)
             //    Log.Info(Group1 + "+" + trigger1, new Exception(nextFireTime.Value.ToString("u")));
-        }
-
-        public class AccountValidationJob : IJob
-        {
-
-            public Task Execute(IJobExecutionContext context)
-            {
-                Task retVal;
-                try
-                {
-                    retVal =  RunValidation();
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
-                    retVal = Task.CompletedTask;
-                }
-                return retVal;
-            }
-
-            public async Task RunValidation()
-            {
-                AccountRepository accountRepository = new AccountRepository("Server=WTHMCLBILL;Database=MCLTEST;Trusted_Connection=True;");
-                Console.WriteLine("Starting RunValidation job");
-                await Task.Run(() => accountRepository.ValidateUnbilledAccountsAsync());
-            }
-
         }
 
     }

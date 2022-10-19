@@ -13,16 +13,21 @@ namespace LabBilling.Forms
 {
     public partial class NewAccountForm : MetroForm
     {
+
+        public string CreatedAccount;
+        private readonly NumberRepository numberRepository = new NumberRepository(Helper.ConnVal);
+        private readonly AccountRepository accountRepository = new AccountRepository(Helper.ConnVal);
+        private readonly FinRepository finRepository = new FinRepository(Helper.ConnVal);
+        private System.Windows.Forms.Timer _timer;
+        private int _timerInterval = 650;
+
         public NewAccountForm()
         {
             Log.Instance.Trace($"Entering");
             InitializeComponent();
+            _timer = new System.Windows.Forms.Timer() { Enabled = false, Interval = _timerInterval };
+            _timer.Tick += new EventHandler(clientTextBox_KeyUpDone);
         }
-
-        public string CreatedAccount;
-        private readonly NumberRepository numberRepository = new NumberRepository(Helper.ConnVal);
-        private readonly AccountRepository accDB = new AccountRepository(Helper.ConnVal);
-        private readonly FinRepository finRepository = new FinRepository(Helper.ConnVal);
 
         private void AddAccount_Click(object sender, EventArgs e)
         {
@@ -33,13 +38,13 @@ namespace LabBilling.Forms
             }
 
             //if account number is blank - assign a new account number
-            if (AccountNo.Text == "")
+            if (accountNoTextBox.Text == "")
             {
                 //get new account number
-                AccountNo.Text = string.Format("D{0}", numberRepository.GetNumber("account"));
+                accountNoTextBox.Text = string.Format("D{0}", numberRepository.GetNumber("account"));
             }
-            MessageBox.Show("Account Number " + AccountNo.Text + " assigned.");
-            if (AccountNo.Text == "D-1")
+            //MessageBox.Show("Account Number " + AccountNoTextBox.Text + " assigned.");
+            if (accountNoTextBox.Text == "D-1")
             {
                 //error assigning account number
                 MessageBox.Show("Error assigning account number. Process aborted.");
@@ -47,21 +52,24 @@ namespace LabBilling.Forms
             }
             else
             {
-                CreatedAccount = AccountNo.Text;
+                CreatedAccount = accountNoTextBox.Text;
 
                 //create the account
 
                 Account acc = new Account();
-                acc.AccountNo = AccountNo.Text;
-                acc.PatFullName = string.Format("{0},{1} {2}", LastName.Text, FirstName.Text, MiddleName.Text);
-                acc.Pat.PatFullName = string.Format("{0},{1} {2}", LastName.Text, FirstName.Text, MiddleName.Text);
-                acc.Pat.BirthDate = Convert.ToDateTime(DateOfBirth.Text);
-                acc.TransactionDate = Convert.ToDateTime(ServiceDate.Text);
-                acc.Pat.AccountNo = AccountNo.Text;
-                acc.Pat.Sex = PatientSex.SelectedValue.ToString();
-                acc.FinCode = FinancialClass.SelectedValue.ToString(); ;
+                acc.AccountNo = accountNoTextBox.Text;
+                acc.PatLastName = lastNameTextBox.Text;
+                acc.PatFirstName = firstNameTextBox.Text;
+                acc.PatMiddleName = middleNameTextBox.Text;
+                acc.Pat.BirthDate = Convert.ToDateTime(dateOfBirthTextBox.Text);
+                acc.TransactionDate = Convert.ToDateTime(serviceDateTextBox.Text);
+                acc.Pat.AccountNo = accountNoTextBox.Text;
+                acc.Pat.Sex = patientSexComboBox.SelectedValue.ToString();
+                acc.FinCode = financialClassComboBox.SelectedValue.ToString();
+                acc.ClientMnem = clientTextBox.Text;
+                acc.Status = "NEW";
 
-                accDB.AddAccount(acc);
+                accountRepository.AddAccount(acc);
 
                 this.DialogResult = DialogResult.OK;
             }
@@ -71,30 +79,17 @@ namespace LabBilling.Forms
         private void NewAccountForm_Load(object sender, EventArgs e)
         {
             Log.Instance.Trace($"Entering");
-            PatientSex.DataSource = Dictionaries.sexSource.ToList();
-            PatientSex.ValueMember = "Key";
-            PatientSex.DisplayMember = "Value";
+            patientSexComboBox.DataSource = Dictionaries.sexSource.ToList();
+            patientSexComboBox.ValueMember = "Key";
+            patientSexComboBox.DisplayMember = "Value";
 
             #region Setup Financial Code Combobox
-            List<Fin> fins = finRepository.GetAll().ToList();
-
-            DataTable finDataTable = new DataTable(typeof(Fin).Name);
-
-            finDataTable.Columns.Add("fin_code");
-            finDataTable.Columns.Add("res_party");
-            var values = new object[2];
-
-            foreach (Fin fin in fins)
-            {
-                values[0] = fin.fin_code;
-                values[1] = fin.res_party;
-            }
-
-            FinancialClass.Items.Clear();
-            FinancialClass.DisplayMember = "res_party";
-            FinancialClass.ValueMember = "fin_code";
-            FinancialClass.DataSource = finDataTable;
-            FinancialClass.SelectedIndex = -1;
+            List<Fin> fins = DataCache.Instance.GetFins(); // finRepository.GetAll().ToList();
+            
+            financialClassComboBox.DisplayMember = nameof(Fin.Description);
+            financialClassComboBox.ValueMember = nameof(Fin.FinCode);
+            financialClassComboBox.DataSource = fins;
+            financialClassComboBox.SelectedIndex = -1;
 
             #endregion
 
@@ -110,55 +105,55 @@ namespace LabBilling.Forms
         private void LastName_Validating(object sender, CancelEventArgs e)
         {
             Log.Instance.Trace($"Entering");
-            if (string.IsNullOrWhiteSpace(LastName.Text))
+            if (string.IsNullOrWhiteSpace(lastNameTextBox.Text))
             {
                 e.Cancel = true;
-                LastName.Focus();
-                errorProvider1.SetError(LastName, "Name should not be left blank!");
+                lastNameTextBox.Focus();
+                errorProvider1.SetError(lastNameTextBox, "Name should not be left blank!");
             }
             else
             {
                 e.Cancel = false;
-                errorProvider1.SetError(LastName, "");
+                errorProvider1.SetError(lastNameTextBox, "");
             }
         }
 
         private void FirstName_Validating(object sender, CancelEventArgs e)
         {
             Log.Instance.Trace($"Entering");
-            if (string.IsNullOrWhiteSpace(FirstName.Text))
+            if (string.IsNullOrWhiteSpace(firstNameTextBox.Text))
             {
-                errorProvider1.SetError(FirstName, "Name should not be left blank!");
+                errorProvider1.SetError(firstNameTextBox, "Name should not be left blank!");
             }
             else
             {
-                errorProvider1.SetError(FirstName, "");
+                errorProvider1.SetError(firstNameTextBox, "");
             }
         }
 
         private void DateOfBirth_Validating(object sender, CancelEventArgs e)
         {
             Log.Instance.Trace($"Entering");
-            if (!DateOfBirth.MaskCompleted)
+            if (!dateOfBirthTextBox.MaskCompleted)
             {
-                errorProvider1.SetError(DateOfBirth, "Enter a valid date of birth.");
+                errorProvider1.SetError(dateOfBirthTextBox, "Enter a valid date of birth.");
             }
             else
             {
-                errorProvider1.SetError(DateOfBirth, "");
+                errorProvider1.SetError(dateOfBirthTextBox, "");
             }
         }
 
         private void PatientSex_Validating(object sender, CancelEventArgs e)
         {
             Log.Instance.Trace($"Entering");
-            if (PatientSex.SelectedIndex == -1 || PatientSex.SelectedIndex == 0)
+            if (patientSexComboBox.SelectedIndex == -1 || patientSexComboBox.SelectedIndex == 0)
             {
-                errorProvider1.SetError(PatientSex, "Select a valid sex.");
+                errorProvider1.SetError(patientSexComboBox, "Select a valid sex.");
             }
             else
             {
-                errorProvider1.SetError(PatientSex, "");
+                errorProvider1.SetError(patientSexComboBox, "");
             }
 
         }
@@ -166,30 +161,50 @@ namespace LabBilling.Forms
         private void ServiceDate_Validating(object sender, CancelEventArgs e)
         {
             Log.Instance.Trace($"Entering");
-            if (!ServiceDate.MaskCompleted)
+            if (!serviceDateTextBox.MaskCompleted)
             {
-                errorProvider1.SetError(ServiceDate, "Enter a valid date of service.");
+                errorProvider1.SetError(serviceDateTextBox, "Enter a valid date of service.");
             }
             else
             {
-                errorProvider1.SetError(ServiceDate, "");
+                errorProvider1.SetError(serviceDateTextBox, "");
             }
-
         }
 
         private void FinancialClass_Validating(object sender, CancelEventArgs e)
         {
             Log.Instance.Trace($"Entering");
-            if (FinancialClass.SelectedIndex == -1)
-            {
-                errorProvider1.SetError(FinancialClass, "Select a valid financial class.");
-            }
-            else
-            {
-                errorProvider1.SetError(FinancialClass, "");
-            }
+            //if (FinancialClassComboBox.SelectedIndex == -1)
+            //{
+            //    errorProvider1.SetError(FinancialClassComboBox, "Select a valid financial class.");
+            //}
+            //else
+            //{
+            //    errorProvider1.SetError(FinancialClassComboBox, "");
+            //}
 
         }
 
+        private void clientTextBox_KeyUp(object sender, KeyEventArgs e)
+        {
+            _timer.Stop();
+            _timer.Start();
+        }
+
+        private void clientTextBox_KeyUpDone(object sender, EventArgs e)
+        {
+            _timer.Stop();
+
+            ClientLookupForm clientLookupForm = new ClientLookupForm();
+            ClientRepository clientRepository = new ClientRepository(Helper.ConnVal);
+            clientLookupForm.Datasource = DataCache.Instance.GetClients();
+            
+            clientLookupForm.InitialSearchText = clientTextBox.Text;
+
+            if (clientLookupForm.ShowDialog() == DialogResult.OK)
+            {
+                clientTextBox.Text = clientLookupForm.SelectedValue;
+            }
+        }
     }
 }

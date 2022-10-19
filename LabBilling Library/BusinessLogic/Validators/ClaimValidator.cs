@@ -30,7 +30,7 @@ namespace LabBilling.Core.BusinessLogic.Validators
                 .GreaterThan(0).WithMessage("No charges to bill.");
 
 
-            When(a => a.Fin.type == "M", () =>
+            When(a => a.Fin.FinClass == "M", () =>
             {
                 RuleFor(a => a.Pat)
                     .SetValidator(new DemographicsValidator());
@@ -77,7 +77,7 @@ namespace LabBilling.Core.BusinessLogic.Validators
                     .Empty().WithMessage("LMRP Rule Violation");
             });
 
-            When(a => a.Fin.type != "M", () =>
+            When(a => a.Fin.FinClass != "M", () =>
             {
 
 

@@ -79,7 +79,7 @@ namespace LabBilling.Core.DataAccess
         {
             Log.Instance.Debug($"Entering");
 
-            var record = dbConnection.SingleOrDefault<Account>($"where {this.GetRealColumn(typeof(Account), nameof(Account.AccountNo))} = @0", 
+            var record = dbConnection.SingleOrDefault<Account>($"where {this.GetRealColumn(nameof(Account.AccountNo))} = @0", 
                 new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account });
 
             //if(!Str.ParseName(record.PatFullName, out string strLastName, out string strFirstName, out string strMiddleName, out string strSuffix))
@@ -94,10 +94,10 @@ namespace LabBilling.Core.DataAccess
             //    record.PatNameSuffix = strSuffix;
             //}
 
-            if (record.ClientMnem != null)
+            if (!string.IsNullOrEmpty(record.ClientMnem))
             {
                 record.Client = clientRepository.GetClient(record.ClientMnem);
-                record.ClientName = record.Client.cli_nme;
+                record.ClientName = record.Client.Name;
             }
 
             if (!demographicsOnly)
@@ -124,38 +124,41 @@ namespace LabBilling.Core.DataAccess
                     //set default date
                     outpBillStartDate = new DateTime(2012, 4, 1);
                 }
-                if(record.Client.outpatient_billing)
+                if (record.Client != null)
                 {
-                    record.BillingType = "REF LAB";
-                    
-                    if(record.TransactionDate.IsBetween(outpBillStartDate, arbitraryEndDate)
-                        && record.TransactionDate.IsBetween(questStartDate, questEndDate))
+                    if (record.Client.OutpatientBilling)
                     {
-                        if (record.PrimaryInsuranceCode.In("BC", "UMR", "GOLDEN1", "HP", "AETNA", "AG", "HUM", "SECP", "BCA"))
-                            record.BillForm = "UBOP";
-                        else if (record.FinCode == "D")
-                            record.BillForm = "QUEST";
-                        else
-                            record.BillForm = "UNDEFINED";
-                    }
-                }
-                else
-                {
-                    record.BillingType = "REF LAB";
-                    if(record.FinCode == "B" && record.InsurancePrimary.PolicyNumber.StartsWith("ZXK"))
-                    {
-                        record.BillForm = "QUEST";
-                    }
-                    else if(record.FinCode == "D" && record.TransactionDate.IsBetween(questStartDate, questEndDate))
-                    {
-                        record.BillForm = "QUEST";
+                        record.BillingType = "REF LAB";
+
+                        if (record.TransactionDate.IsBetween(outpBillStartDate, arbitraryEndDate)
+                            && record.TransactionDate.IsBetween(questStartDate, questEndDate))
+                        {
+                            if (record.PrimaryInsuranceCode.In("BC", "UMR", "GOLDEN1", "HP", "AETNA", "AG", "HUM", "SECP", "BCA"))
+                                record.BillForm = "UBOP";
+                            else if (record.FinCode == "D")
+                                record.BillForm = "QUEST";
+                            else
+                                record.BillForm = "UNDEFINED";
+                        }
                     }
                     else
                     {
-                        if (record.InsurancePrimary == null)
-                            record.BillForm = "UNDEFINED";
+                        record.BillingType = "REF LAB";
+                        if (record.FinCode == "B" && record.InsurancePrimary.PolicyNumber.StartsWith("ZXK"))
+                        {
+                            record.BillForm = "QUEST";
+                        }
+                        else if (record.FinCode == "D" && record.TransactionDate.IsBetween(questStartDate, questEndDate))
+                        {
+                            record.BillForm = "QUEST";
+                        }
                         else
-                            record.BillForm = record.InsurancePrimary.InsCompany.BillForm;
+                        {
+                            if (record.InsurancePrimary == null)
+                                record.BillForm = "UNDEFINED";
+                            else
+                                record.BillForm = record.InsurancePrimary.InsCompany.BillForm;
+                        }
                     }
                 }
             }
@@ -204,6 +207,8 @@ namespace LabBilling.Core.DataAccess
 
         public void AddAccount(Account acc)
         {
+            if (string.IsNullOrEmpty(acc.Status))
+                acc.Status = "NEW";
             this.Add(acc);
             //patRepository.Add(acc.Pat);
         }
@@ -380,6 +385,16 @@ namespace LabBilling.Core.DataAccess
             return addSuccess;
         }
 
+        public bool ChangeFinancialClass(string account, string newFinCode)
+        {
+            var record = GetByAccount(account);
+
+            if (record != null)
+                return ChangeFinancialClass(ref record, newFinCode);
+            else
+                return false;
+        }
+
         public bool ChangeFinancialClass(ref Account table, string newFinCode)
         {
             Log.Instance.Trace($"Entering");
@@ -417,7 +432,7 @@ namespace LabBilling.Core.DataAccess
                 AddNote(table.AccountNo, $"Financial code updated from {oldFinCode} to {newFinCode}.");
 
                 //reprocess charges if needed due to financial code change.
-                if(newFin.type != oldFin.type)
+                if(newFin.FinClass != oldFin.FinClass)
                 {
                     try
                     {
@@ -437,6 +452,63 @@ namespace LabBilling.Core.DataAccess
             Log.Instance.Trace($"Exiting");
             return updateSuccess;
         }
+
+        public bool ChangeClient(ref Account table, string newClientMnem)
+        {
+            Log.Instance.Trace($"Entering");
+            if (table == null)
+                throw new ArgumentNullException("table");
+            else if (newClientMnem == null)
+                throw new ArgumentNullException("newClientMnem");
+
+            bool updateSuccess = true;
+            string oldClientMnem = table.ClientMnem;
+
+            ClientRepository clientRepository = new ClientRepository(dbConnection);
+            Client oldClient = clientRepository.GetClient(oldClientMnem);
+            Client newClient = clientRepository.GetClient(newClientMnem);
+
+            if(newClient == null)
+                throw new ArgumentException($"Client mnem {newClientMnem} is not valid.", "newClientMnem");
+
+            if(oldClientMnem != newClientMnem)
+            {
+                table.ClientMnem = newClientMnem;
+                table.Client = newClient;
+                table.ClientName = newClient.Name;
+                try
+                {
+                    Update(table, new[] { nameof(Account.ClientMnem) });
+                }
+                catch (Exception ex)
+                {
+                    Log.Instance.Error(ex);
+                    throw new ApplicationException($"Exception updating client for {table.AccountNo}.", ex);
+                }
+                AddNote(table.AccountNo, $"Client updated from {oldClientMnem} to {newClientMnem}.");
+
+                //reprocess charges if fin class is client bill (C) to pick up proper discounts.
+                if (table.Fin.FinClass == "C")
+                {
+                    try
+                    {
+                        chrgRepository.ReprocessCharges(table.AccountNo);
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new ApplicationException("Error reprocessing charges.", ex);
+                    }
+                }
+            }
+            else
+            {
+                updateSuccess = false;
+            }
+
+            Log.Instance.Trace($"Exiting");
+            return updateSuccess;
+        }
+
 
         /// <summary>
         /// Add a charge to an account. The account must exist.
@@ -477,13 +549,13 @@ namespace LabBilling.Core.DataAccess
             //now build the charge & detail records
             chrg.AccountNo = account;
             chrg.Action = "";
-            chrg.BillMethod = fin.form_type;
+            chrg.BillMethod = fin.ClaimType;
             chrg.CDMCode = cdm;
             chrg.Comment = comment;
             chrg.IsCredited = false;
             chrg.Facility = "";
             chrg.FinCode = accData.FinCode;
-            chrg.FinancialType = fin.type;
+            chrg.FinancialType = fin.FinClass;
             chrg.PatFirstName = fn;
             chrg.PatLastName = ln;
             chrg.PatMiddleName = mn;
@@ -511,7 +583,7 @@ namespace LabBilling.Core.DataAccess
                 ChrgDetail chrgDetail = new ChrgDetail();
                 chrgDetail.Cpt4 = fee.Cpt4;
                 chrgDetail.Type = fee.Type;
-                switch (fin.type)
+                switch (fin.FinClass)
                 {
                     case "M":
                         chrgDetail.Amount = fee.MClassPrice;

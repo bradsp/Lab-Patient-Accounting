@@ -99,9 +99,21 @@ namespace LabBilling.Forms
             if(naf.ShowDialog() == DialogResult.OK)
             {
                 SelectedAccount = naf.CreatedAccount;
-                this.DialogResult = DialogResult.OK;
-                return;
+                ClearButton_Click(sender, e);
+                accountSearchText.Text = SelectedAccount;
+                SearchButton_Click(sender, e);
             }
+        }
+
+        private void ClearButton_Click(object sender, EventArgs e)
+        {
+            accountSearchText.Text = string.Empty;
+            mrnSearchText.Text = string.Empty;
+            txtLastName.Text = string.Empty;
+            txtFirstName.Text = string.Empty;
+            ssnSearchText.Text = string.Empty;
+            dobSearchText.Text = string.Empty;
+            cbSexSearch.SelectedIndex = -1;
         }
     }
 }

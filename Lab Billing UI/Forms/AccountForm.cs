@@ -31,7 +31,7 @@ namespace LabBilling.Forms
         private bool InEditMode = false;
         private List<string> changedControls = new List<string>();
         private Dictionary<Control, string> controlColumnMap = new Dictionary<Control, string>();
-        private LookupForm lookupForm = new LookupForm();
+        private InsCompanyLookupForm lookupForm = new InsCompanyLookupForm();
 
         private readonly InsRepository insDB = new InsRepository(Helper.ConnVal);
         private readonly AccountRepository accDB = new AccountRepository(Helper.ConnVal);
@@ -49,7 +49,7 @@ namespace LabBilling.Forms
         private readonly PhyRepository phyRepository = new PhyRepository(Helper.ConnVal);
 
         private const int _timerInterval = 650;
-        private bool skipSelectionChanged = false;
+        //private bool skipSelectionChanged = false;
         private System.Windows.Forms.Timer _timer;
 
         private string _selectedAccount;
@@ -274,8 +274,8 @@ namespace LabBilling.Forms
 
 
             PlanFinCodeComboBox.DataSource = DataCache.Instance.GetFins(); // finDB.GetAll();
-            PlanFinCodeComboBox.DisplayMember = nameof(Fin.res_party);
-            PlanFinCodeComboBox.ValueMember = nameof(Fin.fin_code);
+            PlanFinCodeComboBox.DisplayMember = nameof(Fin.Description);
+            PlanFinCodeComboBox.ValueMember = nameof(Fin.FinCode);
             PlanFinCodeComboBox.SelectedIndex = -1;
 
             #endregion
@@ -307,6 +307,9 @@ namespace LabBilling.Forms
 
         #endregion
 
+        /// <summary>
+        /// Loads account object from database and refreshes the form controls.
+        /// </summary>
         private void LoadAccountData()
         {
             Log.Instance.Trace($"Entering");
@@ -315,6 +318,20 @@ namespace LabBilling.Forms
 
             dxBindingList = new BindingList<PatDiag>(currentAccount.Pat.Diagnoses);
             ShowCreditedChrgCheckBox.Checked = false;
+            LoadSummaryTab();
+            LoadDemographics();
+            LoadCharges();
+            LoadPayments();
+            LoadDx();
+            LoadNotes();
+            LoadBillingActivity();
+        }
+
+        /// <summary>
+        /// Updates form controls from Account object
+        /// </summary>
+        private void RefreshAccountData()
+        {
             LoadSummaryTab();
             LoadDemographics();
             LoadCharges();
@@ -653,7 +670,7 @@ namespace LabBilling.Forms
             }
             if (selectedIns < 0)
             {
-                MetroMessageBox.Show(this, "Insurance Order is not a valid selection.");
+                MessageBox.Show(this, "Insurance Order is not a valid selection.");
                 Log.Instance.Debug("Insurance Order is not a valid selection.");
                 return;
             }
@@ -711,7 +728,7 @@ namespace LabBilling.Forms
             {
                 if (!InEditMode)
                 {
-                    if (MetroMessageBox.Show(this, string.Format("You are adding a new {0} insurance {1}. This will replace the existing {2} insurance. OK to update?",
+                    if (MessageBox.Show(this, string.Format("You are adding a new {0} insurance {1}. This will replace the existing {2} insurance. OK to update?",
                         InsOrderComboBox.SelectedValue, PlanNameTextBox.Text, InsOrderComboBox.SelectedValue), "Existing Insurance", MessageBoxButtons.YesNo) == DialogResult.Yes)
                     {
                         insDB.Update(currentAccount.Insurances[selectedIns]);
@@ -832,12 +849,12 @@ namespace LabBilling.Forms
                 }
                 if (selectedIns < 0)
                 {
-                    MetroMessageBox.Show(this, "Insurance Order is not a valid selection.");
+                    MessageBox.Show(this, "Insurance Order is not a valid selection.");
                     Log.Instance.Debug("Insurance Order is not a valid selection.");
                     return;
                 }
 
-                if (MetroMessageBox.Show(this, string.Format("Delete {0} insurance {1} for this patient?",
+                if (MessageBox.Show(this, string.Format("Delete {0} insurance {1} for this patient?",
                     currentAccount.Insurances[selectedIns].Coverage,
                     currentAccount.Insurances[selectedIns].PlanName),
                     "Delete Insurance", MessageBoxButtons.YesNo)
@@ -1059,7 +1076,7 @@ namespace LabBilling.Forms
                 }
                 catch (Exception ex)
                 {
-                    MetroMessageBox.Show(this, string.Format("Exception {0}", ex.Message));
+                    MessageBox.Show(this, string.Format("Exception {0}", ex.Message));
                 }
                 foreach (DataGridViewColumn col in ChrgDetailDataGrid.Columns)
                 {
@@ -1152,7 +1169,7 @@ namespace LabBilling.Forms
         {
             if (UpdateDxPointersButton.Enabled == true)
             {
-                if (MetroMessageBox.Show(this, "Changes were made to diagnosis pointers. Save changes?", "Save Changes?",
+                if (MessageBox.Show(this, "Changes were made to diagnosis pointers. Save changes?", "Save Changes?",
                     MessageBoxButtons.YesNo, MessageBoxIcon.Question)
                     == DialogResult.Yes)
                 {
@@ -1224,7 +1241,7 @@ namespace LabBilling.Forms
                 catch (Exception ex)
                 {
                     Log.Instance.Error(ex.Message);
-                    MetroMessageBox.Show(this, "Error loading Diagnosis Code Pointer. Exception has been logged. Report to Administrator.");
+                    MessageBox.Show(this, "Error loading Diagnosis Code Pointer. Exception has been logged. Report to Administrator.");
                 }
             }
         }
@@ -1274,7 +1291,7 @@ namespace LabBilling.Forms
             catch (Exception ex)
             {
                 Log.Instance.Error(ex.Message);
-                MetroMessageBox.Show(this, "Error updating charge detail record. Please try again. If error continues, report error to Administrator.");
+                MessageBox.Show(this, "Error updating charge detail record. Please try again. If error continues, report error to Administrator.");
                 return;
             }
 
@@ -1432,7 +1449,7 @@ namespace LabBilling.Forms
                 if (dxBindingList.FirstOrDefault(n => n.Code == selectedCode) != null)
                 {
                     //this code already exists in the list
-                    MetroMessageBox.Show(this, "Diagnosis already entered for this account", "Record Exists", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+                    MessageBox.Show(this, "Diagnosis already entered for this account", "Record Exists", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
                     return;
                 }
 
@@ -1442,7 +1459,7 @@ namespace LabBilling.Forms
 
                 if (maxNo >= 9)
                 {
-                    MetroMessageBox.Show(this, "Maximum number of diagnosis reached.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    MessageBox.Show(this, "Maximum number of diagnosis reached.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 }
                 else
                 {
@@ -1474,7 +1491,7 @@ namespace LabBilling.Forms
                     if (dxBindingList.FirstOrDefault<PatDiag>(n => n.Code == DxQuickAddTextBox.Text) != null)
                     {
                         //this code already exists in the list
-                        MetroMessageBox.Show(this, "Diagnosis already entered for this account", "Record Exists", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+                        MessageBox.Show(this, "Diagnosis already entered for this account", "Record Exists", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
                         DxQuickAddTextBox.Text = "";
                         return;
                     }
@@ -1489,7 +1506,7 @@ namespace LabBilling.Forms
 
                         if (maxNo >= 9)
                         {
-                            MetroMessageBox.Show(this, "Maximum number of diagnosis reached.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                            MessageBox.Show(this, "Maximum number of diagnosis reached.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                             DxQuickAddTextBox.Text = "";
                             return;
                         }
@@ -1544,9 +1561,9 @@ namespace LabBilling.Forms
             currentAccount.Pat.Diagnoses = dxBindingList.ToList<PatDiag>();
 
             if (patDB.SaveDiagnoses(currentAccount.Pat) == true)
-                MetroMessageBox.Show(this, "Diagnoses updated successfully.");
+                MessageBox.Show(this, "Diagnoses updated successfully.");
             else
-                MetroMessageBox.Show(this, "Diagnosis update failed.");
+                MessageBox.Show(this, "Diagnosis update failed.");
         }
 
         private void DiagnosisDataGrid_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
@@ -1632,184 +1649,98 @@ namespace LabBilling.Forms
             else
             {
                 Log.Instance.Error($"Person search returned an empty selected account.");
-                MetroMessageBox.Show(this, "A valid account number was not returned from search. Please try again. If problem persists, report issue to an administrator.");
+                MessageBox.Show(this, "A valid account number was not returned from search. Please try again. If problem persists, report issue to an administrator.");
             }
         }
         private void ChangeDateOfServiceToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Log.Instance.Trace($"Entering");
-            DateTime newDate = DateTime.MinValue;
-
-            Form frm = new Form()
+            var result = InputDialogs.SelectDateOfService((DateTime)currentAccount.TransactionDate);
+             
+            try
             {
-                Text = "Change Date of Service",
-                DialogResult = DialogResult.OK,
-                Width = 400
-            };
-            Label lbl2 = new Label()
-            {
-                Text = "Choose the new date of service",
-                Location = new Point(10, 10),
-                Width = 130
-            };
-            DateTimePicker dateTimePicker = new DateTimePicker()
-            {
-                Name = "newDateFrm",
-                Location = new Point(lbl2.Width + 10, 10),
-                Format = DateTimePickerFormat.Short,
-                Width = 100,
-                Value = (DateTime)currentAccount.TransactionDate
-            };
-            Label lbl1 = new Label()
-            {
-                Text = "Enter Reason for date change",
-                Location = new Point(10, 50),
-                Width = 130
-            };
-            TextBox tbReason = new TextBox()
-            {
-                Location = new Point(lbl1.Width + 10, 50),
-                Width = 200,
-                Multiline = true
-            };
-            Button btnOK = new Button()
-            {
-                Text = "OK",
-                Location = new System.Drawing.Point(10, 80)
-            };
-            Button btnCanel = new Button()
-            {
-                Text = "Cancel",
-                Location = new Point(btnOK.Width + 20, 80)
-            };
-
-
-            btnOK.Click += (o, s) =>
-            {
-                if (string.IsNullOrEmpty(tbReason.Text))
+                if (result.newDate != DateTime.MinValue)
                 {
-                    MetroMessageBox.Show(this, "Must enter a reason.");
-                    return;
+                    accDB.ChangeDateOfService(ref currentAccount, result.newDate, result.reason);
                 }
-                frm.DialogResult = DialogResult.OK;
-                frm.Close();
-            };
-            btnCanel.Click += (o, s) =>
-            {
-                frm.DialogResult = DialogResult.Cancel;
-                frm.Close();
-            };
-
-            frm.Controls.Add(dateTimePicker);
-            frm.Controls.Add(tbReason);
-            frm.Controls.Add(lbl2);
-            frm.Controls.Add(lbl1);
-            frm.Controls.Add(btnOK);
-            frm.Controls.Add(btnCanel);
-            if (frm.ShowDialog() == DialogResult.OK)
-            {
-                MetroMessageBox.Show(this, $"New date is {dateTimePicker}. Reason is {tbReason.Text}");
-                try
+                else
                 {
-                    accDB.ChangeDateOfService(ref currentAccount, dateTimePicker.Value, tbReason.Text);
-                }
-                catch (ArgumentNullException anex)
-                {
-                    Log.Instance.Error(anex, $"Change date of service parameter {anex.ParamName} must contain a value.");
-                    MetroMessageBox.Show(this, $"{anex.ParamName} must contain a value. Date of service was not changed.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-                catch (Exception ex)
-                {
-                    Log.Instance.Error(ex, $"Error changing date of service.");
-                    MetroMessageBox.Show(this, $"Error changing date of service. Date of service was not changed.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Date selected is not valid. Date has not been changed.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
+            catch (ArgumentNullException anex)
+            {
+                Log.Instance.Error(anex, $"Change date of service parameter {anex.ParamName} must contain a value.");
+                MessageBox.Show(this, $"{anex.ParamName} must contain a value. Date of service was not changed.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            catch (Exception ex)
+            {
+                Log.Instance.Error(ex, $"Error changing date of service.");
+                MessageBox.Show(this, $"Error changing date of service. Date of service was not changed.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+            RefreshAccountData();
 
             Log.Instance.Trace($"Exiting");
-
         }
 
         private void ChangeFinancialClassToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Log.Instance.Trace($"Entering");
 
-            //create form to capture new financial code with dropdownlist of codes.
-            string newFinCode = string.Empty;
-
-            Form frm = new Form()
+            string newFinCode = InputDialogs.SelectFinancialCode(currentAccount.FinCode);
+            if (!string.IsNullOrEmpty(newFinCode))
             {
-                Text = "Change Financial Code",
-                DialogResult = DialogResult.OK,
-                Width = 400
-            };
-            Label lbl1 = new Label()
-            {
-                Text = "Choose new financial class",
-                Location = new Point(10, 10),
-                Width = 130
-            };
-            ComboBox cbNewFinCode = new ComboBox()
-            {
-                Location = new Point(lbl1.Width + 10, 10),
-                Width = 200,
-            };
-
-            cbNewFinCode.DataSource = finDB.GetAll();
-            cbNewFinCode.DisplayMember = nameof(Fin.res_party); // "res_party";
-            cbNewFinCode.ValueMember = nameof(Fin.fin_code); // "fin_code";
-            cbNewFinCode.SelectedIndex = -1;
-
-            Button btnOK = new Button()
-            {
-                Text = "OK",
-                Location = new System.Drawing.Point(10, 80)
-            };
-            Button btnCanel = new Button()
-            {
-                Text = "Cancel",
-                Location = new Point(btnOK.Width + 20, 80)
-            };
-
-            btnOK.Click += (o, s) =>
-            {
-
-                frm.DialogResult = DialogResult.OK;
-                frm.Close();
-            };
-            btnCanel.Click += (o, s) =>
-            {
-                frm.DialogResult = DialogResult.Cancel;
-                frm.Close();
-            };
-
-            frm.Controls.Add(cbNewFinCode);
-            frm.Controls.Add(lbl1);
-            frm.Controls.Add(btnOK);
-            frm.Controls.Add(btnCanel);
-            if (frm.ShowDialog() == DialogResult.OK)
-            {
-                MetroMessageBox.Show(this, $"New financial class is {cbNewFinCode.SelectedValue}");
+                //MessageBox.Show(this, $"New financial class is {newFinCode}");
                 try
                 {
-                    accDB.ChangeFinancialClass(ref currentAccount, cbNewFinCode.SelectedValue.ToString());
+                    accDB.ChangeFinancialClass(ref currentAccount, newFinCode);
                 }
                 catch (ArgumentException anex)
                 {
                     Log.Instance.Error(anex, $"Financial code {anex.ParamName} is not valid.");
-                    MetroMessageBox.Show(this, $"{anex.ParamName} is not a valid financial code. Financial code was not changed.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(this, $"{anex.ParamName} is not a valid financial code. Financial code was not changed.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 catch (Exception ex)
                 {
                     Log.Instance.Error(ex, $"Error changing financial class.");
-                    MetroMessageBox.Show(this, $"Error changing financial class. Financial code was not changed.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(this, $"Error changing financial class. Financial code was not changed.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
+
+                RefreshAccountData();
             }
         }
 
         private void ChangeClientToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Log.Instance.Trace($"Entering");
-            MessageBox.Show("Function not implemented.");
+
+            ClientLookupForm clientLookupForm = new ClientLookupForm();
+            ClientRepository clientRepository = new ClientRepository(Helper.ConnVal);
+            clientLookupForm.Datasource = DataCache.Instance.GetClients();
+
+            if (clientLookupForm.ShowDialog() == DialogResult.OK)
+            {
+                string newClient = clientLookupForm.SelectedValue;
+
+                try
+                {
+                    if(accDB.ChangeClient(ref currentAccount, newClient))
+                    {
+                        RefreshAccountData();
+                    }
+                    else
+                    {
+                        MessageBox.Show("Error during update.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+                catch(Exception ex)
+                {
+                    MessageBox.Show("Error updating client. Client not updated.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    Log.Instance.Error(ex);
+                    return;
+                }
+            }
         }
 
         private void AddOnChangeHandlerToInputControls(Control ctrl)
@@ -1862,7 +1793,7 @@ namespace LabBilling.Forms
             Log.Instance.Trace($"Entering");
             if (currentAccount.Status != "HOLD")
             {
-                MetroMessageBox.Show(this, "Account is not in HOLD status. This will only set account status from HOLD to NEW. It will not change any billing information.");
+                MessageBox.Show(this, "Account is not in HOLD status. This will only set account status from HOLD to NEW. It will not change any billing information.");
                 return;
             }
 
@@ -1883,6 +1814,7 @@ namespace LabBilling.Forms
             //AccountRepository accDB = new AccountRepository();
             currentAccount.Status = "NEW";
             accDB.Update(currentAccount);
+            RefreshAccountData();
 
         }
 
@@ -1947,8 +1879,18 @@ namespace LabBilling.Forms
             dgv.Rows[rowIndex].Selected = true;
 
             var claimJson = dgv[nameof(BillingActivity.Text), rowIndex].Value.ToString();
+            ClaimData claim;
+            try
+            {
+                claim = Newtonsoft.Json.JsonConvert.DeserializeObject<ClaimData>(claimJson);
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show("Claim data is not in json format.");
+                Log.Instance.Error(ex);
 
-            ClaimData claim = Newtonsoft.Json.JsonConvert.DeserializeObject<ClaimData>(claimJson);
+                return;
+            }
 
             Billing837 billing837 = new Billing837(Helper.ConnVal);
 

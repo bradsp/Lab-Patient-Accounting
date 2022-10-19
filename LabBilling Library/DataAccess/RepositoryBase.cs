@@ -8,6 +8,7 @@ using PetaPoco.Providers;
 using PetaPoco.Core;
 using System.Reflection;
 using PetaPoco;
+using System.Data.SqlClient;
 
 namespace LabBilling.Core.DataAccess
 {
@@ -50,7 +51,9 @@ namespace LabBilling.Core.DataAccess
         {
             Log.Instance.Trace("Entering");
 
-            string sql = $"SELECT * FROM {_tableName}";
+            //string sql = $"SELECT * FROM {_tableName}";
+            PetaPoco.Sql sql = PetaPoco.Sql.Builder
+                .From(_tableName);
 
             var queryResult = dbConnection.Fetch<Tpoco>(sql);
 
@@ -62,7 +65,9 @@ namespace LabBilling.Core.DataAccess
         {
             Log.Instance.Trace("Entering");
 
-            string sql = $"SELECT * FROM {_tableName}";
+            //string sql = $"SELECT * FROM {_tableName}";
+            PetaPoco.Sql sql = PetaPoco.Sql.Builder
+                .From(_tableName);
 
             var queryResult = await dbConnection.FetchAsync<Tpoco>(sql);
 

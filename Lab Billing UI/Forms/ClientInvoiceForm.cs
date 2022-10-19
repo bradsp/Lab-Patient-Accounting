@@ -40,8 +40,8 @@ namespace LabBilling.Forms
 
             clientList.Insert(0, new Client
             {
-                cli_mnem = null,
-                cli_nme = "--All Clients--"
+                ClientMnem = null,
+                Name = "--All Clients--"
             });
 
 
