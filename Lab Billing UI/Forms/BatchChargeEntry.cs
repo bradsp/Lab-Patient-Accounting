@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using LabBilling.Core.DataAccess;
 using LabBilling.Core.Models;
+using LabBilling.Logging;
 
 namespace LabBilling.Forms
 {
@@ -38,6 +39,16 @@ namespace LabBilling.Forms
             chrgBindingSource.DataSource = charges;
             dgvBatchEntry.DataSource = chrgBindingSource;
 
+            dgvBatchEntry.Columns[nameof(BatchCharge.CDM)].DisplayIndex = 0;
+            dgvBatchEntry.Columns[nameof(BatchCharge.ChargeDescription)].DisplayIndex = 1;
+            dgvBatchEntry.Columns[nameof(BatchCharge.Qty)].DisplayIndex = 2;
+            dgvBatchEntry.Columns[nameof(BatchCharge.AccountNo)].DisplayIndex = 3;
+            dgvBatchEntry.Columns[nameof(BatchCharge.AccountNo)].ReadOnly = true;
+            dgvBatchEntry.Columns[nameof(BatchCharge.CDM)].MinimumWidth = 100;
+            dgvBatchEntry.Columns[nameof(BatchCharge.ChargeDescription)].ReadOnly = true;
+            dgvBatchEntry.Columns[nameof(BatchCharge.ChargeDescription)].FillWeight = 100;
+            dgvBatchEntry.Columns[nameof(BatchCharge.ChargeDescription)].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            dgvBatchEntry.AutoResizeColumns();
         }
 
         private void dgvBatchEntry_CellEndEdit(object sender, DataGridViewCellEventArgs e)
@@ -47,51 +58,85 @@ namespace LabBilling.Forms
 
         private void dgvBatchEntry_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
-            if(dgvBatchEntry.Columns[e.ColumnIndex].Name == "CDM")
+            switch (dgvBatchEntry.Columns[e.ColumnIndex].Name)
             {
+                case nameof(BatchCharge.CDM):
+                    Cdm cdm = new Cdm();
+                    //look up cdm number and get amount
+                    cdm = cdmRepository.GetCdm(dgvBatchEntry[e.ColumnIndex, e.RowIndex].Value.ToString());
+                    if (cdm != null)
+                    {
+                        dgvBatchEntry[nameof(BatchCharge.ChargeDescription), e.RowIndex].Value = cdm.Description;
+                        dgvBatchEntry[nameof(BatchCharge.AccountNo), e.RowIndex].Value = accountNoTextBox.Text;
+                        dgvBatchEntry[nameof(BatchCharge.Qty), e.RowIndex].Value = 1;
+                    }
+                    else
+                    {
+                        //pop a cdm search dialog
+                        CdmLookupForm cdmLookupForm = new CdmLookupForm();
+                        cdmLookupForm.Datasource = DataCache.Instance.GetCdms();
 
-                Cdm cdm = new Cdm();
+                        cdmLookupForm.InitialSearchText = dgvBatchEntry[e.ColumnIndex, e.RowIndex].Value.ToString();
+                        if (cdmLookupForm.ShowDialog() == DialogResult.OK)
+                        {
+                            dgvBatchEntry[e.ColumnIndex, e.RowIndex].Value = cdmLookupForm.SelectedValue;
+                            cdm = cdmRepository.GetCdm(cdmLookupForm.SelectedValue);
+                            if (cdm != null)
+                            {
+                                dgvBatchEntry[nameof(BatchCharge.ChargeDescription), e.RowIndex].Value = cdm.Description;
+                                dgvBatchEntry[nameof(BatchCharge.AccountNo), e.RowIndex].Value = accountNoTextBox.Text;
+                                dgvBatchEntry[nameof(BatchCharge.Qty), e.RowIndex].Value = 1;
 
-                //look up cdm number and get amount
-                cdm = cdmRepository.GetCdm(dgvBatchEntry[e.ColumnIndex, e.RowIndex].Value.ToString());
+                                dgvBatchEntry.Focus();
+                                dgvBatchEntry.CurrentCell = dgvBatchEntry[nameof(BatchCharge.Qty), 0];
+                                dgvBatchEntry.BeginEdit(true);
+                            }
+                            else
+                            {
+                                dgvBatchEntry[e.ColumnIndex, e.RowIndex].Value = string.Empty;
 
-                MessageBox.Show(string.Format("CDM Description: {0}",cdm.Description));
-
-                //if cdm is not valid, show an error
-
-
+                                dgvBatchEntry.Focus();
+                                dgvBatchEntry.CurrentCell = dgvBatchEntry[nameof(BatchCharge.CDM), 0];
+                                dgvBatchEntry.BeginEdit(true);
+                            }
+                        }
+                    }
+                    break;
+                default:
+                    break;
             }
         }
 
-        private void SaveCharges_Click(object sender, EventArgs e)
+        private void PostCharges_Click(object sender, EventArgs e)
         {
             //loop through rows to write charges
 
-        }
-
-        private void CDM_Leave(object sender, EventArgs e)
-        {
-            //look up cdm number and get amount
-            Cdm cdm = cdmRepository.GetCdm(cdmTextBox.Text);
-
-            if (cdm == null)
+            foreach(var charge in charges)
             {
-                MessageBox.Show(string.Format("CDM {0} not found", cdmTextBox.Text));
-                cdmTextBox.BackColor = Color.Red;
-            }
-            else
-            {
-                MessageBox.Show(string.Format("CDM Description: {0}", cdm.Description));
-                cdmTextBox.BackColor = Color.White;
+                try
+                {
+                    accountRepository.AddCharge(charge.AccountNo, charge.CDM, charge.Qty, (DateTime)currentAccount.TransactionDate);
+                }
+                catch(Exception ex)
+                {
+                    MessageBox.Show("Error posting charge. Process aborted.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    Log.Instance.Error(ex);
+                    break;
+                }
             }
 
-            //if cdm is not valid, show an error
+            //clear the form
+            currentAccount = null;
+            patientDOBTextBox.Text = string.Empty;
+            patientNameTextBox.Text = string.Empty;
+            serviceDateTextBox.Text = string.Empty;
+            fincodeTextBox.Text = string.Empty;
+            clientTextBox.Text = string.Empty;
+            accountNoTextBox.Text = string.Empty;
 
-        }
-
-        private void AddChargeToGrid_Click(object sender, EventArgs e)
-        {
-
+            charges = new List<BatchCharge>();
+            dgvBatchEntry.Rows.Clear();
+            dgvBatchEntry.Refresh();
         }
 
         private void patientSearchButton_Click(object sender, EventArgs e)
@@ -103,15 +148,36 @@ namespace LabBilling.Forms
 
                 currentAccount = accountRepository.GetByAccount(selectedAccount);
 
-                AccountNoTextBox.Text = currentAccount.AccountNo;
-                PatientNameTextBox.Text = currentAccount.PatFullName;
-                PatientSSNTextBox.Text = currentAccount.SocSecNo;
-                PatientDOBTextBox.Text = currentAccount.Pat.BirthDate.ToString();
+                accountNoTextBox.Text = currentAccount.AccountNo;
+                patientNameTextBox.Text = currentAccount.PatFullName;
+                patientDOBTextBox.Text = ((DateTime)(currentAccount.Pat.BirthDate)).ToShortDateString();
                 clientTextBox.Text = currentAccount.ClientName;
+                fincodeTextBox.Text = currentAccount.FinCode;
+                serviceDateTextBox.Text = ((DateTime)(currentAccount.TransactionDate)).ToShortDateString();
 
-
+                dgvBatchEntry.Focus();
+                dgvBatchEntry.CurrentCell = dgvBatchEntry[nameof(BatchCharge.CDM), 0];
+                dgvBatchEntry.BeginEdit(true);
             }
 
+        }
+
+        private void dgvBatchEntry_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
+        {
+
+        }
+
+        private void dgvBatchEntry_RowEnter(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
+        private void dgvBatchEntry_CellEnter(object sender, DataGridViewCellEventArgs e)
+        {
+            if (dgvBatchEntry.CurrentRow.Cells[e.ColumnIndex].ReadOnly)
+            {
+                SendKeys.Send("{tab}");
+            }
         }
     }
 }

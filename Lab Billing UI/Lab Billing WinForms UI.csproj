@@ -143,6 +143,12 @@
     <Compile Include="Forms\InterfaceMonitor.Designer.cs">
       <DependentUpon>InterfaceMonitor.cs</DependentUpon>
     </Compile>
+    <Compile Include="LookupForms\CdmLookupForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="LookupForms\CdmLookupForm.Designer.cs">
+      <DependentUpon>CdmLookupForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="LookupForms\ClientLookupForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -479,6 +485,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\InterfaceMonitor.resx">
       <DependentUpon>InterfaceMonitor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LookupForms\CdmLookupForm.resx">
+      <DependentUpon>CdmLookupForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="LookupForms\ClientLookupForm.resx">
       <DependentUpon>ClientLookupForm.cs</DependentUpon>

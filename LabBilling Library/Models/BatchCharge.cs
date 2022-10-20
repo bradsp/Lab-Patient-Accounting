@@ -12,7 +12,6 @@ namespace LabBilling.Core.Models
         public string CDM { get; set; }
         public string ChargeDescription { get; set; }
         public int Qty { get; set; }
-        public float Amount { get; set; }
-        public string Comment { get; set; }
+        //public string Comment { get; set; }
     }
 }

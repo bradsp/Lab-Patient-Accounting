@@ -19,6 +19,7 @@ namespace LabBilling
         private static InsCompanyRepository _insCompanyRepository;
         private static PhyRepository _phyRepository;
         private static ClientRepository _clientRepository;
+        private static CdmRepository _cdmRepository;
 
         private DataCache() 
         {
@@ -26,6 +27,7 @@ namespace LabBilling
             _insCompanyRepository = new InsCompanyRepository(Helper.ConnVal);
             _phyRepository = new PhyRepository(Helper.ConnVal);
             _clientRepository = new ClientRepository(Helper.ConnVal);
+            _cdmRepository = new CdmRepository(Helper.ConnVal);
         }
 
         private static DataCache instance = null;
@@ -76,6 +78,15 @@ namespace LabBilling
             var clients = cache.GetOrAdd("client", clientGetter);
 
             return clients.ToList();
+        }
+
+        Func<IEnumerable<Cdm>> cdmGetter = () => _cdmRepository.GetAll(false);
+
+        public List<Cdm> GetCdms()
+        {
+            var cdms = cache.GetOrAdd("cdm", cdmGetter);
+
+            return cdms.ToList();
         }
     }
 
