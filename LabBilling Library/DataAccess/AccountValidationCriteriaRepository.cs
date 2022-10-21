@@ -28,7 +28,7 @@ namespace LabBilling.Core.DataAccess
 
         public List<AccountValidationCriteria> GetByRuleId(int ruleId)
         {
-            Log.Instance.Trace("$Entering");
+            Log.Instance.Trace("Entering");
 
             var sql = PetaPoco.Sql.Builder
                 .Where("rule_id = @0 ", ruleId);

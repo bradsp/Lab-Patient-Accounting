@@ -158,7 +158,17 @@ namespace LabBilling.Core.Models
         public string BillForm { get; set; }
         [Ignore]
         public string BillingType { get; set; }
-
+        [Ignore]
+        public bool SentToCollections 
+        { 
+            get
+            {
+                if (this.Pat.SentToCollectionsDate != null)
+                    return true;
+                else
+                    return false;
+            }
+        }
  
     }
 

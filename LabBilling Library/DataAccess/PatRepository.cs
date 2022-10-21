@@ -35,7 +35,7 @@ namespace LabBilling.Core.DataAccess
 
         public Pat GetByAccount(string account)
         {
-            Log.Instance.Debug("$Entering");
+            Log.Instance.Debug("Entering");
 
             var record = dbConnection.SingleOrDefault<Pat>("where account = @0",
                 new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account });

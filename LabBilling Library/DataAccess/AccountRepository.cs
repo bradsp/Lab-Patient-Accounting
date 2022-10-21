@@ -143,21 +143,25 @@ namespace LabBilling.Core.DataAccess
                     }
                     else
                     {
-                        record.BillingType = "REF LAB";
-                        if (record.FinCode == "B" && record.InsurancePrimary.PolicyNumber.StartsWith("ZXK"))
+                        if (record.InsurancePrimary != null)
                         {
-                            record.BillForm = "QUEST";
-                        }
-                        else if (record.FinCode == "D" && record.TransactionDate.IsBetween(questStartDate, questEndDate))
-                        {
-                            record.BillForm = "QUEST";
+                            record.BillingType = "REF LAB";
+                            if (record.FinCode == "B" && record.InsurancePrimary.PolicyNumber.StartsWith("ZXK"))
+                            {
+                                record.BillForm = "QUEST";
+                            }
+                            else if (record.FinCode == "D" && record.TransactionDate.IsBetween(questStartDate, questEndDate))
+                            {
+                                record.BillForm = "QUEST";
+                            }
+                            else
+                            {
+                                record.BillForm = record.InsurancePrimary.InsCompany.BillForm;
+                            }
                         }
                         else
                         {
-                            if (record.InsurancePrimary == null)
-                                record.BillForm = "UNDEFINED";
-                            else
-                                record.BillForm = record.InsurancePrimary.InsCompany.BillForm;
+                            record.BillForm = "UNDEFINED";
                         }
                     }
                 }
@@ -166,7 +170,7 @@ namespace LabBilling.Core.DataAccess
             object result;
 
             //populate properties
-            result = dbConnection.ExecuteScalar<object>("SELECT dbo.GetAccBalByDate(@0, @1)", account, DateTime.Today);
+            result = dbConnection.ExecuteScalar<object>("SELECT dbo.GetAccBalance(@0)", account);
             if (result != DBNull.Value && result != null)
                 record.Balance = Convert.ToDouble(result); 
             

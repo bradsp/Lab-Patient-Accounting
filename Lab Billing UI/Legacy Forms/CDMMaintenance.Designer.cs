@@ -29,14 +29,14 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmCDM));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
@@ -48,18 +48,19 @@
             this.tsbUpdate = new System.Windows.Forms.ToolStripButton();
             this.ssMain = new System.Windows.Forms.StatusStrip();
             this.tcMain = new System.Windows.Forms.TabControl();
-            this.tpFS3 = new System.Windows.Forms.TabPage();
-            this.dgvFS3 = new System.Windows.Forms.DataGridView();
-            this.tpFS2 = new System.Windows.Forms.TabPage();
+            this.tabFeeSched2 = new System.Windows.Forms.TabPage();
             this.dgvFS2 = new System.Windows.Forms.DataGridView();
+            this.tabFeeSched3 = new System.Windows.Forms.TabPage();
+            this.dgvFS3 = new System.Windows.Forms.DataGridView();
             this.dgvCDM = new System.Windows.Forms.DataGridView();
             this.scMain = new System.Windows.Forms.SplitContainer();
+            this.tabFeeSched1 = new System.Windows.Forms.TabPage();
             this.tsMain.SuspendLayout();
             this.tcMain.SuspendLayout();
-            this.tpFS3.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvFS3)).BeginInit();
-            this.tpFS2.SuspendLayout();
+            this.tabFeeSched2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvFS2)).BeginInit();
+            this.tabFeeSched3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvFS3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvCDM)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.scMain)).BeginInit();
             this.scMain.Panel1.SuspendLayout();
@@ -124,8 +125,9 @@
             // 
             // tcMain
             // 
-            this.tcMain.Controls.Add(this.tpFS2);
-            this.tcMain.Controls.Add(this.tpFS3);
+            this.tcMain.Controls.Add(this.tabFeeSched1);
+            this.tcMain.Controls.Add(this.tabFeeSched2);
+            this.tcMain.Controls.Add(this.tabFeeSched3);
             this.tcMain.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tcMain.Location = new System.Drawing.Point(0, 0);
             this.tcMain.Name = "tcMain";
@@ -133,65 +135,16 @@
             this.tcMain.Size = new System.Drawing.Size(1262, 376);
             this.tcMain.TabIndex = 0;
             // 
-            // tpFS3
+            // tabFeeSched2
             // 
-            this.tpFS3.Controls.Add(this.dgvFS3);
-            this.tpFS3.Location = new System.Drawing.Point(4, 22);
-            this.tpFS3.Name = "tpFS3";
-            this.tpFS3.Padding = new System.Windows.Forms.Padding(3);
-            this.tpFS3.Size = new System.Drawing.Size(560, 92);
-            this.tpFS3.TabIndex = 1;
-            this.tpFS3.Text = "FEE SCHEDULE 3";
-            this.tpFS3.UseVisualStyleBackColor = true;
-            // 
-            // dgvFS3
-            // 
-            this.dgvFS3.AllowDrop = true;
-            dataGridViewCellStyle5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
-            this.dgvFS3.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle5;
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvFS3.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle6;
-            this.dgvFS3.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle7.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle7.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle7.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle7.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle7.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dgvFS3.DefaultCellStyle = dataGridViewCellStyle7;
-            this.dgvFS3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dgvFS3.Location = new System.Drawing.Point(3, 3);
-            this.dgvFS3.Name = "dgvFS3";
-            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle8.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle8.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle8.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvFS3.RowHeadersDefaultCellStyle = dataGridViewCellStyle8;
-            this.dgvFS3.Size = new System.Drawing.Size(554, 86);
-            this.dgvFS3.TabIndex = 0;
-            this.dgvFS3.DragDrop += new System.Windows.Forms.DragEventHandler(this.dgv_DragDrop);
-            this.dgvFS3.DragEnter += new System.Windows.Forms.DragEventHandler(this.dgv_DragEnter);
-            // 
-            // tpFS2
-            // 
-            this.tpFS2.Controls.Add(this.dgvFS2);
-            this.tpFS2.Location = new System.Drawing.Point(4, 22);
-            this.tpFS2.Name = "tpFS2";
-            this.tpFS2.Padding = new System.Windows.Forms.Padding(3);
-            this.tpFS2.Size = new System.Drawing.Size(1254, 350);
-            this.tpFS2.TabIndex = 0;
-            this.tpFS2.Text = "FEE SCHEDULE 2";
-            this.tpFS2.UseVisualStyleBackColor = true;
+            this.tabFeeSched2.Controls.Add(this.dgvFS2);
+            this.tabFeeSched2.Location = new System.Drawing.Point(4, 22);
+            this.tabFeeSched2.Name = "tabFeeSched2";
+            this.tabFeeSched2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabFeeSched2.Size = new System.Drawing.Size(1254, 350);
+            this.tabFeeSched2.TabIndex = 0;
+            this.tabFeeSched2.Text = "Fee Schedule 2";
+            this.tabFeeSched2.UseVisualStyleBackColor = true;
             // 
             // dgvFS2
             // 
@@ -232,6 +185,55 @@
             this.dgvFS2.TabIndex = 0;
             this.dgvFS2.DragDrop += new System.Windows.Forms.DragEventHandler(this.dgv_DragDrop);
             this.dgvFS2.DragEnter += new System.Windows.Forms.DragEventHandler(this.dgv_DragEnter);
+            // 
+            // tabFeeSched3
+            // 
+            this.tabFeeSched3.Controls.Add(this.dgvFS3);
+            this.tabFeeSched3.Location = new System.Drawing.Point(4, 22);
+            this.tabFeeSched3.Name = "tabFeeSched3";
+            this.tabFeeSched3.Padding = new System.Windows.Forms.Padding(3);
+            this.tabFeeSched3.Size = new System.Drawing.Size(1254, 350);
+            this.tabFeeSched3.TabIndex = 1;
+            this.tabFeeSched3.Text = "Fee Schedule 3";
+            this.tabFeeSched3.UseVisualStyleBackColor = true;
+            // 
+            // dgvFS3
+            // 
+            this.dgvFS3.AllowDrop = true;
+            dataGridViewCellStyle5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            this.dgvFS3.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvFS3.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle6;
+            this.dgvFS3.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle7.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle7.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle7.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle7.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle7.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dgvFS3.DefaultCellStyle = dataGridViewCellStyle7;
+            this.dgvFS3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dgvFS3.Location = new System.Drawing.Point(3, 3);
+            this.dgvFS3.Name = "dgvFS3";
+            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle8.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle8.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle8.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvFS3.RowHeadersDefaultCellStyle = dataGridViewCellStyle8;
+            this.dgvFS3.Size = new System.Drawing.Size(1248, 344);
+            this.dgvFS3.TabIndex = 0;
+            this.dgvFS3.DragDrop += new System.Windows.Forms.DragEventHandler(this.dgv_DragDrop);
+            this.dgvFS3.DragEnter += new System.Windows.Forms.DragEventHandler(this.dgv_DragEnter);
             // 
             // dgvCDM
             // 
@@ -293,6 +295,16 @@
             this.scMain.SplitterDistance = 301;
             this.scMain.TabIndex = 2;
             // 
+            // tabFeeSched1
+            // 
+            this.tabFeeSched1.Location = new System.Drawing.Point(4, 22);
+            this.tabFeeSched1.Name = "tabFeeSched1";
+            this.tabFeeSched1.Padding = new System.Windows.Forms.Padding(3);
+            this.tabFeeSched1.Size = new System.Drawing.Size(1254, 350);
+            this.tabFeeSched1.TabIndex = 2;
+            this.tabFeeSched1.Text = "Fee Schedule 1";
+            this.tabFeeSched1.UseVisualStyleBackColor = true;
+            // 
             // frmCDM
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -308,10 +320,10 @@
             this.tsMain.ResumeLayout(false);
             this.tsMain.PerformLayout();
             this.tcMain.ResumeLayout(false);
-            this.tpFS3.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dgvFS3)).EndInit();
-            this.tpFS2.ResumeLayout(false);
+            this.tabFeeSched2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvFS2)).EndInit();
+            this.tabFeeSched3.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dgvFS3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvCDM)).EndInit();
             this.scMain.Panel1.ResumeLayout(false);
             this.scMain.Panel2.ResumeLayout(false);
@@ -331,12 +343,13 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripButton tsbUpdate;
         private System.Windows.Forms.TabControl tcMain;
-        private System.Windows.Forms.TabPage tpFS2;
+        private System.Windows.Forms.TabPage tabFeeSched2;
         private System.Windows.Forms.DataGridView dgvFS2;
-        private System.Windows.Forms.TabPage tpFS3;
+        private System.Windows.Forms.TabPage tabFeeSched3;
         private System.Windows.Forms.DataGridView dgvFS3;
         private System.Windows.Forms.DataGridView dgvCDM;
         private System.Windows.Forms.SplitContainer scMain;
+        private System.Windows.Forms.TabPage tabFeeSched1;
     }
 }
 

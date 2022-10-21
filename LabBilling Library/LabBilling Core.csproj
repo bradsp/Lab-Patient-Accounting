@@ -121,6 +121,9 @@
     <Reference Include="NLog, Version=5.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
       <HintPath>..\packages\NLog.5.0.4\lib\net46\NLog.dll</HintPath>
     </Reference>
+    <Reference Include="NLog.Database, Version=5.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <HintPath>..\packages\NLog.Database.5.0.4\lib\net46\NLog.Database.dll</HintPath>
+    </Reference>
     <Reference Include="NLog.WindowsEventLog, Version=5.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
       <HintPath>..\packages\NLog.WindowsEventLog.5.0.4\lib\netstandard2.0\NLog.WindowsEventLog.dll</HintPath>
     </Reference>
@@ -266,6 +269,7 @@
     <Compile Include="DataAccess\RevenueCodeRepository.cs" />
     <Compile Include="DataAccess\SystemParametersRepository.cs" />
     <Compile Include="DataAccess\UserProfileRepository.cs" />
+    <Compile Include="DataAccess\WriteOffCodeRepository.cs" />
     <Compile Include="FunctionRepository.cs" />
     <Compile Include="LabBillingCoreResources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -319,6 +323,7 @@
     <Compile Include="Models\SysParameter.cs" />
     <Compile Include="Models\UnbilledAccounts.cs" />
     <Compile Include="Models\UserProfile.cs" />
+    <Compile Include="Models\WriteOffCode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

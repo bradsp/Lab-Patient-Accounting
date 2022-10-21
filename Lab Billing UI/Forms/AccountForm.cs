@@ -47,6 +47,7 @@ namespace LabBilling.Forms
         private readonly DictDxRepository dictDxDb = new DictDxRepository(Helper.ConnVal);
         private readonly SystemParametersRepository systemParametersRepository = new SystemParametersRepository(Helper.ConnVal);
         private readonly PhyRepository phyRepository = new PhyRepository(Helper.ConnVal);
+        private readonly ChkRepository chkRepository = new ChkRepository(Helper.ConnVal);
 
         private const int _timerInterval = 650;
         //private bool skipSelectionChanged = false;
@@ -225,7 +226,6 @@ namespace LabBilling.Forms
             #endregion
 
             lookupForm.Datasource = insCompanies;
-
 
             #region Setup ordering provider combo box
 
@@ -1338,6 +1338,20 @@ namespace LabBilling.Forms
             TotalWriteOffTextBox.Text = currentAccount.TotalWriteOff.ToString("c");
             TotalPmtAllTextBox.Text = (currentAccount.TotalPayments + currentAccount.TotalContractual + currentAccount.TotalWriteOff).ToString("c");
 
+            if(currentAccount.Fin.FinClass == "C" ||
+                currentAccount.SentToCollections ||
+                currentAccount.Status == "CLOSED")
+            {
+                AddPaymentButton.Enabled = false;
+                Label addPaymentStatusLabel = new Label();
+                addPaymentStatusLabel.AutoSize = true;
+                addPaymentStatusLabel.MaximumSize = new Size(300, 300);
+                addPaymentStatusLabel.Text = "Cannot add payment to this account.";
+                addPaymentStatusLabel.Anchor = AnchorStyles.Top|AnchorStyles.Right;
+                addPaymentStatusLabel.Location = new Point(tabPayments.Right - 310, AddPaymentButton.Bottom + 10);
+                tabPayments.Controls.Add(addPaymentStatusLabel);
+            }
+
             //payments = chkdb.GetByAccount(SelectedAccount);
             //Log.Instance.Debug($"GetPayments returned {payments.Count} rows.");
             PaymentsDataGrid.DataSource = currentAccount.Payments.ToList();
@@ -1391,7 +1405,18 @@ namespace LabBilling.Forms
 
         private void AddPaymentButton_Click(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            PaymentAdjustmentEntryForm form = new PaymentAdjustmentEntryForm();
+
+            if(form.ShowDialog() == DialogResult.OK)
+            {
+                //post record to account
+                var chk = form.chk;
+
+                chk.AccountNo = currentAccount.AccountNo;
+                chk.FinCode = currentAccount.FinCode;
+                chkRepository.Add(chk);
+                LoadAccountData();
+            }
         }
 
         #endregion

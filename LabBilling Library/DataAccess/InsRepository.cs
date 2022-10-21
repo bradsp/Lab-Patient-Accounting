@@ -28,7 +28,7 @@ namespace LabBilling.Core.DataAccess
 
         public List<Ins> GetByAccount(string account)
         {
-            Log.Instance.Debug("$Entering");
+            Log.Instance.Debug("Entering");
 
             var records = dbConnection.Fetch<Ins>("where account = @0 and deleted = 0 order by ins_a_b_c", 
                 new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account });

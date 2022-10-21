@@ -47,7 +47,7 @@ namespace LabBilling.Core.DataAccess
 
         public List<Chrg> GetByAccount(string account, bool showCredited = true, bool includeInvoiced = true)
         {
-            Log.Instance.Debug($"Entering");
+            Log.Instance.Debug($"Entering - account {account}");
 
             var sql = PetaPoco.Sql.Builder
                 .Select("chrg.*, chrg_details.*")
@@ -99,7 +99,7 @@ namespace LabBilling.Core.DataAccess
         /// <returns></returns>
         public int AddCharge(Chrg chrg)
         {
-            Log.Instance.Trace("Entering");
+            Log.Instance.Trace($"Entering - {chrg.AccountNo}");
             //function will add charge
             try
             {
@@ -116,7 +116,7 @@ namespace LabBilling.Core.DataAccess
             }
             catch (Exception ex)
             {
-                Log.Instance.Fatal("Error in AddCharge", ex);
+                Log.Instance.Fatal($"Error in AddCharge - {chrg.AccountNo}", ex);
                 throw new ApplicationException("Error in AddCharge", ex);
             }
 
@@ -124,7 +124,7 @@ namespace LabBilling.Core.DataAccess
 
         public List<InvoiceChargeView> GetInvoiceCharges(string account)
         {
-            Log.Instance.Debug($"Entering");
+            Log.Instance.Trace($"Entering - {account}");
 
             var sql = PetaPoco.Sql.Builder
                 .From("InvoiceChargeView")
@@ -139,6 +139,7 @@ namespace LabBilling.Core.DataAccess
 
         public void SetChargeInvoiceStatus(string account, string invoiceNo)
         {
+            Log.Instance.Trace($"Entering - account {account} invoice {invoiceNo}");
             List<Chrg> chrgs = GetByAccount(account, true, false).ToList();
 
             foreach (Chrg chrg in chrgs)
@@ -170,7 +171,7 @@ namespace LabBilling.Core.DataAccess
         /// <returns>Number of charges reprocessed.</returns>
         public int ReprocessCharges(string account)
         {
-            Log.Instance.Trace($"Entering");
+            Log.Instance.Trace($"Entering {account}");
             int chrgCount = 0;
 
             //call stored procedure [dbo].[usp_prg_ReCharge_Acc_Transaction]

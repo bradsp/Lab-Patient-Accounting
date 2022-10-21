@@ -773,5 +773,16 @@ namespace LabBilling
             remittance835.Load835(file);
 
         }
+
+        private void chargeMasterToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            Log.Instance.Trace("Entering");
+            ChargeMasterMaintenance frm = new ChargeMasterMaintenance();
+
+            frm.MdiParent = this;
+            frm.WindowState = FormWindowState.Normal;
+            frm.AutoScroll = true;
+            frm.Show();
+        }
     }
 }

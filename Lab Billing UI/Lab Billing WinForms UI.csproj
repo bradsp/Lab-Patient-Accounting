@@ -28,7 +28,7 @@
     <MapFileExtensions>true</MapFileExtensions>
     <ProductName>Lab Outreach Patient Accounting</ProductName>
     <PublisherName>West Tennessee Healthcare</PublisherName>
-    <ApplicationRevision>6</ApplicationRevision>
+    <ApplicationRevision>10</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
@@ -101,6 +101,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataCache.cs" />
+    <Compile Include="Forms\ChargeMasterEditForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ChargeMasterEditForm.Designer.cs">
+      <DependentUpon>ChargeMasterEditForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\ClaimRuleEditorForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -142,6 +148,12 @@
     </Compile>
     <Compile Include="Forms\InterfaceMonitor.Designer.cs">
       <DependentUpon>InterfaceMonitor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\PaymentAdjustmentEntryForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\PaymentAdjustmentEntryForm.Designer.cs">
+      <DependentUpon>PaymentAdjustmentEntryForm.cs</DependentUpon>
     </Compile>
     <Compile Include="LookupForms\CdmLookupForm.cs">
       <SubType>Form</SubType>
@@ -258,6 +270,12 @@
       <DependentUpon>ViewerQuestForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Library\InputDialogs.cs" />
+    <Compile Include="UserControls\CurrencyTextBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="UserControls\CurrencyTextBox.Designer.cs">
+      <DependentUpon>CurrencyTextBox.cs</DependentUpon>
+    </Compile>
     <Compile Include="UserControls\FlatCombo.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -465,6 +483,12 @@
     <None Include="Resources\refresh-icon.png" />
     <None Include="Resources\hiclipart.com-id_dbhyp.png" />
     <None Include="Resources\lookup-icon-png-and-vector-for-free-download-pngtree-lookup-png-512_512.png" />
+    <EmbeddedResource Include="Forms\ChargeMasterEditForm.resx">
+      <DependentUpon>ChargeMasterEditForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ChargeMasterMaintenance.resx">
+      <DependentUpon>ChargeMasterMaintenance.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\ClaimRuleEditorForm.resx">
       <DependentUpon>ClaimRuleEditorForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -485,6 +509,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\InterfaceMonitor.resx">
       <DependentUpon>InterfaceMonitor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\PaymentAdjustmentEntryForm.resx">
+      <DependentUpon>PaymentAdjustmentEntryForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="LookupForms\CdmLookupForm.resx">
       <DependentUpon>CdmLookupForm.cs</DependentUpon>
@@ -725,6 +752,9 @@
       <Version>3.1.1</Version>
     </PackageReference>
     <PackageReference Include="NLog">
+      <Version>5.0.4</Version>
+    </PackageReference>
+    <PackageReference Include="NLog.Database">
       <Version>5.0.4</Version>
     </PackageReference>
     <PackageReference Include="NLog.Schema">

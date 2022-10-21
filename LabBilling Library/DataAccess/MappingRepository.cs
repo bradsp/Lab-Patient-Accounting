@@ -52,7 +52,7 @@ namespace LabBilling.Core.DataAccess
 
         public IEnumerable<Mapping> GetMappings(string codeSet, string sendingSystem)
         {
-            Log.Instance.Trace("$Entering");
+            Log.Instance.Trace("Entering");
 
             var sql = PetaPoco.Sql.Builder
                 .Append("SELECT * ")
@@ -67,7 +67,7 @@ namespace LabBilling.Core.DataAccess
 
         public string GetMappedValue(string codeSet, string sendingSystem, string sendingValue)
         {
-            Log.Instance.Trace("$Entering");
+            Log.Instance.Trace("Entering");
 
             var sql = PetaPoco.Sql.Builder
                 .Append("SELECT * ")

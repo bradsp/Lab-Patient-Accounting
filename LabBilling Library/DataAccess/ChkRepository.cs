@@ -21,7 +21,7 @@ namespace LabBilling.Core.DataAccess
 
         public override Chk GetById(int id)
         {
-            Log.Instance.Trace("$Entering");
+            Log.Instance.Trace($"Entering - id {id}");
             var sql = PetaPoco.Sql.Builder
                 .From(_tableName)
                 .Where("pay_no = @0", new SqlParameter() { SqlDbType = SqlDbType.Decimal, Value = id });
@@ -34,7 +34,7 @@ namespace LabBilling.Core.DataAccess
 
         public List<Chk> GetByAccount(string account)
         {
-            Log.Instance.Trace("$Entering");
+            Log.Instance.Trace($"Entering - {account}");
 
             var sql = PetaPoco.Sql.Builder
                 .From(_tableName)
@@ -49,7 +49,7 @@ namespace LabBilling.Core.DataAccess
 
         public List<Chk> GetByAccount(string account, bool includeInvoiced)
         {
-            Log.Instance.Trace("$Entering");
+            Log.Instance.Trace($"Entering - {account}");
             if (includeInvoiced)
             {
                 return this.GetByAccount(account);
@@ -70,6 +70,7 @@ namespace LabBilling.Core.DataAccess
 
         public override object Add(Chk table)
         {
+            table.Status = "NEW";
 
             return base.Add(table);
         }
@@ -77,7 +78,7 @@ namespace LabBilling.Core.DataAccess
         public bool AddBatch(List<Chk> chks)
         {
 
-            Log.Instance.Trace("$Entering");
+            Log.Instance.Trace("Entering");
 
             try
             {

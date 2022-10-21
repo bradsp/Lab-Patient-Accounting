@@ -87,6 +87,7 @@
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.windowManagerPanel1 = new MDIWindowManager.WindowManagerPanel();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.chargeMasterToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.MainFormMenu.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -267,6 +268,7 @@
             // dictionariesToolStripMenuItem
             // 
             this.dictionariesToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.chargeMasterToolStripMenuItem1,
             this.chargeMasterToolStripMenuItem,
             this.clientsToolStripMenuItem,
             this.financialClassToolStripMenuItem,
@@ -499,6 +501,12 @@
             resources.ApplyResources(this.panel1, "panel1");
             this.panel1.Name = "panel1";
             // 
+            // chargeMasterToolStripMenuItem1
+            // 
+            this.chargeMasterToolStripMenuItem1.Name = "chargeMasterToolStripMenuItem1";
+            resources.ApplyResources(this.chargeMasterToolStripMenuItem1, "chargeMasterToolStripMenuItem1");
+            this.chargeMasterToolStripMenuItem1.Click += new System.EventHandler(this.chargeMasterToolStripMenuItem1_Click);
+            // 
             // MainForm
             // 
             resources.ApplyResources(this, "$this");
@@ -581,5 +589,6 @@
         private System.Windows.Forms.ToolStripMenuItem institutionalToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem professionalToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem remittancePostingToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem chargeMasterToolStripMenuItem1;
     }
 }

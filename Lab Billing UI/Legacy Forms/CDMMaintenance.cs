@@ -16,15 +16,15 @@ namespace LabBilling.Legacy
         string m_strServer = null;
         string m_strDatabase = null;
         string m_strProductionEnvironment = null;
-       // ERR m_Err = null;
+        // ERR m_Err = null;
         //ToolStripControlHost m_dpFrom;
         //ToolStripControlHost m_dpThru;
         ToolStripControlHost m_cboxFS2; // CheckBox
         ToolStripControlHost m_cboxFS3; // CheckBox
-        //DateTime m_dtFrom;
-        //DateTime m_dtThru;
-    //    private PrintDocument m_ViewerPrintDocument;
-    //    private ReportGenerator m_rgReport;
+                                        //DateTime m_dtFrom;
+                                        //DateTime m_dtThru;
+                                        //    private PrintDocument m_ViewerPrintDocument;
+                                        //    private ReportGenerator m_rgReport;
         private string propAppName
         { get { return string.Format("{0} {1}", Application.ProductName, Application.ProductVersion); } }
         private SqlConnection m_sqlConn = null;
@@ -83,20 +83,20 @@ namespace LabBilling.Legacy
         //    //  Requery();
         //}
 
-       //void frmAcc_ValueChanged(object sender, EventArgs e)
-       // {
-       //     if (((DateTimePicker)sender).Name == "FROM")
-       //     {
-       //         m_dtFrom = ((DateTimePicker)sender).Value;
-       //     }
-       //     else
-       //     {
-       //         m_dtThru = ((DateTimePicker)sender).Value;
-       //     }
+        //void frmAcc_ValueChanged(object sender, EventArgs e)
+        // {
+        //     if (((DateTimePicker)sender).Name == "FROM")
+        //     {
+        //         m_dtFrom = ((DateTimePicker)sender).Value;
+        //     }
+        //     else
+        //     {
+        //         m_dtThru = ((DateTimePicker)sender).Value;
+        //     }
 
-       // }
+        // }
 
-          
+
         public frmCDM(string[] args)
         {
             InitializeComponent();
@@ -112,7 +112,7 @@ namespace LabBilling.Legacy
             strArgs[0] = string.Format("/{0}", m_strProductionEnvironment);
             strArgs[1] = args[0];
             strArgs[2] = args[1];
-           // m_Err = new ERR(strArgs);
+            // m_Err = new ERR(strArgs);
 
             //this.Text += string.Format(" - Production Environment {0}", m_strProductionEnvironment);
             CreateDateTimes();
@@ -121,42 +121,38 @@ namespace LabBilling.Legacy
         private void frmCDM_Load(object sender, EventArgs e)
         {
 
-		 // m_ViewerPrintDocument = new PrintDocument();
-          //m_ViewerPrintDocument.DefaultPageSettings.Landscape = true;
-          string strName = string.Format("{0} {1}", Application.ProductName, Application.ProductVersion);
-          //m_rgReport = new ReportGenerator(dgvRecords, m_ViewerPrintDocument, strName, m_strDatabase);
-          //m_ViewerPrintDocument.PrintPage += new PrintPageEventHandler(m_rgReport.MyPrintDocument_PrintPage);
-		  
-		  m_sqlConn = new SqlConnection(string.Format("Data Source={0}; Initial Catalog = {1};"
-                    + "Integrated Security = 'SSPI'", m_strServer, m_strDatabase));
-		  // use this to load any combo box on the toolstip
-          SqlDataAdapter sda = new SqlDataAdapter(); // local to this function only
-          using (SqlConnection connection = new SqlConnection(m_sqlConn.ConnectionString))
-          {
-              Application.DoEvents();
-              //     tsslNote.Text = "Loading Start Date";
-              // get the operating date range for queries.
+            // m_ViewerPrintDocument = new PrintDocument();
+            //m_ViewerPrintDocument.DefaultPageSettings.Landscape = true;
+            string strName = string.Format("{0} {1}", Application.ProductName, Application.ProductVersion);
+            //m_rgReport = new ReportGenerator(dgvRecords, m_ViewerPrintDocument, strName, m_strDatabase);
+            //m_ViewerPrintDocument.PrintPage += new PrintPageEventHandler(m_rgReport.MyPrintDocument_PrintPage);
 
-              SqlCommand cdmSelect =
-                 new SqlCommand(
-                     string.Format("select cdm from dbo.cdm where deleted = 0 and orderable = 1 order by cdm"
-                     )
-                     , connection);
-              sda.SelectCommand = cdmSelect;
-              Application.DoEvents();
-              DataTable dtValue = new DataTable();
-              Application.DoEvents();
-              sda.Fill(dtValue);
-              //m_dtStartSSI = DateTime.Parse(dtStart.Rows[0]["value"].ToString()); //OR
-              tscbCDM.ComboBox.DataSource = dtValue;
-              tscbCDM.ComboBox.DisplayMember = "CDM";
-          }	
-          
-          
+            m_sqlConn = new SqlConnection(string.Format("Data Source={0}; Initial Catalog = {1};"
+                      + "Integrated Security = 'SSPI'", m_strServer, m_strDatabase));
+            // use this to load any combo box on the toolstip
+            SqlDataAdapter sda = new SqlDataAdapter(); // local to this function only
+            using (SqlConnection connection = new SqlConnection(m_sqlConn.ConnectionString))
+            {
+                Application.DoEvents();
+                //     tsslNote.Text = "Loading Start Date";
+                // get the operating date range for queries.
+
+                SqlCommand cdmSelect =
+                   new SqlCommand(
+                       string.Format("select cdm from dbo.cdm where deleted = 0 and orderable = 1 order by cdm"
+                       )
+                       , connection);
+                sda.SelectCommand = cdmSelect;
+                Application.DoEvents();
+                DataTable dtValue = new DataTable();
+                Application.DoEvents();
+                sda.Fill(dtValue);
+                //m_dtStartSSI = DateTime.Parse(dtStart.Rows[0]["value"].ToString()); //OR
+                tscbCDM.ComboBox.DataSource = dtValue;
+                tscbCDM.ComboBox.DisplayMember = "CDM";
+            }
         }
 
-
-        
         private void tsbLoadCDM_Click(object sender, EventArgs e)
         {
             dgvFS2.Rows.Clear();
@@ -209,13 +205,10 @@ namespace LabBilling.Legacy
 
                 foreach (DataRow dr in dtValueFS2.Rows)
                 {
-                    dgvFS2.Rows.Add(new object[] { dr[0], dr[1], dr[2],dr[3],dr[4],dr[5],dr[6],dr[7],dr[8],dr[9],dr[10],dr[11] });
+                    dgvFS2.Rows.Add(new object[] { dr[0], dr[1], dr[2], dr[3], dr[4], dr[5], dr[6], dr[7], dr[8], dr[9], dr[10], dr[11] });
                 }
 
                 dgvFS2.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.DisplayedCells;
-             
-
-                
 
                 foreach (DataGridViewRow drMain in dgvCDM.Rows)
                 {
@@ -227,25 +220,25 @@ namespace LabBilling.Legacy
                     catch (ArgumentOutOfRangeException)
                     {
                         int nRows = dtValueFS2.Rows.Count;
-                        dtValueFS2.Rows.Add(new object[] {"Missing"});
-                        
-                        dtValueFS2.Rows[dtValueFS2.Rows.Count-1].SetColumnError(0,"row not present in FS2");
+                        dtValueFS2.Rows.Add(new object[] { "Missing" });
+
+                        dtValueFS2.Rows[dtValueFS2.Rows.Count - 1].SetColumnError(0, "row not present in FS2");
                         //strText = ((DataRow)((DataRowView)dgvAccount.Rows[e.RowIndex].DataBoundItem).Row)["status"].ToString().ToUpper();
                         drFS2 = new DataGridViewRow();
-                        drFS2.SetValues(dtValueFS2.Rows[dtValueFS2.Rows.Count-1].ItemArray);
+                        drFS2.SetValues(dtValueFS2.Rows[dtValueFS2.Rows.Count - 1].ItemArray);
                         //drFS2.Cells.AddRange(dtValueFS2.Rows[drMain.Index].ItemArray);
                         //int nRow = dgvFS2.Rows.Count;
                         //dgvFS2.Rows[nRow].ErrorText = "row not present in FS2";
                         continue;
                     }
-                    
+
                     for (int i = 0; i < drMain.Cells.Count; i++)
                     {
                         //if (string.IsNullOrEmpty(drFS2.HeaderCell.FormattedValue.ToString() ))
                         //{
                         //    continue;
                         //}
-                        if ( i == 5 ) // mprice
+                        if (i == 5) // mprice
                         {
                             continue;
                         }
@@ -261,7 +254,7 @@ namespace LabBilling.Legacy
                         {
                             continue;
                         }
-                        if (dr.Index > dgvCDM.Rows.Count-1)
+                        if (dr.Index > dgvCDM.Rows.Count - 1)
                         {
                             dr.ErrorText = "Excess Row will be deleted if updated.";
                         }
@@ -283,7 +276,7 @@ namespace LabBilling.Legacy
                     Application.DoEvents();
                     sdaFS3.Fill(dtValueFS3);
                 }
-              
+
 
             }
 
@@ -305,8 +298,8 @@ namespace LabBilling.Legacy
         private void tsbUpdate_Click(object sender, EventArgs e)
         {
             // copy selected items to current tabls fee schedule
-            DataGridView dgv = new DataGridView(); 
-            
+            DataGridView dgv = new DataGridView();
+
 
             if (((CheckBox)m_cboxFS2.Control).Checked)
             {
@@ -343,65 +336,64 @@ namespace LabBilling.Legacy
                         {
                             continue;
                         }
-                    SqlCommand cmdInsert = new SqlCommand(
-                        string.Format("INSERT INTO dbo.cpt4_2 "+
-                        "(	cdm ,link ,	cpt4 ,descript ,	mprice , "+
-                        "	cprice ,zprice ,rev_code ,	type ,	modi , "+
-                        "	billcode ,	mod_date ,	mod_user ,	mod_prg , mod_host , "+
-                        "   code_flag	) "+
-                        "VALUES	( "+
-                        "'{0}',  " + //-- cdm - varchar(7)
-                        "{1} , " + //-- link - int 
-                        "'{2}' , " + //-- cpt4 - varchar(5)
-                        "'{3}' , " + //-- descript - varchar(50)
-                        "{4} , " + //-- mprice - money 
-                            "{5} ,  " + //-- cprice - money 
-                            "{6} ,  " + //-- zprice - money
-                            "'{7}' ,  " + //-- rev_code - varchar(4)
-                            "'{8}' ,  " + //-- type - varchar(4)
-                            "'{9}' ,  " + //-- modi - varchar(2)
-                                "'{10}' ,  "+ //-- billcode - varchar(7)
-                                "'{11}' ,  " + //-- mod_date - datetime
-                                "'{12}' ,  " + //-- mod_user - varchar(50)
-                                "'{13}' ,  " + //-- mod_prg - varchar(50)
-                                "'{14}' ,  " + //-- mod_host - varchar(50)
-                                    "'{15}')  ", //-- code_flag - varchar(50)
-                        dr.Cells["cdm"].Value.ToString(),
-                        dr.Cells["link"].Value.ToString(),
-                        dr.Cells["cpt4"].Value.ToString(),
-                        dr.Cells["descript"].Value.ToString(),
-                        dr.Cells["mprice"].Value.ToString(),
-                        dr.Cells["cprice"].Value.ToString(),
-                        dr.Cells["zprice"].Value.ToString(),
-                        dr.Cells["rev_code"].Value.ToString(),
-                        dr.Cells["type"].Value.ToString(),
-                        dr.Cells["modi"].Value.ToString(),
-                        dr.Cells["billcode"].Value.ToString(),
-                        DateTime.Now.ToShortDateString(),
-                        string.Format(@"{0}\{1}",Environment.UserDomainName, Environment.UserName),
-                        propAppName,
-                        Environment.MachineName,
-                        dr.Cells["code_flag"].Value.ToString())  
-                    , conn);
-                    sda = new SqlDataAdapter();
-                    sda.InsertCommand = cmdInsert;
-                    sda.InsertCommand.Connection.Open();
-                    try
-                    {
-                        sda.InsertCommand.ExecuteNonQuery();
-                    }
-                    catch (SqlException se)
-                    {
-                        MessageBox.Show(se.Message);
-                    }
-                    finally
-                    {
-                        sda.InsertCommand.Connection.Close();
-                    }
+                        SqlCommand cmdInsert = new SqlCommand(
+                            "INSERT INTO dbo.cpt4_2 " +
+                            "(	cdm ,link ,	cpt4 ,descript ,	mprice , " +
+                            "	cprice ,zprice ,rev_code ,	type ,	modi , " +
+                            "	billcode ,	mod_date ,	mod_user ,	mod_prg , mod_host , " +
+                            "   code_flag	) " +
+                            "VALUES	( " +
+                            "@1,  " + //-- cdm - varchar(7)
+                            "@2 , " + //-- link - int 
+                            "@3 , " + //-- cpt4 - varchar(5)
+                            "@4 , " + //-- descript - varchar(50)
+                            "@5 , " + //-- mprice - money 
+                            "@6 ,  " + //-- cprice - money 
+                            "@7 ,  " + //-- zprice - money
+                            "@8 ,  " + //-- rev_code - varchar(4)
+                            "@9 ,  " + //-- type - varchar(4)
+                            "@10 ,  " + //-- modi - varchar(2)
+                            "@11 ,  " + //-- billcode - varchar(7)
+                            "@12 ,  " + //-- mod_date - datetime
+                            "@13 ,  " + //-- mod_user - varchar(50)
+                            "@14 ,  " + //-- mod_prg - varchar(50)
+                            "@15 ,  " + //-- mod_host - varchar(50)
+                            "@16)  ", conn); //-- code_flag - varchar(50)
 
+                        cmdInsert.Parameters.AddWithValue("@1", dr.Cells["cdm"].Value.ToString());
+                        cmdInsert.Parameters.AddWithValue("@2", dr.Cells["link"].Value.ToString());
+                        cmdInsert.Parameters.AddWithValue("@3", dr.Cells["cpt4"].Value.ToString());
+                        cmdInsert.Parameters.AddWithValue("@4", dr.Cells["descript"].Value.ToString());
+                        cmdInsert.Parameters.AddWithValue("@5", dr.Cells["mprice"].Value.ToString());
+                        cmdInsert.Parameters.AddWithValue("@6", dr.Cells["cprice"].Value.ToString());
+                        cmdInsert.Parameters.AddWithValue("@7", dr.Cells["zprice"].Value.ToString());
+                        cmdInsert.Parameters.AddWithValue("@8", dr.Cells["rev_code"].Value.ToString());
+                        cmdInsert.Parameters.AddWithValue("@9", dr.Cells["type"].Value.ToString());
+                        cmdInsert.Parameters.AddWithValue("@10", dr.Cells["modi"].Value.ToString());
+                        cmdInsert.Parameters.AddWithValue("@11", dr.Cells["billcode"].Value.ToString());
+                        cmdInsert.Parameters.AddWithValue("@12", DateTime.Now.ToShortDateString());
+                        cmdInsert.Parameters.AddWithValue("@13", string.Format(@"{0}\{1}", Environment.UserDomainName, Environment.UserName));
+                        cmdInsert.Parameters.AddWithValue("@14", propAppName);
+                        cmdInsert.Parameters.AddWithValue("@15", Environment.MachineName);
+                        cmdInsert.Parameters.AddWithValue("@16", dr.Cells["code_flag"].Value.ToString());
+
+                        sda = new SqlDataAdapter();
+                        sda.InsertCommand = cmdInsert;
+                        sda.InsertCommand.Connection.Open();
+                        try
+                        {
+                            sda.InsertCommand.ExecuteNonQuery();
+                        }
+                        catch (SqlException se)
+                        {
+                            MessageBox.Show(se.Message);
+                        }
+                        finally
+                        {
+                            sda.InsertCommand.Connection.Close();
+                        }
+                    }
                 }
-                }
-             
             }
             if (((CheckBox)m_cboxFS3.Control).Checked)
             {
@@ -412,17 +404,17 @@ namespace LabBilling.Legacy
             }
 
             tsbLoadCDM_Click(null, null);
-            
-             
+
+
         }
 
 
         private void dgvCDM_DragLeave(object sender, EventArgs e)
         {
-            WarningException ellipse = ((WarningException) sender);
+            WarningException ellipse = ((WarningException)sender);
             if (ellipse != null)
             {
-              //  ellipse.Fill = _previousFill;
+                //  ellipse.Fill = _previousFill;
             }
         }
 
@@ -434,14 +426,14 @@ namespace LabBilling.Legacy
                 if (info.RowIndex >= 0)
                 {
                     DataGridViewSelectedRowCollection view = dgvCDM.SelectedRows;//.Rows[info.RowIndex].DataBoundItem;
-                   // DataRowView view = (DataRowView)dgvCDM.Rows[info.RowIndex].DataBoundItem;
+                                                                                 // DataRowView view = (DataRowView)dgvCDM.Rows[info.RowIndex].DataBoundItem;
                     if (view != null)
                     {
                         dgvCDM.DoDragDrop(view, DragDropEffects.Copy);
                     }
                 }
             }
-           
+
 
         }
 
@@ -453,17 +445,17 @@ namespace LabBilling.Legacy
         private void dgv_DragDrop(object sender, DragEventArgs e)
         {
             DataGridView dgv = ((DataGridView)sender);
-           // if (e.Data.GetDataPresent(typeof(DataRowView)))
+            // if (e.Data.GetDataPresent(typeof(DataRowView)))
             if (e.Data.GetDataPresent(typeof(DataGridViewSelectedRowCollection)))
             {
                 int nCount = ((DataGridViewSelectedRowCollection)e.Data.GetData(typeof(DataGridViewSelectedRowCollection))).Count;
-                DataGridViewSelectedRowCollection drc = 
+                DataGridViewSelectedRowCollection drc =
                     ((DataGridViewSelectedRowCollection)e.Data.GetData(typeof(DataGridViewSelectedRowCollection)));
                 DataGridViewRow[] arDgv = new DataGridViewRow[3];
                 drc.CopyTo(arDgv, 0);
                 foreach (DataGridViewRow dr in arDgv)
                 {
-                    
+
                     dgv.Rows.Add(dr);
                 }
 
@@ -479,8 +471,8 @@ namespace LabBilling.Legacy
                 //{
                 //    dgv.Rows.Add(   ((DataGridViewRow)drc[i]));
                 //}
- 
-                    //dgvFS2.Rows.Add(((DataRowView)e.Data.GetData(typeof(DataRowView))).Row.ItemArray);
+
+                //dgvFS2.Rows.Add(((DataRowView)e.Data.GetData(typeof(DataRowView))).Row.ItemArray);
             }
         }
     }
