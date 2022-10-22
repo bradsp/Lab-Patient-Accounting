@@ -29,9 +29,16 @@ namespace LabBilling.Forms
 
         private void OKbutton_Click(object sender, EventArgs e)
         {
-            SelectedForm = OpenTabsList.SelectedItem.ToString();
+            if (OpenTabsList.SelectedItems.Count > 0)
+            {
+                SelectedForm = OpenTabsList.SelectedItem.ToString();
 
-            this.DialogResult = DialogResult.OK;
+                this.DialogResult = DialogResult.OK;
+            }
+            else
+            {
+                MessageBox.Show("Please select a tab to close.", "Select Tab", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+            }
 
             return;
         }

@@ -35,7 +35,6 @@
             this.worklistToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.workqueuesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.duplicateAccountsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.paymentProcessingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.batchChargeEntryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.batchRemittanceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.badDebtMaintenanceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -54,6 +53,7 @@
             this.professionalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.remittancePostingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dictionariesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.chargeMasterToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.chargeMasterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.clientsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.financialClassToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -77,17 +77,11 @@
             this.systemParametersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.interfaceMappingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.interfaceMonitorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.windowsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.cascadeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.tileHorizontalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.tileVerticalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.arrangeIconsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.windowManagerPanel1 = new MDIWindowManager.WindowManagerPanel();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.chargeMasterToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.MainFormMenu.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -100,10 +94,8 @@
             this.dictionariesToolStripMenuItem,
             this.reportsToolStripMenuItem,
             this.systemAdministrationToolStripMenuItem,
-            this.windowsToolStripMenuItem,
             this.helpToolStripMenuItem});
             resources.ApplyResources(this.MainFormMenu, "MainFormMenu");
-            this.MainFormMenu.MdiWindowListItem = this.windowsToolStripMenuItem;
             this.MainFormMenu.Name = "MainFormMenu";
             // 
             // billingToolStripMenuItem
@@ -113,18 +105,17 @@
             this.worklistToolStripMenuItem,
             this.workqueuesToolStripMenuItem,
             this.duplicateAccountsToolStripMenuItem,
-            this.paymentProcessingToolStripMenuItem,
             this.batchChargeEntryToolStripMenuItem,
             this.batchRemittanceToolStripMenuItem,
+            this.posting835RemitToolStripMenuItem,
+            this.remittancePostingToolStripMenuItem,
             this.badDebtMaintenanceToolStripMenuItem,
             this.sSISubmissionToolStripMenuItem,
             this.questProcessingToolStripMenuItem,
+            this.clientBillsNewToolStripMenuItem,
             this.clientBillsToolStripMenuItem,
             this.globalBillingToolStripMenuItem,
-            this.posting835RemitToolStripMenuItem,
-            this.clientBillsNewToolStripMenuItem,
-            this.generateClaimsToolStripMenuItem,
-            this.remittancePostingToolStripMenuItem});
+            this.generateClaimsToolStripMenuItem});
             this.billingToolStripMenuItem.Name = "billingToolStripMenuItem";
             resources.ApplyResources(this.billingToolStripMenuItem, "billingToolStripMenuItem");
             // 
@@ -151,11 +142,6 @@
             this.duplicateAccountsToolStripMenuItem.Name = "duplicateAccountsToolStripMenuItem";
             resources.ApplyResources(this.duplicateAccountsToolStripMenuItem, "duplicateAccountsToolStripMenuItem");
             this.duplicateAccountsToolStripMenuItem.Click += new System.EventHandler(this.duplicateAccountsToolStripMenuItem_Click);
-            // 
-            // paymentProcessingToolStripMenuItem
-            // 
-            this.paymentProcessingToolStripMenuItem.Name = "paymentProcessingToolStripMenuItem";
-            resources.ApplyResources(this.paymentProcessingToolStripMenuItem, "paymentProcessingToolStripMenuItem");
             // 
             // batchChargeEntryToolStripMenuItem
             // 
@@ -279,6 +265,12 @@
             this.zipCodesToolStripMenuItem});
             this.dictionariesToolStripMenuItem.Name = "dictionariesToolStripMenuItem";
             resources.ApplyResources(this.dictionariesToolStripMenuItem, "dictionariesToolStripMenuItem");
+            // 
+            // chargeMasterToolStripMenuItem1
+            // 
+            this.chargeMasterToolStripMenuItem1.Name = "chargeMasterToolStripMenuItem1";
+            resources.ApplyResources(this.chargeMasterToolStripMenuItem1, "chargeMasterToolStripMenuItem1");
+            this.chargeMasterToolStripMenuItem1.Click += new System.EventHandler(this.chargeMasterToolStripMenuItem1_Click);
             // 
             // chargeMasterToolStripMenuItem
             // 
@@ -422,36 +414,6 @@
             resources.ApplyResources(this.interfaceMonitorToolStripMenuItem, "interfaceMonitorToolStripMenuItem");
             this.interfaceMonitorToolStripMenuItem.Click += new System.EventHandler(this.interfaceMonitorToolStripMenuItem_Click);
             // 
-            // windowsToolStripMenuItem
-            // 
-            this.windowsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.cascadeToolStripMenuItem,
-            this.tileHorizontalToolStripMenuItem,
-            this.tileVerticalToolStripMenuItem,
-            this.arrangeIconsToolStripMenuItem});
-            this.windowsToolStripMenuItem.Name = "windowsToolStripMenuItem";
-            resources.ApplyResources(this.windowsToolStripMenuItem, "windowsToolStripMenuItem");
-            // 
-            // cascadeToolStripMenuItem
-            // 
-            this.cascadeToolStripMenuItem.Name = "cascadeToolStripMenuItem";
-            resources.ApplyResources(this.cascadeToolStripMenuItem, "cascadeToolStripMenuItem");
-            // 
-            // tileHorizontalToolStripMenuItem
-            // 
-            this.tileHorizontalToolStripMenuItem.Name = "tileHorizontalToolStripMenuItem";
-            resources.ApplyResources(this.tileHorizontalToolStripMenuItem, "tileHorizontalToolStripMenuItem");
-            // 
-            // tileVerticalToolStripMenuItem
-            // 
-            this.tileVerticalToolStripMenuItem.Name = "tileVerticalToolStripMenuItem";
-            resources.ApplyResources(this.tileVerticalToolStripMenuItem, "tileVerticalToolStripMenuItem");
-            // 
-            // arrangeIconsToolStripMenuItem
-            // 
-            this.arrangeIconsToolStripMenuItem.Name = "arrangeIconsToolStripMenuItem";
-            resources.ApplyResources(this.arrangeIconsToolStripMenuItem, "arrangeIconsToolStripMenuItem");
-            // 
             // helpToolStripMenuItem
             // 
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -501,12 +463,6 @@
             resources.ApplyResources(this.panel1, "panel1");
             this.panel1.Name = "panel1";
             // 
-            // chargeMasterToolStripMenuItem1
-            // 
-            this.chargeMasterToolStripMenuItem1.Name = "chargeMasterToolStripMenuItem1";
-            resources.ApplyResources(this.chargeMasterToolStripMenuItem1, "chargeMasterToolStripMenuItem1");
-            this.chargeMasterToolStripMenuItem1.Click += new System.EventHandler(this.chargeMasterToolStripMenuItem1_Click);
-            // 
             // MainForm
             // 
             resources.ApplyResources(this, "$this");
@@ -535,7 +491,6 @@
         private System.Windows.Forms.ToolStripMenuItem billingToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem accountToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem workqueuesToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem paymentProcessingToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem batchChargeEntryToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem batchRemittanceToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem sSISubmissionToolStripMenuItem;
@@ -573,11 +528,6 @@
         private System.Windows.Forms.ToolStripMenuItem sSISubmissionToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem reportByInsuranceCompanyToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem posting835RemitToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem windowsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem cascadeToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem tileHorizontalToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem tileVerticalToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem arrangeIconsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
         private MDIWindowManager.WindowManagerPanel windowManagerPanel1;
         private System.Windows.Forms.Panel panel1;

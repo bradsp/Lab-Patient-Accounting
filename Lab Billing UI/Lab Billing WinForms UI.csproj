@@ -28,7 +28,7 @@
     <MapFileExtensions>true</MapFileExtensions>
     <ProductName>Lab Outreach Patient Accounting</ProductName>
     <PublisherName>West Tennessee Healthcare</PublisherName>
-    <ApplicationRevision>10</ApplicationRevision>
+    <ApplicationRevision>12</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
@@ -118,6 +118,12 @@
     </Compile>
     <Compile Include="Forms\ClientInvoiceForm.Designer.cs">
       <DependentUpon>ClientInvoiceForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ClientMaintenanceEditForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ClientMaintenanceEditForm.Designer.cs">
+      <DependentUpon>ClientMaintenanceEditForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\DashboardForm.cs">
       <SubType>Form</SubType>
@@ -391,11 +397,11 @@
     <Compile Include="Forms\ChargeMasterMaintenance.Designer.cs">
       <DependentUpon>ChargeMasterMaintenance.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\ClientsForm.cs">
+    <Compile Include="Forms\ClientMaintenanceForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\ClientsForm.Designer.cs">
-      <DependentUpon>ClientsForm.cs</DependentUpon>
+    <Compile Include="Forms\ClientMaintenanceForm.Designer.cs">
+      <DependentUpon>ClientMaintenanceForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\MainForm.cs">
       <SubType>Form</SubType>
@@ -494,6 +500,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ClientInvoiceForm.resx">
       <DependentUpon>ClientInvoiceForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ClientMaintenanceEditForm.resx">
+      <DependentUpon>ClientMaintenanceEditForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\DashboardForm.resx">
       <DependentUpon>DashboardForm.cs</DependentUpon>
@@ -613,8 +622,8 @@
       <DependentUpon>ChargeEntryForm.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ClientsForm.resx">
-      <DependentUpon>ClientsForm.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\ClientMaintenanceForm.resx">
+      <DependentUpon>ClientMaintenanceForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>

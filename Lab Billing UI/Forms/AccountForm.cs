@@ -572,6 +572,7 @@ namespace LabBilling.Forms
                 InsOrderComboBox.SelectedIndex = 0;
                 HolderStateComboBox.SelectedIndex = 0;
                 HolderSexComboBox.SelectedIndex = 0;
+                PlanFinCodeComboBox.BackColor = Color.Linen;
 
                 InsuranceDataGrid.ClearSelection();
                 SetInsDataEntryAccess(false);
@@ -646,7 +647,7 @@ namespace LabBilling.Forms
 
         #region InsuranceTab
 
-        private void SaveInsuranceButton_Click_1(object sender, EventArgs e)
+        private void SaveInsuranceButton_Click(object sender, EventArgs e)
         {
             // saves the insurance info back to the grid
             Log.Instance.Trace($"Entering");
@@ -947,6 +948,7 @@ namespace LabBilling.Forms
             //clear the insurance table selection and data entry fields.
             InsuranceDataGrid.ClearSelection();
             ClearInsEntryFields();
+            SetInsDataEntryAccess(true);
         }
 
         private void insurancePlanTextBox_KeyUp(object sender, KeyEventArgs e)
@@ -1743,7 +1745,7 @@ namespace LabBilling.Forms
             ClientLookupForm clientLookupForm = new ClientLookupForm();
             ClientRepository clientRepository = new ClientRepository(Helper.ConnVal);
             clientLookupForm.Datasource = DataCache.Instance.GetClients();
-
+            
             if (clientLookupForm.ShowDialog() == DialogResult.OK)
             {
                 string newClient = clientLookupForm.SelectedValue;

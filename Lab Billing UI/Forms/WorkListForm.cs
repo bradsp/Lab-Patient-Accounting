@@ -34,6 +34,7 @@ namespace LabBilling.Forms
         private bool tasksRunning = false;
         private bool requestAbort = false;
         private BindingSource accountBindingSource = new BindingSource();
+        private int worklistPanelWidth = 0;
 
         private void WorkListForm_Load(object sender, EventArgs e)
         {
@@ -81,9 +82,9 @@ namespace LabBilling.Forms
             CancelValidationButton.Visible = true;
 
             int cnt = accounts.Count;
-            progressBar.Minimum = 0;
-            progressBar.Maximum = cnt;
-            progressBar.Value = 0;
+            toolStripProgressBar1.Minimum = 0;
+            toolStripProgressBar1.Maximum = cnt;
+            toolStripProgressBar1.Value = 0;
             Cursor.Current = Cursors.WaitCursor;
 
             tasksRunning = true;
@@ -91,17 +92,17 @@ namespace LabBilling.Forms
             {
                 if (requestAbort)
                 {
-                    statusLabel2.Text = "Aborting...";
+                    toolStripStatusLabel1.Text = "Aborting...";
                     tasksRunning = false;
                     break;
                 }
-                statusLabel2.Text = $"Validating {progressBar.Value} of {accounts.Count}.";
+                toolStripStatusLabel1.Text = $"Validating {toolStripProgressBar1.Value} of {accounts.Count}.";
                 await RunValidationAsync(acc.Account);
                 accountGrid.Refresh();
-                progressBar.Increment(1);
+                toolStripProgressBar1.Increment(1);
             }
             tasksRunning = false;
-            statusLabel2.Text = "Validation complete.";
+            toolStripStatusLabel1.Text = "Validation complete.";
 
             Cursor.Current = Cursors.Default;
             ValidateButton.Enabled = true;
@@ -377,8 +378,8 @@ namespace LabBilling.Forms
             accountGrid.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             accountGrid.RowHeadersVisible = false;
 
-            statusLabel1.Text = "Loading Accounts ... ";
-            progressBar.ProgressBarStyle = ProgressBarStyle.Marquee;
+            toolStripStatusLabel1.Text = "Loading Accounts ... ";
+            toolStripProgressBar1.Style = ProgressBarStyle.Marquee;
             accounts = (List<AccountSearch>)await Task.Run(() =>
             {
                 return accountSearchRepository.GetBySearch(parameters);
@@ -409,10 +410,10 @@ namespace LabBilling.Forms
 
             Cursor.Current = Cursors.Default;
 
-            statusLabel1.Text = accountGrid.Rows.Count.ToString() + $" records.";
+            toolStripStatusLabel1.Text = accountGrid.Rows.Count.ToString() + $" records.";
 
 
-            progressBar.ProgressBarStyle = ProgressBarStyle.Continuous;
+            toolStripProgressBar1.Style = ProgressBarStyle.Continuous;
 
             Cursor.Current = Cursors.Default;
 
@@ -609,6 +610,31 @@ namespace LabBilling.Forms
             }
 
             Log.Instance.Trace($"Exiting");
+        }
+
+        private void panelExpandCollapseButton_Click(object sender, EventArgs e)
+        {
+            if (panelExpandCollapseButton.Text == ">")
+            {
+                //expand
+                panel1.Width = worklistPanelWidth;
+                panelExpandCollapseButton.Text = "<";
+                accountGrid.Left = panel1.Right + 10;
+                accountGrid.Width -= worklistPanelWidth - 20;
+                ValidateButton.Left = panel1.Right + 10;
+                CancelValidationButton.Left = ValidateButton.Right + 10;
+            }
+            else
+            {
+                //collapse
+                worklistPanelWidth = panel1.Width;
+                panel1.Width = panelExpandCollapseButton.Width;
+                panelExpandCollapseButton.Text = ">";
+                accountGrid.Left = panel1.Right + 10;
+                accountGrid.Width += worklistPanelWidth - 20;  
+                ValidateButton.Left = panel1.Right + 10;
+                CancelValidationButton.Left = ValidateButton.Right + 10;
+            }
         }
     }
 }

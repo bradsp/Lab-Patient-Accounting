@@ -194,16 +194,16 @@ namespace LabBilling
 
             if (Convert.ToBoolean(systemParametersRepository.GetByKey("allow_chk_entry")))
             {
-                paymentProcessingToolStripMenuItem.Visible = Program.LoggedInUser.CanAddPayments;
                 batchRemittanceToolStripMenuItem.Visible = Program.LoggedInUser.CanAddPayments;
                 remittancePostingToolStripMenuItem.Visible = Program.LoggedInUser.CanAddPayments;
+                posting835RemitToolStripMenuItem.Visible = Program.LoggedInUser.CanAddPayments;
                 b5.Visible = Program.LoggedInUser.CanAddPayments;
             }
             else
             {
-                paymentProcessingToolStripMenuItem.Visible = false;
                 batchRemittanceToolStripMenuItem.Visible = false;
                 remittancePostingToolStripMenuItem.Visible = false;
+                posting835RemitToolStripMenuItem.Visible = false;
                 b5.Visible = false;
             }
             if (Convert.ToBoolean(systemParametersRepository.GetByKey("allow_chrg_entry")))
@@ -515,7 +515,7 @@ namespace LabBilling
         {
             Log.Instance.Trace($"Entering");
 
-            ClientsForm frm = new ClientsForm();
+            ClientMaintenanceForm frm = new ClientMaintenanceForm();
 
             frm.MdiParent = this;
             frm.WindowState = FormWindowState.Normal;
