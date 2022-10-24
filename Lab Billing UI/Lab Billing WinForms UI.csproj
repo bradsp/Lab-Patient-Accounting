@@ -26,6 +26,7 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
+    <InstallUrl>\\wthmclbill\installations%24\LabBilling\</InstallUrl>
     <ProductName>Lab Outreach Patient Accounting</ProductName>
     <PublisherName>West Tennessee Healthcare</PublisherName>
     <ApplicationRevision>12</ApplicationRevision>

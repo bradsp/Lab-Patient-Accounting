@@ -48,7 +48,7 @@ namespace LabBilling.Forms
                 {
                     var clientQuery =
                         from client in Datasource
-                        where client.Name.StartsWith(searchTextBox.Text.ToUpper()) || client.ClientMnem.Equals(searchTextBox.Text.ToUpper())
+                        where client.Name.Contains(searchTextBox.Text.ToUpper()) || client.ClientMnem.Equals(searchTextBox.Text.ToUpper())
                         select client;
 
                     if (clientQuery.Count() > 0)

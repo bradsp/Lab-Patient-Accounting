@@ -53,7 +53,7 @@ namespace LabBilling.Forms
                 {
                     var inscQuery =
                         from insc in Datasource
-                        where insc.PlanName.StartsWith(searchTextBox.Text.ToUpper()) || insc.InsuranceCode.Equals(searchTextBox.Text)
+                        where insc.PlanName.Contains(searchTextBox.Text.ToUpper()) || insc.InsuranceCode.Equals(searchTextBox.Text)
                         select insc;
 
                     if (inscQuery.Count() > 0)

@@ -166,6 +166,7 @@
             // 
             // accountSearchText
             // 
+            this.accountSearchText.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
             this.accountSearchText.Location = new System.Drawing.Point(11, 89);
             this.accountSearchText.Name = "accountSearchText";
             this.accountSearchText.Size = new System.Drawing.Size(177, 20);

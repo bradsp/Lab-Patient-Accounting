@@ -8,6 +8,7 @@ using LabBilling.Core.Models;
 using LazyCache;
 using LazyCache.Providers;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Identity.Client;
 using PetaPoco;
 
 namespace LabBilling
@@ -53,6 +54,11 @@ namespace LabBilling
             return fins.ToList();
         }
 
+        public void ClearFinCache()
+        {
+            cache.Remove("fin");
+        }
+
         Func<IEnumerable<InsCompany>> inscGetter = () => _insCompanyRepository.GetAll();
 
         public List<InsCompany> GetInsCompanies()
@@ -60,6 +66,11 @@ namespace LabBilling
             var inscs = cache.GetOrAdd("insc", inscGetter);
 
             return inscs.ToList();
+        }
+
+        public void ClearInscCache()
+        {
+            cache.Remove("insc");
         }
 
         Func<IEnumerable<Phy>> phyGetter = () => _phyRepository.GetActive();
@@ -71,6 +82,11 @@ namespace LabBilling
             return phys.ToList();
         }
 
+        public void ClearProviderCache()
+        {
+            cache.Remove("phy");
+        }
+
         Func<IEnumerable<Client>> clientGetter = () => _clientRepository.GetAll(false);
 
         public List<Client> GetClients()
@@ -80,6 +96,19 @@ namespace LabBilling
             return clients.ToList();
         }
 
+        Func<IEnumerable<Client>> clientAllGetter = () => _clientRepository.GetAll(true);
+
+        public List<Client> GetClientsIncludeInactive()
+        {
+            var clients = cache.GetOrAdd("client", clientAllGetter);
+            return clients.ToList();
+        }
+
+        public void ClearClientCache()
+        {
+            cache.Remove("client");
+        }
+
         Func<IEnumerable<Cdm>> cdmGetter = () => _cdmRepository.GetAll(false);
 
         public List<Cdm> GetCdms()
@@ -87,6 +116,11 @@ namespace LabBilling
             var cdms = cache.GetOrAdd("cdm", cdmGetter);
 
             return cdms.ToList();
+        }
+
+        public void ClearCdmCache()
+        {
+            cache.Remove("cdm");
         }
     }
 

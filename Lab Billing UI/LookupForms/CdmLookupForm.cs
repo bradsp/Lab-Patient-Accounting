@@ -48,7 +48,7 @@ namespace LabBilling.Forms
                 {
                     var cdmQuery =
                         from cdm in Datasource
-                        where cdm.Description.StartsWith(searchTextBox.Text.ToUpper()) || cdm.ChargeId.Equals(searchTextBox.Text.ToUpper())
+                        where cdm.Description.Contains(searchTextBox.Text.ToUpper()) || cdm.ChargeId.Equals(searchTextBox.Text.ToUpper())
                         select cdm;
 
                     if (cdmQuery.Count() > 0)

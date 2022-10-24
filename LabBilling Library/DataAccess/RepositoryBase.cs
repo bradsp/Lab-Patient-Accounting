@@ -33,8 +33,7 @@ namespace LabBilling.Core.DataAccess
             _tableInfo = GetTableInfo(typeof(Tpoco));
             _tableName = _tableInfo.TableName;
             dbConnection = new PetaPoco.Database(connectionString, new CustomSqlDatabaseProvider());
-
-            Log.Instance.Trace("Exiting");
+            Log.Instance.Debug(dbConnection.ConnectionString);
         }
 
         public RepositoryBase(Database db)
@@ -43,8 +42,7 @@ namespace LabBilling.Core.DataAccess
             _tableInfo = GetTableInfo(typeof(Tpoco));
             _tableName = _tableInfo.TableName;
             dbConnection = db;
-
-            Log.Instance.Trace("Exiting");
+            Log.Instance.Debug(dbConnection.ConnectionString);
         }
 
         public virtual List<Tpoco> GetAll()
@@ -57,7 +55,7 @@ namespace LabBilling.Core.DataAccess
 
             var queryResult = dbConnection.Fetch<Tpoco>(sql);
 
-            Log.Instance.Trace("Exiting");
+            Log.Instance.Debug(dbConnection.LastSQL);
             return queryResult;
         }
 
@@ -71,7 +69,7 @@ namespace LabBilling.Core.DataAccess
 
             var queryResult = await dbConnection.FetchAsync<Tpoco>(sql);
 
-            Log.Instance.Trace("Exiting");
+            Log.Instance.Debug(dbConnection.LastSQL);
             return queryResult.ToList<Tpoco>();
         }
 
@@ -91,7 +89,7 @@ namespace LabBilling.Core.DataAccess
                 table.rowguid = Guid.NewGuid();
 
             object identity = dbConnection.Insert(table);
-            Log.Instance.Trace("Exiting");
+            Log.Instance.Debug(dbConnection.LastSQL);
             return identity;
         }
 
@@ -113,7 +111,7 @@ namespace LabBilling.Core.DataAccess
                 table.mod_user = Environment.UserName.ToString();
 
             dbConnection.Update(table);
-            Log.Instance.Trace("Exiting");
+            Log.Instance.Debug(dbConnection.LastSQL);
             return true;
         }
 
@@ -150,7 +148,7 @@ namespace LabBilling.Core.DataAccess
             }
 
             dbConnection.Update(table, cColumns);
-            Log.Instance.Trace("Exiting");
+            Log.Instance.Debug(dbConnection.LastSQL);
             return true;        
         }
 
@@ -175,7 +173,7 @@ namespace LabBilling.Core.DataAccess
                 Log.Instance.Error("Error saving account validation record to database.", ex);
                 return false;
             }
-            Log.Instance.Trace("Exiting");
+            Log.Instance.Debug(dbConnection.LastSQL);
             return true;
         }
 
@@ -184,7 +182,7 @@ namespace LabBilling.Core.DataAccess
             Log.Instance.Trace("Entering");
 
             var count = dbConnection.Delete(table);
-            Log.Instance.Trace("Exiting");
+            Log.Instance.Debug(dbConnection.LastSQL);
             return count > 0;
         }
 
@@ -223,7 +221,6 @@ namespace LabBilling.Core.DataAccess
             }
 
             return propertyName;
-
         }
 
         public static TableInfo GetTableInfo(Type t)

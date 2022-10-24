@@ -22,13 +22,23 @@ namespace LabBilling.Core.DataAccess
 
         public List<Client> GetAll(bool includeInactive)
         {
-            PetaPoco.Sql sql = PetaPoco.Sql.Builder
-                .From(_tableName)
-                .Where($"{GetRealColumn(nameof(Client.IsDeleted))} = @0", includeInactive);
+            Log.Instance.Trace("Entering");
+            PetaPoco.Sql sql;
 
+            if (includeInactive)
+            {
+                sql = PetaPoco.Sql.Builder
+                    .From(_tableName);
+            }
+            else
+            {
+                sql = PetaPoco.Sql.Builder
+                    .From(_tableName)
+                    .Where($"{GetRealColumn(nameof(Client.IsDeleted))} = @0", false);
+            }
             var queryResult = dbConnection.Fetch<Client>(sql);
+            Log.Instance.Debug(dbConnection.LastSQL);
 
-            Log.Instance.Trace("Exiting");
             return queryResult;
         }
 
@@ -41,10 +51,42 @@ namespace LabBilling.Core.DataAccess
             }
 
             var record = dbConnection.SingleOrDefault<Client>("where cli_mnem = @0", new SqlParameter() { SqlDbType = System.Data.SqlDbType.VarChar, Value = clientMnem });
-            if (record == null)
-                record = new Client();
-
+            Log.Instance.Debug(dbConnection.LastSQL);
             return record;
+        }
+
+        public override object Add(Client table)
+        {
+            if (string.IsNullOrEmpty(table.BillProfCharges))
+                table.BillProfCharges = "NO";
+
+            return base.Add(table);
+        }
+
+        public override bool Save(Client table)
+        {
+            var record = this.GetClient(table.ClientMnem);
+
+            bool success;
+            if (record != null)
+            {
+                success = this.Update(table);
+            }
+            else
+            {
+                try
+                {
+                    this.Add(table);
+                    success = true;
+                }
+                catch (Exception ex)
+                {
+                    Log.Instance.Error(ex);
+                    success = false;
+                }
+            }
+            Log.Instance.Debug(dbConnection.LastSQL);
+            return success;
         }
 
         public override Client GetById(int id)

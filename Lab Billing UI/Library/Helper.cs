@@ -13,7 +13,9 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Windows.Forms;
 using System.Xml.Linq;
+using LabBilling.Core.Models;
 using MetroFramework.Controls;
+using Microsoft.SqlServer.Management.Smo.Wmi;
 using PetaPoco;
 using RFClassLibrary;
 
@@ -21,16 +23,10 @@ namespace LabBilling
 {
     public static class Helper
     {
-        //private static string _environment = "";
-
         public static string ConnVal
         {
             get
             {
-                //if (Program.SelectedEnvironment == null || Program.SelectedEnvironment == "") //default to MCLTEST if value has not been set
-                //    throw new ArgumentNullException("Program.SelectedEnvironment");
-                //return ConfigurationManager.ConnectionStrings[Program.SelectedEnvironment].ConnectionString;
-
                 SqlConnectionStringBuilder myBuilder = new SqlConnectionStringBuilder();
 
                 myBuilder.InitialCatalog = Program.Database;
@@ -188,6 +184,76 @@ namespace LabBilling
             }
         }
 
+        public static List<T> ConvertToList<T>(DataTable dt)
+        {
+            var columnNames = dt.Columns.Cast<DataColumn>().Select(c => c.ColumnName.ToLower()).ToList();
+            var properties = typeof(T).GetProperties();
+            return dt.AsEnumerable().Select(row => {
+                var objT = Activator.CreateInstance<T>();
+                foreach (var pro in properties)
+                {
+                    if (columnNames.Contains(pro.Name.ToLower()))
+                    {
+                        try
+                        {
+                            pro.SetValue(objT, row[pro.Name]);
+                        }
+                        catch (Exception ex) { }
+                    }
+                }
+                return objT;
+            }).ToList();
+        }
+
+        /// <summary>
+        /// Returns a new DataRow from an object.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        public static DataRow ToDataRow<T>(this T item) where T : class
+        {
+            var tb = new DataTable(typeof(T).Name);
+
+            PropertyInfo[] props = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
+            foreach (var prop in props)
+            {
+                PropertyType type;
+                if (prop.PropertyType.Name.Contains("Nullable"))
+                    tb.Columns.Add(prop.Name, Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType);
+                else
+                    tb.Columns.Add(prop.Name, prop.PropertyType);
+            }
+
+            DataRow dr = tb.NewRow();
+
+            foreach (PropertyInfo prop in item.GetType().GetProperties())
+            {
+                var type = Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType;
+                dr[prop.Name] = prop.GetValue(item, null) ?? DBNull.Value;
+            }
+
+            return dr;
+        }
+
+        /// <summary>
+        /// Returns a DataRow from an object. Use this to pass an existing datarow to be updated.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="item"></param>
+        /// <param name="row"></param>
+        /// <returns></returns>
+        public static DataRow ToDataRow<T>(this T item, DataRow row) where T:class
+        {
+            foreach (PropertyInfo prop in item.GetType().GetProperties())
+            {
+                var type = Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType;
+                row[prop.Name] = prop.GetValue(item, null) ?? DBNull.Value;
+            }
+
+            return row;
+        }
+
         public static DataTable ToDataTable<T>(this IEnumerable<T> items) where T:class
         {
             var tb = new DataTable(typeof(T).Name);
@@ -196,7 +262,11 @@ namespace LabBilling
 
             foreach (var prop in props)
             {
-                tb.Columns.Add(prop.Name, prop.PropertyType);
+                PropertyType type;
+                if (prop.PropertyType.Name.Contains("Nullable"))
+                    tb.Columns.Add(prop.Name, Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType);
+                else
+                    tb.Columns.Add(prop.Name, prop.PropertyType);
             }
 
             foreach (var item in items)
@@ -204,7 +274,7 @@ namespace LabBilling
                 var values = new object[props.Length];
                 for (var i = 0; i < props.Length; i++)
                 {
-                    values[i] = props[i].GetValue(item, null);
+                    values[i] = props[i].GetValue(item, null) ?? DBNull.Value;
                 }
 
                 tb.Rows.Add(values);
