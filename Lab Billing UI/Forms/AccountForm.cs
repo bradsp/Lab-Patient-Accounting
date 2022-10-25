@@ -988,11 +988,6 @@ namespace LabBilling.Forms
             }
         }
 
-        private void insSearchButton_Click(object sender, EventArgs e)
-        {
-
-        }
-
         #endregion
 
         #region ChargeTab

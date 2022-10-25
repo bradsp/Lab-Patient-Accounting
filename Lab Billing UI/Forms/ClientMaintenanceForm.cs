@@ -24,7 +24,7 @@ namespace LabBilling.Forms
         private BindingSource clientSource = new BindingSource();
         private List<Client> _clientList = null;
         private DataTable _clientTable = null;
-        private IEnumerable<Client> clientQuery = null;
+        //private IEnumerable<Client> clientQuery = null;
 
         public ClientMaintenanceForm()
         {

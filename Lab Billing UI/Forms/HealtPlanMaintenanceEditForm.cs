@@ -15,10 +15,11 @@ namespace LabBilling.Forms
 {
     public partial class HealthPlanMaintenanceEditForm : MetroForm
     {
-        InsCompanyRepository insCompanyRepository = new InsCompanyRepository(Helper.ConnVal);
-        InsCompany insCompany = new InsCompany();
-        FinRepository finRepository = new FinRepository(Helper.ConnVal);
+        private InsCompanyRepository insCompanyRepository = new InsCompanyRepository(Helper.ConnVal);
+        public InsCompany insCompany = new InsCompany();
+        private FinRepository finRepository = new FinRepository(Helper.ConnVal);
         private string selectedInsCode = null;
+        private bool addMode = false;
 
 
         public HealthPlanMaintenanceEditForm()
@@ -48,16 +49,26 @@ namespace LabBilling.Forms
             if (selectedInsCode == null)
             {
                 //open in add mode
-
+                insCodeTextBox.ReadOnly = false;
+                addMode = true;
             }
             else
             {
                 insCompany = insCompanyRepository.GetByCode(selectedInsCode);
-
+                insCodeTextBox.ReadOnly = true;
                 if (insCompany == null)
                 {
-                    MessageBox.Show($"Insurance Code {selectedInsCode} not found.");
-                    return;
+                    if (MessageBox.Show($"Insurance Code {selectedInsCode} not found. \n\n Do you want to add this insurance plan?",
+                        "Not Found", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                    {
+                        insCompany = new InsCompany();
+                        insCompany.InsuranceCode = selectedInsCode;
+                        insCodeTextBox.ReadOnly = false;
+                    }
+                    else
+                    {
+                        return;
+                    }                    
                 }
 
                 LoadData();
@@ -69,11 +80,7 @@ namespace LabBilling.Forms
                     Helper.SetControlsAccess(this.Controls, false);
                     cancelButton.Enabled = true;
                 }
-
-                insCodeTextBox.ReadOnly = true;
             }
-
-
         }
 
         private void LoadData()
@@ -92,8 +99,6 @@ namespace LabBilling.Forms
             billAsJmcghCheckBox.Checked = insCompany.BillAsJmcgh;
             finCodeComboBox.SelectedValue = insCompany.FinancialCode ?? String.Empty;
             
-            //finClassComboBox.SelectedValue = insCompany.FinancialClass;
-
             claimTypeComboBox.SelectedItem = insCompany.ClaimFilingIndicatorCode;
             string insType = string.Empty;
 
@@ -179,6 +184,30 @@ namespace LabBilling.Forms
         {
             this.DialogResult = DialogResult.Cancel;
             return;
+        }
+
+        private void insCodeTextBox_Leave(object sender, EventArgs e)
+        {
+            //check for existing insurance code
+            if (addMode)
+            {
+                var insc = insCompanyRepository.GetByCode(insCodeTextBox.Text);
+                if (insc != null)
+                {
+                    if (MessageBox.Show($"Record for insurance code {insc.InsuranceCode} already exists. \n\nEdit this record instead?",
+                        "Existing Insurance Plan", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                    {
+                        insCompany = insc;
+                        insCodeTextBox.ReadOnly = true;
+                        LoadData();
+                    }
+                    else
+                    {
+                        insCodeTextBox.Text = String.Empty;
+                        insCodeTextBox.Focus();
+                    }
+                }
+            }
         }
     }
 }

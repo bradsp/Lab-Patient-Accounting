@@ -268,7 +268,7 @@
             this.address1TextBox.SelectionLength = 0;
             this.address1TextBox.SelectionStart = 0;
             this.address1TextBox.ShortcutsEnabled = true;
-            this.address1TextBox.Size = new System.Drawing.Size(213, 23);
+            this.address1TextBox.Size = new System.Drawing.Size(368, 23);
             this.address1TextBox.TabIndex = 20;
             this.address1TextBox.UseSelectable = true;
             this.address1TextBox.WaterMarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
@@ -298,7 +298,7 @@
             this.planNameTextBox.SelectionLength = 0;
             this.planNameTextBox.SelectionStart = 0;
             this.planNameTextBox.ShortcutsEnabled = true;
-            this.planNameTextBox.Size = new System.Drawing.Size(213, 23);
+            this.planNameTextBox.Size = new System.Drawing.Size(368, 23);
             this.planNameTextBox.TabIndex = 18;
             this.planNameTextBox.UseSelectable = true;
             this.planNameTextBox.WaterMarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
@@ -333,6 +333,7 @@
             this.insCodeTextBox.UseSelectable = true;
             this.insCodeTextBox.WaterMarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
             this.insCodeTextBox.WaterMarkFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Pixel);
+            this.insCodeTextBox.Leave += new System.EventHandler(this.insCodeTextBox_Leave);
             // 
             // billAsJmcghCheckBox
             // 

@@ -166,7 +166,6 @@ namespace LabBilling.Forms
             this.AddInsuranceButton = new System.Windows.Forms.Button();
             this.InsTabMessageTextBox = new System.Windows.Forms.TextBox();
             this.insurancePlanTextBox = new System.Windows.Forms.TextBox();
-            this.insSearchButton = new System.Windows.Forms.Button();
             this.tabDiagnosis = new System.Windows.Forms.TabPage();
             this.DxDeleteButton = new System.Windows.Forms.PictureBox();
             this.SaveDxButton = new System.Windows.Forms.Button();
@@ -1008,7 +1007,6 @@ namespace LabBilling.Forms
             this.insTabLayoutPanel.Controls.Add(this.AddInsuranceButton, 2, 1);
             this.insTabLayoutPanel.Controls.Add(this.InsTabMessageTextBox, 1, 14);
             this.insTabLayoutPanel.Controls.Add(this.insurancePlanTextBox, 3, 3);
-            this.insTabLayoutPanel.Controls.Add(this.insSearchButton, 4, 3);
             this.insTabLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.insTabLayoutPanel.Location = new System.Drawing.Point(3, 3);
             this.insTabLayoutPanel.Name = "insTabLayoutPanel";
@@ -1087,7 +1085,7 @@ namespace LabBilling.Forms
             // 
             this.SaveInsuranceButton.BackColor = System.Drawing.Color.SkyBlue;
             this.SaveInsuranceButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.SaveInsuranceButton.Location = new System.Drawing.Point(3, 434);
+            this.SaveInsuranceButton.Location = new System.Drawing.Point(3, 431);
             this.SaveInsuranceButton.Name = "SaveInsuranceButton";
             this.SaveInsuranceButton.Size = new System.Drawing.Size(99, 52);
             this.SaveInsuranceButton.TabIndex = 25;
@@ -1112,7 +1110,7 @@ namespace LabBilling.Forms
             this.PlanFinCodeComboBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.PlanFinCodeComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.PlanFinCodeComboBox.FormattingEnabled = true;
-            this.PlanFinCodeComboBox.Location = new System.Drawing.Point(558, 301);
+            this.PlanFinCodeComboBox.Location = new System.Drawing.Point(558, 298);
             this.PlanFinCodeComboBox.Name = "PlanFinCodeComboBox";
             this.PlanFinCodeComboBox.Size = new System.Drawing.Size(230, 21);
             this.PlanFinCodeComboBox.TabIndex = 20;
@@ -1121,7 +1119,7 @@ namespace LabBilling.Forms
             // 
             this.InsPlanFinCodeLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.InsPlanFinCodeLabel.AutoSize = true;
-            this.InsPlanFinCodeLabel.Location = new System.Drawing.Point(428, 305);
+            this.InsPlanFinCodeLabel.Location = new System.Drawing.Point(428, 302);
             this.InsPlanFinCodeLabel.Name = "InsPlanFinCodeLabel";
             this.InsPlanFinCodeLabel.Size = new System.Drawing.Size(101, 13);
             this.InsPlanFinCodeLabel.TabIndex = 32;
@@ -1130,7 +1128,7 @@ namespace LabBilling.Forms
             // CertSSNTextBox
             // 
             this.CertSSNTextBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.CertSSNTextBox.Location = new System.Drawing.Point(558, 408);
+            this.CertSSNTextBox.Location = new System.Drawing.Point(558, 405);
             this.CertSSNTextBox.Name = "CertSSNTextBox";
             this.CertSSNTextBox.Size = new System.Drawing.Size(230, 20);
             this.CertSSNTextBox.TabIndex = 24;
@@ -1147,7 +1145,7 @@ namespace LabBilling.Forms
             // 
             this.InsCertSSNLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.InsCertSSNLabel.AutoSize = true;
-            this.InsCertSSNLabel.Location = new System.Drawing.Point(428, 411);
+            this.InsCertSSNLabel.Location = new System.Drawing.Point(428, 408);
             this.InsCertSSNLabel.Name = "InsCertSSNLabel";
             this.InsCertSSNLabel.Size = new System.Drawing.Size(53, 13);
             this.InsCertSSNLabel.TabIndex = 40;
@@ -1156,7 +1154,7 @@ namespace LabBilling.Forms
             // GroupNameTextBox
             // 
             this.GroupNameTextBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.GroupNameTextBox.Location = new System.Drawing.Point(558, 381);
+            this.GroupNameTextBox.Location = new System.Drawing.Point(558, 378);
             this.GroupNameTextBox.Name = "GroupNameTextBox";
             this.GroupNameTextBox.Size = new System.Drawing.Size(230, 20);
             this.GroupNameTextBox.TabIndex = 23;
@@ -1165,7 +1163,7 @@ namespace LabBilling.Forms
             // 
             this.InsGroupNameLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.InsGroupNameLabel.AutoSize = true;
-            this.InsGroupNameLabel.Location = new System.Drawing.Point(428, 385);
+            this.InsGroupNameLabel.Location = new System.Drawing.Point(428, 382);
             this.InsGroupNameLabel.Name = "InsGroupNameLabel";
             this.InsGroupNameLabel.Size = new System.Drawing.Size(67, 13);
             this.InsGroupNameLabel.TabIndex = 38;
@@ -1175,7 +1173,7 @@ namespace LabBilling.Forms
             // 
             this.HolderFirstNameLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.HolderFirstNameLabel.AutoSize = true;
-            this.HolderFirstNameLabel.Location = new System.Drawing.Point(3, 172);
+            this.HolderFirstNameLabel.Location = new System.Drawing.Point(3, 170);
             this.HolderFirstNameLabel.Name = "HolderFirstNameLabel";
             this.HolderFirstNameLabel.Size = new System.Drawing.Size(91, 13);
             this.HolderFirstNameLabel.TabIndex = 3;
@@ -1184,7 +1182,7 @@ namespace LabBilling.Forms
             // HolderZipTextBox
             // 
             this.HolderZipTextBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.HolderZipTextBox.Location = new System.Drawing.Point(133, 301);
+            this.HolderZipTextBox.Location = new System.Drawing.Point(133, 298);
             this.HolderZipTextBox.Name = "HolderZipTextBox";
             this.HolderZipTextBox.Size = new System.Drawing.Size(153, 20);
             this.HolderZipTextBox.TabIndex = 7;
@@ -1192,7 +1190,7 @@ namespace LabBilling.Forms
             // GroupNumberTextBox
             // 
             this.GroupNumberTextBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.GroupNumberTextBox.Location = new System.Drawing.Point(558, 355);
+            this.GroupNumberTextBox.Location = new System.Drawing.Point(558, 352);
             this.GroupNumberTextBox.Name = "GroupNumberTextBox";
             this.GroupNumberTextBox.Size = new System.Drawing.Size(230, 20);
             this.GroupNumberTextBox.TabIndex = 22;
@@ -1201,7 +1199,7 @@ namespace LabBilling.Forms
             // 
             this.HolderZipCodeLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.HolderZipCodeLabel.AutoSize = true;
-            this.HolderZipCodeLabel.Location = new System.Drawing.Point(3, 305);
+            this.HolderZipCodeLabel.Location = new System.Drawing.Point(3, 302);
             this.HolderZipCodeLabel.Name = "HolderZipCodeLabel";
             this.HolderZipCodeLabel.Size = new System.Drawing.Size(46, 13);
             this.HolderZipCodeLabel.TabIndex = 13;
@@ -1211,7 +1209,7 @@ namespace LabBilling.Forms
             // 
             this.InsGroupNumberLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.InsGroupNumberLabel.AutoSize = true;
-            this.InsGroupNumberLabel.Location = new System.Drawing.Point(428, 358);
+            this.InsGroupNumberLabel.Location = new System.Drawing.Point(428, 355);
             this.InsGroupNumberLabel.Name = "InsGroupNumberLabel";
             this.InsGroupNumberLabel.Size = new System.Drawing.Size(76, 13);
             this.InsGroupNumberLabel.TabIndex = 36;
@@ -1220,7 +1218,7 @@ namespace LabBilling.Forms
             // PlanAddress2TextBox
             // 
             this.PlanAddress2TextBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.PlanAddress2TextBox.Location = new System.Drawing.Point(558, 248);
+            this.PlanAddress2TextBox.Location = new System.Drawing.Point(558, 245);
             this.PlanAddress2TextBox.Name = "PlanAddress2TextBox";
             this.PlanAddress2TextBox.Size = new System.Drawing.Size(230, 20);
             this.PlanAddress2TextBox.TabIndex = 18;
@@ -1232,7 +1230,7 @@ namespace LabBilling.Forms
             this.InsRelationComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.InsRelationComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.InsRelationComboBox.FormattingEnabled = true;
-            this.InsRelationComboBox.Location = new System.Drawing.Point(133, 381);
+            this.InsRelationComboBox.Location = new System.Drawing.Point(133, 378);
             this.InsRelationComboBox.Name = "InsRelationComboBox";
             this.InsRelationComboBox.Size = new System.Drawing.Size(230, 21);
             this.InsRelationComboBox.TabIndex = 10;
@@ -1241,7 +1239,7 @@ namespace LabBilling.Forms
             // 
             this.HolderRelationLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.HolderRelationLabel.AutoSize = true;
-            this.HolderRelationLabel.Location = new System.Drawing.Point(3, 385);
+            this.HolderRelationLabel.Location = new System.Drawing.Point(3, 382);
             this.HolderRelationLabel.Name = "HolderRelationLabel";
             this.HolderRelationLabel.Size = new System.Drawing.Size(94, 13);
             this.HolderRelationLabel.TabIndex = 19;
@@ -1250,7 +1248,7 @@ namespace LabBilling.Forms
             // PolicyNumberTextBox
             // 
             this.PolicyNumberTextBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.PolicyNumberTextBox.Location = new System.Drawing.Point(558, 328);
+            this.PolicyNumberTextBox.Location = new System.Drawing.Point(558, 325);
             this.PolicyNumberTextBox.Name = "PolicyNumberTextBox";
             this.PolicyNumberTextBox.Size = new System.Drawing.Size(230, 20);
             this.PolicyNumberTextBox.TabIndex = 21;
@@ -1259,7 +1257,7 @@ namespace LabBilling.Forms
             // 
             this.HolderStateLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.HolderStateLabel.AutoSize = true;
-            this.HolderStateLabel.Location = new System.Drawing.Point(3, 278);
+            this.HolderStateLabel.Location = new System.Drawing.Point(3, 275);
             this.HolderStateLabel.Name = "HolderStateLabel";
             this.HolderStateLabel.Size = new System.Drawing.Size(32, 13);
             this.HolderStateLabel.TabIndex = 11;
@@ -1269,7 +1267,7 @@ namespace LabBilling.Forms
             // 
             this.HolderDOBTextBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.HolderDOBTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.HolderDOBTextBox.Location = new System.Drawing.Point(133, 355);
+            this.HolderDOBTextBox.Location = new System.Drawing.Point(133, 352);
             this.HolderDOBTextBox.Mask = "00/00/0000";
             this.HolderDOBTextBox.Name = "HolderDOBTextBox";
             this.HolderDOBTextBox.Size = new System.Drawing.Size(230, 20);
@@ -1280,7 +1278,7 @@ namespace LabBilling.Forms
             // 
             this.InsPolicyNumberLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.InsPolicyNumberLabel.AutoSize = true;
-            this.InsPolicyNumberLabel.Location = new System.Drawing.Point(428, 332);
+            this.InsPolicyNumberLabel.Location = new System.Drawing.Point(428, 329);
             this.InsPolicyNumberLabel.Name = "InsPolicyNumberLabel";
             this.InsPolicyNumberLabel.Size = new System.Drawing.Size(75, 13);
             this.InsPolicyNumberLabel.TabIndex = 34;
@@ -1290,7 +1288,7 @@ namespace LabBilling.Forms
             // 
             this.HolderDOBLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.HolderDOBLabel.AutoSize = true;
-            this.HolderDOBLabel.Location = new System.Drawing.Point(3, 358);
+            this.HolderDOBLabel.Location = new System.Drawing.Point(3, 355);
             this.HolderDOBLabel.Name = "HolderDOBLabel";
             this.HolderDOBLabel.Size = new System.Drawing.Size(66, 13);
             this.HolderDOBLabel.TabIndex = 17;
@@ -1305,7 +1303,7 @@ namespace LabBilling.Forms
             this.HolderStateComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.HolderStateComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.HolderStateComboBox.FormattingEnabled = true;
-            this.HolderStateComboBox.Location = new System.Drawing.Point(133, 274);
+            this.HolderStateComboBox.Location = new System.Drawing.Point(133, 271);
             this.HolderStateComboBox.Name = "HolderStateComboBox";
             this.HolderStateComboBox.Size = new System.Drawing.Size(230, 21);
             this.HolderStateComboBox.TabIndex = 6;
@@ -1313,7 +1311,7 @@ namespace LabBilling.Forms
             // HolderFirstNameTextBox
             // 
             this.HolderFirstNameTextBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.HolderFirstNameTextBox.Location = new System.Drawing.Point(133, 168);
+            this.HolderFirstNameTextBox.Location = new System.Drawing.Point(133, 167);
             this.HolderFirstNameTextBox.Name = "HolderFirstNameTextBox";
             this.HolderFirstNameTextBox.Size = new System.Drawing.Size(230, 20);
             this.HolderFirstNameTextBox.TabIndex = 2;
@@ -1322,7 +1320,7 @@ namespace LabBilling.Forms
             // 
             this.InsPlanLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.InsPlanLabel.AutoSize = true;
-            this.InsPlanLabel.Location = new System.Drawing.Point(428, 172);
+            this.InsPlanLabel.Location = new System.Drawing.Point(428, 170);
             this.InsPlanLabel.Name = "InsPlanLabel";
             this.InsPlanLabel.Size = new System.Drawing.Size(78, 13);
             this.InsPlanLabel.TabIndex = 23;
@@ -1360,7 +1358,7 @@ namespace LabBilling.Forms
             "Male",
             "Female",
             "Unknown"});
-            this.HolderSexComboBox.Location = new System.Drawing.Point(133, 328);
+            this.HolderSexComboBox.Location = new System.Drawing.Point(133, 325);
             this.HolderSexComboBox.Name = "HolderSexComboBox";
             this.HolderSexComboBox.Size = new System.Drawing.Size(230, 21);
             this.HolderSexComboBox.TabIndex = 8;
@@ -1369,7 +1367,7 @@ namespace LabBilling.Forms
             // 
             this.HolderMiddleNameLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.HolderMiddleNameLabel.AutoSize = true;
-            this.HolderMiddleNameLabel.Location = new System.Drawing.Point(3, 199);
+            this.HolderMiddleNameLabel.Location = new System.Drawing.Point(3, 196);
             this.HolderMiddleNameLabel.Name = "HolderMiddleNameLabel";
             this.HolderMiddleNameLabel.Size = new System.Drawing.Size(103, 13);
             this.HolderMiddleNameLabel.TabIndex = 5;
@@ -1379,7 +1377,7 @@ namespace LabBilling.Forms
             // 
             this.HolderSexLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.HolderSexLabel.AutoSize = true;
-            this.HolderSexLabel.Location = new System.Drawing.Point(3, 332);
+            this.HolderSexLabel.Location = new System.Drawing.Point(3, 329);
             this.HolderSexLabel.Name = "HolderSexLabel";
             this.HolderSexLabel.Size = new System.Drawing.Size(25, 13);
             this.HolderSexLabel.TabIndex = 15;
@@ -1388,7 +1386,7 @@ namespace LabBilling.Forms
             // HolderMiddleNameTextBox
             // 
             this.HolderMiddleNameTextBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.HolderMiddleNameTextBox.Location = new System.Drawing.Point(133, 196);
+            this.HolderMiddleNameTextBox.Location = new System.Drawing.Point(133, 193);
             this.HolderMiddleNameTextBox.Name = "HolderMiddleNameTextBox";
             this.HolderMiddleNameTextBox.Size = new System.Drawing.Size(230, 20);
             this.HolderMiddleNameTextBox.TabIndex = 3;
@@ -1397,7 +1395,7 @@ namespace LabBilling.Forms
             // 
             this.InsPlanNameLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.InsPlanNameLabel.AutoSize = true;
-            this.InsPlanNameLabel.Location = new System.Drawing.Point(428, 199);
+            this.InsPlanNameLabel.Location = new System.Drawing.Point(428, 196);
             this.InsPlanNameLabel.Name = "InsPlanNameLabel";
             this.InsPlanNameLabel.Size = new System.Drawing.Size(59, 13);
             this.InsPlanNameLabel.TabIndex = 25;
@@ -1406,7 +1404,7 @@ namespace LabBilling.Forms
             // PlanNameTextBox
             // 
             this.PlanNameTextBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.PlanNameTextBox.Location = new System.Drawing.Point(558, 196);
+            this.PlanNameTextBox.Location = new System.Drawing.Point(558, 193);
             this.PlanNameTextBox.Name = "PlanNameTextBox";
             this.PlanNameTextBox.ReadOnly = true;
             this.PlanNameTextBox.Size = new System.Drawing.Size(230, 20);
@@ -1416,7 +1414,7 @@ namespace LabBilling.Forms
             // 
             this.HolderAddressLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.HolderAddressLabel.AutoSize = true;
-            this.HolderAddressLabel.Location = new System.Drawing.Point(3, 225);
+            this.HolderAddressLabel.Location = new System.Drawing.Point(3, 222);
             this.HolderAddressLabel.Name = "HolderAddressLabel";
             this.HolderAddressLabel.Size = new System.Drawing.Size(45, 13);
             this.HolderAddressLabel.TabIndex = 7;
@@ -1425,7 +1423,7 @@ namespace LabBilling.Forms
             // HolderAddressTextBox
             // 
             this.HolderAddressTextBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.HolderAddressTextBox.Location = new System.Drawing.Point(133, 222);
+            this.HolderAddressTextBox.Location = new System.Drawing.Point(133, 219);
             this.HolderAddressTextBox.Name = "HolderAddressTextBox";
             this.HolderAddressTextBox.Size = new System.Drawing.Size(230, 20);
             this.HolderAddressTextBox.TabIndex = 4;
@@ -1433,7 +1431,7 @@ namespace LabBilling.Forms
             // PlanCityStTextBox
             // 
             this.PlanCityStTextBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.PlanCityStTextBox.Location = new System.Drawing.Point(558, 274);
+            this.PlanCityStTextBox.Location = new System.Drawing.Point(558, 271);
             this.PlanCityStTextBox.Name = "PlanCityStTextBox";
             this.PlanCityStTextBox.Size = new System.Drawing.Size(230, 20);
             this.PlanCityStTextBox.TabIndex = 19;
@@ -1442,7 +1440,7 @@ namespace LabBilling.Forms
             // 
             this.InsPlanAddressLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.InsPlanAddressLabel.AutoSize = true;
-            this.InsPlanAddressLabel.Location = new System.Drawing.Point(428, 225);
+            this.InsPlanAddressLabel.Location = new System.Drawing.Point(428, 222);
             this.InsPlanAddressLabel.Name = "InsPlanAddressLabel";
             this.InsPlanAddressLabel.Size = new System.Drawing.Size(69, 13);
             this.InsPlanAddressLabel.TabIndex = 27;
@@ -1452,7 +1450,7 @@ namespace LabBilling.Forms
             // 
             this.InsPlanCityStateZipLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.InsPlanCityStateZipLabel.AutoSize = true;
-            this.InsPlanCityStateZipLabel.Location = new System.Drawing.Point(428, 278);
+            this.InsPlanCityStateZipLabel.Location = new System.Drawing.Point(428, 275);
             this.InsPlanCityStateZipLabel.Name = "InsPlanCityStateZipLabel";
             this.InsPlanCityStateZipLabel.Size = new System.Drawing.Size(79, 13);
             this.InsPlanCityStateZipLabel.TabIndex = 30;
@@ -1461,7 +1459,7 @@ namespace LabBilling.Forms
             // PlanAddressTextBox
             // 
             this.PlanAddressTextBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.PlanAddressTextBox.Location = new System.Drawing.Point(558, 222);
+            this.PlanAddressTextBox.Location = new System.Drawing.Point(558, 219);
             this.PlanAddressTextBox.Name = "PlanAddressTextBox";
             this.PlanAddressTextBox.Size = new System.Drawing.Size(230, 20);
             this.PlanAddressTextBox.TabIndex = 17;
@@ -1469,7 +1467,7 @@ namespace LabBilling.Forms
             // HolderCityTextBox
             // 
             this.HolderCityTextBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.HolderCityTextBox.Location = new System.Drawing.Point(133, 248);
+            this.HolderCityTextBox.Location = new System.Drawing.Point(133, 245);
             this.HolderCityTextBox.Name = "HolderCityTextBox";
             this.HolderCityTextBox.Size = new System.Drawing.Size(230, 20);
             this.HolderCityTextBox.TabIndex = 5;
@@ -1478,7 +1476,7 @@ namespace LabBilling.Forms
             // 
             this.HolderCityLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.HolderCityLabel.AutoSize = true;
-            this.HolderCityLabel.Location = new System.Drawing.Point(3, 251);
+            this.HolderCityLabel.Location = new System.Drawing.Point(3, 248);
             this.HolderCityLabel.Name = "HolderCityLabel";
             this.HolderCityLabel.Size = new System.Drawing.Size(24, 13);
             this.HolderCityLabel.TabIndex = 9;
@@ -1521,18 +1519,6 @@ namespace LabBilling.Forms
             this.insurancePlanTextBox.Size = new System.Drawing.Size(230, 20);
             this.insurancePlanTextBox.TabIndex = 14;
             this.insurancePlanTextBox.KeyUp += new System.Windows.Forms.KeyEventHandler(this.insurancePlanTextBox_KeyUp);
-            // 
-            // insSearchButton
-            // 
-            this.insSearchButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.insSearchButton.Location = new System.Drawing.Point(853, 167);
-            this.insSearchButton.Name = "insSearchButton";
-            this.insSearchButton.Size = new System.Drawing.Size(75, 23);
-            this.insSearchButton.TabIndex = 15;
-            this.insSearchButton.Text = "Plan Search";
-            this.insSearchButton.UseVisualStyleBackColor = true;
-            this.insSearchButton.Visible = false;
-            this.insSearchButton.Click += new System.EventHandler(this.insSearchButton_Click);
             // 
             // tabDiagnosis
             // 
@@ -2799,7 +2785,6 @@ namespace LabBilling.Forms
         private System.Windows.Forms.TextBox GuarantorPhoneTextBox;
         private Library.ProviderLookup providerLookup1;
         private System.Windows.Forms.TextBox insurancePlanTextBox;
-        private System.Windows.Forms.Button insSearchButton;
     }
 }
 
