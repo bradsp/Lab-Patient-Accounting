@@ -19,6 +19,7 @@ using System.Threading.Tasks;
 using System.Threading;
 using static System.Net.Mime.MediaTypeNames;
 using System.ServiceModel.Channels;
+using Application = System.Windows.Forms.Application;
 
 namespace LabBilling
 {
@@ -61,11 +62,28 @@ namespace LabBilling
             PersonSearchForm frm = new PersonSearchForm();
             if(frm.ShowDialog() == DialogResult.OK)
             {
-                AccountForm accFrm = new AccountForm(frm.SelectedAccount);
-                accFrm.MdiParent = this;
-                accFrm.WindowState = FormWindowState.Normal;
-                accFrm.AutoScroll = true;
-                accFrm.Show();
+
+                var formsList = System.Windows.Forms.Application.OpenForms.OfType<AccountForm>();
+                bool formFound = false;
+                foreach (var form in formsList)
+                {
+                    if (form.SelectedAccount == frm.SelectedAccount)
+                    {
+                        //form is already open, activate this one
+                        form.Focus();
+                        formFound = true;
+                        break;
+                    }
+                }
+
+                if (!formFound)
+                {
+                    AccountForm accFrm = new AccountForm(frm.SelectedAccount);
+                    accFrm.MdiParent = this;
+                    accFrm.WindowState = FormWindowState.Normal;
+                    accFrm.AutoScroll = true;
+                    accFrm.Show();
+                }
             }
         }
 
@@ -260,7 +278,7 @@ namespace LabBilling
             var linkLabel = (LinkLabel)sender;
 
             bool IsAlreadyOpen = false;
-            if (System.Windows.Forms.Application.OpenForms.OfType<AccountForm>().Count() > 0)
+            if (Application.OpenForms.OfType<AccountForm>().Count() > 0)
             {
                 foreach (AccountForm frm in System.Windows.Forms.Application.OpenForms.OfType<AccountForm>())
                 {
@@ -379,11 +397,21 @@ namespace LabBilling
         {
             Log.Instance.Trace($"Entering");
 
-            BadDebtForm frm = new BadDebtForm();
-            frm.MdiParent = this;
-            frm.AutoScroll = true;
-            frm.WindowState = FormWindowState.Normal;
-            frm.Show();
+            var formsList = Application.OpenForms.OfType<BadDebtForm>();
+
+            if (formsList.Count() > 0)
+            {
+                formsList.First().Focus();
+            }
+            else
+            {
+
+                BadDebtForm frm = new BadDebtForm();
+                frm.MdiParent = this;
+                frm.AutoScroll = true;
+                frm.WindowState = FormWindowState.Normal;
+                frm.Show();
+            }
         }
 
         private void questCorrectionsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -422,22 +450,40 @@ namespace LabBilling
         private void chargeMasterToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Log.Instance.Debug($"Entering");
-            frmCDM frm = new frmCDM(Helper.GetArgs());
-            frm.MdiParent = this;
-            frm.WindowState = FormWindowState.Normal;
-            frm.AutoScroll = true;
-            frm.Show();
+            var formsList = Application.OpenForms.OfType<frmCDM>();
+
+            if (formsList.Count() > 0)
+            {
+                formsList.First().Focus();
+            }
+            else
+            {
+                frmCDM frm = new frmCDM(Helper.GetArgs());
+                frm.MdiParent = this;
+                frm.WindowState = FormWindowState.Normal;
+                frm.AutoScroll = true;
+                frm.Show();
+            }
         }
 
         private void clientBillsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Log.Instance.Trace($"Entering");
 
-            ClientBillForm frm = new ClientBillForm(Helper.GetArgs());
-            frm.MdiParent = this;
-            frm.AutoScroll = true;
-            frm.WindowState = FormWindowState.Normal;
-            frm.Show();
+            var formsList = Application.OpenForms.OfType<ClientBillForm>();
+
+            if (formsList.Count() > 0)
+            {
+                formsList.First().Focus();
+            }
+            else
+            {
+                ClientBillForm frm = new ClientBillForm(Helper.GetArgs());
+                frm.MdiParent = this;
+                frm.AutoScroll = true;
+                frm.WindowState = FormWindowState.Normal;
+                frm.Show();
+            }
         }
 
         private void duplicateAccountsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -515,22 +561,41 @@ namespace LabBilling
         {
             Log.Instance.Trace($"Entering");
 
-            ClientMaintenanceForm frm = new ClientMaintenanceForm();
+            var formsList = Application.OpenForms.OfType<ClientMaintenanceForm>();
+            
+            if(formsList.Count() > 0)
+            {
+                formsList.First().Focus();
+            }
+            else
+            {
+                ClientMaintenanceForm frm = new ClientMaintenanceForm();
 
-            frm.MdiParent = this;
-            frm.WindowState = FormWindowState.Normal;
-            frm.AutoScroll = true;
-            frm.Show();
+                frm.MdiParent = this;
+                frm.WindowState = FormWindowState.Normal;
+                frm.AutoScroll = true;
+                frm.Show();
+            }
         }
 
         private void batchChargeEntryToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Log.Instance.Trace($"Entering");
 
-            BatchChargeEntry frm = new BatchChargeEntry();
+            var formsList = Application.OpenForms.OfType<BatchChargeEntry>();
 
-            frm.MdiParent = this;
-            frm.Show();
+            if (formsList.Count() > 0)
+            {
+                formsList.First().Focus();
+            }
+            else
+            {
+                BatchChargeEntry frm = new BatchChargeEntry();
+
+                frm.MdiParent = this;
+                frm.Show();
+            }
+
         }
 
         private void batchRemittanceToolStripMenuItem_Click(object sender, EventArgs e)
@@ -594,13 +659,22 @@ namespace LabBilling
         private void clientBillsNewToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Log.Instance.Trace("Entering");
-            ClientInvoiceForm frm = new ClientInvoiceForm();
 
-            frm.MdiParent = this;
-            frm.WindowState = FormWindowState.Normal;
-            frm.AutoScroll = true;
-            frm.Show();
+            var formsList = Application.OpenForms.OfType<ClientInvoiceForm>();
 
+            if (formsList.Count() > 0)
+            {
+                formsList.First().Focus();
+            }
+            else
+            {
+                ClientInvoiceForm frm = new ClientInvoiceForm();
+
+                frm.MdiParent = this;
+                frm.WindowState = FormWindowState.Normal;
+                frm.AutoScroll = true;
+                frm.Show();
+            }
         }
 
         private void interfaceMonitorToolStripMenuItem_Click(object sender, EventArgs e)
@@ -777,12 +851,22 @@ namespace LabBilling
         private void chargeMasterToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             Log.Instance.Trace("Entering");
-            ChargeMasterMaintenance frm = new ChargeMasterMaintenance();
 
-            frm.MdiParent = this;
-            frm.WindowState = FormWindowState.Normal;
-            frm.AutoScroll = true;
-            frm.Show();
+            var formsList = Application.OpenForms.OfType<ChargeMasterMaintenance>();
+
+            if (formsList.Count() > 0)
+            {
+                formsList.First().Focus();
+            }
+            else
+            {
+                ChargeMasterMaintenance frm = new ChargeMasterMaintenance();
+
+                frm.MdiParent = this;
+                frm.WindowState = FormWindowState.Normal;
+                frm.AutoScroll = true;
+                frm.Show();
+            }
         }
     }
 }

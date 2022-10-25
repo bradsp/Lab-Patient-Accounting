@@ -1,19 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using LabBilling.Core.DataAccess;
-using LabBilling.Core;
 using LabBilling.Logging;
 using LabBilling.Core.Models;
 using LabBilling.Library;
-using RFClassLibrary;
-using Microsoft.Identity.Client;
 
 
 namespace LabBilling.Forms
@@ -229,6 +223,7 @@ namespace LabBilling.Forms
 
         private void accountGrid_RowHeaderMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
         {
+            /*
             Log.Instance.Trace($"Entering");
             Cursor.Current = Cursors.WaitCursor;
             int selectedRows = accountGrid.Rows.GetRowCount(DataGridViewElementStates.Selected);
@@ -247,7 +242,7 @@ namespace LabBilling.Forms
                 MessageBox.Show("No account selected.");
                 return;
             }
-
+            */
         }
 
         private void WorkListForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -490,11 +485,25 @@ namespace LabBilling.Forms
             if (selectedRows > 0)
             {
                 var selectedAccount = accountGrid.SelectedRows[0].Cells[nameof(AccountSearch.Account)].Value.ToString();
-                AccountForm frm = new AccountForm(selectedAccount)
+                // TODO: make sure there is not another tab already open for this account
+                var formsList = Application.OpenForms.OfType<AccountForm>();
+                bool formFound = false;
+                foreach(var form in formsList)
                 {
-                    MdiParent = this.ParentForm
-                };
-                frm.Show();
+                    if(form.SelectedAccount == selectedAccount)
+                    {
+                        //form is already open, activate this one
+                        form.Focus();
+                        formFound = true;
+                        break;
+                    }
+                }
+
+                if (!formFound)
+                {
+                    AccountForm frm = new AccountForm(selectedAccount, this.ParentForm);
+                    frm.Show();
+                }
                 return;
             }
             else

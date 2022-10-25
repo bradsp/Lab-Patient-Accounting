@@ -71,13 +71,15 @@ namespace LabBilling.Forms
             Log.Instance.Trace("Entering");
 
             if (account != null)
+            {
                 _selectedAccount = account;
+            }
 
             if (parentForm != null)
                 this.MdiParent = parentForm;
         }
 
-        public AccountForm()
+        private AccountForm()
         {
             Log.Instance.Trace("Entering");
             InitializeComponent();
