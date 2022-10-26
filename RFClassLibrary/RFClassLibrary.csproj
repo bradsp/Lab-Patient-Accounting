@@ -300,6 +300,7 @@
   <ItemGroup>
     <Content Include="HL7Transform.xslt" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>

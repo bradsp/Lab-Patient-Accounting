@@ -43,6 +43,7 @@ namespace LabBilling.Forms
             this.progressBar2 = new System.Windows.Forms.ProgressBar();
             this.InvoiceHistoryTabControl = new System.Windows.Forms.TabControl();
             this.GenerateInvoicesTabPage = new System.Windows.Forms.TabPage();
+            this.StatusText = new System.Windows.Forms.TextBox();
             this.InvoiceHistoryTabPage = new System.Windows.Forms.TabPage();
             this.label6 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
@@ -53,7 +54,6 @@ namespace LabBilling.Forms
             this.ViewInvoice = new System.Windows.Forms.Button();
             this.PrintInvoice = new System.Windows.Forms.Button();
             this.InvoiceHistoryDGV = new System.Windows.Forms.DataGridView();
-            this.StatusText = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.InvoicesDGV)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.UnbilledAccountsDGV)).BeginInit();
             this.InvoiceHistoryTabControl.SuspendLayout();
@@ -74,6 +74,7 @@ namespace LabBilling.Forms
             this.InvoicesDGV.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.InvoicesDGV.Location = new System.Drawing.Point(6, 34);
             this.InvoicesDGV.Name = "InvoicesDGV";
+            this.InvoicesDGV.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.InvoicesDGV.Size = new System.Drawing.Size(763, 372);
             this.InvoicesDGV.TabIndex = 0;
             this.InvoicesDGV.SelectionChanged += new System.EventHandler(this.InvoicesDGV_SelectionChanged);
@@ -229,6 +230,16 @@ namespace LabBilling.Forms
             this.GenerateInvoicesTabPage.Text = "Generate Invoices";
             this.GenerateInvoicesTabPage.UseVisualStyleBackColor = true;
             // 
+            // StatusText
+            // 
+            this.StatusText.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.StatusText.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.StatusText.Location = new System.Drawing.Point(775, 152);
+            this.StatusText.Multiline = true;
+            this.StatusText.Name = "StatusText";
+            this.StatusText.Size = new System.Drawing.Size(215, 254);
+            this.StatusText.TabIndex = 15;
+            // 
             // InvoiceHistoryTabPage
             // 
             this.InvoiceHistoryTabPage.Controls.Add(this.label6);
@@ -342,15 +353,6 @@ namespace LabBilling.Forms
             this.InvoiceHistoryDGV.Size = new System.Drawing.Size(892, 501);
             this.InvoiceHistoryDGV.TabIndex = 0;
             this.InvoiceHistoryDGV.CellMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.InvoiceHistoryDGV_CellMouseDoubleClick);
-            // 
-            // StatusText
-            // 
-            this.StatusText.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.StatusText.Location = new System.Drawing.Point(775, 152);
-            this.StatusText.Multiline = true;
-            this.StatusText.Name = "StatusText";
-            this.StatusText.Size = new System.Drawing.Size(215, 254);
-            this.StatusText.TabIndex = 15;
             // 
             // ClientInvoiceForm
             // 

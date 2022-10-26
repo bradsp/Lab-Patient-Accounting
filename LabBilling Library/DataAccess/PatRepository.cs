@@ -35,7 +35,7 @@ namespace LabBilling.Core.DataAccess
 
         public Pat GetByAccount(string account)
         {
-            Log.Instance.Debug("Entering");
+            Log.Instance.Trace($"Entering - account {account}");
 
             var record = dbConnection.SingleOrDefault<Pat>("where account = @0",
                 new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account });
@@ -155,6 +155,7 @@ namespace LabBilling.Core.DataAccess
 
         public bool SaveDiagnoses(Pat pat)
         {
+            Log.Instance.Trace($"Entering - account {pat.AccountNo}");
             // this function will validate and save the dx from the model in both the pat record and in the patdx table
 
             //first - the updated diagnoses is in the PatDiag object. We need to update the individual fields in the Pat object from this
@@ -214,6 +215,7 @@ namespace LabBilling.Core.DataAccess
 
         public override bool Update(Pat table)
         {
+            Log.Instance.Trace($"Entering - account {table.AccountNo}");
             //generate full name from name parts
             table.PatFullName =
                 String.Format("{0},{1} {2} {3}",
@@ -236,6 +238,7 @@ namespace LabBilling.Core.DataAccess
 
         public override bool Update(Pat table, IEnumerable<string> columns)
         {
+            Log.Instance.Trace($"Entering - account {table.AccountNo}");
             //generate full name from name parts
             table.PatFullName =
                 String.Format("{0},{1} {2} {3}",
@@ -259,6 +262,7 @@ namespace LabBilling.Core.DataAccess
 
         public void SaveAll(Pat pat)
         {
+            Log.Instance.Trace($"Entering - account {pat.AccountNo}");
             dbConnection.Save(pat);
         }
     }

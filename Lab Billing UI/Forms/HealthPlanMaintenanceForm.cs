@@ -19,11 +19,15 @@ namespace LabBilling.Forms
         private InsCompanyRepository insCompanyRepository = new InsCompanyRepository(Helper.ConnVal);
         private DataTable _insCompanyTable = null;
         private BindingSource insCompanySource = new BindingSource();
+        private Timer _timer = null;
+        private const int _timerDelay = 650;
         
 
         public HealthPlanMaintenanceForm()
         {
             InitializeComponent();
+            _timer = new Timer() { Enabled = false, Interval = _timerDelay };
+            _timer.Tick += new EventHandler(filterTextBox_KeyUpDone);
         }
 
         private void HealthPlanMaintenanceForm_Load(object sender, EventArgs e)
@@ -43,21 +47,12 @@ namespace LabBilling.Forms
             //set permissions
             AddPlanButton.Visible = Program.LoggedInUser.CanEditDictionary;
 
-            LoadHealthPlanGrid();
+            ConfigureHealthPlanGrid();
         }
 
-        private void LoadHealthPlanGrid()
+        private void ConfigureHealthPlanGrid()
         {
-            //healthPlanGrid.DataSource = null;
-           // healthPlanGrid.Rows.Clear();
-            //healthPlanGrid.Columns.Clear();
 
-            //bool excludeDeleted = !includeDeletedCheckBox.Checked;
-            //var insCompanies = insCompanyRepository.GetAll(excludeDeleted).OrderBy(x => x.PlanName).ToList();
-
-            //_insCompanyTable = insCompanies.ToDataTable();
-
-            //healthPlanGrid.DataSource = insCompanies;
             healthPlanGrid.Columns[nameof(InsCompany.mod_date)].Visible = false;
             healthPlanGrid.Columns[nameof(InsCompany.mod_host)].Visible = false;
             healthPlanGrid.Columns[nameof(InsCompany.mod_prg)].Visible = false;
@@ -65,6 +60,9 @@ namespace LabBilling.Forms
             //healthPlanGrid.Columns[nameof(InsCompany.ClaimFilingIndicatorCode)].Visible = false;
             healthPlanGrid.Columns[nameof(InsCompany.PayorCode)].Visible = false;
             healthPlanGrid.Columns[nameof(InsCompany.rowguid)].Visible = false;
+            healthPlanGrid.Columns[nameof(InsCompany.ClaimFilingIndicatorCode)].Visible = false;
+            healthPlanGrid.Columns[nameof(InsCompany.ClaimsNetPayerId)].Visible = false;
+            
 
             healthPlanGrid.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.DisplayedCells);
             healthPlanGrid.AllowUserToAddRows = false;
@@ -82,6 +80,9 @@ namespace LabBilling.Forms
                 _insCompanyTable.DefaultView.RowFilter = String.Empty;
             else
                 _insCompanyTable.DefaultView.RowFilter = $"{nameof(InsCompany.IsDeleted)} = false";
+
+            if (!string.IsNullOrEmpty(filterTextBox.Text))
+                filterTextBox_KeyUpDone(sender, e);
 
         }
 
@@ -111,7 +112,6 @@ namespace LabBilling.Forms
                     }
                     record = form.insCompany.ToDataRow(record);
                 }
-                //LoadHealthPlanGrid();
             }
         }
 
@@ -128,7 +128,33 @@ namespace LabBilling.Forms
                 }
                 record = form.insCompany.ToDataRow(record);
             }
-            //LoadHealthPlanGrid();
+        }
+
+        private void filterTextBox_KeyUp(object sender, KeyEventArgs e)
+        {
+            _timer.Stop();
+            _timer.Start();
+        }
+
+        private void filterTextBox_KeyUpDone(object sender, EventArgs e)
+        {
+            _timer.Stop();
+
+            if (!string.IsNullOrEmpty(filterTextBox.Text))
+            {
+                if(includeDeletedCheckBox.Checked)
+                    _insCompanyTable.DefaultView.RowFilter = $"{nameof(InsCompany.PlanName)} like '%{filterTextBox.Text}%'";
+                else
+                    _insCompanyTable.DefaultView.RowFilter = $"{nameof(InsCompany.PlanName)} like '%{filterTextBox.Text}%' and {nameof(InsCompany.IsDeleted)} = false";
+            }
+            else
+            {
+                if (includeDeletedCheckBox.Checked)
+                    _insCompanyTable.DefaultView.RowFilter = String.Empty;
+                else
+                    _insCompanyTable.DefaultView.RowFilter = $"{nameof(InsCompany.IsDeleted)} = false";
+            }
+
         }
     }
 }

@@ -9,6 +9,7 @@ using PetaPoco.Core;
 using System.Reflection;
 using PetaPoco;
 using System.Data.SqlClient;
+using System.Linq.Expressions;
 
 namespace LabBilling.Core.DataAccess
 {
@@ -16,7 +17,7 @@ namespace LabBilling.Core.DataAccess
     /// 
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public abstract class RepositoryBase<Tpoco> : IRepositoryBase<Tpoco> where Tpoco : IBaseEntity
+    public abstract class RepositoryBase<TPoco> : IRepositoryBase<TPoco> where TPoco : IBaseEntity
     {
         protected readonly PetaPoco.Database dbConnection = null;
         protected readonly string _tableName;
@@ -30,7 +31,7 @@ namespace LabBilling.Core.DataAccess
         public RepositoryBase(string connectionString)
         {
             Log.Instance.Trace("Entering");
-            _tableInfo = GetTableInfo(typeof(Tpoco));
+            _tableInfo = GetTableInfo(typeof(TPoco));
             _tableName = _tableInfo.TableName;
             dbConnection = new PetaPoco.Database(connectionString, new CustomSqlDatabaseProvider());
             Log.Instance.Debug(dbConnection.ConnectionString);
@@ -39,13 +40,13 @@ namespace LabBilling.Core.DataAccess
         public RepositoryBase(Database db)
         {
             Log.Instance.Trace("Entering");
-            _tableInfo = GetTableInfo(typeof(Tpoco));
+            _tableInfo = GetTableInfo(typeof(TPoco));
             _tableName = _tableInfo.TableName;
             dbConnection = db;
             Log.Instance.Debug(dbConnection.ConnectionString);
         }
 
-        public virtual List<Tpoco> GetAll()
+        public virtual List<TPoco> GetAll()
         {
             Log.Instance.Trace("Entering");
 
@@ -53,13 +54,13 @@ namespace LabBilling.Core.DataAccess
             PetaPoco.Sql sql = PetaPoco.Sql.Builder
                 .From(_tableName);
 
-            var queryResult = dbConnection.Fetch<Tpoco>(sql);
+            var queryResult = dbConnection.Fetch<TPoco>(sql);
 
             Log.Instance.Debug(dbConnection.LastSQL);
             return queryResult;
         }
 
-        public virtual async Task<IEnumerable<Tpoco>> GetAllAsync()
+        public virtual async Task<IEnumerable<TPoco>> GetAllAsync()
         {
             Log.Instance.Trace("Entering");
 
@@ -67,13 +68,13 @@ namespace LabBilling.Core.DataAccess
             PetaPoco.Sql sql = PetaPoco.Sql.Builder
                 .From(_tableName);
 
-            var queryResult = await dbConnection.FetchAsync<Tpoco>(sql);
+            var queryResult = await dbConnection.FetchAsync<TPoco>(sql);
 
             Log.Instance.Debug(dbConnection.LastSQL);
-            return queryResult.ToList<Tpoco>();
+            return queryResult.ToList<TPoco>();
         }
 
-        public virtual object Add(Tpoco table)
+        public virtual object Add(TPoco table)
         {
             Log.Instance.Trace("Entering");
 
@@ -93,11 +94,11 @@ namespace LabBilling.Core.DataAccess
             return identity;
         }
 
-        public abstract Tpoco GetById(int id);
+        public abstract TPoco GetById(int id);
 
         //public abstract Tpoco GetByPrimaryKey();
 
-        public virtual bool Update(Tpoco table)
+        public virtual bool Update(TPoco table)
         {
             Log.Instance.Trace("Entering");
 
@@ -115,7 +116,7 @@ namespace LabBilling.Core.DataAccess
             return true;
         }
 
-        public virtual bool Update(Tpoco table, IEnumerable<string> columns)
+        public virtual bool Update(TPoco table, IEnumerable<string> columns)
         {
             Log.Instance.Trace("Entering");
             List<string> cColumns = new List<string>();
@@ -152,7 +153,7 @@ namespace LabBilling.Core.DataAccess
             return true;        
         }
 
-        public virtual bool Save(Tpoco table)
+        public virtual bool Save(TPoco table)
         {
             Log.Instance.Trace("Entering");
 
@@ -177,7 +178,7 @@ namespace LabBilling.Core.DataAccess
             return true;
         }
 
-        public virtual bool Delete(Tpoco table)
+        public virtual bool Delete(TPoco table)
         {
             Log.Instance.Trace("Entering");
 
@@ -193,7 +194,7 @@ namespace LabBilling.Core.DataAccess
 
         public string GetRealColumn(string propertyName)
         {
-            return GetRealColumn(typeof(Tpoco), propertyName);
+            return GetRealColumn(typeof(TPoco), propertyName);
         }
 
         public string GetRealColumn(string objectName, string propertyName)
@@ -248,6 +249,12 @@ namespace LabBilling.Core.DataAccess
         public virtual void AbortTransaction()
         {
             dbConnection.AbortTransaction();
+        }
+
+        public IEnumerable<TPoco> Find(Expression<Func<TPoco, bool>> predicate)
+        {
+
+            return null;
         }
 
     }

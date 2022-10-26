@@ -16,17 +16,15 @@ namespace LabBilling.Forms
 {
     public partial class PaymentAdjustmentEntryForm : Form
     {
-        private System.Windows.Forms.Timer _timer;
-        private int _timerInterval = 650;
-
+        private Account _account;
 
         public Chk chk = new Chk();
 
-        public PaymentAdjustmentEntryForm()
+        public PaymentAdjustmentEntryForm(ref Account account)
         {
             InitializeComponent();
-            _timer = new System.Windows.Forms.Timer() { Enabled = false, Interval = _timerInterval };
-            _timer.Tick += new EventHandler(insuranceTextBox_KeyUpDone);
+
+            _account = account;
         }
 
         private void PaymentAdjustmentEntryForm_Load(object sender, EventArgs e)
@@ -37,6 +35,12 @@ namespace LabBilling.Forms
             writeOffCodeComboBox.DisplayMember = nameof(WriteOffCode.Description);
             writeOffCodeComboBox.ValueMember = nameof(WriteOffCode.Code);
             writeOffCodeComboBox.SelectedIndex = -1;
+
+            //load ins combobox with account's insurances
+            insuranceComboBox.DataSource = _account.Insurances;
+            insuranceComboBox.ValueMember = nameof(Ins.InsCode);
+            insuranceComboBox.DisplayMember = nameof(Ins.PlanName);
+            insuranceComboBox.SelectedIndex = -1;
 
             // todo: investigate restriction from legacy system:
             // CODE 1500 SHOULD NOT BE USED TO WRITE OFF FOR BAD DEBT. BAD DEBT CANNOT BE HANDLED BY THE ACCOUNT PROGRAM.
@@ -60,7 +64,7 @@ namespace LabBilling.Forms
                     chk.WriteOffCode = writeOffCodeComboBox.SelectedValue.ToString();
                 if (!string.IsNullOrEmpty(writeOffDateTextBox.Text) && writeOffDateTextBox.MaskFull)
                     chk.WriteOffDate = DateTime.Parse(writeOffDateTextBox.Text);
-                chk.InsCode = insuranceTextBox.Text;
+                chk.InsCode = insuranceComboBox.SelectedValue != null ? insuranceComboBox.SelectedValue.ToString() : String.Empty;
                 chk.Source = fromTextBox.Text;
 
                 chk.PaidAmount = Convert.ToDouble(paymentAmtTextBox.DollarValue);
@@ -82,26 +86,5 @@ namespace LabBilling.Forms
             }
         }
 
-        private void insuranceTextBox_KeyUp(object sender, KeyEventArgs e)
-        {
-            _timer.Stop();
-            _timer.Start();
-        }
-
-        private void insuranceTextBox_KeyUpDone(object sender, EventArgs e)
-        {
-            _timer.Stop();
-            if (insuranceTextBox.Text.Length > 0)
-            {
-                InsCompanyLookupForm insCompanyLookupForm = new InsCompanyLookupForm();
-                insCompanyLookupForm.InitialSearchText = insuranceTextBox.Text;
-                insCompanyLookupForm.Datasource = DataCache.Instance.GetInsCompanies();
-
-                if (insCompanyLookupForm.ShowDialog() == DialogResult.OK)
-                {
-                    insuranceTextBox.Text = insCompanyLookupForm.SelectedValue.ToString();
-                }
-            }
-        }
     }
 }

@@ -34,7 +34,6 @@
             this.checkDateTextBox = new System.Windows.Forms.MaskedTextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.insuranceTextBox = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
@@ -50,6 +49,7 @@
             this.cancelButton = new System.Windows.Forms.Button();
             this.checkNoTextBox = new System.Windows.Forms.TextBox();
             this.label10 = new System.Windows.Forms.Label();
+            this.insuranceComboBox = new System.Windows.Forms.ComboBox();
             this.paymentAmtTextBox = new LabBilling.UserControls.CurrencyTextBox();
             this.writeOffAmtTextBox = new LabBilling.UserControls.CurrencyTextBox();
             this.contractualAmtTextBox = new LabBilling.UserControls.CurrencyTextBox();
@@ -106,14 +106,6 @@
             this.label2.Size = new System.Drawing.Size(64, 13);
             this.label2.TabIndex = 4;
             this.label2.Text = "Check Date";
-            // 
-            // insuranceTextBox
-            // 
-            this.insuranceTextBox.Location = new System.Drawing.Point(132, 127);
-            this.insuranceTextBox.Name = "insuranceTextBox";
-            this.insuranceTextBox.Size = new System.Drawing.Size(253, 20);
-            this.insuranceTextBox.TabIndex = 9;
-            this.insuranceTextBox.KeyUp += new System.Windows.Forms.KeyEventHandler(this.insuranceTextBox_KeyUp);
             // 
             // label3
             // 
@@ -252,6 +244,16 @@
             this.label10.TabIndex = 6;
             this.label10.Text = "Check No";
             // 
+            // insuranceComboBox
+            // 
+            this.insuranceComboBox.BackColor = System.Drawing.SystemColors.Window;
+            this.insuranceComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.insuranceComboBox.FormattingEnabled = true;
+            this.insuranceComboBox.Location = new System.Drawing.Point(132, 126);
+            this.insuranceComboBox.Name = "insuranceComboBox";
+            this.insuranceComboBox.Size = new System.Drawing.Size(253, 21);
+            this.insuranceComboBox.TabIndex = 9;
+            // 
             // paymentAmtTextBox
             // 
             this.paymentAmtTextBox.DollarValue = new decimal(new int[] {
@@ -300,6 +302,7 @@
             this.CancelButton = this.cancelButton;
             this.ClientSize = new System.Drawing.Size(424, 478);
             this.ControlBox = false;
+            this.Controls.Add(this.insuranceComboBox);
             this.Controls.Add(this.paymentAmtTextBox);
             this.Controls.Add(this.cancelButton);
             this.Controls.Add(this.postButton);
@@ -323,7 +326,6 @@
             this.Controls.Add(this.label3);
             this.Controls.Add(this.fromLabel);
             this.Controls.Add(this.checkNoTextBox);
-            this.Controls.Add(this.insuranceTextBox);
             this.Controls.Add(this.fromTextBox);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "PaymentAdjustmentEntryForm";
@@ -343,7 +345,6 @@
         private System.Windows.Forms.MaskedTextBox checkDateTextBox;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox insuranceTextBox;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label5;
@@ -362,5 +363,6 @@
         private System.Windows.Forms.TextBox checkNoTextBox;
         private System.Windows.Forms.Label label10;
         private UserControls.CurrencyTextBox paymentAmtTextBox;
+        private System.Windows.Forms.ComboBox insuranceComboBox;
     }
 }

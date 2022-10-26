@@ -8,53 +8,60 @@ using LabBilling.Core.DataAccess;
 using LabBilling.Logging;
 using LabBilling.Core.Models;
 using LabBilling.Library;
-
+using System.Data;
+using System.CodeDom;
 
 namespace LabBilling.Forms
 {
+
     public partial class WorkListForm : Form
     {
-
-        public WorkListForm(string connValue)
-        {
-            InitializeComponent();
-            _connectionString = connValue;
-        }
         private string _connectionString;
         private AccountRepository accountRepository;
         private AccountSearchRepository accountSearchRepository;
         private SystemParametersRepository systemParametersRepository;
-        private List<AccountSearch> accounts;
+        //private List<AccountSearch> accounts;
         private bool tasksRunning = false;
         private bool requestAbort = false;
         private BindingSource accountBindingSource = new BindingSource();
+        private DataTable accountTable = null;
         private int worklistPanelWidth = 0;
+        private System.Windows.Forms.Timer _timer;
+        private const int _timerDelay = 650;
 
         private void WorkListForm_Load(object sender, EventArgs e)
         {
+            ToolTip validateButtonToolTip = new ToolTip();
+            validateButtonToolTip.SetToolTip(ValidateButton, "Validate will run on all accounts in worklist regardless of filter.");
+
             //Cursor.Current = Cursors.WaitCursor;
             accountRepository = new AccountRepository(_connectionString);
             accountSearchRepository = new AccountSearchRepository(_connectionString);
             systemParametersRepository = new SystemParametersRepository(_connectionString);
+
+            accountTable = new List<AccountSearch>().ToDataTable();
+            accountTable.PrimaryKey = new DataColumn[] { accountTable.Columns[nameof(AccountSearch.Account)] };
+
+            accountBindingSource.DataSource = accountTable;
             accountGrid.DataSource = accountBindingSource;
 
             // load the treeview with worklists
             TreeNode[] worklistsTreeNode = new TreeNode[]
             {
-                new TreeNode("Medicare/Cigna"),
-                new TreeNode("BlueCross"),
-                new TreeNode("Champus"),
-                new TreeNode("Tenncare BC/BS"),
-                new TreeNode("Commercial UB"),
-                new TreeNode("Commercial 1500"),
-                new TreeNode("UHC Community Plan"),
-                new TreeNode("Pathways TNCare"),
-                new TreeNode("Amerigroup"),
-                new TreeNode("Manual Hold"),
-                new TreeNode("Initial Hold"),
-                new TreeNode("Client Bill"),
-                new TreeNode("Submitted Institutional"),
-                new TreeNode("Submitted Professional")
+                new TreeNode(Worklists.MedicareCigna),
+                new TreeNode(Worklists.BlueCross),
+                new TreeNode(Worklists.Champus),
+                new TreeNode(Worklists.TenncareBCBS),
+                new TreeNode(Worklists.CommercialInst),
+                new TreeNode(Worklists.CommercialProf),
+                new TreeNode(Worklists.UHCCommunityPlan),
+                new TreeNode(Worklists.PathwaysTNCare),
+                new TreeNode(Worklists.Amerigroup),
+                new TreeNode(Worklists.ManualHold),
+                new TreeNode(Worklists.InitialHold),
+                new TreeNode(Worklists.ClientBill),
+                new TreeNode(Worklists.SubmittedInstitutional),
+                new TreeNode(Worklists.SubmittedProfessional)
             };
 
             TreeNode rootNode = new TreeNode("Worklists", worklistsTreeNode);
@@ -70,19 +77,18 @@ namespace LabBilling.Forms
         {
             requestAbort = false;
             ValidateButton.Enabled = false;
-            PostButton.Enabled = false;
             workqueues.Enabled = false;
             CancelValidationButton.Enabled = true;
             CancelValidationButton.Visible = true;
 
-            int cnt = accounts.Count;
+            int cnt = accountTable.Rows.Count;
             toolStripProgressBar1.Minimum = 0;
             toolStripProgressBar1.Maximum = cnt;
             toolStripProgressBar1.Value = 0;
             Cursor.Current = Cursors.WaitCursor;
 
             tasksRunning = true;
-            foreach (var acc in accounts)
+            foreach (DataRow acc in accountTable.Rows)
             {
                 if (requestAbort)
                 {
@@ -90,8 +96,8 @@ namespace LabBilling.Forms
                     tasksRunning = false;
                     break;
                 }
-                toolStripStatusLabel1.Text = $"Validating {toolStripProgressBar1.Value} of {accounts.Count}.";
-                await RunValidationAsync(acc.Account);
+                toolStripStatusLabel1.Text = $"Validating {toolStripProgressBar1.Value} of {cnt}.";
+                await RunValidationAsync(acc[nameof(AccountSearch.Account)].ToString());
                 accountGrid.Refresh();
                 toolStripProgressBar1.Increment(1);
             }
@@ -100,10 +106,17 @@ namespace LabBilling.Forms
 
             Cursor.Current = Cursors.Default;
             ValidateButton.Enabled = true;
-            PostButton.Enabled = true;
             workqueues.Enabled = true;
             CancelValidationButton.Visible = false;
             CancelValidationButton.Enabled = false;
+        }
+
+        public WorkListForm(string connValue)
+        {
+            InitializeComponent();
+            _connectionString = connValue;
+            _timer = new Timer() { Enabled = false, Interval = _timerDelay };
+            _timer.Tick += new EventHandler(filterTextBox_KeyUpDone);
         }
 
         //private void RunValidation(string accountNo)
@@ -145,7 +158,8 @@ namespace LabBilling.Forms
         {
             if (!string.IsNullOrEmpty(accountNo))
             {
-                var acct = accounts.FirstOrDefault(x => x.Account == accountNo);
+                //var acct = accounts.FirstOrDefault(x => x.Account == accountNo);
+                var acct = accountTable.Rows.Find(accountNo);
                 try
                 {
                     var (isValid, validationText, formType) = await ValidateAccountAsync(accountNo);
@@ -154,9 +168,9 @@ namespace LabBilling.Forms
                     {
                         if (acct != null)
                         {
-                            acct.ValidationStatus = validationText;
-                            acct.LastValidationDate = DateTime.Now;
-                            acct.Status = "ERROR";
+                            acct[nameof(AccountSearch.ValidationStatus)] = validationText;
+                            acct[nameof(AccountSearch.LastValidationDate)] = DateTime.Now;
+                            acct[nameof(AccountSearch.Status)] = "ERROR";
                         }
 
                         accountRepository.UpdateStatus(accountNo, "NEW");
@@ -168,9 +182,9 @@ namespace LabBilling.Forms
 
                         if(acct != null)
                         {
-                            acct.Status = formType;
-                            acct.LastValidationDate = DateTime.Now;
-                            acct.ValidationStatus = "No validation errors";
+                            acct[nameof(AccountSearch.Status)] = formType;
+                            acct[nameof(AccountSearch.LastValidationDate)] = DateTime.Now;
+                            acct[nameof(AccountSearch.ValidationStatus)] = "No validation errors";
                         }
                     }
                 }
@@ -180,9 +194,9 @@ namespace LabBilling.Forms
 
                     if(acct != null)
                     {
-                        acct.ValidationStatus = "Error validating account. Notify support.";
-                        acct.LastValidationDate = DateTime.Now;
-                        acct.Status = "ERROR";
+                        acct[nameof(AccountSearch.ValidationStatus)] = "Error validating account. Notify support.";
+                        acct[nameof(AccountSearch.LastValidationDate)] = DateTime.Now;
+                        acct[nameof(AccountSearch.Status)] = "ERROR";
                     }
 
                     accountRepository.UpdateStatus(accountNo, "NEW");
@@ -214,35 +228,6 @@ namespace LabBilling.Forms
                 return (false, $"Exception in validation - {ex.Message}", String.Empty);
             }
 
-        }
-
-        private void PostButton_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void accountGrid_RowHeaderMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
-        {
-            /*
-            Log.Instance.Trace($"Entering");
-            Cursor.Current = Cursors.WaitCursor;
-            int selectedRows = accountGrid.Rows.GetRowCount(DataGridViewElementStates.Selected);
-            if (selectedRows > 0)
-            {
-                var selectedAccount = accountGrid.SelectedRows[0].Cells[nameof(AccountSearch.Account)].Value.ToString();
-                AccountForm frm = new AccountForm(selectedAccount)
-                {
-                    MdiParent = this.ParentForm
-                };
-                frm.Show();
-                return;
-            }
-            else
-            {
-                MessageBox.Show("No account selected.");
-                return;
-            }
-            */
         }
 
         private void WorkListForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -283,87 +268,87 @@ namespace LabBilling.Forms
             var selectedQueue = workqueues.SelectedNode.Text;
             switch (selectedQueue)
             {
-                case "Medicare/Cigna":
+                case Worklists.MedicareCigna:
                     parameters = parameters.Append((nameof(AccountSearch.ServiceDate), AccountSearchRepository.operation.LessThanOrEqual, thruDate.ToString())).ToArray();
                     parameters = parameters.Append((nameof(AccountSearch.FinCode), AccountSearchRepository.operation.Equal, "A")).ToArray();
                     parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "HOLD")).ToArray();
                     parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "SSI1500")).ToArray();
                     parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "SSIUB")).ToArray();
                     break;
-                case "BlueCross":
+                case Worklists.BlueCross:
                     parameters = parameters.Append((nameof(AccountSearch.ServiceDate), AccountSearchRepository.operation.LessThanOrEqual, thruDate.ToString())).ToArray();
                     parameters = parameters.Append((nameof(AccountSearch.FinCode), AccountSearchRepository.operation.Equal, "B")).ToArray();
                     parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "HOLD")).ToArray();
                     parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "SSI1500")).ToArray();
                     parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "SSIUB")).ToArray();
                     break;
-                case "Champus":
+                case Worklists.Champus:
                     parameters = parameters.Append((nameof(AccountSearch.ServiceDate), AccountSearchRepository.operation.LessThanOrEqual, thruDate.ToString())).ToArray();
                     parameters = parameters.Append((nameof(AccountSearch.FinCode), AccountSearchRepository.operation.Equal, "C")).ToArray();
                     parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "HOLD")).ToArray();
                     parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "SSI1500")).ToArray();
                     parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "SSIUB")).ToArray();
                     break;
-                case "Tenncare BC/BS":
+                case Worklists.TenncareBCBS:
                     parameters = parameters.Append((nameof(AccountSearch.ServiceDate), AccountSearchRepository.operation.LessThanOrEqual, thruDate.ToString())).ToArray();
                     parameters = parameters.Append((nameof(AccountSearch.FinCode), AccountSearchRepository.operation.Equal, "D")).ToArray();
                     parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "HOLD")).ToArray();
                     parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "SSI1500")).ToArray();
                     parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "SSIUB")).ToArray();
                     break;
-                case "Commercial UB":
+                case Worklists.CommercialInst:
                     parameters = parameters.Append((nameof(AccountSearch.ServiceDate), AccountSearchRepository.operation.LessThanOrEqual, thruDate.ToString())).ToArray();
                     parameters = parameters.Append((nameof(AccountSearch.FinCode), AccountSearchRepository.operation.Equal, "H")).ToArray();
                     parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "HOLD")).ToArray();
                     parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "SSI1500")).ToArray();
                     parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "SSIUB")).ToArray();
                     break;
-                case "Commercial 1500":
+                case Worklists.CommercialProf:
                     parameters = parameters.Append((nameof(AccountSearch.ServiceDate), AccountSearchRepository.operation.LessThanOrEqual, thruDate.ToString())).ToArray();
                     parameters = parameters.Append((nameof(AccountSearch.FinCode), AccountSearchRepository.operation.Equal, "L")).ToArray();
                     parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "HOLD")).ToArray();
                     parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "SSI1500")).ToArray();
                     parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "SSIUB")).ToArray();
                     break;
-                case "UHC Community Plan":
+                case Worklists.UHCCommunityPlan:
                     parameters = parameters.Append((nameof(AccountSearch.ServiceDate), AccountSearchRepository.operation.LessThanOrEqual, thruDate.ToString())).ToArray();
                     parameters = parameters.Append((nameof(AccountSearch.FinCode), AccountSearchRepository.operation.Equal, "M")).ToArray();
                     parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "HOLD")).ToArray();
                     parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "SSI1500")).ToArray();
                     parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "SSIUB")).ToArray();
                     break;
-                case "Pathways TNCare":
+                case Worklists.PathwaysTNCare:
                     parameters = parameters.Append((nameof(AccountSearch.ServiceDate), AccountSearchRepository.operation.LessThanOrEqual, thruDate.ToString())).ToArray();
                     parameters = parameters.Append((nameof(AccountSearch.FinCode), AccountSearchRepository.operation.Equal, "P")).ToArray();
                     parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "HOLD")).ToArray();
                     parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "SSI1500")).ToArray();
                     parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "SSIUB")).ToArray();
                     break;
-                case "Amerigroup":
+                case Worklists.Amerigroup:
                     parameters = parameters.Append((nameof(AccountSearch.ServiceDate), AccountSearchRepository.operation.LessThanOrEqual, thruDate.ToString())).ToArray();
                     parameters = parameters.Append((nameof(AccountSearch.FinCode), AccountSearchRepository.operation.Equal, "Q")).ToArray();
                     parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "HOLD")).ToArray();
                     parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "SSI1500")).ToArray();
                     parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "SSIUB")).ToArray();
                     break;
-                case "Manual Hold":
+                case Worklists.ManualHold:
                     parameters = parameters.Append((nameof(AccountSearch.ServiceDate), AccountSearchRepository.operation.LessThanOrEqual, thruDate.ToString())).ToArray();
                     parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.Equal, "HOLD")).ToArray();
                     break;
-                case "Initial Hold":
+                case Worklists.InitialHold:
                     parameters = parameters.Append((nameof(AccountSearch.ServiceDate), AccountSearchRepository.operation.GreaterThanOrEqual, thruDate.ToString())).ToArray();
                     parameters = parameters.Append((nameof(AccountSearch.FinCode), AccountSearchRepository.operation.NotEqual, "W")).ToArray();
                     parameters = parameters.Append((nameof(AccountSearch.FinCode), AccountSearchRepository.operation.NotEqual, "X")).ToArray();
                     parameters = parameters.Append((nameof(AccountSearch.FinCode), AccountSearchRepository.operation.NotEqual, "Y")).ToArray();
                     parameters = parameters.Append((nameof(AccountSearch.FinCode), AccountSearchRepository.operation.NotEqual, "Z")).ToArray();
                     break;
-                case "Client Bill":
+                case Worklists.ClientBill:
                     parameters = parameters.Append((nameof(AccountSearch.FinCode), AccountSearchRepository.operation.OneOf, "'W','X','Y','Z'")).ToArray();
                     break;
-                case "Submitted Institutional":
+                case Worklists.SubmittedInstitutional:
                     parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.Equal, "SSIUB")).ToArray();
                     break;
-                case "Submitted Professional":
+                case Worklists.SubmittedProfessional:
                     parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.Equal, "SSI1500")).ToArray();
                     break;
                 default:
@@ -375,20 +360,15 @@ namespace LabBilling.Forms
 
             toolStripStatusLabel1.Text = "Loading Accounts ... ";
             toolStripProgressBar1.Style = ProgressBarStyle.Marquee;
-            accounts = (List<AccountSearch>)await Task.Run(() =>
+            var accounts = (List<AccountSearch>)await Task.Run(() =>
             {
                 return accountSearchRepository.GetBySearch(parameters);
             });
 
-            if (accounts == null || accounts.Count == 0)
-            {
-                accounts.Add(new AccountSearch()
-                {
-                    Name = "No records found."
-                });
-            }
-
-            accountBindingSource.DataSource = accounts;
+            accountBindingSource.DataSource = null;
+            accountTable = accounts.ToDataTable();
+            accountTable.PrimaryKey = new DataColumn[] { accountTable.Columns[nameof(AccountSearch.Account)] };
+            accountBindingSource.DataSource = accountTable;
 
             accountGrid.ForeColor = Color.Black;
             accountGrid.Columns[nameof(AccountSearch.mod_date)].Visible = false;
@@ -518,10 +498,10 @@ namespace LabBilling.Forms
             Log.Instance.Trace($"Entering");
 
             var selectedAccount = accountGrid.SelectedRows[0].Cells[nameof(AccountSearch.Account)].Value.ToString();
-            var accts = accounts.FirstOrDefault(x => x.Account == selectedAccount);
+            var accts = accountTable.Rows.Find(selectedAccount);
             var account = accountRepository.GetByAccount(selectedAccount);
 
-            string newFinCode = InputDialogs.SelectFinancialCode(accts.FinCode);
+            string newFinCode = InputDialogs.SelectFinancialCode(accts[nameof(AccountSearch.FinCode)].ToString());
             if (!string.IsNullOrEmpty(newFinCode))
             {
 
@@ -529,7 +509,7 @@ namespace LabBilling.Forms
                 try
                 {
                     accountRepository.ChangeFinancialClass(ref account, newFinCode);
-                    accts.FinCode = account.FinCode;
+                    accts[nameof(AccountSearch.FinCode)] = account.FinCode;
                     accountGrid.Refresh();
                 }
                 catch (ArgumentException anex)
@@ -550,7 +530,7 @@ namespace LabBilling.Forms
         {
             Log.Instance.Trace($"Entering");
             var selectedAccount = accountGrid.SelectedRows[0].Cells[nameof(AccountSearch.Account)].Value.ToString();
-            var accts = accounts.FirstOrDefault(x => x.Account == selectedAccount);
+            var accts = accountTable.Rows.Find(selectedAccount);
             var account = accountRepository.GetByAccount(selectedAccount);
 
             ClientLookupForm clientLookupForm = new ClientLookupForm();
@@ -565,7 +545,7 @@ namespace LabBilling.Forms
                 {
                     if (accountRepository.ChangeClient(ref account, newClient))
                     {
-                        accts.ClientMnem = newClient;
+                        accts[nameof(AccountSearch.ClientMnem)] = newClient;
                         accountGrid.Refresh();
                     }
                     else
@@ -589,7 +569,7 @@ namespace LabBilling.Forms
             Log.Instance.Trace($"Entering");
 
             var selectedAccount = accountGrid.SelectedRows[0].Cells[nameof(AccountSearch.Account)].Value.ToString();
-            var accts = accounts.FirstOrDefault(x => x.Account == selectedAccount);
+            var accts = accountTable.Rows.Find(selectedAccount);
             var account = accountRepository.GetByAccount(selectedAccount);
 
 
@@ -600,7 +580,7 @@ namespace LabBilling.Forms
                 if (result.newDate != DateTime.MinValue)
                 {
                     accountRepository.ChangeDateOfService(ref account, result.newDate, result.reason);
-                    accts.ServiceDate = account.TransactionDate;
+                    accts[nameof(AccountSearch.ServiceDate)] = account.TransactionDate;
                 }
                 else
                 {
@@ -643,6 +623,36 @@ namespace LabBilling.Forms
                 accountGrid.Width += worklistPanelWidth - 20;  
                 ValidateButton.Left = panel1.Right + 10;
                 CancelValidationButton.Left = ValidateButton.Right + 10;
+            }
+        }
+
+        private void filterTextBox_KeyUp(object sender, KeyEventArgs e)
+        {
+            _timer.Stop();
+            _timer.Start();
+        }
+
+        private void filterTextBox_KeyUpDone(object sender, EventArgs e)
+        {
+            _timer.Stop();
+            if (!string.IsNullOrEmpty(filterTextBox.Text))
+            {
+                if (nameFilterRadioBtn.Checked)
+                {
+                    accountTable.DefaultView.RowFilter = $"{nameof(AccountSearch.Name)} like '{filterTextBox.Text}%'";
+                }
+                if (clientFilterRadioBtn.Checked)
+                {
+                    accountTable.DefaultView.RowFilter = $"{nameof(AccountSearch.ClientMnem)} = '{filterTextBox.Text}'";
+                }
+                if (accountFilterRadioBtn.Checked)
+                {
+                    accountTable.DefaultView.RowFilter = $"{nameof(AccountSearch.Account)} like '{filterTextBox.Text}%'";
+                }
+            }
+            else
+            {
+                accountTable.DefaultView.RowFilter = String.Empty;
             }
         }
     }

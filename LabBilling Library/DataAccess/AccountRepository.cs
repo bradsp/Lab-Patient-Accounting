@@ -77,7 +77,7 @@ namespace LabBilling.Core.DataAccess
 
         public Account GetByAccount(string account, bool demographicsOnly = false)
         {
-            Log.Instance.Debug($"Entering");
+            Log.Instance.Trace($"Entering - account {account} demographicsOnly {demographicsOnly}");
 
             var record = dbConnection.SingleOrDefault<Account>($"where {this.GetRealColumn(nameof(Account.AccountNo))} = @0", 
                 new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account });
@@ -205,12 +205,14 @@ namespace LabBilling.Core.DataAccess
 
         public override object Add(Account table)
         {
+            Log.Instance.Trace($"Entering - account {table.AccountNo}");
             patRepository.Add(table.Pat);
             return base.Add(table);
         }
 
         public void AddAccount(Account acc)
         {
+            Log.Instance.Trace($"Entering - account {acc.AccountNo}");
             if (string.IsNullOrEmpty(acc.Status))
                 acc.Status = "NEW";
             this.Add(acc);
@@ -219,7 +221,7 @@ namespace LabBilling.Core.DataAccess
 
         public IEnumerable<InvoiceSelect> GetInvoiceAccounts(string clientMnem, DateTime thruDate)
         {
-            Log.Instance.Trace("Entering");
+            Log.Instance.Trace($"Entering - client {clientMnem} thruDate {thruDate}");
 
             return dbConnection.Fetch<InvoiceSelect>($"where {this.GetRealColumn(typeof(InvoiceSelect), nameof(InvoiceSelect.cl_mnem))} = @0 " + 
                 $"and {this.GetRealColumn(typeof(InvoiceSelect), nameof(InvoiceSelect.trans_date))} <= @1", 
@@ -229,7 +231,7 @@ namespace LabBilling.Core.DataAccess
 
         public IEnumerable<ClaimItem> GetAccountsForClaims(ClaimType claimType)
         {
-            Log.Instance.Trace("Entering");
+            Log.Instance.Trace($"Entering - claimType {claimType}");
 
             PetaPoco.Sql command;
 
@@ -278,7 +280,7 @@ namespace LabBilling.Core.DataAccess
 
         public override bool Update(Account table)
         {
-            Log.Instance.Trace($"Entering");
+            Log.Instance.Trace($"Entering - account {table.AccountNo}");
             //generate full name field from name parts
             table.PatFullName = String.Format("{0},{1} {2} {3}",
                 table.PatLastName,
@@ -294,7 +296,7 @@ namespace LabBilling.Core.DataAccess
 
         public override bool Update(Account table, IEnumerable<string> columns)
         {
-            Log.Instance.Trace($"Entering");
+            Log.Instance.Trace($"Entering - account {table.AccountNo}");
             //generate full name field from name parts
             table.PatFullName = String.Format("{0},{1} {2} {3}",
                 table.PatLastName,
@@ -310,6 +312,7 @@ namespace LabBilling.Core.DataAccess
 
         public int UpdateStatus(string accountNo, string status)
         {
+            Log.Instance.Trace($"Entering - account {accountNo} status {status}");
             return dbConnection.Update<Account>("set status = @0, mod_date = @1, mod_user = @2, mod_prg = @3, mod_host = @4 where account = @5",
                 new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = status },
                 new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = DateTime.Now },
@@ -321,7 +324,7 @@ namespace LabBilling.Core.DataAccess
 
         public bool ChangeDateOfService(ref Account table, DateTime newDate, string reason_comment)
         {
-            Log.Instance.Trace($"Entering");
+            Log.Instance.Trace($"Entering - account  {table.AccountNo} new date {newDate} reason {reason_comment}");
 
             if(table == null)
                 throw new ArgumentNullException("table");
@@ -366,7 +369,7 @@ namespace LabBilling.Core.DataAccess
 
         public bool AddNote(string account, string noteText)
         {
-            Log.Instance.Trace($"Entering");
+            Log.Instance.Trace($"Entering - account {account} note {noteText}");
             bool addSuccess = true;
 
             AccountNote accountNote = new AccountNote()
@@ -391,6 +394,7 @@ namespace LabBilling.Core.DataAccess
 
         public bool ChangeFinancialClass(string account, string newFinCode)
         {
+            Log.Instance.Trace($"Entering - Account {account} New Fin {newFinCode}");
             var record = GetByAccount(account);
 
             if (record != null)
@@ -401,7 +405,7 @@ namespace LabBilling.Core.DataAccess
 
         public bool ChangeFinancialClass(ref Account table, string newFinCode)
         {
-            Log.Instance.Trace($"Entering");
+            Log.Instance.Trace($"Entering - account {table.AccountNo} new fin {newFinCode}");
             if (table == null)
                 throw new ArgumentNullException("table");
             else if (newFinCode == null)
@@ -459,7 +463,7 @@ namespace LabBilling.Core.DataAccess
 
         public bool ChangeClient(ref Account table, string newClientMnem)
         {
-            Log.Instance.Trace($"Entering");
+            Log.Instance.Trace($"Entering - account {table.AccountNo} new client {newClientMnem}");
             if (table == null)
                 throw new ArgumentNullException("table");
             else if (newClientMnem == null)
@@ -524,7 +528,7 @@ namespace LabBilling.Core.DataAccess
         /// <returns>Charge number of newly entered charge or < 0 if an error occurs.</returns>
         public int AddCharge(string account, string cdm, int qty, DateTime serviceDate, string comment = null, string refNumber = null)
         {
-            Log.Instance.Trace($"Entering");
+            Log.Instance.Trace($"Entering - account {account} cdm {cdm}");
             CdmRepository cdmRepository = new CdmRepository(dbConnection);
             FinRepository finRepository = new FinRepository(dbConnection);
 
@@ -634,6 +638,8 @@ namespace LabBilling.Core.DataAccess
 
         public bool Validate(ref Account account)
         {
+            Log.Instance.Trace($"Entering - account {account}");
+
             BusinessLogic.Validators.ClaimValidator claimValidator = new BusinessLogic.Validators.ClaimValidator();
 
             account.LmrpErrors = ValidateLMRP(account);
@@ -647,7 +653,6 @@ namespace LabBilling.Core.DataAccess
                 account.AccountValidationStatus.validation_text += error + "\n";
                 lmrperrors += error + "\n";
             }
-
 
             account.AccountValidationStatus.account = account.AccountNo;
             account.AccountValidationStatus.mod_date = DateTime.Now;
@@ -685,6 +690,7 @@ namespace LabBilling.Core.DataAccess
 
         private List<string> ValidateLMRP(Account account)
         {
+            Log.Instance.Trace($"Entering - account {account}");
             List<string> errorList = new List<string>();
 
             //determine if there are any rules for ama_year
@@ -728,6 +734,8 @@ namespace LabBilling.Core.DataAccess
     
         public async Task ValidateUnbilledAccountsAsync()
         {
+            Log.Instance.Trace($"Entering");
+
             DateTime.TryParse(systemParametersRepository.GetByKey("ssi_bill_thru_date"), out DateTime thruDate);
 
             (string propertyName, AccountSearchRepository.operation oper, string searchText)[] parameters = {

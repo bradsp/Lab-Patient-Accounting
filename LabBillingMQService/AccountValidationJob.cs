@@ -10,17 +10,19 @@ namespace LabBillingMQService
 
             public Task Execute(IJobExecutionContext context)
             {
-                Task retVal;
-                try
-                {
-                    retVal =  RunValidation();
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
-                    retVal = Task.CompletedTask;
-                }
-                return retVal;
+                Console.WriteLine($"Starting Account validation. {DateTime.Now}");
+                //Task retVal;
+                //try
+                //{
+                //    retVal =  RunValidation();
+                //}
+                //catch (Exception ex)
+                //{
+                //    Console.WriteLine(ex.Message);
+                //    retVal = Task.CompletedTask;
+                //}
+                //return retVal;
+                return Task.CompletedTask;
             }
 
             public async Task RunValidation()

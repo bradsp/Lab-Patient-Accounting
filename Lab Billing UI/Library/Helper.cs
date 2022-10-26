@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Configuration;
 using System.Data;
-using System.Data.Common;
 using System.Data.SqlClient;
 using System.Diagnostics;
 using System.IO;
@@ -12,12 +10,7 @@ using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
 using System.Windows.Forms;
-using System.Xml.Linq;
-using LabBilling.Core.Models;
 using MetroFramework.Controls;
-using Microsoft.SqlServer.Management.Smo.Wmi;
-using PetaPoco;
-using RFClassLibrary;
 
 namespace LabBilling
 {
@@ -218,7 +211,7 @@ namespace LabBilling
             PropertyInfo[] props = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
             foreach (var prop in props)
             {
-                PropertyType type;
+                //PropertyType type;
                 if (prop.PropertyType.Name.Contains("Nullable"))
                     tb.Columns.Add(prop.Name, Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType);
                 else
@@ -254,7 +247,7 @@ namespace LabBilling
             return row;
         }
 
-        public static DataTable ToDataTable<T>(this IEnumerable<T> items) where T:class
+        public static DataTable ToDataTable<T>(this IEnumerable<T> items) where T : class
         {
             var tb = new DataTable(typeof(T).Name);
 
@@ -262,7 +255,7 @@ namespace LabBilling
 
             foreach (var prop in props)
             {
-                PropertyType type;
+                //PropertyType type;
                 if (prop.PropertyType.Name.Contains("Nullable"))
                     tb.Columns.Add(prop.Name, Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType);
                 else

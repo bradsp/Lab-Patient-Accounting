@@ -28,7 +28,7 @@ namespace LabBilling.Core.DataAccess
 
         public List<Ins> GetByAccount(string account)
         {
-            Log.Instance.Debug("Entering");
+            Log.Instance.Debug($"Entering - account {account}");
 
             var records = dbConnection.Fetch<Ins>("where account = @0 and deleted = 0 order by ins_a_b_c", 
                 new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account });
@@ -68,7 +68,7 @@ namespace LabBilling.Core.DataAccess
         
         public Ins GetByAccount(string account, InsCoverage coverage)
         {
-
+            Log.Instance.Trace($"Entering - account {account} coverage {coverage}");
             var record = dbConnection.SingleOrDefault<Ins>("where account = @0 and ins_a_b_c = @1",
                 new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account },
                 new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = coverage.Value });
@@ -89,7 +89,7 @@ namespace LabBilling.Core.DataAccess
 
         public override bool Update(Ins table, IEnumerable<string> columns)
         {
-
+            Log.Instance.Trace($"Entering - account {table.Account}");
             List<string> cols = columns.ToList();
 
             if(cols.Contains(nameof(Ins.HolderState)) || 

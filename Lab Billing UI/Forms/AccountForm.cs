@@ -1404,7 +1404,7 @@ namespace LabBilling.Forms
 
         private void AddPaymentButton_Click(object sender, EventArgs e)
         {
-            PaymentAdjustmentEntryForm form = new PaymentAdjustmentEntryForm();
+            PaymentAdjustmentEntryForm form = new PaymentAdjustmentEntryForm(ref currentAccount);
 
             if(form.ShowDialog() == DialogResult.OK)
             {

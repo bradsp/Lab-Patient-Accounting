@@ -31,9 +31,11 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            this.includeDeletedCheckBox = new MetroFramework.Controls.MetroCheckBox();
+            this.includeDeletedCheckBox = new System.Windows.Forms.CheckBox();
             this.healthPlanGrid = new MetroFramework.Controls.MetroGrid();
             this.AddPlanButton = new System.Windows.Forms.Button();
+            this.filterTextBox = new System.Windows.Forms.TextBox();
+            this.filterLabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.healthPlanGrid)).BeginInit();
             this.SuspendLayout();
             // 
@@ -46,11 +48,11 @@
             this.includeDeletedCheckBox.Size = new System.Drawing.Size(106, 15);
             this.includeDeletedCheckBox.TabIndex = 0;
             this.includeDeletedCheckBox.Text = "Include Inactive";
-            this.includeDeletedCheckBox.UseSelectable = true;
             this.includeDeletedCheckBox.CheckedChanged += new System.EventHandler(this.includeDeletedCheckBox_CheckedChanged);
             // 
             // healthPlanGrid
             // 
+            this.healthPlanGrid.AllowUserToOrderColumns = true;
             this.healthPlanGrid.AllowUserToResizeRows = false;
             this.healthPlanGrid.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
@@ -108,12 +110,31 @@
             this.AddPlanButton.UseVisualStyleBackColor = true;
             this.AddPlanButton.Click += new System.EventHandler(this.AddPlanButton_Click);
             // 
+            // filterTextBox
+            // 
+            this.filterTextBox.Location = new System.Drawing.Point(369, 7);
+            this.filterTextBox.Name = "filterTextBox";
+            this.filterTextBox.Size = new System.Drawing.Size(265, 20);
+            this.filterTextBox.TabIndex = 3;
+            this.filterTextBox.KeyUp += new System.Windows.Forms.KeyEventHandler(this.filterTextBox_KeyUp);
+            // 
+            // filterLabel
+            // 
+            this.filterLabel.AutoSize = true;
+            this.filterLabel.Location = new System.Drawing.Point(328, 10);
+            this.filterLabel.Name = "filterLabel";
+            this.filterLabel.Size = new System.Drawing.Size(29, 13);
+            this.filterLabel.TabIndex = 4;
+            this.filterLabel.Text = "Filter";
+            // 
             // HealthPlanMaintenanceForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(1181, 621);
+            this.Controls.Add(this.filterLabel);
+            this.Controls.Add(this.filterTextBox);
             this.Controls.Add(this.AddPlanButton);
             this.Controls.Add(this.healthPlanGrid);
             this.Controls.Add(this.includeDeletedCheckBox);
@@ -127,8 +148,10 @@
         }
 
         #endregion
-        private MetroFramework.Controls.MetroCheckBox includeDeletedCheckBox;
+        private System.Windows.Forms.CheckBox includeDeletedCheckBox;
         private MetroFramework.Controls.MetroGrid healthPlanGrid;
         private System.Windows.Forms.Button AddPlanButton;
+        private System.Windows.Forms.TextBox filterTextBox;
+        private System.Windows.Forms.Label filterLabel;
     }
 }

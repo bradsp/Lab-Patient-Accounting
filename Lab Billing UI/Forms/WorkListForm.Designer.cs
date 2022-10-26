@@ -29,9 +29,9 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             this.accountGrid = new MetroFramework.Controls.MetroGrid();
             this.accountGridContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.holdToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -39,7 +39,6 @@
             this.changeClientToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.changeDateOfServiceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ValidateButton = new MetroFramework.Controls.MetroButton();
-            this.PostButton = new MetroFramework.Controls.MetroButton();
             this.workqueues = new System.Windows.Forms.TreeView();
             this.CancelValidationButton = new MetroFramework.Controls.MetroButton();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
@@ -47,6 +46,12 @@
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.panel1 = new System.Windows.Forms.Panel();
             this.panelExpandCollapseButton = new System.Windows.Forms.Button();
+            this.filterTextBox = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.nameFilterRadioBtn = new System.Windows.Forms.RadioButton();
+            this.radioButton1 = new System.Windows.Forms.RadioButton();
+            this.clientFilterRadioBtn = new System.Windows.Forms.RadioButton();
+            this.accountFilterRadioBtn = new System.Windows.Forms.RadioButton();
             ((System.ComponentModel.ISupportInitialize)(this.accountGrid)).BeginInit();
             this.accountGridContextMenu.SuspendLayout();
             this.statusStrip1.SuspendLayout();
@@ -66,24 +71,24 @@
             this.accountGrid.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.accountGrid.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.None;
             this.accountGrid.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(174)))), ((int)(((byte)(219)))));
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
-            dataGridViewCellStyle4.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
-            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(198)))), ((int)(((byte)(247)))));
-            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));
-            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.accountGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(174)))), ((int)(((byte)(219)))));
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            dataGridViewCellStyle1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(198)))), ((int)(((byte)(247)))));
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.accountGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.accountGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.accountGrid.ContextMenuStrip = this.accountGridContextMenu;
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
-            dataGridViewCellStyle5.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
-            dataGridViewCellStyle5.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(136)))), ((int)(((byte)(136)))), ((int)(((byte)(136)))));
-            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(198)))), ((int)(((byte)(247)))));
-            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));
-            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.accountGrid.DefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            dataGridViewCellStyle2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(136)))), ((int)(((byte)(136)))), ((int)(((byte)(136)))));
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(198)))), ((int)(((byte)(247)))));
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.accountGrid.DefaultCellStyle = dataGridViewCellStyle2;
             this.accountGrid.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.accountGrid.EnableHeadersVisualStyles = false;
             this.accountGrid.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
@@ -92,20 +97,19 @@
             this.accountGrid.MultiSelect = false;
             this.accountGrid.Name = "accountGrid";
             this.accountGrid.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(174)))), ((int)(((byte)(219)))));
-            dataGridViewCellStyle6.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
-            dataGridViewCellStyle6.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
-            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(198)))), ((int)(((byte)(247)))));
-            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));
-            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.accountGrid.RowHeadersDefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(174)))), ((int)(((byte)(219)))));
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            dataGridViewCellStyle3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(198)))), ((int)(((byte)(247)))));
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.accountGrid.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
             this.accountGrid.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.accountGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.accountGrid.Size = new System.Drawing.Size(952, 410);
             this.accountGrid.TabIndex = 1;
             this.accountGrid.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.accountGrid_CellFormatting);
-            this.accountGrid.RowHeaderMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.accountGrid_RowHeaderMouseDoubleClick);
             this.accountGrid.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.accountGrid_MouseDoubleClick);
             this.accountGrid.MouseDown += new System.Windows.Forms.MouseEventHandler(this.accountGrid_MouseDown);
             // 
@@ -156,18 +160,6 @@
             this.ValidateButton.Text = "Validate Accounts";
             this.ValidateButton.UseSelectable = true;
             this.ValidateButton.Click += new System.EventHandler(this.ValidateButton_Click);
-            // 
-            // PostButton
-            // 
-            this.PostButton.Enabled = false;
-            this.PostButton.Location = new System.Drawing.Point(440, 12);
-            this.PostButton.Name = "PostButton";
-            this.PostButton.Size = new System.Drawing.Size(94, 23);
-            this.PostButton.TabIndex = 3;
-            this.PostButton.Text = "Submit Claims";
-            this.PostButton.UseSelectable = true;
-            this.PostButton.Visible = false;
-            this.PostButton.Click += new System.EventHandler(this.PostButton_Click);
             // 
             // workqueues
             // 
@@ -233,15 +225,82 @@
             this.panelExpandCollapseButton.UseVisualStyleBackColor = true;
             this.panelExpandCollapseButton.Click += new System.EventHandler(this.panelExpandCollapseButton_Click);
             // 
+            // filterTextBox
+            // 
+            this.filterTextBox.Location = new System.Drawing.Point(492, 15);
+            this.filterTextBox.Name = "filterTextBox";
+            this.filterTextBox.Size = new System.Drawing.Size(253, 20);
+            this.filterTextBox.TabIndex = 13;
+            this.filterTextBox.KeyUp += new System.Windows.Forms.KeyEventHandler(this.filterTextBox_KeyUp);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(457, 18);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(29, 13);
+            this.label1.TabIndex = 14;
+            this.label1.Text = "Filter";
+            // 
+            // nameFilterRadioBtn
+            // 
+            this.nameFilterRadioBtn.AutoSize = true;
+            this.nameFilterRadioBtn.Checked = true;
+            this.nameFilterRadioBtn.Location = new System.Drawing.Point(760, 16);
+            this.nameFilterRadioBtn.Name = "nameFilterRadioBtn";
+            this.nameFilterRadioBtn.Size = new System.Drawing.Size(53, 17);
+            this.nameFilterRadioBtn.TabIndex = 15;
+            this.nameFilterRadioBtn.TabStop = true;
+            this.nameFilterRadioBtn.Text = "Name";
+            this.nameFilterRadioBtn.UseVisualStyleBackColor = true;
+            // 
+            // radioButton1
+            // 
+            this.radioButton1.AutoSize = true;
+            this.radioButton1.Location = new System.Drawing.Point(819, 15);
+            this.radioButton1.Name = "radioButton1";
+            this.radioButton1.Size = new System.Drawing.Size(53, 17);
+            this.radioButton1.TabIndex = 15;
+            this.radioButton1.TabStop = true;
+            this.radioButton1.Text = "Name";
+            this.radioButton1.UseVisualStyleBackColor = true;
+            // 
+            // clientFilterRadioBtn
+            // 
+            this.clientFilterRadioBtn.AutoSize = true;
+            this.clientFilterRadioBtn.Location = new System.Drawing.Point(819, 16);
+            this.clientFilterRadioBtn.Name = "clientFilterRadioBtn";
+            this.clientFilterRadioBtn.Size = new System.Drawing.Size(51, 17);
+            this.clientFilterRadioBtn.TabIndex = 15;
+            this.clientFilterRadioBtn.TabStop = true;
+            this.clientFilterRadioBtn.Text = "Client";
+            this.clientFilterRadioBtn.UseVisualStyleBackColor = true;
+            // 
+            // accountFilterRadioBtn
+            // 
+            this.accountFilterRadioBtn.AutoSize = true;
+            this.accountFilterRadioBtn.Location = new System.Drawing.Point(876, 16);
+            this.accountFilterRadioBtn.Name = "accountFilterRadioBtn";
+            this.accountFilterRadioBtn.Size = new System.Drawing.Size(65, 17);
+            this.accountFilterRadioBtn.TabIndex = 15;
+            this.accountFilterRadioBtn.TabStop = true;
+            this.accountFilterRadioBtn.Text = "Account";
+            this.accountFilterRadioBtn.UseVisualStyleBackColor = true;
+            // 
             // WorkListForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1166, 476);
+            this.Controls.Add(this.accountFilterRadioBtn);
+            this.Controls.Add(this.clientFilterRadioBtn);
+            this.Controls.Add(this.radioButton1);
+            this.Controls.Add(this.nameFilterRadioBtn);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.filterTextBox);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.CancelValidationButton);
-            this.Controls.Add(this.PostButton);
             this.Controls.Add(this.ValidateButton);
             this.Controls.Add(this.accountGrid);
             this.Name = "WorkListForm";
@@ -262,7 +321,6 @@
 
         private MetroFramework.Controls.MetroGrid accountGrid;
         private MetroFramework.Controls.MetroButton ValidateButton;
-        private MetroFramework.Controls.MetroButton PostButton;
         private System.Windows.Forms.TreeView workqueues;
         private MetroFramework.Controls.MetroButton CancelValidationButton;
         private System.Windows.Forms.ContextMenuStrip accountGridContextMenu;
@@ -275,5 +333,11 @@
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Button panelExpandCollapseButton;
+        private System.Windows.Forms.TextBox filterTextBox;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.RadioButton nameFilterRadioBtn;
+        private System.Windows.Forms.RadioButton radioButton1;
+        private System.Windows.Forms.RadioButton clientFilterRadioBtn;
+        private System.Windows.Forms.RadioButton accountFilterRadioBtn;
     }
 }

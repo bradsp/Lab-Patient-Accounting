@@ -41,9 +41,9 @@
             this.address1TextBox = new MetroFramework.Controls.MetroTextBox();
             this.planNameTextBox = new MetroFramework.Controls.MetroTextBox();
             this.insCodeTextBox = new MetroFramework.Controls.MetroTextBox();
-            this.billAsJmcghCheckBox = new MetroFramework.Controls.MetroCheckBox();
-            this.allowOutpatientBillingCheckBox = new MetroFramework.Controls.MetroCheckBox();
-            this.isMedicareHmoCheckBox = new MetroFramework.Controls.MetroCheckBox();
+            this.billAsJmcghCheckBox = new System.Windows.Forms.CheckBox();
+            this.allowOutpatientBillingCheckBox = new System.Windows.Forms.CheckBox();
+            this.isMedicareHmoCheckBox = new System.Windows.Forms.CheckBox();
             this.insuranceTypeComboBox = new MetroFramework.Controls.MetroComboBox();
             this.finClassComboBox = new MetroFramework.Controls.MetroComboBox();
             this.finCodeComboBox = new MetroFramework.Controls.MetroComboBox();
@@ -343,7 +343,6 @@
             this.billAsJmcghCheckBox.Size = new System.Drawing.Size(96, 15);
             this.billAsJmcghCheckBox.TabIndex = 58;
             this.billAsJmcghCheckBox.Text = "Bill as JMCGH";
-            this.billAsJmcghCheckBox.UseSelectable = true;
             // 
             // allowOutpatientBillingCheckBox
             // 
@@ -353,7 +352,6 @@
             this.allowOutpatientBillingCheckBox.Size = new System.Drawing.Size(149, 15);
             this.allowOutpatientBillingCheckBox.TabIndex = 57;
             this.allowOutpatientBillingCheckBox.Text = "Allow Outpatient Billing";
-            this.allowOutpatientBillingCheckBox.UseSelectable = true;
             // 
             // isMedicareHmoCheckBox
             // 
@@ -363,7 +361,6 @@
             this.isMedicareHmoCheckBox.Size = new System.Drawing.Size(115, 15);
             this.isMedicareHmoCheckBox.TabIndex = 56;
             this.isMedicareHmoCheckBox.Text = "Is Medicare HMO";
-            this.isMedicareHmoCheckBox.UseSelectable = true;
             // 
             // insuranceTypeComboBox
             // 
@@ -793,9 +790,9 @@
         private MetroFramework.Controls.MetroTextBox address1TextBox;
         private MetroFramework.Controls.MetroTextBox planNameTextBox;
         private MetroFramework.Controls.MetroTextBox insCodeTextBox;
-        private MetroFramework.Controls.MetroCheckBox billAsJmcghCheckBox;
-        private MetroFramework.Controls.MetroCheckBox allowOutpatientBillingCheckBox;
-        private MetroFramework.Controls.MetroCheckBox isMedicareHmoCheckBox;
+        private System.Windows.Forms.CheckBox billAsJmcghCheckBox;
+        private System.Windows.Forms.CheckBox allowOutpatientBillingCheckBox;
+        private System.Windows.Forms.CheckBox isMedicareHmoCheckBox;
         private MetroFramework.Controls.MetroComboBox insuranceTypeComboBox;
         private MetroFramework.Controls.MetroComboBox finClassComboBox;
         private MetroFramework.Controls.MetroComboBox finCodeComboBox;

@@ -51,6 +51,50 @@ namespace LabBilling.Core
             return tempCount;
         }
 
+        public void GenerateStatement(string clientMnemonic)
+        {
+            Log.Instance.Trace($"Entering - client {clientMnemonic}");
+            if (clientMnemonic == null)
+                throw new ArgumentNullException();
+            SystemParametersRepository systemdb = new SystemParametersRepository(_connection);
+            AccountRepository accdb = new AccountRepository(_connection);
+            Account acc = accdb.GetByAccount(clientMnemonic);
+            if (acc == null)
+                NewClient(clientMnemonic);
+
+            InvoiceModel invoiceModel = new InvoiceModel();
+
+            invoiceModel.BillingCompanyName = systemdb.GetByKey("invoice_company_name") ?? string.Empty;
+            invoiceModel.BillingCompanyAddress = systemdb.GetByKey("invoice_company_address") ?? string.Empty;
+            invoiceModel.BillingCompanyCity = systemdb.GetByKey("invoice_company_city") ?? string.Empty;
+            invoiceModel.BillingCompanyState = systemdb.GetByKey("invoice_company_state") ?? string.Empty;
+            invoiceModel.BillingCompanyZipCode = systemdb.GetByKey("invoice_company_zipcode") ?? string.Empty;
+            invoiceModel.BillingCompanyPhone = systemdb.GetByKey("invoice_company_zipcode") ?? string.Empty;
+            invoiceModel.ImageFilePath = systemdb.GetByKey("invoice_logo_image_path") ?? string.Empty;
+
+            ClientRepository clientdb = new ClientRepository(_connection);
+            NumberRepository numberdb = new NumberRepository(_connection);
+
+            Client client = clientdb.GetClient(clientMnemonic);
+            invoiceModel.ClientName = client.Name;
+            invoiceModel.Address1 = client.StreetAddress1;
+            invoiceModel.Address2 = client.StreetAddress2;
+            invoiceModel.City = client.City;
+            invoiceModel.State = client.State;
+            invoiceModel.ZipCode = client.ZipCode;
+            invoiceModel.InvoiceDate = DateTime.Today;
+            invoiceModel.InvoiceNo = numberdb.GetNumber("invoice").ToString();
+
+            double balanceForward = clientdb.Balance(clientMnemonic);
+            invoiceModel.BalanceForward = balanceForward;
+            double payments = 0.00;
+            double adjustments = 0.00;
+            invoiceModel.InvoiceDetails = new List<InvoiceDetailModel>();
+
+
+        }
+
+
         /// <summary>
         /// Generate an invoice for a single client.
         /// </summary>
@@ -58,7 +102,7 @@ namespace LabBilling.Core
         /// <param name="throughDate"></param>
         public void GenerateInvoice(string clientMnemonic, DateTime throughDate)
         {
-            Log.Instance.Trace("Entering");
+            Log.Instance.Trace($"Entering - client {clientMnemonic} thrudate {throughDate}");
             if (clientMnemonic == null || throughDate == null)
                 throw new ArgumentNullException();
             SystemParametersRepository systemdb = new SystemParametersRepository(_connection);
@@ -69,13 +113,13 @@ namespace LabBilling.Core
 
             InvoiceModel invoiceModel = new InvoiceModel();
 
-            invoiceModel.BillingCompanyName = systemdb.GetByKey("invoice_company_name") ?? "Medical Center Laboratory";
-            invoiceModel.BillingCompanyAddress = systemdb.GetByKey("invoice_company_address") ?? "PO Box 3099";
-            invoiceModel.BillingCompanyCity = systemdb.GetByKey("invoice_company_city") ?? "Jackson";
-            invoiceModel.BillingCompanyState = systemdb.GetByKey("invoice_company_state") ?? "TN";
-            invoiceModel.BillingCompanyZipCode = systemdb.GetByKey("invoice_company_zipcode") ?? "38303";
-            invoiceModel.BillingCompanyPhone = systemdb.GetByKey("invoice_company_zipcode") ?? "731-541-7300 / 866-396-8537";
-            invoiceModel.ImageFilePath = systemdb.GetByKey("invoice_logo_image_path") ?? @"../../../ViewerClientBill/MCLleft.jpg";
+            invoiceModel.BillingCompanyName = systemdb.GetByKey("invoice_company_name") ?? string.Empty;
+            invoiceModel.BillingCompanyAddress = systemdb.GetByKey("invoice_company_address") ?? string.Empty;
+            invoiceModel.BillingCompanyCity = systemdb.GetByKey("invoice_company_city") ?? string.Empty;
+            invoiceModel.BillingCompanyState = systemdb.GetByKey("invoice_company_state") ?? string.Empty;
+            invoiceModel.BillingCompanyZipCode = systemdb.GetByKey("invoice_company_zipcode") ?? string.Empty;
+            invoiceModel.BillingCompanyPhone = systemdb.GetByKey("invoice_company_zipcode") ?? string.Empty;
+            invoiceModel.ImageFilePath = systemdb.GetByKey("invoice_logo_image_path") ?? string.Empty;
 
             ClientRepository clientdb = new ClientRepository(_connection);
             NumberRepository numberdb = new NumberRepository(_connection);
@@ -286,7 +330,7 @@ namespace LabBilling.Core
         {
             var cmd = PetaPoco.Sql.Builder
                 .Append("select vbs.cl_mnem as 'ClientMnem', client.cli_nme as 'ClientName', dictionary.clienttype.description as 'ClientType', ")
-                .Append("sum(dbo.GetAccBalByDate(vbs.account, GETDATE())) as 'UnbilledAmount' ")
+                .Append("sum(dbo.GetAccBalance(vbs.account)) as 'UnbilledAmount' ")
                 .Append("from vw_cbill_select vbs join client on vbs.cl_mnem = client.cli_mnem ")
                 .Append("join dictionary.clienttype on client.[type] = dictionary.clienttype.[type] ")
                 .Append("where trans_date <= @0", thruDate.ToShortDateString())
@@ -300,7 +344,7 @@ namespace LabBilling.Core
         {
             var cmd = PetaPoco.Sql.Builder
                 .Append("select vbs.cl_mnem, vbs.account, vbs.trans_date, vbs.pat_name, vbs.fin_code, ")
-                .Append("dbo.GetAccBalByDate(vbs.account, GETDATE()) as 'UnbilledAmount' ")
+                .Append("dbo.GetAccBalance(vbs.account) as 'UnbilledAmount' ")
                 .Append("from vw_cbill_select vbs ")
                 .Append("where cl_mnem = @0 ", clientMnem)
                 .Append("and trans_date <= @0 ", thruDate);

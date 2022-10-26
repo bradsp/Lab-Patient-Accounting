@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Timers;
@@ -42,6 +43,7 @@ namespace LabBillingMQService
         private void AddJobs()
         {
             AddAccountValidationJob();
+            AddChargeInterfaceProcessingJob();
         }
 
         public void AddAccountValidationJob()
@@ -68,6 +70,32 @@ namespace LabBillingMQService
             Console.WriteLine($"Account Validation Job initialized. Next run time - {nextFireTime}");
             //if (nextFireTime != null)
             //    Log.Info(Group1 + "+" + trigger1, new Exception(nextFireTime.Value.ToString("u")));
+        }
+
+        public void AddChargeInterfaceProcessingJob()
+        {
+            const string trigger1 = "ChargeInterfaceProcessing";
+            IJob adtJob = new ChargeInterfaceProcessing();
+            var jobDetail = new JobDetailImpl(trigger1 + Job, Group1, adtJob.GetType());
+
+            var trigger = (ISimpleTrigger)TriggerBuilder.Create()
+                .WithIdentity(trigger1 + Job, Group1)
+                .StartAt(DateTime.Now.AddMinutes(1))
+                .ForJob(trigger1 + Job, Group1)
+                .Build();
+
+            scheduler.ScheduleJob(jobDetail, trigger);
+            var nextFireTime = trigger.GetNextFireTimeUtc();
+            Console.WriteLine($"Charge Interface Processing initialized. Next run time - {nextFireTime}");
+
+        }
+
+        public void AddAdtInterfaceProcessingJob()
+        {
+            const string trigger1 = "AdtInterfaceProcessing";
+            IJob chrgJob = new ChargeInterfaceProcessing();
+            var jobDetail = new JobDetailImpl(trigger1 + Job, Group1, chrgJob.GetType());
+
         }
 
     }

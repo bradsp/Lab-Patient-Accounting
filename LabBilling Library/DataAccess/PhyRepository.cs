@@ -25,6 +25,7 @@ namespace LabBilling.Core.DataAccess
 
         public Phy GetByNPI(string npi)
         {
+            Log.Instance.Trace($"Entering - npi {npi}");
             Phy phy = new Phy();
             Pth pth = new Pth();
 
@@ -43,6 +44,7 @@ namespace LabBilling.Core.DataAccess
 
         public List<Phy> GetByName(string lastName, string firstName)
         {
+            Log.Instance.Trace($"Entering - name {lastName} {firstName}");
             List<Phy> phy = new List<Phy>();
             Pth pth = new Pth();
 
@@ -72,12 +74,13 @@ namespace LabBilling.Core.DataAccess
 
             var queryResult = dbConnection.Fetch<Phy>(sql);
 
-            Log.Instance.Trace("Exiting");
+            Log.Instance.Trace(dbConnection.LastSQL);
             return queryResult;
         }
 
         public override Phy GetById(int id)
         {
+            Log.Instance.Trace($"Entering - id {id}");
             Phy phy = new Phy();
             Pth pth = new Pth();
 
