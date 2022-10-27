@@ -113,6 +113,8 @@ namespace LabBilling
             tlpRecentAccounts.RowCount = recentAccounts.Count;
             tlpRecentAccounts.ColumnCount = 1;
 
+            toolStripDatabaseLabel.Text = Program.Database;
+            toolStripUsernameLabel.Text = Program.LoggedInUser.FullName;
             this.Text += " " + Program.Database;
             if(!string.IsNullOrEmpty(Program.LoggedInUser.ImpersonatingUser))
             {

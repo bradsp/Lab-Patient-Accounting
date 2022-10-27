@@ -121,7 +121,8 @@
             this.changeClientToolStripMenuItem,
             this.changeDateOfServiceToolStripMenuItem});
             this.accountGridContextMenu.Name = "accountGridContextMenu";
-            this.accountGridContextMenu.Size = new System.Drawing.Size(197, 92);
+            this.accountGridContextMenu.Size = new System.Drawing.Size(197, 114);
+            this.accountGridContextMenu.VisibleChanged += new System.EventHandler(this.accountGridContextMenu_VisibleChanged);
             // 
             // holdToolStripMenuItem
             // 

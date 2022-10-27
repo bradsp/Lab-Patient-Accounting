@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using LabBilling.Logging;
 using LabBilling.Core.Models;
+using System.Data.SqlClient;
+using System.Data;
 
 namespace LabBilling.Core.DataAccess
 {
@@ -57,8 +59,8 @@ namespace LabBilling.Core.DataAccess
             var sql = PetaPoco.Sql.Builder
                 .Append("SELECT * ")
                 .Append($"FROM {_tableName} ")
-                .Append("WHERE return_value_type = @0 ", codeSet)
-                .Append("AND sending_system = @0 ", sendingSystem);
+                .Append("WHERE return_value_type = @0 ", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = codeSet })
+                .Append("AND sending_system = @0 ", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = sendingSystem });
 
             var records = dbConnection.Fetch<Mapping>(sql);
 
@@ -72,9 +74,9 @@ namespace LabBilling.Core.DataAccess
             var sql = PetaPoco.Sql.Builder
                 .Append("SELECT * ")
                 .Append($"FROM {_tableName} ")
-                .Append("WHERE return_value_type = @0 ", codeSet)
-                .Append("AND sending_system = @0 ", sendingSystem)
-                .Append("AND sending_value = @0 ", sendingValue);
+                .Append("WHERE return_value_type = @0 ", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = codeSet })
+                .Append("AND sending_system = @0 ", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = sendingSystem })
+                .Append("AND sending_value = @0 ", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = sendingValue });
 
             var record = dbConnection.SingleOrDefault<Mapping>(sql);
 

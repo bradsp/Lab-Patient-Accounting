@@ -64,7 +64,6 @@ namespace LabBilling.Core.DataAccess
         {
             Log.Instance.Trace("Entering");
 
-            //string sql = $"SELECT * FROM {_tableName}";
             PetaPoco.Sql sql = PetaPoco.Sql.Builder
                 .From(_tableName);
 
@@ -95,8 +94,6 @@ namespace LabBilling.Core.DataAccess
         }
 
         public abstract TPoco GetById(int id);
-
-        //public abstract Tpoco GetByPrimaryKey();
 
         public virtual bool Update(TPoco table)
         {

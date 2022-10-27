@@ -37,7 +37,8 @@ namespace LabBilling.Core.DataAccess
                 Log.Instance.Error("Null value passed to WriteOffCodeRepository GetByCode.");
                 return new WriteOffCode();
             }
-            var record = dbConnection.SingleOrDefault<WriteOffCode>($"where {GetRealColumn(nameof(WriteOffCode.Code))} = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = code });
+            var record = dbConnection.SingleOrDefault<WriteOffCode>($"where {GetRealColumn(nameof(WriteOffCode.Code))} = @0", 
+                new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = code });
 
             if (record != null)
             {

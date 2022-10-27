@@ -56,6 +56,10 @@ namespace LabBilling.Forms
             InvoicesDGV.MultiSelect = false;
             SelectionProfile.SelectedIndex = 0;
 
+            ClientFilter.DataSource = clientList;
+            ClientFilter.DisplayMember = nameof(Client.Name);
+            ClientFilter.ValueMember = nameof(Client.ClientMnem);
+
         }
 
         private void RefreshUnbilledGrid()
@@ -238,9 +242,7 @@ namespace LabBilling.Forms
         {
             FromDate.Text = DateTime.Today.AddDays(-30).ToString("MM/dd/yyyy");
             ThroughDate.Text = DateTime.Today.ToString("MM/dd/yyyy");
-            ClientFilter.DataSource = clientList;
-            ClientFilter.DisplayMember = "cli_nme";
-            ClientFilter.ValueMember = "cli_mnem";
+
             DateTime.TryParse(FromDate.Text, out DateTime fd);
             DateTime.TryParse(ThroughDate.Text, out DateTime td);
             await RefreshInvoiceHistoryGridAsync(null, fd, td);
@@ -303,9 +305,12 @@ namespace LabBilling.Forms
 
         private void ClientFilter_SelectedIndexChanged(object sender, EventArgs e)
         {
-            DateTime.TryParse(FromDate.Text, out DateTime fd);
-            DateTime.TryParse(ThroughDate.Text, out DateTime td);
-            RefreshInvoiceHistoryGrid(ClientFilter.SelectedValue?.ToString(), fd, td);
+            if (InvoiceHistoryTabPage.Focused)
+            {
+                DateTime.TryParse(FromDate.Text, out DateTime fd);
+                DateTime.TryParse(ThroughDate.Text, out DateTime td);
+                RefreshInvoiceHistoryGrid(ClientFilter.SelectedValue?.ToString(), fd, td);
+            }
         }
 
         private void ViewInvoice_Click(object sender, EventArgs e)

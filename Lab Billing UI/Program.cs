@@ -61,15 +61,26 @@ namespace LabBilling
 
         static void Application_ThreadException(object sender, ThreadExceptionEventArgs e)
         {
+            Exception exc = (Exception)e.Exception;
+
             //log the exception, display, etc
-            Log.Instance.Fatal(e.Exception, "Unhandled Exception");
+            if (exc.InnerException != null)
+            {
+                Log.Instance.Fatal(exc.InnerException, "Unhandled Exception");
+            }
+            Log.Instance.Fatal(exc, "Unhandled Exception");
             MessageBox.Show("An unhandled exception has been encountered. Report this to your system administrator.", "Unhandled Exception", MessageBoxButtons.OK, MessageBoxIcon.Stop);
         }
 
         static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
+            Exception ex = (Exception)e.ExceptionObject;
             //log the exception
-            Log.Instance.Fatal((Exception)e.ExceptionObject, "Unhandled exception");
+            if(ex.InnerException != null)
+            {
+                Log.Instance.Fatal(ex.InnerException, "Unhandled exception");
+            }
+            Log.Instance.Fatal(ex, "Unhandled exception");
             MessageBox.Show("An unhandled exception has been encountered. Report this to your system administrator.", "Unhandled Exception", MessageBoxButtons.OK, MessageBoxIcon.Stop);
         }
 

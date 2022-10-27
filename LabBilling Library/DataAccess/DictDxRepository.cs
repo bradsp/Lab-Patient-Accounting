@@ -54,7 +54,7 @@ namespace LabBilling.Core.DataAccess
         /// <returns></returns>
         public IEnumerable<DictDx> Search(string searchText, DateTime transDate)
         {
-            Log.Instance.Debug($"Entering");
+            Log.Instance.Trace($"Entering - searchtext {searchText} date {transDate}");
 
             var sql = PetaPoco.Sql.Builder
                 .From("icd9desc")
@@ -63,7 +63,7 @@ namespace LabBilling.Core.DataAccess
                 .Append("AND AMA_year = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = FunctionRepository.GetAMAYear(transDate) });
 
             List<DictDx> records = dbConnection.Fetch<DictDx>(sql);
-
+            Log.Instance.Debug(dbConnection.LastSQL);
             return records;
         }
     }

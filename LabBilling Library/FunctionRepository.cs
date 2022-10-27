@@ -14,7 +14,7 @@ namespace LabBilling
         {
             int year = transDate.Year;
 
-            return transDate.Month >= 10 ? year+1.ToString() : year.ToString();
+            return transDate.Month >= 10 ? (year+1).ToString() : year.ToString();
 
         }
 

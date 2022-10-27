@@ -60,7 +60,6 @@ namespace LabBilling.Forms
             this.summaryTab = new System.Windows.Forms.TabPage();
             this.summaryTable = new System.Windows.Forms.TableLayoutPanel();
             this.tabDemographics = new System.Windows.Forms.TabPage();
-            this.providerLookup1 = new LabBilling.Library.ProviderLookup();
             this.DemoStatusMessagesTextBox = new System.Windows.Forms.TextBox();
             this.SuffixTextBox = new System.Windows.Forms.TextBox();
             this.SaveDemographics = new System.Windows.Forms.Button();
@@ -240,6 +239,15 @@ namespace LabBilling.Forms
             this.BannerBillStatusTextBox = new System.Windows.Forms.TextBox();
             this.BannerProviderTextBox = new System.Windows.Forms.TextBox();
             this.RefreshButton = new System.Windows.Forms.PictureBox();
+            this.statementFlagTextBox = new System.Windows.Forms.TextBox();
+            this.statementFlagLabel = new System.Windows.Forms.Label();
+            this.firstStmtDateTextBox = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.lastStmtDateTextBox = new System.Windows.Forms.TextBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.providerLookup1 = new LabBilling.Library.ProviderLookup();
+            this.minPmtTextBox = new LabBilling.UserControls.CurrencyTextBox();
             this.tabControl1.SuspendLayout();
             this.summaryTab.SuspendLayout();
             this.tabDemographics.SuspendLayout();
@@ -283,7 +291,7 @@ namespace LabBilling.Forms
             this.tabControl1.Location = new System.Drawing.Point(0, 100);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(1159, 641);
+            this.tabControl1.Size = new System.Drawing.Size(1159, 518);
             this.tabControl1.TabIndex = 2;
             this.tabControl1.Selected += new System.Windows.Forms.TabControlEventHandler(this.tabControl1_Selected);
             // 
@@ -294,7 +302,7 @@ namespace LabBilling.Forms
             this.summaryTab.Location = new System.Drawing.Point(4, 22);
             this.summaryTab.Name = "summaryTab";
             this.summaryTab.Padding = new System.Windows.Forms.Padding(3);
-            this.summaryTab.Size = new System.Drawing.Size(1151, 615);
+            this.summaryTab.Size = new System.Drawing.Size(1151, 492);
             this.summaryTab.TabIndex = 0;
             this.summaryTab.Text = "Summary";
             // 
@@ -313,7 +321,7 @@ namespace LabBilling.Forms
             this.summaryTable.Name = "summaryTable";
             this.summaryTable.RowCount = 1;
             this.summaryTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.summaryTable.Size = new System.Drawing.Size(1145, 609);
+            this.summaryTable.Size = new System.Drawing.Size(1145, 486);
             this.summaryTable.TabIndex = 0;
             // 
             // tabDemographics
@@ -357,28 +365,15 @@ namespace LabBilling.Forms
             this.tabDemographics.Location = new System.Drawing.Point(4, 22);
             this.tabDemographics.Name = "tabDemographics";
             this.tabDemographics.Padding = new System.Windows.Forms.Padding(3);
-            this.tabDemographics.Size = new System.Drawing.Size(1151, 615);
+            this.tabDemographics.Size = new System.Drawing.Size(1151, 492);
             this.tabDemographics.TabIndex = 9;
             this.tabDemographics.Text = "Demographics";
-            // 
-            // providerLookup1
-            // 
-            this.providerLookup1.CharacterLookupCountMin = 2;
-            this.providerLookup1.Datasource = null;
-            this.providerLookup1.DisplayValue = null;
-            this.providerLookup1.Location = new System.Drawing.Point(499, 218);
-            this.providerLookup1.Name = "providerLookup1";
-            this.providerLookup1.ResultBoxHeight = 100;
-            this.providerLookup1.SelectedValue = null;
-            this.providerLookup1.Size = new System.Drawing.Size(288, 134);
-            this.providerLookup1.TabIndex = 31;
-            this.providerLookup1.SelectedValueChanged += new LabBilling.Library.ProviderLookup.SelectedValueChangedEventHandler(this.providerLookup1_SelectedValueChanged);
             // 
             // DemoStatusMessagesTextBox
             // 
             this.DemoStatusMessagesTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.DemoStatusMessagesTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.DemoStatusMessagesTextBox.Location = new System.Drawing.Point(134, 361);
+            this.DemoStatusMessagesTextBox.Location = new System.Drawing.Point(134, 300);
             this.DemoStatusMessagesTextBox.Multiline = true;
             this.DemoStatusMessagesTextBox.Name = "DemoStatusMessagesTextBox";
             this.DemoStatusMessagesTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
@@ -733,7 +728,7 @@ namespace LabBilling.Forms
             this.tabGuarantor.Controls.Add(this.GuarStateComboBox);
             this.tabGuarantor.Location = new System.Drawing.Point(4, 22);
             this.tabGuarantor.Name = "tabGuarantor";
-            this.tabGuarantor.Size = new System.Drawing.Size(1151, 615);
+            this.tabGuarantor.Size = new System.Drawing.Size(1151, 492);
             this.tabGuarantor.TabIndex = 13;
             this.tabGuarantor.Text = "Guarantor";
             // 
@@ -948,7 +943,7 @@ namespace LabBilling.Forms
             this.tabInsurance.Location = new System.Drawing.Point(4, 22);
             this.tabInsurance.Name = "tabInsurance";
             this.tabInsurance.Padding = new System.Windows.Forms.Padding(3);
-            this.tabInsurance.Size = new System.Drawing.Size(1151, 615);
+            this.tabInsurance.Size = new System.Drawing.Size(1151, 492);
             this.tabInsurance.TabIndex = 11;
             this.tabInsurance.Text = "Insurance";
             // 
@@ -1026,7 +1021,7 @@ namespace LabBilling.Forms
             this.insTabLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.insTabLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.insTabLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
-            this.insTabLayoutPanel.Size = new System.Drawing.Size(1145, 609);
+            this.insTabLayoutPanel.Size = new System.Drawing.Size(1145, 486);
             this.insTabLayoutPanel.TabIndex = 2;
             // 
             // HolderLastNameLabel
@@ -1506,10 +1501,10 @@ namespace LabBilling.Forms
             // 
             this.insTabLayoutPanel.SetColumnSpan(this.InsTabMessageTextBox, 3);
             this.InsTabMessageTextBox.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.InsTabMessageTextBox.Location = new System.Drawing.Point(133, 522);
+            this.InsTabMessageTextBox.Location = new System.Drawing.Point(133, 489);
             this.InsTabMessageTextBox.Multiline = true;
             this.InsTabMessageTextBox.Name = "InsTabMessageTextBox";
-            this.InsTabMessageTextBox.Size = new System.Drawing.Size(714, 84);
+            this.InsTabMessageTextBox.Size = new System.Drawing.Size(714, 24);
             this.InsTabMessageTextBox.TabIndex = 44;
             // 
             // insurancePlanTextBox
@@ -1537,7 +1532,7 @@ namespace LabBilling.Forms
             this.tabDiagnosis.Location = new System.Drawing.Point(4, 22);
             this.tabDiagnosis.Name = "tabDiagnosis";
             this.tabDiagnosis.Padding = new System.Windows.Forms.Padding(3);
-            this.tabDiagnosis.Size = new System.Drawing.Size(1151, 615);
+            this.tabDiagnosis.Size = new System.Drawing.Size(1151, 492);
             this.tabDiagnosis.TabIndex = 8;
             this.tabDiagnosis.Text = "Diagnosis";
             // 
@@ -1556,7 +1551,7 @@ namespace LabBilling.Forms
             // 
             this.SaveDxButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.SaveDxButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.SaveDxButton.Location = new System.Drawing.Point(734, 380);
+            this.SaveDxButton.Location = new System.Drawing.Point(734, 257);
             this.SaveDxButton.Name = "SaveDxButton";
             this.SaveDxButton.Size = new System.Drawing.Size(75, 28);
             this.SaveDxButton.TabIndex = 8;
@@ -1637,7 +1632,7 @@ namespace LabBilling.Forms
             this.DxSearchDataGrid.RowHeadersDefaultCellStyle = dataGridViewCellStyle6;
             this.DxSearchDataGrid.RowHeadersVisible = false;
             this.DxSearchDataGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.DxSearchDataGrid.Size = new System.Drawing.Size(412, 328);
+            this.DxSearchDataGrid.Size = new System.Drawing.Size(412, 205);
             this.DxSearchDataGrid.TabIndex = 2;
             this.DxSearchDataGrid.CellMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.DxSearchDataGrid_CellMouseDoubleClick);
             this.DxSearchDataGrid.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.DxSearchDataGrid_DataBindingComplete);
@@ -1687,7 +1682,7 @@ namespace LabBilling.Forms
             this.DiagnosisDataGrid.RowHeadersDefaultCellStyle = dataGridViewCellStyle9;
             this.DiagnosisDataGrid.RowHeadersVisible = false;
             this.DiagnosisDataGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.DiagnosisDataGrid.Size = new System.Drawing.Size(358, 328);
+            this.DiagnosisDataGrid.Size = new System.Drawing.Size(358, 205);
             this.DiagnosisDataGrid.TabIndex = 0;
             this.DiagnosisDataGrid.CellMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.DiagnosisDataGrid_CellMouseDoubleClick);
             this.DiagnosisDataGrid.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.DiagnosisDataGrid_DataBindingComplete);
@@ -1722,14 +1717,14 @@ namespace LabBilling.Forms
             this.tabCharges.Location = new System.Drawing.Point(4, 22);
             this.tabCharges.Name = "tabCharges";
             this.tabCharges.Padding = new System.Windows.Forms.Padding(3);
-            this.tabCharges.Size = new System.Drawing.Size(1151, 615);
+            this.tabCharges.Size = new System.Drawing.Size(1151, 492);
             this.tabCharges.TabIndex = 6;
             this.tabCharges.Text = "Charges";
             // 
             // UpdateDxPointersButton
             // 
             this.UpdateDxPointersButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.UpdateDxPointersButton.Location = new System.Drawing.Point(788, 203);
+            this.UpdateDxPointersButton.Location = new System.Drawing.Point(788, 80);
             this.UpdateDxPointersButton.Name = "UpdateDxPointersButton";
             this.UpdateDxPointersButton.Size = new System.Drawing.Size(127, 25);
             this.UpdateDxPointersButton.TabIndex = 10;
@@ -1741,7 +1736,7 @@ namespace LabBilling.Forms
             // 
             this.ChargeDxPointerLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.ChargeDxPointerLabel.AutoSize = true;
-            this.ChargeDxPointerLabel.Location = new System.Drawing.Point(610, 215);
+            this.ChargeDxPointerLabel.Location = new System.Drawing.Point(610, 92);
             this.ChargeDxPointerLabel.Name = "ChargeDxPointerLabel";
             this.ChargeDxPointerLabel.Size = new System.Drawing.Size(94, 13);
             this.ChargeDxPointerLabel.TabIndex = 9;
@@ -1770,7 +1765,7 @@ namespace LabBilling.Forms
             dataGridViewCellStyle11.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             dataGridViewCellStyle11.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
             this.DiagnosisPointerDataGrid.DefaultCellStyle = dataGridViewCellStyle11;
-            this.DiagnosisPointerDataGrid.Location = new System.Drawing.Point(613, 234);
+            this.DiagnosisPointerDataGrid.Location = new System.Drawing.Point(613, 111);
             this.DiagnosisPointerDataGrid.Name = "DiagnosisPointerDataGrid";
             dataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle12.BackColor = System.Drawing.SystemColors.Control;
@@ -1798,7 +1793,7 @@ namespace LabBilling.Forms
             // TotalChargesTextBox
             // 
             this.TotalChargesTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.TotalChargesTextBox.Location = new System.Drawing.Point(1006, 234);
+            this.TotalChargesTextBox.Location = new System.Drawing.Point(1006, 111);
             this.TotalChargesTextBox.Name = "TotalChargesTextBox";
             this.TotalChargesTextBox.ReadOnly = true;
             this.TotalChargesTextBox.Size = new System.Drawing.Size(137, 20);
@@ -1810,7 +1805,7 @@ namespace LabBilling.Forms
             this.ChargeTotalChargesLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.ChargeTotalChargesLabel.AutoSize = true;
             this.ChargeTotalChargesLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ChargeTotalChargesLabel.Location = new System.Drawing.Point(1001, 218);
+            this.ChargeTotalChargesLabel.Location = new System.Drawing.Point(1001, 95);
             this.ChargeTotalChargesLabel.Name = "ChargeTotalChargesLabel";
             this.ChargeTotalChargesLabel.Size = new System.Drawing.Size(86, 13);
             this.ChargeTotalChargesLabel.TabIndex = 5;
@@ -1831,7 +1826,7 @@ namespace LabBilling.Forms
             // 
             this.ChargeDetailGridLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.ChargeDetailGridLabel.AutoSize = true;
-            this.ChargeDetailGridLabel.Location = new System.Drawing.Point(12, 218);
+            this.ChargeDetailGridLabel.Location = new System.Drawing.Point(12, 95);
             this.ChargeDetailGridLabel.Name = "ChargeDetailGridLabel";
             this.ChargeDetailGridLabel.Size = new System.Drawing.Size(76, 13);
             this.ChargeDetailGridLabel.TabIndex = 3;
@@ -1870,7 +1865,7 @@ namespace LabBilling.Forms
             dataGridViewCellStyle14.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             dataGridViewCellStyle14.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
             this.ChrgDetailDataGrid.DefaultCellStyle = dataGridViewCellStyle14;
-            this.ChrgDetailDataGrid.Location = new System.Drawing.Point(8, 234);
+            this.ChrgDetailDataGrid.Location = new System.Drawing.Point(8, 111);
             this.ChrgDetailDataGrid.Name = "ChrgDetailDataGrid";
             dataGridViewCellStyle15.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle15.BackColor = System.Drawing.SystemColors.Control;
@@ -1926,7 +1921,7 @@ namespace LabBilling.Forms
             this.ChargesDataGrid.RowHeadersDefaultCellStyle = dataGridViewCellStyle18;
             this.ChargesDataGrid.RowHeadersVisible = false;
             this.ChargesDataGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.ChargesDataGrid.Size = new System.Drawing.Size(1142, 161);
+            this.ChargesDataGrid.Size = new System.Drawing.Size(1142, 38);
             this.ChargesDataGrid.TabIndex = 0;
             this.ChargesDataGrid.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DgvCharges_CellDoubleClick);
             this.ChargesDataGrid.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.ChargesDataGrid_CellFormatting);
@@ -1962,7 +1957,7 @@ namespace LabBilling.Forms
             this.tabPayments.Controls.Add(this.PaymentsDataGrid);
             this.tabPayments.Location = new System.Drawing.Point(4, 22);
             this.tabPayments.Name = "tabPayments";
-            this.tabPayments.Size = new System.Drawing.Size(1151, 615);
+            this.tabPayments.Size = new System.Drawing.Size(1151, 492);
             this.tabPayments.TabIndex = 7;
             this.tabPayments.Text = "Payments / Adjustments";
             // 
@@ -2087,7 +2082,7 @@ namespace LabBilling.Forms
             this.PaymentsDataGrid.RowHeadersDefaultCellStyle = dataGridViewCellStyle21;
             this.PaymentsDataGrid.RowHeadersVisible = false;
             this.PaymentsDataGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.PaymentsDataGrid.Size = new System.Drawing.Size(1145, 438);
+            this.PaymentsDataGrid.Size = new System.Drawing.Size(1145, 315);
             this.PaymentsDataGrid.TabIndex = 0;
             this.PaymentsDataGrid.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.PaymentsDataGrid_CellDoubleClick);
             // 
@@ -2099,7 +2094,7 @@ namespace LabBilling.Forms
             this.tabNotes.Controls.Add(this.NotesDisplayTextBox);
             this.tabNotes.Location = new System.Drawing.Point(4, 22);
             this.tabNotes.Name = "tabNotes";
-            this.tabNotes.Size = new System.Drawing.Size(1151, 615);
+            this.tabNotes.Size = new System.Drawing.Size(1151, 492);
             this.tabNotes.TabIndex = 5;
             this.tabNotes.Text = "Notes";
             // 
@@ -2119,7 +2114,7 @@ namespace LabBilling.Forms
             this.NotesDisplayTextBox.Location = new System.Drawing.Point(0, 0);
             this.NotesDisplayTextBox.Name = "NotesDisplayTextBox";
             this.NotesDisplayTextBox.ReadOnly = true;
-            this.NotesDisplayTextBox.Size = new System.Drawing.Size(598, 615);
+            this.NotesDisplayTextBox.Size = new System.Drawing.Size(598, 492);
             this.NotesDisplayTextBox.TabIndex = 0;
             this.NotesDisplayTextBox.Text = "";
             // 
@@ -2127,6 +2122,14 @@ namespace LabBilling.Forms
             // 
             this.tabBillingActivity.AutoScroll = true;
             this.tabBillingActivity.BackColor = System.Drawing.Color.White;
+            this.tabBillingActivity.Controls.Add(this.label3);
+            this.tabBillingActivity.Controls.Add(this.minPmtTextBox);
+            this.tabBillingActivity.Controls.Add(this.label2);
+            this.tabBillingActivity.Controls.Add(this.label1);
+            this.tabBillingActivity.Controls.Add(this.lastStmtDateTextBox);
+            this.tabBillingActivity.Controls.Add(this.firstStmtDateTextBox);
+            this.tabBillingActivity.Controls.Add(this.statementFlagLabel);
+            this.tabBillingActivity.Controls.Add(this.statementFlagTextBox);
             this.tabBillingActivity.Controls.Add(this.GenerateClaimButton);
             this.tabBillingActivity.Controls.Add(this.LastValidatedLabel);
             this.tabBillingActivity.Controls.Add(this.BillingLastValidatedLabel);
@@ -2136,7 +2139,7 @@ namespace LabBilling.Forms
             this.tabBillingActivity.Location = new System.Drawing.Point(4, 22);
             this.tabBillingActivity.Name = "tabBillingActivity";
             this.tabBillingActivity.Padding = new System.Windows.Forms.Padding(3);
-            this.tabBillingActivity.Size = new System.Drawing.Size(1151, 615);
+            this.tabBillingActivity.Size = new System.Drawing.Size(1151, 492);
             this.tabBillingActivity.TabIndex = 12;
             this.tabBillingActivity.Text = "Billing Activity";
             // 
@@ -2176,9 +2179,9 @@ namespace LabBilling.Forms
             // 
             // 
             this.ValidationResultsTextBox.CustomButton.Image = null;
-            this.ValidationResultsTextBox.CustomButton.Location = new System.Drawing.Point(-147, 1);
+            this.ValidationResultsTextBox.CustomButton.Location = new System.Drawing.Point(123, 2);
             this.ValidationResultsTextBox.CustomButton.Name = "";
-            this.ValidationResultsTextBox.CustomButton.Size = new System.Drawing.Size(583, 583);
+            this.ValidationResultsTextBox.CustomButton.Size = new System.Drawing.Size(311, 311);
             this.ValidationResultsTextBox.CustomButton.Style = MetroFramework.MetroColorStyle.Blue;
             this.ValidationResultsTextBox.CustomButton.TabIndex = 1;
             this.ValidationResultsTextBox.CustomButton.Theme = MetroFramework.MetroThemeStyle.Light;
@@ -2196,7 +2199,7 @@ namespace LabBilling.Forms
             this.ValidationResultsTextBox.SelectionLength = 0;
             this.ValidationResultsTextBox.SelectionStart = 0;
             this.ValidationResultsTextBox.ShortcutsEnabled = true;
-            this.ValidationResultsTextBox.Size = new System.Drawing.Size(437, 585);
+            this.ValidationResultsTextBox.Size = new System.Drawing.Size(437, 316);
             this.ValidationResultsTextBox.TabIndex = 2;
             this.ValidationResultsTextBox.Text = "metroTextBox1";
             this.ValidationResultsTextBox.UseSelectable = true;
@@ -2245,7 +2248,7 @@ namespace LabBilling.Forms
             dataGridViewCellStyle24.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             dataGridViewCellStyle24.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
             this.BillActivityDataGrid.RowHeadersDefaultCellStyle = dataGridViewCellStyle24;
-            this.BillActivityDataGrid.Size = new System.Drawing.Size(692, 585);
+            this.BillActivityDataGrid.Size = new System.Drawing.Size(692, 451);
             this.BillActivityDataGrid.TabIndex = 0;
             this.BillActivityDataGrid.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.BillActivityDataGrid_MouseDoubleClick);
             // 
@@ -2528,12 +2531,107 @@ namespace LabBilling.Forms
             this.RefreshButton.TabStop = false;
             this.RefreshButton.Click += new System.EventHandler(this.RefreshButton_Click);
             // 
+            // statementFlagTextBox
+            // 
+            this.statementFlagTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.statementFlagTextBox.Location = new System.Drawing.Point(1043, 372);
+            this.statementFlagTextBox.Name = "statementFlagTextBox";
+            this.statementFlagTextBox.ReadOnly = true;
+            this.statementFlagTextBox.Size = new System.Drawing.Size(100, 20);
+            this.statementFlagTextBox.TabIndex = 5;
+            this.statementFlagTextBox.MouseClick += new System.Windows.Forms.MouseEventHandler(this.statementFlagTextBox_MouseClick);
+            // 
+            // statementFlagLabel
+            // 
+            this.statementFlagLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.statementFlagLabel.AutoSize = true;
+            this.statementFlagLabel.Location = new System.Drawing.Point(959, 375);
+            this.statementFlagLabel.Name = "statementFlagLabel";
+            this.statementFlagLabel.Size = new System.Drawing.Size(78, 13);
+            this.statementFlagLabel.TabIndex = 6;
+            this.statementFlagLabel.Text = "Statement Flag";
+            // 
+            // firstStmtDateTextBox
+            // 
+            this.firstStmtDateTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.firstStmtDateTextBox.Location = new System.Drawing.Point(1043, 398);
+            this.firstStmtDateTextBox.Name = "firstStmtDateTextBox";
+            this.firstStmtDateTextBox.ReadOnly = true;
+            this.firstStmtDateTextBox.Size = new System.Drawing.Size(100, 20);
+            this.firstStmtDateTextBox.TabIndex = 7;
+            // 
+            // label1
+            // 
+            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(960, 401);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(77, 13);
+            this.label1.TabIndex = 8;
+            this.label1.Text = "First Statement";
+            // 
+            // lastStmtDateTextBox
+            // 
+            this.lastStmtDateTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.lastStmtDateTextBox.Location = new System.Drawing.Point(1043, 424);
+            this.lastStmtDateTextBox.Name = "lastStmtDateTextBox";
+            this.lastStmtDateTextBox.ReadOnly = true;
+            this.lastStmtDateTextBox.Size = new System.Drawing.Size(100, 20);
+            this.lastStmtDateTextBox.TabIndex = 7;
+            // 
+            // label2
+            // 
+            this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(960, 427);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(78, 13);
+            this.label2.TabIndex = 8;
+            this.label2.Text = "Last Statement";
+            // 
+            // label3
+            // 
+            this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(946, 453);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(92, 13);
+            this.label3.TabIndex = 10;
+            this.label3.Text = "Minimum Payment";
+            // 
+            // providerLookup1
+            // 
+            this.providerLookup1.CharacterLookupCountMin = 2;
+            this.providerLookup1.Datasource = null;
+            this.providerLookup1.DisplayValue = null;
+            this.providerLookup1.Location = new System.Drawing.Point(499, 218);
+            this.providerLookup1.Name = "providerLookup1";
+            this.providerLookup1.ResultBoxHeight = 100;
+            this.providerLookup1.SelectedValue = null;
+            this.providerLookup1.Size = new System.Drawing.Size(288, 134);
+            this.providerLookup1.TabIndex = 31;
+            this.providerLookup1.SelectedValueChanged += new LabBilling.Library.ProviderLookup.SelectedValueChangedEventHandler(this.providerLookup1_SelectedValueChanged);
+            // 
+            // minPmtTextBox
+            // 
+            this.minPmtTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.minPmtTextBox.DollarValue = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+            this.minPmtTextBox.Location = new System.Drawing.Point(1043, 450);
+            this.minPmtTextBox.Name = "minPmtTextBox";
+            this.minPmtTextBox.Size = new System.Drawing.Size(100, 20);
+            this.minPmtTextBox.TabIndex = 9;
+            this.minPmtTextBox.Leave += new System.EventHandler(this.minPmtTextBox_Leave);
+            // 
             // AccountForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Blue;
-            this.ClientSize = new System.Drawing.Size(1159, 753);
+            this.ClientSize = new System.Drawing.Size(1159, 630);
             this.Controls.Add(this.BannerBillStatusLabel);
             this.Controls.Add(this.BannerFinClassLabel);
             this.Controls.Add(this.BannerFinClassTextBox);
@@ -2785,6 +2883,14 @@ namespace LabBilling.Forms
         private System.Windows.Forms.TextBox GuarantorPhoneTextBox;
         private Library.ProviderLookup providerLookup1;
         private System.Windows.Forms.TextBox insurancePlanTextBox;
+        private System.Windows.Forms.Label statementFlagLabel;
+        private System.Windows.Forms.TextBox statementFlagTextBox;
+        private System.Windows.Forms.TextBox firstStmtDateTextBox;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.TextBox lastStmtDateTextBox;
+        private System.Windows.Forms.Label label3;
+        private UserControls.CurrencyTextBox minPmtTextBox;
     }
 }
 

@@ -16,6 +16,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using MetroFramework;
 using LabBilling.Core.BusinessLogic;
+using System.Text.RegularExpressions;
 
 namespace LabBilling.Forms
 {
@@ -1133,7 +1134,8 @@ namespace LabBilling.Forms
                 {
                     chrgdb.CreditCharge(Convert.ToInt32(row.Cells[nameof(Chrg.ChrgId)].Value.ToString()), prompt.Text);
                     //reload charge grids to pick up changes
-                    LoadCharges();
+                    //LoadCharges();
+                    LoadAccountData();
                 }
             }
         }
@@ -1318,6 +1320,15 @@ namespace LabBilling.Forms
                         if (i != e.RowIndex)
                         {
                             DiagnosisPointerDataGrid.Rows[i].Cells[e.ColumnIndex].Value = false;
+                        }
+                    }
+
+                    //loop through the row and ensure only one is checked
+                    for (int j = 2; j < DiagnosisPointerDataGrid.ColumnCount; j++)
+                    {
+                        if(j != e.ColumnIndex)
+                        {
+                            DiagnosisPointerDataGrid.Rows[e.RowIndex].Cells[j].Value = false;
                         }
                     }
                 }
@@ -1654,6 +1665,12 @@ namespace LabBilling.Forms
 
             ValidationResultsTextBox.Text = currentAccount.AccountValidationStatus.validation_text;
             LastValidatedLabel.Text = currentAccount.AccountValidationStatus.mod_date.ToString("G");
+
+            statementFlagTextBox.Text = currentAccount.Pat.StatementFlag;
+            firstStmtDateTextBox.Text = currentAccount.Pat.FirstStatementDate.ToString();
+            lastStmtDateTextBox.Text = currentAccount.Pat.LastStatementDate.ToString();
+            minPmtTextBox.Text = currentAccount.Pat.MinimumPaymentAmount.ToString();
+
 
         }
 
@@ -2004,5 +2021,23 @@ namespace LabBilling.Forms
 
         #endregion
 
+        private void statementFlagTextBox_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (string.IsNullOrEmpty(statementFlagTextBox.Text))
+            {
+                if (MessageBox.Show("Flag patient to receive statements?", "Flag for Statement", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                {
+                    currentAccount.Pat.StatementFlag = "Y";
+                    statementFlagTextBox.Text = "Y";
+                    patDB.Update(currentAccount.Pat, new[] { nameof(Pat.StatementFlag) });
+                }
+            }
+        }
+
+        private void minPmtTextBox_Leave(object sender, EventArgs e)
+        {
+            currentAccount.Pat.MinimumPaymentAmount = (double)minPmtTextBox.DollarValue;
+            patDB.Update(currentAccount.Pat, new[] { nameof(Pat.MinimumPaymentAmount) });
+        }
     }
 }

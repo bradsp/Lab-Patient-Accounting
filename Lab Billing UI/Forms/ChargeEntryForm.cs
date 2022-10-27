@@ -15,14 +15,18 @@ namespace LabBilling.Forms
         private Account _currentAccount = new Account();
         private readonly CdmRepository cdmRepository = new CdmRepository(Helper.ConnVal);
         private readonly AccountRepository accountRepository = new AccountRepository(Helper.ConnVal);
-        private DataTable cdmSortedByCdm;
-        private DataTable cdmSortedByDesc;
+        //private DataTable cdmSortedByCdm;
+        //private DataTable cdmSortedByDesc;
+        private Timer _timer;
+        private const int _timerInterval = 650;
 
         public ChargeEntryForm(Account currentAccount)
         {
             Log.Instance.Trace($"Entering");
             _currentAccount = currentAccount;
             InitializeComponent();
+            _timer = new Timer() { Enabled = false, Interval = _timerInterval };
+            _timer.Tick += new EventHandler(cdmTextBox_KeyUpDone);
         }
 
         private void ChargeEntryForm_Load(object sender, EventArgs e)
@@ -33,40 +37,40 @@ namespace LabBilling.Forms
             tbBannerMRN.Text = _currentAccount.MRN;
             tbDateOfService.Text = _currentAccount.TransactionDate.Value.ToShortDateString();
 
-            BuildCargeItemCombo();
+            //BuildCargeItemCombo();
         }
 
-        private void BuildCargeItemCombo()
-        {
-            var chrgItems = cdmRepository.GetAll().ToList();
+        //private void BuildCargeItemCombo()
+        //{
+        //    var chrgItems = cdmRepository.GetAll().ToList();
 
-            DataTable cdmDataTable = new DataTable(typeof(Cdm).Name);
-            cdmDataTable.Columns.Add("cdm");
-            cdmDataTable.Columns.Add("descript");
-            var values = new object[2];
-            //add a null row value
-            values[0] = "";
-            values[1] = "<select a charge item>";
-            cdmDataTable.Rows.Add(values);
-            foreach (Cdm cdm in chrgItems)
-            {
-                values[0] = cdm.ChargeId;
-                values[1] = cdm.Description;
-                cdmDataTable.Rows.Add(values);
-            }
-            cdmDataTable.DefaultView.Sort = "cdm asc";
+        //    DataTable cdmDataTable = new DataTable(typeof(Cdm).Name);
+        //    cdmDataTable.Columns.Add("cdm");
+        //    cdmDataTable.Columns.Add("descript");
+        //    var values = new object[2];
+        //    //add a null row value
+        //    values[0] = "";
+        //    values[1] = "<select a charge item>";
+        //    cdmDataTable.Rows.Add(values);
+        //    foreach (Cdm cdm in chrgItems)
+        //    {
+        //        values[0] = cdm.ChargeId;
+        //        values[1] = cdm.Description;
+        //        cdmDataTable.Rows.Add(values);
+        //    }
+        //    cdmDataTable.DefaultView.Sort = "cdm asc";
 
-            cdmSortedByCdm = cdmDataTable.DefaultView.ToTable();
+        //    cdmSortedByCdm = cdmDataTable.DefaultView.ToTable();
 
-            cdmDataTable.DefaultView.Sort = "descript asc";
-            cdmSortedByDesc = cdmDataTable.DefaultView.ToTable();
+        //    cdmDataTable.DefaultView.Sort = "descript asc";
+        //    cdmSortedByDesc = cdmDataTable.DefaultView.ToTable();
 
-            cbChargeItem.Items.Clear();
-            cbChargeItem.DataSource = cdmSortedByCdm;
+        //    cbChargeItem.Items.Clear();
+        //    cbChargeItem.DataSource = cdmSortedByCdm;
 
-            cbChargeItem.DisplayMember = "cdm";
-            cbChargeItem.ValueMember = "cdm";
-        }
+        //    cbChargeItem.DisplayMember = "cdm";
+        //    cbChargeItem.ValueMember = "cdm";
+        //}
 
         private void btnSubmit_Click(object sender, EventArgs e)
         {
@@ -76,7 +80,7 @@ namespace LabBilling.Forms
             {
                 string cdm = "";
 
-                cdm = cbChargeItem.SelectedValue.ToString();
+                cdm = cdmTextBox.Text;
 
                 if(string.IsNullOrEmpty(cdm))
                 {
@@ -119,20 +123,39 @@ namespace LabBilling.Forms
 
         private void SearchByCheckChanged (object sender, EventArgs e)
         {
-            if (cbChargeItem != null)
+            //if (cbChargeItem != null)
+            //{
+            //    if (SearchByCdm.Checked)
+            //    {
+            //        cbChargeItem.DataSource = cdmSortedByCdm;
+            //        cbChargeItem.DisplayMember = "cdm";
+            //        cbChargeItem.ValueMember = "cdm";
+            //    }
+            //    else if (SearchByDescription.Checked)
+            //    {
+            //        cbChargeItem.DataSource = cdmSortedByDesc;
+            //        cbChargeItem.DisplayMember = "descript";
+            //        cbChargeItem.ValueMember = "cdm";
+            //    }
+            //}
+        }
+
+        private void cdmTextBox_KeyUp(object sender, KeyEventArgs e)
+        {
+            _timer.Stop();
+            _timer.Start();
+        }
+
+        private void cdmTextBox_KeyUpDone(object sender, EventArgs e)
+        {
+            _timer.Stop();
+            var cdmLookup = new CdmLookupForm();
+            cdmLookup.InitialSearchText = cdmTextBox.Text;
+            cdmLookup.Datasource = cdmRepository.GetAll(false);
+
+            if(cdmLookup.ShowDialog() == DialogResult.OK)
             {
-                if (SearchByCdm.Checked)
-                {
-                    cbChargeItem.DataSource = cdmSortedByCdm;
-                    cbChargeItem.DisplayMember = "cdm";
-                    cbChargeItem.ValueMember = "cdm";
-                }
-                else if (SearchByDescription.Checked)
-                {
-                    cbChargeItem.DataSource = cdmSortedByDesc;
-                    cbChargeItem.DisplayMember = "descript";
-                    cbChargeItem.ValueMember = "cdm";
-                }
+                cdmTextBox.Text = cdmLookup.SelectedValue;
             }
         }
     }

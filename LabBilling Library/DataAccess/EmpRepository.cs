@@ -4,6 +4,8 @@ using LabBilling.Logging;
 using iText.Layout.Element;
 using System.Collections.Generic;
 using System.Linq;
+using System.Data.SqlClient;
+using System.Data;
 
 namespace LabBilling.Core.DataAccess
 {
@@ -42,7 +44,7 @@ namespace LabBilling.Core.DataAccess
 
             Emp emp = null;
 
-            emp = dbConnection.SingleOrDefault<Emp>("where name = @0", username);
+            emp = dbConnection.SingleOrDefault<Emp>("where name = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = username });
 
             return emp;
         }

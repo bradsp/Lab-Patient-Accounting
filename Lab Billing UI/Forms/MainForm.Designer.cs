@@ -37,6 +37,8 @@
             this.duplicateAccountsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.batchChargeEntryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.batchRemittanceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.posting835RemitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.remittancePostingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.badDebtMaintenanceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.sSISubmissionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.sSISortToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -44,14 +46,12 @@
             this.questProcessingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.questCorrectionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.questProcessingToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.clientBillsNewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.clientBillsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.globalBillingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.posting835RemitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.clientBillsNewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.generateClaimsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.institutionalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.professionalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.remittancePostingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dictionariesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.chargeMasterToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.chargeMasterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -82,7 +82,11 @@
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.windowManagerPanel1 = new MDIWindowManager.WindowManagerPanel();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.toolStripUsernameLabel = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripDatabaseLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.MainFormMenu.SuspendLayout();
+            this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // MainFormMenu
@@ -155,6 +159,18 @@
             resources.ApplyResources(this.batchRemittanceToolStripMenuItem, "batchRemittanceToolStripMenuItem");
             this.batchRemittanceToolStripMenuItem.Click += new System.EventHandler(this.batchRemittanceToolStripMenuItem_Click);
             // 
+            // posting835RemitToolStripMenuItem
+            // 
+            this.posting835RemitToolStripMenuItem.Name = "posting835RemitToolStripMenuItem";
+            resources.ApplyResources(this.posting835RemitToolStripMenuItem, "posting835RemitToolStripMenuItem");
+            this.posting835RemitToolStripMenuItem.Click += new System.EventHandler(this.posting835RemitToolStripMenuItem_Click);
+            // 
+            // remittancePostingToolStripMenuItem
+            // 
+            this.remittancePostingToolStripMenuItem.Name = "remittancePostingToolStripMenuItem";
+            resources.ApplyResources(this.remittancePostingToolStripMenuItem, "remittancePostingToolStripMenuItem");
+            this.remittancePostingToolStripMenuItem.Click += new System.EventHandler(this.remittancePostingToolStripMenuItem_Click);
+            // 
             // badDebtMaintenanceToolStripMenuItem
             // 
             this.badDebtMaintenanceToolStripMenuItem.Name = "badDebtMaintenanceToolStripMenuItem";
@@ -201,6 +217,12 @@
             resources.ApplyResources(this.questProcessingToolStripMenuItem1, "questProcessingToolStripMenuItem1");
             this.questProcessingToolStripMenuItem1.Click += new System.EventHandler(this.questProcessingToolStripMenuItem1_Click);
             // 
+            // clientBillsNewToolStripMenuItem
+            // 
+            this.clientBillsNewToolStripMenuItem.Name = "clientBillsNewToolStripMenuItem";
+            resources.ApplyResources(this.clientBillsNewToolStripMenuItem, "clientBillsNewToolStripMenuItem");
+            this.clientBillsNewToolStripMenuItem.Click += new System.EventHandler(this.clientBillsNewToolStripMenuItem_Click);
+            // 
             // clientBillsToolStripMenuItem
             // 
             this.clientBillsToolStripMenuItem.Name = "clientBillsToolStripMenuItem";
@@ -212,18 +234,6 @@
             this.globalBillingToolStripMenuItem.Name = "globalBillingToolStripMenuItem";
             resources.ApplyResources(this.globalBillingToolStripMenuItem, "globalBillingToolStripMenuItem");
             this.globalBillingToolStripMenuItem.Click += new System.EventHandler(this.globalBillingToolStripMenuItem_Click);
-            // 
-            // posting835RemitToolStripMenuItem
-            // 
-            this.posting835RemitToolStripMenuItem.Name = "posting835RemitToolStripMenuItem";
-            resources.ApplyResources(this.posting835RemitToolStripMenuItem, "posting835RemitToolStripMenuItem");
-            this.posting835RemitToolStripMenuItem.Click += new System.EventHandler(this.posting835RemitToolStripMenuItem_Click);
-            // 
-            // clientBillsNewToolStripMenuItem
-            // 
-            this.clientBillsNewToolStripMenuItem.Name = "clientBillsNewToolStripMenuItem";
-            resources.ApplyResources(this.clientBillsNewToolStripMenuItem, "clientBillsNewToolStripMenuItem");
-            this.clientBillsNewToolStripMenuItem.Click += new System.EventHandler(this.clientBillsNewToolStripMenuItem_Click);
             // 
             // generateClaimsToolStripMenuItem
             // 
@@ -244,12 +254,6 @@
             this.professionalToolStripMenuItem.Name = "professionalToolStripMenuItem";
             resources.ApplyResources(this.professionalToolStripMenuItem, "professionalToolStripMenuItem");
             this.professionalToolStripMenuItem.Click += new System.EventHandler(this.professionalToolStripMenuItem_Click);
-            // 
-            // remittancePostingToolStripMenuItem
-            // 
-            this.remittancePostingToolStripMenuItem.Name = "remittancePostingToolStripMenuItem";
-            resources.ApplyResources(this.remittancePostingToolStripMenuItem, "remittancePostingToolStripMenuItem");
-            this.remittancePostingToolStripMenuItem.Click += new System.EventHandler(this.remittancePostingToolStripMenuItem_Click);
             // 
             // dictionariesToolStripMenuItem
             // 
@@ -463,10 +467,37 @@
             resources.ApplyResources(this.panel1, "panel1");
             this.panel1.Name = "panel1";
             // 
+            // statusStrip1
+            // 
+            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripUsernameLabel,
+            this.toolStripDatabaseLabel});
+            resources.ApplyResources(this.statusStrip1, "statusStrip1");
+            this.statusStrip1.Name = "statusStrip1";
+            // 
+            // toolStripUsernameLabel
+            // 
+            this.toolStripUsernameLabel.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
+            this.toolStripUsernameLabel.BorderStyle = System.Windows.Forms.Border3DStyle.Sunken;
+            this.toolStripUsernameLabel.Name = "toolStripUsernameLabel";
+            resources.ApplyResources(this.toolStripUsernameLabel, "toolStripUsernameLabel");
+            // 
+            // toolStripDatabaseLabel
+            // 
+            this.toolStripDatabaseLabel.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
+            this.toolStripDatabaseLabel.BorderStyle = System.Windows.Forms.Border3DStyle.Sunken;
+            this.toolStripDatabaseLabel.Name = "toolStripDatabaseLabel";
+            resources.ApplyResources(this.toolStripDatabaseLabel, "toolStripDatabaseLabel");
+            // 
             // MainForm
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.windowManagerPanel1);
             this.Controls.Add(this.MainFormMenu);
@@ -480,6 +511,8 @@
             this.MdiChildActivate += new System.EventHandler(this.Dashboard_MdiChildActivate);
             this.MainFormMenu.ResumeLayout(false);
             this.MainFormMenu.PerformLayout();
+            this.statusStrip1.ResumeLayout(false);
+            this.statusStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -540,5 +573,8 @@
         private System.Windows.Forms.ToolStripMenuItem professionalToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem remittancePostingToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem chargeMasterToolStripMenuItem1;
+        private System.Windows.Forms.StatusStrip statusStrip1;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripUsernameLabel;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripDatabaseLabel;
     }
 }

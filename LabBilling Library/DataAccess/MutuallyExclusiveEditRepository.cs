@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -27,7 +29,9 @@ namespace LabBilling.Core.DataAccess
         {
             string cpt1RealName = this.GetRealColumn(typeof(MutuallyExclusiveEdit), nameof(MutuallyExclusiveEdit.Cpt1));
             string cpt2RealName = this.GetRealColumn(typeof(MutuallyExclusiveEdit), nameof(MutuallyExclusiveEdit.Cpt1));
-            return dbConnection.SingleOrDefault<MutuallyExclusiveEdit>($"where {cpt1RealName} = @0 and {cpt2RealName} = @1", cpt1, cpt2);
+            return dbConnection.SingleOrDefault<MutuallyExclusiveEdit>($"where {cpt1RealName} = @0 and {cpt2RealName} = @1", 
+                new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = cpt1 }, 
+                new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = cpt2 });
         }
     }
 }

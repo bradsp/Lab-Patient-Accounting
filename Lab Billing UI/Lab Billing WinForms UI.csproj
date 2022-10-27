@@ -29,7 +29,7 @@
     <InstallUrl>\\wthmclbill\installations%24\LabBilling\</InstallUrl>
     <ProductName>Lab Outreach Patient Accounting</ProductName>
     <PublisherName>West Tennessee Healthcare</PublisherName>
-    <ApplicationRevision>19</ApplicationRevision>
+    <ApplicationRevision>26</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
@@ -155,6 +155,12 @@
     </Compile>
     <Compile Include="Forms\InterfaceMonitor.Designer.cs">
       <DependentUpon>InterfaceMonitor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\LogViewerForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\LogViewerForm.Designer.cs">
+      <DependentUpon>LogViewerForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\PaymentAdjustmentEntryForm.cs">
       <SubType>Form</SubType>
@@ -520,6 +526,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\InterfaceMonitor.resx">
       <DependentUpon>InterfaceMonitor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\LogViewerForm.resx">
+      <DependentUpon>LogViewerForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\PaymentAdjustmentEntryForm.resx">
       <DependentUpon>PaymentAdjustmentEntryForm.cs</DependentUpon>

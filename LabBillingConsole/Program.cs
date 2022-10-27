@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using LabBilling.Core.DataAccess;
 using LabBilling.Core.Models;
-using RFClassLibrary;
+//using RFClassLibrary;
 
 namespace LabBillingConsole
 {

@@ -7,6 +7,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml.Serialization;
+using System.Data.SqlClient;
+using System.Data;
 
 namespace LabBilling.Core
 {
@@ -74,8 +76,11 @@ namespace LabBilling.Core
 
             ClientRepository clientdb = new ClientRepository(_connection);
             NumberRepository numberdb = new NumberRepository(_connection);
+            AccountRepository accountRepository = new AccountRepository(_connection);
 
             Client client = clientdb.GetClient(clientMnemonic);
+            Account account = accountRepository.GetByAccount(clientMnemonic);
+
             invoiceModel.ClientName = client.Name;
             invoiceModel.Address1 = client.StreetAddress1;
             invoiceModel.Address2 = client.StreetAddress2;
@@ -85,11 +90,16 @@ namespace LabBilling.Core
             invoiceModel.InvoiceDate = DateTime.Today;
             invoiceModel.InvoiceNo = numberdb.GetNumber("invoice").ToString();
 
-            double balanceForward = clientdb.Balance(clientMnemonic);
+            double balanceForward = 0.0;
+
             invoiceModel.BalanceForward = balanceForward;
+            
             double payments = 0.00;
             double adjustments = 0.00;
+            
             invoiceModel.InvoiceDetails = new List<InvoiceDetailModel>();
+
+
 
 
         }
@@ -333,7 +343,7 @@ namespace LabBilling.Core
                 .Append("sum(dbo.GetAccBalance(vbs.account)) as 'UnbilledAmount' ")
                 .Append("from vw_cbill_select vbs join client on vbs.cl_mnem = client.cli_mnem ")
                 .Append("join dictionary.clienttype on client.[type] = dictionary.clienttype.[type] ")
-                .Append("where trans_date <= @0", thruDate.ToShortDateString())
+                .Append("where trans_date <= @0", new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = thruDate })
                 .Append("group by vbs.cl_mnem, client.cli_nme, dictionary.clienttype.description ")
                 .Append("order by vbs.cl_mnem ");
 
@@ -346,8 +356,8 @@ namespace LabBilling.Core
                 .Append("select vbs.cl_mnem, vbs.account, vbs.trans_date, vbs.pat_name, vbs.fin_code, ")
                 .Append("dbo.GetAccBalance(vbs.account) as 'UnbilledAmount' ")
                 .Append("from vw_cbill_select vbs ")
-                .Append("where cl_mnem = @0 ", clientMnem)
-                .Append("and trans_date <= @0 ", thruDate);
+                .Append("where cl_mnem = @0 ", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = clientMnem })
+                .Append("and trans_date <= @0 ", new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = thruDate });
 
             return dbConnection.Fetch<UnbilledAccounts>(cmd);
 

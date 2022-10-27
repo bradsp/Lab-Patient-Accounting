@@ -33,9 +33,10 @@ namespace LabBilling.Core.DataAccess
                 .From(_tableName);
 
             if (includeDeleted == false)
-                sql.Where($"{this.GetRealColumn(typeof(Cdm), nameof(Cdm.IsDeleted))} = 0");
+                sql.Where($"{this.GetRealColumn(nameof(Cdm.IsDeleted))} = @0", 
+                    new SqlParameter() { SqlDbType = SqlDbType.Bit, Value = 0});
 
-            sql.Append($"order by {_tableName}.{this.GetRealColumn(typeof(Cdm), nameof(Cdm.Description))}");
+            sql.Append($"order by {_tableName}.{this.GetRealColumn(nameof(Cdm.Description))}");
 
             var queryResult = dbConnection.Fetch<Cdm>(sql);
 
@@ -49,8 +50,8 @@ namespace LabBilling.Core.DataAccess
 
         public Cdm GetCdm(string cdm)
         {
-            string cdmRealName = this.GetRealColumn(typeof(Cdm), nameof(Cdm.ChargeId));
-            string isDeletedRealName = this.GetRealColumn(typeof(Cdm), nameof(Cdm.IsDeleted));
+            string cdmRealName = this.GetRealColumn(nameof(Cdm.ChargeId));
+            string isDeletedRealName = this.GetRealColumn(nameof(Cdm.IsDeleted));
 
             var result = dbConnection.SingleOrDefault<Cdm>($"where {cdmRealName} = @0", 
                 new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = cdm });

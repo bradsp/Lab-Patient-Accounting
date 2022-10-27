@@ -2,6 +2,8 @@
 using LabBilling.Core.Models;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
+using System.Data;
 
 namespace LabBilling.Core.DataAccess
 {
@@ -27,7 +29,9 @@ namespace LabBilling.Core.DataAccess
             Log.Instance.Trace("Entering");
 
             var record = dbConnection.Fetch<MessagesInbound>("where msgType like @0 and msgDate between @1 and @2 order by msgDate DESC",
-                type + "%", fromDate.ToString("yyyy-MM-dd HH:mm:ss"), throughDate.ToString("yyyy-MM-dd HH:mm:ss"));
+                new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = type + "%" }, 
+                new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = fromDate.ToString("yyyy-MM-dd HH:mm:ss") }, 
+                new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = throughDate.ToString("yyyy-MM-dd HH:mm:ss") });
 
             return (record);
 

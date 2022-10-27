@@ -3,6 +3,7 @@ using LabBilling.Core.Models;
 using PetaPoco;
 using System;
 using System.Data.SqlClient;
+using System.Data;
 
 namespace LabBilling.Core.DataAccess
 {
@@ -33,7 +34,9 @@ namespace LabBilling.Core.DataAccess
             {
                 Direction = System.Data.ParameterDirection.Output
             };
-            var s = Sql.Builder.Append(";EXEC GetNextNumber @0, @1 OUTPUT", key, number);
+            var s = Sql.Builder.Append(";EXEC GetNextNumber @0, @1 OUTPUT", 
+                new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = key }, 
+                number);
 
             var result = dbConnection.Execute(s);
 

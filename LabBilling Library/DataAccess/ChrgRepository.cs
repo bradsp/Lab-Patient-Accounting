@@ -41,7 +41,7 @@ namespace LabBilling.Core.DataAccess
             //load the cdm record
             CdmRepository cdmRepository = new CdmRepository(dbConnection);
             chrg.Cdm = cdmRepository.GetCdm(chrg.CDMCode);
-            
+            Log.Instance.Debug($"{dbConnection.LastSQL} {dbConnection.LastArgs}");
             return chrg;
         }
 
@@ -74,6 +74,7 @@ namespace LabBilling.Core.DataAccess
                 foreach(ChrgDetail detail in chrg.ChrgDetails)
                 {
                     detail.RevenueCodeDetail = revenueCodeRepository.GetByCode(detail.RevenueCode);
+                    Log.Instance.Debug($"{dbConnection.LastSQL} {dbConnection.LastArgs}");
                 }
             }
 
@@ -84,11 +85,10 @@ namespace LabBilling.Core.DataAccess
         {
             // usp_prg_ReverseCharge            
             int retVal = dbConnection.ExecuteNonQueryProc("usp_prg_ReverseChargeOnly", 
-                new { 
-                    parm1 = new SqlParameter() { SqlDbType = SqlDbType.Decimal, Value = chrgNum }, 
-                    parm2 = new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = comment }
-                });
-
+                new SqlParameter() { ParameterName="chrgNum", SqlDbType = SqlDbType.Decimal, Value = chrgNum }, 
+                new SqlParameter() { ParameterName="comment", SqlDbType = SqlDbType.VarChar, Value = comment });
+            
+            Log.Instance.Debug($"{dbConnection.LastSQL} {dbConnection.LastArgs}");
             return retVal;
         }
 
@@ -111,7 +111,7 @@ namespace LabBilling.Core.DataAccess
 
                     amtRepository.Add(amt);
                 }
-
+                Log.Instance.Debug($"{dbConnection.LastSQL} {dbConnection.LastArgs}");
                 return chrg_num;
             }
             catch (Exception ex)
@@ -132,7 +132,7 @@ namespace LabBilling.Core.DataAccess
                 .Where("cdm <> 'CBILL'");
 
             List<InvoiceChargeView> results = dbConnection.Fetch<InvoiceChargeView>(sql);
-
+            Log.Instance.Debug($"{dbConnection.LastSQL} {dbConnection.LastArgs}");
             return results;
 
         }
@@ -152,6 +152,7 @@ namespace LabBilling.Core.DataAccess
                     try
                     {
                         Update(chrg);
+                        Log.Instance.Debug($"{dbConnection.LastSQL} {dbConnection.LastArgs}");
                     }
                     catch(Exception ex)
                     {
@@ -185,7 +186,7 @@ namespace LabBilling.Core.DataAccess
                 throw new ApplicationException("Error reprocessing charges.", ex);
             }
 
-            Log.Instance.Trace($"Exiting");
+            Log.Instance.Debug($"{dbConnection.LastSQL} {dbConnection.LastArgs}");
             return chrgCount;
         }
 

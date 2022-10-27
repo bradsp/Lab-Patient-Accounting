@@ -41,14 +41,10 @@
             this.btnCancel = new System.Windows.Forms.Button();
             this.tbDateOfService = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
-            this.SearchByCdm = new System.Windows.Forms.RadioButton();
-            this.SearchByDescription = new System.Windows.Forms.RadioButton();
-            this.SearchBy = new System.Windows.Forms.GroupBox();
             this.label5 = new System.Windows.Forms.Label();
             this.ReferenceNumber = new System.Windows.Forms.TextBox();
-            this.cbChargeItem = new MultiColumnCombo.MultiColumnComboBox();
+            this.cdmTextBox = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.nQty)).BeginInit();
-            this.SearchBy.SuspendLayout();
             this.SuspendLayout();
             // 
             // tbBannerMRN
@@ -99,24 +95,24 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(28, 154);
+            this.label1.Location = new System.Drawing.Point(29, 95);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(64, 13);
-            this.label1.TabIndex = 7;
+            this.label1.TabIndex = 6;
             this.label1.Text = "Charge Item";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(46, 190);
+            this.label2.Location = new System.Drawing.Point(47, 131);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(46, 13);
-            this.label2.TabIndex = 9;
+            this.label2.TabIndex = 8;
             this.label2.Text = "Quantity";
             // 
             // nQty
             // 
-            this.nQty.Location = new System.Drawing.Point(99, 188);
+            this.nQty.Location = new System.Drawing.Point(100, 129);
             this.nQty.Minimum = new decimal(new int[] {
             1,
             0,
@@ -124,7 +120,7 @@
             0});
             this.nQty.Name = "nQty";
             this.nQty.Size = new System.Drawing.Size(120, 20);
-            this.nQty.TabIndex = 10;
+            this.nQty.TabIndex = 9;
             this.nQty.Value = new decimal(new int[] {
             1,
             0,
@@ -134,35 +130,35 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(41, 226);
+            this.label3.Location = new System.Drawing.Point(42, 167);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(51, 13);
-            this.label3.TabIndex = 13;
+            this.label3.TabIndex = 12;
             this.label3.Text = "Comment";
             // 
             // tbComment
             // 
-            this.tbComment.Location = new System.Drawing.Point(99, 223);
+            this.tbComment.Location = new System.Drawing.Point(100, 164);
             this.tbComment.Name = "tbComment";
             this.tbComment.Size = new System.Drawing.Size(451, 20);
-            this.tbComment.TabIndex = 14;
+            this.tbComment.TabIndex = 13;
             // 
             // btnSubmit
             // 
-            this.btnSubmit.Location = new System.Drawing.Point(101, 274);
+            this.btnSubmit.Location = new System.Drawing.Point(100, 207);
             this.btnSubmit.Name = "btnSubmit";
             this.btnSubmit.Size = new System.Drawing.Size(75, 23);
-            this.btnSubmit.TabIndex = 15;
+            this.btnSubmit.TabIndex = 14;
             this.btnSubmit.Text = "Submit";
             this.btnSubmit.UseVisualStyleBackColor = true;
             this.btnSubmit.Click += new System.EventHandler(this.btnSubmit_Click);
             // 
             // btnCancel
             // 
-            this.btnCancel.Location = new System.Drawing.Point(194, 274);
+            this.btnCancel.Location = new System.Drawing.Point(193, 207);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
-            this.btnCancel.TabIndex = 16;
+            this.btnCancel.TabIndex = 15;
             this.btnCancel.Text = "Cancel";
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
@@ -188,81 +184,41 @@
             this.label4.TabIndex = 3;
             this.label4.Text = "Date of Service";
             // 
-            // SearchByCdm
-            // 
-            this.SearchByCdm.AutoSize = true;
-            this.SearchByCdm.Checked = true;
-            this.SearchByCdm.Location = new System.Drawing.Point(8, 23);
-            this.SearchByCdm.Name = "SearchByCdm";
-            this.SearchByCdm.Size = new System.Drawing.Size(89, 17);
-            this.SearchByCdm.TabIndex = 0;
-            this.SearchByCdm.TabStop = true;
-            this.SearchByCdm.Text = "CDM Number";
-            this.SearchByCdm.UseVisualStyleBackColor = true;
-            this.SearchByCdm.CheckedChanged += new System.EventHandler(this.SearchByCheckChanged);
-            // 
-            // SearchByDescription
-            // 
-            this.SearchByDescription.AutoSize = true;
-            this.SearchByDescription.Location = new System.Drawing.Point(103, 23);
-            this.SearchByDescription.Name = "SearchByDescription";
-            this.SearchByDescription.Size = new System.Drawing.Size(78, 17);
-            this.SearchByDescription.TabIndex = 1;
-            this.SearchByDescription.TabStop = true;
-            this.SearchByDescription.Text = "Description";
-            this.SearchByDescription.UseVisualStyleBackColor = true;
-            this.SearchByDescription.CheckedChanged += new System.EventHandler(this.SearchByCheckChanged);
-            // 
-            // SearchBy
-            // 
-            this.SearchBy.Controls.Add(this.SearchByCdm);
-            this.SearchBy.Controls.Add(this.SearchByDescription);
-            this.SearchBy.Location = new System.Drawing.Point(99, 95);
-            this.SearchBy.Name = "SearchBy";
-            this.SearchBy.Size = new System.Drawing.Size(188, 49);
-            this.SearchBy.TabIndex = 6;
-            this.SearchBy.TabStop = false;
-            this.SearchBy.Text = "Search By";
-            // 
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(230, 190);
+            this.label5.Location = new System.Drawing.Point(231, 131);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(67, 13);
-            this.label5.TabIndex = 11;
+            this.label5.TabIndex = 10;
             this.label5.Text = "Reference #";
             // 
             // ReferenceNumber
             // 
-            this.ReferenceNumber.Location = new System.Drawing.Point(303, 188);
+            this.ReferenceNumber.Location = new System.Drawing.Point(304, 129);
             this.ReferenceNumber.Name = "ReferenceNumber";
             this.ReferenceNumber.Size = new System.Drawing.Size(100, 20);
-            this.ReferenceNumber.TabIndex = 12;
+            this.ReferenceNumber.TabIndex = 11;
             // 
-            // cbChargeItem
+            // cdmTextBox
             // 
-            this.cbChargeItem.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
-            this.cbChargeItem.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
-            this.cbChargeItem.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
-            this.cbChargeItem.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbChargeItem.Location = new System.Drawing.Point(99, 154);
-            this.cbChargeItem.Name = "cbChargeItem";
-            this.cbChargeItem.Size = new System.Drawing.Size(451, 21);
-            this.cbChargeItem.TabIndex = 13;
+            this.cdmTextBox.Location = new System.Drawing.Point(99, 92);
+            this.cdmTextBox.Name = "cdmTextBox";
+            this.cdmTextBox.Size = new System.Drawing.Size(451, 20);
+            this.cdmTextBox.TabIndex = 7;
+            this.cdmTextBox.KeyUp += new System.Windows.Forms.KeyEventHandler(this.cdmTextBox_KeyUp);
             // 
             // ChargeEntryForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.ClientSize = new System.Drawing.Size(571, 349);
+            this.ClientSize = new System.Drawing.Size(571, 259);
+            this.Controls.Add(this.cdmTextBox);
             this.Controls.Add(this.ReferenceNumber);
             this.Controls.Add(this.label5);
-            this.Controls.Add(this.SearchBy);
             this.Controls.Add(this.tbDateOfService);
             this.Controls.Add(this.label4);
-            this.Controls.Add(this.cbChargeItem);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnSubmit);
             this.Controls.Add(this.tbComment);
@@ -284,8 +240,6 @@
             this.Text = "Add Charge";
             this.Load += new System.EventHandler(this.ChargeEntryForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.nQty)).EndInit();
-            this.SearchBy.ResumeLayout(false);
-            this.SearchBy.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -304,13 +258,10 @@
         private System.Windows.Forms.TextBox tbComment;
         private System.Windows.Forms.Button btnSubmit;
         private System.Windows.Forms.Button btnCancel;
-        private MultiColumnCombo.MultiColumnComboBox cbChargeItem;
         private System.Windows.Forms.TextBox tbDateOfService;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.RadioButton SearchByCdm;
-        private System.Windows.Forms.RadioButton SearchByDescription;
-        private System.Windows.Forms.GroupBox SearchBy;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.TextBox ReferenceNumber;
+        private System.Windows.Forms.TextBox cdmTextBox;
     }
 }

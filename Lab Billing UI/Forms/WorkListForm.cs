@@ -10,6 +10,7 @@ using LabBilling.Core.Models;
 using LabBilling.Library;
 using System.Data;
 using System.CodeDom;
+using LabBilling.Core;
 
 namespace LabBilling.Forms
 {
@@ -20,7 +21,6 @@ namespace LabBilling.Forms
         private AccountRepository accountRepository;
         private AccountSearchRepository accountSearchRepository;
         private SystemParametersRepository systemParametersRepository;
-        //private List<AccountSearch> accounts;
         private bool tasksRunning = false;
         private bool requestAbort = false;
         private BindingSource accountBindingSource = new BindingSource();
@@ -410,9 +410,27 @@ namespace LabBilling.Forms
         private void holdToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var selectedAccount = accountGrid.SelectedRows[0].Cells[nameof(AccountSearch.Account)].Value.ToString();
+            var accts = accountTable.Rows.Find(selectedAccount);
 
-            accountGrid.SelectedRows[0].Cells[nameof(AccountSearch.Status)].Value = "HOLD";
-            accountRepository.UpdateStatus(selectedAccount, "HOLD");
+            if (accountGrid.SelectedRows[0].Cells[nameof(AccountSearch.Status)].Value.ToString() != "HOLD")
+            {
+                //accountGrid.SelectedRows[0].Cells[nameof(AccountSearch.Status)].Value = "HOLD";
+                accts[nameof(AccountSearch.Status)] = "HOLD";
+                //get user comment
+                var result = InputBox.Show("Enter a reason for placing account on hold", true);
+
+                if (result.ReturnCode == DialogResult.OK)
+                {
+                    accountRepository.UpdateStatus(selectedAccount, "HOLD");
+                    accountRepository.AddNote(selectedAccount, result.Text);
+                }
+            }
+            else
+            {
+                accts[nameof(AccountSearch.Status)] = "NEW";
+                accountRepository.UpdateStatus(selectedAccount, "NEW");
+                accountRepository.AddNote(selectedAccount, "Account removed from hold.");
+            }
         }
 
         private void accountGrid_MouseDown(object sender, MouseEventArgs e)
@@ -653,6 +671,19 @@ namespace LabBilling.Forms
             else
             {
                 accountTable.DefaultView.RowFilter = String.Empty;
+            }
+        }
+
+        private void accountGridContextMenu_VisibleChanged(object sender, EventArgs e)
+        {
+            if(accountGridContextMenu.Visible)
+            {
+                var selectedAccount = accountGrid.SelectedRows[0].Cells[nameof(AccountSearch.Account)].Value.ToString();
+
+                if (accountGrid.SelectedRows[0].Cells[nameof(AccountSearch.Status)].Value.ToString() == "HOLD")
+                    holdToolStripMenuItem.Text = "Remove from Hold";
+                else
+                    holdToolStripMenuItem.Text = "Manual Hold";
             }
         }
     }
