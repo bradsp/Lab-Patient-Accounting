@@ -28,10 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.fromTextBox = new System.Windows.Forms.TextBox();
             this.fromLabel = new System.Windows.Forms.Label();
-            this.dateReceivedTextBox = new System.Windows.Forms.MaskedTextBox();
-            this.checkDateTextBox = new System.Windows.Forms.MaskedTextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
@@ -39,7 +38,6 @@
             this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.refundCheckBox = new System.Windows.Forms.CheckBox();
-            this.writeOffDateTextBox = new System.Windows.Forms.MaskedTextBox();
             this.label7 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.writeOffCodeComboBox = new System.Windows.Forms.ComboBox();
@@ -50,9 +48,14 @@
             this.checkNoTextBox = new System.Windows.Forms.TextBox();
             this.label10 = new System.Windows.Forms.Label();
             this.insuranceComboBox = new System.Windows.Forms.ComboBox();
+            this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
+            this.writeOffDateTextBox = new LabBilling.UserControls.DateTextBox();
+            this.checkDateTextBox = new LabBilling.UserControls.DateTextBox();
+            this.dateReceivedTextBox = new LabBilling.UserControls.DateTextBox();
             this.paymentAmtTextBox = new LabBilling.UserControls.CurrencyTextBox();
             this.writeOffAmtTextBox = new LabBilling.UserControls.CurrencyTextBox();
             this.contractualAmtTextBox = new LabBilling.UserControls.CurrencyTextBox();
+            ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
             this.SuspendLayout();
             // 
             // fromTextBox
@@ -70,24 +73,6 @@
             this.fromLabel.Size = new System.Drawing.Size(30, 13);
             this.fromLabel.TabIndex = 0;
             this.fromLabel.Text = "From";
-            // 
-            // dateReceivedTextBox
-            // 
-            this.dateReceivedTextBox.Location = new System.Drawing.Point(132, 50);
-            this.dateReceivedTextBox.Mask = "00/00/0000";
-            this.dateReceivedTextBox.Name = "dateReceivedTextBox";
-            this.dateReceivedTextBox.Size = new System.Drawing.Size(144, 20);
-            this.dateReceivedTextBox.TabIndex = 3;
-            this.dateReceivedTextBox.ValidatingType = typeof(System.DateTime);
-            // 
-            // checkDateTextBox
-            // 
-            this.checkDateTextBox.Location = new System.Drawing.Point(132, 76);
-            this.checkDateTextBox.Mask = "00/00/0000";
-            this.checkDateTextBox.Name = "checkDateTextBox";
-            this.checkDateTextBox.Size = new System.Drawing.Size(144, 20);
-            this.checkDateTextBox.TabIndex = 5;
-            this.checkDateTextBox.ValidatingType = typeof(System.DateTime);
             // 
             // label1
             // 
@@ -152,15 +137,6 @@
             this.refundCheckBox.TabIndex = 12;
             this.refundCheckBox.Text = "Payment Is Refund";
             this.refundCheckBox.UseVisualStyleBackColor = true;
-            // 
-            // writeOffDateTextBox
-            // 
-            this.writeOffDateTextBox.Location = new System.Drawing.Point(132, 232);
-            this.writeOffDateTextBox.Mask = "00/00/0000";
-            this.writeOffDateTextBox.Name = "writeOffDateTextBox";
-            this.writeOffDateTextBox.Size = new System.Drawing.Size(100, 20);
-            this.writeOffDateTextBox.TabIndex = 18;
-            this.writeOffDateTextBox.ValidatingType = typeof(System.DateTime);
             // 
             // label7
             // 
@@ -254,6 +230,37 @@
             this.insuranceComboBox.Size = new System.Drawing.Size(253, 21);
             this.insuranceComboBox.TabIndex = 9;
             // 
+            // errorProvider1
+            // 
+            this.errorProvider1.ContainerControl = this;
+            // 
+            // writeOffDateTextBox
+            // 
+            this.writeOffDateTextBox.DateValue = new System.DateTime(((long)(0)));
+            this.writeOffDateTextBox.Location = new System.Drawing.Point(132, 232);
+            this.writeOffDateTextBox.Name = "writeOffDateTextBox";
+            this.writeOffDateTextBox.Size = new System.Drawing.Size(100, 20);
+            this.writeOffDateTextBox.TabIndex = 18;
+            this.writeOffDateTextBox.Validated += new System.EventHandler(this.writeOffDateTextBox_Validated);
+            // 
+            // checkDateTextBox
+            // 
+            this.checkDateTextBox.DateValue = new System.DateTime(((long)(0)));
+            this.checkDateTextBox.Location = new System.Drawing.Point(132, 76);
+            this.checkDateTextBox.Name = "checkDateTextBox";
+            this.checkDateTextBox.Size = new System.Drawing.Size(100, 20);
+            this.checkDateTextBox.TabIndex = 5;
+            this.checkDateTextBox.Validated += new System.EventHandler(this.checkDateTextBox_Validated);
+            // 
+            // dateReceivedTextBox
+            // 
+            this.dateReceivedTextBox.DateValue = new System.DateTime(((long)(0)));
+            this.dateReceivedTextBox.Location = new System.Drawing.Point(132, 50);
+            this.dateReceivedTextBox.Name = "dateReceivedTextBox";
+            this.dateReceivedTextBox.Size = new System.Drawing.Size(100, 20);
+            this.dateReceivedTextBox.TabIndex = 3;
+            this.dateReceivedTextBox.Validated += new System.EventHandler(this.dateReceivedTextBox_Validated);
+            // 
             // paymentAmtTextBox
             // 
             this.paymentAmtTextBox.DollarValue = new decimal(new int[] {
@@ -302,6 +309,9 @@
             this.CancelButton = this.cancelButton;
             this.ClientSize = new System.Drawing.Size(424, 478);
             this.ControlBox = false;
+            this.Controls.Add(this.writeOffDateTextBox);
+            this.Controls.Add(this.checkDateTextBox);
+            this.Controls.Add(this.dateReceivedTextBox);
             this.Controls.Add(this.insuranceComboBox);
             this.Controls.Add(this.paymentAmtTextBox);
             this.Controls.Add(this.cancelButton);
@@ -311,9 +321,6 @@
             this.Controls.Add(this.refundCheckBox);
             this.Controls.Add(this.writeOffAmtTextBox);
             this.Controls.Add(this.contractualAmtTextBox);
-            this.Controls.Add(this.checkDateTextBox);
-            this.Controls.Add(this.writeOffDateTextBox);
-            this.Controls.Add(this.dateReceivedTextBox);
             this.Controls.Add(this.label9);
             this.Controls.Add(this.label8);
             this.Controls.Add(this.label7);
@@ -332,6 +339,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Enter Payment/Adjustment";
             this.Load += new System.EventHandler(this.PaymentAdjustmentEntryForm_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -341,8 +349,6 @@
 
         private System.Windows.Forms.TextBox fromTextBox;
         private System.Windows.Forms.Label fromLabel;
-        private System.Windows.Forms.MaskedTextBox dateReceivedTextBox;
-        private System.Windows.Forms.MaskedTextBox checkDateTextBox;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
@@ -352,7 +358,6 @@
         private System.Windows.Forms.Label label6;
         private UserControls.CurrencyTextBox writeOffAmtTextBox;
         private System.Windows.Forms.CheckBox refundCheckBox;
-        private System.Windows.Forms.MaskedTextBox writeOffDateTextBox;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.ComboBox writeOffCodeComboBox;
@@ -364,5 +369,9 @@
         private System.Windows.Forms.Label label10;
         private UserControls.CurrencyTextBox paymentAmtTextBox;
         private System.Windows.Forms.ComboBox insuranceComboBox;
+        private UserControls.DateTextBox dateReceivedTextBox;
+        private UserControls.DateTextBox checkDateTextBox;
+        private UserControls.DateTextBox writeOffDateTextBox;
+        private System.Windows.Forms.ErrorProvider errorProvider1;
     }
 }

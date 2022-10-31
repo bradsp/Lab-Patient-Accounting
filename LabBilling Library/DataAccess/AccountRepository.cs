@@ -215,8 +215,8 @@ namespace LabBilling.Core.DataAccess
             Log.Instance.Trace($"Entering - account {acc.AccountNo}");
             if (string.IsNullOrEmpty(acc.Status))
                 acc.Status = "NEW";
+            acc.PatFullName = $"{acc.PatLastName},{acc.PatFirstName} {acc.PatMiddleName}".Trim();
             this.Add(acc);
-            //patRepository.Add(acc.Pat);
         }
 
         public IEnumerable<InvoiceSelect> GetInvoiceAccounts(string clientMnem, DateTime thruDate)
@@ -320,6 +320,16 @@ namespace LabBilling.Core.DataAccess
                 new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = System.AppDomain.CurrentDomain.FriendlyName },
                 new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = Environment.MachineName },
                 new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = accountNo });
+        }
+
+        public bool InsuranceSwap(string accountNo, InsCoverage swap1, InsCoverage swap2)
+        {
+            dbConnection.ExecuteNonQueryProc("SwapInsurances",
+                new SqlParameter() { ParameterName="@account", SqlDbType = SqlDbType.VarChar, Value = accountNo },
+                new SqlParameter() { ParameterName="@ins1", SqlDbType = SqlDbType.VarChar, Value = swap1.ToString() },
+                new SqlParameter() { ParameterName="@ins2", SqlDbType = SqlDbType.VarChar, Value = swap2.ToString() });
+
+            return false;
         }
 
         public bool ChangeDateOfService(ref Account table, DateTime newDate, string reason_comment)

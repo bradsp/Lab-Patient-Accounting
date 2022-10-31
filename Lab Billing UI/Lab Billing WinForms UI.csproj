@@ -102,6 +102,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataCache.cs" />
+    <Compile Include="Forms\AskInsuranceSwapForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\AskInsuranceSwapForm.Designer.cs">
+      <DependentUpon>AskInsuranceSwapForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\ChargeMasterEditForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -289,6 +295,12 @@
     </Compile>
     <Compile Include="UserControls\CurrencyTextBox.Designer.cs">
       <DependentUpon>CurrencyTextBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\DateTextBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="UserControls\DateTextBox.Designer.cs">
+      <DependentUpon>DateTextBox.cs</DependentUpon>
     </Compile>
     <Compile Include="UserControls\FlatCombo.cs">
       <SubType>Component</SubType>
@@ -497,6 +509,9 @@
     <None Include="Resources\refresh-icon.png" />
     <None Include="Resources\hiclipart.com-id_dbhyp.png" />
     <None Include="Resources\lookup-icon-png-and-vector-for-free-download-pngtree-lookup-png-512_512.png" />
+    <EmbeddedResource Include="Forms\AskInsuranceSwapForm.resx">
+      <DependentUpon>AskInsuranceSwapForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\ChargeMasterEditForm.resx">
       <DependentUpon>ChargeMasterEditForm.cs</DependentUpon>
     </EmbeddedResource>

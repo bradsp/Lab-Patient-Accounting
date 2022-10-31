@@ -764,7 +764,8 @@ namespace LabBilling.Forms
 
             }
 
-            insGridSource.ResetBindings(false);
+            //insGridSource.ResetBindings(false);
+            RefreshAccountData();
 
             //clear entry fields
             ClearInsEntryFields();
@@ -1893,7 +1894,6 @@ namespace LabBilling.Forms
             {
                 ValidationResultsTextBox.Text = $"Exception in validation - report to support. {ex.Message}";
             }
-
         }
 
         private void GenerateClaimButton_Click(object sender, EventArgs e)
@@ -1965,6 +1965,10 @@ namespace LabBilling.Forms
                 //load demographics
 
             }
+            if(e.TabPage.Name == summaryTab.Name)
+            {
+                RefreshAccountData();
+            }
         }
 
 
@@ -2023,7 +2027,7 @@ namespace LabBilling.Forms
 
         private void statementFlagTextBox_MouseClick(object sender, MouseEventArgs e)
         {
-            if (string.IsNullOrEmpty(statementFlagTextBox.Text))
+            if ((string.IsNullOrEmpty(statementFlagTextBox.Text)) || (statementFlagTextBox.Text == "N"))
             {
                 if (MessageBox.Show("Flag patient to receive statements?", "Flag for Statement", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                 {
@@ -2037,7 +2041,32 @@ namespace LabBilling.Forms
         private void minPmtTextBox_Leave(object sender, EventArgs e)
         {
             currentAccount.Pat.MinimumPaymentAmount = (double)minPmtTextBox.DollarValue;
-            patDB.Update(currentAccount.Pat, new[] { nameof(Pat.MinimumPaymentAmount) });
+            if (currentAccount.Pat.MinimumPaymentAmount > 0)
+                currentAccount.Pat.StatementFlag = "P";
+            patDB.Update(currentAccount.Pat, new[] { nameof(Pat.MinimumPaymentAmount), nameof(Pat.StatementFlag) });
+            RefreshAccountData();
+
+        }
+
+        private void swapInsurancesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AskInsuranceSwapForm frm = new AskInsuranceSwapForm(ref currentAccount);
+
+            if(frm.ShowDialog() == DialogResult.OK)
+            {
+                try
+                {
+                    accDB.InsuranceSwap(currentAccount.AccountNo, InsCoverage.Parse(frm.swap1), InsCoverage.Parse(frm.swap2));
+                    LoadAccountData();
+                }
+                catch(Exception ex)
+                {
+                    Log.Instance.Fatal(ex);
+                    MessageBox.Show("Exception encountered during insurance swap. Report this to your system administrator.", "Error",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+           
         }
     }
 }

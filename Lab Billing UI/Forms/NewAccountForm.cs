@@ -18,21 +18,22 @@ namespace LabBilling.Forms
         private readonly NumberRepository numberRepository = new NumberRepository(Helper.ConnVal);
         private readonly AccountRepository accountRepository = new AccountRepository(Helper.ConnVal);
         private readonly FinRepository finRepository = new FinRepository(Helper.ConnVal);
-        private System.Windows.Forms.Timer _timer;
+        private Timer _timer;
         private int _timerInterval = 650;
 
         public NewAccountForm()
         {
             Log.Instance.Trace($"Entering");
             InitializeComponent();
-            _timer = new System.Windows.Forms.Timer() { Enabled = false, Interval = _timerInterval };
+            _timer = new Timer() { Enabled = false, Interval = _timerInterval };
             _timer.Tick += new EventHandler(clientTextBox_KeyUpDone);
         }
 
         private void AddAccount_Click(object sender, EventArgs e)
         {
             Log.Instance.Trace($"Entering");
-            if (!this.ValidateChildren())
+
+            if(!IsValid())
             {
                 return;
             }
@@ -85,7 +86,7 @@ namespace LabBilling.Forms
 
             #region Setup Financial Code Combobox
             List<Fin> fins = DataCache.Instance.GetFins(); // finRepository.GetAll().ToList();
-            
+
             financialClassComboBox.DisplayMember = nameof(Fin.Description);
             financialClassComboBox.ValueMember = nameof(Fin.FinCode);
             financialClassComboBox.DataSource = fins;
@@ -133,8 +134,8 @@ namespace LabBilling.Forms
 
         private void DateOfBirth_Validating(object sender, CancelEventArgs e)
         {
-            Log.Instance.Trace($"Entering");
-            if (!dateOfBirthTextBox.MaskCompleted)
+            //Log.Instance.Trace($"Entering");
+            if (dateOfBirthTextBox.DateValue == DateTime.MinValue || string.IsNullOrEmpty(dateOfBirthTextBox.Text))
             {
                 errorProvider1.SetError(dateOfBirthTextBox, "Enter a valid date of birth.");
             }
@@ -161,7 +162,7 @@ namespace LabBilling.Forms
         private void ServiceDate_Validating(object sender, CancelEventArgs e)
         {
             Log.Instance.Trace($"Entering");
-            if (!serviceDateTextBox.MaskCompleted)
+            if (serviceDateTextBox.DateValue == DateTime.MinValue || string.IsNullOrEmpty(serviceDateTextBox.Text))
             {
                 errorProvider1.SetError(serviceDateTextBox, "Enter a valid date of service.");
             }
@@ -174,14 +175,14 @@ namespace LabBilling.Forms
         private void FinancialClass_Validating(object sender, CancelEventArgs e)
         {
             Log.Instance.Trace($"Entering");
-            //if (FinancialClassComboBox.SelectedIndex == -1)
-            //{
-            //    errorProvider1.SetError(FinancialClassComboBox, "Select a valid financial class.");
-            //}
-            //else
-            //{
-            //    errorProvider1.SetError(FinancialClassComboBox, "");
-            //}
+            if (financialClassComboBox.SelectedValue == null)
+            {
+                errorProvider1.SetError(financialClassComboBox, "Select a valid financial class.");
+            }
+            else
+            {
+                errorProvider1.SetError(financialClassComboBox, "");
+            }
 
         }
 
@@ -195,16 +196,58 @@ namespace LabBilling.Forms
         {
             _timer.Stop();
 
-            ClientLookupForm clientLookupForm = new ClientLookupForm();
-            ClientRepository clientRepository = new ClientRepository(Helper.ConnVal);
-            clientLookupForm.Datasource = DataCache.Instance.GetClients();
-            
-            clientLookupForm.InitialSearchText = clientTextBox.Text;
-
-            if (clientLookupForm.ShowDialog() == DialogResult.OK)
+            if (!string.IsNullOrEmpty(clientTextBox.Text))
             {
-                clientTextBox.Text = clientLookupForm.SelectedValue;
+
+                ClientLookupForm clientLookupForm = new ClientLookupForm();
+                ClientRepository clientRepository = new ClientRepository(Helper.ConnVal);
+                clientLookupForm.Datasource = DataCache.Instance.GetClients();
+
+                clientLookupForm.InitialSearchText = clientTextBox.Text;
+
+                if (clientLookupForm.ShowDialog() == DialogResult.OK)
+                {
+                    clientTextBox.Text = clientLookupForm.SelectedValue;
+                }
             }
+        }
+
+        private void clientTextBox_Validating(object sender, CancelEventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(clientTextBox.Text))
+            {
+                errorProvider1.SetError(clientTextBox, "Select a valid client");
+            }
+            else
+            {
+                errorProvider1.SetError(clientTextBox, "");
+            }
+        }
+
+        private bool IsValid()
+        {
+            this.ValidateChildren();
+
+            if (financialClassComboBox.SelectedValue == null)
+                errorProvider1.SetError(financialClassComboBox, "Select a financial class.");
+            else
+                errorProvider1.SetError(financialClassComboBox, "");
+
+            bool success = true;
+
+            if (errorProvider1.GetError(clientTextBox).Length > 0 ||
+            errorProvider1.GetError(financialClassComboBox).Length > 0 ||
+            errorProvider1.GetError(serviceDateTextBox).Length > 0 ||
+            errorProvider1.GetError(patientSexComboBox).Length > 0 ||
+            errorProvider1.GetError(dateOfBirthTextBox).Length > 0 ||
+            errorProvider1.GetError(lastNameTextBox).Length > 0 ||
+            errorProvider1.GetError(firstNameTextBox).Length > 0)
+            {
+                success = false;
+            }
+
+
+            return success;
         }
     }
 }

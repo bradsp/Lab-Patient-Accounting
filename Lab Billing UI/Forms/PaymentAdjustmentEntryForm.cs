@@ -50,20 +50,21 @@ namespace LabBilling.Forms
 
         private void postButton_Click(object sender, EventArgs e)
         {
+            if (!this.ValidateChildren())
+            {
+                return;
+            }
             try
             {
                 chk.CheckNo = checkNoTextBox.Text;
-                if (!string.IsNullOrEmpty(dateReceivedTextBox.Text) && dateReceivedTextBox.MaskFull)
-                    chk.DateReceived = DateTime.Parse(dateReceivedTextBox.Text);
-                if (!string.IsNullOrEmpty(checkDateTextBox.Text) && checkDateTextBox.MaskFull)
-                    chk.ChkDate = DateTime.Parse(checkDateTextBox.Text);
+                chk.DateReceived = dateReceivedTextBox.DateValue;
+                chk.ChkDate = checkDateTextBox.DateValue;
                 chk.Comment = commentTextBox.Text;
                 chk.ContractualAmount = Convert.ToDouble(contractualAmtTextBox.DollarValue);
                 chk.WriteOffAmount = Convert.ToDouble(writeOffAmtTextBox.DollarValue);
                 if(writeOffCodeComboBox.SelectedValue != null)
                     chk.WriteOffCode = writeOffCodeComboBox.SelectedValue.ToString();
-                if (!string.IsNullOrEmpty(writeOffDateTextBox.Text) && writeOffDateTextBox.MaskFull)
-                    chk.WriteOffDate = DateTime.Parse(writeOffDateTextBox.Text);
+                chk.WriteOffDate = writeOffDateTextBox.DateValue;
                 chk.InsCode = insuranceComboBox.SelectedValue != null ? insuranceComboBox.SelectedValue.ToString() : String.Empty;
                 chk.Source = fromTextBox.Text;
 
@@ -86,5 +87,40 @@ namespace LabBilling.Forms
             }
         }
 
+        private void dateReceivedTextBox_Validated(object sender, EventArgs e)
+        {
+            if(dateReceivedTextBox.DateValue == DateTime.MinValue)
+            {
+                errorProvider1.SetError(dateReceivedTextBox, "Enter a valid date.");
+            }
+            else
+            {
+                errorProvider1.SetError(dateReceivedTextBox, string.Empty);
+            }
+        }
+
+        private void checkDateTextBox_Validated(object sender, EventArgs e)
+        {
+            if (checkDateTextBox.DateValue == DateTime.MinValue && !string.IsNullOrEmpty(checkDateTextBox.Text))
+            {
+                errorProvider1.SetError(checkDateTextBox, "Enter a valid date.");
+            }
+            else
+            {
+                errorProvider1.SetError(checkDateTextBox, string.Empty);
+            }
+        }
+
+        private void writeOffDateTextBox_Validated(object sender, EventArgs e)
+        {
+            if (writeOffDateTextBox.DateValue == DateTime.MinValue && !string.IsNullOrEmpty(writeOffDateTextBox.Text))
+            {
+                errorProvider1.SetError(writeOffDateTextBox, "Enter a valid date.");
+            }
+            else
+            {
+                errorProvider1.SetError(writeOffDateTextBox, string.Empty);
+            }
+        }
     }
 }

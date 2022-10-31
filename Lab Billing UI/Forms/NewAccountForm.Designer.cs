@@ -34,7 +34,6 @@ namespace LabBilling.Forms
             this.lastNameTextBox = new System.Windows.Forms.TextBox();
             this.firstNameTextBox = new System.Windows.Forms.TextBox();
             this.middleNameTextBox = new System.Windows.Forms.TextBox();
-            this.dateOfBirthTextBox = new System.Windows.Forms.MaskedTextBox();
             this.patientSexComboBox = new System.Windows.Forms.ComboBox();
             this.label1 = new MetroFramework.Controls.MetroLabel();
             this.label2 = new MetroFramework.Controls.MetroLabel();
@@ -45,13 +44,14 @@ namespace LabBilling.Forms
             this.AddAccount = new System.Windows.Forms.Button();
             this.Cancel = new System.Windows.Forms.Button();
             this.label7 = new MetroFramework.Controls.MetroLabel();
-            this.serviceDateTextBox = new System.Windows.Forms.MaskedTextBox();
             this.label8 = new MetroFramework.Controls.MetroLabel();
             this.financialClassComboBox = new System.Windows.Forms.ComboBox();
             this.label9 = new MetroFramework.Controls.MetroLabel();
             this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
             this.clientLabel = new MetroFramework.Controls.MetroLabel();
             this.clientTextBox = new System.Windows.Forms.TextBox();
+            this.serviceDateTextBox = new LabBilling.UserControls.DateTextBox();
+            this.dateOfBirthTextBox = new LabBilling.UserControls.DateTextBox();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -59,8 +59,10 @@ namespace LabBilling.Forms
             // 
             this.accountNoTextBox.Location = new System.Drawing.Point(124, 69);
             this.accountNoTextBox.Name = "accountNoTextBox";
+            this.accountNoTextBox.ReadOnly = true;
             this.accountNoTextBox.Size = new System.Drawing.Size(121, 20);
             this.accountNoTextBox.TabIndex = 1;
+            this.accountNoTextBox.TabStop = false;
             // 
             // lastNameTextBox
             // 
@@ -87,16 +89,6 @@ namespace LabBilling.Forms
             this.middleNameTextBox.Name = "middleNameTextBox";
             this.middleNameTextBox.Size = new System.Drawing.Size(253, 20);
             this.middleNameTextBox.TabIndex = 8;
-            // 
-            // dateOfBirthTextBox
-            // 
-            this.dateOfBirthTextBox.Location = new System.Drawing.Point(124, 173);
-            this.dateOfBirthTextBox.Mask = "00/00/0000";
-            this.dateOfBirthTextBox.Name = "dateOfBirthTextBox";
-            this.dateOfBirthTextBox.Size = new System.Drawing.Size(100, 20);
-            this.dateOfBirthTextBox.TabIndex = 10;
-            this.dateOfBirthTextBox.ValidatingType = typeof(System.DateTime);
-            this.dateOfBirthTextBox.Validating += new System.ComponentModel.CancelEventHandler(this.DateOfBirth_Validating);
             // 
             // patientSexComboBox
             // 
@@ -169,7 +161,7 @@ namespace LabBilling.Forms
             this.AddAccount.Location = new System.Drawing.Point(125, 334);
             this.AddAccount.Name = "AddAccount";
             this.AddAccount.Size = new System.Drawing.Size(100, 35);
-            this.AddAccount.TabIndex = 17;
+            this.AddAccount.TabIndex = 19;
             this.AddAccount.Text = "Add Account";
             this.AddAccount.UseVisualStyleBackColor = true;
             this.AddAccount.Click += new System.EventHandler(this.AddAccount_Click);
@@ -180,7 +172,7 @@ namespace LabBilling.Forms
             this.Cancel.Location = new System.Drawing.Point(232, 334);
             this.Cancel.Name = "Cancel";
             this.Cancel.Size = new System.Drawing.Size(100, 35);
-            this.Cancel.TabIndex = 18;
+            this.Cancel.TabIndex = 20;
             this.Cancel.Text = "Cancel";
             this.Cancel.UseVisualStyleBackColor = true;
             this.Cancel.Click += new System.EventHandler(this.Cancel_Click);
@@ -193,16 +185,6 @@ namespace LabBilling.Forms
             this.label7.Size = new System.Drawing.Size(130, 19);
             this.label7.TabIndex = 2;
             this.label7.Text = "(blank to assign new)";
-            // 
-            // serviceDateTextBox
-            // 
-            this.serviceDateTextBox.Location = new System.Drawing.Point(124, 226);
-            this.serviceDateTextBox.Mask = "00/00/0000";
-            this.serviceDateTextBox.Name = "serviceDateTextBox";
-            this.serviceDateTextBox.Size = new System.Drawing.Size(100, 20);
-            this.serviceDateTextBox.TabIndex = 14;
-            this.serviceDateTextBox.ValidatingType = typeof(System.DateTime);
-            this.serviceDateTextBox.Validating += new System.ComponentModel.CancelEventHandler(this.ServiceDate_Validating);
             // 
             // label8
             // 
@@ -219,7 +201,8 @@ namespace LabBilling.Forms
             this.financialClassComboBox.Location = new System.Drawing.Point(124, 253);
             this.financialClassComboBox.Name = "financialClassComboBox";
             this.financialClassComboBox.Size = new System.Drawing.Size(253, 21);
-            this.financialClassComboBox.TabIndex = 0;
+            this.financialClassComboBox.TabIndex = 16;
+            this.financialClassComboBox.Validating += new System.ComponentModel.CancelEventHandler(this.FinancialClass_Validating);
             // 
             // label9
             // 
@@ -240,7 +223,7 @@ namespace LabBilling.Forms
             this.clientLabel.Location = new System.Drawing.Point(26, 283);
             this.clientLabel.Name = "clientLabel";
             this.clientLabel.Size = new System.Drawing.Size(42, 19);
-            this.clientLabel.TabIndex = 19;
+            this.clientLabel.TabIndex = 17;
             this.clientLabel.Text = "Client";
             // 
             // clientTextBox
@@ -248,14 +231,35 @@ namespace LabBilling.Forms
             this.clientTextBox.Location = new System.Drawing.Point(125, 283);
             this.clientTextBox.Name = "clientTextBox";
             this.clientTextBox.Size = new System.Drawing.Size(252, 20);
-            this.clientTextBox.TabIndex = 20;
+            this.clientTextBox.TabIndex = 18;
             this.clientTextBox.KeyUp += new System.Windows.Forms.KeyEventHandler(this.clientTextBox_KeyUp);
+            this.clientTextBox.Validating += new System.ComponentModel.CancelEventHandler(this.clientTextBox_Validating);
+            // 
+            // serviceDateTextBox
+            // 
+            this.serviceDateTextBox.DateValue = new System.DateTime(((long)(0)));
+            this.serviceDateTextBox.Location = new System.Drawing.Point(124, 226);
+            this.serviceDateTextBox.Name = "serviceDateTextBox";
+            this.serviceDateTextBox.Size = new System.Drawing.Size(100, 20);
+            this.serviceDateTextBox.TabIndex = 14;
+            this.serviceDateTextBox.Validating += new System.ComponentModel.CancelEventHandler(this.ServiceDate_Validating);
+            // 
+            // dateOfBirthTextBox
+            // 
+            this.dateOfBirthTextBox.DateValue = new System.DateTime(((long)(0)));
+            this.dateOfBirthTextBox.Location = new System.Drawing.Point(124, 173);
+            this.dateOfBirthTextBox.Name = "dateOfBirthTextBox";
+            this.dateOfBirthTextBox.Size = new System.Drawing.Size(100, 20);
+            this.dateOfBirthTextBox.TabIndex = 10;
+            this.dateOfBirthTextBox.Validating += new System.ComponentModel.CancelEventHandler(this.DateOfBirth_Validating);
             // 
             // NewAccountForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(435, 411);
+            this.Controls.Add(this.serviceDateTextBox);
+            this.Controls.Add(this.dateOfBirthTextBox);
             this.Controls.Add(this.clientTextBox);
             this.Controls.Add(this.clientLabel);
             this.Controls.Add(this.financialClassComboBox);
@@ -271,8 +275,6 @@ namespace LabBilling.Forms
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.patientSexComboBox);
-            this.Controls.Add(this.serviceDateTextBox);
-            this.Controls.Add(this.dateOfBirthTextBox);
             this.Controls.Add(this.middleNameTextBox);
             this.Controls.Add(this.firstNameTextBox);
             this.Controls.Add(this.lastNameTextBox);
@@ -288,7 +290,6 @@ namespace LabBilling.Forms
         }
 
         #endregion
-        private System.Windows.Forms.MaskedTextBox dateOfBirthTextBox;
         private MetroFramework.Controls.MetroLabel label1;
         private MetroFramework.Controls.MetroLabel label2;
         private MetroFramework.Controls.MetroLabel label3;
@@ -296,7 +297,6 @@ namespace LabBilling.Forms
         private MetroFramework.Controls.MetroLabel label5;
         private MetroFramework.Controls.MetroLabel label6;
         private MetroFramework.Controls.MetroLabel label7;
-        private System.Windows.Forms.MaskedTextBox serviceDateTextBox;
         private MetroFramework.Controls.MetroLabel label8;
         private System.Windows.Forms.ComboBox financialClassComboBox;
         private MetroFramework.Controls.MetroLabel label9;
@@ -310,5 +310,7 @@ namespace LabBilling.Forms
         private System.Windows.Forms.Button Cancel;
         private System.Windows.Forms.TextBox clientTextBox;
         private MetroFramework.Controls.MetroLabel clientLabel;
+        private UserControls.DateTextBox dateOfBirthTextBox;
+        private UserControls.DateTextBox serviceDateTextBox;
     }
 }

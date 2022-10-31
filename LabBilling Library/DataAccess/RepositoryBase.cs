@@ -57,6 +57,7 @@ namespace LabBilling.Core.DataAccess
             var queryResult = dbConnection.Fetch<TPoco>(sql);
 
             Log.Instance.Debug(dbConnection.LastSQL);
+            Log.Instance.Debug(dbConnection.LastArgs);
             return queryResult;
         }
 
@@ -70,6 +71,7 @@ namespace LabBilling.Core.DataAccess
             var queryResult = await dbConnection.FetchAsync<TPoco>(sql);
 
             Log.Instance.Debug(dbConnection.LastSQL);
+            Log.Instance.Debug(dbConnection.LastArgs);
             return queryResult.ToList<TPoco>();
         }
 
@@ -90,6 +92,7 @@ namespace LabBilling.Core.DataAccess
 
             object identity = dbConnection.Insert(table);
             Log.Instance.Debug(dbConnection.LastSQL);
+            Log.Instance.Debug(dbConnection.LastArgs);
             return identity;
         }
 
@@ -147,6 +150,7 @@ namespace LabBilling.Core.DataAccess
 
             dbConnection.Update(table, cColumns);
             Log.Instance.Debug(dbConnection.LastSQL);
+            Log.Instance.Debug(dbConnection.LastCommand);
             return true;        
         }
 
@@ -172,6 +176,7 @@ namespace LabBilling.Core.DataAccess
                 return false;
             }
             Log.Instance.Debug(dbConnection.LastSQL);
+            Log.Instance.Debug(dbConnection.LastCommand);
             return true;
         }
 
@@ -181,6 +186,7 @@ namespace LabBilling.Core.DataAccess
 
             var count = dbConnection.Delete(table);
             Log.Instance.Debug(dbConnection.LastSQL);
+            Log.Instance.Debug(dbConnection.LastArgs);
             return count > 0;
         }
 

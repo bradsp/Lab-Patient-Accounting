@@ -178,7 +178,8 @@ namespace LabBilling.Core.DataAccess
             //call stored procedure [dbo].[usp_prg_ReCharge_Acc_Transaction]
             try
             {
-                chrgCount = dbConnection.ExecuteNonQueryProc("dbo.usp_prg_ReCharge_Acc_Transaction", new { @account = account });
+                chrgCount = dbConnection.ExecuteNonQueryProc("dbo.usp_prg_ReCharge_Acc_Transaction", 
+                    new SqlParameter() { ParameterName = "@acc", SqlDbType = SqlDbType.VarChar, Value = account });
             }
             catch(Exception ex)
             {

@@ -6,6 +6,7 @@ using RFClassLibrary;
 using System.Linq;
 using System.Data.SqlClient;
 using System.Data;
+using System.Text.RegularExpressions;
 
 namespace LabBilling.Core.DataAccess
 {
@@ -68,10 +69,10 @@ namespace LabBilling.Core.DataAccess
         
         public Ins GetByAccount(string account, InsCoverage coverage)
         {
-            Log.Instance.Trace($"Entering - account {account} coverage {coverage}");
+            Log.Instance.Trace($"Entering - account {account} coverage {coverage.ToString()}");
             var record = dbConnection.SingleOrDefault<Ins>("where account = @0 and ins_a_b_c = @1",
                 new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account },
-                new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = coverage.Value });
+                new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = coverage.ToString() });
             if (record != null)
             {
                 record.InsCompany = dbConnection.SingleOrDefault<InsCompany>("where code = @0", 
@@ -111,15 +112,92 @@ namespace LabBilling.Core.DataAccess
         }
     }
 
-    public class InsCoverage
+    public struct InsCoverage
     {
-        private InsCoverage(string value) { Value = value; }
+        private string value;
 
-        public string Value { get; private set; }
+        public static IEnumerable<InsCoverage> AllInsCoverages
+        {
+            get
+            {
+                yield return Primary;
+                yield return Secondary;
+                yield return Tertiary;
+            }
+        }
 
-        public static InsCoverage Primary => new InsCoverage("A");
-        public static InsCoverage Secondary => new InsCoverage("B");
-        public static InsCoverage Tertiary => new InsCoverage("C");
+        public static InsCoverage Primary { get; } = new InsCoverage("A");
+        public static InsCoverage Secondary { get; } = new InsCoverage("B");
+        public static InsCoverage Tertiary { get; } = new InsCoverage("C");
 
+
+        /// <summary>
+        /// primary constructor
+        /// </summary>
+        /// <param name="value">The string value that this is a wrapper for</param>
+        private InsCoverage(string value)
+        {
+            this.value = value;
+        }
+        /// <summary>
+        /// Compares the Group to another group, or to a string value.
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public override bool Equals(object obj)
+        {
+            if (obj is InsCoverage)
+            {
+                return this.value.Equals(((InsCoverage)obj).value);
+            }
+
+            string otherString = obj as string;
+            if (otherString != null)
+            {
+                return this.value.Equals(otherString);
+            }
+
+            throw new ArgumentException("obj is neither a InsCoverage nor a String");
+        }
+
+        public override int GetHashCode()
+        {
+            return value.GetHashCode();
+        }
+
+        /// <summary>
+        /// returns the internal string that this is a wrapper for.
+        /// </summary>
+        /// <param name="group"></param>
+        /// <returns></returns>
+        public static implicit operator string(InsCoverage insCoverage)
+        {
+            return insCoverage.value;
+        }
+
+        /// <summary>
+        /// Parses a string and returns an instance that corresponds to it.
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public static InsCoverage Parse(string input)
+        {
+            return AllInsCoverages.Where(item => item.value == input).FirstOrDefault();
+        }
+
+        /// <summary>
+        /// Syntatic sugar for the Parse method.
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public static explicit operator InsCoverage(string other)
+        {
+            return Parse(other);
+        }
+
+        public override string ToString()
+        {
+            return value;
+        }
     }
 }

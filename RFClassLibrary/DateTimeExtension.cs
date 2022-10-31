@@ -98,6 +98,12 @@ namespace RFClassLibrary
         /// <returns>Valid dates are returned as DateTime. Invalid date returns DateTime.MinValue</returns>
         public static DateTime ValidateDate(this DateTime dateTime, string datestring)
         {
+            if((datestring.Length == 6 || datestring.Length == 8) && !datestring.Contains("/"))
+            {
+                datestring = datestring.Insert(4, "/");
+                datestring = datestring.Insert(2, "/");
+            }
+
             if (DateTime.TryParse(datestring, out DateTime dt))
                 return dt;
             else
