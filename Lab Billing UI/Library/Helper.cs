@@ -31,6 +31,21 @@ namespace LabBilling
             }
         }
 
+        public static string LogConnVal
+        {
+            get
+            {
+                SqlConnectionStringBuilder myBuilder = new SqlConnectionStringBuilder();
+
+                myBuilder.InitialCatalog = Program.LogDatabase;
+                myBuilder.DataSource = Program.Server;
+                myBuilder.IntegratedSecurity = true;
+                myBuilder.ConnectTimeout = 30;
+
+                return myBuilder.ConnectionString;
+            }
+        }
+
         public static string[] GetArgs()
         {
             //ConnectionString connString = Helper.ConnVal;

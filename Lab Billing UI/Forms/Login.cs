@@ -109,6 +109,7 @@ namespace LabBilling
 
             Program.Database = Properties.Settings.Default.DbName;
             Program.Server = Properties.Settings.Default.DbServer;
+            Program.LogDatabase = Properties.Settings.Default.LogDbName;
 
             IntegratedAuthentication.Checked = true;
             IntegratedAuthentication_CheckedChanged(sender, e);

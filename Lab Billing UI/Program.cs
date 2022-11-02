@@ -15,6 +15,7 @@ namespace LabBilling
         public static string ConnectionString { get; set; }
         public static string Server { get; set; }
         public static string Database { get; set; }
+        public static string LogDatabase { get; set; }
         
 
 

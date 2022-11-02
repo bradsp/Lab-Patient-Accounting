@@ -102,7 +102,7 @@ namespace LabBilling.Core.DataAccess
                         command.Where($"{propName} {op} '{searchText}'");
                     }
                 }
-                command.OrderBy(GetRealColumn(typeof(AccountSearch), nameof(AccountSearch.Name)));
+                command.OrderBy(GetRealColumn(nameof(AccountSearch.Name)));
                 
                 var results = dbConnection.Fetch<AccountSearch>(command);
 

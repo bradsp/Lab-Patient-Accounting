@@ -85,6 +85,7 @@
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripUsernameLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripDatabaseLabel = new System.Windows.Forms.ToolStripStatusLabel();
+            this.systemLogViewerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.MainFormMenu.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -390,7 +391,8 @@
             this.userSecurityToolStripMenuItem,
             this.systemParametersToolStripMenuItem,
             this.interfaceMappingToolStripMenuItem,
-            this.interfaceMonitorToolStripMenuItem});
+            this.interfaceMonitorToolStripMenuItem,
+            this.systemLogViewerToolStripMenuItem});
             this.systemAdministrationToolStripMenuItem.Name = "systemAdministrationToolStripMenuItem";
             resources.ApplyResources(this.systemAdministrationToolStripMenuItem, "systemAdministrationToolStripMenuItem");
             // 
@@ -493,6 +495,12 @@
             this.toolStripDatabaseLabel.Name = "toolStripDatabaseLabel";
             resources.ApplyResources(this.toolStripDatabaseLabel, "toolStripDatabaseLabel");
             // 
+            // systemLogViewerToolStripMenuItem
+            // 
+            this.systemLogViewerToolStripMenuItem.Name = "systemLogViewerToolStripMenuItem";
+            resources.ApplyResources(this.systemLogViewerToolStripMenuItem, "systemLogViewerToolStripMenuItem");
+            this.systemLogViewerToolStripMenuItem.Click += new System.EventHandler(this.systemLogViewerToolStripMenuItem_Click);
+            // 
             // MainForm
             // 
             resources.ApplyResources(this, "$this");
@@ -576,5 +584,6 @@
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripUsernameLabel;
         private System.Windows.Forms.ToolStripStatusLabel toolStripDatabaseLabel;
+        private System.Windows.Forms.ToolStripMenuItem systemLogViewerToolStripMenuItem;
     }
 }

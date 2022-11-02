@@ -376,6 +376,12 @@ namespace LabBilling.Forms
             accountGrid.Columns[nameof(AccountSearch.mod_prg)].Visible = false;
             accountGrid.Columns[nameof(AccountSearch.mod_user)].Visible = false;
             accountGrid.Columns[nameof(AccountSearch.rowguid)].Visible = false;
+            accountGrid.Columns[nameof(AccountSearch.Balance)].Visible = true;
+            accountGrid.Columns[nameof(AccountSearch.TotalPayments)].Visible = showAccountsWithPmtCheckbox.Checked;
+            accountGrid.Columns[nameof(AccountSearch.TotalCharges)].Visible = false;
+            accountGrid.Columns[nameof(AccountSearch.Balance)].DefaultCellStyle.Format = "N2";
+            accountGrid.Columns[nameof(AccountSearch.TotalCharges)].DefaultCellStyle.Format = "N2";
+            accountGrid.Columns[nameof(AccountSearch.TotalPayments)].DefaultCellStyle.Format = "N2";
 
             accountGrid.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.DisplayedCells);
             accountGrid.Columns[nameof(AccountSearch.ValidationStatus)].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
@@ -385,12 +391,15 @@ namespace LabBilling.Forms
 
             Cursor.Current = Cursors.Default;
 
-            toolStripStatusLabel1.Text = accountGrid.Rows.Count.ToString() + $" records.";
-
 
             toolStripProgressBar1.Style = ProgressBarStyle.Continuous;
 
             Cursor.Current = Cursors.Default;
+
+            if (!showAccountsWithPmtCheckbox.Checked)
+                accountTable.DefaultView.RowFilter = $"{nameof(AccountSearch.TotalPayments)} = 0";
+
+            toolStripStatusLabel1.Text = $"{accountTable.DefaultView.Count} records";
 
             workqueues.Enabled = true;
             ValidateButton.Enabled = true;
@@ -650,9 +659,8 @@ namespace LabBilling.Forms
             _timer.Start();
         }
 
-        private void filterTextBox_KeyUpDone(object sender, EventArgs e)
+        private void UpdateFilter()
         {
-            _timer.Stop();
             if (!string.IsNullOrEmpty(filterTextBox.Text))
             {
                 if (nameFilterRadioBtn.Checked)
@@ -667,11 +675,28 @@ namespace LabBilling.Forms
                 {
                     accountTable.DefaultView.RowFilter = $"{nameof(AccountSearch.Account)} like '{filterTextBox.Text}%'";
                 }
+
+                if (!showAccountsWithPmtCheckbox.Checked)
+                {
+                    accountTable.DefaultView.RowFilter += $" and {nameof(AccountSearch.TotalPayments)} = 0";
+                }
             }
             else
             {
-                accountTable.DefaultView.RowFilter = String.Empty;
+                if (!showAccountsWithPmtCheckbox.Checked)
+                    accountTable.DefaultView.RowFilter = $"{nameof(AccountSearch.TotalPayments)} = 0";
+                else
+                    accountTable.DefaultView.RowFilter = String.Empty;
             }
+
+            toolStripStatusLabel1.Text = $"{accountTable.DefaultView.Count} records";
+            accountGrid.Columns[nameof(AccountSearch.TotalPayments)].Visible = showAccountsWithPmtCheckbox.Checked;
+        }
+
+        private void filterTextBox_KeyUpDone(object sender, EventArgs e)
+        {
+            _timer.Stop();
+            UpdateFilter();
         }
 
         private void accountGridContextMenu_VisibleChanged(object sender, EventArgs e)
@@ -685,6 +710,11 @@ namespace LabBilling.Forms
                 else
                     holdToolStripMenuItem.Text = "Manual Hold";
             }
+        }
+
+        private void showAccountsWithPmtCheckbox_CheckedChanged(object sender, EventArgs e)
+        {
+            UpdateFilter();
         }
     }
 }

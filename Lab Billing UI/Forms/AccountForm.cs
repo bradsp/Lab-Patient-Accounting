@@ -1176,6 +1176,8 @@ namespace LabBilling.Forms
 
         private void ChrgDetailDataGrid_SelectionChanged(object sender, EventArgs e)
         {
+            Log.Instance.Trace($"Entering");
+
             if (UpdateDxPointersButton.Enabled == true)
             {
                 if (MessageBox.Show(this, "Changes were made to diagnosis pointers. Save changes?", "Save Changes?",
@@ -1187,8 +1189,6 @@ namespace LabBilling.Forms
                 UpdateDxPointersButton.Enabled = false;
             }
 
-            Log.Instance.Trace($"Entering");
-
             //load dx pointers
             int selectedRows = ChrgDetailDataGrid.Rows.GetRowCount(DataGridViewElementStates.Selected);
             if (selectedRows > 0)
@@ -1199,13 +1199,16 @@ namespace LabBilling.Forms
 
                 string[] ptrs = dxPtr.Split(':');
 
+                //get number of diagnosis codes
+                int dxcnt = currentAccount.Pat.Diagnoses.Count;
+
                 DataTable dt = new DataTable("DxPointer");
                 dt.Columns.Add("DxNo", typeof(int));
                 dt.Columns.Add("DxCode", typeof(string));
-                dt.Columns.Add("Ptr1", typeof(bool));
-                dt.Columns.Add("Ptr2", typeof(bool));
-                dt.Columns.Add("Ptr3", typeof(bool));
-                dt.Columns.Add("Ptr4", typeof(bool));
+                for(int i = 1; i <= dxcnt; i++)
+                {
+                    dt.Columns.Add($"Ptr{i}", typeof(bool));
+                }
 
                 try
                 {
@@ -1214,7 +1217,15 @@ namespace LabBilling.Forms
                     {
                         foreach (PatDiag diag in currentAccount.Pat.Diagnoses)
                         {
-                            dt.Rows.Add(new object[] { iDx++, diag.Code, false, false, false, false });
+                            //dt.Rows.Add(new object[] { iDx++, diag.Code, false, false, false, false });
+                            DataRow newrow = dt.NewRow();
+                            newrow["DxNo"] = iDx++;
+                            newrow["DxCode"] = diag.Code;
+                            for(int c = 2; c < dt.Columns.Count; c++)
+                            {
+                                newrow[c] = false;
+                            }
+                            dt.Rows.Add(newrow);
                         }
 
                         int i = 1;
@@ -1223,23 +1234,7 @@ namespace LabBilling.Forms
                             if (ptr == null || ptr == "")
                                 continue;
                             int iPtr = Convert.ToInt32(ptr);
-                            switch (i)
-                            {
-                                case 1:
-                                    dt.Rows[iPtr - 1]["Ptr1"] = true;
-                                    break;
-                                case 2:
-                                    dt.Rows[iPtr - 1]["Ptr2"] = true;
-                                    break;
-                                case 3:
-                                    dt.Rows[iPtr - 1]["Ptr3"] = true;
-                                    break;
-                                case 4:
-                                    dt.Rows[iPtr - 1]["Ptr4"] = true;
-                                    break;
-                                default:
-                                    break;
-                            }
+                            dt.Rows[iPtr - 1][$"Ptr{i}"] = true;
                             i++;
                         }
                     }

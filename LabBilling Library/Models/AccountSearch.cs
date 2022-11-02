@@ -43,9 +43,23 @@ namespace LabBilling.Core.Models
         [Column("last_validation_date")]
         [ResultColumn]
         public DateTime LastValidationDate { get; set; }
-        [Column("validation_text")]
+
+        [Column("validation_text")]        
         [ResultColumn]
         public string ValidationStatus { get; set; }
+
+        [Column("Balance")]
+        [ResultColumn]
+        public double Balance { get; set; }
+
+        [Column("TotalCharges")]
+        [ResultColumn]
+        public double TotalCharges { get; set; }
+
+        [Column("TotalPayments")]
+        [ResultColumn]
+        public double TotalPayments { get; set; }
+        
         [Ignore]
         public DateTime mod_date { get; set; }
         [Ignore]

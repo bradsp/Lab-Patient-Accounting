@@ -870,5 +870,16 @@ namespace LabBilling
                 frm.Show();
             }
         }
+
+        private void systemLogViewerToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Log.Instance.Trace("Entering");
+
+            LogViewerForm frm = new LogViewerForm();
+            frm.MdiParent = this;
+            frm.WindowState = FormWindowState.Normal;
+            frm.AutoScroll = true;
+            frm.Show();
+        }
     }
 }

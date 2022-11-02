@@ -1799,7 +1799,7 @@ namespace LabBilling.Forms
             dataGridViewCellStyle12.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             dataGridViewCellStyle12.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
             this.DiagnosisPointerDataGrid.RowHeadersDefaultCellStyle = dataGridViewCellStyle12;
-            this.DiagnosisPointerDataGrid.Size = new System.Drawing.Size(302, 109);
+            this.DiagnosisPointerDataGrid.Size = new System.Drawing.Size(302, 208);
             this.DiagnosisPointerDataGrid.TabIndex = 8;
             this.DiagnosisPointerDataGrid.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DiagnosisPointerDataGrid_CellContentClick);
             // 

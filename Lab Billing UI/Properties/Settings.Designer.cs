@@ -40,5 +40,14 @@ namespace LabBilling.Properties {
                 return ((string)(this["DbName"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("NLog")]
+        public string LogDbName {
+            get {
+                return ((string)(this["LogDbName"]));
+            }
+        }
     }
 }

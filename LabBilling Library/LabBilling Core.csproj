@@ -344,6 +344,7 @@
     <Compile Include="DataAccess\IUnitOfWork.cs" />
     <Compile Include="DataAccess\IUnitOfWorkProvider.cs" />
     <Compile Include="DataAccess\LMRPRuleRepository.cs" />
+    <Compile Include="DataAccess\LogRepository.cs" />
     <Compile Include="DataAccess\MessagesInboundRepository.cs" />
     <Compile Include="DataAccess\InvoiceHistoryRepository.cs" />
     <Compile Include="DataAccess\MappingRepository.cs" />
@@ -399,6 +400,7 @@
     <Compile Include="Models\InvoiceModel.cs" />
     <Compile Include="Models\InvoiceSelect.cs" />
     <Compile Include="Models\LMRPRule.cs" />
+    <Compile Include="Models\Logs.cs" />
     <Compile Include="Models\Mapping.cs" />
     <Compile Include="Models\AccountNote.cs" />
     <Compile Include="Models\MutuallyExclusiveEdit.cs" />
