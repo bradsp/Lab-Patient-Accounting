@@ -28,30 +28,21 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle13 = new System.Windows.Forms.DataGridViewCellStyle();
             this.dgvPayments = new System.Windows.Forms.DataGridView();
-            this.Account = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.AccountSearch = new System.Windows.Forms.DataGridViewButtonColumn();
-            this.PatientName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Balance = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.CheckNo = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.CheckDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.DateReceived = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.PaymentSource = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.AmountPaid = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Contractual = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.WriteOff = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.WriteOffCode = new System.Windows.Forms.DataGridViewComboBoxColumn();
-            this.Comment = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.AmountTotal = new System.Windows.Forms.TextBox();
             this.ContractualTotal = new System.Windows.Forms.TextBox();
             this.WriteoffTotal = new System.Windows.Forms.TextBox();
@@ -71,14 +62,29 @@
             this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewDateColumn1 = new LabBilling.Library.DataGridViewDateColumn();
+            this.dataGridViewDateColumn2 = new LabBilling.Library.DataGridViewDateColumn();
             this.dataGridViewTextBoxColumn5 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn6 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn7 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn8 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewDateColumn3 = new LabBilling.Library.DataGridViewDateColumn();
             this.dataGridViewTextBoxColumn9 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.OpenBatch = new MultiColumnCombo.MultiColumnComboBox();
+            this.Account = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.PatientName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Balance = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.CheckNo = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.CheckDate = new LabBilling.Library.DataGridViewDateColumn();
+            this.DateReceived = new LabBilling.Library.DataGridViewDateColumn();
+            this.PaymentSource = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.AmountPaid = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Contractual = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.WriteOff = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.WriteOffDate = new LabBilling.Library.DataGridViewDateColumn();
+            this.Comment = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn10 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn11 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.OpenBatch = new MultiColumnCombo.MultiColumnComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.dgvPayments)).BeginInit();
             this.SuspendLayout();
             // 
@@ -91,7 +97,6 @@
             this.dgvPayments.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvPayments.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Account,
-            this.AccountSearch,
             this.PatientName,
             this.Balance,
             this.CheckNo,
@@ -101,104 +106,28 @@
             this.AmountPaid,
             this.Contractual,
             this.WriteOff,
+            this.WriteOffDate,
             this.WriteOffCode,
             this.Comment});
-            this.dgvPayments.Location = new System.Drawing.Point(12, 39);
+            this.dgvPayments.Location = new System.Drawing.Point(15, 39);
             this.dgvPayments.Name = "dgvPayments";
             this.dgvPayments.Size = new System.Drawing.Size(939, 406);
             this.dgvPayments.TabIndex = 0;
             this.dgvPayments.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvPayments_CellContentClick);
+            this.dgvPayments.CellContentDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvPayments_CellContentDoubleClick);
+            this.dgvPayments.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvPayments_CellDoubleClick);
+            this.dgvPayments.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvPayments_CellEndEdit);
+            this.dgvPayments.CellEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvPayments_CellEnter);
+            this.dgvPayments.CellLeave += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvPayments_CellLeave);
             this.dgvPayments.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvPayments_CellValueChanged);
             this.dgvPayments.RowLeave += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvPayments_RowLeave);
             this.dgvPayments.RowsAdded += new System.Windows.Forms.DataGridViewRowsAddedEventHandler(this.dgvPayments_RowsAdded);
-            // 
-            // Account
-            // 
-            this.Account.HeaderText = "Account";
-            this.Account.Name = "Account";
-            // 
-            // AccountSearch
-            // 
-            this.AccountSearch.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.AccountSearch.HeaderText = "Search";
-            this.AccountSearch.Name = "AccountSearch";
-            this.AccountSearch.Text = "Search";
-            this.AccountSearch.ToolTipText = "Account Search";
-            this.AccountSearch.UseColumnTextForButtonValue = true;
-            this.AccountSearch.Width = 47;
-            // 
-            // PatientName
-            // 
-            this.PatientName.HeaderText = "Patient Name";
-            this.PatientName.Name = "PatientName";
-            // 
-            // Balance
-            // 
-            this.Balance.HeaderText = "Balance";
-            this.Balance.Name = "Balance";
-            // 
-            // CheckNo
-            // 
-            this.CheckNo.HeaderText = "Check No";
-            this.CheckNo.Name = "CheckNo";
-            // 
-            // CheckDate
-            // 
-            dataGridViewCellStyle1.Format = "d";
-            dataGridViewCellStyle1.NullValue = null;
-            this.CheckDate.DefaultCellStyle = dataGridViewCellStyle1;
-            this.CheckDate.HeaderText = "Check Date";
-            this.CheckDate.Name = "CheckDate";
-            // 
-            // DateReceived
-            // 
-            dataGridViewCellStyle2.Format = "d";
-            dataGridViewCellStyle2.NullValue = null;
-            this.DateReceived.DefaultCellStyle = dataGridViewCellStyle2;
-            this.DateReceived.HeaderText = "DateReceived";
-            this.DateReceived.Name = "DateReceived";
-            // 
-            // PaymentSource
-            // 
-            this.PaymentSource.HeaderText = "Payment Source";
-            this.PaymentSource.Name = "PaymentSource";
-            // 
-            // AmountPaid
-            // 
-            dataGridViewCellStyle3.Format = "N2";
-            dataGridViewCellStyle3.NullValue = "0.00";
-            this.AmountPaid.DefaultCellStyle = dataGridViewCellStyle3;
-            this.AmountPaid.HeaderText = "Amount Paid";
-            this.AmountPaid.Name = "AmountPaid";
-            // 
-            // Contractual
-            // 
-            dataGridViewCellStyle4.Format = "N2";
-            dataGridViewCellStyle4.NullValue = "0.00";
-            this.Contractual.DefaultCellStyle = dataGridViewCellStyle4;
-            this.Contractual.HeaderText = "Contractual";
-            this.Contractual.Name = "Contractual";
-            // 
-            // WriteOff
-            // 
-            dataGridViewCellStyle5.Format = "N2";
-            dataGridViewCellStyle5.NullValue = "0.00";
-            this.WriteOff.DefaultCellStyle = dataGridViewCellStyle5;
-            this.WriteOff.HeaderText = "Write Off";
-            this.WriteOff.Name = "WriteOff";
             // 
             // WriteOffCode
             // 
             this.WriteOffCode.HeaderText = "Write Off Code";
             this.WriteOffCode.Name = "WriteOffCode";
             this.WriteOffCode.Width = 75;
-            // 
-            // Comment
-            // 
-            this.Comment.HeaderText = "Comment";
-            this.Comment.Name = "Comment";
-            this.Comment.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.Comment.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             // 
             // AmountTotal
             // 
@@ -378,57 +307,70 @@
             this.dataGridViewTextBoxColumn4.HeaderText = "Check No";
             this.dataGridViewTextBoxColumn4.Name = "dataGridViewTextBoxColumn4";
             // 
-            // dataGridViewTextBoxColumn5
+            // dataGridViewDateColumn1
             // 
             dataGridViewCellStyle6.Format = "d";
             dataGridViewCellStyle6.NullValue = null;
-            this.dataGridViewTextBoxColumn5.DefaultCellStyle = dataGridViewCellStyle6;
+            this.dataGridViewDateColumn1.DefaultCellStyle = dataGridViewCellStyle6;
+            this.dataGridViewDateColumn1.HeaderText = "Check Date";
+            this.dataGridViewDateColumn1.Name = "dataGridViewDateColumn1";
+            this.dataGridViewDateColumn1.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            // 
+            // dataGridViewDateColumn2
+            // 
+            dataGridViewCellStyle7.Format = "d";
+            dataGridViewCellStyle7.NullValue = null;
+            this.dataGridViewDateColumn2.DefaultCellStyle = dataGridViewCellStyle7;
+            this.dataGridViewDateColumn2.HeaderText = "DateReceived";
+            this.dataGridViewDateColumn2.Name = "dataGridViewDateColumn2";
+            this.dataGridViewDateColumn2.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            // 
+            // dataGridViewTextBoxColumn5
+            // 
+            dataGridViewCellStyle8.Format = "d";
+            dataGridViewCellStyle8.NullValue = null;
+            this.dataGridViewTextBoxColumn5.DefaultCellStyle = dataGridViewCellStyle8;
             this.dataGridViewTextBoxColumn5.HeaderText = "Check Date";
             this.dataGridViewTextBoxColumn5.Name = "dataGridViewTextBoxColumn5";
             // 
             // dataGridViewTextBoxColumn6
             // 
-            dataGridViewCellStyle7.Format = "d";
-            dataGridViewCellStyle7.NullValue = null;
-            this.dataGridViewTextBoxColumn6.DefaultCellStyle = dataGridViewCellStyle7;
+            dataGridViewCellStyle9.Format = "d";
+            dataGridViewCellStyle9.NullValue = null;
+            this.dataGridViewTextBoxColumn6.DefaultCellStyle = dataGridViewCellStyle9;
             this.dataGridViewTextBoxColumn6.HeaderText = "DateReceived";
             this.dataGridViewTextBoxColumn6.Name = "dataGridViewTextBoxColumn6";
             // 
             // dataGridViewTextBoxColumn7
             // 
+            dataGridViewCellStyle10.Format = "N2";
+            dataGridViewCellStyle10.NullValue = "0.00";
+            this.dataGridViewTextBoxColumn7.DefaultCellStyle = dataGridViewCellStyle10;
             this.dataGridViewTextBoxColumn7.HeaderText = "Payment Source";
             this.dataGridViewTextBoxColumn7.Name = "dataGridViewTextBoxColumn7";
             // 
             // dataGridViewTextBoxColumn8
             // 
-            dataGridViewCellStyle8.Format = "N2";
-            dataGridViewCellStyle8.NullValue = "0.00";
-            this.dataGridViewTextBoxColumn8.DefaultCellStyle = dataGridViewCellStyle8;
+            dataGridViewCellStyle11.Format = "N2";
+            dataGridViewCellStyle11.NullValue = "0.00";
+            this.dataGridViewTextBoxColumn8.DefaultCellStyle = dataGridViewCellStyle11;
             this.dataGridViewTextBoxColumn8.HeaderText = "Amount Paid";
             this.dataGridViewTextBoxColumn8.Name = "dataGridViewTextBoxColumn8";
             // 
+            // dataGridViewDateColumn3
+            // 
+            this.dataGridViewDateColumn3.HeaderText = "Write Off Date";
+            this.dataGridViewDateColumn3.Name = "dataGridViewDateColumn3";
+            // 
             // dataGridViewTextBoxColumn9
             // 
-            dataGridViewCellStyle9.Format = "N2";
-            dataGridViewCellStyle9.NullValue = "0.00";
-            this.dataGridViewTextBoxColumn9.DefaultCellStyle = dataGridViewCellStyle9;
+            dataGridViewCellStyle12.Format = "N2";
+            dataGridViewCellStyle12.NullValue = "0.00";
+            this.dataGridViewTextBoxColumn9.DefaultCellStyle = dataGridViewCellStyle12;
             this.dataGridViewTextBoxColumn9.HeaderText = "Contractual";
             this.dataGridViewTextBoxColumn9.Name = "dataGridViewTextBoxColumn9";
-            // 
-            // dataGridViewTextBoxColumn10
-            // 
-            dataGridViewCellStyle10.Format = "N2";
-            dataGridViewCellStyle10.NullValue = "0.00";
-            this.dataGridViewTextBoxColumn10.DefaultCellStyle = dataGridViewCellStyle10;
-            this.dataGridViewTextBoxColumn10.HeaderText = "Write Off";
-            this.dataGridViewTextBoxColumn10.Name = "dataGridViewTextBoxColumn10";
-            // 
-            // dataGridViewTextBoxColumn11
-            // 
-            this.dataGridViewTextBoxColumn11.HeaderText = "Comment";
-            this.dataGridViewTextBoxColumn11.Name = "dataGridViewTextBoxColumn11";
-            this.dataGridViewTextBoxColumn11.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridViewTextBoxColumn11.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.dataGridViewTextBoxColumn9.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridViewTextBoxColumn9.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             // 
             // OpenBatch
             // 
@@ -439,7 +381,100 @@
             this.OpenBatch.Size = new System.Drawing.Size(354, 21);
             this.OpenBatch.TabIndex = 12;
             this.OpenBatch.SelectionChangeCommitted += new System.EventHandler(this.OpenBatch_SelectionChangeCommitted);
-            this.OpenBatch.SelectedValueChanged += new System.EventHandler(this.OpenBatch_SelectedValueChanged);
+            // 
+            // Account
+            // 
+            this.Account.HeaderText = "Account";
+            this.Account.Name = "Account";
+            // 
+            // PatientName
+            // 
+            this.PatientName.HeaderText = "Patient Name";
+            this.PatientName.Name = "PatientName";
+            // 
+            // Balance
+            // 
+            this.Balance.HeaderText = "Balance";
+            this.Balance.Name = "Balance";
+            // 
+            // CheckNo
+            // 
+            this.CheckNo.HeaderText = "Check No";
+            this.CheckNo.Name = "CheckNo";
+            // 
+            // CheckDate
+            // 
+            dataGridViewCellStyle1.Format = "d";
+            dataGridViewCellStyle1.NullValue = null;
+            this.CheckDate.DefaultCellStyle = dataGridViewCellStyle1;
+            this.CheckDate.HeaderText = "Check Date";
+            this.CheckDate.Name = "CheckDate";
+            this.CheckDate.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            // 
+            // DateReceived
+            // 
+            dataGridViewCellStyle2.Format = "d";
+            dataGridViewCellStyle2.NullValue = null;
+            this.DateReceived.DefaultCellStyle = dataGridViewCellStyle2;
+            this.DateReceived.HeaderText = "DateReceived";
+            this.DateReceived.Name = "DateReceived";
+            this.DateReceived.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            // 
+            // PaymentSource
+            // 
+            this.PaymentSource.HeaderText = "Payment Source";
+            this.PaymentSource.Name = "PaymentSource";
+            // 
+            // AmountPaid
+            // 
+            dataGridViewCellStyle3.Format = "N2";
+            dataGridViewCellStyle3.NullValue = "0.00";
+            this.AmountPaid.DefaultCellStyle = dataGridViewCellStyle3;
+            this.AmountPaid.HeaderText = "Amount Paid";
+            this.AmountPaid.Name = "AmountPaid";
+            // 
+            // Contractual
+            // 
+            dataGridViewCellStyle4.Format = "N2";
+            dataGridViewCellStyle4.NullValue = "0.00";
+            this.Contractual.DefaultCellStyle = dataGridViewCellStyle4;
+            this.Contractual.HeaderText = "Contractual";
+            this.Contractual.Name = "Contractual";
+            // 
+            // WriteOff
+            // 
+            dataGridViewCellStyle5.Format = "N2";
+            dataGridViewCellStyle5.NullValue = "0.00";
+            this.WriteOff.DefaultCellStyle = dataGridViewCellStyle5;
+            this.WriteOff.HeaderText = "Write Off";
+            this.WriteOff.Name = "WriteOff";
+            // 
+            // WriteOffDate
+            // 
+            this.WriteOffDate.HeaderText = "Write Off Date";
+            this.WriteOffDate.Name = "WriteOffDate";
+            // 
+            // Comment
+            // 
+            this.Comment.HeaderText = "Comment";
+            this.Comment.Name = "Comment";
+            this.Comment.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.Comment.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
+            // dataGridViewTextBoxColumn10
+            // 
+            dataGridViewCellStyle13.Format = "N2";
+            dataGridViewCellStyle13.NullValue = "0.00";
+            this.dataGridViewTextBoxColumn10.DefaultCellStyle = dataGridViewCellStyle13;
+            this.dataGridViewTextBoxColumn10.HeaderText = "Write Off";
+            this.dataGridViewTextBoxColumn10.Name = "dataGridViewTextBoxColumn10";
+            // 
+            // dataGridViewTextBoxColumn11
+            // 
+            this.dataGridViewTextBoxColumn11.HeaderText = "Comment";
+            this.dataGridViewTextBoxColumn11.Name = "dataGridViewTextBoxColumn11";
+            this.dataGridViewTextBoxColumn11.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridViewTextBoxColumn11.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             // 
             // BatchRemittance
             // 
@@ -491,19 +526,6 @@
         private System.Windows.Forms.ComboBox EntryMode;
         private System.Windows.Forms.Label label7;
         private MultiColumnCombo.MultiColumnComboBox OpenBatch;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Account;
-        private System.Windows.Forms.DataGridViewButtonColumn AccountSearch;
-        private System.Windows.Forms.DataGridViewTextBoxColumn PatientName;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Balance;
-        private System.Windows.Forms.DataGridViewTextBoxColumn CheckNo;
-        private System.Windows.Forms.DataGridViewTextBoxColumn CheckDate;
-        private System.Windows.Forms.DataGridViewTextBoxColumn DateReceived;
-        private System.Windows.Forms.DataGridViewTextBoxColumn PaymentSource;
-        private System.Windows.Forms.DataGridViewTextBoxColumn AmountPaid;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Contractual;
-        private System.Windows.Forms.DataGridViewTextBoxColumn WriteOff;
-        private System.Windows.Forms.DataGridViewComboBoxColumn WriteOffCode;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Comment;
         private System.Windows.Forms.Button DeleteBatch;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn2;
@@ -516,5 +538,21 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn9;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn10;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn11;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Account;
+        private System.Windows.Forms.DataGridViewTextBoxColumn PatientName;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Balance;
+        private System.Windows.Forms.DataGridViewTextBoxColumn CheckNo;
+        private Library.DataGridViewDateColumn CheckDate;
+        private Library.DataGridViewDateColumn DateReceived;
+        private System.Windows.Forms.DataGridViewTextBoxColumn PaymentSource;
+        private System.Windows.Forms.DataGridViewTextBoxColumn AmountPaid;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Contractual;
+        private System.Windows.Forms.DataGridViewTextBoxColumn WriteOff;
+        private Library.DataGridViewDateColumn WriteOffDate;
+        private System.Windows.Forms.DataGridViewComboBoxColumn WriteOffCode;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Comment;
+        private Library.DataGridViewDateColumn dataGridViewDateColumn1;
+        private Library.DataGridViewDateColumn dataGridViewDateColumn2;
+        private Library.DataGridViewDateColumn dataGridViewDateColumn3;
     }
 }

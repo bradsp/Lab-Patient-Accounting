@@ -46,7 +46,7 @@
             this.resultsDataGrid.ReadOnly = true;
             this.resultsDataGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.resultsDataGrid.Size = new System.Drawing.Size(726, 267);
-            this.resultsDataGrid.TabIndex = 0;
+            this.resultsDataGrid.TabIndex = 2;
             this.resultsDataGrid.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.resultsDataGrid_CellDoubleClick);
             this.resultsDataGrid.SelectionChanged += new System.EventHandler(this.resultsDataGrid_SelectionChanged);
             // 
@@ -55,7 +55,7 @@
             this.searchTextBox.Location = new System.Drawing.Point(59, 16);
             this.searchTextBox.Name = "searchTextBox";
             this.searchTextBox.Size = new System.Drawing.Size(245, 20);
-            this.searchTextBox.TabIndex = 1;
+            this.searchTextBox.TabIndex = 0;
             this.searchTextBox.KeyUp += new System.Windows.Forms.KeyEventHandler(this.searchTextBox_KeyUp);
             // 
             // searchLabel
@@ -64,7 +64,7 @@
             this.searchLabel.Location = new System.Drawing.Point(12, 19);
             this.searchLabel.Name = "searchLabel";
             this.searchLabel.Size = new System.Drawing.Size(41, 13);
-            this.searchLabel.TabIndex = 2;
+            this.searchLabel.TabIndex = 1;
             this.searchLabel.Text = "Search";
             // 
             // selectButton
@@ -85,7 +85,7 @@
             this.cancelButton.Location = new System.Drawing.Point(93, 336);
             this.cancelButton.Name = "cancelButton";
             this.cancelButton.Size = new System.Drawing.Size(75, 23);
-            this.cancelButton.TabIndex = 3;
+            this.cancelButton.TabIndex = 4;
             this.cancelButton.Text = "&Cancel";
             this.cancelButton.UseVisualStyleBackColor = true;
             // 

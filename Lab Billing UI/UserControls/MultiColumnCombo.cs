@@ -54,9 +54,9 @@ namespace MultiColumnCombo
 
         protected override void OnDataSourceChanged(EventArgs e)
         {
-            base.OnDataSourceChanged(e);
-
             InitializeColumns();
+
+            base.OnDataSourceChanged(e);
         }
 
         protected override void OnValueMemberChanged(EventArgs e)
@@ -79,6 +79,9 @@ namespace MultiColumnCombo
 
         private void InitializeColumns()
         {
+            if (DataManager == null)
+                return;
+
             PropertyDescriptorCollection propertyDescriptorCollection = DataManager.GetItemProperties();
 
             columnWidths = new float[propertyDescriptorCollection.Count];

@@ -29,6 +29,7 @@ namespace LabBilling.Forms
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.InvoicesDGV = new System.Windows.Forms.DataGridView();
             this.GenerateInvoicesBtn = new System.Windows.Forms.Button();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
@@ -54,12 +55,15 @@ namespace LabBilling.Forms
             this.ViewInvoice = new System.Windows.Forms.Button();
             this.PrintInvoice = new System.Windows.Forms.Button();
             this.InvoiceHistoryDGV = new System.Windows.Forms.DataGridView();
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.undoInvoiceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.InvoicesDGV)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.UnbilledAccountsDGV)).BeginInit();
             this.InvoiceHistoryTabControl.SuspendLayout();
             this.GenerateInvoicesTabPage.SuspendLayout();
             this.InvoiceHistoryTabPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.InvoiceHistoryDGV)).BeginInit();
+            this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // InvoicesDGV
@@ -204,7 +208,7 @@ namespace LabBilling.Forms
             this.InvoiceHistoryTabControl.Location = new System.Drawing.Point(0, 0);
             this.InvoiceHistoryTabControl.Name = "InvoiceHistoryTabControl";
             this.InvoiceHistoryTabControl.SelectedIndex = 0;
-            this.InvoiceHistoryTabControl.Size = new System.Drawing.Size(1009, 656);
+            this.InvoiceHistoryTabControl.Size = new System.Drawing.Size(1009, 555);
             this.InvoiceHistoryTabControl.TabIndex = 15;
             // 
             // GenerateInvoicesTabPage
@@ -254,7 +258,7 @@ namespace LabBilling.Forms
             this.InvoiceHistoryTabPage.Location = new System.Drawing.Point(4, 22);
             this.InvoiceHistoryTabPage.Name = "InvoiceHistoryTabPage";
             this.InvoiceHistoryTabPage.Padding = new System.Windows.Forms.Padding(3);
-            this.InvoiceHistoryTabPage.Size = new System.Drawing.Size(1001, 630);
+            this.InvoiceHistoryTabPage.Size = new System.Drawing.Size(1001, 529);
             this.InvoiceHistoryTabPage.TabIndex = 1;
             this.InvoiceHistoryTabPage.Text = "Invoice History";
             this.InvoiceHistoryTabPage.UseVisualStyleBackColor = true;
@@ -347,18 +351,33 @@ namespace LabBilling.Forms
             | System.Windows.Forms.AnchorStyles.Right)));
             this.InvoiceHistoryDGV.BackgroundColor = System.Drawing.SystemColors.ControlLightLight;
             this.InvoiceHistoryDGV.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.InvoiceHistoryDGV.ContextMenuStrip = this.contextMenuStrip1;
             this.InvoiceHistoryDGV.Location = new System.Drawing.Point(8, 47);
             this.InvoiceHistoryDGV.Name = "InvoiceHistoryDGV";
             this.InvoiceHistoryDGV.ReadOnly = true;
-            this.InvoiceHistoryDGV.Size = new System.Drawing.Size(892, 501);
+            this.InvoiceHistoryDGV.Size = new System.Drawing.Size(892, 400);
             this.InvoiceHistoryDGV.TabIndex = 0;
             this.InvoiceHistoryDGV.CellMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.InvoiceHistoryDGV_CellMouseDoubleClick);
+            // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.undoInvoiceToolStripMenuItem});
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(145, 26);
+            // 
+            // undoInvoiceToolStripMenuItem
+            // 
+            this.undoInvoiceToolStripMenuItem.Name = "undoInvoiceToolStripMenuItem";
+            this.undoInvoiceToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.undoInvoiceToolStripMenuItem.Text = "Undo Invoice";
+            this.undoInvoiceToolStripMenuItem.Click += new System.EventHandler(this.undoInvoiceToolStripMenuItem_Click);
             // 
             // ClientInvoiceForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1009, 656);
+            this.ClientSize = new System.Drawing.Size(1009, 555);
             this.Controls.Add(this.InvoiceHistoryTabControl);
             this.Name = "ClientInvoiceForm";
             this.Text = "Client Invoicing";
@@ -371,6 +390,7 @@ namespace LabBilling.Forms
             this.InvoiceHistoryTabPage.ResumeLayout(false);
             this.InvoiceHistoryTabPage.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.InvoiceHistoryDGV)).EndInit();
+            this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -402,5 +422,7 @@ namespace LabBilling.Forms
         private System.Windows.Forms.MaskedTextBox ThroughDate;
         private System.Windows.Forms.MaskedTextBox FromDate;
         private System.Windows.Forms.TextBox StatusText;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem undoInvoiceToolStripMenuItem;
     }
 }

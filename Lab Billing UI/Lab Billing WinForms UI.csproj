@@ -29,7 +29,7 @@
     <InstallUrl>\\wthmclbill\installations%24\LabBilling\</InstallUrl>
     <ProductName>Lab Outreach Patient Accounting</ProductName>
     <PublisherName>West Tennessee Healthcare</PublisherName>
-    <ApplicationRevision>26</ApplicationRevision>
+    <ApplicationRevision>27</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
@@ -175,6 +175,7 @@
       <DependentUpon>PaymentAdjustmentEntryForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Worklists.cs" />
+    <Compile Include="Library\DataGridViewDateColumn.cs" />
     <Compile Include="LookupForms\CdmLookupForm.cs">
       <SubType>Form</SubType>
     </Compile>

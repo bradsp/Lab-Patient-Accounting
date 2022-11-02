@@ -9,6 +9,7 @@ using System.Xml;
 using RFClassLibrary;
 using System.Data;
 using MetroFramework.Forms;
+using System.Security.Principal;
 
 namespace LabBilling.Forms
 {
@@ -22,11 +23,6 @@ namespace LabBilling.Forms
         private readonly ChkBatchRepository chkBatchRepository = new ChkBatchRepository(Helper.ConnVal);
         private readonly ChkRepository chkdb = new ChkRepository(Helper.ConnVal);
         private readonly AccountRepository accdb = new AccountRepository(Helper.ConnVal);
-
-        private void OpenBatch_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
 
         private void SaveBatch_Click(object sender, EventArgs e)
         {
@@ -87,6 +83,10 @@ namespace LabBilling.Forms
                 XmlAttribute writeOffCode = xmlDoc.CreateAttribute("WriteOffCode");
                 writeOffCode.Value = row.Cells["WriteOffCode"].Value?.ToString();
                 pmtNode.Attributes.Append(writeOffCode);
+
+                XmlAttribute writeOffDate = xmlDoc.CreateAttribute("WriteOffDate");
+                writeOffDate.Value = row.Cells["WriteOffdate"].Value?.ToString();
+                pmtNode.Attributes.Append(writeOffDate);
 
                 XmlAttribute comment = xmlDoc.CreateAttribute("Comment");
                 comment.Value = row.Cells["Comment"].Value?.ToString();
@@ -162,10 +162,12 @@ namespace LabBilling.Forms
                 values[2] = batch.User;
                 chkBatchDataTable.Rows.Add(values);
             }
+
             OpenBatch.DataSource = chkBatchDataTable;
             OpenBatch.DisplayMember = "BatchDate";
             OpenBatch.ValueMember = "BatchNo";
 
+            OpenBatch.Refresh();
             #endregion
         }
 
@@ -227,7 +229,6 @@ namespace LabBilling.Forms
                 Log.Instance.Error($"Error posting payment batch", ex);
                 MessageBox.Show("Error occurred. Batch not posted.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-
         }
 
         private void Clear()
@@ -264,7 +265,8 @@ namespace LabBilling.Forms
 
             dgvPayments.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
             dgvPayments.Columns["PatientName"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            dgvPayments.Columns["Comment"].Width = 500;
+            dgvPayments.Columns["PatientName"].Width = 400;
+            dgvPayments.Columns["Comment"].Width = 400;
 
             dgvPayments.Columns["PatientName"].ReadOnly = true;
             dgvPayments.Columns["Balance"].ReadOnly = true;
@@ -285,42 +287,49 @@ namespace LabBilling.Forms
                     dgvPayments.Columns["AmountPaid"].Visible = true;
                     dgvPayments.Columns["WriteOff"].Visible = true;
                     dgvPayments.Columns["WriteOffCode"].Visible = true;
+                    dgvPayments.Columns["WriteOffDate"].Visible = true;
                     dgvPayments.Columns["Contractual"].Visible = true;
                     break;
                 case "Patient":  //amt paid, chk no, chk date enabled
                     dgvPayments.Columns["AmountPaid"].Visible = true;
                     dgvPayments.Columns["WriteOff"].Visible = false;
                     dgvPayments.Columns["WriteOffCode"].Visible = false;
+                    dgvPayments.Columns["WriteOffDate"].Visible = false;
                     dgvPayments.Columns["Contractual"].Visible = false;
                     break;
                 case "Commercial":
                     dgvPayments.Columns["AmountPaid"].Visible = true;
                     dgvPayments.Columns["WriteOff"].Visible = true;
                     dgvPayments.Columns["WriteOffCode"].Visible = true;
+                    dgvPayments.Columns["WriteOffDate"].Visible = true;
                     dgvPayments.Columns["Contractual"].Visible = true;
                     break;
                 case "Amount Paid": // amt paid enabled
                     dgvPayments.Columns["AmountPaid"].Visible = true;
                     dgvPayments.Columns["WriteOff"].Visible = false;
                     dgvPayments.Columns["WriteOffCode"].Visible = false;
+                    dgvPayments.Columns["WriteOffDate"].Visible = false;
                     dgvPayments.Columns["Contractual"].Visible = false;
                     break;
                 case "Contractual": //contractual enabled
                     dgvPayments.Columns["Contractual"].Visible = true;
                     dgvPayments.Columns["WriteOff"].Visible = false;
                     dgvPayments.Columns["WriteOffCode"].Visible = false;
+                    dgvPayments.Columns["WriteOffDate"].Visible = false;
                     dgvPayments.Columns["AmountPaid"].Visible = false;
                     break;
                 case "Write Off":
                     dgvPayments.Columns["AmountPaid"].Visible = false;
                     dgvPayments.Columns["WriteOff"].Visible = true;
                     dgvPayments.Columns["WriteOffCode"].Visible = true;
+                    dgvPayments.Columns["WriteOffDate"].Visible = true;
                     dgvPayments.Columns["Contractual"].Visible = false;
                     break;
                 default:
                     dgvPayments.Columns["AmountPaid"].Visible = true;
                     dgvPayments.Columns["WriteOff"].Visible = true;
                     dgvPayments.Columns["WriteOffCode"].Visible = true;
+                    dgvPayments.Columns["WriteOffDate"].Visible = true;
                     dgvPayments.Columns["Contractual"].Visible = true;
                     break;
             }
@@ -329,27 +338,27 @@ namespace LabBilling.Forms
 
         private void dgvPayments_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-            Log.Instance.Trace($"Entering");
-            var senderGrid = (DataGridView)sender;
+            //Log.Instance.Trace($"Entering");
+            //var senderGrid = (DataGridView)sender;
 
-            if (senderGrid.Columns[e.ColumnIndex] is DataGridViewButtonColumn &&
-                e.RowIndex >= 0)
-            {
-                //TODO - Button Clicked - Launch account search box - return selected account#
-                Log.Instance.Debug($"Entering");
-                PersonSearchForm frm = new PersonSearchForm();
-                frm.ShowDialog();
-                if (frm.SelectedAccount != "" && frm.SelectedAccount != null)
-                {
-                    dgvPayments["Account",e.RowIndex].Value = frm.SelectedAccount;
+            //if (senderGrid.Columns[e.ColumnIndex] is DataGridViewButtonColumn &&
+            //    e.RowIndex >= 0)
+            //{
+            //    //TODO - Button Clicked - Launch account search box - return selected account#
+            //    Log.Instance.Debug($"Entering");
+            //    PersonSearchForm frm = new PersonSearchForm();
+            //    frm.ShowDialog();
+            //    if (frm.SelectedAccount != "" && frm.SelectedAccount != null)
+            //    {
+            //        dgvPayments["Account",e.RowIndex].Value = frm.SelectedAccount;
                     
-                }
-                else
-                {
-                    Log.Instance.Error($"Person search returned an empty selected account.");
-                    MessageBox.Show("A valid account number was not returned from search. Please try again. If problem persists, report issue to an administrator.");
-                }
-            }
+            //    }
+            //    else
+            //    {
+            //        Log.Instance.Error($"Person search returned an empty selected account.");
+            //        MessageBox.Show("A valid account number was not returned from search. Please try again. If problem persists, report issue to an administrator.");
+            //    }
+            //}
         }
 
         private void dgvPayments_CellValueChanged(object sender, DataGridViewCellEventArgs e)
@@ -358,40 +367,24 @@ namespace LabBilling.Forms
             if (dgvPayments.Columns[e.ColumnIndex].Name == "Account")
             {
                 // get account information to populate patient name and balance info
-                Account account = new Account();
+                Account account = null;
                 string strAccount = dgvPayments["Account", e.RowIndex].Value.ToString();
-                strAccount = strAccount.ToUpper();
-                account = accdb.GetByAccount(strAccount, true);
-                //dgvPayments["Account", e.RowIndex].Value = strAccount;
-
-                dgvPayments["PatientName", e.RowIndex].Value = account.PatFullName;
-                dgvPayments["Balance", e.RowIndex].Value = account.Balance;
-                dgvPayments.CurrentCell = dgvPayments.Rows[e.RowIndex].Cells["CheckNo"];
-            }
-
-            if(dgvPayments.Columns[e.ColumnIndex].Name == "CheckDate")
-            {
-                string expression = dgvPayments["CheckDate", e.RowIndex].Value.ToString();
-                DateTime tmp = new DateTime();
-                
-                if(tmp.IsExpression(expression))
+                if (!string.IsNullOrEmpty(strAccount))
                 {
-                    string converted = tmp.ParseExpression(expression).ToShortDateString();
-                    dgvPayments["CheckDate", e.RowIndex].Value = converted;
+                    strAccount = strAccount.ToUpper();
+                    account = accdb.GetByAccount(strAccount, true);
                 }
-            }
 
-            if (dgvPayments.Columns[e.ColumnIndex].Name == "DateReceived")
-            {
-                string expression = dgvPayments["DateReceived", e.RowIndex].Value.ToString();
-                DateTime tmp = new DateTime();
-
-                if (tmp.IsExpression(expression))
+                if (account != null)
                 {
-                    string converted = tmp.ParseExpression(expression).ToShortDateString();
-                    dgvPayments["DateReceived", e.RowIndex].Value = converted;
+                    dgvPayments["Account", e.RowIndex].Value = account.AccountNo;
+                    dgvPayments["PatientName", e.RowIndex].Value = account.PatFullName;
+                    dgvPayments["Balance", e.RowIndex].Value = account.Balance;
+                    dgvPayments.CurrentCell = dgvPayments["CheckNo", e.RowIndex];
                 }
+
             }
+
         }
 
         private void dgvPayments_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
@@ -461,10 +454,6 @@ namespace LabBilling.Forms
             }
         }
 
-        private void OpenBatch_SelectedValueChanged(object sender, EventArgs e)
-        {
-        }
-
         private void OpenBatch_SelectionChangeCommitted(object sender, EventArgs e)
         {
             Log.Instance.Trace($"Entering");
@@ -497,6 +486,7 @@ namespace LabBilling.Forms
                     dgvPayments["AmountPaid", index].Value = node.Attributes["AmountPaid"].Value ?? "0";
                     dgvPayments["WriteOff", index].Value = node.Attributes["WriteOff"].Value ?? "0";
                     dgvPayments["WriteOffCode", index].Value = node.Attributes["WriteOffCode"].Value;
+                    dgvPayments["WriteOffDate", index].Value = node.Attributes["WriteOffDate"].Value;
                     dgvPayments["Comment", index].Value = node.Attributes["Comment"].Value;
                     dgvPayments["CheckDate", index].Value = node.Attributes["CheckDate"].Value;
                     dgvPayments["DateReceived", index].Value = node.Attributes["DateReceived"].Value;
@@ -505,6 +495,90 @@ namespace LabBilling.Forms
                 dgvPayments.CurrentCell = dgvPayments.Rows[idx - 1].Cells["Account"];
             }
 
+        }
+
+        private void dgvPayments_CellEnter(object sender, DataGridViewCellEventArgs e)
+        {
+
+            var senderGrid = (DataGridView)sender;
+
+            if (senderGrid.CurrentRow.Cells[e.ColumnIndex].ReadOnly)
+            {
+                SendKeys.Send("{tab}");
+            }
+
+            if (senderGrid.Columns[e.ColumnIndex].Name == "DateReceived")
+            {
+                senderGrid[e.ColumnIndex, e.RowIndex].Value = DateTime.Now.ToShortDateString();
+            }
+
+            if (senderGrid.Columns[e.ColumnIndex].Name == "PaymentSource")
+            {
+                //copy value from previous column
+                if (e.RowIndex > 0)
+                    senderGrid[e.ColumnIndex, e.RowIndex].Value = senderGrid[e.ColumnIndex, e.RowIndex - 1].Value;
+            }
+
+        }
+
+        private void dgvPayments_CellLeave(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
+        private void dgvPayments_CellEndEdit(object sender, DataGridViewCellEventArgs e)
+        {
+            if (dgvPayments.Columns[e.ColumnIndex].Name == "Account")
+            {
+                // get account information to populate patient name and balance info
+                Account account = null;
+                string strAccount = dgvPayments["Account", e.RowIndex].Value?.ToString();
+                if (!string.IsNullOrEmpty(strAccount))
+                {
+                    strAccount = strAccount.ToUpper();
+                    account = accdb.GetByAccount(strAccount, true);
+                }
+
+                if (account != null)
+                {
+                    dgvPayments["Account", e.RowIndex].Value = strAccount;
+                    dgvPayments["PatientName", e.RowIndex].Value = account.PatFullName;
+                    dgvPayments["Balance", e.RowIndex].Value = account.Balance;
+                    dgvPayments.CurrentCell = dgvPayments["CheckNo", e.RowIndex];
+                }
+            }
+
+        }
+
+        private void dgvPayments_CellContentDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+        }
+
+        private void dgvPayments_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (dgvPayments.Columns[e.ColumnIndex].Name == "Account")
+            {
+                Account account = null;
+                PersonSearchForm frm = new PersonSearchForm();
+                frm.ShowDialog();
+                if (frm.SelectedAccount != "" && frm.SelectedAccount != null)
+                {
+                    string strAccount = frm.SelectedAccount.ToUpper();
+                    account = accdb.GetByAccount(strAccount, true);
+                }
+                else
+                {
+                    Log.Instance.Error($"Person search returned an empty selected account.");
+                    MessageBox.Show("A valid account number was not returned from search. Please try again. If problem persists, report issue to an administrator.");
+                }
+                if (account != null)
+                {
+                    dgvPayments["Account", e.RowIndex].Value = account.AccountNo;
+                    dgvPayments["PatientName", e.RowIndex].Value = account.PatFullName;
+                    dgvPayments["Balance", e.RowIndex].Value = account.Balance;
+                    dgvPayments.CurrentCell = dgvPayments["CheckNo", e.RowIndex];
+                }
+            }
         }
     }
 }

@@ -392,5 +392,10 @@ namespace LabBilling.Forms
         }
 
         #endregion
+
+        private void undoInvoiceToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Function not implemented.");
+        }
     }
 }

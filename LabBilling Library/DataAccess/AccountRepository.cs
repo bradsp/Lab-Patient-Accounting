@@ -75,12 +75,18 @@ namespace LabBilling.Core.DataAccess
             throw new NotImplementedException();
         }
 
+
+
         public Account GetByAccount(string account, bool demographicsOnly = false)
         {
             Log.Instance.Trace($"Entering - account {account} demographicsOnly {demographicsOnly}");
 
             var record = dbConnection.SingleOrDefault<Account>($"where {this.GetRealColumn(nameof(Account.AccountNo))} = @0", 
                 new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account });
+
+
+            if (record == null)
+                return null;
 
             //if(!Str.ParseName(record.PatFullName, out string strLastName, out string strFirstName, out string strMiddleName, out string strSuffix))
             //{
