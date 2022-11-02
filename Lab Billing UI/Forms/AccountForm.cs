@@ -578,10 +578,12 @@ namespace LabBilling.Forms
                 PlanFinCodeComboBox.BackColor = Color.Linen;
 
                 InsuranceDataGrid.ClearSelection();
-                SetInsDataEntryAccess(false);
-                ResetControls(tabDemographics.Controls.OfType<Control>().ToArray());
             }
-
+            SetInsDataEntryAccess(false);
+            insAddMode = false;
+            AddInsuranceButton.Enabled = true;
+            SaveInsuranceButton.Enabled = false;
+            ResetControls(tabDemographics.Controls.OfType<Control>().ToArray());
         }
 
         #region DemographicTab
@@ -769,7 +771,7 @@ namespace LabBilling.Forms
 
             //clear entry fields
             ClearInsEntryFields();
-
+            SaveInsuranceButton.Enabled = false;
         }
 
         private void ClearInsEntryFields()
@@ -799,7 +801,6 @@ namespace LabBilling.Forms
 
             //disable fields
             SetInsDataEntryAccess(false);
-
             ResetControls(insTabLayoutPanel.Controls.OfType<Control>().ToArray());
         }
 
@@ -923,7 +924,9 @@ namespace LabBilling.Forms
                 changedControls.Remove(ctrl.Name);
             }
             //enable data entry fields
+            SaveInsuranceButton.Enabled = true;
             SetInsDataEntryAccess(true);
+            InsOrderComboBox.Enabled = false;
         }
 
         private void LookupInsCode(string code)
@@ -947,12 +950,16 @@ namespace LabBilling.Forms
             }
         }
 
+        bool insAddMode = false;
+
         private void AddInsuranceButton_Click(object sender, EventArgs e)
         {
             //clear the insurance table selection and data entry fields.
             InsuranceDataGrid.ClearSelection();
             ClearInsEntryFields();
             SetInsDataEntryAccess(true);
+            AddInsuranceButton.Enabled = false;
+            SaveInsuranceButton.Enabled = true;
         }
 
         private void insurancePlanTextBox_KeyUp(object sender, KeyEventArgs e)
