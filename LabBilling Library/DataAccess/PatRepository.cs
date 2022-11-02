@@ -207,9 +207,13 @@ namespace LabBilling.Core.DataAccess
                 }                                   
             }
             if (dbConnection.Update(pat) > 0)
+            {
                 return true;
+            }
             else
+            {
                 return false;
+            }
 
         }
 

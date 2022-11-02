@@ -60,6 +60,7 @@ namespace LabBilling.Forms
             this.summaryTab = new System.Windows.Forms.TabPage();
             this.summaryTable = new System.Windows.Forms.TableLayoutPanel();
             this.tabDemographics = new System.Windows.Forms.TabPage();
+            this.DateOfBirthTextBox = new LabBilling.UserControls.DateTextBox();
             this.providerLookup1 = new LabBilling.Library.ProviderLookup();
             this.DemoStatusMessagesTextBox = new System.Windows.Forms.TextBox();
             this.SuffixTextBox = new System.Windows.Forms.TextBox();
@@ -248,7 +249,6 @@ namespace LabBilling.Forms
             this.BannerBillStatusTextBox = new System.Windows.Forms.TextBox();
             this.BannerProviderTextBox = new System.Windows.Forms.TextBox();
             this.RefreshButton = new System.Windows.Forms.PictureBox();
-            this.DateOfBirthTextBox = new LabBilling.UserControls.DateTextBox();
             this.tabControl1.SuspendLayout();
             this.summaryTab.SuspendLayout();
             this.tabDemographics.SuspendLayout();
@@ -369,6 +369,14 @@ namespace LabBilling.Forms
             this.tabDemographics.Size = new System.Drawing.Size(1151, 492);
             this.tabDemographics.TabIndex = 9;
             this.tabDemographics.Text = "Demographics";
+            // 
+            // DateOfBirthTextBox
+            // 
+            this.DateOfBirthTextBox.DateValue = new System.DateTime(((long)(0)));
+            this.DateOfBirthTextBox.Location = new System.Drawing.Point(296, 258);
+            this.DateOfBirthTextBox.Name = "DateOfBirthTextBox";
+            this.DateOfBirthTextBox.Size = new System.Drawing.Size(177, 20);
+            this.DateOfBirthTextBox.TabIndex = 34;
             // 
             // providerLookup1
             // 
@@ -1700,6 +1708,8 @@ namespace LabBilling.Forms
             this.DiagnosisDataGrid.TabIndex = 0;
             this.DiagnosisDataGrid.CellMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.DiagnosisDataGrid_CellMouseDoubleClick);
             this.DiagnosisDataGrid.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.DiagnosisDataGrid_DataBindingComplete);
+            this.DiagnosisDataGrid.RowsAdded += new System.Windows.Forms.DataGridViewRowsAddedEventHandler(this.DiagnosisDataGrid_RowsAdded);
+            this.DiagnosisDataGrid.RowsRemoved += new System.Windows.Forms.DataGridViewRowsRemovedEventHandler(this.DiagnosisDataGrid_RowsRemoved);
             this.DiagnosisDataGrid.UserDeletingRow += new System.Windows.Forms.DataGridViewRowCancelEventHandler(this.DiagnosisDataGrid_UserDeletingRow);
             // 
             // DxSearchButton
@@ -2634,14 +2644,6 @@ namespace LabBilling.Forms
             this.RefreshButton.TabIndex = 28;
             this.RefreshButton.TabStop = false;
             this.RefreshButton.Click += new System.EventHandler(this.RefreshButton_Click);
-            // 
-            // DateOfBirthTextBox
-            // 
-            this.DateOfBirthTextBox.DateValue = new System.DateTime(((long)(0)));
-            this.DateOfBirthTextBox.Location = new System.Drawing.Point(296, 258);
-            this.DateOfBirthTextBox.Name = "DateOfBirthTextBox";
-            this.DateOfBirthTextBox.Size = new System.Drawing.Size(177, 20);
-            this.DateOfBirthTextBox.TabIndex = 34;
             // 
             // AccountForm
             // 

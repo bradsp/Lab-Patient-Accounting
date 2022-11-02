@@ -1507,6 +1507,7 @@ namespace LabBilling.Forms
                 else
                 {
                     dxBindingList.Add(new PatDiag { No = maxNo + 1, Code = selectedCode, Description = selectedDesc });
+                    DiagnosisDataGrid.BackgroundColor = Color.Orange;
                 }
             }
         }
@@ -1554,6 +1555,7 @@ namespace LabBilling.Forms
                             return;
                         }
                         dxBindingList.Add(new PatDiag { No = maxNo + 1, Code = record.DxCode, Description = record.Description });
+                        DiagnosisDataGrid.BackgroundColor = Color.Orange;
                         DxQuickAddTextBox.Text = "";
                     }
                     else
@@ -1580,7 +1582,7 @@ namespace LabBilling.Forms
                 var record = dxBindingList.IndexOf(dxBindingList.First<PatDiag>(n => n.Code == selectedCode));
 
                 dxBindingList.RemoveAt(record);
-
+                DiagnosisDataGrid.BackgroundColor = Color.Orange;
                 //loop through and renumber
                 for (int i = 0; i < dxBindingList.Count; i++)
                 {
@@ -1603,8 +1605,11 @@ namespace LabBilling.Forms
 
             currentAccount.Pat.Diagnoses = dxBindingList.ToList<PatDiag>();
 
-            if (patDB.SaveDiagnoses(currentAccount.Pat) == true)
-                MessageBox.Show(this, "Diagnoses updated successfully.");
+            if (accDB.UpdateDiagnoses(currentAccount) == true)
+            {
+                DiagnosisDataGrid.BackgroundColor = Color.White;
+                //MessageBox.Show(this, "Diagnoses updated successfully.");
+            }
             else
                 MessageBox.Show(this, "Diagnosis update failed.");
         }
@@ -1976,6 +1981,10 @@ namespace LabBilling.Forms
             {
                 RefreshAccountData();
             }
+            if(e.TabPage.Name == tabDiagnosis.Name)
+            {
+                DiagnosisDataGrid.BackgroundColor = Color.White;
+            }
         }
 
 
@@ -2074,6 +2083,16 @@ namespace LabBilling.Forms
                 }
             }
            
+        }
+
+        private void DiagnosisDataGrid_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
+        {
+            //DiagnosisDataGrid.BackgroundColor = Color.Orange;
+        }
+
+        private void DiagnosisDataGrid_RowsRemoved(object sender, DataGridViewRowsRemovedEventArgs e)
+        {
+            //DiagnosisDataGrid.BackgroundColor = Color.Orange;
         }
     }
 }

@@ -75,8 +75,6 @@ namespace LabBilling.Core.DataAccess
             throw new NotImplementedException();
         }
 
-
-
         public Account GetByAccount(string account, bool demographicsOnly = false)
         {
             Log.Instance.Trace($"Entering - account {account} demographicsOnly {demographicsOnly}");
@@ -314,6 +312,16 @@ namespace LabBilling.Core.DataAccess
 
             Log.Instance.Trace($"Exiting");
             return base.Update(table, columns);
+        }
+
+        public bool UpdateDiagnoses(Account acc)
+        {
+            if(patRepository.SaveDiagnoses(acc.Pat))
+            {
+                acc.Pat = patRepository.GetByAccount(acc.AccountNo);
+                return true;
+            }
+            return false;
         }
 
         public int UpdateStatus(string accountNo, string status)
