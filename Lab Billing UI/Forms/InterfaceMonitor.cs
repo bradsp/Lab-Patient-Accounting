@@ -34,6 +34,7 @@ namespace LabBilling.Forms
             
             MessagesGrid.SetColumnsVisibility(false);
 
+            MessagesGrid.Columns[nameof(MessageInbound.SystemMsgId)].Visible = true;
             MessagesGrid.Columns[nameof(MessageInbound.SourceAccount)].Visible = true;
             MessagesGrid.Columns[nameof(MessageInbound.SourceMsgId)].Visible = true;
             MessagesGrid.Columns[nameof(MessageInbound.MessageType)].Visible = true;
@@ -82,16 +83,35 @@ namespace LabBilling.Forms
             {
                 //string msgType = MessagesGrid.SelectedRows[0].Cells[nameof(MessageInbound.MessageType)].Value.ToString();
                 int msgID = Convert.ToInt32(MessagesGrid.SelectedRows[0].Cells[nameof(MessageInbound.SystemMsgId)].Value);
+                string msgType = MessagesGrid.SelectedRows[0].Cells[nameof(MessageInbound.MessageType)].Value.ToString();
+                string processFlag = MessagesGrid.SelectedRows[0].Cells[nameof(MessageInbound.ProcessFlag)].Value.ToString();
 
-                HL7Processor hL7Processor = new HL7Processor(Helper.ConnVal);
+                
+                bool okToProcess = false;
 
-                hL7Processor.ProcessMessage(msgID);
+                if (msgType.StartsWith("DFT") && processFlag == "P")
+                {
+                    if(MessageBox.Show("Reprocessing could result in duplicate charges. Continue anyway?", "Reprocess Charge Message", 
+                        MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                    {
+                        okToProcess = true;
+                    }
+                }
+                else
+                {
+                    okToProcess = true;
+                }
 
-                var row = messagesTable.Rows.Find(msgID);
-                row[nameof(MessageInbound.ProcessFlag)] = "Reprocessed";
-                row[nameof(MessageInbound.ProcessStatusMsg)] = "Update Date Range to refresh status.";
-                MessagesGrid.Refresh();
+                if (okToProcess)
+                {
+                    HL7Processor hL7Processor = new HL7Processor(Helper.ConnVal);
+                    hL7Processor.ProcessMessage(msgID);
 
+                    var row = messagesTable.Rows.Find(msgID);
+                    row[nameof(MessageInbound.ProcessFlag)] = "Reprocessed";
+                    row[nameof(MessageInbound.ProcessStatusMsg)] = "Update Date Range to refresh status.";
+                    MessagesGrid.Refresh();
+                }
             }
             else
             {

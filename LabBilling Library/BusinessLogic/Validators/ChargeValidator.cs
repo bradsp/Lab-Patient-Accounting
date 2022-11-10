@@ -20,16 +20,6 @@ namespace LabBilling.Core.BusinessLogic.Validators
                 .SetValidator(new ChargeDetailValidator())
                 .When(c => !c.IsCredited);
         }
-
-        private bool NotContainOnlyVenipunctureCharge(List<ChrgDetail> chrgDetails)
-        {
-            if (chrgDetails.Count == 1)
-                if(chrgDetails.Where(x => x.Cpt4 == "36415").Count() > 0)
-                    return false;
-
-            return true;
-        }
-
     }
 
     public class ChargeDetailValidator : AbstractValidator<ChrgDetail>

@@ -64,6 +64,16 @@ namespace LabBilling.Core.BusinessLogic.Validators
                     .Must(NotContainOnlyVenipunctureCharge)
                     .WithMessage("Venipuncture is only charge on account");
 
+                RuleFor(c => c.Charges)
+                    .Must(NotNeedRepeatModifier)
+                    .WithMessage("Duplicate cpt - needs modifier.")
+                    .When(a => a.Charges != null);
+
+                RuleFor(c => c.Charges)
+                    .Must(NotHaveDuplicateCdms)
+                    .WithMessage("Duplicate cdms")
+                    .When(a => a.Charges != null);
+
                 RuleFor(a => a.Charges)
                     .Must(NotContainMultipleVenipunctures).WithMessage("Multiple venipuncture charges on account")
                     .When(a => a.Charges != null);
@@ -181,6 +191,60 @@ namespace LabBilling.Core.BusinessLogic.Validators
             {
                 return true;
             }
+        }
+
+        private bool NotNeedRepeatModifier(List<Chrg> chrgs)
+        {
+            bool isOK = true;
+
+            var list = chrgs.Where(x => x.ChrgDetails.Any(y => y.Cpt4 == "80202"));
+            
+            if (list.Count() > 1)
+            {
+                isOK = false;
+
+                foreach (var item in list)
+                {
+                    var details = item.ChrgDetails;
+                    foreach (var detail in details)
+                    {
+                        if (detail.Modifier == "59")
+                        {
+                            isOK = true;
+                        }
+                    }
+                }
+            }
+
+            return isOK;
+        }
+
+        private bool NotHaveDuplicateCdms(List<Chrg> chrgs)
+        {
+
+            bool isOK = false;
+            Dictionary<string, bool> duplicates = new Dictionary<string, bool>() 
+            {
+                {"5686078", false },
+                {"5686066", false } 
+            };
+
+
+            foreach(var chrg in chrgs)
+            {
+                if(duplicates.ContainsKey(chrg.CDMCode))
+                {
+                    duplicates[chrg.CDMCode] = true;
+                }
+            }
+
+            bool isDuplicate = true;
+            foreach (var item in duplicates)
+            {
+                isDuplicate = item.Value;
+            }
+
+            return isDuplicate;
         }
 
     }
