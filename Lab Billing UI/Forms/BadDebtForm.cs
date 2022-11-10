@@ -864,33 +864,33 @@ namespace LabBilling.Forms
             return;
 
 
-            if (e.RowIndex == dgvAccounts.NewRowIndex || e.RowIndex < 0)
-                return;
+            //if (e.RowIndex == dgvAccounts.NewRowIndex || e.RowIndex < 0)
+            //    return;
 
-            if (e.ColumnIndex < 0)
-                return;
+            //if (e.ColumnIndex < 0)
+            //    return;
 
-            //check if click is on specific column
-            if(e.ColumnIndex == dgvAccounts.Columns["dataGridViewDeleteButton"].Index)
-            {
-                //delete the row from the database and grid
-                using (SqlConnection conn = new SqlConnection(Helper.ConnVal))
-                {
-                    if(MessageBox.Show("Are you sure?", "Delete Row",MessageBoxButtons.YesNo) == DialogResult.Yes)
-                    {
-                        SqlCommand cmdDelete = new SqlCommand("delete from bad_debt where rowguid = @rowguid", conn);
-                        cmdDelete.Parameters.Add("@rowguid", SqlDbType.UniqueIdentifier).Value = m_dtAccounts.Columns["rowguid"];
-                        cmdDelete.Parameters["@rowguid"].SourceColumn = "rowguid";
+            ////check if click is on specific column
+            //if(e.ColumnIndex == dgvAccounts.Columns["dataGridViewDeleteButton"].Index)
+            //{
+            //    //delete the row from the database and grid
+            //    using (SqlConnection conn = new SqlConnection(Helper.ConnVal))
+            //    {
+            //        if(MessageBox.Show("Are you sure?", "Delete Row",MessageBoxButtons.YesNo) == DialogResult.Yes)
+            //        {
+            //            SqlCommand cmdDelete = new SqlCommand("delete from bad_debt where rowguid = @rowguid", conn);
+            //            cmdDelete.Parameters.Add("@rowguid", SqlDbType.UniqueIdentifier).Value = m_dtAccounts.Columns["rowguid"];
+            //            cmdDelete.Parameters["@rowguid"].SourceColumn = "rowguid";
 
-                        m_sdaBadDebt.DeleteCommand = cmdDelete;
+            //            m_sdaBadDebt.DeleteCommand = cmdDelete;
 
-                        DataRow dr = m_dtAccounts.Rows[e.RowIndex];
-                        dr.Delete();
+            //            DataRow dr = m_dtAccounts.Rows[e.RowIndex];
+            //            dr.Delete();
 
-                        m_sdaBadDebt.Update(m_dtAccounts);
-                    }
-                }
-            }    
+            //            m_sdaBadDebt.Update(m_dtAccounts);
+            //        }
+            //    }
+            //}    
         }
 
         private void dgvAccounts_CellContentClick(object sender, DataGridViewCellEventArgs e)

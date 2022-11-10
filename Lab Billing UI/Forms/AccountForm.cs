@@ -523,10 +523,14 @@ namespace LabBilling.Forms
             GuarantorPhoneTextBox.Text = currentAccount.Pat.GuarantorPrimaryPhone;
             GuarantorRelationComboBox.SelectedValue = currentAccount.Pat.GuarRelationToPatient != null ? currentAccount.Pat.GuarRelationToPatient : "";
 
+            insGridSource = null;
+            InsuranceDataGrid.DataSource = null;
+            InsuranceDataGrid.Rows.Clear();
+            InsuranceDataGrid.Columns.Clear();
+
             if (currentAccount.Insurances.Count() > 0)
             {
-                InsuranceDataGrid.Rows.Clear();
-                InsuranceDataGrid.Columns.Clear();
+
                 DataGridViewButtonColumn deleteCol = new DataGridViewButtonColumn
                 {
                     Name = "delete",
@@ -580,7 +584,7 @@ namespace LabBilling.Forms
                 InsuranceDataGrid.ClearSelection();
             }
             SetInsDataEntryAccess(false);
-            insAddMode = false;
+            //insAddMode = false;
             AddInsuranceButton.Enabled = true;
             SaveInsuranceButton.Enabled = false;
             ResetControls(tabDemographics.Controls.OfType<Control>().ToArray());
@@ -950,7 +954,7 @@ namespace LabBilling.Forms
             }
         }
 
-        bool insAddMode = false;
+        //bool insAddMode = false;
 
         private void AddInsuranceButton_Click(object sender, EventArgs e)
         {
@@ -1205,6 +1209,7 @@ namespace LabBilling.Forms
                 DataTable dt = new DataTable("DxPointer");
                 dt.Columns.Add("DxNo", typeof(int));
                 dt.Columns.Add("DxCode", typeof(string));
+                dt.Columns.Add("Description", typeof(string));
                 for(int i = 1; i <= dxcnt; i++)
                 {
                     dt.Columns.Add($"Ptr{i}", typeof(bool));
@@ -1221,7 +1226,8 @@ namespace LabBilling.Forms
                             DataRow newrow = dt.NewRow();
                             newrow["DxNo"] = iDx++;
                             newrow["DxCode"] = diag.Code;
-                            for(int c = 2; c < dt.Columns.Count; c++)
+                            newrow["Description"] = diag.Description;
+                            for(int c = 3; c < dt.Columns.Count; c++)
                             {
                                 newrow[c] = false;
                             }
@@ -1239,7 +1245,7 @@ namespace LabBilling.Forms
                         }
                     }
                     DiagnosisPointerDataGrid.DataSource = dt;
-                    DiagnosisPointerDataGrid.Columns["DxCode"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+                    DiagnosisPointerDataGrid.Columns["Description"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
                     DiagnosisPointerDataGrid.AutoResizeColumns();
                 }
                 catch (Exception ex)
@@ -1254,7 +1260,7 @@ namespace LabBilling.Forms
         {
             StringBuilder sb = new StringBuilder();
 
-            for (int c = 2; c < DiagnosisPointerDataGrid.ColumnCount; c++)
+            for (int c = 3; c < DiagnosisPointerDataGrid.ColumnCount; c++)
             {
                 for (int r = 0; r < DiagnosisPointerDataGrid.RowCount; r++)
                 {
@@ -1308,7 +1314,7 @@ namespace LabBilling.Forms
         {
             DiagnosisPointerDataGrid.EndEdit();
 
-            if (e.ColumnIndex > 1)
+            if (e.ColumnIndex > 2)
             {
                 UpdateDxPointersButton.Enabled = true;
 
@@ -1327,7 +1333,7 @@ namespace LabBilling.Forms
                     }
 
                     //loop through the row and ensure only one is checked
-                    for (int j = 2; j < DiagnosisPointerDataGrid.ColumnCount; j++)
+                    for (int j = 3; j < DiagnosisPointerDataGrid.ColumnCount; j++)
                     {
                         if(j != e.ColumnIndex)
                         {
@@ -1674,7 +1680,7 @@ namespace LabBilling.Forms
             ValidationResultsTextBox.Text = currentAccount.AccountValidationStatus.validation_text;
             LastValidatedLabel.Text = currentAccount.AccountValidationStatus.mod_date.ToString("G");
 
-            statementFlagTextBox.Text = currentAccount.Pat.StatementFlag;
+            statementFlagComboBox.SelectedItem = currentAccount.Pat.StatementFlag;
             firstStmtDateTextBox.Text = currentAccount.Pat.FirstStatementDate.ToString();
             lastStmtDateTextBox.Text = currentAccount.Pat.LastStatementDate.ToString();
             minPmtTextBox.Text = currentAccount.Pat.MinimumPaymentAmount.ToString();
@@ -2036,28 +2042,6 @@ namespace LabBilling.Forms
 
         #endregion
 
-        private void statementFlagTextBox_MouseClick(object sender, MouseEventArgs e)
-        {
-            if ((string.IsNullOrEmpty(statementFlagTextBox.Text)) || (statementFlagTextBox.Text == "N"))
-            {
-                if (MessageBox.Show("Flag patient to receive statements?", "Flag for Statement", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
-                {
-                    currentAccount.Pat.StatementFlag = "Y";
-                    statementFlagTextBox.Text = "Y";
-                    patDB.Update(currentAccount.Pat, new[] { nameof(Pat.StatementFlag) });
-                }
-            }
-        }
-
-        private void minPmtTextBox_Leave(object sender, EventArgs e)
-        {
-            currentAccount.Pat.MinimumPaymentAmount = (double)minPmtTextBox.DollarValue;
-            if (currentAccount.Pat.MinimumPaymentAmount > 0)
-                currentAccount.Pat.StatementFlag = "P";
-            patDB.Update(currentAccount.Pat, new[] { nameof(Pat.MinimumPaymentAmount), nameof(Pat.StatementFlag) });
-            RefreshAccountData();
-
-        }
 
         private void swapInsurancesToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -2088,6 +2072,17 @@ namespace LabBilling.Forms
         private void DiagnosisDataGrid_RowsRemoved(object sender, DataGridViewRowsRemovedEventArgs e)
         {
             //DiagnosisDataGrid.BackgroundColor = Color.Orange;
+        }
+
+        private void statementFlagComboBox_SelectionChangeCommitted(object sender, EventArgs e)
+        {
+            if (currentAccount.Pat.StatementFlag == "N")
+            {
+                accDB.UpdateStatus(currentAccount.AccountNo, "STMT");
+            }
+            currentAccount.Pat.StatementFlag = statementFlagComboBox.SelectedItem.ToString();
+
+            patDB.Update(currentAccount.Pat, new[] { nameof(Pat.StatementFlag) });
         }
     }
 }

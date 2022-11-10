@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using LabBilling.Core.DataAccess;
 using LabBilling.Core.Models;
+using LabBilling.Core.BusinessLogic;
 
 namespace LabBillingConsole
 {
@@ -15,7 +16,11 @@ namespace LabBillingConsole
 
         static void Main(string[] args)
         {
-            SwapInsurance();
+            HL7Processor hL7Processor = new HL7Processor(connectionString);
+
+            hL7Processor.ProcessMessages();
+
+            Console.WriteLine("Messages processed.");
 
         }
 
@@ -26,13 +31,11 @@ namespace LabBillingConsole
 
             accountRepository.InsuranceSwap("L17436110", InsCoverage.Primary, InsCoverage.Secondary);
 
-
-
         }
 
 
 
     }
-    
+
 
 }

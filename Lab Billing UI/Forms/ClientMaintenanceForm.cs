@@ -10,7 +10,6 @@ using System.Drawing;
 using System.ComponentModel;
 using System.Data;
 using System.Reflection;
-using NHapi.Base.Model.Primitive;
 
 namespace LabBilling.Forms
 {

@@ -142,6 +142,12 @@ namespace RFClassLibrary
             }
         }
 
+        /// <summary>
+        /// Return a property type from property name
+        /// </summary>
+        /// <param name="t"></param>
+        /// <param name="propName"></param>
+        /// <returns></returns>
         public static Type GetProperty(Type t, string propName)
         {
             var flags = BindingFlags.Public | BindingFlags.Instance;

@@ -12,7 +12,7 @@ namespace LabBilling.Core.DataAccess
 {
     public class ReportingRepository
     {
-        private PetaPoco.Database dbConnection;
+        //private PetaPoco.Database dbConnection;
         private string _connectionString;
 
         public ReportingRepository(string connectionString)

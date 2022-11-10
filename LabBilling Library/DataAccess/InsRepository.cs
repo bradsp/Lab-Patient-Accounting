@@ -88,6 +88,33 @@ namespace LabBilling.Core.DataAccess
             return record;
         }
 
+        public override object Add(Ins table)
+        {
+            table.HolderCityStZip = $"{table.HolderCity}, {table.HolderState} {table.HolderZip}";
+            table.HolderFullName = $"{table.HolderLastName},{table.HolderFirstName} {table.HolderMiddleName}".TrimEnd();
+            return base.Add(table);
+        }
+
+        public override bool Save(Ins table)
+        {
+
+            var record = this.GetByAccount(table.Account, InsCoverage.Parse(table.Coverage));
+
+            try
+            {
+                if (record == null)
+                    this.Add(table);
+                else
+                    this.Update(table);
+            }
+            catch(Exception ex)
+            {
+                throw new ApplicationException("Exception in InsRepository.Save", ex);         
+            }
+
+            return true;
+        }
+
         public override bool Update(Ins table, IEnumerable<string> columns)
         {
             Log.Instance.Trace($"Entering - account {table.Account}");

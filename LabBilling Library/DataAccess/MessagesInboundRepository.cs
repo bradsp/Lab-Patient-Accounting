@@ -7,7 +7,7 @@ using System.Data;
 
 namespace LabBilling.Core.DataAccess
 {
-    public class MessagesInboundRepository : RepositoryBase<MessagesInbound>
+    public class MessagesInboundRepository : RepositoryBase<MessageInbound>
     {
         public MessagesInboundRepository(string connection) : base(connection)
         {
@@ -19,16 +19,48 @@ namespace LabBilling.Core.DataAccess
 
         }
 
-        public override MessagesInbound GetById(int id)
+        public List<MessageInbound> GetUnprocessedMessages()
         {
-            throw new NotImplementedException();
+            Log.Instance.Trace($"Entering");
+
+            var command = PetaPoco.Sql.Builder;
+
+            command.Where($"{GetRealColumn(nameof(MessageInbound.ProcessFlag))} = 'N'");
+            command.OrderBy($"{GetRealColumn(nameof(MessageInbound.MessageDate))}");
+
+            var records = dbConnection.Fetch<MessageInbound>(command);
+
+            return records;
         }
 
-        public List<MessagesInbound> GetByMessageType(string type, DateTime fromDate, DateTime throughDate)
+        public override MessageInbound GetById(int id)
+        {
+            Log.Instance.Trace($"Entering {id}");
+
+            return dbConnection.SingleOrDefault<MessageInbound>(id);
+
+        }
+
+        public List<MessageInbound> GetByDateRange(DateTime fromDate, DateTime throughDate)
         {
             Log.Instance.Trace("Entering");
 
-            var record = dbConnection.Fetch<MessagesInbound>("where msgType like @0 and msgDate between @1 and @2 order by msgDate DESC",
+            var cmd = PetaPoco.Sql.Builder;
+
+            cmd.Where($"msgDate between @0 and @1",
+                new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = fromDate.ToString("yyyy-MM-dd HH:mm:ss") },
+                new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = throughDate.ToString("yyyy-MM-dd HH:mm:ss") });
+
+            var record = dbConnection.Fetch<MessageInbound>(cmd);
+
+            return (record);
+        }
+
+        public List<MessageInbound> GetByMessageType(string type, DateTime fromDate, DateTime throughDate)
+        {
+            Log.Instance.Trace("Entering");
+
+            var record = dbConnection.Fetch<MessageInbound>("where msgType like @0 and msgDate between @1 and @2 order by msgDate DESC",
                 new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = type + "%" }, 
                 new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = fromDate.ToString("yyyy-MM-dd HH:mm:ss") }, 
                 new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = throughDate.ToString("yyyy-MM-dd HH:mm:ss") });

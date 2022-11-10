@@ -33,29 +33,33 @@ namespace LabBilling.Core.DataAccess
             throw new NotImplementedException();
         }
 
-        public Pat GetByAccount(string account)
+        public bool RecordExists(string accountNo)
         {
-            Log.Instance.Trace($"Entering - account {account}");
+            var pat = dbConnection.SingleOrDefault<Pat>($"where account = @0",
+                new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = accountNo });
+
+            if (pat == null)
+                return false;
+            else
+                return true;
+        }
+
+        public Pat GetByAccount(Account account)
+        {
+            Log.Instance.Trace($"Entering - account {account.AccountNo}");
 
             var record = dbConnection.SingleOrDefault<Pat>("where account = @0",
-                new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account });
-            var accRecord = dbConnection.SingleOrDefault<Account>("where account = @0",
-                new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account });
-            record.Physician = phyRepository.GetByNPI(record.ProviderId);
+                new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account.AccountNo });
 
-            if(record == null)
+            if (record == null)
             {
                 //there was not a pat record, so no need to proceed.
                 return new Pat();
             }
 
-            if (accRecord.TransactionDate == null)
-            {
-                Log.Instance.Fatal("Transaction date was not valid.");
-                this.Errors = "Transaction date is not valid.";
-            }
+            record.Physician = phyRepository.GetByNPI(record.ProviderId);
 
-            if(!Str.ParseName(record.PatFullName, out string strLastName, out string strFirstName, out string strMidName, out string strSuffix))
+            if (!Str.ParseName(record.PatFullName, out string strLastName, out string strFirstName, out string strMidName, out string strSuffix))
             {
                 this.Errors = $"Patient name could not be parsed. {record.PatFullName} {record.AccountNo}";
             }
@@ -67,7 +71,7 @@ namespace LabBilling.Core.DataAccess
                 record.PatNameSuffix = strSuffix;
             }
 
-            if(!Str.ParseName(record.GuarantorFullName, out string strGuarLastName, out string strGuarFirstName, out string strGuarMidName, out string strGuarSuffix))
+            if (!Str.ParseName(record.GuarantorFullName, out string strGuarLastName, out string strGuarFirstName, out string strGuarMidName, out string strGuarSuffix))
             {
                 if (!string.IsNullOrEmpty(this.Errors))
                     this.Errors += Environment.NewLine;
@@ -93,7 +97,7 @@ namespace LabBilling.Core.DataAccess
                 record.ZipCode = strZip;
             }
 
-            string amaYear = FunctionRepository.GetAMAYear(accRecord.TransactionDate.GetValueOrDefault(DateTime.Now));
+            string amaYear = FunctionRepository.GetAMAYear(account.TransactionDate.GetValueOrDefault(DateTime.Now));
             record.Diagnoses = new List<PatDiag>();
             if (record.Dx1 != null && record.Dx1 != "")
             {
@@ -173,7 +177,7 @@ namespace LabBilling.Core.DataAccess
             foreach (PatDiag dx in pat.Diagnoses)
             {
                 //check the individual dx code and update
-                switch(dx.No)
+                switch (dx.No)
                 {
                     case 1:
                         pat.Dx1 = dx.Code;
@@ -204,7 +208,7 @@ namespace LabBilling.Core.DataAccess
                         break;
                     default:
                         break;
-                }                                   
+                }
             }
             if (dbConnection.Update(pat) > 0)
             {
@@ -215,6 +219,39 @@ namespace LabBilling.Core.DataAccess
                 return false;
             }
 
+        }
+
+        public override bool Save(Pat table)
+        {
+            try
+            {
+                if (this.RecordExists(table.AccountNo))
+                    this.Update(table);
+                else
+                    this.Add(table);
+            }
+            catch(Exception ex)
+            {
+                throw new ApplicationException("Error in PatRepository.Save", ex);
+            }
+            return true;
+        }
+
+        public override object Add(Pat table)
+        {
+            table.GuarantorFullName =
+                String.Format("{0},{1} {2} {3}",
+                table.GuarantorLastName,
+                table.GuarantorFirstName,
+                table.GuarantorMiddleName,
+                table.GuarantorNameSuffix);
+            table.GuarantorFullName = table.GuarantorFullName.Trim();
+
+            table.GuarantorCityState = $"{table.GuarantorCity}, {table.GuarantorState} {table.GuarantorZipCode}";
+
+            table.CityStateZip = $"{table.City}, {table.State} {table.ZipCode}";
+
+            return base.Add(table);
         }
 
         public override bool Update(Pat table)

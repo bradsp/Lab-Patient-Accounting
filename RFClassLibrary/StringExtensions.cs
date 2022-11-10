@@ -10,6 +10,34 @@ namespace RFClassLibrary
     public static class StringExtensions
     {
         /// <summary>
+        /// Returns the leftmost number of characters from a string
+        /// </summary>
+        /// <param name="str"></param>
+        /// <param name="numChar"></param>
+        /// <returns></returns>
+        public static string Left(this string str, int numChar)
+        {
+            return str.Substring(0, numChar);
+        }
+
+
+        /// <summary>
+        /// Returns the right-most number of characters from a string
+        /// </summary>
+        /// <param name="str"></param>
+        /// <param name="numChar"></param>
+        /// <returns></returns>
+        public static string Right(this string str, int numChar)
+        {
+            int len = str.Length;
+
+
+            return str.Substring(len - numChar);
+        }
+
+
+
+        /// <summary>
         /// This is the extension method.
         /// The first parameter takes the "this" modifier and specifies the type for which the method is defined.
         /// </summary>

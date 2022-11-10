@@ -40,14 +40,17 @@ namespace LabBilling.Forms
             var source = new BindingSource(searchBindingList, null);
 
             PersonAccountResults.DataSource = source;
-            PersonAccountResults.Columns[nameof(AccountSearch.mod_date)].Visible = false;
-            PersonAccountResults.Columns[nameof(AccountSearch.mod_host)].Visible = false;
-            PersonAccountResults.Columns[nameof(AccountSearch.mod_prg)].Visible = false;
-            PersonAccountResults.Columns[nameof(AccountSearch.mod_user)].Visible = false;
-            PersonAccountResults.Columns[nameof(AccountSearch.rowguid)].Visible = false;
-            PersonAccountResults.Columns[nameof(AccountSearch.ValidationStatus)].Visible = false;
-            PersonAccountResults.Columns[nameof(AccountSearch.PrimaryInsCode)].Visible = false;
-            PersonAccountResults.Columns[nameof(AccountSearch.LastValidationDate)].Visible = false;
+            PersonAccountResults.SetColumnsVisibility(false);
+
+
+            PersonAccountResults.Columns[nameof(AccountSearch.Account)].Visible = true;
+            PersonAccountResults.Columns[nameof(AccountSearch.Name)].Visible = true;
+            PersonAccountResults.Columns[nameof(AccountSearch.DateOfBirth)].Visible = true;
+            PersonAccountResults.Columns[nameof(AccountSearch.Sex)].Visible = true;
+            PersonAccountResults.Columns[nameof(AccountSearch.ServiceDate)].Visible = true;
+            PersonAccountResults.Columns[nameof(AccountSearch.Balance)].Visible = true;
+            PersonAccountResults.Columns[nameof(AccountSearch.FinCode)].Visible = true;
+            PersonAccountResults.Columns[nameof(AccountSearch.ClientMnem)].Visible = true;
 
             PersonAccountResults.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
             PersonAccountResults.Columns[nameof(AccountSearch.Name)].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;

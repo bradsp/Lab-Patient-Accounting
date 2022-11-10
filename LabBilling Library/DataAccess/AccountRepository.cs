@@ -22,6 +22,7 @@ namespace LabBilling.Core.DataAccess
         private readonly ChrgRepository chrgRepository;
         private readonly ChkRepository chkRepository;
         private readonly ClientRepository clientRepository;
+        private readonly ClientDiscountRepository clientDiscountRepository;
         private readonly AccountNoteRepository accountNoteRepository;
         private readonly BillingActivityRepository billingActivityRepository;
         private readonly AccountValidationRuleRepository accountValidationRuleRepository;
@@ -31,6 +32,7 @@ namespace LabBilling.Core.DataAccess
         private readonly FinRepository finRepository;
         private readonly SystemParametersRepository systemParametersRepository;
         private readonly AccountLmrpErrorRepository accountLmrpErrorRepository;
+        private readonly CdmRepository cdmRepository;
 
         public AccountRepository(string connectionString) : base(connectionString)
         {
@@ -40,6 +42,7 @@ namespace LabBilling.Core.DataAccess
             chrgRepository = new ChrgRepository(_connection);
             chkRepository = new ChkRepository(_connection);
             clientRepository = new ClientRepository(_connection);
+            clientDiscountRepository = new ClientDiscountRepository(_connection);
             accountNoteRepository = new AccountNoteRepository(_connection);
             billingActivityRepository = new BillingActivityRepository(_connection);
             accountValidationRuleRepository = new AccountValidationRuleRepository(_connection);
@@ -49,6 +52,7 @@ namespace LabBilling.Core.DataAccess
             lmrpRuleRepository = new LMRPRuleRepository(_connection);
             finRepository = new FinRepository(_connection);
             systemParametersRepository = new SystemParametersRepository(_connection);
+            cdmRepository = new CdmRepository(_connection);
         }
 
         public AccountRepository(PetaPoco.Database db) : base(db)
@@ -59,6 +63,7 @@ namespace LabBilling.Core.DataAccess
             chrgRepository = new ChrgRepository(db);
             chkRepository = new ChkRepository(db);
             clientRepository = new ClientRepository(db);
+            clientDiscountRepository = new ClientDiscountRepository(db);
             accountNoteRepository = new AccountNoteRepository(db);
             billingActivityRepository = new BillingActivityRepository(db);
             accountValidationRuleRepository = new AccountValidationRuleRepository(db);
@@ -68,6 +73,7 @@ namespace LabBilling.Core.DataAccess
             lmrpRuleRepository = new LMRPRuleRepository(db);
             finRepository = new FinRepository(db);
             systemParametersRepository = new SystemParametersRepository(db);
+            cdmRepository = new CdmRepository(db);
         }
 
         public override Account GetById(int id)
@@ -86,27 +92,18 @@ namespace LabBilling.Core.DataAccess
             if (record == null)
                 return null;
 
-            //if(!Str.ParseName(record.PatFullName, out string strLastName, out string strFirstName, out string strMiddleName, out string strSuffix))
-            //{
-            //    this.Errors = string.Format("Patient name could not be parsed. {0} {1}\n", record.PatFullName, record.AccountNo);
-            //}
-            //else
-            //{
-            //    record.PatLastName = strLastName;
-            //    record.PatFirstName = strFirstName;
-            //    record.PatMiddleName = strMiddleName;
-            //    record.PatNameSuffix = strSuffix;
-            //}
-
             if (!string.IsNullOrEmpty(record.ClientMnem))
             {
-                record.Client = clientRepository.GetClient(record.ClientMnem);
-                record.ClientName = record.Client.Name;
+                if (record.ClientMnem != "K")
+                {
+                    record.Client = clientRepository.GetClient(record.ClientMnem);
+                    record.ClientName = record.Client.Name;
+                }
             }
 
             if (!demographicsOnly)
             {
-                record.Pat = patRepository.GetByAccount(account);
+                record.Pat = patRepository.GetByAccount(record);
                 record.Insurances = insRepository.GetByAccount(account);
                 record.InsurancePrimary = insRepository.GetByAccount(account, InsCoverage.Primary);
                 record.InsuranceSecondary = insRepository.GetByAccount(account, InsCoverage.Secondary);
@@ -210,8 +207,33 @@ namespace LabBilling.Core.DataAccess
         public override object Add(Account table)
         {
             Log.Instance.Trace($"Entering - account {table.AccountNo}");
-            patRepository.Add(table.Pat);
-            return base.Add(table);
+
+            BeginTransaction();
+
+            base.Add(table);
+
+            //make sure Pat record has an account number
+            if (table.Pat.AccountNo != table.AccountNo)
+                table.Pat.AccountNo = table.AccountNo;
+
+            var pat = patRepository.GetByAccount(table);
+            if (pat == null)
+                patRepository.Add(table.Pat);
+            else
+                patRepository.Update(table.Pat);
+
+            foreach (Ins ins in table.Insurances)
+            {
+                if (ins.Account != table.AccountNo)
+                    ins.Account = table.AccountNo;
+
+                insRepository.Save(ins);
+            }
+
+            table.PatFullName = table.PatNameDisplay;
+            table.Status = "NEW";
+
+            return table;
         }
 
         public void AddAccount(Account acc)
@@ -286,13 +308,7 @@ namespace LabBilling.Core.DataAccess
         {
             Log.Instance.Trace($"Entering - account {table.AccountNo}");
             //generate full name field from name parts
-            table.PatFullName = String.Format("{0},{1} {2} {3}",
-                table.PatLastName,
-                table.PatFirstName,
-                table.PatMiddleName,
-                table.PatNameSuffix);
-
-            table.PatFullName = table.PatFullName.Trim();
+            table.PatFullName = table.PatNameDisplay;
 
             Log.Instance.Trace("Exiting");
             return base.Update(table);
@@ -318,7 +334,7 @@ namespace LabBilling.Core.DataAccess
         {
             if(patRepository.SaveDiagnoses(acc.Pat))
             {
-                acc.Pat = patRepository.GetByAccount(acc.AccountNo);
+                acc.Pat = patRepository.GetByAccount(acc);
                 return true;
             }
             return false;
@@ -541,6 +557,20 @@ namespace LabBilling.Core.DataAccess
             return updateSuccess;
         }
 
+        public int AddCharge(string account, string cdm, int qty, DateTime serviceDate, string comment = null, string refNumber = null)
+        {
+            Log.Instance.Trace($"Entering - account {account} cdm {cdm}");
+
+            //verify the account exists - if not return -1
+            Account accData = GetByAccount(account);
+            if (accData == null)
+            {
+                Log.Instance.Error($"Account {account} not found");
+                throw new AccountNotFoundException("Account not found.", account);
+            }
+
+            return AddCharge(accData, cdm, qty, serviceDate, comment, refNumber);
+        }
 
         /// <summary>
         /// Add a charge to an account. The account must exist.
@@ -550,19 +580,10 @@ namespace LabBilling.Core.DataAccess
         /// <param name="qty"></param>
         /// <param name="comment"></param>
         /// <returns>Charge number of newly entered charge or < 0 if an error occurs.</returns>
-        public int AddCharge(string account, string cdm, int qty, DateTime serviceDate, string comment = null, string refNumber = null)
+        public int AddCharge(Account accData, string cdm, int qty, DateTime serviceDate, string comment = null, string refNumber = null)
         {
-            Log.Instance.Trace($"Entering - account {account} cdm {cdm}");
-            CdmRepository cdmRepository = new CdmRepository(dbConnection);
-            FinRepository finRepository = new FinRepository(dbConnection);
+            Log.Instance.Trace($"Entering - account {accData.AccountNo} cdm {cdm}");
 
-            //verify the account exists - if not return -1
-            Account accData = GetByAccount(account);
-            if (accData == null)
-            {
-                Log.Instance.Error($"Account {account} not found");
-                throw new AccountNotFoundException("Account not found.", account);
-            } 
             //get the cdm number - if cdm number is not found - abort
             Cdm cdmData = cdmRepository.GetCdm(cdm);
             if (cdmData == null)
@@ -572,14 +593,14 @@ namespace LabBilling.Core.DataAccess
             }
 
             Fin fin = finRepository.GetFin(accData.FinCode);
-
+            if(fin == null)
+            {
+                throw new ApplicationException($"No fincode on account {accData.AccountNo}");
+            }
             Chrg chrg = new Chrg();
 
-            //split the patient name
-            RFClassLibrary.Str.ParseName(accData.PatFullName, out string ln, out string fn, out string mn, out string suffix);
-
             //now build the charge & detail records
-            chrg.AccountNo = account;
+            chrg.AccountNo = accData.AccountNo;
             chrg.Action = "";
             chrg.BillMethod = fin.ClaimType;
             chrg.CDMCode = cdm;
@@ -588,9 +609,9 @@ namespace LabBilling.Core.DataAccess
             chrg.Facility = "";
             chrg.FinCode = accData.FinCode;
             chrg.FinancialType = fin.FinClass;
-            chrg.PatFirstName = fn;
-            chrg.PatLastName = ln;
-            chrg.PatMiddleName = mn;
+            chrg.PatFirstName = accData.PatFirstName;
+            chrg.PatLastName = accData.PatLastName;
+            chrg.PatMiddleName = accData.PatMiddleName;
             chrg.OrderMnem = cdmData.Mnem;
             chrg.LISReqNo = refNumber;
             chrg.OrderingSite = "";
@@ -605,12 +626,37 @@ namespace LabBilling.Core.DataAccess
             chrg.UnitNo = accData.EMPINumber;
             chrg.ResponsibleProvider = "";
 
+            List<ICdmDetail> feeSched = null;
+
+            switch (accData.Client.FeeSchedule)
+            {
+                case "1":
+                    feeSched = cdmData.CdmFeeSchedule1;
+                    break;
+                case "2":
+                    feeSched = cdmData.CdmFeeSchedule2;
+                    break;
+                case "3":
+                    feeSched = cdmData.CdmFeeSchedule3;
+                    break;
+                case "4":
+                    feeSched = cdmData.CdmFeeSchedule4;
+                    break;
+                case "5":
+                    feeSched = cdmData.CdmFeeSchedule5;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException("FeeSchedule");
+                    //break;
+            }
+
+
             //need to determine the correct fee schedule - for now default to 1
             double ztotal = 0.0;
             double amtTotal = 0.0;
             double retailTotal = 0.0;
 
-            foreach (CdmFeeSchedule1 fee in cdmData.CdmFeeSchedule1)
+            foreach (CdmDetail fee in feeSched)
             {
                 ChrgDetail chrgDetail = new ChrgDetail();
                 chrgDetail.Cpt4 = fee.Cpt4;
@@ -623,7 +669,14 @@ namespace LabBilling.Core.DataAccess
                         ztotal += fee.ZClassPrice;
                         break;
                     case "C":
-                        chrgDetail.Amount = fee.CClassPrice;
+                        //todo: calculate client discount
+                        var cliDiscount = accData.Client.Discounts.Find(c => c.StartCdmRange == cdm);
+                        double discountPercentage = accData.Client.DefaultDiscount;
+                        if(cliDiscount != null)
+                        {
+                            discountPercentage = cliDiscount.PercentDiscount;
+                        }
+                        chrgDetail.Amount = fee.CClassPrice - (fee.CClassPrice * (discountPercentage/100));
                         retailTotal += fee.CClassPrice;
                         ztotal += fee.ZClassPrice;
                         break;

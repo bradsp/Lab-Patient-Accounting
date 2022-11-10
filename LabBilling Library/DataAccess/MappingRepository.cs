@@ -57,10 +57,8 @@ namespace LabBilling.Core.DataAccess
             Log.Instance.Trace("Entering");
 
             var sql = PetaPoco.Sql.Builder
-                .Append("SELECT * ")
-                .Append($"FROM {_tableName} ")
-                .Append("WHERE return_value_type = @0 ", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = codeSet })
-                .Append("AND sending_system = @0 ", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = sendingSystem });
+                .Where("return_value_type = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = codeSet })
+                .Where("sending_system = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = sendingSystem });
 
             var records = dbConnection.Fetch<Mapping>(sql);
 
@@ -71,16 +69,30 @@ namespace LabBilling.Core.DataAccess
         {
             Log.Instance.Trace("Entering");
 
+            if (codeSet == null)
+                throw new ArgumentNullException(codeSet);
+            if (sendingSystem == null)
+                throw new ArgumentNullException(sendingSystem);
+            if (sendingValue == null)
+                throw new ArgumentNullException(sendingValue);
+
+            if (string.IsNullOrEmpty(codeSet))
+                throw new ArgumentOutOfRangeException(codeSet);
+            if (string.IsNullOrEmpty(sendingSystem))
+                throw new ArgumentOutOfRangeException(sendingSystem);
+            if (string.IsNullOrEmpty(sendingValue))
+                throw new ArgumentOutOfRangeException(sendingValue);
+
             var sql = PetaPoco.Sql.Builder
-                .Append("SELECT * ")
-                .Append($"FROM {_tableName} ")
-                .Append("WHERE return_value_type = @0 ", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = codeSet })
-                .Append("AND sending_system = @0 ", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = sendingSystem })
-                .Append("AND sending_value = @0 ", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = sendingValue });
+                .Where("return_value_type = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = codeSet })
+                .Where("sending_system = @0 ", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = sendingSystem })
+                .Where("sending_value = @0 ", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = sendingValue });
 
-            var record = dbConnection.SingleOrDefault<Mapping>(sql);
+            var record = dbConnection.FirstOrDefault<Mapping>(sql);
 
-            string retVal = record.return_value;
+            string retVal = string.Empty;
+            if(record != null)
+                retVal = record.return_value;
 
             return retVal;
 

@@ -22,6 +22,9 @@ namespace LabBilling.Core.Models
         [Column("mri")]
         public string MRN { get; set; }
 
+        /// <summary>
+        /// Patient Full name as stored in database. This will be deprecated.
+        /// </summary>
         [Column("pat_name")]
         public string PatFullName { get; set; }
         [Column("last_name")]
@@ -114,6 +117,27 @@ namespace LabBilling.Core.Models
         public string FullInfo => $"{AccountNo} {PatFullName} {ClientMnem} {TransactionDate}";
         [Ignore]
         public string ClientName { get; set; }
+
+
+
+        /// <summary>
+        /// Generates full name display from name parts.
+        /// </summary>
+        [Ignore]
+        public string PatNameDisplay
+        {
+            get
+            {
+                if(string.IsNullOrEmpty(PatNameSuffix))
+                {
+                    return $"{PatLastName},{PatFirstName} {PatMiddleName}".TrimEnd();
+                }
+                else
+                {
+                    return $"{PatLastName} {PatNameSuffix},{PatFirstName} {PatMiddleName}".TrimEnd();
+                }
+            }
+        }
 
         [Ignore]
         public List<string> cpt4List

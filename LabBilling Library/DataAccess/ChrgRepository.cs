@@ -25,6 +25,11 @@ namespace LabBilling.Core.DataAccess
             cdmRepository = new CdmRepository(db);
         }
 
+        /// <summary>
+        /// Get a single charge record by the charge number.
+        /// </summary>
+        /// <param name="id">Charge number</param>
+        /// <returns></returns>
         public override Chrg GetById(int id)
         {
             var sql = PetaPoco.Sql.Builder
@@ -45,6 +50,13 @@ namespace LabBilling.Core.DataAccess
             return chrg;
         }
 
+        /// <summary>
+        /// Get charge records for an account.
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="showCredited">True to include credited charges. False to include only active charges.</param>
+        /// <param name="includeInvoiced"></param>
+        /// <returns></returns>
         public List<Chrg> GetByAccount(string account, bool showCredited = true, bool includeInvoiced = true)
         {
             Log.Instance.Debug($"Entering - account {account}");
@@ -70,7 +82,7 @@ namespace LabBilling.Core.DataAccess
             
             foreach(Chrg chrg in result)
             {
-                chrg.Cdm = cdmRepository.GetCdm(chrg.CDMCode);
+                chrg.Cdm = cdmRepository.GetCdm(chrg.CDMCode, true);
                 foreach(ChrgDetail detail in chrg.ChrgDetails)
                 {
                     detail.RevenueCodeDetail = revenueCodeRepository.GetByCode(detail.RevenueCode);
@@ -81,8 +93,15 @@ namespace LabBilling.Core.DataAccess
             return result;
         }
 
+        /// <summary>
+        /// Credit a charge.
+        /// </summary>
+        /// <param name="chrgNum"></param>
+        /// <param name="comment"></param>
+        /// <returns></returns>
         public int CreditCharge(int chrgNum, string comment = "")
         {
+            Log.Instance.Trace($"Entering - chrg number {chrgNum} comment {comment}");
             // usp_prg_ReverseCharge            
             int retVal = dbConnection.ExecuteNonQueryProc("usp_prg_ReverseChargeOnly", 
                 new SqlParameter() { ParameterName="chrgNum", SqlDbType = SqlDbType.Decimal, Value = chrgNum }, 
@@ -119,9 +138,13 @@ namespace LabBilling.Core.DataAccess
                 Log.Instance.Fatal($"Error in AddCharge - {chrg.AccountNo}", ex);
                 throw new ApplicationException("Error in AddCharge", ex);
             }
-
         }
 
+        /// <summary>
+        /// Gets charges to be included on a client invoice.
+        /// </summary>
+        /// <param name="account"></param>
+        /// <returns></returns>
         public List<InvoiceChargeView> GetInvoiceCharges(string account)
         {
             Log.Instance.Trace($"Entering - {account}");
@@ -137,6 +160,12 @@ namespace LabBilling.Core.DataAccess
 
         }
 
+        /// <summary>
+        /// Sets the invoice number on a charge
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="invoiceNo"></param>
+        /// <exception cref="ApplicationException"></exception>
         public void SetChargeInvoiceStatus(string account, string invoiceNo)
         {
             Log.Instance.Trace($"Entering - account {account} invoice {invoiceNo}");
@@ -159,10 +188,8 @@ namespace LabBilling.Core.DataAccess
                         Log.Instance.Error(ex);
                         throw new ApplicationException("Error in SetChargeInvoiceStatus", ex);
                     }
-
                 }
             }
-
         }
 
         /// <summary>

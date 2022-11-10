@@ -29,7 +29,7 @@
     <InstallUrl>\\wthmclbill\installations%24\LabBilling\</InstallUrl>
     <ProductName>Lab Outreach Patient Accounting</ProductName>
     <PublisherName>West Tennessee Healthcare</PublisherName>
-    <ApplicationRevision>32</ApplicationRevision>
+    <ApplicationRevision>34</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
@@ -71,10 +71,6 @@
     <ApplicationIcon>logoicon2.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.SqlServer.Smo, Version=12.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Program Files (x86)\Microsoft SQL Server\120\SDK\Assemblies\Microsoft.SqlServer.Smo.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="PresentationCore" />
     <Reference Include="System" />
@@ -313,27 +309,6 @@
     <Compile Include="UserControls\LabeledTextBox.Designer.cs">
       <DependentUpon>LabeledTextBox.cs</DependentUpon>
     </Compile>
-    <Compile Include="Library\MasterGridView\cModule.cs" />
-    <Compile Include="Library\MasterGridView\ConfigChildGrid.cs" />
-    <Compile Include="Library\MasterGridView\DataGridColumnFactory.cs" />
-    <Compile Include="Library\MasterGridView\DetailTabControl.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Library\MasterGridView\MasterGridView.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Library\MasterGridView\MasterGridViewResource.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>MasterGridViewResource.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Library\MasterGridView\TNumEditBox.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Library\MasterGridView\TNumEditDataGridViewElements.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Library\MasterGridView\TypeMethods.cs" />
     <Compile Include="UserControls\MenuButton.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -683,10 +658,6 @@
     <EmbeddedResource Include="Forms\PersonSearchForm.resx">
       <DependentUpon>PersonSearchForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Library\MasterGridView\MasterGridViewResource.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>MasterGridViewResource.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
     <EmbeddedResource Include="UserControls\InsuranceLookup.resx">
       <DependentUpon>InsuranceLookup.cs</DependentUpon>
     </EmbeddedResource>
@@ -709,10 +680,7 @@
     <EmbeddedResource Include="Forms\UserSecurity.resx">
       <DependentUpon>UserSecurity.cs</DependentUpon>
     </EmbeddedResource>
-    <Content Include="Library\MasterGridView\collapsed.gif" />
-    <Content Include="Library\MasterGridView\expanded.gif" />
     <Content Include="logoicon2.ico" />
-    <Content Include="MstGrid.dll" />
     <Content Include="NLog.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -773,10 +741,10 @@
       <Version>4.7.0</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Caching.Memory">
-      <Version>6.0.1</Version>
+      <Version>7.0.0</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions">
-      <Version>6.0.2</Version>
+      <Version>7.0.0</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.SqlServer.SqlManagementObjects">
       <Version>170.8.0</Version>
@@ -784,23 +752,20 @@
     <PackageReference Include="Newtonsoft.Json">
       <Version>13.0.1</Version>
     </PackageReference>
-    <PackageReference Include="nhapi">
-      <Version>3.1.1</Version>
-    </PackageReference>
     <PackageReference Include="NLog">
-      <Version>5.0.4</Version>
+      <Version>5.0.5</Version>
     </PackageReference>
     <PackageReference Include="NLog.Database">
-      <Version>5.0.4</Version>
+      <Version>5.0.5</Version>
     </PackageReference>
     <PackageReference Include="NLog.Schema">
-      <Version>5.0.4</Version>
+      <Version>5.0.5</Version>
     </PackageReference>
     <PackageReference Include="PetaPoco.Compiled">
       <Version>6.0.532</Version>
     </PackageReference>
     <PackageReference Include="System.Data.SqlClient">
-      <Version>4.8.4</Version>
+      <Version>4.8.5</Version>
     </PackageReference>
     <PackageReference Include="System.Memory">
       <Version>4.5.5</Version>

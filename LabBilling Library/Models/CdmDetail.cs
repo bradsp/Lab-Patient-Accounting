@@ -8,251 +8,36 @@ using PetaPoco;
 namespace LabBilling.Core.Models
 {
     [TableName("cpt4")]
-    public class CdmFeeSchedule1
+    public class CdmFeeSchedule1 : CdmDetail, ICdmDetail
     {
-        public Guid rowguid { get; set; }
-
-        [Column("deleted")]
-        public bool IsDeleted { get; set; }
-
-        [Column("cdm")]
-        public string ChargeItemId { get; set; }
-
-        [Column("link")]
-        public int Link { get; set; }
-
-        [Column("code_flag")]
-        public string CodeFlag { get; set; }
-
-        [Column("cpt4")]
-        public string Cpt4 { get; set; }
-
-        [Column("descript")]
-        public string Description { get; set; }
-
-        [Column("mprice")]
-        public double MClassPrice { get; set; }
-
-        [Column("cprice")]
-        public double CClassPrice { get; set; }
-
-        [Column("zprice")]
-        public double ZClassPrice { get; set; }
-
-        [Column("rev_code")]
-        public string RevenueCode { get; set; }
-
-        [Column("type")]
-        public string Type { get; set; }
-
-        [Column("modi")]
-        public string Modifier { get; set; }
-
-        [Column("billcode")]
-        public string BillCode { get; set; }
-
-        [Column("mod_date")]
-        public DateTime? mod_date { get; set; }
-
-        [Column("mod_user")]
-        public string mod_user { get; set; }
-
-        [Column("mod_prg")]
-        public string mod_prg { get; set; }
-
-        [Column("mod_host")]
-        public string mod_host { get; set; }
-
-        [Column("cost")]
-        public decimal Cost { get; set; }
 
     }
 
     [TableName("cpt4_2")]
-    public class CdmFeeSchedule2
+    public class CdmFeeSchedule2 : CdmDetail, ICdmDetail
     {
-        public Guid rowguid { get; set; }
-
-        [Column("deleted")]
-        public bool IsDeleted { get; set; }
-
-        [Column("cdm")]
-        public string ChargeItemId { get; set; }
-
-        [Column("link")]
-        public int Link { get; set; }
-
-        [Column("code_flag")]
-        public string CodeFlag { get; set; }
-
-        [Column("cpt4")]
-        public string Cpt4 { get; set; }
-
-        [Column("descript")]
-        public string Description { get; set; }
-
-        [Column("mprice")]
-        public double MClassPrice { get; set; }
-
-        [Column("cprice")]
-        public double CClassPrice { get; set; }
-
-        [Column("zprice")]
-        public double ZClassPrice { get; set; }
-
-        [Column("rev_code")]
-        public string RevenueCode { get; set; }
-
-        [Column("type")]
-        public string Type { get; set; }
-
-        [Column("modi")]
-        public string Modifier { get; set; }
-
-        [Column("billcode")]
-        public string BillCode { get; set; }
-
-        [Column("mod_date")]
-        public DateTime? mod_date { get; set; }
-
-        [Column("mod_user")]
-        public string mod_user { get; set; }
-
-        [Column("mod_prg")]
-        public string mod_prg { get; set; }
-
-        [Column("mod_host")]
-        public string mod_host { get; set; }
-
-        [Column("cost")]
-        public decimal Cost { get; set; }
 
     }
 
     [TableName("cpt4_3")]
-    public class CdmFeeSchedule3
+    public class CdmFeeSchedule3 : CdmDetail, ICdmDetail
     {
-        public Guid rowguid { get; set; }
-
-        [Column("deleted")]
-        public bool IsDeleted { get; set; }
-
-        [Column("cdm")]
-        public string ChargeItemId { get; set; }
-
-        [Column("link")]
-        public int Link { get; set; }
-
-        [Column("code_flag")]
-        public string CodeFlag { get; set; }
-
-        [Column("cpt4")]
-        public string Cpt4 { get; set; }
-
-        [Column("descript")]
-        public string Description { get; set; }
-
-        [Column("mprice")]
-        public double MClassPrice { get; set; }
-
-        [Column("cprice")]
-        public double CClassPrice { get; set; }
-
-        [Column("zprice")]
-        public double ZClassPrice { get; set; }
-
-        [Column("rev_code")]
-        public string RevenueCode { get; set; }
-
-        [Column("type")]
-        public string Type { get; set; }
-
-        [Column("modi")]
-        public string Modifier { get; set; }
-
-        [Column("billcode")]
-        public string BillCode { get; set; }
-
-        [Column("mod_date")]
-        public DateTime? mod_date { get; set; }
-
-        [Column("mod_user")]
-        public string mod_user { get; set; }
-
-        [Column("mod_prg")]
-        public string mod_prg { get; set; }
-
-        [Column("mod_host")]
-        public string mod_host { get; set; }
-
-        [Column("cost")]
-        public decimal Cost { get; set; }
 
     }
 
     [TableName("cpt4_4")]
-    public class CdmFeeSchedule4
+    public class CdmFeeSchedule4 : CdmDetail, ICdmDetail
     {
-        public Guid rowguid { get; set; }
-
-        [Column("deleted")]
-        public bool IsDeleted { get; set; }
-
-        [Column("cdm")]
-        public string ChargeItemId { get; set; }
-
-        [Column("link")]
-        public int Link { get; set; }
-
-        [Column("code_flag")]
-        public string CodeFlag { get; set; }
-
-        [Column("cpt4")]
-        public string Cpt4 { get; set; }
-
-        [Column("descript")]
-        public string Description { get; set; }
-
-        [Column("mprice")]
-        public double MClassPrice { get; set; }
-
-        [Column("cprice")]
-        public double CClassPrice { get; set; }
-
-        [Column("zprice")]
-        public double ZClassPrice { get; set; }
-
-        [Column("rev_code")]
-        public string RevenueCode { get; set; }
-
-        [Column("type")]
-        public string Type { get; set; }
-
-        [Column("modi")]
-        public string Modifier { get; set; }
-
-        [Column("billcode")]
-        public string BillCode { get; set; }
-
-        [Column("mod_date")]
-        public DateTime? mod_date { get; set; }
-
-        [Column("mod_user")]
-        public string mod_user { get; set; }
-
-        [Column("mod_prg")]
-        public string mod_prg { get; set; }
-
-        [Column("mod_host")]
-        public string mod_host { get; set; }
-
-        [Column("cost")]
-        public decimal Cost { get; set; }
 
     }
 
     [TableName("cpt4_5")]
-    public class CdmFeeSchedule5
+    public class CdmFeeSchedule5 : CdmDetail, ICdmDetail
+    {
+
+    }
+
+    public class CdmDetail : ICdmDetail
     {
         public Guid rowguid { get; set; }
 
@@ -311,4 +96,46 @@ namespace LabBilling.Core.Models
         public decimal Cost { get; set; }
 
     }
+
+    public interface ICdmDetail
+    {
+        Guid rowguid { get; set; }
+
+        bool IsDeleted { get; set; }
+
+        string ChargeItemId { get; set; }
+
+        int Link { get; set; }
+
+        string CodeFlag { get; set; }
+
+        string Cpt4 { get; set; }
+
+        string Description { get; set; }
+
+        double MClassPrice { get; set; }
+
+        double CClassPrice { get; set; }
+
+        double ZClassPrice { get; set; }
+
+        string RevenueCode { get; set; }
+
+        string Type { get; set; }
+
+        string Modifier { get; set; }
+
+        string BillCode { get; set; }
+
+        DateTime? mod_date { get; set; }
+
+        string mod_user { get; set; }
+
+        string mod_prg { get; set; }
+
+        string mod_host { get; set; }
+
+        decimal Cost { get; set; }
+    }
+        
 }

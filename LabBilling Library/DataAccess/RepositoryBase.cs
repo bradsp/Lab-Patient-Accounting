@@ -23,6 +23,7 @@ namespace LabBilling.Core.DataAccess
         protected readonly string _tableName;
         protected IList<string> _fields;
         protected TableInfo _tableInfo;
+        protected bool transactionStarted = false;
         /// <summary>
         /// Contains error messages as a result of actions.
         /// </summary>
@@ -93,6 +94,10 @@ namespace LabBilling.Core.DataAccess
             object identity = dbConnection.Insert(table);
             Log.Instance.Debug(dbConnection.LastSQL);
             Log.Instance.Debug(dbConnection.LastArgs);
+
+            if (transactionStarted)
+                CompleteTransaction();
+
             return identity;
         }
 
@@ -121,36 +126,34 @@ namespace LabBilling.Core.DataAccess
             Log.Instance.Trace("Entering");
             List<string> cColumns = new List<string>();
 
-            if (table.mod_date == null)
-            {
-                table.mod_date = DateTime.Now;
-                cColumns.Add(nameof(table.mod_date));
-            }
-            if (table.mod_host == "" || table.mod_host == null)
-            {
-                table.mod_host = Environment.MachineName;
-                cColumns.Add(nameof(table.mod_host));
-            }
-            if (table.mod_prg == "" || table.mod_prg == null)
-            {
-                table.mod_prg = System.AppDomain.CurrentDomain.FriendlyName;
-                cColumns.Add(nameof(table.mod_prg));
-            }
-            if (table.mod_user == "" || table.mod_user == null)
-            {
-                table.mod_user = Environment.UserName.ToString();
-                cColumns.Add(nameof(table.mod_user));
-            }
+            table.mod_date = DateTime.Now;
+            cColumns.Add(nameof(table.mod_date));
+            table.mod_host = Environment.MachineName;
+            cColumns.Add(nameof(table.mod_host));
+            table.mod_prg = System.AppDomain.CurrentDomain.FriendlyName;
+            cColumns.Add(nameof(table.mod_prg));
+            table.mod_user = Environment.UserName.ToString();
+            cColumns.Add(nameof(table.mod_user));
 
             foreach (string column in columns)
             {
-                var pocoData = PocoData.ForType(table.GetType(), dbConnection.DefaultMapper);
-                cColumns.Add(pocoData.GetColumnName(column));
+                if(!cColumns.Contains(column))
+                    cColumns.Add(GetRealColumn(column));
             }
 
-            dbConnection.Update(table, cColumns);
+            try
+            {
+                dbConnection.Update(table, cColumns);
+            }
+            catch(Exception ex)
+            {
+                Log.Instance.Debug(dbConnection.LastSQL);
+                Log.Instance.Debug(dbConnection.LastArgs);
+                throw new ApplicationException("Error during database update.", ex);
+            }
+
             Log.Instance.Debug(dbConnection.LastSQL);
-            Log.Instance.Debug(dbConnection.LastCommand);
+            Log.Instance.Debug(dbConnection.LastArgs);
             return true;        
         }
 
@@ -241,17 +244,20 @@ namespace LabBilling.Core.DataAccess
 
         public virtual void BeginTransaction()
         {
+            transactionStarted = true;
             dbConnection.BeginTransaction();
         }
 
         public virtual void CompleteTransaction()
         {
             dbConnection.CompleteTransaction();
+            transactionStarted = false;
         }
 
         public virtual void AbortTransaction()
         {
             dbConnection.AbortTransaction();
+            transactionStarted = false;
         }
 
         public IEnumerable<TPoco> Find(Expression<Func<TPoco, bool>> predicate)

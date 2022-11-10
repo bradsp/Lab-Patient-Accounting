@@ -44,13 +44,18 @@ namespace LabBilling.Core.DataAccess
 
         public Client GetClient(string clientMnem)
         {
-            Log.Instance.Debug($"Entering");
+            Log.Instance.Debug($"Entering - {clientMnem}");
+            ClientDiscountRepository clientDiscountRepository = new ClientDiscountRepository(dbConnection);
+
             if (clientMnem == null)
             {
                 throw new ArgumentNullException("clientMnem");
             }
 
             var record = dbConnection.SingleOrDefault<Client>("where cli_mnem = @0", new SqlParameter() { SqlDbType = System.Data.SqlDbType.VarChar, Value = clientMnem });
+            Log.Instance.Debug(dbConnection.LastSQL);
+            if (record != null)
+                record.Discounts = clientDiscountRepository.GetByClient(clientMnem);
             Log.Instance.Debug(dbConnection.LastSQL);
             return record;
         }

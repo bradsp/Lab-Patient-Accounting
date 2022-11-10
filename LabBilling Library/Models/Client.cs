@@ -1,5 +1,7 @@
-﻿using PetaPoco;
+﻿using iText.Layout.Element;
+using PetaPoco;
 using System;
+using System.Collections.Generic;
 
 namespace LabBilling.Core.Models
 {
@@ -164,6 +166,9 @@ namespace LabBilling.Core.Models
 
         [Ignore]
         public Guid rowguid { get; set; }
+
+        [Ignore]
+        public List<ClientDiscount> Discounts { get; set; }
 
     }
 }

@@ -6,8 +6,18 @@ using System.Threading.Tasks;
 
 namespace RFClassLibrary
 {
+    /// <summary>
+    /// Extensions for generic Lists
+    /// </summary>
     public static class IListExtension
     {
+        /// <summary>
+        /// Add a list of items to another List
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="list"></param>
+        /// <param name="items"></param>
+        /// <exception cref="ArgumentNullException"></exception>
         public static void AddRange<T>(this IList<T> list, IEnumerable<T> items)
         {
             if (list == null) throw new ArgumentNullException(nameof(list));

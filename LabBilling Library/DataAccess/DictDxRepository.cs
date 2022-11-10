@@ -40,8 +40,7 @@ namespace LabBilling.Core.DataAccess
             var record = dbConnection.SingleOrDefault<DictDx>("where icd9_num = @0 and AMA_year = @1", 
                 new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = dxCode },
                 new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = AMA_year });
-            if(record == null)
-                record = new DictDx();
+
             return record;
         }
 

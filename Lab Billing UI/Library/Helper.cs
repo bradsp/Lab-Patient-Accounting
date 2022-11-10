@@ -297,5 +297,13 @@ namespace LabBilling
             prop.SetValue(control, enabled, null);
         }
 
+        public static void SetColumnsVisibility(this DataGridView dgv, bool visible)
+        {
+            for(int i = 0; i < dgv.ColumnCount; i++)
+            {
+                dgv.Columns[i].Visible = visible;
+            }
+        }
+
     }
 }

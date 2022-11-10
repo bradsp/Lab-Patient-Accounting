@@ -81,14 +81,15 @@ namespace LabBilling.Forms
             CancelValidationButton.Enabled = true;
             CancelValidationButton.Visible = true;
 
-            int cnt = accountTable.Rows.Count;
+            int cnt = accountTable.DefaultView.Count;
             toolStripProgressBar1.Minimum = 0;
             toolStripProgressBar1.Maximum = cnt;
             toolStripProgressBar1.Value = 0;
             Cursor.Current = Cursors.WaitCursor;
 
             tasksRunning = true;
-            foreach (DataRow acc in accountTable.Rows)
+            //foreach (DataRow acc in accountTable.DefaultView)
+            for(int i = 0; i < accountTable.DefaultView.Count; i++)
             {
                 if (requestAbort)
                 {
@@ -97,7 +98,8 @@ namespace LabBilling.Forms
                     break;
                 }
                 toolStripStatusLabel1.Text = $"Validating {toolStripProgressBar1.Value} of {cnt}.";
-                await RunValidationAsync(acc[nameof(AccountSearch.Account)].ToString());
+                await RunValidationAsync(accountTable.DefaultView[i][nameof(AccountSearch.Account)].ToString());
+                //await RunValidationAsync(acc[nameof(AccountSearch.Account)].ToString());
                 accountGrid.Refresh();
                 toolStripProgressBar1.Increment(1);
             }

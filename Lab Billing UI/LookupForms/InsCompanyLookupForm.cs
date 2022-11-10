@@ -14,7 +14,7 @@ namespace LabBilling.Forms
 {
     public partial class InsCompanyLookupForm : Form
     {
-        public int CharacterLookupCountMin { get; set; } = 3;
+        public int CharacterLookupCountMin { get; set; } = 2;
         public List<InsCompany> Datasource { get; set; }
         public string InitialSearchText { get; set; }
         public string SelectedValue { get; set; }
@@ -56,20 +56,17 @@ namespace LabBilling.Forms
                         where insc.PlanName.ToUpper().Contains(searchTextBox.Text.ToUpper()) || insc.InsuranceCode.ToUpper().Equals(searchTextBox.Text.ToUpper())
                         select insc;
 
-                    if (inscQuery.Count() > 0)
-                    {
-                        skipSelectionChanged = true;
-                        resultsDataGrid.DataSource = inscQuery.ToList();
-                        resultsDataGrid.Columns.OfType<DataGridViewColumn>().ToList().ForEach(col => col.Visible = false);
-                        resultsDataGrid.Columns[nameof(InsCompany.PlanName)].Visible = true;
-                        resultsDataGrid.Columns[nameof(InsCompany.InsuranceCode)].Visible = true;
-                        resultsDataGrid.Columns[nameof(InsCompany.Address1)].Visible = true;
-                        resultsDataGrid.Columns[nameof(InsCompany.CityStateZip)].Visible = true;
-                        resultsDataGrid.Columns[nameof(InsCompany.PlanName)].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-                        resultsDataGrid.AutoResizeColumns();
-                        resultsDataGrid.ClearSelection();
-                        skipSelectionChanged = false;
-                    }
+                    skipSelectionChanged = true;
+                    resultsDataGrid.DataSource = inscQuery.ToList();
+                    resultsDataGrid.Columns.OfType<DataGridViewColumn>().ToList().ForEach(col => col.Visible = false);
+                    resultsDataGrid.Columns[nameof(InsCompany.PlanName)].Visible = true;
+                    resultsDataGrid.Columns[nameof(InsCompany.InsuranceCode)].Visible = true;
+                    resultsDataGrid.Columns[nameof(InsCompany.Address1)].Visible = true;
+                    resultsDataGrid.Columns[nameof(InsCompany.CityStateZip)].Visible = true;
+                    resultsDataGrid.Columns[nameof(InsCompany.PlanName)].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+                    resultsDataGrid.AutoResizeColumns();
+                    resultsDataGrid.ClearSelection();
+                    skipSelectionChanged = false;
                 }
             }
         }

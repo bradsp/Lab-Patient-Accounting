@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Globalization;
+using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 
 namespace RFClassLibrary
@@ -108,6 +110,35 @@ namespace RFClassLibrary
                 return dt;
             else
                 return DateTime.MinValue;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dateTime"></param>
+        /// <param name="datestring"></param>
+        /// <returns></returns>
+        public static DateTime ParseHL7Date(this DateTime dateTime, string datestring)
+        {
+
+            if(datestring.Length == 8)
+            {
+                dateTime = DateTime.ParseExact(datestring, "yyyyMMdd", CultureInfo.InvariantCulture);
+            }
+            else if(datestring.Length == 12)
+            {
+                dateTime = DateTime.ParseExact(datestring, "yyyyMMddHHmm", CultureInfo.InvariantCulture);
+            }
+            else if(datestring.Length == 14)
+            {
+                dateTime = DateTime.ParseExact(datestring, "yyyyMMddHHmmss", CultureInfo.InvariantCulture);
+            }
+            else
+            {
+                dateTime = DateTime.MinValue;
+            }
+
+            return dateTime;
         }
 
         /// <summary>
@@ -239,6 +270,11 @@ namespace RFClassLibrary
             return date >= start && date <= end;
         }
 
+        /// <summary>
+        /// Parses string returning a nullable DateTime
+        /// </summary>
+        /// <param name="text"></param>
+        /// <returns></returns>
         public static DateTime? Parse(string text)
         {
             DateTime date;

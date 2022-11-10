@@ -17,7 +17,8 @@ namespace LabBilling.Core.BusinessLogic.Validators
                 .When(c => !c.IsCredited);
 
             RuleForEach(c => c.ChrgDetails)
-                .SetValidator(new ChargeDetailValidator());
+                .SetValidator(new ChargeDetailValidator())
+                .When(c => !c.IsCredited);
         }
 
         private bool NotContainOnlyVenipunctureCharge(List<ChrgDetail> chrgDetails)

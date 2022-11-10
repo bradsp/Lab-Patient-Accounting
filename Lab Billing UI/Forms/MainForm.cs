@@ -683,8 +683,10 @@ namespace LabBilling
         {
             Log.Instance.Trace("Entering");
             InterfaceMonitor frm = new InterfaceMonitor();
-
-            frm.ShowDialog();
+            frm.MdiParent = this;
+            frm.WindowState = FormWindowState.Normal;
+            frm.AutoScroll = true;
+            frm.Show();
             
         }
 

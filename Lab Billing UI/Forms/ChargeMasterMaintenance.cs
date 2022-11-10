@@ -10,6 +10,7 @@ using System.Web.UI.WebControls;
 using System.Windows.Forms;
 using LabBilling.Core.DataAccess;
 using LabBilling.Core.Models;
+using LabBilling.Logging;
 
 namespace LabBilling.Forms
 {
@@ -45,8 +46,9 @@ namespace LabBilling.Forms
         {
             cdms = cdmRepository.GetAll(includeInactiveCheckBox.Checked).OrderBy(c => c.Description).ToList();
             cdmdt = Helper.ConvertToDataTable(cdms);
+            bs.DataSource = cdmdt;
             cdmGrid.VirtualMode = true;
-            cdmGrid.DataSource = cdmdt;
+            cdmGrid.DataSource = bs;
 
             RefreshGrid();
         }
@@ -103,8 +105,34 @@ namespace LabBilling.Forms
         {
             _timer.Stop();
 
-            (cdmGrid.DataSource as DataTable).DefaultView.RowFilter = $"{nameof(Cdm.Description)} like '{filterTextBox.Text.ToUpper()}*'";
+            cdmdt.DefaultView.RowFilter = $"{nameof(Cdm.Description)} like '{filterTextBox.Text.ToUpper()}*'";
 
+        }
+
+        private void cdmGrid_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            string cdm = cdmGrid[nameof(Cdm.ChargeId), e.RowIndex].Value.ToString();
+
+            ChargeMasterEditForm editForm = new ChargeMasterEditForm();
+            editForm.SelectedCdm = cdm;
+
+            if (editForm.ShowDialog() == DialogResult.OK)
+            {
+                Cdm cdmRecord = editForm.cdm;
+                var record = cdmdt.Rows.Find(cdmRecord.ChargeId);
+                try
+                {
+                    cdmRepository.Update(cdmRecord);
+
+                    record = cdmRecord.ToDataRow(record);
+                }
+                catch (Exception ex)
+                {
+                    Log.Instance.Error(ex);
+                    MessageBox.Show("Error updating client. Changes not saved.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                DataCache.Instance.ClearClientCache();
+            }
         }
     }
 }
