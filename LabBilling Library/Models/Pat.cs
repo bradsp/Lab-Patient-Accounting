@@ -26,10 +26,10 @@ namespace LabBilling.Core.Models
         [Ignore]
         public string PatNameSuffix { get; set; }
 
-        [Column("dob_yyyy")]
-        public DateTime? BirthDate { get; set; }
-        [Column("sex")]
-        public string Sex { get; set; }
+        //[Column("dob_yyyy")]
+        //public DateTime? BirthDate { get; set; }
+        //[Column("sex")]
+        //public string Sex { get; set; }
         [Column("pat_marital")]
         public string MaritalStatus { get; set; }
 
@@ -161,10 +161,7 @@ namespace LabBilling.Core.Models
 
 
         [Ignore]
-        public string DOBSex => $"{ BirthDate.GetValueOrDefault().ToShortDateString() } - { Sex }";
-
-        [Ignore]
-        public string AddressLine => $"{ Address1 }, { Address2 }, { CityStateZip }";
+        public string AddressLine => $"{ Address1 }, { Address2 }, {City} {State} {ZipCode}";
 
         [Ignore]
         public string Dx1Desc { get; set; }

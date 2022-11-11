@@ -150,7 +150,7 @@ namespace LabBilling.Forms
 
                 accountNoTextBox.Text = currentAccount.AccountNo;
                 patientNameTextBox.Text = currentAccount.PatFullName;
-                patientDOBTextBox.Text = ((DateTime)(currentAccount.Pat.BirthDate)).ToShortDateString();
+                patientDOBTextBox.Text = ((DateTime)(currentAccount.BirthDate)).ToShortDateString();
                 clientTextBox.Text = currentAccount.ClientName;
                 fincodeTextBox.Text = currentAccount.FinCode;
                 serviceDateTextBox.Text = ((DateTime)(currentAccount.TransactionDate)).ToShortDateString();

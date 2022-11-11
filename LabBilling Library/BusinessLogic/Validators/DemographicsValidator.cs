@@ -28,10 +28,6 @@ namespace LabBilling.Core.BusinessLogic.Validators
                 .Length(2).WithMessage("Patient State {PropertyName} must have 2 characters.");
             RuleFor(a => a.City).NotEmpty().WithMessage("Patient {PropertyName} is empty.");
             RuleFor(a => a.ZipCode).NotEmpty().WithMessage("Patient {PropertyName} is empty.");
-            RuleFor(a => a.BirthDate).NotNull();
-            RuleFor(a => a.Sex)
-                .Must(sex => sex == "M" || sex == "F")
-                .WithMessage("{PropertyName} is not a valid value.");
             RuleFor(a => a.GuarRelationToPatient)
                 .NotEmpty().WithMessage("Guarantor relationship is not selected.");
             RuleFor(a => a.GuarantorLastName)

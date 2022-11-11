@@ -458,8 +458,8 @@ namespace LabBilling.Core.BusinessLogic
                     subscriber.SocSecNumber = ins.CertSSN;
                     if (ins.Relation == "01")
                     {
-                        subscriber.Gender = ins.HolderSex.Coalesce(claimData.claimAccount.Pat.Sex);
-                        subscriber.DateOfBirth = ins.HolderBirthDate ?? claimData.claimAccount.Pat.BirthDate;
+                        subscriber.Gender = ins.HolderSex.Coalesce(claimData.claimAccount.Sex);
+                        subscriber.DateOfBirth = ins.HolderBirthDate ?? claimData.claimAccount.BirthDate;
                         subscriber.Address = ins.HolderStreetAddress.Coalesce(claimData.claimAccount.Pat.Address1);
                         subscriber.Address2 = string.Empty;
                         subscriber.City = ins.HolderCity.Coalesce(claimData.claimAccount.Pat.City);

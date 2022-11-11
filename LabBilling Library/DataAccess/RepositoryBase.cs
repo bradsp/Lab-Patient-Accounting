@@ -95,9 +95,6 @@ namespace LabBilling.Core.DataAccess
             Log.Instance.Debug(dbConnection.LastSQL);
             Log.Instance.Debug(dbConnection.LastArgs);
 
-            if (transactionStarted)
-                CompleteTransaction();
-
             return identity;
         }
 

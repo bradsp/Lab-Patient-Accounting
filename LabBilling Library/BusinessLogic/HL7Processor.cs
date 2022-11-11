@@ -10,6 +10,7 @@ using System.Configuration;
 using iText.Forms.Xfdf;
 using System.Linq;
 using System.Windows.Interop;
+using System.Text.RegularExpressions;
 
 namespace LabBilling.Core.BusinessLogic
 {
@@ -293,20 +294,6 @@ namespace LabBilling.Core.BusinessLogic
                 accountRecord.ClientName = accountRecord.Client.Name;
             }
 
-            if(string.IsNullOrEmpty(accountRecord.FinCode))
-            {
-                Log.Instance.Error($"[ERROR] No fin code");
-                if (accountRecord.ClientMnem == "WTCC")
-                {
-                    accountRecord.FinCode = "Y";
-                }
-                else
-                {
-                    errors.AppendLine($"[ERROR] No fin code");
-                    canFile = false;
-                }
-            }
-
             foreach (var ins in accountRecord.Insurances)
             {
                 var insc = insCompanyRepository.GetByCode(ins.InsCode);
@@ -318,6 +305,27 @@ namespace LabBilling.Core.BusinessLogic
                 else
                 {
                     ins.FinCode = insc.FinancialCode;
+                }
+            }
+
+            if (string.IsNullOrEmpty(accountRecord.FinCode))
+            {
+                Log.Instance.Error($"[ERROR] No fin code");
+                if (accountRecord.ClientMnem == "WTCC")
+                {
+                    accountRecord.FinCode = "Y";
+                }
+                else if (accountRecord.Insurances.Count > 0)
+                {
+                    if (accountRecord.FinCode != accountRecord.Insurances[0].FinCode)
+                    {
+                        accountRecord.FinCode = accountRecord.Insurances[0].FinCode;
+                    }
+                }
+                else
+                {
+                    accountRecord.FinCode = "K";
+                    canFile = canFile & true;
                 }
             }
 
@@ -349,7 +357,14 @@ namespace LabBilling.Core.BusinessLogic
                     // add account
                     accountRepository.Update(accountRecord);
                     patRepository.Save(accountRecord.Pat);
-                    
+                    foreach(var ins in accountRecord.Insurances)
+                    {
+                        if (ins.Account != accountRecord.AccountNo)
+                            ins.Account = accountRecord.AccountNo;
+
+                        insRepository.Save(ins);
+                    }
+
                     statusText = $"{accountRecord.AccountNo} updated.";
                     return (Status.Processed, statusText, errors);
                 }
@@ -452,12 +467,35 @@ namespace LabBilling.Core.BusinessLogic
                 phyRepository.Update(phy);
                 return (Status.Processed, $"Provider updated.", errors);
             }
-
         }
 
         private void ParseMSH()
         {
 
+        }
+
+        private string ValidateZipCode(string value)
+        {
+            Regex validateZipRegex = new Regex("^[0-9]{5}(?:-[0-9]{4})?$");
+            
+            if(!validateZipRegex.IsMatch(value))
+            {
+                Regex extractZipRegex = new Regex("[0-9]{5}(?:-[0-9]{4})?");
+                MatchCollection mc = extractZipRegex.Matches(value);
+
+                string extracted = string.Empty;
+
+                foreach (Match m in mc)
+                {
+                    extracted += m;    
+                }
+
+                return extracted;
+            }
+            else
+            {
+                return value;
+            }
         }
 
         private void ParsePID()
@@ -499,8 +537,8 @@ namespace LabBilling.Core.BusinessLogic
                 accountRecord.PatNameSuffix = hl7Message.GetValue("PID.5.4");
             }
 
-            accountRecord.Pat.BirthDate = new DateTime().ParseHL7Date(hl7Message.GetValue("PID.7").Left(8));
-            accountRecord.Pat.Sex = hl7Message.GetValue("PID.8");
+            accountRecord.BirthDate = new DateTime().ParseHL7Date(hl7Message.GetValue("PID.7").Left(8));
+            accountRecord.Sex = hl7Message.GetValue("PID.8");
             accountRecord.Pat.Race = hl7Message.GetValue("PID.10");
             if (hl7Message.HasRepetitions("PID.11"))
             {
@@ -510,7 +548,7 @@ namespace LabBilling.Core.BusinessLogic
                 accountRecord.Pat.Address2 = repList[0].Components(2).Value;
                 accountRecord.Pat.City = repList[0].Components(3).Value;
                 accountRecord.Pat.State = repList[0].Components(4).Value;
-                accountRecord.Pat.ZipCode = repList[0].Components(5).Value;
+                accountRecord.Pat.ZipCode = ValidateZipCode(repList[0].Components(5).Value);
 
                 accountRecord.Pat.EmailAddress = repList[1].Components(1).Value;
             }
@@ -520,7 +558,7 @@ namespace LabBilling.Core.BusinessLogic
                 accountRecord.Pat.Address2 = hl7Message.GetValue("PID.11.2");
                 accountRecord.Pat.City = hl7Message.GetValue("PID.11.3");
                 accountRecord.Pat.State = hl7Message.GetValue("PID.11.4");
-                accountRecord.Pat.ZipCode = hl7Message.GetValue("PID.11.5");
+                accountRecord.Pat.ZipCode = ValidateZipCode(hl7Message.GetValue("PID.11.5"));
             }
 
             if (hl7Message.HasRepetitions("PID.13"))
@@ -544,9 +582,18 @@ namespace LabBilling.Core.BusinessLogic
                 accountRecord.ClientMnem = string.IsNullOrEmpty(hl7Message.GetValue("PV1.3.4")) ? hl7Message.GetValue("PV1.3.4") 
                     : mappingRepository.GetMappedValue("CLIENT", "CERNER", hl7Message.GetValue("PV1.3.4"));
             }
-            accountRecord.FinCode = string.IsNullOrEmpty(hl7Message.GetValue("PV1.20")) ? hl7Message.GetValue("PV1.20") : mappingRepository.GetMappedValue("FIN_CODE", "CERNER", hl7Message.GetValue("PV1.20"));
+            accountRecord.FinCode = string.IsNullOrEmpty(hl7Message.GetValue("PV1.20")) 
+                ? hl7Message.GetValue("PV1.20") 
+                : mappingRepository.GetMappedValue("FIN_CODE", "CERNER", hl7Message.GetValue("PV1.20"));
             accountRecord.OriginalFinCode = accountRecord.FinCode;
             accountRecord.TransactionDate = new DateTime().ParseHL7Date(hl7Message.GetValue("PV1.44"));
+
+            accountRecord.Pat.ProviderId = string.IsNullOrEmpty(hl7Message.GetValue("PV1.17.1"))
+                ? hl7Message.GetValue("PV1.17.1")
+               : mappingRepository.GetMappedValue("PHY_ID", "CERNER", hl7Message.GetValue("PV1.17.1"));
+
+            accountRecord.Pat.Physician = phyRepository.GetByNPI(accountRecord.Pat.ProviderId);
+
         }
 
         private void ParseDG1()
@@ -618,6 +665,11 @@ namespace LabBilling.Core.BusinessLogic
                     ins.Coverage = InsCoverage.Secondary;
                 else if (in1.Fields(1).Value == "3")
                     ins.Coverage = InsCoverage.Tertiary;
+                else
+                {
+                    //this is not a valid insurance coverage type -- disregard
+                    return;
+                }
 
                 ins.InsCode = string.IsNullOrEmpty(in1.Fields(2).Components(1).Value) 
                     ? in1.Fields(2).Components(1).Value 
@@ -638,14 +690,21 @@ namespace LabBilling.Core.BusinessLogic
                     ? in1.Fields(17).Value 
                     : mappingRepository.GetMappedValue("GUAR_REL", "CERNER", in1.Fields(17).Value);
 
-                if(string.IsNullOrEmpty(ins.Relation))
+                if (string.IsNullOrEmpty(ins.Relation))
                 {
                     ins.Relation = string.IsNullOrEmpty(in2.Fields(72).Value) 
                         ? in2.Fields(72).Value 
                         : mappingRepository.GetMappedValue("GUAR_REL", "CERNER", in2.Fields(72).Value);
                 }
 
-                ins.HolderBirthDate = new DateTime().ParseHL7Date(in1.Fields(18).Value);
+                if (!string.IsNullOrEmpty(in1.Fields(18).Value))
+                {
+                    ins.HolderBirthDate = new DateTime().ParseHL7Date(in1.Fields(18).Value);
+                }
+                else
+                {
+                    ins.HolderBirthDate = null;
+                }
 
                 List<Field> repList = in1.Fields(19).Repetitions();
                 if (repList != null)

@@ -46,6 +46,21 @@ namespace LabBilling.Forms
             dgvClients.DataSource = clientSource;
             
             _clientTable.DefaultView.RowFilter = $"{nameof(Client.IsDeleted)} = false";
+            
+            dgvClients.SetColumnsVisibility(false);
+
+            dgvClients.Columns[nameof(Client.ClientMnem)].Visible = true;
+            dgvClients.Columns[nameof(Client.Name)].Visible = true;
+            dgvClients.Columns[nameof(Client.IsDeleted)].Visible = true;
+            dgvClients.Columns[nameof(Client.StreetAddress1)].Visible = true;
+            dgvClients.Columns[nameof(Client.StreetAddress2)].Visible = true;
+            dgvClients.Columns[nameof(Client.City)].Visible = true;
+            dgvClients.Columns[nameof(Client.State)].Visible = true;
+            dgvClients.Columns[nameof(Client.ZipCode)].Visible = true;
+            dgvClients.Columns[nameof(Client.FacilityNo)].Visible = true;
+
+            dgvClients.Columns[nameof(Client.Name)].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            dgvClients.AutoResizeColumns();
 
             Log.Instance.Trace($"Exiting");
         }

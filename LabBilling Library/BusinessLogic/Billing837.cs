@@ -728,15 +728,15 @@ namespace LabBilling.Core
                 });
                 segmentCount++;
                 string patDob;
-                if (claim.claimAccount.Pat.BirthDate != null)
-                    patDob = EdiValue.Date(8, (DateTime)claim.claimAccount.Pat.BirthDate);
+                if (claim.claimAccount.BirthDate != null)
+                    patDob = EdiValue.Date(8, (DateTime)claim.claimAccount.BirthDate);
                 else
                     patDob = "";
                 ediDocument.Segments.Add(new EdiSegment("DMG")
                 {
                     [01] = "D8",
                     [02] = patDob,
-                    [03] = claim.claimAccount.Pat.Sex
+                    [03] = claim.claimAccount.Sex
                 });
                 segmentCount++;
 

@@ -183,11 +183,11 @@ namespace LabBilling.Forms
             controlColumnMap.Add(FirstNameTextBox, nameof(Pat.PatFirstName));
             controlColumnMap.Add(StateComboBox, nameof(Pat.State));
             controlColumnMap.Add(SocSecNoTextBox, nameof(Account.SocSecNo));
-            controlColumnMap.Add(DateOfBirthTextBox, nameof(Pat.BirthDate));
+            controlColumnMap.Add(DateOfBirthTextBox, nameof(Account.BirthDate));
             controlColumnMap.Add(PhoneTextBox, nameof(Pat.PrimaryPhone));
             controlColumnMap.Add(CityTextBox, nameof(Pat.City));
             controlColumnMap.Add(Address2TextBox, nameof(Pat.Address2));
-            controlColumnMap.Add(SexComboBox, nameof(Pat.Sex));
+            controlColumnMap.Add(SexComboBox, nameof(Account.Sex));
             controlColumnMap.Add(Address1TextBox, nameof(Pat.Address1));
             controlColumnMap.Add(GuarZipTextBox, nameof(Pat.GuarantorZipCode));
             controlColumnMap.Add(PlanFinCodeComboBox, nameof(Ins.FinCode));
@@ -375,7 +375,7 @@ namespace LabBilling.Forms
             if (currentAccount.FinCode != "CLIENT")
             {
                 sd.Add(new SummaryData("SSN", currentAccount.SocSecNo.FormatSSN(), SummaryData.GroupType.Demographics, 6, 1));
-                sd.Add(new SummaryData("DOB/Sex", currentAccount.Pat.DOBSex, SummaryData.GroupType.Demographics, 9, 1));
+                sd.Add(new SummaryData("DOB/Sex", currentAccount.DOBSex, SummaryData.GroupType.Demographics, 9, 1));
                 sd.Add(new SummaryData("Diagnoses", "", SummaryData.GroupType.Diagnoses, 13, 1, true));
                 sd.Add(new SummaryData(currentAccount.Pat.Dx1, currentAccount.Pat.Dx1Desc, SummaryData.GroupType.Diagnoses, 14, 1));
                 sd.Add(new SummaryData(currentAccount.Pat.Dx2, currentAccount.Pat.Dx2Desc, SummaryData.GroupType.Diagnoses, 15, 1));
@@ -454,8 +454,8 @@ namespace LabBilling.Forms
             DemoStatusMessagesTextBox.Text = String.Empty;
 
             BannerNameTextBox.Text = currentAccount.PatFullName;
-            BannerDobTextBox.Text = currentAccount.Pat.BirthDate.GetValueOrDefault().ToShortDateString();
-            BannerSexTextBox.Text = currentAccount.Pat.Sex;
+            BannerDobTextBox.Text = currentAccount.BirthDate.GetValueOrDefault().ToShortDateString();
+            BannerSexTextBox.Text = currentAccount.Sex;
             BannerAccountTextBox.Text = SelectedAccount;
             BannerMRNTextBox.Text = currentAccount.MRN;
             BannerClientTextBox.Text = currentAccount.ClientName;
@@ -469,8 +469,8 @@ namespace LabBilling.Forms
 
             BannerNameTextBox.Text = currentAccount.PatFullName;
             BannerAccountTextBox.Text = _selectedAccount;
-            BannerDobTextBox.Text = currentAccount.Pat.BirthDate.Value.ToShortDateString();
-            BannerSexTextBox.Text = currentAccount.Pat.Sex;
+            BannerDobTextBox.Text = currentAccount.BirthDate == null ? null : currentAccount.BirthDate.Value.ToShortDateString();
+            BannerSexTextBox.Text = currentAccount.Sex;
             BannerMRNTextBox.Text = currentAccount.MRN;
 
             TotalChargesLabel.Text = currentAccount.TotalCharges.ToString("c");
@@ -502,9 +502,9 @@ namespace LabBilling.Forms
             SocSecNoTextBox.BackColor = Color.White;
             EmailAddressTextBox.Text = currentAccount.Pat.EmailAddress;
             EmailAddressTextBox.BackColor = Color.White;
-            DateOfBirthTextBox.Text = currentAccount.Pat.BirthDate.Value.ToString("MM/dd/yyyy");
+            DateOfBirthTextBox.Text = currentAccount.BirthDate == null ? string.Empty : currentAccount.BirthDate.Value.ToString("MM/dd/yyyy");
             DateOfBirthTextBox.BackColor = Color.White;
-            SexComboBox.SelectedValue = currentAccount.Pat.Sex;
+            SexComboBox.SelectedValue = currentAccount.Sex == null ? string.Empty : currentAccount.Sex;
             SexComboBox.BackColor = Color.White;
             MaritalStatusComboBox.SelectedValue = currentAccount.Pat.MaritalStatus != null ? currentAccount.Pat.MaritalStatus : "";
             MaritalStatusComboBox.BackColor = Color.White;
@@ -632,8 +632,8 @@ namespace LabBilling.Forms
             currentAccount.Pat.ZipCode = ZipcodeTextBox.Text;
             currentAccount.Pat.CityStateZip = string.Format("{0}, {1} {2}", CityTextBox.Text, StateComboBox.SelectedValue.ToString(), ZipcodeTextBox.Text);
             currentAccount.Pat.PatFullName = string.Format("{0},{1} {2}", LastNameTextBox.Text, FirstNameTextBox.Text, MiddleNameTextBox.Text);
-            currentAccount.Pat.BirthDate = DateTime.Parse(DateOfBirthTextBox.Text);
-            currentAccount.Pat.Sex = SexComboBox.SelectedValue.ToString();
+            currentAccount.BirthDate = DateTime.Parse(DateOfBirthTextBox.Text);
+            currentAccount.Sex = SexComboBox.SelectedValue.ToString();
             currentAccount.Pat.ProviderId = providerLookup1.SelectedValue;
 
             //currentAccount.Pat.SocSecNo = tbSSN.Text;

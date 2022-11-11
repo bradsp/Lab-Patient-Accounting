@@ -21,6 +21,10 @@ namespace LabBilling.Core.Models
         public string SocSecNo { get; set; }
         [Column("mri")]
         public string MRN { get; set; }
+        [Column("birthdate")]
+        public DateTime? BirthDate { get; set; }
+        [Column("sex")]
+        public string Sex { get; set; }
 
         /// <summary>
         /// Patient Full name as stored in database. This will be deprecated.
@@ -117,6 +121,8 @@ namespace LabBilling.Core.Models
         public string FullInfo => $"{AccountNo} {PatFullName} {ClientMnem} {TransactionDate}";
         [Ignore]
         public string ClientName { get; set; }
+        [Ignore]
+        public string DOBSex => $"{BirthDate.GetValueOrDefault().ToShortDateString()} - {Sex}";
 
 
 

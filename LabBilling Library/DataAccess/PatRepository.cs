@@ -54,7 +54,7 @@ namespace LabBilling.Core.DataAccess
             if (record == null)
             {
                 //there was not a pat record, so no need to proceed.
-                return new Pat();
+                return null;
             }
 
             record.Physician = phyRepository.GetByNPI(record.ProviderId);

@@ -123,6 +123,7 @@ namespace LabBilling.Forms
         {
             message = message.Replace("EVN|", "\nEVN|");
             message = message.Replace("PID|", "\nPID|");
+            message = message.Replace("PD1|", "\nPD1|");
             message = message.Replace("PV1|", "\nPV1|");
             message = message.Replace("PV2|", "\nPV2|");
             message = message.Replace("IN1|", "\nIN1|");

@@ -207,8 +207,10 @@ namespace LabBilling.Core.DataAccess
         public override object Add(Account table)
         {
             Log.Instance.Trace($"Entering - account {table.AccountNo}");
-
-            BeginTransaction();
+            table.PatFullName = table.PatNameDisplay;
+            table.Status = "NEW";
+            //table.Sex = table.Sex;
+            //table.BirthDate = table.BirthDate;
 
             base.Add(table);
 
@@ -230,8 +232,6 @@ namespace LabBilling.Core.DataAccess
                 insRepository.Save(ins);
             }
 
-            table.PatFullName = table.PatNameDisplay;
-            table.Status = "NEW";
 
             return table;
         }
@@ -241,7 +241,9 @@ namespace LabBilling.Core.DataAccess
             Log.Instance.Trace($"Entering - account {acc.AccountNo}");
             if (string.IsNullOrEmpty(acc.Status))
                 acc.Status = "NEW";
-            acc.PatFullName = $"{acc.PatLastName},{acc.PatFirstName} {acc.PatMiddleName}".Trim();
+            
+            acc.PatFullName = acc.PatNameDisplay;
+
             this.Add(acc);
         }
 
@@ -307,7 +309,8 @@ namespace LabBilling.Core.DataAccess
         public override bool Update(Account table)
         {
             Log.Instance.Trace($"Entering - account {table.AccountNo}");
-            //generate full name field from name parts
+            if (string.IsNullOrEmpty(table.Status))
+                table.Status = "NEW";
             table.PatFullName = table.PatNameDisplay;
 
             Log.Instance.Trace("Exiting");
@@ -318,13 +321,9 @@ namespace LabBilling.Core.DataAccess
         {
             Log.Instance.Trace($"Entering - account {table.AccountNo}");
             //generate full name field from name parts
-            table.PatFullName = String.Format("{0},{1} {2} {3}",
-                table.PatLastName,
-                table.PatFirstName,
-                table.PatMiddleName,
-                table.PatNameSuffix);
-
-            table.PatFullName = table.PatFullName.Trim();
+            if (string.IsNullOrEmpty(table.Status))
+                table.Status = "NEW";
+            table.PatFullName = table.PatNameDisplay;
 
             Log.Instance.Trace($"Exiting");
             return base.Update(table, columns);
@@ -615,7 +614,7 @@ namespace LabBilling.Core.DataAccess
             chrg.OrderMnem = cdmData.Mnem;
             chrg.LISReqNo = refNumber;
             chrg.OrderingSite = "";
-            chrg.PatBirthDate = accData.Pat.BirthDate;
+            chrg.PatBirthDate = accData.BirthDate;
             chrg.PatFullName = accData.PatFullName;
             chrg.PatSocSecNo = accData.SocSecNo;
             chrg.PerformingSite = "";

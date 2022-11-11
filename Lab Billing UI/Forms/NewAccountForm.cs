@@ -62,10 +62,10 @@ namespace LabBilling.Forms
                 acc.PatLastName = lastNameTextBox.Text;
                 acc.PatFirstName = firstNameTextBox.Text;
                 acc.PatMiddleName = middleNameTextBox.Text;
-                acc.Pat.BirthDate = Convert.ToDateTime(dateOfBirthTextBox.Text);
+                acc.BirthDate = Convert.ToDateTime(dateOfBirthTextBox.Text);
                 acc.TransactionDate = Convert.ToDateTime(serviceDateTextBox.Text);
                 acc.Pat.AccountNo = accountNoTextBox.Text;
-                acc.Pat.Sex = patientSexComboBox.SelectedValue.ToString();
+                acc.Sex = patientSexComboBox.SelectedValue.ToString();
                 acc.FinCode = financialClassComboBox.SelectedValue.ToString();
                 acc.ClientMnem = clientTextBox.Text;
                 acc.Status = "NEW";

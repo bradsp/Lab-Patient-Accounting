@@ -16,7 +16,7 @@ namespace LabBilling.Core.Models
         [Column("ssn")]
         [ResultColumn]
         public string SSN { get; set; }
-        [Column("dob_yyyy")]
+        [Column("birthdate")]
         [ResultColumn]
         public DateTime? DateOfBirth { get; set; }
         [Column("sex")]

@@ -1,11 +1,4 @@
 ﻿using System;
-using System.Configuration;
-using System.Runtime.InteropServices;
-using System.Collections.Generic;
-using System.Linq;
-using System.ServiceProcess;
-using System.Text;
-using System.Threading.Tasks;
 using log4net.Config;
 using Topshelf;
 
@@ -13,7 +6,6 @@ namespace LabBillingService
 {
     static class Program
     {
-
         public static string ConnectionString { get; set; }
         public static string Server { get; set; }
         public static string Database { get; set; }
@@ -52,7 +44,5 @@ namespace LabBillingService
             int exitCodeValue = (int)Convert.ChangeType(exitcode, exitcode.GetTypeCode());
             Environment.ExitCode = exitCodeValue;
         }
-
-
     }
 }

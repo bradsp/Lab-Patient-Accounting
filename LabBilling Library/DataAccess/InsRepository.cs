@@ -70,6 +70,12 @@ namespace LabBilling.Core.DataAccess
         public Ins GetByAccount(string account, InsCoverage coverage)
         {
             Log.Instance.Trace($"Entering - account {account} coverage {coverage.ToString()}");
+
+            if(coverage == null)
+            {
+                throw new ArgumentNullException("coverage");
+            }
+
             var record = dbConnection.SingleOrDefault<Ins>("where account = @0 and ins_a_b_c = @1",
                 new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account },
                 new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = coverage.ToString() });
@@ -97,6 +103,10 @@ namespace LabBilling.Core.DataAccess
 
         public override bool Save(Ins table)
         {
+            if(table.Coverage == null)
+            {
+                return false;
+            }
 
             var record = this.GetByAccount(table.Account, InsCoverage.Parse(table.Coverage));
 

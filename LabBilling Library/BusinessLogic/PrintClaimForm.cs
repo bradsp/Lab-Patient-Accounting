@@ -86,8 +86,8 @@ namespace LabBilling.Core.BusinessLogic
                 SetFieldValue(fields, "box9b", claim.claimAccount.Pat.City);
                 SetFieldValue(fields, "box9c", claim.claimAccount.Pat.State);
                 SetFieldValue(fields, "box9d", claim.claimAccount.Pat.ZipCode);
-                SetFieldValue(fields, "box10", ((DateTime)claim.claimAccount.Pat.BirthDate).ToString("MMddyyyy"));
-                SetFieldValue(fields, "box11", claim.claimAccount.Pat.Sex);
+                SetFieldValue(fields, "box10", ((DateTime)claim.claimAccount.BirthDate).ToString("MMddyyyy"));
+                SetFieldValue(fields, "box11", claim.claimAccount.Sex);
                 SetFieldValue(fields, "box17", "01"); //defaulting to 01 for now
 
                 SetFieldValue(fields, "38a", claim.claimAccount.Pat.GuarantorFullName);

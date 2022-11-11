@@ -26,6 +26,10 @@ namespace LabBilling.Core.BusinessLogic.Validators
                 .Cascade(CascadeMode.Stop)
                 .NotEmpty().WithMessage("Patient First Name is empty.")
                 .Must(BeAValidName).WithMessage("{PropertyName} contains invalid characters");
+            RuleFor(a => a.BirthDate).NotNull();
+            RuleFor(a => a.Sex)
+                .Must(sex => sex == "M" || sex == "F")
+                .WithMessage("{PropertyName} is not a valid value.");
             RuleFor(a => a.Charges.Count)
                 .GreaterThan(0).WithMessage("No charges to bill.");
 
@@ -82,6 +86,10 @@ namespace LabBilling.Core.BusinessLogic.Validators
                     .Must(HaveMatchingPersonAndInsRelation).WithMessage("Person relation and insurance relation do not match")
                     .Must(MatchPatientNameAndInsuranceHolderName).WithMessage("Person Name and Insurance Holder Name do not match")
                     .When(a => a.Pat != null && a.InsurancePrimary != null);
+
+                RuleFor(a => a)
+                    .Must(NotHaveBundledOBPanel).WithMessage("Insurance does not accept OB Panel charge")
+                    .When(a => a.FinCode == "L" && a.PrimaryInsuranceCode == "SEHZ");
 
                 RuleFor(a => a.LmrpErrors)
                     .Empty().WithMessage("LMRP Rule Violation");
@@ -245,6 +253,18 @@ namespace LabBilling.Core.BusinessLogic.Validators
             }
 
             return isDuplicate;
+        }
+
+        private bool NotHaveBundledOBPanel(Account account)
+        {
+            var list = account.Charges.Where(c => c.CDMCode == "MCL0021" && c.IsCredited == false);
+
+            if(list.Count() > 0)
+            {
+                return false;
+            }
+
+            return true;
         }
 
     }
