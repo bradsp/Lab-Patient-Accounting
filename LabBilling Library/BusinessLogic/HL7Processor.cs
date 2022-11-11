@@ -622,7 +622,7 @@ namespace LabBilling.Core.BusinessLogic
                     accountRecord.Pat.GuarantorAddress = repList[0].Components(1).Value;
                     accountRecord.Pat.GuarantorCity = repList[0].Components(3).Value;
                     accountRecord.Pat.GuarantorState = repList[0].Components(4).Value;
-                    accountRecord.Pat.GuarantorZipCode = repList[0].Components(5).Value;
+                    accountRecord.Pat.GuarantorZipCode = ValidateZipCode(repList[0].Components(5).Value);
                     //email address is field 6
                 }
                 else
@@ -630,7 +630,7 @@ namespace LabBilling.Core.BusinessLogic
                     accountRecord.Pat.GuarantorAddress = hl7Message.GetValue("GT1.5.1");
                     accountRecord.Pat.GuarantorCity = hl7Message.GetValue("GT1.5.3");
                     accountRecord.Pat.GuarantorState = hl7Message.GetValue("GT1.5.4");
-                    accountRecord.Pat.GuarantorZipCode = hl7Message.GetValue("GT1.5.5");
+                    accountRecord.Pat.GuarantorZipCode = ValidateZipCode(hl7Message.GetValue("GT1.5.5"));
                 }
 
                 if (hl7Message.HasRepetitions("GT1.6"))

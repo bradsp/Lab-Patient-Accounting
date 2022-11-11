@@ -14,6 +14,7 @@
         public const string Amerigroup = "Amerigroup";
         public const string ManualHold = "Manual Hold";
         public const string InitialHold = "Initial Hold";
+        public const string ErrorFinCode = "Error Fin Code";
         public const string ClientBill = "Client Bill";
         public const string SubmittedInstitutional = "Submitted Institutional";
         public const string SubmittedProfessional = "Submitted Professional";

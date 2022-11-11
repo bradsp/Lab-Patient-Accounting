@@ -59,6 +59,7 @@ namespace LabBilling.Forms
                 new TreeNode(Worklists.Amerigroup),
                 new TreeNode(Worklists.ManualHold),
                 new TreeNode(Worklists.InitialHold),
+                new TreeNode(Worklists.ErrorFinCode),
                 new TreeNode(Worklists.ClientBill),
                 new TreeNode(Worklists.SubmittedInstitutional),
                 new TreeNode(Worklists.SubmittedProfessional)
@@ -343,6 +344,9 @@ namespace LabBilling.Forms
                     parameters = parameters.Append((nameof(AccountSearch.FinCode), AccountSearchRepository.operation.NotEqual, "X")).ToArray();
                     parameters = parameters.Append((nameof(AccountSearch.FinCode), AccountSearchRepository.operation.NotEqual, "Y")).ToArray();
                     parameters = parameters.Append((nameof(AccountSearch.FinCode), AccountSearchRepository.operation.NotEqual, "Z")).ToArray();
+                    break;
+                case Worklists.ErrorFinCode:
+                    parameters = parameters.Append((nameof(AccountSearch.FinCode), AccountSearchRepository.operation.Equal, "K")).ToArray();
                     break;
                 case Worklists.ClientBill:
                     parameters = parameters.Append((nameof(AccountSearch.FinCode), AccountSearchRepository.operation.OneOf, "'W','X','Y','Z'")).ToArray();
