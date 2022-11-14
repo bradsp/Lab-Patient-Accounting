@@ -223,5 +223,29 @@ namespace LabBilling.Forms
         {
             ApplyFilter();
         }
+
+        private void markDoNotProcessToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (MessagesGrid.SelectedRows.Count > 0)
+            {
+                //string msgType = MessagesGrid.SelectedRows[0].Cells[nameof(MessageInbound.MessageType)].Value.ToString();
+                int msgID = Convert.ToInt32(MessagesGrid.SelectedRows[0].Cells[nameof(MessageInbound.SystemMsgId)].Value);
+                string msgType = MessagesGrid.SelectedRows[0].Cells[nameof(MessageInbound.MessageType)].Value.ToString();
+                string processFlag = MessagesGrid.SelectedRows[0].Cells[nameof(MessageInbound.ProcessFlag)].Value.ToString();
+
+                HL7Processor hl7 = new HL7Processor(Helper.ConnVal);
+
+                hl7.SetMessageDoNotProcess(msgID, $"Set to do not process by {Program.LoggedInUser.FullName}");
+
+                var row = messagesTable.Rows.Find(msgID);
+                row[nameof(MessageInbound.ProcessFlag)] = "DNP";
+                row[nameof(MessageInbound.ProcessStatusMsg)] = $"Set to do not process by {Program.LoggedInUser.FullName}";
+                MessagesGrid.Refresh();
+            }
+            else
+            {
+                MessageBox.Show("No message selected.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
+        }
     }
 }

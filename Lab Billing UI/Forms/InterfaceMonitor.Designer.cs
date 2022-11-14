@@ -48,6 +48,7 @@ namespace LabBilling.Forms
             this.errorsTextBox = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
             this.processFlagFilterCombo = new System.Windows.Forms.ComboBox();
+            this.markDoNotProcessToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.MessagesGrid)).BeginInit();
             this.GridContextMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -79,14 +80,15 @@ namespace LabBilling.Forms
             // GridContextMenu
             // 
             this.GridContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.ReprocessMessage});
+            this.ReprocessMessage,
+            this.markDoNotProcessToolStripMenuItem});
             this.GridContextMenu.Name = "GridContextMenu";
-            this.GridContextMenu.Size = new System.Drawing.Size(177, 26);
+            this.GridContextMenu.Size = new System.Drawing.Size(186, 70);
             // 
             // ReprocessMessage
             // 
             this.ReprocessMessage.Name = "ReprocessMessage";
-            this.ReprocessMessage.Size = new System.Drawing.Size(176, 22);
+            this.ReprocessMessage.Size = new System.Drawing.Size(185, 22);
             this.ReprocessMessage.Text = "Reprocess Message";
             this.ReprocessMessage.Click += new System.EventHandler(this.ReprocessMessage_Click);
             // 
@@ -265,6 +267,13 @@ namespace LabBilling.Forms
             this.processFlagFilterCombo.TabIndex = 2;
             this.processFlagFilterCombo.SelectedIndexChanged += new System.EventHandler(this.processFlagFilterCombo_SelectedIndexChanged);
             // 
+            // markDoNotProcessToolStripMenuItem
+            // 
+            this.markDoNotProcessToolStripMenuItem.Name = "markDoNotProcessToolStripMenuItem";
+            this.markDoNotProcessToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
+            this.markDoNotProcessToolStripMenuItem.Text = "Mark Do Not Process";
+            this.markDoNotProcessToolStripMenuItem.Click += new System.EventHandler(this.markDoNotProcessToolStripMenuItem_Click);
+            // 
             // InterfaceMonitor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -323,5 +332,6 @@ namespace LabBilling.Forms
         private System.Windows.Forms.TextBox errorsTextBox;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.ComboBox processFlagFilterCombo;
+        private System.Windows.Forms.ToolStripMenuItem markDoNotProcessToolStripMenuItem;
     }
 }

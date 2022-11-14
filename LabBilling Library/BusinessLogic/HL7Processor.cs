@@ -301,6 +301,7 @@ namespace LabBilling.Core.BusinessLogic
                 {
                     Log.Instance.Warn($"[WARNING] Insurance code not valid {ins.InsCode}");
                     errors.AppendLine($"[WARNING] Insurance code not valid {ins.InsCode}");
+                    canFile = false;
                 }
                 else
                 {
@@ -337,6 +338,7 @@ namespace LabBilling.Core.BusinessLogic
                 {
                     Log.Instance.Warn($"[WARN] Diagnosis {dx.Code} not found.");
                     errors.AppendLine($"[WARN] Diagnosis {dx.Code} not found.");
+                    
                 }
             }
 
@@ -686,6 +688,9 @@ namespace LabBilling.Core.BusinessLogic
                 ins.HolderMiddleName = in1.Fields(16).Components(3).Value;
                 ins.HolderSex = in1.Fields(43).Value;
 
+                if (ins.HolderSex != "M" && ins.HolderSex != "F")
+                    ins.HolderSex = String.Empty;
+
                 ins.Relation = string.IsNullOrEmpty(in1.Fields(17).Value) 
                     ? in1.Fields(17).Value 
                     : mappingRepository.GetMappedValue("GUAR_REL", "CERNER", in1.Fields(17).Value);
@@ -819,6 +824,21 @@ namespace LabBilling.Core.BusinessLogic
 
         }
 
+        public bool SetMessageDoNotProcess(int systemMessageId, string statusMessage)
+        {
+
+            var message = messagesInboundRepository.GetById(systemMessageId);
+
+            message.ProcessFlag = StatusToString(Status.DoNotProcess);
+            message.ProcessStatusMsg = statusMessage;
+
+            return messagesInboundRepository.Update(message, new[]
+            {
+                nameof(MessageInbound.ProcessFlag),
+                nameof(MessageInbound.ProcessStatusMsg)
+            });
+
+        }
 
     }
 
