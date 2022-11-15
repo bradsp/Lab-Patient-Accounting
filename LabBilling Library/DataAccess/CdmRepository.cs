@@ -79,5 +79,6 @@ namespace LabBilling.Core.DataAccess
 
             return result;
         }
+
     }
 }

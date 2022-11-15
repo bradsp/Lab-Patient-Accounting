@@ -6,6 +6,14 @@ using System.Threading.Tasks;
 
 namespace LabBilling.Core
 {
+    [Serializable]
+    public class DiscountRangeNotSupportedException : ApplicationException
+    {
+        public DiscountRangeNotSupportedException() : base("EndCdm must equal Cdm. Cdm range discounts are no longer supported.")
+        {
+            
+        }
+    }
 
     [Serializable]
     public class CdmNotFoundException : ApplicationException

@@ -155,6 +155,9 @@ namespace LabBilling.Core.Models
         [Column("bill_to_client")]
         public string BillToClient { get; set; }
 
+        [Column("bill_method")]
+        public string BillMethod { get; set; }
+
         [ResultColumn]
         public DateTime mod_date { get; set; }
         [ResultColumn]

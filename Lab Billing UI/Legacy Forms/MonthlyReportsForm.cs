@@ -58,10 +58,16 @@ namespace LabBilling.Legacy
                 MessageBox.Show(string.Format("These reports were not written for server [{0}]. \r\nCan not continue.", m_strServer));
                 Environment.Exit(13);
             }
+            string environment = null;
+            if (m_strDatabase.ToUpper().Contains("TEST"))
+                environment = "TEST";
+            else if (m_strDatabase.ToUpper().Contains("LIVE") || m_strDatabase.ToUpper().Contains("PROD"))
+                environment = "LIVE";
+
             string[] argErr = new string[3];
-            argErr[0] = "/LIVE";
+            argErr[0] = "/" + environment;
             argErr[1] = string.Format("/{0}",m_strServer);
-            argErr[2] = "/MCLLIVE";
+            argErr[2] = "/" + m_strDatabase;
 
             m_Err = new ERR(argErr);
 
@@ -738,19 +744,19 @@ order by c.account
             LoadGrid();
         }
 
-        private void tsddbtnMCLOEReports_DropDownOpening(object sender, EventArgs e)
-        {
-            m_strServer = "MCLOE";
-            m_strDatabase = "GOMCLLIVE";
-            CreateConnectionString();
-        }
+        //private void tsddbtnMCLOEReports_DropDownOpening(object sender, EventArgs e)
+        //{
+        //    //m_strServer = "MCLOE";
+        //    //m_strDatabase = "GOMCLLIVE";
+        //    //CreateConnectionString();
+        //}
 
-        private void tsddbtnBillingReports_DropDownOpening(object sender, EventArgs e)
-        {
-            m_strServer = "WTHMCLBILL";
-            m_strDatabase = "MCLLIVE";
-            CreateConnectionString();
-        }
+        //private void tsddbtnBillingReports_DropDownOpening(object sender, EventArgs e)
+        //{
+        //    //m_strServer = "WTHMCLBILL";
+        //    //m_strDatabase = "MCLLIVE";
+        //    //CreateConnectionString();
+        //}
 
         private void tsmi_Contains_Click(object sender, EventArgs e)
         {
@@ -830,8 +836,8 @@ order by c.account
 
         private void tsbtnComboCpt4_Click(object sender, EventArgs e)
         {
-            m_strServer = "WTHMCLBILL";
-            m_strDatabase = "MCLLIVE";
+            //m_strServer = "WTHMCLBILL";
+            //m_strDatabase = "MCLLIVE";
             CreateConnectionString();
             string strFirstCpt4 = string.Empty;
             string strRemainingCpt4s = string.Empty;

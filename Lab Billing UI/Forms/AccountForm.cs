@@ -619,6 +619,8 @@ namespace LabBilling.Forms
             currentAccount.PatFirstName = FirstNameTextBox.Text;
             currentAccount.PatMiddleName = MiddleNameTextBox.Text;
             currentAccount.SocSecNo = SocSecNoTextBox.Text;
+            currentAccount.BirthDate = DateTime.Parse(DateOfBirthTextBox.Text);
+            currentAccount.Sex = SexComboBox.SelectedValue.ToString();
 
             accDB.Update(currentAccount);
 
@@ -632,10 +634,7 @@ namespace LabBilling.Forms
             currentAccount.Pat.ZipCode = ZipcodeTextBox.Text;
             currentAccount.Pat.CityStateZip = string.Format("{0}, {1} {2}", CityTextBox.Text, StateComboBox.SelectedValue.ToString(), ZipcodeTextBox.Text);
             currentAccount.Pat.PatFullName = string.Format("{0},{1} {2}", LastNameTextBox.Text, FirstNameTextBox.Text, MiddleNameTextBox.Text);
-            currentAccount.BirthDate = DateTime.Parse(DateOfBirthTextBox.Text);
-            currentAccount.Sex = SexComboBox.SelectedValue.ToString();
             currentAccount.Pat.ProviderId = providerLookup1.SelectedValue;
-
             //currentAccount.Pat.SocSecNo = tbSSN.Text;
 
             patDB.SaveAll(currentAccount.Pat);
@@ -1199,7 +1198,9 @@ namespace LabBilling.Forms
             {
                 DataGridViewRow row = ChrgDetailDataGrid.SelectedRows[0];
 
-                string dxPtr = row.Cells[nameof(ChrgDetail.DiagCodePointer)].Value.ToString();
+                string dxPtr = row.Cells[nameof(ChrgDetail.DiagCodePointer)].Value == null 
+                    ? string.Empty 
+                    : row.Cells[nameof(ChrgDetail.DiagCodePointer)].Value.ToString();
 
                 string[] ptrs = dxPtr.Split(':');
 
@@ -2083,6 +2084,56 @@ namespace LabBilling.Forms
             currentAccount.Pat.StatementFlag = statementFlagComboBox.SelectedItem.ToString();
 
             patDB.Update(currentAccount.Pat, new[] { nameof(Pat.StatementFlag) });
+        }
+
+        private void moveChargeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Log.Instance.Trace($"Entering");
+            int selectedRows = ChargesDataGrid.Rows.GetRowCount(DataGridViewElementStates.Selected);
+            if (selectedRows > 0)
+            {
+                DataGridViewRow row = ChargesDataGrid.SelectedRows[0];
+
+                PersonSearchForm personSearch = new PersonSearchForm();
+
+                if (personSearch.ShowDialog() == DialogResult.OK)
+                {
+                    string destAccount = personSearch.SelectedAccount;
+                    int chrgId = Convert.ToInt32(row.Cells[nameof(Chrg.ChrgId)].Value);
+
+                    if (MessageBox.Show($"Move charge {chrgId} ({row.Cells[nameof(Chrg.CdmDescription)].Value}) to account {destAccount}?",
+                        "Confirm Move", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                    {
+                        Log.Instance.Debug($"Moving charge {chrgId} from {currentAccount.AccountNo} to {destAccount}");
+                        accDB.MoveCharge(currentAccount.AccountNo, destAccount, chrgId);
+                    }
+                    LoadAccountData();
+                }
+            }
+        }
+
+        private void moveAllChargesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Log.Instance.Trace($"Entering");
+            PersonSearchForm personSearch = new PersonSearchForm();
+
+            if (personSearch.ShowDialog() == DialogResult.OK)
+            {
+                string destAccount = personSearch.SelectedAccount;
+
+                if (MessageBox.Show($"Move all charges to account {destAccount}?",
+                    "Confirm Move", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                {
+                    Log.Instance.Debug($"Moving all charges from {currentAccount.AccountNo} to {destAccount}");
+                    var result = accDB.MoveCharges(currentAccount.AccountNo, destAccount);
+                    if(!result.isSuccess)
+                    {
+                        MessageBox.Show(result.error, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+
+                    LoadAccountData();
+                }
+            }
         }
     }
 }

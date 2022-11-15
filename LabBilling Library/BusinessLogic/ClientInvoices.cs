@@ -222,6 +222,7 @@ namespace LabBilling.Core
                     retailTotal += chrg.RetailAmount;
                     discountTotal += chrg.RetailAmount - chrg.Amount;
                 }
+
                 //write cbill transfer chrg to account
                 invoiceAmountTotal += amountTotal;
                 invoiceInpTotal += inpTotal;
@@ -362,6 +363,12 @@ namespace LabBilling.Core
             return dbConnection.Fetch<UnbilledAccounts>(cmd);
 
         }
+
+        public bool UndoInvoice(string invoiceNo)
+        {
+            throw new NotImplementedException();
+        }
+
     }
 
 }

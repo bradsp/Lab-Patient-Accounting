@@ -58,6 +58,8 @@ namespace LabBilling.Forms
             dgvClients.Columns[nameof(Client.State)].Visible = true;
             dgvClients.Columns[nameof(Client.ZipCode)].Visible = true;
             dgvClients.Columns[nameof(Client.FacilityNo)].Visible = true;
+            dgvClients.Columns[nameof(Client.Type)].Visible = true;
+            dgvClients.Columns[nameof(Client.BillMethod)].Visible = true;
 
             dgvClients.Columns[nameof(Client.Name)].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             dgvClients.AutoResizeColumns();

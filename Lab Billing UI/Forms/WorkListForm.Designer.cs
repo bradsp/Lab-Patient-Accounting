@@ -29,9 +29,9 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             this.accountGrid = new MetroFramework.Controls.MetroGrid();
             this.accountGridContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.holdToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -53,6 +53,7 @@
             this.clientFilterRadioBtn = new System.Windows.Forms.RadioButton();
             this.accountFilterRadioBtn = new System.Windows.Forms.RadioButton();
             this.showAccountsWithPmtCheckbox = new System.Windows.Forms.CheckBox();
+            this.changeToYFinancialClassToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.accountGrid)).BeginInit();
             this.accountGridContextMenu.SuspendLayout();
             this.statusStrip1.SuspendLayout();
@@ -72,24 +73,24 @@
             this.accountGrid.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.accountGrid.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.None;
             this.accountGrid.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(174)))), ((int)(((byte)(219)))));
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
-            dataGridViewCellStyle4.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
-            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(198)))), ((int)(((byte)(247)))));
-            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));
-            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.accountGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(174)))), ((int)(((byte)(219)))));
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            dataGridViewCellStyle1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(198)))), ((int)(((byte)(247)))));
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.accountGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.accountGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.accountGrid.ContextMenuStrip = this.accountGridContextMenu;
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
-            dataGridViewCellStyle5.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
-            dataGridViewCellStyle5.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(136)))), ((int)(((byte)(136)))), ((int)(((byte)(136)))));
-            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(198)))), ((int)(((byte)(247)))));
-            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));
-            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.accountGrid.DefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            dataGridViewCellStyle2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(136)))), ((int)(((byte)(136)))), ((int)(((byte)(136)))));
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(198)))), ((int)(((byte)(247)))));
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.accountGrid.DefaultCellStyle = dataGridViewCellStyle2;
             this.accountGrid.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.accountGrid.EnableHeadersVisualStyles = false;
             this.accountGrid.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
@@ -98,14 +99,14 @@
             this.accountGrid.MultiSelect = false;
             this.accountGrid.Name = "accountGrid";
             this.accountGrid.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(174)))), ((int)(((byte)(219)))));
-            dataGridViewCellStyle6.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
-            dataGridViewCellStyle6.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
-            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(198)))), ((int)(((byte)(247)))));
-            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));
-            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.accountGrid.RowHeadersDefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(174)))), ((int)(((byte)(219)))));
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            dataGridViewCellStyle3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(198)))), ((int)(((byte)(247)))));
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.accountGrid.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
             this.accountGrid.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.accountGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.accountGrid.Size = new System.Drawing.Size(952, 410);
@@ -120,36 +121,38 @@
             this.holdToolStripMenuItem,
             this.changeFinancialClassToolStripMenuItem,
             this.changeClientToolStripMenuItem,
-            this.changeDateOfServiceToolStripMenuItem});
+            this.changeDateOfServiceToolStripMenuItem,
+            this.changeToYFinancialClassToolStripMenuItem});
             this.accountGridContextMenu.Name = "accountGridContextMenu";
-            this.accountGridContextMenu.Size = new System.Drawing.Size(197, 92);
+            this.accountGridContextMenu.Size = new System.Drawing.Size(220, 136);
+            this.accountGridContextMenu.Opened += new System.EventHandler(this.accountGridContextMenu_Opened);
             this.accountGridContextMenu.VisibleChanged += new System.EventHandler(this.accountGridContextMenu_VisibleChanged);
             // 
             // holdToolStripMenuItem
             // 
             this.holdToolStripMenuItem.Name = "holdToolStripMenuItem";
-            this.holdToolStripMenuItem.Size = new System.Drawing.Size(196, 22);
+            this.holdToolStripMenuItem.Size = new System.Drawing.Size(219, 22);
             this.holdToolStripMenuItem.Text = "Hold Claim";
             this.holdToolStripMenuItem.Click += new System.EventHandler(this.holdToolStripMenuItem_Click);
             // 
             // changeFinancialClassToolStripMenuItem
             // 
             this.changeFinancialClassToolStripMenuItem.Name = "changeFinancialClassToolStripMenuItem";
-            this.changeFinancialClassToolStripMenuItem.Size = new System.Drawing.Size(196, 22);
+            this.changeFinancialClassToolStripMenuItem.Size = new System.Drawing.Size(219, 22);
             this.changeFinancialClassToolStripMenuItem.Text = "Change Financial Class";
             this.changeFinancialClassToolStripMenuItem.Click += new System.EventHandler(this.changeFinancialClassToolStripMenuItem_Click);
             // 
             // changeClientToolStripMenuItem
             // 
             this.changeClientToolStripMenuItem.Name = "changeClientToolStripMenuItem";
-            this.changeClientToolStripMenuItem.Size = new System.Drawing.Size(196, 22);
+            this.changeClientToolStripMenuItem.Size = new System.Drawing.Size(219, 22);
             this.changeClientToolStripMenuItem.Text = "Change Client";
             this.changeClientToolStripMenuItem.Click += new System.EventHandler(this.changeClientToolStripMenuItem_Click);
             // 
             // changeDateOfServiceToolStripMenuItem
             // 
             this.changeDateOfServiceToolStripMenuItem.Name = "changeDateOfServiceToolStripMenuItem";
-            this.changeDateOfServiceToolStripMenuItem.Size = new System.Drawing.Size(196, 22);
+            this.changeDateOfServiceToolStripMenuItem.Size = new System.Drawing.Size(219, 22);
             this.changeDateOfServiceToolStripMenuItem.Text = "Change Date of Service";
             this.changeDateOfServiceToolStripMenuItem.Click += new System.EventHandler(this.changeDateOfServiceToolStripMenuItem_Click);
             // 
@@ -300,6 +303,13 @@
             this.showAccountsWithPmtCheckbox.UseVisualStyleBackColor = true;
             this.showAccountsWithPmtCheckbox.CheckedChanged += new System.EventHandler(this.showAccountsWithPmtCheckbox_CheckedChanged);
             // 
+            // changeToYFinancialClassToolStripMenuItem
+            // 
+            this.changeToYFinancialClassToolStripMenuItem.Name = "changeToYFinancialClassToolStripMenuItem";
+            this.changeToYFinancialClassToolStripMenuItem.Size = new System.Drawing.Size(219, 22);
+            this.changeToYFinancialClassToolStripMenuItem.Text = "Change to Y Financial Class";
+            this.changeToYFinancialClassToolStripMenuItem.Click += new System.EventHandler(this.changeToYFinancialClassToolStripMenuItem_Click);
+            // 
             // WorkListForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -354,5 +364,6 @@
         private System.Windows.Forms.RadioButton clientFilterRadioBtn;
         private System.Windows.Forms.RadioButton accountFilterRadioBtn;
         private System.Windows.Forms.CheckBox showAccountsWithPmtCheckbox;
+        private System.Windows.Forms.ToolStripMenuItem changeToYFinancialClassToolStripMenuItem;
     }
 }

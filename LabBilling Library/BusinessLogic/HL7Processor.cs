@@ -301,7 +301,7 @@ namespace LabBilling.Core.BusinessLogic
                 {
                     Log.Instance.Warn($"[WARNING] Insurance code not valid {ins.InsCode}");
                     errors.AppendLine($"[WARNING] Insurance code not valid {ins.InsCode}");
-                    canFile = false;
+                    canFile = true;
                 }
                 else
                 {
@@ -312,21 +312,48 @@ namespace LabBilling.Core.BusinessLogic
             if (string.IsNullOrEmpty(accountRecord.FinCode))
             {
                 Log.Instance.Error($"[ERROR] No fin code");
-                if (accountRecord.ClientMnem == "WTCC")
+                switch (accountRecord.Client.BillMethod)
                 {
-                    accountRecord.FinCode = "Y";
-                }
-                else if (accountRecord.Insurances.Count > 0)
-                {
-                    if (accountRecord.FinCode != accountRecord.Insurances[0].FinCode)
-                    {
-                        accountRecord.FinCode = accountRecord.Insurances[0].FinCode;
-                    }
-                }
-                else
-                {
-                    accountRecord.FinCode = "K";
-                    canFile = canFile & true;
+                    case "INVOICE":
+                        accountRecord.FinCode = "Y";
+                        break;
+                    case "PATIENT":
+                        if (accountRecord.Insurances.Count > 0)
+                        {
+                            if (accountRecord.FinCode != accountRecord.Insurances[0].FinCode)
+                            {
+                                accountRecord.FinCode = accountRecord.Insurances[0].FinCode;
+                            }
+                        }
+                        if(accountRecord.FinCode == "Y")
+                        {
+                            accountRecord.FinCode = "K";
+                        }
+                        break;
+                    case "PER ACCOUNT":
+                        if (accountRecord.FinCode != "Y")
+                        {
+                            if (accountRecord.Insurances.Count > 0)
+                            {
+                                if (accountRecord.FinCode != accountRecord.Insurances[0].FinCode)
+                                {
+                                    accountRecord.FinCode = accountRecord.Insurances[0].FinCode;
+                                }
+                            }
+                        }
+                        break;
+                    default:
+                        if (accountRecord.FinCode != "Y")
+                        {
+                            if (accountRecord.Insurances.Count > 0)
+                            {
+                                if (accountRecord.FinCode != accountRecord.Insurances[0].FinCode)
+                                {
+                                    accountRecord.FinCode = accountRecord.Insurances[0].FinCode;
+                                }
+                            }
+                        }
+                        break;
                 }
             }
 
@@ -676,6 +703,11 @@ namespace LabBilling.Core.BusinessLogic
                 ins.InsCode = string.IsNullOrEmpty(in1.Fields(2).Components(1).Value) 
                     ? in1.Fields(2).Components(1).Value 
                     : mappingRepository.GetMappedValue("INS_CODE", "CERNER", in1.Fields(2).Components(1).Value);
+                if(ins.InsCode == String.Empty)
+                {
+                    ins.InsCode = in1.Fields(2).Components(1).Value;
+                }
+
                 ins.PlanName = in1.Fields(2).Components(2).Value;
                 ins.PlanStreetAddress1 = in1.Fields(5).Components(1).Value;
                 ins.PlanStreetAddress2 = in1.Fields(5).Components(2).Value;

@@ -10,14 +10,16 @@ namespace LabBilling.Core.DataAccess
 {
     public class ClientRepository : RepositoryBase<Client>
     {
+        ClientDiscountRepository clientDiscountRepository;
+
         public ClientRepository(string connection) : base(connection)
         {
-
+            clientDiscountRepository = new ClientDiscountRepository(connection);
         }
 
         public ClientRepository(PetaPoco.Database db) : base(db)
         {
-
+            clientDiscountRepository = new ClientDiscountRepository(db);
         }
 
         public List<Client> GetAll(bool includeInactive)
@@ -45,7 +47,6 @@ namespace LabBilling.Core.DataAccess
         public Client GetClient(string clientMnem)
         {
             Log.Instance.Debug($"Entering - {clientMnem}");
-            ClientDiscountRepository clientDiscountRepository = new ClientDiscountRepository(dbConnection);
 
             if (clientMnem == null)
             {
@@ -65,6 +66,9 @@ namespace LabBilling.Core.DataAccess
             if (string.IsNullOrEmpty(table.BillProfCharges))
                 table.BillProfCharges = "NO";
 
+            if (string.IsNullOrEmpty(table.BillMethod))
+                table.BillMethod = "PER ACCOUNT";
+
             return base.Add(table);
         }
 
@@ -75,6 +79,7 @@ namespace LabBilling.Core.DataAccess
             bool success;
             if (record != null)
             {
+                clientDiscountRepository.SaveAll(table.Discounts);
                 success = this.Update(table);
             }
             else
@@ -82,6 +87,7 @@ namespace LabBilling.Core.DataAccess
                 try
                 {
                     this.Add(table);
+                    clientDiscountRepository.SaveAll(table.Discounts);
                     success = true;
                 }
                 catch (Exception ex)

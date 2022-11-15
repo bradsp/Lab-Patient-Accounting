@@ -54,6 +54,7 @@ namespace LabBilling.Forms
             {
                 return;
             }
+
             try
             {
                 chk.CheckNo = checkNoTextBox.Text;
@@ -62,9 +63,20 @@ namespace LabBilling.Forms
                 chk.Comment = commentTextBox.Text;
                 chk.ContractualAmount = Convert.ToDouble(contractualAmtTextBox.DollarValue);
                 chk.WriteOffAmount = Convert.ToDouble(writeOffAmtTextBox.DollarValue);
-                if(writeOffCodeComboBox.SelectedValue != null)
-                    chk.WriteOffCode = writeOffCodeComboBox.SelectedValue.ToString();
                 chk.WriteOffDate = writeOffDateTextBox.DateValue;
+                if(chk.WriteOffDate != null)
+                {
+                    if (writeOffCodeComboBox.SelectedValue != null)
+                        chk.WriteOffCode = writeOffCodeComboBox.SelectedValue.ToString();
+
+                    if(string.IsNullOrEmpty(chk.WriteOffCode))
+                    {
+                        //must have write off code
+                        errorProvider1.SetError(writeOffCodeComboBox, "Must select a write off reason");
+                        return;
+                    }
+                }
+
                 chk.InsCode = insuranceComboBox.SelectedValue != null ? insuranceComboBox.SelectedValue.ToString() : String.Empty;
                 chk.Source = fromTextBox.Text;
 
@@ -121,6 +133,12 @@ namespace LabBilling.Forms
             {
                 errorProvider1.SetError(writeOffDateTextBox, string.Empty);
             }
+        }
+
+        private void writeOffAmtTextBox_Validated(object sender, EventArgs e)
+        {
+            if (!string.IsNullOrEmpty(writeOffAmtTextBox.Text))
+                writeOffDateTextBox.Text = dateReceivedTextBox.Text;
         }
     }
 }

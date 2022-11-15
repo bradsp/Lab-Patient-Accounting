@@ -286,6 +286,7 @@
             this.writeOffAmtTextBox.Size = new System.Drawing.Size(100, 20);
             this.writeOffAmtTextBox.TabIndex = 16;
             this.writeOffAmtTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.writeOffAmtTextBox.Validated += new System.EventHandler(this.writeOffAmtTextBox_Validated);
             // 
             // contractualAmtTextBox
             // 

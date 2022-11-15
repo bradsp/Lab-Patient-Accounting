@@ -50,9 +50,6 @@
             this.testToolStripMenuItem = new System.Windows.Forms.ToolStripSeparator();
             this.tsmi_C3_C4 = new System.Windows.Forms.ToolStripMenuItem();
             this.tssBilling_Mcloe = new System.Windows.Forms.ToolStripSeparator();
-            this.tsddbtnMCLOEReports = new System.Windows.Forms.ToolStripDropDownButton();
-            this.aBNsReportedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.tsbtnPrint = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.tssbCDM = new System.Windows.Forms.ToolStripSplitButton();
@@ -91,8 +88,6 @@
             this.tsddbtnUserDefined,
             this.tsddbtnBillingReports,
             this.tssBilling_Mcloe,
-            this.tsddbtnMCLOEReports,
-            this.toolStripSeparator2,
             this.tsbtnPrint,
             this.toolStripSeparator4,
             this.tssbCDM,
@@ -119,7 +114,7 @@
             this.tsddbtnUserDefined.Size = new System.Drawing.Size(128, 22);
             this.tsddbtnUserDefined.Text = "User Defined Report";
             this.tsddbtnUserDefined.ButtonClick += new System.EventHandler(this.tsbtnComboCpt4_Click);
-            this.tsddbtnUserDefined.DropDownOpening += new System.EventHandler(this.tsddbtnBillingReports_DropDownOpening);
+            //this.tsddbtnUserDefined.DropDownOpening += new System.EventHandler(this.tsddbtnBillingReports_DropDownOpening);
             // 
             // tscbCPT4s
             // 
@@ -145,7 +140,6 @@
             this.tsddbtnBillingReports.Size = new System.Drawing.Size(96, 22);
             this.tsddbtnBillingReports.Tag = "WTHMCLBILL|MCLLIVE";
             this.tsddbtnBillingReports.Text = "Billing Reports";
-            this.tsddbtnBillingReports.DropDownOpening += new System.EventHandler(this.tsddbtnBillingReports_DropDownOpening);
             // 
             // tsmi80299
             // 
@@ -280,32 +274,6 @@
             this.tssBilling_Mcloe.Padding = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.tssBilling_Mcloe.Size = new System.Drawing.Size(6, 25);
             // 
-            // tsddbtnMCLOEReports
-            // 
-            this.tsddbtnMCLOEReports.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.tsddbtnMCLOEReports.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.aBNsReportedToolStripMenuItem});
-            this.tsddbtnMCLOEReports.Image = ((System.Drawing.Image)(resources.GetObject("tsddbtnMCLOEReports.Image")));
-            this.tsddbtnMCLOEReports.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsddbtnMCLOEReports.Name = "tsddbtnMCLOEReports";
-            this.tsddbtnMCLOEReports.Size = new System.Drawing.Size(103, 22);
-            this.tsddbtnMCLOEReports.Tag = "MCLOE|GOMCLLIVE";
-            this.tsddbtnMCLOEReports.Text = "MCLOE Reports";
-            this.tsddbtnMCLOEReports.Visible = false;
-            this.tsddbtnMCLOEReports.DropDownOpening += new System.EventHandler(this.tsddbtnMCLOEReports_DropDownOpening);
-            // 
-            // aBNsReportedToolStripMenuItem
-            // 
-            this.aBNsReportedToolStripMenuItem.Name = "aBNsReportedToolStripMenuItem";
-            this.aBNsReportedToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
-            this.aBNsReportedToolStripMenuItem.Text = "ABN\'s Reported";
-            this.aBNsReportedToolStripMenuItem.Click += new System.EventHandler(this.aBNsReportedToolStripMenuItem_Click);
-            // 
-            // toolStripSeparator2
-            // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
-            // 
             // tsbtnPrint
             // 
             this.tsbtnPrint.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
@@ -367,7 +335,7 @@
             this.tssbTableReports.Text = "Reports from Table";
             this.tssbTableReports.ToolTipText = "Retrieve the report code from the Sql table for each item listed.";
             this.tssbTableReports.ButtonClick += new System.EventHandler(this.tssbTableReports_ButtonClick);
-            this.tssbTableReports.DropDownOpened += new System.EventHandler(this.tsddbtnBillingReports_DropDownOpening);
+            //this.tssbTableReports.DropDownOpened += new System.EventHandler(this.tsddbtnBillingReports_DropDownOpening);
             this.tssbTableReports.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.tssbTableReports_DropDownItemClicked);
             // 
             // toolStripSeparator3
@@ -558,9 +526,6 @@
         private System.Windows.Forms.ToolStripMenuItem accountsWithNoPatientRecordToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem accountsWithNoInsuranceRecordToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem accountsWhereFinCodeDoesNotMatchPrimaryInsuranceFincodeToolStripMenuItem;
-        private System.Windows.Forms.ToolStripDropDownButton tsddbtnMCLOEReports;
-        private System.Windows.Forms.ToolStripMenuItem aBNsReportedToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripMenuItem tsmiNeedModifiers;
         private System.Windows.Forms.ToolStripMenuItem tsmi_82575_82565;
         private System.Windows.Forms.ToolStripMenuItem tsmi_86157_86156;

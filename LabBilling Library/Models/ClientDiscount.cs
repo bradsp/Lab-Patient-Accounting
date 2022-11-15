@@ -21,7 +21,10 @@ namespace LabBilling.Core.Models
         public string ClientMnem { get; set; }
 
         [Column("start_cdm")]
-        public string StartCdmRange { get; set; }
+        public string Cdm { get; set; }
+
+        [Ignore]
+        public string CdmDescription { get; set; }
 
         [Column("end_cdm")]
         public string EndCdmRange { get; set; }

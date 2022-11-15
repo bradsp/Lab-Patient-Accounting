@@ -669,7 +669,7 @@ namespace LabBilling.Core.DataAccess
                         break;
                     case "C":
                         //todo: calculate client discount
-                        var cliDiscount = accData.Client.Discounts.Find(c => c.StartCdmRange == cdm);
+                        var cliDiscount = accData.Client.Discounts.Find(c => c.Cdm == cdm);
                         double discountPercentage = accData.Client.DefaultDiscount;
                         if(cliDiscount != null)
                         {
@@ -843,6 +843,64 @@ namespace LabBilling.Core.DataAccess
 
         }
     
+        /// <summary>
+        /// Move all charges between accounts. Credits the charges from sourceAccount and charges them on destinationAccount.
+        /// SourceAccount will have a zero total charge amount.
+        /// </summary>
+        /// <param name="sourceAccount"></param>
+        /// <param name="destinationAccount"></param>
+        public (bool isSuccess, string error) MoveCharges(string sourceAccount, string destinationAccount)
+        {
+            if(string.IsNullOrEmpty(sourceAccount) || string.IsNullOrEmpty(destinationAccount))
+            {
+                throw new ArgumentException("One or both arguments are null or empty.");
+            }
+            
+            var source = GetByAccount(sourceAccount);
+            var destination = GetByAccount(destinationAccount);
+            if(source == null || destination == null)
+            {
+                Log.Instance.Error($"Either source or destination account was not valid. {sourceAccount} {destinationAccount}");
+                return (false, "Either source or destination account was not valid.");
+            }
+
+            var charges = source.Charges.Where(c => c.IsCredited == false);
+
+            foreach(var charge in charges)
+            {
+                chrgRepository.CreditCharge(charge.ChrgId, $"Move to {destinationAccount}");
+                AddCharge(destination, charge.CDMCode, charge.Quantity, (DateTime)destination.TransactionDate, $"Moved from {sourceAccount}", charge.ReferenceReq);
+            }
+            return (true, string.Empty);
+        }
+
+        /// <summary>
+        /// Moves a single charge from sourceAccount to destinationAccount
+        /// </summary>
+        /// <param name="sourceAccount"></param>
+        /// <param name="destinationAccount"></param>
+        /// <param name="chrgId"></param>
+        public void MoveCharge(string sourceAccount, string destinationAccount, int chrgId)
+        {
+            if (string.IsNullOrEmpty(sourceAccount) || string.IsNullOrEmpty(destinationAccount))
+            {
+                throw new ArgumentException("One or both arguments are null or empty.");
+            }
+
+            var source = GetByAccount(sourceAccount);
+            var destination = GetByAccount(destinationAccount);
+
+            var charge = source.Charges.SingleOrDefault(c => c.ChrgId == chrgId);
+
+            if(charge.IsCredited)
+            {
+                throw new ApplicationException("Charge is already credited.");
+            }
+
+            chrgRepository.CreditCharge(charge.ChrgId, $"Move to {destinationAccount}");
+            AddCharge(destinationAccount, charge.CDMCode, charge.Quantity, (DateTime)charge.ServiceDate, $"Moved from {sourceAccount}", charge.ReferenceReq);
+
+        }
     
     }
 }

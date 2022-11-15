@@ -18,13 +18,18 @@ namespace LabBilling.Forms
         public Client client;
         private ClientRepository clientRepository;
         private GLCodeRepository gLCodeRepository;
+        private CdmRepository cdmRepository;
         public string SelectedClient { get; set; }
+        private BindingSource clientDiscountBindingSource = new BindingSource();
+        private DataTable clientDiscountDataTable;
+        private Cdm currentCdm = null;
 
         public ClientMaintenanceEditForm()
         {
             InitializeComponent();
             clientRepository = new ClientRepository(Helper.ConnVal);
             gLCodeRepository = new GLCodeRepository(Helper.ConnVal);
+            cdmRepository = new CdmRepository(Helper.ConnVal);
         }
 
         private void btnSave_Click(object sender, EventArgs e)
@@ -45,6 +50,7 @@ namespace LabBilling.Forms
 
             client.MroName = tbMROName.Text;
             client.MroStreetAddress1 = tbMROAddress.Text;
+            client.MroStreetAddress2 = tbMROAddress2.Text;
             client.MroCity = tbMROCity.Text;
             client.MroState = cbMROState.SelectedValue != null ? cbMROState.SelectedValue.ToString() : String.Empty;
             client.MroZipCode = tbMROZipcode.Text;
@@ -52,6 +58,7 @@ namespace LabBilling.Forms
             client.FeeSchedule = cbFeeSched.SelectedValue != null ? cbFeeSched.SelectedValue.ToString() : String.Empty;
             client.ElectronicBillingType = cbEmrType.SelectedValue != null ? cbEmrType.SelectedValue.ToString() : String.Empty;
             client.GlCode = cbCostCenter.SelectedValue != null ? cbCostCenter.SelectedValue.ToString() : String.Empty;
+            client.BillMethod = billMethodComboBox.SelectedItem != null ? billMethodComboBox.SelectedItem.ToString() : String.Empty;
 
             client.Type = cbClientType.SelectedValue != null ? Convert.ToInt16(cbClientType.SelectedValue.ToString()) : 0;
             client.FacilityNo = tbClientCode.Text;
@@ -61,6 +68,8 @@ namespace LabBilling.Forms
             client.PrintInvoiceInDateOrder = chkDateOrder.Checked;
             client.DoNotBill = chkDoNotBill.Checked;
             client.PrintCptOnInvoice = chkPrintCPTonBill.Checked;
+
+            client.Discounts = Helper.ConvertToList<ClientDiscount>(clientDiscountDataTable);
 
             DialogResult = DialogResult.OK;
             return;
@@ -85,6 +94,7 @@ namespace LabBilling.Forms
             tbFax.Text = client.Fax;
             tbZipcode.Text = client.ZipCode;
             tbMROAddress.Text = client.MroStreetAddress1;
+            tbMROAddress2.Text = client.MroStreetAddress2;
             tbMROCity.Text = client.MroCity;
             tbMROName.Text = client.MroName;
             tbMROZipcode.Text = client.MroZipCode;
@@ -92,6 +102,7 @@ namespace LabBilling.Forms
             cbState.SelectedValue = client.State ?? String.Empty;
             cbFeeSched.SelectedValue = client.FeeSchedule ?? String.Empty;
             cbEmrType.SelectedValue = client.ElectronicBillingType ?? String.Empty;
+            billMethodComboBox.SelectedItem = client.BillMethod ?? String.Empty;
             cbCounty.SelectedValue = client.County ?? String.Empty;
             cbCostCenter.SelectedValue = client.GlCode ?? String.Empty;
             cbClientType.SelectedValue = client.Type.ToString();
@@ -102,6 +113,23 @@ namespace LabBilling.Forms
             chkDateOrder.Checked = client.PrintInvoiceInDateOrder;
             chkDoNotBill.Checked = client.DoNotBill;
             chkPrintCPTonBill.Checked = client.PrintCptOnInvoice;
+
+
+            clientDiscountDataTable = client.Discounts.ToDataTable();
+            clientDiscountBindingSource.DataSource = clientDiscountDataTable;
+            clientDiscountDataGrid.DataSource = clientDiscountBindingSource;
+
+            clientDiscountDataTable.DefaultView.Sort = $"{nameof(ClientDiscount.Cdm)}";
+
+            clientDiscountDataGrid.SetColumnsVisibility(false);
+
+            clientDiscountDataGrid.Columns[nameof(ClientDiscount.Cdm)].Visible = true;
+            clientDiscountDataGrid.Columns[nameof(ClientDiscount.CdmDescription)].Visible = true;
+            clientDiscountDataGrid.Columns[nameof(ClientDiscount.CdmDescription)].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            clientDiscountDataGrid.Columns[nameof(ClientDiscount.PercentDiscount)].Visible = true;
+            clientDiscountDataGrid.Columns[nameof(ClientDiscount.Price)].Visible = true;
+            clientDiscountDataGrid.Columns[nameof(ClientDiscount.Price)].DefaultCellStyle.Format = "N2";
+            clientDiscountDataGrid.Columns[nameof(ClientDiscount.PercentDiscount)].DefaultCellStyle.Format = "N2";
 
             tbClientMnem.ReadOnly = true;
         }
@@ -175,6 +203,132 @@ namespace LabBilling.Forms
                     client = new Client();
                 }
             }
+        }
+
+        private void clientDiscountDataGrid_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+
+
+
+
+        }
+
+        private void clientDiscountDataGrid_CellEndEdit(object sender, DataGridViewCellEventArgs e)
+        {
+            switch (clientDiscountDataGrid.Columns[e.ColumnIndex].Name)
+            {
+                case nameof(ClientDiscount.Cdm):
+                    //look up cdm number and get amount
+                    currentCdm = cdmRepository.GetCdm(clientDiscountDataGrid[e.ColumnIndex, e.RowIndex].Value.ToString());
+                    if (currentCdm != null)
+                    {
+                        clientDiscountDataGrid[nameof(ClientDiscount.CdmDescription), e.RowIndex].Value = currentCdm.Description;
+                    }
+                    else
+                    {
+                        //pop a cdm search dialog
+                        CdmLookupForm cdmLookupForm = new CdmLookupForm();
+                        cdmLookupForm.Datasource = DataCache.Instance.GetCdms();
+
+                        cdmLookupForm.InitialSearchText = clientDiscountDataGrid[e.ColumnIndex, e.RowIndex].Value.ToString();
+                        if (cdmLookupForm.ShowDialog() == DialogResult.OK)
+                        {
+                            clientDiscountDataGrid[e.ColumnIndex, e.RowIndex].Value = cdmLookupForm.SelectedValue;
+                            currentCdm = cdmRepository.GetCdm(cdmLookupForm.SelectedValue);
+                            if (currentCdm != null)
+                            {
+                                clientDiscountDataGrid[nameof(ClientDiscount.CdmDescription), e.RowIndex].Value = currentCdm.Description;
+
+                                clientDiscountDataGrid.Focus();
+                                clientDiscountDataGrid.CurrentCell = clientDiscountDataGrid[nameof(ClientDiscount.PercentDiscount), 0];
+                                clientDiscountDataGrid.BeginEdit(true);
+                            }
+                            else
+                            {
+                                clientDiscountDataGrid[e.ColumnIndex, e.RowIndex].Value = string.Empty;
+
+                                clientDiscountDataGrid.Focus();
+                                clientDiscountDataGrid.CurrentCell = clientDiscountDataGrid[nameof(ClientDiscount.Cdm), 0];
+                                clientDiscountDataGrid.BeginEdit(true);
+                            }
+                        }
+                    }
+
+                    break;
+                case nameof(ClientDiscount.PercentDiscount):
+                    double clientPrice = 0.00;
+                    switch (client.FeeSchedule)
+                    {
+                        case "1":
+                            clientPrice = currentCdm.CdmFeeSchedule1.Sum(p => p.CClassPrice);
+                            break;
+                        case "2":
+                            clientPrice = currentCdm.CdmFeeSchedule2.Sum(p => p.CClassPrice);
+                            break;
+                        case "3":
+                            clientPrice = currentCdm.CdmFeeSchedule3.Sum(p => p.CClassPrice);
+                            break;
+                        case "4":
+                            clientPrice = currentCdm.CdmFeeSchedule4.Sum(p => p.CClassPrice);
+                            break;
+                        case "5":
+                            clientPrice = currentCdm.CdmFeeSchedule5.Sum(p => p.CClassPrice);
+                            break;
+                        default:
+                            break;
+                    }
+                    double percentDiscount = Convert.ToDouble(clientDiscountDataGrid[e.ColumnIndex, e.RowIndex].Value.ToString());
+                    percentDiscount = percentDiscount / 100;
+                    double discountPrice = clientPrice - (clientPrice * percentDiscount);
+                    clientDiscountDataGrid[nameof(ClientDiscount.Price), e.RowIndex].Value = discountPrice.ToString();
+                    break;
+                case nameof(ClientDiscount.Price):
+                    clientPrice = 0.00;
+                    switch (client.FeeSchedule)
+                    {
+                        case "1":
+                            clientPrice = currentCdm.CdmFeeSchedule1.Sum(p => p.CClassPrice);
+                            break;
+                        case "2":
+                            clientPrice = currentCdm.CdmFeeSchedule2.Sum(p => p.CClassPrice);
+                            break;
+                        case "3":
+                            clientPrice = currentCdm.CdmFeeSchedule3.Sum(p => p.CClassPrice);
+                            break;
+                        case "4":
+                            clientPrice = currentCdm.CdmFeeSchedule4.Sum(p => p.CClassPrice);
+                            break;
+                        case "5":
+                            clientPrice = currentCdm.CdmFeeSchedule5.Sum(p => p.CClassPrice);
+                            break;
+                        default:
+                            break;
+                    }
+                    discountPrice = Convert.ToDouble(clientDiscountDataGrid[e.ColumnIndex, e.RowIndex].Value.ToString());
+                    percentDiscount = ((clientPrice - discountPrice) / clientPrice) * 100;
+                    clientDiscountDataGrid[nameof(ClientDiscount.PercentDiscount), e.RowIndex].Value = percentDiscount.ToString();
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void clientDiscountDataGrid_RowEnter(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex == clientDiscountDataGrid.NewRowIndex)
+                return;
+
+            string cdm = clientDiscountDataGrid[nameof(ClientDiscount.Cdm), e.RowIndex].Value.ToString();
+
+            if(!string.IsNullOrEmpty(cdm))
+            {
+                currentCdm = cdmRepository.GetCdm(cdm);
+            }
+        }
+
+        private void clientDiscountDataGrid_RowLeave(object sender, DataGridViewCellEventArgs e)
+        {
+
         }
     }
 }

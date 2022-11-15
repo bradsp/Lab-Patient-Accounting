@@ -230,7 +230,6 @@ namespace LabBilling.Core.BusinessLogic.Validators
         private bool NotHaveDuplicateCdms(List<Chrg> chrgs)
         {
 
-            bool isOK = false;
             Dictionary<string, bool> duplicates = new Dictionary<string, bool>() 
             {
                 {"5686078", false },
@@ -249,10 +248,11 @@ namespace LabBilling.Core.BusinessLogic.Validators
             bool isDuplicate = true;
             foreach (var item in duplicates)
             {
-                isDuplicate = item.Value;
+                if (item.Value == false)
+                    isDuplicate = false;
             }
 
-            return isDuplicate;
+            return !isDuplicate;
         }
 
         private bool NotHaveBundledOBPanel(Account account)

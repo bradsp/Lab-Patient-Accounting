@@ -537,8 +537,6 @@ namespace LabBilling.Forms
             string newFinCode = InputDialogs.SelectFinancialCode(accts[nameof(AccountSearch.FinCode)].ToString());
             if (!string.IsNullOrEmpty(newFinCode))
             {
-
-                //MessageBox.Show(this, $"New financial class is {newFinCode}");
                 try
                 {
                     accountRepository.ChangeFinancialClass(ref account, newFinCode);
@@ -707,7 +705,49 @@ namespace LabBilling.Forms
 
         private void accountGridContextMenu_VisibleChanged(object sender, EventArgs e)
         {
-            if(accountGridContextMenu.Visible)
+        }
+
+        private void showAccountsWithPmtCheckbox_CheckedChanged(object sender, EventArgs e)
+        {
+            UpdateFilter();
+        }
+
+        private void changeToYFinancialClassToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+            try
+            {
+                var selectedAccount = accountGrid.SelectedRows[0].Cells[nameof(AccountSearch.Account)].Value.ToString();
+                var accts = accountTable.Rows.Find(selectedAccount);
+                var account = accountRepository.GetByAccount(selectedAccount);
+
+                if (account.FinCode != "Y")
+                {
+                    accountRepository.ChangeFinancialClass(ref account, "Y");
+                    accts[nameof(AccountSearch.FinCode)] = account.FinCode;
+                    accountGrid.Refresh();
+                }
+                else
+                {
+                    MessageBox.Show("Account is already a Y financial code.");
+                }
+            }
+            catch (ArgumentException anex)
+            {
+                Log.Instance.Error(anex, $"Financial code {anex.ParamName} is not valid.");
+                MessageBox.Show(this, $"{anex.ParamName} is not a valid financial code. Financial code was not changed.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            catch (Exception ex)
+            {
+                Log.Instance.Error(ex, $"Error changing financial class.");
+                MessageBox.Show(this, $"Error changing financial class. Financial code was not changed.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+        }
+
+        private void accountGridContextMenu_Opened(object sender, EventArgs e)
+        {
+            if (accountGridContextMenu.Visible)
             {
                 var selectedAccount = accountGrid.SelectedRows[0].Cells[nameof(AccountSearch.Account)].Value.ToString();
 
@@ -715,12 +755,19 @@ namespace LabBilling.Forms
                     holdToolStripMenuItem.Text = "Remove from Hold";
                 else
                     holdToolStripMenuItem.Text = "Manual Hold";
-            }
-        }
 
-        private void showAccountsWithPmtCheckbox_CheckedChanged(object sender, EventArgs e)
-        {
-            UpdateFilter();
+                if (accountGrid.SelectedRows[0].Cells[nameof(AccountSearch.FinCode)].Value.ToString() != "Y")
+                {
+                    changeToYFinancialClassToolStripMenuItem.Visible = true;
+                    changeToYFinancialClassToolStripMenuItem.Enabled = true;
+                }
+                else
+                {
+                    changeToYFinancialClassToolStripMenuItem.Visible = false;
+                    changeToYFinancialClassToolStripMenuItem.Enabled = false;
+                }
+            }
+
         }
     }
 }

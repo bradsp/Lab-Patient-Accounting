@@ -53,8 +53,18 @@ namespace LabBilling.Core.DataAccess
 
             if (record == null)
             {
-                //there was not a pat record, so no need to proceed.
-                return null;
+                //if there ios not a pat record, create one. All accounts must have a pat record
+
+                record = new Pat();
+                record.AccountNo = account.AccountNo;
+
+                Add(record);
+
+                record = dbConnection.SingleOrDefault<Pat>("where account = @0",
+                    new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account.AccountNo });
+
+                if (record == null)
+                    return null;
             }
 
             record.Physician = phyRepository.GetByNPI(record.ProviderId);

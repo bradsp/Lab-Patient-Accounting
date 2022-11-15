@@ -49,12 +49,15 @@
             this.label20 = new System.Windows.Forms.Label();
             this.tbMROCity = new System.Windows.Forms.TextBox();
             this.label21 = new System.Windows.Forms.Label();
+            this.tbMROAddress2 = new System.Windows.Forms.TextBox();
             this.tbMROAddress = new System.Windows.Forms.TextBox();
             this.label22 = new System.Windows.Forms.Label();
             this.tbMROName = new System.Windows.Forms.TextBox();
             this.label23 = new System.Windows.Forms.Label();
             this.tabComment = new System.Windows.Forms.TabPage();
             this.tbComment = new System.Windows.Forms.TextBox();
+            this.tabDiscounts = new System.Windows.Forms.TabPage();
+            this.clientDiscountDataGrid = new System.Windows.Forms.DataGridView();
             this.tbZipcode = new System.Windows.Forms.MaskedTextBox();
             this.cbCostCenter = new System.Windows.Forms.ComboBox();
             this.label15 = new System.Windows.Forms.Label();
@@ -86,11 +89,15 @@
             this.label1 = new System.Windows.Forms.Label();
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnSave = new System.Windows.Forms.Button();
+            this.label16 = new System.Windows.Forms.Label();
+            this.billMethodComboBox = new System.Windows.Forms.ComboBox();
             this.tabControl1.SuspendLayout();
             this.tabClientPreferences.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numDefaultDiscount)).BeginInit();
             this.tabClientMRO.SuspendLayout();
             this.tabComment.SuspendLayout();
+            this.tabDiscounts.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.clientDiscountDataGrid)).BeginInit();
             this.SuspendLayout();
             // 
             // label5
@@ -99,30 +106,36 @@
             this.label5.Location = new System.Drawing.Point(37, 263);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(44, 13);
-            this.label5.TabIndex = 23;
+            this.label5.TabIndex = 31;
             this.label5.Text = "Contact";
             // 
             // tbContact
             // 
+            this.tbContact.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.tbContact.Location = new System.Drawing.Point(37, 278);
             this.tbContact.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.tbContact.Multiline = true;
             this.tbContact.Name = "tbContact";
             this.tbContact.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.tbContact.Size = new System.Drawing.Size(478, 152);
-            this.tbContact.TabIndex = 24;
+            this.tbContact.Size = new System.Drawing.Size(577, 152);
+            this.tbContact.TabIndex = 32;
             // 
             // tabControl1
             // 
+            this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.tabControl1.Controls.Add(this.tabClientPreferences);
             this.tabControl1.Controls.Add(this.tabClientMRO);
             this.tabControl1.Controls.Add(this.tabComment);
+            this.tabControl1.Controls.Add(this.tabDiscounts);
             this.tabControl1.Location = new System.Drawing.Point(36, 434);
             this.tabControl1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(483, 175);
-            this.tabControl1.TabIndex = 31;
+            this.tabControl1.Size = new System.Drawing.Size(585, 175);
+            this.tabControl1.TabIndex = 33;
             // 
             // tabClientPreferences
             // 
@@ -140,7 +153,7 @@
             this.tabClientPreferences.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.tabClientPreferences.Name = "tabClientPreferences";
             this.tabClientPreferences.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.tabClientPreferences.Size = new System.Drawing.Size(475, 149);
+            this.tabClientPreferences.Size = new System.Drawing.Size(577, 149);
             this.tabClientPreferences.TabIndex = 0;
             this.tabClientPreferences.Text = "Preferences";
             this.tabClientPreferences.UseVisualStyleBackColor = true;
@@ -254,6 +267,7 @@
             this.tabClientMRO.Controls.Add(this.label20);
             this.tabClientMRO.Controls.Add(this.tbMROCity);
             this.tabClientMRO.Controls.Add(this.label21);
+            this.tabClientMRO.Controls.Add(this.tbMROAddress2);
             this.tabClientMRO.Controls.Add(this.tbMROAddress);
             this.tabClientMRO.Controls.Add(this.label22);
             this.tabClientMRO.Controls.Add(this.tbMROName);
@@ -262,63 +276,71 @@
             this.tabClientMRO.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.tabClientMRO.Name = "tabClientMRO";
             this.tabClientMRO.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.tabClientMRO.Size = new System.Drawing.Size(475, 149);
+            this.tabClientMRO.Size = new System.Drawing.Size(577, 149);
             this.tabClientMRO.TabIndex = 1;
             this.tabClientMRO.Text = "Medical Review Officer";
             this.tabClientMRO.UseVisualStyleBackColor = true;
             // 
             // tbMROZipcode
             // 
-            this.tbMROZipcode.Location = new System.Drawing.Point(267, 91);
+            this.tbMROZipcode.Location = new System.Drawing.Point(267, 116);
             this.tbMROZipcode.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.tbMROZipcode.Name = "tbMROZipcode";
             this.tbMROZipcode.Size = new System.Drawing.Size(86, 20);
-            this.tbMROZipcode.TabIndex = 41;
+            this.tbMROZipcode.TabIndex = 10;
             // 
             // label19
             // 
             this.label19.AutoSize = true;
-            this.label19.Location = new System.Drawing.Point(215, 94);
+            this.label19.Location = new System.Drawing.Point(215, 119);
             this.label19.Name = "label19";
             this.label19.Size = new System.Drawing.Size(46, 13);
-            this.label19.TabIndex = 40;
+            this.label19.TabIndex = 9;
             this.label19.Text = "Zipcode";
             // 
             // cbMROState
             // 
             this.cbMROState.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbMROState.FormattingEnabled = true;
-            this.cbMROState.Location = new System.Drawing.Point(85, 89);
+            this.cbMROState.Location = new System.Drawing.Point(85, 114);
             this.cbMROState.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.cbMROState.Name = "cbMROState";
             this.cbMROState.Size = new System.Drawing.Size(124, 21);
-            this.cbMROState.TabIndex = 39;
+            this.cbMROState.TabIndex = 8;
             // 
             // label20
             // 
             this.label20.AutoSize = true;
-            this.label20.Location = new System.Drawing.Point(48, 94);
+            this.label20.Location = new System.Drawing.Point(48, 119);
             this.label20.Name = "label20";
             this.label20.Size = new System.Drawing.Size(32, 13);
-            this.label20.TabIndex = 38;
+            this.label20.TabIndex = 7;
             this.label20.Text = "State";
             // 
             // tbMROCity
             // 
-            this.tbMROCity.Location = new System.Drawing.Point(85, 66);
+            this.tbMROCity.Location = new System.Drawing.Point(85, 91);
             this.tbMROCity.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.tbMROCity.Name = "tbMROCity";
             this.tbMROCity.Size = new System.Drawing.Size(268, 20);
-            this.tbMROCity.TabIndex = 37;
+            this.tbMROCity.TabIndex = 6;
             // 
             // label21
             // 
             this.label21.AutoSize = true;
-            this.label21.Location = new System.Drawing.Point(56, 68);
+            this.label21.Location = new System.Drawing.Point(56, 93);
             this.label21.Name = "label21";
             this.label21.Size = new System.Drawing.Size(24, 13);
-            this.label21.TabIndex = 36;
+            this.label21.TabIndex = 5;
             this.label21.Text = "City";
+            // 
+            // tbMROAddress2
+            // 
+            this.tbMROAddress2.Location = new System.Drawing.Point(85, 67);
+            this.tbMROAddress2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.tbMROAddress2.Name = "tbMROAddress2";
+            this.tbMROAddress2.Size = new System.Drawing.Size(268, 20);
+            this.tbMROAddress2.TabIndex = 4;
             // 
             // tbMROAddress
             // 
@@ -326,7 +348,7 @@
             this.tbMROAddress.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.tbMROAddress.Name = "tbMROAddress";
             this.tbMROAddress.Size = new System.Drawing.Size(268, 20);
-            this.tbMROAddress.TabIndex = 35;
+            this.tbMROAddress.TabIndex = 3;
             // 
             // label22
             // 
@@ -334,7 +356,7 @@
             this.label22.Location = new System.Drawing.Point(35, 46);
             this.label22.Name = "label22";
             this.label22.Size = new System.Drawing.Size(45, 13);
-            this.label22.TabIndex = 34;
+            this.label22.TabIndex = 2;
             this.label22.Text = "Address";
             // 
             // tbMROName
@@ -343,7 +365,7 @@
             this.tbMROName.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.tbMROName.Name = "tbMROName";
             this.tbMROName.Size = new System.Drawing.Size(268, 20);
-            this.tbMROName.TabIndex = 33;
+            this.tbMROName.TabIndex = 1;
             // 
             // label23
             // 
@@ -351,7 +373,7 @@
             this.label23.Location = new System.Drawing.Point(45, 24);
             this.label23.Name = "label23";
             this.label23.Size = new System.Drawing.Size(35, 13);
-            this.label23.TabIndex = 32;
+            this.label23.TabIndex = 0;
             this.label23.Text = "Name";
             // 
             // tabComment
@@ -360,7 +382,7 @@
             this.tabComment.Location = new System.Drawing.Point(4, 22);
             this.tabComment.Name = "tabComment";
             this.tabComment.Padding = new System.Windows.Forms.Padding(3);
-            this.tabComment.Size = new System.Drawing.Size(475, 149);
+            this.tabComment.Size = new System.Drawing.Size(577, 149);
             this.tabComment.TabIndex = 2;
             this.tabComment.Text = "Comments";
             this.tabComment.UseVisualStyleBackColor = true;
@@ -372,8 +394,33 @@
             this.tbComment.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.tbComment.Multiline = true;
             this.tbComment.Name = "tbComment";
-            this.tbComment.Size = new System.Drawing.Size(469, 143);
+            this.tbComment.Size = new System.Drawing.Size(571, 143);
             this.tbComment.TabIndex = 37;
+            // 
+            // tabDiscounts
+            // 
+            this.tabDiscounts.Controls.Add(this.clientDiscountDataGrid);
+            this.tabDiscounts.Location = new System.Drawing.Point(4, 22);
+            this.tabDiscounts.Name = "tabDiscounts";
+            this.tabDiscounts.Padding = new System.Windows.Forms.Padding(3);
+            this.tabDiscounts.Size = new System.Drawing.Size(577, 149);
+            this.tabDiscounts.TabIndex = 3;
+            this.tabDiscounts.Text = "Discounts";
+            this.tabDiscounts.UseVisualStyleBackColor = true;
+            // 
+            // clientDiscountDataGrid
+            // 
+            this.clientDiscountDataGrid.BackgroundColor = System.Drawing.Color.White;
+            this.clientDiscountDataGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.clientDiscountDataGrid.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.clientDiscountDataGrid.Location = new System.Drawing.Point(3, 3);
+            this.clientDiscountDataGrid.Name = "clientDiscountDataGrid";
+            this.clientDiscountDataGrid.Size = new System.Drawing.Size(571, 143);
+            this.clientDiscountDataGrid.TabIndex = 0;
+            this.clientDiscountDataGrid.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.clientDiscountDataGrid_CellEndEdit);
+            this.clientDiscountDataGrid.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.clientDiscountDataGrid_CellValueChanged);
+            this.clientDiscountDataGrid.RowEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.clientDiscountDataGrid_RowEnter);
+            this.clientDiscountDataGrid.RowLeave += new System.Windows.Forms.DataGridViewCellEventHandler(this.clientDiscountDataGrid_RowLeave);
             // 
             // tbZipcode
             // 
@@ -391,7 +438,7 @@
             this.cbCostCenter.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.cbCostCenter.Name = "cbCostCenter";
             this.cbCostCenter.Size = new System.Drawing.Size(124, 21);
-            this.cbCostCenter.TabIndex = 30;
+            this.cbCostCenter.TabIndex = 28;
             // 
             // label15
             // 
@@ -399,18 +446,18 @@
             this.label15.Location = new System.Drawing.Point(404, 82);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(62, 13);
-            this.label15.TabIndex = 29;
+            this.label15.TabIndex = 27;
             this.label15.Text = "Cost Center";
             // 
             // cbEmrType
             // 
             this.cbEmrType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbEmrType.FormattingEnabled = true;
-            this.cbEmrType.Location = new System.Drawing.Point(476, 57);
+            this.cbEmrType.Location = new System.Drawing.Point(476, 55);
             this.cbEmrType.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.cbEmrType.Name = "cbEmrType";
             this.cbEmrType.Size = new System.Drawing.Size(124, 21);
-            this.cbEmrType.TabIndex = 28;
+            this.cbEmrType.TabIndex = 26;
             // 
             // label14
             // 
@@ -418,18 +465,18 @@
             this.label14.Location = new System.Drawing.Point(408, 60);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(58, 13);
-            this.label14.TabIndex = 27;
+            this.label14.TabIndex = 25;
             this.label14.Text = "EMR Type";
             // 
             // cbClientType
             // 
             this.cbClientType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbClientType.FormattingEnabled = true;
-            this.cbClientType.Location = new System.Drawing.Point(476, 32);
+            this.cbClientType.Location = new System.Drawing.Point(476, 31);
             this.cbClientType.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.cbClientType.Name = "cbClientType";
             this.cbClientType.Size = new System.Drawing.Size(124, 21);
-            this.cbClientType.TabIndex = 26;
+            this.cbClientType.TabIndex = 24;
             // 
             // label13
             // 
@@ -437,7 +484,7 @@
             this.label13.Location = new System.Drawing.Point(406, 35);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(60, 13);
-            this.label13.TabIndex = 25;
+            this.label13.TabIndex = 23;
             this.label13.Text = "Client Type";
             // 
             // tbEmail
@@ -634,6 +681,7 @@
             // 
             // btnCancel
             // 
+            this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnCancel.Location = new System.Drawing.Point(138, 637);
             this.btnCancel.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnCancel.Name = "btnCancel";
@@ -645,6 +693,7 @@
             // 
             // btnSave
             // 
+            this.btnSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnSave.BackColor = System.Drawing.Color.PaleGreen;
             this.btnSave.Location = new System.Drawing.Point(37, 636);
             this.btnSave.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
@@ -655,10 +704,34 @@
             this.btnSave.UseVisualStyleBackColor = false;
             this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
             // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(407, 107);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(59, 13);
+            this.label16.TabIndex = 29;
+            this.label16.Text = "Bill Method";
+            // 
+            // billMethodComboBox
+            // 
+            this.billMethodComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.billMethodComboBox.FormattingEnabled = true;
+            this.billMethodComboBox.Items.AddRange(new object[] {
+            "INVOICE",
+            "PATIENT",
+            "PER ACCOUNT"});
+            this.billMethodComboBox.Location = new System.Drawing.Point(476, 104);
+            this.billMethodComboBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.billMethodComboBox.Name = "billMethodComboBox";
+            this.billMethodComboBox.Size = new System.Drawing.Size(124, 21);
+            this.billMethodComboBox.TabIndex = 30;
+            // 
             // ClientMaintenanceEditForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.Color.WhiteSmoke;
             this.ClientSize = new System.Drawing.Size(633, 690);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnSave);
@@ -666,6 +739,8 @@
             this.Controls.Add(this.tbContact);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.tbZipcode);
+            this.Controls.Add(this.billMethodComboBox);
+            this.Controls.Add(this.label16);
             this.Controls.Add(this.cbCostCenter);
             this.Controls.Add(this.label15);
             this.Controls.Add(this.cbEmrType);
@@ -695,7 +770,7 @@
             this.Controls.Add(this.tbClientName);
             this.Controls.Add(this.label1);
             this.Name = "ClientMaintenanceEditForm";
-            this.Text = "ClientMaintenanceEditForm";
+            this.Text = "Client Maintenance";
             this.Load += new System.EventHandler(this.ClientMaintenanceEditForm_Load);
             this.tabControl1.ResumeLayout(false);
             this.tabClientPreferences.ResumeLayout(false);
@@ -705,6 +780,8 @@
             this.tabClientMRO.PerformLayout();
             this.tabComment.ResumeLayout(false);
             this.tabComment.PerformLayout();
+            this.tabDiscounts.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.clientDiscountDataGrid)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -770,5 +847,10 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.Button btnSave;
+        private System.Windows.Forms.TextBox tbMROAddress2;
+        private System.Windows.Forms.TabPage tabDiscounts;
+        private System.Windows.Forms.DataGridView clientDiscountDataGrid;
+        private System.Windows.Forms.Label label16;
+        private System.Windows.Forms.ComboBox billMethodComboBox;
     }
 }
