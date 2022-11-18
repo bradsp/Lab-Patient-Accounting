@@ -57,17 +57,24 @@ namespace LabBilling.Core.DataAccess
         /// <param name="showCredited">True to include credited charges. False to include only active charges.</param>
         /// <param name="includeInvoiced"></param>
         /// <returns></returns>
-        public List<Chrg> GetByAccount(string account, bool showCredited = true, bool includeInvoiced = true)
+        public List<Chrg> GetByAccount(string account, bool showCredited = true, bool includeInvoiced = true, DateTime? asOfDate = null)
         {
             Log.Instance.Debug($"Entering - account {account}");
+
 
             var sql = PetaPoco.Sql.Builder
                 .Select("chrg.*, chrg_details.*")
                 .From("chrg")
                 .InnerJoin("chrg_details").On("chrg_details.chrg_num = chrg.chrg_num")
                 .Where("account = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account });
-            
-            if(!showCredited)
+
+            if (asOfDate != null)
+            {
+                sql.Where($"{_tableName}.{GetRealColumn(nameof(Chrg.mod_date))} > @0",
+                    new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = asOfDate});
+            }
+
+            if (!showCredited)
                 sql.Where("credited = 0");
 
             if (!includeInvoiced)

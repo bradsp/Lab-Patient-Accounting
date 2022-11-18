@@ -32,13 +32,17 @@ namespace LabBilling.Core.DataAccess
 
         }
 
-        public List<Chk> GetByAccount(string account)
+        public List<Chk> GetByAccount(string account, DateTime? asOfDate = null)
         {
             Log.Instance.Trace($"Entering - {account}");
 
             var sql = PetaPoco.Sql.Builder
                 .From(_tableName)
                 .Where("account = @0 ", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account });
+
+            if (asOfDate != null)
+                sql.Where($"{GetRealColumn(nameof(Chk.mod_date))} > @0",
+                    new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = asOfDate });
 
             sql.OrderBy("pay_no");
 

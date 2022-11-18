@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Security.Permissions;
 
 namespace LabBilling.Core.Models
 { 
@@ -8,7 +9,10 @@ namespace LabBilling.Core.Models
     /// </summary>
     public class InvoiceModel
     {
+        public StatementTypeEnum StatementType { get; set; }
+
         //Invoice header information
+        public string ClientMnem { get; set; }
         public string ImageFilePath { get; set; }
         public string ClientName { get; set; }
         public string Address1 { get; set; }
@@ -21,6 +25,8 @@ namespace LabBilling.Core.Models
         public double InvoiceTotal { get; set; }
         public double BalanceForward { get; set; }
         public double BalanceDue { get; set; }
+        public double DiscountTotal { get; set; }
+        public DateTime ThroughDate { get; set; }
 
         public string BillingCompanyName { get; set; }
         public string BillingCompanyAddress { get; set; }
@@ -30,6 +36,15 @@ namespace LabBilling.Core.Models
         public string BillingCompanyPhone { get; set; }
 
         public List<InvoiceDetailModel> InvoiceDetails;
+
+        public List<ClientStatementDetailModel> ClientStatementDetails;
+
+        public enum StatementTypeEnum
+        {
+            Invoice,
+            Statement
+        }
+
     }
 
     /// <summary>
@@ -54,5 +69,14 @@ namespace LabBilling.Core.Models
         public string ClientName { get; set; }
         public string ClientType { get; set; }
         public double UnbilledAmount { get; set; }
+    }
+
+    public class ClientStatementDetailModel
+    {
+        public string Account { get; set; }
+        public string Invoice { get; set; }
+        public DateTime ServiceDate { get; set; }
+        public string Description { get; set; }
+        public double Amount { get; set; }
     }
 }

@@ -24,6 +24,7 @@ namespace LabBilling.Forms
         private void InterfaceMonitor_Load(object sender, EventArgs e)
         {
             FromDate.Value = DateTimeHelper.Yesterday();
+            Cursor.Current = Cursors.WaitCursor;
 
             messagesTable = msgs.GetByDateRange(FromDate.Value, ThruDate.Value).ToDataTable();
             messagesTable.PrimaryKey = new DataColumn[] { messagesTable.Columns[nameof(MessageInbound.SystemMsgId)] };
@@ -59,6 +60,8 @@ namespace LabBilling.Forms
             MessageTypeFilterComboBox.SelectedItem = "All";
 
             ApplyFilter();
+
+            Cursor.Current = Cursors.Default;
         }
 
         private void MessagesGrid_CellClick(object sender, DataGridViewCellEventArgs e)
@@ -202,16 +205,37 @@ namespace LabBilling.Forms
                     messagesTable.DefaultView.RowFilter = newFilter;
                 }
             }
+
+            if(showMessagesWithErrorsCheckBox.Checked)
+            {
+                string newFilter = messagesTable.DefaultView.RowFilter;
+
+                if(!string.IsNullOrEmpty(messagesTable.DefaultView.RowFilter))
+                {
+                    newFilter += " and ";
+                }
+                //"NOT(ISNULL(ColumnName,'')='')"
+                newFilter += $"NOT(ISNULL({nameof(MessageInbound.Errors)},'') = '')";
+
+                messagesTable.DefaultView.RowFilter = newFilter;
+            }
         }
 
         private void FilterButton_Click(object sender, EventArgs e)
         {
+            Cursor.Current = Cursors.WaitCursor;
+
             messagesTable = msgs.GetByDateRange(FromDate.Value, ThruDate.Value).ToDataTable();
             messagesTable.PrimaryKey = new DataColumn[] { messagesTable.Columns[nameof(MessageInbound.SystemMsgId)] };
 
             bindingSource.DataSource = messagesTable;
             MessagesGrid.Refresh();
+
+            messagesTable.DefaultView.Sort = $"{nameof(MessageInbound.MessageDate)} DESC";
+
             ApplyFilter();
+
+            Cursor.Current = Cursors.Default;
         }
 
         private void accountFilterTextBox_KeyDown(object sender, KeyEventArgs e)
@@ -249,6 +273,11 @@ namespace LabBilling.Forms
             {
                 MessageBox.Show("No message selected.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
+        }
+
+        private void showMessagesWithErrorsCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            ApplyFilter();
         }
     }
 }

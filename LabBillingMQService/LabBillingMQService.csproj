@@ -5,17 +5,17 @@
     <TargetFramework>net6.0-windows</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <AssemblyVersion>2022.11.15.1845</AssemblyVersion>
-    <FileVersion>2022.11.15.1845</FileVersion>
+    <AssemblyVersion>2022.11.17.2048</AssemblyVersion>
+    <FileVersion>2022.11.17.2048</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Autofac" Version="6.4.0" />
+    <PackageReference Include="Autofac" Version="6.5.0" />
     <PackageReference Include="Autofac.Extras.Quartz" Version="8.0.0" />
     <PackageReference Include="PetaPoco.Compiled" Version="6.0.532" />
     <PackageReference Include="Quartz" Version="3.5.0" />
-    <PackageReference Include="Topshelf" Version="4.3.0" />
-    <PackageReference Include="Topshelf.Log4Net" Version="4.3.0" />
+    <PackageReference Include="Topshelf" Version="4.3.1-develop.253" />
+    <PackageReference Include="Topshelf.Log4Net" Version="4.3.1-develop.253" />
   </ItemGroup>
 
   <ItemGroup>

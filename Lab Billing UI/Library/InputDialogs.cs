@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using LabBilling.Core.Models;
 using LabBilling.Core.DataAccess;
+using LabBilling.UserControls;
 
 namespace LabBilling.Library
 {
@@ -183,6 +184,76 @@ namespace LabBilling.Library
                 return (DateTime.MinValue, string.Empty);
             }
 
+        }
+
+        public static DateTime? SelectStatementBeginDate(DateTime defaultDate)
+        {
+            Form frm = new Form()
+            {
+                Text = "Generate Statement Begin Date",
+                DialogResult = DialogResult.OK,
+                Width = 400
+            };
+            Label dosLabel = new Label()
+            {
+                Text = "Choose the new date of service",
+                Width = 130
+            };
+            DateTextBox dateTimePicker = new DateTextBox()
+            {
+                Name = "newDateFrm",
+                Width = 100
+            };
+            Button okButton = new Button()
+            {
+                Text = "OK",
+            };
+            Button cancelButton = new Button()
+            {
+                Text = "Cancel",
+            };
+
+            frm.Load += (o, s) =>
+            {
+
+                dosLabel.Top = 20;
+                dosLabel.Left = (frm.Width - dosLabel.Width) / 2;
+                dateTimePicker.Top = dosLabel.Bottom + 10;
+                dateTimePicker.Left = (frm.Width - dateTimePicker.Width) / 2;
+
+                okButton.Left = (frm.Width - okButton.Width - cancelButton.Width - 10) / 2;
+                okButton.Top = dateTimePicker.Bottom + 30;
+                cancelButton.Left = okButton.Left + okButton.Width + 10;
+                cancelButton.Top = okButton.Top;
+
+                dateTimePicker.DateValue = defaultDate;
+            };
+
+            okButton.Click += (o, s) =>
+            {
+                frm.DialogResult = DialogResult.OK;
+                frm.Close();
+            };
+
+            cancelButton.Click += (o, s) =>
+            {
+                frm.DialogResult = DialogResult.Cancel;
+                frm.Close();
+            };
+
+            frm.Controls.Add(dateTimePicker);
+            frm.Controls.Add(dosLabel);
+            frm.Controls.Add(okButton);
+            frm.Controls.Add(cancelButton);
+            if (frm.ShowDialog() == DialogResult.OK)
+            {
+                //MessageBox.Show($"New date is {dateTimePicker}. Reason is {tbReason.Text}");
+                return dateTimePicker.DateValue;
+            }
+            else
+            {
+                return null;
+            }
         }
 
     }

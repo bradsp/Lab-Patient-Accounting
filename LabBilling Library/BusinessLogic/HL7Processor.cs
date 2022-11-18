@@ -121,7 +121,7 @@ namespace LabBilling.Core.BusinessLogic
             Log.Instance.Trace($"Entering");
 
             currentMessage = messagesInboundRepository.GetById(systemMessageId);
-            if(currentMessage != null)
+            if (currentMessage != null)
                 ProcessMessage();
 
         }
@@ -170,13 +170,13 @@ namespace LabBilling.Core.BusinessLogic
 
             var msgsToProcess = messagesInboundRepository.GetUnprocessedMessages();
 
-            foreach(var msg in msgsToProcess)
+            foreach (var msg in msgsToProcess)
             {
                 currentMessage = msg;
                 ProcessMessage();
             }
         }
-       
+
         private (Status status, string statusText, StringBuilder errors) ParseHL7(string message)
         {
             Log.Instance.Debug($"Parsing message: {message}");
@@ -208,7 +208,7 @@ namespace LabBilling.Core.BusinessLogic
                     statusText = result.statusText;
                     processStatus = result.status;
                 }
-                else if(hl7Message.MessageStructure == "ADT_A03")
+                else if (hl7Message.MessageStructure == "ADT_A03")
                 {
                     Log.Instance.Trace($"Message type: {hl7Message.MessageStructure} - Control ID: {hl7Message.MessageControlID}");
                     statusText = "Skipping A03";
@@ -235,7 +235,7 @@ namespace LabBilling.Core.BusinessLogic
                     //errors = result.errors;
                     //statusText = result.statusText;
                     //processStatus = result.status;
-                    
+
                 }
                 else
                 {
@@ -261,11 +261,11 @@ namespace LabBilling.Core.BusinessLogic
             string statusText = string.Empty;
             StringBuilder errors = new StringBuilder();
 
-            string[] invalidFacilities = new string[] { "001", "005", "007", "008", "009", "010", "080", "800", "850", "900"};
+            string[] invalidFacilities = new string[] { "001", "005", "007", "008", "009", "010", "080", "800", "850", "900" };
 
             string facility = hl7Message.GetValue("MSH.4");
 
-            if(invalidFacilities.Contains(facility))
+            if (invalidFacilities.Contains(facility))
             {
                 //invalid facility - do not file
                 Log.Instance.Debug($"Invalid facility {facility}");
@@ -309,15 +309,27 @@ namespace LabBilling.Core.BusinessLogic
                 }
             }
 
-            if (string.IsNullOrEmpty(accountRecord.FinCode))
+            switch (accountRecord.Client.BillMethod)
             {
-                Log.Instance.Error($"[ERROR] No fin code");
-                switch (accountRecord.Client.BillMethod)
-                {
-                    case "INVOICE":
-                        accountRecord.FinCode = "Y";
-                        break;
-                    case "PATIENT":
+                case "INVOICE":
+                    accountRecord.FinCode = "Y";
+                    break;
+                case "PATIENT":
+                    if (accountRecord.Insurances.Count > 0)
+                    {
+                        if (accountRecord.FinCode != accountRecord.Insurances[0].FinCode)
+                        {
+                            accountRecord.FinCode = accountRecord.Insurances[0].FinCode;
+                        }
+                    }
+                    if (accountRecord.FinCode == "Y")
+                    {
+                        accountRecord.FinCode = "K";
+                    }
+                    break;
+                case "PER ACCOUNT":
+                    if (accountRecord.FinCode != "Y")
+                    {
                         if (accountRecord.Insurances.Count > 0)
                         {
                             if (accountRecord.FinCode != accountRecord.Insurances[0].FinCode)
@@ -325,36 +337,26 @@ namespace LabBilling.Core.BusinessLogic
                                 accountRecord.FinCode = accountRecord.Insurances[0].FinCode;
                             }
                         }
-                        if(accountRecord.FinCode == "Y")
+                    }
+                    break;
+                default:
+                    if (accountRecord.FinCode != "Y")
+                    {
+                        if (accountRecord.Insurances.Count > 0)
                         {
-                            accountRecord.FinCode = "K";
-                        }
-                        break;
-                    case "PER ACCOUNT":
-                        if (accountRecord.FinCode != "Y")
-                        {
-                            if (accountRecord.Insurances.Count > 0)
+                            if (accountRecord.FinCode != accountRecord.Insurances[0].FinCode)
                             {
-                                if (accountRecord.FinCode != accountRecord.Insurances[0].FinCode)
-                                {
-                                    accountRecord.FinCode = accountRecord.Insurances[0].FinCode;
-                                }
+                                accountRecord.FinCode = accountRecord.Insurances[0].FinCode;
                             }
                         }
-                        break;
-                    default:
-                        if (accountRecord.FinCode != "Y")
-                        {
-                            if (accountRecord.Insurances.Count > 0)
-                            {
-                                if (accountRecord.FinCode != accountRecord.Insurances[0].FinCode)
-                                {
-                                    accountRecord.FinCode = accountRecord.Insurances[0].FinCode;
-                                }
-                            }
-                        }
-                        break;
-                }
+                    }
+                    break;
+            }
+
+            if (string.IsNullOrEmpty(accountRecord.FinCode))
+            {
+                Log.Instance.Error($"[ERROR] No fin code");
+                accountRecord.FinCode = "K";
             }
 
             foreach (var dx in accountRecord.Pat.Diagnoses)
@@ -365,56 +367,75 @@ namespace LabBilling.Core.BusinessLogic
                 {
                     Log.Instance.Warn($"[WARN] Diagnosis {dx.Code} not found.");
                     errors.AppendLine($"[WARN] Diagnosis {dx.Code} not found.");
-                    
+
                 }
             }
 
-
-            //check for existing account
-            var existingAccount = accountRepository.GetByAccount(accountRecord.AccountNo);
-            if (existingAccount != null)
+            try
             {
-                //compare and update existingAccount for update -
-                //need to decide when to update and when to not update - maybe update until past initial hold period
-
-                //loop through all properties and determine which ones are different
-
-                //return (Status.NotProcessed, "Existing account. Did not update", new StringBuilder());
-
-                if (canFile)
+                //check for existing account
+                var existingAccount = accountRepository.GetByAccount(accountRecord.AccountNo);
+                if (existingAccount != null)
                 {
-                    // add account
-                    accountRepository.Update(accountRecord);
-                    patRepository.Save(accountRecord.Pat);
-                    foreach(var ins in accountRecord.Insurances)
+                    //compare and update existingAccount for update -
+                    //need to decide when to update and when to not update - maybe update until past initial hold period
+
+                    //loop through all properties and determine which ones are different
+
+                    //return (Status.NotProcessed, "Existing account. Did not update", new StringBuilder());
+
+                    if (canFile)
                     {
-                        if (ins.Account != accountRecord.AccountNo)
-                            ins.Account = accountRecord.AccountNo;
+                        // add account
+                        accountRepository.Update(accountRecord);
+                        patRepository.Save(accountRecord.Pat);
+                        foreach (var ins in accountRecord.Insurances)
+                        {
+                            if (ins.Account != accountRecord.AccountNo)
+                                ins.Account = accountRecord.AccountNo;
 
-                        insRepository.Save(ins);
+                            insRepository.Save(ins);
+                        }
+
+                        statusText = $"{accountRecord.AccountNo} updated.";
+                        return (Status.Processed, statusText, errors);
                     }
-
-                    statusText = $"{accountRecord.AccountNo} updated.";
-                    return (Status.Processed, statusText, errors);
+                    else
+                    {
+                        return (Status.Failed, "Required information missing. See errors.", errors);
+                    }
                 }
                 else
                 {
-                    return (Status.Failed, "Required information missing. See errors.", errors);
+                    if (canFile)
+                    {
+                        // add account
+                        accountRepository.Add(accountRecord);
+                        statusText = $"{accountRecord.AccountNo} added.";
+                        return (Status.Processed, statusText, errors);
+                    }
+                    else
+                    {
+                        return (Status.Failed, "Required information missing. See errors.", errors);
+                    }
                 }
             }
-            else
+            catch (Exception ex)
             {
-                if (canFile)
+                if (ex.InnerException.Message.Contains("truncated"))
                 {
-                    // add account
-                    accountRepository.Add(accountRecord);
-                    statusText = $"{accountRecord.AccountNo} added.";
-                    return (Status.Processed, statusText, errors);
+                    errors.Append("Data is longer than a database field. Record not written.");
+                    Log.Instance.Error(ex.InnerException, "Data is longer than a database field. Record not written.");
                 }
                 else
                 {
-                    return (Status.Failed, "Required information missing. See errors.", errors);
+                    errors.Append(ex.Message);
+                    if (ex.InnerException != null)
+                    {
+                        errors.Append(ex.Message);
+                    }
                 }
+                return (Status.Failed, "Database error", errors);
             }
         }
 
@@ -454,7 +475,7 @@ namespace LabBilling.Core.BusinessLogic
                     {
                         errors.AppendLine($"[WARN] {cdmex.Message} for {transaction.Cdm} on {existingAccount}. Charge not posted.");
                     }
-                    
+
                 }
                 return (Status.Processed, $"{accountRecord.AccountNo} - charges posted.", errors);
             }
@@ -506,8 +527,8 @@ namespace LabBilling.Core.BusinessLogic
         private string ValidateZipCode(string value)
         {
             Regex validateZipRegex = new Regex("^[0-9]{5}(?:-[0-9]{4})?$");
-            
-            if(!validateZipRegex.IsMatch(value))
+
+            if (!validateZipRegex.IsMatch(value))
             {
                 Regex extractZipRegex = new Regex("[0-9]{5}(?:-[0-9]{4})?");
                 MatchCollection mc = extractZipRegex.Matches(value);
@@ -516,7 +537,7 @@ namespace LabBilling.Core.BusinessLogic
 
                 foreach (Match m in mc)
                 {
-                    extracted += m;    
+                    extracted += m;
                 }
 
                 return extracted;
@@ -600,19 +621,19 @@ namespace LabBilling.Core.BusinessLogic
             accountRecord.MeditechAccount = accountRecord.AccountNo;
             accountRecord.Pat.AccountNo = accountRecord.AccountNo;
             accountRecord.SocSecNo = hl7Message.GetValue("PID.19");
-            
+
         }
 
         private void ParsePV1()
         {
             accountRecord.ClientMnem = string.IsNullOrEmpty(hl7Message.GetValue("PV1.3.1")) ? hl7Message.GetValue("PV1.3.1") : mappingRepository.GetMappedValue("CLIENT", "CERNER", hl7Message.GetValue("PV1.3.1"));
-            if(string.IsNullOrEmpty(accountRecord.ClientMnem))
+            if (string.IsNullOrEmpty(accountRecord.ClientMnem))
             {
-                accountRecord.ClientMnem = string.IsNullOrEmpty(hl7Message.GetValue("PV1.3.4")) ? hl7Message.GetValue("PV1.3.4") 
+                accountRecord.ClientMnem = string.IsNullOrEmpty(hl7Message.GetValue("PV1.3.4")) ? hl7Message.GetValue("PV1.3.4")
                     : mappingRepository.GetMappedValue("CLIENT", "CERNER", hl7Message.GetValue("PV1.3.4"));
             }
-            accountRecord.FinCode = string.IsNullOrEmpty(hl7Message.GetValue("PV1.20")) 
-                ? hl7Message.GetValue("PV1.20") 
+            accountRecord.FinCode = string.IsNullOrEmpty(hl7Message.GetValue("PV1.20"))
+                ? hl7Message.GetValue("PV1.20")
                 : mappingRepository.GetMappedValue("FIN_CODE", "CERNER", hl7Message.GetValue("PV1.20"));
             accountRecord.OriginalFinCode = accountRecord.FinCode;
             accountRecord.TransactionDate = new DateTime().ParseHL7Date(hl7Message.GetValue("PV1.44"));
@@ -629,7 +650,7 @@ namespace LabBilling.Core.BusinessLogic
         {
             List<Segment> dg1Segments = hl7Message.Segments("DG1");
 
-            foreach(var dx in dg1Segments)
+            foreach (var dx in dg1Segments)
             {
                 PatDiag patDiag = new PatDiag();
                 patDiag.Code = dx.Fields(3).Value.Replace(".", "");
@@ -645,7 +666,7 @@ namespace LabBilling.Core.BusinessLogic
                 accountRecord.Pat.GuarantorLastName = hl7Message.GetValue("GT1.3.1");
                 accountRecord.Pat.GuarantorFirstName = hl7Message.GetValue("GT1.3.2");
 
-                if(hl7Message.HasRepetitions("GT1.5"))
+                if (hl7Message.HasRepetitions("GT1.5"))
                 {
                     List<Field> repList = hl7Message.Segments("GT1")[0].Fields(5).Repetitions();
                     accountRecord.Pat.GuarantorAddress = repList[0].Components(1).Value;
@@ -682,11 +703,15 @@ namespace LabBilling.Core.BusinessLogic
 
             for (int i = 0; i < segIn1.Count; i++)
             {
-                var in1 = segIn1[i];
-                var in2 = segIn2[i];
+                Segment in1 = segIn1[i];
+
+                Segment in2 = null;
+
+                if (segIn2.Count >= i + 1)
+                    in2 = segIn2[i];
 
                 Ins ins = new Ins();
-                
+
                 ins.Account = accountRecord.AccountNo;
                 if (in1.Fields(1).Value == "1")
                     ins.Coverage = InsCoverage.Primary;
@@ -700,10 +725,10 @@ namespace LabBilling.Core.BusinessLogic
                     return;
                 }
 
-                ins.InsCode = string.IsNullOrEmpty(in1.Fields(2).Components(1).Value) 
-                    ? in1.Fields(2).Components(1).Value 
+                ins.InsCode = string.IsNullOrEmpty(in1.Fields(2).Components(1).Value)
+                    ? in1.Fields(2).Components(1).Value
                     : mappingRepository.GetMappedValue("INS_CODE", "CERNER", in1.Fields(2).Components(1).Value);
-                if(ins.InsCode == String.Empty)
+                if (ins.InsCode == String.Empty)
                 {
                     ins.InsCode = in1.Fields(2).Components(1).Value;
                 }
@@ -723,16 +748,9 @@ namespace LabBilling.Core.BusinessLogic
                 if (ins.HolderSex != "M" && ins.HolderSex != "F")
                     ins.HolderSex = String.Empty;
 
-                ins.Relation = string.IsNullOrEmpty(in1.Fields(17).Value) 
-                    ? in1.Fields(17).Value 
+                ins.Relation = string.IsNullOrEmpty(in1.Fields(17).Value)
+                    ? in1.Fields(17).Value
                     : mappingRepository.GetMappedValue("GUAR_REL", "CERNER", in1.Fields(17).Value);
-
-                if (string.IsNullOrEmpty(ins.Relation))
-                {
-                    ins.Relation = string.IsNullOrEmpty(in2.Fields(72).Value) 
-                        ? in2.Fields(72).Value 
-                        : mappingRepository.GetMappedValue("GUAR_REL", "CERNER", in2.Fields(72).Value);
-                }
 
                 if (!string.IsNullOrEmpty(in1.Fields(18).Value))
                 {
@@ -757,7 +775,17 @@ namespace LabBilling.Core.BusinessLogic
 
                 ins.PolicyNumber = in1.Fields(49).Value;
 
-                ins.CertSSN = in2.Fields(2).Value;
+                if (in2 != null)
+                {
+                    ins.CertSSN = in2.Fields(2).Value;
+
+                    if (string.IsNullOrEmpty(ins.Relation))
+                    {
+                        ins.Relation = string.IsNullOrEmpty(in2.Fields(72).Value)
+                            ? in2.Fields(72).Value
+                            : mappingRepository.GetMappedValue("GUAR_REL", "CERNER", in2.Fields(72).Value);
+                    }
+                }
 
                 accountRecord.Insurances.Add(ins);
             }
@@ -767,7 +795,7 @@ namespace LabBilling.Core.BusinessLogic
         {
             var segFT1 = hl7Message.Segments("FT1");
 
-            foreach(var seg in segFT1)
+            foreach (var seg in segFT1)
             {
                 ChargeTransaction transaction = new ChargeTransaction();
 
@@ -785,7 +813,7 @@ namespace LabBilling.Core.BusinessLogic
                     transaction.Qty = Convert.ToInt16(seg.Fields(10).Value);
 
                 //ordering doctor - repeating FT1.21
-                
+
                 transaction.RefNumber = seg.Fields(23).Value;
 
                 //string cpt = hl7Message.GetValue("FT1.25.1");
@@ -798,7 +826,7 @@ namespace LabBilling.Core.BusinessLogic
             //parse PR1 here, if needed
         }
 
-        
+
         private void ParseSTF()
         {
 
@@ -810,7 +838,7 @@ namespace LabBilling.Core.BusinessLogic
             phy.Credentials = hl7Message.GetValue("STF.3.4");
 
             //STF-10 - phone repeating
-            if(hl7Message.HasRepetitions("STF.10"))
+            if (hl7Message.HasRepetitions("STF.10"))
             {
                 List<Field> repList = hl7Message.Segments("STF")[0].Fields(10).Repetitions();
 
@@ -821,7 +849,7 @@ namespace LabBilling.Core.BusinessLogic
             phy.Address2 = hl7Message.GetValue("STF.11.2");
             phy.City = hl7Message.GetValue("STF.11.3");
             phy.State = hl7Message.GetValue("STF.11.4");
-            phy.ZipCode = hl7Message.GetValue("STF.11.5");         
+            phy.ZipCode = hl7Message.GetValue("STF.11.5");
 
         }
 
@@ -833,10 +861,10 @@ namespace LabBilling.Core.BusinessLogic
             string speciality = hl7Message.GetValue("PRA.5");
 
             //practioner ids - PRA.6 repeating
-            if(hl7Message.HasRepetitions("PRA.6"))
+            if (hl7Message.HasRepetitions("PRA.6"))
             {
                 List<Field> repList = hl7Message.Segments("PRA")[0].Fields(6).Repetitions();
-                foreach(var field in repList)
+                foreach (var field in repList)
                 {
                     string code = field.Components(1).Value;
                     string codeType = field.Components(2).Value;
@@ -848,7 +876,7 @@ namespace LabBilling.Core.BusinessLogic
                     }
 
                     if (codeType == "UPIN")
-                       phy.Upin = code;
+                        phy.Upin = code;
                 }
 
 

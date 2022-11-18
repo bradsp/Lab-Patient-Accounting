@@ -33,6 +33,7 @@ namespace LabBilling.Forms
             this.MessagesGrid = new System.Windows.Forms.DataGridView();
             this.GridContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.ReprocessMessage = new System.Windows.Forms.ToolStripMenuItem();
+            this.markDoNotProcessToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.MessageTypeFilterComboBox = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.hl7MessageTextBox = new System.Windows.Forms.TextBox();
@@ -48,7 +49,7 @@ namespace LabBilling.Forms
             this.errorsTextBox = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
             this.processFlagFilterCombo = new System.Windows.Forms.ComboBox();
-            this.markDoNotProcessToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showMessagesWithErrorsCheckBox = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.MessagesGrid)).BeginInit();
             this.GridContextMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -83,7 +84,7 @@ namespace LabBilling.Forms
             this.ReprocessMessage,
             this.markDoNotProcessToolStripMenuItem});
             this.GridContextMenu.Name = "GridContextMenu";
-            this.GridContextMenu.Size = new System.Drawing.Size(186, 70);
+            this.GridContextMenu.Size = new System.Drawing.Size(186, 48);
             // 
             // ReprocessMessage
             // 
@@ -92,9 +93,15 @@ namespace LabBilling.Forms
             this.ReprocessMessage.Text = "Reprocess Message";
             this.ReprocessMessage.Click += new System.EventHandler(this.ReprocessMessage_Click);
             // 
+            // markDoNotProcessToolStripMenuItem
+            // 
+            this.markDoNotProcessToolStripMenuItem.Name = "markDoNotProcessToolStripMenuItem";
+            this.markDoNotProcessToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
+            this.markDoNotProcessToolStripMenuItem.Text = "Mark Do Not Process";
+            this.markDoNotProcessToolStripMenuItem.Click += new System.EventHandler(this.markDoNotProcessToolStripMenuItem_Click);
+            // 
             // MessageTypeFilterComboBox
             // 
-            this.MessageTypeFilterComboBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.MessageTypeFilterComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.MessageTypeFilterComboBox.FormattingEnabled = true;
             this.MessageTypeFilterComboBox.Items.AddRange(new object[] {
@@ -102,17 +109,16 @@ namespace LabBilling.Forms
             "ADT",
             "DFT",
             "MFN"});
-            this.MessageTypeFilterComboBox.Location = new System.Drawing.Point(434, 35);
+            this.MessageTypeFilterComboBox.Location = new System.Drawing.Point(389, 36);
             this.MessageTypeFilterComboBox.Name = "MessageTypeFilterComboBox";
-            this.MessageTypeFilterComboBox.Size = new System.Drawing.Size(121, 21);
+            this.MessageTypeFilterComboBox.Size = new System.Drawing.Size(74, 21);
             this.MessageTypeFilterComboBox.TabIndex = 2;
             this.MessageTypeFilterComboBox.SelectedIndexChanged += new System.EventHandler(this.MessageTypeSelect_SelectedIndexChanged);
             // 
             // label1
             // 
-            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(431, 19);
+            this.label1.Location = new System.Drawing.Point(386, 20);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(77, 13);
             this.label1.TabIndex = 3;
@@ -135,7 +141,7 @@ namespace LabBilling.Forms
             this.FromDate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.FromDate.CustomFormat = "M/d/yy HH:mm";
             this.FromDate.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.FromDate.Location = new System.Drawing.Point(749, 36);
+            this.FromDate.Location = new System.Drawing.Point(771, 35);
             this.FromDate.Name = "FromDate";
             this.FromDate.Size = new System.Drawing.Size(116, 20);
             this.FromDate.TabIndex = 5;
@@ -145,7 +151,7 @@ namespace LabBilling.Forms
             this.ThruDate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.ThruDate.CustomFormat = "M/d/yy HH:mm";
             this.ThruDate.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.ThruDate.Location = new System.Drawing.Point(893, 36);
+            this.ThruDate.Location = new System.Drawing.Point(915, 35);
             this.ThruDate.Name = "ThruDate";
             this.ThruDate.Size = new System.Drawing.Size(114, 20);
             this.ThruDate.TabIndex = 5;
@@ -154,7 +160,7 @@ namespace LabBilling.Forms
             // 
             this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(746, 20);
+            this.label2.Location = new System.Drawing.Point(768, 19);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(65, 13);
             this.label2.TabIndex = 6;
@@ -164,7 +170,7 @@ namespace LabBilling.Forms
             // 
             this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(871, 38);
+            this.label3.Location = new System.Drawing.Point(893, 39);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(16, 13);
             this.label3.TabIndex = 7;
@@ -173,9 +179,9 @@ namespace LabBilling.Forms
             // FilterButton
             // 
             this.FilterButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.FilterButton.Location = new System.Drawing.Point(1013, 34);
+            this.FilterButton.Location = new System.Drawing.Point(1035, 34);
             this.FilterButton.Name = "FilterButton";
-            this.FilterButton.Size = new System.Drawing.Size(148, 23);
+            this.FilterButton.Size = new System.Drawing.Size(126, 23);
             this.FilterButton.TabIndex = 8;
             this.FilterButton.Text = "Update Date Range";
             this.FilterButton.UseVisualStyleBackColor = true;
@@ -185,7 +191,7 @@ namespace LabBilling.Forms
             // 
             this.accountFilterTextBox.Location = new System.Drawing.Point(211, 36);
             this.accountFilterTextBox.Name = "accountFilterTextBox";
-            this.accountFilterTextBox.Size = new System.Drawing.Size(217, 20);
+            this.accountFilterTextBox.Size = new System.Drawing.Size(165, 20);
             this.accountFilterTextBox.TabIndex = 9;
             this.accountFilterTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.accountFilterTextBox_KeyDown);
             // 
@@ -248,9 +254,8 @@ namespace LabBilling.Forms
             // 
             // label5
             // 
-            this.label5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(558, 19);
+            this.label5.Location = new System.Drawing.Point(466, 20);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(68, 13);
             this.label5.TabIndex = 3;
@@ -258,27 +263,31 @@ namespace LabBilling.Forms
             // 
             // processFlagFilterCombo
             // 
-            this.processFlagFilterCombo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.processFlagFilterCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.processFlagFilterCombo.FormattingEnabled = true;
-            this.processFlagFilterCombo.Location = new System.Drawing.Point(561, 35);
+            this.processFlagFilterCombo.Location = new System.Drawing.Point(469, 36);
             this.processFlagFilterCombo.Name = "processFlagFilterCombo";
-            this.processFlagFilterCombo.Size = new System.Drawing.Size(121, 21);
+            this.processFlagFilterCombo.Size = new System.Drawing.Size(109, 21);
             this.processFlagFilterCombo.TabIndex = 2;
             this.processFlagFilterCombo.SelectedIndexChanged += new System.EventHandler(this.processFlagFilterCombo_SelectedIndexChanged);
             // 
-            // markDoNotProcessToolStripMenuItem
+            // showMessagesWithErrorsCheckBox
             // 
-            this.markDoNotProcessToolStripMenuItem.Name = "markDoNotProcessToolStripMenuItem";
-            this.markDoNotProcessToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
-            this.markDoNotProcessToolStripMenuItem.Text = "Mark Do Not Process";
-            this.markDoNotProcessToolStripMenuItem.Click += new System.EventHandler(this.markDoNotProcessToolStripMenuItem_Click);
+            this.showMessagesWithErrorsCheckBox.AutoSize = true;
+            this.showMessagesWithErrorsCheckBox.Location = new System.Drawing.Point(584, 38);
+            this.showMessagesWithErrorsCheckBox.Name = "showMessagesWithErrorsCheckBox";
+            this.showMessagesWithErrorsCheckBox.Size = new System.Drawing.Size(156, 17);
+            this.showMessagesWithErrorsCheckBox.TabIndex = 12;
+            this.showMessagesWithErrorsCheckBox.Text = "Show Messages with Errors";
+            this.showMessagesWithErrorsCheckBox.UseVisualStyleBackColor = true;
+            this.showMessagesWithErrorsCheckBox.CheckedChanged += new System.EventHandler(this.showMessagesWithErrorsCheckBox_CheckedChanged);
             // 
             // InterfaceMonitor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1184, 600);
+            this.Controls.Add(this.showMessagesWithErrorsCheckBox);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.accountFilterTextBox);
@@ -333,5 +342,6 @@ namespace LabBilling.Forms
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.ComboBox processFlagFilterCombo;
         private System.Windows.Forms.ToolStripMenuItem markDoNotProcessToolStripMenuItem;
+        private System.Windows.Forms.CheckBox showMessagesWithErrorsCheckBox;
     }
 }

@@ -12,6 +12,7 @@ using System.Xml.Serialization;
 using LabBilling.Core.DataAccess;
 using LabBilling.Core;
 using LabBilling.Core.Models;
+using LabBilling.Library;
 
 namespace LabBilling.Forms
 {
@@ -66,7 +67,7 @@ namespace LabBilling.Forms
         {
             Cursor.Current = Cursors.WaitCursor;
 
-            InvoicesDGV.DataSource = clientInvoices.GetUnbilledClients(_thruDate);
+            InvoicesDGV.DataSource = clientRepository.GetUnbilledClients(_thruDate);
 
             InvoicesDGV.Columns[nameof(UnbilledClient.UnbilledAmount)].DefaultCellStyle.Format = "c2";
             InvoicesDGV.Columns[nameof(UnbilledClient.UnbilledAmount)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
@@ -92,7 +93,7 @@ namespace LabBilling.Forms
             progressBar2.Visible = true;
             progressBar2.Style = ProgressBarStyle.Marquee;
 
-            InvoicesDGV.DataSource = await Task.Run(() => clientInvoices.GetUnbilledClients(_thruDate));
+            InvoicesDGV.DataSource = await Task.Run(() => clientRepository.GetUnbilledClients(_thruDate));
 
             InvoicesDGV.Columns[nameof(UnbilledClient.UnbilledAmount)].DefaultCellStyle.Format = "c2";
             InvoicesDGV.Columns[nameof(UnbilledClient.UnbilledAmount)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
@@ -118,7 +119,7 @@ namespace LabBilling.Forms
 
         private void RefreshUnbilledAccountsGrid(string clientMnem)
         {
-            UnbilledAccountsDGV.DataSource = clientInvoices.GetUnbilledAccounts(clientMnem, _thruDate);
+            UnbilledAccountsDGV.DataSource = clientRepository.GetUnbilledAccounts(clientMnem, _thruDate);
 
             UnbilledAccountsDGV.Columns[nameof(UnbilledAccounts.UnbilledAmount)].DefaultCellStyle.Format = "c2";
             UnbilledAccountsDGV.Columns[nameof(UnbilledAccounts.UnbilledAmount)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
@@ -396,6 +397,22 @@ namespace LabBilling.Forms
         private void undoInvoiceToolStripMenuItem_Click(object sender, EventArgs e)
         {
             MessageBox.Show("Function not implemented.");
+        }
+
+        private void generateStatementButton_Click(object sender, EventArgs e)
+        {
+            if (InvoiceHistoryDGV.SelectedRows[0].Cells[nameof(InvoiceHistory.cl_mnem)].Value == null)
+            {
+                MessageBox.Show("Invoice image not stored in history record.");
+                return;
+            }
+            else
+            {
+                var statementBeginDate = InputDialogs.SelectStatementBeginDate(DateTime.Today.AddDays(-120));
+                string client = InvoiceHistoryDGV.SelectedRows[0].Cells[nameof(InvoiceHistory.cl_mnem)].Value.ToString();
+                clientInvoices.GenerateStatement(client, (DateTime)statementBeginDate);
+            }
+
         }
     }
 }

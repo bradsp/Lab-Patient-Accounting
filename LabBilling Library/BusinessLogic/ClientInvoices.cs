@@ -19,6 +19,9 @@ namespace LabBilling.Core
     {
         private string _connection;
         private readonly PetaPoco.Database dbConnection;
+        private readonly ChkRepository chkdb;
+        private readonly ChrgRepository chrgdb;
+        private readonly ClientRepository clientdb;
 
         public ClientInvoices(string connection)
         {
@@ -28,6 +31,10 @@ namespace LabBilling.Core
             }
             _connection = connection;
             dbConnection = new PetaPoco.Database(connection, new SqlServerDatabaseProvider());
+
+            chrgdb = new ChrgRepository(dbConnection);
+            chkdb = new ChkRepository(dbConnection);
+            clientdb = new ClientRepository(dbConnection);
         }
 
         public int Compile(DateTime thruDate, IList<UnbilledClient> unbilledClients, IProgress<int> progress)
@@ -53,19 +60,24 @@ namespace LabBilling.Core
             return tempCount;
         }
 
-        public void GenerateStatement(string clientMnemonic)
+        public void GenerateStatement(string clientMnemonic, DateTime asOfDate)
         {
             Log.Instance.Trace($"Entering - client {clientMnemonic}");
+
             if (clientMnemonic == null)
-                throw new ArgumentNullException();
+                throw new ArgumentNullException("clientMnemonic");
+            if (asOfDate > DateTime.Today)
+                throw new ArgumentOutOfRangeException("asOfDate");
+
             SystemParametersRepository systemdb = new SystemParametersRepository(_connection);
             AccountRepository accdb = new AccountRepository(_connection);
             Account acc = accdb.GetByAccount(clientMnemonic);
             if (acc == null)
-                NewClient(clientMnemonic);
+                clientdb.NewClient(clientMnemonic);
 
             InvoiceModel invoiceModel = new InvoiceModel();
 
+            invoiceModel.StatementType = InvoiceModel.StatementTypeEnum.Statement;
             invoiceModel.BillingCompanyName = systemdb.GetByKey("invoice_company_name") ?? string.Empty;
             invoiceModel.BillingCompanyAddress = systemdb.GetByKey("invoice_company_address") ?? string.Empty;
             invoiceModel.BillingCompanyCity = systemdb.GetByKey("invoice_company_city") ?? string.Empty;
@@ -74,13 +86,9 @@ namespace LabBilling.Core
             invoiceModel.BillingCompanyPhone = systemdb.GetByKey("invoice_company_zipcode") ?? string.Empty;
             invoiceModel.ImageFilePath = systemdb.GetByKey("invoice_logo_image_path") ?? string.Empty;
 
-            ClientRepository clientdb = new ClientRepository(_connection);
-            NumberRepository numberdb = new NumberRepository(_connection);
-            AccountRepository accountRepository = new AccountRepository(_connection);
-
             Client client = clientdb.GetClient(clientMnemonic);
-            Account account = accountRepository.GetByAccount(clientMnemonic);
 
+            invoiceModel.ClientMnem = clientMnemonic;
             invoiceModel.ClientName = client.Name;
             invoiceModel.Address1 = client.StreetAddress1;
             invoiceModel.Address2 = client.StreetAddress2;
@@ -88,19 +96,16 @@ namespace LabBilling.Core
             invoiceModel.State = client.State;
             invoiceModel.ZipCode = client.ZipCode;
             invoiceModel.InvoiceDate = DateTime.Today;
-            invoiceModel.InvoiceNo = numberdb.GetNumber("invoice").ToString();
 
-            double balanceForward = 0.0;
+            double balanceForward = clientdb.Balance(clientMnemonic); ;
 
             invoiceModel.BalanceForward = balanceForward;
             
-            double payments = 0.00;
-            double adjustments = 0.00;
-            
             invoiceModel.InvoiceDetails = new List<InvoiceDetailModel>();
 
+            var details = clientdb.GetStatementDetails(clientMnemonic, asOfDate);
 
-
+            InvoicePrint.CreatePDF(invoiceModel, $"d:\\temp\\Statement-{invoiceModel.ClientMnem}-{DateTime.Today.ToString("yyyyMMdd")}.pdf");
 
         }
 
@@ -119,9 +124,11 @@ namespace LabBilling.Core
             AccountRepository accdb = new AccountRepository(_connection);
             Account acc = accdb.GetByAccount(clientMnemonic);
             if (acc == null)
-                NewClient(clientMnemonic);
+                clientdb.NewClient(clientMnemonic);
 
             InvoiceModel invoiceModel = new InvoiceModel();
+            invoiceModel.StatementType = InvoiceModel.StatementTypeEnum.Invoice;
+            invoiceModel.ThroughDate = throughDate;
 
             invoiceModel.BillingCompanyName = systemdb.GetByKey("invoice_company_name") ?? string.Empty;
             invoiceModel.BillingCompanyAddress = systemdb.GetByKey("invoice_company_address") ?? string.Empty;
@@ -131,10 +138,10 @@ namespace LabBilling.Core
             invoiceModel.BillingCompanyPhone = systemdb.GetByKey("invoice_company_zipcode") ?? string.Empty;
             invoiceModel.ImageFilePath = systemdb.GetByKey("invoice_logo_image_path") ?? string.Empty;
 
-            ClientRepository clientdb = new ClientRepository(_connection);
             NumberRepository numberdb = new NumberRepository(_connection);
 
             Client client = clientdb.GetClient(clientMnemonic);
+            invoiceModel.ClientMnem = clientMnemonic;
             invoiceModel.ClientName = client.Name;
             invoiceModel.Address1 = client.StreetAddress1;
             invoiceModel.Address2 = client.StreetAddress2;
@@ -144,48 +151,48 @@ namespace LabBilling.Core
             invoiceModel.InvoiceDate = DateTime.Today;
             invoiceModel.InvoiceNo = numberdb.GetNumber("invoice").ToString();
 
-            double balanceForward = clientdb.Balance(clientMnemonic);
-            invoiceModel.BalanceForward = balanceForward;
-            double payments = 0.00;
-            double adjustments = 0.00;
+            //double balanceForward = clientdb.Balance(clientMnemonic);
+            //invoiceModel.BalanceForward = balanceForward;
+            //double payments = 0.00;
+            //double adjustments = 0.00;
             invoiceModel.InvoiceDetails = new List<InvoiceDetailModel>();
 
-            //get payments since last invoice
-            ChkRepository chkdb = new ChkRepository(_connection);
-            var chks = chkdb.GetByAccount(clientMnemonic, false);
 
-            foreach(Chk chk in chks)
-            {
-                invoiceModel.InvoiceDetails.Add(new InvoiceDetailModel()
-                {
-                    ServiceDate = chk.DateReceived,
-                    Description = string.Format("Payment Received - {0}", chk.Source),
-                    Amount = chk.PaidAmount + chk.WriteOffAmount + chk.ContractualAmount
-                });
-                payments += chk.PaidAmount + chk.WriteOffAmount + chk.ContractualAmount;
-                //update chk record with new invoice number
-                chk.Invoice = invoiceModel.InvoiceNo;
-                chkdb.Update(chk);
-            }
+
+            ////get payments since last invoice
+            //var chks = chkdb.GetByAccount(clientMnemonic, false);
+
+            //foreach(Chk chk in chks)
+            //{
+            //    invoiceModel.InvoiceDetails.Add(new InvoiceDetailModel()
+            //    {
+            //        ServiceDate = chk.DateReceived,
+            //        Description = string.Format("Payment Received - {0}", chk.Source),
+            //        Amount = chk.PaidAmount + chk.WriteOffAmount + chk.ContractualAmount
+            //    });
+            //    payments += chk.PaidAmount + chk.WriteOffAmount + chk.ContractualAmount;
+            //    //update chk record with new invoice number
+            //    chk.Invoice = invoiceModel.InvoiceNo;
+            //    chkdb.Update(chk);
+            //}
 
             //get adjustments since last invoice
-            ChrgRepository chrgdb = new ChrgRepository(_connection);
-            var chrgs = chrgdb.GetInvoiceCharges(clientMnemonic);
+            //var chrgs = chrgdb.GetInvoiceCharges(clientMnemonic);
 
-            foreach(InvoiceChargeView chrg in chrgs)
-            {
-                invoiceModel.InvoiceDetails.Add(new InvoiceDetailModel()
-                {
-                    ServiceDate = chrg.TransactionDate,
-                    Description = chrg.ChargeDescription,
-                    Qty = chrg.Quantity,
-                    CDM = chrg.ChargeItemId,
-                    Amount = chrg.Amount
-                });
-                adjustments += chrg.Amount;
-            }
+            //foreach(InvoiceChargeView chrg in chrgs)
+            //{
+            //    invoiceModel.InvoiceDetails.Add(new InvoiceDetailModel()
+            //    {
+            //        ServiceDate = chrg.TransactionDate,
+            //        Description = chrg.ChargeDescription,
+            //        Qty = chrg.Quantity,
+            //        CDM = chrg.ChargeItemId,
+            //        Amount = chrg.Amount
+            //    });
+            //    adjustments += chrg.Amount;
+            //}
 
-            chrgdb.SetChargeInvoiceStatus(clientMnemonic, invoiceModel.InvoiceNo);
+            //chrgdb.SetChargeInvoiceStatus(clientMnemonic, invoiceModel.InvoiceNo);
 
             //compile accounts/charges for this client
 
@@ -271,7 +278,21 @@ namespace LabBilling.Core
             });
             chrgdb.AddCharge(invoiceChrg);
             invoiceModel.InvoiceTotal = invoiceAmountTotal;
+            invoiceModel.DiscountTotal = discountTotal;
 
+            SaveInvoiceHistory(invoiceModel);
+
+
+            //invoiceModel.BalanceDue = balanceForward + invoiceAmountTotal;
+
+            InvoicePrint.CreatePDF(invoiceModel, $"c:\\temp\\Invoice-{invoiceModel.ClientMnem}-{invoiceModel.InvoiceNo}.pdf");
+
+
+
+        }
+
+        private void SaveInvoiceHistory(InvoiceModel invoiceModel)
+        {
             //store the invoice data as xml for storage in invoice history
             XmlSerializer x = new XmlSerializer(invoiceModel.GetType());
             StringWriter textWriter = new StringWriter();
@@ -282,87 +303,21 @@ namespace LabBilling.Core
             InvoiceHistory invoiceHistory = new InvoiceHistory();
             InvoiceHistoryRepository historyRepository = new InvoiceHistoryRepository(_connection);
 
-            invoiceHistory.cl_mnem = clientMnemonic;
-            invoiceHistory.balance_due = balanceForward + invoiceAmountTotal;
-            invoiceHistory.bal_forward = balanceForward;
-            invoiceHistory.discount = discountTotal;
+            invoiceHistory.cl_mnem = invoiceModel.ClientMnem;
+            invoiceHistory.discount = invoiceModel.DiscountTotal;
             invoiceHistory.invoice = invoiceModel.InvoiceNo;
-            invoiceHistory.payments = payments;
-            invoiceHistory.thru_date = throughDate;
-            invoiceHistory.total_chrg = invoiceAmountTotal;
-            invoiceHistory.true_balance_due = balanceForward + invoiceAmountTotal;
+            invoiceHistory.thru_date = invoiceModel.ThroughDate;
+            invoiceHistory.total_chrg = invoiceModel.InvoiceTotal;
             invoiceHistory.cbill_html = textWriter.ToString();
 
+            //invoiceHistory.balance_due = balanceForward + invoiceAmountTotal;
+            //invoiceHistory.bal_forward = balanceForward;
+            //invoiceHistory.payments = payments;
+            //invoiceHistory.true_balance_due = balanceForward + invoiceAmountTotal;
+
             historyRepository.Add(invoiceHistory);
-
-            invoiceModel.BalanceDue = balanceForward + invoiceAmountTotal;
-
-            InvoicePrint.CreatePDF(invoiceModel, $"c:\\temp\\{invoiceModel.InvoiceNo}.pdf");
-
         }
 
-        /// <summary>
-        /// Adds new client account if it does not exist
-        /// </summary>
-        private void NewClient(string clientMnem)
-        {
-            //check to see if client is valid and client exists
-            ClientRepository clientdb = new ClientRepository(_connection);
-            Client client = clientdb.GetClient(clientMnem);
-
-            if (client == null)
-            {
-                throw new ArgumentException("Client mnemonic is not found in client table","clientMnem");
-            }
-
-            Account account;
-
-            //check to see if client account exists
-            AccountRepository accdb = new AccountRepository(_connection);
-            account = accdb.GetByAccount(clientMnem);
-
-            if(account == null)
-            {
-                //account does not exist - add the account
-                account = new Account();
-                account.AccountNo = clientMnem;
-                account.PatFullName = client.Name;
-                account.MeditechAccount = clientMnem;
-                account.FinCode = "CLIENT";
-                account.TransactionDate = DateTime.Today;
-                account.ClientMnem = clientMnem;
-
-                accdb.Add(account);
-            }
-
-        }
-
-        public List<UnbilledClient> GetUnbilledClients(DateTime thruDate)
-        {
-            var cmd = PetaPoco.Sql.Builder
-                .Append("select vbs.cl_mnem as 'ClientMnem', client.cli_nme as 'ClientName', dictionary.clienttype.description as 'ClientType', ")
-                .Append("sum(dbo.GetAccBalance(vbs.account)) as 'UnbilledAmount' ")
-                .Append("from vw_cbill_select vbs join client on vbs.cl_mnem = client.cli_mnem ")
-                .Append("join dictionary.clienttype on client.[type] = dictionary.clienttype.[type] ")
-                .Append("where trans_date <= @0", new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = thruDate })
-                .Append("group by vbs.cl_mnem, client.cli_nme, dictionary.clienttype.description ")
-                .Append("order by vbs.cl_mnem ");
-
-            return dbConnection.Fetch<UnbilledClient>(cmd);
-        }
-
-        public List<UnbilledAccounts> GetUnbilledAccounts(string clientMnem, DateTime thruDate)
-        {
-            var cmd = PetaPoco.Sql.Builder
-                .Append("select vbs.cl_mnem, vbs.account, vbs.trans_date, vbs.pat_name, vbs.fin_code, ")
-                .Append("dbo.GetAccBalance(vbs.account) as 'UnbilledAmount' ")
-                .Append("from vw_cbill_select vbs ")
-                .Append("where cl_mnem = @0 ", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = clientMnem })
-                .Append("and trans_date <= @0 ", new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = thruDate });
-
-            return dbConnection.Fetch<UnbilledAccounts>(cmd);
-
-        }
 
         public bool UndoInvoice(string invoiceNo)
         {
