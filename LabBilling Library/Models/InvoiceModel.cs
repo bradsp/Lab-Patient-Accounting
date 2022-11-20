@@ -45,6 +45,9 @@ namespace LabBilling.Core.Models
             Statement
         }
 
+        public bool ShowCpt { get; set; }
+
+       
     }
 
     /// <summary>
@@ -54,12 +57,20 @@ namespace LabBilling.Core.Models
     {
         public string Account { get; set; }
         public string PatientName { get; set; }
-        public DateTime? ServiceDate { get; set; }
+        public DateTime ServiceDate { get; set; }
+        public double AccountTotal { get; set; }
+
+        public List<InvoiceDetailLinesModel> InvoiceDetailLines { get; set; } = new List<InvoiceDetailLinesModel>();
+    }
+
+    public class InvoiceDetailLinesModel
+    {
         public string CDM { get; set; }
         public string CPT { get; set; }
         public string Description { get; set; }
         public int Qty { get; set; }
         public double Amount { get; set; }
+
     }
 
     public class UnbilledClient
@@ -75,6 +86,7 @@ namespace LabBilling.Core.Models
     {
         public string Account { get; set; }
         public string Invoice { get; set; }
+        public string Reference { get; set; }
         public DateTime ServiceDate { get; set; }
         public string Description { get; set; }
         public double Amount { get; set; }

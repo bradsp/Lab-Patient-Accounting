@@ -101,11 +101,13 @@ namespace LabBilling.Forms
             #region Process permissions and enable controls
 
             Helper.SetControlsAccess(tabCharges.Controls, false);
+            Helper.SetControlsAccess(chargeLayoutPanel.Controls, false);
             if (systemParametersRepository.GetByKey("allow_chrg_entry") == "1")
             {
                 if (Program.LoggedInUser.CanSubmitCharges)
                 {
                     Helper.SetControlsAccess(tabCharges.Controls, true);
+                    Helper.SetControlsAccess(chargeLayoutPanel.Controls, true);
                 }
             }
 
@@ -151,6 +153,7 @@ namespace LabBilling.Forms
                     Helper.SetControlsAccess(tabDiagnosis.Controls, true);
                     Helper.SetControlsAccess(tabGuarantor.Controls, true);
                     Helper.SetControlsAccess(tabNotes.Controls, true);
+                    Helper.SetControlsAccess(chargeLayoutPanel.Controls, true);
                     Helper.SetControlsAccess(tabCharges.Controls, true);
                     Helper.SetControlsAccess(tabPayments.Controls, true);
                     AddChargeButton.Visible = Program.LoggedInUser.CanSubmitCharges;
@@ -462,6 +465,7 @@ namespace LabBilling.Forms
             BannerFinClassTextBox.Text = currentAccount.FinCode;
             BannerBillStatusTextBox.Text = currentAccount.Status;
             BannerProviderTextBox.Text = currentAccount.Pat.Physician.FullName;
+            bannerDateOfServiceTextBox.Text = currentAccount.TransactionDate.GetValueOrDefault().ToShortDateString();
 
             TotalChargesTextBox.Text = currentAccount.TotalCharges.ToString("c");
 

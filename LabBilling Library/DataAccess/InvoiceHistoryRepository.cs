@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Data;
 using System.Data.SqlClient;
+using iText.StyledXmlParser.Node;
 
 namespace LabBilling.Core.DataAccess
 {
@@ -23,6 +24,12 @@ namespace LabBilling.Core.DataAccess
         public override InvoiceHistory GetById(int id)
         {
             throw new NotImplementedException();
+        }
+
+        public InvoiceHistory GetByInvoice(string invoiceNo)
+        {
+            return dbConnection.SingleOrDefault<InvoiceHistory>($"where {GetRealColumn(nameof(InvoiceHistory.InvoiceNo))} = @0",
+                new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = invoiceNo });
         }
 
         public IEnumerable<InvoiceHistory> GetWithSort(string clientMnem = null, DateTime? fromDate = null, DateTime? throughDate = null)

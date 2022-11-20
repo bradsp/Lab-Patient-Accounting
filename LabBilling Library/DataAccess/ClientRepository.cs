@@ -125,16 +125,6 @@ namespace LabBilling.Core.DataAccess
              var balanceReturn = dbConnection.ExecuteScalar<double>("select dbo.GetAccBalance(@0)",
                 new SqlParameter() { SqlDbType = System.Data.SqlDbType.VarChar, Value = clientMnem });
 
-            //var c = Sql.Builder.Append("SELECT total FROM vw_chrg_bal_cbill WHERE account = @0", new SqlParameter() { SqlDbType = System.Data.SqlDbType.VarChar, Value = clientMnem });
-
-            //double chrgResult = dbConnection.ExecuteScalar<double?>(c) ?? 0.0;
-
-            //var p = Sql.Builder.Append("SELECT total FROM vw_chk_bal_cbill WHERE account = @0", new SqlParameter() { SqlDbType = System.Data.SqlDbType.VarChar, Value = clientMnem });
-
-            //double chkResult = dbConnection.ExecuteScalar<double?>(p) ?? 0.0;
-
-            //double BalanceReturn = chrgResult - chkResult;
-
             return balanceReturn;
 
         }
@@ -146,7 +136,7 @@ namespace LabBilling.Core.DataAccess
             if (asOfDate > DateTime.Now)
                 throw new ArgumentOutOfRangeException("asOfDate");
 
-            var balance = dbConnection.ExecuteScalar<double>("dbo.GetAccBalanceByDate",
+            var balance = dbConnection.ExecuteScalar<double>("select dbo.GetAccBalByDate(@0, @1)",
                 new SqlParameter() { ParameterName = "@account", SqlDbType = System.Data.SqlDbType.VarChar, Value = clientMnem },
                 new SqlParameter() { ParameterName = "@effDate", SqlDbType = System.Data.SqlDbType.DateTime, Value = asOfDate });
 
@@ -176,6 +166,7 @@ namespace LabBilling.Core.DataAccess
                 if (chrg.CDMCode == "CBILL")
                 {
                     statementDetail.Description = $"Invoice {chrg.Invoice}";
+                    statementDetail.Reference = chrg.Invoice;
                 }
                 else
                 {
@@ -209,8 +200,9 @@ namespace LabBilling.Core.DataAccess
                 {
                     statementDetail.Description = $"Adjustment - {chk.Comment}";
                 }
-                statementDetail.Amount = chk.PaidAmount + chk.ContractualAmount + chk.WriteOffAmount;
-
+                statementDetail.Amount = (chk.PaidAmount + chk.ContractualAmount + chk.WriteOffAmount) * -1;
+                statementDetail.ServiceDate = chk.DateReceived == null ? DateTime.Today : (DateTime)chk.DateReceived;
+                statementDetail.Reference = chk.CheckNo;
                 statementDetails.Add(statementDetail);
             }
 

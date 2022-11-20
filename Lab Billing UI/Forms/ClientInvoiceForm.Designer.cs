@@ -52,12 +52,12 @@ namespace LabBilling.Forms
             this.FromDate = new System.Windows.Forms.MaskedTextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.ClientFilter = new System.Windows.Forms.ComboBox();
+            this.generateStatementButton = new System.Windows.Forms.Button();
             this.ViewInvoice = new System.Windows.Forms.Button();
             this.PrintInvoice = new System.Windows.Forms.Button();
             this.InvoiceHistoryDGV = new System.Windows.Forms.DataGridView();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.undoInvoiceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.generateStatementButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.InvoicesDGV)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.UnbilledAccountsDGV)).BeginInit();
             this.InvoiceHistoryTabControl.SuspendLayout();
@@ -80,7 +80,7 @@ namespace LabBilling.Forms
             this.InvoicesDGV.Location = new System.Drawing.Point(6, 34);
             this.InvoicesDGV.Name = "InvoicesDGV";
             this.InvoicesDGV.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.InvoicesDGV.Size = new System.Drawing.Size(763, 372);
+            this.InvoicesDGV.Size = new System.Drawing.Size(763, 346);
             this.InvoicesDGV.TabIndex = 0;
             this.InvoicesDGV.SelectionChanged += new System.EventHandler(this.InvoicesDGV_SelectionChanged);
             // 
@@ -163,10 +163,10 @@ namespace LabBilling.Forms
             | System.Windows.Forms.AnchorStyles.Right)));
             this.UnbilledAccountsDGV.BackgroundColor = System.Drawing.SystemColors.ControlLightLight;
             this.UnbilledAccountsDGV.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.UnbilledAccountsDGV.Location = new System.Drawing.Point(6, 412);
+            this.UnbilledAccountsDGV.Location = new System.Drawing.Point(6, 386);
             this.UnbilledAccountsDGV.Name = "UnbilledAccountsDGV";
             this.UnbilledAccountsDGV.ReadOnly = true;
-            this.UnbilledAccountsDGV.Size = new System.Drawing.Size(989, 212);
+            this.UnbilledAccountsDGV.Size = new System.Drawing.Size(989, 137);
             this.UnbilledAccountsDGV.TabIndex = 11;
             this.UnbilledAccountsDGV.RowHeaderMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.UnbilledAccountsDGV_RowHeaderMouseDoubleClick);
             // 
@@ -242,7 +242,7 @@ namespace LabBilling.Forms
             this.StatusText.Location = new System.Drawing.Point(775, 152);
             this.StatusText.Multiline = true;
             this.StatusText.Name = "StatusText";
-            this.StatusText.Size = new System.Drawing.Size(215, 254);
+            this.StatusText.Size = new System.Drawing.Size(215, 228);
             this.StatusText.TabIndex = 15;
             // 
             // InvoiceHistoryTabPage
@@ -321,6 +321,17 @@ namespace LabBilling.Forms
             this.ClientFilter.TabIndex = 3;
             this.ClientFilter.SelectedIndexChanged += new System.EventHandler(this.ClientFilter_SelectedIndexChanged);
             // 
+            // generateStatementButton
+            // 
+            this.generateStatementButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.generateStatementButton.Location = new System.Drawing.Point(906, 134);
+            this.generateStatementButton.Name = "generateStatementButton";
+            this.generateStatementButton.Size = new System.Drawing.Size(87, 44);
+            this.generateStatementButton.TabIndex = 2;
+            this.generateStatementButton.Text = "Generate Statement";
+            this.generateStatementButton.UseVisualStyleBackColor = true;
+            this.generateStatementButton.Click += new System.EventHandler(this.generateStatementButton_Click);
+            // 
             // ViewInvoice
             // 
             this.ViewInvoice.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -374,17 +385,6 @@ namespace LabBilling.Forms
             this.undoInvoiceToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
             this.undoInvoiceToolStripMenuItem.Text = "Undo Invoice";
             this.undoInvoiceToolStripMenuItem.Click += new System.EventHandler(this.undoInvoiceToolStripMenuItem_Click);
-            // 
-            // generateStatementButton
-            // 
-            this.generateStatementButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.generateStatementButton.Location = new System.Drawing.Point(906, 134);
-            this.generateStatementButton.Name = "generateStatementButton";
-            this.generateStatementButton.Size = new System.Drawing.Size(87, 44);
-            this.generateStatementButton.TabIndex = 2;
-            this.generateStatementButton.Text = "Generate Statement";
-            this.generateStatementButton.UseVisualStyleBackColor = true;
-            this.generateStatementButton.Click += new System.EventHandler(this.generateStatementButton_Click);
             // 
             // ClientInvoiceForm
             // 

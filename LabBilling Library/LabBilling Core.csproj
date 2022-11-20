@@ -125,6 +125,12 @@
     <Reference Include="Microsoft.IO.RecyclableMemoryStream, Version=2.2.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.IO.RecyclableMemoryStream.2.2.1\lib\net462\Microsoft.IO.RecyclableMemoryStream.dll</HintPath>
     </Reference>
+    <Reference Include="MigraDoc.DocumentObjectModel">
+      <HintPath>..\..\PDFsharp\MigraDoc\src\MigraDoc.DocumentObjectModel\bin\Debug\MigraDoc.DocumentObjectModel.dll</HintPath>
+    </Reference>
+    <Reference Include="MigraDoc.Rendering">
+      <HintPath>..\..\PDFsharp\MigraDoc\src\MigraDoc.Rendering\bin\Debug\MigraDoc.Rendering.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.13.0.2-beta3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -148,6 +154,12 @@
     </Reference>
     <Reference Include="NPOI.OpenXmlFormats, Version=2.6.0.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
       <HintPath>..\packages\NPOI.2.6.0\lib\net472\NPOI.OpenXmlFormats.dll</HintPath>
+    </Reference>
+    <Reference Include="PdfSharp">
+      <HintPath>..\..\PDFsharp\MigraDoc\src\MigraDoc.Rendering\bin\Debug\PdfSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="PdfSharp.Charting">
+      <HintPath>..\..\PDFsharp\MigraDoc\src\MigraDoc.Rendering\bin\Debug\PdfSharp.Charting.dll</HintPath>
     </Reference>
     <Reference Include="PetaPoco, Version=6.0.532.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\PetaPoco.Compiled.6.0.532\lib\net45\PetaPoco.dll</HintPath>
@@ -258,6 +270,7 @@
     <Compile Include="BusinessLogic\ClaimGenerator.cs" />
     <Compile Include="BusinessLogic\ClaimRulesEngine.cs" />
     <Compile Include="BusinessLogic\HL7Processor.cs" />
+    <Compile Include="BusinessLogic\InvoicePrintPdfSharp.cs" />
     <Compile Include="BusinessLogic\PrintClaimForm.cs" />
     <Compile Include="BusinessLogic\Remittance835.cs" />
     <Compile Include="BusinessLogic\Validators\ChargeValidator.cs" />

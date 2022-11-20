@@ -17,7 +17,7 @@ using System.Collections;  // billing
 using System.Reflection;
 using System.Diagnostics;
 using LabBilling.Core.Models;
-using LabBilling.Core;
+using LabBilling.Core.BusinessLogic;
 using LabBilling.Forms;
 
 namespace LabBilling.Legacy
@@ -998,6 +998,7 @@ namespace LabBilling.Legacy
             //setup test data
             InvoiceModel invModel = new InvoiceModel
             {
+                StatementType = InvoiceModel.StatementTypeEnum.Invoice,
                 ClientName = "WTTC",
                 Address1 = "597 WEST FOREST COVE",
                 City = "JACKSON",
@@ -1012,71 +1013,117 @@ namespace LabBilling.Legacy
                 BillingCompanyState = "TN",
                 BillingCompanyZipCode = "38303",
                 BillingCompanyPhone = "731.541.7300 / 866.396.8537",
-                ImageFilePath = @"../../../ViewerClientBill/MCLleft.jpg",
+                ImageFilePath = @"\\wthmclbill\shared\billing\test\mcl-logo-horiz-300x60.jpg",
                 InvoiceDetails = new List<InvoiceDetailModel>
                 {
-                    new InvoiceDetailModel 
-                    { 
-                        Account="L17138937", 
-                        PatientName = "MOUSE,MARION", 
-                        ServiceDate = DateTime.Parse("12/12/2020"), 
-                        CDM = "5362524",
-                        CPT = "80202",
-                        Description = "VANCOMYCIN TROUGH",
-                        Qty = 1,
-                        Amount = 13.54
+                    new InvoiceDetailModel
+                    {
+                        Account="L17138937",
+                        PatientName = "MOUSE,MARION",
+                        ServiceDate = DateTime.Parse("12/12/2020"),
+                        AccountTotal = 13.54,
+                        InvoiceDetailLines = new List<InvoiceDetailLinesModel>
+                        {
+                            new InvoiceDetailLinesModel
+                            {
+                                CDM = "5362524",
+                                CPT = "80202",
+                                Description = "VANCOMYCIN TROUGH",
+                                Qty = 1,
+                                Amount = 13.54
+                            }
+                        }
                     },
                     new InvoiceDetailModel
                     {
                         Account="L17158137",
                         PatientName = "DOE,JUNELEE",
                         ServiceDate = DateTime.Parse("01/09/2021"),
-                        CDM = "6127072",
-                        CPT = "81001",
-                        Description = "URINALYSIS W/MIC, C&S IF INDICATED",
-                        Qty = 1,
-                        Amount = 3.17
+                        AccountTotal = 3.17 + 5.17,
+                        InvoiceDetailLines = new List<InvoiceDetailLinesModel>
+                        {
+                            new InvoiceDetailLinesModel
+                            {
+                                CDM = "6127072",
+                                CPT = "81001",
+                                Description = "URINALYSIS W/MIC, C&S IF INDICATED",
+                                Qty = 1,
+                                Amount = 3.17
+                            },
+                            new InvoiceDetailLinesModel
+                            {
+                                CDM = "5545154",
+                                CPT = "88143",
+                                Description = "CBC w/Auto Diff",
+                                Qty = 1,
+                                Amount = 5.17
+                            }
+                        }
                     },
                     new InvoiceDetailModel
                     {
                         Account="L17158136",
                         PatientName = "DOE,MARCUS",
                         ServiceDate = DateTime.Parse("01/09/2021"),
-                        CDM = "5362524",
-                        CPT = "80202",
-                        Description = "VANCOMYCIN TROUGH",
-                        Qty = 1,
-                        Amount = 13.54
+                        AccountTotal = 13.54,
+                        InvoiceDetailLines = new List<InvoiceDetailLinesModel>
+                        {
+                            new InvoiceDetailLinesModel
+                            {
+                                CDM = "5362524",
+                                CPT = "80202",
+                                Description = "VANCOMYCIN TROUGH",
+                                Qty = 1,
+                                Amount = 13.54
+                            }
+                        }
                     },
                     new InvoiceDetailModel
                     {
                         Account="L17163700",
                         PatientName = "DEER,MARGO",
                         ServiceDate = DateTime.Parse("01/17/2021"),
-                        CDM = "5565120",
-                        CPT = "85610",
-                        Description = "PROTHROMBIN TIME",
-                        Qty = 1,
-                        Amount = 4.29
+                        AccountTotal = 4.29,
+                        InvoiceDetailLines = new List<InvoiceDetailLinesModel>
+                        {
+                            new InvoiceDetailLinesModel
+                            {
+                                CDM = "5565120",
+                                CPT = "85610",
+                                Description = "PROTHROMBIN TIME",
+                                Qty = 1,
+                                Amount = 4.29
+                            }
+                        }
                     },
                     new InvoiceDetailModel
                     {
                         Account="WTTC",
                         PatientName = "WEST TENNESSEE TRANSITIONAL CARE",
                         ServiceDate = DateTime.Parse("12/29/2020"),
-                        CDM = "5362524",
-                        CPT = "80202",
-                        Description = "VANCOMYCIN TROUGH",
-                        Qty = -1,
-                        Amount = -13.54
+                        AccountTotal = -13.54,
+                        InvoiceDetailLines = new List<InvoiceDetailLinesModel>
+                        {
+                            new InvoiceDetailLinesModel
+                            {
+                                CDM = "5362524",
+                                CPT = "80202",
+                                Description = "VANCOMYCIN TROUGH",
+                                Qty = -1,
+                                Amount = -13.54
+                            }
+                        }
                     },
-
                 }
-
             };
 
             string filename = @"c:\temp\demo.pdf";
-            InvoicePrint.CreatePDF(invModel, filename);
+            //InvoicePrint.CreatePDF(invModel, filename);
+            InvoicePrintPdfSharp invoicePrint = new InvoicePrintPdfSharp();
+
+            invoicePrint.CreateInvoicePdf(invModel, filename);
+
+
 
             System.Diagnostics.Process.Start(filename);
 

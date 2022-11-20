@@ -11,7 +11,7 @@ using LabBilling.Core.Models;
 using Table = iText.Layout.Element.Table;
 using VerticalAlignment = iText.Layout.Properties.VerticalAlignment;
 
-namespace LabBilling.Core
+namespace LabBilling.Core.BusinessLogic
 {
 
     /// <summary>
@@ -352,57 +352,57 @@ namespace LabBilling.Core
 
             foreach (var detail in model.InvoiceDetails)
             {
-                if (currentRow == bkgColor1)
-                    currentRow = bkgColor2;
-                else currentRow = bkgColor1;
-                // Table
-                table.AddCell(new Cell(1, 1)
-                    .SetBackgroundColor(currentRow)
-                    .SetTextAlignment(TextAlignment.LEFT)
-                    .SetBorder(detailBorder)
-                    .Add(new Paragraph(detail.Account ?? "").SetFontSize(detailFontSize)));
+                //if (currentRow == bkgColor1)
+                //    currentRow = bkgColor2;
+                //else currentRow = bkgColor1;
+                //// Table
+                //table.AddCell(new Cell(1, 1)
+                //    .SetBackgroundColor(currentRow)
+                //    .SetTextAlignment(TextAlignment.LEFT)
+                //    .SetBorder(detailBorder)
+                //    .Add(new Paragraph(detail.Account ?? "").SetFontSize(detailFontSize)));
 
-                table.AddCell(new Cell(1, 1)
-                    .SetBackgroundColor(currentRow)
-                    .SetTextAlignment(TextAlignment.LEFT)
-                    .SetBorder(detailBorder)
-                    .Add(new Paragraph(detail.PatientName ?? "").SetFontSize(detailFontSize)));
+                //table.AddCell(new Cell(1, 1)
+                //    .SetBackgroundColor(currentRow)
+                //    .SetTextAlignment(TextAlignment.LEFT)
+                //    .SetBorder(detailBorder)
+                //    .Add(new Paragraph(detail.PatientName ?? "").SetFontSize(detailFontSize)));
 
-                table.AddCell(new Cell(1, 1)
-                    .SetBackgroundColor(currentRow)
-                    .SetTextAlignment(TextAlignment.RIGHT)
-                    .SetBorder(detailBorder)
-                    .Add(new Paragraph(detail.ServiceDate?.ToShortDateString() ?? "").SetFontSize(detailFontSize)));
+                //table.AddCell(new Cell(1, 1)
+                //    .SetBackgroundColor(currentRow)
+                //    .SetTextAlignment(TextAlignment.RIGHT)
+                //    .SetBorder(detailBorder)
+                //    .Add(new Paragraph(detail.ServiceDate?.ToShortDateString() ?? "").SetFontSize(detailFontSize)));
 
-                table.AddCell(new Cell(1, 1)
-                    .SetBackgroundColor(currentRow)
-                    .SetTextAlignment(TextAlignment.LEFT)
-                    .SetBorder(detailBorder)
-                    .Add(new Paragraph(detail.CDM ?? "").SetFontSize(detailFontSize)));
+                //table.AddCell(new Cell(1, 1)
+                //    .SetBackgroundColor(currentRow)
+                //    .SetTextAlignment(TextAlignment.LEFT)
+                //    .SetBorder(detailBorder)
+                //    .Add(new Paragraph(detail.CDM ?? "").SetFontSize(detailFontSize)));
 
-                table.AddCell(new Cell(1, 1)
-                    .SetBackgroundColor(currentRow)
-                    .SetTextAlignment(TextAlignment.LEFT)
-                    .SetBorder(detailBorder)
-                    .Add(new Paragraph(detail.CPT ?? "").SetFontSize(detailFontSize)));
+                //table.AddCell(new Cell(1, 1)
+                //    .SetBackgroundColor(currentRow)
+                //    .SetTextAlignment(TextAlignment.LEFT)
+                //    .SetBorder(detailBorder)
+                //    .Add(new Paragraph(detail.CPT ?? "").SetFontSize(detailFontSize)));
 
-                table.AddCell(new Cell(1, 1)
-                    .SetBackgroundColor(currentRow)
-                    .SetTextAlignment(TextAlignment.LEFT)
-                    .SetBorder(detailBorder)
-                    .Add(new Paragraph(detail.Description ?? "").SetFontSize(detailFontSize)));
+                //table.AddCell(new Cell(1, 1)
+                //    .SetBackgroundColor(currentRow)
+                //    .SetTextAlignment(TextAlignment.LEFT)
+                //    .SetBorder(detailBorder)
+                //    .Add(new Paragraph(detail.Description ?? "").SetFontSize(detailFontSize)));
 
-                table.AddCell(new Cell(1, 1)
-                    .SetBackgroundColor(currentRow)
-                    .SetTextAlignment(TextAlignment.RIGHT)
-                    .SetBorder(detailBorder)
-                    .Add(new Paragraph(detail.Qty.ToString() ?? "").SetFontSize(detailFontSize)));
+                //table.AddCell(new Cell(1, 1)
+                //    .SetBackgroundColor(currentRow)
+                //    .SetTextAlignment(TextAlignment.RIGHT)
+                //    .SetBorder(detailBorder)
+                //    .Add(new Paragraph(detail.Qty.ToString() ?? "").SetFontSize(detailFontSize)));
 
-                table.AddCell(new Cell(1, 1)
-                    .SetBackgroundColor(currentRow)
-                    .SetTextAlignment(TextAlignment.RIGHT)
-                    .SetBorder(detailBorder)
-                    .Add(new Paragraph(detail.Amount.ToString("0.00") ?? "").SetFontSize(detailFontSize)));
+                //table.AddCell(new Cell(1, 1)
+                //    .SetBackgroundColor(currentRow)
+                //    .SetTextAlignment(TextAlignment.RIGHT)
+                //    .SetBorder(detailBorder)
+                //    .Add(new Paragraph(detail.Amount.ToString("0.00") ?? "").SetFontSize(detailFontSize)));
 
             }
 

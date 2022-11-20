@@ -105,6 +105,25 @@ namespace LabBilling.Core.Models
         public Guid rowguid { get; set; }
 
         [Ignore]
+        public string CptList 
+        { 
+            get
+            {
+                if (ChrgDetails != null)
+                {
+                    string cptList = string.Empty;
+                    ChrgDetails.ForEach(x => cptList += x.Cpt4 + ", ");
+
+                    cptList = cptList.Remove(cptList.Length - 1);
+
+                    return cptList;
+                }
+
+                return string.Empty;
+            }
+        }
+
+        [Ignore]
         public string CdmDescription
         {
             get
@@ -138,7 +157,8 @@ namespace LabBilling.Core.Models
         public string ChargeItemId { get; set; }
         [Column("descript")]
         public string ChargeDescription { get; set; }
-
+        [Column("cptList")]
+        public string CptList { get; set; }
 
         [Ignore]
         public DateTime mod_date { get; set; }

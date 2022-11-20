@@ -158,7 +158,7 @@ namespace LabBilling.Core.DataAccess
 
             var sql = PetaPoco.Sql.Builder
                 .From("InvoiceChargeView")
-                .Where("WHERE account = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account })
+                .Where("account = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account })
                 .Where("cdm <> 'CBILL'");
 
             List<InvoiceChargeView> results = dbConnection.Fetch<InvoiceChargeView>(sql);

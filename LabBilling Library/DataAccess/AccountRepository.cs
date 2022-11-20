@@ -583,6 +583,13 @@ namespace LabBilling.Core.DataAccess
         {
             Log.Instance.Trace($"Entering - account {accData.AccountNo} cdm {cdm}");
 
+            //check account status, change to NEW if it is paid out.
+            if(accData.Status == "PAID_OUT")
+            {
+                UpdateStatus(accData.AccountNo, "NEW");
+                accData.Status = "NEW";
+            }
+
             //get the cdm number - if cdm number is not found - abort
             Cdm cdmData = cdmRepository.GetCdm(cdm);
             if (cdmData == null)

@@ -28,7 +28,7 @@ namespace LabBilling.Core.DataAccess
 
         public Fin GetFin(string finCode)
         {
-            return dbConnection.SingleOrDefault<Fin>("where fin_code = @0", 
+            return dbConnection.SingleOrDefault<Fin>($"where {GetRealColumn(nameof(Fin.FinCode))} = @0", 
                 new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = finCode });
         }
     }

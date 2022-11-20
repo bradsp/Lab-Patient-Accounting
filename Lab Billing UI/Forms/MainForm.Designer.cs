@@ -77,6 +77,7 @@
             this.systemParametersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.interfaceMappingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.interfaceMonitorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.systemLogViewerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -85,7 +86,6 @@
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripUsernameLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripDatabaseLabel = new System.Windows.Forms.ToolStripStatusLabel();
-            this.systemLogViewerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.MainFormMenu.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -420,6 +420,12 @@
             resources.ApplyResources(this.interfaceMonitorToolStripMenuItem, "interfaceMonitorToolStripMenuItem");
             this.interfaceMonitorToolStripMenuItem.Click += new System.EventHandler(this.interfaceMonitorToolStripMenuItem_Click);
             // 
+            // systemLogViewerToolStripMenuItem
+            // 
+            this.systemLogViewerToolStripMenuItem.Name = "systemLogViewerToolStripMenuItem";
+            resources.ApplyResources(this.systemLogViewerToolStripMenuItem, "systemLogViewerToolStripMenuItem");
+            this.systemLogViewerToolStripMenuItem.Click += new System.EventHandler(this.systemLogViewerToolStripMenuItem_Click);
+            // 
             // helpToolStripMenuItem
             // 
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -494,12 +500,6 @@
             this.toolStripDatabaseLabel.BorderStyle = System.Windows.Forms.Border3DStyle.Sunken;
             this.toolStripDatabaseLabel.Name = "toolStripDatabaseLabel";
             resources.ApplyResources(this.toolStripDatabaseLabel, "toolStripDatabaseLabel");
-            // 
-            // systemLogViewerToolStripMenuItem
-            // 
-            this.systemLogViewerToolStripMenuItem.Name = "systemLogViewerToolStripMenuItem";
-            resources.ApplyResources(this.systemLogViewerToolStripMenuItem, "systemLogViewerToolStripMenuItem");
-            this.systemLogViewerToolStripMenuItem.Click += new System.EventHandler(this.systemLogViewerToolStripMenuItem_Click);
             // 
             // MainForm
             // 

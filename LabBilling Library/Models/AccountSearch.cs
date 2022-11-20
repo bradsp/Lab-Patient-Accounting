@@ -13,6 +13,16 @@ namespace LabBilling.Core.Models
         [Column("pat_name")]
         [ResultColumn]
         public string Name { get; set; }
+        [Column("first_name")]
+        [ResultColumn]
+        public string FirstName { get; set; }
+        [Column("last_name")]
+        [ResultColumn]
+        public string LastName { get; set; }
+        [Column("middle_name")]
+        [ResultColumn]
+        public string MiddleName { get; set; }
+
         [Column("ssn")]
         [ResultColumn]
         public string SSN { get; set; }

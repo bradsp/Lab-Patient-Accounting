@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Serialization;
 using LabBilling.Core.DataAccess;
-using LabBilling.Core;
+using LabBilling.Core.BusinessLogic;
 using LabBilling.Core.Models;
 using LabBilling.Library;
 
@@ -246,6 +246,7 @@ namespace LabBilling.Forms
 
             DateTime.TryParse(FromDate.Text, out DateTime fd);
             DateTime.TryParse(ThroughDate.Text, out DateTime td);
+            td = td.AddDays(1);
             await RefreshInvoiceHistoryGridAsync(null, fd, td);
         }
 
@@ -255,19 +256,19 @@ namespace LabBilling.Forms
 
             InvoiceHistoryDGV.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.ClientName)].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.bal_forward)].DefaultCellStyle.Format = "c2";
-            InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.bal_forward)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-            InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.total_chrg)].DefaultCellStyle.Format = "c2";
-            InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.total_chrg)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-            InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.discount)].DefaultCellStyle.Format = "c2";
-            InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.discount)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-            InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.balance_due)].DefaultCellStyle.Format = "c2";
-            InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.balance_due)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-            InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.payments)].DefaultCellStyle.Format = "c2";
-            InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.payments)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-            InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.true_balance_due)].DefaultCellStyle.Format = "c2";
-            InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.true_balance_due)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-            InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.cbill_filestream)].Visible = false;
+            InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.BalanceForward)].DefaultCellStyle.Format = "c2";
+            InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.BalanceForward)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.TotalCharges)].DefaultCellStyle.Format = "c2";
+            InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.TotalCharges)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.Discount)].DefaultCellStyle.Format = "c2";
+            InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.Discount)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.BalanceDue)].DefaultCellStyle.Format = "c2";
+            InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.BalanceDue)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.Payments)].DefaultCellStyle.Format = "c2";
+            InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.Payments)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.TrueBalanceDue)].DefaultCellStyle.Format = "c2";
+            InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.TrueBalanceDue)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.InvoiceFile)].Visible = false;
             InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.mod_user)].Visible = false;
             InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.mod_date)].Visible = false;
             InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.mod_prg)].Visible = false;
@@ -283,19 +284,19 @@ namespace LabBilling.Forms
 
             InvoiceHistoryDGV.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.ClientName)].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.bal_forward)].DefaultCellStyle.Format = "c2";
-            InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.bal_forward)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-            InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.total_chrg)].DefaultCellStyle.Format = "c2";
-            InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.total_chrg)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-            InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.discount)].DefaultCellStyle.Format = "c2";
-            InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.discount)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-            InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.balance_due)].DefaultCellStyle.Format = "c2";
-            InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.balance_due)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-            InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.payments)].DefaultCellStyle.Format = "c2";
-            InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.payments)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-            InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.true_balance_due)].DefaultCellStyle.Format = "c2";
-            InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.true_balance_due)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-            InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.cbill_filestream)].Visible = false;
+            InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.BalanceForward)].DefaultCellStyle.Format = "c2";
+            InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.BalanceForward)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.TotalCharges)].DefaultCellStyle.Format = "c2";
+            InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.TotalCharges)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.Discount)].DefaultCellStyle.Format = "c2";
+            InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.Discount)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.BalanceDue)].DefaultCellStyle.Format = "c2";
+            InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.BalanceDue)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.Payments)].DefaultCellStyle.Format = "c2";
+            InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.Payments)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.TrueBalanceDue)].DefaultCellStyle.Format = "c2";
+            InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.TrueBalanceDue)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.InvoiceFile)].Visible = false;
             InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.mod_user)].Visible = false;
             InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.mod_date)].Visible = false;
             InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.mod_prg)].Visible = false;
@@ -319,24 +320,19 @@ namespace LabBilling.Forms
             if (InvoiceHistoryDGV.SelectedRows == null)
                 return;
 
-            if (InvoiceHistoryDGV.SelectedRows[0].Cells[nameof(InvoiceHistory.cbill_html)].Value == null)
+            if (InvoiceHistoryDGV.SelectedRows[0].Cells[nameof(InvoiceHistory.InvoiceData)].Value == null)
             {
                 MessageBox.Show("Invoice image not stored in history record.");
                 return;
             }
             else
             {
+                string invoiceNo = InvoiceHistoryDGV.SelectedRows[0].Cells[nameof(InvoiceHistory.InvoiceNo)].Value.ToString();
 
+                ClientInvoices clientInvoices = new ClientInvoices(Helper.ConnVal);
 
-                string xml = InvoiceHistoryDGV.SelectedRows[0].Cells[nameof(InvoiceHistory.cbill_html)].Value.ToString();
-
-                XmlSerializer serializer = new XmlSerializer(typeof(InvoiceModel));
-                StringReader rdr = new StringReader(xml);
-
-                InvoiceModel model = (InvoiceModel)serializer.Deserialize(rdr);
-
-                string filename = $"c:\\temp\\{model.InvoiceNo}.pdf";
-                InvoicePrint.CreatePDF(model, filename);
+                string filename = clientInvoices.ReprintInvoice(invoiceNo);                
+                
                 System.Diagnostics.Process.Start(filename);
             }
         }
@@ -388,6 +384,7 @@ namespace LabBilling.Forms
             }
             else
             {
+                td = td.AddDays(1);
                 RefreshInvoiceHistoryGrid(ClientFilter.SelectedValue?.ToString(), fd, td);
             }
         }
@@ -401,7 +398,7 @@ namespace LabBilling.Forms
 
         private void generateStatementButton_Click(object sender, EventArgs e)
         {
-            if (InvoiceHistoryDGV.SelectedRows[0].Cells[nameof(InvoiceHistory.cl_mnem)].Value == null)
+            if (InvoiceHistoryDGV.SelectedRows[0].Cells[nameof(InvoiceHistory.ClientMnem)].Value == null)
             {
                 MessageBox.Show("Invoice image not stored in history record.");
                 return;
@@ -409,7 +406,7 @@ namespace LabBilling.Forms
             else
             {
                 var statementBeginDate = InputDialogs.SelectStatementBeginDate(DateTime.Today.AddDays(-120));
-                string client = InvoiceHistoryDGV.SelectedRows[0].Cells[nameof(InvoiceHistory.cl_mnem)].Value.ToString();
+                string client = InvoiceHistoryDGV.SelectedRows[0].Cells[nameof(InvoiceHistory.ClientMnem)].Value.ToString();
                 clientInvoices.GenerateStatement(client, (DateTime)statementBeginDate);
             }
 
