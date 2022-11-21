@@ -134,7 +134,6 @@ namespace LabBilling.Library
 
             frm.Load += (o, s) =>
             {
-
                 dosLabel.Top = 20;
                 dosLabel.Left = (frm.Width - dosLabel.Width) / 2;
                 dateTimePicker.Top = dosLabel.Bottom + 10;
@@ -183,7 +182,6 @@ namespace LabBilling.Library
             {
                 return (DateTime.MinValue, string.Empty);
             }
-
         }
 
         public static DateTime? SelectStatementBeginDate(DateTime defaultDate)
@@ -192,12 +190,13 @@ namespace LabBilling.Library
             {
                 Text = "Generate Statement Begin Date",
                 DialogResult = DialogResult.OK,
-                Width = 400
+                Width = 400,
+                Height = 200
             };
             Label dosLabel = new Label()
             {
-                Text = "Choose the new date of service",
-                Width = 130
+                Text = "Enter Starting Date for Statement",
+                Width = 250
             };
             DateTextBox dateTimePicker = new DateTextBox()
             {
@@ -215,7 +214,6 @@ namespace LabBilling.Library
 
             frm.Load += (o, s) =>
             {
-
                 dosLabel.Top = 20;
                 dosLabel.Left = (frm.Width - dosLabel.Width) / 2;
                 dateTimePicker.Top = dosLabel.Bottom + 10;

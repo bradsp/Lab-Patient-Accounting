@@ -1,7 +1,6 @@
 ﻿using LabBilling.Core.Models;
 using System;
 using LabBilling.Logging;
-using iText.Layout.Element;
 using System.Collections.Generic;
 using System.Linq;
 using System.Data.SqlClient;

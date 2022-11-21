@@ -5,8 +5,8 @@
     <TargetFramework>net6.0-windows</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <AssemblyVersion>2022.11.19.2138</AssemblyVersion>
-    <FileVersion>2022.11.19.2138</FileVersion>
+    <AssemblyVersion>2022.11.21.1525</AssemblyVersion>
+    <FileVersion>2022.11.21.1525</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>

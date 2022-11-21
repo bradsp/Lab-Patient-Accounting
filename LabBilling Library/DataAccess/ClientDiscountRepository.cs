@@ -3,12 +3,9 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using LabBilling.Core.Models;
 using LabBilling.Logging;
-using PetaPoco;
-using static iText.StyledXmlParser.Jsoup.Select.Evaluator;
+//using static iText.StyledXmlParser.Jsoup.Select.Evaluator;
 
 namespace LabBilling.Core.DataAccess
 {

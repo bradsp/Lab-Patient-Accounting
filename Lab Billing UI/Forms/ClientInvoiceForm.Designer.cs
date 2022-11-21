@@ -80,7 +80,7 @@ namespace LabBilling.Forms
             this.InvoicesDGV.Location = new System.Drawing.Point(6, 34);
             this.InvoicesDGV.Name = "InvoicesDGV";
             this.InvoicesDGV.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.InvoicesDGV.Size = new System.Drawing.Size(763, 346);
+            this.InvoicesDGV.Size = new System.Drawing.Size(763, 268);
             this.InvoicesDGV.TabIndex = 0;
             this.InvoicesDGV.SelectionChanged += new System.EventHandler(this.InvoicesDGV_SelectionChanged);
             // 
@@ -163,10 +163,10 @@ namespace LabBilling.Forms
             | System.Windows.Forms.AnchorStyles.Right)));
             this.UnbilledAccountsDGV.BackgroundColor = System.Drawing.SystemColors.ControlLightLight;
             this.UnbilledAccountsDGV.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.UnbilledAccountsDGV.Location = new System.Drawing.Point(6, 386);
+            this.UnbilledAccountsDGV.Location = new System.Drawing.Point(6, 338);
             this.UnbilledAccountsDGV.Name = "UnbilledAccountsDGV";
             this.UnbilledAccountsDGV.ReadOnly = true;
-            this.UnbilledAccountsDGV.Size = new System.Drawing.Size(989, 137);
+            this.UnbilledAccountsDGV.Size = new System.Drawing.Size(989, 185);
             this.UnbilledAccountsDGV.TabIndex = 11;
             this.UnbilledAccountsDGV.RowHeaderMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.UnbilledAccountsDGV_RowHeaderMouseDoubleClick);
             // 

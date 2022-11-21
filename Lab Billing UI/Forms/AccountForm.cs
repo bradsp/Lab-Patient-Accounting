@@ -320,6 +320,9 @@ namespace LabBilling.Forms
         {
             Log.Instance.Trace($"Entering");
             currentAccount = accDB.GetByAccount(SelectedAccount);
+
+            generateClientStatementToolStripMenuItem.Enabled = currentAccount.FinCode == "CLIENT";
+
             this.Text = $"{currentAccount.PatFullName}";
 
             dxBindingList = new BindingList<PatDiag>(currentAccount.Pat.Diagnoses);
@@ -510,7 +513,7 @@ namespace LabBilling.Forms
             DateOfBirthTextBox.BackColor = Color.White;
             SexComboBox.SelectedValue = currentAccount.Sex == null ? string.Empty : currentAccount.Sex;
             SexComboBox.BackColor = Color.White;
-            MaritalStatusComboBox.SelectedValue = currentAccount.Pat.MaritalStatus != null ? currentAccount.Pat.MaritalStatus : "";
+            MaritalStatusComboBox.SelectedValue = !string.IsNullOrEmpty(currentAccount.Pat.MaritalStatus) ? currentAccount.Pat.MaritalStatus : "U";
             MaritalStatusComboBox.BackColor = Color.White;
 
             providerLookup1.SelectedValue = currentAccount.Pat.ProviderId;
@@ -1018,6 +1021,10 @@ namespace LabBilling.Forms
 
             ChargesDataGrid.DataSource = chargesTable;
             ChargesDataGrid.DataMember = chargesTable.TableName;
+            if(currentAccount.FinCode == "CLIENT")
+            {
+                chargesTable.DefaultView.Sort = $"{nameof(Chrg.ChrgId)} desc";
+            }
             if (!ShowCreditedChrgCheckBox.Checked)
             {
                 chargesTable.DefaultView.RowFilter = "IsCredited = false";
@@ -1376,8 +1383,7 @@ namespace LabBilling.Forms
                 tabPayments.Controls.Add(addPaymentStatusLabel);
             }
 
-            //payments = chkdb.GetByAccount(SelectedAccount);
-            //Log.Instance.Debug($"GetPayments returned {payments.Count} rows.");
+            currentAccount.Payments = currentAccount.Payments.OrderByDescending(x => x.PaymentNo).ToList();
             PaymentsDataGrid.DataSource = currentAccount.Payments.ToList();
 
             foreach (DataGridViewColumn col in PaymentsDataGrid.Columns)
@@ -1967,12 +1973,12 @@ namespace LabBilling.Forms
                     throw new ArgumentOutOfRangeException("ClaimType is not defined.");
             }
 
-            PrintClaimForm printClaim = new PrintClaimForm(Helper.ConnVal);
+            //PrintClaimForm printClaim = new PrintClaimForm(Helper.ConnVal);
 
             //string x12Text = billing837.GenerateSingleClaim(claim, fileLocation);
             //printClaim.Print(x12Text, false, true);
 
-            printClaim.PrintForm(claim);
+            //printClaim.PrintForm(claim);
 
         }
 
@@ -2137,6 +2143,23 @@ namespace LabBilling.Forms
 
                     LoadAccountData();
                 }
+            }
+        }
+
+        private void generateClientStatementToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var statementBeginDate = InputDialogs.SelectStatementBeginDate(DateTime.Today.AddDays(-120));
+
+            if (statementBeginDate != null)
+            {
+                string client = currentAccount.ClientMnem;
+                ClientInvoices clientInvoices = new ClientInvoices(Helper.ConnVal);
+
+                
+                var filename = clientInvoices.GenerateStatement(client, (DateTime)statementBeginDate);
+
+
+                System.Diagnostics.Process.Start(filename);
             }
         }
     }

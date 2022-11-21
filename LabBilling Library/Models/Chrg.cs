@@ -128,7 +128,10 @@ namespace LabBilling.Core.Models
         {
             get
             {
-                return this.Cdm.Description;
+                if(this.Cdm != null)
+                    return this.Cdm.Description;
+                
+                return string.Empty;
             }
         }
     

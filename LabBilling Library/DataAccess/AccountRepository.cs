@@ -85,7 +85,7 @@ namespace LabBilling.Core.DataAccess
         {
             Log.Instance.Trace($"Entering - account {account} demographicsOnly {demographicsOnly}");
 
-            var record = dbConnection.SingleOrDefault<Account>($"where {this.GetRealColumn(nameof(Account.AccountNo))} = @0", 
+            var record = dbConnection.SingleOrDefault<Account>($"where {this.GetRealColumn(nameof(Account.AccountNo))} = @0",
                 new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account });
 
 
@@ -116,11 +116,11 @@ namespace LabBilling.Core.DataAccess
                 record.Fin = finRepository.GetFin(record.FinCode);
 
                 DateTime outpBillStartDate;
-                DateTime questStartDate = new DateTime(2012,10,1);
-                DateTime questEndDate = new DateTime(2020,5,31);
+                DateTime questStartDate = new DateTime(2012, 10, 1);
+                DateTime questEndDate = new DateTime(2020, 5, 31);
                 DateTime arbitraryEndDate = new DateTime(2016, 12, 31);
 
-                if(!DateTime.TryParse(systemParametersRepository.GetByKey("outpatient_bill_start"), out outpBillStartDate))
+                if (!DateTime.TryParse(systemParametersRepository.GetByKey("outpatient_bill_start"), out outpBillStartDate))
                 {
                     //set default date
                     outpBillStartDate = new DateTime(2012, 4, 1);
@@ -173,32 +173,42 @@ namespace LabBilling.Core.DataAccess
             //populate properties
             result = dbConnection.ExecuteScalar<object>("SELECT dbo.GetAccBalance(@0)", account);
             if (result != DBNull.Value && result != null)
-                record.Balance = Convert.ToDouble(result); 
-            
-            result = dbConnection.ExecuteScalar<object>("SELECT dbo.GetBadDebtByAccount(@0)", 
+                record.Balance = Convert.ToDouble(result);
+
+            result = dbConnection.ExecuteScalar<object>("SELECT dbo.GetBadDebtByAccount(@0)",
                 new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account });
             if (result != DBNull.Value && result != null)
-                record.TotalBadDebt = Convert.ToDouble(result); 
-            
-            result = dbConnection.ExecuteScalar<object>("SELECT dbo.GetAccTotalCharges(@0)", 
-                new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account });
-            if (result != DBNull.Value && result != null)
-                record.TotalCharges = Convert.ToDouble(result); 
-            
-            result = dbConnection.ExecuteScalar<object>("SELECT dbo.GetContractualByAccount(@0)", 
-                new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account });
-            if (result != DBNull.Value && result != null)
-                record.TotalContractual = Convert.ToDouble(result); 
-            
-            result = dbConnection.ExecuteScalar<object>("SELECT dbo.GetAmtPaidByAccount(@0)", 
-                new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account });
-            if (result != DBNull.Value && result != null)
-                record.TotalPayments = Convert.ToDouble(result); 
-            
-            result = dbConnection.ExecuteScalar<object>("SELECT dbo.GetWriteOffByAccount(@0)", 
-                new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account });
-            if (result != DBNull.Value && result != null)
-                record.TotalWriteOff = Convert.ToDouble(result);
+                record.TotalBadDebt = Convert.ToDouble(result);
+
+            if (record.FinCode == "CLIENT")
+            {
+                record.TotalCharges = record.Charges.Where(x => x.Status != "CBILL").Sum(x => x.Quantity * x.NetAmount);
+                record.TotalPayments = record.Payments.Where(x => x.Status != "CBILL").Sum(x => x.PaidAmount);
+                record.TotalContractual = record.Payments.Where(x => x.Status != "CBILL").Sum(x => x.ContractualAmount);
+                record.TotalWriteOff = record.Payments.Where(x => x.Status != "CBILL").Sum(x => x.WriteOffAmount);
+            }
+            else
+            {
+                result = dbConnection.ExecuteScalar<object>("SELECT dbo.GetAccTotalCharges(@0)",
+                    new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account });
+                if (result != DBNull.Value && result != null)
+                    record.TotalCharges = Convert.ToDouble(result);
+
+                result = dbConnection.ExecuteScalar<object>("SELECT dbo.GetContractualByAccount(@0)",
+                    new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account });
+                if (result != DBNull.Value && result != null)
+                    record.TotalContractual = Convert.ToDouble(result);
+
+                result = dbConnection.ExecuteScalar<object>("SELECT dbo.GetAmtPaidByAccount(@0)",
+                    new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account });
+                if (result != DBNull.Value && result != null)
+                    record.TotalPayments = Convert.ToDouble(result);
+
+                result = dbConnection.ExecuteScalar<object>("SELECT dbo.GetWriteOffByAccount(@0)",
+                    new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account });
+                if (result != DBNull.Value && result != null)
+                    record.TotalWriteOff = Convert.ToDouble(result);
+            }
 
             return record;
         }
@@ -241,7 +251,7 @@ namespace LabBilling.Core.DataAccess
             Log.Instance.Trace($"Entering - account {acc.AccountNo}");
             if (string.IsNullOrEmpty(acc.Status))
                 acc.Status = "NEW";
-            
+
             acc.PatFullName = acc.PatNameDisplay;
 
             this.Add(acc);
@@ -251,9 +261,9 @@ namespace LabBilling.Core.DataAccess
         {
             Log.Instance.Trace($"Entering - client {clientMnem} thruDate {thruDate}");
 
-            return dbConnection.Fetch<InvoiceSelect>($"where {this.GetRealColumn(typeof(InvoiceSelect), nameof(InvoiceSelect.cl_mnem))} = @0 " + 
-                $"and {this.GetRealColumn(typeof(InvoiceSelect), nameof(InvoiceSelect.trans_date))} <= @1", 
-                new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = clientMnem }, 
+            return dbConnection.Fetch<InvoiceSelect>($"where {this.GetRealColumn(typeof(InvoiceSelect), nameof(InvoiceSelect.cl_mnem))} = @0 " +
+                $"and {this.GetRealColumn(typeof(InvoiceSelect), nameof(InvoiceSelect.trans_date))} <= @1",
+                new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = clientMnem },
                 new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = thruDate });
         }
 
@@ -280,7 +290,7 @@ namespace LabBilling.Core.DataAccess
                             .From(_tableName)
                             .InnerJoin("ins").On("ins.account = acc.account and ins_a_b_c = 'A'")
                             .Where("status = '1500'");
-                            //.Where("ins_code not in ('CHAMPUS')");
+                        //.Where("ins_code not in ('CHAMPUS')");
                         break;
                     default:
                         command = PetaPoco.Sql.Builder;
@@ -331,7 +341,7 @@ namespace LabBilling.Core.DataAccess
 
         public bool UpdateDiagnoses(Account acc)
         {
-            if(patRepository.SaveDiagnoses(acc.Pat))
+            if (patRepository.SaveDiagnoses(acc.Pat))
             {
                 acc.Pat = patRepository.GetByAccount(acc);
                 return true;
@@ -354,9 +364,9 @@ namespace LabBilling.Core.DataAccess
         public bool InsuranceSwap(string accountNo, InsCoverage swap1, InsCoverage swap2)
         {
             dbConnection.ExecuteNonQueryProc("SwapInsurances",
-                new SqlParameter() { ParameterName="@account", SqlDbType = SqlDbType.VarChar, Value = accountNo },
-                new SqlParameter() { ParameterName="@ins1", SqlDbType = SqlDbType.VarChar, Value = swap1.ToString() },
-                new SqlParameter() { ParameterName="@ins2", SqlDbType = SqlDbType.VarChar, Value = swap2.ToString() });
+                new SqlParameter() { ParameterName = "@account", SqlDbType = SqlDbType.VarChar, Value = accountNo },
+                new SqlParameter() { ParameterName = "@ins1", SqlDbType = SqlDbType.VarChar, Value = swap1.ToString() },
+                new SqlParameter() { ParameterName = "@ins2", SqlDbType = SqlDbType.VarChar, Value = swap2.ToString() });
 
             return false;
         }
@@ -365,9 +375,9 @@ namespace LabBilling.Core.DataAccess
         {
             Log.Instance.Trace($"Entering - account  {table.AccountNo} new date {newDate} reason {reason_comment}");
 
-            if(table == null)
+            if (table == null)
                 throw new ArgumentNullException("table");
-            else if(newDate == null)
+            else if (newDate == null)
                 throw new ArgumentNullException("newDate");
             else if (reason_comment == null)
                 throw new ArgumentNullException("reason_comment");
@@ -420,7 +430,7 @@ namespace LabBilling.Core.DataAccess
             {
                 accountNoteRepository.Add(accountNote);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 addSuccess = false;
                 Log.Instance.Error(ex, "Error adding account note.");
@@ -458,20 +468,20 @@ namespace LabBilling.Core.DataAccess
 
             Fin newFin = finRepository.GetFin(newFinCode);
             Fin oldFin = finRepository.GetFin(oldFinCode);
-            
-            if(newFin == null)
+
+            if (newFin == null)
             {
                 throw new ArgumentException($"Financial code {newFinCode} is not valid code.", "newFinCode");
             }
 
-            if(oldFinCode != newFinCode)
+            if (oldFinCode != newFinCode)
             {
                 table.FinCode = newFinCode;
                 try
                 {
                     Update(table, new[] { nameof(Account.FinCode) });
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     Log.Instance.Error(ex);
                     throw new ApplicationException($"Exception updating fin code for {table.AccountNo}.", ex);
@@ -479,13 +489,13 @@ namespace LabBilling.Core.DataAccess
                 AddNote(table.AccountNo, $"Financial code updated from {oldFinCode} to {newFinCode}.");
 
                 //reprocess charges if needed due to financial code change.
-                if(newFin.FinClass != oldFin.FinClass)
+                if (newFin.FinClass != oldFin.FinClass)
                 {
                     try
                     {
                         chrgRepository.ReprocessCharges(table.AccountNo);
                     }
-                    catch(Exception ex)
+                    catch (Exception ex)
                     {
                         throw new ApplicationException("Error reprocessing charges.", ex);
                     }
@@ -515,10 +525,10 @@ namespace LabBilling.Core.DataAccess
             Client oldClient = clientRepository.GetClient(oldClientMnem);
             Client newClient = clientRepository.GetClient(newClientMnem);
 
-            if(newClient == null)
+            if (newClient == null)
                 throw new ArgumentException($"Client mnem {newClientMnem} is not valid.", "newClientMnem");
 
-            if(oldClientMnem != newClientMnem)
+            if (oldClientMnem != newClientMnem)
             {
                 table.ClientMnem = newClientMnem;
                 table.Client = newClient;
@@ -584,7 +594,7 @@ namespace LabBilling.Core.DataAccess
             Log.Instance.Trace($"Entering - account {accData.AccountNo} cdm {cdm}");
 
             //check account status, change to NEW if it is paid out.
-            if(accData.Status == "PAID_OUT")
+            if (accData.Status == "PAID_OUT")
             {
                 UpdateStatus(accData.AccountNo, "NEW");
                 accData.Status = "NEW";
@@ -599,7 +609,7 @@ namespace LabBilling.Core.DataAccess
             }
 
             Fin fin = finRepository.GetFin(accData.FinCode);
-            if(fin == null)
+            if (fin == null)
             {
                 throw new ApplicationException($"No fincode on account {accData.AccountNo}");
             }
@@ -678,11 +688,11 @@ namespace LabBilling.Core.DataAccess
                         //todo: calculate client discount
                         var cliDiscount = accData.Client.Discounts.Find(c => c.Cdm == cdm);
                         double discountPercentage = accData.Client.DefaultDiscount;
-                        if(cliDiscount != null)
+                        if (cliDiscount != null)
                         {
                             discountPercentage = cliDiscount.PercentDiscount;
                         }
-                        chrgDetail.Amount = fee.CClassPrice - (fee.CClassPrice * (discountPercentage/100));
+                        chrgDetail.Amount = fee.CClassPrice - (fee.CClassPrice * (discountPercentage / 100));
                         retailTotal += fee.CClassPrice;
                         ztotal += fee.ZClassPrice;
                         break;
@@ -751,7 +761,7 @@ namespace LabBilling.Core.DataAccess
             }
             else
             {
-                isAccountValid=true;
+                isAccountValid = true;
                 account.AccountValidationStatus.validation_text = "No validation errors.";
             }
 
@@ -777,14 +787,14 @@ namespace LabBilling.Core.DataAccess
             List<string> errorList = new List<string>();
 
             //determine if there are any rules for ama_year
-            if(lmrpRuleRepository.RulesLoaded((DateTime)account.TransactionDate) <= 0)
+            if (lmrpRuleRepository.RulesLoaded((DateTime)account.TransactionDate) <= 0)
             {
                 // no lmrp rules loaded for this ama year. 
                 errorList.Add("Rules not loaded for AMA_Year. DO NOT BILL.");
                 return errorList;
             }
 
-            foreach(var cpt4 in account.cpt4List.Distinct())
+            foreach (var cpt4 in account.cpt4List.Distinct())
             {
                 if (cpt4 == null)
                     continue;
@@ -806,15 +816,15 @@ namespace LabBilling.Core.DataAccess
 
                 }
 
-                if(!dxSupported)
+                if (!dxSupported)
                 {
                     errorList.Add($"LMRP Violation - No dx codes support medical necessity for cpt {cpt4}.");
                 }
             }
             return errorList;
         }
-    
-    
+
+
         public async Task ValidateUnbilledAccountsAsync()
         {
             Log.Instance.Trace($"Entering");
@@ -835,21 +845,21 @@ namespace LabBilling.Core.DataAccess
 
             var accounts = await Task.Run(() => accountSearchRepository.GetBySearch(parameters).ToList());
 
-            foreach(var account in accounts)
+            foreach (var account in accounts)
             {
                 try
                 {
                     var accountRecord = this.GetByAccount(account.Account);
                     this.Validate(ref accountRecord);
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     Log.Instance.Error(e, "Error during account validation job.");
                 }
             }
 
         }
-    
+
         /// <summary>
         /// Move all charges between accounts. Credits the charges from sourceAccount and charges them on destinationAccount.
         /// SourceAccount will have a zero total charge amount.
@@ -858,14 +868,14 @@ namespace LabBilling.Core.DataAccess
         /// <param name="destinationAccount"></param>
         public (bool isSuccess, string error) MoveCharges(string sourceAccount, string destinationAccount)
         {
-            if(string.IsNullOrEmpty(sourceAccount) || string.IsNullOrEmpty(destinationAccount))
+            if (string.IsNullOrEmpty(sourceAccount) || string.IsNullOrEmpty(destinationAccount))
             {
                 throw new ArgumentException("One or both arguments are null or empty.");
             }
-            
+
             var source = GetByAccount(sourceAccount);
             var destination = GetByAccount(destinationAccount);
-            if(source == null || destination == null)
+            if (source == null || destination == null)
             {
                 Log.Instance.Error($"Either source or destination account was not valid. {sourceAccount} {destinationAccount}");
                 return (false, "Either source or destination account was not valid.");
@@ -873,7 +883,7 @@ namespace LabBilling.Core.DataAccess
 
             var charges = source.Charges.Where(c => c.IsCredited == false);
 
-            foreach(var charge in charges)
+            foreach (var charge in charges)
             {
                 chrgRepository.CreditCharge(charge.ChrgId, $"Move to {destinationAccount}");
                 AddCharge(destination, charge.CDMCode, charge.Quantity, (DateTime)destination.TransactionDate, $"Moved from {sourceAccount}", charge.ReferenceReq);
@@ -899,7 +909,7 @@ namespace LabBilling.Core.DataAccess
 
             var charge = source.Charges.SingleOrDefault(c => c.ChrgId == chrgId);
 
-            if(charge.IsCredited)
+            if (charge.IsCredited)
             {
                 throw new ApplicationException("Charge is already credited.");
             }
@@ -908,6 +918,6 @@ namespace LabBilling.Core.DataAccess
             AddCharge(destinationAccount, charge.CDMCode, charge.Quantity, (DateTime)charge.ServiceDate, $"Moved from {sourceAccount}", charge.ReferenceReq);
 
         }
-    
+
     }
 }

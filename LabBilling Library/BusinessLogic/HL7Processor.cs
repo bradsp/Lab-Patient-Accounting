@@ -7,7 +7,6 @@ using RFClassLibrary;
 using LabBilling.Logging;
 using System.Text;
 using System.Configuration;
-using iText.Forms.Xfdf;
 using System.Linq;
 using System.Windows.Interop;
 using System.Text.RegularExpressions;

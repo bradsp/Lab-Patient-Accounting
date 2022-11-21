@@ -107,6 +107,11 @@ namespace LabBilling.Core.DataAccess
                 record.ZipCode = strZip;
             }
 
+            if(string.IsNullOrEmpty(record.MaritalStatus))
+            {
+                record.MaritalStatus = "U";
+            }
+
             string amaYear = FunctionRepository.GetAMAYear(account.TransactionDate.GetValueOrDefault(DateTime.Now));
             record.Diagnoses = new List<PatDiag>();
             if (record.Dx1 != null && record.Dx1 != "")

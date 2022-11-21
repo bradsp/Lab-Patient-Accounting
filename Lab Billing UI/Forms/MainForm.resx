@@ -531,18 +531,6 @@
   <metadata name="statusStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>156, 17</value>
   </metadata>
-  <data name="toolStripUsernameLabel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>137, 19</value>
-  </data>
-  <data name="toolStripUsernameLabel.Text" xml:space="preserve">
-    <value>toolStripUsernameLabel</value>
-  </data>
-  <data name="toolStripDatabaseLabel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>132, 19</value>
-  </data>
-  <data name="toolStripDatabaseLabel.Text" xml:space="preserve">
-    <value>toolStripDatabaseLabel</value>
-  </data>
   <data name="statusStrip1.Location" type="System.Drawing.Point, System.Drawing">
     <value>204, 724</value>
   </data>
@@ -566,6 +554,18 @@
   </data>
   <data name="&gt;&gt;statusStrip1.ZOrder" xml:space="preserve">
     <value>0</value>
+  </data>
+  <data name="toolStripUsernameLabel.Size" type="System.Drawing.Size, System.Drawing">
+    <value>137, 19</value>
+  </data>
+  <data name="toolStripUsernameLabel.Text" xml:space="preserve">
+    <value>toolStripUsernameLabel</value>
+  </data>
+  <data name="toolStripDatabaseLabel.Size" type="System.Drawing.Size, System.Drawing">
+    <value>132, 19</value>
+  </data>
+  <data name="toolStripDatabaseLabel.Text" xml:space="preserve">
+    <value>toolStripDatabaseLabel</value>
   </data>
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
