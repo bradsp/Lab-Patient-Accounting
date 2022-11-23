@@ -1,10 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using LabBilling.Core.Models;
+using MathNet.Numerics;
 using MigraDoc.DocumentObjectModel;
 using MigraDoc.DocumentObjectModel.Shapes;
 using MigraDoc.DocumentObjectModel.Tables;
 using MigraDoc.Rendering;
+using PdfSharp.Pdf;
+using PdfSharp.Pdf.IO;
 
 namespace LabBilling.Core.BusinessLogic
 {
@@ -21,6 +25,33 @@ namespace LabBilling.Core.BusinessLogic
         public InvoicePrintPdfSharp()
         {
 
+        }
+
+        public string MergeFiles(IEnumerable<string> files, string outputFilename, bool duplex = false)
+        {
+            PdfDocument outputDocument = new PdfDocument();
+
+            foreach(string file in files)
+            {
+                PdfDocument inputDocument = PdfReader.Open(file, PdfDocumentOpenMode.Import);
+
+                int count = inputDocument.PageCount;
+
+                for(int idx = 0; idx < count; idx++)
+                {
+                    PdfPage page = inputDocument.Pages[idx];
+                    outputDocument.AddPage(page);
+                }
+                if(count.IsOdd() && duplex)
+                {
+                    //add a blank page
+                    outputDocument.AddPage();
+                }
+            }
+
+            outputDocument.Save(outputFilename);
+
+            return outputFilename;
         }
 
         public void CreateInvoicePdf(InvoiceModel model, string outFilePath)
@@ -113,45 +144,30 @@ namespace LabBilling.Core.BusinessLogic
 
         private void CreateHeaderFooter()
         {
-            // Each MigraDoc document needs at least one section.
-            section = this.document.AddSection();
+
+            //section.PageSetup.DifferentFirstPageHeaderFooter = true;
 
             // Put a logo in the header
             Image image = section.Headers.Primary.AddImage(model.ImageFilePath);
-            image.Width = "2.5in";
+            image.Width = "2in";
             image.LockAspectRatio = true;
             image.RelativeVertical = RelativeVertical.Line;
             image.RelativeHorizontal = RelativeHorizontal.Margin;
             image.Top = ShapePosition.Top;
-            image.Left = ShapePosition.Right;
-            image.WrapFormat.Style = WrapStyle.Through;
-
-            // Create footer
-            Paragraph paragraph = section.Footers.Primary.AddParagraph();
-            paragraph.AddText($"{model.BillingCompanyName} · {model.BillingCompanyAddress} · {model.BillingCompanyCity} · {model.BillingCompanyState} {model.BillingCompanyZipCode} · {model.BillingCompanyPhone}");
-            paragraph.Format.Font.Size = 9;
-            paragraph.Format.Alignment = ParagraphAlignment.Center;
+            image.Left = ShapePosition.Left;
+            image.WrapFormat.Style = WrapStyle.TopBottom;
 
             //Create the text frame for the company address
-            clientAddressFrame = section.AddTextFrame();
+            clientAddressFrame = section.Headers.Primary.AddTextFrame();
             clientAddressFrame.Width = "7.0cm";
             clientAddressFrame.Height = "3.0cm";
-            clientAddressFrame.Left = ShapePosition.Left;
+            clientAddressFrame.Left = "5.5in";
             clientAddressFrame.RelativeHorizontal = RelativeHorizontal.Margin;
             clientAddressFrame.RelativeVertical = RelativeVertical.Page;
             clientAddressFrame.Top = "1.0cm";
 
-            // Create the text frame for the client address
-            this.addressFrame = section.AddTextFrame();
-            this.addressFrame.Height = "3.0cm";
-            this.addressFrame.Width = "7.0cm";
-            this.addressFrame.Left = ShapePosition.Left;
-            this.addressFrame.RelativeHorizontal = RelativeHorizontal.Margin;
-            this.addressFrame.Top = "3.1cm";
-            this.addressFrame.RelativeVertical = RelativeVertical.Page;
-
             // Put sender in address frame
-            paragraph = clientAddressFrame.AddParagraph();
+            Paragraph paragraph = clientAddressFrame.AddParagraph();
             paragraph.AddText(model.BillingCompanyName);
             paragraph.AddLineBreak();
             paragraph.AddText(model.BillingCompanyAddress);
@@ -164,18 +180,42 @@ namespace LabBilling.Core.BusinessLogic
             paragraph.Format.Font.Size = 7;
             paragraph.Format.SpaceAfter = 3;
 
+
+            // Create the text frame for the client address
+            this.addressFrame = section.Headers.Primary.AddTextFrame();
+            this.addressFrame.Height = "3.0cm";
+            this.addressFrame.Width = "7.0cm";
+            this.addressFrame.Left = ShapePosition.Left;
+            this.addressFrame.RelativeHorizontal = RelativeHorizontal.Margin;
+            this.addressFrame.Top = "3.1cm";
+            this.addressFrame.RelativeVertical = RelativeVertical.Page;
+
             // Add the print date field
-            paragraph = section.AddParagraph();
+            paragraph = section.Headers.Primary.AddParagraph();
             paragraph.Format.SpaceBefore = "3cm";
             paragraph.Style = "Reference";
-            paragraph.AddFormattedText(model.StatementType == InvoiceModel.StatementTypeEnum.Invoice ? "INVOICE" : "STATEMENT", TextFormat.Bold);
-            //paragraph.AddTab();
-            ////paragraph.AddText(model.BillingCompanyCity);
-            //paragraph.AddDateField(model.InvoiceDate.ToShortDateString());
+            paragraph.AddFormattedText(model.StatementType == InvoiceModel.StatementTypeEnum.Invoice ? $"INVOICE # {model.InvoiceNo}" : "STATEMENT", TextFormat.Bold);
+            paragraph.AddTab();
+            paragraph.AddText("Page ");
+            paragraph.AddPageField();
+            paragraph.AddText(" of ");
+            paragraph.AddNumPagesField();
+
+            // Create footer
+            paragraph = section.Footers.Primary.AddParagraph();
+            paragraph.AddText($"{model.BillingCompanyName} · {model.BillingCompanyAddress} · {model.BillingCompanyCity} · {model.BillingCompanyState} {model.BillingCompanyZipCode} · {model.BillingCompanyPhone}");
+            paragraph.Format.Font.Size = 9;
+            paragraph.Format.Alignment = ParagraphAlignment.Center;
+
+            section.Footers.FirstPage = section.Footers.Primary.Clone();
         }
 
         private void CreateInvoicePage()
         {
+            // Each MigraDoc document needs at least one section.
+            section = this.document.AddSection();
+            section.PageSetup.TopMargin = Unit.FromInch(2.5);
+
             CreateHeaderFooter();
 
             // create text frame for invoice information
@@ -388,6 +428,9 @@ namespace LabBilling.Core.BusinessLogic
 
         private void CreateStatementPage()
         {
+            section = this.document.AddSection();
+            section.PageSetup.TopMargin = Unit.FromInch(2.5);
+
             CreateHeaderFooter();
 
             // Create the item table
@@ -515,7 +558,6 @@ namespace LabBilling.Core.BusinessLogic
             //paragraph.Format.Shading.Color = Color.Parse("LightGray");
             //paragraph.AddText();
         }
-
 
         public static void PrintPdf(string pdfFileName)
         {

@@ -465,7 +465,7 @@
             this.windowManagerPanel1.ShowIcons = false;
             this.windowManagerPanel1.ShowLayoutButtons = true;
             this.windowManagerPanel1.ShowTitle = false;
-            this.windowManagerPanel1.Style = MDIWindowManager.TabStyle.ClassicTabs;
+            this.windowManagerPanel1.Style = MDIWindowManager.TabStyle.FlatHiliteTabs;
             this.windowManagerPanel1.TabRenderMode = MDIWindowManager.TabsProvider.Standard;
             this.windowManagerPanel1.TitleBackColor = System.Drawing.SystemColors.ControlDark;
             this.windowManagerPanel1.TitleForeColor = System.Drawing.SystemColors.ControlLightLight;

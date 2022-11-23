@@ -13,6 +13,9 @@ using LabBilling.Core.DataAccess;
 using LabBilling.Core.BusinessLogic;
 using LabBilling.Core.Models;
 using LabBilling.Library;
+using System.Diagnostics;
+using Microsoft.Win32;
+using LabBilling.Logging;
 
 namespace LabBilling.Forms
 {
@@ -33,6 +36,8 @@ namespace LabBilling.Forms
 
         private async void ClientInvoiceForm_Load(object sender, EventArgs e)
         {
+            toolStripStatusLabel1.Text = string.Empty;
+
             clientInvoices = new ClientInvoices(Helper.ConnVal);
             historyRepository = new InvoiceHistoryRepository(Helper.ConnVal);
             clientRepository = new ClientRepository(Helper.ConnVal);
@@ -77,7 +82,7 @@ namespace LabBilling.Forms
             InvoicesDGV.Columns[nameof(UnbilledClient.ClientName)].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
 
             double sum = 0;
-            foreach(DataGridViewRow row in InvoicesDGV.Rows)
+            foreach (DataGridViewRow row in InvoicesDGV.Rows)
             {
                 sum += Convert.ToDouble(row.Cells[nameof(UnbilledClient.UnbilledAmount)].Value);
             }
@@ -90,8 +95,7 @@ namespace LabBilling.Forms
 
         private async Task RefreshUnbilledGridAsync()
         {
-            progressBar2.Visible = true;
-            progressBar2.Style = ProgressBarStyle.Marquee;
+            toolStripProgressBar1.Style = ProgressBarStyle.Marquee;
 
             InvoicesDGV.DataSource = await Task.Run(() => clientRepository.GetUnbilledClients(_thruDate));
 
@@ -111,8 +115,7 @@ namespace LabBilling.Forms
             TotalUnbilledCharges.Text = sum.ToString("C");
             TotalUnbilledCharges.TextAlign = HorizontalAlignment.Right;
 
-            progressBar2.Style = ProgressBarStyle.Continuous;
-            progressBar2.Visible = false;
+            toolStripProgressBar1.Style = ProgressBarStyle.Continuous;
 
         }
 
@@ -136,12 +139,8 @@ namespace LabBilling.Forms
             List<UnbilledClient> unbilledClients = new List<UnbilledClient>();
 
             Cursor.Current = Cursors.WaitCursor;
-            progressBar2.MarqueeAnimationSpeed = 30;
-            progressBar2.Visible = true;
-            progressBar2.Style = ProgressBarStyle.Marquee;
-            progressBar1.Visible = true;
 
-            foreach(DataGridViewRow row in InvoicesDGV.Rows)
+            foreach (DataGridViewRow row in InvoicesDGV.Rows)
             {
                 if ((bool)row.Cells["SelectForInvoice"].Value == true)
                 {
@@ -157,10 +156,10 @@ namespace LabBilling.Forms
             }
             Cursor.Current = Cursors.Default;
 
-            progressBar1.Value = 0;
+            toolStripProgressBar1.Value = 0;
             var progress = new Progress<int>(percent =>
             {
-                progressBar1.Value = percent;
+                toolStripProgressBar1.Value = percent;
             });
             try
             {
@@ -170,18 +169,15 @@ namespace LabBilling.Forms
             {
 
             }
-            progressBar1.Value = 100;
-            progressBar2.Style = ProgressBarStyle.Continuous;
-            progressBar2.Visible = false;
-
+            toolStripProgressBar1.Value = 100;
         }
 
         private void ThruDate_CheckedChanged(object sender, EventArgs e)
         {
-            if(PreviousMonth.Checked)
+            if (PreviousMonth.Checked)
                 _thruDate = DateTime.Today.AddDays(-DateTime.Now.Day);
 
-            if(CurrentMonth.Checked)
+            if (CurrentMonth.Checked)
                 _thruDate = DateTime.Today;
 
             RefreshUnbilledGrid();
@@ -189,7 +185,7 @@ namespace LabBilling.Forms
 
         private void InvoicesDGV_SelectionChanged(object sender, EventArgs e)
         {
-            if(InvoicesDGV.SelectedRows.Count > 0)
+            if (InvoicesDGV.SelectedRows.Count > 0)
             {
                 RefreshUnbilledAccountsGrid(InvoicesDGV.SelectedRows[0].Cells["ClientMnem"].Value.ToString());
             }
@@ -197,7 +193,7 @@ namespace LabBilling.Forms
 
         private void UnbilledAccountsDGV_RowHeaderMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
         {
-            if(UnbilledAccountsDGV.SelectedRows.Count > 0)
+            if (UnbilledAccountsDGV.SelectedRows.Count > 0)
             {
                 AccountForm frm = new AccountForm(UnbilledAccountsDGV.SelectedRows[0].Cells["account"].Value.ToString())
                 {
@@ -212,7 +208,7 @@ namespace LabBilling.Forms
             string profile = SelectionProfile.SelectedItem.ToString();
             int counter;
             Cursor.Current = Cursors.WaitCursor;
-            for(counter = 1; counter < (InvoicesDGV.Rows.Count); counter++)
+            for (counter = 1; counter < (InvoicesDGV.Rows.Count); counter++)
             {
                 switch (profile)
                 {
@@ -220,7 +216,7 @@ namespace LabBilling.Forms
                         InvoicesDGV.Rows[counter].Cells[nameof(UnbilledClient.SelectForInvoice)].Value = false;
                         break;
                     case "Nursing Homes":
-                        if(InvoicesDGV.Rows[counter].Cells[nameof(UnbilledClient.ClientType)].Value.ToString() == "Nursing Homes")
+                        if (InvoicesDGV.Rows[counter].Cells[nameof(UnbilledClient.ClientType)].Value.ToString() == "Nursing Homes")
                             InvoicesDGV.Rows[counter].Cells[nameof(UnbilledClient.SelectForInvoice)].Value = true;
                         else
                             InvoicesDGV.Rows[counter].Cells[nameof(UnbilledClient.SelectForInvoice)].Value = false;
@@ -268,7 +264,7 @@ namespace LabBilling.Forms
             InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.Payments)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.TrueBalanceDue)].DefaultCellStyle.Format = "c2";
             InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.TrueBalanceDue)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-            InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.InvoiceFile)].Visible = false;
+            InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.InvoiceFilename)].Visible = false;
             InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.mod_user)].Visible = false;
             InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.mod_date)].Visible = false;
             InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.mod_prg)].Visible = false;
@@ -280,7 +276,7 @@ namespace LabBilling.Forms
         private async Task RefreshInvoiceHistoryGridAsync(string clientMnem, DateTime? fromDate = null, DateTime? throughDate = null)
         {
 
-            InvoiceHistoryDGV.DataSource = await Task.Run( () => historyRepository.GetWithSort(clientMnem, fromDate, throughDate));
+            InvoiceHistoryDGV.DataSource = await Task.Run(() => historyRepository.GetWithSort(clientMnem, fromDate, throughDate));
 
             InvoiceHistoryDGV.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.ClientName)].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
@@ -296,7 +292,8 @@ namespace LabBilling.Forms
             InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.Payments)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.TrueBalanceDue)].DefaultCellStyle.Format = "c2";
             InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.TrueBalanceDue)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-            InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.InvoiceFile)].Visible = false;
+            InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.InvoiceFilename)].Visible = false;
+            InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.InvoiceData)].Visible = false;
             InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.mod_user)].Visible = false;
             InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.mod_date)].Visible = false;
             InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.mod_prg)].Visible = false;
@@ -331,15 +328,127 @@ namespace LabBilling.Forms
 
                 ClientInvoices clientInvoices = new ClientInvoices(Helper.ConnVal);
 
-                string filename = clientInvoices.ReprintInvoice(invoiceNo);                
-                
+                string filename = clientInvoices.PrintInvoice(invoiceNo);
+
                 System.Diagnostics.Process.Start(filename);
             }
         }
 
+        private void CompileInvoicesToPdf(string filename, bool duplex = false)
+        {
+            List<string> files = new List<string>();
+
+
+            foreach (DataGridViewRow row in InvoiceHistoryDGV.SelectedRows)
+            {
+                var client = row.Cells[nameof(InvoiceHistory.ClientMnem)].Value.ToString();
+                var invoice = row.Cells[nameof(InvoiceHistory.InvoiceNo)].Value.ToString();
+
+                string invFilename = clientInvoices.GenerateStatement(client, DateTime.Today.AddDays(-120));
+                files.Add(invFilename);
+
+                string stmtFilename = clientInvoices.PrintInvoice(invoice);
+                files.Add(stmtFilename);
+            }
+
+            //merge all the files into one pdf
+            InvoicePrintPdfSharp invoicePrint = new InvoicePrintPdfSharp();
+
+            invoicePrint.MergeFiles(files, filename, duplex);
+
+            return;
+        }
+
         private void PrintInvoice_Click(object sender, EventArgs e)
         {
+            if (InvoiceHistoryDGV.SelectedRows == null)
+            {
+                if(MessageBox.Show("No invoices are selected. Do you want to print all invoices?", "Print All?", 
+                    MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                {
+                    InvoiceHistoryDGV.SelectAll();
+                }
+                else
+                {
+                    return;
+                }
+            }
+                
 
+            bool duplexPrinting = false;
+            string senderName = null;
+            if(sender is ToolStripMenuItem)
+            {
+                var menuItem = sender as ToolStripMenuItem;
+                senderName = menuItem.Name;
+            }
+            else
+            {
+                return;
+            }
+
+            if (senderName == printToolStripMenuItem.Name)
+            {
+                PrintDialog printDialog = new PrintDialog();
+                if (printDialog.ShowDialog() == DialogResult.OK)
+                {
+                    Cursor.Current = Cursors.WaitCursor;
+                    string printerName = printDialog.PrinterSettings.PrinterName;
+                    if (printDialog.PrinterSettings.Duplex != System.Drawing.Printing.Duplex.Simplex &&
+                        printDialog.PrinterSettings.Duplex != System.Drawing.Printing.Duplex.Default)
+                    {
+                        duplexPrinting = true;
+                    }
+                    string outfile = $"c:\\temp\\{Guid.NewGuid()}.pdf";
+
+                    CompileInvoicesToPdf(outfile, duplexPrinting);
+
+                    if (!PrintPDF(outfile, printerName))
+                    {
+                        Log.Instance.Error($"File {outfile} did not print to printer {printerName}.");
+                    }
+                    else
+                    {
+                        File.Delete(outfile);
+                    }
+                }
+            }
+            else if (senderName == saveToPDFToolStripMenuItem.Name)
+            {
+                SaveFileDialog saveFileDialog = new SaveFileDialog();
+
+                saveFileDialog.Title = "Save File";
+                saveFileDialog.DefaultExt = "pdf";
+                saveFileDialog.Filter = "pdf files (*.pdf)|*.pdf|All files (*.*)|*.*";
+                saveFileDialog.FilterIndex = 1;
+
+                if (saveFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    string filename = saveFileDialog.FileName;
+
+                    CompileInvoicesToPdf(filename);
+                }
+            }
+
+            Cursor.Current = Cursors.Default;
+        }
+
+
+
+        private bool PrintPDF(string file, string printer)
+        {
+            try
+            {
+                Process.Start(Registry.LocalMachine.OpenSubKey(
+                    @"SOFTWARE\Microsoft\Windows\CurrentVersion" +
+                    @"\App Paths\AcroRd32.exe").GetValue("").ToString(),
+                    string.Format("/h /t \"{0}\" \"{1}\"", file, printer));
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         private void InvoiceHistoryDGV_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
@@ -357,8 +466,8 @@ namespace LabBilling.Forms
 
             DateTime.TryParse(FromDate.Text, out DateTime fd);
             DateTime.TryParse(ThroughDate.Text, out DateTime td);
-            
-            if(fd > td)
+
+            if (fd > td)
             {
                 return;
             }
@@ -409,6 +518,50 @@ namespace LabBilling.Forms
                 string client = InvoiceHistoryDGV.SelectedRows[0].Cells[nameof(InvoiceHistory.ClientMnem)].Value.ToString();
                 clientInvoices.GenerateStatement(client, (DateTime)statementBeginDate);
             }
+
+        }
+
+        private void UnbilledAccountsDGV_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            string account = UnbilledAccountsDGV[nameof(UnbilledAccounts.Account), e.RowIndex].Value.ToString();
+
+            Cursor.Current = Cursors.WaitCursor;
+
+            var formsList = Application.OpenForms.OfType<AccountForm>();
+            bool formFound = false;
+            foreach (var form in formsList)
+            {
+                if (form.SelectedAccount == account)
+                {
+                    //form is already open, activate this one
+                    form.Focus();
+                    formFound = true;
+                    break;
+                }
+            }
+
+            if (!formFound)
+            {
+                AccountForm frm = new AccountForm(account, this.ParentForm);
+                frm.Show();
+            }
+
+            Cursor.Current = Cursors.Default;
+        }
+
+        private async void refreshUnbilledInvoices_Click(object sender, EventArgs e)
+        {
+            await RefreshUnbilledGridAsync();
+        }
+
+        private void PrintInvoice_Click_1(object sender, EventArgs e)
+        {
+            var pos = System.Windows.Forms.Cursor.Position;
+
+            int top = pos.X - printContextMenu.Width;
+            int left = pos.Y;
+
+            printContextMenu.Show(Cursor.Position);
 
         }
     }

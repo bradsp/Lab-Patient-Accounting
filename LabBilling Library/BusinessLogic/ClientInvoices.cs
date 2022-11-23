@@ -7,9 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml.Serialization;
-using System.Data.SqlClient;
 using System.Data;
-using MCL;
 
 namespace LabBilling.Core.BusinessLogic
 {
@@ -125,7 +123,7 @@ namespace LabBilling.Core.BusinessLogic
             return filename;
         }
 
-        public string ReprintInvoice(string invoiceNo)
+        public string PrintInvoice(string invoiceNo)
         {
             InvoiceModel invoiceModel = new InvoiceModel();
 
@@ -149,7 +147,6 @@ namespace LabBilling.Core.BusinessLogic
 
             return filename;
         }
-
 
         /// <summary>
         /// Generate an invoice for a single client.
@@ -304,9 +301,10 @@ namespace LabBilling.Core.BusinessLogic
             invoiceModel.DiscountTotal = discountTotal;
 
             SaveInvoiceHistory(invoiceModel);
-            InvoicePrintPdfSharp invoicePrint = new InvoicePrintPdfSharp();
 
-            invoicePrint.CreateInvoicePdf(invoiceModel, $"{fileSavePath}\\Invoice-{invoiceModel.ClientMnem}-{invoiceModel.InvoiceNo}.pdf");
+            //InvoicePrintPdfSharp invoicePrint = new InvoicePrintPdfSharp();
+
+            //invoicePrint.CreateInvoicePdf(invoiceModel, $"{fileSavePath}\\Invoice-{invoiceModel.ClientMnem}-{invoiceModel.InvoiceNo}.pdf");
 
         }
 

@@ -45,8 +45,8 @@ namespace LabBilling.Core.Models
         [Column("cbill_html")]
         public string InvoiceData { get; set; }
 
-        [Column("cbill_filestream")]
-        public byte[] InvoiceFile { get; set; }
+        [Column("invoice_filename")]
+        public string InvoiceFilename { get; set; }
 
         public string mod_user { get; set; }
         public DateTime mod_date { get; set; }

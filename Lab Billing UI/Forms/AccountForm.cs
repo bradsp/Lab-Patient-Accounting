@@ -323,7 +323,7 @@ namespace LabBilling.Forms
 
             generateClientStatementToolStripMenuItem.Enabled = currentAccount.FinCode == "CLIENT";
 
-            this.Text = $"{currentAccount.PatFullName}";
+            this.Text = $"{currentAccount.AccountNo} - {currentAccount.PatFullName}";
 
             dxBindingList = new BindingList<PatDiag>(currentAccount.Pat.Diagnoses);
             ShowCreditedChrgCheckBox.Checked = false;

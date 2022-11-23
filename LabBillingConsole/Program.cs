@@ -19,14 +19,14 @@ namespace LabBillingConsole
             //TestClientInvoices();
             ReprintInvoice();
 
-            GenerateStatement();
+            //GenerateStatement();
         }
 
         public static void ReprintInvoice()
         {
             ClientInvoices clientInvoices = new ClientInvoices(connectionString);
 
-            string filename = clientInvoices.ReprintInvoice("77835");
+            string filename = clientInvoices.PrintInvoice("77834");
 
             System.Diagnostics.Process.Start(filename);
         }
