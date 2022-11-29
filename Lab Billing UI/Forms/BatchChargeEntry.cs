@@ -49,6 +49,9 @@ namespace LabBilling.Forms
             dgvBatchEntry.Columns[nameof(BatchCharge.ChargeDescription)].FillWeight = 100;
             dgvBatchEntry.Columns[nameof(BatchCharge.ChargeDescription)].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             dgvBatchEntry.AutoResizeColumns();
+
+            dgvBatchEntry.AllowUserToAddRows = false;
+            
         }
 
         private void dgvBatchEntry_CellEndEdit(object sender, DataGridViewCellEventArgs e)
@@ -155,6 +158,7 @@ namespace LabBilling.Forms
                 fincodeTextBox.Text = currentAccount.FinCode;
                 serviceDateTextBox.Text = ((DateTime)(currentAccount.TransactionDate)).ToShortDateString();
 
+                dgvBatchEntry.AllowUserToAddRows = true;
                 dgvBatchEntry.Focus();
                 dgvBatchEntry.CurrentCell = dgvBatchEntry[nameof(BatchCharge.CDM), 0];
                 dgvBatchEntry.BeginEdit(true);

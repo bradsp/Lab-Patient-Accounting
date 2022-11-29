@@ -17,6 +17,8 @@ using System.Threading.Tasks;
 using MetroFramework;
 using LabBilling.Core.BusinessLogic;
 using System.Text.RegularExpressions;
+using System.Configuration;
+using System.Drawing.Printing;
 
 namespace LabBilling.Forms
 {
@@ -131,7 +133,6 @@ namespace LabBilling.Forms
             //Helper.SetControlsAccess(tabPayments.Controls, false);
             AddChargeButton.Visible = false;
             AddPaymentButton.Visible = false;
-            UpdateDxPointersButton.Visible = false;
             SaveInsuranceButton.Visible = false;
             SaveDxButton.Visible = false;
             SaveDemographics.Visible = false;
@@ -158,7 +159,7 @@ namespace LabBilling.Forms
                     Helper.SetControlsAccess(tabPayments.Controls, true);
                     AddChargeButton.Visible = Program.LoggedInUser.CanSubmitCharges;
                     AddPaymentButton.Visible = Program.LoggedInUser.CanAddPayments;
-                    UpdateDxPointersButton.Visible = true;
+                    //UpdateDxPointersButton.Visible = true;
                     SaveInsuranceButton.Visible = true;
                     SaveDxButton.Visible = true;
                     SaveDemographics.Visible = true;
@@ -297,7 +298,7 @@ namespace LabBilling.Forms
                 AddOnChangeHandlerToInputControls(tabInsurance);
             }
 
-            UpdateDxPointersButton.Enabled = false; // start disabled until a box has been checked.
+            //UpdateDxPointersButton.Enabled = false; // start disabled until a box has been checked.
         }
 
         private void AccountForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -730,7 +731,7 @@ namespace LabBilling.Forms
             currentAccount.Insurances[selectedIns].PlanCityState = PlanCityStTextBox.Text;
             currentAccount.Insurances[selectedIns].Relation = InsRelationComboBox.SelectedValue.ToString();
             currentAccount.Insurances[selectedIns].Coverage = InsOrderComboBox.SelectedValue.ToString();
-            if(PlanFinCodeComboBox.SelectedValue != null)
+            if (PlanFinCodeComboBox.SelectedValue != null)
                 currentAccount.Insurances[selectedIns].FinCode = PlanFinCodeComboBox.SelectedValue.ToString();
 
             currentAccount.Insurances[selectedIns].InsCode = insurancePlanTextBox.Text; // InsCodeComboBox.SelectedValue.ToString();
@@ -911,7 +912,7 @@ namespace LabBilling.Forms
             else
                 HolderDOBTextBox.Text = "";
             InsRelationComboBox.SelectedValue = InsuranceDataGrid.SelectedRows[0].Cells[nameof(Ins.Relation)].Value?.ToString() ?? "";
-          
+
             insurancePlanTextBox.Text = InsuranceDataGrid.SelectedRows[0].Cells[nameof(Ins.InsCode)].Value?.ToString() ?? "";
 
             PlanNameTextBox.Text = InsuranceDataGrid.SelectedRows[0].Cells[nameof(Ins.PlanName)].Value?.ToString();
@@ -1021,7 +1022,7 @@ namespace LabBilling.Forms
 
             ChargesDataGrid.DataSource = chargesTable;
             ChargesDataGrid.DataMember = chargesTable.TableName;
-            if(currentAccount.FinCode == "CLIENT")
+            if (currentAccount.FinCode == "CLIENT")
             {
                 chargesTable.DefaultView.Sort = $"{nameof(Chrg.ChrgId)} desc";
             }
@@ -1107,7 +1108,7 @@ namespace LabBilling.Forms
 
                 ChrgDetailDataGrid.Columns[nameof(ChrgDetail.Cpt4)].Visible = true;
                 ChrgDetailDataGrid.Columns[nameof(ChrgDetail.BillType)].Visible = true;
-                ChrgDetailDataGrid.Columns[nameof(ChrgDetail.DiagCodePointer)].Visible = true;
+                ChrgDetailDataGrid.Columns[nameof(ChrgDetail.DiagnosisPointer.DiagnosisPointer)].Visible = true;
                 ChrgDetailDataGrid.Columns[nameof(ChrgDetail.Modifier)].Visible = true;
                 ChrgDetailDataGrid.Columns[nameof(ChrgDetail.Modifer2)].Visible = true;
                 ChrgDetailDataGrid.Columns[nameof(ChrgDetail.RevenueCode)].Visible = true;
@@ -1185,175 +1186,7 @@ namespace LabBilling.Forms
 
         private void ChrgDetailDataGrid_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
-            Log.Instance.Trace($"Entering");
-        }
-
-        private void ChrgDetailDataGrid_SelectionChanged(object sender, EventArgs e)
-        {
-            Log.Instance.Trace($"Entering");
-
-            if (UpdateDxPointersButton.Enabled == true)
-            {
-                if (MessageBox.Show(this, "Changes were made to diagnosis pointers. Save changes?", "Save Changes?",
-                    MessageBoxButtons.YesNo, MessageBoxIcon.Question)
-                    == DialogResult.Yes)
-                {
-                    UpdateDxPointersButton_Click(sender, e);
-                }
-                UpdateDxPointersButton.Enabled = false;
-            }
-
-            //load dx pointers
-            int selectedRows = ChrgDetailDataGrid.Rows.GetRowCount(DataGridViewElementStates.Selected);
-            if (selectedRows > 0)
-            {
-                DataGridViewRow row = ChrgDetailDataGrid.SelectedRows[0];
-
-                string dxPtr = row.Cells[nameof(ChrgDetail.DiagCodePointer)].Value == null 
-                    ? string.Empty 
-                    : row.Cells[nameof(ChrgDetail.DiagCodePointer)].Value.ToString();
-
-                string[] ptrs = dxPtr.Split(':');
-
-                //get number of diagnosis codes
-                int dxcnt = currentAccount.Pat.Diagnoses.Count;
-
-                DataTable dt = new DataTable("DxPointer");
-                dt.Columns.Add("DxNo", typeof(int));
-                dt.Columns.Add("DxCode", typeof(string));
-                dt.Columns.Add("Description", typeof(string));
-                for(int i = 1; i <= dxcnt; i++)
-                {
-                    dt.Columns.Add($"Ptr{i}", typeof(bool));
-                }
-
-                try
-                {
-                    int iDx = 1;
-                    if (currentAccount.Pat.Diagnoses.Count > 0)
-                    {
-                        foreach (PatDiag diag in currentAccount.Pat.Diagnoses)
-                        {
-                            //dt.Rows.Add(new object[] { iDx++, diag.Code, false, false, false, false });
-                            DataRow newrow = dt.NewRow();
-                            newrow["DxNo"] = iDx++;
-                            newrow["DxCode"] = diag.Code;
-                            newrow["Description"] = diag.Description;
-                            for(int c = 3; c < dt.Columns.Count; c++)
-                            {
-                                newrow[c] = false;
-                            }
-                            dt.Rows.Add(newrow);
-                        }
-
-                        int i = 1;
-                        foreach (string ptr in ptrs)
-                        {
-                            if (ptr == null || ptr == "")
-                                continue;
-                            int iPtr = Convert.ToInt32(ptr);
-                            dt.Rows[iPtr - 1][$"Ptr{i}"] = true;
-                            i++;
-                        }
-                    }
-                    DiagnosisPointerDataGrid.DataSource = dt;
-                    DiagnosisPointerDataGrid.Columns["Description"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-                    DiagnosisPointerDataGrid.AutoResizeColumns();
-                }
-                catch (Exception ex)
-                {
-                    Log.Instance.Error(ex.Message);
-                    MessageBox.Show(this, "Error loading Diagnosis Code Pointer. Exception has been logged. Report to Administrator.");
-                }
-            }
-        }
-
-        private void UpdateDxPointersButton_Click(object sender, EventArgs e)
-        {
-            StringBuilder sb = new StringBuilder();
-
-            for (int c = 3; c < DiagnosisPointerDataGrid.ColumnCount; c++)
-            {
-                for (int r = 0; r < DiagnosisPointerDataGrid.RowCount; r++)
-                {
-                    if ((bool)DiagnosisPointerDataGrid.Rows[r].Cells[c].Value == true)
-                    {
-                        sb.Append(DiagnosisPointerDataGrid.Rows[r].Cells[0].Value.ToString() + ":");
-                    }
-                }
-            }
-
-            string dxPtr = sb.ToString();
-
-
-            //update amt record
-
-            ChrgDetail amt = new ChrgDetail();
-
-            amt.uri = Convert.ToInt32(ChrgDetailDataGrid.SelectedRows[0].Cells[nameof(amt.uri)].Value);
-            amt.Amount = Convert.ToDouble(ChrgDetailDataGrid.SelectedRows[0].Cells[nameof(amt.Amount)].Value ?? 0.0);
-            amt.BillMethod = ChrgDetailDataGrid.SelectedRows[0].Cells[nameof(amt.BillMethod)].Value?.ToString();
-            amt.BillType = ChrgDetailDataGrid.SelectedRows[0].Cells[nameof(amt.BillType)].Value?.ToString();
-            amt.ChrgNo = Convert.ToInt32(ChrgDetailDataGrid.SelectedRows[0].Cells[nameof(amt.ChrgNo)].Value ?? 0.0);
-            amt.Cpt4 = ChrgDetailDataGrid.SelectedRows[0].Cells[nameof(amt.Cpt4)].Value?.ToString();
-            amt.DiagCodePointer = dxPtr;
-            amt.Modifier = ChrgDetailDataGrid.SelectedRows[0].Cells[nameof(amt.Modifier)].Value?.ToString();
-            amt.Modifer2 = ChrgDetailDataGrid.SelectedRows[0].Cells[nameof(amt.Modifer2)].Value?.ToString();
-            amt.LISReqNo = ChrgDetailDataGrid.SelectedRows[0].Cells[nameof(amt.LISReqNo)].Value?.ToString();
-            amt.OrderCode = ChrgDetailDataGrid.SelectedRows[0].Cells[nameof(amt.OrderCode)].Value?.ToString();
-            amt.PointerSet = true;
-            amt.RevenueCode = ChrgDetailDataGrid.SelectedRows[0].Cells[nameof(amt.RevenueCode)].Value?.ToString();
-            amt.Type = ChrgDetailDataGrid.SelectedRows[0].Cells[nameof(amt.Type)].Value?.ToString();
-
-            ChrgDetailRepository amtRepository = new ChrgDetailRepository(Helper.ConnVal);
-            try
-            {
-                amtRepository.Update(amt);
-            }
-            catch (Exception ex)
-            {
-                Log.Instance.Error(ex.Message);
-                MessageBox.Show(this, "Error updating charge detail record. Please try again. If error continues, report error to Administrator.");
-                return;
-            }
-
-            UpdateDxPointersButton.Enabled = false;
-            LoadCharges();
-            ChrgDetailDataGrid.DataSource = null;
-        }
-
-        private void DiagnosisPointerDataGrid_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-            DiagnosisPointerDataGrid.EndEdit();
-
-            if (e.ColumnIndex > 2)
-            {
-                UpdateDxPointersButton.Enabled = true;
-
-                DataGridViewCheckBoxCell cbCell = DiagnosisPointerDataGrid.Rows[e.RowIndex].Cells[e.ColumnIndex] as DataGridViewCheckBoxCell;
-                bool checkedValue = (bool)cbCell.Value;
-
-                if (checkedValue == true)
-                {
-                    //loop through the column entries and ensure only one is checked
-                    for (int i = 0; i < DiagnosisPointerDataGrid.RowCount; i++)
-                    {
-                        if (i != e.RowIndex)
-                        {
-                            DiagnosisPointerDataGrid.Rows[i].Cells[e.ColumnIndex].Value = false;
-                        }
-                    }
-
-                    //loop through the row and ensure only one is checked
-                    for (int j = 3; j < DiagnosisPointerDataGrid.ColumnCount; j++)
-                    {
-                        if(j != e.ColumnIndex)
-                        {
-                            DiagnosisPointerDataGrid.Rows[e.RowIndex].Cells[j].Value = false;
-                        }
-                    }
-                }
-            }
+            //Log.Instance.Trace($"Entering");
         }
 
         #endregion
@@ -1369,7 +1202,7 @@ namespace LabBilling.Forms
             TotalWriteOffTextBox.Text = currentAccount.TotalWriteOff.ToString("c");
             TotalPmtAllTextBox.Text = (currentAccount.TotalPayments + currentAccount.TotalContractual + currentAccount.TotalWriteOff).ToString("c");
 
-            if(currentAccount.Fin.FinClass == "C" ||
+            if (currentAccount.Fin.FinClass == "C" ||
                 currentAccount.SentToCollections ||
                 currentAccount.Status == "CLOSED")
             {
@@ -1378,7 +1211,7 @@ namespace LabBilling.Forms
                 addPaymentStatusLabel.AutoSize = true;
                 addPaymentStatusLabel.MaximumSize = new Size(300, 300);
                 addPaymentStatusLabel.Text = "Cannot add payment to this account.";
-                addPaymentStatusLabel.Anchor = AnchorStyles.Top|AnchorStyles.Right;
+                addPaymentStatusLabel.Anchor = AnchorStyles.Top | AnchorStyles.Right;
                 addPaymentStatusLabel.Location = new Point(tabPayments.Right - 310, AddPaymentButton.Bottom + 10);
                 tabPayments.Controls.Add(addPaymentStatusLabel);
             }
@@ -1437,7 +1270,7 @@ namespace LabBilling.Forms
         {
             PaymentAdjustmentEntryForm form = new PaymentAdjustmentEntryForm(ref currentAccount);
 
-            if(form.ShowDialog() == DialogResult.OK)
+            if (form.ShowDialog() == DialogResult.OK)
             {
                 //post record to account
                 var chk = form.chk;
@@ -1453,11 +1286,233 @@ namespace LabBilling.Forms
 
         #region DiagnosisTab
 
+        DataTable dxPointers = new DataTable();
+        BindingSource dxPointerBindingSource = new BindingSource();
+
+
         private void LoadDx()
         {
             Log.Instance.Trace("Entering");
             DiagnosisDataGrid.DataSource = new BindingSource(dxBindingList, null);
+
+            LoadDxPointerGrid();
+
         }
+        bool dxLoadingMode = false;
+
+        private void LoadDxPointerGrid()
+        {
+            dxLoadingMode = true;
+            dxPointers.Columns.Add(new DataColumn()
+            {
+                DataType = System.Type.GetType("System.String"),
+                Caption = "CDM",
+                ColumnName = "CDM",
+            });
+
+            dxPointers.Columns.Add(new DataColumn()
+            {
+                DataType = System.Type.GetType("System.String"),
+                Caption = "CPT4",
+                ColumnName = "CPT4",
+            });
+
+            dxPointers.Columns.Add(new DataColumn()
+            {
+                DataType = System.Type.GetType("System.String"),
+                Caption = "Description",
+                ColumnName = "Description",
+            });
+
+            dxPointerGrid2.Columns.Add(new DataGridViewTextBoxColumn()
+            {
+                Name = "CDM",
+                DataPropertyName = "CDM",
+                HeaderText = "CDM",
+                ReadOnly = true
+            });
+
+            dxPointerGrid2.Columns.Add(new DataGridViewTextBoxColumn()
+            {
+                Name = "CPT4",
+                DataPropertyName = "CPT4",
+                HeaderText = "CPT4",
+                ReadOnly = true
+            });
+
+            dxPointerGrid2.Columns.Add(new DataGridViewTextBoxColumn()
+            {
+                Name = "Description",
+                DataPropertyName = "Description",
+                HeaderText = "Description",
+                ReadOnly = true,
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+            });
+
+            int cnt = dxBindingList.Count;
+            string[] ptrStrings = new string[cnt+1];
+
+            ptrStrings[0] = "";
+
+            for (int z = 1; z < cnt+1; z++)
+            {
+                ptrStrings[z] = z.ToString();
+            }
+
+            for (int i = 1; i < cnt+1; i++)
+            {
+                dxPointers.Columns.Add(new DataColumn()
+                {
+                    DataType = System.Type.GetType("System.String"),
+                    Caption = "Pointer",
+                    ColumnName = ptrStrings[i]
+                });
+
+                dxPointerGrid2.Columns.Add(new DataGridViewComboBoxColumn()
+                {
+                    Name = ptrStrings[i],
+                    DataPropertyName = ptrStrings[i],
+                    DataSource = dxBindingList,
+                    ValueMember = nameof(PatDiag.Code),
+                    DisplayMember = nameof(PatDiag.Code),
+                    HeaderText = ptrStrings[i],
+                    FlatStyle = FlatStyle.Flat
+                });
+            }
+
+            dxPointerBindingSource.DataSource = dxPointers;
+
+            dxPointerGrid2.DataSource = dxPointerBindingSource;
+
+            //load charges and pointers to grid
+            foreach (var chrg in currentAccount.Charges)
+            {
+                foreach (var chrgDetail in chrg.ChrgDetails)
+                {
+                    DataRow row = dxPointers.NewRow();
+                    row["CDM"] = chrg.CDMCode;
+                    row["CPT4"] = chrgDetail.Cpt4;
+                    row["Description"] = chrg.CdmDescription;
+
+                    string[] ptrs = chrgDetail.DiagnosisPointer.DiagnosisPointer.Split(':');
+                    for (int pi = 0; pi < ptrs.Length; pi++)
+                    {
+                        if (ptrs[pi] == null || ptrs[pi] == "")
+                            continue;
+                        int iPtr = Convert.ToInt32(ptrs[pi]);
+                        if (iPtr > cnt)
+                            continue;
+
+                        row[ptrStrings[pi + 1]] = dxBindingList.Where(x => x.No == iPtr).First().Code;
+                    }
+                    dxPointers.Rows.Add(row);
+                }
+            }
+            dxPointerGrid2.AutoResizeColumns();
+            dxLoadingMode = false;
+        }
+
+        private void dxPointerGrid2_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
+        {
+            ComboBox combo = e.Control as ComboBox;
+            if (combo != null)
+            {
+                combo.SelectedIndexChanged -= dxCombo_SelectedIndexChanged;
+                combo.SelectedIndexChanged += new EventHandler(dxCombo_SelectedIndexChanged);
+            }
+        }
+
+        private void dxPointerGrid2_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            //You can check for e.ColumnIndex to limit this to your specific column
+            if (e.ColumnIndex > 2)
+            {
+                var editingControl = this.dxPointerGrid2.EditingControl as
+                    DataGridViewComboBoxEditingControl;
+                if (editingControl != null)
+                    editingControl.DroppedDown = true;
+            }
+        }
+
+        private void dxPointerGrid2_CellEnter(object sender, DataGridViewCellEventArgs e)
+        {
+            if (dxPointerGrid2.Columns[e.ColumnIndex].Name == "CDM" ||
+                dxPointerGrid2.Columns[e.ColumnIndex].Name == "CPT4" ||
+                dxPointerGrid2.Columns[e.ColumnIndex].Name == "Description")
+            {
+                SendKeys.Send("{TAB}");
+            }
+        }
+
+        private void dxPointerGrid2_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            if(!dxLoadingMode)
+            {
+                //loop through columns
+                int cnt = dxBindingList.Count();
+
+                var dxSelected = new List<string>();
+
+                for (int i = 0; i < cnt; i++)
+                {
+                    var val = dxPointerGrid2[(i + 1).ToString(), e.RowIndex].Value.ToString();
+                    dxSelected.Add(val);
+                }
+
+                var dup = dxSelected.GroupBy(x => x).Where(c => c.Count() > 1)
+                    .Select(x => new { dx = x.Key, cnt = x.Count() }).ToList();
+
+                if (dup.Count() > 0)
+                {
+                    var dupDx = dup.FirstOrDefault();
+                    for (int i = 3; i < cnt + 3; i++)
+                    {
+                        if (dxPointerGrid2[i, e.RowIndex].Value.ToString() == dupDx.dx)
+                            dxPointerGrid2[i, e.RowIndex].Style.BackColor = Color.Red;
+                    }
+                }
+                else
+                {
+
+                    string newPointer = "";
+
+                    for (int i = 3; i < cnt + 3; i++)
+                    {
+                        dxPointerGrid2[i, e.RowIndex].Style.BackColor = Color.White;
+
+                        var dxValue = dxPointerGrid2[i, e.RowIndex].Value.ToString();
+                        var dxRecord = dxBindingList.Where(x => x.Code == dxPointerGrid2[i, e.RowIndex].Value.ToString()).First();
+                        if (dxRecord != null && !string.IsNullOrEmpty(dxValue))
+                        {
+                            newPointer += $"{dxRecord.No}:";
+                        }
+                    }
+                    //update pointers
+                    var cpt = dxPointerGrid2["CPT4", e.RowIndex].Value.ToString();
+
+                    var updatedChrg = currentAccount.Charges.Where(c => c.ChrgDetails.Any(cd => cd.Cpt4 == cpt)).ToList();
+                    updatedChrg.ForEach(c => c.ChrgDetails.ForEach(cd => cd.DiagnosisPointer.DiagnosisPointer = newPointer));
+
+                    ChrgRepository chrgRepository = new ChrgRepository(Helper.ConnVal);
+
+                    chrgRepository.UpdateDxPointers(updatedChrg);
+
+                }
+            }
+        }
+
+        private void dxPointerGrid2_CellEndEdit(object sender, DataGridViewCellEventArgs e)
+        {
+        }
+
+        private void dxCombo_SelectedIndexChanged(object sender, EventArgs e)
+        {
+        }
+
+        private void dxPointerGrid2_RowLeave(object sender, DataGridViewCellEventArgs e)
+        {
+        }
+
         private void DxSearchButton_Click(object sender, EventArgs e)
         {
             Log.Instance.Trace($"Entering");
@@ -1520,6 +1575,8 @@ namespace LabBilling.Forms
                 {
                     dxBindingList.Add(new PatDiag { No = maxNo + 1, Code = selectedCode, Description = selectedDesc });
                     DiagnosisDataGrid.BackgroundColor = Color.Orange;
+
+                    SaveDiagnoses();
                 }
             }
         }
@@ -1569,6 +1626,8 @@ namespace LabBilling.Forms
                         dxBindingList.Add(new PatDiag { No = maxNo + 1, Code = record.DxCode, Description = record.Description });
                         DiagnosisDataGrid.BackgroundColor = Color.Orange;
                         DxQuickAddTextBox.Text = "";
+
+                        SaveDiagnoses();
                     }
                     else
                     {
@@ -1601,6 +1660,7 @@ namespace LabBilling.Forms
                     dxBindingList[i].No = i + 1;
                 }
 
+                SaveDiagnoses();
             }
         }
 
@@ -1612,6 +1672,13 @@ namespace LabBilling.Forms
         }
 
         private void SaveDxButton_Click(object sender, EventArgs e)
+        {
+            Log.Instance.Trace($"Entering");
+
+            SaveDiagnoses();
+        }
+
+        private void SaveDiagnoses()
         {
             Log.Instance.Trace($"Entering");
 
@@ -1722,7 +1789,7 @@ namespace LabBilling.Forms
         {
             Log.Instance.Trace($"Entering");
             var result = InputDialogs.SelectDateOfService((DateTime)currentAccount.TransactionDate);
-             
+
             try
             {
                 if (result.newDate != DateTime.MinValue)
@@ -1784,14 +1851,14 @@ namespace LabBilling.Forms
             ClientLookupForm clientLookupForm = new ClientLookupForm();
             ClientRepository clientRepository = new ClientRepository(Helper.ConnVal);
             clientLookupForm.Datasource = DataCache.Instance.GetClients();
-            
+
             if (clientLookupForm.ShowDialog() == DialogResult.OK)
             {
                 string newClient = clientLookupForm.SelectedValue;
 
                 try
                 {
-                    if(accDB.ChangeClient(ref currentAccount, newClient))
+                    if (accDB.ChangeClient(ref currentAccount, newClient))
                     {
                         RefreshAccountData();
                     }
@@ -1800,7 +1867,7 @@ namespace LabBilling.Forms
                         MessageBox.Show("Error during update.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     MessageBox.Show("Error updating client. Client not updated.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     Log.Instance.Error(ex);
@@ -1949,7 +2016,7 @@ namespace LabBilling.Forms
             {
                 claim = Newtonsoft.Json.JsonConvert.DeserializeObject<ClaimData>(claimJson);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 MessageBox.Show("Claim data is not in json format.");
                 Log.Instance.Error(ex);
@@ -1989,11 +2056,11 @@ namespace LabBilling.Forms
                 //load demographics
 
             }
-            if(e.TabPage.Name == summaryTab.Name)
+            if (e.TabPage.Name == summaryTab.Name)
             {
                 RefreshAccountData();
             }
-            if(e.TabPage.Name == tabDiagnosis.Name)
+            if (e.TabPage.Name == tabDiagnosis.Name)
             {
                 DiagnosisDataGrid.BackgroundColor = Color.White;
             }
@@ -2058,21 +2125,21 @@ namespace LabBilling.Forms
         {
             AskInsuranceSwapForm frm = new AskInsuranceSwapForm(ref currentAccount);
 
-            if(frm.ShowDialog() == DialogResult.OK)
+            if (frm.ShowDialog() == DialogResult.OK)
             {
                 try
                 {
                     accDB.InsuranceSwap(currentAccount.AccountNo, InsCoverage.Parse(frm.swap1), InsCoverage.Parse(frm.swap2));
                     LoadAccountData();
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     Log.Instance.Fatal(ex);
                     MessageBox.Show("Exception encountered during insurance swap. Report this to your system administrator.", "Error",
                         MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
-           
+
         }
 
         private void DiagnosisDataGrid_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
@@ -2136,7 +2203,7 @@ namespace LabBilling.Forms
                 {
                     Log.Instance.Debug($"Moving all charges from {currentAccount.AccountNo} to {destAccount}");
                     var result = accDB.MoveCharges(currentAccount.AccountNo, destAccount);
-                    if(!result.isSuccess)
+                    if (!result.isSuccess)
                     {
                         MessageBox.Show(result.error, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
@@ -2148,19 +2215,22 @@ namespace LabBilling.Forms
 
         private void generateClientStatementToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var statementBeginDate = InputDialogs.SelectStatementBeginDate(DateTime.Today.AddDays(-120));
 
-            if (statementBeginDate != null)
-            {
-                string client = currentAccount.ClientMnem;
-                ClientInvoices clientInvoices = new ClientInvoices(Helper.ConnVal);
-
-                
-                var filename = clientInvoices.GenerateStatement(client, (DateTime)statementBeginDate);
-
-
-                System.Diagnostics.Process.Start(filename);
-            }
         }
+
+        private void dxPointerGrid2_DataError(object sender, DataGridViewDataErrorEventArgs e)
+        {
+            //if (e.Exception.Message == "DataGridViewComboBoxCell value is not valid.")
+            //{
+            //    object value = dxPointerGrid2.Rows[e.RowIndex].Cells[e.ColumnIndex].Value;
+            //    if (!((DataGridViewComboBoxColumn)dxPointerGrid2.Columns[e.ColumnIndex]).Items.Contains(value))
+            //    {
+            //        ((DataGridViewComboBoxColumn)dxPointerGrid2.Columns[e.ColumnIndex]).Items.Add(value);
+            //        e.ThrowException = false;
+            //    }
+            //}
+        }
+
+
     }
 }

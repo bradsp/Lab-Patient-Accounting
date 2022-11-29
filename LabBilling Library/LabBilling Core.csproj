@@ -314,6 +314,7 @@
     <Compile Include="Models\AccountValidationRule.cs" />
     <Compile Include="Models\AccountValidationStatus.cs" />
     <Compile Include="Models\BillingBatch.cs" />
+    <Compile Include="Models\ChrgDiagnosisPointer.cs" />
     <Compile Include="Models\ChrgDetail.cs" />
     <Compile Include="Models\BadDebt.cs" />
     <Compile Include="Models\BatchCharge.cs" />

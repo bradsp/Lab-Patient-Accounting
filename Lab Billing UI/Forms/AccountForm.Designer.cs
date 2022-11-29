@@ -60,8 +60,6 @@ namespace LabBilling.Forms
             this.summaryTab = new System.Windows.Forms.TabPage();
             this.summaryTable = new System.Windows.Forms.TableLayoutPanel();
             this.tabDemographics = new System.Windows.Forms.TabPage();
-            this.DateOfBirthTextBox = new LabBilling.UserControls.DateTextBox();
-            this.providerLookup1 = new LabBilling.Library.ProviderLookup();
             this.DemoStatusMessagesTextBox = new System.Windows.Forms.TextBox();
             this.SuffixTextBox = new System.Windows.Forms.TextBox();
             this.SaveDemographics = new System.Windows.Forms.Button();
@@ -91,9 +89,6 @@ namespace LabBilling.Forms
             this.FirstNameTextBox = new System.Windows.Forms.TextBox();
             this.PatFirstNameLabel = new System.Windows.Forms.Label();
             this.PatLastNameLabel = new System.Windows.Forms.Label();
-            this.MaritalStatusComboBox = new LabBilling.Library.FlatCombo();
-            this.SexComboBox = new LabBilling.Library.FlatCombo();
-            this.StateComboBox = new LabBilling.Library.FlatCombo();
             this.tabGuarantor = new System.Windows.Forms.TabPage();
             this.GuarantorSaveButton = new System.Windows.Forms.Button();
             this.PatRelationLabel = new System.Windows.Forms.Label();
@@ -115,15 +110,12 @@ namespace LabBilling.Forms
             this.GuarZipTextBox = new System.Windows.Forms.MaskedTextBox();
             this.GuarPhoneLabel = new System.Windows.Forms.Label();
             this.GuarantorPhoneTextBox = new System.Windows.Forms.TextBox();
-            this.GuarantorRelationComboBox = new LabBilling.Library.FlatCombo();
-            this.GuarStateComboBox = new LabBilling.Library.FlatCombo();
             this.tabInsurance = new System.Windows.Forms.TabPage();
             this.insTabLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
             this.HolderLastNameLabel = new System.Windows.Forms.Label();
             this.InsuranceDataGrid = new System.Windows.Forms.DataGridView();
             this.SaveInsuranceButton = new System.Windows.Forms.Button();
             this.InsCopyPatientLink = new System.Windows.Forms.LinkLabel();
-            this.PlanFinCodeComboBox = new LabBilling.Library.FlatCombo();
             this.InsPlanFinCodeLabel = new System.Windows.Forms.Label();
             this.CertSSNTextBox = new System.Windows.Forms.TextBox();
             this.HolderLastNameTextBox = new System.Windows.Forms.TextBox();
@@ -136,19 +128,15 @@ namespace LabBilling.Forms
             this.HolderZipCodeLabel = new System.Windows.Forms.Label();
             this.InsGroupNumberLabel = new System.Windows.Forms.Label();
             this.PlanAddress2TextBox = new System.Windows.Forms.TextBox();
-            this.InsRelationComboBox = new LabBilling.Library.FlatCombo();
             this.HolderRelationLabel = new System.Windows.Forms.Label();
             this.PolicyNumberTextBox = new System.Windows.Forms.TextBox();
             this.HolderStateLabel = new System.Windows.Forms.Label();
             this.HolderDOBTextBox = new System.Windows.Forms.MaskedTextBox();
             this.InsPolicyNumberLabel = new System.Windows.Forms.Label();
             this.HolderDOBLabel = new System.Windows.Forms.Label();
-            this.HolderStateComboBox = new LabBilling.Library.FlatCombo();
             this.HolderFirstNameTextBox = new System.Windows.Forms.TextBox();
             this.InsPlanLabel = new System.Windows.Forms.Label();
             this.InsuranceOrderLabel = new System.Windows.Forms.Label();
-            this.InsOrderComboBox = new LabBilling.Library.FlatCombo();
-            this.HolderSexComboBox = new LabBilling.Library.FlatCombo();
             this.HolderMiddleNameLabel = new System.Windows.Forms.Label();
             this.HolderSexLabel = new System.Windows.Forms.Label();
             this.HolderMiddleNameTextBox = new System.Windows.Forms.TextBox();
@@ -167,6 +155,7 @@ namespace LabBilling.Forms
             this.InsTabMessageTextBox = new System.Windows.Forms.TextBox();
             this.insurancePlanTextBox = new System.Windows.Forms.TextBox();
             this.tabDiagnosis = new System.Windows.Forms.TabPage();
+            this.dxPointerGrid2 = new System.Windows.Forms.DataGridView();
             this.DxDeleteButton = new System.Windows.Forms.PictureBox();
             this.SaveDxButton = new System.Windows.Forms.Button();
             this.QuickAddLabel = new System.Windows.Forms.Label();
@@ -180,15 +169,12 @@ namespace LabBilling.Forms
             this.tabCharges = new System.Windows.Forms.TabPage();
             this.chargeLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
             this.ChargesDataGridLabel = new System.Windows.Forms.Label();
-            this.UpdateDxPointersButton = new System.Windows.Forms.Button();
             this.ChargesDataGrid = new System.Windows.Forms.DataGridView();
             this.menuCharges = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripCreditCharge = new System.Windows.Forms.ToolStripMenuItem();
             this.moveChargeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.DiagnosisPointerDataGrid = new System.Windows.Forms.DataGridView();
             this.ChargeDetailGridLabel = new System.Windows.Forms.Label();
             this.ChrgDetailDataGrid = new System.Windows.Forms.DataGridView();
-            this.ChargeDxPointerLabel = new System.Windows.Forms.Label();
             this.AddChargeButton = new System.Windows.Forms.Button();
             this.TotalChargesTextBox = new System.Windows.Forms.TextBox();
             this.ChargeTotalChargesLabel = new System.Windows.Forms.Label();
@@ -221,7 +207,6 @@ namespace LabBilling.Forms
             this.ValidationResultsTextBox = new MetroFramework.Controls.MetroTextBox();
             this.ValidateAccountButton = new MetroFramework.Controls.MetroButton();
             this.BillActivityDataGrid = new System.Windows.Forms.DataGridView();
-            this.minPmtTextBox = new LabBilling.UserControls.CurrencyTextBox();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.accountToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.changeDateOfServiceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -255,6 +240,20 @@ namespace LabBilling.Forms
             this.RefreshButton = new System.Windows.Forms.PictureBox();
             this.bannerDateOfServiceTextBox = new System.Windows.Forms.TextBox();
             this.bannerDateOfServiceLabel = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.DateOfBirthTextBox = new LabBilling.UserControls.DateTextBox();
+            this.providerLookup1 = new LabBilling.Library.ProviderLookup();
+            this.MaritalStatusComboBox = new LabBilling.Library.FlatCombo();
+            this.SexComboBox = new LabBilling.Library.FlatCombo();
+            this.StateComboBox = new LabBilling.Library.FlatCombo();
+            this.GuarantorRelationComboBox = new LabBilling.Library.FlatCombo();
+            this.GuarStateComboBox = new LabBilling.Library.FlatCombo();
+            this.PlanFinCodeComboBox = new LabBilling.Library.FlatCombo();
+            this.InsRelationComboBox = new LabBilling.Library.FlatCombo();
+            this.HolderStateComboBox = new LabBilling.Library.FlatCombo();
+            this.InsOrderComboBox = new LabBilling.Library.FlatCombo();
+            this.HolderSexComboBox = new LabBilling.Library.FlatCombo();
+            this.minPmtTextBox = new LabBilling.UserControls.CurrencyTextBox();
             this.tabControl1.SuspendLayout();
             this.summaryTab.SuspendLayout();
             this.tabDemographics.SuspendLayout();
@@ -263,6 +262,7 @@ namespace LabBilling.Forms
             this.insTabLayoutPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.InsuranceDataGrid)).BeginInit();
             this.tabDiagnosis.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dxPointerGrid2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.DxDeleteButton)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.DxSearchDataGrid)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.DiagnosisDataGrid)).BeginInit();
@@ -271,7 +271,6 @@ namespace LabBilling.Forms
             this.chargeLayoutPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ChargesDataGrid)).BeginInit();
             this.menuCharges.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.DiagnosisPointerDataGrid)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ChrgDetailDataGrid)).BeginInit();
             this.tabPayments.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.PaymentsDataGrid)).BeginInit();
@@ -376,27 +375,6 @@ namespace LabBilling.Forms
             this.tabDemographics.Size = new System.Drawing.Size(1151, 492);
             this.tabDemographics.TabIndex = 9;
             this.tabDemographics.Text = "Demographics";
-            // 
-            // DateOfBirthTextBox
-            // 
-            this.DateOfBirthTextBox.DateValue = new System.DateTime(((long)(0)));
-            this.DateOfBirthTextBox.Location = new System.Drawing.Point(296, 258);
-            this.DateOfBirthTextBox.Name = "DateOfBirthTextBox";
-            this.DateOfBirthTextBox.Size = new System.Drawing.Size(177, 20);
-            this.DateOfBirthTextBox.TabIndex = 34;
-            // 
-            // providerLookup1
-            // 
-            this.providerLookup1.CharacterLookupCountMin = 2;
-            this.providerLookup1.Datasource = null;
-            this.providerLookup1.DisplayValue = null;
-            this.providerLookup1.Location = new System.Drawing.Point(499, 218);
-            this.providerLookup1.Name = "providerLookup1";
-            this.providerLookup1.ResultBoxHeight = 100;
-            this.providerLookup1.SelectedValue = null;
-            this.providerLookup1.Size = new System.Drawing.Size(288, 134);
-            this.providerLookup1.TabIndex = 31;
-            this.providerLookup1.SelectedValueChanged += new LabBilling.Library.ProviderLookup.SelectedValueChangedEventHandler(this.providerLookup1_SelectedValueChanged);
             // 
             // DemoStatusMessagesTextBox
             // 
@@ -674,48 +652,6 @@ namespace LabBilling.Forms
             this.PatLastNameLabel.Text = "Last Name";
             this.PatLastNameLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
-            // MaritalStatusComboBox
-            // 
-            this.MaritalStatusComboBox.BackColor = System.Drawing.Color.White;
-            this.MaritalStatusComboBox.BorderColor = System.Drawing.Color.Blue;
-            this.MaritalStatusComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.MaritalStatusComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.MaritalStatusComboBox.FormattingEnabled = true;
-            this.MaritalStatusComboBox.Location = new System.Drawing.Point(296, 298);
-            this.MaritalStatusComboBox.Name = "MaritalStatusComboBox";
-            this.MaritalStatusComboBox.Size = new System.Drawing.Size(177, 21);
-            this.MaritalStatusComboBox.TabIndex = 29;
-            // 
-            // SexComboBox
-            // 
-            this.SexComboBox.BackColor = System.Drawing.Color.White;
-            this.SexComboBox.BorderColor = System.Drawing.Color.Blue;
-            this.SexComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.SexComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.SexComboBox.FormattingEnabled = true;
-            this.SexComboBox.Items.AddRange(new object[] {
-            "Male",
-            "Female",
-            "Unknown"});
-            this.SexComboBox.Location = new System.Drawing.Point(296, 218);
-            this.SexComboBox.Name = "SexComboBox";
-            this.SexComboBox.Size = new System.Drawing.Size(177, 21);
-            this.SexComboBox.TabIndex = 25;
-            // 
-            // StateComboBox
-            // 
-            this.StateComboBox.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
-            this.StateComboBox.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
-            this.StateComboBox.BackColor = System.Drawing.Color.White;
-            this.StateComboBox.BorderColor = System.Drawing.Color.Blue;
-            this.StateComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.StateComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.StateComboBox.FormattingEnabled = true;
-            this.StateComboBox.Location = new System.Drawing.Point(296, 170);
-            this.StateComboBox.Name = "StateComboBox";
-            this.StateComboBox.Size = new System.Drawing.Size(177, 21);
-            this.StateComboBox.TabIndex = 15;
-            // 
             // tabGuarantor
             // 
             this.tabGuarantor.AutoScroll = true;
@@ -928,31 +864,6 @@ namespace LabBilling.Forms
             this.GuarantorPhoneTextBox.Size = new System.Drawing.Size(297, 20);
             this.GuarantorPhoneTextBox.TabIndex = 21;
             // 
-            // GuarantorRelationComboBox
-            // 
-            this.GuarantorRelationComboBox.BorderColor = System.Drawing.Color.Blue;
-            this.GuarantorRelationComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.GuarantorRelationComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.GuarantorRelationComboBox.FormattingEnabled = true;
-            this.GuarantorRelationComboBox.Location = new System.Drawing.Point(110, 55);
-            this.GuarantorRelationComboBox.Name = "GuarantorRelationComboBox";
-            this.GuarantorRelationComboBox.Size = new System.Drawing.Size(131, 21);
-            this.GuarantorRelationComboBox.TabIndex = 2;
-            // 
-            // GuarStateComboBox
-            // 
-            this.GuarStateComboBox.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
-            this.GuarStateComboBox.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
-            this.GuarStateComboBox.BackColor = System.Drawing.Color.White;
-            this.GuarStateComboBox.BorderColor = System.Drawing.Color.Blue;
-            this.GuarStateComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.GuarStateComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.GuarStateComboBox.FormattingEnabled = true;
-            this.GuarStateComboBox.Location = new System.Drawing.Point(316, 211);
-            this.GuarStateComboBox.Name = "GuarStateComboBox";
-            this.GuarStateComboBox.Size = new System.Drawing.Size(183, 21);
-            this.GuarStateComboBox.TabIndex = 17;
-            // 
             // tabInsurance
             // 
             this.tabInsurance.AutoScroll = true;
@@ -967,6 +878,7 @@ namespace LabBilling.Forms
             // 
             // insTabLayoutPanel
             // 
+            this.insTabLayoutPanel.AutoScroll = true;
             this.insTabLayoutPanel.ColumnCount = 5;
             this.insTabLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 130F));
             this.insTabLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
@@ -1118,17 +1030,6 @@ namespace LabBilling.Forms
             this.InsCopyPatientLink.Text = "Copy Patient Info";
             this.InsCopyPatientLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.InsCopyPatientLink_LinkClicked_1);
             // 
-            // PlanFinCodeComboBox
-            // 
-            this.PlanFinCodeComboBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.PlanFinCodeComboBox.BorderColor = System.Drawing.Color.Blue;
-            this.PlanFinCodeComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.PlanFinCodeComboBox.FormattingEnabled = true;
-            this.PlanFinCodeComboBox.Location = new System.Drawing.Point(558, 298);
-            this.PlanFinCodeComboBox.Name = "PlanFinCodeComboBox";
-            this.PlanFinCodeComboBox.Size = new System.Drawing.Size(230, 21);
-            this.PlanFinCodeComboBox.TabIndex = 20;
-            // 
             // InsPlanFinCodeLabel
             // 
             this.InsPlanFinCodeLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
@@ -1237,19 +1138,6 @@ namespace LabBilling.Forms
             this.PlanAddress2TextBox.Size = new System.Drawing.Size(230, 20);
             this.PlanAddress2TextBox.TabIndex = 18;
             // 
-            // InsRelationComboBox
-            // 
-            this.InsRelationComboBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.InsRelationComboBox.BackColor = System.Drawing.Color.MintCream;
-            this.InsRelationComboBox.BorderColor = System.Drawing.Color.Blue;
-            this.InsRelationComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.InsRelationComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.InsRelationComboBox.FormattingEnabled = true;
-            this.InsRelationComboBox.Location = new System.Drawing.Point(133, 378);
-            this.InsRelationComboBox.Name = "InsRelationComboBox";
-            this.InsRelationComboBox.Size = new System.Drawing.Size(230, 21);
-            this.InsRelationComboBox.TabIndex = 10;
-            // 
             // HolderRelationLabel
             // 
             this.HolderRelationLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
@@ -1309,21 +1197,6 @@ namespace LabBilling.Forms
             this.HolderDOBLabel.TabIndex = 17;
             this.HolderDOBLabel.Text = "Date of Birth";
             // 
-            // HolderStateComboBox
-            // 
-            this.HolderStateComboBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.HolderStateComboBox.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
-            this.HolderStateComboBox.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
-            this.HolderStateComboBox.BackColor = System.Drawing.Color.MintCream;
-            this.HolderStateComboBox.BorderColor = System.Drawing.Color.Blue;
-            this.HolderStateComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.HolderStateComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.HolderStateComboBox.FormattingEnabled = true;
-            this.HolderStateComboBox.Location = new System.Drawing.Point(133, 271);
-            this.HolderStateComboBox.Name = "HolderStateComboBox";
-            this.HolderStateComboBox.Size = new System.Drawing.Size(230, 21);
-            this.HolderStateComboBox.TabIndex = 6;
-            // 
             // HolderFirstNameTextBox
             // 
             this.HolderFirstNameTextBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
@@ -1351,35 +1224,6 @@ namespace LabBilling.Forms
             this.InsuranceOrderLabel.Size = new System.Drawing.Size(83, 13);
             this.InsuranceOrderLabel.TabIndex = 21;
             this.InsuranceOrderLabel.Text = "Insurance Order";
-            // 
-            // InsOrderComboBox
-            // 
-            this.InsOrderComboBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.InsOrderComboBox.BorderColor = System.Drawing.Color.Blue;
-            this.InsOrderComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.InsOrderComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.InsOrderComboBox.FormattingEnabled = true;
-            this.InsOrderComboBox.Location = new System.Drawing.Point(558, 140);
-            this.InsOrderComboBox.Name = "InsOrderComboBox";
-            this.InsOrderComboBox.Size = new System.Drawing.Size(230, 21);
-            this.InsOrderComboBox.TabIndex = 13;
-            // 
-            // HolderSexComboBox
-            // 
-            this.HolderSexComboBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.HolderSexComboBox.BackColor = System.Drawing.Color.MintCream;
-            this.HolderSexComboBox.BorderColor = System.Drawing.Color.Blue;
-            this.HolderSexComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.HolderSexComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.HolderSexComboBox.FormattingEnabled = true;
-            this.HolderSexComboBox.Items.AddRange(new object[] {
-            "Male",
-            "Female",
-            "Unknown"});
-            this.HolderSexComboBox.Location = new System.Drawing.Point(133, 325);
-            this.HolderSexComboBox.Name = "HolderSexComboBox";
-            this.HolderSexComboBox.Size = new System.Drawing.Size(230, 21);
-            this.HolderSexComboBox.TabIndex = 8;
             // 
             // HolderMiddleNameLabel
             // 
@@ -1542,11 +1386,13 @@ namespace LabBilling.Forms
             // 
             this.tabDiagnosis.AutoScroll = true;
             this.tabDiagnosis.BackColor = System.Drawing.Color.White;
+            this.tabDiagnosis.Controls.Add(this.dxPointerGrid2);
             this.tabDiagnosis.Controls.Add(this.DxDeleteButton);
             this.tabDiagnosis.Controls.Add(this.SaveDxButton);
             this.tabDiagnosis.Controls.Add(this.QuickAddLabel);
             this.tabDiagnosis.Controls.Add(this.DxQuickAddTextBox);
             this.tabDiagnosis.Controls.Add(this.txtSearchDx);
+            this.tabDiagnosis.Controls.Add(this.label4);
             this.tabDiagnosis.Controls.Add(this.DxSearchLabel);
             this.tabDiagnosis.Controls.Add(this.DxSearchDataGrid);
             this.tabDiagnosis.Controls.Add(this.SelectedDxLabel);
@@ -1558,6 +1404,53 @@ namespace LabBilling.Forms
             this.tabDiagnosis.Size = new System.Drawing.Size(1151, 492);
             this.tabDiagnosis.TabIndex = 8;
             this.tabDiagnosis.Text = "Diagnosis";
+            // 
+            // dxPointerGrid2
+            // 
+            this.dxPointerGrid2.AllowUserToAddRows = false;
+            this.dxPointerGrid2.AllowUserToDeleteRows = false;
+            this.dxPointerGrid2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dxPointerGrid2.BackgroundColor = System.Drawing.Color.White;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dxPointerGrid2.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle4;
+            this.dxPointerGrid2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dxPointerGrid2.DefaultCellStyle = dataGridViewCellStyle5;
+            this.dxPointerGrid2.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter;
+            this.dxPointerGrid2.Location = new System.Drawing.Point(19, 279);
+            this.dxPointerGrid2.MultiSelect = false;
+            this.dxPointerGrid2.Name = "dxPointerGrid2";
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dxPointerGrid2.RowHeadersDefaultCellStyle = dataGridViewCellStyle6;
+            this.dxPointerGrid2.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dxPointerGrid2.Size = new System.Drawing.Size(790, 207);
+            this.dxPointerGrid2.TabIndex = 10;
+            this.dxPointerGrid2.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dxPointerGrid2_CellClick);
+            this.dxPointerGrid2.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dxPointerGrid2_CellEndEdit);
+            this.dxPointerGrid2.CellEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.dxPointerGrid2_CellEnter);
+            this.dxPointerGrid2.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dxPointerGrid2_CellValueChanged);
+            this.dxPointerGrid2.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.dxPointerGrid2_DataError);
+            this.dxPointerGrid2.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.dxPointerGrid2_EditingControlShowing);
+            this.dxPointerGrid2.RowLeave += new System.Windows.Forms.DataGridViewCellEventHandler(this.dxPointerGrid2_RowLeave);
             // 
             // DxDeleteButton
             // 
@@ -1574,12 +1467,13 @@ namespace LabBilling.Forms
             // 
             this.SaveDxButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.SaveDxButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.SaveDxButton.Location = new System.Drawing.Point(734, 257);
+            this.SaveDxButton.Location = new System.Drawing.Point(820, 6);
             this.SaveDxButton.Name = "SaveDxButton";
             this.SaveDxButton.Size = new System.Drawing.Size(75, 28);
             this.SaveDxButton.TabIndex = 8;
             this.SaveDxButton.Text = "Save Diagnoses";
             this.SaveDxButton.UseVisualStyleBackColor = true;
+            this.SaveDxButton.Visible = false;
             this.SaveDxButton.Click += new System.EventHandler(this.SaveDxButton_Click);
             // 
             // QuickAddLabel
@@ -1625,34 +1519,34 @@ namespace LabBilling.Forms
             this.DxSearchDataGrid.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
             this.DxSearchDataGrid.BackgroundColor = System.Drawing.Color.White;
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.DxSearchDataGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle7.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle7.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle7.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle7.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle7.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.DxSearchDataGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle7;
             this.DxSearchDataGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.DxSearchDataGrid.DefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle8.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle8.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle8.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.DxSearchDataGrid.DefaultCellStyle = dataGridViewCellStyle8;
             this.DxSearchDataGrid.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.DxSearchDataGrid.Location = new System.Drawing.Point(18, 46);
             this.DxSearchDataGrid.Name = "DxSearchDataGrid";
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.DxSearchDataGrid.RowHeadersDefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle9.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle9.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle9.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle9.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle9.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.DxSearchDataGrid.RowHeadersDefaultCellStyle = dataGridViewCellStyle9;
             this.DxSearchDataGrid.RowHeadersVisible = false;
             this.DxSearchDataGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.DxSearchDataGrid.Size = new System.Drawing.Size(412, 205);
@@ -1675,34 +1569,34 @@ namespace LabBilling.Forms
             this.DiagnosisDataGrid.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
             this.DiagnosisDataGrid.BackgroundColor = System.Drawing.Color.White;
-            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle7.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle7.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle7.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle7.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle7.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.DiagnosisDataGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle7;
+            dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle10.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle10.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle10.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle10.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle10.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle10.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.DiagnosisDataGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle10;
             this.DiagnosisDataGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle8.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle8.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle8.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.DiagnosisDataGrid.DefaultCellStyle = dataGridViewCellStyle8;
+            dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle11.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle11.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle11.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle11.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle11.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle11.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.DiagnosisDataGrid.DefaultCellStyle = dataGridViewCellStyle11;
             this.DiagnosisDataGrid.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.DiagnosisDataGrid.Location = new System.Drawing.Point(451, 46);
             this.DiagnosisDataGrid.Name = "DiagnosisDataGrid";
-            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle9.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle9.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle9.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle9.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle9.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.DiagnosisDataGrid.RowHeadersDefaultCellStyle = dataGridViewCellStyle9;
+            dataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle12.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle12.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle12.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle12.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle12.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle12.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.DiagnosisDataGrid.RowHeadersDefaultCellStyle = dataGridViewCellStyle12;
             this.DiagnosisDataGrid.RowHeadersVisible = false;
             this.DiagnosisDataGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.DiagnosisDataGrid.Size = new System.Drawing.Size(358, 205);
@@ -1748,12 +1642,9 @@ namespace LabBilling.Forms
             this.chargeLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.chargeLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 120F));
             this.chargeLayoutPanel.Controls.Add(this.ChargesDataGridLabel, 0, 0);
-            this.chargeLayoutPanel.Controls.Add(this.UpdateDxPointersButton, 1, 5);
             this.chargeLayoutPanel.Controls.Add(this.ChargesDataGrid, 0, 1);
-            this.chargeLayoutPanel.Controls.Add(this.DiagnosisPointerDataGrid, 0, 5);
             this.chargeLayoutPanel.Controls.Add(this.ChargeDetailGridLabel, 0, 2);
             this.chargeLayoutPanel.Controls.Add(this.ChrgDetailDataGrid, 0, 3);
-            this.chargeLayoutPanel.Controls.Add(this.ChargeDxPointerLabel, 0, 4);
             this.chargeLayoutPanel.Controls.Add(this.AddChargeButton, 1, 0);
             this.chargeLayoutPanel.Location = new System.Drawing.Point(8, 33);
             this.chargeLayoutPanel.Name = "chargeLayoutPanel";
@@ -1777,55 +1668,44 @@ namespace LabBilling.Forms
             this.ChargesDataGridLabel.TabIndex = 2;
             this.ChargesDataGridLabel.Text = "Charges";
             // 
-            // UpdateDxPointersButton
-            // 
-            this.UpdateDxPointersButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.UpdateDxPointersButton.Location = new System.Drawing.Point(1018, 356);
-            this.UpdateDxPointersButton.Name = "UpdateDxPointersButton";
-            this.UpdateDxPointersButton.Size = new System.Drawing.Size(114, 25);
-            this.UpdateDxPointersButton.TabIndex = 10;
-            this.UpdateDxPointersButton.Text = "Update Dx Pointers";
-            this.UpdateDxPointersButton.UseVisualStyleBackColor = true;
-            this.UpdateDxPointersButton.Click += new System.EventHandler(this.UpdateDxPointersButton_Click);
-            // 
             // ChargesDataGrid
             // 
             this.ChargesDataGrid.AllowUserToAddRows = false;
             this.ChargesDataGrid.AllowUserToDeleteRows = false;
             this.ChargesDataGrid.BackgroundColor = System.Drawing.SystemColors.ControlLightLight;
-            dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle10.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle10.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle10.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle10.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle10.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle10.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.ChargesDataGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle10;
+            dataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle13.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle13.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle13.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle13.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle13.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle13.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.ChargesDataGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle13;
             this.ChargesDataGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.ChargesDataGrid.ContextMenuStrip = this.menuCharges;
-            dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle11.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle11.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle11.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle11.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle11.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle11.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.ChargesDataGrid.DefaultCellStyle = dataGridViewCellStyle11;
+            dataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle14.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle14.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle14.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle14.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle14.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle14.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.ChargesDataGrid.DefaultCellStyle = dataGridViewCellStyle14;
             this.ChargesDataGrid.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ChargesDataGrid.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.ChargesDataGrid.Location = new System.Drawing.Point(3, 32);
             this.ChargesDataGrid.Name = "ChargesDataGrid";
-            dataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle12.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle12.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle12.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle12.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle12.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle12.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.ChargesDataGrid.RowHeadersDefaultCellStyle = dataGridViewCellStyle12;
+            dataGridViewCellStyle15.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle15.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle15.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle15.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle15.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle15.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle15.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.ChargesDataGrid.RowHeadersDefaultCellStyle = dataGridViewCellStyle15;
             this.ChargesDataGrid.RowHeadersVisible = false;
             this.ChargesDataGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.ChargesDataGrid.Size = new System.Drawing.Size(1009, 153);
+            this.ChargesDataGrid.Size = new System.Drawing.Size(1009, 158);
             this.ChargesDataGrid.TabIndex = 0;
             this.ChargesDataGrid.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DgvCharges_CellDoubleClick);
             this.ChargesDataGrid.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.ChargesDataGrid_CellFormatting);
@@ -1853,48 +1733,11 @@ namespace LabBilling.Forms
             this.moveChargeToolStripMenuItem.Text = "Move Charge";
             this.moveChargeToolStripMenuItem.Click += new System.EventHandler(this.moveChargeToolStripMenuItem_Click);
             // 
-            // DiagnosisPointerDataGrid
-            // 
-            this.DiagnosisPointerDataGrid.AllowUserToAddRows = false;
-            this.DiagnosisPointerDataGrid.AllowUserToDeleteRows = false;
-            this.DiagnosisPointerDataGrid.BackgroundColor = System.Drawing.SystemColors.ControlLightLight;
-            dataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle13.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle13.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle13.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle13.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle13.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle13.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.DiagnosisPointerDataGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle13;
-            this.DiagnosisPointerDataGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle14.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle14.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle14.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle14.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle14.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle14.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.DiagnosisPointerDataGrid.DefaultCellStyle = dataGridViewCellStyle14;
-            this.DiagnosisPointerDataGrid.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.DiagnosisPointerDataGrid.Location = new System.Drawing.Point(3, 356);
-            this.DiagnosisPointerDataGrid.Name = "DiagnosisPointerDataGrid";
-            dataGridViewCellStyle15.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle15.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle15.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle15.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle15.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle15.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle15.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.DiagnosisPointerDataGrid.RowHeadersDefaultCellStyle = dataGridViewCellStyle15;
-            this.DiagnosisPointerDataGrid.Size = new System.Drawing.Size(1009, 94);
-            this.DiagnosisPointerDataGrid.TabIndex = 8;
-            this.DiagnosisPointerDataGrid.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DiagnosisPointerDataGrid_CellContentClick);
-            // 
             // ChargeDetailGridLabel
             // 
             this.ChargeDetailGridLabel.AutoSize = true;
             this.ChargeDetailGridLabel.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.ChargeDetailGridLabel.Location = new System.Drawing.Point(3, 188);
+            this.ChargeDetailGridLabel.Location = new System.Drawing.Point(3, 193);
             this.ChargeDetailGridLabel.Name = "ChargeDetailGridLabel";
             this.ChargeDetailGridLabel.Size = new System.Drawing.Size(1009, 13);
             this.ChargeDetailGridLabel.TabIndex = 3;
@@ -1923,7 +1766,7 @@ namespace LabBilling.Forms
             dataGridViewCellStyle17.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
             this.ChrgDetailDataGrid.DefaultCellStyle = dataGridViewCellStyle17;
             this.ChrgDetailDataGrid.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ChrgDetailDataGrid.Location = new System.Drawing.Point(3, 204);
+            this.ChrgDetailDataGrid.Location = new System.Drawing.Point(3, 209);
             this.ChrgDetailDataGrid.Name = "ChrgDetailDataGrid";
             dataGridViewCellStyle18.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle18.BackColor = System.Drawing.SystemColors.Control;
@@ -1935,20 +1778,9 @@ namespace LabBilling.Forms
             this.ChrgDetailDataGrid.RowHeadersDefaultCellStyle = dataGridViewCellStyle18;
             this.ChrgDetailDataGrid.RowHeadersVisible = false;
             this.ChrgDetailDataGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.ChrgDetailDataGrid.Size = new System.Drawing.Size(1009, 133);
+            this.ChrgDetailDataGrid.Size = new System.Drawing.Size(1009, 137);
             this.ChrgDetailDataGrid.TabIndex = 1;
             this.ChrgDetailDataGrid.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.ChrgDetailDataGrid_CellMouseClick);
-            this.ChrgDetailDataGrid.SelectionChanged += new System.EventHandler(this.ChrgDetailDataGrid_SelectionChanged);
-            // 
-            // ChargeDxPointerLabel
-            // 
-            this.ChargeDxPointerLabel.AutoSize = true;
-            this.ChargeDxPointerLabel.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.ChargeDxPointerLabel.Location = new System.Drawing.Point(3, 340);
-            this.ChargeDxPointerLabel.Name = "ChargeDxPointerLabel";
-            this.ChargeDxPointerLabel.Size = new System.Drawing.Size(1009, 13);
-            this.ChargeDxPointerLabel.TabIndex = 9;
-            this.ChargeDxPointerLabel.Text = "Diagnosis Pointers";
             // 
             // AddChargeButton
             // 
@@ -2380,19 +2212,6 @@ namespace LabBilling.Forms
             this.BillActivityDataGrid.TabIndex = 0;
             this.BillActivityDataGrid.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.BillActivityDataGrid_MouseDoubleClick);
             // 
-            // minPmtTextBox
-            // 
-            this.minPmtTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.minPmtTextBox.DollarValue = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
-            this.minPmtTextBox.Location = new System.Drawing.Point(1043, 450);
-            this.minPmtTextBox.Name = "minPmtTextBox";
-            this.minPmtTextBox.Size = new System.Drawing.Size(100, 20);
-            this.minPmtTextBox.TabIndex = 9;
-            // 
             // menuStrip1
             // 
             this.menuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
@@ -2716,6 +2535,185 @@ namespace LabBilling.Forms
             this.bannerDateOfServiceLabel.TabIndex = 31;
             this.bannerDateOfServiceLabel.Text = "Date of Service:";
             // 
+            // label4
+            // 
+            this.label4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(16, 263);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(94, 13);
+            this.label4.TabIndex = 3;
+            this.label4.Text = "Diagnosis Pointers";
+            // 
+            // DateOfBirthTextBox
+            // 
+            this.DateOfBirthTextBox.DateValue = new System.DateTime(((long)(0)));
+            this.DateOfBirthTextBox.Location = new System.Drawing.Point(296, 258);
+            this.DateOfBirthTextBox.Name = "DateOfBirthTextBox";
+            this.DateOfBirthTextBox.Size = new System.Drawing.Size(177, 20);
+            this.DateOfBirthTextBox.TabIndex = 34;
+            // 
+            // providerLookup1
+            // 
+            this.providerLookup1.CharacterLookupCountMin = 2;
+            this.providerLookup1.Datasource = null;
+            this.providerLookup1.DisplayValue = null;
+            this.providerLookup1.Location = new System.Drawing.Point(499, 218);
+            this.providerLookup1.Name = "providerLookup1";
+            this.providerLookup1.ResultBoxHeight = 100;
+            this.providerLookup1.SelectedValue = null;
+            this.providerLookup1.Size = new System.Drawing.Size(288, 134);
+            this.providerLookup1.TabIndex = 31;
+            this.providerLookup1.SelectedValueChanged += new LabBilling.Library.ProviderLookup.SelectedValueChangedEventHandler(this.providerLookup1_SelectedValueChanged);
+            // 
+            // MaritalStatusComboBox
+            // 
+            this.MaritalStatusComboBox.BackColor = System.Drawing.Color.White;
+            this.MaritalStatusComboBox.BorderColor = System.Drawing.Color.Blue;
+            this.MaritalStatusComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.MaritalStatusComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.MaritalStatusComboBox.FormattingEnabled = true;
+            this.MaritalStatusComboBox.Location = new System.Drawing.Point(296, 298);
+            this.MaritalStatusComboBox.Name = "MaritalStatusComboBox";
+            this.MaritalStatusComboBox.Size = new System.Drawing.Size(177, 21);
+            this.MaritalStatusComboBox.TabIndex = 29;
+            // 
+            // SexComboBox
+            // 
+            this.SexComboBox.BackColor = System.Drawing.Color.White;
+            this.SexComboBox.BorderColor = System.Drawing.Color.Blue;
+            this.SexComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.SexComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.SexComboBox.FormattingEnabled = true;
+            this.SexComboBox.Items.AddRange(new object[] {
+            "Male",
+            "Female",
+            "Unknown"});
+            this.SexComboBox.Location = new System.Drawing.Point(296, 218);
+            this.SexComboBox.Name = "SexComboBox";
+            this.SexComboBox.Size = new System.Drawing.Size(177, 21);
+            this.SexComboBox.TabIndex = 25;
+            // 
+            // StateComboBox
+            // 
+            this.StateComboBox.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
+            this.StateComboBox.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this.StateComboBox.BackColor = System.Drawing.Color.White;
+            this.StateComboBox.BorderColor = System.Drawing.Color.Blue;
+            this.StateComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.StateComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.StateComboBox.FormattingEnabled = true;
+            this.StateComboBox.Location = new System.Drawing.Point(296, 170);
+            this.StateComboBox.Name = "StateComboBox";
+            this.StateComboBox.Size = new System.Drawing.Size(177, 21);
+            this.StateComboBox.TabIndex = 15;
+            // 
+            // GuarantorRelationComboBox
+            // 
+            this.GuarantorRelationComboBox.BorderColor = System.Drawing.Color.Blue;
+            this.GuarantorRelationComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.GuarantorRelationComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.GuarantorRelationComboBox.FormattingEnabled = true;
+            this.GuarantorRelationComboBox.Location = new System.Drawing.Point(110, 55);
+            this.GuarantorRelationComboBox.Name = "GuarantorRelationComboBox";
+            this.GuarantorRelationComboBox.Size = new System.Drawing.Size(131, 21);
+            this.GuarantorRelationComboBox.TabIndex = 2;
+            // 
+            // GuarStateComboBox
+            // 
+            this.GuarStateComboBox.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
+            this.GuarStateComboBox.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this.GuarStateComboBox.BackColor = System.Drawing.Color.White;
+            this.GuarStateComboBox.BorderColor = System.Drawing.Color.Blue;
+            this.GuarStateComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.GuarStateComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.GuarStateComboBox.FormattingEnabled = true;
+            this.GuarStateComboBox.Location = new System.Drawing.Point(316, 211);
+            this.GuarStateComboBox.Name = "GuarStateComboBox";
+            this.GuarStateComboBox.Size = new System.Drawing.Size(183, 21);
+            this.GuarStateComboBox.TabIndex = 17;
+            // 
+            // PlanFinCodeComboBox
+            // 
+            this.PlanFinCodeComboBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.PlanFinCodeComboBox.BorderColor = System.Drawing.Color.Blue;
+            this.PlanFinCodeComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.PlanFinCodeComboBox.FormattingEnabled = true;
+            this.PlanFinCodeComboBox.Location = new System.Drawing.Point(558, 298);
+            this.PlanFinCodeComboBox.Name = "PlanFinCodeComboBox";
+            this.PlanFinCodeComboBox.Size = new System.Drawing.Size(230, 21);
+            this.PlanFinCodeComboBox.TabIndex = 20;
+            // 
+            // InsRelationComboBox
+            // 
+            this.InsRelationComboBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.InsRelationComboBox.BackColor = System.Drawing.Color.MintCream;
+            this.InsRelationComboBox.BorderColor = System.Drawing.Color.Blue;
+            this.InsRelationComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.InsRelationComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.InsRelationComboBox.FormattingEnabled = true;
+            this.InsRelationComboBox.Location = new System.Drawing.Point(133, 378);
+            this.InsRelationComboBox.Name = "InsRelationComboBox";
+            this.InsRelationComboBox.Size = new System.Drawing.Size(230, 21);
+            this.InsRelationComboBox.TabIndex = 10;
+            // 
+            // HolderStateComboBox
+            // 
+            this.HolderStateComboBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.HolderStateComboBox.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
+            this.HolderStateComboBox.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this.HolderStateComboBox.BackColor = System.Drawing.Color.MintCream;
+            this.HolderStateComboBox.BorderColor = System.Drawing.Color.Blue;
+            this.HolderStateComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.HolderStateComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.HolderStateComboBox.FormattingEnabled = true;
+            this.HolderStateComboBox.Location = new System.Drawing.Point(133, 271);
+            this.HolderStateComboBox.Name = "HolderStateComboBox";
+            this.HolderStateComboBox.Size = new System.Drawing.Size(230, 21);
+            this.HolderStateComboBox.TabIndex = 6;
+            // 
+            // InsOrderComboBox
+            // 
+            this.InsOrderComboBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.InsOrderComboBox.BorderColor = System.Drawing.Color.Blue;
+            this.InsOrderComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.InsOrderComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.InsOrderComboBox.FormattingEnabled = true;
+            this.InsOrderComboBox.Location = new System.Drawing.Point(558, 140);
+            this.InsOrderComboBox.Name = "InsOrderComboBox";
+            this.InsOrderComboBox.Size = new System.Drawing.Size(230, 21);
+            this.InsOrderComboBox.TabIndex = 13;
+            // 
+            // HolderSexComboBox
+            // 
+            this.HolderSexComboBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.HolderSexComboBox.BackColor = System.Drawing.Color.MintCream;
+            this.HolderSexComboBox.BorderColor = System.Drawing.Color.Blue;
+            this.HolderSexComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.HolderSexComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.HolderSexComboBox.FormattingEnabled = true;
+            this.HolderSexComboBox.Items.AddRange(new object[] {
+            "Male",
+            "Female",
+            "Unknown"});
+            this.HolderSexComboBox.Location = new System.Drawing.Point(133, 325);
+            this.HolderSexComboBox.Name = "HolderSexComboBox";
+            this.HolderSexComboBox.Size = new System.Drawing.Size(230, 21);
+            this.HolderSexComboBox.TabIndex = 8;
+            // 
+            // minPmtTextBox
+            // 
+            this.minPmtTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.minPmtTextBox.DollarValue = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+            this.minPmtTextBox.Location = new System.Drawing.Point(1043, 450);
+            this.minPmtTextBox.Name = "minPmtTextBox";
+            this.minPmtTextBox.Size = new System.Drawing.Size(100, 20);
+            this.minPmtTextBox.TabIndex = 9;
+            // 
             // AccountForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2765,6 +2763,7 @@ namespace LabBilling.Forms
             ((System.ComponentModel.ISupportInitialize)(this.InsuranceDataGrid)).EndInit();
             this.tabDiagnosis.ResumeLayout(false);
             this.tabDiagnosis.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dxPointerGrid2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.DxDeleteButton)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.DxSearchDataGrid)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.DiagnosisDataGrid)).EndInit();
@@ -2775,7 +2774,6 @@ namespace LabBilling.Forms
             this.chargeLayoutPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ChargesDataGrid)).EndInit();
             this.menuCharges.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.DiagnosisPointerDataGrid)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ChrgDetailDataGrid)).EndInit();
             this.tabPayments.ResumeLayout(false);
             this.tabPayments.PerformLayout();
@@ -2919,10 +2917,7 @@ namespace LabBilling.Forms
         private System.Windows.Forms.TextBox BannerFinClassTextBox;
         private System.Windows.Forms.Label BannerFinClassLabel;
         private System.Windows.Forms.DataGridView BillActivityDataGrid;
-        private System.Windows.Forms.DataGridView DiagnosisPointerDataGrid;
-        private System.Windows.Forms.Label ChargeDxPointerLabel;
         private System.Windows.Forms.Button AddPaymentButton;
-        private System.Windows.Forms.Button UpdateDxPointersButton;
         private System.Windows.Forms.TextBox DemoStatusMessagesTextBox;
         private System.Windows.Forms.Button AddInsuranceButton;
         private System.Windows.Forms.Label PatientFullNameLabel;
@@ -2992,6 +2987,8 @@ namespace LabBilling.Forms
         private System.Windows.Forms.Label bannerDateOfServiceLabel;
         private System.Windows.Forms.TableLayoutPanel chargeLayoutPanel;
         private System.Windows.Forms.ToolStripMenuItem generateClientStatementToolStripMenuItem;
+        private System.Windows.Forms.DataGridView dxPointerGrid2;
+        private System.Windows.Forms.Label label4;
     }
 }
 

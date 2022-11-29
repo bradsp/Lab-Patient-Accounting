@@ -12,17 +12,20 @@ namespace LabBilling.Core.DataAccess
     {
         private CdmRepository cdmRepository;
         private readonly ChrgDetailRepository amtRepository;
+        private readonly ChrgDiagnosisPointerRepository chrgDiagnosisPointerRepository;
 
         public ChrgRepository(string connection) : base(connection)
         {
             amtRepository = new ChrgDetailRepository(connection);
             cdmRepository = new CdmRepository(connection);
+            chrgDiagnosisPointerRepository = new ChrgDiagnosisPointerRepository(connection);
         }
 
         public ChrgRepository(PetaPoco.Database db) : base(db)
         {
             amtRepository = new ChrgDetailRepository(db);
             cdmRepository = new CdmRepository(db);
+            chrgDiagnosisPointerRepository = new ChrgDiagnosisPointerRepository(db);
         }
 
         /// <summary>
@@ -93,6 +96,7 @@ namespace LabBilling.Core.DataAccess
                 foreach(ChrgDetail detail in chrg.ChrgDetails)
                 {
                     detail.RevenueCodeDetail = revenueCodeRepository.GetByCode(detail.RevenueCode);
+                    detail.DiagnosisPointer = chrgDiagnosisPointerRepository.GetById(detail.uri);
                     Log.Instance.Debug($"{dbConnection.LastSQL} {dbConnection.LastArgs}");
                 }
             }
@@ -225,5 +229,20 @@ namespace LabBilling.Core.DataAccess
             return chrgCount;
         }
 
+
+        public bool UpdateDxPointers(IEnumerable<Chrg> chrgs)
+        {
+            bool returnVal = true;
+
+            foreach(var chrg in chrgs)
+            {
+                foreach(var detail in chrg.ChrgDetails)
+                {
+                    returnVal = chrgDiagnosisPointerRepository.Save(detail.DiagnosisPointer) && returnVal;
+                }
+            }
+
+            return returnVal;
+        }
     }
 }

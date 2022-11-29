@@ -716,7 +716,7 @@ namespace LabBilling.Core.DataAccess
                 chrgDetail.OrderCode = fee.BillCode;
                 chrgDetail.BillType = "";
                 chrgDetail.BillMethod = "";
-                chrgDetail.DiagCodePointer = "1:";
+                chrgDetail.DiagnosisPointer.DiagnosisPointer = "1:";
 
                 chrg.ChrgDetails.Add(chrgDetail);
             }

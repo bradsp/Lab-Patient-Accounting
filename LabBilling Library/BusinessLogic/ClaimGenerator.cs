@@ -540,7 +540,7 @@ namespace LabBilling.Core.BusinessLogic
                         claimLine.RevenueCodeDescription = detail.RevenueCodeDetail.Description;
                         claimLine.Amount = detail.Amount;
                         claimLine.Quantity = chrg.Quantity;
-                        string[] dxptr = detail.DiagCodePointer.Split(':');
+                        string[] dxptr = detail.DiagnosisPointer.DiagnosisPointer.Split(':');
                         if(dxptr.Length >= 1)
                             claimLine.DxPtr1 = dxptr[0] ?? "";
                         if (dxptr.Length >= 2) 

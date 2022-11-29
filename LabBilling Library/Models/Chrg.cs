@@ -137,6 +137,7 @@ namespace LabBilling.Core.Models
     
         [Ignore]        
         public List<ChrgDetail> ChrgDetails { get; set; } = new List<ChrgDetail>();
+
         [Ignore]
         public Cdm Cdm { get; set; } = new Cdm();
     }
