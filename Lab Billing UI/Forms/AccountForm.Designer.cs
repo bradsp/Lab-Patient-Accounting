@@ -161,6 +161,7 @@ namespace LabBilling.Forms
             this.QuickAddLabel = new System.Windows.Forms.Label();
             this.DxQuickAddTextBox = new System.Windows.Forms.TextBox();
             this.txtSearchDx = new System.Windows.Forms.TextBox();
+            this.label4 = new System.Windows.Forms.Label();
             this.DxSearchLabel = new System.Windows.Forms.Label();
             this.DxSearchDataGrid = new System.Windows.Forms.DataGridView();
             this.SelectedDxLabel = new System.Windows.Forms.Label();
@@ -240,7 +241,6 @@ namespace LabBilling.Forms
             this.RefreshButton = new System.Windows.Forms.PictureBox();
             this.bannerDateOfServiceTextBox = new System.Windows.Forms.TextBox();
             this.bannerDateOfServiceLabel = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
             this.DateOfBirthTextBox = new LabBilling.UserControls.DateTextBox();
             this.providerLookup1 = new LabBilling.Library.ProviderLookup();
             this.MaritalStatusComboBox = new LabBilling.Library.FlatCombo();
@@ -1430,7 +1430,7 @@ namespace LabBilling.Forms
             dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
             this.dxPointerGrid2.DefaultCellStyle = dataGridViewCellStyle5;
             this.dxPointerGrid2.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter;
-            this.dxPointerGrid2.Location = new System.Drawing.Point(19, 279);
+            this.dxPointerGrid2.Location = new System.Drawing.Point(19, 241);
             this.dxPointerGrid2.MultiSelect = false;
             this.dxPointerGrid2.Name = "dxPointerGrid2";
             dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
@@ -1442,7 +1442,7 @@ namespace LabBilling.Forms
             dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
             this.dxPointerGrid2.RowHeadersDefaultCellStyle = dataGridViewCellStyle6;
             this.dxPointerGrid2.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dxPointerGrid2.Size = new System.Drawing.Size(790, 207);
+            this.dxPointerGrid2.Size = new System.Drawing.Size(790, 245);
             this.dxPointerGrid2.TabIndex = 10;
             this.dxPointerGrid2.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dxPointerGrid2_CellClick);
             this.dxPointerGrid2.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dxPointerGrid2_CellEndEdit);
@@ -1465,7 +1465,6 @@ namespace LabBilling.Forms
             // 
             // SaveDxButton
             // 
-            this.SaveDxButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.SaveDxButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SaveDxButton.Location = new System.Drawing.Point(820, 6);
             this.SaveDxButton.Name = "SaveDxButton";
@@ -1502,6 +1501,16 @@ namespace LabBilling.Forms
             this.txtSearchDx.Size = new System.Drawing.Size(218, 20);
             this.txtSearchDx.TabIndex = 4;
             this.txtSearchDx.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.SearchDxTextBox_KeyPress);
+            // 
+            // label4
+            // 
+            this.label4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(16, 225);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(94, 13);
+            this.label4.TabIndex = 3;
+            this.label4.Text = "Diagnosis Pointers";
             // 
             // DxSearchLabel
             // 
@@ -1549,7 +1558,7 @@ namespace LabBilling.Forms
             this.DxSearchDataGrid.RowHeadersDefaultCellStyle = dataGridViewCellStyle9;
             this.DxSearchDataGrid.RowHeadersVisible = false;
             this.DxSearchDataGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.DxSearchDataGrid.Size = new System.Drawing.Size(412, 205);
+            this.DxSearchDataGrid.Size = new System.Drawing.Size(412, 176);
             this.DxSearchDataGrid.TabIndex = 2;
             this.DxSearchDataGrid.CellMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.DxSearchDataGrid_CellMouseDoubleClick);
             this.DxSearchDataGrid.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.DxSearchDataGrid_DataBindingComplete);
@@ -1599,7 +1608,7 @@ namespace LabBilling.Forms
             this.DiagnosisDataGrid.RowHeadersDefaultCellStyle = dataGridViewCellStyle12;
             this.DiagnosisDataGrid.RowHeadersVisible = false;
             this.DiagnosisDataGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.DiagnosisDataGrid.Size = new System.Drawing.Size(358, 205);
+            this.DiagnosisDataGrid.Size = new System.Drawing.Size(358, 176);
             this.DiagnosisDataGrid.TabIndex = 0;
             this.DiagnosisDataGrid.CellMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.DiagnosisDataGrid_CellMouseDoubleClick);
             this.DiagnosisDataGrid.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.DiagnosisDataGrid_DataBindingComplete);
@@ -1648,13 +1657,13 @@ namespace LabBilling.Forms
             this.chargeLayoutPanel.Controls.Add(this.AddChargeButton, 1, 0);
             this.chargeLayoutPanel.Location = new System.Drawing.Point(8, 33);
             this.chargeLayoutPanel.Name = "chargeLayoutPanel";
-            this.chargeLayoutPanel.RowCount = 6;
+            this.chargeLayoutPanel.RowCount = 4;
+            this.chargeLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.chargeLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 60F));
             this.chargeLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.chargeLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 40F));
-            this.chargeLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.chargeLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 35F));
-            this.chargeLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.chargeLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.chargeLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.chargeLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.chargeLayoutPanel.Size = new System.Drawing.Size(1135, 453);
             this.chargeLayoutPanel.TabIndex = 11;
             // 
@@ -1705,7 +1714,7 @@ namespace LabBilling.Forms
             this.ChargesDataGrid.RowHeadersDefaultCellStyle = dataGridViewCellStyle15;
             this.ChargesDataGrid.RowHeadersVisible = false;
             this.ChargesDataGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.ChargesDataGrid.Size = new System.Drawing.Size(1009, 158);
+            this.ChargesDataGrid.Size = new System.Drawing.Size(1009, 240);
             this.ChargesDataGrid.TabIndex = 0;
             this.ChargesDataGrid.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DgvCharges_CellDoubleClick);
             this.ChargesDataGrid.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.ChargesDataGrid_CellFormatting);
@@ -1737,7 +1746,7 @@ namespace LabBilling.Forms
             // 
             this.ChargeDetailGridLabel.AutoSize = true;
             this.ChargeDetailGridLabel.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.ChargeDetailGridLabel.Location = new System.Drawing.Point(3, 193);
+            this.ChargeDetailGridLabel.Location = new System.Drawing.Point(3, 275);
             this.ChargeDetailGridLabel.Name = "ChargeDetailGridLabel";
             this.ChargeDetailGridLabel.Size = new System.Drawing.Size(1009, 13);
             this.ChargeDetailGridLabel.TabIndex = 3;
@@ -1766,7 +1775,7 @@ namespace LabBilling.Forms
             dataGridViewCellStyle17.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
             this.ChrgDetailDataGrid.DefaultCellStyle = dataGridViewCellStyle17;
             this.ChrgDetailDataGrid.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ChrgDetailDataGrid.Location = new System.Drawing.Point(3, 209);
+            this.ChrgDetailDataGrid.Location = new System.Drawing.Point(3, 291);
             this.ChrgDetailDataGrid.Name = "ChrgDetailDataGrid";
             dataGridViewCellStyle18.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle18.BackColor = System.Drawing.SystemColors.Control;
@@ -1778,7 +1787,7 @@ namespace LabBilling.Forms
             this.ChrgDetailDataGrid.RowHeadersDefaultCellStyle = dataGridViewCellStyle18;
             this.ChrgDetailDataGrid.RowHeadersVisible = false;
             this.ChrgDetailDataGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.ChrgDetailDataGrid.Size = new System.Drawing.Size(1009, 137);
+            this.ChrgDetailDataGrid.Size = new System.Drawing.Size(1009, 159);
             this.ChrgDetailDataGrid.TabIndex = 1;
             this.ChrgDetailDataGrid.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.ChrgDetailDataGrid_CellMouseClick);
             // 
@@ -2534,16 +2543,6 @@ namespace LabBilling.Forms
             this.bannerDateOfServiceLabel.Size = new System.Drawing.Size(84, 13);
             this.bannerDateOfServiceLabel.TabIndex = 31;
             this.bannerDateOfServiceLabel.Text = "Date of Service:";
-            // 
-            // label4
-            // 
-            this.label4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(16, 263);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(94, 13);
-            this.label4.TabIndex = 3;
-            this.label4.Text = "Diagnosis Pointers";
             // 
             // DateOfBirthTextBox
             // 

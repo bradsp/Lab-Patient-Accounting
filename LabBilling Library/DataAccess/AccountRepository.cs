@@ -675,6 +675,7 @@ namespace LabBilling.Core.DataAccess
             foreach (CdmDetail fee in feeSched)
             {
                 ChrgDetail chrgDetail = new ChrgDetail();
+                chrgDetail.DiagnosisPointer = new ChrgDiagnosisPointer();
                 chrgDetail.Cpt4 = fee.Cpt4;
                 chrgDetail.Type = fee.Type;
                 switch (fin.FinClass)

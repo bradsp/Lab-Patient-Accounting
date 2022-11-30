@@ -129,7 +129,7 @@ namespace LabBilling.Core.DataAccess
         /// <returns></returns>
         public int AddCharge(Chrg chrg)
         {
-            Log.Instance.Trace($"Entering - {chrg.AccountNo}");
+                Log.Instance.Trace($"Entering - {chrg.AccountNo}");
             //function will add charge
             try
             {

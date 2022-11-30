@@ -26,6 +26,8 @@ namespace LabBilling.Forms
     {
         private BindingList<PatDiag> dxBindingList;
         private DataTable chargesTable = new DataTable();
+        private DataTable dxPointers = new DataTable();
+        private BindingSource dxPointerBindingSource = new BindingSource();
 
         private List<InsCompany> insCompanies = null;
         private List<Phy> providers = null;
@@ -134,7 +136,7 @@ namespace LabBilling.Forms
             AddChargeButton.Visible = false;
             AddPaymentButton.Visible = false;
             SaveInsuranceButton.Visible = false;
-            SaveDxButton.Visible = false;
+            //SaveDxButton.Visible = false;
             SaveDemographics.Visible = false;
             GuarCopyPatientLink.Visible = false;
             InsCopyPatientLink.Visible = false;
@@ -161,7 +163,7 @@ namespace LabBilling.Forms
                     AddPaymentButton.Visible = Program.LoggedInUser.CanAddPayments;
                     //UpdateDxPointersButton.Visible = true;
                     SaveInsuranceButton.Visible = true;
-                    SaveDxButton.Visible = true;
+                    //SaveDxButton.Visible = true;
                     SaveDemographics.Visible = true;
                     GuarCopyPatientLink.Visible = true;
                     InsCopyPatientLink.Visible = true;
@@ -328,6 +330,9 @@ namespace LabBilling.Forms
 
             dxBindingList = new BindingList<PatDiag>(currentAccount.Pat.Diagnoses);
             ShowCreditedChrgCheckBox.Checked = false;
+
+
+
             LoadSummaryTab();
             LoadDemographics();
             LoadCharges();
@@ -1286,23 +1291,35 @@ namespace LabBilling.Forms
 
         #region DiagnosisTab
 
-        DataTable dxPointers = new DataTable();
-        BindingSource dxPointerBindingSource = new BindingSource();
 
+
+        bool dxLoadingMode = false;
 
         private void LoadDx()
         {
             Log.Instance.Trace("Entering");
+
             DiagnosisDataGrid.DataSource = new BindingSource(dxBindingList, null);
 
-            LoadDxPointerGrid();
-
-        }
-        bool dxLoadingMode = false;
-
-        private void LoadDxPointerGrid()
-        {
             dxLoadingMode = true;
+
+            dxPointerBindingSource.DataSource = null;
+
+            dxPointerGrid2.DataSource = null;
+
+            int cnt = dxBindingList.Count;
+            string[] ptrStrings = new string[cnt+1];
+
+            ptrStrings[0] = "";
+
+            for (int z = 1; z < cnt+1; z++)
+            {
+                ptrStrings[z] = z.ToString();
+            }
+
+            dxPointers.Rows.Clear();
+            dxPointers.Columns.Clear();
+
             dxPointers.Columns.Add(new DataColumn()
             {
                 DataType = System.Type.GetType("System.String"),
@@ -1323,6 +1340,9 @@ namespace LabBilling.Forms
                 Caption = "Description",
                 ColumnName = "Description",
             });
+
+            dxPointerGrid2.Columns.Clear();
+            dxPointerGrid2.Rows.Clear();
 
             dxPointerGrid2.Columns.Add(new DataGridViewTextBoxColumn()
             {
@@ -1349,16 +1369,6 @@ namespace LabBilling.Forms
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
             });
 
-            int cnt = dxBindingList.Count;
-            string[] ptrStrings = new string[cnt+1];
-
-            ptrStrings[0] = "";
-
-            for (int z = 1; z < cnt+1; z++)
-            {
-                ptrStrings[z] = z.ToString();
-            }
-
             for (int i = 1; i < cnt+1; i++)
             {
                 dxPointers.Columns.Add(new DataColumn()
@@ -1376,7 +1386,8 @@ namespace LabBilling.Forms
                     ValueMember = nameof(PatDiag.Code),
                     DisplayMember = nameof(PatDiag.Code),
                     HeaderText = ptrStrings[i],
-                    FlatStyle = FlatStyle.Flat
+                    FlatStyle = FlatStyle.Flat,
+                    MinimumWidth = 100
                 });
             }
 
@@ -1387,25 +1398,32 @@ namespace LabBilling.Forms
             //load charges and pointers to grid
             foreach (var chrg in currentAccount.Charges)
             {
-                foreach (var chrgDetail in chrg.ChrgDetails)
+                if (!chrg.IsCredited)
                 {
-                    DataRow row = dxPointers.NewRow();
-                    row["CDM"] = chrg.CDMCode;
-                    row["CPT4"] = chrgDetail.Cpt4;
-                    row["Description"] = chrg.CdmDescription;
-
-                    string[] ptrs = chrgDetail.DiagnosisPointer.DiagnosisPointer.Split(':');
-                    for (int pi = 0; pi < ptrs.Length; pi++)
+                    foreach (var chrgDetail in chrg.ChrgDetails)
                     {
-                        if (ptrs[pi] == null || ptrs[pi] == "")
-                            continue;
-                        int iPtr = Convert.ToInt32(ptrs[pi]);
-                        if (iPtr > cnt)
-                            continue;
+                        DataRow row = dxPointers.NewRow();
+                        row["CDM"] = chrg.CDMCode;
+                        row["CPT4"] = chrgDetail.Cpt4;
+                        row["Description"] = chrg.CdmDescription;
 
-                        row[ptrStrings[pi + 1]] = dxBindingList.Where(x => x.No == iPtr).First().Code;
+                        if (chrgDetail.DiagnosisPointer != null)
+                        {
+                            string[] ptrs = chrgDetail.DiagnosisPointer.DiagnosisPointer.Split(':');
+                            for (int pi = 0; pi < ptrs.Length; pi++)
+                            {
+                                if (ptrs[pi] == null || ptrs[pi] == "")
+                                    continue;
+                                int iPtr = Convert.ToInt32(ptrs[pi]);
+                                if (iPtr > cnt)
+                                    continue;
+
+                                row[ptrStrings[pi + 1]] = dxBindingList.Where(x => x.No == iPtr).First().Code;
+                            }
+                        }
+
+                        dxPointers.Rows.Add(row);
                     }
-                    dxPointers.Rows.Add(row);
                 }
             }
             dxPointerGrid2.AutoResizeColumns();
@@ -1436,12 +1454,12 @@ namespace LabBilling.Forms
 
         private void dxPointerGrid2_CellEnter(object sender, DataGridViewCellEventArgs e)
         {
-            if (dxPointerGrid2.Columns[e.ColumnIndex].Name == "CDM" ||
-                dxPointerGrid2.Columns[e.ColumnIndex].Name == "CPT4" ||
-                dxPointerGrid2.Columns[e.ColumnIndex].Name == "Description")
-            {
-                SendKeys.Send("{TAB}");
-            }
+            //if (dxPointerGrid2.Columns[e.ColumnIndex].Name == "CDM" ||
+            //    dxPointerGrid2.Columns[e.ColumnIndex].Name == "CPT4" ||
+            //    dxPointerGrid2.Columns[e.ColumnIndex].Name == "Description")
+            //{
+            //    SendKeys.Send("{TAB}");
+            //}
         }
 
         private void dxPointerGrid2_CellValueChanged(object sender, DataGridViewCellEventArgs e)
@@ -1481,7 +1499,7 @@ namespace LabBilling.Forms
                         dxPointerGrid2[i, e.RowIndex].Style.BackColor = Color.White;
 
                         var dxValue = dxPointerGrid2[i, e.RowIndex].Value.ToString();
-                        var dxRecord = dxBindingList.Where(x => x.Code == dxPointerGrid2[i, e.RowIndex].Value.ToString()).First();
+                        var dxRecord = dxBindingList.Where(x => x.Code == dxValue).FirstOrDefault();
                         if (dxRecord != null && !string.IsNullOrEmpty(dxValue))
                         {
                             newPointer += $"{dxRecord.No}:";
@@ -1516,18 +1534,21 @@ namespace LabBilling.Forms
         private void DxSearchButton_Click(object sender, EventArgs e)
         {
             Log.Instance.Trace($"Entering");
-            var dictRecords = dictDxDb.Search(txtSearchDx.Text, currentAccount.TransactionDate.GetValueOrDefault(DateTime.Now));
+            if (!string.IsNullOrEmpty(txtSearchDx.Text))
+            {
+                var dictRecords = dictDxDb.Search(txtSearchDx.Text, currentAccount.TransactionDate.GetValueOrDefault(DateTime.Now));
 
-            DxSearchDataGrid.DataSource = dictRecords;
-            DxSearchDataGrid.Columns[nameof(DictDx.mod_date)].Visible = false;
-            DxSearchDataGrid.Columns[nameof(DictDx.mod_user)].Visible = false;
-            DxSearchDataGrid.Columns[nameof(DictDx.mod_prg)].Visible = false;
-            DxSearchDataGrid.Columns[nameof(DictDx.mod_host)].Visible = false;
-            DxSearchDataGrid.Columns[nameof(DictDx.IsDeleted)].Visible = false;
-            DxSearchDataGrid.Columns[nameof(DictDx.AmaYear)].Visible = false;
-            DxSearchDataGrid.Columns[nameof(DictDx.Id)].Visible = false;
-            DxSearchDataGrid.Columns[nameof(DictDx.Version)].Visible = false;
-            DxSearchDataGrid.Columns[nameof(DictDx.rowguid)].Visible = false;
+                DxSearchDataGrid.DataSource = dictRecords;
+                DxSearchDataGrid.Columns[nameof(DictDx.mod_date)].Visible = false;
+                DxSearchDataGrid.Columns[nameof(DictDx.mod_user)].Visible = false;
+                DxSearchDataGrid.Columns[nameof(DictDx.mod_prg)].Visible = false;
+                DxSearchDataGrid.Columns[nameof(DictDx.mod_host)].Visible = false;
+                DxSearchDataGrid.Columns[nameof(DictDx.IsDeleted)].Visible = false;
+                DxSearchDataGrid.Columns[nameof(DictDx.AmaYear)].Visible = false;
+                DxSearchDataGrid.Columns[nameof(DictDx.Id)].Visible = false;
+                DxSearchDataGrid.Columns[nameof(DictDx.Version)].Visible = false;
+                DxSearchDataGrid.Columns[nameof(DictDx.rowguid)].Visible = false;
+            }
         }
 
         private void DxSearchDataGrid_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
@@ -1688,9 +1709,12 @@ namespace LabBilling.Forms
             {
                 DiagnosisDataGrid.BackgroundColor = Color.White;
                 //MessageBox.Show(this, "Diagnoses updated successfully.");
+                LoadDx();
             }
             else
+            {
                 MessageBox.Show(this, "Diagnosis update failed.");
+            }
         }
 
         private void DiagnosisDataGrid_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)

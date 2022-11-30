@@ -75,7 +75,7 @@ namespace LabBilling.Core.BusinessLogic.Validators
 
                 RuleFor(c => c.Charges)
                     .Must(NotHaveDuplicateCdms)
-                    .WithMessage("Duplicate cdms")
+                    .WithMessage("Mutually Exclusive CDMs 5686066 and 5686078")
                     .When(a => a.Charges != null);
 
                 RuleFor(a => a.Charges)
@@ -237,7 +237,7 @@ namespace LabBilling.Core.BusinessLogic.Validators
             };
 
 
-            foreach(var chrg in chrgs)
+            foreach(var chrg in chrgs.Where(x => !x.IsCredited))
             {
                 if(duplicates.ContainsKey(chrg.CDMCode))
                 {
