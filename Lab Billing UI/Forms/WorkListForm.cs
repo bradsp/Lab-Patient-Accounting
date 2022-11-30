@@ -377,6 +377,9 @@ namespace LabBilling.Forms
             accountBindingSource.DataSource = accountTable;
 
             accountGrid.ForeColor = Color.Black;
+            accountGrid.Columns[nameof(AccountSearch.FirstName)].Visible = false;
+            accountGrid.Columns[nameof(AccountSearch.LastName)].Visible = false;
+            accountGrid.Columns[nameof(AccountSearch.MiddleName)].Visible = false;
             accountGrid.Columns[nameof(AccountSearch.mod_date)].Visible = false;
             accountGrid.Columns[nameof(AccountSearch.mod_host)].Visible = false;
             accountGrid.Columns[nameof(AccountSearch.mod_prg)].Visible = false;

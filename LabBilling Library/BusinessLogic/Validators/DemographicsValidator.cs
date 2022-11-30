@@ -18,16 +18,16 @@ namespace LabBilling.Core.BusinessLogic.Validators
                 .Cascade(CascadeMode.Stop)
                 .NotEmpty()
                 .Must(BeAValidAddress).WithMessage("{PropertyName} has invalid characters.");
-            //RuleFor(a => a.CityStateZip)
-            //    .Cascade(CascadeMode.Stop)
-            //    .NotEmpty().WithMessage("Patient Demographic {PropertyName} does not have a value")
-            //    .Equal(",").WithMessage("Patient Demographic {PropertyName} has no value");
             RuleFor(a => a.State)
                 .Cascade(CascadeMode.Stop)
                 .NotEmpty()
                 .Length(2).WithMessage("Patient State {PropertyName} must have 2 characters.");
-            RuleFor(a => a.City).NotEmpty().WithMessage("Patient {PropertyName} is empty.");
-            RuleFor(a => a.ZipCode).NotEmpty().WithMessage("Patient {PropertyName} is empty.");
+            RuleFor(a => a.City)
+                .NotEmpty()
+                .WithMessage("Patient {PropertyName} is empty.");
+            RuleFor(a => a.ZipCode)
+                .NotEmpty()
+                .WithMessage("Patient {PropertyName} is empty.");
             RuleFor(a => a.GuarRelationToPatient)
                 .NotEmpty().WithMessage("Guarantor relationship is not selected.");
             RuleFor(a => a.GuarantorLastName)
@@ -51,13 +51,6 @@ namespace LabBilling.Core.BusinessLogic.Validators
             RuleFor(a => a.Physician).SetValidator(new PhysicianValidator())
                 .When(a => !string.IsNullOrEmpty(a.ProviderId));
 
-        }
-
-        private bool BeAValidName(string name)
-        {
-            name = name.Replace(" ", "");
-            name = name.Replace("-", "");
-            return name.All(Char.IsLetter);
         }
 
         private bool BeAValidAddress(string address)

@@ -307,28 +307,14 @@ namespace LabBilling.Core.BusinessLogic
                     ins.FinCode = insc.FinancialCode;
                 }
             }
-
-            switch (accountRecord.Client.BillMethod)
+            if (accountRecord.Client != null)
             {
-                case "INVOICE":
-                    accountRecord.FinCode = "Y";
-                    break;
-                case "PATIENT":
-                    if (accountRecord.Insurances.Count > 0)
-                    {
-                        if (accountRecord.FinCode != accountRecord.Insurances[0].FinCode)
-                        {
-                            accountRecord.FinCode = accountRecord.Insurances[0].FinCode;
-                        }
-                    }
-                    if (accountRecord.FinCode == "Y")
-                    {
-                        accountRecord.FinCode = "K";
-                    }
-                    break;
-                case "PER ACCOUNT":
-                    if (accountRecord.FinCode != "Y")
-                    {
+                switch (accountRecord.Client.BillMethod)
+                {
+                    case "INVOICE":
+                        accountRecord.FinCode = "Y";
+                        break;
+                    case "PATIENT":
                         if (accountRecord.Insurances.Count > 0)
                         {
                             if (accountRecord.FinCode != accountRecord.Insurances[0].FinCode)
@@ -336,20 +322,36 @@ namespace LabBilling.Core.BusinessLogic
                                 accountRecord.FinCode = accountRecord.Insurances[0].FinCode;
                             }
                         }
-                    }
-                    break;
-                default:
-                    if (accountRecord.FinCode != "Y")
-                    {
-                        if (accountRecord.Insurances.Count > 0)
+                        if (accountRecord.FinCode == "Y")
                         {
-                            if (accountRecord.FinCode != accountRecord.Insurances[0].FinCode)
+                            accountRecord.FinCode = "K";
+                        }
+                        break;
+                    case "PER ACCOUNT":
+                        if (accountRecord.FinCode != "Y")
+                        {
+                            if (accountRecord.Insurances.Count > 0)
                             {
-                                accountRecord.FinCode = accountRecord.Insurances[0].FinCode;
+                                if (accountRecord.FinCode != accountRecord.Insurances[0].FinCode)
+                                {
+                                    accountRecord.FinCode = accountRecord.Insurances[0].FinCode;
+                                }
                             }
                         }
-                    }
-                    break;
+                        break;
+                    default:
+                        if (accountRecord.FinCode != "Y")
+                        {
+                            if (accountRecord.Insurances.Count > 0)
+                            {
+                                if (accountRecord.FinCode != accountRecord.Insurances[0].FinCode)
+                                {
+                                    accountRecord.FinCode = accountRecord.Insurances[0].FinCode;
+                                }
+                            }
+                        }
+                        break;
+                }
             }
 
             if (string.IsNullOrEmpty(accountRecord.FinCode))
@@ -626,6 +628,12 @@ namespace LabBilling.Core.BusinessLogic
         private void ParsePV1()
         {
             accountRecord.ClientMnem = string.IsNullOrEmpty(hl7Message.GetValue("PV1.3.1")) ? hl7Message.GetValue("PV1.3.1") : mappingRepository.GetMappedValue("CLIENT", "CERNER", hl7Message.GetValue("PV1.3.1"));
+
+            if(string.IsNullOrEmpty(accountRecord.ClientMnem))
+            {
+                accountRecord.ClientMnem = string.IsNullOrEmpty(hl7Message.GetValue("PV1.6.1")) ? hl7Message.GetValue("PV1.6.1") : mappingRepository.GetMappedValue("CLIENT", "CERNER", hl7Message.GetValue("PV1.6.1"));
+            }
+
             if (string.IsNullOrEmpty(accountRecord.ClientMnem))
             {
                 accountRecord.ClientMnem = string.IsNullOrEmpty(hl7Message.GetValue("PV1.3.4")) ? hl7Message.GetValue("PV1.3.4")

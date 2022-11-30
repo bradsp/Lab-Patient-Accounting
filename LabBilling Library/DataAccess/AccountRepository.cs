@@ -105,9 +105,6 @@ namespace LabBilling.Core.DataAccess
             {
                 record.Pat = patRepository.GetByAccount(record);
                 record.Insurances = insRepository.GetByAccount(account);
-                record.InsurancePrimary = insRepository.GetByAccount(account, InsCoverage.Primary);
-                record.InsuranceSecondary = insRepository.GetByAccount(account, InsCoverage.Secondary);
-                record.InsuranceTertiary = insRepository.GetByAccount(account, InsCoverage.Tertiary);
                 record.Charges = chrgRepository.GetByAccount(account);
                 record.Payments = chkRepository.GetByAccount(account);
                 record.Notes = accountNoteRepository.GetByAccount(account);
@@ -147,18 +144,20 @@ namespace LabBilling.Core.DataAccess
                         if (record.InsurancePrimary != null)
                         {
                             record.BillingType = "REF LAB";
-                            if (record.FinCode == "B" && record.InsurancePrimary.PolicyNumber.StartsWith("ZXK"))
-                            {
-                                record.BillForm = "QUEST";
-                            }
-                            else if (record.FinCode == "D" && record.TransactionDate.IsBetween(questStartDate, questEndDate))
-                            {
-                                record.BillForm = "QUEST";
-                            }
-                            else
-                            {
-                                record.BillForm = record.InsurancePrimary.InsCompany.BillForm;
-                            }
+                            record.BillForm = record.InsurancePrimary.InsCompany.BillForm;
+
+                            //if (record.FinCode == "B" && record.InsurancePrimary.PolicyNumber.StartsWith("ZXK"))
+                            //{
+                            //    record.BillForm = "QUEST";
+                            //}
+                            //else if (record.FinCode == "D" && record.TransactionDate.IsBetween(questStartDate, questEndDate))
+                            //{
+                            //    record.BillForm = "QUEST";
+                            //}
+                            //else
+                            //{
+                            //    record.BillForm = record.InsurancePrimary.InsCompany.BillForm;
+                            //}
                         }
                         else
                         {
@@ -734,52 +733,65 @@ namespace LabBilling.Core.DataAccess
         {
             Log.Instance.Trace($"Entering - account {account}");
 
-            BusinessLogic.Validators.ClaimValidator claimValidator = new BusinessLogic.Validators.ClaimValidator();
-
-            account.LmrpErrors = ValidateLMRP(account);
-
-            var validationResult = claimValidator.Validate(account);
-            bool isAccountValid = false;
-
-            string lmrperrors = null;
-            foreach (var error in account.LmrpErrors)
+            try
             {
-                account.AccountValidationStatus.validation_text += error + "\n";
-                lmrperrors += error + "\n";
+                BusinessLogic.Validators.ClaimValidator claimValidator = new BusinessLogic.Validators.ClaimValidator();
+                account.LmrpErrors = ValidateLMRP(account);
+                var validationResult = claimValidator.Validate(account);
+
+                bool isAccountValid = false;
+
+                string lmrperrors = null;
+                foreach (var error in account.LmrpErrors)
+                {
+                    account.AccountValidationStatus.validation_text += error + "\n";
+                    lmrperrors += error + "\n";
+                }
+
+                account.AccountValidationStatus.account = account.AccountNo;
+                account.AccountValidationStatus.mod_date = DateTime.Now;
+
+                if (!validationResult.IsValid)
+                {
+                    isAccountValid = false;
+                    account.AccountValidationStatus.validation_text = validationResult.ToString();
+                }
+                else if (account.LmrpErrors.Count > 0)
+                {
+                    isAccountValid = false;
+                }
+                else
+                {
+                    isAccountValid = true;
+                    account.AccountValidationStatus.validation_text = "No validation errors.";
+                }
+
+                accountValidationStatusRepository.Save(account.AccountValidationStatus);
+                if (!string.IsNullOrEmpty(lmrperrors))
+                {
+                    AccountLmrpError record = new AccountLmrpError();
+                    record.AccountNo = account.AccountNo;
+                    record.DateOfService = (DateTime)account.TransactionDate;
+                    record.ClientMnem = account.ClientMnem;
+                    record.FinancialCode = account.FinCode;
+                    record.Error = lmrperrors;
+
+                    accountLmrpErrorRepository.Save(record);
+                }
+
+                return isAccountValid;
+            }
+            catch(Exception ex)
+            {
+                Log.Instance.Error(ex);
+
+                account.AccountValidationStatus.account = account.AccountNo;
+                account.AccountValidationStatus.mod_date = DateTime.Now;
+                account.AccountValidationStatus.validation_text = "Exception during Validation. Unable to validate.";
+                accountValidationStatusRepository.Save(account.AccountValidationStatus);
             }
 
-            account.AccountValidationStatus.account = account.AccountNo;
-            account.AccountValidationStatus.mod_date = DateTime.Now;
-
-            if (!validationResult.IsValid)
-            {
-                isAccountValid = false;
-                account.AccountValidationStatus.validation_text = validationResult.ToString();
-            }
-            else if (account.LmrpErrors.Count > 0)
-            {
-                isAccountValid = false;
-            }
-            else
-            {
-                isAccountValid = true;
-                account.AccountValidationStatus.validation_text = "No validation errors.";
-            }
-
-            accountValidationStatusRepository.Save(account.AccountValidationStatus);
-            if (!string.IsNullOrEmpty(lmrperrors))
-            {
-                AccountLmrpError record = new AccountLmrpError();
-                record.AccountNo = account.AccountNo;
-                record.DateOfService = (DateTime)account.TransactionDate;
-                record.ClientMnem = account.ClientMnem;
-                record.FinancialCode = account.FinCode;
-                record.Error = lmrperrors;
-
-                accountLmrpErrorRepository.Save(record);
-            }
-
-            return isAccountValid;
+            return false;
         }
 
         private List<string> ValidateLMRP(Account account)

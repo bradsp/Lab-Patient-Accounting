@@ -69,7 +69,8 @@ namespace LabBilling.Forms
             client.DoNotBill = chkDoNotBill.Checked;
             client.PrintCptOnInvoice = chkPrintCPTonBill.Checked;
 
-            client.Discounts = Helper.ConvertToList<ClientDiscount>(clientDiscountDataTable);
+            if(clientDiscountDataTable != null)
+                client.Discounts = Helper.ConvertToList<ClientDiscount>(clientDiscountDataTable);
 
             DialogResult = DialogResult.OK;
             return;

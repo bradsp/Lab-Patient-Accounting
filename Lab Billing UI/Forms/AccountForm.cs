@@ -1410,7 +1410,11 @@ namespace LabBilling.Forms
                         if (chrgDetail.DiagnosisPointer != null)
                         {
                             string[] ptrs = chrgDetail.DiagnosisPointer.DiagnosisPointer.Split(':');
-                            for (int pi = 0; pi < ptrs.Length; pi++)
+                            if(ptrs.Length > cnt)
+                            {
+
+                            }
+                            for (int pi = 0; pi < cnt && pi < ptrs.Length; pi++)
                             {
                                 if (ptrs[pi] == null || ptrs[pi] == "")
                                     continue;
@@ -1709,7 +1713,7 @@ namespace LabBilling.Forms
             {
                 DiagnosisDataGrid.BackgroundColor = Color.White;
                 //MessageBox.Show(this, "Diagnoses updated successfully.");
-                LoadDx();
+                RefreshAccountData();
             }
             else
             {
@@ -2244,15 +2248,11 @@ namespace LabBilling.Forms
 
         private void dxPointerGrid2_DataError(object sender, DataGridViewDataErrorEventArgs e)
         {
-            //if (e.Exception.Message == "DataGridViewComboBoxCell value is not valid.")
-            //{
-            //    object value = dxPointerGrid2.Rows[e.RowIndex].Cells[e.ColumnIndex].Value;
-            //    if (!((DataGridViewComboBoxColumn)dxPointerGrid2.Columns[e.ColumnIndex]).Items.Contains(value))
-            //    {
-            //        ((DataGridViewComboBoxColumn)dxPointerGrid2.Columns[e.ColumnIndex]).Items.Add(value);
-            //        e.ThrowException = false;
-            //    }
-            //}
+
+            Log.Instance.Error(e.Exception, e.Exception.Message);
+
+            return;
+
         }
 
 

@@ -54,7 +54,11 @@ namespace LabBilling.Core.DataAccess
                     ins.HolderFullName = $"{ins.HolderLastName},{ins.HolderFirstName} {ins.HolderMiddleName}";
                 }
 
-                ins.InsCompany = dbConnection.SingleOrDefault<InsCompany>("where code = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = ins.InsCode });
+                if (ins.InsCode != null)
+                {
+                    ins.InsCompany = dbConnection.SingleOrDefault<InsCompany>("where code = @0",
+                        new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = ins.InsCode });
+                }
                 if (ins.InsCompany == null)
                     ins.InsCompany = new InsCompany();
 
@@ -81,8 +85,11 @@ namespace LabBilling.Core.DataAccess
                 new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = coverage.ToString() });
             if (record != null)
             {
-                record.InsCompany = dbConnection.SingleOrDefault<InsCompany>("where code = @0", 
-                    new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = record.InsCode });
+                if (record.InsCode != null)
+                {
+                    record.InsCompany = dbConnection.SingleOrDefault<InsCompany>("where code = @0",
+                        new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = record.InsCode });
+                }
                 if (record.InsCompany == null)
                     record.InsCompany = new InsCompany();
 

@@ -54,9 +54,11 @@ namespace LabBilling.Core.BusinessLogic.Validators
 
                 RuleFor(a => a.TotalCharges)
                     .GreaterThan(0);
+
                 RuleFor(a => a.Charges.Sum(x => x.Quantity))
                     .GreaterThan(0).WithMessage("Charge qty nets zero")
                     .When(ac => ac.Charges.Count > 0);
+
                 RuleForEach(a => a.Charges)
                     .SetValidator(new ChargeValidator())
                     .When(ac => ac.Charges.Count > 0);

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using PetaPoco;
 
 namespace LabBilling.Core.Models
@@ -172,11 +173,29 @@ namespace LabBilling.Core.Models
         }
 
         [Ignore]
-        public Ins InsurancePrimary { get; set; } = new Ins();
+        public Ins InsurancePrimary
+        {
+            get
+            {
+                return Insurances.Where(i => i.Coverage == "A").FirstOrDefault();
+            }
+        }
         [Ignore]
-        public Ins InsuranceSecondary { get; set; } = new Ins();
+        public Ins InsuranceSecondary
+        {
+            get
+            {
+                return Insurances.Where(i => i.Coverage == "B").FirstOrDefault();
+            }
+        }
         [Ignore]
-        public Ins InsuranceTertiary { get; set; } = new Ins();
+        public Ins InsuranceTertiary
+        {
+            get
+            {
+                return Insurances.Where(i => i.Coverage == "C").FirstOrDefault();
+            }
+        }
 
         [Ignore]
         public List<string> LmrpErrors { get; set; } = new List<string>();

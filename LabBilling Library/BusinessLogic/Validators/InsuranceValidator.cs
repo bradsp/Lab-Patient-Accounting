@@ -32,15 +32,20 @@ namespace LabBilling.Core.BusinessLogic.Validators
                     else
                         return true;
                 }).WithMessage("Both Policy Number and Group Number are empty.");
+
             RuleFor(a => a.PolicyNumber)
                 .Must(BeAValidPolicyNumber).WithMessage("Ins Policy Number is not correct format.")
                 .When(a => !string.IsNullOrEmpty(a.PolicyNumber));
+
             RuleFor(a => a.GroupNumber)
                 .Must(BeAValidGroupNumber).WithMessage("Ins Group Number is not a valid format.")
                 .When(a => !string.IsNullOrEmpty(a.GroupNumber));
+
             RuleFor(a => a.PlanName)
-                .Must(BeAValidName).WithMessage("Ins Plan Name contains invalid characters.")
-                .NotEmpty().WithMessage("Ins Plan Name is empty.");
+                .Cascade(CascadeMode.Stop)
+                .NotEmpty().WithMessage("Ins Plan Name is empty.")
+                .Must(BeAValidName).WithMessage("Ins Plan Name contains invalid characters.");
+
             RuleFor(a => a.InsCompany)
                 .Must((insc) =>
                 {
@@ -49,8 +54,10 @@ namespace LabBilling.Core.BusinessLogic.Validators
                     else
                         return true;
                 }).WithMessage("Plan must contain an address.");
+
             RuleFor(a => a.InsCompany.NThrivePayerNo)
                 .NotEmpty().WithMessage("NThrive payer code is not defined for this payer.");
+
             RuleFor(a => a.Coverage)
                 .Must((a) =>
                 {
