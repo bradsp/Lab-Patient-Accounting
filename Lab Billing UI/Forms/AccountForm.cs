@@ -293,7 +293,7 @@ namespace LabBilling.Forms
             {
                 Log.Instance.Debug($"Loading account data for {SelectedAccount}");
                 userProfileDB.InsertRecentAccount(SelectedAccount, Program.LoggedInUser.UserName);
-                LoadAccountData();
+                //LoadAccountData();
 
                 AddOnChangeHandlerToInputControls(tabDemographics);
                 AddOnChangeHandlerToInputControls(tabGuarantor);
@@ -314,8 +314,6 @@ namespace LabBilling.Forms
             LoadAccountData();
         }
 
-        #endregion
-
         /// <summary>
         /// Loads account object from database and refreshes the form controls.
         /// </summary>
@@ -331,15 +329,7 @@ namespace LabBilling.Forms
             dxBindingList = new BindingList<PatDiag>(currentAccount.Pat.Diagnoses);
             ShowCreditedChrgCheckBox.Checked = false;
 
-
-
-            LoadSummaryTab();
-            LoadDemographics();
-            LoadCharges();
-            LoadPayments();
-            LoadDx();
-            LoadNotes();
-            LoadBillingActivity();
+            RefreshAccountData();
         }
 
         /// <summary>
@@ -349,6 +339,7 @@ namespace LabBilling.Forms
         {
             LoadSummaryTab();
             LoadDemographics();
+            LoadInsuranceData();
             LoadCharges();
             LoadPayments();
             LoadDx();
@@ -460,6 +451,10 @@ namespace LabBilling.Forms
             #endregion
         }
 
+        #endregion
+
+        #region DemographicTab
+
         private void LoadDemographics()
         {
             Log.Instance.Trace("Entering");
@@ -477,8 +472,6 @@ namespace LabBilling.Forms
             bannerDateOfServiceTextBox.Text = currentAccount.TransactionDate.GetValueOrDefault().ToShortDateString();
 
             TotalChargesTextBox.Text = currentAccount.TotalCharges.ToString("c");
-
-            //this.Text = $" {currentAccount.pat_name} - Demographics";
 
             BannerNameTextBox.Text = currentAccount.PatFullName;
             BannerAccountTextBox.Text = _selectedAccount;
@@ -524,6 +517,7 @@ namespace LabBilling.Forms
 
             providerLookup1.SelectedValue = currentAccount.Pat.ProviderId;
             providerLookup1.DisplayValue = currentAccount.Pat.Physician.FullName;
+            providerLookup1.BackColor = Color.White;
 
             GuarantorLastNameTextBox.Text = currentAccount.Pat.GuarantorLastName;
             GuarFirstNameTextBox.Text = currentAccount.Pat.GuarantorFirstName;
@@ -536,6 +530,74 @@ namespace LabBilling.Forms
             GuarantorPhoneTextBox.Text = currentAccount.Pat.GuarantorPrimaryPhone;
             GuarantorRelationComboBox.SelectedValue = currentAccount.Pat.GuarRelationToPatient != null ? currentAccount.Pat.GuarRelationToPatient : "";
 
+            ResetControls(tabDemographics.Controls.OfType<Control>().ToArray());
+            ResetControls(tabGuarantor.Controls.OfType<Control>().ToArray());
+        }
+
+        private void InsCopyPatientLink_LinkClicked_1(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Log.Instance.Trace($"Entering");
+            Log.Instance.Debug($"Copying patient data to insurance holder.");
+            //copy patient data for insurance holder info
+            HolderLastNameTextBox.Text = LastNameTextBox.Text;
+            HolderFirstNameTextBox.Text = FirstNameTextBox.Text;
+            HolderMiddleNameTextBox.Text = MiddleNameTextBox.Text;
+            HolderAddressTextBox.Text = Address1TextBox.Text;
+            HolderCityTextBox.Text = CityTextBox.Text;
+            HolderStateComboBox.SelectedValue = StateComboBox.SelectedValue;
+            HolderZipTextBox.Text = ZipcodeTextBox.Text;
+            HolderDOBTextBox.Text = DateOfBirthTextBox.Text;
+            HolderSexComboBox.SelectedValue = SexComboBox.SelectedValue;
+            InsRelationComboBox.SelectedValue = "01";
+        }
+
+        private void SaveDemographics_Click(object sender, EventArgs e)
+        {
+            Log.Instance.Trace($"Entering");
+
+            currentAccount.PatFullName = $"{LastNameTextBox.Text} {SuffixTextBox.Text},{FirstNameTextBox.Text} {MiddleNameTextBox.Text}";
+            currentAccount.PatLastName = LastNameTextBox.Text;
+            currentAccount.PatFirstName = FirstNameTextBox.Text;
+            currentAccount.PatMiddleName = MiddleNameTextBox.Text;
+            currentAccount.SocSecNo = SocSecNoTextBox.Text;
+            currentAccount.BirthDate = DateTime.Parse(DateOfBirthTextBox.Text);
+            currentAccount.Sex = SexComboBox.SelectedValue.ToString();
+
+            accDB.Update(currentAccount);
+
+            currentAccount.Pat.Address1 = Address1TextBox.Text;
+            currentAccount.Pat.Address2 = Address2TextBox.Text;
+            currentAccount.Pat.EmailAddress = EmailAddressTextBox.Text;
+            currentAccount.Pat.MaritalStatus = MaritalStatusComboBox.SelectedValue.ToString();
+            currentAccount.Pat.PrimaryPhone = PhoneTextBox.Text;
+            currentAccount.Pat.City = CityTextBox.Text;
+            currentAccount.Pat.State = StateComboBox.SelectedValue.ToString();
+            currentAccount.Pat.ZipCode = ZipcodeTextBox.Text;
+            currentAccount.Pat.CityStateZip = string.Format("{0}, {1} {2}", CityTextBox.Text, StateComboBox.SelectedValue.ToString(), ZipcodeTextBox.Text);
+            currentAccount.Pat.PatFullName = string.Format("{0},{1} {2}", LastNameTextBox.Text, FirstNameTextBox.Text, MiddleNameTextBox.Text);
+            currentAccount.Pat.ProviderId = providerLookup1.SelectedValue;
+            //currentAccount.Pat.SocSecNo = tbSSN.Text;
+
+            patDB.SaveAll(currentAccount.Pat);
+
+            var controls = tabDemographics.Controls; //tabDemographics.Controls;
+
+            foreach (Control control in controls)
+            {
+                //set background back to white to indicate change has been saved to database
+                control.BackColor = Color.White;
+            }
+
+            this.LoadAccountData();
+
+        }
+
+        #endregion
+
+        #region InsuranceTab
+
+        private void LoadInsuranceData()
+        {
             insGridSource = null;
             InsuranceDataGrid.DataSource = null;
             InsuranceDataGrid.Rows.Clear();
@@ -600,73 +662,8 @@ namespace LabBilling.Forms
             //insAddMode = false;
             AddInsuranceButton.Enabled = true;
             SaveInsuranceButton.Enabled = false;
-            ResetControls(tabDemographics.Controls.OfType<Control>().ToArray());
-        }
-
-        #region DemographicTab
-
-
-        private void InsCopyPatientLink_LinkClicked_1(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            Log.Instance.Trace($"Entering");
-            Log.Instance.Debug($"Copying patient data to insurance holder.");
-            //copy patient data for insurance holder info
-            HolderLastNameTextBox.Text = LastNameTextBox.Text;
-            HolderFirstNameTextBox.Text = FirstNameTextBox.Text;
-            HolderMiddleNameTextBox.Text = MiddleNameTextBox.Text;
-            HolderAddressTextBox.Text = Address1TextBox.Text;
-            HolderCityTextBox.Text = CityTextBox.Text;
-            HolderStateComboBox.SelectedValue = StateComboBox.SelectedValue;
-            HolderZipTextBox.Text = ZipcodeTextBox.Text;
-            HolderDOBTextBox.Text = DateOfBirthTextBox.Text;
-            HolderSexComboBox.SelectedValue = SexComboBox.SelectedValue;
-            InsRelationComboBox.SelectedValue = "01";
-        }
-
-        private void SaveDemographics_Click(object sender, EventArgs e)
-        {
-            Log.Instance.Trace($"Entering");
-
-            currentAccount.PatFullName = $"{LastNameTextBox.Text} {SuffixTextBox.Text},{FirstNameTextBox.Text} {MiddleNameTextBox.Text}";
-            currentAccount.PatLastName = LastNameTextBox.Text;
-            currentAccount.PatFirstName = FirstNameTextBox.Text;
-            currentAccount.PatMiddleName = MiddleNameTextBox.Text;
-            currentAccount.SocSecNo = SocSecNoTextBox.Text;
-            currentAccount.BirthDate = DateTime.Parse(DateOfBirthTextBox.Text);
-            currentAccount.Sex = SexComboBox.SelectedValue.ToString();
-
-            accDB.Update(currentAccount);
-
-            currentAccount.Pat.Address1 = Address1TextBox.Text;
-            currentAccount.Pat.Address2 = Address2TextBox.Text;
-            currentAccount.Pat.EmailAddress = EmailAddressTextBox.Text;
-            currentAccount.Pat.MaritalStatus = MaritalStatusComboBox.SelectedValue.ToString();
-            currentAccount.Pat.PrimaryPhone = PhoneTextBox.Text;
-            currentAccount.Pat.City = CityTextBox.Text;
-            currentAccount.Pat.State = StateComboBox.SelectedValue.ToString();
-            currentAccount.Pat.ZipCode = ZipcodeTextBox.Text;
-            currentAccount.Pat.CityStateZip = string.Format("{0}, {1} {2}", CityTextBox.Text, StateComboBox.SelectedValue.ToString(), ZipcodeTextBox.Text);
-            currentAccount.Pat.PatFullName = string.Format("{0},{1} {2}", LastNameTextBox.Text, FirstNameTextBox.Text, MiddleNameTextBox.Text);
-            currentAccount.Pat.ProviderId = providerLookup1.SelectedValue;
-            //currentAccount.Pat.SocSecNo = tbSSN.Text;
-
-            patDB.SaveAll(currentAccount.Pat);
-
-            var controls = tabDemographics.Controls; //tabDemographics.Controls;
-
-            foreach (Control control in controls)
-            {
-                //set background back to white to indicate change has been saved to database
-                control.BackColor = Color.White;
-            }
-
-            this.LoadAccountData();
 
         }
-
-        #endregion
-
-        #region InsuranceTab
 
         private void SaveInsuranceButton_Click(object sender, EventArgs e)
         {
@@ -1290,8 +1287,6 @@ namespace LabBilling.Forms
         #endregion
 
         #region DiagnosisTab
-
-
 
         bool dxLoadingMode = false;
 
@@ -2094,7 +2089,6 @@ namespace LabBilling.Forms
             }
         }
 
-
         private void providerLookup1_SelectedValueChanged(object source, EventArgs args)
         {
             string phy = providerLookup1.SelectedValue;
@@ -2255,6 +2249,9 @@ namespace LabBilling.Forms
 
         }
 
-
+        private void AccountForm_Activated(object sender, EventArgs e)
+        {
+            LoadAccountData();
+        }
     }
 }

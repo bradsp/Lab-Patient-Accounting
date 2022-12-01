@@ -400,8 +400,13 @@ namespace LabBilling.Core.DataAccess
 
                 //TODO: is there any reason a date of service change should result in changing all charges --
                 // except: the date of service on charges will not match new date.
+                
                 // option: reprocess all charges, or update service date on charge records
-
+                foreach(var chrg in table.Charges)
+                {
+                    chrg.ServiceDate = newDate;
+                    chrgRepository.Update(chrg);
+                }
             }
             else
             {
