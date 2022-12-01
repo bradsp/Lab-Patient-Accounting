@@ -52,8 +52,8 @@ namespace LabBilling.Legacy
                 MessageBox.Show("Not enough arguments to start this application", propAppName);
                 Environment.Exit(13);
             }
-            m_strServer = args[0].Remove(0, 1);
-            m_strDatabase = args[1].Remove(0, 1);
+            m_strServer = args[0]; //.Remove(0, 1);
+            m_strDatabase = args[1]; //.Remove(0, 1);
             m_strProductionEnvironment = m_strDatabase.Contains("LIVE") ? "LIVE" : "TEST";
             string[] strArgs = new string[3];
             strArgs[0] = string.Format("/{0}", m_strProductionEnvironment);

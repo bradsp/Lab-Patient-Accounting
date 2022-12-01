@@ -252,15 +252,22 @@ namespace LabBilling
         private void UpdateMenuAccess()
         {
             generateClaimsToolStripMenuItem.Visible = Program.LoggedInUser.CanSubmitBilling;
-            systemAdministrationToolStripMenuItem.Visible = Program.LoggedInUser.IsAdministrator;
             batchRemittanceToolStripMenuItem.Visible = Program.LoggedInUser.CanAddPayments;
-            sSISubmissionToolStripMenuItem.Visible = Program.LoggedInUser.CanSubmitBilling;
-            sSISubmissionToolStripMenuItem1.Visible = Program.LoggedInUser.CanSubmitBilling;
             badDebtMaintenanceToolStripMenuItem.Visible = Program.LoggedInUser.CanModifyBadDebt;
             posting835RemitToolStripMenuItem.Visible = Program.LoggedInUser.CanAddPayments;
             batchChargeEntryToolStripMenuItem.Visible = Program.LoggedInUser.CanSubmitCharges;
 
-            if(Program.LoggedInUser.Access == "VIEW")
+            //administrator only menu items
+            systemAdministrationToolStripMenuItem.Visible = Program.LoggedInUser.IsAdministrator;
+            workqueuesToolStripMenuItem.Visible = Program.LoggedInUser.IsAdministrator;
+            sSISubmissionToolStripMenuItem.Visible = Program.LoggedInUser.IsAdministrator; //Program.LoggedInUser.CanSubmitBilling;
+            sSISubmissionToolStripMenuItem1.Visible = Program.LoggedInUser.IsAdministrator; //Program.LoggedInUser.CanSubmitBilling;
+            clientBillsToolStripMenuItem.Visible = Program.LoggedInUser.IsAdministrator;
+            questProcessingToolStripMenuItem.Visible = Program.LoggedInUser.IsAdministrator;
+            questProcessingToolStripMenuItem1.Visible = Program.LoggedInUser.IsAdministrator;
+            globalBillingToolStripMenuItem.Visible = Program.LoggedInUser.IsAdministrator;
+
+            if (Program.LoggedInUser.Access == "VIEW")
             {
                 duplicateAccountsToolStripMenuItem.Visible = false;
                 questCorrectionsToolStripMenuItem.Visible = false;
