@@ -28,6 +28,10 @@ namespace LabBilling.Library
 
         protected override void OnKeyPress(KeyPressEventArgs e, int rowIndex)
         {
+            if(this == null || this.Value == null)
+            {
+                return;
+            }
             // allows only numbers, dashes, slashes, or date computation (T, T-1, T+1, etc);
             // allows only numbers, decimals and control characters
             if (!Char.IsDigit(e.KeyChar) && !Char.IsControl(e.KeyChar) && e.KeyChar != '/' && e.KeyChar != '-' && e.KeyChar != 'T' && e.KeyChar != 't')

@@ -10,6 +10,7 @@ using RFClassLibrary;
 using System.Data;
 using MetroFramework.Forms;
 using System.Security.Principal;
+using System.Drawing;
 
 namespace LabBilling.Forms
 {
@@ -177,7 +178,7 @@ namespace LabBilling.Forms
 
             List<Chk> chks = new List<Chk>();
             chkdb.BeginTransaction();
-            foreach(DataGridViewRow row in dgvPayments.Rows)
+            foreach (DataGridViewRow row in dgvPayments.Rows)
             {
                 if (row.IsNewRow)
                     continue;
@@ -273,6 +274,8 @@ namespace LabBilling.Forms
 
             EntryMode.SelectedIndex = 0;
 
+            SetCellsReadonly(0, true);
+
             LoadOpenBatches();
         }
 
@@ -336,31 +339,6 @@ namespace LabBilling.Forms
 
         }
 
-        private void dgvPayments_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-            //Log.Instance.Trace($"Entering");
-            //var senderGrid = (DataGridView)sender;
-
-            //if (senderGrid.Columns[e.ColumnIndex] is DataGridViewButtonColumn &&
-            //    e.RowIndex >= 0)
-            //{
-            //    //TODO - Button Clicked - Launch account search box - return selected account#
-            //    Log.Instance.Debug($"Entering");
-            //    PersonSearchForm frm = new PersonSearchForm();
-            //    frm.ShowDialog();
-            //    if (frm.SelectedAccount != "" && frm.SelectedAccount != null)
-            //    {
-            //        dgvPayments["Account",e.RowIndex].Value = frm.SelectedAccount;
-                    
-            //    }
-            //    else
-            //    {
-            //        Log.Instance.Error($"Person search returned an empty selected account.");
-            //        MessageBox.Show("A valid account number was not returned from search. Please try again. If problem persists, report issue to an administrator.");
-            //    }
-            //}
-        }
-
         private void dgvPayments_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
             Log.Instance.Trace($"Entering");
@@ -374,6 +352,18 @@ namespace LabBilling.Forms
                     strAccount = strAccount.ToUpper();
                     account = accdb.GetByAccount(strAccount, true);
                 }
+                else
+                {
+                    return;
+                }
+
+                if (account == null)
+                {
+                    MessageBox.Show($"Account {strAccount} not found.", "Account not found.");
+                    dgvPayments["Account", e.RowIndex].Value = string.Empty;
+                    dgvPayments.CurrentCell = dgvPayments.Rows[e.RowIndex].Cells["Account"];
+                    return;
+                }
 
                 if (account != null)
                 {
@@ -381,11 +371,23 @@ namespace LabBilling.Forms
                     dgvPayments["PatientName", e.RowIndex].Value = account.PatFullName;
                     dgvPayments["Balance", e.RowIndex].Value = account.Balance;
                     dgvPayments.CurrentCell = dgvPayments["CheckNo", e.RowIndex];
+
+                    //clear the readonly flag on the cells
+                    SetCellsReadonly(e.RowIndex, false);
                 }
 
             }
 
         }
+
+        private void SetCellsReadonly(int rowIndex, bool setReadonly)
+        {
+            for (int i = 3; i < dgvPayments.ColumnCount; i++)
+            {
+                dgvPayments[i, rowIndex].ReadOnly = setReadonly;
+            }
+        }
+
 
         private void dgvPayments_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
         {
@@ -394,6 +396,11 @@ namespace LabBilling.Forms
             //This will protect against invalid data being written to the database if columns containing data are hidden.
             if (dgvPayments.Rows.Count > 0)
                 EntryMode.Enabled = false;
+
+            //make all the cells readonly until a valid account has been entered
+
+            SetCellsReadonly(e.RowIndex, true);
+
         }
 
         private void TotalPayments()
@@ -501,11 +508,18 @@ namespace LabBilling.Forms
         {
 
             var senderGrid = (DataGridView)sender;
-
-            if (senderGrid.CurrentRow.Cells[e.ColumnIndex].ReadOnly)
+            if (senderGrid.Columns[e.ColumnIndex].Name == "PatientName")
             {
-                SendKeys.Send("{tab}");
+                if (senderGrid.CurrentRow.Cells[e.ColumnIndex].Value == null)
+                {
+                    return;
+                }
             }
+
+            //if (senderGrid.CurrentRow.Cells[e.ColumnIndex].ReadOnly)
+            //{
+            //    SendKeys.Send("{tab}");
+            //}
 
             if (senderGrid.Columns[e.ColumnIndex].Name == "DateReceived")
             {
@@ -528,25 +542,33 @@ namespace LabBilling.Forms
 
         private void dgvPayments_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
-            if (dgvPayments.Columns[e.ColumnIndex].Name == "Account")
-            {
-                // get account information to populate patient name and balance info
-                Account account = null;
-                string strAccount = dgvPayments["Account", e.RowIndex].Value?.ToString();
-                if (!string.IsNullOrEmpty(strAccount))
-                {
-                    strAccount = strAccount.ToUpper();
-                    account = accdb.GetByAccount(strAccount, true);
-                }
+            //if (dgvPayments.Columns[e.ColumnIndex].Name == "Account")
+            //{
+            //    // get account information to populate patient name and balance info
+            //    Account account = null;
+            //    string strAccount = dgvPayments["Account", e.RowIndex].Value?.ToString();
+            //    if (!string.IsNullOrEmpty(strAccount))
+            //    {
+            //        strAccount = strAccount.ToUpper();
+            //        account = accdb.GetByAccount(strAccount, true);
+            //    }
 
-                if (account != null)
-                {
-                    dgvPayments["Account", e.RowIndex].Value = strAccount;
-                    dgvPayments["PatientName", e.RowIndex].Value = account.PatFullName;
-                    dgvPayments["Balance", e.RowIndex].Value = account.Balance;
-                    dgvPayments.CurrentCell = dgvPayments["CheckNo", e.RowIndex];
-                }
-            }
+            //        if (account == null)
+            //    {
+            //        MessageBox.Show($"Account {strAccount} not found.", "Account not found.");
+            //        dgvPayments["Account", e.RowIndex].Value = string.Empty;
+            //        dgvPayments.CurrentCell = dgvPayments.Rows[e.RowIndex].Cells["Account"];
+            //        return;
+            //    }
+
+            //    if (account != null)
+            //    {
+            //        dgvPayments["Account", e.RowIndex].Value = strAccount;
+            //        dgvPayments["PatientName", e.RowIndex].Value = account.PatFullName;
+            //        dgvPayments["Balance", e.RowIndex].Value = account.Balance;
+            //        dgvPayments.CurrentCell = dgvPayments["CheckNo", e.RowIndex];
+            //        }
+            //}
 
         }
 
@@ -578,6 +600,30 @@ namespace LabBilling.Forms
                     dgvPayments["Balance", e.RowIndex].Value = account.Balance;
                     dgvPayments.CurrentCell = dgvPayments["CheckNo", e.RowIndex];
                 }
+            }
+        }
+
+        private void dgvPayments_RowEnter(object sender, DataGridViewCellEventArgs e)
+        {
+            if(dgvPayments["PatientName", e.RowIndex].Value == null ||
+                dgvPayments["PatientName", e.RowIndex].Value.ToString() == "")
+            {
+                SetCellsReadonly(e.RowIndex, true);
+            }
+        }
+
+        private void dgvPayments_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
+        {
+            if (e.ColumnIndex < 0 || e.RowIndex < 0)
+                return; 
+
+            if (dgvPayments[e.ColumnIndex, e.RowIndex].ReadOnly == true)
+            {
+                dgvPayments[e.ColumnIndex, e.RowIndex].Style.BackColor = Color.Gray;
+            }
+            else
+            {
+                dgvPayments[e.ColumnIndex, e.RowIndex].Style.BackColor = Color.White;
             }
         }
     }
