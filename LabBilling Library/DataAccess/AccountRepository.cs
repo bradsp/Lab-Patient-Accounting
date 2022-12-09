@@ -11,6 +11,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using System.Data.SqlClient;
 using System.Data;
+using NPOI.HSSF.Record;
 
 namespace LabBilling.Core.DataAccess
 {
@@ -734,12 +735,130 @@ namespace LabBilling.Core.DataAccess
             return chrgRepository.AddCharge(chrg);
         }
 
+        private class BundledProfile
+        {
+            public string ProfileCdm { get; set; }
+
+            public List<BundledProfileComponent> ComponentCpt { get; set; }
+
+            public bool BundleQualfies
+            {
+                get
+                {
+                    return !ComponentCpt.Any(x => x.IsPresent == false);
+                }
+            }
+        }
+
+        private class BundledProfileComponent
+        {
+            public string Cdm { get; set; }
+            public string Cpt { get; set; }
+            public bool IsPresent { get; set; }
+            public int ChrgId { get; set; }
+
+            public BundledProfileComponent()
+            {
+
+            }
+
+            public BundledProfileComponent(string cpt, bool isPresent = false)
+            {
+                Cpt = cpt;
+                IsPresent = isPresent;
+            }
+
+            public BundledProfileComponent(string cpt, string cdm, bool isPresent = false)
+            {
+                Cpt = cpt;
+                Cdm = cdm;
+                IsPresent = isPresent;
+            }
+        }
+
+        public void BundlePanels(string accountNo)
+        {
+
+        }
+
+        public void BundlePanels(Account account)
+        {
+            List<BundledProfile> bundledProfiles = new List<BundledProfile>();
+            bundledProfiles.Add(new BundledProfile()
+            {
+                ProfileCdm = "MCL0029",
+                ComponentCpt = new List<BundledProfileComponent>()
+                {
+                    new BundledProfileComponent("85025", "5545154"),
+                    new BundledProfileComponent("80053", "5382522"),
+                    new BundledProfileComponent("84443", "5646008")
+                }
+            });
+
+            bundledProfiles.Add(new BundledProfile()
+            {
+                ProfileCdm = "MCL0021",
+                ComponentCpt = new List<BundledProfileComponent>()
+                {
+                    new BundledProfileComponent("85025", "5545154"),
+                    new BundledProfileComponent("87340", "5646012"),
+                    new BundledProfileComponent("86762", "5646086"),
+                    new BundledProfileComponent("86592", "5686054"),
+                    new BundledProfileComponent("86850", "5728026"),
+                    new BundledProfileComponent("86900", "5728190"),
+                    new BundledProfileComponent("86901")
+                }
+            });            
+
+            //foreach(var profile in bundledProfiles)
+            for(int x = 0; x < bundledProfiles.Count; x++)
+            {
+                //foreach(var cpt in profile.ComponentCpt)
+                for(int i = 0; i < bundledProfiles[x].ComponentCpt.Count; i++)
+                {
+                    foreach(var chrg in account.Charges.Where(c => !c.IsCredited))
+                    {
+                        if (chrg.ChrgDetails.Any(d => d.Cpt4 == bundledProfiles[x].ComponentCpt[i].Cpt))
+                        {
+                            bundledProfiles[x].ComponentCpt[i].IsPresent = true;
+                            bundledProfiles[x].ComponentCpt[i].ChrgId = chrg.ChrgId;
+                        }
+                    }
+                }
+
+                if (bundledProfiles[x].BundleQualfies)
+                {
+                    //credit components and charge profile cdm
+
+                    for(int i = 0; i < bundledProfiles[x].ComponentCpt.Count; i++)
+                    {
+                        chrgRepository.CreditCharge(bundledProfiles[x].ComponentCpt[i].ChrgId, $"Bundling to {bundledProfiles[x].ProfileCdm}");
+                    }
+
+                    this.AddCharge(account, bundledProfiles[x].ProfileCdm, 1, (DateTime)account.TransactionDate, $"Bundled by Rule");
+                    this.AddNote(account.AccountNo, $"Bundled charges into {bundledProfiles[x].ProfileCdm}");
+                }
+
+            }
+
+        }
+
+
         public bool Validate(ref Account account)
         {
             Log.Instance.Trace($"Entering - account {account}");
 
             try
             {
+                if (account.InsurancePrimary != null)
+                {
+                    if (account.InsurancePrimary.InsCompany != null)
+                    {
+                        if (!account.InsurancePrimary.InsCompany.IsMedicareHmo)
+                            BundlePanels(account);
+                    }
+                }
+
                 BusinessLogic.Validators.ClaimValidator claimValidator = new BusinessLogic.Validators.ClaimValidator();
                 account.LmrpErrors = ValidateLMRP(account);
                 var validationResult = claimValidator.Validate(account);

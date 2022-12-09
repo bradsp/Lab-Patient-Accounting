@@ -119,12 +119,8 @@ namespace LabBilling.Forms
                     "order by statement_number,  activity_id, record_cnt ",strBatchId)
                     , conn);
 
-                
-
                 try
                 {
-                   
-
                     sda.SelectCommand = cmdSelectStmt;
                     int nRec = sda.Fill(m_dsPatBill.Tables["STMT"]);
                     dgvStatement.DataSource = m_dsPatBill.Tables["STMT"];

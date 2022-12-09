@@ -12,6 +12,9 @@ namespace LabBilling.Core.BusinessLogic.Validators
     {
         public InsuranceValidator()
         {
+            RuleFor(a => a.InsCompany.IsDeleted)
+                .Equal(false)
+                .WithMessage(a => $"Account is using inactive insurance {a.InsCode}");
             RuleFor(a => a.HolderLastName)
                 .NotEmpty().WithMessage("Ins Holder Last Name is empty.");
             RuleFor(a => a.HolderFirstName)

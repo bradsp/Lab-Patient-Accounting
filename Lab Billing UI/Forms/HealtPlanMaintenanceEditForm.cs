@@ -131,6 +131,7 @@ namespace LabBilling.Forms
             insCompany.City = planCityTextBox.Text;
             insCompany.State = planStateTextBox.Text;
             insCompany.Zip = planZipCodeTextBox.Text;
+            insCompany.CityStateZip = $"{insCompany.City}, {insCompany.State} {insCompany.Zip}";
 
             insCompany.IsMedicareHmo = isMedicareHmoCheckBox.Checked;
             insCompany.AllowOutpatientBilling = allowOutpatientBillingCheckBox.Checked;

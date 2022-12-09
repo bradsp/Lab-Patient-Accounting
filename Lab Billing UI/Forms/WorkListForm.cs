@@ -57,6 +57,7 @@ namespace LabBilling.Forms
                 new TreeNode(Worklists.UHCCommunityPlan),
                 new TreeNode(Worklists.PathwaysTNCare),
                 new TreeNode(Worklists.Amerigroup),
+                new TreeNode(Worklists.SelfPay),
                 new TreeNode(Worklists.ManualHold),
                 new TreeNode(Worklists.InitialHold),
                 new TreeNode(Worklists.ErrorFinCode),
@@ -330,6 +331,13 @@ namespace LabBilling.Forms
                 case Worklists.Amerigroup:
                     parameters = parameters.Append((nameof(AccountSearch.ServiceDate), AccountSearchRepository.operation.LessThanOrEqual, thruDate.ToString())).ToArray();
                     parameters = parameters.Append((nameof(AccountSearch.FinCode), AccountSearchRepository.operation.Equal, "Q")).ToArray();
+                    parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "HOLD")).ToArray();
+                    parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "SSI1500")).ToArray();
+                    parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "SSIUB")).ToArray();
+                    break;
+                case Worklists.SelfPay:
+                    parameters = parameters.Append((nameof(AccountSearch.ServiceDate), AccountSearchRepository.operation.LessThanOrEqual, thruDate.ToString())).ToArray();
+                    parameters = parameters.Append((nameof(AccountSearch.FinCode), AccountSearchRepository.operation.Equal, "E")).ToArray();
                     parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "HOLD")).ToArray();
                     parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "SSI1500")).ToArray();
                     parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "SSIUB")).ToArray();

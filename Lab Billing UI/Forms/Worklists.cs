@@ -12,6 +12,7 @@
         public const string UHCCommunityPlan = "UHC Community Plan";
         public const string PathwaysTNCare = "Pathways TNCare";
         public const string Amerigroup = "Amerigroup";
+        public const string SelfPay = "Self Pay";
         public const string ManualHold = "Manual Hold";
         public const string InitialHold = "Initial Hold";
         public const string ErrorFinCode = "Error Fin Code";
