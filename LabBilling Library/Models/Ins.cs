@@ -30,7 +30,12 @@ namespace LabBilling.Core.Models
         { 
             get
             {
-                return ($"{HolderStreetAddress}, {HolderCityStZip}");
+                if (string.IsNullOrEmpty(HolderStreetAddress) && string.IsNullOrEmpty(HolderCity) && string.IsNullOrEmpty(HolderState))
+                {
+                    return "";
+                }
+                else
+                    return ($"{HolderStreetAddress}, {HolderCityStZip}");
             }
         }
 

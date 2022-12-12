@@ -47,6 +47,11 @@ namespace LabBilling.Core.BusinessLogic.Validators
                 RuleFor(a => a.Insurances)
                     .Must(HaveValidInsuranceCoverageCodes).WithMessage("Insurances have invalid or out of order coverage codes.");
 
+                RuleFor(a => a.Insurances)
+                    .Must(x => x.Count > 0)
+                    .WithMessage("No insurances defined for account.")
+                    .When(x => x.FinCode != "E");
+
                 RuleForEach(a => a.Insurances)
                     .SetValidator(new InsuranceValidator()).When(a => a.FinCode != "E");
 
@@ -71,11 +76,11 @@ namespace LabBilling.Core.BusinessLogic.Validators
                 RuleFor(a => a.TotalPayments)
                     .LessThanOrEqualTo(0).WithMessage("Account has payments recorded.");
 
-                RuleFor(c => c)
+                RuleFor(a => a)
                     .Must(NotContainOnlyVenipunctureCharge)
                     .WithMessage("Venipuncture is only charge on account");
 
-                RuleFor(c => c.Charges)
+                RuleFor(a => a.Charges)
                     .Must(NotNeedRepeatModifier)
                     .WithMessage("Duplicate cpt - needs modifier.")
                     .When(a => a.Charges != null);

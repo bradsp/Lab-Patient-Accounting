@@ -112,7 +112,7 @@ namespace LabBilling.Core.DataAccess
                 record.MaritalStatus = "U";
             }
 
-            string amaYear = FunctionRepository.GetAMAYear(account.TransactionDate.GetValueOrDefault(DateTime.Now));
+            string amaYear = FunctionRepository.GetAMAYear(account.TransactionDate);
             record.Diagnoses = new List<PatDiag>();
             if (record.Dx1 != null && record.Dx1 != "")
             {

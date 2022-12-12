@@ -49,7 +49,7 @@ namespace LabBilling.Core.Models
         public string OriginalFinCode { get; set; }
 
         [Column("trans_date")]
-        public DateTime? TransactionDate { get; set; }
+        public DateTime TransactionDate { get; set; }
         [Column("cbill_date")]
         public DateTime? ClientBillDate { get; set; }
         [Column("post_date")]
@@ -152,7 +152,7 @@ namespace LabBilling.Core.Models
             get
             {
                 List<string> cpt4List = new List<string>();
-                foreach (var chrg in Charges)
+                foreach (var chrg in Charges.Where(c => c.IsCredited == false))
                 {
                     foreach (var detail in chrg.ChrgDetails)
                     {

@@ -55,7 +55,7 @@ namespace LabBilling.Core.Models
         [Ignore]
         public RevenueCode RevenueCodeDetail { get; set; }
         [Ignore]
-        public ChrgDiagnosisPointer DiagnosisPointer { get; set; }
+        public ChrgDiagnosisPointer DiagnosisPointer { get; set; } = new ChrgDiagnosisPointer();
 
     }
 }

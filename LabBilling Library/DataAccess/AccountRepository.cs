@@ -219,8 +219,8 @@ namespace LabBilling.Core.DataAccess
             Log.Instance.Trace($"Entering - account {table.AccountNo}");
             table.PatFullName = table.PatNameDisplay;
             table.Status = "NEW";
-            //table.Sex = table.Sex;
-            //table.BirthDate = table.BirthDate;
+
+            table.TransactionDate = table.TransactionDate.Date;
 
             base.Add(table);
 
@@ -241,8 +241,6 @@ namespace LabBilling.Core.DataAccess
 
                 insRepository.Save(ins);
             }
-
-
             return table;
         }
 

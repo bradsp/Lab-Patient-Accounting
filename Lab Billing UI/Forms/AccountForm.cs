@@ -368,7 +368,7 @@ namespace LabBilling.Forms
 
                 new SummaryData("Financial","",SummaryData.GroupType.Financial,1,2,true),
                 new SummaryData("Financial Class", currentAccount.FinCode, SummaryData.GroupType.Financial,2,2),
-                new SummaryData("Date of Service", currentAccount.TransactionDate?.ToShortDateString(), SummaryData.GroupType.Financial,3,2),
+                new SummaryData("Date of Service", currentAccount.TransactionDate.ToShortDateString(), SummaryData.GroupType.Financial,3,2),
                 new SummaryData("Total Charges", currentAccount.TotalCharges.ToString("c"),SummaryData.GroupType.Financial,4,2),
                 new SummaryData("Total Payments", (currentAccount.TotalPayments+currentAccount.TotalContractual+currentAccount.TotalWriteOff).ToString("c"),
                     SummaryData.GroupType.Financial,5,2),
@@ -469,7 +469,7 @@ namespace LabBilling.Forms
             BannerFinClassTextBox.Text = currentAccount.FinCode;
             BannerBillStatusTextBox.Text = currentAccount.Status;
             BannerProviderTextBox.Text = currentAccount.Pat.Physician.FullName;
-            bannerDateOfServiceTextBox.Text = currentAccount.TransactionDate.GetValueOrDefault().ToShortDateString();
+            bannerDateOfServiceTextBox.Text = currentAccount.TransactionDate.ToShortDateString();
 
             TotalChargesTextBox.Text = currentAccount.TotalCharges.ToString("c");
 
@@ -1490,7 +1490,6 @@ namespace LabBilling.Forms
                 }
                 else
                 {
-
                     string newPointer = "";
 
                     for (int i = 3; i < cnt + 3; i++)
@@ -1507,8 +1506,16 @@ namespace LabBilling.Forms
                     //update pointers
                     var cpt = dxPointerGrid2["CPT4", e.RowIndex].Value.ToString();
 
-                    var updatedChrg = currentAccount.Charges.Where(c => c.ChrgDetails.Any(cd => cd.Cpt4 == cpt)).ToList();
-                    updatedChrg.ForEach(c => c.ChrgDetails.ForEach(cd => cd.DiagnosisPointer.DiagnosisPointer = newPointer));
+                    var updatedChrg = currentAccount.Charges.Where(c => c.IsCredited == false && c.ChrgDetails.Any(cd => cd.Cpt4 == cpt)).ToList();
+                    updatedChrg.ForEach(c => c.ChrgDetails.ForEach((cd) =>
+                    {
+                        if (cd.DiagnosisPointer == null)
+                        {
+                            cd.DiagnosisPointer = new ChrgDiagnosisPointer();
+                            cd.DiagnosisPointer.ChrgDetailUri = cd.uri;
+                        }
+                        cd.DiagnosisPointer.DiagnosisPointer = newPointer;
+                    }));
 
                     ChrgRepository chrgRepository = new ChrgRepository(Helper.ConnVal);
 
@@ -1535,7 +1542,7 @@ namespace LabBilling.Forms
             Log.Instance.Trace($"Entering");
             if (!string.IsNullOrEmpty(txtSearchDx.Text))
             {
-                var dictRecords = dictDxDb.Search(txtSearchDx.Text, currentAccount.TransactionDate.GetValueOrDefault(DateTime.Now));
+                var dictRecords = dictDxDb.Search(txtSearchDx.Text, currentAccount.TransactionDate);
 
                 DxSearchDataGrid.DataSource = dictRecords;
                 DxSearchDataGrid.Columns[nameof(DictDx.mod_date)].Visible = false;
@@ -1629,7 +1636,7 @@ namespace LabBilling.Forms
                         return;
                     }
 
-                    var record = dictDxDb.GetByCode(DxQuickAddTextBox.Text, currentAccount.TransactionDate.GetValueOrDefault(DateTime.Now));
+                    var record = dictDxDb.GetByCode(DxQuickAddTextBox.Text, currentAccount.TransactionDate);
                     if (record != null)
                     {
                         //this is a valid entry

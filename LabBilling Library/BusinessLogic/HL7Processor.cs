@@ -456,13 +456,60 @@ namespace LabBilling.Core.BusinessLogic
 
             if (existingAccount == null)
             {
-                Log.Instance.Error($"[ERROR] Account {accountRecord.AccountNo} does not exist.");
-                errors.AppendLine($"[ERROR] Account {accountRecord.AccountNo} does not exist.");
-                canFile = false;
+                accountRecord.Client = clientRepository.GetClient(accountRecord.ClientMnem);
+                if (accountRecord.Client == null)
+                {
+                    //error - invalid client
+                    Log.Instance.Error($"[ERROR] Invalid client {accountRecord.ClientMnem}");
+                    errors.AppendLine($"[ERROR] Invalid client {accountRecord.ClientMnem}");
+                    canFile = false;
+                }
+                else
+                {
+                    accountRecord.ClientName = accountRecord.Client.Name;
+                }
+
+                if (accountRecord.Client != null)
+                {
+                    switch (accountRecord.Client.BillMethod)
+                    {
+                        case "INVOICE":
+                            accountRecord.FinCode = "Y";
+                            break;
+                        case "PATIENT":
+                            break;
+                        case "PER ACCOUNT":
+                            if (accountRecord.FinCode != "Y")
+                            {
+                                accountRecord.FinCode = "K";
+                            }
+                            break;
+                        default:
+                            accountRecord.FinCode = "K";
+                            break;
+                    }
+                }
+                if (string.IsNullOrEmpty(accountRecord.FinCode))
+                {
+                    Log.Instance.Error($"[ERROR] No fin code");
+                    accountRecord.FinCode = "K";
+                }
+
+                //Log.Instance.Error($"[ERROR] Account {accountRecord.AccountNo} does not exist.");
+                //errors.AppendLine($"[ERROR] Account {accountRecord.AccountNo} does not exist.");
+                //canFile = false;
+                if(canFile)
+                {
+                    accountRepository.Add(accountRecord);
+                    patRepository.Save(accountRecord.Pat);
+                    existingAccount = accountRepository.GetByAccount(accountRecord.AccountNo);
+                }
             }
 
             if (canFile)
             {
+
+
                 foreach (var transaction in chargeTransactions)
                 {
                     transaction.Account = accountRecord.AccountNo;
@@ -621,7 +668,7 @@ namespace LabBilling.Core.BusinessLogic
             accountRecord.AccountNo = "L" + hl7Message.GetValue("PID.18.1");
             accountRecord.MeditechAccount = accountRecord.AccountNo;
             accountRecord.Pat.AccountNo = accountRecord.AccountNo;
-            accountRecord.SocSecNo = hl7Message.GetValue("PID.19");
+            accountRecord.SocSecNo = hl7Message.GetValue("PID.19").Replace("-", string.Empty);
 
         }
 
@@ -857,12 +904,10 @@ namespace LabBilling.Core.BusinessLogic
             phy.City = hl7Message.GetValue("STF.11.3");
             phy.State = hl7Message.GetValue("STF.11.4");
             phy.ZipCode = hl7Message.GetValue("STF.11.5");
-
         }
 
         private void ParsePRA()
         {
-
             string drnum = hl7Message.GetValue("PRA.1.1");
             string group = hl7Message.GetValue("PRA.2");
             string speciality = hl7Message.GetValue("PRA.5");
@@ -885,10 +930,7 @@ namespace LabBilling.Core.BusinessLogic
                     if (codeType == "UPIN")
                         phy.Upin = code;
                 }
-
-
             }
-
         }
 
         public bool SetMessageDoNotProcess(int systemMessageId, string statusMessage)
@@ -904,9 +946,6 @@ namespace LabBilling.Core.BusinessLogic
                 nameof(MessageInbound.ProcessFlag),
                 nameof(MessageInbound.ProcessStatusMsg)
             });
-
         }
-
     }
-
 }

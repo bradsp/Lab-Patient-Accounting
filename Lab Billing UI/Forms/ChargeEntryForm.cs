@@ -35,7 +35,7 @@ namespace LabBilling.Forms
             tbBannerAccount.Text = _currentAccount.AccountNo;
             tbBannerName.Text = _currentAccount.PatFullName;
             tbBannerMRN.Text = _currentAccount.MRN;
-            tbDateOfService.Text = _currentAccount.TransactionDate.Value.ToShortDateString();
+            tbDateOfService.Text = _currentAccount.TransactionDate.ToShortDateString();
 
             //BuildCargeItemCombo();
         }
@@ -91,7 +91,7 @@ namespace LabBilling.Forms
                 accountRepository.AddCharge(_currentAccount.AccountNo,
                     cdm,
                     Convert.ToInt32(nQty.Value),
-                    _currentAccount.TransactionDate ?? DateTime.Today,
+                    _currentAccount.TransactionDate,
                     tbComment.Text,
                     ReferenceNumber.Text);
             }
