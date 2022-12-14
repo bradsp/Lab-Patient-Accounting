@@ -60,7 +60,7 @@ namespace LabBilling.Core.DataAccess
         /// <param name="showCredited">True to include credited charges. False to include only active charges.</param>
         /// <param name="includeInvoiced"></param>
         /// <returns></returns>
-        public List<Chrg> GetByAccount(string account, bool showCredited = true, bool includeInvoiced = true, DateTime? asOfDate = null)
+        public List<Chrg> GetByAccount(string account, bool showCredited = true, bool includeInvoiced = true, DateTime? asOfDate = null, bool excludeInvChrg = true)
         {
             Log.Instance.Debug($"Entering - account {account}");
 
@@ -78,12 +78,16 @@ namespace LabBilling.Core.DataAccess
             }
 
             if (!showCredited)
-                sql.Where("credited = 0");
+                sql.Where($"{GetRealColumn(nameof(Chrg.IsCredited))} = 0");
 
             if (!includeInvoiced)
-                sql.Where("invoice is null");
+                sql.Where($"{GetRealColumn(nameof(Chrg.Invoice))} is null");
 
-            sql.OrderBy("chrg.chrg_num");
+            if (excludeInvChrg)
+                sql.Where($"{GetRealColumn(nameof(Chrg.CDMCode))} <> @0",
+                    new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = "CBILL"});
+
+            sql.OrderBy($"{_tableName}.{GetRealColumn(nameof(Chrg.ChrgId))}");
 
             var result = dbConnection.Fetch<Chrg, ChrgDetail, Chrg>(new ChrgChrgDetailRelator().MapIt, sql);
 

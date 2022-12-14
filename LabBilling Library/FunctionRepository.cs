@@ -14,6 +14,12 @@ namespace LabBilling
         {
             int year = transDate.Year;
 
+            if(year < DateTime.Now.Year - 20)
+            {
+                //likely an invalid year, return current year
+                return DateTime.Now.Year.ToString();
+            }
+
             return transDate.Month >= 10 ? (year+1).ToString() : year.ToString();
 
         }

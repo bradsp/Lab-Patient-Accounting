@@ -40,6 +40,10 @@ namespace LabBilling.Forms
         {
             //load combo boxes
             claimTypeComboBox.DropDownStyle = ComboBoxStyle.DropDown;
+            claimTypeComboBox.DataSource = Dictionaries.claimFilingIndicatorCode.ToList();
+            claimTypeComboBox.ValueMember = "Key";
+            claimTypeComboBox.DisplayMember = "Value";
+            claimTypeComboBox.SelectedIndex = 0;
 
             finCodeComboBox.DisplayMember = nameof(Fin.FinCode);
             finCodeComboBox.ValueMember = nameof(Fin.FinCode);
@@ -99,7 +103,7 @@ namespace LabBilling.Forms
             billAsJmcghCheckBox.Checked = insCompany.BillAsJmcgh;
             finCodeComboBox.SelectedValue = insCompany.FinancialCode ?? String.Empty;
             
-            claimTypeComboBox.SelectedItem = insCompany.ClaimFilingIndicatorCode;
+            claimTypeComboBox.SelectedValue = insCompany.ClaimFilingIndicatorCode ?? "";
             string insType = string.Empty;
 
             if (insCompany.BillForm == "UB")
@@ -139,7 +143,7 @@ namespace LabBilling.Forms
             if(finCodeComboBox.SelectedValue != null)
                 insCompany.FinancialCode = finCodeComboBox.SelectedValue.ToString();
             if(claimTypeComboBox.SelectedItem != null)
-                insCompany.ClaimFilingIndicatorCode = claimTypeComboBox.SelectedItem.ToString();
+                insCompany.ClaimFilingIndicatorCode = claimTypeComboBox.SelectedValue.ToString();
             if (insuranceTypeComboBox.SelectedItem != null)
             {
                 if (insuranceTypeComboBox.SelectedItem.ToString() == "Institutional")

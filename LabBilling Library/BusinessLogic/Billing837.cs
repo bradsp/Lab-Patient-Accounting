@@ -227,12 +227,12 @@ namespace LabBilling.Core
 
             segmentCount += Loop2000B(ref hlCount);
 
-            // Note: Loops 2000c & 2010CA are not sent when the patient is the subscriber
-            segmentCount += Loop2000C(ref hlCount);
-
             segmentCount += Loop2300();
 
             segmentCount += Loop2400();
+
+            // Note: Loops 2000C & 2010CA are not sent when the patient is the subscriber
+            segmentCount += Loop2000C(ref hlCount);
 
             // SE - Transaction Set Trailer
             segmentCount++;
@@ -839,6 +839,7 @@ namespace LabBilling.Core
                 //CL1 - institutional claim code
                 ediDocument.Segments.Add(new EdiSegment("CL1")
                 {
+
                     [03] = "01", //patient status code - core source 239 - hardcoding to 01 for now
 
                 });

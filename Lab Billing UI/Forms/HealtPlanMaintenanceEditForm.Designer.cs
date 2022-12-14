@@ -250,7 +250,7 @@
             // 
             // 
             this.address1TextBox.CustomButton.Image = null;
-            this.address1TextBox.CustomButton.Location = new System.Drawing.Point(191, 1);
+            this.address1TextBox.CustomButton.Location = new System.Drawing.Point(346, 1);
             this.address1TextBox.CustomButton.Name = "";
             this.address1TextBox.CustomButton.Size = new System.Drawing.Size(21, 21);
             this.address1TextBox.CustomButton.Style = MetroFramework.MetroColorStyle.Blue;
@@ -280,7 +280,7 @@
             // 
             // 
             this.planNameTextBox.CustomButton.Image = null;
-            this.planNameTextBox.CustomButton.Location = new System.Drawing.Point(191, 1);
+            this.planNameTextBox.CustomButton.Location = new System.Drawing.Point(346, 1);
             this.planNameTextBox.CustomButton.Name = "";
             this.planNameTextBox.CustomButton.Size = new System.Drawing.Size(21, 21);
             this.planNameTextBox.CustomButton.Style = MetroFramework.MetroColorStyle.Blue;
@@ -340,7 +340,7 @@
             this.billAsJmcghCheckBox.AutoSize = true;
             this.billAsJmcghCheckBox.Location = new System.Drawing.Point(431, 274);
             this.billAsJmcghCheckBox.Name = "billAsJmcghCheckBox";
-            this.billAsJmcghCheckBox.Size = new System.Drawing.Size(96, 15);
+            this.billAsJmcghCheckBox.Size = new System.Drawing.Size(93, 17);
             this.billAsJmcghCheckBox.TabIndex = 58;
             this.billAsJmcghCheckBox.Text = "Bill as JMCGH";
             // 
@@ -349,7 +349,7 @@
             this.allowOutpatientBillingCheckBox.AutoSize = true;
             this.allowOutpatientBillingCheckBox.Location = new System.Drawing.Point(431, 251);
             this.allowOutpatientBillingCheckBox.Name = "allowOutpatientBillingCheckBox";
-            this.allowOutpatientBillingCheckBox.Size = new System.Drawing.Size(149, 15);
+            this.allowOutpatientBillingCheckBox.Size = new System.Drawing.Size(133, 17);
             this.allowOutpatientBillingCheckBox.TabIndex = 57;
             this.allowOutpatientBillingCheckBox.Text = "Allow Outpatient Billing";
             // 
@@ -358,7 +358,7 @@
             this.isMedicareHmoCheckBox.AutoSize = true;
             this.isMedicareHmoCheckBox.Location = new System.Drawing.Point(431, 228);
             this.isMedicareHmoCheckBox.Name = "isMedicareHmoCheckBox";
-            this.isMedicareHmoCheckBox.Size = new System.Drawing.Size(115, 15);
+            this.isMedicareHmoCheckBox.Size = new System.Drawing.Size(109, 17);
             this.isMedicareHmoCheckBox.TabIndex = 56;
             this.isMedicareHmoCheckBox.Text = "Is Medicare HMO";
             // 
@@ -369,7 +369,7 @@
             this.insuranceTypeComboBox.Items.AddRange(new object[] {
             "Institutional",
             "Professional"});
-            this.insuranceTypeComboBox.Location = new System.Drawing.Point(449, 354);
+            this.insuranceTypeComboBox.Location = new System.Drawing.Point(525, 354);
             this.insuranceTypeComboBox.Name = "insuranceTypeComboBox";
             this.insuranceTypeComboBox.Size = new System.Drawing.Size(209, 29);
             this.insuranceTypeComboBox.TabIndex = 55;
@@ -381,7 +381,7 @@
             this.finClassComboBox.ItemHeight = 23;
             this.finClassComboBox.Location = new System.Drawing.Point(159, 354);
             this.finClassComboBox.Name = "finClassComboBox";
-            this.finClassComboBox.Size = new System.Drawing.Size(141, 29);
+            this.finClassComboBox.Size = new System.Drawing.Size(92, 29);
             this.finClassComboBox.TabIndex = 41;
             this.finClassComboBox.UseSelectable = true;
             this.finClassComboBox.Visible = false;
@@ -399,7 +399,7 @@
             // insuranceTypeLabel
             // 
             this.insuranceTypeLabel.AutoSize = true;
-            this.insuranceTypeLabel.Location = new System.Drawing.Point(449, 329);
+            this.insuranceTypeLabel.Location = new System.Drawing.Point(525, 329);
             this.insuranceTypeLabel.Name = "insuranceTypeLabel";
             this.insuranceTypeLabel.Size = new System.Drawing.Size(94, 19);
             this.insuranceTypeLabel.TabIndex = 54;
@@ -622,7 +622,7 @@
             // claimTypeLabel
             // 
             this.claimTypeLabel.AutoSize = true;
-            this.claimTypeLabel.Location = new System.Drawing.Point(303, 329);
+            this.claimTypeLabel.Location = new System.Drawing.Point(257, 332);
             this.claimTypeLabel.Name = "claimTypeLabel";
             this.claimTypeLabel.Size = new System.Drawing.Size(74, 19);
             this.claimTypeLabel.TabIndex = 42;
@@ -632,14 +632,9 @@
             // 
             this.claimTypeComboBox.FormattingEnabled = true;
             this.claimTypeComboBox.ItemHeight = 23;
-            this.claimTypeComboBox.Items.AddRange(new object[] {
-            "BL",
-            "CH",
-            "CI",
-            "MA"});
-            this.claimTypeComboBox.Location = new System.Drawing.Point(303, 354);
+            this.claimTypeComboBox.Location = new System.Drawing.Point(257, 354);
             this.claimTypeComboBox.Name = "claimTypeComboBox";
-            this.claimTypeComboBox.Size = new System.Drawing.Size(141, 29);
+            this.claimTypeComboBox.Size = new System.Drawing.Size(262, 29);
             this.claimTypeComboBox.TabIndex = 43;
             this.claimTypeComboBox.UseSelectable = true;
             // 

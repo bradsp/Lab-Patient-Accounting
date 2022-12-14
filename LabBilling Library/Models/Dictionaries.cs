@@ -257,5 +257,33 @@ namespace LabBilling.Core.Models
             {"Wilson","Wilson"}
         };
 
+        public static Dictionary<string, string> claimFilingIndicatorCode = new Dictionary<string, string>
+        {
+            {"","--Select--" },
+            {"AM", "Automobile Medical"},
+            {"BL", "Blue Cross/Blue Shield"},
+            {"CH", "Champus"},
+            {"CI", "Commercial Insurance Co."},
+            {"17", "Dental Maintenance Organization"},
+            {"DS", "Disability"},
+            {"14", "Exclusive Provider Organization (EPO)"},
+            {"FI", "Federal Employees Program"},
+            {"HM", "Health Maintenance Organization"},
+            {"16", "Health Maintenance Organization (HMO) Medicare Risk"},
+            {"15", "Indemnity Insurance"},
+            {"LM", "Liability Medical"},
+            {"MA", "Medicare Part A"},
+            {"MB", "Medicare Part B"},
+            {"MC", "Medicaid"},
+            {"ZZ", "Mutually Defined"},
+            {"OF", "Other Federal Program"},
+            {"11", "Other Non-Federal Programs"},
+            {"13", "Point of Service (POS)"},
+            {"12", "Preferred Provider Organization (PPO)"},
+            {"TV", "Title V"},
+            {"VA", "Veterans Affairs Plan"},
+            {"WC", "Workers’ Compensation Health Claim"},
+        };
+
     }
 }

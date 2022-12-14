@@ -84,11 +84,11 @@ namespace LabBilling.Core.BusinessLogic
             switch (claimType)
             {
                 case ClaimType.Institutional:
-                    claimList = accountRepository.GetAccountsForClaims(AccountRepository.ClaimType.Institutional).Take(20).ToList();
+                    claimList = accountRepository.GetAccountsForClaims(AccountRepository.ClaimType.Institutional).Take(30).ToList();
                     billClaimType = Billing837.ClaimType.Institutional;
                     break;
                 case ClaimType.Professional:
-                    claimList = accountRepository.GetAccountsForClaims(AccountRepository.ClaimType.Professional).Take(20).ToList();
+                    claimList = accountRepository.GetAccountsForClaims(AccountRepository.ClaimType.Professional).Take(30).ToList();
                     billClaimType = Billing837.ClaimType.Professional;
                     break;
                 default:
@@ -420,11 +420,13 @@ namespace LabBilling.Core.BusinessLogic
                 claimData.ReferringProviderMiddleName = claimData.claimAccount.Pat.Physician.MiddleInitial;
                 claimData.ReferringProviderSuffix = "";
                 claimData.ReferringProviderNPI = claimData.claimAccount.Pat.Physician.NpiId;
-                Dictionary<string, string> dicOP = new Dictionary<string, string>();
-                dicOP.Add("MC", "440002");
-                dicOP.Add("BC", "1000427");
-                dicOP.Add("TNBC", "1000427");
-                dicOP.Add("UHC", "626010402");
+                //Dictionary<string, string> dicOP = new Dictionary<string, string>
+                //{
+                //    { "MC", "440002" },
+                //    { "BC", "1000427" },
+                //    { "TNBC", "1000427" },
+                //    { "UHC", "626010402" }
+                //};
                 foreach (Ins ins in claimData.claimAccount.Insurances)
                 {
                     if (ins.IsDeleted)

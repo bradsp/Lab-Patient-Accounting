@@ -19,5 +19,6 @@
         public const string ClientBill = "Client Bill";
         public const string SubmittedInstitutional = "Submitted Institutional";
         public const string SubmittedProfessional = "Submitted Professional";
+        public const string SubmittedOtherClaim = "Submitted Other";
     }
 }

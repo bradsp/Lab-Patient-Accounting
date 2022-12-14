@@ -1204,7 +1204,7 @@ namespace LabBilling.Forms
             TotalWriteOffTextBox.Text = currentAccount.TotalWriteOff.ToString("c");
             TotalPmtAllTextBox.Text = (currentAccount.TotalPayments + currentAccount.TotalContractual + currentAccount.TotalWriteOff).ToString("c");
 
-            if (currentAccount.Fin.FinClass == "C" ||
+            if ((currentAccount.Fin.FinClass == "C" && currentAccount.FinCode != "CLIENT") ||
                 currentAccount.SentToCollections ||
                 currentAccount.Status == "CLOSED")
             {

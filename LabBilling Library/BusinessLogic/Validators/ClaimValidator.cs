@@ -17,7 +17,8 @@ namespace LabBilling.Core.BusinessLogic.Validators
 
             RuleFor(a => a.TransactionDate)
                 .NotNull()
-                .NotEmpty().WithMessage("{PropertyName} is empty.");
+                .NotEmpty().WithMessage("{PropertyName} is empty.")
+                .LessThan(DateTime.Now.AddYears(-20)).WithMessage("{PropertyName} not a valid date.");
 
             RuleFor(a => a.PatLastName)
                 .Cascade(CascadeMode.Stop)
