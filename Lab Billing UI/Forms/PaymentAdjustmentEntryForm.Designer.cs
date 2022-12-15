@@ -162,8 +162,9 @@
             this.writeOffCodeComboBox.FormattingEnabled = true;
             this.writeOffCodeComboBox.Location = new System.Drawing.Point(43, 290);
             this.writeOffCodeComboBox.Name = "writeOffCodeComboBox";
-            this.writeOffCodeComboBox.Size = new System.Drawing.Size(253, 21);
+            this.writeOffCodeComboBox.Size = new System.Drawing.Size(342, 21);
             this.writeOffCodeComboBox.TabIndex = 21;
+            this.writeOffCodeComboBox.SelectedValueChanged += new System.EventHandler(this.writeOffCodeComboBox_SelectedValueChanged);
             // 
             // label9
             // 
@@ -308,6 +309,7 @@
             this.writeOffCodeTextBox.Name = "writeOffCodeTextBox";
             this.writeOffCodeTextBox.Size = new System.Drawing.Size(100, 20);
             this.writeOffCodeTextBox.TabIndex = 20;
+            this.writeOffCodeTextBox.TextChanged += new System.EventHandler(this.writeOffCodeTextBox_TextChanged);
             // 
             // PaymentAdjustmentEntryForm
             // 

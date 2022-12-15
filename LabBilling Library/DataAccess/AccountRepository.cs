@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using System.Data.SqlClient;
 using System.Data;
 using NPOI.HSSF.Record;
+using PetaPoco;
 
 namespace LabBilling.Core.DataAccess
 {
@@ -959,6 +960,42 @@ namespace LabBilling.Core.DataAccess
             return errorList;
         }
 
+        public void ValidateUnbilledAccounts()
+        {
+            Log.Instance.Trace($"Entering");
+
+            DateTime.TryParse(systemParametersRepository.GetByKey("ssi_bill_thru_date"), out DateTime thruDate);
+
+            (string propertyName, AccountSearchRepository.operation oper, string searchText)[] parameters = {
+                (nameof(AccountSearch.ServiceDate), AccountSearchRepository.operation.LessThanOrEqual, thruDate.ToString()),
+                (nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "PAID_OUT"),
+                (nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "CLOSED"),
+                (nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "SSI1500"),
+                (nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "SSIUB"),
+                (nameof(AccountSearch.FinCode), AccountSearchRepository.operation.NotEqual, "CLIENT"),
+                (nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "HOLD"),
+                (nameof(AccountSearch.FinCode), AccountSearchRepository.operation.NotEqual, "Y"),
+                (nameof(AccountSearch.FinCode), AccountSearchRepository.operation.NotEqual, "CLIENT"),
+                (nameof(AccountSearch.FinCode), AccountSearchRepository.operation.NotEqual, "E")
+            };
+
+            AccountSearchRepository accountSearchRepository = new AccountSearchRepository(dbConnection);
+
+            var accounts = accountSearchRepository.GetBySearch(parameters).ToList();
+
+            foreach (var account in accounts)
+            {
+                try
+                {
+                    var accountRecord = this.GetByAccount(account.Account);
+                    this.Validate(ref accountRecord);
+                }
+                catch (Exception e)
+                {
+                    Log.Instance.Error(e, "Error during account validation job.");
+                }
+            }
+        }
 
         public async Task ValidateUnbilledAccountsAsync()
         {

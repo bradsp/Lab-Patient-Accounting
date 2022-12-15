@@ -36,6 +36,8 @@ namespace LabBilling.Forms
             writeOffCodeComboBox.ValueMember = nameof(WriteOffCode.Code);
             writeOffCodeComboBox.SelectedIndex = -1;
 
+            writeOffCodeTextBox.Text = string.Empty;
+
             //load ins combobox with account's insurances
             insuranceComboBox.DataSource = _account.Insurances;
             insuranceComboBox.ValueMember = nameof(Ins.InsCode);
@@ -44,8 +46,6 @@ namespace LabBilling.Forms
 
             // todo: investigate restriction from legacy system:
             // CODE 1500 SHOULD NOT BE USED TO WRITE OFF FOR BAD DEBT. BAD DEBT CANNOT BE HANDLED BY THE ACCOUNT PROGRAM.
-            
-
         }
 
         private void postButton_Click(object sender, EventArgs e)
@@ -139,6 +139,31 @@ namespace LabBilling.Forms
         {
             if (!string.IsNullOrEmpty(writeOffAmtTextBox.Text))
                 writeOffDateTextBox.Text = dateReceivedTextBox.Text;
+        }
+
+        bool writeOffCodeDoNotChange = false;
+        private void writeOffCodeTextBox_TextChanged(object sender, EventArgs e)
+        {
+            if (!writeOffCodeDoNotChange)
+            {
+                writeOffCodeDoNotChange = true;
+                writeOffCodeComboBox.SelectedValue = writeOffCodeTextBox.Text;
+                writeOffCodeDoNotChange = false;
+            }
+        }
+
+        private void writeOffCodeComboBox_SelectedValueChanged(object sender, EventArgs e)
+        {
+            if(!writeOffCodeDoNotChange)
+            {
+                if (writeOffCodeComboBox.SelectedValue != null)
+                {
+                    writeOffCodeDoNotChange = true;
+                    writeOffCodeTextBox.Text = writeOffCodeComboBox.SelectedValue.ToString();
+                    writeOffCodeDoNotChange = false;
+                }
+            }
+
         }
     }
 }

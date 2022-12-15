@@ -168,7 +168,11 @@ namespace LabBilling.Core.Models
         {
             get
             {
-                return this.Insurances.Find(x => x.Coverage == "A").InsCode;
+                var ins = this.Insurances.Find(x => x.Coverage == "A");
+                if (ins != null)
+                    return this.Insurances.Find(x => x.Coverage == "A").InsCode;
+                else
+                    return string.Empty;
             }
         }
 

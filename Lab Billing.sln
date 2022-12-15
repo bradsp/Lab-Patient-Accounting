@@ -34,11 +34,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LabBillingUnitTesting", "La
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lab Billing WPF UI", "Lab Billing WPF UI\Lab Billing WPF UI.csproj", "{84A8C2C0-9E5B-4779-A134-337CB93AE3A7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LabBillingMQService", "LabBillingMQService\LabBillingMQService.csproj", "{083DD118-7838-4C45-941D-3D2DC8CB6D3D}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LabBillingConsole", "LabBillingConsole\LabBillingConsole.csproj", "{710148ED-1BB6-4776-8D8C-737A166A014C}"
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "LabBillingServiceSetup", "LabBillingServiceSetup\LabBillingServiceSetup.vdproj", "{CCA0C739-9B92-4DED-AE24-342149046295}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lab Billing Jobs", "Lab Billing Jobs\Lab Billing Jobs.csproj", "{EEE71488-9E0F-46F4-8B35-2ECC84E92513}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -128,13 +128,6 @@ Global
 		{84A8C2C0-9E5B-4779-A134-337CB93AE3A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{84A8C2C0-9E5B-4779-A134-337CB93AE3A7}.Release|x86.ActiveCfg = Release|Any CPU
 		{84A8C2C0-9E5B-4779-A134-337CB93AE3A7}.Release|x86.Build.0 = Release|Any CPU
-		{083DD118-7838-4C45-941D-3D2DC8CB6D3D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{083DD118-7838-4C45-941D-3D2DC8CB6D3D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{083DD118-7838-4C45-941D-3D2DC8CB6D3D}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{083DD118-7838-4C45-941D-3D2DC8CB6D3D}.Debug|x86.Build.0 = Debug|Any CPU
-		{083DD118-7838-4C45-941D-3D2DC8CB6D3D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{083DD118-7838-4C45-941D-3D2DC8CB6D3D}.Release|x86.ActiveCfg = Release|Any CPU
-		{083DD118-7838-4C45-941D-3D2DC8CB6D3D}.Release|x86.Build.0 = Release|Any CPU
 		{710148ED-1BB6-4776-8D8C-737A166A014C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{710148ED-1BB6-4776-8D8C-737A166A014C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{710148ED-1BB6-4776-8D8C-737A166A014C}.Debug|x86.ActiveCfg = Debug|Any CPU
@@ -146,6 +139,14 @@ Global
 		{CCA0C739-9B92-4DED-AE24-342149046295}.Debug|x86.ActiveCfg = Debug
 		{CCA0C739-9B92-4DED-AE24-342149046295}.Release|Any CPU.ActiveCfg = Release
 		{CCA0C739-9B92-4DED-AE24-342149046295}.Release|x86.ActiveCfg = Release
+		{EEE71488-9E0F-46F4-8B35-2ECC84E92513}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EEE71488-9E0F-46F4-8B35-2ECC84E92513}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EEE71488-9E0F-46F4-8B35-2ECC84E92513}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{EEE71488-9E0F-46F4-8B35-2ECC84E92513}.Debug|x86.Build.0 = Debug|Any CPU
+		{EEE71488-9E0F-46F4-8B35-2ECC84E92513}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EEE71488-9E0F-46F4-8B35-2ECC84E92513}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EEE71488-9E0F-46F4-8B35-2ECC84E92513}.Release|x86.ActiveCfg = Release|Any CPU
+		{EEE71488-9E0F-46F4-8B35-2ECC84E92513}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,7 +1,9 @@
-﻿using LabBilling.Core.DataAccess;
+﻿using System;
+using System.Threading.Tasks;
+using LabBilling.Core.DataAccess;
 using Quartz;
 
-namespace LabBillingMQService
+namespace Lab_Billing_Jobs
 {
     public partial class JobProcessor
     {

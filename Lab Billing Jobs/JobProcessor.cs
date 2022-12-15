@@ -9,7 +9,7 @@ using Quartz.Impl;
 using Quartz.Impl.Triggers;
 using static Quartz.Logging.OperationName;
 
-namespace LabBillingMQService
+namespace Lab_Billing_Jobs
 {
     public partial class JobProcessor
     {
@@ -17,9 +17,9 @@ namespace LabBillingMQService
         private const string Group1 = "BusinessTasks";
         private const string Job = "Job";
 
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+//#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         public JobProcessor()
-#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+//#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         {
         }
 

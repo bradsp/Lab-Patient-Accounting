@@ -53,7 +53,7 @@
       <HintPath>..\packages\FastExpressionCompiler.3.3.3\lib\net45\FastExpressionCompiler.dll</HintPath>
     </Reference>
     <Reference Include="FluentValidation, Version=11.0.0.0, Culture=neutral, PublicKeyToken=7de548da2fbae0f0, processorArchitecture=MSIL">
-      <HintPath>..\packages\FluentValidation.11.3.0\lib\netstandard2.0\FluentValidation.dll</HintPath>
+      <HintPath>..\packages\FluentValidation.11.4.0\lib\netstandard2.0\FluentValidation.dll</HintPath>
     </Reference>
     <Reference Include="Fonet, Version=1.0.0.0, Culture=neutral, PublicKeyToken=52effa152c4a9dc6, processorArchitecture=MSIL">
       <HintPath>..\packages\Fonet.1.0\lib\net20\Fonet.dll</HintPath>
@@ -102,16 +102,16 @@
       <HintPath>..\packages\PDFsharp-MigraDoc.1.51.5186-beta\lib\net20\MigraDoc.RtfRendering.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.13.0.2-beta3\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\packages\Newtonsoft.Json.13.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="NLog, Version=5.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
-      <HintPath>..\packages\NLog.5.0.5\lib\net46\NLog.dll</HintPath>
+      <HintPath>..\packages\NLog.5.1.0\lib\net46\NLog.dll</HintPath>
     </Reference>
     <Reference Include="NLog.Database, Version=5.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
-      <HintPath>..\packages\NLog.Database.5.0.5\lib\net46\NLog.Database.dll</HintPath>
+      <HintPath>..\packages\NLog.Database.5.1.0\lib\net46\NLog.Database.dll</HintPath>
     </Reference>
     <Reference Include="NLog.WindowsEventLog, Version=5.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
-      <HintPath>..\packages\NLog.WindowsEventLog.5.0.5\lib\netstandard2.0\NLog.WindowsEventLog.dll</HintPath>
+      <HintPath>..\packages\NLog.WindowsEventLog.5.1.0\lib\netstandard2.0\NLog.WindowsEventLog.dll</HintPath>
     </Reference>
     <Reference Include="NPOI, Version=2.6.0.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
       <HintPath>..\packages\NPOI.2.6.0\lib\net472\NPOI.dll</HintPath>
@@ -216,8 +216,8 @@
     <Reference Include="System.Text.Encodings.Web, Version=7.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Text.Encodings.Web.7.0.0\lib\net462\System.Text.Encodings.Web.dll</HintPath>
     </Reference>
-    <Reference Include="System.Text.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Text.Json.7.0.0\lib\net462\System.Text.Json.dll</HintPath>
+    <Reference Include="System.Text.Json, Version=7.0.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Text.Json.7.0.1\lib\net462\System.Text.Json.dll</HintPath>
     </Reference>
     <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Threading.Tasks.Extensions.4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll</HintPath>
