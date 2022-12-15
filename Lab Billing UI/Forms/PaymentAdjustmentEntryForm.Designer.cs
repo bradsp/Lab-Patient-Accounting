@@ -55,6 +55,7 @@
             this.paymentAmtTextBox = new LabBilling.UserControls.CurrencyTextBox();
             this.writeOffAmtTextBox = new LabBilling.UserControls.CurrencyTextBox();
             this.contractualAmtTextBox = new LabBilling.UserControls.CurrencyTextBox();
+            this.writeOffCodeTextBox = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -159,36 +160,36 @@
             // writeOffCodeComboBox
             // 
             this.writeOffCodeComboBox.FormattingEnabled = true;
-            this.writeOffCodeComboBox.Location = new System.Drawing.Point(132, 262);
+            this.writeOffCodeComboBox.Location = new System.Drawing.Point(43, 290);
             this.writeOffCodeComboBox.Name = "writeOffCodeComboBox";
             this.writeOffCodeComboBox.Size = new System.Drawing.Size(253, 21);
-            this.writeOffCodeComboBox.TabIndex = 20;
+            this.writeOffCodeComboBox.TabIndex = 21;
             // 
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(19, 303);
+            this.label9.Location = new System.Drawing.Point(19, 325);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(51, 13);
-            this.label9.TabIndex = 21;
+            this.label9.TabIndex = 22;
             this.label9.Text = "Comment";
             // 
             // commentTextBox
             // 
-            this.commentTextBox.Location = new System.Drawing.Point(22, 319);
+            this.commentTextBox.Location = new System.Drawing.Point(22, 341);
             this.commentTextBox.Multiline = true;
             this.commentTextBox.Name = "commentTextBox";
             this.commentTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.commentTextBox.Size = new System.Drawing.Size(363, 58);
-            this.commentTextBox.TabIndex = 22;
+            this.commentTextBox.TabIndex = 23;
             // 
             // postButton
             // 
             this.postButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.postButton.Location = new System.Drawing.Point(108, 403);
+            this.postButton.Location = new System.Drawing.Point(108, 425);
             this.postButton.Name = "postButton";
             this.postButton.Size = new System.Drawing.Size(82, 35);
-            this.postButton.TabIndex = 23;
+            this.postButton.TabIndex = 24;
             this.postButton.Text = "Post";
             this.postButton.UseVisualStyleBackColor = true;
             this.postButton.Click += new System.EventHandler(this.postButton_Click);
@@ -197,18 +198,18 @@
             // 
             this.cancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.cancelButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.cancelButton.Location = new System.Drawing.Point(218, 403);
+            this.cancelButton.Location = new System.Drawing.Point(218, 425);
             this.cancelButton.Name = "cancelButton";
             this.cancelButton.Size = new System.Drawing.Size(75, 35);
-            this.cancelButton.TabIndex = 24;
+            this.cancelButton.TabIndex = 25;
             this.cancelButton.Text = "Cancel";
             this.cancelButton.UseVisualStyleBackColor = true;
             // 
             // checkNoTextBox
             // 
-            this.checkNoTextBox.Location = new System.Drawing.Point(132, 102);
+            this.checkNoTextBox.Location = new System.Drawing.Point(132, 100);
             this.checkNoTextBox.Name = "checkNoTextBox";
-            this.checkNoTextBox.Size = new System.Drawing.Size(144, 20);
+            this.checkNoTextBox.Size = new System.Drawing.Size(100, 20);
             this.checkNoTextBox.TabIndex = 7;
             // 
             // label10
@@ -301,6 +302,13 @@
             this.contractualAmtTextBox.TabIndex = 14;
             this.contractualAmtTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
+            // writeOffCodeTextBox
+            // 
+            this.writeOffCodeTextBox.Location = new System.Drawing.Point(132, 262);
+            this.writeOffCodeTextBox.Name = "writeOffCodeTextBox";
+            this.writeOffCodeTextBox.Size = new System.Drawing.Size(100, 20);
+            this.writeOffCodeTextBox.TabIndex = 20;
+            // 
             // PaymentAdjustmentEntryForm
             // 
             this.AcceptButton = this.postButton;
@@ -333,6 +341,7 @@
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.fromLabel);
+            this.Controls.Add(this.writeOffCodeTextBox);
             this.Controls.Add(this.checkNoTextBox);
             this.Controls.Add(this.fromTextBox);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
@@ -374,5 +383,6 @@
         private UserControls.DateTextBox checkDateTextBox;
         private UserControls.DateTextBox writeOffDateTextBox;
         private System.Windows.Forms.ErrorProvider errorProvider1;
+        private System.Windows.Forms.TextBox writeOffCodeTextBox;
     }
 }

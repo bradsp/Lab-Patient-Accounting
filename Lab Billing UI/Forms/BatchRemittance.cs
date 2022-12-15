@@ -11,6 +11,7 @@ using System.Data;
 using MetroFramework.Forms;
 using System.Security.Principal;
 using System.Drawing;
+using MCL;
 
 namespace LabBilling.Forms
 {
@@ -25,7 +26,7 @@ namespace LabBilling.Forms
         private readonly ChkRepository chkdb = new ChkRepository(Helper.ConnVal);
         private readonly AccountRepository accdb = new AccountRepository(Helper.ConnVal);
 
-        private void SaveBatch_Click(object sender, EventArgs e)
+        private void SaveBatchButton_Click(object sender, EventArgs e)
         {
             Log.Instance.Trace($"Entering");
             //saves an open batch for later use
@@ -175,6 +176,21 @@ namespace LabBilling.Forms
         private void SubmitPayments_Click(object sender, EventArgs e)
         {
             Log.Instance.Trace($"Entering");
+            int batch = -1;
+
+            if (OpenBatch.SelectedIndex > 0)
+            {
+                batch = Convert.ToInt32(OpenBatch.SelectedValue.ToString());
+            }
+            else
+            {
+                ChkBatch chkBatch = new ChkBatch
+                {
+                    BatchDate = DateTime.Today,
+                    User = Program.LoggedInUser.UserName                    
+                };
+                batch = (int)chkBatchRepository.Add(chkBatch);
+            }
 
             List<Chk> chks = new List<Chk>();
             chkdb.BeginTransaction();
@@ -187,19 +203,16 @@ namespace LabBilling.Forms
 
                 double temp = 0.00;
                 chk.AccountNo = row.Cells["Account"].Value.ToString();
-                if (OpenBatch.SelectedIndex > 0)
-                    chk.Batch = Convert.ToInt16(OpenBatch.SelectedValue.ToString());
-                else
-                    chk.Batch = -1;
+                chk.Batch = batch;
                 chk.PaidAmount = Double.TryParse(row.Cells["AmountPaid"].Value?.ToString(), out temp) ? temp : 0.00;
                 chk.ChkDate = DateTimeExtension.ValidateDateNullable(row.Cells["CheckDate"].Value?.ToString());
                 chk.DateReceived = DateTimeExtension.ValidateDateNullable(row.Cells["DateReceived"].Value?.ToString());
-                chk.CheckNo = row.Cells["CheckNo"].Value.ToString();
-                chk.Comment = row.Cells["Comment"].Value.ToString();
+                chk.CheckNo = row.Cells["CheckNo"].Value?.ToString();
+                chk.Comment = row.Cells["Comment"].Value?.ToString();
                 chk.ContractualAmount = Double.TryParse(row.Cells["Contractual"].Value?.ToString(), out temp) ? temp : 0.00;
                 chk.WriteOffCode = row.Cells["WriteOffCode"].Value?.ToString();
                 chk.WriteOffAmount = Double.TryParse(row.Cells["WriteOff"].Value?.ToString(), out temp) ? temp : 0.00;
-                chk.Source = row.Cells["PaymentSource"].Value.ToString();
+                chk.Source = row.Cells["PaymentSource"].Value?.ToString();
                 try
                 {
                     chks.Add(chk);
@@ -209,18 +222,15 @@ namespace LabBilling.Forms
                     Log.Instance.Error("Error posting pmt/adj batch.", ex);
                     MessageBox.Show("Batch failed to post.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
-            }
 
+            }
+            MessageBox.Show($"Batch {batch} posted.", "Batch Posted");
             try
             {
                 chkdb.AddBatch(chks);
-                //if this was a saved batch, delete the batch record
-                if (OpenBatch.SelectedIndex > 0)
-                {
-                    ChkBatch chkBatch = chkBatchRepository.GetById(Convert.ToInt32(OpenBatch.SelectedValue));
-                    chkBatchRepository.Delete(chkBatch);
-                    LoadOpenBatches();
-                }
+                ChkBatch chkBatch = chkBatchRepository.GetById(batch);
+                chkBatchRepository.Delete(chkBatch);
+                LoadOpenBatches();
                 chkdb.CompleteTransaction();
                 //clear entry screen for next batch
                 Clear();
@@ -339,11 +349,17 @@ namespace LabBilling.Forms
 
         }
 
+        bool skipDgvPaymentsCellValueChanged = false;
+
         private void dgvPayments_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
             Log.Instance.Trace($"Entering");
+
             if (dgvPayments.Columns[e.ColumnIndex].Name == "Account")
             {
+                if (skipDgvPaymentsCellValueChanged)
+                    return;
+
                 // get account information to populate patient name and balance info
                 Account account = null;
                 string strAccount = dgvPayments["Account", e.RowIndex].Value.ToString();
@@ -356,17 +372,23 @@ namespace LabBilling.Forms
                 {
                     return;
                 }
-
+                
                 if (account == null)
                 {
+                    skipDgvPaymentsCellValueChanged = true;
+
                     MessageBox.Show($"Account {strAccount} not found.", "Account not found.");
                     dgvPayments["Account", e.RowIndex].Value = string.Empty;
-                    dgvPayments.CurrentCell = dgvPayments.Rows[e.RowIndex].Cells["Account"];
+                    dgvPayments.CurrentCell = dgvPayments["Account", e.RowIndex];
+
+                    skipDgvPaymentsCellValueChanged = false;
                     return;
                 }
 
                 if (account != null)
                 {
+                    skipDgvPaymentsCellValueChanged = true;
+
                     dgvPayments["Account", e.RowIndex].Value = account.AccountNo;
                     dgvPayments["PatientName", e.RowIndex].Value = account.PatFullName;
                     dgvPayments["Balance", e.RowIndex].Value = account.Balance;
@@ -374,10 +396,10 @@ namespace LabBilling.Forms
 
                     //clear the readonly flag on the cells
                     SetCellsReadonly(e.RowIndex, false);
+
+                    skipDgvPaymentsCellValueChanged = false;
                 }
-
             }
-
         }
 
         private void SetCellsReadonly(int rowIndex, bool setReadonly)
@@ -625,6 +647,12 @@ namespace LabBilling.Forms
             {
                 dgvPayments[e.ColumnIndex, e.RowIndex].Style.BackColor = Color.White;
             }
+
+            //if (dgvPayments.Columns[e.ColumnIndex].Name == "Account")
+            //{
+            //    dgvPayments[e.ColumnIndex, e.RowIndex].Value;
+            //}
+
         }
     }
 }

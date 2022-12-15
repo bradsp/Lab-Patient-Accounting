@@ -28,19 +28,19 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle13 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle14 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle15 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle16 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle17 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle18 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle19 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle20 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle21 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle22 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle23 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle24 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle25 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle26 = new System.Windows.Forms.DataGridViewCellStyle();
             this.dgvPayments = new System.Windows.Forms.DataGridView();
             this.Account = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.PatientName = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -64,12 +64,12 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
-            this.SaveBatch = new System.Windows.Forms.Button();
-            this.SubmitPayments = new System.Windows.Forms.Button();
+            this.SaveBatchButton = new System.Windows.Forms.Button();
+            this.SubmitPaymentsButton = new System.Windows.Forms.Button();
             this.label6 = new System.Windows.Forms.Label();
             this.EntryMode = new System.Windows.Forms.ComboBox();
             this.label7 = new System.Windows.Forms.Label();
-            this.DeleteBatch = new System.Windows.Forms.Button();
+            this.DeleteBatchButton = new System.Windows.Forms.Button();
             this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -146,18 +146,18 @@
             // 
             // CheckDate
             // 
-            dataGridViewCellStyle1.Format = "d";
-            dataGridViewCellStyle1.NullValue = null;
-            this.CheckDate.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle14.Format = "d";
+            dataGridViewCellStyle14.NullValue = null;
+            this.CheckDate.DefaultCellStyle = dataGridViewCellStyle14;
             this.CheckDate.HeaderText = "Check Date";
             this.CheckDate.Name = "CheckDate";
             this.CheckDate.Resizable = System.Windows.Forms.DataGridViewTriState.True;
             // 
             // DateReceived
             // 
-            dataGridViewCellStyle2.Format = "d";
-            dataGridViewCellStyle2.NullValue = null;
-            this.DateReceived.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle15.Format = "d";
+            dataGridViewCellStyle15.NullValue = null;
+            this.DateReceived.DefaultCellStyle = dataGridViewCellStyle15;
             this.DateReceived.HeaderText = "DateReceived";
             this.DateReceived.Name = "DateReceived";
             this.DateReceived.Resizable = System.Windows.Forms.DataGridViewTriState.True;
@@ -169,25 +169,25 @@
             // 
             // AmountPaid
             // 
-            dataGridViewCellStyle3.Format = "N2";
-            dataGridViewCellStyle3.NullValue = "0.00";
-            this.AmountPaid.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle16.Format = "N2";
+            dataGridViewCellStyle16.NullValue = "0.00";
+            this.AmountPaid.DefaultCellStyle = dataGridViewCellStyle16;
             this.AmountPaid.HeaderText = "Amount Paid";
             this.AmountPaid.Name = "AmountPaid";
             // 
             // Contractual
             // 
-            dataGridViewCellStyle4.Format = "N2";
-            dataGridViewCellStyle4.NullValue = "0.00";
-            this.Contractual.DefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle17.Format = "N2";
+            dataGridViewCellStyle17.NullValue = "0.00";
+            this.Contractual.DefaultCellStyle = dataGridViewCellStyle17;
             this.Contractual.HeaderText = "Contractual";
             this.Contractual.Name = "Contractual";
             // 
             // WriteOff
             // 
-            dataGridViewCellStyle5.Format = "N2";
-            dataGridViewCellStyle5.NullValue = "0.00";
-            this.WriteOff.DefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle18.Format = "N2";
+            dataGridViewCellStyle18.NullValue = "0.00";
+            this.WriteOff.DefaultCellStyle = dataGridViewCellStyle18;
             this.WriteOff.HeaderText = "Write Off";
             this.WriteOff.Name = "WriteOff";
             // 
@@ -295,34 +295,34 @@
             this.label5.TabIndex = 3;
             this.label5.Text = "Totals";
             // 
-            // SaveBatch
+            // SaveBatchButton
             // 
-            this.SaveBatch.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.SaveBatch.BackColor = System.Drawing.Color.Yellow;
-            this.SaveBatch.Location = new System.Drawing.Point(775, 461);
-            this.SaveBatch.Name = "SaveBatch";
-            this.SaveBatch.Size = new System.Drawing.Size(75, 43);
-            this.SaveBatch.TabIndex = 4;
-            this.SaveBatch.Text = "Save Batch for Later";
-            this.SaveBatch.UseVisualStyleBackColor = false;
-            this.SaveBatch.Click += new System.EventHandler(this.SaveBatch_Click);
+            this.SaveBatchButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.SaveBatchButton.BackColor = System.Drawing.Color.Yellow;
+            this.SaveBatchButton.Location = new System.Drawing.Point(775, 461);
+            this.SaveBatchButton.Name = "SaveBatchButton";
+            this.SaveBatchButton.Size = new System.Drawing.Size(75, 43);
+            this.SaveBatchButton.TabIndex = 4;
+            this.SaveBatchButton.Text = "Save Batch for Later";
+            this.SaveBatchButton.UseVisualStyleBackColor = false;
+            this.SaveBatchButton.Click += new System.EventHandler(this.SaveBatchButton_Click);
             // 
-            // SubmitPayments
+            // SubmitPaymentsButton
             // 
-            this.SubmitPayments.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.SubmitPayments.BackColor = System.Drawing.Color.LightGreen;
-            this.SubmitPayments.Location = new System.Drawing.Point(856, 461);
-            this.SubmitPayments.Name = "SubmitPayments";
-            this.SubmitPayments.Size = new System.Drawing.Size(95, 43);
-            this.SubmitPayments.TabIndex = 5;
-            this.SubmitPayments.Text = "Submit Payments";
-            this.SubmitPayments.UseVisualStyleBackColor = false;
-            this.SubmitPayments.Click += new System.EventHandler(this.SubmitPayments_Click);
+            this.SubmitPaymentsButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.SubmitPaymentsButton.BackColor = System.Drawing.Color.LightGreen;
+            this.SubmitPaymentsButton.Location = new System.Drawing.Point(856, 461);
+            this.SubmitPaymentsButton.Name = "SubmitPaymentsButton";
+            this.SubmitPaymentsButton.Size = new System.Drawing.Size(95, 43);
+            this.SubmitPaymentsButton.TabIndex = 5;
+            this.SubmitPaymentsButton.Text = "Submit Payments";
+            this.SubmitPaymentsButton.UseVisualStyleBackColor = false;
+            this.SubmitPaymentsButton.Click += new System.EventHandler(this.SubmitPayments_Click);
             // 
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(12, 15);
+            this.label6.Location = new System.Drawing.Point(16, 15);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(98, 13);
             this.label6.TabIndex = 7;
@@ -339,7 +339,7 @@
             "Amount Paid",
             "Contractual",
             "Write Off"});
-            this.EntryMode.Location = new System.Drawing.Point(543, 12);
+            this.EntryMode.Location = new System.Drawing.Point(547, 12);
             this.EntryMode.Name = "EntryMode";
             this.EntryMode.Size = new System.Drawing.Size(142, 21);
             this.EntryMode.TabIndex = 8;
@@ -349,23 +349,23 @@
             // 
             this.label7.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(476, 15);
+            this.label7.Location = new System.Drawing.Point(480, 15);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(61, 13);
             this.label7.TabIndex = 9;
             this.label7.Text = "Entry Mode";
             // 
-            // DeleteBatch
+            // DeleteBatchButton
             // 
-            this.DeleteBatch.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.DeleteBatch.BackColor = System.Drawing.Color.Red;
-            this.DeleteBatch.Location = new System.Drawing.Point(694, 461);
-            this.DeleteBatch.Name = "DeleteBatch";
-            this.DeleteBatch.Size = new System.Drawing.Size(75, 43);
-            this.DeleteBatch.TabIndex = 11;
-            this.DeleteBatch.Text = "Delete Batch";
-            this.DeleteBatch.UseVisualStyleBackColor = false;
-            this.DeleteBatch.Click += new System.EventHandler(this.DeleteBatch_Click);
+            this.DeleteBatchButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.DeleteBatchButton.BackColor = System.Drawing.Color.Red;
+            this.DeleteBatchButton.Location = new System.Drawing.Point(694, 461);
+            this.DeleteBatchButton.Name = "DeleteBatchButton";
+            this.DeleteBatchButton.Size = new System.Drawing.Size(75, 43);
+            this.DeleteBatchButton.TabIndex = 11;
+            this.DeleteBatchButton.Text = "Delete Batch";
+            this.DeleteBatchButton.UseVisualStyleBackColor = false;
+            this.DeleteBatchButton.Click += new System.EventHandler(this.DeleteBatch_Click);
             // 
             // dataGridViewTextBoxColumn1
             // 
@@ -389,51 +389,51 @@
             // 
             // dataGridViewDateColumn1
             // 
-            dataGridViewCellStyle6.Format = "d";
-            dataGridViewCellStyle6.NullValue = null;
-            this.dataGridViewDateColumn1.DefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle19.Format = "d";
+            dataGridViewCellStyle19.NullValue = null;
+            this.dataGridViewDateColumn1.DefaultCellStyle = dataGridViewCellStyle19;
             this.dataGridViewDateColumn1.HeaderText = "Check Date";
             this.dataGridViewDateColumn1.Name = "dataGridViewDateColumn1";
             this.dataGridViewDateColumn1.Resizable = System.Windows.Forms.DataGridViewTriState.True;
             // 
             // dataGridViewDateColumn2
             // 
-            dataGridViewCellStyle7.Format = "d";
-            dataGridViewCellStyle7.NullValue = null;
-            this.dataGridViewDateColumn2.DefaultCellStyle = dataGridViewCellStyle7;
+            dataGridViewCellStyle20.Format = "d";
+            dataGridViewCellStyle20.NullValue = null;
+            this.dataGridViewDateColumn2.DefaultCellStyle = dataGridViewCellStyle20;
             this.dataGridViewDateColumn2.HeaderText = "DateReceived";
             this.dataGridViewDateColumn2.Name = "dataGridViewDateColumn2";
             this.dataGridViewDateColumn2.Resizable = System.Windows.Forms.DataGridViewTriState.True;
             // 
             // dataGridViewTextBoxColumn5
             // 
-            dataGridViewCellStyle8.Format = "d";
-            dataGridViewCellStyle8.NullValue = null;
-            this.dataGridViewTextBoxColumn5.DefaultCellStyle = dataGridViewCellStyle8;
+            dataGridViewCellStyle21.Format = "d";
+            dataGridViewCellStyle21.NullValue = null;
+            this.dataGridViewTextBoxColumn5.DefaultCellStyle = dataGridViewCellStyle21;
             this.dataGridViewTextBoxColumn5.HeaderText = "Check Date";
             this.dataGridViewTextBoxColumn5.Name = "dataGridViewTextBoxColumn5";
             // 
             // dataGridViewTextBoxColumn6
             // 
-            dataGridViewCellStyle9.Format = "d";
-            dataGridViewCellStyle9.NullValue = null;
-            this.dataGridViewTextBoxColumn6.DefaultCellStyle = dataGridViewCellStyle9;
+            dataGridViewCellStyle22.Format = "d";
+            dataGridViewCellStyle22.NullValue = null;
+            this.dataGridViewTextBoxColumn6.DefaultCellStyle = dataGridViewCellStyle22;
             this.dataGridViewTextBoxColumn6.HeaderText = "DateReceived";
             this.dataGridViewTextBoxColumn6.Name = "dataGridViewTextBoxColumn6";
             // 
             // dataGridViewTextBoxColumn7
             // 
-            dataGridViewCellStyle10.Format = "N2";
-            dataGridViewCellStyle10.NullValue = "0.00";
-            this.dataGridViewTextBoxColumn7.DefaultCellStyle = dataGridViewCellStyle10;
+            dataGridViewCellStyle23.Format = "N2";
+            dataGridViewCellStyle23.NullValue = "0.00";
+            this.dataGridViewTextBoxColumn7.DefaultCellStyle = dataGridViewCellStyle23;
             this.dataGridViewTextBoxColumn7.HeaderText = "Payment Source";
             this.dataGridViewTextBoxColumn7.Name = "dataGridViewTextBoxColumn7";
             // 
             // dataGridViewTextBoxColumn8
             // 
-            dataGridViewCellStyle11.Format = "N2";
-            dataGridViewCellStyle11.NullValue = "0.00";
-            this.dataGridViewTextBoxColumn8.DefaultCellStyle = dataGridViewCellStyle11;
+            dataGridViewCellStyle24.Format = "N2";
+            dataGridViewCellStyle24.NullValue = "0.00";
+            this.dataGridViewTextBoxColumn8.DefaultCellStyle = dataGridViewCellStyle24;
             this.dataGridViewTextBoxColumn8.HeaderText = "Amount Paid";
             this.dataGridViewTextBoxColumn8.Name = "dataGridViewTextBoxColumn8";
             // 
@@ -444,9 +444,9 @@
             // 
             // dataGridViewTextBoxColumn9
             // 
-            dataGridViewCellStyle12.Format = "N2";
-            dataGridViewCellStyle12.NullValue = "0.00";
-            this.dataGridViewTextBoxColumn9.DefaultCellStyle = dataGridViewCellStyle12;
+            dataGridViewCellStyle25.Format = "N2";
+            dataGridViewCellStyle25.NullValue = "0.00";
+            this.dataGridViewTextBoxColumn9.DefaultCellStyle = dataGridViewCellStyle25;
             this.dataGridViewTextBoxColumn9.HeaderText = "Contractual";
             this.dataGridViewTextBoxColumn9.Name = "dataGridViewTextBoxColumn9";
             this.dataGridViewTextBoxColumn9.Resizable = System.Windows.Forms.DataGridViewTriState.True;
@@ -456,7 +456,7 @@
             // 
             this.OpenBatch.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
             this.OpenBatch.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.OpenBatch.Location = new System.Drawing.Point(116, 12);
+            this.OpenBatch.Location = new System.Drawing.Point(120, 12);
             this.OpenBatch.Name = "OpenBatch";
             this.OpenBatch.Size = new System.Drawing.Size(354, 21);
             this.OpenBatch.TabIndex = 12;
@@ -464,9 +464,9 @@
             // 
             // dataGridViewTextBoxColumn10
             // 
-            dataGridViewCellStyle13.Format = "N2";
-            dataGridViewCellStyle13.NullValue = "0.00";
-            this.dataGridViewTextBoxColumn10.DefaultCellStyle = dataGridViewCellStyle13;
+            dataGridViewCellStyle26.Format = "N2";
+            dataGridViewCellStyle26.NullValue = "0.00";
+            this.dataGridViewTextBoxColumn10.DefaultCellStyle = dataGridViewCellStyle26;
             this.dataGridViewTextBoxColumn10.HeaderText = "Write Off";
             this.dataGridViewTextBoxColumn10.Name = "dataGridViewTextBoxColumn10";
             // 
@@ -483,13 +483,13 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.ClientSize = new System.Drawing.Size(963, 527);
-            this.Controls.Add(this.DeleteBatch);
+            this.Controls.Add(this.DeleteBatchButton);
             this.Controls.Add(this.OpenBatch);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.EntryMode);
             this.Controls.Add(this.label6);
-            this.Controls.Add(this.SubmitPayments);
-            this.Controls.Add(this.SaveBatch);
+            this.Controls.Add(this.SubmitPaymentsButton);
+            this.Controls.Add(this.SaveBatchButton);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
@@ -521,13 +521,13 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Button SaveBatch;
-        private System.Windows.Forms.Button SubmitPayments;
+        private System.Windows.Forms.Button SaveBatchButton;
+        private System.Windows.Forms.Button SubmitPaymentsButton;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.ComboBox EntryMode;
         private System.Windows.Forms.Label label7;
         private MultiColumnCombo.MultiColumnComboBox OpenBatch;
-        private System.Windows.Forms.Button DeleteBatch;
+        private System.Windows.Forms.Button DeleteBatchButton;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn2;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn3;
