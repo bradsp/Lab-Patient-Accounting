@@ -125,7 +125,29 @@ namespace LabBilling.Core.Models
         [Ignore]
         public string DOBSex => $"{BirthDate.GetValueOrDefault().ToShortDateString()} - {Sex}";
 
-
+        [Ignore]
+        public bool ReadyToBill 
+        { 
+            get
+            {
+                if (Status == "RTB" || Status == "UB" || Status == "SSIUB" || Status == "1500" || Status == "SSI1500"
+                    || Status == "PAID_OUT" || Status == "CLOSED" || Status == "CLAIM" || Status == "STMT")
+                    return true;
+                else
+                    return false;
+            }
+            set
+            {
+                if (value == true)
+                {
+                    this.Status = "RTB";
+                }
+                else
+                {
+                    this.Status = "NEW";
+                }
+            }
+        }
 
         /// <summary>
         /// Generates full name display from name parts.
@@ -222,7 +244,30 @@ namespace LabBilling.Core.Models
                     return false;
             }
         }
- 
+
+        public enum StatusCode
+        {
+            [Description("NEW")]
+            NEW,
+            [Description("1500")]
+            PROF,
+            [Description("UB")]
+            INST,
+            [Description("VALIDATED")]
+            VALIDATED,
+            [Description("SSI1500")]
+            PROFSUBMITTED,
+            [Description("SSIUB")]
+            INSTSUBMITTED,
+            [Description("CLAIM")]
+            CLAIM,
+            [Description("STMT")]
+            STMT,
+            [Description("PAID_OUT")]
+            PAID_OUT,
+            [Description("CLOSED")]
+            CLOSED
+        };
     }
 
 }

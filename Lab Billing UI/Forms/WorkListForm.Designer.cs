@@ -38,6 +38,7 @@
             this.changeFinancialClassToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.changeClientToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.changeDateOfServiceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.changeToYFinancialClassToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ValidateButton = new MetroFramework.Controls.MetroButton();
             this.workqueues = new System.Windows.Forms.TreeView();
             this.CancelValidationButton = new MetroFramework.Controls.MetroButton();
@@ -53,7 +54,7 @@
             this.clientFilterRadioBtn = new System.Windows.Forms.RadioButton();
             this.accountFilterRadioBtn = new System.Windows.Forms.RadioButton();
             this.showAccountsWithPmtCheckbox = new System.Windows.Forms.CheckBox();
-            this.changeToYFinancialClassToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.readyToBillToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.accountGrid)).BeginInit();
             this.accountGridContextMenu.SuspendLayout();
             this.statusStrip1.SuspendLayout();
@@ -122,9 +123,10 @@
             this.changeFinancialClassToolStripMenuItem,
             this.changeClientToolStripMenuItem,
             this.changeDateOfServiceToolStripMenuItem,
-            this.changeToYFinancialClassToolStripMenuItem});
+            this.changeToYFinancialClassToolStripMenuItem,
+            this.readyToBillToolStripMenuItem});
             this.accountGridContextMenu.Name = "accountGridContextMenu";
-            this.accountGridContextMenu.Size = new System.Drawing.Size(220, 136);
+            this.accountGridContextMenu.Size = new System.Drawing.Size(220, 158);
             this.accountGridContextMenu.Opened += new System.EventHandler(this.accountGridContextMenu_Opened);
             this.accountGridContextMenu.VisibleChanged += new System.EventHandler(this.accountGridContextMenu_VisibleChanged);
             // 
@@ -155,6 +157,13 @@
             this.changeDateOfServiceToolStripMenuItem.Size = new System.Drawing.Size(219, 22);
             this.changeDateOfServiceToolStripMenuItem.Text = "Change Date of Service";
             this.changeDateOfServiceToolStripMenuItem.Click += new System.EventHandler(this.changeDateOfServiceToolStripMenuItem_Click);
+            // 
+            // changeToYFinancialClassToolStripMenuItem
+            // 
+            this.changeToYFinancialClassToolStripMenuItem.Name = "changeToYFinancialClassToolStripMenuItem";
+            this.changeToYFinancialClassToolStripMenuItem.Size = new System.Drawing.Size(219, 22);
+            this.changeToYFinancialClassToolStripMenuItem.Text = "Change to Y Financial Class";
+            this.changeToYFinancialClassToolStripMenuItem.Click += new System.EventHandler(this.changeToYFinancialClassToolStripMenuItem_Click);
             // 
             // ValidateButton
             // 
@@ -303,12 +312,13 @@
             this.showAccountsWithPmtCheckbox.UseVisualStyleBackColor = true;
             this.showAccountsWithPmtCheckbox.CheckedChanged += new System.EventHandler(this.showAccountsWithPmtCheckbox_CheckedChanged);
             // 
-            // changeToYFinancialClassToolStripMenuItem
+            // readyToBillToolStripMenuItem
             // 
-            this.changeToYFinancialClassToolStripMenuItem.Name = "changeToYFinancialClassToolStripMenuItem";
-            this.changeToYFinancialClassToolStripMenuItem.Size = new System.Drawing.Size(219, 22);
-            this.changeToYFinancialClassToolStripMenuItem.Text = "Change to Y Financial Class";
-            this.changeToYFinancialClassToolStripMenuItem.Click += new System.EventHandler(this.changeToYFinancialClassToolStripMenuItem_Click);
+            this.readyToBillToolStripMenuItem.CheckOnClick = true;
+            this.readyToBillToolStripMenuItem.Name = "readyToBillToolStripMenuItem";
+            this.readyToBillToolStripMenuItem.Size = new System.Drawing.Size(219, 22);
+            this.readyToBillToolStripMenuItem.Text = "Ready to Bill";
+            this.readyToBillToolStripMenuItem.Click += new System.EventHandler(this.readyToBillToolStripMenuItem_Click);
             // 
             // WorkListForm
             // 
@@ -365,5 +375,6 @@
         private System.Windows.Forms.RadioButton accountFilterRadioBtn;
         private System.Windows.Forms.CheckBox showAccountsWithPmtCheckbox;
         private System.Windows.Forms.ToolStripMenuItem changeToYFinancialClassToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem readyToBillToolStripMenuItem;
     }
 }

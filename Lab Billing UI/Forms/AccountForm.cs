@@ -53,7 +53,7 @@ namespace LabBilling.Forms
         private readonly SystemParametersRepository systemParametersRepository = new SystemParametersRepository(Helper.ConnVal);
         private readonly PhyRepository phyRepository = new PhyRepository(Helper.ConnVal);
         private readonly ChkRepository chkRepository = new ChkRepository(Helper.ConnVal);
-
+        private bool billingTabLoading = false;
         private const int _timerInterval = 650;
         //private bool skipSelectionChanged = false;
         private System.Windows.Forms.Timer _timer;
@@ -1773,6 +1773,7 @@ namespace LabBilling.Forms
         {
             Log.Instance.Trace("Entering");
 
+            billingTabLoading = true;
 
             BillActivityDataGrid.DataSource = currentAccount.BillingActivities.ToList();
             BillActivityDataGrid.Columns[nameof(BillingActivity.rowguid)].Visible = false;
@@ -1793,7 +1794,9 @@ namespace LabBilling.Forms
             lastStmtDateTextBox.Text = currentAccount.Pat.LastStatementDate.ToString();
             minPmtTextBox.Text = currentAccount.Pat.MinimumPaymentAmount.ToString();
 
+            readyToBillCheckbox.Checked = currentAccount.ReadyToBill;
 
+            billingTabLoading = false;
         }
 
         #endregion
@@ -2259,6 +2262,17 @@ namespace LabBilling.Forms
         private void AccountForm_Activated(object sender, EventArgs e)
         {
             LoadAccountData();
+        }
+
+        private void readyToBillCheckbox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!billingTabLoading)
+            {
+                currentAccount.ReadyToBill = readyToBillCheckbox.Checked;
+                accDB.UpdateStatus(currentAccount.AccountNo, currentAccount.Status);
+                accDB.AddNote(currentAccount.AccountNo, "Marked ready to bill.");
+                RefreshAccountData();
+            }
         }
     }
 }

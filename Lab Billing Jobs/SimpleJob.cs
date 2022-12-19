@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using LabBilling.Core.DataAccess;
 using Quartz;
 
-namespace Lab_Billing_Jobs
+namespace LabBillingJobs
 {
     public partial class JobProcessor
     {

@@ -9,10 +9,16 @@ using Quartz.Impl;
 using Quartz.Impl.Triggers;
 using static Quartz.Logging.OperationName;
 
-namespace Lab_Billing_Jobs
+namespace LabBillingJobs
 {
+
+
     public partial class JobProcessor
     {
+        private static readonly log4net.ILog log =
+            log4net.LogManager.GetLogger
+            (System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         private IScheduler scheduler;
         private const string Group1 = "BusinessTasks";
         private const string Job = "Job";
@@ -32,13 +38,10 @@ namespace Lab_Billing_Jobs
 
             AddJobs();
         }
-        public void OnPaused() =>
-            scheduler.PauseAll();
-        public void OnContinue() =>
-            scheduler.ResumeAll();
-        public void OnStop() =>
-            scheduler.Shutdown();
-        
+
+        public void OnPaused() => scheduler.PauseAll();
+        public void OnContinue() => scheduler.ResumeAll();
+        public void OnStop() => scheduler.Shutdown();
 
         private void AddJobs()
         {
@@ -52,25 +55,18 @@ namespace Lab_Billing_Jobs
             IJob myJob = new AccountValidationJob();
             var jobDetail = new JobDetailImpl(trigger1 + Job, Group1, myJob.GetType());
 
-            var trigger = (ISimpleTrigger)TriggerBuilder.Create()
+            var trigger = TriggerBuilder.Create()
                 .WithIdentity(trigger1 + Job, Group1)
-                .StartAt(DateTime.Now.AddMinutes(1)) // some Date 
+                .WithCronSchedule("0 0 18 * * ?")
+                //.StartAt(DateTime.Now.AddMinutes(1)) // some Date 
                 .ForJob(trigger1 + Job, Group1) // identify job with name, group strings
                 .Build();
-
-            //var trigger = new CronTriggerImpl(
-            //    trigger1,
-            //    Group1,
-            //    "0 0 22 * * ? *" /* every day at 10pm */
-            //    )
-            //{ TimeZone = TimeZoneInfo.Local };
 
             scheduler.ScheduleJob(jobDetail, trigger);
             var nextFireTime = trigger.GetNextFireTimeUtc();
             Console.WriteLine($"Account Validation Job initialized. Next run time - {nextFireTime}");
+            log.Info($"Account Validation Job initialized. Next run time - {nextFireTime}");
 
-            //if (nextFireTime != null)
-            //    Log.Info(Group1 + "+" + trigger1, new Exception(nextFireTime.Value.ToString("u")));
 
         }
 

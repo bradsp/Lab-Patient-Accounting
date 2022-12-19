@@ -254,6 +254,7 @@ namespace LabBilling.Forms
             this.InsOrderComboBox = new LabBilling.Library.FlatCombo();
             this.HolderSexComboBox = new LabBilling.Library.FlatCombo();
             this.minPmtTextBox = new LabBilling.UserControls.CurrencyTextBox();
+            this.readyToBillCheckbox = new System.Windows.Forms.CheckBox();
             this.tabControl1.SuspendLayout();
             this.summaryTab.SuspendLayout();
             this.tabDemographics.SuspendLayout();
@@ -2015,6 +2016,7 @@ namespace LabBilling.Forms
             // 
             this.tabBillingActivity.AutoScroll = true;
             this.tabBillingActivity.BackColor = System.Drawing.Color.White;
+            this.tabBillingActivity.Controls.Add(this.readyToBillCheckbox);
             this.tabBillingActivity.Controls.Add(this.statementFlagComboBox);
             this.tabBillingActivity.Controls.Add(this.label3);
             this.tabBillingActivity.Controls.Add(this.label2);
@@ -2713,6 +2715,17 @@ namespace LabBilling.Forms
             this.minPmtTextBox.Size = new System.Drawing.Size(100, 20);
             this.minPmtTextBox.TabIndex = 9;
             // 
+            // readyToBillCheckbox
+            // 
+            this.readyToBillCheckbox.AutoSize = true;
+            this.readyToBillCheckbox.Location = new System.Drawing.Point(706, 10);
+            this.readyToBillCheckbox.Name = "readyToBillCheckbox";
+            this.readyToBillCheckbox.Size = new System.Drawing.Size(85, 17);
+            this.readyToBillCheckbox.TabIndex = 12;
+            this.readyToBillCheckbox.Text = "Ready to Bill";
+            this.readyToBillCheckbox.UseVisualStyleBackColor = true;
+            this.readyToBillCheckbox.CheckedChanged += new System.EventHandler(this.readyToBillCheckbox_CheckedChanged);
+            // 
             // AccountForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2989,6 +3002,7 @@ namespace LabBilling.Forms
         private System.Windows.Forms.ToolStripMenuItem generateClientStatementToolStripMenuItem;
         private System.Windows.Forms.DataGridView dxPointerGrid2;
         private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.CheckBox readyToBillCheckbox;
     }
 }
 

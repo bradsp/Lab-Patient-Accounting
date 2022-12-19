@@ -400,9 +400,9 @@ namespace LabBilling.Core.DataAccess
 
                 //TODO: is there any reason a date of service change should result in changing all charges --
                 // except: the date of service on charges will not match new date.
-                
+
                 // option: reprocess all charges, or update service date on charge records
-                foreach(var chrg in table.Charges)
+                foreach (var chrg in table.Charges)
                 {
                     chrg.ServiceDate = newDate;
                     chrgRepository.Update(chrg);
@@ -807,15 +807,15 @@ namespace LabBilling.Core.DataAccess
                     new BundledProfileComponent("86900", "5728190"),
                     new BundledProfileComponent("86901")
                 }
-            });            
+            });
 
             //foreach(var profile in bundledProfiles)
-            for(int x = 0; x < bundledProfiles.Count; x++)
+            for (int x = 0; x < bundledProfiles.Count; x++)
             {
                 //foreach(var cpt in profile.ComponentCpt)
-                for(int i = 0; i < bundledProfiles[x].ComponentCpt.Count; i++)
+                for (int i = 0; i < bundledProfiles[x].ComponentCpt.Count; i++)
                 {
-                    foreach(var chrg in account.Charges.Where(c => !c.IsCredited))
+                    foreach (var chrg in account.Charges.Where(c => !c.IsCredited))
                     {
                         if (chrg.ChrgDetails.Any(d => d.Cpt4 == bundledProfiles[x].ComponentCpt[i].Cpt))
                         {
@@ -829,7 +829,7 @@ namespace LabBilling.Core.DataAccess
                 {
                     //credit components and charge profile cdm
 
-                    for(int i = 0; i < bundledProfiles[x].ComponentCpt.Count; i++)
+                    for (int i = 0; i < bundledProfiles[x].ComponentCpt.Count; i++)
                     {
                         chrgRepository.CreditCharge(bundledProfiles[x].ComponentCpt[i].ChrgId, $"Bundling to {bundledProfiles[x].ProfileCdm}");
                     }
@@ -849,62 +849,81 @@ namespace LabBilling.Core.DataAccess
 
             try
             {
-                if (account.InsurancePrimary != null)
+                if (account.Status == "SSIUB" || account.Status == "SSI1500" || account.Status == "CLAIM" || account.Status == "STMT"
+                    || account.Status == "CLOSED" || account.Status == "PAID_OUT")
                 {
-                    if (account.InsurancePrimary.InsCompany != null)
-                    {
-                        if (!account.InsurancePrimary.InsCompany.IsMedicareHmo)
-                            BundlePanels(account);
-                    }
-                }
-
-                BusinessLogic.Validators.ClaimValidator claimValidator = new BusinessLogic.Validators.ClaimValidator();
-                account.LmrpErrors = ValidateLMRP(account);
-                var validationResult = claimValidator.Validate(account);
-
-                bool isAccountValid = false;
-
-                string lmrperrors = null;
-                foreach (var error in account.LmrpErrors)
-                {
-                    account.AccountValidationStatus.validation_text += error + "\n";
-                    lmrperrors += error + "\n";
-                }
-
-                account.AccountValidationStatus.account = account.AccountNo;
-                account.AccountValidationStatus.mod_date = DateTime.Now;
-
-                if (!validationResult.IsValid)
-                {
-                    isAccountValid = false;
-                    account.AccountValidationStatus.validation_text = validationResult.ToString();
-                }
-                else if (account.LmrpErrors.Count > 0)
-                {
-                    isAccountValid = false;
+                    //account has been billed, do not validate
+                    account.AccountValidationStatus.account = account.AccountNo;
+                    account.AccountValidationStatus.mod_date = DateTime.Now;
+                    account.AccountValidationStatus.validation_text = "Account has already been billed. Did not validate.";
+                    accountValidationStatusRepository.Save(account.AccountValidationStatus);
+                    return false;
                 }
                 else
                 {
-                    isAccountValid = true;
-                    account.AccountValidationStatus.validation_text = "No validation errors.";
+                    if (account.InsurancePrimary != null)
+                    {
+                        if (account.InsurancePrimary.InsCompany != null)
+                        {
+                            if (!account.InsurancePrimary.InsCompany.IsMedicareHmo)
+                                BundlePanels(account);
+                        }
+                    }
+
+                    BusinessLogic.Validators.ClaimValidator claimValidator = new BusinessLogic.Validators.ClaimValidator();
+                    account.LmrpErrors = ValidateLMRP(account);
+                    var validationResult = claimValidator.Validate(account);
+
+                    bool isAccountValid = false;
+
+                    string lmrperrors = null;
+                    foreach (var error in account.LmrpErrors)
+                    {
+                        account.AccountValidationStatus.validation_text += error + "\n";
+                        lmrperrors += error + "\n";
+                    }
+
+                    account.AccountValidationStatus.account = account.AccountNo;
+                    account.AccountValidationStatus.mod_date = DateTime.Now;
+
+                    if (!validationResult.IsValid)
+                    {
+                        isAccountValid = false;
+                        account.AccountValidationStatus.validation_text = validationResult.ToString();
+                        //update account status back to new
+                        UpdateStatus(account.AccountNo, "NEW");
+                    }
+                    else if (account.LmrpErrors.Count > 0)
+                    {
+                        isAccountValid = false;
+                        UpdateStatus(account.AccountNo, "NEW");
+                    }
+                    else
+                    {
+                        isAccountValid = true;
+                        account.AccountValidationStatus.validation_text = "No validation errors.";
+                        //update account status if this account has been flagged to bill
+                        if(account.Status == "RTB")
+                            UpdateStatus(account.AccountNo, account.BillForm);
+                    }
+
+                    accountValidationStatusRepository.Save(account.AccountValidationStatus);
+                    if (!string.IsNullOrEmpty(lmrperrors))
+                    {
+                        AccountLmrpError record = new AccountLmrpError();
+                        record.AccountNo = account.AccountNo;
+                        record.DateOfService = (DateTime)account.TransactionDate;
+                        record.ClientMnem = account.ClientMnem;
+                        record.FinancialCode = account.FinCode;
+                        record.Error = lmrperrors;
+
+                        accountLmrpErrorRepository.Save(record);
+                    }
+
+                    return isAccountValid;
                 }
-
-                accountValidationStatusRepository.Save(account.AccountValidationStatus);
-                if (!string.IsNullOrEmpty(lmrperrors))
-                {
-                    AccountLmrpError record = new AccountLmrpError();
-                    record.AccountNo = account.AccountNo;
-                    record.DateOfService = (DateTime)account.TransactionDate;
-                    record.ClientMnem = account.ClientMnem;
-                    record.FinancialCode = account.FinCode;
-                    record.Error = lmrperrors;
-
-                    accountLmrpErrorRepository.Save(record);
-                }
-
-                return isAccountValid;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Log.Instance.Error(ex);
 

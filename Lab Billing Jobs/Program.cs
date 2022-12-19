@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Topshelf;
 using log4net.Config;
 
-namespace Lab_Billing_Jobs
+namespace LabBillingJobs
 {
     internal class Program
     {
@@ -19,8 +19,8 @@ namespace Lab_Billing_Jobs
 
                 x.RunAsLocalSystem();
                 x.UseLog4Net();
-                x.SetServiceName("LabBillingMQService");
-                x.SetDisplayName("Lab Billing Message Queue Service");
+                x.SetServiceName("LabBillingJobsService");
+                x.SetDisplayName("Lab Billing Jobs Service");
 
                 x.Service<JobProcessor>(s =>
                 {

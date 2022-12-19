@@ -38,7 +38,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LabBillingConsole", "LabBil
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "LabBillingServiceSetup", "LabBillingServiceSetup\LabBillingServiceSetup.vdproj", "{CCA0C739-9B92-4DED-AE24-342149046295}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lab Billing Jobs", "Lab Billing Jobs\Lab Billing Jobs.csproj", "{EEE71488-9E0F-46F4-8B35-2ECC84E92513}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LabBillingJobs", "Lab Billing Jobs\LabBillingJobs.csproj", "{EEE71488-9E0F-46F4-8B35-2ECC84E92513}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

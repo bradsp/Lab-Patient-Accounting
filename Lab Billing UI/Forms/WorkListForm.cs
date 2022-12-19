@@ -177,13 +177,13 @@ namespace LabBilling.Forms
                             acct[nameof(AccountSearch.LastValidationDate)] = DateTime.Now;
                             acct[nameof(AccountSearch.Status)] = "ERROR";
                         }
-                        if(formType != "CLAIM")
-                            accountRepository.UpdateStatus(accountNo, "NEW");
+                        //if(formType != "CLAIM")
+                        //    accountRepository.UpdateStatus(accountNo, "NEW");
                     }
                     else
                     {
-                        if (formType != "UNDEFINED")
-                            accountRepository.UpdateStatus(accountNo, formType);
+                        //if (formType != "UNDEFINED")
+                        //    accountRepository.UpdateStatus(accountNo, formType);
 
                         if(acct != null)
                         {
@@ -218,11 +218,11 @@ namespace LabBilling.Forms
             });
             try
             {
-                if(account.Status == "SSIUB" || account.Status == "SSI1500" || account.Status == "CLAIM" || account.Status == "STMT")
-                {
-                    //account has been billed, do not validate
-                    return (false, "Account has already been billed. Did not validate.", "CLAIM");
-                }
+                //if(account.Status == "SSIUB" || account.Status == "SSI1500" || account.Status == "CLAIM" || account.Status == "STMT")
+                //{
+                //    //account has been billed, do not validate
+                //    return (false, "Account has already been billed. Did not validate.", "CLAIM");
+                //}
 
                 if (!accountRepository.Validate(ref account))
                 {
@@ -514,7 +514,8 @@ namespace LabBilling.Forms
                     accountGrid[nameof(AccountSearch.ValidationStatus), e.RowIndex].Style.BackColor = Color.LightPink;
                 }
                 else if (accountGrid[e.ColumnIndex, e.RowIndex].Value.ToString() == "UB" ||
-                    accountGrid[e.ColumnIndex, e.RowIndex].Value.ToString() == "1500")
+                    accountGrid[e.ColumnIndex, e.RowIndex].Value.ToString() == "1500" ||
+                    accountGrid[e.ColumnIndex, e.RowIndex].Value.ToString() == "RTB")
                 {
                     accountGrid[e.ColumnIndex, e.RowIndex].Style.BackColor = Color.LightGreen;
                     accountGrid[nameof(AccountSearch.ValidationStatus), e.RowIndex].Style.BackColor = Color.LightGreen;
@@ -798,8 +799,42 @@ namespace LabBilling.Forms
                     changeToYFinancialClassToolStripMenuItem.Visible = false;
                     changeToYFinancialClassToolStripMenuItem.Enabled = false;
                 }
+
+                var status = accountGrid.SelectedRows[0].Cells[nameof(AccountSearch.Status)].Value.ToString();
+                if (status == "RTB" || status == "1500" || status == "UB")
+                    readyToBillToolStripMenuItem.Checked = true;
+                else
+                    readyToBillToolStripMenuItem.Checked = false;
             }
 
+        }
+
+        private void readyToBillToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var selectedAccount = accountGrid.SelectedRows[0].Cells[nameof(AccountSearch.Account)].Value.ToString();
+            var accts = accountTable.Rows.Find(selectedAccount);
+            var account = accountRepository.GetByAccount(selectedAccount);
+
+            if(readyToBillToolStripMenuItem.Checked)
+            {
+                if (!account.ReadyToBill)
+                {
+                    accountRepository.UpdateStatus(selectedAccount, "RTB");
+                    accountRepository.AddNote(selectedAccount, "Marked ready to bill.");
+                    accts[nameof(AccountSearch.Status)] = "RTB";
+                    accountGrid.Refresh();
+                }
+            }
+            else
+            {
+                if(account.ReadyToBill)
+                {
+                    accountRepository.UpdateStatus(selectedAccount, "NEW");
+                    accountRepository.AddNote(selectedAccount, "Ready to bill removed.");
+                    accts[nameof(AccountSearch.Status)] = "NEW";
+                    accountGrid.Refresh();
+                }
+            }
         }
     }
 }
