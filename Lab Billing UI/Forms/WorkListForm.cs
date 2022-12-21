@@ -822,6 +822,7 @@ namespace LabBilling.Forms
                     accountRepository.UpdateStatus(selectedAccount, "RTB");
                     accountRepository.AddNote(selectedAccount, "Marked ready to bill.");
                     accts[nameof(AccountSearch.Status)] = "RTB";
+                    _ = Task.Run(() => RunValidationAsync(selectedAccount));
                     accountGrid.Refresh();
                 }
             }

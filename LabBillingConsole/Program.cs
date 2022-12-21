@@ -16,10 +16,12 @@ namespace LabBillingConsole
 
         static void Main(string[] args)
         {
-            //TestClientInvoices();
-            ReprintInvoice();
 
-            //GenerateStatement();
+        }
+
+        public static void AutomatationTest()
+        {
+
         }
 
         public static void ReprintInvoice()

@@ -337,6 +337,7 @@ namespace LabBilling.Core.BusinessLogic
                 claimData.ReceiverOrgName = parametersdb.GetByKey("billing_receiver_name");
                 claimData.ReceiverId = parametersdb.GetByKey("billing_receiver_id");
                 claimData.ProviderTaxonomyCode = "282N00000X";
+
                 claimData.BillingProviderName = parametersdb.GetByKey("billing_entity_name");
                 claimData.BillingProviderAddress = parametersdb.GetByKey("billing_entity_street");
                 claimData.BillingProviderCity = parametersdb.GetByKey("billing_entity_city");
@@ -345,10 +346,16 @@ namespace LabBilling.Core.BusinessLogic
                 claimData.BillingProviderCountry = parametersdb.GetByKey("billing_entity_country");
                 claimData.BillingProviderTaxId = parametersdb.GetByKey("fed_tax_id");
                 claimData.BillingProviderUPIN = String.Empty;
-                claimData.BillingProviderNPI = parametersdb.GetByKey("wth_npi");
+                claimData.BillingProviderNPI = parametersdb.GetByKey("npi_number");
                 claimData.BillingProviderContactName = parametersdb.GetByKey("billing_contact");
                 claimData.BillingProviderContactPhone = parametersdb.GetByKey("billing_phone");
                 claimData.BillingProviderContactEmail = parametersdb.GetByKey("billing_email");
+
+                if (claimData.claimAccount.InsurancePrimary.InsCompany.BillAsJmcgh)
+                {
+                    claimData.BillingProviderName = parametersdb.GetByKey("company2_name");
+                    claimData.BillingProviderNPI = parametersdb.GetByKey("wth_npi");
+                }
 
                 claimData.PayToAddress = parametersdb.GetByKey("remit_to_address");
                 claimData.PayToCity = parametersdb.GetByKey("remit_to_city");
@@ -420,18 +427,12 @@ namespace LabBilling.Core.BusinessLogic
                 claimData.ReferringProviderMiddleName = claimData.claimAccount.Pat.Physician.MiddleInitial;
                 claimData.ReferringProviderSuffix = "";
                 claimData.ReferringProviderNPI = claimData.claimAccount.Pat.Physician.NpiId;
-                //Dictionary<string, string> dicOP = new Dictionary<string, string>
-                //{
-                //    { "MC", "440002" },
-                //    { "BC", "1000427" },
-                //    { "TNBC", "1000427" },
-                //    { "UHC", "626010402" }
-                //};
+
                 foreach (Ins ins in claimData.claimAccount.Insurances)
                 {
                     if (ins.IsDeleted)
                         continue;
-                    //        public IEnumerable<ClaimSubscriber> Subscribers { get; set; }
+
                     ClaimSubscriber subscriber = new ClaimSubscriber();
                     switch(ins.Coverage)
                     {
@@ -488,13 +489,7 @@ namespace LabBilling.Core.BusinessLogic
                     subscriber.PayerZipCode = ins.InsCompany.Zip;
                     subscriber.PayerCountry = "US";
                     string strPayer = ins.InsCompany.NThrivePayerNo ?? "UKNOWN";
-                    //if(dicOP.ContainsKey(ins.InsCode))
-                    //{
-                    //    if(!dicOP.TryGetValue(ins.InsCode, out strPayer))
-                    //    {
-                    //        strPayer = ins.InsCompany.PayerNo;
-                    //    }
-                    //}
+
                     if (strPayer == string.Empty)
                     {
                         strPayer = "UKNOWN";
@@ -504,20 +499,6 @@ namespace LabBilling.Core.BusinessLogic
                     subscriber.CoordinationOfBenefitsCode = "";
                     subscriber.ConditionResponseCode = "";
                     subscriber.EmployementStatusCode = "";
-
-                    //string strClaimFilingIndicatorCode = null;
-
-                    //if (!string.IsNullOrEmpty(ins.InsCompany.ProviderNoQualifer))
-                    //{
-                    //    if (!ClaimFilingIndicatorCode.TryGetValue(ins.InsCompany.ProviderNoQualifer, out strClaimFilingIndicatorCode))
-                    //    {
-                    //        strClaimFilingIndicatorCode = "CI";
-                    //    }
-                    //}
-                    //else
-                    //{
-                    //    strClaimFilingIndicatorCode = "CI";
-                    //}
 
                     subscriber.ClaimFilingIndicatorCode = ins.InsCompany.ClaimFilingIndicatorCode;
 

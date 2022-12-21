@@ -659,7 +659,7 @@ namespace LabBilling.Core
         private int Loop2000C(ref int hlCount)
         {
             int segmentCount = 0;
-            if (claim.claimAccount.Pat.GuarRelationToPatient != "01")
+            if (claim.claimAccount.InsurancePrimary.Relation != "01")
             {
                 //HL segment
                 ediDocument.Segments.Add(new EdiSegment("HL")

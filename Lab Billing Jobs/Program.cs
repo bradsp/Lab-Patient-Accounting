@@ -10,8 +10,18 @@ namespace LabBillingJobs
 {
     internal class Program
     {
+        public static string ConnectionString { get; set; }
+        public static string Server { get; set; }
+        public static string Database { get; set; }
+        public static string LogDatabase { get; set; }
+
+
         static void Main(string[] args)
         {
+            Program.Database = "LabBillingTest"; // Properties.Settings.Default.DbName;
+            Program.Server = "WTHMCLBILL"; // Properties.Settings.Default.DbServer;
+            Program.LogDatabase = "NLog"; // Properties.Settings.Default.LogDbName;
+
             XmlConfigurator.Configure(new System.IO.FileInfo(@"D:\Users\bpowers\source\repos\Lab-Billing\Lab Billing Jobs\log4net.config"));
 
             var exitcode = HostFactory.Run(x =>

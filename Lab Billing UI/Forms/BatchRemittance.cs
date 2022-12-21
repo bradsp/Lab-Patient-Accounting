@@ -498,27 +498,29 @@ namespace LabBilling.Forms
 
                 //load data into data grid view
                 XmlDocument xmlDoc = new XmlDocument();
-
-                xmlDoc.LoadXml(chkBatch.BatchData);
-
-                XmlNodeList nodes = xmlDoc.DocumentElement.SelectNodes("/Batch/Payment");
-                foreach (XmlNode node in nodes)
+                if (chkBatch.BatchData != null)
                 {
-                    //we have to get the index of a last row id:
-                    var index = dgvPayments.Rows.Add();
+                    xmlDoc.LoadXml(chkBatch.BatchData);
 
-                    //and count +1 to get a new row id:
-                    dgvPayments["Account", index].Value = node.Attributes["Account"].Value;
-                    dgvPayments["CheckNo", index].Value = node.Attributes["CheckNo"].Value;
-                    dgvPayments["PaymentSource", index].Value = node.Attributes["PaymentSource"].Value;
-                    dgvPayments["Contractual", index].Value = node.Attributes["Contractual"].Value ?? "0";
-                    dgvPayments["AmountPaid", index].Value = node.Attributes["AmountPaid"].Value ?? "0";
-                    dgvPayments["WriteOff", index].Value = node.Attributes["WriteOff"].Value ?? "0";
-                    dgvPayments["WriteOffCode", index].Value = node.Attributes["WriteOffCode"].Value;
-                    dgvPayments["WriteOffDate", index].Value = node.Attributes["WriteOffDate"].Value;
-                    dgvPayments["Comment", index].Value = node.Attributes["Comment"].Value;
-                    dgvPayments["CheckDate", index].Value = node.Attributes["CheckDate"].Value;
-                    dgvPayments["DateReceived", index].Value = node.Attributes["DateReceived"].Value;
+                    XmlNodeList nodes = xmlDoc.DocumentElement.SelectNodes("/Batch/Payment");
+                    foreach (XmlNode node in nodes)
+                    {
+                        //we have to get the index of a last row id:
+                        var index = dgvPayments.Rows.Add();
+
+                        //and count +1 to get a new row id:
+                        dgvPayments["Account", index].Value = node.Attributes["Account"].Value;
+                        dgvPayments["CheckNo", index].Value = node.Attributes["CheckNo"].Value;
+                        dgvPayments["PaymentSource", index].Value = node.Attributes["PaymentSource"].Value;
+                        dgvPayments["Contractual", index].Value = node.Attributes["Contractual"].Value ?? "0";
+                        dgvPayments["AmountPaid", index].Value = node.Attributes["AmountPaid"].Value ?? "0";
+                        dgvPayments["WriteOff", index].Value = node.Attributes["WriteOff"].Value ?? "0";
+                        dgvPayments["WriteOffCode", index].Value = node.Attributes["WriteOffCode"].Value;
+                        dgvPayments["WriteOffDate", index].Value = node.Attributes["WriteOffDate"].Value;
+                        dgvPayments["Comment", index].Value = node.Attributes["Comment"].Value;
+                        dgvPayments["CheckDate", index].Value = node.Attributes["CheckDate"].Value;
+                        dgvPayments["DateReceived", index].Value = node.Attributes["DateReceived"].Value;
+                    }
                 }
                 var idx = dgvPayments.Rows.Count;
                 dgvPayments.CurrentCell = dgvPayments.Rows[idx - 1].Cells["Account"];

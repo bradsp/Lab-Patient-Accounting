@@ -32,7 +32,7 @@ namespace LabBillingJobs
 
             public void RunValidation()
             {
-                AccountRepository accountRepository = new AccountRepository("Server=WTHMCLBILL;Database=LabBillingTest;Trusted_Connection=True;");
+                AccountRepository accountRepository = new AccountRepository(Helper.ConnVal);
                 Console.WriteLine("In RunValidation() - Starting RunValidation job");
                 log.Info("In RunValidation() - Starting RunValidation job");
                 accountRepository.ValidateUnbilledAccounts();

@@ -153,28 +153,17 @@ namespace LabBilling.Core.BusinessLogic.Validators
 
         private bool MatchPatientNameAndInsuranceHolderName(Account account)
         {
-            bool process = false;
-            if (account.FinCode == "A" || account.FinCode == "D" || account.FinCode == "M")
-                process = true;
-            if (account.FinCode == "H" && account.InsurancePrimary.InsCode == "HESP")
-                process = true;
-            if (account.FinCode == "L" && new string[] { "SEHZ", "WIN", "SECP", "HUM" }.Contains(account.InsurancePrimary.InsCode))
-                process = true;
-
-            if (process)
+            if (account.Pat.GuarRelationToPatient == "01")
             {
-                if (account.Pat.GuarRelationToPatient == "01")
+                if (account.PatLastName == account.InsurancePrimary.HolderLastName &&
+                    account.PatFirstName == account.InsurancePrimary.HolderFirstName &&
+                    account.PatMiddleName == account.InsurancePrimary.HolderMiddleName)
                 {
-                    if (account.PatLastName == account.InsurancePrimary.HolderLastName &&
-                        account.PatFirstName == account.InsurancePrimary.HolderFirstName &&
-                        account.PatMiddleName == account.InsurancePrimary.HolderMiddleName)
-                    {
-                        return true;
-                    }
-                    else
-                    {
-                        return false;
-                    }
+                    return true;
+                }
+                else
+                {
+                    return false;
                 }
             }
             return true;
