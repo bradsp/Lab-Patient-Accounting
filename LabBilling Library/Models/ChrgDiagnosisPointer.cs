@@ -32,5 +32,6 @@ namespace LabBilling.Core.Models
         public string mod_host { get; set; }
         [Ignore]
         public Guid rowguid { get; set; }
+
     }
 }

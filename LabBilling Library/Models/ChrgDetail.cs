@@ -22,8 +22,6 @@ namespace LabBilling.Core.Models
         public string Type { get; set; }
         [Column("amount")]
         public double Amount { get; set; }
-        //[Column("diagnosis_code_ptr")]
-        //public string DiagCodePointer { get; set; }
         [Column("mt_req_no")]
         public string LISReqNo { get; set; }
         [Column("order_code")]
@@ -56,6 +54,14 @@ namespace LabBilling.Core.Models
         public RevenueCode RevenueCodeDetail { get; set; }
         [Ignore]
         public ChrgDiagnosisPointer DiagnosisPointer { get; set; } = new ChrgDiagnosisPointer();
+        [Ignore]
+        public string DiagCodePointer
+        {
+            get
+            {
+                return this.DiagnosisPointer.DiagnosisPointer;
+            }
+        }
 
     }
 }

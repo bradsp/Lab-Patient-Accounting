@@ -1051,8 +1051,8 @@ namespace LabBilling.Forms
 
             ChargesDataGrid.Columns[nameof(Chrg.NetAmount)].DefaultCellStyle.Format = "N2";
             ChargesDataGrid.Columns[nameof(Chrg.NetAmount)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-            ChargesDataGrid.Columns[nameof(Chrg.CalculatedAmount)].DefaultCellStyle.Format = "N2";
-            ChargesDataGrid.Columns[nameof(Chrg.CalculatedAmount)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            //ChargesDataGrid.Columns[nameof(Chrg.CalculatedAmount)].DefaultCellStyle.Format = "N2";
+            //ChargesDataGrid.Columns[nameof(Chrg.CalculatedAmount)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             ChargesDataGrid.Columns[nameof(Chrg.Quantity)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
 
             ChargesDataGrid.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.DisplayedCells);
@@ -1110,7 +1110,7 @@ namespace LabBilling.Forms
 
                 ChrgDetailDataGrid.Columns[nameof(ChrgDetail.Cpt4)].Visible = true;
                 ChrgDetailDataGrid.Columns[nameof(ChrgDetail.BillType)].Visible = true;
-                ChrgDetailDataGrid.Columns[nameof(ChrgDetail.DiagnosisPointer.DiagnosisPointer)].Visible = true;
+                //ChrgDetailDataGrid.Columns[nameof(ChrgDetail.DiagCodePointer)].Visible = true;
                 ChrgDetailDataGrid.Columns[nameof(ChrgDetail.Modifier)].Visible = true;
                 ChrgDetailDataGrid.Columns[nameof(ChrgDetail.Modifer2)].Visible = true;
                 ChrgDetailDataGrid.Columns[nameof(ChrgDetail.RevenueCode)].Visible = true;
@@ -1451,16 +1451,6 @@ namespace LabBilling.Forms
             }
         }
 
-        private void dxPointerGrid2_CellEnter(object sender, DataGridViewCellEventArgs e)
-        {
-            //if (dxPointerGrid2.Columns[e.ColumnIndex].Name == "CDM" ||
-            //    dxPointerGrid2.Columns[e.ColumnIndex].Name == "CPT4" ||
-            //    dxPointerGrid2.Columns[e.ColumnIndex].Name == "Description")
-            //{
-            //    SendKeys.Send("{TAB}");
-            //}
-        }
-
         private void dxPointerGrid2_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
             if(!dxLoadingMode)
@@ -1525,15 +1515,7 @@ namespace LabBilling.Forms
             }
         }
 
-        private void dxPointerGrid2_CellEndEdit(object sender, DataGridViewCellEventArgs e)
-        {
-        }
-
         private void dxCombo_SelectedIndexChanged(object sender, EventArgs e)
-        {
-        }
-
-        private void dxPointerGrid2_RowLeave(object sender, DataGridViewCellEventArgs e)
         {
         }
 
@@ -2272,6 +2254,32 @@ namespace LabBilling.Forms
                 accDB.UpdateStatus(currentAccount.AccountNo, currentAccount.Status);
                 accDB.AddNote(currentAccount.AccountNo, "Marked ready to bill.");
                 RefreshAccountData();
+            }
+        }
+
+        private void clearDxPointerToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var selectedCell = dxPointerGrid2.CurrentCell;
+
+
+            if(selectedCell.ColumnIndex >= 3)
+            {
+                DataGridViewComboBoxCell comboBoxCell = (selectedCell as DataGridViewComboBoxCell);
+
+                comboBoxCell.Value = null;
+            }
+        }
+
+        private void dxPointerGrid2_CellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            if(e.ColumnIndex != -1 && e.RowIndex != -1 && e.Button == System.Windows.Forms.MouseButtons.Right)
+            {
+                DataGridViewCell c = (sender as DataGridView)[e.ColumnIndex, e.RowIndex];
+                c.DataGridView.ClearSelection();
+                c.DataGridView.CurrentCell = c;
+                c.Selected = true;
+                
+                dxPointerMenuStrip.Show(c.DataGridView, dxPointerGrid2.PointToClient(Cursor.Position));
             }
         }
     }

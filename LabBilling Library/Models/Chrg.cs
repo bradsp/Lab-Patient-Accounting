@@ -82,16 +82,16 @@ namespace LabBilling.Core.Models
         [Column("istemp")]
         public string IsTemp { get; set; }
 
-        [ResultColumn]
-        [Column("age_on_date_of_service")]
-        public int AgeOnDateOfService { get; set; }
+        //[ResultColumn]
+        //[Column("age_on_date_of_service")]
+        //public int AgeOnDateOfService { get; set; }
         [Column("retail")]
         public double RetailAmount { get; set; }
         [Column("inp_price")]
         public double HospAmount { get; set; }
-        [ResultColumn]
-        [Column("calc_amt")]
-        public double CalculatedAmount { get; set; }
+        //[ResultColumn]
+        //[Column("calc_amt")]
+        //public double CalculatedAmount { get; set; }
 
         [ResultColumn]
         public DateTime mod_date { get; set; }

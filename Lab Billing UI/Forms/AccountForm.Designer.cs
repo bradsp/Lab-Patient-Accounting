@@ -195,6 +195,7 @@ namespace LabBilling.Forms
             this.AddNoteButton = new System.Windows.Forms.Button();
             this.NotesDisplayTextBox = new System.Windows.Forms.RichTextBox();
             this.tabBillingActivity = new System.Windows.Forms.TabPage();
+            this.readyToBillCheckbox = new System.Windows.Forms.CheckBox();
             this.statementFlagComboBox = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -241,6 +242,8 @@ namespace LabBilling.Forms
             this.RefreshButton = new System.Windows.Forms.PictureBox();
             this.bannerDateOfServiceTextBox = new System.Windows.Forms.TextBox();
             this.bannerDateOfServiceLabel = new System.Windows.Forms.Label();
+            this.dxPointerMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.clearDxPointerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.DateOfBirthTextBox = new LabBilling.UserControls.DateTextBox();
             this.providerLookup1 = new LabBilling.Library.ProviderLookup();
             this.MaritalStatusComboBox = new LabBilling.Library.FlatCombo();
@@ -254,7 +257,6 @@ namespace LabBilling.Forms
             this.InsOrderComboBox = new LabBilling.Library.FlatCombo();
             this.HolderSexComboBox = new LabBilling.Library.FlatCombo();
             this.minPmtTextBox = new LabBilling.UserControls.CurrencyTextBox();
-            this.readyToBillCheckbox = new System.Windows.Forms.CheckBox();
             this.tabControl1.SuspendLayout();
             this.summaryTab.SuspendLayout();
             this.tabDemographics.SuspendLayout();
@@ -280,6 +282,7 @@ namespace LabBilling.Forms
             ((System.ComponentModel.ISupportInitialize)(this.BillActivityDataGrid)).BeginInit();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.RefreshButton)).BeginInit();
+            this.dxPointerMenuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -1446,12 +1449,10 @@ namespace LabBilling.Forms
             this.dxPointerGrid2.Size = new System.Drawing.Size(790, 245);
             this.dxPointerGrid2.TabIndex = 10;
             this.dxPointerGrid2.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dxPointerGrid2_CellClick);
-            this.dxPointerGrid2.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dxPointerGrid2_CellEndEdit);
-            this.dxPointerGrid2.CellEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.dxPointerGrid2_CellEnter);
+            this.dxPointerGrid2.CellMouseDown += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dxPointerGrid2_CellMouseDown);
             this.dxPointerGrid2.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dxPointerGrid2_CellValueChanged);
             this.dxPointerGrid2.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.dxPointerGrid2_DataError);
             this.dxPointerGrid2.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.dxPointerGrid2_EditingControlShowing);
-            this.dxPointerGrid2.RowLeave += new System.Windows.Forms.DataGridViewCellEventHandler(this.dxPointerGrid2_RowLeave);
             // 
             // DxDeleteButton
             // 
@@ -2038,6 +2039,17 @@ namespace LabBilling.Forms
             this.tabBillingActivity.TabIndex = 12;
             this.tabBillingActivity.Text = "Billing Activity";
             // 
+            // readyToBillCheckbox
+            // 
+            this.readyToBillCheckbox.AutoSize = true;
+            this.readyToBillCheckbox.Location = new System.Drawing.Point(706, 10);
+            this.readyToBillCheckbox.Name = "readyToBillCheckbox";
+            this.readyToBillCheckbox.Size = new System.Drawing.Size(85, 17);
+            this.readyToBillCheckbox.TabIndex = 12;
+            this.readyToBillCheckbox.Text = "Ready to Bill";
+            this.readyToBillCheckbox.UseVisualStyleBackColor = true;
+            this.readyToBillCheckbox.CheckedChanged += new System.EventHandler(this.readyToBillCheckbox_CheckedChanged);
+            // 
             // statementFlagComboBox
             // 
             this.statementFlagComboBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
@@ -2546,6 +2558,20 @@ namespace LabBilling.Forms
             this.bannerDateOfServiceLabel.TabIndex = 31;
             this.bannerDateOfServiceLabel.Text = "Date of Service:";
             // 
+            // dxPointerMenuStrip
+            // 
+            this.dxPointerMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.clearDxPointerToolStripMenuItem});
+            this.dxPointerMenuStrip.Name = "dxPointerMenuStrip";
+            this.dxPointerMenuStrip.Size = new System.Drawing.Size(160, 26);
+            // 
+            // clearDxPointerToolStripMenuItem
+            // 
+            this.clearDxPointerToolStripMenuItem.Name = "clearDxPointerToolStripMenuItem";
+            this.clearDxPointerToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
+            this.clearDxPointerToolStripMenuItem.Text = "Clear Dx Pointer";
+            this.clearDxPointerToolStripMenuItem.Click += new System.EventHandler(this.clearDxPointerToolStripMenuItem_Click);
+            // 
             // DateOfBirthTextBox
             // 
             this.DateOfBirthTextBox.DateValue = new System.DateTime(((long)(0)));
@@ -2715,17 +2741,6 @@ namespace LabBilling.Forms
             this.minPmtTextBox.Size = new System.Drawing.Size(100, 20);
             this.minPmtTextBox.TabIndex = 9;
             // 
-            // readyToBillCheckbox
-            // 
-            this.readyToBillCheckbox.AutoSize = true;
-            this.readyToBillCheckbox.Location = new System.Drawing.Point(706, 10);
-            this.readyToBillCheckbox.Name = "readyToBillCheckbox";
-            this.readyToBillCheckbox.Size = new System.Drawing.Size(85, 17);
-            this.readyToBillCheckbox.TabIndex = 12;
-            this.readyToBillCheckbox.Text = "Ready to Bill";
-            this.readyToBillCheckbox.UseVisualStyleBackColor = true;
-            this.readyToBillCheckbox.CheckedChanged += new System.EventHandler(this.readyToBillCheckbox_CheckedChanged);
-            // 
             // AccountForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2798,6 +2813,7 @@ namespace LabBilling.Forms
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.RefreshButton)).EndInit();
+            this.dxPointerMenuStrip.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -3003,6 +3019,8 @@ namespace LabBilling.Forms
         private System.Windows.Forms.DataGridView dxPointerGrid2;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.CheckBox readyToBillCheckbox;
+        private System.Windows.Forms.ContextMenuStrip dxPointerMenuStrip;
+        private System.Windows.Forms.ToolStripMenuItem clearDxPointerToolStripMenuItem;
     }
 }
 
