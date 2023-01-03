@@ -508,8 +508,6 @@ namespace LabBilling.Core.BusinessLogic
 
             if (canFile)
             {
-
-
                 foreach (var transaction in chargeTransactions)
                 {
                     transaction.Account = accountRecord.AccountNo;
@@ -521,7 +519,13 @@ namespace LabBilling.Core.BusinessLogic
                     }
                     catch (CdmNotFoundException cdmex)
                     {
-                        errors.AppendLine($"[WARN] {cdmex.Message} for {transaction.Cdm} on {existingAccount}. Charge not posted.");
+                        errors.AppendLine($"[WARN] {cdmex.Message} for {transaction.Cdm} on {existingAccount.AccountNo}. Charge not posted.");
+                        return (Status.Failed, $"{accountRecord.AccountNo} - charges not posted.", errors);
+                    }
+                    catch(InvalidClientException cliex)
+                    {
+                        errors.AppendLine($"[ERROR] {cliex.Message} for {existingAccount.ClientMnem} on {existingAccount.AccountNo}. Charge not posted.");
+                        return (Status.Failed, $"{accountRecord.AccountNo} - charges not posted.", errors);
                     }
 
                 }

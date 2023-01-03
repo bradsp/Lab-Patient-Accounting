@@ -10,9 +10,7 @@ namespace LabBilling.Core
     public class DiscountRangeNotSupportedException : ApplicationException
     {
         public DiscountRangeNotSupportedException() : base("EndCdm must equal Cdm. Cdm range discounts are no longer supported.")
-        {
-            
-        }
+        { }
     }
 
     [Serializable]
@@ -20,28 +18,37 @@ namespace LabBilling.Core
     {
         public string Cdm { get; }
 
-        public CdmNotFoundException()
-        {
+        public CdmNotFoundException() { }
 
-        }
-
-        public CdmNotFoundException(string message) : base(message)
-        {
-
-        }
+        public CdmNotFoundException(string message) : base(message) { }
 
         public CdmNotFoundException(string message, Exception inner)
-            : base (message, inner)
-        {
-
-        }
+            : base (message, inner) { }
 
         public CdmNotFoundException(string message, string cdm)
             : this(message)
         {
             Cdm = cdm;
         }
+    }
 
+    [Serializable]
+    public class InvalidClientException : ApplicationException
+    {
+        public string ClientMnem { get; }
+
+        public InvalidClientException() { }
+
+        public InvalidClientException(string message) : base(message) { }
+
+        public InvalidClientException(string message, Exception inner)
+            : base(message, inner) { }
+
+        public InvalidClientException(string message, string clientMnem)
+            : this (message)
+        {
+            ClientMnem = clientMnem;
+        }
     }
 
     [Serializable]
@@ -49,21 +56,12 @@ namespace LabBilling.Core
     {
         public string AccountNumber { get; }
 
-        public AccountNotFoundException()
-        {
-        
-        }
+        public AccountNotFoundException() { }
 
-        public AccountNotFoundException(string message) : base(message)
-        {
+        public AccountNotFoundException(string message) : base(message) { }
 
-        }
-
-        public AccountNotFoundException(string message, Exception inner) 
-            : base(message, inner)
-        {
-
-        }
+        public AccountNotFoundException(string message, Exception inner)
+            : base(message, inner) { }
 
         public AccountNotFoundException(string message, string accountNumber)
             : this(message)
@@ -77,22 +75,13 @@ namespace LabBilling.Core
     {
         public string ParameterName { get; }
 
-        public InvalidParameterValueException()
-        {
-
-        }
+        public InvalidParameterValueException() { }
 
         public InvalidParameterValueException(string message)
-            : base(message)
-        {
-
-        }
+            : base(message) { }
 
         public InvalidParameterValueException(string parameterName, Exception inner)
-            : base(parameterName, inner)
-        {
-
-        }
+            : base(parameterName, inner) { }
 
         public InvalidParameterValueException(string message, string parameterName)
             : this(message)
@@ -107,22 +96,13 @@ namespace LabBilling.Core
         public string PatientName { get; }
         public string Account { get; }
 
-        public PatientNameParseException()
-        {
-
-        }
+        public PatientNameParseException() { }
 
         public PatientNameParseException(string message)
-            : base(message)
-        {
-
-        }
+            : base(message) { }
 
         public PatientNameParseException(string patientName, Exception inner)
-            : base(patientName, inner)
-        {
-
-        }
+            : base(patientName, inner) { }
 
         public PatientNameParseException(string message, string patientName, string account)
             : this(message)
@@ -136,16 +116,10 @@ namespace LabBilling.Core
     {
         public string RuleName { get; }
 
-        public RuleProcessException()
-        {
-
-        }
+        public RuleProcessException() { }
 
         public RuleProcessException(string message, Exception innerException)
-            : base(message, innerException)
-        {
-
-        }
+            : base(message, innerException) { }
 
         public RuleProcessException(string message, string ruleName)
             : base(message)

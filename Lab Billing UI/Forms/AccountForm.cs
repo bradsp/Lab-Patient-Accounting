@@ -19,6 +19,7 @@ using LabBilling.Core.BusinessLogic;
 using System.Text.RegularExpressions;
 using System.Configuration;
 using System.Drawing.Printing;
+using LabBilling.Legacy;
 
 namespace LabBilling.Forms
 {
@@ -2281,6 +2282,20 @@ namespace LabBilling.Forms
                 
                 dxPointerMenuStrip.Show(c.DataGridView, dxPointerGrid2.PointToClient(Cursor.Position));
             }
+        }
+
+        private void printEOBToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+            List<string> args = new List<string>();
+            args.AddRange(Helper.GetArgs());
+
+            args.Add(currentAccount.AccountNo);
+
+            PrintEOBForm frm = new PrintEOBForm(args.ToArray());
+
+            frm.ShowDialog(this);
+
         }
     }
 }

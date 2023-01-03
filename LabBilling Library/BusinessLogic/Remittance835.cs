@@ -7,6 +7,12 @@ using System.Threading.Tasks;
 using EdiTools;
 using LabBilling.Core.Models;
 using LabBilling.Core.DataAccess;
+using OopFactory.X12.Parsing;
+using OopFactory.X12.Parsing.Model;
+using System.IO;
+using System.Reflection;
+using System.Xml.Xsl;
+using System.Xml;
 
 namespace LabBilling.Core.BusinessLogic
 {
@@ -19,7 +25,7 @@ namespace LabBilling.Core.BusinessLogic
 
         private string _connString;
 
-        public Dictionary<string, string> adjustmentReasonCodes = new Dictionary<string, string>()
+        public Dictionary<string, string> claimAdjustmentReasonCodes = new Dictionary<string, string>()
         {
             {"1","Deductible Amount"},
             {"2","Coinsurance Amount"},
@@ -1003,6 +1009,40 @@ namespace LabBilling.Core.BusinessLogic
             {"799","Resubmit a replacement claim, not a new claim."}
         };
 
+        public Dictionary<string, string> payerDictionary = new Dictionary<string, string>
+        {
+            { "046000", "" },
+            { "06J4812", "UHC" },
+            { "12350", "ALCATEL-LUCENT FRR UNION" },
+            { "126927", "" },
+            { "12700", "BOILERMAKERS NATIONAL H&W FUND" },
+            { "199947", "OPT/PPO" },
+            { "304000", "" },
+            { "3P1104", "" },
+            { "4G3135", "" },
+            { "4P0327", "" },
+            { "525617", "" },
+            { "6J4812", "UHC" },
+            { "701669", "" },
+            { "704389", "" },
+            { "703981", "" },
+            { "704534", "" },
+            { "704630", "" },
+            { "704966", "" },
+            { "706717", "" },
+            { "708501", "" },
+            { "708547", "" },
+            { "709779", "" },
+            { "710755", "" },
+            { "714946", "" },
+            { "730781", "" },
+            { "742681", "" },
+            { "742904", "" },
+            { "743213", "" },
+            { "80003", "AARP MEDICARECOMPLETE PLUS" },
+            { "8K5167", "" }
+        };
+
         EdiDocument ediDocument = null;
 
         public void Load835(string fileName)
@@ -1013,6 +1053,7 @@ namespace LabBilling.Core.BusinessLogic
             Loop2000 loop2000 = null;
             Loop2100 loop2100 = null;
             Loop2110 loop2110 = null;
+            Loop2110Adj loop2110Adj = null;
 
             string currentLoop = null;
             string currN1type = null;
@@ -1144,15 +1185,58 @@ namespace LabBilling.Core.BusinessLogic
                         loop2110.RevenueCode = segment[4];
                         break;
                     case "CAS":
-                        loop2110.ClaimAdjustmentGroupCode = segment[1];
+                        loop2110Adj = new Loop2110Adj();
+                        loop2110Adj.ClaimAdjustmentGroupCode = segment[1];
                         // CO - contractual obligation
                         // CR - corrections and reversal
                         // OA - other adjustment
                         // PI - Payer initiated reductions
                         // PR - Patient Responsibility
-                        loop2110.AdjustmentReasonCode = segment[2];
-                        loop2110.AdjustmentAmount = segment[3];
-                        loop2110.AdjustmentQuantity = segment[4];
+                        loop2110Adj.AdjustmentReasonCode = segment[2];
+                        loop2110Adj.AdjustmentAmount = segment[3];
+                        loop2110Adj.AdjustmentQuantity = segment[4];
+                        loop2110.Adjustments.Add(loop2110Adj);
+
+                        if (segment[5] != null)
+                        {
+                            loop2110Adj = new Loop2110Adj();
+                            loop2110Adj.AdjustmentReasonCode = segment[5];
+                            loop2110Adj.AdjustmentAmount = segment[6];
+                            loop2110Adj.AdjustmentQuantity = segment[7];
+                            loop2110.Adjustments.Add(loop2110Adj);
+                        }
+                        if (segment[8] != null)
+                        {
+                            loop2110Adj = new Loop2110Adj();
+                            loop2110Adj.AdjustmentReasonCode = segment[8];
+                            loop2110Adj.AdjustmentAmount = segment[9];
+                            loop2110Adj.AdjustmentQuantity = segment[10];
+                            loop2110.Adjustments.Add(loop2110Adj);
+                        }
+                        if (segment[11] != null)
+                        {
+                            loop2110Adj = new Loop2110Adj();
+                            loop2110Adj.AdjustmentReasonCode = segment[11];
+                            loop2110Adj.AdjustmentAmount = segment[12];
+                            loop2110Adj.AdjustmentQuantity = segment[13];
+                            loop2110.Adjustments.Add(loop2110Adj);
+                        }
+                        if (segment[14] != null)
+                        {
+                            loop2110Adj = new Loop2110Adj();
+                            loop2110Adj.AdjustmentReasonCode = segment[14];
+                            loop2110Adj.AdjustmentAmount = segment[15];
+                            loop2110Adj.AdjustmentQuantity = segment[16];
+                            loop2110.Adjustments.Add(loop2110Adj);
+                        }
+                        if (segment[17] != null)
+                        {
+                            loop2110Adj = new Loop2110Adj();
+                            loop2110Adj.AdjustmentReasonCode = segment[17];
+                            loop2110Adj.AdjustmentAmount = segment[18];
+                            loop2110Adj.AdjustmentQuantity = segment[19];
+                            loop2110.Adjustments.Add(loop2110Adj);
+                        }
                         break;
                     case "NM1":
                         if (segment[1] == "QC")
@@ -1180,6 +1264,45 @@ namespace LabBilling.Core.BusinessLogic
         {
             ChkRepository chkRepository = new ChkRepository(_connString);
 
+
+        }
+
+        public void Load835_oop(string filename)
+        {
+            Stream transformStream = null;
+
+            Stream inputStream = new FileStream(filename, FileMode.Open, FileAccess.Read);
+            FileInfo outputFileInfo = new FileInfo(@"c:\temp\835out.xml");
+
+            transformStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(@"OopFactory.X12.Transformations.X12-835-To-CSV.xslt");
+
+            X12Parser parser = new X12Parser();
+            Interchange interchange = parser.Parse(inputStream);
+            interchange.SerializeToX12(true);
+            string xml = interchange.Serialize();
+
+            var transform = new XslCompiledTransform();
+            transform.Load(XmlReader.Create(transformStream));
+            XsltArgumentList arguments = new XsltArgumentList();
+            arguments.AddParam("filename", "", new FileInfo(filename).Name);
+
+            MemoryStream mstream = new MemoryStream();
+            transform.Transform(XmlReader.Create(new StringReader(xml)), arguments, mstream);
+            mstream.Flush();
+            mstream.Position = 0;
+            string content = new StreamReader(mstream).ReadToEnd();
+            {
+                string outFilename = String.Format("{0}\\{1}{2}", outputFileInfo.DirectoryName, outputFileInfo.Name.Replace(outputFileInfo.Extension, ""), outputFileInfo.Extension);
+                using (Stream outputStream = new FileStream(outFilename, FileMode.Create, FileAccess.Write))
+                {
+                    using (StreamWriter writer = new StreamWriter(outputStream))
+                    {
+                        writer.Write(content);
+                        writer.Close();
+                    }
+                    outputStream.Close();
+                }
+            }
 
         }
 
@@ -1237,12 +1360,18 @@ namespace LabBilling.Core.BusinessLogic
         public string LineItemChargeAmount { get; set; }
         public string MonetaryAmount { get; set; }
         public string RevenueCode { get; set; }
+        public string PaidAmount { get; internal set; }
+        public string AllowedAmount { get; internal set; }
+
+        public List<Loop2110Adj> Adjustments { get; set; } = new List<Loop2110Adj>();
+    }
+
+    public class Loop2110Adj
+    {
         public string ClaimAdjustmentGroupCode { get; set; }
         public string AdjustmentReasonCode { get; set; }
         public string AdjustmentAmount { get; set; }
         public string AdjustmentQuantity { get; set; }
-        public string PaidAmount { get; internal set; }
-        public string AllowedAmount { get; internal set; }
     }
 
 

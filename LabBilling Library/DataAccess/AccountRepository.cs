@@ -597,6 +597,11 @@ namespace LabBilling.Core.DataAccess
         {
             Log.Instance.Trace($"Entering - account {accData.AccountNo} cdm {cdm}");
 
+            if(accData.Client == null)
+            {
+                throw new InvalidClientException("Client not valid", accData.ClientMnem);
+            }
+
             //check account status, change to NEW if it is paid out.
             if (accData.Status == "PAID_OUT")
             {

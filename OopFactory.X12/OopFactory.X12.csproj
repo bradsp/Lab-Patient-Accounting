@@ -682,6 +682,9 @@
     <EmbeddedResource Include="Specifications\Ansi-187-Specification.xml" />
     <EmbeddedResource Include="Specifications\Ansi-179-Specification.xml" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Transformations\X12-835-To-CSV.xslt" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>

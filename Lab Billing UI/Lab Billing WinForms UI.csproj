@@ -29,7 +29,7 @@
     <InstallUrl>\\wthmclbill\installations%24\LabBilling\</InstallUrl>
     <ProductName>Lab Outreach Patient Accounting</ProductName>
     <PublisherName>West Tennessee Healthcare</PublisherName>
-    <ApplicationRevision>73</ApplicationRevision>
+    <ApplicationRevision>74</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
@@ -171,6 +171,12 @@
       <DependentUpon>PaymentAdjustmentEntryForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Worklists.cs" />
+    <Compile Include="Legacy Forms\PrintEOBForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Legacy Forms\PrintEOBForm.designer.cs">
+      <DependentUpon>PrintEOBForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Library\DataGridViewDateColumn.cs" />
     <Compile Include="LookupForms\CdmLookupForm.cs">
       <SubType>Form</SubType>
@@ -523,6 +529,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\PaymentAdjustmentEntryForm.resx">
       <DependentUpon>PaymentAdjustmentEntryForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Legacy Forms\PrintEOBForm.resx">
+      <DependentUpon>PrintEOBForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="LookupForms\CdmLookupForm.resx">
       <DependentUpon>CdmLookupForm.cs</DependentUpon>
