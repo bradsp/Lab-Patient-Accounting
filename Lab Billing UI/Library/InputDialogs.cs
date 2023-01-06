@@ -35,7 +35,7 @@ namespace LabBilling.Library
                 Width = 200,
             };
 
-            newFinCodeComboBox.DataSource = finRepository.GetAll();
+            newFinCodeComboBox.DataSource = DataCache.Instance.GetFins();
             newFinCodeComboBox.DisplayMember = nameof(Fin.Description); 
             newFinCodeComboBox.ValueMember = nameof(Fin.FinCode); 
 

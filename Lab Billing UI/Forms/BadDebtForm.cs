@@ -371,15 +371,17 @@ namespace LabBilling.Forms
             //    }
             //}
             //m_dtAccounts.AcceptChanges();
-
-            if(dgvAccounts.Columns["dataGridViewDeleteButton"] == null)
+            if (!sentCollections)
             {
-                var deleteButton = new DataGridViewButtonColumn();
-                deleteButton.Name = "dataGridViewDeleteButton";
-                deleteButton.HeaderText = "Delete";
-                deleteButton.Text = "Delete";
-                deleteButton.UseColumnTextForButtonValue = true;
-                dgvAccounts.Columns.Add(deleteButton);
+                if (dgvAccounts.Columns["dataGridViewDeleteButton"] == null)
+                {
+                    var deleteButton = new DataGridViewButtonColumn();
+                    deleteButton.Name = "dataGridViewDeleteButton";
+                    deleteButton.HeaderText = "Delete";
+                    deleteButton.Text = "Delete";
+                    deleteButton.UseColumnTextForButtonValue = true;
+                    dgvAccounts.Columns.Add(deleteButton);
+                }
             }
 
             dgvAccounts.AutoResizeColumns();

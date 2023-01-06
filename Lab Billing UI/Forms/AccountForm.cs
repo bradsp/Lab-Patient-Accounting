@@ -1984,6 +1984,7 @@ namespace LabBilling.Forms
         {
             try
             {
+                LoadAccountData();
                 if (!await Task.Run(() => accDB.Validate(ref currentAccount)))
                 {
                     //has validation errors - do not bill
@@ -2040,7 +2041,7 @@ namespace LabBilling.Forms
                 return;
             }
 
-            Billing837 billing837 = new Billing837(Helper.ConnVal);
+            Billing837 billing837 = new Billing837(Helper.ConnVal, systemParametersRepository.GetProductionEnvironment());
 
             string fileLocation;
 

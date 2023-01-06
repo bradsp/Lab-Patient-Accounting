@@ -39,6 +39,7 @@
             this.changeClientToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.changeDateOfServiceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.changeToYFinancialClassToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.readyToBillToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ValidateButton = new MetroFramework.Controls.MetroButton();
             this.workqueues = new System.Windows.Forms.TreeView();
             this.CancelValidationButton = new MetroFramework.Controls.MetroButton();
@@ -50,11 +51,10 @@
             this.filterTextBox = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.nameFilterRadioBtn = new System.Windows.Forms.RadioButton();
-            this.radioButton1 = new System.Windows.Forms.RadioButton();
             this.clientFilterRadioBtn = new System.Windows.Forms.RadioButton();
             this.accountFilterRadioBtn = new System.Windows.Forms.RadioButton();
             this.showAccountsWithPmtCheckbox = new System.Windows.Forms.CheckBox();
-            this.readyToBillToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showReadyToBillCheckbox = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.accountGrid)).BeginInit();
             this.accountGridContextMenu.SuspendLayout();
             this.statusStrip1.SuspendLayout();
@@ -126,7 +126,7 @@
             this.changeToYFinancialClassToolStripMenuItem,
             this.readyToBillToolStripMenuItem});
             this.accountGridContextMenu.Name = "accountGridContextMenu";
-            this.accountGridContextMenu.Size = new System.Drawing.Size(220, 158);
+            this.accountGridContextMenu.Size = new System.Drawing.Size(220, 136);
             this.accountGridContextMenu.Opened += new System.EventHandler(this.accountGridContextMenu_Opened);
             this.accountGridContextMenu.VisibleChanged += new System.EventHandler(this.accountGridContextMenu_VisibleChanged);
             // 
@@ -165,14 +165,24 @@
             this.changeToYFinancialClassToolStripMenuItem.Text = "Change to Y Financial Class";
             this.changeToYFinancialClassToolStripMenuItem.Click += new System.EventHandler(this.changeToYFinancialClassToolStripMenuItem_Click);
             // 
+            // readyToBillToolStripMenuItem
+            // 
+            this.readyToBillToolStripMenuItem.CheckOnClick = true;
+            this.readyToBillToolStripMenuItem.Name = "readyToBillToolStripMenuItem";
+            this.readyToBillToolStripMenuItem.Size = new System.Drawing.Size(219, 22);
+            this.readyToBillToolStripMenuItem.Text = "Ready to Bill";
+            this.readyToBillToolStripMenuItem.Click += new System.EventHandler(this.readyToBillToolStripMenuItem_Click);
+            // 
             // ValidateButton
             // 
-            this.ValidateButton.Location = new System.Drawing.Point(202, 12);
+            this.ValidateButton.Enabled = false;
+            this.ValidateButton.Location = new System.Drawing.Point(1042, 11);
             this.ValidateButton.Name = "ValidateButton";
-            this.ValidateButton.Size = new System.Drawing.Size(113, 23);
+            this.ValidateButton.Size = new System.Drawing.Size(57, 23);
             this.ValidateButton.TabIndex = 2;
             this.ValidateButton.Text = "Validate Accounts";
             this.ValidateButton.UseSelectable = true;
+            this.ValidateButton.Visible = false;
             this.ValidateButton.Click += new System.EventHandler(this.ValidateButton_Click);
             // 
             // workqueues
@@ -188,12 +198,14 @@
             // 
             // CancelValidationButton
             // 
-            this.CancelValidationButton.Location = new System.Drawing.Point(321, 12);
+            this.CancelValidationButton.Enabled = false;
+            this.CancelValidationButton.Location = new System.Drawing.Point(1105, 11);
             this.CancelValidationButton.Name = "CancelValidationButton";
-            this.CancelValidationButton.Size = new System.Drawing.Size(113, 23);
+            this.CancelValidationButton.Size = new System.Drawing.Size(49, 23);
             this.CancelValidationButton.TabIndex = 10;
             this.CancelValidationButton.Text = "Cancel Validation";
             this.CancelValidationButton.UseSelectable = true;
+            this.CancelValidationButton.Visible = false;
             this.CancelValidationButton.Click += new System.EventHandler(this.CancelValidationButton_Click);
             // 
             // statusStrip1
@@ -241,7 +253,7 @@
             // 
             // filterTextBox
             // 
-            this.filterTextBox.Location = new System.Drawing.Point(492, 15);
+            this.filterTextBox.Location = new System.Drawing.Point(236, 10);
             this.filterTextBox.Name = "filterTextBox";
             this.filterTextBox.Size = new System.Drawing.Size(253, 20);
             this.filterTextBox.TabIndex = 13;
@@ -250,7 +262,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(457, 18);
+            this.label1.Location = new System.Drawing.Point(201, 13);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(29, 13);
             this.label1.TabIndex = 14;
@@ -260,7 +272,7 @@
             // 
             this.nameFilterRadioBtn.AutoSize = true;
             this.nameFilterRadioBtn.Checked = true;
-            this.nameFilterRadioBtn.Location = new System.Drawing.Point(760, 16);
+            this.nameFilterRadioBtn.Location = new System.Drawing.Point(496, 13);
             this.nameFilterRadioBtn.Name = "nameFilterRadioBtn";
             this.nameFilterRadioBtn.Size = new System.Drawing.Size(53, 17);
             this.nameFilterRadioBtn.TabIndex = 15;
@@ -268,21 +280,10 @@
             this.nameFilterRadioBtn.Text = "Name";
             this.nameFilterRadioBtn.UseVisualStyleBackColor = true;
             // 
-            // radioButton1
-            // 
-            this.radioButton1.AutoSize = true;
-            this.radioButton1.Location = new System.Drawing.Point(819, 15);
-            this.radioButton1.Name = "radioButton1";
-            this.radioButton1.Size = new System.Drawing.Size(53, 17);
-            this.radioButton1.TabIndex = 15;
-            this.radioButton1.TabStop = true;
-            this.radioButton1.Text = "Name";
-            this.radioButton1.UseVisualStyleBackColor = true;
-            // 
             // clientFilterRadioBtn
             // 
             this.clientFilterRadioBtn.AutoSize = true;
-            this.clientFilterRadioBtn.Location = new System.Drawing.Point(819, 16);
+            this.clientFilterRadioBtn.Location = new System.Drawing.Point(555, 13);
             this.clientFilterRadioBtn.Name = "clientFilterRadioBtn";
             this.clientFilterRadioBtn.Size = new System.Drawing.Size(51, 17);
             this.clientFilterRadioBtn.TabIndex = 15;
@@ -293,7 +294,7 @@
             // accountFilterRadioBtn
             // 
             this.accountFilterRadioBtn.AutoSize = true;
-            this.accountFilterRadioBtn.Location = new System.Drawing.Point(876, 16);
+            this.accountFilterRadioBtn.Location = new System.Drawing.Point(612, 13);
             this.accountFilterRadioBtn.Name = "accountFilterRadioBtn";
             this.accountFilterRadioBtn.Size = new System.Drawing.Size(65, 17);
             this.accountFilterRadioBtn.TabIndex = 15;
@@ -304,7 +305,7 @@
             // showAccountsWithPmtCheckbox
             // 
             this.showAccountsWithPmtCheckbox.AutoSize = true;
-            this.showAccountsWithPmtCheckbox.Location = new System.Drawing.Point(982, 15);
+            this.showAccountsWithPmtCheckbox.Location = new System.Drawing.Point(683, 13);
             this.showAccountsWithPmtCheckbox.Name = "showAccountsWithPmtCheckbox";
             this.showAccountsWithPmtCheckbox.Size = new System.Drawing.Size(172, 17);
             this.showAccountsWithPmtCheckbox.TabIndex = 16;
@@ -312,23 +313,26 @@
             this.showAccountsWithPmtCheckbox.UseVisualStyleBackColor = true;
             this.showAccountsWithPmtCheckbox.CheckedChanged += new System.EventHandler(this.showAccountsWithPmtCheckbox_CheckedChanged);
             // 
-            // readyToBillToolStripMenuItem
+            // showReadyToBillCheckbox
             // 
-            this.readyToBillToolStripMenuItem.CheckOnClick = true;
-            this.readyToBillToolStripMenuItem.Name = "readyToBillToolStripMenuItem";
-            this.readyToBillToolStripMenuItem.Size = new System.Drawing.Size(219, 22);
-            this.readyToBillToolStripMenuItem.Text = "Ready to Bill";
-            this.readyToBillToolStripMenuItem.Click += new System.EventHandler(this.readyToBillToolStripMenuItem_Click);
+            this.showReadyToBillCheckbox.AutoSize = true;
+            this.showReadyToBillCheckbox.Location = new System.Drawing.Point(861, 14);
+            this.showReadyToBillCheckbox.Name = "showReadyToBillCheckbox";
+            this.showReadyToBillCheckbox.Size = new System.Drawing.Size(115, 17);
+            this.showReadyToBillCheckbox.TabIndex = 16;
+            this.showReadyToBillCheckbox.Text = "Show Ready to Bill";
+            this.showReadyToBillCheckbox.UseVisualStyleBackColor = true;
+            this.showReadyToBillCheckbox.CheckedChanged += new System.EventHandler(this.showReadyToBillCheckbox_CheckedChanged);
             // 
             // WorkListForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1166, 476);
+            this.Controls.Add(this.showReadyToBillCheckbox);
             this.Controls.Add(this.showAccountsWithPmtCheckbox);
             this.Controls.Add(this.accountFilterRadioBtn);
             this.Controls.Add(this.clientFilterRadioBtn);
-            this.Controls.Add(this.radioButton1);
             this.Controls.Add(this.nameFilterRadioBtn);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.filterTextBox);
@@ -339,8 +343,10 @@
             this.Controls.Add(this.accountGrid);
             this.Name = "WorkListForm";
             this.Text = "Work List";
+            this.Activated += new System.EventHandler(this.WorkListForm_Activated);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.WorkListForm_FormClosing);
             this.Load += new System.EventHandler(this.WorkListForm_Load);
+            this.Enter += new System.EventHandler(this.WorkListForm_Enter);
             ((System.ComponentModel.ISupportInitialize)(this.accountGrid)).EndInit();
             this.accountGridContextMenu.ResumeLayout(false);
             this.statusStrip1.ResumeLayout(false);
@@ -370,11 +376,11 @@
         private System.Windows.Forms.TextBox filterTextBox;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.RadioButton nameFilterRadioBtn;
-        private System.Windows.Forms.RadioButton radioButton1;
         private System.Windows.Forms.RadioButton clientFilterRadioBtn;
         private System.Windows.Forms.RadioButton accountFilterRadioBtn;
         private System.Windows.Forms.CheckBox showAccountsWithPmtCheckbox;
         private System.Windows.Forms.ToolStripMenuItem changeToYFinancialClassToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem readyToBillToolStripMenuItem;
+        private System.Windows.Forms.CheckBox showReadyToBillCheckbox;
     }
 }

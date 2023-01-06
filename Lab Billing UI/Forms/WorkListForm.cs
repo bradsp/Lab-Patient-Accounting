@@ -28,11 +28,14 @@ namespace LabBilling.Forms
         private int worklistPanelWidth = 0;
         private System.Windows.Forms.Timer _timer;
         private const int _timerDelay = 650;
+        private string selectedQueue = null;
 
         private void WorkListForm_Load(object sender, EventArgs e)
         {
-            ToolTip validateButtonToolTip = new ToolTip();
-            validateButtonToolTip.SetToolTip(ValidateButton, "Validate will run on all accounts in worklist regardless of filter.");
+            //ToolTip validateButtonToolTip = new ToolTip();
+            //validateButtonToolTip.SetToolTip(ValidateButton, "Validate will run on all accounts in worklist regardless of filter.");
+            
+            //ValidateButton.Visible = false;
 
             //Cursor.Current = Cursors.WaitCursor;
             accountRepository = new AccountRepository(_connectionString);
@@ -71,18 +74,19 @@ namespace LabBilling.Forms
             workqueues.Nodes.Add(rootNode);
             workqueues.ExpandAll();
 
-            CancelValidationButton.Visible = false;
-            CancelValidationButton.Enabled = false;
+            //CancelValidationButton.Visible = false;
+            //CancelValidationButton.Enabled = false;
 
+            workqueues.Enabled = true;
         }
 
         private async void ValidateButton_Click(object sender, EventArgs e)
         {
             requestAbort = false;
-            ValidateButton.Enabled = false;
+            //ValidateButton.Enabled = false;
             workqueues.Enabled = false;
-            CancelValidationButton.Enabled = true;
-            CancelValidationButton.Visible = true;
+            //CancelValidationButton.Enabled = true;
+            //CancelValidationButton.Visible = true;
 
             int cnt = accountTable.DefaultView.Count;
             toolStripProgressBar1.Minimum = 0;
@@ -110,10 +114,10 @@ namespace LabBilling.Forms
             toolStripStatusLabel1.Text = "Validation complete.";
 
             Cursor.Current = Cursors.Default;
-            ValidateButton.Enabled = true;
+            //ValidateButton.Enabled = true;
             workqueues.Enabled = true;
-            CancelValidationButton.Visible = false;
-            CancelValidationButton.Enabled = false;
+            //CancelValidationButton.Visible = false;
+            //CancelValidationButton.Enabled = false;
         }
 
         public WorkListForm(string connValue)
@@ -123,41 +127,6 @@ namespace LabBilling.Forms
             _timer = new Timer() { Enabled = false, Interval = _timerDelay };
             _timer.Tick += new EventHandler(filterTextBox_KeyUpDone);
         }
-
-        //private void RunValidation(string accountNo)
-        //{
-        //    if (!string.IsNullOrEmpty(accountNo))
-        //    {
-        //        int rowIndex = -1;
-        //        bool tempAllowUserToAddRows = accountGrid.AllowUserToAddRows;
-        //        accountGrid.AllowUserToAddRows = false; // Turn off or .Value below will throw null exception
-        //        DataGridViewRow row = accountGrid.Rows
-        //            .Cast<DataGridViewRow>()
-        //            .Where(r => r.Cells["Account"].Value.ToString().Equals(accountNo))
-        //            .First();
-        //        rowIndex = row.Index;
-        //        accountGrid.AllowUserToAddRows = tempAllowUserToAddRows;
-
-        //        Account account;
-        //        account = accountRepository.GetByAccount(accountNo);
-        //        if (!accountRepository.Validate(ref account))
-        //        {
-        //            //account has validation errors - update grid
-        //            accountGrid[nameof(AccountSearch.ValidationStatus), rowIndex].Value = account.AccountValidationStatus.validation_text;
-        //            accountGrid[nameof(AccountSearch.LastValidationDate), rowIndex].Value = DateTime.Now.ToString();
-        //            accountGrid[nameof(AccountSearch.Status), rowIndex].Value = "ERROR";
-        //            accountRepository.UpdateStatus(accountNo, "NEW");
-        //        }
-        //        else
-        //        {
-        //            accountGrid[nameof(AccountSearch.ValidationStatus), rowIndex].Value = "No validation errors";
-        //            accountGrid[nameof(AccountSearch.Status), rowIndex].Value = account.Fin.ClaimType;
-        //            accountGrid[nameof(AccountSearch.LastValidationDate), rowIndex].Value = DateTime.Now.ToString();
-        //            accountRepository.UpdateStatus(account.AccountNo, account.Fin.ClaimType);
-        //        }
-
-        //    }
-        //}
 
         private async Task RunValidationAsync(string accountNo)
         {
@@ -261,10 +230,16 @@ namespace LabBilling.Forms
             }
         }
 
-        private async void workqueues_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
+        private void workqueues_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
+        {
+            selectedQueue = workqueues.SelectedNode.Text;
+            LoadWorkList();
+        }
+
+        private async void LoadWorkList()
         {
             workqueues.Enabled = false;
-            ValidateButton.Enabled = false;
+            //ValidateButton.Enabled = false;
 
             Cursor.Current = Cursors.WaitCursor;
 
@@ -276,7 +251,12 @@ namespace LabBilling.Forms
                 (nameof(AccountSearch.FinCode), AccountSearchRepository.operation.NotEqual, "CLIENT")
             };
 
-            var selectedQueue = workqueues.SelectedNode.Text;
+            if (selectedQueue == null)
+            {
+                workqueues.Enabled = true;
+                return;
+            }
+
             switch (selectedQueue)
             {
                 case Worklists.MedicareCigna:
@@ -389,7 +369,7 @@ namespace LabBilling.Forms
                 default:
                     break;
             }
-            
+
             accountGrid.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             accountGrid.RowHeadersVisible = false;
 
@@ -440,7 +420,8 @@ namespace LabBilling.Forms
             toolStripStatusLabel1.Text = $"{accountTable.DefaultView.Count} records";
 
             workqueues.Enabled = true;
-            ValidateButton.Enabled = true;
+            UpdateFilter();
+            //ValidateButton.Enabled = true;
         }
 
         private void CancelValidationButton_Click(object sender, EventArgs e)
@@ -573,7 +554,8 @@ namespace LabBilling.Forms
                 try
                 {
                     accountRepository.ChangeFinancialClass(ref account, newFinCode);
-                    accts[nameof(AccountSearch.FinCode)] = account.FinCode;
+                    //accts[nameof(AccountSearch.FinCode)] = account.FinCode;
+                    accts.Delete();
                     accountGrid.Refresh();
                 }
                 catch (ArgumentException anex)
@@ -674,8 +656,8 @@ namespace LabBilling.Forms
                 panelExpandCollapseButton.Text = "<";
                 accountGrid.Left = panel1.Right + 10;
                 accountGrid.Width -= worklistPanelWidth - 20;
-                ValidateButton.Left = panel1.Right + 10;
-                CancelValidationButton.Left = ValidateButton.Right + 10;
+                //ValidateButton.Left = panel1.Right + 10;
+                //CancelValidationButton.Left = ValidateButton.Right + 10;
             }
             else
             {
@@ -685,8 +667,8 @@ namespace LabBilling.Forms
                 panelExpandCollapseButton.Text = ">";
                 accountGrid.Left = panel1.Right + 10;
                 accountGrid.Width += worklistPanelWidth - 20;  
-                ValidateButton.Left = panel1.Right + 10;
-                CancelValidationButton.Left = ValidateButton.Right + 10;
+                //ValidateButton.Left = panel1.Right + 10;
+                //CancelValidationButton.Left = ValidateButton.Right + 10;
             }
         }
 
@@ -717,13 +699,34 @@ namespace LabBilling.Forms
                 {
                     accountTable.DefaultView.RowFilter += $" and {nameof(AccountSearch.TotalPayments)} = 0";
                 }
+
+                if(!showReadyToBillCheckbox.Checked)
+                {
+                    accountTable.DefaultView.RowFilter += $" and {nameof(AccountSearch.Status)} not in ('RTB','1500','UB')";
+                }
             }
             else
             {
                 if (!showAccountsWithPmtCheckbox.Checked)
+                {
                     accountTable.DefaultView.RowFilter = $"{nameof(AccountSearch.TotalPayments)} = 0";
+                }
                 else
+                {
                     accountTable.DefaultView.RowFilter = String.Empty;
+                }
+
+                if(!showReadyToBillCheckbox.Checked)
+                {
+                    if(accountTable.DefaultView.RowFilter != string.Empty)
+                    {
+                        accountTable.DefaultView.RowFilter += $" and {nameof(AccountSearch.Status)} not in ('RTB','1500','UB')";
+                    }
+                    else
+                    {
+                        accountTable.DefaultView.RowFilter = $"{nameof(AccountSearch.Status)} not in ('RTB','1500','UB')";
+                    }
+                }
             }
 
             toolStripStatusLabel1.Text = $"{accountTable.DefaultView.Count} records";
@@ -757,7 +760,8 @@ namespace LabBilling.Forms
                 if (account.FinCode != "Y")
                 {
                     accountRepository.ChangeFinancialClass(ref account, "Y");
-                    accts[nameof(AccountSearch.FinCode)] = account.FinCode;
+                    //accts[nameof(AccountSearch.FinCode)] = account.FinCode;
+                    accts.Delete();
                     accountGrid.Refresh();
                 }
                 else
@@ -836,6 +840,21 @@ namespace LabBilling.Forms
                     accountGrid.Refresh();
                 }
             }
+        }
+
+        private void WorkListForm_Activated(object sender, EventArgs e)
+        {
+            LoadWorkList();
+        }
+
+        private void showReadyToBillCheckbox_CheckedChanged(object sender, EventArgs e)
+        {
+            UpdateFilter();
+        }
+
+        private void WorkListForm_Enter(object sender, EventArgs e)
+        {
+
         }
     }
 }

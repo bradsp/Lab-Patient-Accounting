@@ -52,10 +52,12 @@ namespace LabBilling.Core.BusinessLogic
             parametersdb = new SystemParametersRepository(db);
 
             propProductionEnvironment = dBName.Contains("LIVE") ? "P" : "T";
-            string[] strArgs = new string[3];
-            strArgs[0] = dBName.Contains("LIVE") ? "/LIVE" : "/TEST";
-            strArgs[1] = dBserverName;
-            strArgs[2] = dBName;
+            string env = parametersdb.GetProductionEnvironment();
+
+            //string[] strArgs = new string[3];
+            //strArgs[0] = propProductionEnvironment == "P" ? "/LIVE" : "/TEST";
+            //strArgs[1] = dBserverName;
+            //strArgs[2] = dBName;
 
             accountRepository = new AccountRepository(db);
             patRepository = new PatRepository(db);
@@ -73,7 +75,7 @@ namespace LabBilling.Core.BusinessLogic
         {
             ProgressReportModel report = new ProgressReportModel();
             //compile list of accounts to have claims generated
-            billing837 = new Billing837(_connectionString);
+            billing837 = new Billing837(_connectionString, propProductionEnvironment);
             string batchSubmitterID = parametersdb.GetByKey("fed_tax_id");
             decimal strNum = numberRepository.GetNumber("ssi_batch");
             string interchangeControlNumber = string.Format("{0:D9}", int.Parse(string.Format("{0}{1}", DateTime.Now.Year, strNum)));

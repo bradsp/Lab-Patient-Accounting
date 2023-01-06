@@ -23,6 +23,15 @@ namespace LabBilling.Core.DataAccess
             throw new NotImplementedException();
         }
 
+        public string GetProductionEnvironment()
+        {
+            string env = GetByKey("dbenvironment");
+            if (env == "Production")
+                return "P";
+            else
+                return "T";
+        }
+
         public string GetByKey(string key)
         {
             Log.Instance.Debug($"Entering");

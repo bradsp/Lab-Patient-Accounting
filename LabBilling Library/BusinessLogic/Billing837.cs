@@ -53,9 +53,9 @@ namespace LabBilling.Core
         /// Initiate instance of Billing837 class.
         /// </summary>
         /// <param name="connectionString"></param>
-        public Billing837(string connectionString)
+        public Billing837(string connectionString, string productionEnvironment)
         {
-
+            ProductionEnvironment = productionEnvironment;
         }
 
         public EdiDocument ediDocument;
@@ -92,10 +92,12 @@ namespace LabBilling.Core
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="claims">List of claims to be compiled.</param>
+        /// <param name="claims"></param>
         /// <param name="interchangeControlNumber"></param>
-        /// <param name="environment"></param>
         /// <param name="batchSubmitterId"></param>
+        /// <param name="file_location"></param>
+        /// <param name="claimType"></param>
+        /// <returns></returns>
         public string Generate837ClaimBatch(IEnumerable<ClaimData> claims,
             string interchangeControlNumber,
             string batchSubmitterId,
@@ -129,7 +131,7 @@ namespace LabBilling.Core
                 [12] = this.InterchangeControlVersionNo, // interchange control version number
                 [13] = interchangeControlNumber, // 1.ToString("d9");
                 [14] = this.RequestInterchangeAcknowledgment ? "1" : "0", // acknowledgement requested
-                [15] = ProductionEnvironment, //  interchange usage indicator "P";
+                [15] = ProductionEnvironment, //  interchange usage indicator "P" for production "T" for test
                 [16] = ediDocument.Options.ComponentSeparator.ToString(), // component element separator
             });
 
@@ -873,12 +875,15 @@ namespace LabBilling.Core
             if (claimType == ClaimType.Institutional)
             {
                 // medical record number
-                ediDocument.Segments.Add(new EdiSegment("REF")
+                if (claim.claimAccount.MRN != string.Empty)
                 {
-                    [01] = "EA",
-                    [02] = claim.claimAccount.MRN
-                });
-                segmentCount++;
+                    ediDocument.Segments.Add(new EdiSegment("REF")
+                    {
+                        [01] = "EA",
+                        [02] = claim.claimAccount.MRN
+                    });
+                    segmentCount++;
+                }
             }
 
             // --K3 - file information

@@ -173,7 +173,7 @@
     <value>217, 22</value>
   </data>
   <data name="badDebtMaintenanceToolStripMenuItem.Text" xml:space="preserve">
-    <value>Collections Maintenance</value>
+    <value>Patient Collections</value>
   </data>
   <data name="sSISortToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>153, 22</value>

@@ -21,6 +21,11 @@ namespace LabBilling.Core.DataAccess
 
         }
 
+        public List<Fin> GetActive()
+        {
+            return dbConnection.Query<Fin>($"where {GetRealColumn(nameof(Fin.IsDeleted))} = 0").ToList();
+        }
+
         public override Fin GetById(int id)
         {
             throw new NotImplementedException();

@@ -29,19 +29,21 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(BadDebtForm));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
             this.tsMain = new System.Windows.Forms.ToolStrip();
             this.tsddbtnBadDebt = new System.Windows.Forms.ToolStripDropDownButton();
             this.tsmiSelectAccounts = new System.Windows.Forms.ToolStripMenuItem();
             this.GeneratePatientBillsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.GenerateCollectionsFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
-            this.tsbLoad = new System.Windows.Forms.ToolStripButton();
-            this.tsbLoadMailerP = new System.Windows.Forms.ToolStripButton();
+            this.worklistsToolStripDropDown = new System.Windows.Forms.ToolStripDropDownButton();
+            this.readyForCollectionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.paymentPlanToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.sentToCollectionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.importCollectionsFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tsbWriteOff = new System.Windows.Forms.ToolStripButton();
-            this.tsbReadMCLFile = new System.Windows.Forms.ToolStripButton();
             this.tsbPrintGrid = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
             this.tsbSmallBalWriteOff = new System.Windows.Forms.ToolStripButton();
@@ -49,11 +51,6 @@
             this.tspbRecords = new System.Windows.Forms.ToolStripProgressBar();
             this.ssRecords = new System.Windows.Forms.ToolStripStatusLabel();
             this.dgvAccounts = new System.Windows.Forms.DataGridView();
-            this.worklistsToolStripDropDown = new System.Windows.Forms.ToolStripDropDownButton();
-            this.readyForCollectionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.paymentPlanToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.sentToCollectionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.importCollectionsFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tsMain.SuspendLayout();
             this.ssMain.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvAccounts)).BeginInit();
@@ -64,13 +61,10 @@
             this.tsMain.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
             this.tsMain.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.tsMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsddbtnBadDebt,
-            this.toolStripSeparator5,
             this.worklistsToolStripDropDown,
-            this.tsbLoad,
-            this.tsbLoadMailerP,
+            this.toolStripSeparator5,
+            this.tsddbtnBadDebt,
             this.tsbWriteOff,
-            this.tsbReadMCLFile,
             this.tsbPrintGrid,
             this.toolStripSeparator6,
             this.tsbSmallBalWriteOff});
@@ -123,27 +117,47 @@
             this.toolStripSeparator5.Name = "toolStripSeparator5";
             this.toolStripSeparator5.Size = new System.Drawing.Size(6, 25);
             // 
-            // tsbLoad
+            // worklistsToolStripDropDown
             // 
-            this.tsbLoad.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.tsbLoad.Image = ((System.Drawing.Image)(resources.GetObject("tsbLoad.Image")));
-            this.tsbLoad.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbLoad.Name = "tsbLoad";
-            this.tsbLoad.Size = new System.Drawing.Size(144, 22);
-            this.tsbLoad.Text = "Load Grid From Bad Debt";
-            this.tsbLoad.Visible = false;
-            this.tsbLoad.Click += new System.EventHandler(this.tsbLoad_Click);
+            this.worklistsToolStripDropDown.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.worklistsToolStripDropDown.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.readyForCollectionsToolStripMenuItem,
+            this.paymentPlanToolStripMenuItem,
+            this.sentToCollectionsToolStripMenuItem,
+            this.importCollectionsFileToolStripMenuItem});
+            this.worklistsToolStripDropDown.Image = ((System.Drawing.Image)(resources.GetObject("worklistsToolStripDropDown.Image")));
+            this.worklistsToolStripDropDown.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.worklistsToolStripDropDown.Name = "worklistsToolStripDropDown";
+            this.worklistsToolStripDropDown.Size = new System.Drawing.Size(68, 22);
+            this.worklistsToolStripDropDown.Text = "Worklists";
             // 
-            // tsbLoadMailerP
+            // readyForCollectionsToolStripMenuItem
             // 
-            this.tsbLoadMailerP.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.tsbLoadMailerP.Image = ((System.Drawing.Image)(resources.GetObject("tsbLoadMailerP.Image")));
-            this.tsbLoadMailerP.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbLoadMailerP.Name = "tsbLoadMailerP";
-            this.tsbLoadMailerP.Size = new System.Drawing.Size(144, 22);
-            this.tsbLoadMailerP.Text = "Load Grid with Mailer \"P\"";
-            this.tsbLoadMailerP.Visible = false;
-            this.tsbLoadMailerP.Click += new System.EventHandler(this.tsbLoadMailerP_Click);
+            this.readyForCollectionsToolStripMenuItem.Name = "readyForCollectionsToolStripMenuItem";
+            this.readyForCollectionsToolStripMenuItem.Size = new System.Drawing.Size(193, 22);
+            this.readyForCollectionsToolStripMenuItem.Text = "Ready for Collections";
+            this.readyForCollectionsToolStripMenuItem.Click += new System.EventHandler(this.tsbLoad_Click);
+            // 
+            // paymentPlanToolStripMenuItem
+            // 
+            this.paymentPlanToolStripMenuItem.Name = "paymentPlanToolStripMenuItem";
+            this.paymentPlanToolStripMenuItem.Size = new System.Drawing.Size(193, 22);
+            this.paymentPlanToolStripMenuItem.Text = "Payment Plan";
+            this.paymentPlanToolStripMenuItem.Click += new System.EventHandler(this.tsbLoadMailerP_Click);
+            // 
+            // sentToCollectionsToolStripMenuItem
+            // 
+            this.sentToCollectionsToolStripMenuItem.Name = "sentToCollectionsToolStripMenuItem";
+            this.sentToCollectionsToolStripMenuItem.Size = new System.Drawing.Size(193, 22);
+            this.sentToCollectionsToolStripMenuItem.Text = "Sent to Collections";
+            this.sentToCollectionsToolStripMenuItem.Click += new System.EventHandler(this.tsbLoad_Click);
+            // 
+            // importCollectionsFileToolStripMenuItem
+            // 
+            this.importCollectionsFileToolStripMenuItem.Name = "importCollectionsFileToolStripMenuItem";
+            this.importCollectionsFileToolStripMenuItem.Size = new System.Drawing.Size(193, 22);
+            this.importCollectionsFileToolStripMenuItem.Text = "Import Collections File";
+            this.importCollectionsFileToolStripMenuItem.Click += new System.EventHandler(this.tsbReadMCLFile_Click);
             // 
             // tsbWriteOff
             // 
@@ -154,17 +168,6 @@
             this.tsbWriteOff.Size = new System.Drawing.Size(59, 22);
             this.tsbWriteOff.Text = "Write Off";
             this.tsbWriteOff.Click += new System.EventHandler(this.tsbWriteOff_Click);
-            // 
-            // tsbReadMCLFile
-            // 
-            this.tsbReadMCLFile.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.tsbReadMCLFile.Image = ((System.Drawing.Image)(resources.GetObject("tsbReadMCLFile.Image")));
-            this.tsbReadMCLFile.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbReadMCLFile.Name = "tsbReadMCLFile";
-            this.tsbReadMCLFile.Size = new System.Drawing.Size(64, 22);
-            this.tsbReadMCLFile.Text = "READ FILE";
-            this.tsbReadMCLFile.Visible = false;
-            this.tsbReadMCLFile.Click += new System.EventHandler(this.tsbReadMCLFile_Click);
             // 
             // tsbPrintGrid
             // 
@@ -222,35 +225,35 @@
             this.dgvAccounts.AllowUserToAddRows = false;
             this.dgvAccounts.BackgroundColor = System.Drawing.SystemColors.ControlLightLight;
             this.dgvAccounts.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.EnableAlwaysIncludeHeaderText;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvAccounts.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle10.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle10.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle10.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle10.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle10.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle10.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvAccounts.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle10;
             this.dgvAccounts.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dgvAccounts.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle11.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle11.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle11.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle11.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle11.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle11.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dgvAccounts.DefaultCellStyle = dataGridViewCellStyle11;
             this.dgvAccounts.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dgvAccounts.Location = new System.Drawing.Point(0, 25);
             this.dgvAccounts.MultiSelect = false;
             this.dgvAccounts.Name = "dgvAccounts";
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvAccounts.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle12.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle12.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle12.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle12.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle12.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle12.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvAccounts.RowHeadersDefaultCellStyle = dataGridViewCellStyle12;
             this.dgvAccounts.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvAccounts.Size = new System.Drawing.Size(1010, 605);
             this.dgvAccounts.TabIndex = 2;
@@ -265,48 +268,6 @@
             this.dgvAccounts.RowsRemoved += new System.Windows.Forms.DataGridViewRowsRemovedEventHandler(this.dgvAccounts_RowsRemoved);
             this.dgvAccounts.SelectionChanged += new System.EventHandler(this.DgvAccounts_SelectionChanged);
             // 
-            // worklistsToolStripDropDown
-            // 
-            this.worklistsToolStripDropDown.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.worklistsToolStripDropDown.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.readyForCollectionsToolStripMenuItem,
-            this.paymentPlanToolStripMenuItem,
-            this.sentToCollectionsToolStripMenuItem,
-            this.importCollectionsFileToolStripMenuItem});
-            this.worklistsToolStripDropDown.Image = ((System.Drawing.Image)(resources.GetObject("worklistsToolStripDropDown.Image")));
-            this.worklistsToolStripDropDown.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.worklistsToolStripDropDown.Name = "worklistsToolStripDropDown";
-            this.worklistsToolStripDropDown.Size = new System.Drawing.Size(68, 22);
-            this.worklistsToolStripDropDown.Text = "Worklists";
-            // 
-            // readyForCollectionsToolStripMenuItem
-            // 
-            this.readyForCollectionsToolStripMenuItem.Name = "readyForCollectionsToolStripMenuItem";
-            this.readyForCollectionsToolStripMenuItem.Size = new System.Drawing.Size(193, 22);
-            this.readyForCollectionsToolStripMenuItem.Text = "Ready for Collections";
-            this.readyForCollectionsToolStripMenuItem.Click += new System.EventHandler(this.tsbLoad_Click);
-            // 
-            // paymentPlanToolStripMenuItem
-            // 
-            this.paymentPlanToolStripMenuItem.Name = "paymentPlanToolStripMenuItem";
-            this.paymentPlanToolStripMenuItem.Size = new System.Drawing.Size(193, 22);
-            this.paymentPlanToolStripMenuItem.Text = "Payment Plan";
-            this.paymentPlanToolStripMenuItem.Click += new System.EventHandler(this.tsbLoadMailerP_Click);
-            // 
-            // sentToCollectionsToolStripMenuItem
-            // 
-            this.sentToCollectionsToolStripMenuItem.Name = "sentToCollectionsToolStripMenuItem";
-            this.sentToCollectionsToolStripMenuItem.Size = new System.Drawing.Size(193, 22);
-            this.sentToCollectionsToolStripMenuItem.Text = "Sent to Collections";
-            this.sentToCollectionsToolStripMenuItem.Click += new System.EventHandler(this.tsbLoad_Click);
-            // 
-            // importCollectionsFileToolStripMenuItem
-            // 
-            this.importCollectionsFileToolStripMenuItem.Name = "importCollectionsFileToolStripMenuItem";
-            this.importCollectionsFileToolStripMenuItem.Size = new System.Drawing.Size(193, 22);
-            this.importCollectionsFileToolStripMenuItem.Text = "Import Collections File";
-            this.importCollectionsFileToolStripMenuItem.Click += new System.EventHandler(this.tsbReadMCLFile_Click);
-            // 
             // BadDebtForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -317,7 +278,7 @@
             this.Controls.Add(this.tsMain);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "BadDebtForm";
-            this.Text = "Collection Maintenance";
+            this.Text = "Patient Collections";
             this.Load += new System.EventHandler(this.frmBadDebt_Load);
             this.tsMain.ResumeLayout(false);
             this.tsMain.PerformLayout();
@@ -335,10 +296,7 @@
         private System.Windows.Forms.StatusStrip ssMain;
         private System.Windows.Forms.DataGridView dgvAccounts;
         private System.Windows.Forms.ToolStripButton tsbWriteOff;
-        private System.Windows.Forms.ToolStripButton tsbLoad;
         private System.Windows.Forms.ToolStripStatusLabel ssRecords;
-        private System.Windows.Forms.ToolStripButton tsbLoadMailerP;
-        private System.Windows.Forms.ToolStripButton tsbReadMCLFile;
         private System.Windows.Forms.ToolStripButton tsbPrintGrid;
         private System.Windows.Forms.ToolStripProgressBar tspbRecords;
         private System.Windows.Forms.ToolStripDropDownButton tsddbtnBadDebt;

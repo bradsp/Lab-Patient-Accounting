@@ -45,7 +45,7 @@ namespace LabBilling
             }
         }
 
-        Func<IEnumerable<Fin>> finGetter = () => _finRepository.GetAll();
+        Func<IEnumerable<Fin>> finGetter = () => _finRepository.GetActive();
         
         public List<Fin> GetFins()
         {
