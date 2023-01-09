@@ -229,12 +229,13 @@ namespace LabBilling.Core
 
             segmentCount += Loop2000B(ref hlCount);
 
+            // Note: Loops 2000C & 2010CA are not sent when the patient is the subscriber
+            segmentCount += Loop2000C(ref hlCount);
+
             segmentCount += Loop2300();
 
             segmentCount += Loop2400();
 
-            // Note: Loops 2000C & 2010CA are not sent when the patient is the subscriber
-            segmentCount += Loop2000C(ref hlCount);
 
             // SE - Transaction Set Trailer
             segmentCount++;
@@ -477,8 +478,11 @@ namespace LabBilling.Core
         {
             int segmentCount = 0;
 
-            foreach (ClaimSubscriber subscriber in claim.Subscribers)
+            //Primary Payer
+            if (claim.Subscribers.Count > 0)
             {
+                ClaimSubscriber subscriber = claim.Subscribers[0];
+
                 // --HL - Subscriber Hierarchical Level
                 ediDocument.Segments.Add(new EdiSegment("HL")
                 {
@@ -507,11 +511,8 @@ namespace LabBilling.Core
 
                 segmentCount += Loop2010BA(subscriber);
                 segmentCount += Loop2010BB(subscriber);
-
             }
-
             return segmentCount;
-
         }
 
         private int Loop2010BA(ClaimSubscriber subscriber)
@@ -875,12 +876,12 @@ namespace LabBilling.Core
             if (claimType == ClaimType.Institutional)
             {
                 // medical record number
-                if (claim.claimAccount.MRN != string.Empty)
+                if (!string.IsNullOrEmpty(claim.claimAccount.MRN))
                 {
                     ediDocument.Segments.Add(new EdiSegment("REF")
                     {
                         [01] = "EA",
-                        [02] = claim.claimAccount.MRN
+                        [02] = claim.claimAccount.MRN.Trim()
                     });
                     segmentCount++;
                 }
@@ -989,29 +990,57 @@ namespace LabBilling.Core
 
             //Loop 2320 - Other Subscriber information
             //SBR - Other Subscriber information
-            //CAS - Claim Level adjustments
-            //AMT - Coordination of Benefits (COB) Payer Paid amount
-            //AMT - Coordination of Benefits (COB) Total Non-covered amount
-            //AMT - Remaining Patient Liability
-            //OI - Other Insurance Coverage Information
-            //MOA - Outpatient Adjudication Information
+            foreach (ClaimSubscriber subscriber in claim.Subscribers)
+            {
+                if (subscriber.PayerResponsibilitySequenceCode == "P")
+                    continue;
 
-            //Loop 2330A - Other Subscriber Name
-            //NM1 - Other Subscriber Name
-            //N3 - Other Subscriber Address
-            //N4 - Other Subscriber City, State, Zip
-            //REF - Other Subscriber Secondary Information
+                ediDocument.Segments.Add(new EdiSegment("SBR")
+                {
+                    [01] = subscriber.PayerResponsibilitySequenceCode, //payer responsibility
+                    [02] = subscriber.IndividualRelationshipCode, //individual relationship code
+                    [03] = subscriber.ReferenceIdentification, //reference identification
+                    [04] = subscriber.PlanName, //name
+                    [05] = subscriber.InsuranceTypeCode,
+                    [06] = subscriber.CoordinationOfBenefitsCode,
+                    [07] = subscriber.ConditionResponseCode,
+                    [08] = subscriber.EmployementStatusCode,
+                    [09] = subscriber.ClaimFilingIndicatorCode
+                });
+                segmentCount++;
+                //CAS - Claim Level adjustments
+                //AMT - Coordination of Benefits (COB) Payer Paid amount
+                //AMT - Coordination of Benefits (COB) Total Non-covered amount
+                //AMT - Remaining Patient Liability
+                //OI - Other Insurance Coverage Information
+                ediDocument.Segments.Add(new EdiSegment("OI")
+                {
+                    [03] = "Y", //Yes/No Condition or Response Code
+                    [06] = "Y" //Release of Information Code
+                });
+                segmentCount++;
 
-            //Loop 2330B - Other Payer Name
-            //NM1 - Other Payer Name
-            //N3 - Other Payer Address
-            //N4 - Other Payer City, State, Zip
-            //DTP - Claim Check or Remittance Date
-            //REF - Other Payer Secondary Identifier
-            //REF - Other Payer Prior Authorization Number
-            //REF - Other Payer Referral Number
-            //REF - Other Payer Claim Adjustment Indicator
-            //REF - Other Pay Claim Control Number
+                //MOA - Outpatient Adjudication Information
+
+                //Loop 2330A - Other Subscriber Name
+                //NM1 - Other Subscriber Name
+                //N3 - Other Subscriber Address
+                //N4 - Other Subscriber City, State, Zip
+                //REF - Other Subscriber Secondary Information
+                segmentCount += Loop2010BA(subscriber);
+
+                //Loop 2330B - Other Payer Name
+                //NM1 - Other Payer Name
+                //N3 - Other Payer Address
+                //N4 - Other Payer City, State, Zip
+                //DTP - Claim Check or Remittance Date
+                //REF - Other Payer Secondary Identifier
+                //REF - Other Payer Prior Authorization Number
+                //REF - Other Payer Referral Number
+                //REF - Other Payer Claim Adjustment Indicator
+                //REF - Other Pay Claim Control Number
+                segmentCount += Loop2010BB(subscriber);
+            }
 
             //Loop 2330C - Other Payer Referring Provider
             //NM1 - Other Payer Referring Provider

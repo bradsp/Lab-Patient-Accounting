@@ -101,6 +101,9 @@ namespace LabBilling.Core.BusinessLogic.Validators
                     .When(a => a.Pat != null && a.InsurancePrimary != null && (a.FinCode == "A" || a.FinCode == "D"));
 
                 RuleFor(a => a)
+                    .Must(MatchPatientNameAndInsuranceHolderName).WithMessage("Ins holder with self relation must match patient");
+
+                RuleFor(a => a)
                     .Must(NotHaveBundledOBPanel).WithMessage("Insurance does not accept OB Panel charge")
                     .When(a => a.FinCode == "L" && a.PrimaryInsuranceCode == "SEHZ");
 
@@ -122,6 +125,22 @@ namespace LabBilling.Core.BusinessLogic.Validators
             name = name.Replace("-", "");
             return name.All(Char.IsLetter);
         }
+
+        //private bool NotHaveUnusedDiagnosis(Account account)
+        //{
+            
+        //    foreach(var dx in account.Pat.Diagnoses)
+        //    {
+        //        foreach(var chrg in account.Charges)
+        //        {
+        //            foreach(var chrgDetail in chrg.ChrgDetails)
+        //            {
+        //                chrgDetail.DiagCodePointer
+        //            }
+        //        }
+        //    }
+           
+        //}
 
         private bool NotContainOnlyVenipunctureCharge(Account account)
         {
@@ -153,20 +172,25 @@ namespace LabBilling.Core.BusinessLogic.Validators
 
         private bool MatchPatientNameAndInsuranceHolderName(Account account)
         {
-            if (account.Pat.GuarRelationToPatient == "01")
+            bool valid = true;
+            foreach(var ins in account.Insurances)
             {
-                if (account.PatLastName == account.InsurancePrimary.HolderLastName &&
-                    account.PatFirstName == account.InsurancePrimary.HolderFirstName &&
-                    account.PatMiddleName == account.InsurancePrimary.HolderMiddleName)
+                if (ins.Relation == "01")
                 {
-                    return true;
-                }
-                else
-                {
-                    return false;
+                    if (account.PatLastName == ins.HolderLastName &&
+                        account.PatFirstName == ins.HolderFirstName &&
+                        account.PatMiddleName == ins.HolderMiddleName)
+                    {
+                        valid &= true;
+                    }
+                    else
+                    {
+                        valid &= false;
+                    }
                 }
             }
-            return true;
+
+            return valid;
         }
 
         private bool HaveValidInsuranceCoverageCodes(List<Ins> insurances)

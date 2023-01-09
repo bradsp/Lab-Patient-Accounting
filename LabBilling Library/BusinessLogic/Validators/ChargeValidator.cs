@@ -33,12 +33,13 @@ namespace LabBilling.Core.BusinessLogic.Validators
                 .NotEmpty()
                 .Must(c => c == "NORM" || c == "N/A" || c == "TC");
 
-            RuleFor(c => c.DiagnosisPointer)
-                .NotEmpty().WithMessage("Cpt diagnosis pointer is null.");
+            RuleFor(c => c.DiagCodePointer)
+                .NotNull().WithMessage("Cpt diagnosis pointer is null.");
 
-            RuleFor(c => c.DiagnosisPointer.DiagnosisPointer)
+            RuleFor(c => c.DiagCodePointer)
+                .Cascade(CascadeMode.Stop)
                 .NotEmpty().WithMessage("Cpt diagnosis pointer is empty.")
-                .When(c => c.DiagnosisPointer != null);
+                .NotNull().WithMessage("Cpt diagnosis pointer is null.");
         }
     }
 }

@@ -24,9 +24,19 @@ namespace LabBilling.Core.DataAccess
         {
             Log.Instance.Debug($"Entering");
 
-            var record = dbConnection.Fetch<BillingActivity>("where account = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account });
+            var record = dbConnection.Fetch<BillingActivity>($"where {GetRealColumn(nameof(BillingActivity.AccountNo))} = @0", 
+                new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account });
 
             return record;
+        }
+
+        public List<BillingActivity> GetBatch(string batch)
+        {
+            Log.Instance.Debug("Entering");
+            var records = dbConnection.Fetch<BillingActivity>($"where {GetRealColumn(nameof(BillingActivity.Batch))} = @0",
+                new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = batch });
+
+            return records;
         }
 
         public override bool Save(BillingActivity table)

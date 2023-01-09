@@ -86,6 +86,7 @@
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripUsernameLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripDatabaseLabel = new System.Windows.Forms.ToolStripStatusLabel();
+            this.claimBatchManagementToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.MainFormMenu.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -120,7 +121,8 @@
             this.clientBillsNewToolStripMenuItem,
             this.clientBillsToolStripMenuItem,
             this.globalBillingToolStripMenuItem,
-            this.generateClaimsToolStripMenuItem});
+            this.generateClaimsToolStripMenuItem,
+            this.claimBatchManagementToolStripMenuItem});
             this.billingToolStripMenuItem.Name = "billingToolStripMenuItem";
             resources.ApplyResources(this.billingToolStripMenuItem, "billingToolStripMenuItem");
             // 
@@ -501,6 +503,12 @@
             this.toolStripDatabaseLabel.Name = "toolStripDatabaseLabel";
             resources.ApplyResources(this.toolStripDatabaseLabel, "toolStripDatabaseLabel");
             // 
+            // claimBatchManagementToolStripMenuItem
+            // 
+            this.claimBatchManagementToolStripMenuItem.Name = "claimBatchManagementToolStripMenuItem";
+            resources.ApplyResources(this.claimBatchManagementToolStripMenuItem, "claimBatchManagementToolStripMenuItem");
+            this.claimBatchManagementToolStripMenuItem.Click += new System.EventHandler(this.claimBatchManagementToolStripMenuItem_Click);
+            // 
             // MainForm
             // 
             resources.ApplyResources(this, "$this");
@@ -585,5 +593,6 @@
         private System.Windows.Forms.ToolStripStatusLabel toolStripUsernameLabel;
         private System.Windows.Forms.ToolStripStatusLabel toolStripDatabaseLabel;
         private System.Windows.Forms.ToolStripMenuItem systemLogViewerToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem claimBatchManagementToolStripMenuItem;
     }
 }

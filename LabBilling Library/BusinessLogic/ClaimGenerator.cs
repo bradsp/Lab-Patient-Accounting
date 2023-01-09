@@ -82,16 +82,19 @@ namespace LabBilling.Core.BusinessLogic
 
             List<ClaimItem> claimList;
             Billing837.ClaimType billClaimType;
+            string processedStatus = null;
 
             switch (claimType)
             {
                 case ClaimType.Institutional:
                     claimList = accountRepository.GetAccountsForClaims(AccountRepository.ClaimType.Institutional).Take(30).ToList();
                     billClaimType = Billing837.ClaimType.Institutional;
+                    processedStatus = "SSIUB";
                     break;
                 case ClaimType.Professional:
                     claimList = accountRepository.GetAccountsForClaims(AccountRepository.ClaimType.Professional).Take(30).ToList();
                     billClaimType = Billing837.ClaimType.Professional;
+                    processedStatus = "SSI1500";
                     break;
                 default:
                     throw new ArgumentOutOfRangeException("ClaimType is not defined.");
@@ -130,7 +133,7 @@ namespace LabBilling.Core.BusinessLogic
                     }
 
                     //update status and activity date fields
-                    claim.claimAccount.Status = "SSIUB";
+                    claim.claimAccount.Status = processedStatus;
 
                     accountRepository.Update(claim.claimAccount, new[] { nameof(Account.Status) });
 
@@ -200,11 +203,11 @@ namespace LabBilling.Core.BusinessLogic
                     batchSubmitterID, fileLocation, billClaimType);
 
                 BillingBatch billingBatch = new BillingBatch();
-                billingBatch.batch = Convert.ToDouble(interchangeControlNumber);
-                billingBatch.run_date = DateTime.Today;
-                billingBatch.run_user = OS.GetUserName();
-                billingBatch.x12_text = x12Text;
-                billingBatch.claim_count = claims.Count;
+                billingBatch.Batch = Convert.ToDouble(interchangeControlNumber);
+                billingBatch.RunDate = DateTime.Today;
+                billingBatch.RunUser = OS.GetUserName();
+                billingBatch.X12Text = x12Text;
+                billingBatch.ClaimCount = claims.Count;
 
                 billingBatchRepository.Add(billingBatch);
 
@@ -525,7 +528,7 @@ namespace LabBilling.Core.BusinessLogic
                         claimLine.RevenueCodeDescription = detail.RevenueCodeDetail.Description;
                         claimLine.Amount = detail.Amount;
                         claimLine.Quantity = chrg.Quantity;
-                        string[] dxptr = detail.DiagnosisPointer.DiagnosisPointer.Split(':');
+                        string[] dxptr = detail.DiagCodePointer.Split(':');
                         if(dxptr.Length >= 1)
                             claimLine.DxPtr1 = dxptr[0] ?? "";
                         if (dxptr.Length >= 2) 

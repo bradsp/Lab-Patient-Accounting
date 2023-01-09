@@ -234,13 +234,13 @@
     <value>Global Billing</value>
   </data>
   <data name="institutionalToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>138, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="institutionalToolStripMenuItem.Text" xml:space="preserve">
     <value>Institutional</value>
   </data>
   <data name="professionalToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>138, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="professionalToolStripMenuItem.Text" xml:space="preserve">
     <value>Professional</value>
@@ -250,6 +250,12 @@
   </data>
   <data name="generateClaimsToolStripMenuItem.Text" xml:space="preserve">
     <value>Generate Claims</value>
+  </data>
+  <data name="claimBatchManagementToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>217, 22</value>
+  </data>
+  <data name="claimBatchManagementToolStripMenuItem.Text" xml:space="preserve">
+    <value>Claim Batch Management</value>
   </data>
   <data name="billingToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>52, 20</value>
@@ -3970,6 +3976,12 @@
   </data>
   <data name="&gt;&gt;toolStripDatabaseLabel.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripStatusLabel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;claimBatchManagementToolStripMenuItem.Name" xml:space="preserve">
+    <value>claimBatchManagementToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;claimBatchManagementToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
     <value>MainForm</value>

@@ -11,11 +11,28 @@ namespace LabBilling.Core.Models
     [PrimaryKey("batch", AutoIncrement = false)]
     public class BillingBatch : IBaseEntity
     {
-        public double batch { get; set; }
-        public DateTime run_date { get; set; }
-        public string run_user { get; set; }
-        public string x12_text { get; set; }
-        public int claim_count { get; set; }
+
+        [Column("batch")]
+        public double Batch { get; set; }
+
+        [Column("run_date")]
+        public DateTime RunDate { get; set; }
+
+        [Column("run_user")]
+        public string RunUser { get; set; }
+
+        [Column("x12_text")]
+        public string X12Text { get; set; }
+
+        [Column("claim_count")]
+        public int ClaimCount { get; set; }
+
+        [Ignore]
+        public double TotalBilled { get; set; }
+
+        [Ignore]
+        public string BatchType { get; set; }
+
         public DateTime mod_date { get; set; }
         public string mod_user { get; set; }
         public string mod_prg { get; set; }

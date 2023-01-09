@@ -890,5 +890,17 @@ namespace LabBilling
             frm.AutoScroll = true;
             frm.Show();
         }
+
+        private void claimBatchManagementToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Log.Instance.Trace("Entering");
+
+            ClaimsManagementForm frm = new ClaimsManagementForm();
+            frm.MdiParent = this;
+            frm.WindowState = FormWindowState.Normal;
+            frm.AutoScroll = true;
+            frm.Show();
+
+        }
     }
 }
