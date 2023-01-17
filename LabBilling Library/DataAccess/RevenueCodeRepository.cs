@@ -32,9 +32,5 @@ namespace LabBilling.Core.DataAccess
                 new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = revenueCode });
         }
 
-        public override RevenueCode GetById(int id)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

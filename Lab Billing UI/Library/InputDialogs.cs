@@ -175,7 +175,7 @@ namespace LabBilling.Library
             frm.Controls.Add(cancelButton);
             if (frm.ShowDialog() == DialogResult.OK)
             {
-                MessageBox.Show($"New date is {dateTimePicker}. Reason is {tbReason.Text}");
+                MessageBox.Show($"New date is {dateTimePicker.Value}. Reason is {tbReason.Text}");
                 return (dateTimePicker.Value, tbReason.Text);
             }
             else

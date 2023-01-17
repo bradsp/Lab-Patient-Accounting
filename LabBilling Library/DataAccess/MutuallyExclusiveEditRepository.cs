@@ -20,10 +20,6 @@ namespace LabBilling.Core.DataAccess
         {
 
         }
-        public override MutuallyExclusiveEdit GetById(int id)
-        {
-            throw new NotImplementedException();
-        }
 
         public MutuallyExclusiveEdit GetEdit(string cpt1, string cpt2)
         {

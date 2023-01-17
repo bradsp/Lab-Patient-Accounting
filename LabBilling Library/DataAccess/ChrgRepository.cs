@@ -33,7 +33,7 @@ namespace LabBilling.Core.DataAccess
         /// </summary>
         /// <param name="id">Charge number</param>
         /// <returns></returns>
-        public override Chrg GetById(int id)
+        public Chrg GetById(int id)
         {
             var sql = PetaPoco.Sql.Builder
                 .Select("chrg.*, cdm.descript as 'cdm_desc', chrg_details.*")

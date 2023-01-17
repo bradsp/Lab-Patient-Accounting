@@ -132,9 +132,5 @@ namespace LabBilling.Core.DataAccess
             return true;
         }
 
-        public override ClientDiscount GetById(int id)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

@@ -28,11 +28,6 @@ namespace LabBilling.Core.DataAccess
             phyRepository = new PhyRepository(db);
         }
 
-        public override Pat GetById(int id)
-        {
-            throw new NotImplementedException();
-        }
-
         public bool RecordExists(string accountNo)
         {
             var pat = dbConnection.SingleOrDefault<Pat>($"where account = @0",

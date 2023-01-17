@@ -44,11 +44,6 @@ namespace LabBilling.Core.DataAccess
             return queryResult;
         }
 
-        public override Cdm GetById(int id)
-        {
-            throw new NotImplementedException();
-        }
-
         public Cdm GetCdm(string cdm, bool includeDeleted = false)
         {
             string cdmRealName = this.GetRealColumn(nameof(Cdm.ChargeId));

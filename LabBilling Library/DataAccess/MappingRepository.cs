@@ -22,11 +22,6 @@ namespace LabBilling.Core.DataAccess
 
         }
 
-        public override Mapping GetById(int id)
-        {
-            throw new NotImplementedException();
-        }
-
         public IList<string> GetReturnTypeList()
         {
             Log.Instance.Debug($"Entering");

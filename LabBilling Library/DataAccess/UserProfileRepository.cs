@@ -21,11 +21,6 @@ namespace LabBilling.Core.DataAccess
 
         }
 
-        public override UserProfile GetById(int id)
-        {
-            throw new NotImplementedException();
-        }
-
         public void InsertRecentAccount(string account, string user)
         {
             UserProfile userProfile = new UserProfile();

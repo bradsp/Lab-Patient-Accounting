@@ -98,8 +98,6 @@ namespace LabBilling.Core.DataAccess
             return identity;
         }
 
-        public abstract TPoco GetById(int id);
-
         public virtual bool Update(TPoco table)
         {
             Log.Instance.Trace("Entering");

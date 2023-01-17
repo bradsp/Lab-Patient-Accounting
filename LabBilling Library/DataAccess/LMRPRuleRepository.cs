@@ -22,11 +22,6 @@ namespace LabBilling.Core.DataAccess
 
         }
 
-        public override LMRPRule GetById(int id)
-        {
-            throw new NotImplementedException();
-        }
-
         public LMRPRule GetRule(string cpt, string dx, DateTime serviceDate)
         {
             string cptRealName = this.GetRealColumn(typeof(LMRPRule), nameof(LMRPRule.CptCode));

@@ -234,13 +234,13 @@
     <value>Global Billing</value>
   </data>
   <data name="institutionalToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>180, 22</value>
+    <value>138, 22</value>
   </data>
   <data name="institutionalToolStripMenuItem.Text" xml:space="preserve">
     <value>Institutional</value>
   </data>
   <data name="professionalToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>180, 22</value>
+    <value>138, 22</value>
   </data>
   <data name="professionalToolStripMenuItem.Text" xml:space="preserve">
     <value>Professional</value>
@@ -450,14 +450,14 @@
     <value>&amp;Help</value>
   </data>
   <data name="MainFormMenu.Location" type="System.Drawing.Point, System.Drawing">
-    <value>20, 60</value>
+    <value>0, 0</value>
   </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="MainFormMenu.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>7, 2, 0, 2</value>
   </data>
   <data name="MainFormMenu.Size" type="System.Drawing.Size, System.Drawing">
-    <value>1164, 24</value>
+    <value>1008, 24</value>
   </data>
   <data name="MainFormMenu.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -484,13 +484,13 @@
     <value>Microsoft Sans Serif, 8pt</value>
   </data>
   <data name="windowManagerPanel1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>206, 86</value>
+    <value>205, 26</value>
   </data>
   <data name="windowManagerPanel1.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>3, 2, 3, 2</value>
   </data>
   <data name="windowManagerPanel1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>976, 39</value>
+    <value>801, 30</value>
   </data>
   <data name="windowManagerPanel1.TabIndex" type="System.Int32, mscorlib">
     <value>3</value>
@@ -510,30 +510,6 @@
   <data name="&gt;&gt;windowManagerPanel1.ZOrder" xml:space="preserve">
     <value>2</value>
   </data>
-  <data name="panel1.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Left</value>
-  </data>
-  <data name="panel1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>20, 84</value>
-  </data>
-  <data name="panel1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>184, 664</value>
-  </data>
-  <data name="panel1.TabIndex" type="System.Int32, mscorlib">
-    <value>5</value>
-  </data>
-  <data name="&gt;&gt;panel1.Name" xml:space="preserve">
-    <value>panel1</value>
-  </data>
-  <data name="&gt;&gt;panel1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;panel1.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;panel1.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
   <metadata name="statusStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>156, 17</value>
   </metadata>
@@ -550,10 +526,10 @@
     <value>toolStripDatabaseLabel</value>
   </data>
   <data name="statusStrip1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>204, 724</value>
+    <value>0, 705</value>
   </data>
   <data name="statusStrip1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>980, 24</value>
+    <value>1008, 24</value>
   </data>
   <data name="statusStrip1.TabIndex" type="System.Int32, mscorlib">
     <value>7</value>
@@ -571,6 +547,30 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;statusStrip1.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="panel1.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Left</value>
+  </data>
+  <data name="panel1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 24</value>
+  </data>
+  <data name="panel1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>203, 681</value>
+  </data>
+  <data name="panel1.TabIndex" type="System.Int32, mscorlib">
+    <value>11</value>
+  </data>
+  <data name="&gt;&gt;panel1.Name" xml:space="preserve">
+    <value>panel1</value>
+  </data>
+  <data name="&gt;&gt;panel1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;panel1.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;panel1.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -583,7 +583,7 @@
     <value>7, 15</value>
   </data>
   <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
-    <value>1204, 768</value>
+    <value>1008, 729</value>
   </data>
   <data name="$this.Font" type="System.Drawing.Font, System.Drawing">
     <value>Microsoft Sans Serif, 9pt</value>
@@ -3791,6 +3791,12 @@
   <data name="&gt;&gt;professionalToolStripMenuItem.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="&gt;&gt;claimBatchManagementToolStripMenuItem.Name" xml:space="preserve">
+    <value>claimBatchManagementToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;claimBatchManagementToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="&gt;&gt;dictionariesToolStripMenuItem.Name" xml:space="preserve">
     <value>dictionariesToolStripMenuItem</value>
   </data>
@@ -3977,16 +3983,10 @@
   <data name="&gt;&gt;toolStripDatabaseLabel.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripStatusLabel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;claimBatchManagementToolStripMenuItem.Name" xml:space="preserve">
-    <value>claimBatchManagementToolStripMenuItem</value>
-  </data>
-  <data name="&gt;&gt;claimBatchManagementToolStripMenuItem.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
     <value>MainForm</value>
   </data>
   <data name="&gt;&gt;$this.Type" xml:space="preserve">
-    <value>MetroFramework.Forms.MetroForm, MetroFramework, Version=1.4.0.0, Culture=neutral, PublicKeyToken=5f91a84759bf584a</value>
+    <value>System.Windows.Forms.Form, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
 </root>

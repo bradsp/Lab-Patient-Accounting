@@ -19,11 +19,6 @@ namespace LabBilling.Core.DataAccess
 
         }
 
-        public override Number GetById(int id)
-        {
-            throw new NotImplementedException();
-        }
-
         public decimal GetNumber(string key)
         {
             Log.Instance.Debug($"Entering");

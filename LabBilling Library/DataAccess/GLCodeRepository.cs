@@ -19,9 +19,5 @@ namespace LabBilling.Core.DataAccess
 
         }
 
-        public override GLCode GetById(int id)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

@@ -18,12 +18,5 @@ namespace LabBilling.Core.DataAccess
         {
 
         }
-
-        public override PatDx GetById(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-
     }
 }

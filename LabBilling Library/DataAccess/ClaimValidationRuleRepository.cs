@@ -17,11 +17,6 @@ namespace LabBilling.Core.DataAccess
         {
         }
 
-        public override ClaimValidationRule GetById(int id)
-        {
-            throw new NotImplementedException();
-        }
-
         public List<ClaimValidationRule> GetRules()
         {
             Log.Instance.Debug($"Entering");
@@ -76,12 +71,6 @@ namespace LabBilling.Core.DataAccess
         {
 
         }
-
-        public override ClaimValidationRuleCriterion GetById(int id)
-        {
-            throw new NotImplementedException();
-        }
-
 
     }
 

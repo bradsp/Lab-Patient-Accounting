@@ -19,11 +19,6 @@ namespace LabBilling.Core.DataAccess
 
         }
 
-        public override DictDx GetById(int id)
-        {
-            throw new NotImplementedException();
-        }
-
         public DictDx GetByCode(string dxCode, DateTime transDate)
         {
             Log.Instance.Debug($"Entering");

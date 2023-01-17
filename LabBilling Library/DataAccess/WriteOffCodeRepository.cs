@@ -23,11 +23,6 @@ namespace LabBilling.Core.DataAccess
 
         }
 
-        public override WriteOffCode GetById(int id)
-        {
-            throw new NotImplementedException();
-        }
-
         public WriteOffCode GetByCode(string code)
         {
             Log.Instance.Debug($"Entering");

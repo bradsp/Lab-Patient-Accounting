@@ -21,11 +21,6 @@ namespace LabBilling.Core.DataAccess
         {
         }
 
-        public override AccountValidationCriteria GetById(int id)
-        {
-            throw new NotImplementedException();
-        }
-
         public List<AccountValidationCriteria> GetByRuleId(int ruleId)
         {
             Log.Instance.Trace("Entering");

@@ -17,11 +17,6 @@ namespace LabBilling.Core.DataAccess
         {
         }
 
-        public override InvoiceHistory GetById(int id)
-        {
-            throw new NotImplementedException();
-        }
-
         public InvoiceHistory GetByInvoice(string invoiceNo)
         {
             return dbConnection.SingleOrDefault<InvoiceHistory>($"where {GetRealColumn(nameof(InvoiceHistory.InvoiceNo))} = @0",

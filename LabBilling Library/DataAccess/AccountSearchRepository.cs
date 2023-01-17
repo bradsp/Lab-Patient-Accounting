@@ -25,10 +25,6 @@ namespace LabBilling.Core.DataAccess
         {
 
         }
-        public override AccountSearch GetById(int id)
-        {
-            throw new NotImplementedException();
-        }
 
         public enum operation
         {

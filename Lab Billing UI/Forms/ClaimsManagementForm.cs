@@ -13,6 +13,7 @@ using LabBilling.Core.Models;
 using Opulos.Core.UI;
 using LabBilling.Logging;
 using LabBilling.Core.DataAccess;
+using System.ServiceModel.Configuration;
 
 namespace LabBilling.Forms
 {
@@ -39,25 +40,39 @@ namespace LabBilling.Forms
 
         private void ClaimsManagementForm_Load(object sender, EventArgs e)
         {
-            billingBatches = batchRepository.GetAll();
-            billingBatchTable = billingBatches.ToDataTable();
+            cancelButton.Enabled = false;
+            claimProgressStatusLabel.Text = "";
 
             billingBatchBindingSource = new BindingSource();
-            billingBatchBindingSource.DataSource = billingBatchTable;
 
-            billingActivitiesBindingSource = new BindingSource();
+            LoadData();
 
-            claimBatchDataGrid.DataSource = billingBatchBindingSource;
             claimBatchDataGrid.Columns[nameof(BillingBatch.mod_prg)].Visible = false;
             claimBatchDataGrid.Columns[nameof(BillingBatch.mod_date)].Visible = false;
             claimBatchDataGrid.Columns[nameof(BillingBatch.mod_host)].Visible = false;
             claimBatchDataGrid.Columns[nameof(BillingBatch.mod_user)].Visible = false;
             claimBatchDataGrid.Columns[nameof(BillingBatch.rowguid)].Visible = false;
             claimBatchDataGrid.Columns[nameof(BillingBatch.X12Text)].Visible = false;
+            claimBatchDataGrid.Columns[nameof(BillingBatch.TotalBilled)].DefaultCellStyle.Format = "N2";
+            claimBatchDataGrid.Columns[nameof(BillingBatch.TotalBilled)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             //claimBatchDataGrid.Columns[nameof(BillingBatch.X12Text)].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             claimBatchDataGrid.AutoResizeColumns();
 
+        }
+
+        private void LoadData()
+        {
+            billingBatches = batchRepository.GetAll();
+            billingBatchTable = billingBatches.ToDataTable();
+            billingBatchTable.PrimaryKey = new DataColumn[] { billingBatchTable.Columns[nameof(BillingBatch.Batch)] };
             billingBatchTable.DefaultView.Sort = $"{nameof(BillingBatch.Batch)} desc";
+
+            billingBatchBindingSource.DataSource = billingBatchTable;
+
+            billingActivitiesBindingSource = new BindingSource();
+
+            claimBatchDataGrid.DataSource = billingBatchBindingSource;
+
         }
 
         private enum BillingType
@@ -70,47 +85,16 @@ namespace LabBilling.Forms
         {
             cancellationToken = new CancellationTokenSource();
 
-            //TableLayoutPanel tlpClaimBatch = new TableLayoutPanel { Dock = DockStyle.Fill };
-            //tlpClaimBatch.ColumnCount = 1;
-            //tlpClaimBatch.RowCount = 1;
-
-            //Label claimProcessTitleLabel = new Label();
-            //switch (billingType)
-            //{
-            //    case BillingType.Institutional:
-            //        claimProcessTitleLabel.Text = "Institutional Claims";
-            //        break;
-            //    case BillingType.Professional:
-            //        claimProcessTitleLabel.Text = "Professional Claims";
-            //        break;
-            //    default:
-            //        throw new ArgumentOutOfRangeException(nameof(billingType));
-            //}
-            //tlpClaimBatch.Controls.Add(claimProcessTitleLabel, 0, 0);
-            //claimProcessTitleLabel.Dock = DockStyle.Fill;
-
             claimProgress = new ProgressBar();
             claimProgress.Style = ProgressBarStyle.Continuous;
             claimProgress.Minimum = 0;
-            //tlpClaimBatch.Controls.Add(claimProgress, 0, 1);
-            //claimProgress.Dock = DockStyle.Fill;
 
-            //claimProgressStatusLabel = new Label();
-            //tlpClaimBatch.Controls.Add(claimProgressStatusLabel, 0, 2);
             claimProgressStatusLabel.Text = "Processing...";
-            //claimProgressStatusLabel.Dock = DockStyle.Fill;
-
-            //Button cancelButton = new Button { Text = "Cancel", Name = "cancelButton" };
-            //cancelButton.Click += new EventHandler(cancelButton_Click);
-            //tlpClaimBatch.Controls.Add(cancelButton, 0, 3);
-            //cancelButton.Dock = DockStyle.Fill;
-
-            //accordion.Add(tlpClaimBatch, "Claim Batch", "Claim Batch", 1, true);
-            //accordion.PerformLayout();
 
             ClaimGenerator claims = new ClaimGenerator(Helper.ConnVal);
             Progress<ProgressReportModel> progress = new Progress<ProgressReportModel>();
             progress.ProgressChanged += ReportProgress;
+            cancelButton.Enabled = true;
             try
             {
                 int claimsProcessed = 0;
@@ -147,6 +131,8 @@ namespace LabBilling.Forms
                 claimProgress.SetState(2);
                 cancelButton.Enabled = false;
             }
+            cancelButton.Enabled = false;
+            LoadData();
         }
 
         private void ReportProgress(object sender, ProgressReportModel e)
@@ -199,17 +185,64 @@ namespace LabBilling.Forms
 
         private void clearBatchToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            //get batch number
+            var selectedBatch = claimBatchDataGrid.SelectedRows[0].Cells[nameof(BillingBatch.Batch)].Value;
 
+            double batchNo = Convert.ToDouble(selectedBatch);
+            Cursor.Current = Cursors.WaitCursor;
+            if(batchRepository.ClearBatch(batchNo))
+            {
+                billingBatchTable.Rows.Find(batchNo).Delete();
+            }
+            Cursor.Current = Cursors.Default;
         }
 
         private void regenerateClaimFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            var selectedBatch = claimBatchDataGrid.SelectedRows[0].Cells[nameof(BillingBatch.Batch)].Value;
+            double batchNo = Convert.ToDouble(selectedBatch);
+
+            ClaimGenerator claims = new ClaimGenerator(Helper.ConnVal);
+
+            Cursor.Current = Cursors.WaitCursor;
+
+            claims.RegenerateBatch(batchNo);
+
+            Cursor.Current = Cursors.Default;
 
         }
 
         private void generateClaimsButton_Click(object sender, EventArgs e)
         {
+            BillingType billingType;
 
+            if(institutionalRadioButton.Checked)
+            {
+                billingType = BillingType.Institutional;
+            }
+            else if(professionalRadioButton.Checked)
+            {
+                billingType = BillingType.Professional;
+            }
+            else
+            {
+                return;
+            }
+
+            _ = RunBillingBatch(billingType);
+
+        }
+
+        private void claimBatchDetailDataGrid_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            var selectedAccount = claimBatchDetailDataGrid.SelectedRows[0].Cells[nameof(BillingActivity.AccountNo)].Value.ToString();
+
+            if(!string.IsNullOrEmpty(selectedAccount))
+            {
+                AccountForm frm = new AccountForm(selectedAccount, this.MdiParent);
+                frm.WindowState = FormWindowState.Normal;
+                frm.Show();
+            }
         }
     }
 }

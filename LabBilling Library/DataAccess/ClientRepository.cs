@@ -102,11 +102,6 @@ namespace LabBilling.Core.DataAccess
             return success;
         }
 
-        public override Client GetById(int id)
-        {
-            throw new NotImplementedException();
-        }
-
         /// <summary>
         /// Compute the client balance. Uses the vw_chrg_bal_cbill and vw_chk_bal_cbill
         /// which is essentially the same as the vw_chrg_bal and vw_chk_bal

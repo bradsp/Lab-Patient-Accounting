@@ -78,7 +78,7 @@ namespace LabBilling.Core.DataAccess
             return queryResult;
         }
 
-        public override Phy GetById(int id)
+        public Phy GetById(int id)
         {
             Log.Instance.Trace($"Entering - id {id}");
             Phy phy = new Phy();

@@ -54,11 +54,6 @@ namespace LabBilling.Core.BusinessLogic
             propProductionEnvironment = dBName.Contains("LIVE") ? "P" : "T";
             string env = parametersdb.GetProductionEnvironment();
 
-            //string[] strArgs = new string[3];
-            //strArgs[0] = propProductionEnvironment == "P" ? "/LIVE" : "/TEST";
-            //strArgs[1] = dBserverName;
-            //strArgs[2] = dBName;
-
             accountRepository = new AccountRepository(db);
             patRepository = new PatRepository(db);
             chrgRepository = new ChrgRepository(db);
@@ -79,6 +74,8 @@ namespace LabBilling.Core.BusinessLogic
             string batchSubmitterID = parametersdb.GetByKey("fed_tax_id");
             decimal strNum = numberRepository.GetNumber("ssi_batch");
             string interchangeControlNumber = string.Format("{0:D9}", int.Parse(string.Format("{0}{1}", DateTime.Now.Year, strNum)));
+            string batchType;
+            string fileLocation;
 
             List<ClaimItem> claimList;
             Billing837.ClaimType billClaimType;
@@ -87,14 +84,18 @@ namespace LabBilling.Core.BusinessLogic
             switch (claimType)
             {
                 case ClaimType.Institutional:
-                    claimList = accountRepository.GetAccountsForClaims(AccountRepository.ClaimType.Institutional).Take(30).ToList();
+                    claimList = accountRepository.GetAccountsForClaims(AccountRepository.ClaimType.Institutional).ToList();
                     billClaimType = Billing837.ClaimType.Institutional;
                     processedStatus = "SSIUB";
+                    batchType = "UB";
+                    fileLocation = parametersdb.GetByKey("claim_837i_file_location");
                     break;
                 case ClaimType.Professional:
-                    claimList = accountRepository.GetAccountsForClaims(AccountRepository.ClaimType.Professional).Take(30).ToList();
+                    claimList = accountRepository.GetAccountsForClaims(AccountRepository.ClaimType.Professional).ToList();
                     billClaimType = Billing837.ClaimType.Professional;
                     processedStatus = "SSI1500";
+                    batchType = "1500";
+                    fileLocation = parametersdb.GetByKey("claim_837p_file_location");
                     break;
                 default:
                     throw new ArgumentOutOfRangeException("ClaimType is not defined.");
@@ -106,6 +107,7 @@ namespace LabBilling.Core.BusinessLogic
             try
             {
                 report.TotalRecords = claimList.Count();
+
                 foreach (ClaimItem item in claimList)
                 {
                     if (cancellationToken.IsCancellationRequested)
@@ -160,17 +162,7 @@ namespace LabBilling.Core.BusinessLogic
                     billingActivity.AccountNo = claim.claimAccount.AccountNo;
                     billingActivity.Batch = Convert.ToDouble(interchangeControlNumber);
                     billingActivity.ElectronicBillBatch = Convert.ToDouble(interchangeControlNumber);
-                    switch (claimType)
-                    {
-                        case ClaimType.Institutional:
-                            billingActivity.ElectronicBillStatus = "UB";
-                            break;
-                        case ClaimType.Professional:
-                            billingActivity.ElectronicBillStatus = "1500";
-                            break;
-                        default:
-                            break;
-                    }
+                    billingActivity.ElectronicBillStatus = batchType;
                     billingActivity.FinancialCode = claim.claimAccount.FinCode;
                     billingActivity.InsuranceOrder = claim.claimAccount.Insurances[0].Coverage;
                     billingActivity.InsuranceCode = claim.claimAccount.Insurances[0].InsCode;
@@ -186,18 +178,6 @@ namespace LabBilling.Core.BusinessLogic
                     progress.Report(report);
                 }
 
-                string fileLocation;
-                switch (claimType)
-                {
-                    case ClaimType.Institutional:
-                        fileLocation = parametersdb.GetByKey("claim_837i_file_location");
-                        break;
-                    case ClaimType.Professional:
-                        fileLocation = parametersdb.GetByKey("claim_837p_file_location");
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException("ClaimType is not defined.");
-                }
 
                 string x12Text = billing837.Generate837ClaimBatch(claims, interchangeControlNumber,
                     batchSubmitterID, fileLocation, billClaimType);
@@ -208,6 +188,8 @@ namespace LabBilling.Core.BusinessLogic
                 billingBatch.RunUser = OS.GetUserName();
                 billingBatch.X12Text = x12Text;
                 billingBatch.ClaimCount = claims.Count;
+                billingBatch.TotalBilled = claims.Sum(x => x.TotalChargeAmount);
+                billingBatch.BatchType = batchType;
 
                 billingBatchRepository.Add(billingBatch);
 
@@ -227,6 +209,52 @@ namespace LabBilling.Core.BusinessLogic
                 db.AbortTransaction();
             }
             return -1;
+        }
+
+        public void RegenerateBatch(double batchNo)
+        {
+
+            var batch = billingBatchRepository.GetBatch(batchNo);
+            string batchSubmitterID = parametersdb.GetByKey("fed_tax_id");
+
+            LabBilling.Core.Billing837.ClaimType claimType;
+
+            string fileLocation;
+
+            claims.Clear();
+            switch (batch.BatchType)
+            {
+                case "UB":
+                    claimType = (Billing837.ClaimType)ClaimType.Institutional;
+                    fileLocation = parametersdb.GetByKey("claim_837i_file_location");
+                    break;
+                case "1500":
+                    claimType = (Billing837.ClaimType)ClaimType.Professional;
+                    fileLocation = parametersdb.GetByKey("claim_837p_file_location");
+                    break;
+                default:
+                    //not a valid batch
+                    return;
+            }
+
+            foreach(var account in batch.BillingActivities)
+            {
+                var claim = GenerateClaim(account.AccountNo);
+                if(claim != null)
+                    claims.Add(claim);
+            }
+
+            if (claims.Count > 0)
+            {
+                batch.X12Text = billing837.Generate837ClaimBatch(claims, batch.Batch.ToString(),
+                    batchSubmitterID, fileLocation, claimType);
+
+                batch.RunDate = DateTime.Now.Date;
+                batch.TotalBilled = claims.Sum(x => x.TotalChargeAmount);
+
+                billingBatchRepository.Update(batch);
+            }
+            return;
         }
 
         public void CompileClaim(string accountNo)
@@ -453,7 +481,25 @@ namespace LabBilling.Core.BusinessLogic
                         default:
                             throw new InvalidParameterValueException($"Invalid Ins Coverage Code {ins.Coverage}", "Ins.Coverage");
                     }
-                    subscriber.IndividualRelationshipCode = ins.Relation == "01" ? "18" : String.Empty;
+
+                    Dictionary<string, string> relationConversion = new System.Collections.Generic.Dictionary<string, string>()
+                    {
+                        {"01", "18"},
+                        {"02", "01"},
+                        {"03", "19"},
+                        {"04", "G8"},
+                        {"09", "21"}
+                    };
+
+                    if (subscriber.PayerResponsibilitySequenceCode == "P")
+                    {
+                        subscriber.IndividualRelationshipCode = ins.Relation == "01" ? "18" : String.Empty;
+                    }
+                    else
+                    {
+                        subscriber.IndividualRelationshipCode = relationConversion[ins.Relation];
+                    }
+
                     subscriber.ReferenceIdentification = ins.GroupNumber;
                     subscriber.PlanName = string.IsNullOrEmpty(ins.GroupName) ? ins.PlanName : ins.GroupName;
                    

@@ -27,10 +27,10 @@ namespace LabBilling.Core.Models
         [Column("claim_count")]
         public int ClaimCount { get; set; }
 
-        [Ignore]
+        [Column("TotalBilled")]
         public double TotalBilled { get; set; }
 
-        [Ignore]
+        [Column("BatchType")]
         public string BatchType { get; set; }
 
         public DateTime mod_date { get; set; }
@@ -38,5 +38,8 @@ namespace LabBilling.Core.Models
         public string mod_prg { get; set; }
         public string mod_host { get; set; }
         public Guid rowguid { get; set; }
+
+        [Ignore]
+        public List<BillingActivity> BillingActivities { get; set; } = new List<BillingActivity>();
     }
 }

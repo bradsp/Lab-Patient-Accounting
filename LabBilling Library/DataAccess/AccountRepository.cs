@@ -78,11 +78,6 @@ namespace LabBilling.Core.DataAccess
             cdmRepository = new CdmRepository(db);
         }
 
-        public override Account GetById(int id)
-        {
-            throw new NotImplementedException();
-        }
-
         public Account GetByAccount(string account, bool demographicsOnly = false)
         {
             Log.Instance.Trace($"Entering - account {account} demographicsOnly {demographicsOnly}");

@@ -178,6 +178,11 @@ namespace LabBilling
             tlpBilling.Controls.Add(b5, 0, 4);
             b5.Dock = DockStyle.Fill;
 
+            MetroButton b6 = new MetroButton { Text = "Claims Batch Management", Name = "ClaimBatchManagementButton" };
+            b6.Click += new EventHandler(claimBatchManagementToolStripMenuItem_Click);
+            tlpBilling.Controls.Add(b6, 0, 5);
+            b6.Dock = DockStyle.Fill;
+
             accordion.Add(tlpBilling, "Billing", "Billing Functions", 1, true);
 
             //Reports Section

@@ -21,11 +21,6 @@ namespace LabBilling.Core.DataAccess
 
         }
 
-        public override AccountNote GetById(int id)
-        {
-            throw new NotImplementedException();
-        }
-
         public List<AccountNote> GetByAccount(string account)
         {
             var sql = PetaPoco.Sql.Builder

@@ -39,6 +39,8 @@ namespace LabBilling.Core.BusinessLogic.Validators
             RuleFor(a => a.Charges.Count)
                 .GreaterThan(0).WithMessage("No charges to bill.");
 
+            RuleFor(a => a.Fin.FinClass)
+                .Equal("M").WithMessage("This is a client bill account. Do not bill insurance.");
 
             When(a => a.Fin.FinClass == "M", () =>
             {
@@ -107,15 +109,15 @@ namespace LabBilling.Core.BusinessLogic.Validators
                     .Must(NotHaveBundledOBPanel).WithMessage("Insurance does not accept OB Panel charge")
                     .When(a => a.FinCode == "L" && a.PrimaryInsuranceCode == "SEHZ");
 
+                RuleFor(a => a)
+                    .Must(MatchChargeServiceDateAndAccountTransDate).WithMessage("Account DOS does not match charge service date.");
+
+                //todo: rule - each diagnosis must be used in a dx Pointer.                
+
                 RuleFor(a => a.LmrpErrors)
                     .Empty().WithMessage("LMRP Rule Violation");
             });
 
-            When(a => a.Fin.FinClass != "M", () =>
-            {
-
-
-            });
 
         }
 
@@ -177,9 +179,9 @@ namespace LabBilling.Core.BusinessLogic.Validators
             {
                 if (ins.Relation == "01")
                 {
-                    if (account.PatLastName == ins.HolderLastName &&
-                        account.PatFirstName == ins.HolderFirstName &&
-                        account.PatMiddleName == ins.HolderMiddleName)
+                    if ((account.PatLastName ?? "") == (ins.HolderLastName ?? "") &&
+                        (account.PatFirstName ?? "") == (ins.HolderFirstName ?? "") &&
+                        (account.PatMiddleName ?? "") == (ins.HolderMiddleName ?? ""))
                     {
                         valid &= true;
                     }
@@ -290,6 +292,18 @@ namespace LabBilling.Core.BusinessLogic.Validators
                 return false;
             }
 
+            return true;
+        }
+
+        private bool MatchChargeServiceDateAndAccountTransDate(Account account)
+        {
+            foreach(var chrg in account.Charges)
+            {
+                if(((DateTime)chrg.ServiceDate).Date != account.TransactionDate.Date)
+                {
+                    return false;
+                }
+            }
             return true;
         }
 

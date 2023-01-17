@@ -17,7 +17,6 @@ namespace LabBilling.Core.DataAccess
         bool Delete(TPoco table);
         List<TPoco> GetAll();
         Task<IEnumerable<TPoco>> GetAllAsync();
-        TPoco GetById(int id);
         bool Update(TPoco table);
         bool Update(TPoco table, IEnumerable<string> columns);
         IEnumerable<TPoco> Find(Expression<Func<TPoco, bool>> predicate);

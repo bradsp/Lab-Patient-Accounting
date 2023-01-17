@@ -18,11 +18,6 @@ namespace LabBilling.Core.DataAccess
 
         }
 
-        public override SysParameter GetById(int id)
-        {
-            throw new NotImplementedException();
-        }
-
         public string GetProductionEnvironment()
         {
             string env = GetByKey("dbenvironment");

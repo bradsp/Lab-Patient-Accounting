@@ -20,11 +20,6 @@ namespace LabBilling.Core.DataAccess
 
         }
 
-        public override InsCompany GetById(int id)
-        {
-            throw new NotImplementedException();
-        }
-
         public InsCompany GetByCode(string code)
         {
             Log.Instance.Debug($"Entering");

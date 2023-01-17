@@ -47,9 +47,5 @@ namespace LabBilling.Core.DataAccess
 
         }
 
-        public override AccountValidationStatus GetById(int id)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

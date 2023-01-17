@@ -59,7 +59,10 @@ namespace LabBilling.Core.Models
         {
             get
             {
-                return this.DiagnosisPointer.DiagnosisPointer;
+                if (this.DiagnosisPointer == null)
+                    return "";
+                else
+                    return this.DiagnosisPointer.DiagnosisPointer ?? "";
             }
         }
 

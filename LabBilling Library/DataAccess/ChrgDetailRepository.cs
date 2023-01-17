@@ -32,11 +32,6 @@ namespace LabBilling.Core.DataAccess
             return value;
         }
 
-        public override ChrgDetail GetById(int id)
-        {
-            throw new NotImplementedException();
-        }
-
         public IEnumerable<ChrgDetail> GetByCharge(int chrg_num)
         {
             RevenueCodeRepository revenueCodeRepository = new RevenueCodeRepository(dbConnection);
@@ -69,7 +64,7 @@ namespace LabBilling.Core.DataAccess
 
         }
 
-        public override ChrgDiagnosisPointer GetById(int id)
+        public ChrgDiagnosisPointer GetById(int id)
         {
             return dbConnection.SingleOrDefault<ChrgDiagnosisPointer>(id);
         }

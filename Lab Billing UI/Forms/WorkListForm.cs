@@ -833,10 +833,14 @@ namespace LabBilling.Forms
             {
                 if (!account.ReadyToBill)
                 {
-                    accountRepository.UpdateStatus(selectedAccount, "RTB");
-                    accountRepository.AddNote(selectedAccount, "Marked ready to bill.");
-                    accts[nameof(AccountSearch.Status)] = "RTB";
-                    _ = Task.Run(() => RunValidationAsync(selectedAccount));
+                    accountRepository.Validate(ref account);
+                    if (account.AccountValidationStatus.validation_text == "No validation errors.")
+                    {
+                        accountRepository.UpdateStatus(selectedAccount, "RTB");
+                        accountRepository.AddNote(selectedAccount, "Marked ready to bill.");
+                        accts[nameof(AccountSearch.Status)] = "RTB";
+                        _ = Task.Run(() => RunValidationAsync(selectedAccount));
+                    }                    
                     accountGrid.Refresh();
                 }
             }

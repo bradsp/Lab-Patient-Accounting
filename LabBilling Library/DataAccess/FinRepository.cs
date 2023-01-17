@@ -26,11 +26,6 @@ namespace LabBilling.Core.DataAccess
             return dbConnection.Query<Fin>($"where {GetRealColumn(nameof(Fin.IsDeleted))} = 0").ToList();
         }
 
-        public override Fin GetById(int id)
-        {
-            throw new NotImplementedException();
-        }
-
         public Fin GetFin(string finCode)
         {
             return dbConnection.SingleOrDefault<Fin>($"where {GetRealColumn(nameof(Fin.FinCode))} = @0", 

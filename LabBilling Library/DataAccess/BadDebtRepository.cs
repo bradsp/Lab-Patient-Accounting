@@ -21,11 +21,6 @@ namespace LabBilling.Core.DataAccess
 
         }
 
-        public override BadDebt GetById(int id)
-        {
-            throw new NotImplementedException();
-        }
-
         public BadDebt GetRecord(string rowguid)
         {
             BadDebt badDebt = new BadDebt();

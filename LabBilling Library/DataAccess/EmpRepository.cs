@@ -32,11 +32,6 @@ namespace LabBilling.Core.DataAccess
             return emps;
         }
 
-        public override Emp GetById(int Id)
-        {
-            throw new NotImplementedException();
-        }
-
         public Emp GetByUsername(string username)
         {
             Log.Instance.Trace($"Entering");

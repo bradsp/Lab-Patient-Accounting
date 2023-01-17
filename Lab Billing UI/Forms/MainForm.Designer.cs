@@ -52,6 +52,7 @@
             this.generateClaimsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.institutionalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.professionalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.claimBatchManagementToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dictionariesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.chargeMasterToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.chargeMasterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -82,11 +83,10 @@
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.windowManagerPanel1 = new MDIWindowManager.WindowManagerPanel();
-            this.panel1 = new System.Windows.Forms.Panel();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripUsernameLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripDatabaseLabel = new System.Windows.Forms.ToolStripStatusLabel();
-            this.claimBatchManagementToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.panel1 = new System.Windows.Forms.Panel();
             this.MainFormMenu.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -257,6 +257,12 @@
             this.professionalToolStripMenuItem.Name = "professionalToolStripMenuItem";
             resources.ApplyResources(this.professionalToolStripMenuItem, "professionalToolStripMenuItem");
             this.professionalToolStripMenuItem.Click += new System.EventHandler(this.professionalToolStripMenuItem_Click);
+            // 
+            // claimBatchManagementToolStripMenuItem
+            // 
+            this.claimBatchManagementToolStripMenuItem.Name = "claimBatchManagementToolStripMenuItem";
+            resources.ApplyResources(this.claimBatchManagementToolStripMenuItem, "claimBatchManagementToolStripMenuItem");
+            this.claimBatchManagementToolStripMenuItem.Click += new System.EventHandler(this.claimBatchManagementToolStripMenuItem_Click);
             // 
             // dictionariesToolStripMenuItem
             // 
@@ -472,11 +478,6 @@
             this.windowManagerPanel1.TitleBackColor = System.Drawing.SystemColors.ControlDark;
             this.windowManagerPanel1.TitleForeColor = System.Drawing.SystemColors.ControlLightLight;
             // 
-            // panel1
-            // 
-            resources.ApplyResources(this.panel1, "panel1");
-            this.panel1.Name = "panel1";
-            // 
             // statusStrip1
             // 
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -503,24 +504,23 @@
             this.toolStripDatabaseLabel.Name = "toolStripDatabaseLabel";
             resources.ApplyResources(this.toolStripDatabaseLabel, "toolStripDatabaseLabel");
             // 
-            // claimBatchManagementToolStripMenuItem
+            // panel1
             // 
-            this.claimBatchManagementToolStripMenuItem.Name = "claimBatchManagementToolStripMenuItem";
-            resources.ApplyResources(this.claimBatchManagementToolStripMenuItem, "claimBatchManagementToolStripMenuItem");
-            this.claimBatchManagementToolStripMenuItem.Click += new System.EventHandler(this.claimBatchManagementToolStripMenuItem_Click);
+            resources.ApplyResources(this.panel1, "panel1");
+            this.panel1.Name = "panel1";
             // 
             // MainForm
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.panel1);
+            this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.windowManagerPanel1);
             this.Controls.Add(this.MainFormMenu);
             this.IsMdiContainer = true;
+            this.KeyPreview = true;
             this.MainMenuStrip = this.MainFormMenu;
             this.Name = "MainForm";
-            this.TransparencyKey = System.Drawing.Color.Empty;
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Dashboard_FormClosing);
             this.Load += new System.EventHandler(this.MainForm_Load);
@@ -579,7 +579,6 @@
         private System.Windows.Forms.ToolStripMenuItem posting835RemitToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
         private MDIWindowManager.WindowManagerPanel windowManagerPanel1;
-        private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.ToolStripMenuItem interfaceMappingToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem clientBillsNewToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem interfaceMonitorToolStripMenuItem;
@@ -594,5 +593,6 @@
         private System.Windows.Forms.ToolStripStatusLabel toolStripDatabaseLabel;
         private System.Windows.Forms.ToolStripMenuItem systemLogViewerToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem claimBatchManagementToolStripMenuItem;
+        private System.Windows.Forms.Panel panel1;
     }
 }

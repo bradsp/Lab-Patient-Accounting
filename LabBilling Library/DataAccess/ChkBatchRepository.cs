@@ -14,9 +14,10 @@ namespace LabBilling.Core.DataAccess
 
         }
 
-        public override ChkBatch GetById(int id)
+        public ChkBatch GetById(int id)
         {
             return dbConnection.SingleOrDefault<ChkBatch>(id);
         }
+
     }
 }

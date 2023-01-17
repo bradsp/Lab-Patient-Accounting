@@ -60,12 +60,6 @@ namespace LabBilling.Core.DataAccess
             }
         }
 
-        public override BillingActivity GetById(int id)
-        {
-            Log.Instance.Debug($"Entering");
-            throw new NotImplementedException();
-        }
-
         public override object Add(BillingActivity table)
         {
             Log.Instance.Debug($"Entering");

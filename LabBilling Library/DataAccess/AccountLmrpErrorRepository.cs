@@ -47,9 +47,5 @@ namespace LabBilling.Core.DataAccess
             return record;
         }
 
-        public override AccountLmrpError GetById(int id)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

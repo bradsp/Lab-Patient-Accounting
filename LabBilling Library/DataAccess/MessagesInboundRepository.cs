@@ -33,7 +33,7 @@ namespace LabBilling.Core.DataAccess
             return records;
         }
 
-        public override MessageInbound GetById(int id)
+        public MessageInbound GetById(int id)
         {
             Log.Instance.Trace($"Entering {id}");
 

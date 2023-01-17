@@ -24,11 +24,6 @@ namespace LabBilling.Core.DataAccess
             accountValidationCriteriaRepository = new AccountValidationCriteriaRepository(dbConnection);
         }
 
-        public override AccountValidationRule GetById(int id)
-        {
-            throw new NotImplementedException();
-        }
-
         public override List<AccountValidationRule> GetAll()
         {
             Log.Instance.Trace($"Entering");

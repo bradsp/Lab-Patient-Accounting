@@ -22,11 +22,6 @@ namespace LabBilling.Core.DataAccess
 
         }
 
-        public override Ins GetById(int id)
-        {
-            throw new NotImplementedException();
-        }
-
         public List<Ins> GetByAccount(string account)
         {
             Log.Instance.Debug($"Entering - account {account}");
@@ -106,6 +101,48 @@ namespace LabBilling.Core.DataAccess
             table.HolderCityStZip = $"{table.HolderCity}, {table.HolderState} {table.HolderZip}";
             table.HolderFullName = $"{table.HolderLastName},{table.HolderFirstName} {table.HolderMiddleName}".TrimEnd();
             return base.Add(table);
+        }
+
+        public override bool Delete(Ins table)
+        {
+            var result = base.Delete(table);
+
+            //deleting an insurance may result in other insurances being reassigned ordering
+            var insurances = GetByAccount(table.Account);
+
+            int iteration = 1;
+            foreach(var ins in insurances)
+            {
+                switch(iteration)
+                {
+                    case 1:
+                        if(ins.Coverage != "A")
+                        {
+                            ins.Coverage = "A";
+                            Update(ins);
+                        }
+                        break;
+                    case 2:
+                        if(ins.Coverage != "B")
+                        {
+                            ins.Coverage = "B";
+                            Update(ins);
+                        }
+                        break;
+                    case 3:
+                        if(ins.Coverage != "C")
+                        {
+                            ins.Coverage = "C";
+                            Update(ins);
+                        }
+                        break;
+                    default:
+                        break;
+                }
+                iteration++;
+            }
+
+            return result;
         }
 
         public override bool Save(Ins table)

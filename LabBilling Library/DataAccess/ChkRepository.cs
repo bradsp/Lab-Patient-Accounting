@@ -19,7 +19,7 @@ namespace LabBilling.Core.DataAccess
 
         }
 
-        public override Chk GetById(int id)
+        public Chk GetById(int id)
         {
             Log.Instance.Trace($"Entering - id {id}");
             var sql = PetaPoco.Sql.Builder
@@ -29,7 +29,6 @@ namespace LabBilling.Core.DataAccess
             var result = dbConnection.SingleOrDefault<Chk>(sql);
 
             return result;
-
         }
 
         public List<Chk> GetByAccount(string account, DateTime? asOfDate = null)

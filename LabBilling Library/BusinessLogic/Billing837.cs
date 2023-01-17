@@ -509,13 +509,13 @@ namespace LabBilling.Core
 
                 //PAT segment goes here -- needed if patient is known to be deceased
 
-                segmentCount += Loop2010BA(subscriber);
-                segmentCount += Loop2010BB(subscriber);
+                segmentCount += Loop2010BA_2330A(subscriber);
+                segmentCount += Loop2010BB_2330B(subscriber);
             }
             return segmentCount;
         }
 
-        private int Loop2010BA(ClaimSubscriber subscriber)
+        private int Loop2010BA_2330A(ClaimSubscriber subscriber)
         {
             int segmentCount = 0;
 
@@ -555,21 +555,24 @@ namespace LabBilling.Core
             });
             segmentCount++;
             // --DMG - Subscriber Demographic Information
-            string sbsDob;
-            if (subscriber.DateOfBirth != null)
-                sbsDob = EdiValue.Date(8, (DateTime)subscriber.DateOfBirth);
-            else
-                sbsDob = "";
-            //date of birth must be 8 characters long
-            if (sbsDob.Length == 8)
+            if (subscriber.PayerResponsibilitySequenceCode == "P")
             {
-                ediDocument.Segments.Add(new EdiSegment("DMG")
+                string sbsDob;
+                if (subscriber.DateOfBirth != null)
+                    sbsDob = EdiValue.Date(8, (DateTime)subscriber.DateOfBirth);
+                else
+                    sbsDob = "";
+                //date of birth must be 8 characters long
+                if (sbsDob.Length == 8)
                 {
-                    [01] = "D8",
-                    [02] = sbsDob,
-                    [03] = subscriber.Gender
-                });
-                segmentCount++;
+                    ediDocument.Segments.Add(new EdiSegment("DMG")
+                    {
+                        [01] = "D8",
+                        [02] = sbsDob,
+                        [03] = subscriber.Gender
+                    });
+                    segmentCount++;
+                }
             }
             // --REF - Subscriber Secondary Identification - only include if SSN has a value
             if (subscriber.SocSecNumber != null && subscriber.SocSecNumber.Length > 0)
@@ -587,7 +590,7 @@ namespace LabBilling.Core
             return segmentCount;
         }
 
-        private int Loop2010BB(ClaimSubscriber subscriber)
+        private int Loop2010BB_2330B(ClaimSubscriber subscriber)
         {
             int segmentCount = 0;
             // -- NM1 - Payer Name
@@ -696,7 +699,7 @@ namespace LabBilling.Core
                         indRelationCode = "18";
                         break;
                 }
-
+                
                 ediDocument.Segments.Add(new EdiSegment("PAT")
                 {
                     [01] = indRelationCode
@@ -1000,7 +1003,7 @@ namespace LabBilling.Core
                     [01] = subscriber.PayerResponsibilitySequenceCode, //payer responsibility
                     [02] = subscriber.IndividualRelationshipCode, //individual relationship code
                     [03] = subscriber.ReferenceIdentification, //reference identification
-                    [04] = subscriber.PlanName, //name
+                    [04] = string.IsNullOrEmpty(subscriber.ReferenceIdentification) ? subscriber.PlanName : "", //name
                     [05] = subscriber.InsuranceTypeCode,
                     [06] = subscriber.CoordinationOfBenefitsCode,
                     [07] = subscriber.ConditionResponseCode,
@@ -1027,7 +1030,7 @@ namespace LabBilling.Core
                 //N3 - Other Subscriber Address
                 //N4 - Other Subscriber City, State, Zip
                 //REF - Other Subscriber Secondary Information
-                segmentCount += Loop2010BA(subscriber);
+                segmentCount += Loop2010BA_2330A(subscriber);
 
                 //Loop 2330B - Other Payer Name
                 //NM1 - Other Payer Name
@@ -1039,7 +1042,7 @@ namespace LabBilling.Core
                 //REF - Other Payer Referral Number
                 //REF - Other Payer Claim Adjustment Indicator
                 //REF - Other Pay Claim Control Number
-                segmentCount += Loop2010BB(subscriber);
+                segmentCount += Loop2010BB_2330B(subscriber);
             }
 
             //Loop 2330C - Other Payer Referring Provider
