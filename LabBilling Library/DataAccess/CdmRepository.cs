@@ -44,6 +44,21 @@ namespace LabBilling.Core.DataAccess
             return queryResult;
         }
 
+        public override bool Save(Cdm table)
+        {
+            var record = GetCdm(table.ChargeId);
+
+            if (record != null)
+            {
+                return Update(table);
+            }
+            else
+            {
+                Add(table);
+                return true;
+            }
+        }
+
         public Cdm GetCdm(string cdm, bool includeDeleted = false)
         {
             string cdmRealName = this.GetRealColumn(nameof(Cdm.ChargeId));

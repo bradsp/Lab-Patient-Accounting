@@ -582,17 +582,7 @@ namespace LabBilling.Core.BusinessLogic
 
             if (!validateZipRegex.IsMatch(value))
             {
-                Regex extractZipRegex = new Regex("[0-9]{5}(?:-[0-9]{4})?");
-                MatchCollection mc = extractZipRegex.Matches(value);
-
-                string extracted = string.Empty;
-
-                foreach (Match m in mc)
-                {
-                    extracted += m;
-                }
-
-                return extracted;
+                return "";
             }
             else
             {
@@ -641,6 +631,10 @@ namespace LabBilling.Core.BusinessLogic
 
             accountRecord.BirthDate = new DateTime().ParseHL7Date(hl7Message.GetValue("PID.7").Left(8));
             accountRecord.Sex = hl7Message.GetValue("PID.8");
+            if(!Dictionaries.sexSource.ContainsKey(accountRecord.Sex))
+            {
+                accountRecord.Sex = "U";
+            }
             accountRecord.Pat.Race = hl7Message.GetValue("PID.10");
             if (hl7Message.HasRepetitions("PID.11"))
             {
@@ -668,7 +662,11 @@ namespace LabBilling.Core.BusinessLogic
                 List<Field> repList = hl7Message.Segments("PID")[0].Fields(13).Repetitions();
                 accountRecord.Pat.PrimaryPhone = repList[0].Components(1).Value;
             }
-
+            accountRecord.Pat.MaritalStatus = hl7Message.GetValue("PID.16");
+            if(!Dictionaries.maritalSource.ContainsKey(accountRecord.Pat.MaritalStatus))
+            {
+                accountRecord.Pat.MaritalStatus = "U";
+            }
             accountRecord.AccountNo = "L" + hl7Message.GetValue("PID.18.1");
             accountRecord.MeditechAccount = accountRecord.AccountNo;
             accountRecord.Pat.AccountNo = accountRecord.AccountNo;

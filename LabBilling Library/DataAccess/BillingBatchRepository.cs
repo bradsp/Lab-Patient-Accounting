@@ -38,26 +38,29 @@ namespace LabBilling.Core.DataAccess
                     var account = accountRepository.GetByAccount(detail.AccountNo);
                     if (account != null)
                     {
+
+                        accountRepository.ClearClaimStatus(account);
+
                         // -- pat - clear h1500_date, ub_date, ssi_batch
-                        List<string> columns = new List<string>();
-                        if (detail.ElectronicBillStatus == "UB")
-                        {
-                            account.Pat.InstitutionalClaimDate = null;
-                            columns.Add(nameof(Pat.InstitutionalClaimDate));
-                        }
-                        if (detail.ElectronicBillStatus == "1500")
-                        {
-                            account.Pat.ProfessionalClaimDate = null;
-                            columns.Add(nameof(Pat.ProfessionalClaimDate));
-                        }
-                        account.Pat.EBillBatchDate = null;
-                        account.Pat.SSIBatch = null;
-                        columns.Add(nameof(Pat.EBillBatchDate));
-                        columns.Add(nameof(Pat.SSIBatch));
-                        // acc - reset status to form status
-                        account.Status = "NEW";
-                        patRepository.Update(account.Pat, columns);
-                        accountRepository.UpdateStatus(account.AccountNo, "NEW");
+                        //List<string> columns = new List<string>();
+                        //if (detail.ElectronicBillStatus == "UB")
+                        //{
+                        //    account.Pat.InstitutionalClaimDate = null;
+                        //    columns.Add(nameof(Pat.InstitutionalClaimDate));
+                        //}
+                        //if (detail.ElectronicBillStatus == "1500")
+                        //{
+                        //    account.Pat.ProfessionalClaimDate = null;
+                        //    columns.Add(nameof(Pat.ProfessionalClaimDate));
+                        //}
+                        //account.Pat.EBillBatchDate = null;
+                        //account.Pat.SSIBatch = null;
+                        //columns.Add(nameof(Pat.EBillBatchDate));
+                        //columns.Add(nameof(Pat.SSIBatch));
+                        //// acc - reset status to form status
+                        //account.Status = "NEW";
+                        //patRepository.Update(account.Pat, columns);
+                        //accountRepository.UpdateStatus(account.AccountNo, "NEW");
                     }
                     // dbh - delete history record
                     dbConnection.Delete(detail);

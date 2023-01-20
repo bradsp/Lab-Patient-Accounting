@@ -32,7 +32,25 @@ namespace LabBilling.Forms
 
         private void addCdmButton_Click(object sender, EventArgs e)
         {
-            
+            ChargeMasterEditForm editForm = new ChargeMasterEditForm();
+
+            if (editForm.ShowDialog() == DialogResult.OK)
+            {
+                Cdm cdmRecord = editForm.cdm;
+                var record = cdmdt.Rows.Find(cdmRecord.ChargeId);
+                try
+                {
+                    cdmRepository.Save(cdmRecord);
+
+                    record = cdmRecord.ToDataRow(record);
+                }
+                catch (Exception ex)
+                {
+                    Log.Instance.Error(ex);
+                    MessageBox.Show("Error updating CDM. Changes not saved.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                DataCache.Instance.ClearClientCache();
+            }
         }
 
         private void includeInactiveCheckBox_CheckedChanged(object sender, EventArgs e)
@@ -105,7 +123,7 @@ namespace LabBilling.Forms
         {
             _timer.Stop();
 
-            cdmdt.DefaultView.RowFilter = $"{nameof(Cdm.Description)} like '{filterTextBox.Text.ToUpper()}*'";
+            cdmdt.DefaultView.RowFilter = $"({nameof(Cdm.Description)} like '{filterTextBox.Text.ToUpper()}*') or ({nameof(Cdm.ChargeId)} like '{filterTextBox.Text.ToUpper()}*')";
 
         }
 
@@ -129,7 +147,7 @@ namespace LabBilling.Forms
                 catch (Exception ex)
                 {
                     Log.Instance.Error(ex);
-                    MessageBox.Show("Error updating client. Changes not saved.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Error updating CDM. Changes not saved.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 DataCache.Instance.ClearClientCache();
             }

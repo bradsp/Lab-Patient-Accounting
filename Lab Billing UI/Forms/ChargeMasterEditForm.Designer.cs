@@ -235,6 +235,7 @@
             this.chargeIdTextBox.Name = "chargeIdTextBox";
             this.chargeIdTextBox.Size = new System.Drawing.Size(100, 20);
             this.chargeIdTextBox.TabIndex = 4;
+            this.chargeIdTextBox.Leave += new System.EventHandler(this.chargeIdTextBox_Leave);
             // 
             // descriptionTextBox
             // 

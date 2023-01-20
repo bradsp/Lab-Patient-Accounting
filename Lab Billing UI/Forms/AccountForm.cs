@@ -2025,6 +2025,8 @@ namespace LabBilling.Forms
 
         private void BillActivityDataGrid_MouseDoubleClick(object sender, MouseEventArgs e)
         {
+            return;
+
             DataGridView dgv = (DataGridView)sender;
 
             // Use HitTest to resolve the row under the cursor
@@ -2309,7 +2311,17 @@ namespace LabBilling.Forms
             PrintEOBForm frm = new PrintEOBForm(args.ToArray());
 
             frm.ShowDialog(this);
+        }
 
+        private void clearClaimStatusButton_Click(object sender, EventArgs e)
+        {
+            if(MessageBox.Show("Clearing the claim status may result in duplicate claim submissions. Ensure the claim has been deleted in the clearing house system.",
+                "Potential Duplicate Submission", MessageBoxButtons.OKCancel, MessageBoxIcon.Exclamation) == DialogResult.OK)
+            {
+                accDB.ClearClaimStatus(currentAccount);
+
+                LoadAccountData();
+            }
         }
     }
 }

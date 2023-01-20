@@ -1110,5 +1110,38 @@ namespace LabBilling.Core.DataAccess
 
         }
 
+        /// <summary>
+        /// Clears all claim flags so account will be picked up in next claim batch
+        /// </summary>
+        /// <param name="account"></param>
+        public void ClearClaimStatus(Account account)
+        {
+            if (account == null)
+                throw new ArgumentNullException("account");
+
+            List<string> columns = new List<string>();
+            try
+            {
+                //clear pat 1500 & ub date flags
+                account.Pat.ProfessionalClaimDate = null;
+                columns.Add(nameof(Pat.ProfessionalClaimDate));
+                account.Pat.InstitutionalClaimDate = null;
+                columns.Add(nameof(Pat.InstitutionalClaimDate));
+                account.Pat.EBillBatchDate = null;
+                columns.Add(nameof(Pat.EBillBatchDate));
+                account.Pat.SSIBatch = null;
+                columns.Add(nameof(Pat.SSIBatch));
+                //set account status to "NEW"
+                account.Status = "NEW";
+
+                patRepository.Update(account.Pat, columns);
+                UpdateStatus(account.AccountNo, "NEW");
+            }
+            catch(Exception ex)
+            {
+                throw new ApplicationException($"Exception clearing billing status on {account.AccountNo}", ex);
+            }
+        }
+
     }
 }

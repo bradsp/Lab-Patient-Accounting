@@ -10,14 +10,21 @@ using System.Windows.Forms;
 using LabBilling.Core.Models;
 using LabBilling.Core.DataAccess;
 using System.Web.UI.WebControls;
+using System.Windows.Forms.DataVisualization.Charting;
 
 namespace LabBilling.Forms
 {
     public partial class ChargeMasterEditForm : Form
     {
+
+        private bool addMode = false;
+        private CdmRepository cdmRepository;
+
         public ChargeMasterEditForm()
         {
             InitializeComponent();
+
+            cdmRepository = new CdmRepository(Helper.ConnVal);
         }
 
         public string SelectedCdm { get; set; }
@@ -30,12 +37,35 @@ namespace LabBilling.Forms
 
         private void ChargeMasterEditForm_Load(object sender, EventArgs e)
         {
-            CdmRepository cdmRepository = new CdmRepository(Helper.ConnVal);
-            cdm = cdmRepository.GetCdm(SelectedCdm);
-            
-            saveButton.Enabled = false; // save function not yet implemented
-            
+            if (SelectedCdm != null)
+            {
+                cdm = cdmRepository.GetCdm(SelectedCdm);
+                if(cdm == null)
+                {
+                    if(MessageBox.Show($"CDM {SelectedCdm} is not found. Do you want to add?", "Not Found", 
+                        MessageBoxButtons.YesNo, MessageBoxIcon.Error) == DialogResult.No)
+                    {
+                        DialogResult = DialogResult.Cancel;
+                        return;
+                    }
+                    addMode = true;
+                }
+            }
+            else
+            {
+                cdm = new Cdm();
+                cdm.ChargeId = SelectedCdm;
+                cdm.CdmFeeSchedule1 = new List<ICdmDetail>();
+                cdm.CdmFeeSchedule2 = new List<ICdmDetail>();
+                cdm.CdmFeeSchedule3 = new List<ICdmDetail>();
+                cdm.CdmFeeSchedule4 = new List<ICdmDetail>();
+                cdm.CdmFeeSchedule5 = new List<ICdmDetail>();
+
+                addMode = true;
+            }
+
             LoadData();
+            //saveButton.Enabled = false; // save function not yet implemented           
         }
 
         private void LoadData()
@@ -133,7 +163,32 @@ namespace LabBilling.Forms
 
         private void saveButton_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Save function not implemeted.");
+            DialogResult = DialogResult.OK;
+            return;
+        }
+
+        private void chargeIdTextBox_Leave(object sender, EventArgs e)
+        {
+            if (addMode)
+            {
+                var record = cdmRepository.GetCdm(chargeIdTextBox.Text);
+                if (record != null)
+                {
+                    if (MessageBox.Show($"Cdm {chargeIdTextBox.Text} exists. Load CDM for editing?", "CDM Exists",
+                        MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                    {
+                        SelectedCdm = record.ChargeId;
+                        cdm = record;
+                        LoadData();
+                        addMode = false;
+                    }
+                    else
+                    {
+                        DialogResult = DialogResult.Cancel;
+                        return;
+                    }
+                }
+            }
         }
     }
 }
