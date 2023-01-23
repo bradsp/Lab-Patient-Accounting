@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IdentityModel.Protocols.WSTrust;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,6 +22,7 @@ namespace LabBilling
         private static PhyRepository _phyRepository;
         private static ClientRepository _clientRepository;
         private static CdmRepository _cdmRepository;
+        private static RevenueCodeRepository _revenueCodeRepository;
 
         private DataCache() 
         {
@@ -29,6 +31,7 @@ namespace LabBilling
             _phyRepository = new PhyRepository(Helper.ConnVal);
             _clientRepository = new ClientRepository(Helper.ConnVal);
             _cdmRepository = new CdmRepository(Helper.ConnVal);
+            _revenueCodeRepository = new RevenueCodeRepository(Helper.ConnVal);
         }
 
         private static DataCache instance = null;
@@ -121,6 +124,20 @@ namespace LabBilling
         public void ClearCdmCache()
         {
             cache.Remove("cdm");
+        }
+
+        Func<IEnumerable<RevenueCode>> revenueCodeGetter = () => _revenueCodeRepository.GetAll();
+
+        public List<RevenueCode> GetRevenueCodes()
+        {
+            var revenuecodes = cache.GetOrAdd("revcode", revenueCodeGetter);
+
+            return revenuecodes.ToList();
+        }
+
+        public void ClearRevenueCodeCache()
+        {
+            cache.Remove("revcode");
         }
     }
 

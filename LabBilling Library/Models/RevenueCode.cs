@@ -3,7 +3,7 @@ using PetaPoco;
 
 namespace LabBilling.Core.Models
 {
-    [TableName("revcode")]
+    [TableName("dictionary.revcode")]
     [PrimaryKey("code", AutoIncrement = false)]
     public class RevenueCode : IBaseEntity
     {
@@ -12,8 +12,8 @@ namespace LabBilling.Core.Models
         public string Code { get; set; }
 
         [Column("description")]
-
         public string Description { get; set; }
+
         public DateTime mod_date { get; set; }
         public string mod_user { get; set; }
         public string mod_prg { get; set; }
