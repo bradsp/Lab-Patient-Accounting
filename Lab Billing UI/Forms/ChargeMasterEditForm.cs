@@ -103,6 +103,30 @@ namespace LabBilling.Forms
             feeSched4Grid.DataSource = feeSched4BindingSource;
             feeSched5Grid.DataSource = feeSched5BindingSource;
 
+            List<DataGridViewComboBoxColumn> comboboxColumns = new List<DataGridViewComboBoxColumn>();
+            for (int i = 0; i < 5; i++)
+            {
+                DataGridViewComboBoxColumn comboboxColumn = new DataGridViewComboBoxColumn();
+                comboboxColumn.Items.Add("NORM");
+                comboboxColumn.Items.Add("TC");
+                comboboxColumn.Items.Add("PC");
+                comboboxColumn.Items.Add("N/A");
+                comboboxColumn.DataPropertyName = nameof(CdmDetail.Type);
+                comboboxColumn.Name = nameof(CdmDetail.Type);
+                comboboxColumns.Add(comboboxColumn);
+            }
+
+            feeSched1Grid.Columns.Remove(nameof(CdmDetail.Type));
+            feeSched1Grid.Columns.Insert(1, comboboxColumns[0]);
+            feeSched2Grid.Columns.Remove(nameof(CdmDetail.Type));
+            feeSched2Grid.Columns.Insert(1, comboboxColumns[1]);
+            feeSched3Grid.Columns.Remove(nameof(CdmDetail.Type));
+            feeSched3Grid.Columns.Insert(1, comboboxColumns[2]);
+            feeSched4Grid.Columns.Remove(nameof(CdmDetail.Type));
+            feeSched4Grid.Columns.Insert(1, comboboxColumns[3]);
+            feeSched5Grid.Columns.Remove(nameof(CdmDetail.Type));
+            feeSched5Grid.Columns.Insert(1, comboboxColumns[4]);
+
             FormatGrid(feeSched1Grid);
             FormatGrid(feeSched2Grid);
             FormatGrid(feeSched3Grid);
