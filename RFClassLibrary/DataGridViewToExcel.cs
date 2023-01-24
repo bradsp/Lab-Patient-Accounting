@@ -460,9 +460,9 @@ namespace RFClassLibrary
                 rng.Value2 = Value.ToString();
                 rng.Style = StyleName;
                 rng.Columns.EntireColumn.AutoFit();
-                rng.Borders.Weight = XlBorderWeight.xlThin;
-                rng.Borders.LineStyle = XlLineStyle.xlContinuous;
-                rng.Borders.ColorIndex = XlColorIndex.xlColorIndexAutomatic;
+                rng.Borders.Weight = Microsoft.Office.Interop.Excel.XlBorderWeight.xlThin;
+                rng.Borders.LineStyle = Microsoft.Office.Interop.Excel.XlLineStyle.xlContinuous;
+                rng.Borders.ColorIndex = Microsoft.Office.Interop.Excel.XlColorIndex.xlColorIndexAutomatic;
             }
             #endregion
 
