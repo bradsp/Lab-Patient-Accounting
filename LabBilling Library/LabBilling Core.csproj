@@ -61,10 +61,6 @@
     <Reference Include="ICSharpCode.SharpZipLib, Version=1.4.1.12, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
       <HintPath>..\packages\SharpZipLib.1.4.1\lib\netstandard2.0\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
-    <Reference Include="j4jayant.HL7.Parser, Version=2022.11.6.2225, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\hl7-cSharp-parser\j4jayant.HL7.Parser\j4jayant.HL7.Parser\bin\Debug\j4jayant.HL7.Parser.dll</HintPath>
-    </Reference>
     <Reference Include="MathNet.Numerics, Version=5.0.0.0, Culture=neutral, PublicKeyToken=cd8b63ad3d691a37, processorArchitecture=MSIL">
       <HintPath>..\packages\MathNet.Numerics.Signed.5.0.0\lib\net48\MathNet.Numerics.dll</HintPath>
     </Reference>
@@ -365,6 +361,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\j4jayant.HL7.Parser\j4jayant.HL7.Parser.csproj">
+      <Project>{687f3113-0395-4dbc-a332-c1a329516651}</Project>
+      <Name>j4jayant.HL7.Parser</Name>
+    </ProjectReference>
     <ProjectReference Include="..\MCL\MCL.csproj">
       <Project>{f54e006c-aa33-48f2-9e2f-46cfb5d7ee47}</Project>
       <Name>MCL</Name>

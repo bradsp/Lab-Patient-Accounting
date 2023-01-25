@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("OopFactory.X12.Validation")]
-[assembly: AssemblyDescription("Open Source .NET C# X12 Parser")]
+[assembly: AssemblyTitle("j4jayant.HL7.Parser")]
+[assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Dannie Strubhar")]
-[assembly: AssemblyProduct("OopFactory.X12.Validation")]
-[assembly: AssemblyCopyright("Copyright ©  2012")]
+[assembly: AssemblyCompany("")]
+[assembly: AssemblyProduct("j4jayant.HL7.Parser")]
+[assembly: AssemblyCopyright("Copyright ©  2013")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("5aa383ae-0ba7-4263-987b-31ba3784a3e6")]
+[assembly: Guid("b1a06d84-5854-4923-aade-df2c4877b9ec")]
 
 // Version information for an assembly consists of the following four values:
 //
