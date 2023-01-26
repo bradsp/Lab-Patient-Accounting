@@ -586,7 +586,7 @@ namespace LabBilling.Core.BusinessLogic
                         claimLine.EPSDTIndicator = "";
                         claimLine.FamilyPlanningIndicator = "";
                         claimLine.ServiceDate = chrg.ServiceDate;
-                        claimLine.ControlNumber = chrg.CDMCode;
+                        claimLine.ControlNumber = string.IsNullOrEmpty(detail.Modifier) ? chrg.CDMCode : $"{chrg.CDMCode}-{detail.Modifier}";
                         claimLine.RevenueCode = detail.RevenueCode;
 
                         claimData.ClaimLines.Add(claimLine);

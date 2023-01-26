@@ -62,13 +62,19 @@
     <ManifestKeyFile>Lab Billing WinForms UI_TemporaryKey.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
-    <GenerateManifests>true</GenerateManifests>
+    <GenerateManifests>false</GenerateManifests>
   </PropertyGroup>
   <PropertyGroup>
-    <SignManifests>true</SignManifests>
+    <SignManifests>false</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>logoicon2.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup>
+    <TargetZone>LocalIntranet</TargetZone>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.VisualBasic" />
@@ -488,6 +494,7 @@
       <DependentUpon>UserSecurity.cs</DependentUpon>
     </Compile>
     <Compile Include="Settings.cs" />
+    <None Include="Properties\app.manifest" />
     <None Include="Resources\kisspng-gear-spanners-computer-icons-gear-5abf330af2b385.0314791715224798829941.png" />
     <None Include="Resources\wrench-icon.png" />
     <None Include="Lab Billing WinForms UI_TemporaryKey.pfx" />
