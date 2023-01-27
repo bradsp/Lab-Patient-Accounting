@@ -1476,7 +1476,8 @@ namespace LabBilling.Forms
                 for (int i = 0; i < cnt; i++)
                 {
                     var val = dxPointerGrid2[(i + 1).ToString(), e.RowIndex].Value.ToString();
-                    dxSelected.Add(val);
+                    if(!string.IsNullOrEmpty(val))
+                        dxSelected.Add(val);
                 }
 
                 var dup = dxSelected.GroupBy(x => x).Where(c => c.Count() > 1)

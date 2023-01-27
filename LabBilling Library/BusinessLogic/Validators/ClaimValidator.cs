@@ -58,6 +58,9 @@ namespace LabBilling.Core.BusinessLogic.Validators
                 RuleForEach(a => a.Insurances)
                     .SetValidator(new InsuranceValidator()).When(a => a.FinCode != "E");
 
+                RuleFor(a => a)
+                    .Must(NotHaveUnusedDiagnosis).WithMessage("All diagnosis codes are not used in a pointer.");
+
                 RuleFor(a => a.FinCode)
                     .Cascade(CascadeMode.Stop)
                     .NotEmpty().WithMessage("{PropertyName} is empty.")
@@ -128,21 +131,33 @@ namespace LabBilling.Core.BusinessLogic.Validators
             return name.All(Char.IsLetter);
         }
 
-        //private bool NotHaveUnusedDiagnosis(Account account)
-        //{
-            
-        //    foreach(var dx in account.Pat.Diagnoses)
-        //    {
-        //        foreach(var chrg in account.Charges)
-        //        {
-        //            foreach(var chrgDetail in chrg.ChrgDetails)
-        //            {
-        //                chrgDetail.DiagCodePointer
-        //            }
-        //        }
-        //    }
-           
-        //}
+        private bool NotHaveUnusedDiagnosis(Account account)
+        {
+
+            foreach (var dx in account.Pat.Diagnoses)
+            {
+                bool dxUsed = false;
+                foreach (var chrg in account.Charges)
+                {
+                    foreach (var chrgDetail in chrg.ChrgDetails)
+                    {
+                        List<string> dxPtrs = chrgDetail.DiagnosisPointer.DiagnosisPointer.Split(':').ToList();
+                        foreach(var ptr in dxPtrs)
+                        {
+                            if (!string.IsNullOrEmpty(ptr))
+                            {
+                                if (dx.No == Convert.ToInt32(ptr))
+                                    dxUsed = true;
+                            }
+                        }
+                    }
+                }
+                if (!dxUsed)
+                    return false;
+            }
+
+            return true;
+        }
 
         private bool NotContainOnlyVenipunctureCharge(Account account)
         {
