@@ -32,11 +32,13 @@ namespace LabBilling.Core.DataAccess
             if (!string.IsNullOrEmpty(npi))
                 phy = dbConnection.SingleOrDefault<Phy>("where tnh_num = @0",
                     new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = npi });
-
-            if (!string.IsNullOrEmpty(phy.PathologistCode))
+            if (phy != null)
             {
-                pth = dbConnection.SingleOrDefault<Pth>(Convert.ToInt32(phy.PathologistCode));
-                phy.Pathologist = pth;
+                if (!string.IsNullOrEmpty(phy.PathologistCode))
+                {
+                    pth = dbConnection.SingleOrDefault<Pth>(Convert.ToInt32(phy.PathologistCode));
+                    phy.Pathologist = pth;
+                }
             }
 
             return phy;

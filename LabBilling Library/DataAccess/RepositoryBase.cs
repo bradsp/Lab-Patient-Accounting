@@ -92,8 +92,8 @@ namespace LabBilling.Core.DataAccess
             table.rowguid = Guid.NewGuid();
 
             object identity = dbConnection.Insert(table);
-            Log.Instance.Debug(dbConnection.LastSQL);
-            Log.Instance.Debug(dbConnection.LastArgs);
+            Log.Instance.Debug(dbConnection.LastSQL.ToString());
+            Log.Instance.Debug(dbConnection.LastArgs.ToString());
 
             return identity;
         }
@@ -112,7 +112,7 @@ namespace LabBilling.Core.DataAccess
             table.mod_user = Environment.UserName.ToString();
 
             dbConnection.Update(table);
-            Log.Instance.Debug(dbConnection.LastSQL);
+            Log.Instance.Debug(dbConnection.LastSQL.ToString());
             return true;
         }
 
@@ -142,13 +142,13 @@ namespace LabBilling.Core.DataAccess
             }
             catch(Exception ex)
             {
-                Log.Instance.Debug(dbConnection.LastSQL);
-                Log.Instance.Debug(dbConnection.LastArgs);
+                Log.Instance.Debug(dbConnection.LastSQL.ToString());
+                Log.Instance.Debug(dbConnection.LastArgs.ToString());
                 throw new ApplicationException("Error during database update.", ex);
             }
 
-            Log.Instance.Debug(dbConnection.LastSQL);
-            Log.Instance.Debug(dbConnection.LastArgs);
+            Log.Instance.Debug(dbConnection.LastSQL.ToString());
+            Log.Instance.Debug(dbConnection.LastArgs.ToString());
             return true;        
         }
 
@@ -169,8 +169,8 @@ namespace LabBilling.Core.DataAccess
                 Log.Instance.Error("Error saving account validation record to database.", ex);
                 return false;
             }
-            Log.Instance.Debug(dbConnection.LastSQL);
-            Log.Instance.Debug(dbConnection.LastCommand);
+            Log.Instance.Debug(dbConnection.LastSQL.ToString());
+            Log.Instance.Debug(dbConnection.LastCommand.ToString());
             return true;
         }
 
@@ -179,8 +179,8 @@ namespace LabBilling.Core.DataAccess
             Log.Instance.Trace("Entering");
 
             var count = dbConnection.Delete(table);
-            Log.Instance.Debug(dbConnection.LastSQL);
-            Log.Instance.Debug(dbConnection.LastArgs);
+            Log.Instance.Debug(dbConnection.LastSQL.ToString());
+            Log.Instance.Debug(dbConnection.LastArgs.ToString());
             return count > 0;
         }
 

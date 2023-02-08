@@ -16,11 +16,14 @@ namespace LabBillingService
         /// </summary>
         static void Main()
         {
-            Program.Database = "LabBillingTest"; // Properties.Settings.Default.DbName;
-            Program.Server = "WTHMCLBILL"; // Properties.Settings.Default.DbServer;
-            Program.LogDatabase = "NLog"; // Properties.Settings.Default.LogDbName;
+            Program.Database = Properties.Settings.Default.DbName;
+            Program.Server = Properties.Settings.Default.DbServer;
+            Program.LogDatabase = Properties.Settings.Default.LogDbName;
 
-            XmlConfigurator.Configure(new System.IO.FileInfo(@"D:\Users\bpowers\source\repos\Lab-Billing\LabBillingService\log4net.config"));
+            string path = System.Reflection.Assembly.GetExecutingAssembly().Location;
+            var directory = System.IO.Path.GetDirectoryName(path);
+
+            XmlConfigurator.Configure(new System.IO.FileInfo($"{directory}\\log4net.config"));
 
             var exitcode = HostFactory.Run(x =>
             {

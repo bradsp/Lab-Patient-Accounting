@@ -227,13 +227,13 @@ namespace LabBilling.Core.BusinessLogic
                 {
                     //skipping these for now
                     Log.Instance.Trace($"Message type: {hl7Message.MessageStructure} - Control ID: {hl7Message.MessageControlID}");
-                    processStatus = Status.NotProcessed;
-                    statusText = String.Empty;
+                    //processStatus = Status.NotProcessed;
+                    //statusText = String.Empty;
 
-                    //var result = ProcessMFNMessage();
-                    //errors = result.errors;
-                    //statusText = result.statusText;
-                    //processStatus = result.status;
+                    var result = ProcessMFNMessage();
+                    errors = result.errors;
+                    statusText = result.statusText;
+                    processStatus = result.status;
 
                 }
                 else
@@ -545,6 +545,7 @@ namespace LabBilling.Core.BusinessLogic
             StringBuilder errors = new StringBuilder();
             string statusText = string.Empty;
 
+            string eventCode = ParseMFE();
             ParseSTF();
             ParsePRA();
 
@@ -565,7 +566,19 @@ namespace LabBilling.Core.BusinessLogic
             }
             else
             {
-                Log.Instance.Debug("Provider updated");
+                phy.uri = existingPhy.uri;
+                phy.rowguid = existingPhy.rowguid;
+
+                if (eventCode == "MDL" || eventCode == "MDC")
+                {
+                    phy.IsDeleted = true;
+                    Log.Instance.Debug("Provider deleted");
+                }
+                else
+                {
+                    phy.IsDeleted = false;
+                    Log.Instance.Debug("Provider updated");
+                }
                 phyRepository.Update(phy);
                 return (Status.Processed, $"Provider updated.", errors);
             }
@@ -914,6 +927,8 @@ namespace LabBilling.Core.BusinessLogic
             string group = hl7Message.GetValue("PRA.2");
             string speciality = hl7Message.GetValue("PRA.5");
 
+            phy.DoctorNumber = drnum;
+
             //practioner ids - PRA.6 repeating
             if (hl7Message.HasRepetitions("PRA.6"))
             {
@@ -934,6 +949,18 @@ namespace LabBilling.Core.BusinessLogic
                 }
             }
         }
+
+        private string ParseMFE()
+        {
+            //MFE-1
+            string eventCode = hl7Message.GetValue("MFE.1");
+
+            string identifier = hl7Message.GetValue("MFE.4.1");
+            string identifierType = hl7Message.GetValue("MFE.4.3");
+
+            return eventCode;
+        }
+
 
         public bool SetMessageDoNotProcess(int systemMessageId, string statusMessage)
         {
