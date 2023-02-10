@@ -6,7 +6,7 @@
       <Value Profile="(Default)">WTHMCLBILL</Value>
     </Setting>
     <Setting Name="DbName" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">LabBillingTest</Value>
+      <Value Profile="(Default)">LabBillingProd</Value>
     </Setting>
     <Setting Name="LogDbName" Type="System.String" Scope="Application">
       <Value Profile="(Default)">NLog</Value>

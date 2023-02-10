@@ -31,22 +31,29 @@ namespace LabBilling.Core.DataAccess
 
             foreach(Ins ins in records)
             {
-                if(string.IsNullOrEmpty(ins.HolderLastName) || string.IsNullOrEmpty(ins.HolderFirstName))
+                if (!string.IsNullOrEmpty(ins.HolderFullName))
                 {
-                    if (!Str.ParseName(ins.HolderFullName.ToString(),
-                        out string lname, out string fname, out string mname, out string suffix))
+                    if (string.IsNullOrEmpty(ins.HolderLastName) || string.IsNullOrEmpty(ins.HolderFirstName))
                     {
-                        //error parsing name
-                        Log.Instance.Info($"Insurance holder name could not be parsed. {ins.HolderFullName}");
-                    }
+                        if (!Str.ParseName(ins.HolderFullName.ToString(),
+                            out string lname, out string fname, out string mname, out string suffix))
+                        {
+                            //error parsing name
+                            Log.Instance.Info($"Insurance holder name could not be parsed. {ins.HolderFullName}");
+                        }
 
-                    ins.HolderLastName = lname;
-                    ins.HolderFirstName = fname;
-                    ins.HolderMiddleName = mname;
+                        ins.HolderLastName = lname;
+                        ins.HolderFirstName = fname;
+                        ins.HolderMiddleName = mname;
+                    }
+                    else
+                    {
+                        ins.HolderFullName = $"{ins.HolderLastName},{ins.HolderFirstName} {ins.HolderMiddleName}";
+                    }
                 }
                 else
                 {
-                    ins.HolderFullName = $"{ins.HolderLastName},{ins.HolderFirstName} {ins.HolderMiddleName}";
+                    ins.HolderFullName = string.Empty;
                 }
 
                 if (ins.InsCode != null)

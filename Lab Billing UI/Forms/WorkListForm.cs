@@ -9,7 +9,7 @@ using LabBilling.Logging;
 using LabBilling.Core.Models;
 using LabBilling.Library;
 using System.Data;
-using System.CodeDom;
+//using System.CodeDom;
 using LabBilling.Core;
 
 namespace LabBilling.Forms
@@ -395,6 +395,8 @@ namespace LabBilling.Forms
             accountTable.PrimaryKey = new DataColumn[] { accountTable.Columns[nameof(AccountSearch.Account)] };
             accountBindingSource.DataSource = accountTable;
 
+            accountTable.DefaultView.Sort = nameof(AccountSearch.ServiceDate);
+
             accountGrid.ForeColor = Color.Black;
             accountGrid.Columns[nameof(AccountSearch.FirstName)].Visible = false;
             accountGrid.Columns[nameof(AccountSearch.LastName)].Visible = false;
@@ -418,7 +420,6 @@ namespace LabBilling.Forms
             accountGrid.RowHeadersVisible = true;
 
             Cursor.Current = Cursors.Default;
-
 
             toolStripProgressBar1.Style = ProgressBarStyle.Continuous;
 

@@ -314,7 +314,7 @@ namespace LabBilling.Core.BusinessLogic.Validators
         {
             foreach(var chrg in account.Charges)
             {
-                if(((DateTime)chrg.ServiceDate).Date != account.TransactionDate.Date)
+                if(((DateTime)chrg.ServiceDate).Date != account.TransactionDate.Date && !chrg.IsCredited)
                 {
                     return false;
                 }
