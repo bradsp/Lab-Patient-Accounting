@@ -261,11 +261,18 @@ namespace LabBilling.Core.DataAccess
                 new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = thruDate });
         }
 
-        public IEnumerable<ClaimItem> GetAccountsForClaims(ClaimType claimType)
+        public IEnumerable<ClaimItem> GetAccountsForClaims(ClaimType claimType, int maxClaims = 0)
         {
             Log.Instance.Trace($"Entering - claimType {claimType}");
 
             PetaPoco.Sql command;
+
+            string selMaxRecords = string.Empty;
+
+            if(maxClaims > 0)
+            {
+                selMaxRecords = $"TOP {maxClaims} ";
+            }
 
             try
             {
@@ -273,18 +280,17 @@ namespace LabBilling.Core.DataAccess
                 {
                     case ClaimType.Institutional:
                         command = PetaPoco.Sql.Builder
-                            .Select("status, acc.account, pat_name, ssn, cl_mnem, acc.fin_code, trans_date, ins.plan_nme")
+                            .Select($"{selMaxRecords}status, acc.account, pat_name, ssn, cl_mnem, acc.fin_code, trans_date, ins.plan_nme")
                             .From(_tableName)
                             .InnerJoin("ins").On("ins.account = acc.account and ins_a_b_c = 'A'")
                             .Where("status = 'UB'");
                         break;
                     case ClaimType.Professional:
                         command = PetaPoco.Sql.Builder
-                            .Select("status, acc.account, pat_name, ssn, cl_mnem, acc.fin_code, trans_date, ins.plan_nme")
+                            .Select($"{selMaxRecords}status, acc.account, pat_name, ssn, cl_mnem, acc.fin_code, trans_date, ins.plan_nme")
                             .From(_tableName)
                             .InnerJoin("ins").On("ins.account = acc.account and ins_a_b_c = 'A'")
                             .Where("status = '1500'");
-                        //.Where("ins_code not in ('CHAMPUS')");
                         break;
                     default:
                         command = PetaPoco.Sql.Builder;

@@ -1240,6 +1240,7 @@ namespace LabBilling.Forms
             }
 
             PaymentsDataGrid.Columns[nameof(Chk.PaidAmount)].Visible = true;
+            PaymentsDataGrid.Columns[nameof(Chk.Batch)].Visible = true;
             PaymentsDataGrid.Columns[nameof(Chk.ChkDate)].Visible = true;
             PaymentsDataGrid.Columns[nameof(Chk.CheckNo)].Visible = true;
             PaymentsDataGrid.Columns[nameof(Chk.Comment)].Visible = true;

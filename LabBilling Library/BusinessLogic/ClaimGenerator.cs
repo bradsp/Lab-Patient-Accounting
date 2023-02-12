@@ -76,6 +76,7 @@ namespace LabBilling.Core.BusinessLogic
             string interchangeControlNumber = string.Format("{0:D9}", int.Parse(string.Format("{0}{1}", DateTime.Now.Year, strNum)));
             string batchType;
             string fileLocation;
+            int maxClaims = Convert.ToInt32(parametersdb.GetByKey("claim_batch_max_claims"));
 
             List<ClaimItem> claimList;
             Billing837.ClaimType billClaimType;
@@ -84,14 +85,14 @@ namespace LabBilling.Core.BusinessLogic
             switch (claimType)
             {
                 case ClaimType.Institutional:
-                    claimList = accountRepository.GetAccountsForClaims(AccountRepository.ClaimType.Institutional).ToList();
+                    claimList = accountRepository.GetAccountsForClaims(AccountRepository.ClaimType.Institutional, maxClaims).ToList();
                     billClaimType = Billing837.ClaimType.Institutional;
                     processedStatus = "SSIUB";
                     batchType = "UB";
                     fileLocation = parametersdb.GetByKey("claim_837i_file_location");
                     break;
                 case ClaimType.Professional:
-                    claimList = accountRepository.GetAccountsForClaims(AccountRepository.ClaimType.Professional).ToList();
+                    claimList = accountRepository.GetAccountsForClaims(AccountRepository.ClaimType.Professional, maxClaims).ToList();
                     billClaimType = Billing837.ClaimType.Professional;
                     processedStatus = "SSI1500";
                     batchType = "1500";
