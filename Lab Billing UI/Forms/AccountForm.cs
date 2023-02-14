@@ -45,6 +45,7 @@ namespace LabBilling.Forms
         private readonly DictDxRepository dxDB = new DictDxRepository(Helper.ConnVal);
         private readonly InsCompanyRepository insCompanyRepository = new InsCompanyRepository(Helper.ConnVal);
         private readonly ChrgRepository chrgdb = new ChrgRepository(Helper.ConnVal);
+        private readonly ChrgDetailRepository chrgDetailRepository = new ChrgDetailRepository(Helper.ConnVal);
         private readonly UserProfileRepository userProfileDB = new UserProfileRepository(Helper.ConnVal);
         private readonly FinRepository finDB = new FinRepository(Helper.ConnVal);
         private readonly ChkRepository chkdb = new ChkRepository(Helper.ConnVal);
@@ -231,6 +232,19 @@ namespace LabBilling.Forms
                 AddOnChangeHandlerToInputControls(tabInsurance);
             }
 
+            //build context menu
+            foreach (var item in Dictionaries.cptModifiers)
+            {
+                ToolStripMenuItem tsItem = new ToolStripMenuItem(item.Key);
+                tsItem.Tag = item.Value;
+                tsItem.Click += new EventHandler(AddModifier_Click);
+
+                addModifierToolStripMenuItem.DropDownItems.Add(tsItem);
+            }
+
+            removeModifierToolStripMenuItem.Click += new EventHandler(RemoveModifier_Click);
+
+
             //UpdateDxPointersButton.Enabled = false; // start disabled until a box has been checked.
         }
 
@@ -240,20 +254,14 @@ namespace LabBilling.Forms
             Helper.SetControlsAccess(chargeLayoutPanel.Controls, false);
             if (systemParametersRepository.GetByKey("allow_chrg_entry") == "1")
             {
-                if (Program.LoggedInUser.CanSubmitCharges)
-                {
-                    Helper.SetControlsAccess(tabCharges.Controls, true);
-                    Helper.SetControlsAccess(chargeLayoutPanel.Controls, true);
-                }
+                Helper.SetControlsAccess(tabCharges.Controls, Program.LoggedInUser.CanSubmitCharges);
+                Helper.SetControlsAccess(chargeLayoutPanel.Controls, Program.LoggedInUser.CanSubmitCharges);
             }
 
             Helper.SetControlsAccess(tabPayments.Controls, false);
             if (systemParametersRepository.GetByKey("allow_chk_entry") == "1")
             {
-                if (Program.LoggedInUser.CanAddPayments)
-                {
-                    Helper.SetControlsAccess(tabPayments.Controls, true);
-                }
+                Helper.SetControlsAccess(tabPayments.Controls, Program.LoggedInUser.CanAddAdjustments);
             }
 
             //Helper.SetControlsAccess(DemographicsTabLayoutPanel.Controls, false);
@@ -292,7 +300,7 @@ namespace LabBilling.Forms
                     Helper.SetControlsAccess(tabCharges.Controls, true);
                     Helper.SetControlsAccess(tabPayments.Controls, true);
                     AddChargeButton.Visible = Program.LoggedInUser.CanSubmitCharges;
-                    AddPaymentButton.Visible = Program.LoggedInUser.CanAddPayments;
+                    AddPaymentButton.Visible = Program.LoggedInUser.CanAddAdjustments;
                     //UpdateDxPointersButton.Visible = true;
                     SaveInsuranceButton.Visible = true;
                     //SaveDxButton.Visible = true;
@@ -1073,6 +1081,43 @@ namespace LabBilling.Forms
             ChargesDataGrid.BackgroundColor = Color.AntiqueWhite;
             ChrgDetailDataGrid.BackgroundColor = Color.AntiqueWhite;
 
+            ChargesDataGrid.ClearSelection();
+            ChrgDetailDataGrid.ClearSelection();
+
+        }
+
+        private void RemoveModifier_Click(object sender, EventArgs e)
+        {
+            Log.Instance.Trace($"Entering");
+
+            // get selected charge detail uri
+            int selectedRows = ChrgDetailDataGrid.Rows.GetRowCount(DataGridViewElementStates.Selected);
+            if (selectedRows > 0)
+            {
+                DataGridViewRow row = ChrgDetailDataGrid.SelectedRows[0];
+                var uri = Convert.ToInt32(row.Cells[nameof(ChrgDetail.uri)].Value.ToString());
+
+                chrgDetailRepository.RemoveModifier(uri);
+                LoadAccountData();
+            }
+        }
+
+        private void AddModifier_Click(object sender, EventArgs e)
+        {
+            Log.Instance.Trace($"Entering");
+            ToolStripMenuItem item = sender as ToolStripMenuItem;
+            //MessageBox.Show(item.Text + " " + item.Tag);
+
+            // get selected charge detail uri
+            int selectedRows = ChrgDetailDataGrid.Rows.GetRowCount(DataGridViewElementStates.Selected);
+            if (selectedRows > 0)
+            {
+                DataGridViewRow row = ChrgDetailDataGrid.SelectedRows[0];
+                var uri = Convert.ToInt32(row.Cells[nameof(ChrgDetail.uri)].Value.ToString());
+
+                chrgDetailRepository.AddModifier(uri, item.Text);
+                LoadAccountData();
+            }
         }
 
         private void DgvCharges_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
@@ -1197,11 +1242,6 @@ namespace LabBilling.Forms
             {
                 LoadAccountData();
             }
-        }
-
-        private void ChrgDetailDataGrid_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
-        {
-            //Log.Instance.Trace($"Entering");
         }
 
         #endregion
@@ -2324,6 +2364,11 @@ namespace LabBilling.Forms
 
                 LoadAccountData();
             }
+        }
+
+        private void chargeDetailsContextMenu_Opening(object sender, CancelEventArgs e)
+        {
+
         }
     }
 }

@@ -13,12 +13,14 @@ namespace LabBilling
 {
     public partial class Login : MetroForm
     {
-        public Login()
+        public Login(bool test = false)
         {
             Log.Instance.Trace($"Entering");
+            testEnvironment = test;
             InitializeComponent();
         }
 
+        public bool testEnvironment = false;
         public bool IsLoggedIn { get; set; }
         public Emp LoggedInUser { get; set; }
         private EmpRepository db;
@@ -107,9 +109,18 @@ namespace LabBilling
             username.Text = systemUser = paramsLogin[1].ToString();
             domain.Text = systemDomain = paramsLogin[0].ToString();
 
-            Program.Database = Properties.Settings.Default.DbName;
-            Program.Server = Properties.Settings.Default.DbServer;
-            Program.LogDatabase = Properties.Settings.Default.LogDbName;
+            if (testEnvironment)
+            {
+                Program.Database = Properties.Settings.Default.TestDbName;
+                Program.Server = Properties.Settings.Default.TestDbServer;
+                Program.LogDatabase = Properties.Settings.Default.LogDbName;
+            }
+            else
+            {
+                Program.Database = Properties.Settings.Default.DbName;
+                Program.Server = Properties.Settings.Default.DbServer;
+                Program.LogDatabase = Properties.Settings.Default.LogDbName;
+            }
 
             IntegratedAuthentication.Checked = true;
             IntegratedAuthentication_CheckedChanged(sender, e);
@@ -234,11 +245,10 @@ namespace LabBilling
 
         private void setupImage_Click(object sender, EventArgs e)
         {
-            DatabaseSettingsForm dbForm = new DatabaseSettingsForm();
+            //DatabaseSettingsForm dbForm = new DatabaseSettingsForm();
 
-            dbForm.ShowDialog();
-
-
+            //dbForm.ShowDialog();
         }
+
     }
 }

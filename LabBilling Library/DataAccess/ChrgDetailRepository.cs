@@ -34,6 +34,8 @@ namespace LabBilling.Core.DataAccess
 
         public IEnumerable<ChrgDetail> GetByCharge(int chrg_num)
         {
+            Logging.Log.Instance.Trace("Entering");
+
             RevenueCodeRepository revenueCodeRepository = new RevenueCodeRepository(dbConnection);
             ChrgDiagnosisPointerRepository chrgDiagnosisPointerRepository = new ChrgDiagnosisPointerRepository(dbConnection);
             var sql = PetaPoco.Sql.Builder
@@ -50,6 +52,32 @@ namespace LabBilling.Core.DataAccess
 
             return results;
         }
+
+        public int AddModifier(int uri, string modifier)
+        {
+            Logging.Log.Instance.Trace("Entering");
+
+            var sql = PetaPoco.Sql.Builder
+                .From($"{_tableName}")
+                .Where($"{this.GetRealColumn(nameof(ChrgDetail.uri))} = @0", new SqlParameter() { SqlDbType = SqlDbType.Decimal,Value = uri });
+
+            var result = dbConnection.SingleOrDefault<ChrgDetail>(sql);
+
+            if(result != null)
+            {
+                result.Modifier = modifier;
+
+                return dbConnection.Update(result);
+            }
+
+            return 0;
+        }
+
+        public int RemoveModifier(int uri)
+        {
+            return AddModifier(uri, string.Empty);
+        }
+
     }
 
     public class ChrgDiagnosisPointerRepository : RepositoryBase<ChrgDiagnosisPointer>

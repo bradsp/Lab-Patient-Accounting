@@ -285,5 +285,12 @@ namespace LabBilling.Core.Models
             {"WC", "Workers’ Compensation Health Claim"},
         };
 
+        public static Dictionary<string, string> cptModifiers = new Dictionary<string, string>
+        {
+            {"59", "Distinct Procedural Service" },
+            {"90", "Reference (Outside) Laboratory" },
+            {"91", "Repeat Test" },
+            {"QW", "CLIA Waived Test" }
+        };
     }
 }

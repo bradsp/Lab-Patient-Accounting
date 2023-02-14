@@ -44,6 +44,8 @@ namespace LabBilling.Forms
             insuranceComboBox.DisplayMember = nameof(Ins.PlanName);
             insuranceComboBox.SelectedIndex = -1;
 
+            paymentAmtTextBox.Enabled = Program.LoggedInUser.CanAddPayments;
+            refundCheckBox.Enabled = Program.LoggedInUser.CanAddPayments;
             // todo: investigate restriction from legacy system:
             // CODE 1500 SHOULD NOT BE USED TO WRITE OFF FOR BAD DEBT. BAD DEBT CANNOT BE HANDLED BY THE ACCOUNT PROGRAM.
         }

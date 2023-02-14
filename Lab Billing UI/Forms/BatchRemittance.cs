@@ -224,7 +224,7 @@ namespace LabBilling.Forms
                 }
 
             }
-            MessageBox.Show($"Batch {batch} posted.", "Batch Posted");
+
             try
             {
                 chkdb.AddBatch(chks);
@@ -233,6 +233,7 @@ namespace LabBilling.Forms
                 LoadOpenBatches();
                 chkdb.CompleteTransaction();
                 //clear entry screen for next batch
+                MessageBox.Show($"Batch {batch} posted.", "Batch Posted");
                 Clear();
             }
             catch (Exception ex)

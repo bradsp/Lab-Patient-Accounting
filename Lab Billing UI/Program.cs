@@ -17,16 +17,13 @@ namespace LabBilling
         public static string Database { get; set; }
         public static string LogDatabase { get; set; }
         public static string Environment { get; set; }
-        
-
 
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
         [STAThread]
-        static void Main()
+        static void Main(string[] args)
         {
-
 
             bool firstInstance;
             Mutex mutex = new Mutex(false, "Local\\" + Application.ProductName, out firstInstance);
@@ -42,14 +39,23 @@ namespace LabBilling
 
             Application.ThreadException += new System.Threading.ThreadExceptionEventHandler(Application_ThreadException);
             AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
-            
 
             Application.ApplicationExit += new EventHandler(OnApplicationExit);
 
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Login loginFrm = new Login();
+            bool testEnvironment = false;
+
+            if(args.Length > 0)
+            {
+                if (args[0].Contains("TEST"))
+                {
+                    testEnvironment = true;
+                }
+            }
+
+            Login loginFrm = new Login(testEnvironment);
             if(loginFrm.ShowDialog() == DialogResult.OK)
             {
                 Log.Instance.Info($"Login successful - connection {Helper.ConnVal}");

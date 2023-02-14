@@ -49,5 +49,29 @@ namespace LabBilling.Properties {
                 return ((string)(this["LogDbName"]));
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("LabBillingTest")]
+        public string TestDbName {
+            get {
+                return ((string)(this["TestDbName"]));
+            }
+            set {
+                this["TestDbName"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("WTHMCLBILL")]
+        public string TestDbServer {
+            get {
+                return ((string)(this["TestDbServer"]));
+            }
+            set {
+                this["TestDbServer"] = value;
+            }
+        }
     }
 }

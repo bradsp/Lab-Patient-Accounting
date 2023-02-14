@@ -137,7 +137,7 @@ namespace LabBilling.Core.BusinessLogic.Validators
             foreach (var dx in account.Pat.Diagnoses)
             {
                 bool dxUsed = false;
-                foreach (var chrg in account.Charges)
+                foreach (var chrg in account.Charges.Where(x => x.IsCredited = false))
                 {
                     foreach (var chrgDetail in chrg.ChrgDetails)
                     {

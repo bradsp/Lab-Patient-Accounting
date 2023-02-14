@@ -60,6 +60,8 @@ namespace LabBilling.Forms
             this.summaryTab = new System.Windows.Forms.TabPage();
             this.summaryTable = new System.Windows.Forms.TableLayoutPanel();
             this.tabDemographics = new System.Windows.Forms.TabPage();
+            this.DateOfBirthTextBox = new LabBilling.UserControls.DateTextBox();
+            this.providerLookup1 = new LabBilling.Library.ProviderLookup();
             this.DemoStatusMessagesTextBox = new System.Windows.Forms.TextBox();
             this.SuffixTextBox = new System.Windows.Forms.TextBox();
             this.SaveDemographics = new System.Windows.Forms.Button();
@@ -89,6 +91,9 @@ namespace LabBilling.Forms
             this.FirstNameTextBox = new System.Windows.Forms.TextBox();
             this.PatFirstNameLabel = new System.Windows.Forms.Label();
             this.PatLastNameLabel = new System.Windows.Forms.Label();
+            this.MaritalStatusComboBox = new LabBilling.Library.FlatCombo();
+            this.SexComboBox = new LabBilling.Library.FlatCombo();
+            this.StateComboBox = new LabBilling.Library.FlatCombo();
             this.tabGuarantor = new System.Windows.Forms.TabPage();
             this.GuarantorSaveButton = new System.Windows.Forms.Button();
             this.PatRelationLabel = new System.Windows.Forms.Label();
@@ -110,12 +115,15 @@ namespace LabBilling.Forms
             this.GuarZipTextBox = new System.Windows.Forms.MaskedTextBox();
             this.GuarPhoneLabel = new System.Windows.Forms.Label();
             this.GuarantorPhoneTextBox = new System.Windows.Forms.TextBox();
+            this.GuarantorRelationComboBox = new LabBilling.Library.FlatCombo();
+            this.GuarStateComboBox = new LabBilling.Library.FlatCombo();
             this.tabInsurance = new System.Windows.Forms.TabPage();
             this.insTabLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
             this.HolderLastNameLabel = new System.Windows.Forms.Label();
             this.InsuranceDataGrid = new System.Windows.Forms.DataGridView();
             this.SaveInsuranceButton = new System.Windows.Forms.Button();
             this.InsCopyPatientLink = new System.Windows.Forms.LinkLabel();
+            this.PlanFinCodeComboBox = new LabBilling.Library.FlatCombo();
             this.InsPlanFinCodeLabel = new System.Windows.Forms.Label();
             this.CertSSNTextBox = new System.Windows.Forms.TextBox();
             this.HolderLastNameTextBox = new System.Windows.Forms.TextBox();
@@ -128,15 +136,19 @@ namespace LabBilling.Forms
             this.HolderZipCodeLabel = new System.Windows.Forms.Label();
             this.InsGroupNumberLabel = new System.Windows.Forms.Label();
             this.PlanAddress2TextBox = new System.Windows.Forms.TextBox();
+            this.InsRelationComboBox = new LabBilling.Library.FlatCombo();
             this.HolderRelationLabel = new System.Windows.Forms.Label();
             this.PolicyNumberTextBox = new System.Windows.Forms.TextBox();
             this.HolderStateLabel = new System.Windows.Forms.Label();
             this.HolderDOBTextBox = new System.Windows.Forms.MaskedTextBox();
             this.InsPolicyNumberLabel = new System.Windows.Forms.Label();
             this.HolderDOBLabel = new System.Windows.Forms.Label();
+            this.HolderStateComboBox = new LabBilling.Library.FlatCombo();
             this.HolderFirstNameTextBox = new System.Windows.Forms.TextBox();
             this.InsPlanLabel = new System.Windows.Forms.Label();
             this.InsuranceOrderLabel = new System.Windows.Forms.Label();
+            this.InsOrderComboBox = new LabBilling.Library.FlatCombo();
+            this.HolderSexComboBox = new LabBilling.Library.FlatCombo();
             this.HolderMiddleNameLabel = new System.Windows.Forms.Label();
             this.HolderSexLabel = new System.Windows.Forms.Label();
             this.HolderMiddleNameTextBox = new System.Windows.Forms.TextBox();
@@ -195,6 +207,7 @@ namespace LabBilling.Forms
             this.AddNoteButton = new System.Windows.Forms.Button();
             this.NotesDisplayTextBox = new System.Windows.Forms.RichTextBox();
             this.tabBillingActivity = new System.Windows.Forms.TabPage();
+            this.clearClaimStatusButton = new MetroFramework.Controls.MetroButton();
             this.readyToBillCheckbox = new System.Windows.Forms.CheckBox();
             this.statementFlagComboBox = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
@@ -209,6 +222,7 @@ namespace LabBilling.Forms
             this.ValidationResultsTextBox = new MetroFramework.Controls.MetroTextBox();
             this.ValidateAccountButton = new MetroFramework.Controls.MetroButton();
             this.BillActivityDataGrid = new System.Windows.Forms.DataGridView();
+            this.minPmtTextBox = new LabBilling.UserControls.CurrencyTextBox();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.accountToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.changeDateOfServiceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -245,20 +259,9 @@ namespace LabBilling.Forms
             this.bannerDateOfServiceLabel = new System.Windows.Forms.Label();
             this.dxPointerMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.clearDxPointerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.clearClaimStatusButton = new MetroFramework.Controls.MetroButton();
-            this.DateOfBirthTextBox = new LabBilling.UserControls.DateTextBox();
-            this.providerLookup1 = new LabBilling.Library.ProviderLookup();
-            this.MaritalStatusComboBox = new LabBilling.Library.FlatCombo();
-            this.SexComboBox = new LabBilling.Library.FlatCombo();
-            this.StateComboBox = new LabBilling.Library.FlatCombo();
-            this.GuarantorRelationComboBox = new LabBilling.Library.FlatCombo();
-            this.GuarStateComboBox = new LabBilling.Library.FlatCombo();
-            this.PlanFinCodeComboBox = new LabBilling.Library.FlatCombo();
-            this.InsRelationComboBox = new LabBilling.Library.FlatCombo();
-            this.HolderStateComboBox = new LabBilling.Library.FlatCombo();
-            this.InsOrderComboBox = new LabBilling.Library.FlatCombo();
-            this.HolderSexComboBox = new LabBilling.Library.FlatCombo();
-            this.minPmtTextBox = new LabBilling.UserControls.CurrencyTextBox();
+            this.chargeDetailsContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.addModifierToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.removeModifierToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tabControl1.SuspendLayout();
             this.summaryTab.SuspendLayout();
             this.tabDemographics.SuspendLayout();
@@ -285,6 +288,7 @@ namespace LabBilling.Forms
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.RefreshButton)).BeginInit();
             this.dxPointerMenuStrip.SuspendLayout();
+            this.chargeDetailsContextMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -381,6 +385,27 @@ namespace LabBilling.Forms
             this.tabDemographics.Size = new System.Drawing.Size(1151, 492);
             this.tabDemographics.TabIndex = 9;
             this.tabDemographics.Text = "Demographics";
+            // 
+            // DateOfBirthTextBox
+            // 
+            this.DateOfBirthTextBox.DateValue = new System.DateTime(((long)(0)));
+            this.DateOfBirthTextBox.Location = new System.Drawing.Point(296, 258);
+            this.DateOfBirthTextBox.Name = "DateOfBirthTextBox";
+            this.DateOfBirthTextBox.Size = new System.Drawing.Size(177, 20);
+            this.DateOfBirthTextBox.TabIndex = 34;
+            // 
+            // providerLookup1
+            // 
+            this.providerLookup1.CharacterLookupCountMin = 2;
+            this.providerLookup1.Datasource = null;
+            this.providerLookup1.DisplayValue = null;
+            this.providerLookup1.Location = new System.Drawing.Point(499, 218);
+            this.providerLookup1.Name = "providerLookup1";
+            this.providerLookup1.ResultBoxHeight = 100;
+            this.providerLookup1.SelectedValue = null;
+            this.providerLookup1.Size = new System.Drawing.Size(288, 134);
+            this.providerLookup1.TabIndex = 31;
+            this.providerLookup1.SelectedValueChanged += new LabBilling.Library.ProviderLookup.SelectedValueChangedEventHandler(this.providerLookup1_SelectedValueChanged);
             // 
             // DemoStatusMessagesTextBox
             // 
@@ -658,6 +683,48 @@ namespace LabBilling.Forms
             this.PatLastNameLabel.Text = "Last Name";
             this.PatLastNameLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
+            // MaritalStatusComboBox
+            // 
+            this.MaritalStatusComboBox.BackColor = System.Drawing.Color.White;
+            this.MaritalStatusComboBox.BorderColor = System.Drawing.Color.Blue;
+            this.MaritalStatusComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.MaritalStatusComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.MaritalStatusComboBox.FormattingEnabled = true;
+            this.MaritalStatusComboBox.Location = new System.Drawing.Point(296, 298);
+            this.MaritalStatusComboBox.Name = "MaritalStatusComboBox";
+            this.MaritalStatusComboBox.Size = new System.Drawing.Size(177, 21);
+            this.MaritalStatusComboBox.TabIndex = 29;
+            // 
+            // SexComboBox
+            // 
+            this.SexComboBox.BackColor = System.Drawing.Color.White;
+            this.SexComboBox.BorderColor = System.Drawing.Color.Blue;
+            this.SexComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.SexComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.SexComboBox.FormattingEnabled = true;
+            this.SexComboBox.Items.AddRange(new object[] {
+            "Male",
+            "Female",
+            "Unknown"});
+            this.SexComboBox.Location = new System.Drawing.Point(296, 218);
+            this.SexComboBox.Name = "SexComboBox";
+            this.SexComboBox.Size = new System.Drawing.Size(177, 21);
+            this.SexComboBox.TabIndex = 25;
+            // 
+            // StateComboBox
+            // 
+            this.StateComboBox.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
+            this.StateComboBox.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this.StateComboBox.BackColor = System.Drawing.Color.White;
+            this.StateComboBox.BorderColor = System.Drawing.Color.Blue;
+            this.StateComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.StateComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.StateComboBox.FormattingEnabled = true;
+            this.StateComboBox.Location = new System.Drawing.Point(296, 170);
+            this.StateComboBox.Name = "StateComboBox";
+            this.StateComboBox.Size = new System.Drawing.Size(177, 21);
+            this.StateComboBox.TabIndex = 15;
+            // 
             // tabGuarantor
             // 
             this.tabGuarantor.AutoScroll = true;
@@ -870,6 +937,31 @@ namespace LabBilling.Forms
             this.GuarantorPhoneTextBox.Size = new System.Drawing.Size(297, 20);
             this.GuarantorPhoneTextBox.TabIndex = 21;
             // 
+            // GuarantorRelationComboBox
+            // 
+            this.GuarantorRelationComboBox.BorderColor = System.Drawing.Color.Blue;
+            this.GuarantorRelationComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.GuarantorRelationComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.GuarantorRelationComboBox.FormattingEnabled = true;
+            this.GuarantorRelationComboBox.Location = new System.Drawing.Point(110, 55);
+            this.GuarantorRelationComboBox.Name = "GuarantorRelationComboBox";
+            this.GuarantorRelationComboBox.Size = new System.Drawing.Size(131, 21);
+            this.GuarantorRelationComboBox.TabIndex = 2;
+            // 
+            // GuarStateComboBox
+            // 
+            this.GuarStateComboBox.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
+            this.GuarStateComboBox.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this.GuarStateComboBox.BackColor = System.Drawing.Color.White;
+            this.GuarStateComboBox.BorderColor = System.Drawing.Color.Blue;
+            this.GuarStateComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.GuarStateComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.GuarStateComboBox.FormattingEnabled = true;
+            this.GuarStateComboBox.Location = new System.Drawing.Point(316, 211);
+            this.GuarStateComboBox.Name = "GuarStateComboBox";
+            this.GuarStateComboBox.Size = new System.Drawing.Size(183, 21);
+            this.GuarStateComboBox.TabIndex = 17;
+            // 
             // tabInsurance
             // 
             this.tabInsurance.AutoScroll = true;
@@ -1036,6 +1128,17 @@ namespace LabBilling.Forms
             this.InsCopyPatientLink.Text = "Copy Patient Info";
             this.InsCopyPatientLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.InsCopyPatientLink_LinkClicked_1);
             // 
+            // PlanFinCodeComboBox
+            // 
+            this.PlanFinCodeComboBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.PlanFinCodeComboBox.BorderColor = System.Drawing.Color.Blue;
+            this.PlanFinCodeComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.PlanFinCodeComboBox.FormattingEnabled = true;
+            this.PlanFinCodeComboBox.Location = new System.Drawing.Point(558, 298);
+            this.PlanFinCodeComboBox.Name = "PlanFinCodeComboBox";
+            this.PlanFinCodeComboBox.Size = new System.Drawing.Size(230, 21);
+            this.PlanFinCodeComboBox.TabIndex = 20;
+            // 
             // InsPlanFinCodeLabel
             // 
             this.InsPlanFinCodeLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
@@ -1144,6 +1247,19 @@ namespace LabBilling.Forms
             this.PlanAddress2TextBox.Size = new System.Drawing.Size(230, 20);
             this.PlanAddress2TextBox.TabIndex = 18;
             // 
+            // InsRelationComboBox
+            // 
+            this.InsRelationComboBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.InsRelationComboBox.BackColor = System.Drawing.Color.MintCream;
+            this.InsRelationComboBox.BorderColor = System.Drawing.Color.Blue;
+            this.InsRelationComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.InsRelationComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.InsRelationComboBox.FormattingEnabled = true;
+            this.InsRelationComboBox.Location = new System.Drawing.Point(133, 378);
+            this.InsRelationComboBox.Name = "InsRelationComboBox";
+            this.InsRelationComboBox.Size = new System.Drawing.Size(230, 21);
+            this.InsRelationComboBox.TabIndex = 10;
+            // 
             // HolderRelationLabel
             // 
             this.HolderRelationLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
@@ -1203,6 +1319,21 @@ namespace LabBilling.Forms
             this.HolderDOBLabel.TabIndex = 17;
             this.HolderDOBLabel.Text = "Date of Birth";
             // 
+            // HolderStateComboBox
+            // 
+            this.HolderStateComboBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.HolderStateComboBox.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
+            this.HolderStateComboBox.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this.HolderStateComboBox.BackColor = System.Drawing.Color.MintCream;
+            this.HolderStateComboBox.BorderColor = System.Drawing.Color.Blue;
+            this.HolderStateComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.HolderStateComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.HolderStateComboBox.FormattingEnabled = true;
+            this.HolderStateComboBox.Location = new System.Drawing.Point(133, 271);
+            this.HolderStateComboBox.Name = "HolderStateComboBox";
+            this.HolderStateComboBox.Size = new System.Drawing.Size(230, 21);
+            this.HolderStateComboBox.TabIndex = 6;
+            // 
             // HolderFirstNameTextBox
             // 
             this.HolderFirstNameTextBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
@@ -1230,6 +1361,35 @@ namespace LabBilling.Forms
             this.InsuranceOrderLabel.Size = new System.Drawing.Size(83, 13);
             this.InsuranceOrderLabel.TabIndex = 21;
             this.InsuranceOrderLabel.Text = "Insurance Order";
+            // 
+            // InsOrderComboBox
+            // 
+            this.InsOrderComboBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.InsOrderComboBox.BorderColor = System.Drawing.Color.Blue;
+            this.InsOrderComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.InsOrderComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.InsOrderComboBox.FormattingEnabled = true;
+            this.InsOrderComboBox.Location = new System.Drawing.Point(558, 140);
+            this.InsOrderComboBox.Name = "InsOrderComboBox";
+            this.InsOrderComboBox.Size = new System.Drawing.Size(230, 21);
+            this.InsOrderComboBox.TabIndex = 13;
+            // 
+            // HolderSexComboBox
+            // 
+            this.HolderSexComboBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.HolderSexComboBox.BackColor = System.Drawing.Color.MintCream;
+            this.HolderSexComboBox.BorderColor = System.Drawing.Color.Blue;
+            this.HolderSexComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.HolderSexComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.HolderSexComboBox.FormattingEnabled = true;
+            this.HolderSexComboBox.Items.AddRange(new object[] {
+            "Male",
+            "Female",
+            "Unknown"});
+            this.HolderSexComboBox.Location = new System.Drawing.Point(133, 325);
+            this.HolderSexComboBox.Name = "HolderSexComboBox";
+            this.HolderSexComboBox.Size = new System.Drawing.Size(230, 21);
+            this.HolderSexComboBox.TabIndex = 8;
             // 
             // HolderMiddleNameLabel
             // 
@@ -1770,6 +1930,7 @@ namespace LabBilling.Forms
             dataGridViewCellStyle16.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
             this.ChrgDetailDataGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle16;
             this.ChrgDetailDataGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.ChrgDetailDataGrid.ContextMenuStrip = this.chargeDetailsContextMenu;
             dataGridViewCellStyle17.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle17.BackColor = System.Drawing.SystemColors.Window;
             dataGridViewCellStyle17.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -1779,8 +1940,10 @@ namespace LabBilling.Forms
             dataGridViewCellStyle17.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
             this.ChrgDetailDataGrid.DefaultCellStyle = dataGridViewCellStyle17;
             this.ChrgDetailDataGrid.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ChrgDetailDataGrid.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.ChrgDetailDataGrid.Location = new System.Drawing.Point(3, 291);
             this.ChrgDetailDataGrid.Name = "ChrgDetailDataGrid";
+            this.ChrgDetailDataGrid.ReadOnly = true;
             dataGridViewCellStyle18.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle18.BackColor = System.Drawing.SystemColors.Control;
             dataGridViewCellStyle18.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -1793,7 +1956,6 @@ namespace LabBilling.Forms
             this.ChrgDetailDataGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.ChrgDetailDataGrid.Size = new System.Drawing.Size(1009, 159);
             this.ChrgDetailDataGrid.TabIndex = 1;
-            this.ChrgDetailDataGrid.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.ChrgDetailDataGrid_CellMouseClick);
             // 
             // AddChargeButton
             // 
@@ -1861,11 +2023,11 @@ namespace LabBilling.Forms
             // AddPaymentButton
             // 
             this.AddPaymentButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.AddPaymentButton.Location = new System.Drawing.Point(1055, 15);
+            this.AddPaymentButton.Location = new System.Drawing.Point(957, 15);
             this.AddPaymentButton.Name = "AddPaymentButton";
-            this.AddPaymentButton.Size = new System.Drawing.Size(75, 23);
+            this.AddPaymentButton.Size = new System.Drawing.Size(173, 23);
             this.AddPaymentButton.TabIndex = 9;
-            this.AddPaymentButton.Text = "Add Payment";
+            this.AddPaymentButton.Text = "Add Payment/Adjustment";
             this.AddPaymentButton.UseVisualStyleBackColor = true;
             this.AddPaymentButton.Click += new System.EventHandler(this.AddPaymentButton_Click);
             // 
@@ -2041,6 +2203,17 @@ namespace LabBilling.Forms
             this.tabBillingActivity.Size = new System.Drawing.Size(1151, 492);
             this.tabBillingActivity.TabIndex = 12;
             this.tabBillingActivity.Text = "Billing Activity";
+            // 
+            // clearClaimStatusButton
+            // 
+            this.clearClaimStatusButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.clearClaimStatusButton.Location = new System.Drawing.Point(1027, 93);
+            this.clearClaimStatusButton.Name = "clearClaimStatusButton";
+            this.clearClaimStatusButton.Size = new System.Drawing.Size(116, 23);
+            this.clearClaimStatusButton.TabIndex = 13;
+            this.clearClaimStatusButton.Text = "Clear Claim Status";
+            this.clearClaimStatusButton.UseSelectable = true;
+            this.clearClaimStatusButton.Click += new System.EventHandler(this.clearClaimStatusButton_Click);
             // 
             // readyToBillCheckbox
             // 
@@ -2237,6 +2410,19 @@ namespace LabBilling.Forms
             this.BillActivityDataGrid.Size = new System.Drawing.Size(916, 125);
             this.BillActivityDataGrid.TabIndex = 0;
             this.BillActivityDataGrid.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.BillActivityDataGrid_MouseDoubleClick);
+            // 
+            // minPmtTextBox
+            // 
+            this.minPmtTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.minPmtTextBox.DollarValue = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+            this.minPmtTextBox.Location = new System.Drawing.Point(1043, 328);
+            this.minPmtTextBox.Name = "minPmtTextBox";
+            this.minPmtTextBox.Size = new System.Drawing.Size(100, 20);
+            this.minPmtTextBox.TabIndex = 9;
             // 
             // menuStrip1
             // 
@@ -2583,185 +2769,26 @@ namespace LabBilling.Forms
             this.clearDxPointerToolStripMenuItem.Text = "Clear Dx Pointer";
             this.clearDxPointerToolStripMenuItem.Click += new System.EventHandler(this.clearDxPointerToolStripMenuItem_Click);
             // 
-            // clearClaimStatusButton
+            // chargeDetailsContextMenu
             // 
-            this.clearClaimStatusButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.clearClaimStatusButton.Location = new System.Drawing.Point(1027, 93);
-            this.clearClaimStatusButton.Name = "clearClaimStatusButton";
-            this.clearClaimStatusButton.Size = new System.Drawing.Size(116, 23);
-            this.clearClaimStatusButton.TabIndex = 13;
-            this.clearClaimStatusButton.Text = "Clear Claim Status";
-            this.clearClaimStatusButton.UseSelectable = true;
-            this.clearClaimStatusButton.Click += new System.EventHandler(this.clearClaimStatusButton_Click);
+            this.chargeDetailsContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.addModifierToolStripMenuItem,
+            this.removeModifierToolStripMenuItem});
+            this.chargeDetailsContextMenu.Name = "chargeDetailsContextMenu";
+            this.chargeDetailsContextMenu.Size = new System.Drawing.Size(166, 48);
+            this.chargeDetailsContextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.chargeDetailsContextMenu_Opening);
             // 
-            // DateOfBirthTextBox
+            // addModifierToolStripMenuItem
             // 
-            this.DateOfBirthTextBox.DateValue = new System.DateTime(((long)(0)));
-            this.DateOfBirthTextBox.Location = new System.Drawing.Point(296, 258);
-            this.DateOfBirthTextBox.Name = "DateOfBirthTextBox";
-            this.DateOfBirthTextBox.Size = new System.Drawing.Size(177, 20);
-            this.DateOfBirthTextBox.TabIndex = 34;
+            this.addModifierToolStripMenuItem.Name = "addModifierToolStripMenuItem";
+            this.addModifierToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
+            this.addModifierToolStripMenuItem.Text = "Add Modifier";
             // 
-            // providerLookup1
+            // removeModifierToolStripMenuItem
             // 
-            this.providerLookup1.CharacterLookupCountMin = 2;
-            this.providerLookup1.Datasource = null;
-            this.providerLookup1.DisplayValue = null;
-            this.providerLookup1.Location = new System.Drawing.Point(499, 218);
-            this.providerLookup1.Name = "providerLookup1";
-            this.providerLookup1.ResultBoxHeight = 100;
-            this.providerLookup1.SelectedValue = null;
-            this.providerLookup1.Size = new System.Drawing.Size(288, 134);
-            this.providerLookup1.TabIndex = 31;
-            this.providerLookup1.SelectedValueChanged += new LabBilling.Library.ProviderLookup.SelectedValueChangedEventHandler(this.providerLookup1_SelectedValueChanged);
-            // 
-            // MaritalStatusComboBox
-            // 
-            this.MaritalStatusComboBox.BackColor = System.Drawing.Color.White;
-            this.MaritalStatusComboBox.BorderColor = System.Drawing.Color.Blue;
-            this.MaritalStatusComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.MaritalStatusComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.MaritalStatusComboBox.FormattingEnabled = true;
-            this.MaritalStatusComboBox.Location = new System.Drawing.Point(296, 298);
-            this.MaritalStatusComboBox.Name = "MaritalStatusComboBox";
-            this.MaritalStatusComboBox.Size = new System.Drawing.Size(177, 21);
-            this.MaritalStatusComboBox.TabIndex = 29;
-            // 
-            // SexComboBox
-            // 
-            this.SexComboBox.BackColor = System.Drawing.Color.White;
-            this.SexComboBox.BorderColor = System.Drawing.Color.Blue;
-            this.SexComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.SexComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.SexComboBox.FormattingEnabled = true;
-            this.SexComboBox.Items.AddRange(new object[] {
-            "Male",
-            "Female",
-            "Unknown"});
-            this.SexComboBox.Location = new System.Drawing.Point(296, 218);
-            this.SexComboBox.Name = "SexComboBox";
-            this.SexComboBox.Size = new System.Drawing.Size(177, 21);
-            this.SexComboBox.TabIndex = 25;
-            // 
-            // StateComboBox
-            // 
-            this.StateComboBox.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
-            this.StateComboBox.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
-            this.StateComboBox.BackColor = System.Drawing.Color.White;
-            this.StateComboBox.BorderColor = System.Drawing.Color.Blue;
-            this.StateComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.StateComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.StateComboBox.FormattingEnabled = true;
-            this.StateComboBox.Location = new System.Drawing.Point(296, 170);
-            this.StateComboBox.Name = "StateComboBox";
-            this.StateComboBox.Size = new System.Drawing.Size(177, 21);
-            this.StateComboBox.TabIndex = 15;
-            // 
-            // GuarantorRelationComboBox
-            // 
-            this.GuarantorRelationComboBox.BorderColor = System.Drawing.Color.Blue;
-            this.GuarantorRelationComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.GuarantorRelationComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.GuarantorRelationComboBox.FormattingEnabled = true;
-            this.GuarantorRelationComboBox.Location = new System.Drawing.Point(110, 55);
-            this.GuarantorRelationComboBox.Name = "GuarantorRelationComboBox";
-            this.GuarantorRelationComboBox.Size = new System.Drawing.Size(131, 21);
-            this.GuarantorRelationComboBox.TabIndex = 2;
-            // 
-            // GuarStateComboBox
-            // 
-            this.GuarStateComboBox.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
-            this.GuarStateComboBox.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
-            this.GuarStateComboBox.BackColor = System.Drawing.Color.White;
-            this.GuarStateComboBox.BorderColor = System.Drawing.Color.Blue;
-            this.GuarStateComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.GuarStateComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.GuarStateComboBox.FormattingEnabled = true;
-            this.GuarStateComboBox.Location = new System.Drawing.Point(316, 211);
-            this.GuarStateComboBox.Name = "GuarStateComboBox";
-            this.GuarStateComboBox.Size = new System.Drawing.Size(183, 21);
-            this.GuarStateComboBox.TabIndex = 17;
-            // 
-            // PlanFinCodeComboBox
-            // 
-            this.PlanFinCodeComboBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.PlanFinCodeComboBox.BorderColor = System.Drawing.Color.Blue;
-            this.PlanFinCodeComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.PlanFinCodeComboBox.FormattingEnabled = true;
-            this.PlanFinCodeComboBox.Location = new System.Drawing.Point(558, 298);
-            this.PlanFinCodeComboBox.Name = "PlanFinCodeComboBox";
-            this.PlanFinCodeComboBox.Size = new System.Drawing.Size(230, 21);
-            this.PlanFinCodeComboBox.TabIndex = 20;
-            // 
-            // InsRelationComboBox
-            // 
-            this.InsRelationComboBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.InsRelationComboBox.BackColor = System.Drawing.Color.MintCream;
-            this.InsRelationComboBox.BorderColor = System.Drawing.Color.Blue;
-            this.InsRelationComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.InsRelationComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.InsRelationComboBox.FormattingEnabled = true;
-            this.InsRelationComboBox.Location = new System.Drawing.Point(133, 378);
-            this.InsRelationComboBox.Name = "InsRelationComboBox";
-            this.InsRelationComboBox.Size = new System.Drawing.Size(230, 21);
-            this.InsRelationComboBox.TabIndex = 10;
-            // 
-            // HolderStateComboBox
-            // 
-            this.HolderStateComboBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.HolderStateComboBox.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
-            this.HolderStateComboBox.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
-            this.HolderStateComboBox.BackColor = System.Drawing.Color.MintCream;
-            this.HolderStateComboBox.BorderColor = System.Drawing.Color.Blue;
-            this.HolderStateComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.HolderStateComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.HolderStateComboBox.FormattingEnabled = true;
-            this.HolderStateComboBox.Location = new System.Drawing.Point(133, 271);
-            this.HolderStateComboBox.Name = "HolderStateComboBox";
-            this.HolderStateComboBox.Size = new System.Drawing.Size(230, 21);
-            this.HolderStateComboBox.TabIndex = 6;
-            // 
-            // InsOrderComboBox
-            // 
-            this.InsOrderComboBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.InsOrderComboBox.BorderColor = System.Drawing.Color.Blue;
-            this.InsOrderComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.InsOrderComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.InsOrderComboBox.FormattingEnabled = true;
-            this.InsOrderComboBox.Location = new System.Drawing.Point(558, 140);
-            this.InsOrderComboBox.Name = "InsOrderComboBox";
-            this.InsOrderComboBox.Size = new System.Drawing.Size(230, 21);
-            this.InsOrderComboBox.TabIndex = 13;
-            // 
-            // HolderSexComboBox
-            // 
-            this.HolderSexComboBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.HolderSexComboBox.BackColor = System.Drawing.Color.MintCream;
-            this.HolderSexComboBox.BorderColor = System.Drawing.Color.Blue;
-            this.HolderSexComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.HolderSexComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.HolderSexComboBox.FormattingEnabled = true;
-            this.HolderSexComboBox.Items.AddRange(new object[] {
-            "Male",
-            "Female",
-            "Unknown"});
-            this.HolderSexComboBox.Location = new System.Drawing.Point(133, 325);
-            this.HolderSexComboBox.Name = "HolderSexComboBox";
-            this.HolderSexComboBox.Size = new System.Drawing.Size(230, 21);
-            this.HolderSexComboBox.TabIndex = 8;
-            // 
-            // minPmtTextBox
-            // 
-            this.minPmtTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.minPmtTextBox.DollarValue = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
-            this.minPmtTextBox.Location = new System.Drawing.Point(1043, 328);
-            this.minPmtTextBox.Name = "minPmtTextBox";
-            this.minPmtTextBox.Size = new System.Drawing.Size(100, 20);
-            this.minPmtTextBox.TabIndex = 9;
+            this.removeModifierToolStripMenuItem.Name = "removeModifierToolStripMenuItem";
+            this.removeModifierToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
+            this.removeModifierToolStripMenuItem.Text = "Remove Modifier";
             // 
             // AccountForm
             // 
@@ -2836,6 +2863,7 @@ namespace LabBilling.Forms
             this.menuStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.RefreshButton)).EndInit();
             this.dxPointerMenuStrip.ResumeLayout(false);
+            this.chargeDetailsContextMenu.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -3045,6 +3073,9 @@ namespace LabBilling.Forms
         private System.Windows.Forms.ToolStripMenuItem clearDxPointerToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem printEOBToolStripMenuItem;
         private MetroFramework.Controls.MetroButton clearClaimStatusButton;
+        private System.Windows.Forms.ContextMenuStrip chargeDetailsContextMenu;
+        private System.Windows.Forms.ToolStripMenuItem addModifierToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem removeModifierToolStripMenuItem;
     }
 }
 
