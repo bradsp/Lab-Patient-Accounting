@@ -274,6 +274,10 @@ namespace LabBilling.Core.BusinessLogic
             try
             {
                 claim = GenerateClaim(accountNo);
+                if(claim == null)
+                {
+                    throw new ApplicationException("Error in GenerateClaim");
+                }
                 claim.InterchangeControlNumber = interchangeControlNumber;
                 claim.BatchSubmitterId = batchSubmitterID;
                 claimx12 = Newtonsoft.Json.JsonConvert.SerializeObject(claim);

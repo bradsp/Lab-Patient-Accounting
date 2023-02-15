@@ -59,7 +59,8 @@ namespace LabBilling.Core.BusinessLogic.Validators
                     .SetValidator(new InsuranceValidator()).When(a => a.FinCode != "E");
 
                 RuleFor(a => a)
-                    .Must(NotHaveUnusedDiagnosis).WithMessage("All diagnosis codes are not used in a pointer.");
+                    .Must(NotHaveUnusedDiagnosis).WithMessage("All diagnosis codes are not used in a pointer.")
+                    .When(a => a.Fin.ClaimType == "1500");
 
                 RuleFor(a => a.FinCode)
                     .Cascade(CascadeMode.Stop)
@@ -137,7 +138,7 @@ namespace LabBilling.Core.BusinessLogic.Validators
             foreach (var dx in account.Pat.Diagnoses)
             {
                 bool dxUsed = false;
-                foreach (var chrg in account.Charges.Where(x => x.IsCredited = false))
+                foreach (var chrg in account.Charges.Where(x => x.IsCredited == false))
                 {
                     foreach (var chrgDetail in chrg.ChrgDetails)
                     {
@@ -312,7 +313,7 @@ namespace LabBilling.Core.BusinessLogic.Validators
 
         private bool MatchChargeServiceDateAndAccountTransDate(Account account)
         {
-            foreach(var chrg in account.Charges)
+            foreach(var chrg in account.Charges.Where(x => x.IsCredited == false))
             {
                 if(((DateTime)chrg.ServiceDate).Date != account.TransactionDate.Date && !chrg.IsCredited)
                 {

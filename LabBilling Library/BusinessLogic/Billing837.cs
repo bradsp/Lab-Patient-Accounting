@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Xml.Linq;
 using EdiTools;
 using LabBilling.Core.Models;
+using NPOI.HSSF.Record;
 
 namespace LabBilling.Core
 {
@@ -900,15 +902,28 @@ namespace LabBilling.Core
             int dxCnt = 1;
             if (claimType == ClaimType.Institutional)
             {
+                //per spec - one HI segment per dx code. Primary diagnosis will have "ABK", secondary dx use "ABF"
                 foreach (PatDiag diag in claim.claimAccount.Pat.Diagnoses)
                 {
+                    if (string.IsNullOrEmpty(diag.Code))
+                        continue;
                     //per spec "ABK" is code for ICD-10, but does not pass validation
-                    //using "BK" for icd9
                     var hiElement = new EdiElement();
-                    hiElement[1] = "ABK";
-                    hiElement[2] = diag.Code;
+                    if(dxCnt == 1)
+                    {                                        
+                        hiElement[1] = "ABK";
+                        hiElement[2] = diag.Code;
+                        hi.Element(dxCnt, hiElement);
+                        ediDocument.Segments.Add(hi);
+                        hi = new EdiSegment("HI");
+                    }
+                    else
+                    {
+                        hiElement[1] = "ABF";
+                        hiElement[2] = diag.Code;
+                        hi.Element(dxCnt-1, hiElement);
+                    }
 
-                    hi.Element(dxCnt, hiElement);
                     dxCnt++;
                 }
                 ediDocument.Segments.Add(hi);

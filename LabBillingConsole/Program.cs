@@ -16,7 +16,27 @@ namespace LabBillingConsole
 
         static void Main(string[] args)
         {
-            RemittanceTest();
+            //RemittanceTest();
+            //ValidateAccountsJob();
+
+            GenerateClaimTest();
+        }
+
+        public static void GenerateClaimTest()
+        {
+            ClaimGenerator claimGenerator = new ClaimGenerator(connectionString);
+
+            claimGenerator.CompileClaim("L17429213");
+        }
+
+        public static void ValidateAccountsJob()
+        {
+            AccountRepository accountRepository = new AccountRepository(connectionString);
+            Console.WriteLine("In RunValidation() - Starting RunValidation job");
+            //log.Info("In RunValidation() - Starting RunValidation job");
+            accountRepository.ValidateUnbilledAccounts();
+            Console.WriteLine("In RunValidation() - Finished RunValidation job");
+            //log.Info("In RunValidation() - Finished RunValidation job");
         }
 
         public static void AutomatationTest()
