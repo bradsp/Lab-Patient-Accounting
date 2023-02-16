@@ -7,26 +7,41 @@ using System.Threading.Tasks;
 using LabBilling.Core.DataAccess;
 using LabBilling.Core.Models;
 using LabBilling.Core.BusinessLogic;
+using LabBilling.Core;
 
 namespace LabBillingConsole
 {
     internal class Program
     {
-        public const string connectionString = "Server=WTHMCLBILL;Database=LabBillingTest;Trusted_Connection=True;";
+        public const string connectionString = "Server=WTHMCLBILL;Database=LabBillingProd;Trusted_Connection=True;";
 
         static void Main(string[] args)
         {
             //RemittanceTest();
             //ValidateAccountsJob();
 
-            GenerateClaimTest();
+            //GenerateClaimTest();
+            NotesImport();
+
+        }
+
+        public static void NotesImport()
+        {
+            Console.WriteLine("Beginning notes import.");
+            NotesImport notesImport = new NotesImport(connectionString);
+            string filename = @"\\wthmclbill\shared\Billing\LIVE\claims\Notes\510051_20230215_ExportNotes_424.exted";
+            notesImport.ImportNotes(filename);
+            Console.WriteLine("Notes Import complete");
         }
 
         public static void GenerateClaimTest()
         {
-            ClaimGenerator claimGenerator = new ClaimGenerator(connectionString);
+            //ClaimGenerator claimGenerator = new ClaimGenerator(connectionString);
 
-            claimGenerator.CompileClaim("L17429213");
+            //claimGenerator.CompileClaim("L17429213");
+
+            Billing837 billing837 = new Billing837(connectionString, "");
+
         }
 
         public static void ValidateAccountsJob()

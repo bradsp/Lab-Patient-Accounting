@@ -849,14 +849,14 @@ namespace LabBilling.Core.DataAccess
         }
 
 
-        public bool Validate(ref Account account)
+        public bool Validate(ref Account account, bool reprint = false)
         {
             Log.Instance.Trace($"Entering - account {account}");
 
             try
             {
-                if (account.Status == "SSIUB" || account.Status == "SSI1500" || account.Status == "CLAIM" || account.Status == "STMT"
-                    || account.Status == "CLOSED" || account.Status == "PAID_OUT")
+                if ((account.Status == "SSIUB" || account.Status == "SSI1500" || account.Status == "CLAIM" || account.Status == "STMT"
+                    || account.Status == "CLOSED" || account.Status == "PAID_OUT") && !reprint)
                 {
                     //account has been billed, do not validate
                     account.AccountValidationStatus.account = account.AccountNo;

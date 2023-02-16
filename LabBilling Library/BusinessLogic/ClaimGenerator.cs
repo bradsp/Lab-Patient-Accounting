@@ -51,8 +51,8 @@ namespace LabBilling.Core.BusinessLogic
 
             parametersdb = new SystemParametersRepository(db);
 
-            propProductionEnvironment = dBName.Contains("LIVE") ? "P" : "T";
-            string env = parametersdb.GetProductionEnvironment();
+            //propProductionEnvironment = dBName.Contains("LIVE") ? "P" : "T";
+            propProductionEnvironment = parametersdb.GetProductionEnvironment();
 
             accountRepository = new AccountRepository(db);
             patRepository = new PatRepository(db);
@@ -214,9 +214,10 @@ namespace LabBilling.Core.BusinessLogic
 
         public void RegenerateBatch(double batchNo)
         {
-
+            billing837 = new Billing837(_connectionString, propProductionEnvironment);
             var batch = billingBatchRepository.GetBatch(batchNo);
             string batchSubmitterID = parametersdb.GetByKey("fed_tax_id");
+            string interchangeControlNumber = string.Format("{0:D9}", int.Parse(string.Format("{0}", batch.Batch)));
 
             LabBilling.Core.Billing837.ClaimType claimType;
 
@@ -240,14 +241,14 @@ namespace LabBilling.Core.BusinessLogic
 
             foreach(var account in batch.BillingActivities)
             {
-                var claim = GenerateClaim(account.AccountNo);
+                var claim = GenerateClaim(account.AccountNo, true);
                 if(claim != null)
                     claims.Add(claim);
             }
 
             if (claims.Count > 0)
             {
-                batch.X12Text = billing837.Generate837ClaimBatch(claims, batch.Batch.ToString(),
+                batch.X12Text = billing837.Generate837ClaimBatch(claims, interchangeControlNumber,
                     batchSubmitterID, fileLocation, claimType);
 
                 batch.RunDate = DateTime.Now.Date;
@@ -332,11 +333,11 @@ namespace LabBilling.Core.BusinessLogic
         /// <param name="account"></param>
         /// <returns></returns>
         /// <exception cref="InvalidParameterValueException"></exception>
-        public ClaimData GenerateClaim(string account)
+        public ClaimData GenerateClaim(string account, bool reprint = false)
         {
             Account accountModel = accountRepository.GetByAccount(account);
 
-            if(!accountRepository.Validate(ref accountModel))
+            if(!accountRepository.Validate(ref accountModel, reprint))
             {
                 return null;
             }
@@ -354,7 +355,13 @@ namespace LabBilling.Core.BusinessLogic
                 case "UB":
                     claimData.ClaimType = ClaimType.Institutional;
                     break;
+                case "SSIUB":
+                    claimData.ClaimType = ClaimType.Institutional;
+                    break;
                 case "1500":
+                    claimData.ClaimType = ClaimType.Professional;
+                    break;
+                case "SSI1500":
                     claimData.ClaimType = ClaimType.Professional;
                     break;
                 default:

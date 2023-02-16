@@ -102,7 +102,7 @@
             this.clearBatchToolStripMenuItem,
             this.regenerateClaimFileToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(189, 48);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(189, 70);
             // 
             // clearBatchToolStripMenuItem
             // 

@@ -237,6 +237,7 @@
     <Compile Include="BusinessLogic\ClaimRulesEngine.cs" />
     <Compile Include="BusinessLogic\HL7Processor.cs" />
     <Compile Include="BusinessLogic\InvoicePrintPdfSharp.cs" />
+    <Compile Include="BusinessLogic\NotesImport.cs" />
     <Compile Include="BusinessLogic\PrintClaimForm.cs" />
     <Compile Include="BusinessLogic\Remittance835.cs" />
     <Compile Include="BusinessLogic\Validators\ChargeValidator.cs" />

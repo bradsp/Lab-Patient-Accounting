@@ -905,22 +905,26 @@ namespace LabBilling.Core
                 //per spec - one HI segment per dx code. Primary diagnosis will have "ABK", secondary dx use "ABF"
                 foreach (PatDiag diag in claim.claimAccount.Pat.Diagnoses)
                 {
-                    if (string.IsNullOrEmpty(diag.Code))
+                    if (string.IsNullOrEmpty(diag.Code.Trim()))
                         continue;
                     //per spec "ABK" is code for ICD-10, but does not pass validation
                     var hiElement = new EdiElement();
                     if(dxCnt == 1)
                     {                                        
                         hiElement[1] = "ABK";
-                        hiElement[2] = diag.Code;
+                        hiElement[2] = diag.Code.Trim();
                         hi.Element(dxCnt, hiElement);
-                        ediDocument.Segments.Add(hi);
-                        hi = new EdiSegment("HI");
                     }
                     else
                     {
+                        if (dxCnt == 2)
+                        {
+                            ediDocument.Segments.Add(hi);
+                            segmentCount++;
+                            hi = new EdiSegment("HI");
+                        }
                         hiElement[1] = "ABF";
-                        hiElement[2] = diag.Code;
+                        hiElement[2] = diag.Code.Trim();
                         hi.Element(dxCnt-1, hiElement);
                     }
 
