@@ -105,6 +105,14 @@ namespace RFClassLibrary
                 datestring = datestring.Insert(4, "/");
                 datestring = datestring.Insert(2, "/");
             }
+            // mmddyyyyhhmm
+            if(datestring.Length == 12 && !datestring.Contains("/"))
+            {
+                datestring = datestring.Insert(10, ":");
+                datestring = datestring.Insert(8, " ");
+                datestring = datestring.Insert(4, "/");
+                datestring = datestring.Insert(2, "/");
+            }
 
             if (DateTime.TryParse(datestring, out DateTime dt))
                 return dt;

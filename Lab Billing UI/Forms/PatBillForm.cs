@@ -162,7 +162,7 @@ namespace LabBilling.Forms
         {
             // wdk 20160725 moved to new server
             //string strFileName = string.Format(@"\\mclcom1\c$\temp\PatStatement{0}.txt", DateTime.Now.ToString("yyyyMMddHHmm"));
-            string strFileName = string.Format(@"\\mclftp\mclftp_d\temp\PatStatement{0}.txt", DateTime.Now.ToString("yyyyMMddHHmm"));
+            string strFileName = string.Format(@"\\mclftp2\MCLFTP_E\TEMP\PatStatement{0}.txt", DateTime.Now.ToString("yyyyMMddHHmm"));
             StreamWriter sw = new StreamWriter(strFileName);
             sw.AutoFlush = true;
             sw.Write(string.Format("HDR~MCL~~CERNER~MCL~{0}~{1}~T~N~0~0~0\r\n"

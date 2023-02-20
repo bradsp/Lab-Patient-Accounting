@@ -8,30 +8,93 @@ using LabBilling.Core.DataAccess;
 using LabBilling.Core.Models;
 using LabBilling.Core.BusinessLogic;
 using LabBilling.Core;
+using System.IO;
+using RFClassLibrary;
 
 namespace LabBillingConsole
 {
     internal class Program
     {
-        public const string connectionString = "Server=WTHMCLBILL;Database=LabBillingProd;Trusted_Connection=True;";
+        public const string connectionString = "Server=WTHMCLBILL;Database=LabBillingTest;Trusted_Connection=True;";
 
         static void Main(string[] args)
         {
-            //RemittanceTest();
-            //ValidateAccountsJob();
 
-            //GenerateClaimTest();
-            NotesImport();
+            bool showMenu = true;
 
+            while(showMenu)
+            {
+                showMenu = MainMenu();
+            }
+
+        }
+
+        private static bool MainMenu()
+        {
+            Console.Clear();
+            Console.WriteLine("******** TESTING MENU ***********\n");
+            Console.WriteLine("Choose an option:");
+            Console.WriteLine("1) Remittance Test");
+            Console.WriteLine("2) Validate Accounts");
+            Console.WriteLine("3) Generate Claim Test");
+            Console.WriteLine("4) Notes Import");
+            Console.WriteLine("5) Process Interface Messages");
+            Console.WriteLine("6) Reprint Invoice");
+            Console.WriteLine("7) Generate Statement");
+            Console.WriteLine("X) Exit");
+            Console.Write("\r\nSelect an option: ");
+
+            switch (Console.ReadLine())
+            {
+                case "1":
+                    RemittanceTest();
+                    return true;
+                case "2":
+                    ValidateAccountsJob();
+                    return true;
+                case "3":
+                    GenerateClaimTest();
+                    return false;
+                case "4":
+                    NotesImport();
+                    return false;
+                case "5":
+                    ProcessInterfaceMessages();
+                    return false;
+                case "6":
+                    ReprintInvoice();
+                    return false;
+                case "7":
+                    GenerateStatement();
+                    return false;
+                case "X":
+                    return false;
+                case "x":
+                    return false;
+                default:
+                    return true;
+            }
         }
 
         public static void NotesImport()
         {
             Console.WriteLine("Beginning notes import.");
             NotesImport notesImport = new NotesImport(connectionString);
-            string filename = @"\\wthmclbill\shared\Billing\LIVE\claims\Notes\510051_20230215_ExportNotes_424.exted";
-            notesImport.ImportNotes(filename);
-            Console.WriteLine("Notes Import complete");
+            //string filename = @"\\wthmclbill\shared\Billing\LIVE\claims\Notes\510051_20230215_ExportNotes_424.exted";
+            try
+            {
+                foreach (string filename in Directory.GetFiles(@"\\wthmclbill\shared\Billing\LIVE\claims\Notes", "*.exted"))
+                {
+                    notesImport.ImportNotes(filename);
+                    Console.WriteLine($"Imported {filename}");
+                }
+                Console.WriteLine("Notes Import complete");
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
+
         }
 
         public static void GenerateClaimTest()
@@ -234,10 +297,12 @@ namespace LabBillingConsole
 
         public static void RemittanceTest()
         {
-            Remittance835 remittance835 = new Remittance835(connectionString);
             string file = @"\\wthmclbill\shared\Billing\TEST\Posting835Remit\MCL_NC_MCR_1093705428_835_11119267.RMT";
 
+            Remittance835 remittance835 = new Remittance835(connectionString);
+
             remittance835.Load835(file);
+
         }
 
     }

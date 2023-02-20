@@ -14,7 +14,7 @@ namespace LabBilling.Core.BusinessLogic.Validators
         {
             RuleFor(c => c.NetAmount)
                 .GreaterThan(0)
-                .When(c => !c.IsCredited);
+                .When(c => !c.IsCredited && c.Status != "N/A");
 
             RuleForEach(c => c.ChrgDetails)
                 .SetValidator(new ChargeDetailValidator())
@@ -28,6 +28,7 @@ namespace LabBilling.Core.BusinessLogic.Validators
         {
             RuleFor(c => c.Cpt4)
                 .NotEmpty();
+
             RuleFor(c => c.Type)
                 .Cascade(CascadeMode.Stop)
                 .NotEmpty()

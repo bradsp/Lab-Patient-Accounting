@@ -12,6 +12,7 @@ using PetaPoco;
 using PetaPoco.Providers;
 using RFClassLibrary;
 using System.Threading;
+using MCL;
 
 namespace LabBilling.Core.BusinessLogic
 {
@@ -347,7 +348,7 @@ namespace LabBilling.Core.BusinessLogic
                 claimAccount = accountModel
 
             };
-            claimData.claimAccount.Charges = chrgRepository.GetByAccount(account, false).ToList();            
+            claimData.claimAccount.ClaimCharges = chrgRepository.GetClaimCharges(account).ToList();            
             claimData.claimAccount.Payments = chkRepository.GetByAccount(account).ToList();
 
             switch (accountModel.Status)
@@ -572,38 +573,69 @@ namespace LabBilling.Core.BusinessLogic
 
                 }
 
-                foreach (Chrg chrg in claimData.claimAccount.Charges)
+                foreach(ClaimChargeView claimCharge in claimData.claimAccount.ClaimCharges)
                 {
-                    // public IEnumerable<ClaimLine> ClaimLines { get; set; }
-                    foreach (ChrgDetail detail in chrg.ChrgDetails)
-                    {
-                        ClaimLine claimLine = new ClaimLine();
-                        claimLine.ProcedureCode = detail.Cpt4;
-                        claimLine.ProcedureModifier1 = detail.Modifier;
-                        claimLine.ProcedureModifier2 = detail.Modifer2;
-                        claimLine.ProcedureModifier3 = "";
-                        claimLine.Description = chrg.Cdm.Description;
-                        claimLine.RevenueCodeDescription = detail.RevenueCodeDetail.Description;
-                        claimLine.Amount = detail.Amount;
-                        claimLine.Quantity = chrg.Quantity;
-                        string[] dxptr = detail.DiagCodePointer.Split(':');
-                        if(dxptr.Length >= 1)
-                            claimLine.DxPtr1 = dxptr[0] ?? "";
-                        if (dxptr.Length >= 2) 
-                            claimLine.DxPtr2 = dxptr[1] ?? "";
-                        if (dxptr.Length >= 3) 
-                            claimLine.DxPtr3 = dxptr[2] ?? "";
-                        if (dxptr.Length >= 4) 
-                            claimLine.DxPtr4 = dxptr[3] ?? "";
-                        claimLine.EPSDTIndicator = "";
-                        claimLine.FamilyPlanningIndicator = "";
-                        claimLine.ServiceDate = chrg.ServiceDate;
-                        claimLine.ControlNumber = string.IsNullOrEmpty(detail.Modifier) ? chrg.CDMCode : $"{chrg.CDMCode}-{detail.Modifier}";
-                        claimLine.RevenueCode = detail.RevenueCode;
+                    ClaimLine claimLine = new ClaimLine();
+                    claimLine.ProcedureCode = claimCharge.CptCode;
+                    claimLine.ProcedureModifier1 = claimCharge.Modifier;
+                    claimLine.ProcedureModifier2 = claimCharge.Modifier2;
+                    claimLine.ProcedureModifier3 = "";
+                    claimLine.Description = claimCharge.Cdm.Description;
+                    claimLine.RevenueCodeDescription = claimCharge.RevenueCodeDetail.Description;
+                    claimLine.Amount = claimCharge.Amount;
+                    claimLine.Quantity = claimCharge.Qty;
+                    string[] dxptr = claimCharge.DiagnosisCodePointer.Split(':');
+                    if (dxptr.Length >= 1)
+                        claimLine.DxPtr1 = dxptr[0] ?? "";
+                    if (dxptr.Length >= 2)
+                        claimLine.DxPtr2 = dxptr[1] ?? "";
+                    if (dxptr.Length >= 3)
+                        claimLine.DxPtr3 = dxptr[2] ?? "";
+                    if (dxptr.Length >= 4)
+                        claimLine.DxPtr4 = dxptr[3] ?? "";
+                    claimLine.EPSDTIndicator = "";
+                    claimLine.FamilyPlanningIndicator = "";
+                    claimLine.ServiceDate = claimCharge.TransactionDate;
+                    claimLine.ControlNumber = string.IsNullOrWhiteSpace(claimCharge.Modifier) ? claimCharge.ChargeId : $"{claimCharge.ChargeId}-{claimCharge.Modifier}";
+                    claimLine.RevenueCode = claimCharge.RevenueCode;
 
-                        claimData.ClaimLines.Add(claimLine);
-                    }
+                    claimData.ClaimLines.Add(claimLine);
                 }
+
+                //foreach (Chrg chrg in claimData.claimAccount.Charges)
+                //{
+                //    // public IEnumerable<ClaimLine> ClaimLines { get; set; }
+                //    foreach (ChrgDetail detail in chrg.ChrgDetails)
+                //    {
+                //        if (detail.Type == "N/A")
+                //            continue;
+                //        ClaimLine claimLine = new ClaimLine();
+                //        claimLine.ProcedureCode = detail.Cpt4;
+                //        claimLine.ProcedureModifier1 = detail.Modifier;
+                //        claimLine.ProcedureModifier2 = detail.Modifer2;
+                //        claimLine.ProcedureModifier3 = "";
+                //        claimLine.Description = chrg.Cdm.Description;
+                //        claimLine.RevenueCodeDescription = detail.RevenueCodeDetail.Description;
+                //        claimLine.Amount = detail.Amount;
+                //        claimLine.Quantity = chrg.Quantity;
+                //        string[] dxptr = detail.DiagCodePointer.Split(':');
+                //        if(dxptr.Length >= 1)
+                //            claimLine.DxPtr1 = dxptr[0] ?? "";
+                //        if (dxptr.Length >= 2) 
+                //            claimLine.DxPtr2 = dxptr[1] ?? "";
+                //        if (dxptr.Length >= 3) 
+                //            claimLine.DxPtr3 = dxptr[2] ?? "";
+                //        if (dxptr.Length >= 4) 
+                //            claimLine.DxPtr4 = dxptr[3] ?? "";
+                //        claimLine.EPSDTIndicator = "";
+                //        claimLine.FamilyPlanningIndicator = "";
+                //        claimLine.ServiceDate = chrg.ServiceDate;
+                //        claimLine.ControlNumber = string.IsNullOrWhiteSpace(detail.Modifier) ? chrg.CDMCode : $"{chrg.CDMCode}-{detail.Modifier}";
+                //        claimLine.RevenueCode = detail.RevenueCode;
+
+                //        claimData.ClaimLines.Add(claimLine);
+                //    }
+                //}
 
             }
             catch (InvalidParameterValueException ipve)

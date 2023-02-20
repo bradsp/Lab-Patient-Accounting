@@ -283,14 +283,16 @@ namespace LabBilling.Core.DataAccess
                             .Select($"{selMaxRecords}status, acc.account, pat_name, ssn, cl_mnem, acc.fin_code, trans_date, ins.plan_nme")
                             .From(_tableName)
                             .InnerJoin("ins").On("ins.account = acc.account and ins_a_b_c = 'A'")
-                            .Where("status = 'UB'");
+                            .Where("status = 'UB'")
+                            .OrderBy($"{GetRealColumn(nameof(Account.TransactionDate))}");
                         break;
                     case ClaimType.Professional:
                         command = PetaPoco.Sql.Builder
                             .Select($"{selMaxRecords}status, acc.account, pat_name, ssn, cl_mnem, acc.fin_code, trans_date, ins.plan_nme")
                             .From(_tableName)
                             .InnerJoin("ins").On("ins.account = acc.account and ins_a_b_c = 'A'")
-                            .Where("status = '1500'");
+                            .Where("status = '1500'")
+                            .OrderBy($"{GetRealColumn(nameof(Account.TransactionDate))}");
                         break;
                     default:
                         command = PetaPoco.Sql.Builder;
@@ -625,6 +627,22 @@ namespace LabBilling.Core.DataAccess
             }
             Chrg chrg = new Chrg();
 
+            switch (fin.FinClass)
+            {
+                case "M":
+                    chrg.Status = cdmData.MClassType == "N/A" ? "N/A" : "NEW";
+                    break;
+                case "C":
+                    chrg.Status = cdmData.CClassType == "N/A" ? "N/A" : "NEW";
+                    break;
+                case "Z":
+                    chrg.Status = cdmData.ZClassType == "N/A" ? "N/A" : "NEW";
+                    break;
+                default:
+                    chrg.Status = "NEW";
+                    break;
+            }
+
             //now build the charge & detail records
             chrg.AccountNo = accData.AccountNo;
             chrg.Action = "";
@@ -648,7 +666,6 @@ namespace LabBilling.Core.DataAccess
             chrg.PostingDate = DateTime.Today;
             chrg.Quantity = qty;
             chrg.ServiceDate = serviceDate;
-            chrg.Status = "NEW";
             chrg.UnitNo = accData.EMPINumber;
             chrg.ResponsibleProvider = "";
 

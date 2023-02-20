@@ -93,6 +93,8 @@ namespace LabBilling.Core.Models
         [Ignore]
         public List<Chrg> Charges { get; set; } = new List<Chrg>();
         [Ignore]
+        public List<ClaimChargeView> ClaimCharges { get; set; } = new List<ClaimChargeView>();
+        [Ignore]
         public List<Chk> Payments { get; set; } = new List<Chk>();
         [Ignore]
         public List<AccountNote> Notes { get; set; } = new List<AccountNote>();

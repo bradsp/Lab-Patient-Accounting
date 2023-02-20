@@ -34,6 +34,7 @@ namespace LabBilling.Forms
 
         private void btnSave_Click(object sender, EventArgs e)
         {
+            client.IsDeleted = !activeCheckBox.Checked;
             client.ClientMnem = tbClientMnem.Text;
             client.Name = tbClientName.Text;
             client.StreetAddress1 = tbAddress1.Text;
@@ -83,6 +84,7 @@ namespace LabBilling.Forms
 
         private void LoadClient()
         {
+            activeCheckBox.Checked = !client.IsDeleted;
             tbClientMnem.Text = client.ClientMnem;
             tbClientName.Text = client.Name;
             tbAddress1.Text = client.StreetAddress1;

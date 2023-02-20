@@ -41,7 +41,7 @@ namespace LabBilling.Core.BusinessLogic
                             AccountNote accountNote = new AccountNote();
                             accountNote.Account = fields[1];
                             DateTime noteDate = DateTime.MinValue;
-                            noteDate = noteDate.ValidateDate(fields[3]);
+                            noteDate = noteDate.ValidateDate(fields[6]);
 
                             string comment = $"{noteDate} - {fields[5]}";
                             accountNote.Comment = comment;

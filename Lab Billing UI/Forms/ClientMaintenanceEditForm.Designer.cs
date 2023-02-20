@@ -91,6 +91,7 @@
             this.btnSave = new System.Windows.Forms.Button();
             this.label16 = new System.Windows.Forms.Label();
             this.billMethodComboBox = new System.Windows.Forms.ComboBox();
+            this.activeCheckBox = new System.Windows.Forms.CheckBox();
             this.tabControl1.SuspendLayout();
             this.tabClientPreferences.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numDefaultDiscount)).BeginInit();
@@ -727,12 +728,23 @@
             this.billMethodComboBox.Size = new System.Drawing.Size(124, 21);
             this.billMethodComboBox.TabIndex = 30;
             // 
+            // activeCheckBox
+            // 
+            this.activeCheckBox.AutoSize = true;
+            this.activeCheckBox.Location = new System.Drawing.Point(102, 12);
+            this.activeCheckBox.Name = "activeCheckBox";
+            this.activeCheckBox.Size = new System.Drawing.Size(56, 17);
+            this.activeCheckBox.TabIndex = 34;
+            this.activeCheckBox.Text = "Active";
+            this.activeCheckBox.UseVisualStyleBackColor = true;
+            // 
             // ClientMaintenanceEditForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.WhiteSmoke;
             this.ClientSize = new System.Drawing.Size(633, 690);
+            this.Controls.Add(this.activeCheckBox);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnSave);
             this.Controls.Add(this.label5);
@@ -852,5 +864,6 @@
         private System.Windows.Forms.DataGridView clientDiscountDataGrid;
         private System.Windows.Forms.Label label16;
         private System.Windows.Forms.ComboBox billMethodComboBox;
+        private System.Windows.Forms.CheckBox activeCheckBox;
     }
 }

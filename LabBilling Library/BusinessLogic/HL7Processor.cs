@@ -903,7 +903,9 @@ namespace LabBilling.Core.BusinessLogic
 
             phy.LastName = hl7Message.GetValue("STF.3.1");
             phy.FirstName = hl7Message.GetValue("STF.3.2");
-            phy.MiddleInitial = hl7Message.GetValue("STF.3.3").Left(1);
+            phy.MiddleInitial = hl7Message.GetValue("STF.3.3");
+            if (phy.MiddleInitial.Length > 1)
+                phy.MiddleInitial = phy.MiddleInitial.Left(1);
             phy.Credentials = hl7Message.GetValue("STF.3.4");
 
             //STF-10 - phone repeating

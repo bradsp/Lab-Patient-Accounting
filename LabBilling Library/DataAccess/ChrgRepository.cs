@@ -5,6 +5,8 @@ using LabBilling.Logging;
 using LabBilling.Core.Models;
 using System.Data.SqlClient;
 using System.Data;
+using NPOI.XSSF.Model;
+using System.CodeDom.Compiler;
 
 namespace LabBilling.Core.DataAccess
 {
@@ -52,6 +54,31 @@ namespace LabBilling.Core.DataAccess
             Log.Instance.Debug($"{dbConnection.LastSQL} {dbConnection.LastArgs}");
             return chrg;
         }
+
+        public List<ClaimChargeView> GetClaimCharges(string account)
+        {
+            Log.Instance.Debug($"Entering - account {account}");
+
+            var sql = PetaPoco.Sql.Builder
+                .From("vw_chrg_bill")
+                .Where("account = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account });
+
+            var results = dbConnection.Fetch<ClaimChargeView>(sql);
+
+            CdmRepository cdmRepository = new CdmRepository(dbConnection);
+            RevenueCodeRepository revenueCodeRepository = new RevenueCodeRepository(dbConnection);
+
+            foreach(var chrg in results)
+            {
+                chrg.RevenueCodeDetail = revenueCodeRepository.GetByCode(chrg.RevenueCode);
+                chrg.Cdm = cdmRepository.GetCdm(chrg.ChargeId, true);
+                Log.Instance.Debug($"{dbConnection.LastSQL} {dbConnection.LastArgs}");
+            }
+
+            return results;
+
+        }
+
 
         /// <summary>
         /// Get charge records for an account.
