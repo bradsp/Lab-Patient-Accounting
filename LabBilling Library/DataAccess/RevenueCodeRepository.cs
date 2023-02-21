@@ -20,11 +20,12 @@ namespace LabBilling.Core.DataAccess
 
         public RevenueCode GetByCode(string revenueCode)
         {
+            Log.Instance.Trace("Entering");
+
             string colName = this.GetRealColumn(typeof(RevenueCode), nameof(RevenueCode.Code));
 
             if (revenueCode == null)
             {
-                Log.Instance.Error("Null value passed to Revenue Code GetByCode.");
                 return new RevenueCode();
             }
 

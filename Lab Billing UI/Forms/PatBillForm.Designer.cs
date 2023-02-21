@@ -42,14 +42,17 @@
             this.dgvActivity = new System.Windows.Forms.DataGridView();
             this.tsMain.SuspendLayout();
             this.ssMain.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.scMain)).BeginInit();
             this.scMain.Panel1.SuspendLayout();
             this.scMain.Panel2.SuspendLayout();
             this.scMain.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.scStmtAcc)).BeginInit();
             this.scStmtAcc.Panel1.SuspendLayout();
             this.scStmtAcc.Panel2.SuspendLayout();
             this.scStmtAcc.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvStatement)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvAccount)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.scEnctrActv)).BeginInit();
             this.scEnctrActv.Panel1.SuspendLayout();
             this.scEnctrActv.Panel2.SuspendLayout();
             this.scEnctrActv.SuspendLayout();
@@ -73,7 +76,7 @@
             this.tsbCreateFile.Image = ((System.Drawing.Image)(resources.GetObject("tsbCreateFile.Image")));
             this.tsbCreateFile.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbCreateFile.Name = "tsbCreateFile";
-            this.tsbCreateFile.Size = new System.Drawing.Size(77, 22);
+            this.tsbCreateFile.Size = new System.Drawing.Size(75, 22);
             this.tsbCreateFile.Text = "CREATE FILE";
             this.tsbCreateFile.Click += new System.EventHandler(this.tsbCreateFile_Click);
             // 
@@ -81,7 +84,7 @@
             // 
             this.ssMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsslCount});
-            this.ssMain.Location = new System.Drawing.Point(0, 251);
+            this.ssMain.Location = new System.Drawing.Point(0, 374);
             this.ssMain.Name = "ssMain";
             this.ssMain.Size = new System.Drawing.Size(798, 22);
             this.ssMain.TabIndex = 8;
@@ -112,7 +115,7 @@
             // 
             this.scMain.Panel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
             this.scMain.Panel2.Controls.Add(this.scEnctrActv);
-            this.scMain.Size = new System.Drawing.Size(798, 226);
+            this.scMain.Size = new System.Drawing.Size(798, 349);
             this.scMain.SplitterDistance = 100;
             this.scMain.TabIndex = 9;
             // 
@@ -172,8 +175,8 @@
             // scEnctrActv.Panel2
             // 
             this.scEnctrActv.Panel2.Controls.Add(this.dgvActivity);
-            this.scEnctrActv.Size = new System.Drawing.Size(798, 122);
-            this.scEnctrActv.SplitterDistance = 93;
+            this.scEnctrActv.Size = new System.Drawing.Size(798, 245);
+            this.scEnctrActv.SplitterDistance = 186;
             this.scEnctrActv.TabIndex = 0;
             // 
             // dgvEncounter
@@ -182,7 +185,7 @@
             this.dgvEncounter.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dgvEncounter.Location = new System.Drawing.Point(0, 0);
             this.dgvEncounter.Name = "dgvEncounter";
-            this.dgvEncounter.Size = new System.Drawing.Size(798, 93);
+            this.dgvEncounter.Size = new System.Drawing.Size(798, 186);
             this.dgvEncounter.TabIndex = 0;
             this.dgvEncounter.Enter += new System.EventHandler(this.dgvEnter);
             // 
@@ -192,19 +195,19 @@
             this.dgvActivity.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dgvActivity.Location = new System.Drawing.Point(0, 0);
             this.dgvActivity.Name = "dgvActivity";
-            this.dgvActivity.Size = new System.Drawing.Size(798, 25);
+            this.dgvActivity.Size = new System.Drawing.Size(798, 55);
             this.dgvActivity.TabIndex = 0;
             this.dgvActivity.Enter += new System.EventHandler(this.dgvEnter);
             // 
-            // PatBill
+            // PatBillForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(798, 273);
+            this.ClientSize = new System.Drawing.Size(798, 396);
             this.Controls.Add(this.scMain);
             this.Controls.Add(this.ssMain);
             this.Controls.Add(this.tsMain);
-            this.Name = "PatBill";
+            this.Name = "PatBillForm";
             this.Text = "PatBill";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.Load += new System.EventHandler(this.PatBill_Load);
@@ -214,14 +217,17 @@
             this.ssMain.PerformLayout();
             this.scMain.Panel1.ResumeLayout(false);
             this.scMain.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.scMain)).EndInit();
             this.scMain.ResumeLayout(false);
             this.scStmtAcc.Panel1.ResumeLayout(false);
             this.scStmtAcc.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.scStmtAcc)).EndInit();
             this.scStmtAcc.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvStatement)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvAccount)).EndInit();
             this.scEnctrActv.Panel1.ResumeLayout(false);
             this.scEnctrActv.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.scEnctrActv)).EndInit();
             this.scEnctrActv.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvEncounter)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvActivity)).EndInit();

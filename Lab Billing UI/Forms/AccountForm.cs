@@ -1258,7 +1258,6 @@ namespace LabBilling.Forms
             TotalPmtAllTextBox.Text = (currentAccount.TotalPayments + currentAccount.TotalContractual + currentAccount.TotalWriteOff).ToString("c");
 
             if ((currentAccount.Fin.FinClass == "C" && currentAccount.FinCode != "CLIENT") ||
-                currentAccount.SentToCollections ||
                 currentAccount.Status == "CLOSED")
             {
                 AddPaymentButton.Enabled = false;
@@ -1326,10 +1325,23 @@ namespace LabBilling.Forms
         {
             PaymentAdjustmentEntryForm form = new PaymentAdjustmentEntryForm(ref currentAccount);
 
+            if(currentAccount.SentToCollections)
+            {
+                if (MessageBox.Show($"Account {currentAccount.AccountNo} has been sent to collections. Follow process to notify collection agency of payment.\n Continue with add payment?",
+                    "Account Sent to Collections", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) != DialogResult.Yes)
+                    return;
+            }
+
             if (form.ShowDialog() == DialogResult.OK)
             {
                 //post record to account
                 var chk = form.chk;
+
+                if (currentAccount.Status == "PAID_OUT")
+                {
+                    accDB.UpdateStatus(currentAccount.AccountNo, "NEW");
+                    currentAccount.Status = "NEW";
+                }
 
                 chk.AccountNo = currentAccount.AccountNo;
                 chk.FinCode = currentAccount.FinCode;

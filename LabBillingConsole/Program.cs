@@ -15,7 +15,7 @@ namespace LabBillingConsole
 {
     internal class Program
     {
-        public const string connectionString = "Server=WTHMCLBILL;Database=LabBillingTest;Trusted_Connection=True;";
+        public const string connectionString = "Server=WTHMCLBILL;Database=LabBillingProd;Trusted_Connection=True;";
 
         static void Main(string[] args)
         {
@@ -26,7 +26,6 @@ namespace LabBillingConsole
             {
                 showMenu = MainMenu();
             }
-
         }
 
         private static bool MainMenu()
