@@ -89,7 +89,8 @@ namespace LabBilling.Core.DataAccess
                 try
                 {
                     this.Add(table);
-                    clientDiscountRepository.SaveAll(table.Discounts);
+                    if(table.Discounts != null)
+                        clientDiscountRepository.SaveAll(table.Discounts);
                     success = true;
                 }
                 catch (Exception ex)

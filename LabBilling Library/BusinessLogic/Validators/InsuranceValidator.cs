@@ -56,7 +56,14 @@ namespace LabBilling.Core.BusinessLogic.Validators
                         return false;
                     else
                         return true;
-                }).WithMessage("Plan must contain an address.");
+                }).WithMessage("Plan must contain an address.")
+                .Must((insc) =>
+                {
+                    if (string.IsNullOrWhiteSpace(insc.Zip))
+                        return false;
+                    else
+                        return true;
+                }).WithMessage("Plan does not have a zip code.");
 
             RuleFor(a => a.InsCompany.NThrivePayerNo)
                 .NotEmpty().WithMessage("NThrive payer code is not defined for this payer.");

@@ -379,25 +379,33 @@ namespace LabBilling.Forms
                     skipDgvPaymentsCellValueChanged = true;
 
                     MessageBox.Show($"Account {strAccount} not found.", "Account not found.");
+                    dgvPayments.EndEdit();
                     dgvPayments["Account", e.RowIndex].Value = string.Empty;
                     dgvPayments.CurrentCell = dgvPayments["Account", e.RowIndex];
 
                     skipDgvPaymentsCellValueChanged = false;
                     return;
                 }
-
-                if (account != null)
+                else if (account != null)
                 {
                     skipDgvPaymentsCellValueChanged = true;
-
-                    dgvPayments["Account", e.RowIndex].Value = account.AccountNo;
+                    if (account.SentToCollections)
+                    {
+                        dgvPayments["Comment", e.RowIndex].Value = account.AccountNo;
+                        dgvPayments.EndEdit();
+                        dgvPayments["Account", e.RowIndex].Value = "BADDEBT";
+                    }
+                    else
+                    {
+                        dgvPayments["Account", e.RowIndex].Value = account.AccountNo;
+                    }
                     dgvPayments["PatientName", e.RowIndex].Value = account.PatFullName;
                     dgvPayments["Balance", e.RowIndex].Value = account.Balance;
                     dgvPayments.CurrentCell = dgvPayments["CheckNo", e.RowIndex];
 
                     //clear the readonly flag on the cells
                     SetCellsReadonly(e.RowIndex, false);
-
+                    dgvPayments.RefreshEdit();
                     skipDgvPaymentsCellValueChanged = false;
                 }
             }
@@ -567,33 +575,7 @@ namespace LabBilling.Forms
 
         private void dgvPayments_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
-            //if (dgvPayments.Columns[e.ColumnIndex].Name == "Account")
-            //{
-            //    // get account information to populate patient name and balance info
-            //    Account account = null;
-            //    string strAccount = dgvPayments["Account", e.RowIndex].Value?.ToString();
-            //    if (!string.IsNullOrEmpty(strAccount))
-            //    {
-            //        strAccount = strAccount.ToUpper();
-            //        account = accdb.GetByAccount(strAccount, true);
-            //    }
 
-            //        if (account == null)
-            //    {
-            //        MessageBox.Show($"Account {strAccount} not found.", "Account not found.");
-            //        dgvPayments["Account", e.RowIndex].Value = string.Empty;
-            //        dgvPayments.CurrentCell = dgvPayments.Rows[e.RowIndex].Cells["Account"];
-            //        return;
-            //    }
-
-            //    if (account != null)
-            //    {
-            //        dgvPayments["Account", e.RowIndex].Value = strAccount;
-            //        dgvPayments["PatientName", e.RowIndex].Value = account.PatFullName;
-            //        dgvPayments["Balance", e.RowIndex].Value = account.Balance;
-            //        dgvPayments.CurrentCell = dgvPayments["CheckNo", e.RowIndex];
-            //        }
-            //}
 
         }
 
@@ -656,6 +638,11 @@ namespace LabBilling.Forms
             //    dgvPayments[e.ColumnIndex, e.RowIndex].Value;
             //}
 
+        }
+
+        private void dgvPayments_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
+        {
+            //((DataGridView)sender).RefreshEdit();
         }
     }
 }
