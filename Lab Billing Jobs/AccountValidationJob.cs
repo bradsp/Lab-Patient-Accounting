@@ -35,7 +35,9 @@ namespace LabBillingJobs
                 AccountRepository accountRepository = new AccountRepository(Helper.ConnVal);
                 Console.WriteLine("In RunValidation() - Starting RunValidation job");
                 log.Info("In RunValidation() - Starting RunValidation job");
+
                 accountRepository.ValidateUnbilledAccounts();
+                
                 Console.WriteLine("In RunValidation() - Finished RunValidation job");
                 log.Info("In RunValidation() - Finished RunValidation job");
             }

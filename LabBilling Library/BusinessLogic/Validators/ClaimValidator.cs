@@ -142,7 +142,11 @@ namespace LabBilling.Core.BusinessLogic.Validators
                 {
                     foreach (var chrgDetail in chrg.ChrgDetails)
                     {
-                        List<string> dxPtrs = chrgDetail.DiagnosisPointer.DiagnosisPointer.Split(':').ToList();
+                        List<string> dxPtrs = new List<string>();
+
+                        if (chrgDetail.DiagnosisPointer != null)
+                            dxPtrs = chrgDetail.DiagnosisPointer.DiagnosisPointer.Split(':').ToList();
+
                         foreach(var ptr in dxPtrs)
                         {
                             if (!string.IsNullOrEmpty(ptr))

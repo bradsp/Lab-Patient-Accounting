@@ -29,7 +29,7 @@
     <InstallUrl>\\wthmclbill\installations%24\LabBilling\</InstallUrl>
     <ProductName>Lab Outreach Patient Accounting</ProductName>
     <PublisherName>West Tennessee Healthcare</PublisherName>
-    <ApplicationRevision>104</ApplicationRevision>
+    <ApplicationRevision>106</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
