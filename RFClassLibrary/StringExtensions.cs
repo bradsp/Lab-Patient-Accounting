@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text.RegularExpressions;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace RFClassLibrary
 {
@@ -57,6 +58,23 @@ namespace RFClassLibrary
         {
             return Regex.Replace(value, @"\s+", " ");
         }
+
+        /// <summary>
+        /// Extension method to remove all instances of a char in a list of chars.
+        /// </summary>
+        /// <param name="str"></param>
+        /// <param name="charsToRemove"></param>
+        /// <returns></returns>
+        public static string Filter(this string str, List<char> charsToRemove)
+        {
+            foreach(char c in charsToRemove)
+            {
+                str = str.Replace(c.ToString(), string.Empty);
+            }
+
+            return str;
+        }
+
 
         /// <summary>
         /// Returns string formatted as an SSN (inserts dashes).

@@ -207,7 +207,7 @@ namespace LabBilling.Core.BusinessLogic
             }
             catch (Exception ex)
             {
-                Log.Instance.Fatal(ex, "Exception processing Institutional Claims. Batch has been rolled back. Report error to the Application Administrator.");
+                Log.Instance.Fatal(ex, $"Exception processing {claimType} Claims. Batch has been rolled back. Report error to the Application Administrator.");
                 db.AbortTransaction();
             }
             return -1;
@@ -596,7 +596,9 @@ namespace LabBilling.Core.BusinessLogic
                     claimLine.EPSDTIndicator = "";
                     claimLine.FamilyPlanningIndicator = "";
                     claimLine.ServiceDate = claimCharge.TransactionDate;
-                    claimLine.ControlNumber = string.IsNullOrWhiteSpace(claimCharge.Modifier) ? claimCharge.ChargeId : $"{claimCharge.ChargeId}-{claimCharge.Modifier}";
+                    claimLine.ControlNumber = $"{claimCharge.ChargeId}-{claimCharge.CptCode}";
+                    if(!string.IsNullOrWhiteSpace(claimCharge.Modifier)) 
+                        claimLine.ControlNumber += $"-{claimCharge.Modifier}";
                     claimLine.RevenueCode = claimCharge.RevenueCode;
 
                     claimData.ClaimLines.Add(claimLine);

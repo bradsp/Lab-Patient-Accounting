@@ -46,6 +46,8 @@ namespace LabBillingJobs
         private void AddJobs()
         {
             AddAccountValidationJob();
+            AddClaimProcessingJob();
+            AddNotesProcessingJob();
         }
 
         public void AddAccountValidationJob()
@@ -57,19 +59,58 @@ namespace LabBillingJobs
 
             var trigger = TriggerBuilder.Create()
                 .WithIdentity(trigger1 + Job, Group1)
-                .WithCronSchedule("0 0 18 * * ?")
+                .WithCronSchedule("0 0 18 ? * * *")
                 //.StartAt(DateTime.Now.AddSeconds(5)) // some Date 
                 .ForJob(trigger1 + Job, Group1) // identify job with name, group strings
                 .Build();
 
             scheduler.ScheduleJob(jobDetail, trigger);
             var nextFireTime = trigger.GetNextFireTimeUtc();
-            Console.WriteLine($"Account Validation Job initialized. Next run time - {nextFireTime}");
-            log.Info($"Account Validation Job initialized. Next run time - {nextFireTime}");
+            Console.WriteLine($"{trigger1} Job initialized. Next run time - {nextFireTime}");
+            log.Info($"{trigger1} Job initialized. Next run time - {nextFireTime}");
 
 
         }
 
+        public void AddClaimProcessingJob()
+        {
+            const string trigger1 = "ClaimProcessing";
+
+            IJob myJob = new ClaimsProcessingJob();
+            var jobDetail = new JobDetailImpl(trigger1 + Job, Group1, myJob.GetType());
+
+            var trigger = TriggerBuilder.Create()
+                .WithIdentity(trigger1 + Job, Group1)
+                .WithCronSchedule("0 0 21 ? * SUN,MON,TUE,WED,THU *")
+                //.StartAt(DateTime.Now.AddSeconds(5)) // some Date 
+                .ForJob(trigger1 + Job, Group1) // identify job with name, group strings
+                .Build();
+
+            scheduler.ScheduleJob(jobDetail, trigger);
+            var nextFireTime = trigger.GetNextFireTimeUtc();
+            Console.WriteLine($"{trigger1} Job initialized. Next run time - {nextFireTime}");
+            log.Info($"{trigger1} Job initialized. Next run time - {nextFireTime}");
+        }
+
+        public void AddNotesProcessingJob()
+        {
+            const string trigger1 = "NotesProcessing";
+
+            IJob myJob = new NotesProcessingJob();
+            var jobDetail = new JobDetailImpl(trigger1 + Job, Group1, myJob.GetType());
+
+            var trigger = TriggerBuilder.Create()
+                .WithIdentity(trigger1 + Job, Group1)
+                .WithCronSchedule("0 0 7 * * ?")
+                //.StartAt(DateTime.Now.AddSeconds(5)) // some Date 
+                .ForJob(trigger1 + Job, Group1) // identify job with name, group strings
+                .Build();
+
+            scheduler.ScheduleJob(jobDetail, trigger);
+            var nextFireTime = trigger.GetNextFireTimeUtc();
+            Console.WriteLine($"{trigger1} Job initialized. Next run time - {nextFireTime}");
+            log.Info($"{trigger1} Job initialized. Next run time - {nextFireTime}");
+        }
 
 
     }

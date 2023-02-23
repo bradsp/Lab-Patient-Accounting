@@ -31,6 +31,7 @@ namespace LabBillingConsole
         private static bool MainMenu()
         {
             Console.Clear();
+            Console.WriteLine($"Connection String: {connectionString}\n\n");
             Console.WriteLine("******** TESTING MENU ***********\n");
             Console.WriteLine("Choose an option:");
             Console.WriteLine("1) Remittance Test");

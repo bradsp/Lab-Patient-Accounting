@@ -4,6 +4,7 @@ using System.Xml.Linq;
 using EdiTools;
 using LabBilling.Core.Models;
 using NPOI.HSSF.Record;
+using RFClassLibrary;
 
 namespace LabBilling.Core
 {
@@ -48,8 +49,23 @@ namespace LabBilling.Core
         public const string transactionSetIdentifierCode = "837";
 
         private ClaimType? claimType;
-
         private ClaimData claim; //used to track current claim being processed
+        private List<char> specialChars 
+        { 
+            get
+            {
+                var tmp = new List<char>
+                {
+                    SegmentTerminator,
+                    ElementTerminator,
+                    ComponentSeparator,
+                    RepetitionSeparator
+                };
+
+                return tmp;
+            }
+        }
+
 
         /// <summary>
         /// Initiate instance of Billing837 class.
@@ -58,6 +74,8 @@ namespace LabBilling.Core
         public Billing837(string connectionString, string productionEnvironment)
         {
             ProductionEnvironment = productionEnvironment;
+
+
         }
 
         public EdiDocument ediDocument;
@@ -1112,7 +1130,7 @@ namespace LabBilling.Core
                         sv2_2[3] = line.ProcedureModifier1;
                         sv2_2[4] = line.ProcedureModifier2;
                         sv2_2[5] = line.ProcedureModifier3;
-                        sv2_2[7] = line.Description;
+                        sv2_2[7] = line.Description.Filter(specialChars);
                         sv2.Element(2, sv2_2);
 
                         sv2[3] = line.Amount.ToString();
@@ -1132,7 +1150,7 @@ namespace LabBilling.Core
                         sv1_1[3] = line.ProcedureModifier1;
                         sv1_1[4] = line.ProcedureModifier2;
                         sv1_1[5] = line.ProcedureModifier3;
-                        sv1_1[7] = line.Description;
+                        sv1_1[7] = line.Description.Filter(specialChars);
                         sv1.Element(1, sv1_1);
 
                         sv1[2] = line.Amount.ToString();
