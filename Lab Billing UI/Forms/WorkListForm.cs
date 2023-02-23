@@ -67,7 +67,8 @@ namespace LabBilling.Forms
                 new TreeNode(Worklists.ClientBill),
                 new TreeNode(Worklists.SubmittedInstitutional),
                 new TreeNode(Worklists.SubmittedProfessional),
-                new TreeNode(Worklists.SubmittedOtherClaim)
+                new TreeNode(Worklists.SubmittedOtherClaim),
+                new TreeNode(Worklists.ReceivingStatements)
             };
 
             TreeNode rootNode = new TreeNode("Worklists", worklistsTreeNode);
@@ -375,6 +376,9 @@ namespace LabBilling.Forms
                     break;
                 case Worklists.SubmittedOtherClaim:
                     parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.Equal, "CLAIM")).ToArray();
+                    break;
+                case Worklists.ReceivingStatements:
+                    parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.Equal, "STMT")).ToArray();
                     break;
                 default:
                     break;

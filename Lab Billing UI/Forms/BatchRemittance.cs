@@ -31,7 +31,6 @@ namespace LabBilling.Forms
             Log.Instance.Trace($"Entering");
             //saves an open batch for later use
 
-
             //batch record
             XmlDocument xmlDoc = new XmlDocument();
             XmlNode rootNode = xmlDoc.CreateElement("Batch");
@@ -559,7 +558,9 @@ namespace LabBilling.Forms
                 senderGrid[e.ColumnIndex, e.RowIndex].Value = DateTime.Now.ToShortDateString();
             }
 
-            if (senderGrid.Columns[e.ColumnIndex].Name == "PaymentSource")
+            if (senderGrid.Columns[e.ColumnIndex].Name == "PaymentSource" ||
+                senderGrid.Columns[e.ColumnIndex].Name == "CheckNo" ||
+                senderGrid.Columns[e.ColumnIndex].Name == "CheckDate")
             {
                 //copy value from previous column
                 if (e.RowIndex > 0)

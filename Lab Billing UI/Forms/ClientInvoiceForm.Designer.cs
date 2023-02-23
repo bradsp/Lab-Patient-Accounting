@@ -42,6 +42,11 @@ namespace LabBilling.Forms
             this.label3 = new System.Windows.Forms.Label();
             this.InvoiceHistoryTabControl = new System.Windows.Forms.TabControl();
             this.GenerateInvoicesTabPage = new System.Windows.Forms.TabPage();
+            this.refreshUnbilledInvoices = new System.Windows.Forms.PictureBox();
+            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.toolStripProgressBar1 = new System.Windows.Forms.ToolStripProgressBar();
+            this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.InvoiceHistoryTabPage = new System.Windows.Forms.TabPage();
             this.label6 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
@@ -55,27 +60,24 @@ namespace LabBilling.Forms
             this.InvoiceHistoryDGV = new System.Windows.Forms.DataGridView();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.undoInvoiceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
-            this.toolStripProgressBar1 = new System.Windows.Forms.ToolStripProgressBar();
-            this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
-            this.refreshUnbilledInvoices = new System.Windows.Forms.PictureBox();
             this.printContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.printToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveToPDFToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.invoiceLabel = new System.Windows.Forms.Label();
+            this.invoiceTextBox = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.InvoicesDGV)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.UnbilledAccountsDGV)).BeginInit();
             this.InvoiceHistoryTabControl.SuspendLayout();
             this.GenerateInvoicesTabPage.SuspendLayout();
-            this.InvoiceHistoryTabPage.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.InvoiceHistoryDGV)).BeginInit();
-            this.contextMenuStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.refreshUnbilledInvoices)).BeginInit();
+            this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
-            this.statusStrip1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.refreshUnbilledInvoices)).BeginInit();
+            this.InvoiceHistoryTabPage.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.InvoiceHistoryDGV)).BeginInit();
+            this.contextMenuStrip1.SuspendLayout();
             this.printContextMenu.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -225,8 +227,63 @@ namespace LabBilling.Forms
             this.GenerateInvoicesTabPage.Text = "Generate Invoices";
             this.GenerateInvoicesTabPage.UseVisualStyleBackColor = true;
             // 
+            // refreshUnbilledInvoices
+            // 
+            this.refreshUnbilledInvoices.Image = global::LabBilling.Properties.Resources.refresh_icon;
+            this.refreshUnbilledInvoices.Location = new System.Drawing.Point(331, 7);
+            this.refreshUnbilledInvoices.Name = "refreshUnbilledInvoices";
+            this.refreshUnbilledInvoices.Size = new System.Drawing.Size(21, 20);
+            this.refreshUnbilledInvoices.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.refreshUnbilledInvoices.TabIndex = 18;
+            this.refreshUnbilledInvoices.TabStop = false;
+            this.refreshUnbilledInvoices.Click += new System.EventHandler(this.refreshUnbilledInvoices_Click);
+            // 
+            // statusStrip1
+            // 
+            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripProgressBar1,
+            this.toolStripStatusLabel1});
+            this.statusStrip1.Location = new System.Drawing.Point(3, 504);
+            this.statusStrip1.Name = "statusStrip1";
+            this.statusStrip1.Size = new System.Drawing.Size(995, 22);
+            this.statusStrip1.TabIndex = 17;
+            this.statusStrip1.Text = "statusStrip1";
+            // 
+            // toolStripProgressBar1
+            // 
+            this.toolStripProgressBar1.Name = "toolStripProgressBar1";
+            this.toolStripProgressBar1.Size = new System.Drawing.Size(100, 16);
+            // 
+            // toolStripStatusLabel1
+            // 
+            this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
+            this.toolStripStatusLabel1.Size = new System.Drawing.Size(118, 17);
+            this.toolStripStatusLabel1.Text = "toolStripStatusLabel1";
+            // 
+            // splitContainer1
+            // 
+            this.splitContainer1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.splitContainer1.Location = new System.Drawing.Point(13, 44);
+            this.splitContainer1.Name = "splitContainer1";
+            this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // splitContainer1.Panel1
+            // 
+            this.splitContainer1.Panel1.Controls.Add(this.InvoicesDGV);
+            // 
+            // splitContainer1.Panel2
+            // 
+            this.splitContainer1.Panel2.Controls.Add(this.UnbilledAccountsDGV);
+            this.splitContainer1.Size = new System.Drawing.Size(976, 447);
+            this.splitContainer1.SplitterDistance = 281;
+            this.splitContainer1.TabIndex = 16;
+            // 
             // InvoiceHistoryTabPage
             // 
+            this.InvoiceHistoryTabPage.Controls.Add(this.invoiceTextBox);
+            this.InvoiceHistoryTabPage.Controls.Add(this.invoiceLabel);
             this.InvoiceHistoryTabPage.Controls.Add(this.label6);
             this.InvoiceHistoryTabPage.Controls.Add(this.label5);
             this.InvoiceHistoryTabPage.Controls.Add(this.ThroughDate);
@@ -248,7 +305,7 @@ namespace LabBilling.Forms
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(591, 21);
+            this.label6.Location = new System.Drawing.Point(751, 20);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(43, 13);
             this.label6.TabIndex = 7;
@@ -257,7 +314,7 @@ namespace LabBilling.Forms
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(382, 20);
+            this.label5.Location = new System.Drawing.Point(542, 19);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(90, 13);
             this.label5.TabIndex = 6;
@@ -265,7 +322,7 @@ namespace LabBilling.Forms
             // 
             // ThroughDate
             // 
-            this.ThroughDate.Location = new System.Drawing.Point(640, 18);
+            this.ThroughDate.Location = new System.Drawing.Point(800, 17);
             this.ThroughDate.Mask = "00/00/0000";
             this.ThroughDate.Name = "ThroughDate";
             this.ThroughDate.Size = new System.Drawing.Size(100, 20);
@@ -275,7 +332,7 @@ namespace LabBilling.Forms
             // 
             // FromDate
             // 
-            this.FromDate.Location = new System.Drawing.Point(478, 18);
+            this.FromDate.Location = new System.Drawing.Point(638, 17);
             this.FromDate.Mask = "00/00/0000";
             this.FromDate.Name = "FromDate";
             this.FromDate.Size = new System.Drawing.Size(100, 20);
@@ -365,59 +422,6 @@ namespace LabBilling.Forms
             this.undoInvoiceToolStripMenuItem.Text = "Undo Invoice";
             this.undoInvoiceToolStripMenuItem.Click += new System.EventHandler(this.undoInvoiceToolStripMenuItem_Click);
             // 
-            // splitContainer1
-            // 
-            this.splitContainer1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.splitContainer1.Location = new System.Drawing.Point(13, 44);
-            this.splitContainer1.Name = "splitContainer1";
-            this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
-            // 
-            // splitContainer1.Panel1
-            // 
-            this.splitContainer1.Panel1.Controls.Add(this.InvoicesDGV);
-            // 
-            // splitContainer1.Panel2
-            // 
-            this.splitContainer1.Panel2.Controls.Add(this.UnbilledAccountsDGV);
-            this.splitContainer1.Size = new System.Drawing.Size(976, 447);
-            this.splitContainer1.SplitterDistance = 281;
-            this.splitContainer1.TabIndex = 16;
-            // 
-            // statusStrip1
-            // 
-            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripProgressBar1,
-            this.toolStripStatusLabel1});
-            this.statusStrip1.Location = new System.Drawing.Point(3, 504);
-            this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(995, 22);
-            this.statusStrip1.TabIndex = 17;
-            this.statusStrip1.Text = "statusStrip1";
-            // 
-            // toolStripProgressBar1
-            // 
-            this.toolStripProgressBar1.Name = "toolStripProgressBar1";
-            this.toolStripProgressBar1.Size = new System.Drawing.Size(100, 16);
-            // 
-            // toolStripStatusLabel1
-            // 
-            this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
-            this.toolStripStatusLabel1.Size = new System.Drawing.Size(118, 17);
-            this.toolStripStatusLabel1.Text = "toolStripStatusLabel1";
-            // 
-            // refreshUnbilledInvoices
-            // 
-            this.refreshUnbilledInvoices.Image = global::LabBilling.Properties.Resources.refresh_icon;
-            this.refreshUnbilledInvoices.Location = new System.Drawing.Point(331, 7);
-            this.refreshUnbilledInvoices.Name = "refreshUnbilledInvoices";
-            this.refreshUnbilledInvoices.Size = new System.Drawing.Size(21, 20);
-            this.refreshUnbilledInvoices.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.refreshUnbilledInvoices.TabIndex = 18;
-            this.refreshUnbilledInvoices.TabStop = false;
-            this.refreshUnbilledInvoices.Click += new System.EventHandler(this.refreshUnbilledInvoices_Click);
-            // 
             // printContextMenu
             // 
             this.printContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -440,6 +444,23 @@ namespace LabBilling.Forms
             this.saveToPDFToolStripMenuItem.Text = "Save to PDF";
             this.saveToPDFToolStripMenuItem.Click += new System.EventHandler(this.PrintInvoice_Click);
             // 
+            // invoiceLabel
+            // 
+            this.invoiceLabel.AutoSize = true;
+            this.invoiceLabel.Location = new System.Drawing.Point(345, 19);
+            this.invoiceLabel.Name = "invoiceLabel";
+            this.invoiceLabel.Size = new System.Drawing.Size(42, 13);
+            this.invoiceLabel.TabIndex = 8;
+            this.invoiceLabel.Text = "Invoice";
+            // 
+            // invoiceTextBox
+            // 
+            this.invoiceTextBox.Location = new System.Drawing.Point(393, 17);
+            this.invoiceTextBox.Name = "invoiceTextBox";
+            this.invoiceTextBox.Size = new System.Drawing.Size(133, 20);
+            this.invoiceTextBox.TabIndex = 9;
+            this.invoiceTextBox.TextChanged += new System.EventHandler(this.invoiceTextBox_TextChanged);
+            // 
             // ClientInvoiceForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -454,17 +475,17 @@ namespace LabBilling.Forms
             this.InvoiceHistoryTabControl.ResumeLayout(false);
             this.GenerateInvoicesTabPage.ResumeLayout(false);
             this.GenerateInvoicesTabPage.PerformLayout();
-            this.InvoiceHistoryTabPage.ResumeLayout(false);
-            this.InvoiceHistoryTabPage.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.InvoiceHistoryDGV)).EndInit();
-            this.contextMenuStrip1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.refreshUnbilledInvoices)).EndInit();
+            this.statusStrip1.ResumeLayout(false);
+            this.statusStrip1.PerformLayout();
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
-            this.statusStrip1.ResumeLayout(false);
-            this.statusStrip1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.refreshUnbilledInvoices)).EndInit();
+            this.InvoiceHistoryTabPage.ResumeLayout(false);
+            this.InvoiceHistoryTabPage.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.InvoiceHistoryDGV)).EndInit();
+            this.contextMenuStrip1.ResumeLayout(false);
             this.printContextMenu.ResumeLayout(false);
             this.ResumeLayout(false);
 
@@ -505,5 +526,7 @@ namespace LabBilling.Forms
         private System.Windows.Forms.ContextMenuStrip printContextMenu;
         private System.Windows.Forms.ToolStripMenuItem printToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveToPDFToolStripMenuItem;
+        private System.Windows.Forms.TextBox invoiceTextBox;
+        private System.Windows.Forms.Label invoiceLabel;
     }
 }

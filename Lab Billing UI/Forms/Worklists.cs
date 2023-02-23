@@ -20,5 +20,6 @@
         public const string SubmittedInstitutional = "Submitted Institutional";
         public const string SubmittedProfessional = "Submitted Professional";
         public const string SubmittedOtherClaim = "Submitted Other";
+        public const string ReceivingStatements = "Receiving Statements";
     }
 }

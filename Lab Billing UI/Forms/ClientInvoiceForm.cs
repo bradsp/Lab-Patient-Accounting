@@ -43,6 +43,7 @@ namespace LabBilling.Forms
             clientRepository = new ClientRepository(Helper.ConnVal);
 
             clientList = clientRepository.GetAll().ToList();
+            clientList.Sort((p, q) => p.Name.CompareTo(q.Name));
 
             clientList.Insert(0, new Client
             {
@@ -240,15 +241,18 @@ namespace LabBilling.Forms
             FromDate.Text = DateTime.Today.AddDays(-30).ToString("MM/dd/yyyy");
             ThroughDate.Text = DateTime.Today.ToString("MM/dd/yyyy");
 
-            DateTime.TryParse(FromDate.Text, out DateTime fd);
-            DateTime.TryParse(ThroughDate.Text, out DateTime td);
-            td = td.AddDays(1);
-            await RefreshInvoiceHistoryGridAsync(null, fd, td);
+            //DateTime.TryParse(FromDate.Text, out DateTime fd);
+            //DateTime.TryParse(ThroughDate.Text, out DateTime td);
+            //td = td.AddDays(1);
+            await RefreshInvoiceHistoryGridAsync();
         }
 
-        private void RefreshInvoiceHistoryGrid(string clientMnem, DateTime? fromDate = null, DateTime? throughDate = null)
+        private void RefreshInvoiceHistoryGrid()
         {
-            InvoiceHistoryDGV.DataSource = historyRepository.GetWithSort(clientMnem, fromDate, throughDate);
+            DateTime.TryParse(FromDate.Text, out DateTime fd);
+            DateTime.TryParse(ThroughDate.Text, out DateTime td);
+
+            InvoiceHistoryDGV.DataSource = historyRepository.GetWithSort(ClientFilter.SelectedValue?.ToString(), fd, td, invoiceTextBox.Text);
 
             InvoiceHistoryDGV.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.ClientName)].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
@@ -273,10 +277,14 @@ namespace LabBilling.Forms
 
         }
 
-        private async Task RefreshInvoiceHistoryGridAsync(string clientMnem, DateTime? fromDate = null, DateTime? throughDate = null)
+        private async Task RefreshInvoiceHistoryGridAsync()
         {
+            DateTime.TryParse(FromDate.Text, out DateTime fd);
+            DateTime.TryParse(ThroughDate.Text, out DateTime td);
 
-            InvoiceHistoryDGV.DataSource = await Task.Run(() => historyRepository.GetWithSort(clientMnem, fromDate, throughDate));
+            string client = ClientFilter.SelectedValue?.ToString();
+
+            InvoiceHistoryDGV.DataSource = await Task.Run(() => historyRepository.GetWithSort(client, fd, td, invoiceTextBox.Text));
 
             InvoiceHistoryDGV.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.ClientName)].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
@@ -304,12 +312,8 @@ namespace LabBilling.Forms
 
         private void ClientFilter_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (InvoiceHistoryTabPage.Focused)
-            {
-                DateTime.TryParse(FromDate.Text, out DateTime fd);
-                DateTime.TryParse(ThroughDate.Text, out DateTime td);
-                RefreshInvoiceHistoryGrid(ClientFilter.SelectedValue?.ToString(), fd, td);
-            }
+            if(FromDate.MaskCompleted && ThroughDate.MaskCompleted)
+                RefreshInvoiceHistoryGrid();
         }
 
         private void ViewInvoice_Click(object sender, EventArgs e)
@@ -473,7 +477,7 @@ namespace LabBilling.Forms
             }
             else
             {
-                RefreshInvoiceHistoryGrid(ClientFilter.SelectedValue?.ToString(), fd, td);
+                RefreshInvoiceHistoryGrid();
             }
         }
 
@@ -494,7 +498,7 @@ namespace LabBilling.Forms
             else
             {
                 td = td.AddDays(1);
-                RefreshInvoiceHistoryGrid(ClientFilter.SelectedValue?.ToString(), fd, td);
+                RefreshInvoiceHistoryGrid();
             }
         }
 
@@ -563,6 +567,11 @@ namespace LabBilling.Forms
 
             printContextMenu.Show(Cursor.Position);
 
+        }
+
+        private void invoiceTextBox_TextChanged(object sender, EventArgs e)
+        {
+            RefreshInvoiceHistoryGrid();
         }
     }
 }
