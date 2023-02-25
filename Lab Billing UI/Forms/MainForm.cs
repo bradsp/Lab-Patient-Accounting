@@ -8,17 +8,14 @@ using System.Windows.Forms;
 using LabBilling.ReportByInsuranceCompany;
 using System.Linq;
 using Opulos.Core.UI;
-using System.Text;
 using System.Collections.Generic;
 using LabBilling.Core.BusinessLogic;
 using MetroFramework.Forms;
 using MetroFramework.Controls;
-using System.Drawing;
 using MetroFramework;
 using System.Threading.Tasks;
 using System.Threading;
-using static System.Net.Mime.MediaTypeNames;
-using System.ServiceModel.Channels;
+
 using Application = System.Windows.Forms.Application;
 
 namespace LabBilling
@@ -256,7 +253,7 @@ namespace LabBilling
 
         private void UpdateMenuAccess()
         {
-            generateClaimsToolStripMenuItem.Visible = Program.LoggedInUser.CanSubmitBilling;
+            generateClaimsToolStripMenuItem.Visible = false; // Program.LoggedInUser.CanSubmitBilling;
             batchRemittanceToolStripMenuItem.Visible = Program.LoggedInUser.CanAddPayments;
             badDebtMaintenanceToolStripMenuItem.Visible = Program.LoggedInUser.CanModifyBadDebt;
             posting835RemitToolStripMenuItem.Visible = Program.LoggedInUser.CanAddPayments;
@@ -264,12 +261,12 @@ namespace LabBilling
 
             //administrator only menu items
             systemAdministrationToolStripMenuItem.Visible = Program.LoggedInUser.IsAdministrator;
-            workqueuesToolStripMenuItem.Visible = Program.LoggedInUser.IsAdministrator;
-            sSISubmissionToolStripMenuItem.Visible = Program.LoggedInUser.IsAdministrator; //Program.LoggedInUser.CanSubmitBilling;
-            sSISubmissionToolStripMenuItem1.Visible = Program.LoggedInUser.IsAdministrator; //Program.LoggedInUser.CanSubmitBilling;
+            workqueuesToolStripMenuItem.Visible = false; // Program.LoggedInUser.IsAdministrator;
+            sSISubmissionToolStripMenuItem.Visible = false; // Program.LoggedInUser.IsAdministrator; //Program.LoggedInUser.CanSubmitBilling;
+            sSISubmissionToolStripMenuItem1.Visible = false; // Program.LoggedInUser.IsAdministrator; //Program.LoggedInUser.CanSubmitBilling;
             clientBillsToolStripMenuItem.Visible = Program.LoggedInUser.IsAdministrator;
-            questProcessingToolStripMenuItem.Visible = Program.LoggedInUser.IsAdministrator;
-            questProcessingToolStripMenuItem1.Visible = Program.LoggedInUser.IsAdministrator;
+            questProcessingToolStripMenuItem.Visible = false; // Program.LoggedInUser.IsAdministrator;
+            questProcessingToolStripMenuItem1.Visible = false; // Program.LoggedInUser.IsAdministrator;
             globalBillingToolStripMenuItem.Visible = Program.LoggedInUser.IsAdministrator;
 
             if (Program.LoggedInUser.Access == "VIEW")

@@ -33,10 +33,11 @@
             this.billingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.accountToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.worklistToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.workqueuesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.duplicateAccountsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.batchChargeEntryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.batchRemittanceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.claimBatchManagementToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.clientBillsNewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.posting835RemitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.remittancePostingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.badDebtMaintenanceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -46,13 +47,12 @@
             this.questProcessingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.questCorrectionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.questProcessingToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.clientBillsNewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.clientBillsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.globalBillingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.workqueuesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.generateClaimsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.institutionalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.professionalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.claimBatchManagementToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dictionariesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.chargeMasterToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.chargeMasterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -109,20 +109,20 @@
             this.billingToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.accountToolStripMenuItem,
             this.worklistToolStripMenuItem,
-            this.workqueuesToolStripMenuItem,
             this.duplicateAccountsToolStripMenuItem,
             this.batchChargeEntryToolStripMenuItem,
             this.batchRemittanceToolStripMenuItem,
+            this.claimBatchManagementToolStripMenuItem,
+            this.clientBillsNewToolStripMenuItem,
             this.posting835RemitToolStripMenuItem,
             this.remittancePostingToolStripMenuItem,
             this.badDebtMaintenanceToolStripMenuItem,
             this.sSISubmissionToolStripMenuItem,
             this.questProcessingToolStripMenuItem,
-            this.clientBillsNewToolStripMenuItem,
             this.clientBillsToolStripMenuItem,
             this.globalBillingToolStripMenuItem,
-            this.generateClaimsToolStripMenuItem,
-            this.claimBatchManagementToolStripMenuItem});
+            this.workqueuesToolStripMenuItem,
+            this.generateClaimsToolStripMenuItem});
             this.billingToolStripMenuItem.Name = "billingToolStripMenuItem";
             resources.ApplyResources(this.billingToolStripMenuItem, "billingToolStripMenuItem");
             // 
@@ -137,12 +137,6 @@
             this.worklistToolStripMenuItem.Name = "worklistToolStripMenuItem";
             resources.ApplyResources(this.worklistToolStripMenuItem, "worklistToolStripMenuItem");
             this.worklistToolStripMenuItem.Click += new System.EventHandler(this.worklistToolStripMenuItem_Click);
-            // 
-            // workqueuesToolStripMenuItem
-            // 
-            this.workqueuesToolStripMenuItem.Name = "workqueuesToolStripMenuItem";
-            resources.ApplyResources(this.workqueuesToolStripMenuItem, "workqueuesToolStripMenuItem");
-            this.workqueuesToolStripMenuItem.Click += new System.EventHandler(this.workqueuesToolStripMenuItem_Click);
             // 
             // duplicateAccountsToolStripMenuItem
             // 
@@ -161,6 +155,18 @@
             this.batchRemittanceToolStripMenuItem.Name = "batchRemittanceToolStripMenuItem";
             resources.ApplyResources(this.batchRemittanceToolStripMenuItem, "batchRemittanceToolStripMenuItem");
             this.batchRemittanceToolStripMenuItem.Click += new System.EventHandler(this.batchRemittanceToolStripMenuItem_Click);
+            // 
+            // claimBatchManagementToolStripMenuItem
+            // 
+            this.claimBatchManagementToolStripMenuItem.Name = "claimBatchManagementToolStripMenuItem";
+            resources.ApplyResources(this.claimBatchManagementToolStripMenuItem, "claimBatchManagementToolStripMenuItem");
+            this.claimBatchManagementToolStripMenuItem.Click += new System.EventHandler(this.claimBatchManagementToolStripMenuItem_Click);
+            // 
+            // clientBillsNewToolStripMenuItem
+            // 
+            this.clientBillsNewToolStripMenuItem.Name = "clientBillsNewToolStripMenuItem";
+            resources.ApplyResources(this.clientBillsNewToolStripMenuItem, "clientBillsNewToolStripMenuItem");
+            this.clientBillsNewToolStripMenuItem.Click += new System.EventHandler(this.clientBillsNewToolStripMenuItem_Click);
             // 
             // posting835RemitToolStripMenuItem
             // 
@@ -220,12 +226,6 @@
             resources.ApplyResources(this.questProcessingToolStripMenuItem1, "questProcessingToolStripMenuItem1");
             this.questProcessingToolStripMenuItem1.Click += new System.EventHandler(this.questProcessingToolStripMenuItem1_Click);
             // 
-            // clientBillsNewToolStripMenuItem
-            // 
-            this.clientBillsNewToolStripMenuItem.Name = "clientBillsNewToolStripMenuItem";
-            resources.ApplyResources(this.clientBillsNewToolStripMenuItem, "clientBillsNewToolStripMenuItem");
-            this.clientBillsNewToolStripMenuItem.Click += new System.EventHandler(this.clientBillsNewToolStripMenuItem_Click);
-            // 
             // clientBillsToolStripMenuItem
             // 
             this.clientBillsToolStripMenuItem.Name = "clientBillsToolStripMenuItem";
@@ -237,6 +237,12 @@
             this.globalBillingToolStripMenuItem.Name = "globalBillingToolStripMenuItem";
             resources.ApplyResources(this.globalBillingToolStripMenuItem, "globalBillingToolStripMenuItem");
             this.globalBillingToolStripMenuItem.Click += new System.EventHandler(this.globalBillingToolStripMenuItem_Click);
+            // 
+            // workqueuesToolStripMenuItem
+            // 
+            this.workqueuesToolStripMenuItem.Name = "workqueuesToolStripMenuItem";
+            resources.ApplyResources(this.workqueuesToolStripMenuItem, "workqueuesToolStripMenuItem");
+            this.workqueuesToolStripMenuItem.Click += new System.EventHandler(this.workqueuesToolStripMenuItem_Click);
             // 
             // generateClaimsToolStripMenuItem
             // 
@@ -257,12 +263,6 @@
             this.professionalToolStripMenuItem.Name = "professionalToolStripMenuItem";
             resources.ApplyResources(this.professionalToolStripMenuItem, "professionalToolStripMenuItem");
             this.professionalToolStripMenuItem.Click += new System.EventHandler(this.professionalToolStripMenuItem_Click);
-            // 
-            // claimBatchManagementToolStripMenuItem
-            // 
-            this.claimBatchManagementToolStripMenuItem.Name = "claimBatchManagementToolStripMenuItem";
-            resources.ApplyResources(this.claimBatchManagementToolStripMenuItem, "claimBatchManagementToolStripMenuItem");
-            this.claimBatchManagementToolStripMenuItem.Click += new System.EventHandler(this.claimBatchManagementToolStripMenuItem_Click);
             // 
             // dictionariesToolStripMenuItem
             // 
@@ -521,6 +521,7 @@
             this.KeyPreview = true;
             this.MainMenuStrip = this.MainFormMenu;
             this.Name = "MainForm";
+            this.TransparencyKey = System.Drawing.Color.Empty;
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Dashboard_FormClosing);
             this.Load += new System.EventHandler(this.MainForm_Load);

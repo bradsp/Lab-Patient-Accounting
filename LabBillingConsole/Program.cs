@@ -41,6 +41,7 @@ namespace LabBillingConsole
             Console.WriteLine("5) Process Interface Messages");
             Console.WriteLine("6) Reprint Invoice");
             Console.WriteLine("7) Generate Statement");
+            Console.WriteLine("8) Regenerate Claim Batch");
             Console.WriteLine("X) Exit");
             Console.Write("\r\nSelect an option: ");
 
@@ -67,6 +68,9 @@ namespace LabBillingConsole
                 case "7":
                     GenerateStatement();
                     return false;
+                case "8":
+                    RegenerateClaimBatch();
+                    return false;
                 case "X":
                     return false;
                 case "x":
@@ -74,6 +78,13 @@ namespace LabBillingConsole
                 default:
                     return true;
             }
+        }
+
+        public static void RegenerateClaimBatch()
+        {
+            ClaimGenerator claimGenerator = new ClaimGenerator(connectionString);
+
+            claimGenerator.RegenerateBatch(20238186);
         }
 
         public static void NotesImport()

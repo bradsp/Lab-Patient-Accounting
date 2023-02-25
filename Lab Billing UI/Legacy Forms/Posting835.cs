@@ -328,7 +328,7 @@ namespace LabBilling.Legacy
             using (SqlCommand cmd = m_sqlConnection.CreateCommand())
             {
                 cmd.CommandText = string.Format("select key_name, value from system where programs = '{0}'"
-                    , Application.ProductName);
+                    , "Posting835Remittance");
 
                 SqlDataAdapter dataAdapter = new SqlDataAdapter(cmd);
                 dataAdapter.Fill(dtDirectories);
@@ -434,19 +434,26 @@ namespace LabBilling.Legacy
             }
             else
             {
-                MessageBox.Show("Arguments need to start with a [/]");
-                Environment.Exit(13);
+                m_strServer = args[0];
             }
+            //else
+            //{
+            //    MessageBox.Show("Arguments need to start with a [/]");
+            //    Environment.Exit(13);
+            //}
             if (args[1].StartsWith("/"))
             {
                 m_strDatabase = args[1].Remove(0, 1); // 08/08/2008 wdk changed to accomidate the ERR class
-                //m_strDatabase = args[1].Remove(0,1); 
             }
             else
             {
-                MessageBox.Show("Arguments need to start with a [/]");
-                Environment.Exit(13);
+                m_strDatabase = args[1];
             }
+            //else
+            //{
+            //    MessageBox.Show("Arguments need to start with a [/]");
+            //    Environment.Exit(13);
+            //}
 
             // add the LaunchAcc event handler to the grids. This allows any data grid view with a column named 
             // account to load the Acc.exe
@@ -469,7 +476,7 @@ namespace LabBilling.Legacy
             dgvDenieds.RowHeaderMouseDoubleClick +=
                     new System.Windows.Forms.DataGridViewCellMouseEventHandler(FormExtensions.LaunchAcc_EventHandler);
 
-            m_ERR = new ERR(new string[] { m_strDatabase.Contains("LIVE") ? "/LIVE" : "/TEST", m_strServer, m_strDatabase }); // ERR class needs /LIVE or /TEST to be the first argument in the command line.
+            m_ERR = new ERR(new string[] { m_strDatabase.Contains("Test") ? "/TEST" : "/LIVE", m_strServer, m_strDatabase }); // ERR class needs /LIVE or /TEST to be the first argument in the command line.
             // rgc/wdk 20120425 moved to remove the spid overload in sql.
             m_rNum = new R_number(m_strServer, m_strDatabase, ref m_ERR);
             m_cAcc = new CAcc(m_strServer, m_strDatabase, ref m_ERR);
@@ -488,10 +495,10 @@ namespace LabBilling.Legacy
         /// <param name="e"></param>
         private void tsmi835_Click(object sender, EventArgs e)
         {
-            openFileDialog.Filter = "835 Files (*.835)|*.835 |XML Files (*.X12)|*.X12|All Files (*.*)|*.*";
-            openFileDialog.FileName = string.Format(@"{0}\*.835", diCurrent);
+            openFileDialog.Filter = "All Files (*.*)|*.*";
+            //openFileDialog.FileName = string.Format(@"{0}\*.*", diCurrent);
 
-            openFileDialog.DefaultExt = "835";
+            //openFileDialog.DefaultExt = "*";
             openFileDialog.InitialDirectory = string.Format(@"{0}", diCurrent);
 
             openFileDialog.Tag = (string)"MEDICARE";

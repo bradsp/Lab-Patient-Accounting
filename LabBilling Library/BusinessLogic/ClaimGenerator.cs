@@ -69,6 +69,8 @@ namespace LabBilling.Core.BusinessLogic
 
         public int CompileBillingBatch(ClaimType claimType, IProgress<ProgressReportModel> progress, CancellationToken cancellationToken)
         {
+            claims = new List<ClaimData>();
+
             ProgressReportModel report = new ProgressReportModel();
             //compile list of accounts to have claims generated
             billing837 = new Billing837(_connectionString, propProductionEnvironment);

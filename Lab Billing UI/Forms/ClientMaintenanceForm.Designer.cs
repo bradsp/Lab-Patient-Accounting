@@ -33,6 +33,7 @@
             this.filterLabel = new System.Windows.Forms.Label();
             this.includeDeletedCheckBox = new System.Windows.Forms.CheckBox();
             this.newClientButton = new System.Windows.Forms.Button();
+            this.helpProvider1 = new System.Windows.Forms.HelpProvider();
             ((System.ComponentModel.ISupportInitialize)(this.dgvClients)).BeginInit();
             this.SuspendLayout();
             // 
@@ -127,5 +128,6 @@
         private System.Windows.Forms.Label filterLabel;
         private System.Windows.Forms.CheckBox includeDeletedCheckBox;
         private System.Windows.Forms.Button newClientButton;
+        private System.Windows.Forms.HelpProvider helpProvider1;
     }
 }
