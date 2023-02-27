@@ -66,6 +66,9 @@ namespace LabBilling.Core.Models
         [Column("nthrive_payer_no")]
         public string NThrivePayerNo { get; set; }
 
+        [Column("is_generic")]
+        public bool IsGenericPayor { get; set; }
+
         [Ignore]
         public string FinancialClass 
         { 

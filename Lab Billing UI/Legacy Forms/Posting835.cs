@@ -3883,11 +3883,14 @@ namespace LabBilling.Legacy
                             // WDK 20130725 added 
                             if (m_strarrRecordsInsertAddContractual != null)
                             {
-                                if (!string.IsNullOrEmpty(m_strarrRecordsInsertAddContractual.GetValue((int)Col835Grids.Account).ToString()))
+                                if (m_strarrRecordsInsertAddContractual.GetValue((int)Col835Grids.Account) != null)
                                 {
-                                    m_dsRecords.Tables[dgvProcessed.Name].Rows.Add(m_strarrRecordsInsertAddContractual);
-                                    m_strarrRecordsInsertAddContractual = new string[Enum.GetNames(typeof(Col835Grids)).Length];// wdk 20130725         
-                                    m_strarrRecordsInsertAddContractual.Initialize();
+                                    if (!string.IsNullOrEmpty(m_strarrRecordsInsertAddContractual.GetValue((int)Col835Grids.Account).ToString()))
+                                    {
+                                        m_dsRecords.Tables[dgvProcessed.Name].Rows.Add(m_strarrRecordsInsertAddContractual);
+                                        m_strarrRecordsInsertAddContractual = new string[Enum.GetNames(typeof(Col835Grids)).Length];// wdk 20130725         
+                                        m_strarrRecordsInsertAddContractual.Initialize();
+                                    }
                                 }
                             }
                         }

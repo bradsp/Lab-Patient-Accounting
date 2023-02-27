@@ -68,6 +68,12 @@ namespace LabBilling.Core.DataAccess
                 ins.HolderCity = strCity;
                 ins.HolderState = strState;
                 ins.HolderZip = strZip;
+
+                Str.ParseCityStZip(ins.PlanCityState, out strCity, out strState, out strZip);
+                ins.PlanCity = strCity;
+                ins.PlanState = strState;
+                ins.PlanZip = strZip;
+
             }
 
             return records;
@@ -99,6 +105,12 @@ namespace LabBilling.Core.DataAccess
                 record.HolderCity = strCity;
                 record.HolderState = strState;
                 record.HolderZip = strZip;
+
+                Str.ParseCityStZip(record.PlanCityState, out strCity, out strState, out strZip);
+                record.PlanCity = strCity;
+                record.PlanState = strState;
+                record.PlanZip = strZip;
+
             }
             return record;
         }

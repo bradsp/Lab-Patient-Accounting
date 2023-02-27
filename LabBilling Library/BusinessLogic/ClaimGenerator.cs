@@ -547,13 +547,28 @@ namespace LabBilling.Core.BusinessLogic
                         subscriber.ZipCode = ins.HolderZip;
                         subscriber.Country = "US";
                     }
-                    subscriber.PayerName = ins.PlanName; // ins.InsCompany.name;
-                    subscriber.PayerAddress = ins.InsCompany.Address1;
-                    subscriber.PayerAddress2 = ins.InsCompany.Address2;
-                    subscriber.PayerCity = ins.InsCompany.City;
-                    subscriber.PayerState = ins.InsCompany.State;
-                    subscriber.PayerZipCode = ins.InsCompany.Zip;
-                    subscriber.PayerCountry = "US";
+
+                    if(ins.InsCompany.IsGenericPayor)
+                    {
+                        subscriber.PayerName = ins.PlanName;
+                        subscriber.PayerAddress = ins.PlanStreetAddress1;
+                        subscriber.PayerAddress2 = ins.PlanStreetAddress2;
+                        subscriber.PayerCity = ins.PlanCity;
+                        subscriber.PayerState = ins.PlanState;
+                        subscriber.PayerZipCode = ins.PlanZip;
+                        subscriber.PayerCountry = "US";
+
+                    }
+                    else
+                    {
+                        subscriber.PayerName = ins.PlanName; // ins.InsCompany.name;
+                        subscriber.PayerAddress = ins.InsCompany.Address1;
+                        subscriber.PayerAddress2 = ins.InsCompany.Address2;
+                        subscriber.PayerCity = ins.InsCompany.City;
+                        subscriber.PayerState = ins.InsCompany.State;
+                        subscriber.PayerZipCode = ins.InsCompany.Zip;
+                        subscriber.PayerCountry = "US";
+                    }
                     string strPayer = ins.InsCompany.NThrivePayerNo ?? "UKNOWN";
 
                     if (strPayer == string.Empty)

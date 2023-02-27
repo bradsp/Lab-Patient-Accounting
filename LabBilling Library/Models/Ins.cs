@@ -62,6 +62,12 @@ namespace LabBilling.Core.Models
         [Column("p_city_st")]
         public string PlanCityState { get; set; }
         [Ignore]
+        public string PlanCity { get; set; }
+        [Ignore]
+        public string PlanState { get; set; }
+        [Ignore]
+        public string PlanZip { get; set; }
+        [Ignore]
         public string PlanAddress 
         { 
             get

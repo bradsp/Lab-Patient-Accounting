@@ -942,6 +942,17 @@ namespace LabBilling.Forms
             PlanAddressTextBox.Text = InsuranceDataGrid.SelectedRows[0].Cells[nameof(Ins.PlanStreetAddress1)].Value?.ToString();
             PlanAddress2TextBox.Text = InsuranceDataGrid.SelectedRows[0].Cells[nameof(Ins.PlanStreetAddress2)].Value?.ToString();
             PlanCityStTextBox.Text = InsuranceDataGrid.SelectedRows[0].Cells[nameof(Ins.PlanCityState)].Value?.ToString();
+
+            var insurances = currentAccount.Insurances.Where(x => x.Coverage == InsuranceDataGrid.SelectedRows[0].Cells[nameof(Ins.Coverage)].Value.ToString());
+
+            if (insurances.First().InsCompany.IsGenericPayor)
+            {
+                PlanNameTextBox.Enabled = true;
+                PlanAddressTextBox.Enabled = true;
+                PlanAddress2TextBox.Enabled = true;
+                PlanCityStTextBox.Enabled = true;
+            }
+
             PolicyNumberTextBox.Text = InsuranceDataGrid.SelectedRows[0].Cells[nameof(Ins.PolicyNumber)].Value?.ToString();
             GroupNumberTextBox.Text = InsuranceDataGrid.SelectedRows[0].Cells[nameof(Ins.GroupNumber)].Value?.ToString();
             GroupNameTextBox.Text = InsuranceDataGrid.SelectedRows[0].Cells[nameof(Ins.GroupName)].Value?.ToString();
@@ -981,6 +992,16 @@ namespace LabBilling.Forms
                 PlanAddress2TextBox.Text = record.Address2;
                 PlanCityStTextBox.Text = record.CityStateZip;
                 PlanFinCodeComboBox.SelectedValue = record.FinancialCode ?? String.Empty;
+
+                if(record.IsGenericPayor)
+                {
+                    PlanNameTextBox.Enabled = true;
+                    PlanAddress2TextBox.Enabled = true;
+                    PlanAddress2TextBox.Enabled = true;
+                    PlanCityStTextBox.Enabled = true;
+                    PlanFinCodeComboBox.Enabled = true;
+                }
+
             }
         }
 
@@ -1012,22 +1033,22 @@ namespace LabBilling.Forms
                 string insCode = insurancePlanTextBox.Text = lookupForm.SelectedValue;
                 LookupInsCode(insCode);
 
-                if (insCode == "MISC")
-                {
-                    PlanNameTextBox.ReadOnly = false;
-                    PlanAddressTextBox.ReadOnly = false;
-                    PlanAddress2TextBox.ReadOnly = false;
-                    PlanCityStTextBox.ReadOnly = false;
-                    PlanFinCodeComboBox.Enabled = true;
-                }
-                else
-                {
-                    PlanNameTextBox.ReadOnly = true;
-                    PlanAddressTextBox.ReadOnly = true;
-                    PlanAddress2TextBox.ReadOnly = true;
-                    PlanCityStTextBox.ReadOnly = true;
-                    PlanFinCodeComboBox.Enabled = false;
-                }
+                //if (insCode == "MISC")
+                //{
+                //    PlanNameTextBox.ReadOnly = false;
+                //    PlanAddressTextBox.ReadOnly = false;
+                //    PlanAddress2TextBox.ReadOnly = false;
+                //    PlanCityStTextBox.ReadOnly = false;
+                //    PlanFinCodeComboBox.Enabled = true;
+                //}
+                //else
+                //{
+                //    PlanNameTextBox.ReadOnly = true;
+                //    PlanAddressTextBox.ReadOnly = true;
+                //    PlanAddress2TextBox.ReadOnly = true;
+                //    PlanCityStTextBox.ReadOnly = true;
+                //    PlanFinCodeComboBox.Enabled = false;
+                //}
             }
         }
 

@@ -65,7 +65,20 @@ namespace LabBilling.Core.BusinessLogic.Validators
                         return false;
                     else
                         return true;
-                }).WithMessage("Plan does not have a zip code.");
+                }).WithMessage("Plan does not have a zip code.")
+                .When(a => !a.InsCompany.IsGenericPayor);
+
+            RuleFor(a => a.PlanStreetAddress1)
+                .NotEmpty().WithMessage("Plan address is empty.")
+                .When(a => a.InsCompany.IsGenericPayor);
+
+            RuleFor(a => a.PlanCity)
+                .NotEmpty().WithMessage("Plan City is empty.")
+                .When(a => a.InsCompany.IsGenericPayor);
+
+            RuleFor(a => a.PlanZip)
+                .NotEmpty().WithMessage("Plan state is empty.")
+                .When(a => a.InsCompany.IsGenericPayor);
 
             RuleFor(a => a.InsCompany.NThrivePayerNo)
                 .NotEmpty().WithMessage("NThrive payer code is not defined for this payer.");
@@ -143,9 +156,7 @@ namespace LabBilling.Core.BusinessLogic.Validators
                 bool hasCorrectLength = policyNum.Length >= 7 && policyNum.Length <= 12 ? true : false;
                 return hasCorrectLength;
             }
-
         }
-
         private bool BeAValidGroupNumber(Ins ins, string groupNumber)
         {
             if(ins.FinCode == "A" || ins.FinCode == "C")

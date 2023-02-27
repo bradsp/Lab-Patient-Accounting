@@ -68,6 +68,7 @@
             this.cancelButton = new MetroFramework.Controls.MetroButton();
             this.IsActiveCheckBox = new System.Windows.Forms.CheckBox();
             this.citystzipLabel = new System.Windows.Forms.Label();
+            this.isGenericCheckBox = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // planZipCodeLabel
@@ -717,6 +718,15 @@
             this.citystzipLabel.TabIndex = 64;
             this.citystzipLabel.Text = "citystatezip display";
             // 
+            // isGenericCheckBox
+            // 
+            this.isGenericCheckBox.AutoSize = true;
+            this.isGenericCheckBox.Location = new System.Drawing.Point(431, 297);
+            this.isGenericCheckBox.Name = "isGenericCheckBox";
+            this.isGenericCheckBox.Size = new System.Drawing.Size(104, 17);
+            this.isGenericCheckBox.TabIndex = 58;
+            this.isGenericCheckBox.Text = "Is Generic Payor";
+            // 
             // HealthPlanMaintenanceEditForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -728,6 +738,7 @@
             this.Controls.Add(this.saveButton);
             this.Controls.Add(this.commentsLabel);
             this.Controls.Add(this.commentsTextBox);
+            this.Controls.Add(this.isGenericCheckBox);
             this.Controls.Add(this.billAsJmcghCheckBox);
             this.Controls.Add(this.allowOutpatientBillingCheckBox);
             this.Controls.Add(this.isMedicareHmoCheckBox);
@@ -812,5 +823,6 @@
         private MetroFramework.Controls.MetroButton cancelButton;
         private System.Windows.Forms.CheckBox IsActiveCheckBox;
         private System.Windows.Forms.Label citystzipLabel;
+        private System.Windows.Forms.CheckBox isGenericCheckBox;
     }
 }

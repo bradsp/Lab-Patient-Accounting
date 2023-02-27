@@ -743,6 +743,7 @@ namespace LabBilling.Legacy
             this.purgeInvalidFilesToolStripMenuItem,
             this.findAccountInFilesToolStripMenuItem});
             this.cmsMedicare835Files.Name = "cmsMedicare835Files";
+            this.cmsMedicare835Files.OwnerItem = this.tsddbImport;
             this.cmsMedicare835Files.Size = new System.Drawing.Size(185, 70);
             // 
             // tsmiImport
@@ -870,7 +871,7 @@ namespace LabBilling.Legacy
             // 
             this.postEOBsToolStripMenuItem.CheckOnClick = true;
             this.postEOBsToolStripMenuItem.Name = "postEOBsToolStripMenuItem";
-            this.postEOBsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.postEOBsToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
             this.postEOBsToolStripMenuItem.Text = "Post EOB\'s";
             this.postEOBsToolStripMenuItem.Click += new System.EventHandler(this.tsmiEOB_Click);
             // 
@@ -878,7 +879,7 @@ namespace LabBilling.Legacy
             // 
             this.printEOBsToolStripMenuItem.CheckOnClick = true;
             this.printEOBsToolStripMenuItem.Name = "printEOBsToolStripMenuItem";
-            this.printEOBsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.printEOBsToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
             this.printEOBsToolStripMenuItem.Text = "Print EOB\'s";
             this.printEOBsToolStripMenuItem.Click += new System.EventHandler(this.tsbPrintEOB_Click);
             // 
@@ -898,28 +899,28 @@ namespace LabBilling.Legacy
             // tsmiFirst20
             // 
             this.tsmiFirst20.Name = "tsmiFirst20";
-            this.tsmiFirst20.Size = new System.Drawing.Size(180, 22);
+            this.tsmiFirst20.Size = new System.Drawing.Size(155, 22);
             this.tsmiFirst20.Text = "First 20";
             this.tsmiFirst20.Click += new System.EventHandler(this.tsmiFirst20_Click);
             // 
             // tsmiNext100
             // 
             this.tsmiNext100.Name = "tsmiNext100";
-            this.tsmiNext100.Size = new System.Drawing.Size(180, 22);
+            this.tsmiNext100.Size = new System.Drawing.Size(155, 22);
             this.tsmiNext100.Text = "Next 20";
             this.tsmiNext100.Click += new System.EventHandler(this.tsmiNext20_Click);
             // 
             // tsmiPrevious100
             // 
             this.tsmiPrevious100.Name = "tsmiPrevious100";
-            this.tsmiPrevious100.Size = new System.Drawing.Size(180, 22);
+            this.tsmiPrevious100.Size = new System.Drawing.Size(155, 22);
             this.tsmiPrevious100.Text = "Previous 20";
             this.tsmiPrevious100.Click += new System.EventHandler(this.tsmiPrevious20_Click);
             // 
             // tsmiLast100
             // 
             this.tsmiLast100.Name = "tsmiLast100";
-            this.tsmiLast100.Size = new System.Drawing.Size(180, 22);
+            this.tsmiLast100.Size = new System.Drawing.Size(155, 22);
             this.tsmiLast100.Text = "Last 20";
             this.tsmiLast100.Click += new System.EventHandler(this.tsmiLast20_Click);
             // 
@@ -928,7 +929,7 @@ namespace LabBilling.Legacy
             this.tsmiFindAccount.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tstbFindAccount});
             this.tsmiFindAccount.Name = "tsmiFindAccount";
-            this.tsmiFindAccount.Size = new System.Drawing.Size(180, 22);
+            this.tsmiFindAccount.Size = new System.Drawing.Size(155, 22);
             this.tsmiFindAccount.Text = "Find Account";
             this.tsmiFindAccount.Click += new System.EventHandler(this.FindAccountInFilesToolStripMenuItem_Click);
             // 
@@ -938,7 +939,6 @@ namespace LabBilling.Legacy
             this.tstbFindAccount.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
             this.tstbFindAccount.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.CustomSource;
             this.tstbFindAccount.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
-            this.tstbFindAccount.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.tstbFindAccount.Name = "tstbFindAccount";
             this.tstbFindAccount.Size = new System.Drawing.Size(100, 23);
             // 
@@ -948,14 +948,13 @@ namespace LabBilling.Legacy
             this.tstbFindSubscriber});
             this.tsmiFindSubscriber.Enabled = false;
             this.tsmiFindSubscriber.Name = "tsmiFindSubscriber";
-            this.tsmiFindSubscriber.Size = new System.Drawing.Size(180, 22);
+            this.tsmiFindSubscriber.Size = new System.Drawing.Size(155, 22);
             this.tsmiFindSubscriber.Text = "Find Subscriber";
             // 
             // tstbFindSubscriber
             // 
             this.tstbFindSubscriber.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
             this.tstbFindSubscriber.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.CustomSource;
-            this.tstbFindSubscriber.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.tstbFindSubscriber.Name = "tstbFindSubscriber";
             this.tstbFindSubscriber.Size = new System.Drawing.Size(100, 23);
             // 
@@ -996,13 +995,11 @@ namespace LabBilling.Legacy
             // 
             // tstbFileSearch
             // 
-            this.tstbFileSearch.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.tstbFileSearch.Name = "tstbFileSearch";
             this.tstbFileSearch.Size = new System.Drawing.Size(100, 21);
             // 
             // tsmiExtension
             // 
-            this.tsmiExtension.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.tsmiExtension.Name = "tsmiExtension";
             this.tsmiExtension.Size = new System.Drawing.Size(160, 21);
             this.tsmiExtension.Text = "*.*";

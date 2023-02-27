@@ -101,6 +101,7 @@ namespace LabBilling.Forms
             isMedicareHmoCheckBox.Checked = insCompany.IsMedicareHmo;
             allowOutpatientBillingCheckBox.Checked = insCompany.AllowOutpatientBilling;
             billAsJmcghCheckBox.Checked = insCompany.BillAsJmcgh;
+            isGenericCheckBox.Checked = insCompany.IsGenericPayor;
             finCodeComboBox.SelectedValue = insCompany.FinancialCode ?? String.Empty;
             
             claimTypeComboBox.SelectedValue = insCompany.ClaimFilingIndicatorCode ?? "";
@@ -140,6 +141,7 @@ namespace LabBilling.Forms
             insCompany.IsMedicareHmo = isMedicareHmoCheckBox.Checked;
             insCompany.AllowOutpatientBilling = allowOutpatientBillingCheckBox.Checked;
             insCompany.BillAsJmcgh = billAsJmcghCheckBox.Checked;
+            insCompany.IsGenericPayor = isGenericCheckBox.Checked;
             if(finCodeComboBox.SelectedValue != null)
                 insCompany.FinancialCode = finCodeComboBox.SelectedValue.ToString();
             if(claimTypeComboBox.SelectedItem != null)
