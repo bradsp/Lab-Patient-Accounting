@@ -11,6 +11,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using System.Data.SqlClient;
 using System.Data;
+using Org.BouncyCastle.Asn1.X509.Qualified;
 
 namespace LabBilling.Core.DataAccess
 {
@@ -52,6 +53,8 @@ namespace LabBilling.Core.DataAccess
                     var prop = accounttype.GetProperty(searchValue.propertyName);
 
                     string propName = GetRealColumn(typeof(AccountSearch), prop.Name);
+                    Type propType = prop.PropertyType;
+
                     string op;
                     string searchText = searchValue.searchText;
 
@@ -92,10 +95,13 @@ namespace LabBilling.Core.DataAccess
                     if (op == "in")
                     {
                         command.Where($"{propName} {op} ({searchText})");
+                        
                     }
                     else
                     {
-                        command.Where($"{propName} {op} '{searchText}'");
+                        //command.Where($"{propName} {op} '{searchText}'");
+                        command.Where($"{propName} {op} @0",
+                            new SqlParameter() { SqlDbType = GetType(propType), Value = searchText });
                     }
                 }
                 command.OrderBy(GetRealColumn(nameof(AccountSearch.Name)));
@@ -116,6 +122,32 @@ namespace LabBilling.Core.DataAccess
             return new List<AccountSearch>();
         }
 
+        private SqlDbType GetType(Type propType)
+        {
+            if (propType == typeof(System.String))
+            {
+                return SqlDbType.VarChar;
+            }
+            else if (propType == typeof(System.Int32) || propType == typeof(System.Int16) || propType == typeof(System.Int64))
+            {
+                return SqlDbType.Int;
+            }
+            else if(propType == typeof(System.Double))
+            {
+                return SqlDbType.Decimal;
+            }
+            else if (propType == typeof(DateTime))
+            {
+                return SqlDbType.DateTime;
+            }
+            else if(propType == typeof(System.Nullable<System.DateTime>))
+            {
+                return SqlDbType.DateTime;
+            }
+
+            return SqlDbType.VarChar;
+        }
+
         public async Task<IEnumerable<AccountSearch>> GetBySearchAsync((string propertyName, operation oper, string searchText)[] searchValues)
         {
             InsRepository insRepository = new InsRepository(dbConnection);
@@ -130,6 +162,7 @@ namespace LabBilling.Core.DataAccess
                     var prop = accounttype.GetProperty(searchValue.propertyName);
 
                     string propName = GetRealColumn(typeof(AccountSearch), prop.Name);
+                    Type propType = prop.PropertyType;
                     string op;
                     string searchText = searchValue.searchText;
 
@@ -167,7 +200,9 @@ namespace LabBilling.Core.DataAccess
                             op = "=";
                             break;
                     }
-                    command.Where($"{propName} {op} '{searchText}'");
+                    //command.Where($"{propName} {op} '{searchText}'");
+                    command.Where($"{propName} {op} @0",
+                        new SqlParameter() { SqlDbType = GetType(propType), Value = searchText });
                 }
                 command.OrderBy(GetRealColumn(typeof(AccountSearch), nameof(AccountSearch.Name)));
                 var results = dbConnection.Fetch<AccountSearch>(command);

@@ -128,8 +128,8 @@ namespace LabBilling.Core.Models
         public string DOBSex => $"{BirthDate.GetValueOrDefault().ToShortDateString()} - {Sex}";
 
         [Ignore]
-        public bool ReadyToBill 
-        { 
+        public bool ReadyToBill
+        {
             get
             {
                 if (Status == "RTB" || Status == "UB" || Status == "SSIUB" || Status == "1500" || Status == "SSI1500"
@@ -159,7 +159,7 @@ namespace LabBilling.Core.Models
         {
             get
             {
-                if(string.IsNullOrEmpty(PatNameSuffix))
+                if (string.IsNullOrEmpty(PatNameSuffix))
                 {
                     return $"{PatLastName},{PatFirstName} {PatMiddleName}".TrimEnd();
                 }
@@ -236,8 +236,8 @@ namespace LabBilling.Core.Models
         [Ignore]
         public string BillingType { get; set; }
         [Ignore]
-        public bool SentToCollections 
-        { 
+        public bool SentToCollections
+        {
             get
             {
                 if (this.Pat.SentToCollectionsDate != null)
@@ -246,6 +246,9 @@ namespace LabBilling.Core.Models
                     return false;
             }
         }
+
+        [Ignore]
+        public AccountAlert AccountAlert { get; set; } = new AccountAlert();
 
         public enum StatusCode
         {

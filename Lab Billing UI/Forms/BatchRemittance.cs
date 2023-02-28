@@ -260,7 +260,7 @@ namespace LabBilling.Forms
             // reference the combobox column
             DataGridViewComboBoxColumn cboWriteoffColumn = (DataGridViewComboBoxColumn)dgvPayments.Columns["WriteOffCode"];
             cboWriteoffColumn.DataSource = Dictionaries.WriteOffCodes.ToList();
-            cboWriteoffColumn.DisplayMember = "Value";  // the Name property in Choice class
+            cboWriteoffColumn.DisplayMember = "Key";  // the Name property in Choice class
             cboWriteoffColumn.ValueMember = "Key";  // ditto for the Value property
             cboWriteoffColumn.DropDownWidth = 500;
 

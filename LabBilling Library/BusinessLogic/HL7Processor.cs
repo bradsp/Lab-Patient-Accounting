@@ -510,6 +510,18 @@ namespace LabBilling.Core.BusinessLogic
             {
                 foreach (var transaction in chargeTransactions)
                 {
+                    //if the account has no previous charges, make sure the account transaction date matches the charge service date
+                    if(accountRecord.Charges.Count == 0)
+                    {
+                        if (accountRecord.TransactionDate != transaction.ServiceDate)
+                        {
+                            Log.Instance.Debug($"Account {accountRecord.AccountNo} transaction date {accountRecord.TransactionDate} does not match charge service date {transaction.ServiceDate}. Account updated.");
+                            accountRecord.TransactionDate = transaction.ServiceDate;
+
+                            accountRepository.Update(accountRecord, new string[] { nameof(Account.TransactionDate) });
+                        }
+                    }
+
                     transaction.Account = accountRecord.AccountNo;
                     transaction.Comment = $"MSG ID: {currentMessage.SystemMsgId}";
                     Log.Instance.Debug($"Adding charge {transaction.Account},{transaction.Cdm},{transaction.Qty},{transaction.ServiceDate},{transaction.Comment},{transaction.RefNumber}");
@@ -706,6 +718,11 @@ namespace LabBilling.Core.BusinessLogic
                 : mappingRepository.GetMappedValue("FIN_CODE", "CERNER", hl7Message.GetValue("PV1.20"));
             accountRecord.OriginalFinCode = accountRecord.FinCode;
             accountRecord.TransactionDate = new DateTime().ParseHL7Date(hl7Message.GetValue("PV1.44"));
+            if(accountRecord.TransactionDate == DateTime.MinValue)
+            {
+                //default transaction date to today
+                accountRecord.TransactionDate = DateTime.Today;
+            }
 
             accountRecord.Pat.ProviderId = string.IsNullOrEmpty(hl7Message.GetValue("PV1.17.1"))
                 ? hl7Message.GetValue("PV1.17.1")

@@ -57,6 +57,7 @@ namespace LabBilling.Forms
         private readonly ChkRepository chkRepository = new ChkRepository(Helper.ConnVal);
         private bool billingTabLoading = false;
         private const int _timerInterval = 650;
+        private const string notesAlertText = "** SEE NOTES **";
         //private bool skipSelectionChanged = false;
         private System.Windows.Forms.Timer _timer;
 
@@ -490,6 +491,10 @@ namespace LabBilling.Forms
             BannerBillStatusTextBox.Text = currentAccount.Status;
             BannerProviderTextBox.Text = currentAccount.Pat.Physician.FullName;
             bannerDateOfServiceTextBox.Text = currentAccount.TransactionDate.ToShortDateString();
+            if (currentAccount.AccountAlert != null)
+                bannerAlertLabel.Text = currentAccount.AccountAlert.Alert ? notesAlertText : "";
+            else
+                bannerAlertLabel.Text = "";
 
             TotalChargesTextBox.Text = currentAccount.TotalCharges.ToString("c");
 
@@ -579,6 +584,7 @@ namespace LabBilling.Forms
             currentAccount.PatLastName = LastNameTextBox.Text;
             currentAccount.PatFirstName = FirstNameTextBox.Text;
             currentAccount.PatMiddleName = MiddleNameTextBox.Text;
+            currentAccount.PatNameSuffix = SuffixTextBox.Text;
             currentAccount.SocSecNo = SocSecNoTextBox.Text;
             currentAccount.BirthDate = DateTime.Parse(DateOfBirthTextBox.Text);
             currentAccount.Sex = SexComboBox.SelectedValue.ToString();
@@ -1815,6 +1821,8 @@ namespace LabBilling.Forms
                 NotesDisplayTextBox.SelectionFont = new Font(NotesDisplayTextBox.SelectionFont, FontStyle.Regular);
                 NotesDisplayTextBox.AppendText(Environment.NewLine + note.Comment + Environment.NewLine + Environment.NewLine);
             }
+            if(currentAccount.AccountAlert != null)
+                noteAlertCheckBox.Checked = currentAccount.AccountAlert.Alert;
         }
 
         private void AddNoteButton_Click(object sender, EventArgs e)
@@ -2401,6 +2409,18 @@ namespace LabBilling.Forms
 
         private void chargeDetailsContextMenu_Opening(object sender, CancelEventArgs e)
         {
+
+        }
+
+        private void noteAlertCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (currentAccount.AccountAlert == null)
+                currentAccount.AccountAlert = new AccountAlert();
+            currentAccount.AccountAlert.AccountNo = currentAccount.AccountNo;
+            currentAccount.AccountAlert.Alert = noteAlertCheckBox.Checked;
+            bannerAlertLabel.Text = noteAlertCheckBox.Checked ? notesAlertText : "";
+
+            accDB.SetNoteAlert(currentAccount.AccountNo, noteAlertCheckBox.Checked);
 
         }
     }

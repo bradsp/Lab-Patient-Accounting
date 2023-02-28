@@ -108,6 +108,8 @@ namespace LabBilling.Core.DataAccess
                 record.BillingActivities = billingActivityRepository.GetByAccount(account);
                 record.AccountValidationStatus = accountValidationStatusRepository.GetByAccount(account);
                 record.Fin = finRepository.GetFin(record.FinCode);
+                record.AccountAlert = dbConnection.SingleOrDefault<AccountAlert>($"where {this.GetRealColumn(nameof(AccountAlert.AccountNo))} = @0",
+                    new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account });
 
                 DateTime outpBillStartDate;
                 DateTime questStartDate = new DateTime(2012, 10, 1);
@@ -283,7 +285,7 @@ namespace LabBilling.Core.DataAccess
                             .Select($"{selMaxRecords}status, acc.account, pat_name, ssn, cl_mnem, acc.fin_code, trans_date, ins.plan_nme")
                             .From(_tableName)
                             .InnerJoin("ins").On("ins.account = acc.account and ins_a_b_c = 'A'")
-                            .Where("status = 'UB'")
+                            .Where("status = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = "UB" })
                             .OrderBy($"{GetRealColumn(nameof(Account.TransactionDate))}");
                         break;
                     case ClaimType.Professional:
@@ -291,7 +293,7 @@ namespace LabBilling.Core.DataAccess
                             .Select($"{selMaxRecords}status, acc.account, pat_name, ssn, cl_mnem, acc.fin_code, trans_date, ins.plan_nme")
                             .From(_tableName)
                             .InnerJoin("ins").On("ins.account = acc.account and ins_a_b_c = 'A'")
-                            .Where("status = '1500'")
+                            .Where("status = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = "1500" })
                             .OrderBy($"{GetRealColumn(nameof(Account.TransactionDate))}");
                         break;
                     default:
@@ -339,6 +341,38 @@ namespace LabBilling.Core.DataAccess
 
             Log.Instance.Trace($"Exiting");
             return base.Update(table, columns);
+        }
+
+        public bool SetNoteAlert(string account, bool showAlert)
+        {
+            Log.Instance.Trace($"Entering - account {account} showAlert {showAlert}");
+
+            try
+            {
+                var record = dbConnection.SingleOrDefault<AccountAlert>($"where {GetRealColumn(nameof(AccountAlert.AccountNo))} = @0",
+                    new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account});
+
+                if (record == null)
+                {
+                    record = new AccountAlert();
+                    record.AccountNo = account;
+                    record.Alert = showAlert;
+
+                    dbConnection.Insert(record);
+                }
+                else
+                {
+                    record.Alert = showAlert;
+                    dbConnection.Update(record);
+                }
+            }
+            catch(Exception ex)
+            {
+                Log.Instance.Error(ex, "Error updating NoteAlert.");
+                return false;
+            }
+
+            return true;
         }
 
         public bool UpdateDiagnoses(Account acc)

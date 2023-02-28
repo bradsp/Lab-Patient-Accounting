@@ -109,7 +109,7 @@
             this.WriteOffDate,
             this.WriteOffCode,
             this.Comment});
-            this.dgvPayments.Location = new System.Drawing.Point(15, 39);
+            this.dgvPayments.Location = new System.Drawing.Point(12, 39);
             this.dgvPayments.Name = "dgvPayments";
             this.dgvPayments.Size = new System.Drawing.Size(939, 406);
             this.dgvPayments.TabIndex = 0;
