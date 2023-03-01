@@ -51,6 +51,7 @@ namespace LabBilling.Forms
             PersonAccountResults.Columns[nameof(AccountSearch.Balance)].Visible = true;
             PersonAccountResults.Columns[nameof(AccountSearch.FinCode)].Visible = true;
             PersonAccountResults.Columns[nameof(AccountSearch.ClientMnem)].Visible = true;
+            PersonAccountResults.Columns[nameof(AccountSearch.Status)].Visible = true;
 
             PersonAccountResults.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
             PersonAccountResults.Columns[nameof(AccountSearch.Name)].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;

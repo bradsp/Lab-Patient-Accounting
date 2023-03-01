@@ -2267,12 +2267,14 @@ namespace LabBilling.Forms
 
         private void statementFlagComboBox_SelectionChangeCommitted(object sender, EventArgs e)
         {
-            if (currentAccount.Pat.StatementFlag == "N")
+            if (currentAccount.Pat.StatementFlag != "N")
             {
                 accDB.UpdateStatus(currentAccount.AccountNo, "STMT");
             }
-            currentAccount.Pat.StatementFlag = statementFlagComboBox.SelectedItem.ToString();
 
+            accDB.AddNote(currentAccount.AccountNo, $"Statement flag changed from {currentAccount.Pat.StatementFlag} to {statementFlagComboBox.SelectedItem}");
+
+            currentAccount.Pat.StatementFlag = statementFlagComboBox.SelectedItem.ToString();
             patDB.Update(currentAccount.Pat, new[] { nameof(Pat.StatementFlag) });
         }
 

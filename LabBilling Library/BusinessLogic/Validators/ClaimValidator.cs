@@ -252,21 +252,30 @@ namespace LabBilling.Core.BusinessLogic.Validators
         private bool NotNeedRepeatModifier(List<Chrg> chrgs)
         {
             bool isOK = true;
-
+            
             var list = chrgs.Where(x => x.ChrgDetails.Any(y => y.Cpt4 == "80202"));
             
             if (list.Count() > 1)
             {
                 isOK = false;
-
+                int cptCount = 0;
                 foreach (var item in list)
                 {
+                    cptCount++;
                     var details = item.ChrgDetails;
-                    foreach (var detail in details)
+                    if (cptCount == 1)
                     {
-                        if (detail.Modifier == "59")
+                        isOK = true;
+                    }
+                    else
+                    {
+                        isOK = false;
+                        foreach (var detail in details)
                         {
-                            isOK = true;
+                            if (detail.Modifier == "59")
+                            {
+                                isOK = true;
+                            }
                         }
                     }
                 }

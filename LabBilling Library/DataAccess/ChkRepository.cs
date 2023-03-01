@@ -31,6 +31,19 @@ namespace LabBilling.Core.DataAccess
             return result;
         }
 
+        public List<Chk> GetByCheckNo(string checkno)
+        {
+            Log.Instance.Trace($"Entering - check no {checkno}");
+
+            var sql = PetaPoco.Sql.Builder
+                .From(_tableName)
+                .Where($"{GetRealColumn(nameof(Chk.CheckNo))} = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = checkno });
+
+            var result = dbConnection.Fetch<Chk>(sql);
+
+            return result;
+        }
+
         public List<Chk> GetByAccount(string account, DateTime? asOfDate = null)
         {
             Log.Instance.Trace($"Entering - {account}");
