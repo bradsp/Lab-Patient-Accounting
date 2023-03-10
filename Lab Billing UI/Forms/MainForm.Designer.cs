@@ -34,7 +34,7 @@
             this.accountToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.worklistToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.duplicateAccountsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.batchChargeEntryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.accountChargeEntryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.batchRemittanceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.claimBatchManagementToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.clientBillsNewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -87,6 +87,7 @@
             this.toolStripUsernameLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripDatabaseLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.batchChargeEntryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.MainFormMenu.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -110,6 +111,7 @@
             this.accountToolStripMenuItem,
             this.worklistToolStripMenuItem,
             this.duplicateAccountsToolStripMenuItem,
+            this.accountChargeEntryToolStripMenuItem,
             this.batchChargeEntryToolStripMenuItem,
             this.batchRemittanceToolStripMenuItem,
             this.claimBatchManagementToolStripMenuItem,
@@ -144,11 +146,11 @@
             resources.ApplyResources(this.duplicateAccountsToolStripMenuItem, "duplicateAccountsToolStripMenuItem");
             this.duplicateAccountsToolStripMenuItem.Click += new System.EventHandler(this.duplicateAccountsToolStripMenuItem_Click);
             // 
-            // batchChargeEntryToolStripMenuItem
+            // accountChargeEntryToolStripMenuItem
             // 
-            this.batchChargeEntryToolStripMenuItem.Name = "batchChargeEntryToolStripMenuItem";
-            resources.ApplyResources(this.batchChargeEntryToolStripMenuItem, "batchChargeEntryToolStripMenuItem");
-            this.batchChargeEntryToolStripMenuItem.Click += new System.EventHandler(this.batchChargeEntryToolStripMenuItem_Click);
+            this.accountChargeEntryToolStripMenuItem.Name = "accountChargeEntryToolStripMenuItem";
+            resources.ApplyResources(this.accountChargeEntryToolStripMenuItem, "accountChargeEntryToolStripMenuItem");
+            this.accountChargeEntryToolStripMenuItem.Click += new System.EventHandler(this.accountChargeEntryToolStripMenuItem_Click);
             // 
             // batchRemittanceToolStripMenuItem
             // 
@@ -509,6 +511,12 @@
             resources.ApplyResources(this.panel1, "panel1");
             this.panel1.Name = "panel1";
             // 
+            // batchChargeEntryToolStripMenuItem
+            // 
+            this.batchChargeEntryToolStripMenuItem.Name = "batchChargeEntryToolStripMenuItem";
+            resources.ApplyResources(this.batchChargeEntryToolStripMenuItem, "batchChargeEntryToolStripMenuItem");
+            this.batchChargeEntryToolStripMenuItem.Click += new System.EventHandler(this.batchChargeEntryToolStripMenuItem_Click);
+            // 
             // MainForm
             // 
             resources.ApplyResources(this, "$this");
@@ -541,7 +549,7 @@
         private System.Windows.Forms.ToolStripMenuItem billingToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem accountToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem workqueuesToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem batchChargeEntryToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem accountChargeEntryToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem batchRemittanceToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem sSISubmissionToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem dictionariesToolStripMenuItem;
@@ -595,5 +603,6 @@
         private System.Windows.Forms.ToolStripMenuItem systemLogViewerToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem claimBatchManagementToolStripMenuItem;
         private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.ToolStripMenuItem batchChargeEntryToolStripMenuItem;
     }
 }

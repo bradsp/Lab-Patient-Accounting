@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Data;
 using System.Linq;
+using System.CodeDom.Compiler;
 
 namespace LabBilling.Core.DataAccess
 {
@@ -88,6 +89,33 @@ namespace LabBilling.Core.DataAccess
             }
 
             return result;
+        }
+
+        public List<Cdm> GetByCpt(string cptId)
+        {
+            List<CdmFeeSchedule1> cdmDetails = new List<CdmFeeSchedule1>();
+
+            var cmd = PetaPoco.Sql.Builder;
+            cmd.From("cpt4");
+            cmd.Where($"{GetRealColumn(typeof(CdmFeeSchedule1), nameof(CdmFeeSchedule1.Cpt4))} = @0",
+                new SqlParameter() { SqlDbType = SqlDbType.VarChar,SqlValue = cptId });
+
+            cdmDetails = dbConnection.Fetch<CdmFeeSchedule1>(cmd);
+
+            List<string> cdms = new List<string>();
+
+            List<string> distinctCdms = cdmDetails.Select(c => c.BillCode).ToList();
+
+            if(distinctCdms.Count > 0)
+            {
+                cmd = PetaPoco.Sql.Builder;
+                cmd.From(_tableName);
+                cmd.Where($"{GetRealColumn(nameof(Cdm.ChargeId))} in (@cdms)", new { cdms = distinctCdms });
+                List<Cdm> results = dbConnection.Fetch<Cdm>(cmd);
+
+                return results;
+            }
+            return new List<Cdm>();
         }
 
     }

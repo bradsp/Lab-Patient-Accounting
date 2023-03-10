@@ -253,7 +253,7 @@ namespace LabBilling.Core.BusinessLogic.Validators
         {
             bool isOK = true;
             
-            var list = chrgs.Where(x => x.ChrgDetails.Any(y => y.Cpt4 == "80202"));
+            var list = chrgs.Where(x => x.IsCredited == false && x.ChrgDetails.Any(y => y.Cpt4 == "80202"));
             
             if (list.Count() > 1)
             {

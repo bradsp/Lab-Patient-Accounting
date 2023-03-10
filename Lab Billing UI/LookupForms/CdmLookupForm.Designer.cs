@@ -33,6 +33,9 @@
             this.searchLabel = new System.Windows.Forms.Label();
             this.selectButton = new System.Windows.Forms.Button();
             this.cancelButton = new System.Windows.Forms.Button();
+            this.cdmDescSearchRadioButton = new System.Windows.Forms.RadioButton();
+            this.cptSearchRadioButton = new System.Windows.Forms.RadioButton();
+            this.searchByLabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.resultsDataGrid)).BeginInit();
             this.SuspendLayout();
             // 
@@ -89,6 +92,39 @@
             this.cancelButton.Text = "&Cancel";
             this.cancelButton.UseVisualStyleBackColor = true;
             // 
+            // cdmDescSearchRadioButton
+            // 
+            this.cdmDescSearchRadioButton.AutoSize = true;
+            this.cdmDescSearchRadioButton.Checked = true;
+            this.cdmDescSearchRadioButton.Location = new System.Drawing.Point(427, 17);
+            this.cdmDescSearchRadioButton.Name = "cdmDescSearchRadioButton";
+            this.cdmDescSearchRadioButton.Size = new System.Drawing.Size(113, 17);
+            this.cdmDescSearchRadioButton.TabIndex = 4;
+            this.cdmDescSearchRadioButton.TabStop = true;
+            this.cdmDescSearchRadioButton.Text = "CDM / Description";
+            this.cdmDescSearchRadioButton.UseVisualStyleBackColor = true;
+            this.cdmDescSearchRadioButton.CheckedChanged += new System.EventHandler(this.cdmDescSearchRadioButton_CheckedChanged);
+            // 
+            // cptSearchRadioButton
+            // 
+            this.cptSearchRadioButton.AutoSize = true;
+            this.cptSearchRadioButton.Location = new System.Drawing.Point(567, 17);
+            this.cptSearchRadioButton.Name = "cptSearchRadioButton";
+            this.cptSearchRadioButton.Size = new System.Drawing.Size(46, 17);
+            this.cptSearchRadioButton.TabIndex = 5;
+            this.cptSearchRadioButton.Text = "CPT";
+            this.cptSearchRadioButton.UseVisualStyleBackColor = true;
+            this.cptSearchRadioButton.CheckedChanged += new System.EventHandler(this.cptSearchRadioButton_CheckedChanged);
+            // 
+            // searchByLabel
+            // 
+            this.searchByLabel.AutoSize = true;
+            this.searchByLabel.Location = new System.Drawing.Point(343, 19);
+            this.searchByLabel.Name = "searchByLabel";
+            this.searchByLabel.Size = new System.Drawing.Size(58, 13);
+            this.searchByLabel.TabIndex = 6;
+            this.searchByLabel.Text = "Search by:";
+            // 
             // CdmLookupForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -97,6 +133,9 @@
             this.CancelButton = this.cancelButton;
             this.ClientSize = new System.Drawing.Size(750, 371);
             this.ControlBox = false;
+            this.Controls.Add(this.searchByLabel);
+            this.Controls.Add(this.cptSearchRadioButton);
+            this.Controls.Add(this.cdmDescSearchRadioButton);
             this.Controls.Add(this.cancelButton);
             this.Controls.Add(this.selectButton);
             this.Controls.Add(this.searchLabel);
@@ -124,5 +163,8 @@
         private System.Windows.Forms.Label searchLabel;
         private System.Windows.Forms.Button selectButton;
         private System.Windows.Forms.Button cancelButton;
+        private System.Windows.Forms.RadioButton cdmDescSearchRadioButton;
+        private System.Windows.Forms.RadioButton cptSearchRadioButton;
+        private System.Windows.Forms.Label searchByLabel;
     }
 }

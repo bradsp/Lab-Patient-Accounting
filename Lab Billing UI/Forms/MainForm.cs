@@ -165,8 +165,8 @@ namespace LabBilling
             //tlpBilling.Controls.Add(b3, 0, 2);
             //b3.Dock = DockStyle.Fill;
 
-            MetroButton b4 = new MetroButton { Text = "Batch Charge Entry", Name = "btnBatchChargeEntry" };
-            b4.Click += new EventHandler(batchChargeEntryToolStripMenuItem_Click);
+            MetroButton b4 = new MetroButton { Text = "Account Charge Entry", Name = "btnAccountChargeEntry" };
+            b4.Click += new EventHandler(accountChargeEntryToolStripMenuItem_Click);
             tlpBilling.Controls.Add(b4, 0, 3);
             b4.Dock = DockStyle.Fill;
 
@@ -230,11 +230,13 @@ namespace LabBilling
             }
             if (Convert.ToBoolean(systemParametersRepository.GetByKey("allow_chrg_entry")))
             {
+                accountChargeEntryToolStripMenuItem.Visible = Program.LoggedInUser.CanSubmitCharges;
                 batchChargeEntryToolStripMenuItem.Visible = Program.LoggedInUser.CanSubmitCharges;
                 b4.Visible = Program.LoggedInUser.CanSubmitCharges;
             }
             else
             {
+                accountChargeEntryToolStripMenuItem.Visible = false;
                 batchChargeEntryToolStripMenuItem.Visible = false;
                 b4.Visible = false;
             }
@@ -253,11 +255,14 @@ namespace LabBilling
 
         private void UpdateMenuAccess()
         {
+            //during testing only - remove once batch charge entry is in production
+            batchChargeEntryToolStripMenuItem.Visible = Program.LoggedInUser.IsAdministrator;
+
             generateClaimsToolStripMenuItem.Visible = false; // Program.LoggedInUser.CanSubmitBilling;
             batchRemittanceToolStripMenuItem.Visible = Program.LoggedInUser.CanAddPayments;
             badDebtMaintenanceToolStripMenuItem.Visible = Program.LoggedInUser.CanModifyBadDebt;
             posting835RemitToolStripMenuItem.Visible = Program.LoggedInUser.CanAddPayments;
-            batchChargeEntryToolStripMenuItem.Visible = Program.LoggedInUser.CanSubmitCharges;
+            accountChargeEntryToolStripMenuItem.Visible = Program.LoggedInUser.CanSubmitCharges;
 
             //administrator only menu items
             systemAdministrationToolStripMenuItem.Visible = Program.LoggedInUser.IsAdministrator;
@@ -278,6 +283,8 @@ namespace LabBilling
                 globalBillingToolStripMenuItem.Visible = false;
                 clientBillsNewToolStripMenuItem.Visible = false;
                 clientBillsToolStripMenuItem.Visible = false;
+                batchChargeEntryToolStripMenuItem.Visible = false;
+                accountChargeEntryToolStripMenuItem.Visible = false;
             }
 
         }
@@ -589,11 +596,11 @@ namespace LabBilling
             }
         }
 
-        private void batchChargeEntryToolStripMenuItem_Click(object sender, EventArgs e)
+        private void accountChargeEntryToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Log.Instance.Trace($"Entering");
 
-            var formsList = Application.OpenForms.OfType<BatchChargeEntry>();
+            var formsList = Application.OpenForms.OfType<AccountChargeEntry>();
 
             if (formsList.Count() > 0)
             {
@@ -601,7 +608,7 @@ namespace LabBilling
             }
             else
             {
-                BatchChargeEntry frm = new BatchChargeEntry();
+                AccountChargeEntry frm = new AccountChargeEntry();
 
                 frm.MdiParent = this;
                 frm.Show();
@@ -903,6 +910,17 @@ namespace LabBilling
             frm.AutoScroll = true;
             frm.Show();
 
+        }
+
+        private void batchChargeEntryToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Log.Instance.Trace("Entering");
+
+            BatchChargeEntryForm frm = new BatchChargeEntryForm();
+            frm.MdiParent = this;
+            frm.WindowState = FormWindowState.Normal;
+            frm.AutoScroll = true;
+            frm.Show();
         }
     }
 }

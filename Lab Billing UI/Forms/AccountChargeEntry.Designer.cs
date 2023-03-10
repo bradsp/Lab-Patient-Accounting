@@ -1,6 +1,6 @@
 ﻿namespace LabBilling.Forms
 {
-    partial class BatchChargeEntry
+    partial class AccountChargeEntry
     {
         /// <summary>
         /// Required designer variable.
@@ -57,7 +57,7 @@
             this.dgvBatchEntry.Location = new System.Drawing.Point(11, 98);
             this.dgvBatchEntry.Name = "dgvBatchEntry";
             this.dgvBatchEntry.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.dgvBatchEntry.Size = new System.Drawing.Size(789, 476);
+            this.dgvBatchEntry.Size = new System.Drawing.Size(1137, 476);
             this.dgvBatchEntry.TabIndex = 20;
             this.dgvBatchEntry.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvBatchEntry_CellEndEdit);
             this.dgvBatchEntry.CellEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvBatchEntry_CellEnter);
@@ -69,7 +69,7 @@
             // PostCharges
             // 
             this.PostCharges.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.PostCharges.Location = new System.Drawing.Point(698, 69);
+            this.PostCharges.Location = new System.Drawing.Point(1046, 69);
             this.PostCharges.Name = "PostCharges";
             this.PostCharges.Size = new System.Drawing.Size(102, 23);
             this.PostCharges.TabIndex = 21;
@@ -209,7 +209,7 @@
             this.fincodeTextBox.Size = new System.Drawing.Size(142, 16);
             this.fincodeTextBox.TabIndex = 25;
             // 
-            // BatchChargeEntry
+            // AccountChargeEntry
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -230,8 +230,8 @@
             this.Controls.Add(this.accountNoTextBox);
             this.Controls.Add(this.PostCharges);
             this.Controls.Add(this.dgvBatchEntry);
-            this.Name = "BatchChargeEntry";
-            this.Text = "BatchChargeEntry";
+            this.Name = "AccountChargeEntry";
+            this.Text = "Account Charge Entry";
             this.Load += new System.EventHandler(this.BatchChargeEntry_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dgvBatchEntry)).EndInit();
             this.ResumeLayout(false);

@@ -9,7 +9,12 @@ using LabBilling.Core.Models;
 using LabBilling.Core.BusinessLogic;
 using LabBilling.Core;
 using System.IO;
+using PetaPoco;
 using RFClassLibrary;
+using System.Data.Common;
+using PetaPoco.Providers;
+using System.Data;
+using System.Data.SqlClient;
 
 namespace LabBillingConsole
 {
@@ -42,6 +47,7 @@ namespace LabBillingConsole
             Console.WriteLine("6) Reprint Invoice");
             Console.WriteLine("7) Generate Statement");
             Console.WriteLine("8) Regenerate Claim Batch");
+            Console.WriteLine("9) Fix Drug Screen Charges");
             Console.WriteLine("X) Exit");
             Console.Write("\r\nSelect an option: ");
 
@@ -71,6 +77,9 @@ namespace LabBillingConsole
                 case "8":
                     RegenerateClaimBatch();
                     return false;
+                case "9":
+                    FixDrugScreenCharges();
+                    return false;
                 case "X":
                     return false;
                 case "x":
@@ -85,6 +94,33 @@ namespace LabBillingConsole
             ClaimGenerator claimGenerator = new ClaimGenerator(connectionString);
 
             claimGenerator.RegenerateBatch(20238186);
+        }
+
+        public static void FixDrugScreenCharges()
+        {
+            PetaPoco.Database dbConnection = new Database(connectionString, new CustomSqlDatabaseProvider());
+            ChrgRepository chargeRepository = new ChrgRepository(dbConnection);
+            AccountRepository accountRepository = new AccountRepository(dbConnection);
+            //get list of accounts
+            var sql = PetaPoco.Sql.Builder;
+            sql.From("chrg");
+            sql.Where("cdm = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = "5362506" });
+            sql.Where("mod_date >= @0", new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = new DateTime(2023, 2, 1) });
+            sql.Where("credited = 0");
+
+            var charges = dbConnection.Fetch<Chrg>(sql);
+            //loop through accounts
+            foreach(var chrg in charges)
+            {
+                //credit 5362506
+                chargeRepository.CreditCharge(chrg.ChrgId, "correct DAP7 cdm");
+                Console.WriteLine($"Credited {chrg.AccountNo} {chrg.ChrgId} {chrg.Cdm}");
+                //charge 5869007
+                accountRepository.AddCharge(chrg.AccountNo, "5869007", chrg.Quantity, (DateTime)chrg.ServiceDate, "correct DAP7 cdm");
+                Console.WriteLine($"Added {chrg.AccountNo} 5869007");
+
+            }
+
         }
 
         public static void NotesImport()

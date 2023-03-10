@@ -182,21 +182,23 @@ namespace LabBilling.Core.BusinessLogic
                     progress.Report(report);
                 }
 
+                if (claims.Count > 0)
+                {
 
-                string x12Text = billing837.Generate837ClaimBatch(claims, interchangeControlNumber,
-                    batchSubmitterID, fileLocation, billClaimType);
+                    string x12Text = billing837.Generate837ClaimBatch(claims, interchangeControlNumber,
+                        batchSubmitterID, fileLocation, billClaimType);
 
-                BillingBatch billingBatch = new BillingBatch();
-                billingBatch.Batch = Convert.ToDouble(interchangeControlNumber);
-                billingBatch.RunDate = DateTime.Today;
-                billingBatch.RunUser = OS.GetUserName();
-                billingBatch.X12Text = x12Text;
-                billingBatch.ClaimCount = claims.Count;
-                billingBatch.TotalBilled = claims.Sum(x => x.TotalChargeAmount);
-                billingBatch.BatchType = batchType;
+                    BillingBatch billingBatch = new BillingBatch();
+                    billingBatch.Batch = Convert.ToDouble(interchangeControlNumber);
+                    billingBatch.RunDate = DateTime.Today;
+                    billingBatch.RunUser = OS.GetUserName();
+                    billingBatch.X12Text = x12Text;
+                    billingBatch.ClaimCount = claims.Count;
+                    billingBatch.TotalBilled = claims.Sum(x => x.TotalChargeAmount);
+                    billingBatch.BatchType = batchType;
 
-                billingBatchRepository.Add(billingBatch);
-
+                    billingBatchRepository.Add(billingBatch);
+                }
                 db.CompleteTransaction();
 
                 return claims.Count;

@@ -262,10 +262,14 @@ namespace LabBilling.Forms
             if (item.Name == "readyForCollectionsToolStripMenuItem")
             {
                 sentCollections = false;
+                tsbSmallBalWriteOff.Enabled = false;
+                tsbWriteOff.Enabled = false;
             }
             else //if(nameof(sender) == "sentToCollectionsToolStripMenuItem")
             {
                 sentCollections = true;
+                tsbSmallBalWriteOff.Enabled = true;
+                tsbWriteOff.Enabled = true;
             }
 
             Log.Instance.Trace($"Entering");
@@ -459,7 +463,7 @@ namespace LabBilling.Forms
                     string.Format("with cte as " +
                     "( select pat.account from pat " +
                     " inner join acc on acc.account = pat.account " +
-                    " where mailer = 'p' and not acc.status in ('closed','paid_out') ) " +
+                    " where mailer = 'P' and not acc.status in ('CLOSED','PAID_OUT') ) " +
                     " , ctepay as ( " +
                     " select account, convert(varchar(10),max(mod_date),101) as [last chk date] " +
                     " from chk " +

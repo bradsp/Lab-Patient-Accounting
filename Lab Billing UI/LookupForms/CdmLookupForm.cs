@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Windows.Forms;
+using LabBilling.Core.DataAccess;
 using LabBilling.Core.Models;
 
 namespace LabBilling.Forms
@@ -18,10 +19,13 @@ namespace LabBilling.Forms
         private bool skipSelectionChanged = false;
         private System.Windows.Forms.Timer _timer;
 
+        private CdmRepository cdmRepository;
 
         public CdmLookupForm()
         {
             InitializeComponent();
+            cdmRepository = new CdmRepository(Helper.ConnVal);
+
             _timer = new System.Windows.Forms.Timer() { Enabled = false, Interval = _timerInterval };
             _timer.Tick += new EventHandler(searchTextBox_OnKeyUpDone);
         }
@@ -46,14 +50,29 @@ namespace LabBilling.Forms
                 //load box with selectable entries once there are the minumum number of letters in the box
                 if (searchTextBox.Text.Length >= CharacterLookupCountMin)
                 {
-                    var cdmQuery =
-                        from cdm in Datasource
-                        where cdm.Description.Contains(searchTextBox.Text.ToUpper()) || cdm.ChargeId.Equals(searchTextBox.Text.ToUpper())
-                        select cdm;
+                    skipSelectionChanged = true;
+
+                    resultsDataGrid.DataSource = null;
+                    resultsDataGrid.Rows.Clear();
+                    resultsDataGrid.Refresh();
+
+                    IEnumerable<Cdm> cdmQuery = null;
+
+                    if (cdmDescSearchRadioButton.Checked)
+                    {
+                        cdmQuery =
+                            from cdm in Datasource
+                            where cdm.Description.Contains(searchTextBox.Text.ToUpper()) || cdm.ChargeId.Equals(searchTextBox.Text.ToUpper())
+                            select cdm;
+                    }
+
+                    if(cptSearchRadioButton.Checked)
+                    {
+                        cdmQuery = cdmRepository.GetByCpt(searchTextBox.Text.ToUpper());
+                    }
 
                     if (cdmQuery.Count() > 0)
                     {
-                        skipSelectionChanged = true;
                         resultsDataGrid.DataSource = cdmQuery.ToList();
                         resultsDataGrid.Columns.OfType<DataGridViewColumn>().ToList().ForEach(col => col.Visible = false);
                         resultsDataGrid.Columns[nameof(Cdm.Description)].Visible = true;
@@ -61,8 +80,8 @@ namespace LabBilling.Forms
                         resultsDataGrid.Columns[nameof(Cdm.Description)].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
                         resultsDataGrid.AutoResizeColumns();
                         resultsDataGrid.ClearSelection();
-                        skipSelectionChanged = false;
                     }
+                    skipSelectionChanged = false;
                 }
             }
         }
@@ -100,6 +119,18 @@ namespace LabBilling.Forms
         private void selectButton_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.OK;
+        }
+
+        private void cdmDescSearchRadioButton_CheckedChanged(object sender, EventArgs e)
+        {
+            if(cdmDescSearchRadioButton.Checked)
+                searchTextBox_OnKeyUpDone(sender, e);
+        }
+
+        private void cptSearchRadioButton_CheckedChanged(object sender, EventArgs e)
+        {
+            if(cptSearchRadioButton.Checked)
+                searchTextBox_OnKeyUpDone(sender, e);
         }
     }
 }

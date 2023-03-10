@@ -29,7 +29,7 @@
     <InstallUrl>\\wthmclbill\installations%24\LabBilling\</InstallUrl>
     <ProductName>Lab Outreach Patient Accounting</ProductName>
     <PublisherName>West Tennessee Healthcare</PublisherName>
-    <ApplicationRevision>118</ApplicationRevision>
+    <ApplicationRevision>120</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
@@ -109,6 +109,12 @@
     </Compile>
     <Compile Include="Forms\AskInsuranceSwapForm.Designer.cs">
       <DependentUpon>AskInsuranceSwapForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\BatchChargeEntryForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\BatchChargeEntryForm.Designer.cs">
+      <DependentUpon>BatchChargeEntryForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\ChargeMasterEditForm.cs">
       <SubType>Form</SubType>
@@ -387,11 +393,11 @@
     <Compile Include="Forms\BadDebtForm.Designer.cs">
       <DependentUpon>BadDebtForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\BatchChargeEntry.cs">
+    <Compile Include="Forms\AccountChargeEntry.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\BatchChargeEntry.Designer.cs">
-      <DependentUpon>BatchChargeEntry.cs</DependentUpon>
+    <Compile Include="Forms\AccountChargeEntry.Designer.cs">
+      <DependentUpon>AccountChargeEntry.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\BatchRemittance.cs">
       <SubType>Form</SubType>
@@ -506,6 +512,9 @@
     <None Include="Resources\lookup-icon-png-and-vector-for-free-download-pngtree-lookup-png-512_512.png" />
     <EmbeddedResource Include="Forms\AskInsuranceSwapForm.resx">
       <DependentUpon>AskInsuranceSwapForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\BatchChargeEntryForm.resx">
+      <DependentUpon>BatchChargeEntryForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ChargeMasterEditForm.resx">
       <DependentUpon>ChargeMasterEditForm.cs</DependentUpon>
@@ -638,8 +647,8 @@
       <DependentUpon>BadDebtForm.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\BatchChargeEntry.resx">
-      <DependentUpon>BatchChargeEntry.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\AccountChargeEntry.resx">
+      <DependentUpon>AccountChargeEntry.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\BatchRemittance.resx">
       <DependentUpon>BatchRemittance.cs</DependentUpon>

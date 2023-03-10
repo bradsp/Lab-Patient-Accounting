@@ -13,7 +13,7 @@ using LabBilling.Logging;
 
 namespace LabBilling.Forms
 {
-    public partial class BatchChargeEntry : Form
+    public partial class AccountChargeEntry : Form
     {
         private readonly ClientRepository clientRepository = new ClientRepository(Helper.ConnVal);
         private readonly CdmRepository cdmRepository = new CdmRepository(Helper.ConnVal);
@@ -22,7 +22,7 @@ namespace LabBilling.Forms
         private BindingSource chrgBindingSource;
         private Account currentAccount;
 
-        public BatchChargeEntry()
+        public AccountChargeEntry()
         {
             InitializeComponent();
         }
