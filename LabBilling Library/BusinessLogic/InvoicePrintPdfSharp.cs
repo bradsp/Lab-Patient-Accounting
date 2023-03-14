@@ -19,6 +19,8 @@ namespace LabBilling.Core.BusinessLogic
         private TextFrame addressFrame = null;
         private TextFrame invoiceFrame = null;
         private TextFrame clientAddressFrame = null;
+        private TextFrame tableCaptionFrameLeft = null;
+        private TextFrame tableCaptionFrameRight = null;
         private Table table = null;
         private Section section = null;
 
@@ -183,19 +185,39 @@ namespace LabBilling.Core.BusinessLogic
 
             // Create the text frame for the client address
             this.addressFrame = section.Headers.Primary.AddTextFrame();
-            this.addressFrame.Height = "3.0cm";
+            this.addressFrame.Height = "2.0cm";
             this.addressFrame.Width = "7.0cm";
             this.addressFrame.Left = ShapePosition.Left;
             this.addressFrame.RelativeHorizontal = RelativeHorizontal.Margin;
-            this.addressFrame.Top = "3.1cm";
+            this.addressFrame.Top = "5.5cm";
             this.addressFrame.RelativeVertical = RelativeVertical.Page;
 
+            //create a text frame for the statement type, date, and page
+            this.tableCaptionFrameLeft = section.Headers.Primary.AddTextFrame();
+            this.tableCaptionFrameLeft.Height = "1.0cm";
+            this.tableCaptionFrameLeft.Width = "6.0cm";
+            this.tableCaptionFrameLeft.Left = ShapePosition.Left;
+            this.tableCaptionFrameLeft.RelativeHorizontal = RelativeHorizontal.Margin;
+            this.tableCaptionFrameLeft.Top = "8cm";
+            this.tableCaptionFrameLeft.RelativeVertical = RelativeVertical.Page;
+
+            this.tableCaptionFrameRight = section.Headers.Primary.AddTextFrame();
+            this.tableCaptionFrameRight.Height = "1.0cm";
+            this.tableCaptionFrameRight.Width = "6.0cm";
+            this.tableCaptionFrameRight.Left = "10.5cm";
+            this.tableCaptionFrameRight.RelativeHorizontal = RelativeHorizontal.Margin;
+            this.tableCaptionFrameRight.Top = "8cm";
+            this.tableCaptionFrameRight.RelativeVertical = RelativeVertical.Page;
+
             // Add the print date field
-            paragraph = section.Headers.Primary.AddParagraph();
-            paragraph.Format.SpaceBefore = "3cm";
+            paragraph = this.tableCaptionFrameLeft.AddParagraph();
+            //paragraph.Format.SpaceBefore = "9cm";
             paragraph.Style = "Reference";
             paragraph.AddFormattedText(model.StatementType == InvoiceModel.StatementTypeEnum.Invoice ? $"INVOICE # {model.InvoiceNo}" : "STATEMENT", TextFormat.Bold);
-            paragraph.AddTab();
+            //paragraph.AddTab();
+            paragraph = this.tableCaptionFrameRight.AddParagraph();
+            paragraph.Style = "Reference";
+            paragraph.Format.Alignment = ParagraphAlignment.Right;
             paragraph.AddText("Page ");
             paragraph.AddPageField();
             paragraph.AddText(" of ");
@@ -214,7 +236,7 @@ namespace LabBilling.Core.BusinessLogic
         {
             // Each MigraDoc document needs at least one section.
             section = this.document.AddSection();
-            section.PageSetup.TopMargin = Unit.FromInch(2.5);
+            section.PageSetup.TopMargin = Unit.FromInch(3.75);
 
             CreateHeaderFooter();
 
@@ -325,7 +347,7 @@ namespace LabBilling.Core.BusinessLogic
             Paragraph paragraph = this.addressFrame.AddParagraph();
             paragraph.AddText(model.ClientName);
             paragraph.AddLineBreak();
-            paragraph.AddText(model.Address1);
+            paragraph.AddText(model.Address1 ?? string.Empty);
             paragraph.AddLineBreak();
             paragraph.AddText($"{model.City}, {model.State} {model.ZipCode}");
 
@@ -429,7 +451,7 @@ namespace LabBilling.Core.BusinessLogic
         private void CreateStatementPage()
         {
             section = this.document.AddSection();
-            section.PageSetup.TopMargin = Unit.FromInch(2.5);
+            section.PageSetup.TopMargin = Unit.FromInch(3.75);
 
             CreateHeaderFooter();
 
@@ -494,13 +516,15 @@ namespace LabBilling.Core.BusinessLogic
             Paragraph paragraph = this.addressFrame.AddParagraph();
             paragraph.AddText(model.ClientName);
             paragraph.AddLineBreak();
-            paragraph.AddText(model.Address1);
+            paragraph.AddText(model.Address1 ?? string.Empty);
             paragraph.AddLineBreak();
             paragraph.AddText($"{model.City}, {model.State} {model.ZipCode}");
 
             // add a balance forward line
             Row row = this.table.AddRow();
             row.TopPadding = 1.5;
+            row.Cells[0].Format.Alignment = ParagraphAlignment.Left;
+            row.Cells[0].AddParagraph(model.BalanceForwardDate.ToShortDateString());
             row.Cells[2].AddParagraph("Balance Forward");
             row.Cells[3].Format.Alignment = ParagraphAlignment.Right;
             row.Cells[3].AddParagraph(model.BalanceForward.ToString("0.00"));

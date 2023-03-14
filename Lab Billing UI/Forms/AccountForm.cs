@@ -1497,20 +1497,23 @@ namespace LabBilling.Forms
 
                         if (chrgDetail.DiagnosisPointer != null)
                         {
-                            string[] ptrs = chrgDetail.DiagnosisPointer.DiagnosisPointer.Split(':');
-                            if(ptrs.Length > cnt)
+                            if (chrgDetail.DiagnosisPointer.DiagnosisPointer != null)
                             {
+                                string[] ptrs = chrgDetail.DiagnosisPointer.DiagnosisPointer.Split(':');
+                                if (ptrs.Length > cnt)
+                                {
 
-                            }
-                            for (int pi = 0; pi < cnt && pi < ptrs.Length; pi++)
-                            {
-                                if (ptrs[pi] == null || ptrs[pi] == "")
-                                    continue;
-                                int iPtr = Convert.ToInt32(ptrs[pi]);
-                                if (iPtr > cnt)
-                                    continue;
+                                }
+                                for (int pi = 0; pi < cnt && pi < ptrs.Length; pi++)
+                                {
+                                    if (ptrs[pi] == null || ptrs[pi] == "")
+                                        continue;
+                                    int iPtr = Convert.ToInt32(ptrs[pi]);
+                                    if (iPtr > cnt)
+                                        continue;
 
-                                row[ptrStrings[pi + 1]] = dxBindingList.Where(x => x.No == iPtr).First().Code;
+                                    row[ptrStrings[pi + 1]] = dxBindingList.Where(x => x.No == iPtr).First().Code;
+                                }
                             }
                         }
 

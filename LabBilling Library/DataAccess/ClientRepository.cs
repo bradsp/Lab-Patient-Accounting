@@ -145,7 +145,7 @@ namespace LabBilling.Core.DataAccess
             ChkRepository chkRepository = new ChkRepository(dbConnection);
             ChrgRepository chrgRepository = new ChrgRepository(dbConnection);
 
-            var charges = chrgRepository.GetByAccount(clientMnem, true, true, asOfDate);
+            var charges = chrgRepository.GetByAccount(clientMnem, true, true, asOfDate, false);
 
             var payments = chkRepository.GetByAccount(clientMnem, asOfDate);
 

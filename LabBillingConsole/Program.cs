@@ -105,7 +105,8 @@ namespace LabBillingConsole
             var sql = PetaPoco.Sql.Builder;
             sql.From("chrg");
             sql.Where("cdm = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = "5362506" });
-            sql.Where("mod_date >= @0", new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = new DateTime(2023, 2, 1) });
+            sql.Where("account in (select account from acc where acc.trans_date > @0)", new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = new DateTime(2023, 3, 1) });
+            sql.Where("mod_date >= @0", new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = new DateTime(2023, 3, 1) });
             sql.Where("credited = 0");
 
             var charges = dbConnection.Fetch<Chrg>(sql);
@@ -173,7 +174,7 @@ namespace LabBillingConsole
         {
             ClientInvoices clientInvoices = new ClientInvoices(connectionString);
 
-            string filename = clientInvoices.PrintInvoice("77834");
+            string filename = clientInvoices.PrintInvoice("78630");
 
             System.Diagnostics.Process.Start(filename);
         }

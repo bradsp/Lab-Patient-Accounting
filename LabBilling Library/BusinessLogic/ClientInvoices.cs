@@ -107,6 +107,7 @@ namespace LabBilling.Core.BusinessLogic
             invoiceModel.ZipCode = client.ZipCode;
             invoiceModel.InvoiceDate = DateTime.Today;
 
+            invoiceModel.BalanceForwardDate = asOfDate;
             invoiceModel.BalanceForward = clientdb.Balance(clientMnemonic, asOfDate);
             invoiceModel.BalanceDue = clientdb.Balance(clientMnemonic);
             
@@ -290,6 +291,7 @@ namespace LabBilling.Core.BusinessLogic
             invoiceChrg.FinancialType = "C";
             invoiceChrg.FinCode = "CLIENT";
             invoiceChrg.ServiceDate = DateTime.Today;
+            invoiceChrg.Status = "NEW";
             invoiceChrg.ChrgDetails.Add(new ChrgDetail()
             {
                 Cpt4 = "NONE",

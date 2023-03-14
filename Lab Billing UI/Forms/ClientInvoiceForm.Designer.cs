@@ -48,6 +48,8 @@ namespace LabBilling.Forms
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.InvoiceHistoryTabPage = new System.Windows.Forms.TabPage();
+            this.invoiceTextBox = new System.Windows.Forms.TextBox();
+            this.invoiceLabel = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.ThroughDate = new System.Windows.Forms.MaskedTextBox();
@@ -63,8 +65,8 @@ namespace LabBilling.Forms
             this.printContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.printToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveToPDFToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.invoiceLabel = new System.Windows.Forms.Label();
-            this.invoiceTextBox = new System.Windows.Forms.TextBox();
+            this.saveAllToPDFToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.printAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.InvoicesDGV)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.UnbilledAccountsDGV)).BeginInit();
             this.InvoiceHistoryTabControl.SuspendLayout();
@@ -302,6 +304,23 @@ namespace LabBilling.Forms
             this.InvoiceHistoryTabPage.Text = "Invoice History";
             this.InvoiceHistoryTabPage.UseVisualStyleBackColor = true;
             // 
+            // invoiceTextBox
+            // 
+            this.invoiceTextBox.Location = new System.Drawing.Point(393, 17);
+            this.invoiceTextBox.Name = "invoiceTextBox";
+            this.invoiceTextBox.Size = new System.Drawing.Size(133, 20);
+            this.invoiceTextBox.TabIndex = 9;
+            this.invoiceTextBox.TextChanged += new System.EventHandler(this.invoiceTextBox_TextChanged);
+            // 
+            // invoiceLabel
+            // 
+            this.invoiceLabel.AutoSize = true;
+            this.invoiceLabel.Location = new System.Drawing.Point(345, 19);
+            this.invoiceLabel.Name = "invoiceLabel";
+            this.invoiceLabel.Size = new System.Drawing.Size(42, 13);
+            this.invoiceLabel.TabIndex = 8;
+            this.invoiceLabel.Text = "Invoice";
+            // 
             // label6
             // 
             this.label6.AutoSize = true;
@@ -387,7 +406,7 @@ namespace LabBilling.Forms
             this.PrintInvoiceButton.Name = "PrintInvoiceButton";
             this.PrintInvoiceButton.Size = new System.Drawing.Size(87, 42);
             this.PrintInvoiceButton.TabIndex = 1;
-            this.PrintInvoiceButton.Text = "Print Selected Invoices";
+            this.PrintInvoiceButton.Text = "Print Invoices";
             this.PrintInvoiceButton.UseVisualStyleBackColor = true;
             this.PrintInvoiceButton.Click += new System.EventHandler(this.PrintInvoice_Click_1);
             // 
@@ -426,40 +445,39 @@ namespace LabBilling.Forms
             // 
             this.printContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.printToolStripMenuItem,
-            this.saveToPDFToolStripMenuItem});
+            this.printAllToolStripMenuItem,
+            this.saveToPDFToolStripMenuItem,
+            this.saveAllToPDFToolStripMenuItem});
             this.printContextMenu.Name = "printContextMenu";
-            this.printContextMenu.Size = new System.Drawing.Size(137, 48);
+            this.printContextMenu.Size = new System.Drawing.Size(184, 92);
             // 
             // printToolStripMenuItem
             // 
             this.printToolStripMenuItem.Name = "printToolStripMenuItem";
-            this.printToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
-            this.printToolStripMenuItem.Text = "Print";
+            this.printToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
+            this.printToolStripMenuItem.Text = "Print Selected";
             this.printToolStripMenuItem.Click += new System.EventHandler(this.PrintInvoice_Click);
             // 
             // saveToPDFToolStripMenuItem
             // 
             this.saveToPDFToolStripMenuItem.Name = "saveToPDFToolStripMenuItem";
-            this.saveToPDFToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
-            this.saveToPDFToolStripMenuItem.Text = "Save to PDF";
+            this.saveToPDFToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
+            this.saveToPDFToolStripMenuItem.Text = "Save Selected to PDF";
             this.saveToPDFToolStripMenuItem.Click += new System.EventHandler(this.PrintInvoice_Click);
             // 
-            // invoiceLabel
+            // saveAllToPDFToolStripMenuItem
             // 
-            this.invoiceLabel.AutoSize = true;
-            this.invoiceLabel.Location = new System.Drawing.Point(345, 19);
-            this.invoiceLabel.Name = "invoiceLabel";
-            this.invoiceLabel.Size = new System.Drawing.Size(42, 13);
-            this.invoiceLabel.TabIndex = 8;
-            this.invoiceLabel.Text = "Invoice";
+            this.saveAllToPDFToolStripMenuItem.Name = "saveAllToPDFToolStripMenuItem";
+            this.saveAllToPDFToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
+            this.saveAllToPDFToolStripMenuItem.Text = "Save All to PDF";
+            this.saveAllToPDFToolStripMenuItem.Click += new System.EventHandler(this.saveAllToPDFToolStripMenuItem_Click);
             // 
-            // invoiceTextBox
+            // printAllToolStripMenuItem
             // 
-            this.invoiceTextBox.Location = new System.Drawing.Point(393, 17);
-            this.invoiceTextBox.Name = "invoiceTextBox";
-            this.invoiceTextBox.Size = new System.Drawing.Size(133, 20);
-            this.invoiceTextBox.TabIndex = 9;
-            this.invoiceTextBox.TextChanged += new System.EventHandler(this.invoiceTextBox_TextChanged);
+            this.printAllToolStripMenuItem.Name = "printAllToolStripMenuItem";
+            this.printAllToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
+            this.printAllToolStripMenuItem.Text = "Print All";
+            this.printAllToolStripMenuItem.Click += new System.EventHandler(this.printAllToolStripMenuItem_Click);
             // 
             // ClientInvoiceForm
             // 
@@ -528,5 +546,7 @@ namespace LabBilling.Forms
         private System.Windows.Forms.ToolStripMenuItem saveToPDFToolStripMenuItem;
         private System.Windows.Forms.TextBox invoiceTextBox;
         private System.Windows.Forms.Label invoiceLabel;
+        private System.Windows.Forms.ToolStripMenuItem saveAllToPDFToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem printAllToolStripMenuItem;
     }
 }

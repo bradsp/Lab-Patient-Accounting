@@ -16,6 +16,7 @@ using LabBilling.Library;
 using System.Diagnostics;
 using Microsoft.Win32;
 using LabBilling.Logging;
+using System.Threading;
 
 namespace LabBilling.Forms
 {
@@ -33,6 +34,7 @@ namespace LabBilling.Forms
         private InvoiceHistoryRepository historyRepository;
         private ClientRepository clientRepository;
         private List<Client> clientList;
+        private SystemParametersRepository parametersRepository;
 
         private async void ClientInvoiceForm_Load(object sender, EventArgs e)
         {
@@ -41,6 +43,7 @@ namespace LabBilling.Forms
             clientInvoices = new ClientInvoices(Helper.ConnVal);
             historyRepository = new InvoiceHistoryRepository(Helper.ConnVal);
             clientRepository = new ClientRepository(Helper.ConnVal);
+            parametersRepository = new SystemParametersRepository(Helper.ConnVal);
 
             clientList = clientRepository.GetAll().ToList();
             clientList.Sort((p, q) => p.Name.CompareTo(q.Name));
@@ -171,6 +174,8 @@ namespace LabBilling.Forms
 
             }
             toolStripProgressBar1.Value = 100;
+
+            MessageBox.Show("Generating Invoices Completed");
         }
 
         private void ThruDate_CheckedChanged(object sender, EventArgs e)
@@ -239,7 +244,7 @@ namespace LabBilling.Forms
         private async void InvoiceHistoryPage_Enter(object sender, EventArgs e)
         {
             FromDate.Text = DateTime.Today.AddDays(-30).ToString("MM/dd/yyyy");
-            ThroughDate.Text = DateTime.Today.ToString("MM/dd/yyyy");
+            ThroughDate.Text = DateTime.Today.AddDays(1).ToString("MM/dd/yyyy");
 
             //DateTime.TryParse(FromDate.Text, out DateTime fd);
             //DateTime.TryParse(ThroughDate.Text, out DateTime td);
@@ -363,21 +368,27 @@ namespace LabBilling.Forms
             return;
         }
 
+        private void printAllToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            InvoiceHistoryDGV.SelectAll();
+            PrintInvoice_Click(sender, e);
+        }
+
+        private void saveAllToPDFToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            InvoiceHistoryDGV.SelectAll();
+            PrintInvoice_Click(sender, e);
+        }
+
         private void PrintInvoice_Click(object sender, EventArgs e)
         {
+            Cursor.Current = Cursors.WaitCursor;
+
             if (InvoiceHistoryDGV.SelectedRows == null)
             {
-                if(MessageBox.Show("No invoices are selected. Do you want to print all invoices?", "Print All?", 
-                    MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
-                {
-                    InvoiceHistoryDGV.SelectAll();
-                }
-                else
-                {
-                    return;
-                }
+                MessageBox.Show("No rows selected.");
+                return;
             }
-                
 
             bool duplexPrinting = false;
             string senderName = null;
@@ -391,62 +402,99 @@ namespace LabBilling.Forms
                 return;
             }
 
-            if (senderName == printToolStripMenuItem.Name)
+            if (senderName == printToolStripMenuItem.Name || senderName == printAllToolStripMenuItem.Name)
             {
                 PrintDialog printDialog = new PrintDialog();
-                if (printDialog.ShowDialog() == DialogResult.OK)
-                {
-                    Cursor.Current = Cursors.WaitCursor;
-                    string printerName = printDialog.PrinterSettings.PrinterName;
-                    if (printDialog.PrinterSettings.Duplex != System.Drawing.Printing.Duplex.Simplex &&
-                        printDialog.PrinterSettings.Duplex != System.Drawing.Printing.Duplex.Default)
-                    {
-                        duplexPrinting = true;
-                    }
-                    string outfile = $"c:\\temp\\{Guid.NewGuid()}.pdf";
+//                if (printDialog.ShowDialog() == DialogResult.OK)
+  //              {
+                Cursor.Current = Cursors.WaitCursor;
+                //string printerName = printDialog.PrinterSettings.PrinterName;
+                //if (printDialog.PrinterSettings.Duplex != System.Drawing.Printing.Duplex.Simplex &&
+                //    printDialog.PrinterSettings.Duplex != System.Drawing.Printing.Duplex.Default)
+                //{
+                //    duplexPrinting = true;
+                //}
+                string outfile = $"c:\\temp\\{Guid.NewGuid()}.pdf";
 
-                    CompileInvoicesToPdf(outfile, duplexPrinting);
+                CompileInvoicesToPdf(outfile, duplexPrinting);
 
-                    if (!PrintPDF(outfile, printerName))
-                    {
-                        Log.Instance.Error($"File {outfile} did not print to printer {printerName}.");
-                    }
-                    else
-                    {
-                        File.Delete(outfile);
-                    }
-                }
+                Process.Start(outfile);
+
+                //if (!PrintPDF(outfile, printerName))
+                //{
+                //    Log.Instance.Error($"File {outfile} did not print to printer {printerName}.");
+                //}
+                //else
+                //{
+                //    File.Delete(outfile);
+                //    MessageBox.Show("Printing invoices completed.");
+                //}
+    //            }
             }
-            else if (senderName == saveToPDFToolStripMenuItem.Name)
+            else if (senderName == saveToPDFToolStripMenuItem.Name || senderName == saveAllToPDFToolStripMenuItem.Name)
             {
+                string path = parametersRepository.GetByKey("invoice_file_location");
+                if(!Directory.Exists(path))
+                {
+                    path = "";
+                }
+
                 SaveFileDialog saveFileDialog = new SaveFileDialog();
 
                 saveFileDialog.Title = "Save File";
                 saveFileDialog.DefaultExt = "pdf";
                 saveFileDialog.Filter = "pdf files (*.pdf)|*.pdf|All files (*.*)|*.*";
                 saveFileDialog.FilterIndex = 1;
+                saveFileDialog.InitialDirectory = path;
+                saveFileDialog.FileName = $"InvoicesPrint-{DateTime.Now:MM-dd-yyyy}.pdf";
 
                 if (saveFileDialog.ShowDialog() == DialogResult.OK)
                 {
                     string filename = saveFileDialog.FileName;
 
                     CompileInvoicesToPdf(filename);
+                    System.Diagnostics.Process.Start(filename);
                 }
             }
 
             Cursor.Current = Cursors.Default;
+            
         }
-
-
 
         private bool PrintPDF(string file, string printer)
         {
             try
             {
-                Process.Start(Registry.LocalMachine.OpenSubKey(
-                    @"SOFTWARE\Microsoft\Windows\CurrentVersion" +
-                    @"\App Paths\AcroRd32.exe").GetValue("").ToString(),
-                    string.Format("/h /t \"{0}\" \"{1}\"", file, printer));
+                var process = new Process();
+                process.StartInfo = new ProcessStartInfo();
+                process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+
+                //process.StartInfo.FileName = Registry.LocalMachine
+                //    .OpenSubKey("SOFTWARE")
+                //    .OpenSubKey("Microsoft")
+                //    .OpenSubKey("Windows")
+                //    .OpenSubKey("CurrentVersion")
+                //    .OpenSubKey("App Paths")
+                //    .OpenSubKey("Acrobat.exe")
+                //    .GetValue("").ToString();
+                //process.StartInfo.Arguments = string.Format("/s /h /t \"{0}\" \"{1}\"", file, printer);
+
+                process.StartInfo.FileName = file;
+                process.StartInfo.Verb = "print";
+                process.StartInfo.CreateNoWindow = true;
+                process.StartInfo.UseShellExecute = true;
+
+                process.Start();
+
+                process.WaitForExit();
+
+                Thread.Sleep(8000);
+
+                if(!process.CloseMainWindow())
+                {
+                    process.Kill();
+                }
+                
                 return true;
             }
             catch
@@ -573,5 +621,7 @@ namespace LabBilling.Forms
         {
             RefreshInvoiceHistoryGrid();
         }
+
+
     }
 }

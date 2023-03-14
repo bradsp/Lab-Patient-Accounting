@@ -23,6 +23,7 @@ namespace LabBilling.Core.Models
         public string InvoiceNo { get; set; }
         public DateTime InvoiceDate { get; set; }
         public double InvoiceTotal { get; set; }
+        public DateTime BalanceForwardDate { get; set; }
         public double BalanceForward { get; set; }
         public double BalanceDue { get; set; }
         public double DiscountTotal { get; set; }
