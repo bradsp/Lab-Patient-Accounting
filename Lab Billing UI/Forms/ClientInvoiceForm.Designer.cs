@@ -64,9 +64,10 @@ namespace LabBilling.Forms
             this.undoInvoiceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.printContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.printToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.printAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveToPDFToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveAllToPDFToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.printAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.progressBar1 = new System.Windows.Forms.ProgressBar();
             ((System.ComponentModel.ISupportInitialize)(this.InvoicesDGV)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.UnbilledAccountsDGV)).BeginInit();
             this.InvoiceHistoryTabControl.SuspendLayout();
@@ -284,6 +285,7 @@ namespace LabBilling.Forms
             // 
             // InvoiceHistoryTabPage
             // 
+            this.InvoiceHistoryTabPage.Controls.Add(this.progressBar1);
             this.InvoiceHistoryTabPage.Controls.Add(this.invoiceTextBox);
             this.InvoiceHistoryTabPage.Controls.Add(this.invoiceLabel);
             this.InvoiceHistoryTabPage.Controls.Add(this.label6);
@@ -458,6 +460,13 @@ namespace LabBilling.Forms
             this.printToolStripMenuItem.Text = "Print Selected";
             this.printToolStripMenuItem.Click += new System.EventHandler(this.PrintInvoice_Click);
             // 
+            // printAllToolStripMenuItem
+            // 
+            this.printAllToolStripMenuItem.Name = "printAllToolStripMenuItem";
+            this.printAllToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
+            this.printAllToolStripMenuItem.Text = "Print All";
+            this.printAllToolStripMenuItem.Click += new System.EventHandler(this.printAllToolStripMenuItem_Click);
+            // 
             // saveToPDFToolStripMenuItem
             // 
             this.saveToPDFToolStripMenuItem.Name = "saveToPDFToolStripMenuItem";
@@ -472,12 +481,14 @@ namespace LabBilling.Forms
             this.saveAllToPDFToolStripMenuItem.Text = "Save All to PDF";
             this.saveAllToPDFToolStripMenuItem.Click += new System.EventHandler(this.saveAllToPDFToolStripMenuItem_Click);
             // 
-            // printAllToolStripMenuItem
+            // progressBar1
             // 
-            this.printAllToolStripMenuItem.Name = "printAllToolStripMenuItem";
-            this.printAllToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
-            this.printAllToolStripMenuItem.Text = "Print All";
-            this.printAllToolStripMenuItem.Click += new System.EventHandler(this.printAllToolStripMenuItem_Click);
+            this.progressBar1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.progressBar1.Location = new System.Drawing.Point(8, 464);
+            this.progressBar1.Name = "progressBar1";
+            this.progressBar1.Size = new System.Drawing.Size(892, 23);
+            this.progressBar1.TabIndex = 10;
             // 
             // ClientInvoiceForm
             // 
@@ -548,5 +559,6 @@ namespace LabBilling.Forms
         private System.Windows.Forms.Label invoiceLabel;
         private System.Windows.Forms.ToolStripMenuItem saveAllToPDFToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem printAllToolStripMenuItem;
+        private System.Windows.Forms.ProgressBar progressBar1;
     }
 }

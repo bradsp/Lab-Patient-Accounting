@@ -38,6 +38,8 @@ namespace LabBilling.Forms
 
         private async void ClientInvoiceForm_Load(object sender, EventArgs e)
         {
+            progressBar1.Visible = false;
+
             toolStripStatusLabel1.Text = string.Empty;
 
             clientInvoices = new ClientInvoices(Helper.ConnVal);
@@ -70,6 +72,18 @@ namespace LabBilling.Forms
             ClientFilter.DisplayMember = nameof(Client.Name);
             ClientFilter.ValueMember = nameof(Client.ClientMnem);
 
+            //are there any old print files that need to be cleaned up?
+            CleanTempFiles();
+
+        }
+
+        private void CleanTempFiles()
+        {
+            string[] dirs = Directory.GetFiles(@"c:\temp\", "invoiceTemp*.pdf");
+            foreach(string dir in dirs)
+            {
+                File.Delete(dir);
+            }
         }
 
         private void RefreshUnbilledGrid()
@@ -347,6 +361,11 @@ namespace LabBilling.Forms
         {
             List<string> files = new List<string>();
 
+            int records = InvoiceHistoryDGV.SelectedRows.Count;
+            progressBar1.Visible = true;
+            progressBar1.Minimum = 0;
+            progressBar1.Maximum = records;
+            progressBar1.Value = 0;
 
             foreach (DataGridViewRow row in InvoiceHistoryDGV.SelectedRows)
             {
@@ -358,6 +377,8 @@ namespace LabBilling.Forms
 
                 string stmtFilename = clientInvoices.PrintInvoice(invoice);
                 files.Add(stmtFilename);
+
+                progressBar1.Increment(1);
             }
 
             //merge all the files into one pdf
@@ -414,7 +435,7 @@ namespace LabBilling.Forms
                 //{
                 //    duplexPrinting = true;
                 //}
-                string outfile = $"c:\\temp\\{Guid.NewGuid()}.pdf";
+                string outfile = $"c:\\temp\\invoiceTemp-{Guid.NewGuid()}.pdf";
 
                 CompileInvoicesToPdf(outfile, duplexPrinting);
 
@@ -458,7 +479,7 @@ namespace LabBilling.Forms
             }
 
             Cursor.Current = Cursors.Default;
-            
+            progressBar1.Visible = false;
         }
 
         private bool PrintPDF(string file, string printer)
