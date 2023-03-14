@@ -1486,7 +1486,7 @@ namespace LabBilling.Forms
             //load charges and pointers to grid
             foreach (var chrg in currentAccount.Charges)
             {
-                if (!chrg.IsCredited)
+                if (!chrg.IsCredited && chrg.Status != "N/A")
                 {
                     foreach (var chrgDetail in chrg.ChrgDetails)
                     {
