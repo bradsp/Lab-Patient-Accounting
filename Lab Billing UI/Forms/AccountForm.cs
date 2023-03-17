@@ -586,7 +586,7 @@ namespace LabBilling.Forms
             currentAccount.PatMiddleName = MiddleNameTextBox.Text;
             currentAccount.PatNameSuffix = SuffixTextBox.Text;
             currentAccount.SocSecNo = SocSecNoTextBox.Text;
-            currentAccount.BirthDate = DateTime.Parse(DateOfBirthTextBox.Text);
+            currentAccount.BirthDate = DateTimeExtension.ValidateDateOrNull(DateOfBirthTextBox.Text);
             currentAccount.Sex = SexComboBox.SelectedValue.ToString();
 
             accDB.Update(currentAccount);

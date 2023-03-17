@@ -95,6 +95,33 @@ namespace RFClassLibrary
         /// <summary>
         /// Takes a date string and parses the date.
         /// </summary>
+        /// <param name="datestring"></param>
+        /// <returns>Valid dates are returned as DateTime. Invalid date returns DateTime.MinValue</returns>
+        public static DateTime ValidateDate(string datestring)
+        {
+            DateTime myDateTime = DateTime.MinValue;
+          
+            return myDateTime.ValidateDate(datestring);
+        }
+
+        /// <summary>
+        /// Takes a date string and parses the date.
+        /// </summary>
+        /// <param name="datestring"></param>
+        /// <returns>Valid dates are returned as DateTime. Invalid date returns null</returns>
+        public static DateTime? ValidateDateOrNull(string datestring)
+        {
+            DateTime myDateTime = DateTime.MinValue;
+            if (myDateTime == DateTime.MinValue)
+                return null;
+            else
+                return myDateTime.ValidateDate(datestring);
+        }
+
+
+        /// <summary>
+        /// Takes a date string and parses the date.
+        /// </summary>
         /// <param name="dateTime"></param>
         /// <param name="datestring"></param>
         /// <returns>Valid dates are returned as DateTime. Invalid date returns DateTime.MinValue</returns>

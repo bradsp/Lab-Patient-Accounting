@@ -10,6 +10,7 @@ using System.Drawing.Printing;
 using LabBilling.Logging;
 using LabBilling.Core.Models;
 using Microsoft.Identity.Client;
+using Microsoft.IdentityModel.Tokens;
 
 namespace LabBilling.Forms
 {
@@ -918,7 +919,7 @@ namespace LabBilling.Forms
 
                         m_sdaBadDebt.DeleteCommand = cmdDelete;
 
-                        DataRow dr = m_dtAccounts.Rows[e.RowIndex];
+                        DataRow dr = m_dtAccounts.AsEnumerable().SingleOrDefault(b => b.Field<string>("account") == dgvAccounts["account", e.RowIndex].Value.ToString());
                         dr.Delete();
 
                         m_sdaBadDebt.Update(m_dtAccounts);
