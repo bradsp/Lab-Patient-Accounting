@@ -29,6 +29,7 @@ namespace LabBilling.Forms
         private System.Windows.Forms.Timer _timer;
         private const int _timerDelay = 650;
         private string selectedQueue = null;
+        private TreeNode currentNode = null;
 
         private void WorkListForm_Load(object sender, EventArgs e)
         {
@@ -233,7 +234,16 @@ namespace LabBilling.Forms
 
         private void workqueues_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
         {
+            if(currentNode != null)
+            {
+                currentNode.BackColor = Color.White;
+                currentNode.ForeColor = Color.Black;
+            }
             selectedQueue = workqueues.SelectedNode.Text;
+            currentNode = workqueues.SelectedNode;
+
+            workqueues.SelectedNode.BackColor = Color.Green;
+            workqueues.SelectedNode.ForeColor = Color.White;
             LoadWorkList();
         }
 

@@ -304,8 +304,13 @@ namespace LabBilling.Legacy
             //        == DialogResult.Yes)
             //{
             // added a date to the system table to manage the import so it isn't done twice by the clerks.
-            MoveFilesToProcess();
+
+            // this is no longer needed now that we are getting remits from nThrive
+            //MoveFilesToProcess(); 
+
             //}
+
+            GetSystemParameters();
 
             CreateSpecialDataGridViewCells();
             CreateDictionaryColGrids();
@@ -318,6 +323,29 @@ namespace LabBilling.Legacy
             tbDatabase.Text = string.Format("{0} / {1}", m_strServer, m_strDatabase); // display on screen the server and database
 
         }
+
+        private void GetSystemParameters()
+        {
+            m_sqlConnection = new SqlConnection(string.Format("Data Source={0}; Initial Catalog = {1};"
+                + "Integrated Security = 'SSPI'", m_strServer, m_strDatabase));
+
+            dtDirectories = new DataTable();
+            using (SqlCommand cmd = m_sqlConnection.CreateCommand())
+            {
+                cmd.CommandText = string.Format("select key_name, value from system where programs = '{0}'"
+                    , "Posting835Remittance");
+
+                SqlDataAdapter dataAdapter = new SqlDataAdapter(cmd);
+                dataAdapter.Fill(dtDirectories);
+
+            }
+            // our directories
+            DataRow[] dr = dtDirectories.Select("key_name = 'import_directory_into'");
+            diCurrent = new DirectoryInfo(string.Format(@"{0}", dr[0]["value"].ToString()));
+            diInvalid = new DirectoryInfo(string.Format(@"{0}\invalid", dr[0]["value"].ToString()));
+            diSaved = new DirectoryInfo(string.Format(@"{0}\saved", dr[0]["value"].ToString()));
+        }
+
 
         private void MoveFilesToProcess()
         {

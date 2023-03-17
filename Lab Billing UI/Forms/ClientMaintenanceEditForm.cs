@@ -69,6 +69,7 @@ namespace LabBilling.Forms
             client.PrintInvoiceInDateOrder = chkDateOrder.Checked;
             client.DoNotBill = chkDoNotBill.Checked;
             client.PrintCptOnInvoice = chkPrintCPTonBill.Checked;
+            client.DefaultDiscount = (double)numDefaultDiscount.Value;
 
             if(clientDiscountDataTable != null)
                 client.Discounts = Helper.ConvertToList<ClientDiscount>(clientDiscountDataTable);
@@ -116,6 +117,7 @@ namespace LabBilling.Forms
             chkDateOrder.Checked = client.PrintInvoiceInDateOrder;
             chkDoNotBill.Checked = client.DoNotBill;
             chkPrintCPTonBill.Checked = client.PrintCptOnInvoice;
+            numDefaultDiscount.Value = (decimal)client.DefaultDiscount;
 
 
             clientDiscountDataTable = client.Discounts.ToDataTable();

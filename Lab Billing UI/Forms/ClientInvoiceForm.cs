@@ -42,6 +42,9 @@ namespace LabBilling.Forms
 
             toolStripStatusLabel1.Text = string.Empty;
 
+            //are there any old print files that need to be cleaned up?
+            CleanTempFiles();
+
             clientInvoices = new ClientInvoices(Helper.ConnVal);
             historyRepository = new InvoiceHistoryRepository(Helper.ConnVal);
             clientRepository = new ClientRepository(Helper.ConnVal);
@@ -55,7 +58,6 @@ namespace LabBilling.Forms
                 ClientMnem = null,
                 Name = "--All Clients--"
             });
-
 
             if (PreviousMonth.Checked)
                 _thruDate = DateTime.Today.AddDays(-DateTime.Now.Day);
@@ -71,10 +73,6 @@ namespace LabBilling.Forms
             ClientFilter.DataSource = clientList;
             ClientFilter.DisplayMember = nameof(Client.Name);
             ClientFilter.ValueMember = nameof(Client.ClientMnem);
-
-            //are there any old print files that need to be cleaned up?
-            CleanTempFiles();
-
         }
 
         private void CleanTempFiles()

@@ -53,13 +53,15 @@ namespace LabBilling.Forms
             }
             else
             {
-                cdm = new Cdm();
-                cdm.ChargeId = SelectedCdm;
-                cdm.CdmFeeSchedule1 = new List<ICdmDetail>();
-                cdm.CdmFeeSchedule2 = new List<ICdmDetail>();
-                cdm.CdmFeeSchedule3 = new List<ICdmDetail>();
-                cdm.CdmFeeSchedule4 = new List<ICdmDetail>();
-                cdm.CdmFeeSchedule5 = new List<ICdmDetail>();
+                cdm = new Cdm
+                {
+                    ChargeId = SelectedCdm,
+                    CdmFeeSchedule1 = new List<ICdmDetail>(),
+                    CdmFeeSchedule2 = new List<ICdmDetail>(),
+                    CdmFeeSchedule3 = new List<ICdmDetail>(),
+                    CdmFeeSchedule4 = new List<ICdmDetail>(),
+                    CdmFeeSchedule5 = new List<ICdmDetail>()
+                };
 
                 addMode = true;
             }
@@ -75,8 +77,8 @@ namespace LabBilling.Forms
             notesTextBox.Text = cdm.Comments;
 
             costTextBox.Text = cdm.Cost.ToString();
-            orderableCheckBox.Checked = cdm.IsOrderable == 0 ? false : true;
-            cbillDetailCheckBox.Checked = cdm.CBillDetail == 0 ? false : true;
+            orderableCheckBox.Checked = cdm.IsOrderable != 0;
+            cbillDetailCheckBox.Checked = cdm.CBillDetail != 0;
             deletedCheckBox.Checked = cdm.IsDeleted;
 
             lisOrderCodeTextBox.Text = cdm.Mnem;
@@ -189,6 +191,26 @@ namespace LabBilling.Forms
         {
             DialogResult = DialogResult.OK;
             return;
+
+            cdm.ChargeId = chargeIdTextBox.Text;
+            cdm.CBillDetail = cbillDetailCheckBox.Checked ? 1 : 0;
+            cdm.CClassPaAmount = Convert.ToDouble(cProfTextBox.Text);
+            cdm.CClassType = clientChargeType.Text;
+            cdm.Comments = notesTextBox.Text;
+            cdm.Cost = Convert.ToDouble(costTextBox.Text);
+            cdm.Description = descriptionTextBox.Text;
+            cdm.IsDeleted = deletedCheckBox.Checked;
+            cdm.IsOrderable = orderableCheckBox.Checked ? 1 : 0;
+            cdm.MClassPaAmount = Convert.ToDouble(mProfTextBox.Text);
+            cdm.MClassType = patChargeType.Text;
+            cdm.ZClassPaAmount = Convert.ToDouble(zProfTextBox.Text);
+            cdm.ZClassType = zChargeType.Text;
+            cdm.RefLabBillCode = refLabBillCodeTextBox.Text;
+            cdm.RefLabId = refLabIdTextBox.Text;
+            cdm.RefLabPayment = Convert.ToDouble(refLabPayment.Text);
+            cdm.Mnem = lisOrderCodeTextBox.Text;
+
+
         }
 
         private void chargeIdTextBox_Leave(object sender, EventArgs e)
