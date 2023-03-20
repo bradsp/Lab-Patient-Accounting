@@ -602,7 +602,6 @@ namespace LabBilling.Forms
             currentAccount.Pat.CityStateZip = string.Format("{0}, {1} {2}", CityTextBox.Text, StateComboBox.SelectedValue.ToString(), ZipcodeTextBox.Text);
             currentAccount.Pat.PatFullName = string.Format("{0},{1} {2}", LastNameTextBox.Text, FirstNameTextBox.Text, MiddleNameTextBox.Text);
             currentAccount.Pat.ProviderId = providerLookup1.SelectedValue;
-            //currentAccount.Pat.SocSecNo = tbSSN.Text;
 
             patDB.SaveAll(currentAccount.Pat);
 
@@ -2275,10 +2274,20 @@ namespace LabBilling.Forms
                 accDB.UpdateStatus(currentAccount.AccountNo, "STMT");
             }
 
-            accDB.AddNote(currentAccount.AccountNo, $"Statement flag changed from {currentAccount.Pat.StatementFlag} to {statementFlagComboBox.SelectedItem}");
+            //validate account - if valid, change statement flag. Otherwise, show errors.
+            if (accDB.Validate(ref currentAccount))
+            {
+                accDB.AddNote(currentAccount.AccountNo, $"Statement flag changed from {currentAccount.Pat.StatementFlag} to {statementFlagComboBox.SelectedItem}");
 
-            currentAccount.Pat.StatementFlag = statementFlagComboBox.SelectedItem.ToString();
-            patDB.Update(currentAccount.Pat, new[] { nameof(Pat.StatementFlag) });
+                currentAccount.Pat.StatementFlag = statementFlagComboBox.SelectedItem.ToString();
+                patDB.Update(currentAccount.Pat, new[] { nameof(Pat.StatementFlag) });
+            }
+            else
+            {
+                MessageBox.Show("There are validation errors. Resolve before setting statement flag.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                LoadAccountData();
+            }
+
         }
 
         private void moveChargeToolStripMenuItem_Click(object sender, EventArgs e)

@@ -112,10 +112,18 @@ namespace RFClassLibrary
         public static DateTime? ValidateDateOrNull(string datestring)
         {
             DateTime myDateTime = DateTime.MinValue;
-            if (myDateTime == DateTime.MinValue)
+            if (string.IsNullOrWhiteSpace(datestring))
+            {
                 return null;
+            }
             else
-                return myDateTime.ValidateDate(datestring);
+            {
+                myDateTime = myDateTime.ValidateDate(datestring);
+                if (myDateTime == DateTime.MinValue)
+                    return null;
+                else
+                    return myDateTime;
+            }
         }
 
 

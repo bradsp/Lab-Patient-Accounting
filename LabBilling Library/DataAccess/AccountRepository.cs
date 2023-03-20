@@ -215,7 +215,10 @@ namespace LabBilling.Core.DataAccess
         public override object Add(Account table)
         {
             Log.Instance.Trace($"Entering - account {table.AccountNo}");
-            table.PatFullName = table.PatNameDisplay;
+
+            if(table.FinCode != "CLIENT")
+                table.PatFullName = table.PatNameDisplay;
+
             table.Status = "NEW";
 
             table.TransactionDate = table.TransactionDate.Date;
@@ -899,7 +902,12 @@ namespace LabBilling.Core.DataAccess
 
         }
 
-
+        /// <summary>
+        /// Runs all validation routines on account. Updates validation status and account flags. Errors are stored in the validation status table.
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="reprint">Set true if validating account to resubmit the claim with no changes.</param>
+        /// <returns>True if account is valid for billing, false if there are validation errors.</returns>
         public bool Validate(ref Account account, bool reprint = false)
         {
             Log.Instance.Trace($"Entering - account {account}");
@@ -1193,6 +1201,8 @@ namespace LabBilling.Core.DataAccess
 
                 patRepository.Update(account.Pat, columns);
                 UpdateStatus(account.AccountNo, "NEW");
+
+                AddNote(account.AccountNo, "Claim status cleared.");
             }
             catch(Exception ex)
             {

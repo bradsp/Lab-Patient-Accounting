@@ -13,15 +13,18 @@ namespace LabBilling.Core.DataAccess
     public class ClientRepository : RepositoryBase<Client>
     {
         ClientDiscountRepository clientDiscountRepository;
+        //AccountRepository accountRepository;
 
         public ClientRepository(string connection) : base(connection)
         {
             clientDiscountRepository = new ClientDiscountRepository(connection);
+            //accountRepository = new AccountRepository(connection);
         }
 
         public ClientRepository(PetaPoco.Database db) : base(db)
         {
             clientDiscountRepository = new ClientDiscountRepository(db);
+            //accountRepository = new AccountRepository(db);
         }
 
         public List<Client> GetAll(bool includeInactive)
@@ -70,6 +73,24 @@ namespace LabBilling.Core.DataAccess
 
             if (string.IsNullOrEmpty(table.BillMethod))
                 table.BillMethod = "PER ACCOUNT";
+            AccountRepository accountRepository = new AccountRepository(dbConnection);
+
+            var account = accountRepository.GetByAccount(table.ClientMnem, true);
+
+            if(account == null)
+            {
+                //add account
+                account = new Account();
+                account.AccountNo = table.ClientMnem;
+                account.PatFullName = table.Name;
+                account.FinCode = "CLIENT";
+                account.TransactionDate = DateTime.Today;
+                account.Status = "NEW";
+                account.ClientMnem = table.ClientMnem;
+                account.MeditechAccount = table.ClientMnem;
+
+                accountRepository.Add(account);
+            }
 
             return base.Add(table);
         }

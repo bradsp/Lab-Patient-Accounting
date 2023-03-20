@@ -42,11 +42,48 @@ namespace LabBilling.Core.BusinessLogic.Validators
             RuleFor(a => a.Fin.FinClass)
                 .Equal("M").WithMessage("This is a client bill account. Do not bill insurance.");
 
+            //rules for all 3rd party bill accounts
             When(a => a.Fin.FinClass == "M", () =>
             {
-                RuleFor(a => a.Pat)
+                RuleFor(a => a)
                     .SetValidator(new DemographicsValidator());
 
+                RuleFor(a => a.TotalCharges)
+                    .GreaterThan(0);
+
+                RuleFor(a => a.Charges.Sum(x => x.Quantity))
+                    .GreaterThan(0).WithMessage("Charge qty nets zero")
+                    .When(ac => ac.Charges.Count > 0);
+
+                RuleForEach(a => a.Charges)
+                    .SetValidator(new ChargeValidator())
+                    .When(ac => ac.Charges.Count > 0);
+
+                RuleFor(a => a)
+                    .Must(NotContainOnlyVenipunctureCharge)
+                    .WithMessage("Venipuncture is only charge on account");
+
+                //RuleFor(c => c.Charges)
+                //    .Must(NotHaveDuplicateCdms)
+                //    .WithMessage("Mutually Exclusive CDMs 5686066 and 5686078")
+                //    .When(a => a.Charges != null);
+
+                RuleFor(a => a.Charges)
+                    .Must(NotContainMultipleVenipunctures).WithMessage("Multiple venipuncture charges on account")
+                    .When(a => a.Charges != null);
+
+                RuleFor(a => a)
+                    .Must(MatchChargeServiceDateAndAccountTransDate).WithMessage("Account DOS does not match charge service date.");
+
+                //todo: rule - each diagnosis must be used in a dx Pointer.                
+
+                RuleFor(a => a.LmrpErrors)
+                    .Empty().WithMessage("LMRP Rule Violation");
+            });
+
+            //rules for insurance billed accounts (exclude self-pay)
+            When(a => a.Fin.FinClass == "M" && a.FinCode != "E", () =>
+            {
                 RuleFor(a => a.Insurances)
                     .Must(HaveValidInsuranceCoverageCodes).WithMessage("Insurances have invalid or out of order coverage codes.");
 
@@ -68,37 +105,13 @@ namespace LabBilling.Core.BusinessLogic.Validators
                     .Must((a, f) => f == a.InsurancePrimary.FinCode)
                     .WithMessage("Account fin code does not equal insurance fin code")
                     .When(ac => ac.InsurancePrimary != null);
-
-                RuleFor(a => a.TotalCharges)
-                    .GreaterThan(0);
-
-                RuleFor(a => a.Charges.Sum(x => x.Quantity))
-                    .GreaterThan(0).WithMessage("Charge qty nets zero")
-                    .When(ac => ac.Charges.Count > 0);
-
-                RuleForEach(a => a.Charges)
-                    .SetValidator(new ChargeValidator())
-                    .When(ac => ac.Charges.Count > 0);
-
+                
                 RuleFor(a => a.TotalPayments)
                     .LessThanOrEqualTo(0).WithMessage("Account has payments recorded.");
-
-                RuleFor(a => a)
-                    .Must(NotContainOnlyVenipunctureCharge)
-                    .WithMessage("Venipuncture is only charge on account");
 
                 RuleFor(a => a.Charges)
                     .Must(NotNeedRepeatModifier)
                     .WithMessage("Duplicate cpt - needs modifier.")
-                    .When(a => a.Charges != null);
-
-                //RuleFor(c => c.Charges)
-                //    .Must(NotHaveDuplicateCdms)
-                //    .WithMessage("Mutually Exclusive CDMs 5686066 and 5686078")
-                //    .When(a => a.Charges != null);
-
-                RuleFor(a => a.Charges)
-                    .Must(NotContainMultipleVenipunctures).WithMessage("Multiple venipuncture charges on account")
                     .When(a => a.Charges != null);
 
                 RuleFor(a => a)
@@ -113,15 +126,7 @@ namespace LabBilling.Core.BusinessLogic.Validators
                     .Must(NotHaveBundledOBPanel).WithMessage("Insurance does not accept OB Panel charge")
                     .When(a => a.FinCode == "L" && a.PrimaryInsuranceCode == "SEHZ");
 
-                RuleFor(a => a)
-                    .Must(MatchChargeServiceDateAndAccountTransDate).WithMessage("Account DOS does not match charge service date.");
-
-                //todo: rule - each diagnosis must be used in a dx Pointer.                
-
-                RuleFor(a => a.LmrpErrors)
-                    .Empty().WithMessage("LMRP Rule Violation");
             });
-
 
         }
 

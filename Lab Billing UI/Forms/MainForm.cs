@@ -23,10 +23,10 @@ namespace LabBilling
     public partial class MainForm : MetroForm
     {
 
-        private Accordion accordion = new Accordion();
-        private readonly UserProfileRepository userProfile = new UserProfileRepository(Helper.ConnVal); 
-        private readonly AccountRepository accountRepository = new AccountRepository(Helper.ConnVal);
-        private readonly SystemParametersRepository systemParametersRepository = new SystemParametersRepository(Helper.ConnVal);
+        private Accordion accordion = null;
+        private readonly UserProfileRepository userProfile = null;
+        private readonly AccountRepository accountRepository = null;
+        private readonly SystemParametersRepository systemParametersRepository = null;
         private ProgressBar claimProgress;
         private Label claimProgressStatusLabel;
         private CancellationTokenSource cancellationToken;
@@ -39,6 +39,11 @@ namespace LabBilling
         public MainForm()
         {
             InitializeComponent();
+
+            userProfile = new UserProfileRepository(Helper.ConnVal);
+            accountRepository = new AccountRepository(Helper.ConnVal);
+            systemParametersRepository = new SystemParametersRepository(Helper.ConnVal);
+            accordion = new Accordion();
         }
 
         private void userSecurityToolStripMenuItem_Click(object sender, EventArgs e)
@@ -57,7 +62,7 @@ namespace LabBilling
             Log.Instance.Trace($"Entering");
 
             PersonSearchForm frm = new PersonSearchForm();
-            if(frm.ShowDialog() == DialogResult.OK)
+            if (frm.ShowDialog() == DialogResult.OK)
             {
 
                 var formsList = System.Windows.Forms.Application.OpenForms.OfType<AccountForm>();
@@ -93,7 +98,7 @@ namespace LabBilling
 
             #region user authentication
 
-            if(Program.LoggedInUser == null)
+            if (Program.LoggedInUser == null)
             {
                 Log.Instance.Fatal("There is not a valid user object.");
                 MetroMessageBox.Show(this, "Application error with user object. Aborting.", "Fatal Error", MessageBoxButtons.OK, MessageBoxIcon.Stop);
@@ -113,22 +118,22 @@ namespace LabBilling
             toolStripDatabaseLabel.Text = Program.Database;
             toolStripUsernameLabel.Text = Program.LoggedInUser.FullName;
             this.Text += " " + Program.Database;
-            if(!string.IsNullOrEmpty(Program.LoggedInUser.ImpersonatingUser))
+            if (!string.IsNullOrEmpty(Program.LoggedInUser.ImpersonatingUser))
             {
                 this.Text += $"  *** IMPERSONATING {Program.LoggedInUser.ImpersonatingUser} ***";
             }
-            
+
             if (!Convert.ToBoolean(systemParametersRepository.GetByKey("allow_edit")))
                 this.Text += " | READ ONLY MODE";
             if (!Convert.ToBoolean(systemParametersRepository.GetByKey("allow_chrg_entry")))
                 this.Text += " | Charge entry disabled";
             if (!Convert.ToBoolean(systemParametersRepository.GetByKey("allow_chk_entry")))
                 this.Text += " | Pmt/Adj entry disabled";
-            
+
             foreach (UserProfile up in recentAccounts)
             {
-                var ar = accountRepository.GetByAccount(up.ParameterData,true);
-                if(ar != null)
+                var ar = accountRepository.GetByAccount(up.ParameterData, true);
+                if (ar != null)
                 {
                     LinkLabel a1 = new LinkLabel { Text = ar.PatFullName, Tag = up.ParameterData };
                     a1.LinkClicked += new LinkLabelLinkClickedEventHandler(RecentLabelClicked);
@@ -361,7 +366,7 @@ namespace LabBilling
         {
             Log.Instance.Trace($"Entering");
 
-            if(System.Windows.Forms.Application.OpenForms.OfType<WorkListForm>().Count() > 0)
+            if (System.Windows.Forms.Application.OpenForms.OfType<WorkListForm>().Count() > 0)
             {
                 WorkListForm workListForm = System.Windows.Forms.Application.OpenForms.OfType<WorkListForm>().First();
                 workListForm.Focus();
@@ -580,8 +585,8 @@ namespace LabBilling
             Log.Instance.Trace($"Entering");
 
             var formsList = Application.OpenForms.OfType<ClientMaintenanceForm>();
-            
-            if(formsList.Count() > 0)
+
+            if (formsList.Count() > 0)
             {
                 formsList.First().Focus();
             }
@@ -651,7 +656,7 @@ namespace LabBilling
 
         private void Dashboard_MdiChildActivate(object sender, EventArgs e)
         {
-            if(this.MdiChildren.Count() > Convert.ToInt32(systemParametersRepository.GetByKey("tabs_open_limit")))
+            if (this.MdiChildren.Count() > Convert.ToInt32(systemParametersRepository.GetByKey("tabs_open_limit")))
             {
 
                 List<string> openForms = new List<string>();
@@ -663,7 +668,7 @@ namespace LabBilling
 
                 AskCloseTabForm frm = new AskCloseTabForm(openForms);
 
-                if(frm.ShowDialog(this) == DialogResult.OK)
+                if (frm.ShowDialog(this) == DialogResult.OK)
                 {
                     string selectedForm = frm.SelectedForm;
 
@@ -703,7 +708,7 @@ namespace LabBilling
             frm.WindowState = FormWindowState.Normal;
             frm.AutoScroll = true;
             frm.Show();
-            
+
         }
 
         private void pathologistsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -801,7 +806,7 @@ namespace LabBilling
                         return claims.CompileBillingBatch(Core.ClaimType.Institutional, progress, cancellationToken.Token);
                     });
                 }
-                else if(billingType == BillingType.Professional)
+                else if (billingType == BillingType.Professional)
                 {
                     claimsProcessed = await Task.Run(() =>
                     {
@@ -836,7 +841,7 @@ namespace LabBilling
 
         private void cancelButton_Click(object sender, EventArgs e)
         {
-            if(MessageBox.Show("This will cancel the claim batch and rollback any changes. Are you sure?", "Cancel Batch?",
+            if (MessageBox.Show("This will cancel the claim batch and rollback any changes. Are you sure?", "Cancel Batch?",
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                 cancellationToken.Cancel();
         }

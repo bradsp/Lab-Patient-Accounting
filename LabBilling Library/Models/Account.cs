@@ -159,13 +159,20 @@ namespace LabBilling.Core.Models
         {
             get
             {
-                if (string.IsNullOrEmpty(PatNameSuffix))
+                if (FinCode != "CLIENT")
                 {
-                    return $"{PatLastName},{PatFirstName} {PatMiddleName}".TrimEnd();
+                    if (string.IsNullOrEmpty(PatNameSuffix))
+                    {
+                        return $"{PatLastName},{PatFirstName} {PatMiddleName}".TrimEnd();
+                    }
+                    else
+                    {
+                        return $"{PatLastName} {PatNameSuffix},{PatFirstName} {PatMiddleName}".TrimEnd();
+                    }
                 }
                 else
                 {
-                    return $"{PatLastName} {PatNameSuffix},{PatFirstName} {PatMiddleName}".TrimEnd();
+                    return PatFullName;
                 }
             }
         }

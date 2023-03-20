@@ -210,6 +210,8 @@ namespace LabBilling.Forms
             cdm.RefLabPayment = Convert.ToDouble(refLabPayment.Text);
             cdm.Mnem = lisOrderCodeTextBox.Text;
 
+            
+
 
         }
 
