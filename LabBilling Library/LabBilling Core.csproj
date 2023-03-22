@@ -258,6 +258,7 @@
     <Compile Include="DataAccess\AccountValidationCriteriaRepository.cs" />
     <Compile Include="DataAccess\AccountValidationRuleRepository.cs" />
     <Compile Include="DataAccess\AccountValidationStatusRepository.cs" />
+    <Compile Include="DataAccess\CdmDetailRepository.cs" />
     <Compile Include="DataAccess\ChrgDetailRepository.cs" />
     <Compile Include="DataAccess\BadDebtRepository.cs" />
     <Compile Include="DataAccess\BillingActivityRepository.cs" />

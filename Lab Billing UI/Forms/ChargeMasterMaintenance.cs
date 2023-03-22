@@ -36,39 +36,30 @@ namespace LabBilling.Forms
 
             if (editForm.ShowDialog() == DialogResult.OK)
             {
-                Cdm cdmRecord = editForm.cdm;
-                var record = cdmdt.Rows.Find(cdmRecord.ChargeId);
-                try
-                {
-                    cdmRepository.Save(cdmRecord);
-
-                    record = cdmRecord.ToDataRow(record);
-                }
-                catch (Exception ex)
-                {
-                    Log.Instance.Error(ex);
-                    MessageBox.Show("Error updating CDM. Changes not saved.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-                DataCache.Instance.ClearClientCache();
+                ReloadGrid();
             }
         }
 
         private void includeInactiveCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            cdms = cdmRepository.GetAll(includeInactiveCheckBox.Checked);
+            ReloadGrid();
+        }
+
+        private void ReloadGrid()
+        {
+            cdms = cdmRepository.GetAll(includeInactiveCheckBox.Checked).OrderBy(c => c.Description).ToList();
             cdmdt = Helper.ConvertToDataTable(cdms);
+            bs.DataSource = null;
+            bs.DataSource = cdmdt;
+            cdmGrid.DataSource = null;
+            cdmGrid.DataSource = bs;
+
             RefreshGrid();
         }
 
         private void ChargeMasterMaintenance_Load(object sender, EventArgs e)
         {
-            cdms = cdmRepository.GetAll(includeInactiveCheckBox.Checked).OrderBy(c => c.Description).ToList();
-            cdmdt = Helper.ConvertToDataTable(cdms);
-            bs.DataSource = cdmdt;
-            cdmGrid.VirtualMode = true;
-            cdmGrid.DataSource = bs;
-
-            RefreshGrid();
+            ReloadGrid();
         }
 
         private void RefreshGrid()
@@ -99,6 +90,11 @@ namespace LabBilling.Forms
             cdmGrid.Columns[nameof(Cdm.Description)].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
 
             cdmGrid.AutoResizeColumns();
+
+            if(!string.IsNullOrWhiteSpace(filterTextBox.Text))
+            {
+                cdmdt.DefaultView.RowFilter = $"({nameof(Cdm.Description)} like '{filterTextBox.Text.ToUpper()}*') or ({nameof(Cdm.ChargeId)} like '{filterTextBox.Text.ToUpper()}*')";
+            }
         }
 
         private void cdmGrid_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
@@ -136,20 +132,7 @@ namespace LabBilling.Forms
 
             if (editForm.ShowDialog() == DialogResult.OK)
             {
-                Cdm cdmRecord = editForm.cdm;
-                var record = cdmdt.Rows.Find(cdmRecord.ChargeId);
-                try
-                {
-                    cdmRepository.Update(cdmRecord);
-
-                    record = cdmRecord.ToDataRow(record);
-                }
-                catch (Exception ex)
-                {
-                    Log.Instance.Error(ex);
-                    MessageBox.Show("Error updating CDM. Changes not saved.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-                DataCache.Instance.ClearClientCache();
+                ReloadGrid();
             }
         }
     }

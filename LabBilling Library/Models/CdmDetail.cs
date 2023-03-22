@@ -37,12 +37,18 @@ namespace LabBilling.Core.Models
 
     }
 
-    public class CdmDetail : ICdmDetail
+    [TableName("dictionary.cdm_detail")]
+    [PrimaryKey("rowguid", AutoIncrement = false)]
+    public class CdmDetail : ICdmDetail,IBaseEntity
     {
+        [Column("rowguid")]
         public Guid rowguid { get; set; }
 
         [Column("deleted")]
         public bool IsDeleted { get; set; }
+
+        [Column("fee_sched")]
+        public string FeeSchedule { get; set; }
 
         [Column("cdm")]
         public string ChargeItemId { get; set; }
@@ -81,7 +87,7 @@ namespace LabBilling.Core.Models
         public string BillCode { get; set; }
 
         [Column("mod_date")]
-        public DateTime? mod_date { get; set; }
+        public DateTime mod_date { get; set; }
 
         [Column("mod_user")]
         public string mod_user { get; set; }
@@ -102,6 +108,8 @@ namespace LabBilling.Core.Models
         Guid rowguid { get; set; }
 
         bool IsDeleted { get; set; }
+
+        string FeeSchedule { get; set; }
 
         string ChargeItemId { get; set; }
 
@@ -127,7 +135,7 @@ namespace LabBilling.Core.Models
 
         string BillCode { get; set; }
 
-        DateTime? mod_date { get; set; }
+        DateTime mod_date { get; set; }
 
         string mod_user { get; set; }
 

@@ -23,14 +23,11 @@ namespace LabBilling.Forms
         }
 
         private readonly ChkBatchRepository chkBatchRepository = new ChkBatchRepository(Helper.ConnVal);
-        private readonly ChkRepository chkdb = new ChkRepository(Helper.ConnVal);
-        private readonly AccountRepository accdb = new AccountRepository(Helper.ConnVal);
+        private readonly ChkRepository chkRepository = new ChkRepository(Helper.ConnVal);
+        private readonly AccountRepository accountRepository = new AccountRepository(Helper.ConnVal);
 
-        private void SaveBatchButton_Click(object sender, EventArgs e)
+        private int SaveBatch(int batchNo = 0)
         {
-            Log.Instance.Trace($"Entering");
-            //saves an open batch for later use
-
             //batch record
             XmlDocument xmlDoc = new XmlDocument();
             XmlNode rootNode = xmlDoc.CreateElement("Batch");
@@ -104,39 +101,51 @@ namespace LabBilling.Forms
                 BatchData = xmlDoc.OuterXml
             };
 
+            if(batchNo > 0)
+            {
+                chkBatch.BatchNo = batchNo;
+                if (chkBatchRepository.Update(chkBatch))
+                    return batchNo;
+                else
+                    return -1;
+            }
+            else
+            {
+                int batch = (int)chkBatchRepository.Add(chkBatch);
+                if (batch > 0)
+                    return batch;
+                else
+                    return -1;
+            }
+        }
+
+        private void SaveBatchButton_Click(object sender, EventArgs e)
+        {
+            Log.Instance.Trace($"Entering");
+            //saves an open batch for later use
+            int retBatch = -1;
+
             if (OpenBatch.SelectedIndex > 0)
             {
-                //updated existing
-                chkBatch.BatchNo = Convert.ToInt32(OpenBatch.SelectedValue);
-                if (chkBatchRepository.Update(chkBatch))
-                {
-                    MessageBox.Show("Batch saved");
-                    //ToDo: Clear entry screen for next batch
-                    Clear();
-
-                }
-                else
-                {
-                    MessageBox.Show("Error saving batch", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
+                retBatch = SaveBatch(Convert.ToInt32(OpenBatch.SelectedValue));
             }
             else
             {
                 // add new batch
-                if ((int)chkBatchRepository.Add(chkBatch) > 0)
-                {
-                    MessageBox.Show("Batch saved", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    //ToDo: Clear entry screen for next batch
-                    Clear();
-                }
-                else
-                {
-                    MessageBox.Show("Error saving batch");
-                }
+                retBatch = SaveBatch();
             }
 
-            //reload OpenBatch list
-            LoadOpenBatches();
+            if(retBatch > 0)
+            {
+                MessageBox.Show("Batch saved.");
+                Clear();
+                //reload OpenBatch list
+                LoadOpenBatches();                
+            }
+            else
+            {
+                MessageBox.Show("Error saving batch.");
+            }
         }
 
         private void LoadOpenBatches()
@@ -145,7 +154,7 @@ namespace LabBilling.Forms
 
             #region Setup OpenBatch Combobox
             List<ChkBatch> chkBatches = new List<ChkBatch>();
-            chkBatches = chkBatchRepository.GetAll().ToList();
+            chkBatches = chkBatchRepository.GetAll().Where(x => x.PostedDate == null).ToList();
 
             DataTable chkBatchDataTable = new DataTable(typeof(ChkBatch).Name);
             chkBatchDataTable.Columns.Add("BatchNo");
@@ -180,19 +189,22 @@ namespace LabBilling.Forms
             if (OpenBatch.SelectedIndex > 0)
             {
                 batch = Convert.ToInt32(OpenBatch.SelectedValue.ToString());
+                SaveBatch(batch);
             }
             else
             {
-                ChkBatch chkBatch = new ChkBatch
-                {
-                    BatchDate = DateTime.Today,
-                    User = Program.LoggedInUser.UserName                    
-                };
-                batch = (int)chkBatchRepository.Add(chkBatch);
+                batch = SaveBatch();
+            }
+
+            if(batch <= 0)
+            {
+                Log.Instance.Error("Error saving batch.");
+                MessageBox.Show("Error saving batch.");
+                return;
             }
 
             List<Chk> chks = new List<Chk>();
-            chkdb.BeginTransaction();
+            chkRepository.BeginTransaction();
             foreach (DataGridViewRow row in dgvPayments.Rows)
             {
                 if (row.IsNewRow)
@@ -212,28 +224,26 @@ namespace LabBilling.Forms
                 chk.WriteOffCode = row.Cells["WriteOffCode"].Value?.ToString();
                 chk.WriteOffAmount = Double.TryParse(row.Cells["WriteOff"].Value?.ToString(), out temp) ? temp : 0.00;
                 chk.Source = row.Cells["PaymentSource"].Value?.ToString();
-                try
-                {
-                    chks.Add(chk);
-                }
-                catch (Exception ex)
-                {
-                    Log.Instance.Error("Error posting pmt/adj batch.", ex);
-                    MessageBox.Show("Batch failed to post.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-
+                chks.Add(chk);
             }
 
             try
             {
-                chkdb.AddBatch(chks);
+                chkRepository.AddBatch(chks);
+
                 ChkBatch chkBatch = chkBatchRepository.GetById(batch);
-                chkBatchRepository.Delete(chkBatch);
+                chkBatchRepository.UpdatePostedDate(batch, DateTime.Now);
+
                 LoadOpenBatches();
-                chkdb.CompleteTransaction();
+                chkRepository.CompleteTransaction();
                 //clear entry screen for next batch
                 MessageBox.Show($"Batch {batch} posted.", "Batch Posted");
                 Clear();
+            }
+            catch(ApplicationException apex)
+            {
+                Log.Instance.Error($"Error posting payment batch", apex);
+                MessageBox.Show("Error occurred. Batch not posted.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             catch (Exception ex)
             {
@@ -366,7 +376,7 @@ namespace LabBilling.Forms
                 if (!string.IsNullOrEmpty(strAccount))
                 {
                     strAccount = strAccount.ToUpper();
-                    account = accdb.GetByAccount(strAccount, true);
+                    account = accountRepository.GetByAccount(strAccount, true);
                 }
                 else
                 {
@@ -594,7 +604,7 @@ namespace LabBilling.Forms
                 if (frm.SelectedAccount != "" && frm.SelectedAccount != null)
                 {
                     string strAccount = frm.SelectedAccount.ToUpper();
-                    account = accdb.GetByAccount(strAccount, true);
+                    account = accountRepository.GetByAccount(strAccount, true);
                 }
                 else
                 {

@@ -706,7 +706,7 @@ namespace LabBilling.Core.DataAccess
             chrg.UnitNo = accData.EMPINumber;
             chrg.ResponsibleProvider = "";
 
-            List<ICdmDetail> feeSched = null;
+            List<CdmDetail> feeSched = null;
 
             switch (accData.Client.FeeSchedule)
             {

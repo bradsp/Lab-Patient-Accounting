@@ -35,8 +35,8 @@ namespace LabBilling.Core.DataAccess
                 .From(_tableName);
 
             if (includeDeleted == false)
-                sql.Where($"{this.GetRealColumn(nameof(Cdm.IsDeleted))} = @0", 
-                    new SqlParameter() { SqlDbType = SqlDbType.Bit, Value = 0});
+                sql.Where($"{this.GetRealColumn(nameof(Cdm.IsDeleted))} = @0",
+                    new SqlParameter() { SqlDbType = SqlDbType.Bit, Value = 0 });
 
             sql.Append($"order by {_tableName}.{this.GetRealColumn(nameof(Cdm.Description))}");
 
@@ -47,12 +47,10 @@ namespace LabBilling.Core.DataAccess
 
         public override bool Save(Cdm table)
         {
-            var record = GetCdm(table.ChargeId);
+            var record = GetCdm(table.ChargeId, true);
 
             if (record != null)
-            {
                 return Update(table);
-            }
             else
             {
                 Add(table);
@@ -60,8 +58,99 @@ namespace LabBilling.Core.DataAccess
             }
         }
 
+        public override bool Update(Cdm table)
+        {
+            //update all fee schedules as well
+            CdmDetailRepository cdmDetailRepository = new CdmDetailRepository(dbConnection);
+
+            foreach(var cd in table.CdmFeeSchedule1)
+            {
+                cdmDetailRepository.Save(cd);
+            }
+            foreach (var cd in table.CdmFeeSchedule2)
+            {
+                cdmDetailRepository.Save(cd);
+            }
+            foreach (var cd in table.CdmFeeSchedule3)
+            {
+                cdmDetailRepository.Save(cd);
+            }
+            foreach (var cd in table.CdmFeeSchedule4)
+            {
+                cdmDetailRepository.Save(cd);
+            }
+            foreach (var cd in table.CdmFeeSchedule5)
+            {
+                cdmDetailRepository.Save(cd);
+            }
+
+
+            return base.Update(table);
+        }
+
+        public override object Add(Cdm table)
+        {
+            CdmDetailRepository cdmDetailRepository = new CdmDetailRepository(dbConnection);
+            //add all fee schedules as well
+            foreach (var cd in table.CdmFeeSchedule1)
+            {
+                cdmDetailRepository.Save(cd);
+            }
+            foreach (var cd in table.CdmFeeSchedule2)
+            {
+                cdmDetailRepository.Save(cd);
+            }
+            foreach (var cd in table.CdmFeeSchedule3)
+            {
+                cdmDetailRepository.Save(cd);
+            }
+            foreach (var cd in table.CdmFeeSchedule4)
+            {
+                cdmDetailRepository.Save(cd);
+            }
+            foreach (var cd in table.CdmFeeSchedule5)
+            {
+                cdmDetailRepository.Save(cd);
+            }
+
+            return base.Add(table);
+        }
+
+        //public Cdm GetCdm(string cdm, bool includeDeleted = false)
+        //{
+        //    string cdmRealName = this.GetRealColumn(nameof(Cdm.ChargeId));
+        //    string isDeletedRealName = this.GetRealColumn(nameof(Cdm.IsDeleted));
+
+        //    var cmd = PetaPoco.Sql.Builder;
+        //    cmd.Where($"{cdmRealName} = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = cdm });
+
+        //    if (!includeDeleted)
+        //        cmd.Where($"{isDeletedRealName} = 0");
+
+        //    var result = dbConnection.SingleOrDefault<Cdm>(cmd);
+        //    if (result != null)
+        //    {
+        //        string cdmColName = this.GetRealColumn(typeof(CdmDetail), nameof(CdmDetail.ChargeItemId));
+        //        string isDeletedColName = this.GetRealColumn(typeof(CdmDetail), nameof(CdmDetail.IsDeleted));
+        //        result.CdmFeeSchedule1 = dbConnection.Fetch<CdmFeeSchedule1>($"where {cdmColName} = @0 and {isDeletedColName} = 0",
+        //            new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = cdm }).ToList<ICdmDetail>();
+        //        result.CdmFeeSchedule2 = dbConnection.Fetch<CdmFeeSchedule2>($"where {cdmColName} = @0 and {isDeletedColName} = 0",
+        //            new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = cdm }).ToList<ICdmDetail>();
+        //        result.CdmFeeSchedule3 = dbConnection.Fetch<CdmFeeSchedule3>($"where {cdmColName} = @0 and {isDeletedColName} = 0",
+        //            new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = cdm }).ToList<ICdmDetail>();
+        //        result.CdmFeeSchedule4 = dbConnection.Fetch<CdmFeeSchedule4>($"where {cdmColName} = @0 and {isDeletedColName} = 0",
+        //            new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = cdm }).ToList<ICdmDetail>();
+        //        result.CdmFeeSchedule5 = dbConnection.Fetch<CdmFeeSchedule5>($"where {cdmColName} = @0 and {isDeletedColName} = 0",
+        //            new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = cdm }).ToList<ICdmDetail>();
+        //    }
+
+        //    return result;
+        //}
+
         public Cdm GetCdm(string cdm, bool includeDeleted = false)
         {
+            CdmDetailRepository cdmDetailRepository = new CdmDetailRepository(dbConnection);
+
             string cdmRealName = this.GetRealColumn(nameof(Cdm.ChargeId));
             string isDeletedRealName = this.GetRealColumn(nameof(Cdm.IsDeleted));
 
@@ -72,20 +161,13 @@ namespace LabBilling.Core.DataAccess
                 cmd.Where($"{isDeletedRealName} = 0");
 
             var result = dbConnection.SingleOrDefault<Cdm>(cmd);
-            if(result != null)
+            if (result != null)
             {
-                string cdmColName = this.GetRealColumn(typeof(CdmDetail), nameof(CdmDetail.ChargeItemId));
-                string isDeletedColName = this.GetRealColumn(typeof(CdmDetail), nameof(CdmDetail.IsDeleted));
-                result.CdmFeeSchedule1 = dbConnection.Fetch<CdmFeeSchedule1>($"where {cdmColName} = @0 and {isDeletedColName} = 0", 
-                    new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = cdm }).ToList<ICdmDetail>();
-                result.CdmFeeSchedule2 = dbConnection.Fetch<CdmFeeSchedule2>($"where {cdmColName} = @0 and {isDeletedColName} = 0", 
-                    new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = cdm }).ToList<ICdmDetail>();
-                result.CdmFeeSchedule3 = dbConnection.Fetch<CdmFeeSchedule3>($"where {cdmColName} = @0 and {isDeletedColName} = 0", 
-                    new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = cdm }).ToList<ICdmDetail>();
-                result.CdmFeeSchedule4 = dbConnection.Fetch<CdmFeeSchedule4>($"where {cdmColName} = @0 and {isDeletedColName} = 0", 
-                    new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = cdm }).ToList<ICdmDetail>();
-                result.CdmFeeSchedule5 = dbConnection.Fetch<CdmFeeSchedule5>($"where {cdmColName} = @0 and {isDeletedColName} = 0", 
-                    new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = cdm }).ToList<ICdmDetail>();
+                result.CdmFeeSchedule1 = cdmDetailRepository.GetByCdm(cdm, "1");
+                result.CdmFeeSchedule2 = cdmDetailRepository.GetByCdm(cdm, "2");
+                result.CdmFeeSchedule3 = cdmDetailRepository.GetByCdm(cdm, "3");
+                result.CdmFeeSchedule4 = cdmDetailRepository.GetByCdm(cdm, "4");
+                result.CdmFeeSchedule5 = cdmDetailRepository.GetByCdm(cdm, "5");
             }
 
             return result;
@@ -93,22 +175,19 @@ namespace LabBilling.Core.DataAccess
 
         public List<Cdm> GetByCpt(string cptId)
         {
-            List<CdmFeeSchedule1> cdmDetails = new List<CdmFeeSchedule1>();
+            List<CdmDetail> cdmDetails = new List<CdmDetail>();
 
-            var cmd = PetaPoco.Sql.Builder;
-            cmd.From("cpt4");
-            cmd.Where($"{GetRealColumn(typeof(CdmFeeSchedule1), nameof(CdmFeeSchedule1.Cpt4))} = @0",
-                new SqlParameter() { SqlDbType = SqlDbType.VarChar,SqlValue = cptId });
+            CdmDetailRepository cdmDetailRepository = new CdmDetailRepository(dbConnection);
 
-            cdmDetails = dbConnection.Fetch<CdmFeeSchedule1>(cmd);
+            cdmDetails = cdmDetailRepository.GetByCpt(cptId);
 
             List<string> cdms = new List<string>();
 
-            List<string> distinctCdms = cdmDetails.Select(c => c.BillCode).ToList();
+            List<string> distinctCdms = cdmDetails.Select(c => c.ChargeItemId).Distinct().ToList();
 
             if(distinctCdms.Count > 0)
             {
-                cmd = PetaPoco.Sql.Builder;
+                PetaPoco.Sql cmd = PetaPoco.Sql.Builder;
                 cmd.From(_tableName);
                 cmd.Where($"{GetRealColumn(nameof(Cdm.ChargeId))} in (@cdms)", new { cdms = distinctCdms });
                 List<Cdm> results = dbConnection.Fetch<Cdm>(cmd);

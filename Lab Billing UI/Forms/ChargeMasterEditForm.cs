@@ -39,7 +39,7 @@ namespace LabBilling.Forms
         {
             if (SelectedCdm != null)
             {
-                cdm = cdmRepository.GetCdm(SelectedCdm);
+                cdm = cdmRepository.GetCdm(SelectedCdm, true);
                 if(cdm == null)
                 {
                     if(MessageBox.Show($"CDM {SelectedCdm} is not found. Do you want to add?", "Not Found", 
@@ -56,11 +56,11 @@ namespace LabBilling.Forms
                 cdm = new Cdm
                 {
                     ChargeId = SelectedCdm,
-                    CdmFeeSchedule1 = new List<ICdmDetail>(),
-                    CdmFeeSchedule2 = new List<ICdmDetail>(),
-                    CdmFeeSchedule3 = new List<ICdmDetail>(),
-                    CdmFeeSchedule4 = new List<ICdmDetail>(),
-                    CdmFeeSchedule5 = new List<ICdmDetail>()
+                    CdmFeeSchedule1 = new List<CdmDetail>(),
+                    CdmFeeSchedule2 = new List<CdmDetail>(),
+                    CdmFeeSchedule3 = new List<CdmDetail>(),
+                    CdmFeeSchedule4 = new List<CdmDetail>(),
+                    CdmFeeSchedule5 = new List<CdmDetail>()
                 };
 
                 addMode = true;
@@ -141,11 +141,12 @@ namespace LabBilling.Forms
         {
             dgv.SetColumnsVisibility(false);
             int colOrder = 1;
-            dgv.Columns[nameof(CdmDetail.Link)].Visible = true;
-            dgv.Columns[nameof(CdmDetail.Link)].DisplayIndex = colOrder++;
+            //dgv.Columns[nameof(CdmDetail.Link)].Visible = true;
+            //dgv.Columns[nameof(CdmDetail.Link)].DisplayIndex = colOrder++;
             dgv.Columns[nameof(CdmDetail.CodeFlag)].Visible = true;
             dgv.Columns[nameof(CdmDetail.CodeFlag)].DisplayIndex = colOrder++;
             dgv.Columns[nameof(CdmDetail.Cpt4)].Visible = true;
+            ((DataGridViewTextBoxColumn)dgv.Columns[nameof(CdmDetail.Cpt4)]).MaxInputLength = 5;
             dgv.Columns[nameof(CdmDetail.Cpt4)].DisplayIndex = colOrder++;
             dgv.Columns[nameof(CdmDetail.Description)].Visible = true;
             dgv.Columns[nameof(CdmDetail.Description)].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
@@ -172,26 +173,44 @@ namespace LabBilling.Forms
             dgv.AutoResizeColumns();
         }
 
+        private void RefreshGrid(DataGridView dgv, BindingSource bs, string feeSched)
+        {
+            if (dgv.Rows.Count == 1 && dgv.Rows[0].IsNewRow)
+            {
+                if (MessageBox.Show("Do you want to copy rows from fee schedule 1?", "Copy from Fee Schedule 1?", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                {
+                    foreach (DataRow row in ((DataTable)feeSched1BindingSource.DataSource).Rows)
+                    {
+                        ((DataTable)bs.DataSource).ImportRow(row);
+                        foreach(DataRow r in ((DataTable)bs.DataSource).Rows)
+                        {
+                            r.BeginEdit();
+                            r[nameof(CdmDetail.FeeSchedule)] = feeSched;
+                            r[nameof(CdmDetail.rowguid)] = DBNull.Value;
+                        }
+                    }
+                    dgv.Refresh();
+                }
+            }
+            FormatGrid(dgv);
+        }
+
         private void cptTabControl_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (cptTabControl.SelectedTab.Name == feeSched1tab.Name)
                 FormatGrid(feeSched1Grid);
             else if (cptTabControl.SelectedTab.Name == feeSched2tab.Name)
-                FormatGrid(feeSched2Grid);
+                RefreshGrid(feeSched2Grid, feeSched2BindingSource, "2");
             else if (cptTabControl.SelectedTab.Name == feeSched3tab.Name)
-                FormatGrid(feeSched3Grid);
+                RefreshGrid(feeSched3Grid, feeSched3BindingSource, "3");
             else if (cptTabControl.SelectedTab.Name == feeSched4tab.Name)
-                FormatGrid(feeSched4Grid);
+                RefreshGrid(feeSched4Grid, feeSched4BindingSource, "4");
             else if (cptTabControl.SelectedTab.Name == feeSched5tab.Name)
-                FormatGrid(feeSched5Grid);
-
+                RefreshGrid(feeSched5Grid, feeSched5BindingSource, "5");
         }
 
         private void saveButton_Click(object sender, EventArgs e)
         {
-            DialogResult = DialogResult.OK;
-            return;
-
             cdm.ChargeId = chargeIdTextBox.Text;
             cdm.CBillDetail = cbillDetailCheckBox.Checked ? 1 : 0;
             cdm.CClassPaAmount = Convert.ToDouble(cProfTextBox.Text);
@@ -210,9 +229,58 @@ namespace LabBilling.Forms
             cdm.RefLabPayment = Convert.ToDouble(refLabPayment.Text);
             cdm.Mnem = lisOrderCodeTextBox.Text;
 
-            
+            ReadFeeSchedule(cdm.CdmFeeSchedule1, feeSched1Grid, "1");
+            ReadFeeSchedule(cdm.CdmFeeSchedule2, feeSched2Grid, "2");
+            ReadFeeSchedule(cdm.CdmFeeSchedule3, feeSched3Grid, "3");
+            ReadFeeSchedule(cdm.CdmFeeSchedule4, feeSched4Grid, "4");
+            ReadFeeSchedule(cdm.CdmFeeSchedule5, feeSched5Grid, "5");
 
+            if(cdmRepository.Save(cdm))
+            {
+                DialogResult = DialogResult.OK;
+            }
+            else
+            {
+                MessageBox.Show("Error saving cdm.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                DialogResult = DialogResult.Cancel;
+            }
 
+            return;
+        }
+
+        private void ReadFeeSchedule(List<CdmDetail> cdmDetails, DataGridView dgv, string feeSched)
+        {
+            cdmDetails.Clear();
+            int linkNo = 1;
+            foreach (DataGridViewRow row in dgv.Rows)
+            {
+                if(row.IsNewRow)
+                    continue;
+
+                string rg = row.Cells[nameof(CdmDetail.rowguid)].Value.ToString();
+                Guid lRowguid = Guid.Empty;
+                if(!string.IsNullOrEmpty(rg))
+                    lRowguid = Guid.Parse(rg);
+
+                cdmDetails.Add(new CdmDetail()
+                {
+                    rowguid = lRowguid,
+                    FeeSchedule = feeSched,
+                    Cpt4 = row.Cells[nameof(CdmDetail.Cpt4)].Value.ToString(),
+                    ChargeItemId = cdm.ChargeId,
+                    Link = linkNo++,
+                    CodeFlag = row.Cells[nameof(CdmDetail.CodeFlag)].Value.ToString(),
+                    Description = row.Cells[nameof(CdmDetail.Description)].Value.ToString(),
+                    MClassPrice = Convert.ToDouble(row.Cells[nameof(CdmDetail.MClassPrice)].Value.ToString()),
+                    CClassPrice = Convert.ToDouble(row.Cells[nameof(CdmDetail.CClassPrice)].Value.ToString()),
+                    ZClassPrice = Convert.ToDouble(row.Cells[nameof(CdmDetail.ZClassPrice)].Value.ToString()),
+                    RevenueCode = row.Cells[nameof(CdmDetail.RevenueCode)].Value.ToString(),
+                    Type = row.Cells[nameof(CdmDetail.Type)].Value.ToString(),
+                    Modifier = row.Cells[nameof(CdmDetail.Modifier)].Value.ToString(),
+                    BillCode = row.Cells[nameof(CdmDetail.BillCode)].Value.ToString(),
+                    Cost = Convert.ToDecimal(row.Cells[nameof(CdmDetail.Cost)].Value.ToString())
+                });
+            }
         }
 
         private void chargeIdTextBox_Leave(object sender, EventArgs e)

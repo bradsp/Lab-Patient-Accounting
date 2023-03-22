@@ -57,15 +57,18 @@ namespace LabBilling.Core.Models
         public Guid rowguid { get; set; }
 
         [Ignore]
-        public List<ICdmDetail> CdmFeeSchedule1 { get; set; }
+        public List<CdmDetail> CdmDetails { get; set; }
+
         [Ignore]
-        public List<ICdmDetail> CdmFeeSchedule2 { get; set; }
+        public List<CdmDetail> CdmFeeSchedule1 { get; set; }
         [Ignore]
-        public List<ICdmDetail> CdmFeeSchedule3 { get; set; }
+        public List<CdmDetail> CdmFeeSchedule2 { get; set; }
         [Ignore]
-        public List<ICdmDetail> CdmFeeSchedule4 { get; set; }
+        public List<CdmDetail> CdmFeeSchedule3 { get; set; }
         [Ignore]
-        public List<ICdmDetail> CdmFeeSchedule5 { get; set; }
+        public List<CdmDetail> CdmFeeSchedule4 { get; set; }
+        [Ignore]
+        public List<CdmDetail> CdmFeeSchedule5 { get; set; }
 
 
     }

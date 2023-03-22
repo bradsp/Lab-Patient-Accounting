@@ -114,7 +114,8 @@ namespace LabBilling.Core.DataAccess
             {
                 Log.Instance.Fatal(e, $"Exception adding chk record");
                 dbConnection.AbortTransaction();
-                return false;
+                throw new ApplicationException("Exception encountered posting batch. Records have been rolled back.", e);
+                //return false;
             }
 
             return true;
