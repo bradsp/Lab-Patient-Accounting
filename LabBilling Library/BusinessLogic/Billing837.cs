@@ -865,13 +865,12 @@ namespace LabBilling.Core
                 //CL1 - institutional claim code
                 ediDocument.Segments.Add(new EdiSegment("CL1")
                 {
-
+                    [01] = "", //admission type code
+                    [02] = claim.AdmissionSourceCode, //admission source code
                     [03] = "01", //patient status code - core source 239 - hardcoding to 01 for now
-
                 });
                 segmentCount++;
             }
-
 
             // --PWK - Claim supplemental information
             // --CN1 - Contact Information
@@ -945,7 +944,6 @@ namespace LabBilling.Core
                         hiElement[2] = diag.Code.Trim();
                         hi.Element(dxCnt-1, hiElement);
                     }
-
                     dxCnt++;
                 }
                 ediDocument.Segments.Add(hi);

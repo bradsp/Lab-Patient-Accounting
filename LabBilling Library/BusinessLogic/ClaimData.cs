@@ -75,6 +75,8 @@ namespace LabBilling.Core
         public string RelatedCausesCountryCode { get; set; }
         public string SpecialProgramIndicator { get; set; }
         public string DelayReasonCode { get; set; }
+        public string AdmissionSourceCode { get; set; }
+        public string AdmissionTypeCode { get; set; }
 
         public DateTime? OnsetOfCurrentIllness { get; set; }
         public DateTime? InitialTreatmentDate { get; set; }

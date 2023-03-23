@@ -171,6 +171,8 @@ namespace LabBilling.Core.Models
 
         [Ignore]
         public List<ClientDiscount> Discounts { get; set; }
+        [Ignore]
+        public ClientType ClientType { get; set; }
 
     }
 }

@@ -1436,7 +1436,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:LabBilling Core, Version=2023.3.20.1325, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:LabBilling Core, Version=2023.3.23.1252, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_C4265F3CA61474897971612E03C71DD2"
@@ -1684,7 +1684,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:j4jayant.HL7.Parser, Version=2023.3.20.1325, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:j4jayant.HL7.Parser, Version=2023.3.23.1252, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_F523DAB88C6DBBA5B3515F9F3B8453CD"
@@ -1798,15 +1798,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:LabBillingService"
-        "ProductCode" = "8:{F18433A7-A43F-44BF-B6D5-E84A6EE17787}"
-        "PackageCode" = "8:{E01D1C5E-1224-4AE6-91D4-3C4AB0F9E613}"
+        "ProductCode" = "8:{482D8DB5-55C3-4EA8-8A5F-1B7862B7257F}"
+        "PackageCode" = "8:{48F0881B-18CB-426F-89A4-31FA06298F8E}"
         "UpgradeCode" = "8:{CC4FC0F6-B7BA-4BE6-9E8A-DB5495084071}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:1.0.25"
+        "ProductVersion" = "8:1.0.26"
         "Manufacturer" = "8:WTH"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"

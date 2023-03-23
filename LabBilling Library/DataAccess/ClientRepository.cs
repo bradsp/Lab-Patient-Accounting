@@ -13,18 +13,19 @@ namespace LabBilling.Core.DataAccess
     public class ClientRepository : RepositoryBase<Client>
     {
         ClientDiscountRepository clientDiscountRepository;
+        ClientTypeRepository clientTypeRepository;
         //AccountRepository accountRepository;
 
         public ClientRepository(string connection) : base(connection)
         {
             clientDiscountRepository = new ClientDiscountRepository(connection);
-            //accountRepository = new AccountRepository(connection);
+            clientTypeRepository = new ClientTypeRepository(connection);
         }
 
         public ClientRepository(PetaPoco.Database db) : base(db)
         {
             clientDiscountRepository = new ClientDiscountRepository(db);
-            //accountRepository = new AccountRepository(db);
+            clientTypeRepository = new ClientTypeRepository(db);
         }
 
         public List<Client> GetAll(bool includeInactive)
@@ -61,7 +62,10 @@ namespace LabBilling.Core.DataAccess
             var record = dbConnection.SingleOrDefault<Client>("where cli_mnem = @0", new SqlParameter() { SqlDbType = System.Data.SqlDbType.VarChar, Value = clientMnem });
             Log.Instance.Debug(dbConnection.LastSQL);
             if (record != null)
+            {
                 record.Discounts = clientDiscountRepository.GetByClient(clientMnem);
+                record.ClientType = clientTypeRepository.GetByType(record.Type);
+            }
             Log.Instance.Debug(dbConnection.LastSQL);
             return record;
         }

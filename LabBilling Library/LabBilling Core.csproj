@@ -270,6 +270,7 @@
     <Compile Include="DataAccess\ClaimValidationRuleRepository.cs" />
     <Compile Include="DataAccess\ClientDiscountRepository.cs" />
     <Compile Include="DataAccess\ClientRepository.cs" />
+    <Compile Include="DataAccess\ClientTypeRepository.cs" />
     <Compile Include="DataAccess\CustomSqlDatabaseProvider.cs" />
     <Compile Include="DataAccess\DictDxRepository.cs" />
     <Compile Include="DataAccess\EmpRepository.cs" />
@@ -327,6 +328,7 @@
     <Compile Include="Models\ClaimValidationRule.cs" />
     <Compile Include="Models\Client.cs" />
     <Compile Include="Models\ClientDiscount.cs" />
+    <Compile Include="Models\ClientType.cs" />
     <Compile Include="Models\DictAccValidation.cs" />
     <Compile Include="Models\DictDx.cs" />
     <Compile Include="Models\Dictionaries.cs" />

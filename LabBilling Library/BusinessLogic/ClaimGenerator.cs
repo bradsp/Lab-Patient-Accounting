@@ -443,6 +443,7 @@ namespace LabBilling.Core.BusinessLogic
                     claimData.FacilityCode = "14";
                     claimData.FacilityCodeQualifier = "A";
                     claimData.ClaimFrequency = "1";
+                    claimData.AdmissionSourceCode = claimData.claimAccount.Client.ClientType.AdmissionSourceCode;
                 }
                 claimData.ProviderSignatureIndicator = "Y"; //default to Yes
                 claimData.ProviderAcceptAssignmentCode = "C";
