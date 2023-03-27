@@ -29,7 +29,7 @@
     <InstallUrl>\\wthmclbill\installations%24\LabBilling\</InstallUrl>
     <ProductName>Lab Outreach Patient Accounting</ProductName>
     <PublisherName>West Tennessee Healthcare</PublisherName>
-    <ApplicationRevision>133</ApplicationRevision>
+    <ApplicationRevision>134</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
@@ -181,6 +181,12 @@
     </Compile>
     <Compile Include="Forms\LogViewerForm.Designer.cs">
       <DependentUpon>LogViewerForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\PatientCollectionsRunWizard.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\PatientCollectionsRunWizard.Designer.cs">
+      <DependentUpon>PatientCollectionsRunWizard.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\PaymentAdjustmentEntryForm.cs">
       <SubType>Form</SubType>
@@ -381,17 +387,17 @@
     <Compile Include="Forms\AskCloseTabForm.Designer.cs">
       <DependentUpon>AskCloseTabForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\BadDebtEditForm.cs">
+    <Compile Include="Forms\PatientCollectionsEditForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\BadDebtEditForm.Designer.cs">
-      <DependentUpon>BadDebtEditForm.cs</DependentUpon>
+    <Compile Include="Forms\PatientCollectionsEditForm.Designer.cs">
+      <DependentUpon>PatientCollectionsEditForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\BadDebtForm.cs">
+    <Compile Include="Forms\PatientCollectionsForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\BadDebtForm.Designer.cs">
-      <DependentUpon>BadDebtForm.cs</DependentUpon>
+    <Compile Include="Forms\PatientCollectionsForm.Designer.cs">
+      <DependentUpon>PatientCollectionsForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\AccountChargeEntry.cs">
       <SubType>Form</SubType>
@@ -552,6 +558,9 @@
     <EmbeddedResource Include="Forms\LogViewerForm.resx">
       <DependentUpon>LogViewerForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\PatientCollectionsRunWizard.resx">
+      <DependentUpon>PatientCollectionsRunWizard.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\PaymentAdjustmentEntryForm.resx">
       <DependentUpon>PaymentAdjustmentEntryForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -640,11 +649,11 @@
     <EmbeddedResource Include="Forms\AskCloseTabForm.resx">
       <DependentUpon>AskCloseTabForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\BadDebtEditForm.resx">
-      <DependentUpon>BadDebtEditForm.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\PatientCollectionsEditForm.resx">
+      <DependentUpon>PatientCollectionsEditForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\BadDebtForm.resx">
-      <DependentUpon>BadDebtForm.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\PatientCollectionsForm.resx">
+      <DependentUpon>PatientCollectionsForm.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\AccountChargeEntry.resx">

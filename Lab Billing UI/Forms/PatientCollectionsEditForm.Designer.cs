@@ -1,7 +1,7 @@
 ﻿
 namespace LabBilling.Forms
 {
-    partial class BadDebtEditForm
+    partial class PatientCollectionsEditForm
     {
         /// <summary>
         /// Required designer variable.

@@ -153,6 +153,7 @@
       <DependentUpon>DMessageForm.cs</DependentUpon>
     </Compile>
     <Compile Include="ERR.cs" />
+    <Compile Include="HelperExtensions.cs" />
     <Compile Include="IListExtensions.cs" />
     <Compile Include="FilterListBox.cs">
       <SubType>Component</SubType>

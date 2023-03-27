@@ -420,7 +420,7 @@ namespace LabBilling
         {
             Log.Instance.Trace($"Entering");
 
-            var formsList = Application.OpenForms.OfType<BadDebtForm>();
+            var formsList = Application.OpenForms.OfType<PatientCollectionsForm>();
 
             if (formsList.Count() > 0)
             {
@@ -429,7 +429,7 @@ namespace LabBilling
             else
             {
 
-                BadDebtForm frm = new BadDebtForm();
+                PatientCollectionsForm frm = new PatientCollectionsForm();
                 frm.MdiParent = this;
                 frm.AutoScroll = true;
                 frm.WindowState = FormWindowState.Normal;

@@ -88,7 +88,7 @@ namespace LabBilling.Core.DataAccess
         {
             table.Status = "NEW";
 
-            AccountRepository accountRepository = new AccountRepository(dbConnection);
+            //AccountRepository accountRepository = new AccountRepository(dbConnection);
 
             return base.Add(table);
         }

@@ -79,8 +79,6 @@ namespace LabBilling.Forms
                     " and nullif(statement_submitted_dt_tm,'') is null "+
                     "order by statement_number, record_cnt", strBatchId)
                     , conn);
-
-
                 
                 SqlCommand cmdSelectAcc = new SqlCommand(
                     string.Format("select account_id as [account], * from dbo.patbill_acc  "+
@@ -88,7 +86,6 @@ namespace LabBilling.Forms
                     " and nullif(date_sent,'') is null " +
                     "order by statement_number, record_cnt_acct ", strBatchId)
                     , conn);
-
                 
                 SqlCommand cmdSelectEnctr = new SqlCommand(
                     string.Format(
@@ -99,8 +96,6 @@ namespace LabBilling.Forms
                     " ) "+
                     "order by statement_number, record_cnt",strBatchId)
                     ,conn);
-
-                
                
                 SqlCommand cmdSelectEnctrActv = new SqlCommand(
                     string.Format(
@@ -111,7 +106,6 @@ namespace LabBilling.Forms
                     " ) " +
                     "order by statement_number,  parent_activity_id, record_cnt", strBatchId)
                     ,conn);
-
                 
                 SqlCommand cmdSelectNotices = new SqlCommand(
                     string.Format("select * from pat_statements_cerner "+
@@ -168,8 +162,6 @@ namespace LabBilling.Forms
             sw.Write(string.Format("HDR~MCL~~CERNER~MCL~{0}~{1}~T~N~0~0~0\r\n"
                 ,DateTime.Now.ToString("yyyyMMdd")
                 ,DateTime.Now.ToString("HHmmss")));
-           
-            
 
             foreach (DataRow dr in m_dsPatBill.Tables["STMT"].Rows)
             {
@@ -468,9 +460,6 @@ namespace LabBilling.Forms
                             drActv[iActv]["parent_activity_id"].ToString().ToUpper()
                             
                             ));
-                            
-
-
 
                         }
 

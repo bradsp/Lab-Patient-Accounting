@@ -35,6 +35,7 @@
             this.worklistToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.duplicateAccountsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.accountChargeEntryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.batchChargeEntryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.batchRemittanceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.claimBatchManagementToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.clientBillsNewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -87,7 +88,7 @@
             this.toolStripUsernameLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripDatabaseLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.batchChargeEntryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.helpProvider1 = new System.Windows.Forms.HelpProvider();
             this.MainFormMenu.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -151,6 +152,12 @@
             this.accountChargeEntryToolStripMenuItem.Name = "accountChargeEntryToolStripMenuItem";
             resources.ApplyResources(this.accountChargeEntryToolStripMenuItem, "accountChargeEntryToolStripMenuItem");
             this.accountChargeEntryToolStripMenuItem.Click += new System.EventHandler(this.accountChargeEntryToolStripMenuItem_Click);
+            // 
+            // batchChargeEntryToolStripMenuItem
+            // 
+            this.batchChargeEntryToolStripMenuItem.Name = "batchChargeEntryToolStripMenuItem";
+            resources.ApplyResources(this.batchChargeEntryToolStripMenuItem, "batchChargeEntryToolStripMenuItem");
+            this.batchChargeEntryToolStripMenuItem.Click += new System.EventHandler(this.batchChargeEntryToolStripMenuItem_Click);
             // 
             // batchRemittanceToolStripMenuItem
             // 
@@ -511,12 +518,6 @@
             resources.ApplyResources(this.panel1, "panel1");
             this.panel1.Name = "panel1";
             // 
-            // batchChargeEntryToolStripMenuItem
-            // 
-            this.batchChargeEntryToolStripMenuItem.Name = "batchChargeEntryToolStripMenuItem";
-            resources.ApplyResources(this.batchChargeEntryToolStripMenuItem, "batchChargeEntryToolStripMenuItem");
-            this.batchChargeEntryToolStripMenuItem.Click += new System.EventHandler(this.batchChargeEntryToolStripMenuItem_Click);
-            // 
             // MainForm
             // 
             resources.ApplyResources(this, "$this");
@@ -604,5 +605,6 @@
         private System.Windows.Forms.ToolStripMenuItem claimBatchManagementToolStripMenuItem;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.ToolStripMenuItem batchChargeEntryToolStripMenuItem;
+        private System.Windows.Forms.HelpProvider helpProvider1;
     }
 }

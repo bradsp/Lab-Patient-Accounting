@@ -105,9 +105,10 @@ namespace LabBilling.Core.BusinessLogic.Validators
                     .Must((a, f) => f == a.InsurancePrimary.FinCode)
                     .WithMessage("Account fin code does not equal insurance fin code")
                     .When(ac => ac.InsurancePrimary != null);
-                
+
                 RuleFor(a => a.TotalPayments)
-                    .LessThanOrEqualTo(0).WithMessage("Account has payments recorded.");
+                    .LessThanOrEqualTo(0).WithMessage("Account has payments recorded.")
+                    .When(a => a.Status == "NEW");
 
                 RuleFor(a => a.Charges)
                     .Must(NotNeedRepeatModifier)

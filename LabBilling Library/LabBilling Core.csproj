@@ -291,6 +291,7 @@
     <Compile Include="DataAccess\MutuallyExclusiveEditRepository.cs" />
     <Compile Include="DataAccess\NumberRepository.cs" />
     <Compile Include="DataAccess\PatDxRepository.cs" />
+    <Compile Include="DataAccess\PatientStatementRepository.cs" />
     <Compile Include="DataAccess\PatRepository.cs" />
     <Compile Include="DataAccess\PhyRepository.cs" />
     <Compile Include="DataAccess\ReportingRepository.cs" />
@@ -355,6 +356,11 @@
     <Compile Include="Models\Parameters.cs" />
     <Compile Include="Models\Pat.cs" />
     <Compile Include="Models\PatDx.cs" />
+    <Compile Include="Models\PatientStatement.cs" />
+    <Compile Include="Models\PatientStatementAccount.cs" />
+    <Compile Include="Models\PatientStatementCerner.cs" />
+    <Compile Include="Models\PatientStatementEncounter.cs" />
+    <Compile Include="Models\PatientStatementEncounterActivity.cs" />
     <Compile Include="Models\Phy.cs" />
     <Compile Include="Models\ProgressReportModel.cs" />
     <Compile Include="Models\Pth.cs" />

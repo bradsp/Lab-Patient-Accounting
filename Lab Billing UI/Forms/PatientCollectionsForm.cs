@@ -14,7 +14,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace LabBilling.Forms
 {
-    public partial class BadDebtForm : Form
+    public partial class PatientCollectionsForm : Form
     {
         private string propAppName
         { get { return string.Format("{0} {1}", Application.ProductName, Application.ProductVersion); } }
@@ -81,7 +81,7 @@ namespace LabBilling.Forms
             tsbSmallBalWriteOff.Enabled = !tsbSmallBalWriteOff.Enabled;
         }
           
-        public BadDebtForm()
+        public PatientCollectionsForm()
         {
             Log.Instance.Trace($"Entering");
             InitializeComponent();
@@ -186,7 +186,6 @@ namespace LabBilling.Forms
                     continue;
                 }
                 
-
                 m_CAcc.GetBalance(strAccount, out strBal);
                 if (strBal.Contains("ERR"))
                 {
@@ -406,7 +405,7 @@ namespace LabBilling.Forms
                 if(dgvAccounts.Columns.Contains("rowguid"))
                 {
                     string selectedGuid = ((DataGridView)sender).Rows[e.RowIndex].Cells["rowguid"].Value.ToString();
-                    BadDebtEditForm bdFrm = new BadDebtEditForm(selectedGuid);
+                    PatientCollectionsEditForm bdFrm = new PatientCollectionsEditForm(selectedGuid);
 
                     if (bdFrm.ShowDialog() == DialogResult.OK)
                     {
@@ -933,6 +932,14 @@ namespace LabBilling.Forms
         {
             Log.Instance.Trace($"Entering");
             dgvAccounts_RowHeaderMouseDoubleClick(sender, e);
+        }
+
+        private void patientStatementsWizardToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            PatientCollectionsRunWizard frm = new PatientCollectionsRunWizard();
+
+            frm.ShowDialog();
+
         }
     }
 }

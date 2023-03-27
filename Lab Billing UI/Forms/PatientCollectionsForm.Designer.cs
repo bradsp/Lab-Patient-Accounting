@@ -1,6 +1,6 @@
 ﻿namespace LabBilling.Forms
 {
-    partial class BadDebtForm
+    partial class PatientCollectionsForm
     {
         /// <summary>
         /// Required designer variable.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(BadDebtForm));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PatientCollectionsForm));
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
@@ -51,6 +51,7 @@
             this.tspbRecords = new System.Windows.Forms.ToolStripProgressBar();
             this.ssRecords = new System.Windows.Forms.ToolStripStatusLabel();
             this.dgvAccounts = new System.Windows.Forms.DataGridView();
+            this.patientStatementsWizardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tsMain.SuspendLayout();
             this.ssMain.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvAccounts)).BeginInit();
@@ -127,7 +128,8 @@
             this.tsddbtnBadDebt.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsmiSelectAccounts,
             this.GeneratePatientBillsToolStripMenuItem,
-            this.GenerateCollectionsFileToolStripMenuItem});
+            this.GenerateCollectionsFileToolStripMenuItem,
+            this.patientStatementsWizardToolStripMenuItem});
             this.tsddbtnBadDebt.Image = ((System.Drawing.Image)(resources.GetObject("tsddbtnBadDebt.Image")));
             this.tsddbtnBadDebt.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsddbtnBadDebt.Name = "tsddbtnBadDebt";
@@ -138,7 +140,7 @@
             // 
             this.tsmiSelectAccounts.CheckOnClick = true;
             this.tsmiSelectAccounts.Name = "tsmiSelectAccounts";
-            this.tsmiSelectAccounts.Size = new System.Drawing.Size(194, 22);
+            this.tsmiSelectAccounts.Size = new System.Drawing.Size(212, 22);
             this.tsmiSelectAccounts.Text = "SELECT PAT BILL ACC\'s";
             this.tsmiSelectAccounts.ToolTipText = "Use \"Bad Debt Batch\" on the MCL billing menu";
             this.tsmiSelectAccounts.Visible = false;
@@ -148,14 +150,14 @@
             // 
             this.GeneratePatientBillsToolStripMenuItem.CheckOnClick = true;
             this.GeneratePatientBillsToolStripMenuItem.Name = "GeneratePatientBillsToolStripMenuItem";
-            this.GeneratePatientBillsToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
+            this.GeneratePatientBillsToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
             this.GeneratePatientBillsToolStripMenuItem.Text = "Generate Patient Bills";
             this.GeneratePatientBillsToolStripMenuItem.Click += new System.EventHandler(this.GeneratePatientBillsToolStripMenuItem_Click);
             // 
             // GenerateCollectionsFileToolStripMenuItem
             // 
             this.GenerateCollectionsFileToolStripMenuItem.Name = "GenerateCollectionsFileToolStripMenuItem";
-            this.GenerateCollectionsFileToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
+            this.GenerateCollectionsFileToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
             this.GenerateCollectionsFileToolStripMenuItem.Text = "Send to Collections";
             this.GenerateCollectionsFileToolStripMenuItem.Click += new System.EventHandler(this.GenerateCollectionsFileToolStripMenuItem_Click);
             // 
@@ -270,7 +272,14 @@
             this.dgvAccounts.RowsRemoved += new System.Windows.Forms.DataGridViewRowsRemovedEventHandler(this.dgvAccounts_RowsRemoved);
             this.dgvAccounts.SelectionChanged += new System.EventHandler(this.DgvAccounts_SelectionChanged);
             // 
-            // BadDebtForm
+            // patientStatementsWizardToolStripMenuItem
+            // 
+            this.patientStatementsWizardToolStripMenuItem.Name = "patientStatementsWizardToolStripMenuItem";
+            this.patientStatementsWizardToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
+            this.patientStatementsWizardToolStripMenuItem.Text = "Patient Statements Wizard";
+            this.patientStatementsWizardToolStripMenuItem.Click += new System.EventHandler(this.patientStatementsWizardToolStripMenuItem_Click);
+            // 
+            // PatientCollectionsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -279,7 +288,7 @@
             this.Controls.Add(this.ssMain);
             this.Controls.Add(this.tsMain);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Name = "BadDebtForm";
+            this.Name = "PatientCollectionsForm";
             this.Text = "Patient Collections";
             this.Load += new System.EventHandler(this.frmBadDebt_Load);
             this.tsMain.ResumeLayout(false);
@@ -313,6 +322,7 @@
         private System.Windows.Forms.ToolStripMenuItem paymentPlanToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem sentToCollectionsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem importCollectionsFileToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem patientStatementsWizardToolStripMenuItem;
     }
 }
 

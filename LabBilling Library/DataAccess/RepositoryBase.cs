@@ -51,7 +51,6 @@ namespace LabBilling.Core.DataAccess
         {
             Log.Instance.Trace("Entering");
 
-            //string sql = $"SELECT * FROM {_tableName}";
             PetaPoco.Sql sql = PetaPoco.Sql.Builder
                 .From(_tableName);
 
@@ -80,15 +79,10 @@ namespace LabBilling.Core.DataAccess
         {
             Log.Instance.Trace("Entering");
 
-            //if (table.mod_date == null || table.mod_date == DateTime.MinValue)
             table.mod_date = DateTime.Now;
-            //if (table.mod_host == "" || table.mod_host == null)
             table.mod_host = Environment.MachineName;
-            //if (table.mod_prg == "" || table.mod_prg == null)
             table.mod_prg = System.AppDomain.CurrentDomain.FriendlyName;
-            //if (table.mod_user == "" || table.mod_user == null)
             table.mod_user = Environment.UserName.ToString();
-            //if (table.rowguid == Guid.Empty)
             table.rowguid = Guid.NewGuid();
 
             object identity = dbConnection.Insert(table);
@@ -102,13 +96,9 @@ namespace LabBilling.Core.DataAccess
         {
             Log.Instance.Trace("Entering");
 
-            //if (table.mod_date == null || table.mod_date == DateTime.MinValue)
             table.mod_date = DateTime.Now;
-            //if (table.mod_host == "" || table.mod_host == null)
             table.mod_host = Environment.MachineName;
-            //if (table.mod_prg == "" || table.mod_prg == null)
             table.mod_prg = System.AppDomain.CurrentDomain.FriendlyName;
-            //if (table.mod_user == "" || table.mod_user == null)
             table.mod_user = Environment.UserName.ToString();
 
             dbConnection.Update(table);

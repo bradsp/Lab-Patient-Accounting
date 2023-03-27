@@ -144,19 +144,6 @@ namespace LabBilling.Core.DataAccess
                         {
                             record.BillingType = "REF LAB";
                             record.BillForm = record.InsurancePrimary.InsCompany.BillForm;
-
-                            //if (record.FinCode == "B" && record.InsurancePrimary.PolicyNumber.StartsWith("ZXK"))
-                            //{
-                            //    record.BillForm = "QUEST";
-                            //}
-                            //else if (record.FinCode == "D" && record.TransactionDate.IsBetween(questStartDate, questEndDate))
-                            //{
-                            //    record.BillForm = "QUEST";
-                            //}
-                            //else
-                            //{
-                            //    record.BillForm = record.InsurancePrimary.InsCompany.BillForm;
-                            //}
                         }
                         else
                         {
@@ -600,6 +587,22 @@ namespace LabBilling.Core.DataAccess
                         throw new ApplicationException("Error reprocessing charges.", ex);
                     }
                 }
+
+                if(table.Fin.FinClass == "M")
+                {
+                    //reprocess charges is fee schedule is different to pick up correct charge amounts
+                    if(oldClient.FeeSchedule != newClient.FeeSchedule)
+                    {
+                        try
+                        {
+                            chrgRepository.ReprocessCharges(table.AccountNo);
+                        }
+                        catch(Exception ex)
+                        {
+                            throw new ApplicationException("Error reprocessing charges.", ex);
+                        }
+                    }
+                }
             }
             else
             {
@@ -956,12 +959,14 @@ namespace LabBilling.Core.DataAccess
                         isAccountValid = false;
                         account.AccountValidationStatus.validation_text = validationResult.ToString();
                         //update account status back to new
-                        UpdateStatus(account.AccountNo, "NEW");
+                        if(!reprint)
+                            UpdateStatus(account.AccountNo, "NEW");
                     }
                     else if (account.LmrpErrors.Count > 0)
                     {
                         isAccountValid = false;
-                        UpdateStatus(account.AccountNo, "NEW");
+                        if(!reprint)
+                            UpdateStatus(account.AccountNo, "NEW");
                     }
                     else
                     {

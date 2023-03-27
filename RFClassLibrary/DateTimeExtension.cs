@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
@@ -16,9 +17,29 @@ namespace RFClassLibrary
         /// <returns>Yesterday date at same time.</returns>
         public static DateTime Yesterday()
         {
-
             return DateTime.Now.AddDays(-1);
         }
+
+        /// <summary>
+        /// Returns a datetime object for the last day of the previous month.
+        /// </summary>
+        /// <returns></returns>
+        public static DateTime GetLastDayOfPrevMonth()
+        {
+            return DateTime.Today.AddDays(-1);
+        }
+
+        /// <summary>
+        /// Returns a datetime object for the last day of the current month.
+        /// </summary>
+        /// <returns></returns>
+        public static DateTime GetLastDayOfCurrentMonth()
+        {
+            int month = DateTime.Today.Month;
+
+            return new DateTime(DateTime.Today.Year, DateTime.Today.AddMonths(1).Month, 1).AddDays(-1);
+        }
+
     }
 
 
@@ -204,6 +225,17 @@ namespace RFClassLibrary
         {
             return new DateTime(dateTime.Year, dateTime.Month, 1).AddMonths(1).AddDays(-1);
         }
+
+        /// <summary>
+        /// Gets the last date of the previous month of the Datetime.
+        /// </summary>
+        /// <param name="dateTime"></param>
+        /// <returns></returns>
+        public static DateTime GetLastDayOfPrevMonth(this DateTime dateTime)
+        {
+            return new DateTime(dateTime.Year, dateTime.Month, 1).AddDays(-1);
+        }
+
 
         /// <summary>
         /// Returns datetime corresponding to last day of the month

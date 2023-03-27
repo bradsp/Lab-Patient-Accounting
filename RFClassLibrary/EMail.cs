@@ -46,8 +46,8 @@ namespace RFClassLibrary
         /// You may send to multiple email addresses just seperate them with the ; colon character.
         /// 12/14/2006 Rick Crone
         /// </summary>
-        /// <param name="strFrom">Should be in the format DAVID.KELLY@WTH.ORG</param>
-        /// <param name="strTo">Should be in the format DAVID.KELLY@WTH.ORG</param>
+        /// <param name="strFrom">Should be in the format nnnnnnn@domain.tld</param>
+        /// <param name="strTo">Should be in the format nnnnnnn@domain.tld</param>
         /// <param name="strSubject"></param>
         /// <param name="strBody"></param>
         /// <returns></returns>

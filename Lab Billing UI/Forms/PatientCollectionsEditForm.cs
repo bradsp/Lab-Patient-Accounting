@@ -7,14 +7,14 @@ using MetroFramework.Forms;
 
 namespace LabBilling.Forms
 {
-    public partial class BadDebtEditForm : MetroForm
+    public partial class PatientCollectionsEditForm : MetroForm
     {
 
         public string SelectedRecord { get; set; }
         private BadDebt badDebt = new BadDebt();
         private readonly BadDebtRepository badDebtRepository = new BadDebtRepository(Helper.ConnVal);
 
-        public BadDebtEditForm(string selectedGuid)
+        public PatientCollectionsEditForm(string selectedGuid)
         {
             Log.Instance.Trace($"Entering");
             InitializeComponent();
