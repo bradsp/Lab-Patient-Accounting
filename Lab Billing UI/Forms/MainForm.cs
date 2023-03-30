@@ -30,6 +30,7 @@ namespace LabBilling
         private ProgressBar claimProgress;
         private Label claimProgressStatusLabel;
         private CancellationTokenSource cancellationToken;
+        private TableLayoutPanel tlpRecentAccounts;
 
         public ProgressReportModel progressReportModel = new ProgressReportModel()
         {
@@ -81,11 +82,27 @@ namespace LabBilling
                 if (!formFound)
                 {
                     AccountForm accFrm = new AccountForm(frm.SelectedAccount);
+                    accFrm.AccountOpenedEvent += AccFrm_AccountOpenedEvent;
                     accFrm.MdiParent = this;
                     accFrm.WindowState = FormWindowState.Normal;
                     accFrm.AutoScroll = true;
                     accFrm.Show();
+                    //accFrm.AccountOpenedEvent -= AccFrm_AccountOpenedEvent;
                 }
+            }
+        }
+
+        private void AccFrm_AccountOpenedEvent(object sender, string e)
+        {
+            var ar = accountRepository.GetByAccount(e, true);
+            if (ar != null)
+            {
+                LinkLabel a1 = new LinkLabel { Text = ar.PatFullName, Tag = e };
+                a1.LinkClicked += new LinkLabelLinkClickedEventHandler(RecentLabelClicked);
+                tlpRecentAccounts.Controls.Add(a1);
+                a1.Dock = DockStyle.Fill;
+                accordion.Refresh();
+                accordion.AutoScroll = true;
             }
         }
 
@@ -111,7 +128,7 @@ namespace LabBilling
             //recent accounts section
             var recentAccounts = userProfile.GetRecentAccount(Program.LoggedInUser.UserName).ToList();
 
-            TableLayoutPanel tlpRecentAccounts = new TableLayoutPanel { Dock = DockStyle.Fill };
+            tlpRecentAccounts = new TableLayoutPanel { Dock = DockStyle.Fill };
             tlpRecentAccounts.RowCount = recentAccounts.Count;
             tlpRecentAccounts.ColumnCount = 1;
 
@@ -143,6 +160,7 @@ namespace LabBilling
             }
 
             panel1.Controls.Add(accordion);
+            tlpRecentAccounts.AutoSize = true;
             accordion.Add(tlpRecentAccounts, "Recent Accounts", "Last Opened Accounts", 1, true);
 
             //Billing Menu Section

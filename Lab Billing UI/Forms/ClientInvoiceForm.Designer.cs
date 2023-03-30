@@ -48,6 +48,7 @@ namespace LabBilling.Forms
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.InvoiceHistoryTabPage = new System.Windows.Forms.TabPage();
+            this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.invoiceTextBox = new System.Windows.Forms.TextBox();
             this.invoiceLabel = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
@@ -67,7 +68,6 @@ namespace LabBilling.Forms
             this.printAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveToPDFToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveAllToPDFToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.progressBar1 = new System.Windows.Forms.ProgressBar();
             ((System.ComponentModel.ISupportInitialize)(this.InvoicesDGV)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.UnbilledAccountsDGV)).BeginInit();
             this.InvoiceHistoryTabControl.SuspendLayout();
@@ -306,6 +306,15 @@ namespace LabBilling.Forms
             this.InvoiceHistoryTabPage.Text = "Invoice History";
             this.InvoiceHistoryTabPage.UseVisualStyleBackColor = true;
             // 
+            // progressBar1
+            // 
+            this.progressBar1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.progressBar1.Location = new System.Drawing.Point(8, 464);
+            this.progressBar1.Name = "progressBar1";
+            this.progressBar1.Size = new System.Drawing.Size(892, 23);
+            this.progressBar1.TabIndex = 10;
+            // 
             // invoiceTextBox
             // 
             this.invoiceTextBox.Location = new System.Drawing.Point(393, 17);
@@ -480,15 +489,6 @@ namespace LabBilling.Forms
             this.saveAllToPDFToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
             this.saveAllToPDFToolStripMenuItem.Text = "Save All to PDF";
             this.saveAllToPDFToolStripMenuItem.Click += new System.EventHandler(this.saveAllToPDFToolStripMenuItem_Click);
-            // 
-            // progressBar1
-            // 
-            this.progressBar1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.progressBar1.Location = new System.Drawing.Point(8, 464);
-            this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(892, 23);
-            this.progressBar1.TabIndex = 10;
             // 
             // ClientInvoiceForm
             // 

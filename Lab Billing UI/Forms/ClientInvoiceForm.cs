@@ -65,6 +65,7 @@ namespace LabBilling.Forms
                 _thruDate = DateTime.Today;
 
             await RefreshUnbilledGridAsync();
+            //RefreshUnbilledGrid();
 
             InvoicesDGV.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             InvoicesDGV.MultiSelect = false;
@@ -92,10 +93,17 @@ namespace LabBilling.Forms
 
             InvoicesDGV.Columns[nameof(UnbilledClient.UnbilledAmount)].DefaultCellStyle.Format = "c2";
             InvoicesDGV.Columns[nameof(UnbilledClient.UnbilledAmount)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            InvoicesDGV.Columns[nameof(UnbilledClient.PriorBalance)].DefaultCellStyle.Format = "c2";
+            InvoicesDGV.Columns[nameof(UnbilledClient.PriorBalance)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             InvoicesDGV.Columns[nameof(UnbilledClient.ClientMnem)].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
             InvoicesDGV.Columns[nameof(UnbilledClient.UnbilledAmount)].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
             InvoicesDGV.Columns[nameof(UnbilledClient.SelectForInvoice)].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
             InvoicesDGV.Columns[nameof(UnbilledClient.ClientName)].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            InvoicesDGV.Columns[nameof(UnbilledClient.PriorBalance)].ReadOnly = true;
+            InvoicesDGV.Columns[nameof(UnbilledClient.UnbilledAmount)].ReadOnly = true;
+            InvoicesDGV.Columns[nameof(UnbilledClient.ClientMnem)].ReadOnly = true;
+            InvoicesDGV.Columns[nameof(UnbilledClient.ClientType)].ReadOnly = true;
+            InvoicesDGV.Columns[nameof(UnbilledClient.ClientType)].ReadOnly = true;
 
             double sum = 0;
             foreach (DataGridViewRow row in InvoicesDGV.Rows)
@@ -117,10 +125,17 @@ namespace LabBilling.Forms
 
             InvoicesDGV.Columns[nameof(UnbilledClient.UnbilledAmount)].DefaultCellStyle.Format = "c2";
             InvoicesDGV.Columns[nameof(UnbilledClient.UnbilledAmount)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            InvoicesDGV.Columns[nameof(UnbilledClient.PriorBalance)].DefaultCellStyle.Format = "c2";
+            InvoicesDGV.Columns[nameof(UnbilledClient.PriorBalance)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             InvoicesDGV.Columns[nameof(UnbilledClient.ClientMnem)].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
             InvoicesDGV.Columns[nameof(UnbilledClient.UnbilledAmount)].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
             InvoicesDGV.Columns[nameof(UnbilledClient.SelectForInvoice)].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
             InvoicesDGV.Columns[nameof(UnbilledClient.ClientName)].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            InvoicesDGV.Columns[nameof(UnbilledClient.PriorBalance)].ReadOnly = true;
+            InvoicesDGV.Columns[nameof(UnbilledClient.UnbilledAmount)].ReadOnly = true;
+            InvoicesDGV.Columns[nameof(UnbilledClient.ClientMnem)].ReadOnly = true;
+            InvoicesDGV.Columns[nameof(UnbilledClient.ClientType)].ReadOnly = true;
+            InvoicesDGV.Columns[nameof(UnbilledClient.ClientType)].ReadOnly = true;
 
             double sum = 0;
             foreach (DataGridViewRow row in InvoicesDGV.Rows)
@@ -147,7 +162,6 @@ namespace LabBilling.Forms
             UnbilledAccountsDGV.Columns[nameof(UnbilledAccounts.ClientMnem)].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
             UnbilledAccountsDGV.Columns[nameof(UnbilledAccounts.FinancialClass)].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
             UnbilledAccountsDGV.Columns[nameof(UnbilledAccounts.TransactionDate)].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-
         }
 
         private async void GenerateInvoicesBtn_Click(object sender, EventArgs e)
@@ -205,7 +219,8 @@ namespace LabBilling.Forms
         {
             if (InvoicesDGV.SelectedRows.Count > 0)
             {
-                RefreshUnbilledAccountsGrid(InvoicesDGV.SelectedRows[0].Cells["ClientMnem"].Value.ToString());
+                if(InvoicesDGV.SelectedRows[0].Cells[nameof(UnbilledClient.ClientMnem)].Value != null)
+                    RefreshUnbilledAccountsGrid(InvoicesDGV.SelectedRows[0].Cells[nameof(UnbilledClient.ClientMnem)].Value.ToString());
             }
         }
 
@@ -213,7 +228,7 @@ namespace LabBilling.Forms
         {
             if (UnbilledAccountsDGV.SelectedRows.Count > 0)
             {
-                AccountForm frm = new AccountForm(UnbilledAccountsDGV.SelectedRows[0].Cells["account"].Value.ToString())
+                AccountForm frm = new AccountForm(UnbilledAccountsDGV.SelectedRows[0].Cells[nameof(UnbilledAccounts.Account)].Value.ToString())
                 {
                     MdiParent = this.ParentForm
                 };
@@ -374,7 +389,8 @@ namespace LabBilling.Forms
                 files.Add(invFilename);
 
                 string stmtFilename = clientInvoices.PrintInvoice(invoice);
-                files.Add(stmtFilename);
+                if(!string.IsNullOrWhiteSpace(stmtFilename))
+                    files.Add(stmtFilename);
 
                 progressBar1.Increment(1);
             }

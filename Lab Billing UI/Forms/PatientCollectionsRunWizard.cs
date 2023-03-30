@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using LabBilling.Core;
 using LabBilling.Core.BusinessLogic;
+using LabBilling.Core.DataAccess;
 using LabBilling.Logging;
 using RFClassLibrary;
 
@@ -17,6 +18,7 @@ namespace LabBilling.Forms
     public partial class PatientCollectionsRunWizard : Form
     {
         private PatientBilling patientBilling = new PatientBilling(Helper.ConnVal);
+        private BadDebtRepository badDebtRepository = new BadDebtRepository(Helper.ConnVal);
         private bool errorEncountered = false;
 
         public PatientCollectionsRunWizard()
@@ -31,14 +33,19 @@ namespace LabBilling.Forms
             return result;
         }
 
-        private void sendToCollectionsStartButton_Click(object sender, EventArgs e)
+        private async void sendToCollectionsStartButton_Click(object sender, EventArgs e)
         {
             Log.Instance.Trace("Entering");
             try
             {
-                patientBilling.SendToCollections();
+                sendToCollectionsProgressBar.Style = ProgressBarStyle.Continuous;
+                sendToCollectionsProgressBar.Value = 0;
+                sendToCollectionsProgressBar.Maximum = 100;
+                patientBilling.ProgressIncrementedEvent += PatientBilling_ProgressIncrementedEvent;
 
+                await patientBilling.SendToCollections();
 
+                //patientBilling.ProgressIncementedEvent -= PatientBilling_ProgressIncementedEvent;
             }
             catch(ApplicationException apex)
             {
@@ -58,12 +65,36 @@ namespace LabBilling.Forms
             }
         }
 
+        private void PatientBilling_ProgressIncrementedEvent(object sender, ProgressEventArgs e)
+        {
+            if (sendToCollectionsProgressBar.InvokeRequired)
+            {
+                sendToCollectionsProgressBar.Invoke(new Action(() =>
+                {
+                    sendToCollectionsProgressBar.Value = e.PercentComplete;
+                    sendToCollectionsTextbox.Text = e.Status;
+                }));
+            }
+            else
+            {
+                sendToCollectionsProgressBar.Value = e.PercentComplete;
+                sendToCollectionsTextbox.Text = e.Status;
+            }
+        }
+
         private void createStmtFileStartButton_Click(object sender, EventArgs e)
         {
             Log.Instance.Trace("Entering");
             try
             {
-                patientBilling.CreateStatementFile();
+                createStmtFileProgressBar.Style = ProgressBarStyle.Marquee;
+                createStmtFileTextBox.Text = "Creating statement file.";
+                patientBilling.CreateStatementFile(DateTimeHelper.GetLastDayOfPrevMonth());
+
+                createStmtFileProgressBar.Style = ProgressBarStyle.Continuous;
+                createStmtFileProgressBar.Value = 100;
+                createStmtFileProgressBar.Maximum = 100;
+                createStmtFileTextBox.Text = "File created.";
             }
             catch (ApplicationException apex)
             {
@@ -88,7 +119,11 @@ namespace LabBilling.Forms
             Log.Instance.Trace("Entering");
             try
             {
+                compileStatementsProgressBar.Style = ProgressBarStyle.Marquee;
                 patientBilling.CompileStatements(DateTimeHelper.GetLastDayOfPrevMonth());
+                compileStatementsProgressBar.Style = ProgressBarStyle.Continuous;
+                compileStatementsProgressBar.Value = 100;
+                compileStatementsProgressBar.Maximum = 100;
             }
             catch(ArgumentException argex)
             {
@@ -114,6 +149,19 @@ namespace LabBilling.Forms
                 DialogResult = DialogResult.Cancel;
                 return;
             }
+        }
+
+        private void cancelButton_Click(object sender, EventArgs e)
+        {
+            DialogResult = DialogResult.Cancel;
+            return;
+        }
+
+        private void PatientCollectionsRunWizard_Load(object sender, EventArgs e)
+        {
+            var records = badDebtRepository.GetNotSentRecords();
+
+            sendToCollectionsTextbox.Text = $"{records.Count()} records to send to collections.";
         }
     }
 }

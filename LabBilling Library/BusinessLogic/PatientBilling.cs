@@ -12,9 +12,23 @@ using PetaPoco;
 using System.Data.SqlClient;
 using System.Diagnostics;
 using LabBilling.Logging;
+using PetaPoco.Providers;
 
 namespace LabBilling.Core
 {
+
+    public class ProgressEventArgs : EventArgs
+    {
+        public int PercentComplete { get; private set; } = 0;
+        public string Status { get; private set; }
+
+        public ProgressEventArgs(int percentComplete, string status)
+        {
+            PercentComplete = percentComplete;
+            Status = status;
+        }
+    }
+
     public class PatientBilling
     {
         private Database db;
@@ -33,7 +47,7 @@ namespace LabBilling.Core
 
         public PatientBilling(string connectionString)
         {
-            db = new Database(connectionString);
+            db = new Database(connectionString, new CustomSqlDatabaseProvider());
 
             accountRepository = new AccountRepository(db);
             patRepository = new PatRepository(db);
@@ -47,119 +61,127 @@ namespace LabBilling.Core
             patientStatementAccountRepository = new PatientStatementAccountRepository(db);
         }
 
-        //public void InitiateBilling(DateTime throughDate)
-        //{
-        //    endDate = throughDate;
+        public event EventHandler<ProgressEventArgs> ProgressIncrementedEvent;
 
-        //    SendToCollections();
-
-        //    CompileStatements();
-
-        //    CreateStatementFile();
-
-        //}
-
-        public void SendToCollections()
+        public async Task SendToCollections()
         {
             // set date_sent records in bad_debt table where date_sent is null to today's date
-
-            StringBuilder sb = new StringBuilder();
-            // create collections file to send to MSCB
-            FixedFileLine fileLine = new FixedFileLine(20);
-            //create header
-            fileLine.SetField(1, 1, 20, "DEBTOR_LAST_NAME");
-            fileLine.SetField(2, 21, 35, "DEBTOR_FIRST_NAME");
-            fileLine.SetField(3, 36, 60, "STREET_ADDR_1");
-            fileLine.SetField(4, 61, 85, "STREET_ADDR_2");
-            fileLine.SetField(5, 86, 103, "CITY");
-            fileLine.SetField(6, 104, 118, "STATE_ZP");
-            fileLine.SetField(7, 119, 133, "SPOUSE");
-            fileLine.SetField(8, 134, 145, "PHONE");
-            fileLine.SetField(9, 146, 155, "SSN");
-            fileLine.SetField(10, 156, 175, "LICENSE");
-            fileLine.SetField(11, 176, 210, "EMPLOYMENT");
-            fileLine.SetField(12, 211, 245, "REMARKS");
-            fileLine.SetField(13, 246, 270, "ACCOUNT_NUMBER");
-            fileLine.SetField(14, 271, 290, "PATIENT_NAME");
-            fileLine.SetField(15, 291, 325, "REMARKS_2");
-            fileLine.SetField(16, 326, 354, "MISC");
-            fileLine.SetField(17, 355, 360, "SVC_DT");
-            fileLine.SetField(18, 361, 366, "PMT_DT");
-            fileLine.SetField(19, 367, 376, "BALANCE");
-            fileLine.SetField(20, 377, 386, "ORIG_CHRG");
-
-            sb.AppendLine(fileLine.OutputLine());
-
-            var results = badDebtRepository.GetRecords(false);
-
-            db.BeginTransaction();
-
-            foreach(var result in results)
+            await Task.Run(() =>
             {
-                try
+                StringBuilder sb = new StringBuilder();
+                string fileName = parametersRepository.GetByKey("CollectionsFileLocation");
+                fileName += $"MCL{DateTime.Today.ToString("MMddyyyy")}.txt";
+
+                // create collections file to send to MSCB
+                FixedFileLine fileLine = new FixedFileLine(20);
+                //create header
+                fileLine.SetField(1, 1, 20, "DEBTOR_LAST_NAME");
+                fileLine.SetField(2, 21, 35, "DEBTOR_FIRST_NAME");
+                fileLine.SetField(3, 36, 60, "STREET_ADDR_1");
+                fileLine.SetField(4, 61, 85, "STREET_ADDR_2");
+                fileLine.SetField(5, 86, 103, "CITY");
+                fileLine.SetField(6, 104, 118, "STATE_ZP");
+                fileLine.SetField(7, 119, 133, "SPOUSE");
+                fileLine.SetField(8, 134, 145, "PHONE");
+                fileLine.SetField(9, 146, 155, "SSN");
+                fileLine.SetField(10, 156, 175, "LICENSE");
+                fileLine.SetField(11, 176, 210, "EMPLOYMENT");
+                fileLine.SetField(12, 211, 245, "REMARKS");
+                fileLine.SetField(13, 246, 270, "ACCOUNT_NUMBER");
+                fileLine.SetField(14, 271, 290, "PATIENT_NAME");
+                fileLine.SetField(15, 291, 325, "REMARKS_2");
+                fileLine.SetField(16, 326, 354, "MISC");
+                fileLine.SetField(17, 355, 360, "SVC_DT");
+                fileLine.SetField(18, 361, 366, "PMT_DT");
+                fileLine.SetField(19, 367, 376, "BALANCE");
+                fileLine.SetField(20, 377, 386, "ORIG_CHRG");
+
+                sb.AppendLine(fileLine.OutputLine());
+
+                var results = badDebtRepository.GetNotSentRecords();
+
+                if(results.Count() == 0)
                 {
-
-                    var acc = accountRepository.GetByAccount(result.AccountNo, true);
-
-                    fileLine = new FixedFileLine(20);
-                    //create header
-                    fileLine.SetField(1, 1, 20, result.DebtorLastName);
-                    fileLine.SetField(2, 21, 35, result.DebtorFirstName);
-                    fileLine.SetField(3, 36, 60, result.StreetAddress1);
-                    fileLine.SetField(4, 61, 85, result.StreetAddress2);
-                    fileLine.SetField(5, 86, 103, result.City);
-                    fileLine.SetField(6, 104, 118, result.StateZip);
-                    fileLine.SetField(7, 119, 133, result.Spouse);
-                    fileLine.SetField(8, 134, 145, result.Phone);
-                    fileLine.SetField(9, 146, 155, result.SocialSecurityNo);
-                    fileLine.SetField(10, 156, 175, result.LicenseNumber);
-                    fileLine.SetField(11, 176, 210, result.Employment);
-                    fileLine.SetField(12, 211, 245, result.Remarks);
-                    fileLine.SetField(13, 246, 270, result.AccountNo);
-                    fileLine.SetField(14, 271, 290, result.PatientName);
-                    fileLine.SetField(15, 291, 325, result.Remarks2);
-                    fileLine.SetField(16, 326, 354, result.Misc);
-                    fileLine.SetField(17, 355, 360, result.ServiceDate.NullDateToString("mmddyy"));
-                    fileLine.SetField(18, 361, 366, result.PaymentDate.NullDateToString("mmddyy"));
-                    fileLine.SetField(19, 367, 376, result.Balance.ToString());
-                    fileLine.SetField(20, 377, 386, acc.TotalCharges.ToString());
-
-                    sb.AppendLine(fileLine.OutputLine());
-
-                    result.DateSent = DateTime.Now;
-
-                    badDebtRepository.Update(result);
-
-                    // write off accounts where bad_debt.date_sent = today
-                    Chk chk = new Chk();
-                    chk.AccountNo = result.AccountNo;
-                    chk.Batch = 0;
-                    chk.WriteOffAmount = acc.Balance;
-                    chk.Source = "BAD_DEBT";
-                    chk.Status = "WRITE_OFF";
-                    chk.Comment = "BAD DEBT WRITE OFF";
-                    chk.IsCollectionPmt = true;
-
-                    chkRepository.Add(chk);
+                    ProgressIncrementedEvent?.Invoke(this, new ProgressEventArgs(100, "No records to process."));
+                    return;
                 }
-                catch(Exception ex)
+
+                db.BeginTransaction();
+                int recordsProcessed = 0;
+                foreach (var result in results)
                 {
-                    Log.Instance.Error("Error during collections send. Process aborted.", ex);
-                    db.AbortTransaction();
-                    throw new ApplicationException("Error during collections send.Process aborted.", ex);
+                    try
+                    {
+                        var acc = accountRepository.GetByAccount(result.AccountNo, true);
+
+                        fileLine = new FixedFileLine(20);
+                        //create header
+                        fileLine.SetField(1, 1, 20, result.DebtorLastName);
+                        fileLine.SetField(2, 21, 35, result.DebtorFirstName);
+                        fileLine.SetField(3, 36, 60, result.StreetAddress1);
+                        fileLine.SetField(4, 61, 85, result.StreetAddress2);
+                        fileLine.SetField(5, 86, 103, result.City);
+                        fileLine.SetField(6, 104, 118, result.StateZip);
+                        fileLine.SetField(7, 119, 133, result.Spouse);
+                        fileLine.SetField(8, 134, 145, result.Phone);
+                        fileLine.SetField(9, 146, 155, result.SocialSecurityNo);
+                        fileLine.SetField(10, 156, 175, result.LicenseNumber);
+                        fileLine.SetField(11, 176, 210, result.Employment);
+                        fileLine.SetField(12, 211, 245, result.Remarks);
+                        fileLine.SetField(13, 246, 270, result.AccountNo);
+                        fileLine.SetField(14, 271, 290, result.PatientName);
+                        fileLine.SetField(15, 291, 325, result.Remarks2);
+                        fileLine.SetField(16, 326, 354, result.Misc);
+                        fileLine.SetField(17, 355, 360, result.ServiceDate.NullDateToString("mmddyy"));
+                        fileLine.SetField(18, 361, 366, result.PaymentDate.NullDateToString("mmddyy"));
+                        fileLine.SetField(19, 367, 376, result.Balance.ToString());
+                        fileLine.SetField(20, 377, 386, acc.TotalCharges.ToString());
+
+                        sb.AppendLine(fileLine.OutputLine());
+
+                        result.DateSent = DateTime.Now;
+
+                        badDebtRepository.Update(result);
+
+                        // write off accounts where bad_debt.date_sent = today
+                        Chk chk = new Chk();
+                        chk.AccountNo = result.AccountNo;
+                        chk.Batch = 0;
+                        chk.WriteOffAmount = acc.Balance;
+                        chk.WriteOffDate = DateTime.Today;
+                        chk.Source = "BAD_DEBT";
+                        chk.Status = "WRITE_OFF";
+                        chk.Comment = "BAD DEBT WRITE OFF";
+                        chk.IsCollectionPmt = true;
+
+                        chkRepository.Add(chk);
+
+                        ProgressIncrementedEvent?.Invoke(this, new ProgressEventArgs(++recordsProcessed / results.Count() * 100, $"Processed {result.AccountNo}"));
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Instance.Error("Error during collections send. Process aborted.", ex);
+                        db.AbortTransaction();
+                        throw new ApplicationException("Error during collections send.Process aborted.", ex);
+                    }
                 }
-            }
 
-            db.CompleteTransaction();
+                File.WriteAllText(fileName, sb.ToString());
 
+                db.CompleteTransaction();
+            });
             // email mailer P report
-
-
-
         }
 
-        public void CreateStatementFile()
+        public void CreateStatementFile(DateTime throughDate)
         {
+            if (throughDate == DateTime.MinValue)
+            {
+                throw new ArgumentException("Through Date is not a valid date.", "throughDate");
+            }
+
+            endDate = throughDate;
+            batchNo = $"{endDate.Year}{endDate.Month:00}";
 
             // 5. step 5 - run viewer bad debt and create file
             //AFTER running pat viewer bad debt to create the file do this. 
@@ -531,16 +553,17 @@ namespace LabBilling.Core
             }
 
             endDate = throughDate;
+            batchNo = $"{endDate.Year}{endDate.Month.ToString("00")}";
             try
             {
                 //run exec usp_prg_pat_bill_update_flags '<last day of prev month>'
                 //step 1 - exec_prg_pat_bill_update_flags '{thrudate}'
-                db.ExecuteNonQueryProc("usp_prg_pat_bill_update_flags", new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = endDate });
+                db.ExecuteNonQueryProc("usp_prg_pat_bill_update_flags", new SqlParameter() { ParameterName = "@thrudate", SqlDbType = SqlDbType.DateTime, Value = endDate });
 
                 //run exec usp_prg_pat_bill_compile @batchNo = '<batchNo>', @endDate = '<last day of prev month>'
                 db.ExecuteNonQueryProc("usp_prg_pat_bill_compile",
-                    new SqlParameter() { SqlDbType = SqlDbType.NVarChar, Value = batchNo },
-                    new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = endDate });
+                    new SqlParameter() { ParameterName = "@batchNo", SqlDbType = SqlDbType.VarChar, Value = batchNo },
+                    new SqlParameter() { ParameterName = "@endDate", SqlDbType = SqlDbType.DateTime, Value = endDate });
 
                 db.CompleteTransaction();
             }

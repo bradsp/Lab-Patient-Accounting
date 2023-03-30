@@ -61,6 +61,8 @@ namespace LabBilling.Forms
         //private bool skipSelectionChanged = false;
         private System.Windows.Forms.Timer _timer;
 
+        public event EventHandler<string> AccountOpenedEvent;
+
         private string _selectedAccount;
         public string SelectedAccount
         {
@@ -226,6 +228,7 @@ namespace LabBilling.Forms
             {
                 Log.Instance.Debug($"Loading account data for {SelectedAccount}");
                 userProfileDB.InsertRecentAccount(SelectedAccount, Program.LoggedInUser.UserName);
+                AccountOpenedEvent?.Invoke(this, SelectedAccount);
                 //LoadAccountData();
 
                 AddOnChangeHandlerToInputControls(tabDemographics);

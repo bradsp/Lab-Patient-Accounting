@@ -81,6 +81,7 @@ namespace LabBilling.Core.Models
         public string ClientName { get; set; }
         public string ClientType { get; set; }
         public double UnbilledAmount { get; set; }
+        public double PriorBalance { get; set; }
     }
 
     public class ClientStatementDetailModel

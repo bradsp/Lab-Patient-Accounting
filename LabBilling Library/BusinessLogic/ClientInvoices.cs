@@ -142,11 +142,15 @@ namespace LabBilling.Core.BusinessLogic
 
             invoiceModel.ImageFilePath = systemdb.GetByKey("invoice_logo_image_path") ?? string.Empty;
 
-            string filename = $"{fileSavePath}\\Invoice-{invoiceModel.ClientMnem}-{invoiceModel.InvoiceNo}.pdf";
+            //only print an invoice if there are invoice lines to print.
+            if(invoiceModel.InvoiceDetails.Count() > 0)
+            {
+                string filename = $"{fileSavePath}\\Invoice-{invoiceModel.ClientMnem}-{invoiceModel.InvoiceNo}.pdf";
+                invoicePrint.CreateInvoicePdf(invoiceModel, filename);
+                return filename;
+            }
 
-            invoicePrint.CreateInvoicePdf(invoiceModel, filename);
-
-            return filename;
+            return string.Empty;
         }
 
         /// <summary>
@@ -335,7 +339,6 @@ namespace LabBilling.Core.BusinessLogic
 
             invoiceHistoryRepository.Add(invoiceHistory);
         }
-
 
         public bool UndoInvoice(string invoiceNo)
         {

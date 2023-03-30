@@ -49,9 +49,14 @@ namespace LabBilling.Core.DataAccess
             return base.Update(table, columns);
         }
 
-        public IEnumerable<BadDebt> GetRecords(bool sent)
+        public IEnumerable<BadDebt> GetNotSentRecords()
         {
             List<BadDebt> records = new List<BadDebt>();
+
+            var sql = PetaPoco.Sql.Builder;
+            sql.Where($"{GetRealColumn(nameof(BadDebt.DateSent))} is null");
+
+            records = dbConnection.Fetch<BadDebt>(sql);
 
             return records;
         }

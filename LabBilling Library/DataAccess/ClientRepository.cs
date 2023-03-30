@@ -178,6 +178,9 @@ namespace LabBilling.Core.DataAccess
 
             foreach(var chrg in charges)
             {
+                if (chrg.NetAmount == 0 && chrg.CDMCode == "CBILL")
+                    continue;
+
                 var statementDetail = new ClientStatementDetailModel();
 
                 statementDetail.ServiceDate = chrg.ServiceDate == null ? DateTime.MinValue : (DateTime)chrg.ServiceDate;
@@ -269,16 +272,29 @@ namespace LabBilling.Core.DataAccess
 
         public List<UnbilledClient> GetUnbilledClients(DateTime thruDate)
         {
-            var cmd = Sql.Builder
-                .Append("select vbs.cl_mnem as 'ClientMnem', client.cli_nme as 'ClientName', dictionary.clienttype.description as 'ClientType', ")
-                .Append("sum(dbo.GetAccBalance(vbs.account)) as 'UnbilledAmount' ")
-                .Append("from vw_cbill_select vbs join client on vbs.cl_mnem = client.cli_mnem ")
-                .Append("join dictionary.clienttype on client.[type] = dictionary.clienttype.[type] ")
-                .Append("where trans_date <= @0", new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = thruDate })
-                .Append("group by vbs.cl_mnem, client.cli_nme, dictionary.clienttype.description ")
-                .Append("order by vbs.cl_mnem ");
+            //var cmd = Sql.Builder
+            //    .Append("select vbs.cl_mnem as 'ClientMnem', client.cli_nme as 'ClientName', dictionary.clienttype.description as 'ClientType', ")
+            //    .Append("sum(dbo.GetAccBalance(vbs.account)) as 'UnbilledAmount' ")
+            //    .Append("from vw_cbill_select vbs join client on vbs.cl_mnem = client.cli_mnem ")
+            //    .Append("join dictionary.clienttype on client.[type] = dictionary.clienttype.[type] ")
+            //    .Append("where trans_date <= @0", new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = thruDate })
+            //    .Append("group by vbs.cl_mnem, client.cli_nme, dictionary.clienttype.description ")
+            //    .Append("order by vbs.cl_mnem ");
 
-            return dbConnection.Fetch<UnbilledClient>(cmd);
+            //cmd = Sql.Builder
+            //    .Select("client.cli_mnem, client.cli_nme, ct.description, dbo.GetAccBalance(acc.account) as 'PriorBalance', sum(dbo.GetAccBalance(vbs.account)) as 'UnbilledAmount'")
+            //    .From("client ")
+            //    .InnerJoin("acc").On("client.cli_mnem = acc.account")
+            //    .LeftJoin("vw_cbill_select vbs").On("vbs.cl_mnem = client.cli_mnem")
+            //    .InnerJoin("dictionary.clienttype ct").On("ct.type = client.[type]")
+            //    .Where("client.deleted = 0")
+            //    .GroupBy("client.cli_mnem, client.cli_nme, ct.description, dbo.GetAccBalance(acc.account)")
+            //    .OrderBy("client.cli_mnem");
+
+            var results = dbConnection.FetchProc<UnbilledClient>("dbo.GetClientsToBill",
+                new SqlParameter() { ParameterName = "@thruDate", SqlDbType = SqlDbType.DateTime, Value = thruDate });
+
+            return results;
         }
 
         public List<UnbilledAccounts> GetUnbilledAccounts(string clientMnem, DateTime thruDate)

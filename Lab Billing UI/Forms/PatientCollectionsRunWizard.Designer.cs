@@ -30,25 +30,25 @@
         {
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.sendCollectionsTabPage = new System.Windows.Forms.TabPage();
+            this.sendToCollectionsTextbox = new System.Windows.Forms.TextBox();
+            this.sendToCollectionsProgressBar = new System.Windows.Forms.ProgressBar();
+            this.sendToCollectionsStartButton = new System.Windows.Forms.Button();
+            this.label1 = new System.Windows.Forms.Label();
             this.compileStatementsTabPage = new System.Windows.Forms.TabPage();
+            this.compileStmtsStartButton = new System.Windows.Forms.Button();
+            this.compileStatementsTextBox = new System.Windows.Forms.TextBox();
+            this.compileStatementsProgressBar = new System.Windows.Forms.ProgressBar();
+            this.label2 = new System.Windows.Forms.Label();
+            this.createStmtFileTabPage = new System.Windows.Forms.TabPage();
+            this.createStmtFileStartButton = new System.Windows.Forms.Button();
+            this.createStmtFileTextBox = new System.Windows.Forms.TextBox();
+            this.createStmtFileProgressBar = new System.Windows.Forms.ProgressBar();
+            this.label3 = new System.Windows.Forms.Label();
+            this.finishTabPage = new System.Windows.Forms.TabPage();
             this.cancelButton = new System.Windows.Forms.Button();
             this.backButton = new System.Windows.Forms.Button();
             this.nextButton = new System.Windows.Forms.Button();
             this.finishButton = new System.Windows.Forms.Button();
-            this.createStmtFileTabPage = new System.Windows.Forms.TabPage();
-            this.finishTabPage = new System.Windows.Forms.TabPage();
-            this.label1 = new System.Windows.Forms.Label();
-            this.sendToCollectionsStartButton = new System.Windows.Forms.Button();
-            this.sendToCollectionsProgressBar = new System.Windows.Forms.ProgressBar();
-            this.sendToCollectionsTextbox = new System.Windows.Forms.TextBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.compileStatementsProgressBar = new System.Windows.Forms.ProgressBar();
-            this.compileStatementsTextBox = new System.Windows.Forms.TextBox();
-            this.compileStmtsStartButton = new System.Windows.Forms.Button();
-            this.label3 = new System.Windows.Forms.Label();
-            this.createStmtFileProgressBar = new System.Windows.Forms.ProgressBar();
-            this.createStmtFileTextBox = new System.Windows.Forms.TextBox();
-            this.createStmtFileStartButton = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.sendCollectionsTabPage.SuspendLayout();
             this.compileStatementsTabPage.SuspendLayout();
@@ -84,6 +84,41 @@
             this.sendCollectionsTabPage.Text = "Send to Collections";
             this.sendCollectionsTabPage.UseVisualStyleBackColor = true;
             // 
+            // sendToCollectionsTextbox
+            // 
+            this.sendToCollectionsTextbox.Location = new System.Drawing.Point(39, 121);
+            this.sendToCollectionsTextbox.Multiline = true;
+            this.sendToCollectionsTextbox.Name = "sendToCollectionsTextbox";
+            this.sendToCollectionsTextbox.Size = new System.Drawing.Size(530, 189);
+            this.sendToCollectionsTextbox.TabIndex = 3;
+            // 
+            // sendToCollectionsProgressBar
+            // 
+            this.sendToCollectionsProgressBar.Location = new System.Drawing.Point(39, 92);
+            this.sendToCollectionsProgressBar.Name = "sendToCollectionsProgressBar";
+            this.sendToCollectionsProgressBar.Size = new System.Drawing.Size(530, 23);
+            this.sendToCollectionsProgressBar.TabIndex = 2;
+            // 
+            // sendToCollectionsStartButton
+            // 
+            this.sendToCollectionsStartButton.Location = new System.Drawing.Point(592, 92);
+            this.sendToCollectionsStartButton.Name = "sendToCollectionsStartButton";
+            this.sendToCollectionsStartButton.Size = new System.Drawing.Size(75, 23);
+            this.sendToCollectionsStartButton.TabIndex = 1;
+            this.sendToCollectionsStartButton.Text = "Start";
+            this.sendToCollectionsStartButton.UseVisualStyleBackColor = true;
+            this.sendToCollectionsStartButton.Click += new System.EventHandler(this.sendToCollectionsStartButton_Click);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(41, 41);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(533, 13);
+            this.label1.TabIndex = 0;
+            this.label1.Text = "This step will generate the collections file to send to MSCB, and write off those" +
+    " accounts. Click Start to proceed.";
+            // 
             // compileStatementsTabPage
             // 
             this.compileStatementsTabPage.Controls.Add(this.compileStmtsStartButton);
@@ -98,6 +133,98 @@
             this.compileStatementsTabPage.Text = "Compile Statements";
             this.compileStatementsTabPage.UseVisualStyleBackColor = true;
             // 
+            // compileStmtsStartButton
+            // 
+            this.compileStmtsStartButton.Location = new System.Drawing.Point(465, 80);
+            this.compileStmtsStartButton.Name = "compileStmtsStartButton";
+            this.compileStmtsStartButton.Size = new System.Drawing.Size(75, 23);
+            this.compileStmtsStartButton.TabIndex = 3;
+            this.compileStmtsStartButton.Text = "Start";
+            this.compileStmtsStartButton.UseVisualStyleBackColor = true;
+            this.compileStmtsStartButton.Click += new System.EventHandler(this.compileStmtsStartButton_Click);
+            // 
+            // compileStatementsTextBox
+            // 
+            this.compileStatementsTextBox.Location = new System.Drawing.Point(65, 121);
+            this.compileStatementsTextBox.Multiline = true;
+            this.compileStatementsTextBox.Name = "compileStatementsTextBox";
+            this.compileStatementsTextBox.Size = new System.Drawing.Size(374, 176);
+            this.compileStatementsTextBox.TabIndex = 2;
+            // 
+            // compileStatementsProgressBar
+            // 
+            this.compileStatementsProgressBar.Location = new System.Drawing.Point(65, 80);
+            this.compileStatementsProgressBar.Name = "compileStatementsProgressBar";
+            this.compileStatementsProgressBar.Size = new System.Drawing.Size(374, 23);
+            this.compileStatementsProgressBar.TabIndex = 1;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(62, 45);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(377, 13);
+            this.label2.TabIndex = 0;
+            this.label2.Text = "This step will compile the records to receive statements. Click Start to proceed." +
+    "";
+            // 
+            // createStmtFileTabPage
+            // 
+            this.createStmtFileTabPage.Controls.Add(this.createStmtFileStartButton);
+            this.createStmtFileTabPage.Controls.Add(this.createStmtFileTextBox);
+            this.createStmtFileTabPage.Controls.Add(this.createStmtFileProgressBar);
+            this.createStmtFileTabPage.Controls.Add(this.label3);
+            this.createStmtFileTabPage.Location = new System.Drawing.Point(4, 22);
+            this.createStmtFileTabPage.Name = "createStmtFileTabPage";
+            this.createStmtFileTabPage.Size = new System.Drawing.Size(768, 350);
+            this.createStmtFileTabPage.TabIndex = 2;
+            this.createStmtFileTabPage.Text = "Create Statement File";
+            this.createStmtFileTabPage.UseVisualStyleBackColor = true;
+            // 
+            // createStmtFileStartButton
+            // 
+            this.createStmtFileStartButton.Location = new System.Drawing.Point(481, 71);
+            this.createStmtFileStartButton.Name = "createStmtFileStartButton";
+            this.createStmtFileStartButton.Size = new System.Drawing.Size(75, 23);
+            this.createStmtFileStartButton.TabIndex = 3;
+            this.createStmtFileStartButton.Text = "Start";
+            this.createStmtFileStartButton.UseVisualStyleBackColor = true;
+            this.createStmtFileStartButton.Click += new System.EventHandler(this.createStmtFileStartButton_Click);
+            // 
+            // createStmtFileTextBox
+            // 
+            this.createStmtFileTextBox.Location = new System.Drawing.Point(69, 100);
+            this.createStmtFileTextBox.Multiline = true;
+            this.createStmtFileTextBox.Name = "createStmtFileTextBox";
+            this.createStmtFileTextBox.Size = new System.Drawing.Size(379, 153);
+            this.createStmtFileTextBox.TabIndex = 2;
+            // 
+            // createStmtFileProgressBar
+            // 
+            this.createStmtFileProgressBar.Location = new System.Drawing.Point(69, 71);
+            this.createStmtFileProgressBar.Name = "createStmtFileProgressBar";
+            this.createStmtFileProgressBar.Size = new System.Drawing.Size(379, 23);
+            this.createStmtFileProgressBar.TabIndex = 1;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(58, 42);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(390, 13);
+            this.label3.TabIndex = 0;
+            this.label3.Text = "This step will generate the statement file to be sent to DNI. Click Start to proc" +
+    "eed.";
+            // 
+            // finishTabPage
+            // 
+            this.finishTabPage.Location = new System.Drawing.Point(4, 22);
+            this.finishTabPage.Name = "finishTabPage";
+            this.finishTabPage.Size = new System.Drawing.Size(768, 350);
+            this.finishTabPage.TabIndex = 3;
+            this.finishTabPage.Text = "Finish";
+            this.finishTabPage.UseVisualStyleBackColor = true;
+            // 
             // cancelButton
             // 
             this.cancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
@@ -107,6 +234,7 @@
             this.cancelButton.TabIndex = 1;
             this.cancelButton.Text = "Cancel";
             this.cancelButton.UseVisualStyleBackColor = true;
+            this.cancelButton.Click += new System.EventHandler(this.cancelButton_Click);
             // 
             // backButton
             // 
@@ -138,133 +266,6 @@
             this.finishButton.Text = "Finish";
             this.finishButton.UseVisualStyleBackColor = true;
             // 
-            // createStmtFileTabPage
-            // 
-            this.createStmtFileTabPage.Controls.Add(this.createStmtFileStartButton);
-            this.createStmtFileTabPage.Controls.Add(this.createStmtFileTextBox);
-            this.createStmtFileTabPage.Controls.Add(this.createStmtFileProgressBar);
-            this.createStmtFileTabPage.Controls.Add(this.label3);
-            this.createStmtFileTabPage.Location = new System.Drawing.Point(4, 22);
-            this.createStmtFileTabPage.Name = "createStmtFileTabPage";
-            this.createStmtFileTabPage.Size = new System.Drawing.Size(768, 350);
-            this.createStmtFileTabPage.TabIndex = 2;
-            this.createStmtFileTabPage.Text = "Create Statement File";
-            this.createStmtFileTabPage.UseVisualStyleBackColor = true;
-            // 
-            // finishTabPage
-            // 
-            this.finishTabPage.Location = new System.Drawing.Point(4, 22);
-            this.finishTabPage.Name = "finishTabPage";
-            this.finishTabPage.Size = new System.Drawing.Size(768, 350);
-            this.finishTabPage.TabIndex = 3;
-            this.finishTabPage.Text = "Finish";
-            this.finishTabPage.UseVisualStyleBackColor = true;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(41, 41);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(533, 13);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "This step will generate the collections file to send to MSCB, and write off those" +
-    " accounts. Click Start to proceed.";
-            // 
-            // sendToCollectionsStartButton
-            // 
-            this.sendToCollectionsStartButton.Location = new System.Drawing.Point(592, 92);
-            this.sendToCollectionsStartButton.Name = "sendToCollectionsStartButton";
-            this.sendToCollectionsStartButton.Size = new System.Drawing.Size(75, 23);
-            this.sendToCollectionsStartButton.TabIndex = 1;
-            this.sendToCollectionsStartButton.Text = "Start";
-            this.sendToCollectionsStartButton.UseVisualStyleBackColor = true;
-            this.sendToCollectionsStartButton.Click += new System.EventHandler(this.sendToCollectionsStartButton_Click);
-            // 
-            // sendToCollectionsProgressBar
-            // 
-            this.sendToCollectionsProgressBar.Location = new System.Drawing.Point(39, 92);
-            this.sendToCollectionsProgressBar.Name = "sendToCollectionsProgressBar";
-            this.sendToCollectionsProgressBar.Size = new System.Drawing.Size(530, 23);
-            this.sendToCollectionsProgressBar.TabIndex = 2;
-            // 
-            // sendToCollectionsTextbox
-            // 
-            this.sendToCollectionsTextbox.Location = new System.Drawing.Point(39, 121);
-            this.sendToCollectionsTextbox.Multiline = true;
-            this.sendToCollectionsTextbox.Name = "sendToCollectionsTextbox";
-            this.sendToCollectionsTextbox.Size = new System.Drawing.Size(530, 189);
-            this.sendToCollectionsTextbox.TabIndex = 3;
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(62, 45);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(377, 13);
-            this.label2.TabIndex = 0;
-            this.label2.Text = "This step will compile the records to receive statements. Click Start to proceed." +
-    "";
-            // 
-            // compileStatementsProgressBar
-            // 
-            this.compileStatementsProgressBar.Location = new System.Drawing.Point(65, 80);
-            this.compileStatementsProgressBar.Name = "compileStatementsProgressBar";
-            this.compileStatementsProgressBar.Size = new System.Drawing.Size(374, 23);
-            this.compileStatementsProgressBar.TabIndex = 1;
-            // 
-            // compileStatementsTextBox
-            // 
-            this.compileStatementsTextBox.Location = new System.Drawing.Point(65, 121);
-            this.compileStatementsTextBox.Multiline = true;
-            this.compileStatementsTextBox.Name = "compileStatementsTextBox";
-            this.compileStatementsTextBox.Size = new System.Drawing.Size(374, 176);
-            this.compileStatementsTextBox.TabIndex = 2;
-            // 
-            // compileStmtsStartButton
-            // 
-            this.compileStmtsStartButton.Location = new System.Drawing.Point(465, 80);
-            this.compileStmtsStartButton.Name = "compileStmtsStartButton";
-            this.compileStmtsStartButton.Size = new System.Drawing.Size(75, 23);
-            this.compileStmtsStartButton.TabIndex = 3;
-            this.compileStmtsStartButton.Text = "Start";
-            this.compileStmtsStartButton.UseVisualStyleBackColor = true;
-            this.compileStmtsStartButton.Click += new System.EventHandler(this.compileStmtsStartButton_Click);
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(58, 42);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(390, 13);
-            this.label3.TabIndex = 0;
-            this.label3.Text = "This step will generate the statement file to be sent to DNI. Click Start to proc" +
-    "eed.";
-            // 
-            // createStmtFileProgressBar
-            // 
-            this.createStmtFileProgressBar.Location = new System.Drawing.Point(69, 71);
-            this.createStmtFileProgressBar.Name = "createStmtFileProgressBar";
-            this.createStmtFileProgressBar.Size = new System.Drawing.Size(379, 23);
-            this.createStmtFileProgressBar.TabIndex = 1;
-            // 
-            // createStmtFileTextBox
-            // 
-            this.createStmtFileTextBox.Location = new System.Drawing.Point(69, 100);
-            this.createStmtFileTextBox.Multiline = true;
-            this.createStmtFileTextBox.Name = "createStmtFileTextBox";
-            this.createStmtFileTextBox.Size = new System.Drawing.Size(379, 153);
-            this.createStmtFileTextBox.TabIndex = 2;
-            // 
-            // createStmtFileStartButton
-            // 
-            this.createStmtFileStartButton.Location = new System.Drawing.Point(481, 71);
-            this.createStmtFileStartButton.Name = "createStmtFileStartButton";
-            this.createStmtFileStartButton.Size = new System.Drawing.Size(75, 23);
-            this.createStmtFileStartButton.TabIndex = 3;
-            this.createStmtFileStartButton.Text = "Start";
-            this.createStmtFileStartButton.UseVisualStyleBackColor = true;
-            this.createStmtFileStartButton.Click += new System.EventHandler(this.createStmtFileStartButton_Click);
-            // 
             // PatientCollectionsRunWizard
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -277,6 +278,7 @@
             this.Controls.Add(this.tabControl1);
             this.Name = "PatientCollectionsRunWizard";
             this.Text = "Patient Collections Run";
+            this.Load += new System.EventHandler(this.PatientCollectionsRunWizard_Load);
             this.tabControl1.ResumeLayout(false);
             this.sendCollectionsTabPage.ResumeLayout(false);
             this.sendCollectionsTabPage.PerformLayout();

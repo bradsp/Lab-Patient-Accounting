@@ -162,10 +162,13 @@ namespace LabBilling.Core.Models
         [Column("batch_id")]
         public string BatchId { get; set; }
 
-
+        [Ignore]
         public List<PatientStatementAccount> Accounts { get; set; }
+        [Ignore] 
         public List<PatientStatementCerner> CernerStatements { get; set; }
+        [Ignore] 
         public List<PatientStatementEncounter> Encounters { get; set; }
+        [Ignore] 
         public List<PatientStatementEncounterActivity> EncounterActivity { get; set; }
 
 

@@ -26,7 +26,7 @@ namespace RFClassLibrary
         /// <returns></returns>
         public static DateTime GetLastDayOfPrevMonth()
         {
-            return DateTime.Today.AddDays(-1);
+            return new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1).AddDays(-1);
         }
 
         /// <summary>
