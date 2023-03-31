@@ -35,6 +35,10 @@
             this.sendToCollectionsStartButton = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.compileStatementsTabPage = new System.Windows.Forms.TabPage();
+            this.batchNoLabel = new System.Windows.Forms.Label();
+            this.throughDateLabel = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
             this.compileStmtsStartButton = new System.Windows.Forms.Button();
             this.compileStatementsTextBox = new System.Windows.Forms.TextBox();
             this.compileStatementsProgressBar = new System.Windows.Forms.ProgressBar();
@@ -48,10 +52,7 @@
             this.backButton = new System.Windows.Forms.Button();
             this.nextButton = new System.Windows.Forms.Button();
             this.finishButton = new System.Windows.Forms.Button();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            this.throughDateLabel = new System.Windows.Forms.Label();
-            this.batchNoLabel = new System.Windows.Forms.Label();
+            this.bannerLabel = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.sendCollectionsTabPage.SuspendLayout();
             this.compileStatementsTabPage.SuspendLayout();
@@ -139,6 +140,44 @@
             this.compileStatementsTabPage.Text = "Compile Statements";
             this.compileStatementsTabPage.UseVisualStyleBackColor = true;
             // 
+            // batchNoLabel
+            // 
+            this.batchNoLabel.AutoSize = true;
+            this.batchNoLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.batchNoLabel.Location = new System.Drawing.Point(144, 68);
+            this.batchNoLabel.Name = "batchNoLabel";
+            this.batchNoLabel.Size = new System.Drawing.Size(91, 18);
+            this.batchNoLabel.TabIndex = 5;
+            this.batchNoLabel.Text = "<batchNo>";
+            // 
+            // throughDateLabel
+            // 
+            this.throughDateLabel.AutoSize = true;
+            this.throughDateLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.throughDateLabel.Location = new System.Drawing.Point(144, 39);
+            this.throughDateLabel.Name = "throughDateLabel";
+            this.throughDateLabel.Size = new System.Drawing.Size(122, 18);
+            this.throughDateLabel.TabIndex = 5;
+            this.throughDateLabel.Text = "<through date>";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(62, 72);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(55, 13);
+            this.label5.TabIndex = 4;
+            this.label5.Text = "Batch No:";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(62, 43);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(76, 13);
+            this.label4.TabIndex = 4;
+            this.label4.Text = "Through Date:";
+            // 
             // compileStmtsStartButton
             // 
             this.compileStmtsStartButton.Location = new System.Drawing.Point(465, 109);
@@ -225,87 +264,63 @@
             // cancelButton
             // 
             this.cancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.cancelButton.Location = new System.Drawing.Point(434, 415);
+            this.cancelButton.Location = new System.Drawing.Point(709, 415);
             this.cancelButton.Name = "cancelButton";
             this.cancelButton.Size = new System.Drawing.Size(75, 23);
             this.cancelButton.TabIndex = 1;
-            this.cancelButton.Text = "Cancel";
+            this.cancelButton.Text = "Close";
             this.cancelButton.UseVisualStyleBackColor = true;
             this.cancelButton.Click += new System.EventHandler(this.cancelButton_Click);
             // 
             // backButton
             // 
             this.backButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.backButton.Location = new System.Drawing.Point(515, 415);
+            this.backButton.Location = new System.Drawing.Point(466, 415);
             this.backButton.Name = "backButton";
             this.backButton.Size = new System.Drawing.Size(75, 23);
             this.backButton.TabIndex = 1;
             this.backButton.Text = "< Back";
             this.backButton.UseVisualStyleBackColor = true;
+            this.backButton.Visible = false;
             // 
             // nextButton
             // 
             this.nextButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.nextButton.Location = new System.Drawing.Point(596, 415);
+            this.nextButton.Location = new System.Drawing.Point(547, 415);
             this.nextButton.Name = "nextButton";
             this.nextButton.Size = new System.Drawing.Size(75, 23);
             this.nextButton.TabIndex = 1;
             this.nextButton.Text = "Next >";
             this.nextButton.UseVisualStyleBackColor = true;
+            this.nextButton.Visible = false;
             // 
             // finishButton
             // 
             this.finishButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.finishButton.Location = new System.Drawing.Point(677, 415);
+            this.finishButton.Location = new System.Drawing.Point(628, 415);
             this.finishButton.Name = "finishButton";
             this.finishButton.Size = new System.Drawing.Size(75, 23);
             this.finishButton.TabIndex = 1;
             this.finishButton.Text = "Finish";
             this.finishButton.UseVisualStyleBackColor = true;
+            this.finishButton.Visible = false;
             // 
-            // label4
+            // bannerLabel
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(62, 43);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(76, 13);
-            this.label4.TabIndex = 4;
-            this.label4.Text = "Through Date:";
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(62, 72);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(55, 13);
-            this.label5.TabIndex = 4;
-            this.label5.Text = "Batch No:";
-            // 
-            // throughDateLabel
-            // 
-            this.throughDateLabel.AutoSize = true;
-            this.throughDateLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.throughDateLabel.Location = new System.Drawing.Point(144, 39);
-            this.throughDateLabel.Name = "throughDateLabel";
-            this.throughDateLabel.Size = new System.Drawing.Size(122, 18);
-            this.throughDateLabel.TabIndex = 5;
-            this.throughDateLabel.Text = "<through date>";
-            // 
-            // batchNoLabel
-            // 
-            this.batchNoLabel.AutoSize = true;
-            this.batchNoLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.batchNoLabel.Location = new System.Drawing.Point(144, 68);
-            this.batchNoLabel.Name = "batchNoLabel";
-            this.batchNoLabel.Size = new System.Drawing.Size(91, 18);
-            this.batchNoLabel.TabIndex = 5;
-            this.batchNoLabel.Text = "<batchNo>";
+            this.bannerLabel.AutoSize = true;
+            this.bannerLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.bannerLabel.Location = new System.Drawing.Point(13, 9);
+            this.bannerLabel.Name = "bannerLabel";
+            this.bannerLabel.Size = new System.Drawing.Size(119, 20);
+            this.bannerLabel.TabIndex = 2;
+            this.bannerLabel.Text = "<bannerText>";
             // 
             // PatientCollectionsRunWizard
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.bannerLabel);
             this.Controls.Add(this.finishButton);
             this.Controls.Add(this.nextButton);
             this.Controls.Add(this.backButton);
@@ -322,6 +337,7 @@
             this.createStmtFileTabPage.ResumeLayout(false);
             this.createStmtFileTabPage.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -351,5 +367,6 @@
         private System.Windows.Forms.Label throughDateLabel;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label bannerLabel;
     }
 }

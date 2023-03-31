@@ -172,6 +172,21 @@ namespace LabBilling.Forms
             batchNoLabel.Text = batchNo;
             throughDateLabel.Text = thruDate.ToShortDateString();
 
+            //check of patient bills have already been run for this month
+            if(patientBilling.BatchPreviouslyRun(batchNo))
+            {
+                bannerLabel.Text = $"Batch {batchNo} has already been run.";
+                bannerLabel.ForeColor = Color.Red;
+            }
+            else
+            {
+                bannerLabel.Visible = false;
+            }
+
+            compileStmtsStartButton.Enabled = false;
+            sendToCollectionsStartButton.Enabled = false;
+            createStmtFileStartButton.Enabled = false;
+           
         }
     }
 }

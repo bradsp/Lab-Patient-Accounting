@@ -1,8 +1,12 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Text;
+using System.Web.UI.WebControls;
 
 namespace RFClassLibrary
 {
+
     /// <summary>
     /// This class allows the creation of fixed field length text strings. 
     /// </summary>

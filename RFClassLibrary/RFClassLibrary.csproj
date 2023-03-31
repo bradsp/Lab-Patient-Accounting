@@ -145,6 +145,7 @@
     </Compile>
     <Compile Include="DataSetPrinter.cs" />
     <Compile Include="DateTimeExtension.cs" />
+    <Compile Include="DelimitedFile.cs" />
     <Compile Include="dkPrint.cs" />
     <Compile Include="DMessageForm.cs">
       <SubType>Form</SubType>

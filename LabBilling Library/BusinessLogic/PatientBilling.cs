@@ -173,6 +173,16 @@ namespace LabBilling.Core
             // email mailer P report
         }
 
+        public bool BatchPreviouslyRun(string batchNo)
+        {
+            int cnt = patientStatementRepository.GetStatementCount(batchNo);
+
+            if (cnt > 0)
+                return true;
+
+            return false;
+        }
+
         public void CreateStatementFile(DateTime throughDate)
         {
             if (throughDate == DateTime.MinValue)

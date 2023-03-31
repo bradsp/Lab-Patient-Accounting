@@ -3,6 +3,7 @@ using LabBilling.Logging;
 using PetaPoco;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
@@ -34,6 +35,18 @@ namespace LabBilling.Core.DataAccess
             _activityRepository = new PatientStatementEncounterActivityRepository(db);
         }
 
+        public int GetStatementCount(string batch)
+        {
+            var sql = PetaPoco.Sql.Builder
+                .Select("count(*) as 'Cnt'")
+                .From("dbo.patbill_stmt")
+                .Where($"{GetRealColumn(nameof(PatientStatement.BatchId))} = @0",
+                    new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = batch });
+
+            int cnt = dbConnection.ExecuteScalar<int>(sql);
+
+            return cnt;
+        }
 
         public List<PatientStatement> GetByBatch(string batch)
         {

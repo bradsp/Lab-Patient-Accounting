@@ -48,6 +48,7 @@ namespace LabBillingConsole
             Console.WriteLine("7) Generate Statement");
             Console.WriteLine("8) Regenerate Claim Batch");
             Console.WriteLine("9) Fix Drug Screen Charges");
+            Console.WriteLine("10) Test Delimited File Line");
             Console.WriteLine("X) Exit");
             Console.Write("\r\nSelect an option: ");
 
@@ -80,6 +81,9 @@ namespace LabBillingConsole
                 case "9":
                     FixDrugScreenCharges();
                     return false;
+                case "10":
+                    TestDelimitedFileLine();
+                    return false;
                 case "X":
                     return false;
                 case "x":
@@ -87,6 +91,37 @@ namespace LabBillingConsole
                 default:
                     return true;
             }
+        }
+
+        public static void TestDelimitedFileLine()
+        {
+
+            DelimitedFileLine delimitedFileLine = new DelimitedFileLine();
+
+            Line line = new Line();
+
+            line[0] = "SG1";
+            line[1] = "POWERS";
+            line[2] = "BRADLEY";
+            line[3] = "STEPHEN";
+            line[4] = "19740716";
+            line[5] = "M";
+
+            delimitedFileLine.AddLine(line);
+
+            line = new Line();
+            line[0] = "SG2";
+            line[1] = "POWERS";
+            line[2] = "SUZAN";
+            line[4] = "19641226";
+            line[5] = "F";
+
+            delimitedFileLine.AddLine(line);
+
+            string outS = delimitedFileLine.ToString('|');
+
+            Console.WriteLine(outS);
+            Console.ReadLine();
         }
 
         public static void RegenerateClaimBatch()
