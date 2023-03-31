@@ -16,7 +16,7 @@ namespace LabBilling.Core.Models
         [Column("record_cnt")]
         public int RecordCount { get; set; }
         [Column("statement_number")]
-        public float StatementNumber { get; set; }
+        public Int64 StatementNumber { get; set; }
         [Column("billing_entity_street")]
         public string BillingEntityStreet { get; set; }
         [Column("billing_entity_city")]

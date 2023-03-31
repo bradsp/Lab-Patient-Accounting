@@ -20,6 +20,8 @@ namespace LabBilling.Forms
         private PatientBilling patientBilling = new PatientBilling(Helper.ConnVal);
         private BadDebtRepository badDebtRepository = new BadDebtRepository(Helper.ConnVal);
         private bool errorEncountered = false;
+        private DateTime thruDate;
+        private string batchNo;
 
         public PatientCollectionsRunWizard()
         {
@@ -162,6 +164,14 @@ namespace LabBilling.Forms
             var records = badDebtRepository.GetNotSentRecords();
 
             sendToCollectionsTextbox.Text = $"{records.Count()} records to send to collections.";
+
+            thruDate = DateTimeHelper.GetLastDayOfPrevMonth();
+
+            batchNo = $"{thruDate.Year}{thruDate.Month:00}";
+
+            batchNoLabel.Text = batchNo;
+            throughDateLabel.Text = thruDate.ToShortDateString();
+
         }
     }
 }

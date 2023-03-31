@@ -12,7 +12,7 @@ namespace LabBilling.Core.Models
     public class PatientStatementEncounterActivity : IBaseEntity
     {
         [Column("statement_number")] 
-        public float StatementNumber { get; set; }
+        public Int64 StatementNumber { get; set; }
         [Column("record_type")] 
         public string RecordType { get; set; }
         [Column("record_cnt")] 

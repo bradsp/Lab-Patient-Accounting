@@ -51,7 +51,7 @@ namespace LabBilling.Core.DataAccess
 
             sql.Where($"{GetRealColumn(nameof(PatientStatement.BatchId))} = @0", 
                 new SqlParameter() { SqlDbType = System.Data.SqlDbType.VarChar, Value = batch});
-            sql.Where($"{GetRealColumn(nameof(PatientStatement.StatementSubmittedDateTime))} is null");
+            sql.Where($"{GetRealColumn(nameof(PatientStatement.StatementSubmittedDateTime))} is null or {GetRealColumn(nameof(PatientStatement.StatementSubmittedDateTime))} = '01/01/1900'");
 
             var results = dbConnection.Fetch<PatientStatement>(sql);
 
@@ -152,7 +152,7 @@ namespace LabBilling.Core.DataAccess
 
             sql.Where($"{GetRealColumn(nameof(PatientStatementEncounter.BatchId))} = @0",
                 new SqlParameter() { SqlDbType = System.Data.SqlDbType.VarChar, Value = batch });
-            sql.Where($"{GetRealColumn(nameof(PatientStatementEncounter.StatementNumber))} IN (select statement_number from dbo.pat_bill_acc where batch_id = @0 " + 
+            sql.Where($"{GetRealColumn(nameof(PatientStatementEncounter.StatementNumber))} IN (select statement_number from dbo.patbill_acc where batch_id = @0 " + 
                 "and nullif(date_sent,'') is null)",
                 new SqlParameter() { SqlDbType = System.Data.SqlDbType.VarChar, Value = batch });
 
@@ -189,7 +189,7 @@ namespace LabBilling.Core.DataAccess
 
             sql.Where($"{GetRealColumn(nameof(PatientStatementEncounterActivity.BatchId))} = @0",
                 new SqlParameter() { SqlDbType = System.Data.SqlDbType.VarChar, Value = batch });
-            sql.Where($"{GetRealColumn(nameof(PatientStatementEncounterActivity.StatementNumber))} IN (select statement_number from dbo.pat_bill_acc where batch_id = @0 " +
+            sql.Where($"{GetRealColumn(nameof(PatientStatementEncounterActivity.StatementNumber))} IN (select statement_number from dbo.patbill_acc where batch_id = @0 " +
                 "and nullif(date_sent,'') is null)",
                 new SqlParameter() { SqlDbType = System.Data.SqlDbType.VarChar, Value = batch });
 

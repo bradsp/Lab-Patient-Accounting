@@ -248,7 +248,6 @@ namespace LabBilling.Forms
                     dr["est_patient_liab_amt"].ToString().ToUpper(),
                     dr["online_billpay_url"].ToString().ToUpper(),
                     dr["guarantor_access_code"].ToString().ToUpper()          //70
-
                     ));
 
                 string strSelect = string.Format("statement_type = 'SMSG' and  statement_type_id = '{0}' ",
@@ -277,7 +276,7 @@ namespace LabBilling.Forms
                     sw.Write(string.Format("ACCT|{0}|{1}|{2}|{3}|{4}|{5}|{6}|{7}|{8}|{9}|{10}|{11}|{12}|{13}|{14}|{15}"+
                         "|{16}|{17}|{18}|{19}|{20}|{21}|{22}|{23}|{24}|{25}|{26}|{27}|{28}|{29}|{30}|{31}|{32}|{33}|{34}" +
                         "\r\n",
-                        (iAcc + 1).ToString().ToUpper(),//drAcc[iAcc]["record_cnt_acct"].ToString(), //0
+                        (iAcc + 1).ToString().ToUpper(),  //drAcc[iAcc]["record_cnt_acct"].ToString(), //0
                         drAcc[iAcc]["patient_account_number"].ToString().ToUpper(),
                         drAcc[iAcc]["account_id"].ToString().ToUpper(),
                         drAcc[iAcc]["pat_name"].ToString().ToUpper(),
@@ -312,14 +311,13 @@ namespace LabBilling.Forms
                         drAcc[iAcc]["maximum_out_of_pocket_amt_ind"].ToString().ToUpper(),
                         drAcc[iAcc]["amt_over_max_out_of_pocket"].ToString().ToUpper(),
                         drAcc[iAcc]["est_patient_liab_amt"].ToString().ToUpper()
-
                         ));
 
                     // each encounter
                     DataRow[] drEnct = m_dsPatBill.Tables["ENCTR"].Select(
-                    string.Format("statement_number = '{0}' and record_cnt = '{1}'"
-                        , dr["statement_number"].ToString().ToUpper(), drAcc[iAcc]["record_cnt_acct"].ToString().ToUpper()));
-
+                    string.Format("statement_number = '{0}' and record_cnt = '{1}'", 
+                        dr["statement_number"].ToString().ToUpper(), 
+                        drAcc[iAcc]["record_cnt_acct"].ToString().ToUpper()));
 
                     for (int iEnctr = 0; iEnctr <= drEnct.GetUpperBound(0); iEnctr++)
                     {

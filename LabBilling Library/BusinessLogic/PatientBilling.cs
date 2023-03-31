@@ -227,30 +227,28 @@ namespace LabBilling.Core
             DataTable encountersActivityDt = HelperExtensions.ConvertToDataTable(encountersActivity);
             DataTable cernerStatementDt = HelperExtensions.ConvertToDataTable(cernerStatement);
 
-
             //todo: get file path from parameters
             //string.Format(@"\\mclftp2\MCLFTP_E\TEMP\PatStatement{0}.txt", DateTime.Now.ToString("yyyyMMddHHmm"));
-            string strFileName = string.Format(@"{0}PatStatement{1}.txt",
-                parametersRepository.GetByKey("StatementsFileLocation"),
-                DateTime.Now.ToString("yyyyMMddHHmm"));
+            string strFileName = $"{parametersRepository.GetByKey("StatementsFileLocation")}PatStatement{DateTime.Now.ToString("yyyyMMddHHmm")}.txt";
             
             StreamWriter sw = new StreamWriter(strFileName);
             sw.AutoFlush = true;
+
             sw.Write(string.Format("HDR~MCL~~CERNER~MCL~{0}~{1}~T~N~0~0~0\r\n"
                 , DateTime.Now.ToString("yyyyMMdd")
                 , DateTime.Now.ToString("HHmmss")));
 
             foreach (DataRow dr in statementDt.Rows)
             {
+                var q = $"{nameof(PatientStatement.StatementNumber)} = {dr[nameof(PatientStatement.StatementNumber)].ToString()}";
                 // each statement
-                DataRow[] drAcc = accountsDt.Select(
-                    string.Format("statement_number = '{0}'", dr[nameof(PatientStatement.StatementNumber)].ToString()));
+                DataRow[] drAcc = accountsDt.Select(q);
 
                 sw.Write(string.Format("STMT|{0}|{1}|{2}|{3}|{4}|{5}|{6}|{7}|{8}|{9}|{10}|{11}|{12}|{13}|{14}|{15}" +
                     "|{16}|{17}|{18}|{19}|{20}|{21}|{22}|{23}|{24}|{25}|{26}|{27}|{28}|{29}|{30}|{31}|{32}|{33}|{34}|{35}" +
                     "|{36}|{37}|{38}|{39}|{40}|{41}|{42}|{43}|{44}|{45}|{46}|{47}|{48}|{49}|{50}|{51}|{52}|{53}|{54}|{55}" +
                     "|{56}|{57}|{58}|{59}|{60}|{61}|{62}|{63}|{64}|{65}|{66}|{67}|{68}|{69}|{70}|{71}|{72}\r\n",
-                    dr[nameof(PatientStatement.RecordCount)].ToString(),              //0
+                    dr[nameof(PatientStatement.RecordCount)].ToString(),                        //0
                     dr[nameof(PatientStatement.StatementNumber)].ToString(),
                     dr[nameof(PatientStatement.BillingEntityStreet)].ToString().ToUpper(),
                     dr[nameof(PatientStatement.BillingEntityCity)].ToString().ToUpper(),
@@ -323,18 +321,12 @@ namespace LabBilling.Core
                     dr[nameof(PatientStatement.EstPatientLiabAmt)].ToString().ToUpper(),
                     dr[nameof(PatientStatement.OnlineBillpayUrl)].ToString().ToUpper(),
                     dr[nameof(PatientStatement.GuarantorAccessCode)].ToString().ToUpper()          //70
-
                     ));
-
-                string strSelect = string.Format("statement_type = 'SMSG' and  statement_type_id = '{0}' ",
-                    dr["statement_number"].ToString());
 
                 if (cernerStatementDt.Rows.Count > 0)
                 {
-                    DataRow[] drStmtMsg = cernerStatementDt.Select(
-                        string.Format("statement_type = 'SMSG' and  statement_type_id = '{0}' ",
-                        dr["statement_number"].ToString()));
-
+                    DataRow[] drStmtMsg = cernerStatementDt.Select($"{nameof(PatientStatementCerner.StatementType)} = 'SMSG' " + 
+                        $"and {nameof(PatientStatementCerner.StatementTypeId)} = '{dr[nameof(PatientStatement.StatementNumber)].ToString()}' ");
 
                     for (int iSmsg = 0; iSmsg <= drStmtMsg.GetUpperBound(0); iSmsg++)
                     {
@@ -390,10 +382,12 @@ namespace LabBilling.Core
                         ));
 
                     // each encounter
-                    DataRow[] drEnct = encountersDt.Select(
-                    string.Format("statement_number = '{0}' and record_cnt = '{1}'", 
-                        dr[nameof(PatientStatement.StatementNumber)].ToString().ToUpper(), 
-                        drAcc[iAcc][nameof(PatientStatementAccount.RecordCountAcct)].ToString().ToUpper()));
+                    DataRow[] drEnct = encountersDt.Select($"{nameof(PatientStatementEncounter.StatementNumber)} = {dr[nameof(PatientStatement.StatementNumber)].ToString()} " + 
+                        $"and {nameof(PatientStatementEncounter.RecordCount)} = '{drAcc[iAcc][nameof(PatientStatementAccount.RecordCountAcct)]}'");
+
+                    //string.Format("statement_number = '{0}' and record_cnt = '{1}'", 
+                    //    dr[nameof(PatientStatement.StatementNumber)].ToString().ToUpper(), 
+                    //    drAcc[iAcc][nameof(PatientStatementAccount.RecordCountAcct)].ToString().ToUpper()));
 
                     for (int iEnctr = 0; iEnctr <= drEnct.GetUpperBound(0); iEnctr++)
                     {
@@ -480,9 +474,12 @@ namespace LabBilling.Core
 
                         if (cernerStatementDt.Rows.Count > 0)
                         {
-                            DataRow[] drEnctMsg = cernerStatementDt.Select(
-                            string.Format("statement_type = 'EMSG' and  statement_type_id = '{0}' and account = '{1}'",
-                            dr[nameof(PatientStatement.StatementNumber)].ToString(), drEnct[iEnctr][nameof(PatientStatementEncounter.PFTEncntrId)].ToString().ToUpper()));
+                            DataRow[] drEnctMsg = cernerStatementDt.Select($"{nameof(PatientStatementCerner.StatementType)} = 'EMSG' " + 
+                                $"and {nameof(PatientStatementCerner.StatementTypeId)} = {dr[nameof(PatientStatement.StatementNumber)].ToString()} " + 
+                                $"and {nameof(PatientStatementCerner.Account)} = '{drEnct[iEnctr][nameof(PatientStatementEncounter.PFTEncntrId)]}'");
+
+                            //string.Format("statement_type = 'EMSG' and  statement_type_id = '{0}' and account = '{1}'",
+                            //dr[nameof(PatientStatement.StatementNumber)].ToString(), drEnct[iEnctr][nameof(PatientStatementEncounter.PFTEncntrId)].ToString().ToUpper()));
 
                             for (int iEmsg = 0; iEmsg <= drEnctMsg.GetUpperBound(0); iEmsg++)
                             {
@@ -493,10 +490,11 @@ namespace LabBilling.Core
                                     drEnctMsg[iEmsg][nameof(PatientStatementCerner.StatementText)].ToString().ToUpper()));
                             }
                         }
-                        DataRow[] drActv = encountersActivityDt.Select(
-                                string.Format("statement_number = '{0}' and parent_activity_id = '{1}'"
-                                , dr[nameof(PatientStatement.StatementNumber)].ToString().ToUpper()
-                                , drEnct[iEnctr][nameof(PatientStatementEncounter.RecordCount)].ToString().ToUpper()));
+                        DataRow[] drActv = encountersActivityDt.Select($"{nameof(PatientStatementEncounterActivity.StatementNumber)} = '{dr[nameof(PatientStatement.StatementNumber)].ToString()}' " +
+                            $"and {nameof(PatientStatementEncounterActivity.ParentActivityId)} = '{drEnct[iEnctr][nameof(PatientStatementEncounter.RecordCount)]}'");
+                                //string.Format("statement_number = '{0}' and parent_activity_id = '{1}'"
+                                //, dr[nameof(PatientStatement.StatementNumber)].ToString().ToUpper()
+                                //, drEnct[iEnctr][nameof(PatientStatementEncounter.RecordCount)].ToString().ToUpper()));
                         for (int iActv = 0; iActv <= drActv.GetUpperBound(0); iActv++)
                         {
 
@@ -504,7 +502,7 @@ namespace LabBilling.Core
                                 "|{12}|{13}|{14}|{15}|{16}|{17}|{18}|{19}|{20}|{21}|{22}|{23}|{24}|{25}" +
                                 "|{26}|{27}" +
                                 "\r\n",
-                            (iActv + 1).ToString().ToUpper(),//drActv[iActv]["record_cnt"].ToString(), //0
+                            (iActv + 1).ToString().ToUpper(), //drActv[iActv]["record_cnt"].ToString(), //0
                             drActv[iActv][nameof(PatientStatementEncounterActivity.EncntrNumber)].ToString().ToUpper(),
                             drActv[iActv][nameof(PatientStatementEncounterActivity.ActivityId)].ToString().ToUpper(),
                             drActv[iActv][nameof(PatientStatementEncounterActivity.ActivityType)].ToString().ToUpper(),
@@ -558,7 +556,7 @@ namespace LabBilling.Core
             {
                 //run exec usp_prg_pat_bill_update_flags '<last day of prev month>'
                 //step 1 - exec_prg_pat_bill_update_flags '{thrudate}'
-                db.ExecuteNonQueryProc("usp_prg_pat_bill_update_flags", new SqlParameter() { ParameterName = "@thrudate", SqlDbType = SqlDbType.DateTime, Value = endDate });
+                //db.ExecuteNonQueryProc("usp_prg_pat_bill_update_flags", new SqlParameter() { ParameterName = "@thrudate", SqlDbType = SqlDbType.DateTime, Value = endDate });
 
                 //run exec usp_prg_pat_bill_compile @batchNo = '<batchNo>', @endDate = '<last day of prev month>'
                 db.ExecuteNonQueryProc("usp_prg_pat_bill_compile",

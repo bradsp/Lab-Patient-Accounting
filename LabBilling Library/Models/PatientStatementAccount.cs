@@ -13,7 +13,7 @@ namespace LabBilling.Core.Models
     public class PatientStatementAccount : IBaseEntity
     {
         [Column("statement_number")] 
-        public float StatementNumber { get; set; }
+        public Int64 StatementNumber { get; set; }
         [Column("record_cnt_acct")] 
         public string RecordCountAcct { get; set; }
         [Column("patient_account_number")] 

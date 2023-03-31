@@ -29,9 +29,9 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PatientCollectionsForm));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             this.tsMain = new System.Windows.Forms.ToolStrip();
             this.worklistsToolStripDropDown = new System.Windows.Forms.ToolStripDropDownButton();
             this.readyForCollectionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -43,6 +43,7 @@
             this.tsmiSelectAccounts = new System.Windows.Forms.ToolStripMenuItem();
             this.GeneratePatientBillsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.GenerateCollectionsFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.patientStatementsWizardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tsbWriteOff = new System.Windows.Forms.ToolStripButton();
             this.tsbPrintGrid = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
@@ -51,7 +52,6 @@
             this.tspbRecords = new System.Windows.Forms.ToolStripProgressBar();
             this.ssRecords = new System.Windows.Forms.ToolStripStatusLabel();
             this.dgvAccounts = new System.Windows.Forms.DataGridView();
-            this.patientStatementsWizardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tsMain.SuspendLayout();
             this.ssMain.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvAccounts)).BeginInit();
@@ -126,10 +126,10 @@
             // 
             this.tsddbtnBadDebt.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.tsddbtnBadDebt.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.patientStatementsWizardToolStripMenuItem,
             this.tsmiSelectAccounts,
             this.GeneratePatientBillsToolStripMenuItem,
-            this.GenerateCollectionsFileToolStripMenuItem,
-            this.patientStatementsWizardToolStripMenuItem});
+            this.GenerateCollectionsFileToolStripMenuItem});
             this.tsddbtnBadDebt.Image = ((System.Drawing.Image)(resources.GetObject("tsddbtnBadDebt.Image")));
             this.tsddbtnBadDebt.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsddbtnBadDebt.Name = "tsddbtnBadDebt";
@@ -140,7 +140,7 @@
             // 
             this.tsmiSelectAccounts.CheckOnClick = true;
             this.tsmiSelectAccounts.Name = "tsmiSelectAccounts";
-            this.tsmiSelectAccounts.Size = new System.Drawing.Size(212, 22);
+            this.tsmiSelectAccounts.Size = new System.Drawing.Size(197, 22);
             this.tsmiSelectAccounts.Text = "SELECT PAT BILL ACC\'s";
             this.tsmiSelectAccounts.ToolTipText = "Use \"Bad Debt Batch\" on the MCL billing menu";
             this.tsmiSelectAccounts.Visible = false;
@@ -150,16 +150,25 @@
             // 
             this.GeneratePatientBillsToolStripMenuItem.CheckOnClick = true;
             this.GeneratePatientBillsToolStripMenuItem.Name = "GeneratePatientBillsToolStripMenuItem";
-            this.GeneratePatientBillsToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
+            this.GeneratePatientBillsToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
             this.GeneratePatientBillsToolStripMenuItem.Text = "Generate Patient Bills";
+            this.GeneratePatientBillsToolStripMenuItem.Visible = false;
             this.GeneratePatientBillsToolStripMenuItem.Click += new System.EventHandler(this.GeneratePatientBillsToolStripMenuItem_Click);
             // 
             // GenerateCollectionsFileToolStripMenuItem
             // 
             this.GenerateCollectionsFileToolStripMenuItem.Name = "GenerateCollectionsFileToolStripMenuItem";
-            this.GenerateCollectionsFileToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
+            this.GenerateCollectionsFileToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
             this.GenerateCollectionsFileToolStripMenuItem.Text = "Send to Collections";
+            this.GenerateCollectionsFileToolStripMenuItem.Visible = false;
             this.GenerateCollectionsFileToolStripMenuItem.Click += new System.EventHandler(this.GenerateCollectionsFileToolStripMenuItem_Click);
+            // 
+            // patientStatementsWizardToolStripMenuItem
+            // 
+            this.patientStatementsWizardToolStripMenuItem.Name = "patientStatementsWizardToolStripMenuItem";
+            this.patientStatementsWizardToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
+            this.patientStatementsWizardToolStripMenuItem.Text = "Run Patient Statements";
+            this.patientStatementsWizardToolStripMenuItem.Click += new System.EventHandler(this.patientStatementsWizardToolStripMenuItem_Click);
             // 
             // tsbWriteOff
             // 
@@ -169,6 +178,7 @@
             this.tsbWriteOff.Name = "tsbWriteOff";
             this.tsbWriteOff.Size = new System.Drawing.Size(59, 22);
             this.tsbWriteOff.Text = "Write Off";
+            this.tsbWriteOff.Visible = false;
             this.tsbWriteOff.Click += new System.EventHandler(this.tsbWriteOff_Click);
             // 
             // tsbPrintGrid
@@ -196,6 +206,7 @@
             this.tsbSmallBalWriteOff.Size = new System.Drawing.Size(135, 22);
             this.tsbSmallBalWriteOff.Text = "Small Balance Write Off";
             this.tsbSmallBalWriteOff.ToolTipText = "Small Balance Write Off $10.00 and less";
+            this.tsbSmallBalWriteOff.Visible = false;
             this.tsbSmallBalWriteOff.Click += new System.EventHandler(this.TsbSmallBalWriteOff_Click);
             // 
             // ssMain
@@ -228,36 +239,36 @@
             this.dgvAccounts.AllowUserToDeleteRows = false;
             this.dgvAccounts.BackgroundColor = System.Drawing.SystemColors.ControlLightLight;
             this.dgvAccounts.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.EnableAlwaysIncludeHeaderText;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvAccounts.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvAccounts.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle4;
             this.dgvAccounts.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dgvAccounts.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dgvAccounts.DefaultCellStyle = dataGridViewCellStyle5;
             this.dgvAccounts.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dgvAccounts.Location = new System.Drawing.Point(0, 25);
             this.dgvAccounts.MultiSelect = false;
             this.dgvAccounts.Name = "dgvAccounts";
             this.dgvAccounts.ReadOnly = true;
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvAccounts.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvAccounts.RowHeadersDefaultCellStyle = dataGridViewCellStyle6;
             this.dgvAccounts.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvAccounts.Size = new System.Drawing.Size(1010, 605);
             this.dgvAccounts.TabIndex = 2;
@@ -271,13 +282,6 @@
             this.dgvAccounts.RowsAdded += new System.Windows.Forms.DataGridViewRowsAddedEventHandler(this.dgvAccounts_RowsAdded);
             this.dgvAccounts.RowsRemoved += new System.Windows.Forms.DataGridViewRowsRemovedEventHandler(this.dgvAccounts_RowsRemoved);
             this.dgvAccounts.SelectionChanged += new System.EventHandler(this.DgvAccounts_SelectionChanged);
-            // 
-            // patientStatementsWizardToolStripMenuItem
-            // 
-            this.patientStatementsWizardToolStripMenuItem.Name = "patientStatementsWizardToolStripMenuItem";
-            this.patientStatementsWizardToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
-            this.patientStatementsWizardToolStripMenuItem.Text = "Patient Statements Wizard";
-            this.patientStatementsWizardToolStripMenuItem.Click += new System.EventHandler(this.patientStatementsWizardToolStripMenuItem_Click);
             // 
             // PatientCollectionsForm
             // 

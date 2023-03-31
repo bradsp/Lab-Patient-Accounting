@@ -44,11 +44,14 @@
             this.createStmtFileTextBox = new System.Windows.Forms.TextBox();
             this.createStmtFileProgressBar = new System.Windows.Forms.ProgressBar();
             this.label3 = new System.Windows.Forms.Label();
-            this.finishTabPage = new System.Windows.Forms.TabPage();
             this.cancelButton = new System.Windows.Forms.Button();
             this.backButton = new System.Windows.Forms.Button();
             this.nextButton = new System.Windows.Forms.Button();
             this.finishButton = new System.Windows.Forms.Button();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.throughDateLabel = new System.Windows.Forms.Label();
+            this.batchNoLabel = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.sendCollectionsTabPage.SuspendLayout();
             this.compileStatementsTabPage.SuspendLayout();
@@ -63,7 +66,6 @@
             this.tabControl1.Controls.Add(this.sendCollectionsTabPage);
             this.tabControl1.Controls.Add(this.compileStatementsTabPage);
             this.tabControl1.Controls.Add(this.createStmtFileTabPage);
-            this.tabControl1.Controls.Add(this.finishTabPage);
             this.tabControl1.Location = new System.Drawing.Point(12, 32);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
@@ -121,6 +123,10 @@
             // 
             // compileStatementsTabPage
             // 
+            this.compileStatementsTabPage.Controls.Add(this.batchNoLabel);
+            this.compileStatementsTabPage.Controls.Add(this.throughDateLabel);
+            this.compileStatementsTabPage.Controls.Add(this.label5);
+            this.compileStatementsTabPage.Controls.Add(this.label4);
             this.compileStatementsTabPage.Controls.Add(this.compileStmtsStartButton);
             this.compileStatementsTabPage.Controls.Add(this.compileStatementsTextBox);
             this.compileStatementsTabPage.Controls.Add(this.compileStatementsProgressBar);
@@ -135,7 +141,7 @@
             // 
             // compileStmtsStartButton
             // 
-            this.compileStmtsStartButton.Location = new System.Drawing.Point(465, 80);
+            this.compileStmtsStartButton.Location = new System.Drawing.Point(465, 109);
             this.compileStmtsStartButton.Name = "compileStmtsStartButton";
             this.compileStmtsStartButton.Size = new System.Drawing.Size(75, 23);
             this.compileStmtsStartButton.TabIndex = 3;
@@ -145,7 +151,7 @@
             // 
             // compileStatementsTextBox
             // 
-            this.compileStatementsTextBox.Location = new System.Drawing.Point(65, 121);
+            this.compileStatementsTextBox.Location = new System.Drawing.Point(65, 150);
             this.compileStatementsTextBox.Multiline = true;
             this.compileStatementsTextBox.Name = "compileStatementsTextBox";
             this.compileStatementsTextBox.Size = new System.Drawing.Size(374, 176);
@@ -153,7 +159,7 @@
             // 
             // compileStatementsProgressBar
             // 
-            this.compileStatementsProgressBar.Location = new System.Drawing.Point(65, 80);
+            this.compileStatementsProgressBar.Location = new System.Drawing.Point(65, 109);
             this.compileStatementsProgressBar.Name = "compileStatementsProgressBar";
             this.compileStatementsProgressBar.Size = new System.Drawing.Size(374, 23);
             this.compileStatementsProgressBar.TabIndex = 1;
@@ -161,7 +167,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(62, 45);
+            this.label2.Location = new System.Drawing.Point(62, 17);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(377, 13);
             this.label2.TabIndex = 0;
@@ -216,15 +222,6 @@
             this.label3.Text = "This step will generate the statement file to be sent to DNI. Click Start to proc" +
     "eed.";
             // 
-            // finishTabPage
-            // 
-            this.finishTabPage.Location = new System.Drawing.Point(4, 22);
-            this.finishTabPage.Name = "finishTabPage";
-            this.finishTabPage.Size = new System.Drawing.Size(768, 350);
-            this.finishTabPage.TabIndex = 3;
-            this.finishTabPage.Text = "Finish";
-            this.finishTabPage.UseVisualStyleBackColor = true;
-            // 
             // cancelButton
             // 
             this.cancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
@@ -266,6 +263,44 @@
             this.finishButton.Text = "Finish";
             this.finishButton.UseVisualStyleBackColor = true;
             // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(62, 43);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(76, 13);
+            this.label4.TabIndex = 4;
+            this.label4.Text = "Through Date:";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(62, 72);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(55, 13);
+            this.label5.TabIndex = 4;
+            this.label5.Text = "Batch No:";
+            // 
+            // throughDateLabel
+            // 
+            this.throughDateLabel.AutoSize = true;
+            this.throughDateLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.throughDateLabel.Location = new System.Drawing.Point(144, 39);
+            this.throughDateLabel.Name = "throughDateLabel";
+            this.throughDateLabel.Size = new System.Drawing.Size(122, 18);
+            this.throughDateLabel.TabIndex = 5;
+            this.throughDateLabel.Text = "<through date>";
+            // 
+            // batchNoLabel
+            // 
+            this.batchNoLabel.AutoSize = true;
+            this.batchNoLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.batchNoLabel.Location = new System.Drawing.Point(144, 68);
+            this.batchNoLabel.Name = "batchNoLabel";
+            this.batchNoLabel.Size = new System.Drawing.Size(91, 18);
+            this.batchNoLabel.TabIndex = 5;
+            this.batchNoLabel.Text = "<batchNo>";
+            // 
             // PatientCollectionsRunWizard
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -302,7 +337,6 @@
         private System.Windows.Forms.Button sendToCollectionsStartButton;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TabPage createStmtFileTabPage;
-        private System.Windows.Forms.TabPage finishTabPage;
         private System.Windows.Forms.TextBox sendToCollectionsTextbox;
         private System.Windows.Forms.ProgressBar sendToCollectionsProgressBar;
         private System.Windows.Forms.Button compileStmtsStartButton;
@@ -313,5 +347,9 @@
         private System.Windows.Forms.ProgressBar createStmtFileProgressBar;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Button createStmtFileStartButton;
+        private System.Windows.Forms.Label batchNoLabel;
+        private System.Windows.Forms.Label throughDateLabel;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label label4;
     }
 }
