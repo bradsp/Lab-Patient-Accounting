@@ -336,7 +336,7 @@ namespace LabBilling.Core
                 if (cernerStatementDt.Rows.Count > 0)
                 {
                     DataRow[] drStmtMsg = cernerStatementDt.Select($"{nameof(PatientStatementCerner.StatementType)} = 'SMSG' " + 
-                        $"and {nameof(PatientStatementCerner.StatementTypeId)} = '{dr[nameof(PatientStatement.StatementNumber)].ToString()}' ");
+                        $"and {nameof(PatientStatementCerner.StatementTypeId)} = '{dr[nameof(PatientStatement.StatementNumber)]}' ");
 
                     for (int iSmsg = 0; iSmsg <= drStmtMsg.GetUpperBound(0); iSmsg++)
                     {
@@ -392,7 +392,7 @@ namespace LabBilling.Core
                         ));
 
                     // each encounter
-                    DataRow[] drEnct = encountersDt.Select($"{nameof(PatientStatementEncounter.StatementNumber)} = {dr[nameof(PatientStatement.StatementNumber)].ToString()} " + 
+                    DataRow[] drEnct = encountersDt.Select($"{nameof(PatientStatementEncounter.StatementNumber)} = {dr[nameof(PatientStatement.StatementNumber)]} " + 
                         $"and {nameof(PatientStatementEncounter.RecordCount)} = '{drAcc[iAcc][nameof(PatientStatementAccount.RecordCountAcct)]}'");
 
                     //string.Format("statement_number = '{0}' and record_cnt = '{1}'", 
@@ -485,7 +485,7 @@ namespace LabBilling.Core
                         if (cernerStatementDt.Rows.Count > 0)
                         {
                             DataRow[] drEnctMsg = cernerStatementDt.Select($"{nameof(PatientStatementCerner.StatementType)} = 'EMSG' " + 
-                                $"and {nameof(PatientStatementCerner.StatementTypeId)} = {dr[nameof(PatientStatement.StatementNumber)].ToString()} " + 
+                                $"and {nameof(PatientStatementCerner.StatementTypeId)} = {dr[nameof(PatientStatement.StatementNumber)]} " + 
                                 $"and {nameof(PatientStatementCerner.Account)} = '{drEnct[iEnctr][nameof(PatientStatementEncounter.PFTEncntrId)]}'");
 
                             //string.Format("statement_type = 'EMSG' and  statement_type_id = '{0}' and account = '{1}'",
@@ -500,7 +500,7 @@ namespace LabBilling.Core
                                     drEnctMsg[iEmsg][nameof(PatientStatementCerner.StatementText)].ToString().ToUpper()));
                             }
                         }
-                        DataRow[] drActv = encountersActivityDt.Select($"{nameof(PatientStatementEncounterActivity.StatementNumber)} = '{dr[nameof(PatientStatement.StatementNumber)].ToString()}' " +
+                        DataRow[] drActv = encountersActivityDt.Select($"{nameof(PatientStatementEncounterActivity.StatementNumber)} = '{dr[nameof(PatientStatement.StatementNumber)]}' " +
                             $"and {nameof(PatientStatementEncounterActivity.ParentActivityId)} = '{drEnct[iEnctr][nameof(PatientStatementEncounter.RecordCount)]}'");
                                 //string.Format("statement_number = '{0}' and parent_activity_id = '{1}'"
                                 //, dr[nameof(PatientStatement.StatementNumber)].ToString().ToUpper()

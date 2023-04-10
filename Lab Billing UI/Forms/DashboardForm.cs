@@ -25,9 +25,34 @@ namespace LabBilling.Forms
         private void DashboardForm_Load(object sender, EventArgs e)
         {
             LoadChart();
-            
+
+            //LoadAnnouncements();
         }
 
+        private void LoadAnnouncements()
+        {
+            AnnouncementRepository announcementRepository = new AnnouncementRepository(Helper.ConnVal);
+
+            var announcements = announcementRepository.GetActive();
+
+            string text = @"{\rtf1\ansi\deff0";
+            text += @"{\fonttbl{\f0\fswiss Arial;}}";
+            text += @"{\colortbl;\red0\green0\blue0;\red255\green0\blue0;}";
+
+            foreach (Announcement announcement in announcements)
+            {
+                text += @"\cf2 ";
+                text += @"\b " + announcement.StartDate.ToShortDateString() + @"\b0 ";
+
+                text += @"\cf1 ";
+                text += @"\par " + announcement.MessageText + @"\par ";
+            }
+
+            text += "}";
+
+            announcementsTextBox.Rtf = text;
+
+        }
 
         private void LoadChart()
         {

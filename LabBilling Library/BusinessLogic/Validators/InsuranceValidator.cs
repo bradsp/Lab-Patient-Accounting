@@ -38,9 +38,9 @@ namespace LabBilling.Core.BusinessLogic.Validators
                         return true;
                 }).WithMessage("Both Policy Number and Group Number are empty.");
 
-            RuleFor(a => a.PolicyNumber)
-                .Must(BeAValidPolicyNumber).WithMessage("Ins Policy Number is not correct format.")
-                .When(a => !string.IsNullOrEmpty(a.PolicyNumber));
+            //RuleFor(a => a.PolicyNumber)
+            //    .Must(BeAValidPolicyNumber).WithMessage("Ins Policy Number is not correct format.")
+            //    .When(a => !string.IsNullOrEmpty(a.PolicyNumber));
 
             RuleFor(a => a.GroupNumber)
                 .Must(BeAValidGroupNumber).WithMessage("Ins Group Number is not a valid format.")
@@ -153,8 +153,8 @@ namespace LabBilling.Core.BusinessLogic.Validators
             }
             else
             {
-                bool hasCorrectLength = policyNum.Length >= 7 && policyNum.Length <= 12 ? true : false;
-                return hasCorrectLength;
+                //bool hasCorrectLength = policyNum.Length >= 7 && policyNum.Length <= 12 ? true : false;
+                return true;
             }
         }
         private bool BeAValidGroupNumber(Ins ins, string groupNumber)

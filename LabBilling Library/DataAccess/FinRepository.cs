@@ -23,7 +23,11 @@ namespace LabBilling.Core.DataAccess
 
         public List<Fin> GetActive()
         {
-            return dbConnection.Query<Fin>($"where {GetRealColumn(nameof(Fin.IsDeleted))} = 0").ToList();
+            var sql = PetaPoco.Sql.Builder
+                .Where($"{GetRealColumn(nameof(Fin.IsDeleted))} = 0")
+                .Where($"{GetRealColumn(nameof(Fin.FinCode))} <> @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, SqlValue = "CLIENT" });
+
+            return dbConnection.Fetch<Fin>(sql);
         }
 
         public Fin GetFin(string finCode)

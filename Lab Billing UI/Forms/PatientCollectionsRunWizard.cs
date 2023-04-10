@@ -19,6 +19,7 @@ namespace LabBilling.Forms
     {
         private PatientBilling patientBilling = new PatientBilling(Helper.ConnVal);
         private BadDebtRepository badDebtRepository = new BadDebtRepository(Helper.ConnVal);
+        private SystemParametersRepository parametersRepository = new SystemParametersRepository(Helper.ConnVal);
         private bool errorEncountered = false;
         private DateTime thruDate;
         private string batchNo;
@@ -187,6 +188,26 @@ namespace LabBilling.Forms
             sendToCollectionsStartButton.Enabled = false;
             createStmtFileStartButton.Enabled = false;
            
+        }
+
+        private void PatientCollectionsRunWizard_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+
+        }
+
+        private void PatientCollectionsRunWizard_HelpButtonClicked(object sender, CancelEventArgs e)
+        {
+            string url = parametersRepository.GetByKey("documentation_site_url");
+            string topicPath = parametersRepository.GetByKey("patient_statements_url");
+
+            if (!string.IsNullOrWhiteSpace(url) && !string.IsNullOrWhiteSpace(topicPath))
+            {
+                System.Diagnostics.Process.Start($"{url}/{topicPath}");
+            }
+            else
+            {
+                MessageBox.Show("Documentation parameters not set. Cannot launch documentation.");
+            }
         }
     }
 }

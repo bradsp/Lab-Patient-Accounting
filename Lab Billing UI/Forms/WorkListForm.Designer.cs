@@ -40,9 +40,7 @@
             this.changeDateOfServiceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.changeToYFinancialClassToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.readyToBillToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.ValidateButton = new MetroFramework.Controls.MetroButton();
             this.workqueues = new System.Windows.Forms.TreeView();
-            this.CancelValidationButton = new MetroFramework.Controls.MetroButton();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripProgressBar1 = new System.Windows.Forms.ToolStripProgressBar();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
@@ -173,18 +171,6 @@
             this.readyToBillToolStripMenuItem.Text = "Ready to Bill";
             this.readyToBillToolStripMenuItem.Click += new System.EventHandler(this.readyToBillToolStripMenuItem_Click);
             // 
-            // ValidateButton
-            // 
-            this.ValidateButton.Enabled = false;
-            this.ValidateButton.Location = new System.Drawing.Point(1042, 11);
-            this.ValidateButton.Name = "ValidateButton";
-            this.ValidateButton.Size = new System.Drawing.Size(57, 23);
-            this.ValidateButton.TabIndex = 2;
-            this.ValidateButton.Text = "Validate Accounts";
-            this.ValidateButton.UseSelectable = true;
-            this.ValidateButton.Visible = false;
-            this.ValidateButton.Click += new System.EventHandler(this.ValidateButton_Click);
-            // 
             // workqueues
             // 
             this.workqueues.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -195,18 +181,6 @@
             this.workqueues.Size = new System.Drawing.Size(175, 448);
             this.workqueues.TabIndex = 9;
             this.workqueues.NodeMouseDoubleClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.workqueues_NodeMouseDoubleClick);
-            // 
-            // CancelValidationButton
-            // 
-            this.CancelValidationButton.Enabled = false;
-            this.CancelValidationButton.Location = new System.Drawing.Point(1105, 11);
-            this.CancelValidationButton.Name = "CancelValidationButton";
-            this.CancelValidationButton.Size = new System.Drawing.Size(49, 23);
-            this.CancelValidationButton.TabIndex = 10;
-            this.CancelValidationButton.Text = "Cancel Validation";
-            this.CancelValidationButton.UseSelectable = true;
-            this.CancelValidationButton.Visible = false;
-            this.CancelValidationButton.Click += new System.EventHandler(this.CancelValidationButton_Click);
             // 
             // statusStrip1
             // 
@@ -338,8 +312,6 @@
             this.Controls.Add(this.filterTextBox);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.statusStrip1);
-            this.Controls.Add(this.CancelValidationButton);
-            this.Controls.Add(this.ValidateButton);
             this.Controls.Add(this.accountGrid);
             this.Name = "WorkListForm";
             this.Text = "Work List";
@@ -360,9 +332,7 @@
         #endregion
 
         private MetroFramework.Controls.MetroGrid accountGrid;
-        private MetroFramework.Controls.MetroButton ValidateButton;
         private System.Windows.Forms.TreeView workqueues;
-        private MetroFramework.Controls.MetroButton CancelValidationButton;
         private System.Windows.Forms.ContextMenuStrip accountGridContextMenu;
         private System.Windows.Forms.ToolStripMenuItem holdToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem changeFinancialClassToolStripMenuItem;

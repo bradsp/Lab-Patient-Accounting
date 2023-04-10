@@ -44,6 +44,9 @@ namespace LabBilling.Core.Models
         [Column("ins_code")]
         [ResultColumn]
         public string PrimaryInsCode { get; set; }
+        [Column("plan_nme")]
+        [ResultColumn]
+        public string PrimaryInsPlanName { get; set; }
         [Column("status")]
         [ResultColumn]
         public string Status { get; set; }
