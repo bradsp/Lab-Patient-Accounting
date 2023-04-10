@@ -258,6 +258,7 @@
     <Compile Include="DataAccess\AccountValidationCriteriaRepository.cs" />
     <Compile Include="DataAccess\AccountValidationRuleRepository.cs" />
     <Compile Include="DataAccess\AccountValidationStatusRepository.cs" />
+    <Compile Include="DataAccess\AnnouncementRepository.cs" />
     <Compile Include="DataAccess\CdmDetailRepository.cs" />
     <Compile Include="DataAccess\ChrgDetailRepository.cs" />
     <Compile Include="DataAccess\BadDebtRepository.cs" />
@@ -291,6 +292,10 @@
     <Compile Include="DataAccess\MutuallyExclusiveEditRepository.cs" />
     <Compile Include="DataAccess\NumberRepository.cs" />
     <Compile Include="DataAccess\PatDxRepository.cs" />
+    <Compile Include="DataAccess\PatientStatementAccountRepository.cs" />
+    <Compile Include="DataAccess\PatientStatementCernerRepository.cs" />
+    <Compile Include="DataAccess\PatientStatementEncounterActivityRepository.cs" />
+    <Compile Include="DataAccess\PatientStatementEncounterRepository.cs" />
     <Compile Include="DataAccess\PatientStatementRepository.cs" />
     <Compile Include="DataAccess\PatRepository.cs" />
     <Compile Include="DataAccess\PhyRepository.cs" />
@@ -314,6 +319,7 @@
     <Compile Include="Models\AccountSearch.cs" />
     <Compile Include="Models\AccountValidationRule.cs" />
     <Compile Include="Models\AccountValidationStatus.cs" />
+    <Compile Include="Models\Announcement.cs" />
     <Compile Include="Models\BillingBatch.cs" />
     <Compile Include="Models\ChrgDiagnosisPointer.cs" />
     <Compile Include="Models\ChrgDetail.cs" />

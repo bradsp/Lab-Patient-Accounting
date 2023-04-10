@@ -17,6 +17,7 @@ using System.Threading.Tasks;
 using System.Threading;
 
 using Application = System.Windows.Forms.Application;
+using System.IdentityModel.Claims;
 
 namespace LabBilling
 {
@@ -406,15 +407,12 @@ namespace LabBilling
             string url = systemParametersRepository.GetByKey("report_portal_url");
             ReportingPortalForm frm = new ReportingPortalForm(url);
 
-            frm.MdiParent = this;
-            frm.AutoScroll = true;
-            frm.WindowState = FormWindowState.Normal;
-            frm.Show();
-            return;
+            //frm.MdiParent = this;
+            //frm.AutoScroll = true;
+            //frm.WindowState = FormWindowState.Normal;
+            //frm.Show();
+            //return;
 
-            //SystemParametersRepository da = new SystemParametersRepository();
-            /*
-            string url = systemParametersRepository.GetByKey("report_portal_url");
             if(url != "")
             {
                 System.Diagnostics.Process.Start(url);
@@ -423,7 +421,6 @@ namespace LabBilling
             {
                 MessageBox.Show("Reporting Portal System Parameter not set or not valid. Please contact your administrator","Application Error");
             }
-            */
         }
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
@@ -944,6 +941,78 @@ namespace LabBilling
             frm.WindowState = FormWindowState.Normal;
             frm.AutoScroll = true;
             frm.Show();
+        }
+
+        private void documentationToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Form activForm;
+            activForm = Form.ActiveForm.ActiveMdiChild;
+
+            string url = systemParametersRepository.GetByKey("documentation_site_url");
+            string topicPath = null;
+            switch (activForm.Name)
+            {
+                case nameof(WorkListForm):
+                    topicPath = systemParametersRepository.GetByKey("worklist_url");
+                    break;
+                case nameof(AccountForm):
+                    topicPath = systemParametersRepository.GetByKey("account_management_url");
+                    break;
+                case nameof(ChargeMasterMaintenance):
+                case nameof(ChargeMasterEditForm):
+                    topicPath = systemParametersRepository.GetByKey("charge_master_maint_url");
+                    break;
+                case nameof(HealthPlanMaintenanceEditForm):
+                case nameof(HealthPlanMaintenanceForm):
+                    topicPath = systemParametersRepository.GetByKey("ins_plan_maint_url");
+                    break;
+                case nameof(PhysicianMaintenanceForm):
+                    topicPath = systemParametersRepository.GetByKey("phy_maint_url");
+                    break;
+                case nameof(ClientMaintenanceForm):
+                case nameof(ClientMaintenanceEditForm):
+                    topicPath = systemParametersRepository.GetByKey("client_maint_url");
+                    break;
+                case nameof(BatchRemittance):
+                    topicPath = systemParametersRepository.GetByKey("batch_remittance_url");
+                    break;
+                case nameof(ClaimsManagementForm):
+                    topicPath = systemParametersRepository.GetByKey("claims_management_url");
+                    break;
+                case nameof(AccountChargeEntry):
+                    topicPath = systemParametersRepository.GetByKey("account_charge_entry_url");
+                    break;
+                case nameof(ClientInvoiceForm):
+                    topicPath = systemParametersRepository.GetByKey("client_invoicing_url");
+                    break;
+                case nameof(PatientCollectionsForm):
+                case nameof(PatientCollectionsEditForm):
+                    topicPath = systemParametersRepository.GetByKey("patient_collections_url");
+                    break;
+                default:
+                    break;
+            }
+            if (!string.IsNullOrWhiteSpace(topicPath))
+                url += "/" + topicPath;
+            System.Diagnostics.Process.Start(url);
+        }
+
+        private void MainForm_KeyDown(object sender, KeyEventArgs e)
+        {
+            if(e.KeyData == Keys.F1)
+            {
+                documentationToolStripMenuItem_Click(sender, e);
+            }
+        }
+
+        private void latestUpdatesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string url = systemParametersRepository.GetByKey("documentation_site_url");
+            string topicPath = null;
+            topicPath = systemParametersRepository.GetByKey("latest_updates_url");
+            if (!string.IsNullOrWhiteSpace(topicPath))
+                url += "/" + topicPath;
+            System.Diagnostics.Process.Start(url);
         }
     }
 }

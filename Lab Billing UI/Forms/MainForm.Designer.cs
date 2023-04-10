@@ -81,6 +81,7 @@
             this.interfaceMonitorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.systemLogViewerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.documentationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.windowManagerPanel1 = new MDIWindowManager.WindowManagerPanel();
@@ -89,6 +90,7 @@
             this.toolStripDatabaseLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.panel1 = new System.Windows.Forms.Panel();
             this.helpProvider1 = new System.Windows.Forms.HelpProvider();
+            this.latestUpdatesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.MainFormMenu.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -446,10 +448,18 @@
             // helpToolStripMenuItem
             // 
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.documentationToolStripMenuItem,
+            this.latestUpdatesToolStripMenuItem,
             this.aboutToolStripMenuItem,
             this.exitToolStripMenuItem});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
             resources.ApplyResources(this.helpToolStripMenuItem, "helpToolStripMenuItem");
+            // 
+            // documentationToolStripMenuItem
+            // 
+            this.documentationToolStripMenuItem.Name = "documentationToolStripMenuItem";
+            resources.ApplyResources(this.documentationToolStripMenuItem, "documentationToolStripMenuItem");
+            this.documentationToolStripMenuItem.Click += new System.EventHandler(this.documentationToolStripMenuItem_Click);
             // 
             // aboutToolStripMenuItem
             // 
@@ -518,6 +528,12 @@
             resources.ApplyResources(this.panel1, "panel1");
             this.panel1.Name = "panel1";
             // 
+            // latestUpdatesToolStripMenuItem
+            // 
+            this.latestUpdatesToolStripMenuItem.Name = "latestUpdatesToolStripMenuItem";
+            resources.ApplyResources(this.latestUpdatesToolStripMenuItem, "latestUpdatesToolStripMenuItem");
+            this.latestUpdatesToolStripMenuItem.Click += new System.EventHandler(this.latestUpdatesToolStripMenuItem_Click);
+            // 
             // MainForm
             // 
             resources.ApplyResources(this, "$this");
@@ -535,6 +551,7 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Dashboard_FormClosing);
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.MdiChildActivate += new System.EventHandler(this.Dashboard_MdiChildActivate);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MainForm_KeyDown);
             this.MainFormMenu.ResumeLayout(false);
             this.MainFormMenu.PerformLayout();
             this.statusStrip1.ResumeLayout(false);
@@ -606,5 +623,7 @@
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.ToolStripMenuItem batchChargeEntryToolStripMenuItem;
         private System.Windows.Forms.HelpProvider helpProvider1;
+        private System.Windows.Forms.ToolStripMenuItem documentationToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem latestUpdatesToolStripMenuItem;
     }
 }

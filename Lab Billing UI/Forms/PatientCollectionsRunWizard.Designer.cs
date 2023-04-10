@@ -326,9 +326,14 @@
             this.Controls.Add(this.backButton);
             this.Controls.Add(this.cancelButton);
             this.Controls.Add(this.tabControl1);
+            this.HelpButton = true;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "PatientCollectionsRunWizard";
             this.Text = "Patient Collections Run";
+            this.HelpButtonClicked += new System.ComponentModel.CancelEventHandler(this.PatientCollectionsRunWizard_HelpButtonClicked);
             this.Load += new System.EventHandler(this.PatientCollectionsRunWizard_Load);
+            this.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.PatientCollectionsRunWizard_HelpRequested);
             this.tabControl1.ResumeLayout(false);
             this.sendCollectionsTabPage.ResumeLayout(false);
             this.sendCollectionsTabPage.PerformLayout();

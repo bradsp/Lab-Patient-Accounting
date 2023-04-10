@@ -33,10 +33,6 @@ namespace LabBilling.Forms
 
         private void WorkListForm_Load(object sender, EventArgs e)
         {
-            //ToolTip validateButtonToolTip = new ToolTip();
-            //validateButtonToolTip.SetToolTip(ValidateButton, "Validate will run on all accounts in worklist regardless of filter.");
-            
-            //ValidateButton.Visible = false;
 
             //Cursor.Current = Cursors.WaitCursor;
             accountRepository = new AccountRepository(_connectionString);
@@ -76,51 +72,43 @@ namespace LabBilling.Forms
             workqueues.Nodes.Add(rootNode);
             workqueues.ExpandAll();
 
-            //CancelValidationButton.Visible = false;
-            //CancelValidationButton.Enabled = false;
-
             workqueues.Enabled = true;
         }
 
-        private async void ValidateButton_Click(object sender, EventArgs e)
-        {
-            requestAbort = false;
-            //ValidateButton.Enabled = false;
-            workqueues.Enabled = false;
-            //CancelValidationButton.Enabled = true;
-            //CancelValidationButton.Visible = true;
+        //private async void ValidateButton_Click(object sender, EventArgs e)
+        //{
+        //    requestAbort = false;
+        //    workqueues.Enabled = false;
 
-            int cnt = accountTable.DefaultView.Count;
-            toolStripProgressBar1.Minimum = 0;
-            toolStripProgressBar1.Maximum = cnt;
-            toolStripProgressBar1.Value = 0;
-            Cursor.Current = Cursors.WaitCursor;
+        //    int cnt = accountTable.DefaultView.Count;
+        //    toolStripProgressBar1.Minimum = 0;
+        //    toolStripProgressBar1.Maximum = cnt;
+        //    toolStripProgressBar1.Value = 0;
+        //    Cursor.Current = Cursors.WaitCursor;
 
-            tasksRunning = true;
-            //foreach (DataRow acc in accountTable.DefaultView)
-            for(int i = 0; i < accountTable.DefaultView.Count; i++)
-            {
-                if (requestAbort)
-                {
-                    toolStripStatusLabel1.Text = "Aborting...";
-                    tasksRunning = false;
-                    break;
-                }
-                toolStripStatusLabel1.Text = $"Validating {toolStripProgressBar1.Value} of {cnt}.";
-                await RunValidationAsync(accountTable.DefaultView[i][nameof(AccountSearch.Account)].ToString());
-                //await RunValidationAsync(acc[nameof(AccountSearch.Account)].ToString());
-                accountGrid.Refresh();
-                toolStripProgressBar1.Increment(1);
-            }
-            tasksRunning = false;
-            toolStripStatusLabel1.Text = "Validation complete.";
+        //    tasksRunning = true;
+        //    //foreach (DataRow acc in accountTable.DefaultView)
+        //    for(int i = 0; i < accountTable.DefaultView.Count; i++)
+        //    {
+        //        if (requestAbort)
+        //        {
+        //            toolStripStatusLabel1.Text = "Aborting...";
+        //            tasksRunning = false;
+        //            break;
+        //        }
+        //        toolStripStatusLabel1.Text = $"Validating {toolStripProgressBar1.Value} of {cnt}.";
+        //        await RunValidationAsync(accountTable.DefaultView[i][nameof(AccountSearch.Account)].ToString());
+        //        //await RunValidationAsync(acc[nameof(AccountSearch.Account)].ToString());
+        //        accountGrid.Refresh();
+        //        toolStripProgressBar1.Increment(1);
+        //    }
+        //    tasksRunning = false;
+        //    toolStripStatusLabel1.Text = "Validation complete.";
 
-            Cursor.Current = Cursors.Default;
-            //ValidateButton.Enabled = true;
-            workqueues.Enabled = true;
-            //CancelValidationButton.Visible = false;
-            //CancelValidationButton.Enabled = false;
-        }
+        //    Cursor.Current = Cursors.Default;
+        //    workqueues.Enabled = true;
+
+        //}
 
         public WorkListForm(string connValue)
         {
@@ -250,7 +238,6 @@ namespace LabBilling.Forms
         private async void LoadWorkList()
         {
             workqueues.Enabled = false;
-            //ValidateButton.Enabled = false;
 
             Cursor.Current = Cursors.WaitCursor;
 
@@ -427,6 +414,25 @@ namespace LabBilling.Forms
             accountGrid.Columns[nameof(AccountSearch.TotalCharges)].DefaultCellStyle.Format = "N2";
             accountGrid.Columns[nameof(AccountSearch.TotalPayments)].DefaultCellStyle.Format = "N2";
 
+            //column order
+            int x = 0;
+            accountGrid.Columns[nameof(AccountSearch.Account)].DisplayIndex = x++;
+            accountGrid.Columns[nameof(AccountSearch.Name)].DisplayIndex = x++;
+            accountGrid.Columns[nameof(AccountSearch.SSN)].DisplayIndex = x++;
+            accountGrid.Columns[nameof(AccountSearch.DateOfBirth)].DisplayIndex = x++;
+            accountGrid.Columns[nameof(AccountSearch.Sex)].DisplayIndex = x++;
+            accountGrid.Columns[nameof(AccountSearch.MRN)].DisplayIndex = x++;
+            accountGrid.Columns[nameof(AccountSearch.ServiceDate)].DisplayIndex = x++;
+            accountGrid.Columns[nameof(AccountSearch.Balance)].DisplayIndex = x++;
+            accountGrid.Columns[nameof(AccountSearch.FinCode)].DisplayIndex = x++;
+            accountGrid.Columns[nameof(AccountSearch.PrimaryInsCode)].DisplayIndex = x++;
+            accountGrid.Columns[nameof(AccountSearch.PrimaryInsPlanName)].DisplayIndex = x++;
+            accountGrid.Columns[nameof(AccountSearch.Status)].DisplayIndex = x++;
+            accountGrid.Columns[nameof(AccountSearch.ClientMnem)].DisplayIndex = x++;
+            accountGrid.Columns[nameof(AccountSearch.ValidationStatus)].DisplayIndex = x++;
+            accountGrid.Columns[nameof(AccountSearch.LastValidationDate)].DisplayIndex = x++;
+
+            accountGrid.Columns[nameof(AccountSearch.ValidationStatus)].MinimumWidth = 200;
             accountGrid.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.DisplayedCells);
             accountGrid.Columns[nameof(AccountSearch.ValidationStatus)].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
 
@@ -446,19 +452,19 @@ namespace LabBilling.Forms
 
             workqueues.Enabled = true;
             UpdateFilter();
-            //ValidateButton.Enabled = true;
+
         }
 
-        private void CancelValidationButton_Click(object sender, EventArgs e)
-        {
-            if (MessageBox.Show("Are you sure you want to abort validation process?", "Abort Validation?", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
-                    == DialogResult.Yes)
-            {
-                //code to abort process
-                requestAbort = true;
-                return;
-            }
-        }
+        //private void CancelValidationButton_Click(object sender, EventArgs e)
+        //{
+        //    if (MessageBox.Show("Are you sure you want to abort validation process?", "Abort Validation?", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
+        //            == DialogResult.Yes)
+        //    {
+        //        //code to abort process
+        //        requestAbort = true;
+        //        return;
+        //    }
+        //}
 
         private void holdToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -681,8 +687,6 @@ namespace LabBilling.Forms
                 panelExpandCollapseButton.Text = "<";
                 accountGrid.Left = panel1.Right + 10;
                 accountGrid.Width -= worklistPanelWidth - 20;
-                //ValidateButton.Left = panel1.Right + 10;
-                //CancelValidationButton.Left = ValidateButton.Right + 10;
             }
             else
             {
@@ -692,8 +696,6 @@ namespace LabBilling.Forms
                 panelExpandCollapseButton.Text = ">";
                 accountGrid.Left = panel1.Right + 10;
                 accountGrid.Width += worklistPanelWidth - 20;  
-                //ValidateButton.Left = panel1.Right + 10;
-                //CancelValidationButton.Left = ValidateButton.Right + 10;
             }
         }
 
