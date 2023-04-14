@@ -13,6 +13,9 @@ using System.Data.SqlClient;
 using System.Data;
 using NPOI.HSSF.Record;
 using PetaPoco;
+using NPOI.SS.Formula.UDF;
+using NPOI.SS.Formula.Functions;
+using Log = LabBilling.Logging.Log;
 
 namespace LabBilling.Core.DataAccess
 {
@@ -35,6 +38,12 @@ namespace LabBilling.Core.DataAccess
         private readonly SystemParametersRepository systemParametersRepository;
         private readonly AccountLmrpErrorRepository accountLmrpErrorRepository;
         private readonly CdmRepository cdmRepository;
+
+        private const string invoicedCdm = "CBILL";
+        private const string cbillStatus = "CBILL";
+        private const string capStatus = "CAP";
+        private const string naStatus = "N/A";
+        private const string newStatus = "NEW";
 
         public AccountRepository(string connectionString) : base(connectionString)
         {
@@ -80,7 +89,7 @@ namespace LabBilling.Core.DataAccess
 
         public Account GetByAccount(string account, bool demographicsOnly = false)
         {
-            Log.Instance.Trace($"Entering - account {account} demographicsOnly {demographicsOnly}");
+            Logging.Log.Instance.Trace($"Entering - account {account} demographicsOnly {demographicsOnly}");
 
             var record = dbConnection.SingleOrDefault<Account>($"where {this.GetRealColumn(nameof(Account.AccountNo))} = @0",
                 new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account });
@@ -94,7 +103,8 @@ namespace LabBilling.Core.DataAccess
                 if (record.ClientMnem != "K")
                 {
                     record.Client = clientRepository.GetClient(record.ClientMnem);
-                    record.ClientName = record.Client.Name;
+                    if(record.Client != null)
+                        record.ClientName = record.Client.Name;
                 }
             }
             record.Pat = patRepository.GetByAccount(record);
@@ -153,47 +163,72 @@ namespace LabBilling.Core.DataAccess
                 }
             }
 
-            object result;
+            //object result;
 
             //populate properties
-            result = dbConnection.ExecuteScalar<object>("SELECT dbo.GetAccBalance(@0)", account);
-            if (result != DBNull.Value && result != null)
-                record.Balance = Convert.ToDouble(result);
+            //result = dbConnection.ExecuteScalar<object>("SELECT dbo.GetAccBalance(@0)", account);
+            //if (result != DBNull.Value && result != null)
+            //    record.Balance = Convert.ToDouble(result);
 
-            result = dbConnection.ExecuteScalar<object>("SELECT dbo.GetBadDebtByAccount(@0)",
-                new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account });
-            if (result != DBNull.Value && result != null)
-                record.TotalBadDebt = Convert.ToDouble(result);
+
+            //result = dbConnection.ExecuteScalar<object>("SELECT dbo.GetBadDebtByAccount(@0)",
+            //    new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account });
+            //if (result != DBNull.Value && result != null)
+            //    record.TotalBadDebt = Convert.ToDouble(result);
+
+            record.TotalBadDebt = record.Payments.Where(x => x.IsCollectionPmt).Sum(x => x.WriteOffAmount);
+
+            record.BillableCharges = record.Charges.Where(x => x.Status != cbillStatus && x.Status != capStatus && x.Status != naStatus && !x.IsCredited).ToList();
 
             if (record.FinCode == "CLIENT")
             {
-                record.TotalCharges = record.Charges.Where(x => x.Status != "CBILL").Sum(x => x.Quantity * x.NetAmount);
-                record.TotalPayments = record.Payments.Where(x => x.Status != "CBILL").Sum(x => x.PaidAmount);
-                record.TotalContractual = record.Payments.Where(x => x.Status != "CBILL").Sum(x => x.ContractualAmount);
-                record.TotalWriteOff = record.Payments.Where(x => x.Status != "CBILL").Sum(x => x.WriteOffAmount);
+                record.TotalCharges = record.Charges.Where(x => x.Status != cbillStatus).Sum(x => x.Quantity * x.NetAmount);
             }
             else
             {
-                result = dbConnection.ExecuteScalar<object>("SELECT dbo.GetAccTotalCharges(@0)",
-                    new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account });
-                if (result != DBNull.Value && result != null)
-                    record.TotalCharges = Convert.ToDouble(result);
+                //result = dbConnection.ExecuteScalar<object>("SELECT dbo.GetAccTotalCharges(@0)",
+                //    new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account });
+                //if (result != DBNull.Value && result != null)
+                //    record.TotalCharges = Convert.ToDouble(result);
 
-                result = dbConnection.ExecuteScalar<object>("SELECT dbo.GetContractualByAccount(@0)",
-                    new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account });
-                if (result != DBNull.Value && result != null)
-                    record.TotalContractual = Convert.ToDouble(result);
+                //result = dbConnection.ExecuteScalar<object>("SELECT dbo.GetContractualByAccount(@0)",
+                //    new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account });
+                //if (result != DBNull.Value && result != null)
+                //    record.TotalContractual = Convert.ToDouble(result);
 
-                result = dbConnection.ExecuteScalar<object>("SELECT dbo.GetAmtPaidByAccount(@0)",
-                    new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account });
-                if (result != DBNull.Value && result != null)
-                    record.TotalPayments = Convert.ToDouble(result);
+                //result = dbConnection.ExecuteScalar<object>("SELECT dbo.GetAmtPaidByAccount(@0)",
+                //    new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account });
+                //if (result != DBNull.Value && result != null)
+                //    record.TotalPayments = Convert.ToDouble(result);
 
-                result = dbConnection.ExecuteScalar<object>("SELECT dbo.GetWriteOffByAccount(@0)",
-                    new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account });
-                if (result != DBNull.Value && result != null)
-                    record.TotalWriteOff = Convert.ToDouble(result);
+                //result = dbConnection.ExecuteScalar<object>("SELECT dbo.GetWriteOffByAccount(@0)",
+                //    new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account });
+                //if (result != DBNull.Value && result != null)
+                //    record.TotalWriteOff = Convert.ToDouble(result);
+
+                record.TotalCharges = record.Charges.Where(x => x.Status != cbillStatus && x.Status != capStatus && x.Status != naStatus && !x.IsCredited)
+                    .Sum(x => x.Quantity * x.NetAmount); 
             }
+
+            record.TotalWriteOff = record.Payments.Where(x => x.Status != cbillStatus).Sum(x => x.WriteOffAmount);
+            record.TotalPayments = record.Payments.Where(x => x.Status != cbillStatus).Sum(x => x.PaidAmount);
+            record.TotalContractual = record.Payments.Where(x => x.Status != cbillStatus).Sum(x => x.ContractualAmount);
+
+
+            record.ClaimBalance = record.BillableCharges.Where(x => x.FinancialType == "M").Sum(x => x.Quantity * x.NetAmount)
+                - (record.TotalPayments + record.TotalWriteOff + record.TotalContractual);
+
+            var results = record.BillableCharges.Where(x => x.FinancialType == "C")
+                .GroupBy(x => x.ClientMnem, (client, balance) => new { Client = client, Balance = balance.Sum(c => c.Quantity * c.NetAmount) });
+
+            record.ClientBalance = new List<(string client, double balance)>();
+            foreach(var result in results)
+            {
+                record.ClientBalance.Add((result.Client, result.Balance));
+            }
+
+
+            record.Balance = record.TotalCharges - (record.TotalPayments + record.TotalContractual + record.TotalWriteOff);
 
             return record;
         }
@@ -206,7 +241,7 @@ namespace LabBilling.Core.DataAccess
             if(table.FinCode != "CLIENT")
                 table.PatFullName = table.PatNameDisplay;
 
-            table.Status = "NEW";
+            table.Status = newStatus;
 
             table.TransactionDate = table.TransactionDate.Date;
 
@@ -236,7 +271,7 @@ namespace LabBilling.Core.DataAccess
         {
             Log.Instance.Trace($"Entering - account {acc.AccountNo}");
             if (string.IsNullOrEmpty(acc.Status))
-                acc.Status = "NEW";
+                acc.Status = newStatus;
 
             acc.PatFullName = acc.PatNameDisplay;
 
@@ -247,8 +282,8 @@ namespace LabBilling.Core.DataAccess
         {
             Log.Instance.Trace($"Entering - client {clientMnem} thruDate {thruDate}");
 
-            return dbConnection.Fetch<InvoiceSelect>($"where {this.GetRealColumn(typeof(InvoiceSelect), nameof(InvoiceSelect.cl_mnem))} = @0 " +
-                $"and {this.GetRealColumn(typeof(InvoiceSelect), nameof(InvoiceSelect.trans_date))} <= @1",
+            return dbConnection.Fetch<InvoiceSelect>($"where {this.GetRealColumn(typeof(InvoiceSelect), nameof(InvoiceSelect.ClientMnem))} = @0 " +
+                $"and {this.GetRealColumn(typeof(InvoiceSelect), nameof(InvoiceSelect.TransactionDate))} <= @1",
                 new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = clientMnem },
                 new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = thruDate });
         }
@@ -313,8 +348,12 @@ namespace LabBilling.Core.DataAccess
         public override bool Update(Account table)
         {
             Log.Instance.Trace($"Entering - account {table.AccountNo}");
+
+            if (table == null)
+                throw new ArgumentNullException(nameof(table));
+
             if (string.IsNullOrEmpty(table.Status))
-                table.Status = "NEW";
+                table.Status = newStatus;
             table.PatFullName = table.PatNameDisplay;
 
             Log.Instance.Trace("Exiting");
@@ -326,7 +365,7 @@ namespace LabBilling.Core.DataAccess
             Log.Instance.Trace($"Entering - account {table.AccountNo}");
             //generate full name field from name parts
             if (string.IsNullOrEmpty(table.Status))
-                table.Status = "NEW";
+                table.Status = newStatus;
             table.PatFullName = table.PatNameDisplay;
 
             Log.Instance.Trace($"Exiting");
@@ -336,6 +375,9 @@ namespace LabBilling.Core.DataAccess
         public bool SetNoteAlert(string account, bool showAlert)
         {
             Log.Instance.Trace($"Entering - account {account} showAlert {showAlert}");
+
+            if(string.IsNullOrEmpty(account))
+                throw new ArgumentNullException(nameof(account));
 
             try
             {
@@ -367,6 +409,11 @@ namespace LabBilling.Core.DataAccess
 
         public bool UpdateDiagnoses(Account acc)
         {
+            Log.Instance.Trace("Entering");
+
+            if (acc == null)
+                throw new ArgumentNullException(nameof(acc));
+
             if (patRepository.SaveDiagnoses(acc.Pat))
             {
                 acc.Pat = patRepository.GetByAccount(acc);
@@ -378,6 +425,12 @@ namespace LabBilling.Core.DataAccess
         public int UpdateStatus(string accountNo, string status)
         {
             Log.Instance.Trace($"Entering - account {accountNo} status {status}");
+
+            if (string.IsNullOrEmpty(accountNo))
+                throw new ArgumentNullException(nameof(accountNo));
+            if(string.IsNullOrEmpty(status))
+                throw new ArgumentNullException(nameof(status));
+
             return dbConnection.Update<Account>("set status = @0, mod_date = @1, mod_user = @2, mod_prg = @3, mod_host = @4 where account = @5",
                 new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = status },
                 new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = DateTime.Now },
@@ -389,6 +442,11 @@ namespace LabBilling.Core.DataAccess
 
         public bool InsuranceSwap(string accountNo, InsCoverage swap1, InsCoverage swap2)
         {
+            Log.Instance.Trace($"Entering - Account {accountNo} Ins1 {swap1} Ins2 {swap2}");
+
+            if (string.IsNullOrEmpty(accountNo))
+                throw new ArgumentNullException(nameof(accountNo));
+
             dbConnection.ExecuteNonQueryProc("SwapInsurances",
                 new SqlParameter() { ParameterName = "@account", SqlDbType = SqlDbType.VarChar, Value = accountNo },
                 new SqlParameter() { ParameterName = "@ins1", SqlDbType = SqlDbType.VarChar, Value = swap1.ToString() },
@@ -399,14 +457,14 @@ namespace LabBilling.Core.DataAccess
 
         public bool ChangeDateOfService(ref Account table, DateTime newDate, string reason_comment)
         {
-            Log.Instance.Trace($"Entering - account  {table.AccountNo} new date {newDate} reason {reason_comment}");
+            Log.Instance.Trace($"Entering - account {table.AccountNo} new date {newDate} reason {reason_comment}");
 
             if (table == null)
-                throw new ArgumentNullException("table");
-            else if (newDate == null)
-                throw new ArgumentNullException("newDate");
-            else if (reason_comment == null)
-                throw new ArgumentNullException("reason_comment");
+                throw new ArgumentNullException(nameof(table));
+            if (newDate == null)
+                throw new ArgumentNullException(nameof(newDate));
+            if (reason_comment == null)
+                throw new ArgumentNullException(nameof(reason_comment));
 
             bool updateSuccess = false;
             DateTime oldServiceDate = DateTime.MinValue;
@@ -452,6 +510,14 @@ namespace LabBilling.Core.DataAccess
             Log.Instance.Trace($"Entering - account {account} note {noteText}");
             bool addSuccess = true;
 
+            if (string.IsNullOrEmpty(account))
+                throw new ArgumentNullException(nameof(account));
+            if(string.IsNullOrEmpty(noteText))
+            {
+                //there is no note to add
+                return false;
+            }
+
             AccountNote accountNote = new AccountNote()
             {
                 Account = account,
@@ -463,7 +529,6 @@ namespace LabBilling.Core.DataAccess
             }
             catch (Exception ex)
             {
-                addSuccess = false;
                 Log.Instance.Error(ex, "Error adding account note.");
                 throw new ApplicationException("Error adding account note.", ex);
             }
@@ -475,6 +540,12 @@ namespace LabBilling.Core.DataAccess
         public bool ChangeFinancialClass(string account, string newFinCode)
         {
             Log.Instance.Trace($"Entering - Account {account} New Fin {newFinCode}");
+
+            if (string.IsNullOrEmpty(account))
+                throw new ArgumentNullException(nameof(account));
+            if(string.IsNullOrEmpty(newFinCode))
+                throw new ArgumentNullException(nameof(newFinCode));
+
             var record = GetByAccount(account);
 
             if (record != null)
@@ -487,9 +558,9 @@ namespace LabBilling.Core.DataAccess
         {
             Log.Instance.Trace($"Entering - account {table.AccountNo} new fin {newFinCode}");
             if (table == null)
-                throw new ArgumentNullException("table");
+                throw new ArgumentNullException(nameof(table));
             else if (newFinCode == null)
-                throw new ArgumentNullException("newDate");
+                throw new ArgumentNullException(nameof(newFinCode));
 
             bool updateSuccess = true;
             string oldFinCode = table.FinCode;
@@ -524,7 +595,8 @@ namespace LabBilling.Core.DataAccess
                 {
                     try
                     {
-                        chrgRepository.ReprocessCharges(table.AccountNo);
+                        //chrgRepository.ReprocessCharges(table.AccountNo);
+                        ReprocessCharges(table, $"Fin Code changed from {oldFinCode} to {newFinCode}");
                     }
                     catch (Exception ex)
                     {
@@ -545,72 +617,197 @@ namespace LabBilling.Core.DataAccess
         {
             Log.Instance.Trace($"Entering - account {table.AccountNo} new client {newClientMnem}");
             if (table == null)
-                throw new ArgumentNullException("table");
+                throw new ArgumentNullException(nameof(table));
             else if (newClientMnem == null)
-                throw new ArgumentNullException("newClientMnem");
+                throw new ArgumentNullException(nameof(newClientMnem));
 
             bool updateSuccess = true;
             string oldClientMnem = table.ClientMnem;
 
-            ClientRepository clientRepository = new ClientRepository(dbConnection);
-            Client oldClient = clientRepository.GetClient(oldClientMnem);
-            Client newClient = clientRepository.GetClient(newClientMnem);
 
-            if (newClient == null)
-                throw new ArgumentException($"Client mnem {newClientMnem} is not valid.", "newClientMnem");
-
-            if (oldClientMnem != newClientMnem)
+            try
             {
-                table.ClientMnem = newClientMnem;
-                table.Client = newClient;
-                table.ClientName = newClient.Name;
-                try
-                {
-                    Update(table, new[] { nameof(Account.ClientMnem) });
-                }
-                catch (Exception ex)
-                {
-                    Log.Instance.Error(ex);
-                    throw new ApplicationException($"Exception updating client for {table.AccountNo}.", ex);
-                }
-                AddNote(table.AccountNo, $"Client updated from {oldClientMnem} to {newClientMnem}.");
+                ClientRepository clientRepository = new ClientRepository(dbConnection);
+                Client oldClient = clientRepository.GetClient(oldClientMnem);
+                Client newClient = clientRepository.GetClient(newClientMnem);
 
-                //reprocess charges if fin class is client bill (C) to pick up proper discounts.
-                if (table.Fin.FinClass == "C")
+                dbConnection.BeginTransaction();
+
+                if (newClient == null)
+                    throw new ArgumentException($"Client mnem {newClientMnem} is not valid.", "newClientMnem");
+
+                if (oldClientMnem != newClientMnem)
                 {
+
+                    table.ClientMnem = newClientMnem;
+                    table.Client = newClient;
+                    table.ClientName = newClient.Name;
                     try
                     {
-                        chrgRepository.ReprocessCharges(table.AccountNo);
+                        Update(table, new[] { nameof(Account.ClientMnem) });
                     }
                     catch (Exception ex)
                     {
-                        throw new ApplicationException("Error reprocessing charges.", ex);
+                        Log.Instance.Error(ex);
+                        throw new ApplicationException($"Exception updating client for {table.AccountNo}.", ex);
                     }
-                }
+                    AddNote(table.AccountNo, $"Client updated from {oldClientMnem} to {newClientMnem}.");
 
-                if(table.Fin.FinClass == "M")
-                {
-                    //reprocess charges is fee schedule is different to pick up correct charge amounts
-                    if(oldClient.FeeSchedule != newClient.FeeSchedule)
+                    //reprocess charges if fin class is client bill (C) to pick up proper discounts.
+                    if (table.Fin.FinClass == "C")
                     {
                         try
                         {
-                            chrgRepository.ReprocessCharges(table.AccountNo);
+                            ReprocessCharges(table.AccountNo, $"Client changed from {oldClientMnem} to {newClientMnem}");
                         }
-                        catch(Exception ex)
+                        catch (Exception ex)
                         {
                             throw new ApplicationException("Error reprocessing charges.", ex);
                         }
                     }
+
+                    if (table.Fin.FinClass == "M")
+                    {
+                        //reprocess charges is fee schedule is different to pick up correct charge amounts
+                        if (oldClient.FeeSchedule != newClient.FeeSchedule)
+                        {
+                            try
+                            {
+                                //chrgRepository.ReprocessCharges(table.AccountNo);
+                                ReprocessCharges(table.AccountNo, $"Client changed from {oldClientMnem} to {newClientMnem}");
+                            }
+                            catch (Exception ex)
+                            {
+                                throw new ApplicationException("Error reprocessing charges.", ex);
+                            }
+                        }
+                    }
+                    dbConnection.CompleteTransaction();
+                }
+                else
+                {
+                    // old client is same as new client - no change
+                    updateSuccess = false;
+                    dbConnection.CompleteTransaction();
                 }
             }
-            else
+            catch(Exception ex)
             {
+                Log.Instance.Error("Error during Change Client", ex);
+                dbConnection.AbortTransaction();
                 updateSuccess = false;
             }
-
             Log.Instance.Trace($"Exiting");
             return updateSuccess;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="comment"></param>
+        /// <returns></returns>
+        public int ReprocessCharges(Account account, string comment)
+        {
+            Log.Instance.Trace($"Entering {account}");
+
+            if(account == null)
+                throw new ArgumentNullException(nameof(account));
+
+            dbConnection.BeginTransaction();
+            try
+            {
+                foreach (var chrg in account.Charges.Where(x => x.IsCredited == false))
+                {
+                    if (chrg.CDMCode == invoicedCdm)  //do not reprocess CBILL charge records
+                        continue;
+
+                    Chrg creditChrg = new Chrg
+                    {
+                        //creditChrg.ChrgId = 0;
+                        AccountNo = account.AccountNo,
+                        Action = chrg.Action,
+                        BillMethod = chrg.BillMethod,
+                        Cdm = chrg.Cdm,
+                        CDMCode = chrg.CDMCode,
+                        Comment = comment,
+                        Facility = chrg.Facility,
+                        FinancialType = chrg.FinancialType,
+                        FinCode = chrg.FinCode,
+                        HospAmount = chrg.HospAmount,
+                        HistoryDate = chrg.HistoryDate,
+                        Invoice = "",
+                        LISReqNo = chrg.LISReqNo,
+                        Location = chrg.Location,
+                        NetAmount = chrg.NetAmount,
+                        Quantity = chrg.Quantity * -1,
+                        RetailAmount = chrg.RetailAmount,
+                        ServiceDate = chrg.ServiceDate,
+                        Status = chrg.Status,
+                        ClientMnem = chrg.ClientMnem,
+
+                        ChrgDetails = chrg.ChrgDetails
+                    };
+                    foreach (var detail in creditChrg.ChrgDetails)
+                    {
+                        detail.ChrgNo = 0;
+                        detail.uri = 0;
+                        detail.rowguid = Guid.Empty;
+                    }
+
+                    //insert credit charge & amt record with qty to reverse original
+                    //update old chrg as credited
+
+                    //if charge has been on an invoice, keep the credited flag false so it will be picked up on the client's next invoice
+                    //if charge has not been on an invoice, mark old and new charge credited since they were never billed.
+                    if (string.IsNullOrEmpty(chrg.Invoice) || chrg.CDMCode == invoicedCdm)
+                        creditChrg.IsCredited = true;
+                    else
+                        creditChrg.IsCredited = false;
+
+                    chrgRepository.AddCharge(creditChrg);
+
+                    if (string.IsNullOrEmpty(chrg.Invoice) || chrg.CDMCode == invoicedCdm)
+                        chrgRepository.SetCredited(chrg.ChrgId);
+
+                    //insert new charge and detail
+                    if(chrg.CDMCode != invoicedCdm)
+                        AddCharge(account, chrg.CDMCode, chrg.Quantity, account.TransactionDate);
+                }
+
+                dbConnection.CompleteTransaction();
+            }
+            catch(Exception ex)
+            {
+                Log.Instance.Error(ex);
+                dbConnection.AbortTransaction();
+                throw new ApplicationException("Error reprocessing charges", ex);
+            }
+            return 0;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="comment"></param>
+        /// <returns></returns>
+        public int ReprocessCharges(string account, string comment)
+        {
+            Log.Instance.Trace($"Entering {account}");
+
+            if(string.IsNullOrEmpty(account))
+                throw new ArgumentNullException(nameof(account));
+
+            var acc = GetByAccount(account);
+
+            if (acc == null)
+            {
+                Log.Instance.Error($"Account {account} is not a valid account.");
+                throw new AccountNotFoundException($"Account is not a valid account.", account);
+            }
+
+            return ReprocessCharges(acc, comment);
         }
 
         public int AddCharge(string account, string cdm, int qty, DateTime serviceDate, string comment = null, string refNumber = null)
@@ -622,7 +819,7 @@ namespace LabBilling.Core.DataAccess
             if (accData == null)
             {
                 Log.Instance.Error($"Account {account} not found");
-                throw new AccountNotFoundException("Account not found.", account);
+                throw new AccountNotFoundException("Account is not a valid account.", account);
             }
 
             return AddCharge(accData, cdm, qty, serviceDate, comment, refNumber);
@@ -648,8 +845,8 @@ namespace LabBilling.Core.DataAccess
             //check account status, change to NEW if it is paid out.
             if (accData.Status == "PAID_OUT")
             {
-                UpdateStatus(accData.AccountNo, "NEW");
-                accData.Status = "NEW";
+                UpdateStatus(accData.AccountNo, newStatus);
+                accData.Status = newStatus;
             }
 
             //get the cdm number - if cdm number is not found - abort
@@ -670,16 +867,16 @@ namespace LabBilling.Core.DataAccess
             switch (fin.FinClass)
             {
                 case "M":
-                    chrg.Status = cdmData.MClassType == "N/A" ? "N/A" : "NEW";
+                    chrg.Status = cdmData.MClassType == naStatus ? naStatus : newStatus;
                     break;
                 case "C":
-                    chrg.Status = cdmData.CClassType == "N/A" ? "N/A" : "NEW";
+                    chrg.Status = cdmData.CClassType == naStatus ? naStatus : newStatus;
                     break;
                 case "Z":
-                    chrg.Status = cdmData.ZClassType == "N/A" ? "N/A" : "NEW";
+                    chrg.Status = cdmData.ZClassType == naStatus ? naStatus : newStatus;
                     break;
                 default:
-                    chrg.Status = "NEW";
+                    chrg.Status = newStatus;
                     break;
             }
 
@@ -692,16 +889,11 @@ namespace LabBilling.Core.DataAccess
             chrg.IsCredited = false;
             chrg.Facility = "";
             chrg.FinCode = accData.FinCode;
+            chrg.ClientMnem = accData.ClientMnem;
             chrg.FinancialType = fin.FinClass;
-            chrg.PatFirstName = accData.PatFirstName;
-            chrg.PatLastName = accData.PatLastName;
-            chrg.PatMiddleName = accData.PatMiddleName;
             chrg.OrderMnem = cdmData.Mnem;
             chrg.LISReqNo = refNumber;
             chrg.OrderingSite = "";
-            chrg.PatBirthDate = accData.BirthDate;
-            chrg.PatFullName = accData.PatFullName;
-            chrg.PatSocSecNo = accData.SocSecNo;
             chrg.PerformingSite = "";
             chrg.PostingDate = DateTime.Today;
             chrg.Quantity = qty;
@@ -741,10 +933,12 @@ namespace LabBilling.Core.DataAccess
 
             foreach (CdmDetail fee in feeSched)
             {
-                ChrgDetail chrgDetail = new ChrgDetail();
-                chrgDetail.DiagnosisPointer = new ChrgDiagnosisPointer();
-                chrgDetail.Cpt4 = fee.Cpt4;
-                chrgDetail.Type = fee.Type;
+                ChrgDetail chrgDetail = new ChrgDetail
+                {
+                    DiagnosisPointer = new ChrgDiagnosisPointer(),
+                    Cpt4 = fee.Cpt4,
+                    Type = fee.Type
+                };
                 switch (fin.FinClass)
                 {
                     case "M":
@@ -960,13 +1154,13 @@ namespace LabBilling.Core.DataAccess
                         account.AccountValidationStatus.validation_text = validationResult.ToString();
                         //update account status back to new
                         if(!reprint)
-                            UpdateStatus(account.AccountNo, "NEW");
+                            UpdateStatus(account.AccountNo, newStatus);
                     }
                     else if (account.LmrpErrors.Count > 0)
                     {
                         isAccountValid = false;
                         if(!reprint)
-                            UpdateStatus(account.AccountNo, "NEW");
+                            UpdateStatus(account.AccountNo, newStatus);
                     }
                     else
                     {
@@ -1187,7 +1381,7 @@ namespace LabBilling.Core.DataAccess
         public void ClearClaimStatus(Account account)
         {
             if (account == null)
-                throw new ArgumentNullException("account");
+                throw new ArgumentNullException(nameof(account));
 
             List<string> columns = new List<string>();
             try
@@ -1202,10 +1396,10 @@ namespace LabBilling.Core.DataAccess
                 account.Pat.SSIBatch = null;
                 columns.Add(nameof(Pat.SSIBatch));
                 //set account status to "NEW"
-                account.Status = "NEW";
+                account.Status = newStatus;
 
                 patRepository.Update(account.Pat, columns);
-                UpdateStatus(account.AccountNo, "NEW");
+                UpdateStatus(account.AccountNo, newStatus);
 
                 AddNote(account.AccountNo, "Claim status cleared.");
             }

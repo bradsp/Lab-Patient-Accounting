@@ -150,7 +150,6 @@ namespace LabBilling.Forms
 
         }
 
-
         private void RefreshUnbilledAccountsGrid(string clientMnem)
         {
             UnbilledAccountsDGV.DataSource = clientRepository.GetUnbilledAccounts(clientMnem, _thruDate);

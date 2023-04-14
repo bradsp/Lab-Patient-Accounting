@@ -350,7 +350,7 @@ namespace LabBilling.Forms
 
             if(currentAccount.ReadyToBill)
             {
-                MessageBox.Show("Account is flagged ready to bill, or has been billed. Any changes can affect the claim.");
+                //MessageBox.Show("Account is flagged ready to bill, or has been billed. Any changes can affect the claim.");
             }
 
             RefreshAccountData();
@@ -377,72 +377,80 @@ namespace LabBilling.Forms
             // should appear. In other words, keep the group types together and the individual items in the order
             // they should be displayed.
             #region PopulateSummaryTab
-            List<SummaryData> sd = new List<SummaryData>
-            {
-                new SummaryData("Demographics","",SummaryData.GroupType.Demographics,1,1,true),
-                new SummaryData("Account", SelectedAccount, SummaryData.GroupType.Demographics,2,1),
-                new SummaryData("EMR Account", currentAccount.MeditechAccount, SummaryData.GroupType.Demographics,3,1),
-                new SummaryData("Status", currentAccount.Status,SummaryData.GroupType.Demographics,4,1),
-                new SummaryData("MRN", currentAccount.MRN, SummaryData.GroupType.Demographics,5,1),
-                new SummaryData("Client", currentAccount.ClientName, SummaryData.GroupType.Demographics,7,1),
-                new SummaryData("Ordering Provider", currentAccount.Pat.Physician.FullName, SummaryData.GroupType.Demographics, 8, 1),
-                new SummaryData("Address", currentAccount.Pat.AddressLine, SummaryData.GroupType.Demographics,10,1),
-                new SummaryData("Phone", currentAccount.Pat.PrimaryPhone.FormatPhone(), SummaryData.GroupType.Demographics,11,1),
-                new SummaryData("Email", currentAccount.Pat.EmailAddress, SummaryData.GroupType.Demographics,12,1),
+            List<SummaryData> sd = new List<SummaryData>();
 
-                new SummaryData("Financial","",SummaryData.GroupType.Financial,1,2,true),
-                new SummaryData("Financial Class", currentAccount.FinCode, SummaryData.GroupType.Financial,2,2),
-                new SummaryData("Date of Service", currentAccount.TransactionDate.ToShortDateString(), SummaryData.GroupType.Financial,3,2),
-                new SummaryData("Total Charges", currentAccount.TotalCharges.ToString("c"),SummaryData.GroupType.Financial,4,2),
-                new SummaryData("Total Payments", (currentAccount.TotalPayments+currentAccount.TotalContractual+currentAccount.TotalWriteOff).ToString("c"),
-                    SummaryData.GroupType.Financial,5,2),
-                new SummaryData("Balance", currentAccount.Balance.ToString("c"), SummaryData.GroupType.Financial,6,2)
-            };
-            //this data is not relevant if this is a CLIENT account
-            if (currentAccount.FinCode != "CLIENT")
-            {
-                sd.Add(new SummaryData("SSN", currentAccount.SocSecNo.FormatSSN(), SummaryData.GroupType.Demographics, 6, 1));
-                sd.Add(new SummaryData("DOB/Sex", currentAccount.DOBSex, SummaryData.GroupType.Demographics, 9, 1));
-                sd.Add(new SummaryData("Diagnoses", "", SummaryData.GroupType.Diagnoses, 13, 1, true));
-                sd.Add(new SummaryData(currentAccount.Pat.Dx1, currentAccount.Pat.Dx1Desc, SummaryData.GroupType.Diagnoses, 14, 1));
-                sd.Add(new SummaryData(currentAccount.Pat.Dx2, currentAccount.Pat.Dx2Desc, SummaryData.GroupType.Diagnoses, 15, 1));
-                sd.Add(new SummaryData(currentAccount.Pat.Dx3, currentAccount.Pat.Dx3Desc, SummaryData.GroupType.Diagnoses, 16, 1));
-                sd.Add(new SummaryData(currentAccount.Pat.Dx4, currentAccount.Pat.Dx4Desc, SummaryData.GroupType.Diagnoses, 17, 1));
-                sd.Add(new SummaryData(currentAccount.Pat.Dx5, currentAccount.Pat.Dx5Desc, SummaryData.GroupType.Diagnoses, 18, 1));
-                sd.Add(new SummaryData(currentAccount.Pat.Dx6, currentAccount.Pat.Dx6Desc, SummaryData.GroupType.Diagnoses, 19, 1));
-                sd.Add(new SummaryData(currentAccount.Pat.Dx7, currentAccount.Pat.Dx7Desc, SummaryData.GroupType.Diagnoses, 20, 1));
-                sd.Add(new SummaryData(currentAccount.Pat.Dx8, currentAccount.Pat.Dx8Desc, SummaryData.GroupType.Diagnoses, 21, 1));
-                sd.Add(new SummaryData(currentAccount.Pat.Dx9, currentAccount.Pat.Dx9Desc, SummaryData.GroupType.Diagnoses, 22, 1));
+            int col = 1;
+            int row = 1;
+            //column 1
+            sd.Add(new SummaryData("Demographics", "", SummaryData.GroupType.Demographics, row++, col, true));
+            sd.Add(new SummaryData("Account", SelectedAccount, SummaryData.GroupType.Demographics, row++, col));
+            sd.Add(new SummaryData("EMR Account", currentAccount.MeditechAccount, SummaryData.GroupType.Demographics, row++, col));
+            sd.Add(new SummaryData("Status", currentAccount.Status, SummaryData.GroupType.Demographics, row++, col));
+            sd.Add(new SummaryData("MRN", currentAccount.MRN, SummaryData.GroupType.Demographics, row++, col));
+            sd.Add(new SummaryData("SSN", currentAccount.SocSecNo.FormatSSN(), SummaryData.GroupType.Demographics, row++, col));
+            sd.Add(new SummaryData("Client", currentAccount.ClientName, SummaryData.GroupType.Demographics, row++, col));
+            sd.Add(new SummaryData("Ordering Provider", currentAccount.Pat.Physician.FullName, SummaryData.GroupType.Demographics, row++, col));
+            sd.Add(new SummaryData("DOB/Sex", currentAccount.DOBSex, SummaryData.GroupType.Demographics, row++, col));
+            sd.Add(new SummaryData("Address", currentAccount.Pat.AddressLine, SummaryData.GroupType.Demographics, row++, col));
+            sd.Add(new SummaryData("Phone", currentAccount.Pat.PrimaryPhone.FormatPhone(), SummaryData.GroupType.Demographics, row++, col));
+            sd.Add(new SummaryData("Email", currentAccount.Pat.EmailAddress, SummaryData.GroupType.Demographics, row++, col));
 
-                foreach (Ins ins in currentAccount.Insurances)
+
+            sd.Add(new SummaryData("Diagnoses", "", SummaryData.GroupType.Diagnoses, row++, col, true));
+            sd.Add(new SummaryData(currentAccount.Pat.Dx1, currentAccount.Pat.Dx1Desc, SummaryData.GroupType.Diagnoses, row++, col));
+            sd.Add(new SummaryData(currentAccount.Pat.Dx2, currentAccount.Pat.Dx2Desc, SummaryData.GroupType.Diagnoses, row++, col));
+            sd.Add(new SummaryData(currentAccount.Pat.Dx3, currentAccount.Pat.Dx3Desc, SummaryData.GroupType.Diagnoses, row++, col));
+            sd.Add(new SummaryData(currentAccount.Pat.Dx4, currentAccount.Pat.Dx4Desc, SummaryData.GroupType.Diagnoses, row++, col));
+            sd.Add(new SummaryData(currentAccount.Pat.Dx5, currentAccount.Pat.Dx5Desc, SummaryData.GroupType.Diagnoses, row++, col));
+            sd.Add(new SummaryData(currentAccount.Pat.Dx6, currentAccount.Pat.Dx6Desc, SummaryData.GroupType.Diagnoses, row++, col));
+            sd.Add(new SummaryData(currentAccount.Pat.Dx7, currentAccount.Pat.Dx7Desc, SummaryData.GroupType.Diagnoses, row++, col));
+            sd.Add(new SummaryData(currentAccount.Pat.Dx8, currentAccount.Pat.Dx8Desc, SummaryData.GroupType.Diagnoses, row++, col));
+            sd.Add(new SummaryData(currentAccount.Pat.Dx9, currentAccount.Pat.Dx9Desc, SummaryData.GroupType.Diagnoses, row++, col));
+
+            //column 2
+            col = 2;
+            row = 1;
+            sd.Add(new SummaryData("Financial", "", SummaryData.GroupType.Financial, row++, col, true));
+            sd.Add(new SummaryData("Financial Class", currentAccount.FinCode, SummaryData.GroupType.Financial, row++, col));
+            sd.Add(new SummaryData("Date of Service", currentAccount.TransactionDate.ToShortDateString(), SummaryData.GroupType.Financial, row++, col));
+            sd.Add(new SummaryData("Total Charges", currentAccount.TotalCharges.ToString("c"), SummaryData.GroupType.Financial, row++, col));
+            sd.Add(new SummaryData("Total Payments", (currentAccount.TotalPayments + currentAccount.TotalContractual + currentAccount.TotalWriteOff).ToString("c"),
+                SummaryData.GroupType.Financial,row++, col));
+            sd.Add(new SummaryData("3rd Party/Patient Balance", currentAccount.ClaimBalance.ToString("c"), SummaryData.GroupType.Financial, row++, col));
+            foreach(var (client, balance) in currentAccount.ClientBalance)
+            {
+                sd.Add(new SummaryData($"Client Balance {client}", balance.ToString("c"), SummaryData.GroupType.Financial, row++, col));
+            }
+            sd.Add(new SummaryData("Account Balance", currentAccount.Balance.ToString("c"), SummaryData.GroupType.Financial, row++, col));
+
+            foreach (Ins ins in currentAccount.Insurances)
+            {
+                if (ins.Coverage == "A")
                 {
-                    if (ins.Coverage == "A")
-                    {
-                        sd.Add(new SummaryData("Primary Insurance", "", SummaryData.GroupType.Insurance, 7, 2, true));
-                        sd.Add(new SummaryData("Holder", ins.HolderFullName, SummaryData.GroupType.Insurance, 8, 2));
-                        sd.Add(new SummaryData("Insurance", ins.PlanName, SummaryData.GroupType.Insurance, 9, 2));
-                        sd.Add(new SummaryData("Policy", ins.PolicyNumber, SummaryData.GroupType.Insurance, 10, 2));
-                        sd.Add(new SummaryData("Group #", ins.GroupNumber, SummaryData.GroupType.Insurance, 11, 2));
-                        sd.Add(new SummaryData("Group", ins.GroupName, SummaryData.GroupType.Insurance, 12, 2));
-                    }
-                    if (ins.Coverage == "B")
-                    {
-                        sd.Add(new SummaryData("Secondary Insurance", "", SummaryData.GroupType.Insurance, 13, 2, true));
-                        sd.Add(new SummaryData("Holder", ins.HolderFullName, SummaryData.GroupType.Insurance, 14, 2));
-                        sd.Add(new SummaryData("Insurance", ins.PlanName, SummaryData.GroupType.Insurance, 15, 2));
-                        sd.Add(new SummaryData("Policy", ins.PolicyNumber, SummaryData.GroupType.Insurance, 16, 2));
-                        sd.Add(new SummaryData("Group #", ins.GroupNumber, SummaryData.GroupType.Insurance, 17, 2));
-                        sd.Add(new SummaryData("Group", ins.GroupName, SummaryData.GroupType.Insurance, 18, 2));
-                    }
-                    if (ins.Coverage == "C")
-                    {
-                        sd.Add(new SummaryData("Tertiary Insurance", "", SummaryData.GroupType.Insurance, 19, 2, true));
-                        sd.Add(new SummaryData("Holder", ins.HolderFullName, SummaryData.GroupType.Insurance, 20, 2));
-                        sd.Add(new SummaryData("Insurance", ins.PlanName, SummaryData.GroupType.Insurance, 21, 2));
-                        sd.Add(new SummaryData("Policy", ins.PolicyNumber, SummaryData.GroupType.Insurance, 22, 2));
-                        sd.Add(new SummaryData("Group #", ins.GroupNumber, SummaryData.GroupType.Insurance, 23, 2));
-                        sd.Add(new SummaryData("Group", ins.GroupName, SummaryData.GroupType.Insurance, 24, 2));
-                    }
+                    sd.Add(new SummaryData("Primary Insurance", "", SummaryData.GroupType.Insurance, row++, col, true));
+                    sd.Add(new SummaryData("Holder", ins.HolderFullName, SummaryData.GroupType.Insurance, row++, col));
+                    sd.Add(new SummaryData("Insurance", ins.PlanName, SummaryData.GroupType.Insurance, row++, col));
+                    sd.Add(new SummaryData("Policy", ins.PolicyNumber, SummaryData.GroupType.Insurance, row++, col));
+                    sd.Add(new SummaryData("Group #", ins.GroupNumber, SummaryData.GroupType.Insurance, row++, col));
+                    sd.Add(new SummaryData("Group", ins.GroupName, SummaryData.GroupType.Insurance, row++, col));
+                }
+                if (ins.Coverage == "B")
+                {
+                    sd.Add(new SummaryData("Secondary Insurance", "", SummaryData.GroupType.Insurance, row++, col, true));
+                    sd.Add(new SummaryData("Holder", ins.HolderFullName, SummaryData.GroupType.Insurance, row++, col));
+                    sd.Add(new SummaryData("Insurance", ins.PlanName, SummaryData.GroupType.Insurance, row++, col));
+                    sd.Add(new SummaryData("Policy", ins.PolicyNumber, SummaryData.GroupType.Insurance, row++, col));
+                    sd.Add(new SummaryData("Group #", ins.GroupNumber, SummaryData.GroupType.Insurance, row++, col));
+                    sd.Add(new SummaryData("Group", ins.GroupName, SummaryData.GroupType.Insurance, row++, col));
+                }
+                if (ins.Coverage == "C")
+                {
+                    sd.Add(new SummaryData("Tertiary Insurance", "", SummaryData.GroupType.Insurance, row++, col, true));
+                    sd.Add(new SummaryData("Holder", ins.HolderFullName, SummaryData.GroupType.Insurance, row++, col));
+                    sd.Add(new SummaryData("Insurance", ins.PlanName, SummaryData.GroupType.Insurance, row++, col));
+                    sd.Add(new SummaryData("Policy", ins.PolicyNumber, SummaryData.GroupType.Insurance, row++, col));
+                    sd.Add(new SummaryData("Group #", ins.GroupNumber, SummaryData.GroupType.Insurance, row++, col));
+                    sd.Add(new SummaryData("Group", ins.GroupName, SummaryData.GroupType.Insurance, row++, col));
                 }
             }
 
@@ -499,6 +507,11 @@ namespace LabBilling.Forms
             else
                 bannerAlertLabel.Text = "";
 
+            if(currentAccount.ReadyToBill)
+            {
+                bannerAlertLabel.Text += "  Account is flagged ready to bill, or has been billed. Any changes can affect the claim.";
+            }
+
             TotalChargesTextBox.Text = currentAccount.TotalCharges.ToString("c");
 
             BannerNameTextBox.Text = currentAccount.PatFullName;
@@ -510,6 +523,8 @@ namespace LabBilling.Forms
             TotalChargesLabel.Text = currentAccount.TotalCharges.ToString("c");
             TotalPmtAdjLabel.Text = (currentAccount.TotalContractual + currentAccount.TotalPayments + currentAccount.TotalWriteOff).ToString("c");
             BalanceLabel.Text = currentAccount.Balance.ToString("c");
+            ThirdPartyBalLabel.Text = currentAccount.ClaimBalance.ToString("c");
+            ClientBalLabel.Text = currentAccount.ClientBalance.Sum(x => x.balance).ToString("c");
 
             PatientFullNameLabel.Text = currentAccount.PatFullName;
             LastNameTextBox.Text = currentAccount.PatLastName;
@@ -1040,23 +1055,6 @@ namespace LabBilling.Forms
             {
                 string insCode = insurancePlanTextBox.Text = lookupForm.SelectedValue;
                 LookupInsCode(insCode);
-
-                //if (insCode == "MISC")
-                //{
-                //    PlanNameTextBox.ReadOnly = false;
-                //    PlanAddressTextBox.ReadOnly = false;
-                //    PlanAddress2TextBox.ReadOnly = false;
-                //    PlanCityStTextBox.ReadOnly = false;
-                //    PlanFinCodeComboBox.Enabled = true;
-                //}
-                //else
-                //{
-                //    PlanNameTextBox.ReadOnly = true;
-                //    PlanAddressTextBox.ReadOnly = true;
-                //    PlanAddress2TextBox.ReadOnly = true;
-                //    PlanCityStTextBox.ReadOnly = true;
-                //    PlanFinCodeComboBox.Enabled = false;
-                //}
             }
         }
 
@@ -1080,7 +1078,7 @@ namespace LabBilling.Forms
             }
             if (!ShowCreditedChrgCheckBox.Checked)
             {
-                chargesTable.DefaultView.RowFilter = "IsCredited = false";
+                chargesTable.DefaultView.RowFilter = $"{nameof(Chrg.IsCredited)} = false";
             }
 
             foreach (DataGridViewColumn col in ChargesDataGrid.Columns)
@@ -1098,17 +1096,31 @@ namespace LabBilling.Forms
             ChargesDataGrid.Columns[nameof(Chrg.Comment)].Visible = true;
             ChargesDataGrid.Columns[nameof(Chrg.ChrgId)].Visible = true;
             ChargesDataGrid.Columns[nameof(Chrg.Invoice)].Visible = true;
+            ChargesDataGrid.Columns[nameof(Chrg.FinCode)].Visible = true;
+            ChargesDataGrid.Columns[nameof(Chrg.ClientMnem)].Visible = true;
 
             ChargesDataGrid.Columns[nameof(Chrg.NetAmount)].DefaultCellStyle.Format = "N2";
             ChargesDataGrid.Columns[nameof(Chrg.NetAmount)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-            //ChargesDataGrid.Columns[nameof(Chrg.CalculatedAmount)].DefaultCellStyle.Format = "N2";
-            //ChargesDataGrid.Columns[nameof(Chrg.CalculatedAmount)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             ChargesDataGrid.Columns[nameof(Chrg.Quantity)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
 
             ChargesDataGrid.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.DisplayedCells);
             ChargesDataGrid.Columns[nameof(Chrg.CdmDescription)].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             ChargesDataGrid.BackgroundColor = Color.AntiqueWhite;
             ChrgDetailDataGrid.BackgroundColor = Color.AntiqueWhite;
+
+            //chargeBalRichTextbox.Text = "3rd Party Patient Balance\n";
+            chargeBalRichTextbox.SelectionFont = new Font(chargeBalRichTextbox.Font.FontFamily, 10, FontStyle.Bold);
+            chargeBalRichTextbox.SelectedText = "3rd Party Patient Balance\n";
+
+            chargeBalRichTextbox.AppendText(currentAccount.ClaimBalance.ToString("c") + "\n");
+
+            foreach(var (client, balance) in currentAccount.ClientBalance)
+            {
+                chargeBalRichTextbox.SelectionFont = new Font(chargeBalRichTextbox.Font.FontFamily, 10, FontStyle.Bold);
+                //chargeBalRichTextbox.AppendText($"Client {client} Balance\n");
+                chargeBalRichTextbox.SelectedText = $"Client {client} Balance\n";
+                chargeBalRichTextbox.AppendText(balance.ToString("c") + "\n");
+            }
 
             ChargesDataGrid.ClearSelection();
             ChrgDetailDataGrid.ClearSelection();
@@ -1135,7 +1147,6 @@ namespace LabBilling.Forms
         {
             Log.Instance.Trace($"Entering");
             ToolStripMenuItem item = sender as ToolStripMenuItem;
-            //MessageBox.Show(item.Text + " " + item.Tag);
 
             // get selected charge detail uri
             int selectedRows = ChrgDetailDataGrid.Rows.GetRowCount(DataGridViewElementStates.Selected);
@@ -1222,7 +1233,18 @@ namespace LabBilling.Forms
             {
                 ChargesDataGrid.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.Red;
                 ChargesDataGrid.Rows[e.RowIndex].DefaultCellStyle.ForeColor = Color.White;
+                return;
             }
+            if(e.ColumnIndex == ChargesDataGrid.Columns[nameof(Chrg.ChrgId)].Index)
+            {
+                if (ChargesDataGrid[nameof(Chrg.FinancialType), e.RowIndex].Value.ToString() == "C")
+                    ChargesDataGrid.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.LightGreen;
+
+                if (ChargesDataGrid[nameof(Chrg.FinancialType), e.RowIndex].Value.ToString() == "M")
+                    ChargesDataGrid.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.LightBlue;
+
+            }
+
         }
 
         /// <summary>
@@ -1940,7 +1962,6 @@ namespace LabBilling.Forms
             string newFinCode = InputDialogs.SelectFinancialCode(currentAccount.FinCode);
             if (!string.IsNullOrEmpty(newFinCode))
             {
-                //MessageBox.Show(this, $"New financial class is {newFinCode}");
                 try
                 {
                     accountRepository.ChangeFinancialClass(ref currentAccount, newFinCode);
@@ -1956,7 +1977,7 @@ namespace LabBilling.Forms
                     MessageBox.Show(this, $"Error changing financial class. Financial code was not changed.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
 
-                RefreshAccountData();
+                LoadAccountData();
             }
         }
 
@@ -1976,7 +1997,7 @@ namespace LabBilling.Forms
                 {
                     if (accountRepository.ChangeClient(ref currentAccount, newClient))
                     {
-                        RefreshAccountData();
+                        LoadAccountData();
                     }
                     else
                     {
@@ -2438,7 +2459,24 @@ namespace LabBilling.Forms
             bannerAlertLabel.Text = noteAlertCheckBox.Checked ? notesAlertText : "";
 
             accountRepository.SetNoteAlert(currentAccount.AccountNo, noteAlertCheckBox.Checked);
+        }
 
+        private void showThirdPartyCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            Log.Instance.Trace($"Entering");
+            if (showThirdPartyCheckBox.Checked)
+                chargesTable.DefaultView.RowFilter = String.Empty;
+            else
+                chargesTable.DefaultView.RowFilter = $"{nameof(Chrg.IsCredited)} = false";
+        }
+
+        private void showClientBilledCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            Log.Instance.Trace($"Entering");
+            if (showClientBilledCheckBox.Checked)
+                chargesTable.DefaultView.RowFilter = String.Empty;
+            else
+                chargesTable.DefaultView.RowFilter = "IsCredited = false";
         }
     }
 }

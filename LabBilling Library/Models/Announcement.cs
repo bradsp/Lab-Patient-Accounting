@@ -27,6 +27,8 @@ namespace LabBilling.Core.Models
         public string mod_host { get; set; }
         [Column("id")]
         public int Id { get; set; }
+        [Column("is_rtf")]
+        public bool IsRtf { get; set; }
 
         [Ignore]
         public Guid rowguid { get; set; }

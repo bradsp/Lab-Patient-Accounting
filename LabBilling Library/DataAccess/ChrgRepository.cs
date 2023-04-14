@@ -15,6 +15,7 @@ namespace LabBilling.Core.DataAccess
         private CdmRepository cdmRepository;
         private readonly ChrgDetailRepository amtRepository;
         private readonly ChrgDiagnosisPointerRepository chrgDiagnosisPointerRepository;
+        private const string invoiceCode = "CBILL";
 
         public ChrgRepository(string connection) : base(connection)
         {
@@ -59,6 +60,9 @@ namespace LabBilling.Core.DataAccess
         {
             Log.Instance.Debug($"Entering - account {account}");
 
+            if(string.IsNullOrEmpty(account))
+                throw new ArgumentNullException(nameof(account));
+
             var sql = PetaPoco.Sql.Builder
                 .From("vw_chrg_bill")
                 .Where("account = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account });
@@ -85,12 +89,16 @@ namespace LabBilling.Core.DataAccess
         /// </summary>
         /// <param name="account"></param>
         /// <param name="showCredited">True to include credited charges. False to include only active charges.</param>
-        /// <param name="includeInvoiced"></param>
+        /// <param name="includeInvoiced">True to include all charges. False to exclude charges that have been on client invoice.</param>
+        /// <param name="asOfDate"></param>
+        /// <param name="excludeCBill">True to exclude the Invoice transfer charge record.</param>
         /// <returns></returns>
-        public List<Chrg> GetByAccount(string account, bool showCredited = true, bool includeInvoiced = true, DateTime? asOfDate = null, bool excludeInvChrg = true)
+        public List<Chrg> GetByAccount(string account, bool showCredited = true, bool includeInvoiced = true, DateTime? asOfDate = null, bool excludeCBill = true)
         {
             Log.Instance.Debug($"Entering - account {account}");
 
+            if(string.IsNullOrEmpty(account))
+                throw new ArgumentNullException(nameof(account));
 
             var sql = PetaPoco.Sql.Builder
                 .Select("chrg.*, chrg_details.*")
@@ -108,11 +116,11 @@ namespace LabBilling.Core.DataAccess
                 sql.Where($"{GetRealColumn(nameof(Chrg.IsCredited))} = 0");
 
             if (!includeInvoiced)
-                sql.Where($"{GetRealColumn(nameof(Chrg.Invoice))} is null");
+                sql.Where($"{GetRealColumn(nameof(Chrg.Invoice))} is null or {GetRealColumn(nameof(Chrg.Invoice))} = ''");
 
-            if (excludeInvChrg)
+            if (excludeCBill)
                 sql.Where($"{GetRealColumn(nameof(Chrg.CDMCode))} <> @0",
-                    new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = "CBILL"});
+                    new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = invoiceCode});
 
             sql.OrderBy($"{_tableName}.{GetRealColumn(nameof(Chrg.ChrgId))}");
 
@@ -144,6 +152,10 @@ namespace LabBilling.Core.DataAccess
         public int CreditCharge(int chrgNum, string comment = "")
         {
             Log.Instance.Trace($"Entering - chrg number {chrgNum} comment {comment}");
+
+            if (chrgNum <= 0)
+                throw new ArgumentOutOfRangeException(nameof(chrgNum));
+
             // usp_prg_ReverseCharge            
             int retVal = dbConnection.ExecuteNonQueryProc("usp_prg_ReverseChargeOnly", 
                 new SqlParameter() { ParameterName="chrgNum", SqlDbType = SqlDbType.Decimal, Value = chrgNum }, 
@@ -160,7 +172,11 @@ namespace LabBilling.Core.DataAccess
         /// <returns></returns>
         public int AddCharge(Chrg chrg)
         {
-                Log.Instance.Trace($"Entering - {chrg.AccountNo}");
+            Log.Instance.Trace($"Entering - {chrg.AccountNo}");
+            
+            if(chrg == null)
+                throw new ArgumentNullException(nameof(chrg));
+
             //function will add charge
             try
             {
@@ -187,19 +203,54 @@ namespace LabBilling.Core.DataAccess
         /// </summary>
         /// <param name="account"></param>
         /// <returns></returns>
-        public List<InvoiceChargeView> GetInvoiceCharges(string account)
+        public List<InvoiceChargeView> GetInvoiceCharges(string account, string clientMnem)
         {
             Log.Instance.Trace($"Entering - {account}");
 
+            if(string.IsNullOrEmpty(account))
+                throw new ArgumentNullException(nameof(account));
+
+            if(string.IsNullOrEmpty(clientMnem))
+                throw new ArgumentNullException(nameof(clientMnem));
+
             var sql = PetaPoco.Sql.Builder
                 .From("InvoiceChargeView")
-                .Where("account = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account })
-                .Where("cdm <> 'CBILL'");
+                .Where($"{GetRealColumn(typeof(InvoiceChargeView), nameof(InvoiceChargeView.AccountNo))} = @0",
+                    new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account })
+                .Where($"{GetRealColumn(typeof(InvoiceChargeView), nameof(InvoiceChargeView.ChargeItemId))} <> @0",
+                    new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = invoiceCode })
+                .Where($"{GetRealColumn(typeof(InvoiceChargeView), nameof(InvoiceChargeView.ClientMnem))} = @0",
+                    new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = clientMnem })
+                .Where($"{GetRealColumn(typeof(InvoiceChargeView), nameof(InvoiceChargeView.FinancialType))} = @0",
+                    new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = "C" });
 
             List<InvoiceChargeView> results = dbConnection.Fetch<InvoiceChargeView>(sql);
             Log.Instance.Debug($"{dbConnection.LastSQL} {dbConnection.LastArgs}");
             return results;
 
+        }
+
+        public bool SetCredited(int chrgId, bool isCredited = true)
+        {
+            Log.Instance.Trace($"Entering ChrgId {chrgId}");
+
+            if(chrgId <= 0)
+                throw new ArgumentOutOfRangeException(nameof(chrgId));
+
+            try
+            {
+                var chrg = GetById(chrgId);
+                if (chrg != null)
+                {
+                    chrg.IsCredited = isCredited;
+                    return Update(chrg, new List<string> { nameof(Chrg.IsCredited) });
+                }
+                return false;
+            }
+            catch(Exception ex)
+            {
+                throw new ApplicationException($"Error setting credited on charge {chrgId}", ex);
+            }
         }
 
         /// <summary>
@@ -208,21 +259,30 @@ namespace LabBilling.Core.DataAccess
         /// <param name="account"></param>
         /// <param name="invoiceNo"></param>
         /// <exception cref="ApplicationException"></exception>
-        public void SetChargeInvoiceStatus(string account, string invoiceNo)
+        public void SetChargeInvoiceStatus(string account, string clientMnem, string invoiceNo)
         {
             Log.Instance.Trace($"Entering - account {account} invoice {invoiceNo}");
+
+            if(string.IsNullOrEmpty(account))
+                throw new ArgumentNullException(nameof(account));
+
+            if(string.IsNullOrEmpty(clientMnem))
+                throw new ArgumentNullException(nameof(clientMnem));
+
+            if(string.IsNullOrEmpty(invoiceNo))
+                throw new ArgumentNullException(nameof(invoiceNo));
+
             List<Chrg> chrgs = GetByAccount(account, true, false).ToList();
 
-            foreach (Chrg chrg in chrgs)
+            foreach (Chrg chrg in chrgs.Where(x => x.ClientMnem == clientMnem && x.FinancialType == "C"))
             {
-                if(chrg.CDMCode != "CBILL" && (chrg.Invoice == "" || chrg.Invoice == null))
+                if(chrg.CDMCode != invoiceCode && (chrg.Invoice == "" || chrg.Invoice == null))
                 {
-                    //chrg.status = "CBILL";
                     chrg.Invoice = invoiceNo;
 
                     try
                     {
-                        Update(chrg);
+                        Update(chrg, new List<string> { nameof(Chrg.Invoice) });
                         Log.Instance.Debug($"{dbConnection.LastSQL} {dbConnection.LastArgs}");
                     }
                     catch(Exception ex)
@@ -244,6 +304,9 @@ namespace LabBilling.Core.DataAccess
             Log.Instance.Trace($"Entering {account}");
             int chrgCount = 0;
 
+            if(string.IsNullOrEmpty(account))
+                throw new ArgumentNullException(nameof(account));
+
             //call stored procedure [dbo].[usp_prg_ReCharge_Acc_Transaction]
             try
             {
@@ -259,7 +322,6 @@ namespace LabBilling.Core.DataAccess
             Log.Instance.Debug($"{dbConnection.LastSQL} {dbConnection.LastArgs}");
             return chrgCount;
         }
-
 
         public bool UpdateDxPointers(IEnumerable<Chrg> chrgs)
         {

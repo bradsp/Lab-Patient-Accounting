@@ -18,7 +18,7 @@ namespace LabBilling.Core.BusinessLogic.Validators
 
             RuleForEach(c => c.ChrgDetails)
                 .SetValidator(new ChargeDetailValidator())
-                .When(c => !c.IsCredited);
+                .When(c => !c.IsCredited && c.FinancialType == "M");
         }
     }
 

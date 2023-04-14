@@ -26,7 +26,7 @@ namespace LabBilling.Forms
         {
             LoadChart();
 
-            //LoadAnnouncements();
+            LoadAnnouncements();
         }
 
         private void LoadAnnouncements()
@@ -35,23 +35,55 @@ namespace LabBilling.Forms
 
             var announcements = announcementRepository.GetActive();
 
-            string text = @"{\rtf1\ansi\deff0";
-            text += @"{\fonttbl{\f0\fswiss Arial;}}";
-            text += @"{\colortbl;\red0\green0\blue0;\red255\green0\blue0;}";
+            Label hdrlbl = new Label();
+            hdrlbl.Text = "Announcements";
+            hdrlbl.Font = new Font(hdrlbl.Font.FontFamily, 16, FontStyle.Bold);
+
+            announcementLayoutPanel.Controls.Add(hdrlbl);
+            hdrlbl.Dock = DockStyle.Fill;
 
             foreach (Announcement announcement in announcements)
             {
-                text += @"\cf2 ";
-                text += @"\b " + announcement.StartDate.ToShortDateString() + @"\b0 ";
+                Label lbl = new Label();
+                lbl.Text = announcement.StartDate.ToShortDateString();
+                lbl.ForeColor = Color.Blue;
+                lbl.Font = new Font(lbl.Font.FontFamily, 14, FontStyle.Bold);
 
-                text += @"\cf1 ";
-                text += @"\par " + announcement.MessageText + @"\par ";
+
+                announcementLayoutPanel.Controls.Add(lbl);
+                lbl.Dock = DockStyle.Fill;
+                lbl.BorderStyle = BorderStyle.None;
+                lbl.BackColor = Color.LightBlue;
+
+                RichTextBox tb = new RichTextBox();
+                tb.ContentsResized += AnnouncementContentResized;
+                tb.LinkClicked += AnnouncementBox_LinkClicked;
+
+                if (announcement.IsRtf)
+                    tb.Rtf = announcement.MessageText;
+                else
+                    tb.Text = announcement.MessageText;
+
+                announcementLayoutPanel.Controls.Add(tb);
+                tb.Dock = DockStyle.Fill;
+                tb.BorderStyle = BorderStyle.None;
+                tb.ReadOnly = true;
+                tb.DetectUrls = true;
             }
 
-            text += "}";
+        }
 
-            announcementsTextBox.Rtf = text;
+        private void AnnouncementBox_LinkClicked(object sender, LinkClickedEventArgs e)
+        {
+            System.Diagnostics.Process.Start(e.LinkText);
+        }
 
+        private void AnnouncementContentResized(object sender, ContentsResizedEventArgs e)
+        {
+            var richTextBox = (RichTextBox)sender;
+            richTextBox.Width = e.NewRectangle.Width;
+            richTextBox.Height = e.NewRectangle.Height;
+            richTextBox.Width += richTextBox.Margin.Horizontal + SystemInformation.HorizontalResizeBorderThickness;
         }
 
         private void LoadChart()

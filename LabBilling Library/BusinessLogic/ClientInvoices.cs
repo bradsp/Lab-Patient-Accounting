@@ -55,22 +55,29 @@ namespace LabBilling.Core.BusinessLogic
             if (thruDate == null)
                 throw new ArgumentNullException();
 
-            //var unbilledClients = GetUnbilledClients(thruDate);
-
             int clientCount = unbilledClients.Count;
-
-            int tempCount = 0;
-            foreach (UnbilledClient unbilledClient in unbilledClients)
+            dbConnection.BeginTransaction();
+            try
             {
-                GenerateInvoice(unbilledClient.ClientMnem, thruDate);
-                tempCount++;
-                if (progress != null)
+                int tempCount = 0;
+                foreach (UnbilledClient unbilledClient in unbilledClients)
                 {
-                    progress.Report((tempCount * 100 / clientCount));
+                    GenerateInvoice(unbilledClient.ClientMnem, thruDate);
+                    tempCount++;
+                    if (progress != null)
+                    {
+                        progress.Report((tempCount * 100 / clientCount));
+                    }
                 }
+                dbConnection.CompleteTransaction();
+                return tempCount;
             }
-
-            return tempCount;
+            catch (Exception ex)
+            {
+                Log.Instance.Error("Error encountered during invoice run. Process is aborted and transactions rolled back.", ex);
+                dbConnection.AbortTransaction();
+                return 0;
+            }
         }
 
         public string GenerateStatement(string clientMnemonic, DateTime asOfDate)
@@ -134,10 +141,10 @@ namespace LabBilling.Core.BusinessLogic
             InvoicePrintPdfSharp invoicePrint = new InvoicePrintPdfSharp();
 
             string xml = invoiceHistory.InvoiceData;
-
+            xml = xml.Replace("&#x0;", "");
             XmlSerializer serializer = new XmlSerializer(typeof(InvoiceModel));
             StringReader rdr = new StringReader(xml);
-
+            
             invoiceModel = (InvoiceModel)serializer.Deserialize(rdr);
 
             invoiceModel.ImageFilePath = systemdb.GetByKey("invoice_logo_image_path") ?? string.Empty;
@@ -199,9 +206,9 @@ namespace LabBilling.Core.BusinessLogic
             List<InvoiceSelect> accounts = accdb.GetInvoiceAccounts(clientMnemonic, throughDate).ToList();
 
             if (client.PrintInvoiceInDateOrder)
-                accounts = accounts.OrderBy(x => x.trans_date).ThenBy(y => y.account).ToList();
+                accounts = accounts.OrderBy(x => x.TransactionDate).ThenBy(y => y.AccountNo).ToList();
             else
-                accounts = accounts.OrderBy(x => x.account).ToList();
+                accounts = accounts.OrderBy(x => x.AccountNo).ToList();
 
             double invoiceAmountTotal = 0.0;
             double invoiceRetailTotal = 0.0;
@@ -215,13 +222,13 @@ namespace LabBilling.Core.BusinessLogic
                 double inpTotal = 0.0;
                 double retailTotal = 0.0;
 
-                List<InvoiceChargeView> charges = chrgdb.GetInvoiceCharges(account.account);
+                List<InvoiceChargeView> charges = chrgdb.GetInvoiceCharges(account.AccountNo, clientMnemonic);
 
                 InvoiceDetailModel invoiceDetail = new InvoiceDetailModel()
                 {
-                    Account = account.account,
-                    PatientName = account.pat_name,
-                    ServiceDate = account.trans_date
+                    Account = account.AccountNo,
+                    PatientName = account.PatientName,
+                    ServiceDate = account.TransactionDate
 
                 };
                 double accountTotal = 0.0;
@@ -253,33 +260,34 @@ namespace LabBilling.Core.BusinessLogic
                 invoiceRetailTotal += retailTotal;
 
                 Chrg accChrg = new Chrg();
-                accChrg.AccountNo = account.account;
+                accChrg.AccountNo = account.AccountNo;
                 accChrg.CDMCode = "CBILL";
                 accChrg.Invoice = invoiceModel.InvoiceNo;
-                accChrg.Quantity = -1;
+                accChrg.Quantity = amountTotal < 0 ? 1 : -1;
                 accChrg.HospAmount = inpTotal;
                 accChrg.RetailAmount = retailTotal;
-                accChrg.NetAmount = amountTotal;
+                accChrg.NetAmount = Math.Abs(amountTotal);
                 accChrg.FinancialType = "C";
-                accChrg.FinCode = account.fin_code;
-                accChrg.ServiceDate = DateTime.Today;
+                accChrg.FinCode = account.FinCode;
+                accChrg.ServiceDate = account.TransactionDate;
                 accChrg.Status = "NEW";
                 accChrg.PostingDate = DateTime.Today;
                 accChrg.PerformingSite = "";
                 accChrg.OrderingSite = "";
                 accChrg.IsCredited = false;
-                accChrg.PatFirstName = "";
-                accChrg.PatLastName = "";
-                accChrg.PatMiddleName = "";
+                accChrg.ClientMnem = invoiceModel.ClientMnem;
+                //accChrg.PatFirstName = "";
+                //accChrg.PatLastName = "";
+                //accChrg.PatMiddleName = "";
                 accChrg.ChrgDetails.Add(new ChrgDetail()
                 {
                     Cpt4 = "NONE",
                     Type = "NORM",
-                    Amount = amountTotal
+                    Amount = Math.Abs(amountTotal)
                 });
                 chrgdb.AddCharge(accChrg);
 
-                chrgdb.SetChargeInvoiceStatus(account.account, invoiceModel.InvoiceNo);
+                chrgdb.SetChargeInvoiceStatus(account.AccountNo, clientMnemonic, invoiceModel.InvoiceNo);
             }
 
             //write client invoice transaction on client account
@@ -288,19 +296,20 @@ namespace LabBilling.Core.BusinessLogic
             invoiceChrg.AccountNo = clientMnemonic;
             invoiceChrg.CDMCode = "CBILL";
             invoiceChrg.Invoice = invoiceModel.InvoiceNo;
-            invoiceChrg.Quantity = 1;
+            invoiceChrg.Quantity = invoiceAmountTotal < 0 ? -1 : 1;
             invoiceChrg.HospAmount = invoiceInpTotal;
             invoiceChrg.RetailAmount = invoiceRetailTotal;
-            invoiceChrg.NetAmount = invoiceAmountTotal;
+            invoiceChrg.NetAmount = Math.Abs(invoiceAmountTotal);
             invoiceChrg.FinancialType = "C";
             invoiceChrg.FinCode = "CLIENT";
             invoiceChrg.ServiceDate = DateTime.Today;
             invoiceChrg.Status = "NEW";
+            invoiceChrg.ClientMnem = invoiceModel.ClientMnem;
             invoiceChrg.ChrgDetails.Add(new ChrgDetail()
             {
                 Cpt4 = "NONE",
                 Type = "NORM",
-                Amount = invoiceAmountTotal
+                Amount = Math.Abs(invoiceAmountTotal)
             });
             chrgdb.AddCharge(invoiceChrg);
             invoiceModel.InvoiceTotal = invoiceAmountTotal;

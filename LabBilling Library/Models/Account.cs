@@ -93,6 +93,8 @@ namespace LabBilling.Core.Models
         [Ignore]
         public List<Chrg> Charges { get; set; } = new List<Chrg>();
         [Ignore]
+        public List<Chrg> BillableCharges { get; set;} = new List<Chrg>();
+        [Ignore]
         public List<ClaimChargeView> ClaimCharges { get; set; } = new List<ClaimChargeView>();
         [Ignore]
         public List<Chk> Payments { get; set; } = new List<Chk>();
@@ -106,6 +108,14 @@ namespace LabBilling.Core.Models
         public Client Client { get; set; }
         [Ignore]
         public Guid rowguid { get; set; }
+
+        [Ignore]
+        public double InvoiceBalance { get; set; }
+        [Ignore]
+        public double ClaimBalance { get; set; }
+        [Ignore]
+        public List<(string client, double balance)> ClientBalance { get; set; }
+
 
         [Ignore]
         public double Balance { get; set; }

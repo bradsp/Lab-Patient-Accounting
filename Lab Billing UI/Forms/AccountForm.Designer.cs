@@ -182,6 +182,8 @@ namespace LabBilling.Forms
             this.AddChargeButton = new System.Windows.Forms.Button();
             this.TotalChargesTextBox = new System.Windows.Forms.TextBox();
             this.ChargeTotalChargesLabel = new System.Windows.Forms.Label();
+            this.showClientBilledCheckBox = new System.Windows.Forms.CheckBox();
+            this.showThirdPartyCheckBox = new System.Windows.Forms.CheckBox();
             this.ShowCreditedChrgCheckBox = new System.Windows.Forms.CheckBox();
             this.tabPayments = new System.Windows.Forms.TabPage();
             this.AddPaymentButton = new System.Windows.Forms.Button();
@@ -195,6 +197,7 @@ namespace LabBilling.Forms
             this.TotalPaymentTextBox = new System.Windows.Forms.TextBox();
             this.PaymentsDataGrid = new System.Windows.Forms.DataGridView();
             this.tabNotes = new System.Windows.Forms.TabPage();
+            this.noteAlertCheckBox = new System.Windows.Forms.CheckBox();
             this.AddNoteButton = new System.Windows.Forms.Button();
             this.NotesDisplayTextBox = new System.Windows.Forms.RichTextBox();
             this.tabBillingActivity = new System.Windows.Forms.TabPage();
@@ -249,8 +252,8 @@ namespace LabBilling.Forms
             this.bannerDateOfServiceLabel = new System.Windows.Forms.Label();
             this.dxPointerMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.clearDxPointerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.noteAlertCheckBox = new System.Windows.Forms.CheckBox();
             this.bannerAlertLabel = new System.Windows.Forms.Label();
+            this.chargeBalRichTextbox = new System.Windows.Forms.RichTextBox();
             this.DateOfBirthTextBox = new LabBilling.UserControls.DateTextBox();
             this.providerLookup1 = new LabBilling.Library.ProviderLookup();
             this.MaritalStatusComboBox = new LabBilling.Library.FlatCombo();
@@ -264,6 +267,10 @@ namespace LabBilling.Forms
             this.InsOrderComboBox = new LabBilling.Library.FlatCombo();
             this.HolderSexComboBox = new LabBilling.Library.FlatCombo();
             this.minPmtTextBox = new LabBilling.UserControls.CurrencyTextBox();
+            this.BannerThirdPartyBalLabel = new System.Windows.Forms.Label();
+            this.ThirdPartyBalLabel = new System.Windows.Forms.Label();
+            this.BannerClientBalLabel = new System.Windows.Forms.Label();
+            this.ClientBalLabel = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.summaryTab.SuspendLayout();
             this.tabDemographics.SuspendLayout();
@@ -1645,6 +1652,8 @@ namespace LabBilling.Forms
             this.tabCharges.Controls.Add(this.chargeLayoutPanel);
             this.tabCharges.Controls.Add(this.TotalChargesTextBox);
             this.tabCharges.Controls.Add(this.ChargeTotalChargesLabel);
+            this.tabCharges.Controls.Add(this.showClientBilledCheckBox);
+            this.tabCharges.Controls.Add(this.showThirdPartyCheckBox);
             this.tabCharges.Controls.Add(this.ShowCreditedChrgCheckBox);
             this.tabCharges.Location = new System.Drawing.Point(4, 22);
             this.tabCharges.Name = "tabCharges";
@@ -1660,12 +1669,13 @@ namespace LabBilling.Forms
             | System.Windows.Forms.AnchorStyles.Right)));
             this.chargeLayoutPanel.ColumnCount = 2;
             this.chargeLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.chargeLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 120F));
+            this.chargeLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 162F));
             this.chargeLayoutPanel.Controls.Add(this.ChargesDataGridLabel, 0, 0);
             this.chargeLayoutPanel.Controls.Add(this.ChargesDataGrid, 0, 1);
             this.chargeLayoutPanel.Controls.Add(this.ChargeDetailGridLabel, 0, 2);
             this.chargeLayoutPanel.Controls.Add(this.ChrgDetailDataGrid, 0, 3);
             this.chargeLayoutPanel.Controls.Add(this.AddChargeButton, 1, 0);
+            this.chargeLayoutPanel.Controls.Add(this.chargeBalRichTextbox, 1, 1);
             this.chargeLayoutPanel.Location = new System.Drawing.Point(8, 33);
             this.chargeLayoutPanel.Name = "chargeLayoutPanel";
             this.chargeLayoutPanel.RowCount = 4;
@@ -1684,7 +1694,7 @@ namespace LabBilling.Forms
             this.ChargesDataGridLabel.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.ChargesDataGridLabel.Location = new System.Drawing.Point(3, 16);
             this.ChargesDataGridLabel.Name = "ChargesDataGridLabel";
-            this.ChargesDataGridLabel.Size = new System.Drawing.Size(1009, 13);
+            this.ChargesDataGridLabel.Size = new System.Drawing.Size(967, 13);
             this.ChargesDataGridLabel.TabIndex = 2;
             this.ChargesDataGridLabel.Text = "Charges";
             // 
@@ -1725,7 +1735,7 @@ namespace LabBilling.Forms
             this.ChargesDataGrid.RowHeadersDefaultCellStyle = dataGridViewCellStyle15;
             this.ChargesDataGrid.RowHeadersVisible = false;
             this.ChargesDataGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.ChargesDataGrid.Size = new System.Drawing.Size(1009, 240);
+            this.ChargesDataGrid.Size = new System.Drawing.Size(967, 240);
             this.ChargesDataGrid.TabIndex = 0;
             this.ChargesDataGrid.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DgvCharges_CellDoubleClick);
             this.ChargesDataGrid.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.ChargesDataGrid_CellFormatting);
@@ -1759,7 +1769,7 @@ namespace LabBilling.Forms
             this.ChargeDetailGridLabel.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.ChargeDetailGridLabel.Location = new System.Drawing.Point(3, 275);
             this.ChargeDetailGridLabel.Name = "ChargeDetailGridLabel";
-            this.ChargeDetailGridLabel.Size = new System.Drawing.Size(1009, 13);
+            this.ChargeDetailGridLabel.Size = new System.Drawing.Size(967, 13);
             this.ChargeDetailGridLabel.TabIndex = 3;
             this.ChargeDetailGridLabel.Text = "Charge Details";
             // 
@@ -1801,7 +1811,7 @@ namespace LabBilling.Forms
             this.ChrgDetailDataGrid.RowHeadersDefaultCellStyle = dataGridViewCellStyle18;
             this.ChrgDetailDataGrid.RowHeadersVisible = false;
             this.ChrgDetailDataGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.ChrgDetailDataGrid.Size = new System.Drawing.Size(1009, 159);
+            this.ChrgDetailDataGrid.Size = new System.Drawing.Size(967, 159);
             this.ChrgDetailDataGrid.TabIndex = 1;
             // 
             // chargeDetailsContextMenu
@@ -1856,6 +1866,28 @@ namespace LabBilling.Forms
             this.ChargeTotalChargesLabel.Size = new System.Drawing.Size(86, 13);
             this.ChargeTotalChargesLabel.TabIndex = 5;
             this.ChargeTotalChargesLabel.Text = "Total Charges";
+            // 
+            // showClientBilledCheckBox
+            // 
+            this.showClientBilledCheckBox.AutoSize = true;
+            this.showClientBilledCheckBox.Location = new System.Drawing.Point(244, 10);
+            this.showClientBilledCheckBox.Name = "showClientBilledCheckBox";
+            this.showClientBilledCheckBox.Size = new System.Drawing.Size(110, 17);
+            this.showClientBilledCheckBox.TabIndex = 4;
+            this.showClientBilledCheckBox.Text = "Show Client Billed";
+            this.showClientBilledCheckBox.UseVisualStyleBackColor = true;
+            this.showClientBilledCheckBox.CheckedChanged += new System.EventHandler(this.showClientBilledCheckBox_CheckedChanged);
+            // 
+            // showThirdPartyCheckBox
+            // 
+            this.showThirdPartyCheckBox.AutoSize = true;
+            this.showThirdPartyCheckBox.Location = new System.Drawing.Point(102, 10);
+            this.showThirdPartyCheckBox.Name = "showThirdPartyCheckBox";
+            this.showThirdPartyCheckBox.Size = new System.Drawing.Size(136, 17);
+            this.showThirdPartyCheckBox.TabIndex = 4;
+            this.showThirdPartyCheckBox.Text = "Show 3rd Party/Patient";
+            this.showThirdPartyCheckBox.UseVisualStyleBackColor = true;
+            this.showThirdPartyCheckBox.CheckedChanged += new System.EventHandler(this.showThirdPartyCheckBox_CheckedChanged);
             // 
             // ShowCreditedChrgCheckBox
             // 
@@ -2025,6 +2057,17 @@ namespace LabBilling.Forms
             this.tabNotes.Size = new System.Drawing.Size(1151, 492);
             this.tabNotes.TabIndex = 5;
             this.tabNotes.Text = "Notes";
+            // 
+            // noteAlertCheckBox
+            // 
+            this.noteAlertCheckBox.AutoSize = true;
+            this.noteAlertCheckBox.Location = new System.Drawing.Point(606, 32);
+            this.noteAlertCheckBox.Name = "noteAlertCheckBox";
+            this.noteAlertCheckBox.Size = new System.Drawing.Size(73, 17);
+            this.noteAlertCheckBox.TabIndex = 2;
+            this.noteAlertCheckBox.Text = "Note Alert";
+            this.noteAlertCheckBox.UseVisualStyleBackColor = true;
+            this.noteAlertCheckBox.CheckedChanged += new System.EventHandler(this.noteAlertCheckBox_CheckedChanged);
             // 
             // AddNoteButton
             // 
@@ -2511,7 +2554,7 @@ namespace LabBilling.Forms
             // 
             this.BannerAccBalanceLabel.AutoSize = true;
             this.BannerAccBalanceLabel.ForeColor = System.Drawing.Color.White;
-            this.BannerAccBalanceLabel.Location = new System.Drawing.Point(807, 64);
+            this.BannerAccBalanceLabel.Location = new System.Drawing.Point(807, 61);
             this.BannerAccBalanceLabel.Name = "BannerAccBalanceLabel";
             this.BannerAccBalanceLabel.Size = new System.Drawing.Size(92, 13);
             this.BannerAccBalanceLabel.TabIndex = 20;
@@ -2530,7 +2573,7 @@ namespace LabBilling.Forms
             // BalanceLabel
             // 
             this.BalanceLabel.ForeColor = System.Drawing.Color.White;
-            this.BalanceLabel.Location = new System.Drawing.Point(901, 64);
+            this.BalanceLabel.Location = new System.Drawing.Point(901, 61);
             this.BalanceLabel.Name = "BalanceLabel";
             this.BalanceLabel.Size = new System.Drawing.Size(60, 13);
             this.BalanceLabel.TabIndex = 20;
@@ -2581,9 +2624,10 @@ namespace LabBilling.Forms
             // 
             // RefreshButton
             // 
+            this.RefreshButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.RefreshButton.BackColor = System.Drawing.Color.LightSteelBlue;
             this.RefreshButton.Image = global::LabBilling.Properties.Resources.refresh_icon;
-            this.RefreshButton.Location = new System.Drawing.Point(1003, 32);
+            this.RefreshButton.Location = new System.Drawing.Point(1135, 31);
             this.RefreshButton.Name = "RefreshButton";
             this.RefreshButton.Size = new System.Drawing.Size(20, 22);
             this.RefreshButton.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -2625,28 +2669,26 @@ namespace LabBilling.Forms
             this.clearDxPointerToolStripMenuItem.Text = "Clear Dx Pointer";
             this.clearDxPointerToolStripMenuItem.Click += new System.EventHandler(this.clearDxPointerToolStripMenuItem_Click);
             // 
-            // noteAlertCheckBox
-            // 
-            this.noteAlertCheckBox.AutoSize = true;
-            this.noteAlertCheckBox.Location = new System.Drawing.Point(606, 32);
-            this.noteAlertCheckBox.Name = "noteAlertCheckBox";
-            this.noteAlertCheckBox.Size = new System.Drawing.Size(73, 17);
-            this.noteAlertCheckBox.TabIndex = 2;
-            this.noteAlertCheckBox.Text = "Note Alert";
-            this.noteAlertCheckBox.UseVisualStyleBackColor = true;
-            this.noteAlertCheckBox.CheckedChanged += new System.EventHandler(this.noteAlertCheckBox_CheckedChanged);
-            // 
             // bannerAlertLabel
             // 
             this.bannerAlertLabel.AutoSize = true;
             this.bannerAlertLabel.BackColor = System.Drawing.Color.White;
             this.bannerAlertLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.bannerAlertLabel.ForeColor = System.Drawing.Color.Red;
-            this.bannerAlertLabel.Location = new System.Drawing.Point(500, 76);
+            this.bannerAlertLabel.Location = new System.Drawing.Point(503, 78);
             this.bannerAlertLabel.Name = "bannerAlertLabel";
             this.bannerAlertLabel.Size = new System.Drawing.Size(13, 17);
             this.bannerAlertLabel.TabIndex = 33;
             this.bannerAlertLabel.Text = ".";
+            // 
+            // chargeBalRichTextbox
+            // 
+            this.chargeBalRichTextbox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.chargeBalRichTextbox.Location = new System.Drawing.Point(976, 32);
+            this.chargeBalRichTextbox.Name = "chargeBalRichTextbox";
+            this.chargeBalRichTextbox.Size = new System.Drawing.Size(156, 240);
+            this.chargeBalRichTextbox.TabIndex = 8;
+            this.chargeBalRichTextbox.Text = "";
             // 
             // DateOfBirthTextBox
             // 
@@ -2817,6 +2859,46 @@ namespace LabBilling.Forms
             this.minPmtTextBox.Size = new System.Drawing.Size(100, 20);
             this.minPmtTextBox.TabIndex = 9;
             // 
+            // BannerThirdPartyBalLabel
+            // 
+            this.BannerThirdPartyBalLabel.AutoSize = true;
+            this.BannerThirdPartyBalLabel.ForeColor = System.Drawing.Color.White;
+            this.BannerThirdPartyBalLabel.Location = new System.Drawing.Point(963, 32);
+            this.BannerThirdPartyBalLabel.Name = "BannerThirdPartyBalLabel";
+            this.BannerThirdPartyBalLabel.Size = new System.Drawing.Size(70, 13);
+            this.BannerThirdPartyBalLabel.TabIndex = 20;
+            this.BannerThirdPartyBalLabel.Text = "3rd Party Bal:";
+            // 
+            // ThirdPartyBalLabel
+            // 
+            this.ThirdPartyBalLabel.ForeColor = System.Drawing.Color.White;
+            this.ThirdPartyBalLabel.Location = new System.Drawing.Point(1057, 32);
+            this.ThirdPartyBalLabel.Name = "ThirdPartyBalLabel";
+            this.ThirdPartyBalLabel.Size = new System.Drawing.Size(60, 13);
+            this.ThirdPartyBalLabel.TabIndex = 20;
+            this.ThirdPartyBalLabel.Text = "0.00";
+            this.ThirdPartyBalLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // BannerClientBalLabel
+            // 
+            this.BannerClientBalLabel.AutoSize = true;
+            this.BannerClientBalLabel.ForeColor = System.Drawing.Color.White;
+            this.BannerClientBalLabel.Location = new System.Drawing.Point(963, 48);
+            this.BannerClientBalLabel.Name = "BannerClientBalLabel";
+            this.BannerClientBalLabel.Size = new System.Drawing.Size(78, 13);
+            this.BannerClientBalLabel.TabIndex = 20;
+            this.BannerClientBalLabel.Text = "Client Balance:";
+            // 
+            // ClientBalLabel
+            // 
+            this.ClientBalLabel.ForeColor = System.Drawing.Color.White;
+            this.ClientBalLabel.Location = new System.Drawing.Point(1057, 48);
+            this.ClientBalLabel.Name = "ClientBalLabel";
+            this.ClientBalLabel.Size = new System.Drawing.Size(60, 13);
+            this.ClientBalLabel.TabIndex = 20;
+            this.ClientBalLabel.Text = "0.00";
+            this.ClientBalLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
             // AccountForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2841,7 +2923,11 @@ namespace LabBilling.Forms
             this.Controls.Add(this.BannerDOBSexLabel);
             this.Controls.Add(this.TotalChargesLabel);
             this.Controls.Add(this.BannerTotalChargesLabel);
+            this.Controls.Add(this.ClientBalLabel);
+            this.Controls.Add(this.ThirdPartyBalLabel);
+            this.Controls.Add(this.BannerClientBalLabel);
             this.Controls.Add(this.BalanceLabel);
+            this.Controls.Add(this.BannerThirdPartyBalLabel);
             this.Controls.Add(this.TotalPmtAdjLabel);
             this.Controls.Add(this.BannerAccBalanceLabel);
             this.Controls.Add(this.BannerTotalPmtLabel);
@@ -3107,6 +3193,13 @@ namespace LabBilling.Forms
         private System.Windows.Forms.ToolStripMenuItem removeModifierToolStripMenuItem;
         private System.Windows.Forms.CheckBox noteAlertCheckBox;
         private System.Windows.Forms.Label bannerAlertLabel;
+        private System.Windows.Forms.CheckBox showClientBilledCheckBox;
+        private System.Windows.Forms.CheckBox showThirdPartyCheckBox;
+        private System.Windows.Forms.RichTextBox chargeBalRichTextbox;
+        private System.Windows.Forms.Label BannerThirdPartyBalLabel;
+        private System.Windows.Forms.Label ThirdPartyBalLabel;
+        private System.Windows.Forms.Label BannerClientBalLabel;
+        private System.Windows.Forms.Label ClientBalLabel;
     }
 }
 

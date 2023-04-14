@@ -25,7 +25,8 @@ namespace LabBilling.Core.DataAccess
 
             var value = base.Add(table);
 
-            table.DiagnosisPointer.ChrgDetailUri = Convert.ToDouble(value);
+            if(table.DiagnosisPointer != null)
+                table.DiagnosisPointer.ChrgDetailUri = Convert.ToDouble(value);
 
             chrgDiagnosisPointerRepository.Save(table.DiagnosisPointer);
 
@@ -104,9 +105,13 @@ namespace LabBilling.Core.DataAccess
 
         public override bool Save(ChrgDiagnosisPointer record)
         {
+            if(record == null)
+            {
+                throw new ArgumentNullException(nameof(record));
+            }
             if(record.ChrgDetailUri <= 0)
             {
-                throw new ArgumentOutOfRangeException("ChrgDetailUri");
+                throw new ArgumentOutOfRangeException(nameof(ChrgDiagnosisPointer.ChrgDetailUri));
             }
             var existingRecord = GetById(record.ChrgDetailUri);
 
@@ -119,7 +124,6 @@ namespace LabBilling.Core.DataAccess
                 Add(record);
                 return true;
             }
-
         }
 
     }

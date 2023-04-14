@@ -7,11 +7,16 @@ namespace LabBilling.Core.Models
     [TableName("vw_cbill_select")]
     public class InvoiceSelect : IBaseEntity
     {
-        public string account { get; set; }
-        public string cl_mnem { get; set; }
-        public DateTime trans_date { get; set; }
-        public string pat_name { get; set; }
-        public string fin_code { get; set; }
+        [Column("account")]
+        public string AccountNo { get; set; }
+        [Column("cl_mnem")]
+        public string ClientMnem { get; set; }
+        [Column("trans_date")]
+        public DateTime TransactionDate { get; set; }
+        [Column("pat_name")]
+        public string PatientName { get; set; }
+        [Column("fin_code")]
+        public string FinCode { get; set; }
 
         [Ignore]
         public DateTime mod_date { get; set; }
