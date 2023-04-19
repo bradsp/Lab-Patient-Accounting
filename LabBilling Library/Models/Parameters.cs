@@ -7,7 +7,7 @@ using LabBilling.Logging;
 namespace LabBilling.Core.Models
 {
     [Serializable]
-    public class Parameters 
+    public sealed class Parameters 
     {
         //[Category("Billing")]
         //[Description("")]

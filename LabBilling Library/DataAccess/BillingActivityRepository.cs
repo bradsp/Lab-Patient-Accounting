@@ -10,7 +10,7 @@ using System.Data;
 
 namespace LabBilling.Core.DataAccess
 {
-    public class BillingActivityRepository : RepositoryBase<BillingActivity>
+    public sealed class BillingActivityRepository : RepositoryBase<BillingActivity>
     {
         public BillingActivityRepository(string connection) : base(connection)
         {

@@ -10,7 +10,7 @@ using System.CodeDom.Compiler;
 
 namespace LabBilling.Core.DataAccess
 {
-    public class ChrgRepository : RepositoryBase<Chrg>
+    public sealed class ChrgRepository : RepositoryBase<Chrg>
     {
         private CdmRepository cdmRepository;
         private readonly ChrgDetailRepository amtRepository;

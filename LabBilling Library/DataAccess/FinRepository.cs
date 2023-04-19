@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace LabBilling.Core.DataAccess
 {
-    public class FinRepository : RepositoryBase<Fin>
+    public sealed class FinRepository : RepositoryBase<Fin>
     {
         public FinRepository(string connection) : base(connection)
         {

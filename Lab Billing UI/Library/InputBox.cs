@@ -24,7 +24,7 @@ namespace LabBilling.Core
     /// <summary>
     /// Summary description for InputBox.
     /// </summary>
-    public class InputBox
+    public sealed class InputBox
     {
 
         #region Private Windows Contols and Constructor

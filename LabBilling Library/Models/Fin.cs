@@ -9,7 +9,7 @@ namespace LabBilling.Core.Models
 {
     [TableName("fin")]
     [PrimaryKey("fin_code", AutoIncrement = false)]
-    public class Fin : IBaseEntity
+    public sealed class Fin : IBaseEntity
     {
         [Column("fin_code")]
         public string FinCode { get; set; }

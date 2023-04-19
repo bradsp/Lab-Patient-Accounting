@@ -5,7 +5,7 @@ namespace LabBilling.Core.Models
 {
     [TableName("dictionary.mapping")]
     [PrimaryKey("uid",AutoIncrement = true)]
-    public class Mapping :IBaseEntity
+    public sealed class Mapping :IBaseEntity
     {
         public string return_value	{ get; set; }
         public string return_value_type { get; set; }

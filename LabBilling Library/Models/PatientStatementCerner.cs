@@ -9,7 +9,7 @@ using PetaPoco;
 namespace LabBilling.Core.Models
 {
     [TableName("dbo.pat_statements_cerner")]
-    public class PatientStatementCerner : IBaseEntity
+    public sealed class PatientStatementCerner : IBaseEntity
     {
         [Column("statement_type")]
         public string StatementType { get; set; }

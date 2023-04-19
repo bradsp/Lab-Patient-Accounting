@@ -10,7 +10,7 @@ namespace LabBilling.Core.Models
 {
     [TableName("insc")]
     [PrimaryKey("code", AutoIncrement = false)]
-    public class InsCompany : IBaseEntity
+    public sealed class InsCompany : IBaseEntity
     {
 
         [Column("code")]

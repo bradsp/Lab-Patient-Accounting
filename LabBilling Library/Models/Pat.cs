@@ -6,7 +6,7 @@ namespace LabBilling.Core.Models
 {
     [TableName("pat")]
     [PrimaryKey("account",AutoIncrement = false)]
-    public class Pat : IBaseEntity
+    public sealed class Pat : IBaseEntity
     {
         [Column("deleted")]
         public bool IsDeleted { get; set; }

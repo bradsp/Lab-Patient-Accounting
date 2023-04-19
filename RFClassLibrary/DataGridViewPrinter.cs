@@ -35,7 +35,7 @@ namespace RFClassLibrary
     /// at
     /// http://www.codeproject.com/csharp/datagridviewprinter.asp
     /// </summary>
-    public class DataGridViewPrinter
+    public sealed class DataGridViewPrinter
     {
         private bool m_bPageBreak = false;
         private string m_strLastColumnBreakValue = null;

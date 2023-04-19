@@ -7,7 +7,7 @@ using System.Data.SqlClient;
 
 namespace LabBilling.Core.DataAccess
 {
-    public class InvoiceHistoryRepository : RepositoryBase<InvoiceHistory>
+    public sealed class InvoiceHistoryRepository : RepositoryBase<InvoiceHistory>
     {
         public InvoiceHistoryRepository(string connection) : base(connection)
         {

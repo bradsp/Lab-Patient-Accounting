@@ -9,7 +9,7 @@ namespace LabBilling.Core.Models
 {
     [TableName("data_billing_batch")]
     [PrimaryKey("batch", AutoIncrement = false)]
-    public class BillingBatch : IBaseEntity
+    public sealed class BillingBatch : IBaseEntity
     {
 
         [Column("batch")]

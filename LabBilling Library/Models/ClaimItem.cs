@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace LabBilling.Core.Models
 {
-    public class ClaimItem
+    public sealed class ClaimItem
     {
         public string status { get; set; }
         public string account { get; set; }

@@ -10,7 +10,7 @@ namespace LabBilling.Core.Models
 {
     [TableName("acc_alert")]
     [PrimaryKey("account", AutoIncrement = false)]
-    public class AccountAlert : IBaseEntity
+    public sealed class AccountAlert : IBaseEntity
     {
         [Column("account")]
         public string AccountNo { get; set; }

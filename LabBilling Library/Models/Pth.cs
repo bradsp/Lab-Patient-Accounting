@@ -9,7 +9,7 @@ namespace LabBilling.Core.Models
 {
     [TableName("pth")]
     [PrimaryKey("pc_code", AutoIncrement = true)]
-    public class Pth : IBaseEntity
+    public sealed class Pth : IBaseEntity
     {
 
         [Column("deleted")]

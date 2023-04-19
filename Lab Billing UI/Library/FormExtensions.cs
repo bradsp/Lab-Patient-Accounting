@@ -9,7 +9,7 @@ using LabBilling.Forms;
 
 namespace LabBilling.Library
 {
-    public class FormExtensions
+    public sealed class FormExtensions
     {
         /// <summary>
         /// Event Handler for the data grid views click event, launches the account program for the selected account.

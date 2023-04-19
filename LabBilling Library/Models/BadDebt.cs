@@ -9,7 +9,7 @@ namespace LabBilling.Core.Models
 {
     [TableName("bad_debt")]
     [PrimaryKey("rowguid", AutoIncrement = false)]
-    public class BadDebt : IBaseEntity
+    public sealed class BadDebt : IBaseEntity
     {
         public Guid rowguid { get; set; }
 

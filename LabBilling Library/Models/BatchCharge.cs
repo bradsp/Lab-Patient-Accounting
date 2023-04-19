@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace LabBilling.Core.Models
 {
-    public class BatchCharge
+    public sealed class BatchCharge
     {
         public string AccountNo { get; set; }
         public string CDM { get; set; }

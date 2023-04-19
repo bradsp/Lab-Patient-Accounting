@@ -182,8 +182,6 @@ namespace LabBilling.Forms
             this.AddChargeButton = new System.Windows.Forms.Button();
             this.TotalChargesTextBox = new System.Windows.Forms.TextBox();
             this.ChargeTotalChargesLabel = new System.Windows.Forms.Label();
-            this.showClientBilledCheckBox = new System.Windows.Forms.CheckBox();
-            this.showThirdPartyCheckBox = new System.Windows.Forms.CheckBox();
             this.ShowCreditedChrgCheckBox = new System.Windows.Forms.CheckBox();
             this.tabPayments = new System.Windows.Forms.TabPage();
             this.AddPaymentButton = new System.Windows.Forms.Button();
@@ -254,6 +252,10 @@ namespace LabBilling.Forms
             this.clearDxPointerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.bannerAlertLabel = new System.Windows.Forms.Label();
             this.chargeBalRichTextbox = new System.Windows.Forms.RichTextBox();
+            this.BannerThirdPartyBalLabel = new System.Windows.Forms.Label();
+            this.ThirdPartyBalLabel = new System.Windows.Forms.Label();
+            this.BannerClientBalLabel = new System.Windows.Forms.Label();
+            this.ClientBalLabel = new System.Windows.Forms.Label();
             this.DateOfBirthTextBox = new LabBilling.UserControls.DateTextBox();
             this.providerLookup1 = new LabBilling.Library.ProviderLookup();
             this.MaritalStatusComboBox = new LabBilling.Library.FlatCombo();
@@ -267,10 +269,9 @@ namespace LabBilling.Forms
             this.InsOrderComboBox = new LabBilling.Library.FlatCombo();
             this.HolderSexComboBox = new LabBilling.Library.FlatCombo();
             this.minPmtTextBox = new LabBilling.UserControls.CurrencyTextBox();
-            this.BannerThirdPartyBalLabel = new System.Windows.Forms.Label();
-            this.ThirdPartyBalLabel = new System.Windows.Forms.Label();
-            this.BannerClientBalLabel = new System.Windows.Forms.Label();
-            this.ClientBalLabel = new System.Windows.Forms.Label();
+            this.show3rdPartyRadioButton = new System.Windows.Forms.RadioButton();
+            this.showClientRadioButton = new System.Windows.Forms.RadioButton();
+            this.showAllChargeRadioButton = new System.Windows.Forms.RadioButton();
             this.tabControl1.SuspendLayout();
             this.summaryTab.SuspendLayout();
             this.tabDemographics.SuspendLayout();
@@ -1649,11 +1650,12 @@ namespace LabBilling.Forms
             // 
             this.tabCharges.AutoScroll = true;
             this.tabCharges.BackColor = System.Drawing.Color.White;
+            this.tabCharges.Controls.Add(this.showAllChargeRadioButton);
+            this.tabCharges.Controls.Add(this.showClientRadioButton);
+            this.tabCharges.Controls.Add(this.show3rdPartyRadioButton);
             this.tabCharges.Controls.Add(this.chargeLayoutPanel);
             this.tabCharges.Controls.Add(this.TotalChargesTextBox);
             this.tabCharges.Controls.Add(this.ChargeTotalChargesLabel);
-            this.tabCharges.Controls.Add(this.showClientBilledCheckBox);
-            this.tabCharges.Controls.Add(this.showThirdPartyCheckBox);
             this.tabCharges.Controls.Add(this.ShowCreditedChrgCheckBox);
             this.tabCharges.Location = new System.Drawing.Point(4, 22);
             this.tabCharges.Name = "tabCharges";
@@ -1866,28 +1868,6 @@ namespace LabBilling.Forms
             this.ChargeTotalChargesLabel.Size = new System.Drawing.Size(86, 13);
             this.ChargeTotalChargesLabel.TabIndex = 5;
             this.ChargeTotalChargesLabel.Text = "Total Charges";
-            // 
-            // showClientBilledCheckBox
-            // 
-            this.showClientBilledCheckBox.AutoSize = true;
-            this.showClientBilledCheckBox.Location = new System.Drawing.Point(244, 10);
-            this.showClientBilledCheckBox.Name = "showClientBilledCheckBox";
-            this.showClientBilledCheckBox.Size = new System.Drawing.Size(110, 17);
-            this.showClientBilledCheckBox.TabIndex = 4;
-            this.showClientBilledCheckBox.Text = "Show Client Billed";
-            this.showClientBilledCheckBox.UseVisualStyleBackColor = true;
-            this.showClientBilledCheckBox.CheckedChanged += new System.EventHandler(this.showClientBilledCheckBox_CheckedChanged);
-            // 
-            // showThirdPartyCheckBox
-            // 
-            this.showThirdPartyCheckBox.AutoSize = true;
-            this.showThirdPartyCheckBox.Location = new System.Drawing.Point(102, 10);
-            this.showThirdPartyCheckBox.Name = "showThirdPartyCheckBox";
-            this.showThirdPartyCheckBox.Size = new System.Drawing.Size(136, 17);
-            this.showThirdPartyCheckBox.TabIndex = 4;
-            this.showThirdPartyCheckBox.Text = "Show 3rd Party/Patient";
-            this.showThirdPartyCheckBox.UseVisualStyleBackColor = true;
-            this.showThirdPartyCheckBox.CheckedChanged += new System.EventHandler(this.showThirdPartyCheckBox_CheckedChanged);
             // 
             // ShowCreditedChrgCheckBox
             // 
@@ -2690,6 +2670,46 @@ namespace LabBilling.Forms
             this.chargeBalRichTextbox.TabIndex = 8;
             this.chargeBalRichTextbox.Text = "";
             // 
+            // BannerThirdPartyBalLabel
+            // 
+            this.BannerThirdPartyBalLabel.AutoSize = true;
+            this.BannerThirdPartyBalLabel.ForeColor = System.Drawing.Color.White;
+            this.BannerThirdPartyBalLabel.Location = new System.Drawing.Point(963, 32);
+            this.BannerThirdPartyBalLabel.Name = "BannerThirdPartyBalLabel";
+            this.BannerThirdPartyBalLabel.Size = new System.Drawing.Size(70, 13);
+            this.BannerThirdPartyBalLabel.TabIndex = 20;
+            this.BannerThirdPartyBalLabel.Text = "3rd Party Bal:";
+            // 
+            // ThirdPartyBalLabel
+            // 
+            this.ThirdPartyBalLabel.ForeColor = System.Drawing.Color.White;
+            this.ThirdPartyBalLabel.Location = new System.Drawing.Point(1057, 32);
+            this.ThirdPartyBalLabel.Name = "ThirdPartyBalLabel";
+            this.ThirdPartyBalLabel.Size = new System.Drawing.Size(60, 13);
+            this.ThirdPartyBalLabel.TabIndex = 20;
+            this.ThirdPartyBalLabel.Text = "0.00";
+            this.ThirdPartyBalLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // BannerClientBalLabel
+            // 
+            this.BannerClientBalLabel.AutoSize = true;
+            this.BannerClientBalLabel.ForeColor = System.Drawing.Color.White;
+            this.BannerClientBalLabel.Location = new System.Drawing.Point(963, 48);
+            this.BannerClientBalLabel.Name = "BannerClientBalLabel";
+            this.BannerClientBalLabel.Size = new System.Drawing.Size(78, 13);
+            this.BannerClientBalLabel.TabIndex = 20;
+            this.BannerClientBalLabel.Text = "Client Balance:";
+            // 
+            // ClientBalLabel
+            // 
+            this.ClientBalLabel.ForeColor = System.Drawing.Color.White;
+            this.ClientBalLabel.Location = new System.Drawing.Point(1057, 48);
+            this.ClientBalLabel.Name = "ClientBalLabel";
+            this.ClientBalLabel.Size = new System.Drawing.Size(60, 13);
+            this.ClientBalLabel.TabIndex = 20;
+            this.ClientBalLabel.Text = "0.00";
+            this.ClientBalLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
             // DateOfBirthTextBox
             // 
             this.DateOfBirthTextBox.DateValue = new System.DateTime(((long)(0)));
@@ -2859,45 +2879,40 @@ namespace LabBilling.Forms
             this.minPmtTextBox.Size = new System.Drawing.Size(100, 20);
             this.minPmtTextBox.TabIndex = 9;
             // 
-            // BannerThirdPartyBalLabel
+            // show3rdPartyRadioButton
             // 
-            this.BannerThirdPartyBalLabel.AutoSize = true;
-            this.BannerThirdPartyBalLabel.ForeColor = System.Drawing.Color.White;
-            this.BannerThirdPartyBalLabel.Location = new System.Drawing.Point(963, 32);
-            this.BannerThirdPartyBalLabel.Name = "BannerThirdPartyBalLabel";
-            this.BannerThirdPartyBalLabel.Size = new System.Drawing.Size(70, 13);
-            this.BannerThirdPartyBalLabel.TabIndex = 20;
-            this.BannerThirdPartyBalLabel.Text = "3rd Party Bal:";
+            this.show3rdPartyRadioButton.AutoSize = true;
+            this.show3rdPartyRadioButton.Location = new System.Drawing.Point(111, 10);
+            this.show3rdPartyRadioButton.Name = "show3rdPartyRadioButton";
+            this.show3rdPartyRadioButton.Size = new System.Drawing.Size(135, 17);
+            this.show3rdPartyRadioButton.TabIndex = 12;
+            this.show3rdPartyRadioButton.Text = "Show 3rd Party/Patient";
+            this.show3rdPartyRadioButton.UseVisualStyleBackColor = true;
+            this.show3rdPartyRadioButton.CheckedChanged += new System.EventHandler(this.show3rdPartyRadioButton_CheckedChanged);
             // 
-            // ThirdPartyBalLabel
+            // showClientRadioButton
             // 
-            this.ThirdPartyBalLabel.ForeColor = System.Drawing.Color.White;
-            this.ThirdPartyBalLabel.Location = new System.Drawing.Point(1057, 32);
-            this.ThirdPartyBalLabel.Name = "ThirdPartyBalLabel";
-            this.ThirdPartyBalLabel.Size = new System.Drawing.Size(60, 13);
-            this.ThirdPartyBalLabel.TabIndex = 20;
-            this.ThirdPartyBalLabel.Text = "0.00";
-            this.ThirdPartyBalLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.showClientRadioButton.AutoSize = true;
+            this.showClientRadioButton.Location = new System.Drawing.Point(252, 10);
+            this.showClientRadioButton.Name = "showClientRadioButton";
+            this.showClientRadioButton.Size = new System.Drawing.Size(125, 17);
+            this.showClientRadioButton.TabIndex = 12;
+            this.showClientRadioButton.Text = "Show Client Invoiced";
+            this.showClientRadioButton.UseVisualStyleBackColor = true;
+            this.showClientRadioButton.CheckedChanged += new System.EventHandler(this.show3rdPartyRadioButton_CheckedChanged);
             // 
-            // BannerClientBalLabel
+            // showAllChargeRadioButton
             // 
-            this.BannerClientBalLabel.AutoSize = true;
-            this.BannerClientBalLabel.ForeColor = System.Drawing.Color.White;
-            this.BannerClientBalLabel.Location = new System.Drawing.Point(963, 48);
-            this.BannerClientBalLabel.Name = "BannerClientBalLabel";
-            this.BannerClientBalLabel.Size = new System.Drawing.Size(78, 13);
-            this.BannerClientBalLabel.TabIndex = 20;
-            this.BannerClientBalLabel.Text = "Client Balance:";
-            // 
-            // ClientBalLabel
-            // 
-            this.ClientBalLabel.ForeColor = System.Drawing.Color.White;
-            this.ClientBalLabel.Location = new System.Drawing.Point(1057, 48);
-            this.ClientBalLabel.Name = "ClientBalLabel";
-            this.ClientBalLabel.Size = new System.Drawing.Size(60, 13);
-            this.ClientBalLabel.TabIndex = 20;
-            this.ClientBalLabel.Text = "0.00";
-            this.ClientBalLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.showAllChargeRadioButton.AutoSize = true;
+            this.showAllChargeRadioButton.Checked = true;
+            this.showAllChargeRadioButton.Location = new System.Drawing.Point(383, 10);
+            this.showAllChargeRadioButton.Name = "showAllChargeRadioButton";
+            this.showAllChargeRadioButton.Size = new System.Drawing.Size(66, 17);
+            this.showAllChargeRadioButton.TabIndex = 12;
+            this.showAllChargeRadioButton.TabStop = true;
+            this.showAllChargeRadioButton.Text = "Show All";
+            this.showAllChargeRadioButton.UseVisualStyleBackColor = true;
+            this.showAllChargeRadioButton.CheckedChanged += new System.EventHandler(this.show3rdPartyRadioButton_CheckedChanged);
             // 
             // AccountForm
             // 
@@ -3193,13 +3208,14 @@ namespace LabBilling.Forms
         private System.Windows.Forms.ToolStripMenuItem removeModifierToolStripMenuItem;
         private System.Windows.Forms.CheckBox noteAlertCheckBox;
         private System.Windows.Forms.Label bannerAlertLabel;
-        private System.Windows.Forms.CheckBox showClientBilledCheckBox;
-        private System.Windows.Forms.CheckBox showThirdPartyCheckBox;
         private System.Windows.Forms.RichTextBox chargeBalRichTextbox;
         private System.Windows.Forms.Label BannerThirdPartyBalLabel;
         private System.Windows.Forms.Label ThirdPartyBalLabel;
         private System.Windows.Forms.Label BannerClientBalLabel;
         private System.Windows.Forms.Label ClientBalLabel;
+        private System.Windows.Forms.RadioButton showAllChargeRadioButton;
+        private System.Windows.Forms.RadioButton showClientRadioButton;
+        private System.Windows.Forms.RadioButton show3rdPartyRadioButton;
     }
 }
 

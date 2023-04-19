@@ -10,7 +10,7 @@ using System.Data;
 
 namespace LabBilling.Core.DataAccess
 {
-    public class ReportingRepository
+    public sealed class ReportingRepository
     {
         //private PetaPoco.Database dbConnection;
         private string _connectionString;

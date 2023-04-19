@@ -5,7 +5,7 @@ namespace LabBilling.Core.Models
 {
     [TableName("dictionary.clienttype")]
     [PrimaryKey("type", AutoIncrement = false)]
-    public class ClientType : IBaseEntity
+    public sealed class ClientType : IBaseEntity
     {
         [Column("type")]
         public int Type { get; set; }

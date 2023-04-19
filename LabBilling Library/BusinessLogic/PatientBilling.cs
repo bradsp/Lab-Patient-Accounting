@@ -29,7 +29,7 @@ namespace LabBilling.Core
         }
     }
 
-    public class PatientBilling
+    public sealed class PatientBilling
     {
         private Database db;
         private string batchNo;

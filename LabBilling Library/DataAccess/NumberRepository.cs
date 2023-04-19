@@ -7,7 +7,7 @@ using System.Data;
 
 namespace LabBilling.Core.DataAccess
 {
-    public class NumberRepository : RepositoryBase<Number>
+    public sealed class NumberRepository : RepositoryBase<Number>
     {
         public NumberRepository(string connection) : base(connection)
         {

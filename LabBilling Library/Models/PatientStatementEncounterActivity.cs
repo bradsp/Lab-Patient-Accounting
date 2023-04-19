@@ -9,7 +9,7 @@ using PetaPoco;
 namespace LabBilling.Core.Models
 {
     [TableName("patbill_enctr_actv")]
-    public class PatientStatementEncounterActivity : IBaseEntity
+    public sealed class PatientStatementEncounterActivity : IBaseEntity
     {
         [Column("statement_number")] 
         public Int64 StatementNumber { get; set; }

@@ -9,7 +9,7 @@ namespace LabBilling.Core.Models
 {
     [PetaPoco.TableName("cdm")]
     [PetaPoco.PrimaryKey("cdm", AutoIncrement = false)]
-    public class Cdm : IBaseEntity
+    public sealed class Cdm : IBaseEntity
     {
         [Column("deleted")]
         public bool IsDeleted { get; set; }

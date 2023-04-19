@@ -10,7 +10,7 @@ using RFClassLibrary;
 
 namespace PetaPoco.Providers
 {
-    public class CustomSqlDatabaseProvider : PetaPoco.Providers.SqlServerDatabaseProvider
+    public sealed class CustomSqlDatabaseProvider : PetaPoco.Providers.SqlServerDatabaseProvider
     {
         private string GetInsertPreamble(string primaryKeyName)
         {

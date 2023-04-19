@@ -9,7 +9,7 @@ namespace LabBilling.Core.Models
 {
     [TableName("number")]
     [PrimaryKey("keyfield", AutoIncrement = true)]
-    public class Number : IBaseEntity
+    public sealed class Number : IBaseEntity
     {
         public string keyfield { get; set; } // varchar(15), not null
         public decimal? cnt { get; set; } // numeric(15,0), null

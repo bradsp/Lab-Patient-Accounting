@@ -9,7 +9,7 @@ namespace LabBilling.Core.Models
 {
     [TableName("phy")]
     [PrimaryKey("uri", AutoIncrement = true)]
-    public class Phy : IBaseEntity
+    public sealed class Phy : IBaseEntity
     {
         public Guid rowguid { get; set; }
         [Column("deleted")]

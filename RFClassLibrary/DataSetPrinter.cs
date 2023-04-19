@@ -12,7 +12,7 @@ namespace RFClassLibrary
     /// <summary>
     /// Class designed to print from a DataSet
     /// </summary>
-    public class DataSetPrinter
+    public sealed class DataSetPrinter
     {
         private string m_strFooterText;
         /// <summary>

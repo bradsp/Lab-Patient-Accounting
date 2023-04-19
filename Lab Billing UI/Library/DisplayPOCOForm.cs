@@ -9,7 +9,7 @@ using System.Windows.Forms;
 
 namespace LabBilling.Core
 {
-    public class DisplayPOCOForm<C> where C : class
+    public sealed class DisplayPOCOForm<C> where C : class
     {
         private C _data;
 

@@ -8,7 +8,7 @@ using LabBilling.Core.Models;
 
 namespace LabBilling.Core.BusinessLogic.Validators
 {
-    public class ChargeValidator : AbstractValidator<Chrg>
+    public sealed class ChargeValidator : AbstractValidator<Chrg>
     {
         public ChargeValidator()
         {
@@ -22,7 +22,7 @@ namespace LabBilling.Core.BusinessLogic.Validators
         }
     }
 
-    public class ChargeDetailValidator : AbstractValidator<ChrgDetail>
+    public sealed class ChargeDetailValidator : AbstractValidator<ChrgDetail>
     {
         public ChargeDetailValidator()
         {

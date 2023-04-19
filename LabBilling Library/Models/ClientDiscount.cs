@@ -10,7 +10,7 @@ namespace LabBilling.Core.Models
 {
     [TableName("dictionary.cli_dis")]
     [PrimaryKey("uri", AutoIncrement = true)]
-    public class ClientDiscount : IBaseEntity
+    public sealed class ClientDiscount : IBaseEntity
     {
         public Guid rowguid { get; set; }
 

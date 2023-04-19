@@ -7,7 +7,7 @@ using System.Data;
 
 namespace LabBilling.Core.DataAccess
 {
-    public class MessagesInboundRepository : RepositoryBase<MessageInbound>
+    public sealed class MessagesInboundRepository : RepositoryBase<MessageInbound>
     {
         public MessagesInboundRepository(string connection) : base(connection)
         {

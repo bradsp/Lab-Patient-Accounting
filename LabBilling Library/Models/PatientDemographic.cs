@@ -10,7 +10,7 @@ namespace LabBilling.Core.Models
 
     [TableName("infce.patient_demographics")]
     [PrimaryKey("systemMsgId", AutoIncrement = true)]
-    public class PatientDemographic : IBaseEntity
+    public sealed class PatientDemographic : IBaseEntity
     {
         public string enctr_sys { get; set; } // varchar(25), null
         public string client { get; set; } // varchar(max), null

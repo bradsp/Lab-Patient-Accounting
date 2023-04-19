@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Security.Permissions;
 
 namespace LabBilling.Core.Models
-{ 
+{
     /// <summary>
     /// 
     /// </summary>
-    public class InvoiceModel
+    public sealed class InvoiceModel
     {
         public StatementTypeEnum StatementType { get; set; }
 
@@ -49,48 +49,5 @@ namespace LabBilling.Core.Models
         public bool ShowCpt { get; set; }
 
        
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    public class InvoiceDetailModel
-    {
-        public string Account { get; set; }
-        public string PatientName { get; set; }
-        public DateTime ServiceDate { get; set; }
-        public double AccountTotal { get; set; }
-
-        public List<InvoiceDetailLinesModel> InvoiceDetailLines { get; set; } = new List<InvoiceDetailLinesModel>();
-    }
-
-    public class InvoiceDetailLinesModel
-    {
-        public string CDM { get; set; }
-        public string CPT { get; set; }
-        public string Description { get; set; }
-        public int Qty { get; set; }
-        public double Amount { get; set; }
-
-    }
-
-    public class UnbilledClient
-    {
-        public bool SelectForInvoice { get; set; }
-        public string ClientMnem { get; set; }
-        public string ClientName { get; set; }
-        public string ClientType { get; set; }
-        public double UnbilledAmount { get; set; }
-        public double PriorBalance { get; set; }
-    }
-
-    public class ClientStatementDetailModel
-    {
-        public string Account { get; set; }
-        public string Invoice { get; set; }
-        public string Reference { get; set; }
-        public DateTime ServiceDate { get; set; }
-        public string Description { get; set; }
-        public double Amount { get; set; }
     }
 }

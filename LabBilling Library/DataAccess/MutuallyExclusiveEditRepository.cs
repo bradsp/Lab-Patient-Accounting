@@ -9,7 +9,7 @@ using LabBilling.Core.Models;
 
 namespace LabBilling.Core.DataAccess
 {
-    public class MutuallyExclusiveEditRepository : RepositoryBase<MutuallyExclusiveEdit>
+    public sealed class MutuallyExclusiveEditRepository : RepositoryBase<MutuallyExclusiveEdit>
     {
         public MutuallyExclusiveEditRepository(string connection) : base(connection)
         {

@@ -7,7 +7,7 @@ namespace LabBilling.Core.Models
     [PetaPoco.TableName("emp")]
     [PetaPoco.PrimaryKey("name", AutoIncrement=false)]
     [PetaPoco.ExplicitColumns]
-    public class Emp : IBaseEntity
+    public sealed class Emp : IBaseEntity
     {
         [PetaPoco.Column("name")]
         public string UserName { get; set; }

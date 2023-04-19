@@ -19,7 +19,7 @@ using Log = LabBilling.Logging.Log;
 
 namespace LabBilling.Core.DataAccess
 {
-    public class AccountRepository : RepositoryBase<Account>
+    public sealed class AccountRepository : RepositoryBase<Account>
     {
         private string _connection;
         private readonly PatRepository patRepository;

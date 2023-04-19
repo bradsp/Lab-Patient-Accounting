@@ -9,7 +9,7 @@ namespace LabBilling.Core.Models
 {
     [TableName("notes")]
     [PrimaryKey("rowguid", AutoIncrement = false)]
-    public class AccountNote : IBaseEntity
+    public sealed class AccountNote : IBaseEntity
     {
 
         [Column("account")]

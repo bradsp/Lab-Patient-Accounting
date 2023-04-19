@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace LabBilling.Core.DataAccess
 {
-    public class ClientTypeRepository : RepositoryBase<ClientType>
+    public sealed class ClientTypeRepository : RepositoryBase<ClientType>
     {
         public ClientTypeRepository(string connectionString) : base(connectionString)
         {

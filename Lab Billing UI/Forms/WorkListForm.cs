@@ -721,6 +721,10 @@ namespace LabBilling.Forms
                 {
                     accountTable.DefaultView.RowFilter = $"{nameof(AccountSearch.Account)} like '{filterTextBox.Text}%'";
                 }
+                if (insuranceFilterRadioButton.Checked)
+                {
+                    accountTable.DefaultView.RowFilter = $"{nameof(AccountSearch.PrimaryInsPlanName)} like '%{filterTextBox.Text}%'";
+                }
 
                 if (!showAccountsWithPmtCheckbox.Checked)
                 {

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace LabBilling.Core.Models
 {
-    public class ProgressReportModel
+    public sealed class ProgressReportModel
     {
         public int PercentageComplete { get; set; } = 0;
         public int RecordsProcessed { get; set; } = 0;

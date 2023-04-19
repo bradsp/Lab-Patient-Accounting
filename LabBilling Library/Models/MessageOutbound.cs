@@ -5,7 +5,7 @@ namespace LabBilling.Core.Models
 {
     [TableName("infce.messages_outbound")]
     [PrimaryKey("systemMsgId", AutoIncrement = true)]
-    public class MessageOutbound : IBaseEntity
+    public sealed class MessageOutbound : IBaseEntity
     {
         public string account_cerner { get; set; } // varchar(50), null
         public decimal? sourceMsgId { get; set; } // numeric(18,0), null

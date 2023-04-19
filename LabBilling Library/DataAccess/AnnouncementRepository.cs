@@ -11,7 +11,7 @@ using PetaPoco;
 
 namespace LabBilling.Core.DataAccess
 {
-    public class AnnouncementRepository : RepositoryBase<Announcement>
+    public sealed class AnnouncementRepository : RepositoryBase<Announcement>
     {
         public AnnouncementRepository(string connectionString) : base(connectionString) { }
 

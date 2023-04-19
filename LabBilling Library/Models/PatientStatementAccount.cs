@@ -10,7 +10,7 @@ namespace LabBilling.Core.Models
 {
     [TableName("dbo.patbill_acc")]
     [PrimaryKey("uid", AutoIncrement = true)]
-    public class PatientStatementAccount : IBaseEntity
+    public sealed class PatientStatementAccount : IBaseEntity
     {
         [Column("statement_number")] 
         public Int64 StatementNumber { get; set; }

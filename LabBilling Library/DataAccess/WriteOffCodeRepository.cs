@@ -10,7 +10,7 @@ using LabBilling.Logging;
 
 namespace LabBilling.Core.DataAccess
 {
-    public class WriteOffCodeRepository : RepositoryBase<WriteOffCode>
+    public sealed class WriteOffCodeRepository : RepositoryBase<WriteOffCode>
     {
 
         public WriteOffCodeRepository(string connection) : base(connection)

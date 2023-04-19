@@ -13,7 +13,7 @@ using System.Text.RegularExpressions;
 
 namespace LabBilling.Core.BusinessLogic
 {
-    public class HL7Processor
+    public sealed class HL7Processor
     {
         j4jayant.HL7.Parser.Message hl7Message;
         private MessageInbound currentMessage;

@@ -5,7 +5,7 @@ namespace LabBilling.Core.Models
 {
     [TableName("dictionary.revcode")]
     [PrimaryKey("code", AutoIncrement = false)]
-    public class RevenueCode : IBaseEntity
+    public sealed class RevenueCode : IBaseEntity
     {
 
         [Column("code")]

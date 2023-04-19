@@ -11,7 +11,7 @@ using NPOI.XWPF.UserModel;
 
 namespace LabBilling.Core.DataAccess
 {
-    public class PhyRepository : RepositoryBase<Phy>
+    public sealed class PhyRepository : RepositoryBase<Phy>
     {
         public PhyRepository(string connection) : base(connection)
         {

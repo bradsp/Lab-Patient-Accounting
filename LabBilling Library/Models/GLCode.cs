@@ -9,7 +9,7 @@ namespace LabBilling.Core.Models
 {
     [TableName("dict_general_ledger_codes")]
     [PrimaryKey("level_1",AutoIncrement = false)]
-    public class GLCode : IBaseEntity
+    public sealed class GLCode : IBaseEntity
     {
         public string gl_account_code { get; set; }
         public string level_1 { get; set; }

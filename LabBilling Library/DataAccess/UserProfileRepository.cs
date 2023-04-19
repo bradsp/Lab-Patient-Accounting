@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace LabBilling.Core.DataAccess
 {
-    public class UserProfileRepository : RepositoryBase<UserProfile>
+    public sealed class UserProfileRepository : RepositoryBase<UserProfile>
     {
         public UserProfileRepository(string connection) : base(connection)
         {

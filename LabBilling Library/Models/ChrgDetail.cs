@@ -5,7 +5,7 @@ namespace LabBilling.Core.Models
 {
     [TableName("chrg_details")]
     [PrimaryKey("uri",AutoIncrement = true)]
-    public class ChrgDetail : IBaseEntity
+    public sealed class ChrgDetail : IBaseEntity
     {
 
         [Column("chrg_num")]

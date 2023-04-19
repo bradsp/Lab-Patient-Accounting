@@ -8,7 +8,7 @@ using System.Data;
 
 namespace LabBilling.Core.DataAccess
 {
-    public class EmpRepository : RepositoryBase<Emp>
+    public sealed class EmpRepository : RepositoryBase<Emp>
     {
         public EmpRepository(string connection) : base(connection)
         {

@@ -9,7 +9,7 @@ namespace LabBilling.Core.Models
 {
     [TableName("dictionary.dict_C_MEEDIT")]
     [PrimaryKey("MutexEditId", AutoIncrement = true)]
-    public class MutuallyExclusiveEdit : IBaseEntity
+    public sealed class MutuallyExclusiveEdit : IBaseEntity
     {
         [Column("ME_1")]
         public string Cpt1 { get; set; }

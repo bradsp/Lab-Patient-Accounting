@@ -9,7 +9,7 @@ namespace LabBilling.Core.Models
 {
     [TableName("data_billing_history")]
     [PrimaryKey("rowguid", AutoIncrement = false)]
-    public class BillingActivity : IBaseEntity
+    public sealed class BillingActivity : IBaseEntity
     {
         public Guid rowguid { get; set; }
         [Column("deleted")]

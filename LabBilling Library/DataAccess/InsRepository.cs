@@ -10,7 +10,7 @@ using System.Text.RegularExpressions;
 
 namespace LabBilling.Core.DataAccess
 {
-    public class InsRepository : RepositoryBase<Ins>
+    public sealed class InsRepository : RepositoryBase<Ins>
     {
         public InsRepository(string connection) : base(connection)
         {

@@ -5,7 +5,7 @@ namespace LabBilling.Core.Models
 {
     [TableName("chk")]
     [PrimaryKey("pay_no",AutoIncrement = true)]
-    public class Chk : IBaseEntity
+    public sealed class Chk : IBaseEntity
     {
 
         [Column("deleted")]

@@ -5,7 +5,7 @@ namespace LabBilling.Core.Models
 {
     [TableName("infce.messages_inbound_webconnect")]
     [PrimaryKey("systemMsgId", AutoIncrement = true)]
-    public class MessageInboundWebconnect : IBaseEntity
+    public sealed class MessageInboundWebconnect : IBaseEntity
     {
         public string account_cerner { get; set; } // varchar(50), null
         public decimal? sourceMsgId { get; set; } // numeric(18,0), null

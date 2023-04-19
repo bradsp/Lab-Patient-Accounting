@@ -10,7 +10,7 @@ namespace LabBilling.Core.Models
 {
     [TableName("chrg_dx_pointer")]
     [PrimaryKey("chrg_detail_uri", AutoIncrement = false)]
-    public class ChrgDiagnosisPointer : IBaseEntity
+    public sealed class ChrgDiagnosisPointer : IBaseEntity
     {
 
         [Column("chrg_detail_uri")]

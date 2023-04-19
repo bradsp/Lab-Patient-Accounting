@@ -8,7 +8,7 @@ using System.Data;
 
 namespace LabBilling.Core.DataAccess
 {
-    public class InsCompanyRepository : RepositoryBase<InsCompany>
+    public sealed class InsCompanyRepository : RepositoryBase<InsCompany>
     {
         public InsCompanyRepository(string connection) : base(connection)
         {

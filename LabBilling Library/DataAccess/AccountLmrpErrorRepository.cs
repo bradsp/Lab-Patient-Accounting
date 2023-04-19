@@ -9,7 +9,7 @@ using LabBilling.Core.Models;
 
 namespace LabBilling.Core.DataAccess
 {
-    public class AccountLmrpErrorRepository : RepositoryBase<AccountLmrpError>
+    public sealed class AccountLmrpErrorRepository : RepositoryBase<AccountLmrpError>
     {
         public AccountLmrpErrorRepository(string connectionString) : base(connectionString)
         {

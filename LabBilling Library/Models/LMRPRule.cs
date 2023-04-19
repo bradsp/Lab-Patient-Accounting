@@ -9,7 +9,7 @@ namespace LabBilling.Core.Models
 {
     [TableName("dictionary.lmrp")]
     [PrimaryKey("uid", AutoIncrement = true)]
-    public class LMRPRule : IBaseEntity
+    public sealed class LMRPRule : IBaseEntity
     {
         [Column("cpt4")]
         public string CptCode { get; set; }

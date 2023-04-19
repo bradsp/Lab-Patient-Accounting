@@ -53,6 +53,7 @@
             this.accountFilterRadioBtn = new System.Windows.Forms.RadioButton();
             this.showAccountsWithPmtCheckbox = new System.Windows.Forms.CheckBox();
             this.showReadyToBillCheckbox = new System.Windows.Forms.CheckBox();
+            this.insuranceFilterRadioButton = new System.Windows.Forms.RadioButton();
             ((System.ComponentModel.ISupportInitialize)(this.accountGrid)).BeginInit();
             this.accountGridContextMenu.SuspendLayout();
             this.statusStrip1.SuspendLayout();
@@ -279,7 +280,7 @@
             // showAccountsWithPmtCheckbox
             // 
             this.showAccountsWithPmtCheckbox.AutoSize = true;
-            this.showAccountsWithPmtCheckbox.Location = new System.Drawing.Point(683, 13);
+            this.showAccountsWithPmtCheckbox.Location = new System.Drawing.Point(861, 13);
             this.showAccountsWithPmtCheckbox.Name = "showAccountsWithPmtCheckbox";
             this.showAccountsWithPmtCheckbox.Size = new System.Drawing.Size(172, 17);
             this.showAccountsWithPmtCheckbox.TabIndex = 16;
@@ -290,13 +291,24 @@
             // showReadyToBillCheckbox
             // 
             this.showReadyToBillCheckbox.AutoSize = true;
-            this.showReadyToBillCheckbox.Location = new System.Drawing.Point(861, 14);
+            this.showReadyToBillCheckbox.Location = new System.Drawing.Point(1039, 14);
             this.showReadyToBillCheckbox.Name = "showReadyToBillCheckbox";
             this.showReadyToBillCheckbox.Size = new System.Drawing.Size(115, 17);
             this.showReadyToBillCheckbox.TabIndex = 16;
             this.showReadyToBillCheckbox.Text = "Show Ready to Bill";
             this.showReadyToBillCheckbox.UseVisualStyleBackColor = true;
             this.showReadyToBillCheckbox.CheckedChanged += new System.EventHandler(this.showReadyToBillCheckbox_CheckedChanged);
+            // 
+            // insuranceFilterRadioButton
+            // 
+            this.insuranceFilterRadioButton.AutoSize = true;
+            this.insuranceFilterRadioButton.Location = new System.Drawing.Point(683, 13);
+            this.insuranceFilterRadioButton.Name = "insuranceFilterRadioButton";
+            this.insuranceFilterRadioButton.Size = new System.Drawing.Size(72, 17);
+            this.insuranceFilterRadioButton.TabIndex = 15;
+            this.insuranceFilterRadioButton.TabStop = true;
+            this.insuranceFilterRadioButton.Text = "Insurance";
+            this.insuranceFilterRadioButton.UseVisualStyleBackColor = true;
             // 
             // WorkListForm
             // 
@@ -305,6 +317,7 @@
             this.ClientSize = new System.Drawing.Size(1166, 476);
             this.Controls.Add(this.showReadyToBillCheckbox);
             this.Controls.Add(this.showAccountsWithPmtCheckbox);
+            this.Controls.Add(this.insuranceFilterRadioButton);
             this.Controls.Add(this.accountFilterRadioBtn);
             this.Controls.Add(this.clientFilterRadioBtn);
             this.Controls.Add(this.nameFilterRadioBtn);
@@ -352,5 +365,6 @@
         private System.Windows.Forms.ToolStripMenuItem changeToYFinancialClassToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem readyToBillToolStripMenuItem;
         private System.Windows.Forms.CheckBox showReadyToBillCheckbox;
+        private System.Windows.Forms.RadioButton insuranceFilterRadioButton;
     }
 }

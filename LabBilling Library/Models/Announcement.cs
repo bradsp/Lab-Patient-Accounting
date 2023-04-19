@@ -9,7 +9,7 @@ namespace LabBilling.Core.Models
 {
     [TableName("announcements")]
     [PrimaryKey("id", AutoIncrement = true)]
-    public class Announcement : IBaseEntity
+    public sealed class Announcement : IBaseEntity
     {
         [Column("start_date")]
         public DateTime StartDate { get; set; }

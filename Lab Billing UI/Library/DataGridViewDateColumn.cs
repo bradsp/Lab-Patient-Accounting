@@ -10,7 +10,7 @@ using RFClassLibrary;
 
 namespace LabBilling.Library
 {
-    public class DataGridViewDateCell : DataGridViewTextBoxCell
+    public sealed class DataGridViewDateCell : DataGridViewTextBoxCell
     {
         // member variable used to keep datetime value
         private DateTime? dateValue;

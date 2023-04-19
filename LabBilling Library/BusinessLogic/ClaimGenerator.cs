@@ -16,7 +16,7 @@ using MCL;
 
 namespace LabBilling.Core.BusinessLogic
 {
-    public class ClaimGenerator
+    public sealed class ClaimGenerator
     {
         private SystemParametersRepository parametersdb;
 

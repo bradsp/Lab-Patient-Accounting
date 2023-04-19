@@ -7,7 +7,7 @@ namespace LabBilling.Core.Models
 {
     [TableName("chrg")]
     [PrimaryKey("chrg_num", AutoIncrement = true)]
-    public class Chrg : IBaseEntity
+    public sealed class Chrg : IBaseEntity
     {
         [Column("credited")]
         public bool IsCredited { get; set; }

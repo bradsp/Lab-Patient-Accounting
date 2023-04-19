@@ -348,7 +348,7 @@ namespace LabBilling.Forms
             dxBindingList = new BindingList<PatDiag>(currentAccount.Pat.Diagnoses);
             ShowCreditedChrgCheckBox.Checked = false;
 
-            if(currentAccount.ReadyToBill)
+            if (currentAccount.ReadyToBill)
             {
                 //MessageBox.Show("Account is flagged ready to bill, or has been billed. Any changes can affect the claim.");
             }
@@ -415,9 +415,9 @@ namespace LabBilling.Forms
             sd.Add(new SummaryData("Date of Service", currentAccount.TransactionDate.ToShortDateString(), SummaryData.GroupType.Financial, row++, col));
             sd.Add(new SummaryData("Total Charges", currentAccount.TotalCharges.ToString("c"), SummaryData.GroupType.Financial, row++, col));
             sd.Add(new SummaryData("Total Payments", (currentAccount.TotalPayments + currentAccount.TotalContractual + currentAccount.TotalWriteOff).ToString("c"),
-                SummaryData.GroupType.Financial,row++, col));
+                SummaryData.GroupType.Financial, row++, col));
             sd.Add(new SummaryData("3rd Party/Patient Balance", currentAccount.ClaimBalance.ToString("c"), SummaryData.GroupType.Financial, row++, col));
-            foreach(var (client, balance) in currentAccount.ClientBalance)
+            foreach (var (client, balance) in currentAccount.ClientBalance)
             {
                 sd.Add(new SummaryData($"Client Balance {client}", balance.ToString("c"), SummaryData.GroupType.Financial, row++, col));
             }
@@ -507,7 +507,7 @@ namespace LabBilling.Forms
             else
                 bannerAlertLabel.Text = "";
 
-            if(currentAccount.ReadyToBill)
+            if (currentAccount.ReadyToBill)
             {
                 bannerAlertLabel.Text += "  Account is flagged ready to bill, or has been billed. Any changes can affect the claim.";
             }
@@ -1016,7 +1016,7 @@ namespace LabBilling.Forms
                 PlanCityStTextBox.Text = record.CityStateZip;
                 PlanFinCodeComboBox.SelectedValue = record.FinancialCode ?? String.Empty;
 
-                if(record.IsGenericPayor)
+                if (record.IsGenericPayor)
                 {
                     PlanNameTextBox.Enabled = true;
                     PlanAddress2TextBox.Enabled = true;
@@ -1114,7 +1114,7 @@ namespace LabBilling.Forms
 
             chargeBalRichTextbox.AppendText(currentAccount.ClaimBalance.ToString("c") + "\n");
 
-            foreach(var (client, balance) in currentAccount.ClientBalance)
+            foreach (var (client, balance) in currentAccount.ClientBalance)
             {
                 chargeBalRichTextbox.SelectionFont = new Font(chargeBalRichTextbox.Font.FontFamily, 10, FontStyle.Bold);
                 //chargeBalRichTextbox.AppendText($"Client {client} Balance\n");
@@ -1235,7 +1235,7 @@ namespace LabBilling.Forms
                 ChargesDataGrid.Rows[e.RowIndex].DefaultCellStyle.ForeColor = Color.White;
                 return;
             }
-            if(e.ColumnIndex == ChargesDataGrid.Columns[nameof(Chrg.ChrgId)].Index)
+            if (e.ColumnIndex == ChargesDataGrid.Columns[nameof(Chrg.ChrgId)].Index)
             {
                 if (ChargesDataGrid[nameof(Chrg.FinancialType), e.RowIndex].Value.ToString() == "C")
                     ChargesDataGrid.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.LightGreen;
@@ -1277,6 +1277,10 @@ namespace LabBilling.Forms
         private void ShowCreditedChrgCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             Log.Instance.Trace($"Entering");
+
+            FilterCharges();
+            return;
+
             if (ShowCreditedChrgCheckBox.Checked)
                 chargesTable.DefaultView.RowFilter = String.Empty;
             else
@@ -1376,7 +1380,7 @@ namespace LabBilling.Forms
         {
             PaymentAdjustmentEntryForm form = new PaymentAdjustmentEntryForm(ref currentAccount);
 
-            if(currentAccount.SentToCollections)
+            if (currentAccount.SentToCollections)
             {
                 if (MessageBox.Show($"Account {currentAccount.AccountNo} has been sent to collections. Follow process to notify collection agency of payment.\n Continue with add payment?",
                     "Account Sent to Collections", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) != DialogResult.Yes)
@@ -1420,11 +1424,11 @@ namespace LabBilling.Forms
             dxPointerGrid2.DataSource = null;
 
             int cnt = dxBindingList.Count;
-            string[] ptrStrings = new string[cnt+1];
+            string[] ptrStrings = new string[cnt + 1];
 
             ptrStrings[0] = "";
 
-            for (int z = 1; z < cnt+1; z++)
+            for (int z = 1; z < cnt + 1; z++)
             {
                 ptrStrings[z] = z.ToString();
             }
@@ -1481,7 +1485,7 @@ namespace LabBilling.Forms
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
             });
 
-            for (int i = 1; i < cnt+1; i++)
+            for (int i = 1; i < cnt + 1; i++)
             {
                 dxPointers.Columns.Add(new DataColumn()
                 {
@@ -1573,7 +1577,7 @@ namespace LabBilling.Forms
 
         private void dxPointerGrid2_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
-            if(!dxLoadingMode)
+            if (!dxLoadingMode)
             {
                 //loop through columns
                 int cnt = dxBindingList.Count();
@@ -1583,7 +1587,7 @@ namespace LabBilling.Forms
                 for (int i = 0; i < cnt; i++)
                 {
                     var val = dxPointerGrid2[(i + 1).ToString(), e.RowIndex].Value.ToString();
-                    if(!string.IsNullOrEmpty(val))
+                    if (!string.IsNullOrEmpty(val))
                         dxSelected.Add(val);
                 }
 
@@ -1848,7 +1852,7 @@ namespace LabBilling.Forms
                 NotesDisplayTextBox.SelectionFont = new Font(NotesDisplayTextBox.SelectionFont, FontStyle.Regular);
                 NotesDisplayTextBox.AppendText(Environment.NewLine + note.Comment + Environment.NewLine + Environment.NewLine);
             }
-            if(currentAccount.AccountAlert != null)
+            if (currentAccount.AccountAlert != null)
                 noteAlertCheckBox.Checked = currentAccount.AccountAlert.Alert;
         }
 
@@ -2400,7 +2404,7 @@ namespace LabBilling.Forms
             var selectedCell = dxPointerGrid2.CurrentCell;
 
 
-            if(selectedCell.ColumnIndex >= 3)
+            if (selectedCell.ColumnIndex >= 3)
             {
                 DataGridViewComboBoxCell comboBoxCell = (selectedCell as DataGridViewComboBoxCell);
 
@@ -2410,13 +2414,13 @@ namespace LabBilling.Forms
 
         private void dxPointerGrid2_CellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
         {
-            if(e.ColumnIndex != -1 && e.RowIndex != -1 && e.Button == System.Windows.Forms.MouseButtons.Right)
+            if (e.ColumnIndex != -1 && e.RowIndex != -1 && e.Button == System.Windows.Forms.MouseButtons.Right)
             {
                 DataGridViewCell c = (sender as DataGridView)[e.ColumnIndex, e.RowIndex];
                 c.DataGridView.ClearSelection();
                 c.DataGridView.CurrentCell = c;
                 c.Selected = true;
-                
+
                 dxPointerMenuStrip.Show(c.DataGridView, dxPointerGrid2.PointToClient(Cursor.Position));
             }
         }
@@ -2436,7 +2440,7 @@ namespace LabBilling.Forms
 
         private void clearClaimStatusButton_Click(object sender, EventArgs e)
         {
-            if(MessageBox.Show("Clearing the claim status may result in duplicate claim submissions. Ensure the claim has been deleted in the clearing house system.",
+            if (MessageBox.Show("Clearing the claim status may result in duplicate claim submissions. Ensure the claim has been deleted in the clearing house system.",
                 "Potential Duplicate Submission", MessageBoxButtons.OKCancel, MessageBoxIcon.Exclamation) == DialogResult.OK)
             {
                 accountRepository.ClearClaimStatus(currentAccount);
@@ -2461,22 +2465,32 @@ namespace LabBilling.Forms
             accountRepository.SetNoteAlert(currentAccount.AccountNo, noteAlertCheckBox.Checked);
         }
 
-        private void showThirdPartyCheckBox_CheckedChanged(object sender, EventArgs e)
+        private void FilterCharges()
         {
-            Log.Instance.Trace($"Entering");
-            if (showThirdPartyCheckBox.Checked)
+
+            chargesTable.DefaultView.RowFilter = string.Empty;
+
+            if (show3rdPartyRadioButton.Checked)
+                chargesTable.DefaultView.RowFilter = $"{nameof(Chrg.FinancialType)} = 'M'";
+
+            if (showClientRadioButton.Checked)
+                chargesTable.DefaultView.RowFilter = $"{nameof(Chrg.FinancialType)} = 'C'";
+
+            if (showAllChargeRadioButton.Checked)
                 chargesTable.DefaultView.RowFilter = String.Empty;
-            else
-                chargesTable.DefaultView.RowFilter = $"{nameof(Chrg.IsCredited)} = false";
+
+            if (!ShowCreditedChrgCheckBox.Checked)
+            {
+                if (chargesTable.DefaultView.RowFilter == string.Empty)
+                    chargesTable.DefaultView.RowFilter = $"{nameof(Chrg.IsCredited)} = false";
+                else
+                    chargesTable.DefaultView.RowFilter += $"and {nameof(Chrg.IsCredited)} = false";
+            }
         }
 
-        private void showClientBilledCheckBox_CheckedChanged(object sender, EventArgs e)
+        private void show3rdPartyRadioButton_CheckedChanged(object sender, EventArgs e)
         {
-            Log.Instance.Trace($"Entering");
-            if (showClientBilledCheckBox.Checked)
-                chargesTable.DefaultView.RowFilter = String.Empty;
-            else
-                chargesTable.DefaultView.RowFilter = "IsCredited = false";
+            FilterCharges();
         }
     }
 }

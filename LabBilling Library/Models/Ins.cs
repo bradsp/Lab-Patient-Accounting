@@ -5,7 +5,7 @@ namespace LabBilling.Core.Models
 {
     [TableName("ins")]
     [PrimaryKey("rowguid", AutoIncrement = false)]
-    public class Ins : IBaseEntity
+    public sealed class Ins : IBaseEntity
     {
         [Column("account")]
         public string Account { get; set; }

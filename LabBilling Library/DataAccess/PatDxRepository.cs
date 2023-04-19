@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace LabBilling.Core.DataAccess
 {
-    public class PatDxRepository : RepositoryBase<PatDx>
+    public sealed class PatDxRepository : RepositoryBase<PatDx>
     {
         public PatDxRepository(string connection) : base(connection)
         {

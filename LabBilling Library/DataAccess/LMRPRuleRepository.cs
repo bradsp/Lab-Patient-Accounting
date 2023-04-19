@@ -10,7 +10,7 @@ using System.Data;
 
 namespace LabBilling.Core.DataAccess
 {
-    public class LMRPRuleRepository : RepositoryBase<LMRPRule>
+    public sealed class LMRPRuleRepository : RepositoryBase<LMRPRule>
     {
         public LMRPRuleRepository(string connectionString) : base(connectionString)
         {

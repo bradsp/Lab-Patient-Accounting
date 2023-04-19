@@ -7,7 +7,7 @@ using PetaPoco;
 
 namespace LabBilling.Core.DataAccess
 {
-    public class ChrgDetailRepository : RepositoryBase<ChrgDetail>
+    public sealed class ChrgDetailRepository : RepositoryBase<ChrgDetail>
     {
         public ChrgDetailRepository(string connection) : base(connection)
         {

@@ -5,7 +5,7 @@ using PetaPoco;
 namespace LabBilling.Core.Models
 {
     [TableName("vw_cbill_select")]
-    public class InvoiceSelect : IBaseEntity
+    public sealed class InvoiceSelect : IBaseEntity
     {
         [Column("account")]
         public string AccountNo { get; set; }

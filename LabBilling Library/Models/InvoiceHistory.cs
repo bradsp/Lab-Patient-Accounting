@@ -9,7 +9,7 @@ namespace LabBilling.Core.Models
 {
     [TableName("cbill_hist")]
     [PrimaryKey("invoice", AutoIncrement = false)]
-    public class InvoiceHistory : IBaseEntity
+    public sealed class InvoiceHistory : IBaseEntity
     {
 
         [Column("cl_mnem")]

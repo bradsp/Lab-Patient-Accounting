@@ -12,7 +12,7 @@ using LabBilling.Logging;
 
 namespace LabBilling.Core.BusinessLogic
 {
-    public class NotesImport
+    public sealed class NotesImport
     {
         private string _connectionString;
 

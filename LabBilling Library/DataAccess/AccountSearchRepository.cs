@@ -15,7 +15,7 @@ using Org.BouncyCastle.Asn1.X509.Qualified;
 
 namespace LabBilling.Core.DataAccess
 {
-    public class AccountSearchRepository : RepositoryBase<AccountSearch>
+    public sealed class AccountSearchRepository : RepositoryBase<AccountSearch>
     {
         public AccountSearchRepository(string connectionString) : base(connectionString)
         {

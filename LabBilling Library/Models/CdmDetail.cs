@@ -8,31 +8,31 @@ using PetaPoco;
 namespace LabBilling.Core.Models
 {
     [TableName("cpt4")]
-    public class CdmFeeSchedule1 : CdmDetail, ICdmDetail
+    public sealed class CdmFeeSchedule1 : CdmDetail, ICdmDetail
     {
 
     }
 
     [TableName("cpt4_2")]
-    public class CdmFeeSchedule2 : CdmDetail, ICdmDetail
+    public sealed class CdmFeeSchedule2 : CdmDetail, ICdmDetail
     {
 
     }
 
     [TableName("cpt4_3")]
-    public class CdmFeeSchedule3 : CdmDetail, ICdmDetail
+    public sealed class CdmFeeSchedule3 : CdmDetail, ICdmDetail
     {
 
     }
 
     [TableName("cpt4_4")]
-    public class CdmFeeSchedule4 : CdmDetail, ICdmDetail
+    public sealed class CdmFeeSchedule4 : CdmDetail, ICdmDetail
     {
 
     }
 
     [TableName("cpt4_5")]
-    public class CdmFeeSchedule5 : CdmDetail, ICdmDetail
+    public sealed class CdmFeeSchedule5 : CdmDetail, ICdmDetail
     {
 
     }

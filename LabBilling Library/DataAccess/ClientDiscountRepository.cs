@@ -9,7 +9,7 @@ using LabBilling.Logging;
 
 namespace LabBilling.Core.DataAccess
 {
-    public class ClientDiscountRepository : RepositoryBase<ClientDiscount>
+    public sealed class ClientDiscountRepository : RepositoryBase<ClientDiscount>
     {
         public ClientDiscountRepository(string connectionString) : base(connectionString)
         {

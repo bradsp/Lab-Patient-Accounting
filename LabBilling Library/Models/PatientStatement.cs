@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace LabBilling.Core.Models
 {
     [TableName("dbo.patbill_stmt")]
-    public class PatientStatement : IBaseEntity
+    public sealed class PatientStatement : IBaseEntity
     {
         [Column("record_type")]
         public string RecordType { get; set; }

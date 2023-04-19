@@ -9,7 +9,7 @@ namespace LabBilling.Core.Models
 {
     [TableName("icd9desc")]
     [PrimaryKey("id", AutoIncrement = true)]
-    public class DictDx : IBaseEntity
+    public sealed class DictDx : IBaseEntity
     {
         [Column("icd9_num")]
         public string DxCode { get; set; }

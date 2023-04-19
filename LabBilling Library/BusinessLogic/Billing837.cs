@@ -11,7 +11,7 @@ namespace LabBilling.Core
     /// <summary>
     /// Class to generate 837 claim files from a populated ClaimData object
     /// </summary>
-    public class Billing837
+    public sealed class Billing837
     {
 
         public char SegmentTerminator { get; set; } = '~';

@@ -6,7 +6,7 @@ using LabBilling.Logging;
 
 namespace LabBilling.Core.DataAccess
 {
-    public class RevenueCodeRepository : RepositoryBase<RevenueCode>
+    public sealed class RevenueCodeRepository : RepositoryBase<RevenueCode>
     {
         public RevenueCodeRepository(string connection) : base(connection)
         {

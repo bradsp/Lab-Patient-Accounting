@@ -5,7 +5,7 @@ namespace LabBilling.Core.Models
 {
     [TableName("AccountSearchView")]
     [PrimaryKey("account", AutoIncrement = false)]
-    public class AccountSearch : IBaseEntity
+    public sealed class AccountSearch : IBaseEntity
     {
         [Column("account")]
         [ResultColumn]

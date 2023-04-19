@@ -9,7 +9,7 @@ namespace LabBilling.Core.Models
 {
     [TableName("UserProfile")]
     [PrimaryKey("Id", AutoIncrement = true)]
-    public class UserProfile : IBaseEntity
+    public sealed class UserProfile : IBaseEntity
     {
         public int Id { get; set; }
         public string UserName { get; set; }

@@ -9,7 +9,7 @@ using MCL;
 
 namespace LabBilling.Core.DataAccess
 {
-    public class BillingBatchRepository : RepositoryBase<BillingBatch>
+    public sealed class BillingBatchRepository : RepositoryBase<BillingBatch>
     {
         AccountRepository accountRepository;
         PatRepository patRepository;

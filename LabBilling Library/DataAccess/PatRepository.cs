@@ -11,7 +11,7 @@ namespace LabBilling.Core.DataAccess
     /// <summary>
     /// 
     /// </summary>
-    public class PatRepository : RepositoryBase<Pat>
+    public sealed class PatRepository : RepositoryBase<Pat>
     {
         private readonly DictDxRepository dictDxDb;
         private readonly PhyRepository phyRepository;

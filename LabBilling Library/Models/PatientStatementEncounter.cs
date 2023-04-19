@@ -9,7 +9,7 @@ using PetaPoco;
 namespace LabBilling.Core.Models
 {
     [TableName("dbo.patbill_enctr")]
-    public class PatientStatementEncounter : IBaseEntity
+    public sealed class PatientStatementEncounter : IBaseEntity
     {
         [Column("record_type")] 
         public string RecordType { get; set; }

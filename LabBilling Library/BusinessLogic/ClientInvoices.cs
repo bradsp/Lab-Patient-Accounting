@@ -14,7 +14,7 @@ namespace LabBilling.Core.BusinessLogic
     /// <summary>
     /// 
     /// </summary>
-    public class ClientInvoices
+    public sealed class ClientInvoices
     {
         private string _connection;
         private readonly PetaPoco.Database dbConnection;

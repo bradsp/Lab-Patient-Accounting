@@ -9,7 +9,7 @@ using System.IO;
 
 namespace LabBilling.Core.BusinessLogic
 {
-    public class ClaimRulesEngine
+    public sealed class ClaimRulesEngine
     {
         //public static List<MRERule> dbRules = new List<MRERule>()
         //{

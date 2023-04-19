@@ -5,7 +5,7 @@ namespace LabBilling.Core.Models
 {
     [PetaPoco.TableName("patdx")]
     [PrimaryKey("uid", AutoIncrement = true)]
-    public class PatDx : IBaseEntity
+    public sealed class PatDx : IBaseEntity
     {
         [Column("deleted")]
         public bool IsDeleted { get; set; }

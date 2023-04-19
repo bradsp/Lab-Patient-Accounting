@@ -9,7 +9,7 @@ namespace LabBilling.Core.Models
 {
     [TableName("dict_claim_validation_rules")]
     [PrimaryKey("RuleId", AutoIncrement = true)]
-    public class ClaimValidationRule : IBaseEntity
+    public sealed class ClaimValidationRule : IBaseEntity
     {
         public int RuleId { get; set; }
         public string RuleName { get; set; }

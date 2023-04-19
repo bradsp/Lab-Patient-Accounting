@@ -10,7 +10,7 @@ using LabBilling.Core.DataAccess;
 
 namespace LabBilling.Core.BusinessLogic.Validators
 {
-    public class ClaimValidator : AbstractValidator<Account>
+    public sealed class ClaimValidator : AbstractValidator<Account>
     {
         public ClaimValidator()
         {

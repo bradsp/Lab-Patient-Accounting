@@ -12,7 +12,7 @@ namespace LabBilling.Core.Models
     /// This table is in the NLog database
     /// </summary>
     [TableName("Logs")]
-    public class Logs
+    public sealed class Logs
     {
         public int Id { get; set; }
         public DateTime CreatedOn { get; set; }

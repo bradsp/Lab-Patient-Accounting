@@ -8,7 +8,7 @@ using LabBilling.Core.Models;
 
 namespace LabBilling.Core.BusinessLogic.Validators
 {
-    public class InsuranceValidator : AbstractValidator<Ins>
+    public sealed class InsuranceValidator : AbstractValidator<Ins>
     {
         public InsuranceValidator()
         {

@@ -8,7 +8,7 @@ using LabBilling.Core.Models;
 
 namespace LabBilling.Core.BusinessLogic.Validators
 {
-    public class DemographicsValidator : AbstractValidator<Account>
+    public sealed class DemographicsValidator : AbstractValidator<Account>
     {
         public DemographicsValidator()
         {

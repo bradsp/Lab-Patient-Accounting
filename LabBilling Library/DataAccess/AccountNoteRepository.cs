@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace LabBilling.Core.DataAccess
 {
-    public class AccountNoteRepository : RepositoryBase<AccountNote>
+    public sealed class AccountNoteRepository : RepositoryBase<AccountNote>
     {
         public AccountNoteRepository(string connection) : base(connection)
         {

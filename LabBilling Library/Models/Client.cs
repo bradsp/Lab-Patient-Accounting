@@ -6,7 +6,7 @@ namespace LabBilling.Core.Models
 {
     [TableName("client")]
     [PrimaryKey("cli_mnem",AutoIncrement = false)]
-    public class Client : IBaseEntity
+    public sealed class Client : IBaseEntity
     {
 
         [Column("deleted")]

@@ -9,7 +9,7 @@ using LabBilling.Core.DataAccess;
 
 namespace LabBilling.Core.BusinessLogic.Validators
 {
-    public class InterfaceMessageValidator : AbstractValidator<Account>
+    public sealed class InterfaceMessageValidator : AbstractValidator<Account>
     {
         private string connectionString;
         ClientRepository clientRepository;

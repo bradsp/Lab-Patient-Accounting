@@ -6,7 +6,7 @@ using System.Data.SqlClient;
 
 namespace LabBilling.Core.DataAccess
 {
-    public class PatientStatementCernerRepository : RepositoryBase<PatientStatementCerner>
+    public sealed class PatientStatementCernerRepository : RepositoryBase<PatientStatementCerner>
     {
         public PatientStatementCernerRepository(string connectionString) : base (connectionString) { }
 

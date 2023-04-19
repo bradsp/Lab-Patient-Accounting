@@ -6,7 +6,7 @@ using System.Data;
 
 namespace LabBilling.Core.DataAccess
 {
-    public class SystemParametersRepository : RepositoryBase<SysParameter>
+    public sealed class SystemParametersRepository : RepositoryBase<SysParameter>
     {
         public SystemParametersRepository(string connection) : base(connection)
         {

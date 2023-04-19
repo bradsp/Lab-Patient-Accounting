@@ -10,7 +10,7 @@ namespace RFClassLibrary
     /// <summary>
     /// This class allows the created of delimited field text strings.
     /// </summary>
-    public class DelimitedFileLine
+    public sealed class DelimitedFileLine
     {
         /// <summary>
         /// 

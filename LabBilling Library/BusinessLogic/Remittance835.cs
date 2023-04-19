@@ -16,7 +16,7 @@ using System.Xml;
 
 namespace LabBilling.Core.BusinessLogic
 {
-    public class Remittance835
+    public sealed class Remittance835
     {
         public Remittance835(string connString)
         {

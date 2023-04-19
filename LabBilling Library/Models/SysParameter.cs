@@ -6,7 +6,7 @@ namespace LabBilling.Core.Models
 {
     [TableName("system")]
     [PrimaryKey("KeyName", AutoIncrement = false)]
-    public class SysParameter : IBaseEntity
+    public sealed class SysParameter : IBaseEntity
     {
         [Column("key_name")]
         public string key_name { get; set; }

@@ -6,7 +6,7 @@ namespace LabBilling.Core.Models
 {
     [TableName("infce.messages_inbound")]
     [PrimaryKey("systemMsgId", AutoIncrement=true)]
-    public class MessageInbound : IBaseEntity
+    public sealed class MessageInbound : IBaseEntity
     {
 
         [Column("account_cerner")]

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace LabBilling.Core.DataAccess
 {
-    public class GLCodeRepository : RepositoryBase<GLCode>
+    public sealed class GLCodeRepository : RepositoryBase<GLCode>
     {
         public GLCodeRepository(string connection) : base(connection)
         {

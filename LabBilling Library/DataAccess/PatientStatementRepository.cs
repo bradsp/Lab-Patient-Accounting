@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 namespace LabBilling.Core.DataAccess
 {
 
-    public class PatientStatementRepository : RepositoryBase<PatientStatement>
+    public sealed class PatientStatementRepository : RepositoryBase<PatientStatement>
     {
 
         public PatientStatementRepository(string connectionString) : base(connectionString)  

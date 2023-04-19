@@ -10,7 +10,7 @@ using System.CodeDom.Compiler;
 
 namespace LabBilling.Core.DataAccess
 {
-    public class CdmDetailRepository : RepositoryBase<CdmDetail>
+    public sealed class CdmDetailRepository : RepositoryBase<CdmDetail>
     {
         public CdmDetailRepository(string connection) : base(connection)
         {

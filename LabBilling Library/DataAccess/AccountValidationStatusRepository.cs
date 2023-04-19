@@ -10,7 +10,7 @@ using PetaPoco.Core;
 
 namespace LabBilling.Core.DataAccess
 {
-    public class AccountValidationStatusRepository : RepositoryBase<AccountValidationStatus>
+    public sealed class AccountValidationStatusRepository : RepositoryBase<AccountValidationStatus>
     {
 
         public AccountValidationStatusRepository(string connectionString) : base(connectionString)

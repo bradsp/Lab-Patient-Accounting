@@ -6,7 +6,7 @@ namespace LabBilling.Core.Models
 {
     [TableName("dict_acc_validation")]
     [PrimaryKey("rule_id", AutoIncrement = true)]
-    public class DictAccValidation : IBaseEntity
+    public sealed class DictAccValidation : IBaseEntity
     {
         public int rule_id { get; set; } // int, not null
         public string type_check { get; set; } // varchar(50), null
@@ -25,7 +25,7 @@ namespace LabBilling.Core.Models
 
     [TableName("dict_acc_validation_criteria")]
     [PrimaryKey("uid", AutoIncrement = true)]
-    public class DictAccValidationCriterion : IBaseEntity
+    public sealed class DictAccValidationCriterion : IBaseEntity
     {
         public int rule_id { get; set; } // int, not null
         public string fin_code { get; set; } // varchar(10), null

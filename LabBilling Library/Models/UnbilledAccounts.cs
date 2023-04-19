@@ -5,7 +5,7 @@ using PetaPoco;
 namespace LabBilling.Core.Models
 {
     [TableName("vw_cbill_select")]
-    public class UnbilledAccounts
+    public sealed class UnbilledAccounts
     {
 
         [Column("cl_mnem")]

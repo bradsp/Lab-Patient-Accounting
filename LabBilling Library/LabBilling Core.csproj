@@ -277,7 +277,6 @@
     <Compile Include="DataAccess\EmpRepository.cs" />
     <Compile Include="DataAccess\FinRepository.cs" />
     <Compile Include="DataAccess\GLCodeRepository.cs" />
-    <Compile Include="DataAccess\IDBConnection.cs" />
     <Compile Include="DataAccess\InsCompanyRepository.cs" />
     <Compile Include="DataAccess\InsRepository.cs" />
     <Compile Include="DataAccess\IRepository.cs" />
@@ -335,6 +334,7 @@
     <Compile Include="Models\ClaimValidationRule.cs" />
     <Compile Include="Models\Client.cs" />
     <Compile Include="Models\ClientDiscount.cs" />
+    <Compile Include="Models\ClientStatementDetailModel.cs" />
     <Compile Include="Models\ClientType.cs" />
     <Compile Include="Models\DictAccValidation.cs" />
     <Compile Include="Models\DictDx.cs" />
@@ -345,6 +345,8 @@
     <Compile Include="Models\IBaseEntity.cs" />
     <Compile Include="Models\Ins.cs" />
     <Compile Include="Models\InsCompany.cs" />
+    <Compile Include="Models\InvoiceDetailLinesModel.cs" />
+    <Compile Include="Models\InvoiceDetailModel.cs" />
     <Compile Include="Models\PatientDemographic.cs" />
     <Compile Include="Models\InvoiceHistory.cs" />
     <Compile Include="Models\InvoiceModel.cs" />
@@ -373,6 +375,7 @@
     <Compile Include="Models\RevenueCode.cs" />
     <Compile Include="Models\SysParameter.cs" />
     <Compile Include="Models\UnbilledAccounts.cs" />
+    <Compile Include="Models\UnbilledClient.cs" />
     <Compile Include="Models\UserProfile.cs" />
     <Compile Include="Models\WriteOffCode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

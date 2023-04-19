@@ -10,7 +10,7 @@ using RFClassLibrary;
 
 namespace LabBilling.Core.DataAccess
 {
-    public class AccountValidationCriteriaRepository : RepositoryBase<AccountValidationCriteria>
+    public sealed class AccountValidationCriteriaRepository : RepositoryBase<AccountValidationCriteria>
     {
 
         public AccountValidationCriteriaRepository(string connectionString) : base(connectionString)

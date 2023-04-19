@@ -7,7 +7,7 @@ using System.Data;
 
 namespace LabBilling.Core.DataAccess
 {
-    public class ChkRepository : RepositoryBase<Chk>
+    public sealed class ChkRepository : RepositoryBase<Chk>
     {
         public ChkRepository(string connection) : base(connection)
         {

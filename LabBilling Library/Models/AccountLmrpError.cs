@@ -9,7 +9,7 @@ namespace LabBilling.Core.Models
 {
     [TableName("ACC_LMRP")]
     [PrimaryKey("uri", AutoIncrement = true)]
-    public class AccountLmrpError : IBaseEntity
+    public sealed class AccountLmrpError : IBaseEntity
     {
         [Column("account")]
         public string AccountNo { get; set; }

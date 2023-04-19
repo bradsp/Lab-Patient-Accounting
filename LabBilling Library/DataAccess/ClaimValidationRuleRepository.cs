@@ -7,7 +7,7 @@ using LabBilling.Core.BusinessLogic;
 
 namespace LabBilling.Core.DataAccess
 {
-    public class ClaimValidationRuleRepository : RepositoryBase<ClaimValidationRule>
+    public sealed class ClaimValidationRuleRepository : RepositoryBase<ClaimValidationRule>
     {
         public ClaimValidationRuleRepository(string connection) : base(connection)
         {

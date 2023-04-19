@@ -8,7 +8,7 @@ namespace LabBilling.Core.Models
 {
     [TableName("acc")]
     [PrimaryKey("account", AutoIncrement = false)]
-    public class Account : IBaseEntity
+    public sealed class Account : IBaseEntity
     {
         [Column("deleted")]
         public bool IsDeleted { get; set; }
@@ -267,29 +267,49 @@ namespace LabBilling.Core.Models
         [Ignore]
         public AccountAlert AccountAlert { get; set; } = new AccountAlert();
 
-        public enum StatusCode
-        {
-            [Description("NEW")]
-            NEW,
-            [Description("1500")]
-            PROF,
-            [Description("UB")]
-            INST,
-            [Description("VALIDATED")]
-            VALIDATED,
-            [Description("SSI1500")]
-            PROFSUBMITTED,
-            [Description("SSIUB")]
-            INSTSUBMITTED,
-            [Description("CLAIM")]
-            CLAIM,
-            [Description("STMT")]
-            STMT,
-            [Description("PAID_OUT")]
-            PAID_OUT,
-            [Description("CLOSED")]
-            CLOSED
-        };
+        [Ignore]
+        public DateTime LastActivity 
+        { 
+            get
+            {
+                List<DateTime> dates = new List<DateTime>
+                {
+                    mod_date,
+                    Charges.Max(x => x.mod_date),
+                    Pat.mod_date,
+                    Insurances.Max(x => x.mod_date),
+                    Payments.Max(x => x.mod_date),
+                    Notes.Max(x => x.mod_date),
+                    BillingActivities.Max(x => x.mod_date)
+                };
+
+                return dates.Max();
+            } 
+        }
+    }
+
+    public static class StatusCode
+    {
+        public const string New = "NEW";
+
+        public const string ReadyToBill = "RTB";
+
+        public const string Prof = "1500";
+
+        public const string Inst = "UB";
+
+        public const string ProfSubmitted = "SSI1500";
+
+        public const string InstSubmitted = "SSIUB";
+
+        public const string ClaimSubmitted = "CLAIM";
+
+        public const string Statements = "STMT";
+
+        public const string PaidOut = "PAID_OUT";
+
+        public const string Closed = "CLOSED";
+
     }
 
 }

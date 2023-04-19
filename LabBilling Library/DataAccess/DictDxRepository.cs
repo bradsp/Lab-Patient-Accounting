@@ -7,7 +7,7 @@ using System.Data;
 
 namespace LabBilling.Core.DataAccess
 {
-    public class DictDxRepository : RepositoryBase<DictDx>
+    public sealed class DictDxRepository : RepositoryBase<DictDx>
     {
         public DictDxRepository(string connection) : base(connection)
         {

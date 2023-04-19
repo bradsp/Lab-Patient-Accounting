@@ -9,7 +9,7 @@ namespace LabBilling.Core.Models
 {
     [TableName("dict_acc_validation")]
     [PrimaryKey("rule_id", AutoIncrement = true)]
-    public class AccountValidationRule : IBaseEntity
+    public sealed class AccountValidationRule : IBaseEntity
     {
         public int rule_id { get; set; }
         public string type_check { get; set; }
@@ -28,7 +28,7 @@ namespace LabBilling.Core.Models
 
     [TableName("dict_acc_validation_criteria")]
     [PrimaryKey("uid", AutoIncrement = true)]
-    public class AccountValidationCriteria : IBaseEntity
+    public sealed class AccountValidationCriteria : IBaseEntity
     {
         public int rule_id { get; set; }
         public string fin_code { get; set; }

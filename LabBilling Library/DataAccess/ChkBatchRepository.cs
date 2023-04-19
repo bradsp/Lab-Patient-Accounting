@@ -6,7 +6,7 @@ using System.Data;
 
 namespace LabBilling.Core.DataAccess
 {
-    public class ChkBatchRepository : RepositoryBase<ChkBatch>
+    public sealed class ChkBatchRepository : RepositoryBase<ChkBatch>
     {
         public ChkBatchRepository(string connection) : base(connection)
         {

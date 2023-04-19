@@ -9,7 +9,7 @@ namespace LabBilling.Core.Models
 {
     [TableName("acc_validation_status")]
     [PrimaryKey("account", AutoIncrement = false)]
-    public class AccountValidationStatus : IBaseEntity
+    public sealed class AccountValidationStatus : IBaseEntity
     {
 
         public string account { get; set; }

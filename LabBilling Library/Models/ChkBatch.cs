@@ -10,7 +10,7 @@ namespace LabBilling.Core.Models
 {
     [TableName("chk_batch")]
     [PrimaryKey("BatchNo", AutoIncrement = true)]
-    public class ChkBatch : IBaseEntity
+    public sealed class ChkBatch : IBaseEntity
     {
         public int BatchNo { get; set; }
         public string User { get; set; }
