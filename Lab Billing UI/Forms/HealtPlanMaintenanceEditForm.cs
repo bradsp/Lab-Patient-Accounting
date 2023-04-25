@@ -125,6 +125,21 @@ namespace LabBilling.Forms
             IsActiveCheckBox.Checked = !insCompany.IsDeleted;
             citystzipLabel.Text = insCompany.CityStateZip;
 
+            interfaceMappingDataGrid.DataSource = insCompany.Mappings;
+
+            interfaceMappingDataGrid.Columns[nameof(Mapping.mod_date)].Visible = false;
+            interfaceMappingDataGrid.Columns[nameof(Mapping.mod_user)].Visible = false;
+            interfaceMappingDataGrid.Columns[nameof(Mapping.mod_host)].Visible = false;
+            interfaceMappingDataGrid.Columns[nameof(Mapping.mod_prg)].Visible = false;
+            interfaceMappingDataGrid.Columns[nameof(Mapping.rowguid)].Visible = false;
+            interfaceMappingDataGrid.Columns[nameof(Mapping.SystemType)].Visible = false;
+            interfaceMappingDataGrid.Columns[nameof(Mapping.SystemKey)].Visible = false;
+            interfaceMappingDataGrid.Columns[nameof(Mapping.uid)].Visible = false;
+
+            interfaceMappingDataGrid.Columns[nameof(Mapping.InterfaceAlias)].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+
+            interfaceMappingDataGrid.AutoResizeColumns();
+
         }
 
         private void saveButton_Click(object sender, EventArgs e)

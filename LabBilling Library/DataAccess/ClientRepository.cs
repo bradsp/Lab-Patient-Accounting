@@ -7,6 +7,7 @@ using NPOI.XWPF.UserModel;
 using System.Collections.Generic;
 using System.Data;
 using System.Text.RegularExpressions;
+using System.Linq;
 
 namespace LabBilling.Core.DataAccess
 {
@@ -53,6 +54,7 @@ namespace LabBilling.Core.DataAccess
         public Client GetClient(string clientMnem)
         {
             Log.Instance.Debug($"Entering - {clientMnem}");
+            MappingRepository mappingRepository = new MappingRepository(dbConnection);
 
             if (clientMnem == null)
             {
@@ -65,6 +67,7 @@ namespace LabBilling.Core.DataAccess
             {
                 record.Discounts = clientDiscountRepository.GetByClient(clientMnem);
                 record.ClientType = clientTypeRepository.GetByType(record.Type);
+                record.Mappings = mappingRepository.GetMappingsBySendingValue("CLIENT", record.ClientMnem).ToList();
             }
             Log.Instance.Debug(dbConnection.LastSQL);
             return record;
@@ -300,14 +303,20 @@ namespace LabBilling.Core.DataAccess
         public List<UnbilledAccounts> GetUnbilledAccounts(string clientMnem, DateTime thruDate)
         {
             var cmd = Sql.Builder
-                .Append("select vbs.cl_mnem, vbs.account, vbs.trans_date, vbs.pat_name, vbs.fin_code, ")
-                .Append("dbo.GetAccBalance(vbs.account) as 'UnbilledAmount' ")
-                .Append("from vw_cbill_select vbs ")
-                .Append("where cl_mnem = @0 ", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = clientMnem })
-                .Append("and trans_date <= @0 ", new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = thruDate });
+                .Select(new[] 
+                {
+                    "vbs.cl_mnem",
+                    "vbs.account",
+                    "vbs.trans_date",
+                    "vbs.pat_name",
+                    "vbs.fin_code",
+                    "dbo.GetAccClientBalance(vbs.account, vbs.cl_mnem) as 'UnbilledAmount'"
+                })
+                .From("vw_cbill_select vbs")
+                .Where("cl_mnem = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = clientMnem })
+                .Where("trans_date <= @0 ", new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = thruDate });
 
             return dbConnection.Fetch<UnbilledAccounts>(cmd);
-
         }
 
     }

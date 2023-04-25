@@ -1,20 +1,11 @@
-﻿using LabBilling.Logging;
-using LabBilling.Core.Models;
+﻿using LabBilling.Core.Models;
 using System;
 using System.Collections.Generic;
 using RFClassLibrary;
-using LabBilling.Core.BusinessLogic;
-using System.Text;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Reflection;
 using System.Threading.Tasks;
 using System.Data.SqlClient;
 using System.Data;
-using NPOI.HSSF.Record;
-using PetaPoco;
-using NPOI.SS.Formula.UDF;
-using NPOI.SS.Formula.Functions;
 using Log = LabBilling.Logging.Log;
 
 namespace LabBilling.Core.DataAccess
@@ -38,12 +29,13 @@ namespace LabBilling.Core.DataAccess
         private readonly SystemParametersRepository systemParametersRepository;
         private readonly AccountLmrpErrorRepository accountLmrpErrorRepository;
         private readonly CdmRepository cdmRepository;
+        private readonly GlobalBillingCdmRepository globalBillingCdmRepository;
 
         private const string invoicedCdm = "CBILL";
         private const string cbillStatus = "CBILL";
         private const string capStatus = "CAP";
         private const string naStatus = "N/A";
-        private const string newStatus = "NEW";
+        private const string newChrgStatus = "NEW";
 
         public AccountRepository(string connectionString) : base(connectionString)
         {
@@ -64,6 +56,7 @@ namespace LabBilling.Core.DataAccess
             finRepository = new FinRepository(_connection);
             systemParametersRepository = new SystemParametersRepository(_connection);
             cdmRepository = new CdmRepository(_connection);
+            globalBillingCdmRepository = new GlobalBillingCdmRepository(_connection);
         }
 
         public AccountRepository(PetaPoco.Database db) : base(db)
@@ -85,6 +78,7 @@ namespace LabBilling.Core.DataAccess
             finRepository = new FinRepository(db);
             systemParametersRepository = new SystemParametersRepository(db);
             cdmRepository = new CdmRepository(db);
+            globalBillingCdmRepository = new GlobalBillingCdmRepository(db);
         }
 
         public Account GetByAccount(string account, bool demographicsOnly = false)
@@ -111,9 +105,9 @@ namespace LabBilling.Core.DataAccess
 
             if (!demographicsOnly)
             {
-                record.Insurances = insRepository.GetByAccount(account);
                 record.Charges = chrgRepository.GetByAccount(account, true, true, null, false);
                 record.Payments = chkRepository.GetByAccount(account);
+                record.Insurances = insRepository.GetByAccount(account);
                 record.Notes = accountNoteRepository.GetByAccount(account);
                 record.BillingActivities = billingActivityRepository.GetByAccount(account);
                 record.AccountValidationStatus = accountValidationStatusRepository.GetByAccount(account);
@@ -178,7 +172,7 @@ namespace LabBilling.Core.DataAccess
 
             record.TotalBadDebt = record.Payments.Where(x => x.IsCollectionPmt).Sum(x => x.WriteOffAmount);
 
-            record.BillableCharges = record.Charges.Where(x => x.Status != cbillStatus && x.Status != capStatus && x.Status != naStatus && !x.IsCredited).ToList();
+            record.BillableCharges = record.Charges.Where(x => x.Status != cbillStatus && x.Status != capStatus && x.Status != naStatus).ToList();
 
             if (record.FinCode == "CLIENT")
             {
@@ -206,7 +200,7 @@ namespace LabBilling.Core.DataAccess
                 //if (result != DBNull.Value && result != null)
                 //    record.TotalWriteOff = Convert.ToDouble(result);
 
-                record.TotalCharges = record.Charges.Where(x => x.Status != cbillStatus && x.Status != capStatus && x.Status != naStatus && !x.IsCredited)
+                record.TotalCharges = record.Charges.Where(x => x.Status != cbillStatus && x.Status != capStatus && x.Status != naStatus)
                     .Sum(x => x.Quantity * x.NetAmount); 
             }
 
@@ -241,7 +235,7 @@ namespace LabBilling.Core.DataAccess
             if(table.FinCode != "CLIENT")
                 table.PatFullName = table.PatNameDisplay;
 
-            table.Status = newStatus;
+            table.Status = AccountStatus.New;
 
             table.TransactionDate = table.TransactionDate.Date;
 
@@ -271,7 +265,7 @@ namespace LabBilling.Core.DataAccess
         {
             Log.Instance.Trace($"Entering - account {acc.AccountNo}");
             if (string.IsNullOrEmpty(acc.Status))
-                acc.Status = newStatus;
+                acc.Status = AccountStatus.New;
 
             acc.PatFullName = acc.PatNameDisplay;
 
@@ -310,7 +304,7 @@ namespace LabBilling.Core.DataAccess
                             .Select($"{selMaxRecords}status, acc.account, pat_name, ssn, cl_mnem, acc.fin_code, trans_date, ins.plan_nme")
                             .From(_tableName)
                             .InnerJoin("ins").On("ins.account = acc.account and ins_a_b_c = 'A'")
-                            .Where("status = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = "UB" })
+                            .Where("status = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = AccountStatus.Institutional })
                             .OrderBy($"{GetRealColumn(nameof(Account.TransactionDate))}");
                         break;
                     case ClaimType.Professional:
@@ -318,7 +312,7 @@ namespace LabBilling.Core.DataAccess
                             .Select($"{selMaxRecords}status, acc.account, pat_name, ssn, cl_mnem, acc.fin_code, trans_date, ins.plan_nme")
                             .From(_tableName)
                             .InnerJoin("ins").On("ins.account = acc.account and ins_a_b_c = 'A'")
-                            .Where("status = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = "1500" })
+                            .Where("status = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = AccountStatus.Professional })
                             .OrderBy($"{GetRealColumn(nameof(Account.TransactionDate))}");
                         break;
                     default:
@@ -353,7 +347,7 @@ namespace LabBilling.Core.DataAccess
                 throw new ArgumentNullException(nameof(table));
 
             if (string.IsNullOrEmpty(table.Status))
-                table.Status = newStatus;
+                table.Status = AccountStatus.New;
             table.PatFullName = table.PatNameDisplay;
 
             Log.Instance.Trace("Exiting");
@@ -365,7 +359,7 @@ namespace LabBilling.Core.DataAccess
             Log.Instance.Trace($"Entering - account {table.AccountNo}");
             //generate full name field from name parts
             if (string.IsNullOrEmpty(table.Status))
-                table.Status = newStatus;
+                table.Status = AccountStatus.New;
             table.PatFullName = table.PatNameDisplay;
 
             Log.Instance.Trace($"Exiting");
@@ -430,8 +424,10 @@ namespace LabBilling.Core.DataAccess
                 throw new ArgumentNullException(nameof(accountNo));
             if(string.IsNullOrEmpty(status))
                 throw new ArgumentNullException(nameof(status));
+            if (!AccountStatus.IsValid(status))
+                throw new ArgumentOutOfRangeException("Invalid status", nameof(status));
 
-            return dbConnection.Update<Account>("set status = @0, mod_date = @1, mod_user = @2, mod_prg = @3, mod_host = @4 where account = @5",
+            return dbConnection.Update<Account>($"set status = @0, mod_date = @1, mod_user = @2, mod_prg = @3, mod_host = @4 where account = @5",
                 new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = status },
                 new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = DateTime.Now },
                 new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = Environment.UserName.ToString() },
@@ -512,6 +508,7 @@ namespace LabBilling.Core.DataAccess
 
             if (string.IsNullOrEmpty(account))
                 throw new ArgumentNullException(nameof(account));
+
             if(string.IsNullOrEmpty(noteText))
             {
                 //there is no note to add
@@ -843,10 +840,10 @@ namespace LabBilling.Core.DataAccess
             }
 
             //check account status, change to NEW if it is paid out.
-            if (accData.Status == "PAID_OUT")
+            if (accData.Status == AccountStatus.PaidOut)
             {
-                UpdateStatus(accData.AccountNo, newStatus);
-                accData.Status = newStatus;
+                UpdateStatus(accData.AccountNo, AccountStatus.New);
+                accData.Status = AccountStatus.New;
             }
 
             //get the cdm number - if cdm number is not found - abort
@@ -857,26 +854,32 @@ namespace LabBilling.Core.DataAccess
                 throw new CdmNotFoundException("CDM not found.", cdm);
             }
 
-            Fin fin = finRepository.GetFin(accData.FinCode);
-            if (fin == null)
+            Fin fin = finRepository.GetFin(accData.FinCode) ?? throw new ApplicationException($"No fincode on account {accData.AccountNo}");
+            Client chargeClient = accData.Client;
+
+            //check for global billing cdm - if it is, change client to JPG, fin to Y, and get appropriate prices
+            var gb = globalBillingCdmRepository.GetCdm(cdm);
+            if (gb != null)
             {
-                throw new ApplicationException($"No fincode on account {accData.AccountNo}");
+                fin = finRepository.GetFin("Y") ?? throw new ApplicationException($"Fin code Y not found error {accData.AccountNo}");
+                chargeClient = clientRepository.GetClient("JPG");
             }
+
             Chrg chrg = new Chrg();
 
             switch (fin.FinClass)
             {
                 case "M":
-                    chrg.Status = cdmData.MClassType == naStatus ? naStatus : newStatus;
+                    chrg.Status = cdmData.MClassType == naStatus ? naStatus : newChrgStatus;
                     break;
                 case "C":
-                    chrg.Status = cdmData.CClassType == naStatus ? naStatus : newStatus;
+                    chrg.Status = cdmData.CClassType == naStatus ? naStatus : newChrgStatus;
                     break;
                 case "Z":
-                    chrg.Status = cdmData.ZClassType == naStatus ? naStatus : newStatus;
+                    chrg.Status = cdmData.ZClassType == naStatus ? naStatus : newChrgStatus;
                     break;
                 default:
-                    chrg.Status = newStatus;
+                    chrg.Status = newChrgStatus;
                     break;
             }
 
@@ -888,8 +891,8 @@ namespace LabBilling.Core.DataAccess
             chrg.Comment = comment;
             chrg.IsCredited = false;
             chrg.Facility = "";
-            chrg.FinCode = accData.FinCode;
-            chrg.ClientMnem = accData.ClientMnem;
+            chrg.FinCode = fin.FinCode;
+            chrg.ClientMnem = chargeClient.ClientMnem;
             chrg.FinancialType = fin.FinClass;
             chrg.OrderMnem = cdmData.Mnem;
             chrg.LISReqNo = refNumber;
@@ -903,7 +906,7 @@ namespace LabBilling.Core.DataAccess
 
             List<CdmDetail> feeSched = null;
 
-            switch (accData.Client.FeeSchedule)
+            switch (chargeClient.FeeSchedule)
             {
                 case "1":
                     feeSched = cdmData.CdmFeeSchedule1;
@@ -948,8 +951,8 @@ namespace LabBilling.Core.DataAccess
                         break;
                     case "C":
                         //todo: calculate client discount
-                        var cliDiscount = accData.Client.Discounts.Find(c => c.Cdm == cdm);
-                        double discountPercentage = accData.Client.DefaultDiscount;
+                        var cliDiscount = chargeClient.Discounts.Find(c => c.Cdm == cdm);
+                        double discountPercentage = chargeClient.DefaultDiscount;
                         if (cliDiscount != null)
                         {
                             discountPercentage = cliDiscount.PercentDiscount;
@@ -1154,13 +1157,13 @@ namespace LabBilling.Core.DataAccess
                         account.AccountValidationStatus.validation_text = validationResult.ToString();
                         //update account status back to new
                         if(!reprint)
-                            UpdateStatus(account.AccountNo, newStatus);
+                            UpdateStatus(account.AccountNo, AccountStatus.New);
                     }
                     else if (account.LmrpErrors.Count > 0)
                     {
                         isAccountValid = false;
                         if(!reprint)
-                            UpdateStatus(account.AccountNo, newStatus);
+                            UpdateStatus(account.AccountNo, AccountStatus.New);
                     }
                     else
                     {
@@ -1396,10 +1399,10 @@ namespace LabBilling.Core.DataAccess
                 account.Pat.SSIBatch = null;
                 columns.Add(nameof(Pat.SSIBatch));
                 //set account status to "NEW"
-                account.Status = newStatus;
+                account.Status = AccountStatus.New;
 
                 patRepository.Update(account.Pat, columns);
-                UpdateStatus(account.AccountNo, newStatus);
+                UpdateStatus(account.AccountNo, AccountStatus.New);
 
                 AddNote(account.AccountNo, "Claim status cleared.");
             }

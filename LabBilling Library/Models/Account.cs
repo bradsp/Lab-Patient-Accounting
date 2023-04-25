@@ -70,6 +70,7 @@ namespace LabBilling.Core.Models
 
         [Column("status")]
         public string Status { get; set; }
+
         [Column("num_comments")]
         public int CommentCount { get; set; }
 
@@ -142,8 +143,15 @@ namespace LabBilling.Core.Models
         {
             get
             {
-                if (Status == "RTB" || Status == "UB" || Status == "SSIUB" || Status == "1500" || Status == "SSI1500"
-                    || Status == "PAID_OUT" || Status == "CLOSED" || Status == "CLAIM" || Status == "STMT")
+                if (Status == AccountStatus.ReadyToBill || 
+                    Status == AccountStatus.Institutional || 
+                    Status == AccountStatus.InstSubmitted || 
+                    Status == AccountStatus.Professional || 
+                    Status == AccountStatus.ProfSubmitted || 
+                    Status == AccountStatus.PaidOut || 
+                    Status == AccountStatus.Closed || 
+                    Status == AccountStatus.ClaimSubmitted || 
+                    Status == AccountStatus.Statements)
                     return true;
                 else
                     return false;
@@ -152,11 +160,11 @@ namespace LabBilling.Core.Models
             {
                 if (value == true)
                 {
-                    this.Status = "RTB";
+                    this.Status = AccountStatus.ReadyToBill;
                 }
                 else
                 {
-                    this.Status = "NEW";
+                    this.Status = AccountStatus.New;
                 }
             }
         }
@@ -286,30 +294,69 @@ namespace LabBilling.Core.Models
                 return dates.Max();
             } 
         }
+
+        //private Dictionary<AccountStatusCode, string> AccountStatusDictionary = new Dictionary<AccountStatusCode, string>()
+        //{
+        //    { AccountStatusCode.New, "NEW" },
+        //    { AccountStatusCode.ReadyToBill, "RTB" },
+        //    { AccountStatusCode.Professional, "1500" },
+        //    { AccountStatusCode.Institutional, "UB" },
+        //    { AccountStatusCode.ProfSubmitted, "SSI1500" },
+        //    { AccountStatusCode.InstSubmitted, "SSIUB" },
+        //    { AccountStatusCode.ClaimSubmitted, "CLAIM" },
+        //    { AccountStatusCode.Statements, "STMT" },
+        //    { AccountStatusCode.PaidOut, "PAID_OUT" },
+        //    { AccountStatusCode.Closed, "CLOSED" }
+        //};
     }
 
-    public static class StatusCode
+    public static class AccountStatus
     {
-        public const string New = "NEW";
+        public static readonly string New = "NEW";
+        public static readonly string ReadyToBill = "RTB";
+        public static readonly string Professional = "1500";
+        public static readonly string Institutional = "UB";
+        public static readonly string ProfSubmitted = "SSI1500";
+        public static readonly string InstSubmitted = "SSIUB";
+        public static readonly string ClaimSubmitted = "CLAIM";
+        public static readonly string Statements = "STMT";
+        public static readonly string PaidOut = "PAID_OUT";
+        public static readonly string Closed = "CLOSED";
 
-        public const string ReadyToBill = "RTB";
+        public static bool IsValid(string status)
+        {
+            if (status == New) return true;
+            if (status == ReadyToBill) return true;
+            if (status == Professional) return true;
+            if (status == Institutional) return true;
+            if (status == InstSubmitted) return true;
+            if (status == ClaimSubmitted) return true;
+            if (status == Statements) return true;
+            if (status == ProfSubmitted) return true;
+            if (status == PaidOut) return true;
+            if (status == Closed) return true;
 
-        public const string Prof = "1500";
+            return false;
 
-        public const string Inst = "UB";
-
-        public const string ProfSubmitted = "SSI1500";
-
-        public const string InstSubmitted = "SSIUB";
-
-        public const string ClaimSubmitted = "CLAIM";
-
-        public const string Statements = "STMT";
-
-        public const string PaidOut = "PAID_OUT";
-
-        public const string Closed = "CLOSED";
+        }
 
     }
+
+
+
+    //[Flags]
+    //public enum AccountStatus
+    //{
+    //    New = 1,
+    //    ReadyToBill = 2,
+    //    Professional = 4,
+    //    Institutional = 8,
+    //    ProfSubmitted = 16,
+    //    InstSubmitted = 32,
+    //    ClaimSubmitted = 64,
+    //    Statements = 128,
+    //    PaidOut = 256,
+    //    Closed = 512
+    //}
 
 }

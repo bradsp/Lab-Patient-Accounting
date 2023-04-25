@@ -173,6 +173,7 @@ namespace LabBilling.Core.Models
         public List<ClientDiscount> Discounts { get; set; }
         [Ignore]
         public ClientType ClientType { get; set; }
-
+        [Ignore]
+        public List<Mapping> Mappings { get; set; } = new List<Mapping>();
     }
 }

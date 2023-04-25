@@ -112,7 +112,7 @@ namespace LabBilling.Core
                 {
                     try
                     {
-                        var acc = accountRepository.GetByAccount(result.AccountNo, true);
+                        var acc = accountRepository.GetByAccount(result.AccountNo, false);
 
                         fileLine = new FixedFileLine(20);
                         //create header
@@ -134,8 +134,8 @@ namespace LabBilling.Core
                         fileLine.SetField(16, 326, 354, result.Misc);
                         fileLine.SetField(17, 355, 360, result.ServiceDate.NullDateToString("mmddyy"));
                         fileLine.SetField(18, 361, 366, result.PaymentDate.NullDateToString("mmddyy"));
-                        fileLine.SetField(19, 367, 376, result.Balance.ToString());
-                        fileLine.SetField(20, 377, 386, acc.TotalCharges.ToString());
+                        fileLine.SetField(19, 367, 376, result.Balance.ToString("f2"));
+                        fileLine.SetField(20, 377, 386, acc.TotalCharges.ToString("f2"));
 
                         sb.AppendLine(fileLine.OutputLine());
 

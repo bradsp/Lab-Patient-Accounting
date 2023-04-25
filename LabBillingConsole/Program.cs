@@ -15,12 +15,14 @@ using System.Data.Common;
 using PetaPoco.Providers;
 using System.Data;
 using System.Data.SqlClient;
+using System.Reflection;
+using System.ComponentModel;
 
 namespace LabBillingConsole
 {
     internal class Program
     {
-        public const string connectionString = "Server=WTHMCLBILL;Database=LabBillingProd;Trusted_Connection=True;";
+        public const string connectionString = "Server=WTHMCLBILL;Database=LabBillingTest;Trusted_Connection=True;";
 
         static void Main(string[] args)
         {
@@ -49,6 +51,7 @@ namespace LabBillingConsole
             Console.WriteLine("8) Regenerate Claim Batch");
             Console.WriteLine("9) Fix Drug Screen Charges");
             Console.WriteLine("10) Test Delimited File Line");
+            Console.WriteLine("11) Application Parameters Test");
             Console.WriteLine("X) Exit");
             Console.Write("\r\nSelect an option: ");
 
@@ -84,6 +87,9 @@ namespace LabBillingConsole
                 case "10":
                     TestDelimitedFileLine();
                     return false;
+                case "11":
+                    ApplicationParametersTest();
+                    return false;
                 case "X":
                     return false;
                 case "x":
@@ -91,6 +97,27 @@ namespace LabBillingConsole
                 default:
                     return true;
             }
+        }
+
+        public static void ApplicationParametersTest()
+        {
+            PetaPoco.Database dbConnection = new Database(connectionString, new CustomSqlDatabaseProvider());
+            
+            SystemParametersRepository systemParametersRepository = new SystemParametersRepository(dbConnection);
+
+            ApplicationParameters parms = new ApplicationParameters();
+
+            systemParametersRepository.LoadParameters(parms);
+
+            int s = 1;
+
+            var categoryInfo = typeof(ApplicationParameters).GetProperty(nameof(ApplicationParameters.NewParamatertest)).GetCustomAttribute<CategoryAttribute>();
+            var descriptionInfo = typeof(ApplicationParameters).GetProperty(nameof(ApplicationParameters.NewParamatertest)).GetCustomAttribute<DescriptionAttribute>();
+            var category = categoryInfo.Category;
+            var description = descriptionInfo.Description;
+
+            systemParametersRepository.SaveParameter(nameof(ApplicationParameters.NewParamatertest), "test value", category, description);
+
         }
 
         public static void TestDelimitedFileLine()

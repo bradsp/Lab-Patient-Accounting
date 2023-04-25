@@ -73,7 +73,7 @@ namespace LabBilling.Core.BusinessLogic.Validators
                     .When(a => a.Charges != null);
 
                 RuleFor(a => a)
-                    .Must(MatchChargeServiceDateAndAccountTransDate).WithMessage("Account DOS does not match charge service date.");
+                    .Must(MatchChargeServiceDateAndAccountTransDate).WithMessage("Account DOS does not match charge service date.");                    
 
                 //todo: rule - each diagnosis must be used in a dx Pointer.                
 
@@ -332,7 +332,7 @@ namespace LabBilling.Core.BusinessLogic.Validators
 
         private bool MatchChargeServiceDateAndAccountTransDate(Account account)
         {
-            foreach(var chrg in account.Charges.Where(x => x.IsCredited == false))
+            foreach(var chrg in account.Charges.Where(x => x.IsCredited == false && x.CDMCode != "CBILL"))
             {
                 if(((DateTime)chrg.ServiceDate).Date != account.TransactionDate.Date && !chrg.IsCredited)
                 {

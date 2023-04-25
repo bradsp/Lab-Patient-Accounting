@@ -7,10 +7,15 @@ namespace LabBilling.Core.Models
     [PrimaryKey("uid",AutoIncrement = true)]
     public sealed class Mapping :IBaseEntity
     {
-        public string return_value	{ get; set; }
-        public string return_value_type { get; set; }
-        public string sending_system { get; set; }
-        public string sending_value { get; set; }
+        [Column("return_value")]
+        public string SystemKey	{ get; set; }
+        [Column("return_value_type")]
+        public string SystemType { get; set; }
+        [Column("sending_system")]
+        public string InterfaceName { get; set; }
+        [Column("sending_value")]        
+        public string InterfaceAlias { get; set; }
+        [Column("uid")]
         public int uid  { get; set; }
 
         public DateTime mod_date { get; set; }

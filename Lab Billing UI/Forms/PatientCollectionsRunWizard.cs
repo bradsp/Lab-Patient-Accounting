@@ -49,6 +49,9 @@ namespace LabBilling.Forms
                 await patientBilling.SendToCollections();
 
                 //patientBilling.ProgressIncementedEvent -= PatientBilling_ProgressIncementedEvent;
+
+                compileStmtsStartButton.Enabled = true;
+
             }
             catch(ApplicationException apex)
             {
@@ -127,6 +130,8 @@ namespace LabBilling.Forms
                 compileStatementsProgressBar.Style = ProgressBarStyle.Continuous;
                 compileStatementsProgressBar.Value = 100;
                 compileStatementsProgressBar.Maximum = 100;
+
+                createStmtFileStartButton.Enabled = true;
             }
             catch(ArgumentException argex)
             {
@@ -178,14 +183,15 @@ namespace LabBilling.Forms
             {
                 bannerLabel.Text = $"Batch {batchNo} has already been run.";
                 bannerLabel.ForeColor = Color.Red;
+                sendToCollectionsStartButton.Enabled = false;
             }
             else
             {
                 bannerLabel.Visible = false;
+                sendToCollectionsStartButton.Enabled = true;
             }
 
             compileStmtsStartButton.Enabled = false;
-            sendToCollectionsStartButton.Enabled = false;
             createStmtFileStartButton.Enabled = false;
            
         }

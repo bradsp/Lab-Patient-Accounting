@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MathNet.Numerics.RootFinding;
 using PetaPoco;
 
 namespace LabBilling.Core.Models
@@ -100,7 +101,8 @@ namespace LabBilling.Core.Models
         [ResultColumn]
         public string mod_host { get; set; }
 
-
+        [Ignore]
+        public List<Mapping> Mappings { get; set; } = new List<Mapping>();   
 
     }
 }

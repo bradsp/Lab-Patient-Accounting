@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using PetaPoco;
 
 namespace LabBilling.Core.Models

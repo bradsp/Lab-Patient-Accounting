@@ -277,6 +277,7 @@
     <Compile Include="DataAccess\EmpRepository.cs" />
     <Compile Include="DataAccess\FinRepository.cs" />
     <Compile Include="DataAccess\GLCodeRepository.cs" />
+    <Compile Include="DataAccess\GlobalBillingCdmRepository.cs" />
     <Compile Include="DataAccess\InsCompanyRepository.cs" />
     <Compile Include="DataAccess\InsRepository.cs" />
     <Compile Include="DataAccess\IRepository.cs" />
@@ -342,6 +343,7 @@
     <Compile Include="Models\Emp.cs" />
     <Compile Include="Models\Fin.cs" />
     <Compile Include="Models\GLCode.cs" />
+    <Compile Include="Models\GlobalBillingCdm.cs" />
     <Compile Include="Models\IBaseEntity.cs" />
     <Compile Include="Models\Ins.cs" />
     <Compile Include="Models\InsCompany.cs" />

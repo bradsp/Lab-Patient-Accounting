@@ -1108,7 +1108,8 @@ namespace LabBilling.Forms
             ChargesDataGrid.BackgroundColor = Color.AntiqueWhite;
             ChrgDetailDataGrid.BackgroundColor = Color.AntiqueWhite;
 
-            //chargeBalRichTextbox.Text = "3rd Party Patient Balance\n";
+            
+            chargeBalRichTextbox.Text = "";
             chargeBalRichTextbox.SelectionFont = new Font(chargeBalRichTextbox.Font.FontFamily, 10, FontStyle.Bold);
             chargeBalRichTextbox.SelectedText = "3rd Party Patient Balance\n";
 

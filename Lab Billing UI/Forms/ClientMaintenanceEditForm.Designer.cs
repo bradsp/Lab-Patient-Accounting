@@ -92,6 +92,8 @@
             this.label16 = new System.Windows.Forms.Label();
             this.billMethodComboBox = new System.Windows.Forms.ComboBox();
             this.activeCheckBox = new System.Windows.Forms.CheckBox();
+            this.tabInterface = new System.Windows.Forms.TabPage();
+            this.interfaceMappingDataGrid = new System.Windows.Forms.DataGridView();
             this.tabControl1.SuspendLayout();
             this.tabClientPreferences.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numDefaultDiscount)).BeginInit();
@@ -99,6 +101,8 @@
             this.tabComment.SuspendLayout();
             this.tabDiscounts.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.clientDiscountDataGrid)).BeginInit();
+            this.tabInterface.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.interfaceMappingDataGrid)).BeginInit();
             this.SuspendLayout();
             // 
             // label5
@@ -131,6 +135,7 @@
             this.tabControl1.Controls.Add(this.tabClientMRO);
             this.tabControl1.Controls.Add(this.tabComment);
             this.tabControl1.Controls.Add(this.tabDiscounts);
+            this.tabControl1.Controls.Add(this.tabInterface);
             this.tabControl1.Location = new System.Drawing.Point(36, 434);
             this.tabControl1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.tabControl1.Name = "tabControl1";
@@ -738,6 +743,26 @@
             this.activeCheckBox.Text = "Active";
             this.activeCheckBox.UseVisualStyleBackColor = true;
             // 
+            // tabInterface
+            // 
+            this.tabInterface.Controls.Add(this.interfaceMappingDataGrid);
+            this.tabInterface.Location = new System.Drawing.Point(4, 22);
+            this.tabInterface.Name = "tabInterface";
+            this.tabInterface.Padding = new System.Windows.Forms.Padding(3);
+            this.tabInterface.Size = new System.Drawing.Size(577, 149);
+            this.tabInterface.TabIndex = 4;
+            this.tabInterface.Text = "Interface";
+            this.tabInterface.UseVisualStyleBackColor = true;
+            // 
+            // interfaceMappingDataGrid
+            // 
+            this.interfaceMappingDataGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.interfaceMappingDataGrid.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.interfaceMappingDataGrid.Location = new System.Drawing.Point(3, 3);
+            this.interfaceMappingDataGrid.Name = "interfaceMappingDataGrid";
+            this.interfaceMappingDataGrid.Size = new System.Drawing.Size(571, 143);
+            this.interfaceMappingDataGrid.TabIndex = 0;
+            // 
             // ClientMaintenanceEditForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -794,6 +819,8 @@
             this.tabComment.PerformLayout();
             this.tabDiscounts.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.clientDiscountDataGrid)).EndInit();
+            this.tabInterface.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.interfaceMappingDataGrid)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -865,5 +892,7 @@
         private System.Windows.Forms.Label label16;
         private System.Windows.Forms.ComboBox billMethodComboBox;
         private System.Windows.Forms.CheckBox activeCheckBox;
+        private System.Windows.Forms.TabPage tabInterface;
+        private System.Windows.Forms.DataGridView interfaceMappingDataGrid;
     }
 }

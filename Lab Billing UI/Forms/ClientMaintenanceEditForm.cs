@@ -136,6 +136,18 @@ namespace LabBilling.Forms
             clientDiscountDataGrid.Columns[nameof(ClientDiscount.Price)].DefaultCellStyle.Format = "N2";
             clientDiscountDataGrid.Columns[nameof(ClientDiscount.PercentDiscount)].DefaultCellStyle.Format = "N2";
 
+            interfaceMappingDataGrid.DataSource = client.Mappings;
+
+            interfaceMappingDataGrid.SetColumnsVisibility(false);
+
+            interfaceMappingDataGrid.Columns[nameof(Mapping.InterfaceName)].Visible = true;
+            interfaceMappingDataGrid.Columns[nameof(Mapping.InterfaceAlias)].Visible = true;
+
+            interfaceMappingDataGrid.Columns[nameof(Mapping.InterfaceAlias)].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+
+            interfaceMappingDataGrid.AutoResizeColumns();
+
+
             tbClientMnem.ReadOnly = true;
         }
 

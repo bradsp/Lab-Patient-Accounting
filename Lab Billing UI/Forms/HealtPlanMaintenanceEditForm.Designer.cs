@@ -69,6 +69,9 @@
             this.IsActiveCheckBox = new System.Windows.Forms.CheckBox();
             this.citystzipLabel = new System.Windows.Forms.Label();
             this.isGenericCheckBox = new System.Windows.Forms.CheckBox();
+            this.interfaceMappingDataGrid = new System.Windows.Forms.DataGridView();
+            this.metroLabel1 = new MetroFramework.Controls.MetroLabel();
+            ((System.ComponentModel.ISupportInitialize)(this.interfaceMappingDataGrid)).BeginInit();
             this.SuspendLayout();
             // 
             // planZipCodeLabel
@@ -339,7 +342,7 @@
             // billAsJmcghCheckBox
             // 
             this.billAsJmcghCheckBox.AutoSize = true;
-            this.billAsJmcghCheckBox.Location = new System.Drawing.Point(431, 274);
+            this.billAsJmcghCheckBox.Location = new System.Drawing.Point(593, 161);
             this.billAsJmcghCheckBox.Name = "billAsJmcghCheckBox";
             this.billAsJmcghCheckBox.Size = new System.Drawing.Size(93, 17);
             this.billAsJmcghCheckBox.TabIndex = 58;
@@ -348,7 +351,7 @@
             // allowOutpatientBillingCheckBox
             // 
             this.allowOutpatientBillingCheckBox.AutoSize = true;
-            this.allowOutpatientBillingCheckBox.Location = new System.Drawing.Point(431, 251);
+            this.allowOutpatientBillingCheckBox.Location = new System.Drawing.Point(593, 138);
             this.allowOutpatientBillingCheckBox.Name = "allowOutpatientBillingCheckBox";
             this.allowOutpatientBillingCheckBox.Size = new System.Drawing.Size(133, 17);
             this.allowOutpatientBillingCheckBox.TabIndex = 57;
@@ -357,7 +360,7 @@
             // isMedicareHmoCheckBox
             // 
             this.isMedicareHmoCheckBox.AutoSize = true;
-            this.isMedicareHmoCheckBox.Location = new System.Drawing.Point(431, 228);
+            this.isMedicareHmoCheckBox.Location = new System.Drawing.Point(593, 115);
             this.isMedicareHmoCheckBox.Name = "isMedicareHmoCheckBox";
             this.isMedicareHmoCheckBox.Size = new System.Drawing.Size(109, 17);
             this.isMedicareHmoCheckBox.TabIndex = 56;
@@ -370,7 +373,7 @@
             this.insuranceTypeComboBox.Items.AddRange(new object[] {
             "Institutional",
             "Professional"});
-            this.insuranceTypeComboBox.Location = new System.Drawing.Point(525, 354);
+            this.insuranceTypeComboBox.Location = new System.Drawing.Point(525, 328);
             this.insuranceTypeComboBox.Name = "insuranceTypeComboBox";
             this.insuranceTypeComboBox.Size = new System.Drawing.Size(209, 29);
             this.insuranceTypeComboBox.TabIndex = 55;
@@ -380,7 +383,7 @@
             // 
             this.finClassComboBox.FormattingEnabled = true;
             this.finClassComboBox.ItemHeight = 23;
-            this.finClassComboBox.Location = new System.Drawing.Point(159, 354);
+            this.finClassComboBox.Location = new System.Drawing.Point(159, 328);
             this.finClassComboBox.Name = "finClassComboBox";
             this.finClassComboBox.Size = new System.Drawing.Size(92, 29);
             this.finClassComboBox.TabIndex = 41;
@@ -391,7 +394,7 @@
             // 
             this.finCodeComboBox.FormattingEnabled = true;
             this.finCodeComboBox.ItemHeight = 23;
-            this.finCodeComboBox.Location = new System.Drawing.Point(12, 354);
+            this.finCodeComboBox.Location = new System.Drawing.Point(12, 328);
             this.finCodeComboBox.Name = "finCodeComboBox";
             this.finCodeComboBox.Size = new System.Drawing.Size(141, 29);
             this.finCodeComboBox.TabIndex = 39;
@@ -400,7 +403,7 @@
             // insuranceTypeLabel
             // 
             this.insuranceTypeLabel.AutoSize = true;
-            this.insuranceTypeLabel.Location = new System.Drawing.Point(525, 329);
+            this.insuranceTypeLabel.Location = new System.Drawing.Point(525, 303);
             this.insuranceTypeLabel.Name = "insuranceTypeLabel";
             this.insuranceTypeLabel.Size = new System.Drawing.Size(94, 19);
             this.insuranceTypeLabel.TabIndex = 54;
@@ -421,7 +424,7 @@
             this.nThrivePayerNoTextBox.CustomButton.UseSelectable = true;
             this.nThrivePayerNoTextBox.CustomButton.Visible = false;
             this.nThrivePayerNoTextBox.Lines = new string[0];
-            this.nThrivePayerNoTextBox.Location = new System.Drawing.Point(593, 425);
+            this.nThrivePayerNoTextBox.Location = new System.Drawing.Point(593, 399);
             this.nThrivePayerNoTextBox.MaxLength = 32767;
             this.nThrivePayerNoTextBox.Name = "nThrivePayerNoTextBox";
             this.nThrivePayerNoTextBox.PasswordChar = '\0';
@@ -439,7 +442,7 @@
             // nthrivePayerNoLabel
             // 
             this.nthrivePayerNoLabel.AutoSize = true;
-            this.nthrivePayerNoLabel.Location = new System.Drawing.Point(593, 403);
+            this.nthrivePayerNoLabel.Location = new System.Drawing.Point(593, 377);
             this.nthrivePayerNoLabel.Name = "nthrivePayerNoLabel";
             this.nthrivePayerNoLabel.Size = new System.Drawing.Size(112, 19);
             this.nthrivePayerNoLabel.TabIndex = 52;
@@ -460,7 +463,7 @@
             this.payorCodeTextBox.CustomButton.UseSelectable = true;
             this.payorCodeTextBox.CustomButton.Visible = false;
             this.payorCodeTextBox.Lines = new string[0];
-            this.payorCodeTextBox.Location = new System.Drawing.Point(449, 425);
+            this.payorCodeTextBox.Location = new System.Drawing.Point(449, 399);
             this.payorCodeTextBox.MaxLength = 32767;
             this.payorCodeTextBox.Name = "payorCodeTextBox";
             this.payorCodeTextBox.PasswordChar = '\0';
@@ -478,7 +481,7 @@
             // payorCodeLabel
             // 
             this.payorCodeLabel.AutoSize = true;
-            this.payorCodeLabel.Location = new System.Drawing.Point(449, 403);
+            this.payorCodeLabel.Location = new System.Drawing.Point(449, 377);
             this.payorCodeLabel.Name = "payorCodeLabel";
             this.payorCodeLabel.Size = new System.Drawing.Size(78, 19);
             this.payorCodeLabel.TabIndex = 50;
@@ -499,7 +502,7 @@
             this.payerNoTextBox.CustomButton.UseSelectable = true;
             this.payerNoTextBox.CustomButton.Visible = false;
             this.payerNoTextBox.Lines = new string[0];
-            this.payerNoTextBox.Location = new System.Drawing.Point(304, 425);
+            this.payerNoTextBox.Location = new System.Drawing.Point(304, 399);
             this.payerNoTextBox.MaxLength = 32767;
             this.payerNoTextBox.Name = "payerNoTextBox";
             this.payerNoTextBox.PasswordChar = '\0';
@@ -517,7 +520,7 @@
             // payerNoLabel
             // 
             this.payerNoLabel.AutoSize = true;
-            this.payerNoLabel.Location = new System.Drawing.Point(303, 403);
+            this.payerNoLabel.Location = new System.Drawing.Point(303, 377);
             this.payerNoLabel.Name = "payerNoLabel";
             this.payerNoLabel.Size = new System.Drawing.Size(63, 19);
             this.payerNoLabel.TabIndex = 48;
@@ -538,7 +541,7 @@
             this.providerNoTextBox.CustomButton.UseSelectable = true;
             this.providerNoTextBox.CustomButton.Visible = false;
             this.providerNoTextBox.Lines = new string[0];
-            this.providerNoTextBox.Location = new System.Drawing.Point(159, 425);
+            this.providerNoTextBox.Location = new System.Drawing.Point(159, 399);
             this.providerNoTextBox.MaxLength = 32767;
             this.providerNoTextBox.Name = "providerNoTextBox";
             this.providerNoTextBox.PasswordChar = '\0';
@@ -556,7 +559,7 @@
             // providerNoLabel
             // 
             this.providerNoLabel.AutoSize = true;
-            this.providerNoLabel.Location = new System.Drawing.Point(159, 403);
+            this.providerNoLabel.Location = new System.Drawing.Point(159, 377);
             this.providerNoLabel.Name = "providerNoLabel";
             this.providerNoLabel.Size = new System.Drawing.Size(81, 19);
             this.providerNoLabel.TabIndex = 46;
@@ -577,7 +580,7 @@
             this.providerNoQualifierTextBox.CustomButton.UseSelectable = true;
             this.providerNoQualifierTextBox.CustomButton.Visible = false;
             this.providerNoQualifierTextBox.Lines = new string[0];
-            this.providerNoQualifierTextBox.Location = new System.Drawing.Point(13, 425);
+            this.providerNoQualifierTextBox.Location = new System.Drawing.Point(13, 399);
             this.providerNoQualifierTextBox.MaxLength = 32767;
             this.providerNoQualifierTextBox.Name = "providerNoQualifierTextBox";
             this.providerNoQualifierTextBox.PasswordChar = '\0';
@@ -595,7 +598,7 @@
             // finClassLabel
             // 
             this.finClassLabel.AutoSize = true;
-            this.finClassLabel.Location = new System.Drawing.Point(159, 329);
+            this.finClassLabel.Location = new System.Drawing.Point(159, 303);
             this.finClassLabel.Name = "finClassLabel";
             this.finClassLabel.Size = new System.Drawing.Size(92, 19);
             this.finClassLabel.TabIndex = 40;
@@ -605,7 +608,7 @@
             // providerNoQualifierLabel
             // 
             this.providerNoQualifierLabel.AutoSize = true;
-            this.providerNoQualifierLabel.Location = new System.Drawing.Point(12, 403);
+            this.providerNoQualifierLabel.Location = new System.Drawing.Point(12, 377);
             this.providerNoQualifierLabel.Name = "providerNoQualifierLabel";
             this.providerNoQualifierLabel.Size = new System.Drawing.Size(135, 19);
             this.providerNoQualifierLabel.TabIndex = 44;
@@ -614,7 +617,7 @@
             // finCodeLabel
             // 
             this.finCodeLabel.AutoSize = true;
-            this.finCodeLabel.Location = new System.Drawing.Point(12, 329);
+            this.finCodeLabel.Location = new System.Drawing.Point(12, 303);
             this.finCodeLabel.Name = "finCodeLabel";
             this.finCodeLabel.Size = new System.Drawing.Size(95, 19);
             this.finCodeLabel.TabIndex = 38;
@@ -623,7 +626,7 @@
             // claimTypeLabel
             // 
             this.claimTypeLabel.AutoSize = true;
-            this.claimTypeLabel.Location = new System.Drawing.Point(257, 332);
+            this.claimTypeLabel.Location = new System.Drawing.Point(257, 303);
             this.claimTypeLabel.Name = "claimTypeLabel";
             this.claimTypeLabel.Size = new System.Drawing.Size(74, 19);
             this.claimTypeLabel.TabIndex = 42;
@@ -633,7 +636,7 @@
             // 
             this.claimTypeComboBox.FormattingEnabled = true;
             this.claimTypeComboBox.ItemHeight = 23;
-            this.claimTypeComboBox.Location = new System.Drawing.Point(257, 354);
+            this.claimTypeComboBox.Location = new System.Drawing.Point(257, 328);
             this.claimTypeComboBox.Name = "claimTypeComboBox";
             this.claimTypeComboBox.Size = new System.Drawing.Size(262, 29);
             this.claimTypeComboBox.TabIndex = 43;
@@ -642,7 +645,7 @@
             // commentsLabel
             // 
             this.commentsLabel.AutoSize = true;
-            this.commentsLabel.Location = new System.Drawing.Point(13, 481);
+            this.commentsLabel.Location = new System.Drawing.Point(13, 431);
             this.commentsLabel.Name = "commentsLabel";
             this.commentsLabel.Size = new System.Drawing.Size(73, 19);
             this.commentsLabel.TabIndex = 59;
@@ -654,7 +657,7 @@
             // 
             // 
             this.commentsTextBox.CustomButton.Image = null;
-            this.commentsTextBox.CustomButton.Location = new System.Drawing.Point(618, 2);
+            this.commentsTextBox.CustomButton.Location = new System.Drawing.Point(621, 2);
             this.commentsTextBox.CustomButton.Name = "";
             this.commentsTextBox.CustomButton.Size = new System.Drawing.Size(97, 97);
             this.commentsTextBox.CustomButton.Style = MetroFramework.MetroColorStyle.Blue;
@@ -663,7 +666,7 @@
             this.commentsTextBox.CustomButton.UseSelectable = true;
             this.commentsTextBox.CustomButton.Visible = false;
             this.commentsTextBox.Lines = new string[0];
-            this.commentsTextBox.Location = new System.Drawing.Point(13, 503);
+            this.commentsTextBox.Location = new System.Drawing.Point(13, 453);
             this.commentsTextBox.MaxLength = 32767;
             this.commentsTextBox.Multiline = true;
             this.commentsTextBox.Name = "commentsTextBox";
@@ -673,7 +676,7 @@
             this.commentsTextBox.SelectionLength = 0;
             this.commentsTextBox.SelectionStart = 0;
             this.commentsTextBox.ShortcutsEnabled = true;
-            this.commentsTextBox.Size = new System.Drawing.Size(718, 102);
+            this.commentsTextBox.Size = new System.Drawing.Size(377, 86);
             this.commentsTextBox.TabIndex = 60;
             this.commentsTextBox.UseSelectable = true;
             this.commentsTextBox.WaterMarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
@@ -702,7 +705,7 @@
             // IsActiveCheckBox
             // 
             this.IsActiveCheckBox.AutoSize = true;
-            this.IsActiveCheckBox.Location = new System.Drawing.Point(675, 92);
+            this.IsActiveCheckBox.Location = new System.Drawing.Point(593, 92);
             this.IsActiveCheckBox.Name = "IsActiveCheckBox";
             this.IsActiveCheckBox.Size = new System.Drawing.Size(56, 17);
             this.IsActiveCheckBox.TabIndex = 63;
@@ -712,7 +715,7 @@
             // citystzipLabel
             // 
             this.citystzipLabel.AutoSize = true;
-            this.citystzipLabel.Location = new System.Drawing.Point(409, 184);
+            this.citystzipLabel.Location = new System.Drawing.Point(378, 212);
             this.citystzipLabel.Name = "citystzipLabel";
             this.citystzipLabel.Size = new System.Drawing.Size(94, 13);
             this.citystzipLabel.TabIndex = 64;
@@ -721,21 +724,41 @@
             // isGenericCheckBox
             // 
             this.isGenericCheckBox.AutoSize = true;
-            this.isGenericCheckBox.Location = new System.Drawing.Point(431, 297);
+            this.isGenericCheckBox.Location = new System.Drawing.Point(593, 184);
             this.isGenericCheckBox.Name = "isGenericCheckBox";
             this.isGenericCheckBox.Size = new System.Drawing.Size(104, 17);
             this.isGenericCheckBox.TabIndex = 58;
             this.isGenericCheckBox.Text = "Is Generic Payor";
             // 
+            // interfaceMappingDataGrid
+            // 
+            this.interfaceMappingDataGrid.BackgroundColor = System.Drawing.Color.White;
+            this.interfaceMappingDataGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.interfaceMappingDataGrid.Location = new System.Drawing.Point(396, 453);
+            this.interfaceMappingDataGrid.Name = "interfaceMappingDataGrid";
+            this.interfaceMappingDataGrid.Size = new System.Drawing.Size(338, 86);
+            this.interfaceMappingDataGrid.TabIndex = 65;
+            // 
+            // metroLabel1
+            // 
+            this.metroLabel1.AutoSize = true;
+            this.metroLabel1.Location = new System.Drawing.Point(397, 431);
+            this.metroLabel1.Name = "metroLabel1";
+            this.metroLabel1.Size = new System.Drawing.Size(116, 19);
+            this.metroLabel1.TabIndex = 59;
+            this.metroLabel1.Text = "Interface Mapping";
+            // 
             // HealthPlanMaintenanceEditForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(754, 628);
+            this.ClientSize = new System.Drawing.Size(752, 578);
+            this.Controls.Add(this.interfaceMappingDataGrid);
             this.Controls.Add(this.citystzipLabel);
             this.Controls.Add(this.IsActiveCheckBox);
             this.Controls.Add(this.cancelButton);
             this.Controls.Add(this.saveButton);
+            this.Controls.Add(this.metroLabel1);
             this.Controls.Add(this.commentsLabel);
             this.Controls.Add(this.commentsTextBox);
             this.Controls.Add(this.isGenericCheckBox);
@@ -776,6 +799,7 @@
             this.Name = "HealthPlanMaintenanceEditForm";
             this.Text = "Edit Health Plan";
             this.Load += new System.EventHandler(this.HealtPlanMaintenaceEditForm_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.interfaceMappingDataGrid)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -824,5 +848,7 @@
         private System.Windows.Forms.CheckBox IsActiveCheckBox;
         private System.Windows.Forms.Label citystzipLabel;
         private System.Windows.Forms.CheckBox isGenericCheckBox;
+        private System.Windows.Forms.DataGridView interfaceMappingDataGrid;
+        private MetroFramework.Controls.MetroLabel metroLabel1;
     }
 }

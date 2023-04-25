@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using LabBilling.Logging;
 using LabBilling.Core.Models;
 using System.Data.SqlClient;
@@ -27,7 +24,7 @@ namespace LabBilling.Core.DataAccess
             Log.Instance.Debug($"Entering");
 
             string sql = null;
-            sql = $"select DISTINCT return_value_type from {_tableName}";
+            sql = $"select DISTINCT {GetRealColumn(nameof(Mapping.SystemType))} from {_tableName}";
 
             var queryResult = dbConnection.Fetch<string>(sql);
 
@@ -39,7 +36,7 @@ namespace LabBilling.Core.DataAccess
             Log.Instance.Debug($"Entering");
 
             string sql = null;
-            sql = $"select DISTINCT sending_system from {_tableName}";
+            sql = $"select DISTINCT {GetRealColumn(nameof(Mapping.InterfaceName))} from {_tableName}";
 
             var queryResult = dbConnection.Fetch<string>(sql);
 
@@ -52,8 +49,25 @@ namespace LabBilling.Core.DataAccess
             Log.Instance.Trace("Entering");
 
             var sql = PetaPoco.Sql.Builder
-                .Where("return_value_type = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = codeSet })
-                .Where("sending_system = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = sendingSystem });
+                .Where($"{GetRealColumn(nameof(Mapping.SystemType))} = @0", 
+                    new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = codeSet })
+                .Where($"{GetRealColumn(nameof(Mapping.InterfaceName))} = @0", 
+                    new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = sendingSystem });
+
+            var records = dbConnection.Fetch<Mapping>(sql);
+
+            return records;
+        }
+
+        public IEnumerable<Mapping> GetMappingsBySendingValue(string codeSet, string sendingValue)
+        {
+            Log.Instance.Trace("Entering");
+
+            var sql = PetaPoco.Sql.Builder
+                .Where($"{GetRealColumn(nameof(Mapping.SystemType))} = @0", 
+                    new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = codeSet })
+                .Where($"{GetRealColumn(nameof(Mapping.SystemKey))} = @0", 
+                    new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = sendingValue });
 
             var records = dbConnection.Fetch<Mapping>(sql);
 
@@ -79,15 +93,18 @@ namespace LabBilling.Core.DataAccess
                 throw new ArgumentOutOfRangeException(sendingValue);
 
             var sql = PetaPoco.Sql.Builder
-                .Where("return_value_type = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = codeSet })
-                .Where("sending_system = @0 ", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = sendingSystem })
-                .Where("sending_value = @0 ", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = sendingValue });
+                .Where($"{GetRealColumn(nameof(Mapping.SystemType))} = @0", 
+                    new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = codeSet })
+                .Where($"{GetRealColumn(nameof(Mapping.InterfaceName))} = @0", 
+                    new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = sendingSystem })
+                .Where($"{GetRealColumn(nameof(Mapping.InterfaceAlias))} = @0", 
+                    new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = sendingValue });
 
             var record = dbConnection.FirstOrDefault<Mapping>(sql);
 
             string retVal = string.Empty;
             if(record != null)
-                retVal = record.return_value;
+                retVal = record.SystemKey;
 
             return retVal;
 

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using RFClassLibrary;
 using System.Data.SqlClient;
 using System.Data;
+using System.Linq;
 
 namespace LabBilling.Core.DataAccess
 {
@@ -37,6 +38,10 @@ namespace LabBilling.Core.DataAccess
                 //record.City = strCity;
                 //record.State = strState;
                 //record.Zip = strZip;
+
+                MappingRepository mappingRepository = new MappingRepository(dbConnection);
+
+                record.Mappings = mappingRepository.GetMappingsBySendingValue("INS_CODE", record.InsuranceCode).ToList();
             }
 
             return record;
