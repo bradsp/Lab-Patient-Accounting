@@ -39,22 +39,20 @@ namespace LabBilling.Forms
         private Dictionary<Control, string> controlColumnMap = new Dictionary<Control, string>();
         private InsCompanyLookupForm lookupForm = new InsCompanyLookupForm();
 
-        private readonly InsRepository insRepository = new InsRepository(Helper.ConnVal);
-        private readonly AccountRepository accountRepository = new AccountRepository(Helper.ConnVal);
-        private readonly PatRepository patRepository = new PatRepository(Helper.ConnVal);
-        private readonly DictDxRepository dictDxRepository = new DictDxRepository(Helper.ConnVal);
-        private readonly InsCompanyRepository insCompanyRepository = new InsCompanyRepository(Helper.ConnVal);
-        private readonly ChrgRepository chrgRepository = new ChrgRepository(Helper.ConnVal);
-        private readonly ChrgDetailRepository chrgDetailRepository = new ChrgDetailRepository(Helper.ConnVal);
-        private readonly UserProfileRepository userProfileDB = new UserProfileRepository(Helper.ConnVal);
-        private readonly FinRepository finRepository = new FinRepository(Helper.ConnVal);
-        private readonly ChkRepository chkRepository = new ChkRepository(Helper.ConnVal);
-        private readonly AccountNoteRepository accountNoteRepository = new AccountNoteRepository(Helper.ConnVal);
-        private readonly BillingActivityRepository billingActivityRepository = new BillingActivityRepository(Helper.ConnVal);
-        //private readonly DictDxRepository dictDxDb = new DictDxRepository(Helper.ConnVal);
-        private readonly SystemParametersRepository systemParametersRepository = new SystemParametersRepository(Helper.ConnVal);
-        private readonly PhyRepository phyRepository = new PhyRepository(Helper.ConnVal);
-        //private readonly ChkRepository chkRepository = new ChkRepository(Helper.ConnVal);
+        private readonly InsRepository insRepository = new InsRepository(Program.AppEnvironment);
+        private readonly AccountRepository accountRepository = new AccountRepository(Program.AppEnvironment);
+        private readonly PatRepository patRepository = new PatRepository(Program.AppEnvironment);
+        private readonly DictDxRepository dictDxRepository = new DictDxRepository(Program.AppEnvironment);
+        private readonly InsCompanyRepository insCompanyRepository = new InsCompanyRepository(Program.AppEnvironment);
+        private readonly ChrgRepository chrgRepository = new ChrgRepository(Program.AppEnvironment);
+        private readonly ChrgDetailRepository chrgDetailRepository = new ChrgDetailRepository(Program.AppEnvironment);
+        private readonly UserProfileRepository userProfileDB = new UserProfileRepository(Program.AppEnvironment);
+        private readonly FinRepository finRepository = new FinRepository(Program.AppEnvironment);
+        private readonly ChkRepository chkRepository = new ChkRepository(Program.AppEnvironment);
+        private readonly AccountNoteRepository accountNoteRepository = new AccountNoteRepository(Program.AppEnvironment);
+        private readonly BillingActivityRepository billingActivityRepository = new BillingActivityRepository(Program.AppEnvironment);
+        private readonly SystemParametersRepository systemParametersRepository = new SystemParametersRepository(Program.AppEnvironment);
+        private readonly PhyRepository phyRepository = new PhyRepository(Program.AppEnvironment);
         private bool billingTabLoading = false;
         private const int _timerInterval = 650;
         private const string notesAlertText = "** SEE NOTES **";
@@ -256,14 +254,16 @@ namespace LabBilling.Forms
         {
             Helper.SetControlsAccess(tabCharges.Controls, false);
             Helper.SetControlsAccess(chargeLayoutPanel.Controls, false);
-            if (systemParametersRepository.GetByKey("allow_chrg_entry") == "1")
+            //if (systemParametersRepository.GetByKey("allow_chrg_entry") == "1")
+            if (Program.AppEnvironment.ApplicationParameters.AllowChargeEntry)
             {
                 Helper.SetControlsAccess(tabCharges.Controls, Program.LoggedInUser.CanSubmitCharges);
                 Helper.SetControlsAccess(chargeLayoutPanel.Controls, Program.LoggedInUser.CanSubmitCharges);
             }
 
             Helper.SetControlsAccess(tabPayments.Controls, false);
-            if (systemParametersRepository.GetByKey("allow_chk_entry") == "1")
+            //if (systemParametersRepository.GetByKey("allow_chk_entry") == "1")
+            if(Program.AppEnvironment.ApplicationParameters.AllowPaymentAdjustmentEntry)
             {
                 Helper.SetControlsAccess(tabPayments.Controls, Program.LoggedInUser.CanAddAdjustments);
             }
@@ -290,7 +290,8 @@ namespace LabBilling.Forms
             clearHoldStatusToolStripMenuItem.Visible = false;
             ValidateAccountButton.Visible = false;
             GenerateClaimButton.Visible = false;
-            if (Convert.ToBoolean(systemParametersRepository.GetByKey("allow_edit")))
+            //if (Convert.ToBoolean(systemParametersRepository.GetByKey("allow_edit")))
+            if(Program.AppEnvironment.ApplicationParameters.AllowEditing)
             {
                 if (Program.LoggedInUser.Access == "ENTER/EDIT")
                 {
@@ -1633,7 +1634,7 @@ namespace LabBilling.Forms
                         cd.DiagnosisPointer.DiagnosisPointer = newPointer;
                     }));
 
-                    ChrgRepository chrgRepository = new ChrgRepository(Helper.ConnVal);
+                    ChrgRepository chrgRepository = new ChrgRepository(Program.AppEnvironment);
 
                     chrgRepository.UpdateDxPointers(updatedChrg);
 
@@ -1991,7 +1992,7 @@ namespace LabBilling.Forms
             Log.Instance.Trace($"Entering");
 
             ClientLookupForm clientLookupForm = new ClientLookupForm();
-            ClientRepository clientRepository = new ClientRepository(Helper.ConnVal);
+            ClientRepository clientRepository = new ClientRepository(Program.AppEnvironment);
             clientLookupForm.Datasource = DataCache.Instance.GetClients();
 
             if (clientLookupForm.ShowDialog() == DialogResult.OK)
@@ -2132,7 +2133,7 @@ namespace LabBilling.Forms
 
         private void GenerateClaimButton_Click(object sender, EventArgs e)
         {
-            ClaimGenerator claimGenerator = new ClaimGenerator(Helper.ConnVal);
+            ClaimGenerator claimGenerator = new ClaimGenerator(Program.AppEnvironment);
 
             claimGenerator.CompileClaim(currentAccount.AccountNo);
         }
@@ -2140,7 +2141,7 @@ namespace LabBilling.Forms
         private void BillActivityDataGrid_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             return;
-
+            /*
             DataGridView dgv = (DataGridView)sender;
 
             // Use HitTest to resolve the row under the cursor
@@ -2191,7 +2192,7 @@ namespace LabBilling.Forms
             //printClaim.Print(x12Text, false, true);
 
             //printClaim.PrintForm(claim);
-
+            */
         }
 
         private void tabControl1_Selected(object sender, TabControlEventArgs e)

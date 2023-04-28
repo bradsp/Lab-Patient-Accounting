@@ -15,9 +15,9 @@ namespace LabBilling.Forms
 {
     public partial class HealthPlanMaintenanceEditForm : MetroForm
     {
-        private InsCompanyRepository insCompanyRepository = new InsCompanyRepository(Helper.ConnVal);
+        private InsCompanyRepository insCompanyRepository = new InsCompanyRepository(Program.AppEnvironment);
         public InsCompany insCompany = new InsCompany();
-        private FinRepository finRepository = new FinRepository(Helper.ConnVal);
+        private FinRepository finRepository = new FinRepository(Program.AppEnvironment);
         private string selectedInsCode = null;
         private bool addMode = false;
 

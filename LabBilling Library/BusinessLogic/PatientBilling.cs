@@ -34,31 +34,32 @@ namespace LabBilling.Core
         private Database db;
         private string batchNo;
         private DateTime endDate = DateTime.MinValue;
-        private PatRepository patRepository;
-        private AccountRepository accountRepository;
-        private BadDebtRepository badDebtRepository;
-        private ChkRepository chkRepository;
-        private PatientStatementRepository patientStatementRepository;
-        private PatientStatementAccountRepository patientStatementAccountRepository;
-        private PatientStatementCernerRepository patientStatementCernerRepository;
-        private PatientStatementEncounterActivityRepository patientStatementEncounterActivityRepository;
-        private PatientStatementEncounterRepository patientStatementEncounterRepository;
-        private SystemParametersRepository parametersRepository;
+        private readonly PatRepository patRepository;
+        private readonly AccountRepository accountRepository;
+        private readonly BadDebtRepository badDebtRepository;
+        private readonly ChkRepository chkRepository;
+        private readonly PatientStatementRepository patientStatementRepository;
+        private readonly PatientStatementAccountRepository patientStatementAccountRepository;
+        private readonly PatientStatementCernerRepository patientStatementCernerRepository;
+        private readonly PatientStatementEncounterActivityRepository patientStatementEncounterActivityRepository;
+        private readonly PatientStatementEncounterRepository patientStatementEncounterRepository;
+        private readonly SystemParametersRepository parametersRepository;
+        private IAppEnvironment _appEnvironment;
 
-        public PatientBilling(string connectionString)
+        public PatientBilling(IAppEnvironment appEnvironment)
         {
-            db = new Database(connectionString, new CustomSqlDatabaseProvider());
+            db = appEnvironment.Database;
 
-            accountRepository = new AccountRepository(db);
-            patRepository = new PatRepository(db);
-            badDebtRepository = new BadDebtRepository(db);
-            chkRepository = new ChkRepository(db);
-            parametersRepository = new SystemParametersRepository(db);
-            patientStatementRepository = new PatientStatementRepository(db);
-            patientStatementCernerRepository = new PatientStatementCernerRepository(db);
-            patientStatementEncounterRepository = new PatientStatementEncounterRepository(db);
-            patientStatementEncounterActivityRepository = new PatientStatementEncounterActivityRepository(db);
-            patientStatementAccountRepository = new PatientStatementAccountRepository(db);
+            accountRepository = new AccountRepository(appEnvironment);
+            patRepository = new PatRepository(appEnvironment);
+            badDebtRepository = new BadDebtRepository(appEnvironment);
+            chkRepository = new ChkRepository(appEnvironment);
+            parametersRepository = new SystemParametersRepository(appEnvironment);
+            patientStatementRepository = new PatientStatementRepository(appEnvironment);
+            patientStatementCernerRepository = new PatientStatementCernerRepository(appEnvironment);
+            patientStatementEncounterRepository = new PatientStatementEncounterRepository(appEnvironment);
+            patientStatementEncounterActivityRepository = new PatientStatementEncounterActivityRepository(appEnvironment);
+            patientStatementAccountRepository = new PatientStatementAccountRepository(appEnvironment);
         }
 
         public event EventHandler<ProgressEventArgs> ProgressIncrementedEvent;
@@ -69,7 +70,8 @@ namespace LabBilling.Core
             await Task.Run(() =>
             {
                 StringBuilder sb = new StringBuilder();
-                string fileName = parametersRepository.GetByKey("CollectionsFileLocation");
+                //string fileName = parametersRepository.GetByKey("CollectionsFileLocation");
+                string fileName = _appEnvironment.ApplicationParameters.CollectionsFileLocation;
                 fileName += $"MCL{DateTime.Today.ToString("MMddyyyy")}.txt";
 
                 // create collections file to send to MSCB
@@ -238,8 +240,8 @@ namespace LabBilling.Core
             DataTable cernerStatementDt = HelperExtensions.ConvertToDataTable(cernerStatement);
 
             //todo: get file path from parameters
-            //string.Format(@"\\mclftp2\MCLFTP_E\TEMP\PatStatement{0}.txt", DateTime.Now.ToString("yyyyMMddHHmm"));
-            string strFileName = $"{parametersRepository.GetByKey("StatementsFileLocation")}PatStatement{DateTime.Now.ToString("yyyyMMddHHmm")}.txt";
+            //string strFileName = $"{parametersRepository.GetByKey("StatementsFileLocation")}PatStatement{DateTime.Now:yyyyMMddHHmm}.txt";
+            string strFileName = $"{_appEnvironment.ApplicationParameters.StatementsFileLocation}PatStatement{DateTime.Now:yyyyMMddHHmm}.txt";
             
             StreamWriter sw = new StreamWriter(strFileName);
             sw.AutoFlush = true;
@@ -250,7 +252,7 @@ namespace LabBilling.Core
 
             foreach (DataRow dr in statementDt.Rows)
             {
-                var q = $"{nameof(PatientStatement.StatementNumber)} = {dr[nameof(PatientStatement.StatementNumber)].ToString()}";
+                var q = $"{nameof(PatientStatement.StatementNumber)} = {dr[nameof(PatientStatement.StatementNumber)]}";
                 // each statement
                 DataRow[] drAcc = accountsDt.Select(q);
 
@@ -561,12 +563,13 @@ namespace LabBilling.Core
             }
 
             endDate = throughDate;
-            batchNo = $"{endDate.Year}{endDate.Month.ToString("00")}";
+            batchNo = $"{endDate.Year}{endDate.Month:00}";
             try
             {
                 //run exec usp_prg_pat_bill_update_flags '<last day of prev month>'
                 //step 1 - exec_prg_pat_bill_update_flags '{thrudate}'
-                //db.ExecuteNonQueryProc("usp_prg_pat_bill_update_flags", new SqlParameter() { ParameterName = "@thrudate", SqlDbType = SqlDbType.DateTime, Value = endDate });
+                db.ExecuteNonQueryProc("usp_prg_pat_bill_update_flags", 
+                    new SqlParameter() { ParameterName = "@thrudate", SqlDbType = SqlDbType.DateTime, Value = endDate });
 
                 //run exec usp_prg_pat_bill_compile @batchNo = '<batchNo>', @endDate = '<last day of prev month>'
                 db.ExecuteNonQueryProc("usp_prg_pat_bill_compile",

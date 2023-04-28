@@ -12,11 +12,7 @@ namespace LabBilling.Core.DataAccess
 {
     public sealed class BillingActivityRepository : RepositoryBase<BillingActivity>
     {
-        public BillingActivityRepository(string connection) : base(connection)
-        {
-        }
-
-        public BillingActivityRepository(PetaPoco.Database db) : base(db)
+        public BillingActivityRepository(IAppEnvironment appEnvironment) : base(appEnvironment)
         {
         }
 

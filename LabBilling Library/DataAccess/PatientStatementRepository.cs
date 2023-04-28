@@ -15,13 +15,8 @@ namespace LabBilling.Core.DataAccess
     public sealed class PatientStatementRepository : RepositoryBase<PatientStatement>
     {
 
-        public PatientStatementRepository(string connectionString) : base(connectionString)  
+        public PatientStatementRepository(IAppEnvironment appEnvironment) : base(appEnvironment)  
         { 
-
-        }
-
-        public PatientStatementRepository(Database db) : base(db) 
-        {
 
         }
 

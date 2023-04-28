@@ -19,11 +19,14 @@ namespace LabBilling.Core.BusinessLogic
         private AccountRepository _accountRepository;
         private AccountNoteRepository _accountNoteRepository;
 
-        public NotesImport(string connectionString)
+        public NotesImport(IAppEnvironment appEnvironment)
         {
-            _connectionString = connectionString;
-            _accountRepository = new AccountRepository(_connectionString);
-            _accountNoteRepository = new AccountNoteRepository(_connectionString);
+            if (appEnvironment == null) throw new ArgumentNullException(nameof(appEnvironment));
+            if (!appEnvironment.EnvironmentValid) throw new ArgumentException("App Environment is not valid.");
+
+            _connectionString = appEnvironment.ConnectionString;
+            _accountRepository = new AccountRepository(appEnvironment);
+            _accountNoteRepository = new AccountNoteRepository(appEnvironment);
 
         }
         public void ImportNotes(string fileName)

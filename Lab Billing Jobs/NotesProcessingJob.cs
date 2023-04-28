@@ -37,7 +37,7 @@ namespace LabBillingJobs
             public void NotesImport()
             {
                 Console.WriteLine("Beginning notes import.");
-                NotesImport notesImport = new NotesImport(Helper.ConnVal);
+                NotesImport notesImport = new NotesImport(Program.AppEnvironment);
 
                 try
                 {

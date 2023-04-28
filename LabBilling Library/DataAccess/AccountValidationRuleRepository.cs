@@ -14,14 +14,9 @@ namespace LabBilling.Core.DataAccess
     {
         private AccountValidationCriteriaRepository accountValidationCriteriaRepository;
 
-        public AccountValidationRuleRepository(string connection) : base(connection)
+        public AccountValidationRuleRepository(IAppEnvironment appEnvironment) : base(appEnvironment)
         {
-            accountValidationCriteriaRepository = new AccountValidationCriteriaRepository(dbConnection);
-        }
-
-        public AccountValidationRuleRepository(PetaPoco.Database db) : base(db)
-        {
-            accountValidationCriteriaRepository = new AccountValidationCriteriaRepository(dbConnection);
+            accountValidationCriteriaRepository = new AccountValidationCriteriaRepository(appEnvironment);
         }
 
         public override List<AccountValidationRule> GetAll()

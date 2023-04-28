@@ -11,14 +11,9 @@ namespace LabBilling.Core.DataAccess
 {
     public sealed class UserProfileRepository : RepositoryBase<UserProfile>
     {
-        public UserProfileRepository(string connection) : base(connection)
+        public UserProfileRepository(IAppEnvironment appEnvironment) : base(appEnvironment)
         {
             
-        }
-
-        public UserProfileRepository(PetaPoco.Database db) : base(db)
-        {
-
         }
 
         public void InsertRecentAccount(string account, string user)

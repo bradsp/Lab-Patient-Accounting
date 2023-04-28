@@ -24,6 +24,8 @@ namespace LabBillingConsole
     {
         public const string connectionString = "Server=WTHMCLBILL;Database=LabBillingTest;Trusted_Connection=True;";
 
+        public static AppEnvironment appEnvironment;
+
         static void Main(string[] args)
         {
 
@@ -37,6 +39,11 @@ namespace LabBillingConsole
 
         private static bool MainMenu()
         {
+            appEnvironment = new AppEnvironment();
+            appEnvironment.DatabaseName = "LabBillingTest";
+            appEnvironment.ServerName = "WTHMCLBILL";
+            appEnvironment.LogDatabaseName = "Log";
+
             Console.Clear();
             Console.WriteLine($"Connection String: {connectionString}\n\n");
             Console.WriteLine("******** TESTING MENU ***********\n");
@@ -101,22 +108,22 @@ namespace LabBillingConsole
 
         public static void ApplicationParametersTest()
         {
-            PetaPoco.Database dbConnection = new Database(connectionString, new CustomSqlDatabaseProvider());
-            
-            SystemParametersRepository systemParametersRepository = new SystemParametersRepository(dbConnection);
+           
+            SystemParametersRepository systemParametersRepository = new SystemParametersRepository(appEnvironment);
 
             ApplicationParameters parms = new ApplicationParameters();
 
-            systemParametersRepository.LoadParameters(parms);
+            parms = systemParametersRepository.LoadParameters();
 
             int s = 1;
 
-            var categoryInfo = typeof(ApplicationParameters).GetProperty(nameof(ApplicationParameters.NewParamatertest)).GetCustomAttribute<CategoryAttribute>();
-            var descriptionInfo = typeof(ApplicationParameters).GetProperty(nameof(ApplicationParameters.NewParamatertest)).GetCustomAttribute<DescriptionAttribute>();
-            var category = categoryInfo.Category;
-            var description = descriptionInfo.Description;
+            var prop = typeof(ApplicationParameters).GetProperty(nameof(ApplicationParameters.LabDirector));
+                        
+            var category = parms.GetCategory(nameof(ApplicationParameters.LabDirector));
+            var description = parms.GetCategory(nameof(ApplicationParameters.LabDirector));
+            var defaultValue = parms.GetDefaultValue(nameof(ApplicationParameters.LabDirector));
 
-            systemParametersRepository.SaveParameter(nameof(ApplicationParameters.NewParamatertest), "test value", category, description);
+            systemParametersRepository.SaveParameter(nameof(ApplicationParameters.LabDirector), "test value", category, description, prop.PropertyType.Name);
 
         }
 
@@ -153,7 +160,7 @@ namespace LabBillingConsole
 
         public static void RegenerateClaimBatch()
         {
-            ClaimGenerator claimGenerator = new ClaimGenerator(connectionString);
+            ClaimGenerator claimGenerator = new ClaimGenerator(appEnvironment);
 
             claimGenerator.RegenerateBatch(20238186);
         }
@@ -161,8 +168,8 @@ namespace LabBillingConsole
         public static void FixDrugScreenCharges()
         {
             PetaPoco.Database dbConnection = new Database(connectionString, new CustomSqlDatabaseProvider());
-            ChrgRepository chargeRepository = new ChrgRepository(dbConnection);
-            AccountRepository accountRepository = new AccountRepository(dbConnection);
+            ChrgRepository chargeRepository = new ChrgRepository(appEnvironment);
+            AccountRepository accountRepository = new AccountRepository(appEnvironment);
             //get list of accounts
             var sql = PetaPoco.Sql.Builder;
             sql.From("chrg");
@@ -189,7 +196,7 @@ namespace LabBillingConsole
         public static void NotesImport()
         {
             Console.WriteLine("Beginning notes import.");
-            NotesImport notesImport = new NotesImport(connectionString);
+            NotesImport notesImport = new NotesImport(appEnvironment);
             //string filename = @"\\wthmclbill\shared\Billing\LIVE\claims\Notes\510051_20230215_ExportNotes_424.exted";
             try
             {
@@ -219,7 +226,7 @@ namespace LabBillingConsole
 
         public static void ValidateAccountsJob()
         {
-            AccountRepository accountRepository = new AccountRepository(connectionString);
+            AccountRepository accountRepository = new AccountRepository(appEnvironment);
             Console.WriteLine("In RunValidation() - Starting RunValidation job");
             //log.Info("In RunValidation() - Starting RunValidation job");
             accountRepository.ValidateUnbilledAccounts();
@@ -234,7 +241,7 @@ namespace LabBillingConsole
 
         public static void ReprintInvoice()
         {
-            ClientInvoices clientInvoices = new ClientInvoices(connectionString);
+            ClientInvoices clientInvoices = new ClientInvoices(appEnvironment);
 
             string filename = clientInvoices.PrintInvoice("78630");
 
@@ -243,7 +250,7 @@ namespace LabBillingConsole
 
         public static void GenerateStatement()
         {
-            ClientInvoices clientInvoice = new ClientInvoices(connectionString);
+            ClientInvoices clientInvoice = new ClientInvoices(appEnvironment);
 
             string filename = clientInvoice.GenerateStatement("HESC", DateTime.Today.AddDays(-120));
 
@@ -253,7 +260,7 @@ namespace LabBillingConsole
 
         public static void TestClientInvoices()
         {
-            ClientInvoices clientInvoices = new ClientInvoices(connectionString);
+            ClientInvoices clientInvoices = new ClientInvoices(appEnvironment);
 
             //clientInvoices.GenerateInvoice("WTCC", new DateTime(2022, 10, 31));
 
@@ -391,7 +398,7 @@ namespace LabBillingConsole
 
         public static void ProcessInterfaceMessages()
         {
-            HL7Processor hL7Processor = new HL7Processor(connectionString);
+            HL7Processor hL7Processor = new HL7Processor(appEnvironment);
             hL7Processor.ProcessMessages();
             Console.WriteLine("Messages processed.");
         }
@@ -399,7 +406,7 @@ namespace LabBillingConsole
         public static void SwapInsurance()
         {
 
-            var accountRepository = new AccountRepository(connectionString);
+            var accountRepository = new AccountRepository(appEnvironment);
 
             accountRepository.InsuranceSwap("L17436110", InsCoverage.Primary, InsCoverage.Secondary);
 
@@ -409,7 +416,7 @@ namespace LabBillingConsole
         {
             string file = @"\\wthmclbill\shared\Billing\TEST\Posting835Remit\MCL_NC_MCR_1093705428_835_11119267.RMT";
 
-            Remittance835 remittance835 = new Remittance835(connectionString);
+            Remittance835 remittance835 = new Remittance835(appEnvironment);
 
             remittance835.Load835(file);
 

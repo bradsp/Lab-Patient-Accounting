@@ -24,20 +24,12 @@ namespace LabBilling.Core.BusinessLogic
 
         private List<ClaimValidationRule> _rules;
 
-        public ClaimRulesEngine(string connectionstring)
+        public ClaimRulesEngine(IAppEnvironment appEnvironment)
         {
-            ClaimValidationRuleRepository claimRuleRepository = new ClaimValidationRuleRepository(connectionstring);
+            ClaimValidationRuleRepository claimRuleRepository = new ClaimValidationRuleRepository(appEnvironment);
 
             _rules = claimRuleRepository.GetRules();
             
-        }
-
-        public ClaimRulesEngine(PetaPoco.Database db)
-        {
-            ClaimValidationRuleRepository claimRuleRepository = new ClaimValidationRuleRepository(db);
-
-            _rules = claimRuleRepository.GetRules();
-
         }
 
         #region Testdata

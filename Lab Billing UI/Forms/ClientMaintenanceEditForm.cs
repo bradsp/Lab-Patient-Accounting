@@ -27,9 +27,9 @@ namespace LabBilling.Forms
         public ClientMaintenanceEditForm()
         {
             InitializeComponent();
-            clientRepository = new ClientRepository(Helper.ConnVal);
-            gLCodeRepository = new GLCodeRepository(Helper.ConnVal);
-            cdmRepository = new CdmRepository(Helper.ConnVal);
+            clientRepository = new ClientRepository(Program.AppEnvironment);
+            gLCodeRepository = new GLCodeRepository(Program.AppEnvironment);
+            cdmRepository = new CdmRepository(Program.AppEnvironment);
         }
 
         private void btnSave_Click(object sender, EventArgs e)

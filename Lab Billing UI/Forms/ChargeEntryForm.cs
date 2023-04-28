@@ -13,8 +13,8 @@ namespace LabBilling.Forms
     public partial class ChargeEntryForm : Form
     {
         private Account _currentAccount = new Account();
-        private readonly CdmRepository cdmRepository = new CdmRepository(Helper.ConnVal);
-        private readonly AccountRepository accountRepository = new AccountRepository(Helper.ConnVal);
+        private readonly CdmRepository cdmRepository = new CdmRepository(Program.AppEnvironment);
+        private readonly AccountRepository accountRepository = new AccountRepository(Program.AppEnvironment);
         //private DataTable cdmSortedByCdm;
         //private DataTable cdmSortedByDesc;
         private Timer _timer;

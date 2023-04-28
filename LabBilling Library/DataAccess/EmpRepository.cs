@@ -10,13 +10,8 @@ namespace LabBilling.Core.DataAccess
 {
     public sealed class EmpRepository : RepositoryBase<Emp>
     {
-        public EmpRepository(string connection) : base(connection)
+        public EmpRepository(IAppEnvironment appEnvironment) : base(appEnvironment)
         {
-        }
-
-        public EmpRepository(PetaPoco.Database db) : base(db)
-        {
-
         }
 
         public List<Emp> GetActiveUsers()

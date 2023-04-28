@@ -12,15 +12,11 @@ namespace LabBilling.Core.DataAccess
 {
     public sealed class LMRPRuleRepository : RepositoryBase<LMRPRule>
     {
-        public LMRPRuleRepository(string connectionString) : base(connectionString)
+        public LMRPRuleRepository(IAppEnvironment appEnvironment) : base(appEnvironment)
         {
 
         }
 
-        public LMRPRuleRepository(PetaPoco.Database db) : base(db)
-        {
-
-        }
 
         public LMRPRule GetRule(string cpt, string dx, DateTime serviceDate)
         {

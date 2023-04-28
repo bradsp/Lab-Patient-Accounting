@@ -15,9 +15,9 @@ namespace LabBilling.Forms
     {
 
         public string CreatedAccount;
-        private readonly NumberRepository numberRepository = new NumberRepository(Helper.ConnVal);
-        private readonly AccountRepository accountRepository = new AccountRepository(Helper.ConnVal);
-        private readonly FinRepository finRepository = new FinRepository(Helper.ConnVal);
+        private readonly NumberRepository numberRepository = new NumberRepository(Program.AppEnvironment);
+        private readonly AccountRepository accountRepository = new AccountRepository(Program.AppEnvironment);
+        private readonly FinRepository finRepository = new FinRepository(Program.AppEnvironment);
         private Timer _timer;
         private int _timerInterval = 650;
 
@@ -200,7 +200,7 @@ namespace LabBilling.Forms
             {
 
                 ClientLookupForm clientLookupForm = new ClientLookupForm();
-                ClientRepository clientRepository = new ClientRepository(Helper.ConnVal);
+                ClientRepository clientRepository = new ClientRepository(Program.AppEnvironment);
                 clientLookupForm.Datasource = DataCache.Instance.GetClients();
 
                 clientLookupForm.InitialSearchText = clientTextBox.Text;

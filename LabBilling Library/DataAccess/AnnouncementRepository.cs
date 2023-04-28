@@ -13,9 +13,7 @@ namespace LabBilling.Core.DataAccess
 {
     public sealed class AnnouncementRepository : RepositoryBase<Announcement>
     {
-        public AnnouncementRepository(string connectionString) : base(connectionString) { }
-
-        public AnnouncementRepository(Database database) : base(database) { }
+        public AnnouncementRepository(IAppEnvironment appEnvironment) : base(appEnvironment) { }
 
         public List<Announcement> GetActive()
         {

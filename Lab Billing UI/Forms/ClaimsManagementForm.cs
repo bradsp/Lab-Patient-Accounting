@@ -34,8 +34,8 @@ namespace LabBilling.Forms
         {
             InitializeComponent();
 
-            batchRepository = new BillingBatchRepository(Helper.ConnVal);
-            billingActivityRepository = new BillingActivityRepository(Helper.ConnVal);
+            batchRepository = new BillingBatchRepository(Program.AppEnvironment);
+            billingActivityRepository = new BillingActivityRepository(Program.AppEnvironment);
         }
 
         private void ClaimsManagementForm_Load(object sender, EventArgs e)
@@ -91,7 +91,7 @@ namespace LabBilling.Forms
 
             claimProgressStatusLabel.Text = "Processing...";
 
-            ClaimGenerator claims = new ClaimGenerator(Helper.ConnVal);
+            ClaimGenerator claims = new ClaimGenerator(Program.AppEnvironment);
             Progress<ProgressReportModel> progress = new Progress<ProgressReportModel>();
             progress.ProgressChanged += ReportProgress;
             cancelButton.Enabled = true;
@@ -202,7 +202,7 @@ namespace LabBilling.Forms
             var selectedBatch = claimBatchDataGrid.SelectedRows[0].Cells[nameof(BillingBatch.Batch)].Value;
             double batchNo = Convert.ToDouble(selectedBatch);
 
-            ClaimGenerator claims = new ClaimGenerator(Helper.ConnVal);
+            ClaimGenerator claims = new ClaimGenerator(Program.AppEnvironment);
 
             Cursor.Current = Cursors.WaitCursor;
 

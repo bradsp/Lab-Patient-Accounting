@@ -19,7 +19,7 @@ namespace LabBilling.Forms
             InitializeComponent();
         }
 
-        private readonly MappingRepository mappingRepository = new MappingRepository(Helper.ConnVal);
+        private readonly MappingRepository mappingRepository = new MappingRepository(Program.AppEnvironment);
 
         private void InterfaceMapping_Load(object sender, EventArgs e)
         {

@@ -15,8 +15,8 @@ namespace LabBilling.Library
     {
         public static string SelectFinancialCode(string currentFin = null)
         {
-            AccountRepository accountRepository = new AccountRepository(Helper.ConnVal);
-            FinRepository finRepository = new FinRepository(Helper.ConnVal);
+            AccountRepository accountRepository = new AccountRepository(Program.AppEnvironment);
+            FinRepository finRepository = new FinRepository(Program.AppEnvironment);
 
             Form frm = new Form()
             {

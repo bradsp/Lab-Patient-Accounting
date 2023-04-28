@@ -15,9 +15,9 @@ namespace LabBilling.Forms
 {
     public partial class AccountChargeEntry : Form
     {
-        private readonly ClientRepository clientRepository = new ClientRepository(Helper.ConnVal);
-        private readonly CdmRepository cdmRepository = new CdmRepository(Helper.ConnVal);
-        private readonly AccountRepository accountRepository = new AccountRepository(Helper.ConnVal);
+        private readonly ClientRepository clientRepository = new ClientRepository(Program.AppEnvironment);
+        private readonly CdmRepository cdmRepository = new CdmRepository(Program.AppEnvironment);
+        private readonly AccountRepository accountRepository = new AccountRepository(Program.AppEnvironment);
         private List<BatchCharge> charges;
         private BindingSource chrgBindingSource;
         private Account currentAccount;

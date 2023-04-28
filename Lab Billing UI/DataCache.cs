@@ -26,12 +26,12 @@ namespace LabBilling
 
         private DataCache() 
         {
-            _finRepository = new FinRepository(Helper.ConnVal);
-            _insCompanyRepository = new InsCompanyRepository(Helper.ConnVal);
-            _phyRepository = new PhyRepository(Helper.ConnVal);
-            _clientRepository = new ClientRepository(Helper.ConnVal);
-            _cdmRepository = new CdmRepository(Helper.ConnVal);
-            _revenueCodeRepository = new RevenueCodeRepository(Helper.ConnVal);
+            _finRepository = new FinRepository(Program.AppEnvironment);
+            _insCompanyRepository = new InsCompanyRepository(Program.AppEnvironment);
+            _phyRepository = new PhyRepository(Program.AppEnvironment);
+            _clientRepository = new ClientRepository(Program.AppEnvironment);
+            _cdmRepository = new CdmRepository(Program.AppEnvironment);
+            _revenueCodeRepository = new RevenueCodeRepository(Program.AppEnvironment);
         }
 
         private static DataCache instance = null;

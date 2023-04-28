@@ -24,7 +24,7 @@ namespace LabBilling.Forms
         {
             InitializeComponent();
 
-            cdmRepository = new CdmRepository(Helper.ConnVal);
+            cdmRepository = new CdmRepository(Program.AppEnvironment);
         }
 
         public string SelectedCdm { get; set; }

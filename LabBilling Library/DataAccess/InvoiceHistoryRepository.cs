@@ -9,11 +9,7 @@ namespace LabBilling.Core.DataAccess
 {
     public sealed class InvoiceHistoryRepository : RepositoryBase<InvoiceHistory>
     {
-        public InvoiceHistoryRepository(string connection) : base(connection)
-        {
-        }
-
-        public InvoiceHistoryRepository(PetaPoco.Database db) : base(db)
+        public InvoiceHistoryRepository(IAppEnvironment appEnvironment) : base(appEnvironment)
         {
         }
 

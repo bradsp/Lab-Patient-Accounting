@@ -9,15 +9,9 @@ namespace LabBilling.Core.DataAccess
 {
     public sealed class GLCodeRepository : RepositoryBase<GLCode>
     {
-        public GLCodeRepository(string connection) : base(connection)
+        public GLCodeRepository(IAppEnvironment appEnvironment) : base(appEnvironment)
         {
 
         }
-
-        public GLCodeRepository(PetaPoco.Database db) : base(db)
-        {
-
-        }
-
     }
 }

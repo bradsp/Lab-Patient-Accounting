@@ -8,12 +8,7 @@ namespace LabBilling.Core.DataAccess
 {
     public sealed class RevenueCodeRepository : RepositoryBase<RevenueCode>
     {
-        public RevenueCodeRepository(string connection) : base(connection)
-        {
-
-        }
-
-        public RevenueCodeRepository(PetaPoco.Database db) : base(db)
+        public RevenueCodeRepository(IAppEnvironment appEnvironment) : base(appEnvironment)
         {
 
         }

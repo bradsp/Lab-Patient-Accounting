@@ -12,14 +12,19 @@ namespace LabBilling.Core.DataAccess
 {
     public sealed class CdmRepository : RepositoryBase<Cdm>
     {
-        public CdmRepository(string connection) : base(connection)
+        //public CdmRepository(string connection) : base(connection)
+        //{
+
+        //}
+
+        //public CdmRepository(PetaPoco.Database db) : base(db)
+        //{
+
+        //}
+
+        public CdmRepository(IAppEnvironment appEnvironment) : base(appEnvironment)
         {
-
-        }
-
-        public CdmRepository(PetaPoco.Database db) : base(db)
-        {
-
+            
         }
 
         public override List<Cdm> GetAll()
@@ -61,7 +66,7 @@ namespace LabBilling.Core.DataAccess
         public override bool Update(Cdm table)
         {
             //update all fee schedules as well
-            CdmDetailRepository cdmDetailRepository = new CdmDetailRepository(dbConnection);
+            CdmDetailRepository cdmDetailRepository = new CdmDetailRepository(_appEnvironment);
 
             foreach(var cd in table.CdmFeeSchedule1)
             {
@@ -90,7 +95,7 @@ namespace LabBilling.Core.DataAccess
 
         public override object Add(Cdm table)
         {
-            CdmDetailRepository cdmDetailRepository = new CdmDetailRepository(dbConnection);
+            CdmDetailRepository cdmDetailRepository = new CdmDetailRepository(_appEnvironment);
             //add all fee schedules as well
             foreach (var cd in table.CdmFeeSchedule1)
             {
@@ -118,7 +123,7 @@ namespace LabBilling.Core.DataAccess
 
         public Cdm GetCdm(string cdm, bool includeDeleted = false)
         {
-            CdmDetailRepository cdmDetailRepository = new CdmDetailRepository(dbConnection);
+            CdmDetailRepository cdmDetailRepository = new CdmDetailRepository(_appEnvironment);
 
             string cdmRealName = this.GetRealColumn(nameof(Cdm.ChargeId));
             string isDeletedRealName = this.GetRealColumn(nameof(Cdm.IsDeleted));
@@ -146,7 +151,7 @@ namespace LabBilling.Core.DataAccess
         {
             List<CdmDetail> cdmDetails = new List<CdmDetail>();
 
-            CdmDetailRepository cdmDetailRepository = new CdmDetailRepository(dbConnection);
+            CdmDetailRepository cdmDetailRepository = new CdmDetailRepository(_appEnvironment);
 
             cdmDetails = cdmDetailRepository.GetByCpt(cptId);
 

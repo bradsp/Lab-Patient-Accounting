@@ -15,9 +15,7 @@ namespace LabBilling.Core.DataAccess
 {
     public sealed class GlobalBillingCdmRepository : RepositoryBase<GlobalBillingCdm>
     {
-        public GlobalBillingCdmRepository(string connectionString) : base(connectionString)  { }
-
-        public GlobalBillingCdmRepository(Database db) : base(db) { }
+        public GlobalBillingCdmRepository(IAppEnvironment appEnvironment) : base(appEnvironment)  { }
 
         public GlobalBillingCdm GetCdm(string cdm)
         {

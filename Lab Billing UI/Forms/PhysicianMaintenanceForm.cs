@@ -21,7 +21,7 @@ namespace LabBilling.Forms
             InitializeComponent();
         }
 
-        private readonly PhyRepository phydb = new PhyRepository(Helper.ConnVal);
+        private readonly PhyRepository phydb = new PhyRepository(Program.AppEnvironment);
         private List<Phy> physicians = new List<Phy>();
 
         private void PhysicianMaintenanceForm_Load(object sender, EventArgs e)

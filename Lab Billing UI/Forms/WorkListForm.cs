@@ -35,9 +35,9 @@ namespace LabBilling.Forms
         {
 
             //Cursor.Current = Cursors.WaitCursor;
-            accountRepository = new AccountRepository(_connectionString);
-            accountSearchRepository = new AccountSearchRepository(_connectionString);
-            systemParametersRepository = new SystemParametersRepository(_connectionString);
+            accountRepository = new AccountRepository(Program.AppEnvironment);
+            accountSearchRepository = new AccountSearchRepository(Program.AppEnvironment);
+            systemParametersRepository = new SystemParametersRepository(Program.AppEnvironment);
 
             accountTable = new List<AccountSearch>().ToDataTable();
             accountTable.PrimaryKey = new DataColumn[] { accountTable.Columns[nameof(AccountSearch.Account)] };
@@ -241,7 +241,8 @@ namespace LabBilling.Forms
 
             Cursor.Current = Cursors.WaitCursor;
 
-            DateTime.TryParse(systemParametersRepository.GetByKey("ssi_bill_thru_date"), out DateTime thruDate);
+            //DateTime.TryParse(systemParametersRepository.GetByKey("ssi_bill_thru_date"), out DateTime thruDate);
+            DateTime thruDate = Program.AppEnvironment.ApplicationParameters.SSIBillThruDate;
             (string propertyName, AccountSearchRepository.operation oper, string searchText)[] parameters =
             {
                 (nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "PAID_OUT"),
@@ -611,7 +612,7 @@ namespace LabBilling.Forms
             var account = accountRepository.GetByAccount(selectedAccount);
 
             ClientLookupForm clientLookupForm = new ClientLookupForm();
-            ClientRepository clientRepository = new ClientRepository(Helper.ConnVal);
+            ClientRepository clientRepository = new ClientRepository(Program.AppEnvironment);
             clientLookupForm.Datasource = DataCache.Instance.GetClients();
 
             if (clientLookupForm.ShowDialog() == DialogResult.OK)

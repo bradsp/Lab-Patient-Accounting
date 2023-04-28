@@ -11,12 +11,7 @@ namespace LabBilling.Core.DataAccess
 {
     public sealed class AccountLmrpErrorRepository : RepositoryBase<AccountLmrpError>
     {
-        public AccountLmrpErrorRepository(string connectionString) : base(connectionString)
-        {
-
-        }
-
-        public AccountLmrpErrorRepository(PetaPoco.Database db) : base(db)
+        public AccountLmrpErrorRepository(IAppEnvironment appEnvironment) : base(appEnvironment)
         {
 
         }

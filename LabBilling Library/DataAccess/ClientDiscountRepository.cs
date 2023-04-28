@@ -11,12 +11,7 @@ namespace LabBilling.Core.DataAccess
 {
     public sealed class ClientDiscountRepository : RepositoryBase<ClientDiscount>
     {
-        public ClientDiscountRepository(string connectionString) : base(connectionString)
-        {
-
-        }
-
-        public ClientDiscountRepository(PetaPoco.Database db) : base(db)
+        public ClientDiscountRepository(IAppEnvironment appEnvironment) : base(appEnvironment)
         {
 
         }
@@ -36,7 +31,7 @@ namespace LabBilling.Core.DataAccess
                     new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = clientMnem });
             }
 
-            CdmRepository cdmRepository = new CdmRepository(dbConnection);
+            CdmRepository cdmRepository = new CdmRepository(_appEnvironment);
 
             foreach(ClientDiscount clientDiscount in results)
             {

@@ -31,7 +31,7 @@ namespace LabBilling.Forms
 
         private void LoadAnnouncements()
         {
-            AnnouncementRepository announcementRepository = new AnnouncementRepository(Helper.ConnVal);
+            AnnouncementRepository announcementRepository = new AnnouncementRepository(Program.AppEnvironment);
 
             var announcements = announcementRepository.GetActive();
 

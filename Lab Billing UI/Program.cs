@@ -5,18 +5,15 @@ using System.Threading;
 using System.Windows.Forms;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
+using LabBilling.Core.DataAccess;
 
 namespace LabBilling
 {
     static class Program
     {
         public static Emp LoggedInUser { get; set; }
-        //public static string SelectedEnvironment { get; set; }
-        public static string ConnectionString { get; set; }
-        public static string Server { get; set; }
-        public static string Database { get; set; }
-        public static string LogDatabase { get; set; }
-        public static string Environment { get; set; }
+
+        public static AppEnvironment AppEnvironment { get; set; } = new AppEnvironment();
 
         /// <summary>
         /// The main entry point for the application.

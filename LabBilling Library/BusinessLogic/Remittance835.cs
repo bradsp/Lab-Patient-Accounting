@@ -18,10 +18,8 @@ namespace LabBilling.Core.BusinessLogic
 {
     public sealed class Remittance835
     {
-        public Remittance835(string connString)
-        {
-            _connString = connString;
-        }
+        private IAppEnvironment _appEnvironment;
+
 
         private string _connString;
 
@@ -1044,6 +1042,11 @@ namespace LabBilling.Core.BusinessLogic
         };
 
         EdiDocument ediDocument = null;
+        public Remittance835(IAppEnvironment appEnvironment)
+        {
+            _appEnvironment = appEnvironment;
+            _connString = appEnvironment.ConnectionString;
+        }
 
         public void Load835(string fileName)
         {
@@ -1262,7 +1265,7 @@ namespace LabBilling.Core.BusinessLogic
 
         private void ProcessRemittance()
         {
-            ChkRepository chkRepository = new ChkRepository(_connString);
+            ChkRepository chkRepository = new ChkRepository(_appEnvironment);
 
 
         }

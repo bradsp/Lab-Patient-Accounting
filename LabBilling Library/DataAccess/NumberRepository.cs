@@ -9,12 +9,7 @@ namespace LabBilling.Core.DataAccess
 {
     public sealed class NumberRepository : RepositoryBase<Number>
     {
-        public NumberRepository(string connection) : base(connection)
-        {
-
-        }
-
-        public NumberRepository(PetaPoco.Database db) : base(db)
+        public NumberRepository(IAppEnvironment appEnvironment) : base(appEnvironment)
         {
 
         }

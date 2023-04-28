@@ -11,12 +11,7 @@ namespace LabBilling.Core.DataAccess
 {
     public sealed class BadDebtRepository : RepositoryBase<BadDebt>
     {
-        public BadDebtRepository(string connection) : base(connection)
-        {
-
-        }
-
-        public BadDebtRepository(PetaPoco.Database db) : base(db)
+        public BadDebtRepository(IAppEnvironment appEnvironment) : base(appEnvironment)
         {
 
         }

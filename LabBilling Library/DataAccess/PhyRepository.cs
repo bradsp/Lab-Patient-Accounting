@@ -13,14 +13,9 @@ namespace LabBilling.Core.DataAccess
 {
     public sealed class PhyRepository : RepositoryBase<Phy>
     {
-        public PhyRepository(string connection) : base(connection)
+        public PhyRepository(IAppEnvironment appEnvironment) : base(appEnvironment)
         {
                 
-        }
-
-        public PhyRepository(PetaPoco.Database db) : base(db)
-        {
-
         }
 
         public Phy GetByNPI(string npi)

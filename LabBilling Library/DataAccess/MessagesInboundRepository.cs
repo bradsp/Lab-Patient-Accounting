@@ -9,12 +9,7 @@ namespace LabBilling.Core.DataAccess
 {
     public sealed class MessagesInboundRepository : RepositoryBase<MessageInbound>
     {
-        public MessagesInboundRepository(string connection) : base(connection)
-        {
-
-        }
-
-        public MessagesInboundRepository(PetaPoco.Database db) : base(db)
+        public MessagesInboundRepository(IAppEnvironment appEnvironment) : base(appEnvironment)
         {
 
         }

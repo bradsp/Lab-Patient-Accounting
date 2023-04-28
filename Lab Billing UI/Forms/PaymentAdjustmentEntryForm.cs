@@ -30,7 +30,7 @@ namespace LabBilling.Forms
         private void PaymentAdjustmentEntryForm_Load(object sender, EventArgs e)
         {
             //get write off codes
-            WriteOffCodeRepository writeOffCodeRepository = new WriteOffCodeRepository(Helper.ConnVal);
+            WriteOffCodeRepository writeOffCodeRepository = new WriteOffCodeRepository(Program.AppEnvironment);
             writeOffCodeComboBox.DataSource = writeOffCodeRepository.GetAll();
             writeOffCodeComboBox.DisplayMember = nameof(WriteOffCode.Description);
             writeOffCodeComboBox.ValueMember = nameof(WriteOffCode.Code);

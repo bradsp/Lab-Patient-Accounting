@@ -14,7 +14,7 @@ namespace LabBilling.Forms
         public InterfaceMonitor()
         {
             InitializeComponent();
-            msgs = new MessagesInboundRepository(Helper.ConnVal);
+            msgs = new MessagesInboundRepository(Program.AppEnvironment);
         }
 
         private readonly MessagesInboundRepository msgs;
@@ -110,7 +110,7 @@ namespace LabBilling.Forms
 
                 if (okToProcess)
                 {
-                    HL7Processor hL7Processor = new HL7Processor(Helper.ConnVal);
+                    HL7Processor hL7Processor = new HL7Processor(Program.AppEnvironment);
                     hL7Processor.ProcessMessage(msgID);
 
                     var row = messagesTable.Rows.Find(msgID);
@@ -260,7 +260,7 @@ namespace LabBilling.Forms
                 string msgType = MessagesGrid.SelectedRows[0].Cells[nameof(MessageInbound.MessageType)].Value.ToString();
                 string processFlag = MessagesGrid.SelectedRows[0].Cells[nameof(MessageInbound.ProcessFlag)].Value.ToString();
 
-                HL7Processor hl7 = new HL7Processor(Helper.ConnVal);
+                HL7Processor hl7 = new HL7Processor(Program.AppEnvironment);
 
                 hl7.SetMessageDoNotProcess(msgID, $"Set to do not process by {Program.LoggedInUser.FullName}");
 

@@ -8,10 +8,7 @@ namespace LabBilling.Core.DataAccess
 {
     public sealed class PatientStatementEncounterRepository : RepositoryBase<PatientStatementEncounter>
     {
-        public PatientStatementEncounterRepository(string connectionString) : base(connectionString) { }
-
-
-        public PatientStatementEncounterRepository(Database db) : base(db) {  }
+        public PatientStatementEncounterRepository(IAppEnvironment appEnvironment) : base(appEnvironment) { }
 
         public List<PatientStatementEncounter> GetByBatch(string batch)
         {

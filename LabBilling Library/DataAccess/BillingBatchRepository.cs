@@ -14,16 +14,10 @@ namespace LabBilling.Core.DataAccess
         AccountRepository accountRepository;
         PatRepository patRepository;
 
-        public BillingBatchRepository(string connection) : base(connection)
+        public BillingBatchRepository(IAppEnvironment appEnvironment) : base(appEnvironment)
         {
-            accountRepository = new AccountRepository(connection);
-            patRepository = new PatRepository(connection);
-        }
-
-        public BillingBatchRepository(PetaPoco.Database db) : base(db)
-        {
-            accountRepository = new AccountRepository(db);
-            patRepository = new PatRepository(db);
+            accountRepository = new AccountRepository(appEnvironment);
+            patRepository = new PatRepository(appEnvironment);
         }
 
         public bool ClearBatch(double batch)

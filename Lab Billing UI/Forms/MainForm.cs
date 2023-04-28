@@ -42,9 +42,9 @@ namespace LabBilling
         {
             InitializeComponent();
 
-            userProfile = new UserProfileRepository(Helper.ConnVal);
-            accountRepository = new AccountRepository(Helper.ConnVal);
-            systemParametersRepository = new SystemParametersRepository(Helper.ConnVal);
+            userProfile = new UserProfileRepository(Program.AppEnvironment);
+            accountRepository = new AccountRepository(Program.AppEnvironment);
+            systemParametersRepository = new SystemParametersRepository(Program.AppEnvironment);
             accordion = new Accordion();
         }
 
@@ -52,10 +52,12 @@ namespace LabBilling
         {
             Log.Instance.Trace($"Entering");
 
-            UserSecurity frm = new UserSecurity();
-            frm.MdiParent = this;
-            frm.WindowState = FormWindowState.Normal;
-            frm.AutoScroll = true;
+            UserSecurity frm = new UserSecurity
+            {
+                MdiParent = this,
+                WindowState = FormWindowState.Normal,
+                AutoScroll = true
+            };
             frm.Show();
         }
 
@@ -126,6 +128,8 @@ namespace LabBilling
 
             #region load accordion menu
 
+            Program.AppEnvironment.ApplicationParameters = systemParametersRepository.LoadParameters();
+
             //recent accounts section
             var recentAccounts = userProfile.GetRecentAccount(Program.LoggedInUser.UserName).ToList();
 
@@ -133,19 +137,19 @@ namespace LabBilling
             tlpRecentAccounts.RowCount = recentAccounts.Count;
             tlpRecentAccounts.ColumnCount = 1;
 
-            toolStripDatabaseLabel.Text = Program.Database;
+            toolStripDatabaseLabel.Text = Program.AppEnvironment.DatabaseName;
             toolStripUsernameLabel.Text = Program.LoggedInUser.FullName;
-            this.Text += " " + Program.Database;
+            this.Text += " " + Program.AppEnvironment.DatabaseName;
             if (!string.IsNullOrEmpty(Program.LoggedInUser.ImpersonatingUser))
             {
                 this.Text += $"  *** IMPERSONATING {Program.LoggedInUser.ImpersonatingUser} ***";
             }
 
-            if (!Convert.ToBoolean(systemParametersRepository.GetByKey("allow_edit")))
+            if (!Program.AppEnvironment.ApplicationParameters.AllowEditing)
                 this.Text += " | READ ONLY MODE";
-            if (!Convert.ToBoolean(systemParametersRepository.GetByKey("allow_chrg_entry")))
+            if (!Program.AppEnvironment.ApplicationParameters.AllowChargeEntry)
                 this.Text += " | Charge entry disabled";
-            if (!Convert.ToBoolean(systemParametersRepository.GetByKey("allow_chk_entry")))
+            if (!Program.AppEnvironment.ApplicationParameters.AllowPaymentAdjustmentEntry)
                 this.Text += " | Pmt/Adj entry disabled";
 
             foreach (UserProfile up in recentAccounts)
@@ -238,7 +242,8 @@ namespace LabBilling
             //enable menu items based on permissions
             systemAdministrationToolStripMenuItem.Visible = Program.LoggedInUser.IsAdministrator;
 
-            if (Convert.ToBoolean(systemParametersRepository.GetByKey("allow_chk_entry")))
+            //if (Convert.ToBoolean(systemParametersRepository.GetByKey("allow_chk_entry")))
+            if(Program.AppEnvironment.ApplicationParameters.AllowPaymentAdjustmentEntry)
             {
                 batchRemittanceToolStripMenuItem.Visible = Program.LoggedInUser.CanAddPayments;
                 remittancePostingToolStripMenuItem.Visible = Program.LoggedInUser.CanAddPayments;
@@ -252,7 +257,8 @@ namespace LabBilling
                 posting835RemitToolStripMenuItem.Visible = false;
                 b5.Visible = false;
             }
-            if (Convert.ToBoolean(systemParametersRepository.GetByKey("allow_chrg_entry")))
+            //if (Convert.ToBoolean(systemParametersRepository.GetByKey("allow_chrg_entry")))
+            if (Program.AppEnvironment.ApplicationParameters.AllowChargeEntry)
             {
                 accountChargeEntryToolStripMenuItem.Visible = Program.LoggedInUser.CanSubmitCharges;
                 batchChargeEntryToolStripMenuItem.Visible = Program.LoggedInUser.CanSubmitCharges;
@@ -264,7 +270,8 @@ namespace LabBilling
                 batchChargeEntryToolStripMenuItem.Visible = false;
                 b4.Visible = false;
             }
-            if (Convert.ToBoolean(systemParametersRepository.GetByKey("allow_edit")))
+            //if (Convert.ToBoolean(systemParametersRepository.GetByKey("allow_edit")))
+            if(Program.AppEnvironment.ApplicationParameters.AllowEditing)
             {
                 sSISubmissionToolStripMenuItem.Visible = Program.LoggedInUser.CanSubmitBilling;
             }
@@ -334,8 +341,10 @@ namespace LabBilling
 
             if (!IsAlreadyOpen)
             {
-                AccountForm frm = new AccountForm(linkLabel.Tag.ToString());
-                frm.MdiParent = this;
+                AccountForm frm = new AccountForm(linkLabel.Tag.ToString())
+                {
+                    MdiParent = this
+                };
                 Cursor.Current = Cursors.WaitCursor;
                 frm.Show();
                 Cursor.Current = Cursors.Default;
@@ -404,7 +413,8 @@ namespace LabBilling
         {
             Log.Instance.Trace($"Entering");
 
-            string url = systemParametersRepository.GetByKey("report_portal_url");
+            //string url = systemParametersRepository.GetByKey("report_portal_url");
+            string url = Program.AppEnvironment.ApplicationParameters.ReportingPortalUrl;
             ReportingPortalForm frm = new ReportingPortalForm(url);
 
             //frm.MdiParent = this;
@@ -444,10 +454,12 @@ namespace LabBilling
             else
             {
 
-                PatientCollectionsForm frm = new PatientCollectionsForm();
-                frm.MdiParent = this;
-                frm.AutoScroll = true;
-                frm.WindowState = FormWindowState.Normal;
+                PatientCollectionsForm frm = new PatientCollectionsForm
+                {
+                    MdiParent = this,
+                    AutoScroll = true,
+                    WindowState = FormWindowState.Normal
+                };
                 frm.Show();
             }
         }
@@ -456,10 +468,12 @@ namespace LabBilling
         {
             Log.Instance.Trace($"Entering");
 
-            frmCorrection frm = new frmCorrection(Helper.GetArgs());
-            frm.MdiParent = this;
-            frm.AutoScroll = true;
-            frm.WindowState = FormWindowState.Normal;
+            frmCorrection frm = new frmCorrection(Helper.GetArgs())
+            {
+                MdiParent = this,
+                AutoScroll = true,
+                WindowState = FormWindowState.Normal
+            };
             frm.Show();
         }
 
@@ -478,10 +492,12 @@ namespace LabBilling
         {
             Log.Instance.Trace($"Entering");
 
-            frmGlobalBilling frm = new frmGlobalBilling(Helper.GetArgs());
-            frm.MdiParent = this;
-            frm.AutoScroll = true;
-            frm.WindowState = FormWindowState.Normal;
+            frmGlobalBilling frm = new frmGlobalBilling(Helper.GetArgs())
+            {
+                MdiParent = this,
+                AutoScroll = true,
+                WindowState = FormWindowState.Normal
+            };
             frm.Show();
         }
 
@@ -496,10 +512,12 @@ namespace LabBilling
             }
             else
             {
-                frmCDM frm = new frmCDM(Helper.GetArgs());
-                frm.MdiParent = this;
-                frm.WindowState = FormWindowState.Normal;
-                frm.AutoScroll = true;
+                frmCDM frm = new frmCDM(Helper.GetArgs())
+                {
+                    MdiParent = this,
+                    WindowState = FormWindowState.Normal,
+                    AutoScroll = true
+                };
                 frm.Show();
             }
         }
@@ -516,10 +534,12 @@ namespace LabBilling
             }
             else
             {
-                ClientBillForm frm = new ClientBillForm(Helper.GetArgs());
-                frm.MdiParent = this;
-                frm.AutoScroll = true;
-                frm.WindowState = FormWindowState.Normal;
+                ClientBillForm frm = new ClientBillForm(Helper.GetArgs())
+                {
+                    MdiParent = this,
+                    AutoScroll = true,
+                    WindowState = FormWindowState.Normal
+                };
                 frm.Show();
             }
         }
@@ -539,10 +559,7 @@ namespace LabBilling
         {
             Log.Instance.Trace($"Entering");
 
-            frmSSISort frm = new frmSSISort(Helper.GetArgs());
-            frm.MdiParent = this;
-            frm.AutoScroll = true;
-            frm.WindowState = FormWindowState.Normal;
+            frmSSISort frm = new frmSSISort(Helper.GetArgs()) { MdiParent = this, AutoScroll = true, WindowState = FormWindowState.Normal };
             frm.Show();
         }
 
@@ -550,10 +567,7 @@ namespace LabBilling
         {
             Log.Instance.Trace($"Entering");
 
-            frmSSI frm = new frmSSI(Helper.GetArgs());
-            frm.MdiParent = this;
-            frm.AutoScroll = true;
-            frm.WindowState = FormWindowState.Normal;
+            frmSSI frm = new frmSSI(Helper.GetArgs()) { MdiParent = this, AutoScroll = true, WindowState = FormWindowState.Normal };
             frm.Show();
         }
 
@@ -561,10 +575,7 @@ namespace LabBilling
         {
             Log.Instance.Trace($"Entering");
 
-            frmReport frm = new frmReport(Helper.GetArgs());
-            frm.MdiParent = this;
-            frm.AutoScroll = true;
-            frm.WindowState = FormWindowState.Normal;
+            frmReport frm = new frmReport(Helper.GetArgs()) { MdiParent = this, AutoScroll = true, WindowState = FormWindowState.Normal };
             frm.Show();
         }
 
@@ -572,10 +583,12 @@ namespace LabBilling
         {
             Log.Instance.Trace($"Entering");
 
-            Legacy.Posting835 frm = new Legacy.Posting835(Helper.GetArgs());
-            frm.MdiParent = this;
-            frm.AutoScroll = true;
-            frm.WindowState = FormWindowState.Normal;
+            Legacy.Posting835 frm = new Legacy.Posting835(Helper.GetArgs())
+            {
+                MdiParent = this,
+                AutoScroll = true,
+                WindowState = FormWindowState.Normal
+            };
 
             frm.Show();
         }
@@ -607,11 +620,12 @@ namespace LabBilling
             }
             else
             {
-                ClientMaintenanceForm frm = new ClientMaintenanceForm();
-
-                frm.MdiParent = this;
-                frm.WindowState = FormWindowState.Normal;
-                frm.AutoScroll = true;
+                ClientMaintenanceForm frm = new ClientMaintenanceForm
+                {
+                    MdiParent = this,
+                    WindowState = FormWindowState.Normal,
+                    AutoScroll = true
+                };
                 frm.Show();
             }
         }
@@ -628,9 +642,10 @@ namespace LabBilling
             }
             else
             {
-                AccountChargeEntry frm = new AccountChargeEntry();
-
-                frm.MdiParent = this;
+                AccountChargeEntry frm = new AccountChargeEntry
+                {
+                    MdiParent = this
+                };
                 frm.Show();
             }
 
@@ -649,11 +664,12 @@ namespace LabBilling
         {
             Log.Instance.Trace("Entering");
 
-            PhysicianMaintenanceForm frm = new PhysicianMaintenanceForm();
-
-            frm.MdiParent = this;
-            frm.WindowState = FormWindowState.Normal;
-            frm.AutoScroll = true;
+            PhysicianMaintenanceForm frm = new PhysicianMaintenanceForm
+            {
+                MdiParent = this,
+                WindowState = FormWindowState.Normal,
+                AutoScroll = true
+            };
             frm.Show();
         }
 
@@ -661,17 +677,15 @@ namespace LabBilling
         {
             Log.Instance.Trace("Entering");
 
-            InterfaceMapping frm = new InterfaceMapping();
-            frm.MdiParent = this;
-            frm.WindowState = FormWindowState.Normal;
-            frm.AutoScroll = true;
+            InterfaceMapping frm = new InterfaceMapping { MdiParent = this, WindowState = FormWindowState.Normal, AutoScroll = true };
             frm.Show();
 
         }
 
         private void Dashboard_MdiChildActivate(object sender, EventArgs e)
         {
-            if (this.MdiChildren.Count() > Convert.ToInt32(systemParametersRepository.GetByKey("tabs_open_limit")))
+            //if (this.MdiChildren.Count() > Convert.ToInt32(systemParametersRepository.GetByKey("tabs_open_limit")))
+            if(this.MdiChildren.Count() > Program.AppEnvironment.ApplicationParameters.TabsOpenLimit)
             {
 
                 List<string> openForms = new List<string>();
@@ -706,11 +720,7 @@ namespace LabBilling
             }
             else
             {
-                ClientInvoiceForm frm = new ClientInvoiceForm();
-
-                frm.MdiParent = this;
-                frm.WindowState = FormWindowState.Normal;
-                frm.AutoScroll = true;
+                ClientInvoiceForm frm = new ClientInvoiceForm { MdiParent = this, WindowState = FormWindowState.Normal, AutoScroll = true };
                 frm.Show();
             }
         }
@@ -718,10 +728,7 @@ namespace LabBilling
         private void interfaceMonitorToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Log.Instance.Trace("Entering");
-            InterfaceMonitor frm = new InterfaceMonitor();
-            frm.MdiParent = this;
-            frm.WindowState = FormWindowState.Normal;
-            frm.AutoScroll = true;
+            InterfaceMonitor frm = new InterfaceMonitor { MdiParent = this, WindowState = FormWindowState.Normal, AutoScroll = true };
             frm.Show();
 
         }
@@ -770,9 +777,12 @@ namespace LabBilling
         {
             cancellationToken = new CancellationTokenSource();
 
-            TableLayoutPanel tlpClaimBatch = new TableLayoutPanel { Dock = DockStyle.Fill };
-            tlpClaimBatch.ColumnCount = 1;
-            tlpClaimBatch.RowCount = 1;
+            TableLayoutPanel tlpClaimBatch = new TableLayoutPanel
+            {
+                Dock = DockStyle.Fill,
+                ColumnCount = 1,
+                RowCount = 1
+            };
 
             Label claimProcessTitleLabel = new Label();
             switch (billingType)
@@ -808,7 +818,7 @@ namespace LabBilling
             accordion.Add(tlpClaimBatch, "Claim Batch", "Claim Batch", 1, true);
             accordion.PerformLayout();
 
-            ClaimGenerator claims = new ClaimGenerator(Helper.ConnVal);
+            ClaimGenerator claims = new ClaimGenerator(Program.AppEnvironment);
             Progress<ProgressReportModel> progress = new Progress<ProgressReportModel>();
             progress.ProgressChanged += ReportProgress;
             try
@@ -871,17 +881,13 @@ namespace LabBilling
         private void insurancePlansToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Log.Instance.Trace("Entering");
-            HealthPlanMaintenanceForm frm = new HealthPlanMaintenanceForm();
-
-            frm.MdiParent = this;
-            frm.WindowState = FormWindowState.Normal;
-            frm.AutoScroll = true;
+            HealthPlanMaintenanceForm frm = new HealthPlanMaintenanceForm { MdiParent = this, WindowState = FormWindowState.Normal, AutoScroll = true };
             frm.Show();
         }
 
         private void remittancePostingToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Remittance835 remittance835 = new Remittance835(Helper.ConnVal);
+            Remittance835 remittance835 = new Remittance835(Program.AppEnvironment);
             string file = @"\\wthmclbill\shared\Billing\TEST\Posting835Remit\MCL_NC_MCR_1093705428_835_11119267.RMT";
 
             remittance835.Load835(file);
@@ -900,11 +906,7 @@ namespace LabBilling
             }
             else
             {
-                ChargeMasterMaintenance frm = new ChargeMasterMaintenance();
-
-                frm.MdiParent = this;
-                frm.WindowState = FormWindowState.Normal;
-                frm.AutoScroll = true;
+                ChargeMasterMaintenance frm = new ChargeMasterMaintenance { MdiParent = this, WindowState = FormWindowState.Normal, AutoScroll = true };
                 frm.Show();
             }
         }
@@ -913,10 +915,7 @@ namespace LabBilling
         {
             Log.Instance.Trace("Entering");
 
-            LogViewerForm frm = new LogViewerForm();
-            frm.MdiParent = this;
-            frm.WindowState = FormWindowState.Normal;
-            frm.AutoScroll = true;
+            LogViewerForm frm = new LogViewerForm { MdiParent = this, WindowState = FormWindowState.Normal, AutoScroll = true };
             frm.Show();
         }
 
@@ -948,46 +947,58 @@ namespace LabBilling
             Form activForm;
             activForm = Form.ActiveForm.ActiveMdiChild;
 
-            string url = systemParametersRepository.GetByKey("documentation_site_url");
+            //string url = systemParametersRepository.GetByKey("documentation_site_url");
+            string url = Program.AppEnvironment.ApplicationParameters.DocumentationSiteUrl;
             string topicPath = null;
             switch (activForm.Name)
             {
                 case nameof(WorkListForm):
-                    topicPath = systemParametersRepository.GetByKey("worklist_url");
+                    //topicPath = systemParametersRepository.GetByKey("worklist_url");
+                    topicPath = Program.AppEnvironment.ApplicationParameters.WorklistUrl;
                     break;
                 case nameof(AccountForm):
-                    topicPath = systemParametersRepository.GetByKey("account_management_url");
+                    //topicPath = systemParametersRepository.GetByKey("account_management_url");
+                    topicPath = Program.AppEnvironment.ApplicationParameters.AccountManagementUrl;
                     break;
                 case nameof(ChargeMasterMaintenance):
                 case nameof(ChargeMasterEditForm):
-                    topicPath = systemParametersRepository.GetByKey("charge_master_maint_url");
+                    //topicPath = systemParametersRepository.GetByKey("charge_master_maint_url");
+                    topicPath = Program.AppEnvironment.ApplicationParameters.ChargeMasterMaintenanceUrl;
                     break;
                 case nameof(HealthPlanMaintenanceEditForm):
                 case nameof(HealthPlanMaintenanceForm):
-                    topicPath = systemParametersRepository.GetByKey("ins_plan_maint_url");
+                    //topicPath = systemParametersRepository.GetByKey("ins_plan_maint_url");
+                    topicPath = Program.AppEnvironment.ApplicationParameters.InsurancePlanMaintenanceUrl;
                     break;
                 case nameof(PhysicianMaintenanceForm):
-                    topicPath = systemParametersRepository.GetByKey("phy_maint_url");
+                    //topicPath = systemParametersRepository.GetByKey("phy_maint_url");
+                    topicPath = Program.AppEnvironment.ApplicationParameters.PhysicianMaintenanceUrl;
                     break;
                 case nameof(ClientMaintenanceForm):
                 case nameof(ClientMaintenanceEditForm):
-                    topicPath = systemParametersRepository.GetByKey("client_maint_url");
+                    //topicPath = systemParametersRepository.GetByKey("client_maint_url");
+                    topicPath = Program.AppEnvironment.ApplicationParameters.ClientMaintenanceUrl;
                     break;
                 case nameof(BatchRemittance):
-                    topicPath = systemParametersRepository.GetByKey("batch_remittance_url");
+                    //topicPath = systemParametersRepository.GetByKey("batch_remittance_url");
+                    topicPath = Program.AppEnvironment.ApplicationParameters.BatchRemittanceUrl;
                     break;
                 case nameof(ClaimsManagementForm):
-                    topicPath = systemParametersRepository.GetByKey("claims_management_url");
+                    //topicPath = systemParametersRepository.GetByKey("claims_management_url");
+                    topicPath = Program.AppEnvironment.ApplicationParameters.ClaimsManagementUrl;
                     break;
                 case nameof(AccountChargeEntry):
-                    topicPath = systemParametersRepository.GetByKey("account_charge_entry_url");
+                    //topicPath = systemParametersRepository.GetByKey("account_charge_entry_url");
+                    topicPath = Program.AppEnvironment.ApplicationParameters.AccountChargeEntryUrl;
                     break;
                 case nameof(ClientInvoiceForm):
-                    topicPath = systemParametersRepository.GetByKey("client_invoicing_url");
+                    //topicPath = systemParametersRepository.GetByKey("client_invoicing_url");
+                    topicPath = Program.AppEnvironment.ApplicationParameters.ClientInvoicingUrl;
                     break;
                 case nameof(PatientCollectionsForm):
                 case nameof(PatientCollectionsEditForm):
-                    topicPath = systemParametersRepository.GetByKey("patient_collections_url");
+                    //topicPath = systemParametersRepository.GetByKey("patient_collections_url");
+                    topicPath = Program.AppEnvironment.ApplicationParameters.PatientCollectionsUrl;
                     break;
                 default:
                     break;
@@ -1007,9 +1018,11 @@ namespace LabBilling
 
         private void latestUpdatesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            string url = systemParametersRepository.GetByKey("documentation_site_url");
+            //string url = systemParametersRepository.GetByKey("documentation_site_url");
+            string url = Program.AppEnvironment.ApplicationParameters.DocumentationSiteUrl;
             string topicPath = null;
-            topicPath = systemParametersRepository.GetByKey("latest_updates_url");
+            //topicPath = systemParametersRepository.GetByKey("latest_updates_url");
+            topicPath = Program.AppEnvironment.ApplicationParameters.LatestUpdatesUrl;
             if (!string.IsNullOrWhiteSpace(topicPath))
                 url += "/" + topicPath;
             System.Diagnostics.Process.Start(url);

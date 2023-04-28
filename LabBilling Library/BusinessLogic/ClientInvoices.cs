@@ -26,27 +26,35 @@ namespace LabBilling.Core.BusinessLogic
         private readonly InvoiceHistoryRepository invoiceHistoryRepository;
         private string fileSavePath = null;
 
-        public ClientInvoices(string connection)
+        private IAppEnvironment _appEnvironment;
+
+        public ClientInvoices(IAppEnvironment appEnvironment)
         {
-            if(connection == "" || connection == null)
+            if(appEnvironment == null) throw new ArgumentNullException(nameof(appEnvironment));
+            if (!appEnvironment.EnvironmentValid) throw new ArgumentException("App Environment is not valid.");
+
+            _appEnvironment = appEnvironment;
+            //if(connection == "" || connection == null)
+            //{
+            //    throw new ArgumentException("Must have a valid connection string", "connection");
+            //}
+            _connection = appEnvironment.ConnectionString;
+
+            dbConnection = appEnvironment.Database;  //new PetaPoco.Database(connection, new SqlServerDatabaseProvider());
+
+            chrgdb = new ChrgRepository(_appEnvironment);
+            chkdb = new ChkRepository(_appEnvironment);
+            clientdb = new ClientRepository(_appEnvironment);
+            systemdb = new SystemParametersRepository(_appEnvironment);
+            accdb = new AccountRepository(_appEnvironment);
+            invoiceHistoryRepository = new InvoiceHistoryRepository(_appEnvironment);
+
+            //this.fileSavePath = systemdb.GetByKey("invoice_file_location") ?? string.Empty;
+            this.fileSavePath = appEnvironment.ApplicationParameters.InvoiceFileLocation;
+
+            if (string.IsNullOrEmpty(fileSavePath))
             {
-                throw new ArgumentException("Must have a valid connection string", "connection");
-            }
-            _connection = connection;
-            dbConnection = new PetaPoco.Database(connection, new SqlServerDatabaseProvider());
-
-            chrgdb = new ChrgRepository(dbConnection);
-            chkdb = new ChkRepository(dbConnection);
-            clientdb = new ClientRepository(dbConnection);
-            systemdb = new SystemParametersRepository(dbConnection);
-            accdb = new AccountRepository(dbConnection);
-            invoiceHistoryRepository = new InvoiceHistoryRepository(dbConnection);
-
-            this.fileSavePath = systemdb.GetByKey("invoice_file_location") ?? string.Empty;
-
-            if(string.IsNullOrEmpty(fileSavePath))
-            {
-                throw new InvalidParameterValueException("invoice_file_location");
+                throw new InvalidParameterValueException(nameof(ApplicationParameters.InvoiceFileLocation));
             }
         }
 
@@ -95,13 +103,13 @@ namespace LabBilling.Core.BusinessLogic
 
             InvoiceModel invoiceModel = new InvoiceModel();
             invoiceModel.StatementType = InvoiceModel.StatementTypeEnum.Statement;
-            invoiceModel.BillingCompanyName = systemdb.GetByKey("invoice_company_name") ?? string.Empty;
-            invoiceModel.BillingCompanyAddress = systemdb.GetByKey("invoice_company_address") ?? string.Empty;
-            invoiceModel.BillingCompanyCity = systemdb.GetByKey("invoice_company_city") ?? string.Empty;
-            invoiceModel.BillingCompanyState = systemdb.GetByKey("invoice_company_state") ?? string.Empty;
-            invoiceModel.BillingCompanyZipCode = systemdb.GetByKey("invoice_company_zipcode") ?? string.Empty;
-            invoiceModel.BillingCompanyPhone = systemdb.GetByKey("invoice_company_zipcode") ?? string.Empty;
-            invoiceModel.ImageFilePath = systemdb.GetByKey("invoice_logo_image_path") ?? string.Empty;
+            invoiceModel.BillingCompanyName = _appEnvironment.ApplicationParameters.InvoiceCompanyName; //systemdb.GetByKey("invoice_company_name") ?? string.Empty;
+            invoiceModel.BillingCompanyAddress = _appEnvironment.ApplicationParameters.InvoiceCompanyAddress; //systemdb.GetByKey("invoice_company_address") ?? string.Empty;
+            invoiceModel.BillingCompanyCity = _appEnvironment.ApplicationParameters.InvoiceCompanyCity; //systemdb.GetByKey("invoice_company_city") ?? string.Empty;
+            invoiceModel.BillingCompanyState = _appEnvironment.ApplicationParameters.InvoiceCompanyState; //systemdb.GetByKey("invoice_company_state") ?? string.Empty;
+            invoiceModel.BillingCompanyZipCode = _appEnvironment.ApplicationParameters.InvoiceCompanyZipCode; //systemdb.GetByKey("invoice_company_zipcode") ?? string.Empty;
+            invoiceModel.BillingCompanyPhone = _appEnvironment.ApplicationParameters.InvoiceCompanyPhone; //systemdb.GetByKey("invoice_company_zipcode") ?? string.Empty;
+            invoiceModel.ImageFilePath = _appEnvironment.ApplicationParameters.InvoiceLogoImagePath; //systemdb.GetByKey("invoice_logo_image_path") ?? string.Empty;
 
             Client client = clientdb.GetClient(clientMnemonic);
 
@@ -147,7 +155,7 @@ namespace LabBilling.Core.BusinessLogic
             
             invoiceModel = (InvoiceModel)serializer.Deserialize(rdr);
 
-            invoiceModel.ImageFilePath = systemdb.GetByKey("invoice_logo_image_path") ?? string.Empty;
+            invoiceModel.ImageFilePath = _appEnvironment.ApplicationParameters.InvoiceLogoImagePath; //systemdb.GetByKey("invoice_logo_image_path") ?? string.Empty;
 
             //only print an invoice if there are invoice lines to print.
             if(invoiceModel.InvoiceDetails.Count() > 0)
@@ -178,15 +186,15 @@ namespace LabBilling.Core.BusinessLogic
             invoiceModel.StatementType = InvoiceModel.StatementTypeEnum.Invoice;
             invoiceModel.ThroughDate = throughDate;
 
-            invoiceModel.BillingCompanyName = systemdb.GetByKey("invoice_company_name") ?? string.Empty;
-            invoiceModel.BillingCompanyAddress = systemdb.GetByKey("invoice_company_address") ?? string.Empty;
-            invoiceModel.BillingCompanyCity = systemdb.GetByKey("invoice_company_city") ?? string.Empty;
-            invoiceModel.BillingCompanyState = systemdb.GetByKey("invoice_company_state") ?? string.Empty;
-            invoiceModel.BillingCompanyZipCode = systemdb.GetByKey("invoice_company_zipcode") ?? string.Empty;
-            invoiceModel.BillingCompanyPhone = systemdb.GetByKey("invoice_company_phone") ?? string.Empty;
-            invoiceModel.ImageFilePath = systemdb.GetByKey("invoice_logo_image_path") ?? string.Empty;
+            invoiceModel.BillingCompanyName = _appEnvironment.ApplicationParameters.InvoiceCompanyName; //systemdb.GetByKey("invoice_company_name") ?? string.Empty;
+            invoiceModel.BillingCompanyAddress = _appEnvironment.ApplicationParameters.InvoiceCompanyAddress; //systemdb.GetByKey("invoice_company_address") ?? string.Empty;
+            invoiceModel.BillingCompanyCity = _appEnvironment.ApplicationParameters.InvoiceCompanyCity; //systemdb.GetByKey("invoice_company_city") ?? string.Empty;
+            invoiceModel.BillingCompanyState = _appEnvironment.ApplicationParameters.InvoiceCompanyCity; //systemdb.GetByKey("invoice_company_state") ?? string.Empty;
+            invoiceModel.BillingCompanyZipCode = _appEnvironment.ApplicationParameters.InvoiceCompanyZipCode; //systemdb.GetByKey("invoice_company_zipcode") ?? string.Empty;
+            invoiceModel.BillingCompanyPhone = _appEnvironment.ApplicationParameters.InvoiceCompanyPhone; //systemdb.GetByKey("invoice_company_phone") ?? string.Empty;
+            invoiceModel.ImageFilePath = _appEnvironment.ApplicationParameters.InvoiceLogoImagePath; //systemdb.GetByKey("invoice_logo_image_path") ?? string.Empty;
 
-            NumberRepository numberdb = new NumberRepository(_connection);
+            NumberRepository numberdb = new NumberRepository(_appEnvironment);
 
             Client client = clientdb.GetClient(clientMnemonic);
             invoiceModel.ClientMnem = clientMnemonic;

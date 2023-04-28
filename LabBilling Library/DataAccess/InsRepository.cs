@@ -12,12 +12,7 @@ namespace LabBilling.Core.DataAccess
 {
     public sealed class InsRepository : RepositoryBase<Ins>
     {
-        public InsRepository(string connection) : base(connection)
-        {
-
-        }
-
-        public InsRepository(PetaPoco.Database db) : base(db)
+        public InsRepository(IAppEnvironment appEnvironment) : base(appEnvironment)
         {
 
         }

@@ -38,8 +38,8 @@ namespace LabBilling.Forms
         public BatchChargeEntryForm()
         {
 
-            accountRepository = new AccountRepository(Helper.ConnVal);
-            cdmRepository = new CdmRepository(Helper.ConnVal);
+            accountRepository = new AccountRepository(Program.AppEnvironment);
+            cdmRepository = new CdmRepository(Program.AppEnvironment);
 
             InitializeComponent();
 

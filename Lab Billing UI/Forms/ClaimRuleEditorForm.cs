@@ -20,16 +20,16 @@ namespace LabBilling.Forms
 
         private List<ClaimValidationRule> claimRules;
         private List<string> propertyList;
-        ClaimValidationRuleRepository claimRuleRepository = new ClaimValidationRuleRepository(Helper.ConnVal);
+        ClaimValidationRuleRepository claimRuleRepository = new ClaimValidationRuleRepository(Program.AppEnvironment);
 
         private void ClaimRuleEditorForm_Load(object sender, EventArgs e)
         {
-            cbOperator.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
-            cbOperator.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
-            cbMemberName.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
-            cbMemberName.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
-            cbLineType.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
-            cbLineType.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
+            cbOperator.AutoCompleteSource = AutoCompleteSource.ListItems;
+            cbOperator.AutoCompleteMode = AutoCompleteMode.Suggest;
+            cbMemberName.AutoCompleteSource = AutoCompleteSource.ListItems;
+            cbMemberName.AutoCompleteMode = AutoCompleteMode.Suggest;
+            cbLineType.AutoCompleteSource = AutoCompleteSource.ListItems;
+            cbLineType.AutoCompleteMode = AutoCompleteMode.Suggest;
             cbMemberName.DropDownStyle = ComboBoxStyle.DropDown;
 
             listRules.View = View.Details;

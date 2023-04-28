@@ -20,14 +20,7 @@ namespace LabBilling
         {
             get
             {
-                SqlConnectionStringBuilder myBuilder = new SqlConnectionStringBuilder();
-
-                myBuilder.InitialCatalog = Program.Database;
-                myBuilder.DataSource = Program.Server;
-                myBuilder.IntegratedSecurity = true;
-                myBuilder.ConnectTimeout = 30;
-
-                return myBuilder.ConnectionString;
+                return Program.AppEnvironment.ConnectionString;
             }
         }
 
@@ -35,27 +28,13 @@ namespace LabBilling
         {
             get
             {
-                SqlConnectionStringBuilder myBuilder = new SqlConnectionStringBuilder();
-
-                myBuilder.InitialCatalog = Program.LogDatabase;
-                myBuilder.DataSource = Program.Server;
-                myBuilder.IntegratedSecurity = true;
-                myBuilder.ConnectTimeout = 30;
-
-                return myBuilder.ConnectionString;
+                return Program.AppEnvironment.LogConnectionString;
             }
         }
 
         public static string[] GetArgs()
         {
-            //ConnectionString connString = Helper.ConnVal;
-            
-            string[] args = new string[2];
-
-            args[0] = Program.Server;
-            args[1] = Program.Database;
-
-            return args;
+            return Program.AppEnvironment.GetArgs();
         }
 
         public static string Encrypt(string clearText)

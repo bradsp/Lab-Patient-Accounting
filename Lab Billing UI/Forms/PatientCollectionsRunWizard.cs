@@ -17,9 +17,9 @@ namespace LabBilling.Forms
 {
     public partial class PatientCollectionsRunWizard : Form
     {
-        private PatientBilling patientBilling = new PatientBilling(Helper.ConnVal);
-        private BadDebtRepository badDebtRepository = new BadDebtRepository(Helper.ConnVal);
-        private SystemParametersRepository parametersRepository = new SystemParametersRepository(Helper.ConnVal);
+        private PatientBilling patientBilling = new PatientBilling(Program.AppEnvironment);
+        private BadDebtRepository badDebtRepository = new BadDebtRepository(Program.AppEnvironment);
+        private SystemParametersRepository parametersRepository = new SystemParametersRepository(Program.AppEnvironment);
         private bool errorEncountered = false;
         private DateTime thruDate;
         private string batchNo;
@@ -191,8 +191,8 @@ namespace LabBilling.Forms
                 sendToCollectionsStartButton.Enabled = true;
             }
 
-            compileStmtsStartButton.Enabled = false;
-            createStmtFileStartButton.Enabled = false;
+            compileStmtsStartButton.Enabled = true;
+            createStmtFileStartButton.Enabled = true;
            
         }
 
@@ -203,8 +203,10 @@ namespace LabBilling.Forms
 
         private void PatientCollectionsRunWizard_HelpButtonClicked(object sender, CancelEventArgs e)
         {
-            string url = parametersRepository.GetByKey("documentation_site_url");
-            string topicPath = parametersRepository.GetByKey("patient_statements_url");
+            //string url = parametersRepository.GetByKey("documentation_site_url");
+            string url = Program.AppEnvironment.ApplicationParameters.DocumentationSiteUrl;
+            //string topicPath = parametersRepository.GetByKey("patient_statements_url");
+            string topicPath = Program.AppEnvironment.ApplicationParameters.PatientStatementsUrl;
 
             if (!string.IsNullOrWhiteSpace(url) && !string.IsNullOrWhiteSpace(topicPath))
             {

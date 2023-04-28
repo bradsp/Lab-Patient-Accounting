@@ -19,8 +19,8 @@ namespace LabBilling.Core.DataAccess
     /// <typeparam name="T"></typeparam>
     public abstract class RepositoryBase<TPoco> : IRepositoryBase<TPoco> where TPoco : IBaseEntity
     {
-        protected readonly PetaPoco.Database dbConnection = null;
-        protected readonly string _tableName;
+        protected PetaPoco.Database dbConnection = null;
+        protected string _tableName;
         protected IList<string> _fields;
         protected TableInfo _tableInfo;
         protected bool transactionStarted = false;
@@ -28,24 +28,42 @@ namespace LabBilling.Core.DataAccess
         /// Contains error messages as a result of actions.
         /// </summary>
         public string Errors { get; internal set; }
+        protected IAppEnvironment _appEnvironment { get; set; }
 
-        public RepositoryBase(string connectionString)
+        public RepositoryBase(IAppEnvironment environment)
+        {
+            Log.Instance.Trace("Entering");
+            if (!environment.EnvironmentValid)
+                throw new ApplicationException("AppEnvironment not valid.");
+            
+            _appEnvironment = environment;
+            Initialize();
+            
+        }
+
+        private void Initialize()
         {
             Log.Instance.Trace("Entering");
             _tableInfo = GetTableInfo(typeof(TPoco));
             _tableName = _tableInfo.TableName;
-            dbConnection = new PetaPoco.Database(connectionString, new CustomSqlDatabaseProvider());
-            Log.Instance.Debug(dbConnection.ConnectionString);
+            dbConnection = _appEnvironment.Database;
         }
 
-        public RepositoryBase(Database db)
-        {
-            Log.Instance.Trace("Entering");
-            _tableInfo = GetTableInfo(typeof(TPoco));
-            _tableName = _tableInfo.TableName;
-            dbConnection = db;
-            Log.Instance.Debug(dbConnection.ConnectionString);
-        }
+        //public RepositoryBase(string connectionString)
+        //{
+        //    Log.Instance.Trace("Entering");
+        //    Initialize();
+        //    dbConnection = new PetaPoco.Database(connectionString, new CustomSqlDatabaseProvider());
+        //    Log.Instance.Debug(dbConnection.ConnectionString);
+        //}
+
+        //public RepositoryBase(Database db)
+        //{
+        //    Log.Instance.Trace("Entering");
+        //    Initialize();
+        //    dbConnection = db;
+        //    Log.Instance.Debug(dbConnection.ConnectionString);
+        //}
 
         public virtual List<TPoco> GetAll()
         {

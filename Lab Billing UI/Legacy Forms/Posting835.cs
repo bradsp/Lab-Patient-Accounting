@@ -6037,7 +6037,7 @@ namespace LabBilling.Legacy
                 Application.DoEvents();
                 tspbRecords.PerformStep();
                 Application.DoEvents();
-                string strContents = RFClassLibrary.RFCObject.GetFileContents(f1.FullName).ToUpper();
+                string strContents = RFCObject.GetFileContents(f1.FullName).ToUpper();
                 if (!(strContents.Contains("CLP*L") || strContents.Contains("CLP*C") || strContents.Contains("CLP*D")))
                 {
                     try
@@ -6067,8 +6067,10 @@ namespace LabBilling.Legacy
 
         private void FindAccountInFilesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Form f = new Form();
-            f.Text = "FIND ACCOUNT";
+            Form f = new Form
+            {
+                Text = "FIND ACCOUNT"
+            };
             TextBox t = new TextBox();
             f.Controls.Add(t);
             ListBox l = new ListBox();

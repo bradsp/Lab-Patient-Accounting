@@ -17,12 +17,7 @@ namespace LabBilling.Core.DataAccess
 {
     public sealed class AccountSearchRepository : RepositoryBase<AccountSearch>
     {
-        public AccountSearchRepository(string connectionString) : base(connectionString)
-        {
-
-        }
-
-        public AccountSearchRepository(PetaPoco.Database db) : base(db)
+        public AccountSearchRepository(IAppEnvironment appEnvironment) : base(appEnvironment)
         {
 
         }
@@ -42,7 +37,7 @@ namespace LabBilling.Core.DataAccess
 
         public IList<AccountSearch> GetBySearch((string propertyName, operation oper, string searchText)[] searchValues)
         {
-            InsRepository insRepository = new InsRepository(dbConnection);
+            InsRepository insRepository = new InsRepository(_appEnvironment);
             try
             {
                 var command = PetaPoco.Sql.Builder;
@@ -150,7 +145,7 @@ namespace LabBilling.Core.DataAccess
 
         public async Task<IEnumerable<AccountSearch>> GetBySearchAsync((string propertyName, operation oper, string searchText)[] searchValues)
         {
-            InsRepository insRepository = new InsRepository(dbConnection);
+            InsRepository insRepository = new InsRepository(_appEnvironment);
             try
             {
                 var command = PetaPoco.Sql.Builder;
@@ -251,27 +246,34 @@ namespace LabBilling.Core.DataAccess
                     .Where("deleted = 0 ");
 
                 if (!String.IsNullOrEmpty(lastNameSearchText))
-                    command.Where($"{GetRealColumn(nameof(AccountSearch.LastName))} like @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = lastNameSearchText+"%" });
+                    command.Where($"{GetRealColumn(nameof(AccountSearch.LastName))} like @0", 
+                        new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = lastNameSearchText+"%" });
 
                 if(!string.IsNullOrEmpty(firstNameSearchText))
-                    command.Where($"{GetRealColumn(nameof(AccountSearch.FirstName))} like @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = firstNameSearchText + "%" });
+                    command.Where($"{GetRealColumn(nameof(AccountSearch.FirstName))} like @0", 
+                        new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = firstNameSearchText + "%" });
 
                 if (!string.IsNullOrEmpty(accountSearchText))
-                    command.Where($"{GetRealColumn(nameof(AccountSearch.Account))} = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = accountSearchText });
+                    command.Where($"{GetRealColumn(nameof(AccountSearch.Account))} = @0", 
+                        new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = accountSearchText });
 
                 if (!string.IsNullOrEmpty(mrnSearchText))
-                    command.Where($"{GetRealColumn(nameof(AccountSearch.MRN))} = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = mrnSearchText });
+                    command.Where($"{GetRealColumn(nameof(AccountSearch.MRN))} = @0", 
+                        new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = mrnSearchText });
 
                 if (!string.IsNullOrEmpty(sexSearch))
-                    command.Where($"{GetRealColumn(nameof(AccountSearch.Sex))} = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = sexSearch });
+                    command.Where($"{GetRealColumn(nameof(AccountSearch.Sex))} = @0", 
+                        new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = sexSearch });
 
                 if (!string.IsNullOrEmpty(ssnSearchText))
-                    command.Where($"{GetRealColumn(nameof(AccountSearch.SSN))} = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = ssnSearchText });
+                    command.Where($"{GetRealColumn(nameof(AccountSearch.SSN))} = @0", 
+                        new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = ssnSearchText });
 
                 if (!string.IsNullOrEmpty(dobSearch))
                 {
                     _ = DateTime.TryParse(dobSearch, out DateTime dobDt);
-                    command.Where($"{GetRealColumn(nameof(AccountSearch.DateOfBirth))} = @0", new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = dobDt });
+                    command.Where($"{GetRealColumn(nameof(AccountSearch.DateOfBirth))} = @0", 
+                        new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = dobDt });
                 }
                     
                 command.OrderBy($"{GetRealColumn(nameof(AccountSearch.ServiceDate))} desc");

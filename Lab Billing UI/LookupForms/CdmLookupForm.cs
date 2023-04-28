@@ -24,7 +24,7 @@ namespace LabBilling.Forms
         public CdmLookupForm()
         {
             InitializeComponent();
-            cdmRepository = new CdmRepository(Helper.ConnVal);
+            cdmRepository = new CdmRepository(Program.AppEnvironment);
 
             _timer = new System.Windows.Forms.Timer() { Enabled = false, Interval = _timerInterval };
             _timer.Tick += new EventHandler(searchTextBox_OnKeyUpDone);

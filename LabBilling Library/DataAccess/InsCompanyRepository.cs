@@ -11,12 +11,7 @@ namespace LabBilling.Core.DataAccess
 {
     public sealed class InsCompanyRepository : RepositoryBase<InsCompany>
     {
-        public InsCompanyRepository(string connection) : base(connection)
-        {
-
-        }
-
-        public InsCompanyRepository(PetaPoco.Database db) : base(db)
+        public InsCompanyRepository(IAppEnvironment appEnvironment) : base(appEnvironment)
         {
 
         }
@@ -39,7 +34,7 @@ namespace LabBilling.Core.DataAccess
                 //record.State = strState;
                 //record.Zip = strZip;
 
-                MappingRepository mappingRepository = new MappingRepository(dbConnection);
+                MappingRepository mappingRepository = new MappingRepository(_appEnvironment);
 
                 record.Mappings = mappingRepository.GetMappingsBySendingValue("INS_CODE", record.InsuranceCode).ToList();
             }

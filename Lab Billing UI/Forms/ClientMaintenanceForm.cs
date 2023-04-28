@@ -15,8 +15,8 @@ namespace LabBilling.Forms
 {
     public partial class ClientMaintenanceForm : Form
     {
-        private readonly ClientRepository clientRepository = new ClientRepository(Helper.ConnVal);
-        private readonly GLCodeRepository gLCodeRepository = new GLCodeRepository(Helper.ConnVal);
+        private readonly ClientRepository clientRepository = new ClientRepository(Program.AppEnvironment);
+        private readonly GLCodeRepository gLCodeRepository = new GLCodeRepository(Program.AppEnvironment);
         private System.Windows.Forms.Timer _timer;
         private int timerDelay = 650;
 

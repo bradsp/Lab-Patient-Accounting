@@ -9,19 +9,14 @@ namespace LabBilling.Core.DataAccess
 {
     public sealed class ChrgDetailRepository : RepositoryBase<ChrgDetail>
     {
-        public ChrgDetailRepository(string connection) : base(connection)
-        {
-
-        }
-
-        public ChrgDetailRepository(PetaPoco.Database db) : base(db)
+        public ChrgDetailRepository(IAppEnvironment appEnvironment) : base(appEnvironment)
         {
 
         }
 
         public override object Add(ChrgDetail table)
         {
-            ChrgDiagnosisPointerRepository chrgDiagnosisPointerRepository = new ChrgDiagnosisPointerRepository(dbConnection);
+            ChrgDiagnosisPointerRepository chrgDiagnosisPointerRepository = new ChrgDiagnosisPointerRepository(_appEnvironment);
 
             var value = base.Add(table);
 
@@ -37,8 +32,8 @@ namespace LabBilling.Core.DataAccess
         {
             Logging.Log.Instance.Trace("Entering");
 
-            RevenueCodeRepository revenueCodeRepository = new RevenueCodeRepository(dbConnection);
-            ChrgDiagnosisPointerRepository chrgDiagnosisPointerRepository = new ChrgDiagnosisPointerRepository(dbConnection);
+            RevenueCodeRepository revenueCodeRepository = new RevenueCodeRepository(_appEnvironment);
+            ChrgDiagnosisPointerRepository chrgDiagnosisPointerRepository = new ChrgDiagnosisPointerRepository(_appEnvironment);
             var sql = PetaPoco.Sql.Builder
                 .From($"{_tableName}")
                 .Where($"{this.GetRealColumn(nameof(ChrgDetail.ChrgNo))} = @0", new SqlParameter() { SqlDbType = SqlDbType.Decimal, Value = chrg_num });
@@ -83,12 +78,7 @@ namespace LabBilling.Core.DataAccess
 
     public class ChrgDiagnosisPointerRepository : RepositoryBase<ChrgDiagnosisPointer>
     {
-        public ChrgDiagnosisPointerRepository(string connection) : base (connection)
-        {
-
-        }
-
-        public ChrgDiagnosisPointerRepository(Database db) : base(db)
+        public ChrgDiagnosisPointerRepository(IAppEnvironment appEnvironment) : base (appEnvironment)
         {
 
         }

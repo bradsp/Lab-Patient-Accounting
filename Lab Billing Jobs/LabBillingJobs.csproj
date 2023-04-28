@@ -151,7 +151,6 @@
   <ItemGroup>
     <Compile Include="AccountValidationJob.cs" />
     <Compile Include="ClaimsProcessingJob.cs" />
-    <Compile Include="Helper.cs" />
     <Compile Include="JobProcessor.cs" />
     <Compile Include="NotesProcessingJob.cs" />
     <Compile Include="Program.cs" />

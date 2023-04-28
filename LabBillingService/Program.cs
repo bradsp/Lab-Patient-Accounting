@@ -1,4 +1,5 @@
 ﻿using System;
+using LabBilling.Core.DataAccess;
 using log4net.Config;
 using Topshelf;
 
@@ -6,19 +7,25 @@ namespace LabBillingService
 {
     static class Program
     {
-        public static string ConnectionString { get; set; }
-        public static string Server { get; set; }
-        public static string Database { get; set; }
-        public static string LogDatabase { get; set; }
+        //public static string ConnectionString { get; set; }
+        //public static string Server { get; set; }
+        //public static string Database { get; set; }
+        //public static string LogDatabase { get; set; }
+
+        public static AppEnvironment AppEnvironment { get; set; }
 
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
         static void Main()
         {
-            Program.Database = Properties.Settings.Default.DbName;
-            Program.Server = Properties.Settings.Default.DbServer;
-            Program.LogDatabase = Properties.Settings.Default.LogDbName;
+            AppEnvironment.DatabaseName = Properties.Settings.Default.DbName;
+            AppEnvironment.ServerName = Properties.Settings.Default.DbServer;
+            AppEnvironment.LogDatabaseName = Properties.Settings.Default.LogDbName;
+
+            SystemParametersRepository systemParametersRepository = new SystemParametersRepository(AppEnvironment);
+
+            AppEnvironment.ApplicationParameters = systemParametersRepository.LoadParameters();
 
             string path = System.Reflection.Assembly.GetExecutingAssembly().Location;
             var directory = System.IO.Path.GetDirectoryName(path);

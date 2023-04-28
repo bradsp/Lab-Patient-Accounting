@@ -22,9 +22,9 @@ namespace LabBilling.Forms
             InitializeComponent();
         }
 
-        private readonly ChkBatchRepository chkBatchRepository = new ChkBatchRepository(Helper.ConnVal);
-        private readonly ChkRepository chkRepository = new ChkRepository(Helper.ConnVal);
-        private readonly AccountRepository accountRepository = new AccountRepository(Helper.ConnVal);
+        private readonly ChkBatchRepository chkBatchRepository = new ChkBatchRepository(Program.AppEnvironment);
+        private readonly ChkRepository chkRepository = new ChkRepository(Program.AppEnvironment);
+        private readonly AccountRepository accountRepository = new AccountRepository(Program.AppEnvironment);
 
         private int SaveBatch(int batchNo = 0)
         {

@@ -9,14 +9,9 @@ namespace LabBilling.Core.DataAccess
 {
     public sealed class MappingRepository : RepositoryBase<Mapping>
     {
-        public MappingRepository(string connection) : base(connection)
+        public MappingRepository(IAppEnvironment appEnvironment) : base(appEnvironment)
         {
                 
-        }
-
-        public MappingRepository(PetaPoco.Database db) : base(db)
-        {
-
         }
 
         public IList<string> GetReturnTypeList()

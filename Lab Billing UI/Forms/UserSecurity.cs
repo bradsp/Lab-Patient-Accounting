@@ -13,7 +13,7 @@ namespace LabBilling
     public partial class UserSecurity : Form
     {
         //private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
-        readonly EmpRepository empRepository = new EmpRepository(Helper.ConnVal);
+        readonly EmpRepository empRepository = new EmpRepository(Program.AppEnvironment);
         private bool IsNewRecord = false;
         List<Emp> searchResults = new List<Emp>();
 

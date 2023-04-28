@@ -5,22 +5,25 @@ using System.Text;
 using System.Threading.Tasks;
 using Topshelf;
 using log4net.Config;
+using LabBilling.Core.DataAccess;
 
 namespace LabBillingJobs
 {
     internal class Program
     {
-        public static string ConnectionString { get; set; }
-        public static string Server { get; set; }
-        public static string Database { get; set; }
-        public static string LogDatabase { get; set; }
+        //public static string ConnectionString { get; set; }
+        //public static string Server { get; set; }
+        //public static string Database { get; set; }
+        //public static string LogDatabase { get; set; }
 
+        public static AppEnvironment AppEnvironment { get; set; } = new AppEnvironment();
 
         static void Main(string[] args)
         {
-            Program.Database = Properties.Settings.Default.DbName;
-            Program.Server = Properties.Settings.Default.DbServer;
-            Program.LogDatabase = Properties.Settings.Default.LogDbName;
+
+            AppEnvironment.DatabaseName = Properties.Settings.Default.DbName;
+            AppEnvironment.ServerName = Properties.Settings.Default.DbServer;
+            AppEnvironment.LogDatabaseName = Properties.Settings.Default.LogDbName;
 
             string path = System.Reflection.Assembly.GetExecutingAssembly().Location;
             var directory = System.IO.Path.GetDirectoryName(path);

@@ -36,7 +36,7 @@ namespace LabBillingJobs
 
             public void RunClaimsProcessing()
             {
-                ClaimGenerator claimGenerator = new ClaimGenerator(Helper.ConnVal);
+                ClaimGenerator claimGenerator = new ClaimGenerator(Program.AppEnvironment);
 
                 CancellationToken cancellationToken = new CancellationToken();
                 Progress<ProgressReportModel> progressReportModel = new Progress<ProgressReportModel>();

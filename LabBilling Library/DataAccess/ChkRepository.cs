@@ -9,12 +9,7 @@ namespace LabBilling.Core.DataAccess
 {
     public sealed class ChkRepository : RepositoryBase<Chk>
     {
-        public ChkRepository(string connection) : base(connection)
-        {
-
-        }
-
-        public ChkRepository(PetaPoco.Database db) : base(db)
+        public ChkRepository(IAppEnvironment appEnvironment) : base(appEnvironment)
         {
 
         }

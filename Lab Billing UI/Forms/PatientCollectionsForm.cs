@@ -87,8 +87,8 @@ namespace LabBilling.Forms
             InitializeComponent();
             
 
-            m_strServer = Program.Server; 
-            m_strDatabase = Program.Database;
+            m_strServer = Program.AppEnvironment.ServerName; 
+            m_strDatabase = Program.AppEnvironment.DatabaseName;
             m_strProductionEnvironment = m_strDatabase; //.Contains("LIVE")? "LIVE":"TEST";
 
             string[] strArgs = new string[] { m_strProductionEnvironment, m_strServer, m_strDatabase };

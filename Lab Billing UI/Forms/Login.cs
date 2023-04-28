@@ -111,21 +111,21 @@ namespace LabBilling
 
             if (testEnvironment)
             {
-                Program.Database = Properties.Settings.Default.TestDbName;
-                Program.Server = Properties.Settings.Default.TestDbServer;
-                Program.LogDatabase = Properties.Settings.Default.LogDbName;
+                Program.AppEnvironment.DatabaseName = Properties.Settings.Default.TestDbName;
+                Program.AppEnvironment.ServerName = Properties.Settings.Default.TestDbServer;
+                Program.AppEnvironment.LogDatabaseName = Properties.Settings.Default.LogDbName;
             }
             else
             {
-                Program.Database = Properties.Settings.Default.DbName;
-                Program.Server = Properties.Settings.Default.DbServer;
-                Program.LogDatabase = Properties.Settings.Default.LogDbName;
+                Program.AppEnvironment.DatabaseName = Properties.Settings.Default.DbName;
+                Program.AppEnvironment.ServerName = Properties.Settings.Default.DbServer;
+                Program.AppEnvironment.LogDatabaseName = Properties.Settings.Default.LogDbName;
             }
 
             IntegratedAuthentication.Checked = true;
             IntegratedAuthentication_CheckedChanged(sender, e);
 
-            db = new EmpRepository(Helper.ConnVal);
+            db = new EmpRepository(Program.AppEnvironment);
 
             //check username now to see if it is valid and has impersonate permissions
             GetUserProfile();

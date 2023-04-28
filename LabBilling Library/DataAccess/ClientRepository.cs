@@ -17,16 +17,10 @@ namespace LabBilling.Core.DataAccess
         ClientTypeRepository clientTypeRepository;
         //AccountRepository accountRepository;
 
-        public ClientRepository(string connection) : base(connection)
+        public ClientRepository(IAppEnvironment appEnvironment) : base(appEnvironment)
         {
-            clientDiscountRepository = new ClientDiscountRepository(connection);
-            clientTypeRepository = new ClientTypeRepository(connection);
-        }
-
-        public ClientRepository(PetaPoco.Database db) : base(db)
-        {
-            clientDiscountRepository = new ClientDiscountRepository(db);
-            clientTypeRepository = new ClientTypeRepository(db);
+            clientDiscountRepository = new ClientDiscountRepository(appEnvironment);
+            clientTypeRepository = new ClientTypeRepository(appEnvironment);
         }
 
         public List<Client> GetAll(bool includeInactive)
@@ -54,11 +48,11 @@ namespace LabBilling.Core.DataAccess
         public Client GetClient(string clientMnem)
         {
             Log.Instance.Debug($"Entering - {clientMnem}");
-            MappingRepository mappingRepository = new MappingRepository(dbConnection);
+            MappingRepository mappingRepository = new MappingRepository(_appEnvironment);
 
             if (clientMnem == null)
             {
-                throw new ArgumentNullException("clientMnem");
+                throw new ArgumentNullException(nameof(clientMnem));
             }
 
             var record = dbConnection.SingleOrDefault<Client>("where cli_mnem = @0", new SqlParameter() { SqlDbType = System.Data.SqlDbType.VarChar, Value = clientMnem });
@@ -80,7 +74,7 @@ namespace LabBilling.Core.DataAccess
 
             if (string.IsNullOrEmpty(table.BillMethod))
                 table.BillMethod = "PER ACCOUNT";
-            AccountRepository accountRepository = new AccountRepository(dbConnection);
+            AccountRepository accountRepository = new AccountRepository(_appEnvironment);
 
             var account = accountRepository.GetByAccount(table.ClientMnem, true);
 
@@ -170,8 +164,8 @@ namespace LabBilling.Core.DataAccess
         public List<ClientStatementDetailModel> GetStatementDetails(string clientMnem, DateTime asOfDate)
         {
 
-            ChkRepository chkRepository = new ChkRepository(dbConnection);
-            ChrgRepository chrgRepository = new ChrgRepository(dbConnection);
+            ChkRepository chkRepository = new ChkRepository(_appEnvironment);
+            ChrgRepository chrgRepository = new ChrgRepository(_appEnvironment);
 
             var charges = chrgRepository.GetByAccount(clientMnem, true, true, asOfDate, false);
 
@@ -254,7 +248,7 @@ namespace LabBilling.Core.DataAccess
             Account account;
 
             //check to see if client account exists
-            AccountRepository accdb = new AccountRepository(dbConnection);
+            AccountRepository accdb = new AccountRepository(_appEnvironment);
             account = accdb.GetByAccount(clientMnem);
 
             if (account == null)

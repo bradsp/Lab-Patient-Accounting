@@ -45,10 +45,10 @@ namespace LabBilling.Forms
             //are there any old print files that need to be cleaned up?
             CleanTempFiles();
 
-            clientInvoices = new ClientInvoices(Helper.ConnVal);
-            historyRepository = new InvoiceHistoryRepository(Helper.ConnVal);
-            clientRepository = new ClientRepository(Helper.ConnVal);
-            parametersRepository = new SystemParametersRepository(Helper.ConnVal);
+            clientInvoices = new ClientInvoices(Program.AppEnvironment);
+            historyRepository = new InvoiceHistoryRepository(Program.AppEnvironment);
+            clientRepository = new ClientRepository(Program.AppEnvironment);
+            parametersRepository = new SystemParametersRepository(Program.AppEnvironment);
 
             clientList = clientRepository.GetAll().ToList();
             clientList.Sort((p, q) => p.Name.CompareTo(q.Name));
@@ -361,7 +361,7 @@ namespace LabBilling.Forms
             {
                 string invoiceNo = InvoiceHistoryDGV.SelectedRows[0].Cells[nameof(InvoiceHistory.InvoiceNo)].Value.ToString();
 
-                ClientInvoices clientInvoices = new ClientInvoices(Helper.ConnVal);
+                ClientInvoices clientInvoices = new ClientInvoices(Program.AppEnvironment);
 
                 string filename = clientInvoices.PrintInvoice(invoiceNo);
 
@@ -467,7 +467,8 @@ namespace LabBilling.Forms
             }
             else if (senderName == saveToPDFToolStripMenuItem.Name || senderName == saveAllToPDFToolStripMenuItem.Name)
             {
-                string path = parametersRepository.GetByKey("invoice_file_location");
+                //string path = parametersRepository.GetByKey("invoice_file_location");
+                string path = Program.AppEnvironment.ApplicationParameters.InvoiceFileLocation;
                 if(!Directory.Exists(path))
                 {
                     path = "";

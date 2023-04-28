@@ -9,11 +9,7 @@ namespace LabBilling.Core.DataAccess
 {
     public sealed class ClaimValidationRuleRepository : RepositoryBase<ClaimValidationRule>
     {
-        public ClaimValidationRuleRepository(string connection) : base(connection)
-        {
-        }
-
-        public ClaimValidationRuleRepository(PetaPoco.Database db) : base(db)
+        public ClaimValidationRuleRepository(IAppEnvironment appEnvironment) : base(appEnvironment)
         {
         }
 
@@ -36,7 +32,7 @@ namespace LabBilling.Core.DataAccess
 
         public override bool Save(ClaimValidationRule table)
         {
-            ClaimValidationRuleCriterionRepository criterionRepository = new ClaimValidationRuleCriterionRepository(dbConnection);
+            ClaimValidationRuleCriterionRepository criterionRepository = new ClaimValidationRuleCriterionRepository(_appEnvironment);
 
             //if RuleId == 0 - add new rule, otherwise update       
             if(table.RuleId == 0)
@@ -63,11 +59,7 @@ namespace LabBilling.Core.DataAccess
 
     public class ClaimValidationRuleCriterionRepository : RepositoryBase<ClaimValidationRuleCriterion>
     {
-        public ClaimValidationRuleCriterionRepository(string connectionString) : base(connectionString)
-        {
-
-        }
-        public ClaimValidationRuleCriterionRepository(PetaPoco.Database db) : base(db)
+        public ClaimValidationRuleCriterionRepository(IAppEnvironment appEnvironment) : base(appEnvironment)
         {
 
         }

@@ -10,12 +10,8 @@ namespace LabBilling.Core.DataAccess
 {
     public sealed class ClientTypeRepository : RepositoryBase<ClientType>
     {
-        public ClientTypeRepository(string connectionString) : base(connectionString)
+        public ClientTypeRepository(IAppEnvironment appEnvironment) : base(appEnvironment)
         {
-        }
-
-        public ClientTypeRepository(Database database) : base(database) 
-        { 
         }
 
         public ClientType GetByType(int type)

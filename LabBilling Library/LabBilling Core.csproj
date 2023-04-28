@@ -259,6 +259,7 @@
     <Compile Include="DataAccess\AccountValidationRuleRepository.cs" />
     <Compile Include="DataAccess\AccountValidationStatusRepository.cs" />
     <Compile Include="DataAccess\AnnouncementRepository.cs" />
+    <Compile Include="DataAccess\AppEnvironment.cs" />
     <Compile Include="DataAccess\CdmDetailRepository.cs" />
     <Compile Include="DataAccess\ChrgDetailRepository.cs" />
     <Compile Include="DataAccess\BadDebtRepository.cs" />
@@ -278,9 +279,10 @@
     <Compile Include="DataAccess\FinRepository.cs" />
     <Compile Include="DataAccess\GLCodeRepository.cs" />
     <Compile Include="DataAccess\GlobalBillingCdmRepository.cs" />
+    <Compile Include="DataAccess\IAppEnvironment.cs" />
     <Compile Include="DataAccess\InsCompanyRepository.cs" />
     <Compile Include="DataAccess\InsRepository.cs" />
-    <Compile Include="DataAccess\IRepository.cs" />
+    <Compile Include="DataAccess\IRepositoryBase.cs" />
     <Compile Include="DataAccess\IUnitOfWork.cs" />
     <Compile Include="DataAccess\IUnitOfWorkProvider.cs" />
     <Compile Include="DataAccess\LMRPRuleRepository.cs" />

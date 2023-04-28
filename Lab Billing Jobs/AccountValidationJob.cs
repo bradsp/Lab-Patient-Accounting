@@ -32,7 +32,7 @@ namespace LabBillingJobs
 
             public void RunValidation()
             {
-                AccountRepository accountRepository = new AccountRepository(Helper.ConnVal);
+                AccountRepository accountRepository = new AccountRepository(Program.AppEnvironment);
                 Console.WriteLine("In RunValidation() - Starting RunValidation job");
                 log.Info("In RunValidation() - Starting RunValidation job");
 

@@ -9,14 +9,10 @@ namespace LabBilling.Core.DataAccess
 {
     public sealed class PatDxRepository : RepositoryBase<PatDx>
     {
-        public PatDxRepository(string connection) : base(connection)
+        public PatDxRepository(IAppEnvironment appEnvironment) : base(appEnvironment)
         {
 
         }
 
-        public PatDxRepository(PetaPoco.Database db) : base(db)
-        {
-
-        }
     }
 }

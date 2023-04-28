@@ -12,12 +12,7 @@ namespace LabBilling.Core.DataAccess
 {
     public sealed class CdmDetailRepository : RepositoryBase<CdmDetail>
     {
-        public CdmDetailRepository(string connection) : base(connection)
-        {
-            
-        }
-
-        public CdmDetailRepository(Database db) : base(db)
+        public CdmDetailRepository(IAppEnvironment appEnvironment) : base(appEnvironment)
         {
             
         }

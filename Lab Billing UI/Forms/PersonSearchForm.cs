@@ -15,8 +15,8 @@ namespace LabBilling.Forms
         List<AccountSearch> searchResults = new List<AccountSearch>();
 
         public string SelectedAccount { get; set; }
-        private readonly AccountRepository accdb = new AccountRepository(Helper.ConnVal);
-        private readonly AccountSearchRepository accountSearchRepository = new AccountSearchRepository(Helper.ConnVal);
+        private readonly AccountRepository accdb = new AccountRepository(Program.AppEnvironment);
+        private readonly AccountSearchRepository accountSearchRepository = new AccountSearchRepository(Program.AppEnvironment);
 
         public PersonSearchForm()
         {

@@ -11,12 +11,7 @@ namespace LabBilling.Core.DataAccess
 {
     public sealed class MutuallyExclusiveEditRepository : RepositoryBase<MutuallyExclusiveEdit>
     {
-        public MutuallyExclusiveEditRepository(string connection) : base(connection)
-        {
-
-        }
-
-        public MutuallyExclusiveEditRepository(PetaPoco.Database db) : base(db)
+        public MutuallyExclusiveEditRepository(IAppEnvironment appEnvironment) : base(appEnvironment)
         {
 
         }

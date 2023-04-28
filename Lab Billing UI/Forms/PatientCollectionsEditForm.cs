@@ -12,7 +12,7 @@ namespace LabBilling.Forms
 
         public string SelectedRecord { get; set; }
         private BadDebt badDebt = new BadDebt();
-        private readonly BadDebtRepository badDebtRepository = new BadDebtRepository(Helper.ConnVal);
+        private readonly BadDebtRepository badDebtRepository = new BadDebtRepository(Program.AppEnvironment);
 
         public PatientCollectionsEditForm(string selectedGuid)
         {

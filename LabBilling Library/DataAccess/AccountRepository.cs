@@ -37,48 +37,25 @@ namespace LabBilling.Core.DataAccess
         private const string naStatus = "N/A";
         private const string newChrgStatus = "NEW";
 
-        public AccountRepository(string connectionString) : base(connectionString)
+        public AccountRepository(IAppEnvironment appEnvironment) : base(appEnvironment)
         {
-            _connection = connectionString;
-            patRepository = new PatRepository(_connection);
-            insRepository = new InsRepository(_connection);
-            chrgRepository = new ChrgRepository(_connection);
-            chkRepository = new ChkRepository(_connection);
-            clientRepository = new ClientRepository(_connection);
-            clientDiscountRepository = new ClientDiscountRepository(_connection);
-            accountNoteRepository = new AccountNoteRepository(_connection);
-            billingActivityRepository = new BillingActivityRepository(_connection);
-            accountValidationRuleRepository = new AccountValidationRuleRepository(_connection);
-            accountValidationCriteriaRepository = new AccountValidationCriteriaRepository(_connection);
-            accountValidationStatusRepository = new AccountValidationStatusRepository(_connection);
-            accountLmrpErrorRepository = new AccountLmrpErrorRepository(_connection);
-            lmrpRuleRepository = new LMRPRuleRepository(_connection);
-            finRepository = new FinRepository(_connection);
-            systemParametersRepository = new SystemParametersRepository(_connection);
-            cdmRepository = new CdmRepository(_connection);
-            globalBillingCdmRepository = new GlobalBillingCdmRepository(_connection);
-        }
-
-        public AccountRepository(PetaPoco.Database db) : base(db)
-        {
-            _connection = string.Empty;
-            patRepository = new PatRepository(db);
-            insRepository = new InsRepository(db);
-            chrgRepository = new ChrgRepository(db);
-            chkRepository = new ChkRepository(db);
-            clientRepository = new ClientRepository(db);
-            clientDiscountRepository = new ClientDiscountRepository(db);
-            accountNoteRepository = new AccountNoteRepository(db);
-            billingActivityRepository = new BillingActivityRepository(db);
-            accountValidationRuleRepository = new AccountValidationRuleRepository(db);
-            accountValidationCriteriaRepository = new AccountValidationCriteriaRepository(db);
-            accountValidationStatusRepository = new AccountValidationStatusRepository(db);
-            accountLmrpErrorRepository = new AccountLmrpErrorRepository(db);
-            lmrpRuleRepository = new LMRPRuleRepository(db);
-            finRepository = new FinRepository(db);
-            systemParametersRepository = new SystemParametersRepository(db);
-            cdmRepository = new CdmRepository(db);
-            globalBillingCdmRepository = new GlobalBillingCdmRepository(db);
+            patRepository = new PatRepository(appEnvironment);
+            insRepository = new InsRepository(appEnvironment);
+            chrgRepository = new ChrgRepository(appEnvironment);
+            chkRepository = new ChkRepository(appEnvironment);
+            clientRepository = new ClientRepository(appEnvironment);
+            clientDiscountRepository = new ClientDiscountRepository(appEnvironment);
+            accountNoteRepository = new AccountNoteRepository(appEnvironment);
+            billingActivityRepository = new BillingActivityRepository(appEnvironment);
+            accountValidationRuleRepository = new AccountValidationRuleRepository(appEnvironment);
+            accountValidationCriteriaRepository = new AccountValidationCriteriaRepository(appEnvironment);
+            accountValidationStatusRepository = new AccountValidationStatusRepository(appEnvironment);
+            accountLmrpErrorRepository = new AccountLmrpErrorRepository(appEnvironment);
+            lmrpRuleRepository = new LMRPRuleRepository(appEnvironment);
+            finRepository = new FinRepository(appEnvironment);
+            systemParametersRepository = new SystemParametersRepository(appEnvironment);
+            cdmRepository = new CdmRepository(appEnvironment);
+            globalBillingCdmRepository = new GlobalBillingCdmRepository(appEnvironment);
         }
 
         public Account GetByAccount(string account, bool demographicsOnly = false)
@@ -563,7 +540,7 @@ namespace LabBilling.Core.DataAccess
             string oldFinCode = table.FinCode;
 
             //check that newFincode is a valid fincode
-            FinRepository finRepository = new FinRepository(dbConnection);
+            FinRepository finRepository = new FinRepository(_appEnvironment);
 
             Fin newFin = finRepository.GetFin(newFinCode);
             Fin oldFin = finRepository.GetFin(oldFinCode);
@@ -624,7 +601,7 @@ namespace LabBilling.Core.DataAccess
 
             try
             {
-                ClientRepository clientRepository = new ClientRepository(dbConnection);
+                ClientRepository clientRepository = new ClientRepository(_appEnvironment);
                 Client oldClient = clientRepository.GetClient(oldClientMnem);
                 Client newClient = clientRepository.GetClient(newClientMnem);
 
@@ -1265,7 +1242,7 @@ namespace LabBilling.Core.DataAccess
                 (nameof(AccountSearch.FinCode), AccountSearchRepository.operation.NotEqual, "E")
             };
 
-            AccountSearchRepository accountSearchRepository = new AccountSearchRepository(dbConnection);
+            AccountSearchRepository accountSearchRepository = new AccountSearchRepository(_appEnvironment);
 
             var accounts = accountSearchRepository.GetBySearch(parameters).ToList();
 
@@ -1299,7 +1276,7 @@ namespace LabBilling.Core.DataAccess
                 (nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "HOLD")
             };
 
-            AccountSearchRepository accountSearchRepository = new AccountSearchRepository(dbConnection);
+            AccountSearchRepository accountSearchRepository = new AccountSearchRepository(_appEnvironment);
 
             var accounts = await Task.Run(() => accountSearchRepository.GetBySearch(parameters).ToList());
 

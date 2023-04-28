@@ -16,7 +16,7 @@ namespace LabBilling.Forms
 {
     public partial class HealthPlanMaintenanceForm : Form
     {
-        private InsCompanyRepository insCompanyRepository = new InsCompanyRepository(Helper.ConnVal);
+        private InsCompanyRepository insCompanyRepository = new InsCompanyRepository(Program.AppEnvironment);
         private DataTable _insCompanyTable = null;
         private BindingSource insCompanySource = new BindingSource();
         private Timer _timer = null;

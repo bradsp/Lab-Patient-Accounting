@@ -16,7 +16,7 @@ namespace LabBilling.Forms
 {
     public partial class ChargeMasterMaintenance : Form
     {
-        private CdmRepository cdmRepository = new CdmRepository(Helper.ConnVal);
+        private CdmRepository cdmRepository = new CdmRepository(Program.AppEnvironment);
         private List<Cdm> cdms = new List<Cdm>();
         private DataTable cdmdt = new DataTable();
         private BindingSource bs = new BindingSource();

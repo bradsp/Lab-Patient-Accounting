@@ -11,12 +11,7 @@ namespace LabBilling.Core.DataAccess
 {
     public sealed class AccountNoteRepository : RepositoryBase<AccountNote>
     {
-        public AccountNoteRepository(string connection) : base(connection)
-        {
-
-        }
-
-        public AccountNoteRepository(PetaPoco.Database db) : base(db)
+        public AccountNoteRepository(IAppEnvironment appEnvironment) : base(appEnvironment)
         {
 
         }

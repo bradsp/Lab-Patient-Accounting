@@ -13,11 +13,7 @@ namespace LabBilling.Core.DataAccess
     public sealed class AccountValidationCriteriaRepository : RepositoryBase<AccountValidationCriteria>
     {
 
-        public AccountValidationCriteriaRepository(string connectionString) : base(connectionString)
-        {
-        }
-
-        public AccountValidationCriteriaRepository(PetaPoco.Database db) : base(db)
+        public AccountValidationCriteriaRepository(IAppEnvironment appEnvironment) : base(appEnvironment)
         {
         }
 

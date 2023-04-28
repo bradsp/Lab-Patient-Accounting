@@ -32,6 +32,7 @@ namespace LabBilling.Core.BusinessLogic
         private DictDxRepository dxRepository;
 
         private List<ChargeTransaction> chargeTransactions = new List<ChargeTransaction>();
+        private IAppEnvironment _appEnvironment;
 
         private class ChargeTransaction
         {
@@ -102,17 +103,19 @@ namespace LabBilling.Core.BusinessLogic
             return processStatus;
         }
 
-        public HL7Processor(string connectionString)
+        public HL7Processor(IAppEnvironment appEnvironment)
         {
-            accountRepository = new AccountRepository(connectionString);
-            phyRepository = new PhyRepository(connectionString);
-            messagesInboundRepository = new MessagesInboundRepository(connectionString);
-            mappingRepository = new MappingRepository(connectionString);
-            clientRepository = new ClientRepository(connectionString);
-            insCompanyRepository = new InsCompanyRepository(connectionString);
-            dxRepository = new DictDxRepository(connectionString);
-            patRepository = new PatRepository(connectionString);
-            insRepository = new InsRepository(connectionString);
+            _appEnvironment = appEnvironment;
+
+            accountRepository = new AccountRepository(_appEnvironment);
+            phyRepository = new PhyRepository(_appEnvironment);
+            messagesInboundRepository = new MessagesInboundRepository(_appEnvironment);
+            mappingRepository = new MappingRepository(_appEnvironment);
+            clientRepository = new ClientRepository(_appEnvironment);
+            insCompanyRepository = new InsCompanyRepository(_appEnvironment);
+            dxRepository = new DictDxRepository(_appEnvironment);
+            patRepository = new PatRepository(_appEnvironment);
+            insRepository = new InsRepository(_appEnvironment);
         }
 
         public void ProcessMessage(int systemMessageId)

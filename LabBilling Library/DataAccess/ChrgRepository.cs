@@ -17,18 +17,11 @@ namespace LabBilling.Core.DataAccess
         private readonly ChrgDiagnosisPointerRepository chrgDiagnosisPointerRepository;
         private const string invoiceCode = "CBILL";
 
-        public ChrgRepository(string connection) : base(connection)
+        public ChrgRepository(IAppEnvironment appEnvironment) : base(appEnvironment)
         {
-            amtRepository = new ChrgDetailRepository(connection);
-            cdmRepository = new CdmRepository(connection);
-            chrgDiagnosisPointerRepository = new ChrgDiagnosisPointerRepository(connection);
-        }
-
-        public ChrgRepository(PetaPoco.Database db) : base(db)
-        {
-            amtRepository = new ChrgDetailRepository(db);
-            cdmRepository = new CdmRepository(db);
-            chrgDiagnosisPointerRepository = new ChrgDiagnosisPointerRepository(db);
+            amtRepository = new ChrgDetailRepository(appEnvironment);
+            cdmRepository = new CdmRepository(appEnvironment);
+            chrgDiagnosisPointerRepository = new ChrgDiagnosisPointerRepository(appEnvironment);
         }
 
         /// <summary>
@@ -50,7 +43,7 @@ namespace LabBilling.Core.DataAccess
             Chrg chrg = result.First<Chrg>();
 
             //load the cdm record
-            CdmRepository cdmRepository = new CdmRepository(dbConnection);
+            CdmRepository cdmRepository = new CdmRepository(_appEnvironment);
             chrg.Cdm = cdmRepository.GetCdm(chrg.CDMCode);
             Log.Instance.Debug($"{dbConnection.LastSQL} {dbConnection.LastArgs}");
             return chrg;
@@ -69,8 +62,8 @@ namespace LabBilling.Core.DataAccess
 
             var results = dbConnection.Fetch<ClaimChargeView>(sql);
 
-            CdmRepository cdmRepository = new CdmRepository(dbConnection);
-            RevenueCodeRepository revenueCodeRepository = new RevenueCodeRepository(dbConnection);
+            CdmRepository cdmRepository = new CdmRepository(_appEnvironment);
+            RevenueCodeRepository revenueCodeRepository = new RevenueCodeRepository(_appEnvironment);
 
             foreach(var chrg in results)
             {
@@ -126,8 +119,8 @@ namespace LabBilling.Core.DataAccess
 
             var result = dbConnection.Fetch<Chrg, ChrgDetail, Chrg>(new ChrgChrgDetailRelator().MapIt, sql);
 
-            CdmRepository cdmRepository = new CdmRepository(dbConnection);
-            RevenueCodeRepository revenueCodeRepository = new RevenueCodeRepository(dbConnection);
+            CdmRepository cdmRepository = new CdmRepository(_appEnvironment);
+            RevenueCodeRepository revenueCodeRepository = new RevenueCodeRepository(_appEnvironment);
             
             foreach(Chrg chrg in result)
             {

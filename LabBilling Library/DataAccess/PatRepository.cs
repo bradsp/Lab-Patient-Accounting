@@ -16,16 +16,10 @@ namespace LabBilling.Core.DataAccess
         private readonly DictDxRepository dictDxDb;
         private readonly PhyRepository phyRepository;
 
-        public PatRepository(string connection) : base(connection)
+        public PatRepository(IAppEnvironment appEnvironment) : base(appEnvironment)
         {
-            dictDxDb = new DictDxRepository(connection);
-            phyRepository = new PhyRepository(connection);
-        }
-
-        public PatRepository(PetaPoco.Database db) : base(db)
-        {
-            dictDxDb = new DictDxRepository(db);
-            phyRepository = new PhyRepository(db);
+            dictDxDb = new DictDxRepository(appEnvironment);
+            phyRepository = new PhyRepository(appEnvironment);
         }
 
         public bool RecordExists(string accountNo)

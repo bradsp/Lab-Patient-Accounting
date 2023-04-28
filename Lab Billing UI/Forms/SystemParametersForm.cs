@@ -12,6 +12,7 @@ using System.Data.SqlClient;
 using System.Data;
 using Newtonsoft.Json.Linq;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 
 namespace LabBilling.Forms
 {
@@ -22,7 +23,7 @@ namespace LabBilling.Forms
             InitializeComponent();
         }
 
-        private readonly SystemParametersRepository paramsdb = new SystemParametersRepository(Helper.ConnVal);
+        private readonly SystemParametersRepository paramsdb = new SystemParametersRepository(Program.AppEnvironment);
         private Parameters parameters = new Parameters();
 
         private void SystemParametersForm_Load(object sender, EventArgs e)
@@ -32,7 +33,7 @@ namespace LabBilling.Forms
             //List<Core.Models.SysParameter> results = (List<Core.Models.SysParameter>)paramsdb.GetAll();
 
             //parameters.LoadSystemParameters(results);
-            propertyGrid.SelectedObject = BuildDynamicClass();
+            propertyGrid.SelectedObject = Program.AppEnvironment.ApplicationParameters; //BuildDynamicClass();
 
             //propertyGrid.SelectedObject = parameters;
 
@@ -206,18 +207,27 @@ namespace LabBilling.Forms
             //    e.OldValue, 
             //    e.ChangedItem.Value));
 
-            Core.Models.SysParameter systemParameters = new Core.Models.SysParameter();
+            SysParameter systemParameters = new SysParameter();
             systemParameters.KeyName = e.ChangedItem.Label;
             systemParameters.Value = e.ChangedItem.Value.ToString();
 
-            try
+            PropertyInfo[] properties = typeof(ApplicationParameters).GetProperties();
+
+            var pInfo = properties.Single<PropertyInfo>(x => x.Name == systemParameters.KeyName);
+
+            if(pInfo != null)
             {
-                paramsdb.Update(systemParameters, new[] { nameof(SysParameter.Value) });
-            }
-            catch(Exception ex)
-            {
-                Log.Instance.Error("Error updating system parameter.", ex);
-                MessageBox.Show("Error during update. Parameter was not updated.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                pInfo.SetValue(parameters, e.ChangedItem.Value.ToString());
+
+                try
+                {
+                    paramsdb.Update(systemParameters, new[] { nameof(SysParameter.Value) });
+                }
+                catch (Exception ex)
+                {
+                    Log.Instance.Error("Error updating system parameter.", ex);
+                    MessageBox.Show("Error during update. Parameter was not updated.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
         }
     }

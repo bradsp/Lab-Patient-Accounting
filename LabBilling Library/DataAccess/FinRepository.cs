@@ -11,12 +11,7 @@ namespace LabBilling.Core.DataAccess
 {
     public sealed class FinRepository : RepositoryBase<Fin>
     {
-        public FinRepository(string connection) : base(connection)
-        {
-
-        }
-
-        public FinRepository(PetaPoco.Database db) : base(db)
+        public FinRepository(IAppEnvironment appEnvironment) : base(appEnvironment)
         {
 
         }

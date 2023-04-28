@@ -13,12 +13,7 @@ namespace LabBilling.Core.DataAccess
     public sealed class WriteOffCodeRepository : RepositoryBase<WriteOffCode>
     {
 
-        public WriteOffCodeRepository(string connection) : base(connection)
-        {
-
-        }
-
-        public WriteOffCodeRepository(PetaPoco.Database db) : base(db)
+        public WriteOffCodeRepository(IAppEnvironment appEnvironment) : base(appEnvironment)
         {
 
         }
