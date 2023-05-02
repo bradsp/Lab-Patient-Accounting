@@ -272,6 +272,8 @@ namespace LabBilling.Forms
             this.ThirdPartyBalLabel = new System.Windows.Forms.Label();
             this.BannerClientBalLabel = new System.Windows.Forms.Label();
             this.ClientBalLabel = new System.Windows.Forms.Label();
+            this.statementHistoryDataGrid = new System.Windows.Forms.DataGridView();
+            this.label5 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.summaryTab.SuspendLayout();
             this.tabDemographics.SuspendLayout();
@@ -299,6 +301,7 @@ namespace LabBilling.Forms
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.RefreshButton)).BeginInit();
             this.dxPointerMenuStrip.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.statementHistoryDataGrid)).BeginInit();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -2273,6 +2276,8 @@ namespace LabBilling.Forms
             // 
             this.tabBillingActivity.AutoScroll = true;
             this.tabBillingActivity.BackColor = System.Drawing.Color.White;
+            this.tabBillingActivity.Controls.Add(this.label5);
+            this.tabBillingActivity.Controls.Add(this.statementHistoryDataGrid);
             this.tabBillingActivity.Controls.Add(this.clearClaimStatusButton);
             this.tabBillingActivity.Controls.Add(this.readyToBillCheckbox);
             this.tabBillingActivity.Controls.Add(this.statementFlagComboBox);
@@ -2331,7 +2336,7 @@ namespace LabBilling.Forms
             "2",
             "3",
             "P"});
-            this.statementFlagComboBox.Location = new System.Drawing.Point(1043, 249);
+            this.statementFlagComboBox.Location = new System.Drawing.Point(1027, 331);
             this.statementFlagComboBox.Name = "statementFlagComboBox";
             this.statementFlagComboBox.Size = new System.Drawing.Size(100, 21);
             this.statementFlagComboBox.TabIndex = 11;
@@ -2341,7 +2346,7 @@ namespace LabBilling.Forms
             // 
             this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(946, 331);
+            this.label3.Location = new System.Drawing.Point(930, 413);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(92, 13);
             this.label3.TabIndex = 10;
@@ -2351,7 +2356,7 @@ namespace LabBilling.Forms
             // 
             this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(960, 305);
+            this.label2.Location = new System.Drawing.Point(944, 387);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(78, 13);
             this.label2.TabIndex = 8;
@@ -2361,7 +2366,7 @@ namespace LabBilling.Forms
             // 
             this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(960, 279);
+            this.label1.Location = new System.Drawing.Point(944, 361);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(77, 13);
             this.label1.TabIndex = 8;
@@ -2370,7 +2375,7 @@ namespace LabBilling.Forms
             // lastStmtDateTextBox
             // 
             this.lastStmtDateTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.lastStmtDateTextBox.Location = new System.Drawing.Point(1043, 302);
+            this.lastStmtDateTextBox.Location = new System.Drawing.Point(1027, 384);
             this.lastStmtDateTextBox.Name = "lastStmtDateTextBox";
             this.lastStmtDateTextBox.ReadOnly = true;
             this.lastStmtDateTextBox.Size = new System.Drawing.Size(100, 20);
@@ -2379,7 +2384,7 @@ namespace LabBilling.Forms
             // firstStmtDateTextBox
             // 
             this.firstStmtDateTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.firstStmtDateTextBox.Location = new System.Drawing.Point(1043, 276);
+            this.firstStmtDateTextBox.Location = new System.Drawing.Point(1027, 358);
             this.firstStmtDateTextBox.Name = "firstStmtDateTextBox";
             this.firstStmtDateTextBox.ReadOnly = true;
             this.firstStmtDateTextBox.Size = new System.Drawing.Size(100, 20);
@@ -2389,7 +2394,7 @@ namespace LabBilling.Forms
             // 
             this.statementFlagLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.statementFlagLabel.AutoSize = true;
-            this.statementFlagLabel.Location = new System.Drawing.Point(959, 253);
+            this.statementFlagLabel.Location = new System.Drawing.Point(943, 335);
             this.statementFlagLabel.Name = "statementFlagLabel";
             this.statementFlagLabel.Size = new System.Drawing.Size(78, 13);
             this.statementFlagLabel.TabIndex = 6;
@@ -2430,9 +2435,9 @@ namespace LabBilling.Forms
             // 
             // 
             this.ValidationResultsTextBox.CustomButton.Image = null;
-            this.ValidationResultsTextBox.CustomButton.Location = new System.Drawing.Point(732, 2);
+            this.ValidationResultsTextBox.CustomButton.Location = new System.Drawing.Point(792, 2);
             this.ValidationResultsTextBox.CustomButton.Name = "";
-            this.ValidationResultsTextBox.CustomButton.Size = new System.Drawing.Size(181, 181);
+            this.ValidationResultsTextBox.CustomButton.Size = new System.Drawing.Size(121, 121);
             this.ValidationResultsTextBox.CustomButton.Style = MetroFramework.MetroColorStyle.Blue;
             this.ValidationResultsTextBox.CustomButton.TabIndex = 1;
             this.ValidationResultsTextBox.CustomButton.Theme = MetroFramework.MetroThemeStyle.Light;
@@ -2450,7 +2455,7 @@ namespace LabBilling.Forms
             this.ValidationResultsTextBox.SelectionLength = 0;
             this.ValidationResultsTextBox.SelectionStart = 0;
             this.ValidationResultsTextBox.ShortcutsEnabled = true;
-            this.ValidationResultsTextBox.Size = new System.Drawing.Size(916, 186);
+            this.ValidationResultsTextBox.Size = new System.Drawing.Size(916, 126);
             this.ValidationResultsTextBox.TabIndex = 2;
             this.ValidationResultsTextBox.Text = "metroTextBox1";
             this.ValidationResultsTextBox.UseSelectable = true;
@@ -2472,6 +2477,7 @@ namespace LabBilling.Forms
             // 
             this.BillActivityDataGrid.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.BillActivityDataGrid.BackgroundColor = System.Drawing.Color.WhiteSmoke;
             dataGridViewCellStyle22.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle22.BackColor = System.Drawing.SystemColors.Control;
             dataGridViewCellStyle22.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -2511,7 +2517,7 @@ namespace LabBilling.Forms
             0,
             0,
             0});
-            this.minPmtTextBox.Location = new System.Drawing.Point(1043, 328);
+            this.minPmtTextBox.Location = new System.Drawing.Point(1027, 410);
             this.minPmtTextBox.Name = "minPmtTextBox";
             this.minPmtTextBox.Size = new System.Drawing.Size(100, 20);
             this.minPmtTextBox.TabIndex = 9;
@@ -2914,6 +2920,24 @@ namespace LabBilling.Forms
             this.ClientBalLabel.Text = "0.00";
             this.ClientBalLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
+            // statementHistoryDataGrid
+            // 
+            this.statementHistoryDataGrid.BackgroundColor = System.Drawing.Color.White;
+            this.statementHistoryDataGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.statementHistoryDataGrid.Location = new System.Drawing.Point(8, 328);
+            this.statementHistoryDataGrid.Name = "statementHistoryDataGrid";
+            this.statementHistoryDataGrid.Size = new System.Drawing.Size(916, 113);
+            this.statementHistoryDataGrid.TabIndex = 14;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(9, 309);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(90, 13);
+            this.label5.TabIndex = 15;
+            this.label5.Text = "Statement History";
+            // 
             // AccountForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2994,6 +3018,7 @@ namespace LabBilling.Forms
             this.menuStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.RefreshButton)).EndInit();
             this.dxPointerMenuStrip.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.statementHistoryDataGrid)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -3216,6 +3241,8 @@ namespace LabBilling.Forms
         private System.Windows.Forms.RadioButton showAllChargeRadioButton;
         private System.Windows.Forms.RadioButton showClientRadioButton;
         private System.Windows.Forms.RadioButton show3rdPartyRadioButton;
+        private System.Windows.Forms.DataGridView statementHistoryDataGrid;
+        private System.Windows.Forms.Label label5;
     }
 }
 

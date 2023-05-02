@@ -26,7 +26,7 @@ namespace LabBilling.Core.BusinessLogic
 
         public string propProductionEnvironment { get; set; }
         private string _connectionString;
-        private AppEnvironment _appEnvironment;
+        private IAppEnvironment _appEnvironment;
 
         private PetaPoco.Database db; 
 
@@ -52,6 +52,7 @@ namespace LabBilling.Core.BusinessLogic
             }
 
             _connectionString = appEnvironment.ConnectionString;
+            _appEnvironment = appEnvironment;
 
             ConnectionString connString = _connectionString;
             _appEnvironment.ApplicationParameters = appEnvironment.ApplicationParameters;

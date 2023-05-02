@@ -283,13 +283,23 @@ namespace LabBilling.Core.Models
                 List<DateTime> dates = new List<DateTime>
                 {
                     mod_date,
-                    Charges.Max(x => x.mod_date),
-                    Pat.mod_date,
-                    Insurances.Max(x => x.mod_date),
-                    Payments.Max(x => x.mod_date),
-                    Notes.Max(x => x.mod_date),
-                    BillingActivities.Max(x => x.mod_date)
+                    Pat.mod_date
                 };
+
+                if (Charges.Any())
+                    dates.Add(Charges.Max(x => x.mod_date));
+
+                if (Insurances.Any())
+                    dates.Add(Insurances.Max(x => x.mod_date));
+
+                if (Payments.Any())
+                    dates.Add(Payments.Max(x => x.mod_date));
+
+                if (Notes.Any())
+                    dates.Add(Notes.Max(x => x.mod_date));
+
+                if (BillingActivities.Any())
+                    dates.Add(BillingActivities.Max(x => x.mod_date));
 
                 return dates.Max();
             } 

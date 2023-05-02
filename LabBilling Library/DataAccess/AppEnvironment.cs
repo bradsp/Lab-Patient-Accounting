@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -12,7 +13,31 @@ namespace LabBilling.Core.DataAccess
 {
     public class AppEnvironment : IAppEnvironment
     {
+        public string DatabaseName { get; set; }
+        public string ServerName { get; set; }
+        public string LogDatabaseName { get; set; }
+        public string Environment { get; set; }
+
+        public string ServiceUsername { get; set; }
+        public string ServicePassword { get; set; }
+
+        public SystemParametersRepository systemParametersRepository;
+
         private PetaPoco.Database _database;
+
+        public bool RunAsService { get; set; } = false;
+
+        public AppEnvironment()
+        {
+            try
+            {
+                systemParametersRepository = new SystemParametersRepository(this);
+            }
+            catch (ApplicationException apex)
+            {
+                //ok to ignore
+            }
+        }
 
         public bool EnvironmentValid { 
             get 
@@ -40,6 +65,39 @@ namespace LabBilling.Core.DataAccess
         {
             get
             {
+                if (!RunAsService)
+                {
+                    if (string.IsNullOrEmpty(ServerName))
+                    {
+                        throw new ApplicationException("ServerName value not set.");
+                    }
+
+                    if (string.IsNullOrEmpty(DatabaseName))
+                    {
+                        throw new ApplicationException("DatabaseName value not set.");
+                    }
+
+                    SqlConnectionStringBuilder myBuilder = new SqlConnectionStringBuilder
+                    {
+                        InitialCatalog = DatabaseName,
+                        DataSource = ServerName,
+                        IntegratedSecurity = true,
+                        ConnectTimeout = 30
+                    };
+
+                    return myBuilder.ConnectionString;
+                }
+                else
+                {
+                    return ConnectionStringService;
+                }
+            }
+        }
+
+        public string ConnectionStringService
+        {
+            get
+            {
                 if (string.IsNullOrEmpty(ServerName))
                 {
                     throw new ApplicationException("ServerName value not set.");
@@ -49,22 +107,29 @@ namespace LabBilling.Core.DataAccess
                 {
                     throw new ApplicationException("DatabaseName value not set.");
                 }
-                SqlConnectionStringBuilder myBuilder = new SqlConnectionStringBuilder
+
+                if(string.IsNullOrEmpty(ServiceUsername))
                 {
-                    InitialCatalog = DatabaseName,
-                    DataSource = ServerName,
-                    IntegratedSecurity = true,
-                    ConnectTimeout = 30
-                };
+                    throw new ApplicationException("ServiceUserName value not set.");
+                }
+
+                if(string.IsNullOrEmpty(ServicePassword))
+                {
+                    throw new ApplicationException("ServicePassword value not set.");
+                }
+
+                SqlConnectionStringBuilder myBuilder = new SqlConnectionStringBuilder();
+
+                myBuilder.InitialCatalog = DatabaseName;
+                myBuilder.DataSource = ServerName;
+                myBuilder.IntegratedSecurity = false;
+                myBuilder.UserID = ServiceUsername;
+                myBuilder.Password = ServicePassword;
+                myBuilder.ConnectTimeout = 30;
 
                 return myBuilder.ConnectionString;
             }
         }
-
-        public string DatabaseName { get; set; }
-        public string ServerName { get; set; }
-        public string LogDatabaseName { get; set; }
-        public string Environment { get; set; }
 
         public PetaPoco.Database Database
         {
@@ -89,8 +154,9 @@ namespace LabBilling.Core.DataAccess
                     ApplicationParameters = new ApplicationParameters();
                     if(EnvironmentValid)
                     {
-                        SystemParametersRepository repository = new SystemParametersRepository(this);
-                        _appParms = repository.LoadParameters();
+                        if (systemParametersRepository == null)
+                            systemParametersRepository = new SystemParametersRepository(this);
+                        _appParms = systemParametersRepository.LoadParameters();
                     }    
                 }
                 return _appParms;

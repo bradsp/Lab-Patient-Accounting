@@ -10,7 +10,7 @@ using Log = LabBilling.Logging.Log;
 
 namespace LabBilling.Core.DataAccess
 {
-    public sealed class AccountRepository : RepositoryBase<Account>
+    public sealed class AccountRepository : RepositoryBase<Account>, IRepositoryBase<Account>, IAccountRepository
     {
         private string _connection;
         private readonly PatRepository patRepository;
@@ -74,7 +74,7 @@ namespace LabBilling.Core.DataAccess
                 if (record.ClientMnem != "K")
                 {
                     record.Client = clientRepository.GetClient(record.ClientMnem);
-                    if(record.Client != null)
+                    if (record.Client != null)
                         record.ClientName = record.Client.Name;
                 }
             }
@@ -178,7 +178,7 @@ namespace LabBilling.Core.DataAccess
                 //    record.TotalWriteOff = Convert.ToDouble(result);
 
                 record.TotalCharges = record.Charges.Where(x => x.Status != cbillStatus && x.Status != capStatus && x.Status != naStatus)
-                    .Sum(x => x.Quantity * x.NetAmount); 
+                    .Sum(x => x.Quantity * x.NetAmount);
             }
 
             record.TotalWriteOff = record.Payments.Where(x => x.Status != cbillStatus).Sum(x => x.WriteOffAmount);
@@ -193,7 +193,7 @@ namespace LabBilling.Core.DataAccess
                 .GroupBy(x => x.ClientMnem, (client, balance) => new { Client = client, Balance = balance.Sum(c => c.Quantity * c.NetAmount) });
 
             record.ClientBalance = new List<(string client, double balance)>();
-            foreach(var result in results)
+            foreach (var result in results)
             {
                 record.ClientBalance.Add((result.Client, result.Balance));
             }
@@ -209,7 +209,7 @@ namespace LabBilling.Core.DataAccess
         {
             Log.Instance.Trace($"Entering - account {table.AccountNo}");
 
-            if(table.FinCode != "CLIENT")
+            if (table.FinCode != "CLIENT")
                 table.PatFullName = table.PatNameDisplay;
 
             table.Status = AccountStatus.New;
@@ -267,7 +267,7 @@ namespace LabBilling.Core.DataAccess
 
             string selMaxRecords = string.Empty;
 
-            if(maxClaims > 0)
+            if (maxClaims > 0)
             {
                 selMaxRecords = $"TOP {maxClaims} ";
             }
@@ -347,13 +347,13 @@ namespace LabBilling.Core.DataAccess
         {
             Log.Instance.Trace($"Entering - account {account} showAlert {showAlert}");
 
-            if(string.IsNullOrEmpty(account))
+            if (string.IsNullOrEmpty(account))
                 throw new ArgumentNullException(nameof(account));
 
             try
             {
                 var record = dbConnection.SingleOrDefault<AccountAlert>($"where {GetRealColumn(nameof(AccountAlert.AccountNo))} = @0",
-                    new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account});
+                    new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account });
 
                 if (record == null)
                 {
@@ -369,7 +369,7 @@ namespace LabBilling.Core.DataAccess
                     dbConnection.Update(record);
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Log.Instance.Error(ex, "Error updating NoteAlert.");
                 return false;
@@ -399,7 +399,7 @@ namespace LabBilling.Core.DataAccess
 
             if (string.IsNullOrEmpty(accountNo))
                 throw new ArgumentNullException(nameof(accountNo));
-            if(string.IsNullOrEmpty(status))
+            if (string.IsNullOrEmpty(status))
                 throw new ArgumentNullException(nameof(status));
             if (!AccountStatus.IsValid(status))
                 throw new ArgumentOutOfRangeException("Invalid status", nameof(status));
@@ -486,7 +486,7 @@ namespace LabBilling.Core.DataAccess
             if (string.IsNullOrEmpty(account))
                 throw new ArgumentNullException(nameof(account));
 
-            if(string.IsNullOrEmpty(noteText))
+            if (string.IsNullOrEmpty(noteText))
             {
                 //there is no note to add
                 return false;
@@ -517,7 +517,7 @@ namespace LabBilling.Core.DataAccess
 
             if (string.IsNullOrEmpty(account))
                 throw new ArgumentNullException(nameof(account));
-            if(string.IsNullOrEmpty(newFinCode))
+            if (string.IsNullOrEmpty(newFinCode))
                 throw new ArgumentNullException(nameof(newFinCode));
 
             var record = GetByAccount(account);
@@ -665,7 +665,7 @@ namespace LabBilling.Core.DataAccess
                     dbConnection.CompleteTransaction();
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Log.Instance.Error("Error during Change Client", ex);
                 dbConnection.AbortTransaction();
@@ -685,7 +685,7 @@ namespace LabBilling.Core.DataAccess
         {
             Log.Instance.Trace($"Entering {account}");
 
-            if(account == null)
+            if (account == null)
                 throw new ArgumentNullException(nameof(account));
 
             dbConnection.BeginTransaction();
@@ -745,13 +745,13 @@ namespace LabBilling.Core.DataAccess
                         chrgRepository.SetCredited(chrg.ChrgId);
 
                     //insert new charge and detail
-                    if(chrg.CDMCode != invoicedCdm)
+                    if (chrg.CDMCode != invoicedCdm)
                         AddCharge(account, chrg.CDMCode, chrg.Quantity, account.TransactionDate);
                 }
 
                 dbConnection.CompleteTransaction();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Log.Instance.Error(ex);
                 dbConnection.AbortTransaction();
@@ -770,7 +770,7 @@ namespace LabBilling.Core.DataAccess
         {
             Log.Instance.Trace($"Entering {account}");
 
-            if(string.IsNullOrEmpty(account))
+            if (string.IsNullOrEmpty(account))
                 throw new ArgumentNullException(nameof(account));
 
             var acc = GetByAccount(account);
@@ -811,7 +811,7 @@ namespace LabBilling.Core.DataAccess
         {
             Log.Instance.Trace($"Entering - account {accData.AccountNo} cdm {cdm}");
 
-            if(accData.Client == null)
+            if (accData.Client == null)
             {
                 throw new InvalidClientException("Client not valid", accData.ClientMnem);
             }
@@ -1133,13 +1133,13 @@ namespace LabBilling.Core.DataAccess
                         isAccountValid = false;
                         account.AccountValidationStatus.validation_text = validationResult.ToString();
                         //update account status back to new
-                        if(!reprint)
+                        if (!reprint)
                             UpdateStatus(account.AccountNo, AccountStatus.New);
                     }
                     else if (account.LmrpErrors.Count > 0)
                     {
                         isAccountValid = false;
-                        if(!reprint)
+                        if (!reprint)
                             UpdateStatus(account.AccountNo, AccountStatus.New);
                     }
                     else
@@ -1147,7 +1147,7 @@ namespace LabBilling.Core.DataAccess
                         isAccountValid = true;
                         account.AccountValidationStatus.validation_text = "No validation errors.";
                         //update account status if this account has been flagged to bill
-                        if(account.Status == "RTB")
+                        if (account.Status == "RTB")
                             UpdateStatus(account.AccountNo, account.BillForm);
                     }
 
@@ -1383,7 +1383,7 @@ namespace LabBilling.Core.DataAccess
 
                 AddNote(account.AccountNo, "Claim status cleared.");
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw new ApplicationException($"Exception clearing billing status on {account.AccountNo}", ex);
             }

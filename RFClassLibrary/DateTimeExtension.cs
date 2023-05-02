@@ -1,4 +1,5 @@
 ﻿using System;
+using System.CodeDom.Compiler;
 using System.Data;
 using System.Globalization;
 using System.Runtime.CompilerServices;
@@ -306,6 +307,16 @@ namespace RFClassLibrary
         public static DateTime BeginningOfTheDay(this DateTime date)
         {
             return new DateTime(date.Year, date.Month, date.Day);
+        }
+
+        /// <summary>
+        /// Returns datetime corresponding to day end
+        /// </summary>
+        /// <param name="date"></param>
+        /// <returns></returns>
+        public static DateTime EndOfTheDay(this DateTime date)
+        {
+            return new DateTime(date.Year, date.Month, date.Day, 23, 59, 59);
         }
 
         /// <summary>

@@ -32,5 +32,20 @@ namespace LabBilling.Core.DataAccess
             return results;
         }
 
+        public List<PatientStatementAccount> GetByAccount(string account)
+        {
+            Log.Instance.Trace("Entering");
+
+            var sql = PetaPoco.Sql.Builder;
+
+            sql.Where($"{GetRealColumn(nameof(PatientStatementAccount.AccountId))} = @0",
+                new SqlParameter() { SqlDbType = System.Data.SqlDbType.VarChar, Value = account });
+
+            var results = dbConnection.Fetch<PatientStatementAccount>(sql);
+            Log.Instance.Debug(dbConnection.LastSQL);
+            return results;
+
+        }
+
     }
 }

@@ -13,15 +13,6 @@ namespace LabBilling.Core.DataAccess
 {
     public sealed class SystemParametersRepository : RepositoryBase<SysParameter>
     {
-        //public SystemParametersRepository(string connection) : base(connection)
-        //{
-                
-        //}
-
-        //public SystemParametersRepository(PetaPoco.Database db) : base(db)
-        //{
-
-        //}
 
         public SystemParametersRepository(IAppEnvironment appEnvironment) : base(appEnvironment) { }
         

@@ -24,6 +24,9 @@ namespace LabBillingJobs
             AppEnvironment.DatabaseName = Properties.Settings.Default.DbName;
             AppEnvironment.ServerName = Properties.Settings.Default.DbServer;
             AppEnvironment.LogDatabaseName = Properties.Settings.Default.LogDbName;
+            AppEnvironment.RunAsService = true;
+            AppEnvironment.ServiceUsername = Properties.Settings.Default.Username;
+            AppEnvironment.ServicePassword = Properties.Settings.Default.Password;
 
             string path = System.Reflection.Assembly.GetExecutingAssembly().Location;
             var directory = System.IO.Path.GetDirectoryName(path);

@@ -25,6 +25,7 @@ namespace LabBilling.Forms
 
         private readonly SystemParametersRepository paramsdb = new SystemParametersRepository(Program.AppEnvironment);
         private Parameters parameters = new Parameters();
+        private ApplicationParameters applicationParameters = new ApplicationParameters();
 
         private void SystemParametersForm_Load(object sender, EventArgs e)
         {
@@ -34,6 +35,7 @@ namespace LabBilling.Forms
 
             //parameters.LoadSystemParameters(results);
             propertyGrid.SelectedObject = Program.AppEnvironment.ApplicationParameters; //BuildDynamicClass();
+            
 
             //propertyGrid.SelectedObject = parameters;
 
@@ -213,11 +215,13 @@ namespace LabBilling.Forms
 
             PropertyInfo[] properties = typeof(ApplicationParameters).GetProperties();
 
-            var pInfo = properties.Single<PropertyInfo>(x => x.Name == systemParameters.KeyName);
+            Type propertyType = typeof(ApplicationParameters);
+
+            var pInfo = propertyType.GetProperty(systemParameters.KeyName);
 
             if(pInfo != null)
             {
-                pInfo.SetValue(parameters, e.ChangedItem.Value.ToString());
+                pInfo.SetValue(Program.AppEnvironment.ApplicationParameters, e.ChangedItem.Value);
 
                 try
                 {

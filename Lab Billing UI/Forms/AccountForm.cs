@@ -53,6 +53,7 @@ namespace LabBilling.Forms
         private readonly BillingActivityRepository billingActivityRepository = new BillingActivityRepository(Program.AppEnvironment);
         private readonly SystemParametersRepository systemParametersRepository = new SystemParametersRepository(Program.AppEnvironment);
         private readonly PhyRepository phyRepository = new PhyRepository(Program.AppEnvironment);
+        private readonly PatientStatementAccountRepository patientStatementAccountRepository = new PatientStatementAccountRepository(Program.AppEnvironment);
         private bool billingTabLoading = false;
         private const int _timerInterval = 650;
         private const string notesAlertText = "** SEE NOTES **";
@@ -1907,6 +1908,16 @@ namespace LabBilling.Forms
 
             readyToBillCheckbox.Checked = currentAccount.ReadyToBill;
 
+            statementHistoryDataGrid.DataSource = patientStatementAccountRepository.GetByAccount(currentAccount.AccountNo);
+
+            statementHistoryDataGrid.SetColumnsVisibility(false);
+
+            statementHistoryDataGrid.Columns[nameof(PatientStatementAccount.DateSent)].Visible = true;
+            statementHistoryDataGrid.Columns[nameof(PatientStatementAccount.Mailer)].Visible = true;
+            statementHistoryDataGrid.Columns[nameof(PatientStatementAccount.MailerCount)].Visible = true;
+            statementHistoryDataGrid.Columns[nameof(PatientStatementAccount.ProcessedDate)].Visible = true;
+            statementHistoryDataGrid.Columns[nameof(PatientStatementAccount.StatementNumber)].Visible = true;
+            
             billingTabLoading = false;
         }
 

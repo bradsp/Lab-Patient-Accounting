@@ -1,4 +1,5 @@
 ﻿using LabBilling.Core.Models;
+using RFClassLibrary;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -50,6 +51,20 @@ namespace LabBilling.Core.DataAccess
 
             var sql = PetaPoco.Sql.Builder;
             sql.Where($"{GetRealColumn(nameof(BadDebt.DateSent))} is null");
+
+            records = dbConnection.Fetch<BadDebt>(sql);
+
+            return records;
+        }
+
+        public IEnumerable<BadDebt> GetSentByDate(DateTime date)
+        {
+            List<BadDebt> records = new List<BadDebt>();
+
+            var sql = PetaPoco.Sql.Builder;
+            sql.Where($"{GetRealColumn(nameof(BadDebt.DateSent))} between @0 and @1",
+                new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = date.BeginningOfTheDay()},
+                new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = date.EndOfTheDay()});
 
             records = dbConnection.Fetch<BadDebt>(sql);
 
