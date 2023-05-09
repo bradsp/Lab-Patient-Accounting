@@ -261,6 +261,7 @@
     <Compile Include="DataAccess\AnnouncementRepository.cs" />
     <Compile Include="DataAccess\AppEnvironment.cs" />
     <Compile Include="DataAccess\CdmDetailRepository.cs" />
+    <Compile Include="DataAccess\ChkBatchDetailRepository.cs" />
     <Compile Include="DataAccess\ChrgDetailRepository.cs" />
     <Compile Include="DataAccess\BadDebtRepository.cs" />
     <Compile Include="DataAccess\BillingActivityRepository.cs" />
@@ -325,6 +326,7 @@
     <Compile Include="Models\Announcement.cs" />
     <Compile Include="Models\ApplicationParameters.cs" />
     <Compile Include="Models\BillingBatch.cs" />
+    <Compile Include="Models\ChkBatchDetail.cs" />
     <Compile Include="Models\ChrgDiagnosisPointer.cs" />
     <Compile Include="Models\ChrgDetail.cs" />
     <Compile Include="Models\BadDebt.cs" />

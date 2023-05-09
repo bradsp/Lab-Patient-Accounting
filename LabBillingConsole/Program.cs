@@ -24,11 +24,6 @@ namespace LabBillingConsole
 {
     internal class Program
     {
-        //public const string connectionString = "Server=WTHMCLBILL;Database=LabBillingTest;Trusted_Connection=True;";
-
-        public static AppEnvironment appEnvironment;
-        public static Utilities utilities;
-        public static Testing testing;
 
         static void Main(string[] args)
         {
@@ -43,57 +38,57 @@ namespace LabBillingConsole
 
         private static bool MainMenuPanel()
         {
-            appEnvironment = new AppEnvironment
+
+            string serverName;
+            string databaseName;
+
+            StringBuilder dbSelect = new StringBuilder();
+            dbSelect.AppendLine("Select Database:\n\n");
+            dbSelect.AppendLine("1) LabBillingProd");
+            dbSelect.AppendLine("2) LabBillingTest");
+            dbSelect.AppendLine("0) Exit");
+
+            var panel1 = new Panel(dbSelect.ToString());
+            panel1.Header = new PanelHeader("Lab Patient Accounting");
+            panel1.Border = BoxBorder.Square;
+            panel1.Expand = true;
+            panel1.Padding = new Padding(2, 2, 2, 2);
+
+            AnsiConsole.Write(panel1);
+
+            var menuSelect = AnsiConsole.Prompt(new TextPrompt<int>("Select database: ")
+                .PromptStyle("green")
+                .Validate(db =>
+                {
+                    if (db == 0 || db == 1 || db == 2)
+                        return ValidationResult.Success();
+                    else
+                        return ValidationResult.Error("Invalid selection.");
+                }));
+
+            serverName = "WTHMCLBILL";
+
+            switch (menuSelect)
             {
-                DatabaseName = "LabBillingProd",
-                ServerName = "WTHMCLBILL",
-                LogDatabaseName = "Log"
-            };
-
-            testing = new Testing(appEnvironment);
-            utilities = new Utilities(appEnvironment);
-
-            Console.Clear();
-
-            StringBuilder menuText = new StringBuilder();
-            menuText.AppendLine($"Connection String: {appEnvironment.ConnectionString}\n\n");
-            menuText.AppendLine("Choose an option:");
-            menuText.AppendLine("1) Utility Menu");
-            menuText.AppendLine("2) Testing Menu");
-            menuText.AppendLine("X) Exit");
-
-            var panel = new Panel(menuText.ToString());
-            panel.Header = new PanelHeader("Lab Patient Accounting Main Menu");
-            panel.Border = BoxBorder.Square;
-            panel.Padding = new Padding(2, 2, 2, 2);
-
-            AnsiConsole.Write(panel);
-
-            var selected = AnsiConsole.Ask<string>("Select an option: ");
-
-            return ExecuteMenuSelection(selected);
-        }
-
-        private static bool ExecuteMenuSelection(string selection)
-        {
-            switch (selection)
-            {
-                case "1":
-                    Console.Clear();
-                    utilities.LaunchMenu();
-                    return true;
-                case "2":
-                    Console.Clear();
-                    testing.LaunchMenu();
-                    return true;
-                case "X":
+                case 0:
                     return false;
-                case "x":
-                    return false;
+                case 1:
+                    databaseName = "LabBillingProd";
+                    break;
+                case 2:
+                    databaseName = "LabBillingTest";
+                    break;
                 default:
                     return true;
+                    //break;
             }
+
+            MainMenu mainMenu = new MainMenu(serverName, databaseName);
+
+            return mainMenu.MainMenuPanel();
+
         }
+
     }
 
 

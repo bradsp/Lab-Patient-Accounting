@@ -20,10 +20,11 @@ namespace LabBilling.Core.DataAccess
 
             var value = base.Add(table);
 
-            if(table.DiagnosisPointer != null)
+            if (table.DiagnosisPointer != null)
+            {
                 table.DiagnosisPointer.ChrgDetailUri = Convert.ToDouble(value);
-
-            chrgDiagnosisPointerRepository.Save(table.DiagnosisPointer);
+                chrgDiagnosisPointerRepository.Save(table.DiagnosisPointer);
+            }
 
             return value;
         }
