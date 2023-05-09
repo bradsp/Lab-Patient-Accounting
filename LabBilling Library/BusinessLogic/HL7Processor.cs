@@ -30,6 +30,7 @@ namespace LabBilling.Core.BusinessLogic
         private ClientRepository clientRepository;
         private InsCompanyRepository insCompanyRepository;
         private DictDxRepository dxRepository;
+        private FinRepository finRepository;
 
         private List<ChargeTransaction> chargeTransactions = new List<ChargeTransaction>();
         private IAppEnvironment _appEnvironment;
@@ -116,6 +117,7 @@ namespace LabBilling.Core.BusinessLogic
             dxRepository = new DictDxRepository(_appEnvironment);
             patRepository = new PatRepository(_appEnvironment);
             insRepository = new InsRepository(_appEnvironment);
+            finRepository = new FinRepository(_appEnvironment);
         }
 
         public void ProcessMessage(int systemMessageId)
@@ -384,9 +386,18 @@ namespace LabBilling.Core.BusinessLogic
                     //compare and update existingAccount for update -
                     //need to decide when to update and when to not update - maybe update until past initial hold period
 
-                    //loop through all properties and determine which ones are different
+                    //if fin_code or client are different - determine if charges need to be reprocessed (after the update)
+                    bool reprocessCharges = false;
 
-                    //return (Status.NotProcessed, "Existing account. Did not update", new StringBuilder());
+                    accountRecord.Fin = finRepository.GetFin(accountRecord.FinCode);
+
+                    if (existingAccount.Fin.FinClass != accountRecord.Fin.FinClass)
+                        reprocessCharges = true;
+
+                    if (accountRecord.Fin.FinClass == "C" && existingAccount.ClientMnem != accountRecord.ClientMnem)
+                        reprocessCharges = true;
+
+                    //loop through all properties and determine which ones are different
 
                     if (canFile)
                     {
@@ -402,6 +413,12 @@ namespace LabBilling.Core.BusinessLogic
                         }
 
                         statusText = $"{accountRecord.AccountNo} updated.";
+
+                        if(reprocessCharges)
+                        {
+                            accountRepository.ReprocessCharges(accountRecord.AccountNo, "Client or FinClass change.");
+                        }
+
                         return (Status.Processed, statusText, errors);
                     }
                     else

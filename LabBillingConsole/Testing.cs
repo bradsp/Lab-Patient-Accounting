@@ -21,7 +21,7 @@ namespace LabBillingConsole
         public override bool LaunchMenu()
         {
             StringBuilder menuText = new StringBuilder();
-            menuText.AppendLine($"Connection String: {_appEnvironment.ConnectionString}\n\n");
+            menuText.AppendLine($"Database:  {_appEnvironment.DatabaseName}\n\n");
             menuText.AppendLine("******** TESTING MENU ***********\n");
             menuText.AppendLine("Choose an option:");
             menuText.AppendLine("1) Remittance Test");
@@ -31,6 +31,7 @@ namespace LabBillingConsole
             var panel = new Panel(menuText.ToString());
             panel.Header = new PanelHeader("Lab Patient Accounting Testing Menu");
             panel.Border = BoxBorder.Square;
+            panel.Expand = true;
             panel.Padding = new Padding(2, 2, 2, 2);
 
             AnsiConsole.Write(panel);

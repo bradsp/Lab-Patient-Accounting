@@ -54,7 +54,7 @@ namespace RFClassLibrary
         /// </summary>
         /// <param name="dt"></param>
         /// <param name="expression"></param>
-        /// <returns></returns>
+        /// <returns>A date time with the computed date, or MinValue if not a valid expression.</returns>
         public static DateTime ParseExpression(this DateTime dt, string expression)
         {
             //expect an expression such as "T" for today, "T-1" for yesterday, "T+1" for tomorrow, etc.

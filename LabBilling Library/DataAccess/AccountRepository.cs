@@ -97,11 +97,15 @@ namespace LabBilling.Core.DataAccess
                 DateTime questEndDate = new DateTime(2020, 5, 31);
                 DateTime arbitraryEndDate = new DateTime(2016, 12, 31);
 
-                if (!DateTime.TryParse(systemParametersRepository.GetByKey("outpatient_bill_start"), out outpBillStartDate))
+                //if (!DateTime.TryParse(systemParametersRepository.GetByKey("outpatient_bill_start"), out outpBillStartDate))
+                outpBillStartDate = _appEnvironment.ApplicationParameters.OutpatientBillStart;
+
+                if(outpBillStartDate == DateTime.MinValue)
                 {
                     //set default date
                     outpBillStartDate = new DateTime(2012, 4, 1);
                 }
+
                 if (record.Client != null)
                 {
                     if (record.Client.OutpatientBilling)
@@ -134,19 +138,6 @@ namespace LabBilling.Core.DataAccess
                 }
             }
 
-            //object result;
-
-            //populate properties
-            //result = dbConnection.ExecuteScalar<object>("SELECT dbo.GetAccBalance(@0)", account);
-            //if (result != DBNull.Value && result != null)
-            //    record.Balance = Convert.ToDouble(result);
-
-
-            //result = dbConnection.ExecuteScalar<object>("SELECT dbo.GetBadDebtByAccount(@0)",
-            //    new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account });
-            //if (result != DBNull.Value && result != null)
-            //    record.TotalBadDebt = Convert.ToDouble(result);
-
             record.TotalBadDebt = record.Payments.Where(x => x.IsCollectionPmt).Sum(x => x.WriteOffAmount);
 
             record.BillableCharges = record.Charges.Where(x => x.Status != cbillStatus && x.Status != capStatus && x.Status != naStatus).ToList();
@@ -157,26 +148,6 @@ namespace LabBilling.Core.DataAccess
             }
             else
             {
-                //result = dbConnection.ExecuteScalar<object>("SELECT dbo.GetAccTotalCharges(@0)",
-                //    new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account });
-                //if (result != DBNull.Value && result != null)
-                //    record.TotalCharges = Convert.ToDouble(result);
-
-                //result = dbConnection.ExecuteScalar<object>("SELECT dbo.GetContractualByAccount(@0)",
-                //    new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account });
-                //if (result != DBNull.Value && result != null)
-                //    record.TotalContractual = Convert.ToDouble(result);
-
-                //result = dbConnection.ExecuteScalar<object>("SELECT dbo.GetAmtPaidByAccount(@0)",
-                //    new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account });
-                //if (result != DBNull.Value && result != null)
-                //    record.TotalPayments = Convert.ToDouble(result);
-
-                //result = dbConnection.ExecuteScalar<object>("SELECT dbo.GetWriteOffByAccount(@0)",
-                //    new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account });
-                //if (result != DBNull.Value && result != null)
-                //    record.TotalWriteOff = Convert.ToDouble(result);
-
                 record.TotalCharges = record.Charges.Where(x => x.Status != cbillStatus && x.Status != capStatus && x.Status != naStatus)
                     .Sum(x => x.Quantity * x.NetAmount);
             }
@@ -192,12 +163,12 @@ namespace LabBilling.Core.DataAccess
             var results = record.BillableCharges.Where(x => x.FinancialType == "C")
                 .GroupBy(x => x.ClientMnem, (client, balance) => new { Client = client, Balance = balance.Sum(c => c.Quantity * c.NetAmount) });
 
-            record.ClientBalance = new List<(string client, double balance)>();
+            record.ClientBalance = new List<(string client, double balance)>();            
+            
             foreach (var result in results)
             {
                 record.ClientBalance.Add((result.Client, result.Balance));
             }
-
 
             record.Balance = record.TotalCharges - (record.TotalPayments + record.TotalContractual + record.TotalWriteOff);
 
@@ -836,7 +807,8 @@ namespace LabBilling.Core.DataAccess
 
             //check for global billing cdm - if it is, change client to JPG, fin to Y, and get appropriate prices
             var gb = globalBillingCdmRepository.GetCdm(cdm);
-            if (gb != null)
+            //hard coding exception for Hardin County for now - 05/09/2023 BSP
+            if (gb != null && accData.ClientMnem != "HC")
             {
                 fin = finRepository.GetFin("Y") ?? throw new ApplicationException($"Fin code Y not found error {accData.AccountNo}");
                 chargeClient = clientRepository.GetClient("JPG");
@@ -1227,7 +1199,9 @@ namespace LabBilling.Core.DataAccess
         {
             Log.Instance.Trace($"Entering");
 
-            DateTime.TryParse(systemParametersRepository.GetByKey("ssi_bill_thru_date"), out DateTime thruDate);
+            //DateTime.TryParse(systemParametersRepository.GetByKey("ssi_bill_thru_date"), out DateTime thruDate);
+
+            DateTime thruDate = _appEnvironment.ApplicationParameters.SSIStartDate;
 
             (string propertyName, AccountSearchRepository.operation oper, string searchText)[] parameters = {
                 (nameof(AccountSearch.ServiceDate), AccountSearchRepository.operation.LessThanOrEqual, thruDate.ToString()),
@@ -1264,7 +1238,9 @@ namespace LabBilling.Core.DataAccess
         {
             Log.Instance.Trace($"Entering");
 
-            DateTime.TryParse(systemParametersRepository.GetByKey("ssi_bill_thru_date"), out DateTime thruDate);
+            //DateTime.TryParse(systemParametersRepository.GetByKey("ssi_bill_thru_date"), out DateTime thruDate);
+
+            DateTime thruDate = _appEnvironment.ApplicationParameters.SSIBillThruDate;
 
             (string propertyName, AccountSearchRepository.operation oper, string searchText)[] parameters = {
                 (nameof(AccountSearch.ServiceDate), AccountSearchRepository.operation.LessThanOrEqual, thruDate.ToString()),

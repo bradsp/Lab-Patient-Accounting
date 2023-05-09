@@ -243,6 +243,9 @@ namespace LabBilling
 
         public static DataTable ToDataTable<T>(this IEnumerable<T> items) where T : class
         {
+            if (items == null)
+                throw new ArgumentNullException(nameof(items));
+
             var tb = new DataTable(typeof(T).Name);
 
             PropertyInfo[] props = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
