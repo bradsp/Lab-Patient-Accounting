@@ -8,21 +8,21 @@ namespace LabBilling.Core.Models
     public sealed class ApplicationParameters
     {
 
-        [Category(""), Description("")] 
+        [Category("Collections"), Description("")] 
         public System.String CollectionsFileLocation { get; set; }
-        [Category(""), Description("")] 
+        [Category("Collections"), Description("")] 
         public System.String CollectionsSftpPassword { get; set; }
-        [Category(""), Description(""), DefaultValue("")] 
+        [Category("Collections"), Description(""), DefaultValue("")] 
         public System.String CollectionsSftpServer { get; set; }
-        [Category(""), Description("")] 
+        [Category("Collections"), Description("")] 
         public System.String CollectionsSftpUsername { get; set; }
-        [Category(""), Description("")] 
+        [Category("Collections"), Description("")] 
         public System.String StatementsFileLocation { get; set; }
-        [Category(""), Description("")] 
+        [Category("Collections"), Description("")] 
         public System.String StatementsSftpPassword { get; set; }
-        [Category(""), Description("")] 
+        [Category("Collections"), Description("")] 
         public System.String StatementsSftpServer { get; set; }
-        [Category(""), Description("")] 
+        [Category("Collections"), Description("")] 
         public System.String StatementsSftpUsername { get; set; }
 
 
@@ -34,7 +34,7 @@ namespace LabBilling.Core.Models
         public System.String BankRoutingNumber { get; set; }
 
 
-        [Category("Billing"), Description("SET AUTHORIZED CBILL USERS")] 
+        [Category("Billing"), Description("Pipe-delimited list of usernames who are authorized to run client invoices.")] 
         public System.String AuthorizedToRunClientBills { get; set; }
         [Category("Billing"), Description("")] 
         public System.String BHGroupNo { get; set; }
@@ -54,7 +54,7 @@ namespace LabBilling.Core.Models
         public System.String ChampusGroupNo { get; set; }
         [Category("Billing"), Description("")] 
         public System.String CNetReceiverId { get; set; }
-        [Category("Billing"), Description("CODE STATS ")] 
+        [Category("Billing"), Description("CODE STATS")] 
         public System.String CodeStats { get; set; }
         [Category("Billing"), Description("Sets the date to run bad debt")] 
         public System.DateTime CollectionsRun { get; set; }
@@ -104,7 +104,7 @@ namespace LabBilling.Core.Models
         public System.DateTime SecondaryBilling { get; set; }
         [Category("Billing"), Description("")] 
         public System.Double SmallBalanceAmount { get; set; }
-        [Category("Billing"), Description("Added for use in ViewerAcc")] 
+        [Category("Billing"), Description("Date for holding accounts before allowing claims to be generated.")] 
         public System.DateTime SSIBillThruDate { get; set; }
         [Category("Billing"), Description("Used by ViewerAcc to seperate the new claim methodolgy from the old method.")] 
         public System.DateTime SSIStartDate { get; set; }
@@ -116,7 +116,7 @@ namespace LabBilling.Core.Models
         public System.Int32 UseBillMethod { get; set; }
 
 
-        [Category("Charging"), Description("ENABLE FEE SCHEULES")] 
+        [Category("Charging"), Description("Pipe delimited list of active fee schedules")] 
         public System.String FeeSchedules { get; set; }
         [Category("Charging"), Description("")] 
         public System.String GeneralHealthPanelInsurances { get; set; }
@@ -345,6 +345,7 @@ namespace LabBilling.Core.Models
         [Category("System"), Description("")]
         public System.String ServiceUserPassword { get; set; }
 
+
         [Category("ViewerSlides"), Description("")] 
         public System.String IHCStainsQuery { get; set; }
         [Category("ViewerSlides"), Description("")] 
@@ -356,6 +357,7 @@ namespace LabBilling.Core.Models
         [Category("ViewerSlides"), Description("")] 
         public System.String SpecialStainsQuery { get; set; }
 
+
         public static ApplicationParameters Load(string xml)
         {
             XmlSerializer xmlSerializer = new XmlSerializer(typeof(ApplicationParameters));
@@ -365,6 +367,7 @@ namespace LabBilling.Core.Models
                 return appParm;
             }
         }
+
 
         public string GetDescription(string propertyName)
         {
@@ -392,6 +395,7 @@ namespace LabBilling.Core.Models
 
             return attributeValue;
         }
+
         public string GetProductionEnvironment()
         {
             //string env = GetByKey("dbenvironment");

@@ -80,7 +80,7 @@ namespace LabBilling.Forms
                 var record = _clientTable.Rows.Find(client.ClientMnem);
                 try
                 {
-                    clientRepository.Update(client);
+                    clientRepository.Save(client);
 
                     record = client.ToDataRow(record);
                 }

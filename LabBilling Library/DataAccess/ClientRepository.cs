@@ -96,6 +96,14 @@ namespace LabBilling.Core.DataAccess
             return base.Add(table);
         }
 
+        public override bool Update(Client table)
+        {
+
+
+
+            return base.Update(table);
+        }
+
         public override bool Save(Client table)
         {
             var record = this.GetClient(table.ClientMnem);

@@ -49,14 +49,14 @@
             this.label20 = new System.Windows.Forms.Label();
             this.tbMROCity = new System.Windows.Forms.TextBox();
             this.label21 = new System.Windows.Forms.Label();
-            this.tbMROAddress2 = new System.Windows.Forms.TextBox();
+            this.MROAddress2TextBox = new System.Windows.Forms.TextBox();
             this.tbMROAddress = new System.Windows.Forms.TextBox();
             this.label22 = new System.Windows.Forms.Label();
             this.tbMROName = new System.Windows.Forms.TextBox();
             this.label23 = new System.Windows.Forms.Label();
             this.tabComment = new System.Windows.Forms.TabPage();
             this.tbComment = new System.Windows.Forms.TextBox();
-            this.tabDiscounts = new System.Windows.Forms.TabPage();
+            this.DiscountsTab = new System.Windows.Forms.TabPage();
             this.clientDiscountDataGrid = new System.Windows.Forms.DataGridView();
             this.tbZipcode = new System.Windows.Forms.MaskedTextBox();
             this.cbCostCenter = new System.Windows.Forms.ComboBox();
@@ -83,12 +83,12 @@
             this.label4 = new System.Windows.Forms.Label();
             this.tbClientCode = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
-            this.tbClientMnem = new System.Windows.Forms.TextBox();
+            this.ClientMnemTextBox = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.tbClientName = new System.Windows.Forms.TextBox();
+            this.ClientNameTextBox = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.btnCancel = new System.Windows.Forms.Button();
-            this.btnSave = new System.Windows.Forms.Button();
+            this.CancelButton = new System.Windows.Forms.Button();
+            this.SaveButton = new System.Windows.Forms.Button();
             this.label16 = new System.Windows.Forms.Label();
             this.billMethodComboBox = new System.Windows.Forms.ComboBox();
             this.activeCheckBox = new System.Windows.Forms.CheckBox();
@@ -99,7 +99,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numDefaultDiscount)).BeginInit();
             this.tabClientMRO.SuspendLayout();
             this.tabComment.SuspendLayout();
-            this.tabDiscounts.SuspendLayout();
+            this.DiscountsTab.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.clientDiscountDataGrid)).BeginInit();
             this.tabInterface.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.interfaceMappingDataGrid)).BeginInit();
@@ -134,7 +134,7 @@
             this.tabControl1.Controls.Add(this.tabClientPreferences);
             this.tabControl1.Controls.Add(this.tabClientMRO);
             this.tabControl1.Controls.Add(this.tabComment);
-            this.tabControl1.Controls.Add(this.tabDiscounts);
+            this.tabControl1.Controls.Add(this.DiscountsTab);
             this.tabControl1.Controls.Add(this.tabInterface);
             this.tabControl1.Location = new System.Drawing.Point(36, 434);
             this.tabControl1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
@@ -273,7 +273,7 @@
             this.tabClientMRO.Controls.Add(this.label20);
             this.tabClientMRO.Controls.Add(this.tbMROCity);
             this.tabClientMRO.Controls.Add(this.label21);
-            this.tabClientMRO.Controls.Add(this.tbMROAddress2);
+            this.tabClientMRO.Controls.Add(this.MROAddress2TextBox);
             this.tabClientMRO.Controls.Add(this.tbMROAddress);
             this.tabClientMRO.Controls.Add(this.label22);
             this.tabClientMRO.Controls.Add(this.tbMROName);
@@ -342,11 +342,11 @@
             // 
             // tbMROAddress2
             // 
-            this.tbMROAddress2.Location = new System.Drawing.Point(85, 67);
-            this.tbMROAddress2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.tbMROAddress2.Name = "tbMROAddress2";
-            this.tbMROAddress2.Size = new System.Drawing.Size(268, 20);
-            this.tbMROAddress2.TabIndex = 4;
+            this.MROAddress2TextBox.Location = new System.Drawing.Point(85, 67);
+            this.MROAddress2TextBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.MROAddress2TextBox.Name = "tbMROAddress2";
+            this.MROAddress2TextBox.Size = new System.Drawing.Size(268, 20);
+            this.MROAddress2TextBox.TabIndex = 4;
             // 
             // tbMROAddress
             // 
@@ -405,14 +405,14 @@
             // 
             // tabDiscounts
             // 
-            this.tabDiscounts.Controls.Add(this.clientDiscountDataGrid);
-            this.tabDiscounts.Location = new System.Drawing.Point(4, 22);
-            this.tabDiscounts.Name = "tabDiscounts";
-            this.tabDiscounts.Padding = new System.Windows.Forms.Padding(3);
-            this.tabDiscounts.Size = new System.Drawing.Size(577, 149);
-            this.tabDiscounts.TabIndex = 3;
-            this.tabDiscounts.Text = "Discounts";
-            this.tabDiscounts.UseVisualStyleBackColor = true;
+            this.DiscountsTab.Controls.Add(this.clientDiscountDataGrid);
+            this.DiscountsTab.Location = new System.Drawing.Point(4, 22);
+            this.DiscountsTab.Name = "tabDiscounts";
+            this.DiscountsTab.Padding = new System.Windows.Forms.Padding(3);
+            this.DiscountsTab.Size = new System.Drawing.Size(577, 149);
+            this.DiscountsTab.TabIndex = 3;
+            this.DiscountsTab.Text = "Discounts";
+            this.DiscountsTab.UseVisualStyleBackColor = true;
             // 
             // clientDiscountDataGrid
             // 
@@ -652,12 +652,12 @@
             // 
             // tbClientMnem
             // 
-            this.tbClientMnem.Location = new System.Drawing.Point(102, 31);
-            this.tbClientMnem.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.tbClientMnem.Name = "tbClientMnem";
-            this.tbClientMnem.Size = new System.Drawing.Size(119, 20);
-            this.tbClientMnem.TabIndex = 1;
-            this.tbClientMnem.Leave += new System.EventHandler(this.tbClientMnem_Leave);
+            this.ClientMnemTextBox.Location = new System.Drawing.Point(102, 31);
+            this.ClientMnemTextBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.ClientMnemTextBox.Name = "tbClientMnem";
+            this.ClientMnemTextBox.Size = new System.Drawing.Size(119, 20);
+            this.ClientMnemTextBox.TabIndex = 1;
+            this.ClientMnemTextBox.Leave += new System.EventHandler(this.tbClientMnem_Leave);
             // 
             // label2
             // 
@@ -670,11 +670,11 @@
             // 
             // tbClientName
             // 
-            this.tbClientName.Location = new System.Drawing.Point(102, 55);
-            this.tbClientName.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.tbClientName.Name = "tbClientName";
-            this.tbClientName.Size = new System.Drawing.Size(268, 20);
-            this.tbClientName.TabIndex = 5;
+            this.ClientNameTextBox.Location = new System.Drawing.Point(102, 55);
+            this.ClientNameTextBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.ClientNameTextBox.Name = "tbClientName";
+            this.ClientNameTextBox.Size = new System.Drawing.Size(268, 20);
+            this.ClientNameTextBox.TabIndex = 5;
             // 
             // label1
             // 
@@ -687,28 +687,28 @@
             // 
             // btnCancel
             // 
-            this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnCancel.Location = new System.Drawing.Point(138, 637);
-            this.btnCancel.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(83, 30);
-            this.btnCancel.TabIndex = 33;
-            this.btnCancel.Text = "Cancel";
-            this.btnCancel.UseVisualStyleBackColor = true;
-            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
+            this.CancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.CancelButton.Location = new System.Drawing.Point(138, 637);
+            this.CancelButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.CancelButton.Name = "btnCancel";
+            this.CancelButton.Size = new System.Drawing.Size(83, 30);
+            this.CancelButton.TabIndex = 33;
+            this.CancelButton.Text = "Cancel";
+            this.CancelButton.UseVisualStyleBackColor = true;
+            this.CancelButton.Click += new System.EventHandler(this.btnCancel_Click);
             // 
             // btnSave
             // 
-            this.btnSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnSave.BackColor = System.Drawing.Color.PaleGreen;
-            this.btnSave.Location = new System.Drawing.Point(37, 636);
-            this.btnSave.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.btnSave.Name = "btnSave";
-            this.btnSave.Size = new System.Drawing.Size(83, 31);
-            this.btnSave.TabIndex = 32;
-            this.btnSave.Text = "Save";
-            this.btnSave.UseVisualStyleBackColor = false;
-            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
+            this.SaveButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.SaveButton.BackColor = System.Drawing.Color.PaleGreen;
+            this.SaveButton.Location = new System.Drawing.Point(37, 636);
+            this.SaveButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.SaveButton.Name = "btnSave";
+            this.SaveButton.Size = new System.Drawing.Size(83, 31);
+            this.SaveButton.TabIndex = 32;
+            this.SaveButton.Text = "Save";
+            this.SaveButton.UseVisualStyleBackColor = false;
+            this.SaveButton.Click += new System.EventHandler(this.btnSave_Click);
             // 
             // label16
             // 
@@ -770,8 +770,8 @@
             this.BackColor = System.Drawing.Color.WhiteSmoke;
             this.ClientSize = new System.Drawing.Size(633, 690);
             this.Controls.Add(this.activeCheckBox);
-            this.Controls.Add(this.btnCancel);
-            this.Controls.Add(this.btnSave);
+            this.Controls.Add(this.CancelButton);
+            this.Controls.Add(this.SaveButton);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.tbContact);
             this.Controls.Add(this.tabControl1);
@@ -802,9 +802,9 @@
             this.Controls.Add(this.label4);
             this.Controls.Add(this.tbClientCode);
             this.Controls.Add(this.label3);
-            this.Controls.Add(this.tbClientMnem);
+            this.Controls.Add(this.ClientMnemTextBox);
             this.Controls.Add(this.label2);
-            this.Controls.Add(this.tbClientName);
+            this.Controls.Add(this.ClientNameTextBox);
             this.Controls.Add(this.label1);
             this.Name = "ClientMaintenanceEditForm";
             this.Text = "Client Maintenance";
@@ -817,7 +817,7 @@
             this.tabClientMRO.PerformLayout();
             this.tabComment.ResumeLayout(false);
             this.tabComment.PerformLayout();
-            this.tabDiscounts.ResumeLayout(false);
+            this.DiscountsTab.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.clientDiscountDataGrid)).EndInit();
             this.tabInterface.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.interfaceMappingDataGrid)).EndInit();
@@ -880,14 +880,14 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TextBox tbClientCode;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.TextBox tbClientMnem;
+        private System.Windows.Forms.TextBox ClientMnemTextBox;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox tbClientName;
+        private System.Windows.Forms.TextBox ClientNameTextBox;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Button btnCancel;
-        private System.Windows.Forms.Button btnSave;
-        private System.Windows.Forms.TextBox tbMROAddress2;
-        private System.Windows.Forms.TabPage tabDiscounts;
+        private new System.Windows.Forms.Button CancelButton;
+        private System.Windows.Forms.Button SaveButton;
+        private System.Windows.Forms.TextBox MROAddress2TextBox;
+        private System.Windows.Forms.TabPage DiscountsTab;
         private System.Windows.Forms.DataGridView clientDiscountDataGrid;
         private System.Windows.Forms.Label label16;
         private System.Windows.Forms.ComboBox billMethodComboBox;
