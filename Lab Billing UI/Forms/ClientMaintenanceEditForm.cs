@@ -35,8 +35,8 @@ namespace LabBilling.Forms
         private void btnSave_Click(object sender, EventArgs e)
         {
             client.IsDeleted = !activeCheckBox.Checked;
-            client.ClientMnem = tbClientMnem.Text;
-            client.Name = tbClientName.Text;
+            client.ClientMnem = ClientMnemTextBox.Text;
+            client.Name = ClientNameTextBox.Text;
             client.StreetAddress1 = tbAddress1.Text;
             client.StreetAddress2 = tbAddress2.Text;
             client.City = tbCity.Text;
@@ -51,7 +51,7 @@ namespace LabBilling.Forms
 
             client.MroName = tbMROName.Text;
             client.MroStreetAddress1 = tbMROAddress.Text;
-            client.MroStreetAddress2 = tbMROAddress2.Text;
+            client.MroStreetAddress2 = MROAddress2TextBox.Text;
             client.MroCity = tbMROCity.Text;
             client.MroState = cbMROState.SelectedValue != null ? cbMROState.SelectedValue.ToString() : String.Empty;
             client.MroZipCode = tbMROZipcode.Text;
@@ -86,8 +86,8 @@ namespace LabBilling.Forms
         private void LoadClient()
         {
             activeCheckBox.Checked = !client.IsDeleted;
-            tbClientMnem.Text = client.ClientMnem;
-            tbClientName.Text = client.Name;
+            ClientMnemTextBox.Text = client.ClientMnem;
+            ClientNameTextBox.Text = client.Name;
             tbAddress1.Text = client.StreetAddress1;
             tbAddress2.Text = client.StreetAddress2;
             tbCity.Text = client.City;
@@ -98,7 +98,7 @@ namespace LabBilling.Forms
             tbFax.Text = client.Fax;
             tbZipcode.Text = client.ZipCode;
             tbMROAddress.Text = client.MroStreetAddress1;
-            tbMROAddress2.Text = client.MroStreetAddress2;
+            MROAddress2TextBox.Text = client.MroStreetAddress2;
             tbMROCity.Text = client.MroCity;
             tbMROName.Text = client.MroName;
             tbMROZipcode.Text = client.MroZipCode;
@@ -148,7 +148,7 @@ namespace LabBilling.Forms
             interfaceMappingDataGrid.AutoResizeColumns();
 
 
-            tbClientMnem.ReadOnly = true;
+            ClientMnemTextBox.ReadOnly = true;
         }
 
         private void ClientMaintenanceEditForm_Load(object sender, EventArgs e)
@@ -197,13 +197,13 @@ namespace LabBilling.Forms
 
         private void tbClientMnem_Leave(object sender, EventArgs e)
         {
-            if (!String.IsNullOrEmpty(tbClientMnem.Text) && !tbClientMnem.ReadOnly)
+            if (!String.IsNullOrEmpty(ClientMnemTextBox.Text) && !ClientMnemTextBox.ReadOnly)
             {
-                var record = clientRepository.GetClient(tbClientMnem.Text);
+                var record = clientRepository.GetClient(ClientMnemTextBox.Text);
 
                 if (record != null)
                 {
-                    string message = $"Client with mnmen {tbClientMnem.Text} already exists. Edit this record instead?\n\nChoose Yes to load this client, or no to enter a new mnem.";
+                    string message = $"Client with mnmen {ClientMnemTextBox.Text} already exists. Edit this record instead?\n\nChoose Yes to load this client, or no to enter a new mnem.";
                     if (MessageBox.Show(message, "Client Exists",
                         MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question) == DialogResult.Yes)
                     {
@@ -212,7 +212,7 @@ namespace LabBilling.Forms
                     }
                     else
                     {
-                        tbClientMnem.Focus();
+                        ClientMnemTextBox.Focus();
                     }
                 }
                 else
@@ -345,7 +345,11 @@ namespace LabBilling.Forms
 
         private void clientDiscountDataGrid_RowLeave(object sender, DataGridViewCellEventArgs e)
         {
+            if (clientDiscountDataGrid.Rows[e.RowIndex].IsNewRow || 
+                string.IsNullOrEmpty(clientDiscountDataGrid[nameof(ClientDiscount.Cdm), e.RowIndex].Value.ToString()))
+                return;
 
+            clientDiscountDataGrid[nameof(ClientDiscount.ClientMnem), e.RowIndex].Value = ClientMnemTextBox.Text;
         }
     }
 }

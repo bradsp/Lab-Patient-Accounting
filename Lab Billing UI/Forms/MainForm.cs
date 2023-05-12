@@ -17,7 +17,10 @@ using System.Threading.Tasks;
 using System.Threading;
 
 using Application = System.Windows.Forms.Application;
-using System.IdentityModel.Claims;
+using NLog.Config;
+using NLog.Targets;
+using RFClassLibrary;
+using NLog;
 
 namespace LabBilling
 {
@@ -41,6 +44,44 @@ namespace LabBilling
         public MainForm()
         {
             InitializeComponent();
+
+            #region Configure NLog
+
+            var configuration = new NLog.Config.LoggingConfiguration();
+
+            var fileTarget = new NLog.Targets.FileTarget("logfile") { FileName = "c:\\temp\\lab-billing-log.txt" };
+            var consoleTarget = new NLog.Targets.ConsoleTarget("logconsole");
+            var dbTarget = new NLog.Targets.DatabaseTarget("database")
+            {
+                ConnectionString = Program.AppEnvironment.LogConnectionString,
+                CommandText = @"INSERT INTO Logs(CreatedOn,Message,Level,Exception,StackTrace,Logger,HostName,Username,CallingSite,CallingSiteLineNumber,AppVersion,DatabaseName,DatabaseServer) VALUES (@datetime,@msg,@level,@exception,@trace,@logger,@hostname,@user,@callsite,@lineno,@version,@dbname,@dbserver)",
+            };
+
+            GlobalDiagnosticsContext.Set("dbname", Program.AppEnvironment.DatabaseName);
+            GlobalDiagnosticsContext.Set("dbserver", Program.AppEnvironment.ServerName);
+
+            dbTarget.Parameters.Add(new DatabaseParameterInfo("@datetime", new NLog.Layouts.SimpleLayout("${date}")));
+            dbTarget.Parameters.Add(new DatabaseParameterInfo("@msg", new NLog.Layouts.SimpleLayout("${message}")));
+            dbTarget.Parameters.Add(new DatabaseParameterInfo("@level", new NLog.Layouts.SimpleLayout("${level}")));
+            dbTarget.Parameters.Add(new DatabaseParameterInfo("@exception", new NLog.Layouts.SimpleLayout("${exception}")));
+            dbTarget.Parameters.Add(new DatabaseParameterInfo("@trace", new NLog.Layouts.SimpleLayout("${stacktrace}")));
+            dbTarget.Parameters.Add(new DatabaseParameterInfo("@logger", new NLog.Layouts.SimpleLayout("${logger}")));
+            dbTarget.Parameters.Add(new DatabaseParameterInfo("@hostname", new NLog.Layouts.SimpleLayout("${hostname}")));
+            dbTarget.Parameters.Add(new DatabaseParameterInfo("@user", new NLog.Layouts.SimpleLayout("${environment-user}")));
+            dbTarget.Parameters.Add(new DatabaseParameterInfo("@callsite", new NLog.Layouts.SimpleLayout("${callsite}")));
+            dbTarget.Parameters.Add(new DatabaseParameterInfo("@lineno", new NLog.Layouts.SimpleLayout("${callsite-linenumber}")));
+            dbTarget.Parameters.Add(new DatabaseParameterInfo("@version", new NLog.Layouts.SimpleLayout("${assembly-version}")));
+            dbTarget.Parameters.Add(new DatabaseParameterInfo("@dbname", new NLog.Layouts.SimpleLayout("${gdc:item=dbname}")));
+            dbTarget.Parameters.Add(new DatabaseParameterInfo("@dbserver", new NLog.Layouts.SimpleLayout("${gdc:item=dbserver}")));
+
+            var dbRule = new LoggingRule("*", NLog.LogLevel.Trace, dbTarget);
+
+            configuration.AddRule(dbRule);
+
+            NLog.LogManager.Configuration = configuration;
+
+            #endregion
+
 
             userProfile = new UserProfileRepository(Program.AppEnvironment);
             accountRepository = new AccountRepository(Program.AppEnvironment);

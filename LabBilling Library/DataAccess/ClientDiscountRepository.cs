@@ -111,6 +111,8 @@ namespace LabBilling.Core.DataAccess
 
                 foreach (ClientDiscount dis in discounts)
                 {
+                    if(string.IsNullOrEmpty(dis.EndCdmRange))
+                        dis.EndCdmRange = dis.Cdm;
                     Add(dis);
                 }
 
