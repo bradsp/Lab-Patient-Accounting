@@ -135,6 +135,7 @@ namespace LabBilling.Core.BusinessLogic
 
                     try
                     {
+                        
                         claim = GenerateClaim(item.account);
                         if(claim == null)
                         {
@@ -355,6 +356,12 @@ namespace LabBilling.Core.BusinessLogic
         public ClaimData GenerateClaim(string account, bool reprint = false)
         {
             Account accountModel = accountRepository.GetByAccount(account);
+
+            //there is no balance so nothing to send on claim
+            if(accountModel.ClaimBalance <= 0.00)
+            {
+                return null;
+            }
 
             if(!accountRepository.Validate(ref accountModel, reprint))
             {

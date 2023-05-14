@@ -102,6 +102,12 @@ namespace LabBilling.Core.DataAccess
         {
             Log.Instance.Trace("Entering");
 
+            if (discounts == null)
+                return false;
+
+            if (discounts.Count() < 1)
+                return false;
+
             string clientMnem = discounts.First().ClientMnem;
             try
             {

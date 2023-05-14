@@ -61,7 +61,7 @@ namespace LabBilling.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("WTH014")]
+        [global::System.Configuration.DefaultSettingValueAttribute("WTHMCLBILL")]
         public string TestDbServer {
             get {
                 return ((string)(this["TestDbServer"]));
