@@ -74,6 +74,10 @@ namespace LabBilling.Forms
             ClientFilter.DataSource = clientList;
             ClientFilter.DisplayMember = nameof(Client.Name);
             ClientFilter.ValueMember = nameof(Client.ClientMnem);
+
+            InvoiceHistoryTabControl.Enabled = true;
+            GenerateInvoicesTabPage.Enabled = true;
+
         }
 
         private void CleanTempFiles()
@@ -119,6 +123,9 @@ namespace LabBilling.Forms
 
         private async Task RefreshUnbilledGridAsync()
         {
+            InvoiceHistoryTabControl.Enabled = false;
+            GenerateInvoicesTabPage.Enabled = false;
+
             toolStripProgressBar1.Style = ProgressBarStyle.Marquee;
 
             InvoicesDGV.DataSource = await Task.Run(() => clientRepository.GetUnbilledClients(_thruDate));
@@ -148,6 +155,9 @@ namespace LabBilling.Forms
 
             toolStripProgressBar1.Style = ProgressBarStyle.Continuous;
 
+
+            InvoiceHistoryTabControl.Enabled = true;
+            GenerateInvoicesTabPage.Enabled = true;
         }
 
         private void RefreshUnbilledAccountsGrid(string clientMnem)

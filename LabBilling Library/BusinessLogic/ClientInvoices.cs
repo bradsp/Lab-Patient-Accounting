@@ -186,13 +186,13 @@ namespace LabBilling.Core.BusinessLogic
             invoiceModel.StatementType = InvoiceModel.StatementTypeEnum.Invoice;
             invoiceModel.ThroughDate = throughDate;
 
-            invoiceModel.BillingCompanyName = _appEnvironment.ApplicationParameters.InvoiceCompanyName; //systemdb.GetByKey("invoice_company_name") ?? string.Empty;
-            invoiceModel.BillingCompanyAddress = _appEnvironment.ApplicationParameters.InvoiceCompanyAddress; //systemdb.GetByKey("invoice_company_address") ?? string.Empty;
-            invoiceModel.BillingCompanyCity = _appEnvironment.ApplicationParameters.InvoiceCompanyCity; //systemdb.GetByKey("invoice_company_city") ?? string.Empty;
-            invoiceModel.BillingCompanyState = _appEnvironment.ApplicationParameters.InvoiceCompanyCity; //systemdb.GetByKey("invoice_company_state") ?? string.Empty;
-            invoiceModel.BillingCompanyZipCode = _appEnvironment.ApplicationParameters.InvoiceCompanyZipCode; //systemdb.GetByKey("invoice_company_zipcode") ?? string.Empty;
-            invoiceModel.BillingCompanyPhone = _appEnvironment.ApplicationParameters.InvoiceCompanyPhone; //systemdb.GetByKey("invoice_company_phone") ?? string.Empty;
-            invoiceModel.ImageFilePath = _appEnvironment.ApplicationParameters.InvoiceLogoImagePath; //systemdb.GetByKey("invoice_logo_image_path") ?? string.Empty;
+            invoiceModel.BillingCompanyName = _appEnvironment.ApplicationParameters.InvoiceCompanyName; 
+            invoiceModel.BillingCompanyAddress = _appEnvironment.ApplicationParameters.InvoiceCompanyAddress; 
+            invoiceModel.BillingCompanyCity = _appEnvironment.ApplicationParameters.InvoiceCompanyCity; 
+            invoiceModel.BillingCompanyState = _appEnvironment.ApplicationParameters.InvoiceCompanyCity; 
+            invoiceModel.BillingCompanyZipCode = _appEnvironment.ApplicationParameters.InvoiceCompanyZipCode; 
+            invoiceModel.BillingCompanyPhone = _appEnvironment.ApplicationParameters.InvoiceCompanyPhone; 
+            invoiceModel.ImageFilePath = _appEnvironment.ApplicationParameters.InvoiceLogoImagePath; 
 
             NumberRepository numberdb = new NumberRepository(_appEnvironment);
 

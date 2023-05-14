@@ -25,8 +25,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LabBillingService", "LabBil
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A2023807-DB07-4D12-BD42-1AAE04DA7D62}"
 	ProjectSection(SolutionItems) = preProject
-		LabBilling db build script 12-21-2022.sql = LabBilling db build script 12-21-2022.sql
-		labbilling db build script.sql = labbilling db build script.sql
+		Lab Patient Accounting SQL Agent Jobs.sql = Lab Patient Accounting SQL Agent Jobs.sql
+		LabPatientAccounting DB Build.sql = LabPatientAccounting DB Build.sql
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "OopFactory", "OopFactory", "{0719C63F-DA15-4FA1-92D7-43798407AC70}"
