@@ -76,7 +76,7 @@ Distributed under the GNU Affero General Public License v3.0. See `LICENSE` for 
 <!-- CONTACT -->
 ## Contact
 
-Bradley Powers - [@bradleyspowers](https://twitter.com/bradleyspowers) - bradspowers@outlook.com
+Bradley Powers - [@bradleyspowers](https://twitter.com/bradleyspowers) - [LinkedIn](https://linkedin.com/bradley-powers) - bradspowers@outlook.com
 
 Project Link: [https://github.com/bradsp/Lab-Patient-Accounting](https://github.com/bradsp/Lab-Patient-Accounting)
 
