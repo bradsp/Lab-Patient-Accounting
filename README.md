@@ -3,19 +3,47 @@
 # Lab-Patient-Accounting
 A medical patient account application developed for West Tennessee Healthcare outreach laboratory.
 
+*Note: This readme is incomplete. I am adding to it as I have time.*
+
 ## About the Project
+Lab Patient Accounting is a medical patient accounting and billing application created specifically for outreach laboraties. Laboratory charges can be billed to the client via invoice, insurance company or health plan via X12 837i and 837p files to a billing clearing house, or to the patient via statements.
+
+**Features**
+
+* Patient and account entry & updates via HL7 interface (ADT)
+* Charge entry via HL7 interface (DFT)
+* Provider file maintenance via HL7 interface (MFN)
+* X12 837 5010 for electronic claims
+* 
 
 
 ### Built With
 
+* Visual Studio 2022
+* C#
+* .NET Framework 4.8
+* WinForms
+* Microsoft SQL Server
+* PetaPoco
 
 ## Getting Started
 
+* Create database on a Microsoft SQL Server instance using the LabPatientAccounting DB Build.sql script. Update the database name and server name in the script to match your installation.
+* Initial database table load is needed for the application to run.
+  * System table (application parameters).
+  * Emp table (users). 
+* Open the repository in Visual Studio. In the Lab Billing UI project, update the database name and server name in the Settings.Settings. Build the application. 
+* Run the application.
 
 ### Prerequsites
 
+* Microsoft SQL Server 2014 or greater
+* Microsoft Windows PC for client application
+* 
 
 ### Installation
+
+
 
 
 ## Usage
@@ -25,7 +53,6 @@ A medical patient account application developed for West Tennessee Healthcare ou
 
 
 ## Contributing
-
 
 Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
 
@@ -44,7 +71,6 @@ Don't forget to give the project a star! Thanks again!
 Distributed under the GNU Affero General Public License v3.0. See `LICENSE` for more information.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-
 
 
 <!-- CONTACT -->
