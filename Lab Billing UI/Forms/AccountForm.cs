@@ -1232,21 +1232,23 @@ namespace LabBilling.Forms
         private void ChargesDataGrid_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
             Log.Instance.Trace($"Entering");
-            if (e.ColumnIndex == ChargesDataGrid.Columns[nameof(Chrg.IsCredited)].Index && e.Value.ToString() == "True")
+            if (ChargesDataGrid[nameof(Chrg.IsCredited), e.RowIndex].Value.ToString() == "True")
             {
-                ChargesDataGrid.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.Red;
-                ChargesDataGrid.Rows[e.RowIndex].DefaultCellStyle.ForeColor = Color.White;
+                e.CellStyle.BackColor = Color.Red;
+                e.CellStyle.ForeColor = Color.White;
                 return;
             }
-            if (e.ColumnIndex == ChargesDataGrid.Columns[nameof(Chrg.ChrgId)].Index)
+
+            if (ChargesDataGrid[nameof(Chrg.FinancialType), e.RowIndex].Value.ToString() == "C")
             {
-                if (ChargesDataGrid[nameof(Chrg.FinancialType), e.RowIndex].Value.ToString() == "C")
-                    ChargesDataGrid.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.LightGreen;
-
-                if (ChargesDataGrid[nameof(Chrg.FinancialType), e.RowIndex].Value.ToString() == "M")
-                    ChargesDataGrid.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.LightBlue;
-
+                e.CellStyle.BackColor = Color.LightGreen;
             }
+            if (ChargesDataGrid[nameof(Chrg.FinancialType), e.RowIndex].Value.ToString() == "M")
+            {
+                e.CellStyle.BackColor = Color.LightBlue;
+            }
+
+            return; 
 
         }
 
