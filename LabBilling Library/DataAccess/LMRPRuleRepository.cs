@@ -28,7 +28,7 @@ namespace LabBilling.Core.DataAccess
             string expireDateName = this.GetRealColumn(typeof(LMRPRule), nameof(LMRPRule.ExpirationDate));
 
             var result = dbConnection.SingleOrDefault<LMRPRule>($"where {cptRealName} = @0 and @1 between {begDxName} and {endDxName} " + 
-                "and {amaYearName} = @2 and  {rbDateName} <= @3 and {expireDateName} >= @4",
+                $"and {amaYearName} = @2 and  {rbDateName} <= @3 and ({expireDateName} >= @4 or {expireDateName} is null)",
                 new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = cpt },
                 new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = dx },
                 new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = AmaYear(serviceDate) },
@@ -59,7 +59,7 @@ namespace LabBilling.Core.DataAccess
             string rbDateName = this.GetRealColumn(typeof(LMRPRule), nameof(LMRPRule.RBDate));
 
             var result = dbConnection.SingleOrDefault<LMRPRuleDefinition>($"where {cptRealName} = @0 " +
-                $"and {amaYearName} = @1 and  {rbDateName} <= @2 and {expireDateName} >= @3",
+                $"and {amaYearName} = @1 and  {rbDateName} <= @2 and ({expireDateName} >= @3 or {expireDateName} is null)",
                 new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = cpt },
                 new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = AmaYear(serviceDate) },
                 new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = serviceDate },

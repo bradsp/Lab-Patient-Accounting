@@ -40,12 +40,13 @@ namespace LabBilling.Core.Models
         public string mod_user { get; set; }
         public DateTime mod_date { get; set; }
         public string mod_prg { get; set; }
+        [Ignore]
         public string mod_host { get; set; }
         [Ignore]
         public Guid rowguid { get; set; }
     }
 
-    [TableName("dictionary.lmrp")]
+    [TableName("dictionary.LMRPRuleDefinition")]
     public class LMRPRuleDefinition
     {
         [Column("cpt4")]

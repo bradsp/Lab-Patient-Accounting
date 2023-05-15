@@ -1088,35 +1088,36 @@ namespace LabBilling.Core.DataAccess
                     account.LmrpErrors = ValidateLMRP(account);
                     var validationResult = claimValidator.Validate(account);
 
-                    bool isAccountValid = false;
-
-                    string lmrperrors = null;
-                    foreach (var error in account.LmrpErrors)
-                    {
-                        account.AccountValidationStatus.validation_text += error + "\n";
-                        lmrperrors += error + "\n";
-                    }
+                    bool isAccountValid = true;
 
                     account.AccountValidationStatus.account = account.AccountNo;
                     account.AccountValidationStatus.mod_date = DateTime.Now;
 
+                    string lmrperrors = null;
+
                     if (!validationResult.IsValid)
                     {
                         isAccountValid = false;
-                        account.AccountValidationStatus.validation_text = validationResult.ToString();
+                        account.AccountValidationStatus.validation_text = validationResult.ToString() + Environment.NewLine;
                         //update account status back to new
                         if (!reprint)
                             UpdateStatus(account.AccountNo, AccountStatus.New);
                     }
-                    else if (account.LmrpErrors.Count > 0)
+
+                    if (account.LmrpErrors.Count > 0)
                     {
                         isAccountValid = false;
+                        foreach (var error in account.LmrpErrors)
+                        {
+                            account.AccountValidationStatus.validation_text += error + Environment.NewLine;
+                            lmrperrors += error + "\n";
+                        }
                         if (!reprint)
                             UpdateStatus(account.AccountNo, AccountStatus.New);
                     }
-                    else
+
+                    if(isAccountValid)
                     {
-                        isAccountValid = true;
                         account.AccountValidationStatus.validation_text = "No validation errors.";
                         //update account status if this account has been flagged to bill
                         if (account.Status == "RTB")
