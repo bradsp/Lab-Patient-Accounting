@@ -20,7 +20,7 @@ Lab Patient Accounting is a medical patient accounting and billing application c
 ### Built With
 
 * Visual Studio 2022
-* C#
+* C# 7.3
 * .NET Framework 4.8
 * WinForms
 * Microsoft SQL Server
