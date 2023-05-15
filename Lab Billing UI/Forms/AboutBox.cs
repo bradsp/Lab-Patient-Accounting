@@ -53,15 +53,13 @@ namespace LabBilling.Forms
         {
             get
             {
-                string retVal;
+                string retVal = null;
                 object[] attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyDescriptionAttribute), false);
-                if (attributes.Length == 0)
+                if (attributes.Length > 0)
                 {
-                    retVal = "";
+                    retVal = ((AssemblyDescriptionAttribute)attributes[0]).Description;
+                    retVal += Environment.NewLine + Environment.NewLine;
                 }
-                retVal = ((AssemblyDescriptionAttribute)attributes[0]).Description;
-
-                retVal += Environment.NewLine + Environment.NewLine;
 
                 retVal += "Server Name: " + Program.AppEnvironment.ServerName + Environment.NewLine;
                 retVal += "Database Name: " + Program.AppEnvironment.DatabaseName + Environment.NewLine;
