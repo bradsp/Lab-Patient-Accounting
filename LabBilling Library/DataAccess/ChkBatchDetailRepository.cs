@@ -62,13 +62,27 @@ namespace LabBilling.Core.DataAccess
             bool success = false;
             int newId = -1;
 
-            if(existing != null)
+            if (string.IsNullOrEmpty(table.AccountNo))
             {
-                success = base.Update(table);
+                Log.Instance.Error($"{nameof(table.AccountNo)} cannot be empty.");
+                success = false;
+                throw new ApplicationException($"{nameof(table.AccountNo)} cannot be empty.");
             }
-            else
+            try
             {
-                newId = Convert.ToInt32(base.Add(table));
+                if (existing != null)
+                {
+                    success = base.Update(table);
+                }
+                else
+                {
+                    newId = Convert.ToInt32(base.Add(table));
+                }
+            }
+            catch(Exception ex)
+            {
+                Log.Instance.Error(ex, "Error writing ChkBatchDetail");
+                throw ex;
             }
 
             return (success, newId);            
