@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using PetaPoco;
 
 namespace LabBilling.Core.Models
@@ -64,6 +65,12 @@ namespace LabBilling.Core.Models
                 else
                     return this.DiagnosisPointer.DiagnosisPointer ?? "";
             }
+        }
+
+        public override string ToString()
+        { 
+            string retVal = $"{Cpt4}|{Type}|{Amount}|{ChrgNo}";
+            return retVal;
         }
 
     }
