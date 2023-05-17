@@ -70,6 +70,12 @@ namespace LabBilling.Core.Models
         [Ignore]
         public List<CdmDetail> CdmFeeSchedule5 { get; set; }
 
+        public override string ToString()
+        {
+            string value = $"{ChargeId}|{Description}|{Mnem}";
+
+            return value;
+        }
 
     }
 }
