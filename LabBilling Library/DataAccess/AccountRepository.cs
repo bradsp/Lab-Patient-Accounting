@@ -521,6 +521,8 @@ namespace LabBilling.Core.DataAccess
                 throw new ArgumentException($"Financial code {newFinCode} is not valid code.", "newFinCode");
             }
 
+            BeginTransaction();
+
             if (oldFinCode != newFinCode)
             {
                 table.FinCode = newFinCode;
@@ -545,8 +547,13 @@ namespace LabBilling.Core.DataAccess
                     }
                     catch (Exception ex)
                     {
+                        AbortTransaction();
                         throw new ApplicationException("Error reprocessing charges.", ex);
                     }
+                }
+                else
+                {
+                    UpdateChargesFinCode(table.AccountNo, newFinCode);
                 }
             }
             else
@@ -554,6 +561,7 @@ namespace LabBilling.Core.DataAccess
                 updateSuccess = false;
             }
 
+            CompleteTransaction();
             Log.Instance.Trace($"Exiting");
             return updateSuccess;
         }
@@ -613,7 +621,7 @@ namespace LabBilling.Core.DataAccess
 
                     if (table.Fin.FinClass == "M")
                     {
-                        //reprocess charges is fee schedule is different to pick up correct charge amounts
+                        //reprocess charges if fee schedule is different to pick up correct charge amounts
                         if (oldClient.FeeSchedule != newClient.FeeSchedule)
                         {
                             try
@@ -626,7 +634,19 @@ namespace LabBilling.Core.DataAccess
                                 throw new ApplicationException("Error reprocessing charges.", ex);
                             }
                         }
+                        else
+                        {
+                            try
+                            {
+                                UpdateChargesClient(table.AccountNo, newClientMnem);
+                            }
+                            catch( Exception ex)
+                            {
+                                throw new ApplicationException("Error updating charge client.", ex);
+                            }
+                        }
                     }
+
                     dbConnection.CompleteTransaction();
                 }
                 else
@@ -753,6 +773,60 @@ namespace LabBilling.Core.DataAccess
             }
 
             return ReprocessCharges(acc, comment);
+        }
+
+        public bool UpdateChargesFinCode(string account, string finCode)
+        {
+            Log.Instance.Trace("Entering");
+
+            List<Chrg> charges = chrgRepository.GetByAccount(account);
+
+            if(charges == null || charges.Count == 0)
+            {
+                return false;
+            }
+
+            var fin = finRepository.GetFin(finCode);
+
+            if(fin == null)
+            {
+                return false;
+            }
+
+            var chrgsToUpdate = charges.Where(x => x.IsCredited == false && x.ClientMnem != "JPG").ToList();
+
+            foreach(var chrg in chrgsToUpdate)
+            {
+                chrg.FinCode = finCode;
+                chrg.FinancialType = fin.ClaimType;
+                chrgRepository.Update(chrg, new[] { nameof(Chrg.FinancialType), nameof(Chrg.FinCode) });
+            }
+
+            return true;
+        }
+
+        public bool UpdateChargesClient(string account, string clientMnem)
+        {
+            Log.Instance.Trace("Entering");
+
+            List<Chrg> charges = chrgRepository.GetByAccount(account);
+
+            if (charges == null || charges.Count == 0)
+                return false;
+
+            var client = clientRepository.GetClient(clientMnem);
+            if (client == null)
+                return false;
+
+            var chrgsToUpdate = charges.Where(x => x.IsCredited == false).ToList();
+
+            foreach(var chrg in chrgsToUpdate)
+            {
+                chrg.ClientMnem = clientMnem;
+                chrgRepository.Update(chrg, new[] { nameof(Chrg.ClientMnem) });
+            }
+
+            return true;
         }
 
         public int AddCharge(string account, string cdm, int qty, DateTime serviceDate, string comment = null, string refNumber = null)
