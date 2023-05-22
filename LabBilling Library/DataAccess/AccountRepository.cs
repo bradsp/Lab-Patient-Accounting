@@ -1276,7 +1276,7 @@ namespace LabBilling.Core.DataAccess
 
             //DateTime.TryParse(systemParametersRepository.GetByKey("ssi_bill_thru_date"), out DateTime thruDate);
 
-            DateTime thruDate = _appEnvironment.ApplicationParameters.SSIStartDate;
+            DateTime thruDate = _appEnvironment.ApplicationParameters.SSIBillThruDate;
 
             (string propertyName, AccountSearchRepository.operation oper, string searchText)[] parameters = {
                 (nameof(AccountSearch.ServiceDate), AccountSearchRepository.operation.LessThanOrEqual, thruDate.ToString()),
