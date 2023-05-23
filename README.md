@@ -25,6 +25,18 @@ Lab Patient Accounting is a medical patient accounting and billing application c
 * WinForms
 * Microsoft SQL Server
 * PetaPoco
+* AutoFac
+* EdiTools
+* FluentValidation
+* log4net
+* MDIWindowManager
+* MetroModernUI
+* Newtonsoft.Json
+* NLog
+* PDFsharp
+* Quartz
+* Spectre.Console
+* Topshelf
 
 ## Getting Started
 
@@ -96,6 +108,7 @@ Use this space to list resources you find helpful and would like to give credit 
 * [GitHub Pages](https://pages.github.com)
 * [Font Awesome](https://fontawesome.com)
 * [React Icons](https://react-icons.github.io/react-icons/search)
+* [PetaPoco](https://github.com/CollaboratingPlatypus/PetaPoco)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
