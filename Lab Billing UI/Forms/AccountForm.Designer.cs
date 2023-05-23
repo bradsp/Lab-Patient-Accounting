@@ -215,6 +215,8 @@ namespace LabBilling.Forms
             this.AddNoteButton = new System.Windows.Forms.Button();
             this.NotesDisplayTextBox = new System.Windows.Forms.RichTextBox();
             this.tabBillingActivity = new System.Windows.Forms.TabPage();
+            this.label5 = new System.Windows.Forms.Label();
+            this.statementHistoryDataGrid = new System.Windows.Forms.DataGridView();
             this.clearClaimStatusButton = new MetroFramework.Controls.MetroButton();
             this.readyToBillCheckbox = new System.Windows.Forms.CheckBox();
             this.statementFlagComboBox = new System.Windows.Forms.ComboBox();
@@ -272,8 +274,6 @@ namespace LabBilling.Forms
             this.ThirdPartyBalLabel = new System.Windows.Forms.Label();
             this.BannerClientBalLabel = new System.Windows.Forms.Label();
             this.ClientBalLabel = new System.Windows.Forms.Label();
-            this.statementHistoryDataGrid = new System.Windows.Forms.DataGridView();
-            this.label5 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.summaryTab.SuspendLayout();
             this.tabDemographics.SuspendLayout();
@@ -297,11 +297,11 @@ namespace LabBilling.Forms
             ((System.ComponentModel.ISupportInitialize)(this.PaymentsDataGrid)).BeginInit();
             this.tabNotes.SuspendLayout();
             this.tabBillingActivity.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.statementHistoryDataGrid)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.BillActivityDataGrid)).BeginInit();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.RefreshButton)).BeginInit();
             this.dxPointerMenuStrip.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.statementHistoryDataGrid)).BeginInit();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -2301,6 +2301,24 @@ namespace LabBilling.Forms
             this.tabBillingActivity.TabIndex = 12;
             this.tabBillingActivity.Text = "Billing Activity";
             // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(9, 309);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(90, 13);
+            this.label5.TabIndex = 15;
+            this.label5.Text = "Statement History";
+            // 
+            // statementHistoryDataGrid
+            // 
+            this.statementHistoryDataGrid.BackgroundColor = System.Drawing.Color.White;
+            this.statementHistoryDataGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.statementHistoryDataGrid.Location = new System.Drawing.Point(8, 328);
+            this.statementHistoryDataGrid.Name = "statementHistoryDataGrid";
+            this.statementHistoryDataGrid.Size = new System.Drawing.Size(916, 113);
+            this.statementHistoryDataGrid.TabIndex = 14;
+            // 
             // clearClaimStatusButton
             // 
             this.clearClaimStatusButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -2642,6 +2660,7 @@ namespace LabBilling.Forms
             this.BannerAccountTextBox.ReadOnly = true;
             this.BannerAccountTextBox.Size = new System.Drawing.Size(94, 22);
             this.BannerAccountTextBox.TabIndex = 25;
+            this.BannerAccountTextBox.Click += new System.EventHandler(this.BannerAccountTextBox_Click);
             // 
             // BannerSexTextBox
             // 
@@ -2920,24 +2939,6 @@ namespace LabBilling.Forms
             this.ClientBalLabel.Text = "0.00";
             this.ClientBalLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
-            // statementHistoryDataGrid
-            // 
-            this.statementHistoryDataGrid.BackgroundColor = System.Drawing.Color.White;
-            this.statementHistoryDataGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.statementHistoryDataGrid.Location = new System.Drawing.Point(8, 328);
-            this.statementHistoryDataGrid.Name = "statementHistoryDataGrid";
-            this.statementHistoryDataGrid.Size = new System.Drawing.Size(916, 113);
-            this.statementHistoryDataGrid.TabIndex = 14;
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(9, 309);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(90, 13);
-            this.label5.TabIndex = 15;
-            this.label5.Text = "Statement History";
-            // 
             // AccountForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -3013,12 +3014,12 @@ namespace LabBilling.Forms
             this.tabNotes.PerformLayout();
             this.tabBillingActivity.ResumeLayout(false);
             this.tabBillingActivity.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.statementHistoryDataGrid)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.BillActivityDataGrid)).EndInit();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.RefreshButton)).EndInit();
             this.dxPointerMenuStrip.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.statementHistoryDataGrid)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 

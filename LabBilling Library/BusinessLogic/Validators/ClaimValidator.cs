@@ -77,8 +77,7 @@ namespace LabBilling.Core.BusinessLogic.Validators
 
                 //todo: rule - each diagnosis must be used in a dx Pointer.                
 
-                RuleFor(a => a.LmrpErrors)
-                    .Empty().WithMessage("LMRP Rule Violation");
+
             });
 
             //rules for insurance billed accounts (exclude self-pay)
@@ -126,6 +125,9 @@ namespace LabBilling.Core.BusinessLogic.Validators
                 RuleFor(a => a)
                     .Must(NotHaveBundledOBPanel).WithMessage("Insurance does not accept OB Panel charge")
                     .When(a => a.FinCode == "L" && a.PrimaryInsuranceCode == "SEHZ");
+
+                RuleFor(a => a.LmrpErrors)
+                    .Empty().WithMessage("LMRP Rule Violation");
 
             });
 

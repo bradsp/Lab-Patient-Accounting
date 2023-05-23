@@ -2507,5 +2507,11 @@ namespace LabBilling.Forms
         {
             FilterCharges();
         }
+
+        private void BannerAccountTextBox_Click(object sender, EventArgs e)
+        {
+            Clipboard.SetText(BannerAccountTextBox.Text);
+            
+        }
     }
 }

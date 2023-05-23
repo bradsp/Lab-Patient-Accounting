@@ -208,11 +208,13 @@ namespace LabBilling.Forms
             {
                 Log.Instance.Error($"Error posting payment batch", apex);
                 MessageBox.Show("Error occurred. Batch not posted.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                chkRepository.AbortTransaction();
             }
             catch (Exception ex)
             {
                 Log.Instance.Error($"Error posting payment batch", ex);
                 MessageBox.Show("Error occurred. Batch not posted.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                chkRepository.AbortTransaction();
             }
         }
 
@@ -484,44 +486,51 @@ namespace LabBilling.Forms
             if (string.IsNullOrEmpty(row[nameof(ChkBatchDetail.AccountNo)].ToString()))
                 return;
 
-            ChkBatchDetail detail = new ChkBatchDetail();
-
-            detail.Batch = chkBatch.BatchNo;
-            row[nameof(ChkBatchDetail.AccountNo)] = row[nameof(ChkBatchDetail.AccountNo)].ToString().ToUpper();
-            detail.AccountNo = row[nameof(ChkBatchDetail.AccountNo)].ToString().ToUpper();
-            detail.AmtPaid = Convert.ToDouble(row[nameof(ChkBatchDetail.AmtPaid)]);
-            detail.Contractual = Convert.ToDouble(row[nameof(ChkBatchDetail.Contractual)]);
-            detail.WriteOffAmount = Convert.ToDouble(row[nameof(ChkBatchDetail.WriteOffAmount)]);
-
-            if (DateTime.TryParse(row[nameof(ChkBatchDetail.CheckDate)].ToString(), out DateTime temp))
-                detail.CheckDate = temp;
-
-            detail.CheckNo = row[nameof(ChkBatchDetail.CheckNo)].ToString();
-            detail.Comment = row[nameof(ChkBatchDetail.Comment)].ToString();
-
-            if (DateTime.TryParse(row[nameof(ChkBatchDetail.DateReceived)].ToString(), out DateTime temp2))
-                detail.DateReceived = temp2;
-
-            detail.Source = row[nameof(ChkBatchDetail.Source)].ToString();
-            detail.WriteOffCode = row[nameof(ChkBatchDetail.WriteOffCode)].ToString();
-
-            if (DateTime.TryParse(row[nameof(ChkBatchDetail.WriteOffDate)].ToString(), out DateTime temp3))
-                detail.WriteOffDate = temp3;
-
-            if (!string.IsNullOrWhiteSpace(row[nameof(ChkBatchDetail.Id)].ToString()))
-                detail.Id = Convert.ToInt32(row[nameof(ChkBatchDetail.Id)].ToString());
-
-            var (successFlag, newId) = chkBatchDetailRepository.Save(detail);
-
-            if (newId > 0)
+            try
             {
-                row[nameof(ChkBatchDetail.Id)] = newId;
+                ChkBatchDetail detail = new ChkBatchDetail();
+
+                detail.Batch = chkBatch.BatchNo;
+                row[nameof(ChkBatchDetail.AccountNo)] = row[nameof(ChkBatchDetail.AccountNo)].ToString().ToUpper();
+                detail.AccountNo = row[nameof(ChkBatchDetail.AccountNo)].ToString().ToUpper();
+                detail.AmtPaid = Convert.ToDouble(row[nameof(ChkBatchDetail.AmtPaid)]);
+                detail.Contractual = Convert.ToDouble(row[nameof(ChkBatchDetail.Contractual)]);
+                detail.WriteOffAmount = Convert.ToDouble(row[nameof(ChkBatchDetail.WriteOffAmount)]);
+
+                if (DateTime.TryParse(row[nameof(ChkBatchDetail.CheckDate)].ToString(), out DateTime temp))
+                    detail.CheckDate = temp;
+
+                detail.CheckNo = row[nameof(ChkBatchDetail.CheckNo)].ToString();
+                detail.Comment = row[nameof(ChkBatchDetail.Comment)].ToString();
+
+                if (DateTime.TryParse(row[nameof(ChkBatchDetail.DateReceived)].ToString(), out DateTime temp2))
+                    detail.DateReceived = temp2;
+
+                detail.Source = row[nameof(ChkBatchDetail.Source)].ToString();
+                detail.WriteOffCode = row[nameof(ChkBatchDetail.WriteOffCode)].ToString();
+
+                if (DateTime.TryParse(row[nameof(ChkBatchDetail.WriteOffDate)].ToString(), out DateTime temp3))
+                    detail.WriteOffDate = temp3;
+
+                if (!string.IsNullOrWhiteSpace(row[nameof(ChkBatchDetail.Id)].ToString()))
+                    detail.Id = Convert.ToInt32(row[nameof(ChkBatchDetail.Id)].ToString());
+
+                var (successFlag, newId) = chkBatchDetailRepository.Save(detail);
+
+                if (newId > 0)
+                {
+                    row[nameof(ChkBatchDetail.Id)] = newId;
+                }
+
+                TotalPayments();
+
+                chkBatch.ChkBatchDetails = Helper.ConvertToList<ChkBatchDetail>(chkDetailsDataTable);
             }
-
-            TotalPayments();
-
-            chkBatch.ChkBatchDetails = Helper.ConvertToList<ChkBatchDetail>(chkDetailsDataTable);
-
+            catch(Exception ex)
+            {
+                Log.Instance.Error(ex);
+                MessageBox.Show("Error writing detail row. Exit and try again. If the issue persists, contact your administrator.");
+            }
         }
 
         private void dgvPayments_RowLeave(object sender, DataGridViewCellEventArgs e)
