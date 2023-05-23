@@ -1178,7 +1178,8 @@ namespace LabBilling.Core.DataAccess
                             UpdateStatus(account.AccountNo, AccountStatus.New);
                     }
 
-                    if (account.LmrpErrors.Count > 0)
+                    //only run LMRP on A fin_code
+                    if (account.LmrpErrors.Count > 0 && account.FinCode == "A")
                     {
                         isAccountValid = false;
                         foreach (var error in account.LmrpErrors)
