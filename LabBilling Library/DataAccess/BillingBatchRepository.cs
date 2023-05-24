@@ -26,7 +26,7 @@ namespace LabBilling.Core.DataAccess
 
             try
             {
-                dbConnection.BeginTransaction();
+                BeginTransaction();
                 foreach (var detail in data.BillingActivities)
                 {
                     var account = accountRepository.GetByAccount(detail.AccountNo);
@@ -62,12 +62,12 @@ namespace LabBilling.Core.DataAccess
                 // batch - delete batch
                 dbConnection.Delete(data);
 
-                dbConnection.CompleteTransaction();
+                CompleteTransaction();
                 return true;
             }
             catch(Exception ex)
             {
-                dbConnection.AbortTransaction();
+                AbortTransaction();
                 return false;
             }
 

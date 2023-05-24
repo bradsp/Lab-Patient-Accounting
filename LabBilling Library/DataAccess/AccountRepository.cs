@@ -647,19 +647,19 @@ namespace LabBilling.Core.DataAccess
                         }
                     }
 
-                    dbConnection.CompleteTransaction();
+                    CompleteTransaction();
                 }
                 else
                 {
                     // old client is same as new client - no change
                     updateSuccess = false;
-                    dbConnection.CompleteTransaction();
+                    CompleteTransaction();
                 }
             }
             catch (Exception ex)
             {
                 Log.Instance.Error("Error during Change Client", ex);
-                dbConnection.AbortTransaction();
+                AbortTransaction();
                 updateSuccess = false;
             }
             Log.Instance.Trace($"Exiting");
@@ -679,7 +679,7 @@ namespace LabBilling.Core.DataAccess
             if (account == null)
                 throw new ArgumentNullException(nameof(account));
 
-            dbConnection.BeginTransaction();
+            BeginTransaction();
             try
             {
                 foreach (var chrg in account.Charges.Where(x => x.IsCredited == false))
@@ -740,12 +740,12 @@ namespace LabBilling.Core.DataAccess
                         AddCharge(account, chrg.CDMCode, chrg.Quantity, account.TransactionDate);
                 }
 
-                dbConnection.CompleteTransaction();
+                CompleteTransaction();
             }
             catch (Exception ex)
             {
                 Log.Instance.Error(ex);
-                dbConnection.AbortTransaction();
+                AbortTransaction();
                 throw new ApplicationException("Error reprocessing charges", ex);
             }
             return 0;
@@ -798,7 +798,7 @@ namespace LabBilling.Core.DataAccess
             foreach(var chrg in chrgsToUpdate)
             {
                 chrg.FinCode = finCode;
-                chrg.FinancialType = fin.ClaimType;
+                chrg.FinancialType = fin.FinClass;
                 chrgRepository.Update(chrg, new[] { nameof(Chrg.FinancialType), nameof(Chrg.FinCode) });
             }
 

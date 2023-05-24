@@ -95,7 +95,7 @@ namespace LabBilling.Core.DataAccess
 
             try
             {
-                dbConnection.BeginTransaction();
+                BeginTransaction();
 
                 // Some transactional DB work
                 foreach (Chk chk in chks)
@@ -103,12 +103,12 @@ namespace LabBilling.Core.DataAccess
                     this.Add(chk);
                 }
 
-                dbConnection.CompleteTransaction();
+                CompleteTransaction();
             }
             catch (Exception e)
             {
                 Log.Instance.Fatal(e, $"Exception adding chk record");
-                dbConnection.AbortTransaction();
+                AbortTransaction();
                 throw new ApplicationException("Exception encountered posting batch. Records have been rolled back.", e);
                 //return false;
             }

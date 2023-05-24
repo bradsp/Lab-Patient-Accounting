@@ -243,18 +243,21 @@ namespace LabBilling.Core.DataAccess
 
         public virtual void BeginTransaction()
         {
+            Log.Instance.Debug("Begin Transaction");
             transactionStarted = true;
             dbConnection.BeginTransaction();
         }
 
         public virtual void CompleteTransaction()
         {
+            Log.Instance.Debug("Complete Transaction");
             dbConnection.CompleteTransaction();
             transactionStarted = false;
         }
 
         public virtual void AbortTransaction()
         {
+            Log.Instance.Debug("Abort Transaction");
             dbConnection.AbortTransaction();
             transactionStarted = false;
         }
