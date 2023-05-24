@@ -793,7 +793,9 @@ namespace LabBilling.Core.DataAccess
                 return false;
             }
 
-            var chrgsToUpdate = charges.Where(x => x.IsCredited == false && x.ClientMnem != "JPG").ToList();
+            var chrgsToUpdate = charges.Where(x => x.IsCredited == false && 
+                (x.ClientMnem != _appEnvironment.ApplicationParameters.PathologyGroupClientMnem || 
+                string.IsNullOrEmpty(_appEnvironment.ApplicationParameters.PathologyGroupClientMnem))).ToList();
 
             foreach(var chrg in chrgsToUpdate)
             {
@@ -879,13 +881,16 @@ namespace LabBilling.Core.DataAccess
             Fin fin = finRepository.GetFin(accData.FinCode) ?? throw new ApplicationException($"No fincode on account {accData.AccountNo}");
             Client chargeClient = accData.Client;
 
-            //check for global billing cdm - if it is, change client to JPG, fin to Y, and get appropriate prices
-            var gb = globalBillingCdmRepository.GetCdm(cdm);
-            //hard coding exception for Hardin County for now - 05/09/2023 BSP
-            if (gb != null && accData.ClientMnem != "HC")
+            if (_appEnvironment.ApplicationParameters.PathologyGroupBillsProfessional)
             {
-                fin = finRepository.GetFin("Y") ?? throw new ApplicationException($"Fin code Y not found error {accData.AccountNo}");
-                chargeClient = clientRepository.GetClient("JPG");
+                //check for global billing cdm - if it is, change client to Pathology Group, fin to Y, and get appropriate prices
+                var gb = globalBillingCdmRepository.GetCdm(cdm);
+                //hard coding exception for Hardin County for now - 05/09/2023 BSP
+                if (gb != null && accData.ClientMnem != "HC")
+                {
+                    fin = finRepository.GetFin("Y") ?? throw new ApplicationException($"Fin code Y not found error {accData.AccountNo}");
+                    chargeClient = clientRepository.GetClient(_appEnvironment.ApplicationParameters.PathologyGroupClientMnem);
+                }
             }
 
             Chrg chrg = new Chrg();

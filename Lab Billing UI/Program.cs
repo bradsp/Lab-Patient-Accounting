@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using LabBilling.Core.DataAccess;
+using System.Data.SqlClient;
 
 namespace LabBilling
 {
@@ -72,6 +73,27 @@ namespace LabBilling
             if (exc.InnerException != null)
             {
                 Log.Instance.Fatal(exc.InnerException, "Unhandled Exception");
+                if (exc.InnerException is SqlException)
+                {
+                    SqlException sqlException = (SqlException)exc.InnerException;
+                    if (sqlException.Message.Contains("Execution Timeout Expired"))
+                    {
+                        Log.Instance.Fatal(sqlException, "SQL Database error.");
+                        MessageBox.Show("Execution timeout expired. Report this to your system administrator.", "SQL Database Error", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                        return;
+                    }
+                }
+            }
+
+            if (exc is SqlException)
+            {
+                SqlException sqlException = (SqlException)exc;
+                if(sqlException.Message.Contains("Execution Timeout Expired"))
+                {
+                    Log.Instance.Fatal(sqlException, "SQL Database error.");
+                    MessageBox.Show("Execution timeout expired. Report this to your system administrator.", "SQL Database Error", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                    return;
+                }
             }
             Log.Instance.Fatal(exc, "Unhandled Exception");
             MessageBox.Show("An unhandled exception has been encountered. Report this to your system administrator.", "Unhandled Exception", MessageBoxButtons.OK, MessageBoxIcon.Stop);
@@ -79,13 +101,34 @@ namespace LabBilling
 
         static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
-            Exception ex = (Exception)e.ExceptionObject;
-            //log the exception
-            if(ex.InnerException != null)
+            Exception exc = (Exception)e.ExceptionObject;
+            //log the exception, display, etc
+            if (exc.InnerException != null)
             {
-                Log.Instance.Fatal(ex.InnerException, "Unhandled exception");
+                Log.Instance.Fatal(exc.InnerException, "Unhandled Exception");
+                if (exc.InnerException is SqlException)
+                {
+                    SqlException sqlException = (SqlException)exc.InnerException;
+                    if (sqlException.Message.Contains("Execution Timeout Expired"))
+                    {
+                        Log.Instance.Fatal(sqlException, "SQL Database error.");
+                        MessageBox.Show("Execution timeout expired. Report this to your system administrator.", "SQL Database Error", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                        return;
+                    }
+                }
             }
-            Log.Instance.Fatal(ex, "Unhandled exception");
+
+            if (exc is SqlException)
+            {
+                SqlException sqlException = (SqlException)exc;
+                if (sqlException.Message.Contains("Execution Timeout Expired"))
+                {
+                    Log.Instance.Fatal(sqlException, "SQL Database error.");
+                    MessageBox.Show("Execution timeout expired. Report this to your system administrator.", "SQL Database Error", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                    return;
+                }
+            }
+            Log.Instance.Fatal(exc, "Unhandled Exception");
             MessageBox.Show("An unhandled exception has been encountered. Report this to your system administrator.", "Unhandled Exception", MessageBoxButtons.OK, MessageBoxIcon.Stop);
         }
 
