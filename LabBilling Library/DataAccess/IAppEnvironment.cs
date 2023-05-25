@@ -8,7 +8,7 @@ namespace LabBilling.Core.DataAccess
         ApplicationParameters ApplicationParameters { get; set; }
         string ConnectionString { get; }
         string ConnectionStringService { get; }
-        Database Database { get; }
+        IDatabase Database { get; }
         string DatabaseName { get; set; }
         string Environment { get; set; }
         string LogConnectionString { get; }

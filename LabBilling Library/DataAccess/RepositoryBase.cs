@@ -19,7 +19,7 @@ namespace LabBilling.Core.DataAccess
     /// <typeparam name="T"></typeparam>
     public abstract class RepositoryBase<TPoco> : IRepositoryBase<TPoco> where TPoco : IBaseEntity
     {
-        protected PetaPoco.Database dbConnection = null;
+        protected PetaPoco.IDatabase dbConnection = null;
         protected string _tableName;
         protected IList<string> _fields;
         protected TableInfo _tableInfo;

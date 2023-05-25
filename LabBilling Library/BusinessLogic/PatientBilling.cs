@@ -31,7 +31,7 @@ namespace LabBilling.Core
 
     public sealed class PatientBilling
     {
-        private Database db;
+        private IDatabase db;
         private string batchNo;
         private DateTime endDate = DateTime.MinValue;
         private readonly PatRepository patRepository;
