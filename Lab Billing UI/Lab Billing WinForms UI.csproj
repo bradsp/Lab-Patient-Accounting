@@ -784,6 +784,9 @@
     <None Include="Resources\wthLogo.jpg" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="HtmlAgilityPack">
+      <Version>1.11.46</Version>
+    </PackageReference>
     <PackageReference Include="LazyCache">
       <Version>2.4.0</Version>
     </PackageReference>
