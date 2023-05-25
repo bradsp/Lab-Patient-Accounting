@@ -1,5 +1,6 @@
 ﻿using LabBilling.Core.Models;
 using Org.BouncyCastle.Crypto.Tls;
+using PetaPoco;
 using PetaPoco.Providers;
 using System;
 using System.Collections.Generic;
@@ -23,7 +24,7 @@ namespace LabBilling.Core.DataAccess
 
         public SystemParametersRepository systemParametersRepository;
 
-        private PetaPoco.Database _database;
+        private PetaPoco.IDatabase _database;
 
         public bool RunAsService { get; set; } = false;
 
@@ -131,13 +132,24 @@ namespace LabBilling.Core.DataAccess
             }
         }
 
-        public PetaPoco.Database Database
+        public PetaPoco.IDatabase Database
         {
             get
             {
                 if (_database == null)
+                {
                     _database = new PetaPoco.Database(ConnectionString, new CustomSqlDatabaseProvider());
 
+                    _database = DatabaseConfiguration
+                        .Build()
+                        .UsingConnectionString(ConnectionString)
+                        .UsingProvider<CustomSqlDatabaseProvider>(new CustomSqlDatabaseProvider())
+                        .UsingCommandTimeout(180)
+                        .WithAutoSelect()
+                        .UsingDefaultMapper<MyMapper>(new MyMapper())
+                        .Create();
+                    
+                }
                 return _database;
             }
         }

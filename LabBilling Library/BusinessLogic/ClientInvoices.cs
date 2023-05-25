@@ -17,7 +17,7 @@ namespace LabBilling.Core.BusinessLogic
     public sealed class ClientInvoices
     {
         private string _connection;
-        private readonly PetaPoco.Database dbConnection;
+        private readonly PetaPoco.IDatabase dbConnection;
         private readonly ChkRepository chkdb;
         private readonly ChrgRepository chrgdb;
         private readonly ClientRepository clientdb;
@@ -64,6 +64,7 @@ namespace LabBilling.Core.BusinessLogic
                 throw new ArgumentNullException();
 
             int clientCount = unbilledClients.Count;
+            Log.Instance.Debug("Begin Transaction");
             dbConnection.BeginTransaction();
             try
             {
@@ -77,12 +78,14 @@ namespace LabBilling.Core.BusinessLogic
                         progress.Report((tempCount * 100 / clientCount));
                     }
                 }
+                Log.Instance.Debug("Complete Transaction");
                 dbConnection.CompleteTransaction();
                 return tempCount;
             }
             catch (Exception ex)
             {
                 Log.Instance.Error("Error encountered during invoice run. Process is aborted and transactions rolled back.", ex);
+                Log.Instance.Debug("Abort Transaction");
                 dbConnection.AbortTransaction();
                 return 0;
             }

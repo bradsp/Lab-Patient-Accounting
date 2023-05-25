@@ -206,16 +206,16 @@ namespace LabBilling.Core.DataAccess
 
         public virtual void BeginTransaction()
         {
-            dbConnection.BeginTransaction();
+            BeginTransaction();
         }
 
         public virtual void CompleteTransaction()
         {
-            dbConnection.CompleteTransaction();
+            CompleteTransaction();
         }
         public virtual void AbortTransaction()
         {
-            dbConnection.AbortTransaction();
+            AbortTransaction();
         }
 
         public IEnumerable<Logs> Find(Expression<Func<Logs, bool>> predicate)

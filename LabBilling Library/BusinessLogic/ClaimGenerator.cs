@@ -28,7 +28,7 @@ namespace LabBilling.Core.BusinessLogic
         private string _connectionString;
         private IAppEnvironment _appEnvironment;
 
-        private PetaPoco.Database db; 
+        private PetaPoco.IDatabase db; 
 
         private AccountRepository accountRepository;
         private PatRepository patRepository;

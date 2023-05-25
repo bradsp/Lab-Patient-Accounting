@@ -75,6 +75,7 @@ namespace LabBilling.Forms
             this.Cancel = new System.Windows.Forms.Button();
             this.SocSecNo = new System.Windows.Forms.MaskedTextBox();
             this.label22 = new System.Windows.Forms.Label();
+            this.stateZipLabel = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // PatientName
@@ -463,11 +464,21 @@ namespace LabBilling.Forms
             this.label22.TabIndex = 20;
             this.label22.Text = "Social Security No";
             // 
-            // BadDebtEditForm
+            // stateZipLabel
+            // 
+            this.stateZipLabel.AutoSize = true;
+            this.stateZipLabel.Location = new System.Drawing.Point(224, 220);
+            this.stateZipLabel.Name = "stateZipLabel";
+            this.stateZipLabel.Size = new System.Drawing.Size(16, 13);
+            this.stateZipLabel.TabIndex = 45;
+            this.stateZipLabel.Text = "...";
+            // 
+            // PatientCollectionsEditForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 476);
+            this.Controls.Add(this.stateZipLabel);
             this.Controls.Add(this.SocSecNo);
             this.Controls.Add(this.Cancel);
             this.Controls.Add(this.Save);
@@ -514,7 +525,7 @@ namespace LabBilling.Forms
             this.Controls.Add(this.FirstName);
             this.Controls.Add(this.AccountNo);
             this.Controls.Add(this.PatientName);
-            this.Name = "BadDebtEditForm";
+            this.Name = "PatientCollectionsEditForm";
             this.Text = "Edit Collection Record";
             this.Load += new System.EventHandler(this.BadDebtEditForm_Load);
             this.ResumeLayout(false);
@@ -570,5 +581,6 @@ namespace LabBilling.Forms
         private System.Windows.Forms.Button Cancel;
         private System.Windows.Forms.MaskedTextBox SocSecNo;
         private System.Windows.Forms.Label label22;
+        private System.Windows.Forms.Label stateZipLabel;
     }
 }

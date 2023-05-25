@@ -47,6 +47,7 @@ namespace LabBilling.Forms
             Address2.Text = badDebt.StreetAddress2;
             City.Text = badDebt.City;
             State.Text = badDebt.State;
+            stateZipLabel.Text = badDebt.StateZip;
             ZipCode.Text = badDebt.Zip;
             Spouse.Text = badDebt.Spouse;
             Phone.Text = badDebt.Phone;

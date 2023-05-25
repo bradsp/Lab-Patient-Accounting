@@ -647,19 +647,19 @@ namespace LabBilling.Core.DataAccess
                         }
                     }
 
-                    dbConnection.CompleteTransaction();
+                    CompleteTransaction();
                 }
                 else
                 {
                     // old client is same as new client - no change
                     updateSuccess = false;
-                    dbConnection.CompleteTransaction();
+                    CompleteTransaction();
                 }
             }
             catch (Exception ex)
             {
                 Log.Instance.Error("Error during Change Client", ex);
-                dbConnection.AbortTransaction();
+                AbortTransaction();
                 updateSuccess = false;
             }
             Log.Instance.Trace($"Exiting");
@@ -679,7 +679,7 @@ namespace LabBilling.Core.DataAccess
             if (account == null)
                 throw new ArgumentNullException(nameof(account));
 
-            dbConnection.BeginTransaction();
+            BeginTransaction();
             try
             {
                 foreach (var chrg in account.Charges.Where(x => x.IsCredited == false))
@@ -740,12 +740,12 @@ namespace LabBilling.Core.DataAccess
                         AddCharge(account, chrg.CDMCode, chrg.Quantity, account.TransactionDate);
                 }
 
-                dbConnection.CompleteTransaction();
+                CompleteTransaction();
             }
             catch (Exception ex)
             {
                 Log.Instance.Error(ex);
-                dbConnection.AbortTransaction();
+                AbortTransaction();
                 throw new ApplicationException("Error reprocessing charges", ex);
             }
             return 0;
@@ -793,12 +793,14 @@ namespace LabBilling.Core.DataAccess
                 return false;
             }
 
-            var chrgsToUpdate = charges.Where(x => x.IsCredited == false && x.ClientMnem != "JPG").ToList();
+            var chrgsToUpdate = charges.Where(x => x.IsCredited == false && 
+                (x.ClientMnem != _appEnvironment.ApplicationParameters.PathologyGroupClientMnem || 
+                string.IsNullOrEmpty(_appEnvironment.ApplicationParameters.PathologyGroupClientMnem))).ToList();
 
             foreach(var chrg in chrgsToUpdate)
             {
                 chrg.FinCode = finCode;
-                chrg.FinancialType = fin.ClaimType;
+                chrg.FinancialType = fin.FinClass;
                 chrgRepository.Update(chrg, new[] { nameof(Chrg.FinancialType), nameof(Chrg.FinCode) });
             }
 
@@ -879,13 +881,16 @@ namespace LabBilling.Core.DataAccess
             Fin fin = finRepository.GetFin(accData.FinCode) ?? throw new ApplicationException($"No fincode on account {accData.AccountNo}");
             Client chargeClient = accData.Client;
 
-            //check for global billing cdm - if it is, change client to JPG, fin to Y, and get appropriate prices
-            var gb = globalBillingCdmRepository.GetCdm(cdm);
-            //hard coding exception for Hardin County for now - 05/09/2023 BSP
-            if (gb != null && accData.ClientMnem != "HC")
+            if (_appEnvironment.ApplicationParameters.PathologyGroupBillsProfessional)
             {
-                fin = finRepository.GetFin("Y") ?? throw new ApplicationException($"Fin code Y not found error {accData.AccountNo}");
-                chargeClient = clientRepository.GetClient("JPG");
+                //check for global billing cdm - if it is, change client to Pathology Group, fin to Y, and get appropriate prices
+                var gb = globalBillingCdmRepository.GetCdm(cdm);
+                //hard coding exception for Hardin County for now - 05/09/2023 BSP
+                if (gb != null && accData.ClientMnem != "HC")
+                {
+                    fin = finRepository.GetFin("Y") ?? throw new ApplicationException($"Fin code Y not found error {accData.AccountNo}");
+                    chargeClient = clientRepository.GetClient(_appEnvironment.ApplicationParameters.PathologyGroupClientMnem);
+                }
             }
 
             Chrg chrg = new Chrg();

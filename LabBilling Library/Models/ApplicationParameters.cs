@@ -300,6 +300,12 @@ namespace LabBilling.Core.Models
         public System.String InvoiceFileLocation { get; set; }
 
 
+        [Category("PathologyGroup"), Description("Client mnemonic for the pathology group. This is used for invoicing PC component when the lab does not do Pathology group billing.")]
+        public System.String PathologyGroupClientMnem { get; set; }
+        [Category("PathologyGroup"), Description("Set to true when professional charges to billed by the pathology group.")]
+        public System.Boolean PathologyGroupBillsProfessional { get; set; }
+
+
         [Category("Operations"), Description("use to move the day back in an hourly query")] 
         public System.String DemoDays { get; set; }
         [Category("Operations"), Description("")] 

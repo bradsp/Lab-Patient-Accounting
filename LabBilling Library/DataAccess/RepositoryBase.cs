@@ -19,7 +19,7 @@ namespace LabBilling.Core.DataAccess
     /// <typeparam name="T"></typeparam>
     public abstract class RepositoryBase<TPoco> : IRepositoryBase<TPoco> where TPoco : IBaseEntity
     {
-        protected PetaPoco.Database dbConnection = null;
+        protected PetaPoco.IDatabase dbConnection = null;
         protected string _tableName;
         protected IList<string> _fields;
         protected TableInfo _tableInfo;
@@ -243,18 +243,21 @@ namespace LabBilling.Core.DataAccess
 
         public virtual void BeginTransaction()
         {
+            Log.Instance.Debug("Begin Transaction");
             transactionStarted = true;
             dbConnection.BeginTransaction();
         }
 
         public virtual void CompleteTransaction()
         {
+            Log.Instance.Debug("Complete Transaction");
             dbConnection.CompleteTransaction();
             transactionStarted = false;
         }
 
         public virtual void AbortTransaction()
         {
+            Log.Instance.Debug("Abort Transaction");
             dbConnection.AbortTransaction();
             transactionStarted = false;
         }
