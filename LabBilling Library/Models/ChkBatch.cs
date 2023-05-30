@@ -16,7 +16,7 @@ namespace LabBilling.Core.Models
         public string User { get; set; }
         public DateTime BatchDate { get; set; }
         public string BatchData { get; set; }
-        public string PostedDate { get; set; }
+        public DateTime? PostedDate { get; set; }
 
         [ResultColumn]
         public DateTime mod_date { get; set; }

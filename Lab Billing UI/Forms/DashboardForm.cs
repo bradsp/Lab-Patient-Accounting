@@ -11,12 +11,15 @@ using PetaPoco;
 using LabBilling.Core.Models;
 using LabBilling.Core.DataAccess;
 using System.Windows.Forms.DataVisualization.Charting;
+using System.Net.Http;
+using System.Xml.Linq;
+using LabBilling.Logging;
+using HtmlAgilityPack;
 
 namespace LabBilling.Forms
 {
     public partial class DashboardForm : Form
     {
-
         public DashboardForm()
         {
             InitializeComponent();
@@ -26,7 +29,7 @@ namespace LabBilling.Forms
         {
             LoadChart();
 
-            LoadAnnouncements();
+            LoadAnnouncementsWeb();
         }
 
         private void LoadAnnouncements()
@@ -71,6 +74,83 @@ namespace LabBilling.Forms
                 tb.DetectUrls = true;
             }
 
+        }
+
+        private void LoadAnnouncementsWeb()
+        {
+            string url = Program.AppEnvironment.ApplicationParameters.DocumentationSiteUrl + "/" +
+                Program.AppEnvironment.ApplicationParameters.LatestUpdatesUrl;
+
+            LinkLabel hdrlbl = new LinkLabel();
+            hdrlbl.Text = "Updates";
+            hdrlbl.Font = new Font(hdrlbl.Font.FontFamily, 16, FontStyle.Bold);
+            hdrlbl.LinkArea = new LinkArea(0, 22);
+            hdrlbl.LinkClicked += new LinkLabelLinkClickedEventHandler(Hdrlbl_LinkClicked);
+
+            announcementLayoutPanel.Controls.Add(hdrlbl, 0, 0);
+            announcementLayoutPanel.RowStyles[0].SizeType = SizeType.Absolute;
+            announcementLayoutPanel.RowStyles[0].Height = 40;
+            hdrlbl.Dock = DockStyle.Fill;
+
+
+
+            var response = CallUrl(url).Result;
+
+            WebBrowser tb = new WebBrowser();
+
+            tb.DocumentText = ParseHtml(response);
+            tb.Dock = DockStyle.Fill;
+
+            announcementLayoutPanel.RowCount++;
+            announcementLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 80));                
+
+            announcementLayoutPanel.Controls.Add(tb, 0, 1);
+
+            dashboardLayoutPanel.SetColumnSpan(announcementLayoutPanel, 2);
+        }
+
+        private void Hdrlbl_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            string url = Program.AppEnvironment.ApplicationParameters.DocumentationSiteUrl + "/" +
+                Program.AppEnvironment.ApplicationParameters.LatestUpdatesUrl;
+            System.Diagnostics.Process.Start(url);
+        }
+
+        private static async Task<string> CallUrl(string fullUrl)
+        {
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    var response = await client.GetAsync(fullUrl)
+                        .ConfigureAwait(false);
+
+                    var content = response.Content;
+
+                    string result = await content.ReadAsStringAsync();
+
+                    return result;
+                }
+            }
+            catch(HttpRequestException e)
+            {
+                Log.Instance.Error(e);
+                MessageBox.Show(e.Message);
+                return "";
+            }
+
+        }
+
+        private string ParseHtml(string html)
+        {
+            HtmlAgilityPack.HtmlDocument htmlDoc = new HtmlAgilityPack.HtmlDocument();
+
+            htmlDoc.LoadHtml(html);
+
+            var content = htmlDoc.DocumentNode.SelectSingleNode("//div[@id='wikitext']");
+
+
+            return content.OuterHtml;
         }
 
         private void AnnouncementBox_LinkClicked(object sender, LinkClickedEventArgs e)
