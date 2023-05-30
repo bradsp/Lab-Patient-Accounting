@@ -255,6 +255,9 @@ namespace LabBilling.Core.DataAccess
 
             table.CityStateZip = $"{table.City}, {table.State} {table.ZipCode}";
 
+            if (string.IsNullOrWhiteSpace(table.StatementFlag))
+                table.StatementFlag = "N";
+
             return base.Add(table);
         }
 
@@ -277,6 +280,9 @@ namespace LabBilling.Core.DataAccess
                 table.GuarantorMiddleName,
                 table.GuarantorNameSuffix);
             table.GuarantorFullName = table.GuarantorFullName.Trim();
+
+            if (string.IsNullOrWhiteSpace(table.StatementFlag))
+                table.StatementFlag = "N";
 
             return base.Update(table);
         }
@@ -301,6 +307,9 @@ namespace LabBilling.Core.DataAccess
                 table.GuarantorNameSuffix);
             table.GuarantorFullName = table.GuarantorFullName.Trim();
 
+            if (string.IsNullOrWhiteSpace(table.StatementFlag))
+                table.StatementFlag = "N";
+
             return base.Update(table, columns);
         }
 
@@ -308,7 +317,7 @@ namespace LabBilling.Core.DataAccess
         public void SaveAll(Pat pat)
         {
             Log.Instance.Trace($"Entering - account {pat.AccountNo}");
-            dbConnection.Save(pat);
+            Save(pat);
         }
     }
 }
