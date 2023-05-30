@@ -107,6 +107,9 @@ namespace LabBilling.Core
 
                         chkRepository.Add(chk);
 
+                        //update bad debt date on pat record
+                        acc.Pat.SentToCollectionsDate = DateTime.Today;
+                        patRepository.Update(acc.Pat, new[] { nameof(Pat.SentToCollectionsDate) });
 
                         ProgressIncrementedEvent?.Invoke(this, new ProgressEventArgs(++recordsProcessed / results.Count() * 100, $"Processed {result.AccountNo}"));
                     }
