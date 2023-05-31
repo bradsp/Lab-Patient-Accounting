@@ -29,6 +29,8 @@ namespace LabBilling.Forms
         private DataTable chargesTable = new DataTable();
         private DataTable dxPointers = new DataTable();
         private BindingSource dxPointerBindingSource = new BindingSource();
+        private const string setHoldMenuText = "Set Claim Hold";
+        private const string clearHoldMenuText = "Clear Claim Hold";
 
         private List<InsCompany> insCompanies = null;
         private List<Phy> providers = null;
@@ -353,6 +355,15 @@ namespace LabBilling.Forms
             if (currentAccount.ReadyToBill)
             {
                 //MessageBox.Show("Account is flagged ready to bill, or has been billed. Any changes can affect the claim.");
+            }
+
+            if(currentAccount.Status == AccountStatus.Hold)
+            {
+                clearHoldStatusToolStripMenuItem.Text = clearHoldMenuText;
+            }
+            else
+            {
+                clearHoldStatusToolStripMenuItem.Text = setHoldMenuText;
             }
 
             RefreshAccountData();
@@ -2080,30 +2091,42 @@ namespace LabBilling.Forms
         private void ClearHoldStatusToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Log.Instance.Trace($"Entering");
-            if (currentAccount.Status != "HOLD")
+
+            if(clearHoldStatusToolStripMenuItem.Text == clearHoldMenuText)
             {
-                MessageBox.Show(this, "Account is not in HOLD status. This will only set account status from HOLD to NEW. It will not change any billing information.");
-                return;
+                InputBoxResult prompt = InputBox.Show("Enter reason for setting status back to New:", "New Note");
+                AccountNote note = new AccountNote();
+
+                if (prompt.ReturnCode == DialogResult.OK)
+                {
+                    note.Account = currentAccount.AccountNo;
+                    note.Comment = $"Claim hold cleared: {prompt.Text}";
+                    accountNoteRepository.Add(note);
+                    //reload notes to pick up changes
+                    LoadNotes();
+                }
+
+                accountRepository.UpdateStatus(currentAccount.AccountNo, AccountStatus.New);
             }
 
-            //Reason must be entered for changing status
-
-            InputBoxResult prompt = InputBox.Show("Enter reason for setting status back to New:", "New Note");
-            AccountNote note = new AccountNote();
-
-            if (prompt.ReturnCode == DialogResult.OK)
+            if(clearHoldStatusToolStripMenuItem.Text == setHoldMenuText)
             {
-                note.Account = currentAccount.AccountNo;
-                note.Comment = prompt.Text;
-                accountNoteRepository.Add(note);
-                //reload notes to pick up changes
-                LoadNotes();
+                InputBoxResult prompt = InputBox.Show("Enter reason for claim hold:", "New Note");
+                AccountNote note = new AccountNote();
+
+                if (prompt.ReturnCode == DialogResult.OK)
+                {
+                    note.Account = currentAccount.AccountNo;
+                    note.Comment = $"Claim hold set: {prompt.Text}";
+                    accountNoteRepository.Add(note);
+                    //reload notes to pick up changes
+                    LoadNotes();
+                }
+
+                accountRepository.UpdateStatus(currentAccount.AccountNo, AccountStatus.Hold);
             }
 
-            //AccountRepository accDB = new AccountRepository();
-            currentAccount.Status = "NEW";
-            accountRepository.Update(currentAccount);
-            RefreshAccountData();
+            LoadAccountData();
 
         }
 
@@ -2455,6 +2478,7 @@ namespace LabBilling.Forms
 
         private void clearClaimStatusButton_Click(object sender, EventArgs e)
         {
+
             if (MessageBox.Show("Clearing the claim status may result in duplicate claim submissions. Ensure the claim has been deleted in the clearing house system.",
                 "Potential Duplicate Submission", MessageBoxButtons.OKCancel, MessageBoxIcon.Exclamation) == DialogResult.OK)
             {
