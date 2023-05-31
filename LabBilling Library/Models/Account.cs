@@ -332,6 +332,7 @@ namespace LabBilling.Core.Models
         public static readonly string Statements = "STMT";
         public static readonly string PaidOut = "PAID_OUT";
         public static readonly string Closed = "CLOSED";
+        public static readonly string Hold = "HOLD";
 
         public static bool IsValid(string status)
         {
@@ -345,6 +346,7 @@ namespace LabBilling.Core.Models
             if (status == ProfSubmitted) return true;
             if (status == PaidOut) return true;
             if (status == Closed) return true;
+            if (status == Hold) return true;
 
             return false;
 

@@ -21,7 +21,7 @@
     <SccProvider>
     </SccProvider>
     <TargetFrameworkProfile />
-    <AssemblyVersion>2023.1.1.529</AssemblyVersion>
+    <AssemblyVersion>2023.1.1.530</AssemblyVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
