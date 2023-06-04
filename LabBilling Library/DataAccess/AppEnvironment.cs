@@ -22,6 +22,11 @@ namespace LabBilling.Core.DataAccess
         public string ServiceUsername { get; set; }
         public string ServicePassword { get; set; }
 
+        public bool IntegratedAuthentication { get; set; }
+
+        public string UserName { get; set; }
+        public string Password { get; set; }
+
         public SystemParametersRepository systemParametersRepository;
 
         private PetaPoco.IDatabase _database;
@@ -78,15 +83,29 @@ namespace LabBilling.Core.DataAccess
                         throw new ApplicationException("DatabaseName value not set.");
                     }
 
-                    SqlConnectionStringBuilder myBuilder = new SqlConnectionStringBuilder
+                    if(IntegratedAuthentication)
                     {
-                        InitialCatalog = DatabaseName,
-                        DataSource = ServerName,
-                        IntegratedSecurity = true,
-                        ConnectTimeout = 30
-                    };
+                        SqlConnectionStringBuilder myBuilder = new SqlConnectionStringBuilder
+                        {
+                            InitialCatalog = DatabaseName,
+                            DataSource = ServerName,
+                            IntegratedSecurity = true,
+                            ConnectTimeout = 30
+                        };
 
-                    return myBuilder.ConnectionString;
+                        return myBuilder.ConnectionString;
+                    }
+                    else
+                    {
+                        SqlConnectionStringBuilder myBuilder = new SqlConnectionStringBuilder();
+                        myBuilder.InitialCatalog = DatabaseName;
+                        myBuilder.DataSource = ServerName;
+                        myBuilder.IntegratedSecurity = false;
+                        myBuilder.UserID = UserName;
+                        myBuilder.Password = Password;
+                        myBuilder.ConnectTimeout = 30;
+                        return myBuilder.ConnectionString;
+                    }
                 }
                 else
                 {
@@ -183,15 +202,32 @@ namespace LabBilling.Core.DataAccess
         {
             get
             {
-                SqlConnectionStringBuilder myBuilder = new SqlConnectionStringBuilder
+                if (IntegratedAuthentication)
                 {
-                    InitialCatalog = LogDatabaseName,
-                    DataSource = ServerName,
-                    IntegratedSecurity = true,
-                    ConnectTimeout = 30
-                };
+                    SqlConnectionStringBuilder myBuilder = new SqlConnectionStringBuilder
+                    {
+                        InitialCatalog = LogDatabaseName,
+                        DataSource = ServerName,
+                        IntegratedSecurity = true,
+                        ConnectTimeout = 30
+                    };
 
-                return myBuilder.ConnectionString;
+                    return myBuilder.ConnectionString;
+                }
+                else
+                {
+                    SqlConnectionStringBuilder myBuilder = new SqlConnectionStringBuilder
+                    {
+                        InitialCatalog = LogDatabaseName,
+                        DataSource = ServerName,
+                        IntegratedSecurity = false,
+                        UserID = UserName,
+                        Password = Password,
+                        ConnectTimeout = 30
+                    };
+
+                    return myBuilder.ConnectionString;
+                }
             }
         }
 

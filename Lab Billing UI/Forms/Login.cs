@@ -42,55 +42,40 @@ namespace LabBilling
                 return;
             }
 
+            Program.AppEnvironment.UserName = username.Text;
+            Program.AppEnvironment.Password = password.Text;
+
+            if (!IntegratedAuthentication.Checked)
+            {
+                if (!ServerLogin())
+                    return;
+            }
+
             DialogResult = DialogResult.OK;
+        }
 
-            //bool loginSuccess = false;
+        public bool ServerLogin()
+        {
+            db = new EmpRepository(Program.AppEnvironment);
 
-/*            IntPtr th = IntPtr.Zero;
-            if(IntegratedAuthentication.Checked)
-            {
-                username.Text = systemUser;
-                loginSuccess = true;
-            }
-            else
-            {
-                loginSuccess = LogonUser(username.Text, "WTHMC", password.Text, 2, 0, ref th);
-            }
+            bool loginSuccess = db.LoginCheck(username.Text, Helper.Encrypt(password.Text.Trim()));
 
             if (loginSuccess)
             {
-                GetUserProfile();
-                if (!IsLoggedIn)
-                {
-                    Log.Instance.Info(string.Format("Username {0} is not authorized for billing system access.", systemUser));
-                    statustext.Text = string.Format("Username {0} is not authorized for billing system access.", systemUser);
-                    return;
-                }
-                DialogResult = DialogResult.OK;
+                IsLoggedIn = true;
+                LoggedInUser = db.GetByUsername(username.Text);
+                Program.LoggedInUser = LoggedInUser;
+                Program.LoggedInUser.Password = "";
+                Log.Instance.Info(string.Format("Login Success - {0}", LoggedInUser.UserName));
+                return true;
             }
             else
             {
-                // if active directory login failed, revert to local login
-                loginSuccess = db.LoginCheck(username.Text, Helper.Encrypt(password.Text.Trim()));
-                statustext.Text = "Active Directory login failed. Using local login.";
+                IsLoggedIn = false;
+                statustext.Text = "Invalid username or password, or access not granted. Please try again.";
                 Log.Instance.Error(statustext);
-                if (loginSuccess)
-                {
-                    IsLoggedIn = true;
-                    LoggedInUser = db.GetByUsername(username.Text);
-                    Program.LoggedInUser = LoggedInUser;
-                    Program.LoggedInUser.Password = "";
-                    Log.Instance.Info(string.Format("Login Success - {0}", LoggedInUser.UserName));
-                    this.DialogResult = DialogResult.OK;
-                }
-                else
-                {
-                    IsLoggedIn = false;
-                    statustext.Text = "Invalid username or password, or access not granted. Please try again.";
-                    Log.Instance.Error(statustext);
-                    return;
-                }
-            } */
+                return false;
+            }
         }
 
         private void pictureBox1_Click(object sender, EventArgs e)
@@ -103,11 +88,9 @@ namespace LabBilling
         private void Login_Load(object sender, EventArgs e)
         {
             Log.Instance.Trace($"Entering");
-            string domainUser = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
-            string[] paramsLogin = domainUser.Split('\\');
 
-            username.Text = systemUser = paramsLogin[1].ToString();
-            domain.Text = systemDomain = paramsLogin[0].ToString();
+            domain.Visible = false;
+            label3.Visible = false;
 
             if (testEnvironment)
             {
@@ -122,38 +105,60 @@ namespace LabBilling
                 Program.AppEnvironment.LogDatabaseName = Properties.Settings.Default.LogDbName;
             }
 
-            IntegratedAuthentication.Checked = true;
-            IntegratedAuthentication_CheckedChanged(sender, e);
+            Program.AppEnvironment.IntegratedAuthentication = Properties.Settings.Default.IntegratedSecurity;
 
-            db = new EmpRepository(Program.AppEnvironment);
-
-            //check username now to see if it is valid and has impersonate permissions
-            GetUserProfile();
-            if(IsLoggedIn)
+            if (Properties.Settings.Default.IntegratedSecurity)
             {
-                if(LoggedInUser.CanImpersonate)
+                db = new EmpRepository(Program.AppEnvironment);
+
+                string domainUser = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
+                string[] paramsLogin = domainUser.Split('\\');
+
+                username.Text = systemUser = paramsLogin[1].ToString();
+                domain.Text = systemDomain = paramsLogin[0].ToString();
+
+                IntegratedAuthentication.Checked = true;
+                IntegratedAuthentication_CheckedChanged(sender, e);
+
+                //check username now to see if it is valid and has impersonate permissions
+                GetUserProfile();
+
+                if (IsLoggedIn)
                 {
-                    impersonateUserLabel.Visible = true;
-                    impersonateUserComboBox.Visible = true;
-                    
-                    //load impersonateUserComboBox
-                    var emps = db.GetActiveUsers();
+                    if (LoggedInUser.CanImpersonate)
+                    {
+                        impersonateUserLabel.Visible = true;
+                        impersonateUserComboBox.Visible = true; 
+                        db = new EmpRepository(Program.AppEnvironment);
 
-                    skipImpersonateComboSelectionChange = true;
-                    impersonateUserComboBox.DataSource = emps;
-                    impersonateUserComboBox.DisplayMember = nameof(Emp.FullName);
-                    impersonateUserComboBox.ValueMember = nameof(Emp.UserName);
+                        //load impersonateUserComboBox
+                        var emps = db.GetActiveUsers();
 
-                    impersonateUserComboBox.SelectedValue = LoggedInUser.UserName;
+                        skipImpersonateComboSelectionChange = true;
+                        impersonateUserComboBox.DataSource = emps;
+                        impersonateUserComboBox.DisplayMember = nameof(Emp.FullName);
+                        impersonateUserComboBox.ValueMember = nameof(Emp.UserName);
 
-                    skipImpersonateComboSelectionChange = false;
-                }
-                else
-                {
-                    DialogResult = DialogResult.OK;
-                    this.Close();
+                        impersonateUserComboBox.SelectedValue = LoggedInUser.UserName;
+
+                        skipImpersonateComboSelectionChange = false;
+                    }
+                    else
+                    {
+                        DialogResult = DialogResult.OK;
+                        this.Close();
+                    }
                 }
             }
+            else
+            {
+                IntegratedAuthentication.Checked = false;
+                IntegratedAuthentication_CheckedChanged(sender, e);
+
+                IntegratedAuthentication.Enabled = false;
+            }
+
+
         }
 
         private bool GetUserProfile()
@@ -169,33 +174,6 @@ namespace LabBilling
             }
 
             return IsLoggedIn;
-        }
-
-        private bool LocalLogin()
-        {
-            // if active directory login failed, revert to local login
-            bool loginSuccess = db.LoginCheck(username.Text, Helper.Encrypt(password.Text.Trim()));
-            statustext.Text = "Active Directory login failed. Using local login.";
-            Log.Instance.Error(statustext);
-            if (loginSuccess)
-            {
-                IsLoggedIn = true;
-                LoggedInUser = db.GetByUsername(username.Text);
-                Program.LoggedInUser = LoggedInUser;
-                Program.LoggedInUser.Password = "";
-                Log.Instance.Info(string.Format("Login Success - {0}", LoggedInUser.UserName));
-                this.DialogResult = DialogResult.OK;
-            }
-            else
-            {
-                IsLoggedIn = false;
-                statustext.Text = "Invalid username or password, or access not granted. Please try again.";
-                Log.Instance.Error(statustext);
-                return false;
-            }
-
-            return true;
-
         }
 
         private void IntegratedAuthentication_CheckedChanged(object sender, EventArgs e)

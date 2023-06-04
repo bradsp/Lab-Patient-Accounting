@@ -47,7 +47,7 @@ namespace LabBilling.Core.DataAccess
 
             user = GetByUsername(u);
 
-            if (user.UserName != u || user.Password != p)
+            if (user.UserName != u)
             {
                 isSuccess = false;
             }
