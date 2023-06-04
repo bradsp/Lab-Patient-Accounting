@@ -24,6 +24,7 @@ Lab Patient Accounting is a medical patient accounting and billing application c
 * .NET Framework 4.8
 * WinForms
 * Microsoft SQL Server
+* Microsoft SQL Server Reporting Services
 * PetaPoco
 * AutoFac
 * EdiTools
