@@ -103,13 +103,13 @@
       <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="NLog, Version=5.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
-      <HintPath>..\packages\NLog.5.1.4\lib\net46\NLog.dll</HintPath>
+      <HintPath>..\packages\NLog.5.2.0\lib\net46\NLog.dll</HintPath>
     </Reference>
     <Reference Include="NLog.Database, Version=5.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
-      <HintPath>..\packages\NLog.Database.5.1.4\lib\net46\NLog.Database.dll</HintPath>
+      <HintPath>..\packages\NLog.Database.5.2.0\lib\net46\NLog.Database.dll</HintPath>
     </Reference>
     <Reference Include="NLog.WindowsEventLog, Version=5.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
-      <HintPath>..\packages\NLog.WindowsEventLog.5.1.4\lib\netstandard2.0\NLog.WindowsEventLog.dll</HintPath>
+      <HintPath>..\packages\NLog.WindowsEventLog.5.2.0\lib\netstandard2.0\NLog.WindowsEventLog.dll</HintPath>
     </Reference>
     <Reference Include="NPOI, Version=2.6.0.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
       <HintPath>..\packages\NPOI.2.6.0\lib\net472\NPOI.dll</HintPath>

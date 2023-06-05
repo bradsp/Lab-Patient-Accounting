@@ -42,21 +42,11 @@
             this.posting835RemitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.remittancePostingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.badDebtMaintenanceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.sSISubmissionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.sSISortToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.sSISubmissionToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.questProcessingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.questCorrectionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.questProcessingToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.clientBillsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.globalBillingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.workqueuesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.generateClaimsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.institutionalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.professionalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dictionariesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.chargeMasterToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.chargeMasterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.clientsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.financialClassToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.iCDDxCodesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -82,6 +72,7 @@
             this.systemLogViewerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.documentationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.latestUpdatesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.windowManagerPanel1 = new MDIWindowManager.WindowManagerPanel();
@@ -90,7 +81,6 @@
             this.toolStripDatabaseLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.panel1 = new System.Windows.Forms.Panel();
             this.helpProvider1 = new System.Windows.Forms.HelpProvider();
-            this.latestUpdatesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.MainFormMenu.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -122,11 +112,6 @@
             this.posting835RemitToolStripMenuItem,
             this.remittancePostingToolStripMenuItem,
             this.badDebtMaintenanceToolStripMenuItem,
-            this.sSISubmissionToolStripMenuItem,
-            this.questProcessingToolStripMenuItem,
-            this.clientBillsToolStripMenuItem,
-            this.globalBillingToolStripMenuItem,
-            this.workqueuesToolStripMenuItem,
             this.generateClaimsToolStripMenuItem});
             this.billingToolStripMenuItem.Name = "billingToolStripMenuItem";
             resources.ApplyResources(this.billingToolStripMenuItem, "billingToolStripMenuItem");
@@ -197,64 +182,6 @@
             resources.ApplyResources(this.badDebtMaintenanceToolStripMenuItem, "badDebtMaintenanceToolStripMenuItem");
             this.badDebtMaintenanceToolStripMenuItem.Click += new System.EventHandler(this.badDebtMaintenanceToolStripMenuItem_Click);
             // 
-            // sSISubmissionToolStripMenuItem
-            // 
-            this.sSISubmissionToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.sSISortToolStripMenuItem,
-            this.sSISubmissionToolStripMenuItem1});
-            this.sSISubmissionToolStripMenuItem.Name = "sSISubmissionToolStripMenuItem";
-            resources.ApplyResources(this.sSISubmissionToolStripMenuItem, "sSISubmissionToolStripMenuItem");
-            // 
-            // sSISortToolStripMenuItem
-            // 
-            this.sSISortToolStripMenuItem.Name = "sSISortToolStripMenuItem";
-            resources.ApplyResources(this.sSISortToolStripMenuItem, "sSISortToolStripMenuItem");
-            this.sSISortToolStripMenuItem.Click += new System.EventHandler(this.sSISortToolStripMenuItem_Click);
-            // 
-            // sSISubmissionToolStripMenuItem1
-            // 
-            this.sSISubmissionToolStripMenuItem1.Name = "sSISubmissionToolStripMenuItem1";
-            resources.ApplyResources(this.sSISubmissionToolStripMenuItem1, "sSISubmissionToolStripMenuItem1");
-            this.sSISubmissionToolStripMenuItem1.Click += new System.EventHandler(this.sSISubmissionToolStripMenuItem1_Click);
-            // 
-            // questProcessingToolStripMenuItem
-            // 
-            this.questProcessingToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.questCorrectionsToolStripMenuItem,
-            this.questProcessingToolStripMenuItem1});
-            this.questProcessingToolStripMenuItem.Name = "questProcessingToolStripMenuItem";
-            resources.ApplyResources(this.questProcessingToolStripMenuItem, "questProcessingToolStripMenuItem");
-            // 
-            // questCorrectionsToolStripMenuItem
-            // 
-            this.questCorrectionsToolStripMenuItem.Name = "questCorrectionsToolStripMenuItem";
-            resources.ApplyResources(this.questCorrectionsToolStripMenuItem, "questCorrectionsToolStripMenuItem");
-            this.questCorrectionsToolStripMenuItem.Click += new System.EventHandler(this.questCorrectionsToolStripMenuItem_Click);
-            // 
-            // questProcessingToolStripMenuItem1
-            // 
-            this.questProcessingToolStripMenuItem1.Name = "questProcessingToolStripMenuItem1";
-            resources.ApplyResources(this.questProcessingToolStripMenuItem1, "questProcessingToolStripMenuItem1");
-            this.questProcessingToolStripMenuItem1.Click += new System.EventHandler(this.questProcessingToolStripMenuItem1_Click);
-            // 
-            // clientBillsToolStripMenuItem
-            // 
-            this.clientBillsToolStripMenuItem.Name = "clientBillsToolStripMenuItem";
-            resources.ApplyResources(this.clientBillsToolStripMenuItem, "clientBillsToolStripMenuItem");
-            this.clientBillsToolStripMenuItem.Click += new System.EventHandler(this.clientBillsToolStripMenuItem_Click);
-            // 
-            // globalBillingToolStripMenuItem
-            // 
-            this.globalBillingToolStripMenuItem.Name = "globalBillingToolStripMenuItem";
-            resources.ApplyResources(this.globalBillingToolStripMenuItem, "globalBillingToolStripMenuItem");
-            this.globalBillingToolStripMenuItem.Click += new System.EventHandler(this.globalBillingToolStripMenuItem_Click);
-            // 
-            // workqueuesToolStripMenuItem
-            // 
-            this.workqueuesToolStripMenuItem.Name = "workqueuesToolStripMenuItem";
-            resources.ApplyResources(this.workqueuesToolStripMenuItem, "workqueuesToolStripMenuItem");
-            this.workqueuesToolStripMenuItem.Click += new System.EventHandler(this.workqueuesToolStripMenuItem_Click);
-            // 
             // generateClaimsToolStripMenuItem
             // 
             this.generateClaimsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -279,7 +206,6 @@
             // 
             this.dictionariesToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.chargeMasterToolStripMenuItem1,
-            this.chargeMasterToolStripMenuItem,
             this.clientsToolStripMenuItem,
             this.financialClassToolStripMenuItem,
             this.iCDDxCodesToolStripMenuItem,
@@ -295,12 +221,6 @@
             this.chargeMasterToolStripMenuItem1.Name = "chargeMasterToolStripMenuItem1";
             resources.ApplyResources(this.chargeMasterToolStripMenuItem1, "chargeMasterToolStripMenuItem1");
             this.chargeMasterToolStripMenuItem1.Click += new System.EventHandler(this.chargeMasterToolStripMenuItem1_Click);
-            // 
-            // chargeMasterToolStripMenuItem
-            // 
-            this.chargeMasterToolStripMenuItem.Name = "chargeMasterToolStripMenuItem";
-            resources.ApplyResources(this.chargeMasterToolStripMenuItem, "chargeMasterToolStripMenuItem");
-            this.chargeMasterToolStripMenuItem.Click += new System.EventHandler(this.chargeMasterToolStripMenuItem_Click);
             // 
             // clientsToolStripMenuItem
             // 
@@ -461,6 +381,12 @@
             resources.ApplyResources(this.documentationToolStripMenuItem, "documentationToolStripMenuItem");
             this.documentationToolStripMenuItem.Click += new System.EventHandler(this.documentationToolStripMenuItem_Click);
             // 
+            // latestUpdatesToolStripMenuItem
+            // 
+            this.latestUpdatesToolStripMenuItem.Name = "latestUpdatesToolStripMenuItem";
+            resources.ApplyResources(this.latestUpdatesToolStripMenuItem, "latestUpdatesToolStripMenuItem");
+            this.latestUpdatesToolStripMenuItem.Click += new System.EventHandler(this.latestUpdatesToolStripMenuItem_Click);
+            // 
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
@@ -528,12 +454,6 @@
             resources.ApplyResources(this.panel1, "panel1");
             this.panel1.Name = "panel1";
             // 
-            // latestUpdatesToolStripMenuItem
-            // 
-            this.latestUpdatesToolStripMenuItem.Name = "latestUpdatesToolStripMenuItem";
-            resources.ApplyResources(this.latestUpdatesToolStripMenuItem, "latestUpdatesToolStripMenuItem");
-            this.latestUpdatesToolStripMenuItem.Click += new System.EventHandler(this.latestUpdatesToolStripMenuItem_Click);
-            // 
             // MainForm
             // 
             resources.ApplyResources(this, "$this");
@@ -566,12 +486,9 @@
         private System.Windows.Forms.MenuStrip MainFormMenu;
         private System.Windows.Forms.ToolStripMenuItem billingToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem accountToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem workqueuesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem accountChargeEntryToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem batchRemittanceToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem sSISubmissionToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem dictionariesToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem chargeMasterToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem clientsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem financialClassToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem iCDDxCodesToolStripMenuItem;
@@ -594,14 +511,7 @@
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem badDebtMaintenanceToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem questProcessingToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem questCorrectionsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem questProcessingToolStripMenuItem1;
-        private System.Windows.Forms.ToolStripMenuItem globalBillingToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem clientBillsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem duplicateAccountsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem sSISortToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem sSISubmissionToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem reportByInsuranceCompanyToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem posting835RemitToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;

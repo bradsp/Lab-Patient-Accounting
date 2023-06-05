@@ -283,7 +283,6 @@ namespace LabBilling
             //enable menu items based on permissions
             systemAdministrationToolStripMenuItem.Visible = Program.LoggedInUser.IsAdministrator;
 
-            //if (Convert.ToBoolean(systemParametersRepository.GetByKey("allow_chk_entry")))
             if(Program.AppEnvironment.ApplicationParameters.AllowPaymentAdjustmentEntry)
             {
                 batchRemittanceToolStripMenuItem.Visible = Program.LoggedInUser.CanAddPayments;
@@ -298,7 +297,7 @@ namespace LabBilling
                 posting835RemitToolStripMenuItem.Visible = false;
                 b5.Visible = false;
             }
-            //if (Convert.ToBoolean(systemParametersRepository.GetByKey("allow_chrg_entry")))
+
             if (Program.AppEnvironment.ApplicationParameters.AllowChargeEntry)
             {
                 accountChargeEntryToolStripMenuItem.Visible = Program.LoggedInUser.CanSubmitCharges;
@@ -311,14 +310,9 @@ namespace LabBilling
                 batchChargeEntryToolStripMenuItem.Visible = false;
                 b4.Visible = false;
             }
-            //if (Convert.ToBoolean(systemParametersRepository.GetByKey("allow_edit")))
-            if(Program.AppEnvironment.ApplicationParameters.AllowEditing)
-            {
-                sSISubmissionToolStripMenuItem.Visible = Program.LoggedInUser.CanSubmitBilling;
-            }
-            else
-            {
-                sSISubmissionToolStripMenuItem.Visible = false;
+
+            if(!Program.AppEnvironment.ApplicationParameters.AllowEditing)
+            {                
                 MetroMessageBox.Show(this, "System is in read-only mode.", "Read Only Mode", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             UpdateMenuAccess();
@@ -338,23 +332,11 @@ namespace LabBilling
 
             //administrator only menu items
             systemAdministrationToolStripMenuItem.Visible = Program.LoggedInUser.IsAdministrator;
-            workqueuesToolStripMenuItem.Visible = false; // Program.LoggedInUser.IsAdministrator;
-            sSISubmissionToolStripMenuItem.Visible = false; // Program.LoggedInUser.IsAdministrator; //Program.LoggedInUser.CanSubmitBilling;
-            sSISubmissionToolStripMenuItem1.Visible = false; // Program.LoggedInUser.IsAdministrator; //Program.LoggedInUser.CanSubmitBilling;
-            clientBillsToolStripMenuItem.Visible = Program.LoggedInUser.IsAdministrator;
-            questProcessingToolStripMenuItem.Visible = false; // Program.LoggedInUser.IsAdministrator;
-            questProcessingToolStripMenuItem1.Visible = false; // Program.LoggedInUser.IsAdministrator;
-            globalBillingToolStripMenuItem.Visible = Program.LoggedInUser.IsAdministrator;
 
             if (Program.LoggedInUser.Access == "VIEW")
             {
                 duplicateAccountsToolStripMenuItem.Visible = false;
-                questCorrectionsToolStripMenuItem.Visible = false;
-                questProcessingToolStripMenuItem.Visible = false;
-                questProcessingToolStripMenuItem1.Visible = false;
-                globalBillingToolStripMenuItem.Visible = false;
                 clientBillsNewToolStripMenuItem.Visible = false;
-                clientBillsToolStripMenuItem.Visible = false;
                 batchChargeEntryToolStripMenuItem.Visible = false;
                 accountChargeEntryToolStripMenuItem.Visible = false;
             }
@@ -505,85 +487,6 @@ namespace LabBilling
             }
         }
 
-        private void questCorrectionsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Log.Instance.Trace($"Entering");
-
-            frmCorrection frm = new frmCorrection(Helper.GetArgs())
-            {
-                MdiParent = this,
-                AutoScroll = true,
-                WindowState = FormWindowState.Normal
-            };
-            frm.Show();
-        }
-
-        private void questProcessingToolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-            Log.Instance.Trace($"Entering");
-
-            frmQuest frm = new frmQuest(Helper.GetArgs());
-            frm.MdiParent = this;
-            frm.AutoScroll = true;
-            frm.WindowState = FormWindowState.Normal;
-            frm.Show();
-        }
-
-        private void globalBillingToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Log.Instance.Trace($"Entering");
-
-            frmGlobalBilling frm = new frmGlobalBilling(Helper.GetArgs())
-            {
-                MdiParent = this,
-                AutoScroll = true,
-                WindowState = FormWindowState.Normal
-            };
-            frm.Show();
-        }
-
-        private void chargeMasterToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Log.Instance.Debug($"Entering");
-            var formsList = Application.OpenForms.OfType<frmCDM>();
-
-            if (formsList.Count() > 0)
-            {
-                formsList.First().Focus();
-            }
-            else
-            {
-                frmCDM frm = new frmCDM(Helper.GetArgs())
-                {
-                    MdiParent = this,
-                    WindowState = FormWindowState.Normal,
-                    AutoScroll = true
-                };
-                frm.Show();
-            }
-        }
-
-        private void clientBillsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Log.Instance.Trace($"Entering");
-
-            var formsList = Application.OpenForms.OfType<ClientBillForm>();
-
-            if (formsList.Count() > 0)
-            {
-                formsList.First().Focus();
-            }
-            else
-            {
-                ClientBillForm frm = new ClientBillForm(Helper.GetArgs())
-                {
-                    MdiParent = this,
-                    AutoScroll = true,
-                    WindowState = FormWindowState.Normal
-                };
-                frm.Show();
-            }
-        }
 
         private void duplicateAccountsToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -593,22 +496,6 @@ namespace LabBilling
             frm.MdiParent = this;
             frm.AutoScroll = true;
             frm.WindowState = FormWindowState.Normal;
-            frm.Show();
-        }
-
-        private void sSISortToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Log.Instance.Trace($"Entering");
-
-            frmSSISort frm = new frmSSISort(Helper.GetArgs()) { MdiParent = this, AutoScroll = true, WindowState = FormWindowState.Normal };
-            frm.Show();
-        }
-
-        private void sSISubmissionToolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-            Log.Instance.Trace($"Entering");
-
-            frmSSI frm = new frmSSI(Helper.GetArgs()) { MdiParent = this, AutoScroll = true, WindowState = FormWindowState.Normal };
             frm.Show();
         }
 
