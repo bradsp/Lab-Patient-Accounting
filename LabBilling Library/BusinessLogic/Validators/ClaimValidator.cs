@@ -73,7 +73,12 @@ namespace LabBilling.Core.BusinessLogic.Validators
                     .When(a => a.Charges != null);
 
                 RuleFor(a => a)
-                    .Must(MatchChargeServiceDateAndAccountTransDate).WithMessage("Account DOS does not match charge service date.");                    
+                    .Must(MatchChargeServiceDateAndAccountTransDate).WithMessage("Account DOS does not match charge service date.");
+
+                RuleFor(a => a.Charges.Where(x => x.FinancialType == "M").Count())
+                    .GreaterThan(0)
+                    .WithMessage("No claim billable charges.");
+                    
 
                 //todo: rule - each diagnosis must be used in a dx Pointer.                
 
