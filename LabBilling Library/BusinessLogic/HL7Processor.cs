@@ -158,7 +158,7 @@ namespace LabBilling.Core.BusinessLogic
                 currentMessage.ProcessStatusMsg = "Exception encountered during process.";
                 currentMessage.Errors = ex.Message + "\n" + ex.StackTrace;
 
-                Console.WriteLine($"{DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss.fffffffK")} - Exception encountered during process.");
+                Console.WriteLine($"{DateTime.Now:yyyy-MM-ddTHH:mm:ss.fffffffK} - Exception encountered during process.");
                 messagesInboundRepository.Update(currentMessage, new[]
                 {
                     nameof(MessageInbound.ProcessFlag),

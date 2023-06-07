@@ -17,5 +17,8 @@
     <Setting Name="TestDbServer" Type="System.String" Scope="Application">
       <Value Profile="(Default)">WTHMCLBILL</Value>
     </Setting>
+    <Setting Name="IntegratedSecurity" Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

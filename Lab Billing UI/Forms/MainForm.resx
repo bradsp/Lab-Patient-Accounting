@@ -187,64 +187,6 @@
   <data name="badDebtMaintenanceToolStripMenuItem.Text" xml:space="preserve">
     <value>Patient Collections</value>
   </data>
-  <data name="sSISortToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>153, 22</value>
-  </data>
-  <data name="sSISortToolStripMenuItem.Text" xml:space="preserve">
-    <value>SSI Sort</value>
-  </data>
-  <data name="sSISubmissionToolStripMenuItem1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>153, 22</value>
-  </data>
-  <data name="sSISubmissionToolStripMenuItem1.Text" xml:space="preserve">
-    <value>SSI Submission</value>
-  </data>
-  <data name="sSISubmissionToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>217, 22</value>
-  </data>
-  <data name="sSISubmissionToolStripMenuItem.Text" xml:space="preserve">
-    <value>SSI Submission (Legacy)</value>
-  </data>
-  <data name="questCorrectionsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>169, 22</value>
-  </data>
-  <data name="questCorrectionsToolStripMenuItem.Text" xml:space="preserve">
-    <value>Quest Corrections</value>
-  </data>
-  <data name="questProcessingToolStripMenuItem1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>169, 22</value>
-  </data>
-  <data name="questProcessingToolStripMenuItem1.Text" xml:space="preserve">
-    <value>Quest Processing</value>
-  </data>
-  <data name="questProcessingToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>217, 22</value>
-  </data>
-  <data name="questProcessingToolStripMenuItem.Text" xml:space="preserve">
-    <value>Quest</value>
-  </data>
-  <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="questProcessingToolStripMenuItem.Visible" type="System.Boolean, mscorlib">
-    <value>False</value>
-  </data>
-  <data name="clientBillsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>217, 22</value>
-  </data>
-  <data name="clientBillsToolStripMenuItem.Text" xml:space="preserve">
-    <value>Client Bills (Legacy)</value>
-  </data>
-  <data name="globalBillingToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>217, 22</value>
-  </data>
-  <data name="globalBillingToolStripMenuItem.Text" xml:space="preserve">
-    <value>Global Billing</value>
-  </data>
-  <data name="workqueuesToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>217, 22</value>
-  </data>
-  <data name="workqueuesToolStripMenuItem.Text" xml:space="preserve">
-    <value>Workqueues (legacy)</value>
-  </data>
   <data name="institutionalToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>138, 22</value>
   </data>
@@ -270,34 +212,29 @@
     <value>&amp;Billing</value>
   </data>
   <data name="chargeMasterToolStripMenuItem1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>196, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="chargeMasterToolStripMenuItem1.Text" xml:space="preserve">
     <value>Charge Master</value>
   </data>
-  <data name="chargeMasterToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>196, 22</value>
-  </data>
-  <data name="chargeMasterToolStripMenuItem.Text" xml:space="preserve">
-    <value>Charge Master (legacy)</value>
-  </data>
   <data name="clientsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>196, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="clientsToolStripMenuItem.Text" xml:space="preserve">
     <value>Clients</value>
   </data>
   <data name="financialClassToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>196, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="financialClassToolStripMenuItem.Text" xml:space="preserve">
     <value>Financial Class</value>
   </data>
+  <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="financialClassToolStripMenuItem.Visible" type="System.Boolean, mscorlib">
     <value>False</value>
   </data>
   <data name="iCDDxCodesToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>196, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="iCDDxCodesToolStripMenuItem.Text" xml:space="preserve">
     <value>ICD Dx Codes</value>
@@ -306,19 +243,19 @@
     <value>False</value>
   </data>
   <data name="insurancePlansToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>196, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="insurancePlansToolStripMenuItem.Text" xml:space="preserve">
     <value>Insurance Plans</value>
   </data>
   <data name="physiciansToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>196, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="physiciansToolStripMenuItem.Text" xml:space="preserve">
     <value>Providers</value>
   </data>
   <data name="pathologistsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>196, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="pathologistsToolStripMenuItem.Text" xml:space="preserve">
     <value>Pathologists</value>
@@ -327,7 +264,7 @@
     <value>False</value>
   </data>
   <data name="zipCodesToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>196, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="zipCodesToolStripMenuItem.Text" xml:space="preserve">
     <value>Zip Codes</value>
@@ -438,25 +375,25 @@
     <value>&amp;System Administration</value>
   </data>
   <data name="documentationToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>180, 22</value>
+    <value>157, 22</value>
   </data>
   <data name="documentationToolStripMenuItem.Text" xml:space="preserve">
     <value>Documentation</value>
   </data>
   <data name="latestUpdatesToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>180, 22</value>
+    <value>157, 22</value>
   </data>
   <data name="latestUpdatesToolStripMenuItem.Text" xml:space="preserve">
     <value>Latest Updates</value>
   </data>
   <data name="aboutToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>180, 22</value>
+    <value>157, 22</value>
   </data>
   <data name="aboutToolStripMenuItem.Text" xml:space="preserve">
     <value>About...</value>
   </data>
   <data name="exitToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>180, 22</value>
+    <value>157, 22</value>
   </data>
   <data name="exitToolStripMenuItem.Text" xml:space="preserve">
     <value>E&amp;xit</value>
@@ -3752,60 +3689,6 @@
   <data name="&gt;&gt;badDebtMaintenanceToolStripMenuItem.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;sSISubmissionToolStripMenuItem.Name" xml:space="preserve">
-    <value>sSISubmissionToolStripMenuItem</value>
-  </data>
-  <data name="&gt;&gt;sSISubmissionToolStripMenuItem.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;sSISortToolStripMenuItem.Name" xml:space="preserve">
-    <value>sSISortToolStripMenuItem</value>
-  </data>
-  <data name="&gt;&gt;sSISortToolStripMenuItem.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;sSISubmissionToolStripMenuItem1.Name" xml:space="preserve">
-    <value>sSISubmissionToolStripMenuItem1</value>
-  </data>
-  <data name="&gt;&gt;sSISubmissionToolStripMenuItem1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;questProcessingToolStripMenuItem.Name" xml:space="preserve">
-    <value>questProcessingToolStripMenuItem</value>
-  </data>
-  <data name="&gt;&gt;questProcessingToolStripMenuItem.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;questCorrectionsToolStripMenuItem.Name" xml:space="preserve">
-    <value>questCorrectionsToolStripMenuItem</value>
-  </data>
-  <data name="&gt;&gt;questCorrectionsToolStripMenuItem.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;questProcessingToolStripMenuItem1.Name" xml:space="preserve">
-    <value>questProcessingToolStripMenuItem1</value>
-  </data>
-  <data name="&gt;&gt;questProcessingToolStripMenuItem1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;clientBillsToolStripMenuItem.Name" xml:space="preserve">
-    <value>clientBillsToolStripMenuItem</value>
-  </data>
-  <data name="&gt;&gt;clientBillsToolStripMenuItem.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;globalBillingToolStripMenuItem.Name" xml:space="preserve">
-    <value>globalBillingToolStripMenuItem</value>
-  </data>
-  <data name="&gt;&gt;globalBillingToolStripMenuItem.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;workqueuesToolStripMenuItem.Name" xml:space="preserve">
-    <value>workqueuesToolStripMenuItem</value>
-  </data>
-  <data name="&gt;&gt;workqueuesToolStripMenuItem.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
   <data name="&gt;&gt;generateClaimsToolStripMenuItem.Name" xml:space="preserve">
     <value>generateClaimsToolStripMenuItem</value>
   </data>
@@ -3834,12 +3717,6 @@
     <value>chargeMasterToolStripMenuItem1</value>
   </data>
   <data name="&gt;&gt;chargeMasterToolStripMenuItem1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;chargeMasterToolStripMenuItem.Name" xml:space="preserve">
-    <value>chargeMasterToolStripMenuItem</value>
-  </data>
-  <data name="&gt;&gt;chargeMasterToolStripMenuItem.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;clientsToolStripMenuItem.Name" xml:space="preserve">
@@ -3992,6 +3869,12 @@
   <data name="&gt;&gt;documentationToolStripMenuItem.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="&gt;&gt;latestUpdatesToolStripMenuItem.Name" xml:space="preserve">
+    <value>latestUpdatesToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;latestUpdatesToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="&gt;&gt;aboutToolStripMenuItem.Name" xml:space="preserve">
     <value>aboutToolStripMenuItem</value>
   </data>
@@ -4021,12 +3904,6 @@
   </data>
   <data name="&gt;&gt;helpProvider1.Type" xml:space="preserve">
     <value>System.Windows.Forms.HelpProvider, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;latestUpdatesToolStripMenuItem.Name" xml:space="preserve">
-    <value>latestUpdatesToolStripMenuItem</value>
-  </data>
-  <data name="&gt;&gt;latestUpdatesToolStripMenuItem.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
     <value>MainForm</value>
