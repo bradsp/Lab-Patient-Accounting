@@ -41,6 +41,9 @@ namespace LabBilling.Core.Models
         [Column("fin_code")]
         [ResultColumn]
         public string FinCode { get; set; }
+        [Column("fin_type")]
+        [ResultColumn]
+        public string FinType { get; set; }
         [Column("ins_code")]
         [ResultColumn]
         public string PrimaryInsCode { get; set; }
