@@ -1407,7 +1407,7 @@ namespace LabBilling.Core.DataAccess
             }
 
             chrgRepository.CreditCharge(charge.ChrgId, $"Move to {destinationAccount}");
-            AddCharge(destinationAccount, charge.CDMCode, charge.Quantity, (DateTime)charge.ServiceDate, $"Moved from {sourceAccount}", charge.ReferenceReq);
+            AddCharge(destinationAccount, charge.CDMCode, charge.Quantity, destination.TransactionDate, $"Moved from {sourceAccount}", charge.ReferenceReq);
 
         }
 
