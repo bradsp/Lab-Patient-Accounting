@@ -58,8 +58,8 @@
     <Reference Include="NLog.Database, Version=5.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
       <HintPath>..\packages\NLog.Database.5.2.0\lib\net46\NLog.Database.dll</HintPath>
     </Reference>
-    <Reference Include="PetaPoco, Version=6.0.554.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\PetaPoco.Compiled.6.0.554\lib\net45\PetaPoco.dll</HintPath>
+    <Reference Include="PetaPoco, Version=6.0.566.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\PetaPoco.Compiled.6.0.566\lib\net45\PetaPoco.dll</HintPath>
     </Reference>
     <Reference Include="Spectre.Console, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Spectre.Console.0.47.0\lib\netstandard2.0\Spectre.Console.dll</HintPath>
