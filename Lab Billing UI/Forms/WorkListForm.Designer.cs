@@ -29,9 +29,9 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             this.accountGrid = new MetroFramework.Controls.MetroGrid();
             this.accountGridContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.holdToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -73,24 +73,24 @@
             this.accountGrid.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.accountGrid.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.None;
             this.accountGrid.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(174)))), ((int)(((byte)(219)))));
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
-            dataGridViewCellStyle1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(198)))), ((int)(((byte)(247)))));
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.accountGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(174)))), ((int)(((byte)(219)))));
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            dataGridViewCellStyle4.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(198)))), ((int)(((byte)(247)))));
+            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));
+            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.accountGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle4;
             this.accountGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.accountGrid.ContextMenuStrip = this.accountGridContextMenu;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
-            dataGridViewCellStyle2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(136)))), ((int)(((byte)(136)))), ((int)(((byte)(136)))));
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(198)))), ((int)(((byte)(247)))));
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.accountGrid.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            dataGridViewCellStyle5.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            dataGridViewCellStyle5.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(136)))), ((int)(((byte)(136)))), ((int)(((byte)(136)))));
+            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(198)))), ((int)(((byte)(247)))));
+            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));
+            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.accountGrid.DefaultCellStyle = dataGridViewCellStyle5;
             this.accountGrid.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.accountGrid.EnableHeadersVisualStyles = false;
             this.accountGrid.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
@@ -99,14 +99,14 @@
             this.accountGrid.MultiSelect = false;
             this.accountGrid.Name = "accountGrid";
             this.accountGrid.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(174)))), ((int)(((byte)(219)))));
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
-            dataGridViewCellStyle3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(198)))), ((int)(((byte)(247)))));
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.accountGrid.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(174)))), ((int)(((byte)(219)))));
+            dataGridViewCellStyle6.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            dataGridViewCellStyle6.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(198)))), ((int)(((byte)(247)))));
+            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));
+            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.accountGrid.RowHeadersDefaultCellStyle = dataGridViewCellStyle6;
             this.accountGrid.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.accountGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.accountGrid.Size = new System.Drawing.Size(952, 410);
@@ -230,7 +230,7 @@
             // 
             this.filterTextBox.Location = new System.Drawing.Point(236, 10);
             this.filterTextBox.Name = "filterTextBox";
-            this.filterTextBox.Size = new System.Drawing.Size(253, 20);
+            this.filterTextBox.Size = new System.Drawing.Size(228, 20);
             this.filterTextBox.TabIndex = 13;
             this.filterTextBox.KeyUp += new System.Windows.Forms.KeyEventHandler(this.filterTextBox_KeyUp);
             // 
@@ -247,7 +247,7 @@
             // 
             this.nameFilterRadioBtn.AutoSize = true;
             this.nameFilterRadioBtn.Checked = true;
-            this.nameFilterRadioBtn.Location = new System.Drawing.Point(496, 13);
+            this.nameFilterRadioBtn.Location = new System.Drawing.Point(472, 13);
             this.nameFilterRadioBtn.Name = "nameFilterRadioBtn";
             this.nameFilterRadioBtn.Size = new System.Drawing.Size(53, 17);
             this.nameFilterRadioBtn.TabIndex = 15;
@@ -258,7 +258,7 @@
             // clientFilterRadioBtn
             // 
             this.clientFilterRadioBtn.AutoSize = true;
-            this.clientFilterRadioBtn.Location = new System.Drawing.Point(555, 13);
+            this.clientFilterRadioBtn.Location = new System.Drawing.Point(531, 13);
             this.clientFilterRadioBtn.Name = "clientFilterRadioBtn";
             this.clientFilterRadioBtn.Size = new System.Drawing.Size(51, 17);
             this.clientFilterRadioBtn.TabIndex = 15;
@@ -269,7 +269,7 @@
             // accountFilterRadioBtn
             // 
             this.accountFilterRadioBtn.AutoSize = true;
-            this.accountFilterRadioBtn.Location = new System.Drawing.Point(612, 13);
+            this.accountFilterRadioBtn.Location = new System.Drawing.Point(588, 13);
             this.accountFilterRadioBtn.Name = "accountFilterRadioBtn";
             this.accountFilterRadioBtn.Size = new System.Drawing.Size(65, 17);
             this.accountFilterRadioBtn.TabIndex = 15;
@@ -280,9 +280,10 @@
             // showAccountsWithPmtCheckbox
             // 
             this.showAccountsWithPmtCheckbox.AutoSize = true;
-            this.showAccountsWithPmtCheckbox.Location = new System.Drawing.Point(861, 13);
+            this.showAccountsWithPmtCheckbox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.showAccountsWithPmtCheckbox.Location = new System.Drawing.Point(867, 12);
             this.showAccountsWithPmtCheckbox.Name = "showAccountsWithPmtCheckbox";
-            this.showAccountsWithPmtCheckbox.Size = new System.Drawing.Size(172, 17);
+            this.showAccountsWithPmtCheckbox.Size = new System.Drawing.Size(169, 17);
             this.showAccountsWithPmtCheckbox.TabIndex = 16;
             this.showAccountsWithPmtCheckbox.Text = "Show Accounts with Payments";
             this.showAccountsWithPmtCheckbox.UseVisualStyleBackColor = true;
@@ -291,9 +292,10 @@
             // showReadyToBillCheckbox
             // 
             this.showReadyToBillCheckbox.AutoSize = true;
-            this.showReadyToBillCheckbox.Location = new System.Drawing.Point(1039, 14);
+            this.showReadyToBillCheckbox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.showReadyToBillCheckbox.Location = new System.Drawing.Point(1042, 13);
             this.showReadyToBillCheckbox.Name = "showReadyToBillCheckbox";
-            this.showReadyToBillCheckbox.Size = new System.Drawing.Size(115, 17);
+            this.showReadyToBillCheckbox.Size = new System.Drawing.Size(112, 17);
             this.showReadyToBillCheckbox.TabIndex = 16;
             this.showReadyToBillCheckbox.Text = "Show Ready to Bill";
             this.showReadyToBillCheckbox.UseVisualStyleBackColor = true;
@@ -302,7 +304,7 @@
             // insuranceFilterRadioButton
             // 
             this.insuranceFilterRadioButton.AutoSize = true;
-            this.insuranceFilterRadioButton.Location = new System.Drawing.Point(683, 13);
+            this.insuranceFilterRadioButton.Location = new System.Drawing.Point(659, 13);
             this.insuranceFilterRadioButton.Name = "insuranceFilterRadioButton";
             this.insuranceFilterRadioButton.Size = new System.Drawing.Size(72, 17);
             this.insuranceFilterRadioButton.TabIndex = 15;

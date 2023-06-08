@@ -75,41 +75,6 @@ namespace LabBilling.Forms
             workqueues.Enabled = true;
         }
 
-        //private async void ValidateButton_Click(object sender, EventArgs e)
-        //{
-        //    requestAbort = false;
-        //    workqueues.Enabled = false;
-
-        //    int cnt = accountTable.DefaultView.Count;
-        //    toolStripProgressBar1.Minimum = 0;
-        //    toolStripProgressBar1.Maximum = cnt;
-        //    toolStripProgressBar1.Value = 0;
-        //    Cursor.Current = Cursors.WaitCursor;
-
-        //    tasksRunning = true;
-        //    //foreach (DataRow acc in accountTable.DefaultView)
-        //    for(int i = 0; i < accountTable.DefaultView.Count; i++)
-        //    {
-        //        if (requestAbort)
-        //        {
-        //            toolStripStatusLabel1.Text = "Aborting...";
-        //            tasksRunning = false;
-        //            break;
-        //        }
-        //        toolStripStatusLabel1.Text = $"Validating {toolStripProgressBar1.Value} of {cnt}.";
-        //        await RunValidationAsync(accountTable.DefaultView[i][nameof(AccountSearch.Account)].ToString());
-        //        //await RunValidationAsync(acc[nameof(AccountSearch.Account)].ToString());
-        //        accountGrid.Refresh();
-        //        toolStripProgressBar1.Increment(1);
-        //    }
-        //    tasksRunning = false;
-        //    toolStripStatusLabel1.Text = "Validation complete.";
-
-        //    Cursor.Current = Cursors.Default;
-        //    workqueues.Enabled = true;
-
-        //}
-
         public WorkListForm(string connValue)
         {
             InitializeComponent();
@@ -136,14 +101,9 @@ namespace LabBilling.Forms
                             acct[nameof(AccountSearch.LastValidationDate)] = DateTime.Now;
                             acct[nameof(AccountSearch.Status)] = "ERROR";
                         }
-                        //if(formType != "CLAIM")
-                        //    accountRepository.UpdateStatus(accountNo, "NEW");
                     }
                     else
                     {
-                        //if (formType != "UNDEFINED")
-                        //    accountRepository.UpdateStatus(accountNo, formType);
-
                         if(acct != null)
                         {
                             acct[nameof(AccountSearch.Status)] = formType;
@@ -177,11 +137,6 @@ namespace LabBilling.Forms
             });
             try
             {
-                //if(account.Status == "SSIUB" || account.Status == "SSI1500" || account.Status == "CLAIM" || account.Status == "STMT")
-                //{
-                //    //account has been billed, do not validate
-                //    return (false, "Account has already been billed. Did not validate.", "CLAIM");
-                //}
 
                 if (!accountRepository.Validate(ref account))
                 {
@@ -241,7 +196,6 @@ namespace LabBilling.Forms
 
             Cursor.Current = Cursors.WaitCursor;
 
-            //DateTime.TryParse(systemParametersRepository.GetByKey("ssi_bill_thru_date"), out DateTime thruDate);
             DateTime thruDate = Program.AppEnvironment.ApplicationParameters.SSIBillThruDate;
             (string propertyName, AccountSearchRepository.operation oper, string searchText)[] parameters =
             {
