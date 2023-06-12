@@ -449,35 +449,18 @@ namespace LabBilling.Forms
             if (senderName == printToolStripMenuItem.Name || senderName == printAllToolStripMenuItem.Name)
             {
                 PrintDialog printDialog = new PrintDialog();
-//                if (printDialog.ShowDialog() == DialogResult.OK)
-  //              {
+
                 Cursor.Current = Cursors.WaitCursor;
-                //string printerName = printDialog.PrinterSettings.PrinterName;
-                //if (printDialog.PrinterSettings.Duplex != System.Drawing.Printing.Duplex.Simplex &&
-                //    printDialog.PrinterSettings.Duplex != System.Drawing.Printing.Duplex.Default)
-                //{
-                //    duplexPrinting = true;
-                //}
+
                 string outfile = $"c:\\temp\\invoiceTemp-{Guid.NewGuid()}.pdf";
 
                 CompileInvoicesToPdf(outfile, duplexPrinting);
 
                 Process.Start(outfile);
 
-                //if (!PrintPDF(outfile, printerName))
-                //{
-                //    Log.Instance.Error($"File {outfile} did not print to printer {printerName}.");
-                //}
-                //else
-                //{
-                //    File.Delete(outfile);
-                //    MessageBox.Show("Printing invoices completed.");
-                //}
-    //            }
             }
             else if (senderName == saveToPDFToolStripMenuItem.Name || senderName == saveAllToPDFToolStripMenuItem.Name)
             {
-                //string path = parametersRepository.GetByKey("invoice_file_location");
                 string path = Program.AppEnvironment.ApplicationParameters.InvoiceFileLocation;
                 if(!Directory.Exists(path))
                 {
@@ -513,16 +496,6 @@ namespace LabBilling.Forms
                 var process = new Process();
                 process.StartInfo = new ProcessStartInfo();
                 process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
-
-                //process.StartInfo.FileName = Registry.LocalMachine
-                //    .OpenSubKey("SOFTWARE")
-                //    .OpenSubKey("Microsoft")
-                //    .OpenSubKey("Windows")
-                //    .OpenSubKey("CurrentVersion")
-                //    .OpenSubKey("App Paths")
-                //    .OpenSubKey("Acrobat.exe")
-                //    .GetValue("").ToString();
-                //process.StartInfo.Arguments = string.Format("/s /h /t \"{0}\" \"{1}\"", file, printer);
 
                 process.StartInfo.FileName = file;
                 process.StartInfo.Verb = "print";
