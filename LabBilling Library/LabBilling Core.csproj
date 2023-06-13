@@ -129,8 +129,8 @@
     <Reference Include="PdfSharp.Charting, Version=1.51.5185.0, Culture=neutral, PublicKeyToken=f94615aa0424f9eb, processorArchitecture=MSIL">
       <HintPath>..\packages\PDFsharp-MigraDoc.1.51.5186-beta\lib\net20\PdfSharp.Charting.dll</HintPath>
     </Reference>
-    <Reference Include="PetaPoco, Version=6.0.554.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\PetaPoco.Compiled.6.0.554\lib\net45\PetaPoco.dll</HintPath>
+    <Reference Include="PetaPoco, Version=6.0.566.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\PetaPoco.Compiled.6.0.566\lib\net45\PetaPoco.dll</HintPath>
     </Reference>
     <Reference Include="SixLabors.Fonts, Version=1.0.0.0, Culture=neutral, PublicKeyToken=d998eea7b14cab13, processorArchitecture=MSIL">
       <HintPath>..\packages\SixLabors.Fonts.1.0.0-beta19\lib\netstandard2.0\SixLabors.Fonts.dll</HintPath>
