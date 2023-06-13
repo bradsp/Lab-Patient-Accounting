@@ -1,7 +1,7 @@
 <img src="Lab Billing UI/Resources/logoicon2.png" alt="Logo" width="80" height="80">
 
 # Lab-Patient-Accounting
-A medical patient account application developed for West Tennessee Healthcare outreach laboratory.
+A medical patient account application developed for an outreach laboratory.
 
 *Note: This readme is incomplete. I am adding to it as I have time.*
 
