@@ -17,7 +17,7 @@ namespace LabBillingUnitTesting
         public void StripZerosTest(string source, string expected)
         {
 
-            string returned = Str.StripZeros(source);
+            string returned = StringExtensions.StripZeros(source);
 
             Assert.Equal(expected, returned);
 

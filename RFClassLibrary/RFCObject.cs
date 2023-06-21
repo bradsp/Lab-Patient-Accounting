@@ -7,7 +7,7 @@
  * It may also include some basic functionality that most
  * classes would likely use. 
  * 
- */ 
+ */
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -26,7 +26,7 @@ namespace RFClassLibrary
     /// </summary>
     public class RFCObject
     {
-         
+
         /// <summary>
         ///09/03/2008 wdk/rgc Added for Handling fatal error 
         /// rgc/wdk 20090609 changed from private to public for use with HL7 class.
@@ -34,7 +34,7 @@ namespace RFClassLibrary
         static public ERR m_ERR;
 
         //- static to access via derived classes
-        
+
         /// <summary>
         /// string holds error message (and other) messages
         /// 09/14/2006 Rick Crone
@@ -52,7 +52,7 @@ namespace RFClassLibrary
                 m_strErrMsg = value;
                 try
                 {
-                    m_ERR.AddErrorToDataSet(string.Format("INFO^{0}",Application.ProductName), m_strErrMsg);
+                    m_ERR.AddErrorToDataSet(string.Format("INFO^{0}", Application.ProductName), m_strErrMsg);
                 }
                 catch (NullReferenceException)
                 {
@@ -71,8 +71,8 @@ namespace RFClassLibrary
         static public string ms_strWork;
         /// <!--is the class valid - properly initalized -->
         public bool m_bValid;  //10/03/2007 wdk/rgc removed static and refactored
-        
-      
+
+
 
         /// <summary>
         /// gets the validity value
@@ -106,7 +106,7 @@ namespace RFClassLibrary
                 {
                     strApp = Assembly.GetExecutingAssembly().FullName;
                 }
-                   
+
                 return strApp;
             }
             set
@@ -119,7 +119,7 @@ namespace RFClassLibrary
         /// </summary>
         public string propAppVersionAndRefInfo
         {
-            
+
             get
             {
                 string strRetVal;
@@ -128,8 +128,8 @@ namespace RFClassLibrary
                 //Assembly asm =  Assembly.GetExecutingAssembly();
                 Assembly asm = Assembly.GetEntryAssembly();//  .GetExecutingAssembly();
                 strFullName = string.Format("File Version: {0}", asm.FullName);
-               
-    
+
+
                 strAssemblyNames = string.Format("References :");
                 AssemblyName[] asmNames = asm.GetReferencedAssemblies();
                 foreach (AssemblyName nm in asmNames)
@@ -138,12 +138,12 @@ namespace RFClassLibrary
                     strAssemblyNames += nm.FullName;
                 }
 
-            strRetVal = string.Format("{0}\n{1}", strFullName, strAssemblyNames);
-            return(strRetVal);   
+                strRetVal = string.Format("{0}\n{1}", strFullName, strAssemblyNames);
+                return (strRetVal);
             }
         }
-        
-        
+
+
         /// <summary>
         ///  will this get a build date or an install date???
         /// 12/06/2006 Rick Crone
@@ -154,7 +154,7 @@ namespace RFClassLibrary
             {
                 //return(File.GetCreationTime(Application.ExecutablePath).ToString());
                 // GetLastWriteTime
-                return(File.GetLastWriteTime(Application.ExecutablePath).ToString());
+                return (File.GetLastWriteTime(Application.ExecutablePath).ToString());
                 //return Application.ProductName.ToString();
             }
             set
@@ -181,7 +181,7 @@ namespace RFClassLibrary
         {
             get
             {
-                
+
                 return (Application.ExecutablePath);
             }
         }
@@ -233,14 +233,14 @@ namespace RFClassLibrary
         /// <returns></returns>
         public string SqlClean(string strIn)
         {
-	        // 09/09/2004 WDK and RGC attempt to avoid SQL injection attack
+            // 09/09/2004 WDK and RGC attempt to avoid SQL injection attack
             strIn = strIn.Replace("'", "''");
             strIn = strIn.Replace("--", "");
             strIn = strIn.Replace("/*", "");
             strIn = strIn.Replace("*/", "");
             strIn = strIn.Replace(";", ""); // semi colon denotes end of one statement and start of another
-        	
-	        return strIn;
+
+            return strIn;
 
         }
         /// <summary>
@@ -250,7 +250,7 @@ namespace RFClassLibrary
         /// </summary>
         /// <param name="strIn"></param>
         /// <returns></returns>
-        static public string staticSqlClean(string strIn) 
+        static public string staticSqlClean(string strIn)
         {
             // 09/09/2004 WDK and RGC attempt to avoid SQL injection attack
             strIn = strIn.Replace("'", "''");
@@ -301,7 +301,7 @@ namespace RFClassLibrary
             dpFrom = new ToolStripControlHost(new DateTimePicker());
             ((DateTimePicker)dpFrom.Control).Format = DateTimePickerFormat.Short;
             dpFrom.Control.Width = 95;
-  
+
             dpThru = new ToolStripControlHost(new DateTimePicker());
             ((DateTimePicker)dpThru.Control).Format = DateTimePickerFormat.Short;
             dpThru.Control.Width = 95;
@@ -330,16 +330,16 @@ namespace RFClassLibrary
                     dpThru.Text = strThru; // the value is a valid datetime use it.
                 }
             }
-            
+
             //dpFrom.Control.Refresh();
             //dpFrom.Invalidate();
             //tsMain.Items.Insert(7, dpFrom);
 
-//            dpThru.Text = DateTime.Now.Subtract(new TimeSpan(DateTime.Now.Day, 0, 0, 0)).ToString("d");// "01/10/2007";
+            //            dpThru.Text = DateTime.Now.Subtract(new TimeSpan(DateTime.Now.Day, 0, 0, 0)).ToString("d");// "01/10/2007";
             //dpThru.Control.Refresh();
             //dpThru.Invalidate();
-           // tsMain.Items.Insert(9, dpThru);
-          //  tsMain.Refresh();
+            // tsMain.Items.Insert(9, dpThru);
+            //  tsMain.Refresh();
         }
 
 
@@ -416,7 +416,7 @@ namespace RFClassLibrary
                     FileContents = sr.ReadToEnd();
                 }
             }
-             
+
             catch (FileLoadException fle)
             {
                 m_strErrMsg = new string(fle.Message.ToCharArray());
@@ -445,12 +445,12 @@ namespace RFClassLibrary
             {
                 if (sr != null)
                     sr.Close();
-            }              
+            }
 
             return FileContents;
         }
 
-  
+
         /// <summary>
         /// Dynamic used with instance of the class. For a static version see sfatal(string strErrMsg)
         /// Pass the error messge to be set to this function.
@@ -469,7 +469,7 @@ namespace RFClassLibrary
             if (m_ERR == null)
             {
                 m_ERR = new ERR(new string[] { "/LIVE", "/MCLOE", "/GOMCLLIVE" });
-                
+
             }
             m_ERR.propErrMsg = strErrMsg.Length == 0 ? m_strErrMsg : strErrMsg;
             m_ERR.ErrorHandler(ERR.ErrLevel.eINFO);// logs
@@ -494,7 +494,7 @@ namespace RFClassLibrary
         {
             if (m_ERR == null)
             {
-                m_ERR = new ERR(new string[] {"/LIVE","/MCLOE","/GOMCLLIVE"});
+                m_ERR = new ERR(new string[] { "/LIVE", "/MCLOE", "/GOMCLLIVE" });
 
             }
             m_ERR.propErrMsg = strErrMsg.Length == 0 ? m_strErrMsg : strErrMsg;
@@ -511,18 +511,18 @@ namespace RFClassLibrary
         /// <returns></returns>
         static public string FormatBytes(long bytes)
         {
-          const int scale = 1024;
-          string[] orders = new string[] { "GB", "MB", "KB", "Bytes" };
-          long max = (long)Math.Pow(scale, (orders.GetUpperBound(0)));
+            const int scale = 1024;
+            string[] orders = new string[] { "GB", "MB", "KB", "Bytes" };
+            long max = (long)Math.Pow(scale, (orders.GetUpperBound(0)));
 
-          foreach (string order in orders)
-          {
-            if ( bytes > max )
-              return string.Format("{0:##.##} {1}", decimal.Divide( bytes, max ), order);
+            foreach (string order in orders)
+            {
+                if (bytes > max)
+                    return string.Format("{0:##.##} {1}", decimal.Divide(bytes, max), order);
 
-            max /= scale;
-          }
-          return "0 Bytes";
+                max /= scale;
+            }
+            return "0 Bytes";
         }
 
         /// <summary>
@@ -541,7 +541,7 @@ namespace RFClassLibrary
                     strRetVal = dtConvert.ToString("yyyyMMdd");
                 }
             }
-            
+
             return strRetVal;
         }
 

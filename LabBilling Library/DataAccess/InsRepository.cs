@@ -30,7 +30,7 @@ namespace LabBilling.Core.DataAccess
                 {
                     if (string.IsNullOrEmpty(ins.HolderLastName) || string.IsNullOrEmpty(ins.HolderFirstName))
                     {
-                        if (!Str.ParseName(ins.HolderFullName.ToString(),
+                        if (!StringExtensions.ParseName(ins.HolderFullName.ToString(),
                             out string lname, out string fname, out string mname, out string suffix))
                         {
                             //error parsing name
@@ -59,12 +59,12 @@ namespace LabBilling.Core.DataAccess
                 if (ins.InsCompany == null)
                     ins.InsCompany = new InsCompany();
 
-                Str.ParseCityStZip(ins.HolderCityStZip, out string strCity, out string strState, out string strZip);
+                StringExtensions.ParseCityStZip(ins.HolderCityStZip, out string strCity, out string strState, out string strZip);
                 ins.HolderCity = strCity;
                 ins.HolderState = strState;
                 ins.HolderZip = strZip;
 
-                Str.ParseCityStZip(ins.PlanCityState, out strCity, out strState, out strZip);
+                StringExtensions.ParseCityStZip(ins.PlanCityState, out strCity, out strState, out strZip);
                 ins.PlanCity = strCity;
                 ins.PlanState = strState;
                 ins.PlanZip = strZip;
@@ -96,12 +96,12 @@ namespace LabBilling.Core.DataAccess
                 if (record.InsCompany == null)
                     record.InsCompany = new InsCompany();
 
-                Str.ParseCityStZip(record.HolderCityStZip, out string strCity, out string strState, out string strZip);
+                StringExtensions.ParseCityStZip(record.HolderCityStZip, out string strCity, out string strState, out string strZip);
                 record.HolderCity = strCity;
                 record.HolderState = strState;
                 record.HolderZip = strZip;
 
-                Str.ParseCityStZip(record.PlanCityState, out strCity, out strState, out strZip);
+                StringExtensions.ParseCityStZip(record.PlanCityState, out strCity, out strState, out strZip);
                 record.PlanCity = strCity;
                 record.PlanState = strState;
                 record.PlanZip = strZip;

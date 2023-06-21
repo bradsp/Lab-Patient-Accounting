@@ -1297,10 +1297,10 @@ namespace LabBilling.Forms
             FilterCharges();
             return;
 
-            if (ShowCreditedChrgCheckBox.Checked)
-                chargesTable.DefaultView.RowFilter = String.Empty;
-            else
-                chargesTable.DefaultView.RowFilter = "IsCredited = false";
+            //if (ShowCreditedChrgCheckBox.Checked)
+            //    chargesTable.DefaultView.RowFilter = String.Empty;
+            //else
+            //    chargesTable.DefaultView.RowFilter = "IsCredited = false";
 
         }
 

@@ -11,8 +11,8 @@ namespace LabBilling.Core.BusinessLogic.Validators
 {
     public sealed class InterfaceMessageValidator : AbstractValidator<Account>
     {
-        private string connectionString;
-        ClientRepository clientRepository;
+        private readonly string connectionString;
+        //ClientRepository clientRepository;
 
         public InterfaceMessageValidator(string connectionString)
         {

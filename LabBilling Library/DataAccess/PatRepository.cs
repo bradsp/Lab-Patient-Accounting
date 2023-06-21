@@ -58,7 +58,7 @@ namespace LabBilling.Core.DataAccess
 
             record.Physician = phyRepository.GetByNPI(record.ProviderId);
 
-            if (!Str.ParseName(record.PatFullName, out string strLastName, out string strFirstName, out string strMidName, out string strSuffix))
+            if (!StringExtensions.ParseName(record.PatFullName, out string strLastName, out string strFirstName, out string strMidName, out string strSuffix))
             {
                 this.Errors = $"Patient name could not be parsed. {record.PatFullName} {record.AccountNo}";
             }
@@ -70,7 +70,7 @@ namespace LabBilling.Core.DataAccess
                 record.PatNameSuffix = strSuffix;
             }
 
-            if (!Str.ParseName(record.GuarantorFullName, out string strGuarLastName, out string strGuarFirstName, out string strGuarMidName, out string strGuarSuffix))
+            if (!StringExtensions.ParseName(record.GuarantorFullName, out string strGuarLastName, out string strGuarFirstName, out string strGuarMidName, out string strGuarSuffix))
             {
                 if (!string.IsNullOrEmpty(this.Errors))
                     this.Errors += Environment.NewLine;
@@ -85,7 +85,7 @@ namespace LabBilling.Core.DataAccess
                 record.GuarantorNameSuffix = strGuarSuffix;
             }
 
-            if (!Str.ParseCityStZip(record.CityStateZip, out string strCity, out string strState, out string strZip))
+            if (!StringExtensions.ParseCityStZip(record.CityStateZip, out string strCity, out string strState, out string strZip))
             {
                 this.Errors += $"Patient CityStZip could not be parsed. {record.CityStateZip} - {record.AccountNo}";
             }

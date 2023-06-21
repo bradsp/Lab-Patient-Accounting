@@ -394,25 +394,6 @@ namespace LabBilling
             frm.Show();
         }
 
-        private void workqueuesToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Log.Instance.Trace($"Entering");
-
-            if (System.Windows.Forms.Application.OpenForms.OfType<WorkqueueForm>().Count() > 0)
-            {
-                WorkqueueForm workqueueform = System.Windows.Forms.Application.OpenForms.OfType<WorkqueueForm>().First();
-                workqueueform.Focus();
-            }
-            else
-            {
-                WorkqueueForm workqueueForm = new WorkqueueForm(Helper.ConnVal);
-                workqueueForm.MdiParent = this;
-                workqueueForm.AutoScroll = true;
-                workqueueForm.WindowState = FormWindowState.Normal;
-                workqueueForm.Show();
-            }
-        }
-
         private void worklistToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Log.Instance.Trace($"Entering");
