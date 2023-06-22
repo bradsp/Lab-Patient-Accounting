@@ -346,57 +346,6 @@ namespace LabBilling.Legacy
             diSaved = new DirectoryInfo(string.Format(@"{0}\saved", dr[0]["value"].ToString()));
         }
 
-
-        private void MoveFilesToProcess()
-        {
-            m_sqlConnection = new SqlConnection(string.Format("Data Source={0}; Initial Catalog = {1};"
-                + "Integrated Security = 'SSPI'", m_strServer, m_strDatabase));
-
-            dtDirectories = new DataTable();
-            using (SqlCommand cmd = m_sqlConnection.CreateCommand())
-            {
-                cmd.CommandText = string.Format("select key_name, value from system where programs = '{0}'"
-                    , "Posting835Remittance");
-
-                SqlDataAdapter dataAdapter = new SqlDataAdapter(cmd);
-                dataAdapter.Fill(dtDirectories);
-
-            }
-            // our directories
-            DataRow[] dr = dtDirectories.Select("key_name = 'import_directory_into'");
-            diCurrent = new DirectoryInfo(string.Format(@"{0}", dr[0]["value"].ToString()));
-            diInvalid = new DirectoryInfo(string.Format(@"{0}\invalid", dr[0]["value"].ToString()));
-            diSaved = new DirectoryInfo(string.Format(@"{0}\saved", dr[0]["value"].ToString()));
-
-            // Hospitals Directory
-            dr = dtDirectories.Select("key_name = 'import_directory'");
-            diFrom = new DirectoryInfo(string.Format(@"{0}", dr[0]["value"].ToString()));
-            int nC = diFrom.GetFiles("*.835", SearchOption.TopDirectoryOnly).Count();
-            if (diFrom.GetFiles("*.835", SearchOption.TopDirectoryOnly).Count() <= 0)
-            {
-                if (MessageBox.Show("No files at this time.\r\n\nSelect 'CANCEL' to exit the application.\r\n\nSelect 'OK' to continue without importing files."
-                        , "FILE IMPORT", MessageBoxButtons.OKCancel) == DialogResult.Cancel)
-                {
-                    Environment.Exit(0);
-                }
-                return;
-            }
-
-            // date last done.
-            dr = dtDirectories.Select("key_name = 'import_date'");
-            dtFilesImported = Convert.ToDateTime(dr[0]["value"].ToString());
-            if (dtFilesImported >= DateTime.Today)
-            {
-                return;
-            }
-            else
-            {
-                UpdateImportDate();
-                ImportMedicareFilesFromWTH(null, null);
-            }
-
-        }
-
         private void CreatePayorDictionary()
         {
 
@@ -440,10 +389,6 @@ namespace LabBilling.Legacy
             m_dicPayer.Add("80003", "AARP MEDICARECOMPLETE PLUS");
             m_dicPayer.Add("8K5167", "");
 
-            //m_dicPayer.Add("", "");
-            //m_dicPayer.Add("", "");
-            //m_dicPayer.Add("", "");
-
         }
 
         public Posting835(string[] args)
@@ -464,11 +409,7 @@ namespace LabBilling.Legacy
             {
                 m_strServer = args[0];
             }
-            //else
-            //{
-            //    MessageBox.Show("Arguments need to start with a [/]");
-            //    Environment.Exit(13);
-            //}
+
             if (args[1].StartsWith("/"))
             {
                 m_strDatabase = args[1].Remove(0, 1); // 08/08/2008 wdk changed to accomidate the ERR class
@@ -477,23 +418,7 @@ namespace LabBilling.Legacy
             {
                 m_strDatabase = args[1];
             }
-            //else
-            //{
-            //    MessageBox.Show("Arguments need to start with a [/]");
-            //    Environment.Exit(13);
-            //}
 
-            // add the LaunchAcc event handler to the grids. This allows any data grid view with a column named 
-            // account to load the Acc.exe
-            //LaunchAcc la = new LaunchAcc(m_strDatabase);
-            //dgvEOB.RowHeaderMouseDoubleClick +=
-            //        new System.Windows.Forms.DataGridViewCellMouseEventHandler(LaunchAcc.LaunchAcc_EventHandler);
-            //dgvProcessed.RowHeaderMouseDoubleClick +=
-            //        new System.Windows.Forms.DataGridViewCellMouseEventHandler(LaunchAcc.LaunchAcc_EventHandler);
-            //dgvNotProcessed.RowHeaderMouseDoubleClick +=
-            //       new System.Windows.Forms.DataGridViewCellMouseEventHandler(LaunchAcc.LaunchAcc_EventHandler);
-            //dgvDenieds.RowHeaderMouseDoubleClick +=
-            //       new System.Windows.Forms.DataGridViewCellMouseEventHandler(LaunchAcc.LaunchAcc_EventHandler);
 
             dgvEOB.RowHeaderMouseDoubleClick +=
                     new System.Windows.Forms.DataGridViewCellMouseEventHandler(FormExtensions.LaunchAcc_EventHandler);
@@ -542,27 +467,11 @@ namespace LabBilling.Legacy
         private void tsmiBCBSTEdi_Click(object sender, EventArgs e)
         {
             return; // must update the directory
-            /*
-            openFileDialog.Filter = "835 Files (*.835)|*.835 |XML Files (*.X12)|*.X12|All Files (*.*)|*.*";
-            openFileDialog.FileName = @"\\WTHmclbill\MedicareRemit\*.835";
-            openFileDialog.DefaultExt = "835";
-            openFileDialog.InitialDirectory = @"\\WTHMCLBILL\MedicareRemit";
-            openFileDialog.Tag = (string)"BLUECROSS";
-            openFileDialog.ShowDialog();
-            m_strFileType = "BLUECROSS";*/
+
         }
         private void tsmiUHC_Click(object sender, EventArgs e)
         {
             return; // must update the directory
-            /*
-            openFileDialog.Filter = "835 Files (*.835)|*.835 |dat Files (*.dat)|*.dat |XML Files (*.X12)|*.X12|All Files (*.*)|*.*";
-            openFileDialog.FileName = @"\\WTHMCLBILL\MedicareRemit\*.835";
-            openFileDialog.DefaultExt = "dat";
-            openFileDialog.InitialDirectory = @"\\WTHMCLBILL\MedicareRemit";
-            openFileDialog.Tag = (string)"UHC";
-            openFileDialog.ShowDialog();
-            m_strFileType = "UHC";*/
-
         }
 
         /// <summary>
@@ -656,8 +565,7 @@ namespace LabBilling.Legacy
             m_dicColGrids.Add(Col835Grids.eStat.ToString(), m_celHidden);
             m_dicColGrids.Add(Col835Grids.eWeight.ToString(), m_celHidden);
             m_dicColGrids.Add(Col835Grids.eAPC.ToString(), m_celHidden);
-            //m_dicColGrids.Add(col835Grids.eWriteOffDate.ToString(), m_celHidden); // wdk 20130731 added
-            //m_dicColGrids.Add(col835Grids.eWriteOffCode.ToString(), m_celHidden); // wdk 20130731 added
+
         }
 
         /// <summary>
@@ -917,33 +825,7 @@ namespace LabBilling.Legacy
                     e.Value = "0.00";
                 }
             }
-            #region Documentation Cell tooltips and datetime formatting
-            //if (e.ColumnIndex == (int)col835Grids.eDateOfService || e.ColumnIndex == (int)col835EOB.eDOS)
-            //{
-            //    DateTime dtFormat = new DateTime();
-            //    RFClassLibrary.Time.StringToHL7Time(e.Value.ToString(), out dtFormat);
-            //    e.Value = dtFormat.ToString("d");
-            //    return;
-            //}
-            // 06/03/2008 wdk don't care about reason at this time.
-            //if ((e.ColumnIndex == (int) col835Grids.eReason)
-            //        && e.Value != null)
-            //{
-            //    DataGridViewCell cell = ((DataGridView)sender).Rows[e.RowIndex].Cells[e.ColumnIndex];
-            //    string[] str = e.Value.ToString().Split(new char[] { '/' });
-            //    string strReason = "";
-            //    try
-            //    {
-            //        m_dicReasonCodes.TryGetValue(str[1], out strReason);
 
-            //        cell.ToolTipText = strReason;
-            //    }
-            //    catch (IndexOutOfRangeException)
-            //    {
-            //        cell.ToolTipText = "No help available";
-            //    }                
-            //}
-            #endregion Documentation Cell tooltips and datetime formatting
         }
 
         private void openFileDialog_FileOk(object sender, CancelEventArgs e)
@@ -1033,15 +915,12 @@ namespace LabBilling.Legacy
                     {
                         try
                         {
-                            // File.Move(strFileName, string.Format(@"\\WTHMclBill\MedicareRemit\INVALID\{0}", strFileName.Substring(strFileName.LastIndexOf('\\'))));
                             File.Move(strFileName, string.Format(@"\\wthmclbill\shared\Billing\LIVE\Posting835Remit\MedicareRemit\INVALID\{0}", strFileName.Substring(strFileName.LastIndexOf('\\'))));
                         }
                         catch (IOException)
                         {
                             string strMoveFileName = strFileName.Replace(".835", "_dk.835");
-                            // File.Move(strFileName, string.Format(@"\\WTHMclBill\MedicareRemit\INVALID\{0}", strMoveFileName.Substring(strMoveFileName.LastIndexOf('\\'))));
                             File.Move(strFileName, string.Format(@"\\wthmclbill\shared\Billing\LIVE\Posting835Remit\MedicareRemit\INVALID\{0}", strMoveFileName.Substring(strMoveFileName.LastIndexOf('\\'))));
-                            // continue
                         }
                     }
                 }
@@ -1103,8 +982,6 @@ namespace LabBilling.Legacy
             foreach (DataRow dr in m_dtNotes.Rows)
             {
                 Application.DoEvents();
-                //int x;
-                //x = 9;
             }
         }
 
@@ -1125,10 +1002,6 @@ namespace LabBilling.Legacy
             tbFileName.Tag = strFileName;
             // read the file into a string.
             string strLine = RFCObject.GetFileContents(strFileName).Replace(Environment.NewLine, "");
-            //if (!strLine.Contains("CLP*L15"))
-            //{
-            //    return false;
-            //}
             strLine = strLine.Replace("\n", "");
             strLine = strLine.Replace("\r", "");
             // wdk 20090901 added for processing new file from CAHABA that has multiple ISA's
@@ -1185,20 +1058,6 @@ namespace LabBilling.Legacy
             // split the file using the "~" to check for multiple packets in the file. if we ever get 
             // a UHC like this we will have to handle.
             ArrayList alFile = new ArrayList(strLine.Split(new char[] { '~' }));
-            //int nISA = 0;
-            //foreach (string strSegment in alFile)
-            //{
-            //    Application.DoEvents();
-            //    if (strSegment.StartsWith("ISA"))
-            //    {
-            //        nISA++;
-            //    }
-            //}
-            //if (nISA > 1)
-            //{
-            //    MessageBox.Show("MULTIPLE ISA's must be handled in the code now.", "UHC");
-            //    return false;
-            //}
 
             // splitting on ~CLP means 1. the header info is in alClaims[0] 
             ArrayList alClaims = new ArrayList(strLine.Split(new string[] { "~CLP*", "~SE*" }, StringSplitOptions.RemoveEmptyEntries));
@@ -1347,16 +1206,7 @@ namespace LabBilling.Legacy
                     ArrayList strClaimHeaderInfo = new ArrayList(strClaimHeaderParts[0].Split(new char[] { '~' }));
                     // we only care about strClaimHeaderInfo[0]
                     string[] strInfo = strClaimHeaderInfo[0].ToString().Split(new char[] { '*' });
-                    //////////////
-                    //if (!m_cAcc.AccountIsValid(strInfo[0].Replace("A", "")))
-                    //{
-                    //    //ParseSVC(strCLPElement);
-                    //    m_strarrEOBInsert.SetValue("", (int)col835EOB.ePatStat); //not used so set blank
-                    //    m_dsRecords.Tables[dgvEOB.Name].Rows.Add(m_strarrEOBInsert);
-                    //    AddTotalsToArray(m_strarrEOBInsert);
-                    //    bRetVal = true;
-                    //}
-                    //////////////
+
                     dClaimTotalCharge = double.Parse(double.Parse(strInfo[2]).ToString("F2").ToString());
                     dClaimTotalPaid = double.Parse(double.Parse(strInfo[3]).ToString("F2").ToString());
                     dClaimTotalPatResp = 0;
@@ -1419,13 +1269,7 @@ namespace LabBilling.Legacy
                     }
                 }
             }
-            #region            ///////////////////////
-            /*     
-             
-    
 
-            */
-            #endregion ///////////////////////////
             #endregion Process the claims
 
             return bRetVal;
@@ -1460,10 +1304,6 @@ namespace LabBilling.Legacy
                     Application.DoEvents();
                     continue;
                 }
-                //if (str.StartsWith("ISA*"))
-                //{
-                //    continue;
-                //}
 
                 string lbString = "CHECK ";
                 ArrayList alTRN = new ArrayList(str.Split(new string[] { "TRN*1*" }, StringSplitOptions.RemoveEmptyEntries));
@@ -1499,17 +1339,6 @@ namespace LabBilling.Legacy
                 lbChecks.Items.Add(lbString);
             }
 
-            //ArrayList test = new ArrayList(strLine.Split(new string[] { "CLP*L","CLP*C", "CLP*D" }, StringSplitOptions.RemoveEmptyEntries));
-            //ArrayList al = new ArrayList(strLine.Split(new string[] { "~ISA" }, StringSplitOptions.RemoveEmptyEntries));
-            //foreach (string sAl in al)
-            //{
-            //    Application.DoEvents();
-            //    if (sAl.Contains("*440002"))
-            //    {
-            //        strLine = sAl;
-            //        break;
-            //    }
-            //}
             // split the file on the GS's the zero element should be the ISA
             string[] strGS = strLine.Split(new string[] { "~GS*" }, StringSplitOptions.RemoveEmptyEntries);
             string[] strISAElements = strGS[0].Split(new char[] { '*' });
@@ -1605,15 +1434,6 @@ namespace LabBilling.Legacy
             // File Number
             tbFileNumber.Text = string.Format("File # {0}", strGSHeaderElements[5]);
             tbFileNumber.Tag = strGSHeaderElements[5];
-            /// todo:
-            //MCL.R_chk chk = new R_chk(m_strServer, m_strDatabase, ref m_ERR);
-            //int nRec = chk.GetActiveRecords(string.Format("eft_date = '{0}' and eft_number = '{1}' order by mod_date desc",
-            //    tbFileDate.Tag.ToString(),tbFileNumber.Tag.ToString()));
-            //if (nRec > 0)
-            //{
-            //    MessageBox.Show(string.Format("May be a duplicate posting for file {0}",chk.m_strPostFile));
-            //}
-
 
             foreach (string strSTElement in strST)
             {
@@ -1626,11 +1446,6 @@ namespace LabBilling.Legacy
                 {
                     continue;
                 }
-                // file 120815BA.835 for bcbs had 11 se segments
-                //if (!strSTElement.StartsWith("*0001"))
-                //{
-                //    continue;
-                //}
                 if (ParseBlueCrossST(strSTElement))
                 {
                     bRetVal = true;
@@ -1865,11 +1680,6 @@ namespace LabBilling.Legacy
                 //CLP*c2607227`*
                 string strTestAcc = strCLPElements[0].ToString();
 
-                //if (!strTestAcc.StartsWith("L15"))
-                //{
-                //    continue;
-
-                //}
                 int nAccLength = 9;
                 try
                 {
@@ -1934,15 +1744,7 @@ namespace LabBilling.Legacy
             // DTM*405*03 (bill cycle)
             string[] strSTHeader = strCLP[0].Split(new string[] { "~" }, StringSplitOptions.RemoveEmptyEntries);
             ArrayList alSTHeader = new ArrayList(strCLP[0].Split(new string[] { "~" }, StringSplitOptions.RemoveEmptyEntries));
-            //foreach (string str in strCLP)
-            //{
-            //    Application.DoEvents();
-            //    string strPR;
-            //    if ((str.StartsWith("L") || str.StartsWith("C") || str.StartsWith("D")) && str.Contains("CAS*PR*"))
-            //    {
-            //        strPR = str;
-            //    }
-            //}
+
             alSTHeader.RemoveAt(0);// we know the zero element is the ST NUMBER only so skip
             string strValue = QueryArrayList(alSTHeader, "LX*");
             if (!string.IsNullOrEmpty(strValue))
@@ -1952,8 +1754,6 @@ namespace LabBilling.Legacy
             strValue = QueryArrayList(alSTHeader, "TRN");
             if (!string.IsNullOrEmpty(strValue))
             {
-                //if (strSTHeader[i].IndexOf("TRN", 0, 3) > -1)
-                //{
                 string[] strTRNElements = strValue.Split(new char[] { '*' });
                 //strSTHeader[i].Split(new char[] { '*' });
                 // 05/07/2008 wdk/rgc moved from posting check records to loading  the file.
@@ -1979,8 +1779,6 @@ namespace LabBilling.Legacy
                     }
                 }
                 m_strarrRecordsInsert.SetValue(strTRNElements[2], (int)Col835Grids.eCheckNo);
-
-                // }
             }
             strValue = QueryArrayList(alSTHeader, "BPR");
             if (!string.IsNullOrEmpty(strValue))
@@ -2013,148 +1811,6 @@ namespace LabBilling.Legacy
 
             //skip the first item as it is the ST item count
 
-            //for (int i = 1; i <= strSTHeader.GetUpperBound(0); i++)
-            //{
-            //    try
-            //    {
-            //        //if (strSTHeader[i].IndexOf("N3", 0, 3) > -1 || // address
-            //        //        strSTHeader[i].IndexOf("N4", 0, 3) > -1 || //csz
-            //        //            strSTHeader[i].IndexOf("PER", 0, 3) > -1 // contact info
-            //        //    )
-            //        //{
-            //        //    // insurance address lines can be skipped.
-            //        //    continue;
-            //        //}
-            //        //if (strSTHeader[i].IndexOf("BPR", 0, 3) > -1)
-            //        //{
-            //        //    string[] strBPRElements = strSTHeader[i].ToString().Split(new char[] { '*' });
-            //        //    tbCheckAmt.Text = string.Format("Chk Amt: {0}", strBPRElements[2]);
-            //        //    tbCheckAmt.Tag = strBPRElements[2];
-            //        //    continue;
-            //        //}
-            //        //if (strSTHeader[i].IndexOf("TRN", 0, 3) > -1)
-            //        //{
-            //        //    string[] strTRNElements = strSTHeader[i].Split(new char[] { '*' });
-            //        //    // 05/07/2008 wdk/rgc moved from posting check records to loading  the file.
-            //        //    // wdk 20130822 retrofit to remove the "OEPRA0" from the check no.
-            //        //    int nRec = ThereArePreviouslyPostedChecks(strTRNElements[2]);
-            //        //    if (nRec == 0)
-            //        //    {
-            //        //        nRec = ThereArePreviouslyPostedChecks(strTRNElements[2].Replace("0EPRA0", "").Replace("0EZPS0", ""));
-            //        //    }
-            //        //    tbCheckNo.Text = string.Format("Check No: {0}", strTRNElements[2]);
-            //        //    tbCheckNo.Tag = strTRNElements[2];
-            //        //    if (nRec > 0)
-            //        //    {
-            //        //        if (MessageBox.Show(string.Format("{0} already posted {1} chk records.\r\r\n Select YES to move to the saved directory.", tbFileName.Text, nRec), "FILE POSTING ERROR", MessageBoxButtons.YesNo) == DialogResult.Yes)
-            //        //        {
-            //        //            MoveFileToSavedDirectory();
-            //        //            return false;
-            //        //        }
-            //        //        else
-            //        //        {
-            //        //            // tsmiPostCheckRecords.Enabled = false;
-            //        //            tsmiPostCheckRecords.ToolTipText = "This file has been previously posted to the chk table.";
-            //        //        }
-            //        //    }
-            //        //    m_strarrRecordsInsert.SetValue(strTRNElements[2], (int)col835Grids.eCheckNo);
-            //        //    // WDK 20130725 added 
-            //        //    //  m_strarrRecordsInsertAddContractual.SetValue(strTRNElements[2], (int)col835Grids.eCheckNo);
-            //        //    continue;
-            //        //}
-
-            //        //if (strSTHeader[i].IndexOf("DTM*405*", 0, 8) > -1)
-            //        //{
-            //        //    string[] strDTMElements = strSTHeader[i].Split(new char[] { '*' });
-            //        //    DateTime dtCheckDate;
-            //        //    RFClassLibrary.Time.StringToHL7Time(strDTMElements[2], out dtCheckDate);
-            //        //    tbCheckDate.Text = string.Format("Check Date: {0}", dtCheckDate.ToString("d"));
-            //        //    tbCheckDate.Tag = dtCheckDate.ToString("d");
-            //        //    continue;
-            //        //}
-            //        //if (strSTHeader[i].IndexOf("N1*PR", 0, 5) > -1)
-            //        //{
-            //        //    rtbCheckSource.Text = strSTHeader[i].Replace("N1*PR*", "");
-            //        //    string strPayer = rtbCheckSource.Text;                     
-
-            //        //    if (m_strFileType == "BLUECROSS" ||
-            //        //        strPayer == "BLUECARE PLUS TENNESSEE(D-SNP)" ||
-            //        //        strPayer == "BLUECROSS BLUESHIELD OF TENNESSEE" ||
-            //        //        strPayer == "BCBST BLUEADVANTAGE" ||
-            //        //        strPayer == "BLUE CROSS AND BLUE SHIELD OF TENNESSEE")
-            //        //    {
-            //        //        m_strFinCode = "B";
-            //        //        m_strInsCode = "BC";
-            //        //        rtbCheckSource.Tag = (string)"BC REMITTANCE";
-            //        //        continue;
-            //        //    }                        
-
-            //        //}
-            //        // 04/25/2008 wdk had to rewrite this because the TLC files contain hospital id (626010402) used for everyone MED CTR MED PROD etc.
-            //        // TLC          N1*PE*MED CTR/LAB*FI*626010402~
-            //        // MEDICARE     N1*PE*JACKSON-MADISON CO GEN HOSP*XX*1720160708~
-            //        // MEDICARE     N1*PE*JACKSON-MADISON COUNTY GENERAL*XX*1093705428~ // 07/10/2008 wdk added 
-            //        /* wdk 20140911 we know who the provider is
-            //        //if (strSTHeader[i].StartsWith("N1*PE*")) //04/25/2008 wdk does not work for TLC hospital id (626010402) used for everyone MED CTR MED PROD etc.
-            //        if (strSTHeader[i].StartsWith("N1*PE*MED CTR/LAB*"))
-            //        {
-            //            string[] strN1Elements = strSTHeader[i].Split(new char[] { '*' });
-            //            tbProviderID.Text = string.Format("Provider ID: {0}", strN1Elements[4]);
-            //            tbProviderID.Tag = (string)strN1Elements[4];
-            //            rtbCheckSource.Text = "TLC";
-            //            continue;
-            //        }
-
-            //        //07/10/2008 wdk added || strSTHeader[i].StartsWith("N1*PE*JACKSON-MADISON COUNTY GENERAL*") to below because the new files only contain this string for the payer 
-            //        if (strSTHeader[i].StartsWith("N1*PE*JACKSON-MADISON CO GEN HOSP*") || strSTHeader[i].StartsWith("N1*PE*JACKSON-MADISON COUNTY GENERAL*"))
-            //        {
-            //            string[] strN1Elements = strSTHeader[i].Split(new char[] { '*' });
-            //            tbProviderID.Text = string.Format("Provider ID: {0}", strN1Elements[4]);
-            //            tbProviderID.Tag = (string)strN1Elements[4];
-            //            rtbCheckSource.Text = "MC";
-            //            continue;
-            //        }
-            //        // wdk 20090901 added for CAHABA
-            //        if (strSTHeader[i].StartsWith("N1*PE*JACKSON-MADISON COUNTY GENERAL*XX*1093705428")) //rgc/wdk 20090904 the hospital also has provider id 1225029390 we think our checks are in 1093705428 provider id
-            //        {
-            //            string[] strN1Elements = strSTHeader[i].Split(new char[] { '*' });
-            //            tbProviderID.Text = string.Format("Provider ID: {0}", strN1Elements[4]);
-            //            tbProviderID.Tag = (string)strN1Elements[4];
-            //            rtbCheckSource.Text = "MC";
-            //            continue;
-            //        }
-            //        // wdk 20110411 added for CAHABA version 2 see version one above
-            //        if (strSTHeader[i].StartsWith("N1*PE*JACKSON MADISON COUNTY GENERAL*XX*1093705428")) //rgc/wdk 20090904 the hospital also has provider id 1225029390 we think our checks are in 1093705428 provider id
-            //        {
-            //            string[] strN1Elements = strSTHeader[i].Split(new char[] { '*' });
-            //            tbProviderID.Text = string.Format("Provider ID: {0}", strN1Elements[4]);
-            //            tbProviderID.Tag = (string)strN1Elements[4];
-            //            rtbCheckSource.Text = "MC";
-            //            continue;
-            //        }
-            //        if (strSTHeader[i].StartsWith("N1*PR*BLUE"))
-            //        {
-            //            string[] strN1Elements = strSTHeader[i].Split(new char[] { '*' });
-            //            tbProviderID.Text = string.Format("Provider ID: {0}", "1000427");
-            //            tbProviderID.Tag = "1000427";
-            //            rtbCheckSource.Text = "BLUE CROSS";
-            //            continue;
-            //        }
-            //         */
-            //    }
-            //    catch (IndexOutOfRangeException)
-            //    {
-            //        // could have an ST or LX just continue
-            //        continue;
-            //    }
-            //    catch (ArgumentOutOfRangeException)
-            //    {
-            //        //line too short continue we don't expect anything from this line.
-            //        continue;
-            //    }
-            //}
-            //m_cAcc = new CAcc(m_strServer, m_strDatabase, ref m_ERR);
-
             foreach (string strCLPElement in strCLP)
             {
                 Application.DoEvents();
@@ -2162,58 +1818,13 @@ namespace LabBilling.Legacy
                 {
                     continue;
                 }
-                //if (!strCLPElement.Contains("C7087605") && DateTime.Now < new DateTime(2013, 11, 13, 16, 00, 00))
-                //{
-                //    continue;
-                //}
-                //string[] strCLPElements = strCLPElement.Split(new char[] { '*' });
-                //if (strCLPElements[0].ToString().Length == 0) // no account number in CLP in source file.
-                //{
-                //    if (strCLPElement.IndexOf("Medical Center Laboratory") > -1)
-                //    {
-                //        m_ERR.m_Logfile.WriteLogFile(string.Format("No account in source file. \r\n{0}", strCLPElement));
-                //    }
-                //    continue;
-                //}
-                //// 09/05/2008 wdk
-                ////626010402_20080831_1054.835 has a clp  with an extra char at the end 
-                ////CLP*c2607227`*
-                //int nAccLength = 8;
-                //try
-                //{
-                //    if (strCLPElements[0][1] == 'A')
-                //    {
-                //        nAccLength = 9;
-                //    }
-                //}
-                //catch (IndexOutOfRangeException)
-                //{
-                //    m_ERR.m_Logfile.WriteLogFile(strCLPElement);
-                //    continue;
-                //}
-                //if (strCLPElements[0].Length > nAccLength) // no account number in CLP in source file.
-                //{
-                //    if (strCLPElement.IndexOf("Medical Center Laboratory") > -1)
-                //    {
-                //        m_ERR.m_Logfile.WriteLogFile(string.Format("Account [{0} is to long.. \r\n{1}", strCLPElements[0], strCLPElement));
-                //    }
-                //    continue;
-                //}
-                // end of 09/05/2008 wdk
 
-                //  if (m_cAcc.AccountIsValid(strCLPElements[0].Replace("A", "")))
-                //  {
                 ParseBlueCrossSVC(strCLPElement);
                 m_strarrEOBInsert.SetValue("", (int)Col835EOB.ePatStat); // 06/03/2008 not used so set blank
                 m_dsRecords.Tables[dgvEOB.Name].Rows.Add(m_strarrEOBInsert);
                 AddTotalsToArray(m_strarrEOBInsert);
                 bRetVal = true;
-                //  }
-                //}
-                //else
-                //{
-                //    continue;
-                //}
+
             }
 
             return bRetVal;
@@ -2236,11 +1847,7 @@ namespace LabBilling.Legacy
                 var queryRVAL = from string strParts in al
                                 where strParts.Substring(0, nVarLen) == strVar
                                 select strParts;
-                //if (queryRVAL.Count() > 1)
-                //{
-                //    int x;
-                //    x = 9;
-                //}
+
                 if (queryRVAL.Count() > 0)
                 {
                     int nDex = al.IndexOf(queryRVAL.ToArray()[0]);
@@ -2256,8 +1863,6 @@ namespace LabBilling.Legacy
             return strRetVal;
 
         }
-
-
 
         private void AddTotalsToArray(string[] strarrEOBInsert)
         {
@@ -2290,23 +1895,10 @@ namespace LabBilling.Legacy
             // Set the patient data with the CLP data
             SetPatientData(strSVC[0]);
 
-            #region debug for an account
-            string strDebugAccount = null;
-            //if (strSVC[0].IndexOf("C07032996", 0) > -1)
-            //{
-            //    int x;
-            //    x = 9;
-            //}
-            if (strSVC[0].IndexOf("C7087605", 0) > -1)
-            {
-                strDebugAccount = strSVC[0];
-            }
-            #endregion debug for an account
             foreach (string str in strSVC)
             {
                 Application.DoEvents();
-                if (string.IsNullOrEmpty(strDebugAccount) &&
-                    DateTime.Today < new DateTime(2013, 07, 19, 16, 00, 00))
+                if (DateTime.Today < new DateTime(2013, 07, 19, 16, 00, 00))
                 {
                     continue;
                 }
@@ -2350,23 +1942,10 @@ namespace LabBilling.Legacy
             // Set the patient data with the CLP data
             SetPatientData(strSVC[0]);
 
-            #region debug for an account
-            string strDebugAccount = null;
-            //if (strSVC[0].IndexOf("C07032996", 0) > -1)
-            //{
-            //    int x;
-            //    x = 9;
-            //}
-            if (strSVC[0].IndexOf("C7087605", 0) > -1)
-            {
-                strDebugAccount = strSVC[0];
-            }
-            #endregion debug for an account
             foreach (string str in strSVC)
             {
                 Application.DoEvents();
-                if (string.IsNullOrEmpty(strDebugAccount) &&
-                    DateTime.Today < new DateTime(2013, 07, 19, 16, 00, 00))
+                if (DateTime.Today < new DateTime(2013, 07, 19, 16, 00, 00))
                 {
                     continue;
                 }
@@ -2441,661 +2020,649 @@ namespace LabBilling.Legacy
                     case "HC:": // 07/01/2008 rgc/wdk expect Claimsnet to use the ':' seperator
                     case "HC^": // TLC //ISA[19] is the component seperator used for this file. 
                     case "HC>": // Medicare // this means we have the SVC line without SVC*
+                    {
+                        #region CLEAR m_strarrRecordsInsert
+
+
+                        // Clear all the values for the records insert so each SVC contains unique data except the 
+                        // account and subscribers name, and status. 
+                        for (int j = ((int)Col835Grids.eClaimStatus + 1); j <= m_strarrRecordsInsert.GetUpperBound(0); j++)
                         {
-                            #region CLEAR m_strarrRecordsInsert
+                            m_strarrRecordsInsert.SetValue((string)"", j);
 
-
-                            // Clear all the values for the records insert so each SVC contains unique data except the 
-                            // account and subscribers name, and status. 
-                            for (int j = ((int)Col835Grids.eClaimStatus + 1); j <= m_strarrRecordsInsert.GetUpperBound(0); j++)
+                            if ((int)Col835Grids.eAllowed == j ||
+                                    (int)Col835Grids.eCharges == j ||
+                                        (int)Col835Grids.eContractualAdjAmt == j ||
+                                            (int)Col835Grids.ePaid == j ||
+                                                (int)Col835Grids.eOtherAdjAmt == j)
                             {
-                                m_strarrRecordsInsert.SetValue((string)"", j);
-
-                                if ((int)Col835Grids.eAllowed == j ||
-                                        (int)Col835Grids.eCharges == j ||
-                                            (int)Col835Grids.eContractualAdjAmt == j ||
-                                                (int)Col835Grids.ePaid == j ||
-                                                    (int)Col835Grids.eOtherAdjAmt == j)
-                                {
-                                    m_strarrRecordsInsert.SetValue((string)"0.00", j);
-                                }
+                                m_strarrRecordsInsert.SetValue((string)"0.00", j);
                             }
-                            #endregion CLEAR m_strarrRecordsInsert
-
-
-                            // Processing a new SVC line so fill out what we know
-                            // Service Code
-                            m_strarrRecordsInsert.SetValue(strSVCElements[0], (int)Col835Grids.eCPT4Code);
-                            // Charges Reported
-                            dTempSVCCharges = decimal.Parse(strSVCElements[1]);
-                            m_strarrRecordsInsert.SetValue(strSVCElements[1], (int)Col835Grids.eCharges);
-                            // Allowed and paid are the same
-                            m_strarrRecordsInsert.SetValue(strSVCElements[2], (int)Col835Grids.eAllowed);
-                            m_strarrRecordsInsert.SetValue(strSVCElements[2], (int)Col835Grids.ePaid);
-                            dTempAmtPaid = decimal.Parse(strSVCElements[2]); // set this variable into dgvEOB(colEOB.ePayDataHCPCSAmt) after all the svc's  are processed
-                            m_dEOBPayDataHCPCSAmt += dTempAmtPaid;
-                            // Rev Code
-                            m_strarrRecordsInsert.SetValue(strSVCElements[3], (int)Col835Grids.eRevCode);
-                            // Units
-                            try
-                            {
-                                m_strarrRecordsInsert.SetValue(strSVCElements[4], (int)Col835Grids.eUnits);
-                            }
-                            catch (IndexOutOfRangeException)
-                            {
-                                // rgc/wdk 20090813 new CAHABA file does not contain the units. Old file had
-                                // zero listed
-                                m_strarrRecordsInsert.SetValue("0", (int)Col835Grids.eUnits);
-                            }
-                            if (!bContainsCAS) // 06/23/2008 wdk full price paid no CAS line in the split so continue
-                            {
-                                m_strarrRecordsInsert.SetValue("PIF", (int)Col835Grids.eReason); // P(aid) I(n) F(ull)
-                                dtService = new DateTime();
-                                string[] strDate = strPayLine[1].Split(new char[] { '*' });
-                                RFClassLibrary.Time.StringToHL7Time(strDate[2], out dtService);
-                                m_strarrRecordsInsert.SetValue(dtService.ToString("d"), (int)Col835Grids.eDateOfService);
-                                AddRecordToDataGrid();
-                                continue;
-                            }
-                            break;
                         }
+                        #endregion CLEAR m_strarrRecordsInsert
+
+
+                        // Processing a new SVC line so fill out what we know
+                        // Service Code
+                        m_strarrRecordsInsert.SetValue(strSVCElements[0], (int)Col835Grids.eCPT4Code);
+                        // Charges Reported
+                        dTempSVCCharges = decimal.Parse(strSVCElements[1]);
+                        m_strarrRecordsInsert.SetValue(strSVCElements[1], (int)Col835Grids.eCharges);
+                        // Allowed and paid are the same
+                        m_strarrRecordsInsert.SetValue(strSVCElements[2], (int)Col835Grids.eAllowed);
+                        m_strarrRecordsInsert.SetValue(strSVCElements[2], (int)Col835Grids.ePaid);
+                        dTempAmtPaid = decimal.Parse(strSVCElements[2]); // set this variable into dgvEOB(colEOB.ePayDataHCPCSAmt) after all the svc's  are processed
+                        m_dEOBPayDataHCPCSAmt += dTempAmtPaid;
+                        // Rev Code
+                        m_strarrRecordsInsert.SetValue(strSVCElements[3], (int)Col835Grids.eRevCode);
+                        // Units
+                        try
+                        {
+                            m_strarrRecordsInsert.SetValue(strSVCElements[4], (int)Col835Grids.eUnits);
+                        }
+                        catch (IndexOutOfRangeException)
+                        {
+                            // rgc/wdk 20090813 new CAHABA file does not contain the units. Old file had
+                            // zero listed
+                            m_strarrRecordsInsert.SetValue("0", (int)Col835Grids.eUnits);
+                        }
+                        if (!bContainsCAS) // 06/23/2008 wdk full price paid no CAS line in the split so continue
+                        {
+                            m_strarrRecordsInsert.SetValue("PIF", (int)Col835Grids.eReason); // P(aid) I(n) F(ull)
+                            dtService = new DateTime();
+                            string[] strDate = strPayLine[1].Split(new char[] { '*' });
+                            RFClassLibrary.Time.StringToHL7Time(strDate[2], out dtService);
+                            m_strarrRecordsInsert.SetValue(dtService.ToString("d"), (int)Col835Grids.eDateOfService);
+                            AddRecordToDataGrid();
+                            continue;
+                        }
+                        break;
+                    }
                     #endregion HC
 
                     #region DTM
                     case "DTM":
+                    {
+                        if (strSVCElements[1].Contains("472"))
                         {
-                            if (strSVCElements[1].Contains("472"))
-                            {
-                                dtService = new DateTime();
-                                RFClassLibrary.Time.StringToHL7Time(strSVCElements[2], out dtService);
-                                m_strarrRecordsInsert.SetValue(dtService.ToString("d"), (int)Col835Grids.eDateOfService);
-                            }
-
-                            break;
+                            dtService = new DateTime();
+                            RFClassLibrary.Time.StringToHL7Time(strSVCElements[2], out dtService);
+                            m_strarrRecordsInsert.SetValue(dtService.ToString("d"), (int)Col835Grids.eDateOfService);
                         }
+
+                        break;
+                    }
                     #endregion DTM
 
                     #region CAS
                     case "CAS":
+                    {
+                        dTempAmtContractual = decimal.Parse(strSVCElements[3]);
+                        //Claim adjustment group / Adjustment Reason Code
+                        m_strarrRecordsInsert.SetValue(strSVCElements[1] + "/" + strSVCElements[2], (int)Col835Grids.eReason);
+                        // SET SVC elements into the record to be inserted into the recordset and grid. May have been cleared if an OA has been processed before this CO
+                        m_strarrRecordsInsert.SetValue(dTempSVCCharges.ToString(), (int)Col835Grids.eCharges);
+                        m_strarrRecordsInsert.SetValue(dTempAmtPaid.ToString(), (int)Col835Grids.ePaid);
+                        m_strarrRecordsInsert.SetValue(dTempAmtPaid.ToString(), (int)Col835Grids.eAllowed);
+                        m_strarrRecordsInsert.SetValue("0.00", (int)Col835Grids.eOtherAdjAmt);
+                        string[] strNoFail = new string[10];
+                        strSVCElements.CopyTo(strNoFail, 0);
+                        switch (strSVCElements[1])
                         {
-                            dTempAmtContractual = decimal.Parse(strSVCElements[3]);
-                            //Claim adjustment group / Adjustment Reason Code
-                            m_strarrRecordsInsert.SetValue(strSVCElements[1] + "/" + strSVCElements[2], (int)Col835Grids.eReason);
-                            // SET SVC elements into the record to be inserted into the recordset and grid. May have been cleared if an OA has been processed before this CO
-                            m_strarrRecordsInsert.SetValue(dTempSVCCharges.ToString(), (int)Col835Grids.eCharges);
-                            m_strarrRecordsInsert.SetValue(dTempAmtPaid.ToString(), (int)Col835Grids.ePaid);
-                            m_strarrRecordsInsert.SetValue(dTempAmtPaid.ToString(), (int)Col835Grids.eAllowed);
-                            m_strarrRecordsInsert.SetValue("0.00", (int)Col835Grids.eOtherAdjAmt);
-                            string[] strNoFail = new string[10];
-                            strSVCElements.CopyTo(strNoFail, 0);
-                            switch (strSVCElements[1])
+                            #region CO Contractual processing
+                            case "CO":
                             {
-                                #region CO Contractual processing
-                                case "CO":
+                                //m_strarrRecordsInsert.SetValue(strSVCElements[2].ToString(), (int)col835Grids.eClaimAdjCode);
+                                switch (strSVCElements[2])
+                                {
+                                    /* wdk 20130724 added  223 Adjustment code for mandated federal, state or local law/regulation that is not already covered by another code and is mandated before a new code can be created.*/
+                                    case "253": // wdk 20140121 Sequestration - reduction in federal spending 
                                     {
-                                        //m_strarrRecordsInsert.SetValue(strSVCElements[2].ToString(), (int)col835Grids.eClaimAdjCode);
-                                        switch (strSVCElements[2])
+                                        //dTempAmtContractual = Decimal.Negate(dTempAmtContractual);
+                                        m_dEOBPayDataContAdjAmt += dTempAmtContractual;
+                                        m_strarrRecordsInsert.SetValue(dTempAmtContractual.ToString(), (int)Col835Grids.eContractualAdjAmt);
+                                        break;
+
+                                    }
+                                    case "223":
+                                    {
+                                        dTempAmtContractual = Decimal.Negate(dTempAmtContractual);
+                                        m_dEOBPayDataContAdjAmt += dTempAmtContractual;
+                                        m_strarrRecordsInsert.SetValue(dTempAmtContractual.ToString(), (int)Col835Grids.eContractualAdjAmt);
+                                        break;
+
+                                    }
+                                    case "26": // 04/25/2008 wdk TLC Expenses incurred prior to coverage.??
+                                    {
+                                        dTempAmtContractual = Decimal.Negate(dTempAmtContractual);
+                                        m_dEOBPayDataContAdjAmt += dTempAmtContractual;
+                                        m_strarrRecordsInsert.SetValue(dTempAmtContractual.ToString(), (int)Col835Grids.eContractualAdjAmt);
+                                        break;
+                                    }
+                                    //case "18": // 07/29/2008 wdk added per Carol per Darlene 
+                                    case "45": // contractual obligation amount
+                                    {
+                                        m_dEOBPayDataContAdjAmt += dTempAmtContractual;
+                                        m_strarrRecordsInsert.SetValue(dTempAmtContractual.ToString(), (int)Col835Grids.eContractualAdjAmt);
+                                        break;
+                                    }
+                                    case "18": // wdk 20130731 moved here to handle the GZ modifiers
+                                    {
+                                        if (m_strarrRecordsInsert.GetValue((int)Col835Grids.eCPT4Code).ToString().Contains("GZ"))
                                         {
-                                            /* wdk 20130724 added  223 Adjustment code for mandated federal, state or local law/regulation that is not already covered by another code and is mandated before a new code can be created.*/
-                                            case "253": // wdk 20140121 Sequestration - reduction in federal spending 
-                                                {
-                                                    //dTempAmtContractual = Decimal.Negate(dTempAmtContractual);
-                                                    m_dEOBPayDataContAdjAmt += dTempAmtContractual;
-                                                    m_strarrRecordsInsert.SetValue(dTempAmtContractual.ToString(), (int)Col835Grids.eContractualAdjAmt);
-                                                    break;
-
-                                                }
-                                            case "223":
-                                                {
-                                                    dTempAmtContractual = Decimal.Negate(dTempAmtContractual);
-                                                    m_dEOBPayDataContAdjAmt += dTempAmtContractual;
-                                                    m_strarrRecordsInsert.SetValue(dTempAmtContractual.ToString(), (int)Col835Grids.eContractualAdjAmt);
-                                                    break;
-
-                                                }
-                                            case "26": // 04/25/2008 wdk TLC Expenses incurred prior to coverage.??
-                                                {
-                                                    dTempAmtContractual = Decimal.Negate(dTempAmtContractual);
-                                                    m_dEOBPayDataContAdjAmt += dTempAmtContractual;
-                                                    m_strarrRecordsInsert.SetValue(dTempAmtContractual.ToString(), (int)Col835Grids.eContractualAdjAmt);
-                                                    break;
-                                                }
-                                            //case "18": // 07/29/2008 wdk added per Carol per Darlene 
-                                            case "45": // contractual obligation amount
-                                                {
-                                                    m_dEOBPayDataContAdjAmt += dTempAmtContractual;
-                                                    m_strarrRecordsInsert.SetValue(dTempAmtContractual.ToString(), (int)Col835Grids.eContractualAdjAmt);
-                                                    break;
-                                                }
-                                            case "18": // wdk 20130731 moved here to handle the GZ modifiers
-                                                {
-                                                    if (m_strarrRecordsInsert.GetValue((int)Col835Grids.eCPT4Code).ToString().Contains("GZ"))
-                                                    {
-                                                        m_dChargesWriteOffGZ += dTempAmtContractual;
-                                                        m_strarrRecordsInsert.SetValue(dTempAmtContractual.ToString(), (int)Col835Grids.eWriteOffAmt);
-                                                        m_strarrRecordsInsert.SetValue("200", (int)Col835Grids.eWriteOffCode);
-                                                        m_strarrRecordsInsert.SetValue(DateTime.Now.ToShortDateString(), (int)Col835Grids.eWriteOffDate);
-                                                    }
-                                                    else
-                                                    {
-                                                        m_dEOBPayDataContAdjAmt += dTempAmtContractual;
-                                                        m_strarrRecordsInsert.SetValue(dTempAmtContractual.ToString(), (int)Col835Grids.eContractualAdjAmt);
-                                                    }
-                                                    break;
-                                                }
-                                            case "50":
-                                                {
-                                                    if (m_strarrRecordsInsert.GetValue((int)Col835Grids.eCPT4Code).ToString().Contains("GZ"))
-                                                    {
-                                                        m_dChargesWriteOffGZ += dTempAmtContractual;
-                                                        m_strarrRecordsInsert.SetValue(dTempAmtContractual.ToString(), (int)Col835Grids.eWriteOffAmt);
-                                                        m_strarrRecordsInsert.SetValue("200", (int)Col835Grids.eWriteOffCode);
-                                                        m_strarrRecordsInsert.SetValue(DateTime.Now.ToShortDateString(), (int)Col835Grids.eWriteOffDate);
-                                                        //   dgvProcessed.Columns[(int)col835Grids.eWriteOffDate].Visible = true;
-                                                        //   dgvProcessed.Columns[(int)col835Grids.eWriteOffCode].Visible = true;
-
-                                                        //m_dicBandProcessed.Add(dgvProcessed.Name, dgvProcessed.Columns[(int)col835Grids.eWriteOffDate]);
-                                                        //m_dicBandProcessed.Add(dgvProcessed.Name, dgvProcessed.Columns[(int)col835Grids.eWriteOffCode]);
-
-                                                    }
-                                                    else
-                                                    {
-                                                        m_strarrRecordsInsert.SetValue(dTempAmtContractual.ToString(), (int)Col835Grids.eWriteOffAmt);
-                                                    }
-                                                    break;
-                                                }
-                                            case "60": //Charges for outpatient services with this proximity to inpatient services are not covered.                                               //{ removed 07/10/2008 wdk                                                 //    m_dEOBChargesNCovd += dTempAmtContractual;                                                //    break;                                                //}
-                                            case "96":  //96 can be on both the CO and the OA in the CAS which means NONCOVERED in both places.
-                                                {
-                                                    // eob's charges : non covered charges // don't add to contractual add to non covered
-                                                    m_dEOBChargesNCovd += dTempAmtContractual;
-                                                    m_strarrRecordsInsert.SetValue(dTempAmtContractual.ToString(), (int)Col835Grids.eContractualAdjAmt);
-                                                    break;
-                                                }
-                                            case "147": // 04/25/2008 wdk TLC Provider contracted/negotiated rate expired or not on file.??
-                                                {
-                                                    dTempAmtContractual = Decimal.Negate(dTempAmtContractual);
-                                                    m_dEOBPayDataContAdjAmt += dTempAmtContractual;
-                                                    m_strarrRecordsInsert.SetValue(dTempAmtContractual.ToString(), (int)Col835Grids.eContractualAdjAmt);
-                                                    break;
-                                                }
-                                            case "A2": // for TLC CAS*CO*A2's seem to be negative amounts ie -17.49 All we saw with a partial search of file 626010402_20080324_09235.835
-                                                {
-                                                    dTempAmtContractual = Decimal.Negate(dTempAmtContractual);
-                                                    m_dEOBPayDataContAdjAmt += dTempAmtContractual;
-                                                    m_strarrRecordsInsert.SetValue(dTempAmtContractual.ToString(), (int)Col835Grids.eContractualAdjAmt);
-                                                    break;
-                                                }
-
-                                            #region Denied Codes
-                                            case "13": // 06/30/2008 wdk added here per Darlene
-                                            //   case "18": // 06/30/2008 wdk added here per Darlene // 07/29/2008 wdk per darlene this is the same as a 45
-                                            case "24": // 06/30/2008 wdk added here per Darlene
-                                            case "125": // 07/10/2008 wdk added here per Darlene
-                                            case "B9": //Services not covered because the patient is enrolled in a Hospice. This change to be effective 4/1/2008: Patient is enrolled in a Hospice.
-                                            case "B15": // 06/30/2008 wdk added here per Darlene
-                                                {
-                                                    m_dEOBChargesDenied += dTempAmtContractual;
-                                                    m_strarrRecordsInsert.SetValue(dTempAmtContractual.ToString(), (int)Col835Grids.eContractualAdjAmt); // 07/29/2008 wdk should this be here???
-                                                    break;
-                                                }
-
-                                                #endregion Denied Codes
+                                            m_dChargesWriteOffGZ += dTempAmtContractual;
+                                            m_strarrRecordsInsert.SetValue(dTempAmtContractual.ToString(), (int)Col835Grids.eWriteOffAmt);
+                                            m_strarrRecordsInsert.SetValue("200", (int)Col835Grids.eWriteOffCode);
+                                            m_strarrRecordsInsert.SetValue(DateTime.Now.ToShortDateString(), (int)Col835Grids.eWriteOffDate);
                                         }
-                                        if (string.IsNullOrEmpty(strNoFail[5]))
+                                        else
                                         {
-                                            break;
-                                        }
-                                        m_strarrRecordsInsert.CopyTo(m_strarrRecordsInsertAddContractual, 0);
-                                        m_strarrRecordsInsertAddContractual.SetValue("0.00", (int)Col835Grids.eCharges);
-                                        m_strarrRecordsInsertAddContractual.SetValue("0.00", (int)Col835Grids.ePaid);
-                                        m_strarrRecordsInsertAddContractual.SetValue("0.00", (int)Col835Grids.eAllowed);
-                                        m_strarrRecordsInsertAddContractual.SetValue("0.00", (int)Col835Grids.eOtherAdjAmt);
-                                        m_strarrRecordsInsertAddContractual.SetValue(strNoFail[1] + "/" + strNoFail[5], (int)Col835Grids.eReason);
-                                        switch (strNoFail[5])
-                                        {
-                                            /* wdk 20130724 added  223 Adjustment code for mandated federal, state or local law/regulation that is not already covered by another code and is mandated before a new code can be created.*/
-                                            case "253": //wdk 20140121 added 
-                                            case "223":
-                                                {
-                                                    dTempAmtContractual = decimal.Parse(strNoFail[6]);
-                                                    //dTempAmtContractual = Decimal.Negate(dTempAmtContractual);
-                                                    m_dEOBPayDataContAdjAmt += dTempAmtContractual;
-                                                    m_strarrRecordsInsertAddContractual.SetValue(dTempAmtContractual.ToString(), (int)Col835Grids.eContractualAdjAmt);
-                                                    break;
-
-                                                }
-                                            case "26": // 04/25/2008 wdk TLC Expenses incurred prior to coverage.??
-                                                {
-                                                    dTempAmtContractual = decimal.Parse(strNoFail[6]);
-                                                    //dTempAmtContractual = Decimal.Negate(dTempAmtContractual);
-                                                    m_dEOBPayDataContAdjAmt += dTempAmtContractual;
-                                                    m_strarrRecordsInsertAddContractual.SetValue(dTempAmtContractual.ToString(), (int)Col835Grids.eContractualAdjAmt);
-                                                    break;
-                                                }
-                                            case "18": // 07/29/2008 wdk added per Carol per Darlene 
-                                            case "45": // contractual obligation amount
-                                                {
-                                                    dTempAmtContractual = decimal.Parse(strNoFail[6]);
-                                                    m_dEOBPayDataContAdjAmt += dTempAmtContractual;
-                                                    m_strarrRecordsInsertAddContractual.SetValue(dTempAmtContractual.ToString(), (int)Col835Grids.eContractualAdjAmt);
-                                                    break;
-                                                }
-                                            case "60": //Charges for outpatient services with this proximity to inpatient services are not covered.                                               //{ removed 07/10/2008 wdk                                                 //    m_dEOBChargesNCovd += dTempAmtContractual;                                                //    break;                                                //}
-                                            case "96":  //96 can be on both the CO and the OA in the CAS which means NONCOVERED in both places.
-                                                {
-                                                    // eob's charges : non covered charges // don't add to contractual add to non covered
-                                                    dTempAmtContractual = decimal.Parse(strNoFail[6]);
-                                                    m_dEOBChargesNCovd += dTempAmtContractual;
-                                                    m_strarrRecordsInsertAddContractual.SetValue(dTempAmtContractual.ToString(), (int)Col835Grids.eContractualAdjAmt);
-                                                    break;
-                                                }
-                                            case "147": // 04/25/2008 wdk TLC Provider contracted/negotiated rate expired or not on file.??
-                                                {
-                                                    dTempAmtContractual = decimal.Parse(strNoFail[6]);
-                                                    //dTempAmtContractual = Decimal.Negate(dTempAmtContractual);
-                                                    m_dEOBPayDataContAdjAmt += dTempAmtContractual;
-                                                    m_strarrRecordsInsertAddContractual.SetValue(dTempAmtContractual.ToString(), (int)Col835Grids.eContractualAdjAmt);
-                                                    break;
-                                                }
-                                            case "A2": // for TLC CAS*CO*A2's seem to be negative amounts ie -17.49 All we saw with a partial search of file 626010402_20080324_09235.835
-                                                {
-                                                    dTempAmtContractual = decimal.Parse(strNoFail[6]);
-                                                    //dTempAmtContractual = Decimal.Negate(dTempAmtContractual);
-                                                    m_dEOBPayDataContAdjAmt += dTempAmtContractual;
-                                                    m_strarrRecordsInsertAddContractual.SetValue(dTempAmtContractual.ToString(), (int)Col835Grids.eContractualAdjAmt);
-                                                    break;
-                                                }
-
-                                            #region Denied Codes
-                                            case "13": // 06/30/2008 wdk added here per Darlene
-                                            //   case "18": // 06/30/2008 wdk added here per Darlene // 07/29/2008 wdk per darlene this is the same as a 45
-                                            case "24": // 06/30/2008 wdk added here per Darlene
-                                            case "125": // 07/10/2008 wdk added here per Darlene
-                                            case "B9": //Services not covered because the patient is enrolled in a Hospice. This change to be effective 4/1/2008: Patient is enrolled in a Hospice.
-                                            case "B15": // 06/30/2008 wdk added here per Darlene
-                                                {
-                                                    dTempAmtContractual = decimal.Parse(strNoFail[6]);
-                                                    m_dEOBChargesDenied += dTempAmtContractual;
-                                                    m_strarrRecordsInsertAddContractual.SetValue(dTempAmtContractual.ToString(), (int)Col835Grids.eContractualAdjAmt); // 07/29/2008 wdk should this be here???
-                                                    break;
-                                                }
-
-                                                #endregion Denied Codes
+                                            m_dEOBPayDataContAdjAmt += dTempAmtContractual;
+                                            m_strarrRecordsInsert.SetValue(dTempAmtContractual.ToString(), (int)Col835Grids.eContractualAdjAmt);
                                         }
                                         break;
                                     }
-                                #endregion CO
+                                    case "50":
+                                    {
+                                        if (m_strarrRecordsInsert.GetValue((int)Col835Grids.eCPT4Code).ToString().Contains("GZ"))
+                                        {
+                                            m_dChargesWriteOffGZ += dTempAmtContractual;
+                                            m_strarrRecordsInsert.SetValue(dTempAmtContractual.ToString(), (int)Col835Grids.eWriteOffAmt);
+                                            m_strarrRecordsInsert.SetValue("200", (int)Col835Grids.eWriteOffCode);
+                                            m_strarrRecordsInsert.SetValue(DateTime.Now.ToShortDateString(), (int)Col835Grids.eWriteOffDate);
+                                            //   dgvProcessed.Columns[(int)col835Grids.eWriteOffDate].Visible = true;
+                                            //   dgvProcessed.Columns[(int)col835Grids.eWriteOffCode].Visible = true;
 
-                                #region CR Credit Processing
+                                            //m_dicBandProcessed.Add(dgvProcessed.Name, dgvProcessed.Columns[(int)col835Grids.eWriteOffDate]);
+                                            //m_dicBandProcessed.Add(dgvProcessed.Name, dgvProcessed.Columns[(int)col835Grids.eWriteOffCode]);
 
-                                // CAS*CR*2*-5.56**45*-48.09~
-                                //      CAS01 = CR
-                                //      CAS02 = 2 (Coinsurance Amount) taken from Reason code table
-                                //      CAS03 = -5.56 (for this account we wrote this off)
-                                //      CAS04 = "" blank
-                                //      CAS05 = 45 (percent)
-                                //      CAS06 is the contractual
+                                        }
+                                        else
+                                        {
+                                            m_strarrRecordsInsert.SetValue(dTempAmtContractual.ToString(), (int)Col835Grids.eWriteOffAmt);
+                                        }
+                                        break;
+                                    }
+                                    case "60": //Charges for outpatient services with this proximity to inpatient services are not covered.                                               //{ removed 07/10/2008 wdk                                                 //    m_dEOBChargesNCovd += dTempAmtContractual;                                                //    break;                                                //}
+                                    case "96":  //96 can be on both the CO and the OA in the CAS which means NONCOVERED in both places.
+                                    {
+                                        // eob's charges : non covered charges // don't add to contractual add to non covered
+                                        m_dEOBChargesNCovd += dTempAmtContractual;
+                                        m_strarrRecordsInsert.SetValue(dTempAmtContractual.ToString(), (int)Col835Grids.eContractualAdjAmt);
+                                        break;
+                                    }
+                                    case "147": // 04/25/2008 wdk TLC Provider contracted/negotiated rate expired or not on file.??
+                                    {
+                                        dTempAmtContractual = Decimal.Negate(dTempAmtContractual);
+                                        m_dEOBPayDataContAdjAmt += dTempAmtContractual;
+                                        m_strarrRecordsInsert.SetValue(dTempAmtContractual.ToString(), (int)Col835Grids.eContractualAdjAmt);
+                                        break;
+                                    }
+                                    case "A2": // for TLC CAS*CO*A2's seem to be negative amounts ie -17.49 All we saw with a partial search of file 626010402_20080324_09235.835
+                                    {
+                                        dTempAmtContractual = Decimal.Negate(dTempAmtContractual);
+                                        m_dEOBPayDataContAdjAmt += dTempAmtContractual;
+                                        m_strarrRecordsInsert.SetValue(dTempAmtContractual.ToString(), (int)Col835Grids.eContractualAdjAmt);
+                                        break;
+                                    }
 
-                                case "CR": // 04/21/2008 wdk for medicare takebacks status = 22
+                                    #region Denied Codes
+                                    case "13": // 06/30/2008 wdk added here per Darlene
+                                               //   case "18": // 06/30/2008 wdk added here per Darlene // 07/29/2008 wdk per darlene this is the same as a 45
+                                    case "24": // 06/30/2008 wdk added here per Darlene
+                                    case "125": // 07/10/2008 wdk added here per Darlene
+                                    case "B9": //Services not covered because the patient is enrolled in a Hospice. This change to be effective 4/1/2008: Patient is enrolled in a Hospice.
+                                    case "B15": // 06/30/2008 wdk added here per Darlene
+                                    {
+                                        m_dEOBChargesDenied += dTempAmtContractual;
+                                        m_strarrRecordsInsert.SetValue(dTempAmtContractual.ToString(), (int)Col835Grids.eContractualAdjAmt); // 07/29/2008 wdk should this be here???
+                                        break;
+                                    }
+
+                                    #endregion Denied Codes
+                                }
+                                if (string.IsNullOrEmpty(strNoFail[5]))
+                                {
+                                    break;
+                                }
+                                m_strarrRecordsInsert.CopyTo(m_strarrRecordsInsertAddContractual, 0);
+                                m_strarrRecordsInsertAddContractual.SetValue("0.00", (int)Col835Grids.eCharges);
+                                m_strarrRecordsInsertAddContractual.SetValue("0.00", (int)Col835Grids.ePaid);
+                                m_strarrRecordsInsertAddContractual.SetValue("0.00", (int)Col835Grids.eAllowed);
+                                m_strarrRecordsInsertAddContractual.SetValue("0.00", (int)Col835Grids.eOtherAdjAmt);
+                                m_strarrRecordsInsertAddContractual.SetValue(strNoFail[1] + "/" + strNoFail[5], (int)Col835Grids.eReason);
+                                switch (strNoFail[5])
+                                {
+                                    /* wdk 20130724 added  223 Adjustment code for mandated federal, state or local law/regulation that is not already covered by another code and is mandated before a new code can be created.*/
+                                    case "253": //wdk 20140121 added 
+                                    case "223":
+                                    {
+                                        dTempAmtContractual = decimal.Parse(strNoFail[6]);
+                                        //dTempAmtContractual = Decimal.Negate(dTempAmtContractual);
+                                        m_dEOBPayDataContAdjAmt += dTempAmtContractual;
+                                        m_strarrRecordsInsertAddContractual.SetValue(dTempAmtContractual.ToString(), (int)Col835Grids.eContractualAdjAmt);
+                                        break;
+
+                                    }
+                                    case "26": // 04/25/2008 wdk TLC Expenses incurred prior to coverage.??
+                                    {
+                                        dTempAmtContractual = decimal.Parse(strNoFail[6]);
+                                        //dTempAmtContractual = Decimal.Negate(dTempAmtContractual);
+                                        m_dEOBPayDataContAdjAmt += dTempAmtContractual;
+                                        m_strarrRecordsInsertAddContractual.SetValue(dTempAmtContractual.ToString(), (int)Col835Grids.eContractualAdjAmt);
+                                        break;
+                                    }
+                                    case "18": // 07/29/2008 wdk added per Carol per Darlene 
+                                    case "45": // contractual obligation amount
+                                    {
+                                        dTempAmtContractual = decimal.Parse(strNoFail[6]);
+                                        m_dEOBPayDataContAdjAmt += dTempAmtContractual;
+                                        m_strarrRecordsInsertAddContractual.SetValue(dTempAmtContractual.ToString(), (int)Col835Grids.eContractualAdjAmt);
+                                        break;
+                                    }
+                                    case "60": //Charges for outpatient services with this proximity to inpatient services are not covered.                                               //{ removed 07/10/2008 wdk                                                 //    m_dEOBChargesNCovd += dTempAmtContractual;                                                //    break;                                                //}
+                                    case "96":  //96 can be on both the CO and the OA in the CAS which means NONCOVERED in both places.
+                                    {
+                                        // eob's charges : non covered charges // don't add to contractual add to non covered
+                                        dTempAmtContractual = decimal.Parse(strNoFail[6]);
+                                        m_dEOBChargesNCovd += dTempAmtContractual;
+                                        m_strarrRecordsInsertAddContractual.SetValue(dTempAmtContractual.ToString(), (int)Col835Grids.eContractualAdjAmt);
+                                        break;
+                                    }
+                                    case "147": // 04/25/2008 wdk TLC Provider contracted/negotiated rate expired or not on file.??
+                                    {
+                                        dTempAmtContractual = decimal.Parse(strNoFail[6]);
+                                        //dTempAmtContractual = Decimal.Negate(dTempAmtContractual);
+                                        m_dEOBPayDataContAdjAmt += dTempAmtContractual;
+                                        m_strarrRecordsInsertAddContractual.SetValue(dTempAmtContractual.ToString(), (int)Col835Grids.eContractualAdjAmt);
+                                        break;
+                                    }
+                                    case "A2": // for TLC CAS*CO*A2's seem to be negative amounts ie -17.49 All we saw with a partial search of file 626010402_20080324_09235.835
+                                    {
+                                        dTempAmtContractual = decimal.Parse(strNoFail[6]);
+                                        //dTempAmtContractual = Decimal.Negate(dTempAmtContractual);
+                                        m_dEOBPayDataContAdjAmt += dTempAmtContractual;
+                                        m_strarrRecordsInsertAddContractual.SetValue(dTempAmtContractual.ToString(), (int)Col835Grids.eContractualAdjAmt);
+                                        break;
+                                    }
+
+                                    #region Denied Codes
+                                    case "13": // 06/30/2008 wdk added here per Darlene
+                                               //   case "18": // 06/30/2008 wdk added here per Darlene // 07/29/2008 wdk per darlene this is the same as a 45
+                                    case "24": // 06/30/2008 wdk added here per Darlene
+                                    case "125": // 07/10/2008 wdk added here per Darlene
+                                    case "B9": //Services not covered because the patient is enrolled in a Hospice. This change to be effective 4/1/2008: Patient is enrolled in a Hospice.
+                                    case "B15": // 06/30/2008 wdk added here per Darlene
+                                    {
+                                        dTempAmtContractual = decimal.Parse(strNoFail[6]);
+                                        m_dEOBChargesDenied += dTempAmtContractual;
+                                        m_strarrRecordsInsertAddContractual.SetValue(dTempAmtContractual.ToString(), (int)Col835Grids.eContractualAdjAmt); // 07/29/2008 wdk should this be here???
+                                        break;
+                                    }
+
+                                    #endregion Denied Codes
+                                }
+                                break;
+                            }
+                            #endregion CO
+
+                            #region CR Credit Processing
+
+                            // CAS*CR*2*-5.56**45*-48.09~
+                            //      CAS01 = CR
+                            //      CAS02 = 2 (Coinsurance Amount) taken from Reason code table
+                            //      CAS03 = -5.56 (for this account we wrote this off)
+                            //      CAS04 = "" blank
+                            //      CAS05 = 45 (percent)
+                            //      CAS06 is the contractual
+
+                            case "CR": // 04/21/2008 wdk for medicare takebacks status = 22
+                            {
+                                m_strarrRecordsInsert.SetValue(dTempAmtPaid.ToString(), (int)Col835Grids.eContractualAdjAmt);
+                                //Payment adjusted because this care may be covered by another payer per coordination of benefits. 
+                                //This change to be effective 4/1/2008: This care may be covered by another payer per coordination of benefits.
+                                switch (strSVCElements[2])
+                                {
+                                    case "22":
+                                    {
+                                        m_dEOBChargesDenied += dTempAmtPaid;
+                                        break;
+                                    }
+                                    case "45": //file 080409MF.835 has negative contractuals for C2463470
                                     {
                                         m_strarrRecordsInsert.SetValue(dTempAmtPaid.ToString(), (int)Col835Grids.eContractualAdjAmt);
-                                        //Payment adjusted because this care may be covered by another payer per coordination of benefits. 
-                                        //This change to be effective 4/1/2008: This care may be covered by another payer per coordination of benefits.
-                                        switch (strSVCElements[2])
-                                        {
-                                            case "22":
-                                                {
-                                                    m_dEOBChargesDenied += dTempAmtPaid;
-                                                    break;
-                                                }
-                                            case "45": //file 080409MF.835 has negative contractuals for C2463470
-                                                {
-                                                    m_strarrRecordsInsert.SetValue(dTempAmtPaid.ToString(), (int)Col835Grids.eContractualAdjAmt);
-                                                    m_dEOBPayDataContAdjAmt += dTempAmtPaid; // 06/09/2008 wdk added see "CA2491257" in file #1717 on bill cycle 03/31/20089
-                                                    break;
-                                                }
-                                            case "119": // 04/21/2008 wdk for take back from Medicare Previously denied refiled then paid plus this Credit
-                                                {
-                                                    m_dEOBChargesDenied += dTempAmtPaid;
-                                                    break;
-                                                }
-                                            case "2": // 04/21/2008 wdk for refunds from Medicare
-                                                {
-                                                    decimal dTempEOBAmt = decimal.Parse(strSVCElements[6]);
-                                                    m_dEOBPayDataContAdjAmt += dTempEOBAmt;
-                                                    break;
-                                                }
-                                            default:
-                                                {
-                                                    m_ERR.m_Logfile.WriteLogFile(string.Format("CR Default handler for {0} not completed.\r\nAccount:{1}\r\nFile: {2}",
-                                                           strSVCElements[2], m_strarrEOBInsert.GetValue((int)Col835EOB.Account), tbFileName.Tag.ToString()));
-                                                    break;
-                                                }
-                                        }
-
-                                        if (rtbCheckSource.Text.IndexOf("TLC") > -1) // 04/08/2008 rgc/wdk needs to be tested.
-                                        {
-                                            m_dEOBPayDataContAdjAmt = Decimal.Negate(m_dEOBPayDataContAdjAmt);
-                                        }
+                                        m_dEOBPayDataContAdjAmt += dTempAmtPaid; // 06/09/2008 wdk added see "CA2491257" in file #1717 on bill cycle 03/31/20089
                                         break;
                                     }
-                                #endregion CR Credit Processing
-
-                                #region OA Other Adjustments
-                                case "OA": // don't add to contractual
+                                    case "119": // 04/21/2008 wdk for take back from Medicare Previously denied refiled then paid plus this Credit
                                     {
-                                        //dTempAmt = decimal.Parse(strSVCElements[2]);
-                                        // 06/10/2008 the below lines moved from case 23: below.
-                                        m_strarrRecordsInsert.SetValue("0.00", (int)Col835Grids.eAllowed);
-                                        m_strarrRecordsInsert.SetValue("0.00", (int)Col835Grids.eCharges);
-                                        m_strarrRecordsInsert.SetValue("0.00", (int)Col835Grids.ePaid); // don't post OA's because the SVC line dictates the amount paid
-                                        m_strarrRecordsInsert.SetValue("0.00", (int)Col835Grids.eContractualAdjAmt);
-                                        m_strarrRecordsInsert.SetValue(dTempAmtContractual.ToString(), (int)Col835Grids.eOtherAdjAmt);
-                                        // 06/10/2008 rgc/wdk converted if's to switch for scalibility.
-                                        switch (strSVCElements[2])
-                                        {
-                                            case "23":  // TLC other insurance 04/16/2008 wdk //04/21/2008 wdk Medicare has it also. // 05/27/2008 rgc/wdk MSP Prim Pay() from file #1727 account ca2480693
-                                                {
-                                                    m_dEOBPayDataMSPPrimPay += dTempAmtContractual;
-                                                    break;
-                                                }
-                                            case "96":
-                                                {
-                                                    // put on eob non covered 
-                                                    m_dEOBChargesNCovd += dTempAmtContractual;
-                                                    break;
-                                                }
-                                        }
+                                        m_dEOBChargesDenied += dTempAmtPaid;
                                         break;
                                     }
-                                #endregion 0A
-
-                                #region PR Patient Responsiblity
-
-                                // rgc/wdk 20090528 PR 2's may have an additional PR 1 (Deductible) or PR 3(CoPayment) in the same CAS
-                                // see account CA2740441 in ...\\wthmclbill\shared\Billing\LIVE\Posting835Remit\MedicareRemit\Saved\090506my.835 
-
-                                case "PR":  // don't add to contractual
+                                    case "2": // 04/21/2008 wdk for refunds from Medicare
                                     {
-                                        decimal dTempPRAmt = 0.00M;// decimal.Parse(strSVCElements[3]);
-                                        m_strarrRecordsInsert.SetValue("0.00", (int)Col835Grids.ePaid); // don't post 07/01/2008 rgc/wdk Have not seen a PR yet 
-                                        m_strarrRecordsInsert.SetValue("0.00", (int)Col835Grids.eCharges);
-                                        m_strarrRecordsInsert.SetValue("0.00", (int)Col835Grids.eContractualAdjAmt);
-                                        m_strarrRecordsInsert.SetValue(dTempPRAmt.ToString(), (int)Col835Grids.eOtherAdjAmt); //05/27/2008 eOtherAdjAmt is new 
-                                        if (strSVCElements.GetUpperBound(0) == 3)
-                                        {
-                                            // rgc/wdk 20090528 PR 2's may have an additional PR 1 (Deductible) or PR 3(CoPayment) in the same CAS
-                                            // see account CA2740441 in ...\\wthmclbill\shared\Billing\LIVE\Posting835Remit\MedicareRemit\Saved\090506my.835 
-                                            m_strarrRecordsInsert.SetValue(strSVCElements[1] + "/" + strSVCElements[2], (int)Col835Grids.eReason);
-                                            dTempPRAmt = decimal.Parse(strSVCElements[3]);
-                                            m_strarrRecordsInsert.SetValue("0.00", (int)Col835Grids.ePaid); // don't post 07/01/2008 rgc/wdk Have not seen a PR yet 
-                                            m_strarrRecordsInsert.SetValue("0.00", (int)Col835Grids.eCharges);
-                                            m_strarrRecordsInsert.SetValue("0.00", (int)Col835Grids.eContractualAdjAmt);
-                                            m_strarrRecordsInsert.SetValue(dTempPRAmt.ToString(), (int)Col835Grids.eOtherAdjAmt); //05/27/2008 eOtherAdjAmt is new 
-
-
-                                            switch (strSVCElements[2])
-                                            {
-                                                case "1": // patient liability coinsurance added 05/01/2008 wdk
-                                                    {
-                                                        m_dEOBPatLibCoInsurance += dTempPRAmt;
-                                                        break;
-                                                    }
-                                                case "2":  // patient liability coinsurance 05/21/2008 rgc/wdk
-                                                    {
-                                                        // Because the pat's responsibility is both in the allowed added to the CO's amount
-                                                        // and the adjust amount add it to both for PR/2's. If required to be added together
-                                                        // put that code in R_Eob printPageEvent Handler in MCL to add the two together.
-                                                        m_dEOBPatLibCoInsurance += dTempPRAmt;
-                                                        m_dtRecordWriteOff.Rows.Add(m_strarrRecordsInsert);
-                                                        break;
-                                                    }
-                                                case "26": // 07/10/2008 wdk does not have medicare
-                                                    {
-                                                        m_dEOBPatLibNCovdCharges += dTempPRAmt;
-                                                        break;
-                                                    }
-                                                case "31":    // Denied Not identified as the payor's client
-                                                    {
-                                                        m_dEOBChargesDenied += dTempPRAmt;
-                                                        break;
-                                                    }
-                                                case "45": // patient libiality noncovered charges put on eob non covered patient responsibility 
-                                                    {
-                                                        m_dEOBPatLibNCovdCharges += dTempPRAmt;
-                                                        break;
-                                                    }
-
-                                                case "96": // 06/09/2008 wdk Patient non covered per Darlene see file 1749 05/23/2008 account D608890
-                                                    {
-                                                        // wdk 20130129 add to m_dEOBPatLibNCovdCharges also per Carol
-                                                        m_dEOBPatLibNCovdCharges += dTempPRAmt;
-                                                        m_dEOBChargesNCovd += dTempPRAmt;
-                                                        break;
-                                                    }
-                                                case "119": // 07/10/2008 wdk Patient non covered per Darlene see account D609295 in 080627MF.835
-                                                    {
-                                                        m_dEOBPatLibNCovdCharges += dTempPRAmt;
-                                                        break;
-                                                    }
-
-                                                case "B9": // 06/09/2008 wdk Denied per Darlene see file #1717 account CA2466273 
-                                                    {
-                                                        m_dEOBChargesDenied += dTempPRAmt; // Hospise???
-                                                        break;
-                                                    }
-                                                case "A7":
-                                                    {
-                                                        m_dEOBPatLibNCovdCharges += dTempPRAmt;
-                                                        break;
-                                                    }
-                                                default:
-                                                    {
-                                                        m_dEOBPatLibNCovdCharges += dTempPRAmt;
-                                                        break;
-                                                    }
-                                            }
-                                            //  AddRecordToDataGrid();
-                                        }
-                                        if (strSVCElements.GetUpperBound(0) == 6)
-                                        {
-                                            // rgc/wdk 20090528 PR 2's may have an additional PR 1 (Deductible) or PR 3(CoPayment) in the same CAS
-                                            // see account CA2740441 in ..\\wthmclbill\shared\Billing\LIVE\Posting835Remit\MedicareRemit\Saved\090506my.835 
-                                            m_strarrRecordsInsert.SetValue(strSVCElements[1] + "/" + strSVCElements[5], (int)Col835Grids.eReason);
-                                            dTempPRAmt = decimal.Parse(strSVCElements[6]);
-                                            m_strarrRecordsInsert.SetValue("0.00", (int)Col835Grids.ePaid); // don't post 07/01/2008 rgc/wdk Have not seen a PR yet 
-                                            m_strarrRecordsInsert.SetValue("0.00", (int)Col835Grids.eCharges);
-                                            m_strarrRecordsInsert.SetValue("0.00", (int)Col835Grids.eContractualAdjAmt);
-                                            m_strarrRecordsInsert.SetValue(dTempPRAmt.ToString(), (int)Col835Grids.eOtherAdjAmt); //05/27/2008 eOtherAdjAmt is new 
-
-
-                                            switch (strSVCElements[5])
-                                            {
-                                                case "1": // patient liability coinsurance added 05/01/2008 wdk
-                                                    {
-                                                        m_dEOBPatLibCoInsurance += dTempPRAmt;
-                                                        break;
-                                                    }
-                                                case "2":  // patient liability coinsurance 05/21/2008 rgc/wdk
-                                                    {
-                                                        // Because the pat's responsibility is both in the allowed added to the CO's amount
-                                                        // and the adjust amount add it to both for PR/2's. If required to be added together
-                                                        // put that code in R_Eob printPageEvent Handler in MCL to add the two together.
-                                                        m_dEOBPatLibCoInsurance += dTempPRAmt;
-                                                        m_dtRecordWriteOff.Rows.Add(m_strarrRecordsInsert);
-                                                        break;
-                                                    }
-                                                case "26": // 07/10/2008 wdk does not have medicare
-                                                    {
-                                                        m_dEOBPatLibNCovdCharges += dTempPRAmt;
-                                                        break;
-                                                    }
-                                                case "31":    // Denied Not identified as the payor's client
-                                                    {
-                                                        m_dEOBChargesDenied += dTempPRAmt;
-                                                        break;
-                                                    }
-                                                case "45": // patient libiality noncovered charges put on eob non covered patient responsibility 
-                                                    {
-                                                        m_dEOBPatLibNCovdCharges += dTempPRAmt;
-                                                        break;
-                                                    }
-
-                                                case "96": // 06/09/2008 wdk Patient non covered per Darlene see file 1749 05/23/2008 account D608890
-                                                    {
-                                                        // wdk 20130129 add to m_dEOBPatLibNCovdCharges also per Carol
-                                                        m_dEOBPatLibNCovdCharges += dTempPRAmt;
-                                                        m_dEOBChargesNCovd += dTempPRAmt;
-                                                        break;
-                                                    }
-                                                case "119": // 07/10/2008 wdk Patient non covered per Darlene see account D609295 in 080627MF.835
-                                                    {
-                                                        m_dEOBPatLibNCovdCharges += dTempPRAmt;
-                                                        break;
-                                                    }
-
-                                                case "B9": // 06/09/2008 wdk Denied per Darlene see file #1717 account CA2466273 
-                                                    {
-                                                        m_dEOBChargesDenied += dTempPRAmt; // Hospise???
-                                                        break;
-                                                    }
-                                                default:
-                                                    {
-                                                        m_dEOBPatLibNCovdCharges += dTempPRAmt;
-                                                        break;
-                                                    }
-                                            }
-                                            AddRecordToDataGrid();
-                                        }
-
-                                        m_strarrRecordsInsert.SetValue(strSVCElements[1] + "/" + strSVCElements[2], (int)Col835Grids.eReason);
-                                        dTempPRAmt = decimal.Parse(strSVCElements[3]);
-                                        m_strarrRecordsInsert.SetValue("0.00", (int)Col835Grids.ePaid); // don't post 07/01/2008 rgc/wdk Have not seen a PR yet 
-                                        m_strarrRecordsInsert.SetValue("0.00", (int)Col835Grids.eCharges);
-                                        m_strarrRecordsInsert.SetValue("0.00", (int)Col835Grids.eContractualAdjAmt);
-                                        m_strarrRecordsInsert.SetValue(dTempPRAmt.ToString(), (int)Col835Grids.eOtherAdjAmt); //05/27/2008 eOtherAdjAmt is new 
-
-                                        switch (strSVCElements[2])
-                                        {
-                                            case "0": // wdk 20130129 patient libiality noncovered charges put on eob non covered patient responsibility 
-                                                {
-                                                    m_dEOBPatLibNCovdCharges += dTempPRAmt;
-                                                    break;
-                                                }
-                                            case "1": // patient liability coinsurance added 05/01/2008 wdk
-                                                {
-                                                    m_dEOBPatLibCoInsurance += dTempPRAmt;
-                                                    break;
-                                                }
-                                            case "2":  // patient liability coinsurance 05/21/2008 rgc/wdk
-                                                {
-                                                    // Because the pat's responsibility is both in the allowed added to the CO's amount
-                                                    // and the adjust amount add it to both for PR/2's. If required to be added together
-                                                    // put that code in R_Eob printPageEvent Handler in MCL to add the two together.
-                                                    //   m_dEOBPatLibCoInsurance += dTempPRAmt; wdk 20131114 removed as it is doubling the EOB Amount
-                                                    break;
-                                                }
-                                            case "26": // 07/10/2008 wdk does not have medicare
-                                                {
-                                                    m_dEOBPatLibNCovdCharges += dTempPRAmt;
-                                                    break;
-                                                }
-                                            case "31":    // Denied Not identified as the payor's client
-                                                {
-                                                    m_dEOBChargesDenied += dTempPRAmt;
-                                                    break;
-                                                }
-                                            case "45": // patient libiality noncovered charges put on eob non covered patient responsibility 
-                                                {
-                                                    m_dEOBPatLibNCovdCharges += dTempPRAmt;
-                                                    break;
-                                                }
-                                            case "96": // 06/09/2008 wdk Patient non covered per Darlene see file 1749 05/23/2008 account D608890
-                                                {
-                                                    //m_dEOBChargesNCovd += dTempPRAmt; // wdk 20140528 removed per Carols request
-                                                    m_dEOBPatLibNCovdCharges += dTempPRAmt; // wdk 20140528 added per Carols request
-                                                    break;
-                                                }
-                                            case "119": // 07/10/2008 wdk Patient non covered per Darlene see account D609295 in 080627MF.835
-                                                {
-                                                    m_dEOBPatLibNCovdCharges += dTempPRAmt;
-                                                    break;
-                                                }
-
-                                            case "B9": // 06/09/2008 wdk Denied per Darlene see file #1717 account CA2466273 
-                                                {
-                                                    m_dEOBChargesDenied += dTempPRAmt; // Hospise???
-                                                    break;
-                                                }
-                                            default:
-                                                {
-                                                    m_dEOBPatLibNCovdCharges += dTempPRAmt;
-                                                    break;
-                                                }
-                                        }
-
+                                        decimal dTempEOBAmt = decimal.Parse(strSVCElements[6]);
+                                        m_dEOBPayDataContAdjAmt += dTempEOBAmt;
                                         break;
                                     }
-                                #endregion PR
-
-                                #region PC Patient Credit
-                                case "PC": // may be patient credit
+                                    default:
                                     {
-                                        // payment data: pat Refund
-                                        m_dEOBPayDataPatRefund += dTempAmtPaid;
+                                        m_ERR.m_Logfile.WriteLogFile(string.Format("CR Default handler for {0} not completed.\r\nAccount:{1}\r\nFile: {2}",
+                                               strSVCElements[2], m_strarrEOBInsert.GetValue((int)Col835EOB.Account), tbFileName.Tag.ToString()));
                                         break;
                                     }
-                                #endregion PC
+                                }
 
-                                #region PI Payor Initiated Reductions
-                                case "PI":
-                                    {
-                                        m_dPayorInitiatedReductions += decimal.Parse(strSVCElements[3]);
-                                        /////
-
-                                        decimal dTempPIAmt = decimal.Parse(strSVCElements[3]);
-                                        dTempAmtPaid += dTempPIAmt;
-                                        m_strarrRecordsInsert.SetValue(dTempAmtPaid.ToString(), (int)Col835Grids.ePaid); // don't post 07/01/2008 rgc/wdk Have not seen a PR yet 
-                                        //m_strarrRecordsInsert.SetValue("0.00", (int)col835Grids.eCharges);
-                                        //m_strarrRecordsInsert.SetValue("0.00", (int)col835Grids.eContractualAdjAmt);
-                                        m_strarrRecordsInsert.SetValue(dTempPIAmt.ToString(), (int)Col835Grids.eOtherAdjAmt); //05/27/2008 eOtherAdjAmt is new 
-
-                                        break;
-                                    }
-                                    #endregion PI
-
+                                if (rtbCheckSource.Text.IndexOf("TLC") > -1) // 04/08/2008 rgc/wdk needs to be tested.
+                                {
+                                    m_dEOBPayDataContAdjAmt = Decimal.Negate(m_dEOBPayDataContAdjAmt);
+                                }
+                                break;
                             }
+                            #endregion CR Credit Processing
 
-                            // add the CAS to the DataSet/DataGrid
-                            AddRecordToDataGrid();
-                            break;
+                            #region OA Other Adjustments
+                            case "OA": // don't add to contractual
+                            {
+                                //dTempAmt = decimal.Parse(strSVCElements[2]);
+                                // 06/10/2008 the below lines moved from case 23: below.
+                                m_strarrRecordsInsert.SetValue("0.00", (int)Col835Grids.eAllowed);
+                                m_strarrRecordsInsert.SetValue("0.00", (int)Col835Grids.eCharges);
+                                m_strarrRecordsInsert.SetValue("0.00", (int)Col835Grids.ePaid); // don't post OA's because the SVC line dictates the amount paid
+                                m_strarrRecordsInsert.SetValue("0.00", (int)Col835Grids.eContractualAdjAmt);
+                                m_strarrRecordsInsert.SetValue(dTempAmtContractual.ToString(), (int)Col835Grids.eOtherAdjAmt);
+                                // 06/10/2008 rgc/wdk converted if's to switch for scalibility.
+                                switch (strSVCElements[2])
+                                {
+                                    case "23":  // TLC other insurance 04/16/2008 wdk //04/21/2008 wdk Medicare has it also. // 05/27/2008 rgc/wdk MSP Prim Pay() from file #1727 account ca2480693
+                                    {
+                                        m_dEOBPayDataMSPPrimPay += dTempAmtContractual;
+                                        break;
+                                    }
+                                    case "96":
+                                    {
+                                        // put on eob non covered 
+                                        m_dEOBChargesNCovd += dTempAmtContractual;
+                                        break;
+                                    }
+                                }
+                                break;
+                            }
+                            #endregion 0A
+
+                            #region PR Patient Responsiblity
+
+                            // rgc/wdk 20090528 PR 2's may have an additional PR 1 (Deductible) or PR 3(CoPayment) in the same CAS
+                            // see account CA2740441 in ...\\wthmclbill\shared\Billing\LIVE\Posting835Remit\MedicareRemit\Saved\090506my.835 
+
+                            case "PR":  // don't add to contractual
+                            {
+                                decimal dTempPRAmt = 0.00M;// decimal.Parse(strSVCElements[3]);
+                                m_strarrRecordsInsert.SetValue("0.00", (int)Col835Grids.ePaid); // don't post 07/01/2008 rgc/wdk Have not seen a PR yet 
+                                m_strarrRecordsInsert.SetValue("0.00", (int)Col835Grids.eCharges);
+                                m_strarrRecordsInsert.SetValue("0.00", (int)Col835Grids.eContractualAdjAmt);
+                                m_strarrRecordsInsert.SetValue(dTempPRAmt.ToString(), (int)Col835Grids.eOtherAdjAmt); //05/27/2008 eOtherAdjAmt is new 
+                                if (strSVCElements.GetUpperBound(0) == 3)
+                                {
+                                    // rgc/wdk 20090528 PR 2's may have an additional PR 1 (Deductible) or PR 3(CoPayment) in the same CAS
+                                    // see account CA2740441 in ...\\wthmclbill\shared\Billing\LIVE\Posting835Remit\MedicareRemit\Saved\090506my.835 
+                                    m_strarrRecordsInsert.SetValue(strSVCElements[1] + "/" + strSVCElements[2], (int)Col835Grids.eReason);
+                                    dTempPRAmt = decimal.Parse(strSVCElements[3]);
+                                    m_strarrRecordsInsert.SetValue("0.00", (int)Col835Grids.ePaid); // don't post 07/01/2008 rgc/wdk Have not seen a PR yet 
+                                    m_strarrRecordsInsert.SetValue("0.00", (int)Col835Grids.eCharges);
+                                    m_strarrRecordsInsert.SetValue("0.00", (int)Col835Grids.eContractualAdjAmt);
+                                    m_strarrRecordsInsert.SetValue(dTempPRAmt.ToString(), (int)Col835Grids.eOtherAdjAmt); //05/27/2008 eOtherAdjAmt is new 
+
+
+                                    switch (strSVCElements[2])
+                                    {
+                                        case "1": // patient liability coinsurance added 05/01/2008 wdk
+                                        {
+                                            m_dEOBPatLibCoInsurance += dTempPRAmt;
+                                            break;
+                                        }
+                                        case "2":  // patient liability coinsurance 05/21/2008 rgc/wdk
+                                        {
+                                            // Because the pat's responsibility is both in the allowed added to the CO's amount
+                                            // and the adjust amount add it to both for PR/2's. If required to be added together
+                                            // put that code in R_Eob printPageEvent Handler in MCL to add the two together.
+                                            m_dEOBPatLibCoInsurance += dTempPRAmt;
+                                            m_dtRecordWriteOff.Rows.Add(m_strarrRecordsInsert);
+                                            break;
+                                        }
+                                        case "26": // 07/10/2008 wdk does not have medicare
+                                        {
+                                            m_dEOBPatLibNCovdCharges += dTempPRAmt;
+                                            break;
+                                        }
+                                        case "31":    // Denied Not identified as the payor's client
+                                        {
+                                            m_dEOBChargesDenied += dTempPRAmt;
+                                            break;
+                                        }
+                                        case "45": // patient libiality noncovered charges put on eob non covered patient responsibility 
+                                        {
+                                            m_dEOBPatLibNCovdCharges += dTempPRAmt;
+                                            break;
+                                        }
+
+                                        case "96": // 06/09/2008 wdk Patient non covered per Darlene see file 1749 05/23/2008 account D608890
+                                        {
+                                            // wdk 20130129 add to m_dEOBPatLibNCovdCharges also per Carol
+                                            m_dEOBPatLibNCovdCharges += dTempPRAmt;
+                                            m_dEOBChargesNCovd += dTempPRAmt;
+                                            break;
+                                        }
+                                        case "119": // 07/10/2008 wdk Patient non covered per Darlene see account D609295 in 080627MF.835
+                                        {
+                                            m_dEOBPatLibNCovdCharges += dTempPRAmt;
+                                            break;
+                                        }
+
+                                        case "B9": // 06/09/2008 wdk Denied per Darlene see file #1717 account CA2466273 
+                                        {
+                                            m_dEOBChargesDenied += dTempPRAmt; // Hospise???
+                                            break;
+                                        }
+                                        case "A7":
+                                        {
+                                            m_dEOBPatLibNCovdCharges += dTempPRAmt;
+                                            break;
+                                        }
+                                        default:
+                                        {
+                                            m_dEOBPatLibNCovdCharges += dTempPRAmt;
+                                            break;
+                                        }
+                                    }
+                                    //  AddRecordToDataGrid();
+                                }
+                                if (strSVCElements.GetUpperBound(0) == 6)
+                                {
+                                    // rgc/wdk 20090528 PR 2's may have an additional PR 1 (Deductible) or PR 3(CoPayment) in the same CAS
+                                    // see account CA2740441 in ..\\wthmclbill\shared\Billing\LIVE\Posting835Remit\MedicareRemit\Saved\090506my.835 
+                                    m_strarrRecordsInsert.SetValue(strSVCElements[1] + "/" + strSVCElements[5], (int)Col835Grids.eReason);
+                                    dTempPRAmt = decimal.Parse(strSVCElements[6]);
+                                    m_strarrRecordsInsert.SetValue("0.00", (int)Col835Grids.ePaid); // don't post 07/01/2008 rgc/wdk Have not seen a PR yet 
+                                    m_strarrRecordsInsert.SetValue("0.00", (int)Col835Grids.eCharges);
+                                    m_strarrRecordsInsert.SetValue("0.00", (int)Col835Grids.eContractualAdjAmt);
+                                    m_strarrRecordsInsert.SetValue(dTempPRAmt.ToString(), (int)Col835Grids.eOtherAdjAmt); //05/27/2008 eOtherAdjAmt is new 
+
+
+                                    switch (strSVCElements[5])
+                                    {
+                                        case "1": // patient liability coinsurance added 05/01/2008 wdk
+                                        {
+                                            m_dEOBPatLibCoInsurance += dTempPRAmt;
+                                            break;
+                                        }
+                                        case "2":  // patient liability coinsurance 05/21/2008 rgc/wdk
+                                        {
+                                            // Because the pat's responsibility is both in the allowed added to the CO's amount
+                                            // and the adjust amount add it to both for PR/2's. If required to be added together
+                                            // put that code in R_Eob printPageEvent Handler in MCL to add the two together.
+                                            m_dEOBPatLibCoInsurance += dTempPRAmt;
+                                            m_dtRecordWriteOff.Rows.Add(m_strarrRecordsInsert);
+                                            break;
+                                        }
+                                        case "26": // 07/10/2008 wdk does not have medicare
+                                        {
+                                            m_dEOBPatLibNCovdCharges += dTempPRAmt;
+                                            break;
+                                        }
+                                        case "31":    // Denied Not identified as the payor's client
+                                        {
+                                            m_dEOBChargesDenied += dTempPRAmt;
+                                            break;
+                                        }
+                                        case "45": // patient libiality noncovered charges put on eob non covered patient responsibility 
+                                        {
+                                            m_dEOBPatLibNCovdCharges += dTempPRAmt;
+                                            break;
+                                        }
+
+                                        case "96": // 06/09/2008 wdk Patient non covered per Darlene see file 1749 05/23/2008 account D608890
+                                        {
+                                            // wdk 20130129 add to m_dEOBPatLibNCovdCharges also per Carol
+                                            m_dEOBPatLibNCovdCharges += dTempPRAmt;
+                                            m_dEOBChargesNCovd += dTempPRAmt;
+                                            break;
+                                        }
+                                        case "119": // 07/10/2008 wdk Patient non covered per Darlene see account D609295 in 080627MF.835
+                                        {
+                                            m_dEOBPatLibNCovdCharges += dTempPRAmt;
+                                            break;
+                                        }
+
+                                        case "B9": // 06/09/2008 wdk Denied per Darlene see file #1717 account CA2466273 
+                                        {
+                                            m_dEOBChargesDenied += dTempPRAmt; // Hospise???
+                                            break;
+                                        }
+                                        default:
+                                        {
+                                            m_dEOBPatLibNCovdCharges += dTempPRAmt;
+                                            break;
+                                        }
+                                    }
+                                    AddRecordToDataGrid();
+                                }
+
+                                m_strarrRecordsInsert.SetValue(strSVCElements[1] + "/" + strSVCElements[2], (int)Col835Grids.eReason);
+                                dTempPRAmt = decimal.Parse(strSVCElements[3]);
+                                m_strarrRecordsInsert.SetValue("0.00", (int)Col835Grids.ePaid); // don't post 07/01/2008 rgc/wdk Have not seen a PR yet 
+                                m_strarrRecordsInsert.SetValue("0.00", (int)Col835Grids.eCharges);
+                                m_strarrRecordsInsert.SetValue("0.00", (int)Col835Grids.eContractualAdjAmt);
+                                m_strarrRecordsInsert.SetValue(dTempPRAmt.ToString(), (int)Col835Grids.eOtherAdjAmt); //05/27/2008 eOtherAdjAmt is new 
+
+                                switch (strSVCElements[2])
+                                {
+                                    case "0": // wdk 20130129 patient libiality noncovered charges put on eob non covered patient responsibility 
+                                    {
+                                        m_dEOBPatLibNCovdCharges += dTempPRAmt;
+                                        break;
+                                    }
+                                    case "1": // patient liability coinsurance added 05/01/2008 wdk
+                                    {
+                                        m_dEOBPatLibCoInsurance += dTempPRAmt;
+                                        break;
+                                    }
+                                    case "2":  // patient liability coinsurance 05/21/2008 rgc/wdk
+                                    {
+                                        // Because the pat's responsibility is both in the allowed added to the CO's amount
+                                        // and the adjust amount add it to both for PR/2's. If required to be added together
+                                        // put that code in R_Eob printPageEvent Handler in MCL to add the two together.
+                                        //   m_dEOBPatLibCoInsurance += dTempPRAmt; wdk 20131114 removed as it is doubling the EOB Amount
+                                        break;
+                                    }
+                                    case "26": // 07/10/2008 wdk does not have medicare
+                                    {
+                                        m_dEOBPatLibNCovdCharges += dTempPRAmt;
+                                        break;
+                                    }
+                                    case "31":    // Denied Not identified as the payor's client
+                                    {
+                                        m_dEOBChargesDenied += dTempPRAmt;
+                                        break;
+                                    }
+                                    case "45": // patient libiality noncovered charges put on eob non covered patient responsibility 
+                                    {
+                                        m_dEOBPatLibNCovdCharges += dTempPRAmt;
+                                        break;
+                                    }
+                                    case "96": // 06/09/2008 wdk Patient non covered per Darlene see file 1749 05/23/2008 account D608890
+                                    {
+                                        //m_dEOBChargesNCovd += dTempPRAmt; // wdk 20140528 removed per Carols request
+                                        m_dEOBPatLibNCovdCharges += dTempPRAmt; // wdk 20140528 added per Carols request
+                                        break;
+                                    }
+                                    case "119": // 07/10/2008 wdk Patient non covered per Darlene see account D609295 in 080627MF.835
+                                    {
+                                        m_dEOBPatLibNCovdCharges += dTempPRAmt;
+                                        break;
+                                    }
+
+                                    case "B9": // 06/09/2008 wdk Denied per Darlene see file #1717 account CA2466273 
+                                    {
+                                        m_dEOBChargesDenied += dTempPRAmt; // Hospise???
+                                        break;
+                                    }
+                                    default:
+                                    {
+                                        m_dEOBPatLibNCovdCharges += dTempPRAmt;
+                                        break;
+                                    }
+                                }
+
+                                break;
+                            }
+                            #endregion PR
+
+                            #region PC Patient Credit
+                            case "PC": // may be patient credit
+                            {
+                                // payment data: pat Refund
+                                m_dEOBPayDataPatRefund += dTempAmtPaid;
+                                break;
+                            }
+                            #endregion PC
+
+                            #region PI Payor Initiated Reductions
+                            case "PI":
+                            {
+                                m_dPayorInitiatedReductions += decimal.Parse(strSVCElements[3]);
+                                /////
+
+                                decimal dTempPIAmt = decimal.Parse(strSVCElements[3]);
+                                dTempAmtPaid += dTempPIAmt;
+                                m_strarrRecordsInsert.SetValue(dTempAmtPaid.ToString(), (int)Col835Grids.ePaid); // don't post 07/01/2008 rgc/wdk Have not seen a PR yet 
+                                                                                                                 //m_strarrRecordsInsert.SetValue("0.00", (int)col835Grids.eCharges);
+                                                                                                                 //m_strarrRecordsInsert.SetValue("0.00", (int)col835Grids.eContractualAdjAmt);
+                                m_strarrRecordsInsert.SetValue(dTempPIAmt.ToString(), (int)Col835Grids.eOtherAdjAmt); //05/27/2008 eOtherAdjAmt is new 
+
+                                break;
+                            }
+                            #endregion PI
+
                         }
+
+                        // add the CAS to the DataSet/DataGrid
+                        AddRecordToDataGrid();
+                        break;
+                    }
                     #endregion CAS
 
-                    #region REF Reference line
-                    //case "REF": // REF's with a 1S appear on the EOB's we have from Billing as APC# 00343 with a stat of /X'
-                    //    {
-                    //        if (strSVCElements[1] == "1S") // 07/10/2008 wdk changed from strSVCElements[2] to strSVCElements[1]
-                    //        {
-                    //            //UpdateDataTableRecord(tc835.SelectedIndex, (int)col835Grids.eAPC, strSVCElements[2]);
-                    //            //m_strarrRecordsInsert.SetValue(strSVCElements[2], (int)col835Grids.eAPC); // 07/10/2008 wdk too late already added to the dataset 
-                    //            //m_strarrRecordsInsert.SetValue("X", (int)col835Grids.eStat); // 05/21/2008 rgc/wdk don't know when to set the "X" programattically
-                    //        }
-                    //        break;
-                    //    }
-                    #endregion REF
 
                     #region AMT
                     case "AMT":
+                    {
+                        if (strSVCElements[1] == "NE") // from a TLC file
                         {
-                            if (strSVCElements[1] == "NE") // from a TLC file
-                            {
-                                m_dEOBChargesDenied += Decimal.Parse(strSVCElements[2]);
-                            }
-                            break;
+                            m_dEOBChargesDenied += Decimal.Parse(strSVCElements[2]);
                         }
-                        #endregion AMT
+                        break;
+                    }
+                    #endregion AMT
 
                 } // end of switch (strSVCElements[0])
 
@@ -3197,557 +2764,14 @@ namespace LabBilling.Legacy
                 m_strarrRecordsInsert.SetValue(dTempAmtPaid.ToString(), (int)Col835Grids.ePaid);
                 m_strarrRecordsInsert.SetValue(dTempAmtPaid.ToString(), (int)Col835Grids.eAllowed);
                 m_strarrRecordsInsert.SetValue("0.00", (int)Col835Grids.eOtherAdjAmt);
-                // string[] strNoFail = new string[10];
-                // strSVCElements.CopyTo(strNoFail, 0);
-                //switch (strSVCElements[1])
-                //{ 
-                //    #region CO Contractual processing
-                //    case "CO":
-                //        {
-                //            //m_strarrRecordsInsert.SetValue(strSVCElements[2].ToString(), (int)col835Grids.eClaimAdjCode);
-                //            switch (strSVCElements[2])
-                //            {
-                //                /* wdk 20130724 added  223 Adjustment code for mandated federal, state or local law/regulation that is not already covered by another code and is mandated before a new code can be created.*/
-                //                case "253": // wdk 20140121 Sequestration - reduction in federal spending 
-                //                    {
-                //                        //dTempAmtContractual = Decimal.Negate(dTempAmtContractual);
-                //                        m_dEOBPayDataContAdjAmt += dTempAmtContractual;
-                //                        m_strarrRecordsInsert.SetValue(dTempAmtContractual.ToString(), (int)col835Grids.eContractualAdjAmt);
-                //                        break;
 
-                //                    }
-                //                case "223":
-                //                    {
-                //                        dTempAmtContractual = Decimal.Negate(dTempAmtContractual);
-                //                        m_dEOBPayDataContAdjAmt += dTempAmtContractual;
-                //                        m_strarrRecordsInsert.SetValue(dTempAmtContractual.ToString(), (int)col835Grids.eContractualAdjAmt);
-                //                        break;
-
-                //                    }
-                //                case "26": // 04/25/2008 wdk TLC Expenses incurred prior to coverage.??
-                //                    {
-                //                        dTempAmtContractual = Decimal.Negate(dTempAmtContractual);
-                //                        m_dEOBPayDataContAdjAmt += dTempAmtContractual;
-                //                        m_strarrRecordsInsert.SetValue(dTempAmtContractual.ToString(), (int)col835Grids.eContractualAdjAmt);
-                //                        break;
-                //                    }
-                //                //case "18": // 07/29/2008 wdk added per Carol per Darlene 
-                //                case "45": // contractual obligation amount
-                //                    {
-                //                        m_dEOBPayDataContAdjAmt += dTempAmtContractual;
-                //                        m_strarrRecordsInsert.SetValue(dTempAmtContractual.ToString(), (int)col835Grids.eContractualAdjAmt);
-                //                        break;
-                //                    }
-                //                case "18": // wdk 20130731 moved here to handle the GZ modifiers
-                //                    {
-                //                        if (m_strarrRecordsInsert.GetValue((int)col835Grids.eCPT4Code).ToString().Contains("GZ"))
-                //                        {
-                //                            m_dChargesWriteOffGZ += dTempAmtContractual;
-                //                            m_strarrRecordsInsert.SetValue(dTempAmtContractual.ToString(), (int)col835Grids.eWriteOffAmt);
-                //                            m_strarrRecordsInsert.SetValue("200", (int)col835Grids.eWriteOffCode);
-                //                            m_strarrRecordsInsert.SetValue(DateTime.Now.ToShortDateString(), (int)col835Grids.eWriteOffDate);
-                //                        }
-                //                        else
-                //                        {
-                //                            m_dEOBPayDataContAdjAmt += dTempAmtContractual;
-                //                            m_strarrRecordsInsert.SetValue(dTempAmtContractual.ToString(), (int)col835Grids.eContractualAdjAmt);
-                //                        }
-                //                        break;
-                //                    }
-                //                case "50":
-                //                    {
-                //                        if (m_strarrRecordsInsert.GetValue((int)col835Grids.eCPT4Code).ToString().Contains("GZ"))
-                //                        {
-                //                            m_dChargesWriteOffGZ += dTempAmtContractual;
-                //                            m_strarrRecordsInsert.SetValue(dTempAmtContractual.ToString(), (int)col835Grids.eWriteOffAmt);
-                //                            m_strarrRecordsInsert.SetValue("200", (int)col835Grids.eWriteOffCode);
-                //                            m_strarrRecordsInsert.SetValue(DateTime.Now.ToShortDateString(), (int)col835Grids.eWriteOffDate);
-                //                         //   dgvProcessed.Columns[(int)col835Grids.eWriteOffDate].Visible = true;
-                //                         //   dgvProcessed.Columns[(int)col835Grids.eWriteOffCode].Visible = true;
-
-                //                            //m_dicBandProcessed.Add(dgvProcessed.Name, dgvProcessed.Columns[(int)col835Grids.eWriteOffDate]);
-                //                            //m_dicBandProcessed.Add(dgvProcessed.Name, dgvProcessed.Columns[(int)col835Grids.eWriteOffCode]);
-
-                //                        }
-                //                        else
-                //                        {
-                //                            m_strarrRecordsInsert.SetValue(dTempAmtContractual.ToString(), (int)col835Grids.eWriteOffAmt);
-                //                        }
-                //                        break;
-                //                    }
-                //                case "60": //Charges for outpatient services with this proximity to inpatient services are not covered.                                               //{ removed 07/10/2008 wdk                                                 //    m_dEOBChargesNCovd += dTempAmtContractual;                                                //    break;                                                //}
-                //                case "96":  //96 can be on both the CO and the OA in the CAS which means NONCOVERED in both places.
-                //                    {
-                //                        // eob's charges : non covered charges // don't add to contractual add to non covered
-                //                        m_dEOBChargesNCovd += dTempAmtContractual;
-                //                        m_strarrRecordsInsert.SetValue(dTempAmtContractual.ToString(), (int)col835Grids.eContractualAdjAmt);
-                //                        break;
-                //                    }
-                //                case "147": // 04/25/2008 wdk TLC Provider contracted/negotiated rate expired or not on file.??
-                //                    {
-                //                        dTempAmtContractual = Decimal.Negate(dTempAmtContractual);
-                //                        m_dEOBPayDataContAdjAmt += dTempAmtContractual;
-                //                        m_strarrRecordsInsert.SetValue(dTempAmtContractual.ToString(), (int)col835Grids.eContractualAdjAmt);
-                //                        break;
-                //                    }
-                //                case "A2": // for TLC CAS*CO*A2's seem to be negative amounts ie -17.49 All we saw with a partial search of file 626010402_20080324_09235.835
-                //                    {
-                //                        dTempAmtContractual = Decimal.Negate(dTempAmtContractual);
-                //                        m_dEOBPayDataContAdjAmt += dTempAmtContractual;
-                //                        m_strarrRecordsInsert.SetValue(dTempAmtContractual.ToString(), (int)col835Grids.eContractualAdjAmt);
-                //                        break;
-                //                    }
-
-                //                #region Denied Codes
-                //                case "13": // 06/30/2008 wdk added here per Darlene
-                //             //   case "18": // 06/30/2008 wdk added here per Darlene // 07/29/2008 wdk per darlene this is the same as a 45
-                //                case "24": // 06/30/2008 wdk added here per Darlene
-                //                case "125": // 07/10/2008 wdk added here per Darlene
-                //                case "B9": //Services not covered because the patient is enrolled in a Hospice. This change to be effective 4/1/2008: Patient is enrolled in a Hospice.
-                //                case "B15": // 06/30/2008 wdk added here per Darlene
-                //                    {
-                //                        m_dEOBChargesDenied += dTempAmtContractual;
-                //                        m_strarrRecordsInsert.SetValue(dTempAmtContractual.ToString(), (int)col835Grids.eContractualAdjAmt); // 07/29/2008 wdk should this be here???
-                //                        break;
-                //                    }
-
-                //                #endregion Denied Codes
-                //            }
-                //            if (string.IsNullOrEmpty(strNoFail[5]))
-                //            {
-                //                break;
-                //            }
-                //            m_strarrRecordsInsert.CopyTo(m_strarrRecordsInsertAddContractual,0);
-                //            m_strarrRecordsInsertAddContractual.SetValue("0.00", (int)col835Grids.eCharges);
-                //            m_strarrRecordsInsertAddContractual.SetValue("0.00", (int)col835Grids.ePaid);
-                //            m_strarrRecordsInsertAddContractual.SetValue("0.00", (int)col835Grids.eAllowed);
-                //            m_strarrRecordsInsertAddContractual.SetValue("0.00", (int)col835Grids.eOtherAdjAmt);
-                //            m_strarrRecordsInsertAddContractual.SetValue(strNoFail[1] + "/" + strNoFail[5], (int)col835Grids.eReason);
-                //            switch (strNoFail[5])
-                //            {
-                //               /* wdk 20130724 added  223 Adjustment code for mandated federal, state or local law/regulation that is not already covered by another code and is mandated before a new code can be created.*/
-                //                case "253": //wdk 20140121 added 
-                //                case "223":
-                //                    {
-                //                        dTempAmtContractual = decimal.Parse(strNoFail[6]);
-                //                        //dTempAmtContractual = Decimal.Negate(dTempAmtContractual);
-                //                        m_dEOBPayDataContAdjAmt += dTempAmtContractual;
-                //                        m_strarrRecordsInsertAddContractual.SetValue(dTempAmtContractual.ToString(), (int)col835Grids.eContractualAdjAmt);
-                //                        break;
-
-                //                    }
-                //                case "26": // 04/25/2008 wdk TLC Expenses incurred prior to coverage.??
-                //                    {
-                //                        dTempAmtContractual = decimal.Parse(strNoFail[6]);
-                //                        //dTempAmtContractual = Decimal.Negate(dTempAmtContractual);
-                //                        m_dEOBPayDataContAdjAmt += dTempAmtContractual;
-                //                        m_strarrRecordsInsertAddContractual.SetValue(dTempAmtContractual.ToString(), (int)col835Grids.eContractualAdjAmt);
-                //                        break;
-                //                    }
-                //                case "18": // 07/29/2008 wdk added per Carol per Darlene 
-                //                case "45": // contractual obligation amount
-                //                    {
-                //                        dTempAmtContractual = decimal.Parse(strNoFail[6]);
-                //                        m_dEOBPayDataContAdjAmt += dTempAmtContractual;
-                //                        m_strarrRecordsInsertAddContractual.SetValue(dTempAmtContractual.ToString(), (int)col835Grids.eContractualAdjAmt);
-                //                        break;
-                //                    }
-                //                case "60": //Charges for outpatient services with this proximity to inpatient services are not covered.                                               //{ removed 07/10/2008 wdk                                                 //    m_dEOBChargesNCovd += dTempAmtContractual;                                                //    break;                                                //}
-                //                case "96":  //96 can be on both the CO and the OA in the CAS which means NONCOVERED in both places.
-                //                    {
-                //                        // eob's charges : non covered charges // don't add to contractual add to non covered
-                //                        dTempAmtContractual = decimal.Parse(strNoFail[6]);
-                //                        m_dEOBChargesNCovd += dTempAmtContractual;
-                //                        m_strarrRecordsInsertAddContractual.SetValue(dTempAmtContractual.ToString(), (int)col835Grids.eContractualAdjAmt);
-                //                        break;
-                //                    }
-                //                case "147": // 04/25/2008 wdk TLC Provider contracted/negotiated rate expired or not on file.??
-                //                    {
-                //                        dTempAmtContractual = decimal.Parse(strNoFail[6]);
-                //                        //dTempAmtContractual = Decimal.Negate(dTempAmtContractual);
-                //                        m_dEOBPayDataContAdjAmt += dTempAmtContractual;
-                //                        m_strarrRecordsInsertAddContractual.SetValue(dTempAmtContractual.ToString(), (int)col835Grids.eContractualAdjAmt);
-                //                        break;
-                //                    }
-                //                case "A2": // for TLC CAS*CO*A2's seem to be negative amounts ie -17.49 All we saw with a partial search of file 626010402_20080324_09235.835
-                //                    {
-                //                        dTempAmtContractual = decimal.Parse(strNoFail[6]);
-                //                        //dTempAmtContractual = Decimal.Negate(dTempAmtContractual);
-                //                        m_dEOBPayDataContAdjAmt += dTempAmtContractual;
-                //                        m_strarrRecordsInsertAddContractual.SetValue(dTempAmtContractual.ToString(), (int)col835Grids.eContractualAdjAmt);
-                //                        break;
-                //                    }
-
-                //                #region Denied Codes
-                //                case "13": // 06/30/2008 wdk added here per Darlene
-                //             //   case "18": // 06/30/2008 wdk added here per Darlene // 07/29/2008 wdk per darlene this is the same as a 45
-                //                case "24": // 06/30/2008 wdk added here per Darlene
-                //                case "125": // 07/10/2008 wdk added here per Darlene
-                //                case "B9": //Services not covered because the patient is enrolled in a Hospice. This change to be effective 4/1/2008: Patient is enrolled in a Hospice.
-                //                case "B15": // 06/30/2008 wdk added here per Darlene
-                //                    {
-                //                        dTempAmtContractual = decimal.Parse(strNoFail[6]);
-                //                        m_dEOBChargesDenied += dTempAmtContractual;
-                //                        m_strarrRecordsInsertAddContractual.SetValue(dTempAmtContractual.ToString(), (int)col835Grids.eContractualAdjAmt); // 07/29/2008 wdk should this be here???
-                //                        break;
-                //                    }
-
-                //                #endregion Denied Codes
-                //            }
-                //            break;
-                //        }
-                //    #endregion CO
-
-                //    #region CR Credit Processing
-
-                //    // CAS*CR*2*-5.56**45*-48.09~
-                //    //      CAS01 = CR
-                //    //      CAS02 = 2 (Coinsurance Amount) taken from Reason code table
-                //    //      CAS03 = -5.56 (for this account we wrote this off)
-                //    //      CAS04 = "" blank
-                //    //      CAS05 = 45 (percent)
-                //    //      CAS06 is the contractual
-
-                //    case "CR": // 04/21/2008 wdk for medicare takebacks status = 22
-                //        {
-                //            m_strarrRecordsInsert.SetValue(dTempAmtPaid.ToString(), (int)col835Grids.eContractualAdjAmt);
-                //            //Payment adjusted because this care may be covered by another payer per coordination of benefits. 
-                //            //This change to be effective 4/1/2008: This care may be covered by another payer per coordination of benefits.
-                //            switch (strSVCElements[2])
-                //            {
-                //                case "22":
-                //                    {
-                //                        m_dEOBChargesDenied += dTempAmtPaid;
-                //                        break;
-                //                    }
-                //                case "45": //file 080409MF.835 has negative contractuals for C2463470
-                //                    {
-                //                        m_strarrRecordsInsert.SetValue(dTempAmtPaid.ToString(), (int)col835Grids.eContractualAdjAmt);
-                //                        m_dEOBPayDataContAdjAmt += dTempAmtPaid; // 06/09/2008 wdk added see "CA2491257" in file #1717 on bill cycle 03/31/20089
-                //                        break;
-                //                     }
-                //                case "119": // 04/21/2008 wdk for take back from Medicare Previously denied refiled then paid plus this Credit
-                //                     {
-                //                        m_dEOBChargesDenied += dTempAmtPaid;
-                //                        break;
-                //                     }
-                //                case "2": // 04/21/2008 wdk for refunds from Medicare
-                //                     {
-                //                        decimal dTempEOBAmt = decimal.Parse(strSVCElements[6]);
-                //                        m_dEOBPayDataContAdjAmt += dTempEOBAmt;
-                //                        break;
-                //                      }
-                //                default:
-                //                     {
-                //                         m_ERR.m_Logfile.WriteLogFile(string.Format("CR Default handler for {0} not completed.\r\nAccount:{1}\r\nFile: {2}",
-                //                                strSVCElements[2], m_strarrEOBInsert.GetValue((int)col835EOB.Account), tbFileName.Tag.ToString()));
-                //                         break;
-                //                     }
-                //            }
-
-                //            if (rtbCheckSource.Text.IndexOf("TLC") > -1) // 04/08/2008 rgc/wdk needs to be tested.
-                //            {
-                //                m_dEOBPayDataContAdjAmt = Decimal.Negate(m_dEOBPayDataContAdjAmt);
-                //            }
-                //            break;
-                //        }
-                //    #endregion CR Credit Processing
-
-                //    #region OA Other Adjustments
-                //    case "OA": // don't add to contractual
-                //        {
-                //            //dTempAmt = decimal.Parse(strSVCElements[2]);
-                //            // 06/10/2008 the below lines moved from case 23: below.
-                //            m_strarrRecordsInsert.SetValue("0.00", (int)col835Grids.eAllowed);
-                //            m_strarrRecordsInsert.SetValue("0.00", (int)col835Grids.eCharges);
-                //            m_strarrRecordsInsert.SetValue("0.00", (int)col835Grids.ePaid); // don't post OA's because the SVC line dictates the amount paid
-                //            m_strarrRecordsInsert.SetValue("0.00", (int)col835Grids.eContractualAdjAmt);
-                //            m_strarrRecordsInsert.SetValue(dTempAmtContractual.ToString(), (int)col835Grids.eOtherAdjAmt);
-                //            // 06/10/2008 rgc/wdk converted if's to switch for scalibility.
-                //            switch (strSVCElements[2])
-                //            {
-                //                case "23":  // TLC other insurance 04/16/2008 wdk //04/21/2008 wdk Medicare has it also. // 05/27/2008 rgc/wdk MSP Prim Pay() from file #1727 account ca2480693
-                //                    {
-                //                        m_dEOBPayDataMSPPrimPay += dTempAmtContractual;
-                //                        break;
-                //                    }
-                //                case "96":
-                //                    {
-                //                        // put on eob non covered 
-                //                        m_dEOBChargesNCovd += dTempAmtContractual;
-                //                        break;
-                //                    }
-                //            }
-                //            break;
-                //        }
-                //    #endregion 0A
-
-                //    #region PR Patient Responsiblity
-
-                //    // rgc/wdk 20090528 PR 2's may have an additional PR 1 (Deductible) or PR 3(CoPayment) in the same CAS
-                //    // see account CA2740441 in ..\\wthmclbill\shared\Billing\LIVE\Posting835Remit\MedicareRemit\Saved\090506my.835 
-
-                //    case "PR":  // don't add to contractual
-                //        {
-                //            decimal dTempPRAmt = 0.00M;// decimal.Parse(strSVCElements[3]);
-                //            m_strarrRecordsInsert.SetValue("0.00", (int)col835Grids.ePaid); // don't post 07/01/2008 rgc/wdk Have not seen a PR yet 
-                //            m_strarrRecordsInsert.SetValue("0.00", (int)col835Grids.eCharges);
-                //            m_strarrRecordsInsert.SetValue("0.00", (int)col835Grids.eContractualAdjAmt);
-                //            m_strarrRecordsInsert.SetValue(dTempPRAmt.ToString(), (int)col835Grids.eOtherAdjAmt); //05/27/2008 eOtherAdjAmt is new 
-                //            if (strSVCElements.GetUpperBound(0) == 3)
-                //            {
-                //                // rgc/wdk 20090528 PR 2's may have an additional PR 1 (Deductible) or PR 3(CoPayment) in the same CAS
-                //                // see account CA2740441 in ...\\wthmclbill\shared\Billing\LIVE\Posting835Remit\MedicareRemit\Saved\090506my.835 
-                //                m_strarrRecordsInsert.SetValue(strSVCElements[1] + "/" + strSVCElements[2], (int)col835Grids.eReason);
-                //                dTempPRAmt = decimal.Parse(strSVCElements[3]);
-                //                m_strarrRecordsInsert.SetValue("0.00", (int)col835Grids.ePaid); // don't post 07/01/2008 rgc/wdk Have not seen a PR yet 
-                //                m_strarrRecordsInsert.SetValue("0.00", (int)col835Grids.eCharges);
-                //                m_strarrRecordsInsert.SetValue("0.00", (int)col835Grids.eContractualAdjAmt);
-                //                m_strarrRecordsInsert.SetValue(dTempPRAmt.ToString(), (int)col835Grids.eOtherAdjAmt); //05/27/2008 eOtherAdjAmt is new 
-
-
-                //                switch (strSVCElements[2])
-                //                {
-                //                    case "1": // patient liability coinsurance added 05/01/2008 wdk
-                //                        {
-                //                            m_dEOBPatLibCoInsurance += dTempPRAmt;
-                //                            break;
-                //                        }
-                //                    case "2":  // patient liability coinsurance 05/21/2008 rgc/wdk
-                //                        {
-                //                            // Because the pat's responsibility is both in the allowed added to the CO's amount
-                //                            // and the adjust amount add it to both for PR/2's. If required to be added together
-                //                            // put that code in R_Eob printPageEvent Handler in MCL to add the two together.
-                //                            m_dEOBPatLibCoInsurance += dTempPRAmt;
-                //                            m_dtRecordWriteOff.Rows.Add(m_strarrRecordsInsert);
-                //                            break;
-                //                        }
-                //                    case "26": // 07/10/2008 wdk does not have medicare
-                //                        {
-                //                            m_dEOBPatLibNCovdCharges += dTempPRAmt;
-                //                            break;
-                //                        }
-                //                    case "31":    // Denied Not identified as the payor's client
-                //                        {
-                //                            m_dEOBChargesDenied += dTempPRAmt;
-                //                            break;
-                //                        }
-                //                    case "45": // patient libiality noncovered charges put on eob non covered patient responsibility 
-                //                        {
-                //                            m_dEOBPatLibNCovdCharges += dTempPRAmt;
-                //                            break;
-                //                        }
-
-                //                    case "96": // 06/09/2008 wdk Patient non covered per Darlene see file 1749 05/23/2008 account D608890
-                //                        {
-                //                            // wdk 20130129 add to m_dEOBPatLibNCovdCharges also per Carol
-                //                            m_dEOBPatLibNCovdCharges += dTempPRAmt;
-                //                            m_dEOBChargesNCovd += dTempPRAmt;
-                //                            break;
-                //                        }
-                //                    case "119": // 07/10/2008 wdk Patient non covered per Darlene see account D609295 in 080627MF.835
-                //                        {
-                //                            m_dEOBPatLibNCovdCharges += dTempPRAmt;
-                //                            break;
-                //                        }
-
-                //                    case "B9": // 06/09/2008 wdk Denied per Darlene see file #1717 account CA2466273 
-                //                        {
-                //                            m_dEOBChargesDenied += dTempPRAmt; // Hospise???
-                //                            break;
-                //                        }
-                //                    case "A7":
-                //                        {
-                //                            m_dEOBPatLibNCovdCharges += dTempPRAmt;
-                //                            break;
-                //                        }
-                //                    default:
-                //                        {
-                //                            m_dEOBPatLibNCovdCharges += dTempPRAmt;
-                //                            break;
-                //                        }
-                //                }
-                //              //  AddRecordToDataGrid();
-                //            }
-                //            if (strSVCElements.GetUpperBound(0) == 6)
-                //            {
-                //                // rgc/wdk 20090528 PR 2's may have an additional PR 1 (Deductible) or PR 3(CoPayment) in the same CAS
-                //                // see account CA2740441 in ...\\wthmclbill\shared\Billing\LIVE\Posting835Remit\MedicareRemit\Saved\090506my.835 
-                //                m_strarrRecordsInsert.SetValue(strSVCElements[1] + "/" + strSVCElements[5], (int)col835Grids.eReason);
-                //                dTempPRAmt = decimal.Parse(strSVCElements[6]);
-                //                m_strarrRecordsInsert.SetValue("0.00", (int)col835Grids.ePaid); // don't post 07/01/2008 rgc/wdk Have not seen a PR yet 
-                //                m_strarrRecordsInsert.SetValue("0.00", (int)col835Grids.eCharges);
-                //                m_strarrRecordsInsert.SetValue("0.00", (int)col835Grids.eContractualAdjAmt);
-                //                m_strarrRecordsInsert.SetValue(dTempPRAmt.ToString(), (int)col835Grids.eOtherAdjAmt); //05/27/2008 eOtherAdjAmt is new 
-
-
-                //                switch (strSVCElements[5])
-                //                {
-                //                    case "1": // patient liability coinsurance added 05/01/2008 wdk
-                //                        {
-                //                            m_dEOBPatLibCoInsurance += dTempPRAmt;
-                //                            break;
-                //                        }
-                //                    case "2":  // patient liability coinsurance 05/21/2008 rgc/wdk
-                //                        {
-                //                            // Because the pat's responsibility is both in the allowed added to the CO's amount
-                //                            // and the adjust amount add it to both for PR/2's. If required to be added together
-                //                            // put that code in R_Eob printPageEvent Handler in MCL to add the two together.
-                //                            m_dEOBPatLibCoInsurance += dTempPRAmt;
-                //                            m_dtRecordWriteOff.Rows.Add(m_strarrRecordsInsert);
-                //                            break;
-                //                        }
-                //                    case "26": // 07/10/2008 wdk does not have medicare
-                //                        {
-                //                            m_dEOBPatLibNCovdCharges += dTempPRAmt;
-                //                            break;
-                //                        }
-                //                    case "31":    // Denied Not identified as the payor's client
-                //                        {
-                //                            m_dEOBChargesDenied += dTempPRAmt;
-                //                            break;
-                //                        }
-                //                    case "45": // patient libiality noncovered charges put on eob non covered patient responsibility 
-                //                        {
-                //                            m_dEOBPatLibNCovdCharges += dTempPRAmt;
-                //                            break;
-                //                        }
-
-                //                    case "96": // 06/09/2008 wdk Patient non covered per Darlene see file 1749 05/23/2008 account D608890
-                //                        {
-                //                            // wdk 20130129 add to m_dEOBPatLibNCovdCharges also per Carol
-                //                            m_dEOBPatLibNCovdCharges += dTempPRAmt;
-                //                            m_dEOBChargesNCovd += dTempPRAmt;
-                //                            break;
-                //                        }
-                //                    case "119": // 07/10/2008 wdk Patient non covered per Darlene see account D609295 in 080627MF.835
-                //                        {
-                //                            m_dEOBPatLibNCovdCharges += dTempPRAmt;
-                //                            break;
-                //                        }
-
-                //                    case "B9": // 06/09/2008 wdk Denied per Darlene see file #1717 account CA2466273 
-                //                        {
-                //                            m_dEOBChargesDenied += dTempPRAmt; // Hospise???
-                //                            break;
-                //                        }
-                //                    default:
-                //                        {
-                //                            m_dEOBPatLibNCovdCharges += dTempPRAmt;
-                //                            break;
-                //                        }
-                //                }
-                //                AddRecordToDataGrid();
-                //            }
-
-                //            m_strarrRecordsInsert.SetValue(strSVCElements[1] + "/" + strSVCElements[2], (int)col835Grids.eReason);
-                //            dTempPRAmt = decimal.Parse(strSVCElements[3]);
-                //            m_strarrRecordsInsert.SetValue("0.00", (int)col835Grids.ePaid); // don't post 07/01/2008 rgc/wdk Have not seen a PR yet 
-                //            m_strarrRecordsInsert.SetValue("0.00", (int)col835Grids.eCharges);
-                //            m_strarrRecordsInsert.SetValue("0.00", (int)col835Grids.eContractualAdjAmt);
-                //            m_strarrRecordsInsert.SetValue(dTempPRAmt.ToString(), (int)col835Grids.eOtherAdjAmt); //05/27/2008 eOtherAdjAmt is new 
-
-                //            switch (strSVCElements[2])
-                //            {
-                //                case "0": // wdk 20130129 patient libiality noncovered charges put on eob non covered patient responsibility 
-                //                    {
-                //                        m_dEOBPatLibNCovdCharges += dTempPRAmt;
-                //                        break;
-                //                    }
-                //                case "1": // patient liability coinsurance added 05/01/2008 wdk
-                //                    {
-                //                        m_dEOBPatLibCoInsurance += dTempPRAmt;
-                //                        break;
-                //                    }
-                //                case "2":  // patient liability coinsurance 05/21/2008 rgc/wdk
-                //                    {
-                //                        // Because the pat's responsibility is both in the allowed added to the CO's amount
-                //                        // and the adjust amount add it to both for PR/2's. If required to be added together
-                //                        // put that code in R_Eob printPageEvent Handler in MCL to add the two together.
-                //                     //   m_dEOBPatLibCoInsurance += dTempPRAmt; wdk 20131114 removed as it is doubling the EOB Amount
-                //                        break;
-                //                    }
-                //                case "26": // 07/10/2008 wdk does not have medicare
-                //                    {
-                //                        m_dEOBPatLibNCovdCharges += dTempPRAmt;
-                //                        break;
-                //                    }
-                //                case "31":    // Denied Not identified as the payor's client
-                //                    {
-                //                        m_dEOBChargesDenied += dTempPRAmt;
-                //                        break;
-                //                    }
-                //                case "45": // patient libiality noncovered charges put on eob non covered patient responsibility 
-                //                    {
-                //                        m_dEOBPatLibNCovdCharges += dTempPRAmt;
-                //                        break;
-                //                    }
-                //                case "96": // 06/09/2008 wdk Patient non covered per Darlene see file 1749 05/23/2008 account D608890
-                //                    {
-                //                        //m_dEOBChargesNCovd += dTempPRAmt; // wdk 20140528 removed per Carols request
-                //                        m_dEOBPatLibNCovdCharges += dTempPRAmt; // wdk 20140528 added per Carols request
-                //                        break;
-                //                    }
-                //                case "119": // 07/10/2008 wdk Patient non covered per Darlene see account D609295 in 080627MF.835
-                //                    {
-                //                        m_dEOBPatLibNCovdCharges += dTempPRAmt;
-                //                        break;
-                //                    }
-
-                //                case "B9": // 06/09/2008 wdk Denied per Darlene see file #1717 account CA2466273 
-                //                    {
-                //                        m_dEOBChargesDenied += dTempPRAmt; // Hospise???
-                //                        break;
-                //                    }
-                //                default:
-                //                    {
-                //                        m_dEOBPatLibNCovdCharges += dTempPRAmt;
-                //                        break;
-                //                    }
-                //            }
-
-                //            break;
-                //        }
-                //    #endregion PR
-
-                //    #region PC Patient Credit
-                //    case "PC": // may be patient credit
-                //        {
-                //            // payment data: pat Refund
-                //            m_dEOBPayDataPatRefund += dTempAmtPaid;
-                //            break;
-                //        }
-                //    #endregion PC
-
-                //    #region PI Payor Initiated Reductions
-                //    case "PI":
-                //        { 
-                //            m_dPayorInitiatedReductions += decimal.Parse(strSVCElements[3]);
-                //            /////
-
-                //            decimal dTempPIAmt = decimal.Parse(strSVCElements[3]);
-                //            dTempAmtPaid += dTempPIAmt;
-                //            m_strarrRecordsInsert.SetValue(dTempAmtPaid.ToString(), (int)col835Grids.ePaid); // don't post 07/01/2008 rgc/wdk Have not seen a PR yet 
-                //            //m_strarrRecordsInsert.SetValue("0.00", (int)col835Grids.eCharges);
-                //            //m_strarrRecordsInsert.SetValue("0.00", (int)col835Grids.eContractualAdjAmt);
-                //            m_strarrRecordsInsert.SetValue(dTempPIAmt.ToString(), (int)col835Grids.eOtherAdjAmt); //05/27/2008 eOtherAdjAmt is new 
-
-                //            break;
-                //        }
-                //    #endregion PI
-
-                //}
 
                 // add the CAS to the DataSet/DataGrid
                 AddRecordToDataGrid();
                 //    break;
 
                 #endregion CAS
-
-
             }
-            //         bool bContainsCAS = strSVC.Contains("~CAS*"); // 06/23/2008 wdk If no CAS element they paid full amount of charge
-
 
             foreach (string strSVCLine in strPayLine)
             {
@@ -3756,31 +2780,20 @@ namespace LabBilling.Legacy
 
                 switch (strSVCElements[0].Substring(0, strSVCElements[0].Length <= 2 ? strSVCElements[0].Length : 3))
                 {
-
-
-                    #region REF Reference line
-
-                    #endregion REF
-
                     #region AMT
                     case "AMT":
+                    {
+                        if (strSVCElements[1] == "NE") // from a TLC file
                         {
-                            if (strSVCElements[1] == "NE") // from a TLC file
-                            {
-                                m_dEOBChargesDenied += Decimal.Parse(strSVCElements[2]);
-                            }
-                            break;
+                            m_dEOBChargesDenied += Decimal.Parse(strSVCElements[2]);
                         }
-                        #endregion AMT
-
+                        break;
+                    }
+                    #endregion AMT
                 } // end of switch (strSVCElements[0])
 
             } // end of foreach (string strSVCLine in strPayLine)
-
-
         }
-
-
 
         private void ClearRecordInsertServiceLine()
         {
@@ -3819,18 +2832,6 @@ namespace LabBilling.Legacy
             m_dEOBPayDataPatRefund = 0.00m; // Have not seen yet should be a PC in the CAS
         }
 
-        private void UpdateDataTableRecord(int nTab, int nColumn, string strValue)
-        {
-            //throw new NotImplementedException("UpdateDataTableRecord() called");
-            //return;
-            string strSelect = string.Format("Account = '{0}' and eCPT4Code = '{1}'",
-                    m_strarrRecordsInsert.GetValue((int)Col835Grids.Account).ToString(),
-                        m_strarrRecordsInsert.GetValue((int)Col835Grids.eCPT4Code).ToString());
-
-            DataRow[] dgvArrRows = m_dsRecords.Tables[nTab].Select(strSelect);
-        }
-
-
         /// <summary>
         /// Adds records to the Processed, Denied, and Not Processed Grids based on the inserted records status in 
         /// m_strarrRecordsInsert's column (int)col835Grids.eClaimStatus, and the amount paid value in
@@ -3867,91 +2868,91 @@ namespace LabBilling.Legacy
                 case 19: // Denied work related (not really denied ???)
                 case 2:// 04/23/2008 wdk/rgc Coinsurance Amount from claim status codes.               
                 case 22: // Adjusted may be covered by another payer
+                {
+                    if (m_strarrRecordsInsert.GetValue((int)Col835Grids.eReason).ToString().StartsWith("PR"))
                     {
-                        if (m_strarrRecordsInsert.GetValue((int)Col835Grids.eReason).ToString().StartsWith("PR"))
-                        {
-                            m_dsRecords.Tables[dgvNotProcessed.Name].Rows.Add(m_strarrRecordsInsert);
-                            tc835.SelectedIndex = 2;
-                            break;
-                        }
-                        try  // if the amount paid is not zero add it to the processed otherwise to not processed
-                        {
-                            decimal dTryParse = 0.00m;
-                            //decimal dTotalPaid = 0.00m;
+                        m_dsRecords.Tables[dgvNotProcessed.Name].Rows.Add(m_strarrRecordsInsert);
+                        tc835.SelectedIndex = 2;
+                        break;
+                    }
+                    try  // if the amount paid is not zero add it to the processed otherwise to not processed
+                    {
+                        decimal dTryParse = 0.00m;
+                        //decimal dTotalPaid = 0.00m;
 
-                            if (decimal.TryParse(m_strarrRecordsInsert.GetValue((int)Col835Grids.ePaid).ToString(), out dTryParse))
+                        if (decimal.TryParse(m_strarrRecordsInsert.GetValue((int)Col835Grids.ePaid).ToString(), out dTryParse))
+                        {
+                            if (dTryParse == 0.00m)
                             {
-                                if (dTryParse == 0.00m)
-                                {
-                                    if (m_strarrRecordsInsert.GetValue((int)Col835Grids.eReason).ToString().Contains("CO/96") ||
-                                        //m_strarrRecordsInsert.GetValue((int)col835Grids.eReason).ToString().Contains("PR/2") ||
-                                        m_strarrRecordsInsert.GetValue((int)Col835Grids.eReason).ToString().Contains("CO/50"))
-                                    {
-                                        m_dsRecords.Tables[dgvProcessed.Name].Rows.Add(m_strarrRecordsInsert);
-                                        tc835.SelectedIndex = 0;
-                                    }
-                                    else
-                                    {
-                                        m_dsRecords.Tables[dgvNotProcessed.Name].Rows.Add(m_strarrRecordsInsert);
-                                        tc835.SelectedIndex = 0;
-                                    }
-                                }
-                                else
+                                if (m_strarrRecordsInsert.GetValue((int)Col835Grids.eReason).ToString().Contains("CO/96") ||
+                                    //m_strarrRecordsInsert.GetValue((int)col835Grids.eReason).ToString().Contains("PR/2") ||
+                                    m_strarrRecordsInsert.GetValue((int)Col835Grids.eReason).ToString().Contains("CO/50"))
                                 {
                                     m_dsRecords.Tables[dgvProcessed.Name].Rows.Add(m_strarrRecordsInsert);
                                     tc835.SelectedIndex = 0;
-
+                                }
+                                else
+                                {
+                                    m_dsRecords.Tables[dgvNotProcessed.Name].Rows.Add(m_strarrRecordsInsert);
+                                    tc835.SelectedIndex = 0;
                                 }
                             }
                             else
                             {
-                                m_dsRecords.Tables[dgvNotProcessed.Name].Rows.Add(m_strarrRecordsInsert);
-                                tc835.SelectedIndex = 2;
+                                m_dsRecords.Tables[dgvProcessed.Name].Rows.Add(m_strarrRecordsInsert);
+                                tc835.SelectedIndex = 0;
+
                             }
-                            // WDK 20130725 added 
-                            if (m_strarrRecordsInsertAddContractual != null)
+                        }
+                        else
+                        {
+                            m_dsRecords.Tables[dgvNotProcessed.Name].Rows.Add(m_strarrRecordsInsert);
+                            tc835.SelectedIndex = 2;
+                        }
+                        // WDK 20130725 added 
+                        if (m_strarrRecordsInsertAddContractual != null)
+                        {
+                            if (m_strarrRecordsInsertAddContractual.GetValue((int)Col835Grids.Account) != null)
                             {
-                                if (m_strarrRecordsInsertAddContractual.GetValue((int)Col835Grids.Account) != null)
+                                if (!string.IsNullOrEmpty(m_strarrRecordsInsertAddContractual.GetValue((int)Col835Grids.Account).ToString()))
                                 {
-                                    if (!string.IsNullOrEmpty(m_strarrRecordsInsertAddContractual.GetValue((int)Col835Grids.Account).ToString()))
-                                    {
-                                        m_dsRecords.Tables[dgvProcessed.Name].Rows.Add(m_strarrRecordsInsertAddContractual);
-                                        m_strarrRecordsInsertAddContractual = new string[Enum.GetNames(typeof(Col835Grids)).Length];// wdk 20130725         
-                                        m_strarrRecordsInsertAddContractual.Initialize();
-                                    }
+                                    m_dsRecords.Tables[dgvProcessed.Name].Rows.Add(m_strarrRecordsInsertAddContractual);
+                                    m_strarrRecordsInsertAddContractual = new string[Enum.GetNames(typeof(Col835Grids)).Length];// wdk 20130725         
+                                    m_strarrRecordsInsertAddContractual.Initialize();
                                 }
                             }
                         }
-                        catch (Exception)
-                        {
-                            //MessageBox.Show(
-                            //    string.Format("Exception while trying to parse the amount paid from the m_strarrInsertRecord\r\r\n{0}",ex.Message), propAppName);
-                        }
-
-                        break;
                     }
+                    catch (Exception)
+                    {
+                        //MessageBox.Show(
+                        //    string.Format("Exception while trying to parse the amount paid from the m_strarrInsertRecord\r\r\n{0}",ex.Message), propAppName);
+                    }
+
+                    break;
+                }
                 case 4: // denieds (Modifier)
-                    {
-                        m_dsRecords.Tables[dgvDenieds.Name].Rows.Add(m_strarrRecordsInsert);
-                        m_dtNotes.Rows.Add(new object[] { m_strarrRecordsInsert[(int)Col835Grids.Account],
+                {
+                    m_dsRecords.Tables[dgvDenieds.Name].Rows.Add(m_strarrRecordsInsert);
+                    m_dtNotes.Rows.Add(new object[] { m_strarrRecordsInsert[(int)Col835Grids.Account],
                             m_strarrRecordsInsert[(int)Col835Grids.eCPT4Code],
                             m_strarrRecordsInsert[(int)Col835Grids.eClaimStatus],
                             m_strarrRecordsInsert[(int)Col835Grids.eReason] });
-                        tc835.SelectedIndex = 1;
+                    tc835.SelectedIndex = 1;
 
-                        break;
-                    }
+                    break;
+                }
                 default: // 23 payment adj impact of a prior payer
-                    {
-                        m_dsRecords.Tables[dgvNotProcessed.Name].Rows.Add(m_strarrRecordsInsert);
-                        m_dtNotes.Rows.Add(new object[] { m_strarrRecordsInsert[(int)Col835Grids.Account],
+                {
+                    m_dsRecords.Tables[dgvNotProcessed.Name].Rows.Add(m_strarrRecordsInsert);
+                    m_dtNotes.Rows.Add(new object[] { m_strarrRecordsInsert[(int)Col835Grids.Account],
                             m_strarrRecordsInsert[(int)Col835Grids.eCPT4Code],
                             m_strarrRecordsInsert[(int)Col835Grids.eClaimStatus],
                             m_strarrRecordsInsert[(int)Col835Grids.eReason] });
 
-                        tc835.SelectedIndex = 2;
-                        break;
-                    }
+                    tc835.SelectedIndex = 2;
+                    break;
+                }
             } // end of switch    
         }
 
@@ -4242,52 +3243,6 @@ namespace LabBilling.Legacy
                 tspbRecords.PerformStep();
                 Application.DoEvents();
 
-                //sdaChk.InsertCommand.CommandTimeout = 120;
-                //sdaChk.InsertCommand.Connection.Open();// chk.Connection.Open();
-                //transaction = sdaChk.InsertCommand.Connection.BeginTransaction(System.Data.IsolationLevel.ReadUncommitted);// Assign the transaction the dataset connection NOTE: can be named if multiple connections need to be initialized       
-
-                //if (strOldAccount != dr[(int)col835Grids.Account].ToString().ToUpper())
-                //{         
-                //    // if the connection is not closed then close it.
-                //    if (!sdaChk.InsertCommand.Connection.State.Equals(ConnectionState.Closed))
-                //    {
-                //        transaction.Commit();
-                //        sdaChk.InsertCommand.Connection.Close();
-                //        m_ERR.m_Logfile.WriteLogFile(string.Format("Account {0} transaction closed.\r\n", strOldAccount));
-
-                //    }
-
-                //    // open the connection we have created and make an SqlTranaction 
-                //    sdaChk.InsertCommand.Connection.Open();
-                //    transaction = sdaChk.InsertCommand.Connection.BeginTransaction(System.Data.IsolationLevel.ReadUncommitted);// Assign the transaction the dataset connection NOTE: can be named if multiple connections need to be initialized       
-
-                //    strOldAccount = dr[(int)col835Grids.Account].ToString().ToUpper();
-                //    m_ERR.m_Logfile.WriteLogFile(string.Format("Account {0} transaction opened.\r\n", strOldAccount));
-                //    // rgc/wdk 20120425 moved from below the insert to here the above code was causing the 
-                //    // code below to never get called.
-
-                //    //CAcc lCacc = new CAcc(m_strServer, m_strDatabase, ref m_ERR);
-
-                //    if (m_cAcc.m_Racc.GetRecordByAccount(strOldAccount) > 0)
-                //    {
-                //       if (m_cAcc.m_Racc.m_strStatus.ToUpper() == "PAID_OUT")
-                //        {
-                //            string strStatusMsg = string.Format("Account {0} status changed to new from [{1}] by Posting835Remit", m_cAcc.m_Racc.m_strAccount, m_cAcc.m_Racc.m_strStatus);
-                //            m_ERR.m_Logfile.WriteLogFile(strStatusMsg);
-                //            string strErr = string.Empty;
-                //            string strFilter = string.Format("account = '{0}'", m_cAcc.m_Racc.m_strAccount);
-                //            m_cAcc.m_Racc.UpdateField("status", "NEW", strFilter, out strErr);
-                //            if (!strErr.Contains("1 record(s) updated."))
-                //            {
-                //                m_ERR.m_Logfile.WriteLogFile(strErr);
-                //            }
-                //            m_cAcc.AddNote(strStatusMsg);
-
-                //        }
-                //    }
-                //}
-
-
 
                 #region RecordsToSkip  Handle new and/or totals rows. Don't post zero balance check records
 
@@ -4341,66 +3296,7 @@ namespace LabBilling.Legacy
 
                 #endregion RecordsToSkip
 
-                /* this is for TLC and we don't process their files electronically any more
-                                #region write_off handling. Make the write off date null unless there is a small balance to write off.
-                                 NOTE 12/28/2007 wdk
-                                 Could also Set the AllowDbNull Property
-                                    To enable a query to accept null values
-                                    In the Dataset Designer, select the TableAdapter query that needs to accept null parameter values.
-                                    Select Parameters in the Properties window and click the ellipsis (…) button to open the Parameters Collection Editor.
-                                    Select the parameter that allows null values and set the AllowDbNull property to true.
-
-
-                                DateTime? dtWriteOff = new DateTime();
-                                dtWriteOff = null; // set the date null unless the denied amount is greater than $0.00 and less than or equal $5.00
-                                decimal dSmallBalWriteOff = 0m;
-                                // 06/13/2008 wdk added write off handling for CPT4 36415 from TLC
-                                if (rtbCheckSource.Text.Equals("TLC"))
-                                {
-                                    if (dr[(int)col835Grids.eCPT4Code].ToString() == string.Format("HC{0}36415", m_strComponentSeperator))
-                                    {
-                                        dSmallBalWriteOff = 3.07m;
-                                        dtWriteOff = DateTime.Parse(sdtMod.ToString());
-                                    }
-                                }
-
-                                #endregion write_off handling.
-                                */
-
                 #region InsertRecord
-                //        string strRowguid1 = Guid.NewGuid().ToString();
-                //        string strInsert1 =  string.Format(" ('{0}')",strRowguid1);//  //0
-                //               strInsert1 = string.Format(" ('{0}')", false); // deleted 1
-                //               strInsert1 = string.Format(" ('{0}')",  dr[(int)col835Grids.Account].ToString().ToUpper()); //Account 2
-                //               strInsert1 = string.Format(" ('{0}')",  tbCheckDate.Tag.ToString().Length == 0 ? "NULL" : string.Format("'{0}'", tbCheckDate.Tag.ToString())); // check date 3
-                //               strInsert1 = string.Format(" ('{0}')",  sdtReceived); // date check received 4
-                //               strInsert1 = string.Format(" ('{0}')",  dr[(int)col835Grids.eCheckNo].ToString());//tbCheckNo.Tag.ToString(), // check number 5
-                //               strInsert1 = string.Format(" ('{0}')",  decimal.Parse(dr[(int)col835Grids.ePaid].ToString(), System.Globalization.NumberStyles.Currency)); // amount paid 6
-                //               strInsert1 = string.Format(" ('{0}')",  string.IsNullOrEmpty(dr[(int)col835Grids.eWriteOffAmt].ToString()) ? "0.00"
-                //: double.Parse(dr[(int)col835Grids.eWriteOffAmt].ToString()).ToString("F2")); //denied amount as a small balance write off if less than  $5.00 from above. 7                    //dtWriteOff.HasValue ? 5.93m : 
-                //               strInsert1 = string.Format(" ('{0}')", decimal.Parse(dr[(int)col835Grids.eContractualAdjAmt].ToString(), System.Globalization.NumberStyles.Currency)); // contractual amount 8
-                //               strInsert1 = string.Format(" ('{0}')",  "NEW"); // status 9
-                //               strInsert1 = string.Format(" ('{0}')",  rtbCheckSource.Text.Substring(0, (rtbCheckSource.Text.Length > 20 ? 20 : rtbCheckSource.Text.Length))); //10
-                //               strInsert1 = string.Format(" ('{0}')", string.IsNullOrEmpty(dr[(int)col835Grids.eWriteOffDate].ToString()) ? "NULL" : string.Format("'{0}'", DateTime.Parse(dr[(int)col835Grids.eWriteOffDate].ToString()))); // write off date 11
-                //               strInsert1 = string.Format(" ('{0}')", ""); // invoice number this is for CLIENTS not insurance companies. 12
-                //               strInsert1 = string.Format(" ('{0}')", int.Parse(strBatchNo)); // batch number  13
-                //               strInsert1 = string.Format(" ('{0}')", rtbCheckSource.Tag.ToString()); // comment 14 
-                //               strInsert1 = string.Format(" ('{0}')", false); // bad debt 15
-                //               strInsert1 = string.Format(" ('{0}')", sdtMod); // mod_date --original record date Does not change.16
-                //               strInsert1 = string.Format(" ('{0}')", Environment.UserName);  // mod user 17
-                //               strInsert1 = string.Format(" ('{0}')", string.Format("{0} {1}", ProductName, ProductVersion)); // program with version 18
-                //               strInsert1 = string.Format(" ('{0}')", Environment.MachineName); // host namme  19
-                //               strInsert1 = string.Format(" ('{0}')", sdtMod); // mod_date_audit -- actual modification date if any 20
-                //               strInsert1 = string.Format(" ('{0}')", dr[(int)col835Grids.eCPT4Code].ToString()); // cpt4 with modifier(s) seperaterated with a "^" for TLC or ">" for Medicare 21
-                //               strInsert1 = string.Format(" ('{0}')", string.Format(@"{0}", tbFileName.Tag.ToString()));//dtWriteOff.HasValue ? "1000" : "",
-                //               strInsert1 = string.Format(" ('{0}')", string.IsNullOrEmpty(dr[(int)col835Grids.eWriteOffCode].ToString()) ? "NULL"
-                //: dr[(int)col835Grids.eWriteOffCode].ToString());
-                //               strInsert1 = string.Format(" ('{0}')", tbFileDate.Tag.ToString()); // [eft date string] in the format YYMMDD NOT A REAL DATE!!!,
-                //               strInsert1 = string.Format(" ('{0}')", tbFileNumber.Tag.ToString()); // 
-                //               strInsert1 = string.Format(" ('{0}')", m_strFinCode);
-                //               strInsert1 = string.Format(" ('{0}')", m_strInsCode);
-                //               strInsert1 = string.Format(" ('{0}')", dr[(int)col835Grids.eReason].ToString());
-
                 try
                 {
 
@@ -4466,33 +3362,6 @@ namespace LabBilling.Legacy
                     new SqlCommand(strInsert, sdaChk.InsertCommand.Connection, transaction).ExecuteNonQuery();
                     //new SqlCommand(strInsert, chk.Connection).ExecuteNonQuery();
                     nRecordsAdded++;
-                    // to cause a rollback for testing reinstate the below "if" code.
-                    //if (nRecordsAdded == 20)
-                    //{
-                    //    chk.Connection.Open();
-                    //}
-                    //// wdk 20091012 only need to do this once for any account no matter how many checks.
-                    //if (strOldAccount != dr[(int)col835Grids.Account].ToString().ToUpper())
-                    //{
-                    //    CAcc lCacc = new CAcc(m_strServer, m_strDatabase, ref m_ERR);
-                    //    if (lCacc.m_Racc.GetRecordByAccount(dr[(int)col835Grids.Account].ToString().ToUpper()) > 0)
-                    //    {
-                    //        if (lCacc.m_Racc.m_strStatus.ToUpper() != "NEW")
-                    //        {
-                    //            string strStatusMsg = string.Format("Account {0} status changed to new from [{1}] by Posting835Remit", lCacc.m_Racc.m_strAccount, lCacc.m_Racc.m_strStatus);
-                    //            m_ERR.m_Logfile.WriteLogFile(strStatusMsg);
-                    //            string strErr = string.Empty;
-                    //            string strFilter = string.Format("account = '{0}'", lCacc.m_Racc.m_strAccount);
-                    //            lCacc.m_Racc.UpdateField("status", "NEW", strFilter, out strErr);
-                    //            if (!strErr.Contains("1 record(s) updated."))
-                    //            {
-                    //                m_ERR.m_Logfile.WriteLogFile(strErr);
-                    //            }
-                    //            lCacc.AddNote(strStatusMsg);
-
-                    //        }
-                    //    }
-                    //}
                 }
                 #region catch SqlException
                 catch (SqlException sqlError)
@@ -4636,19 +3505,6 @@ namespace LabBilling.Legacy
 
             #endregion Print Account Balance file
 
-            #region Print Log
-            //try
-            //{
-            //    FileStream l_fsErrorLog = new FileStream(m_ERR.m_Logfile.fs.Name, FileMode.Open, FileAccess.Read,FileShare.ReadWrite);
-
-            //    ThreadProcRFCPrintPreview(l_fsErrorLog, "REMITTANCE LOG");
-            //}
-            //catch (Exception ex1)
-            //{
-            //    MessageBox.Show(ex1.StackTrace, "CreatePrintThread(REMITTANCE LOG) ERROR");
-            //}
-
-            #endregion Print Log
             tspbRecords.Value = 0; // reset the progress bar
             tsmiPostCheckRecords.Enabled = false;
             MoveFileToSavedDirectory();
@@ -4718,27 +3574,6 @@ namespace LabBilling.Legacy
         }
 
         /// <summary>
-        /// No longer used 06/17/2008 wdk/rgc
-        /// </summary>
-        [Obsolete("Not used at this time 06/17/2008 wdk/rgc")]
-        private void CreateDictionaryProviders()
-        {
-            // create and add our search criteria for posting
-            m_dicProviders = new Dictionary<string, string>();
-            m_dicProviders.Add("000000005635", "TLC"); // eventually load from system table?? May not be possible. 
-            /* 01/18/2008 wdk
-             * the remittance  626010402_20080114_1208.835 contained a second provider id, added below.
-             * the TLC web site has both numbers as provider id's but the below number is listed as 
-             * the vendor ID on both provider id pages.
-             * */
-            // m_dicProviders.Add("000000003335", "TLC"); // rgc/wdk 20120425 removed as TLC is no longer valid for MCL
-            m_dicProviders.Add("1720160708", "MEDICARE"); // 02/29/2008 Medicare file wth tax id
-            m_dicProviders.Add("1093705428", "MEDICARE"); // 02/29/2008 Medicare file wth_npi
-            m_dicProviders.Add("626010402", "MEDICARE"); // 04/24/2008 Medicare file with JMCGH tax id
-        }
-
-
-        /// <summary>
         /// Returns True if there are previously posted checks or there are errors.
         /// Returns false on successful query that returns no check records.
         /// </summary>
@@ -4772,53 +3607,7 @@ namespace LabBilling.Legacy
                 }
             }
 
-            //int nActiveRecords = m_rChk.GetActiveRecords(string.Format("eft_date = '{0}' AND eft_number = '{1}' AND chk_no = '{2}'", 
-            //                                        tbFileDate.Tag.ToString(), 
-            //                                                                tbFileNumber.Tag.ToString(),
-            //                                                                                    strCheckNo));
-
-            //m_ERR.m_Logfile.WriteLogFile(string.Format("{0} Records found in ThereArePreviouslyPostedChecks().",nActiveRecords));
             return nRec;
-        }
-
-
-
-
-        /// <summary>
-        /// If the eight element is not '440002' then this file cannot contain valid payments for MCL.
-        /// If not ours return false.
-        /// </summary>
-        /// <param name="strISAElements"></param>
-        /// <returns>false if the file is not ours (Hospitals)</returns>
-        [Obsolete("06/17/2008 Not used?")]
-        private bool ValidateMedicareISA(string strISA)
-        {
-            bool bRetValOurs = true;
-            string[] strParts = strISA.Split(new char[] { '~' });
-            string[] strISASplit = strParts[0].Split(new char[] { '*' });
-            if (strISASplit[8].IndexOf("440002") == -1) // if it's not us don't mess with just delete it from our system
-            {
-                bRetValOurs = false;
-            }
-            else
-            {
-            }
-            return bRetValOurs;
-        }
-
-        private void toolStripDropDownButton1_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
-        {
-            OpenFileDialog ofd = new OpenFileDialog();
-            ofd.DefaultExt = "*.835";
-            ofd.InitialDirectory = e.ClickedItem.Text;
-            ofd.Multiselect = false;
-            ofd.ReadOnlyChecked = true;
-            ofd.Filter = "Medicare 835 files (*.835)|*.835";
-            ofd.Title = "Medicare 835 Files";
-            if (ofd.ShowDialog() == DialogResult.OK)
-            {
-
-            }
         }
 
         /// <summary>
@@ -4874,131 +3663,10 @@ namespace LabBilling.Legacy
         }
 
         /// <summary>
-        /// Returns the a DataGridViewRowCollectiom that contains the searched for records.
-        /// </summary>
-        /// <param name="dgvToSearch"></param>
-        /// <param name="strSearchCriteria"></param>
-        /// <param name="nColToSearch"></param>
-        /// <returns></returns>
-        private DataGridViewRowCollection DataGridViewFind(ref DataGridView dgvToSearch, string strSearchCriteria, int nColToSearch)
-        {
-            throw new Exception("The method or operation is not implemented.");
-
-            //    DataGridViewColumnCollection colCol = dgvToSearch.Columns;
-
-            //    DataGridView dgvRetRows = new DataGridView();
-            //    dgvRetRows.ColumnCount = colCol.Count;
-
-            //    foreach (DataGridViewColumn col in colCol)
-            //    {
-            //        dgvRetRows.Columns.Add((DataGridViewColumn)col.Clone());               
-            //    }
-
-            //    for(int i = 0; i < dgvToSearch.Rows.Count; i++)//DataGridViewRow dgvr in dgvToSearch.Rows)
-            //    {
-            //        string[] strInsert = new string[colCol.Count];
-            //        if (dgvToSearch[nColToSearch, i].FormattedValue.ToString() == strSearchCriteria)
-            //        {
-            //            for (int j = 0; j < colCol.Count; j++)
-            //            {
-            //                strInsert[j] = dgvToSearch.Rows[i].Cells[j].FormattedValue.ToString();
-            //            }                    
-            //            dgvRetRows.Rows.Add(strInsert);
-            //        }
-            //    }
-
-            //    return dgvRetRows.Rows;
-        }
-
-
-        //private void tsbImport_Click(object sender, EventArgs e)
-        //{
-        //    if (Environment.UserName == "wkelly" || Environment.UserName == "rcrone")
-        //    {
-        //    // this block imports reason codes into the database. 
-        //        // operation completed 04/18/2008 wdk
-        //        return; 
-        //    string strImport = RFClassLibrary.RFCObject.GetFileContents(@"C:\temp\reasoncodes.txt");
-        //    strImport = strImport.Replace(Environment.NewLine, "");
-        //    string[] strRows = strImport.Split(new char[] { '~' }, StringSplitOptions.RemoveEmptyEntries);
-        //    string[] strCol;
-        //    DateTime dtStart = new DateTime(1900,1,1);
-        //    DateTime dtLastMod = new DateTime(1900, 1, 1);
-        //    DateTime dtStop = new DateTime(1900, 1, 1);
-        //    string strDateStart = "";
-        //    string strDateLastMod = "";
-        //    string strDateStop = "";
-        //    string[] strArrDate;
-        //    string strInsert = "";
-        //    foreach (string strRow in strRows)
-        //    {
-        //        dtStart = new DateTime(1900, 1, 1);
-        //        dtLastMod = new DateTime(1900, 1, 1);
-        //        dtStop = new DateTime(1900, 1, 1);
-        //        strDateStart = "";
-        //        strDateLastMod = "";
-        //        strDateStop = "";
-
-        //        strInsert = "";
-        //        strCol = strRow.Split(new char[] { '*' });
-        //        strArrDate = strCol[2].Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
-        //        // Start: 01/01/1995 | Stop: 01/01/1996 | Last Modified: 06/30/2002
-        //        switch (strArrDate.GetUpperBound(0))
-        //        {
-        //            case 0:
-        //                {
-        //                    strDateStart = strArrDate[0].Replace("Start:", "").Trim();
-        //                    break;
-        //                }
-        //            case 1:
-        //                {
-        //                    strDateStart = strArrDate[0].Replace("Start:", "").Trim();
-        //                    if (strArrDate[1].IndexOf("Stop") > -1)
-        //                    {
-        //                        strDateStop = strArrDate[1].Replace("Stop:", "").Trim();
-        //                    }
-        //                    else
-        //                    {
-        //                        strDateLastMod = strArrDate[1].Replace("Last Modified:", "").Trim();
-        //                    }
-        //                    break;
-        //                }
-        //            case 2:
-        //                {
-        //                    strDateStart = strArrDate[0].Replace("Start:", "").Trim();
-        //                    strDateStop = strArrDate[1].Replace("Stop:", "").Trim();
-        //                    strDateLastMod = strArrDate[2].Replace("Last Modified:", "").Trim();
-
-        //                    break;
-        //                }
-        //        }
-
-        //        dtStart = DateTime.Parse(strDateStart);
-        //        DateTime.TryParse(strDateLastMod, out dtLastMod);
-        //        if (dtLastMod.Equals(DateTime.MinValue))
-        //        {
-        //            dtLastMod = new DateTime(1900, 1, 1);
-        //        }
-        //        DateTime.TryParse(strDateStop, out dtStop);
-        //        if (dtStop.Equals(DateTime.MinValue))
-        //        {
-        //            dtStop = new DateTime(1900, 1, 1);
-        //        }
-        //        DBAccess dba = new DBAccess("wthmclbill", "MCLTEST", "dict_claim_adjustment_reason_codes");
-        //        int nCount = dba.RecCount("dict_claim_adjustment_reason_codes", "reason_code IS NOT NULL", out strImport);
-        //        strInsert = string.Format("insert into dict_claim_adjustment_reason_codes (reason_code, description, rc_start_date, rc_stop_date, rc_last_mod_date) " +
-        //                        "values ('{0}', '{1}', '{2}', '{3}', '{4}')", strCol[0], strCol[1], dtStart.ToString("d"), dtStop.ToString("d"), dtLastMod.ToString("d"));
-        //        dba.SQLExec(strInsert, out strImport);
-        //    }
-        //    }
-        //}
-
-        /// <summary>
         ///  Sets the record count on the status bar to the number in the selected grid control.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-
         private void tcControl835_SelectedIndexChanged(object sender, EventArgs e)
         {
             int nTab = ((TabControl)sender).SelectedIndex;
@@ -5009,169 +3677,26 @@ namespace LabBilling.Legacy
                 case 0:
                 case 1:
                 case 2:
+                {
+                    foreach (DataRow dr in m_dsRecords.Tables[dgv.Name].Rows)
                     {
-                        foreach (DataRow dr in m_dsRecords.Tables[dgv.Name].Rows)
-                        {
-                            Application.DoEvents();
-                            tstbFindSubscriber.AutoCompleteCustomSource.Add(dr[(int)Col835Grids.eSubscriberName].ToString());
-                            tstbFindAccount.AutoCompleteCustomSource.Add(dr[(int)Col835Grids.Account].ToString());
-                        }
-                        break;
+                        Application.DoEvents();
+                        tstbFindSubscriber.AutoCompleteCustomSource.Add(dr[(int)Col835Grids.eSubscriberName].ToString());
+                        tstbFindAccount.AutoCompleteCustomSource.Add(dr[(int)Col835Grids.Account].ToString());
                     }
+                    break;
+                }
                 case 3:
-                    {
-                        foreach (DataRow dr in m_dsRecords.Tables[dgv.Name].Rows)
-                        {
-                            Application.DoEvents();
-                            tstbFindSubscriber.AutoCompleteCustomSource.Add(dr[(int)Col835EOB.eSubscriberName].ToString());
-                            tstbFindAccount.AutoCompleteCustomSource.Add(dr[(int)Col835EOB.Account].ToString());
-                        }
-                        break;
-                    }
-            }
-        }
-
-        /// <summary>
-        /// Displays or hides the bands defined in the dictionary m_dicBands for the Processed records.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void tcControl835_KeyUp(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.F12)
-            {
-                switch (tc835.SelectedIndex)
                 {
-                    case 0:
-                        {
-                            foreach (KeyValuePair<string, DataGridViewBand> kvp in m_dicBandProcessed)
-                            {
-                                Application.DoEvents();
-                                kvp.Value.Visible = !kvp.Value.Visible;
-                            }
-                            break;
-                        }
-                    case 1:
-                        {
-                            foreach (KeyValuePair<string, DataGridViewBand> kvp in m_dicBandDenieds)
-                            {
-                                Application.DoEvents();
-                                kvp.Value.Visible = !kvp.Value.Visible;
-                            }
-                            break;
-                        }
-                    case 2:
-                        {
-                            foreach (KeyValuePair<string, DataGridViewBand> kvp in m_dicBandNotProcessed)
-                            {
-                                Application.DoEvents();
-                                kvp.Value.Visible = !kvp.Value.Visible;
-                            }
-                            break;
-                        }
-                    case 3:
-                        {
-                            foreach (KeyValuePair<string, DataGridViewBand> kvp in m_dicBandEOB)
-                            {
-                                Application.DoEvents();
-                                kvp.Value.Visible = !kvp.Value.Visible;
-                            }
-                            break;
-                        }
+                    foreach (DataRow dr in m_dsRecords.Tables[dgv.Name].Rows)
+                    {
+                        Application.DoEvents();
+                        tstbFindSubscriber.AutoCompleteCustomSource.Add(dr[(int)Col835EOB.eSubscriberName].ToString());
+                        tstbFindAccount.AutoCompleteCustomSource.Add(dr[(int)Col835EOB.Account].ToString());
+                    }
+                    break;
                 }
             }
-        }
-
-        private void dgvRecords_MouseClick(object sender, MouseEventArgs e)
-        {
-            DataGridView dgv = (DataGridView)sender;
-            if (e.Button == MouseButtons.Right)
-            {
-                if (MessageBox.Show("Do you want to add this column to the hidden band?", "HIDE THIS COLUMN", MessageBoxButtons.YesNo) == DialogResult.Yes)
-                {
-                    DataGridView.HitTestInfo dghi = dgv.HitTest(e.X, e.Y);
-                    DataGridViewColumn dgvc = dgv.Columns[dghi.ColumnIndex];
-                    DataGridViewBand bandToAdd = dgvc;
-                    if (m_dicBandProcessed.ContainsKey(dgvc.Name))
-                    {
-                        m_dicBandProcessed.Remove(dgvc.Name);
-                    }
-                    else
-                    {
-                        m_dicBandProcessed.Add(dgvc.Name, bandToAdd);
-                        dgvc.Visible = false;
-                    }
-
-                }
-            }
-            if (e.Button == MouseButtons.Middle)
-            {
-                string strDec = "";
-                foreach (decimal? d in ((decimal?[])dgv.Tag))
-                {
-                    Application.DoEvents();
-                    //if (d.Equals(null))
-                    //{
-                    //    continue;
-                    //}
-                    strDec += string.Format("{0}\r\n", d);// decimal.Parse(dgRow.Cells[(int)col835Grids.eCharges].FormattedValue.ToString(),
-                                                          //System.Globalization.NumberStyles.Currency).ToString();
-
-                }
-                MessageBox.Show(strDec);
-            }
-        }
-
-        /// <summary>
-        /// Provides a running total of the money values when the row is added to the grid.
-        /// Uses the grids TAG cast as a nullable decimal array so each grid can be independently tracked.
-        /// 
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void dgvGeneric_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
-        {
-            //if (((DataGridView)sender).Name == "dgvEOB")
-            //{
-            //    ((DataGridView)sender).Rows.Add();
-            //}
-            return;
-            //    DataGridView dgvGeneric = ((DataGridView)sender);
-            //    decimal?[] dTotalsProcessed = ((decimal?[])dgvGeneric.Tag);
-            //    decimal dTemp = 0.00m;
-            //    DataGridViewRow rowGeneric = dgvGeneric.Rows[e.RowIndex];
-
-            //    string[] strArr = new string[dgvGeneric.Columns.Count];
-
-            //    // check each column in the table for monetary columns type.
-            //      foreach (DataGridViewColumn dc in dgvGeneric.Columns)
-            //    {
-            //        if (dc.CellTemplate.Style.ForeColor == Color.Green) // on't add the totals row to the dgvtotals
-            //        {
-            //            continue;
-            //        }
-            //        if (dc.CellTemplate.Style.Format.ToString() == "C") // if the column is a currency type
-            //        {
-            //            if (decimal.TryParse(rowGeneric.Cells[dc.Index].EditedFormattedValue.ToString(), System.Globalization.NumberStyles.Currency, null, out dTemp))
-            //            {
-            //                if (dTotalsProcessed[dc.Index].Equals(null))
-            //                {
-            //                    dTotalsProcessed[dc.Index] = 0.00m; // set the value to zero if it is null
-            //                }
-            //                dTotalsProcessed[dc.Index] += dTemp;
-            //                dTemp = 0.00m; // clear dTemp before looping again.
-            //            }
-            //        }
-            //        //if (((DataGridView)sender).Name != "dgvEOB")
-            //        {
-            //            strArr[dc.Index] = rowGeneric.Cells[dc.Index].EditedFormattedValue.ToString();
-            //        }
-            //    }
-            ////    if (((DataGridView)sender).Name != "dgvEOB")
-            //    {
-            //        m_dsRecords.Tables[((DataGridView)sender).Name].Rows.Add(strArr);
-            //    }
-            //    dgvGeneric.Tag = dTotalsProcessed;
         }
 
         /// <summary>
@@ -5213,11 +3738,7 @@ namespace LabBilling.Legacy
                 m_rEob.m_Reob.ClearMemberVariables();
 
                 m_rEob.m_Reob.m_strAccount = dr[(int)Col835EOB.Account].ToString();
-                //if (leob.m_strAccount == "CA2477552")
-                //{
-                //    int x;
-                //    x = 9;
-                //}
+
                 m_rEob.m_Reob.m_strSubscriberID = dr[(int)Col835EOB.eHIC].ToString();
                 m_rEob.m_Reob.m_strSubscriberName = RFCObject.staticSqlClean(dr[(int)Col835EOB.eSubscriberName].ToString()); //06/20/2008 wdk name [Carol'Kay] received
                 m_rEob.m_Reob.m_strDateOfService = dr[(int)Col835EOB.eDOS].ToString();
@@ -5327,14 +3848,9 @@ namespace LabBilling.Legacy
                         m_rEob.m_ReobDetail.m_strWght = dgRow[(int)Col835Grids.eWeight].ToString();
 
                         // is this eob in the table already?
-                        strWhere = string.Format("check_no = '{0}' AND " +
-                                                    "bill_cycle_date = '{1}' AND " +
-                                                        "account = '{2}' AND " +
-                                                            "claim_status = '{3}'",
-                                                    m_rEob.m_Reob.m_strCheckNo,
-                                                           m_rEob.m_Reob.m_strBillCycleDate,
-                                                                m_rEob.m_Reob.m_strAccount,
-                                                                    m_rEob.m_Reob.m_strClaimStatus);
+                        strWhere = $"check_no = '{m_rEob.m_Reob.m_strCheckNo}' and bill_cycle_date = '{m_rEob.m_Reob.m_strBillCycleDate}' AND " +
+                            $"account = '{m_rEob.m_Reob.m_strAccount}' and claim_status = '{m_rEob.m_Reob.m_strClaimStatus}'";
+
                         if (m_rEob.m_Reob.GetActiveRecords(strWhere) > 0)
                         {
                             m_ERR.m_Logfile.WriteLogFile(string.Format(@"Account {0} already in EOB table.\r\n \tWHERE Clause: {1}", m_rEob.m_Reob.m_strAccount, strWhere));
@@ -5351,8 +3867,6 @@ namespace LabBilling.Legacy
 
                 if (m_rEob.m_Reob.GetActiveRecords(strWhere) > 0)
                 {
-                    // logged above
-                    //  m_ERR.m_Logfile.WriteLogFile(string.Format("Account {0} already in EOB table.\r\n WHERE Clause: {1}", leob.m_strAccount, strWhere));
                     continue;
                 }
                 if (m_rEob.AddComittableRecord() == -1)
@@ -5375,7 +3889,6 @@ namespace LabBilling.Legacy
                 {
                     m_rEob.m_ReobDetail.propCommittableTransDetail.Rollback();
                     m_rEob.propCommittableTrans.Rollback();
-                    //m_rEob.propCommittableTrans.TransactionInformation.Status = TransactionStatus.Aborted;
                     MessageBox.Show(ex.Message);
                 }
             }
@@ -5387,51 +3900,7 @@ namespace LabBilling.Legacy
             {
                 MessageBox.Show(m_rEob.m_Reob.propErrMsg);
             }
-            //    m_ERR.m_Logfile.WriteLogFile("Leaving EOB CLICK");
         }
-
-        /// <summary>
-        /// Searches all the grids for displaying accounts that match the search criteria.
-        /// Handles adding or removing "A" from the account number should it exist.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void tstbFindAccount_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Return)
-            {
-                bool bSearchHasA = tstbFindAccount.Text.Contains("A");
-                string strAccount = tstbFindAccount.Text.Replace("A", ""); // if it exists remove the "A" this is valid for the first three tabs
-                for (int nTab = 0; nTab < tc835.TabCount; nTab++)
-                {
-                    DataGridView dgv = GetSelectedTabsDataGrid(nTab);
-                    dgv.Rows.Clear();
-                    if (nTab == 3)
-                    {
-                        if (bSearchHasA)
-                        {
-                            strAccount = strAccount.Insert(1, "A");
-                        }
-                    }
-                    tspbRecords.Style = ProgressBarStyle.Marquee;
-                    string strSelect = string.Format("Account = '{0}'", strAccount);
-
-                    DataRow[] dgvArrRows = m_dsRecords.Tables[dgv.Name].Select(strSelect);
-                    //m_ERR.m_Logfile.WriteLogFile(string.Format("   [{0}] {1}", dgvArrRows.GetUpperBound(0), strSelect));
-                    for (int i = 0; i < (dgvArrRows.Length > 20 ? 20 : dgvArrRows.Length); i++)
-                    {
-                        dgv.Rows.Add(dgvArrRows[i].ItemArray);
-                    }
-                    if (dgvArrRows.Length == 0)
-                    {
-                        dgv.Rows.Add("Account not found");
-                    }
-                    tspbRecords.Style = ProgressBarStyle.Blocks;
-                    tspbRecords.Value = 0;
-                }
-            }
-        }
-
 
         private void tsmiFirst20_Click(object sender, EventArgs e)
         {
@@ -5523,47 +3992,13 @@ namespace LabBilling.Legacy
             }
         }
 
-        private void tstbFindSubscriber_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Return)
-            {
-                DataGridView dgv = GetSelectedTabsDataGrid(tc835.SelectedIndex);
-                dgv.Rows.Clear();
-                string strSelect = string.Format("{0} = '{1}'", "eSubscriberName", tstbFindSubscriber.Text);
-                DataRow[] dgvArrRows = m_dsRecords.Tables[dgv.Name].Select(strSelect);
-                m_ERR.m_Logfile.WriteLogFile(string.Format("   [{0}] {1}", dgvArrRows.GetUpperBound(0), strSelect));
-                for (int i = 0; i < (dgvArrRows.Length > 20 ? 20 : dgvArrRows.Length); i++)
-                {
-                    dgv.Rows.Add(dgvArrRows[i].ItemArray);
-                }
-            }
-        }
-
-        private void dgv_KeyDown(object sender, KeyEventArgs e)
-        {
-            e.Handled = true;
-            if (e.KeyCode == Keys.PageDown)
-            {
-                tsmiNext20_Click(sender, null);
-            }
-            if (e.KeyCode == Keys.PageUp)
-            {
-                tsmiPrevious20_Click(sender, null);
-            }
-        }
-
         private void tsbPrintEOB_Click(object sender, EventArgs e)
         {
-
-            //   CAcc m_rAcc = new CAcc(m_strServer, m_strDatabase, ref m_ERR);
-            //   CEob m_rEob = new CEob(m_strServer, m_strDatabase, ref m_ERR);
-
             string strBal = "ERR";
             string strAccount = "";
             string strEOBAccount = ""; // requires the "A"
             tspbRecords.Value = 0;
             tspbRecords.Maximum = m_dsRecords.Tables[dgvEOB.Name].Rows.Count;
-            // tspbRecords.Step = 1;
             tspbRecords.Style = ProgressBarStyle.Blocks;
 
             for (int i = 0; i < m_dsRecords.Tables[dgvEOB.Name].Rows.Count; i++)
@@ -5586,266 +4021,12 @@ namespace LabBilling.Legacy
                                                     tbFileNumber.Tag.ToString());
                     if (m_rEob.m_Reob.GetActiveRecords(m_rEob.m_Reob.m_strFilter) > 0)
                     {
-                        //tspbRecords.ProgressBar.Style = ProgressBarStyle.Marquee;
-
                         m_rEob.m_Reob.LoadMemberVariablesFromDataSet();
                         m_rEob.PrintEOB();
                     }
                 }
             }
-            //tspbRecords.ProgressBar.Style = ProgressBarStyle.Blocks;
             MessageBox.Show("COMPLETE", "EOB PRINTING", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
-
-        }
-
-        private void tstbFileSearch_KeyUp(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Enter)
-            {
-                string strExtension = tsmiExtension.Text;
-                SearchFiles(sender.ToString(), strExtension);
-
-            }
-        }
-
-
-        private void SearchFiles(string strToSearchFor, string strExtension)
-        {
-            MessageBox.Show(string.Format("{0}.\r\n{1}.", MethodBase.GetCurrentMethod().Name, "RETURN MSG"), propAppName);
-            return;
-
-            //          string path = @"C:\";
-            //          try
-            //          {
-            //              string[] drives = System.IO.Directory.GetLogicalDrives();
-            //              /*
-            //               -		drives	{string[14]}	string[]
-            //[0]	"C:\\"	string
-            //[1]	"D:\\"	string
-            //[2]	"E:\\"	string
-            //[3]	"F:\\"	string
-            //[4]	"I:\\"	string
-            //[5]	"L:\\"	string
-            //[6]	"M:\\"	string
-            //[7]	"N:\\"	string
-            //[8]	"P:\\"	string
-            //[9]	"Q:\\"	string
-            //[10]	"S:\\"	string
-            //[11]	"U:\\"	string
-            //[12]	"W:\\"	string
-            //[13]	"Z:\\"	string
-
-            //               */
-            //              string[] directoryEntries =
-            //                     System.IO.Directory.GetFileSystemEntries(path);
-            //              /*
-            //                -		directoryEntries	{string[46]}	string[]
-            //[0]	"C:\\AppDev"	string
-            //[1]	"C:\\AUTOEXEC.BAT"	string
-            //[2]	"C:\\bmps"	string
-            //[3]	"C:\\boot.ini"	string
-            //[4]	"C:\\CLR PROFILER"	string
-            //[5]	"C:\\CONFIG.SYS"	string
-            //[6]	"C:\\dell"	string
-            //[7]	"C:\\dell.sdr"	string
-            //[8]	"C:\\DevStudio"	string
-            //[9]	"C:\\Documents and Settings"	string
-            //[10]	"C:\\Downloads"	string
-            //[11]	"C:\\drivers"	string
-            //[12]	"C:\\FORD"	string
-            //[13]	"C:\\HIS"	string
-            //[14]	"C:\\HMS"	string
-            //[15]	"C:\\i386"	string
-            //[16]	"C:\\Inetpub"	string
-            //[17]	"C:\\INFCACHE.1"	string
-            //[18]	"C:\\IO.SYS"	string
-            //[19]	"C:\\MCLIntranet.ico"	string
-            //[20]	"C:\\mcloe"	string
-            //[21]	"C:\\mcl_bkgrd.bmp"	string
-            //[22]	"C:\\mcl_bkgrd.jpg"	string
-            //[23]	"C:\\mcl_bmp.bmp"	string
-            //[24]	"C:\\mcl_flag.bmp"	string
-            //[25]	"C:\\MEDICAL CENTER LAB AUTHORIZATION STATEMENT.doc"	string
-            //[26]	"C:\\MEDITECH"	string
-            //[27]	"C:\\MSDOS.SYS"	string
-            //[28]	"C:\\MSOCache"	string
-            //[29]	"C:\\My Installations"	string
-            //[30]	"C:\\New Folder"	string
-            //[31]	"C:\\NTDETECT.COM"	string
-            //[32]	"C:\\ntldr"	string
-            //[33]	"C:\\pagefile.sys"	string
-            //[34]	"C:\\PCA.ico"	string
-            //[35]	"C:\\Program Files"	string
-            //[36]	"C:\\RECYCLER"	string
-            //[37]	"C:\\source"	string
-            //[38]	"C:\\SPOOL"	string
-            //[39]	"C:\\System Volume Information"	string
-            //[40]	"C:\\TEMP"	string
-            //[41]	"C:\\TEST70"	string
-            //[42]	"C:\\Thumbs.db"	string
-            //[43]	"C:\\UTIL"	string
-            //[44]	"C:\\WebInserviceIcon.ico"	string
-            //[45]	"C:\\WINDOWS"	string
-
-            //               */
-            //          }
-            //          catch (ArgumentNullException)
-            //          {
-            //              Debug.Print("Path is a null reference.");
-            //          }
-            //          catch (System.Security.SecurityException)
-            //          {
-            //              Debug.Print("The caller does not have the " +
-            //                  "required permission.");
-            //          }
-            //          catch (ArgumentException)
-            //          {
-            //              Debug.Print("Path is an empty string, " +
-            //                  "contains only white spaces, " +
-            //                  "or contains invalid characters.");
-            //          }
-            //          catch (System.IO.DirectoryNotFoundException)
-            //          {
-            //              Debug.Print("The path encapsulated in the " +
-            //                  "Directory object does not exist.");
-            //          }
-
-            //          FolderBrowserDialog fbd = new FolderBrowserDialog();
-            //          fbd.ShowNewFolderButton = false;
-            //          fbd.Description = "TESTING";
-            //          fbd.SelectedPath = System.IO.Directory.GetCurrentDirectory();
-
-
-            //          string strDir = null;
-
-            //          if (fbd.ShowDialog() == DialogResult.OK)
-            //          {
-            //              strDir = fbd.SelectedPath;
-            //          }
-            //          else
-            //          {
-            //              return;
-            //          }
-            //          DirectoryInfo di = new DirectoryInfo(strDir);
-
-            //          tspbRecords.Value = 0;
-            //          tspbRecords.Minimum = 0;
-            //          tspbRecords.Maximum = 0;
-            //          // tspbRecords.Step = 1;
-
-
-
-
-            //          if (!di.Exists)
-            //          {
-            //              MessageBox.Show(string.Format("Directory [{0}] does not exist.", di.Name));
-            //          }
-            //          //Search this directory
-            //          SearchDir(di, strToSearchFor, strExtension);
-            //          //Search subdirectories
-            //          DirectoryInfo[] diDirs = di.GetDirectories();
-            //          try
-            //          {
-            //              foreach (DirectoryInfo dir in diDirs)
-            //              {
-            //                  Application.DoEvents();
-            //                  if (dir.Attributes == FileAttributes.ReadOnly)
-            //                  {
-            //                      continue;
-            //                  }
-
-            //                  tspbRecords.Maximum += ((FileInfo[])dir.GetFiles()).GetLength(0);
-            //                  SearchDir(dir, strToSearchFor, strExtension);
-            //              }
-            //          }
-            //          catch
-            //          {
-            //              // just move on
-
-            //          }
-
-            //          MessageBox.Show("Finished", "DIRECTORY SEARCH");
-            //          tspbRecords.Value = 0;
-        }
-
-
-
-        public void SearchDir(DirectoryInfo diDir, string strToSearchFor, string strExtension)
-        {
-            // vb controls
-            //    DirList;
-            //    FilelistBox;
-            //    DrivelistBox;
-
-            #region FILEINFO
-            FileInfo[] fi = diDir.GetFiles(strExtension);
-            diDir = new DirectoryInfo(@"\\Mcloe\c$\FORD");
-            foreach (FileInfo f in fi)
-            {
-                Application.DoEvents();
-                tspbRecords.PerformStep();
-                string strContents;
-                if (f.Attributes == FileAttributes.ReadOnly)
-                {
-                    continue;
-                }
-                try
-                {
-                    //string strME = "DAVID";
-                    using (FileStream fStream = new FileStream(f.FullName, FileMode.Open, FileAccess.Read))
-                    using (StreamReader sReader = new StreamReader(fStream))
-                    {
-                        strContents = sReader.ReadToEnd().ToUpper();
-                        if (strContents.Contains(strToSearchFor.ToUpper()))
-                        {
-                            RFCPrintPreview ppd = new RFCPrintPreview();
-                            ppd.m_DocumentName = f.FullName;
-                            ppd.propStrToSearchFor = strToSearchFor;
-                            ppd.propTopMost = true;
-                            ppd.propLandscape = false;
-                            try
-                            {
-                                ppd.propStreamToPrint = strContents;
-                                ppd.Show();
-                            }
-                            catch (Exception ex)
-                            {
-                                MessageBox.Show(ex.Message);
-                            }
-                            return;
-                        }
-                    }
-                }
-                catch
-                {
-                }
-            }
-            #endregion FILEINFO
-
-
-        }
-
-        private void Form1_Deactivate(object sender, EventArgs e)
-        {
-            this.BackColor = Color.BurlyWood;
-        }
-
-        private void Form1_Activated(object sender, EventArgs e)
-        {
-
-            this.BackColor = Posting835.DefaultBackColor;
-
-        }
-
-        private void tsmiMedicareWTHShareDir_Click(object sender, EventArgs e)
-        {
-            OpenFileDialog ofd = new OpenFileDialog();
-
-
-            ofd.Filter = "Payment Documents |*.835";
-            ofd.FilterIndex = 1;
-            ofd.InitialDirectory = @"\\wth251\ssiapp\SSI\00852\Billing\Uploadh\REMIT\Lab";
-            ofd.ShowDialog();
         }
 
         /// <summary>
@@ -5859,11 +4040,6 @@ namespace LabBilling.Legacy
         private void ImportMedicareFilesFromWTH(object sender, EventArgs e)
         {
             // Directory Work
-
-            //DataRow[] dr = dtDirectories.Select("key_name = 'import_directory_into'");
-            //diCurrent = new DirectoryInfo(string.Format(@"{0}",dr[0]["value"].ToString()));
-            //diInvalid = new DirectoryInfo(string.Format(@"{0}\invalid", dr[0]["value"].ToString()));
-            //diSaved = new DirectoryInfo(string.Format(@"{0}\saved", dr[0]["value"].ToString()));
 
             DataRow[] dr = dtDirectories.Select("key_name = 'import_directory'");
             diFrom = new DirectoryInfo(string.Format(@"{0}", dr[0]["value"].ToString()));
@@ -5918,95 +4094,13 @@ namespace LabBilling.Legacy
 
                     fFrom.MoveTo(string.Format(@"{0}\{1}\{2}", diFrom.FullName, DateTime.Now.Year.ToString(), strReplaceFile));
 
-                    //fFrom.CopyTo(string.Format(@"{0}\{1}", diInvalid.FullName, fFrom.Name));
                     MessageBox.Show(
                     string.Format("{0}.\r\n{1}.", MethodBase.GetCurrentMethod().Name, ex.Message), propAppName);
                 }
             }
 
-            //    // set the wth directory and filter for the .835 files in this directory only
-            //    DirectoryInfo diWTH = new DirectoryInfo(@"\\wth251\ssiapp\SSI\00852\Billing\Uploadh\REMIT\Lab");
-            //    FileInfo[] fiWTH = diWTH.GetFiles("*.835", SearchOption.TopDirectoryOnly);
-            //    if (fiWTH.GetUpperBound(0) == -1)
-            //    {
-            //        diWTH = new DirectoryInfo(@"\\wth251\ssiapp\SSI\00852\Billing\Uploadh\REMIT\Lab");
-            //        fiWTH = diWTH.GetFiles("*.835", SearchOption.TopDirectoryOnly);
-            //    }
-            //    foreach (FileInfo f in fiWTH)
-            //    {
-            //        Application.DoEvents();
-            //        // if the files last write time is greater than our last files writetime copy it to our remit directory
-            //        if (f.LastWriteTime > dtMax)
-            //        {
-            //            try
-            //            {
-            //                string strRead = RFClassLibrary.RFCObject.GetFileContents(f.FullName);
-            //                bool bOurs = false;
-            //                bOurs = strRead.Contains("N1*PE*MED CTR/LAB*");
-            //                if (!bOurs)
-            //                {
-            //                    bOurs = strRead.Contains("N1*PE*JACKSON-MADISON CO GEN HOSP*");
-            //                }
-            //                if (!bOurs) // 07/10/2008 wdk added
-            //                {
-            //                    bOurs = strRead.Contains("N1*PE*JACKSON-MADISON COUNTY GENERAL*");
-            //                }
-
-
-            //                if (bOurs)
-            //                {
-            //                    f.CopyTo(diRemit.FullName + "\\" + f.Name);
-            //                }
-            //                else
-            //                {
-            //                    f.CopyTo(diInvalid.FullName + "\\" + f.Name);
-            //                }
-            //            }
-            //            catch (Exception ex)
-            //            {
-            //                m_ERR.m_Logfile.WriteLogFile(string.Format("Could not copy {0} from WTH.\r\nERROR:{1}", f.FullName, ex.Message));
-            //                // don't do anything just continue
-            //            }
-            //        }
-
-
             purgeInvalidFilesToolStripMenuItem_Click(null, null);
         }
-
-        private void UpdateImportDate()
-        {
-            using (SqlConnection conn = new SqlConnection(m_sqlConnection.ConnectionString))
-            {
-                try
-                {
-                    SqlCommand cmdUpdate = new SqlCommand(
-                        string.Format("update dbo.system set value = '{0}' where key_name = 'import_date'",
-                        DateTime.Today), conn);
-                    conn.Open();
-                    int nRec = cmdUpdate.ExecuteNonQuery();
-
-
-                }
-                catch (SqlException se)
-                {
-                    MessageBox.Show(se.Message);
-                }
-                catch (Exception e)
-                {
-
-                    MessageBox.Show(e.Message);
-                }
-                finally
-                {
-                    if (conn.State == ConnectionState.Open)
-                    {
-                        conn.Close();
-                    }
-                }
-            }
-        }
-
-
 
         private void purgeInvalidFilesToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -6030,8 +4124,6 @@ namespace LabBilling.Legacy
             tspbRecords.Minimum = 0;
             tspbRecords.Maximum = fiLocal.GetUpperBound(0);
 
-
-
             foreach (FileInfo f1 in fiLocal)
             {
                 Application.DoEvents();
@@ -6050,15 +4142,6 @@ namespace LabBilling.Legacy
                         strReplaceFile = strReplaceFile.Insert(strReplaceFile.LastIndexOf('.'), DateTime.Now.ToFileTimeUtc().ToString());
 
                         f1.MoveTo(string.Format(@"{0}\{1}", diInvalid.FullName, strReplaceFile));
-
-
-                        //if (ioe.Message == "Cannot create a file when that file already exists.")
-                        //{
-                        //    string str = string.Format(@"{0}\{1}{2}.{3}",
-                        //        diInvalid.FullName,f1.Name.Substring(0,f1.Name.IndexOf(f1.Extension)),DateTime.Today.Ticks);
-                        //    f1.MoveTo(string.Format(@"{0}\{1}{2}.{3}",
-                        //        diInvalid.FullName,f1.Name.Substring(0,f1.Name.IndexOf(f1.Extension)),DateTime.Today.Ticks));
-                        //}
                     }
                 }
             }
@@ -6088,158 +4171,11 @@ namespace LabBilling.Legacy
             f.Show();
 
         }
-        private static bool FirstEmpty(FileInfo fi)
-        {
-            if (fi != null)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
 
-        
         void tKeyDown(object sender, KeyEventArgs e)
         {
             throw new NotImplementedException("inside t_KeyDown notify David");
-
-            //if (e.KeyData == Keys.Enter)
-            //{
-            //    DirectoryInfo diLocal = new DirectoryInfo(@"\\wthmclbill\MedicareRemit");
-            //    DirectoryInfo diInvalid = new DirectoryInfo(@"\\wthmclbill\MedicareRemit\invalid");
-            //    DirectoryInfo diSaved = new DirectoryInfo(@"\\wthmclbill\MedicareRemit\saved");
-            //    FileInfo[] fiLocal = diLocal.GetFiles("0910*.835");
-            //    FileInfo[] fiInvalid = diInvalid.GetFiles("0910*.835");
-            //    FileInfo[] fiSaved = diSaved.GetFiles("0910*.835");
-            //    FileInfo[] all = new FileInfo[fiLocal.GetUpperBound(0) + fiInvalid.GetUpperBound(0) + fiSaved.GetUpperBound(0) + 3];
-
-            //    FileInfo nStart = Array.Find(all, FirstEmpty);
-            //    // int nFirst = -1;
-
-            //    if (fiLocal.GetUpperBound(0) > -1)
-            //    {
-            //        fiLocal.CopyTo(all, 0);
-            //    }
-            //    if (fiSaved.GetUpperBound(0) > -1)
-            //    {
-            //        fiSaved.CopyTo(all, fiLocal.GetUpperBound(0) == -1 ? 0 : fiLocal.GetUpperBound(0));
-            //    }
-            //    if (fiInvalid.GetUpperBound(0) > -1)
-            //    {
-            //        fiInvalid.CopyTo(all, fiLocal.GetUpperBound(0) + all.GetUpperBound(0) + 1);
-            //    }
-            //    ((ProgressBar)((TextBox)sender).Parent.Controls["GEORGE"]).Step = 1;
-            //    ((ProgressBar)((TextBox)sender).Parent.Controls["GEORGE"]).Maximum = all.GetUpperBound(0);
-
-            //    //return;
-            //    foreach (FileInfo f1 in all)
-            //    {
-            //        Application.DoEvents();
-            //        ((ProgressBar)((TextBox)sender).Parent.Controls["GEORGE"]).PerformStep();
-            //        if (f1 == null)
-            //        { continue; }
-
-            //        string str = ((TextBox)sender).Text;
-            //        if (RFClassLibrary.RFCObject.GetFileContents(f1.FullName).Contains(str))
-            //        {
-            //            try
-            //            {
-            //                ((ListBox)((TextBox)sender).Parent.Controls["FRED"]).Items.Add(f1.FullName);
-            //            }
-            //            catch (Exception ex)
-            //            {
-
-            //                MessageBox.Show(ex.Message);
-            //            }
-            //        }
-
-            //    }
-            //    MessageBox.Show("DONE");
-            //}
         }
-        
-
-
-        private static int FirstNull(FileInfo f, ref int nFirstNull)
-        {
-            nFirstNull++;
-            if (f == null)
-            {
-                return nFirstNull;
-            }
-            else
-            {
-                return -1;
-            }
-
-        }
-
-        private void tsmiImportFiles_Click(object sender, EventArgs e)
-        {
-            //string[] strWTHFiles = Directory.GetFiles(@"\\wth251\ssiapp\SSI\00852\Billing\Uploadh\REMIT\Lab", "*.835", SearchOption.TopDirectoryOnly);
-            string[] strWTHFiles = Directory.GetFiles(
-                string.Format(@"{0}", diFrom), "*.835", SearchOption.TopDirectoryOnly);
-            if (strWTHFiles.GetUpperBound(0) == -1)
-            {
-                MessageBox.Show("No files to import", propAppName);
-                tspbRecords.Minimum = 0;
-                tspbRecords.Maximum = 0;
-                return;
-            }
-            FileInfo fi = null;// new FileInfo(null);
-            FileInfo fi1 = null;
-            tspbRecords.Minimum = 0;
-            tspbRecords.Maximum = strWTHFiles.GetUpperBound(0);
-
-            foreach (string strFile in strWTHFiles)
-            {
-
-                tspbRecords.PerformStep();
-                Application.DoEvents();
-
-                string[] strParts = strFile.Split('\\');
-
-                fi = new FileInfo(string.Format(@"\\wthmclbill\medicareremit\Saved\{0}",
-                    strParts[strParts.GetUpperBound(0)]));
-                try
-                {
-                    if (!fi.Exists)
-                    {
-                        // not in saved might be in the invalid folder
-                        fi = new FileInfo(string.Format(@"\\wthmclbill\medicareremit\Invalid\{0}",
-                        strParts[strParts.GetUpperBound(0)]));
-                        if (!fi.Exists)
-                        {
-                            fi1 = new FileInfo(string.Format(@"\\wth251\ssiapp\SSI\00852\Billing\Uploadh\REMIT\Lab\{0}", strParts[strParts.GetUpperBound(0)]));
-                            fi1.CopyTo(string.Format(@"\\wthmclbill\medicareremit\{0}",
-                                strParts[strParts.GetUpperBound(0)]));
-                        }
-                    }
-                }
-                catch (IOException ioe)
-                {
-                    MessageBox.Show(ioe.Message, ioe.GetType().ToString());
-                }
-            }
-
-
-
-            tsddbImport.Enabled = true;
-            MessageBox.Show("IMPORT FINISHED", propAppName);
-        }
-
-
-
-
-
-
-
-
-
-
-
 
     } // don't go below this line.
 
