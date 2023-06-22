@@ -81,6 +81,9 @@
     <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions, Version=7.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Extensions.DependencyInjection.Abstractions.7.0.0\lib\net462\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Extensions.Logging.Abstractions, Version=7.0.0.1, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.Logging.Abstractions.7.0.1\lib\net462\Microsoft.Extensions.Logging.Abstractions.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Extensions.Options, Version=7.0.0.1, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Extensions.Options.7.0.1\lib\net462\Microsoft.Extensions.Options.dll</HintPath>
     </Reference>
@@ -122,6 +125,9 @@
     </Reference>
     <Reference Include="NPOI.OpenXmlFormats, Version=2.6.0.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
       <HintPath>..\packages\NPOI.2.6.0\lib\net472\NPOI.OpenXmlFormats.dll</HintPath>
+    </Reference>
+    <Reference Include="OopFactory.X12, Version=3.0.8.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\OopFactory.X12.3.0.8.1\lib\net40\OopFactory.X12.dll</HintPath>
     </Reference>
     <Reference Include="PdfSharp, Version=1.51.5185.0, Culture=neutral, PublicKeyToken=f94615aa0424f9eb, processorArchitecture=MSIL">
       <HintPath>..\packages\PDFsharp-MigraDoc.1.51.5186-beta\lib\net20\PdfSharp.dll</HintPath>
@@ -211,8 +217,8 @@
     <Reference Include="System.Text.Encodings.Web, Version=7.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Text.Encodings.Web.7.0.0\lib\net462\System.Text.Encodings.Web.dll</HintPath>
     </Reference>
-    <Reference Include="System.Text.Json, Version=7.0.0.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Text.Json.7.0.2\lib\net462\System.Text.Json.dll</HintPath>
+    <Reference Include="System.Text.Json, Version=7.0.0.3, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Text.Json.7.0.3\lib\net462\System.Text.Json.dll</HintPath>
     </Reference>
     <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Threading.Tasks.Extensions.4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll</HintPath>
@@ -397,14 +403,6 @@
       <Project>{f54e006c-aa33-48f2-9e2f-46cfb5d7ee47}</Project>
       <Name>MCL</Name>
     </ProjectReference>
-    <ProjectReference Include="..\OopFactory.X12.Hipaa\OopFactory.X12.Hipaa.csproj">
-      <Project>{203C0F4B-D1F0-4C20-8968-7DBD84F4A815}</Project>
-      <Name>OopFactory.X12.Hipaa</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\OopFactory.X12\OopFactory.X12.csproj">
-      <Project>{AFE1BBBC-B957-461C-9022-B45D3DB117C9}</Project>
-      <Name>OopFactory.X12</Name>
-    </ProjectReference>
     <ProjectReference Include="..\RFClassLibrary\RFClassLibrary.csproj">
       <Project>{b15474ed-9185-437e-bac5-a19779cbe721}</Project>
       <Name>RFClassLibrary</Name>
@@ -424,6 +422,8 @@
     <Content Include="BusinessLogic\Resources\UB04_Red.gif">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Specifications\Ansi-133-Specification.xml" />
+    <Content Include="Specifications\Ansi-158-Specification.xml" />
     <EmbeddedResource Include="LabBillingCoreResources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>LabBillingCoreResources.Designer.cs</LastGenOutput>
