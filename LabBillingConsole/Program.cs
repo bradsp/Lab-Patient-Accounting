@@ -27,7 +27,6 @@ namespace LabBillingConsole
 
         static void Main(string[] args)
         {
-
             bool showMenu = true;
 
             while(showMenu)
@@ -38,7 +37,6 @@ namespace LabBillingConsole
 
         private static bool MainMenuPanel()
         {
-
             string serverName;
             string databaseName;
 

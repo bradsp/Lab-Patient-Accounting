@@ -132,7 +132,8 @@ namespace LabBilling.Core.BusinessLogic.Validators
                     .When(a => a.FinCode == "L" && a.PrimaryInsuranceCode == "SEHZ");
 
                 RuleFor(a => a.LmrpErrors)
-                    .Empty().WithMessage("LMRP Rule Violation");
+                    .Empty().WithMessage("LMRP Rule Violation")
+                    .When(a => a.FinCode == "A");
 
             });
 

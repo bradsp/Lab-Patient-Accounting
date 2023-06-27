@@ -278,11 +278,8 @@ namespace LabBilling.Legacy
             openFileDialog.Filter = "835 Files (*.835)|*.835 " +
                                     "|XML Files (*.X12)|*.X12 " +
                                     "|ALL Files (*.*)| *.*";
-            openFileDialog.FileName = //string.Format(@"{0}\*M*.835", diCurrent);
-                                      //@"\\wthmclbill\MedicareRemit\*.835";
-            @"\\wthmclbill\shared\Billing\LIVE\Posting835Remit\MedicareRemit\*.835";
+            openFileDialog.FileName = @"\\wthmclbill\shared\Billing\LIVE\Posting835Remit\MedicareRemit\*.835";
             openFileDialog.DefaultExt = "*.835";
-            //openFileDialog.InitialDirectory = @"\\wthmclbill\MedicareRemit";
             openFileDialog.InitialDirectory = @"\\wthmclbill\shared\Billing\LIVE\Posting835Remit";
             openFileDialog.ShowDialog();
         }

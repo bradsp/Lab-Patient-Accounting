@@ -939,6 +939,7 @@ namespace LabBilling.Legacy
             this.tstbFindAccount.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
             this.tstbFindAccount.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.CustomSource;
             this.tstbFindAccount.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
+            this.tstbFindAccount.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.tstbFindAccount.Name = "tstbFindAccount";
             this.tstbFindAccount.Size = new System.Drawing.Size(100, 23);
             // 
@@ -955,6 +956,7 @@ namespace LabBilling.Legacy
             // 
             this.tstbFindSubscriber.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
             this.tstbFindSubscriber.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.CustomSource;
+            this.tstbFindSubscriber.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.tstbFindSubscriber.Name = "tstbFindSubscriber";
             this.tstbFindSubscriber.Size = new System.Drawing.Size(100, 23);
             // 
@@ -995,11 +997,13 @@ namespace LabBilling.Legacy
             // 
             // tstbFileSearch
             // 
+            this.tstbFileSearch.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.tstbFileSearch.Name = "tstbFileSearch";
             this.tstbFileSearch.Size = new System.Drawing.Size(100, 21);
             // 
             // tsmiExtension
             // 
+            this.tsmiExtension.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.tsmiExtension.Name = "tsmiExtension";
             this.tsmiExtension.Size = new System.Drawing.Size(160, 21);
             this.tsmiExtension.Text = "*.*";
