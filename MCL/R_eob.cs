@@ -73,11 +73,11 @@ namespace MCL
     /// <summary>
     /// EOB instance based on RCRecordset
     /// </summary>
-    public class R_eob :RCRecordset
+    public class R_eob : RCRecordset
     {
         //===== string variables for fields in record  =====
-        
-       
+
+
         /// <summary>
         /// the Meditech account for this EOB
         /// </summary>
@@ -102,7 +102,7 @@ namespace MCL
         /// Patients status
         /// </summary>
         public string m_strPatStat; // this number is part of the ebo but we don't use it and it's '0'
-            
+
 
         /// <summary>
         /// 
@@ -168,7 +168,7 @@ namespace MCL
         /// 
         /// </summary>
         public string m_strClaimForwardedId;
-       
+
         /// <summary>
         /// 
         /// </summary>
@@ -178,8 +178,8 @@ namespace MCL
         /// 
         /// </summary>
         public string m_strEftNumber;
-        
-        
+
+
         /// <summary>
         /// 
         /// </summary>
@@ -201,9 +201,9 @@ namespace MCL
         /// EOB for this account and claim status added this variable and m_strAccount above
         /// Plus original files are split by HIS so additional data is required to eleminate duplicate postings
         /// </summary>
-        public string m_strCheckNo;        
+        public string m_strCheckNo;
 
-        
+
         //===== end of string variables for fields in record  =====
 
         /// <summary>
@@ -218,12 +218,12 @@ namespace MCL
         public R_eob(string strServer, string strDataBase, ref ERR errLog)
             : base(strServer, strDataBase, "data_EOB", ref errLog)
         {
-            
-           
-            
-            
+
+
+
+
         }
-    
+
 
         /// <summary>
         /// Generic GetRecords  - pass in where clause (without the WHERE key word).
@@ -237,8 +237,8 @@ namespace MCL
             if (m_CurrentRecordCount > 0)
             {
                 LoadMemberVariablesFromDataSet();
-                m_strErrMsg = string.Format("{0} Record(s) read", m_CurrentRecordCount);              
-            }          
+                m_strErrMsg = string.Format("{0} Record(s) read", m_CurrentRecordCount);
+            }
             return (m_CurrentRecordCount);
         }
 
@@ -253,7 +253,7 @@ namespace MCL
             //throw new System.NotImplementedException();
             strWhere = string.Format("deleted = 0 AND {0}",
                                         strWhere);
-            
+
             return (GetRecords(strWhere));
         }
 
@@ -266,13 +266,13 @@ namespace MCL
         public bool GetNext()
         {
             bool bRetVal = false; // eof or error on LoadMemberVariablesFromDataSet()
-            if (m_CurrentRecordIndex < (m_CurrentRecordCount-1))
+            if (m_CurrentRecordIndex < (m_CurrentRecordCount - 1))
             {
                 m_CurrentRecordIndex++;
-                return(LoadMemberVariablesFromDataSet());
+                return (LoadMemberVariablesFromDataSet());
             }
             m_strErrMsg = "EOF";
-            return(bRetVal);
+            return (bRetVal);
         }
 
         /// <summary>
@@ -336,7 +336,7 @@ namespace MCL
         //    m_strDeleted = "F";
         //    return (Update());
         //}
-        
+
         //======== generic stuff above this line ===========
 
         // below this commment======= general stuff
@@ -380,16 +380,16 @@ namespace MCL
             m_strClaimForwardedTo = "";
             m_strClaimForwardedId = "";
             m_strEftFile = "";
-            m_strEftNumber = "" ;
+            m_strEftNumber = "";
             m_strEftDate = "";
-            m_strEobPrintDate = "";     
-        
+            m_strEobPrintDate = "";
+
             m_strICN = ""; // this number is part of the eob but we don't use
             m_strPatStat = ""; // this number is part of the ebo but we don't use it and it's '0'
             // additional fields to eliminate duplicates.
             m_strBillCycleDate = "";
             m_strCheckNo = "";
-            
+
         }
 
         /// <summary>
@@ -414,7 +414,7 @@ namespace MCL
                     m_strModDate = ((DateTime)m_DataSet.Tables[propTable.ToString()].Rows[m_CurrentRecordIndex]["mod_date"]).ToString("d");
                 }
                 m_strModUser = m_DataSet.Tables[propTable.ToString()].Rows[m_CurrentRecordIndex]["mod_user"].ToString();
-                m_strModPrg = m_DataSet.Tables[propTable.ToString()].Rows[m_CurrentRecordIndex]["mod_prg"].ToString(); 
+                m_strModPrg = m_DataSet.Tables[propTable.ToString()].Rows[m_CurrentRecordIndex]["mod_prg"].ToString();
                 m_strModHost = m_DataSet.Tables[propTable.ToString()].Rows[m_CurrentRecordIndex]["mod_host"].ToString();
                 // ==== end of 'standard' fields =====================
 
@@ -427,19 +427,19 @@ namespace MCL
                 {
                     m_strDateOfService = ((DateTime)m_DataSet.Tables[propTable.ToString()].Rows[m_CurrentRecordIndex]["date_of_service"]).ToString("d");
                 }
-                m_strChargesReported = 
+                m_strChargesReported =
                     string.Format("{0:F2}",
                     m_DataSet.Tables[propTable.ToString()].Rows[m_CurrentRecordIndex]["charges_reported"]);
-                m_strChargesNoncovered = 
+                m_strChargesNoncovered =
                     string.Format("{0:F2}",
                     m_DataSet.Tables[propTable.ToString()].Rows[m_CurrentRecordIndex]["charges_noncovered"]);
-                m_strChargesDenied = 
+                m_strChargesDenied =
                     string.Format("{0:F2}",
                     m_DataSet.Tables[propTable.ToString()].Rows[m_CurrentRecordIndex]["charges_denied"]);
-                m_strPatLibCoinsurance = 
+                m_strPatLibCoinsurance =
                     string.Format("{0:F2}",
                     m_DataSet.Tables[propTable.ToString()].Rows[m_CurrentRecordIndex]["pat_lib_coinsurance"]);
-                
+
                 m_strEftFile = m_DataSet.Tables[propTable.ToString()].Rows[m_CurrentRecordIndex]["eft_file"].ToString();
                 m_strEftNumber = m_DataSet.Tables[propTable.ToString()].Rows[m_CurrentRecordIndex]["eft_number"].ToString();
                 if (!m_DataSet.Tables[propTable.ToString()].Rows[m_CurrentRecordIndex]["eft_date"].Equals(System.DBNull.Value))
@@ -450,27 +450,27 @@ namespace MCL
                 {
                     m_strEobPrintDate = ((DateTime)m_DataSet.Tables[propTable.ToString()].Rows[m_CurrentRecordIndex]["eob_print_date"]).ToString("d");
                 }
-                m_strPatLibNoncovered = 
+                m_strPatLibNoncovered =
                     string.Format("{0:F2}",
                     m_DataSet.Tables[propTable.ToString()].Rows[m_CurrentRecordIndex]["pat_lib_noncovered"]);
-                m_strPayDataReimbRate = 
-                    string.Format("0{0}",m_DataSet.Tables[propTable.ToString()].Rows[m_CurrentRecordIndex]["pay_data_reimb_rate"]);
-                m_strPayDataMSPPrimPay = 
+                m_strPayDataReimbRate =
+                    string.Format("0{0}", m_DataSet.Tables[propTable.ToString()].Rows[m_CurrentRecordIndex]["pay_data_reimb_rate"]);
+                m_strPayDataMSPPrimPay =
                     string.Format("{0:F2}",
                     m_DataSet.Tables[propTable.ToString()].Rows[m_CurrentRecordIndex]["pay_data_msp_prim_pay"]);
-                m_strPayDataHcpcsAmt = 
+                m_strPayDataHcpcsAmt =
                     string.Format("{0:F2}",
                     m_DataSet.Tables[propTable.ToString()].Rows[m_CurrentRecordIndex]["pay_data_hcpcs_amt"]);
-                m_strPayDataContAdjAmt = 
+                m_strPayDataContAdjAmt =
                     string.Format("{0:F2}",
                     m_DataSet.Tables[propTable.ToString()].Rows[m_CurrentRecordIndex]["pay_data_cont_adj_amt"]);
-                m_strPayDataPatRefund =  
+                m_strPayDataPatRefund =
                     string.Format("{0:F2}",
                     m_DataSet.Tables[propTable.ToString()].Rows[m_CurrentRecordIndex]["pay_data_pat_refund"]);
-                m_strPayDataPerDiemRate = 
+                m_strPayDataPerDiemRate =
                     string.Format("0{0}",
                     m_DataSet.Tables[propTable.ToString()].Rows[m_CurrentRecordIndex]["pay_data_per_diem_rate"].ToString());
-                m_strPayDataNetReimbAmt = 
+                m_strPayDataNetReimbAmt =
                     string.Format("{0:F2}",
                     m_DataSet.Tables[propTable.ToString()].Rows[m_CurrentRecordIndex]["pay_data_net_reimb_amt"]);
                 m_strClaimForwardedTo = m_DataSet.Tables[propTable.ToString()].Rows[m_CurrentRecordIndex]["claim_forwarded_to"].ToString();
@@ -480,10 +480,10 @@ namespace MCL
 
                 if (!m_DataSet.Tables[propTable.ToString()].Rows[m_CurrentRecordIndex]["bill_cycle_date"].Equals(System.DBNull.Value))
                 {
-                    m_strBillCycleDate = 
+                    m_strBillCycleDate =
                         ((DateTime)m_DataSet.Tables[propTable.ToString()].Rows[m_CurrentRecordIndex]["bill_cycle_date"]).ToString("d");
                 }
-                m_strCheckNo = m_DataSet.Tables[propTable.ToString()].Rows[m_CurrentRecordIndex]["check_no"].ToString(); 
+                m_strCheckNo = m_DataSet.Tables[propTable.ToString()].Rows[m_CurrentRecordIndex]["check_no"].ToString();
 
                 bRetVal = true;
             }
@@ -505,7 +505,7 @@ namespace MCL
         /// Or 
         /// -1 = Error m_strErrMsg has detailis of error</returns>
         public int AddRecord()
-        {   
+        {
             int iRetVal = -1;
             string strSQL;
 
@@ -518,27 +518,27 @@ namespace MCL
             */
             strSQL = string.Format("INSERT INTO {0}" +
                 "(account, subscriberID, subscriberName, date_of_service, ICN," +
-                    "PatStat, claim_status, claim_type, charges_reported,  charges_noncovered,"+
-                        "charges_denied, pat_lib_coinsurance, pat_lib_noncovered, pay_data_pat_refund, pay_data_reimb_rate,"+
-                        "pay_data_msp_prim_pay,"+
-                            "pay_data_hcpcs_amt,  pay_data_cont_adj_amt, pay_data_per_diem_rate, pay_data_net_reimb_amt, claim_forwarded_to, "+
-                                "claim_forwarded_id, eft_file,  eft_number, eft_date, "+
-                                    "eob_print_date, mod_date, mod_prg, mod_user, mod_host, bill_cycle_date, check_no) "+
-                                            "VALUES ('{1}','{2}','{3}','{4}','{5}', "+
-                                                    " '{6}','{7}','{8}','{9}','{10}', "+
-                                                        " '{11}','{12}','{13}','{14}','{15}', "+
-                                                            " '{16}','{17}','{18}','{19}','{20}', "+
-                                                                " '{21}','{22}','{23}','{24}','{25}', "+
+                    "PatStat, claim_status, claim_type, charges_reported,  charges_noncovered," +
+                        "charges_denied, pat_lib_coinsurance, pat_lib_noncovered, pay_data_pat_refund, pay_data_reimb_rate," +
+                        "pay_data_msp_prim_pay," +
+                            "pay_data_hcpcs_amt,  pay_data_cont_adj_amt, pay_data_per_diem_rate, pay_data_net_reimb_amt, claim_forwarded_to, " +
+                                "claim_forwarded_id, eft_file,  eft_number, eft_date, " +
+                                    "eob_print_date, mod_date, mod_prg, mod_user, mod_host, bill_cycle_date, check_no) " +
+                                            "VALUES ('{1}','{2}','{3}','{4}','{5}', " +
+                                                    " '{6}','{7}','{8}','{9}','{10}', " +
+                                                        " '{11}','{12}','{13}','{14}','{15}', " +
+                                                            " '{16}','{17}','{18}','{19}','{20}', " +
+                                                                " '{21}','{22}','{23}','{24}','{25}', " +
                                                                     " '{26}', {27},'{28}','{29}', '{30}', '{31}', '{32}')",
-                                         propTable.ToString(), 
+                                         propTable.ToString(),
                                          m_strAccount, m_strSubscriberID, m_strSubscriberName, m_strDateOfService, m_strICN, //5
                                          m_strPatStat, m_strClaimStatus, m_strClaimType, m_strChargesReported, m_strChargesNoncovered, //10
                                          m_strChargesDenied, m_strPatLibCoinsurance, m_strPatLibNoncovered, m_strPayDataPatRefund, m_strPayDataReimbRate, //15  
-                                         m_strPayDataMSPPrimPay, 
+                                         m_strPayDataMSPPrimPay,
                                          m_strPayDataHcpcsAmt, m_strPayDataContAdjAmt, m_strPayDataPerDiemRate, m_strPayDataNetReimbAmt, m_strClaimForwardedTo, //20
-                                         m_strClaimForwardedId,  m_strEftFile, m_strEftNumber, m_strEftDate, //25
-                                         m_strEobPrintDate.Length == 0 ? "null" : string.Format("'{0}'",m_strEobPrintDate), m_strModDate, m_strModPrg, m_strModUser, m_strModHost, m_strBillCycleDate, m_strCheckNo);
-         
+                                         m_strClaimForwardedId, m_strEftFile, m_strEftNumber, m_strEftDate, //25
+                                         m_strEobPrintDate.Length == 0 ? "null" : string.Format("'{0}'", m_strEobPrintDate), m_strModDate, m_strModPrg, m_strModUser, m_strModHost, m_strBillCycleDate, m_strCheckNo);
+
             iRetVal = SQLExec(strSQL, out m_strErrMsg);
             if (iRetVal > 0)
             {
@@ -574,7 +574,7 @@ namespace MCL
                 }
                 m_DataSet.Tables[propTable.ToString()].Rows[m_CurrentRecordIndex]["pat_lib_noncovered"] = m_strPatLibNoncovered;
                 m_DataSet.Tables[propTable.ToString()].Rows[m_CurrentRecordIndex]["pay_data_reimb_rate"] = m_strPayDataReimbRate;
-                m_DataSet.Tables[propTable.ToString()].Rows[m_CurrentRecordIndex]["pay_data_msp_prim_pay"] = m_strPayDataMSPPrimPay ;
+                m_DataSet.Tables[propTable.ToString()].Rows[m_CurrentRecordIndex]["pay_data_msp_prim_pay"] = m_strPayDataMSPPrimPay;
                 m_DataSet.Tables[propTable.ToString()].Rows[m_CurrentRecordIndex]["pay_data_hcpcs_amt"] = m_strPayDataHcpcsAmt;
                 m_DataSet.Tables[propTable.ToString()].Rows[m_CurrentRecordIndex]["pay_data_cont_adj_amt"] = m_strPayDataContAdjAmt;
                 m_DataSet.Tables[propTable.ToString()].Rows[m_CurrentRecordIndex]["pay_data_pat_refund"] = m_strPayDataPatRefund;
@@ -585,10 +585,10 @@ namespace MCL
                 m_DataSet.Tables[propTable.ToString()].Rows[m_CurrentRecordIndex]["icn"] = m_strICN;
                 m_DataSet.Tables[propTable.ToString()].Rows[m_CurrentRecordIndex]["patstat"] = m_strPatStat;
                 m_DataSet.Tables[propTable.ToString()].Rows[m_CurrentRecordIndex]["bill_cycle_date"] = m_strBillCycleDate;
-                m_DataSet.Tables[propTable.ToString()].Rows[m_CurrentRecordIndex]["check_no"] = m_strCheckNo; 
+                m_DataSet.Tables[propTable.ToString()].Rows[m_CurrentRecordIndex]["check_no"] = m_strCheckNo;
 
             }
-          
+
             return iRetVal;
         }
 
@@ -639,11 +639,11 @@ namespace MCL
         //                                 m_strPayDataHcpcsAmt, m_strPayDataContAdjAmt, m_strPayDataPerDiemRate, m_strPayDataNetReimbAmt, m_strClaimForwardedTo, //19
         //                                 m_strClaimForwardedId, m_strEobDetailRowguid, m_strEftFile, m_strEftNumber, m_strEftDate, //24
         //                                 m_strEobPrintDate, m_strModDate, m_strModPrg, m_strModUser, m_strModHost, m_strPayDataPatRefund);
-         
+
         //    return SQLExec(strSQL, out m_strErrMsg);    
         //}
 
- 
+
         //==== 'special' functions just for this class below this line ======
         // <summary>
         // Gets ACTIVE ICD9 record for the icd9 and ama year passed in.
@@ -657,13 +657,13 @@ namespace MCL
         //    strWhere = string.Format("icd9_num = '{0}' AND AMA_year = '{1}'",
         //                                 strIcd9Num,
         //                                  strAMAYear);
-          
+
         //    return (GetActiveRecords(strWhere));
 
         //}
 
 
 
-        
+
     } // don't type below this line
 }

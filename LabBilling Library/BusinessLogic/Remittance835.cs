@@ -1257,8 +1257,9 @@ namespace LabBilling.Core.BusinessLogic
 
             //export remittance class to json
 
-            var json = Newtonsoft.Json.JsonConvert.SerializeObject(remittance);
+            //var json = Newtonsoft.Json.JsonConvert.SerializeObject(remittance);
 
+            var json = Newtonsoft.Json.JsonConvert.SerializeObject(ediDocument);
             System.IO.File.WriteAllText(@"C:\temp\remit.json", json);
 
         }
@@ -1280,9 +1281,9 @@ namespace LabBilling.Core.BusinessLogic
             transformStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(@"OopFactory.X12.Transformations.X12-835-To-CSV.xslt");
 
             X12Parser parser = new X12Parser();
-            Interchange interchange = parser.Parse(inputStream);
-            interchange.SerializeToX12(true);
-            string xml = interchange.Serialize();
+            List<Interchange> interchange = parser.ParseMultiple(inputStream);
+            interchange[0].SerializeToX12(true);
+            string xml = interchange[0].Serialize();
 
             var transform = new XslCompiledTransform();
             transform.Load(XmlReader.Create(transformStream));

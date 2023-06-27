@@ -106,7 +106,7 @@
     </Reference>
     <Reference Include="Office, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
       <HintPath>..\packages\MicrosoftOfficeCore.15.0.0\lib\net35\Office.dll</HintPath>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
     <Reference Include="System">
       <Name>System</Name>
@@ -167,13 +167,11 @@
       <DependentUpon>FormResponse.cs</DependentUpon>
     </Compile>
     <Compile Include="HiPerfTimer.cs" />
-    <Compile Include="HL7.cs" />
     <Compile Include="LaunchAcc.cs" />
     <Compile Include="ListObject.cs" />
     <Compile Include="ListViewPrinter.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="NoAccessException.cs" />
     <Compile Include="ObjectProperties.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -191,7 +189,6 @@
     <Compile Include="RFCPrintPreview.Designer.cs">
       <DependentUpon>RFCPrintPreview.cs</DependentUpon>
     </Compile>
-    <Compile Include="R_Conflict.cs" />
     <Compile Include="SearchEventLog.cs" />
     <Compile Include="StringBuilderExt.cs" />
     <Compile Include="StringExtensions.cs" />
@@ -221,9 +218,6 @@
     <Compile Include="ElapsedTime.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ImAlive.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="LogFile.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -231,9 +225,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Sound.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Str.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Time.cs">
@@ -248,7 +239,6 @@
     <Compile Include="WaveStream.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="XML.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="HL7Schema.xsd">

@@ -12,7 +12,6 @@ namespace LabBilling.Core.DataAccess
 {
     public sealed class AccountRepository : RepositoryBase<Account>, IRepositoryBase<Account>, IAccountRepository
     {
-        private string _connection;
         private readonly PatRepository patRepository;
         private readonly InsRepository insRepository;
         private readonly ChrgRepository chrgRepository;

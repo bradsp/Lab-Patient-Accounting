@@ -67,6 +67,12 @@ namespace LabBilling.Core.Models
         [Column("Balance")]
         [ResultColumn]
         public double Balance { get; set; }
+        [Column("ClientBalance")]
+        [ResultColumn]
+        public double ClientBalance { get; set; }
+        [Column("ThirdPartyBalance")]
+        [ResultColumn]
+        public double ThirdPartyBalance { get; set; }
 
         [Column("TotalCharges")]
         [ResultColumn]

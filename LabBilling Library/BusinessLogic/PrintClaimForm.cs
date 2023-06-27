@@ -1,6 +1,4 @@
-﻿using OopFactory.X12.Hipaa.Claims.Services;
-using OopFactory.X12.Parsing;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
