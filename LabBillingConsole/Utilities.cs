@@ -13,6 +13,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+using System.Threading;
+using LabBilling.Logging;
 
 namespace LabBillingConsole
 {
@@ -39,6 +41,7 @@ namespace LabBillingConsole
             menuText.AppendLine("9) Fix Drug Screen Charges");
             menuText.AppendLine("10) Swap Insurances");
             menuText.AppendLine("12) Regenerate Collections File");
+            menuText.AppendLine("13) Run Claims Batch");
             menuText.AppendLine("X) Exit");
 
             var panel = new Panel(menuText.ToString());
@@ -98,6 +101,10 @@ namespace LabBillingConsole
                     Console.Clear();
                     RegenerateCollectionsFile();
                     return true;
+                case "13":
+                    Console.Clear();
+                    RunClaimsProcessing();
+                    return true;
                 case "X":
                     return false;
                 case "x":
@@ -140,8 +147,6 @@ namespace LabBillingConsole
 
         public void FixDrugScreenCharges()
         {
-
-
 
             PetaPoco.Database dbConnection = new Database(_appEnvironment.ConnectionString, new CustomSqlDatabaseProvider());
             ChrgRepository chargeRepository = new ChrgRepository(_appEnvironment);
@@ -296,6 +301,75 @@ namespace LabBillingConsole
             return response;
         }
 
+        public void RunClaimsProcessing()
+        {
+            ClaimGenerator claimGenerator = new ClaimGenerator(_appEnvironment);
+
+            CancellationToken cancellationToken = new CancellationToken();
+            Progress<ProgressReportModel> progressReportModel = new Progress<ProgressReportModel>();
+
+            Console.WriteLine("In RunClaimsProcessing() - Starting ClaimsProcessing job");
+            Log.Instance.Info("In RunClaimsProcessing() - Starting ClaimsProcessing job");
+
+            try
+            {
+                int claimsProcessed = 0;
+                claimsProcessed = claimGenerator.CompileBillingBatch(LabBilling.Core.ClaimType.Institutional, progressReportModel, cancellationToken);
+
+                if (claimsProcessed < 0)
+                {
+                    Log.Instance.Info("Error processing institutional claims. No file generated.");
+                    Console.WriteLine("Error processing institutional claims. No file generated.");
+                }
+                else
+                {
+                    Log.Instance.Info($"Institutional claim file generated. {claimsProcessed} claims generated.");
+                    Console.WriteLine($"Institutional claim file generated. {claimsProcessed} claims generated.");
+                }
+            }
+            catch (TaskCanceledException tce)
+            {
+                Log.Instance.Error($"Institutional claim Batch cancelled by user", tce);
+                Console.WriteLine("Institutional claim batch cancelled by user. No file was generated and batch has been rolled back.");
+            }
+            catch (Exception ex)
+            {
+                Log.Instance.Error(ex.Message);
+                Console.WriteLine(ex.Message);
+            }
+
+            try
+            {
+                int claimsProcessed = 0;
+
+                claimsProcessed = claimGenerator.CompileBillingBatch(LabBilling.Core.ClaimType.Professional, progressReportModel, cancellationToken);
+
+                if (claimsProcessed < 0)
+                {
+                    Log.Instance.Info("Error processing professional claims. No file generated.");
+                    Console.WriteLine("Error processing professional claims. No file generated.");
+                }
+                else
+                {
+                    Log.Instance.Info($"Professional file generated. {claimsProcessed} claims generated.");
+                    Console.WriteLine($"Professional file generated. {claimsProcessed} claims generated.");
+                }
+
+            }
+            catch (TaskCanceledException tce)
+            {
+                Log.Instance.Error($"Claim Batch cancelled by user", tce);
+                Console.WriteLine("Professional claim batch cancelled by user. No file was generated and batch has been rolled back.");
+            }
+            catch (Exception ex)
+            {
+                Log.Instance.Error(ex.Message);
+                Console.WriteLine(ex.Message);
+            }
+
+            Console.WriteLine("In RunClaimsProcessing() - Finished ClaimsProcessing job");
+            Log.Instance.Info("In RunClaimsProcessing() - Finished ClaimsProcessing job");
+        }
 
     }
 
