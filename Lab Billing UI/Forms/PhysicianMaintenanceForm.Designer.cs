@@ -52,6 +52,7 @@ namespace LabBilling.Forms
             this.PhysicianDGV.Name = "PhysicianDGV";
             this.PhysicianDGV.Size = new System.Drawing.Size(765, 297);
             this.PhysicianDGV.TabIndex = 0;
+            this.PhysicianDGV.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.PhysicianDGV_CellDoubleClick);
             // 
             // label1
             // 
@@ -94,12 +95,12 @@ namespace LabBilling.Forms
             // 
             // btnNew
             // 
-            this.btnNew.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnNew.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.btnNew.Image = ((System.Drawing.Image)(resources.GetObject("btnNew.Image")));
             this.btnNew.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnNew.Name = "btnNew";
-            this.btnNew.Size = new System.Drawing.Size(23, 22);
-            this.btnNew.Text = "Add Entry";
+            this.btnNew.Size = new System.Drawing.Size(82, 22);
+            this.btnNew.Text = "New Provider";
             this.btnNew.ToolTipText = "Add Entry";
             this.btnNew.Click += new System.EventHandler(this.btnNew_Click);
             // 
@@ -115,6 +116,7 @@ namespace LabBilling.Forms
             // 
             // PhysicianMaintenanceForm
             // 
+            this.AcceptButton = this.buttonSearch;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(790, 379);

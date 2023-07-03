@@ -196,6 +196,12 @@
     <Compile Include="Forms\PaymentAdjustmentEntryForm.Designer.cs">
       <DependentUpon>PaymentAdjustmentEntryForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\PhysicianMaintenanceEditForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\PhysicianMaintenanceEditForm.Designer.cs">
+      <DependentUpon>PhysicianMaintenanceEditForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\SplashForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -525,6 +531,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\PaymentAdjustmentEntryForm.resx">
       <DependentUpon>PaymentAdjustmentEntryForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\PhysicianMaintenanceEditForm.resx">
+      <DependentUpon>PhysicianMaintenanceEditForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\SplashForm.resx">
       <DependentUpon>SplashForm.cs</DependentUpon>
