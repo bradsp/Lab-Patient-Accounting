@@ -202,7 +202,6 @@
     <Compile Include="Forms\SplashForm.Designer.cs">
       <DependentUpon>SplashForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Worklists.cs" />
     <Compile Include="Legacy Forms\PrintEOBForm.cs">
       <SubType>Form</SubType>
     </Compile>
