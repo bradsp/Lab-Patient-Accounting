@@ -257,6 +257,7 @@
     <Compile Include="BusinessLogic\Validators\InsuranceValidator.cs" />
     <Compile Include="BusinessLogic\Validators\InterfaceMessageValidator.cs" />
     <Compile Include="BusinessLogic\Validators\PhysicianValidator.cs" />
+    <Compile Include="BusinessLogic\Worklist.cs" />
     <Compile Include="DataAccess\AccountLmrpErrorRepository.cs" />
     <Compile Include="DataAccess\AccountRepository.cs" />
     <Compile Include="DataAccess\AccountSearchRepository.cs" />

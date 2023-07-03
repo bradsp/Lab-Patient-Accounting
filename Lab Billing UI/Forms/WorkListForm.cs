@@ -11,6 +11,7 @@ using LabBilling.Library;
 using System.Data;
 //using System.CodeDom;
 using LabBilling.Core;
+using LabBilling.Core.BusinessLogic;
 
 namespace LabBilling.Forms
 {
@@ -30,10 +31,11 @@ namespace LabBilling.Forms
         private const int _timerDelay = 650;
         private string selectedQueue = null;
         private TreeNode currentNode = null;
+        private Worklist worklist = null;
 
         private void WorkListForm_Load(object sender, EventArgs e)
         {
-
+            worklist = new Worklist(Program.AppEnvironment);
             //Cursor.Current = Cursors.WaitCursor;
             accountRepository = new AccountRepository(Program.AppEnvironment);
             accountSearchRepository = new AccountSearchRepository(Program.AppEnvironment);
@@ -45,28 +47,14 @@ namespace LabBilling.Forms
             accountBindingSource.DataSource = accountTable;
             accountGrid.DataSource = accountBindingSource;
 
-            // load the treeview with worklists
-            TreeNode[] worklistsTreeNode = new TreeNode[]
+            var worklists = Worklists.ToList();
+
+            TreeNode[] worklistsTreeNode = new TreeNode[worklists.Count];
+            int i = 0;
+            foreach(string wlist in worklists)
             {
-                new TreeNode(Worklists.MedicareCigna),
-                new TreeNode(Worklists.BlueCross),
-                new TreeNode(Worklists.Champus),
-                new TreeNode(Worklists.TenncareBCBS),
-                new TreeNode(Worklists.CommercialInst),
-                new TreeNode(Worklists.CommercialProf),
-                new TreeNode(Worklists.UHCCommunityPlan),
-                new TreeNode(Worklists.PathwaysTNCare),
-                new TreeNode(Worklists.Amerigroup),
-                new TreeNode(Worklists.SelfPay),
-                new TreeNode(Worklists.ManualHold),
-                new TreeNode(Worklists.InitialHold),
-                new TreeNode(Worklists.ErrorFinCode),
-                new TreeNode(Worklists.ClientBill),
-                new TreeNode(Worklists.SubmittedInstitutional),
-                new TreeNode(Worklists.SubmittedProfessional),
-                new TreeNode(Worklists.SubmittedOtherClaim),
-                new TreeNode(Worklists.ReceivingStatements)
-            };
+                worklistsTreeNode[i++] = new TreeNode(wlist);
+            }
 
             TreeNode rootNode = new TreeNode("Worklists", worklistsTreeNode);
             workqueues.Nodes.Add(rootNode);
@@ -192,17 +180,11 @@ namespace LabBilling.Forms
 
         private async void LoadWorkList()
         {
+
+
             workqueues.Enabled = false;
 
             Cursor.Current = Cursors.WaitCursor;
-
-            DateTime thruDate = Program.AppEnvironment.ApplicationParameters.SSIBillThruDate;
-            (string propertyName, AccountSearchRepository.operation oper, string searchText)[] parameters =
-            {
-                (nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "PAID_OUT"),
-                (nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "CLOSED"),
-                (nameof(AccountSearch.FinCode), AccountSearchRepository.operation.NotEqual, "CLIENT")
-            };
 
             if (selectedQueue == null)
             {
@@ -210,148 +192,13 @@ namespace LabBilling.Forms
                 return;
             }
 
-            switch (selectedQueue)
-            {
-                case Worklists.MedicareCigna:
-                    parameters = parameters.Append((nameof(AccountSearch.ServiceDate), AccountSearchRepository.operation.LessThanOrEqual, thruDate.ToString())).ToArray();
-                    parameters = parameters.Append((nameof(AccountSearch.FinCode), AccountSearchRepository.operation.Equal, "A")).ToArray();
-                    parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "HOLD")).ToArray();
-                    parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "SSI1500")).ToArray();
-                    parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "SSIUB")).ToArray();
-                    parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "CLAIM")).ToArray();
-                    parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "STMT")).ToArray();
-                    parameters = parameters.Append((nameof(AccountSearch.ThirdPartyBalance), AccountSearchRepository.operation.NotEqual, "0.00")).ToArray();
-                    break;
-                case Worklists.BlueCross:
-                    parameters = parameters.Append((nameof(AccountSearch.ServiceDate), AccountSearchRepository.operation.LessThanOrEqual, thruDate.ToString())).ToArray();
-                    parameters = parameters.Append((nameof(AccountSearch.FinCode), AccountSearchRepository.operation.Equal, "B")).ToArray();
-                    parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "HOLD")).ToArray();
-                    parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "SSI1500")).ToArray();
-                    parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "SSIUB")).ToArray();
-                    parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "SSIUB")).ToArray();
-                    parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "CLAIM")).ToArray();
-                    parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "STMT")).ToArray();
-                    parameters = parameters.Append((nameof(AccountSearch.ThirdPartyBalance), AccountSearchRepository.operation.NotEqual, "0.00")).ToArray();
-                    break;
-                case Worklists.Champus:
-                    parameters = parameters.Append((nameof(AccountSearch.ServiceDate), AccountSearchRepository.operation.LessThanOrEqual, thruDate.ToString())).ToArray();
-                    parameters = parameters.Append((nameof(AccountSearch.FinCode), AccountSearchRepository.operation.Equal, "C")).ToArray();
-                    parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "HOLD")).ToArray();
-                    parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "SSI1500")).ToArray();
-                    parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "SSIUB")).ToArray();
-                    parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "CLAIM")).ToArray();
-                    parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "STMT")).ToArray();
-                    parameters = parameters.Append((nameof(AccountSearch.ThirdPartyBalance), AccountSearchRepository.operation.NotEqual, "0.00")).ToArray();
-                    break;
-                case Worklists.TenncareBCBS:
-                    parameters = parameters.Append((nameof(AccountSearch.ServiceDate), AccountSearchRepository.operation.LessThanOrEqual, thruDate.ToString())).ToArray();
-                    parameters = parameters.Append((nameof(AccountSearch.FinCode), AccountSearchRepository.operation.Equal, "D")).ToArray();
-                    parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "HOLD")).ToArray();
-                    parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "SSI1500")).ToArray();
-                    parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "SSIUB")).ToArray();
-                    parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "CLAIM")).ToArray();
-                    parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "STMT")).ToArray();
-                    parameters = parameters.Append((nameof(AccountSearch.ThirdPartyBalance), AccountSearchRepository.operation.NotEqual, "0.00")).ToArray();
-                    break;
-                case Worklists.CommercialInst:
-                    parameters = parameters.Append((nameof(AccountSearch.ServiceDate), AccountSearchRepository.operation.LessThanOrEqual, thruDate.ToString())).ToArray();
-                    parameters = parameters.Append((nameof(AccountSearch.FinCode), AccountSearchRepository.operation.Equal, "H")).ToArray();
-                    parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "HOLD")).ToArray();
-                    parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "SSI1500")).ToArray();
-                    parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "SSIUB")).ToArray();
-                    parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "CLAIM")).ToArray();
-                    parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "STMT")).ToArray();
-                    parameters = parameters.Append((nameof(AccountSearch.ThirdPartyBalance), AccountSearchRepository.operation.NotEqual, "0.00")).ToArray();
-                    break;
-                case Worklists.CommercialProf:
-                    parameters = parameters.Append((nameof(AccountSearch.ServiceDate), AccountSearchRepository.operation.LessThanOrEqual, thruDate.ToString())).ToArray();
-                    parameters = parameters.Append((nameof(AccountSearch.FinCode), AccountSearchRepository.operation.Equal, "L")).ToArray();
-                    parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "HOLD")).ToArray();
-                    parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "SSI1500")).ToArray();
-                    parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "SSIUB")).ToArray();
-                    parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "CLAIM")).ToArray();
-                    parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "STMT")).ToArray();
-                    parameters = parameters.Append((nameof(AccountSearch.ThirdPartyBalance), AccountSearchRepository.operation.NotEqual, "0.00")).ToArray();
-                    break;
-                case Worklists.UHCCommunityPlan:
-                    parameters = parameters.Append((nameof(AccountSearch.ServiceDate), AccountSearchRepository.operation.LessThanOrEqual, thruDate.ToString())).ToArray();
-                    parameters = parameters.Append((nameof(AccountSearch.FinCode), AccountSearchRepository.operation.Equal, "M")).ToArray();
-                    parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "HOLD")).ToArray();
-                    parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "SSI1500")).ToArray();
-                    parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "SSIUB")).ToArray();
-                    parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "CLAIM")).ToArray();
-                    parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "STMT")).ToArray();
-                    parameters = parameters.Append((nameof(AccountSearch.ThirdPartyBalance), AccountSearchRepository.operation.NotEqual, "0.00")).ToArray();
-                    break;
-                case Worklists.PathwaysTNCare:
-                    parameters = parameters.Append((nameof(AccountSearch.ServiceDate), AccountSearchRepository.operation.LessThanOrEqual, thruDate.ToString())).ToArray();
-                    parameters = parameters.Append((nameof(AccountSearch.FinCode), AccountSearchRepository.operation.Equal, "P")).ToArray();
-                    parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "HOLD")).ToArray();
-                    parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "SSI1500")).ToArray();
-                    parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "SSIUB")).ToArray();
-                    parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "CLAIM")).ToArray();
-                    parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "STMT")).ToArray();
-                    parameters = parameters.Append((nameof(AccountSearch.ThirdPartyBalance), AccountSearchRepository.operation.NotEqual, "0.00")).ToArray();
-                    break;
-                case Worklists.Amerigroup:
-                    parameters = parameters.Append((nameof(AccountSearch.ServiceDate), AccountSearchRepository.operation.LessThanOrEqual, thruDate.ToString())).ToArray();
-                    parameters = parameters.Append((nameof(AccountSearch.FinCode), AccountSearchRepository.operation.Equal, "Q")).ToArray();
-                    parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "HOLD")).ToArray();
-                    parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "SSI1500")).ToArray();
-                    parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "SSIUB")).ToArray();
-                    parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "CLAIM")).ToArray();
-                    parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "STMT")).ToArray();
-                    parameters = parameters.Append((nameof(AccountSearch.ThirdPartyBalance), AccountSearchRepository.operation.NotEqual, "0.00")).ToArray();
-                    break;
-                case Worklists.SelfPay:
-                    parameters = parameters.Append((nameof(AccountSearch.ServiceDate), AccountSearchRepository.operation.LessThanOrEqual, thruDate.ToString())).ToArray();
-                    parameters = parameters.Append((nameof(AccountSearch.FinCode), AccountSearchRepository.operation.Equal, "E")).ToArray();
-                    parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "HOLD")).ToArray();
-                    parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "SSI1500")).ToArray();
-                    parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "SSIUB")).ToArray();
-                    parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "CLAIM")).ToArray();
-                    parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "STMT")).ToArray();
-                    parameters = parameters.Append((nameof(AccountSearch.ThirdPartyBalance), AccountSearchRepository.operation.NotEqual, "0.00")).ToArray();
-                    break;
-                case Worklists.ManualHold:
-                    parameters = parameters.Append((nameof(AccountSearch.ServiceDate), AccountSearchRepository.operation.LessThanOrEqual, thruDate.ToString())).ToArray();
-                    parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.Equal, "HOLD")).ToArray();
-                    break;
-                case Worklists.InitialHold:
-                    parameters = parameters.Append((nameof(AccountSearch.ServiceDate), AccountSearchRepository.operation.GreaterThanOrEqual, thruDate.ToString())).ToArray();
-                    parameters = parameters.Append((nameof(AccountSearch.FinType), AccountSearchRepository.operation.NotEqual, "C")).ToArray();
-                    break;
-                case Worklists.ErrorFinCode:
-                    parameters = parameters.Append((nameof(AccountSearch.FinCode), AccountSearchRepository.operation.Equal, "K")).ToArray();
-                    break;
-                case Worklists.ClientBill:
-                    parameters = parameters.Append((nameof(AccountSearch.FinType), AccountSearchRepository.operation.Equal, "C")).ToArray();
-                    break;
-                case Worklists.SubmittedInstitutional:
-                    parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.Equal, "SSIUB")).ToArray();
-                    break;
-                case Worklists.SubmittedProfessional:
-                    parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.Equal, "SSI1500")).ToArray();
-                    break;
-                case Worklists.SubmittedOtherClaim:
-                    parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.Equal, "CLAIM")).ToArray();
-                    break;
-                case Worklists.ReceivingStatements:
-                    parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.Equal, "STMT")).ToArray();
-                    break;
-                default:
-                    break;
-            }
-
             accountGrid.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             accountGrid.RowHeadersVisible = false;
 
             toolStripStatusLabel1.Text = "Loading Accounts ... ";
             toolStripProgressBar1.Style = ProgressBarStyle.Marquee;
-            var accounts = (List<AccountSearch>)await Task.Run(() =>
-            {
-                return accountSearchRepository.GetBySearch(parameters);
-            });
+
+            var accounts = await worklist.GetAccountsForWorklistAsync(selectedQueue);
 
             accountBindingSource.DataSource = null;
             accountTable = accounts.ToDataTable();
@@ -417,17 +264,6 @@ namespace LabBilling.Forms
 
         }
 
-        //private void CancelValidationButton_Click(object sender, EventArgs e)
-        //{
-        //    if (MessageBox.Show("Are you sure you want to abort validation process?", "Abort Validation?", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
-        //            == DialogResult.Yes)
-        //    {
-        //        //code to abort process
-        //        requestAbort = true;
-        //        return;
-        //    }
-        //}
-
         private void holdToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var selectedAccount = accountGrid.SelectedRows[0].Cells[nameof(AccountSearch.Account)].Value.ToString();
@@ -435,7 +271,6 @@ namespace LabBilling.Forms
 
             if (accountGrid.SelectedRows[0].Cells[nameof(AccountSearch.Status)].Value.ToString() != "HOLD")
             {
-                //accountGrid.SelectedRows[0].Cells[nameof(AccountSearch.Status)].Value = "HOLD";
                 accts[nameof(AccountSearch.Status)] = "HOLD";
                 //get user comment
                 var result = InputBox.Show("Enter a reason for placing account on hold", true);
@@ -547,7 +382,6 @@ namespace LabBilling.Forms
                 try
                 {
                     accountRepository.ChangeFinancialClass(ref account, newFinCode);
-                    //accts[nameof(AccountSearch.FinCode)] = account.FinCode;
                     accts.Delete();
                     accountGrid.Refresh();
                 }

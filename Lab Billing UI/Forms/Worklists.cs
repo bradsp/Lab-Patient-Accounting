@@ -1,6 +1,6 @@
 ﻿namespace LabBilling.Forms
 {
-    public static class Worklists
+    public static class WorklistsDoNotUse
     {
 
         public const string MedicareCigna = "Medicare/Cigna";
