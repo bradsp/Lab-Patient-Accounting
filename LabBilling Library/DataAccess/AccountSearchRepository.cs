@@ -223,8 +223,6 @@ namespace LabBilling.Core.DataAccess
             return new List<AccountSearch>();
         }
 
-
-
         public IEnumerable<AccountSearch> GetBySearch(string lastNameSearchText, string firstNameSearchText, string mrnSearchText, string ssnSearchText, string dobSearch, string sexSearch, string accountSearchText)
         {
             Log.Instance.Debug($"Entering");

@@ -625,7 +625,17 @@ namespace LabBilling.Core.DataAccess
                         {
                             try
                             {
-                                //chrgRepository.ReprocessCharges(table.AccountNo);
+                                ReprocessCharges(table.AccountNo, $"Client changed from {oldClientMnem} to {newClientMnem}");
+                            }
+                            catch (Exception ex)
+                            {
+                                throw new ApplicationException("Error reprocessing charges.", ex);
+                            }
+                        }
+                        else if(oldClient.ClientMnem == "HC"|| newClient.ClientMnem == "HC")
+                        {
+                            try
+                            {
                                 ReprocessCharges(table.AccountNo, $"Client changed from {oldClientMnem} to {newClientMnem}");
                             }
                             catch (Exception ex)
