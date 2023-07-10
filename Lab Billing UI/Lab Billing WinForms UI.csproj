@@ -715,7 +715,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="HtmlAgilityPack">
-      <Version>1.11.48</Version>
+      <Version>1.11.49</Version>
     </PackageReference>
     <PackageReference Include="LazyCache">
       <Version>2.4.0</Version>
@@ -742,13 +742,13 @@
       <Version>13.0.3</Version>
     </PackageReference>
     <PackageReference Include="NLog">
-      <Version>5.2.0</Version>
+      <Version>5.2.2</Version>
     </PackageReference>
     <PackageReference Include="NLog.Database">
-      <Version>5.2.0</Version>
+      <Version>5.2.2</Version>
     </PackageReference>
     <PackageReference Include="NLog.Schema">
-      <Version>5.2.0</Version>
+      <Version>5.2.2</Version>
     </PackageReference>
     <PackageReference Include="PetaPoco.Compiled">
       <Version>6.0.566</Version>
