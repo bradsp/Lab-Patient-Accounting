@@ -82,6 +82,10 @@ namespace LabBilling.Core.DataAccess
             Pth pth = new Pth();
 
             phy = dbConnection.SingleOrDefault<Phy>(id);
+            if(phy == null)
+            {
+                return null;
+            }
             if (!string.IsNullOrEmpty(phy.PathologistCode))
             {
                 pth = dbConnection.SingleOrDefault<Pth>(phy.PathologistCode);

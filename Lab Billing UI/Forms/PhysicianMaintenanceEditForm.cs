@@ -74,34 +74,49 @@ namespace LabBilling.Forms
 
             //LastNameTextBox
             LastNameTextBox.Dock = DockStyle.Fill;
+            LastNameTextBox.MaxLength = 30;
             //FirstNameTextBox
             FirstNameTextBox.Dock = DockStyle.Fill;
+            FirstNameTextBox.MaxLength = 30;
             //MiddleNameTextBox
             MiddleNameTextBox.Dock = DockStyle.Fill;
+            MiddleNameTextBox.MaxLength = 30;
             //ClientTextBox
             ClientTextBox.Dock = DockStyle.Fill;
+            ClientTextBox.MaxLength = 15;
             //ProviderGroupTextBox
             ProviderGroupTextBox.Dock = DockStyle.Fill;
+            ProviderGroupTextBox.MaxLength = 50;
             //Address1TextBox
             Address1TextBox.Dock = DockStyle.Fill;
+            Address1TextBox.MaxLength = 50;
             //Address2TextBox
             Address2TextBox.Dock = DockStyle.Fill;
+            Address2TextBox.MaxLength = 50;
             //CityTextBox
             CityTextBox.Dock = DockStyle.Fill;
+            CityTextBox.MaxLength = 30;
             //StateTextBox
             StateTextBox.Dock = DockStyle.Fill;
+            StateTextBox.MaxLength = 2;
             //ZipTextBox
             ZipTextBox.Dock = DockStyle.Fill;
+            ZipTextBox.MaxLength = 10;
             //PhoneTextBox
             PhoneTextBox.Dock = DockStyle.Fill;
+            PhoneTextBox.MaxLength = 40;
             //LISMenmTextBox
             LISMenmTextBox.Dock = DockStyle.Fill;
+            LISMenmTextBox.MaxLength = 15;
             //CredentialsTextBox
             CredentialsTextBox.Dock = DockStyle.Fill;
+            CredentialsTextBox.MaxLength = 50;
             //DoctorNoTextBox
             DoctorNoTextBox.Dock = DockStyle.Fill;
+            DoctorNoTextBox.MaxLength = 5;
             //NPITextBox
             NPITextBox.Dock = DockStyle.Fill;
+            NPITextBox.MaxLength = 15;
             //BillingNPITextBox
             BillingNPITextBox.Dock = DockStyle.Fill;
 

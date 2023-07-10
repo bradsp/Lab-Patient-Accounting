@@ -38,6 +38,36 @@ namespace LabBilling.Forms
             PhysicianDGV.Columns[nameof(Phy.mod_date)].Visible = false;
             PhysicianDGV.Columns[nameof(Phy.mod_prg)].Visible = false;
             PhysicianDGV.Columns[nameof(Phy.mod_host)].Visible = false;
+            PhysicianDGV.Columns[nameof(Phy.Upin)].Visible = false;
+            PhysicianDGV.Columns[nameof(Phy.Ub92Upin)].Visible = false;
+            PhysicianDGV.Columns[nameof(Phy.PathologistCode)].Visible = false;
+            PhysicianDGV.Columns[nameof(Phy.LastName)].Visible = false;
+            PhysicianDGV.Columns[nameof(Phy.FirstName)].Visible = false;
+            PhysicianDGV.Columns[nameof(Phy.MiddleInitial)].Visible = false;
+            PhysicianDGV.Columns[nameof(Phy.uri)].Visible = false;
+            PhysicianDGV.Columns[nameof(Phy.Pathologist)].Visible = false;
+            PhysicianDGV.Columns[nameof(Phy.PathologistCode)].Visible = false;
+            PhysicianDGV.Columns[nameof(Phy.LabelPrintCount)].Visible = false;
+            PhysicianDGV.Columns[nameof(Phy.uri)].Visible = false;
+            PhysicianDGV.Columns[nameof(Phy.OvCode)].Visible = false;
+
+            int z = 0;
+            PhysicianDGV.Columns[nameof(Phy.NpiId)].DisplayIndex = z++;
+            PhysicianDGV.Columns[nameof(Phy.BillingNpi)].DisplayIndex = z++;
+            PhysicianDGV.Columns[nameof(Phy.FullName)].DisplayIndex = z++;
+            PhysicianDGV.Columns[nameof(Phy.Credentials)].DisplayIndex = z++;
+            PhysicianDGV.Columns[nameof(Phy.ProviderGroup)].DisplayIndex = z++;
+            PhysicianDGV.Columns[nameof(Phy.Address1)].DisplayIndex = z++;
+            PhysicianDGV.Columns[nameof(Phy.Address2)].DisplayIndex = z++;
+            PhysicianDGV.Columns[nameof(Phy.City)].DisplayIndex = z++;
+            PhysicianDGV.Columns[nameof(Phy.State)].DisplayIndex = z++;
+            PhysicianDGV.Columns[nameof(Phy.ZipCode)].DisplayIndex = z++;
+            PhysicianDGV.Columns[nameof(Phy.Phone)].DisplayIndex = z++;
+            PhysicianDGV.Columns[nameof(Phy.DoctorNumber)].DisplayIndex = z++;
+            PhysicianDGV.Columns[nameof(Phy.ClientMnem)].DisplayIndex = z++;
+            PhysicianDGV.Columns[nameof(Phy.LISMnem)].DisplayIndex = z++;
+
+
 
             PhysicianDGV.AutoResizeColumns();
 
@@ -73,11 +103,6 @@ namespace LabBilling.Forms
                     MessageBox.Show(ex.Message);
                 }
             }
-        }
-
-        private void btnDelete_Click(object sender, EventArgs e)
-        {
-
         }
 
         private void buttonSearch_Click(object sender, EventArgs e)
