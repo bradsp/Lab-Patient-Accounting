@@ -98,7 +98,7 @@ namespace LabBilling.Core.DataAccess
 
                 outpBillStartDate = _appEnvironment.ApplicationParameters.OutpatientBillStart;
 
-                if(outpBillStartDate == DateTime.MinValue)
+                if (outpBillStartDate == DateTime.MinValue)
                 {
                     //set default date
                     outpBillStartDate = new DateTime(2012, 4, 1);
@@ -160,8 +160,8 @@ namespace LabBilling.Core.DataAccess
             var results = record.BillableCharges.Where(x => x.FinancialType == "C")
                 .GroupBy(x => x.ClientMnem, (client, balance) => new { Client = client, Balance = balance.Sum(c => c.Quantity * c.NetAmount) });
 
-            record.ClientBalance = new List<(string client, double balance)>();            
-            
+            record.ClientBalance = new List<(string client, double balance)>();
+
             foreach (var result in results)
             {
                 record.ClientBalance.Add((result.Client, result.Balance));
@@ -387,12 +387,47 @@ namespace LabBilling.Core.DataAccess
             if (string.IsNullOrEmpty(accountNo))
                 throw new ArgumentNullException(nameof(accountNo));
 
-            dbConnection.ExecuteNonQueryProc("SwapInsurances",
-                new SqlParameter() { ParameterName = "@account", SqlDbType = SqlDbType.VarChar, Value = accountNo },
-                new SqlParameter() { ParameterName = "@ins1", SqlDbType = SqlDbType.VarChar, Value = swap1.ToString() },
-                new SqlParameter() { ParameterName = "@ins2", SqlDbType = SqlDbType.VarChar, Value = swap2.ToString() });
+            BeginTransaction();
 
-            return false;
+            Account account = GetByAccount(accountNo);
+
+            if (account == null)
+            {
+                AbortTransaction();
+                return false;
+            }
+
+            Ins insA = account.Insurances.Where(x => x.Coverage == swap1).FirstOrDefault();
+            Ins insB = account.Insurances.Where(x => x.Coverage == swap2).FirstOrDefault();
+
+            if (insA == null || insB == null)
+            {
+                AbortTransaction();
+                return false;
+            }
+            try
+            {
+
+                insA.Coverage = InsCoverage.Temporary;
+                insB.Coverage = swap1;
+
+                insRepository.Update(insA);
+                insRepository.Update(insB);
+
+                insA.Coverage = swap2;
+                insRepository.Update(insA);
+
+                AddNote(accountNo, $"Insurance swap: {swap1} {insA.PlanName} and {swap2} {insB.PlanName}");
+                CompleteTransaction();
+                return false;
+            }
+            catch (Exception ex)
+            {
+                Log.Instance.Error(ex, "Error swapping insurances.");
+                AbortTransaction();
+                return false;
+            }
+
         }
 
         public bool ChangeDateOfService(ref Account table, DateTime newDate, string reason_comment)
@@ -628,7 +663,7 @@ namespace LabBilling.Core.DataAccess
                                 throw new ApplicationException("Error reprocessing charges.", ex);
                             }
                         }
-                        else if(oldClient.ClientMnem == "HC"|| newClient.ClientMnem == "HC")
+                        else if (oldClient.ClientMnem == "HC" || newClient.ClientMnem == "HC")
                         {
                             try
                             {
@@ -645,7 +680,7 @@ namespace LabBilling.Core.DataAccess
                             {
                                 UpdateChargesClient(table.AccountNo, newClientMnem);
                             }
-                            catch( Exception ex)
+                            catch (Exception ex)
                             {
                                 throw new ApplicationException("Error updating charge client.", ex);
                             }
@@ -740,23 +775,23 @@ namespace LabBilling.Core.DataAccess
 
             List<Chrg> charges = chrgRepository.GetByAccount(account);
 
-            if(charges == null || charges.Count == 0)
+            if (charges == null || charges.Count == 0)
             {
                 return false;
             }
 
             var fin = finRepository.GetFin(finCode);
 
-            if(fin == null)
+            if (fin == null)
             {
                 return false;
             }
 
-            var chrgsToUpdate = charges.Where(x => x.IsCredited == false && 
-                (x.ClientMnem != _appEnvironment.ApplicationParameters.PathologyGroupClientMnem || 
+            var chrgsToUpdate = charges.Where(x => x.IsCredited == false &&
+                (x.ClientMnem != _appEnvironment.ApplicationParameters.PathologyGroupClientMnem ||
                 string.IsNullOrEmpty(_appEnvironment.ApplicationParameters.PathologyGroupClientMnem))).ToList();
 
-            foreach(var chrg in chrgsToUpdate)
+            foreach (var chrg in chrgsToUpdate)
             {
                 chrg.FinCode = finCode;
                 chrg.FinancialType = fin.FinClass;
@@ -781,7 +816,7 @@ namespace LabBilling.Core.DataAccess
 
             var chrgsToUpdate = charges.Where(x => x.IsCredited == false).ToList();
 
-            foreach(var chrg in chrgsToUpdate)
+            foreach (var chrg in chrgsToUpdate)
             {
                 chrg.ClientMnem = clientMnem;
                 chrgRepository.Update(chrg, new[] { nameof(Chrg.ClientMnem) });
@@ -1153,7 +1188,7 @@ namespace LabBilling.Core.DataAccess
                             UpdateStatus(account.AccountNo, AccountStatus.New);
                     }
 
-                    if(isAccountValid)
+                    if (isAccountValid)
                     {
                         account.AccountValidationStatus.validation_text = "No validation errors.";
                         //update account status if this account has been flagged to bill
