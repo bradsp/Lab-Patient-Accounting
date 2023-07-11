@@ -1037,7 +1037,6 @@ namespace LabBilling.Forms
                     PlanCityStTextBox.Enabled = true;
                     PlanFinCodeComboBox.Enabled = true;
                 }
-
             }
         }
 
@@ -1120,8 +1119,7 @@ namespace LabBilling.Forms
             ChargesDataGrid.Columns[nameof(Chrg.CdmDescription)].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             ChargesDataGrid.BackgroundColor = Color.AntiqueWhite;
             ChrgDetailDataGrid.BackgroundColor = Color.AntiqueWhite;
-
-            
+      
             chargeBalRichTextbox.Text = "";
             chargeBalRichTextbox.SelectionFont = new Font(chargeBalRichTextbox.Font.FontFamily, 10, FontStyle.Bold);
             chargeBalRichTextbox.SelectedText = "3rd Party Patient Balance\n";

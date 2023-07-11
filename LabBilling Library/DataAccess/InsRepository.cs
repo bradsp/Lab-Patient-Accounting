@@ -218,12 +218,14 @@ namespace LabBilling.Core.DataAccess
                 yield return Primary;
                 yield return Secondary;
                 yield return Tertiary;
+                yield return Temporary;
             }
         }
 
         public static InsCoverage Primary { get; } = new InsCoverage("A");
         public static InsCoverage Secondary { get; } = new InsCoverage("B");
         public static InsCoverage Tertiary { get; } = new InsCoverage("C");
+        public static InsCoverage Temporary { get; } = new InsCoverage("X");
 
 
         /// <summary>

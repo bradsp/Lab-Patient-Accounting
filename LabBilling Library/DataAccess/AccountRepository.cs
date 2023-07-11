@@ -96,10 +96,9 @@ namespace LabBilling.Core.DataAccess
                 DateTime questEndDate = new DateTime(2020, 5, 31);
                 DateTime arbitraryEndDate = new DateTime(2016, 12, 31);
 
-                //if (!DateTime.TryParse(systemParametersRepository.GetByKey("outpatient_bill_start"), out outpBillStartDate))
                 outpBillStartDate = _appEnvironment.ApplicationParameters.OutpatientBillStart;
 
-                if(outpBillStartDate == DateTime.MinValue)
+                if (outpBillStartDate == DateTime.MinValue)
                 {
                     //set default date
                     outpBillStartDate = new DateTime(2012, 4, 1);
@@ -155,15 +154,14 @@ namespace LabBilling.Core.DataAccess
             record.TotalPayments = record.Payments.Where(x => x.Status != cbillStatus).Sum(x => x.PaidAmount);
             record.TotalContractual = record.Payments.Where(x => x.Status != cbillStatus).Sum(x => x.ContractualAmount);
 
-
             record.ClaimBalance = record.BillableCharges.Where(x => x.FinancialType == "M").Sum(x => x.Quantity * x.NetAmount)
                 - (record.TotalPayments + record.TotalWriteOff + record.TotalContractual);
 
             var results = record.BillableCharges.Where(x => x.FinancialType == "C")
                 .GroupBy(x => x.ClientMnem, (client, balance) => new { Client = client, Balance = balance.Sum(c => c.Quantity * c.NetAmount) });
 
-            record.ClientBalance = new List<(string client, double balance)>();            
-            
+            record.ClientBalance = new List<(string client, double balance)>();
+
             foreach (var result in results)
             {
                 record.ClientBalance.Add((result.Client, result.Balance));
@@ -173,7 +171,6 @@ namespace LabBilling.Core.DataAccess
 
             return record;
         }
-
 
         public override object Add(Account table)
         {
@@ -390,12 +387,47 @@ namespace LabBilling.Core.DataAccess
             if (string.IsNullOrEmpty(accountNo))
                 throw new ArgumentNullException(nameof(accountNo));
 
-            dbConnection.ExecuteNonQueryProc("SwapInsurances",
-                new SqlParameter() { ParameterName = "@account", SqlDbType = SqlDbType.VarChar, Value = accountNo },
-                new SqlParameter() { ParameterName = "@ins1", SqlDbType = SqlDbType.VarChar, Value = swap1.ToString() },
-                new SqlParameter() { ParameterName = "@ins2", SqlDbType = SqlDbType.VarChar, Value = swap2.ToString() });
+            BeginTransaction();
 
-            return false;
+            Account account = GetByAccount(accountNo);
+
+            if (account == null)
+            {
+                AbortTransaction();
+                return false;
+            }
+
+            Ins insA = account.Insurances.Where(x => x.Coverage == swap1).FirstOrDefault();
+            Ins insB = account.Insurances.Where(x => x.Coverage == swap2).FirstOrDefault();
+
+            if (insA == null || insB == null)
+            {
+                AbortTransaction();
+                return false;
+            }
+            try
+            {
+
+                insA.Coverage = InsCoverage.Temporary;
+                insB.Coverage = swap1;
+
+                insRepository.Update(insA);
+                insRepository.Update(insB);
+
+                insA.Coverage = swap2;
+                insRepository.Update(insA);
+
+                AddNote(accountNo, $"Insurance swap: {swap1} {insA.PlanName} and {swap2} {insB.PlanName}");
+                CompleteTransaction();
+                return false;
+            }
+            catch (Exception ex)
+            {
+                Log.Instance.Error(ex, "Error swapping insurances.");
+                AbortTransaction();
+                return false;
+            }
+
         }
 
         public bool ChangeDateOfService(ref Account table, DateTime newDate, string reason_comment)
@@ -541,7 +573,6 @@ namespace LabBilling.Core.DataAccess
                 {
                     try
                     {
-                        //chrgRepository.ReprocessCharges(table.AccountNo);
                         ReprocessCharges(table, $"Fin Code changed from {oldFinCode} to {newFinCode}");
                     }
                     catch (Exception ex)
@@ -625,7 +656,17 @@ namespace LabBilling.Core.DataAccess
                         {
                             try
                             {
-                                //chrgRepository.ReprocessCharges(table.AccountNo);
+                                ReprocessCharges(table.AccountNo, $"Client changed from {oldClientMnem} to {newClientMnem}");
+                            }
+                            catch (Exception ex)
+                            {
+                                throw new ApplicationException("Error reprocessing charges.", ex);
+                            }
+                        }
+                        else if (oldClient.ClientMnem == "HC" || newClient.ClientMnem == "HC")
+                        {
+                            try
+                            {
                                 ReprocessCharges(table.AccountNo, $"Client changed from {oldClientMnem} to {newClientMnem}");
                             }
                             catch (Exception ex)
@@ -639,7 +680,7 @@ namespace LabBilling.Core.DataAccess
                             {
                                 UpdateChargesClient(table.AccountNo, newClientMnem);
                             }
-                            catch( Exception ex)
+                            catch (Exception ex)
                             {
                                 throw new ApplicationException("Error updating charge client.", ex);
                             }
@@ -686,53 +727,7 @@ namespace LabBilling.Core.DataAccess
                     if (chrg.CDMCode == invoicedCdm)  //do not reprocess CBILL charge records
                         continue;
 
-                    Chrg creditChrg = new Chrg
-                    {
-                        //creditChrg.ChrgId = 0;
-                        AccountNo = account.AccountNo,
-                        Action = chrg.Action,
-                        BillMethod = chrg.BillMethod,
-                        Cdm = chrg.Cdm,
-                        CDMCode = chrg.CDMCode,
-                        Comment = comment,
-                        Facility = chrg.Facility,
-                        FinancialType = chrg.FinancialType,
-                        FinCode = chrg.FinCode,
-                        HospAmount = chrg.HospAmount,
-                        HistoryDate = chrg.HistoryDate,
-                        Invoice = "",
-                        LISReqNo = chrg.LISReqNo,
-                        Location = chrg.Location,
-                        NetAmount = chrg.NetAmount,
-                        Quantity = chrg.Quantity * -1,
-                        RetailAmount = chrg.RetailAmount,
-                        ServiceDate = chrg.ServiceDate,
-                        Status = chrg.Status,
-                        ClientMnem = chrg.ClientMnem,
-
-                        ChrgDetails = chrg.ChrgDetails
-                    };
-                    foreach (var detail in creditChrg.ChrgDetails)
-                    {
-                        detail.ChrgNo = 0;
-                        detail.uri = 0;
-                        detail.rowguid = Guid.Empty;
-                    }
-
-                    //insert credit charge & amt record with qty to reverse original
-                    //update old chrg as credited
-
-                    //if charge has been on an invoice, keep the credited flag false so it will be picked up on the client's next invoice
-                    //if charge has not been on an invoice, mark old and new charge credited since they were never billed.
-                    if (string.IsNullOrEmpty(chrg.Invoice) || chrg.CDMCode == invoicedCdm)
-                        creditChrg.IsCredited = true;
-                    else
-                        creditChrg.IsCredited = false;
-
-                    chrgRepository.AddCharge(creditChrg);
-
-                    if (string.IsNullOrEmpty(chrg.Invoice) || chrg.CDMCode == invoicedCdm)
-                        chrgRepository.SetCredited(chrg.ChrgId);
+                    chrgRepository.CreditCharge(chrg.ChrgId, comment);
 
                     //insert new charge and detail
                     if (chrg.CDMCode != invoicedCdm)
@@ -780,23 +775,23 @@ namespace LabBilling.Core.DataAccess
 
             List<Chrg> charges = chrgRepository.GetByAccount(account);
 
-            if(charges == null || charges.Count == 0)
+            if (charges == null || charges.Count == 0)
             {
                 return false;
             }
 
             var fin = finRepository.GetFin(finCode);
 
-            if(fin == null)
+            if (fin == null)
             {
                 return false;
             }
 
-            var chrgsToUpdate = charges.Where(x => x.IsCredited == false && 
-                (x.ClientMnem != _appEnvironment.ApplicationParameters.PathologyGroupClientMnem || 
+            var chrgsToUpdate = charges.Where(x => x.IsCredited == false &&
+                (x.ClientMnem != _appEnvironment.ApplicationParameters.PathologyGroupClientMnem ||
                 string.IsNullOrEmpty(_appEnvironment.ApplicationParameters.PathologyGroupClientMnem))).ToList();
 
-            foreach(var chrg in chrgsToUpdate)
+            foreach (var chrg in chrgsToUpdate)
             {
                 chrg.FinCode = finCode;
                 chrg.FinancialType = fin.FinClass;
@@ -821,7 +816,7 @@ namespace LabBilling.Core.DataAccess
 
             var chrgsToUpdate = charges.Where(x => x.IsCredited == false).ToList();
 
-            foreach(var chrg in chrgsToUpdate)
+            foreach (var chrg in chrgsToUpdate)
             {
                 chrg.ClientMnem = clientMnem;
                 chrgRepository.Update(chrg, new[] { nameof(Chrg.ClientMnem) });
@@ -1096,10 +1091,8 @@ namespace LabBilling.Core.DataAccess
                 }
             });
 
-            //foreach(var profile in bundledProfiles)
             for (int x = 0; x < bundledProfiles.Count; x++)
             {
-                //foreach(var cpt in profile.ComponentCpt)
                 for (int i = 0; i < bundledProfiles[x].ComponentCpt.Count; i++)
                 {
                     foreach (var chrg in account.Charges.Where(c => !c.IsCredited))
@@ -1195,7 +1188,7 @@ namespace LabBilling.Core.DataAccess
                             UpdateStatus(account.AccountNo, AccountStatus.New);
                     }
 
-                    if(isAccountValid)
+                    if (isAccountValid)
                     {
                         account.AccountValidationStatus.validation_text = "No validation errors.";
                         //update account status if this account has been flagged to bill
@@ -1317,8 +1310,6 @@ namespace LabBilling.Core.DataAccess
         public async Task ValidateUnbilledAccountsAsync()
         {
             Log.Instance.Trace($"Entering");
-
-            //DateTime.TryParse(systemParametersRepository.GetByKey("ssi_bill_thru_date"), out DateTime thruDate);
 
             DateTime thruDate = _appEnvironment.ApplicationParameters.SSIBillThruDate;
 

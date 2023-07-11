@@ -16,7 +16,7 @@
     <TargetFrameworkProfile />
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
-    <AssemblyVersion>2023.1.1.530</AssemblyVersion>
+    <AssemblyVersion>2023.1.1.533</AssemblyVersion>
     <PublishUrl>\\wthmclbill\installations%24\LabBilling\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Unc</InstallFrom>
@@ -31,7 +31,7 @@
     <ProductName>Lab Outreach Patient Accounting</ProductName>
     <PublisherName>West Tennessee Healthcare</PublisherName>
     <WebPage>publish.htm</WebPage>
-    <ApplicationRevision>166</ApplicationRevision>
+    <ApplicationRevision>169</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
@@ -196,13 +196,18 @@
     <Compile Include="Forms\PaymentAdjustmentEntryForm.Designer.cs">
       <DependentUpon>PaymentAdjustmentEntryForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\PhysicianMaintenanceEditForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\PhysicianMaintenanceEditForm.Designer.cs">
+      <DependentUpon>PhysicianMaintenanceEditForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\SplashForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\SplashForm.Designer.cs">
       <DependentUpon>SplashForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Worklists.cs" />
     <Compile Include="Legacy Forms\PrintEOBForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -527,6 +532,9 @@
     <EmbeddedResource Include="Forms\PaymentAdjustmentEntryForm.resx">
       <DependentUpon>PaymentAdjustmentEntryForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\PhysicianMaintenanceEditForm.resx">
+      <DependentUpon>PhysicianMaintenanceEditForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\SplashForm.resx">
       <DependentUpon>SplashForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -707,7 +715,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="HtmlAgilityPack">
-      <Version>1.11.48</Version>
+      <Version>1.11.49</Version>
     </PackageReference>
     <PackageReference Include="LazyCache">
       <Version>2.4.0</Version>
@@ -734,13 +742,13 @@
       <Version>13.0.3</Version>
     </PackageReference>
     <PackageReference Include="NLog">
-      <Version>5.2.0</Version>
+      <Version>5.2.2</Version>
     </PackageReference>
     <PackageReference Include="NLog.Database">
-      <Version>5.2.0</Version>
+      <Version>5.2.2</Version>
     </PackageReference>
     <PackageReference Include="NLog.Schema">
-      <Version>5.2.0</Version>
+      <Version>5.2.2</Version>
     </PackageReference>
     <PackageReference Include="PetaPoco.Compiled">
       <Version>6.0.566</Version>

@@ -5,8 +5,6 @@ using LabBilling.Logging;
 using LabBilling.Core.Models;
 using System.Data.SqlClient;
 using System.Data;
-using NPOI.XSSF.Model;
-using System.CodeDom.Compiler;
 
 namespace LabBilling.Core.DataAccess
 {
@@ -141,7 +139,7 @@ namespace LabBilling.Core.DataAccess
         /// </summary>
         /// <param name="chrgNum"></param>
         /// <param name="comment"></param>
-        /// <returns></returns>
+        /// <returns>Charge ID of credit charge record</returns>
         public int CreditCharge(int chrgNum, string comment = "")
         {
             Log.Instance.Trace($"Entering - chrg number {chrgNum} comment {comment}");
@@ -149,11 +147,16 @@ namespace LabBilling.Core.DataAccess
             if (chrgNum <= 0)
                 throw new ArgumentOutOfRangeException(nameof(chrgNum));
 
-            // usp_prg_ReverseCharge            
-            int retVal = dbConnection.ExecuteNonQueryProc("usp_prg_ReverseChargeOnly", 
-                new SqlParameter() { ParameterName="chrgNum", SqlDbType = SqlDbType.Decimal, Value = chrgNum }, 
-                new SqlParameter() { ParameterName="comment", SqlDbType = SqlDbType.VarChar, Value = comment });
+            var chrg = GetById(chrgNum) ?? throw new ApplicationException($"Charge number {chrgNum} not found.");
+
+            chrg.ChrgId = 0;
+            chrg.Quantity *= -1;
+            chrg.Comment = comment;
+            chrg.Invoice = null;
+            chrg.ChrgDetails.ForEach(x => x.ChrgNo = 0);
             
+            int retVal = AddCharge(chrg);
+            Log.Instance.Trace($"Credit charge number {chrgNum} comment {comment} returned {retVal}");
             Log.Instance.Debug($"{dbConnection.LastSQL} {dbConnection.LastArgs}");
             return retVal;
         }
@@ -285,35 +288,6 @@ namespace LabBilling.Core.DataAccess
                     }
                 }
             }
-        }
-
-        /// <summary>
-        /// Reprocess all open charges on an account. Usually done as a result of a financial code or client change to reprice charges.
-        /// </summary>
-        /// <param name="account"></param>
-        /// <returns>Number of charges reprocessed.</returns>
-        public int ReprocessCharges(string account)
-        {
-            Log.Instance.Trace($"Entering {account}");
-            int chrgCount = 0;
-
-            if(string.IsNullOrEmpty(account))
-                throw new ArgumentNullException(nameof(account));
-
-            //call stored procedure [dbo].[usp_prg_ReCharge_Acc_Transaction]
-            try
-            {
-                chrgCount = dbConnection.ExecuteNonQueryProc("dbo.usp_prg_ReCharge_Acc_Transaction", 
-                    new SqlParameter() { ParameterName = "@acc", SqlDbType = SqlDbType.VarChar, Value = account });
-            }
-            catch(Exception ex)
-            {
-                Log.Instance.Error(ex);
-                throw new ApplicationException("Error reprocessing charges.", ex);
-            }
-
-            Log.Instance.Debug($"{dbConnection.LastSQL} {dbConnection.LastArgs}");
-            return chrgCount;
         }
 
         public bool UpdateDxPointers(IEnumerable<Chrg> chrgs)

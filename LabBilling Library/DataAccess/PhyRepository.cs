@@ -75,20 +75,41 @@ namespace LabBilling.Core.DataAccess
             return queryResult;
         }
 
-        public Phy GetById(int id)
+        public Phy GetById(double id)
         {
             Log.Instance.Trace($"Entering - id {id}");
             Phy phy = new Phy();
             Pth pth = new Pth();
 
             phy = dbConnection.SingleOrDefault<Phy>(id);
-            if (phy.PathologistCode != null)
+            if(phy == null)
+            {
+                return null;
+            }
+            if (!string.IsNullOrEmpty(phy.PathologistCode))
             {
                 pth = dbConnection.SingleOrDefault<Pth>(phy.PathologistCode);
                 phy.Pathologist = pth;
             }
             
             return phy;
+        }
+
+        public override bool Save(Phy table)
+        {
+            var existing = GetById(table.uri);
+
+            if(existing != null)
+            {
+                return this.Update(table);
+            }
+            else
+            {
+                if (this.Add(table) != null)
+                    return true;
+                else
+                    return false;
+            }
         }
 
     }

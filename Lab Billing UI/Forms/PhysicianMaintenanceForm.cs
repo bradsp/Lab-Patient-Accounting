@@ -11,6 +11,7 @@ using LabBilling.Core.DataAccess;
 using LabBilling.Core.Models;
 using LabBilling.Core;
 using LabBilling.Logging;
+using MicroRuleEngine;
 
 namespace LabBilling.Forms
 {
@@ -23,22 +24,52 @@ namespace LabBilling.Forms
 
         private readonly PhyRepository phydb = new PhyRepository(Program.AppEnvironment);
         private List<Phy> physicians = new List<Phy>();
+        private BindingList<Phy> bindingList = new BindingList<Phy>();
+        private BindingSource bindingSource = new BindingSource();
 
         private void PhysicianMaintenanceForm_Load(object sender, EventArgs e)
         {
             Log.Instance.Trace("Entering");
-
-            //PhysicianDGV.DataSource = phydb.GetAll();
         }
 
         private void LoadProviderGrid()
         {
-            PhysicianDGV.Columns["rowguid"].Visible = false;
-            PhysicianDGV.Columns["reserved"].Visible = false;
-            PhysicianDGV.Columns["mod_user"].Visible = false;
-            PhysicianDGV.Columns["mod_date"].Visible = false;
-            PhysicianDGV.Columns["mod_prg"].Visible = false;
-            PhysicianDGV.Columns["mod_host"].Visible = false;
+            PhysicianDGV.Columns[nameof(Phy.rowguid)].Visible = false;
+            PhysicianDGV.Columns[nameof(Phy.reserved)].Visible = false;
+            PhysicianDGV.Columns[nameof(Phy.mod_user)].Visible = false;
+            PhysicianDGV.Columns[nameof(Phy.mod_date)].Visible = false;
+            PhysicianDGV.Columns[nameof(Phy.mod_prg)].Visible = false;
+            PhysicianDGV.Columns[nameof(Phy.mod_host)].Visible = false;
+            PhysicianDGV.Columns[nameof(Phy.Upin)].Visible = false;
+            PhysicianDGV.Columns[nameof(Phy.Ub92Upin)].Visible = false;
+            PhysicianDGV.Columns[nameof(Phy.PathologistCode)].Visible = false;
+            PhysicianDGV.Columns[nameof(Phy.LastName)].Visible = false;
+            PhysicianDGV.Columns[nameof(Phy.FirstName)].Visible = false;
+            PhysicianDGV.Columns[nameof(Phy.MiddleInitial)].Visible = false;
+            PhysicianDGV.Columns[nameof(Phy.uri)].Visible = false;
+            PhysicianDGV.Columns[nameof(Phy.Pathologist)].Visible = false;
+            PhysicianDGV.Columns[nameof(Phy.PathologistCode)].Visible = false;
+            PhysicianDGV.Columns[nameof(Phy.LabelPrintCount)].Visible = false;
+            PhysicianDGV.Columns[nameof(Phy.uri)].Visible = false;
+            PhysicianDGV.Columns[nameof(Phy.OvCode)].Visible = false;
+
+            int z = 0;
+            PhysicianDGV.Columns[nameof(Phy.NpiId)].DisplayIndex = z++;
+            PhysicianDGV.Columns[nameof(Phy.BillingNpi)].DisplayIndex = z++;
+            PhysicianDGV.Columns[nameof(Phy.FullName)].DisplayIndex = z++;
+            PhysicianDGV.Columns[nameof(Phy.Credentials)].DisplayIndex = z++;
+            PhysicianDGV.Columns[nameof(Phy.ProviderGroup)].DisplayIndex = z++;
+            PhysicianDGV.Columns[nameof(Phy.Address1)].DisplayIndex = z++;
+            PhysicianDGV.Columns[nameof(Phy.Address2)].DisplayIndex = z++;
+            PhysicianDGV.Columns[nameof(Phy.City)].DisplayIndex = z++;
+            PhysicianDGV.Columns[nameof(Phy.State)].DisplayIndex = z++;
+            PhysicianDGV.Columns[nameof(Phy.ZipCode)].DisplayIndex = z++;
+            PhysicianDGV.Columns[nameof(Phy.Phone)].DisplayIndex = z++;
+            PhysicianDGV.Columns[nameof(Phy.DoctorNumber)].DisplayIndex = z++;
+            PhysicianDGV.Columns[nameof(Phy.ClientMnem)].DisplayIndex = z++;
+            PhysicianDGV.Columns[nameof(Phy.LISMnem)].DisplayIndex = z++;
+
+
 
             PhysicianDGV.AutoResizeColumns();
 
@@ -46,18 +77,73 @@ namespace LabBilling.Forms
 
         private void btnNew_Click(object sender, EventArgs e)
         {
+            //add new physician
+            PhysicianMaintenanceEditForm editForm = new PhysicianMaintenanceEditForm();
+            editForm.PhyModel = new Phy();
+            if(editForm.ShowDialog() == DialogResult.OK)
+            {
+                try
+                {
+                    var existing = phydb.GetByNPI(editForm.PhyModel.NpiId);
+                    if (existing != null)
+                    {
+                        if(MessageBox.Show("Provider already exists. Save anyway?", "Existing Provider", MessageBoxButtons.YesNo, 
+                            MessageBoxIcon.Question) == DialogResult.Yes)
+                        {
+                            phydb.Save(editForm.PhyModel);
+                        }
+                        else
+                        {
+                            return;
+                        }
+                    }
 
-        }
-
-        private void btnDelete_Click(object sender, EventArgs e)
-        {
-
+                    phydb.Save(editForm.PhyModel);
+                }
+                catch(Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            }
         }
 
         private void buttonSearch_Click(object sender, EventArgs e)
         {
-            PhysicianDGV.DataSource = phydb.GetByName(searchText.Text, "");
+            if(string.IsNullOrEmpty(searchText.Text))
+            {
+                MessageBox.Show("Please enter a search term");
+                return;
+            }
+
+            physicians = phydb.GetByName(searchText.Text, "").ToList();
+            bindingList.AddRange(physicians);
+            bindingSource.DataSource = bindingList;
+            PhysicianDGV.DataSource = bindingSource;
             LoadProviderGrid();
+        }
+
+        private void PhysicianDGV_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            PhysicianMaintenanceEditForm editForm = new PhysicianMaintenanceEditForm();
+            var phy = phydb.GetByNPI(PhysicianDGV.Rows[e.RowIndex].Cells[nameof(Phy.NpiId)].Value.ToString());
+
+            editForm.PhyModel = phy;
+
+            if(editForm.ShowDialog() == DialogResult.OK)
+            {
+                try
+                {
+                    phydb.Save(editForm.PhyModel);
+                    //DataRow updated = physicians.AsEnumerable().Where(p => (double)p[nameof(Phy.uri)] == editForm.PhyModel.uri).First();
+                    var edited = bindingList.Where(p => p.uri == editForm.PhyModel.uri).First();
+                    edited = editForm.PhyModel;
+                    PhysicianDGV.Refresh();
+                }
+                catch(Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            }
         }
     }
 }

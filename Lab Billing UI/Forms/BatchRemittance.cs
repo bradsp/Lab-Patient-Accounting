@@ -46,7 +46,6 @@ namespace LabBilling.Forms
             SaveBatchButton.Enabled = false;
             SubmitPaymentsButton.Enabled = false;
             LoadOpenBatches();
-
             dgvPayments.Enabled = false;
         }
 
@@ -633,6 +632,11 @@ namespace LabBilling.Forms
 
             dgvPayments.Columns[nameof(ChkBatchDetail.PatientName)].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             dgvPayments.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
+
+            foreach(DataGridViewColumn column in dgvPayments.Columns)
+            {
+                column.SortMode = DataGridViewColumnSortMode.NotSortable;
+            }
 
             isGridLoaded = true;
             EntryMode.SelectedIndex = 0;
