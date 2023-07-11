@@ -70,20 +70,20 @@ namespace LabBilling.Core.DataAccess
                 record.PatNameSuffix = strSuffix;
             }
 
-            if (!StringExtensions.ParseName(record.GuarantorFullName, out string strGuarLastName, out string strGuarFirstName, out string strGuarMidName, out string strGuarSuffix))
-            {
-                if (!string.IsNullOrEmpty(this.Errors))
-                    this.Errors += Environment.NewLine;
+            //if (!StringExtensions.ParseName(record.GuarantorFullName, out string strGuarLastName, out string strGuarFirstName, out string strGuarMidName, out string strGuarSuffix))
+            //{
+            //    if (!string.IsNullOrEmpty(this.Errors))
+            //        this.Errors += Environment.NewLine;
 
-                this.Errors += $"Guarantor name could not be parsed. {record.GuarantorFullName} {record.AccountNo}";
-            }
-            else
-            {
-                record.GuarantorLastName = strGuarLastName;
-                record.GuarantorFirstName = strGuarFirstName;
-                record.GuarantorMiddleName = strGuarMidName;
-                record.GuarantorNameSuffix = strGuarSuffix;
-            }
+            //    this.Errors += $"Guarantor name could not be parsed. {record.GuarantorFullName} {record.AccountNo}";
+            //}
+            //else
+            //{
+            //    record.GuarantorLastName = strGuarLastName;
+            //    record.GuarantorFirstName = strGuarFirstName;
+            //    record.GuarantorMiddleName = strGuarMidName;
+            //    record.GuarantorNameSuffix = strGuarSuffix;
+            //}
 
             if (!StringExtensions.ParseCityStZip(record.CityStateZip, out string strCity, out string strState, out string strZip))
             {

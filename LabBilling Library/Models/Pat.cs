@@ -26,10 +26,6 @@ namespace LabBilling.Core.Models
         [Ignore]
         public string PatNameSuffix { get; set; }
 
-        //[Column("dob_yyyy")]
-        //public DateTime? BirthDate { get; set; }
-        //[Column("sex")]
-        //public string Sex { get; set; }
         [Column("pat_marital")]
         public string MaritalStatus { get; set; }
 
@@ -72,13 +68,13 @@ namespace LabBilling.Core.Models
         public string GuarantorZipCode { get; set; }
         [Column("guar_phone")]
         public string GuarantorPrimaryPhone { get; set; }
-        [Ignore]
+        [Column("guar_last_name")]
         public string GuarantorLastName { get; set; }
-        [Ignore]
+        [Column("guar_first_name")]
         public string GuarantorFirstName { get; set; }
-        [Ignore]
+        [Column("guar_middle_name")]
         public string GuarantorMiddleName { get; set; }
-        [Ignore]
+        [Column("guar_suffix")]
         public string GuarantorNameSuffix { get; set; }
 
         [Column("icd9_1")]
