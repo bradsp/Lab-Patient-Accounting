@@ -96,7 +96,6 @@ namespace LabBilling.Core.DataAccess
                 DateTime questEndDate = new DateTime(2020, 5, 31);
                 DateTime arbitraryEndDate = new DateTime(2016, 12, 31);
 
-                //if (!DateTime.TryParse(systemParametersRepository.GetByKey("outpatient_bill_start"), out outpBillStartDate))
                 outpBillStartDate = _appEnvironment.ApplicationParameters.OutpatientBillStart;
 
                 if(outpBillStartDate == DateTime.MinValue)
@@ -155,7 +154,6 @@ namespace LabBilling.Core.DataAccess
             record.TotalPayments = record.Payments.Where(x => x.Status != cbillStatus).Sum(x => x.PaidAmount);
             record.TotalContractual = record.Payments.Where(x => x.Status != cbillStatus).Sum(x => x.ContractualAmount);
 
-
             record.ClaimBalance = record.BillableCharges.Where(x => x.FinancialType == "M").Sum(x => x.Quantity * x.NetAmount)
                 - (record.TotalPayments + record.TotalWriteOff + record.TotalContractual);
 
@@ -173,7 +171,6 @@ namespace LabBilling.Core.DataAccess
 
             return record;
         }
-
 
         public override object Add(Account table)
         {
@@ -541,7 +538,6 @@ namespace LabBilling.Core.DataAccess
                 {
                     try
                     {
-                        //chrgRepository.ReprocessCharges(table.AccountNo);
                         ReprocessCharges(table, $"Fin Code changed from {oldFinCode} to {newFinCode}");
                     }
                     catch (Exception ex)
@@ -696,53 +692,7 @@ namespace LabBilling.Core.DataAccess
                     if (chrg.CDMCode == invoicedCdm)  //do not reprocess CBILL charge records
                         continue;
 
-                    Chrg creditChrg = new Chrg
-                    {
-                        //creditChrg.ChrgId = 0;
-                        AccountNo = account.AccountNo,
-                        Action = chrg.Action,
-                        BillMethod = chrg.BillMethod,
-                        Cdm = chrg.Cdm,
-                        CDMCode = chrg.CDMCode,
-                        Comment = comment,
-                        Facility = chrg.Facility,
-                        FinancialType = chrg.FinancialType,
-                        FinCode = chrg.FinCode,
-                        HospAmount = chrg.HospAmount,
-                        HistoryDate = chrg.HistoryDate,
-                        Invoice = "",
-                        LISReqNo = chrg.LISReqNo,
-                        Location = chrg.Location,
-                        NetAmount = chrg.NetAmount,
-                        Quantity = chrg.Quantity * -1,
-                        RetailAmount = chrg.RetailAmount,
-                        ServiceDate = chrg.ServiceDate,
-                        Status = chrg.Status,
-                        ClientMnem = chrg.ClientMnem,
-
-                        ChrgDetails = chrg.ChrgDetails
-                    };
-                    foreach (var detail in creditChrg.ChrgDetails)
-                    {
-                        detail.ChrgNo = 0;
-                        detail.uri = 0;
-                        detail.rowguid = Guid.Empty;
-                    }
-
-                    //insert credit charge & amt record with qty to reverse original
-                    //update old chrg as credited
-
-                    //if charge has been on an invoice, keep the credited flag false so it will be picked up on the client's next invoice
-                    //if charge has not been on an invoice, mark old and new charge credited since they were never billed.
-                    if (string.IsNullOrEmpty(chrg.Invoice) || chrg.CDMCode == invoicedCdm)
-                        creditChrg.IsCredited = true;
-                    else
-                        creditChrg.IsCredited = false;
-
-                    chrgRepository.AddCharge(creditChrg);
-
-                    if (string.IsNullOrEmpty(chrg.Invoice) || chrg.CDMCode == invoicedCdm)
-                        chrgRepository.SetCredited(chrg.ChrgId);
+                    chrgRepository.CreditCharge(chrg.ChrgId, comment);
 
                     //insert new charge and detail
                     if (chrg.CDMCode != invoicedCdm)
@@ -1106,10 +1056,8 @@ namespace LabBilling.Core.DataAccess
                 }
             });
 
-            //foreach(var profile in bundledProfiles)
             for (int x = 0; x < bundledProfiles.Count; x++)
             {
-                //foreach(var cpt in profile.ComponentCpt)
                 for (int i = 0; i < bundledProfiles[x].ComponentCpt.Count; i++)
                 {
                     foreach (var chrg in account.Charges.Where(c => !c.IsCredited))
@@ -1327,8 +1275,6 @@ namespace LabBilling.Core.DataAccess
         public async Task ValidateUnbilledAccountsAsync()
         {
             Log.Instance.Trace($"Entering");
-
-            //DateTime.TryParse(systemParametersRepository.GetByKey("ssi_bill_thru_date"), out DateTime thruDate);
 
             DateTime thruDate = _appEnvironment.ApplicationParameters.SSIBillThruDate;
 
