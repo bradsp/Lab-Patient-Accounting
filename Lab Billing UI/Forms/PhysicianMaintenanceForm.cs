@@ -11,6 +11,7 @@ using LabBilling.Core.DataAccess;
 using LabBilling.Core.Models;
 using LabBilling.Core;
 using LabBilling.Logging;
+using MicroRuleEngine;
 
 namespace LabBilling.Forms
 {
@@ -22,7 +23,8 @@ namespace LabBilling.Forms
         }
 
         private readonly PhyRepository phydb = new PhyRepository(Program.AppEnvironment);
-        private DataTable physicians = new DataTable();
+        private List<Phy> physicians = new List<Phy>();
+        private BindingList<Phy> bindingList = new BindingList<Phy>();
         private BindingSource bindingSource = new BindingSource();
 
         private void PhysicianMaintenanceForm_Load(object sender, EventArgs e)
@@ -113,8 +115,9 @@ namespace LabBilling.Forms
                 return;
             }
 
-            physicians = phydb.GetByName(searchText.Text, "").ToDataTable();
-            bindingSource.DataSource = physicians;
+            physicians = phydb.GetByName(searchText.Text, "").ToList();
+            bindingList.AddRange(physicians);
+            bindingSource.DataSource = bindingList;
             PhysicianDGV.DataSource = bindingSource;
             LoadProviderGrid();
         }
@@ -131,10 +134,9 @@ namespace LabBilling.Forms
                 try
                 {
                     phydb.Save(editForm.PhyModel);
-                    DataRow updated = physicians.AsEnumerable().Where(p => (double)p[nameof(Phy.uri)] == editForm.PhyModel.uri).First();
-                    updated = editForm.PhyModel.ToDataRow();
-                    physicians.AcceptChanges();
-                    bindingSource.ResetBindings(false);
+                    //DataRow updated = physicians.AsEnumerable().Where(p => (double)p[nameof(Phy.uri)] == editForm.PhyModel.uri).First();
+                    var edited = bindingList.Where(p => p.uri == editForm.PhyModel.uri).First();
+                    edited = editForm.PhyModel;
                     PhysicianDGV.Refresh();
                 }
                 catch(Exception ex)
