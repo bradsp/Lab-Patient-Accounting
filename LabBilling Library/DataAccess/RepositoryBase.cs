@@ -10,6 +10,7 @@ using System.Reflection;
 using PetaPoco;
 using System.Data.SqlClient;
 using System.Linq.Expressions;
+using RFClassLibrary;
 
 namespace LabBilling.Core.DataAccess
 {
@@ -49,22 +50,6 @@ namespace LabBilling.Core.DataAccess
             dbConnection = _appEnvironment.Database;
         }
 
-        //public RepositoryBase(string connectionString)
-        //{
-        //    Log.Instance.Trace("Entering");
-        //    Initialize();
-        //    dbConnection = new PetaPoco.Database(connectionString, new CustomSqlDatabaseProvider());
-        //    Log.Instance.Debug(dbConnection.ConnectionString);
-        //}
-
-        //public RepositoryBase(Database db)
-        //{
-        //    Log.Instance.Trace("Entering");
-        //    Initialize();
-        //    dbConnection = db;
-        //    Log.Instance.Debug(dbConnection.ConnectionString);
-        //}
-
         public virtual List<TPoco> GetAll()
         {
             Log.Instance.Trace("Entering");
@@ -99,7 +84,7 @@ namespace LabBilling.Core.DataAccess
 
             table.mod_date = DateTime.Now;
             table.mod_host = Environment.MachineName;
-            table.mod_prg = System.AppDomain.CurrentDomain.FriendlyName;
+            table.mod_prg = RFClassLibrary.OS.GetAppName();
             table.mod_user = Environment.UserName.ToString();
             table.rowguid = Guid.NewGuid();
 
@@ -116,7 +101,7 @@ namespace LabBilling.Core.DataAccess
 
             table.mod_date = DateTime.Now;
             table.mod_host = Environment.MachineName;
-            table.mod_prg = System.AppDomain.CurrentDomain.FriendlyName;
+            table.mod_prg = RFClassLibrary.OS.GetAppName();
             table.mod_user = Environment.UserName.ToString();
 
             dbConnection.Update(table);
@@ -133,7 +118,7 @@ namespace LabBilling.Core.DataAccess
             cColumns.Add(nameof(table.mod_date));
             table.mod_host = Environment.MachineName;
             cColumns.Add(nameof(table.mod_host));
-            table.mod_prg = System.AppDomain.CurrentDomain.FriendlyName;
+            table.mod_prg = RFClassLibrary.OS.GetAppName();
             cColumns.Add(nameof(table.mod_prg));
             table.mod_user = Environment.UserName.ToString();
             cColumns.Add(nameof(table.mod_user));
@@ -166,7 +151,7 @@ namespace LabBilling.Core.DataAccess
 
             table.mod_date = DateTime.Now;
             table.mod_host = Environment.MachineName;
-            table.mod_prg = System.AppDomain.CurrentDomain.FriendlyName;
+            table.mod_prg = RFClassLibrary.OS.GetAppName();
             table.mod_user = Environment.UserName.ToString();
             try
             {

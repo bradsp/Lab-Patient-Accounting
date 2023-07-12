@@ -607,7 +607,6 @@ namespace LabBilling.Core.DataAccess
             bool updateSuccess = true;
             string oldClientMnem = table.ClientMnem;
 
-
             try
             {
                 ClientRepository clientRepository = new ClientRepository(_appEnvironment);
@@ -706,6 +705,16 @@ namespace LabBilling.Core.DataAccess
             return updateSuccess;
         }
 
+        private class ChargeInfo
+        {
+            public string CdmCode { get; set; }
+            public string FinCode { get; set; }
+            public string ClientMnem { get; set; }
+            public decimal NetAmount { get; set; }
+            public decimal Quantity { get; set; }
+        }
+
+
         /// <summary>
         /// 
         /// </summary>
@@ -722,7 +731,10 @@ namespace LabBilling.Core.DataAccess
             BeginTransaction();
             try
             {
-                foreach (var chrg in account.Charges.Where(x => x.IsCredited == false))
+                var chargesToCredit = account.Charges.Where(x => x.IsCredited == false).ToList();
+
+                //foreach (var chrg in account.Charges.Where(x => x.IsCredited == false))
+                foreach(var chrg in chargesToCredit)
                 {
                     if (chrg.CDMCode == invoicedCdm)  //do not reprocess CBILL charge records
                         continue;
@@ -789,7 +801,8 @@ namespace LabBilling.Core.DataAccess
 
             var chrgsToUpdate = charges.Where(x => x.IsCredited == false &&
                 (x.ClientMnem != _appEnvironment.ApplicationParameters.PathologyGroupClientMnem ||
-                string.IsNullOrEmpty(_appEnvironment.ApplicationParameters.PathologyGroupClientMnem))).ToList();
+                string.IsNullOrEmpty(_appEnvironment.ApplicationParameters.PathologyGroupClientMnem))
+                && x.FinancialType == fin.FinClass).ToList();
 
             foreach (var chrg in chrgsToUpdate)
             {
@@ -814,9 +827,9 @@ namespace LabBilling.Core.DataAccess
             if (client == null)
                 return false;
 
-            var chrgsToUpdate = charges.Where(x => x.IsCredited == false).ToList();
+            //var chrgsToUpdate = charges.Where(x => x.IsCredited == false).ToList();
 
-            foreach (var chrg in chrgsToUpdate)
+            foreach (var chrg in charges)
             {
                 chrg.ClientMnem = clientMnem;
                 chrgRepository.Update(chrg, new[] { nameof(Chrg.ClientMnem) });
@@ -829,7 +842,7 @@ namespace LabBilling.Core.DataAccess
         {
             Log.Instance.Trace($"Entering - account {account} cdm {cdm}");
 
-            //verify the account exists - if not return -1
+            //verify the account exists
             Account accData = GetByAccount(account);
             if (accData == null)
             {
@@ -923,7 +936,6 @@ namespace LabBilling.Core.DataAccess
             chrg.PostingDate = DateTime.Today;
             chrg.Quantity = qty;
             chrg.ServiceDate = serviceDate;
-            chrg.UnitNo = accData.EMPINumber;
             chrg.ResponsibleProvider = "";
 
             List<CdmDetail> feeSched = null;
@@ -1062,6 +1074,50 @@ namespace LabBilling.Core.DataAccess
 
         }
 
+        public void UnbundlePanels(Account account)
+        {
+            var bundledProfiles = account.Charges.Where(x => x.CDMCode == "MCL0029" && x.IsCredited == false);
+            try
+            {
+                BeginTransaction();
+
+                foreach (var bundledProfile in bundledProfiles)
+                {
+                    //credit the profile charge
+                    chrgRepository.CreditCharge(bundledProfile.ChrgId, "Unbundling charge");
+
+                    //enter charges for each component
+                    AddCharge(account, "5545154", 1, account.TransactionDate);
+                    AddCharge(account, "5382522", 1, account.TransactionDate);
+                    AddCharge(account, "5646008", 1, account.TransactionDate);
+                }
+
+                bundledProfiles = account.Charges.Where(x => x.CDMCode == "MCL0021" && x.IsCredited == false);
+
+                foreach (var bundledProfile in bundledProfiles)
+                {
+                    //credit the profile charge
+                    chrgRepository.CreditCharge(bundledProfile.ChrgId, "Unbundling charge");
+
+                    //enter charges for each component
+                    AddCharge(account, "5545154", 1, account.TransactionDate);
+                    AddCharge(account, "5646012", 1, account.TransactionDate);
+                    AddCharge(account, "5646086", 1, account.TransactionDate);
+                    AddCharge(account, "5646054", 1, account.TransactionDate);
+                    AddCharge(account, "5728026", 1, account.TransactionDate);
+                    AddCharge(account, "5728190", 1, account.TransactionDate);
+                }
+
+                CompleteTransaction();
+            }
+            catch(Exception ex)
+            {
+                Log.Instance.Error(ex);
+                AbortTransaction();
+            }
+
+        }
+
         public void BundlePanels(Account account)
         {
             List<BundledProfile> bundledProfiles = new List<BundledProfile>();
@@ -1117,9 +1173,7 @@ namespace LabBilling.Core.DataAccess
                     this.AddCharge(account, bundledProfiles[x].ProfileCdm, 1, (DateTime)account.TransactionDate, $"Bundled by Rule");
                     this.AddNote(account.AccountNo, $"Bundled charges into {bundledProfiles[x].ProfileCdm}");
                 }
-
             }
-
         }
 
         /// <summary>
@@ -1134,6 +1188,7 @@ namespace LabBilling.Core.DataAccess
 
             try
             {
+                BeginTransaction();
                 if ((account.Status == "SSIUB" || account.Status == "SSI1500" || account.Status == "CLAIM" || account.Status == "STMT"
                     || account.Status == "CLOSED" || account.Status == "PAID_OUT") && !reprint)
                 {
@@ -1150,6 +1205,8 @@ namespace LabBilling.Core.DataAccess
                     {
                         if (account.InsurancePrimary.InsCompany != null)
                         {
+                            if(account.InsurancePrimary.InsCompany.IsMedicareHmo)
+                                UnbundlePanels(account);
                             if (!account.InsurancePrimary.InsCompany.IsMedicareHmo)
                                 BundlePanels(account);
                         }
@@ -1208,13 +1265,14 @@ namespace LabBilling.Core.DataAccess
 
                         accountLmrpErrorRepository.Save(record);
                     }
-
+                    CompleteTransaction();
                     return isAccountValid;
                 }
             }
             catch (Exception ex)
             {
                 Log.Instance.Error(ex);
+                AbortTransaction();
 
                 account.AccountValidationStatus.account = account.AccountNo;
                 account.AccountValidationStatus.mod_date = DateTime.Now;

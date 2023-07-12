@@ -47,8 +47,6 @@ namespace LabBilling.Core.Models
         public string BillMethod { get; set; }
         [Column("order_site")]
         public string OrderingSite { get; set; }
-        [Column("unitno")]
-        public string UnitNo { get; set; }
         [Column("location")]
         public string Location { get; set; }
         [Column("responsiblephy")]
