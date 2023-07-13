@@ -150,8 +150,8 @@ namespace LabBilling.Core.DataAccess
                 throw new ArgumentOutOfRangeException(nameof(chrgNum));
             var chrg = GetById(chrgNum) ?? throw new ApplicationException($"Charge number {chrgNum} not found.");
 
-            if(string.IsNullOrEmpty(chrg.Invoice))
-                setCredited = true;
+            //if(string.IsNullOrEmpty(chrg.Invoice))
+            setCredited = true;
 
             chrg.IsCredited = setCredited;
             chrg.ChrgId = 0;

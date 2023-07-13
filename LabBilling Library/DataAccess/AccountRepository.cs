@@ -1201,7 +1201,7 @@ namespace LabBilling.Core.DataAccess
                 }
                 else
                 {
-                    if (account.InsurancePrimary != null)
+                    if (account.Fin.FinClass == "M" && account.InsurancePrimary != null)
                     {
                         if (account.InsurancePrimary.InsCompany != null)
                         {
