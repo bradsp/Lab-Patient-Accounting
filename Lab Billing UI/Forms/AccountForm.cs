@@ -1414,7 +1414,15 @@ namespace LabBilling.Forms
 
                 chk.AccountNo = currentAccount.AccountNo;
                 chk.FinCode = currentAccount.FinCode;
-                chkRepository.Add(chk);
+                try
+                {
+                    chkRepository.Add(chk);
+                }
+                catch(Exception ex)
+                {
+                    Log.Instance.Error(ex);
+                    MessageBox.Show($"Error adding payment. See log for details.");
+                }
                 LoadAccountData();
             }
         }
