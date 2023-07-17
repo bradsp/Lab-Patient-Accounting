@@ -8,7 +8,7 @@ using PetaPoco;
 namespace LabBilling.Core.Models
 {
     [TableName("notes")]
-    [PrimaryKey("rowguid", AutoIncrement = false)]
+    [PrimaryKey("id", AutoIncrement = true)]
     public sealed class AccountNote : IBaseEntity
     {
 
@@ -22,5 +22,7 @@ namespace LabBilling.Core.Models
         public string mod_prg { get; set; }
         public string mod_host { get; set; }
         public Guid rowguid { get; set; }
+        [Column("id")]
+        public double Id { get; set; }
     }
 }

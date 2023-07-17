@@ -1188,7 +1188,6 @@ namespace LabBilling.Core.DataAccess
 
             try
             {
-                BeginTransaction();
                 if ((account.Status == "SSIUB" || account.Status == "SSI1500" || account.Status == "CLAIM" || account.Status == "STMT"
                     || account.Status == "CLOSED" || account.Status == "PAID_OUT") && !reprint)
                 {
@@ -1201,6 +1200,7 @@ namespace LabBilling.Core.DataAccess
                 }
                 else
                 {
+                    BeginTransaction();
                     if (account.Fin.FinClass == "M" && account.InsurancePrimary != null)
                     {
                         if (account.InsurancePrimary.InsCompany != null)

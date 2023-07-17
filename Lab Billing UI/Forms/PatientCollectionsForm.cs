@@ -32,48 +32,6 @@ namespace LabBilling.Forms
         string m_strProductionEnvironment = null;
         DataTable m_dtAccounts;
         SqlDataAdapter m_sdaBadDebt; 
-        //ToolStripControlHost m_dpFrom;
-        //ToolStripControlHost m_dpThru;
-        //ToolStripControlHost m_cboxInclude; // CheckBox
-        
-        //private void CreateDateTimes()
-        //{
-        //    Log.Instance.Trace($"Entering");
-        //    int nSert = tsMain.Items.Count;
-        //    // create the datetime controls for the From and Thru dates
-        //    m_dpFrom = new ToolStripControlHost(new DateTimePicker());
-        //    m_dpFrom.Text = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 0, 0, 0).ToString();
-        //    ((DateTimePicker)m_dpFrom.Control).Format = DateTimePickerFormat.Short;
-        //    m_dpFrom.Control.Width = 95;
-        //    m_dpFrom.Control.Refresh();
-        //    m_dpFrom.Invalidate();
-        //    tsMain.Items.Insert(tsMain.Items.Count, new ToolStripSeparator());
-        //    ToolStripLabel tslFrom = new ToolStripLabel("From: ");
-        //    tsMain.Items.Insert(tsMain.Items.Count, tslFrom);
-        //    tsMain.Items.Insert(tsMain.Items.Count, m_dpFrom);
-
-        //    m_dpThru = new ToolStripControlHost(new DateTimePicker());
-        //    m_dpThru.Text = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 23, 59, 59).ToString();
-        //    ((DateTimePicker)m_dpThru.Control).Format = DateTimePickerFormat.Short;
-        //    m_dpThru.Control.Width = 95;
-        //    m_dpThru.Control.Refresh();
-        //    m_dpThru.Invalidate();
-
-        //    ToolStripLabel tslThru = new ToolStripLabel("Thru: ");
-        //    tsMain.Items.Insert(tsMain.Items.Count, tslThru);
-        //    tsMain.Items.Insert(tsMain.Items.Count, m_dpThru);
-        //    //   tsMain.BackColor = Color.Lavender;
-
-        //    // wdk 20100322 added check box
-        //    ToolStripLabel tslInclude = new ToolStripLabel("COLLECTIONS");
-        //    m_cboxInclude = new ToolStripControlHost(new CheckBox());
-        //    m_cboxInclude.Click += new EventHandler(m_cboxInclude_Click);
-        //    tsMain.Items.Insert(tsMain.Items.Count, tslInclude);
-        //    tsMain.Items.Insert(tsMain.Items.Count, m_cboxInclude);
-
-        // //   tsMain.Items.Insert(tsMain.Items.Count, new ToolStripSeparator());
-        //    tsMain.Refresh();
-        //}
 
         void m_cboxInclude_Click(object sender, EventArgs e)
         {
