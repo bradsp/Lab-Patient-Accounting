@@ -918,9 +918,9 @@ namespace LabBilling.Core.BusinessLogic
                 else
                     transaction.Qty = Convert.ToInt16(seg.Fields(10).Value);
 
-                //ordering doctor - repeating FT1.21
+                //ordering doctor - repeating FT1.21.1
 
-                transaction.RefNumber = seg.Fields(23).Value;
+                transaction.RefNumber = seg.Fields(23).Components(1).Value;
 
                 //string cpt = hl7Message.GetValue("FT1.25.1");
                 //string abn = hl7Message.GetValue("FT1.27");

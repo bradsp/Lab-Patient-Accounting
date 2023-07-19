@@ -920,23 +920,18 @@ namespace LabBilling.Core.DataAccess
 
             //now build the charge & detail records
             chrg.AccountNo = accData.AccountNo;
-            chrg.Action = "";
             chrg.BillMethod = fin.ClaimType;
             chrg.CDMCode = cdm;
             chrg.Comment = comment;
             chrg.IsCredited = false;
-            chrg.Facility = "";
             chrg.FinCode = fin.FinCode;
             chrg.ClientMnem = chargeClient.ClientMnem;
             chrg.FinancialType = fin.FinClass;
             chrg.OrderMnem = cdmData.Mnem;
             chrg.LISReqNo = refNumber;
-            chrg.OrderingSite = "";
-            chrg.PerformingSite = "";
             chrg.PostingDate = DateTime.Today;
             chrg.Quantity = qty;
             chrg.ServiceDate = serviceDate;
-            chrg.ResponsibleProvider = "";
 
             List<CdmDetail> feeSched = null;
 
@@ -1011,10 +1006,7 @@ namespace LabBilling.Core.DataAccess
 
                 chrgDetail.Modifier = fee.Modifier;
                 chrgDetail.RevenueCode = fee.RevenueCode;
-                chrgDetail.LISReqNo = "";
                 chrgDetail.OrderCode = fee.BillCode;
-                chrgDetail.BillType = "";
-                chrgDetail.BillMethod = "";
                 chrgDetail.DiagnosisPointer.DiagnosisPointer = "1:";
 
                 chrg.ChrgDetails.Add(chrgDetail);

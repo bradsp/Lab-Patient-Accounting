@@ -1219,13 +1219,13 @@ namespace LabBilling.Forms
                 }
 
                 ChrgDetailDataGrid.Columns[nameof(ChrgDetail.Cpt4)].Visible = true;
-                ChrgDetailDataGrid.Columns[nameof(ChrgDetail.BillType)].Visible = true;
+                //ChrgDetailDataGrid.Columns[nameof(ChrgDetail.BillType)].Visible = true;
                 //ChrgDetailDataGrid.Columns[nameof(ChrgDetail.DiagCodePointer)].Visible = true;
                 ChrgDetailDataGrid.Columns[nameof(ChrgDetail.Modifier)].Visible = true;
                 ChrgDetailDataGrid.Columns[nameof(ChrgDetail.Modifer2)].Visible = true;
                 ChrgDetailDataGrid.Columns[nameof(ChrgDetail.RevenueCode)].Visible = true;
                 ChrgDetailDataGrid.Columns[nameof(ChrgDetail.Type)].Visible = true;
-                ChrgDetailDataGrid.Columns[nameof(ChrgDetail.BillMethod)].Visible = true;
+                //ChrgDetailDataGrid.Columns[nameof(ChrgDetail.BillMethod)].Visible = true;
                 ChrgDetailDataGrid.Columns[nameof(ChrgDetail.OrderCode)].Visible = true;
                 ChrgDetailDataGrid.Columns[nameof(ChrgDetail.Amount)].Visible = true;
 

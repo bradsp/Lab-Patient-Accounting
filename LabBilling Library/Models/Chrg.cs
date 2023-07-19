@@ -53,16 +53,10 @@ namespace LabBilling.Core.Models
         public string ResponsibleProvider { get; set; }
         [Column("mt_mnem")]
         public string OrderMnem { get; set; }
-        [Column("action")]
-        public string Action { get; set; }
         [Column("facility")]
         public string Facility { get; set; }
         [Column("referencereq")]
         public string ReferenceReq { get; set; }
-        [Column("chrg_err")]
-        public string ChrgError { get; set; }
-        [Column("istemp")]
-        public string IsTemp { get; set; }
         [Column("retail")]
         public double RetailAmount { get; set; }
         [Column("inp_price")]
