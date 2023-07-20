@@ -133,7 +133,7 @@ namespace LabBilling.Core.BusinessLogic
         private void ProcessMessage()
         {
             Log.Instance.Debug($"Processing {currentMessage.MessageType} for account {currentMessage.SourceAccount}");
-            Console.WriteLine($"{DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss.fffffffK")} - Processing {currentMessage.MessageType} for account {currentMessage.SourceAccount}");
+            Console.WriteLine($"{DateTime.Now:yyyy-MM-ddTHH:mm:ss.fffffffK} - Processing {currentMessage.MessageType} for account {currentMessage.SourceAccount}");
             try
             {
                 var result = ParseHL7(currentMessage.HL7Message);
@@ -557,6 +557,13 @@ namespace LabBilling.Core.BusinessLogic
                     catch(InvalidClientException cliex)
                     {
                         errors.AppendLine($"[ERROR] {cliex.Message} for {existingAccount.ClientMnem} on {existingAccount.AccountNo}. Charge not posted.");
+                        Log.Instance.Error(cliex);
+                        return (Status.Failed, $"{accountRecord.AccountNo} - charges not posted.", errors);
+                    }
+                    catch(Exception ex)
+                    {
+                        errors.AppendLine($"[ERROR] {ex.Message} for {existingAccount.ClientMnem} on {existingAccount.AccountNo}. Charge not posted.");
+                        Log.Instance.Error(ex, $"[ERROR] {ex.Message} for {existingAccount.ClientMnem} on {existingAccount.AccountNo}. Charge not posted.");
                         return (Status.Failed, $"{accountRecord.AccountNo} - charges not posted.", errors);
                     }
 

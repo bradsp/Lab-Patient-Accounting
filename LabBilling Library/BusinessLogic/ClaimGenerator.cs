@@ -85,12 +85,21 @@ namespace LabBilling.Core.BusinessLogic
             ProgressReportModel report = new ProgressReportModel();
             //compile list of accounts to have claims generated
             billing837 = new Billing837(_connectionString, propProductionEnvironment);
-            string batchSubmitterID = _appEnvironment.ApplicationParameters.FederalTaxId; //parametersdb.GetByKey("fed_tax_id");
-            decimal strNum = numberRepository.GetNumber("ssi_batch");
-            string interchangeControlNumber = string.Format("{0:D9}", int.Parse(string.Format("{0}{1}", DateTime.Now.Year, strNum)));
+            string batchSubmitterID = _appEnvironment.ApplicationParameters.FederalTaxId;
+
+            BillingBatch billingBatch = new BillingBatch();
+            billingBatch.RunDate = DateTime.Today;
+            billingBatch.RunUser = OS.GetUserName();
+            billingBatch.ClaimCount = 0;
+            billingBatch.TotalBilled = 0;
+
+            var batch = billingBatchRepository.Add(billingBatch);
+
+            double strNum = Convert.ToDouble(batch.ToString());
+
+            string interchangeControlNumber = Convert.ToInt32(strNum).ToString("D9");
             string batchType;
             string fileLocation;
-            //int maxClaims = Convert.ToInt32(parametersdb.GetByKey("claim_batch_max_claims"));
             int maxClaims = _appEnvironment.ApplicationParameters.MaxClaimsInClaimBatch;
 
             List<ClaimItem> claimList;
@@ -194,23 +203,21 @@ namespace LabBilling.Core.BusinessLogic
                     progress.Report(report);
                 }
 
+                string x12Text = string.Empty;
                 if (claims.Count > 0)
                 {
 
-                    string x12Text = billing837.Generate837ClaimBatch(claims, interchangeControlNumber,
+                    x12Text = billing837.Generate837ClaimBatch(claims, interchangeControlNumber,
                         batchSubmitterID, fileLocation, billClaimType);
-
-                    BillingBatch billingBatch = new BillingBatch();
-                    billingBatch.Batch = Convert.ToDouble(interchangeControlNumber);
-                    billingBatch.RunDate = DateTime.Today;
-                    billingBatch.RunUser = OS.GetUserName();
-                    billingBatch.X12Text = x12Text;
-                    billingBatch.ClaimCount = claims.Count;
-                    billingBatch.TotalBilled = claims.Sum(x => x.TotalChargeAmount);
-                    billingBatch.BatchType = batchType;
-
-                    billingBatchRepository.Add(billingBatch);
                 }
+
+                billingBatch = billingBatchRepository.GetBatch(strNum);
+                billingBatch.X12Text = x12Text;
+                billingBatch.ClaimCount = claims.Count;
+                billingBatch.TotalBilled = claims.Sum(x => x.TotalChargeAmount);
+                billingBatch.BatchType = batchType;
+                billingBatchRepository.Update(billingBatch);
+
                 db.CompleteTransaction();
 
                 return claims.Count;
