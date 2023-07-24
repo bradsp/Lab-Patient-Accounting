@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Data.SqlClient;
 using System.Data;
 using Log = LabBilling.Logging.Log;
+using System.Runtime.CompilerServices;
 
 namespace LabBilling.Core.DataAccess
 {
@@ -38,6 +39,10 @@ namespace LabBilling.Core.DataAccess
 
         private const string clientFinType = "C";
         private const string patientFinType = "M";
+        private const string zFinType = "Z";
+        private const string invalidFinCode = "K";
+        private const string clientFinCode = "CLIENT";
+        private const string pthExceptionClient = "HC";
 
         public AccountRepository(IAppEnvironment appEnvironment) : base(appEnvironment)
         {
@@ -73,7 +78,7 @@ namespace LabBilling.Core.DataAccess
 
             if (!string.IsNullOrEmpty(record.ClientMnem))
             {
-                if (record.ClientMnem != "K")
+                if (record.ClientMnem != invalidFinCode)
                 {
                     record.Client = clientRepository.GetClient(record.ClientMnem);
                     if (record.Client != null)
@@ -148,7 +153,7 @@ namespace LabBilling.Core.DataAccess
 
             record.BillableCharges = record.Charges.Where(x => x.Status != cbillStatus && x.Status != capStatus && x.Status != naStatus).ToList();
 
-            if (record.FinCode == "CLIENT")
+            if (record.FinCode == clientFinCode)
             {
                 record.TotalCharges = record.Charges.Where(x => x.Status != cbillStatus).Sum(x => x.Quantity * x.NetAmount);
             }
@@ -255,7 +260,7 @@ namespace LabBilling.Core.DataAccess
                         command = PetaPoco.Sql.Builder
                             .Select($"{selMaxRecords}status, acc.account, pat_name, ssn, cl_mnem, acc.fin_code, trans_date, ins.plan_nme")
                             .From(_tableName)
-                            .InnerJoin("ins").On("ins.account = acc.account and ins_a_b_c = 'A'")
+                            .InnerJoin("ins").On($"ins.account = acc.account and ins_a_b_c = {InsCoverage.Primary}")
                             .Where("status = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = AccountStatus.Institutional })
                             .OrderBy($"{GetRealColumn(nameof(Account.TransactionDate))}");
                         break;
@@ -263,7 +268,7 @@ namespace LabBilling.Core.DataAccess
                         command = PetaPoco.Sql.Builder
                             .Select($"{selMaxRecords}status, acc.account, pat_name, ssn, cl_mnem, acc.fin_code, trans_date, ins.plan_nme")
                             .From(_tableName)
-                            .InnerJoin("ins").On("ins.account = acc.account and ins_a_b_c = 'A'")
+                            .InnerJoin("ins").On($"ins.account = acc.account and ins_a_b_c = {InsCoverage.Primary}")
                             .Where("status = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = AccountStatus.Professional })
                             .OrderBy($"{GetRealColumn(nameof(Account.TransactionDate))}");
                         break;
@@ -672,7 +677,7 @@ namespace LabBilling.Core.DataAccess
                                 throw new ApplicationException("Error reprocessing charges.", ex);
                             }
                         }
-                        else if (oldClient.ClientMnem == "HC" || newClient.ClientMnem == "HC")
+                        else if (oldClient.ClientMnem == pthExceptionClient || newClient.ClientMnem == pthExceptionClient)
                         {
                             try
                             {
@@ -743,7 +748,6 @@ namespace LabBilling.Core.DataAccess
             {
                 var chargesToCredit = account.Charges.Where(x => x.IsCredited == false).ToList();
 
-                //foreach (var chrg in account.Charges.Where(x => x.IsCredited == false))
                 foreach(var chrg in chargesToCredit)
                 {
                     if (chrg.CDMCode == invoicedCdm)  //do not reprocess CBILL charge records
@@ -837,8 +841,6 @@ namespace LabBilling.Core.DataAccess
             if (client == null)
                 return false;
 
-            //var chrgsToUpdate = charges.Where(x => x.IsCredited == false).ToList();
-
             foreach (var chrg in charges)
             {
                 chrg.ClientMnem = clientMnem;
@@ -903,7 +905,7 @@ namespace LabBilling.Core.DataAccess
                 //check for global billing cdm - if it is, change client to Pathology Group, fin to Y, and get appropriate prices
                 var gb = globalBillingCdmRepository.GetCdm(cdm);
                 //hard coding exception for Hardin County for now - 05/09/2023 BSP
-                if (gb != null && accData.ClientMnem != "HC")
+                if (gb != null && accData.ClientMnem != pthExceptionClient)
                 {
                     fin = finRepository.GetFin("Y") ?? throw new ApplicationException($"Fin code Y not found error {accData.AccountNo}");
                     chargeClient = clientRepository.GetClient(_appEnvironment.ApplicationParameters.PathologyGroupClientMnem);
@@ -1353,7 +1355,7 @@ namespace LabBilling.Core.DataAccess
                 (nameof(AccountSearch.FinCode), AccountSearchRepository.operation.NotEqual, AccountStatus.Client),
                 (nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, AccountStatus.Hold),
                 (nameof(AccountSearch.FinCode), AccountSearchRepository.operation.NotEqual, "Y"),
-                (nameof(AccountSearch.FinCode), AccountSearchRepository.operation.NotEqual, "CLIENT"),
+                (nameof(AccountSearch.FinCode), AccountSearchRepository.operation.NotEqual, clientFinCode),
                 (nameof(AccountSearch.FinCode), AccountSearchRepository.operation.NotEqual, "E")
             };
 

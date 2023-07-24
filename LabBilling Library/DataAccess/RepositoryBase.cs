@@ -4,13 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using LabBilling.Logging;
 using LabBilling.Core.Models;
-using PetaPoco.Providers;
-using PetaPoco.Core;
 using System.Reflection;
 using PetaPoco;
-using System.Data.SqlClient;
 using System.Linq.Expressions;
-using RFClassLibrary;
 
 namespace LabBilling.Core.DataAccess
 {
