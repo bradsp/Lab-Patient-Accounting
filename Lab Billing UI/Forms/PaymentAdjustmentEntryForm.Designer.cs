@@ -178,6 +178,7 @@
             // commentTextBox
             // 
             this.commentTextBox.Location = new System.Drawing.Point(22, 341);
+            this.commentTextBox.MaxLength = 100;
             this.commentTextBox.Multiline = true;
             this.commentTextBox.Name = "commentTextBox";
             this.commentTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;

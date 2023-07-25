@@ -15,7 +15,8 @@ namespace LabBilling.Core.DataAccess
     {
         ClientDiscountRepository clientDiscountRepository;
         ClientTypeRepository clientTypeRepository;
-        //AccountRepository accountRepository;
+        private const string invoiceCdm = "CBILL";
+        private const string clientFinCode = "CLIENT";
 
         public ClientRepository(IAppEnvironment appEnvironment) : base(appEnvironment)
         {
@@ -84,9 +85,9 @@ namespace LabBilling.Core.DataAccess
                 account = new Account();
                 account.AccountNo = table.ClientMnem;
                 account.PatFullName = table.Name;
-                account.FinCode = "CLIENT";
+                account.FinCode = clientFinCode;
                 account.TransactionDate = DateTime.Today;
-                account.Status = "NEW";
+                account.Status = AccountStatus.New;
                 account.ClientMnem = table.ClientMnem;
                 account.MeditechAccount = table.ClientMnem;
 
@@ -146,7 +147,7 @@ namespace LabBilling.Core.DataAccess
             Log.Instance.Debug($"Entering");
 
             if(clientMnem == null)
-                throw new ArgumentNullException("clientMnem");
+                throw new ArgumentNullException(nameof(clientMnem));
 
              var balanceReturn = dbConnection.ExecuteScalar<double>("select dbo.GetAccBalance(@0)",
                 new SqlParameter() { SqlDbType = System.Data.SqlDbType.VarChar, Value = clientMnem });
@@ -158,9 +159,9 @@ namespace LabBilling.Core.DataAccess
         public double Balance(string clientMnem, DateTime asOfDate)
         {
             if (clientMnem == null)
-                throw new ArgumentNullException("clientMnem");
+                throw new ArgumentNullException(nameof(clientMnem));
             if (asOfDate > DateTime.Now)
-                throw new ArgumentOutOfRangeException("asOfDate");
+                throw new ArgumentOutOfRangeException(nameof(asOfDate));
 
             var balance = dbConnection.ExecuteScalar<double>("select dbo.GetAccBalByDate(@0, @1)",
                 new SqlParameter() { ParameterName = "@account", SqlDbType = System.Data.SqlDbType.VarChar, Value = clientMnem },
@@ -183,7 +184,7 @@ namespace LabBilling.Core.DataAccess
 
             foreach(var chrg in charges)
             {
-                if (chrg.NetAmount == 0 && chrg.CDMCode == "CBILL")
+                if (chrg.NetAmount == 0 && chrg.CDMCode == invoiceCdm)
                     continue;
 
                 var statementDetail = new ClientStatementDetailModel();
@@ -192,7 +193,7 @@ namespace LabBilling.Core.DataAccess
                 statementDetail.Account = chrg.AccountNo;
                 statementDetail.Invoice = chrg.Invoice;
                 statementDetail.Amount = chrg.NetAmount * chrg.Quantity;
-                if (chrg.CDMCode == "CBILL")
+                if (chrg.CDMCode == invoiceCdm)
                 {
                     statementDetail.Description = $"Invoice {chrg.Invoice}";
                     statementDetail.Reference = chrg.Invoice;
@@ -266,7 +267,7 @@ namespace LabBilling.Core.DataAccess
                 account.AccountNo = clientMnem;
                 account.PatFullName = client.Name;
                 account.MeditechAccount = clientMnem;
-                account.FinCode = "CLIENT";
+                account.FinCode = clientFinCode;
                 account.TransactionDate = DateTime.Today;
                 account.ClientMnem = clientMnem;
 

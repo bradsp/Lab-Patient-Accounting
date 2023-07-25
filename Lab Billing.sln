@@ -21,8 +21,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		LabPatientAccounting DB Build.sql = LabPatientAccounting DB Build.sql
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LabBillingUnitTesting", "LabBillingUnitTesting\LabBillingUnitTesting.csproj", "{D4B09B99-58D0-4279-B467-7171D74B4877}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LabBillingConsole", "LabBillingConsole\LabBillingConsole.csproj", "{710148ED-1BB6-4776-8D8C-737A166A014C}"
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "LabBillingServiceSetup", "LabBillingServiceSetup\LabBillingServiceSetup.vdproj", "{CCA0C739-9B92-4DED-AE24-342149046295}"
@@ -77,13 +75,6 @@ Global
 		{A38E5412-1194-42CE-8CA2-CF509EAE7828}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A38E5412-1194-42CE-8CA2-CF509EAE7828}.Release|x86.ActiveCfg = Release|Any CPU
 		{A38E5412-1194-42CE-8CA2-CF509EAE7828}.Release|x86.Build.0 = Release|Any CPU
-		{D4B09B99-58D0-4279-B467-7171D74B4877}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D4B09B99-58D0-4279-B467-7171D74B4877}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D4B09B99-58D0-4279-B467-7171D74B4877}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{D4B09B99-58D0-4279-B467-7171D74B4877}.Debug|x86.Build.0 = Debug|Any CPU
-		{D4B09B99-58D0-4279-B467-7171D74B4877}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D4B09B99-58D0-4279-B467-7171D74B4877}.Release|x86.ActiveCfg = Release|Any CPU
-		{D4B09B99-58D0-4279-B467-7171D74B4877}.Release|x86.Build.0 = Release|Any CPU
 		{710148ED-1BB6-4776-8D8C-737A166A014C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{710148ED-1BB6-4776-8D8C-737A166A014C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{710148ED-1BB6-4776-8D8C-737A166A014C}.Debug|x86.ActiveCfg = Debug|Any CPU

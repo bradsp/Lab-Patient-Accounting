@@ -144,18 +144,26 @@ namespace LabBilling.Core.DataAccess
         {
             Log.Instance.Trace($"Entering - chrg number {chrgNum} comment {comment}");
 
+            bool setCredited = false;
+
             if (chrgNum <= 0)
                 throw new ArgumentOutOfRangeException(nameof(chrgNum));
-
             var chrg = GetById(chrgNum) ?? throw new ApplicationException($"Charge number {chrgNum} not found.");
 
+            //if(string.IsNullOrEmpty(chrg.Invoice))
+            setCredited = true;
+
+            chrg.IsCredited = setCredited;
             chrg.ChrgId = 0;
             chrg.Quantity *= -1;
             chrg.Comment = comment;
             chrg.Invoice = null;
+            chrg.PostingDate = DateTime.Today;
             chrg.ChrgDetails.ForEach(x => x.ChrgNo = 0);
             
             int retVal = AddCharge(chrg);
+            if (setCredited)
+                SetCredited(chrgNum);
             Log.Instance.Trace($"Credit charge number {chrgNum} comment {comment} returned {retVal}");
             Log.Instance.Debug($"{dbConnection.LastSQL} {dbConnection.LastArgs}");
             return retVal;
