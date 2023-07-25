@@ -52,7 +52,7 @@ namespace LabBilling.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("LabBillingTest")]
+        [global::System.Configuration.DefaultSettingValueAttribute("LabBillingDev")]
         public string TestDbName {
             get {
                 return ((string)(this["TestDbName"]));

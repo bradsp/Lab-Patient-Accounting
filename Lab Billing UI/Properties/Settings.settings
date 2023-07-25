@@ -12,7 +12,7 @@
       <Value Profile="(Default)">NLog</Value>
     </Setting>
     <Setting Name="TestDbName" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">LabBillingTest</Value>
+      <Value Profile="(Default)">LabBillingDev</Value>
     </Setting>
     <Setting Name="TestDbServer" Type="System.String" Scope="Application">
       <Value Profile="(Default)">WTHMCLBILL</Value>

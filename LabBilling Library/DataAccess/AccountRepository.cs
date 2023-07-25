@@ -923,7 +923,6 @@ namespace LabBilling.Core.DataAccess
             chrg.PostingDate = DateTime.Today;
             chrg.Quantity = qty;
             chrg.ServiceDate = serviceDate;
-            chrg.UnitNo = accData.EMPINumber;
             chrg.ResponsibleProvider = "";
 
             List<CdmDetail> feeSched = null;
