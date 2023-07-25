@@ -20,7 +20,8 @@ namespace LabBilling.Core.DataAccess
         {
             var sql = PetaPoco.Sql.Builder
                 .Where($"{GetRealColumn(nameof(Fin.IsDeleted))} = 0")
-                .Where($"{GetRealColumn(nameof(Fin.FinCode))} <> @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, SqlValue = "CLIENT" });
+                .Where($"{GetRealColumn(nameof(Fin.FinCode))} <> @0", 
+                    new SqlParameter() { SqlDbType = SqlDbType.VarChar, SqlValue = "CLIENT" });
 
             return dbConnection.Fetch<Fin>(sql);
         }

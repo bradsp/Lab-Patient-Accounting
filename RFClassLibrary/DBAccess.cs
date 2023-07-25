@@ -33,6 +33,7 @@ namespace RFClassLibrary
         /// <param name="strDataSrc"></param>
         /// <param name="strDB"></param>
         /// <param name="strTable"></param>
+		/// <param name="appName"></param>
 		public DBAccess(string strDataSrc, string strDB, string strTable)
 		{
 			// 
@@ -102,12 +103,12 @@ namespace RFClassLibrary
 				m_strTable = value;	
 			}
 		}
-		
+
 		/// <summary>
 		/// strField is the field to be updated
 		/// strFilter is the filter to be used to select records (the sql where clause)
-        /// 20100420 rgc/wdk if the filter is for a ROWGUID be sure to use the single quote around the
-        /// rowguid. ie '9b7ba1c9-04ae-4ceb-a791-000df4a85cb6'
+		/// 20100420 rgc/wdk if the filter is for a ROWGUID be sure to use the single quote around the
+		/// rowguid. ie '9b7ba1c9-04ae-4ceb-a791-000df4a85cb6'
 		/// returns: The number of records updated
 		/// calling example:
 		///		m_strWork = string.Format("rowguid = '{0}'",m_strWPatRowGUID);
@@ -568,9 +569,10 @@ namespace RFClassLibrary
                     ThrowException(string.Format("{0} {1}", new System.Diagnostics.StackTrace().GetFrame(0).GetMethod().Name, "called while class DBAccess is invalid"));
                 }
                 bool bRetVal = true; // success
-                string strDBConnection = string.Format(@"Data Source={0};Integrated Security=SSPI; Initial Catalog={1}; Connection Timeout = 120",
+                string strDBConnection = string.Format(@"Data Source={0};Integrated Security=SSPI;Initial Catalog={1};Application Name={2};Connection Timeout = 120",
                                                             propDataSrc,
-                                                             propDB);
+                                                             propDB,
+															 propAppName);
                     
                 //********************************
                 DBConnection = new SqlConnection(strDBConnection);

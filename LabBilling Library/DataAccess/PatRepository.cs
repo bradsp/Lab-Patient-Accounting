@@ -5,6 +5,7 @@ using LabBilling.Core.Models;
 using RFClassLibrary;
 using System.Data.SqlClient;
 using System.Data;
+using System.Linq;
 
 namespace LabBilling.Core.DataAccess
 {
@@ -35,7 +36,7 @@ namespace LabBilling.Core.DataAccess
 
         public Pat GetByAccount(Account account)
         {
-            Log.Instance.Trace($"Entering - account {account.AccountNo}");
+            Log.Instance.Trace($"Entering - account {account}");
 
             var record = dbConnection.SingleOrDefault<Pat>("where account = @0",
                 new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account.AccountNo });
@@ -44,8 +45,10 @@ namespace LabBilling.Core.DataAccess
             {
                 //if there ios not a pat record, create one. All accounts must have a pat record
 
-                record = new Pat();
-                record.AccountNo = account.AccountNo;
+                record = new Pat
+                {
+                    AccountNo = account.AccountNo
+                };
 
                 Add(record);
 
@@ -318,6 +321,31 @@ namespace LabBilling.Core.DataAccess
         {
             Log.Instance.Trace($"Entering - account {pat.AccountNo}");
             Save(pat);
+        }
+
+        public int SetStatementFlag(string account, string flag)
+        {
+            string[] validFlags = { "N", "Y", "1", "2", "3", "4" };
+
+            if(!validFlags.Contains(flag))
+                throw new ApplicationException("Invalid statement flag");
+
+            var sql = PetaPoco.Sql.Builder;
+
+            sql.Set($"{GetRealColumn(nameof(Pat.StatementFlag))}=@0",
+                new SqlParameter() { DbType = DbType.String, Value = flag });
+            sql.Where($"{GetRealColumn(nameof(Pat.AccountNo))}=@0",
+                new SqlParameter() { DbType = DbType.String, Value = account });
+            try
+            {
+                var result = dbConnection.Update<Pat>(sql);
+                return result;
+            }
+            catch(Exception ex)
+            {
+                throw new ApplicationException($"Exception updating statement flag on {account}", ex);
+            }
+
         }
     }
 }

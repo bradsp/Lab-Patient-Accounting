@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Data.SqlClient;
 using System.Data;
 using Log = LabBilling.Logging.Log;
+using System.Runtime.CompilerServices;
 
 namespace LabBilling.Core.DataAccess
 {
@@ -35,6 +36,13 @@ namespace LabBilling.Core.DataAccess
         private const string capStatus = "CAP";
         private const string naStatus = "N/A";
         private const string newChrgStatus = "NEW";
+
+        private const string clientFinType = "C";
+        private const string patientFinType = "M";
+        private const string zFinType = "Z";
+        private const string invalidFinCode = "K";
+        private const string clientFinCode = "CLIENT";
+        private const string pthExceptionClient = "HC";
 
         public AccountRepository(IAppEnvironment appEnvironment) : base(appEnvironment)
         {
@@ -70,7 +78,7 @@ namespace LabBilling.Core.DataAccess
 
             if (!string.IsNullOrEmpty(record.ClientMnem))
             {
-                if (record.ClientMnem != "K")
+                if (record.ClientMnem != invalidFinCode)
                 {
                     record.Client = clientRepository.GetClient(record.ClientMnem);
                     if (record.Client != null)
@@ -127,10 +135,15 @@ namespace LabBilling.Core.DataAccess
                         {
                             record.BillingType = "REF LAB";
                             record.BillForm = record.InsurancePrimary.InsCompany.BillForm;
+
+                            if(string.IsNullOrEmpty(record.BillForm))
+                            {
+                                record.BillForm = record.Fin.ClaimType;
+                            }
                         }
                         else
                         {
-                            record.BillForm = "UNDEFINED";
+                            record.BillForm = record.Fin.ClaimType;
                         }
                     }
                 }
@@ -140,7 +153,7 @@ namespace LabBilling.Core.DataAccess
 
             record.BillableCharges = record.Charges.Where(x => x.Status != cbillStatus && x.Status != capStatus && x.Status != naStatus).ToList();
 
-            if (record.FinCode == "CLIENT")
+            if (record.FinCode == clientFinCode)
             {
                 record.TotalCharges = record.Charges.Where(x => x.Status != cbillStatus).Sum(x => x.Quantity * x.NetAmount);
             }
@@ -154,10 +167,10 @@ namespace LabBilling.Core.DataAccess
             record.TotalPayments = record.Payments.Where(x => x.Status != cbillStatus).Sum(x => x.PaidAmount);
             record.TotalContractual = record.Payments.Where(x => x.Status != cbillStatus).Sum(x => x.ContractualAmount);
 
-            record.ClaimBalance = record.BillableCharges.Where(x => x.FinancialType == "M").Sum(x => x.Quantity * x.NetAmount)
+            record.ClaimBalance = record.BillableCharges.Where(x => x.FinancialType == patientFinType).Sum(x => x.Quantity * x.NetAmount)
                 - (record.TotalPayments + record.TotalWriteOff + record.TotalContractual);
 
-            var results = record.BillableCharges.Where(x => x.FinancialType == "C")
+            var results = record.BillableCharges.Where(x => x.FinancialType == clientFinType)
                 .GroupBy(x => x.ClientMnem, (client, balance) => new { Client = client, Balance = balance.Sum(c => c.Quantity * c.NetAmount) });
 
             record.ClientBalance = new List<(string client, double balance)>();
@@ -247,7 +260,7 @@ namespace LabBilling.Core.DataAccess
                         command = PetaPoco.Sql.Builder
                             .Select($"{selMaxRecords}status, acc.account, pat_name, ssn, cl_mnem, acc.fin_code, trans_date, ins.plan_nme")
                             .From(_tableName)
-                            .InnerJoin("ins").On("ins.account = acc.account and ins_a_b_c = 'A'")
+                            .InnerJoin("ins").On($"ins.account = acc.account and ins_a_b_c = {InsCoverage.Primary}")
                             .Where("status = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = AccountStatus.Institutional })
                             .OrderBy($"{GetRealColumn(nameof(Account.TransactionDate))}");
                         break;
@@ -255,7 +268,7 @@ namespace LabBilling.Core.DataAccess
                         command = PetaPoco.Sql.Builder
                             .Select($"{selMaxRecords}status, acc.account, pat_name, ssn, cl_mnem, acc.fin_code, trans_date, ins.plan_nme")
                             .From(_tableName)
-                            .InnerJoin("ins").On("ins.account = acc.account and ins_a_b_c = 'A'")
+                            .InnerJoin("ins").On($"ins.account = acc.account and ins_a_b_c = {InsCoverage.Primary}")
                             .Where("status = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = AccountStatus.Professional })
                             .OrderBy($"{GetRealColumn(nameof(Account.TransactionDate))}");
                         break;
@@ -324,9 +337,11 @@ namespace LabBilling.Core.DataAccess
 
                 if (record == null)
                 {
-                    record = new AccountAlert();
-                    record.AccountNo = account;
-                    record.Alert = showAlert;
+                    record = new AccountAlert
+                    {
+                        AccountNo = account,
+                        Alert = showAlert
+                    };
 
                     dbConnection.Insert(record);
                 }
@@ -375,7 +390,7 @@ namespace LabBilling.Core.DataAccess
                 new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = status },
                 new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = DateTime.Now },
                 new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = Environment.UserName.ToString() },
-                new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = System.AppDomain.CurrentDomain.FriendlyName },
+                new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = RFClassLibrary.OS.GetAppName() },
                 new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = Environment.MachineName },
                 new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = accountNo });
         }
@@ -607,7 +622,6 @@ namespace LabBilling.Core.DataAccess
             bool updateSuccess = true;
             string oldClientMnem = table.ClientMnem;
 
-
             try
             {
                 ClientRepository clientRepository = new ClientRepository(_appEnvironment);
@@ -637,7 +651,7 @@ namespace LabBilling.Core.DataAccess
                     AddNote(table.AccountNo, $"Client updated from {oldClientMnem} to {newClientMnem}.");
 
                     //reprocess charges if fin class is client bill (C) to pick up proper discounts.
-                    if (table.Fin.FinClass == "C")
+                    if (table.Fin.FinClass == clientFinType)
                     {
                         try
                         {
@@ -649,7 +663,7 @@ namespace LabBilling.Core.DataAccess
                         }
                     }
 
-                    if (table.Fin.FinClass == "M")
+                    if (table.Fin.FinClass == patientFinType)
                     {
                         //reprocess charges if fee schedule is different to pick up correct charge amounts
                         if (oldClient.FeeSchedule != newClient.FeeSchedule)
@@ -663,7 +677,7 @@ namespace LabBilling.Core.DataAccess
                                 throw new ApplicationException("Error reprocessing charges.", ex);
                             }
                         }
-                        else if (oldClient.ClientMnem == "HC" || newClient.ClientMnem == "HC")
+                        else if (oldClient.ClientMnem == pthExceptionClient || newClient.ClientMnem == pthExceptionClient)
                         {
                             try
                             {
@@ -706,6 +720,16 @@ namespace LabBilling.Core.DataAccess
             return updateSuccess;
         }
 
+        private class ChargeInfo
+        {
+            public string CdmCode { get; set; }
+            public string FinCode { get; set; }
+            public string ClientMnem { get; set; }
+            public decimal NetAmount { get; set; }
+            public decimal Quantity { get; set; }
+        }
+
+
         /// <summary>
         /// 
         /// </summary>
@@ -722,7 +746,9 @@ namespace LabBilling.Core.DataAccess
             BeginTransaction();
             try
             {
-                foreach (var chrg in account.Charges.Where(x => x.IsCredited == false))
+                var chargesToCredit = account.Charges.Where(x => x.IsCredited == false).ToList();
+
+                foreach(var chrg in chargesToCredit)
                 {
                     if (chrg.CDMCode == invoicedCdm)  //do not reprocess CBILL charge records
                         continue;
@@ -789,7 +815,8 @@ namespace LabBilling.Core.DataAccess
 
             var chrgsToUpdate = charges.Where(x => x.IsCredited == false &&
                 (x.ClientMnem != _appEnvironment.ApplicationParameters.PathologyGroupClientMnem ||
-                string.IsNullOrEmpty(_appEnvironment.ApplicationParameters.PathologyGroupClientMnem))).ToList();
+                string.IsNullOrEmpty(_appEnvironment.ApplicationParameters.PathologyGroupClientMnem))
+                && x.FinancialType == fin.FinClass).ToList();
 
             foreach (var chrg in chrgsToUpdate)
             {
@@ -814,9 +841,7 @@ namespace LabBilling.Core.DataAccess
             if (client == null)
                 return false;
 
-            var chrgsToUpdate = charges.Where(x => x.IsCredited == false).ToList();
-
-            foreach (var chrg in chrgsToUpdate)
+            foreach (var chrg in charges)
             {
                 chrg.ClientMnem = clientMnem;
                 chrgRepository.Update(chrg, new[] { nameof(Chrg.ClientMnem) });
@@ -829,7 +854,7 @@ namespace LabBilling.Core.DataAccess
         {
             Log.Instance.Trace($"Entering - account {account} cdm {cdm}");
 
-            //verify the account exists - if not return -1
+            //verify the account exists
             Account accData = GetByAccount(account);
             if (accData == null)
             {
@@ -880,7 +905,7 @@ namespace LabBilling.Core.DataAccess
                 //check for global billing cdm - if it is, change client to Pathology Group, fin to Y, and get appropriate prices
                 var gb = globalBillingCdmRepository.GetCdm(cdm);
                 //hard coding exception for Hardin County for now - 05/09/2023 BSP
-                if (gb != null && accData.ClientMnem != "HC")
+                if (gb != null && accData.ClientMnem != pthExceptionClient)
                 {
                     fin = finRepository.GetFin("Y") ?? throw new ApplicationException($"Fin code Y not found error {accData.AccountNo}");
                     chargeClient = clientRepository.GetClient(_appEnvironment.ApplicationParameters.PathologyGroupClientMnem);
@@ -891,10 +916,10 @@ namespace LabBilling.Core.DataAccess
 
             switch (fin.FinClass)
             {
-                case "M":
+                case patientFinType:
                     chrg.Status = cdmData.MClassType == naStatus ? naStatus : newChrgStatus;
                     break;
-                case "C":
+                case clientFinType:
                     chrg.Status = cdmData.CClassType == naStatus ? naStatus : newChrgStatus;
                     break;
                 case "Z":
@@ -907,23 +932,18 @@ namespace LabBilling.Core.DataAccess
 
             //now build the charge & detail records
             chrg.AccountNo = accData.AccountNo;
-            chrg.Action = "";
             chrg.BillMethod = fin.ClaimType;
             chrg.CDMCode = cdm;
             chrg.Comment = comment;
             chrg.IsCredited = false;
-            chrg.Facility = "";
             chrg.FinCode = fin.FinCode;
             chrg.ClientMnem = chargeClient.ClientMnem;
             chrg.FinancialType = fin.FinClass;
             chrg.OrderMnem = cdmData.Mnem;
             chrg.LISReqNo = refNumber;
-            chrg.OrderingSite = "";
-            chrg.PerformingSite = "";
             chrg.PostingDate = DateTime.Today;
             chrg.Quantity = qty;
             chrg.ServiceDate = serviceDate;
-            chrg.ResponsibleProvider = "";
 
             List<CdmDetail> feeSched = null;
 
@@ -965,12 +985,12 @@ namespace LabBilling.Core.DataAccess
                 };
                 switch (fin.FinClass)
                 {
-                    case "M":
+                    case patientFinType:
                         chrgDetail.Amount = fee.MClassPrice;
                         retailTotal += fee.MClassPrice;
                         ztotal += fee.ZClassPrice;
                         break;
-                    case "C":
+                    case clientFinType:
                         //todo: calculate client discount
                         var cliDiscount = chargeClient.Discounts.Find(c => c.Cdm == cdm);
                         double discountPercentage = chargeClient.DefaultDiscount;
@@ -998,10 +1018,7 @@ namespace LabBilling.Core.DataAccess
 
                 chrgDetail.Modifier = fee.Modifier;
                 chrgDetail.RevenueCode = fee.RevenueCode;
-                chrgDetail.LISReqNo = "";
                 chrgDetail.OrderCode = fee.BillCode;
-                chrgDetail.BillType = "";
-                chrgDetail.BillMethod = "";
                 chrgDetail.DiagnosisPointer.DiagnosisPointer = "1:";
 
                 chrg.ChrgDetails.Add(chrgDetail);
@@ -1061,6 +1078,50 @@ namespace LabBilling.Core.DataAccess
 
         }
 
+        public void UnbundlePanels(Account account)
+        {
+            var bundledProfiles = account.Charges.Where(x => x.CDMCode == "MCL0029" && x.IsCredited == false);
+            try
+            {
+                BeginTransaction();
+
+                foreach (var bundledProfile in bundledProfiles)
+                {
+                    //credit the profile charge
+                    chrgRepository.CreditCharge(bundledProfile.ChrgId, "Unbundling charge");
+
+                    //enter charges for each component
+                    AddCharge(account, "5545154", 1, account.TransactionDate);
+                    AddCharge(account, "5382522", 1, account.TransactionDate);
+                    AddCharge(account, "5646008", 1, account.TransactionDate);
+                }
+
+                bundledProfiles = account.Charges.Where(x => x.CDMCode == "MCL0021" && x.IsCredited == false);
+
+                foreach (var bundledProfile in bundledProfiles)
+                {
+                    //credit the profile charge
+                    chrgRepository.CreditCharge(bundledProfile.ChrgId, "Unbundling charge");
+
+                    //enter charges for each component
+                    AddCharge(account, "5545154", 1, account.TransactionDate);
+                    AddCharge(account, "5646012", 1, account.TransactionDate);
+                    AddCharge(account, "5646086", 1, account.TransactionDate);
+                    AddCharge(account, "5646054", 1, account.TransactionDate);
+                    AddCharge(account, "5728026", 1, account.TransactionDate);
+                    AddCharge(account, "5728190", 1, account.TransactionDate);
+                }
+
+                CompleteTransaction();
+            }
+            catch(Exception ex)
+            {
+                Log.Instance.Error(ex);
+                AbortTransaction();
+            }
+
+        }
+
         public void BundlePanels(Account account)
         {
             List<BundledProfile> bundledProfiles = new List<BundledProfile>();
@@ -1116,9 +1177,7 @@ namespace LabBilling.Core.DataAccess
                     this.AddCharge(account, bundledProfiles[x].ProfileCdm, 1, (DateTime)account.TransactionDate, $"Bundled by Rule");
                     this.AddNote(account.AccountNo, $"Bundled charges into {bundledProfiles[x].ProfileCdm}");
                 }
-
             }
-
         }
 
         /// <summary>
@@ -1133,8 +1192,9 @@ namespace LabBilling.Core.DataAccess
 
             try
             {
-                if ((account.Status == "SSIUB" || account.Status == "SSI1500" || account.Status == "CLAIM" || account.Status == "STMT"
-                    || account.Status == "CLOSED" || account.Status == "PAID_OUT") && !reprint)
+                if ((account.Status == AccountStatus.InstSubmitted || account.Status == AccountStatus.ProfSubmitted 
+                    || account.Status == AccountStatus.ClaimSubmitted || account.Status == AccountStatus.Statements
+                    || account.Status == AccountStatus.Closed || account.Status == AccountStatus.PaidOut) && !reprint)
                 {
                     //account has been billed, do not validate
                     account.AccountValidationStatus.account = account.AccountNo;
@@ -1145,10 +1205,13 @@ namespace LabBilling.Core.DataAccess
                 }
                 else
                 {
-                    if (account.InsurancePrimary != null)
+                    BeginTransaction();
+                    if (account.Fin.FinClass == patientFinType && account.InsurancePrimary != null)
                     {
                         if (account.InsurancePrimary.InsCompany != null)
                         {
+                            if(account.InsurancePrimary.InsCompany.IsMedicareHmo)
+                                UnbundlePanels(account);
                             if (!account.InsurancePrimary.InsCompany.IsMedicareHmo)
                                 BundlePanels(account);
                         }
@@ -1191,29 +1254,39 @@ namespace LabBilling.Core.DataAccess
                     {
                         account.AccountValidationStatus.validation_text = "No validation errors.";
                         //update account status if this account has been flagged to bill
-                        if (account.Status == "RTB")
+                        if (account.Status == AccountStatus.ReadyToBill)
+                        {   
                             UpdateStatus(account.AccountNo, account.BillForm);
+                            //if this is a self-pay, set the statement flag
+                            if(account.BillForm == AccountStatus.Statements)
+                            {
+                                patRepository.SetStatementFlag(account.AccountNo, "Y");
+                            }
+                        }
                     }
 
                     accountValidationStatusRepository.Save(account.AccountValidationStatus);
                     if (!string.IsNullOrEmpty(lmrperrors))
                     {
-                        AccountLmrpError record = new AccountLmrpError();
-                        record.AccountNo = account.AccountNo;
-                        record.DateOfService = (DateTime)account.TransactionDate;
-                        record.ClientMnem = account.ClientMnem;
-                        record.FinancialCode = account.FinCode;
-                        record.Error = lmrperrors;
+                        AccountLmrpError record = new AccountLmrpError
+                        {
+                            AccountNo = account.AccountNo,
+                            DateOfService = (DateTime)account.TransactionDate,
+                            ClientMnem = account.ClientMnem,
+                            FinancialCode = account.FinCode,
+                            Error = lmrperrors
+                        };
 
                         accountLmrpErrorRepository.Save(record);
                     }
-
+                    CompleteTransaction();
                     return isAccountValid;
                 }
             }
             catch (Exception ex)
             {
                 Log.Instance.Error(ex);
+                AbortTransaction();
 
                 account.AccountValidationStatus.account = account.AccountNo;
                 account.AccountValidationStatus.mod_date = DateTime.Now;
@@ -1271,20 +1344,18 @@ namespace LabBilling.Core.DataAccess
         {
             Log.Instance.Trace($"Entering");
 
-            //DateTime.TryParse(systemParametersRepository.GetByKey("ssi_bill_thru_date"), out DateTime thruDate);
-
             DateTime thruDate = _appEnvironment.ApplicationParameters.SSIBillThruDate;
 
             (string propertyName, AccountSearchRepository.operation oper, string searchText)[] parameters = {
                 (nameof(AccountSearch.ServiceDate), AccountSearchRepository.operation.LessThanOrEqual, thruDate.ToString()),
-                (nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "PAID_OUT"),
-                (nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "CLOSED"),
-                (nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "SSI1500"),
-                (nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "SSIUB"),
-                (nameof(AccountSearch.FinCode), AccountSearchRepository.operation.NotEqual, "CLIENT"),
-                (nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "HOLD"),
+                (nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, AccountStatus.PaidOut),
+                (nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, AccountStatus.Closed),
+                (nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, AccountStatus.ProfSubmitted),
+                (nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, AccountStatus.InstSubmitted),
+                (nameof(AccountSearch.FinCode), AccountSearchRepository.operation.NotEqual, AccountStatus.Client),
+                (nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, AccountStatus.Hold),
                 (nameof(AccountSearch.FinCode), AccountSearchRepository.operation.NotEqual, "Y"),
-                (nameof(AccountSearch.FinCode), AccountSearchRepository.operation.NotEqual, "CLIENT"),
+                (nameof(AccountSearch.FinCode), AccountSearchRepository.operation.NotEqual, clientFinCode),
                 (nameof(AccountSearch.FinCode), AccountSearchRepository.operation.NotEqual, "E")
             };
 
@@ -1314,12 +1385,12 @@ namespace LabBilling.Core.DataAccess
 
             (string propertyName, AccountSearchRepository.operation oper, string searchText)[] parameters = {
                 (nameof(AccountSearch.ServiceDate), AccountSearchRepository.operation.LessThanOrEqual, thruDate.ToString()),
-                (nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "PAID_OUT"),
-                (nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "CLOSED"),
-                (nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "SSI1500"),
-                (nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "SSIUB"),
+                (nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, AccountStatus.PaidOut),
+                (nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, AccountStatus.Closed),
+                (nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, AccountStatus.ProfSubmitted),
+                (nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, AccountStatus.InstSubmitted),
                 (nameof(AccountSearch.FinCode), AccountSearchRepository.operation.NotEqual, "CLIENT"),
-                (nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "HOLD")
+                (nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, AccountStatus.Hold)
             };
 
             AccountSearchRepository accountSearchRepository = new AccountSearchRepository(_appEnvironment);

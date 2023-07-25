@@ -1839,23 +1839,25 @@ namespace LabBilling.Forms
             // showClientRadioButton
             // 
             this.showClientRadioButton.AutoSize = true;
+            this.showClientRadioButton.BackColor = System.Drawing.Color.PaleGreen;
             this.showClientRadioButton.Location = new System.Drawing.Point(252, 10);
             this.showClientRadioButton.Name = "showClientRadioButton";
             this.showClientRadioButton.Size = new System.Drawing.Size(125, 17);
             this.showClientRadioButton.TabIndex = 12;
             this.showClientRadioButton.Text = "Show Client Invoiced";
-            this.showClientRadioButton.UseVisualStyleBackColor = true;
+            this.showClientRadioButton.UseVisualStyleBackColor = false;
             this.showClientRadioButton.CheckedChanged += new System.EventHandler(this.show3rdPartyRadioButton_CheckedChanged);
             // 
             // show3rdPartyRadioButton
             // 
             this.show3rdPartyRadioButton.AutoSize = true;
+            this.show3rdPartyRadioButton.BackColor = System.Drawing.Color.Cyan;
             this.show3rdPartyRadioButton.Location = new System.Drawing.Point(111, 10);
             this.show3rdPartyRadioButton.Name = "show3rdPartyRadioButton";
             this.show3rdPartyRadioButton.Size = new System.Drawing.Size(135, 17);
             this.show3rdPartyRadioButton.TabIndex = 12;
             this.show3rdPartyRadioButton.Text = "Show 3rd Party/Patient";
-            this.show3rdPartyRadioButton.UseVisualStyleBackColor = true;
+            this.show3rdPartyRadioButton.UseVisualStyleBackColor = false;
             this.show3rdPartyRadioButton.CheckedChanged += new System.EventHandler(this.show3rdPartyRadioButton_CheckedChanged);
             // 
             // chargeLayoutPanel

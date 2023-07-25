@@ -85,12 +85,21 @@ namespace LabBilling.Core.BusinessLogic
             ProgressReportModel report = new ProgressReportModel();
             //compile list of accounts to have claims generated
             billing837 = new Billing837(_connectionString, propProductionEnvironment);
-            string batchSubmitterID = _appEnvironment.ApplicationParameters.FederalTaxId; //parametersdb.GetByKey("fed_tax_id");
-            decimal strNum = numberRepository.GetNumber("ssi_batch");
-            string interchangeControlNumber = string.Format("{0:D9}", int.Parse(string.Format("{0}{1}", DateTime.Now.Year, strNum)));
+            string batchSubmitterID = _appEnvironment.ApplicationParameters.FederalTaxId;
+
+            BillingBatch billingBatch = new BillingBatch();
+            billingBatch.RunDate = DateTime.Today;
+            billingBatch.RunUser = OS.GetUserName();
+            billingBatch.ClaimCount = 0;
+            billingBatch.TotalBilled = 0;
+
+            var batch = billingBatchRepository.Add(billingBatch);
+
+            double strNum = Convert.ToDouble(batch.ToString());
+
+            string interchangeControlNumber = Convert.ToInt32(strNum).ToString("D9");
             string batchType;
             string fileLocation;
-            //int maxClaims = Convert.ToInt32(parametersdb.GetByKey("claim_batch_max_claims"));
             int maxClaims = _appEnvironment.ApplicationParameters.MaxClaimsInClaimBatch;
 
             List<ClaimItem> claimList;
@@ -104,15 +113,13 @@ namespace LabBilling.Core.BusinessLogic
                     billClaimType = Billing837.ClaimType.Institutional;
                     processedStatus = AccountStatus.InstSubmitted; // "SSIUB";
                     batchType = AccountStatus.Institutional; // "UB";
-                    //fileLocation = parametersdb.GetByKey("claim_837i_file_location");
                     fileLocation = _appEnvironment.ApplicationParameters.InstitutionalClaimFileLocation;
                     break;
                 case ClaimType.Professional:
                     claimList = accountRepository.GetAccountsForClaims(AccountRepository.ClaimType.Professional, maxClaims).ToList();
                     billClaimType = Billing837.ClaimType.Professional;
-                    processedStatus = AccountStatus.ProfSubmitted; // "SSI1500";
-                    batchType = AccountStatus.Professional; // "1500";
-                    //fileLocation = parametersdb.GetByKey("claim_837p_file_location");
+                    processedStatus = AccountStatus.ProfSubmitted;
+                    batchType = AccountStatus.Professional;
                     fileLocation = _appEnvironment.ApplicationParameters.ProfessionalClaimFileLocation;
                     break;
                 default:
@@ -134,8 +141,7 @@ namespace LabBilling.Core.BusinessLogic
                     }
 
                     try
-                    {
-                        
+                    {                        
                         claim = GenerateClaim(item.account);
                         if(claim == null)
                         {
@@ -197,23 +203,21 @@ namespace LabBilling.Core.BusinessLogic
                     progress.Report(report);
                 }
 
+                string x12Text = string.Empty;
                 if (claims.Count > 0)
                 {
 
-                    string x12Text = billing837.Generate837ClaimBatch(claims, interchangeControlNumber,
+                    x12Text = billing837.Generate837ClaimBatch(claims, interchangeControlNumber,
                         batchSubmitterID, fileLocation, billClaimType);
-
-                    BillingBatch billingBatch = new BillingBatch();
-                    billingBatch.Batch = Convert.ToDouble(interchangeControlNumber);
-                    billingBatch.RunDate = DateTime.Today;
-                    billingBatch.RunUser = OS.GetUserName();
-                    billingBatch.X12Text = x12Text;
-                    billingBatch.ClaimCount = claims.Count;
-                    billingBatch.TotalBilled = claims.Sum(x => x.TotalChargeAmount);
-                    billingBatch.BatchType = batchType;
-
-                    billingBatchRepository.Add(billingBatch);
                 }
+
+                billingBatch = billingBatchRepository.GetBatch(strNum);
+                billingBatch.X12Text = x12Text;
+                billingBatch.ClaimCount = claims.Count;
+                billingBatch.TotalBilled = claims.Sum(x => x.TotalChargeAmount);
+                billingBatch.BatchType = batchType;
+                billingBatchRepository.Update(billingBatch);
+
                 db.CompleteTransaction();
 
                 return claims.Count;
@@ -287,8 +291,7 @@ namespace LabBilling.Core.BusinessLogic
             ClaimData claim;
             string claimx12;
 
-            //billing837 = new Billing837(_connectionString);
-            string batchSubmitterID = _appEnvironment.ApplicationParameters.FederalTaxId; //parametersdb.GetByKey("fed_tax_id");
+            string batchSubmitterID = _appEnvironment.ApplicationParameters.FederalTaxId;
             decimal strNum = numberRepository.GetNumber("ssi_batch");
             string interchangeControlNumber = string.Format("{0:D9}", int.Parse(string.Format("{0}{1}", DateTime.Now.Year, strNum)));
 
@@ -302,7 +305,6 @@ namespace LabBilling.Core.BusinessLogic
                 claim.InterchangeControlNumber = interchangeControlNumber;
                 claim.BatchSubmitterId = batchSubmitterID;
                 claimx12 = Newtonsoft.Json.JsonConvert.SerializeObject(claim);
-                //claimx12 = billing837.Build837Claim(claim, interchangeControlNumber, propProductionEnvironment, batchSubmitterID);
             }
             catch (ApplicationException apex)
             {
@@ -310,31 +312,11 @@ namespace LabBilling.Core.BusinessLogic
                 return;
             }
 
-            //update status and activity date fields
-            //if (claim.ClaimType == ClaimType.Institutional)
-            //{
-            //    claim.claimAccount.Status = "SSIUB";
-            //    claim.claimAccount.Pat.InstitutionalClaimDate = DateTime.Today;
-            //    patRepository.Update(claim.claimAccount.Pat, new[] { nameof(Pat.InstitutionalClaimDate) });
-            //}
-            //if (claim.ClaimType == ClaimType.Professional)
-            //{
-            //    claim.claimAccount.Status = "SSI1500";
-            //    claim.claimAccount.Pat.ProfessionalClaimDate = DateTime.Today;
-            //    patRepository.Update(claim.claimAccount.Pat, new[] { nameof(Pat.ProfessionalClaimDate) });
-            //}
-
-            //accountRepository.Update(claim.claimAccount, new[] { nameof(Account.Status) });
-
-            //claim.claimAccount.Pat.SSIBatch = interchangeControlNumber;
-
             BillingActivity billingActivity = new BillingActivity();
             billingActivity.PatientName = claim.claimAccount.PatFullName;
             billingActivity.RunDate = DateTime.Today;
             billingActivity.AccountNo = claim.claimAccount.AccountNo;
             billingActivity.Batch = Convert.ToDouble(interchangeControlNumber);
-            //billingActivity.ElectronicBillBatch = Convert.ToDouble(interchangeControlNumber);
-            //billingActivity.ElectronicBillStatus = "UB";
             billingActivity.FinancialCode = claim.claimAccount.FinCode;
             billingActivity.InsuranceOrder = claim.claimAccount.Insurances[0].Coverage;
             billingActivity.InsuranceCode = claim.claimAccount.Insurances[0].InsCode;
@@ -644,41 +626,6 @@ namespace LabBilling.Core.BusinessLogic
 
                     claimData.ClaimLines.Add(claimLine);
                 }
-
-                //foreach (Chrg chrg in claimData.claimAccount.Charges)
-                //{
-                //    // public IEnumerable<ClaimLine> ClaimLines { get; set; }
-                //    foreach (ChrgDetail detail in chrg.ChrgDetails)
-                //    {
-                //        if (detail.Type == "N/A")
-                //            continue;
-                //        ClaimLine claimLine = new ClaimLine();
-                //        claimLine.ProcedureCode = detail.Cpt4;
-                //        claimLine.ProcedureModifier1 = detail.Modifier;
-                //        claimLine.ProcedureModifier2 = detail.Modifer2;
-                //        claimLine.ProcedureModifier3 = "";
-                //        claimLine.Description = chrg.Cdm.Description;
-                //        claimLine.RevenueCodeDescription = detail.RevenueCodeDetail.Description;
-                //        claimLine.Amount = detail.Amount;
-                //        claimLine.Quantity = chrg.Quantity;
-                //        string[] dxptr = detail.DiagCodePointer.Split(':');
-                //        if(dxptr.Length >= 1)
-                //            claimLine.DxPtr1 = dxptr[0] ?? "";
-                //        if (dxptr.Length >= 2) 
-                //            claimLine.DxPtr2 = dxptr[1] ?? "";
-                //        if (dxptr.Length >= 3) 
-                //            claimLine.DxPtr3 = dxptr[2] ?? "";
-                //        if (dxptr.Length >= 4) 
-                //            claimLine.DxPtr4 = dxptr[3] ?? "";
-                //        claimLine.EPSDTIndicator = "";
-                //        claimLine.FamilyPlanningIndicator = "";
-                //        claimLine.ServiceDate = chrg.ServiceDate;
-                //        claimLine.ControlNumber = string.IsNullOrWhiteSpace(detail.Modifier) ? chrg.CDMCode : $"{chrg.CDMCode}-{detail.Modifier}";
-                //        claimLine.RevenueCode = detail.RevenueCode;
-
-                //        claimData.ClaimLines.Add(claimLine);
-                //    }
-                //}
 
             }
             catch (InvalidParameterValueException ipve)
