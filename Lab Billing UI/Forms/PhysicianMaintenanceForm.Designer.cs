@@ -42,6 +42,8 @@ namespace LabBilling.Forms
             // 
             // PhysicianDGV
             // 
+            this.PhysicianDGV.AllowUserToAddRows = false;
+            this.PhysicianDGV.AllowUserToDeleteRows = false;
             this.PhysicianDGV.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -49,6 +51,7 @@ namespace LabBilling.Forms
             this.PhysicianDGV.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.PhysicianDGV.Location = new System.Drawing.Point(12, 70);
             this.PhysicianDGV.Name = "PhysicianDGV";
+            this.PhysicianDGV.ReadOnly = true;
             this.PhysicianDGV.Size = new System.Drawing.Size(765, 297);
             this.PhysicianDGV.TabIndex = 0;
             this.PhysicianDGV.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.PhysicianDGV_CellDoubleClick);

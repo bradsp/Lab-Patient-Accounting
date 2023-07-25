@@ -245,11 +245,9 @@ namespace LabBilling.Forms
             LISMenmTextBox.DataBindings.Add("Text", bindingSource, nameof(Phy.LISMnem));
             CredentialsTextBox.DataBindings.Add("Text", bindingSource, nameof(Phy.Credentials));
             DoctorNoTextBox.DataBindings.Add("Text", bindingSource, nameof(Phy.DoctorNumber));
-            IsDeleted.DataBindings.Add("Checked", bindingSource, nameof(Phy.IsDeleted));
+            IsDeleted.DataBindings.Add("Checked", bindingSource, nameof(Phy.IsDeleted), false, DataSourceUpdateMode.OnPropertyChanged);
             NPITextBox.DataBindings.Add("Text", bindingSource, nameof(Phy.NpiId));
             BillingNPITextBox.DataBindings.Add("Text", bindingSource, nameof(Phy.BillingNpi));
-
-
         }
 
         private void CancelButton_Click(object sender, EventArgs e)
@@ -260,6 +258,7 @@ namespace LabBilling.Forms
 
         private void SaveButton_Click(object sender, EventArgs e)
         {
+            this.ActiveControl = LastNameLabel;
             DialogResult = DialogResult.OK;
             return;
         }

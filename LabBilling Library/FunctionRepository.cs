@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using PetaPoco;
 using PetaPoco.Providers;
 
@@ -22,6 +23,17 @@ namespace LabBilling
 
             return transDate.Month >= 10 ? (year+1).ToString() : year.ToString();
 
+        }
+
+        public static string GetArgs(this IDatabase db)
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach(var arg in db.LastArgs)
+            {
+                sb.Append(arg.ToString() + "|");
+            }
+
+            return sb.ToString();
         }
 
     }

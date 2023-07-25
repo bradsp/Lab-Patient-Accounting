@@ -69,8 +69,6 @@ namespace LabBilling.Forms
             PhysicianDGV.Columns[nameof(Phy.ClientMnem)].DisplayIndex = z++;
             PhysicianDGV.Columns[nameof(Phy.LISMnem)].DisplayIndex = z++;
 
-
-
             PhysicianDGV.AutoResizeColumns();
 
         }
@@ -109,6 +107,11 @@ namespace LabBilling.Forms
 
         private void buttonSearch_Click(object sender, EventArgs e)
         {
+            bindingList.Clear();
+            //bindingSource.DataSource = null;
+            PhysicianDGV.DataSource = null;
+            PhysicianDGV.Refresh();
+
             if(string.IsNullOrEmpty(searchText.Text))
             {
                 MessageBox.Show("Please enter a search term");
@@ -117,8 +120,8 @@ namespace LabBilling.Forms
 
             physicians = phydb.GetByName(searchText.Text, "").ToList();
             bindingList.AddRange(physicians);
-            bindingSource.DataSource = bindingList;
-            PhysicianDGV.DataSource = bindingSource;
+            //bindingSource.DataSource = bindingList;
+            PhysicianDGV.DataSource = bindingList;
             LoadProviderGrid();
         }
 
@@ -137,7 +140,9 @@ namespace LabBilling.Forms
                     //DataRow updated = physicians.AsEnumerable().Where(p => (double)p[nameof(Phy.uri)] == editForm.PhyModel.uri).First();
                     var edited = bindingList.Where(p => p.uri == editForm.PhyModel.uri).First();
                     edited = editForm.PhyModel;
-                    PhysicianDGV.Refresh();
+                    bindingList.ResetBindings();
+                    PhysicianDGV.DataSource = null;
+                    PhysicianDGV.DataSource = bindingList;
                 }
                 catch(Exception ex)
                 {
