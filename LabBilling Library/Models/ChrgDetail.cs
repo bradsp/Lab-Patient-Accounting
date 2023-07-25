@@ -8,6 +8,8 @@ namespace LabBilling.Core.Models
     [PrimaryKey("uri",AutoIncrement = true)]
     public sealed class ChrgDetail : IBaseEntity
     {
+        [Column("account")]
+        public string AccountNo { get; set; }
 
         [Column("chrg_num")]
         public int ChrgNo { get; set; }
@@ -21,6 +23,8 @@ namespace LabBilling.Core.Models
         public string Modifer2 { get; set; }
         [Column("type")]
         public string Type { get; set; }
+        [Column("qty")]
+        public int Quantity { get; set; }
         [Column("amount")]
         public double Amount { get; set; }
         [Column("mt_req_no")]
@@ -29,23 +33,32 @@ namespace LabBilling.Core.Models
         public string OrderCode { get; set; }
         [Column("pointer_set")]
         public bool PointerSet { get; set; }
+
         [Column("mod_date")]
         public DateTime mod_date { get; set; }
         [Column("mod_user")]
         public string mod_user { get; set; }
         [Column("mod_prg")]
         public string mod_prg { get; set; }
-        [Column("deleted")]
-        public bool IsDeleted { get; set; }
+
 
         [Column("uri")]
         public int uri { get; set; }
 
-        [Ignore]
+
+        [Column("cl_mnem")]
+        public string ClientMnem { get; set; }
+        [Column("fin_code")]
+        public string FinCode { get; set; }
+        [Column("invoice")]
+        public string Invoice { get; set; }
+        [Column("fin_type")]
+        public string FinancialType { get; set; }
+        [Column("credited")]
+        public bool IsCredited { get; set; }
+
         [Column("mod_host")]
         public string mod_host { get; set; }
-        [Ignore]
-        public Guid rowguid { get; set; }
 
         [Ignore]
         public RevenueCode RevenueCodeDetail { get; set; }
@@ -70,4 +83,33 @@ namespace LabBilling.Core.Models
         }
 
     }
+
+    public static class ChrgDetailStatus
+    {
+        public const string TC = "TC";
+        public const string PC = "PC";
+        public const string Norm = "NORM";
+        public const string NA = "N/A";
+        public const string Invoice = "INV";
+
+        public static string GetStatus(string type)
+        {
+            switch (type)
+            {
+                case "TC":
+                    return "TC";
+                case "PC":
+                    return "PC";
+                case "NORM":
+                    return "NORM";
+                case "N/A":
+                    return "N/A";
+                case "INV":
+                    return "INV";
+                default:
+                    return "NORM";
+            }
+        }
+    }
+
 }

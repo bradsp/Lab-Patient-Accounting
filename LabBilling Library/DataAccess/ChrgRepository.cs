@@ -95,19 +95,19 @@ namespace LabBilling.Core.DataAccess
                 .Select("chrg.*, chrg_details.*")
                 .From("chrg")
                 .InnerJoin("chrg_details").On("chrg_details.chrg_num = chrg.chrg_num")
-                .Where("account = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account });
+                .Where($"{GetRealColumn(nameof(Chrg.AccountNo))} = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account });
 
             if (asOfDate != null)
             {
-                sql.Where($"{_tableName}.{GetRealColumn(nameof(Chrg.mod_date))} > @0",
+                sql.Where($"chrg_detail.{GetRealColumn(nameof(ChrgDetail.mod_date))} > @0",
                     new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = asOfDate});
             }
 
             if (!showCredited)
-                sql.Where($"{GetRealColumn(nameof(Chrg.IsCredited))} = 0");
+                sql.Where($"chrg_detail.{GetRealColumn(nameof(ChrgDetail.IsCredited))} = 0");
 
             if (!includeInvoiced)
-                sql.Where($"{GetRealColumn(nameof(Chrg.Invoice))} is null or {GetRealColumn(nameof(Chrg.Invoice))} = ''");
+                sql.Where($"{GetRealColumn(nameof(ChrgDetail.Invoice))} is null or {GetRealColumn(nameof(ChrgDetail.Invoice))} = ''");
 
             if (excludeCBill)
                 sql.Where($"{GetRealColumn(nameof(Chrg.CDMCode))} <> @0",

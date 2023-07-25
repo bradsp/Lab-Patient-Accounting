@@ -180,9 +180,9 @@ namespace LabBilling.Core.BusinessLogic.Validators
 
         private bool NotContainOnlyVenipunctureCharge(Account account)
         {
-            if (account.cpt4List.Distinct().Count() == 1)
+            if (account.Cpt4List.Distinct().Count() == 1)
             {
-                if (account.cpt4List[0] == "36415")
+                if (account.Cpt4List[0] == "36415")
                 {
                     return false;
                 }

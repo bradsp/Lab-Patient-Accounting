@@ -335,6 +335,7 @@
     <Compile Include="Models\AccountSearch.cs" />
     <Compile Include="Models\AccountValidationRule.cs" />
     <Compile Include="Models\AccountValidationStatus.cs" />
+    <Compile Include="Models\Address.cs" />
     <Compile Include="Models\Announcement.cs" />
     <Compile Include="Models\ApplicationParameters.cs" />
     <Compile Include="Models\BillingBatch.cs" />
@@ -389,6 +390,7 @@
     <Compile Include="Models\PatientStatementCerner.cs" />
     <Compile Include="Models\PatientStatementEncounter.cs" />
     <Compile Include="Models\PatientStatementEncounterActivity.cs" />
+    <Compile Include="Models\Phone.cs" />
     <Compile Include="Models\Phy.cs" />
     <Compile Include="Models\ProgressReportModel.cs" />
     <Compile Include="Models\Pth.cs" />

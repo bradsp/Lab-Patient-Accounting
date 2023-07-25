@@ -11,6 +11,30 @@ namespace LabBilling.Core.DataAccess
     {
         public ChrgDetailRepository(IAppEnvironment appEnvironment) : base(appEnvironment)
         {
+        }
+
+        public List<ChrgDetail> GetByAccount(string accountNo)
+        {
+            Logging.Log.Instance.Trace("Entering");
+
+            if (string.IsNullOrEmpty(accountNo))
+                throw new ArgumentNullException(nameof(accountNo));
+
+            RevenueCodeRepository revenueCodeRepository = new RevenueCodeRepository(_appEnvironment);
+            ChrgDiagnosisPointerRepository chrgDiagnosisPointerRepository = new ChrgDiagnosisPointerRepository(_appEnvironment);
+            var sql = PetaPoco.Sql.Builder
+                .From($"{_tableName}")
+                .Where($"{this.GetRealColumn(nameof(ChrgDetail.AccountNo))} = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = accountNo });
+
+            var results = dbConnection.Fetch<ChrgDetail>(sql);
+
+            foreach (var result in results)
+            {
+                result.RevenueCodeDetail = revenueCodeRepository.GetByCode(result.RevenueCode);
+                result.DiagnosisPointer = chrgDiagnosisPointerRepository.GetById(result.uri);
+            }
+
+            return results;
 
         }
 
@@ -33,6 +57,9 @@ namespace LabBilling.Core.DataAccess
         {
             Logging.Log.Instance.Trace("Entering");
 
+            if (chrg_num <= 0)
+                throw new ArgumentOutOfRangeException(nameof(chrg_num));
+
             RevenueCodeRepository revenueCodeRepository = new RevenueCodeRepository(_appEnvironment);
             ChrgDiagnosisPointerRepository chrgDiagnosisPointerRepository = new ChrgDiagnosisPointerRepository(_appEnvironment);
             var sql = PetaPoco.Sql.Builder
@@ -54,6 +81,12 @@ namespace LabBilling.Core.DataAccess
         {
             Logging.Log.Instance.Trace("Entering");
 
+            if (uri <= 0)
+                throw new ArgumentOutOfRangeException(nameof(uri));
+
+            if(string.IsNullOrEmpty(modifier))
+                throw new ArgumentNullException(nameof(modifier));
+
             var sql = PetaPoco.Sql.Builder
                 .From($"{_tableName}")
                 .Where($"{this.GetRealColumn(nameof(ChrgDetail.uri))} = @0", new SqlParameter() { SqlDbType = SqlDbType.Decimal,Value = uri });
@@ -72,6 +105,9 @@ namespace LabBilling.Core.DataAccess
 
         public int RemoveModifier(int uri)
         {
+            if (uri <= 0)
+                throw new ArgumentOutOfRangeException(nameof(uri));
+
             return AddModifier(uri, string.Empty);
         }
 

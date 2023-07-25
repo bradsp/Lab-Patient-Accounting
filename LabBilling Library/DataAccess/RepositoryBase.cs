@@ -82,7 +82,7 @@ namespace LabBilling.Core.DataAccess
             table.mod_host = Environment.MachineName;
             table.mod_prg = RFClassLibrary.OS.GetAppName();
             table.mod_user = Environment.UserName.ToString();
-            table.rowguid = Guid.NewGuid();
+            //table.rowguid = Guid.NewGuid();
 
             object identity = dbConnection.Insert(table);
             Log.Instance.Debug(dbConnection.LastSQL.ToString());

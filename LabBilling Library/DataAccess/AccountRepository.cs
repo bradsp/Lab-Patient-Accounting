@@ -16,6 +16,7 @@ namespace LabBilling.Core.DataAccess
         private readonly PatRepository patRepository;
         private readonly InsRepository insRepository;
         private readonly ChrgRepository chrgRepository;
+        private readonly ChrgDetailRepository chrgDetailRepository;
         private readonly ChkRepository chkRepository;
         private readonly ClientRepository clientRepository;
         private readonly ClientDiscountRepository clientDiscountRepository;
@@ -49,6 +50,7 @@ namespace LabBilling.Core.DataAccess
             patRepository = new PatRepository(appEnvironment);
             insRepository = new InsRepository(appEnvironment);
             chrgRepository = new ChrgRepository(appEnvironment);
+            chrgDetailRepository = new ChrgDetailRepository(appEnvironment);
             chkRepository = new ChkRepository(appEnvironment);
             clientRepository = new ClientRepository(appEnvironment);
             clientDiscountRepository = new ClientDiscountRepository(appEnvironment);
@@ -90,6 +92,7 @@ namespace LabBilling.Core.DataAccess
             if (!demographicsOnly)
             {
                 record.Charges = chrgRepository.GetByAccount(account, true, true, null, false);
+                record.ChargeDetails = chrgDetailRepository.GetByAccount(account);
                 record.Payments = chkRepository.GetByAccount(account);
                 record.Insurances = insRepository.GetByAccount(account);
                 record.Notes = accountNoteRepository.GetByAccount(account);
@@ -151,27 +154,27 @@ namespace LabBilling.Core.DataAccess
 
             record.TotalBadDebt = record.Payments.Where(x => x.IsCollectionPmt).Sum(x => x.WriteOffAmount);
 
-            record.BillableCharges = record.Charges.Where(x => x.Status != cbillStatus && x.Status != capStatus && x.Status != naStatus).ToList();
+            record.BillableCharges = record.ChargeDetails.Where(x => x.Type != naStatus).ToList();
 
             if (record.FinCode == clientFinCode)
             {
-                record.TotalCharges = record.Charges.Where(x => x.Status != cbillStatus).Sum(x => x.Quantity * x.NetAmount);
+                record.TotalCharges = record.ChargeDetails.Where(x => x.Type != cbillStatus).Sum(x => x.Quantity * x.Amount);
             }
             else
             {
-                record.TotalCharges = record.Charges.Where(x => x.Status != cbillStatus && x.Status != capStatus && x.Status != naStatus)
-                    .Sum(x => x.Quantity * x.NetAmount);
+                record.TotalCharges = record.ChargeDetails.Where(x => x.Type != naStatus)
+                    .Sum(x => x.Quantity * x.Amount);
             }
 
             record.TotalWriteOff = record.Payments.Where(x => x.Status != cbillStatus).Sum(x => x.WriteOffAmount);
             record.TotalPayments = record.Payments.Where(x => x.Status != cbillStatus).Sum(x => x.PaidAmount);
             record.TotalContractual = record.Payments.Where(x => x.Status != cbillStatus).Sum(x => x.ContractualAmount);
 
-            record.ClaimBalance = record.BillableCharges.Where(x => x.FinancialType == patientFinType).Sum(x => x.Quantity * x.NetAmount)
+            record.ClaimBalance = record.BillableCharges.Where(x => x.FinancialType == patientFinType).Sum(x => x.Quantity * x.Amount)
                 - (record.TotalPayments + record.TotalWriteOff + record.TotalContractual);
 
             var results = record.BillableCharges.Where(x => x.FinancialType == clientFinType)
-                .GroupBy(x => x.ClientMnem, (client, balance) => new { Client = client, Balance = balance.Sum(c => c.Quantity * c.NetAmount) });
+                .GroupBy(x => x.ClientMnem, (client, balance) => new { Client = client, Balance = balance.Sum(c => c.Quantity * c.Amount) });
 
             record.ClientBalance = new List<(string client, double balance)>();
 
@@ -746,17 +749,17 @@ namespace LabBilling.Core.DataAccess
             BeginTransaction();
             try
             {
-                var chargesToCredit = account.Charges.Where(x => x.IsCredited == false).ToList();
+                var chargesToCredit = account.ChargeDetails.Where(x => x.IsCredited == false).ToList();
 
                 foreach(var chrg in chargesToCredit)
                 {
-                    if (chrg.CDMCode == invoicedCdm)  //do not reprocess CBILL charge records
+                    if (chrg.Type == ChrgDetailStatus.Invoice)  //do not reprocess CBILL charge records
                         continue;
 
-                    chrgRepository.CreditCharge(chrg.ChrgId, comment);
+                    chrgRepository.CreditCharge(chrg.uri, comment);
 
                     //insert new charge and detail
-                    if (chrg.CDMCode != invoicedCdm)
+                    if (chrg.Type != ChrgDetailStatus.Invoice)
                         AddCharge(account, chrg.CDMCode, chrg.Quantity, account.TransactionDate);
                 }
 
@@ -1310,7 +1313,7 @@ namespace LabBilling.Core.DataAccess
                 return errorList;
             }
 
-            foreach (var cpt4 in account.cpt4List.Distinct())
+            foreach (var cpt4 in account.Cpt4List.Distinct())
             {
                 if (cpt4 == null)
                     continue;

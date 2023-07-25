@@ -23,28 +23,19 @@ namespace LabBilling.Core.Models
         public DateTime? HistoryDate { get; set; }
         [Column("cdm")]
         public string CDMCode { get; set; }
-        [Column("qty")]
-        public int Quantity { get; set; }
+
         [Column("net_amt")]
         public double NetAmount { get; set; }
         [Column("comment")]
         public string Comment { get; set; }
-        [Column("invoice")]
-        public string Invoice { get; set; }
-        [Column("fin_type")]
-        public string FinancialType { get; set; }
+
         [Column("mt_req_no")]
         public string LISReqNo { get; set; }
         [Column("post_date")]
         public DateTime? PostingDate { get; set; }
-        [Column("cl_mnem")]
-        public string ClientMnem { get; set; }
-        [Column("fin_code")]
-        public string FinCode { get; set; }
+
         [Column("performing_site")]
         public string PerformingSite { get; set; }
-        [Column("bill_method")]
-        public string BillMethod { get; set; }
         [Column("order_site")]
         public string OrderingSite { get; set; }
         [Column("location")]
@@ -57,10 +48,6 @@ namespace LabBilling.Core.Models
         public string Facility { get; set; }
         [Column("referencereq")]
         public string ReferenceReq { get; set; }
-        [Column("retail")]
-        public double RetailAmount { get; set; }
-        [Column("inp_price")]
-        public double HospAmount { get; set; }
         [ResultColumn]
         public DateTime mod_date { get; set; }
         [ResultColumn]

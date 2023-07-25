@@ -94,7 +94,9 @@ namespace LabBilling.Core.Models
         [Ignore]
         public List<Chrg> Charges { get; set; } = new List<Chrg>();
         [Ignore]
-        public List<Chrg> BillableCharges { get; set;} = new List<Chrg>();
+        public List<ChrgDetail> ChargeDetails { get; set;} = new List<ChrgDetail>();
+        [Ignore]
+        public List<ChrgDetail> BillableCharges { get; set;} = new List<ChrgDetail>();
         [Ignore]
         public List<ClaimChargeView> ClaimCharges { get; set; } = new List<ClaimChargeView>();
         [Ignore]
@@ -107,8 +109,6 @@ namespace LabBilling.Core.Models
         public AccountValidationStatus AccountValidationStatus { get; set; } = new AccountValidationStatus();
         [Ignore]
         public Client Client { get; set; }
-        [Ignore]
-        public Guid rowguid { get; set; }
 
         [Ignore]
         public double InvoiceBalance { get; set; }
@@ -196,7 +196,7 @@ namespace LabBilling.Core.Models
         }
 
         [Ignore]
-        public List<string> cpt4List
+        public List<string> Cpt4List
         {
             get
             {
