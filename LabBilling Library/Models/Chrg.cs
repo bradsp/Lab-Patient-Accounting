@@ -5,7 +5,7 @@ using PetaPoco;
 
 namespace LabBilling.Core.Models
 {
-    [TableName("chrg")]
+    [TableName("charge")]
     [PrimaryKey("chrg_num", AutoIncrement = true)]
     public sealed class Chrg : IBaseEntity
     {
@@ -48,6 +48,9 @@ namespace LabBilling.Core.Models
         public string Facility { get; set; }
         [Column("referencereq")]
         public string ReferenceReq { get; set; }
+        [Column("diagnosis_code_ptr")]
+        public string DiagnosisCodePointer { get; set; }
+
         [ResultColumn]
         public DateTime mod_date { get; set; }
         [ResultColumn]
@@ -96,6 +99,15 @@ namespace LabBilling.Core.Models
         [Ignore]
         public Cdm Cdm { get; set; } = new Cdm();
     }
+
+    public static class ChargeStatus
+    {
+        public const string New = "NEW";
+        public const string Invoice = "CBILL";
+        public const string NA = "N/A";
+
+    }
+
 
     [TableName("vw_chrg_bill")]
     public class ClaimChargeView : IBaseEntity

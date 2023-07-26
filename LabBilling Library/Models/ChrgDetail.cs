@@ -4,7 +4,7 @@ using PetaPoco;
 
 namespace LabBilling.Core.Models
 {
-    [TableName("chrg_details")]
+    [TableName("charge_details")]
     [PrimaryKey("uri",AutoIncrement = true)]
     public sealed class ChrgDetail : IBaseEntity
     {
@@ -15,6 +15,8 @@ namespace LabBilling.Core.Models
         public int ChrgNo { get; set; }
         [Column("revcode")]
         public string RevenueCode { get; set; }
+        [Column("billcode")]
+        public string BillingCode { get; set; }
         [Column("cpt4")]
         public string Cpt4 { get; set; }
         [Column("modi")]
@@ -27,12 +29,12 @@ namespace LabBilling.Core.Models
         public int Quantity { get; set; }
         [Column("amount")]
         public double Amount { get; set; }
-        [Column("mt_req_no")]
-        public string LISReqNo { get; set; }
-        [Column("order_code")]
-        public string OrderCode { get; set; }
-        [Column("pointer_set")]
-        public bool PointerSet { get; set; }
+        [Column("discount_amount")]
+        public double DiscountAmount { get; set; }
+
+
+        [Column("posted_date")]
+        public DateTime PostedDate { get; set; }
 
         [Column("mod_date")]
         public DateTime mod_date { get; set; }
@@ -40,11 +42,12 @@ namespace LabBilling.Core.Models
         public string mod_user { get; set; }
         [Column("mod_prg")]
         public string mod_prg { get; set; }
+        [Column("mod_host")]
+        public string mod_host { get; set; }
 
 
         [Column("uri")]
         public int uri { get; set; }
-
 
         [Column("cl_mnem")]
         public string ClientMnem { get; set; }
@@ -57,24 +60,23 @@ namespace LabBilling.Core.Models
         [Column("credited")]
         public bool IsCredited { get; set; }
 
-        [Column("mod_host")]
-        public string mod_host { get; set; }
+
 
         [Ignore]
         public RevenueCode RevenueCodeDetail { get; set; }
-        [Ignore]
-        public ChrgDiagnosisPointer DiagnosisPointer { get; set; } = new ChrgDiagnosisPointer();
-        [Ignore]
-        public string DiagCodePointer
-        {
-            get
-            {
-                if (this.DiagnosisPointer == null)
-                    return "";
-                else
-                    return this.DiagnosisPointer.DiagnosisPointer ?? "";
-            }
-        }
+        //[Ignore]
+        //public ChrgDiagnosisPointer DiagnosisPointer { get; set; } = new ChrgDiagnosisPointer();
+        //[Ignore]
+        //public string DiagCodePointer
+        //{
+        //    get
+        //    {
+        //        if (this.DiagnosisPointer == null)
+        //            return "";
+        //        else
+        //            return this.DiagnosisPointer.DiagnosisPointer ?? "";
+        //    }
+        //}
 
         public override string ToString()
         { 

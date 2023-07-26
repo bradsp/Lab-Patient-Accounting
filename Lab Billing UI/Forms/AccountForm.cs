@@ -11,14 +11,8 @@ using LabBilling.Core.Models;
 using LabBilling.Library;
 using RFClassLibrary;
 using System.Data;
-using System.Text;
-using System.Reflection;
 using System.Threading.Tasks;
-using MetroFramework;
 using LabBilling.Core.BusinessLogic;
-using System.Text.RegularExpressions;
-using System.Configuration;
-using System.Drawing.Printing;
 using LabBilling.Legacy;
 
 namespace LabBilling.Forms
@@ -1101,19 +1095,19 @@ namespace LabBilling.Forms
             ChargesDataGrid.Columns[nameof(Chrg.IsCredited)].Visible = true;
             ChargesDataGrid.Columns[nameof(Chrg.CDMCode)].Visible = true;
             ChargesDataGrid.Columns[nameof(Chrg.CdmDescription)].Visible = true;
-            ChargesDataGrid.Columns[nameof(Chrg.Quantity)].Visible = true;
+            //ChargesDataGrid.Columns[nameof(Chrg.Quantity)].Visible = true;
             ChargesDataGrid.Columns[nameof(Chrg.NetAmount)].Visible = true;
             ChargesDataGrid.Columns[nameof(Chrg.ServiceDate)].Visible = true;
             ChargesDataGrid.Columns[nameof(Chrg.Status)].Visible = true;
             ChargesDataGrid.Columns[nameof(Chrg.Comment)].Visible = true;
             ChargesDataGrid.Columns[nameof(Chrg.ChrgId)].Visible = true;
-            ChargesDataGrid.Columns[nameof(Chrg.Invoice)].Visible = true;
-            ChargesDataGrid.Columns[nameof(Chrg.FinCode)].Visible = true;
-            ChargesDataGrid.Columns[nameof(Chrg.ClientMnem)].Visible = true;
+            //ChargesDataGrid.Columns[nameof(Chrg.Invoice)].Visible = true;
+            //ChargesDataGrid.Columns[nameof(Chrg.FinCode)].Visible = true;
+            //ChargesDataGrid.Columns[nameof(Chrg.ClientMnem)].Visible = true;
 
             ChargesDataGrid.Columns[nameof(Chrg.NetAmount)].DefaultCellStyle.Format = "N2";
             ChargesDataGrid.Columns[nameof(Chrg.NetAmount)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-            ChargesDataGrid.Columns[nameof(Chrg.Quantity)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            //ChargesDataGrid.Columns[nameof(Chrg.Quantity)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
 
             ChargesDataGrid.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.DisplayedCells);
             ChargesDataGrid.Columns[nameof(Chrg.CdmDescription)].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
@@ -1223,7 +1217,7 @@ namespace LabBilling.Forms
                 ChrgDetailDataGrid.Columns[nameof(ChrgDetail.Modifer2)].Visible = true;
                 ChrgDetailDataGrid.Columns[nameof(ChrgDetail.RevenueCode)].Visible = true;
                 ChrgDetailDataGrid.Columns[nameof(ChrgDetail.Type)].Visible = true;
-                ChrgDetailDataGrid.Columns[nameof(ChrgDetail.OrderCode)].Visible = true;
+                //ChrgDetailDataGrid.Columns[nameof(ChrgDetail.OrderCode)].Visible = true;
                 ChrgDetailDataGrid.Columns[nameof(ChrgDetail.Amount)].Visible = true;
 
                 ChrgDetailDataGrid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
@@ -1245,14 +1239,14 @@ namespace LabBilling.Forms
                 return;
             }
 
-            if (ChargesDataGrid[nameof(Chrg.FinancialType), e.RowIndex].Value.ToString() == "C")
-            {
-                e.CellStyle.BackColor = Color.LightGreen;
-            }
-            if (ChargesDataGrid[nameof(Chrg.FinancialType), e.RowIndex].Value.ToString() == "M")
-            {
-                e.CellStyle.BackColor = Color.LightBlue;
-            }
+            //if (ChargesDataGrid[nameof(Chrg.FinancialType), e.RowIndex].Value.ToString() == "C")
+            //{
+            //    e.CellStyle.BackColor = Color.LightGreen;
+            //}
+            //if (ChargesDataGrid[nameof(Chrg.FinancialType), e.RowIndex].Value.ToString() == "M")
+            //{
+            //    e.CellStyle.BackColor = Color.LightBlue;
+            //}
 
             return; 
 
@@ -1535,37 +1529,32 @@ namespace LabBilling.Forms
             {
                 if (!chrg.IsCredited && chrg.Status != "N/A")
                 {
-                    foreach (var chrgDetail in chrg.ChrgDetails)
+                    DataRow row = dxPointers.NewRow();
+                    row["CDM"] = chrg.CDMCode;
+                    //row["CPT4"] = chrgDetail.Cpt4;
+                    row["Description"] = chrg.CdmDescription;
+
+                    if (chrg.DiagnosisCodePointer != null)
                     {
-                        DataRow row = dxPointers.NewRow();
-                        row["CDM"] = chrg.CDMCode;
-                        row["CPT4"] = chrgDetail.Cpt4;
-                        row["Description"] = chrg.CdmDescription;
-
-                        if (chrgDetail.DiagnosisPointer != null)
+                        string[] ptrs = chrg.DiagnosisCodePointer.Split(':');
+                        if (ptrs.Length > cnt)
                         {
-                            if (chrgDetail.DiagnosisPointer.DiagnosisPointer != null)
-                            {
-                                string[] ptrs = chrgDetail.DiagnosisPointer.DiagnosisPointer.Split(':');
-                                if (ptrs.Length > cnt)
-                                {
 
-                                }
-                                for (int pi = 0; pi < cnt && pi < ptrs.Length; pi++)
-                                {
-                                    if (ptrs[pi] == null || ptrs[pi] == "")
-                                        continue;
-                                    int iPtr = Convert.ToInt32(ptrs[pi]);
-                                    if (iPtr > cnt)
-                                        continue;
-
-                                    row[ptrStrings[pi + 1]] = dxBindingList.Where(x => x.No == iPtr).First().Code;
-                                }
-                            }
                         }
+                        for (int pi = 0; pi < cnt && pi < ptrs.Length; pi++)
+                        {
+                            if (ptrs[pi] == null || ptrs[pi] == "")
+                                continue;
+                            int iPtr = Convert.ToInt32(ptrs[pi]);
+                            if (iPtr > cnt)
+                                continue;
 
-                        dxPointers.Rows.Add(row);
+                            row[ptrStrings[pi + 1]] = dxBindingList.Where(x => x.No == iPtr).First().Code;
+                        }
                     }
+
+                    dxPointers.Rows.Add(row);
+                   
                 }
             }
             dxPointerGrid2.AutoResizeColumns();
@@ -1638,23 +1627,15 @@ namespace LabBilling.Forms
                         }
                     }
                     //update pointers
-                    var cpt = dxPointerGrid2["CPT4", e.RowIndex].Value.ToString();
-
-                    var updatedChrg = currentAccount.Charges.Where(c => c.IsCredited == false && c.ChrgDetails.Any(cd => cd.Cpt4 == cpt)).ToList();
-                    updatedChrg.ForEach(c => c.ChrgDetails.ForEach((cd) =>
-                    {
-                        if (cd.DiagnosisPointer == null)
-                        {
-                            cd.DiagnosisPointer = new ChrgDiagnosisPointer();
-                            cd.DiagnosisPointer.ChrgDetailUri = cd.uri;
-                        }
-                        cd.DiagnosisPointer.DiagnosisPointer = newPointer;
-                    }));
-
+                    var cpt = dxPointerGrid2["CDM", e.RowIndex].Value.ToString();
                     ChrgRepository chrgRepository = new ChrgRepository(Program.AppEnvironment);
 
-                    chrgRepository.UpdateDxPointers(updatedChrg);
-
+                    var updatedChrg = currentAccount.Charges.Where(c => c.IsCredited == false).ToList();
+                    updatedChrg.ForEach(c => 
+                    {
+                        c.DiagnosisCodePointer = newPointer;
+                        chrgRepository.Update(c);
+                    });
                 }
             }
         }
@@ -2513,11 +2494,11 @@ namespace LabBilling.Forms
 
             chargesTable.DefaultView.RowFilter = string.Empty;
 
-            if (show3rdPartyRadioButton.Checked)
-                chargesTable.DefaultView.RowFilter = $"{nameof(Chrg.FinancialType)} = 'M'";
+            //if (show3rdPartyRadioButton.Checked)
+            //    chargesTable.DefaultView.RowFilter = $"{nameof(Chrg.FinancialType)} = 'M'";
 
-            if (showClientRadioButton.Checked)
-                chargesTable.DefaultView.RowFilter = $"{nameof(Chrg.FinancialType)} = 'C'";
+            //if (showClientRadioButton.Checked)
+            //    chargesTable.DefaultView.RowFilter = $"{nameof(Chrg.FinancialType)} = 'C'";
 
             if (showAllChargeRadioButton.Checked)
                 chargesTable.DefaultView.RowFilter = String.Empty;

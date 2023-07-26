@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using LabBilling.Core.Models;
+using LabBilling.Logging;
 using PetaPoco;
 
 namespace LabBilling.Core.DataAccess
@@ -15,7 +16,7 @@ namespace LabBilling.Core.DataAccess
 
         public List<ChrgDetail> GetByAccount(string accountNo)
         {
-            Logging.Log.Instance.Trace("Entering");
+            Log.Instance.Trace("Entering");
 
             if (string.IsNullOrEmpty(accountNo))
                 throw new ArgumentNullException(nameof(accountNo));
@@ -31,31 +32,56 @@ namespace LabBilling.Core.DataAccess
             foreach (var result in results)
             {
                 result.RevenueCodeDetail = revenueCodeRepository.GetByCode(result.RevenueCode);
-                result.DiagnosisPointer = chrgDiagnosisPointerRepository.GetById(result.uri);
             }
 
             return results;
 
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="showCredited"></param>
+        /// <param name="includeInvoiced"></param>
+        /// <param name="asOfDate"></param>
+        /// <param name="excludeCBill"></param>
+        /// <returns></returns>
+        public List<ChrgDetail> GetByAccount(string account, bool showCredited = true, bool includeInvoiced = true, DateTime? asOfDate = null, bool excludeCBill = true)
+        {
+            Log.Instance.Trace("Entering");
+        }
+
+
+        /// <summary>
+        /// Add a list of charge details.
+        /// </summary>
+        /// <param name="chrgDetails"></param>
+        /// <returns></returns>
+        public List<ChrgDetail> Add(IList<ChrgDetail> chrgDetails)
+        {
+            Log.Instance.Trace("Entering");
+            List<ChrgDetail> addedCharges = new List<ChrgDetail>();
+
+            foreach(var cd in chrgDetails)
+            {
+                addedCharges.Add((ChrgDetail)Add(cd));
+            }
+
+            return addedCharges;
+        }
+
         public override object Add(ChrgDetail table)
         {
-            ChrgDiagnosisPointerRepository chrgDiagnosisPointerRepository = new ChrgDiagnosisPointerRepository(_appEnvironment);
-
+            Log.Instance.Trace("Entering");
             var value = base.Add(table);
-
-            if (table.DiagnosisPointer != null)
-            {
-                table.DiagnosisPointer.ChrgDetailUri = Convert.ToDouble(value);
-                chrgDiagnosisPointerRepository.Save(table.DiagnosisPointer);
-            }
 
             return value;
         }
 
         public IEnumerable<ChrgDetail> GetByCharge(int chrg_num)
         {
-            Logging.Log.Instance.Trace("Entering");
+            Log.Instance.Trace("Entering");
 
             if (chrg_num <= 0)
                 throw new ArgumentOutOfRangeException(nameof(chrg_num));
@@ -71,7 +97,6 @@ namespace LabBilling.Core.DataAccess
             foreach(var result in results)
             {
                 result.RevenueCodeDetail = revenueCodeRepository.GetByCode(result.RevenueCode);
-                result.DiagnosisPointer = chrgDiagnosisPointerRepository.GetById(result.uri);
             }
 
             return results;
@@ -79,7 +104,7 @@ namespace LabBilling.Core.DataAccess
 
         public int AddModifier(int uri, string modifier)
         {
-            Logging.Log.Instance.Trace("Entering");
+            Log.Instance.Trace("Entering");
 
             if (uri <= 0)
                 throw new ArgumentOutOfRangeException(nameof(uri));
@@ -105,6 +130,7 @@ namespace LabBilling.Core.DataAccess
 
         public int RemoveModifier(int uri)
         {
+            Log.Instance.Trace("Entering");
             if (uri <= 0)
                 throw new ArgumentOutOfRangeException(nameof(uri));
 

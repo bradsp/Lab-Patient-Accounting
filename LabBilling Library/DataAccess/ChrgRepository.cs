@@ -12,14 +12,15 @@ namespace LabBilling.Core.DataAccess
     {
         private CdmRepository cdmRepository;
         private readonly ChrgDetailRepository amtRepository;
-        private readonly ChrgDiagnosisPointerRepository chrgDiagnosisPointerRepository;
         private const string invoiceCode = "CBILL";
+        private const string patientFinType = "M";
+        private const string clientFinType = "C";
+        private const string zFinType = "Z";
 
         public ChrgRepository(IAppEnvironment appEnvironment) : base(appEnvironment)
         {
             amtRepository = new ChrgDetailRepository(appEnvironment);
             cdmRepository = new CdmRepository(appEnvironment);
-            chrgDiagnosisPointerRepository = new ChrgDiagnosisPointerRepository(appEnvironment);
         }
 
         /// <summary>
@@ -30,15 +31,11 @@ namespace LabBilling.Core.DataAccess
         public Chrg GetById(int id)
         {
             var sql = PetaPoco.Sql.Builder
-                .Select("chrg.*, cdm.descript as 'cdm_desc', chrg_details.*")
-                .From("chrg")
-                .LeftJoin("cdm").On("chrg.cdm = cdm.cdm")
-                .InnerJoin("chrg_details").On("chrg_details.chrg_num = chrg.chrg_num")
-                .Where("chrg.chrg_num = @0", new SqlParameter() { SqlDbType = SqlDbType.Decimal, Value = id });
+                .From(_tableName)
+                .Where($"{GetRealColumn(nameof(Chrg.ChrgId))} = @0", 
+                    new SqlParameter() { SqlDbType = SqlDbType.Decimal, Value = id });
 
-            var result = dbConnection.Fetch<Chrg, ChrgDetail, Chrg>(new ChrgChrgDetailRelator().MapIt, sql);
-
-            Chrg chrg = result.First<Chrg>();
+            Chrg chrg = dbConnection.SingleOrDefault<Chrg>(sql);
 
             //load the cdm record
             CdmRepository cdmRepository = new CdmRepository(_appEnvironment);
@@ -54,11 +51,19 @@ namespace LabBilling.Core.DataAccess
             if(string.IsNullOrEmpty(account))
                 throw new ArgumentNullException(nameof(account));
 
-            var sql = PetaPoco.Sql.Builder
-                .From("vw_chrg_bill")
-                .Where("account = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account });
+            //var sql = PetaPoco.Sql.Builder
+            //    .From("vw_chrg_bill")
+            //    .Where("account = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account });
 
-            var results = dbConnection.Fetch<ClaimChargeView>(sql);
+            var sql = PetaPoco.Sql.Builder;
+            sql.From(_tableName);
+            sql.Where($"{GetRealColumn(nameof(ChrgDetail.AccountNo))} = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account });
+            sql.Where($"{GetRealColumn(nameof(ChrgDetail.FinancialType))} = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = patientFinType });
+            sql.Where($"{GetRealColumn(nameof(ChrgDetail.IsCredited))} = @0", new SqlParameter() { SqlDbType = SqlDbType.Bit, Value = false });
+            sql.Where($"{GetRealColumn(nameof(ChrgDetail.Type))} <> @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = ChrgDetailStatus.Invoice });
+            sql.Where($"{GetRealColumn(nameof(ChrgDetail.Type))} <> @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = ChrgDetailStatus.NA });
+
+            var results = dbConnection.Fetch<ChrgDetail>(sql);
 
             CdmRepository cdmRepository = new CdmRepository(_appEnvironment);
             RevenueCodeRepository revenueCodeRepository = new RevenueCodeRepository(_appEnvironment);
@@ -66,11 +71,16 @@ namespace LabBilling.Core.DataAccess
             foreach(var chrg in results)
             {
                 chrg.RevenueCodeDetail = revenueCodeRepository.GetByCode(chrg.RevenueCode);
-                chrg.Cdm = cdmRepository.GetCdm(chrg.ChargeId, true);
                 Log.Instance.Debug($"{dbConnection.LastSQL} {dbConnection.LastArgs}");
             }
 
-            return results;
+            List<ClaimChargeView> list = new List<ClaimChargeView>();
+            
+            list = results.GroupBy(c => new {c.BillingCode, c.RevenueCode, c.Cpt4, c.Modifier, c.Modifer2, Amount = c.Quantity * c.Amount })
+                .Select(g => new ClaimChargeView { Amount = g.Key.Amount, ChargeId = g.Key.BillingCode, CptCode = g.Key.Cpt4, Modifier = g.Key.Modifier, Modifier2 = g.Key.Modifer2, RevenueCode = g.Key.RevenueCode, Qty = g.Sum(c => c.Quantity) }).ToList();
+
+
+            return list;
 
         }
 
@@ -126,7 +136,6 @@ namespace LabBilling.Core.DataAccess
                 foreach(ChrgDetail detail in chrg.ChrgDetails)
                 {
                     detail.RevenueCodeDetail = revenueCodeRepository.GetByCode(detail.RevenueCode);
-                    detail.DiagnosisPointer = chrgDiagnosisPointerRepository.GetById(detail.uri);
                     Log.Instance.Debug($"{dbConnection.LastSQL} {dbConnection.LastArgs}");
                 }
             }
@@ -140,33 +149,35 @@ namespace LabBilling.Core.DataAccess
         /// <param name="chrgNum"></param>
         /// <param name="comment"></param>
         /// <returns>Charge ID of credit charge record</returns>
-        public int CreditCharge(int chrgNum, string comment = "")
+        public List<ChrgDetail> CreditCharge(int chrgNum, string comment = "")
         {
             Log.Instance.Trace($"Entering - chrg number {chrgNum} comment {comment}");
+            try
+            {
+                List<ChrgDetail> chrgDetailsPosted = new List<ChrgDetail>();
+                if (chrgNum <= 0)
+                    throw new ArgumentOutOfRangeException(nameof(chrgNum));
+                var chrg = GetById(chrgNum) ?? throw new ApplicationException($"Charge number {chrgNum} not found.");
+                var chrgDetails = amtRepository.GetByCharge(chrgNum);
 
-            bool setCredited = false;
-
-            if (chrgNum <= 0)
-                throw new ArgumentOutOfRangeException(nameof(chrgNum));
-            var chrg = GetById(chrgNum) ?? throw new ApplicationException($"Charge number {chrgNum} not found.");
-
-            //if(string.IsNullOrEmpty(chrg.Invoice))
-            setCredited = true;
-
-            chrg.IsCredited = setCredited;
-            chrg.ChrgId = 0;
-            chrg.Quantity *= -1;
-            chrg.Comment = comment;
-            chrg.Invoice = null;
-            chrg.PostingDate = DateTime.Today;
-            chrg.ChrgDetails.ForEach(x => x.ChrgNo = 0);
-            
-            int retVal = AddCharge(chrg);
-            if (setCredited)
+                foreach (var detail in chrgDetails.Where(x => x.IsCredited == false))
+                {
+                    detail.Quantity *= -1;
+                    detail.uri = 0;
+                    detail.IsCredited = true;
+                    detail.PostedDate = DateTime.Now;
+                    chrgDetailsPosted.Add((ChrgDetail)amtRepository.Add(detail));
+                }
                 SetCredited(chrgNum);
-            Log.Instance.Trace($"Credit charge number {chrgNum} comment {comment} returned {retVal}");
-            Log.Instance.Debug($"{dbConnection.LastSQL} {dbConnection.LastArgs}");
-            return retVal;
+
+                Log.Instance.Debug($"{dbConnection.LastSQL} {dbConnection.LastArgs}");
+                return chrgDetailsPosted;
+            }
+            catch(Exception ex)
+            {
+                Log.Instance.Error("Error in CreditCharge", ex);
+                throw new ApplicationException("Error in CreditCharge", ex);
+            }
         }
 
         /// <summary>
@@ -181,17 +192,10 @@ namespace LabBilling.Core.DataAccess
             if(chrg == null)
                 throw new ArgumentNullException(nameof(chrg));
 
-            //function will add charge
             try
             {
                 int chrg_num = Convert.ToInt32(this.Add(chrg));
 
-                foreach (ChrgDetail amt in chrg.ChrgDetails)
-                {
-                    amt.ChrgNo = chrg_num;
-
-                    amtRepository.Add(amt);
-                }
                 Log.Instance.Debug($"{dbConnection.LastSQL} {dbConnection.LastArgs}");
                 return chrg_num;
             }
@@ -276,17 +280,17 @@ namespace LabBilling.Core.DataAccess
             if(string.IsNullOrEmpty(invoiceNo))
                 throw new ArgumentNullException(nameof(invoiceNo));
 
-            List<Chrg> chrgs = GetByAccount(account, true, false).ToList();
+            List<ChrgDetail> chrgs = amtRepository.GetByAccount(account);
 
-            foreach (Chrg chrg in chrgs.Where(x => x.ClientMnem == clientMnem && x.FinancialType == "C"))
+            foreach (ChrgDetail chrg in chrgs.Where(x => x.ClientMnem == clientMnem && x.FinancialType == "C"))
             {
-                if(chrg.CDMCode != invoiceCode && (chrg.Invoice == "" || chrg.Invoice == null))
+                if(chrg.Type != ChrgDetailStatus.Invoice && (chrg.Invoice == "" || chrg.Invoice == null))
                 {
                     chrg.Invoice = invoiceNo;
 
                     try
                     {
-                        Update(chrg, new List<string> { nameof(Chrg.Invoice) });
+                        amtRepository.Update(chrg, new List<string> { nameof(ChrgDetail.Invoice) });
                         Log.Instance.Debug($"{dbConnection.LastSQL} {dbConnection.LastArgs}");
                     }
                     catch(Exception ex)
@@ -298,19 +302,19 @@ namespace LabBilling.Core.DataAccess
             }
         }
 
-        public bool UpdateDxPointers(IEnumerable<Chrg> chrgs)
-        {
-            bool returnVal = true;
+        //public bool UpdateDxPointers(IEnumerable<Chrg> chrgs)
+        //{
+        //    bool returnVal = true;
 
-            foreach(var chrg in chrgs)
-            {
-                foreach(var detail in chrg.ChrgDetails)
-                {
-                    returnVal = chrgDiagnosisPointerRepository.Save(detail.DiagnosisPointer) && returnVal;
-                }
-            }
+        //    foreach(var chrg in chrgs)
+        //    {
+        //        foreach(var detail in chrg.ChrgDetails)
+        //        {
+        //            returnVal = chrgDiagnosisPointerRepository.Save(detail.DiagnosisPointer) && returnVal;
+        //        }
+        //    }
 
-            return returnVal;
-        }
+        //    return returnVal;
+        //}
     }
 }

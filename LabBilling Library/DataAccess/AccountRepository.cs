@@ -11,7 +11,7 @@ using System.Runtime.CompilerServices;
 
 namespace LabBilling.Core.DataAccess
 {
-    public sealed class AccountRepository : RepositoryBase<Account>, IRepositoryBase<Account>, IAccountRepository
+    public sealed class AccountRepository : RepositoryBase<Account>, IRepositoryBase<Account>
     {
         private readonly PatRepository patRepository;
         private readonly InsRepository insRepository;
@@ -474,8 +474,6 @@ namespace LabBilling.Core.DataAccess
                     table.Notes = accountNoteRepository.GetByAccount(table.AccountNo);
                 }
 
-                //determine if charges need to be reprocessed.
-
                 //TODO: is there any reason a date of service change should result in changing all charges --
                 // except: the date of service on charges will not match new date.
 
@@ -749,18 +747,21 @@ namespace LabBilling.Core.DataAccess
             BeginTransaction();
             try
             {
-                var chargesToCredit = account.ChargeDetails.Where(x => x.IsCredited == false).ToList();
-
-                foreach(var chrg in chargesToCredit)
+                foreach (var chrg in account.Charges)
                 {
-                    if (chrg.Type == ChrgDetailStatus.Invoice)  //do not reprocess CBILL charge records
-                        continue;
 
-                    chrgRepository.CreditCharge(chrg.uri, comment);
+                    var chargesToCredit = account.ChargeDetails.Where(x => x.IsCredited == false && x.ChrgNo == chrg.ChrgId).ToList();
 
+                    foreach (var chrgdetail in chargesToCredit)
+                    {
+                        if (chrgdetail.Type == ChrgDetailStatus.Invoice)  //do not reprocess CBILL charge records
+                            continue;
+
+                        chrgRepository.CreditCharge(chrgdetail.uri, comment);
+                    }
                     //insert new charge and detail
-                    if (chrg.Type != ChrgDetailStatus.Invoice)
-                        AddCharge(account, chrg.CDMCode, chrg.Quantity, account.TransactionDate);
+                    if (chrg.Status != ChargeStatus.Invoice)
+                        AddCharge(account, chrg.CDMCode, account.TransactionDate);
                 }
 
                 CompleteTransaction();
@@ -798,25 +799,26 @@ namespace LabBilling.Core.DataAccess
             return ReprocessCharges(acc, comment);
         }
 
+
         public bool UpdateChargesFinCode(string account, string finCode)
         {
             Log.Instance.Trace("Entering");
 
             List<Chrg> charges = chrgRepository.GetByAccount(account);
+            List<ChrgDetail> chargeDetails = chrgDetailRepository.GetByAccount(account);
 
             if (charges == null || charges.Count == 0)
-            {
                 return false;
-            }
+
+            if(chargeDetails == null || chargeDetails.Count == 0)
+                return false;
 
             var fin = finRepository.GetFin(finCode);
 
             if (fin == null)
-            {
                 return false;
-            }
 
-            var chrgsToUpdate = charges.Where(x => x.IsCredited == false &&
+            var chrgsToUpdate = chargeDetails.Where(x => x.IsCredited == false &&
                 (x.ClientMnem != _appEnvironment.ApplicationParameters.PathologyGroupClientMnem ||
                 string.IsNullOrEmpty(_appEnvironment.ApplicationParameters.PathologyGroupClientMnem))
                 && x.FinancialType == fin.FinClass).ToList();
@@ -825,7 +827,7 @@ namespace LabBilling.Core.DataAccess
             {
                 chrg.FinCode = finCode;
                 chrg.FinancialType = fin.FinClass;
-                chrgRepository.Update(chrg, new[] { nameof(Chrg.FinancialType), nameof(Chrg.FinCode) });
+                chrgDetailRepository.Update(chrg, new[] { nameof(ChrgDetail.FinancialType), nameof(ChrgDetail.FinCode) });
             }
 
             return true;
@@ -836,24 +838,38 @@ namespace LabBilling.Core.DataAccess
             Log.Instance.Trace("Entering");
 
             List<Chrg> charges = chrgRepository.GetByAccount(account);
+            List<ChrgDetail> chrgDetails = chrgDetailRepository.GetByAccount(account);
 
             if (charges == null || charges.Count == 0)
+                return false;
+
+            if (chrgDetails == null || chrgDetails.Count == 0)
                 return false;
 
             var client = clientRepository.GetClient(clientMnem);
             if (client == null)
                 return false;
 
-            foreach (var chrg in charges)
+            foreach (var chrg in chrgDetails)
             {
                 chrg.ClientMnem = clientMnem;
-                chrgRepository.Update(chrg, new[] { nameof(Chrg.ClientMnem) });
+                chrgDetailRepository.Update(chrg, new[] { nameof(ChrgDetail.ClientMnem) });
             }
 
             return true;
         }
 
-        public int AddCharge(string account, string cdm, int qty, DateTime serviceDate, string comment = null, string refNumber = null)
+        /// <summary>
+        /// Add a charge to an account. The account must exist.
+        /// </summary>
+        /// <param name="account">The account number.</param>
+        /// <param name="cdm">Cdm of the charge to add.</param>
+        /// <param name="serviceDate"></param>
+        /// <param name="comment"></param>
+        /// <param name="refNumber"></param>
+        /// <returns></returns>
+        /// <exception cref="AccountNotFoundException"></exception>
+        public List<ChrgDetail> AddCharge(string account, string cdm, DateTime? serviceDate = null, string comment = null, string refNumber = null)
         {
             Log.Instance.Trace($"Entering - account {account} cdm {cdm}");
 
@@ -865,21 +881,24 @@ namespace LabBilling.Core.DataAccess
                 throw new AccountNotFoundException("Account is not a valid account.", account);
             }
 
-            return AddCharge(accData, cdm, qty, serviceDate, comment, refNumber);
+            return AddCharge(accData, cdm, serviceDate, comment, refNumber);
         }
 
         /// <summary>
-        /// Add a charge to an account. The account must exist.
+        /// Add a new charge to an account. The account must exist.
         /// </summary>
-        /// <param name="account"></param>
+        /// <param name="accData"></param>
         /// <param name="cdm"></param>
-        /// <param name="qty"></param>
+        /// <param name="serviceDate"></param>
         /// <param name="comment"></param>
-        /// <returns>Charge number of newly entered charge or < 0 if an error occurs.</returns>
-        public int AddCharge(Account accData, string cdm, int qty, DateTime serviceDate, string comment = null, string refNumber = null)
+        /// <param name="refNumber"></param>
+        /// <returns>A list of the charge details created</returns>
+        /// <exception cref="InvalidClientException"></exception>
+        /// <exception cref="CdmNotFoundException"></exception>
+        /// <exception cref="ApplicationException"></exception>
+        public List<ChrgDetail> AddCharge(Account accData, string cdm, DateTime? serviceDate = null, string comment = null, string refNumber = null)
         {
             Log.Instance.Trace($"Entering - account {accData.AccountNo} cdm {cdm}");
-
             if (accData.Client == null)
             {
                 throw new InvalidClientException("Client not valid", accData.ClientMnem);
@@ -892,6 +911,11 @@ namespace LabBilling.Core.DataAccess
                 accData.Status = AccountStatus.New;
             }
 
+            if (accData.Client == null)
+            {
+                throw new InvalidClientException("Client not valid", accData.ClientMnem);
+            }
+
             //get the cdm number - if cdm number is not found - abort
             Cdm cdmData = cdmRepository.GetCdm(cdm);
             if (cdmData == null)
@@ -901,12 +925,71 @@ namespace LabBilling.Core.DataAccess
             }
 
             Fin fin = finRepository.GetFin(accData.FinCode) ?? throw new ApplicationException($"No fincode on account {accData.AccountNo}");
+
+            Chrg chrg = new Chrg();
+
+            //now build the charge & detail records
+            chrg.AccountNo = accData.AccountNo;
+            chrg.CDMCode = cdm;
+            chrg.Cdm = cdmData;
+            chrg.Comment = comment;
+            chrg.IsCredited = false;
+            chrg.OrderMnem = cdmData.Mnem;
+            chrg.LISReqNo = refNumber;
+            chrg.PostingDate = DateTime.Today;
+            chrg.ServiceDate = serviceDate ?? accData.TransactionDate;
+
+            var result = chrgRepository.AddCharge(chrg);
+            chrg.ChrgId = result;
+
+            Log.Instance.Trace($"Exiting");
+
+            return AddChargeDetail(accData, chrg);
+        }
+
+        /// <summary>
+        /// Update a charge. The charge must exist.
+        /// </summary>
+        /// <param name="chrgId"></param>
+        /// <returns>A list of the charge detail records created.</returns>
+        /// <exception cref="ApplicationException"></exception>
+        public List<ChrgDetail> UpdateCharge(int chrgId)
+        {
+            Log.Instance.Trace($"Entering - charge {chrgId}");
+
+            var chrg = chrgRepository.GetById(chrgId);
+            var acc = GetByAccount(chrg.AccountNo);
+
+            if (chrg == null)
+            {
+                Log.Instance.Error($"Charge {chrgId} not found.");
+                throw new ApplicationException($"Charge {chrgId} not found.");
+            }
+
+            Log.Instance.Trace($"Exiting");
+
+            return AddChargeDetail(acc, chrg);
+        }
+
+        /// <summary>
+        /// Add a charge to an account. The account and parent charge must exist.
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="cdm"></param>
+        /// <param name="qty"></param>
+        /// <param name="comment"></param>
+        /// <returns>Charge number of newly entered charge or < 0 if an error occurs.</returns>
+        private List<ChrgDetail> AddChargeDetail(Account accData, Chrg chrg)
+        {
+            Log.Instance.Trace($"Entering - account {chrg.AccountNo} cdm {chrg.CDMCode}");
+            List<ChrgDetail> chrgDetails = new List<ChrgDetail>();
+            Fin fin = finRepository.GetFin(accData.FinCode) ?? throw new ApplicationException($"No fincode on account {accData.AccountNo}");
             Client chargeClient = accData.Client;
 
             if (_appEnvironment.ApplicationParameters.PathologyGroupBillsProfessional)
             {
                 //check for global billing cdm - if it is, change client to Pathology Group, fin to Y, and get appropriate prices
-                var gb = globalBillingCdmRepository.GetCdm(cdm);
+                var gb = globalBillingCdmRepository.GetCdm(chrg.CDMCode);
                 //hard coding exception for Hardin County for now - 05/09/2023 BSP
                 if (gb != null && accData.ClientMnem != pthExceptionClient)
                 {
@@ -915,124 +998,79 @@ namespace LabBilling.Core.DataAccess
                 }
             }
 
-            Chrg chrg = new Chrg();
-
-            switch (fin.FinClass)
-            {
-                case patientFinType:
-                    chrg.Status = cdmData.MClassType == naStatus ? naStatus : newChrgStatus;
-                    break;
-                case clientFinType:
-                    chrg.Status = cdmData.CClassType == naStatus ? naStatus : newChrgStatus;
-                    break;
-                case "Z":
-                    chrg.Status = cdmData.ZClassType == naStatus ? naStatus : newChrgStatus;
-                    break;
-                default:
-                    chrg.Status = newChrgStatus;
-                    break;
-            }
-
-            //now build the charge & detail records
-            chrg.AccountNo = accData.AccountNo;
-            chrg.BillMethod = fin.ClaimType;
-            chrg.CDMCode = cdm;
-            chrg.Comment = comment;
-            chrg.IsCredited = false;
-            chrg.FinCode = fin.FinCode;
-            chrg.ClientMnem = chargeClient.ClientMnem;
-            chrg.FinancialType = fin.FinClass;
-            chrg.OrderMnem = cdmData.Mnem;
-            chrg.LISReqNo = refNumber;
-            chrg.PostingDate = DateTime.Today;
-            chrg.Quantity = qty;
-            chrg.ServiceDate = serviceDate;
-
             List<CdmDetail> feeSched = null;
 
             switch (chargeClient.FeeSchedule)
             {
                 case "1":
-                    feeSched = cdmData.CdmFeeSchedule1;
+                    feeSched = chrg.Cdm.CdmFeeSchedule1;
                     break;
                 case "2":
-                    feeSched = cdmData.CdmFeeSchedule2;
+                    feeSched = chrg.Cdm.CdmFeeSchedule2;
                     break;
                 case "3":
-                    feeSched = cdmData.CdmFeeSchedule3;
+                    feeSched = chrg.Cdm.CdmFeeSchedule3;
                     break;
                 case "4":
-                    feeSched = cdmData.CdmFeeSchedule4;
+                    feeSched = chrg.Cdm.CdmFeeSchedule4;
                     break;
                 case "5":
-                    feeSched = cdmData.CdmFeeSchedule5;
+                    feeSched = chrg.Cdm.CdmFeeSchedule5;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException("FeeSchedule");
                     //break;
             }
 
-
-            //need to determine the correct fee schedule - for now default to 1
-            double ztotal = 0.0;
-            double amtTotal = 0.0;
-            double retailTotal = 0.0;
-
             foreach (CdmDetail fee in feeSched)
             {
                 ChrgDetail chrgDetail = new ChrgDetail
                 {
-                    DiagnosisPointer = new ChrgDiagnosisPointer(),
+                    //DiagnosisPointer = new ChrgDiagnosisPointer(),
+                    BillingCode = fee.BillCode,
                     Cpt4 = fee.Cpt4,
-                    Type = fee.Type
+                    Type = fee.Type,
+                    AccountNo = chrg.AccountNo,
+                    ChrgNo = chrg.ChrgId,
+                    Modifier = fee.Modifier,
+                    RevenueCode = fee.RevenueCode,
+                    ClientMnem = chargeClient.ClientMnem,
+                    FinCode = fin.FinCode,
+                    FinancialType = fin.FinClass,
+                    Quantity = 1,
                 };
                 switch (fin.FinClass)
                 {
                     case patientFinType:
                         chrgDetail.Amount = fee.MClassPrice;
-                        retailTotal += fee.MClassPrice;
-                        ztotal += fee.ZClassPrice;
+                        chrgDetail.DiscountAmount = 0.00;
                         break;
                     case clientFinType:
                         //todo: calculate client discount
-                        var cliDiscount = chargeClient.Discounts.Find(c => c.Cdm == cdm);
+                        var cliDiscount = chargeClient.Discounts.Find(c => c.Cdm == chrg.CDMCode);
                         double discountPercentage = chargeClient.DefaultDiscount;
                         if (cliDiscount != null)
                         {
                             discountPercentage = cliDiscount.PercentDiscount;
                         }
-                        chrgDetail.Amount = fee.CClassPrice - (fee.CClassPrice * (discountPercentage / 100));
-                        retailTotal += fee.CClassPrice;
-                        ztotal += fee.ZClassPrice;
+                        chrgDetail.DiscountAmount = fee.CClassPrice * (discountPercentage / 100);
+                        chrgDetail.Amount = fee.CClassPrice - chrgDetail.DiscountAmount;
                         break;
                     case "Z":
                         chrgDetail.Amount = fee.ZClassPrice;
-                        retailTotal += fee.ZClassPrice;
-                        ztotal += fee.ZClassPrice;
+                        chrgDetail.DiscountAmount = 0.00;
                         break;
                     default:
                         chrgDetail.Amount = fee.MClassPrice;
-                        retailTotal += fee.MClassPrice;
-                        ztotal += fee.ZClassPrice;
+                        chrgDetail.DiscountAmount = 0.00;
                         break;
                 }
 
-                amtTotal += chrgDetail.Amount;
-
-                chrgDetail.Modifier = fee.Modifier;
-                chrgDetail.RevenueCode = fee.RevenueCode;
-                chrgDetail.OrderCode = fee.BillCode;
-                chrgDetail.DiagnosisPointer.DiagnosisPointer = "1:";
-
-                chrg.ChrgDetails.Add(chrgDetail);
+                chrgDetails.Add(chrgDetail);
             }
 
-            chrg.NetAmount = amtTotal;
-            chrg.HospAmount = ztotal;
-            chrg.RetailAmount = retailTotal;
-
             Log.Instance.Trace($"Exiting");
-            return chrgRepository.AddCharge(chrg);
+            return chrgDetailRepository.Add(chrgDetails);
         }
 
         private class BundledProfile
@@ -1094,9 +1132,9 @@ namespace LabBilling.Core.DataAccess
                     chrgRepository.CreditCharge(bundledProfile.ChrgId, "Unbundling charge");
 
                     //enter charges for each component
-                    AddCharge(account, "5545154", 1, account.TransactionDate);
-                    AddCharge(account, "5382522", 1, account.TransactionDate);
-                    AddCharge(account, "5646008", 1, account.TransactionDate);
+                    AddCharge(account, "5545154", account.TransactionDate);
+                    AddCharge(account, "5382522", account.TransactionDate);
+                    AddCharge(account, "5646008", account.TransactionDate);
                 }
 
                 bundledProfiles = account.Charges.Where(x => x.CDMCode == "MCL0021" && x.IsCredited == false);
@@ -1107,12 +1145,12 @@ namespace LabBilling.Core.DataAccess
                     chrgRepository.CreditCharge(bundledProfile.ChrgId, "Unbundling charge");
 
                     //enter charges for each component
-                    AddCharge(account, "5545154", 1, account.TransactionDate);
-                    AddCharge(account, "5646012", 1, account.TransactionDate);
-                    AddCharge(account, "5646086", 1, account.TransactionDate);
-                    AddCharge(account, "5646054", 1, account.TransactionDate);
-                    AddCharge(account, "5728026", 1, account.TransactionDate);
-                    AddCharge(account, "5728190", 1, account.TransactionDate);
+                    AddCharge(account, "5545154", account.TransactionDate);
+                    AddCharge(account, "5646012", account.TransactionDate);
+                    AddCharge(account, "5646086", account.TransactionDate);
+                    AddCharge(account, "5646054", account.TransactionDate);
+                    AddCharge(account, "5728026", account.TransactionDate);
+                    AddCharge(account, "5728190", account.TransactionDate);
                 }
 
                 CompleteTransaction();
@@ -1177,7 +1215,7 @@ namespace LabBilling.Core.DataAccess
                         chrgRepository.CreditCharge(bundledProfiles[x].ComponentCpt[i].ChrgId, $"Bundling to {bundledProfiles[x].ProfileCdm}");
                     }
 
-                    this.AddCharge(account, bundledProfiles[x].ProfileCdm, 1, (DateTime)account.TransactionDate, $"Bundled by Rule");
+                    this.AddCharge(account, bundledProfiles[x].ProfileCdm, (DateTime)account.TransactionDate, $"Bundled by Rule");
                     this.AddNote(account.AccountNo, $"Bundled charges into {bundledProfiles[x].ProfileCdm}");
                 }
             }
@@ -1441,7 +1479,7 @@ namespace LabBilling.Core.DataAccess
             foreach (var charge in charges)
             {
                 chrgRepository.CreditCharge(charge.ChrgId, $"Move to {destinationAccount}");
-                AddCharge(destination, charge.CDMCode, charge.Quantity, (DateTime)destination.TransactionDate, $"Moved from {sourceAccount}", charge.ReferenceReq);
+                AddCharge(destination, charge.CDMCode, (DateTime)destination.TransactionDate, $"Moved from {sourceAccount}", charge.ReferenceReq);
             }
             return (true, string.Empty);
         }
@@ -1470,7 +1508,7 @@ namespace LabBilling.Core.DataAccess
             }
 
             chrgRepository.CreditCharge(charge.ChrgId, $"Move to {destinationAccount}");
-            AddCharge(destinationAccount, charge.CDMCode, charge.Quantity, destination.TransactionDate, $"Moved from {sourceAccount}", charge.ReferenceReq);
+            AddCharge(destinationAccount, charge.CDMCode, destination.TransactionDate, $"Moved from {sourceAccount}", charge.ReferenceReq);
 
         }
 

@@ -16,9 +16,14 @@ namespace LabBilling.Core.BusinessLogic.Validators
                 .GreaterThan(0)
                 .When(c => !c.IsCredited && c.Status != "N/A");
 
-            RuleForEach(c => c.ChrgDetails)
-                .SetValidator(new ChargeDetailValidator())
-                .When(c => !c.IsCredited && c.FinancialType == "M");
+            RuleFor(c => c.DiagnosisCodePointer)
+                .NotNull().WithMessage("Cpt diagnosis pointer is null.");
+
+            RuleFor(c => c.DiagnosisCodePointer)
+                .Cascade(CascadeMode.Stop)
+                .NotEmpty().WithMessage("Diagnosis pointer is empty.")
+                .NotNull().WithMessage("Diagnosis pointer is null.");
+
         }
     }
 
@@ -35,13 +40,6 @@ namespace LabBilling.Core.BusinessLogic.Validators
                 .Must(c => c == "NORM" || c == "N/A" || c == "TC")
                 .WithMessage("Charge detail type is not valid. Must be NORM, N/A, or TC.");
 
-            RuleFor(c => c.DiagCodePointer)
-                .NotNull().WithMessage("Cpt diagnosis pointer is null.");
-
-            RuleFor(c => c.DiagCodePointer)
-                .Cascade(CascadeMode.Stop)
-                .NotEmpty().WithMessage("Cpt diagnosis pointer is empty.")
-                .NotNull().WithMessage("Cpt diagnosis pointer is null.");
         }
     }
 }

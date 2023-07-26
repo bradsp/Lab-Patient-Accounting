@@ -175,8 +175,9 @@ namespace LabBilling.Core.DataAccess
 
             ChkRepository chkRepository = new ChkRepository(_appEnvironment);
             ChrgRepository chrgRepository = new ChrgRepository(_appEnvironment);
+            ChrgDetailRepository chrgDetailRepository = new ChrgDetailRepository(_appEnvironment);
 
-            var charges = chrgRepository.GetByAccount(clientMnem, true, true, asOfDate, false);
+            var charges = chrgDetailRepository.GetByAccount(clientMnem, true, true, asOfDate, false);
 
             var payments = chkRepository.GetByAccount(clientMnem, asOfDate);
 
@@ -184,16 +185,18 @@ namespace LabBilling.Core.DataAccess
 
             foreach(var chrg in charges)
             {
-                if (chrg.NetAmount == 0 && chrg.CDMCode == invoiceCdm)
+                if (chrg.Amount == 0 && chrg.BillingCode == invoiceCdm)
                     continue;
+
+                var parentCharge = chrgRepository.GetById(chrg.ChrgNo);
 
                 var statementDetail = new ClientStatementDetailModel();
 
-                statementDetail.ServiceDate = chrg.ServiceDate == null ? DateTime.MinValue : (DateTime)chrg.ServiceDate;
+                statementDetail.ServiceDate = parentCharge.ServiceDate == null ? DateTime.MinValue : (DateTime)parentCharge.ServiceDate;
                 statementDetail.Account = chrg.AccountNo;
                 statementDetail.Invoice = chrg.Invoice;
-                statementDetail.Amount = chrg.NetAmount * chrg.Quantity;
-                if (chrg.CDMCode == invoiceCdm)
+                statementDetail.Amount = chrg.Amount * chrg.Quantity;
+                if (chrg.BillingCode == invoiceCdm)
                 {
                     statementDetail.Description = $"Invoice {chrg.Invoice}";
                     statementDetail.Reference = chrg.Invoice;
@@ -203,15 +206,15 @@ namespace LabBilling.Core.DataAccess
                     //see if account is in comment and extract it for the line description
                     string pattern = "([A-Z_]*)\\[(\\w*)\\]";
                     Regex rg = new Regex(pattern);
-                    Match match = rg.Match(chrg.Comment);
+                    Match match = rg.Match(parentCharge.Comment);
                     if(match.Success)
                     {
                         string account = match.Groups[1].Value;
-                        statementDetail.Description = $"Adjustment: {chrg.CdmDescription} on {account}";
+                        statementDetail.Description = $"Adjustment: {parentCharge.CdmDescription} on {account}";
                     }
                     else
                     {
-                        statementDetail.Description = $"Adjustment: {chrg.CdmDescription}";
+                        statementDetail.Description = $"Adjustment: {parentCharge.CdmDescription}";
                     }
                 }
 
@@ -247,13 +250,7 @@ namespace LabBilling.Core.DataAccess
         public void NewClient(string clientMnem)
         {
             //check to see if client is valid and client exists
-            Client client = GetClient(clientMnem);
-
-            if (client == null)
-            {
-                throw new ArgumentException("Client mnemonic is not found in client table", "clientMnem");
-            }
-
+            Client client = GetClient(clientMnem) ?? throw new ArgumentException("Client mnemonic is not found in client table", "clientMnem");
             Account account;
 
             //check to see if client account exists
@@ -263,13 +260,15 @@ namespace LabBilling.Core.DataAccess
             if (account == null)
             {
                 //account does not exist - add the account
-                account = new Account();
-                account.AccountNo = clientMnem;
-                account.PatFullName = client.Name;
-                account.MeditechAccount = clientMnem;
-                account.FinCode = clientFinCode;
-                account.TransactionDate = DateTime.Today;
-                account.ClientMnem = clientMnem;
+                account = new Account
+                {
+                    AccountNo = clientMnem,
+                    PatFullName = client.Name,
+                    MeditechAccount = clientMnem,
+                    FinCode = clientFinCode,
+                    TransactionDate = DateTime.Today,
+                    ClientMnem = clientMnem
+                };
 
                 accdb.Add(account);
             }
@@ -318,6 +317,9 @@ namespace LabBilling.Core.DataAccess
                 .From("vw_cbill_select vbs")
                 .Where("cl_mnem = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = clientMnem })
                 .Where("trans_date <= @0 ", new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = thruDate });
+
+
+
 
             return dbConnection.Fetch<UnbilledAccounts>(cmd);
         }

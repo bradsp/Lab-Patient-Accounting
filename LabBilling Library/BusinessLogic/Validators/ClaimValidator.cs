@@ -51,31 +51,29 @@ namespace LabBilling.Core.BusinessLogic.Validators
                 RuleFor(a => a.TotalCharges)
                     .GreaterThan(0);
 
-                RuleFor(a => a.Charges.Where(x => x.FinancialType == "M").Sum(x => x.Quantity))
+                RuleFor(a => a.ChargeDetails.Where(x => x.FinancialType == "M").Sum(x => x.Quantity))
                     .GreaterThan(0).WithMessage("Charge qty nets zero")
-                    .When(ac => ac.Charges.Count > 0);
+                    .When(ac => ac.ChargeDetails.Count > 0);
 
                 RuleForEach(a => a.Charges)
                     .SetValidator(new ChargeValidator())
                     .When(ac => ac.Charges.Count > 0);
 
+                RuleForEach(a => a.ChargeDetails)
+                    .SetValidator(new ChargeDetailValidator());
+
                 RuleFor(a => a)
                     .Must(NotContainOnlyVenipunctureCharge)
                     .WithMessage("Venipuncture is only charge on account");
 
-                //RuleFor(c => c.Charges)
-                //    .Must(NotHaveDuplicateCdms)
-                //    .WithMessage("Mutually Exclusive CDMs 5686066 and 5686078")
-                //    .When(a => a.Charges != null);
-
-                RuleFor(a => a.Charges)
+                RuleFor(a => a.ChargeDetails)
                     .Must(NotContainMultipleVenipunctures).WithMessage("Multiple venipuncture charges on account")
-                    .When(a => a.Charges != null);
+                    .When(a => a.ChargeDetails != null);
 
                 RuleFor(a => a)
                     .Must(MatchChargeServiceDateAndAccountTransDate).WithMessage("Account DOS does not match charge service date.");
 
-                RuleFor(a => a.Charges.Where(x => x.FinancialType == "M").Count())
+                RuleFor(a => a.ChargeDetails.Where(x => x.FinancialType == "M").Count())
                     .GreaterThan(0)
                     .WithMessage("No claim billable charges.");
                     
@@ -152,22 +150,19 @@ namespace LabBilling.Core.BusinessLogic.Validators
             foreach (var dx in account.Pat.Diagnoses)
             {
                 bool dxUsed = false;
-                foreach (var chrg in account.Charges.Where(x => x.IsCredited == false && x.FinancialType == "M"))
+                foreach (var chrg in account.Charges.Where(x => x.IsCredited == false))
                 {
-                    foreach (var chrgDetail in chrg.ChrgDetails)
+                    List<string> dxPtrs = new List<string>();
+
+                    if (chrg.DiagnosisCodePointer != null)
+                        dxPtrs = chrg.DiagnosisCodePointer.Split(':').ToList();
+
+                    foreach(var ptr in dxPtrs)
                     {
-                        List<string> dxPtrs = new List<string>();
-
-                        if (chrgDetail.DiagnosisPointer != null)
-                            dxPtrs = chrgDetail.DiagnosisPointer.DiagnosisPointer.Split(':').ToList();
-
-                        foreach(var ptr in dxPtrs)
+                        if (!string.IsNullOrEmpty(ptr))
                         {
-                            if (!string.IsNullOrEmpty(ptr))
-                            {
-                                if (dx.No == Convert.ToInt32(ptr))
-                                    dxUsed = true;
-                            }
+                            if (dx.No == Convert.ToInt32(ptr))
+                                dxUsed = true;
                         }
                     }
                 }
@@ -190,9 +185,9 @@ namespace LabBilling.Core.BusinessLogic.Validators
             return true;
         }
 
-        private bool NotContainMultipleVenipunctures(List<Chrg> charges)
+        private bool NotContainMultipleVenipunctures(List<ChrgDetail> charges)
         {
-            var total = charges.Where(c => c.ChrgDetails.Any(_ => _.Cpt4 == "36415"))
+            var total = charges.Where(c =>  c.Cpt4 == "36415")
                 .Sum(x => x.Quantity);
 
             if (total > 1)

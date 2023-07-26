@@ -544,10 +544,10 @@ namespace LabBilling.Core.BusinessLogic
 
                     transaction.Account = accountRecord.AccountNo;
                     transaction.Comment = $"MSG ID: {currentMessage.SystemMsgId}";
-                    Log.Instance.Debug($"Adding charge {transaction.Account},{transaction.Cdm},{transaction.Qty},{transaction.ServiceDate},{transaction.Comment},{transaction.RefNumber}");
+                    Log.Instance.Debug($"Adding charge {transaction.Account},{transaction.Cdm},{transaction.ServiceDate},{transaction.Comment},{transaction.RefNumber}");
                     try
                     {
-                        accountRepository.AddCharge(existingAccount, transaction.Cdm, transaction.Qty, transaction.ServiceDate, transaction.Comment, transaction.RefNumber);
+                        accountRepository.AddCharge(existingAccount, transaction.Cdm, transaction.ServiceDate, transaction.Comment, transaction.RefNumber);
                     }
                     catch (CdmNotFoundException cdmex)
                     {
