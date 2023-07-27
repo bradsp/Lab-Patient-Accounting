@@ -8,7 +8,7 @@ using PetaPoco;
 namespace LabBilling.Core.Models
 {
     [TableName("data_billing_batch")]
-    [PrimaryKey("batch", AutoIncrement = false)]
+    [PrimaryKey("batch", AutoIncrement = true)]
     public sealed class BillingBatch : IBaseEntity
     {
 

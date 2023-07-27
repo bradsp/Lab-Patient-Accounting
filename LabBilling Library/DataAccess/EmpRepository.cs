@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Data.SqlClient;
 using System.Data;
+using Org.BouncyCastle.Crypto.Tls;
 
 namespace LabBilling.Core.DataAccess
 {
@@ -19,7 +20,8 @@ namespace LabBilling.Core.DataAccess
             Log.Instance.Trace($"Entering");
 
             var sqlCmd = new PetaPoco.Sql();
-            sqlCmd.Where($"{GetRealColumn(nameof(Emp.Access))} <> 'NONE'");
+            sqlCmd.Where($"{GetRealColumn(nameof(Emp.Access))} <> @0",
+                new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = UserStatus.None });
             sqlCmd.OrderBy(GetRealColumn(nameof(Emp.FullName)));
 
             var emps = dbConnection.Fetch<Emp>(sqlCmd);
@@ -33,7 +35,8 @@ namespace LabBilling.Core.DataAccess
 
             Emp emp = null;
 
-            emp = dbConnection.SingleOrDefault<Emp>("where name = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = username });
+            emp = dbConnection.SingleOrDefault<Emp>("where name = @0", 
+                new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = username });
 
             return emp;
         }
@@ -51,17 +54,25 @@ namespace LabBilling.Core.DataAccess
             {
                 isSuccess = false;
             }
-            else if (user.Access == "NONE")
+            else if (user.Access == UserStatus.None)
             {
                 isSuccess = false;
             }
-            else if (user.Access == "VIEW" || user.Access == "ENTER/EDIT")
+            else if (user.Access == UserStatus.EnterEdit || user.Access == UserStatus.View)
             {
                 isSuccess = true;
             }
 
             return isSuccess;
         }
+    }
+
+    public sealed class UserStatus
+    {
+        public const string View = "VIEW";
+        public const string EnterEdit = "ENTER/EDIT";
+        public const string None = "NONE";
+
 
     }
 }

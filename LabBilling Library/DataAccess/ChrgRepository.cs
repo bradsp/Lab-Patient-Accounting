@@ -43,7 +43,7 @@ namespace LabBilling.Core.DataAccess
             //load the cdm record
             CdmRepository cdmRepository = new CdmRepository(_appEnvironment);
             chrg.Cdm = cdmRepository.GetCdm(chrg.CDMCode);
-            Log.Instance.Debug($"{dbConnection.LastSQL} {dbConnection.LastArgs}");
+            Log.Instance.Debug($"{dbConnection.LastSQL} {dbConnection.GetArgs()}");
             return chrg;
         }
 
@@ -67,7 +67,7 @@ namespace LabBilling.Core.DataAccess
             {
                 chrg.RevenueCodeDetail = revenueCodeRepository.GetByCode(chrg.RevenueCode);
                 chrg.Cdm = cdmRepository.GetCdm(chrg.ChargeId, true);
-                Log.Instance.Debug($"{dbConnection.LastSQL} {dbConnection.LastArgs}");
+                Log.Instance.Debug($"{dbConnection.LastSQL} {dbConnection.GetArgs()}");
             }
 
             return results;
@@ -127,7 +127,7 @@ namespace LabBilling.Core.DataAccess
                 {
                     detail.RevenueCodeDetail = revenueCodeRepository.GetByCode(detail.RevenueCode);
                     detail.DiagnosisPointer = chrgDiagnosisPointerRepository.GetById(detail.uri);
-                    Log.Instance.Debug($"{dbConnection.LastSQL} {dbConnection.LastArgs}");
+                    Log.Instance.Debug($"{dbConnection.LastSQL} {dbConnection.GetArgs()}");
                 }
             }
 
@@ -144,20 +144,28 @@ namespace LabBilling.Core.DataAccess
         {
             Log.Instance.Trace($"Entering - chrg number {chrgNum} comment {comment}");
 
+            bool setCredited = false;
+
             if (chrgNum <= 0)
                 throw new ArgumentOutOfRangeException(nameof(chrgNum));
-
             var chrg = GetById(chrgNum) ?? throw new ApplicationException($"Charge number {chrgNum} not found.");
 
+            //if(string.IsNullOrEmpty(chrg.Invoice))
+            setCredited = true;
+
+            chrg.IsCredited = setCredited;
             chrg.ChrgId = 0;
             chrg.Quantity *= -1;
             chrg.Comment = comment;
             chrg.Invoice = null;
+            chrg.PostingDate = DateTime.Today;
             chrg.ChrgDetails.ForEach(x => x.ChrgNo = 0);
             
             int retVal = AddCharge(chrg);
+            if (setCredited)
+                SetCredited(chrgNum);
             Log.Instance.Trace($"Credit charge number {chrgNum} comment {comment} returned {retVal}");
-            Log.Instance.Debug($"{dbConnection.LastSQL} {dbConnection.LastArgs}");
+            Log.Instance.Debug($"{dbConnection.LastSQL} {dbConnection.GetArgs()}");
             return retVal;
         }
 
@@ -184,7 +192,7 @@ namespace LabBilling.Core.DataAccess
 
                     amtRepository.Add(amt);
                 }
-                Log.Instance.Debug($"{dbConnection.LastSQL} {dbConnection.LastArgs}");
+                Log.Instance.Debug($"{dbConnection.LastSQL} {dbConnection.GetArgs()}");
                 return chrg_num;
             }
             catch (Exception ex)
@@ -221,7 +229,7 @@ namespace LabBilling.Core.DataAccess
                     new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = "C" });
 
             List<InvoiceChargeView> results = dbConnection.Fetch<InvoiceChargeView>(sql);
-            Log.Instance.Debug($"{dbConnection.LastSQL} {dbConnection.LastArgs}");
+            Log.Instance.Debug($"{dbConnection.LastSQL} {dbConnection.GetArgs()}");
             return results;
 
         }
@@ -279,7 +287,7 @@ namespace LabBilling.Core.DataAccess
                     try
                     {
                         Update(chrg, new List<string> { nameof(Chrg.Invoice) });
-                        Log.Instance.Debug($"{dbConnection.LastSQL} {dbConnection.LastArgs}");
+                        Log.Instance.Debug($"{dbConnection.LastSQL} {dbConnection.GetArgs()}");
                     }
                     catch(Exception ex)
                     {

@@ -25,7 +25,7 @@ namespace LabBilling.Core.DataAccess
             Pth pth = new Pth();
 
             if (!string.IsNullOrEmpty(npi))
-                phy = dbConnection.SingleOrDefault<Phy>("where tnh_num = @0",
+                phy = dbConnection.SingleOrDefault<Phy>($"where {GetRealColumn(nameof(Phy.NpiId))} = @0",
                     new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = npi });
             if (phy != null)
             {

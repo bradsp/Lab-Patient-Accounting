@@ -27,10 +27,6 @@ namespace LabBilling.Core.Models
         public string LISReqNo { get; set; }
         [Column("order_code")]
         public string OrderCode { get; set; }
-        [Column("bill_type")]
-        public string BillType { get; set; }
-        [Column("bill_method")]
-        public string BillMethod { get; set; }
         [Column("pointer_set")]
         public bool PointerSet { get; set; }
         [Column("mod_date")]

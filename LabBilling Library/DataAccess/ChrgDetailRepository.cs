@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using LabBilling.Core.Models;
+using LabBilling.Logging;
 using PetaPoco;
 
 namespace LabBilling.Core.DataAccess
@@ -16,22 +17,31 @@ namespace LabBilling.Core.DataAccess
 
         public override object Add(ChrgDetail table)
         {
-            ChrgDiagnosisPointerRepository chrgDiagnosisPointerRepository = new ChrgDiagnosisPointerRepository(_appEnvironment);
-
-            var value = base.Add(table);
-
-            if (table.DiagnosisPointer != null)
+            Log.Instance.Trace("Entering");
+            try
             {
-                table.DiagnosisPointer.ChrgDetailUri = Convert.ToDouble(value);
-                chrgDiagnosisPointerRepository.Save(table.DiagnosisPointer);
-            }
+                ChrgDiagnosisPointerRepository chrgDiagnosisPointerRepository = new ChrgDiagnosisPointerRepository(_appEnvironment);
 
-            return value;
+                var value = base.Add(table);
+
+                if (table.DiagnosisPointer != null)
+                {
+                    table.DiagnosisPointer.ChrgDetailUri = Convert.ToDouble(value);
+                    chrgDiagnosisPointerRepository.Save(table.DiagnosisPointer);
+                }
+
+                return value;
+            }
+            catch(Exception ex)
+            {
+                Log.Instance.Error(ex, "Exception encountered in ChrgDetail.Add");
+                throw new ApplicationException("Exception encountered in ChrgDetail.Add", ex);
+            }
         }
 
         public IEnumerable<ChrgDetail> GetByCharge(int chrg_num)
         {
-            Logging.Log.Instance.Trace("Entering");
+            Log.Instance.Trace("Entering");
 
             RevenueCodeRepository revenueCodeRepository = new RevenueCodeRepository(_appEnvironment);
             ChrgDiagnosisPointerRepository chrgDiagnosisPointerRepository = new ChrgDiagnosisPointerRepository(_appEnvironment);
@@ -52,7 +62,7 @@ namespace LabBilling.Core.DataAccess
 
         public int AddModifier(int uri, string modifier)
         {
-            Logging.Log.Instance.Trace("Entering");
+            Log.Instance.Trace("Entering");
 
             var sql = PetaPoco.Sql.Builder
                 .From($"{_tableName}")

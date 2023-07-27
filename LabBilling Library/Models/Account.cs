@@ -304,20 +304,6 @@ namespace LabBilling.Core.Models
                 return dates.Max();
             } 
         }
-
-        //private Dictionary<AccountStatusCode, string> AccountStatusDictionary = new Dictionary<AccountStatusCode, string>()
-        //{
-        //    { AccountStatusCode.New, "NEW" },
-        //    { AccountStatusCode.ReadyToBill, "RTB" },
-        //    { AccountStatusCode.Professional, "1500" },
-        //    { AccountStatusCode.Institutional, "UB" },
-        //    { AccountStatusCode.ProfSubmitted, "SSI1500" },
-        //    { AccountStatusCode.InstSubmitted, "SSIUB" },
-        //    { AccountStatusCode.ClaimSubmitted, "CLAIM" },
-        //    { AccountStatusCode.Statements, "STMT" },
-        //    { AccountStatusCode.PaidOut, "PAID_OUT" },
-        //    { AccountStatusCode.Closed, "CLOSED" }
-        //};
     }
 
     public static class AccountStatus
@@ -333,6 +319,7 @@ namespace LabBilling.Core.Models
         public static readonly string PaidOut = "PAID_OUT";
         public static readonly string Closed = "CLOSED";
         public static readonly string Hold = "HOLD";
+        public static readonly string Client = "CLIENT";
 
         public static bool IsValid(string status)
         {
@@ -347,28 +334,9 @@ namespace LabBilling.Core.Models
             if (status == PaidOut) return true;
             if (status == Closed) return true;
             if (status == Hold) return true;
+            if (status == Client) return true;
 
             return false;
-
         }
-
     }
-
-
-
-    //[Flags]
-    //public enum AccountStatus
-    //{
-    //    New = 1,
-    //    ReadyToBill = 2,
-    //    Professional = 4,
-    //    Institutional = 8,
-    //    ProfSubmitted = 16,
-    //    InstSubmitted = 32,
-    //    ClaimSubmitted = 64,
-    //    Statements = 128,
-    //    PaidOut = 256,
-    //    Closed = 512
-    //}
-
 }

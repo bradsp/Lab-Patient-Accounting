@@ -2,6 +2,7 @@
 using Org.BouncyCastle.Crypto.Tls;
 using PetaPoco;
 using PetaPoco.Providers;
+using RFClassLibrary;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -90,6 +91,7 @@ namespace LabBilling.Core.DataAccess
                             InitialCatalog = DatabaseName,
                             DataSource = ServerName,
                             IntegratedSecurity = true,
+                            ApplicationName = RFClassLibrary.OS.GetAppName(),
                             ConnectTimeout = 30
                         };
 
@@ -104,6 +106,7 @@ namespace LabBilling.Core.DataAccess
                         myBuilder.UserID = UserName;
                         myBuilder.Password = Password;
                         myBuilder.ConnectTimeout = 30;
+                        myBuilder.ApplicationName = RFClassLibrary.OS.GetAppName();
                         return myBuilder.ConnectionString;
                     }
                 }
@@ -145,6 +148,7 @@ namespace LabBilling.Core.DataAccess
                 myBuilder.IntegratedSecurity = false;
                 myBuilder.UserID = ServiceUsername;
                 myBuilder.Password = ServicePassword;
+                myBuilder.ApplicationName = RFClassLibrary.OS.GetAppName();
                 myBuilder.ConnectTimeout = 30;
 
                 return myBuilder.ConnectionString;
@@ -209,6 +213,7 @@ namespace LabBilling.Core.DataAccess
                         InitialCatalog = LogDatabaseName,
                         DataSource = ServerName,
                         IntegratedSecurity = true,
+                        ApplicationName = RFClassLibrary.OS.GetAppName(),
                         ConnectTimeout = 30
                     };
 
@@ -223,6 +228,7 @@ namespace LabBilling.Core.DataAccess
                         IntegratedSecurity = false,
                         UserID = UserName,
                         Password = Password,
+                        ApplicationName = RFClassLibrary.OS.GetAppName(),
                         ConnectTimeout = 30
                     };
 

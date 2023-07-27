@@ -133,7 +133,7 @@ namespace LabBilling.Core.BusinessLogic
         private void ProcessMessage()
         {
             Log.Instance.Debug($"Processing {currentMessage.MessageType} for account {currentMessage.SourceAccount}");
-            Console.WriteLine($"{DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss.fffffffK")} - Processing {currentMessage.MessageType} for account {currentMessage.SourceAccount}");
+            Console.WriteLine($"{DateTime.Now:yyyy-MM-ddTHH:mm:ss.fffffffK} - Processing {currentMessage.MessageType} for account {currentMessage.SourceAccount}");
             try
             {
                 var result = ParseHL7(currentMessage.HL7Message);
@@ -557,6 +557,13 @@ namespace LabBilling.Core.BusinessLogic
                     catch(InvalidClientException cliex)
                     {
                         errors.AppendLine($"[ERROR] {cliex.Message} for {existingAccount.ClientMnem} on {existingAccount.AccountNo}. Charge not posted.");
+                        Log.Instance.Error(cliex);
+                        return (Status.Failed, $"{accountRecord.AccountNo} - charges not posted.", errors);
+                    }
+                    catch(Exception ex)
+                    {
+                        errors.AppendLine($"[ERROR] {ex.Message} for {existingAccount.ClientMnem} on {existingAccount.AccountNo}. Charge not posted.");
+                        Log.Instance.Error(ex, $"[ERROR] {ex.Message} for {existingAccount.ClientMnem} on {existingAccount.AccountNo}. Charge not posted.");
                         return (Status.Failed, $"{accountRecord.AccountNo} - charges not posted.", errors);
                     }
 
@@ -918,9 +925,9 @@ namespace LabBilling.Core.BusinessLogic
                 else
                     transaction.Qty = Convert.ToInt16(seg.Fields(10).Value);
 
-                //ordering doctor - repeating FT1.21
+                //ordering doctor - repeating FT1.21.1
 
-                transaction.RefNumber = seg.Fields(23).Value;
+                transaction.RefNumber = seg.Fields(23).Components(1).Value;
 
                 //string cpt = hl7Message.GetValue("FT1.25.1");
                 //string abn = hl7Message.GetValue("FT1.27");

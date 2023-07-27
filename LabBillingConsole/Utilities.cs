@@ -178,7 +178,6 @@ namespace LabBillingConsole
         {
             Console.WriteLine("Beginning notes import.");
             NotesImport notesImport = new NotesImport(_appEnvironment);
-            //string filename = @"\\wthmclbill\shared\Billing\LIVE\claims\Notes\510051_20230215_ExportNotes_424.exted";
             try
             {
                 foreach (string filename in Directory.GetFiles(@"\\wthmclbill\shared\Billing\LIVE\claims\Notes", "*.exted"))
@@ -265,8 +264,6 @@ namespace LabBillingConsole
             {
 
             }
-
-            //accountRepository.InsuranceSwap("L17436110", InsCoverage.Primary, InsCoverage.Secondary);
 
         }
 
