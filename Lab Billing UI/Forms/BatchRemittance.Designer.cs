@@ -422,7 +422,7 @@
             this.Controls.Add(this.AmountTotal);
             this.Controls.Add(this.dgvPayments);
             this.Name = "BatchRemittance";
-            this.Text = "BatchRemittance";
+            this.Text = "Batch Remittance";
             this.Load += new System.EventHandler(this.BatchRemittance_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dgvPayments)).EndInit();
             this.ResumeLayout(false);
