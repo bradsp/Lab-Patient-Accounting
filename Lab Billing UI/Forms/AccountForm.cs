@@ -14,6 +14,8 @@ using System.Data;
 using System.Threading.Tasks;
 using LabBilling.Core.BusinessLogic;
 using LabBilling.Legacy;
+using System.Collections;
+using BrightIdeasSoftware;
 
 namespace LabBilling.Forms
 {
@@ -260,7 +262,7 @@ namespace LabBilling.Forms
 
             Helper.SetControlsAccess(tabPayments.Controls, false);
             //if (systemParametersRepository.GetByKey("allow_chk_entry") == "1")
-            if(Program.AppEnvironment.ApplicationParameters.AllowPaymentAdjustmentEntry)
+            if (Program.AppEnvironment.ApplicationParameters.AllowPaymentAdjustmentEntry)
             {
                 Helper.SetControlsAccess(tabPayments.Controls, Program.LoggedInUser.CanAddAdjustments);
             }
@@ -288,7 +290,7 @@ namespace LabBilling.Forms
             ValidateAccountButton.Visible = false;
             GenerateClaimButton.Visible = false;
             //if (Convert.ToBoolean(systemParametersRepository.GetByKey("allow_edit")))
-            if(Program.AppEnvironment.ApplicationParameters.AllowEditing)
+            if (Program.AppEnvironment.ApplicationParameters.AllowEditing)
             {
                 if (Program.LoggedInUser.Access == "ENTER/EDIT")
                 {
@@ -351,7 +353,7 @@ namespace LabBilling.Forms
                 //MessageBox.Show("Account is flagged ready to bill, or has been billed. Any changes can affect the claim.");
             }
 
-            if(currentAccount.Status == AccountStatus.Hold)
+            if (currentAccount.Status == AccountStatus.Hold)
             {
                 clearHoldStatusToolStripMenuItem.Text = clearHoldMenuText;
             }
@@ -371,7 +373,8 @@ namespace LabBilling.Forms
             LoadSummaryTab();
             LoadDemographics();
             LoadInsuranceData();
-            LoadCharges();
+            //LoadCharges();
+            LoadChargeTreeView();
             LoadPayments();
             LoadDx();
             LoadNotes();
@@ -1113,7 +1116,7 @@ namespace LabBilling.Forms
             ChargesDataGrid.Columns[nameof(Chrg.CdmDescription)].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             ChargesDataGrid.BackgroundColor = Color.AntiqueWhite;
             ChrgDetailDataGrid.BackgroundColor = Color.AntiqueWhite;
-      
+
             chargeBalRichTextbox.Text = "";
             chargeBalRichTextbox.SelectionFont = new Font(chargeBalRichTextbox.Font.FontFamily, 10, FontStyle.Bold);
             chargeBalRichTextbox.SelectedText = "3rd Party Patient Balance\n";
@@ -1248,7 +1251,7 @@ namespace LabBilling.Forms
             //    e.CellStyle.BackColor = Color.LightBlue;
             //}
 
-            return; 
+            return;
 
         }
 
@@ -1409,7 +1412,7 @@ namespace LabBilling.Forms
                 {
                     chkRepository.Add(chk);
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     Log.Instance.Error(ex);
                     MessageBox.Show($"Error adding payment. See log for details.");
@@ -1554,7 +1557,7 @@ namespace LabBilling.Forms
                     }
 
                     dxPointers.Rows.Add(row);
-                   
+
                 }
             }
             dxPointerGrid2.AutoResizeColumns();
@@ -1631,7 +1634,7 @@ namespace LabBilling.Forms
                     ChrgRepository chrgRepository = new ChrgRepository(Program.AppEnvironment);
 
                     var updatedChrg = currentAccount.Charges.Where(c => c.IsCredited == false).ToList();
-                    updatedChrg.ForEach(c => 
+                    updatedChrg.ForEach(c =>
                     {
                         c.DiagnosisCodePointer = newPointer;
                         chrgRepository.Update(c);
@@ -1914,7 +1917,7 @@ namespace LabBilling.Forms
             statementHistoryDataGrid.Columns[nameof(PatientStatementAccount.MailerCount)].Visible = true;
             statementHistoryDataGrid.Columns[nameof(PatientStatementAccount.ProcessedDate)].Visible = true;
             statementHistoryDataGrid.Columns[nameof(PatientStatementAccount.StatementNumber)].Visible = true;
-            
+
             billingTabLoading = false;
         }
 
@@ -2076,7 +2079,7 @@ namespace LabBilling.Forms
         {
             Log.Instance.Trace($"Entering");
 
-            if(clearHoldStatusToolStripMenuItem.Text == clearHoldMenuText)
+            if (clearHoldStatusToolStripMenuItem.Text == clearHoldMenuText)
             {
                 InputBoxResult prompt = InputBox.Show("Enter reason for setting status back to New:", "New Note");
                 AccountNote note = new AccountNote();
@@ -2093,7 +2096,7 @@ namespace LabBilling.Forms
                 accountRepository.UpdateStatus(currentAccount.AccountNo, AccountStatus.New);
             }
 
-            if(clearHoldStatusToolStripMenuItem.Text == setHoldMenuText)
+            if (clearHoldStatusToolStripMenuItem.Text == setHoldMenuText)
             {
                 InputBoxResult prompt = InputBox.Show("Enter reason for claim hold:", "New Note");
                 AccountNote note = new AccountNote();
@@ -2520,7 +2523,76 @@ namespace LabBilling.Forms
         private void BannerAccountTextBox_Click(object sender, EventArgs e)
         {
             Clipboard.SetText(BannerAccountTextBox.Text);
-            
+
         }
+
+        #region Charge Tree List View
+
+        private void LoadChargeTreeView()
+        {
+
+            chargesTreeListView.CanExpandGetter = delegate (object x)
+            {
+                return (x is Chrg) && (x as Chrg).ChrgDetails.Count > 0;
+            };
+
+            chargesTreeListView.ChildrenGetter = delegate (object x)
+            {
+                return (x as Chrg).ChrgDetails;
+            };
+
+            chargesTreeListView.VirtualMode = true;
+
+            OLVColumn[] oLVColumns = new OLVColumn[]
+            {
+                new OLVColumn() { AspectName = nameof(Chrg.ChrgId), IsTileViewColumn = true, Text = "Chrg Id", UseInitialLetterForGroup = true, Width = 180, WordWrap = true },
+                new OLVColumn() { AspectName = nameof(Chrg.CDMCode), IsTileViewColumn = true, Text = "CDM", UseInitialLetterForGroup = true, Width = 180, WordWrap = true },
+                new OLVColumn() { AspectName = nameof(Chrg.CdmDescription), IsTileViewColumn = true, Text = "Description", UseInitialLetterForGroup = true, Width = 180, WordWrap = true },
+                new OLVColumn() { AspectName = nameof(Chrg.ServiceDate), IsTileViewColumn = true, Text = "Service Date", UseInitialLetterForGroup = true, Width = 180, WordWrap = true},
+                new OLVColumn() { AspectName = nameof(Chrg.PostingDate), IsTileViewColumn = true, Text = "Posted Date", UseInitialLetterForGroup = true, Width = 180, WordWrap = true},
+                new OLVColumn() { AspectName = nameof(Chrg.OrderMnem), IsTileViewColumn = true, Text = "Order Mnem", UseInitialLetterForGroup = true, Width = 180, WordWrap = true},
+                new OLVColumn() { AspectName = nameof(ChrgDetail.RevenueCode), IsTileViewColumn = true, Text = "Revenue Code", UseInitialLetterForGroup = true, Width = 180, WordWrap = true},
+                new OLVColumn() { AspectName = nameof(ChrgDetail.Cpt4), IsTileViewColumn = true, Text = "CPT4", UseInitialLetterForGroup = true, Width = 180, WordWrap = true},
+                new OLVColumn() { AspectName = nameof(ChrgDetail.Modifier), IsTileViewColumn = true, Text = "Modifier", UseInitialLetterForGroup = true, Width = 180, WordWrap = true},
+                new OLVColumn() { AspectName = nameof(ChrgDetail.BillingCode), IsTileViewColumn = true, Text = "Billing Code", UseInitialLetterForGroup = true, Width = 180, WordWrap = true},
+                new OLVColumn() { AspectName = nameof(ChrgDetail.Quantity), IsTileViewColumn = true, Text = "Quantity", UseInitialLetterForGroup = true, Width = 180, WordWrap = true},
+                new OLVColumn() { AspectName = nameof(ChrgDetail.Amount), IsTileViewColumn = true, Text = "Amount", UseInitialLetterForGroup = true, Width = 180, WordWrap = true},
+                new OLVColumn() { AspectName = nameof(ChrgDetail.Type), IsTileViewColumn = true, Text = "Type", UseInitialLetterForGroup = true, Width = 180, WordWrap = true},
+                new OLVColumn() { AspectName = nameof(ChrgDetail.FinCode), IsTileViewColumn = true, Text = "Fin Code", UseInitialLetterForGroup = true, Width = 180, WordWrap = true},
+                new OLVColumn() { AspectName = nameof(ChrgDetail.FinancialType), IsTileViewColumn = true, Text = "Financial Type", UseInitialLetterForGroup = true, Width = 180, WordWrap = true},
+                new OLVColumn() { AspectName = nameof(ChrgDetail.ClientMnem), IsTileViewColumn = true, Text = "Client", UseInitialLetterForGroup = true, Width = 180, WordWrap = true },
+                new OLVColumn() { AspectName = nameof(ChrgDetail.Invoice), WordWrap = true, IsTileViewColumn = true, Text = "Invoice", UseInitialLetterForGroup = true, Width = 180 },
+                new OLVColumn() { AspectName = nameof(ChrgDetail.IsCredited), WordWrap = true, IsTileViewColumn = true, Text = "Credited", UseInitialLetterForGroup = true, Width = 180 },
+            };
+
+            foreach(var col in oLVColumns)
+            {
+                chargesTreeListView.AllColumns.Add(col);
+            }
+
+            chargesTreeListView.Columns.AddRange(oLVColumns);
+
+            chargesTreeListView.RebuildColumns();
+
+            ArrayList roots = new ArrayList();
+
+            foreach (var chrg in currentAccount.Charges)
+            {
+                roots.Add(chrg);
+            }
+
+            chargesTreeListView.Roots = roots;
+        }
+
+        private void SetupChargeTreeColumns()
+        {
+
+        }
+
+
+
+        #endregion
+
+
     }
 }

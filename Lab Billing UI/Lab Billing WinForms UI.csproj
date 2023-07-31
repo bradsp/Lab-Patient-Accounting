@@ -750,6 +750,9 @@
     <PackageReference Include="NLog.Schema">
       <Version>5.2.2</Version>
     </PackageReference>
+    <PackageReference Include="ObjectListView.Official">
+      <Version>2.9.1</Version>
+    </PackageReference>
     <PackageReference Include="PetaPoco.Compiled">
       <Version>6.0.566</Version>
     </PackageReference>

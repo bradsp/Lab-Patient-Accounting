@@ -60,8 +60,6 @@ namespace LabBilling.Core.Models
         [ResultColumn]
         public string mod_host { get; set; }
 
-        public Guid rowguid { get; set; }
-
         [Ignore]
         public string CptList 
         { 

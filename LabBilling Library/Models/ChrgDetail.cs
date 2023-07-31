@@ -13,6 +13,9 @@ namespace LabBilling.Core.Models
 
         [Column("chrg_num")]
         public int ChrgNo { get; set; }
+        [Column("service_date")]
+        public DateTime? ServiceDate { get; set; }
+
         [Column("revcode")]
         public string RevenueCode { get; set; }
         [Column("billcode")]
@@ -28,6 +31,7 @@ namespace LabBilling.Core.Models
         [Column("qty")]
         public int Quantity { get; set; }
         [Column("amount")]
+
         public double Amount { get; set; }
         [Column("discount_amount")]
         public double DiscountAmount { get; set; }

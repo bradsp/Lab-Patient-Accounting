@@ -59,6 +59,7 @@ namespace LabBilling.Forms
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.summaryTab = new System.Windows.Forms.TabPage();
             this.summaryTable = new System.Windows.Forms.TableLayoutPanel();
+            this.chargesTreeListView = new BrightIdeasSoftware.TreeListView();
             this.tabDemographics = new System.Windows.Forms.TabPage();
             this.DateOfBirthTextBox = new LabBilling.UserControls.DateTextBox();
             this.providerLookup1 = new LabBilling.Library.ProviderLookup();
@@ -233,6 +234,7 @@ namespace LabBilling.Forms
             this.ValidateAccountButton = new MetroFramework.Controls.MetroButton();
             this.BillActivityDataGrid = new System.Windows.Forms.DataGridView();
             this.minPmtTextBox = new LabBilling.UserControls.CurrencyTextBox();
+            this.chargesNewPage = new System.Windows.Forms.TabPage();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.accountToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.changeDateOfServiceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -276,6 +278,7 @@ namespace LabBilling.Forms
             this.ClientBalLabel = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.summaryTab.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.chargesTreeListView)).BeginInit();
             this.tabDemographics.SuspendLayout();
             this.tabGuarantor.SuspendLayout();
             this.tabInsurance.SuspendLayout();
@@ -299,6 +302,7 @@ namespace LabBilling.Forms
             this.tabBillingActivity.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.statementHistoryDataGrid)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.BillActivityDataGrid)).BeginInit();
+            this.chargesNewPage.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.RefreshButton)).BeginInit();
             this.dxPointerMenuStrip.SuspendLayout();
@@ -318,6 +322,7 @@ namespace LabBilling.Forms
             this.tabControl1.Controls.Add(this.tabPayments);
             this.tabControl1.Controls.Add(this.tabNotes);
             this.tabControl1.Controls.Add(this.tabBillingActivity);
+            this.tabControl1.Controls.Add(this.chargesNewPage);
             this.tabControl1.Location = new System.Drawing.Point(0, 100);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
@@ -353,6 +358,21 @@ namespace LabBilling.Forms
             this.summaryTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.summaryTable.Size = new System.Drawing.Size(1145, 486);
             this.summaryTable.TabIndex = 0;
+            // 
+            // chargesTreeListView
+            // 
+            this.chargesTreeListView.BackColor = System.Drawing.SystemColors.Window;
+            this.chargesTreeListView.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.chargesTreeListView.CellEditUseWholeCell = false;
+            this.chargesTreeListView.HideSelection = false;
+            this.chargesTreeListView.Location = new System.Drawing.Point(21, 23);
+            this.chargesTreeListView.Name = "chargesTreeListView";
+            this.chargesTreeListView.ShowGroups = false;
+            this.chargesTreeListView.Size = new System.Drawing.Size(1110, 292);
+            this.chargesTreeListView.TabIndex = 0;
+            this.chargesTreeListView.UseCompatibleStateImageBehavior = false;
+            this.chargesTreeListView.View = System.Windows.Forms.View.Details;
+            this.chargesTreeListView.VirtualMode = true;
             // 
             // tabDemographics
             // 
@@ -2542,6 +2562,17 @@ namespace LabBilling.Forms
             this.minPmtTextBox.Size = new System.Drawing.Size(100, 20);
             this.minPmtTextBox.TabIndex = 9;
             // 
+            // chargesNewPage
+            // 
+            this.chargesNewPage.Controls.Add(this.chargesTreeListView);
+            this.chargesNewPage.Location = new System.Drawing.Point(4, 22);
+            this.chargesNewPage.Name = "chargesNewPage";
+            this.chargesNewPage.Padding = new System.Windows.Forms.Padding(3);
+            this.chargesNewPage.Size = new System.Drawing.Size(1151, 492);
+            this.chargesNewPage.TabIndex = 14;
+            this.chargesNewPage.Text = "New Charges";
+            this.chargesNewPage.UseVisualStyleBackColor = true;
+            // 
             // menuStrip1
             // 
             this.menuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
@@ -2986,6 +3017,7 @@ namespace LabBilling.Forms
             this.Load += new System.EventHandler(this.AccountForm_Load);
             this.tabControl1.ResumeLayout(false);
             this.summaryTab.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.chargesTreeListView)).EndInit();
             this.tabDemographics.ResumeLayout(false);
             this.tabDemographics.PerformLayout();
             this.tabGuarantor.ResumeLayout(false);
@@ -3018,6 +3050,7 @@ namespace LabBilling.Forms
             this.tabBillingActivity.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.statementHistoryDataGrid)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.BillActivityDataGrid)).EndInit();
+            this.chargesNewPage.ResumeLayout(false);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.RefreshButton)).EndInit();
@@ -3246,6 +3279,8 @@ namespace LabBilling.Forms
         private System.Windows.Forms.RadioButton show3rdPartyRadioButton;
         private System.Windows.Forms.DataGridView statementHistoryDataGrid;
         private System.Windows.Forms.Label label5;
+        private BrightIdeasSoftware.TreeListView chargesTreeListView;
+        private System.Windows.Forms.TabPage chargesNewPage;
     }
 }
 

@@ -69,7 +69,7 @@ namespace LabBilling.Core.DataAccess
 
         public Account GetByAccount(string account, bool demographicsOnly = false)
         {
-            Logging.Log.Instance.Trace($"Entering - account {account} demographicsOnly {demographicsOnly}");
+            Log.Instance.Trace($"Entering - account {account} demographicsOnly {demographicsOnly}");
 
             var record = dbConnection.SingleOrDefault<Account>($"where {this.GetRealColumn(nameof(Account.AccountNo))} = @0",
                 new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account });
@@ -1037,6 +1037,8 @@ namespace LabBilling.Core.DataAccess
                     ClientMnem = chargeClient.ClientMnem,
                     FinCode = fin.FinCode,
                     FinancialType = fin.FinClass,
+                    ServiceDate = chrg.ServiceDate,
+                    PostedDate = DateTime.Today,
                     Quantity = 1,
                 };
                 switch (fin.FinClass)

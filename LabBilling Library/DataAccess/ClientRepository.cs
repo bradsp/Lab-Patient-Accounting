@@ -82,14 +82,16 @@ namespace LabBilling.Core.DataAccess
             if(account == null)
             {
                 //add account
-                account = new Account();
-                account.AccountNo = table.ClientMnem;
-                account.PatFullName = table.Name;
-                account.FinCode = clientFinCode;
-                account.TransactionDate = DateTime.Today;
-                account.Status = AccountStatus.New;
-                account.ClientMnem = table.ClientMnem;
-                account.MeditechAccount = table.ClientMnem;
+                account = new Account
+                {
+                    AccountNo = table.ClientMnem,
+                    PatFullName = table.Name,
+                    FinCode = clientFinCode,
+                    TransactionDate = DateTime.Today,
+                    Status = AccountStatus.New,
+                    ClientMnem = table.ClientMnem,
+                    MeditechAccount = table.ClientMnem
+                };
 
                 accountRepository.Add(account);
             }
@@ -99,9 +101,6 @@ namespace LabBilling.Core.DataAccess
 
         public override bool Update(Client table)
         {
-
-
-
             return base.Update(table);
         }
 

@@ -17,6 +17,9 @@ namespace LabBilling.Core.DataAccess
         private const string clientFinType = "C";
         private const string zFinType = "Z";
 
+        private const string chargeTableName = "charge";
+        private const string chargeDetailTableName = "charge_details";
+
         public ChrgRepository(IAppEnvironment appEnvironment) : base(appEnvironment)
         {
             amtRepository = new ChrgDetailRepository(appEnvironment);
@@ -56,7 +59,7 @@ namespace LabBilling.Core.DataAccess
             //    .Where("account = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account });
 
             var sql = PetaPoco.Sql.Builder;
-            sql.From(_tableName);
+            sql.From(chargeDetailTableName);
             sql.Where($"{GetRealColumn(nameof(ChrgDetail.AccountNo))} = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account });
             sql.Where($"{GetRealColumn(nameof(ChrgDetail.FinancialType))} = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = patientFinType });
             sql.Where($"{GetRealColumn(nameof(ChrgDetail.IsCredited))} = @0", new SqlParameter() { SqlDbType = SqlDbType.Bit, Value = false });
@@ -102,25 +105,25 @@ namespace LabBilling.Core.DataAccess
                 throw new ArgumentNullException(nameof(account));
 
             var sql = PetaPoco.Sql.Builder
-                .Select("chrg.*, chrg_details.*")
-                .From("chrg")
-                .InnerJoin("chrg_details").On("chrg_details.chrg_num = chrg.chrg_num")
-                .Where($"{GetRealColumn(nameof(Chrg.AccountNo))} = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account });
+                .Select($"{chargeTableName}.*, {chargeDetailTableName}.*")
+                .From(chargeTableName)
+                .InnerJoin(chargeDetailTableName).On($"{chargeDetailTableName}.chrg_num = {chargeTableName}.chrg_num")
+                .Where($"{chargeTableName}.{GetRealColumn(nameof(Chrg.AccountNo))} = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account });
 
             if (asOfDate != null)
             {
-                sql.Where($"chrg_detail.{GetRealColumn(nameof(ChrgDetail.mod_date))} > @0",
+                sql.Where($"{chargeDetailTableName}.{GetRealColumn(nameof(ChrgDetail.mod_date))} > @0",
                     new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = asOfDate});
             }
 
             if (!showCredited)
-                sql.Where($"chrg_detail.{GetRealColumn(nameof(ChrgDetail.IsCredited))} = 0");
+                sql.Where($"{chargeDetailTableName}.{GetRealColumn(nameof(ChrgDetail.IsCredited))} = 0");
 
             if (!includeInvoiced)
-                sql.Where($"{GetRealColumn(nameof(ChrgDetail.Invoice))} is null or {GetRealColumn(nameof(ChrgDetail.Invoice))} = ''");
+                sql.Where($"{chargeDetailTableName}.{GetRealColumn(nameof(ChrgDetail.Invoice))} is null or {chargeDetailTableName}.{GetRealColumn(nameof(ChrgDetail.Invoice))} = ''");
 
             if (excludeCBill)
-                sql.Where($"{GetRealColumn(nameof(Chrg.CDMCode))} <> @0",
+                sql.Where($"{chargeTableName}.{GetRealColumn(nameof(Chrg.CDMCode))} <> @0",
                     new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = invoiceCode});
 
             sql.OrderBy($"{_tableName}.{GetRealColumn(nameof(Chrg.ChrgId))}");

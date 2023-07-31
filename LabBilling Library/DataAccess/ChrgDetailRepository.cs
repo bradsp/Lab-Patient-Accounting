@@ -22,8 +22,8 @@ namespace LabBilling.Core.DataAccess
                 throw new ArgumentNullException(nameof(accountNo));
 
             RevenueCodeRepository revenueCodeRepository = new RevenueCodeRepository(_appEnvironment);
-            ChrgDiagnosisPointerRepository chrgDiagnosisPointerRepository = new ChrgDiagnosisPointerRepository(_appEnvironment);
-            var sql = PetaPoco.Sql.Builder
+
+            var sql = Sql.Builder
                 .From($"{_tableName}")
                 .Where($"{this.GetRealColumn(nameof(ChrgDetail.AccountNo))} = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = accountNo });
 
@@ -50,6 +50,32 @@ namespace LabBilling.Core.DataAccess
         public List<ChrgDetail> GetByAccount(string account, bool showCredited = true, bool includeInvoiced = true, DateTime? asOfDate = null, bool excludeCBill = true)
         {
             Log.Instance.Trace("Entering");
+
+            if (string.IsNullOrEmpty(account))
+                throw new ArgumentNullException(nameof(account));
+
+            RevenueCodeRepository revenueCodeRepository = new RevenueCodeRepository(_appEnvironment);
+
+            var sql = Sql.Builder
+                .From($"{_tableName}")
+                .Where($"{_tableName}.{this.GetRealColumn(nameof(ChrgDetail.AccountNo))} = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account })
+                .Where($"{_tableName}.{GetRealColumn(nameof(ChrgDetail.IsCredited))} = @0", new SqlParameter() { SqlDbType = SqlDbType.Bit, Value = showCredited })
+                .Where($"{_tableName}.{GetRealColumn(nameof(ChrgDetail.ServiceDate))} <= @0", new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = asOfDate })
+                .Where($"{_tableName}.{GetRealColumn(nameof(ChrgDetail.BillingCode))} <> @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = "CBILL" });
+
+            if(!includeInvoiced)
+            {
+                sql.Where($"{GetRealColumn(nameof(ChrgDetail.Invoice))} = '' or {GetRealColumn(nameof(ChrgDetail.Invoice))} is null");
+            }
+
+            var results = dbConnection.Fetch<ChrgDetail>(sql);
+
+            foreach (var result in results)
+            {
+                result.RevenueCodeDetail = revenueCodeRepository.GetByCode(result.RevenueCode);
+            }
+
+            return results;
         }
 
 
@@ -65,7 +91,9 @@ namespace LabBilling.Core.DataAccess
 
             foreach(var cd in chrgDetails)
             {
-                addedCharges.Add((ChrgDetail)Add(cd));
+                var value = Add(cd);
+                cd.uri = Convert.ToInt32(value);
+                addedCharges.Add(cd);
             }
 
             return addedCharges;
@@ -90,7 +118,7 @@ namespace LabBilling.Core.DataAccess
             ChrgDiagnosisPointerRepository chrgDiagnosisPointerRepository = new ChrgDiagnosisPointerRepository(_appEnvironment);
             var sql = PetaPoco.Sql.Builder
                 .From($"{_tableName}")
-                .Where($"{this.GetRealColumn(nameof(ChrgDetail.ChrgNo))} = @0", new SqlParameter() { SqlDbType = SqlDbType.Decimal, Value = chrg_num });
+                .Where($"{_tableName}.{this.GetRealColumn(nameof(ChrgDetail.ChrgNo))} = @0", new SqlParameter() { SqlDbType = SqlDbType.Decimal, Value = chrg_num });
 
             var results = dbConnection.Fetch<ChrgDetail>(sql);
 
@@ -114,7 +142,7 @@ namespace LabBilling.Core.DataAccess
 
             var sql = PetaPoco.Sql.Builder
                 .From($"{_tableName}")
-                .Where($"{this.GetRealColumn(nameof(ChrgDetail.uri))} = @0", new SqlParameter() { SqlDbType = SqlDbType.Decimal,Value = uri });
+                .Where($"{_tableName}.{this.GetRealColumn(nameof(ChrgDetail.uri))} = @0", new SqlParameter() { SqlDbType = SqlDbType.Decimal,Value = uri });
 
             var result = dbConnection.SingleOrDefault<ChrgDetail>(sql);
 
