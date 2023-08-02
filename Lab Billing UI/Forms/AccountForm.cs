@@ -340,10 +340,10 @@ namespace LabBilling.Forms
         /// <summary>
         /// Loads account object from database and refreshes the form controls.
         /// </summary>
-        private void LoadAccountData()
+        private async Task LoadAccountData()
         {
             Log.Instance.Trace($"Entering");
-            currentAccount = accountRepository.GetByAccount(SelectedAccount);
+            currentAccount = await accountRepository.GetByAccountAsync(SelectedAccount);
 
             generateClientStatementToolStripMenuItem.Enabled = currentAccount.FinCode == "CLIENT";
 

@@ -8,6 +8,8 @@ using System.Data.SqlClient;
 using System.Data;
 using Log = LabBilling.Logging.Log;
 using System.Runtime.CompilerServices;
+using System.Security.Principal;
+using System.ServiceProcess;
 
 namespace LabBilling.Core.DataAccess
 {
@@ -63,6 +65,11 @@ namespace LabBilling.Core.DataAccess
             systemParametersRepository = new SystemParametersRepository(appEnvironment);
             cdmRepository = new CdmRepository(appEnvironment);
             globalBillingCdmRepository = new GlobalBillingCdmRepository(appEnvironment);
+        }
+
+        public async Task<Account> GetByAccountAsync(string account, bool demographicsOnly = false)
+        {
+            return await Task.Run(() => GetByAccount(account, demographicsOnly));
         }
 
         public Account GetByAccount(string account, bool demographicsOnly = false)
@@ -260,7 +267,7 @@ namespace LabBilling.Core.DataAccess
                         command = PetaPoco.Sql.Builder
                             .Select($"{selMaxRecords}status, acc.account, pat_name, ssn, cl_mnem, acc.fin_code, trans_date, ins.plan_nme")
                             .From(_tableName)
-                            .InnerJoin("ins").On($"ins.account = acc.account and ins_a_b_c = {InsCoverage.Primary}")
+                            .InnerJoin("ins").On($"ins.account = acc.account and ins_a_b_c = '{InsCoverage.Primary}'")
                             .Where("status = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = AccountStatus.Institutional })
                             .OrderBy($"{GetRealColumn(nameof(Account.TransactionDate))}");
                         break;
@@ -268,7 +275,7 @@ namespace LabBilling.Core.DataAccess
                         command = PetaPoco.Sql.Builder
                             .Select($"{selMaxRecords}status, acc.account, pat_name, ssn, cl_mnem, acc.fin_code, trans_date, ins.plan_nme")
                             .From(_tableName)
-                            .InnerJoin("ins").On($"ins.account = acc.account and ins_a_b_c = {InsCoverage.Primary}")
+                            .InnerJoin("ins").On($"ins.account = acc.account and ins_a_b_c = '{InsCoverage.Primary}'")
                             .Where("status = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = AccountStatus.Professional })
                             .OrderBy($"{GetRealColumn(nameof(Account.TransactionDate))}");
                         break;

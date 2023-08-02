@@ -169,6 +169,8 @@ namespace LabBilling.Forms
                 claimBatchDetailDataGrid.Columns[nameof(BillingActivity.mod_user)].Visible = false;
                 claimBatchDetailDataGrid.Columns[nameof(BillingActivity.rowguid)].Visible = false;
                 claimBatchDetailDataGrid.Columns[nameof(BillingActivity.PatientName)].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+                claimBatchDetailDataGrid.Columns[nameof(BillingActivity.ClaimAmount)].DefaultCellStyle.Format = "N2";
+                claimBatchDetailDataGrid.Columns[nameof(BillingActivity.ClaimAmount)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
                 claimBatchDetailDataGrid.AutoResizeColumns();
 
                 billingActivitiesTable.DefaultView.Sort = $"{nameof(BillingActivity.PatientName)}";

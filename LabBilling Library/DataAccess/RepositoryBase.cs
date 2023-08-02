@@ -83,12 +83,19 @@ namespace LabBilling.Core.DataAccess
             table.mod_prg = RFClassLibrary.OS.GetAppName();
             table.mod_user = Environment.UserName.ToString();
             table.rowguid = Guid.NewGuid();
+            try
+            {
+                object identity = dbConnection.Insert(table);
+                Log.Instance.Debug(dbConnection.LastSQL.ToString());
+                Log.Instance.Debug(dbConnection.LastArgs.ToString());
 
-            object identity = dbConnection.Insert(table);
-            Log.Instance.Debug(dbConnection.LastSQL.ToString());
-            Log.Instance.Debug(dbConnection.LastArgs.ToString());
-
-            return identity;
+                return identity;
+            }
+            catch(Exception ex)
+            {
+                Log.Instance.Error(ex, "Exception encountered in RepositoryBase.Add");
+                throw new ApplicationException("Exception encountered in RepositoryBase.Add", ex);
+            }
         }
 
         public virtual bool Update(TPoco table)
