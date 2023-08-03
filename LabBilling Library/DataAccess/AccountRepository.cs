@@ -10,6 +10,7 @@ using Log = LabBilling.Logging.Log;
 using System.Runtime.CompilerServices;
 using System.Security.Principal;
 using System.ServiceProcess;
+using System.ComponentModel.DataAnnotations;
 
 namespace LabBilling.Core.DataAccess
 {
@@ -67,10 +68,7 @@ namespace LabBilling.Core.DataAccess
             globalBillingCdmRepository = new GlobalBillingCdmRepository(appEnvironment);
         }
 
-        public async Task<Account> GetByAccountAsync(string account, bool demographicsOnly = false)
-        {
-            return await Task.Run(() => GetByAccount(account, demographicsOnly));
-        }
+        public async Task<Account> GetByAccountAsync(string account, bool demographicsOnly = false) => await Task.Run(() => GetByAccount(account, demographicsOnly));        
 
         public Account GetByAccount(string account, bool demographicsOnly = false)
         {
@@ -192,6 +190,8 @@ namespace LabBilling.Core.DataAccess
             return record;
         }
 
+        public async Task<object> AddAsync(Account table) => await Task.Run(() => Add(table));        
+
         public override object Add(Account table)
         {
             Log.Instance.Trace($"Entering - account {table.AccountNo}");
@@ -225,6 +225,8 @@ namespace LabBilling.Core.DataAccess
             return table;
         }
 
+        public async Task AddAccountAsync(Account acc) => await Task.Run(() => AddAccount(acc));
+
         public void AddAccount(Account acc)
         {
             Log.Instance.Trace($"Entering - account {acc.AccountNo}");
@@ -236,6 +238,8 @@ namespace LabBilling.Core.DataAccess
             this.Add(acc);
         }
 
+        public async Task<IEnumerable<InvoiceSelect>> GetInvoiceAccountsAsync(string clientMnem, DateTime thruDate) => await Task.Run(() => GetInvoiceAccounts(clientMnem, thruDate));
+
         public IEnumerable<InvoiceSelect> GetInvoiceAccounts(string clientMnem, DateTime thruDate)
         {
             Log.Instance.Trace($"Entering - client {clientMnem} thruDate {thruDate}");
@@ -245,6 +249,9 @@ namespace LabBilling.Core.DataAccess
                 new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = clientMnem },
                 new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = thruDate });
         }
+
+        public async Task<IEnumerable<ClaimItem>> GetAccountsForClaimsAsync(ClaimType claimType, int maxClaims = 0) => await Task.Run(() => GetAccountsForClaims(claimType, maxClaims));
+        
 
         public IEnumerable<ClaimItem> GetAccountsForClaims(ClaimType claimType, int maxClaims = 0)
         {
@@ -303,6 +310,8 @@ namespace LabBilling.Core.DataAccess
             Professional
         }
 
+        public async Task<bool> UpdateAsync(Account table) => await Task.Run(() => Update(table));
+        
         public override bool Update(Account table)
         {
             Log.Instance.Trace($"Entering - account {table.AccountNo}");
@@ -318,6 +327,8 @@ namespace LabBilling.Core.DataAccess
             return base.Update(table);
         }
 
+        public async Task<bool> UpdateAsync(Account table, IEnumerable<string> columns) => await Task.Run(() => Update(table, columns));
+
         public override bool Update(Account table, IEnumerable<string> columns)
         {
             Log.Instance.Trace($"Entering - account {table.AccountNo}");
@@ -329,6 +340,8 @@ namespace LabBilling.Core.DataAccess
             Log.Instance.Trace($"Exiting");
             return base.Update(table, columns);
         }
+
+        public async Task<bool> SetNoteAlertAsync(string account, bool showAlert) => await Task.Run(() => SetNoteAlert(account, showAlert));
 
         public bool SetNoteAlert(string account, bool showAlert)
         {
@@ -367,6 +380,8 @@ namespace LabBilling.Core.DataAccess
             return true;
         }
 
+        public async Task<bool> UpdateDiagnosesAsync(Account acc) => await Task.Run(() => UpdateDiagnoses(acc));
+
         public bool UpdateDiagnoses(Account acc)
         {
             Log.Instance.Trace("Entering");
@@ -381,6 +396,8 @@ namespace LabBilling.Core.DataAccess
             }
             return false;
         }
+
+        public async Task<int> UpdateStatusAsync(string accountNo, string status) => await Task.Run(() => UpdateStatus(accountNo, status));
 
         public int UpdateStatus(string accountNo, string status)
         {
@@ -401,6 +418,8 @@ namespace LabBilling.Core.DataAccess
                 new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = Environment.MachineName },
                 new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = accountNo });
         }
+
+        public async Task<bool> InsuranceSwapAsync(string accountNo, InsCoverage swap1, InsCoverage swap2) => await Task.Run(() => InsuranceSwap(accountNo, swap1, swap2));
 
         public bool InsuranceSwap(string accountNo, InsCoverage swap1, InsCoverage swap2)
         {
@@ -452,7 +471,9 @@ namespace LabBilling.Core.DataAccess
 
         }
 
-        public bool ChangeDateOfService(ref Account table, DateTime newDate, string reason_comment)
+        public async Task<bool> ChangeDateOfServiceAsync(Account table, DateTime newDate, string reason_comment) => await Task.Run(() => ChangeDateOfService(table, newDate, reason_comment));
+
+        public bool ChangeDateOfService(Account table, DateTime newDate, string reason_comment)
         {
             Log.Instance.Trace($"Entering - account {table.AccountNo} new date {newDate} reason {reason_comment}");
 
@@ -502,6 +523,8 @@ namespace LabBilling.Core.DataAccess
 
         }
 
+        public async Task<bool> AddNoteAsync(string account, string noteText) => await Task.Run(() => AddNote(account, noteText));
+
         public bool AddNote(string account, string noteText)
         {
             Log.Instance.Trace($"Entering - account {account} note {noteText}");
@@ -535,6 +558,8 @@ namespace LabBilling.Core.DataAccess
             return addSuccess;
         }
 
+        public async Task<bool> ChangeFinancialClassAsync(string account, string newFinCode) => await Task.Run(() =>  ChangeFinancialClass(account, newFinCode));
+
         public bool ChangeFinancialClass(string account, string newFinCode)
         {
             Log.Instance.Trace($"Entering - Account {account} New Fin {newFinCode}");
@@ -547,12 +572,14 @@ namespace LabBilling.Core.DataAccess
             var record = GetByAccount(account);
 
             if (record != null)
-                return ChangeFinancialClass(ref record, newFinCode);
+                return ChangeFinancialClass(record, newFinCode);
             else
                 return false;
         }
 
-        public bool ChangeFinancialClass(ref Account table, string newFinCode)
+        public async Task<bool> ChangeFinancialClassAsync(Account table, string newFinCode) => await Task.Run(() => ChangeFinancialClass(table, newFinCode));
+
+        public bool ChangeFinancialClass(Account table, string newFinCode)
         {
             Log.Instance.Trace($"Entering - account {table.AccountNo} new fin {newFinCode}");
             if (table == null)
@@ -618,7 +645,9 @@ namespace LabBilling.Core.DataAccess
             return updateSuccess;
         }
 
-        public bool ChangeClient(ref Account table, string newClientMnem)
+        public async Task<bool> ChangeClientAsync(Account table, string newClientMnem) => await Task.Run(() => ChangeClient(table, newClientMnem));
+
+        public bool ChangeClient(Account table, string newClientMnem)
         {
             Log.Instance.Trace($"Entering - account {table.AccountNo} new client {newClientMnem}");
             if (table == null)
@@ -736,6 +765,7 @@ namespace LabBilling.Core.DataAccess
             public decimal Quantity { get; set; }
         }
 
+        public async Task<int> ReprocessChargesAsync(Account account, string comment) => await Task.Run(() => ReprocessCharges(account, comment));
 
         /// <summary>
         /// 
@@ -778,6 +808,8 @@ namespace LabBilling.Core.DataAccess
             return 0;
         }
 
+        public async Task<int> ReprocessChargesAsync(string account, string comment) => await Task.Run(() => ReprocessCharges(account, comment));
+
         /// <summary>
         /// 
         /// </summary>
@@ -801,6 +833,8 @@ namespace LabBilling.Core.DataAccess
 
             return ReprocessCharges(acc, comment);
         }
+
+        public async Task<bool> UpdateChargesFinCodeAsync(string account, string finCode) => await Task.Run(() => UpdateChargesFinCode(account, finCode));
 
         public bool UpdateChargesFinCode(string account, string finCode)
         {
@@ -835,6 +869,8 @@ namespace LabBilling.Core.DataAccess
             return true;
         }
 
+        public async Task<bool> UpdateChargesClientAsync(string account, string clientMnem) => await Task.Run(() => UpdateChargesClient(account, clientMnem));
+
         public bool UpdateChargesClient(string account, string clientMnem)
         {
             Log.Instance.Trace("Entering");
@@ -857,6 +893,9 @@ namespace LabBilling.Core.DataAccess
             return true;
         }
 
+        public async Task<int> AddChargeAsync(string account, string cdm, int qty, DateTime serviceDate, string comment = null, string refNumber = null) 
+            => await Task.Run(() => AddCharge(account, cdm, qty, serviceDate, comment, refNumber));
+
         public int AddCharge(string account, string cdm, int qty, DateTime serviceDate, string comment = null, string refNumber = null)
         {
             Log.Instance.Trace($"Entering - account {account} cdm {cdm}");
@@ -871,6 +910,10 @@ namespace LabBilling.Core.DataAccess
 
             return AddCharge(accData, cdm, qty, serviceDate, comment, refNumber);
         }
+
+
+        public async Task<int> AddChargeAsync(Account accData, string cdm, int qty, DateTime serviceDate, string comment = null, string refNumber = null)
+            => await Task.Run(() => AddCharge(accData, cdm, qty, serviceDate, comment, refNumber));
 
         /// <summary>
         /// Add a charge to an account. The account must exist.
@@ -1085,6 +1128,8 @@ namespace LabBilling.Core.DataAccess
 
         }
 
+        public async Task UnbundlePanelsAsync(Account account) => await Task.Run(() => UnbundlePanels(account));
+
         public void UnbundlePanels(Account account)
         {
             var bundledProfiles = account.Charges.Where(x => x.CDMCode == "MCL0029" && x.IsCredited == false);
@@ -1128,6 +1173,8 @@ namespace LabBilling.Core.DataAccess
             }
 
         }
+
+        public async Task BundlePanelsAsync(Account account) => await Task.Run(() => BundlePanels(account));
 
         public void BundlePanels(Account account)
         {
@@ -1187,13 +1234,15 @@ namespace LabBilling.Core.DataAccess
             }
         }
 
+        public async Task<bool> ValidateAsync(Account account, bool reprint = false) => await Task.Run(() => Validate(account, reprint));
+
         /// <summary>
         /// Runs all validation routines on account. Updates validation status and account flags. Errors are stored in the validation status table.
         /// </summary>
         /// <param name="account"></param>
         /// <param name="reprint">Set true if validating account to resubmit the claim with no changes.</param>
         /// <returns>True if account is valid for billing, false if there are validation errors.</returns>
-        public bool Validate(ref Account account, bool reprint = false)
+        public bool Validate(Account account, bool reprint = false)
         {
             Log.Instance.Trace($"Entering - account {account}");
 
@@ -1304,6 +1353,8 @@ namespace LabBilling.Core.DataAccess
             return false;
         }
 
+        private async Task<List<string>> ValidateLMRPAsync(Account account) => await Task.Run(() => ValidateLMRP(account));
+
         private List<string> ValidateLMRP(Account account)
         {
             Log.Instance.Trace($"Entering - account {account}");
@@ -1375,7 +1426,7 @@ namespace LabBilling.Core.DataAccess
                 try
                 {
                     var accountRecord = this.GetByAccount(account.Account);
-                    this.Validate(ref accountRecord);
+                    this.Validate(accountRecord);
                 }
                 catch (Exception e)
                 {
@@ -1384,40 +1435,7 @@ namespace LabBilling.Core.DataAccess
             }
         }
 
-        public async Task ValidateUnbilledAccountsAsync()
-        {
-            Log.Instance.Trace($"Entering");
-
-            DateTime thruDate = _appEnvironment.ApplicationParameters.SSIBillThruDate;
-
-            (string propertyName, AccountSearchRepository.operation oper, string searchText)[] parameters = {
-                (nameof(AccountSearch.ServiceDate), AccountSearchRepository.operation.LessThanOrEqual, thruDate.ToString()),
-                (nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, AccountStatus.PaidOut),
-                (nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, AccountStatus.Closed),
-                (nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, AccountStatus.ProfSubmitted),
-                (nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, AccountStatus.InstSubmitted),
-                (nameof(AccountSearch.FinCode), AccountSearchRepository.operation.NotEqual, "CLIENT"),
-                (nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, AccountStatus.Hold)
-            };
-
-            AccountSearchRepository accountSearchRepository = new AccountSearchRepository(_appEnvironment);
-
-            var accounts = await Task.Run(() => accountSearchRepository.GetBySearch(parameters).ToList());
-
-            foreach (var account in accounts)
-            {
-                try
-                {
-                    var accountRecord = this.GetByAccount(account.Account);
-                    this.Validate(ref accountRecord);
-                }
-                catch (Exception e)
-                {
-                    Log.Instance.Error(e, "Error during account validation job.");
-                }
-            }
-
-        }
+        public async Task ValidateUnbilledAccountsAsync() => await Task.Run(() => ValidateUnbilledAccounts());
 
         /// <summary>
         /// Move all charges between accounts. Credits the charges from sourceAccount and charges them on destinationAccount.
@@ -1450,6 +1468,8 @@ namespace LabBilling.Core.DataAccess
             return (true, string.Empty);
         }
 
+        public async Task MoveChargeAsync(string sourceAccount, string destinationAccount, int chrgId) => await Task.Run(() => MoveCharge(sourceAccount, destinationAccount, chrgId));
+
         /// <summary>
         /// Moves a single charge from sourceAccount to destinationAccount
         /// </summary>
@@ -1477,6 +1497,9 @@ namespace LabBilling.Core.DataAccess
             AddCharge(destinationAccount, charge.CDMCode, charge.Quantity, destination.TransactionDate, $"Moved from {sourceAccount}", charge.ReferenceReq);
 
         }
+
+
+        public async Task ClearClaimStatusAsync(Account account) => await Task.Run(() => ClearClaimStatus(account));
 
         /// <summary>
         /// Clears all claim flags so account will be picked up in next claim batch

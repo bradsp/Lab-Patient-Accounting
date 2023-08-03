@@ -346,7 +346,7 @@ namespace LabBilling.Core.BusinessLogic
                 return null;
             }
 
-            if(!accountRepository.Validate(ref accountModel, reprint))
+            if(!accountRepository.Validate(accountModel, reprint))
             {
                 return null;
             }
