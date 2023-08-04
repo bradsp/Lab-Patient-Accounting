@@ -322,6 +322,7 @@ namespace LabBilling.Core.BusinessLogic
             billingActivity.InsuranceCode = claim.claimAccount.Insurances[0].InsCode;
             billingActivity.InsComplete = DateTime.MinValue;
             billingActivity.TransactionDate = claim.claimAccount.TransactionDate;
+            billingActivity.ClaimAmount = claim.TotalChargeAmount;
             billingActivity.RunUser = OS.GetUserName();
             billingActivity.Text = claimx12;
 
@@ -345,7 +346,7 @@ namespace LabBilling.Core.BusinessLogic
                 return null;
             }
 
-            if(!accountRepository.Validate(ref accountModel, reprint))
+            if(!accountRepository.Validate(accountModel, reprint))
             {
                 return null;
             }

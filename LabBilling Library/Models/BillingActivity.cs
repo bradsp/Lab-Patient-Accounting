@@ -56,7 +56,10 @@ namespace LabBilling.Core.Models
 
         [Column("ins_complete")]
         public DateTime? InsComplete { get; set; }
-        
+
+        [Column("claim_amount")]
+        public double ClaimAmount { get; set; }
+
         public DateTime mod_date { get; set; }
         public string mod_user { get; set; }
         public string mod_prg { get; set; }

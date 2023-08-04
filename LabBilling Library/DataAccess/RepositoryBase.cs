@@ -88,7 +88,13 @@ namespace LabBilling.Core.DataAccess
             Log.Instance.Debug(dbConnection.LastSQL.ToString());
             Log.Instance.Debug(dbConnection.LastArgs.ToString());
 
-            return identity;
+                return identity;
+            }
+            catch(Exception ex)
+            {
+                Log.Instance.Error(ex, "Exception encountered in RepositoryBase.Add");
+                throw new ApplicationException("Exception encountered in RepositoryBase.Add", ex);
+            }
         }
 
         public virtual bool Update(TPoco table)

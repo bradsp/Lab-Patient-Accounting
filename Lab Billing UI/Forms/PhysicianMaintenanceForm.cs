@@ -2,14 +2,10 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using LabBilling.Core.DataAccess;
 using LabBilling.Core.Models;
-using LabBilling.Core;
 using LabBilling.Logging;
 using MicroRuleEngine;
 
@@ -69,8 +65,6 @@ namespace LabBilling.Forms
             PhysicianDGV.Columns[nameof(Phy.ClientMnem)].DisplayIndex = z++;
             PhysicianDGV.Columns[nameof(Phy.LISMnem)].DisplayIndex = z++;
 
-
-
             PhysicianDGV.AutoResizeColumns();
 
         }
@@ -109,6 +103,10 @@ namespace LabBilling.Forms
 
         private void buttonSearch_Click(object sender, EventArgs e)
         {
+            bindingList.Clear();
+            PhysicianDGV.DataSource = null;
+            PhysicianDGV.Refresh();
+
             if(string.IsNullOrEmpty(searchText.Text))
             {
                 MessageBox.Show("Please enter a search term");
@@ -117,8 +115,7 @@ namespace LabBilling.Forms
 
             physicians = phydb.GetByName(searchText.Text, "").ToList();
             bindingList.AddRange(physicians);
-            bindingSource.DataSource = bindingList;
-            PhysicianDGV.DataSource = bindingSource;
+            PhysicianDGV.DataSource = bindingList;
             LoadProviderGrid();
         }
 
@@ -134,10 +131,7 @@ namespace LabBilling.Forms
                 try
                 {
                     phydb.Save(editForm.PhyModel);
-                    //DataRow updated = physicians.AsEnumerable().Where(p => (double)p[nameof(Phy.uri)] == editForm.PhyModel.uri).First();
-                    var edited = bindingList.Where(p => p.uri == editForm.PhyModel.uri).First();
-                    edited = editForm.PhyModel;
-                    PhysicianDGV.Refresh();
+                    buttonSearch_Click(sender, e);
                 }
                 catch(Exception ex)
                 {

@@ -111,7 +111,7 @@ namespace LabBilling.Core.Models
         public double TotalPaidSinceLastStatement { get; set; }
         [Column("insurance_discount")]
         public double InsuranceDiscount { get; set; }
-        [Column("contact text")]
+        [Column("contact_text")]
         public string ContactText { get; set; }
         [Column("transmission_dt_tm")]
         public string TransmissionDateTime { get; set; }

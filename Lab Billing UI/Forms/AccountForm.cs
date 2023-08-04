@@ -226,7 +226,6 @@ namespace LabBilling.Forms
                 Log.Instance.Debug($"Loading account data for {SelectedAccount}");
                 userProfileDB.InsertRecentAccount(SelectedAccount, Program.LoggedInUser.UserName);
                 AccountOpenedEvent?.Invoke(this, SelectedAccount);
-                //LoadAccountData();
 
                 AddOnChangeHandlerToInputControls(tabDemographics);
                 AddOnChangeHandlerToInputControls(tabGuarantor);
@@ -244,16 +243,12 @@ namespace LabBilling.Forms
             }
 
             removeModifierToolStripMenuItem.Click += new EventHandler(RemoveModifier_Click);
-
-
-            //UpdateDxPointersButton.Enabled = false; // start disabled until a box has been checked.
         }
 
         private void SetFormPermissions()
         {
             Helper.SetControlsAccess(tabCharges.Controls, false);
             Helper.SetControlsAccess(chargeLayoutPanel.Controls, false);
-            //if (systemParametersRepository.GetByKey("allow_chrg_entry") == "1")
             if (Program.AppEnvironment.ApplicationParameters.AllowChargeEntry)
             {
                 Helper.SetControlsAccess(tabCharges.Controls, Program.LoggedInUser.CanSubmitCharges);
@@ -261,25 +256,20 @@ namespace LabBilling.Forms
             }
 
             Helper.SetControlsAccess(tabPayments.Controls, false);
-            //if (systemParametersRepository.GetByKey("allow_chk_entry") == "1")
-            if (Program.AppEnvironment.ApplicationParameters.AllowPaymentAdjustmentEntry)
+            if(Program.AppEnvironment.ApplicationParameters.AllowPaymentAdjustmentEntry)
             {
                 Helper.SetControlsAccess(tabPayments.Controls, Program.LoggedInUser.CanAddAdjustments);
             }
 
-            //Helper.SetControlsAccess(DemographicsTabLayoutPanel.Controls, false);
             Helper.SetControlsAccess(tabDemographics.Controls, false);
             Helper.SetControlsAccess(tabInsurance.Controls, false);
             Helper.SetControlsAccess(insTabLayoutPanel.Controls, false);
             Helper.SetControlsAccess(tabDiagnosis.Controls, false);
             Helper.SetControlsAccess(tabGuarantor.Controls, false);
             Helper.SetControlsAccess(tabNotes.Controls, false);
-            //Helper.SetControlsAccess(tabCharges.Controls, false);
-            //Helper.SetControlsAccess(tabPayments.Controls, false);
             AddChargeButton.Visible = false;
             AddPaymentButton.Visible = false;
             SaveInsuranceButton.Visible = false;
-            //SaveDxButton.Visible = false;
             SaveDemographics.Visible = false;
             GuarCopyPatientLink.Visible = false;
             InsCopyPatientLink.Visible = false;
@@ -290,7 +280,7 @@ namespace LabBilling.Forms
             ValidateAccountButton.Visible = false;
             GenerateClaimButton.Visible = false;
             //if (Convert.ToBoolean(systemParametersRepository.GetByKey("allow_edit")))
-            if (Program.AppEnvironment.ApplicationParameters.AllowEditing)
+            if(Program.AppEnvironment.ApplicationParameters.AllowEditing)
             {
                 if (Program.LoggedInUser.Access == "ENTER/EDIT")
                 {
@@ -305,9 +295,7 @@ namespace LabBilling.Forms
                     Helper.SetControlsAccess(tabPayments.Controls, true);
                     AddChargeButton.Visible = Program.LoggedInUser.CanSubmitCharges;
                     AddPaymentButton.Visible = Program.LoggedInUser.CanAddAdjustments;
-                    //UpdateDxPointersButton.Visible = true;
                     SaveInsuranceButton.Visible = true;
-                    //SaveDxButton.Visible = true;
                     SaveDemographics.Visible = true;
                     GuarCopyPatientLink.Visible = true;
                     InsCopyPatientLink.Visible = true;
@@ -327,19 +315,19 @@ namespace LabBilling.Forms
             Log.Instance.Trace($"Entering");
         }
 
-        private void RefreshButton_Click(object sender, EventArgs e)
+        private async void RefreshButton_Click(object sender, EventArgs e)
         {
             Log.Instance.Trace($"Entering");
-            LoadAccountData();
+            await LoadAccountData();
         }
 
         /// <summary>
         /// Loads account object from database and refreshes the form controls.
         /// </summary>
-        private void LoadAccountData()
+        private async Task LoadAccountData()
         {
             Log.Instance.Trace($"Entering");
-            currentAccount = accountRepository.GetByAccount(SelectedAccount);
+            currentAccount = await accountRepository.GetByAccountAsync(SelectedAccount);
 
             generateClientStatementToolStripMenuItem.Enabled = currentAccount.FinCode == "CLIENT";
 
@@ -353,7 +341,7 @@ namespace LabBilling.Forms
                 //MessageBox.Show("Account is flagged ready to bill, or has been billed. Any changes can affect the claim.");
             }
 
-            if (currentAccount.Status == AccountStatus.Hold)
+            if(currentAccount.Status == AccountStatus.Hold)
             {
                 clearHoldStatusToolStripMenuItem.Text = clearHoldMenuText;
             }
@@ -712,10 +700,8 @@ namespace LabBilling.Forms
                 InsuranceDataGrid.ClearSelection();
             }
             SetInsDataEntryAccess(false);
-            //insAddMode = false;
             AddInsuranceButton.Enabled = true;
             SaveInsuranceButton.Enabled = false;
-
         }
 
         private void SaveInsuranceButton_Click(object sender, EventArgs e)
@@ -1126,7 +1112,6 @@ namespace LabBilling.Forms
             foreach (var (client, balance) in currentAccount.ClientBalance)
             {
                 chargeBalRichTextbox.SelectionFont = new Font(chargeBalRichTextbox.Font.FontFamily, 10, FontStyle.Bold);
-                //chargeBalRichTextbox.AppendText($"Client {client} Balance\n");
                 chargeBalRichTextbox.SelectedText = $"Client {client} Balance\n";
                 chargeBalRichTextbox.AppendText(balance.ToString("c") + "\n");
             }
@@ -1321,7 +1306,7 @@ namespace LabBilling.Forms
             TotalPmtAllTextBox.Text = (currentAccount.TotalPayments + currentAccount.TotalContractual + currentAccount.TotalWriteOff).ToString("c");
 
             if ((currentAccount.Fin.FinClass == "C" && currentAccount.FinCode != "CLIENT") ||
-                currentAccount.Status == "CLOSED")
+                currentAccount.Status == AccountStatus.Closed)
             {
                 AddPaymentButton.Enabled = false;
                 Label addPaymentStatusLabel = new Label();
@@ -1896,7 +1881,6 @@ namespace LabBilling.Forms
             BillActivityDataGrid.Columns[nameof(BillingActivity.Text)].Visible = false;
 
             BillActivityDataGrid.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
-            //BillActivityDataGrid.Columns[nameof(BillingActivity.PatientName)].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
 
             ValidationResultsTextBox.Text = currentAccount.AccountValidationStatus.validation_text;
             LastValidatedLabel.Text = currentAccount.AccountValidationStatus.mod_date.ToString("G");
@@ -1924,7 +1908,7 @@ namespace LabBilling.Forms
         #endregion
 
 
-        private void PersonSearchToolStripMenuItem_Click(object sender, EventArgs e)
+        private async void PersonSearchToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Log.Instance.Trace($"Entering");
             PersonSearchForm frm = new PersonSearchForm();
@@ -1932,7 +1916,7 @@ namespace LabBilling.Forms
             if (frm.SelectedAccount != "" && frm.SelectedAccount != null)
             {
                 _selectedAccount = frm.SelectedAccount;
-                LoadAccountData();
+                await LoadAccountData();
             }
             else
             {
@@ -1949,7 +1933,7 @@ namespace LabBilling.Forms
             {
                 if (result.newDate != DateTime.MinValue)
                 {
-                    accountRepository.ChangeDateOfService(ref currentAccount, result.newDate, result.reason);
+                    accountRepository.ChangeDateOfService(currentAccount, result.newDate, result.reason);
                 }
                 else
                 {
@@ -1972,7 +1956,7 @@ namespace LabBilling.Forms
             Log.Instance.Trace($"Exiting");
         }
 
-        private void ChangeFinancialClassToolStripMenuItem_Click(object sender, EventArgs e)
+        private async void ChangeFinancialClassToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Log.Instance.Trace($"Entering");
 
@@ -1981,7 +1965,7 @@ namespace LabBilling.Forms
             {
                 try
                 {
-                    accountRepository.ChangeFinancialClass(ref currentAccount, newFinCode);
+                    accountRepository.ChangeFinancialClass(currentAccount, newFinCode);
                 }
                 catch (ArgumentException anex)
                 {
@@ -1994,11 +1978,11 @@ namespace LabBilling.Forms
                     MessageBox.Show(this, $"Error changing financial class. Financial code was not changed.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
 
-                LoadAccountData();
+                await LoadAccountData();
             }
         }
 
-        private void ChangeClientToolStripMenuItem_Click(object sender, EventArgs e)
+        private async void ChangeClientToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Log.Instance.Trace($"Entering");
 
@@ -2012,9 +1996,9 @@ namespace LabBilling.Forms
 
                 try
                 {
-                    if (accountRepository.ChangeClient(ref currentAccount, newClient))
+                    if (accountRepository.ChangeClient(currentAccount, newClient))
                     {
-                        LoadAccountData();
+                        await LoadAccountData();
                     }
                     else
                     {
@@ -2075,7 +2059,7 @@ namespace LabBilling.Forms
 
         }
 
-        private void ClearHoldStatusToolStripMenuItem_Click(object sender, EventArgs e)
+        private async void ClearHoldStatusToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Log.Instance.Trace($"Entering");
 
@@ -2113,7 +2097,7 @@ namespace LabBilling.Forms
                 accountRepository.UpdateStatus(currentAccount.AccountNo, AccountStatus.Hold);
             }
 
-            LoadAccountData();
+            await LoadAccountData();
 
         }
 
@@ -2134,8 +2118,8 @@ namespace LabBilling.Forms
         {
             try
             {
-                LoadAccountData();
-                if (!await Task.Run(() => accountRepository.Validate(ref currentAccount)))
+                await LoadAccountData();
+                if (!await Task.Run(() => accountRepository.Validate(currentAccount)))
                 {
                     //has validation errors - do not bill
                     ValidationResultsTextBox.Text = currentAccount.AccountValidationStatus.validation_text;
@@ -2147,7 +2131,7 @@ namespace LabBilling.Forms
                     ValidationResultsTextBox.Text = "No validation errors.";
                     LastValidatedLabel.Text = currentAccount.AccountValidationStatus.mod_date.ToString("G");
                 }
-                LoadAccountData();
+                await LoadAccountData();
             }
             catch (Exception ex)
             {
@@ -2164,59 +2148,6 @@ namespace LabBilling.Forms
 
         private void BillActivityDataGrid_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            return;
-            /*
-            DataGridView dgv = (DataGridView)sender;
-
-            // Use HitTest to resolve the row under the cursor
-            int rowIndex = dgv.HitTest(e.X, e.Y).RowIndex;
-
-            // If there was no DataGridViewRow under the cursor, return
-            if (rowIndex == -1) { return; }
-
-            // Clear all other selections before making a new selection
-            dgv.ClearSelection();
-
-            // Select the found DataGridViewRow
-            dgv.Rows[rowIndex].Selected = true;
-
-            var claimJson = dgv[nameof(BillingActivity.Text), rowIndex].Value.ToString();
-            ClaimData claim;
-            try
-            {
-                claim = Newtonsoft.Json.JsonConvert.DeserializeObject<ClaimData>(claimJson);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Claim data is not in json format.");
-                Log.Instance.Error(ex);
-
-                return;
-            }
-
-            Billing837 billing837 = new Billing837(Helper.ConnVal, systemParametersRepository.GetProductionEnvironment());
-
-            string fileLocation;
-
-            switch (claim.ClaimType)
-            {
-                case ClaimType.Institutional:
-                    fileLocation = systemParametersRepository.GetByKey("claim_837i_file_location");
-                    break;
-                case ClaimType.Professional:
-                    fileLocation = systemParametersRepository.GetByKey("claim_837p_file_location");
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException("ClaimType is not defined.");
-            }
-
-            //PrintClaimForm printClaim = new PrintClaimForm(Helper.ConnVal);
-
-            //string x12Text = billing837.GenerateSingleClaim(claim, fileLocation);
-            //printClaim.Print(x12Text, false, true);
-
-            //printClaim.PrintForm(claim);
-            */
         }
 
         private void tabControl1_Selected(object sender, TabControlEventArgs e)
@@ -2258,7 +2189,7 @@ namespace LabBilling.Forms
             GuarantorRelationComboBox.SelectedValue = "01";
         }
 
-        private void GuarantorSaveButton_Click(object sender, EventArgs e)
+        private async void GuarantorSaveButton_Click(object sender, EventArgs e)
         {
             Log.Instance.Trace($"Entering");
 
@@ -2284,13 +2215,13 @@ namespace LabBilling.Forms
                 //set background back to white to indicate change has been saved to database
                 control.BackColor = Color.White;
             }
-            LoadAccountData();
+            await LoadAccountData();
         }
 
         #endregion
 
 
-        private void swapInsurancesToolStripMenuItem_Click(object sender, EventArgs e)
+        private async void swapInsurancesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             AskInsuranceSwapForm frm = new AskInsuranceSwapForm(ref currentAccount);
 
@@ -2299,7 +2230,7 @@ namespace LabBilling.Forms
                 try
                 {
                     accountRepository.InsuranceSwap(currentAccount.AccountNo, InsCoverage.Parse(frm.swap1), InsCoverage.Parse(frm.swap2));
-                    LoadAccountData();
+                    await LoadAccountData();
                 }
                 catch (Exception ex)
                 {
@@ -2313,15 +2244,13 @@ namespace LabBilling.Forms
 
         private void DiagnosisDataGrid_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
         {
-            //DiagnosisDataGrid.BackgroundColor = Color.Orange;
         }
 
         private void DiagnosisDataGrid_RowsRemoved(object sender, DataGridViewRowsRemovedEventArgs e)
         {
-            //DiagnosisDataGrid.BackgroundColor = Color.Orange;
         }
 
-        private void statementFlagComboBox_SelectionChangeCommitted(object sender, EventArgs e)
+        private async void statementFlagComboBox_SelectionChangeCommitted(object sender, EventArgs e)
         {
             if (currentAccount.Pat.StatementFlag != "N")
             {
@@ -2329,7 +2258,7 @@ namespace LabBilling.Forms
             }
 
             //validate account - if valid, change statement flag. Otherwise, show errors.
-            if (accountRepository.Validate(ref currentAccount, true))
+            if (accountRepository.Validate(currentAccount, true))
             {
                 accountRepository.AddNote(currentAccount.AccountNo, $"Statement flag changed from {currentAccount.Pat.StatementFlag} to {statementFlagComboBox.SelectedItem}");
 
@@ -2341,10 +2270,10 @@ namespace LabBilling.Forms
             {
                 MessageBox.Show("There are validation errors. Resolve before setting statement flag.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            LoadAccountData();
+            await LoadAccountData();
         }
 
-        private void moveChargeToolStripMenuItem_Click(object sender, EventArgs e)
+        private async void moveChargeToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Log.Instance.Trace($"Entering");
             int selectedRows = ChargesDataGrid.Rows.GetRowCount(DataGridViewElementStates.Selected);
@@ -2365,12 +2294,12 @@ namespace LabBilling.Forms
                         Log.Instance.Debug($"Moving charge {chrgId} from {currentAccount.AccountNo} to {destAccount}");
                         accountRepository.MoveCharge(currentAccount.AccountNo, destAccount, chrgId);
                     }
-                    LoadAccountData();
+                    await LoadAccountData();
                 }
             }
         }
 
-        private void moveAllChargesToolStripMenuItem_Click(object sender, EventArgs e)
+        private async void moveAllChargesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Log.Instance.Trace($"Entering");
             PersonSearchForm personSearch = new PersonSearchForm();
@@ -2389,7 +2318,7 @@ namespace LabBilling.Forms
                         MessageBox.Show(result.error, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
 
-                    LoadAccountData();
+                    await LoadAccountData();
                 }
             }
         }
@@ -2408,20 +2337,20 @@ namespace LabBilling.Forms
 
         }
 
-        private void AccountForm_Activated(object sender, EventArgs e)
+        private async void AccountForm_Activated(object sender, EventArgs e)
         {
-            LoadAccountData();
+            await LoadAccountData();
         }
 
-        private void readyToBillCheckbox_CheckedChanged(object sender, EventArgs e)
+        private async void readyToBillCheckbox_CheckedChanged(object sender, EventArgs e)
         {
             if (!billingTabLoading)
             {
                 currentAccount.ReadyToBill = readyToBillCheckbox.Checked;
                 accountRepository.UpdateStatus(currentAccount.AccountNo, currentAccount.Status);
                 accountRepository.AddNote(currentAccount.AccountNo, "Marked ready to bill.");
-                accountRepository.Validate(ref currentAccount);
-                LoadAccountData();
+                accountRepository.Validate(currentAccount);
+                await LoadAccountData();
             }
         }
 
@@ -2464,7 +2393,7 @@ namespace LabBilling.Forms
             frm.ShowDialog(this);
         }
 
-        private void clearClaimStatusButton_Click(object sender, EventArgs e)
+        private async void clearClaimStatusButton_Click(object sender, EventArgs e)
         {
 
             if (MessageBox.Show("Clearing the claim status may result in duplicate claim submissions. Ensure the claim has been deleted in the clearing house system.",
@@ -2472,7 +2401,7 @@ namespace LabBilling.Forms
             {
                 accountRepository.ClearClaimStatus(currentAccount);
 
-                LoadAccountData();
+                await LoadAccountData();
             }
         }
 
@@ -2523,7 +2452,7 @@ namespace LabBilling.Forms
         private void BannerAccountTextBox_Click(object sender, EventArgs e)
         {
             Clipboard.SetText(BannerAccountTextBox.Text);
-
+            
         }
 
         #region Charge Tree List View

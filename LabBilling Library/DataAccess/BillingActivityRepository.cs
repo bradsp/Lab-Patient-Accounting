@@ -26,6 +26,25 @@ namespace LabBilling.Core.DataAccess
             return record;
         }
 
+        public List<BillingActivity> GetByRunDate(DateTime fromDate, DateTime thruDate)
+        {
+            Log.Instance.Trace("Entering");
+
+            if(fromDate == DateTime.MinValue || thruDate == DateTime.MinValue)
+            {
+                throw new ArgumentOutOfRangeException();
+            }
+            if(fromDate > thruDate)
+            {
+                throw new ArgumentException("fromDate must be less than thruDate");
+            }
+
+            return dbConnection.Fetch<BillingActivity>($"where {GetRealColumn(nameof(BillingActivity.RunDate))} between @0 and @1",
+                new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = fromDate },
+                new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = thruDate });
+
+        }
+
         public List<BillingActivity> GetBatch(string batch)
         {
             Log.Instance.Debug("Entering");

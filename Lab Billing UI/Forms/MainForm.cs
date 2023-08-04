@@ -150,7 +150,7 @@ namespace LabBilling
             }
         }
 
-        private void MainForm_Load(object sender, EventArgs e)
+        private async void MainForm_Load(object sender, EventArgs e)
         {
             Log.Instance.Trace($"Entering");
 
@@ -195,7 +195,7 @@ namespace LabBilling
 
             foreach (UserProfile up in recentAccounts)
             {
-                var ar = accountRepository.GetByAccount(up.ParameterData, true);
+                var ar = await accountRepository.GetByAccountAsync(up.ParameterData, true);
                 if (ar != null)
                 {
                     LinkLabel a1 = new LinkLabel { Text = ar.PatFullName, Tag = up.ParameterData };
@@ -420,12 +420,6 @@ namespace LabBilling
             //string url = systemParametersRepository.GetByKey("report_portal_url");
             string url = Program.AppEnvironment.ApplicationParameters.ReportingPortalUrl;
             ReportingPortalForm frm = new ReportingPortalForm(url);
-
-            //frm.MdiParent = this;
-            //frm.AutoScroll = true;
-            //frm.WindowState = FormWindowState.Normal;
-            //frm.Show();
-            //return;
 
             if(url != "")
             {
@@ -856,57 +850,45 @@ namespace LabBilling
             Form activForm;
             activForm = Form.ActiveForm.ActiveMdiChild;
 
-            //string url = systemParametersRepository.GetByKey("documentation_site_url");
             string url = Program.AppEnvironment.ApplicationParameters.DocumentationSiteUrl;
             string topicPath = null;
             switch (activForm.Name)
             {
                 case nameof(WorkListForm):
-                    //topicPath = systemParametersRepository.GetByKey("worklist_url");
                     topicPath = Program.AppEnvironment.ApplicationParameters.WorklistUrl;
                     break;
                 case nameof(AccountForm):
-                    //topicPath = systemParametersRepository.GetByKey("account_management_url");
                     topicPath = Program.AppEnvironment.ApplicationParameters.AccountManagementUrl;
                     break;
                 case nameof(ChargeMasterMaintenance):
                 case nameof(ChargeMasterEditForm):
-                    //topicPath = systemParametersRepository.GetByKey("charge_master_maint_url");
                     topicPath = Program.AppEnvironment.ApplicationParameters.ChargeMasterMaintenanceUrl;
                     break;
                 case nameof(HealthPlanMaintenanceEditForm):
                 case nameof(HealthPlanMaintenanceForm):
-                    //topicPath = systemParametersRepository.GetByKey("ins_plan_maint_url");
                     topicPath = Program.AppEnvironment.ApplicationParameters.InsurancePlanMaintenanceUrl;
                     break;
                 case nameof(PhysicianMaintenanceForm):
-                    //topicPath = systemParametersRepository.GetByKey("phy_maint_url");
                     topicPath = Program.AppEnvironment.ApplicationParameters.PhysicianMaintenanceUrl;
                     break;
                 case nameof(ClientMaintenanceForm):
                 case nameof(ClientMaintenanceEditForm):
-                    //topicPath = systemParametersRepository.GetByKey("client_maint_url");
                     topicPath = Program.AppEnvironment.ApplicationParameters.ClientMaintenanceUrl;
                     break;
                 case nameof(BatchRemittance):
-                    //topicPath = systemParametersRepository.GetByKey("batch_remittance_url");
                     topicPath = Program.AppEnvironment.ApplicationParameters.BatchRemittanceUrl;
                     break;
                 case nameof(ClaimsManagementForm):
-                    //topicPath = systemParametersRepository.GetByKey("claims_management_url");
                     topicPath = Program.AppEnvironment.ApplicationParameters.ClaimsManagementUrl;
                     break;
                 case nameof(AccountChargeEntry):
-                    //topicPath = systemParametersRepository.GetByKey("account_charge_entry_url");
                     topicPath = Program.AppEnvironment.ApplicationParameters.AccountChargeEntryUrl;
                     break;
                 case nameof(ClientInvoiceForm):
-                    //topicPath = systemParametersRepository.GetByKey("client_invoicing_url");
                     topicPath = Program.AppEnvironment.ApplicationParameters.ClientInvoicingUrl;
                     break;
                 case nameof(PatientCollectionsForm):
                 case nameof(PatientCollectionsEditForm):
-                    //topicPath = systemParametersRepository.GetByKey("patient_collections_url");
                     topicPath = Program.AppEnvironment.ApplicationParameters.PatientCollectionsUrl;
                     break;
                 default:
@@ -927,10 +909,8 @@ namespace LabBilling
 
         private void latestUpdatesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            //string url = systemParametersRepository.GetByKey("documentation_site_url");
             string url = Program.AppEnvironment.ApplicationParameters.DocumentationSiteUrl;
             string topicPath = null;
-            //topicPath = systemParametersRepository.GetByKey("latest_updates_url");
             topicPath = Program.AppEnvironment.ApplicationParameters.LatestUpdatesUrl;
             if (!string.IsNullOrWhiteSpace(topicPath))
                 url += "/" + topicPath;

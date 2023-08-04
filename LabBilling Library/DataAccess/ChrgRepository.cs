@@ -43,7 +43,7 @@ namespace LabBilling.Core.DataAccess
             //load the cdm record
             CdmRepository cdmRepository = new CdmRepository(_appEnvironment);
             chrg.Cdm = cdmRepository.GetCdm(chrg.CDMCode);
-            Log.Instance.Debug($"{dbConnection.LastSQL} {dbConnection.LastArgs}");
+            Log.Instance.Debug($"{dbConnection.LastSQL} {dbConnection.GetArgs()}");
             return chrg;
         }
 
@@ -236,7 +236,7 @@ namespace LabBilling.Core.DataAccess
                     new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = "C" });
 
             List<InvoiceChargeView> results = dbConnection.Fetch<InvoiceChargeView>(sql);
-            Log.Instance.Debug($"{dbConnection.LastSQL} {dbConnection.LastArgs}");
+            Log.Instance.Debug($"{dbConnection.LastSQL} {dbConnection.GetArgs()}");
             return results;
 
         }
