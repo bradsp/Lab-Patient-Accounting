@@ -112,7 +112,7 @@ namespace LabBilling.Core.DataAccess
                 DateTime questEndDate = new DateTime(2020, 5, 31);
                 DateTime arbitraryEndDate = new DateTime(2016, 12, 31);
 
-                outpBillStartDate = _appEnvironment.ApplicationParameters.OutpatientBillStart;
+                outpBillStartDate = AppEnvironment.ApplicationParameters.OutpatientBillStart;
 
                 if (outpBillStartDate == DateTime.MinValue)
                 {
@@ -592,7 +592,7 @@ namespace LabBilling.Core.DataAccess
             string oldFinCode = table.FinCode;
 
             //check that newFincode is a valid fincode
-            FinRepository finRepository = new FinRepository(_appEnvironment);
+            FinRepository finRepository = new FinRepository(AppEnvironment);
 
             Fin newFin = finRepository.GetFin(newFinCode);
             Fin oldFin = finRepository.GetFin(oldFinCode);
@@ -661,7 +661,7 @@ namespace LabBilling.Core.DataAccess
 
             try
             {
-                ClientRepository clientRepository = new ClientRepository(_appEnvironment);
+                ClientRepository clientRepository = new ClientRepository(AppEnvironment);
                 Client oldClient = clientRepository.GetClient(oldClientMnem);
                 Client newClient = clientRepository.GetClient(newClientMnem);
 
@@ -859,8 +859,8 @@ namespace LabBilling.Core.DataAccess
                 return false;
 
             var chrgsToUpdate = chargeDetails.Where(x => x.IsCredited == false &&
-                (x.ClientMnem != _appEnvironment.ApplicationParameters.PathologyGroupClientMnem ||
-                string.IsNullOrEmpty(_appEnvironment.ApplicationParameters.PathologyGroupClientMnem))
+                (x.ClientMnem != AppEnvironment.ApplicationParameters.PathologyGroupClientMnem ||
+                string.IsNullOrEmpty(AppEnvironment.ApplicationParameters.PathologyGroupClientMnem))
                 && x.FinancialType == fin.FinClass).ToList();
 
             foreach (var chrg in chrgsToUpdate)
@@ -901,7 +901,20 @@ namespace LabBilling.Core.DataAccess
             return true;
         }
 
-        public int AddCharge(string account, string cdm, int qty, DateTime serviceDate, string comment = null, string refNumber = null)
+        public async Task<List<ChrgDetail>> AddChargeAsync(string account, string cdm, int qty, DateTime serviceDate, string comment = null, string refNumber = null)
+            => await Task.Run(() => AddCharge(account, cdm, serviceDate, comment, refNumber));
+
+        /// <summary>
+        /// Add a charge to an account. The account must exist.
+        /// </summary>
+        /// <param name="account">The account number.</param>
+        /// <param name="cdm">Cdm of the charge to add.</param>
+        /// <param name="serviceDate"></param>
+        /// <param name="comment"></param>
+        /// <param name="refNumber"></param>
+        /// <returns></returns>
+        /// <exception cref="AccountNotFoundException"></exception>
+        public List<ChrgDetail> AddCharge(string account, string cdm, DateTime? serviceDate = null, string comment = null, string refNumber = null)
         {
             Log.Instance.Trace($"Entering - account {account} cdm {cdm}");
 
@@ -916,9 +929,8 @@ namespace LabBilling.Core.DataAccess
             return AddCharge(accData, cdm, serviceDate, comment, refNumber);
         }
 
-
-        public async Task<int> AddChargeAsync(Account accData, string cdm, int qty, DateTime serviceDate, string comment = null, string refNumber = null)
-            => await Task.Run(() => AddCharge(accData, cdm, qty, serviceDate, comment, refNumber));
+        public async Task<List<ChrgDetail>> AddChargeAsync(Account accData, string cdm, DateTime serviceDate, string comment = null, string refNumber = null)
+            => await Task.Run(() => AddCharge(accData, cdm, serviceDate, comment, refNumber));
 
         /// <summary>
         /// Add a new charge to an account. The account must exist.
@@ -1022,7 +1034,7 @@ namespace LabBilling.Core.DataAccess
             Fin fin = finRepository.GetFin(accData.FinCode) ?? throw new ApplicationException($"No fincode on account {accData.AccountNo}");
             Client chargeClient = accData.Client;
 
-            if (_appEnvironment.ApplicationParameters.PathologyGroupBillsProfessional)
+            if (AppEnvironment.ApplicationParameters.PathologyGroupBillsProfessional)
             {
                 //check for global billing cdm - if it is, change client to Pathology Group, fin to Y, and get appropriate prices
                 var gb = globalBillingCdmRepository.GetCdm(chrg.CDMCode);
@@ -1030,7 +1042,7 @@ namespace LabBilling.Core.DataAccess
                 if (gb != null && accData.ClientMnem != pthExceptionClient)
                 {
                     fin = finRepository.GetFin("Y") ?? throw new ApplicationException($"Fin code Y not found error {accData.AccountNo}");
-                    chargeClient = clientRepository.GetClient(_appEnvironment.ApplicationParameters.PathologyGroupClientMnem);
+                    chargeClient = clientRepository.GetClient(AppEnvironment.ApplicationParameters.PathologyGroupClientMnem);
                 }
             }
 
@@ -1431,7 +1443,7 @@ namespace LabBilling.Core.DataAccess
         {
             Log.Instance.Trace($"Entering");
 
-            DateTime thruDate = _appEnvironment.ApplicationParameters.SSIBillThruDate;
+            DateTime thruDate = AppEnvironment.ApplicationParameters.SSIBillThruDate;
 
             (string propertyName, AccountSearchRepository.operation oper, string searchText)[] parameters = {
                 (nameof(AccountSearch.ServiceDate), AccountSearchRepository.operation.LessThanOrEqual, thruDate.ToString()),
@@ -1446,7 +1458,7 @@ namespace LabBilling.Core.DataAccess
                 (nameof(AccountSearch.FinCode), AccountSearchRepository.operation.NotEqual, "E")
             };
 
-            AccountSearchRepository accountSearchRepository = new AccountSearchRepository(_appEnvironment);
+            AccountSearchRepository accountSearchRepository = new AccountSearchRepository(AppEnvironment);
 
             var accounts = accountSearchRepository.GetBySearch(parameters).ToList();
 

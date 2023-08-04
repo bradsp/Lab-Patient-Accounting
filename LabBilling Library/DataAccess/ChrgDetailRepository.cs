@@ -21,7 +21,7 @@ namespace LabBilling.Core.DataAccess
             if (string.IsNullOrEmpty(accountNo))
                 throw new ArgumentNullException(nameof(accountNo));
 
-            RevenueCodeRepository revenueCodeRepository = new RevenueCodeRepository(_appEnvironment);
+            RevenueCodeRepository revenueCodeRepository = new RevenueCodeRepository(AppEnvironment);
 
             var sql = Sql.Builder
                 .From($"{_tableName}")
@@ -54,7 +54,7 @@ namespace LabBilling.Core.DataAccess
             if (string.IsNullOrEmpty(account))
                 throw new ArgumentNullException(nameof(account));
 
-            RevenueCodeRepository revenueCodeRepository = new RevenueCodeRepository(_appEnvironment);
+            RevenueCodeRepository revenueCodeRepository = new RevenueCodeRepository(AppEnvironment);
 
             var sql = Sql.Builder
                 .From($"{_tableName}")
@@ -101,10 +101,26 @@ namespace LabBilling.Core.DataAccess
 
         public override object Add(ChrgDetail table)
         {
-            Log.Instance.Trace("Entering");
-            var value = base.Add(table);
+            try
+            {
+                //ChrgDiagnosisPointerRepository chrgDiagnosisPointerRepository = new ChrgDiagnosisPointerRepository(AppEnvironment);
 
-            return value;
+                var value = base.Add(table);
+
+                //if (table.DiagnosisPointer != null)
+                //{
+                //    table.DiagnosisPointer.ChrgDetailUri = Convert.ToDouble(value);
+                //    chrgDiagnosisPointerRepository.Save(table.DiagnosisPointer);
+                //}
+
+                return value;
+            }
+            catch(Exception ex)
+            {
+                Log.Instance.Error(ex, "Exception encountered in ChrgDetail.Add");
+                throw new ApplicationException("Exception encountered in ChrgDetail.Add", ex);
+            }
+
         }
 
         public IEnumerable<ChrgDetail> GetByCharge(int chrg_num)
@@ -114,8 +130,8 @@ namespace LabBilling.Core.DataAccess
             if (chrg_num <= 0)
                 throw new ArgumentOutOfRangeException(nameof(chrg_num));
 
-            RevenueCodeRepository revenueCodeRepository = new RevenueCodeRepository(_appEnvironment);
-            ChrgDiagnosisPointerRepository chrgDiagnosisPointerRepository = new ChrgDiagnosisPointerRepository(_appEnvironment);
+            RevenueCodeRepository revenueCodeRepository = new RevenueCodeRepository(AppEnvironment);
+            ChrgDiagnosisPointerRepository chrgDiagnosisPointerRepository = new ChrgDiagnosisPointerRepository(AppEnvironment);
             var sql = PetaPoco.Sql.Builder
                 .From($"{_tableName}")
                 .Where($"{_tableName}.{this.GetRealColumn(nameof(ChrgDetail.ChrgNo))} = @0", new SqlParameter() { SqlDbType = SqlDbType.Decimal, Value = chrg_num });
@@ -139,6 +155,7 @@ namespace LabBilling.Core.DataAccess
 
             if(string.IsNullOrEmpty(modifier))
                 throw new ArgumentNullException(nameof(modifier));
+
 
             var sql = PetaPoco.Sql.Builder
                 .From($"{_tableName}")

@@ -25,17 +25,17 @@ namespace LabBilling.Core.DataAccess
         /// Contains error messages as a result of actions.
         /// </summary>
         public string Errors { get; internal set; }
-        protected IAppEnvironment _appEnvironment { get; set; }
+        protected IAppEnvironment AppEnvironment { get; set; }
 
         public RepositoryBase(IAppEnvironment environment)
         {
             Log.Instance.Trace("Entering");
             if (!environment.EnvironmentValid)
                 throw new ApplicationException("AppEnvironment not valid.");
-            
-            _appEnvironment = environment;
+
+            AppEnvironment = environment;
             Initialize();
-            
+
         }
 
         private void Initialize()
@@ -43,7 +43,7 @@ namespace LabBilling.Core.DataAccess
             Log.Instance.Trace("Entering");
             _tableInfo = GetTableInfo(typeof(TPoco));
             _tableName = _tableInfo.TableName;
-            dbConnection = _appEnvironment.Database;
+            dbConnection = AppEnvironment.Database;
         }
 
         public virtual List<TPoco> GetAll()
@@ -83,19 +83,21 @@ namespace LabBilling.Core.DataAccess
             table.mod_prg = RFClassLibrary.OS.GetAppName();
             table.mod_user = Environment.UserName.ToString();
             //table.rowguid = Guid.NewGuid();
-
-            object identity = dbConnection.Insert(table);
-            Log.Instance.Debug(dbConnection.LastSQL.ToString());
-            Log.Instance.Debug(dbConnection.LastArgs.ToString());
+            try
+            {
+                object identity = dbConnection.Insert(table);
+                Log.Instance.Debug(dbConnection.LastSQL.ToString());
+                Log.Instance.Debug(dbConnection.LastArgs.ToString());
 
                 return identity;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Log.Instance.Error(ex, "Exception encountered in RepositoryBase.Add");
                 throw new ApplicationException("Exception encountered in RepositoryBase.Add", ex);
             }
         }
+
 
         public virtual bool Update(TPoco table)
         {
@@ -127,7 +129,7 @@ namespace LabBilling.Core.DataAccess
 
             foreach (string column in columns)
             {
-                if(!cColumns.Contains(column))
+                if (!cColumns.Contains(column))
                     cColumns.Add(GetRealColumn(column));
             }
 
@@ -135,7 +137,7 @@ namespace LabBilling.Core.DataAccess
             {
                 dbConnection.Update(table, cColumns);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Log.Instance.Debug(dbConnection.LastSQL.ToString());
                 Log.Instance.Debug(dbConnection.LastArgs.ToString());
@@ -144,7 +146,7 @@ namespace LabBilling.Core.DataAccess
 
             Log.Instance.Debug(dbConnection.LastSQL.ToString());
             Log.Instance.Debug(dbConnection.LastArgs.ToString());
-            return true;        
+            return true;
         }
 
         public virtual bool Save(TPoco table)
@@ -159,7 +161,7 @@ namespace LabBilling.Core.DataAccess
             {
                 dbConnection.Save(table);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Log.Instance.Error("Error saving account validation record to database.", ex);
                 return false;
@@ -204,9 +206,9 @@ namespace LabBilling.Core.DataAccess
                 return propertyName;
             else
             {
-                foreach(ColumnAttribute attribute in attributes)
+                foreach (ColumnAttribute attribute in attributes)
                 {
-                    if(attribute.GetType() != typeof(ResultColumnAttribute))
+                    if (attribute.GetType() != typeof(ResultColumnAttribute))
                     {
                         return attribute.Name;
                     }
@@ -254,6 +256,5 @@ namespace LabBilling.Core.DataAccess
 
             return null;
         }
-
     }
 }

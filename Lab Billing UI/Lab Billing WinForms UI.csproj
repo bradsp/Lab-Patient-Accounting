@@ -288,6 +288,12 @@
       <DependentUpon>ViewerHistoryForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Library\InputDialogs.cs" />
+    <Compile Include="UserControls\ChargeTreeListView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\ChargeTreeListView.Designer.cs">
+      <DependentUpon>ChargeTreeListView.cs</DependentUpon>
+    </Compile>
     <Compile Include="UserControls\CurrencyTextBox.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -582,6 +588,9 @@
     <EmbeddedResource Include="Legacy Forms\ViewerHistoryForm.resx">
       <DependentUpon>ViewerHistoryForm.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\ChargeTreeListView.resx">
+      <DependentUpon>ChargeTreeListView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UserControls\LabeledTextBox.resx">
       <DependentUpon>LabeledTextBox.cs</DependentUpon>

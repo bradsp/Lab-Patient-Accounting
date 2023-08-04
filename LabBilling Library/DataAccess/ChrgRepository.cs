@@ -41,7 +41,7 @@ namespace LabBilling.Core.DataAccess
             Chrg chrg = dbConnection.SingleOrDefault<Chrg>(sql);
 
             //load the cdm record
-            CdmRepository cdmRepository = new CdmRepository(_appEnvironment);
+            CdmRepository cdmRepository = new CdmRepository(AppEnvironment);
             chrg.Cdm = cdmRepository.GetCdm(chrg.CDMCode);
             Log.Instance.Debug($"{dbConnection.LastSQL} {dbConnection.GetArgs()}");
             return chrg;
@@ -68,8 +68,8 @@ namespace LabBilling.Core.DataAccess
 
             var results = dbConnection.Fetch<ChrgDetail>(sql);
 
-            CdmRepository cdmRepository = new CdmRepository(_appEnvironment);
-            RevenueCodeRepository revenueCodeRepository = new RevenueCodeRepository(_appEnvironment);
+            CdmRepository cdmRepository = new CdmRepository(AppEnvironment);
+            RevenueCodeRepository revenueCodeRepository = new RevenueCodeRepository(AppEnvironment);
 
             foreach(var chrg in results)
             {
@@ -130,8 +130,8 @@ namespace LabBilling.Core.DataAccess
 
             var result = dbConnection.Fetch<Chrg, ChrgDetail, Chrg>(new ChrgChrgDetailRelator().MapIt, sql);
 
-            CdmRepository cdmRepository = new CdmRepository(_appEnvironment);
-            RevenueCodeRepository revenueCodeRepository = new RevenueCodeRepository(_appEnvironment);
+            CdmRepository cdmRepository = new CdmRepository(AppEnvironment);
+            RevenueCodeRepository revenueCodeRepository = new RevenueCodeRepository(AppEnvironment);
             
             foreach(Chrg chrg in result)
             {

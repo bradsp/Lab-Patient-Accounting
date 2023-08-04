@@ -221,6 +221,7 @@ namespace LabBilling.Forms
 
             #endregion
 
+ 
             if (SelectedAccount != null || SelectedAccount != "")
             {
                 Log.Instance.Debug($"Loading account data for {SelectedAccount}");
@@ -329,6 +330,9 @@ namespace LabBilling.Forms
             Log.Instance.Trace($"Entering");
             currentAccount = await accountRepository.GetByAccountAsync(SelectedAccount);
 
+            chargeTreeListView1.Charges = currentAccount.Charges;
+            chargeTreeListView1.ChargeDetails = currentAccount.ChargeDetails;
+
             generateClientStatementToolStripMenuItem.Enabled = currentAccount.FinCode == "CLIENT";
 
             this.Text = $"{currentAccount.AccountNo} - {currentAccount.PatFullName}";
@@ -362,7 +366,6 @@ namespace LabBilling.Forms
             LoadDemographics();
             LoadInsuranceData();
             //LoadCharges();
-            LoadChargeTreeView();
             LoadPayments();
             LoadDx();
             LoadNotes();
@@ -592,7 +595,7 @@ namespace LabBilling.Forms
             InsRelationComboBox.SelectedValue = "01";
         }
 
-        private void SaveDemographics_Click(object sender, EventArgs e)
+        private async void SaveDemographics_Click(object sender, EventArgs e)
         {
             Log.Instance.Trace($"Entering");
 
@@ -629,7 +632,7 @@ namespace LabBilling.Forms
                 control.BackColor = Color.White;
             }
 
-            this.LoadAccountData();
+            await this.LoadAccountData();
 
         }
 
@@ -881,7 +884,7 @@ namespace LabBilling.Forms
             insurancePlanTextBox.Enabled = enable;
         }
 
-        private void InsuranceDataGrid_CellClick(object sender, DataGridViewCellEventArgs e)
+        private async void InsuranceDataGrid_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             Log.Instance.Trace($"Entering");
             InsTabMessageTextBox.Text = String.Empty;
@@ -925,7 +928,7 @@ namespace LabBilling.Forms
                 ClearInsEntryFields();
 
                 ResetControls(insTabLayoutPanel.Controls.OfType<Control>().ToArray());
-                LoadAccountData();
+                await LoadAccountData();
 
                 return;
                 #endregion
@@ -1121,7 +1124,7 @@ namespace LabBilling.Forms
 
         }
 
-        private void RemoveModifier_Click(object sender, EventArgs e)
+        private async void RemoveModifier_Click(object sender, EventArgs e)
         {
             Log.Instance.Trace($"Entering");
 
@@ -1133,11 +1136,11 @@ namespace LabBilling.Forms
                 var uri = Convert.ToInt32(row.Cells[nameof(ChrgDetail.uri)].Value.ToString());
 
                 chrgDetailRepository.RemoveModifier(uri);
-                LoadAccountData();
+                await LoadAccountData();
             }
         }
 
-        private void AddModifier_Click(object sender, EventArgs e)
+        private async void AddModifier_Click(object sender, EventArgs e)
         {
             Log.Instance.Trace($"Entering");
             ToolStripMenuItem item = sender as ToolStripMenuItem;
@@ -1150,7 +1153,7 @@ namespace LabBilling.Forms
                 var uri = Convert.ToInt32(row.Cells[nameof(ChrgDetail.uri)].Value.ToString());
 
                 chrgDetailRepository.AddModifier(uri, item.Text);
-                LoadAccountData();
+                await LoadAccountData();
             }
         }
 
@@ -1245,7 +1248,7 @@ namespace LabBilling.Forms
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void ToolStripCreditCharge_Click(object sender, EventArgs e)
+        private async void ToolStripCreditCharge_Click(object sender, EventArgs e)
         {
             Log.Instance.Trace($"Entering");
             int selectedRows = ChargesDataGrid.Rows.GetRowCount(DataGridViewElementStates.Selected);
@@ -1262,7 +1265,7 @@ namespace LabBilling.Forms
                     chrgRepository.CreditCharge(Convert.ToInt32(row.Cells[nameof(Chrg.ChrgId)].Value.ToString()), prompt.Text);
                     //reload charge grids to pick up changes
                     //LoadCharges();
-                    LoadAccountData();
+                    await LoadAccountData();
                 }
             }
         }
@@ -1281,14 +1284,14 @@ namespace LabBilling.Forms
 
         }
 
-        private void AddChargeButton_Click(object sender, EventArgs e)
+        private async void AddChargeButton_Click(object sender, EventArgs e)
         {
             Log.Instance.Trace($"Entering");
             ChargeEntryForm frm = new ChargeEntryForm(currentAccount);
 
             if (frm.ShowDialog() == DialogResult.OK)
             {
-                LoadAccountData();
+                await LoadAccountData();
             }
         }
 
@@ -1369,7 +1372,7 @@ namespace LabBilling.Forms
             }
         }
 
-        private void AddPaymentButton_Click(object sender, EventArgs e)
+        private async void AddPaymentButton_Click(object sender, EventArgs e)
         {
             PaymentAdjustmentEntryForm form = new PaymentAdjustmentEntryForm(ref currentAccount);
 
@@ -1402,7 +1405,7 @@ namespace LabBilling.Forms
                     Log.Instance.Error(ex);
                     MessageBox.Show($"Error adding payment. See log for details.");
                 }
-                LoadAccountData();
+                await LoadAccountData();
             }
         }
 
@@ -2454,74 +2457,5 @@ namespace LabBilling.Forms
             Clipboard.SetText(BannerAccountTextBox.Text);
             
         }
-
-        #region Charge Tree List View
-
-        private void LoadChargeTreeView()
-        {
-
-            chargesTreeListView.CanExpandGetter = delegate (object x)
-            {
-                return (x is Chrg) && (x as Chrg).ChrgDetails.Count > 0;
-            };
-
-            chargesTreeListView.ChildrenGetter = delegate (object x)
-            {
-                return (x as Chrg).ChrgDetails;
-            };
-
-            chargesTreeListView.VirtualMode = true;
-
-            OLVColumn[] oLVColumns = new OLVColumn[]
-            {
-                new OLVColumn() { AspectName = nameof(Chrg.ChrgId), IsTileViewColumn = true, Text = "Chrg Id", UseInitialLetterForGroup = true, Width = 180, WordWrap = true },
-                new OLVColumn() { AspectName = nameof(Chrg.CDMCode), IsTileViewColumn = true, Text = "CDM", UseInitialLetterForGroup = true, Width = 180, WordWrap = true },
-                new OLVColumn() { AspectName = nameof(Chrg.CdmDescription), IsTileViewColumn = true, Text = "Description", UseInitialLetterForGroup = true, Width = 180, WordWrap = true },
-                new OLVColumn() { AspectName = nameof(Chrg.ServiceDate), IsTileViewColumn = true, Text = "Service Date", UseInitialLetterForGroup = true, Width = 180, WordWrap = true},
-                new OLVColumn() { AspectName = nameof(Chrg.PostingDate), IsTileViewColumn = true, Text = "Posted Date", UseInitialLetterForGroup = true, Width = 180, WordWrap = true},
-                new OLVColumn() { AspectName = nameof(Chrg.OrderMnem), IsTileViewColumn = true, Text = "Order Mnem", UseInitialLetterForGroup = true, Width = 180, WordWrap = true},
-                new OLVColumn() { AspectName = nameof(ChrgDetail.RevenueCode), IsTileViewColumn = true, Text = "Revenue Code", UseInitialLetterForGroup = true, Width = 180, WordWrap = true},
-                new OLVColumn() { AspectName = nameof(ChrgDetail.Cpt4), IsTileViewColumn = true, Text = "CPT4", UseInitialLetterForGroup = true, Width = 180, WordWrap = true},
-                new OLVColumn() { AspectName = nameof(ChrgDetail.Modifier), IsTileViewColumn = true, Text = "Modifier", UseInitialLetterForGroup = true, Width = 180, WordWrap = true},
-                new OLVColumn() { AspectName = nameof(ChrgDetail.BillingCode), IsTileViewColumn = true, Text = "Billing Code", UseInitialLetterForGroup = true, Width = 180, WordWrap = true},
-                new OLVColumn() { AspectName = nameof(ChrgDetail.Quantity), IsTileViewColumn = true, Text = "Quantity", UseInitialLetterForGroup = true, Width = 180, WordWrap = true},
-                new OLVColumn() { AspectName = nameof(ChrgDetail.Amount), IsTileViewColumn = true, Text = "Amount", UseInitialLetterForGroup = true, Width = 180, WordWrap = true},
-                new OLVColumn() { AspectName = nameof(ChrgDetail.Type), IsTileViewColumn = true, Text = "Type", UseInitialLetterForGroup = true, Width = 180, WordWrap = true},
-                new OLVColumn() { AspectName = nameof(ChrgDetail.FinCode), IsTileViewColumn = true, Text = "Fin Code", UseInitialLetterForGroup = true, Width = 180, WordWrap = true},
-                new OLVColumn() { AspectName = nameof(ChrgDetail.FinancialType), IsTileViewColumn = true, Text = "Financial Type", UseInitialLetterForGroup = true, Width = 180, WordWrap = true},
-                new OLVColumn() { AspectName = nameof(ChrgDetail.ClientMnem), IsTileViewColumn = true, Text = "Client", UseInitialLetterForGroup = true, Width = 180, WordWrap = true },
-                new OLVColumn() { AspectName = nameof(ChrgDetail.Invoice), WordWrap = true, IsTileViewColumn = true, Text = "Invoice", UseInitialLetterForGroup = true, Width = 180 },
-                new OLVColumn() { AspectName = nameof(ChrgDetail.IsCredited), WordWrap = true, IsTileViewColumn = true, Text = "Credited", UseInitialLetterForGroup = true, Width = 180 },
-            };
-
-            foreach(var col in oLVColumns)
-            {
-                chargesTreeListView.AllColumns.Add(col);
-            }
-
-            chargesTreeListView.Columns.AddRange(oLVColumns);
-
-            chargesTreeListView.RebuildColumns();
-
-            ArrayList roots = new ArrayList();
-
-            foreach (var chrg in currentAccount.Charges)
-            {
-                roots.Add(chrg);
-            }
-
-            chargesTreeListView.Roots = roots;
-        }
-
-        private void SetupChargeTreeColumns()
-        {
-
-        }
-
-
-
-        #endregion
-
-
     }
 }
