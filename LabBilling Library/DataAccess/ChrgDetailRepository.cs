@@ -92,7 +92,7 @@ namespace LabBilling.Core.DataAccess
             foreach(var cd in chrgDetails)
             {
                 var value = Add(cd);
-                cd.uri = Convert.ToInt32(value);
+                cd.ChrgDetailId = Convert.ToInt32(value);
                 addedCharges.Add(cd);
             }
 
@@ -103,17 +103,9 @@ namespace LabBilling.Core.DataAccess
         {
             try
             {
-                //ChrgDiagnosisPointerRepository chrgDiagnosisPointerRepository = new ChrgDiagnosisPointerRepository(AppEnvironment);
-
                 var value = base.Add(table);
-
-                //if (table.DiagnosisPointer != null)
-                //{
-                //    table.DiagnosisPointer.ChrgDetailUri = Convert.ToDouble(value);
-                //    chrgDiagnosisPointerRepository.Save(table.DiagnosisPointer);
-                //}
-
-                return value;
+                table.ChrgDetailId = Convert.ToInt32(value);
+                return table;
             }
             catch(Exception ex)
             {
@@ -153,13 +145,9 @@ namespace LabBilling.Core.DataAccess
             if (uri <= 0)
                 throw new ArgumentOutOfRangeException(nameof(uri));
 
-            if(string.IsNullOrEmpty(modifier))
-                throw new ArgumentNullException(nameof(modifier));
-
-
             var sql = PetaPoco.Sql.Builder
                 .From($"{_tableName}")
-                .Where($"{_tableName}.{this.GetRealColumn(nameof(ChrgDetail.uri))} = @0", new SqlParameter() { SqlDbType = SqlDbType.Decimal,Value = uri });
+                .Where($"{_tableName}.{this.GetRealColumn(nameof(ChrgDetail.ChrgDetailId))} = @0", new SqlParameter() { SqlDbType = SqlDbType.Decimal,Value = uri });
 
             var result = dbConnection.SingleOrDefault<ChrgDetail>(sql);
 

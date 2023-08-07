@@ -51,7 +51,7 @@ namespace LabBilling.Core.Models
 
 
         [Column("uri")]
-        public int uri { get; set; }
+        public int ChrgDetailId { get; set; }
 
         [Column("cl_mnem")]
         public string ClientMnem { get; set; }
@@ -68,19 +68,15 @@ namespace LabBilling.Core.Models
 
         [Ignore]
         public RevenueCode RevenueCodeDetail { get; set; }
-        //[Ignore]
-        //public ChrgDiagnosisPointer DiagnosisPointer { get; set; } = new ChrgDiagnosisPointer();
-        //[Ignore]
-        //public string DiagCodePointer
-        //{
-        //    get
-        //    {
-        //        if (this.DiagnosisPointer == null)
-        //            return "";
-        //        else
-        //            return this.DiagnosisPointer.DiagnosisPointer ?? "";
-        //    }
-        //}
+
+        [Ignore]
+        public string RevenueCodeDescription
+        {
+            get
+            {
+                return RevenueCodeDetail.Description;
+            }
+        }
 
         public override string ToString()
         { 

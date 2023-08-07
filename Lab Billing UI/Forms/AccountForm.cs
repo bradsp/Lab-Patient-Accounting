@@ -221,7 +221,7 @@ namespace LabBilling.Forms
 
             #endregion
 
- 
+
             if (SelectedAccount != null || SelectedAccount != "")
             {
                 Log.Instance.Debug($"Loading account data for {SelectedAccount}");
@@ -257,7 +257,7 @@ namespace LabBilling.Forms
             }
 
             Helper.SetControlsAccess(tabPayments.Controls, false);
-            if(Program.AppEnvironment.ApplicationParameters.AllowPaymentAdjustmentEntry)
+            if (Program.AppEnvironment.ApplicationParameters.AllowPaymentAdjustmentEntry)
             {
                 Helper.SetControlsAccess(tabPayments.Controls, Program.LoggedInUser.CanAddAdjustments);
             }
@@ -281,7 +281,7 @@ namespace LabBilling.Forms
             ValidateAccountButton.Visible = false;
             GenerateClaimButton.Visible = false;
             //if (Convert.ToBoolean(systemParametersRepository.GetByKey("allow_edit")))
-            if(Program.AppEnvironment.ApplicationParameters.AllowEditing)
+            if (Program.AppEnvironment.ApplicationParameters.AllowEditing)
             {
                 if (Program.LoggedInUser.Access == "ENTER/EDIT")
                 {
@@ -330,8 +330,7 @@ namespace LabBilling.Forms
             Log.Instance.Trace($"Entering");
             currentAccount = await accountRepository.GetByAccountAsync(SelectedAccount);
 
-            chargeTreeListView1.Charges = currentAccount.Charges;
-            chargeTreeListView1.ChargeDetails = currentAccount.ChargeDetails;
+            chargeTreeListView1.CurrentAccount = currentAccount;
 
             generateClientStatementToolStripMenuItem.Enabled = currentAccount.FinCode == "CLIENT";
 
@@ -345,7 +344,7 @@ namespace LabBilling.Forms
                 //MessageBox.Show("Account is flagged ready to bill, or has been billed. Any changes can affect the claim.");
             }
 
-            if(currentAccount.Status == AccountStatus.Hold)
+            if (currentAccount.Status == AccountStatus.Hold)
             {
                 clearHoldStatusToolStripMenuItem.Text = clearHoldMenuText;
             }
@@ -1072,7 +1071,7 @@ namespace LabBilling.Forms
             ChargesDataGrid.DataMember = chargesTable.TableName;
             if (currentAccount.FinCode == "CLIENT")
             {
-                chargesTable.DefaultView.Sort = $"{nameof(Chrg.ChrgId)} desc";
+                chargesTable.DefaultView.Sort = $"{nameof(Chrg.ChrgNo)} desc";
             }
             if (!ShowCreditedChrgCheckBox.Checked)
             {
@@ -1092,7 +1091,7 @@ namespace LabBilling.Forms
             ChargesDataGrid.Columns[nameof(Chrg.ServiceDate)].Visible = true;
             ChargesDataGrid.Columns[nameof(Chrg.Status)].Visible = true;
             ChargesDataGrid.Columns[nameof(Chrg.Comment)].Visible = true;
-            ChargesDataGrid.Columns[nameof(Chrg.ChrgId)].Visible = true;
+            ChargesDataGrid.Columns[nameof(Chrg.ChrgNo)].Visible = true;
             //ChargesDataGrid.Columns[nameof(Chrg.Invoice)].Visible = true;
             //ChargesDataGrid.Columns[nameof(Chrg.FinCode)].Visible = true;
             //ChargesDataGrid.Columns[nameof(Chrg.ClientMnem)].Visible = true;
@@ -1133,7 +1132,7 @@ namespace LabBilling.Forms
             if (selectedRows > 0)
             {
                 DataGridViewRow row = ChrgDetailDataGrid.SelectedRows[0];
-                var uri = Convert.ToInt32(row.Cells[nameof(ChrgDetail.uri)].Value.ToString());
+                var uri = Convert.ToInt32(row.Cells[nameof(ChrgDetail.ChrgDetailId)].Value.ToString());
 
                 chrgDetailRepository.RemoveModifier(uri);
                 await LoadAccountData();
@@ -1150,7 +1149,7 @@ namespace LabBilling.Forms
             if (selectedRows > 0)
             {
                 DataGridViewRow row = ChrgDetailDataGrid.SelectedRows[0];
-                var uri = Convert.ToInt32(row.Cells[nameof(ChrgDetail.uri)].Value.ToString());
+                var uri = Convert.ToInt32(row.Cells[nameof(ChrgDetail.ChrgDetailId)].Value.ToString());
 
                 chrgDetailRepository.AddModifier(uri, item.Text);
                 await LoadAccountData();
@@ -1165,7 +1164,7 @@ namespace LabBilling.Forms
             {
 
                 DataGridViewRow row = ChargesDataGrid.SelectedRows[0];
-                var chrg = chrgRepository.GetById(Convert.ToInt32(row.Cells[nameof(Chrg.ChrgId)].Value.ToString()));
+                var chrg = chrgRepository.GetById(Convert.ToInt32(row.Cells[nameof(Chrg.ChrgNo)].Value.ToString()));
 
                 DisplayPOCOForm<Chrg> frm = new DisplayPOCOForm<Chrg>(chrg)
                 {
@@ -1188,7 +1187,7 @@ namespace LabBilling.Forms
             if (selectedRows > 0)
             {
                 DataGridViewRow row = ChargesDataGrid.SelectedRows[0];
-                var chrg = chrgRepository.GetById(Convert.ToInt32(row.Cells[nameof(Chrg.ChrgId)].Value.ToString()));
+                var chrg = chrgRepository.GetById(Convert.ToInt32(row.Cells[nameof(Chrg.ChrgNo)].Value.ToString()));
 
                 try
                 {
@@ -1257,12 +1256,12 @@ namespace LabBilling.Forms
                 DataGridViewRow row = ChargesDataGrid.SelectedRows[0];
 
                 InputBoxResult prompt = InputBox.Show(string.Format("Credit Charge Number {0}?\nEnter credit reason.",
-                    row.Cells[nameof(Chrg.ChrgId)].Value.ToString()),
+                    row.Cells[nameof(Chrg.ChrgNo)].Value.ToString()),
                     "Credit Charge", "");
 
                 if (prompt.ReturnCode == DialogResult.OK)
                 {
-                    chrgRepository.CreditCharge(Convert.ToInt32(row.Cells[nameof(Chrg.ChrgId)].Value.ToString()), prompt.Text);
+                    chrgRepository.CreditCharge(Convert.ToInt32(row.Cells[nameof(Chrg.ChrgNo)].Value.ToString()), prompt.Text);
                     //reload charge grids to pick up changes
                     //LoadCharges();
                     await LoadAccountData();
@@ -2289,7 +2288,7 @@ namespace LabBilling.Forms
                 if (personSearch.ShowDialog() == DialogResult.OK)
                 {
                     string destAccount = personSearch.SelectedAccount;
-                    int chrgId = Convert.ToInt32(row.Cells[nameof(Chrg.ChrgId)].Value);
+                    int chrgId = Convert.ToInt32(row.Cells[nameof(Chrg.ChrgNo)].Value);
 
                     if (MessageBox.Show($"Move charge {chrgId} ({row.Cells[nameof(Chrg.CdmDescription)].Value}) to account {destAccount}?",
                         "Confirm Move", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
@@ -2455,7 +2454,68 @@ namespace LabBilling.Forms
         private void BannerAccountTextBox_Click(object sender, EventArgs e)
         {
             Clipboard.SetText(BannerAccountTextBox.Text);
-            
+
+        }
+
+        private async void chargeTreeListView1_AddModifierClicked(object sender, UserControls.ChargeTreeListViewArgs e)
+        {
+            Log.Instance.Trace($"Entering");
+
+            chrgDetailRepository.AddModifier(e.ChrgDetailId, e.ModifierToAdd);
+
+            await LoadAccountData();
+        }
+
+        private async void chargeTreeListView1_AddChargeButtonClicked(object sender, UserControls.ChargeTreeListViewArgs e)
+        {
+            Log.Instance.Trace($"Entering");
+            ChargeEntryForm frm = new ChargeEntryForm(currentAccount);
+
+            if (frm.ShowDialog() == DialogResult.OK)
+            {
+                await LoadAccountData();
+            }
+        }
+
+        private async void chargeTreeListView1_CreditCharge(object sender, UserControls.ChargeTreeListViewArgs e)
+        {
+            Log.Instance.Trace("Entering");
+
+            InputBoxResult prompt = InputBox.Show($"Credit Charge Number {e.ChrgNo}?\nEnter credit reason.", "Credit Charge", "");
+
+            if (prompt.ReturnCode == DialogResult.OK)
+            {
+                chrgRepository.CreditCharge(e.ChrgNo, prompt.Text);
+                //reload charge grids to pick up changes
+                //LoadCharges();
+                await LoadAccountData();
+            }
+        }
+
+        private async void chargeTreeListView1_MoveCharge(object sender, UserControls.ChargeTreeListViewArgs e)
+        {
+            Log.Instance.Trace("Entering");
+            PersonSearchForm personSearch = new PersonSearchForm();
+
+            if (personSearch.ShowDialog() == DialogResult.OK)
+            {
+                string destAccount = personSearch.SelectedAccount;
+                int chrgId = Convert.ToInt32(e.ChrgNo);
+
+                if (MessageBox.Show($"Move charge {chrgId} ({e.ChargeDescription}) to account {destAccount}?",
+                    "Confirm Move", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                {
+                    Log.Instance.Debug($"Moving charge {chrgId} from {currentAccount.AccountNo} to {destAccount}");
+                    accountRepository.MoveCharge(currentAccount.AccountNo, destAccount, chrgId);
+                }
+                await LoadAccountData();
+            }
+        }
+
+        private async void chargeTreeListView1_RemoveModifier(object sender, UserControls.ChargeTreeListViewArgs e)
+        {
+            chrgDetailRepository.RemoveModifier(e.ChrgDetailId);
+            await LoadAccountData();
         }
     }
 }

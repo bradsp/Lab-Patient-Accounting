@@ -12,7 +12,7 @@ namespace LabBilling.Core.Models
         [Column("credited")]
         public bool IsCredited { get; set; }
         [Column("chrg_num")]
-        public int ChrgId { get; set; }
+        public int ChrgNo { get; set; }
         [Column("account")]
         public string AccountNo { get; set; }
         [Column("status")]
@@ -223,7 +223,7 @@ namespace LabBilling.Core.Models
             if (chrg == null)
                 return current;
 
-            if(current != null && current.ChrgId == chrg.ChrgId)
+            if(current != null && current.ChrgNo == chrg.ChrgNo)
             {
                 current.ChrgDetails.Add(a);
 

@@ -33,7 +33,6 @@ namespace RFClassLibrary
         /// <param name="strDataSrc"></param>
         /// <param name="strDB"></param>
         /// <param name="strTable"></param>
-		/// <param name="appName"></param>
 		public DBAccess(string strDataSrc, string strDB, string strTable)
 		{
 			// 

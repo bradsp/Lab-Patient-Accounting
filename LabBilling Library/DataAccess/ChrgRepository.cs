@@ -35,7 +35,7 @@ namespace LabBilling.Core.DataAccess
         {
             var sql = PetaPoco.Sql.Builder
                 .From(_tableName)
-                .Where($"{GetRealColumn(nameof(Chrg.ChrgId))} = @0", 
+                .Where($"{GetRealColumn(nameof(Chrg.ChrgNo))} = @0", 
                     new SqlParameter() { SqlDbType = SqlDbType.Decimal, Value = id });
 
             Chrg chrg = dbConnection.SingleOrDefault<Chrg>(sql);
@@ -126,7 +126,7 @@ namespace LabBilling.Core.DataAccess
                 sql.Where($"{chargeTableName}.{GetRealColumn(nameof(Chrg.CDMCode))} <> @0",
                     new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = invoiceCode});
 
-            sql.OrderBy($"{_tableName}.{GetRealColumn(nameof(Chrg.ChrgId))}");
+            sql.OrderBy($"{_tableName}.{GetRealColumn(nameof(Chrg.ChrgNo))}");
 
             var result = dbConnection.Fetch<Chrg, ChrgDetail, Chrg>(new ChrgChrgDetailRelator().MapIt, sql);
 
@@ -166,7 +166,7 @@ namespace LabBilling.Core.DataAccess
                 foreach (var detail in chrgDetails.Where(x => x.IsCredited == false))
                 {
                     detail.Quantity *= -1;
-                    detail.uri = 0;
+                    detail.ChrgDetailId = 0;
                     detail.IsCredited = true;
                     detail.PostedDate = DateTime.Now;
                     chrgDetailsPosted.Add((ChrgDetail)amtRepository.Add(detail));

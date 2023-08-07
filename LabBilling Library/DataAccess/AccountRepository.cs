@@ -787,14 +787,14 @@ namespace LabBilling.Core.DataAccess
                 foreach (var chrg in account.Charges)
                 {
 
-                    var chargesToCredit = account.ChargeDetails.Where(x => x.IsCredited == false && x.ChrgNo == chrg.ChrgId).ToList();
+                    var chargesToCredit = account.ChargeDetails.Where(x => x.IsCredited == false && x.ChrgNo == chrg.ChrgNo).ToList();
 
                     foreach (var chrgdetail in chargesToCredit)
                     {
                         if (chrgdetail.Type == ChrgDetailStatus.Invoice)  //do not reprocess CBILL charge records
                             continue;
 
-                        chrgRepository.CreditCharge(chrgdetail.uri, comment);
+                        chrgRepository.CreditCharge(chrgdetail.ChrgDetailId, comment);
                     }
                     //insert new charge and detail
                     if (chrg.Status != ChargeStatus.Invoice)
@@ -988,7 +988,7 @@ namespace LabBilling.Core.DataAccess
             chrg.ServiceDate = serviceDate ?? accData.TransactionDate;
 
             var result = chrgRepository.AddCharge(chrg);
-            chrg.ChrgId = result;
+            chrg.ChrgNo = result;
 
             Log.Instance.Trace($"Exiting");
 
@@ -1079,7 +1079,7 @@ namespace LabBilling.Core.DataAccess
                     Cpt4 = fee.Cpt4,
                     Type = fee.Type,
                     AccountNo = chrg.AccountNo,
-                    ChrgNo = chrg.ChrgId,
+                    ChrgNo = chrg.ChrgNo,
                     Modifier = fee.Modifier,
                     RevenueCode = fee.RevenueCode,
                     ClientMnem = chargeClient.ClientMnem,
@@ -1181,7 +1181,7 @@ namespace LabBilling.Core.DataAccess
                 foreach (var bundledProfile in bundledProfiles)
                 {
                     //credit the profile charge
-                    chrgRepository.CreditCharge(bundledProfile.ChrgId, "Unbundling charge");
+                    chrgRepository.CreditCharge(bundledProfile.ChrgNo, "Unbundling charge");
 
                     //enter charges for each component
                     AddCharge(account, "5545154", account.TransactionDate);
@@ -1194,7 +1194,7 @@ namespace LabBilling.Core.DataAccess
                 foreach (var bundledProfile in bundledProfiles)
                 {
                     //credit the profile charge
-                    chrgRepository.CreditCharge(bundledProfile.ChrgId, "Unbundling charge");
+                    chrgRepository.CreditCharge(bundledProfile.ChrgNo, "Unbundling charge");
 
                     //enter charges for each component
                     AddCharge(account, "5545154", account.TransactionDate);
@@ -1255,7 +1255,7 @@ namespace LabBilling.Core.DataAccess
                         if (chrg.ChrgDetails.Any(d => d.Cpt4 == bundledProfiles[x].ComponentCpt[i].Cpt))
                         {
                             bundledProfiles[x].ComponentCpt[i].IsPresent = true;
-                            bundledProfiles[x].ComponentCpt[i].ChrgId = chrg.ChrgId;
+                            bundledProfiles[x].ComponentCpt[i].ChrgId = chrg.ChrgNo;
                         }
                     }
                 }
@@ -1503,7 +1503,7 @@ namespace LabBilling.Core.DataAccess
 
             foreach (var charge in charges)
             {
-                chrgRepository.CreditCharge(charge.ChrgId, $"Move to {destinationAccount}");
+                chrgRepository.CreditCharge(charge.ChrgNo, $"Move to {destinationAccount}");
                 AddCharge(destination, charge.CDMCode, (DateTime)destination.TransactionDate, $"Moved from {sourceAccount}", charge.ReferenceReq);
             }
             return (true, string.Empty);
@@ -1527,14 +1527,14 @@ namespace LabBilling.Core.DataAccess
             var source = GetByAccount(sourceAccount);
             var destination = GetByAccount(destinationAccount);
 
-            var charge = source.Charges.SingleOrDefault(c => c.ChrgId == chrgId);
+            var charge = source.Charges.SingleOrDefault(c => c.ChrgNo == chrgId);
 
             if (charge.IsCredited)
             {
                 throw new ApplicationException("Charge is already credited.");
             }
 
-            chrgRepository.CreditCharge(charge.ChrgId, $"Move to {destinationAccount}");
+            chrgRepository.CreditCharge(charge.ChrgNo, $"Move to {destinationAccount}");
             AddCharge(destinationAccount, charge.CDMCode, destination.TransactionDate, $"Moved from {sourceAccount}", charge.ReferenceReq);
 
         }
