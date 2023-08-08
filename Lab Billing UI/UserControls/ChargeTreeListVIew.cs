@@ -3,6 +3,7 @@ using LabBilling.Core.Models;
 using System;
 using System.ComponentModel;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace LabBilling.UserControls
@@ -17,16 +18,18 @@ namespace LabBilling.UserControls
         private Account _currentAccount = null;
         private BindingList<Chrg> boundChrgList = new BindingList<Chrg>();
         private BindingList<ChrgDetail> boundChrgDetails = new BindingList<ChrgDetail>();
+        private const string patientFinClass = "M";
+        private const string clientFinClass = "C";
 
         private double selectedChargeNo = 0;
 
         public Account CurrentAccount
         {
             get { return _currentAccount; }
-            set 
-            { 
+            set
+            {
                 _currentAccount = value;
-                if(_currentAccount != null)
+                if (_currentAccount != null)
                     LoadChargeTreeView();
             }
         }
@@ -34,12 +37,14 @@ namespace LabBilling.UserControls
         private void LoadChargeTreeView()
         {
             boundChrgList = new BindingList<Chrg>(_currentAccount.Charges);
-            boundChrgDetails = new BindingList<ChrgDetail>(_currentAccount.ChargeDetails);            
+            boundChrgDetails = new BindingList<ChrgDetail>(_currentAccount.ChargeDetails);
 
             chargeGrid.DataSource = boundChrgList;
             chargeDetailGrid.DataSource = boundChrgDetails;
-            
+
             _currentAccount.ChargeDetails.Sort((ChrgDetail x, ChrgDetail y) => x.ChrgNo.CompareTo(y.ChrgNo));
+
+            FilterCharges();
 
             foreach (DataGridViewColumn col in chargeGrid.Columns)
                 col.Visible = false;
@@ -58,7 +63,7 @@ namespace LabBilling.UserControls
 
             int n = 0;
 
-            chargeGrid.Columns[nameof(Chrg.IsCredited)].DisplayIndex = n++; 
+            chargeGrid.Columns[nameof(Chrg.IsCredited)].DisplayIndex = n++;
             chargeGrid.Columns[nameof(Chrg.ChrgNo)].DisplayIndex = n++;
             chargeGrid.Columns[nameof(Chrg.CDMCode)].DisplayIndex = n++;
             chargeGrid.Columns[nameof(Chrg.CdmDescription)].DisplayIndex = n++;
@@ -83,6 +88,7 @@ namespace LabBilling.UserControls
             chargeDetailGrid.Columns[nameof(ChrgDetail.ChrgNo)].Visible = true;
             chargeDetailGrid.Columns[nameof(ChrgDetail.ClientMnem)].Visible = true;
             chargeDetailGrid.Columns[nameof(ChrgDetail.Cpt4)].Visible = true;
+            chargeDetailGrid.Columns[nameof(ChrgDetail.CdmDescription)].Visible = true;
             chargeDetailGrid.Columns[nameof(ChrgDetail.DiscountAmount)].Visible = true;
             chargeDetailGrid.Columns[nameof(ChrgDetail.IsCredited)].Visible = true;
             chargeDetailGrid.Columns[nameof(ChrgDetail.Modifier)].Visible = true;
@@ -90,7 +96,6 @@ namespace LabBilling.UserControls
             chargeDetailGrid.Columns[nameof(ChrgDetail.PostedDate)].Visible = true;
             chargeDetailGrid.Columns[nameof(ChrgDetail.Quantity)].Visible = true;
             chargeDetailGrid.Columns[nameof(ChrgDetail.RevenueCode)].Visible = true;
-            chargeDetailGrid.Columns[nameof(ChrgDetail.RevenueCodeDescription)].Visible = true;
             chargeDetailGrid.Columns[nameof(ChrgDetail.Type)].Visible = true;
             chargeDetailGrid.Columns[nameof(ChrgDetail.ServiceDate)].Visible = true;
 
@@ -98,7 +103,11 @@ namespace LabBilling.UserControls
 
             chargeDetailGrid.Columns[nameof(ChrgDetail.IsCredited)].DisplayIndex = n++;
             chargeDetailGrid.Columns[nameof(ChrgDetail.ChrgNo)].DisplayIndex = n++;
+            chargeDetailGrid.Columns[nameof(ChrgDetail.FinancialType)].DisplayIndex = n++;
+            chargeDetailGrid.Columns[nameof(ChrgDetail.FinCode)].DisplayIndex = n++;
+            chargeDetailGrid.Columns[nameof(ChrgDetail.ClientMnem)].DisplayIndex = n++;
             chargeDetailGrid.Columns[nameof(ChrgDetail.BillingCode)].DisplayIndex = n++;
+            chargeDetailGrid.Columns[nameof(ChrgDetail.CdmDescription)].DisplayIndex = n++;
             chargeDetailGrid.Columns[nameof(ChrgDetail.PostedDate)].DisplayIndex = n++;
             chargeDetailGrid.Columns[nameof(ChrgDetail.Type)].DisplayIndex = n++;
             chargeDetailGrid.Columns[nameof(ChrgDetail.ServiceDate)].DisplayIndex = n++;
@@ -107,11 +116,7 @@ namespace LabBilling.UserControls
             chargeDetailGrid.Columns[nameof(ChrgDetail.Modifier)].DisplayIndex = n++;
             chargeDetailGrid.Columns[nameof(ChrgDetail.Modifer2)].DisplayIndex = n++;
             chargeDetailGrid.Columns[nameof(ChrgDetail.RevenueCode)].DisplayIndex = n++;
-            chargeDetailGrid.Columns[nameof(ChrgDetail.RevenueCodeDescription)].DisplayIndex = n++;
             chargeDetailGrid.Columns[nameof(ChrgDetail.Invoice)].DisplayIndex = n++;
-            chargeDetailGrid.Columns[nameof(ChrgDetail.FinancialType)].DisplayIndex = n++;
-            chargeDetailGrid.Columns[nameof(ChrgDetail.FinCode)].DisplayIndex = n++;
-            chargeDetailGrid.Columns[nameof(ChrgDetail.ClientMnem)].DisplayIndex = n++;
             chargeDetailGrid.Columns[nameof(ChrgDetail.Amount)].DisplayIndex = n++;
             chargeDetailGrid.Columns[nameof(ChrgDetail.DiscountAmount)].DisplayIndex = n++;
 
@@ -202,7 +207,7 @@ namespace LabBilling.UserControls
                     };
                     frm.Show();
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     MessageBox.Show(ex.Message);
                 }
@@ -246,7 +251,8 @@ namespace LabBilling.UserControls
             }
         }
 
-        [Browsable(true)][Category("Action")]
+        [Browsable(true)]
+        [Category("Action")]
         [Description("Occurs when user has clicked CreditCharge on a charge line.")]
         public event EventHandler<ChargeTreeListViewArgs> CreditCharge;
 
@@ -266,8 +272,9 @@ namespace LabBilling.UserControls
                 MoveCharge?.Invoke(this, args);
             }
         }
-     
-        [Browsable(true)][Category("Action")]
+
+        [Browsable(true)]
+        [Category("Action")]
         [Description("Occurs when user has clicked MoveCharge on a Charge line.")]
         public event EventHandler<ChargeTreeListViewArgs> MoveCharge;
 
@@ -296,7 +303,7 @@ namespace LabBilling.UserControls
         private void addModifierToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ToolStripMenuItem item = sender as ToolStripMenuItem;
-            
+
             int selectedRows = chargeDetailGrid.Rows.GetRowCount(DataGridViewElementStates.Selected);
             if (selectedRows > 0)
             {
@@ -328,6 +335,62 @@ namespace LabBilling.UserControls
             ChargeTreeListViewArgs args = new ChargeTreeListViewArgs();
 
             AddChargeButtonClicked?.Invoke(this, args);
+        }
+
+        private void showThirdPartyRadioButton_CheckedChanged(object sender, EventArgs e)
+        {
+            FilterCharges();
+        }
+
+        private void showClientRadioButton_CheckedChanged(object sender, EventArgs e)
+        {
+            FilterCharges();
+        }
+
+        private void showAllRadioButton_CheckedChanged(object sender, EventArgs e)
+        {
+            FilterCharges();
+        }
+
+        private void FilterCharges()
+        {
+
+            if (showAllRadioButton.Checked)
+            {
+                if (!showCreditsCheckbox.Checked)
+                {
+                    boundChrgDetails = new BindingList<ChrgDetail>(_currentAccount.ChargeDetails.Where(x => x.IsCredited == false).ToList());
+                }
+                else
+                {
+                    boundChrgDetails = new BindingList<ChrgDetail>(_currentAccount.ChargeDetails);
+                }
+            }
+            else
+            {
+                string finClass;
+                if (showThirdPartyRadioButton.Checked)
+                    finClass = patientFinClass;
+                else
+                    finClass = clientFinClass;
+
+                if (!showCreditsCheckbox.Checked)
+                {
+                    boundChrgDetails = new BindingList<ChrgDetail>(_currentAccount.ChargeDetails.Where(x => x.FinancialType == finClass && x.IsCredited == false).ToList());
+                }
+                else
+                {
+                    boundChrgDetails = new BindingList<ChrgDetail>(_currentAccount.ChargeDetails.Where(x => x.FinancialType == finClass).ToList());
+                }
+
+            }
+
+            chargeDetailGrid.DataSource = boundChrgDetails;
+        }
+
+        private void showCreditsCheckbox_CheckedChanged(object sender, EventArgs e)
+        {
+            FilterCharges();
         }
     }
 

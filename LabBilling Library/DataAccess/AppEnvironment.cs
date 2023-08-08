@@ -15,6 +15,18 @@ namespace LabBilling.Core.DataAccess
 {
     public class AppEnvironment : IAppEnvironment
     {
+        private DbContext _dbContext;
+
+        public DbContext Context 
+        { 
+            get
+            {
+                if (_dbContext == null)
+                    _dbContext = new DbContext(this);
+                return _dbContext;
+            }
+        }
+
         public string DatabaseName { get; set; }
         public string ServerName { get; set; }
         public string LogDatabaseName { get; set; }

@@ -49,12 +49,6 @@ namespace LabBilling.Forms
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle16 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle17 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle18 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle19 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle20 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle21 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle22 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle23 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle24 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AccountForm));
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.summaryTab = new System.Windows.Forms.TabPage();
@@ -179,26 +173,8 @@ namespace LabBilling.Forms
             this.DiagnosisDataGrid = new System.Windows.Forms.DataGridView();
             this.DxDeleteButton = new System.Windows.Forms.PictureBox();
             this.DxSearchButton = new System.Windows.Forms.PictureBox();
-            this.tabCharges = new System.Windows.Forms.TabPage();
-            this.showAllChargeRadioButton = new System.Windows.Forms.RadioButton();
-            this.showClientRadioButton = new System.Windows.Forms.RadioButton();
-            this.show3rdPartyRadioButton = new System.Windows.Forms.RadioButton();
-            this.chargeLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
-            this.ChargesDataGridLabel = new System.Windows.Forms.Label();
-            this.ChargesDataGrid = new System.Windows.Forms.DataGridView();
-            this.menuCharges = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.toolStripCreditCharge = new System.Windows.Forms.ToolStripMenuItem();
-            this.moveChargeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.ChargeDetailGridLabel = new System.Windows.Forms.Label();
-            this.ChrgDetailDataGrid = new System.Windows.Forms.DataGridView();
-            this.chargeDetailsContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.addModifierToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.removeModifierToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.AddChargeButton = new System.Windows.Forms.Button();
-            this.chargeBalRichTextbox = new System.Windows.Forms.RichTextBox();
-            this.TotalChargesTextBox = new System.Windows.Forms.TextBox();
-            this.ChargeTotalChargesLabel = new System.Windows.Forms.Label();
-            this.ShowCreditedChrgCheckBox = new System.Windows.Forms.CheckBox();
+            this.chargesNewPage = new System.Windows.Forms.TabPage();
+            this.chargeTreeListView1 = new LabBilling.UserControls.ChargeTreeListView();
             this.tabPayments = new System.Windows.Forms.TabPage();
             this.AddPaymentButton = new System.Windows.Forms.Button();
             this.PmtTotalPmtAdjLabel = new System.Windows.Forms.Label();
@@ -233,8 +209,6 @@ namespace LabBilling.Forms
             this.ValidateAccountButton = new MetroFramework.Controls.MetroButton();
             this.BillActivityDataGrid = new System.Windows.Forms.DataGridView();
             this.minPmtTextBox = new LabBilling.UserControls.CurrencyTextBox();
-            this.chargesNewPage = new System.Windows.Forms.TabPage();
-            this.chargeTreeListView1 = new LabBilling.UserControls.ChargeTreeListView();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.accountToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.changeDateOfServiceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -289,19 +263,13 @@ namespace LabBilling.Forms
             ((System.ComponentModel.ISupportInitialize)(this.DiagnosisDataGrid)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.DxDeleteButton)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.DxSearchButton)).BeginInit();
-            this.tabCharges.SuspendLayout();
-            this.chargeLayoutPanel.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.ChargesDataGrid)).BeginInit();
-            this.menuCharges.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.ChrgDetailDataGrid)).BeginInit();
-            this.chargeDetailsContextMenu.SuspendLayout();
+            this.chargesNewPage.SuspendLayout();
             this.tabPayments.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.PaymentsDataGrid)).BeginInit();
             this.tabNotes.SuspendLayout();
             this.tabBillingActivity.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.statementHistoryDataGrid)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.BillActivityDataGrid)).BeginInit();
-            this.chargesNewPage.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.dxPointerMenuStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.RefreshButton)).BeginInit();
@@ -317,11 +285,10 @@ namespace LabBilling.Forms
             this.tabControl1.Controls.Add(this.tabGuarantor);
             this.tabControl1.Controls.Add(this.tabInsurance);
             this.tabControl1.Controls.Add(this.tabDiagnosis);
-            this.tabControl1.Controls.Add(this.tabCharges);
+            this.tabControl1.Controls.Add(this.chargesNewPage);
             this.tabControl1.Controls.Add(this.tabPayments);
             this.tabControl1.Controls.Add(this.tabNotes);
             this.tabControl1.Controls.Add(this.tabBillingActivity);
-            this.tabControl1.Controls.Add(this.chargesNewPage);
             this.tabControl1.Location = new System.Drawing.Point(0, 100);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
@@ -1809,285 +1776,32 @@ namespace LabBilling.Forms
             this.DxSearchButton.TabStop = false;
             this.DxSearchButton.Click += new System.EventHandler(this.DxSearchButton_Click);
             // 
-            // tabCharges
+            // chargesNewPage
             // 
-            this.tabCharges.AutoScroll = true;
-            this.tabCharges.BackColor = System.Drawing.Color.White;
-            this.tabCharges.Controls.Add(this.showAllChargeRadioButton);
-            this.tabCharges.Controls.Add(this.showClientRadioButton);
-            this.tabCharges.Controls.Add(this.show3rdPartyRadioButton);
-            this.tabCharges.Controls.Add(this.chargeLayoutPanel);
-            this.tabCharges.Controls.Add(this.TotalChargesTextBox);
-            this.tabCharges.Controls.Add(this.ChargeTotalChargesLabel);
-            this.tabCharges.Controls.Add(this.ShowCreditedChrgCheckBox);
-            this.tabCharges.Location = new System.Drawing.Point(4, 22);
-            this.tabCharges.Name = "tabCharges";
-            this.tabCharges.Padding = new System.Windows.Forms.Padding(3);
-            this.tabCharges.Size = new System.Drawing.Size(1151, 492);
-            this.tabCharges.TabIndex = 6;
-            this.tabCharges.Text = "Charges";
+            this.chargesNewPage.Controls.Add(this.chargeTreeListView1);
+            this.chargesNewPage.Location = new System.Drawing.Point(4, 22);
+            this.chargesNewPage.Name = "chargesNewPage";
+            this.chargesNewPage.Padding = new System.Windows.Forms.Padding(3);
+            this.chargesNewPage.Size = new System.Drawing.Size(1151, 492);
+            this.chargesNewPage.TabIndex = 14;
+            this.chargesNewPage.Text = "Charges";
+            this.chargesNewPage.UseVisualStyleBackColor = true;
             // 
-            // showAllChargeRadioButton
+            // chargeTreeListView1
             // 
-            this.showAllChargeRadioButton.AutoSize = true;
-            this.showAllChargeRadioButton.Checked = true;
-            this.showAllChargeRadioButton.Location = new System.Drawing.Point(383, 10);
-            this.showAllChargeRadioButton.Name = "showAllChargeRadioButton";
-            this.showAllChargeRadioButton.Size = new System.Drawing.Size(66, 17);
-            this.showAllChargeRadioButton.TabIndex = 12;
-            this.showAllChargeRadioButton.TabStop = true;
-            this.showAllChargeRadioButton.Text = "Show All";
-            this.showAllChargeRadioButton.UseVisualStyleBackColor = true;
-            this.showAllChargeRadioButton.CheckedChanged += new System.EventHandler(this.show3rdPartyRadioButton_CheckedChanged);
-            // 
-            // showClientRadioButton
-            // 
-            this.showClientRadioButton.AutoSize = true;
-            this.showClientRadioButton.BackColor = System.Drawing.Color.PaleGreen;
-            this.showClientRadioButton.Location = new System.Drawing.Point(252, 10);
-            this.showClientRadioButton.Name = "showClientRadioButton";
-            this.showClientRadioButton.Size = new System.Drawing.Size(125, 17);
-            this.showClientRadioButton.TabIndex = 12;
-            this.showClientRadioButton.Text = "Show Client Invoiced";
-            this.showClientRadioButton.UseVisualStyleBackColor = false;
-            this.showClientRadioButton.CheckedChanged += new System.EventHandler(this.show3rdPartyRadioButton_CheckedChanged);
-            // 
-            // show3rdPartyRadioButton
-            // 
-            this.show3rdPartyRadioButton.AutoSize = true;
-            this.show3rdPartyRadioButton.BackColor = System.Drawing.Color.Cyan;
-            this.show3rdPartyRadioButton.Location = new System.Drawing.Point(111, 10);
-            this.show3rdPartyRadioButton.Name = "show3rdPartyRadioButton";
-            this.show3rdPartyRadioButton.Size = new System.Drawing.Size(135, 17);
-            this.show3rdPartyRadioButton.TabIndex = 12;
-            this.show3rdPartyRadioButton.Text = "Show 3rd Party/Patient";
-            this.show3rdPartyRadioButton.UseVisualStyleBackColor = false;
-            this.show3rdPartyRadioButton.CheckedChanged += new System.EventHandler(this.show3rdPartyRadioButton_CheckedChanged);
-            // 
-            // chargeLayoutPanel
-            // 
-            this.chargeLayoutPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.chargeLayoutPanel.ColumnCount = 2;
-            this.chargeLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.chargeLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 162F));
-            this.chargeLayoutPanel.Controls.Add(this.ChargesDataGridLabel, 0, 0);
-            this.chargeLayoutPanel.Controls.Add(this.ChargesDataGrid, 0, 1);
-            this.chargeLayoutPanel.Controls.Add(this.ChargeDetailGridLabel, 0, 2);
-            this.chargeLayoutPanel.Controls.Add(this.ChrgDetailDataGrid, 0, 3);
-            this.chargeLayoutPanel.Controls.Add(this.AddChargeButton, 1, 0);
-            this.chargeLayoutPanel.Controls.Add(this.chargeBalRichTextbox, 1, 1);
-            this.chargeLayoutPanel.Location = new System.Drawing.Point(8, 33);
-            this.chargeLayoutPanel.Name = "chargeLayoutPanel";
-            this.chargeLayoutPanel.RowCount = 4;
-            this.chargeLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.chargeLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 60F));
-            this.chargeLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.chargeLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 40F));
-            this.chargeLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.chargeLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.chargeLayoutPanel.Size = new System.Drawing.Size(1135, 453);
-            this.chargeLayoutPanel.TabIndex = 11;
-            // 
-            // ChargesDataGridLabel
-            // 
-            this.ChargesDataGridLabel.AutoSize = true;
-            this.ChargesDataGridLabel.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.ChargesDataGridLabel.Location = new System.Drawing.Point(3, 16);
-            this.ChargesDataGridLabel.Name = "ChargesDataGridLabel";
-            this.ChargesDataGridLabel.Size = new System.Drawing.Size(967, 13);
-            this.ChargesDataGridLabel.TabIndex = 2;
-            this.ChargesDataGridLabel.Text = "Charges";
-            // 
-            // ChargesDataGrid
-            // 
-            this.ChargesDataGrid.AllowUserToAddRows = false;
-            this.ChargesDataGrid.AllowUserToDeleteRows = false;
-            this.ChargesDataGrid.BackgroundColor = System.Drawing.SystemColors.ControlLightLight;
-            dataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle13.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle13.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle13.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle13.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle13.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle13.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.ChargesDataGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle13;
-            this.ChargesDataGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.ChargesDataGrid.ContextMenuStrip = this.menuCharges;
-            dataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle14.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle14.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle14.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle14.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle14.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle14.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.ChargesDataGrid.DefaultCellStyle = dataGridViewCellStyle14;
-            this.ChargesDataGrid.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ChargesDataGrid.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
-            this.ChargesDataGrid.Location = new System.Drawing.Point(3, 32);
-            this.ChargesDataGrid.Name = "ChargesDataGrid";
-            dataGridViewCellStyle15.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle15.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle15.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle15.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle15.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle15.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle15.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.ChargesDataGrid.RowHeadersDefaultCellStyle = dataGridViewCellStyle15;
-            this.ChargesDataGrid.RowHeadersVisible = false;
-            this.ChargesDataGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.ChargesDataGrid.Size = new System.Drawing.Size(967, 240);
-            this.ChargesDataGrid.TabIndex = 0;
-            this.ChargesDataGrid.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DgvCharges_CellDoubleClick);
-            this.ChargesDataGrid.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.ChargesDataGrid_CellFormatting);
-            this.ChargesDataGrid.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.ChargesDataGrid_CellMouseClick);
-            // 
-            // menuCharges
-            // 
-            this.menuCharges.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripCreditCharge,
-            this.moveChargeToolStripMenuItem});
-            this.menuCharges.Name = "menuCharges";
-            this.menuCharges.Size = new System.Drawing.Size(148, 48);
-            // 
-            // toolStripCreditCharge
-            // 
-            this.toolStripCreditCharge.Name = "toolStripCreditCharge";
-            this.toolStripCreditCharge.Size = new System.Drawing.Size(147, 22);
-            this.toolStripCreditCharge.Text = "Credit Charge";
-            this.toolStripCreditCharge.Click += new System.EventHandler(this.ToolStripCreditCharge_Click);
-            // 
-            // moveChargeToolStripMenuItem
-            // 
-            this.moveChargeToolStripMenuItem.Name = "moveChargeToolStripMenuItem";
-            this.moveChargeToolStripMenuItem.Size = new System.Drawing.Size(147, 22);
-            this.moveChargeToolStripMenuItem.Text = "Move Charge";
-            this.moveChargeToolStripMenuItem.Click += new System.EventHandler(this.moveChargeToolStripMenuItem_Click);
-            // 
-            // ChargeDetailGridLabel
-            // 
-            this.ChargeDetailGridLabel.AutoSize = true;
-            this.ChargeDetailGridLabel.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.ChargeDetailGridLabel.Location = new System.Drawing.Point(3, 275);
-            this.ChargeDetailGridLabel.Name = "ChargeDetailGridLabel";
-            this.ChargeDetailGridLabel.Size = new System.Drawing.Size(967, 13);
-            this.ChargeDetailGridLabel.TabIndex = 3;
-            this.ChargeDetailGridLabel.Text = "Charge Details";
-            // 
-            // ChrgDetailDataGrid
-            // 
-            this.ChrgDetailDataGrid.AllowUserToAddRows = false;
-            this.ChrgDetailDataGrid.AllowUserToDeleteRows = false;
-            this.ChrgDetailDataGrid.BackgroundColor = System.Drawing.SystemColors.ControlLightLight;
-            dataGridViewCellStyle16.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle16.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle16.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle16.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle16.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle16.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle16.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.ChrgDetailDataGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle16;
-            this.ChrgDetailDataGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.ChrgDetailDataGrid.ContextMenuStrip = this.chargeDetailsContextMenu;
-            dataGridViewCellStyle17.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle17.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle17.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle17.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle17.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle17.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle17.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.ChrgDetailDataGrid.DefaultCellStyle = dataGridViewCellStyle17;
-            this.ChrgDetailDataGrid.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ChrgDetailDataGrid.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
-            this.ChrgDetailDataGrid.Location = new System.Drawing.Point(3, 291);
-            this.ChrgDetailDataGrid.Name = "ChrgDetailDataGrid";
-            this.ChrgDetailDataGrid.ReadOnly = true;
-            dataGridViewCellStyle18.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle18.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle18.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle18.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle18.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle18.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle18.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.ChrgDetailDataGrid.RowHeadersDefaultCellStyle = dataGridViewCellStyle18;
-            this.ChrgDetailDataGrid.RowHeadersVisible = false;
-            this.ChrgDetailDataGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.ChrgDetailDataGrid.Size = new System.Drawing.Size(967, 159);
-            this.ChrgDetailDataGrid.TabIndex = 1;
-            // 
-            // chargeDetailsContextMenu
-            // 
-            this.chargeDetailsContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.addModifierToolStripMenuItem,
-            this.removeModifierToolStripMenuItem});
-            this.chargeDetailsContextMenu.Name = "chargeDetailsContextMenu";
-            this.chargeDetailsContextMenu.Size = new System.Drawing.Size(166, 48);
-            this.chargeDetailsContextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.chargeDetailsContextMenu_Opening);
-            // 
-            // addModifierToolStripMenuItem
-            // 
-            this.addModifierToolStripMenuItem.Name = "addModifierToolStripMenuItem";
-            this.addModifierToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
-            this.addModifierToolStripMenuItem.Text = "Add Modifier";
-            // 
-            // removeModifierToolStripMenuItem
-            // 
-            this.removeModifierToolStripMenuItem.Name = "removeModifierToolStripMenuItem";
-            this.removeModifierToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
-            this.removeModifierToolStripMenuItem.Text = "Remove Modifier";
-            // 
-            // AddChargeButton
-            // 
-            this.AddChargeButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.AddChargeButton.Location = new System.Drawing.Point(1046, 3);
-            this.AddChargeButton.Name = "AddChargeButton";
-            this.AddChargeButton.Size = new System.Drawing.Size(86, 23);
-            this.AddChargeButton.TabIndex = 7;
-            this.AddChargeButton.Text = "Add Charge";
-            this.AddChargeButton.UseVisualStyleBackColor = true;
-            this.AddChargeButton.Click += new System.EventHandler(this.AddChargeButton_Click);
-            // 
-            // chargeBalRichTextbox
-            // 
-            this.chargeBalRichTextbox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.chargeBalRichTextbox.Location = new System.Drawing.Point(976, 32);
-            this.chargeBalRichTextbox.Name = "chargeBalRichTextbox";
-            this.chargeBalRichTextbox.Size = new System.Drawing.Size(156, 240);
-            this.chargeBalRichTextbox.TabIndex = 8;
-            this.chargeBalRichTextbox.Text = "";
-            // 
-            // TotalChargesTextBox
-            // 
-            this.TotalChargesTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.TotalChargesTextBox.Location = new System.Drawing.Point(1036, 6);
-            this.TotalChargesTextBox.Name = "TotalChargesTextBox";
-            this.TotalChargesTextBox.ReadOnly = true;
-            this.TotalChargesTextBox.Size = new System.Drawing.Size(107, 20);
-            this.TotalChargesTextBox.TabIndex = 6;
-            this.TotalChargesTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            // 
-            // ChargeTotalChargesLabel
-            // 
-            this.ChargeTotalChargesLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.ChargeTotalChargesLabel.AutoSize = true;
-            this.ChargeTotalChargesLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ChargeTotalChargesLabel.Location = new System.Drawing.Point(944, 9);
-            this.ChargeTotalChargesLabel.Name = "ChargeTotalChargesLabel";
-            this.ChargeTotalChargesLabel.Size = new System.Drawing.Size(86, 13);
-            this.ChargeTotalChargesLabel.TabIndex = 5;
-            this.ChargeTotalChargesLabel.Text = "Total Charges";
-            // 
-            // ShowCreditedChrgCheckBox
-            // 
-            this.ShowCreditedChrgCheckBox.AutoSize = true;
-            this.ShowCreditedChrgCheckBox.Location = new System.Drawing.Point(8, 10);
-            this.ShowCreditedChrgCheckBox.Name = "ShowCreditedChrgCheckBox";
-            this.ShowCreditedChrgCheckBox.Size = new System.Drawing.Size(88, 17);
-            this.ShowCreditedChrgCheckBox.TabIndex = 4;
-            this.ShowCreditedChrgCheckBox.Text = "Show Credits";
-            this.ShowCreditedChrgCheckBox.UseVisualStyleBackColor = true;
-            this.ShowCreditedChrgCheckBox.CheckedChanged += new System.EventHandler(this.ShowCreditedChrgCheckBox_CheckedChanged);
+            this.chargeTreeListView1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.chargeTreeListView1.BackColor = System.Drawing.Color.White;
+            this.chargeTreeListView1.CurrentAccount = null;
+            this.chargeTreeListView1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.chargeTreeListView1.Location = new System.Drawing.Point(3, 3);
+            this.chargeTreeListView1.Name = "chargeTreeListView1";
+            this.chargeTreeListView1.Size = new System.Drawing.Size(1145, 486);
+            this.chargeTreeListView1.TabIndex = 0;
+            this.chargeTreeListView1.CreditCharge += new System.EventHandler<LabBilling.UserControls.ChargeTreeListViewArgs>(this.chargeTreeListView1_CreditCharge);
+            this.chargeTreeListView1.MoveCharge += new System.EventHandler<LabBilling.UserControls.ChargeTreeListViewArgs>(this.chargeTreeListView1_MoveCharge);
+            this.chargeTreeListView1.RemoveModifier += new System.EventHandler<LabBilling.UserControls.ChargeTreeListViewArgs>(this.chargeTreeListView1_RemoveModifier);
+            this.chargeTreeListView1.AddModifierClicked += new System.EventHandler<LabBilling.UserControls.ChargeTreeListViewArgs>(this.chargeTreeListView1_AddModifierClicked);
+            this.chargeTreeListView1.AddChargeButtonClicked += new System.EventHandler<LabBilling.UserControls.ChargeTreeListViewArgs>(this.chargeTreeListView1_AddChargeButtonClicked);
             // 
             // tabPayments
             // 
@@ -2199,35 +1913,35 @@ namespace LabBilling.Forms
             this.PaymentsDataGrid.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            dataGridViewCellStyle19.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle19.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle19.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle19.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle19.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle19.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle19.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.PaymentsDataGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle19;
+            dataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle13.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle13.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle13.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle13.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle13.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle13.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.PaymentsDataGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle13;
             this.PaymentsDataGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle20.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle20.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle20.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle20.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle20.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle20.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle20.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.PaymentsDataGrid.DefaultCellStyle = dataGridViewCellStyle20;
+            dataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle14.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle14.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle14.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle14.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle14.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle14.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.PaymentsDataGrid.DefaultCellStyle = dataGridViewCellStyle14;
             this.PaymentsDataGrid.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.PaymentsDataGrid.Location = new System.Drawing.Point(3, 115);
             this.PaymentsDataGrid.Name = "PaymentsDataGrid";
             this.PaymentsDataGrid.ReadOnly = true;
-            dataGridViewCellStyle21.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle21.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle21.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle21.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle21.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle21.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle21.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.PaymentsDataGrid.RowHeadersDefaultCellStyle = dataGridViewCellStyle21;
+            dataGridViewCellStyle15.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle15.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle15.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle15.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle15.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle15.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle15.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.PaymentsDataGrid.RowHeadersDefaultCellStyle = dataGridViewCellStyle15;
             this.PaymentsDataGrid.RowHeadersVisible = false;
             this.PaymentsDataGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.PaymentsDataGrid.Size = new System.Drawing.Size(1145, 315);
@@ -2502,33 +2216,33 @@ namespace LabBilling.Forms
             this.BillActivityDataGrid.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.BillActivityDataGrid.BackgroundColor = System.Drawing.Color.WhiteSmoke;
-            dataGridViewCellStyle22.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle22.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle22.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle22.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle22.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle22.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle22.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.BillActivityDataGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle22;
+            dataGridViewCellStyle16.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle16.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle16.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle16.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle16.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle16.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle16.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.BillActivityDataGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle16;
             this.BillActivityDataGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle23.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle23.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle23.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle23.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle23.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle23.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle23.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.BillActivityDataGrid.DefaultCellStyle = dataGridViewCellStyle23;
+            dataGridViewCellStyle17.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle17.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle17.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle17.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle17.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle17.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle17.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.BillActivityDataGrid.DefaultCellStyle = dataGridViewCellStyle17;
             this.BillActivityDataGrid.Location = new System.Drawing.Point(8, 35);
             this.BillActivityDataGrid.Name = "BillActivityDataGrid";
-            dataGridViewCellStyle24.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle24.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle24.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle24.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle24.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle24.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle24.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.BillActivityDataGrid.RowHeadersDefaultCellStyle = dataGridViewCellStyle24;
+            dataGridViewCellStyle18.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle18.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle18.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle18.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle18.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle18.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle18.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.BillActivityDataGrid.RowHeadersDefaultCellStyle = dataGridViewCellStyle18;
             this.BillActivityDataGrid.Size = new System.Drawing.Size(916, 125);
             this.BillActivityDataGrid.TabIndex = 0;
             this.BillActivityDataGrid.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.BillActivityDataGrid_MouseDoubleClick);
@@ -2545,33 +2259,6 @@ namespace LabBilling.Forms
             this.minPmtTextBox.Name = "minPmtTextBox";
             this.minPmtTextBox.Size = new System.Drawing.Size(100, 20);
             this.minPmtTextBox.TabIndex = 9;
-            // 
-            // chargesNewPage
-            // 
-            this.chargesNewPage.Controls.Add(this.chargeTreeListView1);
-            this.chargesNewPage.Location = new System.Drawing.Point(4, 22);
-            this.chargesNewPage.Name = "chargesNewPage";
-            this.chargesNewPage.Padding = new System.Windows.Forms.Padding(3);
-            this.chargesNewPage.Size = new System.Drawing.Size(1151, 492);
-            this.chargesNewPage.TabIndex = 14;
-            this.chargesNewPage.Text = "New Charges";
-            this.chargesNewPage.UseVisualStyleBackColor = true;
-            // 
-            // chargeTreeListView1
-            // 
-            this.chargeTreeListView1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.chargeTreeListView1.BackColor = System.Drawing.Color.White;
-            this.chargeTreeListView1.CurrentAccount = null;
-            this.chargeTreeListView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.chargeTreeListView1.Location = new System.Drawing.Point(3, 3);
-            this.chargeTreeListView1.Name = "chargeTreeListView1";
-            this.chargeTreeListView1.Size = new System.Drawing.Size(1145, 486);
-            this.chargeTreeListView1.TabIndex = 0;
-            this.chargeTreeListView1.CreditCharge += new System.EventHandler<LabBilling.UserControls.ChargeTreeListViewArgs>(this.chargeTreeListView1_CreditCharge);
-            this.chargeTreeListView1.MoveCharge += new System.EventHandler<LabBilling.UserControls.ChargeTreeListViewArgs>(this.chargeTreeListView1_MoveCharge);
-            this.chargeTreeListView1.RemoveModifier += new System.EventHandler<LabBilling.UserControls.ChargeTreeListViewArgs>(this.chargeTreeListView1_RemoveModifier);
-            this.chargeTreeListView1.AddModifierClicked += new System.EventHandler<LabBilling.UserControls.ChargeTreeListViewArgs>(this.chargeTreeListView1_AddModifierClicked);
-            this.chargeTreeListView1.AddChargeButtonClicked += new System.EventHandler<LabBilling.UserControls.ChargeTreeListViewArgs>(this.chargeTreeListView1_AddChargeButtonClicked);
             // 
             // menuStrip1
             // 
@@ -3032,14 +2719,7 @@ namespace LabBilling.Forms
             ((System.ComponentModel.ISupportInitialize)(this.DiagnosisDataGrid)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.DxDeleteButton)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.DxSearchButton)).EndInit();
-            this.tabCharges.ResumeLayout(false);
-            this.tabCharges.PerformLayout();
-            this.chargeLayoutPanel.ResumeLayout(false);
-            this.chargeLayoutPanel.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.ChargesDataGrid)).EndInit();
-            this.menuCharges.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.ChrgDetailDataGrid)).EndInit();
-            this.chargeDetailsContextMenu.ResumeLayout(false);
+            this.chargesNewPage.ResumeLayout(false);
             this.tabPayments.ResumeLayout(false);
             this.tabPayments.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.PaymentsDataGrid)).EndInit();
@@ -3049,7 +2729,6 @@ namespace LabBilling.Forms
             this.tabBillingActivity.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.statementHistoryDataGrid)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.BillActivityDataGrid)).EndInit();
-            this.chargesNewPage.ResumeLayout(false);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.dxPointerMenuStrip.ResumeLayout(false);
@@ -3074,7 +2753,6 @@ namespace LabBilling.Forms
         private System.Windows.Forms.Label BannerDOBSexLabel;
         private System.Windows.Forms.Label BannerAccountMrnLabel;
         private System.Windows.Forms.ToolStripMenuItem personSearchToolStripMenuItem;
-        private System.Windows.Forms.DataGridView ChargesDataGrid;
         private System.Windows.Forms.DataGridView PaymentsDataGrid;
         private System.Windows.Forms.DataGridView DiagnosisDataGrid;
         private System.Windows.Forms.PictureBox DxSearchButton;
@@ -3087,14 +2765,6 @@ namespace LabBilling.Forms
         private System.Windows.Forms.Button SaveDxButton;
         private System.Windows.Forms.PictureBox DxDeleteButton;
         private System.Windows.Forms.PictureBox RefreshButton;
-        private System.Windows.Forms.DataGridView ChrgDetailDataGrid;
-        private System.Windows.Forms.Label ChargeDetailGridLabel;
-        private System.Windows.Forms.Label ChargesDataGridLabel;
-        private System.Windows.Forms.ContextMenuStrip menuCharges;
-        private System.Windows.Forms.ToolStripMenuItem toolStripCreditCharge;
-        private System.Windows.Forms.CheckBox ShowCreditedChrgCheckBox;
-        private System.Windows.Forms.TextBox TotalChargesTextBox;
-        private System.Windows.Forms.Label ChargeTotalChargesLabel;
         private System.Windows.Forms.TextBox TotalPaymentTextBox;
         private System.Windows.Forms.Label PmtTotalWriteOffLabel;
         private System.Windows.Forms.TextBox TotalWriteOffTextBox;
@@ -3103,7 +2773,6 @@ namespace LabBilling.Forms
         private System.Windows.Forms.Label PmtTotalPaymentLabel;
         private System.Windows.Forms.Label PmtTotalPmtAdjLabel;
         private System.Windows.Forms.TextBox TotalPmtAllTextBox;
-        private System.Windows.Forms.Button AddChargeButton;
         private System.Windows.Forms.RichTextBox NotesDisplayTextBox;
         private System.Windows.Forms.Button AddNoteButton;
         private System.Windows.Forms.MaskedTextBox ZipcodeTextBox;
@@ -3200,7 +2869,6 @@ namespace LabBilling.Forms
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage summaryTab;
         private System.Windows.Forms.TabPage tabNotes;
-        private System.Windows.Forms.TabPage tabCharges;
         private System.Windows.Forms.TabPage tabPayments;
         private System.Windows.Forms.TabPage tabDiagnosis;
         private System.Windows.Forms.TabPage tabDemographics;
@@ -3250,11 +2918,9 @@ namespace LabBilling.Forms
         private System.Windows.Forms.ToolStripMenuItem swapInsurancesToolStripMenuItem;
         private UserControls.DateTextBox DateOfBirthTextBox;
         private System.Windows.Forms.ComboBox statementFlagComboBox;
-        private System.Windows.Forms.ToolStripMenuItem moveChargeToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem moveAllChargesToolStripMenuItem;
         private System.Windows.Forms.TextBox bannerDateOfServiceTextBox;
         private System.Windows.Forms.Label bannerDateOfServiceLabel;
-        private System.Windows.Forms.TableLayoutPanel chargeLayoutPanel;
         private System.Windows.Forms.ToolStripMenuItem generateClientStatementToolStripMenuItem;
         private System.Windows.Forms.DataGridView dxPointerGrid2;
         private System.Windows.Forms.Label label4;
@@ -3263,19 +2929,12 @@ namespace LabBilling.Forms
         private System.Windows.Forms.ToolStripMenuItem clearDxPointerToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem printEOBToolStripMenuItem;
         private MetroFramework.Controls.MetroButton clearClaimStatusButton;
-        private System.Windows.Forms.ContextMenuStrip chargeDetailsContextMenu;
-        private System.Windows.Forms.ToolStripMenuItem addModifierToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem removeModifierToolStripMenuItem;
         private System.Windows.Forms.CheckBox noteAlertCheckBox;
         private System.Windows.Forms.Label bannerAlertLabel;
-        private System.Windows.Forms.RichTextBox chargeBalRichTextbox;
         private System.Windows.Forms.Label BannerThirdPartyBalLabel;
         private System.Windows.Forms.Label ThirdPartyBalLabel;
         private System.Windows.Forms.Label BannerClientBalLabel;
         private System.Windows.Forms.Label ClientBalLabel;
-        private System.Windows.Forms.RadioButton showAllChargeRadioButton;
-        private System.Windows.Forms.RadioButton showClientRadioButton;
-        private System.Windows.Forms.RadioButton show3rdPartyRadioButton;
         private System.Windows.Forms.DataGridView statementHistoryDataGrid;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.TabPage chargesNewPage;

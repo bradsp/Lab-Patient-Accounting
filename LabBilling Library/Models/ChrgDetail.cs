@@ -63,7 +63,11 @@ namespace LabBilling.Core.Models
         public string FinancialType { get; set; }
         [Column("credited")]
         public bool IsCredited { get; set; }
+        [Column("fee_sched")]
+        public string FeeSchedule { get; set; }
 
+        [Ignore]
+        public string CdmDescription { get; set; }
 
 
         [Ignore]

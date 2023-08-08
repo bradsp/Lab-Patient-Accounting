@@ -14,13 +14,9 @@ namespace LabBilling.Core.DataAccess
     /// </summary>
     public sealed class PatRepository : RepositoryBase<Pat>
     {
-        private readonly DictDxRepository dictDxDb;
-        private readonly PhyRepository phyRepository;
 
         public PatRepository(IAppEnvironment appEnvironment) : base(appEnvironment)
         {
-            dictDxDb = new DictDxRepository(appEnvironment);
-            phyRepository = new PhyRepository(appEnvironment);
         }
 
         public bool RecordExists(string accountNo)
@@ -59,7 +55,7 @@ namespace LabBilling.Core.DataAccess
                     return null;
             }
 
-            record.Physician = phyRepository.GetByNPI(record.ProviderId);
+            record.Physician = AppEnvironment.Context.PhyRepository.GetByNPI(record.ProviderId);
 
             if (!StringExtensions.ParseName(record.PatFullName, out string strLastName, out string strFirstName, out string strMidName, out string strSuffix))
             {
@@ -108,55 +104,55 @@ namespace LabBilling.Core.DataAccess
             record.Diagnoses = new List<PatDiag>();
             if (record.Dx1 != null && record.Dx1 != "")
             {
-                var dictRecord = dictDxDb.GetByCode(record.Dx1, amaYear);
+                var dictRecord = AppEnvironment.Context.DictDxRepository.GetByCode(record.Dx1, amaYear);
                 record.Dx1Desc = dictRecord.Description;
                 record.Diagnoses.Add(new PatDiag { No = 1, Code = record.Dx1, Description = dictRecord.Description });
             }
             if (record.Dx2 != null && record.Dx2 != "")
             {
-                var dictRecord = dictDxDb.GetByCode(record.Dx2, amaYear);
+                var dictRecord = AppEnvironment.Context.DictDxRepository.GetByCode(record.Dx2, amaYear);
                 record.Dx2Desc = dictRecord.Description;
                 record.Diagnoses.Add(new PatDiag { No = 2, Code = record.Dx2, Description = dictRecord.Description });
             }
             if (record.Dx3 != null && record.Dx3 != "")
             {
-                var dictRecord = dictDxDb.GetByCode(record.Dx3, amaYear);
+                var dictRecord = AppEnvironment.Context.DictDxRepository.GetByCode(record.Dx3, amaYear);
                 record.Dx3Desc = dictRecord.Description;
                 record.Diagnoses.Add(new PatDiag { No = 3, Code = record.Dx3, Description = dictRecord.Description });
             }
             if (record.Dx4 != null && record.Dx4 != "")
             {
-                var dictRecord = dictDxDb.GetByCode(record.Dx4, amaYear);
+                var dictRecord = AppEnvironment.Context.DictDxRepository.GetByCode(record.Dx4, amaYear);
                 record.Dx4Desc = dictRecord.Description;
                 record.Diagnoses.Add(new PatDiag { No = 4, Code = record.Dx4, Description = dictRecord.Description });
             }
             if (record.Dx5 != null && record.Dx5 != "")
             {
-                var dictRecord = dictDxDb.GetByCode(record.Dx5, amaYear);
+                var dictRecord = AppEnvironment.Context.DictDxRepository.GetByCode(record.Dx5, amaYear);
                 record.Dx5Desc = dictRecord.Description;
                 record.Diagnoses.Add(new PatDiag { No = 5, Code = record.Dx5, Description = dictRecord.Description });
             }
             if (record.Dx6 != null && record.Dx6 != "")
             {
-                var dictRecord = dictDxDb.GetByCode(record.Dx6, amaYear);
+                var dictRecord = AppEnvironment.Context.DictDxRepository.GetByCode(record.Dx6, amaYear);
                 record.Dx6Desc = dictRecord.Description;
                 record.Diagnoses.Add(new PatDiag { No = 6, Code = record.Dx6, Description = dictRecord.Description });
             }
             if (record.Dx7 != null && record.Dx7 != "")
             {
-                var dictRecord = dictDxDb.GetByCode(record.Dx7, amaYear);
+                var dictRecord = AppEnvironment.Context.DictDxRepository.GetByCode(record.Dx7, amaYear);
                 record.Dx7Desc = dictRecord.Description;
                 record.Diagnoses.Add(new PatDiag { No = 7, Code = record.Dx7, Description = dictRecord.Description });
             }
             if (record.Dx8 != null && record.Dx8 != "")
             {
-                var dictRecord = dictDxDb.GetByCode(record.Dx8, amaYear);
+                var dictRecord = AppEnvironment.Context.DictDxRepository.GetByCode(record.Dx8, amaYear);
                 record.Dx8Desc = dictRecord.Description;
                 record.Diagnoses.Add(new PatDiag { No = 8, Code = record.Dx8, Description = dictRecord.Description });
             }
             if (record.Dx9 != null && record.Dx9 != "")
             {
-                var dictRecord = dictDxDb.GetByCode(record.Dx9, amaYear);
+                var dictRecord = AppEnvironment.Context.DictDxRepository.GetByCode(record.Dx9, amaYear);
                 record.Dx9Desc = dictRecord.Description;
                 record.Diagnoses.Add(new PatDiag { No = 9, Code = record.Dx9, Description = dictRecord.Description });
             }

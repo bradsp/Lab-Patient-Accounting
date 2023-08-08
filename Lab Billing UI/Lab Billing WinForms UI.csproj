@@ -124,12 +124,6 @@
     <Compile Include="Forms\ChargeMasterEditForm.Designer.cs">
       <DependentUpon>ChargeMasterEditForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\ClaimRuleEditorForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\ClaimRuleEditorForm.Designer.cs">
-      <DependentUpon>ClaimRuleEditorForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\ClaimsManagementForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -501,9 +495,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ChargeMasterMaintenance.resx">
       <DependentUpon>ChargeMasterMaintenance.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ClaimRuleEditorForm.resx">
-      <DependentUpon>ClaimRuleEditorForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ClaimsManagementForm.resx">
       <DependentUpon>ClaimsManagementForm.cs</DependentUpon>

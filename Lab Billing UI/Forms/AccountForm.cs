@@ -233,27 +233,15 @@ namespace LabBilling.Forms
                 AddOnChangeHandlerToInputControls(tabInsurance);
             }
 
-            //build context menu
-            foreach (var item in Dictionaries.cptModifiers)
-            {
-                ToolStripMenuItem tsItem = new ToolStripMenuItem(item.Key);
-                tsItem.Tag = item.Value;
-                tsItem.Click += new EventHandler(AddModifier_Click);
-
-                addModifierToolStripMenuItem.DropDownItems.Add(tsItem);
-            }
-
-            removeModifierToolStripMenuItem.Click += new EventHandler(RemoveModifier_Click);
         }
 
         private void SetFormPermissions()
         {
-            Helper.SetControlsAccess(tabCharges.Controls, false);
-            Helper.SetControlsAccess(chargeLayoutPanel.Controls, false);
+            Helper.SetControlsAccess(chargesNewPage.Controls, false);
             if (Program.AppEnvironment.ApplicationParameters.AllowChargeEntry)
             {
-                Helper.SetControlsAccess(tabCharges.Controls, Program.LoggedInUser.CanSubmitCharges);
-                Helper.SetControlsAccess(chargeLayoutPanel.Controls, Program.LoggedInUser.CanSubmitCharges);
+                //Helper.SetControlsAccess(tabCharges.Controls, Program.LoggedInUser.CanSubmitCharges);
+                //Helper.SetControlsAccess(chargeLayoutPanel.Controls, Program.LoggedInUser.CanSubmitCharges);
             }
 
             Helper.SetControlsAccess(tabPayments.Controls, false);
@@ -268,7 +256,7 @@ namespace LabBilling.Forms
             Helper.SetControlsAccess(tabDiagnosis.Controls, false);
             Helper.SetControlsAccess(tabGuarantor.Controls, false);
             Helper.SetControlsAccess(tabNotes.Controls, false);
-            AddChargeButton.Visible = false;
+            //AddChargeButton.Visible = false;
             AddPaymentButton.Visible = false;
             SaveInsuranceButton.Visible = false;
             SaveDemographics.Visible = false;
@@ -291,10 +279,9 @@ namespace LabBilling.Forms
                     Helper.SetControlsAccess(tabDiagnosis.Controls, true);
                     Helper.SetControlsAccess(tabGuarantor.Controls, true);
                     Helper.SetControlsAccess(tabNotes.Controls, true);
-                    Helper.SetControlsAccess(chargeLayoutPanel.Controls, true);
-                    Helper.SetControlsAccess(tabCharges.Controls, true);
+                    Helper.SetControlsAccess(chargesNewPage.Controls, true);
                     Helper.SetControlsAccess(tabPayments.Controls, true);
-                    AddChargeButton.Visible = Program.LoggedInUser.CanSubmitCharges;
+                    //AddChargeButton.Visible = Program.LoggedInUser.CanSubmitCharges;
                     AddPaymentButton.Visible = Program.LoggedInUser.CanAddAdjustments;
                     SaveInsuranceButton.Visible = true;
                     SaveDemographics.Visible = true;
@@ -337,12 +324,6 @@ namespace LabBilling.Forms
             this.Text = $"{currentAccount.AccountNo} - {currentAccount.PatFullName}";
 
             dxBindingList = new BindingList<PatDiag>(currentAccount.Pat.Diagnoses);
-            ShowCreditedChrgCheckBox.Checked = false;
-
-            if (currentAccount.ReadyToBill)
-            {
-                //MessageBox.Show("Account is flagged ready to bill, or has been billed. Any changes can affect the claim.");
-            }
 
             if (currentAccount.Status == AccountStatus.Hold)
             {
@@ -364,7 +345,6 @@ namespace LabBilling.Forms
             LoadSummaryTab();
             LoadDemographics();
             LoadInsuranceData();
-            //LoadCharges();
             LoadPayments();
             LoadDx();
             LoadNotes();
@@ -511,8 +491,6 @@ namespace LabBilling.Forms
             {
                 bannerAlertLabel.Text += "  Account is flagged ready to bill, or has been billed. Any changes can affect the claim.";
             }
-
-            TotalChargesTextBox.Text = currentAccount.TotalCharges.ToString("c");
 
             BannerNameTextBox.Text = currentAccount.PatFullName;
             BannerAccountTextBox.Text = _selectedAccount;
@@ -1052,245 +1030,6 @@ namespace LabBilling.Forms
             {
                 string insCode = insurancePlanTextBox.Text = lookupForm.SelectedValue;
                 LookupInsCode(insCode);
-            }
-        }
-
-        #endregion
-
-        #region ChargeTab
-        private void LoadCharges()
-        {
-            Log.Instance.Trace("Entering");
-
-            var chargesList = currentAccount.Charges;
-
-            chargesTable = Helper.ConvertToDataTable(chargesList);
-
-
-            ChargesDataGrid.DataSource = chargesTable;
-            ChargesDataGrid.DataMember = chargesTable.TableName;
-            if (currentAccount.FinCode == "CLIENT")
-            {
-                chargesTable.DefaultView.Sort = $"{nameof(Chrg.ChrgNo)} desc";
-            }
-            if (!ShowCreditedChrgCheckBox.Checked)
-            {
-                chargesTable.DefaultView.RowFilter = $"{nameof(Chrg.IsCredited)} = false";
-            }
-
-            foreach (DataGridViewColumn col in ChargesDataGrid.Columns)
-            {
-                col.Visible = false;
-            }
-
-            ChargesDataGrid.Columns[nameof(Chrg.IsCredited)].Visible = true;
-            ChargesDataGrid.Columns[nameof(Chrg.CDMCode)].Visible = true;
-            ChargesDataGrid.Columns[nameof(Chrg.CdmDescription)].Visible = true;
-            //ChargesDataGrid.Columns[nameof(Chrg.Quantity)].Visible = true;
-            ChargesDataGrid.Columns[nameof(Chrg.NetAmount)].Visible = true;
-            ChargesDataGrid.Columns[nameof(Chrg.ServiceDate)].Visible = true;
-            ChargesDataGrid.Columns[nameof(Chrg.Status)].Visible = true;
-            ChargesDataGrid.Columns[nameof(Chrg.Comment)].Visible = true;
-            ChargesDataGrid.Columns[nameof(Chrg.ChrgNo)].Visible = true;
-            //ChargesDataGrid.Columns[nameof(Chrg.Invoice)].Visible = true;
-            //ChargesDataGrid.Columns[nameof(Chrg.FinCode)].Visible = true;
-            //ChargesDataGrid.Columns[nameof(Chrg.ClientMnem)].Visible = true;
-
-            ChargesDataGrid.Columns[nameof(Chrg.NetAmount)].DefaultCellStyle.Format = "N2";
-            ChargesDataGrid.Columns[nameof(Chrg.NetAmount)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-            //ChargesDataGrid.Columns[nameof(Chrg.Quantity)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-
-            ChargesDataGrid.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.DisplayedCells);
-            ChargesDataGrid.Columns[nameof(Chrg.CdmDescription)].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            ChargesDataGrid.BackgroundColor = Color.AntiqueWhite;
-            ChrgDetailDataGrid.BackgroundColor = Color.AntiqueWhite;
-
-            chargeBalRichTextbox.Text = "";
-            chargeBalRichTextbox.SelectionFont = new Font(chargeBalRichTextbox.Font.FontFamily, 10, FontStyle.Bold);
-            chargeBalRichTextbox.SelectedText = "3rd Party Patient Balance\n";
-
-            chargeBalRichTextbox.AppendText(currentAccount.ClaimBalance.ToString("c") + "\n");
-
-            foreach (var (client, balance) in currentAccount.ClientBalance)
-            {
-                chargeBalRichTextbox.SelectionFont = new Font(chargeBalRichTextbox.Font.FontFamily, 10, FontStyle.Bold);
-                chargeBalRichTextbox.SelectedText = $"Client {client} Balance\n";
-                chargeBalRichTextbox.AppendText(balance.ToString("c") + "\n");
-            }
-
-            ChargesDataGrid.ClearSelection();
-            ChrgDetailDataGrid.ClearSelection();
-
-        }
-
-        private async void RemoveModifier_Click(object sender, EventArgs e)
-        {
-            Log.Instance.Trace($"Entering");
-
-            // get selected charge detail uri
-            int selectedRows = ChrgDetailDataGrid.Rows.GetRowCount(DataGridViewElementStates.Selected);
-            if (selectedRows > 0)
-            {
-                DataGridViewRow row = ChrgDetailDataGrid.SelectedRows[0];
-                var uri = Convert.ToInt32(row.Cells[nameof(ChrgDetail.ChrgDetailId)].Value.ToString());
-
-                chrgDetailRepository.RemoveModifier(uri);
-                await LoadAccountData();
-            }
-        }
-
-        private async void AddModifier_Click(object sender, EventArgs e)
-        {
-            Log.Instance.Trace($"Entering");
-            ToolStripMenuItem item = sender as ToolStripMenuItem;
-
-            // get selected charge detail uri
-            int selectedRows = ChrgDetailDataGrid.Rows.GetRowCount(DataGridViewElementStates.Selected);
-            if (selectedRows > 0)
-            {
-                DataGridViewRow row = ChrgDetailDataGrid.SelectedRows[0];
-                var uri = Convert.ToInt32(row.Cells[nameof(ChrgDetail.ChrgDetailId)].Value.ToString());
-
-                chrgDetailRepository.AddModifier(uri, item.Text);
-                await LoadAccountData();
-            }
-        }
-
-        private void DgvCharges_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
-        {
-            Log.Instance.Trace($"Entering");
-            int selectedRows = ChargesDataGrid.Rows.GetRowCount(DataGridViewElementStates.Selected);
-            if (selectedRows > 0)
-            {
-
-                DataGridViewRow row = ChargesDataGrid.SelectedRows[0];
-                var chrg = chrgRepository.GetById(Convert.ToInt32(row.Cells[nameof(Chrg.ChrgNo)].Value.ToString()));
-
-                DisplayPOCOForm<Chrg> frm = new DisplayPOCOForm<Chrg>(chrg)
-                {
-                    Title = "Charge Details"
-                };
-                frm.Show();
-            }
-        }
-
-        /// <summary>
-        /// Single Click on charge table will display charge details for the clicked row in the
-        /// charge details grid.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void ChargesDataGrid_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
-        {
-            Log.Instance.Trace($"Entering");
-            int selectedRows = ChargesDataGrid.Rows.GetRowCount(DataGridViewElementStates.Selected);
-            if (selectedRows > 0)
-            {
-                DataGridViewRow row = ChargesDataGrid.SelectedRows[0];
-                var chrg = chrgRepository.GetById(Convert.ToInt32(row.Cells[nameof(Chrg.ChrgNo)].Value.ToString()));
-
-                try
-                {
-                    ChrgDetailDataGrid.DataSource = chrg.ChrgDetails;
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(this, string.Format("Exception {0}", ex.Message));
-                }
-                foreach (DataGridViewColumn col in ChrgDetailDataGrid.Columns)
-                {
-                    col.Visible = false;
-                }
-
-                ChrgDetailDataGrid.Columns[nameof(ChrgDetail.Cpt4)].Visible = true;
-                ChrgDetailDataGrid.Columns[nameof(ChrgDetail.Modifier)].Visible = true;
-                ChrgDetailDataGrid.Columns[nameof(ChrgDetail.Modifer2)].Visible = true;
-                ChrgDetailDataGrid.Columns[nameof(ChrgDetail.RevenueCode)].Visible = true;
-                ChrgDetailDataGrid.Columns[nameof(ChrgDetail.Type)].Visible = true;
-                //ChrgDetailDataGrid.Columns[nameof(ChrgDetail.OrderCode)].Visible = true;
-                ChrgDetailDataGrid.Columns[nameof(ChrgDetail.Amount)].Visible = true;
-
-                ChrgDetailDataGrid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
-                ChrgDetailDataGrid.Columns[nameof(ChrgDetail.Cpt4)].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-                ChrgDetailDataGrid.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
-
-                ChrgDetailDataGrid.Columns[nameof(ChrgDetail.Amount)].DefaultCellStyle.Format = "N2";
-
-            }
-        }
-
-        private void ChargesDataGrid_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
-        {
-            Log.Instance.Trace($"Entering");
-            if (ChargesDataGrid[nameof(Chrg.IsCredited), e.RowIndex].Value.ToString() == "True")
-            {
-                e.CellStyle.BackColor = Color.Red;
-                e.CellStyle.ForeColor = Color.White;
-                return;
-            }
-
-            //if (ChargesDataGrid[nameof(Chrg.FinancialType), e.RowIndex].Value.ToString() == "C")
-            //{
-            //    e.CellStyle.BackColor = Color.LightGreen;
-            //}
-            //if (ChargesDataGrid[nameof(Chrg.FinancialType), e.RowIndex].Value.ToString() == "M")
-            //{
-            //    e.CellStyle.BackColor = Color.LightBlue;
-            //}
-
-            return;
-
-        }
-
-        /// <summary>
-        /// Function will credit the charge selected in the charge grid.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private async void ToolStripCreditCharge_Click(object sender, EventArgs e)
-        {
-            Log.Instance.Trace($"Entering");
-            int selectedRows = ChargesDataGrid.Rows.GetRowCount(DataGridViewElementStates.Selected);
-            if (selectedRows > 0)
-            {
-                DataGridViewRow row = ChargesDataGrid.SelectedRows[0];
-
-                InputBoxResult prompt = InputBox.Show(string.Format("Credit Charge Number {0}?\nEnter credit reason.",
-                    row.Cells[nameof(Chrg.ChrgNo)].Value.ToString()),
-                    "Credit Charge", "");
-
-                if (prompt.ReturnCode == DialogResult.OK)
-                {
-                    chrgRepository.CreditCharge(Convert.ToInt32(row.Cells[nameof(Chrg.ChrgNo)].Value.ToString()), prompt.Text);
-                    //reload charge grids to pick up changes
-                    //LoadCharges();
-                    await LoadAccountData();
-                }
-            }
-        }
-
-        private void ShowCreditedChrgCheckBox_CheckedChanged(object sender, EventArgs e)
-        {
-            Log.Instance.Trace($"Entering");
-
-            FilterCharges();
-            return;
-
-            //if (ShowCreditedChrgCheckBox.Checked)
-            //    chargesTable.DefaultView.RowFilter = String.Empty;
-            //else
-            //    chargesTable.DefaultView.RowFilter = "IsCredited = false";
-
-        }
-
-        private async void AddChargeButton_Click(object sender, EventArgs e)
-        {
-            Log.Instance.Trace($"Entering");
-            ChargeEntryForm frm = new ChargeEntryForm(currentAccount);
-
-            if (frm.ShowDialog() == DialogResult.OK)
-            {
-                await LoadAccountData();
             }
         }
 
@@ -2275,32 +2014,6 @@ namespace LabBilling.Forms
             await LoadAccountData();
         }
 
-        private async void moveChargeToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Log.Instance.Trace($"Entering");
-            int selectedRows = ChargesDataGrid.Rows.GetRowCount(DataGridViewElementStates.Selected);
-            if (selectedRows > 0)
-            {
-                DataGridViewRow row = ChargesDataGrid.SelectedRows[0];
-
-                PersonSearchForm personSearch = new PersonSearchForm();
-
-                if (personSearch.ShowDialog() == DialogResult.OK)
-                {
-                    string destAccount = personSearch.SelectedAccount;
-                    int chrgId = Convert.ToInt32(row.Cells[nameof(Chrg.ChrgNo)].Value);
-
-                    if (MessageBox.Show($"Move charge {chrgId} ({row.Cells[nameof(Chrg.CdmDescription)].Value}) to account {destAccount}?",
-                        "Confirm Move", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
-                    {
-                        Log.Instance.Debug($"Moving charge {chrgId} from {currentAccount.AccountNo} to {destAccount}");
-                        accountRepository.MoveCharge(currentAccount.AccountNo, destAccount, chrgId);
-                    }
-                    await LoadAccountData();
-                }
-            }
-        }
-
         private async void moveAllChargesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Log.Instance.Trace($"Entering");
@@ -2421,34 +2134,6 @@ namespace LabBilling.Forms
             bannerAlertLabel.Text = noteAlertCheckBox.Checked ? notesAlertText : "";
 
             accountRepository.SetNoteAlert(currentAccount.AccountNo, noteAlertCheckBox.Checked);
-        }
-
-        private void FilterCharges()
-        {
-
-            chargesTable.DefaultView.RowFilter = string.Empty;
-
-            //if (show3rdPartyRadioButton.Checked)
-            //    chargesTable.DefaultView.RowFilter = $"{nameof(Chrg.FinancialType)} = 'M'";
-
-            //if (showClientRadioButton.Checked)
-            //    chargesTable.DefaultView.RowFilter = $"{nameof(Chrg.FinancialType)} = 'C'";
-
-            if (showAllChargeRadioButton.Checked)
-                chargesTable.DefaultView.RowFilter = String.Empty;
-
-            if (!ShowCreditedChrgCheckBox.Checked)
-            {
-                if (chargesTable.DefaultView.RowFilter == string.Empty)
-                    chargesTable.DefaultView.RowFilter = $"{nameof(Chrg.IsCredited)} = false";
-                else
-                    chargesTable.DefaultView.RowFilter += $"and {nameof(Chrg.IsCredited)} = false";
-            }
-        }
-
-        private void show3rdPartyRadioButton_CheckedChanged(object sender, EventArgs e)
-        {
-            FilterCharges();
         }
 
         private void BannerAccountTextBox_Click(object sender, EventArgs e)

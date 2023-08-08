@@ -16,6 +16,8 @@ namespace LabBilling.Core.DataAccess
         string ServerName { get; set; }
         string User { get; set; }
         bool EnvironmentValid { get; }
+        DbContext Context { get; }
+
         string[] GetArgs();
     }
 }

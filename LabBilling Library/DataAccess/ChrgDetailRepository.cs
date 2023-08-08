@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Linq;
 using LabBilling.Core.Models;
 using LabBilling.Logging;
 using PetaPoco;
@@ -10,6 +11,7 @@ namespace LabBilling.Core.DataAccess
 {
     public sealed class ChrgDetailRepository : RepositoryBase<ChrgDetail>
     {
+
         public ChrgDetailRepository(IAppEnvironment appEnvironment) : base(appEnvironment)
         {
         }
@@ -21,17 +23,18 @@ namespace LabBilling.Core.DataAccess
             if (string.IsNullOrEmpty(accountNo))
                 throw new ArgumentNullException(nameof(accountNo));
 
-            RevenueCodeRepository revenueCodeRepository = new RevenueCodeRepository(AppEnvironment);
-
             var sql = Sql.Builder
                 .From($"{_tableName}")
                 .Where($"{this.GetRealColumn(nameof(ChrgDetail.AccountNo))} = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = accountNo });
 
             var results = dbConnection.Fetch<ChrgDetail>(sql);
 
-            foreach (var result in results)
+            foreach (var result in results)            
             {
-                result.RevenueCodeDetail = revenueCodeRepository.GetByCode(result.RevenueCode);
+                var chrg = AppEnvironment.Context.ChrgRepository.GetById(result.ChrgNo);
+                result.CdmDescription = chrg.Cdm.CdmDetails.Where(x => x.BillCode == result.BillingCode && x.FeeSchedule == result.FeeSchedule).Select(x => x.Description).FirstOrDefault();
+
+                result.RevenueCodeDetail = AppEnvironment.Context.RevenueCodeRepository.GetByCode(result.RevenueCode);
             }
 
             return results;
@@ -54,8 +57,6 @@ namespace LabBilling.Core.DataAccess
             if (string.IsNullOrEmpty(account))
                 throw new ArgumentNullException(nameof(account));
 
-            RevenueCodeRepository revenueCodeRepository = new RevenueCodeRepository(AppEnvironment);
-
             var sql = Sql.Builder
                 .From($"{_tableName}")
                 .Where($"{_tableName}.{this.GetRealColumn(nameof(ChrgDetail.AccountNo))} = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account })
@@ -72,12 +73,40 @@ namespace LabBilling.Core.DataAccess
 
             foreach (var result in results)
             {
-                result.RevenueCodeDetail = revenueCodeRepository.GetByCode(result.RevenueCode);
+                result.RevenueCodeDetail = AppEnvironment.Context.RevenueCodeRepository.GetByCode(result.RevenueCode);
             }
 
             return results;
         }
 
+        public ChrgDetail GetById(int chargeDetailId)
+        {
+            Log.Instance.Trace($"Entering ChrgDetailId {chargeDetailId}");
+            return dbConnection.SingleOrDefault<ChrgDetail>(chargeDetailId);
+        }
+
+        public bool UpdateCredited(int chargeDetailId, bool isCredited = true)
+        {
+            Log.Instance.Trace($"Entering ChrgDetailId {chargeDetailId}");
+
+            if (chargeDetailId <= 0)
+                throw new ArgumentOutOfRangeException(nameof(chargeDetailId));
+
+            try
+            {
+                var chrgDetail = GetById(chargeDetailId);
+                if (chrgDetail != null)
+                {
+                    chrgDetail.IsCredited = isCredited;
+                    return Update(chrgDetail, new List<string> { nameof(Chrg.IsCredited) });
+                }
+                return false;
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException($"Error setting credited on charge {chargeDetailId}", ex);
+            }
+        }
 
         /// <summary>
         /// Add a list of charge details.
@@ -91,9 +120,8 @@ namespace LabBilling.Core.DataAccess
 
             foreach(var cd in chrgDetails)
             {
-                var value = Add(cd);
-                cd.ChrgDetailId = Convert.ToInt32(value);
-                addedCharges.Add(cd);
+                var value = (ChrgDetail)Add(cd);
+                addedCharges.Add(value);
             }
 
             return addedCharges;
@@ -122,8 +150,6 @@ namespace LabBilling.Core.DataAccess
             if (chrg_num <= 0)
                 throw new ArgumentOutOfRangeException(nameof(chrg_num));
 
-            RevenueCodeRepository revenueCodeRepository = new RevenueCodeRepository(AppEnvironment);
-            ChrgDiagnosisPointerRepository chrgDiagnosisPointerRepository = new ChrgDiagnosisPointerRepository(AppEnvironment);
             var sql = PetaPoco.Sql.Builder
                 .From($"{_tableName}")
                 .Where($"{_tableName}.{this.GetRealColumn(nameof(ChrgDetail.ChrgNo))} = @0", new SqlParameter() { SqlDbType = SqlDbType.Decimal, Value = chrg_num });
@@ -132,7 +158,7 @@ namespace LabBilling.Core.DataAccess
 
             foreach(var result in results)
             {
-                result.RevenueCodeDetail = revenueCodeRepository.GetByCode(result.RevenueCode);
+                result.RevenueCodeDetail = AppEnvironment.Context.RevenueCodeRepository.GetByCode(result.RevenueCode);
             }
 
             return results;

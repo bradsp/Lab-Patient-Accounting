@@ -46,7 +46,6 @@
             this.addChargeButton = new MetroFramework.Controls.MetroButton();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.chargeStatus1 = new System.Windows.Forms.RichTextBox();
-            this.chargeStatus2 = new System.Windows.Forms.RichTextBox();
             this.chargesLabel = new MetroFramework.Controls.MetroLabel();
             this.chargeDetailsLabel = new MetroFramework.Controls.MetroLabel();
             this.showCreditsCheckbox = new MetroFramework.Controls.MetroCheckBox();
@@ -150,6 +149,7 @@
             dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
             this.chargeDetailGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle4;
             this.chargeDetailGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.tableLayoutPanel1.SetColumnSpan(this.chargeDetailGrid, 2);
             this.chargeDetailGrid.ContextMenuStrip = this.chargeDetailContextMenu;
             dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
@@ -177,7 +177,7 @@
             this.chargeDetailGrid.RowHeadersDefaultCellStyle = dataGridViewCellStyle6;
             this.chargeDetailGrid.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.chargeDetailGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.chargeDetailGrid.Size = new System.Drawing.Size(940, 282);
+            this.chargeDetailGrid.Size = new System.Drawing.Size(1115, 282);
             this.chargeDetailGrid.TabIndex = 0;
             this.chargeDetailGrid.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.chargeDetailGrid_CellDoubleClick);
             this.chargeDetailGrid.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.chargeDetailGrid_CellFormatting);
@@ -189,18 +189,18 @@
             this.addModifierToolStripMenuItem,
             this.removeModifierToolStripMenuItem});
             this.chargeDetailContextMenu.Name = "chargeDetailContextMenu";
-            this.chargeDetailContextMenu.Size = new System.Drawing.Size(181, 70);
+            this.chargeDetailContextMenu.Size = new System.Drawing.Size(166, 48);
             // 
             // addModifierToolStripMenuItem
             // 
             this.addModifierToolStripMenuItem.Name = "addModifierToolStripMenuItem";
-            this.addModifierToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.addModifierToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
             this.addModifierToolStripMenuItem.Text = "Add Modifier";
             // 
             // removeModifierToolStripMenuItem
             // 
             this.removeModifierToolStripMenuItem.Name = "removeModifierToolStripMenuItem";
-            this.removeModifierToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.removeModifierToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
             this.removeModifierToolStripMenuItem.Text = "Remove Modifier";
             this.removeModifierToolStripMenuItem.Click += new System.EventHandler(this.removeModifierToolStripMenuItem_Click);
             // 
@@ -226,7 +226,6 @@
             this.tableLayoutPanel1.Controls.Add(this.chargeGrid, 0, 1);
             this.tableLayoutPanel1.Controls.Add(this.chargeStatus1, 1, 1);
             this.tableLayoutPanel1.Controls.Add(this.chargeDetailGrid, 0, 3);
-            this.tableLayoutPanel1.Controls.Add(this.chargeStatus2, 1, 3);
             this.tableLayoutPanel1.Controls.Add(this.chargesLabel, 0, 0);
             this.tableLayoutPanel1.Controls.Add(this.chargeDetailsLabel, 0, 2);
             this.tableLayoutPanel1.Location = new System.Drawing.Point(14, 54);
@@ -249,17 +248,6 @@
             this.chargeStatus1.Size = new System.Drawing.Size(169, 139);
             this.chargeStatus1.TabIndex = 2;
             this.chargeStatus1.Text = "";
-            // 
-            // chargeStatus2
-            // 
-            this.chargeStatus2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.chargeStatus2.Location = new System.Drawing.Point(949, 228);
-            this.chargeStatus2.MaxLength = 32767;
-            this.chargeStatus2.Name = "chargeStatus2";
-            this.chargeStatus2.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
-            this.chargeStatus2.Size = new System.Drawing.Size(169, 282);
-            this.chargeStatus2.TabIndex = 3;
-            this.chargeStatus2.Text = "";
             // 
             // chargesLabel
             // 
@@ -288,6 +276,7 @@
             this.showCreditsCheckbox.TabIndex = 4;
             this.showCreditsCheckbox.Text = "Show Credits";
             this.showCreditsCheckbox.UseSelectable = true;
+            this.showCreditsCheckbox.CheckedChanged += new System.EventHandler(this.showCreditsCheckbox_CheckedChanged);
             // 
             // showThirdPartyRadioButton
             // 
@@ -298,6 +287,7 @@
             this.showThirdPartyRadioButton.TabIndex = 5;
             this.showThirdPartyRadioButton.Text = "Show Patient/3rd Party";
             this.showThirdPartyRadioButton.UseSelectable = true;
+            this.showThirdPartyRadioButton.CheckedChanged += new System.EventHandler(this.showThirdPartyRadioButton_CheckedChanged);
             // 
             // showClientRadioButton
             // 
@@ -308,6 +298,7 @@
             this.showClientRadioButton.TabIndex = 5;
             this.showClientRadioButton.Text = "Show Client Charges";
             this.showClientRadioButton.UseSelectable = true;
+            this.showClientRadioButton.CheckedChanged += new System.EventHandler(this.showClientRadioButton_CheckedChanged);
             // 
             // showAllRadioButton
             // 
@@ -320,6 +311,7 @@
             this.showAllRadioButton.TabStop = true;
             this.showAllRadioButton.Text = "Show All";
             this.showAllRadioButton.UseSelectable = true;
+            this.showAllRadioButton.CheckedChanged += new System.EventHandler(this.showAllRadioButton_CheckedChanged);
             // 
             // ChargeTreeListView
             // 
@@ -354,7 +346,6 @@
         private MetroFramework.Controls.MetroButton addChargeButton;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.RichTextBox chargeStatus1;
-        private System.Windows.Forms.RichTextBox chargeStatus2;
         private MetroFramework.Controls.MetroLabel chargesLabel;
         private MetroFramework.Controls.MetroLabel chargeDetailsLabel;
         private System.Windows.Forms.ContextMenuStrip chargeContextMenu;

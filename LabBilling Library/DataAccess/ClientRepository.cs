@@ -13,15 +13,13 @@ namespace LabBilling.Core.DataAccess
 {
     public sealed class ClientRepository : RepositoryBase<Client>
     {
-        ClientDiscountRepository clientDiscountRepository;
-        ClientTypeRepository clientTypeRepository;
+
         private const string invoiceCdm = "CBILL";
         private const string clientFinCode = "CLIENT";
 
         public ClientRepository(IAppEnvironment appEnvironment) : base(appEnvironment)
         {
-            clientDiscountRepository = new ClientDiscountRepository(appEnvironment);
-            clientTypeRepository = new ClientTypeRepository(appEnvironment);
+
         }
 
         public List<Client> GetAll(bool includeInactive)
@@ -49,7 +47,6 @@ namespace LabBilling.Core.DataAccess
         public Client GetClient(string clientMnem)
         {
             Log.Instance.Debug($"Entering - {clientMnem}");
-            MappingRepository mappingRepository = new MappingRepository(AppEnvironment);
 
             if (clientMnem == null)
             {
@@ -60,9 +57,9 @@ namespace LabBilling.Core.DataAccess
             Log.Instance.Debug(dbConnection.LastSQL);
             if (record != null)
             {
-                record.Discounts = clientDiscountRepository.GetByClient(clientMnem);
-                record.ClientType = clientTypeRepository.GetByType(record.Type);
-                record.Mappings = mappingRepository.GetMappingsBySendingValue("CLIENT", record.ClientMnem).ToList();
+                record.Discounts = AppEnvironment.Context.ClientDiscountRepository.GetByClient(clientMnem);
+                record.ClientType = AppEnvironment.Context.ClientTypeRepository.GetByType(record.Type);
+                record.Mappings = AppEnvironment.Context.MappingRepository.GetMappingsBySendingValue("CLIENT", record.ClientMnem).ToList();
             }
             Log.Instance.Debug(dbConnection.LastSQL);
             return record;
@@ -111,7 +108,7 @@ namespace LabBilling.Core.DataAccess
             bool success;
             if (record != null)
             {
-                clientDiscountRepository.SaveAll(table.Discounts);
+                AppEnvironment.Context.ClientDiscountRepository.SaveAll(table.Discounts);
                 success = this.Update(table);
             }
             else
@@ -120,7 +117,7 @@ namespace LabBilling.Core.DataAccess
                 {
                     this.Add(table);
                     if(table.Discounts != null)
-                        clientDiscountRepository.SaveAll(table.Discounts);
+                        AppEnvironment.Context.ClientDiscountRepository.SaveAll(table.Discounts);
                     success = true;
                 }
                 catch (Exception ex)
@@ -172,13 +169,10 @@ namespace LabBilling.Core.DataAccess
         public List<ClientStatementDetailModel> GetStatementDetails(string clientMnem, DateTime asOfDate)
         {
 
-            ChkRepository chkRepository = new ChkRepository(AppEnvironment);
-            ChrgRepository chrgRepository = new ChrgRepository(AppEnvironment);
-            ChrgDetailRepository chrgDetailRepository = new ChrgDetailRepository(AppEnvironment);
 
-            var charges = chrgDetailRepository.GetByAccount(clientMnem, true, true, asOfDate, false);
+            var charges = AppEnvironment.Context.ChrgDetailRepository.GetByAccount(clientMnem, true, true, asOfDate, false);
 
-            var payments = chkRepository.GetByAccount(clientMnem, asOfDate);
+            var payments = AppEnvironment.Context.ChkRepository.GetByAccount(clientMnem, asOfDate);
 
             List<ClientStatementDetailModel> statementDetails = new List<ClientStatementDetailModel>();
 
@@ -187,14 +181,15 @@ namespace LabBilling.Core.DataAccess
                 if (chrg.Amount == 0 && chrg.BillingCode == invoiceCdm)
                     continue;
 
-                var parentCharge = chrgRepository.GetById(chrg.ChrgNo);
+                var parentCharge = AppEnvironment.Context.ChrgRepository.GetById(chrg.ChrgNo);
 
-                var statementDetail = new ClientStatementDetailModel();
-
-                statementDetail.ServiceDate = parentCharge.ServiceDate == null ? DateTime.MinValue : (DateTime)parentCharge.ServiceDate;
-                statementDetail.Account = chrg.AccountNo;
-                statementDetail.Invoice = chrg.Invoice;
-                statementDetail.Amount = chrg.Amount * chrg.Quantity;
+                var statementDetail = new ClientStatementDetailModel
+                {
+                    ServiceDate = parentCharge.ServiceDate == null ? DateTime.MinValue : (DateTime)parentCharge.ServiceDate,
+                    Account = chrg.AccountNo,
+                    Invoice = chrg.Invoice,
+                    Amount = chrg.Amount * chrg.Quantity
+                };
                 if (chrg.BillingCode == invoiceCdm)
                 {
                     statementDetail.Description = $"Invoice {chrg.Invoice}";
@@ -253,8 +248,7 @@ namespace LabBilling.Core.DataAccess
             Account account;
 
             //check to see if client account exists
-            AccountRepository accdb = new AccountRepository(AppEnvironment);
-            account = accdb.GetByAccount(clientMnem);
+            account = AppEnvironment.Context.AccountRepository.GetByAccount(clientMnem);
 
             if (account == null)
             {
@@ -269,7 +263,7 @@ namespace LabBilling.Core.DataAccess
                     ClientMnem = clientMnem
                 };
 
-                accdb.Add(account);
+                AppEnvironment.Context.AccountRepository.Add(account);
             }
 
         }

@@ -16,24 +16,6 @@ namespace LabBilling.Core.DataAccess
 {
     public sealed class AccountRepository : RepositoryBase<Account>, IRepositoryBase<Account>
     {
-        private readonly PatRepository patRepository;
-        private readonly InsRepository insRepository;
-        private readonly ChrgRepository chrgRepository;
-        private readonly ChrgDetailRepository chrgDetailRepository;
-        private readonly ChkRepository chkRepository;
-        private readonly ClientRepository clientRepository;
-        private readonly ClientDiscountRepository clientDiscountRepository;
-        private readonly AccountNoteRepository accountNoteRepository;
-        private readonly BillingActivityRepository billingActivityRepository;
-        private readonly AccountValidationRuleRepository accountValidationRuleRepository;
-        private readonly AccountValidationCriteriaRepository accountValidationCriteriaRepository;
-        private readonly AccountValidationStatusRepository accountValidationStatusRepository;
-        private readonly LMRPRuleRepository lmrpRuleRepository;
-        private readonly FinRepository finRepository;
-        private readonly SystemParametersRepository systemParametersRepository;
-        private readonly AccountLmrpErrorRepository accountLmrpErrorRepository;
-        private readonly CdmRepository cdmRepository;
-        private readonly GlobalBillingCdmRepository globalBillingCdmRepository;
 
         private const string invoicedCdm = "CBILL";
         private const string cbillStatus = "CBILL";
@@ -50,24 +32,7 @@ namespace LabBilling.Core.DataAccess
 
         public AccountRepository(IAppEnvironment appEnvironment) : base(appEnvironment)
         {
-            patRepository = new PatRepository(appEnvironment);
-            insRepository = new InsRepository(appEnvironment);
-            chrgRepository = new ChrgRepository(appEnvironment);
-            chrgDetailRepository = new ChrgDetailRepository(appEnvironment);
-            chkRepository = new ChkRepository(appEnvironment);
-            clientRepository = new ClientRepository(appEnvironment);
-            clientDiscountRepository = new ClientDiscountRepository(appEnvironment);
-            accountNoteRepository = new AccountNoteRepository(appEnvironment);
-            billingActivityRepository = new BillingActivityRepository(appEnvironment);
-            accountValidationRuleRepository = new AccountValidationRuleRepository(appEnvironment);
-            accountValidationCriteriaRepository = new AccountValidationCriteriaRepository(appEnvironment);
-            accountValidationStatusRepository = new AccountValidationStatusRepository(appEnvironment);
-            accountLmrpErrorRepository = new AccountLmrpErrorRepository(appEnvironment);
-            lmrpRuleRepository = new LMRPRuleRepository(appEnvironment);
-            finRepository = new FinRepository(appEnvironment);
-            systemParametersRepository = new SystemParametersRepository(appEnvironment);
-            cdmRepository = new CdmRepository(appEnvironment);
-            globalBillingCdmRepository = new GlobalBillingCdmRepository(appEnvironment);
+
         }
 
         public async Task<Account> GetByAccountAsync(string account, bool demographicsOnly = false) => await Task.Run(() => GetByAccount(account, demographicsOnly));        
@@ -87,23 +52,23 @@ namespace LabBilling.Core.DataAccess
             {
                 if (record.ClientMnem != invalidFinCode)
                 {
-                    record.Client = clientRepository.GetClient(record.ClientMnem);
+                    record.Client = AppEnvironment.Context.ClientRepository.GetClient(record.ClientMnem);
                     if (record.Client != null)
                         record.ClientName = record.Client.Name;
                 }
             }
-            record.Pat = patRepository.GetByAccount(record);
+            record.Pat = AppEnvironment.Context.PatRepository.GetByAccount(record);
 
             if (!demographicsOnly)
             {
-                record.Charges = chrgRepository.GetByAccount(account, true, true, null, false);
-                record.ChargeDetails = chrgDetailRepository.GetByAccount(account);
-                record.Payments = chkRepository.GetByAccount(account);
-                record.Insurances = insRepository.GetByAccount(account);
-                record.Notes = accountNoteRepository.GetByAccount(account);
-                record.BillingActivities = billingActivityRepository.GetByAccount(account);
-                record.AccountValidationStatus = accountValidationStatusRepository.GetByAccount(account);
-                record.Fin = finRepository.GetFin(record.FinCode);
+                record.Charges = AppEnvironment.Context.ChrgRepository.GetByAccount(account, true, true, null, false);
+                record.ChargeDetails = AppEnvironment.Context.ChrgDetailRepository.GetByAccount(account);
+                record.Payments = AppEnvironment.Context.ChkRepository.GetByAccount(account);
+                record.Insurances = AppEnvironment.Context.InsRepository.GetByAccount(account);
+                record.Notes = AppEnvironment.Context.AccountNoteRepository.GetByAccount(account);
+                record.BillingActivities = AppEnvironment.Context.BillingActivityRepository.GetByAccount(account);
+                record.AccountValidationStatus = AppEnvironment.Context.AccountValidationStatusRepository.GetByAccount(account);
+                record.Fin = AppEnvironment.Context.FinRepository.GetFin(record.FinCode);
                 record.AccountAlert = dbConnection.SingleOrDefault<AccountAlert>($"where {this.GetRealColumn(nameof(AccountAlert.AccountNo))} = @0",
                     new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account });
 
@@ -212,18 +177,18 @@ namespace LabBilling.Core.DataAccess
             if (table.Pat.AccountNo != table.AccountNo)
                 table.Pat.AccountNo = table.AccountNo;
 
-            var pat = patRepository.GetByAccount(table);
+            var pat = AppEnvironment.Context.PatRepository.GetByAccount(table);
             if (pat == null)
-                patRepository.Add(table.Pat);
+                AppEnvironment.Context.PatRepository.Add(table.Pat);
             else
-                patRepository.Update(table.Pat);
+                AppEnvironment.Context.PatRepository.Update(table.Pat);
 
             foreach (Ins ins in table.Insurances)
             {
                 if (ins.Account != table.AccountNo)
                     ins.Account = table.AccountNo;
 
-                insRepository.Save(ins);
+                AppEnvironment.Context.InsRepository.Save(ins);
             }
             return table;
         }
@@ -392,9 +357,9 @@ namespace LabBilling.Core.DataAccess
             if (acc == null)
                 throw new ArgumentNullException(nameof(acc));
 
-            if (patRepository.SaveDiagnoses(acc.Pat))
+            if (AppEnvironment.Context.PatRepository.SaveDiagnoses(acc.Pat))
             {
-                acc.Pat = patRepository.GetByAccount(acc);
+                acc.Pat = AppEnvironment.Context.PatRepository.GetByAccount(acc);
                 return true;
             }
             return false;
@@ -455,11 +420,11 @@ namespace LabBilling.Core.DataAccess
                 insA.Coverage = InsCoverage.Temporary;
                 insB.Coverage = swap1;
 
-                insRepository.Update(insA);
-                insRepository.Update(insB);
+                AppEnvironment.Context.InsRepository.Update(insA);
+                AppEnvironment.Context.InsRepository.Update(insB);
 
                 insA.Coverage = swap2;
-                insRepository.Update(insA);
+                AppEnvironment.Context.InsRepository.Update(insA);
 
                 AddNote(accountNo, $"Insurance swap: {swap1} {insA.PlanName} and {swap2} {insB.PlanName}");
                 CompleteTransaction();
@@ -499,7 +464,7 @@ namespace LabBilling.Core.DataAccess
 
                 if (AddNote(table.AccountNo, $"Service Date changed from {oldServiceDate} to {newDate}"))
                 {
-                    table.Notes = accountNoteRepository.GetByAccount(table.AccountNo);
+                    table.Notes = AppEnvironment.Context.AccountNoteRepository.GetByAccount(table.AccountNo);
                 }
 
                 //TODO: is there any reason a date of service change should result in changing all charges --
@@ -509,7 +474,7 @@ namespace LabBilling.Core.DataAccess
                 foreach (var chrg in table.Charges)
                 {
                     chrg.ServiceDate = newDate;
-                    chrgRepository.Update(chrg);
+                    AppEnvironment.Context.ChrgRepository.Update(chrg);
                 }
             }
             else
@@ -547,7 +512,7 @@ namespace LabBilling.Core.DataAccess
             };
             try
             {
-                accountNoteRepository.Add(accountNote);
+                AppEnvironment.Context.AccountNoteRepository.Add(accountNote);
             }
             catch (Exception ex)
             {
@@ -592,10 +557,9 @@ namespace LabBilling.Core.DataAccess
             string oldFinCode = table.FinCode;
 
             //check that newFincode is a valid fincode
-            FinRepository finRepository = new FinRepository(AppEnvironment);
 
-            Fin newFin = finRepository.GetFin(newFinCode);
-            Fin oldFin = finRepository.GetFin(oldFinCode);
+            Fin newFin = AppEnvironment.Context.FinRepository.GetFin(newFinCode);
+            Fin oldFin = AppEnvironment.Context.FinRepository.GetFin(oldFinCode);
 
             if (newFin == null)
             {
@@ -661,9 +625,8 @@ namespace LabBilling.Core.DataAccess
 
             try
             {
-                ClientRepository clientRepository = new ClientRepository(AppEnvironment);
-                Client oldClient = clientRepository.GetClient(oldClientMnem);
-                Client newClient = clientRepository.GetClient(newClientMnem);
+                Client oldClient = AppEnvironment.Context.ClientRepository.GetClient(oldClientMnem);
+                Client newClient = AppEnvironment.Context.ClientRepository.GetClient(newClientMnem);
 
                 dbConnection.BeginTransaction();
 
@@ -786,21 +749,27 @@ namespace LabBilling.Core.DataAccess
             {
                 foreach (var chrg in account.Charges)
                 {
-
-                    var chargesToCredit = account.ChargeDetails.Where(x => x.IsCredited == false && x.ChrgNo == chrg.ChrgNo).ToList();
-
-                    foreach (var chrgdetail in chargesToCredit)
+                    foreach (var chrgdetail in chrg.ChrgDetails.Where(x => x.IsCredited == false))
                     {
+
                         if (chrgdetail.Type == ChrgDetailStatus.Invoice)  //do not reprocess CBILL charge records
                             continue;
 
-                        chrgRepository.CreditCharge(chrgdetail.ChrgDetailId, comment);
-                    }
-                    //insert new charge and detail
-                    if (chrg.Status != ChargeStatus.Invoice)
-                        AddCharge(account, chrg.CDMCode, account.TransactionDate);
-                }
+                        ChrgDetail creditChrgDetail = chrgdetail;
+                        creditChrgDetail.Quantity = creditChrgDetail.Quantity * -1;
+                        creditChrgDetail.ChrgDetailId = 0;
+                        creditChrgDetail.IsCredited = true;
+                        creditChrgDetail.PostedDate = DateTime.Now;
 
+                        AppEnvironment.Context.ChrgDetailRepository.Add(creditChrgDetail);
+
+                        AppEnvironment.Context.ChrgDetailRepository.UpdateCredited(chrgdetail.ChrgDetailId, true);
+
+                        //insert new charge and detail
+                        if (chrg.Status != ChargeStatus.Invoice)
+                            AddChargeDetail(account, chrg);
+                    }
+                }
                 CompleteTransaction();
             }
             catch (Exception ex)
@@ -844,8 +813,8 @@ namespace LabBilling.Core.DataAccess
         {
             Log.Instance.Trace("Entering");
 
-            List<Chrg> charges = chrgRepository.GetByAccount(account);
-            List<ChrgDetail> chargeDetails = chrgDetailRepository.GetByAccount(account);
+            List<Chrg> charges = AppEnvironment.Context.ChrgRepository.GetByAccount(account);
+            List<ChrgDetail> chargeDetails = AppEnvironment.Context.ChrgDetailRepository.GetByAccount(account);
 
             if (charges == null || charges.Count == 0)
                 return false;
@@ -853,7 +822,7 @@ namespace LabBilling.Core.DataAccess
             if(chargeDetails == null || chargeDetails.Count == 0)
                 return false;
 
-            var fin = finRepository.GetFin(finCode);
+            var fin = AppEnvironment.Context.FinRepository.GetFin(finCode);
 
             if (fin == null)
                 return false;
@@ -867,7 +836,7 @@ namespace LabBilling.Core.DataAccess
             {
                 chrg.FinCode = finCode;
                 chrg.FinancialType = fin.FinClass;
-                chrgDetailRepository.Update(chrg, new[] { nameof(ChrgDetail.FinancialType), nameof(ChrgDetail.FinCode) });
+                AppEnvironment.Context.ChrgDetailRepository.Update(chrg, new[] { nameof(ChrgDetail.FinancialType), nameof(ChrgDetail.FinCode) });
             }
 
             return true;
@@ -879,8 +848,8 @@ namespace LabBilling.Core.DataAccess
         {
             Log.Instance.Trace("Entering");
 
-            List<Chrg> charges = chrgRepository.GetByAccount(account);
-            List<ChrgDetail> chrgDetails = chrgDetailRepository.GetByAccount(account);
+            List<Chrg> charges = AppEnvironment.Context.ChrgRepository.GetByAccount(account);
+            List<ChrgDetail> chrgDetails = AppEnvironment.Context.ChrgDetailRepository.GetByAccount(account);
 
             if (charges == null || charges.Count == 0)
                 return false;
@@ -888,14 +857,14 @@ namespace LabBilling.Core.DataAccess
             if (chrgDetails == null || chrgDetails.Count == 0)
                 return false;
 
-            var client = clientRepository.GetClient(clientMnem);
+            var client = AppEnvironment.Context.ClientRepository.GetClient(clientMnem);
             if (client == null)
                 return false;
 
             foreach (var chrg in chrgDetails)
             {
                 chrg.ClientMnem = clientMnem;
-                chrgDetailRepository.Update(chrg, new[] { nameof(ChrgDetail.ClientMnem) });
+                AppEnvironment.Context.ChrgDetailRepository.Update(chrg, new[] { nameof(ChrgDetail.ClientMnem) });
             }
 
             return true;
@@ -965,34 +934,48 @@ namespace LabBilling.Core.DataAccess
             }
 
             //get the cdm number - if cdm number is not found - abort
-            Cdm cdmData = cdmRepository.GetCdm(cdm);
+            Cdm cdmData = AppEnvironment.Context.CdmRepository.GetCdm(cdm);
             if (cdmData == null)
             {
                 Log.Instance.Error($"CDM {cdm} not found.");
                 throw new CdmNotFoundException("CDM not found.", cdm);
             }
 
-            Fin fin = finRepository.GetFin(accData.FinCode) ?? throw new ApplicationException($"No fincode on account {accData.AccountNo}");
+            Fin fin = AppEnvironment.Context.FinRepository.GetFin(accData.FinCode) ?? throw new ApplicationException($"No fincode on account {accData.AccountNo}");
+            try
+            {
+                BeginTransaction();
 
-            Chrg chrg = new Chrg();
+                Chrg chrg = new Chrg();
 
-            //now build the charge & detail records
-            chrg.AccountNo = accData.AccountNo;
-            chrg.CDMCode = cdm;
-            chrg.Cdm = cdmData;
-            chrg.Comment = comment;
-            chrg.IsCredited = false;
-            chrg.OrderMnem = cdmData.Mnem;
-            chrg.LISReqNo = refNumber;
-            chrg.PostingDate = DateTime.Today;
-            chrg.ServiceDate = serviceDate ?? accData.TransactionDate;
+                //now build the charge & detail records
+                chrg.AccountNo = accData.AccountNo;
+                chrg.CDMCode = cdm;
+                chrg.Cdm = cdmData;
+                chrg.Comment = comment;
+                chrg.IsCredited = false;
+                chrg.OrderMnem = cdmData.Mnem;
+                chrg.LISReqNo = refNumber;
+                chrg.PostingDate = DateTime.Today;
+                chrg.ServiceDate = serviceDate ?? accData.TransactionDate;
 
-            var result = chrgRepository.AddCharge(chrg);
-            chrg.ChrgNo = result;
+                var chrgNo = AppEnvironment.Context.ChrgRepository.AddCharge(chrg);
+                chrg.ChrgNo = chrgNo;
 
-            Log.Instance.Trace($"Exiting");
+                Log.Instance.Trace($"Exiting");
 
-            return AddChargeDetail(accData, chrg);
+                var result = AddChargeDetail(accData, chrg);
+
+                CompleteTransaction();
+
+                return result;
+            }
+            catch(Exception ex)
+            {
+                Log.Instance.Error(ex, $"Error during Add Charge. Account {accData.AccountNo} CDM {cdm}");
+                AbortTransaction();
+                throw new ApplicationException($"Error during Add Charge. Account {accData.AccountNo} CDM {cdm}", ex);
+            }
         }
 
         /// <summary>
@@ -1005,7 +988,7 @@ namespace LabBilling.Core.DataAccess
         {
             Log.Instance.Trace($"Entering - charge {chrgId}");
 
-            var chrg = chrgRepository.GetById(chrgId);
+            var chrg = AppEnvironment.Context.ChrgRepository.GetById(chrgId);
             var acc = GetByAccount(chrg.AccountNo);
 
             if (chrg == null)
@@ -1031,18 +1014,18 @@ namespace LabBilling.Core.DataAccess
         {
             Log.Instance.Trace($"Entering - account {chrg.AccountNo} cdm {chrg.CDMCode}");
             List<ChrgDetail> chrgDetails = new List<ChrgDetail>();
-            Fin fin = finRepository.GetFin(accData.FinCode) ?? throw new ApplicationException($"No fincode on account {accData.AccountNo}");
+            Fin fin = AppEnvironment.Context.FinRepository.GetFin(accData.FinCode) ?? throw new ApplicationException($"No fincode on account {accData.AccountNo}");
             Client chargeClient = accData.Client;
 
             if (AppEnvironment.ApplicationParameters.PathologyGroupBillsProfessional)
             {
                 //check for global billing cdm - if it is, change client to Pathology Group, fin to Y, and get appropriate prices
-                var gb = globalBillingCdmRepository.GetCdm(chrg.CDMCode);
+                var gb = AppEnvironment.Context.GlobalBillingCdmRepository.GetCdm(chrg.CDMCode);
                 //hard coding exception for Hardin County for now - 05/09/2023 BSP
                 if (gb != null && accData.ClientMnem != pthExceptionClient)
                 {
-                    fin = finRepository.GetFin("Y") ?? throw new ApplicationException($"Fin code Y not found error {accData.AccountNo}");
-                    chargeClient = clientRepository.GetClient(AppEnvironment.ApplicationParameters.PathologyGroupClientMnem);
+                    fin = AppEnvironment.Context.FinRepository.GetFin("Y") ?? throw new ApplicationException($"Fin code Y not found error {accData.AccountNo}");
+                    chargeClient = AppEnvironment.Context.ClientRepository.GetClient(AppEnvironment.ApplicationParameters.PathologyGroupClientMnem);
                 }
             }
 
@@ -1088,6 +1071,7 @@ namespace LabBilling.Core.DataAccess
                     ServiceDate = chrg.ServiceDate,
                     PostedDate = DateTime.Today,
                     Quantity = 1,
+                    FeeSchedule = fee.FeeSchedule,
                 };
                 switch (fin.FinClass)
                 {
@@ -1120,7 +1104,7 @@ namespace LabBilling.Core.DataAccess
             }
 
             Log.Instance.Trace($"Exiting");
-            return chrgDetailRepository.Add(chrgDetails);
+            return AppEnvironment.Context.ChrgDetailRepository.Add(chrgDetails);
         }
 
         private class BundledProfile
@@ -1181,7 +1165,7 @@ namespace LabBilling.Core.DataAccess
                 foreach (var bundledProfile in bundledProfiles)
                 {
                     //credit the profile charge
-                    chrgRepository.CreditCharge(bundledProfile.ChrgNo, "Unbundling charge");
+                    AppEnvironment.Context.ChrgRepository.CreditCharge(bundledProfile.ChrgNo, "Unbundling charge");
 
                     //enter charges for each component
                     AddCharge(account, "5545154", account.TransactionDate);
@@ -1194,7 +1178,7 @@ namespace LabBilling.Core.DataAccess
                 foreach (var bundledProfile in bundledProfiles)
                 {
                     //credit the profile charge
-                    chrgRepository.CreditCharge(bundledProfile.ChrgNo, "Unbundling charge");
+                    AppEnvironment.Context.ChrgRepository.CreditCharge(bundledProfile.ChrgNo, "Unbundling charge");
 
                     //enter charges for each component
                     AddCharge(account, "5545154", account.TransactionDate);
@@ -1266,7 +1250,7 @@ namespace LabBilling.Core.DataAccess
 
                     for (int i = 0; i < bundledProfiles[x].ComponentCpt.Count; i++)
                     {
-                        chrgRepository.CreditCharge(bundledProfiles[x].ComponentCpt[i].ChrgId, $"Bundling to {bundledProfiles[x].ProfileCdm}");
+                        AppEnvironment.Context.ChrgRepository.CreditCharge(bundledProfiles[x].ComponentCpt[i].ChrgId, $"Bundling to {bundledProfiles[x].ProfileCdm}");
                     }
 
                     this.AddCharge(account, bundledProfiles[x].ProfileCdm, (DateTime)account.TransactionDate, $"Bundled by Rule");
@@ -1297,7 +1281,7 @@ namespace LabBilling.Core.DataAccess
                     account.AccountValidationStatus.account = account.AccountNo;
                     account.AccountValidationStatus.mod_date = DateTime.Now;
                     account.AccountValidationStatus.validation_text = "Account has already been billed. Did not validate.";
-                    accountValidationStatusRepository.Save(account.AccountValidationStatus);
+                    AppEnvironment.Context.AccountValidationStatusRepository.Save(account.AccountValidationStatus);
                     return false;
                 }
                 else
@@ -1357,12 +1341,12 @@ namespace LabBilling.Core.DataAccess
                             //if this is a self-pay, set the statement flag
                             if(account.BillForm == AccountStatus.Statements)
                             {
-                                patRepository.SetStatementFlag(account.AccountNo, "Y");
+                                AppEnvironment.Context.PatRepository.SetStatementFlag(account.AccountNo, "Y");
                             }
                         }
                     }
 
-                    accountValidationStatusRepository.Save(account.AccountValidationStatus);
+                    AppEnvironment.Context.AccountValidationStatusRepository.Save(account.AccountValidationStatus);
                     if (!string.IsNullOrEmpty(lmrperrors))
                     {
                         AccountLmrpError record = new AccountLmrpError
@@ -1374,7 +1358,7 @@ namespace LabBilling.Core.DataAccess
                             Error = lmrperrors
                         };
 
-                        accountLmrpErrorRepository.Save(record);
+                        AppEnvironment.Context.AccountLmrpErrorRepository.Save(record);
                     }
                     CompleteTransaction();
                     return isAccountValid;
@@ -1388,7 +1372,7 @@ namespace LabBilling.Core.DataAccess
                 account.AccountValidationStatus.account = account.AccountNo;
                 account.AccountValidationStatus.mod_date = DateTime.Now;
                 account.AccountValidationStatus.validation_text = "Exception during Validation. Unable to validate.";
-                accountValidationStatusRepository.Save(account.AccountValidationStatus);
+                AppEnvironment.Context.AccountValidationStatusRepository.Save(account.AccountValidationStatus);
             }
 
             return false;
@@ -1402,7 +1386,7 @@ namespace LabBilling.Core.DataAccess
             List<string> errorList = new List<string>();
 
             //determine if there are any rules for ama_year
-            if (lmrpRuleRepository.RulesLoaded((DateTime)account.TransactionDate) <= 0)
+            if (AppEnvironment.Context.LMRPRuleRepository.RulesLoaded((DateTime)account.TransactionDate) <= 0)
             {
                 // no lmrp rules loaded for this ama year. 
                 errorList.Add("Rules not loaded for AMA_Year. DO NOT BILL.");
@@ -1413,16 +1397,16 @@ namespace LabBilling.Core.DataAccess
             {
                 if (cpt4 == null)
                     continue;
-                var ruleDef = lmrpRuleRepository.GetRuleDefinition(cpt4, (DateTime)account.TransactionDate);
+                var ruleDef = AppEnvironment.Context.LMRPRuleRepository.GetRuleDefinition(cpt4, (DateTime)account.TransactionDate);
                 if (ruleDef == null)
                     continue;
 
-                bool dxIsValid = ruleDef.DxIsValid == 0 ? false : true;
+                bool dxIsValid = ruleDef.DxIsValid != 0;
                 bool dxSupported = false;
 
                 foreach (var dx in account.Pat.Diagnoses)
                 {
-                    var rule = lmrpRuleRepository.GetRule(cpt4, dx.Code, (DateTime)account.TransactionDate);
+                    var rule = AppEnvironment.Context.LMRPRuleRepository.GetRule(cpt4, dx.Code, (DateTime)account.TransactionDate);
                     if (dxIsValid && rule != null)
                         dxSupported = true;
 
@@ -1458,9 +1442,7 @@ namespace LabBilling.Core.DataAccess
                 (nameof(AccountSearch.FinCode), AccountSearchRepository.operation.NotEqual, "E")
             };
 
-            AccountSearchRepository accountSearchRepository = new AccountSearchRepository(AppEnvironment);
-
-            var accounts = accountSearchRepository.GetBySearch(parameters).ToList();
+            var accounts = AppEnvironment.Context.AccountSearchRepository.GetBySearch(parameters).ToList();
 
             foreach (var account in accounts)
             {
@@ -1503,7 +1485,7 @@ namespace LabBilling.Core.DataAccess
 
             foreach (var charge in charges)
             {
-                chrgRepository.CreditCharge(charge.ChrgNo, $"Move to {destinationAccount}");
+                AppEnvironment.Context.ChrgRepository.CreditCharge(charge.ChrgNo, $"Move to {destinationAccount}");
                 AddCharge(destination, charge.CDMCode, (DateTime)destination.TransactionDate, $"Moved from {sourceAccount}", charge.ReferenceReq);
             }
             return (true, string.Empty);
@@ -1534,7 +1516,7 @@ namespace LabBilling.Core.DataAccess
                 throw new ApplicationException("Charge is already credited.");
             }
 
-            chrgRepository.CreditCharge(charge.ChrgNo, $"Move to {destinationAccount}");
+            AppEnvironment.Context.ChrgRepository.CreditCharge(charge.ChrgNo, $"Move to {destinationAccount}");
             AddCharge(destinationAccount, charge.CDMCode, destination.TransactionDate, $"Moved from {sourceAccount}", charge.ReferenceReq);
 
         }
@@ -1566,7 +1548,7 @@ namespace LabBilling.Core.DataAccess
                 //set account status to "NEW"
                 account.Status = AccountStatus.New;
 
-                patRepository.Update(account.Pat, columns);
+                AppEnvironment.Context.PatRepository.Update(account.Pat, columns);
                 UpdateStatus(account.AccountNo, AccountStatus.New);
 
                 AddNote(account.AccountNo, "Claim status cleared.");

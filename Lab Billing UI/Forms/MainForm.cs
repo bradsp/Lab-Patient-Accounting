@@ -643,10 +643,7 @@ namespace LabBilling
 
         private void claimValidationRulesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Log.Instance.Trace("Entering");
-            ClaimRuleEditorForm frm = new ClaimRuleEditorForm();
 
-            frm.ShowDialog();
         }
 
         private bool CheckForDuplicate(Form newForm)

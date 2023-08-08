@@ -24,8 +24,6 @@ namespace LabBilling.Core.DataAccess
         {
             Log.Instance.Trace("Entering");
 
-            AccountRepository accountRepository = new AccountRepository(AppEnvironment);
-
             var sql = PetaPoco.Sql.Builder
                 .Where($"{GetRealColumn(nameof(ChkBatchDetail.Batch))} = @0", new SqlParameter() { SqlDbType = SqlDbType.Int, Value = batch })
                 .OrderBy($"{GetRealColumn(nameof(ChkBatchDetail.Id))}");
@@ -36,7 +34,7 @@ namespace LabBilling.Core.DataAccess
             {
                 if (!string.IsNullOrEmpty(x.AccountNo))
                 {
-                    var acc = accountRepository.GetByAccount(x.AccountNo);
+                    var acc = AppEnvironment.Context.AccountRepository.GetByAccount(x.AccountNo);
                     x.PatientName = acc.PatFullName;
                     x.Balance = acc.Balance;
                 }
