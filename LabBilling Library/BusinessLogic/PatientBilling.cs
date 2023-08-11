@@ -29,9 +29,8 @@ namespace LabBilling.Core
         }
     }
 
-    public sealed class PatientBilling
+    public sealed class PatientBilling : DataAccess.Database
     {
-        private IDatabase db;
         private string batchNo;
         private DateTime endDate = DateTime.MinValue;
         private readonly PatRepository patRepository;
@@ -46,9 +45,8 @@ namespace LabBilling.Core
         private readonly SystemParametersRepository parametersRepository;
         private IAppEnvironment _appEnvironment;
 
-        public PatientBilling(IAppEnvironment appEnvironment)
+        public PatientBilling(IAppEnvironment appEnvironment) : base(appEnvironment.ConnectionString)
         {
-            db = appEnvironment.Database;
             _appEnvironment = appEnvironment;
 
             accountRepository = new AccountRepository(appEnvironment);
@@ -78,7 +76,7 @@ namespace LabBilling.Core
                     return;
                 }
 
-                db.BeginTransaction();
+                dbConnection.BeginTransaction();
                 int recordsProcessed = 0;
                 foreach (var result in results)
                 {
@@ -116,12 +114,12 @@ namespace LabBilling.Core
                     catch (Exception ex)
                     {
                         Log.Instance.Error("Error during collections send. Process aborted.", ex);
-                        db.AbortTransaction();
+                        dbConnection.AbortTransaction();
                         throw new ApplicationException("Error during collections send.Process aborted.", ex);
                     }
                 }
 
-                db.CompleteTransaction();
+                dbConnection.CompleteTransaction();
                 GenerateCollectionsFile(results);
 
             });
@@ -223,7 +221,7 @@ namespace LabBilling.Core
                 catch (Exception ex)
                 {
                     Log.Instance.Error("Error during collections send. Process aborted.", ex);
-                    db.AbortTransaction();
+                    dbConnection.AbortTransaction();
                     throw new ApplicationException("Error during collections send.Process aborted.", ex);
                 }
             }
@@ -265,14 +263,14 @@ namespace LabBilling.Core
                 string sql = $"update dbo.patbill_acc SET date_sent = convert(varchar(10),getdate(),101) " +
                 "WHERE nullif(date_sent,'') IS null AND batch_id = @0";
 
-                db.Execute(sql, new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = batchNo });
+                dbConnection.Execute(sql, new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = batchNo });
 
                 sql = $"update dbo.patbill_stmt SET statement_submitted_dt_tm = pa.processed_date " +
                 "from patbill_stmt ps inner join patbill_acc pa on pa.statement_number = ps.statement_number " +
                 "WHERE nullif(ps.statement_submitted_dt_tm,'') is null " +
                 "and pa.processed_date is not null";
 
-                db.Execute(sql);
+                dbConnection.Execute(sql);
             }
             catch (Exception ex)
             {
@@ -611,7 +609,7 @@ namespace LabBilling.Core
 
         public void CompileStatements(DateTime throughDate)
         {
-            db.BeginTransaction();
+            dbConnection.BeginTransaction();
 
             if(throughDate == DateTime.MinValue)
             {
@@ -624,19 +622,19 @@ namespace LabBilling.Core
             {
                 //run exec usp_prg_pat_bill_update_flags '<last day of prev month>'
                 //step 1 - exec_prg_pat_bill_update_flags '{thrudate}'
-                db.ExecuteNonQueryProc("usp_prg_pat_bill_update_flags", 
+                dbConnection.ExecuteNonQueryProc("usp_prg_pat_bill_update_flags", 
                     new SqlParameter() { ParameterName = "@thrudate", SqlDbType = SqlDbType.DateTime, Value = endDate });
 
                 //run exec usp_prg_pat_bill_compile @batchNo = '<batchNo>', @endDate = '<last day of prev month>'
-                db.ExecuteNonQueryProc("usp_prg_pat_bill_compile",
+                dbConnection.ExecuteNonQueryProc("usp_prg_pat_bill_compile",
                     new SqlParameter() { ParameterName = "@batchNo", SqlDbType = SqlDbType.VarChar, Value = batchNo },
                     new SqlParameter() { ParameterName = "@endDate", SqlDbType = SqlDbType.DateTime, Value = endDate });
 
-                db.CompleteTransaction();
+                dbConnection.CompleteTransaction();
             }
             catch (Exception ex)
             {
-                db.AbortTransaction();
+                dbConnection.AbortTransaction();
                 throw new ApplicationException("Error in PatientBilling Compile Statements", ex);
             }
         }

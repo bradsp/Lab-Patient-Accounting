@@ -36,15 +36,6 @@ namespace LabBilling.Core.DataAccess
             Log.Instance.Debug(dbConnection.ConnectionString);
         }
 
-        public LogRepository(Database db)
-        {
-            Log.Instance.Trace("Entering");
-            _tableInfo = GetTableInfo(typeof(Logs));
-            _tableName = _tableInfo.TableName;
-            dbConnection = db;
-            Log.Instance.Debug(dbConnection.ConnectionString);
-        }
-
         public List<Logs> GetAll()
         {
             Log.Instance.Trace("Entering");

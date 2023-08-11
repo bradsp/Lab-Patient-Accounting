@@ -30,8 +30,6 @@ namespace LabBilling.Core.DataAccess
 
         public SystemParametersRepository systemParametersRepository;
 
-        private PetaPoco.IDatabase _database;
-
         public bool RunAsService { get; set; } = false;
 
         public AppEnvironment()
@@ -155,27 +153,27 @@ namespace LabBilling.Core.DataAccess
             }
         }
 
-        public PetaPoco.IDatabase Database
-        {
-            get
-            {
-                if (_database == null)
-                {
-                    _database = new PetaPoco.Database(ConnectionString, new CustomSqlDatabaseProvider());
+        //public PetaPoco.IDatabase Database
+        //{
+        //    get
+        //    {
+        //        if (_database == null)
+        //        {
+        //            //_database = new PetaPoco.Database(ConnectionString, new CustomSqlDatabaseProvider());
 
-                    _database = DatabaseConfiguration
-                        .Build()
-                        .UsingConnectionString(ConnectionString)
-                        .UsingProvider<CustomSqlDatabaseProvider>(new CustomSqlDatabaseProvider())
-                        .UsingCommandTimeout(180)
-                        .WithAutoSelect()
-                        .UsingDefaultMapper<MyMapper>(new MyMapper())
-                        .Create();
+        //            _database = DatabaseConfiguration
+        //                .Build()
+        //                .UsingConnectionString(ConnectionString)
+        //                .UsingProvider<CustomSqlDatabaseProvider>(new CustomSqlDatabaseProvider())
+        //                .UsingCommandTimeout(180)
+        //                .WithAutoSelect()
+        //                .UsingDefaultMapper<MyMapper>(new MyMapper())
+        //                .Create();
                     
-                }
-                return _database;
-            }
-        }
+        //        }
+        //        return _database;
+        //    }
+        //}
 
         public string User { get; set; }
 

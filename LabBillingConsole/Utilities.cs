@@ -148,7 +148,7 @@ namespace LabBillingConsole
         public void FixDrugScreenCharges()
         {
 
-            PetaPoco.Database dbConnection = new Database(_appEnvironment.ConnectionString, new CustomSqlDatabaseProvider());
+            PetaPoco.Database dbConnection = new PetaPoco.Database(_appEnvironment.ConnectionString, new CustomSqlDatabaseProvider());
             ChrgRepository chargeRepository = new ChrgRepository(_appEnvironment);
             AccountRepository accountRepository = new AccountRepository(_appEnvironment);
             //get list of accounts

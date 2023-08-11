@@ -8,16 +8,16 @@ using System.IO;
 using System.Linq;
 using System.Xml.Serialization;
 using System.Data;
+using PetaPoco;
 
 namespace LabBilling.Core.BusinessLogic
 {
     /// <summary>
     /// 
     /// </summary>
-    public sealed class ClientInvoices
+    public sealed class ClientInvoices : DataAccess.Database
     {
         private string _connection;
-        private readonly PetaPoco.IDatabase dbConnection;
         private readonly ChkRepository chkdb;
         private readonly ChrgRepository chrgdb;
         private readonly ClientRepository clientdb;
@@ -28,19 +28,12 @@ namespace LabBilling.Core.BusinessLogic
 
         private IAppEnvironment _appEnvironment;
 
-        public ClientInvoices(IAppEnvironment appEnvironment)
+        public ClientInvoices(IAppEnvironment appEnvironment) : base(appEnvironment.ConnectionString)
         {
             if(appEnvironment == null) throw new ArgumentNullException(nameof(appEnvironment));
             if (!appEnvironment.EnvironmentValid) throw new ArgumentException("App Environment is not valid.");
 
             _appEnvironment = appEnvironment;
-            //if(connection == "" || connection == null)
-            //{
-            //    throw new ArgumentException("Must have a valid connection string", "connection");
-            //}
-            _connection = appEnvironment.ConnectionString;
-
-            dbConnection = appEnvironment.Database;  //new PetaPoco.Database(connection, new SqlServerDatabaseProvider());
 
             chrgdb = new ChrgRepository(_appEnvironment);
             chkdb = new ChkRepository(_appEnvironment);
