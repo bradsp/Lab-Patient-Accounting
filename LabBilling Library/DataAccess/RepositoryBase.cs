@@ -7,6 +7,8 @@ using LabBilling.Core.Models;
 using System.Reflection;
 using PetaPoco;
 using System.Linq.Expressions;
+using PetaPoco.Providers;
+using RFClassLibrary;
 
 namespace LabBilling.Core.DataAccess
 {
@@ -14,9 +16,8 @@ namespace LabBilling.Core.DataAccess
     /// 
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public abstract class RepositoryBase<TPoco> : IRepositoryBase<TPoco> where TPoco : IBaseEntity
+    public abstract class RepositoryBase<TPoco> : Database, IRepositoryBase<TPoco> where TPoco : IBaseEntity
     {
-        protected PetaPoco.IDatabase dbConnection = null;
         protected string _tableName;
         protected IList<string> _fields;
         protected TableInfo _tableInfo;
@@ -27,15 +28,14 @@ namespace LabBilling.Core.DataAccess
         public string Errors { get; internal set; }
         protected IAppEnvironment _appEnvironment { get; set; }
 
-        public RepositoryBase(IAppEnvironment environment)
+        public RepositoryBase(IAppEnvironment environment) : base(environment.ConnectionString)
         {
             Log.Instance.Trace("Entering");
             if (!environment.EnvironmentValid)
                 throw new ApplicationException("AppEnvironment not valid.");
-            
+
             _appEnvironment = environment;
             Initialize();
-            
         }
 
         private void Initialize()
@@ -43,7 +43,6 @@ namespace LabBilling.Core.DataAccess
             Log.Instance.Trace("Entering");
             _tableInfo = GetTableInfo(typeof(TPoco));
             _tableName = _tableInfo.TableName;
-            dbConnection = _appEnvironment.Database;
         }
 
         public virtual List<TPoco> GetAll()
@@ -91,7 +90,7 @@ namespace LabBilling.Core.DataAccess
 
                 return identity;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Log.Instance.Error(ex, "Exception encountered in RepositoryBase.Add");
                 throw new ApplicationException("Exception encountered in RepositoryBase.Add", ex);
@@ -128,7 +127,7 @@ namespace LabBilling.Core.DataAccess
 
             foreach (string column in columns)
             {
-                if(!cColumns.Contains(column))
+                if (!cColumns.Contains(column))
                     cColumns.Add(GetRealColumn(column));
             }
 
@@ -136,7 +135,7 @@ namespace LabBilling.Core.DataAccess
             {
                 dbConnection.Update(table, cColumns);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Log.Instance.Debug(dbConnection.LastSQL.ToString());
                 Log.Instance.Debug(dbConnection.LastArgs.ToString());
@@ -145,7 +144,7 @@ namespace LabBilling.Core.DataAccess
 
             Log.Instance.Debug(dbConnection.LastSQL.ToString());
             Log.Instance.Debug(dbConnection.LastArgs.ToString());
-            return true;        
+            return true;
         }
 
         public virtual bool Save(TPoco table)
@@ -160,7 +159,7 @@ namespace LabBilling.Core.DataAccess
             {
                 dbConnection.Save(table);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Log.Instance.Error("Error saving account validation record to database.", ex);
                 return false;
@@ -205,9 +204,9 @@ namespace LabBilling.Core.DataAccess
                 return propertyName;
             else
             {
-                foreach(ColumnAttribute attribute in attributes)
+                foreach (ColumnAttribute attribute in attributes)
                 {
-                    if(attribute.GetType() != typeof(ResultColumnAttribute))
+                    if (attribute.GetType() != typeof(ResultColumnAttribute))
                     {
                         return attribute.Name;
                     }

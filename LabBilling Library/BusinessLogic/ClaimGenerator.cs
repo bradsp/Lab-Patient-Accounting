@@ -16,19 +16,17 @@ using MCL;
 
 namespace LabBilling.Core.BusinessLogic
 {
-    public sealed class ClaimGenerator
+    public sealed class ClaimGenerator : DataAccess.Database
     {
         //private SystemParametersRepository parametersdb;
 
-        string dBserverName = null;
-        string dBName = null;
+        readonly string dBserverName = null;
+        readonly string dBName = null;
         ArrayList m_alNameSuffix = new ArrayList() { "JR", "SR", "I", "II", "III", "IV", "V", "VI", "VII" };
 
         public string propProductionEnvironment { get; set; }
         private string _connectionString;
         private IAppEnvironment _appEnvironment;
-
-        private PetaPoco.IDatabase db; 
 
         private AccountRepository accountRepository;
         private PatRepository patRepository;
@@ -40,7 +38,7 @@ namespace LabBilling.Core.BusinessLogic
         private BillingActivityRepository billingActivityRepository;
         private BillingBatchRepository billingBatchRepository;
 
-        public ClaimGenerator(IAppEnvironment appEnvironment)
+        public ClaimGenerator(IAppEnvironment appEnvironment) : base(appEnvironment.ConnectionString)
         {
             if(appEnvironment == null)
             {
@@ -59,11 +57,6 @@ namespace LabBilling.Core.BusinessLogic
             dBserverName = appEnvironment.ServerName;
             dBName = appEnvironment.DatabaseName;
 
-            db = appEnvironment.Database;
-
-            //parametersdb = new SystemParametersRepository(appEnvironment);
-
-            //propProductionEnvironment = dBName.Contains("LIVE") ? "P" : "T";
             propProductionEnvironment = appEnvironment.ApplicationParameters.GetProductionEnvironment();
 
             accountRepository = new AccountRepository(appEnvironment);
@@ -128,7 +121,7 @@ namespace LabBilling.Core.BusinessLogic
 
             ClaimData claim;
 
-            db.BeginTransaction();
+            dbConnection.BeginTransaction();
             try
             {
                 report.TotalRecords = claimList.Count();
@@ -218,20 +211,20 @@ namespace LabBilling.Core.BusinessLogic
                 billingBatch.BatchType = batchType;
                 billingBatchRepository.Update(billingBatch);
 
-                db.CompleteTransaction();
+                dbConnection.CompleteTransaction();
 
                 return claims.Count;
             }
             catch (TaskCanceledException tcex)
             {
                 Log.Instance.Fatal(tcex, "Batch processing cancelled by user. Batch has been rolled back.");
-                db.AbortTransaction();
+                dbConnection.AbortTransaction();
                 throw new TaskCanceledException();
             }
             catch (Exception ex)
             {
                 Log.Instance.Fatal(ex, $"Exception processing {claimType} Claims. Batch has been rolled back. Report error to the Application Administrator.");
-                db.AbortTransaction();
+                dbConnection.AbortTransaction();
             }
             return -1;
         }
