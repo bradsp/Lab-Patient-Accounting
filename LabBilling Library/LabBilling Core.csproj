@@ -244,7 +244,6 @@
     <Compile Include="BusinessLogic\Billing837.cs" />
     <Compile Include="BusinessLogic\ClaimData.cs" />
     <Compile Include="BusinessLogic\ClaimGenerator.cs" />
-    <Compile Include="BusinessLogic\ClaimRulesEngine.cs" />
     <Compile Include="BusinessLogic\HL7Processor.cs" />
     <Compile Include="BusinessLogic\InvoicePrintPdfSharp.cs" />
     <Compile Include="BusinessLogic\NotesImport.cs" />
@@ -257,7 +256,6 @@
     <Compile Include="BusinessLogic\InvoicePrint.cs" />
     <Compile Include="BusinessLogic\MicroRuleEngine.cs" />
     <Compile Include="BusinessLogic\PatientBilling.cs" />
-    <Compile Include="BusinessLogic\PrepareClaimRules.cs" />
     <Compile Include="BusinessLogic\Validators\DemographicsValidator.cs" />
     <Compile Include="BusinessLogic\Validators\InsuranceValidator.cs" />
     <Compile Include="BusinessLogic\Validators\InterfaceMessageValidator.cs" />
@@ -281,7 +279,6 @@
     <Compile Include="DataAccess\ChkBatchRepository.cs" />
     <Compile Include="DataAccess\ChkRepository.cs" />
     <Compile Include="DataAccess\ChrgRepository.cs" />
-    <Compile Include="DataAccess\ClaimValidationRuleRepository.cs" />
     <Compile Include="DataAccess\ClientDiscountRepository.cs" />
     <Compile Include="DataAccess\ClientRepository.cs" />
     <Compile Include="DataAccess\ClientTypeRepository.cs" />
@@ -297,8 +294,6 @@
     <Compile Include="DataAccess\InsCompanyRepository.cs" />
     <Compile Include="DataAccess\InsRepository.cs" />
     <Compile Include="DataAccess\IRepositoryBase.cs" />
-    <Compile Include="DataAccess\IUnitOfWork.cs" />
-    <Compile Include="DataAccess\IUnitOfWorkProvider.cs" />
     <Compile Include="DataAccess\LMRPRuleRepository.cs" />
     <Compile Include="DataAccess\LogRepository.cs" />
     <Compile Include="DataAccess\MessagesInboundRepository.cs" />
@@ -336,6 +331,7 @@
     <Compile Include="Models\AccountSearch.cs" />
     <Compile Include="Models\AccountValidationRule.cs" />
     <Compile Include="Models\AccountValidationStatus.cs" />
+    <Compile Include="Models\Address.cs" />
     <Compile Include="Models\Announcement.cs" />
     <Compile Include="Models\ApplicationParameters.cs" />
     <Compile Include="Models\BillingBatch.cs" />
@@ -390,6 +386,7 @@
     <Compile Include="Models\PatientStatementCerner.cs" />
     <Compile Include="Models\PatientStatementEncounter.cs" />
     <Compile Include="Models\PatientStatementEncounterActivity.cs" />
+    <Compile Include="Models\Phone.cs" />
     <Compile Include="Models\Phy.cs" />
     <Compile Include="Models\ProgressReportModel.cs" />
     <Compile Include="Models\Pth.cs" />

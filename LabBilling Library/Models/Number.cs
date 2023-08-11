@@ -22,7 +22,5 @@ namespace LabBilling.Core.Models
         string IBaseEntity.mod_prg { get; set; }
         [Ignore] 
         string IBaseEntity.mod_host { get; set; }
-        [Ignore] 
-        Guid IBaseEntity.rowguid { get; set; }
     }
 }

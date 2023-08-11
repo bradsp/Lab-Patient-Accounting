@@ -11,13 +11,11 @@ namespace LabBilling.Core.DataAccess
 {
     public sealed class BillingBatchRepository : RepositoryBase<BillingBatch>
     {
-        AccountRepository accountRepository;
-        PatRepository patRepository;
+
 
         public BillingBatchRepository(IAppEnvironment appEnvironment) : base(appEnvironment)
         {
-            accountRepository = new AccountRepository(appEnvironment);
-            patRepository = new PatRepository(appEnvironment);
+
         }
 
         public bool ClearBatch(double batch)
@@ -29,32 +27,11 @@ namespace LabBilling.Core.DataAccess
                 BeginTransaction();
                 foreach (var detail in data.BillingActivities)
                 {
-                    var account = accountRepository.GetByAccount(detail.AccountNo);
+                    var account = AppEnvironment.Context.AccountRepository.GetByAccount(detail.AccountNo);
                     if (account != null)
                     {
 
-                        accountRepository.ClearClaimStatus(account);
-
-                        // -- pat - clear h1500_date, ub_date, ssi_batch
-                        //List<string> columns = new List<string>();
-                        //if (detail.ElectronicBillStatus == "UB")
-                        //{
-                        //    account.Pat.InstitutionalClaimDate = null;
-                        //    columns.Add(nameof(Pat.InstitutionalClaimDate));
-                        //}
-                        //if (detail.ElectronicBillStatus == "1500")
-                        //{
-                        //    account.Pat.ProfessionalClaimDate = null;
-                        //    columns.Add(nameof(Pat.ProfessionalClaimDate));
-                        //}
-                        //account.Pat.EBillBatchDate = null;
-                        //account.Pat.SSIBatch = null;
-                        //columns.Add(nameof(Pat.EBillBatchDate));
-                        //columns.Add(nameof(Pat.SSIBatch));
-                        //// acc - reset status to form status
-                        //account.Status = "NEW";
-                        //patRepository.Update(account.Pat, columns);
-                        //accountRepository.UpdateStatus(account.AccountNo, "NEW");
+                        AppEnvironment.Context.AccountRepository.ClearClaimStatus(account);
                     }
                     // dbh - delete history record
                     dbConnection.Delete(detail);
@@ -70,7 +47,6 @@ namespace LabBilling.Core.DataAccess
                 AbortTransaction();
                 return false;
             }
-
         }
 
         public BillingBatch GetBatch(double batch)
@@ -83,7 +59,5 @@ namespace LabBilling.Core.DataAccess
 
             return data;
         }
-
-
     }
 }

@@ -118,7 +118,7 @@ namespace LabBilling.Forms
             {
                 try
                 {
-                    accountRepository.AddCharge(charge.AccountNo, charge.CDM, charge.Qty, (DateTime)currentAccount.TransactionDate);
+                    accountRepository.AddCharge(charge.AccountNo, charge.CDM, (DateTime)currentAccount.TransactionDate);
                 }
                 catch(Exception ex)
                 {

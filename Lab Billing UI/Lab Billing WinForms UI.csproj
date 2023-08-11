@@ -124,12 +124,6 @@
     <Compile Include="Forms\ChargeMasterEditForm.Designer.cs">
       <DependentUpon>ChargeMasterEditForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\ClaimRuleEditorForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\ClaimRuleEditorForm.Designer.cs">
-      <DependentUpon>ClaimRuleEditorForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\ClaimsManagementForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -288,6 +282,12 @@
       <DependentUpon>ViewerHistoryForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Library\InputDialogs.cs" />
+    <Compile Include="UserControls\ChargeTreeListView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\ChargeTreeListView.Designer.cs">
+      <DependentUpon>ChargeTreeListView.cs</DependentUpon>
+    </Compile>
     <Compile Include="UserControls\CurrencyTextBox.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -496,9 +496,6 @@
     <EmbeddedResource Include="Forms\ChargeMasterMaintenance.resx">
       <DependentUpon>ChargeMasterMaintenance.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ClaimRuleEditorForm.resx">
-      <DependentUpon>ClaimRuleEditorForm.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Forms\ClaimsManagementForm.resx">
       <DependentUpon>ClaimsManagementForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -582,6 +579,9 @@
     <EmbeddedResource Include="Legacy Forms\ViewerHistoryForm.resx">
       <DependentUpon>ViewerHistoryForm.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\ChargeTreeListView.resx">
+      <DependentUpon>ChargeTreeListView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UserControls\LabeledTextBox.resx">
       <DependentUpon>LabeledTextBox.cs</DependentUpon>
@@ -749,6 +749,9 @@
     </PackageReference>
     <PackageReference Include="NLog.Schema">
       <Version>5.2.2</Version>
+    </PackageReference>
+    <PackageReference Include="ObjectListView.Official">
+      <Version>2.9.1</Version>
     </PackageReference>
     <PackageReference Include="PetaPoco.Compiled">
       <Version>6.0.566</Version>

@@ -4,15 +4,22 @@ using PetaPoco;
 
 namespace LabBilling.Core.Models
 {
-    [TableName("chrg_details")]
+    [TableName("charge_details")]
     [PrimaryKey("uri",AutoIncrement = true)]
     public sealed class ChrgDetail : IBaseEntity
     {
+        [Column("account")]
+        public string AccountNo { get; set; }
 
         [Column("chrg_num")]
         public int ChrgNo { get; set; }
+        [Column("service_date")]
+        public DateTime? ServiceDate { get; set; }
+
         [Column("revcode")]
         public string RevenueCode { get; set; }
+        [Column("billcode")]
+        public string BillingCode { get; set; }
         [Column("cpt4")]
         public string Cpt4 { get; set; }
         [Column("modi")]
@@ -21,45 +28,57 @@ namespace LabBilling.Core.Models
         public string Modifer2 { get; set; }
         [Column("type")]
         public string Type { get; set; }
+        [Column("qty")]
+        public int Quantity { get; set; }
         [Column("amount")]
+
         public double Amount { get; set; }
-        [Column("mt_req_no")]
-        public string LISReqNo { get; set; }
-        [Column("order_code")]
-        public string OrderCode { get; set; }
-        [Column("pointer_set")]
-        public bool PointerSet { get; set; }
+        [Column("discount_amount")]
+        public double DiscountAmount { get; set; }
+
+
+        [Column("posted_date")]
+        public DateTime PostedDate { get; set; }
+
         [Column("mod_date")]
         public DateTime mod_date { get; set; }
         [Column("mod_user")]
         public string mod_user { get; set; }
         [Column("mod_prg")]
         public string mod_prg { get; set; }
-        [Column("deleted")]
-        public bool IsDeleted { get; set; }
-
-        [Column("uri")]
-        public int uri { get; set; }
-
-        [Ignore]
         [Column("mod_host")]
         public string mod_host { get; set; }
+
+
+        [Column("uri")]
+        public int ChrgDetailId { get; set; }
+
+        [Column("cl_mnem")]
+        public string ClientMnem { get; set; }
+        [Column("fin_code")]
+        public string FinCode { get; set; }
+        [Column("invoice")]
+        public string Invoice { get; set; }
+        [Column("fin_type")]
+        public string FinancialType { get; set; }
+        [Column("credited")]
+        public bool IsCredited { get; set; }
+        [Column("fee_sched")]
+        public string FeeSchedule { get; set; }
+
         [Ignore]
-        public Guid rowguid { get; set; }
+        public string CdmDescription { get; set; }
+
 
         [Ignore]
         public RevenueCode RevenueCodeDetail { get; set; }
+
         [Ignore]
-        public ChrgDiagnosisPointer DiagnosisPointer { get; set; } = new ChrgDiagnosisPointer();
-        [Ignore]
-        public string DiagCodePointer
+        public string RevenueCodeDescription
         {
             get
             {
-                if (this.DiagnosisPointer == null)
-                    return "";
-                else
-                    return this.DiagnosisPointer.DiagnosisPointer ?? "";
+                return RevenueCodeDetail.Description;
             }
         }
 
@@ -70,4 +89,33 @@ namespace LabBilling.Core.Models
         }
 
     }
+
+    public static class ChrgDetailStatus
+    {
+        public const string TC = "TC";
+        public const string PC = "PC";
+        public const string Norm = "NORM";
+        public const string NA = "N/A";
+        public const string Invoice = "INV";
+
+        public static string GetStatus(string type)
+        {
+            switch (type)
+            {
+                case "TC":
+                    return "TC";
+                case "PC":
+                    return "PC";
+                case "NORM":
+                    return "NORM";
+                case "N/A":
+                    return "N/A";
+                case "INV":
+                    return "INV";
+                default:
+                    return "NORM";
+            }
+        }
+    }
+
 }

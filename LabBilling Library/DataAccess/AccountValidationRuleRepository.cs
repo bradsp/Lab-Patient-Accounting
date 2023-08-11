@@ -12,11 +12,10 @@ namespace LabBilling.Core.DataAccess
 {
     public sealed class AccountValidationRuleRepository : RepositoryBase<AccountValidationRule>
     {
-        private AccountValidationCriteriaRepository accountValidationCriteriaRepository;
 
         public AccountValidationRuleRepository(IAppEnvironment appEnvironment) : base(appEnvironment)
         {
-            accountValidationCriteriaRepository = new AccountValidationCriteriaRepository(appEnvironment);
+
         }
 
         public override List<AccountValidationRule> GetAll()
@@ -26,7 +25,7 @@ namespace LabBilling.Core.DataAccess
 
             foreach(AccountValidationRule rule in results)
             {
-                rule.validationCriterion = accountValidationCriteriaRepository.GetByRuleId(rule.rule_id);
+                rule.validationCriterion = AppEnvironment.Context.AccountValidationCriteriaRepository.GetByRuleId(rule.rule_id);
             }
 
             return results;

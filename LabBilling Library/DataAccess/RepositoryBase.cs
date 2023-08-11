@@ -26,7 +26,7 @@ namespace LabBilling.Core.DataAccess
         /// Contains error messages as a result of actions.
         /// </summary>
         public string Errors { get; internal set; }
-        protected IAppEnvironment _appEnvironment { get; set; }
+        protected IAppEnvironment AppEnvironment { get; set; }
 
         public RepositoryBase(IAppEnvironment environment) : base(environment.ConnectionString)
         {
@@ -34,7 +34,7 @@ namespace LabBilling.Core.DataAccess
             if (!environment.EnvironmentValid)
                 throw new ApplicationException("AppEnvironment not valid.");
 
-            _appEnvironment = environment;
+            AppEnvironment = environment;
             Initialize();
         }
 
@@ -81,7 +81,7 @@ namespace LabBilling.Core.DataAccess
             table.mod_host = Environment.MachineName;
             table.mod_prg = RFClassLibrary.OS.GetAppName();
             table.mod_user = Environment.UserName.ToString();
-            table.rowguid = Guid.NewGuid();
+            //table.rowguid = Guid.NewGuid();
             try
             {
                 object identity = dbConnection.Insert(table);
@@ -96,6 +96,7 @@ namespace LabBilling.Core.DataAccess
                 throw new ApplicationException("Exception encountered in RepositoryBase.Add", ex);
             }
         }
+
 
         public virtual bool Update(TPoco table)
         {
@@ -254,6 +255,5 @@ namespace LabBilling.Core.DataAccess
 
             return null;
         }
-
     }
 }

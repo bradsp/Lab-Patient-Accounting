@@ -9,6 +9,6 @@ namespace LabBilling.Core.Models
         string mod_user { get; set; }
         string mod_prg { get; set; }
         string mod_host { get; set; }
-        Guid rowguid { get; set; }
+        
     }
 }

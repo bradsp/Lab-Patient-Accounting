@@ -90,7 +90,6 @@ namespace LabBilling.Forms
 
                 accountRepository.AddCharge(_currentAccount.AccountNo,
                     cdm,
-                    Convert.ToInt32(nQty.Value),
                     _currentAccount.TransactionDate,
                     tbComment.Text,
                     ReferenceNumber.Text);

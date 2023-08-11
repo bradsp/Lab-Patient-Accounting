@@ -10,11 +10,9 @@ namespace LabBilling.Core.DataAccess
 {
     public sealed class ChkBatchRepository : RepositoryBase<ChkBatch>
     {
-        private ChkBatchDetailRepository _chkBatchDetailRepository;
 
         public ChkBatchRepository(IAppEnvironment appEnvironment) : base(appEnvironment)
         {
-            _chkBatchDetailRepository = new ChkBatchDetailRepository(appEnvironment);
         }
 
         public ChkBatch GetById(int id)
@@ -23,7 +21,7 @@ namespace LabBilling.Core.DataAccess
 
             var batch = dbConnection.SingleOrDefault<ChkBatch>(id);
 
-            batch.ChkBatchDetails = _chkBatchDetailRepository.GetByBatch(batch.BatchNo);
+            batch.ChkBatchDetails = AppEnvironment.Context.ChkBatchDetailRepository.GetByBatch(batch.BatchNo);
 
             if(batch.ChkBatchDetails == null)
                 batch.ChkBatchDetails = new List<ChkBatchDetail>();
@@ -49,7 +47,7 @@ namespace LabBilling.Core.DataAccess
 
         public override bool Delete(ChkBatch table)
         {
-            _chkBatchDetailRepository.DeleteBatch(table.BatchNo);
+            AppEnvironment.Context.ChkBatchDetailRepository.DeleteBatch(table.BatchNo);
 
             return base.Delete(table);
         }
@@ -61,7 +59,7 @@ namespace LabBilling.Core.DataAccess
             //save the chk details
             table.ChkBatchDetails.ForEach(x => x.Batch = table.BatchNo);
 
-            table.ChkBatchDetails.ForEach(x => _chkBatchDetailRepository.Save(x));
+            table.ChkBatchDetails.ForEach(x => AppEnvironment.Context.ChkBatchDetailRepository.Save(x));
 
             return rv;
         }
@@ -73,7 +71,7 @@ namespace LabBilling.Core.DataAccess
             //save the chk details
             table.ChkBatchDetails.ForEach(x => x.Batch = table.BatchNo);
 
-            table.ChkBatchDetails.ForEach(x => _chkBatchDetailRepository.Save(x));
+            table.ChkBatchDetails.ForEach(x => AppEnvironment.Context.ChkBatchDetailRepository.Save(x));
 
             return rv;
         }

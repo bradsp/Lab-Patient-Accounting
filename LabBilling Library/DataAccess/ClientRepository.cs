@@ -13,15 +13,13 @@ namespace LabBilling.Core.DataAccess
 {
     public sealed class ClientRepository : RepositoryBase<Client>
     {
-        ClientDiscountRepository clientDiscountRepository;
-        ClientTypeRepository clientTypeRepository;
+
         private const string invoiceCdm = "CBILL";
         private const string clientFinCode = "CLIENT";
 
         public ClientRepository(IAppEnvironment appEnvironment) : base(appEnvironment)
         {
-            clientDiscountRepository = new ClientDiscountRepository(appEnvironment);
-            clientTypeRepository = new ClientTypeRepository(appEnvironment);
+
         }
 
         public List<Client> GetAll(bool includeInactive)
@@ -49,7 +47,6 @@ namespace LabBilling.Core.DataAccess
         public Client GetClient(string clientMnem)
         {
             Log.Instance.Debug($"Entering - {clientMnem}");
-            MappingRepository mappingRepository = new MappingRepository(_appEnvironment);
 
             if (clientMnem == null)
             {
@@ -60,9 +57,9 @@ namespace LabBilling.Core.DataAccess
             Log.Instance.Debug(dbConnection.LastSQL);
             if (record != null)
             {
-                record.Discounts = clientDiscountRepository.GetByClient(clientMnem);
-                record.ClientType = clientTypeRepository.GetByType(record.Type);
-                record.Mappings = mappingRepository.GetMappingsBySendingValue("CLIENT", record.ClientMnem).ToList();
+                record.Discounts = AppEnvironment.Context.ClientDiscountRepository.GetByClient(clientMnem);
+                record.ClientType = AppEnvironment.Context.ClientTypeRepository.GetByType(record.Type);
+                record.Mappings = AppEnvironment.Context.MappingRepository.GetMappingsBySendingValue("CLIENT", record.ClientMnem).ToList();
             }
             Log.Instance.Debug(dbConnection.LastSQL);
             return record;
@@ -75,21 +72,23 @@ namespace LabBilling.Core.DataAccess
 
             if (string.IsNullOrEmpty(table.BillMethod))
                 table.BillMethod = "PER ACCOUNT";
-            AccountRepository accountRepository = new AccountRepository(_appEnvironment);
+            AccountRepository accountRepository = new AccountRepository(AppEnvironment);
 
             var account = accountRepository.GetByAccount(table.ClientMnem, true);
 
             if(account == null)
             {
                 //add account
-                account = new Account();
-                account.AccountNo = table.ClientMnem;
-                account.PatFullName = table.Name;
-                account.FinCode = clientFinCode;
-                account.TransactionDate = DateTime.Today;
-                account.Status = AccountStatus.New;
-                account.ClientMnem = table.ClientMnem;
-                account.MeditechAccount = table.ClientMnem;
+                account = new Account
+                {
+                    AccountNo = table.ClientMnem,
+                    PatFullName = table.Name,
+                    FinCode = clientFinCode,
+                    TransactionDate = DateTime.Today,
+                    Status = AccountStatus.New,
+                    ClientMnem = table.ClientMnem,
+                    MeditechAccount = table.ClientMnem
+                };
 
                 accountRepository.Add(account);
             }
@@ -99,9 +98,6 @@ namespace LabBilling.Core.DataAccess
 
         public override bool Update(Client table)
         {
-
-
-
             return base.Update(table);
         }
 
@@ -112,7 +108,7 @@ namespace LabBilling.Core.DataAccess
             bool success;
             if (record != null)
             {
-                clientDiscountRepository.SaveAll(table.Discounts);
+                AppEnvironment.Context.ClientDiscountRepository.SaveAll(table.Discounts);
                 success = this.Update(table);
             }
             else
@@ -121,7 +117,7 @@ namespace LabBilling.Core.DataAccess
                 {
                     this.Add(table);
                     if(table.Discounts != null)
-                        clientDiscountRepository.SaveAll(table.Discounts);
+                        AppEnvironment.Context.ClientDiscountRepository.SaveAll(table.Discounts);
                     success = true;
                 }
                 catch (Exception ex)
@@ -173,27 +169,28 @@ namespace LabBilling.Core.DataAccess
         public List<ClientStatementDetailModel> GetStatementDetails(string clientMnem, DateTime asOfDate)
         {
 
-            ChkRepository chkRepository = new ChkRepository(_appEnvironment);
-            ChrgRepository chrgRepository = new ChrgRepository(_appEnvironment);
 
-            var charges = chrgRepository.GetByAccount(clientMnem, true, true, asOfDate, false);
+            var charges = AppEnvironment.Context.ChrgDetailRepository.GetByAccount(clientMnem, true, true, asOfDate, false);
 
-            var payments = chkRepository.GetByAccount(clientMnem, asOfDate);
+            var payments = AppEnvironment.Context.ChkRepository.GetByAccount(clientMnem, asOfDate);
 
             List<ClientStatementDetailModel> statementDetails = new List<ClientStatementDetailModel>();
 
             foreach(var chrg in charges)
             {
-                if (chrg.NetAmount == 0 && chrg.CDMCode == invoiceCdm)
+                if (chrg.Amount == 0 && chrg.BillingCode == invoiceCdm)
                     continue;
 
-                var statementDetail = new ClientStatementDetailModel();
+                var parentCharge = AppEnvironment.Context.ChrgRepository.GetById(chrg.ChrgNo);
 
-                statementDetail.ServiceDate = chrg.ServiceDate == null ? DateTime.MinValue : (DateTime)chrg.ServiceDate;
-                statementDetail.Account = chrg.AccountNo;
-                statementDetail.Invoice = chrg.Invoice;
-                statementDetail.Amount = chrg.NetAmount * chrg.Quantity;
-                if (chrg.CDMCode == invoiceCdm)
+                var statementDetail = new ClientStatementDetailModel
+                {
+                    ServiceDate = parentCharge.ServiceDate == null ? DateTime.MinValue : (DateTime)parentCharge.ServiceDate,
+                    Account = chrg.AccountNo,
+                    Invoice = chrg.Invoice,
+                    Amount = chrg.Amount * chrg.Quantity
+                };
+                if (chrg.BillingCode == invoiceCdm)
                 {
                     statementDetail.Description = $"Invoice {chrg.Invoice}";
                     statementDetail.Reference = chrg.Invoice;
@@ -203,15 +200,15 @@ namespace LabBilling.Core.DataAccess
                     //see if account is in comment and extract it for the line description
                     string pattern = "([A-Z_]*)\\[(\\w*)\\]";
                     Regex rg = new Regex(pattern);
-                    Match match = rg.Match(chrg.Comment);
+                    Match match = rg.Match(parentCharge.Comment);
                     if(match.Success)
                     {
                         string account = match.Groups[1].Value;
-                        statementDetail.Description = $"Adjustment: {chrg.CdmDescription} on {account}";
+                        statementDetail.Description = $"Adjustment: {parentCharge.CdmDescription} on {account}";
                     }
                     else
                     {
-                        statementDetail.Description = $"Adjustment: {chrg.CdmDescription}";
+                        statementDetail.Description = $"Adjustment: {parentCharge.CdmDescription}";
                     }
                 }
 
@@ -247,31 +244,26 @@ namespace LabBilling.Core.DataAccess
         public void NewClient(string clientMnem)
         {
             //check to see if client is valid and client exists
-            Client client = GetClient(clientMnem);
-
-            if (client == null)
-            {
-                throw new ArgumentException("Client mnemonic is not found in client table", "clientMnem");
-            }
-
+            Client client = GetClient(clientMnem) ?? throw new ArgumentException("Client mnemonic is not found in client table", "clientMnem");
             Account account;
 
             //check to see if client account exists
-            AccountRepository accdb = new AccountRepository(_appEnvironment);
-            account = accdb.GetByAccount(clientMnem);
+            account = AppEnvironment.Context.AccountRepository.GetByAccount(clientMnem);
 
             if (account == null)
             {
                 //account does not exist - add the account
-                account = new Account();
-                account.AccountNo = clientMnem;
-                account.PatFullName = client.Name;
-                account.MeditechAccount = clientMnem;
-                account.FinCode = clientFinCode;
-                account.TransactionDate = DateTime.Today;
-                account.ClientMnem = clientMnem;
+                account = new Account
+                {
+                    AccountNo = clientMnem,
+                    PatFullName = client.Name,
+                    MeditechAccount = clientMnem,
+                    FinCode = clientFinCode,
+                    TransactionDate = DateTime.Today,
+                    ClientMnem = clientMnem
+                };
 
-                accdb.Add(account);
+                AppEnvironment.Context.AccountRepository.Add(account);
             }
 
         }
@@ -318,6 +310,9 @@ namespace LabBilling.Core.DataAccess
                 .From("vw_cbill_select vbs")
                 .Where("cl_mnem = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = clientMnem })
                 .Where("trans_date <= @0 ", new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = thruDate });
+
+
+
 
             return dbConnection.Fetch<UnbilledAccounts>(cmd);
         }

@@ -12,16 +12,6 @@ namespace LabBilling.Core.DataAccess
 {
     public sealed class CdmRepository : RepositoryBase<Cdm>
     {
-        //public CdmRepository(string connection) : base(connection)
-        //{
-
-        //}
-
-        //public CdmRepository(PetaPoco.Database db) : base(db)
-        //{
-
-        //}
-
         public CdmRepository(IAppEnvironment appEnvironment) : base(appEnvironment)
         {
             
@@ -66,27 +56,26 @@ namespace LabBilling.Core.DataAccess
         public override bool Update(Cdm table)
         {
             //update all fee schedules as well
-            CdmDetailRepository cdmDetailRepository = new CdmDetailRepository(_appEnvironment);
 
             foreach(var cd in table.CdmFeeSchedule1)
             {
-                cdmDetailRepository.Save(cd);
+                AppEnvironment.Context.CdmDetailRepository.Save(cd);
             }
             foreach (var cd in table.CdmFeeSchedule2)
             {
-                cdmDetailRepository.Save(cd);
+                AppEnvironment.Context.CdmDetailRepository.Save(cd);
             }
             foreach (var cd in table.CdmFeeSchedule3)
             {
-                cdmDetailRepository.Save(cd);
+                AppEnvironment.Context.CdmDetailRepository.Save(cd);
             }
             foreach (var cd in table.CdmFeeSchedule4)
             {
-                cdmDetailRepository.Save(cd);
+                AppEnvironment.Context.CdmDetailRepository.Save(cd);
             }
             foreach (var cd in table.CdmFeeSchedule5)
             {
-                cdmDetailRepository.Save(cd);
+                AppEnvironment.Context.CdmDetailRepository.Save(cd);
             }
 
 
@@ -95,27 +84,26 @@ namespace LabBilling.Core.DataAccess
 
         public override object Add(Cdm table)
         {
-            CdmDetailRepository cdmDetailRepository = new CdmDetailRepository(_appEnvironment);
             //add all fee schedules as well
             foreach (var cd in table.CdmFeeSchedule1)
             {
-                cdmDetailRepository.Save(cd);
+                AppEnvironment.Context.CdmDetailRepository.Save(cd);
             }
             foreach (var cd in table.CdmFeeSchedule2)
             {
-                cdmDetailRepository.Save(cd);
+                AppEnvironment.Context.CdmDetailRepository.Save(cd);
             }
             foreach (var cd in table.CdmFeeSchedule3)
             {
-                cdmDetailRepository.Save(cd);
+                AppEnvironment.Context.CdmDetailRepository.Save(cd);
             }
             foreach (var cd in table.CdmFeeSchedule4)
             {
-                cdmDetailRepository.Save(cd);
+                AppEnvironment.Context.CdmDetailRepository.Save(cd);
             }
             foreach (var cd in table.CdmFeeSchedule5)
             {
-                cdmDetailRepository.Save(cd);
+                AppEnvironment.Context.CdmDetailRepository.Save(cd);
             }
 
             return base.Add(table);
@@ -123,7 +111,6 @@ namespace LabBilling.Core.DataAccess
 
         public Cdm GetCdm(string cdm, bool includeDeleted = false)
         {
-            CdmDetailRepository cdmDetailRepository = new CdmDetailRepository(_appEnvironment);
 
             string cdmRealName = this.GetRealColumn(nameof(Cdm.ChargeId));
             string isDeletedRealName = this.GetRealColumn(nameof(Cdm.IsDeleted));
@@ -137,11 +124,13 @@ namespace LabBilling.Core.DataAccess
             var result = dbConnection.SingleOrDefault<Cdm>(cmd);
             if (result != null)
             {
-                result.CdmFeeSchedule1 = cdmDetailRepository.GetByCdm(cdm, "1");
-                result.CdmFeeSchedule2 = cdmDetailRepository.GetByCdm(cdm, "2");
-                result.CdmFeeSchedule3 = cdmDetailRepository.GetByCdm(cdm, "3");
-                result.CdmFeeSchedule4 = cdmDetailRepository.GetByCdm(cdm, "4");
-                result.CdmFeeSchedule5 = cdmDetailRepository.GetByCdm(cdm, "5");
+                result.CdmDetails = AppEnvironment.Context.CdmDetailRepository.GetByCdm(cdm);
+
+                result.CdmFeeSchedule1 = result.CdmDetails.Where(x => x.FeeSchedule == "1").ToList();
+                result.CdmFeeSchedule2 = result.CdmDetails.Where(x => x.FeeSchedule == "2").ToList();
+                result.CdmFeeSchedule3 = result.CdmDetails.Where(x => x.FeeSchedule == "3").ToList();
+                result.CdmFeeSchedule4 = result.CdmDetails.Where(x => x.FeeSchedule == "4").ToList();
+                result.CdmFeeSchedule5 = result.CdmDetails.Where(x => x.FeeSchedule == "5").ToList();
             }
 
             return result;
@@ -151,9 +140,8 @@ namespace LabBilling.Core.DataAccess
         {
             List<CdmDetail> cdmDetails = new List<CdmDetail>();
 
-            CdmDetailRepository cdmDetailRepository = new CdmDetailRepository(_appEnvironment);
 
-            cdmDetails = cdmDetailRepository.GetByCpt(cptId);
+            cdmDetails = AppEnvironment.Context.CdmDetailRepository.GetByCpt(cptId);
 
             List<string> cdms = new List<string>();
 

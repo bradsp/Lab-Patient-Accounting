@@ -20,7 +20,7 @@ namespace LabBilling.Core.DataAccess
         public string GetProductionEnvironment()
         {
             //string env = GetByKey("dbenvironment");
-            string env = _appEnvironment.Environment;
+            string env = AppEnvironment.Environment;
             if (env == "Production")
                 return "P";
             else
