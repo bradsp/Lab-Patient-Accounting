@@ -108,10 +108,7 @@ namespace LabBilling.Library
 
                     }
 
-                    var providerQuery =
-                        from prov in Datasource
-                        where prov.FullName.StartsWith(searchTextBox.Text.ToUpper())
-                        select prov;
+                    var providerQuery = Datasource.Where(x => x.FullName.StartsWith(searchTextBox.Text.ToUpper()) || x.NpiId == searchTextBox.Text.ToUpper());
 
                     if (providerQuery.Count() > 0)
                     {
