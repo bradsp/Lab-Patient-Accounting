@@ -23,6 +23,7 @@ namespace LabBilling.Library
             {
                 return _backgroundColor;
             }
+
             set
             {
                 _backgroundColor = value;

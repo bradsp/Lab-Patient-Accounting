@@ -3455,7 +3455,7 @@ namespace LabBilling.Legacy
                 double dBal = double.Parse(strBal);
                 if (dBal != 0.00 && strStatus == AccountStatus.PaidOut)
                 {
-                    m_cAccStatus.SetStatus(strAccount, AccountStatus.New);
+                    accountRepository.UpdateStatus(strAccount, AccountStatus.New);
                 }
                 m_swAccount.WriteLine(string.Format("{0}{1}{2}", strAccount.PadRight(16), dBal.ToString("C2", CultureInfo.CurrentCulture).PadRight(15), strStatus.PadLeft(15 - strBal.Length)));
             }
