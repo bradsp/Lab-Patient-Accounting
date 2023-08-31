@@ -60,7 +60,7 @@ namespace LabBilling.Forms
         private const int _timerInterval = 650;
         private const string notesAlertText = "** SEE NOTES **";
         //private bool skipSelectionChanged = false;
-        private System.Windows.Forms.Timer _timer;
+        private Timer _timer;
 
         public event EventHandler<string> AccountOpenedEvent;
 

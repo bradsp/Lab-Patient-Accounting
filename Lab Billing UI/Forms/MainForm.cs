@@ -141,6 +141,7 @@ namespace LabBilling
             var ar = accountRepository.GetByAccount(e, true);
             if (ar != null)
             {
+                tlpRecentAccounts.Controls.RemoveAt(0);
                 LinkLabel a1 = new LinkLabel { Text = ar.PatFullName, Tag = e };
                 a1.LinkClicked += new LinkLabelLinkClickedEventHandler(RecentLabelClicked);
                 tlpRecentAccounts.Controls.Add(a1);
