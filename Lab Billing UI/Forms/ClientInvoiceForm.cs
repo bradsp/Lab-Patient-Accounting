@@ -173,6 +173,11 @@ namespace LabBilling.Forms
             UnbilledAccountsDGV.Columns[nameof(UnbilledAccounts.TransactionDate)].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
         }
 
+        private void ClientInvoice_ProgressUpdate(object sender, int e)
+        {
+            toolStripProgressBar1.Value = e;
+        }
+
         private async void GenerateInvoicesBtn_Click(object sender, EventArgs e)
         {
             List<UnbilledClient> unbilledClients = new List<UnbilledClient>();
@@ -196,10 +201,12 @@ namespace LabBilling.Forms
             Cursor.Current = Cursors.Default;
 
             toolStripProgressBar1.Value = 0;
+
             var progress = new Progress<int>(percent =>
             {
                 toolStripProgressBar1.Value = percent;
             });
+
             try
             {
                 await Task.Run(() => clientInvoices.Compile(_thruDate, unbilledClients, progress));
@@ -279,12 +286,9 @@ namespace LabBilling.Forms
         #region InvoiceHistory Tab functions
         private async void InvoiceHistoryPage_Enter(object sender, EventArgs e)
         {
-            FromDate.Text = DateTime.Today.AddDays(-30).ToString("MM/dd/yyyy");
+            FromDate.Text = DateTime.Today.ToString("MM/dd/yyyy");
             ThroughDate.Text = DateTime.Today.AddDays(1).ToString("MM/dd/yyyy");
 
-            //DateTime.TryParse(FromDate.Text, out DateTime fd);
-            //DateTime.TryParse(ThroughDate.Text, out DateTime td);
-            //td = td.AddDays(1);
             await RefreshInvoiceHistoryGridAsync();
         }
 

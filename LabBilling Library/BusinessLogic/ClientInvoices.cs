@@ -66,10 +66,7 @@ namespace LabBilling.Core.BusinessLogic
                 {
                     GenerateInvoice(unbilledClient.ClientMnem, thruDate);
                     tempCount++;
-                    if (progress != null)
-                    {
-                        progress.Report((tempCount * 100 / clientCount));
-                    }
+                    progress?.Report((tempCount * 100 / clientCount));
                 }
                 Log.Instance.Debug("Complete Transaction");
                 dbConnection.CompleteTransaction();

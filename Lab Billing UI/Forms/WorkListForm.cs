@@ -12,6 +12,7 @@ using System.Data;
 //using System.CodeDom;
 using LabBilling.Core;
 using LabBilling.Core.BusinessLogic;
+using Opulos.Core.UI;
 
 namespace LabBilling.Forms
 {
@@ -60,6 +61,15 @@ namespace LabBilling.Forms
             workqueues.ExpandAll();
 
             workqueues.Enabled = true;
+        }
+
+        private void AccFrm_AccountOpenedEvent(object sender, string e)
+        {
+            if(this.ParentForm is MainForm)
+            {
+                MainForm mainfrm = (MainForm)this.ParentForm;
+                mainfrm.UpdateRecentAccounts(e);
+            }
         }
 
         public WorkListForm(string connValue)
@@ -354,6 +364,7 @@ namespace LabBilling.Forms
                 if (!formFound)
                 {
                     AccountForm frm = new AccountForm(selectedAccount, this.ParentForm);
+                    frm.AccountOpenedEvent += AccFrm_AccountOpenedEvent;
                     frm.Show();
                 }
                 return;

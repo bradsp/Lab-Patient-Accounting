@@ -131,18 +131,22 @@ namespace LabBilling
                     accFrm.WindowState = FormWindowState.Normal;
                     accFrm.AutoScroll = true;
                     accFrm.Show();
-                    //accFrm.AccountOpenedEvent -= AccFrm_AccountOpenedEvent;
                 }
             }
         }
 
         private void AccFrm_AccountOpenedEvent(object sender, string e)
         {
-            var ar = accountRepository.GetByAccount(e, true);
+            UpdateRecentAccounts(e);
+        }
+
+        public void UpdateRecentAccounts(string newAccount)
+        {
+            var ar = accountRepository.GetByAccount(newAccount, true);
             if (ar != null)
             {
                 tlpRecentAccounts.Controls.RemoveAt(0);
-                LinkLabel a1 = new LinkLabel { Text = ar.PatFullName, Tag = e };
+                LinkLabel a1 = new LinkLabel { Text = ar.PatFullName, Tag = newAccount };
                 a1.LinkClicked += new LinkLabelLinkClickedEventHandler(RecentLabelClicked);
                 tlpRecentAccounts.Controls.Add(a1);
                 a1.Dock = DockStyle.Fill;
