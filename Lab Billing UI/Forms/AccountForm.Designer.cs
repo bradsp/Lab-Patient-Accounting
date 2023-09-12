@@ -274,6 +274,7 @@ namespace LabBilling.Forms
             this.ThirdPartyBalLabel = new System.Windows.Forms.Label();
             this.BannerClientBalLabel = new System.Windows.Forms.Label();
             this.ClientBalLabel = new System.Windows.Forms.Label();
+            this.changeCreditFlagToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tabControl1.SuspendLayout();
             this.summaryTab.SuspendLayout();
             this.tabDemographics.SuspendLayout();
@@ -1943,21 +1944,22 @@ namespace LabBilling.Forms
             // 
             this.menuCharges.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripCreditCharge,
-            this.moveChargeToolStripMenuItem});
+            this.moveChargeToolStripMenuItem,
+            this.changeCreditFlagToolStripMenuItem});
             this.menuCharges.Name = "menuCharges";
-            this.menuCharges.Size = new System.Drawing.Size(148, 48);
+            this.menuCharges.Size = new System.Drawing.Size(181, 92);
             // 
             // toolStripCreditCharge
             // 
             this.toolStripCreditCharge.Name = "toolStripCreditCharge";
-            this.toolStripCreditCharge.Size = new System.Drawing.Size(147, 22);
+            this.toolStripCreditCharge.Size = new System.Drawing.Size(180, 22);
             this.toolStripCreditCharge.Text = "Credit Charge";
             this.toolStripCreditCharge.Click += new System.EventHandler(this.ToolStripCreditCharge_Click);
             // 
             // moveChargeToolStripMenuItem
             // 
             this.moveChargeToolStripMenuItem.Name = "moveChargeToolStripMenuItem";
-            this.moveChargeToolStripMenuItem.Size = new System.Drawing.Size(147, 22);
+            this.moveChargeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.moveChargeToolStripMenuItem.Text = "Move Charge";
             this.moveChargeToolStripMenuItem.Click += new System.EventHandler(this.moveChargeToolStripMenuItem_Click);
             // 
@@ -2941,6 +2943,13 @@ namespace LabBilling.Forms
             this.ClientBalLabel.Text = "0.00";
             this.ClientBalLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
+            // changeCreditFlagToolStripMenuItem
+            // 
+            this.changeCreditFlagToolStripMenuItem.Name = "changeCreditFlagToolStripMenuItem";
+            this.changeCreditFlagToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.changeCreditFlagToolStripMenuItem.Text = "Change Credit Flag";
+            this.changeCreditFlagToolStripMenuItem.Click += new System.EventHandler(this.changeCreditFlagToolStripMenuItem_Click);
+            // 
             // AccountForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -3246,6 +3255,7 @@ namespace LabBilling.Forms
         private System.Windows.Forms.RadioButton show3rdPartyRadioButton;
         private System.Windows.Forms.DataGridView statementHistoryDataGrid;
         private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.ToolStripMenuItem changeCreditFlagToolStripMenuItem;
     }
 }
 

@@ -265,6 +265,8 @@ namespace LabBilling.Forms
                 Helper.SetControlsAccess(tabPayments.Controls, Program.LoggedInUser.CanAddAdjustments);
             }
 
+            changeCreditFlagToolStripMenuItem.Visible = Program.LoggedInUser.IsAdministrator;
+
             Helper.SetControlsAccess(tabDemographics.Controls, false);
             Helper.SetControlsAccess(tabInsurance.Controls, false);
             Helper.SetControlsAccess(insTabLayoutPanel.Controls, false);
@@ -2462,6 +2464,27 @@ namespace LabBilling.Forms
         private void BannerAccountTextBox_Click(object sender, EventArgs e)
         {
             Clipboard.SetText(BannerAccountTextBox.Text);
+        }
+
+        private async void changeCreditFlagToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Log.Instance.Trace($"Entering");
+            int selectedRows = ChargesDataGrid.Rows.GetRowCount(DataGridViewElementStates.Selected);
+            if (selectedRows > 0)
+            {
+                DataGridViewRow row = ChargesDataGrid.SelectedRows[0];
+
+                int chrgId = Convert.ToInt32(row.Cells[nameof(Chrg.ChrgId)].Value);
+                bool currentFlag = Convert.ToBoolean(row.Cells[nameof(Chrg.IsCredited)].Value);
+                
+                if (MessageBox.Show($"Change credited flag on {chrgId}?",
+                    "Confirm Change", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                {
+                    Log.Instance.Debug($"Changing credited flag on {chrgId} from {currentFlag} to {!currentFlag}");
+                    chrgRepository.SetCredited(chrgId, !currentFlag);
+                }
+                await LoadAccountData();
+            }
         }
     }
 }
