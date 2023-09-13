@@ -2486,5 +2486,13 @@ namespace LabBilling.Forms
                 await LoadAccountData();
             }
         }
+
+        private void copyToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if(NotesDisplayTextBox.SelectionLength > 0)
+            {
+                NotesDisplayTextBox.Copy();
+            }
+        }
     }
 }

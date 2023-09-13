@@ -257,7 +257,7 @@ namespace LabBilling.Forms
             string profile = SelectionProfile.SelectedItem.ToString();
             int counter;
             Cursor.Current = Cursors.WaitCursor;
-            for (counter = 1; counter < (InvoicesDGV.Rows.Count); counter++)
+            for (counter = 0; counter < (InvoicesDGV.Rows.Count); counter++)
             {
                 switch (profile)
                 {

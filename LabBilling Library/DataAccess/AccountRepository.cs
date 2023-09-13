@@ -1402,16 +1402,9 @@ namespace LabBilling.Core.DataAccess
         {
             Log.Instance.Trace($"Entering");
 
-            DateTime thruDate = _appEnvironment.ApplicationParameters.SSIBillThruDate;
-
             (string propertyName, AccountSearchRepository.operation oper, string searchText)[] parameters = {
-                (nameof(AccountSearch.ServiceDate), AccountSearchRepository.operation.LessThanOrEqual, thruDate.ToString()),
-                (nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, AccountStatus.PaidOut),
-                (nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, AccountStatus.Closed),
-                (nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, AccountStatus.ProfSubmitted),
-                (nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, AccountStatus.InstSubmitted),
-                (nameof(AccountSearch.FinCode), AccountSearchRepository.operation.NotEqual, AccountStatus.Client),
-                (nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, AccountStatus.Hold),
+                (nameof(AccountSearch.ServiceDate), AccountSearchRepository.operation.LessThanOrEqual, _appEnvironment.ApplicationParameters.SSIBillThruDate.ToString()),
+                (nameof(AccountSearch.Status), AccountSearchRepository.operation.Equal, AccountStatus.New),
                 (nameof(AccountSearch.FinCode), AccountSearchRepository.operation.NotEqual, "Y"),
                 (nameof(AccountSearch.FinCode), AccountSearchRepository.operation.NotEqual, clientFinCode),
                 (nameof(AccountSearch.FinCode), AccountSearchRepository.operation.NotEqual, "E")

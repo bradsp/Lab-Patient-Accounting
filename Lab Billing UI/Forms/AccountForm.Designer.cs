@@ -189,6 +189,7 @@ namespace LabBilling.Forms
             this.menuCharges = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripCreditCharge = new System.Windows.Forms.ToolStripMenuItem();
             this.moveChargeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.changeCreditFlagToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ChargeDetailGridLabel = new System.Windows.Forms.Label();
             this.ChrgDetailDataGrid = new System.Windows.Forms.DataGridView();
             this.chargeDetailsContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -274,7 +275,8 @@ namespace LabBilling.Forms
             this.ThirdPartyBalLabel = new System.Windows.Forms.Label();
             this.BannerClientBalLabel = new System.Windows.Forms.Label();
             this.ClientBalLabel = new System.Windows.Forms.Label();
-            this.changeCreditFlagToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.noteTextContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.copyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tabControl1.SuspendLayout();
             this.summaryTab.SuspendLayout();
             this.tabDemographics.SuspendLayout();
@@ -303,6 +305,7 @@ namespace LabBilling.Forms
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.RefreshButton)).BeginInit();
             this.dxPointerMenuStrip.SuspendLayout();
+            this.noteTextContextMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -1947,21 +1950,28 @@ namespace LabBilling.Forms
             this.moveChargeToolStripMenuItem,
             this.changeCreditFlagToolStripMenuItem});
             this.menuCharges.Name = "menuCharges";
-            this.menuCharges.Size = new System.Drawing.Size(181, 92);
+            this.menuCharges.Size = new System.Drawing.Size(176, 70);
             // 
             // toolStripCreditCharge
             // 
             this.toolStripCreditCharge.Name = "toolStripCreditCharge";
-            this.toolStripCreditCharge.Size = new System.Drawing.Size(180, 22);
+            this.toolStripCreditCharge.Size = new System.Drawing.Size(175, 22);
             this.toolStripCreditCharge.Text = "Credit Charge";
             this.toolStripCreditCharge.Click += new System.EventHandler(this.ToolStripCreditCharge_Click);
             // 
             // moveChargeToolStripMenuItem
             // 
             this.moveChargeToolStripMenuItem.Name = "moveChargeToolStripMenuItem";
-            this.moveChargeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.moveChargeToolStripMenuItem.Size = new System.Drawing.Size(175, 22);
             this.moveChargeToolStripMenuItem.Text = "Move Charge";
             this.moveChargeToolStripMenuItem.Click += new System.EventHandler(this.moveChargeToolStripMenuItem_Click);
+            // 
+            // changeCreditFlagToolStripMenuItem
+            // 
+            this.changeCreditFlagToolStripMenuItem.Name = "changeCreditFlagToolStripMenuItem";
+            this.changeCreditFlagToolStripMenuItem.Size = new System.Drawing.Size(175, 22);
+            this.changeCreditFlagToolStripMenuItem.Text = "Change Credit Flag";
+            this.changeCreditFlagToolStripMenuItem.Click += new System.EventHandler(this.changeCreditFlagToolStripMenuItem_Click);
             // 
             // ChargeDetailGridLabel
             // 
@@ -2268,6 +2278,7 @@ namespace LabBilling.Forms
             // 
             // NotesDisplayTextBox
             // 
+            this.NotesDisplayTextBox.ContextMenuStrip = this.noteTextContextMenu;
             this.NotesDisplayTextBox.Dock = System.Windows.Forms.DockStyle.Left;
             this.NotesDisplayTextBox.Location = new System.Drawing.Point(0, 0);
             this.NotesDisplayTextBox.Name = "NotesDisplayTextBox";
@@ -2275,6 +2286,7 @@ namespace LabBilling.Forms
             this.NotesDisplayTextBox.Size = new System.Drawing.Size(598, 492);
             this.NotesDisplayTextBox.TabIndex = 0;
             this.NotesDisplayTextBox.Text = "";
+            this.NotesDisplayTextBox.ZoomFactor = 1.2F;
             // 
             // tabBillingActivity
             // 
@@ -2943,12 +2955,19 @@ namespace LabBilling.Forms
             this.ClientBalLabel.Text = "0.00";
             this.ClientBalLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
-            // changeCreditFlagToolStripMenuItem
+            // noteTextContextMenu
             // 
-            this.changeCreditFlagToolStripMenuItem.Name = "changeCreditFlagToolStripMenuItem";
-            this.changeCreditFlagToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.changeCreditFlagToolStripMenuItem.Text = "Change Credit Flag";
-            this.changeCreditFlagToolStripMenuItem.Click += new System.EventHandler(this.changeCreditFlagToolStripMenuItem_Click);
+            this.noteTextContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.copyToolStripMenuItem});
+            this.noteTextContextMenu.Name = "noteTextContextMenu";
+            this.noteTextContextMenu.Size = new System.Drawing.Size(181, 48);
+            // 
+            // copyToolStripMenuItem
+            // 
+            this.copyToolStripMenuItem.Name = "copyToolStripMenuItem";
+            this.copyToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.copyToolStripMenuItem.Text = "Copy";
+            this.copyToolStripMenuItem.Click += new System.EventHandler(this.copyToolStripMenuItem_Click);
             // 
             // AccountForm
             // 
@@ -3031,6 +3050,7 @@ namespace LabBilling.Forms
             this.menuStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.RefreshButton)).EndInit();
             this.dxPointerMenuStrip.ResumeLayout(false);
+            this.noteTextContextMenu.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -3256,6 +3276,8 @@ namespace LabBilling.Forms
         private System.Windows.Forms.DataGridView statementHistoryDataGrid;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.ToolStripMenuItem changeCreditFlagToolStripMenuItem;
+        private System.Windows.Forms.ContextMenuStrip noteTextContextMenu;
+        private System.Windows.Forms.ToolStripMenuItem copyToolStripMenuItem;
     }
 }
 

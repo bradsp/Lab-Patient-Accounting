@@ -35,6 +35,7 @@ namespace LabBilling.Core
         private static Button btnOK;
         private static Button btnCancel;
         private static TextBox txtInput;
+        private static ContextMenuStrip contextMenu;
 
         public InputBox()
         {
@@ -55,6 +56,12 @@ namespace LabBilling.Core
 
         #endregion
 
+        #region Properties
+
+        public int InputBoxHeight { get; set; } = 20;
+
+        #endregion
+
         #region Windows Form code
 
         private static void InitializeComponent()
@@ -65,7 +72,13 @@ namespace LabBilling.Core
             btnOK = new Button();
             btnCancel = new Button();
             txtInput = new TextBox();
+            contextMenu = new ContextMenuStrip();
             frmInputDialog.SuspendLayout();
+            //
+            // contextMenu
+            //
+            ToolStripMenuItem pasteToolStripItem = new ToolStripMenuItem("Paste", null, pasteToolStripItem_click);
+            contextMenu.Items.Add(pasteToolStripItem);
             // 
             // lblPrompt
             // 
@@ -106,6 +119,7 @@ namespace LabBilling.Core
             txtInput.Size = new Size(280, 20);
             txtInput.TabIndex = 0;
             txtInput.Text = "";
+            txtInput.ContextMenuStrip = contextMenu;
             // 
             // InputBoxDialog
             // 
@@ -120,6 +134,40 @@ namespace LabBilling.Core
             frmInputDialog.MinimizeBox = false;
             frmInputDialog.Name = "InputBoxDialog";
             frmInputDialog.ResumeLayout(false);
+        }
+
+        private static void cutToolStripItem_click(object sender, EventArgs e)
+        {
+            // Ensure that text is currently selected in the text box.   
+            if (txtInput.SelectedText != "")
+                // Cut the selected text in the control and paste it into the Clipboard.
+                txtInput.Cut();
+        }
+
+        private static void pasteToolStripItem_click(object sender, EventArgs e)
+        {
+            // Determine if there is any text in the Clipboard to paste into the text box.
+            if (Clipboard.GetDataObject().GetDataPresent(DataFormats.Text) == true)
+            {
+                // Determine if any text is selected in the text box.
+                if (txtInput.SelectionLength > 0)
+                {
+                    // Ask user if they want to paste over currently selected text.
+                    if (MessageBox.Show("Do you want to paste over current selection?", "Cut Example", MessageBoxButtons.YesNo) == DialogResult.No)
+                        // Move selection to the point after the current selection and paste.
+                        txtInput.SelectionStart = txtInput.SelectionStart + txtInput.SelectionLength;
+                }
+                // Paste current text in Clipboard into text box.
+                txtInput.Paste();
+            }
+        }
+
+        private static void copyToolStripItem_click(object sender, EventArgs e)
+        {
+            // Ensure that text is selected in the text box.   
+            if (txtInput.SelectionLength > 0)
+                // Copy the selected text to the Clipboard.
+                txtInput.Copy();
         }
 
         #endregion
@@ -163,18 +211,22 @@ namespace LabBilling.Core
                 n = 1;
 
             System.Drawing.Point Txt = txtInput.Location;
-            Txt.Y = Txt.Y + (n * 4);
+            Txt.Y += (n * 4);
             txtInput.Location = Txt;
             System.Drawing.Size form = frmInputDialog.Size;
-            form.Height = form.Height + (n * 4);
+            form.Height += (n * 4);
             frmInputDialog.Size = form;
 
             txtInput.SelectionStart = 0;
             txtInput.SelectionLength = txtInput.Text.Length;
             if (_passwordMask)
                 txtInput.PasswordChar = '*';
-            if(_multiline)
+            if (_multiline)
+            {
                 txtInput.Multiline = true;
+                txtInput.Height += 60;
+                frmInputDialog.Height += 60;
+            }
             txtInput.Focus();
         }
 
