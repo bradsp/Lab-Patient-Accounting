@@ -144,16 +144,34 @@ namespace LabBilling.Core.DataAccess
         {
             Log.Instance.Trace($"Entering - chrg number {chrgNum} comment {comment}");
 
-            bool setCredited = false;
+            bool setCreditFlag = false;
+            bool setOldChrgCreditFlag = false;
+
 
             if (chrgNum <= 0)
                 throw new ArgumentOutOfRangeException(nameof(chrgNum));
             var chrg = GetById(chrgNum) ?? throw new ApplicationException($"Charge number {chrgNum} not found.");
 
-            //if(string.IsNullOrEmpty(chrg.Invoice))
-            setCredited = true;
+            if (chrg.FinancialType == "M")
+            {
+                setCreditFlag = true;
+                setOldChrgCreditFlag = true;
+            }
+            if(chrg.FinancialType == "C")
+            {
+                if(string.IsNullOrEmpty(chrg.Invoice))
+                {
+                    setCreditFlag = true;
+                    setOldChrgCreditFlag = true;
+                }
+                else
+                {
+                    setCreditFlag = false;
+                    setOldChrgCreditFlag = true;
+                }
+            }
 
-            chrg.IsCredited = setCredited;
+            chrg.IsCredited = setCreditFlag;
             chrg.ChrgId = 0;
             chrg.Quantity *= -1;
             chrg.Comment = comment;
@@ -162,7 +180,7 @@ namespace LabBilling.Core.DataAccess
             chrg.ChrgDetails.ForEach(x => x.ChrgNo = 0);
             
             int retVal = AddCharge(chrg);
-            if (setCredited)
+            if (setOldChrgCreditFlag)
                 SetCredited(chrgNum);
             Log.Instance.Trace($"Credit charge number {chrgNum} comment {comment} returned {retVal}");
             Log.Instance.Debug($"{dbConnection.LastSQL} {dbConnection.GetArgs()}");
