@@ -23,7 +23,7 @@ namespace LabBilling.Core.DataAccess
 
             _ = Guid.TryParse(rowguid, out Guid gRowGuid);
 
-            badDebt = dbConnection.SingleOrDefault<BadDebt>("where rowguid = @0", new SqlParameter() { SqlDbType = SqlDbType.UniqueIdentifier, Value = gRowGuid });
+            badDebt = dbConnection.SingleOrDefault<BadDebt>($"where {GetRealColumn(nameof(BadDebt.rowguid))} = @0", new SqlParameter() { SqlDbType = SqlDbType.UniqueIdentifier, Value = gRowGuid });
 
             if (!string.IsNullOrWhiteSpace(badDebt.StateZip) && badDebt.StateZip.Length >= 7)
             {

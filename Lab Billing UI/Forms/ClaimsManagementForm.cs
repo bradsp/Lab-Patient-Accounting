@@ -1,19 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using LabBilling.Core.BusinessLogic;
 using LabBilling.Core.Models;
-using Opulos.Core.UI;
 using LabBilling.Logging;
 using LabBilling.Core.DataAccess;
-using System.ServiceModel.Configuration;
 
 namespace LabBilling.Forms
 {

@@ -49,12 +49,15 @@ namespace LabBilling
 
             var configuration = new NLog.Config.LoggingConfiguration();
 
+            LogLevel minLevel = NLog.LogLevel.Info;
+
             var fileTarget = new NLog.Targets.FileTarget("logfile") { FileName = "c:\\temp\\lab-billing-log.txt" };
             var consoleTarget = new NLog.Targets.ConsoleTarget("logconsole");
             var dbTarget = new NLog.Targets.DatabaseTarget("database")
             {
                 ConnectionString = Program.AppEnvironment.LogConnectionString,
-                CommandText = @"INSERT INTO Logs(CreatedOn,Message,Level,Exception,StackTrace,Logger,HostName,Username,CallingSite,CallingSiteLineNumber,AppVersion,DatabaseName,DatabaseServer) VALUES (@datetime,@msg,@level,@exception,@trace,@logger,@hostname,@user,@callsite,@lineno,@version,@dbname,@dbserver)",
+                CommandText = @"INSERT INTO Logs(CreatedOn,Message,Level,Exception,StackTrace,Logger,HostName,Username,CallingSite,CallingSiteLineNumber,AppVersion,DatabaseName,DatabaseServer) " +
+                    "VALUES (@datetime,@msg,@level,@exception,@trace,@logger,@hostname,@user,@callsite,@lineno,@version,@dbname,@dbserver)",
             };
 
             GlobalDiagnosticsContext.Set("dbname", Program.AppEnvironment.DatabaseName);
@@ -74,7 +77,7 @@ namespace LabBilling
             dbTarget.Parameters.Add(new DatabaseParameterInfo("@dbname", new NLog.Layouts.SimpleLayout("${gdc:item=dbname}")));
             dbTarget.Parameters.Add(new DatabaseParameterInfo("@dbserver", new NLog.Layouts.SimpleLayout("${gdc:item=dbserver}")));
 
-            var dbRule = new LoggingRule("*", NLog.LogLevel.Trace, dbTarget);
+            var dbRule = new LoggingRule("*", minLevel, dbTarget);
 
             configuration.AddRule(dbRule);
 
@@ -157,7 +160,7 @@ namespace LabBilling
 
         private async void MainForm_Load(object sender, EventArgs e)
         {
-            Log.Instance.Trace($"Entering");
+            Log.Instance.Info($"Launching MainForm");
 
             //set shadowtype to none to resolve access after dispose error
             this.ShadowType = MetroFormShadowType.None;
@@ -592,7 +595,6 @@ namespace LabBilling
 
         private void Dashboard_MdiChildActivate(object sender, EventArgs e)
         {
-            //if (this.MdiChildren.Count() > Convert.ToInt32(systemParametersRepository.GetByKey("tabs_open_limit")))
             if(this.MdiChildren.Count() > Program.AppEnvironment.ApplicationParameters.TabsOpenLimit)
             {
 
@@ -612,7 +614,6 @@ namespace LabBilling
                     this.MdiChildren.First(x => x.Text == selectedForm).Close();
                 }
 
-                //MessageBox.Show(sb.ToString());
             }
         }
 

@@ -20,8 +20,8 @@ namespace LabBilling.Core.DataAccess
         {
             var sql = PetaPoco.Sql.Builder
                 .From(_tableName)
-                .Where("account = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account })
-                .OrderBy("mod_date DESC");
+                .Where($"{GetRealColumn(nameof(AccountNote.Account))} = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account })
+                .OrderBy($"{GetRealColumn(nameof(AccountNote.mod_date))} DESC");
 
             var records = dbConnection.Fetch<AccountNote>(sql);
 

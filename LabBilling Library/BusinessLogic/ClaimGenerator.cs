@@ -18,7 +18,6 @@ namespace LabBilling.Core.BusinessLogic
 {
     public sealed class ClaimGenerator : DataAccess.Database
     {
-        //private SystemParametersRepository parametersdb;
 
         readonly string dBserverName = null;
         readonly string dBName = null;
@@ -233,7 +232,7 @@ namespace LabBilling.Core.BusinessLogic
         {
             billing837 = new Billing837(_connectionString, propProductionEnvironment);
             var batch = billingBatchRepository.GetBatch(batchNo);
-            string batchSubmitterID = _appEnvironment.ApplicationParameters.FederalTaxId; // parametersdb.GetByKey("fed_tax_id");
+            string batchSubmitterID = _appEnvironment.ApplicationParameters.FederalTaxId; 
             string interchangeControlNumber = string.Format("{0:D9}", int.Parse(string.Format("{0}", batch.Batch)));
 
             LabBilling.Core.Billing837.ClaimType claimType;
@@ -245,11 +244,11 @@ namespace LabBilling.Core.BusinessLogic
             {
                 case "UB":
                     claimType = (Billing837.ClaimType)ClaimType.Institutional;
-                    fileLocation = _appEnvironment.ApplicationParameters.InstitutionalClaimFileLocation; //parametersdb.GetByKey("claim_837i_file_location");
+                    fileLocation = _appEnvironment.ApplicationParameters.InstitutionalClaimFileLocation;
                     break;
                 case "1500":
                     claimType = (Billing837.ClaimType)ClaimType.Professional;
-                    fileLocation = _appEnvironment.ApplicationParameters.ProfessionalClaimFileLocation; //parametersdb.GetByKey("claim_837p_file_location");
+                    fileLocation = _appEnvironment.ApplicationParameters.ProfessionalClaimFileLocation;
                     break;
                 default:
                     //not a valid batch
@@ -375,40 +374,40 @@ namespace LabBilling.Core.BusinessLogic
                 claimData.CreatedDate = DateTime.Now;
                 claimData.TransactionTypeCode = "CH";
                 claimData.TransactionSetPurpose = "00";  // 00 = original, 18 - reissue
-                claimData.SubmitterId = _appEnvironment.ApplicationParameters.FederalTaxId; // parametersdb.GetByKey("fed_tax_id");
-                claimData.SubmitterName = _appEnvironment.ApplicationParameters.BillingEntityName; //parametersdb.GetByKey("billing_entity_name");
-                claimData.SubmitterContactName = _appEnvironment.ApplicationParameters.BillingContact; //parametersdb.GetByKey("billing_contact");
-                claimData.SubmitterContactEmail = _appEnvironment.ApplicationParameters.BillingPhone; //parametersdb.GetByKey("billing_phone");
-                claimData.SubmitterContactPhone = _appEnvironment.ApplicationParameters.BillingEmail; //parametersdb.GetByKey("billing_email");
+                claimData.SubmitterId = _appEnvironment.ApplicationParameters.FederalTaxId; 
+                claimData.SubmitterName = _appEnvironment.ApplicationParameters.BillingEntityName; 
+                claimData.SubmitterContactName = _appEnvironment.ApplicationParameters.BillingContact; 
+                claimData.SubmitterContactEmail = _appEnvironment.ApplicationParameters.BillingPhone; 
+                claimData.SubmitterContactPhone = _appEnvironment.ApplicationParameters.BillingEmail; 
 
-                claimData.ReceiverOrgName = _appEnvironment.ApplicationParameters.BillingReceiverName; //parametersdb.GetByKey("billing_receiver_name");
-                claimData.ReceiverId = _appEnvironment.ApplicationParameters.BillingReceiverId; //parametersdb.GetByKey("billing_receiver_id");
+                claimData.ReceiverOrgName = _appEnvironment.ApplicationParameters.BillingReceiverName; 
+                claimData.ReceiverId = _appEnvironment.ApplicationParameters.BillingReceiverId; 
                 claimData.ProviderTaxonomyCode = "282N00000X";
 
-                claimData.BillingProviderName = _appEnvironment.ApplicationParameters.BillingEntityName; //parametersdb.GetByKey("billing_entity_name");
-                claimData.BillingProviderAddress = _appEnvironment.ApplicationParameters.BillingEntityStreet; //parametersdb.GetByKey("billing_entity_street");
-                claimData.BillingProviderCity = _appEnvironment.ApplicationParameters.BillingEntityCity; //parametersdb.GetByKey("billing_entity_city");
-                claimData.BillingProviderState = _appEnvironment.ApplicationParameters.BillingEntityState; //parametersdb.GetByKey("billing_entity_state");
-                claimData.BillingProviderZipCode = _appEnvironment.ApplicationParameters.BillingEntityZip; //parametersdb.GetByKey("billing_entity_zip");
-                claimData.BillingProviderCountry = _appEnvironment.ApplicationParameters.BillingEntityCounty; //parametersdb.GetByKey("billing_entity_country");
-                claimData.BillingProviderTaxId = _appEnvironment.ApplicationParameters.FederalTaxId; //parametersdb.GetByKey("fed_tax_id");
+                claimData.BillingProviderName = _appEnvironment.ApplicationParameters.BillingEntityName; 
+                claimData.BillingProviderAddress = _appEnvironment.ApplicationParameters.BillingEntityStreet; 
+                claimData.BillingProviderCity = _appEnvironment.ApplicationParameters.BillingEntityCity; 
+                claimData.BillingProviderState = _appEnvironment.ApplicationParameters.BillingEntityState; 
+                claimData.BillingProviderZipCode = _appEnvironment.ApplicationParameters.BillingEntityZip; 
+                claimData.BillingProviderCountry = _appEnvironment.ApplicationParameters.BillingEntityCounty;
+                claimData.BillingProviderTaxId = _appEnvironment.ApplicationParameters.FederalTaxId; 
                 claimData.BillingProviderUPIN = String.Empty;
-                claimData.BillingProviderNPI = _appEnvironment.ApplicationParameters.NPINumber; //parametersdb.GetByKey("npi_number");
-                claimData.BillingProviderContactName = _appEnvironment.ApplicationParameters.BillingContact; //parametersdb.GetByKey("billing_contact");
-                claimData.BillingProviderContactPhone = _appEnvironment.ApplicationParameters.BillingPhone; //parametersdb.GetByKey("billing_phone");
-                claimData.BillingProviderContactEmail = _appEnvironment.ApplicationParameters.BillingEmail; //parametersdb.GetByKey("billing_email");
+                claimData.BillingProviderNPI = _appEnvironment.ApplicationParameters.NPINumber;
+                claimData.BillingProviderContactName = _appEnvironment.ApplicationParameters.BillingContact; 
+                claimData.BillingProviderContactPhone = _appEnvironment.ApplicationParameters.BillingPhone;
+                claimData.BillingProviderContactEmail = _appEnvironment.ApplicationParameters.BillingEmail;
 
                 if (claimData.claimAccount.InsurancePrimary.InsCompany.BillAsJmcgh)
                 {
-                    claimData.BillingProviderName = _appEnvironment.ApplicationParameters.Company2Name; //parametersdb.GetByKey("company2_name");
-                    claimData.BillingProviderNPI = _appEnvironment.ApplicationParameters.WTHNPI; //parametersdb.GetByKey("wth_npi");
+                    claimData.BillingProviderName = _appEnvironment.ApplicationParameters.Company2Name;
+                    claimData.BillingProviderNPI = _appEnvironment.ApplicationParameters.WTHNPI;
                 }
 
-                claimData.PayToAddress = _appEnvironment.ApplicationParameters.RemitToAddress; //parametersdb.GetByKey("remit_to_address");
-                claimData.PayToCity = _appEnvironment.ApplicationParameters.RemitToCity; //parametersdb.GetByKey("remit_to_city");
-                claimData.PayToState = _appEnvironment.ApplicationParameters.RemitToState; //parametersdb.GetByKey("remit_to_state");
-                claimData.PayToZipCode = _appEnvironment.ApplicationParameters.RemitToZip; //parametersdb.GetByKey("remit_to_zip");
-                claimData.PayToCountry = _appEnvironment.ApplicationParameters.RemitToCountry; //parametersdb.GetByKey("remit_to_country");
+                claimData.PayToAddress = _appEnvironment.ApplicationParameters.RemitToAddress;
+                claimData.PayToCity = _appEnvironment.ApplicationParameters.RemitToCity;
+                claimData.PayToState = _appEnvironment.ApplicationParameters.RemitToState;
+                claimData.PayToZipCode = _appEnvironment.ApplicationParameters.RemitToZip;
+                claimData.PayToCountry = _appEnvironment.ApplicationParameters.RemitToCountry;
 
                 //not needed currently
                 //2010AC — PAY-TO PLAN NAME Loop Repeat: 1
@@ -462,7 +461,7 @@ namespace LabBilling.Core.BusinessLogic
                 claimData.StatementThruDate = claimData.claimAccount.TransactionDate;
 
                 claimData.PatientAmountPaid = claimData.claimAccount.TotalPayments;
-                claimData.CliaNumber = _appEnvironment.ApplicationParameters.PrimaryCliaNo; //parametersdb.GetByKey("primary_clia_no");
+                claimData.CliaNumber = _appEnvironment.ApplicationParameters.PrimaryCliaNo; 
 
                 claimData.AttendingProviderFirstName = claimData.claimAccount.Pat.Physician.FirstName;
                 claimData.AttendingProviderLastName = claimData.claimAccount.Pat.Physician.LastName;

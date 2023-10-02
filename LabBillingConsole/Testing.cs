@@ -25,6 +25,7 @@ namespace LabBillingConsole
             menuText.AppendLine("1) Remittance Test");
             menuText.AppendLine("3) Generate Claim Test");
             menuText.AppendLine("4) Populate Claim Detail Amount");
+            menuText.AppendLine("5) Import ICD-10");
             menuText.AppendLine("X) Exit");
 
             var panel = new Panel(menuText.ToString());
@@ -56,6 +57,10 @@ namespace LabBillingConsole
                     Console.Clear();
                     PopulateClaimDetailAmount();
                     return false;
+                case "5":
+                    Console.Clear();
+                    ImportICD10();
+                    return false;
                 case "X":
                     return false;
                 case "x":
@@ -63,6 +68,19 @@ namespace LabBillingConsole
                 default:
                     return true;
             }
+        }
+
+        private void ImportICD10()
+        {
+            DictionaryImport dictionaryImport = new DictionaryImport();
+            dictionaryImport.RecordProcessed += OnRecordProcessed;
+            dictionaryImport.ImportICD(@"C:\Users\bpowers\Downloads\icd10cm-CodesDescriptions-2024\icd10cm-order-2024.txt", "2024", _appEnvironment);
+
+        }
+
+        private void OnRecordProcessed(object source, RecordProcessedArgs args)
+        {
+            Console.WriteLine($"ICD Code: {args.IcdCode}   Records processed: {args.RecordsProcessed}");
         }
 
         private void PopulateClaimDetailAmount()

@@ -227,8 +227,15 @@ namespace LabBilling.Forms
             accountGrid.Columns[nameof(AccountSearch.TotalPayments)].Visible = showAccountsWithPmtCheckbox.Checked;
             accountGrid.Columns[nameof(AccountSearch.TotalCharges)].Visible = false;
             accountGrid.Columns[nameof(AccountSearch.Balance)].DefaultCellStyle.Format = "N2";
+            accountGrid.Columns[nameof(AccountSearch.Balance)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
             accountGrid.Columns[nameof(AccountSearch.TotalCharges)].DefaultCellStyle.Format = "N2";
+            accountGrid.Columns[nameof(AccountSearch.TotalCharges)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
             accountGrid.Columns[nameof(AccountSearch.TotalPayments)].DefaultCellStyle.Format = "N2";
+            accountGrid.Columns[nameof(AccountSearch.TotalPayments)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            accountGrid.Columns[nameof(AccountSearch.ThirdPartyBalance)].DefaultCellStyle.Format = "N2";
+            accountGrid.Columns[nameof(AccountSearch.ThirdPartyBalance)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            accountGrid.Columns[nameof(AccountSearch.ClientBalance)].DefaultCellStyle.Format = "N2";
+            accountGrid.Columns[nameof(AccountSearch.ClientBalance)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
 
             //column order
             int x = 0;
@@ -247,6 +254,9 @@ namespace LabBilling.Forms
             accountGrid.Columns[nameof(AccountSearch.ClientMnem)].DisplayIndex = x++;
             accountGrid.Columns[nameof(AccountSearch.ValidationStatus)].DisplayIndex = x++;
             accountGrid.Columns[nameof(AccountSearch.LastValidationDate)].DisplayIndex = x++;
+            accountGrid.Columns[nameof(AccountSearch.ThirdPartyBalance)].DisplayIndex = x++;
+            accountGrid.Columns[nameof(AccountSearch.ClientBalance)].DisplayIndex = x++;
+            accountGrid.Columns[nameof(AccountSearch.FinType)].DisplayIndex = x++;
 
             accountGrid.Columns[nameof(AccountSearch.ValidationStatus)].MinimumWidth = 200;
             accountGrid.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.DisplayedCells);
