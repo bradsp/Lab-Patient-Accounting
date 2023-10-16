@@ -7,10 +7,7 @@ using System.Threading.Tasks;
 using System.Data.SqlClient;
 using System.Data;
 using Log = LabBilling.Logging.Log;
-using System.Runtime.CompilerServices;
-using System.Security.Principal;
-using System.ServiceProcess;
-using System.ComponentModel.DataAnnotations;
+
 
 namespace LabBilling.Core.DataAccess
 {
@@ -24,8 +21,6 @@ namespace LabBilling.Core.DataAccess
         private readonly ClientDiscountRepository clientDiscountRepository;
         private readonly AccountNoteRepository accountNoteRepository;
         private readonly BillingActivityRepository billingActivityRepository;
-        private readonly AccountValidationRuleRepository accountValidationRuleRepository;
-        private readonly AccountValidationCriteriaRepository accountValidationCriteriaRepository;
         private readonly AccountValidationStatusRepository accountValidationStatusRepository;
         private readonly LMRPRuleRepository lmrpRuleRepository;
         private readonly FinRepository finRepository;
@@ -57,8 +52,6 @@ namespace LabBilling.Core.DataAccess
             clientDiscountRepository = new ClientDiscountRepository(appEnvironment);
             accountNoteRepository = new AccountNoteRepository(appEnvironment);
             billingActivityRepository = new BillingActivityRepository(appEnvironment);
-            accountValidationRuleRepository = new AccountValidationRuleRepository(appEnvironment);
-            accountValidationCriteriaRepository = new AccountValidationCriteriaRepository(appEnvironment);
             accountValidationStatusRepository = new AccountValidationStatusRepository(appEnvironment);
             accountLmrpErrorRepository = new AccountLmrpErrorRepository(appEnvironment);
             lmrpRuleRepository = new LMRPRuleRepository(appEnvironment);
@@ -869,8 +862,20 @@ namespace LabBilling.Core.DataAccess
             return true;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="clientMnem"></param>
+        /// <returns></returns>
         public async Task<bool> UpdateChargesClientAsync(string account, string clientMnem) => await Task.Run(() => UpdateChargesClient(account, clientMnem));
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="clientMnem"></param>
+        /// <returns></returns>
         public bool UpdateChargesClient(string account, string clientMnem)
         {
             Log.Instance.Trace("Entering");
@@ -893,10 +898,33 @@ namespace LabBilling.Core.DataAccess
             return true;
         }
 
-        public async Task<int> AddChargeAsync(string account, string cdm, int qty, DateTime serviceDate, string comment = null, string refNumber = null) 
-            => await Task.Run(() => AddCharge(account, cdm, qty, serviceDate, comment, refNumber));
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="cdm"></param>
+        /// <param name="qty"></param>
+        /// <param name="serviceDate"></param>
+        /// <param name="comment"></param>
+        /// <param name="refNumber"></param>
+        /// <param name="miscAmount"></param>
+        /// <returns></returns>
+        public async Task<int> AddChargeAsync(string account, string cdm, int qty, DateTime serviceDate, string comment = null, string refNumber = null, double miscAmount = 0.00) 
+            => await Task.Run(() => AddCharge(account, cdm, qty, serviceDate, comment, refNumber, miscAmount));
 
-        public int AddCharge(string account, string cdm, int qty, DateTime serviceDate, string comment = null, string refNumber = null)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="cdm"></param>
+        /// <param name="qty"></param>
+        /// <param name="serviceDate"></param>
+        /// <param name="comment"></param>
+        /// <param name="refNumber"></param>
+        /// <param name="miscAmount"></param>
+        /// <returns></returns>
+        /// <exception cref="AccountNotFoundException"></exception>
+        public int AddCharge(string account, string cdm, int qty, DateTime serviceDate, string comment = null, string refNumber = null, double miscAmount = 0.00)
         {
             Log.Instance.Trace($"Entering - account {account} cdm {cdm}");
 
@@ -908,12 +936,12 @@ namespace LabBilling.Core.DataAccess
                 throw new AccountNotFoundException("Account is not a valid account.", account);
             }
 
-            return AddCharge(accData, cdm, qty, serviceDate, comment, refNumber);
+            return AddCharge(accData, cdm, qty, serviceDate, comment, refNumber, miscAmount);
         }
 
 
-        public async Task<int> AddChargeAsync(Account accData, string cdm, int qty, DateTime serviceDate, string comment = null, string refNumber = null)
-            => await Task.Run(() => AddCharge(accData, cdm, qty, serviceDate, comment, refNumber));
+        public async Task<int> AddChargeAsync(Account accData, string cdm, int qty, DateTime serviceDate, string comment = null, string refNumber = null, double miscAmount = 0.00)
+            => await Task.Run(() => AddCharge(accData, cdm, qty, serviceDate, comment, refNumber, miscAmount));
 
         /// <summary>
         /// Add a charge to an account. The account must exist.
@@ -922,8 +950,10 @@ namespace LabBilling.Core.DataAccess
         /// <param name="cdm"></param>
         /// <param name="qty"></param>
         /// <param name="comment"></param>
+        /// <param name="refNumber"></param>
+        /// <param name="miscAmount"></param>
         /// <returns>Charge number of newly entered charge or < 0 if an error occurs.</returns>
-        public int AddCharge(Account accData, string cdm, int qty, DateTime serviceDate, string comment = null, string refNumber = null)
+        public int AddCharge(Account accData, string cdm, int qty, DateTime serviceDate, string comment = null, string refNumber = null, double miscAmount = 0.00)
         {
             Log.Instance.Trace($"Entering - account {accData.AccountNo} cdm {cdm}");
 
@@ -1033,6 +1063,7 @@ namespace LabBilling.Core.DataAccess
                     Cpt4 = fee.Cpt4,
                     Type = fee.Type
                 };
+
                 switch (fin.FinClass)
                 {
                     case patientFinType:
@@ -1062,6 +1093,11 @@ namespace LabBilling.Core.DataAccess
                         retailTotal += fee.MClassPrice;
                         ztotal += fee.ZClassPrice;
                         break;
+                }
+
+                if (cdmData.Variable)
+                {
+                    chrgDetail.Amount = miscAmount;
                 }
 
                 amtTotal += chrgDetail.Amount;

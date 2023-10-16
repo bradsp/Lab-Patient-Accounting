@@ -67,7 +67,6 @@ namespace LabBilling.Forms
             }
 
             LoadData();
-            //saveButton.Enabled = false; // save function not yet implemented           
         }
 
         private void LoadData()
@@ -80,6 +79,7 @@ namespace LabBilling.Forms
             orderableCheckBox.Checked = cdm.IsOrderable != 0;
             cbillDetailCheckBox.Checked = cdm.CBillDetail != 0;
             deletedCheckBox.Checked = cdm.IsDeleted;
+            variablePriceCheckBox.Checked = cdm.Variable;
 
             lisOrderCodeTextBox.Text = cdm.Mnem;
             refLabBillCodeTextBox.Text = cdm.RefLabBillCode;
@@ -220,6 +220,7 @@ namespace LabBilling.Forms
             cdm.Description = descriptionTextBox.Text;
             cdm.IsDeleted = deletedCheckBox.Checked;
             cdm.IsOrderable = orderableCheckBox.Checked ? 1 : 0;
+            cdm.Variable = variablePriceCheckBox.Checked;
             cdm.MClassPaAmount = Convert.ToDouble(mProfTextBox.Text);
             cdm.MClassType = patChargeType.Text;
             cdm.ZClassPaAmount = Convert.ToDouble(zProfTextBox.Text);

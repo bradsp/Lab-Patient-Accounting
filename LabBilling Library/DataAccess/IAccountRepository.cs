@@ -11,10 +11,10 @@ namespace LabBilling.Core.DataAccess
         void AddAccount(Account acc);
         Task AddAccountAsync(Account acc);
         Task<object> AddAsync(Account table);
-        int AddCharge(Account accData, string cdm, int qty, DateTime serviceDate, string comment = null, string refNumber = null);
-        int AddCharge(string account, string cdm, int qty, DateTime serviceDate, string comment = null, string refNumber = null);
-        Task<int> AddChargeAsync(string account, string cdm, int qty, DateTime serviceDate, string comment = null, string refNumber = null);
-        Task<int> AddChargeAsync(Account accData, string cdm, int qty, DateTime serviceDate, string comment = null, string refNumber = null);
+        int AddCharge(Account accData, string cdm, int qty, DateTime serviceDate, string comment = null, string refNumber = null, double miscAmount = 0.00);
+        int AddCharge(string account, string cdm, int qty, DateTime serviceDate, string comment = null, string refNumber = null, double miscAmount = 0.00);
+        Task<int> AddChargeAsync(string account, string cdm, int qty, DateTime serviceDate, string comment = null, string refNumber = null, double miscAmount = 0.00);
+        Task<int> AddChargeAsync(Account accData, string cdm, int qty, DateTime serviceDate, string comment = null, string refNumber = null, double miscAmount = 0.00);
         bool AddNote(string account, string noteText);
         Task<bool> AddNoteAsync(string account, string noteText);
         void BundlePanels(Account account);

@@ -1,9 +1,7 @@
 ﻿using PetaPoco;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace LabBilling.Core.Models
 {
@@ -39,6 +37,9 @@ namespace LabBilling.Core.Models
         public string Mnem { get; set; }
         [Column("cost")]
         public double Cost { get; set; }
+        [Column("variable")]
+        public bool Variable { get; set; }
+
         [Column("ref_lab_id")]
         public string RefLabId { get; set; }
         [Column("ref_lab_bill_code")]

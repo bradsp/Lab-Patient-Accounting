@@ -15,8 +15,6 @@ namespace LabBilling.Forms
         private Account _currentAccount = new Account();
         private readonly CdmRepository cdmRepository = new CdmRepository(Program.AppEnvironment);
         private readonly AccountRepository accountRepository = new AccountRepository(Program.AppEnvironment);
-        //private DataTable cdmSortedByCdm;
-        //private DataTable cdmSortedByDesc;
         private Timer _timer;
         private const int _timerInterval = 650;
 
@@ -37,40 +35,7 @@ namespace LabBilling.Forms
             tbBannerMRN.Text = _currentAccount.MRN;
             tbDateOfService.Text = _currentAccount.TransactionDate.ToShortDateString();
 
-            //BuildCargeItemCombo();
         }
-
-        //private void BuildCargeItemCombo()
-        //{
-        //    var chrgItems = cdmRepository.GetAll().ToList();
-
-        //    DataTable cdmDataTable = new DataTable(typeof(Cdm).Name);
-        //    cdmDataTable.Columns.Add("cdm");
-        //    cdmDataTable.Columns.Add("descript");
-        //    var values = new object[2];
-        //    //add a null row value
-        //    values[0] = "";
-        //    values[1] = "<select a charge item>";
-        //    cdmDataTable.Rows.Add(values);
-        //    foreach (Cdm cdm in chrgItems)
-        //    {
-        //        values[0] = cdm.ChargeId;
-        //        values[1] = cdm.Description;
-        //        cdmDataTable.Rows.Add(values);
-        //    }
-        //    cdmDataTable.DefaultView.Sort = "cdm asc";
-
-        //    cdmSortedByCdm = cdmDataTable.DefaultView.ToTable();
-
-        //    cdmDataTable.DefaultView.Sort = "descript asc";
-        //    cdmSortedByDesc = cdmDataTable.DefaultView.ToTable();
-
-        //    cbChargeItem.Items.Clear();
-        //    cbChargeItem.DataSource = cdmSortedByCdm;
-
-        //    cbChargeItem.DisplayMember = "cdm";
-        //    cbChargeItem.ValueMember = "cdm";
-        //}
 
         private void btnSubmit_Click(object sender, EventArgs e)
         {
@@ -93,7 +58,8 @@ namespace LabBilling.Forms
                     Convert.ToInt32(nQty.Value),
                     _currentAccount.TransactionDate,
                     tbComment.Text,
-                    ReferenceNumber.Text);
+                    ReferenceNumber.Text,
+                    Convert.ToDouble(amountTextBox.Text));
             }
             catch(CdmNotFoundException)
             {
@@ -123,21 +89,7 @@ namespace LabBilling.Forms
 
         private void SearchByCheckChanged (object sender, EventArgs e)
         {
-            //if (cbChargeItem != null)
-            //{
-            //    if (SearchByCdm.Checked)
-            //    {
-            //        cbChargeItem.DataSource = cdmSortedByCdm;
-            //        cbChargeItem.DisplayMember = "cdm";
-            //        cbChargeItem.ValueMember = "cdm";
-            //    }
-            //    else if (SearchByDescription.Checked)
-            //    {
-            //        cbChargeItem.DataSource = cdmSortedByDesc;
-            //        cbChargeItem.DisplayMember = "descript";
-            //        cbChargeItem.ValueMember = "cdm";
-            //    }
-            //}
+
         }
 
         private void cdmTextBox_KeyUp(object sender, KeyEventArgs e)
@@ -155,8 +107,39 @@ namespace LabBilling.Forms
 
             if(cdmLookup.ShowDialog() == DialogResult.OK)
             {
+                //if cdm is a variable type, ask for amount
                 cdmTextBox.Text = cdmLookup.SelectedValue;
+                Cdm cdm = cdmRepository.GetCdm(cdmLookup.SelectedValue);
+                if(cdm.Variable)
+                {
+                    var result = GetAmount();
+                    if (result.ReturnCode == DialogResult.OK)
+                    {
+                        amountTextBox.Text = result.Text;
+                    }
+                    else
+                    {
+                        cdmTextBox.Text = string.Empty;
+                    }
+                }
             }
+        }
+
+        private InputBoxResult GetAmount()
+        {
+            var result = InputBox.Show("Enter amount:");
+            if (result.ReturnCode == DialogResult.OK)
+            {
+                if (decimal.TryParse(result.Text, out decimal amountValue))
+                {
+                    return result;
+                }
+                else
+                {
+                    return GetAmount();
+                }
+            }
+            return result;
         }
     }
 }
