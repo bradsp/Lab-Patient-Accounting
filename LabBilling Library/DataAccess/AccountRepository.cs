@@ -61,7 +61,7 @@ namespace LabBilling.Core.DataAccess
             globalBillingCdmRepository = new GlobalBillingCdmRepository(appEnvironment);
         }
 
-        public async Task<Account> GetByAccountAsync(string account, bool demographicsOnly = false) => await Task.Run(() => GetByAccount(account, demographicsOnly));        
+        public async Task<Account> GetByAccountAsync(string account, bool demographicsOnly = false) => await Task.Run(() => GetByAccount(account, demographicsOnly));
 
         public Account GetByAccount(string account, bool demographicsOnly = false)
         {
@@ -134,7 +134,7 @@ namespace LabBilling.Core.DataAccess
                             record.BillingType = "REF LAB";
                             record.BillForm = record.InsurancePrimary.InsCompany.BillForm;
 
-                            if(string.IsNullOrEmpty(record.BillForm))
+                            if (string.IsNullOrEmpty(record.BillForm))
                             {
                                 record.BillForm = record.Fin.ClaimType;
                             }
@@ -165,19 +165,32 @@ namespace LabBilling.Core.DataAccess
             record.TotalPayments = record.Payments.Where(x => x.Status != cbillStatus).Sum(x => x.PaidAmount);
             record.TotalContractual = record.Payments.Where(x => x.Status != cbillStatus).Sum(x => x.ContractualAmount);
 
-            record.ClaimBalance = record.BillableCharges.Where(x => x.FinancialType == patientFinType).Sum(x => x.Quantity * x.NetAmount)
-                - (record.TotalPayments + record.TotalWriteOff + record.TotalContractual);
-
-            var results = record.BillableCharges.Where(x => x.FinancialType == clientFinType)
-                .GroupBy(x => x.ClientMnem, (client, balance) => new { Client = client, Balance = balance.Sum(c => c.Quantity * c.NetAmount) });
-
-            record.ClientBalance = new List<(string client, double balance)>();
-
-            foreach (var result in results)
+            if (record.FinCode == clientFinCode)
             {
-                record.ClientBalance.Add((result.Client, result.Balance));
-            }
+                record.ClaimBalance = 0.00;
 
+                record.ClientBalance = new List<(string client, double balance)>();
+
+                var balance = record.BillableCharges.Sum(y => y.Quantity * y.NetAmount)
+                     - (record.TotalPayments + record.TotalContractual + record.TotalWriteOff);
+
+                record.ClientBalance.Add((record.ClientMnem, balance));
+            }
+            else
+            {
+                record.ClaimBalance = record.BillableCharges.Where(x => x.FinancialType == patientFinType).Sum(x => x.Quantity * x.NetAmount)
+                    - (record.TotalPayments + record.TotalWriteOff + record.TotalContractual);
+
+                var results = record.BillableCharges.Where(x => x.FinancialType == clientFinType)
+                    .GroupBy(x => x.ClientMnem, (client, balance) => new { Client = client, Balance = balance.Sum(c => c.Quantity * c.NetAmount) });
+
+                record.ClientBalance = new List<(string client, double balance)>();
+
+                foreach (var result in results)
+                {
+                    record.ClientBalance.Add((result.Client, result.Balance));
+                }
+            }
             record.Balance = record.TotalCharges - (record.TotalPayments + record.TotalContractual + record.TotalWriteOff);
 
             return record;

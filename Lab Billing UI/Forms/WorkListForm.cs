@@ -545,7 +545,12 @@ namespace LabBilling.Forms
                     accountTable.DefaultView.RowFilter += $" and {nameof(AccountSearch.TotalPayments)} = 0";
                 }
 
-                if(!showReadyToBillCheckbox.Checked)
+                if (!showZeroBalanceCheckBox.Checked)
+                {
+                    accountTable.DefaultView.RowFilter += $" and {nameof(AccountSearch.Balance)} <> 0";
+                }
+
+                if (!showReadyToBillCheckbox.Checked)
                 {
                     accountTable.DefaultView.RowFilter += $" and {nameof(AccountSearch.Status)} not in ('{AccountStatus.ReadyToBill}','{AccountStatus.Professional}','{AccountStatus.Institutional}')";
                 }
@@ -559,6 +564,18 @@ namespace LabBilling.Forms
                 else
                 {
                     accountTable.DefaultView.RowFilter = String.Empty;
+                }
+
+                if (!showZeroBalanceCheckBox.Checked)
+                {
+                    if (accountTable.DefaultView.RowFilter != string.Empty)
+                    {
+                        accountTable.DefaultView.RowFilter += $" and {nameof(AccountSearch.Balance)} <> 0";
+                    }
+                    else
+                    {
+                        accountTable.DefaultView.RowFilter = $" and {nameof(AccountSearch.Balance)} <> 0";
+                    }
                 }
 
                 if(!showReadyToBillCheckbox.Checked)
@@ -703,6 +720,11 @@ namespace LabBilling.Forms
         private void WorkListForm_Enter(object sender, EventArgs e)
         {
 
+        }
+
+        private void showZeroBalanceCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            UpdateFilter();
         }
     }
 }

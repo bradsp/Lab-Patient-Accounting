@@ -215,6 +215,8 @@ namespace LabBilling.Forms
             this.noteAlertCheckBox = new System.Windows.Forms.CheckBox();
             this.AddNoteButton = new System.Windows.Forms.Button();
             this.NotesDisplayTextBox = new System.Windows.Forms.RichTextBox();
+            this.noteTextContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.copyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tabBillingActivity = new System.Windows.Forms.TabPage();
             this.label5 = new System.Windows.Forms.Label();
             this.statementHistoryDataGrid = new System.Windows.Forms.DataGridView();
@@ -275,8 +277,6 @@ namespace LabBilling.Forms
             this.ThirdPartyBalLabel = new System.Windows.Forms.Label();
             this.BannerClientBalLabel = new System.Windows.Forms.Label();
             this.ClientBalLabel = new System.Windows.Forms.Label();
-            this.noteTextContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.copyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tabControl1.SuspendLayout();
             this.summaryTab.SuspendLayout();
             this.tabDemographics.SuspendLayout();
@@ -299,13 +299,13 @@ namespace LabBilling.Forms
             this.tabPayments.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.PaymentsDataGrid)).BeginInit();
             this.tabNotes.SuspendLayout();
+            this.noteTextContextMenu.SuspendLayout();
             this.tabBillingActivity.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.statementHistoryDataGrid)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.BillActivityDataGrid)).BeginInit();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.RefreshButton)).BeginInit();
             this.dxPointerMenuStrip.SuspendLayout();
-            this.noteTextContextMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -2288,6 +2288,20 @@ namespace LabBilling.Forms
             this.NotesDisplayTextBox.Text = "";
             this.NotesDisplayTextBox.ZoomFactor = 1.2F;
             // 
+            // noteTextContextMenu
+            // 
+            this.noteTextContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.copyToolStripMenuItem});
+            this.noteTextContextMenu.Name = "noteTextContextMenu";
+            this.noteTextContextMenu.Size = new System.Drawing.Size(103, 26);
+            // 
+            // copyToolStripMenuItem
+            // 
+            this.copyToolStripMenuItem.Name = "copyToolStripMenuItem";
+            this.copyToolStripMenuItem.Size = new System.Drawing.Size(102, 22);
+            this.copyToolStripMenuItem.Text = "Copy";
+            this.copyToolStripMenuItem.Click += new System.EventHandler(this.copyToolStripMenuItem_Click);
+            // 
             // tabBillingActivity
             // 
             this.tabBillingActivity.AutoScroll = true;
@@ -2768,7 +2782,7 @@ namespace LabBilling.Forms
             // 
             this.BannerTotalPmtLabel.AutoSize = true;
             this.BannerTotalPmtLabel.ForeColor = System.Drawing.Color.White;
-            this.BannerTotalPmtLabel.Location = new System.Drawing.Point(807, 48);
+            this.BannerTotalPmtLabel.Location = new System.Drawing.Point(792, 48);
             this.BannerTotalPmtLabel.Name = "BannerTotalPmtLabel";
             this.BannerTotalPmtLabel.Size = new System.Drawing.Size(75, 13);
             this.BannerTotalPmtLabel.TabIndex = 20;
@@ -2778,7 +2792,7 @@ namespace LabBilling.Forms
             // 
             this.BannerTotalChargesLabel.AutoSize = true;
             this.BannerTotalChargesLabel.ForeColor = System.Drawing.Color.White;
-            this.BannerTotalChargesLabel.Location = new System.Drawing.Point(807, 32);
+            this.BannerTotalChargesLabel.Location = new System.Drawing.Point(792, 32);
             this.BannerTotalChargesLabel.Name = "BannerTotalChargesLabel";
             this.BannerTotalChargesLabel.Size = new System.Drawing.Size(76, 13);
             this.BannerTotalChargesLabel.TabIndex = 20;
@@ -2788,7 +2802,7 @@ namespace LabBilling.Forms
             // 
             this.BannerAccBalanceLabel.AutoSize = true;
             this.BannerAccBalanceLabel.ForeColor = System.Drawing.Color.White;
-            this.BannerAccBalanceLabel.Location = new System.Drawing.Point(807, 64);
+            this.BannerAccBalanceLabel.Location = new System.Drawing.Point(792, 64);
             this.BannerAccBalanceLabel.Name = "BannerAccBalanceLabel";
             this.BannerAccBalanceLabel.Size = new System.Drawing.Size(92, 13);
             this.BannerAccBalanceLabel.TabIndex = 20;
@@ -2797,9 +2811,9 @@ namespace LabBilling.Forms
             // TotalPmtAdjLabel
             // 
             this.TotalPmtAdjLabel.ForeColor = System.Drawing.Color.White;
-            this.TotalPmtAdjLabel.Location = new System.Drawing.Point(901, 48);
+            this.TotalPmtAdjLabel.Location = new System.Drawing.Point(891, 48);
             this.TotalPmtAdjLabel.Name = "TotalPmtAdjLabel";
-            this.TotalPmtAdjLabel.Size = new System.Drawing.Size(60, 13);
+            this.TotalPmtAdjLabel.Size = new System.Drawing.Size(70, 13);
             this.TotalPmtAdjLabel.TabIndex = 20;
             this.TotalPmtAdjLabel.Text = "0.00";
             this.TotalPmtAdjLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
@@ -2807,9 +2821,9 @@ namespace LabBilling.Forms
             // BalanceLabel
             // 
             this.BalanceLabel.ForeColor = System.Drawing.Color.White;
-            this.BalanceLabel.Location = new System.Drawing.Point(901, 64);
+            this.BalanceLabel.Location = new System.Drawing.Point(891, 64);
             this.BalanceLabel.Name = "BalanceLabel";
-            this.BalanceLabel.Size = new System.Drawing.Size(60, 13);
+            this.BalanceLabel.Size = new System.Drawing.Size(70, 13);
             this.BalanceLabel.TabIndex = 20;
             this.BalanceLabel.Text = "0.00";
             this.BalanceLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
@@ -2817,9 +2831,9 @@ namespace LabBilling.Forms
             // TotalChargesLabel
             // 
             this.TotalChargesLabel.ForeColor = System.Drawing.Color.White;
-            this.TotalChargesLabel.Location = new System.Drawing.Point(901, 32);
+            this.TotalChargesLabel.Location = new System.Drawing.Point(891, 32);
             this.TotalChargesLabel.Name = "TotalChargesLabel";
-            this.TotalChargesLabel.Size = new System.Drawing.Size(60, 13);
+            this.TotalChargesLabel.Size = new System.Drawing.Size(70, 13);
             this.TotalChargesLabel.TabIndex = 20;
             this.TotalChargesLabel.Text = "0.00";
             this.TotalChargesLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
@@ -2955,20 +2969,6 @@ namespace LabBilling.Forms
             this.ClientBalLabel.Text = "0.00";
             this.ClientBalLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
-            // noteTextContextMenu
-            // 
-            this.noteTextContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.copyToolStripMenuItem});
-            this.noteTextContextMenu.Name = "noteTextContextMenu";
-            this.noteTextContextMenu.Size = new System.Drawing.Size(181, 48);
-            // 
-            // copyToolStripMenuItem
-            // 
-            this.copyToolStripMenuItem.Name = "copyToolStripMenuItem";
-            this.copyToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.copyToolStripMenuItem.Text = "Copy";
-            this.copyToolStripMenuItem.Click += new System.EventHandler(this.copyToolStripMenuItem_Click);
-            // 
             // AccountForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -3042,6 +3042,7 @@ namespace LabBilling.Forms
             ((System.ComponentModel.ISupportInitialize)(this.PaymentsDataGrid)).EndInit();
             this.tabNotes.ResumeLayout(false);
             this.tabNotes.PerformLayout();
+            this.noteTextContextMenu.ResumeLayout(false);
             this.tabBillingActivity.ResumeLayout(false);
             this.tabBillingActivity.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.statementHistoryDataGrid)).EndInit();
@@ -3050,7 +3051,6 @@ namespace LabBilling.Forms
             this.menuStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.RefreshButton)).EndInit();
             this.dxPointerMenuStrip.ResumeLayout(false);
-            this.noteTextContextMenu.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
