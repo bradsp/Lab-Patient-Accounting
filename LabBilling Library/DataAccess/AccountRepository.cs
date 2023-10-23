@@ -975,6 +975,11 @@ namespace LabBilling.Core.DataAccess
                 throw new InvalidClientException("Client not valid", accData.ClientMnem);
             }
 
+            if (string.IsNullOrEmpty(accData.Client.FeeSchedule))
+            {
+                throw new ApplicationException($"Fee Schedule not defined on client. Cannot post charge. Client {accData.ClientMnem}");
+            }
+
             //check account status, change to NEW if it is paid out.
             if (accData.Status == AccountStatus.PaidOut)
             {
@@ -992,6 +997,8 @@ namespace LabBilling.Core.DataAccess
 
             Fin fin = finRepository.GetFin(accData.FinCode) ?? throw new ApplicationException($"No fincode on account {accData.AccountNo}");
             Client chargeClient = accData.Client;
+
+
 
             if (_appEnvironment.ApplicationParameters.PathologyGroupBillsProfessional)
             {
