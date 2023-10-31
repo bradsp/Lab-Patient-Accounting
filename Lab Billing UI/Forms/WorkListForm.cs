@@ -21,8 +21,6 @@ namespace LabBilling.Forms
     {
         private string _connectionString;
         private AccountRepository accountRepository;
-        private AccountSearchRepository accountSearchRepository;
-        private SystemParametersRepository systemParametersRepository;
         private bool tasksRunning = false;
         private bool requestAbort = false;
         private BindingSource accountBindingSource = new BindingSource();
@@ -38,8 +36,6 @@ namespace LabBilling.Forms
         {
             worklist = new Worklist(Program.AppEnvironment);
             accountRepository = new AccountRepository(Program.AppEnvironment);
-            accountSearchRepository = new AccountSearchRepository(Program.AppEnvironment);
-            systemParametersRepository = new SystemParametersRepository(Program.AppEnvironment);
 
             accountTable = new List<AccountSearch>().ToDataTable();
             accountTable.PrimaryKey = new DataColumn[] { accountTable.Columns[nameof(AccountSearch.Account)] };

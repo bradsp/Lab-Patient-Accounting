@@ -40,6 +40,8 @@ namespace LabBilling.Core.Models
         public System.String BHGroupNo { get; set; }
         [Category("Billing"), Description("")] 
         public System.String BHProviderNo { get; set; }
+        [Category("Billing"), Description("No of days to hold claims for billing")]
+        public System.Int32 BillingInitialHoldDays { get; set; }
         [Category("Billing"), Description("Tax Id of Entity receiving 837 claims")] 
         public System.String BillingReceiverId { get; set; }
         [Category("Billing"), Description("Entity receiving 837 claims")] 
@@ -104,8 +106,6 @@ namespace LabBilling.Core.Models
         public System.DateTime SecondaryBilling { get; set; }
         [Category("Billing"), Description("")] 
         public System.Double SmallBalanceAmount { get; set; }
-        [Category("Billing"), Description("Date for holding accounts before allowing claims to be generated.")] 
-        public System.DateTime SSIBillThruDate { get; set; }
         [Category("Billing"), Description("Used by ViewerAcc to seperate the new claim methodolgy from the old method.")] 
         public System.DateTime SSIStartDate { get; set; }
         [Category("Billing"), Description("")] 

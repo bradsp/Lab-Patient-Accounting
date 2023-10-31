@@ -19,8 +19,6 @@ namespace LabBilling.Core.BusinessLogic
     public sealed class ClaimGenerator : DataAccess.Database
     {
 
-        readonly string dBserverName = null;
-        readonly string dBName = null;
         ArrayList m_alNameSuffix = new ArrayList() { "JR", "SR", "I", "II", "III", "IV", "V", "VI", "VII" };
 
         public string propProductionEnvironment { get; set; }
@@ -53,8 +51,7 @@ namespace LabBilling.Core.BusinessLogic
 
             ConnectionString connString = _connectionString;
             _appEnvironment.ApplicationParameters = appEnvironment.ApplicationParameters;
-            dBserverName = appEnvironment.ServerName;
-            dBName = appEnvironment.DatabaseName;
+
 
             propProductionEnvironment = appEnvironment.ApplicationParameters.GetProductionEnvironment();
 
@@ -103,8 +100,8 @@ namespace LabBilling.Core.BusinessLogic
                 case ClaimType.Institutional:
                     claimList = accountRepository.GetAccountsForClaims(AccountRepository.ClaimType.Institutional, maxClaims).ToList();
                     billClaimType = Billing837.ClaimType.Institutional;
-                    processedStatus = AccountStatus.InstSubmitted; // "SSIUB";
-                    batchType = AccountStatus.Institutional; // "UB";
+                    processedStatus = AccountStatus.InstSubmitted; 
+                    batchType = AccountStatus.Institutional; 
                     fileLocation = _appEnvironment.ApplicationParameters.InstitutionalClaimFileLocation;
                     break;
                 case ClaimType.Professional:

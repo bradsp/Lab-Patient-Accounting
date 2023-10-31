@@ -1459,7 +1459,7 @@ namespace LabBilling.Core.DataAccess
             Log.Instance.Trace($"Entering");
 
             (string propertyName, AccountSearchRepository.operation oper, string searchText)[] parameters = {
-                (nameof(AccountSearch.ServiceDate), AccountSearchRepository.operation.LessThanOrEqual, _appEnvironment.ApplicationParameters.SSIBillThruDate.ToString()),
+                (nameof(AccountSearch.ServiceDate), AccountSearchRepository.operation.LessThanOrEqual, DateTime.Today.AddDays(_appEnvironment.ApplicationParameters.BillingInitialHoldDays*-1).ToShortDateString()),
                 (nameof(AccountSearch.Status), AccountSearchRepository.operation.Equal, AccountStatus.New),
                 (nameof(AccountSearch.FinCode), AccountSearchRepository.operation.NotEqual, "Y"),
                 (nameof(AccountSearch.FinCode), AccountSearchRepository.operation.NotEqual, clientFinCode),
