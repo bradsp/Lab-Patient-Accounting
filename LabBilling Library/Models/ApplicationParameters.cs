@@ -40,7 +40,7 @@ namespace LabBilling.Core.Models
         public System.String BHGroupNo { get; set; }
         [Category("Billing"), Description("")] 
         public System.String BHProviderNo { get; set; }
-        [Category("Billing"), Description("No of days to hold claims for billing")]
+        [Category("Billing"), Description("No of days to hold claims for billing"), DefaultValue(10)]
         public System.Int32 BillingInitialHoldDays { get; set; }
         [Category("Billing"), Description("Tax Id of Entity receiving 837 claims")] 
         public System.String BillingReceiverId { get; set; }
