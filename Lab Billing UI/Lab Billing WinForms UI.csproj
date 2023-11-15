@@ -16,7 +16,7 @@
     <TargetFrameworkProfile />
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
-    <AssemblyVersion>2023.1.1.551</AssemblyVersion>
+    <AssemblyVersion>2023.1.1.552</AssemblyVersion>
     <PublishUrl>\\wthmclbill\installations%24\LabBilling\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Unc</InstallFrom>
@@ -31,7 +31,7 @@
     <ProductName>Lab Outreach Patient Accounting</ProductName>
     <PublisherName>West Tennessee Healthcare</PublisherName>
     <WebPage>publish.htm</WebPage>
-    <ApplicationRevision>187</ApplicationRevision>
+    <ApplicationRevision>188</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>

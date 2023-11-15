@@ -309,7 +309,7 @@ namespace LabBilling.Forms
                     changeFinancialClassToolStripMenuItem.Visible = Program.LoggedInUser.CanModifyAccountFincode;
                     clearHoldStatusToolStripMenuItem.Visible = true;
                     ValidateAccountButton.Visible = true;
-                    GenerateClaimButton.Visible = Program.LoggedInUser.CanSubmitBilling;
+                    //GenerateClaimButton.Visible = Program.LoggedInUser.CanSubmitBilling;
                 }
             }
 
@@ -339,7 +339,7 @@ namespace LabBilling.Forms
             this.Text = $"{currentAccount.AccountNo} - {currentAccount.PatFullName}";
 
             dxBindingList = new BindingList<PatDiag>(currentAccount.Pat.Diagnoses);
-            ShowCreditedChrgCheckBox.Checked = false;
+            //ShowCreditedChrgCheckBox.Checked = false;
 
             if(currentAccount.Status == AccountStatus.Hold)
             {
@@ -1221,8 +1221,8 @@ namespace LabBilling.Forms
             Log.Instance.Trace($"Entering");
             if (ChargesDataGrid[nameof(Chrg.IsCredited), e.RowIndex].Value.ToString() == "True")
             {
-                e.CellStyle.BackColor = Color.Red;
-                e.CellStyle.ForeColor = Color.White;
+                e.CellStyle.BackColor = Color.WhiteSmoke;
+                e.CellStyle.ForeColor = Color.Red;
                 return;
             }
 
@@ -2270,18 +2270,18 @@ namespace LabBilling.Forms
             }
 
             //validate account - if valid, change statement flag. Otherwise, show errors.
-            if (accountRepository.Validate(currentAccount, true))
-            {
+//            if (accountRepository.Validate(currentAccount, true))
+//            {
                 accountRepository.AddNote(currentAccount.AccountNo, $"Statement flag changed from {currentAccount.Pat.StatementFlag} to {statementFlagComboBox.SelectedItem}");
 
                 currentAccount.Pat.StatementFlag = statementFlagComboBox.SelectedItem.ToString();
                 patRepository.Update(currentAccount.Pat, new[] { nameof(Pat.StatementFlag) });
                 accountRepository.UpdateStatus(currentAccount.AccountNo, AccountStatus.Statements);
-            }
-            else
-            {
-                MessageBox.Show("There are validation errors. Resolve before setting statement flag.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+//            }
+//            else
+//            {
+//                MessageBox.Show("There are validation errors. Resolve before setting statement flag.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+//            }
             await LoadAccountData();
         }
 
