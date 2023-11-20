@@ -59,6 +59,7 @@ namespace LabBilling.Forms
         private bool billingTabLoading = false;
         private const int _timerInterval = 650;
         private const string notesAlertText = "** SEE NOTES **";
+        
         //private bool skipSelectionChanged = false;
         private Timer _timer;
 

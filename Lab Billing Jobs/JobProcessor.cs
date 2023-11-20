@@ -57,7 +57,7 @@ namespace LabBillingJobs
 
             var trigger = TriggerBuilder.Create()
                 .WithIdentity(trigger1 + Job, Group1)
-                .WithCronSchedule("0 0 18 ? * * *")
+                .WithCronSchedule("0 0 5 ? * * *")
                 //.StartAt(DateTime.Now.AddSeconds(5)) // some Date 
                 .ForJob(trigger1 + Job, Group1) // identify job with name, group strings
                 .Build();
