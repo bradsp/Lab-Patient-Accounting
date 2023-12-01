@@ -5,9 +5,7 @@ using LabBilling.Core.Models;
 using Spectre.Console;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace LabBillingConsole
 {
@@ -26,6 +24,8 @@ namespace LabBillingConsole
             menuText.AppendLine("Choose an option:");
             menuText.AppendLine("1) Remittance Test");
             menuText.AppendLine("3) Generate Claim Test");
+            menuText.AppendLine("4) Populate Claim Detail Amount");
+            menuText.AppendLine("5) Import ICD-10");
             menuText.AppendLine("X) Exit");
 
             var panel = new Panel(menuText.ToString());
@@ -53,6 +53,14 @@ namespace LabBillingConsole
                     Console.Clear();
                     GenerateClaimTest();
                     return false;
+                case "4":
+                    Console.Clear();
+                    PopulateClaimDetailAmount();
+                    return false;
+                case "5":
+                    Console.Clear();
+                    ImportICD10();
+                    return false;
                 case "X":
                     return false;
                 case "x":
@@ -60,6 +68,43 @@ namespace LabBillingConsole
                 default:
                     return true;
             }
+        }
+
+        private void ImportICD10()
+        {
+            DictionaryImport dictionaryImport = new DictionaryImport();
+            dictionaryImport.RecordProcessed += OnRecordProcessed;
+            dictionaryImport.ImportICD(@"C:\Users\bpowers\Downloads\icd10cm-CodesDescriptions-2024\icd10cm-order-2024.txt", "2024", _appEnvironment);
+
+        }
+
+        private void OnRecordProcessed(object source, RecordProcessedArgs args)
+        {
+            Console.WriteLine($"ICD Code: {args.IcdCode}   Records processed: {args.RecordsProcessed}");
+        }
+
+        private void PopulateClaimDetailAmount()
+        {
+            BillingActivityRepository billingActivityRepository = new BillingActivityRepository(_appEnvironment);
+
+            var records = billingActivityRepository.GetByRunDate(new DateTime(2023, 7, 1), new DateTime(2023,8,2));
+            int cnt = 0;
+            foreach(var record in records)
+            {
+                //parse json from record.Text
+                var claim = Newtonsoft.Json.JsonConvert.DeserializeObject<ClaimData>(record.Text);
+
+                if (claim == null) continue;
+
+                record.ClaimAmount = claim.TotalChargeAmount;
+
+                billingActivityRepository.Update(record, new string[] { nameof(BillingActivity.ClaimAmount) });
+                Console.WriteLine($"{++cnt} - Account {record.AccountNo} - Claim Amount {record.ClaimAmount}");
+
+            }
+
+            Console.WriteLine($"Completed updating claim amount on {cnt} claims.");
+            Console.ReadKey();
         }
 
         public void RemittanceTest()

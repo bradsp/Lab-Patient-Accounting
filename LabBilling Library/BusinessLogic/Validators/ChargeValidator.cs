@@ -14,7 +14,7 @@ namespace LabBilling.Core.BusinessLogic.Validators
         {
             RuleFor(c => c.NetAmount)
                 .GreaterThan(0)
-                .When(c => !c.IsCredited && c.Status != "N/A");
+                .When(c => !c.IsCredited && c.Status != "N/A" && c.CDMCode != "CBILL");
 
             RuleForEach(c => c.ChrgDetails)
                 .SetValidator(new ChargeDetailValidator())

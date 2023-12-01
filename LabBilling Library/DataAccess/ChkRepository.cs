@@ -19,7 +19,7 @@ namespace LabBilling.Core.DataAccess
             Log.Instance.Trace($"Entering - id {id}");
             var sql = PetaPoco.Sql.Builder
                 .From(_tableName)
-                .Where("pay_no = @0", new SqlParameter() { SqlDbType = SqlDbType.Decimal, Value = id });
+                .Where($"{GetRealColumn(nameof(Chk.PaymentNo))} = @0", new SqlParameter() { SqlDbType = SqlDbType.Decimal, Value = id });
 
             var result = dbConnection.SingleOrDefault<Chk>(sql);
 
@@ -82,8 +82,6 @@ namespace LabBilling.Core.DataAccess
         public override object Add(Chk table)
         {
             table.Status = "NEW";
-
-            //AccountRepository accountRepository = new AccountRepository(dbConnection);
 
             return base.Add(table);
         }

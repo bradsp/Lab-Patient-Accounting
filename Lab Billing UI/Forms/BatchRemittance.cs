@@ -3,20 +3,11 @@ using LabBilling.Logging;
 using LabBilling.Core.Models;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Windows.Forms;
-using System.Xml;
 using RFClassLibrary;
 using System.Data;
-using MetroFramework.Forms;
-using System.Security.Principal;
 using System.Drawing;
-using MCL;
-using System.ComponentModel.Design;
-using System.Web.UI.WebControls;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.ListView;
-using System.Windows.Forms.DataVisualization.Charting;
-using System.Runtime.Remoting.Messaging;
+
 
 namespace LabBilling.Forms
 {
@@ -401,7 +392,6 @@ namespace LabBilling.Forms
                 EntryMode.Enabled = false;
 
             //make all the cells readonly until a valid account has been entered
-
             SetCellsReadonly(e.RowIndex, true);
 
         }

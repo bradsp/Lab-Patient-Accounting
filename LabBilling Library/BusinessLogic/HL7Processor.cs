@@ -515,9 +515,6 @@ namespace LabBilling.Core.BusinessLogic
                     accountRecord.FinCode = "K";
                 }
 
-                //Log.Instance.Error($"[ERROR] Account {accountRecord.AccountNo} does not exist.");
-                //errors.AppendLine($"[ERROR] Account {accountRecord.AccountNo} does not exist.");
-                //canFile = false;
                 if(canFile)
                 {
                     accountRepository.Add(accountRecord);
@@ -687,7 +684,15 @@ namespace LabBilling.Core.BusinessLogic
             {
                 accountRecord.Sex = "U";
             }
-            accountRecord.Pat.Race = hl7Message.GetValue("PID.10");
+            if(hl7Message.HasRepetitions("PID.10"))
+            {
+                List<Field> repList = hl7Message.Segments("PID")[0].Fields(10).Repetitions();
+                accountRecord.Pat.Race = repList[0].Components(1).Value;
+            }
+            else
+            {
+                accountRecord.Pat.Race = hl7Message.GetValue("PID.10.1");
+            }
             if (hl7Message.HasRepetitions("PID.11"))
             {
                 List<Field> repList = hl7Message.Segments("PID")[0].Fields(11).Repetitions();

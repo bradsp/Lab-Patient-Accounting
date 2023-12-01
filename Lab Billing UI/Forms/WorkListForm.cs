@@ -12,6 +12,7 @@ using System.Data;
 //using System.CodeDom;
 using LabBilling.Core;
 using LabBilling.Core.BusinessLogic;
+using Opulos.Core.UI;
 
 namespace LabBilling.Forms
 {
@@ -20,8 +21,6 @@ namespace LabBilling.Forms
     {
         private string _connectionString;
         private AccountRepository accountRepository;
-        private AccountSearchRepository accountSearchRepository;
-        private SystemParametersRepository systemParametersRepository;
         private bool tasksRunning = false;
         private bool requestAbort = false;
         private BindingSource accountBindingSource = new BindingSource();
@@ -37,8 +36,6 @@ namespace LabBilling.Forms
         {
             worklist = new Worklist(Program.AppEnvironment);
             accountRepository = new AccountRepository(Program.AppEnvironment);
-            accountSearchRepository = new AccountSearchRepository(Program.AppEnvironment);
-            systemParametersRepository = new SystemParametersRepository(Program.AppEnvironment);
 
             accountTable = new List<AccountSearch>().ToDataTable();
             accountTable.PrimaryKey = new DataColumn[] { accountTable.Columns[nameof(AccountSearch.Account)] };
@@ -60,6 +57,15 @@ namespace LabBilling.Forms
             workqueues.ExpandAll();
 
             workqueues.Enabled = true;
+        }
+
+        private void AccFrm_AccountOpenedEvent(object sender, string e)
+        {
+            if(this.ParentForm is MainForm)
+            {
+                MainForm mainfrm = (MainForm)this.ParentForm;
+                mainfrm.UpdateRecentAccounts(e);
+            }
         }
 
         public WorkListForm(string connValue)
@@ -125,7 +131,7 @@ namespace LabBilling.Forms
             try
             {
 
-                if (!accountRepository.Validate(ref account))
+                if (!accountRepository.Validate(account))
                 {
                     return (false, account.AccountValidationStatus.validation_text,
                         account.BillForm ?? "UNDEFINED");
@@ -162,7 +168,7 @@ namespace LabBilling.Forms
             }
         }
 
-        private void workqueues_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
+        private async void workqueues_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
         {
             if(currentNode != null)
             {
@@ -174,13 +180,11 @@ namespace LabBilling.Forms
 
             workqueues.SelectedNode.BackColor = Color.Green;
             workqueues.SelectedNode.ForeColor = Color.White;
-            LoadWorkList();
+            await LoadWorkList();
         }
 
-        private async void LoadWorkList()
+        private async Task LoadWorkList()
         {
-
-
             workqueues.Enabled = false;
 
             Cursor.Current = Cursors.WaitCursor;
@@ -219,8 +223,15 @@ namespace LabBilling.Forms
             accountGrid.Columns[nameof(AccountSearch.TotalPayments)].Visible = showAccountsWithPmtCheckbox.Checked;
             accountGrid.Columns[nameof(AccountSearch.TotalCharges)].Visible = false;
             accountGrid.Columns[nameof(AccountSearch.Balance)].DefaultCellStyle.Format = "N2";
+            accountGrid.Columns[nameof(AccountSearch.Balance)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
             accountGrid.Columns[nameof(AccountSearch.TotalCharges)].DefaultCellStyle.Format = "N2";
+            accountGrid.Columns[nameof(AccountSearch.TotalCharges)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
             accountGrid.Columns[nameof(AccountSearch.TotalPayments)].DefaultCellStyle.Format = "N2";
+            accountGrid.Columns[nameof(AccountSearch.TotalPayments)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            accountGrid.Columns[nameof(AccountSearch.ThirdPartyBalance)].DefaultCellStyle.Format = "N2";
+            accountGrid.Columns[nameof(AccountSearch.ThirdPartyBalance)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            accountGrid.Columns[nameof(AccountSearch.ClientBalance)].DefaultCellStyle.Format = "N2";
+            accountGrid.Columns[nameof(AccountSearch.ClientBalance)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
 
             //column order
             int x = 0;
@@ -239,6 +250,9 @@ namespace LabBilling.Forms
             accountGrid.Columns[nameof(AccountSearch.ClientMnem)].DisplayIndex = x++;
             accountGrid.Columns[nameof(AccountSearch.ValidationStatus)].DisplayIndex = x++;
             accountGrid.Columns[nameof(AccountSearch.LastValidationDate)].DisplayIndex = x++;
+            accountGrid.Columns[nameof(AccountSearch.ThirdPartyBalance)].DisplayIndex = x++;
+            accountGrid.Columns[nameof(AccountSearch.ClientBalance)].DisplayIndex = x++;
+            accountGrid.Columns[nameof(AccountSearch.FinType)].DisplayIndex = x++;
 
             accountGrid.Columns[nameof(AccountSearch.ValidationStatus)].MinimumWidth = 200;
             accountGrid.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.DisplayedCells);
@@ -321,9 +335,9 @@ namespace LabBilling.Forms
                     accountGrid[e.ColumnIndex, e.RowIndex].Style.ForeColor = Color.White;
                     accountGrid[nameof(AccountSearch.ValidationStatus), e.RowIndex].Style.BackColor = Color.LightPink;
                 }
-                else if (accountGrid[e.ColumnIndex, e.RowIndex].Value.ToString() == "UB" ||
-                    accountGrid[e.ColumnIndex, e.RowIndex].Value.ToString() == "1500" ||
-                    accountGrid[e.ColumnIndex, e.RowIndex].Value.ToString() == "RTB")
+                else if (accountGrid[e.ColumnIndex, e.RowIndex].Value.ToString() == AccountStatus.Institutional ||
+                    accountGrid[e.ColumnIndex, e.RowIndex].Value.ToString() == AccountStatus.Professional ||
+                    accountGrid[e.ColumnIndex, e.RowIndex].Value.ToString() == AccountStatus.ReadyToBill)
                 {
                     accountGrid[e.ColumnIndex, e.RowIndex].Style.BackColor = Color.LightGreen;
                     accountGrid[nameof(AccountSearch.ValidationStatus), e.RowIndex].Style.BackColor = Color.LightGreen;
@@ -356,6 +370,7 @@ namespace LabBilling.Forms
                 if (!formFound)
                 {
                     AccountForm frm = new AccountForm(selectedAccount, this.ParentForm);
+                    frm.AccountOpenedEvent += AccFrm_AccountOpenedEvent;
                     frm.Show();
                 }
                 return;
@@ -367,20 +382,20 @@ namespace LabBilling.Forms
             }
         }
 
-        private void changeFinancialClassToolStripMenuItem_Click(object sender, EventArgs e)
+        private async void changeFinancialClassToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Log.Instance.Trace($"Entering");
 
             var selectedAccount = accountGrid.SelectedRows[0].Cells[nameof(AccountSearch.Account)].Value.ToString();
             var accts = accountTable.Rows.Find(selectedAccount);
-            var account = accountRepository.GetByAccount(selectedAccount);
+            var account = await accountRepository.GetByAccountAsync(selectedAccount);
 
             string newFinCode = InputDialogs.SelectFinancialCode(accts[nameof(AccountSearch.FinCode)].ToString());
             if (!string.IsNullOrEmpty(newFinCode))
             {
                 try
                 {
-                    accountRepository.ChangeFinancialClass(ref account, newFinCode);
+                    await accountRepository.ChangeFinancialClassAsync(account, newFinCode);
                     accts.Delete();
                     accountGrid.Refresh();
                 }
@@ -398,12 +413,12 @@ namespace LabBilling.Forms
             Log.Instance.Trace($"Exiting");
         }
 
-        private void changeClientToolStripMenuItem_Click(object sender, EventArgs e)
+        private async void changeClientToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Log.Instance.Trace($"Entering");
             var selectedAccount = accountGrid.SelectedRows[0].Cells[nameof(AccountSearch.Account)].Value.ToString();
             var accts = accountTable.Rows.Find(selectedAccount);
-            var account = accountRepository.GetByAccount(selectedAccount);
+            var account = await accountRepository.GetByAccountAsync(selectedAccount);
 
             ClientLookupForm clientLookupForm = new ClientLookupForm();
             ClientRepository clientRepository = new ClientRepository(Program.AppEnvironment);
@@ -415,7 +430,7 @@ namespace LabBilling.Forms
 
                 try
                 {
-                    if (accountRepository.ChangeClient(ref account, newClient))
+                    if (await accountRepository.ChangeClientAsync(account, newClient))
                     {
                         accts[nameof(AccountSearch.ClientMnem)] = newClient;
                         accountGrid.Refresh();
@@ -436,13 +451,13 @@ namespace LabBilling.Forms
             Log.Instance.Trace("Exiting");
         }
 
-        private void changeDateOfServiceToolStripMenuItem_Click(object sender, EventArgs e)
+        private async void changeDateOfServiceToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Log.Instance.Trace($"Entering");
 
             var selectedAccount = accountGrid.SelectedRows[0].Cells[nameof(AccountSearch.Account)].Value.ToString();
             var accts = accountTable.Rows.Find(selectedAccount);
-            var account = accountRepository.GetByAccount(selectedAccount);
+            var account = await accountRepository.GetByAccountAsync(selectedAccount);
 
 
             var result = InputDialogs.SelectDateOfService((DateTime)account.TransactionDate);
@@ -451,7 +466,7 @@ namespace LabBilling.Forms
             {
                 if (result.newDate != DateTime.MinValue)
                 {
-                    accountRepository.ChangeDateOfService(ref account, result.newDate, result.reason);
+                    await accountRepository.ChangeDateOfServiceAsync(account, result.newDate, result.reason);
                     accts[nameof(AccountSearch.ServiceDate)] = account.TransactionDate;
                 }
                 else
@@ -526,9 +541,14 @@ namespace LabBilling.Forms
                     accountTable.DefaultView.RowFilter += $" and {nameof(AccountSearch.TotalPayments)} = 0";
                 }
 
-                if(!showReadyToBillCheckbox.Checked)
+                if (!showZeroBalanceCheckBox.Checked)
                 {
-                    accountTable.DefaultView.RowFilter += $" and {nameof(AccountSearch.Status)} not in ('RTB','1500','UB')";
+                    accountTable.DefaultView.RowFilter += $" and {nameof(AccountSearch.Balance)} <> 0";
+                }
+
+                if (!showReadyToBillCheckbox.Checked)
+                {
+                    accountTable.DefaultView.RowFilter += $" and {nameof(AccountSearch.Status)} not in ('{AccountStatus.ReadyToBill}','{AccountStatus.Professional}','{AccountStatus.Institutional}')";
                 }
             }
             else
@@ -542,15 +562,27 @@ namespace LabBilling.Forms
                     accountTable.DefaultView.RowFilter = String.Empty;
                 }
 
+                if (!showZeroBalanceCheckBox.Checked)
+                {
+                    if (accountTable.DefaultView.RowFilter != string.Empty)
+                    {
+                        accountTable.DefaultView.RowFilter += $" and {nameof(AccountSearch.Balance)} <> 0";
+                    }
+                    else
+                    {
+                        accountTable.DefaultView.RowFilter = $" and {nameof(AccountSearch.Balance)} <> 0";
+                    }
+                }
+
                 if(!showReadyToBillCheckbox.Checked)
                 {
                     if(accountTable.DefaultView.RowFilter != string.Empty)
                     {
-                        accountTable.DefaultView.RowFilter += $" and {nameof(AccountSearch.Status)} not in ('RTB','1500','UB')";
+                        accountTable.DefaultView.RowFilter += $" and {nameof(AccountSearch.Status)} not in ('{AccountStatus.ReadyToBill}','{AccountStatus.Professional}','{AccountStatus.Institutional}')";
                     }
                     else
                     {
-                        accountTable.DefaultView.RowFilter = $"{nameof(AccountSearch.Status)} not in ('RTB','1500','UB')";
+                        accountTable.DefaultView.RowFilter = $"{nameof(AccountSearch.Status)} not in ('{AccountStatus.ReadyToBill}','{AccountStatus.Professional}','{AccountStatus.Institutional}')";
                     }
                 }
             }
@@ -585,7 +617,7 @@ namespace LabBilling.Forms
 
                 if (account.FinCode != "Y")
                 {
-                    accountRepository.ChangeFinancialClass(ref account, "Y");
+                    accountRepository.ChangeFinancialClass(account, "Y");
                     accts.Delete();
                     accountGrid.Refresh();
                 }
@@ -648,12 +680,12 @@ namespace LabBilling.Forms
             {
                 if (!account.ReadyToBill)
                 {
-                    accountRepository.Validate(ref account);
+                    accountRepository.Validate(account);
                     if (account.AccountValidationStatus.validation_text == "No validation errors.")
                     {
-                        accountRepository.UpdateStatus(selectedAccount, "RTB");
+                        accountRepository.UpdateStatus(selectedAccount, AccountStatus.ReadyToBill);
                         accountRepository.AddNote(selectedAccount, "Marked ready to bill.");
-                        accts[nameof(AccountSearch.Status)] = "RTB";
+                        accts[nameof(AccountSearch.Status)] = AccountStatus.ReadyToBill;
                         _ = Task.Run(() => RunValidationAsync(selectedAccount));
                     }                    
                     accountGrid.Refresh();
@@ -663,17 +695,17 @@ namespace LabBilling.Forms
             {
                 if(account.ReadyToBill)
                 {
-                    accountRepository.UpdateStatus(selectedAccount, "NEW");
+                    accountRepository.UpdateStatus(selectedAccount, AccountStatus.New);
                     accountRepository.AddNote(selectedAccount, "Ready to bill removed.");
-                    accts[nameof(AccountSearch.Status)] = "NEW";
+                    accts[nameof(AccountSearch.Status)] = AccountStatus.New;
                     accountGrid.Refresh();
                 }
             }
         }
 
-        private void WorkListForm_Activated(object sender, EventArgs e)
+        private async void WorkListForm_Activated(object sender, EventArgs e)
         {
-            LoadWorkList();
+            await LoadWorkList();
         }
 
         private void showReadyToBillCheckbox_CheckedChanged(object sender, EventArgs e)
@@ -684,6 +716,11 @@ namespace LabBilling.Forms
         private void WorkListForm_Enter(object sender, EventArgs e)
         {
 
+        }
+
+        private void showZeroBalanceCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            UpdateFilter();
         }
     }
 }

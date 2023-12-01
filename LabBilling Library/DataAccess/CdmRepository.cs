@@ -12,15 +12,6 @@ namespace LabBilling.Core.DataAccess
 {
     public sealed class CdmRepository : RepositoryBase<Cdm>
     {
-        //public CdmRepository(string connection) : base(connection)
-        //{
-
-        //}
-
-        //public CdmRepository(PetaPoco.Database db) : base(db)
-        //{
-
-        //}
 
         public CdmRepository(IAppEnvironment appEnvironment) : base(appEnvironment)
         {

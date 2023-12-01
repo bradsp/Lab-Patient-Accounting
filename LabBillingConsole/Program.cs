@@ -43,7 +43,8 @@ namespace LabBillingConsole
             StringBuilder dbSelect = new StringBuilder();
             dbSelect.AppendLine("Select Database:\n\n");
             dbSelect.AppendLine("1) LabBillingProd");
-            dbSelect.AppendLine("2) LabBillingTest");
+            dbSelect.AppendLine("2) LabBillingTest (WTMCLBILL)");
+            dbSelect.AppendLine("3) LabBillingTest (WTH014)");
             dbSelect.AppendLine("0) Exit");
 
             var panel1 = new Panel(dbSelect.ToString());
@@ -58,7 +59,7 @@ namespace LabBillingConsole
                 .PromptStyle("green")
                 .Validate(db =>
                 {
-                    if (db == 0 || db == 1 || db == 2)
+                    if (db == 0 || db == 1 || db == 2 || db == 3)
                         return ValidationResult.Success();
                     else
                         return ValidationResult.Error("Invalid selection.");
@@ -72,9 +73,15 @@ namespace LabBillingConsole
                     return false;
                 case 1:
                     databaseName = "LabBillingProd";
+                    serverName = "WTHMCLBILL";
                     break;
                 case 2:
                     databaseName = "LabBillingTest";
+                    serverName = "WTHMCLBILL";
+                    break;
+                case 3:
+                    databaseName = "LabBillingTest";
+                    serverName = "WTH014";
                     break;
                 default:
                     return true;

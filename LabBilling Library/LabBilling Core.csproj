@@ -16,7 +16,7 @@
     <TargetFrameworkProfile />
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
-    <AssemblyVersion>2023.1.4.563</AssemblyVersion>
+    <AssemblyVersion>2023.1.4.594</AssemblyVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -245,6 +245,7 @@
     <Compile Include="BusinessLogic\ClaimData.cs" />
     <Compile Include="BusinessLogic\ClaimGenerator.cs" />
     <Compile Include="BusinessLogic\ClaimRulesEngine.cs" />
+    <Compile Include="BusinessLogic\DictionaryImport.cs" />
     <Compile Include="BusinessLogic\HL7Processor.cs" />
     <Compile Include="BusinessLogic\InvoicePrintPdfSharp.cs" />
     <Compile Include="BusinessLogic\NotesImport.cs" />
@@ -286,6 +287,7 @@
     <Compile Include="DataAccess\ClientRepository.cs" />
     <Compile Include="DataAccess\ClientTypeRepository.cs" />
     <Compile Include="DataAccess\CustomSqlDatabaseProvider.cs" />
+    <Compile Include="DataAccess\Database.cs" />
     <Compile Include="DataAccess\DictDxRepository.cs" />
     <Compile Include="DataAccess\EmpRepository.cs" />
     <Compile Include="DataAccess\FinRepository.cs" />
@@ -333,12 +335,14 @@
     <Compile Include="Models\AccountAlert.cs" />
     <Compile Include="Models\AccountLmrpError.cs" />
     <Compile Include="Models\AccountSearch.cs" />
+    <Compile Include="Models\AccountStatus.cs" />
     <Compile Include="Models\AccountValidationRule.cs" />
     <Compile Include="Models\AccountValidationStatus.cs" />
     <Compile Include="Models\Announcement.cs" />
     <Compile Include="Models\ApplicationParameters.cs" />
     <Compile Include="Models\BillingBatch.cs" />
     <Compile Include="Models\ChkBatchDetail.cs" />
+    <Compile Include="Models\ChrgChrgDetailRelator.cs" />
     <Compile Include="Models\ChrgDiagnosisPointer.cs" />
     <Compile Include="Models\ChrgDetail.cs" />
     <Compile Include="Models\BadDebt.cs" />
@@ -349,6 +353,7 @@
     <Compile Include="Models\Chk.cs" />
     <Compile Include="Models\ChkBatch.cs" />
     <Compile Include="Models\Chrg.cs" />
+    <Compile Include="Models\ClaimChargeView.cs" />
     <Compile Include="Models\ClaimItem.cs" />
     <Compile Include="Models\ClaimValidationRule.cs" />
     <Compile Include="Models\Client.cs" />
@@ -365,6 +370,7 @@
     <Compile Include="Models\IBaseEntity.cs" />
     <Compile Include="Models\Ins.cs" />
     <Compile Include="Models\InsCompany.cs" />
+    <Compile Include="Models\InvoiceChargeView.cs" />
     <Compile Include="Models\InvoiceDetailLinesModel.cs" />
     <Compile Include="Models\InvoiceDetailModel.cs" />
     <Compile Include="Models\PatientDemographic.cs" />
@@ -393,6 +399,7 @@
     <Compile Include="Models\ProgressReportModel.cs" />
     <Compile Include="Models\Pth.cs" />
     <Compile Include="Models\RevenueCode.cs" />
+    <Compile Include="Models\StatementChargeView.cs" />
     <Compile Include="Models\SysParameter.cs" />
     <Compile Include="Models\UnbilledAccounts.cs" />
     <Compile Include="Models\UnbilledClient.cs" />

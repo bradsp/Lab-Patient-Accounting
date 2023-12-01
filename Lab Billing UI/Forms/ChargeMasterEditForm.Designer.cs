@@ -76,6 +76,7 @@
             this.cbillDetailCheckBox = new System.Windows.Forms.CheckBox();
             this.saveButton = new System.Windows.Forms.Button();
             this.cancelButton = new System.Windows.Forms.Button();
+            this.variablePriceCheckBox = new System.Windows.Forms.CheckBox();
             this.cptTabControl.SuspendLayout();
             this.feeSched1tab.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.feeSched1Grid)).BeginInit();
@@ -504,7 +505,7 @@
             // orderableCheckBox
             // 
             this.orderableCheckBox.AutoSize = true;
-            this.orderableCheckBox.Location = new System.Drawing.Point(16, 230);
+            this.orderableCheckBox.Location = new System.Drawing.Point(12, 202);
             this.orderableCheckBox.Name = "orderableCheckBox";
             this.orderableCheckBox.Size = new System.Drawing.Size(72, 17);
             this.orderableCheckBox.TabIndex = 8;
@@ -514,7 +515,7 @@
             // deletedCheckBox
             // 
             this.deletedCheckBox.AutoSize = true;
-            this.deletedCheckBox.Location = new System.Drawing.Point(16, 206);
+            this.deletedCheckBox.Location = new System.Drawing.Point(12, 178);
             this.deletedCheckBox.Name = "deletedCheckBox";
             this.deletedCheckBox.Size = new System.Drawing.Size(63, 17);
             this.deletedCheckBox.TabIndex = 9;
@@ -524,7 +525,7 @@
             // cbillDetailCheckBox
             // 
             this.cbillDetailCheckBox.AutoSize = true;
-            this.cbillDetailCheckBox.Location = new System.Drawing.Point(16, 253);
+            this.cbillDetailCheckBox.Location = new System.Drawing.Point(12, 225);
             this.cbillDetailCheckBox.Name = "cbillDetailCheckBox";
             this.cbillDetailCheckBox.Size = new System.Drawing.Size(120, 17);
             this.cbillDetailCheckBox.TabIndex = 10;
@@ -553,6 +554,16 @@
             this.cancelButton.Text = "Cancel";
             this.cancelButton.UseVisualStyleBackColor = true;
             // 
+            // variablePriceCheckBox
+            // 
+            this.variablePriceCheckBox.AutoSize = true;
+            this.variablePriceCheckBox.Location = new System.Drawing.Point(11, 248);
+            this.variablePriceCheckBox.Name = "variablePriceCheckBox";
+            this.variablePriceCheckBox.Size = new System.Drawing.Size(91, 17);
+            this.variablePriceCheckBox.TabIndex = 19;
+            this.variablePriceCheckBox.Text = "Variable Price";
+            this.variablePriceCheckBox.UseVisualStyleBackColor = true;
+            // 
             // ChargeMasterEditForm
             // 
             this.AcceptButton = this.saveButton;
@@ -561,6 +572,7 @@
             this.BackColor = System.Drawing.Color.White;
             this.CancelButton = this.cancelButton;
             this.ClientSize = new System.Drawing.Size(1094, 563);
+            this.Controls.Add(this.variablePriceCheckBox);
             this.Controls.Add(this.cancelButton);
             this.Controls.Add(this.saveButton);
             this.Controls.Add(this.cbillDetailCheckBox);
@@ -658,5 +670,6 @@
         private System.Windows.Forms.CheckBox cbillDetailCheckBox;
         private System.Windows.Forms.Button saveButton;
         private System.Windows.Forms.Button cancelButton;
+        private System.Windows.Forms.CheckBox variablePriceCheckBox;
     }
 }

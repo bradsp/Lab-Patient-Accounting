@@ -28,6 +28,7 @@ namespace LabBilling.Core.BusinessLogic.Validators
         {
             name = name.Replace(" ", "");
             name = name.Replace("-", "");
+            name = name.Replace("'", "");
             return name.All(Char.IsLetter);
         }
 

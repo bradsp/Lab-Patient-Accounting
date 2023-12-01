@@ -21,7 +21,9 @@ using System.Linq;
 // Move these two lines to the header space
 using System.Reflection;
 using LabBilling.Library;
-
+using LabBilling.Core.Models;
+using LabBilling.Core.DataAccess;
+using LabBilling.Logging;
 
 namespace LabBilling.Legacy
 {
@@ -56,6 +58,12 @@ namespace LabBilling.Legacy
         CAcc m_cAccStatus = null;
         R_number m_rNum = null;
         CAcc m_cAcc = null;
+
+        AccountRepository accountRepository = null;
+        ChkRepository chkRepository = null;
+        NumberRepository numberRepository = null;
+
+
         // end of 20120425
         static DataGridViewCell m_celHidden;
         static DataGridViewCell m_celMoney;
@@ -293,6 +301,7 @@ namespace LabBilling.Legacy
         /// <param name="e"></param>
         private void Posting835_Load(object sender, EventArgs e)
         {
+
             //1. copy the files from directory listed in the system table under programs = 'Posting835Remittance'
             //      key_name = 'import_directory
             //2. into the file location listed in the system table under programs = 'Posting835Remittance'
@@ -426,7 +435,7 @@ namespace LabBilling.Legacy
             dgvDenieds.RowHeaderMouseDoubleClick +=
                     new System.Windows.Forms.DataGridViewCellMouseEventHandler(FormExtensions.LaunchAcc_EventHandler);
 
-            m_ERR = new ERR(new string[] { m_strDatabase.Contains("Test") ? "/TEST" : "/LIVE", m_strServer, m_strDatabase }); // ERR class needs /LIVE or /TEST to be the first argument in the command line.
+            m_ERR = new ERR(new string[] { Program.AppEnvironment.ApplicationParameters.DatabaseEnvironment != "Production" ? "/TEST" : "/LIVE", m_strServer, m_strDatabase }); // ERR class needs /LIVE or /TEST to be the first argument in the command line.
             // rgc/wdk 20120425 moved to remove the spid overload in sql.
             m_rNum = new R_number(m_strServer, m_strDatabase, ref m_ERR);
             m_cAcc = new CAcc(m_strServer, m_strDatabase, ref m_ERR);
@@ -434,6 +443,11 @@ namespace LabBilling.Legacy
             m_rChk = new R_chk(m_strServer, m_strDatabase, ref m_ERR);
             m_rAcc = new CAcc(m_strServer, m_strDatabase, ref m_ERR);
             m_rEob = new CEob(m_strServer, m_strDatabase, ref m_ERR);
+
+            accountRepository = new AccountRepository(Program.AppEnvironment);
+            chkRepository = new ChkRepository(Program.AppEnvironment);
+            numberRepository = new NumberRepository(Program.AppEnvironment);
+
         }
 
 
@@ -546,22 +560,24 @@ namespace LabBilling.Legacy
         /// </summary>
         private static void CreateDictionaryColGrids()
         {
-            m_dicColGrids = new Dictionary<string, DataGridViewCell>();
-            // MONEY FIELDS
-            m_dicColGrids.Add(Col835Grids.ePaid.ToString(), m_celMoney);
-            m_dicColGrids.Add(Col835Grids.eContractualAdjAmt.ToString(), m_celMoney);
-            m_dicColGrids.Add(Col835Grids.eCharges.ToString(), m_celMoney);
-            m_dicColGrids.Add(Col835Grids.eAllowed.ToString(), m_celMoney);
-            m_dicColGrids.Add(Col835Grids.eOtherAdjAmt.ToString(), m_celMoney);
-            m_dicColGrids.Add(Col835Grids.eWriteOffAmt.ToString(), m_celMoney); // wdk 20130731 added
+            m_dicColGrids = new Dictionary<string, DataGridViewCell>
+            {
+                // MONEY FIELDS
+                { Col835Grids.ePaid.ToString(), m_celMoney },
+                { Col835Grids.eContractualAdjAmt.ToString(), m_celMoney },
+                { Col835Grids.eCharges.ToString(), m_celMoney },
+                { Col835Grids.eAllowed.ToString(), m_celMoney },
+                { Col835Grids.eOtherAdjAmt.ToString(), m_celMoney },
+                { Col835Grids.eWriteOffAmt.ToString(), m_celMoney }, // wdk 20130731 added
 
-            // HIDDEN FIELDS (initially not visible) can toggle them to be visible with F12 
-            m_dicColGrids.Add(Col835Grids.eCPT4Code.ToString(), m_celHidden);
-            m_dicColGrids.Add(Col835Grids.eRevCode.ToString(), m_celHidden);
-            m_dicColGrids.Add(Col835Grids.eUnits.ToString(), m_celHidden);
-            m_dicColGrids.Add(Col835Grids.eStat.ToString(), m_celHidden);
-            m_dicColGrids.Add(Col835Grids.eWeight.ToString(), m_celHidden);
-            m_dicColGrids.Add(Col835Grids.eAPC.ToString(), m_celHidden);
+                // HIDDEN FIELDS (initially not visible) can toggle them to be visible with F12 
+                { Col835Grids.eCPT4Code.ToString(), m_celHidden },
+                { Col835Grids.eRevCode.ToString(), m_celHidden },
+                { Col835Grids.eUnits.ToString(), m_celHidden },
+                { Col835Grids.eStat.ToString(), m_celHidden },
+                { Col835Grids.eWeight.ToString(), m_celHidden },
+                { Col835Grids.eAPC.ToString(), m_celHidden }
+            };
 
         }
 
@@ -865,20 +881,17 @@ namespace LabBilling.Legacy
                 {
                     // if we don't find any MCL RECORDS move the file to SAVED\INVALID directory.
                     // wdk 20160526 we are now purging the files before we get here for invalid files so don't ask again
-                    ///*if (MessageBox.Show("This file does not contain any MCL records.\r\nDo you want to copy this file to the INVALID directory", "MEDICARE FILE", MessageBoxButtons.OKCancel) == DialogResult.OK)
+                    try
                     {
-                        try
-                        {
-                            //  File.Move(strFileName, string.Format(@"\\WTHMclBill\MedicareRemit\INVALID\{0}", strFileName.Substring(strFileName.LastIndexOf('\\'))));
-                            File.Move(strFileName, string.Format(@"\\wthmclbill\shared\Billing\LIVE\Posting835Remit\MedicareRemit\INVALID\{0}", strFileName.Substring(strFileName.LastIndexOf('\\'))));
-                        }
-                        catch (IOException)
-                        {
-                            string strMoveFileName = strFileName.Replace(".835", string.Format(@"{0}.835", DateTime.Now.ToFileTimeUtc().ToString()));
-                            File.Move(strFileName, string.Format(@"{0}\{1}", diInvalid, strMoveFileName));
-                            // continue
-                        }
-                    }//*/
+                        //  File.Move(strFileName, string.Format(@"\\WTHMclBill\MedicareRemit\INVALID\{0}", strFileName.Substring(strFileName.LastIndexOf('\\'))));
+                        File.Move(strFileName, string.Format(@"\\wthmclbill\shared\Billing\LIVE\Posting835Remit\MedicareRemit\INVALID\{0}", strFileName.Substring(strFileName.LastIndexOf('\\'))));
+                    }
+                    catch (IOException)
+                    {
+                        string strMoveFileName = strFileName.Replace(".835", string.Format(@"{0}.835", DateTime.Now.ToFileTimeUtc().ToString()));
+                        File.Move(strFileName, string.Format(@"{0}\{1}", diInvalid, strMoveFileName));
+                        // continue
+                    }
                     m_ERR.m_Logfile.WriteLogFile("Returned from parsing with a false value after parsing completed.");
                 }
                 else
@@ -1080,7 +1093,7 @@ namespace LabBilling.Legacy
                     string[] strGSHeaderElements = strHeaderSegment.Split(new char[] { '*' });
                     // Eft Date
                     DateTime dtEftDate;
-                    RFClassLibrary.Time.StringToHL7Time(strGSHeaderElements[4], out dtEftDate);
+                    Time.StringToHL7Time(strGSHeaderElements[4], out dtEftDate);
                     tbFileDate.Text = string.Format("EFT Date: {0}", dtEftDate.ToString("d"));
                     tbFileDate.Tag = dtEftDate.ToString("d");
                     // File Number
@@ -1425,7 +1438,7 @@ namespace LabBilling.Legacy
             string[] strGSHeaderElements = strST[0].Split(new char[] { '*' });
             // Eft Date
             DateTime dtEftDate;
-            RFClassLibrary.Time.StringToHL7Time(strGSHeaderElements[3], out dtEftDate);
+            Time.StringToHL7Time(strGSHeaderElements[3], out dtEftDate);
             tbFileDate.Text = string.Format("EFT Date: {0}", dtEftDate.ToString("d"));
             tbFileDate.Tag = dtEftDate.ToString("d");
             // File Number
@@ -3158,6 +3171,8 @@ namespace LabBilling.Legacy
         /// <param name="e"></param>
         private void tsmiPostCheckRecords_Click(object sender, EventArgs e)
         {
+            ChkRepository chkRepository = new ChkRepository(Program.AppEnvironment);
+            NumberRepository numberRepository = new NumberRepository(Program.AppEnvironment);
 
             //MoveFileToSavedDirectory();
             //return;
@@ -3171,8 +3186,8 @@ namespace LabBilling.Legacy
             {
                 // if this had of used the app.config values.
                 m_strAccountLogPath = string.Format(@"M:\{0}\Spool\AccBalances{1}.txt",
-                                m_strDatabase.ToUpper().Contains("LIVE") ? "LIVE" : "TEST",
-                                tbFileName.Text.Substring(tbFileName.Text.LastIndexOf('\\') + 1));
+                    Program.AppEnvironment.ApplicationParameters.DatabaseEnvironment == "Production" ? "LIVE" : "TEST",
+                    tbFileName.Text.Substring(tbFileName.Text.LastIndexOf('\\') + 1));
                 m_swAccount =
                     new StreamWriter(m_strAccountLogPath);
             }
@@ -3199,28 +3214,15 @@ namespace LabBilling.Legacy
             DateTime sdtMod = DateTime.Parse(DateTime.Now.ToString());
             string strBatchNo = "";
             //MCL.R_number m_rNum = new R_number(m_strServer, m_strDatabase, ref m_ERR);
-            strBatchNo = m_rNum.GetNumber("batch");
+            //strBatchNo = m_rNum.GetNumber("batch");
+            strBatchNo = numberRepository.GetNumber("batch").ToString();
 
             tbBatchNo.Text = string.Format("Batch No: {0}", strBatchNo);
             this.Invalidate();
 
-            SqlConnection conn = new SqlConnection(
-                string.Format("Data Source={0}; Initial Catalog={1}; Integrated Security = 'SSPI'",
-                m_strServer, m_strDatabase));
-            //// create our table adapter for inserting records.
-            SqlDataAdapter sdaChk = new SqlDataAdapter();
-            SqlTransaction transaction;
 
 
-            //wdk 20170518 DataSetChkTableAdapters.chkTableAdapter chk = new Posting835Remittance.DataSetChkTableAdapters.chkTableAdapter();
-            // set the connection string to the appropriate database. Could add server here also.
-            //wdk 20170518 chk.Connection.ConnectionString = chk.Connection.ConnectionString.Replace("MCLTEST", m_strDatabase);
-
-            // open the connection we have created and make an SqlTranaction 
-            //sdaChk.InsertCommand.CommandTimeout = 120;
-            //sdaChk.InsertCommand.Connection.Open();// chk.Connection.Open();
-            //SqlTransaction transaction;
-            //transaction = sdaChk.InsertCommand.Connection.BeginTransaction(System.Data.IsolationLevel.ReadUncommitted);// Assign the transaction the dataset connection NOTE: can be named if multiple connections need to be initialized       
+            chkRepository.BeginTransaction();
 
             // create the loop through the records to add
             tspbRecords.Value = 0;
@@ -3234,6 +3236,7 @@ namespace LabBilling.Legacy
 
             // now process the checks.
             string strOldAccount = string.Empty;
+
             foreach (DataRow dr in m_dsRecords.Tables[dgvProcessed.Name].Rows)
             {
                 Application.DoEvents();
@@ -3296,146 +3299,124 @@ namespace LabBilling.Legacy
                 #region InsertRecord
                 try
                 {
+                    #region old sql code
+                    //string strRowguid = Guid.NewGuid().ToString();
+                    //string strInsert = string.Format(@"Insert into chk 
+                    //(rowguid, deleted, account, chk_date, date_rec,  " +
+                    //    "chk_no, amt_paid, write_off, contractual, status, " +
+                    //    "source, w_off_date, invoice, batch, comment, " +
+                    //    "bad_debt, mod_date, mod_user, mod_prg, mod_host, " +
+                    //    "mod_date_audit, cpt4Code, post_file, write_off_code, eft_date," +
+                    //    "eft_number, fin_code, ins_code, claim_adj_code) VALUES " +
+                    //"('{0}', '{1}', '{2}', {3}, '{4}',  " +
+                    //"'{5}', {6}, {7}, {8}, '{9}', " +
+                    //"'{10}', {11}, '{12}', {13}, '{14}',  " +
+                    //"'{15}', '{16}', '{17}', '{18}', '{19}', '{20}', '{21}', '{22}', {23}, '{24}', '{25}', '{26}', '{27}', '{28}')",
+                    //        strRowguid,  //0
+                    //        false, // deleted 1
+                    //        dr[(int)Col835Grids.Account].ToString().ToUpper(), //Account 2
+                    //        tbCheckDate.Tag.ToString().Length == 0 ? "NULL" : string.Format("'{0}'", tbCheckDate.Tag.ToString()), // check date 3
+                    //        sdtReceived, // date check received 4
+                    //        dr[(int)Col835Grids.eCheckNo].ToString(),//tbCheckNo.Tag.ToString(), // check number 5
+                    //        decimal.Parse(dr[(int)Col835Grids.ePaid].ToString(), System.Globalization.NumberStyles.Currency), // amount paid 6
+                    //        string.IsNullOrEmpty(dr[(int)Col835Grids.eWriteOffAmt].ToString()) ? "0.00"
+                    //        : double.Parse(dr[(int)Col835Grids.eWriteOffAmt].ToString()).ToString("F2"), //denied amount as a small balance write off if less than  $5.00 from above. 7
+                    //                                                                                     //dtWriteOff.HasValue ? 5.93m : 
+                    //        decimal.Parse(dr[(int)Col835Grids.eContractualAdjAmt].ToString(), System.Globalization.NumberStyles.Currency), // contractual amount 8
+                    //        "NEW", // status 9
+                    //        rtbCheckSource.Text.Substring(0, (rtbCheckSource.Text.Length > 20 ? 20 : rtbCheckSource.Text.Length)), //10
+                    //                                                                                                               //dtWriteOff.HasValue ? string.Format("'{0}'",dtWriteOff) : "NULL", // write off date 11
+                    //        string.IsNullOrEmpty(dr[(int)Col835Grids.eWriteOffDate].ToString()) ? "NULL"
+                    //            : string.Format("'{0}'", DateTime.Parse(dr[(int)Col835Grids.eWriteOffDate].ToString())),
+                    //        "", // invoice number this is for CLIENTS not insurance companies. 12
+                    //        int.Parse(strBatchNo), // batch number  13
+                    //                               //strComment.Length == 0 ? "1000 SBA " : strComment, // comment 14 wdk 20120718 replaced with line below
+                    //        rtbCheckSource.Tag.ToString(), // comment 14 
+                    //        false, // bad debt 15
+                    //        sdtMod, // mod_date --original record date Does not change.16
+                    //        Environment.UserName,  // mod user 17
+                    //        string.Format("{0} {1}", ProductName, ProductVersion), // program with version 18
+                    //        Environment.MachineName, // host namme  19
+                    //        sdtMod, // mod_date_audit -- actual modification date if any 20
+                    //        dr[(int)Col835Grids.eCPT4Code].ToString(), // cpt4 with modifier(s) seperaterated with a "^" for TLC or ">" for Medicare 21
+                    //        string.Format(@"{0}", tbFileName.Tag.ToString()),
+                    //        //dtWriteOff.HasValue ? "1000" : "",
+                    //        string.IsNullOrEmpty(dr[(int)Col835Grids.eWriteOffCode].ToString()) ? "NULL"
+                    //        : dr[(int)Col835Grids.eWriteOffCode].ToString(),
+                    //        tbFileDate.Tag.ToString(), // [eft date string] in the format YYMMDD NOT A REAL DATE!!!,
+                    //        tbFileNumber.Tag.ToString(), // 
+                    //        m_strFinCode, m_strInsCode,
+                    //        dr[(int)Col835Grids.eReason].ToString()); // wdk 20120718 "A", "MC"); 
+                    #endregion
 
-                    string strRowguid = Guid.NewGuid().ToString();
-                    string strInsert = string.Format(@"Insert into chk 
-                    (rowguid, deleted, account, chk_date, date_rec,  " +
-                        "chk_no, amt_paid, write_off, contractual, status, " +
-                        "source, w_off_date, invoice, batch, comment, " +
-                        "bad_debt, mod_date, mod_user, mod_prg, mod_host, " +
-                        "mod_date_audit, cpt4Code, post_file, write_off_code, eft_date," +
-                        "eft_number, fin_code, ins_code, claim_adj_code) VALUES " +
-                    " ('{0}',  '{1}',  '{2}',   {3},      '{4}',  " +
-                    "    '{5}',  {6},       {7},       {8},         '{9}', " +
-                    "    '{10}', {11},       '{12}',  {13},  '{14}',  " +
-                    "    '{15}',   '{16}',   '{17}',   '{18}',  '{19}',   '{20}',         '{21}',   '{22}',      {23},         '{24}',     '{25}', '{26}', '{27}', '{28}')",
-                            strRowguid,  //0
-                            false, // deleted 1
-                            dr[(int)Col835Grids.Account].ToString().ToUpper(), //Account 2
-                            tbCheckDate.Tag.ToString().Length == 0 ? "NULL" : string.Format("'{0}'", tbCheckDate.Tag.ToString()), // check date 3
-                            sdtReceived, // date check received 4
-                            dr[(int)Col835Grids.eCheckNo].ToString(),//tbCheckNo.Tag.ToString(), // check number 5
-                            decimal.Parse(dr[(int)Col835Grids.ePaid].ToString(), System.Globalization.NumberStyles.Currency), // amount paid 6
-                            string.IsNullOrEmpty(dr[(int)Col835Grids.eWriteOffAmt].ToString()) ? "0.00"
-                            : double.Parse(dr[(int)Col835Grids.eWriteOffAmt].ToString()).ToString("F2"), //denied amount as a small balance write off if less than  $5.00 from above. 7
-                                                                                                         //dtWriteOff.HasValue ? 5.93m : 
-                            decimal.Parse(dr[(int)Col835Grids.eContractualAdjAmt].ToString(), System.Globalization.NumberStyles.Currency), // contractual amount 8
-                            "NEW", // status 9
-                            rtbCheckSource.Text.Substring(0, (rtbCheckSource.Text.Length > 20 ? 20 : rtbCheckSource.Text.Length)), //10
-                                                                                                                                   //dtWriteOff.HasValue ? string.Format("'{0}'",dtWriteOff) : "NULL", // write off date 11
-                            string.IsNullOrEmpty(dr[(int)Col835Grids.eWriteOffDate].ToString()) ? "NULL"
-                                : string.Format("'{0}'", DateTime.Parse(dr[(int)Col835Grids.eWriteOffDate].ToString())),
-                            "", // invoice number this is for CLIENTS not insurance companies. 12
-                            int.Parse(strBatchNo), // batch number  13
-                                                   //strComment.Length == 0 ? "1000 SBA " : strComment, // comment 14 wdk 20120718 replaced with line below
-                            rtbCheckSource.Tag.ToString(), // comment 14 
-                            false, // bad debt 15
-                            sdtMod, // mod_date --original record date Does not change.16
-                            Environment.UserName,  // mod user 17
-                            string.Format("{0} {1}", ProductName, ProductVersion), // program with version 18
-                            Environment.MachineName, // host namme  19
-                            sdtMod, // mod_date_audit -- actual modification date if any 20
-                            dr[(int)Col835Grids.eCPT4Code].ToString(), // cpt4 with modifier(s) seperaterated with a "^" for TLC or ">" for Medicare 21
-                            string.Format(@"{0}", tbFileName.Tag.ToString()),
-                            //dtWriteOff.HasValue ? "1000" : "",
-                            string.IsNullOrEmpty(dr[(int)Col835Grids.eWriteOffCode].ToString()) ? "NULL"
-                            : dr[(int)Col835Grids.eWriteOffCode].ToString(),
-                            tbFileDate.Tag.ToString(), // [eft date string] in the format YYMMDD NOT A REAL DATE!!!,
-                            tbFileNumber.Tag.ToString(), // 
-                            m_strFinCode, m_strInsCode,
-                            dr[(int)Col835Grids.eReason].ToString()); // wdk 20120718 "A", "MC"); 
+                    Chk chk = new Chk();
+                    chk.IsDeleted = false;
+                    chk.AccountNo = dr[(int)Col835Grids.Account].ToString().ToUpper();
+                    chk.ChkDate = DateTime.Parse(tbCheckDate.Tag.ToString());
+                    chk.DateReceived = sdtReceived;
+                    chk.CheckNo = dr[(int)Col835Grids.eCheckNo].ToString();
+                    chk.PaidAmount = double.Parse(dr[(int)Col835Grids.ePaid].ToString(), System.Globalization.NumberStyles.Currency);
+                    chk.WriteOffAmount = string.IsNullOrEmpty(dr[(int)Col835Grids.eWriteOffAmt].ToString()) ? 0.00
+                            : double.Parse(dr[(int)Col835Grids.eWriteOffAmt].ToString());
+                    chk.ContractualAmount = double.Parse(dr[(int)Col835Grids.eContractualAdjAmt].ToString(), System.Globalization.NumberStyles.Currency);
+                    chk.Status = "NEW";
+                    chk.Source = rtbCheckSource.Text.Substring(0, (rtbCheckSource.Text.Length > 20 ? 20 : rtbCheckSource.Text.Length));
+                    chk.Batch = int.Parse(strBatchNo);
+                    chk.Comment = rtbCheckSource.Text;
+                    chk.IsCollectionPmt = false;
+                    chk.mod_date = sdtMod;
+                    chk.mod_user = Environment.UserName;
+                    chk.mod_prg = string.Format("{0} {1}", ProductName, ProductVersion);
+                    chk.mod_host = Environment.MachineName;
+                    chk.mod_date_audit = sdtMod;
+                    chk.Cpt4Code = dr[(int)Col835Grids.eCPT4Code].ToString();
+                    chk.PostingFile = tbFileName.Tag.ToString();
+                    chk.WriteOffCode = string.IsNullOrEmpty(dr[(int)Col835Grids.eWriteOffCode].ToString()) ? string.Empty
+                            : dr[(int)Col835Grids.eWriteOffCode].ToString();
+                    chk.EftDate = DateTime.Parse(tbFileDate.Tag.ToString());
+                    chk.EftNumber = tbFileNumber.Tag.ToString();
+                    chk.FinCode = m_strFinCode;
+                    chk.InsCode = m_strInsCode;
+                    chk.ClaimAdjCode = dr[(int)Col835Grids.eReason].ToString();
 
-                    //At this point, the connection is bound to the SqlTransaction object that was returned when
-                    // we executed
-                    //      transaction = chk.Connection.BeginTransaction("David"); 
-                    //above. 
-                    //This means that any SqlCommand executed on that connection will be within the transaction.
-                    sdaChk.InsertCommand = new SqlCommand(strInsert, conn);
-                    sdaChk.InsertCommand.CommandTimeout = 120;
-                    sdaChk.InsertCommand.CommandText = strInsert;
-                    sdaChk.InsertCommand.Connection.Open();// chk.Connection.Open();
-                    transaction = sdaChk.InsertCommand.Connection.BeginTransaction(System.Data.IsolationLevel.ReadUncommitted);// Assign the transaction the dataset connection NOTE: can be named if multiple connections need to be initialized       
+                    if (DateTime.TryParse(dr[(int)Col835Grids.eWriteOffDate].ToString(), out DateTime woffDateTime))
+                        chk.WriteOffDate = woffDateTime;
 
-                    new SqlCommand(strInsert, sdaChk.InsertCommand.Connection, transaction).ExecuteNonQuery();
-                    //new SqlCommand(strInsert, chk.Connection).ExecuteNonQuery();
+                    chkRepository.Add(chk);
+
                     nRecordsAdded++;
                 }
-                #region catch SqlException
                 catch (SqlException sqlError)
                 {
-                    //transaction.Rollback() is not necessary because the tranaction is not committed;
-                    MessageBox.Show(string.Format("{0}\r\n\n{1} transactions rolled back.", sqlError.Message, nRecordsAdded), "CHECK POSTING TERMINATED", MessageBoxButtons.OK, MessageBoxIcon.Stop);
-                    m_ERR.m_Logfile.WriteLogFile(string.Format("ACCOUNT {0} INSERT HAS SQLEXCEPTION ERROR: {1}",
-                            dr[(int)Col835Grids.Account].ToString().ToUpper(), sqlError.Message));
-
+                    chkRepository.AbortTransaction();
+                    string errorMsg = $"{sqlError.Message} - {nRecordsAdded} transactions rolled back. Account {dr[(int)Col835Grids.Account].ToString().ToUpper()}";
+                    Log.Instance.Error(errorMsg, sqlError);
+                    MessageBox.Show(errorMsg, "CHECK POSTING TERMINATED", MessageBoxButtons.OK, MessageBoxIcon.Stop);
                     break;
                 }
-                #endregion SqlException
-
-                #region catch InvalidOperationException
                 catch (InvalidOperationException ioe)
                 {
-                    //transaction.Rollback() is not necessary because the tranaction is not committed;
-                    MessageBox.Show(string.Format("{0}\r\n\n{1} transactions rolled back.", ioe.Message, nRecordsAdded), "CHECK POSTING TERMINATED", MessageBoxButtons.OK, MessageBoxIcon.Stop);
-                    m_ERR.m_Logfile.WriteLogFile(string.Format("ACCOUNT {0} INSERT HAS INVALID_OPERATION_EXCEPTION ERROR: {1}",
-                            dr[(int)Col835Grids.Account].ToString().ToUpper(), ioe.Message));
-
+                    chkRepository.AbortTransaction();
+                    string errorMsg = $"{ioe.Message} - {nRecordsAdded} transactions rolled back. Account {dr[(int)Col835Grids.Account].ToString().ToUpper()}";
+                    Log.Instance.Error(errorMsg, ioe);
+                    MessageBox.Show(errorMsg, "CHECK POSTING TERMINATED", MessageBoxButtons.OK, MessageBoxIcon.Stop);
                     break;
                 }
-                #endregion InvalidOperationException
-
-                #region catch NullReferenceException
                 catch (NullReferenceException nre)
                 {
-                    // MessageBox.Show(string.Format("Error: {0}\r\n\nInserted record \r\n{1} .", nre.Message, strInsert), "CHECK POSTING CONTINUED", MessageBoxButtons.OK,MessageBoxIcon.Information);
-                    m_ERR.m_Logfile.WriteLogFile(string.Format("ACCOUNT {0} INSERT HAS NULL_REFERENCE_EXCEPTION ERROR: {1}",
-                            dr[(int)Col835Grids.Account].ToString().ToUpper(), nre.Message));
-
-                    // m_ERR.m_Logfile.WriteLogFile(string.Format("ACCOUNT STRING INSERT {0}", strInsert));
+                    chkRepository.AbortTransaction();
+                    string errorMsg = $"{nre.Message} - {nRecordsAdded} transactions rolled back. Account {dr[(int)Col835Grids.Account].ToString().ToUpper()}";
+                    Log.Instance.Error(errorMsg, nre);
+                    MessageBox.Show(errorMsg, "CHECK POSTING TERMINATED", MessageBoxButtons.OK, MessageBoxIcon.Stop);
                     nErrorRecords++;
                     continue;
                 }
-                #endregion NullReferenceException
-
-
-                #region NOTE: On Transaction Rollback (PART 1)
-                //// interesting note here you can save the tranaction periodically with the below tranaction.Save(string strSaveName)
-                //if (nRecordsAdded == 500)
-                //{
-                //    transaction.Save("500");
-                //}
-                //if (nRecordsAdded == 1000)
-                //{
-                //    transaction.Save("1000");
-                //}
-                #endregion NOTE: On Transaction Rollback
-
                 #endregion InsertRecord
+            } 
 
-                //  } // 09/12/2008 wdk
-
-                #region NOTE: On Transaction Rollback (PART 2)
-                // optional rollback allows the first 500 records to remain in the table. 
-                // transaction.Rollback("500"); // removes all records in the save.
-                //transaction.Rollback("1000"); // removes 501 to 1000
-                #endregion NOTE:
-
-                #region Posting Cleanup. 1) Commit the transaction. 2) Close the connection. 3) Display the posting status.
-                // wdk 20091012 moved above
-                transaction.Commit(); // commit the last transaction and close the connection
-                m_ERR.m_Logfile.WriteLogFile(string.Format("Account {0} transaction closed.\r\n", strOldAccount));
-                // if the connection is not closed then close it.
-                if (!sdaChk.InsertCommand.Connection.State.Equals(ConnectionState.Closed))
-                {
-                    sdaChk.InsertCommand.Connection.Close();
-                }
-
-
-                #endregion Posting Cleanup. 1) Commit the transaction. 2) Close the connection. 3) Display the posting status.
-
-
-            } // 09/12/2008 wdk moved here wdk 20170519
             MessageBox.Show(string.Format("{0} records added.", nRecordsAdded), "DATABASE UPDATE FINISHED");
+
+            chkRepository.CompleteTransaction();
 
             #region Get Account Balances and write them to the account balance file
 
@@ -3472,9 +3453,9 @@ namespace LabBilling.Legacy
                     strBal = strBal.Substring(0, strBal.IndexOf('.') + nEnd);
                 }
                 double dBal = double.Parse(strBal);
-                if (dBal != 0.00 && strStatus == "PAID_OUT")
+                if (dBal != 0.00 && strStatus == AccountStatus.PaidOut)
                 {
-                    m_cAccStatus.SetStatus(strAccount, "NEW");
+                    accountRepository.UpdateStatus(strAccount, AccountStatus.New);
                 }
                 m_swAccount.WriteLine(string.Format("{0}{1}{2}", strAccount.PadRight(16), dBal.ToString("C2", CultureInfo.CurrentCulture).PadRight(15), strStatus.PadLeft(15 - strBal.Length)));
             }
@@ -3499,7 +3480,6 @@ namespace LabBilling.Legacy
             {
                 MessageBox.Show(ex.Message, "CREATE PRINT THREAD (ACCOUNT BALANCES) ERROR");
             }
-
             #endregion Print Account Balance file
 
             tspbRecords.Value = 0; // reset the progress bar
@@ -3624,7 +3604,7 @@ namespace LabBilling.Legacy
         /// <param name="e"></param>
         private void tsbPrintView_Click(object sender, EventArgs e)
         {
-            Bitmap[] bmps = RFClassLibrary.dkPrint.Capture(dkPrint.CaptureType.Form);
+            Bitmap[] bmps = dkPrint.Capture(dkPrint.CaptureType.Form);
             try
             {
                 bmps[0].Save(@"C:\Temp\Posting835Remittance.bmp");
@@ -3636,7 +3616,7 @@ namespace LabBilling.Legacy
             }
             try
             {
-                RFClassLibrary.dkPrint.propStreamToPrint = new StreamReader(@"C:\Temp\Posting835Remittance.bmp");
+                dkPrint.propStreamToPrint = new StreamReader(@"C:\Temp\Posting835Remittance.bmp");
             }
             catch (Exception exc)
             {

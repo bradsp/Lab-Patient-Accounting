@@ -54,6 +54,7 @@
             this.showAccountsWithPmtCheckbox = new System.Windows.Forms.CheckBox();
             this.showReadyToBillCheckbox = new System.Windows.Forms.CheckBox();
             this.insuranceFilterRadioButton = new System.Windows.Forms.RadioButton();
+            this.showZeroBalanceCheckBox = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.accountGrid)).BeginInit();
             this.accountGridContextMenu.SuspendLayout();
             this.statusStrip1.SuspendLayout();
@@ -312,12 +313,25 @@
             this.insuranceFilterRadioButton.Text = "Insurance";
             this.insuranceFilterRadioButton.UseVisualStyleBackColor = true;
             // 
+            // showZeroBalanceCheckBox
+            // 
+            this.showZeroBalanceCheckBox.AutoSize = true;
+            this.showZeroBalanceCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.showZeroBalanceCheckBox.Location = new System.Drawing.Point(744, 12);
+            this.showZeroBalanceCheckBox.Name = "showZeroBalanceCheckBox";
+            this.showZeroBalanceCheckBox.Size = new System.Drawing.Size(117, 17);
+            this.showZeroBalanceCheckBox.TabIndex = 16;
+            this.showZeroBalanceCheckBox.Text = "Show Zero Balance";
+            this.showZeroBalanceCheckBox.UseVisualStyleBackColor = true;
+            this.showZeroBalanceCheckBox.CheckedChanged += new System.EventHandler(this.showZeroBalanceCheckBox_CheckedChanged);
+            // 
             // WorkListForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1166, 476);
             this.Controls.Add(this.showReadyToBillCheckbox);
+            this.Controls.Add(this.showZeroBalanceCheckBox);
             this.Controls.Add(this.showAccountsWithPmtCheckbox);
             this.Controls.Add(this.insuranceFilterRadioButton);
             this.Controls.Add(this.accountFilterRadioBtn);
@@ -368,5 +382,6 @@
         private System.Windows.Forms.ToolStripMenuItem readyToBillToolStripMenuItem;
         private System.Windows.Forms.CheckBox showReadyToBillCheckbox;
         private System.Windows.Forms.RadioButton insuranceFilterRadioButton;
+        private System.Windows.Forms.CheckBox showZeroBalanceCheckBox;
     }
 }
