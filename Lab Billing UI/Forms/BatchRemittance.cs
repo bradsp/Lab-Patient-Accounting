@@ -138,52 +138,51 @@ namespace LabBilling.Forms
         {
             Log.Instance.Trace($"Entering");
             int batch = -1;
-
-            if (OpenBatch.SelectedIndex > 0)
-            {
-                batch = Convert.ToInt32(OpenBatch.SelectedValue.ToString());
-                SaveBatch(batch);
-            }
-            else
-            {
-                batch = SaveBatch();
-            }
-
-            if(batch <= 0)
-            {
-                Log.Instance.Error("Error saving batch.");
-                MessageBox.Show("Error saving batch.");
-                return;
-            }
-
-            List<Chk> chks = new List<Chk>();
-
-            var chkBatch = chkBatchRepository.GetById(batch);
-
-            chkRepository.BeginTransaction();
-
-            foreach(var detail in chkBatch.ChkBatchDetails)
-            {
-                Chk chk = new Chk();
-
-                chk.AccountNo = detail.AccountNo;
-                chk.Batch = detail.Batch;
-                chk.PaidAmount = detail.AmtPaid;
-                chk.ChkDate = detail.CheckDate;
-                chk.DateReceived = detail.DateReceived;
-                chk.CheckNo = detail.CheckNo;
-                chk.Comment = detail.Comment;
-                chk.ContractualAmount = detail.Contractual;
-                chk.WriteOffAmount = detail.WriteOffAmount;
-                chk.WriteOffCode = detail.WriteOffCode;
-                chk.WriteOffDate = detail.WriteOffDate;
-                chk.Source = detail.Source;
-
-                chks.Add(chk);
-            }
-
             try
             {
+                if (OpenBatch.SelectedIndex > 0)
+                {
+                    batch = Convert.ToInt32(OpenBatch.SelectedValue.ToString());
+                    SaveBatch(batch);
+                }
+                else
+                {
+                    batch = SaveBatch();
+                }
+
+                if (batch <= 0)
+                {
+                    Log.Instance.Error("Error saving batch.");
+                    MessageBox.Show("Error saving batch.");
+                    return;
+                }
+
+                List<Chk> chks = new List<Chk>();
+
+                var chkBatch = chkBatchRepository.GetById(batch);
+
+                chkRepository.BeginTransaction();
+
+                foreach (var detail in chkBatch.ChkBatchDetails)
+                {
+                    Chk chk = new Chk();
+
+                    chk.AccountNo = detail.AccountNo;
+                    chk.Batch = detail.Batch;
+                    chk.PaidAmount = detail.AmtPaid;
+                    chk.ChkDate = detail.CheckDate;
+                    chk.DateReceived = detail.DateReceived;
+                    chk.CheckNo = detail.CheckNo;
+                    chk.Comment = detail.Comment;
+                    chk.ContractualAmount = detail.Contractual;
+                    chk.WriteOffAmount = detail.WriteOffAmount;
+                    chk.WriteOffCode = detail.WriteOffCode;
+                    chk.WriteOffDate = detail.WriteOffDate;
+                    chk.Source = detail.Source;
+
+                    chks.Add(chk);
+                }
+
                 chkRepository.AddBatch(chks);
 
                 chkBatchRepository.UpdatePostedDate(batch, DateTime.Now);
