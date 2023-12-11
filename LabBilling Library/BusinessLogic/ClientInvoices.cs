@@ -51,7 +51,7 @@ namespace LabBilling.Core.BusinessLogic
             }
         }
 
-        public int Compile(DateTime thruDate, IList<UnbilledClient> unbilledClients, IProgress<int> progress)
+        public void Compile(DateTime thruDate, IList<UnbilledClient> unbilledClients, IProgress<int> progress)
         {
             if (thruDate == null)
                 throw new ArgumentNullException();
@@ -67,17 +67,19 @@ namespace LabBilling.Core.BusinessLogic
                     GenerateInvoice(unbilledClient.ClientMnem, thruDate);
                     tempCount++;
                     progress?.Report((tempCount * 100 / clientCount));
+                    Log.Instance.Info($"Invoice for {unbilledClient.ClientMnem} generated.");
                 }
                 Log.Instance.Debug("Complete Transaction");
                 dbConnection.CompleteTransaction();
-                return tempCount;
+                Log.Instance.Info($"Client Invoice Run Complete: {tempCount} invoices generated.");
+                return;
             }
             catch (Exception ex)
             {
                 Log.Instance.Error("Error encountered during invoice run. Process is aborted and transactions rolled back.", ex);
                 Log.Instance.Debug("Abort Transaction");
                 dbConnection.AbortTransaction();
-                return 0;
+                return;
             }
         }
 
