@@ -17,9 +17,7 @@ namespace LabBilling.Library
         public WaitForm(Action worker)
         {
             InitializeComponent();
-            if (worker == null)
-                throw new ArgumentNullException();
-            Worker = worker;
+            Worker = worker ?? throw new ArgumentNullException();
         }
 
         protected override void OnLoad(EventArgs e)

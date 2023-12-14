@@ -45,6 +45,7 @@ namespace LabBilling
                 CanEditDictionaries.Enabled = false;
                 CanSubmitBilling.Enabled = false;
                 IsAdministrator.Enabled = false;
+                canImpersonateUserCheckBox.Enabled = false;
                 Reserved5.Enabled = false;
                 Reserved6.Enabled = false;
 
@@ -72,20 +73,22 @@ namespace LabBilling
         private Emp ReadEditedData()
         {
             Log.Instance.Trace($"Entering");
-            Emp editedEmp = new Emp();
-
-            editedEmp.UserName = UserName.Text;
-            editedEmp.FullName = FullName.Text;
-            editedEmp.Access = AccessLevelCombo.Text;
-            //editedEmp.Password = Helper.Encrypt(Password.Text.Trim());
-            editedEmp.CanAddAdjustments = CanAddAccountAdjustments.Checked;
-            editedEmp.CanSubmitCharges = CanAddCharges.Checked;
-            editedEmp.CanAddPayments = CanAddPayments.Checked;
-            editedEmp.CanModifyAccountFincode = CanChangeAccountFinCode.Checked;
-            editedEmp.CanModifyBadDebt = CanEditBadDebt.Checked;
-            editedEmp.CanEditDictionary = CanEditDictionaries.Checked;
-            editedEmp.CanSubmitBilling = CanSubmitBilling.Checked;
-            editedEmp.IsAdministrator = IsAdministrator.Checked;
+            Emp editedEmp = new Emp
+            {
+                UserName = UserName.Text,
+                FullName = FullName.Text,
+                Access = AccessLevelCombo.Text,
+                //editedEmp.Password = Helper.Encrypt(Password.Text.Trim());
+                CanAddAdjustments = CanAddAccountAdjustments.Checked,
+                CanSubmitCharges = CanAddCharges.Checked,
+                CanAddPayments = CanAddPayments.Checked,
+                CanModifyAccountFincode = CanChangeAccountFinCode.Checked,
+                CanModifyBadDebt = CanEditBadDebt.Checked,
+                CanEditDictionary = CanEditDictionaries.Checked,
+                CanSubmitBilling = CanSubmitBilling.Checked,
+                IsAdministrator = IsAdministrator.Checked,
+                CanImpersonate = canImpersonateUserCheckBox.Checked
+            };
 
             return editedEmp;
         }
@@ -95,20 +98,6 @@ namespace LabBilling
             Log.Instance.Trace($"Entering");
             Emp editedEmp = ReadEditedData();
 
-            //editedEmp.UserName = UserName.Text;
-            //editedEmp.FullName = FullName.Text;
-            //editedEmp.Access = AccessLevelCombo.Text;
-            ////editedEmp.Password = Helper.Encrypt(Password.Text.Trim());
-            //editedEmp.CanAddAdjustments = CanAddAccountAdjustments.Checked;
-            //editedEmp.CanSubmitCharges = CanAddCharges.Checked;
-            //editedEmp.CanAddPayments = CanAddPayments.Checked;
-            //editedEmp.CanModifyAccountFincode = CanChangeAccountFinCode.Checked;
-            //editedEmp.CanModifyBadDebt = CanEditBadDebt.Checked;
-            //editedEmp.CanEditDictionary = CanEditDictionaries.Checked;
-            //editedEmp.CanSubmitBilling = CanSubmitBilling.Checked;
-            //editedEmp.IsAdministrator = IsAdministrator.Checked;
-
-            //DataAccess da = new DataAccess(Helper.ConnVal());
             if (!IsNewRecord)
             { 
                 if(empRepository.Update(editedEmp) == true)
@@ -193,6 +182,7 @@ namespace LabBilling
             CanEditDictionaries.Checked = false;
             CanSubmitBilling.Checked = false;
             IsAdministrator.Checked = false;
+            canImpersonateUserCheckBox.Checked = false;
             ModDateTime.Text = "";
             ModUser.Text = "";
             ModProgram.Text = "";
@@ -235,12 +225,12 @@ namespace LabBilling
                 CanEditDictionaries.Checked = Convert.ToBoolean(UserListDGV.SelectedRows[0].Cells[nameof(Emp.CanEditDictionary)].Value);
                 CanSubmitBilling.Checked = Convert.ToBoolean(UserListDGV.SelectedRows[0].Cells[nameof(Emp.CanSubmitBilling)].Value);
                 IsAdministrator.Checked = Convert.ToBoolean(UserListDGV.SelectedRows[0].Cells[nameof(Emp.IsAdministrator)].Value);
+                canImpersonateUserCheckBox.Checked = Convert.ToBoolean(UserListDGV.SelectedRows[0].Cells[nameof(Emp.CanImpersonate)].Value);
 
                 ModDateTime.Text = UserListDGV.SelectedRows[0].Cells[nameof(Emp.LastModifiedDate)].Value.ToString();
                 ModUser.Text = UserListDGV.SelectedRows[0].Cells[nameof(Emp.LastModifiedBy)].Value?.ToString();
                 ModProgram.Text = UserListDGV.SelectedRows[0].Cells[nameof(Emp.LastModifiedWith)].Value?.ToString();
 
-                //throw new NotSupportedException("This is a test of the logging system.");
             }
             catch (Exception ex)
             {
