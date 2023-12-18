@@ -59,7 +59,7 @@ namespace LabBilling.Forms
                     _currentAccount.TransactionDate,
                     tbComment.Text,
                     ReferenceNumber.Text,
-                    Convert.ToDouble(amountTextBox.Text));
+                    Convert.ToDouble(!string.IsNullOrWhiteSpace(amountTextBox.Text) ? amountTextBox.Text : "0.00"));
             }
             catch(CdmNotFoundException)
             {
