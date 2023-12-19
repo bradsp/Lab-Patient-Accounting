@@ -1,15 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using LabBilling.Core.Models;
 using LabBilling.Core.DataAccess;
-using LabBilling.Logging;
+using System.Drawing;
 
 namespace LabBilling.Forms
 {
@@ -34,6 +29,13 @@ namespace LabBilling.Forms
 
         private void btnSave_Click(object sender, EventArgs e)
         {
+
+            if(!ValidateChildren(ValidationConstraints.Enabled))
+            {
+                return;
+            }
+
+
             client.IsDeleted = !activeCheckBox.Checked;
             client.ClientMnem = ClientMnemTextBox.Text;
             client.Name = ClientNameTextBox.Text;
@@ -80,6 +82,7 @@ namespace LabBilling.Forms
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
+            
             DialogResult = DialogResult.Cancel;
         }
 
@@ -350,6 +353,87 @@ namespace LabBilling.Forms
                 return;
 
             clientDiscountDataGrid[nameof(ClientDiscount.ClientMnem), e.RowIndex].Value = ClientMnemTextBox.Text;
+        }
+
+        private void cbFeeSched_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void cbFeeSched_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if(cbFeeSched.SelectedValue == null)
+            {
+                e.Cancel = true;
+                cbFeeSched.Focus();
+                errorProvider1.SetError(cbFeeSched, "Must select a value.");
+            }
+            else
+            {
+                e.Cancel = false;
+                errorProvider1.SetError(cbFeeSched, "");
+            }
+        }
+
+        private void ClientMnemTextBox_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if(string.IsNullOrWhiteSpace(ClientMnemTextBox.Text))
+            {
+                e.Cancel = true;
+                ClientMnemTextBox.Focus();
+                errorProvider1.SetError(ClientMnemTextBox, "Must have a value.");
+            }
+            else
+            {
+                e.Cancel = false;
+                errorProvider1.SetError(ClientMnemTextBox, "");
+            }
+
+        }
+
+        private void cbClientType_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (cbClientType.SelectedValue == null)
+            {
+                e.Cancel = true;
+                cbClientType.Focus();
+                errorProvider1.SetError(cbClientType, "Must select a value.");
+            }
+            else
+            {
+                e.Cancel = false;
+                errorProvider1.SetError(cbClientType, "");
+            }
+        }
+
+        private void cbCostCenter_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (cbCostCenter.SelectedValue == null)
+            {
+                e.Cancel = true;
+                cbCostCenter.Focus();
+                errorProvider1.SetError(cbCostCenter, "Must select a value.");
+            }
+            else
+            {
+                e.Cancel = false;
+                errorProvider1.SetError(cbCostCenter, "");
+            }
+        }
+
+        private void billMethodComboBox_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (billMethodComboBox.SelectedValue == null)
+            {
+                e.Cancel = true;
+                billMethodComboBox.Focus();
+                errorProvider1.SetError(billMethodComboBox, "Must select a value.");
+            }
+            else
+            {
+                e.Cancel = false;
+                errorProvider1.SetError(billMethodComboBox, "");
+            }
         }
     }
 }
