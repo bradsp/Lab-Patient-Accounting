@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.label5 = new System.Windows.Forms.Label();
             this.tbContact = new System.Windows.Forms.TextBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
@@ -58,6 +59,8 @@
             this.tbComment = new System.Windows.Forms.TextBox();
             this.DiscountsTab = new System.Windows.Forms.TabPage();
             this.clientDiscountDataGrid = new System.Windows.Forms.DataGridView();
+            this.tabInterface = new System.Windows.Forms.TabPage();
+            this.interfaceMappingDataGrid = new System.Windows.Forms.DataGridView();
             this.tbZipcode = new System.Windows.Forms.MaskedTextBox();
             this.cbCostCenter = new System.Windows.Forms.ComboBox();
             this.label15 = new System.Windows.Forms.Label();
@@ -92,8 +95,7 @@
             this.label16 = new System.Windows.Forms.Label();
             this.billMethodComboBox = new System.Windows.Forms.ComboBox();
             this.activeCheckBox = new System.Windows.Forms.CheckBox();
-            this.tabInterface = new System.Windows.Forms.TabPage();
-            this.interfaceMappingDataGrid = new System.Windows.Forms.DataGridView();
+            this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
             this.tabControl1.SuspendLayout();
             this.tabClientPreferences.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numDefaultDiscount)).BeginInit();
@@ -103,6 +105,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.clientDiscountDataGrid)).BeginInit();
             this.tabInterface.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.interfaceMappingDataGrid)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
             this.SuspendLayout();
             // 
             // label5
@@ -140,7 +143,7 @@
             this.tabControl1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(585, 175);
+            this.tabControl1.Size = new System.Drawing.Size(578, 175);
             this.tabControl1.TabIndex = 33;
             // 
             // tabClientPreferences
@@ -159,7 +162,7 @@
             this.tabClientPreferences.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.tabClientPreferences.Name = "tabClientPreferences";
             this.tabClientPreferences.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.tabClientPreferences.Size = new System.Drawing.Size(577, 149);
+            this.tabClientPreferences.Size = new System.Drawing.Size(570, 149);
             this.tabClientPreferences.TabIndex = 0;
             this.tabClientPreferences.Text = "Preferences";
             this.tabClientPreferences.UseVisualStyleBackColor = true;
@@ -192,6 +195,8 @@
             this.cbFeeSched.Name = "cbFeeSched";
             this.cbFeeSched.Size = new System.Drawing.Size(54, 21);
             this.cbFeeSched.TabIndex = 9;
+            this.cbFeeSched.SelectedIndexChanged += new System.EventHandler(this.cbFeeSched_SelectedIndexChanged);
+            this.cbFeeSched.Validating += new System.ComponentModel.CancelEventHandler(this.cbFeeSched_Validating);
             // 
             // numDefaultDiscount
             // 
@@ -340,11 +345,11 @@
             this.label21.TabIndex = 5;
             this.label21.Text = "City";
             // 
-            // tbMROAddress2
+            // MROAddress2TextBox
             // 
             this.MROAddress2TextBox.Location = new System.Drawing.Point(85, 67);
             this.MROAddress2TextBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.MROAddress2TextBox.Name = "tbMROAddress2";
+            this.MROAddress2TextBox.Name = "MROAddress2TextBox";
             this.MROAddress2TextBox.Size = new System.Drawing.Size(268, 20);
             this.MROAddress2TextBox.TabIndex = 4;
             // 
@@ -403,11 +408,11 @@
             this.tbComment.Size = new System.Drawing.Size(571, 143);
             this.tbComment.TabIndex = 37;
             // 
-            // tabDiscounts
+            // DiscountsTab
             // 
             this.DiscountsTab.Controls.Add(this.clientDiscountDataGrid);
             this.DiscountsTab.Location = new System.Drawing.Point(4, 22);
-            this.DiscountsTab.Name = "tabDiscounts";
+            this.DiscountsTab.Name = "DiscountsTab";
             this.DiscountsTab.Padding = new System.Windows.Forms.Padding(3);
             this.DiscountsTab.Size = new System.Drawing.Size(577, 149);
             this.DiscountsTab.TabIndex = 3;
@@ -428,6 +433,26 @@
             this.clientDiscountDataGrid.RowEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.clientDiscountDataGrid_RowEnter);
             this.clientDiscountDataGrid.RowLeave += new System.Windows.Forms.DataGridViewCellEventHandler(this.clientDiscountDataGrid_RowLeave);
             // 
+            // tabInterface
+            // 
+            this.tabInterface.Controls.Add(this.interfaceMappingDataGrid);
+            this.tabInterface.Location = new System.Drawing.Point(4, 22);
+            this.tabInterface.Name = "tabInterface";
+            this.tabInterface.Padding = new System.Windows.Forms.Padding(3);
+            this.tabInterface.Size = new System.Drawing.Size(577, 149);
+            this.tabInterface.TabIndex = 4;
+            this.tabInterface.Text = "Interface";
+            this.tabInterface.UseVisualStyleBackColor = true;
+            // 
+            // interfaceMappingDataGrid
+            // 
+            this.interfaceMappingDataGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.interfaceMappingDataGrid.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.interfaceMappingDataGrid.Location = new System.Drawing.Point(3, 3);
+            this.interfaceMappingDataGrid.Name = "interfaceMappingDataGrid";
+            this.interfaceMappingDataGrid.Size = new System.Drawing.Size(571, 143);
+            this.interfaceMappingDataGrid.TabIndex = 0;
+            // 
             // tbZipcode
             // 
             this.tbZipcode.Location = new System.Drawing.Point(284, 143);
@@ -445,6 +470,7 @@
             this.cbCostCenter.Name = "cbCostCenter";
             this.cbCostCenter.Size = new System.Drawing.Size(124, 21);
             this.cbCostCenter.TabIndex = 28;
+            this.cbCostCenter.Validating += new System.ComponentModel.CancelEventHandler(this.cbCostCenter_Validating);
             // 
             // label15
             // 
@@ -483,6 +509,7 @@
             this.cbClientType.Name = "cbClientType";
             this.cbClientType.Size = new System.Drawing.Size(124, 21);
             this.cbClientType.TabIndex = 24;
+            this.cbClientType.Validating += new System.ComponentModel.CancelEventHandler(this.cbClientType_Validating);
             // 
             // label13
             // 
@@ -650,14 +677,15 @@
             this.label3.TabIndex = 2;
             this.label3.Text = "Client Code";
             // 
-            // tbClientMnem
+            // ClientMnemTextBox
             // 
             this.ClientMnemTextBox.Location = new System.Drawing.Point(102, 31);
             this.ClientMnemTextBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.ClientMnemTextBox.Name = "tbClientMnem";
+            this.ClientMnemTextBox.Name = "ClientMnemTextBox";
             this.ClientMnemTextBox.Size = new System.Drawing.Size(119, 20);
             this.ClientMnemTextBox.TabIndex = 1;
             this.ClientMnemTextBox.Leave += new System.EventHandler(this.tbClientMnem_Leave);
+            this.ClientMnemTextBox.Validating += new System.ComponentModel.CancelEventHandler(this.ClientMnemTextBox_Validating);
             // 
             // label2
             // 
@@ -668,11 +696,11 @@
             this.label2.TabIndex = 0;
             this.label2.Text = "Client Mnem";
             // 
-            // tbClientName
+            // ClientNameTextBox
             // 
             this.ClientNameTextBox.Location = new System.Drawing.Point(102, 55);
             this.ClientNameTextBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.ClientNameTextBox.Name = "tbClientName";
+            this.ClientNameTextBox.Name = "ClientNameTextBox";
             this.ClientNameTextBox.Size = new System.Drawing.Size(268, 20);
             this.ClientNameTextBox.TabIndex = 5;
             // 
@@ -685,25 +713,26 @@
             this.label1.TabIndex = 4;
             this.label1.Text = "Client Name";
             // 
-            // btnCancel
+            // CancelButton
             // 
             this.CancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.CancelButton.CausesValidation = false;
             this.CancelButton.Location = new System.Drawing.Point(138, 637);
             this.CancelButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.CancelButton.Name = "btnCancel";
+            this.CancelButton.Name = "CancelButton";
             this.CancelButton.Size = new System.Drawing.Size(83, 30);
             this.CancelButton.TabIndex = 33;
             this.CancelButton.Text = "Cancel";
             this.CancelButton.UseVisualStyleBackColor = true;
             this.CancelButton.Click += new System.EventHandler(this.btnCancel_Click);
             // 
-            // btnSave
+            // SaveButton
             // 
             this.SaveButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.SaveButton.BackColor = System.Drawing.Color.PaleGreen;
             this.SaveButton.Location = new System.Drawing.Point(37, 636);
             this.SaveButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.SaveButton.Name = "btnSave";
+            this.SaveButton.Name = "SaveButton";
             this.SaveButton.Size = new System.Drawing.Size(83, 31);
             this.SaveButton.TabIndex = 32;
             this.SaveButton.Text = "Save";
@@ -732,10 +761,13 @@
             this.billMethodComboBox.Name = "billMethodComboBox";
             this.billMethodComboBox.Size = new System.Drawing.Size(124, 21);
             this.billMethodComboBox.TabIndex = 30;
+            this.billMethodComboBox.Validating += new System.ComponentModel.CancelEventHandler(this.billMethodComboBox_Validating);
             // 
             // activeCheckBox
             // 
             this.activeCheckBox.AutoSize = true;
+            this.activeCheckBox.Checked = true;
+            this.activeCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
             this.activeCheckBox.Location = new System.Drawing.Point(102, 12);
             this.activeCheckBox.Name = "activeCheckBox";
             this.activeCheckBox.Size = new System.Drawing.Size(56, 17);
@@ -743,25 +775,9 @@
             this.activeCheckBox.Text = "Active";
             this.activeCheckBox.UseVisualStyleBackColor = true;
             // 
-            // tabInterface
+            // errorProvider1
             // 
-            this.tabInterface.Controls.Add(this.interfaceMappingDataGrid);
-            this.tabInterface.Location = new System.Drawing.Point(4, 22);
-            this.tabInterface.Name = "tabInterface";
-            this.tabInterface.Padding = new System.Windows.Forms.Padding(3);
-            this.tabInterface.Size = new System.Drawing.Size(577, 149);
-            this.tabInterface.TabIndex = 4;
-            this.tabInterface.Text = "Interface";
-            this.tabInterface.UseVisualStyleBackColor = true;
-            // 
-            // interfaceMappingDataGrid
-            // 
-            this.interfaceMappingDataGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.interfaceMappingDataGrid.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.interfaceMappingDataGrid.Location = new System.Drawing.Point(3, 3);
-            this.interfaceMappingDataGrid.Name = "interfaceMappingDataGrid";
-            this.interfaceMappingDataGrid.Size = new System.Drawing.Size(571, 143);
-            this.interfaceMappingDataGrid.TabIndex = 0;
+            this.errorProvider1.ContainerControl = this;
             // 
             // ClientMaintenanceEditForm
             // 
@@ -821,6 +837,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.clientDiscountDataGrid)).EndInit();
             this.tabInterface.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.interfaceMappingDataGrid)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -894,5 +911,6 @@
         private System.Windows.Forms.CheckBox activeCheckBox;
         private System.Windows.Forms.TabPage tabInterface;
         private System.Windows.Forms.DataGridView interfaceMappingDataGrid;
+        private System.Windows.Forms.ErrorProvider errorProvider1;
     }
 }

@@ -178,8 +178,9 @@ namespace LabBilling.Forms
             toolStripProgressBar1.Value = e;
         }
 
-        private async void GenerateInvoicesBtn_Click(object sender, EventArgs e)
+        private void GenerateInvoicesBtn_Click(object sender, EventArgs e)
         {
+            Log.Instance.Trace("Entering");
             List<UnbilledClient> unbilledClients = new List<UnbilledClient>();
 
             Cursor.Current = Cursors.WaitCursor;
@@ -201,6 +202,7 @@ namespace LabBilling.Forms
             Cursor.Current = Cursors.Default;
 
             toolStripProgressBar1.Value = 0;
+            GenerateInvoicesBtn.Enabled = false;
 
             var progress = new Progress<int>(percent =>
             {
@@ -209,15 +211,21 @@ namespace LabBilling.Forms
 
             try
             {
-                await Task.Run(() => clientInvoices.Compile(_thruDate, unbilledClients, progress));
+                using (WaitForm frm = new WaitForm(() => { clientInvoices.Compile(_thruDate, unbilledClients, progress); }))
+                {
+                    frm.ShowDialog(this);
+                }
+                //await Task.Run(() => clientInvoices.Compile(_thruDate, unbilledClients, progress));
+                MessageBox.Show("Generating Invoices Completed");
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
+                MessageBox.Show("Invoice processing failed with error: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Log.Instance.Error(ex);
             }
             toolStripProgressBar1.Value = 100;
 
-            MessageBox.Show("Generating Invoices Completed");
+            GenerateInvoicesBtn.Enabled = true;
         }
 
         private void ThruDate_CheckedChanged(object sender, EventArgs e)

@@ -16,7 +16,7 @@
     <TargetFrameworkProfile />
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
-    <AssemblyVersion>2023.1.1.552</AssemblyVersion>
+    <AssemblyVersion>2023.1.1.556</AssemblyVersion>
     <PublishUrl>\\wthmclbill\installations%24\LabBilling\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Unc</InstallFrom>
@@ -31,7 +31,7 @@
     <ProductName>Lab Outreach Patient Accounting</ProductName>
     <PublisherName>West Tennessee Healthcare</PublisherName>
     <WebPage>publish.htm</WebPage>
-    <ApplicationRevision>188</ApplicationRevision>
+    <ApplicationRevision>192</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
@@ -215,6 +215,12 @@
       <DependentUpon>PrintEOBForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Library\DataGridViewDateColumn.cs" />
+    <Compile Include="Library\WaitForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Library\WaitForm.Designer.cs">
+      <DependentUpon>WaitForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="LookupForms\CdmLookupForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -540,6 +546,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Legacy Forms\PrintEOBForm.resx">
       <DependentUpon>PrintEOBForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Library\WaitForm.resx">
+      <DependentUpon>WaitForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="LookupForms\CdmLookupForm.resx">
       <DependentUpon>CdmLookupForm.cs</DependentUpon>

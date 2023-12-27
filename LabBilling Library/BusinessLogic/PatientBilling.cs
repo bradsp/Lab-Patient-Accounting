@@ -86,7 +86,7 @@ namespace LabBilling.Core
 
                         result.DateSent = DateTime.Now;
 
-                        badDebtRepository.Update(result);
+                        badDebtRepository.Update(result, new[] { nameof(BadDebt.DateSent) });
 
                         accountRepository.AddNote(acc.AccountNo, $"Account sent to collections. Write off amount {acc.Balance}");
 

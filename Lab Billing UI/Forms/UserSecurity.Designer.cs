@@ -56,6 +56,7 @@
             this.SaveButton = new System.Windows.Forms.Button();
             this.ShowInactive = new System.Windows.Forms.CheckBox();
             this.ResetPassword = new System.Windows.Forms.Button();
+            this.canImpersonateUserCheckBox = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.UserListDGV)).BeginInit();
             this.LastUpdatedGroup.SuspendLayout();
             this.SuspendLayout();
@@ -78,7 +79,7 @@
             this.UserListDGV.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.UserListDGV.ShowEditingIcon = false;
             this.UserListDGV.Size = new System.Drawing.Size(430, 428);
-            this.UserListDGV.TabIndex = 21;
+            this.UserListDGV.TabIndex = 23;
             this.UserListDGV.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.UserListDGV_CellMouseClick);
             // 
             // UserNameLabel
@@ -122,7 +123,7 @@
             this.AccessLevelLabel.Location = new System.Drawing.Point(15, 144);
             this.AccessLevelLabel.Name = "AccessLevelLabel";
             this.AccessLevelLabel.Size = new System.Drawing.Size(71, 13);
-            this.AccessLevelLabel.TabIndex = 6;
+            this.AccessLevelLabel.TabIndex = 7;
             this.AccessLevelLabel.Text = "Access Level";
             // 
             // AccessLevelCombo
@@ -135,7 +136,7 @@
             this.AccessLevelCombo.Location = new System.Drawing.Point(92, 141);
             this.AccessLevelCombo.Name = "AccessLevelCombo";
             this.AccessLevelCombo.Size = new System.Drawing.Size(253, 21);
-            this.AccessLevelCombo.TabIndex = 7;
+            this.AccessLevelCombo.TabIndex = 8;
             // 
             // CanEditDictionaries
             // 
@@ -143,7 +144,7 @@
             this.CanEditDictionaries.Location = new System.Drawing.Point(15, 180);
             this.CanEditDictionaries.Name = "CanEditDictionaries";
             this.CanEditDictionaries.Size = new System.Drawing.Size(124, 17);
-            this.CanEditDictionaries.TabIndex = 8;
+            this.CanEditDictionaries.TabIndex = 9;
             this.CanEditDictionaries.Text = "Can Edit Dictionaries";
             this.CanEditDictionaries.UseVisualStyleBackColor = true;
             // 
@@ -153,7 +154,7 @@
             this.CanEditBadDebt.Location = new System.Drawing.Point(15, 202);
             this.CanEditBadDebt.Name = "CanEditBadDebt";
             this.CanEditBadDebt.Size = new System.Drawing.Size(114, 17);
-            this.CanEditBadDebt.TabIndex = 9;
+            this.CanEditBadDebt.TabIndex = 10;
             this.CanEditBadDebt.Text = "Can Edit Bad Debt";
             this.CanEditBadDebt.UseVisualStyleBackColor = true;
             // 
@@ -163,7 +164,7 @@
             this.CanSubmitBilling.Location = new System.Drawing.Point(15, 224);
             this.CanSubmitBilling.Name = "CanSubmitBilling";
             this.CanSubmitBilling.Size = new System.Drawing.Size(110, 17);
-            this.CanSubmitBilling.TabIndex = 10;
+            this.CanSubmitBilling.TabIndex = 11;
             this.CanSubmitBilling.Text = "Can Submit Billing";
             this.CanSubmitBilling.UseVisualStyleBackColor = true;
             // 
@@ -173,47 +174,47 @@
             this.CanChangeAccountFinCode.Location = new System.Drawing.Point(15, 247);
             this.CanChangeAccountFinCode.Name = "CanChangeAccountFinCode";
             this.CanChangeAccountFinCode.Size = new System.Drawing.Size(170, 17);
-            this.CanChangeAccountFinCode.TabIndex = 11;
+            this.CanChangeAccountFinCode.TabIndex = 12;
             this.CanChangeAccountFinCode.Text = "Can Change Account FinCode";
             this.CanChangeAccountFinCode.UseVisualStyleBackColor = true;
             // 
             // CanAddCharges
             // 
             this.CanAddCharges.AutoSize = true;
-            this.CanAddCharges.Location = new System.Drawing.Point(15, 270);
+            this.CanAddCharges.Location = new System.Drawing.Point(191, 179);
             this.CanAddCharges.Name = "CanAddCharges";
             this.CanAddCharges.Size = new System.Drawing.Size(109, 17);
-            this.CanAddCharges.TabIndex = 12;
+            this.CanAddCharges.TabIndex = 13;
             this.CanAddCharges.Text = "Can Add Charges";
             this.CanAddCharges.UseVisualStyleBackColor = true;
             // 
             // CanAddAccountAdjustments
             // 
             this.CanAddAccountAdjustments.AutoSize = true;
-            this.CanAddAccountAdjustments.Location = new System.Drawing.Point(15, 292);
+            this.CanAddAccountAdjustments.Location = new System.Drawing.Point(191, 202);
             this.CanAddAccountAdjustments.Name = "CanAddAccountAdjustments";
             this.CanAddAccountAdjustments.Size = new System.Drawing.Size(170, 17);
-            this.CanAddAccountAdjustments.TabIndex = 13;
+            this.CanAddAccountAdjustments.TabIndex = 14;
             this.CanAddAccountAdjustments.Text = "Can Add Account Adjustments";
             this.CanAddAccountAdjustments.UseVisualStyleBackColor = true;
             // 
             // IsAdministrator
             // 
             this.IsAdministrator.AutoSize = true;
-            this.IsAdministrator.Location = new System.Drawing.Point(15, 338);
+            this.IsAdministrator.Location = new System.Drawing.Point(15, 289);
             this.IsAdministrator.Name = "IsAdministrator";
             this.IsAdministrator.Size = new System.Drawing.Size(97, 17);
-            this.IsAdministrator.TabIndex = 15;
+            this.IsAdministrator.TabIndex = 16;
             this.IsAdministrator.Text = "Is Administrator";
             this.IsAdministrator.UseVisualStyleBackColor = true;
             // 
             // Reserved5
             // 
             this.Reserved5.AutoSize = true;
-            this.Reserved5.Location = new System.Drawing.Point(203, 338);
+            this.Reserved5.Location = new System.Drawing.Point(191, 312);
             this.Reserved5.Name = "Reserved5";
             this.Reserved5.Size = new System.Drawing.Size(142, 17);
-            this.Reserved5.TabIndex = 17;
+            this.Reserved5.TabIndex = 19;
             this.Reserved5.Text = "Reserved for Future Use";
             this.Reserved5.UseVisualStyleBackColor = true;
             this.Reserved5.Visible = false;
@@ -221,20 +222,20 @@
             // CanAddPayments
             // 
             this.CanAddPayments.AutoSize = true;
-            this.CanAddPayments.Location = new System.Drawing.Point(15, 315);
+            this.CanAddPayments.Location = new System.Drawing.Point(191, 224);
             this.CanAddPayments.Name = "CanAddPayments";
             this.CanAddPayments.Size = new System.Drawing.Size(116, 17);
-            this.CanAddPayments.TabIndex = 14;
+            this.CanAddPayments.TabIndex = 15;
             this.CanAddPayments.Text = "Can Add Payments";
             this.CanAddPayments.UseVisualStyleBackColor = true;
             // 
             // Reserved6
             // 
             this.Reserved6.AutoSize = true;
-            this.Reserved6.Location = new System.Drawing.Point(203, 315);
+            this.Reserved6.Location = new System.Drawing.Point(191, 289);
             this.Reserved6.Name = "Reserved6";
             this.Reserved6.Size = new System.Drawing.Size(142, 17);
-            this.Reserved6.TabIndex = 16;
+            this.Reserved6.TabIndex = 18;
             this.Reserved6.Text = "Reserved for Future Use";
             this.Reserved6.UseVisualStyleBackColor = true;
             this.Reserved6.Visible = false;
@@ -293,7 +294,7 @@
             this.LastUpdatedGroup.Location = new System.Drawing.Point(15, 369);
             this.LastUpdatedGroup.Name = "LastUpdatedGroup";
             this.LastUpdatedGroup.Size = new System.Drawing.Size(307, 94);
-            this.LastUpdatedGroup.TabIndex = 18;
+            this.LastUpdatedGroup.TabIndex = 20;
             this.LastUpdatedGroup.TabStop = false;
             this.LastUpdatedGroup.Text = "Last Updated";
             // 
@@ -306,7 +307,7 @@
             this.AddUserButton.Location = new System.Drawing.Point(92, 7);
             this.AddUserButton.Name = "AddUserButton";
             this.AddUserButton.Size = new System.Drawing.Size(99, 32);
-            this.AddUserButton.TabIndex = 19;
+            this.AddUserButton.TabIndex = 21;
             this.AddUserButton.Text = "New User";
             this.AddUserButton.UseVisualStyleBackColor = false;
             this.AddUserButton.Click += new System.EventHandler(this.AddUserButton_Click);
@@ -321,7 +322,7 @@
             this.SaveButton.Location = new System.Drawing.Point(223, 7);
             this.SaveButton.Name = "SaveButton";
             this.SaveButton.Size = new System.Drawing.Size(99, 32);
-            this.SaveButton.TabIndex = 20;
+            this.SaveButton.TabIndex = 22;
             this.SaveButton.Text = "Save";
             this.SaveButton.UseVisualStyleBackColor = false;
             this.SaveButton.Click += new System.EventHandler(this.SaveButton_Click);
@@ -333,7 +334,7 @@
             this.ShowInactive.Location = new System.Drawing.Point(683, 7);
             this.ShowInactive.Name = "ShowInactive";
             this.ShowInactive.Size = new System.Drawing.Size(124, 17);
-            this.ShowInactive.TabIndex = 22;
+            this.ShowInactive.TabIndex = 24;
             this.ShowInactive.Text = "Show Inactive Users";
             this.ShowInactive.UseVisualStyleBackColor = true;
             this.ShowInactive.CheckedChanged += new System.EventHandler(this.ShowInactive_CheckedChanged);
@@ -343,10 +344,20 @@
             this.ResetPassword.Location = new System.Drawing.Point(286, 114);
             this.ResetPassword.Name = "ResetPassword";
             this.ResetPassword.Size = new System.Drawing.Size(59, 21);
-            this.ResetPassword.TabIndex = 23;
+            this.ResetPassword.TabIndex = 6;
             this.ResetPassword.Text = "Reset";
             this.ResetPassword.UseVisualStyleBackColor = true;
             this.ResetPassword.Click += new System.EventHandler(this.ResetPassword_Click);
+            // 
+            // canImpersonateUserCheckBox
+            // 
+            this.canImpersonateUserCheckBox.AutoSize = true;
+            this.canImpersonateUserCheckBox.Location = new System.Drawing.Point(15, 312);
+            this.canImpersonateUserCheckBox.Name = "canImpersonateUserCheckBox";
+            this.canImpersonateUserCheckBox.Size = new System.Drawing.Size(131, 17);
+            this.canImpersonateUserCheckBox.TabIndex = 17;
+            this.canImpersonateUserCheckBox.Text = "Can Impersonate User";
+            this.canImpersonateUserCheckBox.UseVisualStyleBackColor = true;
             // 
             // UserSecurity
             // 
@@ -364,6 +375,7 @@
             this.Controls.Add(this.Reserved6);
             this.Controls.Add(this.CanAddPayments);
             this.Controls.Add(this.Reserved5);
+            this.Controls.Add(this.canImpersonateUserCheckBox);
             this.Controls.Add(this.IsAdministrator);
             this.Controls.Add(this.CanAddAccountAdjustments);
             this.Controls.Add(this.CanAddCharges);
@@ -420,5 +432,6 @@
         private System.Windows.Forms.Button SaveButton;
         private System.Windows.Forms.CheckBox ShowInactive;
         private System.Windows.Forms.Button ResetPassword;
+        private System.Windows.Forms.CheckBox canImpersonateUserCheckBox;
     }
 }

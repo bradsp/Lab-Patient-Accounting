@@ -45,7 +45,7 @@
             this.ReferenceNumber = new System.Windows.Forms.TextBox();
             this.cdmTextBox = new System.Windows.Forms.TextBox();
             this.amountTextBox = new System.Windows.Forms.TextBox();
-            this.label6 = new System.Windows.Forms.Label();
+            this.amountLabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.nQty)).BeginInit();
             this.SuspendLayout();
             // 
@@ -214,17 +214,18 @@
             // 
             this.amountTextBox.Location = new System.Drawing.Point(450, 131);
             this.amountTextBox.Name = "amountTextBox";
+            this.amountTextBox.ReadOnly = true;
             this.amountTextBox.Size = new System.Drawing.Size(100, 20);
             this.amountTextBox.TabIndex = 17;
             // 
-            // label6
+            // amountLabel
             // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(401, 133);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(43, 13);
-            this.label6.TabIndex = 16;
-            this.label6.Text = "Amount";
+            this.amountLabel.AutoSize = true;
+            this.amountLabel.Location = new System.Drawing.Point(401, 133);
+            this.amountLabel.Name = "amountLabel";
+            this.amountLabel.Size = new System.Drawing.Size(43, 13);
+            this.amountLabel.TabIndex = 16;
+            this.amountLabel.Text = "Amount";
             // 
             // ChargeEntryForm
             // 
@@ -233,7 +234,7 @@
             this.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.ClientSize = new System.Drawing.Size(571, 259);
             this.Controls.Add(this.amountTextBox);
-            this.Controls.Add(this.label6);
+            this.Controls.Add(this.amountLabel);
             this.Controls.Add(this.cdmTextBox);
             this.Controls.Add(this.ReferenceNumber);
             this.Controls.Add(this.label5);
@@ -284,6 +285,6 @@
         private System.Windows.Forms.TextBox ReferenceNumber;
         private System.Windows.Forms.TextBox cdmTextBox;
         private System.Windows.Forms.TextBox amountTextBox;
-        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label amountLabel;
     }
 }

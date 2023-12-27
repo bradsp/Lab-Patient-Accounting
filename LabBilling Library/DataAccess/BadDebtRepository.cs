@@ -57,6 +57,15 @@ namespace LabBilling.Core.DataAccess
 
             records = dbConnection.Fetch<BadDebt>(sql);
 
+            foreach (var record in records)
+            {
+                if (!string.IsNullOrWhiteSpace(record.StateZip) && record.StateZip.Length >= 7)
+                {
+                    record.State = record.StateZip.Substring(0, 2);
+                    record.Zip = record.StateZip.Substring(3);
+                }
+            }
+
             return records;
         }
 
@@ -70,6 +79,15 @@ namespace LabBilling.Core.DataAccess
                 new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = date.EndOfTheDay()});
 
             records = dbConnection.Fetch<BadDebt>(sql);
+
+            foreach (var record in records)
+            {
+                if (!string.IsNullOrWhiteSpace(record.StateZip) && record.StateZip.Length >= 7)
+                {
+                    record.State = record.StateZip.Substring(0, 2);
+                    record.Zip = record.StateZip.Substring(3);
+                }
+            }
 
             return records;
         }
