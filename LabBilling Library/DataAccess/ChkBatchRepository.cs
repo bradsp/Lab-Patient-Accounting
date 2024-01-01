@@ -1,7 +1,7 @@
 ﻿using LabBilling.Core.Models;
 using System;
 using static LabBilling.Core.BusinessLogic.HL7Processor;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using System.Data;
 using System.Collections.Generic;
 using LabBilling.Logging;

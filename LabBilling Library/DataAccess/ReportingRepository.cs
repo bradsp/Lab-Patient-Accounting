@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using LabBilling.Core.Models;
 using LabBilling.Logging;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using System.Data;
 
 namespace LabBilling.Core.DataAccess

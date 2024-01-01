@@ -21,7 +21,7 @@ using System.Data;
 using System.Drawing;
 using System.Windows.Forms;
 // programmer added
-using System.Data.SqlClient; // for sql connection
+using Microsoft.Data.SqlClient; // for sql connection
 using System.Drawing.Printing; // for printing the gridview
 using RFClassLibrary;
 

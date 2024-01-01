@@ -1,22 +1,15 @@
-﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="15.0">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
     <ProjectType>Local</ProjectType>
-    <ProductVersion>9.0.21022</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{B15474ED-9185-437E-BAC5-A19779CBE721}</ProjectGuid>
     <SccProjectName>
     </SccProjectName>
     <SccLocalPath>
     </SccLocalPath>
     <SccProvider>
     </SccProvider>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ApplicationIcon>
-    </ApplicationIcon>
     <AssemblyKeyContainerName>
     </AssemblyKeyContainerName>
-    <AssemblyName>RFClassLibrary</AssemblyName>
     <AssemblyOriginatorKeyFile>
     </AssemblyOriginatorKeyFile>
     <DefaultClientScript>JScript</DefaultClientScript>
@@ -24,15 +17,9 @@
     <DefaultTargetSchema>IE50</DefaultTargetSchema>
     <DelaySign>false</DelaySign>
     <OutputType>Library</OutputType>
-    <RootNamespace>RFClassLibrary</RootNamespace>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
     <StartupObject>
     </StartupObject>
-    <FileUpgradeFlags>
-    </FileUpgradeFlags>
-    <UpgradeBackupLocation>
-    </UpgradeBackupLocation>
-    <OldToolsVersion>3.5</OldToolsVersion>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -50,236 +37,49 @@
     <BootstrapperEnabled>true</BootstrapperEnabled>
     <SccAuxPath>
     </SccAuxPath>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
-    <TargetFrameworkProfile />
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <UseWindowsForms>false</UseWindowsForms>
+    <ImportWindowsDesktopTargets>false</ImportWindowsDesktopTargets>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <OutputPath>bin\Debug\</OutputPath>
-    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
     <BaseAddress>285212672</BaseAddress>
-    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
     <ConfigurationOverrideFile>
     </ConfigurationOverrideFile>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
     <DocumentationFile>bin\debug\RFClassLibrary.xml</DocumentationFile>
-    <DebugSymbols>true</DebugSymbols>
     <FileAlignment>4096</FileAlignment>
     <NoStdLib>false</NoStdLib>
-    <NoWarn>
+    <NoWarn>CA1416
     </NoWarn>
-    <Optimize>false</Optimize>
     <RegisterForComInterop>false</RegisterForComInterop>
     <RemoveIntegerChecks>false</RemoveIntegerChecks>
-    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
-    <WarningLevel>4</WarningLevel>
-    <DebugType>full</DebugType>
-    <ErrorReport>prompt</ErrorReport>
-    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <OutputPath>bin\Debug\</OutputPath>
-    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
     <BaseAddress>285212672</BaseAddress>
-    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
     <ConfigurationOverrideFile>
     </ConfigurationOverrideFile>
-    <DefineConstants>TRACE;DEBUG</DefineConstants>
     <DocumentationFile>bin\debug\\RFClassLibrary.xml</DocumentationFile>
-    <DebugSymbols>false</DebugSymbols>
     <FileAlignment>4096</FileAlignment>
     <NoStdLib>false</NoStdLib>
-    <NoWarn>
+    <NoWarn>CA1416
     </NoWarn>
     <Optimize>false</Optimize>
     <RegisterForComInterop>false</RegisterForComInterop>
     <RemoveIntegerChecks>false</RemoveIntegerChecks>
-    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
-    <WarningLevel>4</WarningLevel>
     <DebugType>none</DebugType>
-    <ErrorReport>prompt</ErrorReport>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Office.Interop.Excel.15.0.4795.1001\lib\net20\Microsoft.Office.Interop.Excel.dll</HintPath>
-      <EmbedInteropTypes>False</EmbedInteropTypes>
-    </Reference>
-    <Reference Include="Office, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
-      <HintPath>..\packages\MicrosoftOfficeCore.15.0.0\lib\net35\Office.dll</HintPath>
-      <EmbedInteropTypes>False</EmbedInteropTypes>
-    </Reference>
-    <Reference Include="System">
-      <Name>System</Name>
-    </Reference>
-    <Reference Include="System.configuration" />
-    <Reference Include="System.Core">
+    <Reference Update="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
-    <Reference Include="System.Data">
+    <Reference Update="System.Data">
       <Name>System.Data</Name>
     </Reference>
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Runtime.Remoting" />
-    <Reference Include="System.ServiceProcess">
-      <Name>System.ServiceProcess</Name>
-    </Reference>
-    <Reference Include="System.Web">
-      <Name>System.Web</Name>
-    </Reference>
-    <Reference Include="System.Web.RegularExpressions" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml">
+    <Reference Update="System.Xml">
       <Name>System.XML</Name>
     </Reference>
-    <Reference Include="System.Xml.Linq">
+    <Reference Update="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="AssemblyInfo.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="ConnectionStringExtensions.cs" />
-    <Compile Include="DataGridViewPrinter.cs" />
-    <Compile Include="DataGridViewToExcel.cs">
-    </Compile>
-    <Compile Include="DataSetPrinter.cs" />
-    <Compile Include="DateTimeExtension.cs" />
-    <Compile Include="DelimitedFile.cs" />
-    <Compile Include="dkPrint.cs" />
-    <Compile Include="DMessageForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="DMessageForm.Designer.cs">
-      <DependentUpon>DMessageForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="ERR.cs" />
-    <Compile Include="HelperExtensions.cs" />
-    <Compile Include="IListExtensions.cs" />
-    <Compile Include="FilterListBox.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="FixedFileLine.cs" />
-    <Compile Include="FormResponse.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FormResponse.Designer.cs">
-      <DependentUpon>FormResponse.cs</DependentUpon>
-    </Compile>
-    <Compile Include="HiPerfTimer.cs" />
-    <Compile Include="LaunchAcc.cs" />
-    <Compile Include="ListObject.cs" />
-    <Compile Include="ListViewPrinter.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="ObjectProperties.cs" />
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-      <DependentUpon>Settings.settings</DependentUpon>
-    </Compile>
-    <Compile Include="RawPrn.cs" />
-    <Compile Include="RCRecordSet.cs" />
-    <Compile Include="Remote.cs" />
-    <Compile Include="ReportGenerator.cs" />
-    <Compile Include="RFCObject.cs" />
-    <Compile Include="RFCPrintPreview.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="RFCPrintPreview.Designer.cs">
-      <DependentUpon>RFCPrintPreview.cs</DependentUpon>
-    </Compile>
-    <Compile Include="SearchEventLog.cs" />
-    <Compile Include="StringBuilderExt.cs" />
-    <Compile Include="StringExtensions.cs" />
-    <Compile Include="TCP_IP.cs" />
-    <Compile Include="TCP_IP_HOST.cs" />
-    <Compile Include="ToolStripDateTimePicker.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="ToolStripMonthCalendarControl.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="ViewerBase.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="ViewerBase.Designer.cs">
-      <DependentUpon>ViewerBase.cs</DependentUpon>
-    </Compile>
-    <Compile Include="WinService.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="DBAccess.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="EMail.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="ElapsedTime.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="LogFile.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="OS.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Sound.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Time.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="WaveNative.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="WaveOut.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="WaveStream.cs">
-      <SubType>Code</SubType>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="HL7Schema.xsd">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="packages.config" />
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="DMessageForm.resx">
-      <DependentUpon>DMessageForm.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="FormResponse.resx">
-      <DependentUpon>FormResponse.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <SubType>Designer</SubType>
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="RFCPrintPreview.resx">
-      <DependentUpon>RFCPrintPreview.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="ViewerBase.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>ViewerBase.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <COMReference Include="VBIDE">
@@ -309,14 +109,36 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="HL7Transform.xslt" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="5.1.2" />
+    <PackageReference Include="Microsoft.AspNetCore.SystemWebAdapters" Version="1.3.0" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="8.0.0" />
   </ItemGroup>
-  <ItemGroup />
-  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Properties\Settings.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
   <PropertyGroup>
-    <PreBuildEvent>
-    </PreBuildEvent>
-    <PostBuildEvent>
-    </PostBuildEvent>
+    <AssemblyVersion>1.0.0.1</AssemblyVersion>
   </PropertyGroup>
 </Project>

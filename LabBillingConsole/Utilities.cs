@@ -7,7 +7,7 @@ using PetaPoco;
 using Spectre.Console;
 using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using System.Data;
 using System.Linq;
 using System.Text;
@@ -148,11 +148,11 @@ namespace LabBillingConsole
         public void FixDrugScreenCharges()
         {
 
-            PetaPoco.Database dbConnection = new PetaPoco.Database(_appEnvironment.ConnectionString, new CustomSqlDatabaseProvider());
+            PetaPoco.Database dbConnection = new PetaPoco.Database(_appEnvironment.ConnectionString, new SqlServerMsDataDatabaseProvider());
             ChrgRepository chargeRepository = new ChrgRepository(_appEnvironment);
             AccountRepository accountRepository = new AccountRepository(_appEnvironment);
             //get list of accounts
-            var sql = PetaPoco.Sql.Builder;
+            var sql = Sql.Builder;
             sql.From("chrg");
             sql.Where("cdm = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = "5362506" });
             sql.Where("account in (select account from acc where acc.trans_date > @0)", new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = new DateTime(2023, 3, 1) });
@@ -196,12 +196,10 @@ namespace LabBillingConsole
 
         public void ValidateAccountsJob()
         {
-            AccountRepository accountRepository = new AccountRepository(_appEnvironment);
+            AccountRepository accountRepository = new(_appEnvironment);
             Console.WriteLine("In RunValidation() - Starting RunValidation job");
-            //log.Info("In RunValidation() - Starting RunValidation job");
             accountRepository.ValidateUnbilledAccounts();
             Console.WriteLine("In RunValidation() - Finished RunValidation job");
-            //log.Info("In RunValidation() - Finished RunValidation job");
         }
 
         public void ReprintInvoice()

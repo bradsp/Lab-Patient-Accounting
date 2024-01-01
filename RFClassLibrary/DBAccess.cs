@@ -1,8 +1,7 @@
 using System;
 //--- added for the DBAcess class
 using System.Data;		
-using System.Data.SqlClient;
-using System.Windows.Forms;
+using Microsoft.Data.SqlClient;
 //------------------------------
 
 
@@ -33,7 +32,6 @@ namespace RFClassLibrary
         /// <param name="strDataSrc"></param>
         /// <param name="strDB"></param>
         /// <param name="strTable"></param>
-		/// <param name="appName"></param>
 		public DBAccess(string strDataSrc, string strDB, string strTable)
 		{
 			// 
@@ -103,64 +101,6 @@ namespace RFClassLibrary
 				m_strTable = value;	
 			}
 		}
-
-		/// <summary>
-		/// strField is the field to be updated
-		/// strFilter is the filter to be used to select records (the sql where clause)
-		/// 20100420 rgc/wdk if the filter is for a ROWGUID be sure to use the single quote around the
-		/// rowguid. ie '9b7ba1c9-04ae-4ceb-a791-000df4a85cb6'
-		/// returns: The number of records updated
-		/// calling example:
-		///		m_strWork = string.Format("rowguid = '{0}'",m_strWPatRowGUID);
-		///		db.propTable = "wpat";
-		///		if(db.UpdateField("mri", m_strMT_Resp, m_strWork, out m_strMsg) != 1)
-		///		{
-		///			// error
-		///			lf.WriteLogFile("*** ERROR UPDATING Medical record in wpat ***");
-		///			lf.WriteLogFile(m_strMsg);
-		///			
-		///		}
-		/// </summary>
-		public int UpdateField(string strField, string strNewValue, string strFilter, out string strMsg)
-		{
-            if (!m_bValid)
-            {
-                ThrowException(string.Format("{0} {1}", new System.Diagnostics.StackTrace().GetFrame(0).GetMethod().Name, "called while class DBAccess is invalid"));
-            }
-			string strSQL;
-            // wdk 20111031 added code to set the mod_prg when updating the records one field at at time
-            // like is done in ViewerDemoTransfer. this will add that application not just ".NetSqlServiceProvider"
-			strSQL = string.Format("UPDATE {0} SET {1} = '{2}', mod_prg = '{3}' WHERE {4}",
-				m_strTable, /* a property field in this class */
-				strField,
-				strNewValue,
-                Application.ProductName + Application.ProductVersion, // wdk 20111031 added to add actual prog to the file.
-				strFilter);
-					
-		
-					
-			return SQLExec(strSQL, out strMsg);
-		}
-	
-
-		/// <summary>
-		/// overload of UpdateField to include the table name
-		/// *note: reloads the existing table name when done
-		/// </summary>
-		public int UpdateField(string strField, string strNewValue, string strFilter, out string strMsg, string strTable)
-		{
-            if (!m_bValid)
-            {
-                ThrowException(string.Format("{0} {1}", new System.Diagnostics.StackTrace().GetFrame(0).GetMethod().Name, "called while class DBAccess is invalid"));
-            }
-			int RetVal = -1;
-			string strCurrentTable = propTable;
-			propTable = strTable;
-			RetVal = UpdateField(strField,strNewValue,strFilter,out strMsg);
-			propTable = strCurrentTable;
-			return(RetVal);
-		}
-		
 		
 		/// <summary>
 		/// Executes sql UPDATE, INSERT, DELETE statements. See RecCount() for SELECT.

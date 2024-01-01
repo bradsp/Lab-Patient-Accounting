@@ -1,16 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IdentityModel.Protocols.WSTrust;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using LabBilling.Core.DataAccess;
 using LabBilling.Core.Models;
 using LazyCache;
-using LazyCache.Providers;
-using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Identity.Client;
-using PetaPoco;
 
 namespace LabBilling
 {

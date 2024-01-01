@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-// programmer added
+﻿// programmer added
 using System.Runtime.InteropServices;
 using System.ComponentModel;
 using System.Threading;

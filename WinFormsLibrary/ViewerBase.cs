@@ -1,16 +1,14 @@
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;  
+using System.Data;
 using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 // programmer added
 using System.Collections.Specialized;// for StringCollection (new mapping type best I can tell wdk.)
-using System.Data.Sql;  
-using System.Data.SqlClient;// for SqlDataSourceEnumerator
+using Microsoft.Data.SqlClient;// for SqlDataSourceEnumerator
 using System.Drawing.Printing;
 using System.Threading; // for loading servers in seperate thread
+using Microsoft.Data.Sql;
+using WinFormsLibrary;
 
 namespace RFClassLibrary
 {
@@ -207,7 +205,7 @@ namespace RFClassLibrary
             {
                 AddDateRangeControls();
             }
-            m_font = RFCObject.CreateFont("Arial", 18);
+            m_font = RFWinformObject.CreateFont("Arial", 18);
 
             //if (!m_bReportPrinterOnly)
             //{

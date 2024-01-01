@@ -5,7 +5,7 @@ using System.Drawing;
 using System.Windows.Forms;
 // wdk 20090330 programmer added
 using System.IO;
-using System.Data.SqlClient; // for SqlException trapping
+using Microsoft.Data.SqlClient; // for SqlException trapping
 using System.Drawing.Printing; // for printing the gridview
 using RFClassLibrary;
 
@@ -93,7 +93,7 @@ namespace LabBilling.Legacy
             CreateDateTimes();
             CreatePrintDocument();
             tssbTableReports_ButtonClick(null, null);
-            m_dgvReport.ContextMenu = GetContextMenu();
+            m_dgvReport.ContextMenuStrip = GetContextMenu();
             using (SqlConnection conn = new SqlConnection(m_strConn))
             {
                 SqlDataAdapter adapter = new SqlDataAdapter();
@@ -484,35 +484,43 @@ namespace LabBilling.Legacy
             if (e.Button == MouseButtons.Right)
             {
                 nFilterColumn = e.ColumnIndex;
-                m_dgvReport.ContextMenu.Show(m_dgvReport, MousePosition);
+                m_dgvReport.ContextMenuStrip.Show(m_dgvReport, MousePosition);
             }
             SetRowNumbers();        
         }
 
-        private ContextMenu GetContextMenu()
+        private // TODO ContextMenu is no longer supported. Use ContextMenuStrip instead. For more details see https://docs.microsoft.com/en-us/dotnet/core/compatibility/winforms#removed-controls
+ContextMenuStrip GetContextMenu()
         {
-            ContextMenu cm = new ContextMenu();
+            // TODO ContextMenu is no longer supported. Use ContextMenuStrip instead. For more details see https://docs.microsoft.com/en-us/dotnet/core/compatibility/winforms#removed-controls
+            ContextMenuStrip cm = new ContextMenuStrip();
 
             //Can create STATIC custom menu items if exists here...          
-            MenuItem m1, m2, m3, m4, mHeader;
-            mHeader = new MenuItem("REPORTS MENU");
+            // TODO MenuItem is no longer supported. Use ToolStripMenuItem instead. For more details see https://docs.microsoft.com/en-us/dotnet/core/compatibility/winforms#removed-controls
+                        ToolStripMenuItem m1, m2, m3, m4, mHeader;
+            // TODO MenuItem is no longer supported. Use ToolStripMenuItem instead. For more details see https://docs.microsoft.com/en-us/dotnet/core/compatibility/winforms#removed-controls
+            mHeader = new ToolStripMenuItem("REPORTS MENU");
             
-            m1 = new MenuItem("Visualize Changes");
+            // TODO MenuItem is no longer supported. Use ToolStripMenuItem instead. For more details see https://docs.microsoft.com/en-us/dotnet/core/compatibility/winforms#removed-controls
+                        m1 = new ToolStripMenuItem("Visualize Changes");
             m1.Click += new EventHandler(m1_Click);
-            m2 = new MenuItem("Filter Data");
+            // TODO MenuItem is no longer supported. Use ToolStripMenuItem instead. For more details see https://docs.microsoft.com/en-us/dotnet/core/compatibility/winforms#removed-controls
+            m2 = new ToolStripMenuItem("Filter Data");
             m2.Click += new EventHandler(m2_Click);
-            m3 = new MenuItem("Hide Column");
+            // TODO MenuItem is no longer supported. Use ToolStripMenuItem instead. For more details see https://docs.microsoft.com/en-us/dotnet/core/compatibility/winforms#removed-controls
+            m3 = new ToolStripMenuItem("Hide Column");
             m3.Click += new EventHandler(m3_Click);
-            m4 = new MenuItem("Show Hidden Columns");
+            // TODO MenuItem is no longer supported. Use ToolStripMenuItem instead. For more details see https://docs.microsoft.com/en-us/dotnet/core/compatibility/winforms#removed-controls
+            m4 = new ToolStripMenuItem("Show Hidden Columns");
             m4.Click += new EventHandler(m4_Click);
             
            
             //Can add functionality for the custom menu items here...
-            cm.MenuItems.Add(mHeader);
-            cm.MenuItems.Add(m1);
-            cm.MenuItems.Add(m2);
-            cm.MenuItems.Add(m3);
-            cm.MenuItems.Add(m4);
+            cm.Items.Add(mHeader);
+            cm.Items.Add(m1);
+            cm.Items.Add(m2);
+            cm.Items.Add(m3);
+            cm.Items.Add(m4);
 
             
             
@@ -1224,8 +1232,7 @@ order by c.account
                     tstbExcelFileName.Focus();
 
                 }
-                RFClassLibrary.GridviewToExcel.export2Excel ex = new RFClassLibrary.GridviewToExcel.export2Excel();
-                ex.ExportToExcel(m_dgvReport, string.Format(@"{0}{1}{2}.xlsx", tsmicbExcelDirectory.Text, tsmicbExcelDirectory.Text.EndsWith(@"\") ? "" : @"\", tstbExcelFileName.Text), tstbExcelWorkSheetName.Text);
+                WinFormsLibrary.DataGridToExcel.Export(m_dgvReport, string.Format(@"{0}{1}{2}.xlsx", tsmicbExcelDirectory.Text, tsmicbExcelDirectory.Text.EndsWith(@"\") ? "" : @"\", tstbExcelFileName.Text), tstbExcelWorkSheetName.Text);
             }
             catch (Exception ex)
             {

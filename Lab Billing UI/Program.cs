@@ -3,10 +3,8 @@ using LabBilling.Core.Models;
 using System;
 using System.Threading;
 using System.Windows.Forms;
-using System.Diagnostics;
-using System.Runtime.CompilerServices;
 using LabBilling.Core.DataAccess;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 
 namespace LabBilling
 {
@@ -52,7 +50,7 @@ namespace LabBilling
                     testEnvironment = true;
                 }
             }
-
+            Application.SetHighDpiMode(HighDpiMode.SystemAware);
             Login loginFrm = new Login(testEnvironment);
             if(loginFrm.ShowDialog() == DialogResult.OK)
             {
@@ -134,10 +132,7 @@ namespace LabBilling
 
         static void OnApplicationExit(object sender, EventArgs e)
         {
-            //Cursor.Current = Cursors.WaitCursor;
-
             NLog.LogManager.Shutdown();
-
         }
     }
 }

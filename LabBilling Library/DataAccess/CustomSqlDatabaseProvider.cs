@@ -1,16 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
+﻿using System.Data;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using PetaPoco;
 using RFClassLibrary;
 
 namespace PetaPoco.Providers
 {
-    public sealed class CustomSqlDatabaseProvider : PetaPoco.Providers.SqlServerDatabaseProvider
+    public sealed class CustomSqlMsDatabaseProvider : SqlServerMsDataDatabaseProvider
     {
         private string GetInsertPreamble(string primaryKeyName)
         {

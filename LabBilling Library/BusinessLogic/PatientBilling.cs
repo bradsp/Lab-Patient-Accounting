@@ -8,11 +8,8 @@ using System.Threading.Tasks;
 using LabBilling.Core.DataAccess;
 using LabBilling.Core.Models;
 using RFClassLibrary;
-using PetaPoco;
-using System.Data.SqlClient;
-using System.Diagnostics;
+using Microsoft.Data.SqlClient;
 using LabBilling.Logging;
-using PetaPoco.Providers;
 
 namespace LabBilling.Core
 {

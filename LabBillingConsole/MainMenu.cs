@@ -30,7 +30,7 @@ namespace LabBillingConsole
 
         public bool MainMenuPanel()
         {
-            _appEnvironment.UserName = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
+            _appEnvironment.UserName = Environment.UserName;
             _appEnvironment.IntegratedAuthentication = true;
 
             testing = new Testing(_appEnvironment);

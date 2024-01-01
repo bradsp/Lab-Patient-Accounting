@@ -1,20 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using PetaPoco;
 using LabBilling.Core.Models;
 using LabBilling.Core.DataAccess;
 using System.Windows.Forms.DataVisualization.Charting;
 using System.Net.Http;
-using System.Xml.Linq;
 using LabBilling.Logging;
-using HtmlAgilityPack;
 
 namespace LabBilling.Forms
 {
@@ -81,8 +73,10 @@ namespace LabBilling.Forms
             string url = Program.AppEnvironment.ApplicationParameters.DocumentationSiteUrl + "/" +
                 Program.AppEnvironment.ApplicationParameters.LatestUpdatesUrl;
 
-            LinkLabel hdrlbl = new LinkLabel();
-            hdrlbl.Text = "Updates";
+            LinkLabel hdrlbl = new()
+            {
+                Text = "Updates"
+            };
             hdrlbl.Font = new Font(hdrlbl.Font.FontFamily, 16, FontStyle.Bold);
             hdrlbl.LinkArea = new LinkArea(0, 22);
             hdrlbl.LinkClicked += new LinkLabelLinkClickedEventHandler(Hdrlbl_LinkClicked);
@@ -92,14 +86,13 @@ namespace LabBilling.Forms
             announcementLayoutPanel.RowStyles[0].Height = 40;
             hdrlbl.Dock = DockStyle.Fill;
 
-
-
             var response = CallUrl(url).Result;
 
-            WebBrowser tb = new WebBrowser();
-
-            tb.DocumentText = ParseHtml(response);
-            tb.Dock = DockStyle.Fill;
+            WebBrowser tb = new()
+            {
+                DocumentText = ParseHtml(response),
+                Dock = DockStyle.Fill
+            };
 
             announcementLayoutPanel.RowCount++;
             announcementLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 80));                
@@ -120,17 +113,15 @@ namespace LabBilling.Forms
         {
             try
             {
-                using (HttpClient client = new HttpClient())
-                {
-                    var response = await client.GetAsync(fullUrl)
-                        .ConfigureAwait(false);
+                using HttpClient client = new HttpClient();
+                var response = await client.GetAsync(fullUrl)
+                    .ConfigureAwait(false);
 
-                    var content = response.Content;
+                var content = response.Content;
 
-                    string result = await content.ReadAsStringAsync();
+                string result = await content.ReadAsStringAsync();
 
-                    return result;
-                }
+                return result;
             }
             catch(HttpRequestException e)
             {

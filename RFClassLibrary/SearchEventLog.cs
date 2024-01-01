@@ -41,8 +41,6 @@ Source: DCOM
 
  */
 using System;
-using System.Collections.Generic;
-using System.Text;
 // programmer added
 using System.Collections;
 using System.Diagnostics;

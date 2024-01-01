@@ -1,15 +1,6 @@
 ﻿using LabBilling.Core.Models;
-using Org.BouncyCastle.Crypto.Tls;
-using PetaPoco;
-using PetaPoco.Providers;
-using RFClassLibrary;
 using System;
-using System.Collections.Generic;
-using System.Data.SqlClient;
-using System.Linq;
-using System.Security.Policy;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.Data.SqlClient;
 
 namespace LabBilling.Core.DataAccess
 {
@@ -31,6 +22,9 @@ namespace LabBilling.Core.DataAccess
         public SystemParametersRepository systemParametersRepository;
 
         public bool RunAsService { get; set; } = false;
+
+        private const bool dbEncrypt = false;
+        private const bool dbTrustServerCert = true;
 
         public AppEnvironment()
         {
@@ -84,12 +78,14 @@ namespace LabBilling.Core.DataAccess
 
                     if(IntegratedAuthentication)
                     {
-                        SqlConnectionStringBuilder myBuilder = new SqlConnectionStringBuilder
+                        SqlConnectionStringBuilder myBuilder = new()
                         {
                             InitialCatalog = DatabaseName,
                             DataSource = ServerName,
                             IntegratedSecurity = true,
                             ApplicationName = RFClassLibrary.OS.GetAppName(),
+                            Encrypt = dbEncrypt,
+                            TrustServerCertificate = dbTrustServerCert,
                             ConnectTimeout = 30
                         };
 
@@ -97,14 +93,18 @@ namespace LabBilling.Core.DataAccess
                     }
                     else
                     {
-                        SqlConnectionStringBuilder myBuilder = new SqlConnectionStringBuilder();
-                        myBuilder.InitialCatalog = DatabaseName;
-                        myBuilder.DataSource = ServerName;
-                        myBuilder.IntegratedSecurity = false;
-                        myBuilder.UserID = UserName;
-                        myBuilder.Password = Password;
-                        myBuilder.ConnectTimeout = 30;
-                        myBuilder.ApplicationName = RFClassLibrary.OS.GetAppName();
+                        SqlConnectionStringBuilder myBuilder = new SqlConnectionStringBuilder
+                        {
+                            InitialCatalog = DatabaseName,
+                            DataSource = ServerName,
+                            IntegratedSecurity = false,
+                            UserID = UserName,
+                            Password = Password,
+                            ConnectTimeout = 30,
+                            Encrypt = dbEncrypt,
+                            TrustServerCertificate = dbTrustServerCert,
+                            ApplicationName = RFClassLibrary.OS.GetAppName()
+                        };
                         return myBuilder.ConnectionString;
                     }
                 }
@@ -139,15 +139,18 @@ namespace LabBilling.Core.DataAccess
                     throw new ApplicationException("ServicePassword value not set.");
                 }
 
-                SqlConnectionStringBuilder myBuilder = new SqlConnectionStringBuilder();
-
-                myBuilder.InitialCatalog = DatabaseName;
-                myBuilder.DataSource = ServerName;
-                myBuilder.IntegratedSecurity = false;
-                myBuilder.UserID = ServiceUsername;
-                myBuilder.Password = ServicePassword;
-                myBuilder.ApplicationName = RFClassLibrary.OS.GetAppName();
-                myBuilder.ConnectTimeout = 30;
+                SqlConnectionStringBuilder myBuilder = new SqlConnectionStringBuilder
+                {
+                    InitialCatalog = DatabaseName,
+                    DataSource = ServerName,
+                    IntegratedSecurity = false,
+                    UserID = ServiceUsername,
+                    Password = ServicePassword,
+                    ApplicationName = RFClassLibrary.OS.GetAppName(),
+                    ConnectTimeout = 30,
+                    Encrypt = dbEncrypt,
+                    TrustServerCertificate = dbTrustServerCert
+                };
 
                 return myBuilder.ConnectionString;
             }
@@ -165,8 +168,7 @@ namespace LabBilling.Core.DataAccess
                     ApplicationParameters = new ApplicationParameters();
                     if(EnvironmentValid)
                     {
-                        if (systemParametersRepository == null)
-                            systemParametersRepository = new SystemParametersRepository(this);
+                        systemParametersRepository ??= new SystemParametersRepository(this);
                         _appParms = systemParametersRepository.LoadParameters();
                     }    
                 }
@@ -190,7 +192,9 @@ namespace LabBilling.Core.DataAccess
                         DataSource = ServerName,
                         IntegratedSecurity = true,
                         ApplicationName = RFClassLibrary.OS.GetAppName(),
-                        ConnectTimeout = 30
+                        ConnectTimeout = 30,
+                        Encrypt = dbEncrypt,
+                        TrustServerCertificate = dbTrustServerCert,
                     };
 
                     return myBuilder.ConnectionString;
@@ -205,7 +209,9 @@ namespace LabBilling.Core.DataAccess
                         UserID = UserName,
                         Password = Password,
                         ApplicationName = RFClassLibrary.OS.GetAppName(),
-                        ConnectTimeout = 30
+                        ConnectTimeout = 30,
+                        Encrypt = dbEncrypt,
+                        TrustServerCertificate = dbTrustServerCert
                     };
 
                     return myBuilder.ConnectionString;

@@ -2,7 +2,7 @@
 using LabBilling.Logging;
 using PetaPoco;
 using System.Collections.Generic;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 
 namespace LabBilling.Core.DataAccess
 {

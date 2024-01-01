@@ -2,7 +2,7 @@
 using LabBilling.Core.Models;
 using PetaPoco;
 using System;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using System.Data;
 
 namespace LabBilling.Core.DataAccess
@@ -19,7 +19,7 @@ namespace LabBilling.Core.DataAccess
             Log.Instance.Debug($"Entering");
 
             //string sql = "exec GetNextNumber @key";
-            //var param = new System.Data.SqlClient.SqlParameter("keyfield", keyfield);
+            //var param = new Microsoft.Data.SqlClient.SqlParameter("keyfield", keyfield);
             var number = new SqlParameter("@NextSequence", System.Data.SqlDbType.Int)
             {
                 Direction = System.Data.ParameterDirection.Output

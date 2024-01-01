@@ -2,16 +2,9 @@
 using LabBilling.Core.Models;
 using System;
 using System.Collections.Generic;
-using RFClassLibrary;
-using LabBilling.Core.BusinessLogic;
-using System.Text;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Reflection;
 using System.Threading.Tasks;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using System.Data;
-using Org.BouncyCastle.Asn1.X509.Qualified;
 
 namespace LabBilling.Core.DataAccess
 {

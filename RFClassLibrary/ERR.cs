@@ -20,28 +20,28 @@
 // Any additional parameters passes are ignored.
 // 
 // Additional configuration comes from Applications Configuration file which may contain the following KEYS
- //<add key="LiveEMailTo" value="david.kelly@wth.org;rick.crone@wth.org"/>
- //<add key="TestEMailTo" value="david.kelly@wth.org;rick.crone@wth.org"/>
-    
- //<add key="LiveERRDataBaseServer" value="MCL03" />
- //<add key="LiveERRDataBase" value="GOMCLLIVE" />
- //<add key="TestERRDataBaseServer" value="MCL03" />
- //<add key="TestERRDataBase" value="GOMCLTEST" />
- //<add key="LiveERRLogTextFile" value="C:\HMS\HMS_HL7_RESULTS_PARSE_LIVE.log" />
-  //<add key="LiveERRLogSaveFile" value="C:\HMS\HMS_HL7_RESULTS_PARSE_LIVE.log" />
-  //<add key="TestERRLogTextFile" value="C:\HMS\HMS_HL7_RESULTS_PARSE_TEST.log" />
-  //<add key="TestERRLogSaveFile" value="C:\HMS\HMS_HL7_RESULTS_PARSE_TEST.log" />    <add key="LiveEMailTo" value="david.kelly@wth.org;rick.crone@wth.org"/>
-  //<add key="TestEMailTo" value="david.kelly@wth.org;rick.crone@wth.org"/>
-    
-  //<add key="LiveERRDataBaseServer" value="MCL03" />
-  //<add key="LiveERRDataBase" value="GOMCLLIVE" />
-  //<add key="TestERRDataBaseServer" value="MCL03" />
-  //<add key="TestERRDataBase" value="GOMCLTEST" />
+//<add key="LiveEMailTo" value="david.kelly@wth.org;rick.crone@wth.org"/>
+//<add key="TestEMailTo" value="david.kelly@wth.org;rick.crone@wth.org"/>
 
-  //<add key="LiveERRLogTextFile" value="C:\HMS\HMS_HL7_RESULTS_PARSE_LIVE.log" />
-  //<add key="LiveERRLogSaveFile" value="C:\HMS\HMS_HL7_RESULTS_PARSE_LIVE.log" />
-  //<add key="TestERRLogTextFile" value="C:\HMS\HMS_HL7_RESULTS_PARSE_TEST.log" />
-  //<add key="TestERRLogSaveFile" value="C:\HMS\HMS_HL7_RESULTS_PARSE_TEST.log" />
+//<add key="LiveERRDataBaseServer" value="MCL03" />
+//<add key="LiveERRDataBase" value="GOMCLLIVE" />
+//<add key="TestERRDataBaseServer" value="MCL03" />
+//<add key="TestERRDataBase" value="GOMCLTEST" />
+//<add key="LiveERRLogTextFile" value="C:\HMS\HMS_HL7_RESULTS_PARSE_LIVE.log" />
+//<add key="LiveERRLogSaveFile" value="C:\HMS\HMS_HL7_RESULTS_PARSE_LIVE.log" />
+//<add key="TestERRLogTextFile" value="C:\HMS\HMS_HL7_RESULTS_PARSE_TEST.log" />
+//<add key="TestERRLogSaveFile" value="C:\HMS\HMS_HL7_RESULTS_PARSE_TEST.log" />    <add key="LiveEMailTo" value="david.kelly@wth.org;rick.crone@wth.org"/>
+//<add key="TestEMailTo" value="david.kelly@wth.org;rick.crone@wth.org"/>
+
+//<add key="LiveERRDataBaseServer" value="MCL03" />
+//<add key="LiveERRDataBase" value="GOMCLLIVE" />
+//<add key="TestERRDataBaseServer" value="MCL03" />
+//<add key="TestERRDataBase" value="GOMCLTEST" />
+
+//<add key="LiveERRLogTextFile" value="C:\HMS\HMS_HL7_RESULTS_PARSE_LIVE.log" />
+//<add key="LiveERRLogSaveFile" value="C:\HMS\HMS_HL7_RESULTS_PARSE_LIVE.log" />
+//<add key="TestERRLogTextFile" value="C:\HMS\HMS_HL7_RESULTS_PARSE_TEST.log" />
+//<add key="TestERRLogSaveFile" value="C:\HMS\HMS_HL7_RESULTS_PARSE_TEST.log" />
 // 
 // 
 // The table should be created with the following SQL script 
@@ -94,11 +94,7 @@
 
 //
 using System;
-using System.Collections.Generic;
-using System.Text;
 // ADDED
-using System.IO;
-using System.Configuration;
 using System.Data;
 
 
@@ -713,7 +709,7 @@ namespace RFClassLibrary
                 try
                 {
                     Console.WriteLine(string.Format("DISPLAY: {0}\r\n{1}\r\n\n{2}", propAppExecPath, m_strErrMsg, Environment.StackTrace.ToString()));
-                    System.Windows.Forms.MessageBox.Show(string.Format("DISPLAY: {0}\r\n{1}\r\n\n{2}", propAppExecPath, m_strErrMsg, Environment.StackTrace.ToString()));
+                    //System.Windows.Forms.MessageBox.Show(string.Format("DISPLAY: {0}\r\n{1}\r\n\n{2}", propAppExecPath, m_strErrMsg, Environment.StackTrace.ToString()));
                 }
                 catch (Exception)
                 {
@@ -758,7 +754,7 @@ namespace RFClassLibrary
             try
             {
                 Console.WriteLine(string.Format("DISPLAY: {0}\r\n{1}", propAppExecPath, m_strErrMsg));
-                System.Windows.Forms.MessageBox.Show(string.Format("DISPLAY: {0}\r\n{1}", propAppExecPath, m_strErrMsg));
+                //System.Windows.Forms.MessageBox.Show(string.Format("DISPLAY: {0}\r\n{1}", propAppExecPath, m_strErrMsg));
             }
             catch (Exception)
             {

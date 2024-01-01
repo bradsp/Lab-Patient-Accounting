@@ -1,21 +1,10 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{F8C8C4A8-005A-49DB-A560-9A78141665B5}</ProjectGuid>
+    <TargetFramework>net6.0-windows</TargetFramework>
     <OutputType>WinExe</OutputType>
     <RootNamespace>LabBilling</RootNamespace>
     <AssemblyName>LabBilling</AssemblyName>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <Deterministic>true</Deterministic>
     <IsWebBootstrapper>false</IsWebBootstrapper>
-    <TargetFrameworkProfile />
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
     <AssemblyVersion>2023.1.1.556</AssemblyVersion>
     <PublishUrl>\\wthmclbill\installations%24\LabBilling\</PublishUrl>
     <Install>true</Install>
@@ -37,25 +26,14 @@
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <UseWindowsForms>true</UseWindowsForms>
+    <UseWPF>true</UseWPF>
+    <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>x64</PlatformTarget>
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <NoWarn>1701;1702;CA1416</NoWarn>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestCertificateThumbprint>3AC84057527B57715CD35ED62ED2E71DC0EE37E8</ManifestCertificateThumbprint>
@@ -78,619 +56,65 @@
   <PropertyGroup>
     <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <NoWarn>1701;1702;CA1416</NoWarn>
+  </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.VisualBasic" />
-    <Reference Include="PresentationCore" />
-    <Reference Include="System" />
-    <Reference Include="System.ComponentModel.DataAnnotations" />
-    <Reference Include="System.Configuration" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Design" />
-    <Reference Include="System.IO.Compression, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL" />
-    <Reference Include="System.Numerics" />
-    <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.Security" />
-    <Reference Include="System.ServiceModel" />
-    <Reference Include="System.Transactions" />
-    <Reference Include="System.Web" />
-    <Reference Include="System.Windows.Forms.DataVisualization" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Deployment" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="DataCache.cs" />
-    <Compile Include="Forms\AskInsuranceSwapForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\AskInsuranceSwapForm.Designer.cs">
-      <DependentUpon>AskInsuranceSwapForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\BatchChargeEntryForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\BatchChargeEntryForm.Designer.cs">
-      <DependentUpon>BatchChargeEntryForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\ChargeMasterEditForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\ChargeMasterEditForm.Designer.cs">
-      <DependentUpon>ChargeMasterEditForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\ClaimRuleEditorForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\ClaimRuleEditorForm.Designer.cs">
-      <DependentUpon>ClaimRuleEditorForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\ClaimsManagementForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\ClaimsManagementForm.Designer.cs">
-      <DependentUpon>ClaimsManagementForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\ClientInvoiceForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\ClientInvoiceForm.Designer.cs">
-      <DependentUpon>ClientInvoiceForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\ClientMaintenanceEditForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\ClientMaintenanceEditForm.Designer.cs">
-      <DependentUpon>ClientMaintenanceEditForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\DashboardForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\DashboardForm.Designer.cs">
-      <DependentUpon>DashboardForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\DatabaseSettingsForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\DatabaseSettingsForm.Designer.cs">
-      <DependentUpon>DatabaseSettingsForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\HealthPlanMaintenanceForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\HealthPlanMaintenanceForm.Designer.cs">
-      <DependentUpon>HealthPlanMaintenanceForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\HealtPlanMaintenanceEditForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\HealtPlanMaintenanceEditForm.Designer.cs">
-      <DependentUpon>HealtPlanMaintenanceEditForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\InterfaceMonitor.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\InterfaceMonitor.Designer.cs">
-      <DependentUpon>InterfaceMonitor.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\LogViewerForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\LogViewerForm.Designer.cs">
-      <DependentUpon>LogViewerForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\PatientCollectionsRunWizard.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\PatientCollectionsRunWizard.Designer.cs">
-      <DependentUpon>PatientCollectionsRunWizard.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\PaymentAdjustmentEntryForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\PaymentAdjustmentEntryForm.Designer.cs">
-      <DependentUpon>PaymentAdjustmentEntryForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\PhysicianMaintenanceEditForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\PhysicianMaintenanceEditForm.Designer.cs">
-      <DependentUpon>PhysicianMaintenanceEditForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\SplashForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\SplashForm.Designer.cs">
-      <DependentUpon>SplashForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Legacy Forms\PrintEOBForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Legacy Forms\PrintEOBForm.designer.cs">
-      <DependentUpon>PrintEOBForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Library\DataGridViewDateColumn.cs" />
-    <Compile Include="Library\WaitForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Library\WaitForm.Designer.cs">
-      <DependentUpon>WaitForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="LookupForms\CdmLookupForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="LookupForms\CdmLookupForm.Designer.cs">
-      <DependentUpon>CdmLookupForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="LookupForms\ClientLookupForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="LookupForms\ClientLookupForm.Designer.cs">
-      <DependentUpon>ClientLookupForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="LookupForms\InsCompanyLookupForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="LookupForms\InsCompanyLookupForm.Designer.cs">
-      <DependentUpon>InsCompanyLookupForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\ProgressForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\ProgressForm.Designer.cs">
-      <DependentUpon>ProgressForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\ReportingPortalForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\ReportingPortalForm.Designer.cs">
-      <DependentUpon>ReportingPortalForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\WorkListForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\WorkListForm.Designer.cs">
-      <DependentUpon>WorkListForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Legacy Forms\DuplicateAccountForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Legacy Forms\DuplicateAccountForm.Designer.cs">
-      <DependentUpon>DuplicateAccountForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Legacy Forms\FormDataCollection.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Legacy Forms\FormDataCollection.Designer.cs">
-      <DependentUpon>FormDataCollection.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Legacy Forms\InsuranceReportForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Legacy Forms\InsuranceReportForm.Designer.cs">
-      <DependentUpon>InsuranceReportForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Legacy Forms\MonthlyReportsForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Legacy Forms\MonthlyReportsForm.Designer.cs">
-      <DependentUpon>MonthlyReportsForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Legacy Forms\Posting835.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Legacy Forms\Posting835.Designer.cs">
-      <DependentUpon>Posting835.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Legacy Forms\ViewerHistoryForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Legacy Forms\ViewerHistoryForm.Designer.cs">
-      <DependentUpon>ViewerHistoryForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Library\InputDialogs.cs" />
-    <Compile Include="UserControls\CurrencyTextBox.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="UserControls\CurrencyTextBox.Designer.cs">
-      <DependentUpon>CurrencyTextBox.cs</DependentUpon>
-    </Compile>
-    <Compile Include="UserControls\DateTextBox.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="UserControls\DateTextBox.Designer.cs">
-      <DependentUpon>DateTextBox.cs</DependentUpon>
-    </Compile>
-    <Compile Include="UserControls\FlatCombo.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Library\FormExtensions.cs" />
-    <Compile Include="UserControls\LabDataGridView.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="UserControls\LabeledTextBox.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="UserControls\LabeledTextBox.Designer.cs">
-      <DependentUpon>LabeledTextBox.cs</DependentUpon>
-    </Compile>
-    <Compile Include="UserControls\MenuButton.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="UserControls\MultiColumnCombo.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Library\Opulos.Core\Accordion.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Library\DisplayPOCOForm.cs" />
-    <Compile Include="Library\Opulos.Core\FontEx.cs" />
-    <Compile Include="Library\Opulos.Core\FontExWPF.cs" />
-    <Compile Include="Library\InputBox.cs" />
-    <Compile Include="Library\Opulos.Core\IToolTips.cs" />
-    <Compile Include="Library\Opulos.Core\MultiKey.cs" />
-    <Compile Include="Library\Opulos.Core\OpacityEx.cs" />
-    <Compile Include="Library\Opulos.Core\ResizeBar.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Library\ProgressBarColor.cs" />
-    <Compile Include="UserControls\InsuranceLookup.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="UserControls\InsuranceLookup.Designer.cs">
-      <DependentUpon>InsuranceLookup.cs</DependentUpon>
-    </Compile>
-    <Compile Include="UserControls\ProviderLookup.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="UserControls\ProviderLookup.Designer.cs">
-      <DependentUpon>ProviderLookup.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Library\StateComboBox.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Library\Opulos.Core\StreamEx.cs" />
-    <Compile Include="Forms\AboutBox.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\AboutBox.Designer.cs">
-      <DependentUpon>AboutBox.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\AskCloseTabForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\AskCloseTabForm.Designer.cs">
-      <DependentUpon>AskCloseTabForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\PatientCollectionsEditForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\PatientCollectionsEditForm.Designer.cs">
-      <DependentUpon>PatientCollectionsEditForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\PatientCollectionsForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\PatientCollectionsForm.Designer.cs">
-      <DependentUpon>PatientCollectionsForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\AccountChargeEntry.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\AccountChargeEntry.Designer.cs">
-      <DependentUpon>AccountChargeEntry.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\BatchRemittance.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\BatchRemittance.Designer.cs">
-      <DependentUpon>BatchRemittance.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\ChargeEntryForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\ChargeEntryForm.Designer.cs">
-      <DependentUpon>ChargeEntryForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\ChargeMasterMaintenance.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\ChargeMasterMaintenance.Designer.cs">
-      <DependentUpon>ChargeMasterMaintenance.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\ClientMaintenanceForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\ClientMaintenanceForm.Designer.cs">
-      <DependentUpon>ClientMaintenanceForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\MainForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\MainForm.Designer.cs">
-      <DependentUpon>MainForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Library\Helper.cs" />
-    <Compile Include="Forms\AccountForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\AccountForm.Designer.cs">
-      <DependentUpon>AccountForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\ErrorsForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\ErrorsForm.Designer.cs">
-      <DependentUpon>ErrorsForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\InterfaceMapping.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\InterfaceMapping.Designer.cs">
-      <DependentUpon>InterfaceMapping.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\NewAccountForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\NewAccountForm.Designer.cs">
-      <DependentUpon>NewAccountForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\PatBillForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\PatBillForm.Designer.cs">
-      <DependentUpon>PatBillForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\PhysicianMaintenanceForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\PhysicianMaintenanceForm.Designer.cs">
-      <DependentUpon>PhysicianMaintenanceForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\SummaryData.cs" />
-    <Compile Include="Forms\Login.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\Login.Designer.cs">
-      <DependentUpon>Login.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\PersonSearchForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\PersonSearchForm.Designer.cs">
-      <DependentUpon>PersonSearchForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Program.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Forms\SystemParametersForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\SystemParametersForm.Designer.cs">
-      <DependentUpon>SystemParametersForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\UserSecurity.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\UserSecurity.Designer.cs">
-      <DependentUpon>UserSecurity.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Settings.cs" />
-    <None Include="Properties\app.manifest" />
-    <None Include="Resources\kisspng-gear-spanners-computer-icons-gear-5abf330af2b385.0314791715224798829941.png" />
-    <None Include="Resources\wrench-icon.png" />
-    <None Include="Lab Billing WinForms UI_TemporaryKey.pfx" />
-    <None Include="Resources\logoicon2.png" />
-    <None Include="Resources\client-login-icon-4.gif" />
-    <None Include="Resources\collapsed.bmp" />
-    <None Include="Resources\refresh-icon.png" />
-    <None Include="Resources\hiclipart.com-id_dbhyp.png" />
-    <None Include="Resources\lookup-icon-png-and-vector-for-free-download-pngtree-lookup-png-512_512.png" />
-    <EmbeddedResource Include="Forms\AskInsuranceSwapForm.resx">
-      <DependentUpon>AskInsuranceSwapForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\BatchChargeEntryForm.resx">
-      <DependentUpon>BatchChargeEntryForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ChargeMasterEditForm.resx">
-      <DependentUpon>ChargeMasterEditForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ChargeMasterMaintenance.resx">
-      <DependentUpon>ChargeMasterMaintenance.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ClaimRuleEditorForm.resx">
-      <DependentUpon>ClaimRuleEditorForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ClaimsManagementForm.resx">
-      <DependentUpon>ClaimsManagementForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ClientInvoiceForm.resx">
-      <DependentUpon>ClientInvoiceForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ClientMaintenanceEditForm.resx">
-      <DependentUpon>ClientMaintenanceEditForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\DashboardForm.resx">
-      <DependentUpon>DashboardForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\DatabaseSettingsForm.resx">
-      <DependentUpon>DatabaseSettingsForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\HealthPlanMaintenanceForm.resx">
-      <DependentUpon>HealthPlanMaintenanceForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\HealtPlanMaintenanceEditForm.resx">
-      <DependentUpon>HealtPlanMaintenanceEditForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\InterfaceMonitor.resx">
-      <DependentUpon>InterfaceMonitor.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\LogViewerForm.resx">
-      <DependentUpon>LogViewerForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\PatientCollectionsRunWizard.resx">
-      <DependentUpon>PatientCollectionsRunWizard.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\PaymentAdjustmentEntryForm.resx">
-      <DependentUpon>PaymentAdjustmentEntryForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\PhysicianMaintenanceEditForm.resx">
-      <DependentUpon>PhysicianMaintenanceEditForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\SplashForm.resx">
-      <DependentUpon>SplashForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Legacy Forms\PrintEOBForm.resx">
-      <DependentUpon>PrintEOBForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Library\WaitForm.resx">
-      <DependentUpon>WaitForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="LookupForms\CdmLookupForm.resx">
-      <DependentUpon>CdmLookupForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="LookupForms\ClientLookupForm.resx">
-      <DependentUpon>ClientLookupForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="LookupForms\InsCompanyLookupForm.resx">
-      <DependentUpon>InsCompanyLookupForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ProgressForm.resx">
-      <DependentUpon>ProgressForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ReportingPortalForm.resx">
-      <DependentUpon>ReportingPortalForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\WorkListForm.resx">
-      <DependentUpon>WorkListForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Legacy Forms\DuplicateAccountForm.resx">
-      <DependentUpon>DuplicateAccountForm.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Legacy Forms\FormDataCollection.resx">
-      <DependentUpon>FormDataCollection.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Legacy Forms\InsuranceReportForm.resx">
-      <DependentUpon>InsuranceReportForm.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Legacy Forms\MonthlyReportsForm.resx">
-      <DependentUpon>MonthlyReportsForm.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Legacy Forms\Posting835.resx">
-      <DependentUpon>Posting835.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Legacy Forms\ViewerHistoryForm.resx">
-      <DependentUpon>ViewerHistoryForm.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UserControls\LabeledTextBox.resx">
-      <DependentUpon>LabeledTextBox.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\AboutBox.resx">
-      <DependentUpon>AboutBox.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\AccountForm.resx">
-      <DependentUpon>AccountForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\AskCloseTabForm.resx">
-      <DependentUpon>AskCloseTabForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\PatientCollectionsEditForm.resx">
-      <DependentUpon>PatientCollectionsEditForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\PatientCollectionsForm.resx">
-      <DependentUpon>PatientCollectionsForm.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\AccountChargeEntry.resx">
-      <DependentUpon>AccountChargeEntry.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\BatchRemittance.resx">
-      <DependentUpon>BatchRemittance.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ChargeEntryForm.resx">
-      <DependentUpon>ChargeEntryForm.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ClientMaintenanceForm.resx">
-      <DependentUpon>ClientMaintenanceForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\MainForm.resx">
-      <DependentUpon>MainForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ErrorsForm.resx">
-      <DependentUpon>ErrorsForm.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\InterfaceMapping.resx">
-      <DependentUpon>InterfaceMapping.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\NewAccountForm.resx">
-      <DependentUpon>NewAccountForm.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\PatBillForm.resx">
-      <DependentUpon>PatBillForm.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\PhysicianMaintenanceForm.resx">
-      <DependentUpon>PhysicianMaintenanceForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Login.resx">
-      <DependentUpon>Login.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\PersonSearchForm.resx">
-      <DependentUpon>PersonSearchForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UserControls\InsuranceLookup.resx">
-      <DependentUpon>InsuranceLookup.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UserControls\ProviderLookup.resx">
-      <DependentUpon>ProviderLookup.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <Compile Include="Properties\Resources.Designer.cs">
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
-      <DesignTime>True</DesignTime>
     </Compile>
-    <EmbeddedResource Include="Forms\SystemParametersForm.resx">
-      <DependentUpon>SystemParametersForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\UserSecurity.resx">
-      <DependentUpon>UserSecurity.cs</DependentUpon>
-    </EmbeddedResource>
+    <Compile Update="Properties\Settings.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Update="UserControls\CurrencyTextBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="UserControls\DateTextBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="UserControls\FlatCombo.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="UserControls\LabDataGridView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="UserControls\LabeledTextBox.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="UserControls\MenuButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="UserControls\MultiColumnCombo.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="Library\Opulos.Core\Accordion.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Library\Opulos.Core\ResizeBar.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="UserControls\InsuranceLookup.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="UserControls\ProviderLookup.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Library\StateComboBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <None Include="Lab Billing WinForms UI_TemporaryKey.pfx" />
     <Content Include="logoicon2.ico" />
-    <None Include="NLog.config">
+    <None Update="NLog.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Properties\Settings.settings">
+    <None Update="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.6.1">
@@ -708,90 +132,50 @@
     <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\MCLctr.jpg" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\iconfinder_8_375259.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\iconfinder_checklist_job_seeker_employee_unemployee_work_2620529.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\contact.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\wthLogo.jpg" />
-  </ItemGroup>
-  <ItemGroup>
     <PackageReference Include="HtmlAgilityPack">
-      <Version>1.11.49</Version>
+      <Version>1.11.57</Version>
     </PackageReference>
     <PackageReference Include="LazyCache">
       <Version>2.4.0</Version>
     </PackageReference>
-    <PackageReference Include="MDIWindowManager">
-      <Version>2.1.0</Version>
-    </PackageReference>
-    <PackageReference Include="MetroModernUI">
-      <Version>1.4.0</Version>
-    </PackageReference>
-    <PackageReference Include="Microsoft.CSharp">
-      <Version>4.7.0</Version>
-    </PackageReference>
-    <PackageReference Include="Microsoft.Extensions.Caching.Memory">
-      <Version>7.0.0</Version>
-    </PackageReference>
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions">
-      <Version>7.0.1</Version>
-    </PackageReference>
+    <PackageReference Include="MetroFrameworkCore" Version="1.0.2" />
     <PackageReference Include="Microsoft.SqlServer.SqlManagementObjects">
-      <Version>170.18.0</Version>
+      <Version>170.21.0</Version>
     </PackageReference>
-    <PackageReference Include="Newtonsoft.Json">
-      <Version>13.0.3</Version>
-    </PackageReference>
+    <PackageReference Include="Microsoft.VisualBasic" Version="10.3.0" />
     <PackageReference Include="NLog">
-      <Version>5.2.2</Version>
+      <Version>5.2.7</Version>
     </PackageReference>
     <PackageReference Include="NLog.Database">
-      <Version>5.2.2</Version>
+      <Version>5.2.7</Version>
     </PackageReference>
     <PackageReference Include="NLog.Schema">
-      <Version>5.2.2</Version>
+      <Version>5.2.7</Version>
     </PackageReference>
-    <PackageReference Include="PetaPoco.Compiled">
-      <Version>6.0.566</Version>
-    </PackageReference>
+    <PackageReference Include="PetaPoco.Compiled" Version="6.0.617" />
     <PackageReference Include="RibbonWinForms">
       <Version>5.1.0-beta</Version>
     </PackageReference>
-    <PackageReference Include="System.Data.SqlClient">
-      <Version>4.8.5</Version>
-    </PackageReference>
-    <PackageReference Include="System.Memory">
-      <Version>4.5.5</Version>
-    </PackageReference>
-    <PackageReference Include="System.Reflection.Emit">
-      <Version>4.7.0</Version>
-    </PackageReference>
-    <PackageReference Include="System.Reflection.Emit.Lightweight">
-      <Version>4.7.0</Version>
-    </PackageReference>
+    <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
+    <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
+    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="WinForms.DataVisualization" Version="1.9.1" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\LabBilling Library\LabBilling Core.csproj">
-      <Project>{0890d249-b319-46be-8b8a-354687c334e8}</Project>
-      <Name>LabBilling Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\MCL\MCL.csproj">
-      <Project>{f54e006c-aa33-48f2-9e2f-46cfb5d7ee47}</Project>
-      <Name>MCL</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\RFClassLibrary\RFClassLibrary.csproj">
-      <Project>{b15474ed-9185-437e-bac5-a19779cbe721}</Project>
-      <Name>RFClassLibrary</Name>
-    </ProjectReference>
+    <ProjectReference Include="..\LabBilling Library\LabBilling Core.csproj" />
+    <ProjectReference Include="..\MCL\MCL.csproj" />
+    <ProjectReference Include="..\RFClassLibrary\RFClassLibrary.csproj" />
+    <ProjectReference Include="..\WinFormsLibrary\WinFormsLibrary.csproj" />
   </ItemGroup>
-  <ItemGroup />
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <Compile Remove="Library\TNumEditBox.cs" />
+    <Compile Remove="Library\TNumEditDataGridViewElements.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
 </Project>

@@ -17,7 +17,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 // added
-using System.Data.SqlClient; // SQL 7.0
+using Microsoft.Data.SqlClient; // SQL 7.0
 using System.Data; // DataSet
 using System.Diagnostics; // stack trace
 

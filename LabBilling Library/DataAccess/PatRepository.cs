@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using LabBilling.Logging;
 using LabBilling.Core.Models;
 using RFClassLibrary;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using System.Data;
 using System.Linq;
 

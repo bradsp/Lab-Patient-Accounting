@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 // programmer added
 using System.IO;
@@ -11,11 +10,9 @@ using RFClassLibrary;
 using System.Drawing.Printing; // for print document
 using MCL;
 using System.Transactions;
-using System.Data.SqlClient;
-using System.Threading;
+using Microsoft.Data.SqlClient;
 using System.Collections; // for arraylist
 //using ExtendedMethodsLibrary;
-using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 // Move these two lines to the header space

@@ -1,13 +1,9 @@
 ﻿using System;
 using LabBilling.Logging;
 using LabBilling.Core.Models;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using System.Data;
-using NPOI.HSSF.Record;
 using System.Reflection;
-using System.Windows.Input;
-using System.ComponentModel;
-using Org.BouncyCastle.Asn1.X509.Qualified;
 
 namespace LabBilling.Core.DataAccess
 {
@@ -85,15 +81,6 @@ namespace LabBilling.Core.DataAccess
                     var value = GetParameter(property.Name);
                     if(value == null)
                     {
-                        //add it
-                        //var categoryInfo = property.GetCustomAttribute<CategoryAttribute>();
-                        //var descriptionInfo = property.GetCustomAttribute<DescriptionAttribute>();
-                        //var defaultInfo = property.GetCustomAttribute<DefaultValueAttribute>();
-
-                        //var category = categoryInfo.Category;
-                        //var description = descriptionInfo.Description;
-                        //var defaultValue = defaultInfo.Value;
-
                         var category = parameters.GetCategory(nameof(property.Name));
                         var description = parameters.GetDescription(nameof(property.Name));
                         var defaultValue = parameters.GetDefaultValue(nameof(property.Name));
@@ -103,7 +90,6 @@ namespace LabBilling.Core.DataAccess
 
                     object v = null;
                     //need to do data type conversion
-
 
                     if (property.PropertyType == typeof(string))
                         v = value.Value ?? null;

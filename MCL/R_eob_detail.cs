@@ -67,7 +67,7 @@ using RFClassLibrary;
 //using System.Data.SqlClient; // SQL 7.0
 using System.Data;
 using System.Transactions;
-using System.Data.SqlClient; // DataRow
+using Microsoft.Data.SqlClient; // DataRow
 
 
 

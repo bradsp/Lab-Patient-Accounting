@@ -24,7 +24,7 @@ namespace LabBilling.Core.DataAccess
             dbConnection = DatabaseConfiguration
                 .Build()
                 .UsingConnectionString(connectionString)
-                .UsingProvider<CustomSqlDatabaseProvider>(new CustomSqlDatabaseProvider())
+                .UsingProvider<CustomSqlMsDatabaseProvider>(new CustomSqlMsDatabaseProvider())
                 .UsingCommandTimeout(180)
                 .WithAutoSelect()
                 .UsingDefaultMapper<MyMapper>(new MyMapper())

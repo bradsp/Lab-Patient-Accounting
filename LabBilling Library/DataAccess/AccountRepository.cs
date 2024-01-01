@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using RFClassLibrary;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using System.Data;
 using Log = LabBilling.Logging.Log;
 
@@ -24,7 +24,7 @@ namespace LabBilling.Core.DataAccess
         private readonly AccountValidationStatusRepository accountValidationStatusRepository;
         private readonly LMRPRuleRepository lmrpRuleRepository;
         private readonly FinRepository finRepository;
-        private readonly SystemParametersRepository systemParametersRepository;
+        //private readonly SystemParametersRepository systemParametersRepository;
         private readonly AccountLmrpErrorRepository accountLmrpErrorRepository;
         private readonly CdmRepository cdmRepository;
         private readonly GlobalBillingCdmRepository globalBillingCdmRepository;
@@ -56,7 +56,7 @@ namespace LabBilling.Core.DataAccess
             accountLmrpErrorRepository = new AccountLmrpErrorRepository(appEnvironment);
             lmrpRuleRepository = new LMRPRuleRepository(appEnvironment);
             finRepository = new FinRepository(appEnvironment);
-            systemParametersRepository = new SystemParametersRepository(appEnvironment);
+            //systemParametersRepository = new SystemParametersRepository(appEnvironment);
             cdmRepository = new CdmRepository(appEnvironment);
             globalBillingCdmRepository = new GlobalBillingCdmRepository(appEnvironment);
         }

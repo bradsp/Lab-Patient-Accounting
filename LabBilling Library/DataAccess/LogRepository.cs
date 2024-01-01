@@ -12,7 +12,7 @@ using PetaPoco;
 using LabBilling.Core.Models;
 using LabBilling.Logging;
 using System.Data;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 
 namespace LabBilling.Core.DataAccess
 {
@@ -32,7 +32,7 @@ namespace LabBilling.Core.DataAccess
             Log.Instance.Trace("Entering");
             _tableInfo = GetTableInfo(typeof(Logs));
             _tableName = _tableInfo.TableName;
-            dbConnection = new PetaPoco.Database(connectionString, new CustomSqlDatabaseProvider());
+            dbConnection = new PetaPoco.Database(connectionString, new SqlServerMsDataDatabaseProvider());
             Log.Instance.Debug(dbConnection.ConnectionString);
         }
 

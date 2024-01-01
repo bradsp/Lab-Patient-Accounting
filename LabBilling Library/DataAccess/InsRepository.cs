@@ -4,7 +4,7 @@ using LabBilling.Logging;
 using LabBilling.Core.Models;
 using RFClassLibrary;
 using System.Linq;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using System.Data;
 using System.Text.RegularExpressions;
 

@@ -273,7 +273,8 @@ namespace RFClassLibrary
                 foreach (Control ctl in base.Controls)
                 {
                     m_tsslNotify = new ToolStripStatusLabel();
-                    if (ctl.GetType() == typeof(StatusStrip) || ctl.GetType() == typeof (StatusBar))
+                    // TODO StatusBar is no longer supported. Use StatusStrip instead. For more details see https://docs.microsoft.com/en-us/dotnet/core/compatibility/windows-forms/5.0/winforms-deprecated-controls
+                    if (ctl.GetType() == typeof(StatusStrip) || ctl.GetType() == typeof (StatusStrip))
                     {
                         ((StatusStrip)ctl).Items.Add(new ToolStripSeparator());
                         ((StatusStrip)ctl).Items.Add(m_tsslNotify);

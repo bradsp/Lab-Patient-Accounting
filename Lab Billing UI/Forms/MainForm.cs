@@ -8,19 +8,28 @@ using System.Windows.Forms;
 using LabBilling.ReportByInsuranceCompany;
 using System.Linq;
 using Opulos.Core.UI;
-using System.Collections.Generic;
 using LabBilling.Core.BusinessLogic;
 using MetroFramework.Forms;
 using MetroFramework.Controls;
 using MetroFramework;
 using System.Threading.Tasks;
 using System.Threading;
-
 using Application = System.Windows.Forms.Application;
 using NLog.Config;
 using NLog.Targets;
-using RFClassLibrary;
 using NLog;
+using System.Drawing;
+using System.Runtime.InteropServices;
+
+
+/*
+ * Tabbed MDI logic 
+ * https://www.codeproject.com/Articles/17640/Tabbed-MDI-Child-Forms
+ * 
+ * 
+ * 
+ */
+
 
 namespace LabBilling
 {
@@ -36,6 +45,10 @@ namespace LabBilling
         private CancellationTokenSource cancellationToken;
         private TableLayoutPanel tlpRecentAccounts;
 
+        private const int WM_SETREDRAW = 11;
+        [DllImport("user32.dll")]
+        public static extern int SendMessage(IntPtr hWnd, Int32 wMsg, bool wParam, Int32 lParam);
+
         public ProgressReportModel progressReportModel = new ProgressReportModel()
         {
             RecordsProcessed = -1
@@ -45,18 +58,29 @@ namespace LabBilling
         {
             InitializeComponent();
 
+            ConfigureLogging();
+
+            userProfile = new UserProfileRepository(Program.AppEnvironment);
+            accountRepository = new AccountRepository(Program.AppEnvironment);
+            systemParametersRepository = new SystemParametersRepository(Program.AppEnvironment);
+            accordion = new Accordion();
+        }
+
+        private static void ConfigureLogging()
+        {
             #region Configure NLog
 
             var configuration = new NLog.Config.LoggingConfiguration();
 
-            LogLevel minLevel = NLog.LogLevel.Info;
+            LogLevel minLevel = NLog.LogLevel.Trace;
 
-            var fileTarget = new NLog.Targets.FileTarget("logfile") { FileName = "c:\\temp\\lab-billing-log.txt" };
-            var consoleTarget = new NLog.Targets.ConsoleTarget("logconsole");
-            var dbTarget = new NLog.Targets.DatabaseTarget("database")
+            var fileTarget = new FileTarget("logfile") { FileName = "c:\\temp\\lab-billing-log.txt" };
+            //var consoleTarget = new NLog.Targets.ConsoleTarget("logconsole");
+            string logTable = Program.AppEnvironment.ApplicationParameters.DatabaseEnvironment != "Production" ? "LogsTest" : "Logs";
+            var dbTarget = new DatabaseTarget("database")
             {
                 ConnectionString = Program.AppEnvironment.LogConnectionString,
-                CommandText = @"INSERT INTO Logs(CreatedOn,Message,Level,Exception,StackTrace,Logger,HostName,Username,CallingSite,CallingSiteLineNumber,AppVersion,DatabaseName,DatabaseServer) " +
+                CommandText = $"INSERT INTO {logTable} (CreatedOn,Message,Level,Exception,StackTrace,Logger,HostName,Username,CallingSite,CallingSiteLineNumber,AppVersion,DatabaseName,DatabaseServer) " +
                     "VALUES (@datetime,@msg,@level,@exception,@trace,@logger,@hostname,@user,@callsite,@lineno,@version,@dbname,@dbserver)",
             };
 
@@ -81,15 +105,16 @@ namespace LabBilling
 
             configuration.AddRule(dbRule);
 
-            NLog.LogManager.Configuration = configuration;
+            LogManager.Configuration = configuration;
 
             #endregion
 
+        }
 
-            userProfile = new UserProfileRepository(Program.AppEnvironment);
-            accountRepository = new AccountRepository(Program.AppEnvironment);
-            systemParametersRepository = new SystemParametersRepository(Program.AppEnvironment);
-            accordion = new Accordion();
+        private void NewForm(Form childForm)
+        {
+            childForm.MdiParent = this;
+            childForm.Show();
         }
 
         private void userSecurityToolStripMenuItem_Click(object sender, EventArgs e)
@@ -113,7 +138,7 @@ namespace LabBilling
             if (frm.ShowDialog() == DialogResult.OK)
             {
 
-                var formsList = System.Windows.Forms.Application.OpenForms.OfType<AccountForm>();
+                var formsList = Application.OpenForms.OfType<AccountForm>();
                 bool formFound = false;
                 foreach (var form in formsList)
                 {
@@ -130,18 +155,13 @@ namespace LabBilling
                 {
                     AccountForm accFrm = new AccountForm(frm.SelectedAccount);
                     accFrm.AccountOpenedEvent += AccFrm_AccountOpenedEvent;
-                    accFrm.MdiParent = this;
-                    accFrm.WindowState = FormWindowState.Normal;
-                    accFrm.AutoScroll = true;
-                    accFrm.Show();
+                    NewForm(accFrm);
                 }
             }
         }
 
         private void AccFrm_AccountOpenedEvent(object sender, string e)
-        {
-            UpdateRecentAccounts(e);
-        }
+            => UpdateRecentAccounts(e);
 
         public void UpdateRecentAccounts(string newAccount)
         {
@@ -175,6 +195,18 @@ namespace LabBilling
             }
             #endregion
 
+            await LoadSideMenu();
+
+            NewForm(new DashboardForm());
+
+            //enable menu items based on permissions
+            systemAdministrationToolStripMenuItem.Visible = Program.LoggedInUser.IsAdministrator;
+            UpdateMenuAccess();
+
+        }
+
+        private async Task LoadSideMenu()
+        {
             #region load accordion menu
 
             Program.AppEnvironment.ApplicationParameters = systemParametersRepository.LoadParameters();
@@ -226,21 +258,11 @@ namespace LabBilling
             b1.Click += new EventHandler(worklistToolStripMenuItem_Click);
             tlpBilling.Controls.Add(b1, 0, 0);
             b1.Dock = DockStyle.Fill;
-            /*
-            MetroButton b3 = new MetroButton { Text = "Workqueue", Name = "btnWorkQueue" };
-            b3.Click += new EventHandler(workqueuesToolStripMenuItem_Click);
-            tlpBilling.Controls.Add(b3, 0, 1);
-            b3.Dock = DockStyle.Fill;
-            */
+
             MetroButton b2 = new MetroButton { Text = "Account", Name = "btnAccount" };
             b2.Click += new EventHandler(accountToolStripMenuItem_Click);
             tlpBilling.Controls.Add(b2, 0, 2);
             b2.Dock = DockStyle.Fill;
-
-            //Button b3 = new Button { Text = "Demographics", Name = "btnDemographics" };
-            //b3.Click += new EventHandler(PatientDemographics_Click);
-            //tlpBilling.Controls.Add(b3, 0, 2);
-            //b3.Dock = DockStyle.Fill;
 
             MetroButton b4 = new MetroButton { Text = "Account Charge Entry", Name = "btnAccountChargeEntry" };
             b4.Click += new EventHandler(accountChargeEntryToolStripMenuItem_Click);
@@ -282,16 +304,7 @@ namespace LabBilling
             accordion.PerformLayout();
             #endregion
 
-            DashboardForm frm = new DashboardForm();
-            frm.MdiParent = this;
-            frm.WindowState = FormWindowState.Normal;
-            frm.AutoScroll = true;
-            frm.Show();
-
-            //enable menu items based on permissions
-            systemAdministrationToolStripMenuItem.Visible = Program.LoggedInUser.IsAdministrator;
-
-            if(Program.AppEnvironment.ApplicationParameters.AllowPaymentAdjustmentEntry)
+            if (Program.AppEnvironment.ApplicationParameters.AllowPaymentAdjustmentEntry)
             {
                 batchRemittanceToolStripMenuItem.Visible = Program.LoggedInUser.CanAddPayments;
                 remittancePostingToolStripMenuItem.Visible = Program.LoggedInUser.CanAddPayments;
@@ -319,11 +332,10 @@ namespace LabBilling
                 b4.Visible = false;
             }
 
-            if(!Program.AppEnvironment.ApplicationParameters.AllowEditing)
-            {                
+            if (!Program.AppEnvironment.ApplicationParameters.AllowEditing)
+            {
                 MetroMessageBox.Show(this, "System is in read-only mode.", "Read Only Mode", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
-            UpdateMenuAccess();
 
         }
 
@@ -332,7 +344,6 @@ namespace LabBilling
             //during testing only - remove once batch charge entry is in production
             batchChargeEntryToolStripMenuItem.Visible = Program.LoggedInUser.IsAdministrator;
 
-            generateClaimsToolStripMenuItem.Visible = false; // Program.LoggedInUser.CanSubmitBilling;
             batchRemittanceToolStripMenuItem.Visible = Program.LoggedInUser.CanAddPayments;
             badDebtMaintenanceToolStripMenuItem.Visible = Program.LoggedInUser.CanModifyBadDebt;
             posting835RemitToolStripMenuItem.Visible = Program.LoggedInUser.CanAddPayments;
@@ -357,12 +368,18 @@ namespace LabBilling
 
             var linkLabel = (LinkLabel)sender;
 
+            LaunchAccount(linkLabel.Tag.ToString());
+        }
+
+        private void LaunchAccount(string account)
+        {
+            Log.Instance.Trace("Entering");
             bool IsAlreadyOpen = false;
             if (Application.OpenForms.OfType<AccountForm>().Count() > 0)
             {
-                foreach (AccountForm frm in System.Windows.Forms.Application.OpenForms.OfType<AccountForm>())
+                foreach (AccountForm frm in Application.OpenForms.OfType<AccountForm>())
                 {
-                    if (frm.SelectedAccount == linkLabel.Tag.ToString())
+                    if (frm.SelectedAccount == account)
                     {
                         IsAlreadyOpen = true;
                         frm.Focus();
@@ -372,70 +389,51 @@ namespace LabBilling
 
             if (!IsAlreadyOpen)
             {
-                AccountForm frm = new AccountForm(linkLabel.Tag.ToString())
-                {
-                    MdiParent = this
-                };
                 Cursor.Current = Cursors.WaitCursor;
-                frm.Show();
+                AccountForm accFrm = new AccountForm(account);
+                accFrm.AccountOpenedEvent += AccFrm_AccountOpenedEvent;
+                NewForm(accFrm);
                 Cursor.Current = Cursors.Default;
             }
-
         }
 
         private void systemParametersToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Log.Instance.Trace($"Entering");
-
-            SystemParametersForm frm = new SystemParametersForm();
-            frm.ShowDialog();
-        }
+            => new SystemParametersForm().ShowDialog();
 
         private void monthlyReportsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Log.Instance.Trace($"Entering");
-
-            frmReports frm = new frmReports(Helper.GetArgs());
-            frm.MdiParent = this;
-            frm.WindowState = FormWindowState.Normal;
-            frm.AutoScroll = true;
-            frm.Show();
-        }
+            => NewForm(new frmReports(Helper.GetArgs()));
 
         private void worklistToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Log.Instance.Trace($"Entering");
 
-            if (System.Windows.Forms.Application.OpenForms.OfType<WorkListForm>().Count() > 0)
+            if (Application.OpenForms.OfType<WorkListForm>().Count() > 0)
             {
-                WorkListForm workListForm = System.Windows.Forms.Application.OpenForms.OfType<WorkListForm>().First();
+                WorkListForm workListForm = Application.OpenForms.OfType<WorkListForm>().First();
                 workListForm.Focus();
             }
             else
             {
                 WorkListForm worklistForm = new WorkListForm(Helper.ConnVal);
-                worklistForm.MdiParent = this;
-                worklistForm.AutoScroll = true;
-                worklistForm.WindowState = FormWindowState.Normal;
-                worklistForm.Show();
+                worklistForm.AccountLaunched += WorklistForm_AccountLaunched;
+                NewForm(worklistForm);
             }
         }
+
+        private void WorklistForm_AccountLaunched(object sender, string e) => LaunchAccount(e);
 
         private void reportingPortalToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Log.Instance.Trace($"Entering");
-
-            //string url = systemParametersRepository.GetByKey("report_portal_url");
             string url = Program.AppEnvironment.ApplicationParameters.ReportingPortalUrl;
-            ReportingPortalForm frm = new ReportingPortalForm(url);
-
-            if(url != "")
+            //ReportingPortalForm frm = new ReportingPortalForm(url);
+            if (url != "")
             {
                 System.Diagnostics.Process.Start(url);
             }
             else
             {
-                MessageBox.Show("Reporting Portal System Parameter not set or not valid. Please contact your administrator","Application Error");
+                MessageBox.Show("Reporting Portal System Parameter not set or not valid. Please contact your administrator", "Application Error");
             }
         }
 
@@ -453,71 +451,35 @@ namespace LabBilling
 
             var formsList = Application.OpenForms.OfType<PatientCollectionsForm>();
 
-            if (formsList.Count() > 0)
+            if (formsList.Any())
             {
                 formsList.First().Focus();
             }
             else
             {
-
-                PatientCollectionsForm frm = new PatientCollectionsForm
-                {
-                    MdiParent = this,
-                    AutoScroll = true,
-                    WindowState = FormWindowState.Normal
-                };
-                frm.Show();
+                NewForm(new PatientCollectionsForm());
             }
         }
 
 
         private void duplicateAccountsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Log.Instance.Trace($"Entering");
-
-            FrmDupAcc frm = new FrmDupAcc(Helper.GetArgs());
-            frm.MdiParent = this;
-            frm.AutoScroll = true;
-            frm.WindowState = FormWindowState.Normal;
-            frm.Show();
-        }
+            => NewForm(new FrmDupAcc(Helper.GetArgs()));
 
         private void reportByInsuranceCompanyToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Log.Instance.Trace($"Entering");
-
-            frmReport frm = new frmReport(Helper.GetArgs()) { MdiParent = this, AutoScroll = true, WindowState = FormWindowState.Normal };
-            frm.Show();
-        }
+            => NewForm(new frmReport(Helper.GetArgs()));
 
         private void posting835RemitToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Log.Instance.Trace($"Entering");
+            => NewForm(new Legacy.Posting835(Helper.GetArgs()));
 
-            Legacy.Posting835 frm = new Legacy.Posting835(Helper.GetArgs())
-            {
-                MdiParent = this,
-                AutoScroll = true,
-                WindowState = FormWindowState.Normal
-            };
-
-            frm.Show();
-        }
-
-        private void Dashboard_FormClosing(object sender, FormClosingEventArgs e)
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             Log.Instance.Trace($"Entering");
             Properties.Settings.Default.Save();
             //if this form is closing, close all other open forms
-            System.Windows.Forms.Application.Exit();
+            Application.Exit();
         }
 
-        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Log.Instance.Trace($"Entering");
-            this.Close();
-            //Application.Exit();
-        }
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e) => this.Close();
 
         private void clientsToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -531,13 +493,7 @@ namespace LabBilling
             }
             else
             {
-                ClientMaintenanceForm frm = new ClientMaintenanceForm
-                {
-                    MdiParent = this,
-                    WindowState = FormWindowState.Normal,
-                    AutoScroll = true
-                };
-                frm.Show();
+                NewForm(new ClientMaintenanceForm());
             }
         }
 
@@ -553,69 +509,51 @@ namespace LabBilling
             }
             else
             {
-                AccountChargeEntry frm = new AccountChargeEntry
-                {
-                    MdiParent = this
-                };
-                frm.Show();
+                NewForm(new AccountChargeEntry());
             }
 
         }
 
         private void batchRemittanceToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Log.Instance.Trace($"Entering");
-
-            BatchRemittance frm = new BatchRemittance();
-            frm.MdiParent = this;
-            frm.Show();
-        }
+            => NewForm(new BatchRemittance());
 
         private void physiciansToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Log.Instance.Trace("Entering");
-
-            PhysicianMaintenanceForm frm = new PhysicianMaintenanceForm
-            {
-                MdiParent = this,
-                WindowState = FormWindowState.Normal,
-                AutoScroll = true
-            };
-            frm.Show();
-        }
+            => NewForm(new PhysicianMaintenanceForm());
 
         private void interfaceMappingToolStripMenuItem_Click(object sender, EventArgs e)
+            => NewForm(new InterfaceMapping());
+
+        private void MainForm_MdiChildActivate(object sender, EventArgs e)
         {
-            Log.Instance.Trace("Entering");
-
-            InterfaceMapping frm = new InterfaceMapping { MdiParent = this, WindowState = FormWindowState.Normal, AutoScroll = true };
-            frm.Show();
-
-        }
-
-        private void Dashboard_MdiChildActivate(object sender, EventArgs e)
-        {
-            if(this.MdiChildren.Count() > Program.AppEnvironment.ApplicationParameters.TabsOpenLimit)
+            if (this.ActiveMdiChild == null)
+                mdiTabControl.Visible = false;
+            else
             {
-
-                List<string> openForms = new List<string>();
-
-                foreach (Form child in this.MdiChildren)
+                this.ActiveMdiChild.WindowState = FormWindowState.Maximized;
+                if (this.ActiveMdiChild.Tag == null)
                 {
-                    openForms.Add(child.Text);
+                    //Add a tabPage to the tabControl with child form caption
+                    TabPage tp = new TabPage(this.ActiveMdiChild.Text);
+                    tp.Tag = this.ActiveMdiChild;
+                    tp.Parent = mdiTabControl;
+                    mdiTabControl.SelectedTab = tp;
+
+                    this.ActiveMdiChild.Tag = tp;
+                    this.ActiveMdiChild.FormClosed += new FormClosedEventHandler(ActiveMdiChild_FormClosed);
+                }
+                else
+                {
+                    TabPage tp = this.ActiveMdiChild.Tag as TabPage;
+                    if (tp != null)
+                        mdiTabControl.SelectedTab = tp;
                 }
 
-                AskCloseTabForm frm = new AskCloseTabForm(openForms);
-
-                if (frm.ShowDialog(this) == DialogResult.OK)
-                {
-                    string selectedForm = frm.SelectedForm;
-
-                    this.MdiChildren.First(x => x.Text == selectedForm).Close();
-                }
-
+                if (!mdiTabControl.Visible) mdiTabControl.Visible = true;
             }
         }
+
+        private void ActiveMdiChild_FormClosed(object sender, FormClosedEventArgs e)
+            => ((sender as Form).Tag as TabPage).Dispose();
 
         private void clientBillsNewToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -623,24 +561,18 @@ namespace LabBilling
 
             var formsList = Application.OpenForms.OfType<ClientInvoiceForm>();
 
-            if (formsList.Count() > 0)
+            if (formsList.Any())
             {
                 formsList.First().Focus();
             }
             else
             {
-                ClientInvoiceForm frm = new ClientInvoiceForm { MdiParent = this, WindowState = FormWindowState.Normal, AutoScroll = true };
-                frm.Show();
+                NewForm(new ClientInvoiceForm());
             }
         }
 
         private void interfaceMonitorToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Log.Instance.Trace("Entering");
-            InterfaceMonitor frm = new InterfaceMonitor { MdiParent = this, WindowState = FormWindowState.Normal, AutoScroll = true };
-            frm.Show();
-
-        }
+            => NewForm(new InterfaceMonitor());
 
         private void pathologistsToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -648,12 +580,7 @@ namespace LabBilling
         }
 
         private void claimValidationRulesToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Log.Instance.Trace("Entering");
-            ClaimRuleEditorForm frm = new ClaimRuleEditorForm();
-
-            frm.ShowDialog();
-        }
+            => NewForm(new ClaimRuleEditorForm());
 
         private bool CheckForDuplicate(Form newForm)
         {
@@ -670,129 +597,8 @@ namespace LabBilling
             return bValue;
         }
 
-        private void professionalToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
-            _ = RunBillingBatch(BillingType.Professional);
-        }
-
-        private enum BillingType
-        {
-            Institutional,
-            Professional
-        }
-
-        private async Task RunBillingBatch(BillingType billingType)
-        {
-            cancellationToken = new CancellationTokenSource();
-
-            TableLayoutPanel tlpClaimBatch = new TableLayoutPanel
-            {
-                Dock = DockStyle.Fill,
-                ColumnCount = 1,
-                RowCount = 1
-            };
-
-            Label claimProcessTitleLabel = new Label();
-            switch (billingType)
-            {
-                case BillingType.Institutional:
-                    claimProcessTitleLabel.Text = "Institutional Claims";
-                    break;
-                case BillingType.Professional:
-                    claimProcessTitleLabel.Text = "Professional Claims";
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(billingType));
-            }
-            tlpClaimBatch.Controls.Add(claimProcessTitleLabel, 0, 0);
-            claimProcessTitleLabel.Dock = DockStyle.Fill;
-
-            claimProgress = new ProgressBar();
-            claimProgress.Style = ProgressBarStyle.Continuous;
-            claimProgress.Minimum = 0;
-            tlpClaimBatch.Controls.Add(claimProgress, 0, 1);
-            claimProgress.Dock = DockStyle.Fill;
-
-            claimProgressStatusLabel = new Label();
-            tlpClaimBatch.Controls.Add(claimProgressStatusLabel, 0, 2);
-            claimProgressStatusLabel.Text = "Processing...";
-            claimProgressStatusLabel.Dock = DockStyle.Fill;
-
-            MetroButton cancelButton = new MetroButton { Text = "Cancel", Name = "cancelButton" };
-            cancelButton.Click += new EventHandler(cancelButton_Click);
-            tlpClaimBatch.Controls.Add(cancelButton, 0, 3);
-            cancelButton.Dock = DockStyle.Fill;
-
-            accordion.Add(tlpClaimBatch, "Claim Batch", "Claim Batch", 1, true);
-            accordion.PerformLayout();
-
-            ClaimGenerator claims = new ClaimGenerator(Program.AppEnvironment);
-            Progress<ProgressReportModel> progress = new Progress<ProgressReportModel>();
-            progress.ProgressChanged += ReportProgress;
-            try
-            {
-                int claimsProcessed = 0;
-                if (billingType == BillingType.Institutional)
-                {
-                    claimsProcessed = await Task.Run(() =>
-                    {
-                        return claims.CompileBillingBatch(Core.ClaimType.Institutional, progress, cancellationToken.Token);
-                    });
-                }
-                else if (billingType == BillingType.Professional)
-                {
-                    claimsProcessed = await Task.Run(() =>
-                    {
-                        return claims.CompileBillingBatch(Core.ClaimType.Professional, progress, cancellationToken.Token);
-                    });
-                }
-
-                if (claimsProcessed < 0)
-                {
-                    MetroMessageBox.Show(this, "Error processing claims. No file generated.", "Process Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-                else
-                {
-                    MetroMessageBox.Show(this, $"File generated. {claimsProcessed} claims generated.");
-                }
-            }
-            catch (TaskCanceledException tce)
-            {
-                Log.Instance.Error(tce, $"{Enum.GetName(typeof(BillingType), billingType)} Claim Batch cancelled by user", tce);
-                MetroMessageBox.Show(this, "Claim batch cancelled by user. No file was generated and batch has been rolled back.");
-                claimProgressStatusLabel.Text = "Job aborted.";
-                claimProgress.Value = claimProgress.Maximum;
-                claimProgress.SetState(2);
-                cancelButton.Enabled = false;
-            }
-        }
-
-        private void institutionalToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            _ = RunBillingBatch(BillingType.Institutional);
-        }
-
-        private void cancelButton_Click(object sender, EventArgs e)
-        {
-            if (MessageBox.Show("This will cancel the claim batch and rollback any changes. Are you sure?", "Cancel Batch?",
-                MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
-                cancellationToken.Cancel();
-        }
-
-        private void ReportProgress(object sender, ProgressReportModel e)
-        {
-            claimProgress.Maximum = e.TotalRecords;
-            claimProgress.Value = e.RecordsProcessed;
-            claimProgressStatusLabel.Text = $"Processing {e.RecordsProcessed} of {e.TotalRecords}";
-        }
-
         private void insurancePlansToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Log.Instance.Trace("Entering");
-            HealthPlanMaintenanceForm frm = new HealthPlanMaintenanceForm { MdiParent = this, WindowState = FormWindowState.Normal, AutoScroll = true };
-            frm.Show();
-        }
+            => NewForm(new HealthPlanMaintenanceForm());
 
         private void remittancePostingToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -809,47 +615,24 @@ namespace LabBilling
 
             var formsList = Application.OpenForms.OfType<ChargeMasterMaintenance>();
 
-            if (formsList.Count() > 0)
+            if (formsList.Any())
             {
                 formsList.First().Focus();
             }
             else
             {
-                ChargeMasterMaintenance frm = new ChargeMasterMaintenance { MdiParent = this, WindowState = FormWindowState.Normal, AutoScroll = true };
-                frm.Show();
+                NewForm(new ChargeMasterMaintenance());
             }
         }
 
         private void systemLogViewerToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Log.Instance.Trace("Entering");
-
-            LogViewerForm frm = new LogViewerForm { MdiParent = this, WindowState = FormWindowState.Normal, AutoScroll = true };
-            frm.Show();
-        }
+            => NewForm(new LogViewerForm());
 
         private void claimBatchManagementToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Log.Instance.Trace("Entering");
-
-            ClaimsManagementForm frm = new ClaimsManagementForm();
-            frm.MdiParent = this;
-            frm.WindowState = FormWindowState.Normal;
-            frm.AutoScroll = true;
-            frm.Show();
-
-        }
+            => NewForm(new ClaimsManagementForm());
 
         private void batchChargeEntryToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Log.Instance.Trace("Entering");
-
-            BatchChargeEntryForm frm = new BatchChargeEntryForm();
-            frm.MdiParent = this;
-            frm.WindowState = FormWindowState.Normal;
-            frm.AutoScroll = true;
-            frm.Show();
-        }
+            => NewForm(new BatchChargeEntryForm());
 
         private void documentationToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -907,10 +690,8 @@ namespace LabBilling
 
         private void MainForm_KeyDown(object sender, KeyEventArgs e)
         {
-            if(e.KeyData == Keys.F1)
-            {
+            if (e.KeyData == Keys.F1)
                 documentationToolStripMenuItem_Click(sender, e);
-            }
         }
 
         private void latestUpdatesToolStripMenuItem_Click(object sender, EventArgs e)
@@ -921,6 +702,18 @@ namespace LabBilling
             if (!string.IsNullOrWhiteSpace(topicPath))
                 url += "/" + topicPath;
             System.Diagnostics.Process.Start(url);
+        }
+
+        private void mdiTabControl_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if ((mdiTabControl.SelectedTab != null) &&
+                (mdiTabControl.SelectedTab.Tag != null))
+            {
+                SendMessage(this.Handle, WM_SETREDRAW, false, 0);
+                (mdiTabControl.SelectedTab.Tag as Form).Select();
+                SendMessage(this.Handle, WM_SETREDRAW, true, 0);
+                this.Refresh();
+            }
         }
     }
 }

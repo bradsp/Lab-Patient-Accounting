@@ -17,6 +17,7 @@ using System.Diagnostics;
 using Microsoft.Win32;
 using LabBilling.Logging;
 using System.Threading;
+using SaveFileDialog = System.Windows.Forms.SaveFileDialog;
 
 namespace LabBilling.Forms
 {

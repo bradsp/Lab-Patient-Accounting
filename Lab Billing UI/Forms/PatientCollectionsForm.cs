@@ -2,15 +2,15 @@
 using System.Data;
 using System.Linq;
 using System.Windows.Forms;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 // programmer added
 using RFClassLibrary;
 using MCL;
 using System.Drawing.Printing;
 using LabBilling.Logging;
 using LabBilling.Core.Models;
-using Microsoft.Identity.Client;
-using Microsoft.IdentityModel.Tokens;
+using LabBilling.Core.DataAccess;
+using System.Collections.Generic;
 
 namespace LabBilling.Forms
 {
@@ -26,26 +26,32 @@ namespace LabBilling.Forms
         R_pat m_rPat = null;
         R_chk m_rChk = null;
         CAcc m_CAcc = null;
-        ERR m_Err = null; 
+        ERR m_Err = null;
         string m_strServer = null;
         string m_strDatabase = null;
         string m_strProductionEnvironment = null;
         DataTable m_dtAccounts;
-        SqlDataAdapter m_sdaBadDebt; 
+        SqlDataAdapter m_sdaBadDebt;
+        PatRepository patRepository;
+        ChkRepository chkRepository;
+        AccountRepository accountRepository;
+        AccountNoteRepository accountNoteRepository;
+        InsRepository insRepository;
+        Account acc;
+
 
         void m_cboxInclude_Click(object sender, EventArgs e)
         {
             Log.Instance.Trace($"Entering");
             tsbSmallBalWriteOff.Enabled = !tsbSmallBalWriteOff.Enabled;
         }
-          
+
         public PatientCollectionsForm()
         {
             Log.Instance.Trace($"Entering");
             InitializeComponent();
-            
 
-            m_strServer = Program.AppEnvironment.ServerName; 
+            m_strServer = Program.AppEnvironment.ServerName;
             m_strDatabase = Program.AppEnvironment.DatabaseName;
             m_strProductionEnvironment = m_strDatabase; //.Contains("LIVE")? "LIVE":"TEST";
 
@@ -58,6 +64,12 @@ namespace LabBilling.Forms
             m_rIns = new R_ins(m_strServer, m_strDatabase, ref m_Err);
 
             //this.Text += string.Format(" {0}", m_strProductionEnvironment);
+            accountRepository = new AccountRepository(Program.AppEnvironment);
+            patRepository = new PatRepository(Program.AppEnvironment);
+            accountNoteRepository = new AccountNoteRepository(Program.AppEnvironment);
+            chkRepository = new ChkRepository(Program.AppEnvironment);
+            insRepository = new InsRepository(Program.AppEnvironment);
+
         }
 
         private void frmBadDebt_Load(object sender, EventArgs e)
@@ -137,13 +149,13 @@ namespace LabBilling.Forms
                 {
                     continue;
                 }
-                
+
                 string strAccount = dr.Cells["account"].Value.ToString().Trim();
                 if (string.IsNullOrEmpty(strAccount))
                 {
                     continue;
                 }
-                
+
                 m_CAcc.GetBalance(strAccount, out strBal);
                 if (strBal.Contains("ERR"))
                 {
@@ -158,57 +170,42 @@ namespace LabBilling.Forms
                 // wdk 20111121 No longer really writing off the balances keeping track in 
                 // aging as BAD_DEBT and COLLECTIONS.
                 // write chk record for balance due as write off with bad debt flagged	
-                m_rChk.GetActiveRecords("account = '~'");
-                m_rChk.ClearMemberVariables();
-                m_rChk.m_strAccount = strAccount;
-                m_rChk.m_strAmtPaid = "";
-                m_rChk.m_strBadDebt = "TRUE";
-                m_rChk.m_strChkDate = DBNull.Value.ToString();
-                m_rChk.m_strDateRec = DBNull.Value.ToString();
-                m_rChk.m_strChkNo = "";
-                m_rChk.m_strComment = "BAD DEBT WRITE OFF";
-                m_rChk.m_strContractual = "";
-                m_rChk.m_strInvoice = "";
-                m_rChk.m_strSource = "BAD_DEBT";
-                m_rChk.m_strStatus = "WRITE_OFF";
-                m_rChk.m_strWriteOff = dBal.ToString("F2");
-                m_rChk.m_strWriteOffDate = DateTime.Today.ToString();
-                m_rChk.m_strInsCode =
+                acc = accountRepository.GetByAccount(strAccount);
+
+                Chk chk = new Chk();
+                chk.AccountNo = strAccount;
+                chk.PaidAmount = 0.00;
+                chk.IsCollectionPmt = true;
+                chk.Comment = "BAD DEBT WRITE OFF";
+                chk.ContractualAmount = 0.00;
+                chk.Source = "BAD_DEBT";
+                chk.Status = "WRITE_OFF";
+                chk.WriteOffAmount = dBal;
+                chk.WriteOffDate = DateTime.Today;
+                chk.InsCode =
                     m_rIns.GetActiveRecords(string.Format("Account = '{0}' and ins_a_b_c = 'A'", strAccount)) == 1 ?
                     m_rIns.propIns_code.Trim().ToUpper() : "";
-                m_CAcc.LoadAccount(strAccount);
-                m_rChk.m_strFinCode = m_CAcc.m_Racc.m_strFinCode;
-                    ;
-                m_rChk.m_strModPrg = Application.ProductName + Application.ProductVersion;
-                int nRec = m_rChk.AddRecord();
+                
+                //m_CAcc.LoadAccount(strAccount);
+                chk.FinCode = m_CAcc.m_Racc.m_strFinCode;
+                //m_rChk.m_strModPrg = Application.ProductName + Application.ProductVersion;
 
-                    // update pat
-                string strUpdateErr = null;
-                    m_rPat.GetActiveRecords("account = '~'");
-                    m_rPat.ClearMemberVariables();
-                    m_rPat.GetActiveRecords(string.Format("account = '{0}'", strAccount));
-                    if (m_rPat.UpdateField("baddebt_date",
-                        DateTime.Today.ToString(),
-                            string.Format("account = '{0}'", strAccount),
-                                out strUpdateErr) > 0)
-                    {
-                        nUpdated += 1;
-                    }
-                    else
-                    {
-                        m_Err.m_Logfile.WriteLogFile(strUpdateErr);
-                    }
-                       
-                        
+                //int nRec = m_rChk.AddRecord();
+                chkRepository.Add(chk);
+
+                // update pat
+                acc.Pat.BadDebtListDate = DateTime.Today;
+
+                if(patRepository.Update(acc.Pat, new[] { nameof(Pat.BadDebtListDate) }))
+                {
+                    nUpdated++;
+                }
+
                 // update notes for this account
-                m_rNotes.GetRecords(string.Format("account = '{0}'", strAccount));
-                m_rNotes.propComment = string.Format("Bad debt set by [{0}]", 
-                    System.Environment.UserName);
-                m_rNotes.AddRecord(string.Format("account = '{0}'", strAccount));
-                  
+                accountRepository.AddNote(strAccount, $"Bad debt set by [{Program.AppEnvironment.UserName}]");
             }
-            MessageBox.Show(string.Format("{0} Pat Records Updated",nUpdated), "POSTING FINISHED");
-  
+            MessageBox.Show(string.Format("{0} Pat Records Updated", nUpdated), "POSTING FINISHED");
+
         }
 
         private void tsbLoad_Click(object sender, EventArgs e)
@@ -250,7 +247,7 @@ namespace LabBilling.Forms
                 DateTime dtSent = (DateTime)result;
 
                 //if (!((CheckBox)m_cboxInclude.Control).Checked)
-                if(sentCollections)
+                if (sentCollections)
                 {
                     strSelectBadDebt =
                         string.Format("select datepart(month, date_sent) as [Month], " +
@@ -285,11 +282,11 @@ namespace LabBilling.Forms
                 // special case processing 
                 if (DateTime.Now < new DateTime(2015, 12, 18, 15, 15, 0))
                 {
-                    strSelectBadDebt = "select datepart(month, date_sent) as [Month] , datepart(year, date_sent) as [Year] , " + 
+                    strSelectBadDebt = "select datepart(month, date_sent) as [Month] , datepart(year, date_sent) as [Year] , " +
                         "account_no as [account] , dbo.pat.pat_full_name , debtor_last_name +', '+debtor_first_name as [Debtor Name] ," +
-                        "convert(datetime,convert(varchar(10),service_date,101)) as [service_date], pat.baddebt_date  " + 
-                        "from pat inner join dbo.bad_debt on bad_debt.account_no = pat.account  " + 
-                        "AND bad_debt.date_entered BETWEEN  '2015-10-26 00:00:00.570' AND '2015-10-27 23:59:52.570' " + 
+                        "convert(datetime,convert(varchar(10),service_date,101)) as [service_date], pat.baddebt_date  " +
+                        "from pat inner join dbo.bad_debt on bad_debt.account_no = pat.account  " +
+                        "AND bad_debt.date_entered BETWEEN  '2015-10-26 00:00:00.570' AND '2015-10-27 23:59:52.570' " +
                         "WHERE dbo.pat.bd_list_date = '2015-12-07 00:00:00.000' AND dbo.pat.baddebt_date IS NULL order by dbo.pat.pat_full_name";
                 }
                 //    string.Format("select " +
@@ -359,8 +356,8 @@ namespace LabBilling.Forms
             //we need to know if the data is from the bad debt table or from Mailer P
             Log.Instance.Trace($"Entering");
             try
-            { 
-                if(dgvAccounts.Columns.Contains("rowguid"))
+            {
+                if (dgvAccounts.Columns.Contains("rowguid"))
                 {
                     string selectedGuid = ((DataGridView)sender).Rows[e.RowIndex].Cells["rowguid"].Value.ToString();
                     PatientCollectionsEditForm bdFrm = new PatientCollectionsEditForm(selectedGuid);
@@ -441,8 +438,8 @@ namespace LabBilling.Forms
                     " left outer join ctePay on ctePay.account = cte.account " +
                     " left outer join cteBal on cteBal.account = cte.account " +
                     " where datediff(day, ctePay.[last chk date], getdate())  > 110 " +
-                    " order by datediff(day, ctePay.[last chk date], getdate())"); 
-                     //dtFrom, dtThru);
+                    " order by datediff(day, ctePay.[last chk date], getdate())");
+                //dtFrom, dtThru);
 
                 SqlCommand cmdSelect = new SqlCommand(strSelectBadDebt, conn);
                 m_sdaBadDebt.SelectCommand = cmdSelect;
@@ -451,7 +448,7 @@ namespace LabBilling.Forms
                 {
                     m_sdaBadDebt.Fill(m_dtAccounts);
                 }
-                catch (SqlException )
+                catch (SqlException)
                 {
                     m_sdaBadDebt.SelectCommand.CommandTimeout = m_sdaBadDebt.SelectCommand.CommandTimeout * 2;
                     try
@@ -468,7 +465,7 @@ namespace LabBilling.Forms
             }
             dgvAccounts.DataSource = m_dtAccounts;
 
-          
+
             ssRecords.Text = string.Format("Records {0}", dgvAccounts.Rows.Count);
 
         }
@@ -477,7 +474,7 @@ namespace LabBilling.Forms
         {
             Log.Instance.Trace($"Entering");
             ssRecords.Text = string.Format("Records {0}", dgvAccounts.Rows.Count);
-            
+
 
             if (e.Button == MouseButtons.Right)
             {
@@ -517,27 +514,27 @@ namespace LabBilling.Forms
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.InitialDirectory = @"\\labops1\c:\temp\";
             ofd.Filter = "Text Files|*.txt";
-          
+
             if (ofd.ShowDialog() == DialogResult.Cancel)
             {
                 return;
             }
-            string[]  alAccounts = 
-                RFClassLibrary.RFCObject.GetFileContents(ofd.FileName).Split(new string[] {Environment.NewLine},StringSplitOptions.RemoveEmptyEntries).ToArray();
-            
-            MessageBox.Show(string.Format("{0} accounts in file",alAccounts.GetUpperBound(0)));
+            string[] alAccounts =
+                RFClassLibrary.RFCObject.GetFileContents(ofd.FileName).Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+
+            MessageBox.Show(string.Format("{0} accounts in file", alAccounts.GetUpperBound(0)));
             dgvAccounts.Columns.Add("ACCOUNT", "ACCOUNT");
             dgvAccounts.Columns.Add("PAT NAME", "PAT NAME");
             dgvAccounts.Columns.Add("GUAR NAME", "GUAR NAME");
-            foreach(string str in alAccounts)
+            foreach (string str in alAccounts)
             {
-                string strGuarName = string.Format("{0}, {1}",str.Substring(0,19).Trim(), str.Substring(20,15).Trim());
+                string strGuarName = string.Format("{0}, {1}", str.Substring(0, 19).Trim(), str.Substring(20, 15).Trim());
                 string strAccount = str.Substring(240, 25).Trim();
                 string strPatName = str.Substring(270, 20).Trim();
 
                 dgvAccounts.Rows.Add(new object[] { strAccount, strPatName, strGuarName });
             }
-          
+
         }
 
         private void tsbPrintGrid_Click(object sender, EventArgs e)
@@ -575,76 +572,76 @@ namespace LabBilling.Forms
             pb.m_strDatabase = m_strDatabase;
             pb.ShowDialog();
             return;
-           
+
         }
 
         private void TsmiSelectAccounts_Click(object sender, EventArgs e)
         {
             Log.Instance.Trace($"Entering");
             return;
-           // int nRows = 0;
-           // Exception myException = new Exception("Message Initialized and Upload failed."); 
-               
-           //using (SqlConnection conn = new SqlConnection(
-           //string.Format("Data Source={0}; Initial Catalog = {1}; Integrated Security = 'SSPI'; "+
-           // "Connection Timeout = 600",
-           //        m_strServer, m_strDatabase)))
-           // {
-           //    conn.Open();
-           //    SqlCommand command = conn.CreateCommand();
-           //    SqlTransaction transaction =conn.BeginTransaction();
-           //    command.Connection = conn;
-           //    command.Transaction = transaction;
+            // int nRows = 0;
+            // Exception myException = new Exception("Message Initialized and Upload failed."); 
 
-           //    try
-           //    {
-           //        DateTime batchDate = new DateTime(
-           //            DateTime.Today.AddMonths(-1).Year
-           //            , DateTime.Today.AddMonths(-1).Month
-           //            , DateTime.Today.AddDays((DateTime.Today.Day * -1)).Day
-           //            , 23, 59, 59);
-           //        command.CommandText = string.Format("exec dbo.usp_prg_pat_bill_acct "+
-           //            "@batchDate = '{0}', @endDate = '{1}',  " +
-           //            "@batch = '{2}{3}'"
-           //            , DateTime.Today.ToString("d")
-           //            , batchDate
-           //            , batchDate.ToString("yyyy"), batchDate.ToString("MM"));
+            //using (SqlConnection conn = new SqlConnection(
+            //string.Format("Data Source={0}; Initial Catalog = {1}; Integrated Security = 'SSPI'; "+
+            // "Connection Timeout = 600",
+            //        m_strServer, m_strDatabase)))
+            // {
+            //    conn.Open();
+            //    SqlCommand command = conn.CreateCommand();
+            //    SqlTransaction transaction =conn.BeginTransaction();
+            //    command.Connection = conn;
+            //    command.Transaction = transaction;
 
-           //        nRows = command.ExecuteNonQuery();
+            //    try
+            //    {
+            //        DateTime batchDate = new DateTime(
+            //            DateTime.Today.AddMonths(-1).Year
+            //            , DateTime.Today.AddMonths(-1).Month
+            //            , DateTime.Today.AddDays((DateTime.Today.Day * -1)).Day
+            //            , 23, 59, 59);
+            //        command.CommandText = string.Format("exec dbo.usp_prg_pat_bill_acct "+
+            //            "@batchDate = '{0}', @endDate = '{1}',  " +
+            //            "@batch = '{2}{3}'"
+            //            , DateTime.Today.ToString("d")
+            //            , batchDate
+            //            , batchDate.ToString("yyyy"), batchDate.ToString("MM"));
 
-           //        transaction.Commit();
-           //    }
-           //    catch (SqlException sqe)
-           //    {
-           //        myException = sqe;
-           //        //MessageBox.Show(sqe.Message, sqe.GetType().ToString());
-           //        transaction.Rollback();
-           //    }
-           //    catch (Exception ex)
-           //    {
-           //        myException =  ex;
-           //        MessageBox.Show(ex.Message, ex.GetType().ToString());
-           //        transaction.Rollback();
-           //    }
-           //     finally
-           //     {
-                    
-           //         if (conn.State == ConnectionState.Open)
-           //         {
-           //             conn.Close();
-           //         }
-           //     }
-           // }
+            //        nRows = command.ExecuteNonQuery();
 
-           // if (!string.IsNullOrEmpty(myException.GetType().ToString()))
-           // {
-           //   MessageBox.Show(myException.Message, myException.GetType().ToString());
-           // }
-           // else
-           // {
-           //     MessageBox.Show(string.Format("{0) Accounts loaded.",nRows),"FINISHED UPLOAD");
-           // }
-           
+            //        transaction.Commit();
+            //    }
+            //    catch (SqlException sqe)
+            //    {
+            //        myException = sqe;
+            //        //MessageBox.Show(sqe.Message, sqe.GetType().ToString());
+            //        transaction.Rollback();
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        myException =  ex;
+            //        MessageBox.Show(ex.Message, ex.GetType().ToString());
+            //        transaction.Rollback();
+            //    }
+            //     finally
+            //     {
+
+            //         if (conn.State == ConnectionState.Open)
+            //         {
+            //             conn.Close();
+            //         }
+            //     }
+            // }
+
+            // if (!string.IsNullOrEmpty(myException.GetType().ToString()))
+            // {
+            //   MessageBox.Show(myException.Message, myException.GetType().ToString());
+            // }
+            // else
+            // {
+            //     MessageBox.Show(string.Format("{0) Accounts loaded.",nRows),"FINISHED UPLOAD");
+            // }
+
 
         }
 
@@ -678,68 +675,35 @@ namespace LabBilling.Forms
                     continue;
                 }
                 string strAccount = dr.Cells["account"].Value.ToString();
-                m_rChk.ClearMemberVariables();
                 int nRec = m_rChk.GetActiveRecords(
                     string.Format("account = '{0}' and bad_debt <> 0", strAccount));
-                if (nRec == 0)
-                {
-                    m_rChk.GetActiveRecords("account = '~'");
-                    m_rChk.ClearMemberVariables();
-                    m_rChk.m_strAccount = strAccount;
-                    m_rChk.m_strAmtPaid = "";
-                    m_rChk.m_strBadDebt = "TRUE";
-                    m_rChk.m_strChkDate = DBNull.Value.ToString();
-                    m_rChk.m_strDateRec = DBNull.Value.ToString();
-                    m_rChk.m_strChkNo = "";
-                    m_rChk.m_strComment = "BAD DEBT WRITE OFF";
-                    m_rChk.m_strContractual = "";
-                    m_rChk.m_strInvoice = "";
-                    m_rChk.m_strSource = "BAD_DEBT";
-                    m_rChk.m_strStatus = "WRITE_OFF";
-                    m_rChk.m_strWriteOff = dBal.ToString("F2");
-                    m_rChk.m_strWriteOffDate = DateTime.Today.ToString();
-                    m_rChk.m_strInsCode =
-                        m_rIns.GetActiveRecords(string.Format("Account = '{0}' and ins_a_b_c = 'A'", strAccount)) == 1 ?
-                        m_rIns.propIns_code.Trim().ToUpper() : "";
-                    m_CAcc.LoadAccount(strAccount);
-                    m_rChk.m_strFinCode = m_CAcc.m_Racc.m_strFinCode;
 
-                    m_rChk.m_strModPrg = propAppName;
-                    int nChk = m_rChk.AddRecord();
+                acc = accountRepository.GetByAccount(strAccount);
+                List<Chk> chks = chkRepository.GetByAccount(strAccount).Where(x => x.IsCollectionPmt != false).ToList();
+
+                if (chks.Count == 0)
+                {
+                    Chk chk = new Chk();
+                    chk.AccountNo = strAccount;
+                    chk.IsCollectionPmt = true;
+                    chk.Comment = "BAD DEBT WRITE OFF";
+                    chk.Source = "BAD_DEBT";
+                    chk.Status = "WRITE_OFF";
+                    chk.WriteOffAmount = dBal;
+                    chk.WriteOffDate = DateTime.Today;
+                    chk.InsCode = acc.PrimaryInsuranceCode;
+                    chk.FinCode = acc.FinCode;
+                    chkRepository.Add(chk);
 
                     // update pat
-                    string strUpdateErr = null;
-                    m_rPat.GetActiveRecords("account = '~'");
-                    m_rPat.ClearMemberVariables();
-                    m_rPat.GetActiveRecords(string.Format("account = '{0}'", strAccount));
-                    if (m_rPat.UpdateField("baddebt_date",
-                        DateTime.Today.ToString(),
-                            string.Format("account = '{0}'", strAccount),
-                                out strUpdateErr) > 0)
+                    acc.Pat.BadDebtListDate = DateTime.Today;
+                    if(patRepository.Update(acc.Pat, new[] { nameof(Pat.BadDebtListDate) }))
                     {
-                        nUpdated += 1;
-                    }
-                    else
-                    {
-                        m_Err.m_Logfile.WriteLogFile(strUpdateErr);
+                        nUpdated++;
                     }
 
-
-                    // update notes for this account
-                    m_rNotes.GetRecords(string.Format("account = '{0}'", strAccount));
-                    m_rNotes.propComment = string.Format("Bad debt set by [{0}]",
-                        System.Environment.UserName);
-                    m_rNotes.AddRecord(string.Format("account = '{0}'", strAccount));
-                    //m_rChk.AddRecord(
+                    accountRepository.AddNote(strAccount, $"Bad debt set by [{Program.AppEnvironment.UserName}]");
                 }
-                /*
-                 * m_rChk = new R_chk(m_strServer, m_strDatabase, ref m_Err);
-                    m_rPat = new R_pat(m_strServer, m_strDatabase, ref m_Err);
-                    m_CAcc = new CAcc(m_strServer, m_strDatabase, ref m_Err);
-                    m_rNotes = new R_notes(m_strServer, m_strDatabase, ref m_Err);
-                    m_rIns = new R_ins(m_strServer, m_strDatabase, ref m_Err);
-
-                 * */
             }
             MessageBox.Show("Processing small balance write_off is complete.", "SMALL BALANCE");
         }
@@ -761,14 +725,14 @@ namespace LabBilling.Forms
 
                     SqlDataReader dr = cmdSelect.ExecuteReader();
 
-                    if(dr.HasRows)
+                    if (dr.HasRows)
                     {
-                        while(dr.Read())
+                        while (dr.Read())
                         {
                             FixedFileLine ffl = new RFClassLibrary.FixedFileLine(19);
                             ffl.SetField(1, 20, dr["debtor_last_name"] as string);
                             ffl.SetField(2, 15, dr["debtor_first_name"] as string);
-                            ffl.SetField(3, 25, dr["st_addr_1"] as string);                            
+                            ffl.SetField(3, 25, dr["st_addr_1"] as string);
                             ffl.SetField(4, 25, dr["st_addr_2"] as string);
                             ffl.SetField(5, 18, dr["city"] as string);
                             ffl.SetField(6, 15, dr["state_zip"] as string);

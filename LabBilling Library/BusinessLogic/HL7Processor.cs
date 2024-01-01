@@ -6,9 +6,7 @@ using j4jayant.HL7.Parser;
 using RFClassLibrary;
 using LabBilling.Logging;
 using System.Text;
-using System.Configuration;
 using System.Linq;
-using System.Windows.Interop;
 using System.Text.RegularExpressions;
 
 namespace LabBilling.Core.BusinessLogic

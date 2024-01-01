@@ -11,14 +11,8 @@ using LabBilling.Core.Models;
 using LabBilling.Library;
 using RFClassLibrary;
 using System.Data;
-using System.Text;
-using System.Reflection;
 using System.Threading.Tasks;
-using MetroFramework;
 using LabBilling.Core.BusinessLogic;
-using System.Text.RegularExpressions;
-using System.Configuration;
-using System.Drawing.Printing;
 using LabBilling.Legacy;
 
 namespace LabBilling.Forms
@@ -59,7 +53,7 @@ namespace LabBilling.Forms
         private bool billingTabLoading = false;
         private const int _timerInterval = 650;
         private const string notesAlertText = "** SEE NOTES **";
-        
+
         //private bool skipSelectionChanged = false;
         private Timer _timer;
 
@@ -87,21 +81,21 @@ namespace LabBilling.Forms
                 _selectedAccount = account;
             }
 
-            if (parentForm != null)
-                this.MdiParent = parentForm;
+            //if (parentForm != null)
+            //    this.MdiParent = parentForm;
         }
 
         private AccountForm()
         {
             Log.Instance.Trace("Entering");
             InitializeComponent();
-            _timer = new System.Windows.Forms.Timer() { Enabled = false, Interval = _timerInterval };
+            _timer = new Timer() { Enabled = false, Interval = _timerInterval };
             _timer.Tick += new EventHandler(insurancePlanTextBox_KeyUpDone);
         }
 
         #region MainForm
 
-        private void AccountForm_Load(object sender, EventArgs e)
+        private async void AccountForm_Load(object sender, EventArgs e)
         {
             Log.Instance.Trace("Entering");
 
@@ -248,6 +242,7 @@ namespace LabBilling.Forms
             }
 
             removeModifierToolStripMenuItem.Click += new EventHandler(RemoveModifier_Click);
+            await LoadAccountData();
         }
 
         private void SetFormPermissions()
@@ -261,7 +256,7 @@ namespace LabBilling.Forms
             }
 
             Helper.SetControlsAccess(tabPayments.Controls, false);
-            if(Program.AppEnvironment.ApplicationParameters.AllowPaymentAdjustmentEntry)
+            if (Program.AppEnvironment.ApplicationParameters.AllowPaymentAdjustmentEntry)
             {
                 Helper.SetControlsAccess(tabPayments.Controls, Program.LoggedInUser.CanAddAdjustments);
             }
@@ -286,7 +281,7 @@ namespace LabBilling.Forms
             clearHoldStatusToolStripMenuItem.Visible = false;
             ValidateAccountButton.Visible = false;
             GenerateClaimButton.Visible = false;
-            if(Program.AppEnvironment.ApplicationParameters.AllowEditing)
+            if (Program.AppEnvironment.ApplicationParameters.AllowEditing)
             {
                 if (Program.LoggedInUser.Access == "ENTER/EDIT")
                 {
@@ -333,6 +328,7 @@ namespace LabBilling.Forms
         private async Task LoadAccountData()
         {
             Log.Instance.Trace($"Entering");
+            this.SuspendLayout();
             currentAccount = await accountRepository.GetByAccountAsync(SelectedAccount);
 
             generateClientStatementToolStripMenuItem.Enabled = currentAccount.FinCode == "CLIENT";
@@ -342,7 +338,7 @@ namespace LabBilling.Forms
             dxBindingList = new BindingList<PatDiag>(currentAccount.Pat.Diagnoses);
             //ShowCreditedChrgCheckBox.Checked = false;
 
-            if(currentAccount.Status == AccountStatus.Hold)
+            if (currentAccount.Status == AccountStatus.Hold)
             {
                 clearHoldStatusToolStripMenuItem.Text = clearHoldMenuText;
             }
@@ -352,6 +348,7 @@ namespace LabBilling.Forms
             }
 
             RefreshAccountData();
+            this.ResumeLayout();
         }
 
         /// <summary>
@@ -1023,8 +1020,6 @@ namespace LabBilling.Forms
             }
         }
 
-        //bool insAddMode = false;
-
         private void AddInsuranceButton_Click(object sender, EventArgs e)
         {
             //clear the insurance table selection and data entry fields.
@@ -1102,7 +1097,7 @@ namespace LabBilling.Forms
             ChargesDataGrid.Columns[nameof(Chrg.CdmDescription)].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             ChargesDataGrid.BackgroundColor = Color.AntiqueWhite;
             ChrgDetailDataGrid.BackgroundColor = Color.AntiqueWhite;
-      
+
             chargeBalRichTextbox.Text = "";
             chargeBalRichTextbox.SelectionFont = new Font(chargeBalRichTextbox.Font.FontFamily, 10, FontStyle.Bold);
             chargeBalRichTextbox.SelectedText = "3rd Party Patient Balance\n";
@@ -1236,7 +1231,7 @@ namespace LabBilling.Forms
                 e.CellStyle.BackColor = Color.LightBlue;
             }
 
-            return; 
+            return;
 
         }
 
@@ -1267,19 +1262,7 @@ namespace LabBilling.Forms
             }
         }
 
-        private void ShowCreditedChrgCheckBox_CheckedChanged(object sender, EventArgs e)
-        {
-            Log.Instance.Trace($"Entering");
-
-            FilterCharges();
-            return;
-
-            //if (ShowCreditedChrgCheckBox.Checked)
-            //    chargesTable.DefaultView.RowFilter = String.Empty;
-            //else
-            //    chargesTable.DefaultView.RowFilter = "IsCredited = false";
-
-        }
+        private void ShowCreditedChrgCheckBox_CheckedChanged(object sender, EventArgs e) => FilterCharges();
 
         private void AddChargeButton_Click(object sender, EventArgs e)
         {
@@ -1397,7 +1380,7 @@ namespace LabBilling.Forms
                 {
                     chkRepository.Add(chk);
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     Log.Instance.Error(ex);
                     MessageBox.Show($"Error adding payment. See log for details.");
@@ -1914,7 +1897,7 @@ namespace LabBilling.Forms
             statementHistoryDataGrid.Columns[nameof(PatientStatementAccount.MailerCount)].Visible = true;
             statementHistoryDataGrid.Columns[nameof(PatientStatementAccount.ProcessedDate)].Visible = true;
             statementHistoryDataGrid.Columns[nameof(PatientStatementAccount.StatementNumber)].Visible = true;
-            
+
             billingTabLoading = false;
         }
 
@@ -2076,7 +2059,7 @@ namespace LabBilling.Forms
         {
             Log.Instance.Trace($"Entering");
 
-            if(clearHoldStatusToolStripMenuItem.Text == clearHoldMenuText)
+            if (clearHoldStatusToolStripMenuItem.Text == clearHoldMenuText)
             {
                 InputBoxResult prompt = InputBox.Show("Enter reason for setting status back to New:", "New Note");
                 AccountNote note = new AccountNote();
@@ -2093,7 +2076,7 @@ namespace LabBilling.Forms
                 accountRepository.UpdateStatus(currentAccount.AccountNo, AccountStatus.New);
             }
 
-            if(clearHoldStatusToolStripMenuItem.Text == setHoldMenuText)
+            if (clearHoldStatusToolStripMenuItem.Text == setHoldMenuText)
             {
                 InputBoxResult prompt = InputBox.Show("Enter reason for claim hold:", "New Note");
                 AccountNote note = new AccountNote();
@@ -2168,7 +2151,6 @@ namespace LabBilling.Forms
             if (e.TabPage.Name == tabDemographics.Name)
             {
                 //load demographics
-
             }
             if (e.TabPage.Name == summaryTab.Name)
             {
@@ -2182,8 +2164,9 @@ namespace LabBilling.Forms
 
         private void providerLookup1_SelectedValueChanged(object source, EventArgs args)
         {
-            string phy = providerLookup1.SelectedValue;
+            //string phy = providerLookup1.SelectedValue;
         }
+        
 
         #region Guarantor Tab
 
@@ -2271,18 +2254,12 @@ namespace LabBilling.Forms
             }
 
             //validate account - if valid, change statement flag. Otherwise, show errors.
-//            if (accountRepository.Validate(currentAccount, true))
-//            {
-                accountRepository.AddNote(currentAccount.AccountNo, $"Statement flag changed from {currentAccount.Pat.StatementFlag} to {statementFlagComboBox.SelectedItem}");
+            accountRepository.AddNote(currentAccount.AccountNo, $"Statement flag changed from {currentAccount.Pat.StatementFlag} to {statementFlagComboBox.SelectedItem}");
 
-                currentAccount.Pat.StatementFlag = statementFlagComboBox.SelectedItem.ToString();
-                patRepository.Update(currentAccount.Pat, new[] { nameof(Pat.StatementFlag) });
-                accountRepository.UpdateStatus(currentAccount.AccountNo, AccountStatus.Statements);
-//            }
-//            else
-//            {
-//                MessageBox.Show("There are validation errors. Resolve before setting statement flag.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-//            }
+            currentAccount.Pat.StatementFlag = statementFlagComboBox.SelectedItem.ToString();
+            patRepository.Update(currentAccount.Pat, new[] { nameof(Pat.StatementFlag) });
+            accountRepository.UpdateStatus(currentAccount.AccountNo, AccountStatus.Statements);
+
             await LoadAccountData();
         }
 
@@ -2338,22 +2315,15 @@ namespace LabBilling.Forms
 
         private void generateClientStatementToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
         }
 
         private void dxPointerGrid2_DataError(object sender, DataGridViewDataErrorEventArgs e)
         {
-
             Log.Instance.Error(e.Exception, e.Exception.Message);
-
             return;
-
         }
 
-        private async void AccountForm_Activated(object sender, EventArgs e)
-        {
-            await LoadAccountData();
-        }
+        private async void AccountForm_Activated(object sender, EventArgs e) => await LoadAccountData();       
 
         private async void readyToBillCheckbox_CheckedChanged(object sender, EventArgs e)
         {
@@ -2418,10 +2388,7 @@ namespace LabBilling.Forms
             }
         }
 
-        private void chargeDetailsContextMenu_Opening(object sender, CancelEventArgs e)
-        {
-
-        }
+        private void chargeDetailsContextMenu_Opening(object sender, CancelEventArgs e) {  }
 
         private void noteAlertCheckBox_CheckedChanged(object sender, EventArgs e)
         {
@@ -2457,15 +2424,9 @@ namespace LabBilling.Forms
             }
         }
 
-        private void show3rdPartyRadioButton_CheckedChanged(object sender, EventArgs e)
-        {
-            FilterCharges();
-        }
+        private void show3rdPartyRadioButton_CheckedChanged(object sender, EventArgs e) => FilterCharges();
 
-        private void BannerAccountTextBox_Click(object sender, EventArgs e)
-        {
-            Clipboard.SetText(BannerAccountTextBox.Text);
-        }
+        private void BannerAccountTextBox_Click(object sender, EventArgs e) => Clipboard.SetText(BannerAccountTextBox.Text);
 
         private async void changeCreditFlagToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -2477,7 +2438,7 @@ namespace LabBilling.Forms
 
                 int chrgId = Convert.ToInt32(row.Cells[nameof(Chrg.ChrgId)].Value);
                 bool currentFlag = Convert.ToBoolean(row.Cells[nameof(Chrg.IsCredited)].Value);
-                
+
                 if (MessageBox.Show($"Change credited flag on {chrgId}?",
                     "Confirm Change", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                 {
@@ -2490,7 +2451,7 @@ namespace LabBilling.Forms
 
         private void copyToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if(NotesDisplayTextBox.SelectionLength > 0)
+            if (NotesDisplayTextBox.SelectionLength > 0)
             {
                 NotesDisplayTextBox.Copy();
             }

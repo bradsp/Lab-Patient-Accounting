@@ -7,7 +7,6 @@ using LabBilling.Core.Models;
 using System.Reflection;
 using PetaPoco;
 using System.Linq.Expressions;
-using PetaPoco.Providers;
 using RFClassLibrary;
 
 namespace LabBilling.Core.DataAccess
@@ -28,6 +27,7 @@ namespace LabBilling.Core.DataAccess
         public string Errors { get; internal set; }
         protected IAppEnvironment _appEnvironment { get; set; }
 
+
         public RepositoryBase(IAppEnvironment environment) : base(environment.ConnectionString)
         {
             Log.Instance.Trace("Entering");
@@ -35,7 +35,21 @@ namespace LabBilling.Core.DataAccess
                 throw new ApplicationException("AppEnvironment not valid.");
 
             _appEnvironment = environment;
+
+            dbConnection.ExceptionThrown += DbConnection_ExceptionThrown;
+            dbConnection.ConnectionOpened += DbConnection_ConnectionOpened;
+
             Initialize();
+        }
+
+        private void DbConnection_ConnectionOpened(object sender, DbConnectionEventArgs e)
+        {
+            //Log.Instance.Trace($"Connected to Database {e.Connection.Database}");
+        }
+
+        private void DbConnection_ExceptionThrown(object sender, ExceptionEventArgs e)
+        {
+            throw new ApplicationException("Error with database connection", e.Exception);
         }
 
         private void Initialize()
@@ -103,7 +117,7 @@ namespace LabBilling.Core.DataAccess
 
             table.mod_date = DateTime.Now;
             table.mod_host = Environment.MachineName;
-            table.mod_prg = RFClassLibrary.OS.GetAppName();
+            table.mod_prg = OS.GetAppName();
             table.mod_user = Environment.UserName.ToString();
 
             dbConnection.Update(table);
@@ -153,7 +167,7 @@ namespace LabBilling.Core.DataAccess
 
             table.mod_date = DateTime.Now;
             table.mod_host = Environment.MachineName;
-            table.mod_prg = RFClassLibrary.OS.GetAppName();
+            table.mod_prg = OS.GetAppName();
             table.mod_user = Environment.UserName.ToString();
             try
             {

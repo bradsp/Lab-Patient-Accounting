@@ -1,0 +1,80 @@
+﻿<Window x:Class="LabBilling.Forms.MainFormWPF"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:LabBilling.Forms"
+        mc:Ignorable="d"
+        Title="Lab Patient Accounting" Height="768" Width="1024" WindowStartupLocation="CenterScreen">
+    <Grid Background="White">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="20"/>
+            <ColumnDefinition Width="0.25*"/>
+            <ColumnDefinition />
+            <ColumnDefinition Width="20"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20"/>
+            <RowDefinition Height="30"/>
+            <RowDefinition />
+            <RowDefinition Height="20"/>
+        </Grid.RowDefinitions>
+
+        <Menu x:Name="MainMenu" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2">
+            <RibbonMenuItem x:Name="billingMenuItem" Header="Billing" >
+                <MenuItem Header="Account"/>
+                <MenuItem Header="Worklist" />
+                <MenuItem Header="Duplicate Accounts"/>
+                <MenuItem Header="Account Charge Entry"/>
+                <MenuItem Header="Batch Charge Entry"/>
+                <MenuItem Header="Batch Remittance"/>
+                <MenuItem Header="Claim Batch Management"/>
+                <MenuItem Header="Posting 835 Remit (Legacy)"/>
+                <MenuItem Header="Remittance Posting"/>
+                <MenuItem Header="Patient Collections"/>
+            </RibbonMenuItem>
+            <RibbonMenuItem x:Name="dictionariesMenuItem" Header="Dictionaries">
+                <MenuItem Header="Charge Master"/>
+                <MenuItem Header="Clients"/>
+                <MenuItem Header="Insurance Plans"/>
+                <MenuItem Header="Providers"/>
+            </RibbonMenuItem>
+            <RibbonMenuItem x:Name="reportsMenuItem" Header="Reports">
+                <MenuItem Header="Coding Stats"/>
+                <MenuItem Header="Monthly Reports"/>
+                <MenuItem Header="Payments"/>
+                <MenuItem Header="Random Drug Screen"/>
+                <MenuItem Header="Address Requisitions"/>
+                <MenuItem Header="Accounting Reports"/>
+                <MenuItem Header="ABN Report"/>
+                <MenuItem Header="Reporting Portal"/>
+                <MenuItem Header="Report by Insurance Company"/>
+            </RibbonMenuItem>
+            <RibbonMenuItem x:Name="systemAdminMenuItem" Header="System Administration">
+                <MenuItem Header="User Security"/>
+                <MenuItem Header="System Parameters"/>
+                <MenuItem Header="Interface Mapping"/>
+                <MenuItem Header="Interface Monitor"/>
+                <MenuItem Header="System Log Viewer"/>
+            </RibbonMenuItem>
+            <RibbonMenuItem x:Name="helpMenuItem" Header="Help">
+                <MenuItem Header="Documentation"/>
+                <MenuItem Header="Latest Updates"/>
+                <MenuItem Header="About..."/>
+                <MenuItem Header="Exit"/>
+            </RibbonMenuItem>
+        </Menu>
+
+        <StackPanel Orientation="Vertical" Background="LightBlue" Grid.Column="1" Grid.Row="2">
+            <Button x:Name="worklistBtn" Content="Worklist" Click="worklistBtn_Click"/>
+            <Button x:Name="accountBtn" Content="Account"/>
+            <Button x:Name="accountChargeEntryBtn" Content="Account Charge Entry"/>
+            <Button x:Name="batchRemittanceBtn" Content="Batch Remittance"/>
+            <Button x:Name="claimsBatchManagementBtn" Content="Claims Batch Management"/>
+        </StackPanel>
+
+        <ContentControl Grid.Row="2" Grid.Column="2">
+            
+        </ContentControl>
+    </Grid>
+</Window>

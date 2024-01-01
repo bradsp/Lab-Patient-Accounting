@@ -1,8 +1,5 @@
 ﻿using System;
-using System.CodeDom.Compiler;
-using System.Data;
 using System.Globalization;
-using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 
 namespace RFClassLibrary

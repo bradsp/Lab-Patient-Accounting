@@ -17,7 +17,7 @@ namespace LabBilling.Core.BusinessLogic
     /// </summary>
     public sealed class ClientInvoices : DataAccess.Database
     {
-        private string _connection;
+        //private string _connection;
         private readonly ChkRepository chkdb;
         private readonly ChrgRepository chrgdb;
         private readonly ClientRepository clientdb;

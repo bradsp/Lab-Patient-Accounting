@@ -9,8 +9,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using LabBilling.Core.Models;
 using LabBilling.Core.DataAccess;
-using System.Web.UI.WebControls;
-using System.Windows.Forms.DataVisualization.Charting;
+//using System.Web.UI.WebControls;
+//using System.Windows.Forms.DataVisualization.Charting;
 
 namespace LabBilling.Forms
 {

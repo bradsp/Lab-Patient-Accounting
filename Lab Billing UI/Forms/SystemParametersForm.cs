@@ -8,7 +8,7 @@ using System.Reflection.Emit;
 using System.ComponentModel;
 using System.Reflection;
 using System.Threading;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using System.Data;
 using Newtonsoft.Json.Linq;
 using System.ComponentModel.DataAnnotations;
@@ -47,7 +47,7 @@ namespace LabBilling.Forms
             // Define the dynamic assembly, module and type
             AssemblyName assemblyName = new AssemblyName("SystemParametersAssembly");
             AssemblyBuilder assemblyBuilder =
-                Thread.GetDomain().DefineDynamicAssembly(assemblyName, AssemblyBuilderAccess.Run);
+                AssemblyBuilder.DefineDynamicAssembly(assemblyName, AssemblyBuilderAccess.Run);
             ModuleBuilder moduleBuilder = assemblyBuilder.DefineDynamicModule("SystemParametersModule");
             TypeBuilder typeBuilder = moduleBuilder.DefineType("ParameterType", TypeAttributes.Public);
 

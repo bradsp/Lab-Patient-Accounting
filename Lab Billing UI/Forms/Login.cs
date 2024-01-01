@@ -3,11 +3,8 @@ using System;
 using System.Windows.Forms;
 using LabBilling.Core.DataAccess;
 using System.Runtime.InteropServices;
-using System.Configuration;
 using LabBilling.Logging;
 using MetroFramework.Forms;
-using MetroFramework.Controls;
-using LabBilling.Forms;
 
 namespace LabBilling
 {

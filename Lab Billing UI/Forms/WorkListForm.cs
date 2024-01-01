@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using LabBilling.Core.DataAccess;
@@ -9,14 +8,11 @@ using LabBilling.Logging;
 using LabBilling.Core.Models;
 using LabBilling.Library;
 using System.Data;
-//using System.CodeDom;
 using LabBilling.Core;
 using LabBilling.Core.BusinessLogic;
-using Opulos.Core.UI;
 
 namespace LabBilling.Forms
 {
-
     public partial class WorkListForm : Form
     {
         private string _connectionString;
@@ -26,11 +22,13 @@ namespace LabBilling.Forms
         private BindingSource accountBindingSource = new BindingSource();
         private DataTable accountTable = null;
         private int worklistPanelWidth = 0;
-        private System.Windows.Forms.Timer _timer;
+        private Timer _timer;
         private const int _timerDelay = 650;
         private string selectedQueue = null;
         private TreeNode currentNode = null;
         private Worklist worklist = null;
+        
+        public event EventHandler<string> AccountLaunched;
 
         private void WorkListForm_Load(object sender, EventArgs e)
         {
@@ -57,15 +55,6 @@ namespace LabBilling.Forms
             workqueues.ExpandAll();
 
             workqueues.Enabled = true;
-        }
-
-        private void AccFrm_AccountOpenedEvent(object sender, string e)
-        {
-            if(this.ParentForm is MainForm)
-            {
-                MainForm mainfrm = (MainForm)this.ParentForm;
-                mainfrm.UpdateRecentAccounts(e);
-            }
         }
 
         public WorkListForm(string connValue)
@@ -348,31 +337,12 @@ namespace LabBilling.Forms
         private void accountGrid_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             Log.Instance.Trace($"Entering");
-            Cursor.Current = Cursors.WaitCursor;
+
             int selectedRows = accountGrid.Rows.GetRowCount(DataGridViewElementStates.Selected);
             if (selectedRows > 0)
             {
                 var selectedAccount = accountGrid.SelectedRows[0].Cells[nameof(AccountSearch.Account)].Value.ToString();
-                // TODO: make sure there is not another tab already open for this account
-                var formsList = Application.OpenForms.OfType<AccountForm>();
-                bool formFound = false;
-                foreach(var form in formsList)
-                {
-                    if(form.SelectedAccount == selectedAccount)
-                    {
-                        //form is already open, activate this one
-                        form.Focus();
-                        formFound = true;
-                        break;
-                    }
-                }
-
-                if (!formFound)
-                {
-                    AccountForm frm = new AccountForm(selectedAccount, this.ParentForm);
-                    frm.AccountOpenedEvent += AccFrm_AccountOpenedEvent;
-                    frm.Show();
-                }
+                AccountLaunched?.Invoke(this, selectedAccount);
                 return;
             }
             else
@@ -597,14 +567,9 @@ namespace LabBilling.Forms
             UpdateFilter();
         }
 
-        private void accountGridContextMenu_VisibleChanged(object sender, EventArgs e)
-        {
-        }
+        private void accountGridContextMenu_VisibleChanged(object sender, EventArgs e) { }
 
-        private void showAccountsWithPmtCheckbox_CheckedChanged(object sender, EventArgs e)
-        {
-            UpdateFilter();
-        }
+        private void showAccountsWithPmtCheckbox_CheckedChanged(object sender, EventArgs e) => UpdateFilter();        
 
         private void changeToYFinancialClassToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -703,24 +668,13 @@ namespace LabBilling.Forms
             }
         }
 
-        private async void WorkListForm_Activated(object sender, EventArgs e)
-        {
-            await LoadWorkList();
-        }
+        private async void WorkListForm_Activated(object sender, EventArgs e) => await LoadWorkList();
+        
+        private void showReadyToBillCheckbox_CheckedChanged(object sender, EventArgs e) => UpdateFilter();
 
-        private void showReadyToBillCheckbox_CheckedChanged(object sender, EventArgs e)
-        {
-            UpdateFilter();
-        }
+        private void WorkListForm_Enter(object sender, EventArgs e) { }
 
-        private void WorkListForm_Enter(object sender, EventArgs e)
-        {
+        private void showZeroBalanceCheckBox_CheckedChanged(object sender, EventArgs e) => UpdateFilter();
 
-        }
-
-        private void showZeroBalanceCheckBox_CheckedChanged(object sender, EventArgs e)
-        {
-            UpdateFilter();
-        }
     }
 }

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using LabBilling.Logging;
 using LabBilling.Core.Models;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using System.Data;
 
 namespace LabBilling.Core.DataAccess

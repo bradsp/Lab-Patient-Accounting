@@ -11,7 +11,7 @@ using RFClassLibrary;
 using System.Collections;
 using System.IO;
 using System.Drawing.Printing;
-using System.Data.SqlClient; // for listobject
+using Microsoft.Data.SqlClient; // for listobject
 
 namespace LabBilling.Legacy
 {

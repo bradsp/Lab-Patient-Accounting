@@ -4,10 +4,11 @@ using System.Windows.Forms;
 // programmer added
 using MCL;
 using RFClassLibrary;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using System.Drawing.Printing;
 using System.Collections;
 using LabBilling.Forms;
+using WinFormsLibrary;
 
 namespace LabBilling.ReportByInsuranceCompany
 {
@@ -177,7 +178,7 @@ namespace LabBilling.ReportByInsuranceCompany
 
         private void CreateDateTimes()
         {
-            RFClassLibrary.RFCObject.CreateDateTimes(ref m_dpFrom, ref m_dpThru, "", "");
+            RFWinformObject.CreateDateTimes(ref m_dpFrom, ref m_dpThru, "", "");
             tsMain.Items.Insert(7, m_dpFrom);
             tsMain.Items.Insert(9, m_dpThru);
             m_dpFrom.Text = DateTime.Now.Subtract(new TimeSpan(45, 0, 0, 0)).ToString("d");
