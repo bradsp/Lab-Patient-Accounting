@@ -4,11 +4,10 @@ using System.Windows.Forms;
 using LabBilling.Core.DataAccess;
 using System.Runtime.InteropServices;
 using LabBilling.Logging;
-using MetroFramework.Forms;
 
 namespace LabBilling
 {
-    public partial class Login : MetroForm
+    public partial class Login : Form
     {
         public Login(bool test = false)
         {

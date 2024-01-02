@@ -32,7 +32,7 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            accountGrid = new MetroFramework.Controls.MetroGrid();
+            accountGrid = new System.Windows.Forms.DataGridView();
             accountGridContextMenu = new System.Windows.Forms.ContextMenuStrip(components);
             holdToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             changeFinancialClassToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -362,7 +362,7 @@
 
         #endregion
 
-        private MetroFramework.Controls.MetroGrid accountGrid;
+        private System.Windows.Forms.DataGridView accountGrid;
         private System.Windows.Forms.TreeView workqueues;
         private System.Windows.Forms.ContextMenuStrip accountGridContextMenu;
         private System.Windows.Forms.ToolStripMenuItem holdToolStripMenuItem;

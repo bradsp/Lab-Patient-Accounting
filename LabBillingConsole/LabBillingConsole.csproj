@@ -52,9 +52,9 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-    <PackageReference Include="NLog" Version="5.2.7" />
-    <PackageReference Include="NLog.Database" Version="5.2.7" />
-    <PackageReference Include="NLog.Schema" Version="5.2.7" />
+    <PackageReference Include="NLog" Version="5.2.8" />
+    <PackageReference Include="NLog.Database" Version="5.2.8" />
+    <PackageReference Include="NLog.Schema" Version="5.2.8" />
     <PackageReference Include="PetaPoco.Compiled" Version="6.0.617" />
     <PackageReference Include="Spectre.Console" Version="0.48.0" />
     <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />

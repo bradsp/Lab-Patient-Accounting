@@ -1,19 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using MetroFramework.Forms;
 using LabBilling.Core.DataAccess;
 using LabBilling.Core.Models;
 
 namespace LabBilling.Forms
 {
-    public partial class HealthPlanMaintenanceEditForm : MetroForm
+    public partial class HealthPlanMaintenanceEditForm : Form
     {
         private InsCompanyRepository insCompanyRepository = new InsCompanyRepository(Program.AppEnvironment);
         public InsCompany insCompany = new InsCompany();

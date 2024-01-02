@@ -4,12 +4,11 @@ using System.Windows.Forms;
 using LabBilling.Core.DataAccess;
 using LabBilling.Core.Models;
 using RFClassLibrary;
-using MetroFramework.Forms;
 using LabBilling.Core.BusinessLogic;
 
 namespace LabBilling.Forms
 {
-    public partial class InterfaceMonitor : MetroForm
+    public partial class InterfaceMonitor : Form
     {
         public InterfaceMonitor()
         {

@@ -485,8 +485,6 @@ namespace LabBilling.Core.DataAccess
 
             if (table == null)
                 throw new ArgumentNullException(nameof(table));
-            if (newDate == null)
-                throw new ArgumentNullException(nameof(newDate));
             if (reason_comment == null)
                 throw new ArgumentNullException(nameof(reason_comment));
 

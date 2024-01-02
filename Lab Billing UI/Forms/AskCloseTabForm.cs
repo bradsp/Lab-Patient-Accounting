@@ -1,17 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using MetroFramework.Forms;
+
 
 namespace LabBilling.Forms
 {
-    public partial class AskCloseTabForm : MetroForm
+    public partial class AskCloseTabForm : Form
     {
         public List<string> OpenTabs { get; set; }
         public string SelectedForm { get; set; }

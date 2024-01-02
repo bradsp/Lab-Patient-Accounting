@@ -34,32 +34,32 @@
             this.toolStripAddCriteria = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripAddGroup = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripDeleteCriteria = new System.Windows.Forms.ToolStripMenuItem();
-            this.listRules = new MetroFramework.Controls.MetroListView();
-            this.tbRuleDescription = new MetroFramework.Controls.MetroTextBox();
-            this.tbErrorText = new MetroFramework.Controls.MetroTextBox();
-            this.tbRuleName = new MetroFramework.Controls.MetroTextBox();
-            this.metroLabel1 = new MetroFramework.Controls.MetroLabel();
-            this.metroLabel2 = new MetroFramework.Controls.MetroLabel();
-            this.metroLabel3 = new MetroFramework.Controls.MetroLabel();
-            this.effectiveDate = new MetroFramework.Controls.MetroDateTime();
-            this.endEffectiveDate = new MetroFramework.Controls.MetroDateTime();
-            this.metroLabel4 = new MetroFramework.Controls.MetroLabel();
-            this.metroLabel5 = new MetroFramework.Controls.MetroLabel();
-            this.cbLineType = new MetroFramework.Controls.MetroComboBox();
-            this.metroLabel6 = new MetroFramework.Controls.MetroLabel();
-            this.tbTargetValue = new MetroFramework.Controls.MetroTextBox();
-            this.cbOperator = new MetroFramework.Controls.MetroComboBox();
-            this.metroLabel7 = new MetroFramework.Controls.MetroLabel();
-            this.metroLabel8 = new MetroFramework.Controls.MetroLabel();
-            this.metroLabel9 = new MetroFramework.Controls.MetroLabel();
-            this.addRuleButton = new MetroFramework.Controls.MetroButton();
-            this.saveRuleButton = new MetroFramework.Controls.MetroButton();
-            this.cbMemberName = new MetroFramework.Controls.MetroComboBox();
+            this.listRules = new ();
+            this.tbRuleDescription = new ();
+            this.tbErrorText = new ();
+            this.tbRuleName = new ();
+            this.metroLabel1 = new ();
+            this.metroLabel2 = new ();
+            this.metroLabel3 = new ();
+            this.effectiveDate = new ();
+            this.endEffectiveDate = new ();
+            this.metroLabel4 = new ();
+            this.metroLabel5 = new ();
+            this.cbLineType = new ();
+            this.metroLabel6 = new ();
+            this.tbTargetValue = new ();
+            this.cbOperator = new ();
+            this.metroLabel7 = new ();
+            this.metroLabel8 = new ();
+            this.metroLabel9 = new ();
+            this.addRuleButton = new ();
+            this.saveRuleButton = new ();
+            this.cbMemberName = new ();
             this.comboBoxMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.resetSelectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.addDetailButton = new MetroFramework.Controls.MetroButton();
-            this.removeDetailButton = new MetroFramework.Controls.MetroButton();
-            this.saveCriteraButton = new MetroFramework.Controls.MetroButton();
+            this.addDetailButton = new ();
+            this.removeDetailButton = new ();
+            this.saveCriteraButton = new ();
             this.menuTVRuleHierarchy.SuspendLayout();
             this.comboBoxMenuStrip.SuspendLayout();
             this.SuspendLayout();
@@ -115,7 +115,6 @@
             this.listRules.Size = new System.Drawing.Size(205, 392);
             this.listRules.TabIndex = 19;
             this.listRules.UseCompatibleStateImageBehavior = false;
-            this.listRules.UseSelectable = true;
             this.listRules.SelectedIndexChanged += new System.EventHandler(this.listRules_SelectedIndexChanged);
             // 
             // tbRuleDescription
@@ -123,15 +122,6 @@
             // 
             // 
             // 
-            this.tbRuleDescription.CustomButton.Image = null;
-            this.tbRuleDescription.CustomButton.Location = new System.Drawing.Point(293, 1);
-            this.tbRuleDescription.CustomButton.Name = "";
-            this.tbRuleDescription.CustomButton.Size = new System.Drawing.Size(21, 21);
-            this.tbRuleDescription.CustomButton.Style = MetroFramework.MetroColorStyle.Blue;
-            this.tbRuleDescription.CustomButton.TabIndex = 1;
-            this.tbRuleDescription.CustomButton.Theme = MetroFramework.MetroThemeStyle.Light;
-            this.tbRuleDescription.CustomButton.UseSelectable = true;
-            this.tbRuleDescription.CustomButton.Visible = false;
             this.tbRuleDescription.Lines = new string[0];
             this.tbRuleDescription.Location = new System.Drawing.Point(618, 106);
             this.tbRuleDescription.MaxLength = 32767;
@@ -144,24 +134,12 @@
             this.tbRuleDescription.ShortcutsEnabled = true;
             this.tbRuleDescription.Size = new System.Drawing.Size(315, 23);
             this.tbRuleDescription.TabIndex = 3;
-            this.tbRuleDescription.UseSelectable = true;
-            this.tbRuleDescription.WaterMarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
-            this.tbRuleDescription.WaterMarkFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Pixel);
             // 
             // tbErrorText
             // 
             // 
             // 
             // 
-            this.tbErrorText.CustomButton.Image = null;
-            this.tbErrorText.CustomButton.Location = new System.Drawing.Point(293, 1);
-            this.tbErrorText.CustomButton.Name = "";
-            this.tbErrorText.CustomButton.Size = new System.Drawing.Size(21, 21);
-            this.tbErrorText.CustomButton.Style = MetroFramework.MetroColorStyle.Blue;
-            this.tbErrorText.CustomButton.TabIndex = 1;
-            this.tbErrorText.CustomButton.Theme = MetroFramework.MetroThemeStyle.Light;
-            this.tbErrorText.CustomButton.UseSelectable = true;
-            this.tbErrorText.CustomButton.Visible = false;
             this.tbErrorText.Lines = new string[0];
             this.tbErrorText.Location = new System.Drawing.Point(618, 135);
             this.tbErrorText.MaxLength = 32767;
@@ -174,24 +152,12 @@
             this.tbErrorText.ShortcutsEnabled = true;
             this.tbErrorText.Size = new System.Drawing.Size(315, 23);
             this.tbErrorText.TabIndex = 5;
-            this.tbErrorText.UseSelectable = true;
-            this.tbErrorText.WaterMarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
-            this.tbErrorText.WaterMarkFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Pixel);
             // 
             // tbRuleName
             // 
             // 
             // 
             // 
-            this.tbRuleName.CustomButton.Image = null;
-            this.tbRuleName.CustomButton.Location = new System.Drawing.Point(293, 1);
-            this.tbRuleName.CustomButton.Name = "";
-            this.tbRuleName.CustomButton.Size = new System.Drawing.Size(21, 21);
-            this.tbRuleName.CustomButton.Style = MetroFramework.MetroColorStyle.Blue;
-            this.tbRuleName.CustomButton.TabIndex = 1;
-            this.tbRuleName.CustomButton.Theme = MetroFramework.MetroThemeStyle.Light;
-            this.tbRuleName.CustomButton.UseSelectable = true;
-            this.tbRuleName.CustomButton.Visible = false;
             this.tbRuleName.Lines = new string[0];
             this.tbRuleName.Location = new System.Drawing.Point(618, 77);
             this.tbRuleName.MaxLength = 32767;
@@ -204,9 +170,6 @@
             this.tbRuleName.ShortcutsEnabled = true;
             this.tbRuleName.Size = new System.Drawing.Size(315, 23);
             this.tbRuleName.TabIndex = 1;
-            this.tbRuleName.UseSelectable = true;
-            this.tbRuleName.WaterMarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
-            this.tbRuleName.WaterMarkFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Pixel);
             // 
             // metroLabel1
             // 
@@ -237,7 +200,6 @@
             // 
             // effectiveDate
             // 
-            this.effectiveDate.FontSize = MetroFramework.MetroDateTimeSize.Small;
             this.effectiveDate.Format = System.Windows.Forms.DateTimePickerFormat.Short;
             this.effectiveDate.Location = new System.Drawing.Point(939, 77);
             this.effectiveDate.MinimumSize = new System.Drawing.Size(0, 25);
@@ -247,7 +209,6 @@
             // 
             // endEffectiveDate
             // 
-            this.endEffectiveDate.FontSize = MetroFramework.MetroDateTimeSize.Small;
             this.endEffectiveDate.Format = System.Windows.Forms.DateTimePickerFormat.Short;
             this.endEffectiveDate.Location = new System.Drawing.Point(939, 134);
             this.endEffectiveDate.MinimumSize = new System.Drawing.Size(0, 25);
@@ -287,7 +248,6 @@
             this.cbLineType.Name = "cbLineType";
             this.cbLineType.Size = new System.Drawing.Size(133, 29);
             this.cbLineType.TabIndex = 11;
-            this.cbLineType.UseSelectable = true;
             // 
             // metroLabel6
             // 
@@ -303,15 +263,6 @@
             // 
             // 
             // 
-            this.tbTargetValue.CustomButton.Image = null;
-            this.tbTargetValue.CustomButton.Location = new System.Drawing.Point(155, 1);
-            this.tbTargetValue.CustomButton.Name = "";
-            this.tbTargetValue.CustomButton.Size = new System.Drawing.Size(21, 21);
-            this.tbTargetValue.CustomButton.Style = MetroFramework.MetroColorStyle.Blue;
-            this.tbTargetValue.CustomButton.TabIndex = 1;
-            this.tbTargetValue.CustomButton.Theme = MetroFramework.MetroThemeStyle.Light;
-            this.tbTargetValue.CustomButton.UseSelectable = true;
-            this.tbTargetValue.CustomButton.Visible = false;
             this.tbTargetValue.Lines = new string[0];
             this.tbTargetValue.Location = new System.Drawing.Point(891, 311);
             this.tbTargetValue.MaxLength = 32767;
@@ -324,9 +275,6 @@
             this.tbTargetValue.ShortcutsEnabled = true;
             this.tbTargetValue.Size = new System.Drawing.Size(177, 23);
             this.tbTargetValue.TabIndex = 17;
-            this.tbTargetValue.UseSelectable = true;
-            this.tbTargetValue.WaterMarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
-            this.tbTargetValue.WaterMarkFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Pixel);
             // 
             // cbOperator
             // 
@@ -343,7 +291,6 @@
             this.cbOperator.Name = "cbOperator";
             this.cbOperator.Size = new System.Drawing.Size(124, 29);
             this.cbOperator.TabIndex = 15;
-            this.cbOperator.UseSelectable = true;
             // 
             // metroLabel7
             // 
@@ -379,7 +326,6 @@
             this.addRuleButton.Size = new System.Drawing.Size(75, 23);
             this.addRuleButton.TabIndex = 23;
             this.addRuleButton.Text = "Add Rule";
-            this.addRuleButton.UseSelectable = true;
             this.addRuleButton.Click += new System.EventHandler(this.addRuleButton_Click);
             // 
             // saveRuleButton
@@ -389,7 +335,6 @@
             this.saveRuleButton.Size = new System.Drawing.Size(75, 23);
             this.saveRuleButton.TabIndex = 24;
             this.saveRuleButton.Text = "Save Rule";
-            this.saveRuleButton.UseSelectable = true;
             this.saveRuleButton.Click += new System.EventHandler(this.saveRuleButton_Click);
             // 
             // cbMemberName
@@ -401,7 +346,6 @@
             this.cbMemberName.Name = "cbMemberName";
             this.cbMemberName.Size = new System.Drawing.Size(215, 29);
             this.cbMemberName.TabIndex = 13;
-            this.cbMemberName.UseSelectable = true;
             // 
             // comboBoxMenuStrip
             // 
@@ -420,25 +364,21 @@
             // addDetailButton
             // 
             this.addDetailButton.ContextMenuStrip = this.menuTVRuleHierarchy;
-            this.addDetailButton.FontSize = MetroFramework.MetroButtonSize.Tall;
             this.addDetailButton.Location = new System.Drawing.Point(455, 37);
             this.addDetailButton.Name = "addDetailButton";
             this.addDetailButton.Size = new System.Drawing.Size(32, 23);
             this.addDetailButton.TabIndex = 21;
             this.addDetailButton.Text = "+";
-            this.addDetailButton.UseSelectable = true;
             this.addDetailButton.Click += new System.EventHandler(this.addDetailButton_Click);
             // 
             // removeDetailButton
             // 
             this.removeDetailButton.ContextMenuStrip = this.menuTVRuleHierarchy;
-            this.removeDetailButton.FontSize = MetroFramework.MetroButtonSize.Tall;
             this.removeDetailButton.Location = new System.Drawing.Point(493, 37);
             this.removeDetailButton.Name = "removeDetailButton";
             this.removeDetailButton.Size = new System.Drawing.Size(32, 23);
             this.removeDetailButton.TabIndex = 22;
             this.removeDetailButton.Text = "-";
-            this.removeDetailButton.UseSelectable = true;
             this.removeDetailButton.Click += new System.EventHandler(this.removeDetailButton_Click);
             // 
             // saveCriteraButton
@@ -448,7 +388,6 @@
             this.saveCriteraButton.Size = new System.Drawing.Size(75, 23);
             this.saveCriteraButton.TabIndex = 18;
             this.saveCriteraButton.Text = "Save Criteria";
-            this.saveCriteraButton.UseSelectable = true;
             this.saveCriteraButton.Click += new System.EventHandler(this.saveCriteraButton_Click);
             // 
             // ClaimRuleEditorForm
@@ -494,34 +433,34 @@
         #endregion
 
         private System.Windows.Forms.TreeView tvRuleHierarchy;
-        private MetroFramework.Controls.MetroListView listRules;
-        private MetroFramework.Controls.MetroTextBox tbRuleDescription;
-        private MetroFramework.Controls.MetroTextBox tbErrorText;
-        private MetroFramework.Controls.MetroTextBox tbRuleName;
-        private MetroFramework.Controls.MetroLabel metroLabel1;
-        private MetroFramework.Controls.MetroLabel metroLabel2;
-        private MetroFramework.Controls.MetroLabel metroLabel3;
-        private MetroFramework.Controls.MetroDateTime effectiveDate;
-        private MetroFramework.Controls.MetroDateTime endEffectiveDate;
-        private MetroFramework.Controls.MetroLabel metroLabel4;
-        private MetroFramework.Controls.MetroLabel metroLabel5;
-        private MetroFramework.Controls.MetroComboBox cbLineType;
-        private MetroFramework.Controls.MetroLabel metroLabel6;
-        private MetroFramework.Controls.MetroTextBox tbTargetValue;
-        private MetroFramework.Controls.MetroComboBox cbOperator;
-        private MetroFramework.Controls.MetroLabel metroLabel7;
-        private MetroFramework.Controls.MetroLabel metroLabel8;
-        private MetroFramework.Controls.MetroLabel metroLabel9;
-        private MetroFramework.Controls.MetroButton addRuleButton;
+        private System.Windows.Forms.ListView listRules;
+        private System.Windows.Forms.TextBox tbRuleDescription;
+        private System.Windows.Forms.TextBox tbErrorText;
+        private System.Windows.Forms.TextBox tbRuleName;
+        private System.Windows.Forms.Label metroLabel1;
+        private System.Windows.Forms.Label metroLabel2;
+        private System.Windows.Forms.Label metroLabel3;
+        private System.Windows.Forms.DateTimePicker effectiveDate;
+        private System.Windows.Forms.DateTimePicker endEffectiveDate;
+        private System.Windows.Forms.Label metroLabel4;
+        private System.Windows.Forms.Label metroLabel5;
+        private System.Windows.Forms.ComboBox cbLineType;
+        private System.Windows.Forms.Label metroLabel6;
+        private System.Windows.Forms.TextBox tbTargetValue;
+        private System.Windows.Forms.ComboBox cbOperator;
+        private System.Windows.Forms.Label metroLabel7;
+        private System.Windows.Forms.Label metroLabel8;
+        private System.Windows.Forms.Label metroLabel9;
+        private System.Windows.Forms.Button addRuleButton;
         private System.Windows.Forms.ContextMenuStrip menuTVRuleHierarchy;
         private System.Windows.Forms.ToolStripMenuItem toolStripAddCriteria;
         private System.Windows.Forms.ToolStripMenuItem toolStripAddGroup;
         private System.Windows.Forms.ToolStripMenuItem toolStripDeleteCriteria;
-        private MetroFramework.Controls.MetroButton saveRuleButton;
-        private MetroFramework.Controls.MetroComboBox cbMemberName;
-        private MetroFramework.Controls.MetroButton addDetailButton;
-        private MetroFramework.Controls.MetroButton removeDetailButton;
-        private MetroFramework.Controls.MetroButton saveCriteraButton;
+        private System.Windows.Forms.Button saveRuleButton;
+        private System.Windows.Forms.ComboBox cbMemberName;
+        private System.Windows.Forms.Button addDetailButton;
+        private System.Windows.Forms.Button removeDetailButton;
+        private System.Windows.Forms.Button saveCriteraButton;
         private System.Windows.Forms.ContextMenuStrip comboBoxMenuStrip;
         private System.Windows.Forms.ToolStripMenuItem resetSelectionToolStripMenuItem;
     }

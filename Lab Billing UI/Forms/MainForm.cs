@@ -9,9 +9,6 @@ using LabBilling.ReportByInsuranceCompany;
 using System.Linq;
 using Opulos.Core.UI;
 using LabBilling.Core.BusinessLogic;
-using MetroFramework.Forms;
-using MetroFramework.Controls;
-using MetroFramework;
 using System.Threading.Tasks;
 using System.Threading;
 using Application = System.Windows.Forms.Application;
@@ -32,7 +29,7 @@ using System.Runtime.InteropServices;
 
 namespace LabBilling
 {
-    public partial class MainForm : MetroForm
+    public partial class MainForm : Form
     {
 
         private Accordion accordion = null;
@@ -195,15 +192,12 @@ namespace LabBilling
         {
             Log.Instance.Info($"Launching MainForm");
 
-            //set shadowtype to none to resolve access after dispose error
-            this.ShadowType = MetroFormShadowType.None;
-
             #region user authentication
 
             if (Program.LoggedInUser == null)
             {
                 Log.Instance.Fatal("There is not a valid user object.");
-                MetroMessageBox.Show(this, "Application error with user object. Aborting.", "Fatal Error", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                MessageBox.Show(this, "Application error with user object. Aborting.", "Fatal Error", MessageBoxButtons.OK, MessageBoxIcon.Stop);
                 Application.Exit();
             }
             #endregion
@@ -267,27 +261,27 @@ namespace LabBilling
             tlpBilling.ColumnCount = 1;
             tlpBilling.RowCount = 3;
 
-            MetroButton b1 = new MetroButton { Text = "Worklist", Name = "btnWorkList" };
+            Button b1 = new () { Text = "Worklist", Name = "btnWorkList" };
             b1.Click += new EventHandler(worklistToolStripMenuItem_Click);
             tlpBilling.Controls.Add(b1, 0, 0);
             b1.Dock = DockStyle.Fill;
 
-            MetroButton b2 = new MetroButton { Text = "Account", Name = "btnAccount" };
+            Button b2 = new () { Text = "Account", Name = "btnAccount" };
             b2.Click += new EventHandler(accountToolStripMenuItem_Click);
             tlpBilling.Controls.Add(b2, 0, 2);
             b2.Dock = DockStyle.Fill;
 
-            MetroButton b4 = new MetroButton { Text = "Account Charge Entry", Name = "btnAccountChargeEntry" };
+            Button b4 = new () { Text = "Account Charge Entry", Name = "btnAccountChargeEntry" };
             b4.Click += new EventHandler(accountChargeEntryToolStripMenuItem_Click);
             tlpBilling.Controls.Add(b4, 0, 3);
             b4.Dock = DockStyle.Fill;
 
-            MetroButton b5 = new MetroButton { Text = "Batch Remittance", Name = "btnBatchRemittance" };
+            Button b5 = new () { Text = "Batch Remittance", Name = "btnBatchRemittance" };
             b5.Click += new EventHandler(batchRemittanceToolStripMenuItem_Click);
             tlpBilling.Controls.Add(b5, 0, 4);
             b5.Dock = DockStyle.Fill;
 
-            MetroButton b6 = new MetroButton { Text = "Claims Batch Management", Name = "ClaimBatchManagementButton" };
+            Button b6 = new () { Text = "Claims Batch Management", Name = "ClaimBatchManagementButton" };
             b6.Click += new EventHandler(claimBatchManagementToolStripMenuItem_Click);
             tlpBilling.Controls.Add(b6, 0, 5);
             b6.Dock = DockStyle.Fill;
@@ -299,12 +293,12 @@ namespace LabBilling
             tlpReports.ColumnCount = 1;
             tlpReports.RowCount = 1;
 
-            MetroButton r1 = new MetroButton { Text = "Monthly Reports", Name = "btnMonthlyReports" };
+            Button r1 = new () { Text = "Monthly Reports", Name = "btnMonthlyReports" };
             r1.Click += new EventHandler(monthlyReportsToolStripMenuItem_Click);
             tlpReports.Controls.Add(r1, 0, 0);
             r1.Dock = DockStyle.Fill;
 
-            MetroButton r2 = new MetroButton { Text = "Reporting Portal", Name = "btnReportingPortal" };
+            Button r2 = new () { Text = "Reporting Portal", Name = "btnReportingPortal" };
             r2.Click += new EventHandler(reportingPortalToolStripMenuItem_Click);
             tlpReports.Controls.Add(r2, 0, 0);
             r2.Dock = DockStyle.Fill;
@@ -347,7 +341,7 @@ namespace LabBilling
 
             if (!Program.AppEnvironment.ApplicationParameters.AllowEditing)
             {
-                MetroMessageBox.Show(this, "System is in read-only mode.", "Read Only Mode", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(this, "System is in read-only mode.", "Read Only Mode", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
 
         }
@@ -389,7 +383,7 @@ namespace LabBilling
             Log.Instance.Trace("Entering");
             SuspendLayout();
             bool IsAlreadyOpen = false;
-            if (Application.OpenForms.OfType<AccountForm>().Count() > 0)
+            if (Application.OpenForms.OfType<AccountForm>().Any())
             {
                 foreach (AccountForm frm in Application.OpenForms.OfType<AccountForm>())
                 {
@@ -584,7 +578,9 @@ namespace LabBilling
             }
             else
             {
-                NewForm(new ClientInvoiceForm());
+                ClientInvoiceForm form = new ClientInvoiceForm();
+                form.AccountLaunched += OnAccountLaunched;
+                NewForm(form);
             }
         }
 
@@ -646,7 +642,11 @@ namespace LabBilling
             => NewForm(new LogViewerForm());
 
         private void claimBatchManagementToolStripMenuItem_Click(object sender, EventArgs e)
-            => NewForm(new ClaimsManagementForm());
+        {
+            ClaimsManagementForm form = new();
+            form.AccountLaunched += OnAccountLaunched;
+            NewForm(form);
+        }
 
         private void batchChargeEntryToolStripMenuItem_Click(object sender, EventArgs e)
             => NewForm(new BatchChargeEntryForm());

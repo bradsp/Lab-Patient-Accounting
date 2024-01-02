@@ -220,7 +220,7 @@ namespace LabBilling.Forms
             tabBillingActivity = new System.Windows.Forms.TabPage();
             label5 = new System.Windows.Forms.Label();
             statementHistoryDataGrid = new System.Windows.Forms.DataGridView();
-            clearClaimStatusButton = new MetroFramework.Controls.MetroButton();
+            clearClaimStatusButton = new System.Windows.Forms.Button();
             readyToBillCheckbox = new System.Windows.Forms.CheckBox();
             statementFlagComboBox = new System.Windows.Forms.ComboBox();
             label3 = new System.Windows.Forms.Label();
@@ -229,11 +229,11 @@ namespace LabBilling.Forms
             lastStmtDateTextBox = new System.Windows.Forms.TextBox();
             firstStmtDateTextBox = new System.Windows.Forms.TextBox();
             statementFlagLabel = new System.Windows.Forms.Label();
-            GenerateClaimButton = new MetroFramework.Controls.MetroButton();
-            LastValidatedLabel = new MetroFramework.Controls.MetroLabel();
-            BillingLastValidatedLabel = new MetroFramework.Controls.MetroLabel();
-            ValidationResultsTextBox = new MetroFramework.Controls.MetroTextBox();
-            ValidateAccountButton = new MetroFramework.Controls.MetroButton();
+            GenerateClaimButton = new System.Windows.Forms.Button();
+            LastValidatedLabel = new System.Windows.Forms.Label();
+            BillingLastValidatedLabel = new System.Windows.Forms.Label();
+            ValidationResultsTextBox = new System.Windows.Forms.TextBox();
+            ValidateAccountButton = new System.Windows.Forms.Button();
             BillActivityDataGrid = new System.Windows.Forms.DataGridView();
             minPmtTextBox = new UserControls.CurrencyTextBox();
             menuStrip1 = new System.Windows.Forms.MenuStrip();
@@ -2491,7 +2491,6 @@ namespace LabBilling.Forms
             clearClaimStatusButton.Size = new System.Drawing.Size(135, 27);
             clearClaimStatusButton.TabIndex = 13;
             clearClaimStatusButton.Text = "Clear Claim Status";
-            clearClaimStatusButton.UseSelectable = true;
             clearClaimStatusButton.Click += clearClaimStatusButton_Click;
             // 
             // readyToBillCheckbox
@@ -2593,7 +2592,6 @@ namespace LabBilling.Forms
             GenerateClaimButton.Size = new System.Drawing.Size(135, 27);
             GenerateClaimButton.TabIndex = 4;
             GenerateClaimButton.Text = "GenerateClaim";
-            GenerateClaimButton.UseSelectable = true;
             GenerateClaimButton.Click += GenerateClaimButton_Click;
             // 
             // LastValidatedLabel
@@ -2621,17 +2619,6 @@ namespace LabBilling.Forms
             // 
             // 
             // 
-            ValidationResultsTextBox.CustomButton.Image = null;
-            ValidationResultsTextBox.CustomButton.Location = new System.Drawing.Point(1079, 1);
-            ValidationResultsTextBox.CustomButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            ValidationResultsTextBox.CustomButton.Name = "";
-            ValidationResultsTextBox.CustomButton.Size = new System.Drawing.Size(167, 165);
-            ValidationResultsTextBox.CustomButton.Style = MetroFramework.MetroColorStyle.Blue;
-            ValidationResultsTextBox.CustomButton.TabIndex = 1;
-            ValidationResultsTextBox.CustomButton.Theme = MetroFramework.MetroThemeStyle.Light;
-            ValidationResultsTextBox.CustomButton.UseSelectable = true;
-            ValidationResultsTextBox.CustomButton.Visible = false;
-            ValidationResultsTextBox.Lines = new string[] { "metroTextBox1" };
             ValidationResultsTextBox.Location = new System.Drawing.Point(9, 192);
             ValidationResultsTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             ValidationResultsTextBox.MaxLength = 32767;
@@ -2645,10 +2632,6 @@ namespace LabBilling.Forms
             ValidationResultsTextBox.ShortcutsEnabled = true;
             ValidationResultsTextBox.Size = new System.Drawing.Size(1069, 145);
             ValidationResultsTextBox.TabIndex = 2;
-            ValidationResultsTextBox.Text = "metroTextBox1";
-            ValidationResultsTextBox.UseSelectable = true;
-            ValidationResultsTextBox.WaterMarkColor = System.Drawing.Color.FromArgb(109, 109, 109);
-            ValidationResultsTextBox.WaterMarkFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Pixel);
             // 
             // ValidateAccountButton
             // 
@@ -2659,7 +2642,6 @@ namespace LabBilling.Forms
             ValidateAccountButton.Size = new System.Drawing.Size(135, 27);
             ValidateAccountButton.TabIndex = 1;
             ValidateAccountButton.Text = "Validate Account";
-            ValidateAccountButton.UseSelectable = true;
             ValidateAccountButton.Click += ValidateAccountButton_Click;
             // 
             // BillActivityDataGrid
@@ -3349,13 +3331,13 @@ namespace LabBilling.Forms
         private System.Windows.Forms.TabPage tabDemographics;
         private System.Windows.Forms.TabPage tabInsurance;
         private System.Windows.Forms.TabPage tabBillingActivity;
-        private MetroFramework.Controls.MetroTextBox ValidationResultsTextBox;
-        private MetroFramework.Controls.MetroButton ValidateAccountButton;
-        private MetroFramework.Controls.MetroLabel LastValidatedLabel;
-        private MetroFramework.Controls.MetroLabel BillingLastValidatedLabel;
+        private System.Windows.Forms.TextBox ValidationResultsTextBox;
+        private System.Windows.Forms.Button ValidateAccountButton;
+        private System.Windows.Forms.Label LastValidatedLabel;
+        private System.Windows.Forms.Label BillingLastValidatedLabel;
         private System.Windows.Forms.Label BannerBillStatusLabel;
         private System.Windows.Forms.TextBox BannerBillStatusTextBox;
-        private MetroFramework.Controls.MetroButton GenerateClaimButton;
+        private System.Windows.Forms.Button GenerateClaimButton;
         private System.Windows.Forms.TextBox BannerProviderTextBox;
         private System.Windows.Forms.Label orderingProviderLabel;
         private System.Windows.Forms.TabPage tabGuarantor;
@@ -3405,7 +3387,7 @@ namespace LabBilling.Forms
         private System.Windows.Forms.ContextMenuStrip dxPointerMenuStrip;
         private System.Windows.Forms.ToolStripMenuItem clearDxPointerToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem printEOBToolStripMenuItem;
-        private MetroFramework.Controls.MetroButton clearClaimStatusButton;
+        private System.Windows.Forms.Button clearClaimStatusButton;
         private System.Windows.Forms.ContextMenuStrip chargeDetailsContextMenu;
         private System.Windows.Forms.ToolStripMenuItem addModifierToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem removeModifierToolStripMenuItem;

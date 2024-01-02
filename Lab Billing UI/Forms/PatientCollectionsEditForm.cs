@@ -3,11 +3,10 @@ using System.Windows.Forms;
 using LabBilling.Core.Models;
 using LabBilling.Core.DataAccess;
 using LabBilling.Logging;
-using MetroFramework.Forms;
 
 namespace LabBilling.Forms
 {
-    public partial class PatientCollectionsEditForm : MetroForm
+    public partial class PatientCollectionsEditForm : Form
     {
 
         public string SelectedRecord { get; set; }

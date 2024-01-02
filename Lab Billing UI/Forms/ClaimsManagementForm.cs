@@ -23,7 +23,7 @@ namespace LabBilling.Forms
         private BindingSource billingActivitiesBindingSource;
         private DataTable billingBatchTable;
         private DataTable billingActivitiesTable;
-
+        public event EventHandler<string> AccountLaunched;
         public ClaimsManagementForm()
         {
             InitializeComponent();
@@ -235,9 +235,7 @@ namespace LabBilling.Forms
 
             if(!string.IsNullOrEmpty(selectedAccount))
             {
-                AccountForm frm = new AccountForm(selectedAccount, this.MdiParent);
-                frm.WindowState = FormWindowState.Normal;
-                frm.Show();
+                AccountLaunched?.Invoke(this, selectedAccount);
             }
         }
     }

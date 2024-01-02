@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using Microsoft.Data.SqlClient;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -10,7 +9,6 @@ using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
 using System.Windows.Forms;
-using MetroFramework.Controls;
 
 namespace LabBilling
 {
@@ -148,26 +146,16 @@ namespace LabBilling
             {
                 if (c is TextBox)
                     (c as TextBox).ReadOnly = !allowAccess;
-                if (c is MetroTextBox)
-                    (c as MetroTextBox).ReadOnly = !allowAccess;
                 if (c is CheckBox)
                     ((CheckBox)c).Enabled = allowAccess;
-                if (c is MetroCheckBox)
-                    ((MetroCheckBox)c).Enabled = allowAccess;
                 if (c is ComboBox)
                     ((ComboBox)c).Enabled = allowAccess;
-                if (c is MetroComboBox)
-                    ((MetroComboBox)c).Enabled = allowAccess;
                 if (c is MaskedTextBox)
                     ((MaskedTextBox)c).ReadOnly = !allowAccess;
                 if (c is Button)
                     ((Button)c).Enabled = allowAccess;
-                if (c is MetroButton)
-                    ((MetroButton)c).Enabled = allowAccess;
                 if (c is DataGridView)
                     ((DataGridView)c).ReadOnly = !allowAccess;
-                if (c is MetroGrid)
-                    ((MetroGrid)c).ReadOnly = !allowAccess;
             }
         }
 

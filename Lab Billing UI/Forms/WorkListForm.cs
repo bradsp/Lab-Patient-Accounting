@@ -52,7 +52,7 @@ namespace LabBilling.Forms
                 worklistsTreeNode[i++] = new TreeNode(wlist);
             }
 
-            TreeNode rootNode = new TreeNode("Worklists", worklistsTreeNode);
+            TreeNode rootNode = new("Worklists", worklistsTreeNode);
             workqueues.Nodes.Add(rootNode);
             workqueues.ExpandAll();
 
@@ -265,7 +265,6 @@ namespace LabBilling.Forms
 
             workqueues.Enabled = true;
             UpdateFilter();
-
         }
 
         private void holdToolStripMenuItem_Click(object sender, EventArgs e)

@@ -10,16 +10,8 @@
  *  changed the page number line by adding spaces so the number actually is shown. 
  *  Stopped the class from displaying the PrintDialog when Print Preview is called.
  */
-using System;
-using System.Collections.Generic;
-using System.Text;
 // added for DataGridViewPrinter
-using System.Windows.Forms;
-using System.Collections;
-using System.Drawing;
 using System.Drawing.Printing;
-using System.Data;
-using System.Reflection; // for assembly info
 
 
 
@@ -38,15 +30,15 @@ namespace RFClassLibrary
     public sealed class DataGridViewPrinter
     {
         private bool m_bPageBreak = false;
-        private string m_strLastColumnBreakValue = null;
-        private string m_strFooterText;
+        private string? m_strLastColumnBreakValue = null;
+        private string? m_strFooterText = null;
         /// <summary>
         /// Property for setting/getting m_strFooterText
         /// </summary>
         public string propFooterText
         {
-            get { return m_strFooterText; }
-            set { m_strFooterText = value; }
+            get => m_strFooterText;
+            set => m_strFooterText = value;
         }
         /// <summary>
         /// wdk 06/11/2007 version of the DataGridViewPrinter in use.
@@ -59,7 +51,7 @@ namespace RFClassLibrary
         /// </summary>
         public string prop_strVersion
         {
-            get { return m_strVersion; }
+            get =>  m_strVersion;
             //set { m_strVersion = value; } // wdk 06/11/2007 can only set this above
         }
 

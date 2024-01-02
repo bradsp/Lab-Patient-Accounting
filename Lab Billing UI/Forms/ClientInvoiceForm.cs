@@ -36,7 +36,7 @@ namespace LabBilling.Forms
         private ClientRepository clientRepository;
         private List<Client> clientList;
         private SystemParametersRepository parametersRepository;
-
+        public event EventHandler<string> AccountLaunched;
         private async void ClientInvoiceForm_Load(object sender, EventArgs e)
         {
             progressBar1.Visible = false;
@@ -253,11 +253,7 @@ namespace LabBilling.Forms
         {
             if (UnbilledAccountsDGV.SelectedRows.Count > 0)
             {
-                AccountForm frm = new AccountForm(UnbilledAccountsDGV.SelectedRows[0].Cells[nameof(UnbilledAccounts.Account)].Value.ToString())
-                {
-                    MdiParent = this.ParentForm
-                };
-                frm.Show();
+                AccountLaunched?.Invoke(this, UnbilledAccountsDGV.SelectedRows[0].Cells[nameof(UnbilledAccounts.Account)].Value.ToString());
             }
         }
 
@@ -607,29 +603,7 @@ namespace LabBilling.Forms
         private void UnbilledAccountsDGV_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
         {
             string account = UnbilledAccountsDGV[nameof(UnbilledAccounts.Account), e.RowIndex].Value.ToString();
-
-            Cursor.Current = Cursors.WaitCursor;
-
-            var formsList = Application.OpenForms.OfType<AccountForm>();
-            bool formFound = false;
-            foreach (var form in formsList)
-            {
-                if (form.SelectedAccount == account)
-                {
-                    //form is already open, activate this one
-                    form.Focus();
-                    formFound = true;
-                    break;
-                }
-            }
-
-            if (!formFound)
-            {
-                AccountForm frm = new AccountForm(account, this.ParentForm);
-                frm.Show();
-            }
-
-            Cursor.Current = Cursors.Default;
+            AccountLaunched?.Invoke(this, account);
         }
 
         private async void refreshUnbilledInvoices_Click(object sender, EventArgs e)

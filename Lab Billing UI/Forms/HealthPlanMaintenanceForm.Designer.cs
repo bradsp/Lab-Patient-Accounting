@@ -32,7 +32,7 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             this.includeDeletedCheckBox = new System.Windows.Forms.CheckBox();
-            this.healthPlanGrid = new MetroFramework.Controls.MetroGrid();
+            this.healthPlanGrid = new ();
             this.AddPlanButton = new System.Windows.Forms.Button();
             this.filterTextBox = new System.Windows.Forms.TextBox();
             this.filterLabel = new System.Windows.Forms.Label();
@@ -149,7 +149,7 @@
 
         #endregion
         private System.Windows.Forms.CheckBox includeDeletedCheckBox;
-        private MetroFramework.Controls.MetroGrid healthPlanGrid;
+        private System.Windows.Forms.DataGridView healthPlanGrid;
         private System.Windows.Forms.Button AddPlanButton;
         private System.Windows.Forms.TextBox filterTextBox;
         private System.Windows.Forms.Label filterLabel;

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using MetroFramework.Forms;
 using System.Windows.Forms;
 using LabBilling.Core.DataAccess;
 using LabBilling.Core.Models;
@@ -11,7 +10,7 @@ using System.Drawing;
 
 namespace LabBilling.Forms
 {
-    public partial class ClaimRuleEditorForm : MetroForm
+    public partial class ClaimRuleEditorForm : Form
     {
         public ClaimRuleEditorForm()
         {
@@ -367,12 +366,11 @@ namespace LabBilling.Forms
             ToolStripMenuItem menuItem = sender as ToolStripMenuItem;
             if(menuItem != null)
             {
-                ContextMenuStrip cbMenu = menuItem.Owner as ContextMenuStrip;
-                if(cbMenu != null)
+                if (menuItem.Owner is ContextMenuStrip cbMenu)
                 {
-                    if(cbMenu.SourceControl.GetType() == typeof(MetroFramework.Controls.MetroComboBox))
+                    if (cbMenu.SourceControl.GetType() == typeof(ComboBox))
                     {
-                        ((MetroFramework.Controls.MetroComboBox)cbMenu.SourceControl).SelectedIndex = -1;
+                        ((ComboBox)cbMenu.SourceControl).SelectedIndex = -1;
                     }
                 }
             }

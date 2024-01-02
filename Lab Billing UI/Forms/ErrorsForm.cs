@@ -1,15 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 // programmer added
-using System.IO;
 using System.Drawing.Printing;
-using MetroFramework.Forms;
+
 
 namespace LabBilling.Forms
 {
@@ -17,7 +11,7 @@ namespace LabBilling.Forms
     /// <summary>
     /// A form to display the errors on an existing record.
     /// </summary>
-    public partial class ErrorsForm : MetroForm
+    public partial class ErrorsForm : Form
     {
         System.Drawing.Printing.PrintDocument pd = null;
         /// <summary>

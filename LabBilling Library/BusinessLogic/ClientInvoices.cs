@@ -53,9 +53,6 @@ namespace LabBilling.Core.BusinessLogic
 
         public void Compile(DateTime thruDate, IList<UnbilledClient> unbilledClients, IProgress<int> progress)
         {
-            if (thruDate == null)
-                throw new ArgumentNullException();
-
             int clientCount = unbilledClients.Count;
             Log.Instance.Debug("Begin Transaction");
             dbConnection.BeginTransaction();

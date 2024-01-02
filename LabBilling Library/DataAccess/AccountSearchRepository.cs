@@ -2,7 +2,6 @@
 using LabBilling.Core.Models;
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using Microsoft.Data.SqlClient;
 using System.Data;
 
@@ -30,7 +29,7 @@ namespace LabBilling.Core.DataAccess
 
         public IList<AccountSearch> GetBySearch((string propertyName, operation oper, string searchText)[] searchValues)
         {
-            InsRepository insRepository = new InsRepository(_appEnvironment);
+            InsRepository insRepository = new(_appEnvironment);
             try
             {
                 var command = PetaPoco.Sql.Builder;
@@ -87,7 +86,6 @@ namespace LabBilling.Core.DataAccess
                     }
                     else
                     {
-                        //command.Where($"{propName} {op} '{searchText}'");
                         command.Where($"{propName} {op} @0",
                             new SqlParameter() { SqlDbType = GetType(propType), Value = searchText });
                     }
@@ -110,7 +108,7 @@ namespace LabBilling.Core.DataAccess
             return new List<AccountSearch>();
         }
 
-        private SqlDbType GetType(Type propType)
+        private static SqlDbType GetType(Type propType)
         {
             if (propType == typeof(System.String))
             {
@@ -136,16 +134,15 @@ namespace LabBilling.Core.DataAccess
             return SqlDbType.VarChar;
         }
 
-        public async Task<IEnumerable<AccountSearch>> GetBySearchAsync((string propertyName, operation oper, string searchText)[] searchValues)
+        public IEnumerable<AccountSearch> GetBySearchAsync((string propertyName, operation oper, string searchText)[] searchValues)
         {
-            InsRepository insRepository = new InsRepository(_appEnvironment);
+            InsRepository insRepository = new(_appEnvironment);
             try
             {
                 var command = PetaPoco.Sql.Builder;
 
                 foreach (var searchValue in searchValues)
                 {
-                    //var expr = (MemberExpression)searchValue.propertyName.Body;
                     Type accounttype = typeof(AccountSearch);
                     var prop = accounttype.GetProperty(searchValue.propertyName);
 
@@ -188,7 +185,6 @@ namespace LabBilling.Core.DataAccess
                             op = "=";
                             break;
                     }
-                    //command.Where($"{propName} {op} '{searchText}'");
                     command.Where($"{propName} {op} @0",
                         new SqlParameter() { SqlDbType = GetType(propType), Value = searchText });
                 }

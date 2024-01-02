@@ -82,7 +82,7 @@ namespace LabBilling.Core.DataAccess
             catch(Exception ex)
             {
                 Log.Instance.Error(ex, "Error writing ChkBatchDetail");
-                throw ex;
+                throw new ApplicationException("Error writing ChkBatchDetail", ex);
             }
 
             return (success, newId);            

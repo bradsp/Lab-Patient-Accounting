@@ -1,13 +1,10 @@
 ﻿using LabBilling.Core.Models;
-using MetroFramework.Forms;
-using MicroRuleEngine;
 using System;
-using System.ComponentModel;
 using System.Windows.Forms;
 
 namespace LabBilling.Forms
 {
-    public partial class PhysicianMaintenanceEditForm : MetroForm
+    public partial class PhysicianMaintenanceEditForm : Form
     {
         public PhysicianMaintenanceEditForm()
         {
