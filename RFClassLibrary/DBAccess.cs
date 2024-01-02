@@ -509,7 +509,7 @@ namespace RFClassLibrary
                     ThrowException(string.Format("{0} {1}", new System.Diagnostics.StackTrace().GetFrame(0).GetMethod().Name, "called while class DBAccess is invalid"));
                 }
                 bool bRetVal = true; // success
-                string strDBConnection = string.Format(@"Data Source={0};Integrated Security=SSPI;Initial Catalog={1};Application Name={2};Connection Timeout = 120",
+                string strDBConnection = string.Format(@"Data Source={0};Integrated Security=SSPI;Initial Catalog={1};Application Name={2};Connection Timeout = 120;Encrypt=false;Trust Server Certificate=true",
                                                             propDataSrc,
                                                              propDB,
 															 propAppName);

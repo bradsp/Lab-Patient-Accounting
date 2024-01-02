@@ -14,8 +14,6 @@
  * 
  */
 using System;
-using System.Collections.Generic;
-using System.Text;
 // added
 using Microsoft.Data.SqlClient; // SQL 7.0
 using System.Data; // DataSet
@@ -24,7 +22,7 @@ using System.Diagnostics; // stack trace
 
 namespace RFClassLibrary
 {
-    
+
     /// <summary>
     ///This RCRecordSet is intended for use as a base class when creating 
     /// classes that need to access a table in a SQL database.
@@ -114,7 +112,8 @@ namespace RFClassLibrary
             //throw new System.NotImplementedException();
             //m_DBAccess = new DBAccess(strServer, strDataBase, strTable);
             m_strTableName = strTable;
-            
+            m_DBConnection = new SqlConnection();
+
             if (!InitalizeDBConnection(out m_DBConnection))
             {
                // m_strErrMsg = propErrMsg;

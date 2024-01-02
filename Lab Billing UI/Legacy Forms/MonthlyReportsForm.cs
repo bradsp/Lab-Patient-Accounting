@@ -26,12 +26,12 @@ namespace LabBilling.Legacy
         public StreamWriter errLog;
         PrintDocument ViewerPrintDocument;         // The PrintDocument to be used for printing.
         ReportGenerator m_rgReport;         // The class that will do the printing process.
-        private string m_strConn;
         private string m_strReportTitle;
         private string m_strQuery;
         private DataSet m_dsSource;
         private string m_strServer;
         private string m_strDatabase;
+        public event EventHandler<string> AccountLaunched;
 
         public frmReports(string[] args)
         {
@@ -71,21 +71,13 @@ namespace LabBilling.Legacy
 
             m_Err = new ERR(argErr);
 
-            CreateConnectionString();
             //m_dgvReport.RowHeaderMouseDoubleClick += new DataGridViewCellMouseEventHandler(LaunchAcc.LaunchAcc_EventHandler);
 
             //this.Text += " PRODUCTION ENVIRONMENT LIVE";
         }
+      
 
-        
 
-        private void CreateConnectionString()
-        {
-            //int n = 0;
-            //int y = 9;
-            //int z = y / n;
-            m_strConn = string.Format(@"Data Source={0};Initial Catalog={1};Integrated Security=SSPI", m_strServer, m_strDatabase);
-        }
 
         private void frmReports_Load(object sender, EventArgs e)
         {
@@ -94,7 +86,7 @@ namespace LabBilling.Legacy
             CreatePrintDocument();
             tssbTableReports_ButtonClick(null, null);
             m_dgvReport.ContextMenuStrip = GetContextMenu();
-            using (SqlConnection conn = new SqlConnection(m_strConn))
+            using (SqlConnection conn = new SqlConnection(Program.AppEnvironment.ConnectionString))
             {
                 SqlDataAdapter adapter = new SqlDataAdapter();
                 adapter.SelectCommand = new SqlCommand(
@@ -126,8 +118,10 @@ namespace LabBilling.Legacy
         {
             int nSert = tsMain.Items.Count;
             // create the datetime controls for the From and Thru dates
-            m_dpFrom = new ToolStripControlHost(new DateTimePicker());
-            m_dpFrom.Text = DateTime.Now.Subtract(new TimeSpan((DateTime.Now.Day-1), 0, 0, 0)).ToString("d");
+            m_dpFrom = new ToolStripControlHost(new DateTimePicker())
+            {
+                Text = DateTime.Now.Subtract(new TimeSpan((DateTime.Now.Day - 1), 0, 0, 0)).ToString("d")
+            };
             ((DateTimePicker)m_dpFrom.Control).Format = DateTimePickerFormat.Short;
             m_dpFrom.Control.Width = 95;
             m_dpFrom.Control.Refresh();
@@ -311,16 +305,14 @@ namespace LabBilling.Legacy
                 Application.DoEvents();
             }
             m_Err.m_Logfile.WriteLogFile(
-                string.Format("m_dgvReport has [{0}] rows and Progress bar max value is  [{1}]",
-                 m_dgvReport.Rows.Count, tspbCount.Maximum));
-            tsslRecords.Text = string.Format("{0} rows loaded.", m_dgvReport.Rows.Count);
+                $"m_dgvReport has [{m_dgvReport.Rows.Count}] rows and Progress bar max value is [{tspbCount.Maximum}]");
+            tsslRecords.Text = $"{m_dgvReport.Rows.Count} rows loaded.";
           }
 
         private void SelectRows(string m_strQuery)
         {
             m_Err.m_Logfile.WriteLogFile("Entered SelectRows()");
-            using (SqlConnection connection =
-                new SqlConnection(m_strConn))
+            using (SqlConnection connection = new(Program.AppEnvironment.ConnectionString))
             {
                 try
                 {
@@ -328,13 +320,10 @@ namespace LabBilling.Legacy
                         adapter.SelectCommand = new SqlCommand(
                     m_strQuery, connection);
                     
-                    
                     int nRec = adapter.Fill(m_dtRecords);
 
                     m_dsSource = new DataSet();    
                     adapter.Fill(m_dsSource);
-
-                
                 }
                 catch (SqlException se)
                 {
@@ -489,31 +478,21 @@ namespace LabBilling.Legacy
             SetRowNumbers();        
         }
 
-        private // TODO ContextMenu is no longer supported. Use ContextMenuStrip instead. For more details see https://docs.microsoft.com/en-us/dotnet/core/compatibility/winforms#removed-controls
-ContextMenuStrip GetContextMenu()
+        private ContextMenuStrip GetContextMenu()
         {
-            // TODO ContextMenu is no longer supported. Use ContextMenuStrip instead. For more details see https://docs.microsoft.com/en-us/dotnet/core/compatibility/winforms#removed-controls
             ContextMenuStrip cm = new ContextMenuStrip();
 
             //Can create STATIC custom menu items if exists here...          
-            // TODO MenuItem is no longer supported. Use ToolStripMenuItem instead. For more details see https://docs.microsoft.com/en-us/dotnet/core/compatibility/winforms#removed-controls
-                        ToolStripMenuItem m1, m2, m3, m4, mHeader;
-            // TODO MenuItem is no longer supported. Use ToolStripMenuItem instead. For more details see https://docs.microsoft.com/en-us/dotnet/core/compatibility/winforms#removed-controls
+            ToolStripMenuItem m1, m2, m3, m4, mHeader;
             mHeader = new ToolStripMenuItem("REPORTS MENU");
-            
-            // TODO MenuItem is no longer supported. Use ToolStripMenuItem instead. For more details see https://docs.microsoft.com/en-us/dotnet/core/compatibility/winforms#removed-controls
-                        m1 = new ToolStripMenuItem("Visualize Changes");
+            m1 = new ToolStripMenuItem("Visualize Changes");
             m1.Click += new EventHandler(m1_Click);
-            // TODO MenuItem is no longer supported. Use ToolStripMenuItem instead. For more details see https://docs.microsoft.com/en-us/dotnet/core/compatibility/winforms#removed-controls
             m2 = new ToolStripMenuItem("Filter Data");
             m2.Click += new EventHandler(m2_Click);
-            // TODO MenuItem is no longer supported. Use ToolStripMenuItem instead. For more details see https://docs.microsoft.com/en-us/dotnet/core/compatibility/winforms#removed-controls
             m3 = new ToolStripMenuItem("Hide Column");
             m3.Click += new EventHandler(m3_Click);
-            // TODO MenuItem is no longer supported. Use ToolStripMenuItem instead. For more details see https://docs.microsoft.com/en-us/dotnet/core/compatibility/winforms#removed-controls
             m4 = new ToolStripMenuItem("Show Hidden Columns");
             m4.Click += new EventHandler(m4_Click);
-            
            
             //Can add functionality for the custom menu items here...
             cm.Items.Add(mHeader);
@@ -521,8 +500,6 @@ ContextMenuStrip GetContextMenu()
             cm.Items.Add(m2);
             cm.Items.Add(m3);
             cm.Items.Add(m4);
-
-            
             
             return cm;
         }
@@ -619,8 +596,7 @@ ContextMenuStrip GetContextMenu()
                     int nlen = strResponse.Length;
 
                     strResponse = strResponse.Remove(strResponse.LastIndexOf(','));
-                }
-                
+                }               
             }
 
             string strColText = m_dgvReport.Columns[nFilterColumn].HeaderText;
@@ -630,11 +606,9 @@ ContextMenuStrip GetContextMenu()
             if (string.IsNullOrEmpty(strResponse))
             {
                 bs.RemoveFilter();
-
             }
             else
             {
-
                 bs.Filter = string.Format("{0} in ({1})", strColText, strResponse);
             }
             m_dgvReport.DataSource = bs;
@@ -752,20 +726,6 @@ order by c.account
             LoadGrid();
         }
 
-        //private void tsddbtnMCLOEReports_DropDownOpening(object sender, EventArgs e)
-        //{
-        //    //m_strServer = "MCLOE";
-        //    //m_strDatabase = "GOMCLLIVE";
-        //    //CreateConnectionString();
-        //}
-
-        //private void tsddbtnBillingReports_DropDownOpening(object sender, EventArgs e)
-        //{
-        //    //m_strServer = "WTHMCLBILL";
-        //    //m_strDatabase = "MCLLIVE";
-        //    //CreateConnectionString();
-        //}
-
         private void tsmi_Contains_Click(object sender, EventArgs e)
         {
             /*
@@ -844,9 +804,6 @@ order by c.account
 
         private void tsbtnComboCpt4_Click(object sender, EventArgs e)
         {
-            //m_strServer = "WTHMCLBILL";
-            //m_strDatabase = "MCLLIVE";
-            CreateConnectionString();
             string strFirstCpt4 = string.Empty;
             string strRemainingCpt4s = string.Empty;
             if (tscbCPT4s.Items.Count < 2)
@@ -881,9 +838,6 @@ order by c.account
             LoadGrid();
             tscbCPT4s.Items.Clear();
         }
-
-      
-       
 
         private void tstbCDM_KeyUp(object sender, KeyEventArgs e)
         {
@@ -972,8 +926,6 @@ order by c.account
                     "join chrg on chrg.account = cte.account "+
                     "where service_date between '{0} 00:00' and '{1} 23:59' "+
 	                " and credited = 0", m_dpFrom, m_dpThru, strFirstCDM);
-
- 
             }
             else
             {
@@ -991,12 +943,9 @@ order by c.account
                     "join chrg on chrg.account = cte.account "+
                     "where service_date between '{0} 00:00' and '{1} 23:59' "+
 	                "and chrg.cdm = '{3}' and credited = 0", m_dpFrom, m_dpThru, strFirstCDM, strSecondCDM);
-
- 
             }
             tsslReportTitle.Text = m_strReportTitle;
             LoadGrid();
-   
         }
 
         private void tssbCDM_ButtonClick(object sender, EventArgs e)
@@ -1015,8 +964,8 @@ order by c.account
             m_dicCode = new Dictionary<string, string>();
             string strQuery = "select * from dbo.Monthly_Reports order by button, report_title";
            
-            SqlDataAdapter sda = new SqlDataAdapter(strQuery, m_strConn);//strConnection);
-            DataSet ds = new DataSet("Monthly_Reports");
+            SqlDataAdapter sda = new SqlDataAdapter(strQuery, Program.AppEnvironment.ConnectionString);
+            DataSet ds = new("Monthly_Reports");
             try
             {
                 sda.Fill(ds, "Monthly_Reports");
@@ -1039,13 +988,7 @@ order by c.account
                 }
                ToolStripMenuItem tsi = (ToolStripMenuItem)tsiBtn.DropDownItems.Add(dr["mi_name"].ToString());
                tsi.Tag = dr["child_button"].ToString();
-               //if (tsi.Tag.ToString() == bool.TrueString)
-               //{
-               //    ToolStripMenuItem tsiReport = (ToolStripMenuItem)tsi.DropDownItems.Add("REPORT");
-               //    tsiReport.CheckOnClick = true;
-               //    tsiReport.Click += new EventHandler(tsiReport_Click);
-               //    tsi.DropDownItems.Add(tsiReport);
-               //}
+
                m_dicCode.Add(dr["mi_name"].ToString(), dr["sql_code"].ToString());              
                tsi.CheckOnClick = true;
                tsi.Click += new EventHandler(tsi_Click);              
@@ -1076,7 +1019,6 @@ order by c.account
             {
                 string[] strParts = tscbClients.SelectedItem.ToString().Split(new char[] { '-' });
                 m_strQuery = m_strQuery.Replace("{2}", string.Format("'{0}'", strParts[0].Trim()));
-                //  return;
             }
             else
                 if (m_strQuery.Contains("{2}"))
@@ -1113,17 +1055,9 @@ order by c.account
             tssbTableReports.DropDown.Close(ToolStripDropDownCloseReason.CloseCalled);
             Application.DoEvents();
             
-           
             try
             {
-                //if (bool.TrueString == ((ToolStripMenuItem)sender).Tag.ToString())
-                //{
-                //    LoadButton((ToolStripMenuItem)sender);
-                //}
-                //else
-                //{
-                    LoadGrid();
-                //}
+                LoadGrid();
             }
             catch (Exception ex)
             {
@@ -1135,80 +1069,15 @@ order by c.account
             tscbClients.SelectedIndex = -1;
             m_Err.m_Logfile.WriteLogFile("Leaving tsi_Click.");
             tsslDisplayReportTitle.Text = string.Format(" | {0}", strButton);
-
         }
         
         void tssbTableReports_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
-          //  ((ToolStripMenuItem)e.ClickedItem).Checked = true;
-
             string strButton = e.ClickedItem.ToString();
-           // string strCode = null;
-           // if (!m_dicCode.TryGetValue(strButton, out strCode))
-           // {
-                MessageBox.Show(
-                    string.Format("Select a Report from menu [{0}].",strButton));
-                return;
-            //}
 
-            //m_strReportTitle = ((ToolStripMenuItem)e.ClickedItem).DropDownItems[0].Text;
-            //m_strQuery = strCode.Replace("{0}", m_dpFrom.Text).Replace("{1}", m_dpThru.Text);
-            
-            //m_Err.m_Logfile.WriteLogFile(string.Format("Date from = [{0}], Date thru = [{1}]", m_dpFrom, m_dpThru));
-
-            //if (m_strQuery.Contains(" cl_mnem in ({2})") && !string.IsNullOrEmpty(tscbClients.SelectedItem.ToString()))
-            //{
-            //    string[] strParts = tscbClients.SelectedItem.ToString().Split(new char[] { '-' });
-            //    m_strQuery = m_strQuery.Replace("{2}", string.Format("'{0}'",strParts[0].Trim()));
-            //  //  return;
-            //}
-            //else
-            //if (m_strQuery.Contains("{2}"))
-            //{
-
-            //    FormDataCollection f = new FormDataCollection();
-            //    if (f.ShowDialog() != DialogResult.OK)
-            //    {
-            //        MessageBox.Show("Cannot process this query with out data");
-            //        tssbTableReports.DropDown.Close(ToolStripDropDownCloseReason.CloseCalled);
-            //        return;
-            //    }
-            //    m_Err.m_Logfile.WriteLogFile(string.Format("Dialog Result = [{0}]", f.DialogResult.ToString()));
-            //    if (string.IsNullOrEmpty(f.tbData.Text))
-            //    {
-            //        MessageBox.Show("Cannot process this query with out data");
-            //        tssbTableReports.DropDown.Close(ToolStripDropDownCloseReason.CloseCalled);
-            //        return;
-            //    }
-
-            //    string strCdm = null;
-            //    string[] strCDMs = f.tbData.Text.Split(new string[] {","}, StringSplitOptions.RemoveEmptyEntries);
-                
-            //    foreach (string str in strCDMs)
-            //    {
-            //        Application.DoEvents();
-            //        strCdm += string.Format("'{0}',", str); 
-            //    }
-            //    strCdm = strCdm.Remove(strCdm.LastIndexOf(','));
-            //    m_strQuery = m_strQuery.Replace("{2}", strCdm);
-
-            //}
-            //m_Err.m_Logfile.WriteLogFile(string.Format("QUERY FILTER = [{0}]", m_strQuery));
-            //tssbTableReports.DropDown.Close(ToolStripDropDownCloseReason.CloseCalled);
-            //try
-            //{
-            //    LoadGrid();
-            //}
-            //catch (Exception ex)
-            //{
-                
-            //    m_Err.m_Logfile.WriteLogFile("Error in LoadGrid");
-            //    m_Err.m_Logfile.WriteLogFile(ex.Message);
-            //    MessageBox.Show(ex.Message, "ERROR");
-            //}
-            //tscbClients.SelectedIndex = -1;
-            //m_Err.m_Logfile.WriteLogFile("Leaving tssbTableReports.");
-            
+            MessageBox.Show(
+                string.Format("Select a Report from menu [{0}].",strButton));
+            return;
         }
 
         private void tssbExcel_ButtonClick(object sender, EventArgs e)
@@ -1245,14 +1114,6 @@ order by c.account
 
         private void m_dgvReport_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
         {
-            //foreach (DataGridViewRow dr in ((DataGridView)sender).Rows)
-            //{
-            //    Application.DoEvents();
-            //    foreach (DataGridViewCell dc in dr.Cells)
-            //    {
-            //        dc.Value = dc.FormattedValue.ToString().Replace('\'', '`');
-            //    }
-            //}
             Application.DoEvents();
         }
 
@@ -1290,7 +1151,6 @@ order by c.account
 
         private void m_dgvReport_DataError(object sender, DataGridViewDataErrorEventArgs e)
         {
-
             Application.DoEvents();
         }
 
@@ -1328,8 +1188,7 @@ order by c.account
                 strAcc = strAcc.Remove(1, 1);
             }
             //string strAccount = "";
-            LabBilling.Forms.AccountForm frm = new Forms.AccountForm(strAcc, this.ParentForm);
-            frm.Show();
+            AccountLaunched?.Invoke(this, strAcc);
         }
     }
 }

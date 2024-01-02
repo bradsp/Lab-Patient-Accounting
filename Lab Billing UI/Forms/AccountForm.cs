@@ -95,7 +95,7 @@ namespace LabBilling.Forms
 
         #region MainForm
 
-        private async void AccountForm_Load(object sender, EventArgs e)
+        private void AccountForm_Load(object sender, EventArgs e)
         {
             Log.Instance.Trace("Entering");
 
@@ -162,14 +162,14 @@ namespace LabBilling.Forms
 
             #region Setup Insurance Company Combobox
 
-            insCompanies = DataCache.Instance.GetInsCompanies(); //insCompanyRepository.GetAll(true).ToList();
+            insCompanies = DataCache.Instance.GetInsCompanies();
             #endregion
 
             lookupForm.Datasource = insCompanies;
 
             #region Setup ordering provider combo box
 
-            providers = DataCache.Instance.GetProviders(); //phyRepository.GetActive().OrderBy(x => x.FullName).ToList();
+            providers = DataCache.Instance.GetProviders();
             providerLookup1.Datasource = providers;
 
             #endregion
@@ -212,8 +212,7 @@ namespace LabBilling.Forms
             HolderSexComboBox.DisplayMember = "Value";
             HolderSexComboBox.ValueMember = "Key";
 
-
-            PlanFinCodeComboBox.DataSource = DataCache.Instance.GetFins(); // finDB.GetAll();
+            PlanFinCodeComboBox.DataSource = DataCache.Instance.GetFins();
             PlanFinCodeComboBox.DisplayMember = nameof(Fin.Description);
             PlanFinCodeComboBox.ValueMember = nameof(Fin.FinCode);
             PlanFinCodeComboBox.SelectedIndex = -1;
@@ -234,15 +233,16 @@ namespace LabBilling.Forms
             //build context menu
             foreach (var item in Dictionaries.cptModifiers)
             {
-                ToolStripMenuItem tsItem = new ToolStripMenuItem(item.Key);
-                tsItem.Tag = item.Value;
+                ToolStripMenuItem tsItem = new (item.Key)
+                {
+                    Tag = item.Value
+                };
                 tsItem.Click += new EventHandler(AddModifier_Click);
 
                 addModifierToolStripMenuItem.DropDownItems.Add(tsItem);
             }
 
             removeModifierToolStripMenuItem.Click += new EventHandler(RemoveModifier_Click);
-            await LoadAccountData();
         }
 
         private void SetFormPermissions()
@@ -305,10 +305,8 @@ namespace LabBilling.Forms
                     changeFinancialClassToolStripMenuItem.Visible = Program.LoggedInUser.CanModifyAccountFincode;
                     clearHoldStatusToolStripMenuItem.Visible = true;
                     ValidateAccountButton.Visible = true;
-                    //GenerateClaimButton.Visible = Program.LoggedInUser.CanSubmitBilling;
                 }
             }
-
         }
 
         private void AccountForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -336,7 +334,6 @@ namespace LabBilling.Forms
             this.Text = $"{currentAccount.AccountNo} - {currentAccount.PatFullName}";
 
             dxBindingList = new BindingList<PatDiag>(currentAccount.Pat.Diagnoses);
-            //ShowCreditedChrgCheckBox.Checked = false;
 
             if (currentAccount.Status == AccountStatus.Hold)
             {
@@ -589,7 +586,7 @@ namespace LabBilling.Forms
             InsRelationComboBox.SelectedValue = "01";
         }
 
-        private void SaveDemographics_Click(object sender, EventArgs e)
+        private async void SaveDemographics_Click(object sender, EventArgs e)
         {
             Log.Instance.Trace($"Entering");
 
@@ -626,7 +623,7 @@ namespace LabBilling.Forms
                 control.BackColor = Color.White;
             }
 
-            this.LoadAccountData();
+            await this.LoadAccountData();
 
         }
 
@@ -636,12 +633,15 @@ namespace LabBilling.Forms
 
         private void LoadInsuranceData()
         {
+            if (this == null)
+                return;
+
             insGridSource = null;
             InsuranceDataGrid.DataSource = null;
             InsuranceDataGrid.Rows.Clear();
             InsuranceDataGrid.Columns.Clear();
 
-            if (currentAccount.Insurances.Count() > 0)
+            if (currentAccount.Insurances.Count > 0)
             {
 
                 DataGridViewButtonColumn deleteCol = new DataGridViewButtonColumn
@@ -730,7 +730,7 @@ namespace LabBilling.Forms
                 return;
             }
 
-            if (currentAccount.Insurances.Count() - 1 < selectedIns)
+            if (currentAccount.Insurances.Count - 1 < selectedIns)
             {
                 //This is a new record
                 currentAccount.Insurances.Insert(selectedIns, new Ins());
@@ -795,7 +795,7 @@ namespace LabBilling.Forms
                 }
                 else
                 {
-                    List<string> updatedColumns = new List<string>();
+                    List<string> updatedColumns = new ();
 
                     foreach (Control control in insTabLayoutPanel.Controls)
                     {
@@ -814,8 +814,6 @@ namespace LabBilling.Forms
                 }
 
             }
-
-            //insGridSource.ResetBindings(false);
             RefreshAccountData();
 
             //clear entry fields
@@ -878,7 +876,7 @@ namespace LabBilling.Forms
             insurancePlanTextBox.Enabled = enable;
         }
 
-        private void InsuranceDataGrid_CellClick(object sender, DataGridViewCellEventArgs e)
+        private async void InsuranceDataGrid_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             Log.Instance.Trace($"Entering");
             InsTabMessageTextBox.Text = String.Empty;
@@ -922,7 +920,7 @@ namespace LabBilling.Forms
                 ClearInsEntryFields();
 
                 ResetControls(insTabLayoutPanel.Controls.OfType<Control>().ToArray());
-                LoadAccountData();
+                await LoadAccountData();
 
                 return;
                 #endregion
@@ -936,9 +934,9 @@ namespace LabBilling.Forms
             HolderSexComboBox.SelectedText = "--Select--";
             InsOrderComboBox.SelectedValue = InsuranceDataGrid.SelectedRows[0].Cells[nameof(Ins.Coverage)].Value.ToString();
 
-            HolderLastNameTextBox.Text = InsuranceDataGrid.SelectedRows[0].Cells[nameof(Ins.HolderLastName)].Value?.ToString(); // ?? lname;
-            HolderFirstNameTextBox.Text = InsuranceDataGrid.SelectedRows[0].Cells[nameof(Ins.HolderFirstName)].Value?.ToString(); // ?? fname;
-            HolderMiddleNameTextBox.Text = InsuranceDataGrid.SelectedRows[0].Cells[nameof(Ins.HolderMiddleName)].Value?.ToString(); // ?? mname;
+            HolderLastNameTextBox.Text = InsuranceDataGrid.SelectedRows[0].Cells[nameof(Ins.HolderLastName)].Value?.ToString(); 
+            HolderFirstNameTextBox.Text = InsuranceDataGrid.SelectedRows[0].Cells[nameof(Ins.HolderFirstName)].Value?.ToString(); 
+            HolderMiddleNameTextBox.Text = InsuranceDataGrid.SelectedRows[0].Cells[nameof(Ins.HolderMiddleName)].Value?.ToString();
             HolderAddressTextBox.Text = InsuranceDataGrid.SelectedRows[0].Cells[nameof(Ins.HolderStreetAddress)].Value != null ? InsuranceDataGrid.SelectedRows[0].Cells[nameof(Ins.HolderStreetAddress)].Value.ToString() : "";
 
             HolderCityTextBox.Text = InsuranceDataGrid.SelectedRows[0].Cells[nameof(Ins.HolderCity)].Value.ToString();
@@ -1116,7 +1114,7 @@ namespace LabBilling.Forms
 
         }
 
-        private void RemoveModifier_Click(object sender, EventArgs e)
+        private async void RemoveModifier_Click(object sender, EventArgs e)
         {
             Log.Instance.Trace($"Entering");
 
@@ -1128,11 +1126,11 @@ namespace LabBilling.Forms
                 var uri = Convert.ToInt32(row.Cells[nameof(ChrgDetail.uri)].Value.ToString());
 
                 chrgDetailRepository.RemoveModifier(uri);
-                LoadAccountData();
+                await LoadAccountData();
             }
         }
 
-        private void AddModifier_Click(object sender, EventArgs e)
+        private async void AddModifier_Click(object sender, EventArgs e)
         {
             Log.Instance.Trace($"Entering");
             ToolStripMenuItem item = sender as ToolStripMenuItem;
@@ -1145,7 +1143,7 @@ namespace LabBilling.Forms
                 var uri = Convert.ToInt32(row.Cells[nameof(ChrgDetail.uri)].Value.ToString());
 
                 chrgDetailRepository.AddModifier(uri, item.Text);
-                LoadAccountData();
+                await LoadAccountData();
             }
         }
 
@@ -1159,7 +1157,7 @@ namespace LabBilling.Forms
                 DataGridViewRow row = ChargesDataGrid.SelectedRows[0];
                 var chrg = chrgRepository.GetById(Convert.ToInt32(row.Cells[nameof(Chrg.ChrgId)].Value.ToString()));
 
-                DisplayPOCOForm<Chrg> frm = new DisplayPOCOForm<Chrg>(chrg)
+                DisplayPOCOForm<Chrg> frm = new (chrg)
                 {
                     Title = "Charge Details"
                 };
@@ -1240,7 +1238,7 @@ namespace LabBilling.Forms
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void ToolStripCreditCharge_Click(object sender, EventArgs e)
+        private async void ToolStripCreditCharge_Click(object sender, EventArgs e)
         {
             Log.Instance.Trace($"Entering");
             int selectedRows = ChargesDataGrid.Rows.GetRowCount(DataGridViewElementStates.Selected);
@@ -1257,21 +1255,21 @@ namespace LabBilling.Forms
                     chrgRepository.CreditCharge(Convert.ToInt32(row.Cells[nameof(Chrg.ChrgId)].Value.ToString()), prompt.Text);
                     //reload charge grids to pick up changes
                     //LoadCharges();
-                    LoadAccountData();
+                    await LoadAccountData();
                 }
             }
         }
 
         private void ShowCreditedChrgCheckBox_CheckedChanged(object sender, EventArgs e) => FilterCharges();
 
-        private void AddChargeButton_Click(object sender, EventArgs e)
+        private async void AddChargeButton_Click(object sender, EventArgs e)
         {
             Log.Instance.Trace($"Entering");
             ChargeEntryForm frm = new ChargeEntryForm(currentAccount);
 
             if (frm.ShowDialog() == DialogResult.OK)
             {
-                LoadAccountData();
+                await LoadAccountData();
             }
         }
 
@@ -1292,12 +1290,14 @@ namespace LabBilling.Forms
                 currentAccount.Status == AccountStatus.Closed)
             {
                 AddPaymentButton.Enabled = false;
-                Label addPaymentStatusLabel = new Label();
-                addPaymentStatusLabel.AutoSize = true;
-                addPaymentStatusLabel.MaximumSize = new Size(300, 300);
-                addPaymentStatusLabel.Text = "Cannot add payment to this account.";
-                addPaymentStatusLabel.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-                addPaymentStatusLabel.Location = new Point(tabPayments.Right - 310, AddPaymentButton.Bottom + 10);
+                Label addPaymentStatusLabel = new ()
+                {
+                    AutoSize = true,
+                    MaximumSize = new Size(300, 300),
+                    Text = "Cannot add payment to this account.",
+                    Anchor = AnchorStyles.Top | AnchorStyles.Right,
+                    Location = new Point(tabPayments.Right - 310, AddPaymentButton.Bottom + 10)
+                };
                 tabPayments.Controls.Add(addPaymentStatusLabel);
             }
 
@@ -1352,7 +1352,7 @@ namespace LabBilling.Forms
             }
         }
 
-        private void AddPaymentButton_Click(object sender, EventArgs e)
+        private async void AddPaymentButton_Click(object sender, EventArgs e)
         {
             PaymentAdjustmentEntryForm form = new PaymentAdjustmentEntryForm(ref currentAccount);
 
@@ -1385,7 +1385,7 @@ namespace LabBilling.Forms
                     Log.Instance.Error(ex);
                     MessageBox.Show($"Error adding payment. See log for details.");
                 }
-                LoadAccountData();
+                await LoadAccountData();
             }
         }
 
@@ -1398,13 +1398,9 @@ namespace LabBilling.Forms
         private void LoadDx()
         {
             Log.Instance.Trace("Entering");
-
             DiagnosisDataGrid.DataSource = new BindingSource(dxBindingList, null);
-
             dxLoadingMode = true;
-
             dxPointerBindingSource.DataSource = null;
-
             dxPointerGrid2.DataSource = null;
 
             int cnt = dxBindingList.Count;
@@ -1539,12 +1535,7 @@ namespace LabBilling.Forms
 
         private void dxPointerGrid2_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
         {
-            ComboBox combo = e.Control as ComboBox;
-            if (combo != null)
-            {
-                combo.SelectedIndexChanged -= dxCombo_SelectedIndexChanged;
-                combo.SelectedIndexChanged += new EventHandler(dxCombo_SelectedIndexChanged);
-            }
+
         }
 
         private void dxPointerGrid2_CellClick(object sender, DataGridViewCellEventArgs e)
@@ -1552,9 +1543,7 @@ namespace LabBilling.Forms
             //You can check for e.ColumnIndex to limit this to your specific column
             if (e.ColumnIndex > 2)
             {
-                var editingControl = this.dxPointerGrid2.EditingControl as
-                    DataGridViewComboBoxEditingControl;
-                if (editingControl != null)
+                if (this.dxPointerGrid2.EditingControl is DataGridViewComboBoxEditingControl editingControl)
                     editingControl.DroppedDown = true;
             }
         }
@@ -1564,7 +1553,7 @@ namespace LabBilling.Forms
             if (!dxLoadingMode)
             {
                 //loop through columns
-                int cnt = dxBindingList.Count();
+                int cnt = dxBindingList.Count;
 
                 var dxSelected = new List<string>();
 
@@ -1622,10 +1611,6 @@ namespace LabBilling.Forms
 
                 }
             }
-        }
-
-        private void dxCombo_SelectedIndexChanged(object sender, EventArgs e)
-        {
         }
 
         private void DxSearchButton_Click(object sender, EventArgs e)
@@ -1983,7 +1968,6 @@ namespace LabBilling.Forms
             Log.Instance.Trace($"Entering");
 
             ClientLookupForm clientLookupForm = new ClientLookupForm();
-            ClientRepository clientRepository = new ClientRepository(Program.AppEnvironment);
             clientLookupForm.Datasource = DataCache.Instance.GetClients();
 
             if (clientLookupForm.ShowDialog() == DialogResult.OK)
@@ -2154,7 +2138,7 @@ namespace LabBilling.Forms
             }
             if (e.TabPage.Name == summaryTab.Name)
             {
-                RefreshAccountData();
+                //RefreshAccountData();
             }
             if (e.TabPage.Name == tabDiagnosis.Name)
             {

@@ -27,11 +27,13 @@ namespace LabBilling.Forms
         private string selectedQueue = null;
         private TreeNode currentNode = null;
         private Worklist worklist = null;
-        
+
         public event EventHandler<string> AccountLaunched;
 
         private void WorkListForm_Load(object sender, EventArgs e)
         {
+            accountGrid.DoubleBuffered(true);
+
             worklist = new Worklist(Program.AppEnvironment);
             accountRepository = new AccountRepository(Program.AppEnvironment);
 
@@ -45,7 +47,7 @@ namespace LabBilling.Forms
 
             TreeNode[] worklistsTreeNode = new TreeNode[worklists.Count];
             int i = 0;
-            foreach(string wlist in worklists)
+            foreach (string wlist in worklists)
             {
                 worklistsTreeNode[i++] = new TreeNode(wlist);
             }
@@ -86,7 +88,7 @@ namespace LabBilling.Forms
                     }
                     else
                     {
-                        if(acct != null)
+                        if (acct != null)
                         {
                             acct[nameof(AccountSearch.Status)] = formType;
                             acct[nameof(AccountSearch.LastValidationDate)] = DateTime.Now;
@@ -98,7 +100,7 @@ namespace LabBilling.Forms
                 {
                     Log.Instance.Error($"Error validating account {accountNo} - {ex.Message}");
 
-                    if(acct != null)
+                    if (acct != null)
                     {
                         acct[nameof(AccountSearch.ValidationStatus)] = "Error validating account. Notify support.";
                         acct[nameof(AccountSearch.LastValidationDate)] = DateTime.Now;
@@ -159,7 +161,7 @@ namespace LabBilling.Forms
 
         private async void workqueues_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
         {
-            if(currentNode != null)
+            if (currentNode != null)
             {
                 currentNode.BackColor = Color.White;
                 currentNode.ForeColor = Color.Black;
@@ -475,7 +477,7 @@ namespace LabBilling.Forms
                 panel1.Width = panelExpandCollapseButton.Width;
                 panelExpandCollapseButton.Text = ">";
                 accountGrid.Left = panel1.Right + 10;
-                accountGrid.Width += worklistPanelWidth - 20;  
+                accountGrid.Width += worklistPanelWidth - 20;
             }
         }
 
@@ -544,9 +546,9 @@ namespace LabBilling.Forms
                     }
                 }
 
-                if(!showReadyToBillCheckbox.Checked)
+                if (!showReadyToBillCheckbox.Checked)
                 {
-                    if(accountTable.DefaultView.RowFilter != string.Empty)
+                    if (accountTable.DefaultView.RowFilter != string.Empty)
                     {
                         accountTable.DefaultView.RowFilter += $" and {nameof(AccountSearch.Status)} not in ('{AccountStatus.ReadyToBill}','{AccountStatus.Professional}','{AccountStatus.Institutional}')";
                     }
@@ -569,7 +571,7 @@ namespace LabBilling.Forms
 
         private void accountGridContextMenu_VisibleChanged(object sender, EventArgs e) { }
 
-        private void showAccountsWithPmtCheckbox_CheckedChanged(object sender, EventArgs e) => UpdateFilter();        
+        private void showAccountsWithPmtCheckbox_CheckedChanged(object sender, EventArgs e) => UpdateFilter();
 
         private void changeToYFinancialClassToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -641,7 +643,7 @@ namespace LabBilling.Forms
             var accts = accountTable.Rows.Find(selectedAccount);
             var account = accountRepository.GetByAccount(selectedAccount);
 
-            if(readyToBillToolStripMenuItem.Checked)
+            if (readyToBillToolStripMenuItem.Checked)
             {
                 if (!account.ReadyToBill)
                 {
@@ -652,13 +654,13 @@ namespace LabBilling.Forms
                         accountRepository.AddNote(selectedAccount, "Marked ready to bill.");
                         accts[nameof(AccountSearch.Status)] = AccountStatus.ReadyToBill;
                         _ = Task.Run(() => RunValidationAsync(selectedAccount));
-                    }                    
+                    }
                     accountGrid.Refresh();
                 }
             }
             else
             {
-                if(account.ReadyToBill)
+                if (account.ReadyToBill)
                 {
                     accountRepository.UpdateStatus(selectedAccount, AccountStatus.New);
                     accountRepository.AddNote(selectedAccount, "Ready to bill removed.");
@@ -669,7 +671,7 @@ namespace LabBilling.Forms
         }
 
         private async void WorkListForm_Activated(object sender, EventArgs e) => await LoadWorkList();
-        
+
         private void showReadyToBillCheckbox_CheckedChanged(object sender, EventArgs e) => UpdateFilter();
 
         private void WorkListForm_Enter(object sender, EventArgs e) { }

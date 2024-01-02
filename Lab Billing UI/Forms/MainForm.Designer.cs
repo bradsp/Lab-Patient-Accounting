@@ -78,7 +78,7 @@
             toolStripDatabaseLabel = new System.Windows.Forms.ToolStripStatusLabel();
             panel1 = new System.Windows.Forms.Panel();
             helpProvider1 = new System.Windows.Forms.HelpProvider();
-            mdiTabControl = new System.Windows.Forms.TabControl();
+            mdiTabControl = new System.Windows.Forms.CustomTabControl();
             MainFormMenu.SuspendLayout();
             statusStrip1.SuspendLayout();
             SuspendLayout();
@@ -367,7 +367,27 @@
             // 
             // mdiTabControl
             // 
+            mdiTabControl.DisplayStyle = System.Windows.Forms.TabStyle.Angled;
+            // 
+            // 
+            // 
+            mdiTabControl.DisplayStyleProvider.BorderColor = System.Drawing.Color.Transparent;
+            mdiTabControl.DisplayStyleProvider.BorderColorHot = System.Drawing.SystemColors.ControlDark;
+            mdiTabControl.DisplayStyleProvider.BorderColorSelected = System.Drawing.Color.FromArgb(127, 157, 185);
+            mdiTabControl.DisplayStyleProvider.CloserColor = System.Drawing.Color.DarkGray;
+            mdiTabControl.DisplayStyleProvider.FocusTrack = false;
+            mdiTabControl.DisplayStyleProvider.HotTrack = true;
+            mdiTabControl.DisplayStyleProvider.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
+            mdiTabControl.DisplayStyleProvider.Opacity = 1F;
+            mdiTabControl.DisplayStyleProvider.Overlap = 7;
+            mdiTabControl.DisplayStyleProvider.Padding = new System.Drawing.Point(10, 3);
+            mdiTabControl.DisplayStyleProvider.Radius = 10;
+            mdiTabControl.DisplayStyleProvider.ShowTabCloser = false;
+            mdiTabControl.DisplayStyleProvider.TextColor = System.Drawing.SystemColors.ControlText;
+            mdiTabControl.DisplayStyleProvider.TextColorDisabled = System.Drawing.SystemColors.ControlDark;
+            mdiTabControl.DisplayStyleProvider.TextColorSelected = System.Drawing.SystemColors.ControlText;
             resources.ApplyResources(mdiTabControl, "mdiTabControl");
+            mdiTabControl.HotTrack = true;
             mdiTabControl.Multiline = true;
             mdiTabControl.Name = "mdiTabControl";
             mdiTabControl.SelectedIndex = 0;
@@ -449,7 +469,7 @@
         private System.Windows.Forms.HelpProvider helpProvider1;
         private System.Windows.Forms.ToolStripMenuItem documentationToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem latestUpdatesToolStripMenuItem;
-        private System.Windows.Forms.TabControl mdiTabControl;
+        private System.Windows.Forms.CustomTabControl mdiTabControl;
         private System.Windows.Forms.ToolStripMenuItem windowToolStripMenuItem;
     }
 }

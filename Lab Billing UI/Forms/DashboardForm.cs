@@ -162,7 +162,6 @@ namespace LabBilling.Forms
             ChartArea chartArea1 = new ChartArea();
             Legend legend1 = new Legend();
 
-
             chartArea1.Name = "ChartArea1";
             chartArea1.AxisX.Interval = 1;
             chartArea1.AxisY.LabelStyle.Format = "##,#";
@@ -170,7 +169,7 @@ namespace LabBilling.Forms
             legend1.Name = "Legend1";
             arChart.Legends.Add(legend1);
 
-            ReportingRepository reportingRepository = new ReportingRepository(Helper.ConnVal);
+            ReportingRepository reportingRepository = new ReportingRepository(Program.AppEnvironment.ConnectionString);
             string seriesName = "A/R Balance";
 
             var data = reportingRepository.GetARByFinCode();
@@ -181,11 +180,13 @@ namespace LabBilling.Forms
             arChart.Titles.Add("A/R Balance by Fin Code");
             arChart.DataSource = data;
 
-            Series series1 = new Series();
-            series1.Legend = legend1.Name;
-            series1.XValueMember = "Financial Class";
-            series1.YValueMembers = "Balance";
-            series1.Name = seriesName;
+            Series series1 = new()
+            {
+                Legend = legend1.Name,
+                XValueMember = "Financial Class",
+                YValueMembers = "Balance",
+                Name = seriesName
+            };
 
             arChart.Series.Add(series1);
             

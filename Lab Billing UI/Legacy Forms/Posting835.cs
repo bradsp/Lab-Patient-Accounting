@@ -238,6 +238,7 @@ namespace LabBilling.Legacy
             //            CreateDataGridViewProcessed(),
             //CreateDataGridViewNotProcessed(), and CreateDataGridViewDenied() function                        
         }
+
         /// <summary>
         /// This enum is for the EOB's header parts. Only used for dgvEOB 
         /// </summary>
@@ -329,8 +330,7 @@ namespace LabBilling.Legacy
 
         private void GetSystemParameters()
         {
-            m_sqlConnection = new SqlConnection(string.Format("Data Source={0}; Initial Catalog = {1};"
-                + "Integrated Security = 'SSPI'", m_strServer, m_strDatabase));
+            m_sqlConnection = new SqlConnection(Program.AppEnvironment.ConnectionString);
 
             dtDirectories = new DataTable();
             using (SqlCommand cmd = m_sqlConnection.CreateCommand())
@@ -444,7 +444,6 @@ namespace LabBilling.Legacy
             accountRepository = new AccountRepository(Program.AppEnvironment);
             chkRepository = new ChkRepository(Program.AppEnvironment);
             numberRepository = new NumberRepository(Program.AppEnvironment);
-
         }
 
 
@@ -457,9 +456,6 @@ namespace LabBilling.Legacy
         private void tsmi835_Click(object sender, EventArgs e)
         {
             openFileDialog.Filter = "All Files (*.*)|*.*";
-            //openFileDialog.FileName = string.Format(@"{0}\*.*", diCurrent);
-
-            //openFileDialog.DefaultExt = "*";
             openFileDialog.InitialDirectory = string.Format(@"{0}", diCurrent);
 
             openFileDialog.Tag = (string)"MEDICARE";
@@ -475,7 +471,6 @@ namespace LabBilling.Legacy
         private void tsmiBCBSTEdi_Click(object sender, EventArgs e)
         {
             return; // must update the directory
-
         }
         private void tsmiUHC_Click(object sender, EventArgs e)
         {
@@ -699,29 +694,31 @@ namespace LabBilling.Legacy
         /// </summary>
         private static void CreateEOBDictionaryColumnGrid()
         {
-            m_dicColGridsEOB = new Dictionary<string, DataGridViewCell>();
-            // money fields
-            m_dicColGridsEOB.Add(Col835EOB.ePaymentDataMSPPrimPay.ToString(), m_celMoney);
-            m_dicColGridsEOB.Add(Col835EOB.ePaymentDataHCPCSAmt.ToString(), m_celMoney);
-            m_dicColGridsEOB.Add(Col835EOB.ePaymentDataContAdjAmt.ToString(), m_celMoney);
-            m_dicColGridsEOB.Add(Col835EOB.ePaymentDataPatRefund.ToString(), m_celMoney);
-            m_dicColGridsEOB.Add(Col835EOB.eChargesReported.ToString(), m_celMoney);
-            m_dicColGridsEOB.Add(Col835EOB.eChargesNCovd.ToString(), m_celMoney);
-            m_dicColGridsEOB.Add(Col835EOB.eChargesDenied.ToString(), m_celMoney);
-            m_dicColGridsEOB.Add(Col835EOB.ePatientLibCoinsurance.ToString(), m_celMoney);
-            m_dicColGridsEOB.Add(Col835EOB.ePatientLibNCovdCharges.ToString(), m_celMoney);
-            m_dicColGridsEOB.Add(Col835EOB.ePaymentDataNetReimbAmt.ToString(), m_celMoney);
-            m_dicColGridsEOB.Add(Col835EOB.eOtherAdjAmt.ToString(), m_celMoney);
+            m_dicColGridsEOB = new Dictionary<string, DataGridViewCell>
+            {
+                // money fields
+                { Col835EOB.ePaymentDataMSPPrimPay.ToString(), m_celMoney },
+                { Col835EOB.ePaymentDataHCPCSAmt.ToString(), m_celMoney },
+                { Col835EOB.ePaymentDataContAdjAmt.ToString(), m_celMoney },
+                { Col835EOB.ePaymentDataPatRefund.ToString(), m_celMoney },
+                { Col835EOB.eChargesReported.ToString(), m_celMoney },
+                { Col835EOB.eChargesNCovd.ToString(), m_celMoney },
+                { Col835EOB.eChargesDenied.ToString(), m_celMoney },
+                { Col835EOB.ePatientLibCoinsurance.ToString(), m_celMoney },
+                { Col835EOB.ePatientLibNCovdCharges.ToString(), m_celMoney },
+                { Col835EOB.ePaymentDataNetReimbAmt.ToString(), m_celMoney },
+                { Col835EOB.eOtherAdjAmt.ToString(), m_celMoney },
 
-            // initially hidden fields can toggle them to be visible with f12 
-            m_dicColGridsEOB.Add(Col835EOB.ePaymentDataPerDiemRate.ToString(), m_celHidden);
-            m_dicColGridsEOB.Add(Col835EOB.ePaymentDataReimbRate.ToString(), m_celHidden);
-            m_dicColGridsEOB.Add(Col835EOB.eICN.ToString(), m_celHidden);
-            m_dicColGridsEOB.Add(Col835EOB.ePatStat.ToString(), m_celHidden);
-            m_dicColGridsEOB.Add(Col835EOB.eClaimSt.ToString(), m_celHidden);
-            m_dicColGridsEOB.Add(Col835EOB.eType.ToString(), m_celHidden);
-            m_dicColGridsEOB.Add(Col835EOB.eClaimForwarded.ToString(), m_celHidden);
-            m_dicColGridsEOB.Add(Col835EOB.eClaimForwardedID.ToString(), m_celHidden);
+                // initially hidden fields can toggle them to be visible with f12 
+                { Col835EOB.ePaymentDataPerDiemRate.ToString(), m_celHidden },
+                { Col835EOB.ePaymentDataReimbRate.ToString(), m_celHidden },
+                { Col835EOB.eICN.ToString(), m_celHidden },
+                { Col835EOB.ePatStat.ToString(), m_celHidden },
+                { Col835EOB.eClaimSt.ToString(), m_celHidden },
+                { Col835EOB.eType.ToString(), m_celHidden },
+                { Col835EOB.eClaimForwarded.ToString(), m_celHidden },
+                { Col835EOB.eClaimForwardedID.ToString(), m_celHidden }
+            };
         }
 
         /// <summary>
@@ -3409,7 +3406,7 @@ namespace LabBilling.Legacy
                     continue;
                 }
                 #endregion InsertRecord
-            } 
+            }
 
             MessageBox.Show(string.Format("{0} records added.", nRecordsAdded), "DATABASE UPDATE FINISHED");
 

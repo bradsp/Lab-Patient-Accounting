@@ -186,11 +186,7 @@ namespace LabBilling.Forms
                     m_rIns.GetActiveRecords(string.Format("Account = '{0}' and ins_a_b_c = 'A'", strAccount)) == 1 ?
                     m_rIns.propIns_code.Trim().ToUpper() : "";
                 
-                //m_CAcc.LoadAccount(strAccount);
                 chk.FinCode = m_CAcc.m_Racc.m_strFinCode;
-                //m_rChk.m_strModPrg = Application.ProductName + Application.ProductVersion;
-
-                //int nRec = m_rChk.AddRecord();
                 chkRepository.Add(chk);
 
                 // update pat
@@ -235,18 +231,15 @@ namespace LabBilling.Forms
 
             m_dtAccounts = new DataTable("BAD_DEBT");
             m_sdaBadDebt = new SqlDataAdapter();
-            using (SqlConnection conn = new SqlConnection(
-            string.Format("Data Source={0}; Initial Catalog = {1}; Integrated Security = 'SSPI'",
-                    m_strServer, m_strDatabase)))
+            using (SqlConnection conn = new(Program.AppEnvironment.ConnectionString))
             {
                 string strSelectBadDebt;
                 //get last collections sent date
-                SqlCommand cmd = new SqlCommand("select max(cast(date_sent as date)) from bad_debt", conn);
+                SqlCommand cmd = new("select max(cast(date_sent as date)) from bad_debt", conn);
                 conn.Open();
                 var result = cmd.ExecuteScalar();
                 DateTime dtSent = (DateTime)result;
 
-                //if (!((CheckBox)m_cboxInclude.Control).Checked)
                 if (sentCollections)
                 {
                     strSelectBadDebt =
@@ -275,9 +268,6 @@ namespace LabBilling.Forms
                     "inner join pat on pat.account = bad_debt.account_no " +
                     "where date_sent is null " +
                     "order by service_date ");
-
-                    //dtFrom, dtThru);
-
                 }
                 // special case processing 
                 if (DateTime.Now < new DateTime(2015, 12, 18, 15, 15, 0))
@@ -289,28 +279,6 @@ namespace LabBilling.Forms
                         "AND bad_debt.date_entered BETWEEN  '2015-10-26 00:00:00.570' AND '2015-10-27 23:59:52.570' " +
                         "WHERE dbo.pat.bd_list_date = '2015-12-07 00:00:00.000' AND dbo.pat.baddebt_date IS NULL order by dbo.pat.pat_full_name";
                 }
-                //    string.Format("select " +
-                //    " datepart(month, date_sent) as [Month], datepart(year, date_sent) as [Year], " +
-                //    " aging_history.account,convert(varchar(10), datestamp,101) as [ah date], " +
-                //    " (aging_history.balance) as [ah bal] " +
-                //    " 	,convert(varchar(10), date_sent,101) as [collections date] " +
-                //    " 	,(bad_debt.balance) as [bd bal] " +
-                //    "	, case " +
-                //    " 	when convert(varchar(10),coalesce(max(chk.date_rec),max(chk.mod_date)),101) is not null " +
-                //    " 	then convert(varchar(10),coalesce(max(chk.date_rec),max(chk.mod_date)),101) " +
-                //    " 	else " +
-                //    "   convert(varchar(10), date_sent,101) " +
-                //    " 	end as [last chk date] " +
-                //    " from aging_history " +
-                //    " left outer join bad_debt on account_no = account " +
-                //    " left outer join chk on chk.account = aging_history.account " +
-                //    //" left outer join mcb_report on mcb_report.account = aging_history.account " +
-                //    //" where datestamp between '{0}' and '{1}' and  " +
-                //    " where date_sent between '{0}' and '{1}' " +
-                //    " group by datestamp, convert(datetime,date_sent), aging_history.account,aging_history.balance " +
-                //    " ,bad_debt.balance "+ //,mcb_report.date_last_payment, mcb_report.balance " +
-                //    " order by coalesce(max(chk.date_rec), max(chk.mod_date), convert(varchar(10), date_sent,101))",
-                //    m_dpFrom, m_dpThru);
 
                 SqlCommand cmdSelect = new SqlCommand(strSelectBadDebt, conn);
                 m_sdaBadDebt.SelectCommand = cmdSelect;
@@ -318,18 +286,6 @@ namespace LabBilling.Forms
             }
             dgvAccounts.DataSource = m_dtAccounts;
 
-            // remove the accounts that have had a check in the last 120 days
-            //int i = 0;
-            //foreach (DataRow dr in m_dtAccounts.Rows)
-            //{
-            //    i++;
-            //    if (DateTime.Parse(dr["last chk date"].ToString()) > DateTime.Today.AddDays(-120))
-            //    {
-            //        dr.Delete();
-
-            //    }
-            //}
-            //m_dtAccounts.AcceptChanges();
             if (!sentCollections)
             {
                 if (dgvAccounts.Columns["dataGridViewDeleteButton"] == null)
@@ -404,14 +360,12 @@ namespace LabBilling.Forms
             Log.Instance.Trace($"Entering");
             dgvAccounts.Columns.Clear();
 
-            DateTime dtFrom = DateTime.Today; // ((DateTimePicker)m_dpFrom.Control).Value;
-            DateTime dtThru = DateTime.Today.AddHours(23).AddMinutes(59).AddSeconds(59); // ((DateTimePicker)m_dpThru.Control).Value;
+            DateTime dtFrom = DateTime.Today; 
+            DateTime dtThru = DateTime.Today.AddHours(23).AddMinutes(59).AddSeconds(59);
 
             m_dtAccounts = new DataTable("BAD_DEBT");
             m_sdaBadDebt = new SqlDataAdapter();
-            using (SqlConnection conn = new SqlConnection(
-            string.Format("Data Source={0}; Initial Catalog = {1}; Integrated Security = 'SSPI'",
-                    m_strServer, m_strDatabase)))
+            using (SqlConnection conn = new SqlConnection(Program.AppEnvironment.ConnectionString))
             {
 
                 string strSelectBadDebt =
@@ -489,30 +443,9 @@ namespace LabBilling.Forms
         private void tsbReadMCLFile_Click(object sender, EventArgs e)
         {
             Log.Instance.Trace($"Entering");
-            /*
-             * outstring.Format("%-20.20s%-15.15s%-25.25s%-25.25s%-18.18s%-15.15s%-15.15s%-12.12s%-10.10s%-20.20s%-35.35s%-35.35s%-25.25s%-20.20s%-35.35s%-29.29s%-6.6s%-6.6s%-10.10s\n",
-				rbad_debt.m_debtor_last_name,       20  
-				rbad_debt.m_debtor_first_name,      15  35
-				rbad_debt.m_st_addr_1,              25  60
-				rbad_debt.m_st_addr_2,              25  85
-				rbad_debt.m_city,                   18  103
-				rbad_debt.m_state_zip,              15  118
-				rbad_debt.m_spouse,                 15  133
-				rbad_debt.m_phone,                  12  145
-				rbad_debt.m_soc_security,           10  155
-				rbad_debt.m_license_number,         20  175
-				rbad_debt.m_employment,             35  210
-				rbad_debt.m_remarks,                35  245
-				rbad_debt.m_account_no,             25  270
-				rbad_debt.m_patient_name,           20  290
-				rbad_debt.m_remarks2,               35  325
-				rbad_debt.m_misc,                   29  354
-				service_date,                        6  360
-				"",//payment_date,                   6  366
-				money(rbad_debt.m_balance));        10  376
-			*/
-            OpenFileDialog ofd = new OpenFileDialog();
-            ofd.InitialDirectory = @"\\labops1\c:\temp\";
+
+            OpenFileDialog ofd = new();
+            ofd.InitialDirectory = @"c:\temp\";
             ofd.Filter = "Text Files|*.txt";
 
             if (ofd.ShowDialog() == DialogResult.Cancel)
@@ -714,15 +647,10 @@ namespace LabBilling.Forms
             string filename = string.Format(@"c:\temp\MCL{0}{1}{2}.txt", DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day);
             using (System.IO.StreamWriter file = new System.IO.StreamWriter(filename))
             {
-                using (SqlConnection conn = new SqlConnection(
-               string.Format("Data Source={0}; Initial Catalog = {1}; Integrated Security = 'SSPI'",
-                       m_strServer, m_strDatabase)))
+                using (SqlConnection conn = new SqlConnection(Program.AppEnvironment.ConnectionString))
                 {
                     conn.Open();
-                    //SqlDataAdapter sda = new SqlDataAdapter(conn);
-
                     SqlCommand cmdSelect = new SqlCommand("select * from bad_debt where date_sent IS NULL", conn);
-
                     SqlDataReader dr = cmdSelect.ExecuteReader();
 
                     if (dr.HasRows)
@@ -755,9 +683,7 @@ namespace LabBilling.Forms
                             file.WriteLine(ffl.OutputLine());
 
 
-                            using (SqlConnection conn2 = new SqlConnection(
-                                    string.Format("Data Source={0}; Initial Catalog = {1}; Integrated Security = 'SSPI'",
-                                    m_strServer, m_strDatabase)))
+                            using (SqlConnection conn2 = new SqlConnection(Program.AppEnvironment.ConnectionString))
                             {
                                 //update the date sent field in the database record
                                 conn2.Open();
@@ -830,11 +756,11 @@ namespace LabBilling.Forms
             {
                 //button clicked
                 //delete the row from the database and grid
-                using (SqlConnection conn = new SqlConnection(Helper.ConnVal))
+                using (SqlConnection conn = new SqlConnection(Program.AppEnvironment.ConnectionString))
                 {
                     if (MessageBox.Show("Are you sure?", "Delete Row", MessageBoxButtons.YesNo) == DialogResult.Yes)
                     {
-                        SqlCommand cmdDelete = new SqlCommand("delete from bad_debt where rowguid = @rowguid", conn);
+                        SqlCommand cmdDelete = new("delete from bad_debt where rowguid = @rowguid", conn);
                         cmdDelete.Parameters.Add("@rowguid", SqlDbType.UniqueIdentifier).Value = m_dtAccounts.Columns["rowguid"];
                         cmdDelete.Parameters["@rowguid"].SourceColumn = "rowguid";
 

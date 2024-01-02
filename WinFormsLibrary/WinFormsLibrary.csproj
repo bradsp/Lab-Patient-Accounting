@@ -5,8 +5,8 @@
     <Nullable>enable</Nullable>
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
-    <AssemblyVersion>2023.0.0.0</AssemblyVersion>
-    <FileVersion>2023.0.0.0</FileVersion>
+    <AssemblyVersion>2024.0.0.0</AssemblyVersion>
+    <FileVersion>2024.0.0.0</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

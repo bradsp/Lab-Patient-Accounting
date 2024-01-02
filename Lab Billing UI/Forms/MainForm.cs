@@ -18,7 +18,6 @@ using Application = System.Windows.Forms.Application;
 using NLog.Config;
 using NLog.Targets;
 using NLog;
-using System.Drawing;
 using System.Runtime.InteropServices;
 
 
@@ -114,7 +113,21 @@ namespace LabBilling
         private void NewForm(Form childForm)
         {
             childForm.MdiParent = this;
+            childForm.TextChanged += ChildForm_TextChanged;
             childForm.Show();
+        }
+
+        private void ChildForm_TextChanged(object sender, EventArgs e)
+        {
+            Form form = (Form)sender;
+            if (form != null)
+            {
+                if (form.Tag != null)
+                {
+                    TabPage tp = (TabPage)form.Tag;
+                    tp.Text = form.Text;
+                }
+            }
         }
 
         private void userSecurityToolStripMenuItem_Click(object sender, EventArgs e)
@@ -191,7 +204,7 @@ namespace LabBilling
             {
                 Log.Instance.Fatal("There is not a valid user object.");
                 MetroMessageBox.Show(this, "Application error with user object. Aborting.", "Fatal Error", MessageBoxButtons.OK, MessageBoxIcon.Stop);
-                System.Windows.Forms.Application.Exit();
+                Application.Exit();
             }
             #endregion
 
@@ -374,6 +387,7 @@ namespace LabBilling
         private void LaunchAccount(string account)
         {
             Log.Instance.Trace("Entering");
+            SuspendLayout();
             bool IsAlreadyOpen = false;
             if (Application.OpenForms.OfType<AccountForm>().Count() > 0)
             {
@@ -395,13 +409,18 @@ namespace LabBilling
                 NewForm(accFrm);
                 Cursor.Current = Cursors.Default;
             }
+            ResumeLayout();
         }
 
         private void systemParametersToolStripMenuItem_Click(object sender, EventArgs e)
             => new SystemParametersForm().ShowDialog();
 
         private void monthlyReportsToolStripMenuItem_Click(object sender, EventArgs e)
-            => NewForm(new frmReports(Helper.GetArgs()));
+        {
+            frmReports frm = new frmReports(Program.AppEnvironment.GetArgs());
+            frm.AccountLaunched += OnAccountLaunched;
+            NewForm(frm); 
+        }
 
         private void worklistToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -415,12 +434,12 @@ namespace LabBilling
             else
             {
                 WorkListForm worklistForm = new WorkListForm(Helper.ConnVal);
-                worklistForm.AccountLaunched += WorklistForm_AccountLaunched;
+                worklistForm.AccountLaunched += OnAccountLaunched;
                 NewForm(worklistForm);
             }
         }
 
-        private void WorklistForm_AccountLaunched(object sender, string e) => LaunchAccount(e);
+        private void OnAccountLaunched(object sender, string e) => LaunchAccount(e);
 
         private void reportingPortalToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -475,8 +494,6 @@ namespace LabBilling
         {
             Log.Instance.Trace($"Entering");
             Properties.Settings.Default.Save();
-            //if this form is closing, close all other open forms
-            Application.Exit();
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e) => this.Close();
