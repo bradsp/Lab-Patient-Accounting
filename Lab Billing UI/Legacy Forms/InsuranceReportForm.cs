@@ -12,7 +12,7 @@ using WinFormsLibrary;
 
 namespace LabBilling.ReportByInsuranceCompany
 {
-    public partial class frmReport : Form
+    public partial class frmReport : BaseForm
     {
         CAcc m_rAcc = null;
         DataTable m_dtDataView = null;

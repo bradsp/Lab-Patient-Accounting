@@ -4,13 +4,11 @@ using LabBilling.Core;
 using System;
 using System.Windows.Forms;
 using LabBilling.Logging;
-using System.Linq;
-using System.Data;
-using System.Threading.Tasks;
+
 
 namespace LabBilling.Forms
 {
-    public partial class ChargeEntryForm : Form
+    public partial class ChargeEntryForm : BaseForm
     {
         private Account _currentAccount = new Account();
         private readonly CdmRepository cdmRepository = new CdmRepository(Program.AppEnvironment);

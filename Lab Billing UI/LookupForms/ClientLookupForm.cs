@@ -7,7 +7,7 @@ using LabBilling.Core.Models;
 
 namespace LabBilling.Forms
 {
-    public partial class ClientLookupForm : Form
+    public partial class ClientLookupForm : BaseForm
     {
         public int CharacterLookupCountMin { get; set; } = 3;
         public List<Client> Datasource { get; set; }

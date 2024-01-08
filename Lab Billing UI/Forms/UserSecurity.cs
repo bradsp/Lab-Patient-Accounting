@@ -7,10 +7,11 @@ using LabBilling.Core.DataAccess;
 using LabBilling.Core;
 using LabBilling.Logging;
 using LabBilling.Core.Models;
+using LabBilling.Forms;
 
 namespace LabBilling
 {
-    public partial class UserSecurity : Form
+    public partial class UserSecurity : BaseForm
     {
         //private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
         readonly EmpRepository empRepository = new EmpRepository(Program.AppEnvironment);

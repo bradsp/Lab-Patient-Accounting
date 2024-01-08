@@ -10,7 +10,7 @@ using System.Drawing;
 
 namespace LabBilling.Forms
 {
-    public partial class ClaimRuleEditorForm : Form
+    public partial class ClaimRuleEditorForm : BaseForm
     {
         public ClaimRuleEditorForm()
         {

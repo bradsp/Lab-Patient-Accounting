@@ -16,7 +16,7 @@ using System.Linq;
 
 namespace LabBilling.Forms
 {
-    public partial class SystemParametersForm : Form
+    public partial class SystemParametersForm : BaseForm
     {
         public SystemParametersForm()
         {

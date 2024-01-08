@@ -1,6 +1,7 @@
 ﻿using LabBilling.Core.Models;
 using System;
 using Microsoft.Data.SqlClient;
+using System.Drawing;
 
 namespace LabBilling.Core.DataAccess
 {
@@ -22,6 +23,14 @@ namespace LabBilling.Core.DataAccess
         public SystemParametersRepository systemParametersRepository;
 
         public bool RunAsService { get; set; } = false;
+
+        public Color WindowBackgroundColor { get; set; } = Color.White;
+        public Color WindowTextColor { get; set; } = Color.Black;
+        public Color MenuBackgroundColor { get; set; } = Color.White;
+        public Color MenuTextColor { get; set; } = Color.Black;
+
+        public Color ButtonBackgroundColor { get; set; } = Color.LightCyan;
+        public Color ButtonTextColor { get; set; } = Color.Black;
 
         private const bool dbEncrypt = false;
         private const bool dbTrustServerCert = true;

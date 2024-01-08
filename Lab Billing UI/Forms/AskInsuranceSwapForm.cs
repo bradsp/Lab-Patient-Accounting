@@ -1,18 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using LabBilling.Core.DataAccess;
 using LabBilling.Core.Models;
 
 namespace LabBilling.Forms
 {
-    public partial class AskInsuranceSwapForm : Form
+    public partial class AskInsuranceSwapForm : BaseForm
     {
         private Account _account;
         private DataTable dt;

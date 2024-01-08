@@ -14,7 +14,7 @@ using System.Collections.Generic;
 
 namespace LabBilling.Forms
 {
-    public partial class PatientCollectionsForm : Form
+    public partial class PatientCollectionsForm : BaseForm
     {
         private string propAppName
         { get { return string.Format("{0} {1}", Application.ProductName, Application.ProductVersion); } }

@@ -27,6 +27,8 @@ namespace LabBilling.Core.BusinessLogic
         private string fileSavePath = null;
 
         private IAppEnvironment _appEnvironment;
+        public event EventHandler<ClientInvoiceGeneratedEventArgs> InvoiceGenerated;
+        public event EventHandler<ClientInvoiceGeneratedEventArgs> InvoiceRunCompleted;
 
         public ClientInvoices(IAppEnvironment appEnvironment) : base(appEnvironment.ConnectionString)
         {
@@ -64,11 +66,25 @@ namespace LabBilling.Core.BusinessLogic
                     GenerateInvoice(unbilledClient.ClientMnem, thruDate);
                     tempCount++;
                     progress?.Report((tempCount * 100 / clientCount));
+                    InvoiceGenerated?.Invoke(this, new ClientInvoiceGeneratedEventArgs()
+                    {
+                        ClientMnem = unbilledClient.ClientMnem,
+                        Progress = tempCount * 100 / clientCount,
+                        InvoiceCount = clientCount,
+                        InvoicesGenerated = tempCount
+                    });
                     Log.Instance.Info($"Invoice for {unbilledClient.ClientMnem} generated.");
                 }
                 Log.Instance.Debug("Complete Transaction");
                 dbConnection.CompleteTransaction();
                 Log.Instance.Info($"Client Invoice Run Complete: {tempCount} invoices generated.");
+                InvoiceRunCompleted?.Invoke(this, new ClientInvoiceGeneratedEventArgs()
+                {
+                    ClientMnem = "",
+                    Progress = tempCount * 100 / clientCount,
+                    InvoiceCount = clientCount,
+                    InvoicesGenerated = tempCount
+                });
                 return;
             }
             catch (Exception ex)
@@ -95,13 +111,13 @@ namespace LabBilling.Core.BusinessLogic
 
             InvoiceModel invoiceModel = new InvoiceModel();
             invoiceModel.StatementType = InvoiceModel.StatementTypeEnum.Statement;
-            invoiceModel.BillingCompanyName = _appEnvironment.ApplicationParameters.InvoiceCompanyName; //systemdb.GetByKey("invoice_company_name") ?? string.Empty;
-            invoiceModel.BillingCompanyAddress = _appEnvironment.ApplicationParameters.InvoiceCompanyAddress; //systemdb.GetByKey("invoice_company_address") ?? string.Empty;
-            invoiceModel.BillingCompanyCity = _appEnvironment.ApplicationParameters.InvoiceCompanyCity; //systemdb.GetByKey("invoice_company_city") ?? string.Empty;
-            invoiceModel.BillingCompanyState = _appEnvironment.ApplicationParameters.InvoiceCompanyState; //systemdb.GetByKey("invoice_company_state") ?? string.Empty;
-            invoiceModel.BillingCompanyZipCode = _appEnvironment.ApplicationParameters.InvoiceCompanyZipCode; //systemdb.GetByKey("invoice_company_zipcode") ?? string.Empty;
-            invoiceModel.BillingCompanyPhone = _appEnvironment.ApplicationParameters.InvoiceCompanyPhone; //systemdb.GetByKey("invoice_company_zipcode") ?? string.Empty;
-            invoiceModel.ImageFilePath = _appEnvironment.ApplicationParameters.InvoiceLogoImagePath; //systemdb.GetByKey("invoice_logo_image_path") ?? string.Empty;
+            invoiceModel.BillingCompanyName = _appEnvironment.ApplicationParameters.InvoiceCompanyName;
+            invoiceModel.BillingCompanyAddress = _appEnvironment.ApplicationParameters.InvoiceCompanyAddress;
+            invoiceModel.BillingCompanyCity = _appEnvironment.ApplicationParameters.InvoiceCompanyCity;
+            invoiceModel.BillingCompanyState = _appEnvironment.ApplicationParameters.InvoiceCompanyState;
+            invoiceModel.BillingCompanyZipCode = _appEnvironment.ApplicationParameters.InvoiceCompanyZipCode;
+            invoiceModel.BillingCompanyPhone = _appEnvironment.ApplicationParameters.InvoiceCompanyPhone;
+            invoiceModel.ImageFilePath = _appEnvironment.ApplicationParameters.InvoiceLogoImagePath;
 
             Client client = clientdb.GetClient(clientMnemonic);
 
@@ -353,6 +369,15 @@ namespace LabBilling.Core.BusinessLogic
         {
             throw new NotImplementedException();
         }
+
+    }
+
+    public class ClientInvoiceGeneratedEventArgs : EventArgs
+    {
+        public string ClientMnem { get; set; }
+        public int Progress { get; set; }
+        public int InvoicesGenerated { get; set; }
+        public int InvoiceCount { get; set; }
 
     }
 

@@ -28,261 +28,280 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.PersonAccountResults = new System.Windows.Forms.DataGridView();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.txtLastName = new System.Windows.Forms.TextBox();
-            this.label4 = new System.Windows.Forms.Label();
-            this.mrnSearchText = new System.Windows.Forms.TextBox();
-            this.label5 = new System.Windows.Forms.Label();
-            this.ssnSearchText = new System.Windows.Forms.TextBox();
-            this.label6 = new System.Windows.Forms.Label();
-            this.label7 = new System.Windows.Forms.Label();
-            this.cbSexSearch = new System.Windows.Forms.ComboBox();
-            this.label8 = new System.Windows.Forms.Label();
-            this.accountSearchText = new System.Windows.Forms.TextBox();
-            this.SearchButton = new System.Windows.Forms.Button();
-            this.ClearButton = new System.Windows.Forms.Button();
-            this.dobSearchText = new System.Windows.Forms.MaskedTextBox();
-            this.SelectButton = new System.Windows.Forms.Button();
-            this.CancelBtn = new System.Windows.Forms.Button();
-            this.txtFirstName = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.AddAccount = new System.Windows.Forms.Button();
-            ((System.ComponentModel.ISupportInitialize)(this.PersonAccountResults)).BeginInit();
-            this.SuspendLayout();
+            PersonAccountResults = new System.Windows.Forms.DataGridView();
+            label2 = new System.Windows.Forms.Label();
+            label3 = new System.Windows.Forms.Label();
+            txtLastName = new System.Windows.Forms.TextBox();
+            label4 = new System.Windows.Forms.Label();
+            mrnSearchText = new System.Windows.Forms.TextBox();
+            label5 = new System.Windows.Forms.Label();
+            ssnSearchText = new System.Windows.Forms.TextBox();
+            label6 = new System.Windows.Forms.Label();
+            label7 = new System.Windows.Forms.Label();
+            cbSexSearch = new System.Windows.Forms.ComboBox();
+            label8 = new System.Windows.Forms.Label();
+            accountSearchText = new System.Windows.Forms.TextBox();
+            SearchButton = new System.Windows.Forms.Button();
+            ClearButton = new System.Windows.Forms.Button();
+            dobSearchText = new System.Windows.Forms.MaskedTextBox();
+            SelectButton = new System.Windows.Forms.Button();
+            CancelBtn = new System.Windows.Forms.Button();
+            txtFirstName = new System.Windows.Forms.TextBox();
+            label1 = new System.Windows.Forms.Label();
+            AddAccount = new System.Windows.Forms.Button();
+            ((System.ComponentModel.ISupportInitialize)PersonAccountResults).BeginInit();
+            SuspendLayout();
             // 
             // PersonAccountResults
             // 
-            this.PersonAccountResults.AllowUserToAddRows = false;
-            this.PersonAccountResults.AllowUserToDeleteRows = false;
-            this.PersonAccountResults.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.PersonAccountResults.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.PersonAccountResults.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
-            this.PersonAccountResults.Location = new System.Drawing.Point(194, 81);
-            this.PersonAccountResults.MultiSelect = false;
-            this.PersonAccountResults.Name = "PersonAccountResults";
-            this.PersonAccountResults.ReadOnly = true;
-            this.PersonAccountResults.RowHeadersVisible = false;
-            this.PersonAccountResults.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.PersonAccountResults.Size = new System.Drawing.Size(863, 418);
-            this.PersonAccountResults.TabIndex = 16;
-            this.PersonAccountResults.DoubleClick += new System.EventHandler(this.PersonAccountResults_DoubleClick);
+            PersonAccountResults.AllowUserToAddRows = false;
+            PersonAccountResults.AllowUserToDeleteRows = false;
+            PersonAccountResults.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            PersonAccountResults.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            PersonAccountResults.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
+            PersonAccountResults.Location = new System.Drawing.Point(227, 39);
+            PersonAccountResults.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            PersonAccountResults.MultiSelect = false;
+            PersonAccountResults.Name = "PersonAccountResults";
+            PersonAccountResults.ReadOnly = true;
+            PersonAccountResults.RowHeadersVisible = false;
+            PersonAccountResults.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            PersonAccountResults.Size = new System.Drawing.Size(1007, 483);
+            PersonAccountResults.TabIndex = 16;
+            PersonAccountResults.DoubleClick += PersonAccountResults_DoubleClick;
             // 
             // label2
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(194, 59);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(61, 19);
-            this.label2.TabIndex = 14;
-            this.label2.Text = "Accounts";
+            label2.AutoSize = true;
+            label2.Location = new System.Drawing.Point(227, 14);
+            label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label2.Name = "label2";
+            label2.Size = new System.Drawing.Size(57, 15);
+            label2.TabIndex = 14;
+            label2.Text = "Accounts";
             // 
             // label3
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(11, 111);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(71, 19);
-            this.label3.TabIndex = 2;
-            this.label3.Text = "Last Name";
+            label3.AutoSize = true;
+            label3.Location = new System.Drawing.Point(14, 74);
+            label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label3.Name = "label3";
+            label3.Size = new System.Drawing.Size(63, 15);
+            label3.TabIndex = 2;
+            label3.Text = "Last Name";
             // 
             // txtLastName
             // 
-            this.txtLastName.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
-            this.txtLastName.Location = new System.Drawing.Point(11, 135);
-            this.txtLastName.Name = "txtLastName";
-            this.txtLastName.Size = new System.Drawing.Size(176, 20);
-            this.txtLastName.TabIndex = 3;
+            txtLastName.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
+            txtLastName.Location = new System.Drawing.Point(14, 102);
+            txtLastName.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            txtLastName.Name = "txtLastName";
+            txtLastName.Size = new System.Drawing.Size(205, 23);
+            txtLastName.TabIndex = 3;
             // 
             // label4
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(11, 206);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(39, 19);
-            this.label4.TabIndex = 6;
-            this.label4.Text = "MRN";
+            label4.AutoSize = true;
+            label4.Location = new System.Drawing.Point(14, 184);
+            label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label4.Name = "label4";
+            label4.Size = new System.Drawing.Size(34, 15);
+            label4.TabIndex = 6;
+            label4.Text = "MRN";
             // 
             // mrnSearchText
             // 
-            this.mrnSearchText.Location = new System.Drawing.Point(11, 227);
-            this.mrnSearchText.Name = "mrnSearchText";
-            this.mrnSearchText.Size = new System.Drawing.Size(177, 20);
-            this.mrnSearchText.TabIndex = 7;
+            mrnSearchText.Location = new System.Drawing.Point(14, 208);
+            mrnSearchText.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            mrnSearchText.Name = "mrnSearchText";
+            mrnSearchText.Size = new System.Drawing.Size(206, 23);
+            mrnSearchText.TabIndex = 7;
             // 
             // label5
             // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(11, 250);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(33, 19);
-            this.label5.TabIndex = 8;
-            this.label5.Text = "SSN";
+            label5.AutoSize = true;
+            label5.Location = new System.Drawing.Point(14, 234);
+            label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label5.Name = "label5";
+            label5.Size = new System.Drawing.Size(28, 15);
+            label5.TabIndex = 8;
+            label5.Text = "SSN";
             // 
             // ssnSearchText
             // 
-            this.ssnSearchText.Location = new System.Drawing.Point(10, 272);
-            this.ssnSearchText.Name = "ssnSearchText";
-            this.ssnSearchText.Size = new System.Drawing.Size(177, 20);
-            this.ssnSearchText.TabIndex = 9;
+            ssnSearchText.Location = new System.Drawing.Point(13, 260);
+            ssnSearchText.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            ssnSearchText.Name = "ssnSearchText";
+            ssnSearchText.Size = new System.Drawing.Size(206, 23);
+            ssnSearchText.TabIndex = 9;
             // 
             // label6
             // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(11, 292);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(84, 19);
-            this.label6.TabIndex = 10;
-            this.label6.Text = "Date of Birth";
+            label6.AutoSize = true;
+            label6.Location = new System.Drawing.Point(14, 283);
+            label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label6.Name = "label6";
+            label6.Size = new System.Drawing.Size(73, 15);
+            label6.TabIndex = 10;
+            label6.Text = "Date of Birth";
             // 
             // label7
             // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(11, 335);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(29, 19);
-            this.label7.TabIndex = 12;
-            this.label7.Text = "Sex";
+            label7.AutoSize = true;
+            label7.Location = new System.Drawing.Point(14, 333);
+            label7.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label7.Name = "label7";
+            label7.Size = new System.Drawing.Size(25, 15);
+            label7.TabIndex = 12;
+            label7.Text = "Sex";
             // 
             // cbSexSearch
             // 
-            this.cbSexSearch.FormattingEnabled = true;
-            this.cbSexSearch.Location = new System.Drawing.Point(11, 357);
-            this.cbSexSearch.Name = "cbSexSearch";
-            this.cbSexSearch.Size = new System.Drawing.Size(177, 21);
-            this.cbSexSearch.TabIndex = 13;
+            cbSexSearch.FormattingEnabled = true;
+            cbSexSearch.Location = new System.Drawing.Point(14, 358);
+            cbSexSearch.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            cbSexSearch.Name = "cbSexSearch";
+            cbSexSearch.Size = new System.Drawing.Size(206, 23);
+            cbSexSearch.TabIndex = 13;
             // 
             // label8
             // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(11, 67);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(56, 19);
-            this.label8.TabIndex = 0;
-            this.label8.Text = "Account";
+            label8.AutoSize = true;
+            label8.Location = new System.Drawing.Point(14, 23);
+            label8.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label8.Name = "label8";
+            label8.Size = new System.Drawing.Size(52, 15);
+            label8.TabIndex = 0;
+            label8.Text = "Account";
             // 
             // accountSearchText
             // 
-            this.accountSearchText.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
-            this.accountSearchText.Location = new System.Drawing.Point(11, 89);
-            this.accountSearchText.Name = "accountSearchText";
-            this.accountSearchText.Size = new System.Drawing.Size(177, 20);
-            this.accountSearchText.TabIndex = 1;
+            accountSearchText.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
+            accountSearchText.Location = new System.Drawing.Point(14, 49);
+            accountSearchText.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            accountSearchText.Name = "accountSearchText";
+            accountSearchText.Size = new System.Drawing.Size(206, 23);
+            accountSearchText.TabIndex = 1;
             // 
             // SearchButton
             // 
-            this.SearchButton.Location = new System.Drawing.Point(10, 416);
-            this.SearchButton.Name = "SearchButton";
-            this.SearchButton.Size = new System.Drawing.Size(177, 36);
-            this.SearchButton.TabIndex = 14;
-            this.SearchButton.Text = "Search";
-            this.SearchButton.UseVisualStyleBackColor = true;
-            this.SearchButton.Click += new System.EventHandler(this.SearchButton_Click);
+            SearchButton.Location = new System.Drawing.Point(13, 426);
+            SearchButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            SearchButton.Name = "SearchButton";
+            SearchButton.Size = new System.Drawing.Size(206, 42);
+            SearchButton.TabIndex = 14;
+            SearchButton.Text = "Search";
+            SearchButton.UseVisualStyleBackColor = true;
+            SearchButton.Click += SearchButton_Click;
             // 
             // ClearButton
             // 
-            this.ClearButton.Location = new System.Drawing.Point(11, 463);
-            this.ClearButton.Name = "ClearButton";
-            this.ClearButton.Size = new System.Drawing.Size(177, 36);
-            this.ClearButton.TabIndex = 15;
-            this.ClearButton.Text = "Clear";
-            this.ClearButton.UseVisualStyleBackColor = true;
-            this.ClearButton.Click += new System.EventHandler(this.ClearButton_Click);
+            ClearButton.Location = new System.Drawing.Point(14, 480);
+            ClearButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            ClearButton.Name = "ClearButton";
+            ClearButton.Size = new System.Drawing.Size(206, 42);
+            ClearButton.TabIndex = 15;
+            ClearButton.Text = "Clear";
+            ClearButton.UseVisualStyleBackColor = true;
+            ClearButton.Click += ClearButton_Click;
             // 
             // dobSearchText
             // 
-            this.dobSearchText.Location = new System.Drawing.Point(11, 312);
-            this.dobSearchText.Mask = "00/00/0000";
-            this.dobSearchText.Name = "dobSearchText";
-            this.dobSearchText.Size = new System.Drawing.Size(177, 20);
-            this.dobSearchText.TabIndex = 11;
-            this.dobSearchText.ValidatingType = typeof(System.DateTime);
+            dobSearchText.Location = new System.Drawing.Point(14, 306);
+            dobSearchText.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            dobSearchText.Mask = "00/00/0000";
+            dobSearchText.Name = "dobSearchText";
+            dobSearchText.Size = new System.Drawing.Size(206, 23);
+            dobSearchText.TabIndex = 11;
+            dobSearchText.ValidatingType = typeof(System.DateTime);
             // 
             // SelectButton
             // 
-            this.SelectButton.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.SelectButton.Location = new System.Drawing.Point(847, 505);
-            this.SelectButton.Name = "SelectButton";
-            this.SelectButton.Size = new System.Drawing.Size(94, 34);
-            this.SelectButton.TabIndex = 17;
-            this.SelectButton.Text = "Select";
-            this.SelectButton.UseVisualStyleBackColor = true;
-            this.SelectButton.Click += new System.EventHandler(this.SelectButton_Click);
+            SelectButton.DialogResult = System.Windows.Forms.DialogResult.OK;
+            SelectButton.Location = new System.Drawing.Point(989, 529);
+            SelectButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            SelectButton.Name = "SelectButton";
+            SelectButton.Size = new System.Drawing.Size(110, 39);
+            SelectButton.TabIndex = 17;
+            SelectButton.Text = "Select";
+            SelectButton.UseVisualStyleBackColor = true;
+            SelectButton.Click += SelectButton_Click;
             // 
             // CancelBtn
             // 
-            this.CancelBtn.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.CancelBtn.Location = new System.Drawing.Point(962, 505);
-            this.CancelBtn.Name = "CancelBtn";
-            this.CancelBtn.Size = new System.Drawing.Size(94, 34);
-            this.CancelBtn.TabIndex = 18;
-            this.CancelBtn.Text = "Cancel";
-            this.CancelBtn.UseVisualStyleBackColor = true;
+            CancelBtn.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            CancelBtn.Location = new System.Drawing.Point(1123, 529);
+            CancelBtn.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            CancelBtn.Name = "CancelBtn";
+            CancelBtn.Size = new System.Drawing.Size(110, 39);
+            CancelBtn.TabIndex = 18;
+            CancelBtn.Text = "Cancel";
+            CancelBtn.UseVisualStyleBackColor = true;
             // 
             // txtFirstName
             // 
-            this.txtFirstName.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
-            this.txtFirstName.Location = new System.Drawing.Point(11, 183);
-            this.txtFirstName.Name = "txtFirstName";
-            this.txtFirstName.Size = new System.Drawing.Size(176, 20);
-            this.txtFirstName.TabIndex = 5;
+            txtFirstName.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
+            txtFirstName.Location = new System.Drawing.Point(14, 157);
+            txtFirstName.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            txtFirstName.Name = "txtFirstName";
+            txtFirstName.Size = new System.Drawing.Size(205, 23);
+            txtFirstName.TabIndex = 5;
             // 
             // label1
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(11, 158);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(73, 19);
-            this.label1.TabIndex = 4;
-            this.label1.Text = "First Name";
+            label1.AutoSize = true;
+            label1.Location = new System.Drawing.Point(14, 128);
+            label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label1.Name = "label1";
+            label1.Size = new System.Drawing.Size(64, 15);
+            label1.TabIndex = 4;
+            label1.Text = "First Name";
             // 
             // AddAccount
             // 
-            this.AddAccount.Location = new System.Drawing.Point(732, 505);
-            this.AddAccount.Name = "AddAccount";
-            this.AddAccount.Size = new System.Drawing.Size(94, 34);
-            this.AddAccount.TabIndex = 19;
-            this.AddAccount.Text = "New Account";
-            this.AddAccount.UseVisualStyleBackColor = true;
-            this.AddAccount.Click += new System.EventHandler(this.AddAccount_Click);
+            AddAccount.Location = new System.Drawing.Point(855, 529);
+            AddAccount.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            AddAccount.Name = "AddAccount";
+            AddAccount.Size = new System.Drawing.Size(110, 39);
+            AddAccount.TabIndex = 19;
+            AddAccount.Text = "New Account";
+            AddAccount.UseVisualStyleBackColor = true;
+            AddAccount.Click += AddAccount_Click;
             // 
             // PersonSearchForm
             // 
-            this.AcceptButton = this.SearchButton;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1069, 555);
-            this.Controls.Add(this.AddAccount);
-            this.Controls.Add(this.txtFirstName);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.CancelBtn);
-            this.Controls.Add(this.SelectButton);
-            this.Controls.Add(this.dobSearchText);
-            this.Controls.Add(this.ClearButton);
-            this.Controls.Add(this.SearchButton);
-            this.Controls.Add(this.accountSearchText);
-            this.Controls.Add(this.label8);
-            this.Controls.Add(this.cbSexSearch);
-            this.Controls.Add(this.label7);
-            this.Controls.Add(this.label6);
-            this.Controls.Add(this.ssnSearchText);
-            this.Controls.Add(this.label5);
-            this.Controls.Add(this.mrnSearchText);
-            this.Controls.Add(this.label4);
-            this.Controls.Add(this.txtLastName);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.PersonAccountResults);
-            this.Name = "PersonSearchForm";
-            this.Text = "Person Search";
-            this.Load += new System.EventHandler(this.PersonSearchForm_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.PersonAccountResults)).EndInit();
-            this.ResumeLayout(false);
-            this.PerformLayout();
-
+            AcceptButton = SearchButton;
+            AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            ClientSize = new System.Drawing.Size(1247, 583);
+            Controls.Add(AddAccount);
+            Controls.Add(txtFirstName);
+            Controls.Add(label1);
+            Controls.Add(CancelBtn);
+            Controls.Add(SelectButton);
+            Controls.Add(dobSearchText);
+            Controls.Add(ClearButton);
+            Controls.Add(SearchButton);
+            Controls.Add(accountSearchText);
+            Controls.Add(label8);
+            Controls.Add(cbSexSearch);
+            Controls.Add(label7);
+            Controls.Add(label6);
+            Controls.Add(ssnSearchText);
+            Controls.Add(label5);
+            Controls.Add(mrnSearchText);
+            Controls.Add(label4);
+            Controls.Add(txtLastName);
+            Controls.Add(label3);
+            Controls.Add(label2);
+            Controls.Add(PersonAccountResults);
+            Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            Name = "PersonSearchForm";
+            Text = "Person Search";
+            Load += PersonSearchForm_Load;
+            ((System.ComponentModel.ISupportInitialize)PersonAccountResults).EndInit();
+            ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion

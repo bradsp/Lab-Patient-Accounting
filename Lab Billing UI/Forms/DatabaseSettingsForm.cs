@@ -11,7 +11,7 @@ using Microsoft.SqlServer.Management.Smo;
 
 namespace LabBilling.Forms
 {
-    public partial class DatabaseSettingsForm : Form
+    public partial class DatabaseSettingsForm : BaseForm
     {
         public DatabaseSettingsForm()
         {

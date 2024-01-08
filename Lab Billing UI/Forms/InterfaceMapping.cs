@@ -12,7 +12,7 @@ using LabBilling.Core.Models;
 
 namespace LabBilling.Forms
 {
-    public partial class InterfaceMapping : Form
+    public partial class InterfaceMapping : BaseForm
     {
         public InterfaceMapping()
         {

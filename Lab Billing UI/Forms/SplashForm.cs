@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 namespace LabBilling.Forms
 {
-    public partial class SplashForm : Form
+    public partial class SplashForm : BaseForm
     {
         public SplashForm()
         {

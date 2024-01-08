@@ -12,7 +12,7 @@ using LabBilling.Core.DataAccess;
 
 namespace LabBilling.Forms
 {
-    public partial class LogViewerForm : Form
+    public partial class LogViewerForm : BaseForm
     {
         public LogViewerForm()
         {

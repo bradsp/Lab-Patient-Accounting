@@ -8,11 +8,11 @@ using System.IO;
 using Microsoft.Data.SqlClient; // for SqlException trapping
 using System.Drawing.Printing; // for printing the gridview
 using RFClassLibrary;
-
+using LabBilling.Forms;
 
 namespace LabBilling.Legacy
 {
-    public partial class frmReports : Form
+    public partial class frmReports : BaseForm
     {
        
         //SqlDataReader m_sqlReader = null;

@@ -10,7 +10,7 @@ using LabBilling.Logging;
 
 namespace LabBilling.Forms
 {
-    public partial class DashboardForm : Form
+    public partial class DashboardForm : BaseForm
     {
         public DashboardForm()
         {

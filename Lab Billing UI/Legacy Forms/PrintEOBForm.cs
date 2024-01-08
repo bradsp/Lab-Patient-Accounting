@@ -1,24 +1,22 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 // programmer added
 using MCL; // for eob recordset
 using RFClassLibrary;
 using System.Collections;
-using System.IO;
 using System.Drawing.Printing;
 using Microsoft.Data.SqlClient; // for listobject
+using LabBilling.Forms;
 
 namespace LabBilling.Legacy
 {
     /// <summary>
     /// Class for PrintEOB
     /// </summary>
-    public partial class PrintEOBForm : Form
+    public partial class PrintEOBForm : BaseForm
     {
         SqlConnection m_sqlConnection;
         Dictionary<string, string> m_dicReason = new Dictionary<string, string>();

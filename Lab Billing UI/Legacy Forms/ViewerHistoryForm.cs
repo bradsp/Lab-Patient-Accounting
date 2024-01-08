@@ -24,13 +24,14 @@ using System.Windows.Forms;
 using Microsoft.Data.SqlClient; // for sql connection
 using System.Drawing.Printing; // for printing the gridview
 using RFClassLibrary;
+using LabBilling.Forms;
 
 namespace LabBilling.Legacy
 {
     /// <summary>
     /// 05/31/2007 wdk main form
     /// </summary>
-    public partial class frmHistory : Form
+    public partial class frmHistory : BaseForm
     {
         
           // The DataGridView Control which will be printed.

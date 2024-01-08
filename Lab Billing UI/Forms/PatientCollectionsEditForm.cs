@@ -6,7 +6,7 @@ using LabBilling.Logging;
 
 namespace LabBilling.Forms
 {
-    public partial class PatientCollectionsEditForm : Form
+    public partial class PatientCollectionsEditForm : BaseForm
     {
 
         public string SelectedRecord { get; set; }

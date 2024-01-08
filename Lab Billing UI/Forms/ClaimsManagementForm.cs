@@ -11,7 +11,7 @@ using LabBilling.Core.DataAccess;
 
 namespace LabBilling.Forms
 {
-    public partial class ClaimsManagementForm : Form
+    public partial class ClaimsManagementForm : BaseForm
     {
         private CancellationTokenSource cancellationToken;
 

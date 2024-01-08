@@ -21,10 +21,11 @@ using LabBilling.Library;
 using LabBilling.Core.Models;
 using LabBilling.Core.DataAccess;
 using LabBilling.Logging;
+using LabBilling.Forms;
 
 namespace LabBilling.Legacy
 {
-    public partial class Posting835 : Form
+    public partial class Posting835 : BaseForm
     {
         DateTime dtFilesImported;     // date the files were imported so we don't do it twice.
         DirectoryInfo diCurrent = null;         //new DirectoryInfo(string.Format(@"{0}",dr[0]["value"].ToString()));

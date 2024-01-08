@@ -11,7 +11,7 @@ using System.Drawing;
 
 namespace LabBilling.Forms
 {
-    public partial class BatchRemittance : Form
+    public partial class BatchRemittance : BaseForm
     {
         public BatchRemittance()
         {

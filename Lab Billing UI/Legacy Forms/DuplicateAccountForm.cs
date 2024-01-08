@@ -11,7 +11,7 @@ using LabBilling.Forms;
 
 namespace LabBilling.Legacy
 {
-    public partial class FrmDupAcc : Form
+    public partial class FrmDupAcc : BaseForm
     {
         ERR m_ERR;
         R_fin m_rFin; // wdk 20120214 move all local recordset to member level and initialize once in load.

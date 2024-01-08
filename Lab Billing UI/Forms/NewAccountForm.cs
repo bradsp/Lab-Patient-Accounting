@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 namespace LabBilling.Forms
 {
-    public partial class NewAccountForm : Form
+    public partial class NewAccountForm : BaseForm
     {
 
         public string CreatedAccount;

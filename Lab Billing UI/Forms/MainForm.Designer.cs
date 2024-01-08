@@ -85,7 +85,7 @@
             // 
             // MainFormMenu
             // 
-            MainFormMenu.BackColor = System.Drawing.Color.Transparent;
+            MainFormMenu.BackColor = System.Drawing.Color.White;
             MainFormMenu.ImageScalingSize = new System.Drawing.Size(20, 20);
             MainFormMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { billingToolStripMenuItem, dictionariesToolStripMenuItem, reportsToolStripMenuItem, systemAdministrationToolStripMenuItem, windowToolStripMenuItem, helpToolStripMenuItem });
             resources.ApplyResources(MainFormMenu, "MainFormMenu");
@@ -397,6 +397,7 @@
             // 
             resources.ApplyResources(this, "$this");
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            BackColor = System.Drawing.Color.White;
             Controls.Add(mdiTabControl);
             Controls.Add(panel1);
             Controls.Add(statusStrip1);
@@ -405,7 +406,6 @@
             KeyPreview = true;
             MainMenuStrip = MainFormMenu;
             Name = "MainForm";
-            TransparencyKey = System.Drawing.Color.Empty;
             WindowState = System.Windows.Forms.FormWindowState.Maximized;
             FormClosing += MainForm_FormClosing;
             Load += MainForm_Load;

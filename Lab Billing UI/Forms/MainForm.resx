@@ -393,14 +393,14 @@
     <value>&amp;Help</value>
   </data>
   <data name="MainFormMenu.Location" type="System.Drawing.Point, System.Drawing">
-    <value>20, 60</value>
+    <value>0, 0</value>
   </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="MainFormMenu.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>7, 2, 0, 2</value>
   </data>
   <data name="MainFormMenu.Size" type="System.Drawing.Size, System.Drawing">
-    <value>984, 24</value>
+    <value>1024, 24</value>
   </data>
   <data name="MainFormMenu.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -436,10 +436,10 @@
     <value>toolStripDatabaseLabel</value>
   </data>
   <data name="statusStrip1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>20, 724</value>
+    <value>0, 744</value>
   </data>
   <data name="statusStrip1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>984, 24</value>
+    <value>1024, 24</value>
   </data>
   <data name="statusStrip1.TabIndex" type="System.Int32, mscorlib">
     <value>7</value>
@@ -464,10 +464,10 @@
     <value>Left</value>
   </data>
   <data name="panel1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>20, 84</value>
+    <value>0, 24</value>
   </data>
   <data name="panel1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>203, 640</value>
+    <value>203, 720</value>
   </data>
   <data name="panel1.TabIndex" type="System.Int32, mscorlib">
     <value>11</value>
@@ -491,10 +491,10 @@
     <value>Top</value>
   </data>
   <data name="mdiTabControl.Location" type="System.Drawing.Point, System.Drawing">
-    <value>223, 84</value>
+    <value>203, 24</value>
   </data>
   <data name="mdiTabControl.Size" type="System.Drawing.Size, System.Drawing">
-    <value>781, 27</value>
+    <value>821, 27</value>
   </data>
   <data name="mdiTabControl.TabIndex" type="System.Int32, mscorlib">
     <value>13</value>
@@ -3880,6 +3880,6 @@
     <value>MainForm</value>
   </data>
   <data name="&gt;&gt;$this.Type" xml:space="preserve">
-    <value>MetroFramework.Forms.MetroForm, MetroFrameworkCore, Culture=neutral, PublicKeyToken=5f91a84759bf584a</value>
+    <value>System.Windows.Forms.Form, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
 </root>

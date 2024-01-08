@@ -51,7 +51,7 @@ namespace LabBilling
                 }
             }
             Application.SetHighDpiMode(HighDpiMode.SystemAware);
-            Login loginFrm = new Login(testEnvironment);
+            Login loginFrm = new(testEnvironment);
             if(loginFrm.ShowDialog() == DialogResult.OK)
             {
                 Log.Instance.Info($"Login successful - connection {Helper.ConnVal}");

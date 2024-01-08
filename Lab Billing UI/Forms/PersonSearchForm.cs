@@ -6,10 +6,11 @@ using System.Windows.Forms;
 using LabBilling.Core.DataAccess;
 using LabBilling.Logging;
 using LabBilling.Core.Models;
+using WinFormsLibrary;
 
 namespace LabBilling.Forms
 {
-    public partial class PersonSearchForm : Form
+    public partial class PersonSearchForm : BaseForm
     {
         List<AccountSearch> searchResults = new List<AccountSearch>();
 
@@ -21,6 +22,8 @@ namespace LabBilling.Forms
         {
             Log.Instance.Trace($"Entering");
             InitializeComponent();
+
+            PersonAccountResults.BackgroundColor = Program.AppEnvironment.WindowBackgroundColor;
         }
 
         private void SearchButton_Click(object sender, EventArgs e)
@@ -32,7 +35,7 @@ namespace LabBilling.Forms
             if (dobSearchText.MaskFull)
                 dobText = dobSearchText.Text;
 
-            searchResults = accountSearchRepository.GetBySearch(txtLastName.Text, txtFirstName.Text, mrnSearchText.Text, ssnSearchText.Text, dobText, 
+            searchResults = accountSearchRepository.GetBySearch(txtLastName.Text, txtFirstName.Text, mrnSearchText.Text, ssnSearchText.Text, dobText,
                 cbSexSearch.SelectedIndex < 0 ? "" : cbSexSearch.SelectedValue.ToString(), accountSearchText.Text).ToList();
 
             var searchBindingList = new BindingList<AccountSearch>(searchResults);
@@ -99,7 +102,7 @@ namespace LabBilling.Forms
             Log.Instance.Trace($"Entering");
             NewAccountForm naf = new NewAccountForm();
 
-            if(naf.ShowDialog() == DialogResult.OK)
+            if (naf.ShowDialog() == DialogResult.OK)
             {
                 SelectedAccount = naf.CreatedAccount;
                 ClearButton_Click(sender, e);

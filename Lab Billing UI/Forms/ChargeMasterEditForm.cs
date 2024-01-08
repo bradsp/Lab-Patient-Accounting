@@ -14,7 +14,7 @@ using LabBilling.Core.DataAccess;
 
 namespace LabBilling.Forms
 {
-    public partial class ChargeMasterEditForm : Form
+    public partial class ChargeMasterEditForm : BaseForm
     {
 
         private bool addMode = false;

@@ -13,7 +13,7 @@ using LabBilling.Logging;
 
 namespace LabBilling.Forms
 {
-    public partial class AccountChargeEntry : Form
+    public partial class AccountChargeEntry : BaseForm
     {
         private readonly ClientRepository clientRepository = new ClientRepository(Program.AppEnvironment);
         private readonly CdmRepository cdmRepository = new CdmRepository(Program.AppEnvironment);

@@ -4,7 +4,7 @@ using System.Windows.Forms;
 
 namespace LabBilling.Forms
 {
-    public partial class PhysicianMaintenanceEditForm : Form
+    public partial class PhysicianMaintenanceEditForm : BaseForm
     {
         public PhysicianMaintenanceEditForm()
         {

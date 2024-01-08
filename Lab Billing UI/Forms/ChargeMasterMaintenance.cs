@@ -10,7 +10,7 @@ using LabBilling.Core.Models;
 
 namespace LabBilling.Forms
 {
-    public partial class ChargeMasterMaintenance : Form
+    public partial class ChargeMasterMaintenance : BaseForm
     {
         private CdmRepository cdmRepository = new CdmRepository(Program.AppEnvironment);
         private List<Cdm> cdms = new List<Cdm>();

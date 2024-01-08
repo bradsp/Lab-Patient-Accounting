@@ -1,20 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using LabBilling.Core.DataAccess;
 using LabBilling.Core.Models;
 using LabBilling.Logging;
-using MCL;
 
 namespace LabBilling.Forms
 {
-    public partial class HealthPlanMaintenanceForm : Form
+    public partial class HealthPlanMaintenanceForm : BaseForm
     {
         private InsCompanyRepository insCompanyRepository = new InsCompanyRepository(Program.AppEnvironment);
         private DataTable _insCompanyTable = null;

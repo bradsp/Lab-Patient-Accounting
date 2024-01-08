@@ -8,7 +8,7 @@ using System.Drawing;
 
 namespace LabBilling.Forms
 {
-    public partial class ClientMaintenanceEditForm : Form
+    public partial class ClientMaintenanceEditForm : BaseForm
     {
         public Client client;
         private ClientRepository clientRepository;

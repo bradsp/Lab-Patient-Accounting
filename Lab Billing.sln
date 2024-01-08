@@ -30,7 +30,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "j4jayant.HL7.Parser", "j4ja
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WinFormsLibrary", "WinFormsLibrary\WinFormsLibrary.csproj", "{9FABCEDD-BF62-4769-A79E-72891CE3EF4A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LabBilling WPF UI", "LabBilling WPF UI\LabBilling WPF UI.csproj", "{2A6D1C90-FAD9-4955-AA94-725DE076BB61}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LabBilling WPF UI", "LabBilling WPF UI\LabBilling WPF UI.csproj", "{2A6D1C90-FAD9-4955-AA94-725DE076BB61}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

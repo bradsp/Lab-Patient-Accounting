@@ -8,7 +8,7 @@ using LabBilling.Core.BusinessLogic;
 
 namespace LabBilling.Forms
 {
-    public partial class InterfaceMonitor : Form
+    public partial class InterfaceMonitor : BaseForm
     {
         public InterfaceMonitor()
         {

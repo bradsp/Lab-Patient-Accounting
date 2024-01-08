@@ -17,7 +17,7 @@ using LabBilling.Legacy;
 
 namespace LabBilling.Forms
 {
-    public partial class AccountForm : Form
+    public partial class AccountForm : BaseForm
     {
         private BindingList<PatDiag> dxBindingList;
         private DataTable chargesTable = new DataTable();

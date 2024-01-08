@@ -6,7 +6,7 @@ using LabBilling.Core.Models;
 
 namespace LabBilling.Forms
 {
-    public partial class HealthPlanMaintenanceEditForm : Form
+    public partial class HealthPlanMaintenanceEditForm : BaseForm
     {
         private InsCompanyRepository insCompanyRepository = new InsCompanyRepository(Program.AppEnvironment);
         public InsCompany insCompany = new InsCompany();

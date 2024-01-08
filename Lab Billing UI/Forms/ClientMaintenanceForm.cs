@@ -1,19 +1,15 @@
 ﻿using LabBilling.Core.DataAccess;
-using LabBilling.Core;
 using LabBilling.Logging;
 using LabBilling.Core.Models;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Windows.Forms;
 using System.Drawing;
-using System.ComponentModel;
 using System.Data;
-using System.Reflection;
 
 namespace LabBilling.Forms
 {
-    public partial class ClientMaintenanceForm : Form
+    public partial class ClientMaintenanceForm : BaseForm
     {
         private readonly ClientRepository clientRepository = new ClientRepository(Program.AppEnvironment);
         private readonly GLCodeRepository gLCodeRepository = new GLCodeRepository(Program.AppEnvironment);

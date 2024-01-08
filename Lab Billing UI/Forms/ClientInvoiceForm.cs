@@ -1,27 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Xml.Serialization;
 using LabBilling.Core.DataAccess;
 using LabBilling.Core.BusinessLogic;
 using LabBilling.Core.Models;
 using LabBilling.Library;
 using System.Diagnostics;
-using Microsoft.Win32;
 using LabBilling.Logging;
 using System.Threading;
 using SaveFileDialog = System.Windows.Forms.SaveFileDialog;
 
 namespace LabBilling.Forms
 {
-    public partial class ClientInvoiceForm : Form
+    public partial class ClientInvoiceForm : BaseForm
     {
         public ClientInvoiceForm()
         {
@@ -35,7 +29,6 @@ namespace LabBilling.Forms
         private InvoiceHistoryRepository historyRepository;
         private ClientRepository clientRepository;
         private List<Client> clientList;
-        private SystemParametersRepository parametersRepository;
         public event EventHandler<string> AccountLaunched;
         private async void ClientInvoiceForm_Load(object sender, EventArgs e)
         {
@@ -49,7 +42,9 @@ namespace LabBilling.Forms
             clientInvoices = new ClientInvoices(Program.AppEnvironment);
             historyRepository = new InvoiceHistoryRepository(Program.AppEnvironment);
             clientRepository = new ClientRepository(Program.AppEnvironment);
-            parametersRepository = new SystemParametersRepository(Program.AppEnvironment);
+
+            clientInvoices.InvoiceGenerated += ClientInvoices_InvoiceGenerated;
+            clientInvoices.InvoiceRunCompleted += ClientInvoices_InvoiceRunCompleted;
 
             clientList = clientRepository.GetAll().ToList();
             clientList.Sort((p, q) => p.Name.CompareTo(q.Name));
@@ -79,6 +74,16 @@ namespace LabBilling.Forms
             InvoiceHistoryTabControl.Enabled = true;
             GenerateInvoicesTabPage.Enabled = true;
 
+        }
+
+        private void ClientInvoices_InvoiceRunCompleted(object sender, ClientInvoiceGeneratedEventArgs e)
+        {
+            
+        }
+
+        private void ClientInvoices_InvoiceGenerated(object sender, ClientInvoiceGeneratedEventArgs e)
+        {
+            
         }
 
         private void CleanTempFiles()

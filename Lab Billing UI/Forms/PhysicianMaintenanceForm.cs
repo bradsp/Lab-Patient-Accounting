@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
 using System.Linq;
 using System.Windows.Forms;
 using LabBilling.Core.DataAccess;
@@ -11,7 +10,7 @@ using MicroRuleEngine;
 
 namespace LabBilling.Forms
 {
-    public partial class PhysicianMaintenanceForm : Form
+    public partial class PhysicianMaintenanceForm : BaseForm
     { 
         public PhysicianMaintenanceForm()
         {

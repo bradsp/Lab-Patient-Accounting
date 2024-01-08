@@ -13,7 +13,7 @@ using LabBilling.Core.BusinessLogic;
 
 namespace LabBilling.Forms
 {
-    public partial class WorkListForm : Form
+    public partial class WorkListForm : BaseForm
     {
         private string _connectionString;
         private AccountRepository accountRepository;

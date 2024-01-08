@@ -4,10 +4,11 @@ using System.Windows.Forms;
 using LabBilling.Core.DataAccess;
 using System.Runtime.InteropServices;
 using LabBilling.Logging;
+using LabBilling.Forms;
 
 namespace LabBilling
 {
-    public partial class Login : Form
+    public partial class Login : BaseForm
     {
         public Login(bool test = false)
         {

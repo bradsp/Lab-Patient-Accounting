@@ -10,7 +10,7 @@ using RFClassLibrary;
 
 namespace LabBilling.Forms
 {
-    public partial class PatientCollectionsRunWizard : Form
+    public partial class PatientCollectionsRunWizard : BaseForm
     {
         private PatientBilling patientBilling = new PatientBilling(Program.AppEnvironment);
         private BadDebtRepository badDebtRepository = new BadDebtRepository(Program.AppEnvironment);

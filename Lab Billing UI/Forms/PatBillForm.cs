@@ -1,17 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using Microsoft.Data.SqlClient;
 using System.IO;
 
 namespace LabBilling.Forms
 {
-    public partial class PatBillForm : Form
+    public partial class PatBillForm : BaseForm
     {
         private BindingSource masterBindingSource = new BindingSource();
         private BindingSource detailBindingSourceAcc = new BindingSource();

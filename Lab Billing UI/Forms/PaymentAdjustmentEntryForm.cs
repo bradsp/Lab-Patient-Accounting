@@ -14,7 +14,7 @@ using LabBilling.Logging;
 
 namespace LabBilling.Forms
 {
-    public partial class PaymentAdjustmentEntryForm : Form
+    public partial class PaymentAdjustmentEntryForm : BaseForm
     {
         private Account _account;
 
