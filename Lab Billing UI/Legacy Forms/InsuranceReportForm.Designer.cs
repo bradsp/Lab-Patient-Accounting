@@ -1,6 +1,6 @@
 namespace LabBilling.ReportByInsuranceCompany
 {
-    partial class frmReport
+    partial class InsuranceReportForm
     {
         /// <summary>
         /// Required designer variable.
@@ -28,7 +28,7 @@ namespace LabBilling.ReportByInsuranceCompany
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmReport));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(InsuranceReportForm));
             this.tsMain = new System.Windows.Forms.ToolStrip();
             this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
             this.cbFinCode = new System.Windows.Forms.ToolStripComboBox();

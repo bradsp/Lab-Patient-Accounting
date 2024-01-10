@@ -245,7 +245,6 @@ namespace LabBilling.Forms
             clearHoldStatusToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             swapInsurancesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             moveAllChargesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            generateClientStatementToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             printEOBToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             BannerMRNTextBox = new System.Windows.Forms.TextBox();
             BannerAccountTextBox = new System.Windows.Forms.TextBox();
@@ -276,6 +275,7 @@ namespace LabBilling.Forms
             ThirdPartyBalLabel = new System.Windows.Forms.Label();
             BannerClientBalLabel = new System.Windows.Forms.Label();
             ClientBalLabel = new System.Windows.Forms.Label();
+            panel1 = new System.Windows.Forms.Panel();
             tabControl1.SuspendLayout();
             summaryTab.SuspendLayout();
             tabDemographics.SuspendLayout();
@@ -305,6 +305,7 @@ namespace LabBilling.Forms
             menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)RefreshButton).BeginInit();
             dxPointerMenuStrip.SuspendLayout();
+            panel1.SuspendLayout();
             SuspendLayout();
             // 
             // tabControl1
@@ -319,11 +320,12 @@ namespace LabBilling.Forms
             tabControl1.Controls.Add(tabPayments);
             tabControl1.Controls.Add(tabNotes);
             tabControl1.Controls.Add(tabBillingActivity);
-            tabControl1.Location = new System.Drawing.Point(0, 115);
+            tabControl1.HotTrack = true;
+            tabControl1.Location = new System.Drawing.Point(0, 130);
             tabControl1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             tabControl1.Name = "tabControl1";
             tabControl1.SelectedIndex = 0;
-            tabControl1.Size = new System.Drawing.Size(1352, 598);
+            tabControl1.Size = new System.Drawing.Size(1352, 596);
             tabControl1.TabIndex = 2;
             tabControl1.Selected += tabControl1_Selected;
             // 
@@ -335,7 +337,7 @@ namespace LabBilling.Forms
             summaryTab.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             summaryTab.Name = "summaryTab";
             summaryTab.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            summaryTab.Size = new System.Drawing.Size(1344, 570);
+            summaryTab.Size = new System.Drawing.Size(1344, 568);
             summaryTab.TabIndex = 0;
             summaryTab.Text = "Summary";
             // 
@@ -355,7 +357,7 @@ namespace LabBilling.Forms
             summaryTable.Name = "summaryTable";
             summaryTable.RowCount = 1;
             summaryTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            summaryTable.Size = new System.Drawing.Size(1336, 564);
+            summaryTable.Size = new System.Drawing.Size(1336, 562);
             summaryTable.TabIndex = 0;
             // 
             // tabDemographics
@@ -400,7 +402,7 @@ namespace LabBilling.Forms
             tabDemographics.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             tabDemographics.Name = "tabDemographics";
             tabDemographics.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            tabDemographics.Size = new System.Drawing.Size(1344, 570);
+            tabDemographics.Size = new System.Drawing.Size(1344, 568);
             tabDemographics.TabIndex = 9;
             tabDemographics.Text = "Demographics";
             // 
@@ -803,7 +805,7 @@ namespace LabBilling.Forms
             tabGuarantor.Location = new System.Drawing.Point(4, 24);
             tabGuarantor.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             tabGuarantor.Name = "tabGuarantor";
-            tabGuarantor.Size = new System.Drawing.Size(1344, 570);
+            tabGuarantor.Size = new System.Drawing.Size(1344, 568);
             tabGuarantor.TabIndex = 13;
             tabGuarantor.Text = "Guarantor";
             // 
@@ -1043,7 +1045,7 @@ namespace LabBilling.Forms
             tabInsurance.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             tabInsurance.Name = "tabInsurance";
             tabInsurance.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            tabInsurance.Size = new System.Drawing.Size(1344, 570);
+            tabInsurance.Size = new System.Drawing.Size(1344, 568);
             tabInsurance.TabIndex = 11;
             tabInsurance.Text = "Insurance";
             // 
@@ -1123,7 +1125,7 @@ namespace LabBilling.Forms
             insTabLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
             insTabLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
             insTabLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 35F));
-            insTabLayoutPanel.Size = new System.Drawing.Size(1336, 564);
+            insTabLayoutPanel.Size = new System.Drawing.Size(1336, 562);
             insTabLayoutPanel.TabIndex = 2;
             // 
             // HolderLastNameLabel
@@ -1155,7 +1157,7 @@ namespace LabBilling.Forms
             dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
             dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle2.ForeColor = System.Drawing.Color.Black;
             dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
             dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
@@ -1175,7 +1177,7 @@ namespace LabBilling.Forms
             dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
             InsuranceDataGrid.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
             InsuranceDataGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            InsuranceDataGrid.Size = new System.Drawing.Size(1311, 120);
+            InsuranceDataGrid.Size = new System.Drawing.Size(1328, 120);
             InsuranceDataGrid.TabIndex = 0;
             InsuranceDataGrid.CellClick += InsuranceDataGrid_CellClick;
             // 
@@ -1211,7 +1213,7 @@ namespace LabBilling.Forms
             PlanFinCodeComboBox.BorderColor = System.Drawing.Color.Blue;
             PlanFinCodeComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             PlanFinCodeComboBox.FormattingEnabled = true;
-            PlanFinCodeComboBox.Location = new System.Drawing.Point(646, 333);
+            PlanFinCodeComboBox.Location = new System.Drawing.Point(652, 333);
             PlanFinCodeComboBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             PlanFinCodeComboBox.Name = "PlanFinCodeComboBox";
             PlanFinCodeComboBox.Size = new System.Drawing.Size(268, 23);
@@ -1221,7 +1223,7 @@ namespace LabBilling.Forms
             // 
             InsPlanFinCodeLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
             InsPlanFinCodeLabel.AutoSize = true;
-            InsPlanFinCodeLabel.Location = new System.Drawing.Point(494, 337);
+            InsPlanFinCodeLabel.Location = new System.Drawing.Point(500, 337);
             InsPlanFinCodeLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             InsPlanFinCodeLabel.Name = "InsPlanFinCodeLabel";
             InsPlanFinCodeLabel.Size = new System.Drawing.Size(111, 15);
@@ -1231,7 +1233,7 @@ namespace LabBilling.Forms
             // CertSSNTextBox
             // 
             CertSSNTextBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            CertSSNTextBox.Location = new System.Drawing.Point(646, 449);
+            CertSSNTextBox.Location = new System.Drawing.Point(652, 449);
             CertSSNTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             CertSSNTextBox.Name = "CertSSNTextBox";
             CertSSNTextBox.Size = new System.Drawing.Size(268, 23);
@@ -1250,7 +1252,7 @@ namespace LabBilling.Forms
             // 
             InsCertSSNLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
             InsCertSSNLabel.AutoSize = true;
-            InsCertSSNLabel.Location = new System.Drawing.Point(494, 453);
+            InsCertSSNLabel.Location = new System.Drawing.Point(500, 453);
             InsCertSSNLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             InsCertSSNLabel.Name = "InsCertSSNLabel";
             InsCertSSNLabel.Size = new System.Drawing.Size(55, 15);
@@ -1260,7 +1262,7 @@ namespace LabBilling.Forms
             // GroupNameTextBox
             // 
             GroupNameTextBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            GroupNameTextBox.Location = new System.Drawing.Point(646, 420);
+            GroupNameTextBox.Location = new System.Drawing.Point(652, 420);
             GroupNameTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             GroupNameTextBox.Name = "GroupNameTextBox";
             GroupNameTextBox.Size = new System.Drawing.Size(268, 23);
@@ -1270,7 +1272,7 @@ namespace LabBilling.Forms
             // 
             InsGroupNameLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
             InsGroupNameLabel.AutoSize = true;
-            InsGroupNameLabel.Location = new System.Drawing.Point(494, 424);
+            InsGroupNameLabel.Location = new System.Drawing.Point(500, 424);
             InsGroupNameLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             InsGroupNameLabel.Name = "InsGroupNameLabel";
             InsGroupNameLabel.Size = new System.Drawing.Size(75, 15);
@@ -1300,7 +1302,7 @@ namespace LabBilling.Forms
             // GroupNumberTextBox
             // 
             GroupNumberTextBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            GroupNumberTextBox.Location = new System.Drawing.Point(646, 391);
+            GroupNumberTextBox.Location = new System.Drawing.Point(652, 391);
             GroupNumberTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             GroupNumberTextBox.Name = "GroupNumberTextBox";
             GroupNumberTextBox.Size = new System.Drawing.Size(268, 23);
@@ -1321,7 +1323,7 @@ namespace LabBilling.Forms
             // 
             InsGroupNumberLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
             InsGroupNumberLabel.AutoSize = true;
-            InsGroupNumberLabel.Location = new System.Drawing.Point(494, 395);
+            InsGroupNumberLabel.Location = new System.Drawing.Point(500, 395);
             InsGroupNumberLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             InsGroupNumberLabel.Name = "InsGroupNumberLabel";
             InsGroupNumberLabel.Size = new System.Drawing.Size(87, 15);
@@ -1331,7 +1333,7 @@ namespace LabBilling.Forms
             // PlanAddress2TextBox
             // 
             PlanAddress2TextBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            PlanAddress2TextBox.Location = new System.Drawing.Point(646, 275);
+            PlanAddress2TextBox.Location = new System.Drawing.Point(652, 275);
             PlanAddress2TextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             PlanAddress2TextBox.Name = "PlanAddress2TextBox";
             PlanAddress2TextBox.Size = new System.Drawing.Size(268, 23);
@@ -1365,7 +1367,7 @@ namespace LabBilling.Forms
             // PolicyNumberTextBox
             // 
             PolicyNumberTextBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            PolicyNumberTextBox.Location = new System.Drawing.Point(646, 362);
+            PolicyNumberTextBox.Location = new System.Drawing.Point(652, 362);
             PolicyNumberTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             PolicyNumberTextBox.Name = "PolicyNumberTextBox";
             PolicyNumberTextBox.Size = new System.Drawing.Size(268, 23);
@@ -1398,7 +1400,7 @@ namespace LabBilling.Forms
             // 
             InsPolicyNumberLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
             InsPolicyNumberLabel.AutoSize = true;
-            InsPolicyNumberLabel.Location = new System.Drawing.Point(494, 366);
+            InsPolicyNumberLabel.Location = new System.Drawing.Point(500, 366);
             InsPolicyNumberLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             InsPolicyNumberLabel.Name = "InsPolicyNumberLabel";
             InsPolicyNumberLabel.Size = new System.Drawing.Size(86, 15);
@@ -1445,7 +1447,7 @@ namespace LabBilling.Forms
             // 
             InsPlanLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
             InsPlanLabel.AutoSize = true;
-            InsPlanLabel.Location = new System.Drawing.Point(494, 192);
+            InsPlanLabel.Location = new System.Drawing.Point(500, 192);
             InsPlanLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             InsPlanLabel.Name = "InsPlanLabel";
             InsPlanLabel.Size = new System.Drawing.Size(84, 15);
@@ -1456,7 +1458,7 @@ namespace LabBilling.Forms
             // 
             InsuranceOrderLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
             InsuranceOrderLabel.AutoSize = true;
-            InsuranceOrderLabel.Location = new System.Drawing.Point(494, 163);
+            InsuranceOrderLabel.Location = new System.Drawing.Point(500, 163);
             InsuranceOrderLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             InsuranceOrderLabel.Name = "InsuranceOrderLabel";
             InsuranceOrderLabel.Size = new System.Drawing.Size(91, 15);
@@ -1470,7 +1472,7 @@ namespace LabBilling.Forms
             InsOrderComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             InsOrderComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             InsOrderComboBox.FormattingEnabled = true;
-            InsOrderComboBox.Location = new System.Drawing.Point(646, 159);
+            InsOrderComboBox.Location = new System.Drawing.Point(652, 159);
             InsOrderComboBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             InsOrderComboBox.Name = "InsOrderComboBox";
             InsOrderComboBox.Size = new System.Drawing.Size(268, 23);
@@ -1526,7 +1528,7 @@ namespace LabBilling.Forms
             // 
             InsPlanNameLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
             InsPlanNameLabel.AutoSize = true;
-            InsPlanNameLabel.Location = new System.Drawing.Point(494, 221);
+            InsPlanNameLabel.Location = new System.Drawing.Point(500, 221);
             InsPlanNameLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             InsPlanNameLabel.Name = "InsPlanNameLabel";
             InsPlanNameLabel.Size = new System.Drawing.Size(65, 15);
@@ -1536,7 +1538,7 @@ namespace LabBilling.Forms
             // PlanNameTextBox
             // 
             PlanNameTextBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            PlanNameTextBox.Location = new System.Drawing.Point(646, 217);
+            PlanNameTextBox.Location = new System.Drawing.Point(652, 217);
             PlanNameTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             PlanNameTextBox.Name = "PlanNameTextBox";
             PlanNameTextBox.ReadOnly = true;
@@ -1566,7 +1568,7 @@ namespace LabBilling.Forms
             // PlanCityStTextBox
             // 
             PlanCityStTextBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            PlanCityStTextBox.Location = new System.Drawing.Point(646, 304);
+            PlanCityStTextBox.Location = new System.Drawing.Point(652, 304);
             PlanCityStTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             PlanCityStTextBox.Name = "PlanCityStTextBox";
             PlanCityStTextBox.Size = new System.Drawing.Size(268, 23);
@@ -1576,7 +1578,7 @@ namespace LabBilling.Forms
             // 
             InsPlanAddressLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
             InsPlanAddressLabel.AutoSize = true;
-            InsPlanAddressLabel.Location = new System.Drawing.Point(494, 250);
+            InsPlanAddressLabel.Location = new System.Drawing.Point(500, 250);
             InsPlanAddressLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             InsPlanAddressLabel.Name = "InsPlanAddressLabel";
             InsPlanAddressLabel.Size = new System.Drawing.Size(75, 15);
@@ -1587,7 +1589,7 @@ namespace LabBilling.Forms
             // 
             InsPlanCityStateZipLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
             InsPlanCityStateZipLabel.AutoSize = true;
-            InsPlanCityStateZipLabel.Location = new System.Drawing.Point(494, 308);
+            InsPlanCityStateZipLabel.Location = new System.Drawing.Point(500, 308);
             InsPlanCityStateZipLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             InsPlanCityStateZipLabel.Name = "InsPlanCityStateZipLabel";
             InsPlanCityStateZipLabel.Size = new System.Drawing.Size(87, 15);
@@ -1597,7 +1599,7 @@ namespace LabBilling.Forms
             // PlanAddressTextBox
             // 
             PlanAddressTextBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            PlanAddressTextBox.Location = new System.Drawing.Point(646, 246);
+            PlanAddressTextBox.Location = new System.Drawing.Point(652, 246);
             PlanAddressTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             PlanAddressTextBox.Name = "PlanAddressTextBox";
             PlanAddressTextBox.Size = new System.Drawing.Size(268, 23);
@@ -1627,7 +1629,7 @@ namespace LabBilling.Forms
             // 
             InsUserInstructionsLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
             InsUserInstructionsLabel.AutoSize = true;
-            InsUserInstructionsLabel.Location = new System.Drawing.Point(646, 133);
+            InsUserInstructionsLabel.Location = new System.Drawing.Point(652, 133);
             InsUserInstructionsLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             InsUserInstructionsLabel.Name = "InsUserInstructionsLabel";
             InsUserInstructionsLabel.Size = new System.Drawing.Size(148, 15);
@@ -1636,7 +1638,7 @@ namespace LabBilling.Forms
             // 
             // AddInsuranceButton
             // 
-            AddInsuranceButton.Location = new System.Drawing.Point(494, 129);
+            AddInsuranceButton.Location = new System.Drawing.Point(500, 129);
             AddInsuranceButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             AddInsuranceButton.Name = "AddInsuranceButton";
             AddInsuranceButton.Size = new System.Drawing.Size(88, 24);
@@ -1654,12 +1656,12 @@ namespace LabBilling.Forms
             InsTabMessageTextBox.Multiline = true;
             InsTabMessageTextBox.Name = "InsTabMessageTextBox";
             InsTabMessageTextBox.ReadOnly = true;
-            InsTabMessageTextBox.Size = new System.Drawing.Size(820, 27);
+            InsTabMessageTextBox.Size = new System.Drawing.Size(832, 27);
             InsTabMessageTextBox.TabIndex = 44;
             // 
             // insurancePlanTextBox
             // 
-            insurancePlanTextBox.Location = new System.Drawing.Point(646, 188);
+            insurancePlanTextBox.Location = new System.Drawing.Point(652, 188);
             insurancePlanTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             insurancePlanTextBox.Name = "insurancePlanTextBox";
             insurancePlanTextBox.Size = new System.Drawing.Size(268, 23);
@@ -1686,7 +1688,7 @@ namespace LabBilling.Forms
             tabDiagnosis.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             tabDiagnosis.Name = "tabDiagnosis";
             tabDiagnosis.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            tabDiagnosis.Size = new System.Drawing.Size(1344, 570);
+            tabDiagnosis.Size = new System.Drawing.Size(1344, 568);
             tabDiagnosis.TabIndex = 8;
             tabDiagnosis.Text = "Diagnosis";
             // 
@@ -1708,7 +1710,7 @@ namespace LabBilling.Forms
             dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Window;
             dataGridViewCellStyle5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
-            dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle5.ForeColor = System.Drawing.Color.Black;
             dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
             dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
@@ -1829,7 +1831,7 @@ namespace LabBilling.Forms
             dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.Window;
             dataGridViewCellStyle8.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
-            dataGridViewCellStyle8.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle8.ForeColor = System.Drawing.Color.Black;
             dataGridViewCellStyle8.SelectionBackColor = System.Drawing.SystemColors.Highlight;
             dataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             dataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
@@ -1880,7 +1882,7 @@ namespace LabBilling.Forms
             dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle11.BackColor = System.Drawing.SystemColors.Window;
             dataGridViewCellStyle11.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
-            dataGridViewCellStyle11.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle11.ForeColor = System.Drawing.Color.Black;
             dataGridViewCellStyle11.SelectionBackColor = System.Drawing.SystemColors.Highlight;
             dataGridViewCellStyle11.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             dataGridViewCellStyle11.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
@@ -1934,7 +1936,7 @@ namespace LabBilling.Forms
             tabCharges.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             tabCharges.Name = "tabCharges";
             tabCharges.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            tabCharges.Size = new System.Drawing.Size(1344, 570);
+            tabCharges.Size = new System.Drawing.Size(1344, 568);
             tabCharges.TabIndex = 6;
             tabCharges.Text = "Charges";
             // 
@@ -2032,7 +2034,7 @@ namespace LabBilling.Forms
             dataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle14.BackColor = System.Drawing.SystemColors.Window;
             dataGridViewCellStyle14.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
-            dataGridViewCellStyle14.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle14.ForeColor = System.Drawing.Color.Black;
             dataGridViewCellStyle14.SelectionBackColor = System.Drawing.SystemColors.Highlight;
             dataGridViewCellStyle14.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             dataGridViewCellStyle14.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
@@ -2114,7 +2116,7 @@ namespace LabBilling.Forms
             dataGridViewCellStyle17.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle17.BackColor = System.Drawing.SystemColors.Window;
             dataGridViewCellStyle17.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
-            dataGridViewCellStyle17.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle17.ForeColor = System.Drawing.Color.Black;
             dataGridViewCellStyle17.SelectionBackColor = System.Drawing.SystemColors.Highlight;
             dataGridViewCellStyle17.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             dataGridViewCellStyle17.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
@@ -2232,7 +2234,7 @@ namespace LabBilling.Forms
             tabPayments.Location = new System.Drawing.Point(4, 24);
             tabPayments.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             tabPayments.Name = "tabPayments";
-            tabPayments.Size = new System.Drawing.Size(1344, 570);
+            tabPayments.Size = new System.Drawing.Size(1344, 568);
             tabPayments.TabIndex = 7;
             tabPayments.Text = "Payments / Adjustments";
             // 
@@ -2345,7 +2347,7 @@ namespace LabBilling.Forms
             dataGridViewCellStyle20.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle20.BackColor = System.Drawing.SystemColors.Window;
             dataGridViewCellStyle20.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
-            dataGridViewCellStyle20.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle20.ForeColor = System.Drawing.Color.Black;
             dataGridViewCellStyle20.SelectionBackColor = System.Drawing.SystemColors.Highlight;
             dataGridViewCellStyle20.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             dataGridViewCellStyle20.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
@@ -2379,7 +2381,7 @@ namespace LabBilling.Forms
             tabNotes.Location = new System.Drawing.Point(4, 24);
             tabNotes.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             tabNotes.Name = "tabNotes";
-            tabNotes.Size = new System.Drawing.Size(1344, 570);
+            tabNotes.Size = new System.Drawing.Size(1344, 568);
             tabNotes.TabIndex = 5;
             tabNotes.Text = "Notes";
             // 
@@ -2414,7 +2416,7 @@ namespace LabBilling.Forms
             NotesDisplayTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             NotesDisplayTextBox.Name = "NotesDisplayTextBox";
             NotesDisplayTextBox.ReadOnly = true;
-            NotesDisplayTextBox.Size = new System.Drawing.Size(697, 570);
+            NotesDisplayTextBox.Size = new System.Drawing.Size(697, 568);
             NotesDisplayTextBox.TabIndex = 0;
             NotesDisplayTextBox.Text = "";
             NotesDisplayTextBox.ZoomFactor = 1.2F;
@@ -2458,7 +2460,7 @@ namespace LabBilling.Forms
             tabBillingActivity.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             tabBillingActivity.Name = "tabBillingActivity";
             tabBillingActivity.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            tabBillingActivity.Size = new System.Drawing.Size(1344, 570);
+            tabBillingActivity.Size = new System.Drawing.Size(1344, 568);
             tabBillingActivity.TabIndex = 12;
             tabBillingActivity.Text = "Billing Activity";
             // 
@@ -2600,7 +2602,7 @@ namespace LabBilling.Forms
             LastValidatedLabel.Location = new System.Drawing.Point(122, 15);
             LastValidatedLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             LastValidatedLabel.Name = "LastValidatedLabel";
-            LastValidatedLabel.Size = new System.Drawing.Size(24, 19);
+            LastValidatedLabel.Size = new System.Drawing.Size(22, 15);
             LastValidatedLabel.TabIndex = 3;
             LastValidatedLabel.Text = ".....";
             // 
@@ -2610,26 +2612,16 @@ namespace LabBilling.Forms
             BillingLastValidatedLabel.Location = new System.Drawing.Point(9, 12);
             BillingLastValidatedLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             BillingLastValidatedLabel.Name = "BillingLastValidatedLabel";
-            BillingLastValidatedLabel.Size = new System.Drawing.Size(91, 19);
+            BillingLastValidatedLabel.Size = new System.Drawing.Size(82, 15);
             BillingLastValidatedLabel.TabIndex = 3;
             BillingLastValidatedLabel.Text = "Last Validated:";
             // 
             // ValidationResultsTextBox
             // 
-            // 
-            // 
-            // 
             ValidationResultsTextBox.Location = new System.Drawing.Point(9, 192);
             ValidationResultsTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            ValidationResultsTextBox.MaxLength = 32767;
             ValidationResultsTextBox.Multiline = true;
             ValidationResultsTextBox.Name = "ValidationResultsTextBox";
-            ValidationResultsTextBox.PasswordChar = '\0';
-            ValidationResultsTextBox.ScrollBars = System.Windows.Forms.ScrollBars.None;
-            ValidationResultsTextBox.SelectedText = "";
-            ValidationResultsTextBox.SelectionLength = 0;
-            ValidationResultsTextBox.SelectionStart = 0;
-            ValidationResultsTextBox.ShortcutsEnabled = true;
             ValidationResultsTextBox.Size = new System.Drawing.Size(1069, 145);
             ValidationResultsTextBox.TabIndex = 2;
             // 
@@ -2660,7 +2652,7 @@ namespace LabBilling.Forms
             dataGridViewCellStyle23.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle23.BackColor = System.Drawing.SystemColors.Window;
             dataGridViewCellStyle23.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
-            dataGridViewCellStyle23.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle23.ForeColor = System.Drawing.Color.Black;
             dataGridViewCellStyle23.SelectionBackColor = System.Drawing.SystemColors.Highlight;
             dataGridViewCellStyle23.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             dataGridViewCellStyle23.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
@@ -2703,7 +2695,7 @@ namespace LabBilling.Forms
             // 
             // accountToolStripMenuItem
             // 
-            accountToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { changeDateOfServiceToolStripMenuItem, changeFinancialClassToolStripMenuItem, changeClientToolStripMenuItem, viewAuditInfoToolStripMenuItem, clearHoldStatusToolStripMenuItem, swapInsurancesToolStripMenuItem, moveAllChargesToolStripMenuItem, generateClientStatementToolStripMenuItem, printEOBToolStripMenuItem });
+            accountToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { changeDateOfServiceToolStripMenuItem, changeFinancialClassToolStripMenuItem, changeClientToolStripMenuItem, viewAuditInfoToolStripMenuItem, clearHoldStatusToolStripMenuItem, swapInsurancesToolStripMenuItem, moveAllChargesToolStripMenuItem, printEOBToolStripMenuItem });
             accountToolStripMenuItem.Name = "accountToolStripMenuItem";
             accountToolStripMenuItem.Size = new System.Drawing.Size(64, 20);
             accountToolStripMenuItem.Text = "Account";
@@ -2711,62 +2703,55 @@ namespace LabBilling.Forms
             // changeDateOfServiceToolStripMenuItem
             // 
             changeDateOfServiceToolStripMenuItem.Name = "changeDateOfServiceToolStripMenuItem";
-            changeDateOfServiceToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
+            changeDateOfServiceToolStripMenuItem.Size = new System.Drawing.Size(196, 22);
             changeDateOfServiceToolStripMenuItem.Text = "Change Date of Service";
             changeDateOfServiceToolStripMenuItem.Click += ChangeDateOfServiceToolStripMenuItem_Click;
             // 
             // changeFinancialClassToolStripMenuItem
             // 
             changeFinancialClassToolStripMenuItem.Name = "changeFinancialClassToolStripMenuItem";
-            changeFinancialClassToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
+            changeFinancialClassToolStripMenuItem.Size = new System.Drawing.Size(196, 22);
             changeFinancialClassToolStripMenuItem.Text = "Change Financial Class";
             changeFinancialClassToolStripMenuItem.Click += ChangeFinancialClassToolStripMenuItem_Click;
             // 
             // changeClientToolStripMenuItem
             // 
             changeClientToolStripMenuItem.Name = "changeClientToolStripMenuItem";
-            changeClientToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
+            changeClientToolStripMenuItem.Size = new System.Drawing.Size(196, 22);
             changeClientToolStripMenuItem.Text = "Change Client";
             changeClientToolStripMenuItem.Click += ChangeClientToolStripMenuItem_Click;
             // 
             // viewAuditInfoToolStripMenuItem
             // 
             viewAuditInfoToolStripMenuItem.Name = "viewAuditInfoToolStripMenuItem";
-            viewAuditInfoToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
+            viewAuditInfoToolStripMenuItem.Size = new System.Drawing.Size(196, 22);
             viewAuditInfoToolStripMenuItem.Text = "View Audit Info";
             // 
             // clearHoldStatusToolStripMenuItem
             // 
             clearHoldStatusToolStripMenuItem.Name = "clearHoldStatusToolStripMenuItem";
-            clearHoldStatusToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
+            clearHoldStatusToolStripMenuItem.Size = new System.Drawing.Size(196, 22);
             clearHoldStatusToolStripMenuItem.Text = "Clear Hold Status";
             clearHoldStatusToolStripMenuItem.Click += ClearHoldStatusToolStripMenuItem_Click;
             // 
             // swapInsurancesToolStripMenuItem
             // 
             swapInsurancesToolStripMenuItem.Name = "swapInsurancesToolStripMenuItem";
-            swapInsurancesToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
+            swapInsurancesToolStripMenuItem.Size = new System.Drawing.Size(196, 22);
             swapInsurancesToolStripMenuItem.Text = "Swap Insurances";
             swapInsurancesToolStripMenuItem.Click += swapInsurancesToolStripMenuItem_Click;
             // 
             // moveAllChargesToolStripMenuItem
             // 
             moveAllChargesToolStripMenuItem.Name = "moveAllChargesToolStripMenuItem";
-            moveAllChargesToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
+            moveAllChargesToolStripMenuItem.Size = new System.Drawing.Size(196, 22);
             moveAllChargesToolStripMenuItem.Text = "Move All Charges";
             moveAllChargesToolStripMenuItem.Click += moveAllChargesToolStripMenuItem_Click;
-            // 
-            // generateClientStatementToolStripMenuItem
-            // 
-            generateClientStatementToolStripMenuItem.Name = "generateClientStatementToolStripMenuItem";
-            generateClientStatementToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
-            generateClientStatementToolStripMenuItem.Text = "Generate Client Statement";
-            generateClientStatementToolStripMenuItem.Click += generateClientStatementToolStripMenuItem_Click;
             // 
             // printEOBToolStripMenuItem
             // 
             printEOBToolStripMenuItem.Name = "printEOBToolStripMenuItem";
-            printEOBToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
+            printEOBToolStripMenuItem.Size = new System.Drawing.Size(196, 22);
             printEOBToolStripMenuItem.Text = "Print EOB";
             printEOBToolStripMenuItem.Click += printEOBToolStripMenuItem_Click;
             // 
@@ -2776,7 +2761,7 @@ namespace LabBilling.Forms
             BannerMRNTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
             BannerMRNTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 0);
             BannerMRNTextBox.ForeColor = System.Drawing.Color.White;
-            BannerMRNTextBox.Location = new System.Drawing.Point(800, 37);
+            BannerMRNTextBox.Location = new System.Drawing.Point(791, 13);
             BannerMRNTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             BannerMRNTextBox.Name = "BannerMRNTextBox";
             BannerMRNTextBox.ReadOnly = true;
@@ -2789,7 +2774,7 @@ namespace LabBilling.Forms
             BannerAccountTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
             BannerAccountTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 0);
             BannerAccountTextBox.ForeColor = System.Drawing.Color.White;
-            BannerAccountTextBox.Location = new System.Drawing.Point(684, 37);
+            BannerAccountTextBox.Location = new System.Drawing.Point(675, 13);
             BannerAccountTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             BannerAccountTextBox.Name = "BannerAccountTextBox";
             BannerAccountTextBox.ReadOnly = true;
@@ -2803,7 +2788,7 @@ namespace LabBilling.Forms
             BannerSexTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
             BannerSexTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 0);
             BannerSexTextBox.ForeColor = System.Drawing.Color.White;
-            BannerSexTextBox.Location = new System.Drawing.Point(507, 39);
+            BannerSexTextBox.Location = new System.Drawing.Point(498, 15);
             BannerSexTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             BannerSexTextBox.Name = "BannerSexTextBox";
             BannerSexTextBox.ReadOnly = true;
@@ -2816,7 +2801,7 @@ namespace LabBilling.Forms
             BannerDobTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
             BannerDobTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 0);
             BannerDobTextBox.ForeColor = System.Drawing.Color.White;
-            BannerDobTextBox.Location = new System.Drawing.Point(414, 39);
+            BannerDobTextBox.Location = new System.Drawing.Point(405, 15);
             BannerDobTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             BannerDobTextBox.Name = "BannerDobTextBox";
             BannerDobTextBox.ReadOnly = true;
@@ -2829,7 +2814,7 @@ namespace LabBilling.Forms
             BannerNameTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
             BannerNameTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 0);
             BannerNameTextBox.ForeColor = System.Drawing.Color.White;
-            BannerNameTextBox.Location = new System.Drawing.Point(14, 39);
+            BannerNameTextBox.Location = new System.Drawing.Point(5, 15);
             BannerNameTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             BannerNameTextBox.Name = "BannerNameTextBox";
             BannerNameTextBox.ReadOnly = true;
@@ -2840,7 +2825,7 @@ namespace LabBilling.Forms
             // 
             BannerDOBSexLabel.AutoSize = true;
             BannerDOBSexLabel.ForeColor = System.Drawing.Color.White;
-            BannerDOBSexLabel.Location = new System.Drawing.Point(314, 43);
+            BannerDOBSexLabel.Location = new System.Drawing.Point(305, 19);
             BannerDOBSexLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             BannerDOBSexLabel.Name = "BannerDOBSexLabel";
             BannerDOBSexLabel.Size = new System.Drawing.Size(57, 15);
@@ -2851,7 +2836,7 @@ namespace LabBilling.Forms
             // 
             BannerAccountMrnLabel.AutoSize = true;
             BannerAccountMrnLabel.ForeColor = System.Drawing.Color.White;
-            BannerAccountMrnLabel.Location = new System.Drawing.Point(583, 43);
+            BannerAccountMrnLabel.Location = new System.Drawing.Point(574, 19);
             BannerAccountMrnLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             BannerAccountMrnLabel.Name = "BannerAccountMrnLabel";
             BannerAccountMrnLabel.Size = new System.Drawing.Size(87, 15);
@@ -2863,7 +2848,7 @@ namespace LabBilling.Forms
             BannerClientTextBox.BackColor = System.Drawing.Color.Blue;
             BannerClientTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
             BannerClientTextBox.ForeColor = System.Drawing.Color.White;
-            BannerClientTextBox.Location = new System.Drawing.Point(14, 69);
+            BannerClientTextBox.Location = new System.Drawing.Point(5, 45);
             BannerClientTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             BannerClientTextBox.Name = "BannerClientTextBox";
             BannerClientTextBox.Size = new System.Drawing.Size(293, 16);
@@ -2874,7 +2859,7 @@ namespace LabBilling.Forms
             BannerFinClassTextBox.BackColor = System.Drawing.Color.Blue;
             BannerFinClassTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
             BannerFinClassTextBox.ForeColor = System.Drawing.Color.White;
-            BannerFinClassTextBox.Location = new System.Drawing.Point(412, 66);
+            BannerFinClassTextBox.Location = new System.Drawing.Point(403, 42);
             BannerFinClassTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             BannerFinClassTextBox.Name = "BannerFinClassTextBox";
             BannerFinClassTextBox.Size = new System.Drawing.Size(117, 16);
@@ -2884,7 +2869,7 @@ namespace LabBilling.Forms
             // 
             BannerFinClassLabel.AutoSize = true;
             BannerFinClassLabel.ForeColor = System.Drawing.Color.White;
-            BannerFinClassLabel.Location = new System.Drawing.Point(314, 66);
+            BannerFinClassLabel.Location = new System.Drawing.Point(305, 42);
             BannerFinClassLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             BannerFinClassLabel.Name = "BannerFinClassLabel";
             BannerFinClassLabel.Size = new System.Drawing.Size(87, 15);
@@ -2895,7 +2880,7 @@ namespace LabBilling.Forms
             // 
             BannerTotalPmtLabel.AutoSize = true;
             BannerTotalPmtLabel.ForeColor = System.Drawing.Color.White;
-            BannerTotalPmtLabel.Location = new System.Drawing.Point(924, 55);
+            BannerTotalPmtLabel.Location = new System.Drawing.Point(915, 31);
             BannerTotalPmtLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             BannerTotalPmtLabel.Name = "BannerTotalPmtLabel";
             BannerTotalPmtLabel.Size = new System.Drawing.Size(83, 15);
@@ -2906,7 +2891,7 @@ namespace LabBilling.Forms
             // 
             BannerTotalChargesLabel.AutoSize = true;
             BannerTotalChargesLabel.ForeColor = System.Drawing.Color.White;
-            BannerTotalChargesLabel.Location = new System.Drawing.Point(924, 37);
+            BannerTotalChargesLabel.Location = new System.Drawing.Point(915, 13);
             BannerTotalChargesLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             BannerTotalChargesLabel.Name = "BannerTotalChargesLabel";
             BannerTotalChargesLabel.Size = new System.Drawing.Size(81, 15);
@@ -2917,7 +2902,7 @@ namespace LabBilling.Forms
             // 
             BannerAccBalanceLabel.AutoSize = true;
             BannerAccBalanceLabel.ForeColor = System.Drawing.Color.White;
-            BannerAccBalanceLabel.Location = new System.Drawing.Point(924, 74);
+            BannerAccBalanceLabel.Location = new System.Drawing.Point(915, 50);
             BannerAccBalanceLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             BannerAccBalanceLabel.Name = "BannerAccBalanceLabel";
             BannerAccBalanceLabel.Size = new System.Drawing.Size(99, 15);
@@ -2927,7 +2912,7 @@ namespace LabBilling.Forms
             // TotalPmtAdjLabel
             // 
             TotalPmtAdjLabel.ForeColor = System.Drawing.Color.White;
-            TotalPmtAdjLabel.Location = new System.Drawing.Point(1040, 55);
+            TotalPmtAdjLabel.Location = new System.Drawing.Point(1031, 31);
             TotalPmtAdjLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             TotalPmtAdjLabel.Name = "TotalPmtAdjLabel";
             TotalPmtAdjLabel.Size = new System.Drawing.Size(82, 15);
@@ -2938,7 +2923,7 @@ namespace LabBilling.Forms
             // BalanceLabel
             // 
             BalanceLabel.ForeColor = System.Drawing.Color.White;
-            BalanceLabel.Location = new System.Drawing.Point(1040, 74);
+            BalanceLabel.Location = new System.Drawing.Point(1031, 50);
             BalanceLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             BalanceLabel.Name = "BalanceLabel";
             BalanceLabel.Size = new System.Drawing.Size(82, 15);
@@ -2949,7 +2934,7 @@ namespace LabBilling.Forms
             // TotalChargesLabel
             // 
             TotalChargesLabel.ForeColor = System.Drawing.Color.White;
-            TotalChargesLabel.Location = new System.Drawing.Point(1040, 37);
+            TotalChargesLabel.Location = new System.Drawing.Point(1031, 13);
             TotalChargesLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             TotalChargesLabel.Name = "TotalChargesLabel";
             TotalChargesLabel.Size = new System.Drawing.Size(82, 15);
@@ -2961,7 +2946,7 @@ namespace LabBilling.Forms
             // 
             BannerBillStatusLabel.AutoSize = true;
             BannerBillStatusLabel.ForeColor = System.Drawing.Color.White;
-            BannerBillStatusLabel.Location = new System.Drawing.Point(583, 66);
+            BannerBillStatusLabel.Location = new System.Drawing.Point(574, 42);
             BannerBillStatusLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             BannerBillStatusLabel.Name = "BannerBillStatusLabel";
             BannerBillStatusLabel.Size = new System.Drawing.Size(78, 15);
@@ -2974,7 +2959,7 @@ namespace LabBilling.Forms
             BannerBillStatusTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
             BannerBillStatusTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
             BannerBillStatusTextBox.ForeColor = System.Drawing.Color.White;
-            BannerBillStatusTextBox.Location = new System.Drawing.Point(684, 63);
+            BannerBillStatusTextBox.Location = new System.Drawing.Point(675, 39);
             BannerBillStatusTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             BannerBillStatusTextBox.Name = "BannerBillStatusTextBox";
             BannerBillStatusTextBox.ReadOnly = true;
@@ -2986,7 +2971,7 @@ namespace LabBilling.Forms
             BannerProviderTextBox.BackColor = System.Drawing.Color.Blue;
             BannerProviderTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
             BannerProviderTextBox.ForeColor = System.Drawing.Color.White;
-            BannerProviderTextBox.Location = new System.Drawing.Point(14, 93);
+            BannerProviderTextBox.Location = new System.Drawing.Point(5, 69);
             BannerProviderTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             BannerProviderTextBox.Name = "BannerProviderTextBox";
             BannerProviderTextBox.Size = new System.Drawing.Size(293, 16);
@@ -2997,7 +2982,7 @@ namespace LabBilling.Forms
             RefreshButton.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
             RefreshButton.BackColor = System.Drawing.Color.LightSteelBlue;
             RefreshButton.Image = Properties.Resources.refresh_icon;
-            RefreshButton.Location = new System.Drawing.Point(1324, 36);
+            RefreshButton.Location = new System.Drawing.Point(1316, 10);
             RefreshButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             RefreshButton.Name = "RefreshButton";
             RefreshButton.Size = new System.Drawing.Size(23, 25);
@@ -3011,7 +2996,7 @@ namespace LabBilling.Forms
             bannerDateOfServiceTextBox.BackColor = System.Drawing.Color.Blue;
             bannerDateOfServiceTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
             bannerDateOfServiceTextBox.ForeColor = System.Drawing.Color.White;
-            bannerDateOfServiceTextBox.Location = new System.Drawing.Point(412, 88);
+            bannerDateOfServiceTextBox.Location = new System.Drawing.Point(403, 64);
             bannerDateOfServiceTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             bannerDateOfServiceTextBox.Name = "bannerDateOfServiceTextBox";
             bannerDateOfServiceTextBox.Size = new System.Drawing.Size(117, 16);
@@ -3021,7 +3006,7 @@ namespace LabBilling.Forms
             // 
             bannerDateOfServiceLabel.AutoSize = true;
             bannerDateOfServiceLabel.ForeColor = System.Drawing.Color.White;
-            bannerDateOfServiceLabel.Location = new System.Drawing.Point(314, 88);
+            bannerDateOfServiceLabel.Location = new System.Drawing.Point(305, 64);
             bannerDateOfServiceLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             bannerDateOfServiceLabel.Name = "bannerDateOfServiceLabel";
             bannerDateOfServiceLabel.Size = new System.Drawing.Size(88, 15);
@@ -3047,18 +3032,19 @@ namespace LabBilling.Forms
             bannerAlertLabel.BackColor = System.Drawing.Color.White;
             bannerAlertLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 0);
             bannerAlertLabel.ForeColor = System.Drawing.Color.Red;
-            bannerAlertLabel.Location = new System.Drawing.Point(587, 90);
+            bannerAlertLabel.Location = new System.Drawing.Point(578, 66);
             bannerAlertLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             bannerAlertLabel.Name = "bannerAlertLabel";
             bannerAlertLabel.Size = new System.Drawing.Size(13, 17);
             bannerAlertLabel.TabIndex = 33;
             bannerAlertLabel.Text = ".";
+            bannerAlertLabel.Visible = false;
             // 
             // BannerThirdPartyBalLabel
             // 
             BannerThirdPartyBalLabel.AutoSize = true;
             BannerThirdPartyBalLabel.ForeColor = System.Drawing.Color.White;
-            BannerThirdPartyBalLabel.Location = new System.Drawing.Point(1124, 37);
+            BannerThirdPartyBalLabel.Location = new System.Drawing.Point(1115, 13);
             BannerThirdPartyBalLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             BannerThirdPartyBalLabel.Name = "BannerThirdPartyBalLabel";
             BannerThirdPartyBalLabel.Size = new System.Drawing.Size(76, 15);
@@ -3068,7 +3054,7 @@ namespace LabBilling.Forms
             // ThirdPartyBalLabel
             // 
             ThirdPartyBalLabel.ForeColor = System.Drawing.Color.White;
-            ThirdPartyBalLabel.Location = new System.Drawing.Point(1233, 37);
+            ThirdPartyBalLabel.Location = new System.Drawing.Point(1224, 13);
             ThirdPartyBalLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             ThirdPartyBalLabel.Name = "ThirdPartyBalLabel";
             ThirdPartyBalLabel.Size = new System.Drawing.Size(70, 15);
@@ -3080,7 +3066,7 @@ namespace LabBilling.Forms
             // 
             BannerClientBalLabel.AutoSize = true;
             BannerClientBalLabel.ForeColor = System.Drawing.Color.White;
-            BannerClientBalLabel.Location = new System.Drawing.Point(1124, 55);
+            BannerClientBalLabel.Location = new System.Drawing.Point(1115, 31);
             BannerClientBalLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             BannerClientBalLabel.Name = "BannerClientBalLabel";
             BannerClientBalLabel.Size = new System.Drawing.Size(85, 15);
@@ -3090,7 +3076,7 @@ namespace LabBilling.Forms
             // ClientBalLabel
             // 
             ClientBalLabel.ForeColor = System.Drawing.Color.White;
-            ClientBalLabel.Location = new System.Drawing.Point(1233, 55);
+            ClientBalLabel.Location = new System.Drawing.Point(1224, 31);
             ClientBalLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             ClientBalLabel.Name = "ClientBalLabel";
             ClientBalLabel.Size = new System.Drawing.Size(70, 15);
@@ -3098,41 +3084,52 @@ namespace LabBilling.Forms
             ClientBalLabel.Text = "0.00";
             ClientBalLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
+            // panel1
+            // 
+            panel1.BackColor = System.Drawing.Color.Blue;
+            panel1.Controls.Add(BannerFinClassTextBox);
+            panel1.Controls.Add(BannerAccountMrnLabel);
+            panel1.Controls.Add(BannerTotalPmtLabel);
+            panel1.Controls.Add(BannerAccBalanceLabel);
+            panel1.Controls.Add(TotalPmtAdjLabel);
+            panel1.Controls.Add(bannerAlertLabel);
+            panel1.Controls.Add(BannerThirdPartyBalLabel);
+            panel1.Controls.Add(BannerBillStatusLabel);
+            panel1.Controls.Add(BalanceLabel);
+            panel1.Controls.Add(bannerDateOfServiceLabel);
+            panel1.Controls.Add(BannerClientBalLabel);
+            panel1.Controls.Add(BannerFinClassLabel);
+            panel1.Controls.Add(ThirdPartyBalLabel);
+            panel1.Controls.Add(bannerDateOfServiceTextBox);
+            panel1.Controls.Add(ClientBalLabel);
+            panel1.Controls.Add(BannerTotalChargesLabel);
+            panel1.Controls.Add(BannerProviderTextBox);
+            panel1.Controls.Add(TotalChargesLabel);
+            panel1.Controls.Add(BannerClientTextBox);
+            panel1.Controls.Add(BannerDOBSexLabel);
+            panel1.Controls.Add(RefreshButton);
+            panel1.Controls.Add(BannerNameTextBox);
+            panel1.Controls.Add(BannerMRNTextBox);
+            panel1.Controls.Add(BannerDobTextBox);
+            panel1.Controls.Add(BannerBillStatusTextBox);
+            panel1.Controls.Add(BannerSexTextBox);
+            panel1.Controls.Add(BannerAccountTextBox);
+            panel1.Dock = System.Windows.Forms.DockStyle.Top;
+            panel1.Location = new System.Drawing.Point(0, 24);
+            panel1.Name = "panel1";
+            panel1.Size = new System.Drawing.Size(1352, 100);
+            panel1.TabIndex = 34;
+            // 
             // AccountForm
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            BackColor = System.Drawing.Color.Blue;
+            BackColor = System.Drawing.Color.White;
             ClientSize = new System.Drawing.Size(1352, 727);
-            Controls.Add(bannerAlertLabel);
-            Controls.Add(BannerBillStatusLabel);
-            Controls.Add(bannerDateOfServiceLabel);
-            Controls.Add(BannerFinClassLabel);
-            Controls.Add(bannerDateOfServiceTextBox);
-            Controls.Add(BannerFinClassTextBox);
-            Controls.Add(BannerProviderTextBox);
-            Controls.Add(BannerClientTextBox);
-            Controls.Add(RefreshButton);
-            Controls.Add(BannerMRNTextBox);
-            Controls.Add(BannerBillStatusTextBox);
-            Controls.Add(BannerAccountTextBox);
-            Controls.Add(BannerSexTextBox);
-            Controls.Add(BannerDobTextBox);
-            Controls.Add(BannerNameTextBox);
-            Controls.Add(BannerDOBSexLabel);
-            Controls.Add(TotalChargesLabel);
-            Controls.Add(BannerTotalChargesLabel);
-            Controls.Add(ClientBalLabel);
-            Controls.Add(ThirdPartyBalLabel);
-            Controls.Add(BannerClientBalLabel);
-            Controls.Add(BalanceLabel);
-            Controls.Add(BannerThirdPartyBalLabel);
-            Controls.Add(TotalPmtAdjLabel);
-            Controls.Add(BannerAccBalanceLabel);
-            Controls.Add(BannerTotalPmtLabel);
-            Controls.Add(BannerAccountMrnLabel);
+            Controls.Add(panel1);
             Controls.Add(tabControl1);
             Controls.Add(menuStrip1);
+            ForeColor = System.Drawing.Color.Black;
             Icon = (System.Drawing.Icon)resources.GetObject("$this.Icon");
             MainMenuStrip = menuStrip1;
             Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
@@ -3181,6 +3178,8 @@ namespace LabBilling.Forms
             menuStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)RefreshButton).EndInit();
             dxPointerMenuStrip.ResumeLayout(false);
+            panel1.ResumeLayout(false);
+            panel1.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -3380,7 +3379,6 @@ namespace LabBilling.Forms
         private System.Windows.Forms.TextBox bannerDateOfServiceTextBox;
         private System.Windows.Forms.Label bannerDateOfServiceLabel;
         private System.Windows.Forms.TableLayoutPanel chargeLayoutPanel;
-        private System.Windows.Forms.ToolStripMenuItem generateClientStatementToolStripMenuItem;
         private System.Windows.Forms.DataGridView dxPointerGrid2;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.CheckBox readyToBillCheckbox;
@@ -3406,6 +3404,7 @@ namespace LabBilling.Forms
         private System.Windows.Forms.ToolStripMenuItem changeCreditFlagToolStripMenuItem;
         private System.Windows.Forms.ContextMenuStrip noteTextContextMenu;
         private System.Windows.Forms.ToolStripMenuItem copyToolStripMenuItem;
+        private System.Windows.Forms.Panel panel1;
     }
 }
 

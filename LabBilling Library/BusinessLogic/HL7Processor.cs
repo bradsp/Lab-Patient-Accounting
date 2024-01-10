@@ -54,25 +54,14 @@ namespace LabBilling.Core.BusinessLogic
         public static string StatusToString(Status status)
         {
             string processStatus = null;
-            switch (status)
+            processStatus = status switch
             {
-                case Status.NotProcessed:
-                    processStatus = "N";
-                    break;
-                case Status.Processed:
-                    processStatus = "P";
-                    break;
-                case Status.Failed:
-                    processStatus = "F";
-                    break;
-                case Status.DoNotProcess:
-                    processStatus = "DNP";
-                    break;
-                default:
-                    processStatus = String.Empty;
-                    break;
-            }
-
+                Status.NotProcessed => "N",
+                Status.Processed => "P",
+                Status.Failed => "F",
+                Status.DoNotProcess => "DNP",
+                _ => String.Empty,
+            };
             return processStatus;
         }
 
@@ -80,25 +69,14 @@ namespace LabBilling.Core.BusinessLogic
         {
             string processStatus = null;
 
-            switch (status)
+            processStatus = status switch
             {
-                case "NotProcessed":
-                    processStatus = "N";
-                    break;
-                case "Processed":
-                    processStatus = "P";
-                    break;
-                case "Failed":
-                    processStatus = "F";
-                    break;
-                case "DoNotProcess":
-                    processStatus = "DNP";
-                    break;
-                default:
-                    processStatus = string.Empty;
-                    break;
-            }
-
+                "NotProcessed" => "N",
+                "Processed" => "P",
+                "Failed" => "F",
+                "DoNotProcess" => "DNP",
+                _ => string.Empty,
+            };
             return processStatus;
         }
 
@@ -183,8 +161,7 @@ namespace LabBilling.Core.BusinessLogic
         {
             Log.Instance.Debug($"Parsing message: {message}");
             hl7Message = new j4jayant.HL7.Parser.Message(message);
-            string statusText = string.Empty;
-            StringBuilder errors = new StringBuilder();
+            StringBuilder errors = new();
             Status processStatus;
 
             bool isParsed = false;
@@ -201,6 +178,7 @@ namespace LabBilling.Core.BusinessLogic
 
             if (isParsed)
             {
+                string statusText;
                 //process ADT message
                 if (hl7Message.MessageStructure == "ADT_A04" || hl7Message.MessageStructure == "ADT_A08")
                 {
@@ -228,11 +206,7 @@ namespace LabBilling.Core.BusinessLogic
                 //process MFN message
                 else if (hl7Message.MessageStructure == "MFN_M02")
                 {
-                    //skipping these for now
                     Log.Instance.Trace($"Message type: {hl7Message.MessageStructure} - Control ID: {hl7Message.MessageControlID}");
-                    //processStatus = Status.NotProcessed;
-                    //statusText = String.Empty;
-
                     var result = ProcessMFNMessage();
                     errors = result.errors;
                     statusText = result.statusText;
@@ -260,18 +234,17 @@ namespace LabBilling.Core.BusinessLogic
         {
             Log.Instance.Trace("Entering");
             bool canFile = true;
-            string statusText = string.Empty;
-            StringBuilder errors = new StringBuilder();
+            StringBuilder errors = new();
 
             string[] invalidFacilities = new string[] { "001", "005", "007", "008", "009", "010", "080", "800", "850", "900" };
 
             string facility = hl7Message.GetValue("MSH.4");
 
+            string statusText;
             if (invalidFacilities.Contains(facility))
             {
                 //invalid facility - do not file
                 Log.Instance.Debug($"Invalid facility {facility}");
-                canFile = false;
                 statusText = "Not a valid facility for Lab outreach";
                 return (Status.DoNotProcess, statusText, errors);
             }
@@ -731,16 +704,21 @@ namespace LabBilling.Core.BusinessLogic
 
         private void ParsePV1()
         {
-            accountRecord.ClientMnem = string.IsNullOrEmpty(hl7Message.GetValue("PV1.3.1")) ? hl7Message.GetValue("PV1.3.1") : mappingRepository.GetMappedValue("CLIENT", "CERNER", hl7Message.GetValue("PV1.3.1"));
+            accountRecord.ClientMnem = string.IsNullOrEmpty(hl7Message.GetValue("PV1.3.1")) 
+                ? hl7Message.GetValue("PV1.3.1") 
+                : mappingRepository.GetMappedValue("CLIENT", "CERNER", hl7Message.GetValue("PV1.3.1"));
 
             if(string.IsNullOrEmpty(accountRecord.ClientMnem))
             {
-                accountRecord.ClientMnem = string.IsNullOrEmpty(hl7Message.GetValue("PV1.6.1")) ? hl7Message.GetValue("PV1.6.1") : mappingRepository.GetMappedValue("CLIENT", "CERNER", hl7Message.GetValue("PV1.6.1"));
+                accountRecord.ClientMnem = string.IsNullOrEmpty(hl7Message.GetValue("PV1.6.1")) 
+                    ? hl7Message.GetValue("PV1.6.1") 
+                    : mappingRepository.GetMappedValue("CLIENT", "CERNER", hl7Message.GetValue("PV1.6.1"));
             }
 
             if (string.IsNullOrEmpty(accountRecord.ClientMnem))
             {
-                accountRecord.ClientMnem = string.IsNullOrEmpty(hl7Message.GetValue("PV1.3.4")) ? hl7Message.GetValue("PV1.3.4")
+                accountRecord.ClientMnem = string.IsNullOrEmpty(hl7Message.GetValue("PV1.3.4")) 
+                    ? hl7Message.GetValue("PV1.3.4")
                     : mappingRepository.GetMappedValue("CLIENT", "CERNER", hl7Message.GetValue("PV1.3.4"));
             }
             accountRecord.FinCode = string.IsNullOrEmpty(hl7Message.GetValue("PV1.20"))
@@ -755,7 +733,7 @@ namespace LabBilling.Core.BusinessLogic
             }
 
             accountRecord.Pat.ProviderId = string.IsNullOrEmpty(hl7Message.GetValue("PV1.17.1"))
-                ? hl7Message.GetValue("PV1.17.1")
+               ? hl7Message.GetValue("PV1.17.1")
                : mappingRepository.GetMappedValue("PHY_ID", "CERNER", hl7Message.GetValue("PV1.17.1"));
 
             accountRecord.Pat.Physician = phyRepository.GetByNPI(accountRecord.Pat.ProviderId);
@@ -768,8 +746,10 @@ namespace LabBilling.Core.BusinessLogic
 
             foreach (var dx in dg1Segments)
             {
-                PatDiag patDiag = new PatDiag();
-                patDiag.Code = dx.Fields(3).Value.Replace(".", "");
+                PatDiag patDiag = new()
+                {
+                    Code = dx.Fields(3).Value.Replace(".", "")
+                };
 
                 accountRecord.Pat.Diagnoses.Add(patDiag);
             }
@@ -808,7 +788,9 @@ namespace LabBilling.Core.BusinessLogic
                 {
                     accountRecord.Pat.GuarantorPrimaryPhone = hl7Message.GetValue("GT1.6");
                 }
-                accountRecord.Pat.GuarRelationToPatient = hl7Message.GetValue("GT1.11") != string.Empty ? mappingRepository.GetMappedValue("GUAR_REL", "CERNER", hl7Message.GetValue("GT1.11")) : string.Empty;
+                accountRecord.Pat.GuarRelationToPatient = hl7Message.GetValue("GT1.11") != string.Empty 
+                    ? mappingRepository.GetMappedValue("GUAR_REL", "CERNER", hl7Message.GetValue("GT1.11")) 
+                    : string.Empty;
             }
         }
 
@@ -826,9 +808,10 @@ namespace LabBilling.Core.BusinessLogic
                 if (segIn2.Count >= i + 1)
                     in2 = segIn2[i];
 
-                Ins ins = new Ins();
-
-                ins.Account = accountRecord.AccountNo;
+                Ins ins = new()
+                {
+                    Account = accountRecord.AccountNo
+                };
                 if (in1.Fields(1).Value == "1")
                     ins.Coverage = InsCoverage.Primary;
                 else if (in1.Fields(1).Value == "2")
@@ -913,13 +896,14 @@ namespace LabBilling.Core.BusinessLogic
 
             foreach (var seg in segFT1)
             {
-                ChargeTransaction transaction = new ChargeTransaction();
+                ChargeTransaction transaction = new()
+                {
+                    //string transactionId = hl7Message.GetValue("FT1.2");
+                    //string transactionBatchId = hl7Message.GetValue("FT1.3");
 
-                //string transactionId = hl7Message.GetValue("FT1.2");
-                //string transactionBatchId = hl7Message.GetValue("FT1.3");
-
-                transaction.ServiceDate = new DateTime().ParseHL7Date(seg.Fields(4).Value.Left(8));
-                transaction.Cdm = seg.Fields(7).Components(1).Value;
+                    ServiceDate = new DateTime().ParseHL7Date(seg.Fields(4).Value.Left(8)),
+                    Cdm = seg.Fields(7).Components(1).Value
+                };
 
                 //string cdmDescription = hl7Message.GetValue("FT1.7.2");
 
@@ -937,15 +921,12 @@ namespace LabBilling.Core.BusinessLogic
 
                 chargeTransactions.Add(transaction);
             }
-
-
             //parse PR1 here, if needed
         }
 
 
         private void ParseSTF()
         {
-
             MFNeventCode = hl7Message.GetValue("MFE.2");
 
             phy.LastName = hl7Message.GetValue("STF.3.1");
@@ -1013,7 +994,6 @@ namespace LabBilling.Core.BusinessLogic
 
         public bool SetMessageDoNotProcess(int systemMessageId, string statusMessage)
         {
-
             var message = messagesInboundRepository.GetById(systemMessageId);
 
             message.ProcessFlag = StatusToString(Status.DoNotProcess);

@@ -22,6 +22,7 @@ using LabBilling.Core.Models;
 using LabBilling.Core.DataAccess;
 using LabBilling.Logging;
 using LabBilling.Forms;
+using System.Drawing.Text;
 
 namespace LabBilling.Legacy
 {
@@ -61,6 +62,7 @@ namespace LabBilling.Legacy
         ChkRepository chkRepository = null;
         NumberRepository numberRepository = null;
 
+        public event EventHandler<string> AccountLaunched;
 
         // end of 20120425
         static DataGridViewCell m_celHidden;
@@ -395,6 +397,17 @@ namespace LabBilling.Legacy
 
         }
 
+        private void DGV_RowHeaderClicked(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            DataGridView dgv = sender as DataGridView;
+
+            var (account, error) = FormExtensions.GetDGVAccount(dgv, e.RowIndex);
+            if (!string.IsNullOrEmpty(account))
+                AccountLaunched?.Invoke(this, account);
+            else
+                MessageBox.Show(error, "Account not Launched");
+        }
+
         public Posting835(string[] args)
         {
             InitializeComponent();
@@ -424,14 +437,10 @@ namespace LabBilling.Legacy
             }
 
 
-            dgvEOB.RowHeaderMouseDoubleClick +=
-                    new System.Windows.Forms.DataGridViewCellMouseEventHandler(FormExtensions.LaunchAcc_EventHandler);
-            dgvProcessed.RowHeaderMouseDoubleClick +=
-                    new System.Windows.Forms.DataGridViewCellMouseEventHandler(FormExtensions.LaunchAcc_EventHandler);
-            dgvNotProcessed.RowHeaderMouseDoubleClick +=
-                    new System.Windows.Forms.DataGridViewCellMouseEventHandler(FormExtensions.LaunchAcc_EventHandler);
-            dgvDenieds.RowHeaderMouseDoubleClick +=
-                    new System.Windows.Forms.DataGridViewCellMouseEventHandler(FormExtensions.LaunchAcc_EventHandler);
+            dgvEOB.RowHeaderMouseDoubleClick += DGV_RowHeaderClicked;
+            dgvProcessed.RowHeaderMouseDoubleClick += DGV_RowHeaderClicked;
+            dgvNotProcessed.RowHeaderMouseDoubleClick += DGV_RowHeaderClicked;
+            dgvDenieds.RowHeaderMouseDoubleClick += DGV_RowHeaderClicked;
 
             m_ERR = new ERR(new string[] { Program.AppEnvironment.ApplicationParameters.DatabaseEnvironment != "Production" ? "/TEST" : "/LIVE", m_strServer, m_strDatabase }); // ERR class needs /LIVE or /TEST to be the first argument in the command line.
             // rgc/wdk 20120425 moved to remove the spid overload in sql.

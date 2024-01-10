@@ -1,39 +1,34 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using LabBilling.Core.Models;
 using LabBilling.Core.DataAccess;
 using LabBilling.Logging;
-using System.Data.Common;
 using System.Collections;
-using PetaPoco;
-using PetaPoco.Providers;
 using RFClassLibrary;
 using System.Threading;
-using MCL;
 
 namespace LabBilling.Core.BusinessLogic
 {
     public sealed class ClaimGenerator : DataAccess.Database
     {
 
-        ArrayList m_alNameSuffix = new ArrayList() { "JR", "SR", "I", "II", "III", "IV", "V", "VI", "VII" };
+        readonly ArrayList NameSuffixList = new() { "JR", "SR", "I", "II", "III", "IV", "V", "VI", "VII" };
 
-        public string propProductionEnvironment { get; set; }
+        public string PropProductionEnvironment { get; set; }
         private string _connectionString;
         private IAppEnvironment _appEnvironment;
 
-        private AccountRepository accountRepository;
-        private PatRepository patRepository;
-        private ChrgRepository chrgRepository;
-        private ChkRepository chkRepository;
+        private readonly AccountRepository accountRepository;
+        private readonly PatRepository patRepository;
+        private readonly ChrgRepository chrgRepository;
+        private readonly ChkRepository chkRepository;
         private List<ClaimData> claims;
         private Billing837 billing837;
-        private NumberRepository numberRepository;
-        private BillingActivityRepository billingActivityRepository;
-        private BillingBatchRepository billingBatchRepository;
+        private readonly NumberRepository numberRepository;
+        private readonly BillingActivityRepository billingActivityRepository;
+        private readonly BillingBatchRepository billingBatchRepository;
 
         public ClaimGenerator(IAppEnvironment appEnvironment) : base(appEnvironment.ConnectionString)
         {
@@ -53,7 +48,7 @@ namespace LabBilling.Core.BusinessLogic
             _appEnvironment.ApplicationParameters = appEnvironment.ApplicationParameters;
 
 
-            propProductionEnvironment = appEnvironment.ApplicationParameters.GetProductionEnvironment();
+            PropProductionEnvironment = appEnvironment.ApplicationParameters.GetProductionEnvironment();
 
             accountRepository = new AccountRepository(appEnvironment);
             patRepository = new PatRepository(appEnvironment);
@@ -73,14 +68,16 @@ namespace LabBilling.Core.BusinessLogic
 
             ProgressReportModel report = new ProgressReportModel();
             //compile list of accounts to have claims generated
-            billing837 = new Billing837(_connectionString, propProductionEnvironment);
+            billing837 = new Billing837(PropProductionEnvironment);
             string batchSubmitterID = _appEnvironment.ApplicationParameters.FederalTaxId;
 
-            BillingBatch billingBatch = new BillingBatch();
-            billingBatch.RunDate = DateTime.Today;
-            billingBatch.RunUser = OS.GetUserName();
-            billingBatch.ClaimCount = 0;
-            billingBatch.TotalBilled = 0;
+            BillingBatch billingBatch = new()
+            {
+                RunDate = DateTime.Today,
+                RunUser = OS.GetUserName(),
+                ClaimCount = 0,
+                TotalBilled = 0
+            };
 
             var batch = billingBatchRepository.Add(billingBatch);
 
@@ -227,7 +224,7 @@ namespace LabBilling.Core.BusinessLogic
 
         public void RegenerateBatch(double batchNo)
         {
-            billing837 = new Billing837(_connectionString, propProductionEnvironment);
+            billing837 = new Billing837(PropProductionEnvironment);
             var batch = billingBatchRepository.GetBatch(batchNo);
             string batchSubmitterID = _appEnvironment.ApplicationParameters.FederalTaxId; 
             string interchangeControlNumber = string.Format("{0:D9}", int.Parse(string.Format("{0}", batch.Batch)));

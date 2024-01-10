@@ -57,7 +57,7 @@ namespace LabBilling.Core.DataAccess
         public override bool Update(Cdm table)
         {
             //update all fee schedules as well
-            CdmDetailRepository cdmDetailRepository = new CdmDetailRepository(_appEnvironment);
+            CdmDetailRepository cdmDetailRepository = new CdmDetailRepository(AppEnvironment);
 
             foreach(var cd in table.CdmFeeSchedule1)
             {
@@ -86,7 +86,7 @@ namespace LabBilling.Core.DataAccess
 
         public override object Add(Cdm table)
         {
-            CdmDetailRepository cdmDetailRepository = new CdmDetailRepository(_appEnvironment);
+            CdmDetailRepository cdmDetailRepository = new CdmDetailRepository(AppEnvironment);
             //add all fee schedules as well
             foreach (var cd in table.CdmFeeSchedule1)
             {
@@ -114,7 +114,7 @@ namespace LabBilling.Core.DataAccess
 
         public Cdm GetCdm(string cdm, bool includeDeleted = false)
         {
-            CdmDetailRepository cdmDetailRepository = new CdmDetailRepository(_appEnvironment);
+            CdmDetailRepository cdmDetailRepository = new CdmDetailRepository(AppEnvironment);
 
             string cdmRealName = this.GetRealColumn(nameof(Cdm.ChargeId));
             string isDeletedRealName = this.GetRealColumn(nameof(Cdm.IsDeleted));
@@ -142,7 +142,7 @@ namespace LabBilling.Core.DataAccess
         {
             List<CdmDetail> cdmDetails = new List<CdmDetail>();
 
-            CdmDetailRepository cdmDetailRepository = new CdmDetailRepository(_appEnvironment);
+            CdmDetailRepository cdmDetailRepository = new CdmDetailRepository(AppEnvironment);
 
             cdmDetails = cdmDetailRepository.GetByCpt(cptId);
 

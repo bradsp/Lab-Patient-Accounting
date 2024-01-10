@@ -261,7 +261,7 @@ namespace LabBillingConsole
 
             //claimGenerator.CompileClaim("L17429213");
 
-            Billing837 billing837 = new Billing837(_appEnvironment.ConnectionString, "");
+            Billing837 billing837 = new Billing837(_appEnvironment.ApplicationParameters.GetProductionEnvironment());
 
         }
 

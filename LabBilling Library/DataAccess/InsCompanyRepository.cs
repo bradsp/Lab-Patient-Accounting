@@ -34,7 +34,7 @@ namespace LabBilling.Core.DataAccess
                 //record.State = strState;
                 //record.Zip = strZip;
 
-                MappingRepository mappingRepository = new MappingRepository(_appEnvironment);
+                MappingRepository mappingRepository = new MappingRepository(AppEnvironment);
 
                 record.Mappings = mappingRepository.GetMappingsBySendingValue("INS_CODE", record.InsuranceCode).ToList();
             }

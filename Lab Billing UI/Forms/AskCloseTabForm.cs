@@ -10,13 +10,10 @@ namespace LabBilling.Forms
         public List<string> OpenTabs { get; set; }
         public string SelectedForm { get; set; }
 
-        public AskCloseTabForm()
+        public AskCloseTabForm(List<string> openTabs)
         {
             InitializeComponent();
-        }
 
-        public AskCloseTabForm(List<string> openTabs) : this()
-        {
             OpenTabs = openTabs;
             
         }

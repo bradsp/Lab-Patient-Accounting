@@ -71,11 +71,9 @@ namespace LabBilling.Core
         /// Initiate instance of Billing837 class.
         /// </summary>
         /// <param name="connectionString"></param>
-        public Billing837(string connectionString, string productionEnvironment)
+        public Billing837(string productionEnvironment)
         {
             ProductionEnvironment = productionEnvironment;
-
-
         }
 
         public EdiDocument ediDocument;
@@ -124,8 +122,6 @@ namespace LabBilling.Core
             string file_location,
             ClaimType claimType)
         {
-            //EdiDocument ediDocument;
-
             this.claimType = claimType;
 
             ediDocument = new EdiDocument();
@@ -202,21 +198,15 @@ namespace LabBilling.Core
             return ediDocument.ToString();
         }
 
-
         private string Build837Claim()
         {
 
-            switch (claim.ClaimType)
+            this.claimType = claim.ClaimType switch
             {
-                case Core.ClaimType.Institutional:
-                    this.claimType = ClaimType.Institutional;
-                    break;
-                case Core.ClaimType.Professional:
-                    this.claimType = ClaimType.Professional;
-                    break;
-                default:
-                    throw new InvalidParameterValueException("ClaimType does not contain a valid value.");
-            }
+                Core.ClaimType.Institutional => (ClaimType?)ClaimType.Institutional,
+                Core.ClaimType.Professional => (ClaimType?)ClaimType.Professional,
+                _ => throw new InvalidParameterValueException("ClaimType does not contain a valid value."),
+            };
 
             int hlCount = 1;
             int segmentCount = 0;

@@ -49,7 +49,7 @@ namespace LabBilling.Core.DataAccess
         public Client GetClient(string clientMnem)
         {
             Log.Instance.Debug($"Entering - {clientMnem}");
-            MappingRepository mappingRepository = new MappingRepository(_appEnvironment);
+            MappingRepository mappingRepository = new MappingRepository(AppEnvironment);
 
             if (clientMnem == null)
             {
@@ -75,7 +75,7 @@ namespace LabBilling.Core.DataAccess
 
             if (string.IsNullOrEmpty(table.BillMethod))
                 table.BillMethod = "PER ACCOUNT";
-            AccountRepository accountRepository = new AccountRepository(_appEnvironment);
+            AccountRepository accountRepository = new AccountRepository(AppEnvironment);
 
             var account = accountRepository.GetByAccount(table.ClientMnem, true);
 
@@ -173,8 +173,8 @@ namespace LabBilling.Core.DataAccess
         public List<ClientStatementDetailModel> GetStatementDetails(string clientMnem, DateTime asOfDate)
         {
 
-            ChkRepository chkRepository = new ChkRepository(_appEnvironment);
-            ChrgRepository chrgRepository = new ChrgRepository(_appEnvironment);
+            ChkRepository chkRepository = new ChkRepository(AppEnvironment);
+            ChrgRepository chrgRepository = new ChrgRepository(AppEnvironment);
 
             var charges = chrgRepository.GetByAccount(clientMnem, true, true, asOfDate, false);
 
@@ -257,7 +257,7 @@ namespace LabBilling.Core.DataAccess
             Account account;
 
             //check to see if client account exists
-            AccountRepository accdb = new AccountRepository(_appEnvironment);
+            AccountRepository accdb = new AccountRepository(AppEnvironment);
             account = accdb.GetByAccount(clientMnem);
 
             if (account == null)

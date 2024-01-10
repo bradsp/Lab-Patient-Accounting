@@ -14,14 +14,7 @@ namespace LabBilling.Core.DataAccess
         {
             Log.Instance.Trace("Entering");
 
-            //SqlCommand cmdSelectAcc = new SqlCommand(
-            //string.Format("select account_id as [account], * from dbo.patbill_acc  " +
-            //"where batch_id = '{0}' " +
-            //" and nullif(date_sent,'') is null " +
-            //"order by statement_number, record_cnt_acct ", strBatchId)
-            //, conn);
-
-            var sql = PetaPoco.Sql.Builder;
+            var sql = Sql.Builder;
 
             sql.Where($"{GetRealColumn(nameof(PatientStatementAccount.BatchId))} = @0",
                 new SqlParameter() { SqlDbType = System.Data.SqlDbType.VarChar, Value = batch });
@@ -36,7 +29,7 @@ namespace LabBilling.Core.DataAccess
         {
             Log.Instance.Trace("Entering");
 
-            var sql = PetaPoco.Sql.Builder;
+            var sql = Sql.Builder;
 
             sql.Where($"{GetRealColumn(nameof(PatientStatementAccount.AccountId))} = @0",
                 new SqlParameter() { SqlDbType = System.Data.SqlDbType.VarChar, Value = account });

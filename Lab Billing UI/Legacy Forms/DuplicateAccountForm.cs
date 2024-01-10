@@ -11,7 +11,7 @@ using LabBilling.Forms;
 
 namespace LabBilling.Legacy
 {
-    public partial class FrmDupAcc : BaseForm
+    public partial class DuplicateAccountsForm : BaseForm
     {
         ERR m_ERR;
         R_fin m_rFin; // wdk 20120214 move all local recordset to member level and initialize once in load.
@@ -23,7 +23,7 @@ namespace LabBilling.Legacy
 
         private string m_strServer;
         private string m_strDatabase;
-        public FrmDupAcc(string[] strArgs)
+        public DuplicateAccountsForm(string[] strArgs)
         {
             if (strArgs.GetUpperBound(0) == 1)
             {

@@ -12,7 +12,7 @@ using WinFormsLibrary;
 
 namespace LabBilling.ReportByInsuranceCompany
 {
-    public partial class frmReport : BaseForm
+    public partial class InsuranceReportForm : BaseForm
     {
         CAcc m_rAcc = null;
         DataTable m_dtDataView = null;
@@ -29,7 +29,9 @@ namespace LabBilling.ReportByInsuranceCompany
         ERR m_ERR;
         string m_strWhere;
 
-        public frmReport(string[] args)
+        public event EventHandler<string> AccountLaunched;
+
+        public InsuranceReportForm(string[] args)
         {
             // wdk 20090403 in some applications we are using 
             //string[] strCline = Environment.GetCommandLineArgs(); to get the command line arguments 
@@ -54,8 +56,8 @@ namespace LabBilling.ReportByInsuranceCompany
                 //Environment.Exit(13);
                 return;
             }
-            m_strDBServer = args[0].Remove(0,1);
-            m_strDBase = args[1].Remove(0,1);
+            m_strDBServer = args[0].Contains('/') ? args[0].Remove(0,1) : args[0];
+            m_strDBase = args[1].Contains('/') ? args[1].Remove(0,1) : args[1];
             // create recordsets
             m_rAcc = new CAcc(m_strDBServer, m_strDBase, ref m_ERR);
 
@@ -165,15 +167,9 @@ namespace LabBilling.ReportByInsuranceCompany
 
         void dgReportInsurance_RowHeaderMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
         {
-            //throw new NotImplementedException();
-            //LaunchAcc la = new LaunchAcc(m_strDBase);
-            
-            //la.LaunchAccount(dgvReportInsurance["account", e.RowIndex].Value.ToString());
-
             string strAccount = dgvReportInsurance["account", e.RowIndex].Value.ToString();
-            AccountForm frm = new AccountForm(strAccount, this.ParentForm);
-            frm.Show();
 
+            AccountLaunched?.Invoke(this, strAccount);
         }
 
         private void CreateDateTimes()
@@ -188,8 +184,6 @@ namespace LabBilling.ReportByInsuranceCompany
 
         private void tsbtnCreateReport_Click(object sender, EventArgs e)
         {
-            
-
             bool bWrite = m_ERR.m_Logfile.WriteLogFile("Entering Report_Click");
             //dgReportInsurance.Rows.Clear();
             // wdk 20120521 removed "","","", as unnecessary the three dates were removed

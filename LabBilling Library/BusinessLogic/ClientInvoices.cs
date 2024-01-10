@@ -184,23 +184,26 @@ namespace LabBilling.Core.BusinessLogic
         public void GenerateInvoice(string clientMnemonic, DateTime throughDate)
         {
             Log.Instance.Trace($"Entering - client {clientMnemonic} thrudate {throughDate}");
-            if (clientMnemonic == null || throughDate == null)
-                throw new ArgumentNullException();
+            if (clientMnemonic == null)
+                throw new ArgumentNullException(nameof(clientMnemonic));
+            
             Account acc = accdb.GetByAccount(clientMnemonic);
             if (acc == null)
                 clientdb.NewClient(clientMnemonic);
 
-            InvoiceModel invoiceModel = new InvoiceModel();
-            invoiceModel.StatementType = InvoiceModel.StatementTypeEnum.Invoice;
-            invoiceModel.ThroughDate = throughDate;
+            InvoiceModel invoiceModel = new()
+            {
+                StatementType = InvoiceModel.StatementTypeEnum.Invoice,
+                ThroughDate = throughDate,
 
-            invoiceModel.BillingCompanyName = _appEnvironment.ApplicationParameters.InvoiceCompanyName; 
-            invoiceModel.BillingCompanyAddress = _appEnvironment.ApplicationParameters.InvoiceCompanyAddress; 
-            invoiceModel.BillingCompanyCity = _appEnvironment.ApplicationParameters.InvoiceCompanyCity; 
-            invoiceModel.BillingCompanyState = _appEnvironment.ApplicationParameters.InvoiceCompanyCity; 
-            invoiceModel.BillingCompanyZipCode = _appEnvironment.ApplicationParameters.InvoiceCompanyZipCode; 
-            invoiceModel.BillingCompanyPhone = _appEnvironment.ApplicationParameters.InvoiceCompanyPhone; 
-            invoiceModel.ImageFilePath = _appEnvironment.ApplicationParameters.InvoiceLogoImagePath; 
+                BillingCompanyName = _appEnvironment.ApplicationParameters.InvoiceCompanyName,
+                BillingCompanyAddress = _appEnvironment.ApplicationParameters.InvoiceCompanyAddress,
+                BillingCompanyCity = _appEnvironment.ApplicationParameters.InvoiceCompanyCity,
+                BillingCompanyState = _appEnvironment.ApplicationParameters.InvoiceCompanyCity,
+                BillingCompanyZipCode = _appEnvironment.ApplicationParameters.InvoiceCompanyZipCode,
+                BillingCompanyPhone = _appEnvironment.ApplicationParameters.InvoiceCompanyPhone,
+                ImageFilePath = _appEnvironment.ApplicationParameters.InvoiceLogoImagePath
+            };
 
             NumberRepository numberdb = new NumberRepository(_appEnvironment);
 
@@ -240,7 +243,7 @@ namespace LabBilling.Core.BusinessLogic
 
                 List<InvoiceChargeView> charges = chrgdb.GetInvoiceCharges(account.AccountNo, clientMnemonic);
 
-                InvoiceDetailModel invoiceDetail = new InvoiceDetailModel()
+                InvoiceDetailModel invoiceDetail = new()
                 {
                     Account = account.AccountNo,
                     PatientName = account.PatientName,

@@ -31,7 +31,7 @@ namespace LabBilling.Core.DataAccess
                     new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = clientMnem });
             }
 
-            CdmRepository cdmRepository = new CdmRepository(_appEnvironment);
+            CdmRepository cdmRepository = new CdmRepository(AppEnvironment);
 
             foreach(ClientDiscount clientDiscount in results)
             {

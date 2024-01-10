@@ -1,6 +1,6 @@
 ﻿namespace LabBilling.Legacy
 {
-    partial class frmReports
+    partial class MonthlyReportsForm
     {
         /// <summary>
         /// Required designer variable.
@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmReports));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MonthlyReportsForm));
             this.tsMain = new System.Windows.Forms.ToolStrip();
             this.tsddbtnUserDefined = new System.Windows.Forms.ToolStripSplitButton();
             this.tscbCPT4s = new System.Windows.Forms.ToolStripComboBox();

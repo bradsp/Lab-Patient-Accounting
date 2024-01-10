@@ -204,7 +204,7 @@ namespace MCL
                 m_Reob.propDBConnection.Open();
 
             }
-            if (m_Transaction.TransactionInformation.Status != TransactionStatus.Active)
+            if (m_Transaction?.TransactionInformation.Status != TransactionStatus.Active)
             {
                 m_Reob.propDBConnection.EnlistTransaction(m_Transaction);
             }
@@ -583,7 +583,7 @@ namespace MCL
              */
             m_Reob.m_strEobPrintDate = DateTime.Now.ToString("G");
             strWhere = string.Format("rowguid  = '{0}' ",
-                                        m_Reob.m_DataSet.Tables[m_Reob.propTable.ToString()].Rows[m_Reob.m_CurrentRecordIndex]["rowguid"].ToString());
+                                        m_Reob.m_DataSet.Tables[m_Reob.propTable.ToString()]?.Rows[m_Reob.m_CurrentRecordIndex]["rowguid"].ToString());
             m_Reob.m_strEobPrintDate = DateTime.Now.ToString();
             strSQL = string.Format("UPDATE {0} SET eob_print_date = '{1}' where {2}",
                                          m_Reob.propTable.ToString(),

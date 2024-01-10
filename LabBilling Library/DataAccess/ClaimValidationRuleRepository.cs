@@ -32,7 +32,7 @@ namespace LabBilling.Core.DataAccess
 
         public override bool Save(ClaimValidationRule table)
         {
-            ClaimValidationRuleCriterionRepository criterionRepository = new ClaimValidationRuleCriterionRepository(_appEnvironment);
+            ClaimValidationRuleCriterionRepository criterionRepository = new ClaimValidationRuleCriterionRepository(AppEnvironment);
 
             //if RuleId == 0 - add new rule, otherwise update       
             if(table.RuleId == 0)

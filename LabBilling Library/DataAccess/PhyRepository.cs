@@ -21,8 +21,8 @@ namespace LabBilling.Core.DataAccess
         public Phy GetByNPI(string npi)
         {
             Log.Instance.Trace($"Entering - npi {npi}");
-            Phy phy = new Phy();
-            Pth pth = new Pth();
+            Phy phy = new();
+            Pth pth = new();
 
             if (!string.IsNullOrEmpty(npi))
                 phy = dbConnection.SingleOrDefault<Phy>($"where {GetRealColumn(nameof(Phy.NpiId))} = @0",

@@ -24,7 +24,7 @@ namespace LabBilling.Core.DataAccess
         {
             Log.Instance.Trace("Entering");
 
-            AccountRepository accountRepository = new AccountRepository(_appEnvironment);
+            AccountRepository accountRepository = new AccountRepository(AppEnvironment);
 
             var sql = PetaPoco.Sql.Builder
                 .Where($"{GetRealColumn(nameof(ChkBatchDetail.Batch))} = @0", new SqlParameter() { SqlDbType = SqlDbType.Int, Value = batch })

@@ -24,7 +24,6 @@ namespace LabBilling.Core.DataAccess
         private readonly AccountValidationStatusRepository accountValidationStatusRepository;
         private readonly LMRPRuleRepository lmrpRuleRepository;
         private readonly FinRepository finRepository;
-        //private readonly SystemParametersRepository systemParametersRepository;
         private readonly AccountLmrpErrorRepository accountLmrpErrorRepository;
         private readonly CdmRepository cdmRepository;
         private readonly GlobalBillingCdmRepository globalBillingCdmRepository;
@@ -56,7 +55,6 @@ namespace LabBilling.Core.DataAccess
             accountLmrpErrorRepository = new AccountLmrpErrorRepository(appEnvironment);
             lmrpRuleRepository = new LMRPRuleRepository(appEnvironment);
             finRepository = new FinRepository(appEnvironment);
-            //systemParametersRepository = new SystemParametersRepository(appEnvironment);
             cdmRepository = new CdmRepository(appEnvironment);
             globalBillingCdmRepository = new GlobalBillingCdmRepository(appEnvironment);
         }
@@ -102,7 +100,7 @@ namespace LabBilling.Core.DataAccess
                 DateTime questEndDate = new DateTime(2020, 5, 31);
                 DateTime arbitraryEndDate = new DateTime(2016, 12, 31);
 
-                outpBillStartDate = _appEnvironment.ApplicationParameters.OutpatientBillStart;
+                outpBillStartDate = AppEnvironment.ApplicationParameters.OutpatientBillStart;
 
                 if (outpBillStartDate == DateTime.MinValue)
                 {
@@ -595,7 +593,7 @@ namespace LabBilling.Core.DataAccess
             string oldFinCode = table.FinCode;
 
             //check that newFincode is a valid fincode
-            FinRepository finRepository = new FinRepository(_appEnvironment);
+            FinRepository finRepository = new FinRepository(AppEnvironment);
 
             Fin newFin = finRepository.GetFin(newFinCode);
             Fin oldFin = finRepository.GetFin(oldFinCode);
@@ -664,7 +662,7 @@ namespace LabBilling.Core.DataAccess
 
             try
             {
-                ClientRepository clientRepository = new ClientRepository(_appEnvironment);
+                ClientRepository clientRepository = new ClientRepository(AppEnvironment);
                 Client oldClient = clientRepository.GetClient(oldClientMnem);
                 Client newClient = clientRepository.GetClient(newClientMnem);
 
@@ -859,8 +857,8 @@ namespace LabBilling.Core.DataAccess
             }
 
             var chrgsToUpdate = charges.Where(x => x.IsCredited == false &&
-                (x.ClientMnem != _appEnvironment.ApplicationParameters.PathologyGroupClientMnem ||
-                string.IsNullOrEmpty(_appEnvironment.ApplicationParameters.PathologyGroupClientMnem))
+                (x.ClientMnem != AppEnvironment.ApplicationParameters.PathologyGroupClientMnem ||
+                string.IsNullOrEmpty(AppEnvironment.ApplicationParameters.PathologyGroupClientMnem))
                 && x.FinancialType == fin.FinClass).ToList();
 
             foreach (var chrg in chrgsToUpdate)
@@ -998,7 +996,7 @@ namespace LabBilling.Core.DataAccess
 
 
 
-            if (_appEnvironment.ApplicationParameters.PathologyGroupBillsProfessional)
+            if (AppEnvironment.ApplicationParameters.PathologyGroupBillsProfessional)
             {
                 //check for global billing cdm - if it is, change client to Pathology Group, fin to Y, and get appropriate prices
                 var gb = globalBillingCdmRepository.GetCdm(cdm);
@@ -1006,7 +1004,7 @@ namespace LabBilling.Core.DataAccess
                 if (gb != null && accData.ClientMnem != pthExceptionClient)
                 {
                     fin = finRepository.GetFin("Y") ?? throw new ApplicationException($"Fin code Y not found error {accData.AccountNo}");
-                    chargeClient = clientRepository.GetClient(_appEnvironment.ApplicationParameters.PathologyGroupClientMnem);
+                    chargeClient = clientRepository.GetClient(AppEnvironment.ApplicationParameters.PathologyGroupClientMnem);
                 }
             }
 
@@ -1457,14 +1455,14 @@ namespace LabBilling.Core.DataAccess
             Log.Instance.Trace($"Entering");
 
             (string propertyName, AccountSearchRepository.operation oper, string searchText)[] parameters = {
-                (nameof(AccountSearch.ServiceDate), AccountSearchRepository.operation.LessThanOrEqual, DateTime.Today.AddDays((_appEnvironment.ApplicationParameters.BillingInitialHoldDays)*-1).ToShortDateString()),
+                (nameof(AccountSearch.ServiceDate), AccountSearchRepository.operation.LessThanOrEqual, DateTime.Today.AddDays((AppEnvironment.ApplicationParameters.BillingInitialHoldDays)*-1).ToShortDateString()),
                 (nameof(AccountSearch.Status), AccountSearchRepository.operation.Equal, AccountStatus.New),
                 (nameof(AccountSearch.FinCode), AccountSearchRepository.operation.NotEqual, "Y"),
                 (nameof(AccountSearch.FinCode), AccountSearchRepository.operation.NotEqual, clientFinCode),
                 (nameof(AccountSearch.FinCode), AccountSearchRepository.operation.NotEqual, "E")
             };
 
-            AccountSearchRepository accountSearchRepository = new AccountSearchRepository(_appEnvironment);
+            AccountSearchRepository accountSearchRepository = new AccountSearchRepository(AppEnvironment);
 
             var accounts = accountSearchRepository.GetBySearch(parameters).ToList();
 

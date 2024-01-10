@@ -9,13 +9,13 @@ using LabBilling.ReportByInsuranceCompany;
 using System.Linq;
 using Opulos.Core.UI;
 using LabBilling.Core.BusinessLogic;
-using System.Threading.Tasks;
 using System.Threading;
 using Application = System.Windows.Forms.Application;
 using NLog.Config;
 using NLog.Targets;
 using NLog;
 using System.Runtime.InteropServices;
+using System.Collections.Generic;
 
 
 /*
@@ -40,6 +40,8 @@ namespace LabBilling
         private Label claimProgressStatusLabel;
         private CancellationTokenSource cancellationToken;
         private TableLayoutPanel tlpRecentAccounts;
+        private List<UserProfile> recentAccounts;
+        private List<Account> recentAccountsByAccount;
 
         private const int WM_SETREDRAW = 11;
         [DllImport("user32.dll")]
@@ -61,12 +63,21 @@ namespace LabBilling
 
             panel1.BackColor = Program.AppEnvironment.WindowBackgroundColor;
             mdiTabControl.Parent.BackColor = Program.AppEnvironment.WindowBackgroundColor;
-            
+
 
             userProfile = new UserProfileRepository(Program.AppEnvironment);
             accountRepository = new AccountRepository(Program.AppEnvironment);
             systemParametersRepository = new SystemParametersRepository(Program.AppEnvironment);
             accordion = new Accordion();
+
+            Program.AppEnvironment.ApplicationParameters = systemParametersRepository.LoadParameters();
+
+            recentAccounts = userProfile.GetRecentAccount(Program.LoggedInUser.UserName).ToList();
+            recentAccountsByAccount = new();
+            foreach (UserProfile up in recentAccounts)
+            {
+                recentAccountsByAccount.Add(accountRepository.GetByAccount(up.ParameterData, true));
+            }
 
         }
 
@@ -117,6 +128,29 @@ namespace LabBilling
 
         private void NewForm(Form childForm)
         {
+            if(MdiChildren.Length >= Program.AppEnvironment.ApplicationParameters.TabsOpenLimit)
+            {
+                AskCloseTabForm askCloseTab = new(MdiChildren.Select(x => x.Text).ToList());
+                if(askCloseTab.ShowDialog() == DialogResult.OK)
+                {
+                    var result = askCloseTab.SelectedForm;
+                    try
+                    {
+                        MdiChildren.Where(x => x.Text == result).First().Close();
+                    }
+                    catch(Exception ex)
+                    {
+                        Log.Instance.Error(ex, "Error closing tab.");
+                        MessageBox.Show("Error closing tab. Contact your administrator.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+                }
+                else
+                {
+                    return;                    
+                }
+            }
+
             childForm.MdiParent = this;
             childForm.TextChanged += ChildForm_TextChanged;
             childForm.Show();
@@ -196,8 +230,10 @@ namespace LabBilling
             }
         }
 
-        private async void MainForm_Load(object sender, EventArgs e)
+        private void MainForm_Load(object sender, EventArgs e)
         {
+            this.WindowState = FormWindowState.Minimized;
+
             Log.Instance.Info($"Launching MainForm");
 
             #region user authentication
@@ -210,24 +246,22 @@ namespace LabBilling
             }
             #endregion
 
-            await LoadSideMenu();
+            LoadSideMenu();
 
             NewForm(new DashboardForm());
 
             //enable menu items based on permissions
             systemAdministrationToolStripMenuItem.Visible = Program.LoggedInUser.IsAdministrator;
             UpdateMenuAccess();
-
+            this.WindowState = FormWindowState.Maximized;
+            this.Focus();
         }
 
-        private async Task LoadSideMenu()
+        private void LoadSideMenu()
         {
             #region load accordion menu
 
-            Program.AppEnvironment.ApplicationParameters = systemParametersRepository.LoadParameters();
-
             //recent accounts section
-            var recentAccounts = userProfile.GetRecentAccount(Program.LoggedInUser.UserName).ToList();
 
             tlpRecentAccounts = new TableLayoutPanel { Dock = DockStyle.Fill };
             tlpRecentAccounts.RowCount = recentAccounts.Count;
@@ -248,12 +282,11 @@ namespace LabBilling
             if (!Program.AppEnvironment.ApplicationParameters.AllowPaymentAdjustmentEntry)
                 this.Text += " | Pmt/Adj entry disabled";
 
-            foreach (UserProfile up in recentAccounts)
+            foreach (var acc in recentAccountsByAccount)
             {
-                var ar = await accountRepository.GetByAccountAsync(up.ParameterData, true);
-                if (ar != null)
+                if (acc != null)
                 {
-                    LinkLabel a1 = new LinkLabel { Text = ar.PatFullName, Tag = up.ParameterData };
+                    LinkLabel a1 = new() { Text = acc.PatFullName, Tag = acc.AccountNo };
                     a1.LinkClicked += new LinkLabelLinkClickedEventHandler(RecentLabelClicked);
                     tlpRecentAccounts.Controls.Add(a1);
                     a1.Dock = DockStyle.Fill;
@@ -433,7 +466,7 @@ namespace LabBilling
 
         private void monthlyReportsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            frmReports frm = new frmReports(Program.AppEnvironment.GetArgs());
+            MonthlyReportsForm frm = new(Program.AppEnvironment.GetArgs());
             frm.AccountLaunched += OnAccountLaunched;
             NewForm(frm);
         }
@@ -498,13 +531,21 @@ namespace LabBilling
 
 
         private void duplicateAccountsToolStripMenuItem_Click(object sender, EventArgs e)
-            => NewForm(new FrmDupAcc(Helper.GetArgs()));
+            => NewForm(new DuplicateAccountsForm(Helper.GetArgs()));
 
         private void reportByInsuranceCompanyToolStripMenuItem_Click(object sender, EventArgs e)
-            => NewForm(new frmReport(Helper.GetArgs()));
+        {
+            InsuranceReportForm frm = new InsuranceReportForm(Program.AppEnvironment.GetArgs());
+            frm.AccountLaunched += OnAccountLaunched;
+            NewForm(frm);
+        }
 
         private void posting835RemitToolStripMenuItem_Click(object sender, EventArgs e)
-            => NewForm(new Legacy.Posting835(Helper.GetArgs()));
+        {
+            Posting835 frm = new Posting835(Program.AppEnvironment.GetArgs());
+            frm.AccountLaunched += OnAccountLaunched;
+            NewForm(frm);
+        }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
@@ -576,8 +617,7 @@ namespace LabBilling
                 }
                 else
                 {
-                    TabPage tp = this.ActiveMdiChild.Tag as TabPage;
-                    if (tp != null)
+                    if (this.ActiveMdiChild.Tag is TabPage tp)
                         mdiTabControl.SelectedTab = tp;
                 }
 

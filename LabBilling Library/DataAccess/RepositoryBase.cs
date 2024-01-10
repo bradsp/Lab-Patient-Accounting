@@ -8,6 +8,7 @@ using System.Reflection;
 using PetaPoco;
 using System.Linq.Expressions;
 using RFClassLibrary;
+using System.ComponentModel;
 
 namespace LabBilling.Core.DataAccess
 {
@@ -25,8 +26,11 @@ namespace LabBilling.Core.DataAccess
         /// Contains error messages as a result of actions.
         /// </summary>
         public string Errors { get; internal set; }
-        protected IAppEnvironment _appEnvironment { get; set; }
+        protected IAppEnvironment AppEnvironment { get; set; }
 
+        [Category("Action")] public event EventHandler<RepositoryEventArgs<TPoco>> RecordUpdated;
+        [Category("Action")] public event EventHandler<RepositoryEventArgs<TPoco>> RecordAdded;
+        [Category("Action")] public event EventHandler<RepositoryEventArgs<TPoco>> RecordDeleted;
 
         public RepositoryBase(IAppEnvironment environment) : base(environment.ConnectionString)
         {
@@ -34,7 +38,7 @@ namespace LabBilling.Core.DataAccess
             if (!environment.EnvironmentValid)
                 throw new ApplicationException("AppEnvironment not valid.");
 
-            _appEnvironment = environment;
+            AppEnvironment = environment;
 
             dbConnection.ExceptionThrown += DbConnection_ExceptionThrown;
             dbConnection.ConnectionOpened += DbConnection_ConnectionOpened;
@@ -101,6 +105,11 @@ namespace LabBilling.Core.DataAccess
                 object identity = dbConnection.Insert(table);
                 Log.Instance.Debug(dbConnection.LastSQL.ToString());
                 Log.Instance.Debug(dbConnection.LastArgs.ToString());
+                RecordAdded?.Invoke(this, new RepositoryEventArgs<TPoco>
+                {
+                    Record = table,
+                    Action = "Add"
+                });
 
                 return identity;
             }
@@ -156,6 +165,11 @@ namespace LabBilling.Core.DataAccess
                 throw new ApplicationException("Error during database update.", ex);
             }
 
+            RecordUpdated?.Invoke(this, new RepositoryEventArgs<TPoco>()
+            {
+                Record = table,
+                Action = "update"
+            });
             Log.Instance.Debug(dbConnection.LastSQL.ToString());
             Log.Instance.Debug(dbConnection.LastArgs.ToString());
             return true;
@@ -180,6 +194,7 @@ namespace LabBilling.Core.DataAccess
             }
             Log.Instance.Debug(dbConnection.LastSQL.ToString());
             Log.Instance.Debug(dbConnection.LastCommand.ToString());
+
             return true;
         }
 
@@ -188,6 +203,11 @@ namespace LabBilling.Core.DataAccess
             Log.Instance.Trace("Entering");
 
             var count = dbConnection.Delete(table);
+            RecordDeleted?.Invoke(this, new RepositoryEventArgs<TPoco>()
+            {
+                Record = table,
+                Action = "deleted"
+            });
             Log.Instance.Debug(dbConnection.LastSQL.ToString());
             Log.Instance.Debug(dbConnection.LastArgs.ToString());
             return count > 0;
@@ -270,4 +290,11 @@ namespace LabBilling.Core.DataAccess
         }
 
     }
+
+    public class RepositoryEventArgs<T> : EventArgs
+    {
+        public string Action { get; set; }
+        public T Record { get; set; }
+    }
+
 }

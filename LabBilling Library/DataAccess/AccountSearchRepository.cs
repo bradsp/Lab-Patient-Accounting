@@ -29,7 +29,7 @@ namespace LabBilling.Core.DataAccess
 
         public IList<AccountSearch> GetBySearch((string propertyName, operation oper, string searchText)[] searchValues)
         {
-            InsRepository insRepository = new(_appEnvironment);
+            InsRepository insRepository = new(AppEnvironment);
             try
             {
                 var command = PetaPoco.Sql.Builder;
@@ -136,7 +136,7 @@ namespace LabBilling.Core.DataAccess
 
         public IEnumerable<AccountSearch> GetBySearchAsync((string propertyName, operation oper, string searchText)[] searchValues)
         {
-            InsRepository insRepository = new(_appEnvironment);
+            InsRepository insRepository = new(AppEnvironment);
             try
             {
                 var command = PetaPoco.Sql.Builder;

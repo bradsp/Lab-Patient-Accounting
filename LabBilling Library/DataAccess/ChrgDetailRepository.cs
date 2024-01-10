@@ -20,7 +20,7 @@ namespace LabBilling.Core.DataAccess
             Log.Instance.Trace("Entering");
             try
             {
-                ChrgDiagnosisPointerRepository chrgDiagnosisPointerRepository = new ChrgDiagnosisPointerRepository(_appEnvironment);
+                ChrgDiagnosisPointerRepository chrgDiagnosisPointerRepository = new ChrgDiagnosisPointerRepository(AppEnvironment);
 
                 var value = base.Add(table);
 
@@ -43,8 +43,8 @@ namespace LabBilling.Core.DataAccess
         {
             Log.Instance.Trace("Entering");
 
-            RevenueCodeRepository revenueCodeRepository = new RevenueCodeRepository(_appEnvironment);
-            ChrgDiagnosisPointerRepository chrgDiagnosisPointerRepository = new ChrgDiagnosisPointerRepository(_appEnvironment);
+            RevenueCodeRepository revenueCodeRepository = new RevenueCodeRepository(AppEnvironment);
+            ChrgDiagnosisPointerRepository chrgDiagnosisPointerRepository = new ChrgDiagnosisPointerRepository(AppEnvironment);
             var sql = PetaPoco.Sql.Builder
                 .From($"{_tableName}")
                 .Where($"{this.GetRealColumn(nameof(ChrgDetail.ChrgNo))} = @0", new SqlParameter() { SqlDbType = SqlDbType.Decimal, Value = chrg_num });

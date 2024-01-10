@@ -37,15 +37,7 @@ namespace LabBilling.Core.DataAccess
         {
             Log.Instance.Trace("Entering");
 
-            //SqlCommand cmdSelectStmt = new SqlCommand(
-            //string.Format(
-            //"select * from dbo.patbill_stmt " +
-            //"WHERE dbo.patbill_stmt.batch_id = '{0}' " +
-            //" and nullif(statement_submitted_dt_tm,'') is null " +
-            //"order by statement_number, record_cnt", strBatchId)
-            //, conn);
-
-            var sql = PetaPoco.Sql.Builder;
+            var sql = Sql.Builder;
 
             sql.Where($"{GetRealColumn(nameof(PatientStatement.BatchId))} = @0", 
                 new SqlParameter() { SqlDbType = System.Data.SqlDbType.VarChar, Value = batch});

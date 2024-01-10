@@ -14,15 +14,17 @@ using System.Data;
 using System.Threading.Tasks;
 using LabBilling.Core.BusinessLogic;
 using LabBilling.Legacy;
+using WinFormsLibrary;
+using System.Windows.Media.Converters;
 
 namespace LabBilling.Forms
 {
     public partial class AccountForm : BaseForm
     {
         private BindingList<PatDiag> dxBindingList;
-        private DataTable chargesTable = new DataTable();
-        private DataTable dxPointers = new DataTable();
-        private BindingSource dxPointerBindingSource = new BindingSource();
+        private DataTable chargesTable = new();
+        private DataTable dxPointers = new();
+        private BindingSource dxPointerBindingSource = new();
         private const string setHoldMenuText = "Set Claim Hold";
         private const string clearHoldMenuText = "Clear Claim Hold";
 
@@ -31,28 +33,29 @@ namespace LabBilling.Forms
         private Account currentAccount = null;
         private BindingSource insGridSource = null;
         private bool InEditMode = false;
-        private List<string> changedControls = new List<string>();
-        private Dictionary<Control, string> controlColumnMap = new Dictionary<Control, string>();
-        private InsCompanyLookupForm lookupForm = new InsCompanyLookupForm();
+        private List<string> changedControls = new();
+        private readonly Dictionary<Control, string> controlColumnMap = new();
+        private readonly InsCompanyLookupForm lookupForm = new();
 
-        private readonly InsRepository insRepository = new InsRepository(Program.AppEnvironment);
-        private readonly AccountRepository accountRepository = new AccountRepository(Program.AppEnvironment);
-        private readonly PatRepository patRepository = new PatRepository(Program.AppEnvironment);
-        private readonly DictDxRepository dictDxRepository = new DictDxRepository(Program.AppEnvironment);
-        private readonly InsCompanyRepository insCompanyRepository = new InsCompanyRepository(Program.AppEnvironment);
-        private readonly ChrgRepository chrgRepository = new ChrgRepository(Program.AppEnvironment);
-        private readonly ChrgDetailRepository chrgDetailRepository = new ChrgDetailRepository(Program.AppEnvironment);
-        private readonly UserProfileRepository userProfileDB = new UserProfileRepository(Program.AppEnvironment);
-        private readonly FinRepository finRepository = new FinRepository(Program.AppEnvironment);
-        private readonly ChkRepository chkRepository = new ChkRepository(Program.AppEnvironment);
-        private readonly AccountNoteRepository accountNoteRepository = new AccountNoteRepository(Program.AppEnvironment);
-        private readonly BillingActivityRepository billingActivityRepository = new BillingActivityRepository(Program.AppEnvironment);
-        private readonly SystemParametersRepository systemParametersRepository = new SystemParametersRepository(Program.AppEnvironment);
-        private readonly PhyRepository phyRepository = new PhyRepository(Program.AppEnvironment);
-        private readonly PatientStatementAccountRepository patientStatementAccountRepository = new PatientStatementAccountRepository(Program.AppEnvironment);
+        private readonly InsRepository insRepository = new(Program.AppEnvironment);
+        private readonly AccountRepository accountRepository = new(Program.AppEnvironment);
+        private readonly PatRepository patRepository = new(Program.AppEnvironment);
+        private readonly DictDxRepository dictDxRepository = new(Program.AppEnvironment);
+        private readonly InsCompanyRepository insCompanyRepository = new(Program.AppEnvironment);
+        private readonly ChrgRepository chrgRepository = new(Program.AppEnvironment);
+        private readonly ChrgDetailRepository chrgDetailRepository = new(Program.AppEnvironment);
+        private readonly UserProfileRepository userProfileDB = new(Program.AppEnvironment);
+        private readonly FinRepository finRepository = new(Program.AppEnvironment);
+        private readonly ChkRepository chkRepository = new(Program.AppEnvironment);
+        private readonly AccountNoteRepository accountNoteRepository = new(Program.AppEnvironment);
+        private readonly BillingActivityRepository billingActivityRepository = new(Program.AppEnvironment);
+        private readonly SystemParametersRepository systemParametersRepository = new(Program.AppEnvironment);
+        private readonly PhyRepository phyRepository = new(Program.AppEnvironment);
+        private readonly PatientStatementAccountRepository patientStatementAccountRepository = new(Program.AppEnvironment);
         private bool billingTabLoading = false;
         private const int _timerInterval = 650;
         private const string notesAlertText = "** SEE NOTES **";
+        private bool closing = false;
 
         //private bool skipSelectionChanged = false;
         private Timer _timer;
@@ -65,24 +68,19 @@ namespace LabBilling.Forms
             get { return _selectedAccount; }
         }
 
-        private ListBox providerSearchListBox = new ListBox();
+        private ListBox providerSearchListBox = new();
 
         /// <summary>
         /// Construct form with an account to open and optionally send the MDI parent form.
         /// </summary>
         /// <param name="account"></param>
         /// <param name="parentForm"></param>
-        public AccountForm(string account, Form parentForm = null) : this()
+        public AccountForm(string account) : this()
         {
             Log.Instance.Trace("Entering");
 
             if (account != null)
-            {
                 _selectedAccount = account;
-            }
-
-            //if (parentForm != null)
-            //    this.MdiParent = parentForm;
         }
 
         private AccountForm()
@@ -98,6 +96,34 @@ namespace LabBilling.Forms
         private void AccountForm_Load(object sender, EventArgs e)
         {
             Log.Instance.Trace("Entering");
+
+            panel1.BackColor = Color.Blue;
+
+            try
+            {
+                panel1.GetAllControls<TextBox>().ForEach(tb =>
+                {
+                    tb.BackColor = Color.Blue;
+                    tb.ForeColor = Color.White;
+                });
+
+                panel1.GetAllControls<Label>().ForEach(l =>
+                {
+                    l.ForeColor = Color.White;
+                    l.BackColor = Color.Blue;
+                });
+
+            }
+            catch (Exception ex)
+            {
+                Log.Instance.Error(ex, "Error setting control formatting.");
+                MessageBox.Show("Unable to load Account. Contact your administrator.", "Error during load", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                closing = true;
+                this.Visible = false;
+                this.Close();
+                return;
+            }
+
 
 
             providerSearchListBox.Visible = false;
@@ -233,7 +259,7 @@ namespace LabBilling.Forms
             //build context menu
             foreach (var item in Dictionaries.cptModifiers)
             {
-                ToolStripMenuItem tsItem = new (item.Key)
+                ToolStripMenuItem tsItem = new(item.Key)
                 {
                     Tag = item.Value
                 };
@@ -312,6 +338,8 @@ namespace LabBilling.Forms
         private void AccountForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             Log.Instance.Trace($"Entering");
+            e.Cancel = false;
+
         }
 
         private async void RefreshButton_Click(object sender, EventArgs e)
@@ -326,23 +354,20 @@ namespace LabBilling.Forms
         private async Task LoadAccountData()
         {
             Log.Instance.Trace($"Entering");
+            if (closing)
+                return;
+
             this.SuspendLayout();
             currentAccount = await accountRepository.GetByAccountAsync(SelectedAccount);
-
-            generateClientStatementToolStripMenuItem.Enabled = currentAccount.FinCode == "CLIENT";
 
             this.Text = $"{currentAccount.AccountNo} - {currentAccount.PatFullName}";
 
             dxBindingList = new BindingList<PatDiag>(currentAccount.Pat.Diagnoses);
 
             if (currentAccount.Status == AccountStatus.Hold)
-            {
                 clearHoldStatusToolStripMenuItem.Text = clearHoldMenuText;
-            }
             else
-            {
                 clearHoldStatusToolStripMenuItem.Text = setHoldMenuText;
-            }
 
             RefreshAccountData();
             this.ResumeLayout();
@@ -369,7 +394,7 @@ namespace LabBilling.Forms
             // should appear. In other words, keep the group types together and the individual items in the order
             // they should be displayed.
             #region PopulateSummaryTab
-            List<SummaryData> sd = new List<SummaryData>();
+            List<SummaryData> sd = new();
 
             int col = 1;
             int row = 1;
@@ -495,13 +520,22 @@ namespace LabBilling.Forms
             BannerProviderTextBox.Text = currentAccount.Pat.Physician.FullName;
             bannerDateOfServiceTextBox.Text = currentAccount.TransactionDate.ToShortDateString();
             if (currentAccount.AccountAlert != null)
+            {
                 bannerAlertLabel.Text = currentAccount.AccountAlert.Alert ? notesAlertText : "";
+                bannerAlertLabel.Visible = !string.IsNullOrEmpty(bannerAlertLabel.Text);
+            }
             else
+            {
+                bannerAlertLabel.Visible = false;
                 bannerAlertLabel.Text = "";
+            }
 
             if (currentAccount.ReadyToBill)
             {
+                bannerAlertLabel.Visible = true;
                 bannerAlertLabel.Text += "  Account is flagged ready to bill, or has been billed. Any changes can affect the claim.";
+                bannerAlertLabel.BackColor = Color.Red;
+                bannerAlertLabel.ForeColor = Color.White;
             }
 
             TotalChargesTextBox.Text = currentAccount.TotalCharges.ToString("c");
@@ -644,7 +678,7 @@ namespace LabBilling.Forms
             if (currentAccount.Insurances.Count > 0)
             {
 
-                DataGridViewButtonColumn deleteCol = new DataGridViewButtonColumn
+                DataGridViewButtonColumn deleteCol = new()
                 {
                     Name = "delete",
                     HeaderText = "Delete",
@@ -795,7 +829,7 @@ namespace LabBilling.Forms
                 }
                 else
                 {
-                    List<string> updatedColumns = new ();
+                    List<string> updatedColumns = new();
 
                     foreach (Control control in insTabLayoutPanel.Controls)
                     {
@@ -934,8 +968,8 @@ namespace LabBilling.Forms
             HolderSexComboBox.SelectedText = "--Select--";
             InsOrderComboBox.SelectedValue = InsuranceDataGrid.SelectedRows[0].Cells[nameof(Ins.Coverage)].Value.ToString();
 
-            HolderLastNameTextBox.Text = InsuranceDataGrid.SelectedRows[0].Cells[nameof(Ins.HolderLastName)].Value?.ToString(); 
-            HolderFirstNameTextBox.Text = InsuranceDataGrid.SelectedRows[0].Cells[nameof(Ins.HolderFirstName)].Value?.ToString(); 
+            HolderLastNameTextBox.Text = InsuranceDataGrid.SelectedRows[0].Cells[nameof(Ins.HolderLastName)].Value?.ToString();
+            HolderFirstNameTextBox.Text = InsuranceDataGrid.SelectedRows[0].Cells[nameof(Ins.HolderFirstName)].Value?.ToString();
             HolderMiddleNameTextBox.Text = InsuranceDataGrid.SelectedRows[0].Cells[nameof(Ins.HolderMiddleName)].Value?.ToString();
             HolderAddressTextBox.Text = InsuranceDataGrid.SelectedRows[0].Cells[nameof(Ins.HolderStreetAddress)].Value != null ? InsuranceDataGrid.SelectedRows[0].Cells[nameof(Ins.HolderStreetAddress)].Value.ToString() : "";
 
@@ -1157,7 +1191,7 @@ namespace LabBilling.Forms
                 DataGridViewRow row = ChargesDataGrid.SelectedRows[0];
                 var chrg = chrgRepository.GetById(Convert.ToInt32(row.Cells[nameof(Chrg.ChrgId)].Value.ToString()));
 
-                DisplayPOCOForm<Chrg> frm = new (chrg)
+                DisplayPOCOForm<Chrg> frm = new(chrg)
                 {
                     Title = "Charge Details"
                 };
@@ -1265,7 +1299,7 @@ namespace LabBilling.Forms
         private async void AddChargeButton_Click(object sender, EventArgs e)
         {
             Log.Instance.Trace($"Entering");
-            ChargeEntryForm frm = new ChargeEntryForm(currentAccount);
+            ChargeEntryForm frm = new(currentAccount);
 
             if (frm.ShowDialog() == DialogResult.OK)
             {
@@ -1290,7 +1324,7 @@ namespace LabBilling.Forms
                 currentAccount.Status == AccountStatus.Closed)
             {
                 AddPaymentButton.Enabled = false;
-                Label addPaymentStatusLabel = new ()
+                Label addPaymentStatusLabel = new()
                 {
                     AutoSize = true,
                     MaximumSize = new Size(300, 300),
@@ -1344,7 +1378,7 @@ namespace LabBilling.Forms
                 DataGridViewRow row = PaymentsDataGrid.SelectedRows[0];
                 var chk = chkRepository.GetById(Convert.ToInt32(row.Cells[nameof(Chk.PaymentNo)].Value.ToString()));
 
-                DisplayPOCOForm<Chk> frm = new DisplayPOCOForm<Chk>(chk)
+                DisplayPOCOForm<Chk> frm = new(chk)
                 {
                     Title = "Payment Details"
                 };
@@ -1354,7 +1388,7 @@ namespace LabBilling.Forms
 
         private async void AddPaymentButton_Click(object sender, EventArgs e)
         {
-            PaymentAdjustmentEntryForm form = new PaymentAdjustmentEntryForm(ref currentAccount);
+            PaymentAdjustmentEntryForm form = new(ref currentAccount);
 
             if (currentAccount.SentToCollections)
             {
@@ -1605,7 +1639,7 @@ namespace LabBilling.Forms
                         cd.DiagnosisPointer.DiagnosisPointer = newPointer;
                     }));
 
-                    ChrgRepository chrgRepository = new ChrgRepository(Program.AppEnvironment);
+                    ChrgRepository chrgRepository = new(Program.AppEnvironment);
 
                     chrgRepository.UpdateDxPointers(updatedChrg);
 
@@ -1829,7 +1863,7 @@ namespace LabBilling.Forms
         {
             Log.Instance.Trace($"Entering");
             InputBoxResult prompt = InputBox.Show("Enter note:", "New Note", true);
-            AccountNote note = new AccountNote();
+            AccountNote note = new();
 
             if (prompt.ReturnCode == DialogResult.OK)
             {
@@ -1892,7 +1926,7 @@ namespace LabBilling.Forms
         private async void PersonSearchToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Log.Instance.Trace($"Entering");
-            PersonSearchForm frm = new PersonSearchForm();
+            PersonSearchForm frm = new();
             frm.ShowDialog();
             if (frm.SelectedAccount != "" && frm.SelectedAccount != null)
             {
@@ -1967,7 +2001,7 @@ namespace LabBilling.Forms
         {
             Log.Instance.Trace($"Entering");
 
-            ClientLookupForm clientLookupForm = new ClientLookupForm();
+            ClientLookupForm clientLookupForm = new();
             clientLookupForm.Datasource = DataCache.Instance.GetClients();
 
             if (clientLookupForm.ShowDialog() == DialogResult.OK)
@@ -2046,7 +2080,7 @@ namespace LabBilling.Forms
             if (clearHoldStatusToolStripMenuItem.Text == clearHoldMenuText)
             {
                 InputBoxResult prompt = InputBox.Show("Enter reason for setting status back to New:", "New Note");
-                AccountNote note = new AccountNote();
+                AccountNote note = new();
 
                 if (prompt.ReturnCode == DialogResult.OK)
                 {
@@ -2063,7 +2097,7 @@ namespace LabBilling.Forms
             if (clearHoldStatusToolStripMenuItem.Text == setHoldMenuText)
             {
                 InputBoxResult prompt = InputBox.Show("Enter reason for claim hold:", "New Note");
-                AccountNote note = new AccountNote();
+                AccountNote note = new();
 
                 if (prompt.ReturnCode == DialogResult.OK)
                 {
@@ -2121,7 +2155,7 @@ namespace LabBilling.Forms
 
         private void GenerateClaimButton_Click(object sender, EventArgs e)
         {
-            ClaimGenerator claimGenerator = new ClaimGenerator(Program.AppEnvironment);
+            ClaimGenerator claimGenerator = new(Program.AppEnvironment);
 
             claimGenerator.CompileClaim(currentAccount.AccountNo);
         }
@@ -2132,14 +2166,6 @@ namespace LabBilling.Forms
 
         private void tabControl1_Selected(object sender, TabControlEventArgs e)
         {
-            if (e.TabPage.Name == tabDemographics.Name)
-            {
-                //load demographics
-            }
-            if (e.TabPage.Name == summaryTab.Name)
-            {
-                //RefreshAccountData();
-            }
             if (e.TabPage.Name == tabDiagnosis.Name)
             {
                 DiagnosisDataGrid.BackgroundColor = Color.White;
@@ -2150,7 +2176,7 @@ namespace LabBilling.Forms
         {
             //string phy = providerLookup1.SelectedValue;
         }
-        
+
 
         #region Guarantor Tab
 
@@ -2203,7 +2229,7 @@ namespace LabBilling.Forms
 
         private async void swapInsurancesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            AskInsuranceSwapForm frm = new AskInsuranceSwapForm(ref currentAccount);
+            AskInsuranceSwapForm frm = new(ref currentAccount);
 
             if (frm.ShowDialog() == DialogResult.OK)
             {
@@ -2255,7 +2281,7 @@ namespace LabBilling.Forms
             {
                 DataGridViewRow row = ChargesDataGrid.SelectedRows[0];
 
-                PersonSearchForm personSearch = new PersonSearchForm();
+                PersonSearchForm personSearch = new();
 
                 if (personSearch.ShowDialog() == DialogResult.OK)
                 {
@@ -2276,7 +2302,7 @@ namespace LabBilling.Forms
         private async void moveAllChargesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Log.Instance.Trace($"Entering");
-            PersonSearchForm personSearch = new PersonSearchForm();
+            PersonSearchForm personSearch = new();
 
             if (personSearch.ShowDialog() == DialogResult.OK)
             {
@@ -2297,17 +2323,13 @@ namespace LabBilling.Forms
             }
         }
 
-        private void generateClientStatementToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-        }
-
         private void dxPointerGrid2_DataError(object sender, DataGridViewDataErrorEventArgs e)
         {
             Log.Instance.Error(e.Exception, e.Exception.Message);
             return;
         }
 
-        private async void AccountForm_Activated(object sender, EventArgs e) => await LoadAccountData();       
+        private async void AccountForm_Activated(object sender, EventArgs e) => await LoadAccountData();
 
         private async void readyToBillCheckbox_CheckedChanged(object sender, EventArgs e)
         {
@@ -2350,12 +2372,12 @@ namespace LabBilling.Forms
         private void printEOBToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
-            List<string> args = new List<string>();
+            List<string> args = new();
             args.AddRange(Helper.GetArgs());
 
             args.Add(currentAccount.AccountNo);
 
-            PrintEOBForm frm = new PrintEOBForm(args.ToArray());
+            PrintEOBForm frm = new(args.ToArray());
 
             frm.ShowDialog(this);
         }
@@ -2372,7 +2394,7 @@ namespace LabBilling.Forms
             }
         }
 
-        private void chargeDetailsContextMenu_Opening(object sender, CancelEventArgs e) {  }
+        private void chargeDetailsContextMenu_Opening(object sender, CancelEventArgs e) { }
 
         private void noteAlertCheckBox_CheckedChanged(object sender, EventArgs e)
         {

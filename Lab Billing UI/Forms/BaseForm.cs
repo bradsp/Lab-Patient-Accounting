@@ -13,7 +13,6 @@ namespace LabBilling.Forms
 
         protected override void OnLoad(EventArgs e)
         {
-            base.OnLoad(e);
 
             this.BackColor = Program.AppEnvironment.WindowBackgroundColor;
             this.ForeColor = Program.AppEnvironment.WindowTextColor;
@@ -40,6 +39,8 @@ namespace LabBilling.Forms
                 comboBox.BackColor = Program.AppEnvironment.WindowBackgroundColor;
                 comboBox.ForeColor = Program.AppEnvironment.WindowTextColor;
             });
+
+            base.OnLoad(e);
         }
 
     }

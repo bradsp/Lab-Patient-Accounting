@@ -12,7 +12,7 @@ using LabBilling.Forms;
 
 namespace LabBilling.Legacy
 {
-    public partial class frmReports : BaseForm
+    public partial class MonthlyReportsForm : BaseForm
     {
        
         //SqlDataReader m_sqlReader = null;
@@ -33,7 +33,7 @@ namespace LabBilling.Legacy
         private string m_strDatabase;
         public event EventHandler<string> AccountLaunched;
 
-        public frmReports(string[] args)
+        public MonthlyReportsForm(string[] args)
         {
             
             InitializeComponent();

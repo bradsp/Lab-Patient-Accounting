@@ -169,8 +169,6 @@ namespace LabBilling.Core.BusinessLogic
 
             return accounts;
         }
-
-
     }
 
     public static class Worklists

@@ -19,7 +19,7 @@ namespace WinFormsLibrary
 
         public static List<T> GetAllControls<T>(this Control container) where T : Control
         {
-            List<T> controls = new List<T>();
+            List<T> controls = new();
             if (container.Controls.Count > 0)
             {
                 controls.AddRange(container.Controls.OfType<T>());
@@ -31,6 +31,5 @@ namespace WinFormsLibrary
 
             return controls;
         }
-
     }
 }

@@ -5,6 +5,7 @@ using System.Threading;
 using System.Windows.Forms;
 using LabBilling.Core.DataAccess;
 using Microsoft.Data.SqlClient;
+using LabBilling.Forms;
 
 namespace LabBilling
 {
@@ -55,7 +56,10 @@ namespace LabBilling
             if(loginFrm.ShowDialog() == DialogResult.OK)
             {
                 Log.Instance.Info($"Login successful - connection {Helper.ConnVal}");
-                Application.Run(new MainForm());
+                SplashForm.ShowSplashScreen();
+                MainForm mainForm = new MainForm();
+                SplashForm.CloseForm();
+                Application.Run(mainForm);
             }
             else
             {
