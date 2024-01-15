@@ -40,7 +40,7 @@ namespace LabBilling.Core.Models
         public bool DxProcessed { get; set; } // bit, null
 
         [Column("mod_date")]
-        public DateTime mod_date { get; set; } // datetime, null
+        public DateTime UpdatedDate { get; set; } // datetime, null
 
         [Column("order_pat_id")]
         public string OrderPatId { get; set; } // varchar(50), null
@@ -63,12 +63,13 @@ namespace LabBilling.Core.Models
         [Column("errors")]
         public string Errors { get; set; } // varchar(max), null
 
+
         [Column("mod_user")]
-        public string mod_user { get; set; }
+        public string UpdatedUser { get; set; }
         [Column("mod_prg")]
-        public string mod_prg { get; set; }
+        public string UpdatedApp { get; set; }
         [Column("mod_host")]
-        public string mod_host { get; set; }
+        public string UpdatedHost { get; set; }
         [Ignore]
         public Guid rowguid { get; set; }
     }

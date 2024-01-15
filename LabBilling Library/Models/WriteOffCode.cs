@@ -17,10 +17,14 @@ namespace LabBilling.Core.Models
         [Column("write_off_description")]
         public string Description { get; set; }
 
-        public DateTime mod_date { get; set; }
-        public string mod_user { get; set; }
-        public string mod_prg { get; set; }
-        public string mod_host { get; set; }
+        [Column("mod_date")]
+        public DateTime UpdatedDate { get; set; }
+        [Column("mod_user")]
+        public string UpdatedUser { get; set; }
+        [Column("mod_prg")]
+        public string UpdatedApp { get; set; }
+        [Column("mod_host")]
+        public string UpdatedHost { get; set; }
         [Ignore]
         public Guid rowguid { get; set; }
     }

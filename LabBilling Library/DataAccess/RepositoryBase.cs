@@ -81,7 +81,7 @@ namespace LabBilling.Core.DataAccess
         {
             Log.Instance.Trace("Entering");
 
-            PetaPoco.Sql sql = PetaPoco.Sql.Builder
+            PetaPoco.Sql sql = Sql.Builder
                 .From(_tableName);
 
             var queryResult = await dbConnection.FetchAsync<TPoco>(sql);
@@ -95,10 +95,10 @@ namespace LabBilling.Core.DataAccess
         {
             Log.Instance.Trace("Entering");
 
-            table.mod_date = DateTime.Now;
-            table.mod_host = Environment.MachineName;
-            table.mod_prg = RFClassLibrary.OS.GetAppName();
-            table.mod_user = Environment.UserName.ToString();
+            table.UpdatedDate = DateTime.Now;
+            table.UpdatedHost = Environment.MachineName;
+            table.UpdatedApp = RFClassLibrary.OS.GetAppName();
+            table.UpdatedUser = Environment.UserName.ToString();
             table.rowguid = Guid.NewGuid();
             try
             {
@@ -124,10 +124,10 @@ namespace LabBilling.Core.DataAccess
         {
             Log.Instance.Trace("Entering");
 
-            table.mod_date = DateTime.Now;
-            table.mod_host = Environment.MachineName;
-            table.mod_prg = OS.GetAppName();
-            table.mod_user = Environment.UserName.ToString();
+            table.UpdatedDate = DateTime.Now;
+            table.UpdatedHost = Environment.MachineName;
+            table.UpdatedApp = OS.GetAppName();
+            table.UpdatedUser = Environment.UserName.ToString();
 
             dbConnection.Update(table);
             Log.Instance.Debug(dbConnection.LastSQL.ToString());
@@ -139,14 +139,14 @@ namespace LabBilling.Core.DataAccess
             Log.Instance.Trace("Entering");
             List<string> cColumns = new List<string>();
 
-            table.mod_date = DateTime.Now;
-            cColumns.Add(nameof(table.mod_date));
-            table.mod_host = Environment.MachineName;
-            cColumns.Add(nameof(table.mod_host));
-            table.mod_prg = RFClassLibrary.OS.GetAppName();
-            cColumns.Add(nameof(table.mod_prg));
-            table.mod_user = Environment.UserName.ToString();
-            cColumns.Add(nameof(table.mod_user));
+            table.UpdatedDate = DateTime.Now;
+            cColumns.Add(nameof(table.UpdatedDate));
+            table.UpdatedHost = Environment.MachineName;
+            cColumns.Add(nameof(table.UpdatedHost));
+            table.UpdatedApp = RFClassLibrary.OS.GetAppName();
+            cColumns.Add(nameof(table.UpdatedApp));
+            table.UpdatedUser = Environment.UserName.ToString();
+            cColumns.Add(nameof(table.UpdatedUser));
 
             foreach (string column in columns)
             {
@@ -179,10 +179,10 @@ namespace LabBilling.Core.DataAccess
         {
             Log.Instance.Trace("Entering");
 
-            table.mod_date = DateTime.Now;
-            table.mod_host = Environment.MachineName;
-            table.mod_prg = OS.GetAppName();
-            table.mod_user = Environment.UserName.ToString();
+            table.UpdatedDate = DateTime.Now;
+            table.UpdatedHost = Environment.MachineName;
+            table.UpdatedApp = OS.GetAppName();
+            table.UpdatedUser = Environment.UserName.ToString();
             try
             {
                 dbConnection.Save(table);
@@ -252,7 +252,7 @@ namespace LabBilling.Core.DataAccess
 
         public static TableInfo GetTableInfo(Type t)
         {
-            TableInfo tableInfo = new TableInfo();
+            TableInfo tableInfo = new();
             object[] customAttributes = t.GetCustomAttributes(typeof(TableNameAttribute), true);
             tableInfo.TableName = (customAttributes.Length == 0) ? t.Name : (customAttributes[0] as TableNameAttribute).Value;
             customAttributes = t.GetCustomAttributes(typeof(PrimaryKeyAttribute), true);

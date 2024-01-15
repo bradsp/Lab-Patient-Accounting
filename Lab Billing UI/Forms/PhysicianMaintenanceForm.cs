@@ -6,7 +6,6 @@ using System.Windows.Forms;
 using LabBilling.Core.DataAccess;
 using LabBilling.Core.Models;
 using LabBilling.Logging;
-using MicroRuleEngine;
 
 namespace LabBilling.Forms
 {
@@ -31,10 +30,10 @@ namespace LabBilling.Forms
         {
             PhysicianDGV.Columns[nameof(Phy.rowguid)].Visible = false;
             PhysicianDGV.Columns[nameof(Phy.reserved)].Visible = false;
-            PhysicianDGV.Columns[nameof(Phy.mod_user)].Visible = false;
-            PhysicianDGV.Columns[nameof(Phy.mod_date)].Visible = false;
-            PhysicianDGV.Columns[nameof(Phy.mod_prg)].Visible = false;
-            PhysicianDGV.Columns[nameof(Phy.mod_host)].Visible = false;
+            PhysicianDGV.Columns[nameof(Phy.UpdatedUser)].Visible = false;
+            PhysicianDGV.Columns[nameof(Phy.UpdatedDate)].Visible = false;
+            PhysicianDGV.Columns[nameof(Phy.UpdatedApp)].Visible = false;
+            PhysicianDGV.Columns[nameof(Phy.UpdatedHost)].Visible = false;
             PhysicianDGV.Columns[nameof(Phy.Upin)].Visible = false;
             PhysicianDGV.Columns[nameof(Phy.Ub92Upin)].Visible = false;
             PhysicianDGV.Columns[nameof(Phy.PathologistCode)].Visible = false;

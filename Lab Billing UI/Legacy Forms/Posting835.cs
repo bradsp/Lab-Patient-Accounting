@@ -3368,10 +3368,10 @@ namespace LabBilling.Legacy
                     chk.Batch = int.Parse(strBatchNo);
                     chk.Comment = rtbCheckSource.Text;
                     chk.IsCollectionPmt = false;
-                    chk.mod_date = sdtMod;
-                    chk.mod_user = Environment.UserName;
-                    chk.mod_prg = string.Format("{0} {1}", ProductName, ProductVersion);
-                    chk.mod_host = Environment.MachineName;
+                    chk.UpdatedDate = sdtMod;
+                    chk.UpdatedUser = Environment.UserName;
+                    chk.UpdatedApp = string.Format("{0} {1}", ProductName, ProductVersion);
+                    chk.UpdatedHost = Environment.MachineName;
                     chk.mod_date_audit = sdtMod;
                     chk.Cpt4Code = dr[(int)Col835Grids.eCPT4Code].ToString();
                     chk.PostingFile = tbFileName.Tag.ToString();

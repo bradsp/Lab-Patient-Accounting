@@ -47,10 +47,10 @@ namespace LabBilling.Forms
         private void ConfigureHealthPlanGrid()
         {
 
-            healthPlanGrid.Columns[nameof(InsCompany.mod_date)].Visible = false;
-            healthPlanGrid.Columns[nameof(InsCompany.mod_host)].Visible = false;
-            healthPlanGrid.Columns[nameof(InsCompany.mod_prg)].Visible = false;
-            healthPlanGrid.Columns[nameof(InsCompany.mod_user)].Visible = false;
+            healthPlanGrid.Columns[nameof(InsCompany.UpdatedDate)].Visible = false;
+            healthPlanGrid.Columns[nameof(InsCompany.UpdatedHost)].Visible = false;
+            healthPlanGrid.Columns[nameof(InsCompany.UpdatedApp)].Visible = false;
+            healthPlanGrid.Columns[nameof(InsCompany.UpdatedUser)].Visible = false;
             //healthPlanGrid.Columns[nameof(InsCompany.ClaimFilingIndicatorCode)].Visible = false;
             healthPlanGrid.Columns[nameof(InsCompany.PayorCode)].Visible = false;
             healthPlanGrid.Columns[nameof(InsCompany.rowguid)].Visible = false;

@@ -186,11 +186,9 @@ namespace LabBilling.Forms
             TotalPaymentTextBox = new System.Windows.Forms.TextBox();
             PaymentsDataGrid = new System.Windows.Forms.DataGridView();
             tabNotes = new System.Windows.Forms.TabPage();
+            notesDataGridView = new UserControls.LabDataGridView();
             noteAlertCheckBox = new System.Windows.Forms.CheckBox();
             AddNoteButton = new System.Windows.Forms.Button();
-            NotesDisplayTextBox = new System.Windows.Forms.RichTextBox();
-            noteTextContextMenu = new System.Windows.Forms.ContextMenuStrip(components);
-            copyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             tabBillingActivity = new System.Windows.Forms.TabPage();
             label5 = new System.Windows.Forms.Label();
             statementHistoryDataGrid = new System.Windows.Forms.DataGridView();
@@ -210,6 +208,9 @@ namespace LabBilling.Forms
             ValidateAccountButton = new System.Windows.Forms.Button();
             BillActivityDataGrid = new System.Windows.Forms.DataGridView();
             minPmtTextBox = new UserControls.CurrencyTextBox();
+            tabInsPrimary = new System.Windows.Forms.TabPage();
+            noteTextContextMenu = new System.Windows.Forms.ContextMenuStrip(components);
+            copyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             menuStrip1 = new System.Windows.Forms.MenuStrip();
             accountToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             changeDateOfServiceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -250,6 +251,8 @@ namespace LabBilling.Forms
             BannerClientBalLabel = new System.Windows.Forms.Label();
             ClientBalLabel = new System.Windows.Forms.Label();
             bannerPanel = new System.Windows.Forms.Panel();
+            tabInsSecondary = new System.Windows.Forms.TabPage();
+            tabInsTertiary = new System.Windows.Forms.TabPage();
             tabControl1.SuspendLayout();
             summaryTab.SuspendLayout();
             tabDemographics.SuspendLayout();
@@ -266,10 +269,11 @@ namespace LabBilling.Forms
             tabPayments.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)PaymentsDataGrid).BeginInit();
             tabNotes.SuspendLayout();
-            noteTextContextMenu.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)notesDataGridView).BeginInit();
             tabBillingActivity.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)statementHistoryDataGrid).BeginInit();
             ((System.ComponentModel.ISupportInitialize)BillActivityDataGrid).BeginInit();
+            noteTextContextMenu.SuspendLayout();
             menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)RefreshButton).BeginInit();
             dxPointerMenuStrip.SuspendLayout();
@@ -288,6 +292,9 @@ namespace LabBilling.Forms
             tabControl1.Controls.Add(tabPayments);
             tabControl1.Controls.Add(tabNotes);
             tabControl1.Controls.Add(tabBillingActivity);
+            tabControl1.Controls.Add(tabInsPrimary);
+            tabControl1.Controls.Add(tabInsSecondary);
+            tabControl1.Controls.Add(tabInsTertiary);
             tabControl1.HotTrack = true;
             tabControl1.Location = new System.Drawing.Point(0, 130);
             tabControl1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
@@ -2057,9 +2064,9 @@ namespace LabBilling.Forms
             // 
             tabNotes.AutoScroll = true;
             tabNotes.BackColor = System.Drawing.Color.White;
+            tabNotes.Controls.Add(notesDataGridView);
             tabNotes.Controls.Add(noteAlertCheckBox);
             tabNotes.Controls.Add(AddNoteButton);
-            tabNotes.Controls.Add(NotesDisplayTextBox);
             tabNotes.Location = new System.Drawing.Point(4, 24);
             tabNotes.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             tabNotes.Name = "tabNotes";
@@ -2067,10 +2074,21 @@ namespace LabBilling.Forms
             tabNotes.TabIndex = 5;
             tabNotes.Text = "Notes";
             // 
+            // notesDataGridView
+            // 
+            notesDataGridView.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            notesDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            notesDataGridView.Location = new System.Drawing.Point(3, 46);
+            notesDataGridView.Name = "notesDataGridView";
+            notesDataGridView.RowTemplate.Height = 25;
+            notesDataGridView.Size = new System.Drawing.Size(1332, 515);
+            notesDataGridView.TabIndex = 3;
+            // 
             // noteAlertCheckBox
             // 
+            noteAlertCheckBox.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
             noteAlertCheckBox.AutoSize = true;
-            noteAlertCheckBox.Location = new System.Drawing.Point(707, 37);
+            noteAlertCheckBox.Location = new System.Drawing.Point(1138, 8);
             noteAlertCheckBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             noteAlertCheckBox.Name = "noteAlertCheckBox";
             noteAlertCheckBox.Size = new System.Drawing.Size(80, 19);
@@ -2081,7 +2099,8 @@ namespace LabBilling.Forms
             // 
             // AddNoteButton
             // 
-            AddNoteButton.Location = new System.Drawing.Point(705, 3);
+            AddNoteButton.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+            AddNoteButton.Location = new System.Drawing.Point(1247, 3);
             AddNoteButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             AddNoteButton.Name = "AddNoteButton";
             AddNoteButton.Size = new System.Drawing.Size(88, 27);
@@ -2089,32 +2108,6 @@ namespace LabBilling.Forms
             AddNoteButton.Text = "Add Note";
             AddNoteButton.UseVisualStyleBackColor = true;
             AddNoteButton.Click += AddNoteButton_Click;
-            // 
-            // NotesDisplayTextBox
-            // 
-            NotesDisplayTextBox.ContextMenuStrip = noteTextContextMenu;
-            NotesDisplayTextBox.Dock = System.Windows.Forms.DockStyle.Left;
-            NotesDisplayTextBox.Location = new System.Drawing.Point(0, 0);
-            NotesDisplayTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            NotesDisplayTextBox.Name = "NotesDisplayTextBox";
-            NotesDisplayTextBox.ReadOnly = true;
-            NotesDisplayTextBox.Size = new System.Drawing.Size(697, 568);
-            NotesDisplayTextBox.TabIndex = 0;
-            NotesDisplayTextBox.Text = "";
-            NotesDisplayTextBox.ZoomFactor = 1.2F;
-            // 
-            // noteTextContextMenu
-            // 
-            noteTextContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { copyToolStripMenuItem });
-            noteTextContextMenu.Name = "noteTextContextMenu";
-            noteTextContextMenu.Size = new System.Drawing.Size(103, 26);
-            // 
-            // copyToolStripMenuItem
-            // 
-            copyToolStripMenuItem.Name = "copyToolStripMenuItem";
-            copyToolStripMenuItem.Size = new System.Drawing.Size(102, 22);
-            copyToolStripMenuItem.Text = "Copy";
-            copyToolStripMenuItem.Click += copyToolStripMenuItem_Click;
             // 
             // tabBillingActivity
             // 
@@ -2363,6 +2356,29 @@ namespace LabBilling.Forms
             minPmtTextBox.Name = "minPmtTextBox";
             minPmtTextBox.Size = new System.Drawing.Size(116, 23);
             minPmtTextBox.TabIndex = 9;
+            // 
+            // tabInsPrimary
+            // 
+            tabInsPrimary.Location = new System.Drawing.Point(4, 24);
+            tabInsPrimary.Name = "tabInsPrimary";
+            tabInsPrimary.Padding = new System.Windows.Forms.Padding(3);
+            tabInsPrimary.Size = new System.Drawing.Size(1344, 568);
+            tabInsPrimary.TabIndex = 15;
+            tabInsPrimary.Text = "Primary Insurance";
+            tabInsPrimary.UseVisualStyleBackColor = true;
+            // 
+            // noteTextContextMenu
+            // 
+            noteTextContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { copyToolStripMenuItem });
+            noteTextContextMenu.Name = "noteTextContextMenu";
+            noteTextContextMenu.Size = new System.Drawing.Size(103, 26);
+            // 
+            // copyToolStripMenuItem
+            // 
+            copyToolStripMenuItem.Name = "copyToolStripMenuItem";
+            copyToolStripMenuItem.Size = new System.Drawing.Size(102, 22);
+            copyToolStripMenuItem.Text = "Copy";
+            copyToolStripMenuItem.Click += copyToolStripMenuItem_Click;
             // 
             // menuStrip1
             // 
@@ -2802,6 +2818,24 @@ namespace LabBilling.Forms
             bannerPanel.Size = new System.Drawing.Size(1352, 100);
             bannerPanel.TabIndex = 34;
             // 
+            // tabInsSecondary
+            // 
+            tabInsSecondary.Location = new System.Drawing.Point(4, 24);
+            tabInsSecondary.Name = "tabInsSecondary";
+            tabInsSecondary.Size = new System.Drawing.Size(1344, 568);
+            tabInsSecondary.TabIndex = 16;
+            tabInsSecondary.Text = "Secondary Insurance";
+            tabInsSecondary.UseVisualStyleBackColor = true;
+            // 
+            // tabInsTertiary
+            // 
+            tabInsTertiary.Location = new System.Drawing.Point(4, 24);
+            tabInsTertiary.Name = "tabInsTertiary";
+            tabInsTertiary.Size = new System.Drawing.Size(1344, 568);
+            tabInsTertiary.TabIndex = 17;
+            tabInsTertiary.Text = "Tertiary Insurance";
+            tabInsTertiary.UseVisualStyleBackColor = true;
+            // 
             // AccountForm
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -2843,11 +2877,12 @@ namespace LabBilling.Forms
             ((System.ComponentModel.ISupportInitialize)PaymentsDataGrid).EndInit();
             tabNotes.ResumeLayout(false);
             tabNotes.PerformLayout();
-            noteTextContextMenu.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)notesDataGridView).EndInit();
             tabBillingActivity.ResumeLayout(false);
             tabBillingActivity.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)statementHistoryDataGrid).EndInit();
             ((System.ComponentModel.ISupportInitialize)BillActivityDataGrid).EndInit();
+            noteTextContextMenu.ResumeLayout(false);
             menuStrip1.ResumeLayout(false);
             menuStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)RefreshButton).EndInit();
@@ -2893,7 +2928,6 @@ namespace LabBilling.Forms
         private System.Windows.Forms.Label PmtTotalPmtAdjLabel;
         private System.Windows.Forms.TextBox TotalPmtAllTextBox;
         private System.Windows.Forms.Button AddChargeButton;
-        private System.Windows.Forms.RichTextBox NotesDisplayTextBox;
         private System.Windows.Forms.Button AddNoteButton;
         private System.Windows.Forms.MaskedTextBox ZipcodeTextBox;
         private LabBilling.Library.FlatCombo MaritalStatusComboBox;
@@ -3063,6 +3097,10 @@ namespace LabBilling.Forms
         private System.Windows.Forms.ContextMenuStrip noteTextContextMenu;
         private System.Windows.Forms.ToolStripMenuItem copyToolStripMenuItem;
         private System.Windows.Forms.Panel bannerPanel;
+        private UserControls.LabDataGridView notesDataGridView;
+        private System.Windows.Forms.TabPage tabInsPrimary;
+        private System.Windows.Forms.TabPage tabInsSecondary;
+        private System.Windows.Forms.TabPage tabInsTertiary;
     }
 }
 

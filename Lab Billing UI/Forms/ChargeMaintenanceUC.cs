@@ -25,7 +25,7 @@ namespace LabBilling.Forms
 
         public Account CurrentAccount { get; set; }
         public event EventHandler ChargesUpdated;
-        public event EventHandler<ChargeMaintErrorEventArgs> OnError;
+        public event EventHandler<AppErrorEventArgs> OnError;
         private bool _allowChargeEntry;
 
         public bool AllowChargeEntry 
@@ -211,10 +211,10 @@ namespace LabBilling.Forms
                 catch (Exception ex)
                 {
                     MessageBox.Show(this, string.Format("Exception {0}", ex.Message));
-                    OnError?.Invoke(this, new ChargeMaintErrorEventArgs()
+                    OnError?.Invoke(this, new AppErrorEventArgs()
                     {
                         ErrorMessage = ex.Message,
-                        ErrorLevel = ChargeMaintErrorEventArgs.ErrorLevelType.Error
+                        ErrorLevel = AppErrorEventArgs.ErrorLevelType.Error
                     });
                 }
                 foreach (DataGridViewColumn col in ChrgDetailDataGrid.Columns)
@@ -333,9 +333,9 @@ namespace LabBilling.Forms
                 if (MessageBox.Show($"Change credited flag on {chrgId}?",
                     "Confirm Change", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                 {
-                    OnError?.Invoke(this, new ChargeMaintErrorEventArgs()
+                    OnError?.Invoke(this, new AppErrorEventArgs()
                     {
-                        ErrorLevel = ChargeMaintErrorEventArgs.ErrorLevelType.Debug,
+                        ErrorLevel = AppErrorEventArgs.ErrorLevelType.Debug,
                         ErrorMessage = $"Changing credited flag on {chrgId} from {currentFlag} to {!currentFlag}"
                     });
 
@@ -362,9 +362,9 @@ namespace LabBilling.Forms
                     if (MessageBox.Show($"Move charge {chrgId} ({row.Cells[nameof(Chrg.CdmDescription)].Value}) to account {destAccount}?",
                         "Confirm Move", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                     {
-                        OnError?.Invoke(this, new ChargeMaintErrorEventArgs() 
+                        OnError?.Invoke(this, new AppErrorEventArgs() 
                         { 
-                            ErrorLevel = ChargeMaintErrorEventArgs.ErrorLevelType.Debug,
+                            ErrorLevel = AppErrorEventArgs.ErrorLevelType.Debug,
                             ErrorMessage = $"Moving charge {chrgId} from {CurrentAccount.AccountNo} to {destAccount}"
                         });
                         accountRepository.MoveCharge(CurrentAccount.AccountNo, destAccount, chrgId);
@@ -375,22 +375,6 @@ namespace LabBilling.Forms
         }
 
         private void filterRadioButton_CheckedChanged(object sender, EventArgs e) => FilterCharges();
-    }
-
-    public class ChargeMaintErrorEventArgs : EventArgs
-    {
-        public string ErrorMessage { get; set; }
-        public ErrorLevelType ErrorLevel { get; set; }
-
-        public enum ErrorLevelType
-        {
-            Trace,
-            Debug,
-            Info,
-            Warning,
-            Error,
-            Fatal
-        }
     }
 
 }

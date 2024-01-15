@@ -124,7 +124,7 @@ namespace LabBilling.Forms
 
                 if (!accountRepository.Validate(account))
                 {
-                    return (false, account.AccountValidationStatus.validation_text,
+                    return (false, account.AccountValidationStatus.ValidationText,
                         account.BillForm ?? "UNDEFINED");
                 }
                 else
@@ -205,10 +205,10 @@ namespace LabBilling.Forms
             accountGrid.Columns[nameof(AccountSearch.FirstName)].Visible = false;
             accountGrid.Columns[nameof(AccountSearch.LastName)].Visible = false;
             accountGrid.Columns[nameof(AccountSearch.MiddleName)].Visible = false;
-            accountGrid.Columns[nameof(AccountSearch.mod_date)].Visible = false;
-            accountGrid.Columns[nameof(AccountSearch.mod_host)].Visible = false;
-            accountGrid.Columns[nameof(AccountSearch.mod_prg)].Visible = false;
-            accountGrid.Columns[nameof(AccountSearch.mod_user)].Visible = false;
+            accountGrid.Columns[nameof(AccountSearch.UpdatedDate)].Visible = false;
+            accountGrid.Columns[nameof(AccountSearch.UpdatedHost)].Visible = false;
+            accountGrid.Columns[nameof(AccountSearch.UpdatedApp)].Visible = false;
+            accountGrid.Columns[nameof(AccountSearch.UpdatedUser)].Visible = false;
             accountGrid.Columns[nameof(AccountSearch.rowguid)].Visible = false;
             accountGrid.Columns[nameof(AccountSearch.Balance)].Visible = true;
             accountGrid.Columns[nameof(AccountSearch.TotalPayments)].Visible = showAccountsWithPmtCheckbox.Checked;
@@ -647,7 +647,7 @@ namespace LabBilling.Forms
                 if (!account.ReadyToBill)
                 {
                     accountRepository.Validate(account);
-                    if (account.AccountValidationStatus.validation_text == "No validation errors.")
+                    if (account.AccountValidationStatus.ValidationText == "No validation errors.")
                     {
                         accountRepository.UpdateStatus(selectedAccount, AccountStatus.ReadyToBill);
                         accountRepository.AddNote(selectedAccount, "Marked ready to bill.");

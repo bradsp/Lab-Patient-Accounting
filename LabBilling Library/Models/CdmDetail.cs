@@ -87,16 +87,16 @@ namespace LabBilling.Core.Models
         public string BillCode { get; set; }
 
         [Column("mod_date")]
-        public DateTime mod_date { get; set; }
+        public DateTime UpdatedDate { get; set; }
 
         [Column("mod_user")]
-        public string mod_user { get; set; }
+        public string UpdatedUser { get; set; }
 
         [Column("mod_prg")]
-        public string mod_prg { get; set; }
+        public string UpdatedApp { get; set; }
 
         [Column("mod_host")]
-        public string mod_host { get; set; }
+        public string UpdatedHost { get; set; }
 
         [Column("cost")]
         public decimal Cost { get; set; }
@@ -135,13 +135,13 @@ namespace LabBilling.Core.Models
 
         string BillCode { get; set; }
 
-        DateTime mod_date { get; set; }
+        DateTime UpdatedDate { get; set; }
 
-        string mod_user { get; set; }
+        string UpdatedUser { get; set; }
 
-        string mod_prg { get; set; }
+        string UpdatedApp { get; set; }
 
-        string mod_host { get; set; }
+        string UpdatedHost { get; set; }
 
         decimal Cost { get; set; }
     }

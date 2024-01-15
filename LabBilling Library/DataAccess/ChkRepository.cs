@@ -48,7 +48,7 @@ namespace LabBilling.Core.DataAccess
                 .Where("account = @0 ", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account });
 
             if (asOfDate != null)
-                sql.Where($"{GetRealColumn(nameof(Chk.mod_date))} > @0",
+                sql.Where($"{GetRealColumn(nameof(Chk.UpdatedDate))} > @0",
                     new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = asOfDate });
 
             sql.OrderBy("pay_no");

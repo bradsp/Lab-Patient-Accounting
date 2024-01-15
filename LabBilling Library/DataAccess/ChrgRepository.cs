@@ -99,7 +99,7 @@ namespace LabBilling.Core.DataAccess
 
             if (asOfDate != null)
             {
-                sql.Where($"{_tableName}.{GetRealColumn(nameof(Chrg.mod_date))} > @0",
+                sql.Where($"{_tableName}.{GetRealColumn(nameof(Chrg.UpdatedDate))} > @0",
                     new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = asOfDate});
             }
 

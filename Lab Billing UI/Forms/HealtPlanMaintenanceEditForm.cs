@@ -120,10 +120,10 @@ namespace LabBilling.Forms
 
             interfaceMappingDataGrid.DataSource = insCompany.Mappings;
 
-            interfaceMappingDataGrid.Columns[nameof(Mapping.mod_date)].Visible = false;
-            interfaceMappingDataGrid.Columns[nameof(Mapping.mod_user)].Visible = false;
-            interfaceMappingDataGrid.Columns[nameof(Mapping.mod_host)].Visible = false;
-            interfaceMappingDataGrid.Columns[nameof(Mapping.mod_prg)].Visible = false;
+            interfaceMappingDataGrid.Columns[nameof(Mapping.UpdatedDate)].Visible = false;
+            interfaceMappingDataGrid.Columns[nameof(Mapping.UpdatedUser)].Visible = false;
+            interfaceMappingDataGrid.Columns[nameof(Mapping.UpdatedHost)].Visible = false;
+            interfaceMappingDataGrid.Columns[nameof(Mapping.UpdatedApp)].Visible = false;
             interfaceMappingDataGrid.Columns[nameof(Mapping.rowguid)].Visible = false;
             interfaceMappingDataGrid.Columns[nameof(Mapping.SystemType)].Visible = false;
             interfaceMappingDataGrid.Columns[nameof(Mapping.SystemKey)].Visible = false;

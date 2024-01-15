@@ -76,16 +76,16 @@ namespace LabBilling.Core.Models
 
         [ResultColumn]
         [Column("mod_date")]
-        public DateTime mod_date { get; set; }
+        public DateTime UpdatedDate { get; set; }
         [ResultColumn]
         [Column("mod_date")]
-        public string mod_user { get; set; }
+        public string UpdatedUser { get; set; }
         [ResultColumn]
         [Column("mod_prg")]
-        public string mod_prg { get; set; }
+        public string UpdatedApp { get; set; }
         [ResultColumn]
         [Column("mod_host")]
-        public string mod_host { get; set; }
+        public string UpdatedHost { get; set; }
 
         [Ignore]
         public Pat Pat { get; set; } = new Pat();
@@ -282,24 +282,24 @@ namespace LabBilling.Core.Models
             {
                 List<DateTime> dates = new List<DateTime>
                 {
-                    mod_date,
-                    Pat.mod_date
+                    UpdatedDate,
+                    Pat.UpdatedDate
                 };
 
                 if (Charges.Any())
-                    dates.Add(Charges.Max(x => x.mod_date));
+                    dates.Add(Charges.Max(x => x.UpdatedDate));
 
                 if (Insurances.Any())
-                    dates.Add(Insurances.Max(x => x.mod_date));
+                    dates.Add(Insurances.Max(x => x.UpdatedDate));
 
                 if (Payments.Any())
-                    dates.Add(Payments.Max(x => x.mod_date));
+                    dates.Add(Payments.Max(x => x.UpdatedDate));
 
                 if (Notes.Any())
-                    dates.Add(Notes.Max(x => x.mod_date));
+                    dates.Add(Notes.Max(x => x.UpdatedDate));
 
                 if (BillingActivities.Any())
-                    dates.Add(BillingActivities.Max(x => x.mod_date));
+                    dates.Add(BillingActivities.Max(x => x.UpdatedDate));
 
                 return dates.Max();
             } 

@@ -44,7 +44,7 @@ namespace LabBilling.Forms
             MessagesGrid.Columns[nameof(MessageInbound.ProcessFlag)].Visible = true;
             MessagesGrid.Columns[nameof(MessageInbound.ProcessStatusMsg)].Visible = true;
             MessagesGrid.Columns[nameof(MessageInbound.Errors)].Visible = true;
-            MessagesGrid.Columns[nameof(MessageInbound.mod_date)].Visible = true;
+            MessagesGrid.Columns[nameof(MessageInbound.UpdatedDate)].Visible = true;
 
             //MessagesGrid.Columns[nameof(MessageInbound.ProcessStatusMsg)].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             MessagesGrid.AutoResizeColumns();

@@ -30,20 +30,18 @@ namespace LabBilling.Core.Models
         [Column("pointer_set")]
         public bool PointerSet { get; set; }
         [Column("mod_date")]
-        public DateTime mod_date { get; set; }
+        public DateTime UpdatedDate { get; set; }
         [Column("mod_user")]
-        public string mod_user { get; set; }
+        public string UpdatedUser { get; set; }
         [Column("mod_prg")]
-        public string mod_prg { get; set; }
-        [Column("deleted")]
-        public bool IsDeleted { get; set; }
+        public string UpdatedApp { get; set; }
+        [Column("mod_host")]
+        [Ignore]
+        public string UpdatedHost { get; set; }
 
         [Column("uri")]
         public int uri { get; set; }
 
-        [Ignore]
-        [Column("mod_host")]
-        public string mod_host { get; set; }
         [Ignore]
         public Guid rowguid { get; set; }
 

@@ -24,11 +24,15 @@ namespace LabBilling.Core.Models
         [Column("id")]
         public int Id { get; set; }
 
-        public DateTime mod_date { get; set; }
-        public string mod_user { get; set; }
-        public string mod_prg { get; set; }
+        [Column("mod_date")]
+        public DateTime UpdatedDate { get; set; }
+        [Column("mod_user")]
+        public string UpdatedUser { get; set; }
+        [Column("mod_prg")]
+        public string UpdatedApp { get; set; }
+
         [Ignore]
-        public string mod_host { get; set; }
+        public string UpdatedHost { get; set; }
         [Ignore]
         public Guid rowguid { get; set; }
 

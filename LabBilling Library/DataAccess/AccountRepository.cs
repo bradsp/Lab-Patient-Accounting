@@ -412,9 +412,11 @@ namespace LabBilling.Core.DataAccess
             if (string.IsNullOrEmpty(status))
                 throw new ArgumentNullException(nameof(status));
             if (!AccountStatus.IsValid(status))
-                throw new ArgumentOutOfRangeException("Invalid status", nameof(status));
+                throw new ArgumentOutOfRangeException(nameof(status), "Invalid status");
 
-            return dbConnection.Update<Account>($"set status = @0, mod_date = @1, mod_user = @2, mod_prg = @3, mod_host = @4 where account = @5",
+            return dbConnection.Update<Account>($"set {GetRealColumn(nameof(Account.Status))} = @0, {GetRealColumn(nameof(Account.UpdatedDate))} = @1, " +
+                $"{GetRealColumn(nameof(Account.UpdatedUser))} = @2, {GetRealColumn(nameof(Account.UpdatedUser))} = @3, {GetRealColumn(nameof(Account.UpdatedHost))} = @4 " +
+                $"where {GetRealColumn(nameof(Account.AccountNo))} = @5",
                 new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = status },
                 new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = DateTime.Now },
                 new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = Environment.UserName.ToString() },
@@ -1305,9 +1307,9 @@ namespace LabBilling.Core.DataAccess
                     || account.Status == AccountStatus.Closed || account.Status == AccountStatus.PaidOut) && !reprint)
                 {
                     //account has been billed, do not validate
-                    account.AccountValidationStatus.account = account.AccountNo;
-                    account.AccountValidationStatus.mod_date = DateTime.Now;
-                    account.AccountValidationStatus.validation_text = "Account has already been billed. Did not validate.";
+                    account.AccountValidationStatus.Account = account.AccountNo;
+                    account.AccountValidationStatus.UpdatedDate = DateTime.Now;
+                    account.AccountValidationStatus.ValidationText = "Account has already been billed. Did not validate.";
                     accountValidationStatusRepository.Save(account.AccountValidationStatus);
                     return false;
                 }
@@ -1331,15 +1333,15 @@ namespace LabBilling.Core.DataAccess
 
                     bool isAccountValid = true;
 
-                    account.AccountValidationStatus.account = account.AccountNo;
-                    account.AccountValidationStatus.mod_date = DateTime.Now;
+                    account.AccountValidationStatus.Account = account.AccountNo;
+                    account.AccountValidationStatus.UpdatedDate = DateTime.Now;
 
                     string lmrperrors = null;
 
                     if (!validationResult.IsValid)
                     {
                         isAccountValid = false;
-                        account.AccountValidationStatus.validation_text = validationResult.ToString() + Environment.NewLine;
+                        account.AccountValidationStatus.ValidationText = validationResult.ToString() + Environment.NewLine;
                         //update account status back to new
                         if (!reprint)
                             UpdateStatus(account.AccountNo, AccountStatus.New);
@@ -1351,7 +1353,7 @@ namespace LabBilling.Core.DataAccess
                         isAccountValid = false;
                         foreach (var error in account.LmrpErrors)
                         {
-                            account.AccountValidationStatus.validation_text += error + Environment.NewLine;
+                            account.AccountValidationStatus.ValidationText += error + Environment.NewLine;
                             lmrperrors += error + "\n";
                         }
                         if (!reprint)
@@ -1360,7 +1362,7 @@ namespace LabBilling.Core.DataAccess
 
                     if (isAccountValid)
                     {
-                        account.AccountValidationStatus.validation_text = "No validation errors.";
+                        account.AccountValidationStatus.ValidationText = "No validation errors.";
                         //update account status if this account has been flagged to bill
                         if (account.Status == AccountStatus.ReadyToBill)
                         {   
@@ -1376,7 +1378,7 @@ namespace LabBilling.Core.DataAccess
                     accountValidationStatusRepository.Save(account.AccountValidationStatus);
                     if (!string.IsNullOrEmpty(lmrperrors))
                     {
-                        AccountLmrpError record = new AccountLmrpError
+                        AccountLmrpError record = new()
                         {
                             AccountNo = account.AccountNo,
                             DateOfService = (DateTime)account.TransactionDate,
@@ -1396,9 +1398,9 @@ namespace LabBilling.Core.DataAccess
                 Log.Instance.Error(ex);
                 AbortTransaction();
 
-                account.AccountValidationStatus.account = account.AccountNo;
-                account.AccountValidationStatus.mod_date = DateTime.Now;
-                account.AccountValidationStatus.validation_text = "Exception during Validation. Unable to validate.";
+                account.AccountValidationStatus.Account = account.AccountNo;
+                account.AccountValidationStatus.UpdatedDate = DateTime.Now;
+                account.AccountValidationStatus.ValidationText = "Exception during Validation. Unable to validate.";
                 accountValidationStatusRepository.Save(account.AccountValidationStatus);
             }
 

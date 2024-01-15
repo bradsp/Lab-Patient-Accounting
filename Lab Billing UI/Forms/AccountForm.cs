@@ -15,8 +15,7 @@ using System.Threading.Tasks;
 using LabBilling.Core.BusinessLogic;
 using LabBilling.Legacy;
 using WinFormsLibrary;
-using System.Windows.Media.Converters;
-using System.Xml;
+
 
 namespace LabBilling.Forms
 {
@@ -42,8 +41,6 @@ namespace LabBilling.Forms
         private readonly PatRepository patRepository = new(Program.AppEnvironment);
         private readonly DictDxRepository dictDxRepository = new(Program.AppEnvironment);
         private readonly InsCompanyRepository insCompanyRepository = new(Program.AppEnvironment);
-        //private readonly ChrgRepository chrgRepository = new(Program.AppEnvironment);
-        //private readonly ChrgDetailRepository chrgDetailRepository = new(Program.AppEnvironment);
         private readonly UserProfileRepository userProfileDB = new(Program.AppEnvironment);
         private readonly ChkRepository chkRepository = new(Program.AppEnvironment);
         private readonly AccountNoteRepository accountNoteRepository = new(Program.AppEnvironment);
@@ -55,7 +52,10 @@ namespace LabBilling.Forms
         private const int _timerInterval = 650;
         private const string notesAlertText = "** SEE NOTES **";
         private bool closing = false;
-        private ChargeMaintenanceUC chargeMaintenance = new ChargeMaintenanceUC();
+        private ChargeMaintenanceUC chargeMaintenance = new();
+        private InsMaintenanceUC insPrimaryMaintenanceUC = new(InsCoverage.Primary);
+        private InsMaintenanceUC insSecondaryMaintenanceUC = new(InsCoverage.Secondary);
+        private InsMaintenanceUC insTertiaryMaintenanceUC = new(InsCoverage.Tertiary);
 
         //private bool skipSelectionChanged = false;
         private Timer _timer;
@@ -125,10 +125,26 @@ namespace LabBilling.Forms
 
             providerSearchListBox.Visible = false;
             tabDemographics.Controls.Add(providerSearchListBox);
+
             tabCharges.Controls.Add(chargeMaintenance);
             chargeMaintenance.Dock = DockStyle.Fill;
             chargeMaintenance.ChargesUpdated += DataChanged_EventHandler;
-            chargeMaintenance.OnError += chargeMaintenance_OnError;
+            chargeMaintenance.OnError += UserControl_OnError;
+
+            tabInsPrimary.Controls.Add(insPrimaryMaintenanceUC);
+            insPrimaryMaintenanceUC.Dock = DockStyle.Fill;
+            insPrimaryMaintenanceUC.InsuranceChanged += DataChanged_EventHandler;
+            insPrimaryMaintenanceUC.OnError += UserControl_OnError;
+
+            tabInsSecondary.Controls.Add(insSecondaryMaintenanceUC);
+            insSecondaryMaintenanceUC.Dock = DockStyle.Fill;
+            insSecondaryMaintenanceUC.InsuranceChanged += DataChanged_EventHandler;
+            insSecondaryMaintenanceUC.OnError += UserControl_OnError;
+
+            tabInsTertiary.Controls.Add(insTertiaryMaintenanceUC);
+            insTertiaryMaintenanceUC.Dock = DockStyle.Fill;
+            insTertiaryMaintenanceUC.InsuranceChanged += DataChanged_EventHandler;
+            insTertiaryMaintenanceUC.OnError += UserControl_OnError;
 
             #region Process permissions and enable controls
 
@@ -137,6 +153,9 @@ namespace LabBilling.Forms
             #endregion
 
             #region load controlColumnMap
+            controlColumnMap.Add(SocSecNoTextBox, nameof(Account.SocSecNo));
+            controlColumnMap.Add(DateOfBirthTextBox, nameof(Account.BirthDate));
+            controlColumnMap.Add(SexComboBox, nameof(Account.Sex));
 
             controlColumnMap.Add(ZipcodeTextBox, nameof(Pat.ZipCode));
             controlColumnMap.Add(MaritalStatusComboBox, nameof(Pat.MaritalStatus));
@@ -146,14 +165,22 @@ namespace LabBilling.Forms
             controlColumnMap.Add(MiddleNameTextBox, nameof(Pat.PatMiddleName));
             controlColumnMap.Add(FirstNameTextBox, nameof(Pat.PatFirstName));
             controlColumnMap.Add(StateComboBox, nameof(Pat.State));
-            controlColumnMap.Add(SocSecNoTextBox, nameof(Account.SocSecNo));
-            controlColumnMap.Add(DateOfBirthTextBox, nameof(Account.BirthDate));
             controlColumnMap.Add(PhoneTextBox, nameof(Pat.PrimaryPhone));
             controlColumnMap.Add(CityTextBox, nameof(Pat.City));
             controlColumnMap.Add(Address2TextBox, nameof(Pat.Address2));
-            controlColumnMap.Add(SexComboBox, nameof(Account.Sex));
             controlColumnMap.Add(Address1TextBox, nameof(Pat.Address1));
             controlColumnMap.Add(GuarZipTextBox, nameof(Pat.GuarantorZipCode));
+            controlColumnMap.Add(GuarSuffixTextBox, nameof(Pat.GuarantorNameSuffix));
+            controlColumnMap.Add(GuarMiddleNameTextBox, nameof(Pat.GuarantorMiddleName));
+            controlColumnMap.Add(GuarFirstNameTextBox, nameof(Pat.GuarantorFirstName));
+            controlColumnMap.Add(GuarStateComboBox, nameof(Pat.GuarantorState));
+            controlColumnMap.Add(GuarantorRelationComboBox, nameof(Pat.GuarRelationToPatient));
+            controlColumnMap.Add(GuarantorPhoneTextBox, nameof(Pat.GuarantorPrimaryPhone));
+            controlColumnMap.Add(GuarCityTextBox, nameof(Pat.GuarantorCity));
+            controlColumnMap.Add(GuarantorAddressTextBox, nameof(Pat.GuarantorAddress));
+            controlColumnMap.Add(GuarantorLastNameTextBox, nameof(Pat.GuarantorLastName));
+            controlColumnMap.Add(providerLookup1, nameof(Pat.ProviderId));
+
             controlColumnMap.Add(PlanFinCodeComboBox, nameof(Ins.FinCode));
             controlColumnMap.Add(CertSSNTextBox, nameof(Ins.CertSSN));
             controlColumnMap.Add(HolderLastNameTextBox, nameof(Ins.HolderLastName));
@@ -175,16 +202,6 @@ namespace LabBilling.Forms
             controlColumnMap.Add(PlanCityStTextBox, nameof(Ins.PlanCityState));
             controlColumnMap.Add(PlanAddressTextBox, nameof(Ins.PlanStreetAddress1));
             controlColumnMap.Add(HolderCityTextBox, nameof(Ins.HolderCity));
-            controlColumnMap.Add(GuarSuffixTextBox, nameof(Pat.GuarantorNameSuffix));
-            controlColumnMap.Add(GuarMiddleNameTextBox, nameof(Pat.GuarantorMiddleName));
-            controlColumnMap.Add(GuarFirstNameTextBox, nameof(Pat.GuarantorFirstName));
-            controlColumnMap.Add(GuarStateComboBox, nameof(Pat.GuarantorState));
-            controlColumnMap.Add(GuarantorRelationComboBox, nameof(Pat.GuarRelationToPatient));
-            controlColumnMap.Add(GuarantorPhoneTextBox, nameof(Pat.GuarantorPrimaryPhone));
-            controlColumnMap.Add(GuarCityTextBox, nameof(Pat.GuarantorCity));
-            controlColumnMap.Add(GuarantorAddressTextBox, nameof(Pat.GuarantorAddress));
-            controlColumnMap.Add(GuarantorLastNameTextBox, nameof(Pat.GuarantorLastName));
-            controlColumnMap.Add(providerLookup1, nameof(Pat.ProviderId));
             #endregion
 
             #region Setup Insurance Company Combobox
@@ -258,26 +275,26 @@ namespace LabBilling.Forms
             }
         }
 
-        private void chargeMaintenance_OnError(object sender, ChargeMaintErrorEventArgs e)
+        private void UserControl_OnError(object sender, AppErrorEventArgs e)
         {
             switch(e.ErrorLevel)
             {
-                case ChargeMaintErrorEventArgs.ErrorLevelType.Trace:
+                case AppErrorEventArgs.ErrorLevelType.Trace:
                     Log.Instance.Trace(e.ErrorMessage);
                     break;
-                case ChargeMaintErrorEventArgs.ErrorLevelType.Debug:
+                case AppErrorEventArgs.ErrorLevelType.Debug:
                     Log.Instance.Debug(e.ErrorMessage);
                     break;
-                case ChargeMaintErrorEventArgs.ErrorLevelType.Info:
+                case AppErrorEventArgs.ErrorLevelType.Info:
                     Log.Instance.Info(e.ErrorMessage);
                     break;
-                case ChargeMaintErrorEventArgs.ErrorLevelType.Warning:
+                case AppErrorEventArgs.ErrorLevelType.Warning:
                     Log.Instance.Warn(e.ErrorMessage);
                     break;
-                case ChargeMaintErrorEventArgs.ErrorLevelType.Error:
+                case AppErrorEventArgs.ErrorLevelType.Error:
                     Log.Instance.Error(e.ErrorMessage);
                     break;
-                case ChargeMaintErrorEventArgs.ErrorLevelType.Fatal:
+                case AppErrorEventArgs.ErrorLevelType.Fatal:
                     Log.Instance.Fatal(e.ErrorMessage);
                     break;
                 default:
@@ -290,7 +307,7 @@ namespace LabBilling.Forms
 
         private void SetFormPermissions()
         {
-            chargeMaintenance.AllowChargeEntry = Program.LoggedInUser.CanSubmitCharges;
+            chargeMaintenance.AllowChargeEntry = Program.LoggedInUser.CanSubmitCharges;            
 
             Helper.SetControlsAccess(tabPayments.Controls, false);
             if (Program.AppEnvironment.ApplicationParameters.AllowPaymentAdjustmentEntry)
@@ -298,6 +315,7 @@ namespace LabBilling.Forms
                 Helper.SetControlsAccess(tabPayments.Controls, Program.LoggedInUser.CanAddAdjustments);
             }
 
+            insPrimaryMaintenanceUC.AllowEditing = false;
             Helper.SetControlsAccess(tabDemographics.Controls, false);
             Helper.SetControlsAccess(tabInsurance.Controls, false);
             Helper.SetControlsAccess(insTabLayoutPanel.Controls, false);
@@ -319,6 +337,7 @@ namespace LabBilling.Forms
             {
                 if (Program.LoggedInUser.Access == "ENTER/EDIT")
                 {
+                    insPrimaryMaintenanceUC.AllowEditing = true;
                     Helper.SetControlsAccess(tabDemographics.Controls, true);
                     Helper.SetControlsAccess(tabInsurance.Controls, true);
                     Helper.SetControlsAccess(insTabLayoutPanel.Controls, true);
@@ -375,6 +394,12 @@ namespace LabBilling.Forms
                 clearHoldStatusToolStripMenuItem.Text = setHoldMenuText;
 
             chargeMaintenance.CurrentAccount = currentAccount;
+            insPrimaryMaintenanceUC.CurrentAccount = currentAccount;
+            insPrimaryMaintenanceUC.CurrentIns = currentAccount.InsurancePrimary;
+            insSecondaryMaintenanceUC.CurrentAccount = currentAccount;
+            insSecondaryMaintenanceUC.CurrentIns = currentAccount.InsuranceSecondary;
+            insTertiaryMaintenanceUC.CurrentAccount = currentAccount;
+            insTertiaryMaintenanceUC.CurrentIns = currentAccount.InsuranceTertiary;
 
             RefreshAccountData();
             this.ResumeLayout();
@@ -389,6 +414,9 @@ namespace LabBilling.Forms
             LoadDemographics();
             LoadInsuranceData();
             chargeMaintenance.LoadCharges();
+            insPrimaryMaintenanceUC.LoadInsuranceData();
+            insSecondaryMaintenanceUC.LoadInsuranceData();
+            insTertiaryMaintenanceUC.LoadInsuranceData();
             LoadPayments();
             LoadDx();
             LoadNotes();
@@ -1116,10 +1144,7 @@ namespace LabBilling.Forms
             currentAccount.Payments = currentAccount.Payments.OrderByDescending(x => x.PaymentNo).ToList();
             PaymentsDataGrid.DataSource = currentAccount.Payments.ToList();
 
-            foreach (DataGridViewColumn col in PaymentsDataGrid.Columns)
-            {
-                col.Visible = false;
-            }
+            PaymentsDataGrid.SetColumnsVisibility(false);
 
             PaymentsDataGrid.Columns[nameof(Chk.PaidAmount)].Visible = true;
             PaymentsDataGrid.Columns[nameof(Chk.Batch)].Visible = true;
@@ -1433,10 +1458,10 @@ namespace LabBilling.Forms
                 var dictRecords = dictDxRepository.Search(txtSearchDx.Text, currentAccount.TransactionDate);
 
                 DxSearchDataGrid.DataSource = dictRecords;
-                DxSearchDataGrid.Columns[nameof(DictDx.mod_date)].Visible = false;
-                DxSearchDataGrid.Columns[nameof(DictDx.mod_user)].Visible = false;
-                DxSearchDataGrid.Columns[nameof(DictDx.mod_prg)].Visible = false;
-                DxSearchDataGrid.Columns[nameof(DictDx.mod_host)].Visible = false;
+                DxSearchDataGrid.Columns[nameof(DictDx.UpdatedDate)].Visible = false;
+                DxSearchDataGrid.Columns[nameof(DictDx.UpdatedUser)].Visible = false;
+                DxSearchDataGrid.Columns[nameof(DictDx.UpdatedApp)].Visible = false;
+                DxSearchDataGrid.Columns[nameof(DictDx.UpdatedHost)].Visible = false;
                 DxSearchDataGrid.Columns[nameof(DictDx.IsDeleted)].Visible = false;
                 DxSearchDataGrid.Columns[nameof(DictDx.AmaYear)].Visible = false;
                 DxSearchDataGrid.Columns[nameof(DictDx.Id)].Visible = false;
@@ -1623,16 +1648,23 @@ namespace LabBilling.Forms
         private void LoadNotes()
         {
             Log.Instance.Trace("Entering");
-            NotesDisplayTextBox.Text = "";
-            NotesDisplayTextBox.BackColor = Color.AntiqueWhite;
-            foreach (AccountNote note in currentAccount.Notes)
-            {
-                NotesDisplayTextBox.DeselectAll();
-                NotesDisplayTextBox.SelectionFont = new Font(NotesDisplayTextBox.SelectionFont, FontStyle.Bold);
-                NotesDisplayTextBox.AppendText(note.mod_date + " - " + note.mod_user);
-                NotesDisplayTextBox.SelectionFont = new Font(NotesDisplayTextBox.SelectionFont, FontStyle.Regular);
-                NotesDisplayTextBox.AppendText(Environment.NewLine + note.Comment + Environment.NewLine + Environment.NewLine);
-            }
+            notesDataGridView.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
+            notesDataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+            notesDataGridView.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
+            notesDataGridView.DataSource = currentAccount.Notes;
+            notesDataGridView.BackgroundColor = Color.AntiqueWhite;
+
+            notesDataGridView.SetColumnsVisibility(false);
+            notesDataGridView.SetColumnVisibility(nameof(AccountNote.UpdatedDate), true);
+            notesDataGridView.SetColumnVisibility(nameof(AccountNote.UpdatedUser), true);
+            notesDataGridView.SetColumnVisibility(nameof(AccountNote.Comment), true);
+
+            notesDataGridView.Columns[nameof(AccountNote.Comment)].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            notesDataGridView.Columns[nameof(AccountNote.UpdatedDate)].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            notesDataGridView.Columns[nameof(AccountNote.UpdatedUser)].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            notesDataGridView.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
+            notesDataGridView.AutoResizeRows(DataGridViewAutoSizeRowsMode.AllCells);
+
             if (currentAccount.AccountAlert != null)
                 noteAlertCheckBox.Checked = currentAccount.AccountAlert.Alert;
         }
@@ -1667,16 +1699,16 @@ namespace LabBilling.Forms
 
             BillActivityDataGrid.DataSource = currentAccount.BillingActivities.ToList();
             BillActivityDataGrid.Columns[nameof(BillingActivity.rowguid)].Visible = false;
-            BillActivityDataGrid.Columns[nameof(BillingActivity.mod_date)].Visible = false;
-            BillActivityDataGrid.Columns[nameof(BillingActivity.mod_host)].Visible = false;
-            BillActivityDataGrid.Columns[nameof(BillingActivity.mod_prg)].Visible = false;
-            BillActivityDataGrid.Columns[nameof(BillingActivity.mod_user)].Visible = false;
+            BillActivityDataGrid.Columns[nameof(BillingActivity.UpdatedDate)].Visible = false;
+            BillActivityDataGrid.Columns[nameof(BillingActivity.UpdatedHost)].Visible = false;
+            BillActivityDataGrid.Columns[nameof(BillingActivity.UpdatedApp)].Visible = false;
+            BillActivityDataGrid.Columns[nameof(BillingActivity.UpdatedUser)].Visible = false;
             BillActivityDataGrid.Columns[nameof(BillingActivity.Text)].Visible = false;
 
             BillActivityDataGrid.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
 
-            ValidationResultsTextBox.Text = currentAccount.AccountValidationStatus.validation_text;
-            LastValidatedLabel.Text = currentAccount.AccountValidationStatus.mod_date.ToString("G");
+            ValidationResultsTextBox.Text = currentAccount.AccountValidationStatus.ValidationText;
+            LastValidatedLabel.Text = currentAccount.AccountValidationStatus.UpdatedDate.ToString("G");
 
             statementFlagComboBox.SelectedItem = currentAccount.Pat.StatementFlag;
             firstStmtDateTextBox.Text = currentAccount.Pat.FirstStatementDate.ToString();
@@ -1915,14 +1947,14 @@ namespace LabBilling.Forms
                 if (!await Task.Run(() => accountRepository.Validate(currentAccount)))
                 {
                     //has validation errors - do not bill
-                    ValidationResultsTextBox.Text = currentAccount.AccountValidationStatus.validation_text;
-                    LastValidatedLabel.Text = currentAccount.AccountValidationStatus.mod_date.ToString("G");
+                    ValidationResultsTextBox.Text = currentAccount.AccountValidationStatus.ValidationText;
+                    LastValidatedLabel.Text = currentAccount.AccountValidationStatus.UpdatedDate.ToString("G");
                 }
                 else
                 {
                     //ok to bill
                     ValidationResultsTextBox.Text = "No validation errors.";
-                    LastValidatedLabel.Text = currentAccount.AccountValidationStatus.mod_date.ToString("G");
+                    LastValidatedLabel.Text = currentAccount.AccountValidationStatus.UpdatedDate.ToString("G");
                 }
                 await LoadAccountData();
             }
@@ -2100,11 +2132,9 @@ namespace LabBilling.Forms
         {
             var selectedCell = dxPointerGrid2.CurrentCell;
 
-
             if (selectedCell.ColumnIndex >= 3)
             {
                 DataGridViewComboBoxCell comboBoxCell = (selectedCell as DataGridViewComboBoxCell);
-
                 comboBoxCell.Value = null;
             }
         }
@@ -2151,8 +2181,7 @@ namespace LabBilling.Forms
 
         private void noteAlertCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            if (currentAccount.AccountAlert == null)
-                currentAccount.AccountAlert = new AccountAlert();
+            currentAccount.AccountAlert ??= new AccountAlert();
             currentAccount.AccountAlert.AccountNo = currentAccount.AccountNo;
             currentAccount.AccountAlert.Alert = noteAlertCheckBox.Checked;
             bannerAlertLabel.Text = noteAlertCheckBox.Checked ? notesAlertText : "";
@@ -2164,10 +2193,7 @@ namespace LabBilling.Forms
 
         private void copyToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (NotesDisplayTextBox.SelectionLength > 0)
-            {
-                NotesDisplayTextBox.Copy();
-            }
+
         }
     }
 }

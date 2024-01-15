@@ -61,14 +61,18 @@ namespace LabBilling.Core.Models
         public double RetailAmount { get; set; }
         [Column("inp_price")]
         public double HospAmount { get; set; }
+        [Column("mod_date")]
         [ResultColumn]
-        public DateTime mod_date { get; set; }
+        public DateTime UpdatedDate { get; set; }
+        [Column("mod_user")]
         [ResultColumn]
-        public string mod_user { get; set; }
+        public string UpdatedUser { get; set; }
+        [Column("mod_prg")]
         [ResultColumn]
-        public string mod_prg { get; set; }
+        public string UpdatedApp { get; set; }
+        [Column("mod_host")]
         [ResultColumn]
-        public string mod_host { get; set; }
+        public string UpdatedHost { get; set; }
 
         public Guid rowguid { get; set; }
 

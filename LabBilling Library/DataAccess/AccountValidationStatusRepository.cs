@@ -13,7 +13,7 @@ namespace LabBilling.Core.DataAccess
 
         public AccountValidationStatus GetByAccount(string account)
         {
-            var record = dbConnection.SingleOrDefault<AccountValidationStatus>($"where {GetRealColumn(nameof(AccountValidationStatus.account))} = @0", 
+            var record = dbConnection.SingleOrDefault<AccountValidationStatus>($"where {GetRealColumn(nameof(AccountValidationStatus.Account))} = @0", 
                 new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account }) ?? new AccountValidationStatus();
             return record;
         }
@@ -22,7 +22,7 @@ namespace LabBilling.Core.DataAccess
         {
             //TODO: error catching
             bool retVal = true;
-            if(dbConnection.Exists<AccountValidationStatus>((object)table.account))
+            if(dbConnection.Exists<AccountValidationStatus>((object)table.Account))
             {
                 this.Update(table);
             }

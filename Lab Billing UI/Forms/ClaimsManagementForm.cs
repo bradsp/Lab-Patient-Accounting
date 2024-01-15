@@ -41,10 +41,10 @@ namespace LabBilling.Forms
 
             LoadData();
 
-            claimBatchDataGrid.Columns[nameof(BillingBatch.mod_prg)].Visible = false;
-            claimBatchDataGrid.Columns[nameof(BillingBatch.mod_date)].Visible = false;
-            claimBatchDataGrid.Columns[nameof(BillingBatch.mod_host)].Visible = false;
-            claimBatchDataGrid.Columns[nameof(BillingBatch.mod_user)].Visible = false;
+            claimBatchDataGrid.Columns[nameof(BillingBatch.UpdatedApp)].Visible = false;
+            claimBatchDataGrid.Columns[nameof(BillingBatch.UpdatedDate)].Visible = false;
+            claimBatchDataGrid.Columns[nameof(BillingBatch.UpdatedHost)].Visible = false;
+            claimBatchDataGrid.Columns[nameof(BillingBatch.UpdatedUser)].Visible = false;
             claimBatchDataGrid.Columns[nameof(BillingBatch.rowguid)].Visible = false;
             claimBatchDataGrid.Columns[nameof(BillingBatch.X12Text)].Visible = false;
             claimBatchDataGrid.Columns[nameof(BillingBatch.TotalBilled)].DefaultCellStyle.Format = "N2";
@@ -157,10 +157,10 @@ namespace LabBilling.Forms
                 claimBatchDetailDataGrid.Columns[nameof(BillingActivity.IsPrinted)].Visible = false;
                 claimBatchDetailDataGrid.Columns[nameof(BillingActivity.Text)].Visible = false;
                 claimBatchDetailDataGrid.Columns[nameof(BillingActivity.IsDeleted)].Visible = false;
-                claimBatchDetailDataGrid.Columns[nameof(BillingActivity.mod_date)].Visible = false;
-                claimBatchDetailDataGrid.Columns[nameof(BillingActivity.mod_host)].Visible = false;
-                claimBatchDetailDataGrid.Columns[nameof(BillingActivity.mod_prg)].Visible = false;
-                claimBatchDetailDataGrid.Columns[nameof(BillingActivity.mod_user)].Visible = false;
+                claimBatchDetailDataGrid.Columns[nameof(BillingActivity.UpdatedDate)].Visible = false;
+                claimBatchDetailDataGrid.Columns[nameof(BillingActivity.UpdatedHost)].Visible = false;
+                claimBatchDetailDataGrid.Columns[nameof(BillingActivity.UpdatedApp)].Visible = false;
+                claimBatchDetailDataGrid.Columns[nameof(BillingActivity.UpdatedUser)].Visible = false;
                 claimBatchDetailDataGrid.Columns[nameof(BillingActivity.rowguid)].Visible = false;
                 claimBatchDetailDataGrid.Columns[nameof(BillingActivity.PatientName)].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
                 claimBatchDetailDataGrid.Columns[nameof(BillingActivity.ClaimAmount)].DefaultCellStyle.Format = "N2";

@@ -19,13 +19,17 @@ namespace LabBilling.Core.Models
         public DateTime? PostedDate { get; set; }
 
         [ResultColumn]
-        public DateTime mod_date { get; set; }
+        [Column("mod_date")]
+        public DateTime UpdatedDate { get; set; }
         [ResultColumn]
-        public string mod_user { get; set; }
+        [Column("mod_user")]
+        public string UpdatedUser { get; set; }
         [ResultColumn]
-        public string mod_prg { get; set; }
+        [Column("mod_prg")]
+        public string UpdatedApp { get; set; }
         [ResultColumn]
-        public string mod_host { get; set; }
+        [Column("mod_host")]
+        public string UpdatedHost { get; set; }
         [Ignore]
         public Guid rowguid { get; set; }
 

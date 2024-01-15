@@ -596,10 +596,11 @@ namespace LabBilling.Core.Models
 
         public SysParameter ExtractSystemParameter(string keyName, object value)
         {
-            SysParameter parameter = new SysParameter();
-
-            parameter.KeyName = keyName;
-            parameter.Value = value.ToString();
+            SysParameter parameter = new SysParameter
+            {
+                KeyName = keyName,
+                Value = value.ToString()
+            };
 
             return parameter;
         }

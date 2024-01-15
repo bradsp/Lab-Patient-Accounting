@@ -26,10 +26,6 @@ namespace LabBilling.Core.Models
         [Ignore]
         public string PatNameSuffix { get; set; }
 
-        //[Column("dob_yyyy")]
-        //public DateTime? BirthDate { get; set; }
-        //[Column("sex")]
-        //public string Sex { get; set; }
         [Column("pat_marital")]
         public string MaritalStatus { get; set; }
 
@@ -150,14 +146,18 @@ namespace LabBilling.Core.Models
         [Column("dx_update_prg")]
         public string DxUpdatePrg { get; set; }
 
+        [Column("mod_date")]
         [ResultColumn]
-        public DateTime mod_date { get; set; }
+        public DateTime UpdatedDate { get; set; }
+        [Column("mod_user")]
         [ResultColumn]
-        public string mod_user { get; set; }
+        public string UpdatedUser { get; set; }
+        [Column("mod_prg")]
         [ResultColumn]
-        public string mod_prg { get; set; }
+        public string UpdatedApp { get; set; }
+        [Column("mod_host")]
         [ResultColumn]
-        public string mod_host { get; set; }
+        public string UpdatedHost { get; set; }
 
 
         [Ignore]

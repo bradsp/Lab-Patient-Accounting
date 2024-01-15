@@ -585,10 +585,10 @@ namespace LabBilling.Forms
 
             dgvPayments.Columns[nameof(ChkBatchDetail.Batch)].Visible = false;
             dgvPayments.Columns[nameof(ChkBatchDetail.Id)].Visible = false;
-            dgvPayments.Columns[nameof(ChkBatchDetail.mod_date)].Visible = false;
-            dgvPayments.Columns[nameof(ChkBatchDetail.mod_host)].Visible = false;
-            dgvPayments.Columns[nameof(ChkBatchDetail.mod_user)].Visible = false;
-            dgvPayments.Columns[nameof(ChkBatchDetail.mod_prg)].Visible = false;
+            dgvPayments.Columns[nameof(ChkBatchDetail.UpdatedDate)].Visible = false;
+            dgvPayments.Columns[nameof(ChkBatchDetail.UpdatedHost)].Visible = false;
+            dgvPayments.Columns[nameof(ChkBatchDetail.UpdatedUser)].Visible = false;
+            dgvPayments.Columns[nameof(ChkBatchDetail.UpdatedApp)].Visible = false;
             dgvPayments.Columns[nameof(ChkBatchDetail.rowguid)].Visible = false;
 
             dgvPayments.Columns[nameof(ChkBatchDetail.AmtPaid)].DefaultCellStyle.Format = "N2";

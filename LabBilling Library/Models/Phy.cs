@@ -51,11 +51,11 @@ namespace LabBilling.Core.Models
         [Column("num_labels")]
         public int LabelPrintCount { get; set; }
         [Column("mod_date")]
-        public DateTime mod_date { get; set; }
+        public DateTime UpdatedDate { get; set; }
         [Column("mod_user")]
-        public string mod_user { get; set; }
+        public string UpdatedUser { get; set; }
         [Column("mod_prg")]
-        public string mod_prg { get; set; }
+        public string UpdatedApp { get; set; }
         [Column("uri")]
         public double uri { get; set; }
         [Column("mt_mnem")]
@@ -68,7 +68,7 @@ namespace LabBilling.Core.Models
         public string DoctorNumber { get; set; }
         [Ignore]
         [Column("mod_host")]
-        public string mod_host { get; set; }
+        public string UpdatedHost { get; set; }
 
         [Ignore]
         public Pth Pathologist { get; set; } = new Pth();

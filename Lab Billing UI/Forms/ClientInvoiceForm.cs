@@ -324,10 +324,10 @@ namespace LabBilling.Forms
             InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.TrueBalanceDue)].DefaultCellStyle.Format = "c2";
             InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.TrueBalanceDue)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.InvoiceFilename)].Visible = false;
-            InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.mod_user)].Visible = false;
-            InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.mod_date)].Visible = false;
-            InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.mod_prg)].Visible = false;
-            InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.mod_host)].Visible = false;
+            InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.UpdatedUser)].Visible = false;
+            InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.UpdatedDate)].Visible = false;
+            InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.UpdatedApp)].Visible = false;
+            InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.UpdatedHost)].Visible = false;
             InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.rowguid)].Visible = false;
 
         }
@@ -357,10 +357,10 @@ namespace LabBilling.Forms
             InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.TrueBalanceDue)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.InvoiceFilename)].Visible = false;
             InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.InvoiceData)].Visible = false;
-            InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.mod_user)].Visible = false;
-            InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.mod_date)].Visible = false;
-            InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.mod_prg)].Visible = false;
-            InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.mod_host)].Visible = false;
+            InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.UpdatedUser)].Visible = false;
+            InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.UpdatedDate)].Visible = false;
+            InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.UpdatedApp)].Visible = false;
+            InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.UpdatedHost)].Visible = false;
             InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.rowguid)].Visible = false;
 
         }

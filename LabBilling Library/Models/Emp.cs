@@ -49,13 +49,13 @@ namespace LabBilling.Core.Models
         //public string MainMenu { get; set; }
 
         [Ignore]
-        public DateTime mod_date { get { return LastModifiedDate; } set { LastModifiedDate = value; } }
+        public DateTime UpdatedDate { get { return LastModifiedDate; } set { LastModifiedDate = value; } }
         [Ignore]
-        public string mod_user { get { return LastModifiedBy;  } set { LastModifiedBy = value; } }
+        public string UpdatedUser { get { return LastModifiedBy;  } set { LastModifiedBy = value; } }
         [Ignore]
-        public string mod_prg {  get { return LastModifiedWith; } set { LastModifiedWith = value; } }
+        public string UpdatedApp {  get { return LastModifiedWith; } set { LastModifiedWith = value; } }
         [Ignore]
-        public string mod_host { get; set; }
+        public string UpdatedHost { get; set; }
         [Ignore]
         public Guid rowguid { get; set; }
 

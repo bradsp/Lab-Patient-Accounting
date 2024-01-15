@@ -17,10 +17,14 @@ namespace LabBilling.Core.Models
 
         [Column("comment")]
         public string Comment { get; set; }
-        public DateTime mod_date { get; set; }
-        public string mod_user { get; set; }
-        public string mod_prg { get; set; }
-        public string mod_host { get; set; }
+        [Column("mod_date")]
+        public DateTime UpdatedDate { get; set; }
+        [Column("mod_user")]
+        public string UpdatedUser { get; set; }
+        [Column("mod_prg")]
+        public string UpdatedApp { get; set; }
+        [Column("mod_host")]
+        public string UpdatedHost { get; set; }
         public Guid rowguid { get; set; }
         [Column("id")]
         public double Id { get; set; }

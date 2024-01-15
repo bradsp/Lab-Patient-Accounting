@@ -31,17 +31,21 @@ namespace LabBilling.Core.Models
 
         [Column("ub92")]
         public string InstitutionalFlag { get; set; }
+        [Column("mod_date")]
         [ResultColumn]
-        public DateTime mod_date { get; set; }
+        public DateTime UpdatedDate { get; set; }
+        [Column("mod_user")]
         [ResultColumn]
-        public string mod_user { get; set; }
+        public string UpdatedUser { get; set; }
+        [Column("mod_prg")]
         [ResultColumn]
-        public string mod_prg { get; set; }
+        public string UpdatedApp { get; set; }
+
 
         [Column("deleted")]
         public bool IsDeleted { get; set; }
         [Ignore]
-        public string mod_host { get; set; }
+        public string UpdatedHost { get; set; }
         [Ignore]
         public Guid rowguid { get; set; }
 

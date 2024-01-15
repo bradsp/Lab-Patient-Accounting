@@ -47,7 +47,7 @@ namespace LabBilling
         [DllImport("user32.dll")]
         public static extern int SendMessage(IntPtr hWnd, Int32 wMsg, bool wParam, Int32 lParam);
 
-        public ProgressReportModel progressReportModel = new ProgressReportModel()
+        public ProgressReportModel progressReportModel = new()
         {
             RecordsProcessed = -1
         };
@@ -298,63 +298,97 @@ namespace LabBilling
             accordion.Add(tlpRecentAccounts, "Recent Accounts", "Last Opened Accounts", 1, true);
 
             //Billing Menu Section
-            TableLayoutPanel tlpBilling = new TableLayoutPanel { Dock = DockStyle.Fill };
-            tlpBilling.ColumnCount = 1;
-            tlpBilling.RowCount = 3;
+            TableLayoutPanel tlpBilling = new()
+            {
+                Dock = DockStyle.Fill,
+                ColumnCount = 1,
+                RowCount = 3
+            };
 
-            Button b1 = new() { Text = "Worklist", Name = "btnWorkList" };
-            b1.BackColor = Program.AppEnvironment.ButtonBackgroundColor;
-            b1.ForeColor = Program.AppEnvironment.ButtonTextColor;
+            Button b1 = new()
+            {
+                Text = "Worklist",
+                Name = "btnWorkList",
+                BackColor = Program.AppEnvironment.ButtonBackgroundColor,
+                ForeColor = Program.AppEnvironment.ButtonTextColor
+            };
             b1.Click += new EventHandler(worklistToolStripMenuItem_Click);
             tlpBilling.Controls.Add(b1, 0, 0);
             b1.Dock = DockStyle.Fill;
 
-            Button b2 = new() { Text = "Account", Name = "btnAccount" };
+            Button b2 = new()
+            {
+                Text = "Account",
+                Name = "btnAccount",
+                BackColor = Program.AppEnvironment.ButtonBackgroundColor,
+                ForeColor = Program.AppEnvironment.ButtonTextColor
+            };
             b2.Click += new EventHandler(accountToolStripMenuItem_Click);
-            b2.BackColor = Program.AppEnvironment.ButtonBackgroundColor;
-            b2.ForeColor = Program.AppEnvironment.ButtonTextColor;
             tlpBilling.Controls.Add(b2, 0, 2);
             b2.Dock = DockStyle.Fill;
 
-            Button b4 = new() { Text = "Account Charge Entry", Name = "btnAccountChargeEntry" };
+            Button b4 = new()
+            {
+                Text = "Account Charge Entry",
+                Name = "btnAccountChargeEntry",
+                BackColor = Program.AppEnvironment.ButtonBackgroundColor,
+                ForeColor = Program.AppEnvironment.ButtonTextColor
+            };
             b4.Click += new EventHandler(accountChargeEntryToolStripMenuItem_Click);
-            b4.BackColor = Program.AppEnvironment.ButtonBackgroundColor;
-            b4.ForeColor = Program.AppEnvironment.ButtonTextColor;
             tlpBilling.Controls.Add(b4, 0, 3);
             b4.Dock = DockStyle.Fill;
 
-            Button b5 = new() { Text = "Batch Remittance", Name = "btnBatchRemittance" };
+            Button b5 = new()
+            {
+                Text = "Batch Remittance",
+                Name = "btnBatchRemittance",
+                BackColor = Program.AppEnvironment.ButtonBackgroundColor,
+                ForeColor = Program.AppEnvironment.ButtonTextColor
+            };
             b5.Click += new EventHandler(batchRemittanceToolStripMenuItem_Click);
-            b5.BackColor = Program.AppEnvironment.ButtonBackgroundColor;
-            b5.ForeColor = Program.AppEnvironment.ButtonTextColor;
             tlpBilling.Controls.Add(b5, 0, 4);
             b5.Dock = DockStyle.Fill;
 
-            Button b6 = new() { Text = "Claims Batch Management", Name = "ClaimBatchManagementButton" };
+            Button b6 = new()
+            {
+                Text = "Claims Batch Management",
+                Name = "ClaimBatchManagementButton",
+                BackColor = Program.AppEnvironment.ButtonBackgroundColor,
+                ForeColor = Program.AppEnvironment.ButtonTextColor
+            };
             b6.Click += new EventHandler(claimBatchManagementToolStripMenuItem_Click);
-            b6.BackColor = Program.AppEnvironment.ButtonBackgroundColor;
-            b6.ForeColor = Program.AppEnvironment.ButtonTextColor;
             tlpBilling.Controls.Add(b6, 0, 5);
             b6.Dock = DockStyle.Fill;
 
             accordion.Add(tlpBilling, "Billing", "Billing Functions", 1, true);
 
             //Reports Section
-            TableLayoutPanel tlpReports = new TableLayoutPanel { Dock = DockStyle.Fill };
-            tlpReports.ColumnCount = 1;
-            tlpReports.RowCount = 1;
+            TableLayoutPanel tlpReports = new()
+            {
+                Dock = DockStyle.Fill,
+                ColumnCount = 1,
+                RowCount = 1
+            };
 
-            Button r1 = new() { Text = "Monthly Reports", Name = "btnMonthlyReports" };
+            Button r1 = new()
+            {
+                Text = "Monthly Reports",
+                Name = "btnMonthlyReports",
+                BackColor = Program.AppEnvironment.ButtonBackgroundColor,
+                ForeColor = Program.AppEnvironment.ButtonTextColor
+            };
             r1.Click += new EventHandler(monthlyReportsToolStripMenuItem_Click);
-            r1.BackColor = Program.AppEnvironment.ButtonBackgroundColor;
-            r1.ForeColor = Program.AppEnvironment.ButtonTextColor;
             tlpReports.Controls.Add(r1, 0, 0);
             r1.Dock = DockStyle.Fill;
 
-            Button r2 = new() { Text = "Reporting Portal", Name = "btnReportingPortal" };
+            Button r2 = new()
+            {
+                Text = "Reporting Portal",
+                Name = "btnReportingPortal",
+                BackColor = Program.AppEnvironment.ButtonBackgroundColor,
+                ForeColor = Program.AppEnvironment.ButtonTextColor
+            };
             r2.Click += new EventHandler(reportingPortalToolStripMenuItem_Click);
-            r2.BackColor = Program.AppEnvironment.ButtonBackgroundColor;
-            r2.ForeColor = Program.AppEnvironment.ButtonTextColor;
             tlpReports.Controls.Add(r2, 0, 0);
             r2.Dock = DockStyle.Fill;
 
@@ -652,24 +686,6 @@ namespace LabBilling
         private void pathologistsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             throw new NotImplementedException();
-        }
-
-        private void claimValidationRulesToolStripMenuItem_Click(object sender, EventArgs e)
-            => NewForm(new ClaimRuleEditorForm());
-
-        private bool CheckForDuplicate(Form newForm)
-        {
-            bool bValue = false;
-            foreach (Form fm in this.MdiChildren)
-            {
-                if (fm.GetType() == newForm.GetType())
-                {
-                    fm.Activate();
-                    fm.WindowState = FormWindowState.Maximized;
-                    bValue = true;
-                }
-            }
-            return bValue;
         }
 
         private void insurancePlansToolStripMenuItem_Click(object sender, EventArgs e)

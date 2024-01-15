@@ -26,13 +26,13 @@ namespace LabBilling.Core.Models
         public string ModHost { get; set; }
 
         [Ignore]
-        public DateTime mod_date { get { return ModDate; } set { ModDate = value; } }
+        public DateTime UpdatedDate { get { return ModDate; } set { ModDate = value; } }
         [Ignore]
-        public string mod_user { get { return ModUser; } set { ModUser = value; } }
+        public string UpdatedUser { get { return ModUser; } set { ModUser = value; } }
         [Ignore]
-        public string mod_prg { get { return ModPrg; } set { ModPrg = value; } }
+        public string UpdatedApp { get { return ModPrg; } set { ModPrg = value; } }
         [Ignore]
-        public string mod_host { get { return ModHost; } set { ModHost = value; } }
+        public string UpdatedHost { get { return ModHost; } set { ModHost = value; } }
         [Ignore]
         public Guid rowguid { get; set; }
     }
