@@ -6,6 +6,8 @@ using System.Linq;
 using System.Windows.Forms;
 using LabBilling.Core.Models;
 using LabBilling.Library;
+using LabBilling.Core;
+using NPOI.OpenXmlFormats.Vml;
 
 namespace LabBilling.Forms
 {
@@ -16,10 +18,11 @@ namespace LabBilling.Forms
         private PatRepository patRepository;
         private InsCompanyRepository insCompanyRepository;
         private List<InsCompany> insCompanies;
-        private InsCompanyLookupForm lookupForm;
-        private Timer _timer;
+        private InsCompanyLookupForm insCoLookupForm;
         private List<string> changedControls;
         private bool _allowEditing;
+        private Timer _timer;
+        private const int timerInterval = 650;
 
         public Account CurrentAccount { get; set; }
         public Ins CurrentIns { get; set; }
@@ -55,7 +58,41 @@ namespace LabBilling.Forms
             insRepository = new(Program.AppEnvironment);
             insCompanyRepository = new(Program.AppEnvironment);
             changedControls = new();
-            lookupForm = new InsCompanyLookupForm();
+            insCoLookupForm = new InsCompanyLookupForm();
+            _timer = new Timer() { Enabled = false, Interval = timerInterval };
+            _timer.Tick += insurancePlanTextBox_KeyUpDone;
+            #region Setup Insurance Company Combobox
+            insCompanies = DataCache.Instance.GetInsCompanies();
+            #endregion
+
+            InsRelationComboBox.DataSource = new BindingSource(Dictionaries.relationSource, null);
+            InsRelationComboBox.DisplayMember = "Value";
+            InsRelationComboBox.ValueMember = "Key";
+
+            HolderSexComboBox.DataSource = new BindingSource(Dictionaries.sexSource, null);
+            HolderSexComboBox.DisplayMember = "Value";
+            HolderSexComboBox.ValueMember = "Key";
+
+            PlanFinCodeComboBox.DataSource = DataCache.Instance.GetFins();
+            PlanFinCodeComboBox.DisplayMember = nameof(Fin.Description);
+            PlanFinCodeComboBox.ValueMember = nameof(Fin.FinCode);
+            PlanFinCodeComboBox.SelectedIndex = -1;
+
+            HolderStateComboBox.DataSource = new BindingSource(Dictionaries.stateSource, null);
+            HolderStateComboBox.DisplayMember = "Value";
+            HolderStateComboBox.ValueMember = "Key";
+
+            HolderStateComboBox.SelectedIndex = 0;
+            HolderSexComboBox.SelectedIndex = 0;
+            PlanFinCodeComboBox.BackColor = Color.Linen;
+
+            //populate edit boxes
+            HolderStateComboBox.SelectedItem = null;
+            HolderStateComboBox.SelectedText = "--Select--";
+            HolderSexComboBox.SelectedItem = null;
+            HolderSexComboBox.SelectedText = "--Select--";
+
+            CurrentIns = new Ins();
 
         }
 
@@ -78,40 +115,6 @@ namespace LabBilling.Forms
             if (CurrentIns.Coverage != Coverage)
                 throw new ApplicationException($"Insurance coverage does not match form coverage. Insurance {CurrentIns.Coverage}, Form {Coverage}");
 
-            #region Setup Insurance Company Combobox
-
-            insCompanies = DataCache.Instance.GetInsCompanies();
-            #endregion
-
-            InsRelationComboBox.DataSource = new BindingSource(Dictionaries.relationSource, null);
-            InsRelationComboBox.DisplayMember = "Value";
-            InsRelationComboBox.ValueMember = "Key";
-
-            HolderSexComboBox.DataSource = new BindingSource(Dictionaries.sexSource, null);
-            HolderSexComboBox.DisplayMember = "Value";
-            HolderSexComboBox.ValueMember = "Key";
-
-            PlanFinCodeComboBox.DataSource = DataCache.Instance.GetFins();
-            PlanFinCodeComboBox.DisplayMember = nameof(Fin.Description);
-            PlanFinCodeComboBox.ValueMember = nameof(Fin.FinCode);
-            PlanFinCodeComboBox.SelectedIndex = -1;
-
-            HolderStateComboBox.DataSource = new BindingSource(Dictionaries.stateSource, null);
-            HolderStateComboBox.DisplayMember = "Value";
-            HolderStateComboBox.ValueMember = "Key";
-
-            lookupForm.Datasource = insCompanies;
-
-            HolderStateComboBox.SelectedIndex = 0;
-            HolderSexComboBox.SelectedIndex = 0;
-            PlanFinCodeComboBox.BackColor = Color.Linen;
-
-            //populate edit boxes
-            HolderStateComboBox.SelectedItem = null;
-            HolderStateComboBox.SelectedText = "--Select--";
-            HolderSexComboBox.SelectedItem = null;
-            HolderSexComboBox.SelectedText = "--Select--";
-
             HolderLastNameTextBox.Text = CurrentIns.HolderLastName;
             HolderFirstNameTextBox.Text = CurrentIns.HolderFirstName;
             HolderMiddleNameTextBox.Text = CurrentIns.HolderMiddleName;
@@ -122,7 +125,7 @@ namespace LabBilling.Forms
             HolderZipTextBox.Text = CurrentIns.HolderZip;
 
             HolderSexComboBox.SelectedValue = CurrentIns.HolderSex ?? "";
-            HolderDOBTextBox.Text = CurrentIns.HolderBirthDate.ToString(); // (@"MM/dd/yyyy");
+            HolderDOBTextBox.Text = CurrentIns.HolderBirthDate?.ToString("MM/dd/yyyy");
             InsRelationComboBox.SelectedValue = CurrentIns.Relation ?? "";
 
             insurancePlanTextBox.Text = CurrentIns.InsCode ?? "";
@@ -168,6 +171,8 @@ namespace LabBilling.Forms
             // saves the insurance info back to the grid            
             OnError?.Invoke(this, new AppErrorEventArgs() { ErrorLevel = AppErrorEventArgs.ErrorLevelType.Trace, ErrorMessage = "Entering" });
 
+            CurrentIns ??= new Ins();
+            CurrentIns.Account = CurrentAccount.AccountNo;
             CurrentIns.CertSSN = CertSSNTextBox.Text;
             CurrentIns.GroupName = GroupNameTextBox.Text;
             CurrentIns.GroupNumber = GroupNumberTextBox.Text;
@@ -204,18 +209,24 @@ namespace LabBilling.Forms
                 CurrentIns.FinCode = PlanFinCodeComboBox.SelectedValue.ToString();
 
             CurrentIns.InsCode = insurancePlanTextBox.Text;
+            try
+            {
+                //call method to update the record in the database
+                if (CurrentIns.rowguid == Guid.Empty)
+                    insRepository.Add(CurrentIns);
+                else
+                    insRepository.Update(CurrentIns);
 
-            //call method to update the record in the database
-            if (CurrentIns.rowguid == Guid.Empty)
-                insRepository.Add(CurrentIns);
-            else
-                insRepository.Update(CurrentIns);
+                InsuranceChanged?.Invoke(this, EventArgs.Empty);
 
-            InsuranceChanged?.Invoke(this, EventArgs.Empty);
-
+            }
+            catch(Exception ex)
+            {
+                OnError?.Invoke(this, new AppErrorEventArgs() { ErrorLevel = AppErrorEventArgs.ErrorLevelType.Error, ErrorMessage = ex.Message });
+                InsTabMessageTextBox.Text = "Error occured during save. Contact your administrator.";
+            }
             //clear entry fields
             ClearInsEntryFields();
-            SaveInsuranceButton.Enabled = false;
         }
 
         private void ClearInsEntryFields()
@@ -241,7 +252,6 @@ namespace LabBilling.Forms
             PlanFinCodeComboBox.SelectedIndex = -1;
 
             //disable fields
-            SetInsDataEntryAccess(false);
             ResetControls(insTabLayoutPanel.Controls.OfType<Control>().ToArray());
         }
 
@@ -315,12 +325,15 @@ namespace LabBilling.Forms
         private void insurancePlanTextBox_KeyUpDone(object sender, EventArgs e)
         {
             _timer.Stop();
-
-            lookupForm.InitialSearchText = insurancePlanTextBox.Text;
-            if (lookupForm.ShowDialog() == DialogResult.OK)
+            if (insurancePlanTextBox.Text.Length > 2)
             {
-                string insCode = insurancePlanTextBox.Text = lookupForm.SelectedValue;
-                LookupInsCode(insCode);
+                insCoLookupForm.Datasource = insCompanies;
+                insCoLookupForm.InitialSearchText = insurancePlanTextBox.Text;
+                if (insCoLookupForm.ShowDialog() == DialogResult.OK)
+                {
+                    string insCode = insurancePlanTextBox.Text = insCoLookupForm.SelectedValue;
+                    LookupInsCode(insCode);
+                }
             }
         }
 
@@ -331,9 +344,17 @@ namespace LabBilling.Forms
                 CurrentIns.PlanName),
                 "Delete Insurance", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
-                if (insRepository.Delete(CurrentIns))
+                try
                 {
-                    //CurrentAccount.Insurances.RemoveAt(CurrentIns);
+                    if (insRepository.Delete(CurrentIns))
+                    {
+                        InsuranceChanged?.Invoke(this, EventArgs.Empty);
+                    }
+                }
+                catch(Exception ex)
+                {
+                    OnError?.Invoke(this, new AppErrorEventArgs() { ErrorLevel = AppErrorEventArgs.ErrorLevelType.Error, ErrorMessage = ex.Message });
+                    InsTabMessageTextBox.Text = "Failed to delete insurance. Contact your administrator.";
                 }
             }
             ClearInsEntryFields();
@@ -351,7 +372,23 @@ namespace LabBilling.Forms
                 changedControls.Remove(ctrl.Name);
             }
         }
+
+        private void InsCopyPatientLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            //copy patient data for insurance holder info
+            HolderLastNameTextBox.Text = CurrentAccount.PatLastName;
+            HolderFirstNameTextBox.Text = CurrentAccount.PatFirstName;
+            HolderMiddleNameTextBox.Text = CurrentAccount.PatMiddleName;
+            HolderAddressTextBox.Text = CurrentAccount.Pat.Address1;
+            HolderCityTextBox.Text = CurrentAccount.Pat.City;
+            HolderStateComboBox.SelectedValue = CurrentAccount.Pat.State;
+            HolderZipTextBox.Text = CurrentAccount.Pat.ZipCode;
+            HolderDOBTextBox.Text = CurrentAccount.BirthDate?.ToString("MM/dd/yyyy");
+            HolderSexComboBox.SelectedValue = CurrentAccount.Sex;
+            InsRelationComboBox.SelectedValue = "01";
+        }
+
     }
 
- 
+
 }

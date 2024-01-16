@@ -127,46 +127,46 @@
             tableLayoutPanel1.Controls.Add(label1, 0, 2);
             tableLayoutPanel1.Controls.Add(SaveInsuranceButton, 0, 13);
             tableLayoutPanel1.Controls.Add(InsCopyPatientLink, 1, 1);
-            tableLayoutPanel1.Controls.Add(PlanFinCodeComboBox, 3, 8);
-            tableLayoutPanel1.Controls.Add(InsPlanFinCodeLabel, 2, 8);
-            tableLayoutPanel1.Controls.Add(CertSSNTextBox, 3, 12);
             tableLayoutPanel1.Controls.Add(HolderLastNameTextBox, 1, 2);
-            tableLayoutPanel1.Controls.Add(InsCertSSNLabel, 2, 12);
-            tableLayoutPanel1.Controls.Add(GroupNameTextBox, 3, 11);
-            tableLayoutPanel1.Controls.Add(InsGroupNameLabel, 2, 11);
             tableLayoutPanel1.Controls.Add(HolderFirstNameLabel, 0, 3);
             tableLayoutPanel1.Controls.Add(HolderZipTextBox, 1, 8);
-            tableLayoutPanel1.Controls.Add(GroupNumberTextBox, 3, 10);
             tableLayoutPanel1.Controls.Add(HolderZipCodeLabel, 0, 8);
-            tableLayoutPanel1.Controls.Add(InsGroupNumberLabel, 2, 10);
-            tableLayoutPanel1.Controls.Add(PlanAddress2TextBox, 3, 6);
             tableLayoutPanel1.Controls.Add(InsRelationComboBox, 1, 11);
             tableLayoutPanel1.Controls.Add(HolderRelationLabel, 0, 11);
-            tableLayoutPanel1.Controls.Add(PolicyNumberTextBox, 3, 9);
             tableLayoutPanel1.Controls.Add(HolderStateLabel, 0, 7);
             tableLayoutPanel1.Controls.Add(HolderDOBTextBox, 1, 10);
-            tableLayoutPanel1.Controls.Add(InsPolicyNumberLabel, 2, 9);
             tableLayoutPanel1.Controls.Add(HolderDOBLabel, 0, 10);
             tableLayoutPanel1.Controls.Add(HolderStateComboBox, 1, 7);
             tableLayoutPanel1.Controls.Add(HolderFirstNameTextBox, 1, 3);
-            tableLayoutPanel1.Controls.Add(InsPlanLabel, 2, 3);
             tableLayoutPanel1.Controls.Add(HolderSexComboBox, 1, 9);
             tableLayoutPanel1.Controls.Add(HolderMiddleNameLabel, 0, 4);
             tableLayoutPanel1.Controls.Add(HolderSexLabel, 0, 9);
             tableLayoutPanel1.Controls.Add(HolderMiddleNameTextBox, 1, 4);
-            tableLayoutPanel1.Controls.Add(InsPlanNameLabel, 2, 4);
-            tableLayoutPanel1.Controls.Add(PlanNameTextBox, 3, 4);
             tableLayoutPanel1.Controls.Add(HolderAddressLabel, 0, 5);
             tableLayoutPanel1.Controls.Add(HolderAddressTextBox, 1, 5);
-            tableLayoutPanel1.Controls.Add(PlanCityStTextBox, 3, 7);
-            tableLayoutPanel1.Controls.Add(InsPlanAddressLabel, 2, 5);
-            tableLayoutPanel1.Controls.Add(InsPlanCityStateZipLabel, 2, 7);
-            tableLayoutPanel1.Controls.Add(PlanAddressTextBox, 3, 5);
             tableLayoutPanel1.Controls.Add(HolderCityTextBox, 1, 6);
             tableLayoutPanel1.Controls.Add(HolderCityLabel, 0, 6);
             tableLayoutPanel1.Controls.Add(InsTabMessageTextBox, 1, 14);
-            tableLayoutPanel1.Controls.Add(insurancePlanTextBox, 3, 3);
-            tableLayoutPanel1.Controls.Add(deleteInsButton, 4, 2);
+            tableLayoutPanel1.Controls.Add(deleteInsButton, 1, 13);
+            tableLayoutPanel1.Controls.Add(InsPlanLabel, 2, 2);
+            tableLayoutPanel1.Controls.Add(insurancePlanTextBox, 3, 2);
+            tableLayoutPanel1.Controls.Add(InsPlanNameLabel, 2, 3);
+            tableLayoutPanel1.Controls.Add(PlanNameTextBox, 3, 3);
+            tableLayoutPanel1.Controls.Add(InsPlanAddressLabel, 2, 4);
+            tableLayoutPanel1.Controls.Add(PlanAddressTextBox, 3, 4);
+            tableLayoutPanel1.Controls.Add(PlanAddress2TextBox, 3, 5);
+            tableLayoutPanel1.Controls.Add(InsPlanCityStateZipLabel, 2, 6);
+            tableLayoutPanel1.Controls.Add(PlanCityStTextBox, 3, 6);
+            tableLayoutPanel1.Controls.Add(InsPlanFinCodeLabel, 2, 7);
+            tableLayoutPanel1.Controls.Add(PlanFinCodeComboBox, 3, 7);
+            tableLayoutPanel1.Controls.Add(InsPolicyNumberLabel, 2, 8);
+            tableLayoutPanel1.Controls.Add(PolicyNumberTextBox, 3, 8);
+            tableLayoutPanel1.Controls.Add(InsGroupNumberLabel, 2, 9);
+            tableLayoutPanel1.Controls.Add(GroupNumberTextBox, 3, 9);
+            tableLayoutPanel1.Controls.Add(InsGroupNameLabel, 2, 10);
+            tableLayoutPanel1.Controls.Add(GroupNameTextBox, 3, 10);
+            tableLayoutPanel1.Controls.Add(InsCertSSNLabel, 2, 11);
+            tableLayoutPanel1.Controls.Add(CertSSNTextBox, 3, 11);
             tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
@@ -205,13 +205,14 @@
             // 
             SaveInsuranceButton.BackColor = System.Drawing.Color.SkyBlue;
             SaveInsuranceButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            SaveInsuranceButton.Location = new System.Drawing.Point(4, 337);
+            SaveInsuranceButton.Location = new System.Drawing.Point(4, 308);
             SaveInsuranceButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             SaveInsuranceButton.Name = "SaveInsuranceButton";
-            SaveInsuranceButton.Size = new System.Drawing.Size(115, 60);
+            SaveInsuranceButton.Size = new System.Drawing.Size(115, 48);
             SaveInsuranceButton.TabIndex = 25;
             SaveInsuranceButton.Text = "Save Insurance";
             SaveInsuranceButton.UseVisualStyleBackColor = false;
+            SaveInsuranceButton.Click += SaveInsuranceButton_Click;
             // 
             // InsCopyPatientLink
             // 
@@ -224,6 +225,7 @@
             InsCopyPatientLink.TabIndex = 0;
             InsCopyPatientLink.TabStop = true;
             InsCopyPatientLink.Text = "Copy Patient Info";
+            InsCopyPatientLink.LinkClicked += InsCopyPatientLink_LinkClicked;
             // 
             // PlanFinCodeComboBox
             // 
@@ -231,7 +233,7 @@
             PlanFinCodeComboBox.BorderColor = System.Drawing.Color.Blue;
             PlanFinCodeComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             PlanFinCodeComboBox.FormattingEnabled = true;
-            PlanFinCodeComboBox.Location = new System.Drawing.Point(544, 192);
+            PlanFinCodeComboBox.Location = new System.Drawing.Point(544, 163);
             PlanFinCodeComboBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             PlanFinCodeComboBox.Name = "PlanFinCodeComboBox";
             PlanFinCodeComboBox.Size = new System.Drawing.Size(228, 23);
@@ -241,7 +243,7 @@
             // 
             InsPlanFinCodeLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
             InsPlanFinCodeLabel.AutoSize = true;
-            InsPlanFinCodeLabel.Location = new System.Drawing.Point(392, 196);
+            InsPlanFinCodeLabel.Location = new System.Drawing.Point(392, 167);
             InsPlanFinCodeLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             InsPlanFinCodeLabel.Name = "InsPlanFinCodeLabel";
             InsPlanFinCodeLabel.Size = new System.Drawing.Size(111, 15);
@@ -251,7 +253,7 @@
             // CertSSNTextBox
             // 
             CertSSNTextBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            CertSSNTextBox.Location = new System.Drawing.Point(544, 308);
+            CertSSNTextBox.Location = new System.Drawing.Point(544, 279);
             CertSSNTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             CertSSNTextBox.Name = "CertSSNTextBox";
             CertSSNTextBox.Size = new System.Drawing.Size(228, 23);
@@ -270,7 +272,7 @@
             // 
             InsCertSSNLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
             InsCertSSNLabel.AutoSize = true;
-            InsCertSSNLabel.Location = new System.Drawing.Point(392, 312);
+            InsCertSSNLabel.Location = new System.Drawing.Point(392, 283);
             InsCertSSNLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             InsCertSSNLabel.Name = "InsCertSSNLabel";
             InsCertSSNLabel.Size = new System.Drawing.Size(55, 15);
@@ -280,7 +282,7 @@
             // GroupNameTextBox
             // 
             GroupNameTextBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            GroupNameTextBox.Location = new System.Drawing.Point(544, 279);
+            GroupNameTextBox.Location = new System.Drawing.Point(544, 250);
             GroupNameTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             GroupNameTextBox.Name = "GroupNameTextBox";
             GroupNameTextBox.Size = new System.Drawing.Size(228, 23);
@@ -290,7 +292,7 @@
             // 
             InsGroupNameLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
             InsGroupNameLabel.AutoSize = true;
-            InsGroupNameLabel.Location = new System.Drawing.Point(392, 283);
+            InsGroupNameLabel.Location = new System.Drawing.Point(392, 254);
             InsGroupNameLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             InsGroupNameLabel.Name = "InsGroupNameLabel";
             InsGroupNameLabel.Size = new System.Drawing.Size(75, 15);
@@ -320,7 +322,7 @@
             // GroupNumberTextBox
             // 
             GroupNumberTextBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            GroupNumberTextBox.Location = new System.Drawing.Point(544, 250);
+            GroupNumberTextBox.Location = new System.Drawing.Point(544, 221);
             GroupNumberTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             GroupNumberTextBox.Name = "GroupNumberTextBox";
             GroupNumberTextBox.Size = new System.Drawing.Size(228, 23);
@@ -341,7 +343,7 @@
             // 
             InsGroupNumberLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
             InsGroupNumberLabel.AutoSize = true;
-            InsGroupNumberLabel.Location = new System.Drawing.Point(392, 254);
+            InsGroupNumberLabel.Location = new System.Drawing.Point(392, 225);
             InsGroupNumberLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             InsGroupNumberLabel.Name = "InsGroupNumberLabel";
             InsGroupNumberLabel.Size = new System.Drawing.Size(87, 15);
@@ -351,7 +353,7 @@
             // PlanAddress2TextBox
             // 
             PlanAddress2TextBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            PlanAddress2TextBox.Location = new System.Drawing.Point(544, 134);
+            PlanAddress2TextBox.Location = new System.Drawing.Point(544, 105);
             PlanAddress2TextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             PlanAddress2TextBox.Name = "PlanAddress2TextBox";
             PlanAddress2TextBox.Size = new System.Drawing.Size(228, 23);
@@ -385,7 +387,7 @@
             // PolicyNumberTextBox
             // 
             PolicyNumberTextBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            PolicyNumberTextBox.Location = new System.Drawing.Point(544, 221);
+            PolicyNumberTextBox.Location = new System.Drawing.Point(544, 192);
             PolicyNumberTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             PolicyNumberTextBox.Name = "PolicyNumberTextBox";
             PolicyNumberTextBox.Size = new System.Drawing.Size(228, 23);
@@ -418,7 +420,7 @@
             // 
             InsPolicyNumberLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
             InsPolicyNumberLabel.AutoSize = true;
-            InsPolicyNumberLabel.Location = new System.Drawing.Point(392, 225);
+            InsPolicyNumberLabel.Location = new System.Drawing.Point(392, 196);
             InsPolicyNumberLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             InsPolicyNumberLabel.Name = "InsPolicyNumberLabel";
             InsPolicyNumberLabel.Size = new System.Drawing.Size(86, 15);
@@ -465,7 +467,7 @@
             // 
             InsPlanLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
             InsPlanLabel.AutoSize = true;
-            InsPlanLabel.Location = new System.Drawing.Point(392, 51);
+            InsPlanLabel.Location = new System.Drawing.Point(392, 22);
             InsPlanLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             InsPlanLabel.Name = "InsPlanLabel";
             InsPlanLabel.Size = new System.Drawing.Size(84, 15);
@@ -522,7 +524,7 @@
             // 
             InsPlanNameLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
             InsPlanNameLabel.AutoSize = true;
-            InsPlanNameLabel.Location = new System.Drawing.Point(392, 80);
+            InsPlanNameLabel.Location = new System.Drawing.Point(392, 51);
             InsPlanNameLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             InsPlanNameLabel.Name = "InsPlanNameLabel";
             InsPlanNameLabel.Size = new System.Drawing.Size(65, 15);
@@ -532,7 +534,7 @@
             // PlanNameTextBox
             // 
             PlanNameTextBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            PlanNameTextBox.Location = new System.Drawing.Point(544, 76);
+            PlanNameTextBox.Location = new System.Drawing.Point(544, 47);
             PlanNameTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             PlanNameTextBox.Name = "PlanNameTextBox";
             PlanNameTextBox.ReadOnly = true;
@@ -562,7 +564,7 @@
             // PlanCityStTextBox
             // 
             PlanCityStTextBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            PlanCityStTextBox.Location = new System.Drawing.Point(544, 163);
+            PlanCityStTextBox.Location = new System.Drawing.Point(544, 134);
             PlanCityStTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             PlanCityStTextBox.Name = "PlanCityStTextBox";
             PlanCityStTextBox.Size = new System.Drawing.Size(228, 23);
@@ -572,7 +574,7 @@
             // 
             InsPlanAddressLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
             InsPlanAddressLabel.AutoSize = true;
-            InsPlanAddressLabel.Location = new System.Drawing.Point(392, 109);
+            InsPlanAddressLabel.Location = new System.Drawing.Point(392, 80);
             InsPlanAddressLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             InsPlanAddressLabel.Name = "InsPlanAddressLabel";
             InsPlanAddressLabel.Size = new System.Drawing.Size(75, 15);
@@ -583,7 +585,7 @@
             // 
             InsPlanCityStateZipLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
             InsPlanCityStateZipLabel.AutoSize = true;
-            InsPlanCityStateZipLabel.Location = new System.Drawing.Point(392, 167);
+            InsPlanCityStateZipLabel.Location = new System.Drawing.Point(392, 138);
             InsPlanCityStateZipLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             InsPlanCityStateZipLabel.Name = "InsPlanCityStateZipLabel";
             InsPlanCityStateZipLabel.Size = new System.Drawing.Size(87, 15);
@@ -593,7 +595,7 @@
             // PlanAddressTextBox
             // 
             PlanAddressTextBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            PlanAddressTextBox.Location = new System.Drawing.Point(544, 105);
+            PlanAddressTextBox.Location = new System.Drawing.Point(544, 76);
             PlanAddressTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             PlanAddressTextBox.Name = "PlanAddressTextBox";
             PlanAddressTextBox.Size = new System.Drawing.Size(228, 23);
@@ -633,21 +635,23 @@
             // 
             // insurancePlanTextBox
             // 
-            insurancePlanTextBox.Location = new System.Drawing.Point(544, 47);
+            insurancePlanTextBox.Location = new System.Drawing.Point(544, 18);
             insurancePlanTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             insurancePlanTextBox.Name = "insurancePlanTextBox";
             insurancePlanTextBox.Size = new System.Drawing.Size(228, 23);
             insurancePlanTextBox.TabIndex = 14;
+            insurancePlanTextBox.KeyUp += insurancePlanTextBox_KeyUp;
             // 
             // deleteInsButton
             // 
-            deleteInsButton.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
-            deleteInsButton.Location = new System.Drawing.Point(879, 18);
+            deleteInsButton.BackColor = System.Drawing.Color.Red;
+            deleteInsButton.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            deleteInsButton.Location = new System.Drawing.Point(155, 308);
             deleteInsButton.Name = "deleteInsButton";
-            deleteInsButton.Size = new System.Drawing.Size(132, 23);
+            deleteInsButton.Size = new System.Drawing.Size(100, 48);
             deleteInsButton.TabIndex = 45;
             deleteInsButton.Text = "Delete Insurance";
-            deleteInsButton.UseVisualStyleBackColor = true;
+            deleteInsButton.UseVisualStyleBackColor = false;
             deleteInsButton.Click += deleteInsButton_Click;
             // 
             // InsMaintenanceUC

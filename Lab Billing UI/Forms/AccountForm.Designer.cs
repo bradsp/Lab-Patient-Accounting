@@ -31,135 +31,83 @@ namespace LabBilling.Forms
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle13 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle14 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle15 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle16 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle17 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle18 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle19 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle20 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle21 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle22 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle23 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle24 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle25 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle26 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle27 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle28 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle29 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle30 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AccountForm));
             tabControl1 = new System.Windows.Forms.TabControl();
             summaryTab = new System.Windows.Forms.TabPage();
             summaryTable = new System.Windows.Forms.TableLayoutPanel();
             tabDemographics = new System.Windows.Forms.TabPage();
-            DateOfBirthTextBox = new UserControls.DateTextBox();
-            providerLookup1 = new Library.ProviderLookup();
+            demographicsLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
             DemoStatusMessagesTextBox = new System.Windows.Forms.TextBox();
-            SuffixTextBox = new System.Windows.Forms.TextBox();
+            GuarZipTextBox = new System.Windows.Forms.MaskedTextBox();
+            GuarZipCodeLabel = new System.Windows.Forms.Label();
+            GuarStateLabel = new System.Windows.Forms.Label();
+            GuarStateComboBox = new Library.FlatCombo();
+            GuarCityTextBox = new System.Windows.Forms.TextBox();
+            GuarCityLabel = new System.Windows.Forms.Label();
+            GuarantorAddressTextBox = new System.Windows.Forms.TextBox();
+            GuarAddressLabel = new System.Windows.Forms.Label();
+            providerLookup1 = new Library.ProviderLookup();
             SaveDemographics = new System.Windows.Forms.Button();
-            PatSuffixLabel = new System.Windows.Forms.Label();
-            orderingProviderLabel = new System.Windows.Forms.Label();
-            PatDOBLabel = new System.Windows.Forms.Label();
-            SocSecNoTextBox = new System.Windows.Forms.MaskedTextBox();
-            PatSSNLabel = new System.Windows.Forms.Label();
-            PatMaritalStatusLabel = new System.Windows.Forms.Label();
-            PatSexLabel = new System.Windows.Forms.Label();
-            EmailAddressTextBox = new System.Windows.Forms.TextBox();
-            PatEmailLabel = new System.Windows.Forms.Label();
-            PhoneTextBox = new System.Windows.Forms.TextBox();
-            PatPhoneLabel = new System.Windows.Forms.Label();
-            ZipcodeTextBox = new System.Windows.Forms.MaskedTextBox();
-            PatZipLabel = new System.Windows.Forms.Label();
-            PatStateLabel = new System.Windows.Forms.Label();
-            CityTextBox = new System.Windows.Forms.TextBox();
-            PatCityLabel = new System.Windows.Forms.Label();
-            Address1TextBox = new System.Windows.Forms.TextBox();
-            Address2TextBox = new System.Windows.Forms.TextBox();
-            PatAddressLabel = new System.Windows.Forms.Label();
-            LastNameTextBox = new System.Windows.Forms.TextBox();
-            PatientFullNameLabel = new System.Windows.Forms.Label();
-            MiddleNameTextBox = new System.Windows.Forms.TextBox();
-            PatMiddleNameLabel = new System.Windows.Forms.Label();
-            FirstNameTextBox = new System.Windows.Forms.TextBox();
-            PatFirstNameLabel = new System.Windows.Forms.Label();
+            DateOfBirthTextBox = new UserControls.DateTextBox();
             PatLastNameLabel = new System.Windows.Forms.Label();
+            LastNameTextBox = new System.Windows.Forms.TextBox();
+            orderingProviderLabel = new System.Windows.Forms.Label();
+            PatFirstNameLabel = new System.Windows.Forms.Label();
+            SocSecNoTextBox = new System.Windows.Forms.MaskedTextBox();
+            FirstNameTextBox = new System.Windows.Forms.TextBox();
+            PatSSNLabel = new System.Windows.Forms.Label();
+            PatMiddleNameLabel = new System.Windows.Forms.Label();
             MaritalStatusComboBox = new Library.FlatCombo();
+            PatMaritalStatusLabel = new System.Windows.Forms.Label();
+            PatDOBLabel = new System.Windows.Forms.Label();
+            MiddleNameTextBox = new System.Windows.Forms.TextBox();
+            PatSexLabel = new System.Windows.Forms.Label();
             SexComboBox = new Library.FlatCombo();
+            PatPhoneLabel = new System.Windows.Forms.Label();
+            PhoneTextBox = new System.Windows.Forms.TextBox();
+            PatZipLabel = new System.Windows.Forms.Label();
+            ZipcodeTextBox = new System.Windows.Forms.MaskedTextBox();
+            PatStateLabel = new System.Windows.Forms.Label();
             StateComboBox = new Library.FlatCombo();
-            tabGuarantor = new System.Windows.Forms.TabPage();
-            GuarantorSaveButton = new System.Windows.Forms.Button();
+            PatCityLabel = new System.Windows.Forms.Label();
+            CityTextBox = new System.Windows.Forms.TextBox();
+            Address2TextBox = new System.Windows.Forms.TextBox();
+            Address1TextBox = new System.Windows.Forms.TextBox();
+            PatAddressLabel = new System.Windows.Forms.Label();
+            PatSuffixLabel = new System.Windows.Forms.Label();
+            SuffixTextBox = new System.Windows.Forms.TextBox();
+            PatEmailLabel = new System.Windows.Forms.Label();
+            EmailAddressTextBox = new System.Windows.Forms.TextBox();
+            label6 = new System.Windows.Forms.Label();
+            label7 = new System.Windows.Forms.Label();
             PatRelationLabel = new System.Windows.Forms.Label();
-            GuarFirstNameLabel = new System.Windows.Forms.Label();
-            GuarFirstNameTextBox = new System.Windows.Forms.TextBox();
-            GuarSuffixLabel = new System.Windows.Forms.Label();
-            GuarSuffixTextBox = new System.Windows.Forms.TextBox();
+            GuarantorRelationComboBox = new Library.FlatCombo();
+            GuarCopyPatientLink = new System.Windows.Forms.LinkLabel();
             GuarLastNameLabel = new System.Windows.Forms.Label();
             GuarantorLastNameTextBox = new System.Windows.Forms.TextBox();
-            GuarCopyPatientLink = new System.Windows.Forms.LinkLabel();
+            GuarFirstNameLabel = new System.Windows.Forms.Label();
+            GuarFirstNameTextBox = new System.Windows.Forms.TextBox();
             GuarMiddleNameLabel = new System.Windows.Forms.Label();
             GuarMiddleNameTextBox = new System.Windows.Forms.TextBox();
-            GuarAddressLabel = new System.Windows.Forms.Label();
-            GuarantorAddressTextBox = new System.Windows.Forms.TextBox();
-            GuarCityLabel = new System.Windows.Forms.Label();
-            GuarCityTextBox = new System.Windows.Forms.TextBox();
-            GuarStateLabel = new System.Windows.Forms.Label();
-            GuarZipCodeLabel = new System.Windows.Forms.Label();
-            GuarZipTextBox = new System.Windows.Forms.MaskedTextBox();
+            GuarSuffixLabel = new System.Windows.Forms.Label();
+            GuarSuffixTextBox = new System.Windows.Forms.TextBox();
             GuarPhoneLabel = new System.Windows.Forms.Label();
             GuarantorPhoneTextBox = new System.Windows.Forms.TextBox();
-            GuarantorRelationComboBox = new Library.FlatCombo();
-            GuarStateComboBox = new Library.FlatCombo();
-            tabInsurance = new System.Windows.Forms.TabPage();
-            insTabLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
-            HolderLastNameLabel = new System.Windows.Forms.Label();
-            InsuranceDataGrid = new System.Windows.Forms.DataGridView();
-            SaveInsuranceButton = new System.Windows.Forms.Button();
-            InsCopyPatientLink = new System.Windows.Forms.LinkLabel();
-            PlanFinCodeComboBox = new Library.FlatCombo();
-            InsPlanFinCodeLabel = new System.Windows.Forms.Label();
-            CertSSNTextBox = new System.Windows.Forms.TextBox();
-            HolderLastNameTextBox = new System.Windows.Forms.TextBox();
-            InsCertSSNLabel = new System.Windows.Forms.Label();
-            GroupNameTextBox = new System.Windows.Forms.TextBox();
-            InsGroupNameLabel = new System.Windows.Forms.Label();
-            HolderFirstNameLabel = new System.Windows.Forms.Label();
-            HolderZipTextBox = new System.Windows.Forms.TextBox();
-            GroupNumberTextBox = new System.Windows.Forms.TextBox();
-            HolderZipCodeLabel = new System.Windows.Forms.Label();
-            InsGroupNumberLabel = new System.Windows.Forms.Label();
-            PlanAddress2TextBox = new System.Windows.Forms.TextBox();
-            InsRelationComboBox = new Library.FlatCombo();
-            HolderRelationLabel = new System.Windows.Forms.Label();
-            PolicyNumberTextBox = new System.Windows.Forms.TextBox();
-            HolderStateLabel = new System.Windows.Forms.Label();
-            HolderDOBTextBox = new System.Windows.Forms.MaskedTextBox();
-            InsPolicyNumberLabel = new System.Windows.Forms.Label();
-            HolderDOBLabel = new System.Windows.Forms.Label();
-            HolderStateComboBox = new Library.FlatCombo();
-            HolderFirstNameTextBox = new System.Windows.Forms.TextBox();
-            InsPlanLabel = new System.Windows.Forms.Label();
-            InsuranceOrderLabel = new System.Windows.Forms.Label();
-            InsOrderComboBox = new Library.FlatCombo();
-            HolderSexComboBox = new Library.FlatCombo();
-            HolderMiddleNameLabel = new System.Windows.Forms.Label();
-            HolderSexLabel = new System.Windows.Forms.Label();
-            HolderMiddleNameTextBox = new System.Windows.Forms.TextBox();
-            InsPlanNameLabel = new System.Windows.Forms.Label();
-            PlanNameTextBox = new System.Windows.Forms.TextBox();
-            HolderAddressLabel = new System.Windows.Forms.Label();
-            HolderAddressTextBox = new System.Windows.Forms.TextBox();
-            PlanCityStTextBox = new System.Windows.Forms.TextBox();
-            InsPlanAddressLabel = new System.Windows.Forms.Label();
-            InsPlanCityStateZipLabel = new System.Windows.Forms.Label();
-            PlanAddressTextBox = new System.Windows.Forms.TextBox();
-            HolderCityTextBox = new System.Windows.Forms.TextBox();
-            HolderCityLabel = new System.Windows.Forms.Label();
-            InsUserInstructionsLabel = new System.Windows.Forms.Label();
-            AddInsuranceButton = new System.Windows.Forms.Button();
-            InsTabMessageTextBox = new System.Windows.Forms.TextBox();
-            insurancePlanTextBox = new System.Windows.Forms.TextBox();
             tabDiagnosis = new System.Windows.Forms.TabPage();
             dxPointerGrid2 = new System.Windows.Forms.DataGridView();
             DxDeleteButton = new System.Windows.Forms.PictureBox();
@@ -173,6 +121,9 @@ namespace LabBilling.Forms
             SelectedDxLabel = new System.Windows.Forms.Label();
             DiagnosisDataGrid = new System.Windows.Forms.DataGridView();
             DxSearchButton = new System.Windows.Forms.PictureBox();
+            tabInsPrimary = new System.Windows.Forms.TabPage();
+            tabInsSecondary = new System.Windows.Forms.TabPage();
+            tabInsTertiary = new System.Windows.Forms.TabPage();
             tabCharges = new System.Windows.Forms.TabPage();
             tabPayments = new System.Windows.Forms.TabPage();
             AddPaymentButton = new System.Windows.Forms.Button();
@@ -208,7 +159,6 @@ namespace LabBilling.Forms
             ValidateAccountButton = new System.Windows.Forms.Button();
             BillActivityDataGrid = new System.Windows.Forms.DataGridView();
             minPmtTextBox = new UserControls.CurrencyTextBox();
-            tabInsPrimary = new System.Windows.Forms.TabPage();
             noteTextContextMenu = new System.Windows.Forms.ContextMenuStrip(components);
             copyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             menuStrip1 = new System.Windows.Forms.MenuStrip();
@@ -251,15 +201,10 @@ namespace LabBilling.Forms
             BannerClientBalLabel = new System.Windows.Forms.Label();
             ClientBalLabel = new System.Windows.Forms.Label();
             bannerPanel = new System.Windows.Forms.Panel();
-            tabInsSecondary = new System.Windows.Forms.TabPage();
-            tabInsTertiary = new System.Windows.Forms.TabPage();
             tabControl1.SuspendLayout();
             summaryTab.SuspendLayout();
             tabDemographics.SuspendLayout();
-            tabGuarantor.SuspendLayout();
-            tabInsurance.SuspendLayout();
-            insTabLayoutPanel.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)InsuranceDataGrid).BeginInit();
+            demographicsLayoutPanel.SuspendLayout();
             tabDiagnosis.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dxPointerGrid2).BeginInit();
             ((System.ComponentModel.ISupportInitialize)DxDeleteButton).BeginInit();
@@ -285,16 +230,14 @@ namespace LabBilling.Forms
             tabControl1.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
             tabControl1.Controls.Add(summaryTab);
             tabControl1.Controls.Add(tabDemographics);
-            tabControl1.Controls.Add(tabGuarantor);
-            tabControl1.Controls.Add(tabInsurance);
             tabControl1.Controls.Add(tabDiagnosis);
+            tabControl1.Controls.Add(tabInsPrimary);
+            tabControl1.Controls.Add(tabInsSecondary);
+            tabControl1.Controls.Add(tabInsTertiary);
             tabControl1.Controls.Add(tabCharges);
             tabControl1.Controls.Add(tabPayments);
             tabControl1.Controls.Add(tabNotes);
             tabControl1.Controls.Add(tabBillingActivity);
-            tabControl1.Controls.Add(tabInsPrimary);
-            tabControl1.Controls.Add(tabInsSecondary);
-            tabControl1.Controls.Add(tabInsTertiary);
             tabControl1.HotTrack = true;
             tabControl1.Location = new System.Drawing.Point(0, 130);
             tabControl1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
@@ -339,40 +282,7 @@ namespace LabBilling.Forms
             // 
             tabDemographics.AutoScroll = true;
             tabDemographics.BackColor = System.Drawing.Color.White;
-            tabDemographics.Controls.Add(DateOfBirthTextBox);
-            tabDemographics.Controls.Add(providerLookup1);
-            tabDemographics.Controls.Add(DemoStatusMessagesTextBox);
-            tabDemographics.Controls.Add(SuffixTextBox);
-            tabDemographics.Controls.Add(SaveDemographics);
-            tabDemographics.Controls.Add(PatSuffixLabel);
-            tabDemographics.Controls.Add(orderingProviderLabel);
-            tabDemographics.Controls.Add(PatDOBLabel);
-            tabDemographics.Controls.Add(SocSecNoTextBox);
-            tabDemographics.Controls.Add(PatSSNLabel);
-            tabDemographics.Controls.Add(PatMaritalStatusLabel);
-            tabDemographics.Controls.Add(PatSexLabel);
-            tabDemographics.Controls.Add(EmailAddressTextBox);
-            tabDemographics.Controls.Add(PatEmailLabel);
-            tabDemographics.Controls.Add(PhoneTextBox);
-            tabDemographics.Controls.Add(PatPhoneLabel);
-            tabDemographics.Controls.Add(ZipcodeTextBox);
-            tabDemographics.Controls.Add(PatZipLabel);
-            tabDemographics.Controls.Add(PatStateLabel);
-            tabDemographics.Controls.Add(CityTextBox);
-            tabDemographics.Controls.Add(PatCityLabel);
-            tabDemographics.Controls.Add(Address1TextBox);
-            tabDemographics.Controls.Add(Address2TextBox);
-            tabDemographics.Controls.Add(PatAddressLabel);
-            tabDemographics.Controls.Add(LastNameTextBox);
-            tabDemographics.Controls.Add(PatientFullNameLabel);
-            tabDemographics.Controls.Add(MiddleNameTextBox);
-            tabDemographics.Controls.Add(PatMiddleNameLabel);
-            tabDemographics.Controls.Add(FirstNameTextBox);
-            tabDemographics.Controls.Add(PatFirstNameLabel);
-            tabDemographics.Controls.Add(PatLastNameLabel);
-            tabDemographics.Controls.Add(MaritalStatusComboBox);
-            tabDemographics.Controls.Add(SexComboBox);
-            tabDemographics.Controls.Add(StateComboBox);
+            tabDemographics.Controls.Add(demographicsLayoutPanel);
             tabDemographics.Location = new System.Drawing.Point(4, 24);
             tabDemographics.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             tabDemographics.Name = "tabDemographics";
@@ -381,620 +291,136 @@ namespace LabBilling.Forms
             tabDemographics.TabIndex = 9;
             tabDemographics.Text = "Demographics";
             // 
-            // DateOfBirthTextBox
+            // demographicsLayoutPanel
             // 
-            DateOfBirthTextBox.DateValue = new System.DateTime(0L);
-            DateOfBirthTextBox.Location = new System.Drawing.Point(345, 298);
-            DateOfBirthTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            DateOfBirthTextBox.Name = "DateOfBirthTextBox";
-            DateOfBirthTextBox.Size = new System.Drawing.Size(206, 23);
-            DateOfBirthTextBox.TabIndex = 34;
-            // 
-            // providerLookup1
-            // 
-            providerLookup1.CharacterLookupCountMin = 2;
-            providerLookup1.Datasource = null;
-            providerLookup1.DisplayValue = null;
-            providerLookup1.Location = new System.Drawing.Point(582, 252);
-            providerLookup1.Margin = new System.Windows.Forms.Padding(5, 3, 5, 3);
-            providerLookup1.Name = "providerLookup1";
-            providerLookup1.ResultBoxHeight = 100;
-            providerLookup1.SelectedValue = null;
-            providerLookup1.Size = new System.Drawing.Size(336, 155);
-            providerLookup1.TabIndex = 31;
-            providerLookup1.SelectedValueChanged += providerLookup1_SelectedValueChanged;
+            demographicsLayoutPanel.ColumnCount = 4;
+            demographicsLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 12F));
+            demographicsLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 38F));
+            demographicsLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 12F));
+            demographicsLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 38F));
+            demographicsLayoutPanel.Controls.Add(DemoStatusMessagesTextBox, 3, 17);
+            demographicsLayoutPanel.Controls.Add(GuarZipTextBox, 3, 9);
+            demographicsLayoutPanel.Controls.Add(GuarZipCodeLabel, 2, 9);
+            demographicsLayoutPanel.Controls.Add(GuarStateLabel, 2, 8);
+            demographicsLayoutPanel.Controls.Add(GuarStateComboBox, 3, 8);
+            demographicsLayoutPanel.Controls.Add(GuarCityTextBox, 3, 7);
+            demographicsLayoutPanel.Controls.Add(GuarCityLabel, 2, 7);
+            demographicsLayoutPanel.Controls.Add(GuarantorAddressTextBox, 3, 6);
+            demographicsLayoutPanel.Controls.Add(GuarAddressLabel, 2, 6);
+            demographicsLayoutPanel.Controls.Add(providerLookup1, 1, 16);
+            demographicsLayoutPanel.Controls.Add(SaveDemographics, 0, 17);
+            demographicsLayoutPanel.Controls.Add(DateOfBirthTextBox, 1, 12);
+            demographicsLayoutPanel.Controls.Add(PatLastNameLabel, 0, 1);
+            demographicsLayoutPanel.Controls.Add(LastNameTextBox, 1, 1);
+            demographicsLayoutPanel.Controls.Add(orderingProviderLabel, 0, 16);
+            demographicsLayoutPanel.Controls.Add(PatFirstNameLabel, 0, 2);
+            demographicsLayoutPanel.Controls.Add(SocSecNoTextBox, 1, 15);
+            demographicsLayoutPanel.Controls.Add(FirstNameTextBox, 1, 2);
+            demographicsLayoutPanel.Controls.Add(PatSSNLabel, 0, 15);
+            demographicsLayoutPanel.Controls.Add(PatMiddleNameLabel, 0, 3);
+            demographicsLayoutPanel.Controls.Add(MaritalStatusComboBox, 1, 14);
+            demographicsLayoutPanel.Controls.Add(PatMaritalStatusLabel, 0, 14);
+            demographicsLayoutPanel.Controls.Add(PatDOBLabel, 0, 12);
+            demographicsLayoutPanel.Controls.Add(MiddleNameTextBox, 1, 3);
+            demographicsLayoutPanel.Controls.Add(PatSexLabel, 0, 11);
+            demographicsLayoutPanel.Controls.Add(SexComboBox, 1, 11);
+            demographicsLayoutPanel.Controls.Add(PatPhoneLabel, 0, 10);
+            demographicsLayoutPanel.Controls.Add(PhoneTextBox, 1, 10);
+            demographicsLayoutPanel.Controls.Add(PatZipLabel, 0, 9);
+            demographicsLayoutPanel.Controls.Add(ZipcodeTextBox, 1, 9);
+            demographicsLayoutPanel.Controls.Add(PatStateLabel, 0, 8);
+            demographicsLayoutPanel.Controls.Add(StateComboBox, 1, 8);
+            demographicsLayoutPanel.Controls.Add(PatCityLabel, 0, 7);
+            demographicsLayoutPanel.Controls.Add(CityTextBox, 1, 7);
+            demographicsLayoutPanel.Controls.Add(Address2TextBox, 1, 6);
+            demographicsLayoutPanel.Controls.Add(Address1TextBox, 1, 5);
+            demographicsLayoutPanel.Controls.Add(PatAddressLabel, 0, 5);
+            demographicsLayoutPanel.Controls.Add(PatSuffixLabel, 0, 4);
+            demographicsLayoutPanel.Controls.Add(SuffixTextBox, 1, 4);
+            demographicsLayoutPanel.Controls.Add(PatEmailLabel, 0, 13);
+            demographicsLayoutPanel.Controls.Add(EmailAddressTextBox, 1, 13);
+            demographicsLayoutPanel.Controls.Add(label6, 1, 0);
+            demographicsLayoutPanel.Controls.Add(label7, 3, 0);
+            demographicsLayoutPanel.Controls.Add(PatRelationLabel, 2, 1);
+            demographicsLayoutPanel.Controls.Add(GuarantorRelationComboBox, 3, 1);
+            demographicsLayoutPanel.Controls.Add(GuarCopyPatientLink, 2, 0);
+            demographicsLayoutPanel.Controls.Add(GuarLastNameLabel, 2, 2);
+            demographicsLayoutPanel.Controls.Add(GuarantorLastNameTextBox, 3, 2);
+            demographicsLayoutPanel.Controls.Add(GuarFirstNameLabel, 2, 3);
+            demographicsLayoutPanel.Controls.Add(GuarFirstNameTextBox, 3, 3);
+            demographicsLayoutPanel.Controls.Add(GuarMiddleNameLabel, 2, 4);
+            demographicsLayoutPanel.Controls.Add(GuarMiddleNameTextBox, 3, 4);
+            demographicsLayoutPanel.Controls.Add(GuarSuffixLabel, 2, 5);
+            demographicsLayoutPanel.Controls.Add(GuarSuffixTextBox, 3, 5);
+            demographicsLayoutPanel.Controls.Add(GuarPhoneLabel, 2, 10);
+            demographicsLayoutPanel.Controls.Add(GuarantorPhoneTextBox, 3, 10);
+            demographicsLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            demographicsLayoutPanel.Location = new System.Drawing.Point(4, 3);
+            demographicsLayoutPanel.Name = "demographicsLayoutPanel";
+            demographicsLayoutPanel.RowCount = 18;
+            demographicsLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
+            demographicsLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            demographicsLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            demographicsLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            demographicsLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            demographicsLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            demographicsLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            demographicsLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            demographicsLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            demographicsLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            demographicsLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            demographicsLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            demographicsLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            demographicsLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            demographicsLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            demographicsLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            demographicsLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            demographicsLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            demographicsLayoutPanel.Size = new System.Drawing.Size(1336, 562);
+            demographicsLayoutPanel.TabIndex = 35;
             // 
             // DemoStatusMessagesTextBox
             // 
             DemoStatusMessagesTextBox.Anchor = System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
             DemoStatusMessagesTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            DemoStatusMessagesTextBox.Location = new System.Drawing.Point(162, 417);
+            DemoStatusMessagesTextBox.Location = new System.Drawing.Point(831, 511);
             DemoStatusMessagesTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             DemoStatusMessagesTextBox.Multiline = true;
             DemoStatusMessagesTextBox.Name = "DemoStatusMessagesTextBox";
             DemoStatusMessagesTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            DemoStatusMessagesTextBox.Size = new System.Drawing.Size(1177, 68);
+            DemoStatusMessagesTextBox.Size = new System.Drawing.Size(501, 37);
             DemoStatusMessagesTextBox.TabIndex = 33;
-            // 
-            // SuffixTextBox
-            // 
-            SuffixTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            SuffixTextBox.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
-            SuffixTextBox.Location = new System.Drawing.Point(342, 67);
-            SuffixTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            SuffixTextBox.Name = "SuffixTextBox";
-            SuffixTextBox.Size = new System.Drawing.Size(61, 23);
-            SuffixTextBox.TabIndex = 4;
-            // 
-            // SaveDemographics
-            // 
-            SaveDemographics.Location = new System.Drawing.Point(15, 417);
-            SaveDemographics.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            SaveDemographics.Name = "SaveDemographics";
-            SaveDemographics.Size = new System.Drawing.Size(125, 51);
-            SaveDemographics.TabIndex = 32;
-            SaveDemographics.Text = "Save Changes";
-            SaveDemographics.UseVisualStyleBackColor = true;
-            SaveDemographics.Click += SaveDemographics_Click;
-            // 
-            // PatSuffixLabel
-            // 
-            PatSuffixLabel.AutoSize = true;
-            PatSuffixLabel.Location = new System.Drawing.Point(338, 48);
-            PatSuffixLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            PatSuffixLabel.Name = "PatSuffixLabel";
-            PatSuffixLabel.Size = new System.Drawing.Size(37, 15);
-            PatSuffixLabel.TabIndex = 3;
-            PatSuffixLabel.Text = "Suffix";
-            PatSuffixLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // orderingProviderLabel
-            // 
-            orderingProviderLabel.AutoSize = true;
-            orderingProviderLabel.Location = new System.Drawing.Point(586, 233);
-            orderingProviderLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            orderingProviderLabel.Name = "orderingProviderLabel";
-            orderingProviderLabel.Size = new System.Drawing.Size(101, 15);
-            orderingProviderLabel.TabIndex = 30;
-            orderingProviderLabel.Text = "Ordering Provider";
-            orderingProviderLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // PatDOBLabel
-            // 
-            PatDOBLabel.AutoSize = true;
-            PatDOBLabel.Location = new System.Drawing.Point(342, 279);
-            PatDOBLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            PatDOBLabel.Name = "PatDOBLabel";
-            PatDOBLabel.Size = new System.Drawing.Size(73, 15);
-            PatDOBLabel.TabIndex = 26;
-            PatDOBLabel.Text = "Date of Birth";
-            PatDOBLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // SocSecNoTextBox
-            // 
-            SocSecNoTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            SocSecNoTextBox.Location = new System.Drawing.Point(15, 345);
-            SocSecNoTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            SocSecNoTextBox.Mask = "000-00-0000";
-            SocSecNoTextBox.Name = "SocSecNoTextBox";
-            SocSecNoTextBox.Size = new System.Drawing.Size(206, 23);
-            SocSecNoTextBox.TabIndex = 23;
-            // 
-            // PatSSNLabel
-            // 
-            PatSSNLabel.AutoSize = true;
-            PatSSNLabel.Location = new System.Drawing.Point(12, 327);
-            PatSSNLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            PatSSNLabel.Name = "PatSSNLabel";
-            PatSSNLabel.Size = new System.Drawing.Size(28, 15);
-            PatSSNLabel.TabIndex = 22;
-            PatSSNLabel.Text = "SSN";
-            PatSSNLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // PatMaritalStatusLabel
-            // 
-            PatMaritalStatusLabel.AutoSize = true;
-            PatMaritalStatusLabel.Location = new System.Drawing.Point(342, 325);
-            PatMaritalStatusLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            PatMaritalStatusLabel.Name = "PatMaritalStatusLabel";
-            PatMaritalStatusLabel.Size = new System.Drawing.Size(79, 15);
-            PatMaritalStatusLabel.TabIndex = 28;
-            PatMaritalStatusLabel.Text = "Marital Status";
-            PatMaritalStatusLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // PatSexLabel
-            // 
-            PatSexLabel.AutoSize = true;
-            PatSexLabel.Location = new System.Drawing.Point(342, 233);
-            PatSexLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            PatSexLabel.Name = "PatSexLabel";
-            PatSexLabel.Size = new System.Drawing.Size(25, 15);
-            PatSexLabel.TabIndex = 24;
-            PatSexLabel.Text = "Sex";
-            PatSexLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // EmailAddressTextBox
-            // 
-            EmailAddressTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            EmailAddressTextBox.Location = new System.Drawing.Point(12, 299);
-            EmailAddressTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            EmailAddressTextBox.Name = "EmailAddressTextBox";
-            EmailAddressTextBox.Size = new System.Drawing.Size(322, 23);
-            EmailAddressTextBox.TabIndex = 21;
-            // 
-            // PatEmailLabel
-            // 
-            PatEmailLabel.AutoSize = true;
-            PatEmailLabel.Location = new System.Drawing.Point(12, 280);
-            PatEmailLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            PatEmailLabel.Name = "PatEmailLabel";
-            PatEmailLabel.Size = new System.Drawing.Size(81, 15);
-            PatEmailLabel.TabIndex = 20;
-            PatEmailLabel.Text = "Email Address";
-            PatEmailLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // PhoneTextBox
-            // 
-            PhoneTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            PhoneTextBox.Location = new System.Drawing.Point(13, 253);
-            PhoneTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            PhoneTextBox.Name = "PhoneTextBox";
-            PhoneTextBox.Size = new System.Drawing.Size(322, 23);
-            PhoneTextBox.TabIndex = 19;
-            // 
-            // PatPhoneLabel
-            // 
-            PatPhoneLabel.AutoSize = true;
-            PatPhoneLabel.Location = new System.Drawing.Point(9, 234);
-            PatPhoneLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            PatPhoneLabel.Name = "PatPhoneLabel";
-            PatPhoneLabel.Size = new System.Drawing.Size(41, 15);
-            PatPhoneLabel.TabIndex = 18;
-            PatPhoneLabel.Text = "Phone";
-            PatPhoneLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // ZipcodeTextBox
-            // 
-            ZipcodeTextBox.Location = new System.Drawing.Point(582, 197);
-            ZipcodeTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            ZipcodeTextBox.Mask = "00000-9999";
-            ZipcodeTextBox.Name = "ZipcodeTextBox";
-            ZipcodeTextBox.Size = new System.Drawing.Size(119, 23);
-            ZipcodeTextBox.TabIndex = 17;
-            // 
-            // PatZipLabel
-            // 
-            PatZipLabel.AutoSize = true;
-            PatZipLabel.Location = new System.Drawing.Point(579, 179);
-            PatZipLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            PatZipLabel.Name = "PatZipLabel";
-            PatZipLabel.Size = new System.Drawing.Size(55, 15);
-            PatZipLabel.TabIndex = 16;
-            PatZipLabel.Text = "Zip Code";
-            PatZipLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // PatStateLabel
-            // 
-            PatStateLabel.AutoSize = true;
-            PatStateLabel.Location = new System.Drawing.Point(342, 179);
-            PatStateLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            PatStateLabel.Name = "PatStateLabel";
-            PatStateLabel.Size = new System.Drawing.Size(33, 15);
-            PatStateLabel.TabIndex = 14;
-            PatStateLabel.Text = "State";
-            PatStateLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // CityTextBox
-            // 
-            CityTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            CityTextBox.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
-            CityTextBox.Location = new System.Drawing.Point(13, 197);
-            CityTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            CityTextBox.Name = "CityTextBox";
-            CityTextBox.Size = new System.Drawing.Size(322, 23);
-            CityTextBox.TabIndex = 13;
-            // 
-            // PatCityLabel
-            // 
-            PatCityLabel.AutoSize = true;
-            PatCityLabel.Location = new System.Drawing.Point(9, 179);
-            PatCityLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            PatCityLabel.Name = "PatCityLabel";
-            PatCityLabel.Size = new System.Drawing.Size(28, 15);
-            PatCityLabel.TabIndex = 12;
-            PatCityLabel.Text = "City";
-            PatCityLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // Address1TextBox
-            // 
-            Address1TextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            Address1TextBox.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
-            Address1TextBox.Location = new System.Drawing.Point(13, 122);
-            Address1TextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            Address1TextBox.Name = "Address1TextBox";
-            Address1TextBox.Size = new System.Drawing.Size(322, 23);
-            Address1TextBox.TabIndex = 10;
-            // 
-            // Address2TextBox
-            // 
-            Address2TextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            Address2TextBox.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
-            Address2TextBox.Location = new System.Drawing.Point(13, 152);
-            Address2TextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            Address2TextBox.Name = "Address2TextBox";
-            Address2TextBox.Size = new System.Drawing.Size(322, 23);
-            Address2TextBox.TabIndex = 11;
-            // 
-            // PatAddressLabel
-            // 
-            PatAddressLabel.AutoSize = true;
-            PatAddressLabel.Location = new System.Drawing.Point(9, 104);
-            PatAddressLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            PatAddressLabel.Name = "PatAddressLabel";
-            PatAddressLabel.Size = new System.Drawing.Size(49, 15);
-            PatAddressLabel.TabIndex = 9;
-            PatAddressLabel.Text = "Address";
-            PatAddressLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // LastNameTextBox
-            // 
-            LastNameTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            LastNameTextBox.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
-            LastNameTextBox.Location = new System.Drawing.Point(9, 67);
-            LastNameTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            LastNameTextBox.Name = "LastNameTextBox";
-            LastNameTextBox.Size = new System.Drawing.Size(322, 23);
-            LastNameTextBox.TabIndex = 2;
-            // 
-            // PatientFullNameLabel
-            // 
-            PatientFullNameLabel.AutoSize = true;
-            PatientFullNameLabel.Location = new System.Drawing.Point(9, 14);
-            PatientFullNameLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            PatientFullNameLabel.Name = "PatientFullNameLabel";
-            PatientFullNameLabel.Size = new System.Drawing.Size(101, 15);
-            PatientFullNameLabel.TabIndex = 0;
-            PatientFullNameLabel.Text = "Patient Full Name";
-            // 
-            // MiddleNameTextBox
-            // 
-            MiddleNameTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            MiddleNameTextBox.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
-            MiddleNameTextBox.Location = new System.Drawing.Point(748, 67);
-            MiddleNameTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            MiddleNameTextBox.Name = "MiddleNameTextBox";
-            MiddleNameTextBox.Size = new System.Drawing.Size(242, 23);
-            MiddleNameTextBox.TabIndex = 8;
-            // 
-            // PatMiddleNameLabel
-            // 
-            PatMiddleNameLabel.AutoSize = true;
-            PatMiddleNameLabel.Location = new System.Drawing.Point(744, 48);
-            PatMiddleNameLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            PatMiddleNameLabel.Name = "PatMiddleNameLabel";
-            PatMiddleNameLabel.Size = new System.Drawing.Size(79, 15);
-            PatMiddleNameLabel.TabIndex = 7;
-            PatMiddleNameLabel.Text = "Middle Name";
-            PatMiddleNameLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // FirstNameTextBox
-            // 
-            FirstNameTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            FirstNameTextBox.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
-            FirstNameTextBox.Location = new System.Drawing.Point(412, 67);
-            FirstNameTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            FirstNameTextBox.Name = "FirstNameTextBox";
-            FirstNameTextBox.Size = new System.Drawing.Size(322, 23);
-            FirstNameTextBox.TabIndex = 6;
-            // 
-            // PatFirstNameLabel
-            // 
-            PatFirstNameLabel.AutoSize = true;
-            PatFirstNameLabel.Location = new System.Drawing.Point(408, 48);
-            PatFirstNameLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            PatFirstNameLabel.Name = "PatFirstNameLabel";
-            PatFirstNameLabel.Size = new System.Drawing.Size(64, 15);
-            PatFirstNameLabel.TabIndex = 5;
-            PatFirstNameLabel.Text = "First Name";
-            PatFirstNameLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // PatLastNameLabel
-            // 
-            PatLastNameLabel.AutoSize = true;
-            PatLastNameLabel.Location = new System.Drawing.Point(6, 48);
-            PatLastNameLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            PatLastNameLabel.Name = "PatLastNameLabel";
-            PatLastNameLabel.Size = new System.Drawing.Size(63, 15);
-            PatLastNameLabel.TabIndex = 1;
-            PatLastNameLabel.Text = "Last Name";
-            PatLastNameLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // MaritalStatusComboBox
-            // 
-            MaritalStatusComboBox.BackColor = System.Drawing.Color.White;
-            MaritalStatusComboBox.BorderColor = System.Drawing.Color.Blue;
-            MaritalStatusComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            MaritalStatusComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            MaritalStatusComboBox.FormattingEnabled = true;
-            MaritalStatusComboBox.Location = new System.Drawing.Point(345, 344);
-            MaritalStatusComboBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            MaritalStatusComboBox.Name = "MaritalStatusComboBox";
-            MaritalStatusComboBox.Size = new System.Drawing.Size(206, 23);
-            MaritalStatusComboBox.TabIndex = 29;
-            // 
-            // SexComboBox
-            // 
-            SexComboBox.BackColor = System.Drawing.Color.White;
-            SexComboBox.BorderColor = System.Drawing.Color.Blue;
-            SexComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            SexComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            SexComboBox.FormattingEnabled = true;
-            SexComboBox.Items.AddRange(new object[] { "Male", "Female", "Unknown" });
-            SexComboBox.Location = new System.Drawing.Point(345, 252);
-            SexComboBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            SexComboBox.Name = "SexComboBox";
-            SexComboBox.Size = new System.Drawing.Size(206, 23);
-            SexComboBox.TabIndex = 25;
-            // 
-            // StateComboBox
-            // 
-            StateComboBox.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
-            StateComboBox.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
-            StateComboBox.BackColor = System.Drawing.Color.White;
-            StateComboBox.BorderColor = System.Drawing.Color.Blue;
-            StateComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            StateComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            StateComboBox.FormattingEnabled = true;
-            StateComboBox.Location = new System.Drawing.Point(345, 196);
-            StateComboBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            StateComboBox.Name = "StateComboBox";
-            StateComboBox.Size = new System.Drawing.Size(206, 23);
-            StateComboBox.TabIndex = 15;
-            // 
-            // tabGuarantor
-            // 
-            tabGuarantor.AutoScroll = true;
-            tabGuarantor.BackColor = System.Drawing.Color.White;
-            tabGuarantor.Controls.Add(GuarantorSaveButton);
-            tabGuarantor.Controls.Add(PatRelationLabel);
-            tabGuarantor.Controls.Add(GuarFirstNameLabel);
-            tabGuarantor.Controls.Add(GuarFirstNameTextBox);
-            tabGuarantor.Controls.Add(GuarSuffixLabel);
-            tabGuarantor.Controls.Add(GuarSuffixTextBox);
-            tabGuarantor.Controls.Add(GuarLastNameLabel);
-            tabGuarantor.Controls.Add(GuarantorLastNameTextBox);
-            tabGuarantor.Controls.Add(GuarCopyPatientLink);
-            tabGuarantor.Controls.Add(GuarMiddleNameLabel);
-            tabGuarantor.Controls.Add(GuarMiddleNameTextBox);
-            tabGuarantor.Controls.Add(GuarAddressLabel);
-            tabGuarantor.Controls.Add(GuarantorAddressTextBox);
-            tabGuarantor.Controls.Add(GuarCityLabel);
-            tabGuarantor.Controls.Add(GuarCityTextBox);
-            tabGuarantor.Controls.Add(GuarStateLabel);
-            tabGuarantor.Controls.Add(GuarZipCodeLabel);
-            tabGuarantor.Controls.Add(GuarZipTextBox);
-            tabGuarantor.Controls.Add(GuarPhoneLabel);
-            tabGuarantor.Controls.Add(GuarantorPhoneTextBox);
-            tabGuarantor.Controls.Add(GuarantorRelationComboBox);
-            tabGuarantor.Controls.Add(GuarStateComboBox);
-            tabGuarantor.Location = new System.Drawing.Point(4, 24);
-            tabGuarantor.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            tabGuarantor.Name = "tabGuarantor";
-            tabGuarantor.Size = new System.Drawing.Size(1344, 568);
-            tabGuarantor.TabIndex = 13;
-            tabGuarantor.Text = "Guarantor";
-            // 
-            // GuarantorSaveButton
-            // 
-            GuarantorSaveButton.BackColor = System.Drawing.Color.DeepSkyBlue;
-            GuarantorSaveButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            GuarantorSaveButton.Location = new System.Drawing.Point(15, 351);
-            GuarantorSaveButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            GuarantorSaveButton.Name = "GuarantorSaveButton";
-            GuarantorSaveButton.Size = new System.Drawing.Size(106, 51);
-            GuarantorSaveButton.TabIndex = 22;
-            GuarantorSaveButton.Text = "Save";
-            GuarantorSaveButton.UseVisualStyleBackColor = false;
-            GuarantorSaveButton.Click += GuarantorSaveButton_Click;
-            // 
-            // PatRelationLabel
-            // 
-            PatRelationLabel.AutoSize = true;
-            PatRelationLabel.Location = new System.Drawing.Point(12, 67);
-            PatRelationLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            PatRelationLabel.Name = "PatRelationLabel";
-            PatRelationLabel.Size = new System.Drawing.Size(104, 15);
-            PatRelationLabel.TabIndex = 1;
-            PatRelationLabel.Text = "Relation to Patient";
-            PatRelationLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // GuarFirstNameLabel
-            // 
-            GuarFirstNameLabel.AutoSize = true;
-            GuarFirstNameLabel.Location = new System.Drawing.Point(435, 125);
-            GuarFirstNameLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            GuarFirstNameLabel.Name = "GuarFirstNameLabel";
-            GuarFirstNameLabel.Size = new System.Drawing.Size(64, 15);
-            GuarFirstNameLabel.TabIndex = 8;
-            GuarFirstNameLabel.Text = "First Name";
-            GuarFirstNameLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // GuarFirstNameTextBox
-            // 
-            GuarFirstNameTextBox.Location = new System.Drawing.Point(438, 143);
-            GuarFirstNameTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            GuarFirstNameTextBox.Name = "GuarFirstNameTextBox";
-            GuarFirstNameTextBox.Size = new System.Drawing.Size(346, 23);
-            GuarFirstNameTextBox.TabIndex = 9;
-            // 
-            // GuarSuffixLabel
-            // 
-            GuarSuffixLabel.AutoSize = true;
-            GuarSuffixLabel.Location = new System.Drawing.Point(369, 125);
-            GuarSuffixLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            GuarSuffixLabel.Name = "GuarSuffixLabel";
-            GuarSuffixLabel.Size = new System.Drawing.Size(37, 15);
-            GuarSuffixLabel.TabIndex = 6;
-            GuarSuffixLabel.Text = "Suffix";
-            GuarSuffixLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // GuarSuffixTextBox
-            // 
-            GuarSuffixTextBox.Location = new System.Drawing.Point(369, 143);
-            GuarSuffixTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            GuarSuffixTextBox.Name = "GuarSuffixTextBox";
-            GuarSuffixTextBox.Size = new System.Drawing.Size(58, 23);
-            GuarSuffixTextBox.TabIndex = 7;
-            // 
-            // GuarLastNameLabel
-            // 
-            GuarLastNameLabel.AutoSize = true;
-            GuarLastNameLabel.Location = new System.Drawing.Point(12, 125);
-            GuarLastNameLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            GuarLastNameLabel.Name = "GuarLastNameLabel";
-            GuarLastNameLabel.Size = new System.Drawing.Size(63, 15);
-            GuarLastNameLabel.TabIndex = 4;
-            GuarLastNameLabel.Text = "Last Name";
-            GuarLastNameLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // GuarantorLastNameTextBox
-            // 
-            GuarantorLastNameTextBox.Location = new System.Drawing.Point(15, 143);
-            GuarantorLastNameTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            GuarantorLastNameTextBox.Name = "GuarantorLastNameTextBox";
-            GuarantorLastNameTextBox.Size = new System.Drawing.Size(346, 23);
-            GuarantorLastNameTextBox.TabIndex = 5;
-            // 
-            // GuarCopyPatientLink
-            // 
-            GuarCopyPatientLink.AutoSize = true;
-            GuarCopyPatientLink.Location = new System.Drawing.Point(288, 67);
-            GuarCopyPatientLink.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            GuarCopyPatientLink.Name = "GuarCopyPatientLink";
-            GuarCopyPatientLink.Size = new System.Drawing.Size(99, 15);
-            GuarCopyPatientLink.TabIndex = 3;
-            GuarCopyPatientLink.TabStop = true;
-            GuarCopyPatientLink.Text = "Copy Patient Info";
-            GuarCopyPatientLink.LinkClicked += GuarCopyPatientLink_LinkClicked;
-            // 
-            // GuarMiddleNameLabel
-            // 
-            GuarMiddleNameLabel.AutoSize = true;
-            GuarMiddleNameLabel.Location = new System.Drawing.Point(792, 125);
-            GuarMiddleNameLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            GuarMiddleNameLabel.Name = "GuarMiddleNameLabel";
-            GuarMiddleNameLabel.Size = new System.Drawing.Size(79, 15);
-            GuarMiddleNameLabel.TabIndex = 10;
-            GuarMiddleNameLabel.Text = "Middle Name";
-            GuarMiddleNameLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // GuarMiddleNameTextBox
-            // 
-            GuarMiddleNameTextBox.Location = new System.Drawing.Point(796, 143);
-            GuarMiddleNameTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            GuarMiddleNameTextBox.Name = "GuarMiddleNameTextBox";
-            GuarMiddleNameTextBox.Size = new System.Drawing.Size(279, 23);
-            GuarMiddleNameTextBox.TabIndex = 11;
-            // 
-            // GuarAddressLabel
-            // 
-            GuarAddressLabel.AutoSize = true;
-            GuarAddressLabel.Location = new System.Drawing.Point(12, 180);
-            GuarAddressLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            GuarAddressLabel.Name = "GuarAddressLabel";
-            GuarAddressLabel.Size = new System.Drawing.Size(49, 15);
-            GuarAddressLabel.TabIndex = 12;
-            GuarAddressLabel.Text = "Address";
-            GuarAddressLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // GuarantorAddressTextBox
-            // 
-            GuarantorAddressTextBox.Location = new System.Drawing.Point(15, 198);
-            GuarantorAddressTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            GuarantorAddressTextBox.Name = "GuarantorAddressTextBox";
-            GuarantorAddressTextBox.Size = new System.Drawing.Size(346, 23);
-            GuarantorAddressTextBox.TabIndex = 13;
-            // 
-            // GuarCityLabel
-            // 
-            GuarCityLabel.AutoSize = true;
-            GuarCityLabel.Location = new System.Drawing.Point(12, 227);
-            GuarCityLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            GuarCityLabel.Name = "GuarCityLabel";
-            GuarCityLabel.Size = new System.Drawing.Size(28, 15);
-            GuarCityLabel.TabIndex = 14;
-            GuarCityLabel.Text = "City";
-            GuarCityLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // GuarCityTextBox
-            // 
-            GuarCityTextBox.Location = new System.Drawing.Point(15, 245);
-            GuarCityTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            GuarCityTextBox.Name = "GuarCityTextBox";
-            GuarCityTextBox.Size = new System.Drawing.Size(346, 23);
-            GuarCityTextBox.TabIndex = 15;
-            // 
-            // GuarStateLabel
-            // 
-            GuarStateLabel.AutoSize = true;
-            GuarStateLabel.Location = new System.Drawing.Point(365, 225);
-            GuarStateLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            GuarStateLabel.Name = "GuarStateLabel";
-            GuarStateLabel.Size = new System.Drawing.Size(33, 15);
-            GuarStateLabel.TabIndex = 16;
-            GuarStateLabel.Text = "State";
-            GuarStateLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // GuarZipCodeLabel
-            // 
-            GuarZipCodeLabel.AutoSize = true;
-            GuarZipCodeLabel.Location = new System.Drawing.Point(589, 225);
-            GuarZipCodeLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            GuarZipCodeLabel.Name = "GuarZipCodeLabel";
-            GuarZipCodeLabel.Size = new System.Drawing.Size(52, 15);
-            GuarZipCodeLabel.TabIndex = 18;
-            GuarZipCodeLabel.Text = "ZipCode";
-            GuarZipCodeLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // GuarZipTextBox
             // 
-            GuarZipTextBox.Location = new System.Drawing.Point(589, 243);
+            GuarZipTextBox.Location = new System.Drawing.Point(831, 265);
             GuarZipTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             GuarZipTextBox.Mask = "00000-9999";
             GuarZipTextBox.Name = "GuarZipTextBox";
             GuarZipTextBox.Size = new System.Drawing.Size(125, 23);
-            GuarZipTextBox.TabIndex = 19;
+            GuarZipTextBox.TabIndex = 39;
             // 
-            // GuarPhoneLabel
+            // GuarZipCodeLabel
             // 
-            GuarPhoneLabel.AutoSize = true;
-            GuarPhoneLabel.Location = new System.Drawing.Point(12, 275);
-            GuarPhoneLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            GuarPhoneLabel.Name = "GuarPhoneLabel";
-            GuarPhoneLabel.Size = new System.Drawing.Size(41, 15);
-            GuarPhoneLabel.TabIndex = 20;
-            GuarPhoneLabel.Text = "Phone";
-            GuarPhoneLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            GuarZipCodeLabel.AutoSize = true;
+            GuarZipCodeLabel.Location = new System.Drawing.Point(671, 262);
+            GuarZipCodeLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            GuarZipCodeLabel.Name = "GuarZipCodeLabel";
+            GuarZipCodeLabel.Size = new System.Drawing.Size(52, 15);
+            GuarZipCodeLabel.TabIndex = 38;
+            GuarZipCodeLabel.Text = "ZipCode";
+            GuarZipCodeLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
-            // GuarantorPhoneTextBox
+            // GuarStateLabel
             // 
-            GuarantorPhoneTextBox.Location = new System.Drawing.Point(15, 293);
-            GuarantorPhoneTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            GuarantorPhoneTextBox.Name = "GuarantorPhoneTextBox";
-            GuarantorPhoneTextBox.Size = new System.Drawing.Size(346, 23);
-            GuarantorPhoneTextBox.TabIndex = 21;
-            // 
-            // GuarantorRelationComboBox
-            // 
-            GuarantorRelationComboBox.BorderColor = System.Drawing.Color.Blue;
-            GuarantorRelationComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            GuarantorRelationComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            GuarantorRelationComboBox.FormattingEnabled = true;
-            GuarantorRelationComboBox.Location = new System.Drawing.Point(128, 63);
-            GuarantorRelationComboBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            GuarantorRelationComboBox.Name = "GuarantorRelationComboBox";
-            GuarantorRelationComboBox.Size = new System.Drawing.Size(152, 23);
-            GuarantorRelationComboBox.TabIndex = 2;
+            GuarStateLabel.AutoSize = true;
+            GuarStateLabel.Location = new System.Drawing.Point(671, 233);
+            GuarStateLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            GuarStateLabel.Name = "GuarStateLabel";
+            GuarStateLabel.Size = new System.Drawing.Size(33, 15);
+            GuarStateLabel.TabIndex = 36;
+            GuarStateLabel.Text = "State";
+            GuarStateLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // GuarStateComboBox
             // 
@@ -1005,643 +431,546 @@ namespace LabBilling.Forms
             GuarStateComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             GuarStateComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             GuarStateComboBox.FormattingEnabled = true;
-            GuarStateComboBox.Location = new System.Drawing.Point(369, 243);
+            GuarStateComboBox.Location = new System.Drawing.Point(831, 236);
             GuarStateComboBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             GuarStateComboBox.Name = "GuarStateComboBox";
             GuarStateComboBox.Size = new System.Drawing.Size(213, 23);
-            GuarStateComboBox.TabIndex = 17;
-            // 
-            // tabInsurance
-            // 
-            tabInsurance.AutoScroll = true;
-            tabInsurance.BackColor = System.Drawing.Color.White;
-            tabInsurance.Controls.Add(insTabLayoutPanel);
-            tabInsurance.Location = new System.Drawing.Point(4, 24);
-            tabInsurance.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            tabInsurance.Name = "tabInsurance";
-            tabInsurance.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            tabInsurance.Size = new System.Drawing.Size(1344, 568);
-            tabInsurance.TabIndex = 11;
-            tabInsurance.Text = "Insurance";
-            // 
-            // insTabLayoutPanel
-            // 
-            insTabLayoutPanel.AutoScroll = true;
-            insTabLayoutPanel.ColumnCount = 5;
-            insTabLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 152F));
-            insTabLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            insTabLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 152F));
-            insTabLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            insTabLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            insTabLayoutPanel.Controls.Add(HolderLastNameLabel, 0, 2);
-            insTabLayoutPanel.Controls.Add(InsuranceDataGrid, 0, 0);
-            insTabLayoutPanel.Controls.Add(SaveInsuranceButton, 0, 13);
-            insTabLayoutPanel.Controls.Add(InsCopyPatientLink, 1, 1);
-            insTabLayoutPanel.Controls.Add(PlanFinCodeComboBox, 3, 8);
-            insTabLayoutPanel.Controls.Add(InsPlanFinCodeLabel, 2, 8);
-            insTabLayoutPanel.Controls.Add(CertSSNTextBox, 3, 12);
-            insTabLayoutPanel.Controls.Add(HolderLastNameTextBox, 1, 2);
-            insTabLayoutPanel.Controls.Add(InsCertSSNLabel, 2, 12);
-            insTabLayoutPanel.Controls.Add(GroupNameTextBox, 3, 11);
-            insTabLayoutPanel.Controls.Add(InsGroupNameLabel, 2, 11);
-            insTabLayoutPanel.Controls.Add(HolderFirstNameLabel, 0, 3);
-            insTabLayoutPanel.Controls.Add(HolderZipTextBox, 1, 8);
-            insTabLayoutPanel.Controls.Add(GroupNumberTextBox, 3, 10);
-            insTabLayoutPanel.Controls.Add(HolderZipCodeLabel, 0, 8);
-            insTabLayoutPanel.Controls.Add(InsGroupNumberLabel, 2, 10);
-            insTabLayoutPanel.Controls.Add(PlanAddress2TextBox, 3, 6);
-            insTabLayoutPanel.Controls.Add(InsRelationComboBox, 1, 11);
-            insTabLayoutPanel.Controls.Add(HolderRelationLabel, 0, 11);
-            insTabLayoutPanel.Controls.Add(PolicyNumberTextBox, 3, 9);
-            insTabLayoutPanel.Controls.Add(HolderStateLabel, 0, 7);
-            insTabLayoutPanel.Controls.Add(HolderDOBTextBox, 1, 10);
-            insTabLayoutPanel.Controls.Add(InsPolicyNumberLabel, 2, 9);
-            insTabLayoutPanel.Controls.Add(HolderDOBLabel, 0, 10);
-            insTabLayoutPanel.Controls.Add(HolderStateComboBox, 1, 7);
-            insTabLayoutPanel.Controls.Add(HolderFirstNameTextBox, 1, 3);
-            insTabLayoutPanel.Controls.Add(InsPlanLabel, 2, 3);
-            insTabLayoutPanel.Controls.Add(InsuranceOrderLabel, 2, 2);
-            insTabLayoutPanel.Controls.Add(InsOrderComboBox, 3, 2);
-            insTabLayoutPanel.Controls.Add(HolderSexComboBox, 1, 9);
-            insTabLayoutPanel.Controls.Add(HolderMiddleNameLabel, 0, 4);
-            insTabLayoutPanel.Controls.Add(HolderSexLabel, 0, 9);
-            insTabLayoutPanel.Controls.Add(HolderMiddleNameTextBox, 1, 4);
-            insTabLayoutPanel.Controls.Add(InsPlanNameLabel, 2, 4);
-            insTabLayoutPanel.Controls.Add(PlanNameTextBox, 3, 4);
-            insTabLayoutPanel.Controls.Add(HolderAddressLabel, 0, 5);
-            insTabLayoutPanel.Controls.Add(HolderAddressTextBox, 1, 5);
-            insTabLayoutPanel.Controls.Add(PlanCityStTextBox, 3, 7);
-            insTabLayoutPanel.Controls.Add(InsPlanAddressLabel, 2, 5);
-            insTabLayoutPanel.Controls.Add(InsPlanCityStateZipLabel, 2, 7);
-            insTabLayoutPanel.Controls.Add(PlanAddressTextBox, 3, 5);
-            insTabLayoutPanel.Controls.Add(HolderCityTextBox, 1, 6);
-            insTabLayoutPanel.Controls.Add(HolderCityLabel, 0, 6);
-            insTabLayoutPanel.Controls.Add(InsUserInstructionsLabel, 3, 1);
-            insTabLayoutPanel.Controls.Add(AddInsuranceButton, 2, 1);
-            insTabLayoutPanel.Controls.Add(InsTabMessageTextBox, 1, 14);
-            insTabLayoutPanel.Controls.Add(insurancePlanTextBox, 3, 3);
-            insTabLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            insTabLayoutPanel.Location = new System.Drawing.Point(4, 3);
-            insTabLayoutPanel.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            insTabLayoutPanel.Name = "insTabLayoutPanel";
-            insTabLayoutPanel.RowCount = 15;
-            insTabLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            insTabLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            insTabLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            insTabLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            insTabLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            insTabLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            insTabLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            insTabLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            insTabLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            insTabLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            insTabLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            insTabLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            insTabLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            insTabLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            insTabLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 35F));
-            insTabLayoutPanel.Size = new System.Drawing.Size(1336, 562);
-            insTabLayoutPanel.TabIndex = 2;
-            // 
-            // HolderLastNameLabel
-            // 
-            HolderLastNameLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            HolderLastNameLabel.AutoSize = true;
-            HolderLastNameLabel.Location = new System.Drawing.Point(4, 163);
-            HolderLastNameLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            HolderLastNameLabel.Name = "HolderLastNameLabel";
-            HolderLastNameLabel.Size = new System.Drawing.Size(102, 15);
-            HolderLastNameLabel.TabIndex = 1;
-            HolderLastNameLabel.Text = "Holder Last Name";
-            // 
-            // InsuranceDataGrid
-            // 
-            InsuranceDataGrid.AllowUserToAddRows = false;
-            InsuranceDataGrid.AllowUserToDeleteRows = false;
-            InsuranceDataGrid.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            InsuranceDataGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
-            InsuranceDataGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            insTabLayoutPanel.SetColumnSpan(InsuranceDataGrid, 5);
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
-            dataGridViewCellStyle2.ForeColor = System.Drawing.Color.Black;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            InsuranceDataGrid.DefaultCellStyle = dataGridViewCellStyle2;
-            InsuranceDataGrid.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
-            InsuranceDataGrid.Location = new System.Drawing.Point(4, 3);
-            InsuranceDataGrid.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            InsuranceDataGrid.MultiSelect = false;
-            InsuranceDataGrid.Name = "InsuranceDataGrid";
-            InsuranceDataGrid.ReadOnly = true;
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
-            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            InsuranceDataGrid.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
-            InsuranceDataGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            InsuranceDataGrid.Size = new System.Drawing.Size(1328, 120);
-            InsuranceDataGrid.TabIndex = 0;
-            InsuranceDataGrid.CellClick += InsuranceDataGrid_CellClick;
-            // 
-            // SaveInsuranceButton
-            // 
-            SaveInsuranceButton.BackColor = System.Drawing.Color.SkyBlue;
-            SaveInsuranceButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            SaveInsuranceButton.Location = new System.Drawing.Point(4, 478);
-            SaveInsuranceButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            SaveInsuranceButton.Name = "SaveInsuranceButton";
-            SaveInsuranceButton.Size = new System.Drawing.Size(115, 60);
-            SaveInsuranceButton.TabIndex = 25;
-            SaveInsuranceButton.Text = "Save Insurance";
-            SaveInsuranceButton.UseVisualStyleBackColor = false;
-            SaveInsuranceButton.Click += SaveInsuranceButton_Click;
-            // 
-            // InsCopyPatientLink
-            // 
-            InsCopyPatientLink.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            InsCopyPatientLink.AutoSize = true;
-            InsCopyPatientLink.Location = new System.Drawing.Point(156, 133);
-            InsCopyPatientLink.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            InsCopyPatientLink.Name = "InsCopyPatientLink";
-            InsCopyPatientLink.Size = new System.Drawing.Size(99, 15);
-            InsCopyPatientLink.TabIndex = 0;
-            InsCopyPatientLink.TabStop = true;
-            InsCopyPatientLink.Text = "Copy Patient Info";
-            InsCopyPatientLink.LinkClicked += InsCopyPatientLink_LinkClicked_1;
-            // 
-            // PlanFinCodeComboBox
-            // 
-            PlanFinCodeComboBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            PlanFinCodeComboBox.BorderColor = System.Drawing.Color.Blue;
-            PlanFinCodeComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            PlanFinCodeComboBox.FormattingEnabled = true;
-            PlanFinCodeComboBox.Location = new System.Drawing.Point(652, 333);
-            PlanFinCodeComboBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            PlanFinCodeComboBox.Name = "PlanFinCodeComboBox";
-            PlanFinCodeComboBox.Size = new System.Drawing.Size(268, 23);
-            PlanFinCodeComboBox.TabIndex = 20;
-            // 
-            // InsPlanFinCodeLabel
-            // 
-            InsPlanFinCodeLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            InsPlanFinCodeLabel.AutoSize = true;
-            InsPlanFinCodeLabel.Location = new System.Drawing.Point(500, 337);
-            InsPlanFinCodeLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            InsPlanFinCodeLabel.Name = "InsPlanFinCodeLabel";
-            InsPlanFinCodeLabel.Size = new System.Drawing.Size(111, 15);
-            InsPlanFinCodeLabel.TabIndex = 32;
-            InsPlanFinCodeLabel.Text = "Plan Financial Code";
-            // 
-            // CertSSNTextBox
-            // 
-            CertSSNTextBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            CertSSNTextBox.Location = new System.Drawing.Point(652, 449);
-            CertSSNTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            CertSSNTextBox.Name = "CertSSNTextBox";
-            CertSSNTextBox.Size = new System.Drawing.Size(268, 23);
-            CertSSNTextBox.TabIndex = 24;
-            // 
-            // HolderLastNameTextBox
-            // 
-            HolderLastNameTextBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            HolderLastNameTextBox.Location = new System.Drawing.Point(156, 159);
-            HolderLastNameTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            HolderLastNameTextBox.Name = "HolderLastNameTextBox";
-            HolderLastNameTextBox.Size = new System.Drawing.Size(268, 23);
-            HolderLastNameTextBox.TabIndex = 1;
-            // 
-            // InsCertSSNLabel
-            // 
-            InsCertSSNLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            InsCertSSNLabel.AutoSize = true;
-            InsCertSSNLabel.Location = new System.Drawing.Point(500, 453);
-            InsCertSSNLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            InsCertSSNLabel.Name = "InsCertSSNLabel";
-            InsCertSSNLabel.Size = new System.Drawing.Size(55, 15);
-            InsCertSSNLabel.TabIndex = 40;
-            InsCertSSNLabel.Text = "Cert/SSN";
-            // 
-            // GroupNameTextBox
-            // 
-            GroupNameTextBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            GroupNameTextBox.Location = new System.Drawing.Point(652, 420);
-            GroupNameTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            GroupNameTextBox.Name = "GroupNameTextBox";
-            GroupNameTextBox.Size = new System.Drawing.Size(268, 23);
-            GroupNameTextBox.TabIndex = 23;
-            // 
-            // InsGroupNameLabel
-            // 
-            InsGroupNameLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            InsGroupNameLabel.AutoSize = true;
-            InsGroupNameLabel.Location = new System.Drawing.Point(500, 424);
-            InsGroupNameLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            InsGroupNameLabel.Name = "InsGroupNameLabel";
-            InsGroupNameLabel.Size = new System.Drawing.Size(75, 15);
-            InsGroupNameLabel.TabIndex = 38;
-            InsGroupNameLabel.Text = "Group Name";
-            // 
-            // HolderFirstNameLabel
-            // 
-            HolderFirstNameLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            HolderFirstNameLabel.AutoSize = true;
-            HolderFirstNameLabel.Location = new System.Drawing.Point(4, 192);
-            HolderFirstNameLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            HolderFirstNameLabel.Name = "HolderFirstNameLabel";
-            HolderFirstNameLabel.Size = new System.Drawing.Size(103, 15);
-            HolderFirstNameLabel.TabIndex = 3;
-            HolderFirstNameLabel.Text = "Holder First Name";
-            // 
-            // HolderZipTextBox
-            // 
-            HolderZipTextBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            HolderZipTextBox.Location = new System.Drawing.Point(156, 333);
-            HolderZipTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            HolderZipTextBox.Name = "HolderZipTextBox";
-            HolderZipTextBox.Size = new System.Drawing.Size(178, 23);
-            HolderZipTextBox.TabIndex = 7;
-            // 
-            // GroupNumberTextBox
-            // 
-            GroupNumberTextBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            GroupNumberTextBox.Location = new System.Drawing.Point(652, 391);
-            GroupNumberTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            GroupNumberTextBox.Name = "GroupNumberTextBox";
-            GroupNumberTextBox.Size = new System.Drawing.Size(268, 23);
-            GroupNumberTextBox.TabIndex = 22;
-            // 
-            // HolderZipCodeLabel
-            // 
-            HolderZipCodeLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            HolderZipCodeLabel.AutoSize = true;
-            HolderZipCodeLabel.Location = new System.Drawing.Point(4, 337);
-            HolderZipCodeLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            HolderZipCodeLabel.Name = "HolderZipCodeLabel";
-            HolderZipCodeLabel.Size = new System.Drawing.Size(50, 15);
-            HolderZipCodeLabel.TabIndex = 13;
-            HolderZipCodeLabel.Text = "Zipcode";
-            // 
-            // InsGroupNumberLabel
-            // 
-            InsGroupNumberLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            InsGroupNumberLabel.AutoSize = true;
-            InsGroupNumberLabel.Location = new System.Drawing.Point(500, 395);
-            InsGroupNumberLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            InsGroupNumberLabel.Name = "InsGroupNumberLabel";
-            InsGroupNumberLabel.Size = new System.Drawing.Size(87, 15);
-            InsGroupNumberLabel.TabIndex = 36;
-            InsGroupNumberLabel.Text = "Group Number";
-            // 
-            // PlanAddress2TextBox
-            // 
-            PlanAddress2TextBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            PlanAddress2TextBox.Location = new System.Drawing.Point(652, 275);
-            PlanAddress2TextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            PlanAddress2TextBox.Name = "PlanAddress2TextBox";
-            PlanAddress2TextBox.Size = new System.Drawing.Size(268, 23);
-            PlanAddress2TextBox.TabIndex = 18;
-            // 
-            // InsRelationComboBox
-            // 
-            InsRelationComboBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            InsRelationComboBox.BackColor = System.Drawing.Color.MintCream;
-            InsRelationComboBox.BorderColor = System.Drawing.Color.Blue;
-            InsRelationComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            InsRelationComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            InsRelationComboBox.FormattingEnabled = true;
-            InsRelationComboBox.Location = new System.Drawing.Point(156, 420);
-            InsRelationComboBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            InsRelationComboBox.Name = "InsRelationComboBox";
-            InsRelationComboBox.Size = new System.Drawing.Size(268, 23);
-            InsRelationComboBox.TabIndex = 10;
-            // 
-            // HolderRelationLabel
-            // 
-            HolderRelationLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            HolderRelationLabel.AutoSize = true;
-            HolderRelationLabel.Location = new System.Drawing.Point(4, 424);
-            HolderRelationLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            HolderRelationLabel.Name = "HolderRelationLabel";
-            HolderRelationLabel.Size = new System.Drawing.Size(104, 15);
-            HolderRelationLabel.TabIndex = 19;
-            HolderRelationLabel.Text = "Relation to Patient";
-            // 
-            // PolicyNumberTextBox
-            // 
-            PolicyNumberTextBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            PolicyNumberTextBox.Location = new System.Drawing.Point(652, 362);
-            PolicyNumberTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            PolicyNumberTextBox.Name = "PolicyNumberTextBox";
-            PolicyNumberTextBox.Size = new System.Drawing.Size(268, 23);
-            PolicyNumberTextBox.TabIndex = 21;
-            // 
-            // HolderStateLabel
-            // 
-            HolderStateLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            HolderStateLabel.AutoSize = true;
-            HolderStateLabel.Location = new System.Drawing.Point(4, 308);
-            HolderStateLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            HolderStateLabel.Name = "HolderStateLabel";
-            HolderStateLabel.Size = new System.Drawing.Size(33, 15);
-            HolderStateLabel.TabIndex = 11;
-            HolderStateLabel.Text = "State";
-            // 
-            // HolderDOBTextBox
-            // 
-            HolderDOBTextBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            HolderDOBTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            HolderDOBTextBox.Location = new System.Drawing.Point(156, 391);
-            HolderDOBTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            HolderDOBTextBox.Mask = "00/00/0000";
-            HolderDOBTextBox.Name = "HolderDOBTextBox";
-            HolderDOBTextBox.Size = new System.Drawing.Size(268, 23);
-            HolderDOBTextBox.TabIndex = 9;
-            HolderDOBTextBox.ValidatingType = typeof(System.DateTime);
-            // 
-            // InsPolicyNumberLabel
-            // 
-            InsPolicyNumberLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            InsPolicyNumberLabel.AutoSize = true;
-            InsPolicyNumberLabel.Location = new System.Drawing.Point(500, 366);
-            InsPolicyNumberLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            InsPolicyNumberLabel.Name = "InsPolicyNumberLabel";
-            InsPolicyNumberLabel.Size = new System.Drawing.Size(86, 15);
-            InsPolicyNumberLabel.TabIndex = 34;
-            InsPolicyNumberLabel.Text = "Policy Number";
-            // 
-            // HolderDOBLabel
-            // 
-            HolderDOBLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            HolderDOBLabel.AutoSize = true;
-            HolderDOBLabel.Location = new System.Drawing.Point(4, 395);
-            HolderDOBLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            HolderDOBLabel.Name = "HolderDOBLabel";
-            HolderDOBLabel.Size = new System.Drawing.Size(73, 15);
-            HolderDOBLabel.TabIndex = 17;
-            HolderDOBLabel.Text = "Date of Birth";
-            // 
-            // HolderStateComboBox
-            // 
-            HolderStateComboBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            HolderStateComboBox.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
-            HolderStateComboBox.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
-            HolderStateComboBox.BackColor = System.Drawing.Color.MintCream;
-            HolderStateComboBox.BorderColor = System.Drawing.Color.Blue;
-            HolderStateComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            HolderStateComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            HolderStateComboBox.FormattingEnabled = true;
-            HolderStateComboBox.Location = new System.Drawing.Point(156, 304);
-            HolderStateComboBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            HolderStateComboBox.Name = "HolderStateComboBox";
-            HolderStateComboBox.Size = new System.Drawing.Size(268, 23);
-            HolderStateComboBox.TabIndex = 6;
-            // 
-            // HolderFirstNameTextBox
-            // 
-            HolderFirstNameTextBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            HolderFirstNameTextBox.Location = new System.Drawing.Point(156, 188);
-            HolderFirstNameTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            HolderFirstNameTextBox.Name = "HolderFirstNameTextBox";
-            HolderFirstNameTextBox.Size = new System.Drawing.Size(268, 23);
-            HolderFirstNameTextBox.TabIndex = 2;
-            // 
-            // InsPlanLabel
-            // 
-            InsPlanLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            InsPlanLabel.AutoSize = true;
-            InsPlanLabel.Location = new System.Drawing.Point(500, 192);
-            InsPlanLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            InsPlanLabel.Name = "InsPlanLabel";
-            InsPlanLabel.Size = new System.Drawing.Size(84, 15);
-            InsPlanLabel.TabIndex = 23;
-            InsPlanLabel.Text = "Insurance Plan";
-            // 
-            // InsuranceOrderLabel
-            // 
-            InsuranceOrderLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            InsuranceOrderLabel.AutoSize = true;
-            InsuranceOrderLabel.Location = new System.Drawing.Point(500, 163);
-            InsuranceOrderLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            InsuranceOrderLabel.Name = "InsuranceOrderLabel";
-            InsuranceOrderLabel.Size = new System.Drawing.Size(91, 15);
-            InsuranceOrderLabel.TabIndex = 21;
-            InsuranceOrderLabel.Text = "Insurance Order";
-            // 
-            // InsOrderComboBox
-            // 
-            InsOrderComboBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            InsOrderComboBox.BorderColor = System.Drawing.Color.Blue;
-            InsOrderComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            InsOrderComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            InsOrderComboBox.FormattingEnabled = true;
-            InsOrderComboBox.Location = new System.Drawing.Point(652, 159);
-            InsOrderComboBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            InsOrderComboBox.Name = "InsOrderComboBox";
-            InsOrderComboBox.Size = new System.Drawing.Size(268, 23);
-            InsOrderComboBox.TabIndex = 13;
-            // 
-            // HolderSexComboBox
-            // 
-            HolderSexComboBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            HolderSexComboBox.BackColor = System.Drawing.Color.MintCream;
-            HolderSexComboBox.BorderColor = System.Drawing.Color.Blue;
-            HolderSexComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            HolderSexComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            HolderSexComboBox.FormattingEnabled = true;
-            HolderSexComboBox.Items.AddRange(new object[] { "Male", "Female", "Unknown" });
-            HolderSexComboBox.Location = new System.Drawing.Point(156, 362);
-            HolderSexComboBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            HolderSexComboBox.Name = "HolderSexComboBox";
-            HolderSexComboBox.Size = new System.Drawing.Size(268, 23);
-            HolderSexComboBox.TabIndex = 8;
-            // 
-            // HolderMiddleNameLabel
-            // 
-            HolderMiddleNameLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            HolderMiddleNameLabel.AutoSize = true;
-            HolderMiddleNameLabel.Location = new System.Drawing.Point(4, 221);
-            HolderMiddleNameLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            HolderMiddleNameLabel.Name = "HolderMiddleNameLabel";
-            HolderMiddleNameLabel.Size = new System.Drawing.Size(118, 15);
-            HolderMiddleNameLabel.TabIndex = 5;
-            HolderMiddleNameLabel.Text = "Holder Middle Name";
-            // 
-            // HolderSexLabel
-            // 
-            HolderSexLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            HolderSexLabel.AutoSize = true;
-            HolderSexLabel.Location = new System.Drawing.Point(4, 366);
-            HolderSexLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            HolderSexLabel.Name = "HolderSexLabel";
-            HolderSexLabel.Size = new System.Drawing.Size(25, 15);
-            HolderSexLabel.TabIndex = 15;
-            HolderSexLabel.Text = "Sex";
-            // 
-            // HolderMiddleNameTextBox
-            // 
-            HolderMiddleNameTextBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            HolderMiddleNameTextBox.Location = new System.Drawing.Point(156, 217);
-            HolderMiddleNameTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            HolderMiddleNameTextBox.Name = "HolderMiddleNameTextBox";
-            HolderMiddleNameTextBox.Size = new System.Drawing.Size(268, 23);
-            HolderMiddleNameTextBox.TabIndex = 3;
-            // 
-            // InsPlanNameLabel
-            // 
-            InsPlanNameLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            InsPlanNameLabel.AutoSize = true;
-            InsPlanNameLabel.Location = new System.Drawing.Point(500, 221);
-            InsPlanNameLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            InsPlanNameLabel.Name = "InsPlanNameLabel";
-            InsPlanNameLabel.Size = new System.Drawing.Size(65, 15);
-            InsPlanNameLabel.TabIndex = 25;
-            InsPlanNameLabel.Text = "Plan Name";
-            // 
-            // PlanNameTextBox
-            // 
-            PlanNameTextBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            PlanNameTextBox.Location = new System.Drawing.Point(652, 217);
-            PlanNameTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            PlanNameTextBox.Name = "PlanNameTextBox";
-            PlanNameTextBox.ReadOnly = true;
-            PlanNameTextBox.Size = new System.Drawing.Size(268, 23);
-            PlanNameTextBox.TabIndex = 16;
-            // 
-            // HolderAddressLabel
-            // 
-            HolderAddressLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            HolderAddressLabel.AutoSize = true;
-            HolderAddressLabel.Location = new System.Drawing.Point(4, 250);
-            HolderAddressLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            HolderAddressLabel.Name = "HolderAddressLabel";
-            HolderAddressLabel.Size = new System.Drawing.Size(49, 15);
-            HolderAddressLabel.TabIndex = 7;
-            HolderAddressLabel.Text = "Address";
-            // 
-            // HolderAddressTextBox
-            // 
-            HolderAddressTextBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            HolderAddressTextBox.Location = new System.Drawing.Point(156, 246);
-            HolderAddressTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            HolderAddressTextBox.Name = "HolderAddressTextBox";
-            HolderAddressTextBox.Size = new System.Drawing.Size(268, 23);
-            HolderAddressTextBox.TabIndex = 4;
-            // 
-            // PlanCityStTextBox
-            // 
-            PlanCityStTextBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            PlanCityStTextBox.Location = new System.Drawing.Point(652, 304);
-            PlanCityStTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            PlanCityStTextBox.Name = "PlanCityStTextBox";
-            PlanCityStTextBox.Size = new System.Drawing.Size(268, 23);
-            PlanCityStTextBox.TabIndex = 19;
-            // 
-            // InsPlanAddressLabel
-            // 
-            InsPlanAddressLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            InsPlanAddressLabel.AutoSize = true;
-            InsPlanAddressLabel.Location = new System.Drawing.Point(500, 250);
-            InsPlanAddressLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            InsPlanAddressLabel.Name = "InsPlanAddressLabel";
-            InsPlanAddressLabel.Size = new System.Drawing.Size(75, 15);
-            InsPlanAddressLabel.TabIndex = 27;
-            InsPlanAddressLabel.Text = "Plan Address";
-            // 
-            // InsPlanCityStateZipLabel
-            // 
-            InsPlanCityStateZipLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            InsPlanCityStateZipLabel.AutoSize = true;
-            InsPlanCityStateZipLabel.Location = new System.Drawing.Point(500, 308);
-            InsPlanCityStateZipLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            InsPlanCityStateZipLabel.Name = "InsPlanCityStateZipLabel";
-            InsPlanCityStateZipLabel.Size = new System.Drawing.Size(87, 15);
-            InsPlanCityStateZipLabel.TabIndex = 30;
-            InsPlanCityStateZipLabel.Text = "Plan City St Zip";
-            // 
-            // PlanAddressTextBox
-            // 
-            PlanAddressTextBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            PlanAddressTextBox.Location = new System.Drawing.Point(652, 246);
-            PlanAddressTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            PlanAddressTextBox.Name = "PlanAddressTextBox";
-            PlanAddressTextBox.Size = new System.Drawing.Size(268, 23);
-            PlanAddressTextBox.TabIndex = 17;
-            // 
-            // HolderCityTextBox
-            // 
-            HolderCityTextBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            HolderCityTextBox.Location = new System.Drawing.Point(156, 275);
-            HolderCityTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            HolderCityTextBox.Name = "HolderCityTextBox";
-            HolderCityTextBox.Size = new System.Drawing.Size(268, 23);
-            HolderCityTextBox.TabIndex = 5;
-            // 
-            // HolderCityLabel
-            // 
-            HolderCityLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            HolderCityLabel.AutoSize = true;
-            HolderCityLabel.Location = new System.Drawing.Point(4, 279);
-            HolderCityLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            HolderCityLabel.Name = "HolderCityLabel";
-            HolderCityLabel.Size = new System.Drawing.Size(28, 15);
-            HolderCityLabel.TabIndex = 9;
-            HolderCityLabel.Text = "City";
-            // 
-            // InsUserInstructionsLabel
-            // 
-            InsUserInstructionsLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            InsUserInstructionsLabel.AutoSize = true;
-            InsUserInstructionsLabel.Location = new System.Drawing.Point(652, 133);
-            InsUserInstructionsLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            InsUserInstructionsLabel.Name = "InsUserInstructionsLabel";
-            InsUserInstructionsLabel.Size = new System.Drawing.Size(148, 15);
-            InsUserInstructionsLabel.TabIndex = 12;
-            InsUserInstructionsLabel.Text = "Select an insurance to edit.";
-            // 
-            // AddInsuranceButton
-            // 
-            AddInsuranceButton.Location = new System.Drawing.Point(500, 129);
-            AddInsuranceButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            AddInsuranceButton.Name = "AddInsuranceButton";
-            AddInsuranceButton.Size = new System.Drawing.Size(88, 24);
-            AddInsuranceButton.TabIndex = 11;
-            AddInsuranceButton.Text = "Add Insurance";
-            AddInsuranceButton.UseVisualStyleBackColor = true;
-            AddInsuranceButton.Click += AddInsuranceButton_Click;
-            // 
-            // InsTabMessageTextBox
-            // 
-            insTabLayoutPanel.SetColumnSpan(InsTabMessageTextBox, 3);
-            InsTabMessageTextBox.Dock = System.Windows.Forms.DockStyle.Bottom;
-            InsTabMessageTextBox.Location = new System.Drawing.Point(156, 546);
-            InsTabMessageTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            InsTabMessageTextBox.Multiline = true;
-            InsTabMessageTextBox.Name = "InsTabMessageTextBox";
-            InsTabMessageTextBox.ReadOnly = true;
-            InsTabMessageTextBox.Size = new System.Drawing.Size(832, 27);
-            InsTabMessageTextBox.TabIndex = 44;
-            // 
-            // insurancePlanTextBox
-            // 
-            insurancePlanTextBox.Location = new System.Drawing.Point(652, 188);
-            insurancePlanTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            insurancePlanTextBox.Name = "insurancePlanTextBox";
-            insurancePlanTextBox.Size = new System.Drawing.Size(268, 23);
-            insurancePlanTextBox.TabIndex = 14;
-            insurancePlanTextBox.KeyUp += insurancePlanTextBox_KeyUp;
+            GuarStateComboBox.TabIndex = 37;
+            // 
+            // GuarCityTextBox
+            // 
+            GuarCityTextBox.Location = new System.Drawing.Point(831, 207);
+            GuarCityTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            GuarCityTextBox.Name = "GuarCityTextBox";
+            GuarCityTextBox.Size = new System.Drawing.Size(346, 23);
+            GuarCityTextBox.TabIndex = 39;
+            // 
+            // GuarCityLabel
+            // 
+            GuarCityLabel.AutoSize = true;
+            GuarCityLabel.Location = new System.Drawing.Point(671, 204);
+            GuarCityLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            GuarCityLabel.Name = "GuarCityLabel";
+            GuarCityLabel.Size = new System.Drawing.Size(28, 15);
+            GuarCityLabel.TabIndex = 38;
+            GuarCityLabel.Text = "City";
+            GuarCityLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // GuarantorAddressTextBox
+            // 
+            GuarantorAddressTextBox.Location = new System.Drawing.Point(831, 178);
+            GuarantorAddressTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            GuarantorAddressTextBox.Name = "GuarantorAddressTextBox";
+            GuarantorAddressTextBox.Size = new System.Drawing.Size(346, 23);
+            GuarantorAddressTextBox.TabIndex = 37;
+            // 
+            // GuarAddressLabel
+            // 
+            GuarAddressLabel.AutoSize = true;
+            GuarAddressLabel.Location = new System.Drawing.Point(671, 175);
+            GuarAddressLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            GuarAddressLabel.Name = "GuarAddressLabel";
+            GuarAddressLabel.Size = new System.Drawing.Size(49, 15);
+            GuarAddressLabel.TabIndex = 36;
+            GuarAddressLabel.Text = "Address";
+            GuarAddressLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // providerLookup1
+            // 
+            providerLookup1.CharacterLookupCountMin = 2;
+            providerLookup1.Datasource = null;
+            providerLookup1.DisplayValue = null;
+            providerLookup1.Location = new System.Drawing.Point(165, 468);
+            providerLookup1.Margin = new System.Windows.Forms.Padding(5, 3, 5, 3);
+            providerLookup1.Name = "providerLookup1";
+            providerLookup1.ResultBoxHeight = 100;
+            providerLookup1.SelectedValue = null;
+            providerLookup1.Size = new System.Drawing.Size(336, 26);
+            providerLookup1.TabIndex = 31;
+            providerLookup1.SelectedValueChanged += providerLookup1_SelectedValueChanged;
+            // 
+            // SaveDemographics
+            // 
+            SaveDemographics.Location = new System.Drawing.Point(4, 500);
+            SaveDemographics.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            SaveDemographics.Name = "SaveDemographics";
+            SaveDemographics.Size = new System.Drawing.Size(125, 51);
+            SaveDemographics.TabIndex = 32;
+            SaveDemographics.Text = "Save Changes";
+            SaveDemographics.UseVisualStyleBackColor = true;
+            SaveDemographics.Click += SaveDemographics_Click;
+            // 
+            // DateOfBirthTextBox
+            // 
+            DateOfBirthTextBox.DateValue = new System.DateTime(0L);
+            DateOfBirthTextBox.Location = new System.Drawing.Point(164, 352);
+            DateOfBirthTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            DateOfBirthTextBox.Name = "DateOfBirthTextBox";
+            DateOfBirthTextBox.Size = new System.Drawing.Size(206, 23);
+            DateOfBirthTextBox.TabIndex = 34;
+            // 
+            // PatLastNameLabel
+            // 
+            PatLastNameLabel.AutoSize = true;
+            PatLastNameLabel.Location = new System.Drawing.Point(4, 30);
+            PatLastNameLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            PatLastNameLabel.Name = "PatLastNameLabel";
+            PatLastNameLabel.Size = new System.Drawing.Size(63, 15);
+            PatLastNameLabel.TabIndex = 1;
+            PatLastNameLabel.Text = "Last Name";
+            PatLastNameLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // LastNameTextBox
+            // 
+            LastNameTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            LastNameTextBox.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
+            LastNameTextBox.Location = new System.Drawing.Point(164, 33);
+            LastNameTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            LastNameTextBox.Name = "LastNameTextBox";
+            LastNameTextBox.Size = new System.Drawing.Size(322, 23);
+            LastNameTextBox.TabIndex = 2;
+            // 
+            // orderingProviderLabel
+            // 
+            orderingProviderLabel.AutoSize = true;
+            orderingProviderLabel.Location = new System.Drawing.Point(4, 465);
+            orderingProviderLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            orderingProviderLabel.Name = "orderingProviderLabel";
+            orderingProviderLabel.Size = new System.Drawing.Size(101, 15);
+            orderingProviderLabel.TabIndex = 30;
+            orderingProviderLabel.Text = "Ordering Provider";
+            orderingProviderLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // PatFirstNameLabel
+            // 
+            PatFirstNameLabel.AutoSize = true;
+            PatFirstNameLabel.Location = new System.Drawing.Point(4, 59);
+            PatFirstNameLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            PatFirstNameLabel.Name = "PatFirstNameLabel";
+            PatFirstNameLabel.Size = new System.Drawing.Size(64, 15);
+            PatFirstNameLabel.TabIndex = 5;
+            PatFirstNameLabel.Text = "First Name";
+            PatFirstNameLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // SocSecNoTextBox
+            // 
+            SocSecNoTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            SocSecNoTextBox.Location = new System.Drawing.Point(164, 439);
+            SocSecNoTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            SocSecNoTextBox.Mask = "000-00-0000";
+            SocSecNoTextBox.Name = "SocSecNoTextBox";
+            SocSecNoTextBox.Size = new System.Drawing.Size(206, 23);
+            SocSecNoTextBox.TabIndex = 23;
+            // 
+            // FirstNameTextBox
+            // 
+            FirstNameTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            FirstNameTextBox.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
+            FirstNameTextBox.Location = new System.Drawing.Point(164, 62);
+            FirstNameTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            FirstNameTextBox.Name = "FirstNameTextBox";
+            FirstNameTextBox.Size = new System.Drawing.Size(322, 23);
+            FirstNameTextBox.TabIndex = 6;
+            // 
+            // PatSSNLabel
+            // 
+            PatSSNLabel.AutoSize = true;
+            PatSSNLabel.Location = new System.Drawing.Point(4, 436);
+            PatSSNLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            PatSSNLabel.Name = "PatSSNLabel";
+            PatSSNLabel.Size = new System.Drawing.Size(28, 15);
+            PatSSNLabel.TabIndex = 22;
+            PatSSNLabel.Text = "SSN";
+            PatSSNLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // PatMiddleNameLabel
+            // 
+            PatMiddleNameLabel.AutoSize = true;
+            PatMiddleNameLabel.Location = new System.Drawing.Point(4, 88);
+            PatMiddleNameLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            PatMiddleNameLabel.Name = "PatMiddleNameLabel";
+            PatMiddleNameLabel.Size = new System.Drawing.Size(79, 15);
+            PatMiddleNameLabel.TabIndex = 7;
+            PatMiddleNameLabel.Text = "Middle Name";
+            PatMiddleNameLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // MaritalStatusComboBox
+            // 
+            MaritalStatusComboBox.BackColor = System.Drawing.Color.White;
+            MaritalStatusComboBox.BorderColor = System.Drawing.Color.Blue;
+            MaritalStatusComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            MaritalStatusComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            MaritalStatusComboBox.FormattingEnabled = true;
+            MaritalStatusComboBox.Location = new System.Drawing.Point(164, 410);
+            MaritalStatusComboBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            MaritalStatusComboBox.Name = "MaritalStatusComboBox";
+            MaritalStatusComboBox.Size = new System.Drawing.Size(206, 23);
+            MaritalStatusComboBox.TabIndex = 29;
+            // 
+            // PatMaritalStatusLabel
+            // 
+            PatMaritalStatusLabel.AutoSize = true;
+            PatMaritalStatusLabel.Location = new System.Drawing.Point(4, 407);
+            PatMaritalStatusLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            PatMaritalStatusLabel.Name = "PatMaritalStatusLabel";
+            PatMaritalStatusLabel.Size = new System.Drawing.Size(79, 15);
+            PatMaritalStatusLabel.TabIndex = 28;
+            PatMaritalStatusLabel.Text = "Marital Status";
+            PatMaritalStatusLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // PatDOBLabel
+            // 
+            PatDOBLabel.AutoSize = true;
+            PatDOBLabel.Location = new System.Drawing.Point(4, 349);
+            PatDOBLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            PatDOBLabel.Name = "PatDOBLabel";
+            PatDOBLabel.Size = new System.Drawing.Size(73, 15);
+            PatDOBLabel.TabIndex = 26;
+            PatDOBLabel.Text = "Date of Birth";
+            PatDOBLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // MiddleNameTextBox
+            // 
+            MiddleNameTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            MiddleNameTextBox.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
+            MiddleNameTextBox.Location = new System.Drawing.Point(164, 91);
+            MiddleNameTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            MiddleNameTextBox.Name = "MiddleNameTextBox";
+            MiddleNameTextBox.Size = new System.Drawing.Size(242, 23);
+            MiddleNameTextBox.TabIndex = 8;
+            // 
+            // PatSexLabel
+            // 
+            PatSexLabel.AutoSize = true;
+            PatSexLabel.Location = new System.Drawing.Point(4, 320);
+            PatSexLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            PatSexLabel.Name = "PatSexLabel";
+            PatSexLabel.Size = new System.Drawing.Size(25, 15);
+            PatSexLabel.TabIndex = 24;
+            PatSexLabel.Text = "Sex";
+            PatSexLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // SexComboBox
+            // 
+            SexComboBox.BackColor = System.Drawing.Color.White;
+            SexComboBox.BorderColor = System.Drawing.Color.Blue;
+            SexComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            SexComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            SexComboBox.FormattingEnabled = true;
+            SexComboBox.Items.AddRange(new object[] { "Male", "Female", "Unknown" });
+            SexComboBox.Location = new System.Drawing.Point(164, 323);
+            SexComboBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            SexComboBox.Name = "SexComboBox";
+            SexComboBox.Size = new System.Drawing.Size(206, 23);
+            SexComboBox.TabIndex = 25;
+            // 
+            // PatPhoneLabel
+            // 
+            PatPhoneLabel.AutoSize = true;
+            PatPhoneLabel.Location = new System.Drawing.Point(4, 291);
+            PatPhoneLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            PatPhoneLabel.Name = "PatPhoneLabel";
+            PatPhoneLabel.Size = new System.Drawing.Size(41, 15);
+            PatPhoneLabel.TabIndex = 18;
+            PatPhoneLabel.Text = "Phone";
+            PatPhoneLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // PhoneTextBox
+            // 
+            PhoneTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            PhoneTextBox.Location = new System.Drawing.Point(164, 294);
+            PhoneTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            PhoneTextBox.Name = "PhoneTextBox";
+            PhoneTextBox.Size = new System.Drawing.Size(322, 23);
+            PhoneTextBox.TabIndex = 19;
+            // 
+            // PatZipLabel
+            // 
+            PatZipLabel.AutoSize = true;
+            PatZipLabel.Location = new System.Drawing.Point(4, 262);
+            PatZipLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            PatZipLabel.Name = "PatZipLabel";
+            PatZipLabel.Size = new System.Drawing.Size(55, 15);
+            PatZipLabel.TabIndex = 16;
+            PatZipLabel.Text = "Zip Code";
+            PatZipLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // ZipcodeTextBox
+            // 
+            ZipcodeTextBox.Location = new System.Drawing.Point(164, 265);
+            ZipcodeTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            ZipcodeTextBox.Mask = "00000-9999";
+            ZipcodeTextBox.Name = "ZipcodeTextBox";
+            ZipcodeTextBox.Size = new System.Drawing.Size(119, 23);
+            ZipcodeTextBox.TabIndex = 17;
+            // 
+            // PatStateLabel
+            // 
+            PatStateLabel.AutoSize = true;
+            PatStateLabel.Location = new System.Drawing.Point(4, 233);
+            PatStateLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            PatStateLabel.Name = "PatStateLabel";
+            PatStateLabel.Size = new System.Drawing.Size(33, 15);
+            PatStateLabel.TabIndex = 14;
+            PatStateLabel.Text = "State";
+            PatStateLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // StateComboBox
+            // 
+            StateComboBox.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
+            StateComboBox.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            StateComboBox.BackColor = System.Drawing.Color.White;
+            StateComboBox.BorderColor = System.Drawing.Color.Blue;
+            StateComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            StateComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            StateComboBox.FormattingEnabled = true;
+            StateComboBox.Location = new System.Drawing.Point(164, 236);
+            StateComboBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            StateComboBox.Name = "StateComboBox";
+            StateComboBox.Size = new System.Drawing.Size(206, 23);
+            StateComboBox.TabIndex = 15;
+            // 
+            // PatCityLabel
+            // 
+            PatCityLabel.AutoSize = true;
+            PatCityLabel.Location = new System.Drawing.Point(4, 204);
+            PatCityLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            PatCityLabel.Name = "PatCityLabel";
+            PatCityLabel.Size = new System.Drawing.Size(28, 15);
+            PatCityLabel.TabIndex = 12;
+            PatCityLabel.Text = "City";
+            PatCityLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // CityTextBox
+            // 
+            CityTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            CityTextBox.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
+            CityTextBox.Location = new System.Drawing.Point(164, 207);
+            CityTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            CityTextBox.Name = "CityTextBox";
+            CityTextBox.Size = new System.Drawing.Size(322, 23);
+            CityTextBox.TabIndex = 13;
+            // 
+            // Address2TextBox
+            // 
+            Address2TextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            Address2TextBox.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
+            Address2TextBox.Location = new System.Drawing.Point(164, 178);
+            Address2TextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            Address2TextBox.Name = "Address2TextBox";
+            Address2TextBox.Size = new System.Drawing.Size(322, 23);
+            Address2TextBox.TabIndex = 11;
+            // 
+            // Address1TextBox
+            // 
+            Address1TextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            Address1TextBox.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
+            Address1TextBox.Location = new System.Drawing.Point(164, 149);
+            Address1TextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            Address1TextBox.Name = "Address1TextBox";
+            Address1TextBox.Size = new System.Drawing.Size(322, 23);
+            Address1TextBox.TabIndex = 10;
+            // 
+            // PatAddressLabel
+            // 
+            PatAddressLabel.AutoSize = true;
+            PatAddressLabel.Location = new System.Drawing.Point(4, 146);
+            PatAddressLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            PatAddressLabel.Name = "PatAddressLabel";
+            PatAddressLabel.Size = new System.Drawing.Size(49, 15);
+            PatAddressLabel.TabIndex = 9;
+            PatAddressLabel.Text = "Address";
+            PatAddressLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // PatSuffixLabel
+            // 
+            PatSuffixLabel.AutoSize = true;
+            PatSuffixLabel.Location = new System.Drawing.Point(4, 117);
+            PatSuffixLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            PatSuffixLabel.Name = "PatSuffixLabel";
+            PatSuffixLabel.Size = new System.Drawing.Size(37, 15);
+            PatSuffixLabel.TabIndex = 3;
+            PatSuffixLabel.Text = "Suffix";
+            PatSuffixLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // SuffixTextBox
+            // 
+            SuffixTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            SuffixTextBox.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
+            SuffixTextBox.Location = new System.Drawing.Point(164, 120);
+            SuffixTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            SuffixTextBox.Name = "SuffixTextBox";
+            SuffixTextBox.Size = new System.Drawing.Size(61, 23);
+            SuffixTextBox.TabIndex = 4;
+            // 
+            // PatEmailLabel
+            // 
+            PatEmailLabel.AutoSize = true;
+            PatEmailLabel.Location = new System.Drawing.Point(4, 378);
+            PatEmailLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            PatEmailLabel.Name = "PatEmailLabel";
+            PatEmailLabel.Size = new System.Drawing.Size(81, 15);
+            PatEmailLabel.TabIndex = 20;
+            PatEmailLabel.Text = "Email Address";
+            PatEmailLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // EmailAddressTextBox
+            // 
+            EmailAddressTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            EmailAddressTextBox.Location = new System.Drawing.Point(164, 381);
+            EmailAddressTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            EmailAddressTextBox.Name = "EmailAddressTextBox";
+            EmailAddressTextBox.Size = new System.Drawing.Size(322, 23);
+            EmailAddressTextBox.TabIndex = 21;
+            // 
+            // label6
+            // 
+            label6.AutoSize = true;
+            label6.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold);
+            label6.Location = new System.Drawing.Point(163, 0);
+            label6.Name = "label6";
+            label6.Size = new System.Drawing.Size(188, 25);
+            label6.TabIndex = 35;
+            label6.Text = "Patient Information";
+            // 
+            // label7
+            // 
+            label7.AutoSize = true;
+            label7.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold);
+            label7.Location = new System.Drawing.Point(830, 0);
+            label7.Name = "label7";
+            label7.Size = new System.Drawing.Size(218, 25);
+            label7.TabIndex = 36;
+            label7.Text = "Guarantor Information";
+            // 
+            // PatRelationLabel
+            // 
+            PatRelationLabel.AutoSize = true;
+            PatRelationLabel.Location = new System.Drawing.Point(671, 30);
+            PatRelationLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            PatRelationLabel.Name = "PatRelationLabel";
+            PatRelationLabel.Size = new System.Drawing.Size(104, 15);
+            PatRelationLabel.TabIndex = 37;
+            PatRelationLabel.Text = "Relation to Patient";
+            PatRelationLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // GuarantorRelationComboBox
+            // 
+            GuarantorRelationComboBox.BorderColor = System.Drawing.Color.Blue;
+            GuarantorRelationComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            GuarantorRelationComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            GuarantorRelationComboBox.FormattingEnabled = true;
+            GuarantorRelationComboBox.Location = new System.Drawing.Point(831, 33);
+            GuarantorRelationComboBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            GuarantorRelationComboBox.Name = "GuarantorRelationComboBox";
+            GuarantorRelationComboBox.Size = new System.Drawing.Size(152, 23);
+            GuarantorRelationComboBox.TabIndex = 36;
+            // 
+            // GuarCopyPatientLink
+            // 
+            GuarCopyPatientLink.AutoSize = true;
+            GuarCopyPatientLink.Location = new System.Drawing.Point(671, 0);
+            GuarCopyPatientLink.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            GuarCopyPatientLink.Name = "GuarCopyPatientLink";
+            GuarCopyPatientLink.Size = new System.Drawing.Size(99, 15);
+            GuarCopyPatientLink.TabIndex = 37;
+            GuarCopyPatientLink.TabStop = true;
+            GuarCopyPatientLink.Text = "Copy Patient Info";
+            // 
+            // GuarLastNameLabel
+            // 
+            GuarLastNameLabel.AutoSize = true;
+            GuarLastNameLabel.Location = new System.Drawing.Point(671, 59);
+            GuarLastNameLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            GuarLastNameLabel.Name = "GuarLastNameLabel";
+            GuarLastNameLabel.Size = new System.Drawing.Size(63, 15);
+            GuarLastNameLabel.TabIndex = 38;
+            GuarLastNameLabel.Text = "Last Name";
+            GuarLastNameLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // GuarantorLastNameTextBox
+            // 
+            GuarantorLastNameTextBox.Location = new System.Drawing.Point(831, 62);
+            GuarantorLastNameTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            GuarantorLastNameTextBox.Name = "GuarantorLastNameTextBox";
+            GuarantorLastNameTextBox.Size = new System.Drawing.Size(346, 23);
+            GuarantorLastNameTextBox.TabIndex = 39;
+            // 
+            // GuarFirstNameLabel
+            // 
+            GuarFirstNameLabel.AutoSize = true;
+            GuarFirstNameLabel.Location = new System.Drawing.Point(671, 88);
+            GuarFirstNameLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            GuarFirstNameLabel.Name = "GuarFirstNameLabel";
+            GuarFirstNameLabel.Size = new System.Drawing.Size(64, 15);
+            GuarFirstNameLabel.TabIndex = 42;
+            GuarFirstNameLabel.Text = "First Name";
+            GuarFirstNameLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // GuarFirstNameTextBox
+            // 
+            GuarFirstNameTextBox.Location = new System.Drawing.Point(831, 91);
+            GuarFirstNameTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            GuarFirstNameTextBox.Name = "GuarFirstNameTextBox";
+            GuarFirstNameTextBox.Size = new System.Drawing.Size(346, 23);
+            GuarFirstNameTextBox.TabIndex = 43;
+            // 
+            // GuarMiddleNameLabel
+            // 
+            GuarMiddleNameLabel.AutoSize = true;
+            GuarMiddleNameLabel.Location = new System.Drawing.Point(671, 117);
+            GuarMiddleNameLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            GuarMiddleNameLabel.Name = "GuarMiddleNameLabel";
+            GuarMiddleNameLabel.Size = new System.Drawing.Size(79, 15);
+            GuarMiddleNameLabel.TabIndex = 44;
+            GuarMiddleNameLabel.Text = "Middle Name";
+            GuarMiddleNameLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // GuarMiddleNameTextBox
+            // 
+            GuarMiddleNameTextBox.Location = new System.Drawing.Point(831, 120);
+            GuarMiddleNameTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            GuarMiddleNameTextBox.Name = "GuarMiddleNameTextBox";
+            GuarMiddleNameTextBox.Size = new System.Drawing.Size(279, 23);
+            GuarMiddleNameTextBox.TabIndex = 45;
+            // 
+            // GuarSuffixLabel
+            // 
+            GuarSuffixLabel.AutoSize = true;
+            GuarSuffixLabel.Location = new System.Drawing.Point(671, 146);
+            GuarSuffixLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            GuarSuffixLabel.Name = "GuarSuffixLabel";
+            GuarSuffixLabel.Size = new System.Drawing.Size(37, 15);
+            GuarSuffixLabel.TabIndex = 40;
+            GuarSuffixLabel.Text = "Suffix";
+            GuarSuffixLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // GuarSuffixTextBox
+            // 
+            GuarSuffixTextBox.Location = new System.Drawing.Point(831, 149);
+            GuarSuffixTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            GuarSuffixTextBox.Name = "GuarSuffixTextBox";
+            GuarSuffixTextBox.Size = new System.Drawing.Size(58, 23);
+            GuarSuffixTextBox.TabIndex = 41;
+            // 
+            // GuarPhoneLabel
+            // 
+            GuarPhoneLabel.AutoSize = true;
+            GuarPhoneLabel.Location = new System.Drawing.Point(671, 291);
+            GuarPhoneLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            GuarPhoneLabel.Name = "GuarPhoneLabel";
+            GuarPhoneLabel.Size = new System.Drawing.Size(41, 15);
+            GuarPhoneLabel.TabIndex = 40;
+            GuarPhoneLabel.Text = "Phone";
+            GuarPhoneLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // GuarantorPhoneTextBox
+            // 
+            GuarantorPhoneTextBox.Location = new System.Drawing.Point(831, 294);
+            GuarantorPhoneTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            GuarantorPhoneTextBox.Name = "GuarantorPhoneTextBox";
+            GuarantorPhoneTextBox.Size = new System.Drawing.Size(346, 23);
+            GuarantorPhoneTextBox.TabIndex = 41;
             // 
             // tabDiagnosis
             // 
@@ -1673,36 +1002,36 @@ namespace LabBilling.Forms
             dxPointerGrid2.AllowUserToDeleteRows = false;
             dxPointerGrid2.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
             dxPointerGrid2.BackgroundColor = System.Drawing.Color.White;
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
-            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            dxPointerGrid2.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle16.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle16.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle16.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+            dataGridViewCellStyle16.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle16.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle16.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle16.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            dxPointerGrid2.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle16;
             dxPointerGrid2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
-            dataGridViewCellStyle5.ForeColor = System.Drawing.Color.Black;
-            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            dxPointerGrid2.DefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle17.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle17.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle17.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+            dataGridViewCellStyle17.ForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle17.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle17.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle17.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            dxPointerGrid2.DefaultCellStyle = dataGridViewCellStyle17;
             dxPointerGrid2.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter;
             dxPointerGrid2.Location = new System.Drawing.Point(22, 278);
             dxPointerGrid2.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             dxPointerGrid2.MultiSelect = false;
             dxPointerGrid2.Name = "dxPointerGrid2";
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
-            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            dxPointerGrid2.RowHeadersDefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle18.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle18.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle18.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+            dataGridViewCellStyle18.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle18.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle18.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle18.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            dxPointerGrid2.RowHeadersDefaultCellStyle = dataGridViewCellStyle18;
             dxPointerGrid2.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             dxPointerGrid2.Size = new System.Drawing.Size(922, 283);
             dxPointerGrid2.TabIndex = 10;
@@ -1794,35 +1123,35 @@ namespace LabBilling.Forms
             DxSearchDataGrid.AllowUserToDeleteRows = false;
             DxSearchDataGrid.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
             DxSearchDataGrid.BackgroundColor = System.Drawing.Color.White;
-            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle7.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle7.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
-            dataGridViewCellStyle7.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle7.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle7.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            DxSearchDataGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle7;
+            dataGridViewCellStyle19.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle19.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle19.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+            dataGridViewCellStyle19.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle19.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle19.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle19.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            DxSearchDataGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle19;
             DxSearchDataGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle8.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
-            dataGridViewCellStyle8.ForeColor = System.Drawing.Color.Black;
-            dataGridViewCellStyle8.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            DxSearchDataGrid.DefaultCellStyle = dataGridViewCellStyle8;
+            dataGridViewCellStyle20.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle20.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle20.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+            dataGridViewCellStyle20.ForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle20.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle20.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle20.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            DxSearchDataGrid.DefaultCellStyle = dataGridViewCellStyle20;
             DxSearchDataGrid.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             DxSearchDataGrid.Location = new System.Drawing.Point(21, 53);
             DxSearchDataGrid.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             DxSearchDataGrid.Name = "DxSearchDataGrid";
-            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle9.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle9.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
-            dataGridViewCellStyle9.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle9.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle9.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            DxSearchDataGrid.RowHeadersDefaultCellStyle = dataGridViewCellStyle9;
+            dataGridViewCellStyle21.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle21.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle21.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+            dataGridViewCellStyle21.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle21.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle21.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle21.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            DxSearchDataGrid.RowHeadersDefaultCellStyle = dataGridViewCellStyle21;
             DxSearchDataGrid.RowHeadersVisible = false;
             DxSearchDataGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             DxSearchDataGrid.Size = new System.Drawing.Size(481, 203);
@@ -1845,35 +1174,35 @@ namespace LabBilling.Forms
             DiagnosisDataGrid.AllowUserToAddRows = false;
             DiagnosisDataGrid.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
             DiagnosisDataGrid.BackgroundColor = System.Drawing.Color.White;
-            dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle10.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle10.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
-            dataGridViewCellStyle10.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle10.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle10.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle10.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            DiagnosisDataGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle10;
+            dataGridViewCellStyle22.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle22.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle22.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+            dataGridViewCellStyle22.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle22.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle22.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle22.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            DiagnosisDataGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle22;
             DiagnosisDataGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle11.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle11.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
-            dataGridViewCellStyle11.ForeColor = System.Drawing.Color.Black;
-            dataGridViewCellStyle11.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle11.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle11.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            DiagnosisDataGrid.DefaultCellStyle = dataGridViewCellStyle11;
+            dataGridViewCellStyle23.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle23.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle23.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+            dataGridViewCellStyle23.ForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle23.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle23.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle23.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            DiagnosisDataGrid.DefaultCellStyle = dataGridViewCellStyle23;
             DiagnosisDataGrid.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             DiagnosisDataGrid.Location = new System.Drawing.Point(526, 53);
             DiagnosisDataGrid.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             DiagnosisDataGrid.Name = "DiagnosisDataGrid";
-            dataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle12.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle12.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
-            dataGridViewCellStyle12.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle12.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle12.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle12.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            DiagnosisDataGrid.RowHeadersDefaultCellStyle = dataGridViewCellStyle12;
+            dataGridViewCellStyle24.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle24.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle24.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+            dataGridViewCellStyle24.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle24.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle24.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle24.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            DiagnosisDataGrid.RowHeadersDefaultCellStyle = dataGridViewCellStyle24;
             DiagnosisDataGrid.RowHeadersVisible = false;
             DiagnosisDataGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             DiagnosisDataGrid.Size = new System.Drawing.Size(418, 203);
@@ -1895,6 +1224,34 @@ namespace LabBilling.Forms
             DxSearchButton.TabIndex = 5;
             DxSearchButton.TabStop = false;
             DxSearchButton.Click += DxSearchButton_Click;
+            // 
+            // tabInsPrimary
+            // 
+            tabInsPrimary.Location = new System.Drawing.Point(4, 24);
+            tabInsPrimary.Name = "tabInsPrimary";
+            tabInsPrimary.Padding = new System.Windows.Forms.Padding(3);
+            tabInsPrimary.Size = new System.Drawing.Size(1344, 568);
+            tabInsPrimary.TabIndex = 15;
+            tabInsPrimary.Text = "Primary Insurance";
+            tabInsPrimary.UseVisualStyleBackColor = true;
+            // 
+            // tabInsSecondary
+            // 
+            tabInsSecondary.Location = new System.Drawing.Point(4, 24);
+            tabInsSecondary.Name = "tabInsSecondary";
+            tabInsSecondary.Size = new System.Drawing.Size(1344, 568);
+            tabInsSecondary.TabIndex = 16;
+            tabInsSecondary.Text = "Secondary Insurance";
+            tabInsSecondary.UseVisualStyleBackColor = true;
+            // 
+            // tabInsTertiary
+            // 
+            tabInsTertiary.Location = new System.Drawing.Point(4, 24);
+            tabInsTertiary.Name = "tabInsTertiary";
+            tabInsTertiary.Size = new System.Drawing.Size(1344, 568);
+            tabInsTertiary.TabIndex = 17;
+            tabInsTertiary.Text = "Tertiary Insurance";
+            tabInsTertiary.UseVisualStyleBackColor = true;
             // 
             // tabCharges
             // 
@@ -2024,36 +1381,36 @@ namespace LabBilling.Forms
             PaymentsDataGrid.AllowUserToAddRows = false;
             PaymentsDataGrid.AllowUserToDeleteRows = false;
             PaymentsDataGrid.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
-            dataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle13.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle13.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
-            dataGridViewCellStyle13.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle13.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle13.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle13.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            PaymentsDataGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle13;
+            dataGridViewCellStyle25.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle25.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle25.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+            dataGridViewCellStyle25.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle25.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle25.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle25.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            PaymentsDataGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle25;
             PaymentsDataGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle14.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle14.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
-            dataGridViewCellStyle14.ForeColor = System.Drawing.Color.Black;
-            dataGridViewCellStyle14.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle14.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle14.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            PaymentsDataGrid.DefaultCellStyle = dataGridViewCellStyle14;
+            dataGridViewCellStyle26.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle26.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle26.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+            dataGridViewCellStyle26.ForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle26.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle26.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle26.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            PaymentsDataGrid.DefaultCellStyle = dataGridViewCellStyle26;
             PaymentsDataGrid.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             PaymentsDataGrid.Location = new System.Drawing.Point(4, 133);
             PaymentsDataGrid.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             PaymentsDataGrid.Name = "PaymentsDataGrid";
             PaymentsDataGrid.ReadOnly = true;
-            dataGridViewCellStyle15.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle15.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle15.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
-            dataGridViewCellStyle15.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle15.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle15.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle15.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            PaymentsDataGrid.RowHeadersDefaultCellStyle = dataGridViewCellStyle15;
+            dataGridViewCellStyle27.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle27.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle27.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+            dataGridViewCellStyle27.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle27.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle27.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle27.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            PaymentsDataGrid.RowHeadersDefaultCellStyle = dataGridViewCellStyle27;
             PaymentsDataGrid.RowHeadersVisible = false;
             PaymentsDataGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             PaymentsDataGrid.Size = new System.Drawing.Size(1336, 363);
@@ -2315,34 +1672,34 @@ namespace LabBilling.Forms
             // 
             BillActivityDataGrid.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
             BillActivityDataGrid.BackgroundColor = System.Drawing.Color.WhiteSmoke;
-            dataGridViewCellStyle16.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle16.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle16.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
-            dataGridViewCellStyle16.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle16.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle16.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle16.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            BillActivityDataGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle16;
+            dataGridViewCellStyle28.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle28.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle28.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+            dataGridViewCellStyle28.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle28.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle28.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle28.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            BillActivityDataGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle28;
             BillActivityDataGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle17.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle17.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle17.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
-            dataGridViewCellStyle17.ForeColor = System.Drawing.Color.Black;
-            dataGridViewCellStyle17.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle17.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle17.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            BillActivityDataGrid.DefaultCellStyle = dataGridViewCellStyle17;
+            dataGridViewCellStyle29.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle29.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle29.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+            dataGridViewCellStyle29.ForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle29.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle29.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle29.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            BillActivityDataGrid.DefaultCellStyle = dataGridViewCellStyle29;
             BillActivityDataGrid.Location = new System.Drawing.Point(9, 40);
             BillActivityDataGrid.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             BillActivityDataGrid.Name = "BillActivityDataGrid";
-            dataGridViewCellStyle18.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle18.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle18.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
-            dataGridViewCellStyle18.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle18.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle18.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle18.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            BillActivityDataGrid.RowHeadersDefaultCellStyle = dataGridViewCellStyle18;
+            dataGridViewCellStyle30.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle30.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle30.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+            dataGridViewCellStyle30.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle30.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle30.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle30.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            BillActivityDataGrid.RowHeadersDefaultCellStyle = dataGridViewCellStyle30;
             BillActivityDataGrid.Size = new System.Drawing.Size(1069, 144);
             BillActivityDataGrid.TabIndex = 0;
             BillActivityDataGrid.MouseDoubleClick += BillActivityDataGrid_MouseDoubleClick;
@@ -2356,16 +1713,6 @@ namespace LabBilling.Forms
             minPmtTextBox.Name = "minPmtTextBox";
             minPmtTextBox.Size = new System.Drawing.Size(116, 23);
             minPmtTextBox.TabIndex = 9;
-            // 
-            // tabInsPrimary
-            // 
-            tabInsPrimary.Location = new System.Drawing.Point(4, 24);
-            tabInsPrimary.Name = "tabInsPrimary";
-            tabInsPrimary.Padding = new System.Windows.Forms.Padding(3);
-            tabInsPrimary.Size = new System.Drawing.Size(1344, 568);
-            tabInsPrimary.TabIndex = 15;
-            tabInsPrimary.Text = "Primary Insurance";
-            tabInsPrimary.UseVisualStyleBackColor = true;
             // 
             // noteTextContextMenu
             // 
@@ -2818,24 +2165,6 @@ namespace LabBilling.Forms
             bannerPanel.Size = new System.Drawing.Size(1352, 100);
             bannerPanel.TabIndex = 34;
             // 
-            // tabInsSecondary
-            // 
-            tabInsSecondary.Location = new System.Drawing.Point(4, 24);
-            tabInsSecondary.Name = "tabInsSecondary";
-            tabInsSecondary.Size = new System.Drawing.Size(1344, 568);
-            tabInsSecondary.TabIndex = 16;
-            tabInsSecondary.Text = "Secondary Insurance";
-            tabInsSecondary.UseVisualStyleBackColor = true;
-            // 
-            // tabInsTertiary
-            // 
-            tabInsTertiary.Location = new System.Drawing.Point(4, 24);
-            tabInsTertiary.Name = "tabInsTertiary";
-            tabInsTertiary.Size = new System.Drawing.Size(1344, 568);
-            tabInsTertiary.TabIndex = 17;
-            tabInsTertiary.Text = "Tertiary Insurance";
-            tabInsTertiary.UseVisualStyleBackColor = true;
-            // 
             // AccountForm
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -2858,13 +2187,8 @@ namespace LabBilling.Forms
             tabControl1.ResumeLayout(false);
             summaryTab.ResumeLayout(false);
             tabDemographics.ResumeLayout(false);
-            tabDemographics.PerformLayout();
-            tabGuarantor.ResumeLayout(false);
-            tabGuarantor.PerformLayout();
-            tabInsurance.ResumeLayout(false);
-            insTabLayoutPanel.ResumeLayout(false);
-            insTabLayoutPanel.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)InsuranceDataGrid).EndInit();
+            demographicsLayoutPanel.ResumeLayout(false);
+            demographicsLayoutPanel.PerformLayout();
             tabDiagnosis.ResumeLayout(false);
             tabDiagnosis.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)dxPointerGrid2).EndInit();
@@ -2957,51 +2281,6 @@ namespace LabBilling.Forms
         private System.Windows.Forms.Label PatLastNameLabel;
         private System.Windows.Forms.TextBox Address1TextBox;
         private System.Windows.Forms.TextBox LastNameTextBox;
-        private System.Windows.Forms.TableLayoutPanel insTabLayoutPanel;
-        private System.Windows.Forms.Label HolderLastNameLabel;
-        private System.Windows.Forms.DataGridView InsuranceDataGrid;
-        private System.Windows.Forms.Button SaveInsuranceButton;
-        private System.Windows.Forms.LinkLabel InsCopyPatientLink;
-        private LabBilling.Library.FlatCombo PlanFinCodeComboBox;
-        private System.Windows.Forms.Label InsPlanFinCodeLabel;
-        private System.Windows.Forms.TextBox CertSSNTextBox;
-        private System.Windows.Forms.TextBox HolderLastNameTextBox;
-        private System.Windows.Forms.Label InsCertSSNLabel;
-        private System.Windows.Forms.TextBox GroupNameTextBox;
-        private System.Windows.Forms.Label InsGroupNameLabel;
-        private System.Windows.Forms.Label HolderFirstNameLabel;
-        private System.Windows.Forms.TextBox HolderZipTextBox;
-        private System.Windows.Forms.TextBox GroupNumberTextBox;
-        private System.Windows.Forms.Label HolderZipCodeLabel;
-        private System.Windows.Forms.Label InsGroupNumberLabel;
-        private System.Windows.Forms.TextBox PlanAddress2TextBox;
-        private LabBilling.Library.FlatCombo InsRelationComboBox;
-        private System.Windows.Forms.Label HolderRelationLabel;
-        private System.Windows.Forms.TextBox PolicyNumberTextBox;
-        private System.Windows.Forms.Label HolderStateLabel;
-        private System.Windows.Forms.MaskedTextBox HolderDOBTextBox;
-        private System.Windows.Forms.Label InsPolicyNumberLabel;
-        private System.Windows.Forms.Label HolderDOBLabel;
-        private LabBilling.Library.FlatCombo HolderStateComboBox;
-        private System.Windows.Forms.TextBox HolderFirstNameTextBox;
-        private System.Windows.Forms.Label InsPlanLabel;
-        private System.Windows.Forms.Label InsuranceOrderLabel;
-        private LabBilling.Library.FlatCombo InsOrderComboBox;
-        private LabBilling.Library.FlatCombo HolderSexComboBox;
-        private System.Windows.Forms.Label HolderMiddleNameLabel;
-        private System.Windows.Forms.Label HolderSexLabel;
-        private System.Windows.Forms.TextBox HolderMiddleNameTextBox;
-        private System.Windows.Forms.Label InsPlanNameLabel;
-        private System.Windows.Forms.TextBox PlanNameTextBox;
-        private System.Windows.Forms.Label HolderAddressLabel;
-        private System.Windows.Forms.TextBox HolderAddressTextBox;
-        private System.Windows.Forms.TextBox PlanCityStTextBox;
-        private System.Windows.Forms.Label InsPlanAddressLabel;
-        private System.Windows.Forms.Label InsPlanCityStateZipLabel;
-        private System.Windows.Forms.TextBox PlanAddressTextBox;
-        private System.Windows.Forms.TextBox HolderCityTextBox;
-        private System.Windows.Forms.Label HolderCityLabel;
-        private System.Windows.Forms.Label InsUserInstructionsLabel;
         private System.Windows.Forms.Button SaveDemographics;
         private System.Windows.Forms.ToolStripMenuItem viewAuditInfoToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem clearHoldStatusToolStripMenuItem;
@@ -3011,9 +2290,6 @@ namespace LabBilling.Forms
         private System.Windows.Forms.DataGridView BillActivityDataGrid;
         private System.Windows.Forms.Button AddPaymentButton;
         private System.Windows.Forms.TextBox DemoStatusMessagesTextBox;
-        private System.Windows.Forms.Button AddInsuranceButton;
-        private System.Windows.Forms.Label PatientFullNameLabel;
-        private System.Windows.Forms.TextBox InsTabMessageTextBox;
         private System.Windows.Forms.Label BannerTotalPmtLabel;
         private System.Windows.Forms.Label BannerTotalChargesLabel;
         private System.Windows.Forms.Label BannerAccBalanceLabel;
@@ -3027,7 +2303,6 @@ namespace LabBilling.Forms
         private System.Windows.Forms.TabPage tabPayments;
         private System.Windows.Forms.TabPage tabDiagnosis;
         private System.Windows.Forms.TabPage tabDemographics;
-        private System.Windows.Forms.TabPage tabInsurance;
         private System.Windows.Forms.TabPage tabBillingActivity;
         private System.Windows.Forms.TextBox ValidationResultsTextBox;
         private System.Windows.Forms.Button ValidateAccountButton;
@@ -3038,31 +2313,7 @@ namespace LabBilling.Forms
         private System.Windows.Forms.Button GenerateClaimButton;
         private System.Windows.Forms.TextBox BannerProviderTextBox;
         private System.Windows.Forms.Label orderingProviderLabel;
-        private System.Windows.Forms.TabPage tabGuarantor;
-        private System.Windows.Forms.Button GuarantorSaveButton;
-        private System.Windows.Forms.Label PatRelationLabel;
-        private LabBilling.Library.FlatCombo GuarantorRelationComboBox;
-        private System.Windows.Forms.Label GuarFirstNameLabel;
-        private System.Windows.Forms.TextBox GuarFirstNameTextBox;
-        private System.Windows.Forms.Label GuarSuffixLabel;
-        private System.Windows.Forms.TextBox GuarSuffixTextBox;
-        private System.Windows.Forms.Label GuarLastNameLabel;
-        private System.Windows.Forms.TextBox GuarantorLastNameTextBox;
-        private System.Windows.Forms.LinkLabel GuarCopyPatientLink;
-        private System.Windows.Forms.Label GuarMiddleNameLabel;
-        private System.Windows.Forms.TextBox GuarMiddleNameTextBox;
-        private System.Windows.Forms.Label GuarAddressLabel;
-        private System.Windows.Forms.TextBox GuarantorAddressTextBox;
-        private System.Windows.Forms.Label GuarCityLabel;
-        private System.Windows.Forms.TextBox GuarCityTextBox;
-        private System.Windows.Forms.Label GuarStateLabel;
-        private LabBilling.Library.FlatCombo GuarStateComboBox;
-        private System.Windows.Forms.Label GuarZipCodeLabel;
-        private System.Windows.Forms.MaskedTextBox GuarZipTextBox;
-        private System.Windows.Forms.Label GuarPhoneLabel;
-        private System.Windows.Forms.TextBox GuarantorPhoneTextBox;
         private Library.ProviderLookup providerLookup1;
-        private System.Windows.Forms.TextBox insurancePlanTextBox;
         private System.Windows.Forms.Label statementFlagLabel;
         private System.Windows.Forms.TextBox firstStmtDateTextBox;
         private System.Windows.Forms.Label label2;
@@ -3101,6 +2352,30 @@ namespace LabBilling.Forms
         private System.Windows.Forms.TabPage tabInsPrimary;
         private System.Windows.Forms.TabPage tabInsSecondary;
         private System.Windows.Forms.TabPage tabInsTertiary;
+        private System.Windows.Forms.TableLayoutPanel demographicsLayoutPanel;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label PatRelationLabel;
+        private Library.FlatCombo GuarantorRelationComboBox;
+        private System.Windows.Forms.LinkLabel GuarCopyPatientLink;
+        private System.Windows.Forms.Label GuarLastNameLabel;
+        private System.Windows.Forms.TextBox GuarantorLastNameTextBox;
+        private System.Windows.Forms.Label GuarFirstNameLabel;
+        private System.Windows.Forms.TextBox GuarFirstNameTextBox;
+        private System.Windows.Forms.Label GuarMiddleNameLabel;
+        private System.Windows.Forms.TextBox GuarMiddleNameTextBox;
+        private System.Windows.Forms.Label GuarSuffixLabel;
+        private System.Windows.Forms.TextBox GuarSuffixTextBox;
+        private System.Windows.Forms.MaskedTextBox GuarZipTextBox;
+        private System.Windows.Forms.Label GuarZipCodeLabel;
+        private System.Windows.Forms.Label GuarStateLabel;
+        private Library.FlatCombo GuarStateComboBox;
+        private System.Windows.Forms.TextBox GuarCityTextBox;
+        private System.Windows.Forms.Label GuarCityLabel;
+        private System.Windows.Forms.TextBox GuarantorAddressTextBox;
+        private System.Windows.Forms.Label GuarAddressLabel;
+        private System.Windows.Forms.Label GuarPhoneLabel;
+        private System.Windows.Forms.TextBox GuarantorPhoneTextBox;
     }
 }
 

@@ -58,7 +58,7 @@ namespace LabBilling.Forms
         private InsMaintenanceUC insTertiaryMaintenanceUC = new(InsCoverage.Tertiary);
 
         //private bool skipSelectionChanged = false;
-        private Timer _timer;
+        //private Timer _timer;
 
         public event EventHandler<string> AccountOpenedEvent;
 
@@ -87,8 +87,6 @@ namespace LabBilling.Forms
         {
             Log.Instance.Trace("Entering");
             InitializeComponent();
-            _timer = new Timer() { Enabled = false, Interval = _timerInterval };
-            _timer.Tick += new EventHandler(insurancePlanTextBox_KeyUpDone);
         }
 
         #region MainForm
@@ -181,27 +179,6 @@ namespace LabBilling.Forms
             controlColumnMap.Add(GuarantorLastNameTextBox, nameof(Pat.GuarantorLastName));
             controlColumnMap.Add(providerLookup1, nameof(Pat.ProviderId));
 
-            controlColumnMap.Add(PlanFinCodeComboBox, nameof(Ins.FinCode));
-            controlColumnMap.Add(CertSSNTextBox, nameof(Ins.CertSSN));
-            controlColumnMap.Add(HolderLastNameTextBox, nameof(Ins.HolderLastName));
-            controlColumnMap.Add(GroupNameTextBox, nameof(Ins.GroupName));
-            controlColumnMap.Add(HolderZipTextBox, nameof(Ins.HolderZip));
-            controlColumnMap.Add(GroupNumberTextBox, nameof(Ins.GroupNumber));
-            controlColumnMap.Add(PlanAddress2TextBox, nameof(Ins.PlanStreetAddress2));
-            controlColumnMap.Add(InsRelationComboBox, nameof(Ins.Relation));
-            controlColumnMap.Add(PolicyNumberTextBox, nameof(Ins.PolicyNumber));
-            controlColumnMap.Add(HolderDOBTextBox, nameof(Ins.HolderBirthDate));
-            controlColumnMap.Add(HolderStateComboBox, nameof(Ins.HolderState));
-            controlColumnMap.Add(HolderFirstNameTextBox, nameof(Ins.HolderFirstName));
-            controlColumnMap.Add(InsOrderComboBox, nameof(Ins.Coverage));
-            controlColumnMap.Add(HolderSexComboBox, nameof(Ins.HolderSex));
-            controlColumnMap.Add(HolderMiddleNameTextBox, nameof(Ins.HolderMiddleName));
-            controlColumnMap.Add(PlanNameTextBox, nameof(Ins.PlanName));
-            controlColumnMap.Add(insurancePlanTextBox, nameof(Ins.InsCode));
-            controlColumnMap.Add(HolderAddressTextBox, nameof(Ins.HolderStreetAddress));
-            controlColumnMap.Add(PlanCityStTextBox, nameof(Ins.PlanCityState));
-            controlColumnMap.Add(PlanAddressTextBox, nameof(Ins.PlanStreetAddress1));
-            controlColumnMap.Add(HolderCityTextBox, nameof(Ins.HolderCity));
             #endregion
 
             #region Setup Insurance Company Combobox
@@ -236,30 +213,9 @@ namespace LabBilling.Forms
             GuarStateComboBox.DisplayMember = "Value";
             GuarStateComboBox.ValueMember = "Key";
 
-            HolderStateComboBox.DataSource = new BindingSource(Dictionaries.stateSource, null);
-            HolderStateComboBox.DisplayMember = "Value";
-            HolderStateComboBox.ValueMember = "Key";
-
             GuarantorRelationComboBox.DataSource = new BindingSource(Dictionaries.relationSource, null);
             GuarantorRelationComboBox.DisplayMember = "Value";
             GuarantorRelationComboBox.ValueMember = "Key";
-
-            InsRelationComboBox.DataSource = new BindingSource(Dictionaries.relationSource, null);
-            InsRelationComboBox.DisplayMember = "Value";
-            InsRelationComboBox.ValueMember = "Key";
-
-            InsOrderComboBox.DataSource = new BindingSource(Dictionaries.payorOrderSource, null);
-            InsOrderComboBox.DisplayMember = "Value";
-            InsOrderComboBox.ValueMember = "Key";
-
-            HolderSexComboBox.DataSource = new BindingSource(Dictionaries.sexSource, null);
-            HolderSexComboBox.DisplayMember = "Value";
-            HolderSexComboBox.ValueMember = "Key";
-
-            PlanFinCodeComboBox.DataSource = DataCache.Instance.GetFins();
-            PlanFinCodeComboBox.DisplayMember = nameof(Fin.Description);
-            PlanFinCodeComboBox.ValueMember = nameof(Fin.FinCode);
-            PlanFinCodeComboBox.SelectedIndex = -1;
 
             #endregion
 
@@ -270,8 +226,6 @@ namespace LabBilling.Forms
                 AccountOpenedEvent?.Invoke(this, SelectedAccount);
 
                 AddOnChangeHandlerToInputControls(tabDemographics);
-                AddOnChangeHandlerToInputControls(tabGuarantor);
-                AddOnChangeHandlerToInputControls(tabInsurance);
             }
         }
 
@@ -317,16 +271,12 @@ namespace LabBilling.Forms
 
             insPrimaryMaintenanceUC.AllowEditing = false;
             Helper.SetControlsAccess(tabDemographics.Controls, false);
-            Helper.SetControlsAccess(tabInsurance.Controls, false);
-            Helper.SetControlsAccess(insTabLayoutPanel.Controls, false);
             Helper.SetControlsAccess(tabDiagnosis.Controls, false);
-            Helper.SetControlsAccess(tabGuarantor.Controls, false);
+            Helper.SetControlsAccess(demographicsLayoutPanel.Controls, false);
             Helper.SetControlsAccess(tabNotes.Controls, false);
             AddPaymentButton.Visible = false;
-            SaveInsuranceButton.Visible = false;
             SaveDemographics.Visible = false;
             GuarCopyPatientLink.Visible = false;
-            InsCopyPatientLink.Visible = false;
             changeClientToolStripMenuItem.Visible = false;
             changeDateOfServiceToolStripMenuItem.Visible = false;
             changeFinancialClassToolStripMenuItem.Visible = false;
@@ -339,17 +289,13 @@ namespace LabBilling.Forms
                 {
                     insPrimaryMaintenanceUC.AllowEditing = true;
                     Helper.SetControlsAccess(tabDemographics.Controls, true);
-                    Helper.SetControlsAccess(tabInsurance.Controls, true);
-                    Helper.SetControlsAccess(insTabLayoutPanel.Controls, true);
                     Helper.SetControlsAccess(tabDiagnosis.Controls, true);
-                    Helper.SetControlsAccess(tabGuarantor.Controls, true);
+                    Helper.SetControlsAccess(demographicsLayoutPanel.Controls, true);
                     Helper.SetControlsAccess(tabNotes.Controls, true);
                     Helper.SetControlsAccess(tabPayments.Controls, true);
                     AddPaymentButton.Visible = Program.LoggedInUser.CanAddAdjustments;
-                    SaveInsuranceButton.Visible = true;
                     SaveDemographics.Visible = true;
                     GuarCopyPatientLink.Visible = true;
-                    InsCopyPatientLink.Visible = true;
                     changeClientToolStripMenuItem.Visible = true;
                     changeDateOfServiceToolStripMenuItem.Visible = true;
                     changeFinancialClassToolStripMenuItem.Visible = Program.LoggedInUser.CanModifyAccountFincode;
@@ -412,7 +358,6 @@ namespace LabBilling.Forms
         {
             LoadSummaryTab();
             LoadDemographics();
-            LoadInsuranceData();
             chargeMaintenance.LoadCharges();
             insPrimaryMaintenanceUC.LoadInsuranceData();
             insSecondaryMaintenanceUC.LoadInsuranceData();
@@ -585,7 +530,7 @@ namespace LabBilling.Forms
             ThirdPartyBalLabel.Text = currentAccount.ClaimBalance.ToString("c");
             ClientBalLabel.Text = currentAccount.ClientBalance.Sum(x => x.balance).ToString("c");
 
-            PatientFullNameLabel.Text = currentAccount.PatFullName;
+            //PatientFullNameLabel.Text = currentAccount.PatFullName;
             LastNameTextBox.Text = currentAccount.PatLastName;
             LastNameTextBox.BackColor = Color.White;
             FirstNameTextBox.Text = currentAccount.PatFirstName;
@@ -612,7 +557,7 @@ namespace LabBilling.Forms
             EmailAddressTextBox.BackColor = Color.White;
             DateOfBirthTextBox.Text = currentAccount.BirthDate == null ? string.Empty : currentAccount.BirthDate.Value.ToString("MM/dd/yyyy");
             DateOfBirthTextBox.BackColor = Color.White;
-            SexComboBox.SelectedValue = currentAccount.Sex == null ? string.Empty : currentAccount.Sex;
+            SexComboBox.SelectedValue = currentAccount.Sex ?? string.Empty;
             SexComboBox.BackColor = Color.White;
             MaritalStatusComboBox.SelectedValue = !string.IsNullOrEmpty(currentAccount.Pat.MaritalStatus) ? currentAccount.Pat.MaritalStatus : "U";
             MaritalStatusComboBox.BackColor = Color.White;
@@ -627,30 +572,13 @@ namespace LabBilling.Forms
             GuarSuffixTextBox.Text = currentAccount.Pat.GuarantorNameSuffix;
             GuarantorAddressTextBox.Text = currentAccount.Pat.GuarantorAddress;
             GuarCityTextBox.Text = currentAccount.Pat.GuarantorCity;
-            GuarStateComboBox.SelectedValue = currentAccount.Pat.GuarantorState != null ? currentAccount.Pat.GuarantorState : "";
+            GuarStateComboBox.SelectedValue = currentAccount.Pat.GuarantorState ?? "";
             GuarZipTextBox.Text = currentAccount.Pat.GuarantorZipCode;
             GuarantorPhoneTextBox.Text = currentAccount.Pat.GuarantorPrimaryPhone;
-            GuarantorRelationComboBox.SelectedValue = currentAccount.Pat.GuarRelationToPatient != null ? currentAccount.Pat.GuarRelationToPatient : "";
+            GuarantorRelationComboBox.SelectedValue = currentAccount.Pat.GuarRelationToPatient ?? "";
 
             ResetControls(tabDemographics.Controls.OfType<Control>().ToArray());
-            ResetControls(tabGuarantor.Controls.OfType<Control>().ToArray());
-        }
-
-        private void InsCopyPatientLink_LinkClicked_1(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            Log.Instance.Trace($"Entering");
-            Log.Instance.Debug($"Copying patient data to insurance holder.");
-            //copy patient data for insurance holder info
-            HolderLastNameTextBox.Text = LastNameTextBox.Text;
-            HolderFirstNameTextBox.Text = FirstNameTextBox.Text;
-            HolderMiddleNameTextBox.Text = MiddleNameTextBox.Text;
-            HolderAddressTextBox.Text = Address1TextBox.Text;
-            HolderCityTextBox.Text = CityTextBox.Text;
-            HolderStateComboBox.SelectedValue = StateComboBox.SelectedValue;
-            HolderZipTextBox.Text = ZipcodeTextBox.Text;
-            HolderDOBTextBox.Text = DateOfBirthTextBox.Text;
-            HolderSexComboBox.SelectedValue = SexComboBox.SelectedValue;
-            InsRelationComboBox.SelectedValue = "01";
+            ResetControls(demographicsLayoutPanel.Controls.OfType<Control>().ToArray());
         }
 
         private async void SaveDemographics_Click(object sender, EventArgs e)
@@ -680,6 +608,19 @@ namespace LabBilling.Forms
             currentAccount.Pat.PatFullName = string.Format("{0},{1} {2}", LastNameTextBox.Text, FirstNameTextBox.Text, MiddleNameTextBox.Text);
             currentAccount.Pat.ProviderId = providerLookup1.SelectedValue;
 
+            currentAccount.Pat.GuarantorFullName = $"{GuarantorLastNameTextBox.Text} {GuarSuffixTextBox.Text},{GuarFirstNameTextBox.Text} {GuarMiddleNameTextBox.Text}";
+            currentAccount.Pat.GuarantorLastName = GuarantorLastNameTextBox.Text;
+            currentAccount.Pat.GuarantorFirstName = GuarFirstNameTextBox.Text;
+            currentAccount.Pat.GuarantorMiddleName = GuarMiddleNameTextBox.Text;
+            currentAccount.Pat.GuarantorNameSuffix = GuarSuffixTextBox.Text;
+            currentAccount.Pat.GuarantorAddress = GuarantorAddressTextBox.Text;
+            currentAccount.Pat.GuarantorCity = GuarCityTextBox.Text;
+            currentAccount.Pat.GuarantorPrimaryPhone = GuarantorPhoneTextBox.Text;
+            currentAccount.Pat.GuarantorState = GuarStateComboBox.SelectedValue.ToString();
+            currentAccount.Pat.GuarantorZipCode = GuarZipTextBox.Text;
+            currentAccount.Pat.GuarantorCityState = $"{GuarCityTextBox.Text}, {GuarStateComboBox.SelectedValue} {GuarZipTextBox.Text}";
+            currentAccount.Pat.GuarRelationToPatient = GuarantorRelationComboBox.SelectedValue.ToString();
+
             patRepository.SaveAll(currentAccount.Pat);
 
             var controls = tabDemographics.Controls; //tabDemographics.Controls;
@@ -692,425 +633,6 @@ namespace LabBilling.Forms
 
             await this.LoadAccountData();
 
-        }
-
-        #endregion
-
-        #region InsuranceTab
-
-        private void LoadInsuranceData()
-        {
-            if (this == null)
-                return;
-
-            insGridSource = null;
-            InsuranceDataGrid.DataSource = null;
-            InsuranceDataGrid.Rows.Clear();
-            InsuranceDataGrid.Columns.Clear();
-
-            if (currentAccount.Insurances.Count > 0)
-            {
-
-                DataGridViewButtonColumn deleteCol = new()
-                {
-                    Name = "delete",
-                    HeaderText = "Delete",
-                    Text = "Delete",
-                    UseColumnTextForButtonValue = true,
-                    Width = 50,
-                    DisplayIndex = 0
-                };
-                this.InsuranceDataGrid.Columns.Add(deleteCol);
-
-                var insBindingList = new BindingList<Ins>(currentAccount.Insurances);
-                insGridSource = new BindingSource(insBindingList, null);
-
-                InsuranceDataGrid.DataSource = insGridSource;
-                InsuranceDataGrid.Columns.OfType<DataGridViewColumn>().ToList().ForEach(col => col.Visible = false);
-
-                InsuranceDataGrid.Columns[nameof(Ins.Coverage)].Visible = true;
-                InsuranceDataGrid.Columns[nameof(Ins.PlanName)].Visible = true;
-                InsuranceDataGrid.Columns[nameof(Ins.PlanAddress)].Visible = true;
-                InsuranceDataGrid.Columns[nameof(Ins.PolicyNumber)].Visible = true;
-                InsuranceDataGrid.Columns[nameof(Ins.HolderFullName)].Visible = true;
-                InsuranceDataGrid.Columns[nameof(Ins.HolderAddress)].Visible = true;
-                InsuranceDataGrid.Columns[nameof(Ins.CertSSN)].Visible = true;
-                InsuranceDataGrid.Columns[nameof(Ins.Relation)].Visible = true;
-                InsuranceDataGrid.Columns[nameof(Ins.HolderBirthDate)].Visible = true;
-                InsuranceDataGrid.Columns[nameof(Ins.HolderSex)].Visible = true;
-                InsuranceDataGrid.Columns["delete"].Visible = true;
-
-                int index = 1;
-                InsuranceDataGrid.Columns[nameof(Ins.Coverage)].DisplayIndex = index++;
-                InsuranceDataGrid.Columns[nameof(Ins.PlanName)].DisplayIndex = index++;
-                InsuranceDataGrid.Columns[nameof(Ins.PlanAddress)].DisplayIndex = index++;
-                InsuranceDataGrid.Columns[nameof(Ins.PolicyNumber)].DisplayIndex = index++;
-                InsuranceDataGrid.Columns[nameof(Ins.CertSSN)].DisplayIndex = index++;
-                InsuranceDataGrid.Columns[nameof(Ins.HolderFullName)].DisplayIndex = index++;
-                InsuranceDataGrid.Columns[nameof(Ins.HolderAddress)].DisplayIndex = index++;
-                InsuranceDataGrid.Columns[nameof(Ins.Relation)].DisplayIndex = index++;
-                InsuranceDataGrid.Columns[nameof(Ins.HolderBirthDate)].DisplayIndex = index++;
-                InsuranceDataGrid.Columns[nameof(Ins.HolderSex)].DisplayIndex = index++;
-
-                InsuranceDataGrid.Columns[nameof(Ins.HolderFullName)].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-                InsuranceDataGrid.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.DisplayedCellsExceptHeader);
-                InsuranceDataGrid.AllowUserToResizeColumns = true;
-
-                InsOrderComboBox.SelectedIndex = 0;
-                HolderStateComboBox.SelectedIndex = 0;
-                HolderSexComboBox.SelectedIndex = 0;
-                PlanFinCodeComboBox.BackColor = Color.Linen;
-
-                InsuranceDataGrid.ClearSelection();
-            }
-            SetInsDataEntryAccess(false);
-            AddInsuranceButton.Enabled = true;
-            SaveInsuranceButton.Enabled = false;
-        }
-
-        private void SaveInsuranceButton_Click(object sender, EventArgs e)
-        {
-            // saves the insurance info back to the grid
-            Log.Instance.Trace($"Entering");
-
-            int selectedIns = -1;
-
-            switch (InsOrderComboBox.SelectedValue)
-            {
-                case "A":
-                    selectedIns = 0;
-                    break;
-                case "B":
-                    selectedIns = 1;
-                    break;
-                case "C":
-                    selectedIns = 2;
-                    break;
-                default:
-                    //Insurance Order is not a valid selection
-                    break;
-            }
-            if (selectedIns < 0)
-            {
-                MessageBox.Show(this, "Insurance Order is not a valid selection.");
-                Log.Instance.Debug("Insurance Order is not a valid selection.");
-                return;
-            }
-
-            if (currentAccount.Insurances.Count - 1 < selectedIns)
-            {
-                //This is a new record
-                currentAccount.Insurances.Insert(selectedIns, new Ins());
-                currentAccount.Insurances[selectedIns].Account = _selectedAccount;
-            }
-
-            currentAccount.Insurances[selectedIns].CertSSN = CertSSNTextBox.Text;
-            currentAccount.Insurances[selectedIns].GroupName = GroupNameTextBox.Text;
-            currentAccount.Insurances[selectedIns].GroupNumber = GroupNumberTextBox.Text;
-            currentAccount.Insurances[selectedIns].HolderStreetAddress = HolderAddressTextBox.Text;
-            currentAccount.Insurances[selectedIns].HolderCity = HolderCityTextBox.Text;
-            currentAccount.Insurances[selectedIns].HolderState = HolderStateComboBox.SelectedValue.ToString();
-            currentAccount.Insurances[selectedIns].HolderZip = HolderZipTextBox.Text;
-            currentAccount.Insurances[selectedIns].HolderCityStZip = string.Format("{0}, {1} {2}",
-                HolderCityTextBox.Text,
-                HolderStateComboBox.SelectedValue == null ? "" : HolderStateComboBox.SelectedValue.ToString(),
-                HolderZipTextBox.Text);
-
-            if (currentAccount.Insurances[selectedIns].HolderCityStZip.Trim() == ",")
-            {
-                currentAccount.Insurances[selectedIns].HolderCityStZip = String.Empty;
-            }
-
-            if (HolderDOBTextBox.MaskCompleted)
-                currentAccount.Insurances[selectedIns].HolderBirthDate = DateTime.Parse(HolderDOBTextBox.Text);
-
-            currentAccount.Insurances[selectedIns].HolderFirstName = HolderFirstNameTextBox.Text;
-            currentAccount.Insurances[selectedIns].HolderLastName = HolderLastNameTextBox.Text;
-            currentAccount.Insurances[selectedIns].HolderMiddleName = HolderMiddleNameTextBox.Text;
-            currentAccount.Insurances[selectedIns].HolderFullName = $"{HolderLastNameTextBox.Text},{HolderFirstNameTextBox.Text} {HolderMiddleNameTextBox.Text}";
-            currentAccount.Insurances[selectedIns].HolderSex = HolderSexComboBox.SelectedValue.ToString();
-            currentAccount.Insurances[selectedIns].PolicyNumber = PolicyNumberTextBox.Text;
-            currentAccount.Insurances[selectedIns].PlanStreetAddress1 = PlanAddressTextBox.Text;
-            currentAccount.Insurances[selectedIns].PlanStreetAddress2 = PlanAddress2TextBox.Text;
-            currentAccount.Insurances[selectedIns].PlanName = PlanNameTextBox.Text;
-            currentAccount.Insurances[selectedIns].PlanCityState = PlanCityStTextBox.Text;
-            currentAccount.Insurances[selectedIns].Relation = InsRelationComboBox.SelectedValue.ToString();
-            currentAccount.Insurances[selectedIns].Coverage = InsOrderComboBox.SelectedValue.ToString();
-            if (PlanFinCodeComboBox.SelectedValue != null)
-                currentAccount.Insurances[selectedIns].FinCode = PlanFinCodeComboBox.SelectedValue.ToString();
-
-            currentAccount.Insurances[selectedIns].InsCode = insurancePlanTextBox.Text; // InsCodeComboBox.SelectedValue.ToString();
-
-            //call method to update the record in the database
-            if (currentAccount.Insurances[selectedIns].rowguid == Guid.Empty)
-            {
-                insRepository.Add(currentAccount.Insurances[selectedIns]);
-            }
-            else
-            {
-                if (!InEditMode)
-                {
-                    if (MessageBox.Show(this, string.Format("You are adding a new {0} insurance {1}. This will replace the existing {2} insurance. OK to update?",
-                        InsOrderComboBox.SelectedValue, PlanNameTextBox.Text, InsOrderComboBox.SelectedValue), "Existing Insurance", MessageBoxButtons.YesNo) == DialogResult.Yes)
-                    {
-                        insRepository.Update(currentAccount.Insurances[selectedIns]);
-                    }
-                    else
-                    {
-                        return;
-                    }
-                }
-                else
-                {
-                    List<string> updatedColumns = new();
-
-                    foreach (Control control in insTabLayoutPanel.Controls)
-                    {
-                        if (changedControls.Contains(control.Name))
-                        {
-                            //get field name from map
-                            string field = controlColumnMap[control].ToString();
-                            if (!string.IsNullOrEmpty(field))
-                            {
-                                updatedColumns.Add(field);
-                            }
-                        }
-                    }
-
-                    insRepository.Update(currentAccount.Insurances[selectedIns], updatedColumns);
-                }
-
-            }
-            RefreshAccountData();
-
-            //clear entry fields
-            ClearInsEntryFields();
-            SaveInsuranceButton.Enabled = false;
-        }
-
-        private void ClearInsEntryFields()
-        {
-            Log.Instance.Trace($"Entering");
-            InEditMode = false;
-            PlanAddressTextBox.Text = String.Empty;
-            PlanAddress2TextBox.Text = String.Empty;
-            PlanCityStTextBox.Text = String.Empty;
-            PlanNameTextBox.Text = String.Empty;
-            HolderAddressTextBox.Text = String.Empty;
-            HolderCityTextBox.Text = String.Empty;
-            HolderDOBTextBox.Text = String.Empty;
-            HolderFirstNameTextBox.Text = String.Empty;
-            HolderLastNameTextBox.Text = String.Empty;
-            HolderMiddleNameTextBox.Text = String.Empty;
-            HolderZipTextBox.Text = String.Empty;
-            PolicyNumberTextBox.Text = String.Empty;
-            GroupNameTextBox.Text = String.Empty;
-            GroupNumberTextBox.Text = String.Empty;
-            CertSSNTextBox.Text = String.Empty;
-            insurancePlanTextBox.Text = String.Empty;
-            HolderSexComboBox.SelectedIndex = 0;
-            HolderStateComboBox.SelectedIndex = 0;
-            InsOrderComboBox.SelectedIndex = 0;
-            PlanFinCodeComboBox.SelectedIndex = -1;
-
-            //disable fields
-            SetInsDataEntryAccess(false);
-            ResetControls(insTabLayoutPanel.Controls.OfType<Control>().ToArray());
-        }
-
-        private void SetInsDataEntryAccess(bool enable)
-        {
-            PlanAddressTextBox.Enabled = enable;
-            PlanAddress2TextBox.Enabled = enable;
-            PlanCityStTextBox.Enabled = enable;
-            PlanNameTextBox.Enabled = enable;
-            HolderAddressTextBox.Enabled = enable;
-            HolderCityTextBox.Enabled = enable;
-            HolderDOBTextBox.Enabled = enable;
-            HolderFirstNameTextBox.Enabled = enable;
-            HolderLastNameTextBox.Enabled = enable;
-            HolderMiddleNameTextBox.Enabled = enable;
-            HolderZipTextBox.Enabled = enable;
-            PolicyNumberTextBox.Enabled = enable;
-            GroupNameTextBox.Enabled = enable;
-            GroupNumberTextBox.Enabled = enable;
-            CertSSNTextBox.Enabled = enable;
-            HolderStateComboBox.Enabled = enable;
-            HolderSexComboBox.Enabled = enable;
-            InsOrderComboBox.Enabled = enable;
-            PlanFinCodeComboBox.Enabled = enable;
-            InsRelationComboBox.Enabled = enable;
-            insurancePlanTextBox.Enabled = enable;
-        }
-
-        private async void InsuranceDataGrid_CellClick(object sender, DataGridViewCellEventArgs e)
-        {
-            Log.Instance.Trace($"Entering");
-            InsTabMessageTextBox.Text = String.Empty;
-            if (e.ColumnIndex == 0)
-            {
-                #region delete button was clicked
-                int selectedIns = -1;
-
-                switch (InsuranceDataGrid.SelectedRows[0].Cells[nameof(Ins.Coverage)].Value.ToString())
-                {
-                    case "A":
-                        selectedIns = 0;
-                        break;
-                    case "B":
-                        selectedIns = 1;
-                        break;
-                    case "C":
-                        selectedIns = 2;
-                        break;
-                    default:
-                        //Insurance Order is not a valid selection
-                        break;
-                }
-                if (selectedIns < 0)
-                {
-                    MessageBox.Show(this, "Insurance Order is not a valid selection.");
-                    Log.Instance.Debug("Insurance Order is not a valid selection.");
-                    return;
-                }
-
-                if (MessageBox.Show(this, string.Format("Delete {0} insurance {1} for this patient?",
-                    currentAccount.Insurances[selectedIns].Coverage,
-                    currentAccount.Insurances[selectedIns].PlanName),
-                    "Delete Insurance", MessageBoxButtons.YesNo)
-                    == DialogResult.Yes)
-                {
-                    if (insRepository.Delete(currentAccount.Insurances[selectedIns]))
-                        currentAccount.Insurances.RemoveAt(selectedIns);
-                }
-                insGridSource.ResetBindings(false);
-                ClearInsEntryFields();
-
-                ResetControls(insTabLayoutPanel.Controls.OfType<Control>().ToArray());
-                await LoadAccountData();
-
-                return;
-                #endregion
-            }
-
-            //populate edit boxes
-            InEditMode = true;
-            HolderStateComboBox.SelectedItem = null;
-            HolderStateComboBox.SelectedText = "--Select--";
-            HolderSexComboBox.SelectedItem = null;
-            HolderSexComboBox.SelectedText = "--Select--";
-            InsOrderComboBox.SelectedValue = InsuranceDataGrid.SelectedRows[0].Cells[nameof(Ins.Coverage)].Value.ToString();
-
-            HolderLastNameTextBox.Text = InsuranceDataGrid.SelectedRows[0].Cells[nameof(Ins.HolderLastName)].Value?.ToString();
-            HolderFirstNameTextBox.Text = InsuranceDataGrid.SelectedRows[0].Cells[nameof(Ins.HolderFirstName)].Value?.ToString();
-            HolderMiddleNameTextBox.Text = InsuranceDataGrid.SelectedRows[0].Cells[nameof(Ins.HolderMiddleName)].Value?.ToString();
-            HolderAddressTextBox.Text = InsuranceDataGrid.SelectedRows[0].Cells[nameof(Ins.HolderStreetAddress)].Value != null ? InsuranceDataGrid.SelectedRows[0].Cells[nameof(Ins.HolderStreetAddress)].Value.ToString() : "";
-
-            HolderCityTextBox.Text = InsuranceDataGrid.SelectedRows[0].Cells[nameof(Ins.HolderCity)].Value.ToString();
-            HolderStateComboBox.SelectedValue = InsuranceDataGrid.SelectedRows[0].Cells[nameof(Ins.HolderState)].Value.ToString();
-            HolderZipTextBox.Text = InsuranceDataGrid.SelectedRows[0].Cells[nameof(Ins.HolderZip)].Value.ToString();
-
-            HolderSexComboBox.SelectedValue = InsuranceDataGrid.SelectedRows[0].Cells[nameof(Ins.HolderSex)].Value?.ToString() ?? "";
-            if (!string.IsNullOrEmpty(InsuranceDataGrid.SelectedRows[0].Cells[nameof(Ins.HolderBirthDate)].Value?.ToString()))
-                HolderDOBTextBox.Text = DateTime.Parse(InsuranceDataGrid.SelectedRows[0].Cells[nameof(Ins.HolderBirthDate)].Value?.ToString()).ToString(@"MM/dd/yyyy");
-            else
-                HolderDOBTextBox.Text = "";
-            InsRelationComboBox.SelectedValue = InsuranceDataGrid.SelectedRows[0].Cells[nameof(Ins.Relation)].Value?.ToString() ?? "";
-
-            insurancePlanTextBox.Text = InsuranceDataGrid.SelectedRows[0].Cells[nameof(Ins.InsCode)].Value?.ToString() ?? "";
-
-            PlanNameTextBox.Text = InsuranceDataGrid.SelectedRows[0].Cells[nameof(Ins.PlanName)].Value?.ToString();
-            PlanAddressTextBox.Text = InsuranceDataGrid.SelectedRows[0].Cells[nameof(Ins.PlanStreetAddress1)].Value?.ToString();
-            PlanAddress2TextBox.Text = InsuranceDataGrid.SelectedRows[0].Cells[nameof(Ins.PlanStreetAddress2)].Value?.ToString();
-            PlanCityStTextBox.Text = InsuranceDataGrid.SelectedRows[0].Cells[nameof(Ins.PlanCityState)].Value?.ToString();
-
-            var insurances = currentAccount.Insurances.Where(x => x.Coverage == InsuranceDataGrid.SelectedRows[0].Cells[nameof(Ins.Coverage)].Value.ToString());
-
-            if (insurances.First().InsCompany.IsGenericPayor)
-            {
-                PlanNameTextBox.Enabled = true;
-                PlanAddressTextBox.Enabled = true;
-                PlanAddress2TextBox.Enabled = true;
-                PlanCityStTextBox.Enabled = true;
-            }
-
-            PolicyNumberTextBox.Text = InsuranceDataGrid.SelectedRows[0].Cells[nameof(Ins.PolicyNumber)].Value?.ToString();
-            GroupNumberTextBox.Text = InsuranceDataGrid.SelectedRows[0].Cells[nameof(Ins.GroupNumber)].Value?.ToString();
-            GroupNameTextBox.Text = InsuranceDataGrid.SelectedRows[0].Cells[nameof(Ins.GroupName)].Value?.ToString();
-            CertSSNTextBox.Text = InsuranceDataGrid.SelectedRows[0].Cells[nameof(Ins.CertSSN)].Value?.ToString();
-            PlanFinCodeComboBox.SelectedValue = InsuranceDataGrid.SelectedRows[0].Cells[nameof(Ins.FinCode)].Value?.ToString() ?? "";
-
-            //reset changed flag & colors
-            foreach (Control ctrl in insTabLayoutPanel.Controls)
-            {
-                if (ctrl is TextBox || ctrl is ComboBox || ctrl is FlatCombo || ctrl is MaskedTextBox)
-                {
-                    ctrl.BackColor = Color.White;
-                }
-                changedControls.Remove(ctrl.Name);
-            }
-            //enable data entry fields
-            SaveInsuranceButton.Enabled = true;
-            SetInsDataEntryAccess(true);
-            InsOrderComboBox.Enabled = false;
-        }
-
-        private void LookupInsCode(string code)
-        {
-            Log.Instance.Trace($"Entering");
-            //lookup code to see if it is valid, then populate other plan fields from data
-
-            if (code == "")
-                return;
-
-            var record = insCompanyRepository.GetByCode(code);
-
-            if (record != null)
-            {
-                //this is a valid code
-                PlanNameTextBox.Text = record.PlanName;
-                PlanAddressTextBox.Text = record.Address1;
-                PlanAddress2TextBox.Text = record.Address2;
-                PlanCityStTextBox.Text = record.CityStateZip;
-                PlanFinCodeComboBox.SelectedValue = record.FinancialCode ?? String.Empty;
-
-                if (record.IsGenericPayor)
-                {
-                    PlanNameTextBox.Enabled = true;
-                    PlanAddress2TextBox.Enabled = true;
-                    PlanAddress2TextBox.Enabled = true;
-                    PlanCityStTextBox.Enabled = true;
-                    PlanFinCodeComboBox.Enabled = true;
-                }
-            }
-        }
-
-        private void AddInsuranceButton_Click(object sender, EventArgs e)
-        {
-            //clear the insurance table selection and data entry fields.
-            InsuranceDataGrid.ClearSelection();
-            ClearInsEntryFields();
-            SetInsDataEntryAccess(true);
-            AddInsuranceButton.Enabled = false;
-            SaveInsuranceButton.Enabled = true;
-        }
-
-        private void insurancePlanTextBox_KeyUp(object sender, KeyEventArgs e)
-        {
-            _timer.Stop();
-            _timer.Start();
-        }
-
-        private void insurancePlanTextBox_KeyUpDone(object sender, EventArgs e)
-        {
-            _timer.Stop();
-
-            lookupForm.InitialSearchText = insurancePlanTextBox.Text;
-            if (lookupForm.ShowDialog() == DialogResult.OK)
-            {
-                string insCode = insurancePlanTextBox.Text = lookupForm.SelectedValue;
-                LookupInsCode(insCode);
-            }
         }
 
         #endregion
@@ -1733,22 +1255,22 @@ namespace LabBilling.Forms
         #endregion
 
 
-        private async void PersonSearchToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Log.Instance.Trace($"Entering");
-            PersonSearchForm frm = new();
-            frm.ShowDialog();
-            if (frm.SelectedAccount != "" && frm.SelectedAccount != null)
-            {
-                _selectedAccount = frm.SelectedAccount;
-                await LoadAccountData();
-            }
-            else
-            {
-                Log.Instance.Error($"Person search returned an empty selected account.");
-                MessageBox.Show(this, "A valid account number was not returned from search. Please try again. If problem persists, report issue to an administrator.");
-            }
-        }
+        //private async void PersonSearchToolStripMenuItem_Click(object sender, EventArgs e)
+        //{
+        //    Log.Instance.Trace($"Entering");
+        //    PersonSearchForm frm = new();
+        //    frm.ShowDialog();
+        //    if (frm.SelectedAccount != "" && frm.SelectedAccount != null)
+        //    {
+        //        _selectedAccount = frm.SelectedAccount;
+        //        await LoadAccountData();
+        //    }
+        //    else
+        //    {
+        //        Log.Instance.Error($"Person search returned an empty selected account.");
+        //        MessageBox.Show(this, "A valid account number was not returned from search. Please try again. If problem persists, report issue to an administrator.");
+        //    }
+        //}
 
         private void ChangeDateOfServiceToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -2004,35 +1526,6 @@ namespace LabBilling.Forms
             GuarZipTextBox.Text = ZipcodeTextBox.Text;
             GuarantorPhoneTextBox.Text = PhoneTextBox.Text;
             GuarantorRelationComboBox.SelectedValue = "01";
-        }
-
-        private async void GuarantorSaveButton_Click(object sender, EventArgs e)
-        {
-            Log.Instance.Trace($"Entering");
-
-            currentAccount.Pat.GuarantorFullName = $"{GuarantorLastNameTextBox.Text} {GuarSuffixTextBox.Text},{GuarFirstNameTextBox.Text} {GuarMiddleNameTextBox.Text}";
-            currentAccount.Pat.GuarantorLastName = GuarantorLastNameTextBox.Text;
-            currentAccount.Pat.GuarantorFirstName = GuarFirstNameTextBox.Text;
-            currentAccount.Pat.GuarantorMiddleName = GuarMiddleNameTextBox.Text;
-            currentAccount.Pat.GuarantorNameSuffix = GuarSuffixTextBox.Text;
-            currentAccount.Pat.GuarantorAddress = GuarantorAddressTextBox.Text;
-            currentAccount.Pat.GuarantorCity = GuarCityTextBox.Text;
-            currentAccount.Pat.GuarantorPrimaryPhone = GuarantorPhoneTextBox.Text;
-            currentAccount.Pat.GuarantorState = GuarStateComboBox.SelectedValue.ToString();
-            currentAccount.Pat.GuarantorZipCode = GuarZipTextBox.Text;
-            currentAccount.Pat.GuarantorCityState = $"{GuarCityTextBox.Text}, {GuarStateComboBox.SelectedValue} {GuarZipTextBox.Text}";
-            currentAccount.Pat.GuarRelationToPatient = GuarantorRelationComboBox.SelectedValue.ToString();
-
-            patRepository.SaveAll(currentAccount.Pat);
-
-            var controls = tabGuarantor.Controls;
-
-            foreach (Control control in controls)
-            {
-                //set background back to white to indicate change has been saved to database
-                control.BackColor = Color.White;
-            }
-            await LoadAccountData();
         }
 
         #endregion
