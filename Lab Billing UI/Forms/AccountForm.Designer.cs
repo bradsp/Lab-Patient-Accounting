@@ -31,21 +31,21 @@ namespace LabBilling.Forms
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle16 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle17 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle18 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle19 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle20 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle21 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle22 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle23 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle24 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle25 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle26 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle27 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle28 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle29 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle30 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle13 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle14 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle15 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AccountForm));
             tabControl1 = new System.Windows.Forms.TabControl();
             summaryTab = new System.Windows.Forms.TabPage();
@@ -61,11 +61,9 @@ namespace LabBilling.Forms
             GuarCityLabel = new System.Windows.Forms.Label();
             GuarantorAddressTextBox = new System.Windows.Forms.TextBox();
             GuarAddressLabel = new System.Windows.Forms.Label();
-            providerLookup1 = new Library.ProviderLookup();
             SaveDemographics = new System.Windows.Forms.Button();
             DateOfBirthTextBox = new UserControls.DateTextBox();
             PatLastNameLabel = new System.Windows.Forms.Label();
-            LastNameTextBox = new System.Windows.Forms.TextBox();
             orderingProviderLabel = new System.Windows.Forms.Label();
             PatFirstNameLabel = new System.Windows.Forms.Label();
             SocSecNoTextBox = new System.Windows.Forms.MaskedTextBox();
@@ -108,6 +106,8 @@ namespace LabBilling.Forms
             GuarSuffixTextBox = new System.Windows.Forms.TextBox();
             GuarPhoneLabel = new System.Windows.Forms.Label();
             GuarantorPhoneTextBox = new System.Windows.Forms.TextBox();
+            LastNameTextBox = new System.Windows.Forms.TextBox();
+            orderingPhyTextBox = new System.Windows.Forms.TextBox();
             tabDiagnosis = new System.Windows.Forms.TabPage();
             dxPointerGrid2 = new System.Windows.Forms.DataGridView();
             DxDeleteButton = new System.Windows.Forms.PictureBox();
@@ -295,9 +295,9 @@ namespace LabBilling.Forms
             // 
             demographicsLayoutPanel.ColumnCount = 4;
             demographicsLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 12F));
-            demographicsLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 38F));
+            demographicsLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 30F));
             demographicsLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 12F));
-            demographicsLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 38F));
+            demographicsLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 46F));
             demographicsLayoutPanel.Controls.Add(DemoStatusMessagesTextBox, 3, 17);
             demographicsLayoutPanel.Controls.Add(GuarZipTextBox, 3, 9);
             demographicsLayoutPanel.Controls.Add(GuarZipCodeLabel, 2, 9);
@@ -307,11 +307,9 @@ namespace LabBilling.Forms
             demographicsLayoutPanel.Controls.Add(GuarCityLabel, 2, 7);
             demographicsLayoutPanel.Controls.Add(GuarantorAddressTextBox, 3, 6);
             demographicsLayoutPanel.Controls.Add(GuarAddressLabel, 2, 6);
-            demographicsLayoutPanel.Controls.Add(providerLookup1, 1, 16);
             demographicsLayoutPanel.Controls.Add(SaveDemographics, 0, 17);
             demographicsLayoutPanel.Controls.Add(DateOfBirthTextBox, 1, 12);
             demographicsLayoutPanel.Controls.Add(PatLastNameLabel, 0, 1);
-            demographicsLayoutPanel.Controls.Add(LastNameTextBox, 1, 1);
             demographicsLayoutPanel.Controls.Add(orderingProviderLabel, 0, 16);
             demographicsLayoutPanel.Controls.Add(PatFirstNameLabel, 0, 2);
             demographicsLayoutPanel.Controls.Add(SocSecNoTextBox, 1, 15);
@@ -354,6 +352,8 @@ namespace LabBilling.Forms
             demographicsLayoutPanel.Controls.Add(GuarSuffixTextBox, 3, 5);
             demographicsLayoutPanel.Controls.Add(GuarPhoneLabel, 2, 10);
             demographicsLayoutPanel.Controls.Add(GuarantorPhoneTextBox, 3, 10);
+            demographicsLayoutPanel.Controls.Add(LastNameTextBox, 1, 1);
+            demographicsLayoutPanel.Controls.Add(orderingPhyTextBox, 1, 16);
             demographicsLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             demographicsLayoutPanel.Location = new System.Drawing.Point(4, 3);
             demographicsLayoutPanel.Name = "demographicsLayoutPanel";
@@ -383,17 +383,17 @@ namespace LabBilling.Forms
             // 
             DemoStatusMessagesTextBox.Anchor = System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
             DemoStatusMessagesTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            DemoStatusMessagesTextBox.Location = new System.Drawing.Point(831, 511);
+            DemoStatusMessagesTextBox.Location = new System.Drawing.Point(724, 509);
             DemoStatusMessagesTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             DemoStatusMessagesTextBox.Multiline = true;
             DemoStatusMessagesTextBox.Name = "DemoStatusMessagesTextBox";
             DemoStatusMessagesTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            DemoStatusMessagesTextBox.Size = new System.Drawing.Size(501, 37);
+            DemoStatusMessagesTextBox.Size = new System.Drawing.Size(608, 37);
             DemoStatusMessagesTextBox.TabIndex = 33;
             // 
             // GuarZipTextBox
             // 
-            GuarZipTextBox.Location = new System.Drawing.Point(831, 265);
+            GuarZipTextBox.Location = new System.Drawing.Point(724, 265);
             GuarZipTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             GuarZipTextBox.Mask = "00000-9999";
             GuarZipTextBox.Name = "GuarZipTextBox";
@@ -403,7 +403,7 @@ namespace LabBilling.Forms
             // GuarZipCodeLabel
             // 
             GuarZipCodeLabel.AutoSize = true;
-            GuarZipCodeLabel.Location = new System.Drawing.Point(671, 262);
+            GuarZipCodeLabel.Location = new System.Drawing.Point(564, 262);
             GuarZipCodeLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             GuarZipCodeLabel.Name = "GuarZipCodeLabel";
             GuarZipCodeLabel.Size = new System.Drawing.Size(52, 15);
@@ -414,7 +414,7 @@ namespace LabBilling.Forms
             // GuarStateLabel
             // 
             GuarStateLabel.AutoSize = true;
-            GuarStateLabel.Location = new System.Drawing.Point(671, 233);
+            GuarStateLabel.Location = new System.Drawing.Point(564, 233);
             GuarStateLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             GuarStateLabel.Name = "GuarStateLabel";
             GuarStateLabel.Size = new System.Drawing.Size(33, 15);
@@ -431,7 +431,7 @@ namespace LabBilling.Forms
             GuarStateComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             GuarStateComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             GuarStateComboBox.FormattingEnabled = true;
-            GuarStateComboBox.Location = new System.Drawing.Point(831, 236);
+            GuarStateComboBox.Location = new System.Drawing.Point(724, 236);
             GuarStateComboBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             GuarStateComboBox.Name = "GuarStateComboBox";
             GuarStateComboBox.Size = new System.Drawing.Size(213, 23);
@@ -439,7 +439,7 @@ namespace LabBilling.Forms
             // 
             // GuarCityTextBox
             // 
-            GuarCityTextBox.Location = new System.Drawing.Point(831, 207);
+            GuarCityTextBox.Location = new System.Drawing.Point(724, 207);
             GuarCityTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             GuarCityTextBox.Name = "GuarCityTextBox";
             GuarCityTextBox.Size = new System.Drawing.Size(346, 23);
@@ -448,7 +448,7 @@ namespace LabBilling.Forms
             // GuarCityLabel
             // 
             GuarCityLabel.AutoSize = true;
-            GuarCityLabel.Location = new System.Drawing.Point(671, 204);
+            GuarCityLabel.Location = new System.Drawing.Point(564, 204);
             GuarCityLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             GuarCityLabel.Name = "GuarCityLabel";
             GuarCityLabel.Size = new System.Drawing.Size(28, 15);
@@ -458,7 +458,7 @@ namespace LabBilling.Forms
             // 
             // GuarantorAddressTextBox
             // 
-            GuarantorAddressTextBox.Location = new System.Drawing.Point(831, 178);
+            GuarantorAddressTextBox.Location = new System.Drawing.Point(724, 178);
             GuarantorAddressTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             GuarantorAddressTextBox.Name = "GuarantorAddressTextBox";
             GuarantorAddressTextBox.Size = new System.Drawing.Size(346, 23);
@@ -467,7 +467,7 @@ namespace LabBilling.Forms
             // GuarAddressLabel
             // 
             GuarAddressLabel.AutoSize = true;
-            GuarAddressLabel.Location = new System.Drawing.Point(671, 175);
+            GuarAddressLabel.Location = new System.Drawing.Point(564, 175);
             GuarAddressLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             GuarAddressLabel.Name = "GuarAddressLabel";
             GuarAddressLabel.Size = new System.Drawing.Size(49, 15);
@@ -475,23 +475,9 @@ namespace LabBilling.Forms
             GuarAddressLabel.Text = "Address";
             GuarAddressLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
-            // providerLookup1
-            // 
-            providerLookup1.CharacterLookupCountMin = 2;
-            providerLookup1.Datasource = null;
-            providerLookup1.DisplayValue = null;
-            providerLookup1.Location = new System.Drawing.Point(165, 468);
-            providerLookup1.Margin = new System.Windows.Forms.Padding(5, 3, 5, 3);
-            providerLookup1.Name = "providerLookup1";
-            providerLookup1.ResultBoxHeight = 100;
-            providerLookup1.SelectedValue = null;
-            providerLookup1.Size = new System.Drawing.Size(336, 26);
-            providerLookup1.TabIndex = 31;
-            providerLookup1.SelectedValueChanged += providerLookup1_SelectedValueChanged;
-            // 
             // SaveDemographics
             // 
-            SaveDemographics.Location = new System.Drawing.Point(4, 500);
+            SaveDemographics.Location = new System.Drawing.Point(4, 497);
             SaveDemographics.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             SaveDemographics.Name = "SaveDemographics";
             SaveDemographics.Size = new System.Drawing.Size(125, 51);
@@ -519,16 +505,6 @@ namespace LabBilling.Forms
             PatLastNameLabel.TabIndex = 1;
             PatLastNameLabel.Text = "Last Name";
             PatLastNameLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // LastNameTextBox
-            // 
-            LastNameTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            LastNameTextBox.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
-            LastNameTextBox.Location = new System.Drawing.Point(164, 33);
-            LastNameTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            LastNameTextBox.Name = "LastNameTextBox";
-            LastNameTextBox.Size = new System.Drawing.Size(322, 23);
-            LastNameTextBox.TabIndex = 2;
             // 
             // orderingProviderLabel
             // 
@@ -837,7 +813,7 @@ namespace LabBilling.Forms
             // 
             label7.AutoSize = true;
             label7.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold);
-            label7.Location = new System.Drawing.Point(830, 0);
+            label7.Location = new System.Drawing.Point(723, 0);
             label7.Name = "label7";
             label7.Size = new System.Drawing.Size(218, 25);
             label7.TabIndex = 36;
@@ -846,7 +822,7 @@ namespace LabBilling.Forms
             // PatRelationLabel
             // 
             PatRelationLabel.AutoSize = true;
-            PatRelationLabel.Location = new System.Drawing.Point(671, 30);
+            PatRelationLabel.Location = new System.Drawing.Point(564, 30);
             PatRelationLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             PatRelationLabel.Name = "PatRelationLabel";
             PatRelationLabel.Size = new System.Drawing.Size(104, 15);
@@ -860,7 +836,7 @@ namespace LabBilling.Forms
             GuarantorRelationComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             GuarantorRelationComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             GuarantorRelationComboBox.FormattingEnabled = true;
-            GuarantorRelationComboBox.Location = new System.Drawing.Point(831, 33);
+            GuarantorRelationComboBox.Location = new System.Drawing.Point(724, 33);
             GuarantorRelationComboBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             GuarantorRelationComboBox.Name = "GuarantorRelationComboBox";
             GuarantorRelationComboBox.Size = new System.Drawing.Size(152, 23);
@@ -869,18 +845,19 @@ namespace LabBilling.Forms
             // GuarCopyPatientLink
             // 
             GuarCopyPatientLink.AutoSize = true;
-            GuarCopyPatientLink.Location = new System.Drawing.Point(671, 0);
+            GuarCopyPatientLink.Location = new System.Drawing.Point(564, 0);
             GuarCopyPatientLink.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             GuarCopyPatientLink.Name = "GuarCopyPatientLink";
             GuarCopyPatientLink.Size = new System.Drawing.Size(99, 15);
             GuarCopyPatientLink.TabIndex = 37;
             GuarCopyPatientLink.TabStop = true;
             GuarCopyPatientLink.Text = "Copy Patient Info";
+            GuarCopyPatientLink.LinkClicked += GuarCopyPatientLink_LinkClicked;
             // 
             // GuarLastNameLabel
             // 
             GuarLastNameLabel.AutoSize = true;
-            GuarLastNameLabel.Location = new System.Drawing.Point(671, 59);
+            GuarLastNameLabel.Location = new System.Drawing.Point(564, 59);
             GuarLastNameLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             GuarLastNameLabel.Name = "GuarLastNameLabel";
             GuarLastNameLabel.Size = new System.Drawing.Size(63, 15);
@@ -890,7 +867,7 @@ namespace LabBilling.Forms
             // 
             // GuarantorLastNameTextBox
             // 
-            GuarantorLastNameTextBox.Location = new System.Drawing.Point(831, 62);
+            GuarantorLastNameTextBox.Location = new System.Drawing.Point(724, 62);
             GuarantorLastNameTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             GuarantorLastNameTextBox.Name = "GuarantorLastNameTextBox";
             GuarantorLastNameTextBox.Size = new System.Drawing.Size(346, 23);
@@ -899,7 +876,7 @@ namespace LabBilling.Forms
             // GuarFirstNameLabel
             // 
             GuarFirstNameLabel.AutoSize = true;
-            GuarFirstNameLabel.Location = new System.Drawing.Point(671, 88);
+            GuarFirstNameLabel.Location = new System.Drawing.Point(564, 88);
             GuarFirstNameLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             GuarFirstNameLabel.Name = "GuarFirstNameLabel";
             GuarFirstNameLabel.Size = new System.Drawing.Size(64, 15);
@@ -909,7 +886,7 @@ namespace LabBilling.Forms
             // 
             // GuarFirstNameTextBox
             // 
-            GuarFirstNameTextBox.Location = new System.Drawing.Point(831, 91);
+            GuarFirstNameTextBox.Location = new System.Drawing.Point(724, 91);
             GuarFirstNameTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             GuarFirstNameTextBox.Name = "GuarFirstNameTextBox";
             GuarFirstNameTextBox.Size = new System.Drawing.Size(346, 23);
@@ -918,7 +895,7 @@ namespace LabBilling.Forms
             // GuarMiddleNameLabel
             // 
             GuarMiddleNameLabel.AutoSize = true;
-            GuarMiddleNameLabel.Location = new System.Drawing.Point(671, 117);
+            GuarMiddleNameLabel.Location = new System.Drawing.Point(564, 117);
             GuarMiddleNameLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             GuarMiddleNameLabel.Name = "GuarMiddleNameLabel";
             GuarMiddleNameLabel.Size = new System.Drawing.Size(79, 15);
@@ -928,7 +905,7 @@ namespace LabBilling.Forms
             // 
             // GuarMiddleNameTextBox
             // 
-            GuarMiddleNameTextBox.Location = new System.Drawing.Point(831, 120);
+            GuarMiddleNameTextBox.Location = new System.Drawing.Point(724, 120);
             GuarMiddleNameTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             GuarMiddleNameTextBox.Name = "GuarMiddleNameTextBox";
             GuarMiddleNameTextBox.Size = new System.Drawing.Size(279, 23);
@@ -937,7 +914,7 @@ namespace LabBilling.Forms
             // GuarSuffixLabel
             // 
             GuarSuffixLabel.AutoSize = true;
-            GuarSuffixLabel.Location = new System.Drawing.Point(671, 146);
+            GuarSuffixLabel.Location = new System.Drawing.Point(564, 146);
             GuarSuffixLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             GuarSuffixLabel.Name = "GuarSuffixLabel";
             GuarSuffixLabel.Size = new System.Drawing.Size(37, 15);
@@ -947,7 +924,7 @@ namespace LabBilling.Forms
             // 
             // GuarSuffixTextBox
             // 
-            GuarSuffixTextBox.Location = new System.Drawing.Point(831, 149);
+            GuarSuffixTextBox.Location = new System.Drawing.Point(724, 149);
             GuarSuffixTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             GuarSuffixTextBox.Name = "GuarSuffixTextBox";
             GuarSuffixTextBox.Size = new System.Drawing.Size(58, 23);
@@ -956,7 +933,7 @@ namespace LabBilling.Forms
             // GuarPhoneLabel
             // 
             GuarPhoneLabel.AutoSize = true;
-            GuarPhoneLabel.Location = new System.Drawing.Point(671, 291);
+            GuarPhoneLabel.Location = new System.Drawing.Point(564, 291);
             GuarPhoneLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             GuarPhoneLabel.Name = "GuarPhoneLabel";
             GuarPhoneLabel.Size = new System.Drawing.Size(41, 15);
@@ -966,11 +943,32 @@ namespace LabBilling.Forms
             // 
             // GuarantorPhoneTextBox
             // 
-            GuarantorPhoneTextBox.Location = new System.Drawing.Point(831, 294);
+            GuarantorPhoneTextBox.Location = new System.Drawing.Point(724, 294);
             GuarantorPhoneTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             GuarantorPhoneTextBox.Name = "GuarantorPhoneTextBox";
             GuarantorPhoneTextBox.Size = new System.Drawing.Size(346, 23);
             GuarantorPhoneTextBox.TabIndex = 41;
+            // 
+            // LastNameTextBox
+            // 
+            LastNameTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            LastNameTextBox.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
+            LastNameTextBox.Location = new System.Drawing.Point(164, 33);
+            LastNameTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            LastNameTextBox.Name = "LastNameTextBox";
+            LastNameTextBox.Size = new System.Drawing.Size(322, 23);
+            LastNameTextBox.TabIndex = 2;
+            // 
+            // orderingPhyTextBox
+            // 
+            orderingPhyTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            orderingPhyTextBox.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
+            orderingPhyTextBox.Location = new System.Drawing.Point(164, 468);
+            orderingPhyTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            orderingPhyTextBox.Name = "orderingPhyTextBox";
+            orderingPhyTextBox.Size = new System.Drawing.Size(322, 23);
+            orderingPhyTextBox.TabIndex = 46;
+            orderingPhyTextBox.KeyUp += orderingPhyTextBox_KeyUp;
             // 
             // tabDiagnosis
             // 
@@ -1002,36 +1000,36 @@ namespace LabBilling.Forms
             dxPointerGrid2.AllowUserToDeleteRows = false;
             dxPointerGrid2.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
             dxPointerGrid2.BackgroundColor = System.Drawing.Color.White;
-            dataGridViewCellStyle16.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle16.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle16.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
-            dataGridViewCellStyle16.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle16.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle16.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle16.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            dxPointerGrid2.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle16;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            dxPointerGrid2.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             dxPointerGrid2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle17.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle17.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle17.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
-            dataGridViewCellStyle17.ForeColor = System.Drawing.Color.Black;
-            dataGridViewCellStyle17.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle17.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle17.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            dxPointerGrid2.DefaultCellStyle = dataGridViewCellStyle17;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+            dataGridViewCellStyle2.ForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            dxPointerGrid2.DefaultCellStyle = dataGridViewCellStyle2;
             dxPointerGrid2.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter;
             dxPointerGrid2.Location = new System.Drawing.Point(22, 278);
             dxPointerGrid2.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             dxPointerGrid2.MultiSelect = false;
             dxPointerGrid2.Name = "dxPointerGrid2";
-            dataGridViewCellStyle18.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle18.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle18.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
-            dataGridViewCellStyle18.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle18.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle18.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle18.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            dxPointerGrid2.RowHeadersDefaultCellStyle = dataGridViewCellStyle18;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            dxPointerGrid2.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
             dxPointerGrid2.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             dxPointerGrid2.Size = new System.Drawing.Size(922, 283);
             dxPointerGrid2.TabIndex = 10;
@@ -1123,35 +1121,35 @@ namespace LabBilling.Forms
             DxSearchDataGrid.AllowUserToDeleteRows = false;
             DxSearchDataGrid.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
             DxSearchDataGrid.BackgroundColor = System.Drawing.Color.White;
-            dataGridViewCellStyle19.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle19.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle19.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
-            dataGridViewCellStyle19.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle19.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle19.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle19.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            DxSearchDataGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle19;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            DxSearchDataGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle4;
             DxSearchDataGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle20.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle20.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle20.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
-            dataGridViewCellStyle20.ForeColor = System.Drawing.Color.Black;
-            dataGridViewCellStyle20.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle20.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle20.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            DxSearchDataGrid.DefaultCellStyle = dataGridViewCellStyle20;
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+            dataGridViewCellStyle5.ForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            DxSearchDataGrid.DefaultCellStyle = dataGridViewCellStyle5;
             DxSearchDataGrid.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             DxSearchDataGrid.Location = new System.Drawing.Point(21, 53);
             DxSearchDataGrid.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             DxSearchDataGrid.Name = "DxSearchDataGrid";
-            dataGridViewCellStyle21.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle21.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle21.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
-            dataGridViewCellStyle21.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle21.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle21.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle21.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            DxSearchDataGrid.RowHeadersDefaultCellStyle = dataGridViewCellStyle21;
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            DxSearchDataGrid.RowHeadersDefaultCellStyle = dataGridViewCellStyle6;
             DxSearchDataGrid.RowHeadersVisible = false;
             DxSearchDataGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             DxSearchDataGrid.Size = new System.Drawing.Size(481, 203);
@@ -1174,35 +1172,35 @@ namespace LabBilling.Forms
             DiagnosisDataGrid.AllowUserToAddRows = false;
             DiagnosisDataGrid.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
             DiagnosisDataGrid.BackgroundColor = System.Drawing.Color.White;
-            dataGridViewCellStyle22.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle22.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle22.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
-            dataGridViewCellStyle22.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle22.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle22.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle22.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            DiagnosisDataGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle22;
+            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle7.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle7.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+            dataGridViewCellStyle7.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle7.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle7.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            DiagnosisDataGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle7;
             DiagnosisDataGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle23.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle23.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle23.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
-            dataGridViewCellStyle23.ForeColor = System.Drawing.Color.Black;
-            dataGridViewCellStyle23.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle23.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle23.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            DiagnosisDataGrid.DefaultCellStyle = dataGridViewCellStyle23;
+            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle8.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+            dataGridViewCellStyle8.ForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle8.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            DiagnosisDataGrid.DefaultCellStyle = dataGridViewCellStyle8;
             DiagnosisDataGrid.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             DiagnosisDataGrid.Location = new System.Drawing.Point(526, 53);
             DiagnosisDataGrid.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             DiagnosisDataGrid.Name = "DiagnosisDataGrid";
-            dataGridViewCellStyle24.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle24.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle24.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
-            dataGridViewCellStyle24.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle24.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle24.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle24.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            DiagnosisDataGrid.RowHeadersDefaultCellStyle = dataGridViewCellStyle24;
+            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle9.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle9.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+            dataGridViewCellStyle9.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle9.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle9.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            DiagnosisDataGrid.RowHeadersDefaultCellStyle = dataGridViewCellStyle9;
             DiagnosisDataGrid.RowHeadersVisible = false;
             DiagnosisDataGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             DiagnosisDataGrid.Size = new System.Drawing.Size(418, 203);
@@ -1381,36 +1379,36 @@ namespace LabBilling.Forms
             PaymentsDataGrid.AllowUserToAddRows = false;
             PaymentsDataGrid.AllowUserToDeleteRows = false;
             PaymentsDataGrid.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
-            dataGridViewCellStyle25.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle25.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle25.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
-            dataGridViewCellStyle25.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle25.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle25.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle25.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            PaymentsDataGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle25;
+            dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle10.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle10.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+            dataGridViewCellStyle10.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle10.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle10.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle10.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            PaymentsDataGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle10;
             PaymentsDataGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle26.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle26.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle26.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
-            dataGridViewCellStyle26.ForeColor = System.Drawing.Color.Black;
-            dataGridViewCellStyle26.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle26.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle26.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            PaymentsDataGrid.DefaultCellStyle = dataGridViewCellStyle26;
+            dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle11.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle11.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+            dataGridViewCellStyle11.ForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle11.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle11.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle11.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            PaymentsDataGrid.DefaultCellStyle = dataGridViewCellStyle11;
             PaymentsDataGrid.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             PaymentsDataGrid.Location = new System.Drawing.Point(4, 133);
             PaymentsDataGrid.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             PaymentsDataGrid.Name = "PaymentsDataGrid";
             PaymentsDataGrid.ReadOnly = true;
-            dataGridViewCellStyle27.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle27.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle27.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
-            dataGridViewCellStyle27.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle27.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle27.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle27.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            PaymentsDataGrid.RowHeadersDefaultCellStyle = dataGridViewCellStyle27;
+            dataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle12.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle12.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+            dataGridViewCellStyle12.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle12.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle12.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle12.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            PaymentsDataGrid.RowHeadersDefaultCellStyle = dataGridViewCellStyle12;
             PaymentsDataGrid.RowHeadersVisible = false;
             PaymentsDataGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             PaymentsDataGrid.Size = new System.Drawing.Size(1336, 363);
@@ -1672,34 +1670,34 @@ namespace LabBilling.Forms
             // 
             BillActivityDataGrid.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
             BillActivityDataGrid.BackgroundColor = System.Drawing.Color.WhiteSmoke;
-            dataGridViewCellStyle28.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle28.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle28.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
-            dataGridViewCellStyle28.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle28.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle28.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle28.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            BillActivityDataGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle28;
+            dataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle13.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle13.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+            dataGridViewCellStyle13.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle13.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle13.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle13.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            BillActivityDataGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle13;
             BillActivityDataGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle29.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle29.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle29.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
-            dataGridViewCellStyle29.ForeColor = System.Drawing.Color.Black;
-            dataGridViewCellStyle29.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle29.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle29.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            BillActivityDataGrid.DefaultCellStyle = dataGridViewCellStyle29;
+            dataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle14.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle14.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+            dataGridViewCellStyle14.ForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle14.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle14.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle14.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            BillActivityDataGrid.DefaultCellStyle = dataGridViewCellStyle14;
             BillActivityDataGrid.Location = new System.Drawing.Point(9, 40);
             BillActivityDataGrid.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             BillActivityDataGrid.Name = "BillActivityDataGrid";
-            dataGridViewCellStyle30.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle30.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle30.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
-            dataGridViewCellStyle30.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle30.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle30.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle30.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            BillActivityDataGrid.RowHeadersDefaultCellStyle = dataGridViewCellStyle30;
+            dataGridViewCellStyle15.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle15.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle15.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+            dataGridViewCellStyle15.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle15.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle15.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle15.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            BillActivityDataGrid.RowHeadersDefaultCellStyle = dataGridViewCellStyle15;
             BillActivityDataGrid.Size = new System.Drawing.Size(1069, 144);
             BillActivityDataGrid.TabIndex = 0;
             BillActivityDataGrid.MouseDoubleClick += BillActivityDataGrid_MouseDoubleClick;
@@ -2313,7 +2311,6 @@ namespace LabBilling.Forms
         private System.Windows.Forms.Button GenerateClaimButton;
         private System.Windows.Forms.TextBox BannerProviderTextBox;
         private System.Windows.Forms.Label orderingProviderLabel;
-        private Library.ProviderLookup providerLookup1;
         private System.Windows.Forms.Label statementFlagLabel;
         private System.Windows.Forms.TextBox firstStmtDateTextBox;
         private System.Windows.Forms.Label label2;
@@ -2376,6 +2373,7 @@ namespace LabBilling.Forms
         private System.Windows.Forms.Label GuarAddressLabel;
         private System.Windows.Forms.Label GuarPhoneLabel;
         private System.Windows.Forms.TextBox GuarantorPhoneTextBox;
+        private System.Windows.Forms.TextBox orderingPhyTextBox;
     }
 }
 

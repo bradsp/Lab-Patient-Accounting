@@ -415,7 +415,7 @@ namespace LabBilling.Core.DataAccess
                 throw new ArgumentOutOfRangeException(nameof(status), "Invalid status");
 
             return dbConnection.Update<Account>($"set {GetRealColumn(nameof(Account.Status))} = @0, {GetRealColumn(nameof(Account.UpdatedDate))} = @1, " +
-                $"{GetRealColumn(nameof(Account.UpdatedUser))} = @2, {GetRealColumn(nameof(Account.UpdatedUser))} = @3, {GetRealColumn(nameof(Account.UpdatedHost))} = @4 " +
+                $"{GetRealColumn(nameof(Account.UpdatedUser))} = @2, {GetRealColumn(nameof(Account.UpdatedApp))} = @3, {GetRealColumn(nameof(Account.UpdatedHost))} = @4 " +
                 $"where {GetRealColumn(nameof(Account.AccountNo))} = @5",
                 new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = status },
                 new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = DateTime.Now },
@@ -595,7 +595,7 @@ namespace LabBilling.Core.DataAccess
             string oldFinCode = table.FinCode;
 
             //check that newFincode is a valid fincode
-            FinRepository finRepository = new FinRepository(AppEnvironment);
+            FinRepository finRepository = new(AppEnvironment);
 
             Fin newFin = finRepository.GetFin(newFinCode);
             Fin oldFin = finRepository.GetFin(oldFinCode);

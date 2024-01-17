@@ -137,16 +137,16 @@ namespace LabBilling.Core.DataAccess
         public virtual bool Update(TPoco table, IEnumerable<string> columns)
         {
             Log.Instance.Trace("Entering");
-            List<string> cColumns = new List<string>();
+            List<string> cColumns = new();
 
             table.UpdatedDate = DateTime.Now;
-            cColumns.Add(nameof(table.UpdatedDate));
+            cColumns.Add(GetRealColumn(nameof(table.UpdatedDate)));
             table.UpdatedHost = Environment.MachineName;
-            cColumns.Add(nameof(table.UpdatedHost));
+            cColumns.Add(GetRealColumn(nameof(table.UpdatedHost)));
             table.UpdatedApp = RFClassLibrary.OS.GetAppName();
-            cColumns.Add(nameof(table.UpdatedApp));
+            cColumns.Add(GetRealColumn(nameof(table.UpdatedApp)));
             table.UpdatedUser = Environment.UserName.ToString();
-            cColumns.Add(nameof(table.UpdatedUser));
+            cColumns.Add(GetRealColumn(nameof(table.UpdatedUser)));
 
             foreach (string column in columns)
             {

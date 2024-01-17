@@ -291,10 +291,7 @@ namespace LabBilling.Forms
             if (record != null)
             {
                 //this is a valid code
-                PlanNameTextBox.Text = record.PlanName;
-                PlanAddressTextBox.Text = record.Address1;
-                PlanAddress2TextBox.Text = record.Address2;
-                PlanCityStTextBox.Text = record.CityStateZip;
+
                 PlanFinCodeComboBox.SelectedValue = record.FinancialCode ?? String.Empty;
 
                 if (record.IsGenericPayor)
@@ -304,6 +301,13 @@ namespace LabBilling.Forms
                     PlanAddress2TextBox.Enabled = true;
                     PlanCityStTextBox.Enabled = true;
                     PlanFinCodeComboBox.Enabled = true;
+                }
+                else
+                {
+                    PlanNameTextBox.Text = record.PlanName;
+                    PlanAddressTextBox.Text = record.Address1;
+                    PlanAddress2TextBox.Text = record.Address2;
+                    PlanCityStTextBox.Text = record.CityStateZip;
                 }
             }
         }

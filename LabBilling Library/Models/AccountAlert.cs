@@ -18,16 +18,12 @@ namespace LabBilling.Core.Models
         public bool Alert { get; set; }
 
         [Column("mod_date")]
-        [ResultColumn]
         public DateTime UpdatedDate { get; set; }
         [Column("mod_user")]
-        [ResultColumn]
         public string UpdatedUser { get; set; }
         [Column("mod_prg")]
-        [ResultColumn]
         public string UpdatedApp { get; set; }
         [Column("mod_host")]
-        [ResultColumn]
         public string UpdatedHost { get; set; }
 
         [Ignore]

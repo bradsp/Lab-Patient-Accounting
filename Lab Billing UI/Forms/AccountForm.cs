@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 using LabBilling.Core.BusinessLogic;
 using LabBilling.Legacy;
 using WinFormsLibrary;
+using LabBilling.LookupForms;
 
 
 namespace LabBilling.Forms
@@ -58,7 +59,7 @@ namespace LabBilling.Forms
         private InsMaintenanceUC insTertiaryMaintenanceUC = new(InsCoverage.Tertiary);
 
         //private bool skipSelectionChanged = false;
-        //private Timer _timer;
+        private Timer _timer;
 
         public event EventHandler<string> AccountOpenedEvent;
 
@@ -177,21 +178,16 @@ namespace LabBilling.Forms
             controlColumnMap.Add(GuarCityTextBox, nameof(Pat.GuarantorCity));
             controlColumnMap.Add(GuarantorAddressTextBox, nameof(Pat.GuarantorAddress));
             controlColumnMap.Add(GuarantorLastNameTextBox, nameof(Pat.GuarantorLastName));
-            controlColumnMap.Add(providerLookup1, nameof(Pat.ProviderId));
+            controlColumnMap.Add(orderingPhyTextBox, nameof(Pat.ProviderId));
 
             #endregion
-
-            #region Setup Insurance Company Combobox
-
-            insCompanies = DataCache.Instance.GetInsCompanies();
-            #endregion
-
-            lookupForm.Datasource = insCompanies;
 
             #region Setup ordering provider combo box
 
             providers = DataCache.Instance.GetProviders();
-            providerLookup1.Datasource = providers;
+            _timer = new Timer() { Enabled = false, Interval = _timerInterval };
+            _timer.Tick += _timer_Tick;
+            //providerLookup1.Datasource = providers;
 
             #endregion
 
@@ -231,7 +227,7 @@ namespace LabBilling.Forms
 
         private void UserControl_OnError(object sender, AppErrorEventArgs e)
         {
-            switch(e.ErrorLevel)
+            switch (e.ErrorLevel)
             {
                 case AppErrorEventArgs.ErrorLevelType.Trace:
                     Log.Instance.Trace(e.ErrorMessage);
@@ -261,7 +257,7 @@ namespace LabBilling.Forms
 
         private void SetFormPermissions()
         {
-            chargeMaintenance.AllowChargeEntry = Program.LoggedInUser.CanSubmitCharges;            
+            chargeMaintenance.AllowChargeEntry = Program.LoggedInUser.CanSubmitCharges;
 
             Helper.SetControlsAccess(tabPayments.Controls, false);
             if (Program.AppEnvironment.ApplicationParameters.AllowPaymentAdjustmentEntry)
@@ -386,7 +382,7 @@ namespace LabBilling.Forms
             sd.Add(new SummaryData("MRN", currentAccount.MRN, SummaryData.GroupType.Demographics, row++, col));
             sd.Add(new SummaryData("SSN", currentAccount.SocSecNo.FormatSSN(), SummaryData.GroupType.Demographics, row++, col));
             sd.Add(new SummaryData("Client", currentAccount.ClientName, SummaryData.GroupType.Demographics, row++, col));
-            sd.Add(new SummaryData("Ordering Provider", currentAccount.Pat.Physician.FullName, SummaryData.GroupType.Demographics, row++, col));
+            sd.Add(new SummaryData("Ordering Provider", currentAccount.Pat.Physician?.FullName ?? currentAccount.Pat.ProviderId, SummaryData.GroupType.Demographics, row++, col));
             sd.Add(new SummaryData("DOB/Sex", currentAccount.DOBSex, SummaryData.GroupType.Demographics, row++, col));
             sd.Add(new SummaryData("Address", currentAccount.Pat.AddressLine, SummaryData.GroupType.Demographics, row++, col));
             sd.Add(new SummaryData("Phone", currentAccount.Pat.PrimaryPhone.FormatPhone(), SummaryData.GroupType.Demographics, row++, col));
@@ -497,7 +493,7 @@ namespace LabBilling.Forms
             BannerClientTextBox.Text = currentAccount.ClientName;
             BannerFinClassTextBox.Text = currentAccount.FinCode;
             BannerBillStatusTextBox.Text = currentAccount.Status;
-            BannerProviderTextBox.Text = currentAccount.Pat.Physician.FullName;
+            BannerProviderTextBox.Text = currentAccount.Pat.Physician?.FullName ?? "";
             bannerDateOfServiceTextBox.Text = currentAccount.TransactionDate.ToShortDateString();
             if (currentAccount.AccountAlert != null)
             {
@@ -562,9 +558,12 @@ namespace LabBilling.Forms
             MaritalStatusComboBox.SelectedValue = !string.IsNullOrEmpty(currentAccount.Pat.MaritalStatus) ? currentAccount.Pat.MaritalStatus : "U";
             MaritalStatusComboBox.BackColor = Color.White;
 
-            providerLookup1.SelectedValue = currentAccount.Pat.ProviderId;
-            providerLookup1.DisplayValue = currentAccount.Pat.Physician.FullName;
-            providerLookup1.BackColor = Color.White;
+            //providerLookup1.SelectedValue = currentAccount.Pat.ProviderId;
+            //providerLookup1.DisplayValue = currentAccount.Pat.Physician.FullName;
+            //providerLookup1.BackColor = Color.White;
+
+            orderingPhyTextBox.Text = currentAccount.Pat.Physician?.ToString();
+            orderingPhyTextBox.Tag = currentAccount.Pat.ProviderId;
 
             GuarantorLastNameTextBox.Text = currentAccount.Pat.GuarantorLastName;
             GuarFirstNameTextBox.Text = currentAccount.Pat.GuarantorFirstName;
@@ -606,7 +605,7 @@ namespace LabBilling.Forms
             currentAccount.Pat.ZipCode = ZipcodeTextBox.Text;
             currentAccount.Pat.CityStateZip = string.Format("{0}, {1} {2}", CityTextBox.Text, StateComboBox.SelectedValue.ToString(), ZipcodeTextBox.Text);
             currentAccount.Pat.PatFullName = string.Format("{0},{1} {2}", LastNameTextBox.Text, FirstNameTextBox.Text, MiddleNameTextBox.Text);
-            currentAccount.Pat.ProviderId = providerLookup1.SelectedValue;
+            currentAccount.Pat.ProviderId = orderingPhyTextBox.Tag.ToString(); //providerLookup1.SelectedValue;
 
             currentAccount.Pat.GuarantorFullName = $"{GuarantorLastNameTextBox.Text} {GuarSuffixTextBox.Text},{GuarFirstNameTextBox.Text} {GuarMiddleNameTextBox.Text}";
             currentAccount.Pat.GuarantorLastName = GuarantorLastNameTextBox.Text;
@@ -1687,6 +1686,32 @@ namespace LabBilling.Forms
         private void copyToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void orderingPhyTextBox_KeyUp(object sender, KeyEventArgs e)
+        {
+            _timer.Stop();
+            _timer.Start();
+        }
+
+        private void _timer_Tick(object sender, EventArgs e)
+        {
+            _timer.Stop();
+            if (orderingPhyTextBox.Text.Length >= 3)
+            {
+                ProviderLookupForm frm = new()
+                {
+                    Datasource = providers,
+                    InitialSearchText = orderingPhyTextBox.Text
+                };
+                if (frm.ShowDialog() == DialogResult.OK)
+                {
+                    orderingPhyTextBox.Text = frm.SelectedPhy.ToString();
+                    orderingPhyTextBox.Tag = frm.SelectedPhy.NpiId;
+                    currentAccount.Pat.Physician = frm.SelectedPhy;
+                }
+            }
+            return;
         }
     }
 }

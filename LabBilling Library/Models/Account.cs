@@ -74,16 +74,12 @@ namespace LabBilling.Core.Models
         [Column("num_comments")]
         public int CommentCount { get; set; }
 
-        [ResultColumn]
         [Column("mod_date")]
         public DateTime UpdatedDate { get; set; }
-        [ResultColumn]
-        [Column("mod_date")]
+        [Column("mod_user")]
         public string UpdatedUser { get; set; }
-        [ResultColumn]
         [Column("mod_prg")]
         public string UpdatedApp { get; set; }
-        [ResultColumn]
         [Column("mod_host")]
         public string UpdatedHost { get; set; }
 

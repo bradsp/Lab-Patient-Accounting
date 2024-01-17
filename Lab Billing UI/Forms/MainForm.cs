@@ -801,13 +801,35 @@ namespace LabBilling
 
         private void mdiTabControl_SelectedIndexChanged(object sender, EventArgs e)
         {
+            SuspendLayout();
             if ((mdiTabControl.SelectedTab != null) &&
                 (mdiTabControl.SelectedTab.Tag != null))
             {
-                SendMessage(this.Handle, WM_SETREDRAW, false, 0);
+
+                // Minimize flicker when switching between tabs, by suspending layout
+                SuspendLayout();
+                (mdiTabControl.SelectedTab.Tag as Form).SuspendLayout();
+                Form activeMdiChild = this.ActiveMdiChild;
+                if (activeMdiChild != null)
+                    activeMdiChild.SuspendLayout();
+
+                // Minimize flicker when switching between tabs, by changing to minimized state first
+                if ((mdiTabControl.SelectedTab.Tag as Form).WindowState != FormWindowState.Maximized)
+                    (mdiTabControl.SelectedTab.Tag as Form).WindowState = FormWindowState.Minimized;
+
                 (mdiTabControl.SelectedTab.Tag as Form).Select();
-                SendMessage(this.Handle, WM_SETREDRAW, true, 0);
-                this.Refresh();
+
+                // Resume layout again
+                if (activeMdiChild != null && !activeMdiChild.IsDisposed)
+                    activeMdiChild.ResumeLayout();
+                (mdiTabControl.SelectedTab.Tag as Form).ResumeLayout();
+                ResumeLayout();
+                (mdiTabControl.SelectedTab.Tag as Form).Refresh();
+
+                //SendMessage(this.Handle, WM_SETREDRAW, false, 0);
+                //(mdiTabControl.SelectedTab.Tag as Form).Select();
+                //SendMessage(this.Handle, WM_SETREDRAW, true, 0);
+                //this.Refresh();
             }
         }
     }
