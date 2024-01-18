@@ -7,6 +7,7 @@ using LabBilling.Core.DataAccess;
 using System.Windows.Forms.DataVisualization.Charting;
 using System.Net.Http;
 using LabBilling.Logging;
+using ScottPlot;
 
 namespace LabBilling.Forms
 {
@@ -19,8 +20,7 @@ namespace LabBilling.Forms
 
         private void DashboardForm_Load(object sender, EventArgs e)
         {
-            LoadChart();
-
+            LoadArChart();
             LoadAnnouncementsWeb();
         }
 
@@ -30,27 +30,31 @@ namespace LabBilling.Forms
 
             var announcements = announcementRepository.GetActive();
 
-            Label hdrlbl = new Label();
-            hdrlbl.Text = "Announcements";
-            hdrlbl.Font = new Font(hdrlbl.Font.FontFamily, 16, FontStyle.Bold);
+            System.Windows.Forms.Label hdrlbl = new System.Windows.Forms.Label
+            {
+                Text = "Announcements"
+            };
+            hdrlbl.Font = new Font(hdrlbl.Font.FontFamily, 16, System.Drawing.FontStyle.Bold);
 
             announcementLayoutPanel.Controls.Add(hdrlbl);
             hdrlbl.Dock = DockStyle.Fill;
 
             foreach (Announcement announcement in announcements)
             {
-                Label lbl = new Label();
-                lbl.Text = announcement.StartDate.ToShortDateString();
-                lbl.ForeColor = Color.Blue;
-                lbl.Font = new Font(lbl.Font.FontFamily, 14, FontStyle.Bold);
+                System.Windows.Forms.Label lbl = new System.Windows.Forms.Label
+                {
+                    Text = announcement.StartDate.ToShortDateString(),
+                    ForeColor = System.Drawing.Color.Blue
+                };
+                lbl.Font = new Font(lbl.Font.FontFamily, 14, System.Drawing.FontStyle.Bold);
 
 
                 announcementLayoutPanel.Controls.Add(lbl);
                 lbl.Dock = DockStyle.Fill;
                 lbl.BorderStyle = BorderStyle.None;
-                lbl.BackColor = Color.LightBlue;
+                lbl.BackColor = System.Drawing.Color.LightBlue;
 
-                RichTextBox tb = new RichTextBox();
+                RichTextBox tb = new();
                 tb.ContentsResized += AnnouncementContentResized;
                 tb.LinkClicked += AnnouncementBox_LinkClicked;
 
@@ -77,7 +81,7 @@ namespace LabBilling.Forms
             {
                 Text = "Updates"
             };
-            hdrlbl.Font = new Font(hdrlbl.Font.FontFamily, 16, FontStyle.Bold);
+            hdrlbl.Font = new Font(hdrlbl.Font.FontFamily, 16, System.Drawing.FontStyle.Bold);
             hdrlbl.LinkArea = new LinkArea(0, 22);
             hdrlbl.LinkClicked += new LinkLabelLinkClickedEventHandler(Hdrlbl_LinkClicked);
 
@@ -157,40 +161,63 @@ namespace LabBilling.Forms
             richTextBox.Width += richTextBox.Margin.Horizontal + SystemInformation.HorizontalResizeBorderThickness;
         }
 
+        private void LoadArChart()
+        {
+            ReportingRepository reportingRepository = new(Program.AppEnvironment.ConnectionString);
+            var data = reportingRepository.GetARByFinCodeList();
+
+            int i = 1;
+            Tick[] ticks = new Tick[data.Count];
+            foreach(var dataItem in data)
+            {
+                formsPlotgl1.Plot.Add.Bar(i, dataItem.Balance);
+                ticks[i - 1] = new Tick(i, dataItem.FinancialClass);
+                i++;
+            }
+
+            formsPlotgl1.Plot.Axes.Bottom.TickGenerator = new ScottPlot.TickGenerators.NumericManual(ticks);
+            formsPlotgl1.Plot.Axes.Bottom.MajorTickStyle.Length = 0;
+            formsPlotgl1.Plot.HideGrid();
+            formsPlotgl1.Plot.Axes.Margins(bottom: 0);
+            formsPlotgl1.Plot.Axes.Bottom.Label.Text = "Financial Class";
+            formsPlotgl1.Plot.Style.Background(ScottPlot.Color.FromHex("#ffffff"), ScottPlot.Color.FromHex("#ffffff"));
+            formsPlotgl1.Plot.Title("Accounts Receivable Balance by Financial Class");
+        }
+
+
         private void LoadChart()
         {
-            ChartArea chartArea1 = new ChartArea();
-            Legend legend1 = new Legend();
+            //ReportingRepository reportingRepository = new(Program.AppEnvironment.ConnectionString);
+            //string seriesName = "A/R Balance";
+            //var data = reportingRepository.GetARByFinCode();
+            //data.DefaultView.Sort = "Financial Class";
+            //data = data.DefaultView.ToTable();
 
-            chartArea1.Name = "ChartArea1";
-            chartArea1.AxisX.Interval = 1;
-            chartArea1.AxisY.LabelStyle.Format = "##,#";
-            arChart.ChartAreas.Add(chartArea1);
-            legend1.Name = "Legend1";
-            arChart.Legends.Add(legend1);
+            //ChartArea chartArea1 = new();
+            //Legend legend1 = new();
 
-            ReportingRepository reportingRepository = new ReportingRepository(Program.AppEnvironment.ConnectionString);
-            string seriesName = "A/R Balance";
+            //chartArea1.Name = "ChartArea1";
+            //chartArea1.AxisX.Interval = 1;
+            //chartArea1.AxisY.LabelStyle.Format = "##,#";
+            //arChart.ChartAreas.Add(chartArea1);
+            //legend1.Name = "Legend1";
+            //arChart.Legends.Add(legend1);
 
-            var data = reportingRepository.GetARByFinCode();
-            data.DefaultView.Sort = "Financial Class";
-            data = data.DefaultView.ToTable();
+            //arChart.Palette = ChartColorPalette.Bright;
+            //arChart.Titles.Add("A/R Balance by Fin Code");
+            //arChart.DataSource = data;
 
-            arChart.Palette = ChartColorPalette.Bright;
-            arChart.Titles.Add("A/R Balance by Fin Code");
-            arChart.DataSource = data;
+            //Series series1 = new()
+            //{
+            //    Legend = legend1.Name,
+            //    XValueMember = "Financial Class",
+            //    YValueMembers = "Balance",
+            //    Name = seriesName
+            //};
 
-            Series series1 = new()
-            {
-                Legend = legend1.Name,
-                XValueMember = "Financial Class",
-                YValueMembers = "Balance",
-                Name = seriesName
-            };
-
-            arChart.Series.Add(series1);
+            //arChart.Series.Add(series1);
             
-            arChart.Text = "A/R Balance";
+            //arChart.Text = "A/R Balance";
 
         }
     }
