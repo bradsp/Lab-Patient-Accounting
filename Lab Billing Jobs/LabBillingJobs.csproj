@@ -69,7 +69,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\LabBilling Library\LabBilling Core.csproj" />
-    <ProjectReference Include="..\RFClassLibrary\RFClassLibrary.csproj" />
+    <ProjectReference Include="..\RFClassLibrary\Utilities.csproj" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.8">

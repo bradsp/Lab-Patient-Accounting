@@ -8,7 +8,7 @@ using System.Drawing.Imaging; // for pixelformat
 using System.Drawing.Printing; // for PrintPageEventArgs
 using System.IO; // StreamReader
 
-namespace RFClassLibrary
+namespace Utilities
 {
     /// <summary>
     /// Print class used for

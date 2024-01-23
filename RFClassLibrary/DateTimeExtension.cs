@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Text.RegularExpressions;
 
-namespace RFClassLibrary
+namespace Utilities
 {
     /// <summary>
     /// DateTime Helper methods

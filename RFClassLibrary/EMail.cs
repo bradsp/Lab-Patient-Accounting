@@ -16,7 +16,7 @@ using System;
 using System.Net.Mail; // email the 2.0 way
 
 
-namespace RFClassLibrary
+namespace Utilities
 {
     /// <summary>
     /// 08/11/2005 Rick Crone - easy email

@@ -20,7 +20,7 @@
   <ItemGroup>
     <ProjectReference Include="..\j4jayant.HL7.Parser\j4jayant.HL7.Parser.csproj" />
     <ProjectReference Include="..\MCL\MCL.csproj" />
-    <ProjectReference Include="..\RFClassLibrary\RFClassLibrary.csproj" />
+    <ProjectReference Include="..\RFClassLibrary\Utilities.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="BusinessLogic\Resources\ADAJ400_Red.gif">

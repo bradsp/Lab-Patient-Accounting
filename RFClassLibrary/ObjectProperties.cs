@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Reflection;
 
-namespace RFClassLibrary
+namespace Utilities
 {
     /// <summary>
     /// Class using reflection and recursion to examine an object and return information about it.

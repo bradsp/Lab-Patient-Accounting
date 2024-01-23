@@ -16,7 +16,7 @@ using System.Drawing.Printing;
 
 
 
-namespace RFClassLibrary
+namespace Utilities
 {
     /// <summary>
     /// 05/31/2007 wdk 

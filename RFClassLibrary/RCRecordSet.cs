@@ -20,7 +20,7 @@ using System.Data; // DataSet
 using System.Diagnostics; // stack trace
 
 
-namespace RFClassLibrary
+namespace Utilities
 {
 
     /// <summary>

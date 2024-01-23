@@ -46,6 +46,9 @@ namespace LabBilling.Core.Models
         public Guid rowguid { get; set; }
 
         [Ignore]
+        public string CptDescription { get; set; }
+
+        [Ignore]
         public RevenueCode RevenueCodeDetail { get; set; }
         [Ignore]
         public ChrgDiagnosisPointer DiagnosisPointer { get; set; } = new ChrgDiagnosisPointer();

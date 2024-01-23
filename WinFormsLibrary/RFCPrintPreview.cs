@@ -11,7 +11,7 @@ using System.IO;
 
 
 
-namespace RFClassLibrary
+namespace Utilities
 {
     /// <summary>
     /// 01/10/08 rgc/wdk

@@ -48,7 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\LabBilling Library\LabBilling Core.csproj" />
-    <ProjectReference Include="..\RFClassLibrary\RFClassLibrary.csproj" />
+    <ProjectReference Include="..\RFClassLibrary\Utilities.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />

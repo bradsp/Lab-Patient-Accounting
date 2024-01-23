@@ -1,7 +1,7 @@
 using System;
 using System.ComponentModel;
 
-namespace RFClassLibrary
+namespace Utilities
 {
     /// <summary>
     /// Summary description for Time.

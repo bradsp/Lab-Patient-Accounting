@@ -4,7 +4,7 @@ using System.Linq;
 using System.Windows.Forms;
 using Microsoft.Data.SqlClient;
 // programmer added
-using RFClassLibrary;
+using Utilities;
 using MCL;
 using System.Drawing.Printing;
 using LabBilling.Logging;
@@ -453,7 +453,7 @@ namespace LabBilling.Forms
                 return;
             }
             string[] alAccounts =
-                RFClassLibrary.RFCObject.GetFileContents(ofd.FileName).Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                Utilities.RFCObject.GetFileContents(ofd.FileName).Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).ToArray();
 
             MessageBox.Show(string.Format("{0} accounts in file", alAccounts.GetUpperBound(0)));
             dgvAccounts.Columns.Add("ACCOUNT", "ACCOUNT");
@@ -657,7 +657,7 @@ namespace LabBilling.Forms
                     {
                         while (dr.Read())
                         {
-                            FixedFileLine ffl = new RFClassLibrary.FixedFileLine(19);
+                            FixedFileLine ffl = new Utilities.FixedFileLine(19);
                             ffl.SetField(1, 20, dr["debtor_last_name"] as string);
                             ffl.SetField(2, 15, dr["debtor_first_name"] as string);
                             ffl.SetField(3, 25, dr["st_addr_1"] as string);

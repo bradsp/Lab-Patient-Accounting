@@ -92,7 +92,7 @@ namespace LabBilling.Core.DataAccess
                             InitialCatalog = DatabaseName,
                             DataSource = ServerName,
                             IntegratedSecurity = true,
-                            ApplicationName = RFClassLibrary.OS.GetAppName(),
+                            ApplicationName = Utilities.OS.GetAppName(),
                             Encrypt = dbEncrypt,
                             TrustServerCertificate = dbTrustServerCert,
                             ConnectTimeout = 30
@@ -112,7 +112,7 @@ namespace LabBilling.Core.DataAccess
                             ConnectTimeout = 30,
                             Encrypt = dbEncrypt,
                             TrustServerCertificate = dbTrustServerCert,
-                            ApplicationName = RFClassLibrary.OS.GetAppName()
+                            ApplicationName = Utilities.OS.GetAppName()
                         };
                         return myBuilder.ConnectionString;
                     }
@@ -155,7 +155,7 @@ namespace LabBilling.Core.DataAccess
                     IntegratedSecurity = false,
                     UserID = ServiceUsername,
                     Password = ServicePassword,
-                    ApplicationName = RFClassLibrary.OS.GetAppName(),
+                    ApplicationName = Utilities.OS.GetAppName(),
                     ConnectTimeout = 30,
                     Encrypt = dbEncrypt,
                     TrustServerCertificate = dbTrustServerCert
@@ -200,7 +200,7 @@ namespace LabBilling.Core.DataAccess
                         InitialCatalog = LogDatabaseName,
                         DataSource = ServerName,
                         IntegratedSecurity = true,
-                        ApplicationName = RFClassLibrary.OS.GetAppName(),
+                        ApplicationName = Utilities.OS.GetAppName(),
                         ConnectTimeout = 30,
                         Encrypt = dbEncrypt,
                         TrustServerCertificate = dbTrustServerCert,
@@ -217,7 +217,7 @@ namespace LabBilling.Core.DataAccess
                         IntegratedSecurity = false,
                         UserID = UserName,
                         Password = Password,
-                        ApplicationName = RFClassLibrary.OS.GetAppName(),
+                        ApplicationName = Utilities.OS.GetAppName(),
                         ConnectTimeout = 30,
                         Encrypt = dbEncrypt,
                         TrustServerCertificate = dbTrustServerCert

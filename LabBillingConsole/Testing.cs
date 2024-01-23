@@ -5,7 +5,9 @@ using LabBilling.Core.Models;
 using Spectre.Console;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
+using Utilities;
 
 namespace LabBillingConsole
 {
@@ -26,6 +28,7 @@ namespace LabBillingConsole
             menuText.AppendLine("3) Generate Claim Test");
             menuText.AppendLine("4) Populate Claim Detail Amount");
             menuText.AppendLine("5) Import ICD-10");
+            menuText.AppendLine("6) Test send SFTP");
             menuText.AppendLine("X) Exit");
 
             var panel = new Panel(menuText.ToString());
@@ -61,6 +64,10 @@ namespace LabBillingConsole
                     Console.Clear();
                     ImportICD10();
                     return false;
+                case "6":
+                    Console.Clear();
+                    TestSftp();
+                    return false;
                 case "X":
                     return false;
                 case "x":
@@ -68,6 +75,17 @@ namespace LabBillingConsole
                 default:
                     return true;
             }
+        }
+
+        private void TestSftp()
+        {
+            string filename = @"\\mclftp2\MCLFTP_E\MSCB\test\test.txt";
+
+            SFTP.UploadSftp(filename, "test/" + Path.GetFileName(filename),
+                "sftp.mscb-inc.com", 22,
+                "CLIENT156",
+                @"e?`5H,\*");
+
         }
 
         private void ImportICD10()

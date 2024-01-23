@@ -9,7 +9,7 @@ using System.Windows.Forms;
 using System.Drawing.Printing;
 using System.IO;
 
-namespace RFClassLibrary
+namespace Utilities
 {
     /// <summary>
     /// Create printable MessageBox Class

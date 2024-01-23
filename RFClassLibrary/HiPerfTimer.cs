@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 using System.ComponentModel;
 using System.Threading;
 
-namespace RFClassLibrary
+namespace Utilities
 {
     /// <summary>
     /// calculates the .Duration() between .Start() and .Stop()

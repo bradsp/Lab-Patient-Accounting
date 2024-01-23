@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
-using RFClassLibrary;
+using Utilities;
 
-namespace RFClassLibrary
+namespace Utilities
 {
     /// <summary>
     /// This Class is designed to allow users to view the account data in billing using the

@@ -1,4 +1,4 @@
-namespace RFClassLibrary
+namespace Utilities
 {
 	partial class RFCPrintPreview
 	{

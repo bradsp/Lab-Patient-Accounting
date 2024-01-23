@@ -10,7 +10,7 @@ using System.Threading; // for loading servers in seperate thread
 using Microsoft.Data.Sql;
 using WinFormsLibrary;
 
-namespace RFClassLibrary
+namespace Utilities
 {
     /// <summary>
     /// This viewer allows manipulation of a basic sql viewer. It contains a tab control which

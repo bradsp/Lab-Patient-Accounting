@@ -6,7 +6,8 @@ using System.Windows.Forms;
 using LabBilling.Core;
 using LabBilling.Core.DataAccess;
 using LabBilling.Logging;
-using RFClassLibrary;
+using Utilities;
+using System.IO;
 
 namespace LabBilling.Forms
 {
@@ -24,7 +25,7 @@ namespace LabBilling.Forms
             InitializeComponent();
         }
 
-        private DialogResult AskError(string errorText)
+        private static DialogResult AskError(string errorText)
         {
             var result = MessageBox.Show(errorText, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
@@ -41,14 +42,23 @@ namespace LabBilling.Forms
                 sendToCollectionsProgressBar.Maximum = 100;
                 patientBilling.ProgressIncrementedEvent += PatientBilling_ProgressIncrementedEvent;
 
-                await patientBilling.SendToCollections();
+                string filename = await patientBilling.SendToCollections();
 
                 //patientBilling.ProgressIncementedEvent -= PatientBilling_ProgressIncementedEvent;
 
-                compileStmtsStartButton.Enabled = true;
+                //send collections file
+                SFTP.UploadSftp(filename, Program.AppEnvironment.ApplicationParameters.CollectionsSftpUploadPath + '/' + Path.GetFileName(filename),
+                    Program.AppEnvironment.ApplicationParameters.CollectionsSftpServer, 22,
+                    Program.AppEnvironment.ApplicationParameters.CollectionsSftpUsername,
+                    Program.AppEnvironment.ApplicationParameters.CollectionsSftpPassword);
 
+                sendToCollectionsTextbox.Text += $"{filename} uploaded to {Program.AppEnvironment.ApplicationParameters.CollectionsSftpServer}\n";
+                Log.Instance.Debug($"{filename} uploaded to {Program.AppEnvironment.ApplicationParameters.CollectionsSftpServer}");
+
+                compileStmtsStartButton.Enabled = true;
+                nextButton.Enabled = true;
             }
-            catch(ApplicationException apex)
+            catch (ApplicationException apex)
             {
                 Log.Instance.Error(apex);
                 AskError("Error occurred in SendToCollections. Patient Billing will be aborted. Notify your administrator.");
@@ -56,7 +66,7 @@ namespace LabBilling.Forms
                 DialogResult = DialogResult.Cancel;
                 return;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Log.Instance.Error(ex);
                 AskError("Error occurred in SendToCollections. Patient Billing will be aborted. Notify your administrator.");
@@ -90,12 +100,21 @@ namespace LabBilling.Forms
             {
                 createStmtFileProgressBar.Style = ProgressBarStyle.Marquee;
                 createStmtFileTextBox.Text = "Creating statement file.";
-                patientBilling.CreateStatementFile(DateTimeHelper.GetLastDayOfPrevMonth());
+                var filename = patientBilling.CreateStatementFile(DateTimeHelper.GetLastDayOfPrevMonth());
 
                 createStmtFileProgressBar.Style = ProgressBarStyle.Continuous;
                 createStmtFileProgressBar.Value = 100;
                 createStmtFileProgressBar.Maximum = 100;
-                createStmtFileTextBox.Text = "File created.";
+                createStmtFileTextBox.Text = "File created." + Environment.NewLine;
+
+                //send statement file
+                SFTP.UploadSftp(filename, Program.AppEnvironment.ApplicationParameters.StatementsSftpUploadPath + '/' + Path.GetFileName(filename),
+                    Program.AppEnvironment.ApplicationParameters.StatementsSftpServer, 22,
+                    Program.AppEnvironment.ApplicationParameters.StatementsSftpUsername,
+                    Program.AppEnvironment.ApplicationParameters.StatementsSftpPassword);
+
+                createStmtFileTextBox.Text += $"{filename} uploaded to {Program.AppEnvironment.ApplicationParameters.StatementsSftpServer}";
+                Log.Instance.Debug($"{filename} uploaded to {Program.AppEnvironment.ApplicationParameters.StatementsSftpServer}");
             }
             catch (ApplicationException apex)
             {
@@ -128,7 +147,7 @@ namespace LabBilling.Forms
 
                 createStmtFileStartButton.Enabled = true;
             }
-            catch(ArgumentException argex)
+            catch (ArgumentException argex)
             {
                 Log.Instance.Error(argex);
                 AskError("Error occurred in SendToCollections. Patient Billing will be aborted. Notify your administrator.");
@@ -136,7 +155,7 @@ namespace LabBilling.Forms
                 DialogResult = DialogResult.Cancel;
                 return;
             }
-            catch(ApplicationException apex)
+            catch (ApplicationException apex)
             {
                 Log.Instance.Error(apex);
                 AskError("Error occurred in SendToCollections. Patient Billing will be aborted. Notify your administrator.");
@@ -144,7 +163,7 @@ namespace LabBilling.Forms
                 DialogResult = DialogResult.Cancel;
                 return;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Log.Instance.Error(ex);
                 AskError("Error occurred in SendToCollections. Patient Billing will be aborted. Notify your administrator.");
@@ -174,7 +193,7 @@ namespace LabBilling.Forms
             throughDateLabel.Text = thruDate.ToShortDateString();
 
             //check of patient bills have already been run for this month
-            if(patientBilling.BatchPreviouslyRun(batchNo))
+            if (patientBilling.BatchPreviouslyRun(batchNo))
             {
                 bannerLabel.Text = $"Batch {batchNo} has already been run.";
                 bannerLabel.ForeColor = Color.Red;
@@ -188,7 +207,7 @@ namespace LabBilling.Forms
 
             compileStmtsStartButton.Enabled = true;
             createStmtFileStartButton.Enabled = true;
-           
+            nextButton.Enabled = true;
         }
 
         private void PatientCollectionsRunWizard_HelpRequested(object sender, HelpEventArgs hlpevent)
@@ -210,6 +229,25 @@ namespace LabBilling.Forms
             else
             {
                 MessageBox.Show("Documentation parameters not set. Cannot launch documentation.");
+            }
+        }
+
+        private void nextButton_Click(object sender, EventArgs e)
+        {
+            tabControl1.SelectedIndex =
+            (tabControl1.SelectedIndex + 1) % tabControl1.TabCount;
+
+        }
+
+        private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (tabControl1.SelectedIndex == 0)
+            {
+                nextButton.Enabled = true;
+            }
+            else
+            {
+                nextButton.Enabled = false;
             }
         }
     }

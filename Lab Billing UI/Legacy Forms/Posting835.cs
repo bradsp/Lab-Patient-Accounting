@@ -6,7 +6,7 @@ using System.Drawing;
 using System.Windows.Forms;
 // programmer added
 using System.IO;
-using RFClassLibrary;
+using Utilities;
 using System.Drawing.Printing; // for print document
 using MCL;
 using System.Transactions;
@@ -1139,7 +1139,7 @@ namespace LabBilling.Legacy
                 {
                     string[] strDTMElements = strHeaderSegment.Split(new char[] { '*' });
                     DateTime dtCheckDate;
-                    RFClassLibrary.Time.StringToHL7Time(strDTMElements[2], out dtCheckDate);
+                    Utilities.Time.StringToHL7Time(strDTMElements[2], out dtCheckDate);
                     tbCheckDate.Text = string.Format("Chk Date: {0}", dtCheckDate.ToString("d"));
                     tbCheckDate.Tag = dtCheckDate.ToString("d");
                     continue;
@@ -1397,7 +1397,7 @@ namespace LabBilling.Legacy
             string[] strGSHeaderElements = strST[0].Split(new char[] { '*' });
             // Eft Date
             DateTime dtEftDate;
-            RFClassLibrary.Time.StringToHL7Time(strGSHeaderElements[3], out dtEftDate);
+            Utilities.Time.StringToHL7Time(strGSHeaderElements[3], out dtEftDate);
             tbFileDate.Text = string.Format("EFT Date: {0}", dtEftDate.ToString("d"));
             tbFileDate.Tag = dtEftDate.ToString("d");
             // File Number
@@ -1558,7 +1558,7 @@ namespace LabBilling.Legacy
                     {
                         string[] strDTMElements = strSTHeader[i].Split(new char[] { '*' });
                         DateTime dtCheckDate;
-                        RFClassLibrary.Time.StringToHL7Time(strDTMElements[2], out dtCheckDate);
+                        Utilities.Time.StringToHL7Time(strDTMElements[2], out dtCheckDate);
                         tbCheckDate.Text = string.Format("Chk Date: {0}", dtCheckDate.ToString("d"));
                         tbCheckDate.Tag = dtCheckDate.ToString("d");
                         continue;
@@ -1808,7 +1808,7 @@ namespace LabBilling.Legacy
             {
                 string[] strDTMElements = strValue.Split(new char[] { '*' });
                 DateTime dtCheckDate;
-                RFClassLibrary.Time.StringToHL7Time(strDTMElements[2], out dtCheckDate);
+                Utilities.Time.StringToHL7Time(strDTMElements[2], out dtCheckDate);
                 tbCheckDate.Text = string.Format("Chk Date: {0}", dtCheckDate.ToString("d"));
                 tbCheckDate.Tag = dtCheckDate.ToString("d");
             }
@@ -2085,7 +2085,7 @@ namespace LabBilling.Legacy
                             m_strarrRecordsInsert.SetValue("PIF", (int)Col835Grids.eReason); // P(aid) I(n) F(ull)
                             dtService = new DateTime();
                             string[] strDate = strPayLine[1].Split(new char[] { '*' });
-                            RFClassLibrary.Time.StringToHL7Time(strDate[2], out dtService);
+                            Utilities.Time.StringToHL7Time(strDate[2], out dtService);
                             m_strarrRecordsInsert.SetValue(dtService.ToString("d"), (int)Col835Grids.eDateOfService);
                             AddRecordToDataGrid();
                             continue;
@@ -2100,7 +2100,7 @@ namespace LabBilling.Legacy
                         if (strSVCElements[1].Contains("472"))
                         {
                             dtService = new DateTime();
-                            RFClassLibrary.Time.StringToHL7Time(strSVCElements[2], out dtService);
+                            Utilities.Time.StringToHL7Time(strSVCElements[2], out dtService);
                             m_strarrRecordsInsert.SetValue(dtService.ToString("d"), (int)Col835Grids.eDateOfService);
                         }
 
@@ -2739,7 +2739,7 @@ namespace LabBilling.Legacy
                 if (strSVCElements[1].Contains("472"))
                 {
                     dtService = new DateTime();
-                    RFClassLibrary.Time.StringToHL7Time(strSVCElements[2], out dtService);
+                    Utilities.Time.StringToHL7Time(strSVCElements[2], out dtService);
                     m_strarrRecordsInsert.SetValue(dtService.ToString("d"), (int)Col835Grids.eDateOfService);
                 }
                 #endregion DTM
@@ -3091,7 +3091,7 @@ namespace LabBilling.Legacy
                 {
                     DateTime dtService = new DateTime();
                     // Split the DTM for the date of service only
-                    RFClassLibrary.Time.StringToHL7Time(strSVCHeaderElements[2], out dtService);
+                    Utilities.Time.StringToHL7Time(strSVCHeaderElements[2], out dtService);
                     m_strarrEOBInsert.SetValue(dtService.ToString("d"), (int)Col835EOB.eDOS);
                     continue;
                 }
@@ -3625,21 +3625,21 @@ namespace LabBilling.Legacy
             catch (Exception exc)
             {
                 MessageBox.Show(exc.Message);
-                RFClassLibrary.dkPrint.propStreamToPrint.Close();
+                Utilities.dkPrint.propStreamToPrint.Close();
             }
             PrintDocument printDoc = new PrintDocument();
 
             printDoc.DefaultPageSettings.Landscape = true;
             printDoc.PrintPage += new PrintPageEventHandler
-                (RFClassLibrary.dkPrint.PrintGraphic_PrintPage);
+                (Utilities.dkPrint.PrintGraphic_PrintPage);
 
             // printDoc.PrinterSettings.PrinterName = @"\\MCL01\MCLP5";
             printDoc.Print();
 
             printDoc.PrintPage -= new PrintPageEventHandler
-                (RFClassLibrary.dkPrint.PrintGraphic_PrintPage);
+                (Utilities.dkPrint.PrintGraphic_PrintPage);
 
-            RFClassLibrary.dkPrint.propStreamToPrint.Close();
+            Utilities.dkPrint.propStreamToPrint.Close();
 
         }
 

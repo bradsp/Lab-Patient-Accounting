@@ -3,7 +3,7 @@ using System.Text.RegularExpressions;
 using System.Linq;
 using System.Collections.Generic;
 
-namespace RFClassLibrary
+namespace Utilities
 {
     /// <summary>
     /// Custom extention methods

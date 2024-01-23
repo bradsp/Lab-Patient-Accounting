@@ -84,7 +84,7 @@ public enum EventLogFilterType
     EventID
 }
 
-namespace RFClassLibrary
+namespace Utilities
 {
     /// <summary>
     /// Class allows searching of the event entry logs. It has two static methods that can be called.

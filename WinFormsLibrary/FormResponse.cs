@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
-namespace RFClassLibrary
+namespace Utilities
 {
     /// <summary>
     /// Local form for responses

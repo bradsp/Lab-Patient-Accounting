@@ -7,7 +7,7 @@ using System.Drawing.Printing;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace RFClassLibrary
+namespace Utilities
 {
     /// <summary>
     /// Class designed to print from a DataSet

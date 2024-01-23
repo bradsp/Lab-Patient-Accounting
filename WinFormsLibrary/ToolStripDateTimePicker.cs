@@ -4,7 +4,7 @@ using System.Text;
 // programmer added
 using System.Windows.Forms;
 
-namespace RFClassLibrary
+namespace Utilities
 {
     /// <summary>
     /// wdk 07/23/2007

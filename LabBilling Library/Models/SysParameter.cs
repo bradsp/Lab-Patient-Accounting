@@ -4,7 +4,7 @@ using NPOI.POIFS.Properties;
 using NPOI.SS.Formula.Functions;
 using NPOI.Util;
 using PetaPoco;
-using RFClassLibrary;
+using Utilities;
 
 namespace LabBilling.Core.Models
 {

@@ -3,7 +3,7 @@ using System;
 using System.IO; // FileStream and StreamWriter
 
 
-namespace RFClassLibrary
+namespace Utilities
 {
 	/// <summary>
 	/// Summary description for LogFile.

@@ -6,7 +6,7 @@ using LabBilling.Core.Models;
 using LabBilling.Core.DataAccess;
 using LabBilling.Logging;
 using System.Collections;
-using RFClassLibrary;
+using Utilities;
 using System.Threading;
 
 namespace LabBilling.Core.BusinessLogic

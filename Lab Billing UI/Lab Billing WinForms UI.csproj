@@ -132,6 +132,7 @@
     <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="12.0.1" />
     <PackageReference Include="HtmlAgilityPack">
       <Version>1.11.57</Version>
     </PackageReference>
@@ -166,7 +167,7 @@
   <ItemGroup>
     <ProjectReference Include="..\LabBilling Library\LabBilling Core.csproj" />
     <ProjectReference Include="..\MCL\MCL.csproj" />
-    <ProjectReference Include="..\RFClassLibrary\RFClassLibrary.csproj" />
+    <ProjectReference Include="..\RFClassLibrary\Utilities.csproj" />
     <ProjectReference Include="..\WinFormsLibrary\WinFormsLibrary.csproj" />
   </ItemGroup>
   <ItemGroup>

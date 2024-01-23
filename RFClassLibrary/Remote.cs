@@ -13,7 +13,7 @@
  * of 'server' code that we put in the services.
  */
 
-namespace RFClassLibrary
+namespace Utilities
 {
     /// <summary>
     /// * Rick Crone 01/25/2007

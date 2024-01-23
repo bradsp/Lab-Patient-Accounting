@@ -2,7 +2,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32421.90
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RFClassLibrary", "RFClassLibrary\RFClassLibrary.csproj", "{B15474ED-9185-437E-BAC5-A19779CBE721}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Utilities", "RFClassLibrary\Utilities.csproj", "{B15474ED-9185-437E-BAC5-A19779CBE721}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MCL", "MCL\MCL.csproj", "{F54E006C-AA33-48F2-9E2F-46CFB5D7EE47}"
 EndProject

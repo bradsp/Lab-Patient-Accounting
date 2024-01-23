@@ -1,4 +1,4 @@
-﻿namespace RFClassLibrary
+﻿namespace Utilities
 {
     partial class DMessageForm
     {
@@ -93,7 +93,7 @@
             this.rtbError.ShortcutsEnabled = false;
             this.rtbError.Size = new System.Drawing.Size(292, 162);
             this.rtbError.TabIndex = 1;
-            this.rtbError.Text = global::RFClassLibrary.Properties.Resources.String1;
+            this.rtbError.Text = global::Utilities.Properties.Resources.String1;
             // 
             // scMain
             // 

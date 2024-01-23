@@ -5,7 +5,7 @@ using Microsoft.Data.SqlClient;
 //------------------------------
 
 
-namespace RFClassLibrary
+namespace Utilities
 {
 	/// <summary>
 	/// Include database functionallity

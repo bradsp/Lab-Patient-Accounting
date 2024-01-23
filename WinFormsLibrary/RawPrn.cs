@@ -5,7 +5,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Runtime.InteropServices; // for PrintDialog
 
-namespace RFClassLibrary
+namespace Utilities
 {
 
     /// <summary>

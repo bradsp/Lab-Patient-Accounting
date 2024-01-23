@@ -111,6 +111,8 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Data.SqlClient" Version="5.1.4" />
     <PackageReference Include="Microsoft.AspNetCore.SystemWebAdapters" Version="1.3.1" />
+    <PackageReference Include="SSH.NET" Version="2023.0.1" />
+    <PackageReference Include="SshKeyGenerator" Version="1.1.51" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="8.0.0" />
   </ItemGroup>
   <ItemGroup>

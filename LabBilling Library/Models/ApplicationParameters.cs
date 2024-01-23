@@ -16,6 +16,8 @@ namespace LabBilling.Core.Models
         public System.String CollectionsSftpServer { get; set; }
         [Category("Collections"), Description("")] 
         public System.String CollectionsSftpUsername { get; set; }
+        [Category("Collections"), Description("")]
+        public System.String CollectionsSftpUploadPath { get; set; }
         [Category("Collections"), Description("")] 
         public System.String StatementsFileLocation { get; set; }
         [Category("Collections"), Description("")] 
@@ -24,6 +26,8 @@ namespace LabBilling.Core.Models
         public System.String StatementsSftpServer { get; set; }
         [Category("Collections"), Description("")] 
         public System.String StatementsSftpUsername { get; set; }
+        [Category("Collections"), Description("")]
+        public System.String StatementsSftpUploadPath { get; set; }
 
 
         [Category("Accounting"), Description("Bank account number")] 

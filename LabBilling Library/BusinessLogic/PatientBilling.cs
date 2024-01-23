@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using LabBilling.Core.DataAccess;
 using LabBilling.Core.Models;
-using RFClassLibrary;
+using Utilities;
 using Microsoft.Data.SqlClient;
 using LabBilling.Logging;
 
@@ -60,17 +60,22 @@ namespace LabBilling.Core
 
         public event EventHandler<ProgressEventArgs> ProgressIncrementedEvent;
 
-        public async Task SendToCollections()
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns>Filename generated</returns>
+        /// <exception cref="ApplicationException"></exception>
+        public async Task<string> SendToCollections()
         {
             // set date_sent records in bad_debt table where date_sent is null to today's date
-            await Task.Run(() =>
+            return await Task.Run(() =>
             {
                 var results = badDebtRepository.GetNotSentRecords();
 
-                if(!results.Any())
+                if (!results.Any())
                 {
                     ProgressIncrementedEvent?.Invoke(this, new ProgressEventArgs(100, "No records to process."));
-                    return;
+                    return "";
                 }
 
                 dbConnection.BeginTransaction();
@@ -117,17 +122,19 @@ namespace LabBilling.Core
                 }
 
                 dbConnection.CompleteTransaction();
-                GenerateCollectionsFile(results);
+                return GenerateCollectionsFile(results);
 
             });
             // email mailer P report
+
+
         }
 
         public int RegenerateCollectionsFile(DateTime tDate)
         {
             var results = badDebtRepository.GetSentByDate(tDate);
-            
-            if(results.Count() > 0)
+
+            if (results.Any())
             {
                 GenerateCollectionsFile(results);
             }
@@ -135,7 +142,13 @@ namespace LabBilling.Core
             return results.Count();
         }
 
-        private void GenerateCollectionsFile(IEnumerable<BadDebt> records)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="records"></param>
+        /// <returns>Filename generated</returns>
+        /// <exception cref="ApplicationException"></exception>
+        private string GenerateCollectionsFile(IEnumerable<BadDebt> records)
         {
             // set date_sent records in bad_debt table where date_sent is null to today's date
 
@@ -143,9 +156,9 @@ namespace LabBilling.Core
             DateTime? date = records.First<BadDebt>().DateSent;
 
             if (!date.HasValue)
-                return;
+                return "";
 
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
             string fileName = _appEnvironment.ApplicationParameters.CollectionsFileLocation;
             fileName += $"MCL{date:MMddyyyy}.txt";
 
@@ -175,10 +188,10 @@ namespace LabBilling.Core
 
             sb.AppendLine(fileLine.OutputLine());
 
-            if (records.Count() == 0)
+            if (!records.Any())
             {
                 ProgressIncrementedEvent?.Invoke(this, new ProgressEventArgs(100, "No records to process."));
-                return;
+                return "";
             }
 
             int recordsProcessed = 0;
@@ -226,6 +239,7 @@ namespace LabBilling.Core
             File.WriteAllText(fileName, sb.ToString());
 
             // email mailer P report
+            return fileName;
         }
 
         public bool BatchPreviouslyRun(string batchNo)
@@ -238,7 +252,14 @@ namespace LabBilling.Core
             return false;
         }
 
-        public void CreateStatementFile(DateTime throughDate)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="throughDate"></param>
+        /// <returns>Path of file created.</returns>
+        /// <exception cref="ArgumentException"></exception>
+        /// <exception cref="ApplicationException"></exception>
+        public string CreateStatementFile(DateTime throughDate)
         {
             if (throughDate == DateTime.MinValue)
             {
@@ -250,7 +271,7 @@ namespace LabBilling.Core
 
             // 5. step 5 - run viewer bad debt and create file
             //AFTER running pat viewer bad debt to create the file do this. 
-            FormatStatementFile();
+            var filename = FormatStatementFile();
 
             //upload statement file to DNI from MCLFTP2
             // 6. step 6 run these queries individually
@@ -268,15 +289,23 @@ namespace LabBilling.Core
                 "and pa.processed_date is not null";
 
                 dbConnection.Execute(sql);
+
+
             }
             catch (Exception ex)
             {
                 throw new ApplicationException("Error in Patient Billing Create Statement file", ex);
             }
 
+            return filename;
+
         }
 
-        private void FormatStatementFile()
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns>Path of file created.</returns>
+        private string FormatStatementFile()
         {
             var statements = patientStatementRepository.GetByBatch(batchNo);
             var accounts = patientStatementAccountRepository.GetByBatch(batchNo);
@@ -292,7 +321,7 @@ namespace LabBilling.Core
 
             //todo: get file path from parameters
             string strFileName = $"{_appEnvironment.ApplicationParameters.StatementsFileLocation}PatStatement{DateTime.Now:yyyyMMddHHmm}.txt";
-            
+
             StreamWriter sw = new StreamWriter(strFileName);
             sw.AutoFlush = true;
 
@@ -387,7 +416,7 @@ namespace LabBilling.Core
 
                 if (cernerStatementDt.Rows.Count > 0)
                 {
-                    DataRow[] drStmtMsg = cernerStatementDt.Select($"{nameof(PatientStatementCerner.StatementType)} = 'SMSG' " + 
+                    DataRow[] drStmtMsg = cernerStatementDt.Select($"{nameof(PatientStatementCerner.StatementType)} = 'SMSG' " +
                         $"and {nameof(PatientStatementCerner.StatementTypeId)} = '{dr[nameof(PatientStatement.StatementNumber)]}' ");
 
                     for (int iSmsg = 0; iSmsg <= drStmtMsg.GetUpperBound(0); iSmsg++)
@@ -444,7 +473,7 @@ namespace LabBilling.Core
                         ));
 
                     // each encounter
-                    DataRow[] drEnct = encountersDt.Select($"{nameof(PatientStatementEncounter.StatementNumber)} = {dr[nameof(PatientStatement.StatementNumber)]} " + 
+                    DataRow[] drEnct = encountersDt.Select($"{nameof(PatientStatementEncounter.StatementNumber)} = {dr[nameof(PatientStatement.StatementNumber)]} " +
                         $"and {nameof(PatientStatementEncounter.RecordCount)} = '{drAcc[iAcc][nameof(PatientStatementAccount.RecordCountAcct)]}'");
 
                     //string.Format("statement_number = '{0}' and record_cnt = '{1}'", 
@@ -536,8 +565,8 @@ namespace LabBilling.Core
 
                         if (cernerStatementDt.Rows.Count > 0)
                         {
-                            DataRow[] drEnctMsg = cernerStatementDt.Select($"{nameof(PatientStatementCerner.StatementType)} = 'EMSG' " + 
-                                $"and {nameof(PatientStatementCerner.StatementTypeId)} = {dr[nameof(PatientStatement.StatementNumber)]} " + 
+                            DataRow[] drEnctMsg = cernerStatementDt.Select($"{nameof(PatientStatementCerner.StatementType)} = 'EMSG' " +
+                                $"and {nameof(PatientStatementCerner.StatementTypeId)} = {dr[nameof(PatientStatement.StatementNumber)]} " +
                                 $"and {nameof(PatientStatementCerner.Account)} = '{drEnct[iEnctr][nameof(PatientStatementEncounter.PFTEncntrId)]}'");
 
                             for (int iEmsg = 0; iEmsg <= drEnctMsg.GetUpperBound(0); iEmsg++)
@@ -596,13 +625,14 @@ namespace LabBilling.Core
 
             sw.Write("TRL~MCL\r\n");
             sw.Close();
+            return strFileName;
         }
 
         public void CompileStatements(DateTime throughDate)
         {
             dbConnection.BeginTransaction();
 
-            if(throughDate == DateTime.MinValue)
+            if (throughDate == DateTime.MinValue)
             {
                 throw new ArgumentException("Through Date is not a valid date.", "throughDate");
             }
@@ -613,7 +643,7 @@ namespace LabBilling.Core
             {
                 //run exec usp_prg_pat_bill_update_flags '<last day of prev month>'
                 //step 1 - exec_prg_pat_bill_update_flags '{thrudate}'
-                dbConnection.ExecuteNonQueryProc("usp_prg_pat_bill_update_flags", 
+                dbConnection.ExecuteNonQueryProc("usp_prg_pat_bill_update_flags",
                     new SqlParameter() { ParameterName = "@thrudate", SqlDbType = SqlDbType.DateTime, Value = endDate });
 
                 //run exec usp_prg_pat_bill_compile @batchNo = '<batchNo>', @endDate = '<last day of prev month>'

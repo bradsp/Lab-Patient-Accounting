@@ -1,4 +1,4 @@
-namespace RFClassLibrary
+namespace Utilities
 {
     /// <summary>
     /// wdk 07/20/2007

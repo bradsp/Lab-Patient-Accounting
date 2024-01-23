@@ -7,7 +7,7 @@ using LabBilling.Core.Models;
 using System.Reflection;
 using PetaPoco;
 using System.Linq.Expressions;
-using RFClassLibrary;
+using Utilities;
 using System.ComponentModel;
 
 namespace LabBilling.Core.DataAccess
@@ -97,7 +97,7 @@ namespace LabBilling.Core.DataAccess
 
             table.UpdatedDate = DateTime.Now;
             table.UpdatedHost = Environment.MachineName;
-            table.UpdatedApp = RFClassLibrary.OS.GetAppName();
+            table.UpdatedApp = Utilities.OS.GetAppName();
             table.UpdatedUser = Environment.UserName.ToString();
             table.rowguid = Guid.NewGuid();
             try
@@ -143,7 +143,7 @@ namespace LabBilling.Core.DataAccess
             cColumns.Add(GetRealColumn(nameof(table.UpdatedDate)));
             table.UpdatedHost = Environment.MachineName;
             cColumns.Add(GetRealColumn(nameof(table.UpdatedHost)));
-            table.UpdatedApp = RFClassLibrary.OS.GetAppName();
+            table.UpdatedApp = Utilities.OS.GetAppName();
             cColumns.Add(GetRealColumn(nameof(table.UpdatedApp)));
             table.UpdatedUser = Environment.UserName.ToString();
             cColumns.Add(GetRealColumn(nameof(table.UpdatedUser)));

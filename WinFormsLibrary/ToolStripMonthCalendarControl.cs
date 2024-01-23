@@ -4,7 +4,7 @@ using System.Text;
 // programmer added
 using System.Windows.Forms;
 
-namespace RFClassLibrary
+namespace Utilities
 {
     ///Declare a class that inherits from ToolStripControlHost.
     public class ToolStripMonthCalendar : ToolStripControlHost

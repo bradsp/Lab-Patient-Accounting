@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using WinFormsLibrary;
 
 namespace LabBilling.LookupForms
 {
@@ -52,6 +53,7 @@ namespace LabBilling.LookupForms
                     var phyQuery =
                         from phy in Datasource
                         where phy.LastName.ToUpper().Contains(searchTextBox.Text.ToUpper()) || phy.FirstName.ToUpper().Equals(searchTextBox.Text.ToUpper())
+                        orderby phy.FullName
                         select phy;
 
                     if (phyQuery.Any())
@@ -59,10 +61,14 @@ namespace LabBilling.LookupForms
                         skipSelectionChanged = true;
                         resultsDataGrid.DataSource = phyQuery.ToList();
                         resultsDataGrid.Columns.OfType<DataGridViewColumn>().ToList().ForEach(col => col.Visible = false);
-                        resultsDataGrid.Columns[nameof(Phy.LastName)].Visible = true;
-                        resultsDataGrid.Columns[nameof(Phy.FirstName)].Visible = true;
-                        resultsDataGrid.Columns[nameof(Phy.NpiId)].Visible = true;
-                        resultsDataGrid.Columns[nameof(Phy.LastName)].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+                        int z = 1;
+                        resultsDataGrid.Columns[nameof(Phy.FullName)].SetVisibilityOrder(true, z++);
+                        resultsDataGrid.Columns[nameof(Phy.NpiId)].SetVisibilityOrder(true, z++);
+                        resultsDataGrid.Columns[nameof(Phy.Address1)].SetVisibilityOrder(true, z++);
+                        resultsDataGrid.Columns[nameof(Phy.City)].SetVisibilityOrder(true, z++);
+                        resultsDataGrid.Columns[nameof(Phy.State)].SetVisibilityOrder(true, z++);
+                        resultsDataGrid.Columns[nameof(Phy.ZipCode)].SetVisibilityOrder(true, z++);
+                        resultsDataGrid.Columns[nameof(Phy.FullName)].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
                         resultsDataGrid.AutoResizeColumns();
                         resultsDataGrid.ClearSelection();
                         skipSelectionChanged = false;

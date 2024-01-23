@@ -24,7 +24,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\MCL\MCL.csproj" />
-    <ProjectReference Include="..\RFClassLibrary\RFClassLibrary.csproj" />
+    <ProjectReference Include="..\RFClassLibrary\Utilities.csproj" />
   </ItemGroup>
 
   <ItemGroup>

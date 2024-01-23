@@ -12,10 +12,10 @@
 */
 using System;
 [assembly: CLSCompliant(true)]
-namespace RFClassLibrary { }
+namespace Utilities { }
 
 
-namespace RFClassLibrary
+namespace Utilities
 {
 
     /// <summary>

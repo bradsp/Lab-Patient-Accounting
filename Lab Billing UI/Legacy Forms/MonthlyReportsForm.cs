@@ -7,7 +7,7 @@ using System.Windows.Forms;
 using System.IO;
 using Microsoft.Data.SqlClient; // for SqlException trapping
 using System.Drawing.Printing; // for printing the gridview
-using RFClassLibrary;
+using Utilities;
 using LabBilling.Forms;
 
 namespace LabBilling.Legacy

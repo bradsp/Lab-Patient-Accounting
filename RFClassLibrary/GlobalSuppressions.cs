@@ -5,4 +5,4 @@
 
 using System.Diagnostics.CodeAnalysis;
 
-[assembly: SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>", Scope = "member", Target = "~M:RFClassLibrary.SearchEventLog.FilterEventLog(EventLogFilterType,System.Collections.IEnumerable,System.Object,System.Object)~System.Diagnostics.EventLogEntry[]")]
+[assembly: SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>", Scope = "member", Target = "~M:Utilities.SearchEventLog.FilterEventLog(EventLogFilterType,System.Collections.IEnumerable,System.Object,System.Object)~System.Diagnostics.EventLogEntry[]")]

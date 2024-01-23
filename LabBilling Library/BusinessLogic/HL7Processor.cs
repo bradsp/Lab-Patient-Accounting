@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using LabBilling.Core.DataAccess;
 using LabBilling.Core.Models;
 using j4jayant.HL7.Parser;
-using RFClassLibrary;
+using Utilities;
 using LabBilling.Logging;
 using System.Text;
 using System.Linq;

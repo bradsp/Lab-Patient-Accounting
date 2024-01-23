@@ -12,7 +12,7 @@ using System.Windows.Forms;
 using System.Drawing;
 
 
-namespace RFClassLibrary
+namespace Utilities
 {
     class ListViewPrinter: PrintDocument
     {

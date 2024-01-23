@@ -7,7 +7,7 @@ using System.Collections;
 using System.Drawing;
 using System.Drawing.Printing;
 using System.Data;
-namespace RFClassLibrary
+namespace Utilities
 {
     /// <summary>
     /// Creates a ReportGenerator with a DataGridViewPrinter object for setting up the printing for various reports.

@@ -15,7 +15,7 @@ using System.IO; // for File
 using System.Reflection;
 using System.Diagnostics;
 
-namespace RFClassLibrary
+namespace Utilities
 {
     /// <summary>
     /// base class for most RFC classes

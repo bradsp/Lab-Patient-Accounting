@@ -1,7 +1,7 @@
 ﻿using LabBilling.Core.Models;
 using System;
 using System.Collections.Generic;
-using RFClassLibrary;
+using Utilities;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Data.SqlClient;
@@ -420,7 +420,7 @@ namespace LabBilling.Core.DataAccess
                 new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = status },
                 new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = DateTime.Now },
                 new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = Environment.UserName.ToString() },
-                new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = RFClassLibrary.OS.GetAppName() },
+                new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = Utilities.OS.GetAppName() },
                 new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = Environment.MachineName },
                 new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = accountNo });
         }
@@ -662,16 +662,25 @@ namespace LabBilling.Core.DataAccess
             bool updateSuccess = true;
             string oldClientMnem = table.ClientMnem;
 
+            if(oldClientMnem == null)
+            {
+                //account does not have a valid current client defined
+
+            }
+
             try
             {
-                ClientRepository clientRepository = new ClientRepository(AppEnvironment);
+                ClientRepository clientRepository = new(AppEnvironment);
                 Client oldClient = clientRepository.GetClient(oldClientMnem);
                 Client newClient = clientRepository.GetClient(newClientMnem);
 
                 dbConnection.BeginTransaction();
 
+                if (oldClient == null)
+                    throw new ArgumentException($"Client mnem {oldClientMnem} is not valid.", nameof(oldClientMnem));
+
                 if (newClient == null)
-                    throw new ArgumentException($"Client mnem {newClientMnem} is not valid.", "newClientMnem");
+                    throw new ArgumentException($"Client mnem {newClientMnem} is not valid.", nameof(newClientMnem));
 
                 if (oldClientMnem != newClientMnem)
                 {

@@ -1,6 +1,6 @@
 ﻿using Microsoft.Data.SqlClient;
 
-namespace RFClassLibrary
+namespace Utilities
 {
     /// <summary>
     /// Helper utilities for connection strings.
