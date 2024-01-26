@@ -32,7 +32,7 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             this.includeDeletedCheckBox = new System.Windows.Forms.CheckBox();
-            this.healthPlanGrid = new ();
+            this.healthPlanGrid = new System.Windows.Forms.DataGridView();
             this.AddPlanButton = new System.Windows.Forms.Button();
             this.filterTextBox = new System.Windows.Forms.TextBox();
             this.filterLabel = new System.Windows.Forms.Label();

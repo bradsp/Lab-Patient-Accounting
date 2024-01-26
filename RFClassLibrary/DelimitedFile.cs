@@ -7,25 +7,26 @@ namespace Utilities
     /// <summary>
     /// This class allows the created of delimited field text strings.
     /// </summary>
-    public sealed class DelimitedFileLine
+    public sealed class DelimitedFile
     {
         /// <summary>
         /// 
         /// </summary>
-        public DelimitedFileLine()
+        public DelimitedFile()
         {
 
         }
 
-        //public char Delimiter { get; set; }
+        //public char FieldDelimiter { get; set; }
+        //public string RowDelimiter { get; set; }
 
-        private List<Line> lines = new List<Line>();
+        private List<DelimitedFileLine> lines = new();
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="line"></param>
-        public void AddLine(Line line)
+        public void AddLine(DelimitedFileLine line)
         {
             lines.Add(line);
         }
@@ -39,7 +40,7 @@ namespace Utilities
         {
             string outS = string.Empty;
 
-            foreach (Line line in lines)
+            foreach (DelimitedFileLine line in lines)
             {
                 outS += line.ToString(delimiter) + "\r\n";
             }
@@ -60,18 +61,20 @@ namespace Utilities
     }
 
     /// <summary>
-    /// Class used with DelimitedFilleLine class.
+    /// Class used with DelimitedFile class.
     /// </summary>
-    public class Line
+    public class DelimitedFileLine
     {
         private List<string> fields;
+        private char delimiter;
 
         /// <summary>
         /// 
         /// </summary>
-        public Line()
+        public DelimitedFileLine(char delimiter)
         {
             fields = new List<string>();
+            this.delimiter = delimiter;
         }
 
         /// <summary>
@@ -94,8 +97,20 @@ namespace Utilities
             }
         }
 
+        public void AddField(string value, int index = -1)
+        {
+            if (index >= 0)
+            {
+                this[index] = value;
+            }
+            else
+            {
+                this.fields.Add(value);
+            }
+        }
+
         /// <summary>
-        /// 
+        /// Using this ToString will override the delimiter entered at construction.
         /// </summary>
         /// <param name="delimiter"></param>
         /// <returns></returns>
@@ -111,13 +126,13 @@ namespace Utilities
         }
 
         /// <summary>
-        /// Do not use ToString without a parameter, use ToString(char delimiter).
+        /// 
         /// </summary>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
         public override string ToString()
         {
-            throw new NotImplementedException();
+            return ToString(delimiter);
         }
 
 

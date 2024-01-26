@@ -404,8 +404,7 @@ namespace LabBilling.Forms
             {
                 if (!dgvPayments.Rows[i].IsNewRow)
                 {
-                    double temp = 0;
-                    a += Double.TryParse(dgvPayments[nameof(ChkBatchDetail.AmtPaid), i].Value?.ToString(), out temp) ? temp : 0.00;
+                    a += Double.TryParse(dgvPayments[nameof(ChkBatchDetail.AmtPaid), i].Value?.ToString(), out double temp) ? temp : 0.00;
                     c += Double.TryParse(dgvPayments[nameof(ChkBatchDetail.Contractual), i].Value?.ToString(), out temp) ? temp : 0.00;
                     w += Double.TryParse(dgvPayments[nameof(ChkBatchDetail.WriteOffAmount), i].Value?.ToString(), out temp) ? temp : 0.00;
                 }

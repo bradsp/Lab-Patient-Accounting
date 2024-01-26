@@ -2,11 +2,14 @@
 using LabBilling.Core.DataAccess;
 using LabBilling.Core.Models;
 using LabBilling.ViewModel;
+using Subro.Controls;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
 using System.Windows.Forms;
+using Utilities;
+using WinFormsLibrary;
 
 namespace LabBilling.Forms
 {
@@ -17,18 +20,23 @@ namespace LabBilling.Forms
             if (this == null)
                 return;
             if (!this.DesignMode)
+            {
                 InitializeComponent();
+                grouper = new(ChargesDataGrid);
+            }
         }
 
         private DataTable chargesTable;
         private AccountRepository accountRepository;
         private ChrgRepository chrgRepository;
         private ChrgDetailRepository chrgDetailRepository;
+        private bool _allowChargeEntry;
+        private Subro.Controls.DataGridViewGrouper grouper;
 
         public Account CurrentAccount { get; set; }
         public event EventHandler ChargesUpdated;
         public event EventHandler<AppErrorEventArgs> OnError;
-        private bool _allowChargeEntry;
+       
 
         public bool AllowChargeEntry 
         { 
@@ -146,7 +154,10 @@ namespace LabBilling.Forms
             TotalChargesTextBox.Text = CurrentAccount.TotalCharges.ToString("c");
 
             ChargesDataGrid.DataSource = chargesTable;
-            //ChargesDataGrid.DataMember = chargesTable.TableName;
+            //var grouper = new Subro.Controls.DataGridViewGrouper(ChargesDataGrid);
+            grouper.SetGroupOn(nameof(Charge.ChrgId));
+
+
             if (CurrentAccount.FinCode == "CLIENT")
             {
                 chargesTable.DefaultView.Sort = $"{nameof(Chrg.ChrgId)} desc";
@@ -160,25 +171,26 @@ namespace LabBilling.Forms
             {
                 col.Visible = false;
             }
+            int z = 1;
 
-            ChargesDataGrid.Columns[nameof(Charge.IsCredited)].Visible = true;
-            ChargesDataGrid.Columns[nameof(Charge.CDMCode)].Visible = true;
-            ChargesDataGrid.Columns[nameof(Charge.CdmDescription)].Visible = true;
-            ChargesDataGrid.Columns[nameof(Charge.Quantity)].Visible = true;
-            ChargesDataGrid.Columns[nameof(Charge.ServiceDate)].Visible = true;
-            ChargesDataGrid.Columns[nameof(Charge.Status)].Visible = true;
-            ChargesDataGrid.Columns[nameof(Charge.Comment)].Visible = true;
-            ChargesDataGrid.Columns[nameof(Charge.ChrgId)].Visible = true;
-            ChargesDataGrid.Columns[nameof(Charge.Invoice)].Visible = true;
-            ChargesDataGrid.Columns[nameof(Charge.FinCode)].Visible = true;
-            ChargesDataGrid.Columns[nameof(Charge.ClientMnem)].Visible = true;
-            ChargesDataGrid.Columns[nameof(Charge.RevenueCode)].Visible = true;
-            ChargesDataGrid.Columns[nameof(Charge.Cpt4)].Visible = true;
-            ChargesDataGrid.Columns[nameof(Charge.Modifier)].Visible = true;
-            ChargesDataGrid.Columns[nameof(Charge.Modifer2)].Visible = true;
-            ChargesDataGrid.Columns[nameof(Charge.Amount)].Visible = true;
-            ChargesDataGrid.Columns[nameof(Charge.Type)].Visible = true;
-            ChargesDataGrid.Columns[nameof(Charge.CptDescription)].Visible = true;
+            ChargesDataGrid.Columns[nameof(Charge.ChrgId)].SetVisibilityOrder(true, z++);
+            ChargesDataGrid.Columns[nameof(Charge.IsCredited)].SetVisibilityOrder(true, z++);
+            ChargesDataGrid.Columns[nameof(Charge.CDMCode)].SetVisibilityOrder(true, z++);
+            ChargesDataGrid.Columns[nameof(Charge.CdmDescription)].SetVisibilityOrder(true, z++);
+            ChargesDataGrid.Columns[nameof(Charge.Status)].SetVisibilityOrder(true, z++);
+            ChargesDataGrid.Columns[nameof(Charge.ServiceDate)].SetVisibilityOrder(true, z++);
+            ChargesDataGrid.Columns[nameof(Charge.Invoice)].SetVisibilityOrder(true, z++);
+            ChargesDataGrid.Columns[nameof(Charge.ClientMnem)].SetVisibilityOrder(true, z++);
+            ChargesDataGrid.Columns[nameof(Charge.FinCode)].SetVisibilityOrder(true, z++);
+            ChargesDataGrid.Columns[nameof(Charge.CptDescription)].SetVisibilityOrder(true, z++);
+            ChargesDataGrid.Columns[nameof(Charge.Quantity)].SetVisibilityOrder(true, z++);
+            ChargesDataGrid.Columns[nameof(Charge.RevenueCode)].SetVisibilityOrder(true, z++);
+            ChargesDataGrid.Columns[nameof(Charge.Cpt4)].SetVisibilityOrder(true, z++);
+            ChargesDataGrid.Columns[nameof(Charge.Modifier)].SetVisibilityOrder(true, z++);
+            ChargesDataGrid.Columns[nameof(Charge.Modifer2)].SetVisibilityOrder(true, z++);
+            ChargesDataGrid.Columns[nameof(Charge.Type)].SetVisibilityOrder(true, z++);
+            ChargesDataGrid.Columns[nameof(Charge.Amount)].SetVisibilityOrder(true, z++);
+            ChargesDataGrid.Columns[nameof(Charge.Comment)].SetVisibilityOrder(true, z++);
 
             ChargesDataGrid.Columns[nameof(Charge.Amount)].DefaultCellStyle.Format = "N2";
             ChargesDataGrid.Columns[nameof(Charge.Amount)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
@@ -186,30 +198,9 @@ namespace LabBilling.Forms
 
             ChargesDataGrid.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.DisplayedCells);
             ChargesDataGrid.Columns[nameof(Charge.CdmDescription)].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            ChargesDataGrid.Columns[nameof(Charge.CptDescription)].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            ChargesDataGrid.Columns[nameof(Charge.CptDescription)].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             ChargesDataGrid.Columns[nameof(Charge.Comment)].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
             ChargesDataGrid.BackgroundColor = Color.AntiqueWhite;
-
-            //set grid column order
-            int z = 1;
-            ChargesDataGrid.Columns[nameof(Charge.ChrgId)].DisplayIndex = z++;
-            ChargesDataGrid.Columns[nameof(Charge.IsCredited)].DisplayIndex = z++;
-            ChargesDataGrid.Columns[nameof(Charge.CDMCode)].DisplayIndex = z++;
-            ChargesDataGrid.Columns[nameof(Charge.CdmDescription)].DisplayIndex = z++;
-            ChargesDataGrid.Columns[nameof(Charge.Status)].DisplayIndex = z++;
-            ChargesDataGrid.Columns[nameof(Charge.ServiceDate)].DisplayIndex = z++;
-            ChargesDataGrid.Columns[nameof(Charge.Invoice)].DisplayIndex = z++;
-            ChargesDataGrid.Columns[nameof(Charge.ClientMnem)].DisplayIndex = z++;
-            ChargesDataGrid.Columns[nameof(Charge.FinCode)].DisplayIndex = z++;
-            ChargesDataGrid.Columns[nameof(Charge.CptDescription)].DisplayIndex = z++;
-            ChargesDataGrid.Columns[nameof(Charge.Quantity)].DisplayIndex = z++;
-            ChargesDataGrid.Columns[nameof(Charge.RevenueCode)].DisplayIndex = z++;
-            ChargesDataGrid.Columns[nameof(Charge.Cpt4)].DisplayIndex = z++;
-            ChargesDataGrid.Columns[nameof(Charge.Modifier)].DisplayIndex = z++;
-            ChargesDataGrid.Columns[nameof(Charge.Modifer2)].DisplayIndex = z++;
-            ChargesDataGrid.Columns[nameof(Charge.Type)].DisplayIndex = z++;
-            ChargesDataGrid.Columns[nameof(Charge.Amount)].DisplayIndex = z++;
-            ChargesDataGrid.Columns[nameof(Charge.Comment)].DisplayIndex = z++;
 
             chargeBalRichTextbox.Text = "";
             chargeBalRichTextbox.SelectionFont = new Font(chargeBalRichTextbox.Font.FontFamily, 10, FontStyle.Bold);
@@ -287,6 +278,9 @@ namespace LabBilling.Forms
 
         private void ChargesDataGrid_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
+            if (grouper.IsGroupRow(e.RowIndex))
+                return;
+
             if (ChargesDataGrid[nameof(Chrg.IsCredited), e.RowIndex].Value.ToString() == "True")
             {
                 e.CellStyle.BackColor = Color.WhiteSmoke;

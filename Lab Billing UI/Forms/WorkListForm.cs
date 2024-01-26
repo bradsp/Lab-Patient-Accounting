@@ -10,6 +10,7 @@ using LabBilling.Library;
 using System.Data;
 using LabBilling.Core;
 using LabBilling.Core.BusinessLogic;
+using WinFormsLibrary;
 
 namespace LabBilling.Forms
 {
@@ -202,17 +203,9 @@ namespace LabBilling.Forms
             accountTable.DefaultView.Sort = nameof(AccountSearch.ServiceDate);
 
             accountGrid.ForeColor = Color.Black;
-            accountGrid.Columns[nameof(AccountSearch.FirstName)].Visible = false;
-            accountGrid.Columns[nameof(AccountSearch.LastName)].Visible = false;
-            accountGrid.Columns[nameof(AccountSearch.MiddleName)].Visible = false;
-            accountGrid.Columns[nameof(AccountSearch.UpdatedDate)].Visible = false;
-            accountGrid.Columns[nameof(AccountSearch.UpdatedHost)].Visible = false;
-            accountGrid.Columns[nameof(AccountSearch.UpdatedApp)].Visible = false;
-            accountGrid.Columns[nameof(AccountSearch.UpdatedUser)].Visible = false;
-            accountGrid.Columns[nameof(AccountSearch.rowguid)].Visible = false;
-            accountGrid.Columns[nameof(AccountSearch.Balance)].Visible = true;
-            accountGrid.Columns[nameof(AccountSearch.TotalPayments)].Visible = showAccountsWithPmtCheckbox.Checked;
-            accountGrid.Columns[nameof(AccountSearch.TotalCharges)].Visible = false;
+
+            accountGrid.SetColumnsVisibility(false);
+
             accountGrid.Columns[nameof(AccountSearch.Balance)].DefaultCellStyle.Format = "N2";
             accountGrid.Columns[nameof(AccountSearch.Balance)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
             accountGrid.Columns[nameof(AccountSearch.TotalCharges)].DefaultCellStyle.Format = "N2";
@@ -226,24 +219,25 @@ namespace LabBilling.Forms
 
             //column order
             int x = 0;
-            accountGrid.Columns[nameof(AccountSearch.Account)].DisplayIndex = x++;
-            accountGrid.Columns[nameof(AccountSearch.Name)].DisplayIndex = x++;
-            accountGrid.Columns[nameof(AccountSearch.SSN)].DisplayIndex = x++;
-            accountGrid.Columns[nameof(AccountSearch.DateOfBirth)].DisplayIndex = x++;
-            accountGrid.Columns[nameof(AccountSearch.Sex)].DisplayIndex = x++;
-            accountGrid.Columns[nameof(AccountSearch.MRN)].DisplayIndex = x++;
-            accountGrid.Columns[nameof(AccountSearch.ServiceDate)].DisplayIndex = x++;
-            accountGrid.Columns[nameof(AccountSearch.Balance)].DisplayIndex = x++;
-            accountGrid.Columns[nameof(AccountSearch.FinCode)].DisplayIndex = x++;
-            accountGrid.Columns[nameof(AccountSearch.PrimaryInsCode)].DisplayIndex = x++;
-            accountGrid.Columns[nameof(AccountSearch.PrimaryInsPlanName)].DisplayIndex = x++;
-            accountGrid.Columns[nameof(AccountSearch.Status)].DisplayIndex = x++;
-            accountGrid.Columns[nameof(AccountSearch.ClientMnem)].DisplayIndex = x++;
-            accountGrid.Columns[nameof(AccountSearch.ValidationStatus)].DisplayIndex = x++;
-            accountGrid.Columns[nameof(AccountSearch.LastValidationDate)].DisplayIndex = x++;
-            accountGrid.Columns[nameof(AccountSearch.ThirdPartyBalance)].DisplayIndex = x++;
-            accountGrid.Columns[nameof(AccountSearch.ClientBalance)].DisplayIndex = x++;
-            accountGrid.Columns[nameof(AccountSearch.FinType)].DisplayIndex = x++;
+            accountGrid.Columns[nameof(AccountSearch.Account)].SetVisibilityOrder(true, x++);
+            accountGrid.Columns[nameof(AccountSearch.Name)].SetVisibilityOrder(true, x++);
+            accountGrid.Columns[nameof(AccountSearch.SSN)].SetVisibilityOrder(true, x++);
+            accountGrid.Columns[nameof(AccountSearch.DateOfBirth)].SetVisibilityOrder(true, x++);
+            accountGrid.Columns[nameof(AccountSearch.Sex)].SetVisibilityOrder(true, x++);
+            accountGrid.Columns[nameof(AccountSearch.MRN)].SetVisibilityOrder(true, x++);
+            accountGrid.Columns[nameof(AccountSearch.ServiceDate)].SetVisibilityOrder(true, x++);
+            accountGrid.Columns[nameof(AccountSearch.Balance)].SetVisibilityOrder(true, x++);
+            accountGrid.Columns[nameof(AccountSearch.FinCode)].SetVisibilityOrder(true, x++);
+            accountGrid.Columns[nameof(AccountSearch.PrimaryInsCode)].SetVisibilityOrder(true, x++);
+            accountGrid.Columns[nameof(AccountSearch.PrimaryInsPlanName)].SetVisibilityOrder(true, x++);
+            accountGrid.Columns[nameof(AccountSearch.Status)].SetVisibilityOrder(true, x++);
+            accountGrid.Columns[nameof(AccountSearch.ClientMnem)].SetVisibilityOrder(true, x++);
+            accountGrid.Columns[nameof(AccountSearch.ValidationStatus)].SetVisibilityOrder(true, x++);
+            accountGrid.Columns[nameof(AccountSearch.LastValidationDate)].SetVisibilityOrder(true, x++);
+            accountGrid.Columns[nameof(AccountSearch.ThirdPartyBalance)].SetVisibilityOrder(true, x++);
+            accountGrid.Columns[nameof(AccountSearch.ClientBalance)].SetVisibilityOrder(true, x++);
+            accountGrid.Columns[nameof(AccountSearch.FinType)].SetVisibilityOrder(true, x++);
+            accountGrid.Columns[nameof(AccountSearch.TotalPayments)].SetVisibilityOrder(showAccountsWithPmtCheckbox.Checked, x++);
 
             accountGrid.Columns[nameof(AccountSearch.ValidationStatus)].MinimumWidth = 200;
             accountGrid.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.DisplayedCells);
@@ -392,7 +386,6 @@ namespace LabBilling.Forms
             var account = await accountRepository.GetByAccountAsync(selectedAccount);
 
             ClientLookupForm clientLookupForm = new ClientLookupForm();
-            ClientRepository clientRepository = new ClientRepository(Program.AppEnvironment);
             clientLookupForm.Datasource = DataCache.Instance.GetClients();
 
             if (clientLookupForm.ShowDialog() == DialogResult.OK)

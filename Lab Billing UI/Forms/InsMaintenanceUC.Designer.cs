@@ -147,7 +147,6 @@
             tableLayoutPanel1.Controls.Add(HolderCityTextBox, 1, 6);
             tableLayoutPanel1.Controls.Add(HolderCityLabel, 0, 6);
             tableLayoutPanel1.Controls.Add(InsTabMessageTextBox, 1, 14);
-            tableLayoutPanel1.Controls.Add(deleteInsButton, 1, 13);
             tableLayoutPanel1.Controls.Add(InsPlanLabel, 2, 2);
             tableLayoutPanel1.Controls.Add(insurancePlanTextBox, 3, 2);
             tableLayoutPanel1.Controls.Add(InsPlanNameLabel, 2, 3);
@@ -167,6 +166,7 @@
             tableLayoutPanel1.Controls.Add(GroupNameTextBox, 3, 10);
             tableLayoutPanel1.Controls.Add(InsCertSSNLabel, 2, 11);
             tableLayoutPanel1.Controls.Add(CertSSNTextBox, 3, 11);
+            tableLayoutPanel1.Controls.Add(deleteInsButton, 3, 13);
             tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
@@ -188,7 +188,7 @@
             tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 35F));
             tableLayoutPanel1.Size = new System.Drawing.Size(1014, 470);
-            tableLayoutPanel1.TabIndex = 3;
+            tableLayoutPanel1.TabIndex = 0;
             // 
             // label1
             // 
@@ -209,7 +209,7 @@
             SaveInsuranceButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             SaveInsuranceButton.Name = "SaveInsuranceButton";
             SaveInsuranceButton.Size = new System.Drawing.Size(115, 48);
-            SaveInsuranceButton.TabIndex = 25;
+            SaveInsuranceButton.TabIndex = 40;
             SaveInsuranceButton.Text = "Save Insurance";
             SaveInsuranceButton.UseVisualStyleBackColor = false;
             SaveInsuranceButton.Click += SaveInsuranceButton_Click;
@@ -234,7 +234,7 @@
             HolderLastNameTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             HolderLastNameTextBox.Name = "HolderLastNameTextBox";
             HolderLastNameTextBox.Size = new System.Drawing.Size(240, 23);
-            HolderLastNameTextBox.TabIndex = 1;
+            HolderLastNameTextBox.TabIndex = 2;
             // 
             // HolderFirstNameLabel
             // 
@@ -254,7 +254,7 @@
             HolderZipTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             HolderZipTextBox.Name = "HolderZipTextBox";
             HolderZipTextBox.Size = new System.Drawing.Size(240, 23);
-            HolderZipTextBox.TabIndex = 7;
+            HolderZipTextBox.TabIndex = 14;
             // 
             // HolderZipCodeLabel
             // 
@@ -279,7 +279,7 @@
             InsRelationComboBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             InsRelationComboBox.Name = "InsRelationComboBox";
             InsRelationComboBox.Size = new System.Drawing.Size(240, 23);
-            InsRelationComboBox.TabIndex = 10;
+            InsRelationComboBox.TabIndex = 20;
             // 
             // HolderRelationLabel
             // 
@@ -312,7 +312,7 @@
             HolderDOBTextBox.Mask = "00/00/0000";
             HolderDOBTextBox.Name = "HolderDOBTextBox";
             HolderDOBTextBox.Size = new System.Drawing.Size(240, 23);
-            HolderDOBTextBox.TabIndex = 9;
+            HolderDOBTextBox.TabIndex = 18;
             HolderDOBTextBox.ValidatingType = typeof(System.DateTime);
             // 
             // HolderDOBLabel
@@ -340,7 +340,7 @@
             HolderStateComboBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             HolderStateComboBox.Name = "HolderStateComboBox";
             HolderStateComboBox.Size = new System.Drawing.Size(240, 23);
-            HolderStateComboBox.TabIndex = 6;
+            HolderStateComboBox.TabIndex = 12;
             // 
             // HolderFirstNameTextBox
             // 
@@ -349,7 +349,7 @@
             HolderFirstNameTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             HolderFirstNameTextBox.Name = "HolderFirstNameTextBox";
             HolderFirstNameTextBox.Size = new System.Drawing.Size(240, 23);
-            HolderFirstNameTextBox.TabIndex = 2;
+            HolderFirstNameTextBox.TabIndex = 4;
             // 
             // HolderSexComboBox
             // 
@@ -364,7 +364,7 @@
             HolderSexComboBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             HolderSexComboBox.Name = "HolderSexComboBox";
             HolderSexComboBox.Size = new System.Drawing.Size(240, 23);
-            HolderSexComboBox.TabIndex = 8;
+            HolderSexComboBox.TabIndex = 16;
             // 
             // HolderMiddleNameLabel
             // 
@@ -395,7 +395,7 @@
             HolderMiddleNameTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             HolderMiddleNameTextBox.Name = "HolderMiddleNameTextBox";
             HolderMiddleNameTextBox.Size = new System.Drawing.Size(240, 23);
-            HolderMiddleNameTextBox.TabIndex = 3;
+            HolderMiddleNameTextBox.TabIndex = 6;
             // 
             // HolderAddressLabel
             // 
@@ -415,7 +415,7 @@
             HolderAddressTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             HolderAddressTextBox.Name = "HolderAddressTextBox";
             HolderAddressTextBox.Size = new System.Drawing.Size(240, 23);
-            HolderAddressTextBox.TabIndex = 4;
+            HolderAddressTextBox.TabIndex = 8;
             // 
             // HolderCityTextBox
             // 
@@ -424,7 +424,7 @@
             HolderCityTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             HolderCityTextBox.Name = "HolderCityTextBox";
             HolderCityTextBox.Size = new System.Drawing.Size(240, 23);
-            HolderCityTextBox.TabIndex = 5;
+            HolderCityTextBox.TabIndex = 10;
             // 
             // HolderCityLabel
             // 
@@ -447,16 +447,16 @@
             InsTabMessageTextBox.Name = "InsTabMessageTextBox";
             InsTabMessageTextBox.ReadOnly = true;
             InsTabMessageTextBox.Size = new System.Drawing.Size(640, 27);
-            InsTabMessageTextBox.TabIndex = 44;
+            InsTabMessageTextBox.TabIndex = 42;
             // 
             // deleteInsButton
             // 
             deleteInsButton.BackColor = System.Drawing.Color.Red;
             deleteInsButton.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            deleteInsButton.Location = new System.Drawing.Point(155, 308);
+            deleteInsButton.Location = new System.Drawing.Point(555, 308);
             deleteInsButton.Name = "deleteInsButton";
             deleteInsButton.Size = new System.Drawing.Size(100, 48);
-            deleteInsButton.TabIndex = 45;
+            deleteInsButton.TabIndex = 41;
             deleteInsButton.Text = "Delete Insurance";
             deleteInsButton.UseVisualStyleBackColor = false;
             deleteInsButton.Click += deleteInsButton_Click;
@@ -469,7 +469,7 @@
             InsPlanLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             InsPlanLabel.Name = "InsPlanLabel";
             InsPlanLabel.Size = new System.Drawing.Size(84, 15);
-            InsPlanLabel.TabIndex = 23;
+            InsPlanLabel.TabIndex = 21;
             InsPlanLabel.Text = "Insurance Plan";
             // 
             // insurancePlanTextBox
@@ -479,7 +479,7 @@
             insurancePlanTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             insurancePlanTextBox.Name = "insurancePlanTextBox";
             insurancePlanTextBox.Size = new System.Drawing.Size(240, 23);
-            insurancePlanTextBox.TabIndex = 14;
+            insurancePlanTextBox.TabIndex = 22;
             insurancePlanTextBox.KeyUp += insurancePlanTextBox_KeyUp;
             // 
             // InsPlanNameLabel
@@ -490,7 +490,7 @@
             InsPlanNameLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             InsPlanNameLabel.Name = "InsPlanNameLabel";
             InsPlanNameLabel.Size = new System.Drawing.Size(65, 15);
-            InsPlanNameLabel.TabIndex = 25;
+            InsPlanNameLabel.TabIndex = 23;
             InsPlanNameLabel.Text = "Plan Name";
             // 
             // PlanNameTextBox
@@ -501,7 +501,7 @@
             PlanNameTextBox.Name = "PlanNameTextBox";
             PlanNameTextBox.ReadOnly = true;
             PlanNameTextBox.Size = new System.Drawing.Size(240, 23);
-            PlanNameTextBox.TabIndex = 16;
+            PlanNameTextBox.TabIndex = 24;
             // 
             // InsPlanAddressLabel
             // 
@@ -511,7 +511,7 @@
             InsPlanAddressLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             InsPlanAddressLabel.Name = "InsPlanAddressLabel";
             InsPlanAddressLabel.Size = new System.Drawing.Size(75, 15);
-            InsPlanAddressLabel.TabIndex = 27;
+            InsPlanAddressLabel.TabIndex = 25;
             InsPlanAddressLabel.Text = "Plan Address";
             // 
             // PlanAddressTextBox
@@ -521,7 +521,7 @@
             PlanAddressTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             PlanAddressTextBox.Name = "PlanAddressTextBox";
             PlanAddressTextBox.Size = new System.Drawing.Size(240, 23);
-            PlanAddressTextBox.TabIndex = 17;
+            PlanAddressTextBox.TabIndex = 26;
             // 
             // PlanAddress2TextBox
             // 
@@ -530,7 +530,7 @@
             PlanAddress2TextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             PlanAddress2TextBox.Name = "PlanAddress2TextBox";
             PlanAddress2TextBox.Size = new System.Drawing.Size(240, 23);
-            PlanAddress2TextBox.TabIndex = 18;
+            PlanAddress2TextBox.TabIndex = 27;
             // 
             // InsPlanCityStateZipLabel
             // 
@@ -540,7 +540,7 @@
             InsPlanCityStateZipLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             InsPlanCityStateZipLabel.Name = "InsPlanCityStateZipLabel";
             InsPlanCityStateZipLabel.Size = new System.Drawing.Size(87, 15);
-            InsPlanCityStateZipLabel.TabIndex = 30;
+            InsPlanCityStateZipLabel.TabIndex = 28;
             InsPlanCityStateZipLabel.Text = "Plan City St Zip";
             // 
             // PlanCityStTextBox
@@ -550,7 +550,7 @@
             PlanCityStTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             PlanCityStTextBox.Name = "PlanCityStTextBox";
             PlanCityStTextBox.Size = new System.Drawing.Size(240, 23);
-            PlanCityStTextBox.TabIndex = 19;
+            PlanCityStTextBox.TabIndex = 29;
             // 
             // InsPlanFinCodeLabel
             // 
@@ -560,7 +560,7 @@
             InsPlanFinCodeLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             InsPlanFinCodeLabel.Name = "InsPlanFinCodeLabel";
             InsPlanFinCodeLabel.Size = new System.Drawing.Size(111, 15);
-            InsPlanFinCodeLabel.TabIndex = 32;
+            InsPlanFinCodeLabel.TabIndex = 30;
             InsPlanFinCodeLabel.Text = "Plan Financial Code";
             // 
             // PlanFinCodeComboBox
@@ -573,7 +573,7 @@
             PlanFinCodeComboBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             PlanFinCodeComboBox.Name = "PlanFinCodeComboBox";
             PlanFinCodeComboBox.Size = new System.Drawing.Size(240, 23);
-            PlanFinCodeComboBox.TabIndex = 20;
+            PlanFinCodeComboBox.TabIndex = 31;
             // 
             // InsPolicyNumberLabel
             // 
@@ -583,7 +583,7 @@
             InsPolicyNumberLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             InsPolicyNumberLabel.Name = "InsPolicyNumberLabel";
             InsPolicyNumberLabel.Size = new System.Drawing.Size(86, 15);
-            InsPolicyNumberLabel.TabIndex = 34;
+            InsPolicyNumberLabel.TabIndex = 32;
             InsPolicyNumberLabel.Text = "Policy Number";
             // 
             // PolicyNumberTextBox
@@ -593,7 +593,7 @@
             PolicyNumberTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             PolicyNumberTextBox.Name = "PolicyNumberTextBox";
             PolicyNumberTextBox.Size = new System.Drawing.Size(240, 23);
-            PolicyNumberTextBox.TabIndex = 21;
+            PolicyNumberTextBox.TabIndex = 33;
             // 
             // InsGroupNumberLabel
             // 
@@ -603,7 +603,7 @@
             InsGroupNumberLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             InsGroupNumberLabel.Name = "InsGroupNumberLabel";
             InsGroupNumberLabel.Size = new System.Drawing.Size(87, 15);
-            InsGroupNumberLabel.TabIndex = 36;
+            InsGroupNumberLabel.TabIndex = 34;
             InsGroupNumberLabel.Text = "Group Number";
             // 
             // GroupNumberTextBox
@@ -613,7 +613,7 @@
             GroupNumberTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             GroupNumberTextBox.Name = "GroupNumberTextBox";
             GroupNumberTextBox.Size = new System.Drawing.Size(240, 23);
-            GroupNumberTextBox.TabIndex = 22;
+            GroupNumberTextBox.TabIndex = 35;
             // 
             // InsGroupNameLabel
             // 
@@ -623,7 +623,7 @@
             InsGroupNameLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             InsGroupNameLabel.Name = "InsGroupNameLabel";
             InsGroupNameLabel.Size = new System.Drawing.Size(75, 15);
-            InsGroupNameLabel.TabIndex = 38;
+            InsGroupNameLabel.TabIndex = 36;
             InsGroupNameLabel.Text = "Group Name";
             // 
             // GroupNameTextBox
@@ -633,7 +633,7 @@
             GroupNameTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             GroupNameTextBox.Name = "GroupNameTextBox";
             GroupNameTextBox.Size = new System.Drawing.Size(240, 23);
-            GroupNameTextBox.TabIndex = 23;
+            GroupNameTextBox.TabIndex = 37;
             // 
             // InsCertSSNLabel
             // 
@@ -643,7 +643,7 @@
             InsCertSSNLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             InsCertSSNLabel.Name = "InsCertSSNLabel";
             InsCertSSNLabel.Size = new System.Drawing.Size(55, 15);
-            InsCertSSNLabel.TabIndex = 40;
+            InsCertSSNLabel.TabIndex = 38;
             InsCertSSNLabel.Text = "Cert/SSN";
             // 
             // CertSSNTextBox
@@ -653,7 +653,7 @@
             CertSSNTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             CertSSNTextBox.Name = "CertSSNTextBox";
             CertSSNTextBox.Size = new System.Drawing.Size(240, 23);
-            CertSSNTextBox.TabIndex = 24;
+            CertSSNTextBox.TabIndex = 39;
             // 
             // InsMaintenanceUC
             // 

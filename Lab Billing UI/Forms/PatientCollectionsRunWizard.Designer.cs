@@ -127,10 +127,14 @@
             // 
             // sendToCollectionsTextbox
             // 
+            sendToCollectionsTextbox.BackColor = System.Drawing.Color.White;
+            sendToCollectionsTextbox.BorderStyle = System.Windows.Forms.BorderStyle.None;
             sendToCollectionsTextbox.Location = new System.Drawing.Point(46, 140);
             sendToCollectionsTextbox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             sendToCollectionsTextbox.Multiline = true;
             sendToCollectionsTextbox.Name = "sendToCollectionsTextbox";
+            sendToCollectionsTextbox.ReadOnly = true;
+            sendToCollectionsTextbox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             sendToCollectionsTextbox.Size = new System.Drawing.Size(618, 217);
             sendToCollectionsTextbox.TabIndex = 3;
             // 

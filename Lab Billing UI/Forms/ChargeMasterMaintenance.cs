@@ -7,6 +7,7 @@ using System.Linq;
 using System.Windows.Forms;
 using LabBilling.Core.DataAccess;
 using LabBilling.Core.Models;
+using WinFormsLibrary;
 
 namespace LabBilling.Forms
 {
@@ -60,29 +61,18 @@ namespace LabBilling.Forms
 
         private void RefreshGrid()
         {
-            int cdmColCnt = cdmGrid.Columns.Count;
-            for (int i = 0; i < cdmColCnt; i++)
-            {
-                cdmGrid.Columns[i].Visible = false;
-            }
-            //cdmGrid.Columns.OfType<DataGridColumn>().ToList().ForEach(col => col.Visible = false);
-            cdmGrid.Columns[nameof(Cdm.IsDeleted)].DisplayIndex = 0;
-            cdmGrid.Columns[nameof(Cdm.ChargeId)].DisplayIndex = 1;
-            cdmGrid.Columns[nameof(Cdm.Description)].DisplayIndex = 2;
-            cdmGrid.Columns[nameof(Cdm.IsOrderable)].DisplayIndex = 3;
-            cdmGrid.Columns[nameof(Cdm.Mnem)].DisplayIndex = 4;
-            cdmGrid.Columns[nameof(Cdm.MClassType)].DisplayIndex = 5;
-            cdmGrid.Columns[nameof(Cdm.CClassType)].DisplayIndex = 6;
-            cdmGrid.Columns[nameof(Cdm.ZClassType)].DisplayIndex = 7;
+            cdmGrid.SetColumnsVisibility(false);
 
-            cdmGrid.Columns[nameof(Cdm.ChargeId)].Visible = true;
-            cdmGrid.Columns[nameof(Cdm.Description)].Visible = true;
-            cdmGrid.Columns[nameof(Cdm.IsOrderable)].Visible = true;
-            cdmGrid.Columns[nameof(Cdm.MClassType)].Visible = true;
-            cdmGrid.Columns[nameof(Cdm.CClassType)].Visible = true;
-            cdmGrid.Columns[nameof(Cdm.ZClassType)].Visible = true;
-            cdmGrid.Columns[nameof(Cdm.IsDeleted)].Visible = true;
-            cdmGrid.Columns[nameof(Cdm.Mnem)].Visible = true;
+            int i = 0;
+            cdmGrid.Columns[nameof(Cdm.IsDeleted)].SetVisibilityOrder(true, i++);
+            cdmGrid.Columns[nameof(Cdm.ChargeId)].SetVisibilityOrder(true, i++);
+            cdmGrid.Columns[nameof(Cdm.Description)].SetVisibilityOrder(true, i++);
+            cdmGrid.Columns[nameof(Cdm.IsOrderable)].SetVisibilityOrder(true, i++);
+            cdmGrid.Columns[nameof(Cdm.Mnem)].SetVisibilityOrder(true, i++);
+            cdmGrid.Columns[nameof(Cdm.MClassType)].SetVisibilityOrder(true, i++);
+            cdmGrid.Columns[nameof(Cdm.CClassType)].SetVisibilityOrder(true, i++);
+            cdmGrid.Columns[nameof(Cdm.ZClassType)].SetVisibilityOrder(true, i++);
+
             cdmGrid.Columns[nameof(Cdm.Description)].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
 
             cdmGrid.AutoResizeColumns();

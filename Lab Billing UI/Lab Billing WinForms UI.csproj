@@ -165,6 +165,7 @@
     <PackageReference Include="WinForms.DataVisualization" Version="1.9.1" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\DataGridViewGrouper\DataGridViewGrouper\DataGridViewGrouper.csproj" />
     <ProjectReference Include="..\LabBilling Library\LabBilling Core.csproj" />
     <ProjectReference Include="..\MCL\MCL.csproj" />
     <ProjectReference Include="..\RFClassLibrary\Utilities.csproj" />

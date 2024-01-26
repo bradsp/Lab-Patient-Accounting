@@ -44,16 +44,16 @@ namespace LabBilling.Forms
             PersonAccountResults.DataSource = source;
             PersonAccountResults.SetColumnsVisibility(false);
 
-
-            PersonAccountResults.Columns[nameof(AccountSearch.Account)].Visible = true;
-            PersonAccountResults.Columns[nameof(AccountSearch.Name)].Visible = true;
-            PersonAccountResults.Columns[nameof(AccountSearch.DateOfBirth)].Visible = true;
-            PersonAccountResults.Columns[nameof(AccountSearch.Sex)].Visible = true;
-            PersonAccountResults.Columns[nameof(AccountSearch.ServiceDate)].Visible = true;
-            PersonAccountResults.Columns[nameof(AccountSearch.Balance)].Visible = true;
-            PersonAccountResults.Columns[nameof(AccountSearch.FinCode)].Visible = true;
-            PersonAccountResults.Columns[nameof(AccountSearch.ClientMnem)].Visible = true;
-            PersonAccountResults.Columns[nameof(AccountSearch.Status)].Visible = true;
+            int i = 0;
+            PersonAccountResults.Columns[nameof(AccountSearch.Account)].SetVisibilityOrder(true, i++);
+            PersonAccountResults.Columns[nameof(AccountSearch.Name)].SetVisibilityOrder(true, i++);
+            PersonAccountResults.Columns[nameof(AccountSearch.DateOfBirth)].SetVisibilityOrder(true, i++);
+            PersonAccountResults.Columns[nameof(AccountSearch.Sex)].SetVisibilityOrder(true, i++);
+            PersonAccountResults.Columns[nameof(AccountSearch.ServiceDate)].SetVisibilityOrder(true, i++);
+            PersonAccountResults.Columns[nameof(AccountSearch.Balance)].SetVisibilityOrder(true, i++);
+            PersonAccountResults.Columns[nameof(AccountSearch.FinCode)].SetVisibilityOrder(true, i++);
+            PersonAccountResults.Columns[nameof(AccountSearch.ClientMnem)].SetVisibilityOrder(true, i++);
+            PersonAccountResults.Columns[nameof(AccountSearch.Status)].SetVisibilityOrder(true, i++);
 
             PersonAccountResults.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
             PersonAccountResults.Columns[nameof(AccountSearch.Name)].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
@@ -62,10 +62,6 @@ namespace LabBilling.Forms
         private void PersonSearchForm_Load(object sender, EventArgs e)
         {
             Log.Instance.Trace($"Entering");
-            //txtLastName.Text = NameSearch;
-            //mrnSearchText.Text = MRNSearch;
-            //accountSearchText.Text = AccNoSearch;
-            //dobSearchText.Text = DOBSearch;
             cbSexSearch.DataSource = new BindingSource(Dictionaries.sexSource, null);
             cbSexSearch.ValueMember = "Key";
             cbSexSearch.DisplayMember = "Value";

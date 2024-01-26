@@ -10,6 +10,7 @@ using LabBilling.Core.Models;
 using Utilities;
 using Microsoft.Data.SqlClient;
 using LabBilling.Logging;
+using Microsoft.AspNetCore.Http;
 
 namespace LabBilling.Core
 {
@@ -99,6 +100,7 @@ namespace LabBilling.Core
                             Batch = 0,
                             WriteOffAmount = acc.Balance,
                             WriteOffDate = DateTime.Today,
+                            DateReceived = DateTime.Today,
                             Source = "BAD_DEBT",
                             Status = "WRITE_OFF",
                             Comment = "BAD DEBT WRITE OFF",
@@ -111,7 +113,11 @@ namespace LabBilling.Core
                         acc.Pat.SentToCollectionsDate = DateTime.Today;
                         patRepository.Update(acc.Pat, new[] { nameof(Pat.SentToCollectionsDate) });
 
-                        ProgressIncrementedEvent?.Invoke(this, new ProgressEventArgs(++recordsProcessed / results.Count() * 100, $"Processed {result.AccountNo}"));
+                        int cnt = results.Count();
+                        decimal processed = ++recordsProcessed / (decimal)cnt;
+                        int percentComplete = Convert.ToInt32(processed * 100);
+                        ProgressIncrementedEvent?.Invoke(this, new ProgressEventArgs(percentComplete, $"Processed {result.AccountNo}"));
+                        dbConnection.CompleteTransaction();
                     }
                     catch (Exception ex)
                     {
@@ -121,7 +127,6 @@ namespace LabBilling.Core
                     }
                 }
 
-                dbConnection.CompleteTransaction();
                 return GenerateCollectionsFile(results);
 
             });
@@ -226,7 +231,10 @@ namespace LabBilling.Core
 
                     sb.AppendLine(fileLine.OutputLine());
 
-                    ProgressIncrementedEvent?.Invoke(this, new ProgressEventArgs(++recordsProcessed / records.Count() * 100, $"Processed {result.AccountNo}"));
+                    int cnt = records.Count();
+                    decimal processed = ++recordsProcessed / (decimal)cnt;
+                    int percentComplete = Convert.ToInt32(processed * 100);
+                    ProgressIncrementedEvent?.Invoke(this, new ProgressEventArgs(percentComplete, $"Processed {result.AccountNo}"));
                 }
                 catch (Exception ex)
                 {
@@ -289,8 +297,6 @@ namespace LabBilling.Core
                 "and pa.processed_date is not null";
 
                 dbConnection.Execute(sql);
-
-
             }
             catch (Exception ex)
             {
@@ -322,19 +328,114 @@ namespace LabBilling.Core
             //todo: get file path from parameters
             string strFileName = $"{_appEnvironment.ApplicationParameters.StatementsFileLocation}PatStatement{DateTime.Now:yyyyMMddHHmm}.txt";
 
-            StreamWriter sw = new StreamWriter(strFileName);
-            sw.AutoFlush = true;
+            StreamWriter sw = new(strFileName)
+            {
+                AutoFlush = true
+            };
 
-            sw.Write(string.Format("HDR~MCL~~CERNER~MCL~{0}~{1}~T~N~0~0~0\r\n"
-                , DateTime.Now.ToString("yyyyMMdd")
-                , DateTime.Now.ToString("HHmmss")));
+            //sw.Write(string.Format("HDR~MCL~~CERNER~MCL~{0}~{1}~T~N~0~0~0\r\n"
+            //    , DateTime.Now.ToString("yyyyMMdd")
+            //    , DateTime.Now.ToString("HHmmss")));
+
+            sw.WriteLine(new DelimitedFileLine('~')
+            {
+                [0] = "HDR",
+                [1] = "MCL",
+                [3] = "CERNER",
+                [4] = "MCL",
+                [5] = DateTime.Now.ToString("yyyyMMdd"),
+                [6] = DateTime.Now.ToString("HHmmss"),
+                [7] = "T",
+                [8] = "N",
+                [9] = "0",
+                [10] = "0",
+                [11] = "0"
+            }.ToString());
 
             foreach (DataRow dr in statementDt.Rows)
             {
                 var q = $"{nameof(PatientStatement.StatementNumber)} = {dr[nameof(PatientStatement.StatementNumber)]}";
                 // each statement
                 DataRow[] drAcc = accountsDt.Select(q);
+                DelimitedFileLine line = new('|');
+                line.AddField("STMT");
+                line.AddField(dr[nameof(PatientStatement.RecordCount)].ToString());
+                line.AddField(dr[nameof(PatientStatement.StatementNumber)].ToString());
+                line.AddField(dr[nameof(PatientStatement.BillingEntityStreet)].ToString().ToUpper());
+                line.AddField(dr[nameof(PatientStatement.BillingEntityCity)].ToString().ToUpper());
+                line.AddField(dr[nameof(PatientStatement.BillingEntityState)].ToString().ToUpper());
+                line.AddField(dr[nameof(PatientStatement.BillingEntityZip)].ToString().ToUpper());
+                line.AddField(dr[nameof(PatientStatement.BillingEntityFedTaxId)].ToString().ToUpper());
+                line.AddField(dr[nameof(PatientStatement.BillingEntityName)].ToString().ToUpper());
+                line.AddField(dr[nameof(PatientStatement.BillingEntityPhone)].ToString().ToUpper());
+                line.AddField(dr[nameof(PatientStatement.BillingEntityFax)].ToString().ToUpper());
+                line.AddField(dr[nameof(PatientStatement.RemitToStreet)].ToString().ToUpper());
+                line.AddField(dr[nameof(PatientStatement.RemitToStreet2)].ToString().ToUpper());
+                line.AddField(dr[nameof(PatientStatement.RemitToCity)].ToString().ToUpper());
+                line.AddField(dr[nameof(PatientStatement.RemitToState)].ToString().ToUpper());
+                line.AddField(dr[nameof(PatientStatement.RemitToZip)].ToString().ToUpper());
+                line.AddField(dr[nameof(PatientStatement.RemitToOrgName)].ToString().ToUpper());
+                line.AddField(dr[nameof(PatientStatement.GuarantorStreet)].ToString().ToUpper());
+                line.AddField(dr[nameof(PatientStatement.GuarantorStreet2)].ToString().ToUpper());
+                line.AddField(dr[nameof(PatientStatement.GuarantorCity)].ToString().ToUpper());
+                line.AddField(dr[nameof(PatientStatement.GuarantorState)].ToString().ToUpper());
+                line.AddField(dr[nameof(PatientStatement.GuarantorZip)].ToString().ToUpper());
+                line.AddField(dr[nameof(PatientStatement.GuarantorName)].ToString().ToUpper());
+                line.AddField(dr[nameof(PatientStatement.AmountDue)].ToString().ToUpper());
+                line.AddField(dr[nameof(PatientStatement.DateDue)].ToString().ToUpper());
+                line.AddField(dr[nameof(PatientStatement.BalanceForward)].ToString().ToUpper());
+                line.AddField(dr[nameof(PatientStatement.AgingBucketCurrent)].ToString().ToUpper());
+                line.AddField(dr[nameof(PatientStatement.AgingBucket30Day)].ToString().ToUpper());
+                line.AddField(dr[nameof(PatientStatement.AgingBucket60Day)].ToString().ToUpper());
+                line.AddField(dr[nameof(PatientStatement.AgingBucket90Day)].ToString().ToUpper());
+                line.AddField(dr[nameof(PatientStatement.StatementTotalAmount)].ToString().ToUpper());
+                line.AddField(dr[nameof(PatientStatement.InsuranceBilledAmount)].ToString().ToUpper());
+                line.AddField(dr[nameof(PatientStatement.BalanceForwardAmount)].ToString().ToUpper());
+                line.AddField(dr[nameof(PatientStatement.BalanceForwardDate)].ToString().ToUpper());
+                line.AddField(dr[nameof(PatientStatement.PrimaryHealthPlanName)].ToString().ToUpper());
+                line.AddField(dr[nameof(PatientStatement.PrimaryHealthPlanPolicyNumber)].ToString().ToUpper());
+                line.AddField(dr[nameof(PatientStatement.PrimaryHealthPlanGroupNumber)].ToString().ToUpper());
+                line.AddField(dr[nameof(PatientStatement.SecondaryHealthPlanName)].ToString().ToUpper());
+                line.AddField(dr[nameof(PatientStatement.SecondaryHealthPlanPolicyNumber)].ToString().ToUpper());
+                line.AddField(dr[nameof(PatientStatement.SecondaryHealthPlanGroupNumber)].ToString().ToUpper());
+                line.AddField(dr[nameof(PatientStatement.TertiaryHealthPlanName)].ToString().ToUpper());
+                line.AddField(dr[nameof(PatientStatement.TertiaryHealthPlanPolicyNumber)].ToString().ToUpper());
+                line.AddField(dr[nameof(PatientStatement.TertiaryHealthPlanGroupNumber)].ToString().ToUpper());
+                line.AddField(dr[nameof(PatientStatement.StatementTime)].ToString().ToUpper());
+                line.AddField(dr[nameof(PatientStatement.PageNumber)].ToString().ToUpper());
+                line.AddField(dr[nameof(PatientStatement.InsurancePending)].ToString().ToUpper());
+                line.AddField(dr[nameof(PatientStatement.UnpaidBalance)].ToString().ToUpper());
+                line.AddField(dr[nameof(PatientStatement.PatientBalance)].ToString().ToUpper());
+                line.AddField(dr[nameof(PatientStatement.TotalPaidSinceLastStatement)].ToString().ToUpper());
+                line.AddField(dr[nameof(PatientStatement.InsuranceDiscount)].ToString().ToUpper());
+                line.AddField(dr[nameof(PatientStatement.ContactText)].ToString().ToUpper());
+                line.AddField(dr[nameof(PatientStatement.TransmissionDateTime)].ToString().ToUpper());
+                line.AddField(dr[nameof(PatientStatement.GuarantorCountry)].ToString().ToUpper());
+                line.AddField(dr[nameof(PatientStatement.GuarantorSSN)].ToString().ToUpper());
+                line.AddField(dr[nameof(PatientStatement.GuarantorPhone)].ToString().ToUpper());
+                line.AddField(dr[nameof(PatientStatement.StatementSubmittedDateTime)].ToString().ToUpper());
+                line.AddField(dr[nameof(PatientStatement.IncludesEstPatLib)].ToString().ToUpper());
+                line.AddField(dr[nameof(PatientStatement.TotalChargeAmount)].ToString().ToUpper());
+                line.AddField(dr[nameof(PatientStatement.NonCoveredChargeAmount)].ToString().ToUpper());
+                line.AddField(dr[nameof(PatientStatement.ABNChargeAmount)].ToString().ToUpper());
+                line.AddField(dr[nameof(PatientStatement.EstContractAllowanceAmtInd)].ToString().ToUpper());
+                line.AddField(dr[nameof(PatientStatement.EstContractAllowanceAmt)].ToString().ToUpper());
+                line.AddField(dr[nameof(PatientStatement.EncntrDeductibleRemAmtInd)].ToString().ToUpper());
+                line.AddField(dr[nameof(PatientStatement.DeductibleAppliedAmt)].ToString().ToUpper());
+                line.AddField(dr[nameof(PatientStatement.EncntrCopayAmtInd)].ToString().ToUpper());
+                line.AddField(dr[nameof(PatientStatement.EncntrCopayAmt)].ToString().ToUpper());
+                line.AddField(dr[nameof(PatientStatement.EncntrCoinsurancePctInd)].ToString().ToUpper());
+                line.AddField(dr[nameof(PatientStatement.EncntrCoinsurancePct)].ToString().ToUpper());
+                line.AddField(dr[nameof(PatientStatement.EncntrCoinsuranceAmt)].ToString().ToUpper());
+                line.AddField(dr[nameof(PatientStatement.MaxOutOfPocketAmtInd)].ToString().ToUpper());
+                line.AddField(dr[nameof(PatientStatement.AmtOverMaxOutOfPocket)].ToString().ToUpper());
+                line.AddField(dr[nameof(PatientStatement.EstPatientLiabAmt)].ToString().ToUpper());
+                line.AddField(dr[nameof(PatientStatement.OnlineBillpayUrl)].ToString().ToUpper());
+                line.AddField(dr[nameof(PatientStatement.GuarantorAccessCode)].ToString().ToUpper());
 
+                sw.WriteLine(line.ToString());                
+
+                /*
                 sw.Write(string.Format("STMT|{0}|{1}|{2}|{3}|{4}|{5}|{6}|{7}|{8}|{9}|{10}|{11}|{12}|{13}|{14}|{15}" +
                     "|{16}|{17}|{18}|{19}|{20}|{21}|{22}|{23}|{24}|{25}|{26}|{27}|{28}|{29}|{30}|{31}|{32}|{33}|{34}|{35}" +
                     "|{36}|{37}|{38}|{39}|{40}|{41}|{42}|{43}|{44}|{45}|{46}|{47}|{48}|{49}|{50}|{51}|{52}|{53}|{54}|{55}" +
@@ -413,6 +514,7 @@ namespace LabBilling.Core
                     dr[nameof(PatientStatement.OnlineBillpayUrl)].ToString().ToUpper(),
                     dr[nameof(PatientStatement.GuarantorAccessCode)].ToString().ToUpper()          //70
                     ));
+                */
 
                 if (cernerStatementDt.Rows.Count > 0)
                 {
@@ -431,58 +533,176 @@ namespace LabBilling.Core
                 // each account
                 for (int iAcc = 0; iAcc <= drAcc.GetUpperBound(0); iAcc++)
                 {
-                    sw.Write(string.Format("ACCT|{0}|{1}|{2}|{3}|{4}|{5}|{6}|{7}|{8}|{9}|{10}|{11}|{12}|{13}|{14}|{15}" +
-                        "|{16}|{17}|{18}|{19}|{20}|{21}|{22}|{23}|{24}|{25}|{26}|{27}|{28}|{29}|{30}|{31}|{32}|{33}|{34}" +
-                        "\r\n",
-                        (iAcc + 1).ToString().ToUpper(),//drAcc[iAcc]["record_cnt_acct"].ToString(), //0
-                        drAcc[iAcc][nameof(PatientStatementAccount.PatientAccountNumber)].ToString().ToUpper(),
-                        drAcc[iAcc][nameof(PatientStatementAccount.AccountId)].ToString().ToUpper(),
-                        drAcc[iAcc][nameof(PatientStatementAccount.PatientName)].ToString().ToUpper(),
-                        drAcc[iAcc][nameof(PatientStatementAccount.AccountSubtotal)].ToString().ToUpper(),                 //4
-                        drAcc[iAcc][nameof(PatientStatementAccount.TotalAccountSubtotal)].ToString().ToUpper(),
-                        drAcc[iAcc][nameof(PatientStatementAccount.AccountAmtDue)].ToString().ToUpper(),
-                        drAcc[iAcc][nameof(PatientStatementAccount.AccountInsPending)].ToString().ToUpper(),
-                        drAcc[iAcc][nameof(PatientStatementAccount.AccountDatesOfService)].ToString().ToUpper(),
-                        drAcc[iAcc][nameof(PatientStatementAccount.AccountUnpaidBalance)].ToString().ToUpper(),                  //9
-                        drAcc[iAcc][nameof(PatientStatementAccount.AccountPatientBalance)].ToString().ToUpper(),
-                        drAcc[iAcc][nameof(PatientStatementAccount.AccountPaidSinceLastStatement)].ToString().ToUpper(),
-                        drAcc[iAcc][nameof(PatientStatementAccount.AccountInsDiscount)].ToString().ToUpper(),
-                        drAcc[iAcc][nameof(PatientStatementAccount.AccountDateDue)].ToString().ToUpper(),
-                        drAcc[iAcc][nameof(PatientStatementAccount.AccountHealthPlanName)].ToString().ToUpper(),            //14
-                        drAcc[iAcc][nameof(PatientStatementAccount.PatientDateOfBirth)].ToString().ToUpper(),
-                        drAcc[iAcc][nameof(PatientStatementAccount.PatientDateOfDeath)].ToString().ToUpper(),
-                        drAcc[iAcc][nameof(PatientStatementAccount.PatientSex)].ToString().ToUpper(),
-                        drAcc[iAcc][nameof(PatientStatementAccount.PatientVip)].ToString().ToUpper(),
-                        drAcc[iAcc][nameof(PatientStatementAccount.IncludesEstPatLib)].ToString().ToUpper(),
-                        drAcc[iAcc][nameof(PatientStatementAccount.TotalChargeAmt)].ToString().ToUpper(),
-                        drAcc[iAcc][nameof(PatientStatementAccount.NonCoveredChargeAmt)].ToString().ToUpper(),
-                        drAcc[iAcc][nameof(PatientStatementAccount.ABNChargeAmt)].ToString().ToUpper(),
-                        drAcc[iAcc][nameof(PatientStatementAccount.EstContractAllowanceAmtInd)].ToString().ToUpper(),
-                        drAcc[iAcc][nameof(PatientStatementAccount.EstContractAllowanceAmt)].ToString().ToUpper(),
-                        drAcc[iAcc][nameof(PatientStatementAccount.EncntrDeductibleRemAmtInd)].ToString().ToUpper(),
-                        drAcc[iAcc][nameof(PatientStatementAccount.DeductibleAppliedAmt)].ToString().ToUpper(),
-                        drAcc[iAcc][nameof(PatientStatementAccount.EncntrCopayAmtInd)].ToString().ToUpper(),
-                        drAcc[iAcc][nameof(PatientStatementAccount.EncntrCopayAmt)].ToString().ToUpper(),
-                        drAcc[iAcc][nameof(PatientStatementAccount.EncntrCoinsurancePctInd)].ToString().ToUpper(),
-                        drAcc[iAcc][nameof(PatientStatementAccount.EncntrCoinsurancePct)].ToString().ToUpper(),
-                        drAcc[iAcc][nameof(PatientStatementAccount.EncntrCoinsuranceAmt)].ToString().ToUpper(),
-                        drAcc[iAcc][nameof(PatientStatementAccount.MaximumOutOfPocketAmtInd)].ToString().ToUpper(),
-                        drAcc[iAcc][nameof(PatientStatementAccount.AmtOverMaxOutOfPocket)].ToString().ToUpper(),
-                        drAcc[iAcc][nameof(PatientStatementAccount.EstPatientLiabAmt)].ToString().ToUpper()
+                    line = new('|');
 
-                        ));
+                    line.AddField("ACCT");
+                    line.AddField((iAcc + 1).ToString().ToUpper());
+                    line.AddField(drAcc[iAcc][nameof(PatientStatementAccount.PatientAccountNumber)].ToString().ToUpper());
+                    line.AddField(drAcc[iAcc][nameof(PatientStatementAccount.AccountId)].ToString().ToUpper());
+                    line.AddField(drAcc[iAcc][nameof(PatientStatementAccount.PatientName)].ToString().ToUpper());
+                    line.AddField(drAcc[iAcc][nameof(PatientStatementAccount.AccountSubtotal)].ToString().ToUpper());
+                    line.AddField(drAcc[iAcc][nameof(PatientStatementAccount.TotalAccountSubtotal)].ToString().ToUpper());
+                    line.AddField(drAcc[iAcc][nameof(PatientStatementAccount.AccountAmtDue)].ToString().ToUpper());
+                    line.AddField(drAcc[iAcc][nameof(PatientStatementAccount.AccountInsPending)].ToString().ToUpper());
+                    line.AddField(drAcc[iAcc][nameof(PatientStatementAccount.AccountDatesOfService)].ToString().ToUpper());
+                    line.AddField(drAcc[iAcc][nameof(PatientStatementAccount.AccountUnpaidBalance)].ToString().ToUpper());
+                    line.AddField(drAcc[iAcc][nameof(PatientStatementAccount.AccountPatientBalance)].ToString().ToUpper());
+                    line.AddField(drAcc[iAcc][nameof(PatientStatementAccount.AccountPaidSinceLastStatement)].ToString().ToUpper());
+                    line.AddField(drAcc[iAcc][nameof(PatientStatementAccount.AccountInsDiscount)].ToString().ToUpper());
+                    line.AddField(drAcc[iAcc][nameof(PatientStatementAccount.AccountDateDue)].ToString().ToUpper());
+                    line.AddField(drAcc[iAcc][nameof(PatientStatementAccount.AccountHealthPlanName)].ToString().ToUpper());
+                    line.AddField(drAcc[iAcc][nameof(PatientStatementAccount.PatientDateOfBirth)].ToString().ToUpper());
+                    line.AddField(drAcc[iAcc][nameof(PatientStatementAccount.PatientDateOfDeath)].ToString().ToUpper());
+                    line.AddField(drAcc[iAcc][nameof(PatientStatementAccount.PatientSex)].ToString().ToUpper());
+                    line.AddField(drAcc[iAcc][nameof(PatientStatementAccount.PatientVip)].ToString().ToUpper());
+                    line.AddField(drAcc[iAcc][nameof(PatientStatementAccount.IncludesEstPatLib)].ToString().ToUpper());
+                    line.AddField(drAcc[iAcc][nameof(PatientStatementAccount.TotalChargeAmt)].ToString().ToUpper());
+                    line.AddField(drAcc[iAcc][nameof(PatientStatementAccount.NonCoveredChargeAmt)].ToString().ToUpper());
+                    line.AddField(drAcc[iAcc][nameof(PatientStatementAccount.ABNChargeAmt)].ToString().ToUpper());
+                    line.AddField(drAcc[iAcc][nameof(PatientStatementAccount.EstContractAllowanceAmtInd)].ToString().ToUpper());
+                    line.AddField(drAcc[iAcc][nameof(PatientStatementAccount.EstContractAllowanceAmt)].ToString().ToUpper());
+                    line.AddField(drAcc[iAcc][nameof(PatientStatementAccount.EncntrDeductibleRemAmtInd)].ToString().ToUpper());
+                    line.AddField(drAcc[iAcc][nameof(PatientStatementAccount.DeductibleAppliedAmt)].ToString().ToUpper());
+                    line.AddField(drAcc[iAcc][nameof(PatientStatementAccount.EncntrCopayAmtInd)].ToString().ToUpper());
+                    line.AddField(drAcc[iAcc][nameof(PatientStatementAccount.EncntrCopayAmt)].ToString().ToUpper());
+                    line.AddField(drAcc[iAcc][nameof(PatientStatementAccount.EncntrCoinsurancePctInd)].ToString().ToUpper());
+                    line.AddField(drAcc[iAcc][nameof(PatientStatementAccount.EncntrCoinsurancePct)].ToString().ToUpper());
+                    line.AddField(drAcc[iAcc][nameof(PatientStatementAccount.EncntrCoinsuranceAmt)].ToString().ToUpper());
+                    line.AddField(drAcc[iAcc][nameof(PatientStatementAccount.MaximumOutOfPocketAmtInd)].ToString().ToUpper());
+                    line.AddField(drAcc[iAcc][nameof(PatientStatementAccount.AmtOverMaxOutOfPocket)].ToString().ToUpper());
+                    line.AddField(drAcc[iAcc][nameof(PatientStatementAccount.EstPatientLiabAmt)].ToString().ToUpper());
+
+                    sw.WriteLine(line.ToString());
+
+                    /*                    sw.Write(string.Format("ACCT|{0}|{1}|{2}|{3}|{4}|{5}|{6}|{7}|{8}|{9}|{10}|{11}|{12}|{13}|{14}|{15}" +
+                                            "|{16}|{17}|{18}|{19}|{20}|{21}|{22}|{23}|{24}|{25}|{26}|{27}|{28}|{29}|{30}|{31}|{32}|{33}|{34}" +
+                                            "\r\n",
+                                            (iAcc + 1).ToString().ToUpper(),//drAcc[iAcc]["record_cnt_acct"].ToString(), //0
+                                            drAcc[iAcc][nameof(PatientStatementAccount.PatientAccountNumber)].ToString().ToUpper(),
+                                            drAcc[iAcc][nameof(PatientStatementAccount.AccountId)].ToString().ToUpper(),
+                                            drAcc[iAcc][nameof(PatientStatementAccount.PatientName)].ToString().ToUpper(),
+                                            drAcc[iAcc][nameof(PatientStatementAccount.AccountSubtotal)].ToString().ToUpper(),                 //4
+                                            drAcc[iAcc][nameof(PatientStatementAccount.TotalAccountSubtotal)].ToString().ToUpper(),
+                                            drAcc[iAcc][nameof(PatientStatementAccount.AccountAmtDue)].ToString().ToUpper(),
+                                            drAcc[iAcc][nameof(PatientStatementAccount.AccountInsPending)].ToString().ToUpper(),
+                                            drAcc[iAcc][nameof(PatientStatementAccount.AccountDatesOfService)].ToString().ToUpper(),
+                                            drAcc[iAcc][nameof(PatientStatementAccount.AccountUnpaidBalance)].ToString().ToUpper(),                  //9
+                                            drAcc[iAcc][nameof(PatientStatementAccount.AccountPatientBalance)].ToString().ToUpper(),
+                                            drAcc[iAcc][nameof(PatientStatementAccount.AccountPaidSinceLastStatement)].ToString().ToUpper(),
+                                            drAcc[iAcc][nameof(PatientStatementAccount.AccountInsDiscount)].ToString().ToUpper(),
+                                            drAcc[iAcc][nameof(PatientStatementAccount.AccountDateDue)].ToString().ToUpper(),
+                                            drAcc[iAcc][nameof(PatientStatementAccount.AccountHealthPlanName)].ToString().ToUpper(),            //14
+                                            drAcc[iAcc][nameof(PatientStatementAccount.PatientDateOfBirth)].ToString().ToUpper(),
+                                            drAcc[iAcc][nameof(PatientStatementAccount.PatientDateOfDeath)].ToString().ToUpper(),
+                                            drAcc[iAcc][nameof(PatientStatementAccount.PatientSex)].ToString().ToUpper(),
+                                            drAcc[iAcc][nameof(PatientStatementAccount.PatientVip)].ToString().ToUpper(),
+                                            drAcc[iAcc][nameof(PatientStatementAccount.IncludesEstPatLib)].ToString().ToUpper(),
+                                            drAcc[iAcc][nameof(PatientStatementAccount.TotalChargeAmt)].ToString().ToUpper(),
+                                            drAcc[iAcc][nameof(PatientStatementAccount.NonCoveredChargeAmt)].ToString().ToUpper(),
+                                            drAcc[iAcc][nameof(PatientStatementAccount.ABNChargeAmt)].ToString().ToUpper(),
+                                            drAcc[iAcc][nameof(PatientStatementAccount.EstContractAllowanceAmtInd)].ToString().ToUpper(),
+                                            drAcc[iAcc][nameof(PatientStatementAccount.EstContractAllowanceAmt)].ToString().ToUpper(),
+                                            drAcc[iAcc][nameof(PatientStatementAccount.EncntrDeductibleRemAmtInd)].ToString().ToUpper(),
+                                            drAcc[iAcc][nameof(PatientStatementAccount.DeductibleAppliedAmt)].ToString().ToUpper(),
+                                            drAcc[iAcc][nameof(PatientStatementAccount.EncntrCopayAmtInd)].ToString().ToUpper(),
+                                            drAcc[iAcc][nameof(PatientStatementAccount.EncntrCopayAmt)].ToString().ToUpper(),
+                                            drAcc[iAcc][nameof(PatientStatementAccount.EncntrCoinsurancePctInd)].ToString().ToUpper(),
+                                            drAcc[iAcc][nameof(PatientStatementAccount.EncntrCoinsurancePct)].ToString().ToUpper(),
+                                            drAcc[iAcc][nameof(PatientStatementAccount.EncntrCoinsuranceAmt)].ToString().ToUpper(),
+                                            drAcc[iAcc][nameof(PatientStatementAccount.MaximumOutOfPocketAmtInd)].ToString().ToUpper(),
+                                            drAcc[iAcc][nameof(PatientStatementAccount.AmtOverMaxOutOfPocket)].ToString().ToUpper(),
+                                            drAcc[iAcc][nameof(PatientStatementAccount.EstPatientLiabAmt)].ToString().ToUpper()
+
+                                            ));
+                    */
 
                     // each encounter
                     DataRow[] drEnct = encountersDt.Select($"{nameof(PatientStatementEncounter.StatementNumber)} = {dr[nameof(PatientStatement.StatementNumber)]} " +
                         $"and {nameof(PatientStatementEncounter.RecordCount)} = '{drAcc[iAcc][nameof(PatientStatementAccount.RecordCountAcct)]}'");
 
-                    //string.Format("statement_number = '{0}' and record_cnt = '{1}'", 
-                    //    dr[nameof(PatientStatement.StatementNumber)].ToString().ToUpper(), 
-                    //    drAcc[iAcc][nameof(PatientStatementAccount.RecordCountAcct)].ToString().ToUpper()));
-
                     for (int iEnctr = 0; iEnctr <= drEnct.GetUpperBound(0); iEnctr++)
                     {
-                        sw.Write(string.Format("ENCT|{0}|{1}|{2}|{3}|{4}|{5}|{6}|{7}|{8}|{9}|{10}|{11}|{12}|{13}|{14}" +
+                        line = new('|');
+
+                        line.AddField("ENCT");
+                        line.AddField((iEnctr + 1).ToString());
+                        line.AddField(drEnct[iEnctr][nameof(PatientStatementEncounter.EncntrNumber)].ToString().ToUpper());
+                        line.AddField(drEnct[iEnctr][nameof(PatientStatementEncounter.PFTEncntrId)].ToString().ToUpper());
+                        line.AddField(drEnct[iEnctr][nameof(PatientStatementEncounter.PlaceOfService)].ToString().ToUpper());
+                        line.AddField(drEnct[iEnctr][nameof(PatientStatementEncounter.PFTEncntrDatesOfService)].ToString().ToUpper());
+                        line.AddField(drEnct[iEnctr][nameof(PatientStatementEncounter.PFTEncntrAmtDue)].ToString().ToUpper());
+                        line.AddField(drEnct[iEnctr][nameof(PatientStatementEncounter.PFTEncntrProvName)].ToString().ToUpper());
+                        line.AddField(drEnct[iEnctr][nameof(PatientStatementEncounter.PFTEncntrProvOrgName)].ToString().ToUpper());
+                        line.AddField(drEnct[iEnctr][nameof(PatientStatementEncounter.PFTEncntrProvOrgStreetAddr)].ToString().ToUpper());
+                        line.AddField(drEnct[iEnctr][nameof(PatientStatementEncounter.PFTEncntrProvOrgStreetAddr2)].ToString().ToUpper());
+                        line.AddField(drEnct[iEnctr][nameof(PatientStatementEncounter.PFTEncntrProvOrgStreetAddr3)].ToString().ToUpper());
+                        line.AddField(drEnct[iEnctr][nameof(PatientStatementEncounter.PFTEncntrProvOrgStreetAddr4)].ToString().ToUpper());
+                        line.AddField(drEnct[iEnctr][nameof(PatientStatementEncounter.PFTEncntrProvOrgCity)].ToString().ToUpper());
+                        line.AddField(drEnct[iEnctr][nameof(PatientStatementEncounter.PFTEncntrProvOrgState)].ToString().ToUpper());
+                        line.AddField(drEnct[iEnctr][nameof(PatientStatementEncounter.PFTEncntrProvOrgZip)].ToString().ToUpper());
+                        line.AddField(drEnct[iEnctr][nameof(PatientStatementEncounter.PFTEncntrProvOrgPhone)].ToString().ToUpper());
+                        line.AddField(drEnct[iEnctr][nameof(PatientStatementEncounter.PFTEncntrProvHrs)].ToString().ToUpper());
+                        line.AddField(drEnct[iEnctr][nameof(PatientStatementEncounter.PFTEncntrUnpaidBalance)].ToString().ToUpper());
+                        line.AddField(drEnct[iEnctr][nameof(PatientStatementEncounter.PFTEncntrPatientBalance)].ToString().ToUpper());
+                        line.AddField(drEnct[iEnctr][nameof(PatientStatementEncounter.PFTEncntrPaidSinceLastStmt)].ToString().ToUpper());
+                        line.AddField(drEnct[iEnctr][nameof(PatientStatementEncounter.PFTEncntrInsDiscount)].ToString().ToUpper());
+                        line.AddField(drEnct[iEnctr][nameof(PatientStatementEncounter.PFTEncntrOrdMgmtActType)].ToString().ToUpper());
+                        line.AddField(drEnct[iEnctr][nameof(PatientStatementEncounter.PFTEncntrOrgMgmtCatType)].ToString().ToUpper());
+                        line.AddField(drEnct[iEnctr][nameof(PatientStatementEncounter.PFTEncntrHealthPlanName)].ToString().ToUpper());
+                        line.AddField(drEnct[iEnctr][nameof(PatientStatementEncounter.PFTEncntrInPending)].ToString().ToUpper());
+                        line.AddField(drEnct[iEnctr][nameof(PatientStatementEncounter.PFTEncntrTotal)].ToString().ToUpper());
+                        line.AddField(drEnct[iEnctr][nameof(PatientStatementEncounter.EncntrAdmitDateTime)].ToString().ToUpper());
+                        line.AddField(drEnct[iEnctr][nameof(PatientStatementEncounter.EncntrDischargeDateTime)].ToString().ToUpper());
+                        line.AddField(drEnct[iEnctr][nameof(PatientStatementEncounter.EncntrMedicalService)].ToString().ToUpper());
+                        line.AddField(drEnct[iEnctr][nameof(PatientStatementEncounter.EncntrType)].ToString().ToUpper());
+                        line.AddField(drEnct[iEnctr][nameof(PatientStatementEncounter.EncntrFinancialClass)].ToString().ToUpper());
+                        line.AddField(drEnct[iEnctr][nameof(PatientStatementEncounter.EncntrVIP)].ToString().ToUpper());
+                        line.AddField(drEnct[iEnctr][nameof(PatientStatementEncounter.PFTEncntrQualifier)].ToString().ToUpper());
+                        line.AddField(drEnct[iEnctr][nameof(PatientStatementEncounter.PFTEncntrTotalCharges)].ToString().ToUpper());
+                        line.AddField(drEnct[iEnctr][nameof(PatientStatementEncounter.TotalPatientPayments)].ToString().ToUpper());
+                        line.AddField(drEnct[iEnctr][nameof(PatientStatementEncounter.TotalPatientAdjustments)].ToString().ToUpper());
+                        line.AddField(drEnct[iEnctr][nameof(PatientStatementEncounter.TotalInsurancePayments)].ToString().ToUpper());
+                        line.AddField(drEnct[iEnctr][nameof(PatientStatementEncounter.TotalInsuranceAdjustments)].ToString().ToUpper());
+                        line.AddField(drEnct[iEnctr][nameof(PatientStatementEncounter.PFTEncntrAssignedAgency)].ToString().ToUpper());
+                        line.AddField(drEnct[iEnctr][nameof(PatientStatementEncounter.PFTEncntrPayPlanFlag)].ToString().ToUpper());
+                        line.AddField(drEnct[iEnctr][nameof(PatientStatementEncounter.PFTEncntrPayPlanStatus)].ToString().ToUpper());
+                        line.AddField(drEnct[iEnctr][nameof(PatientStatementEncounter.PFTEncntrPayPlanOrigAmt)].ToString().ToUpper());
+                        line.AddField(drEnct[iEnctr][nameof(PatientStatementEncounter.PFTEncntrPayPlanPayAmt)].ToString().ToUpper());
+                        line.AddField(drEnct[iEnctr][nameof(PatientStatementEncounter.PFTEncntrPayPlanBeginDateTime)].ToString().ToUpper());
+                        line.AddField(drEnct[iEnctr][nameof(PatientStatementEncounter.PFTEncntrPayPlanDelinqAmt)].ToString().ToUpper());
+                        line.AddField(drEnct[iEnctr][nameof(PatientStatementEncounter.PFTEncntrPriClmOrigTransDateTime)].ToString().ToUpper());
+                        line.AddField(drEnct[iEnctr][nameof(PatientStatementEncounter.PFTEncntrPriClmCurTransDateTime)].ToString().ToUpper());
+                        line.AddField(drEnct[iEnctr][nameof(PatientStatementEncounter.PFTEncntrSecClmOrigTransDateTime)].ToString().ToUpper());
+                        line.AddField(drEnct[iEnctr][nameof(PatientStatementEncounter.PFTSecClmCurTransDateTime)].ToString().ToUpper());
+                        line.AddField(drEnct[iEnctr][nameof(PatientStatementEncounter.PFTEncntrTerClmOrigTransDateTime)].ToString().ToUpper());
+                        line.AddField(drEnct[iEnctr][nameof(PatientStatementEncounter.PFTEncntrTerClmCurTransDateTime)].ToString().ToUpper());
+                        line.AddField(drEnct[iEnctr][nameof(PatientStatementEncounter.PFTEncntrPrimInsuranceBalance)].ToString().ToUpper());
+                        line.AddField(drEnct[iEnctr][nameof(PatientStatementEncounter.PFTEncntrSecInsuranceBalance)].ToString().ToUpper());
+                        line.AddField(drEnct[iEnctr][nameof(PatientStatementEncounter.PFTEncntrTerInsuranceBalance)].ToString().ToUpper());
+                        line.AddField(drEnct[iEnctr][nameof(PatientStatementEncounter.PFTEncntrSelfPayBalance)].ToString().ToUpper());
+                        line.AddField(drEnct[iEnctr][nameof(PatientStatementEncounter.AttendingPhysicianName)].ToString().ToUpper());
+                        line.AddField(drEnct[iEnctr][nameof(PatientStatementEncounter.IncludesEstPatLiab)].ToString().ToUpper());
+                        line.AddField(drEnct[iEnctr][nameof(PatientStatementEncounter.TotalChargeAmount)].ToString().ToUpper());
+                        line.AddField(drEnct[iEnctr][nameof(PatientStatementEncounter.NonCoveredChargeAmt)].ToString().ToUpper());
+                        line.AddField(drEnct[iEnctr][nameof(PatientStatementEncounter.ABNChargeAmt)].ToString().ToUpper());
+                        line.AddField(drEnct[iEnctr][nameof(PatientStatementEncounter.EstContractAllowanceAmtInd)].ToString().ToUpper());
+                        line.AddField(drEnct[iEnctr][nameof(PatientStatementEncounter.EstContractAllowanceAmt)].ToString().ToUpper());
+                        line.AddField(drEnct[iEnctr][nameof(PatientStatementEncounter.EncntrDeductibleRemAmtInd)].ToString().ToUpper());
+                        line.AddField(drEnct[iEnctr][nameof(PatientStatementEncounter.EncntrDeductibleRemAmt)].ToString().ToUpper());
+                        line.AddField(drEnct[iEnctr][nameof(PatientStatementEncounter.DeductibleAppliedAmt)].ToString().ToUpper());
+                        line.AddField(drEnct[iEnctr][nameof(PatientStatementEncounter.EncntrCopayAmtInd)].ToString().ToUpper());
+                        line.AddField(drEnct[iEnctr][nameof(PatientStatementEncounter.EncntrCopayAmt)].ToString().ToUpper());
+                        line.AddField(drEnct[iEnctr][nameof(PatientStatementEncounter.EncntrCoinsurancePctInd)].ToString().ToUpper());
+                        line.AddField(drEnct[iEnctr][nameof(PatientStatementEncounter.EncntrCoinsurancePct)].ToString().ToUpper());
+                        line.AddField(drEnct[iEnctr][nameof(PatientStatementEncounter.EncntrCoinsuranceAmt)].ToString().ToUpper());
+                        line.AddField(drEnct[iEnctr][nameof(PatientStatementEncounter.MaximumOutOfPocketAmtInd)].ToString().ToUpper());
+                        line.AddField(drEnct[iEnctr][nameof(PatientStatementEncounter.MaximumOutOfPocketAmt)].ToString().ToUpper());
+                        line.AddField(drEnct[iEnctr][nameof(PatientStatementEncounter.AmtOverMaxOutOfPocket)].ToString().ToUpper());
+                        line.AddField(drEnct[iEnctr][nameof(PatientStatementEncounter.EstContractAllowanceAmt)].ToString().ToUpper());
+
+                        sw.WriteLine(line.ToString());
+
+/*                        sw.Write(string.Format("ENCT|{0}|{1}|{2}|{3}|{4}|{5}|{6}|{7}|{8}|{9}|{10}|{11}|{12}|{13}|{14}" +
                         "|{16}|{17}|{18}|{19}|{20}|{21}|{22}|{23}|{24}|{25}|{26}|{27}|{28}|{29}|{30}|{31}|{32}|{33}|{34}|{35}" +
                         "|{36}|{37}|{38}|{39}|{40}|{41}|{42}|{43}|{44}|{45}|{46}|{47}|{48}|{49}|{50}|{51}|{52}|{53}|{54}|{55}" +
                         "|{56}|{57}|{58}|{59}|{60}|{61}|{62}|{63}|{64}|{65}|{66}|{67}|{68}|{69}|{70}|{71}|{72}|{73}\r\n",
@@ -562,7 +782,7 @@ namespace LabBilling.Core
                         drEnct[iEnctr][nameof(PatientStatementEncounter.EstContractAllowanceAmt)].ToString().ToUpper()
 
                         ));
-
+*/
                         if (cernerStatementDt.Rows.Count > 0)
                         {
                             DataRow[] drEnctMsg = cernerStatementDt.Select($"{nameof(PatientStatementCerner.StatementType)} = 'EMSG' " +
@@ -583,41 +803,75 @@ namespace LabBilling.Core
 
                         for (int iActv = 0; iActv <= drActv.GetUpperBound(0); iActv++)
                         {
+                            line = new('|');
 
-                            sw.Write(string.Format("ACTV|{0}|{1}|{2}|{3}|{4}|{5}|{6}|{7}|{8}|{9}|{10}|{11}" +
-                                "|{12}|{13}|{14}|{15}|{16}|{17}|{18}|{19}|{20}|{21}|{22}|{23}|{24}|{25}" +
-                                "|{26}|{27}" +
-                                "\r\n",
-                            (iActv + 1).ToString().ToUpper(), //drActv[iActv]["record_cnt"].ToString(), //0
-                            drActv[iActv][nameof(PatientStatementEncounterActivity.EncntrNumber)].ToString().ToUpper(),
-                            drActv[iActv][nameof(PatientStatementEncounterActivity.ActivityId)].ToString().ToUpper(),
-                            drActv[iActv][nameof(PatientStatementEncounterActivity.ActivityType)].ToString().ToUpper(),
-                            drActv[iActv][nameof(PatientStatementEncounterActivity.ActivityDate)].ToString().ToUpper(),                  //4
-                            drActv[iActv][nameof(PatientStatementEncounterActivity.ActivityDescription)].ToString().ToUpper(),
-                            drActv[iActv][nameof(PatientStatementEncounterActivity.ActivityCode)].ToString().ToUpper(),
-                            drActv[iActv][nameof(PatientStatementEncounterActivity.ActivityAmount)].ToString().ToUpper(),
-                            drActv[iActv][nameof(PatientStatementEncounterActivity.Units)].ToString().ToUpper(),
-                            drActv[iActv][nameof(PatientStatementEncounterActivity.CptCode)].ToString().ToUpper(),                       //9
-                            drActv[iActv][nameof(PatientStatementEncounterActivity.CptDescription)].ToString().ToUpper(),
-                            drActv[iActv][nameof(PatientStatementEncounterActivity.DrgCode)].ToString().ToUpper(),
-                            drActv[iActv][nameof(PatientStatementEncounterActivity.RevenueCode)].ToString().ToUpper(),
-                            drActv[iActv][nameof(PatientStatementEncounterActivity.RevenueCodeDescription)].ToString().ToUpper(),
-                            drActv[iActv][nameof(PatientStatementEncounterActivity.HCPCSCode)].ToString().ToUpper(),
-                            drActv[iActv][nameof(PatientStatementEncounterActivity.HPCPSDescription)].ToString().ToUpper(),
-                            drActv[iActv][nameof(PatientStatementEncounterActivity.OrderMgmtActivityType)].ToString().ToUpper(),
-                            drActv[iActv][nameof(PatientStatementEncounterActivity.ActivityAmountDue)].ToString().ToUpper(),
-                            drActv[iActv][nameof(PatientStatementEncounterActivity.ActivityDateOfService)].ToString().ToUpper(),
-                            drActv[iActv][nameof(PatientStatementEncounterActivity.ActivityPatientBalance)].ToString().ToUpper(),
-                            drActv[iActv][nameof(PatientStatementEncounterActivity.ActivityInsDiscount)].ToString().ToUpper(),
-                            drActv[iActv][nameof(PatientStatementEncounterActivity.ActivityTransType)].ToString().ToUpper(),
-                            drActv[iActv][nameof(PatientStatementEncounterActivity.ActivityTransSubType)].ToString().ToUpper(),
-                            drActv[iActv][nameof(PatientStatementEncounterActivity.ActivityTransAmount)].ToString().ToUpper(),
-                            drActv[iActv][nameof(PatientStatementEncounterActivity.ActivityHealthPlanName)].ToString().ToUpper(),
-                            drActv[iActv][nameof(PatientStatementEncounterActivity.ActivityInsPending)].ToString().ToUpper(),
-                            drActv[iActv][nameof(PatientStatementEncounterActivity.ActivityDrCrFlag)].ToString().ToUpper(),
-                            drActv[iActv][nameof(PatientStatementEncounterActivity.ParentActivityId)].ToString().ToUpper()
+                            line.AddField("ACTV");
+                            line.AddField((iActv + 1).ToString().ToUpper());
+                            line.AddField(drActv[iActv][nameof(PatientStatementEncounterActivity.EncntrNumber)].ToString().ToUpper());
+                            line.AddField(drActv[iActv][nameof(PatientStatementEncounterActivity.ActivityId)].ToString().ToUpper());
+                            line.AddField(drActv[iActv][nameof(PatientStatementEncounterActivity.ActivityType)].ToString().ToUpper());
+                            line.AddField(drActv[iActv][nameof(PatientStatementEncounterActivity.ActivityDate)].ToString().ToUpper());
+                            line.AddField(drActv[iActv][nameof(PatientStatementEncounterActivity.ActivityDescription)].ToString().ToUpper());
+                            line.AddField(drActv[iActv][nameof(PatientStatementEncounterActivity.ActivityCode)].ToString().ToUpper());
+                            line.AddField(drActv[iActv][nameof(PatientStatementEncounterActivity.ActivityAmount)].ToString().ToUpper());
+                            line.AddField(drActv[iActv][nameof(PatientStatementEncounterActivity.Units)].ToString().ToUpper());
+                            line.AddField(drActv[iActv][nameof(PatientStatementEncounterActivity.CptCode)].ToString().ToUpper());
+                            line.AddField(drActv[iActv][nameof(PatientStatementEncounterActivity.CptDescription)].ToString().ToUpper());
+                            line.AddField(drActv[iActv][nameof(PatientStatementEncounterActivity.DrgCode)].ToString().ToUpper());
+                            line.AddField(drActv[iActv][nameof(PatientStatementEncounterActivity.RevenueCode)].ToString().ToUpper());
+                            line.AddField(drActv[iActv][nameof(PatientStatementEncounterActivity.RevenueCodeDescription)].ToString().ToUpper());
+                            line.AddField(drActv[iActv][nameof(PatientStatementEncounterActivity.HCPCSCode)].ToString().ToUpper());
+                            line.AddField(drActv[iActv][nameof(PatientStatementEncounterActivity.HPCPSDescription)].ToString().ToUpper());
+                            line.AddField(drActv[iActv][nameof(PatientStatementEncounterActivity.OrderMgmtActivityType)].ToString().ToUpper());
+                            line.AddField(drActv[iActv][nameof(PatientStatementEncounterActivity.ActivityAmountDue)].ToString().ToUpper());
+                            line.AddField(drActv[iActv][nameof(PatientStatementEncounterActivity.ActivityDateOfService)].ToString().ToUpper());
+                            line.AddField(drActv[iActv][nameof(PatientStatementEncounterActivity.ActivityPatientBalance)].ToString().ToUpper());
+                            line.AddField(drActv[iActv][nameof(PatientStatementEncounterActivity.ActivityInsDiscount)].ToString().ToUpper());
+                            line.AddField(drActv[iActv][nameof(PatientStatementEncounterActivity.ActivityTransType)].ToString().ToUpper());
+                            line.AddField(drActv[iActv][nameof(PatientStatementEncounterActivity.ActivityTransSubType)].ToString().ToUpper());
+                            line.AddField(drActv[iActv][nameof(PatientStatementEncounterActivity.ActivityTransAmount)].ToString().ToUpper());
+                            line.AddField(drActv[iActv][nameof(PatientStatementEncounterActivity.ActivityHealthPlanName)].ToString().ToUpper());
+                            line.AddField(drActv[iActv][nameof(PatientStatementEncounterActivity.ActivityInsPending)].ToString().ToUpper());
+                            line.AddField(drActv[iActv][nameof(PatientStatementEncounterActivity.ActivityDrCrFlag)].ToString().ToUpper());
+                            line.AddField(drActv[iActv][nameof(PatientStatementEncounterActivity.ParentActivityId)].ToString().ToUpper());
 
-                            ));
+                            /*                            sw.Write(string.Format("ACTV|{0}|{1}|{2}|{3}|{4}|{5}|{6}|{7}|{8}|{9}|{10}|{11}" +
+                                                            "|{12}|{13}|{14}|{15}|{16}|{17}|{18}|{19}|{20}|{21}|{22}|{23}|{24}|{25}" +
+                                                            "|{26}|{27}" +
+                                                            "\r\n",
+                                                        (iActv + 1).ToString().ToUpper(), //drActv[iActv]["record_cnt"].ToString(), //0
+                                                        drActv[iActv][nameof(PatientStatementEncounterActivity.EncntrNumber)].ToString().ToUpper(),
+                                                        drActv[iActv][nameof(PatientStatementEncounterActivity.ActivityId)].ToString().ToUpper(),
+                                                        drActv[iActv][nameof(PatientStatementEncounterActivity.ActivityType)].ToString().ToUpper(),
+                                                        drActv[iActv][nameof(PatientStatementEncounterActivity.ActivityDate)].ToString().ToUpper(),                  //4
+                                                        drActv[iActv][nameof(PatientStatementEncounterActivity.ActivityDescription)].ToString().ToUpper(),
+                                                        drActv[iActv][nameof(PatientStatementEncounterActivity.ActivityCode)].ToString().ToUpper(),
+                                                        drActv[iActv][nameof(PatientStatementEncounterActivity.ActivityAmount)].ToString().ToUpper(),
+                                                        drActv[iActv][nameof(PatientStatementEncounterActivity.Units)].ToString().ToUpper(),
+                                                        drActv[iActv][nameof(PatientStatementEncounterActivity.CptCode)].ToString().ToUpper(),                       //9
+                                                        drActv[iActv][nameof(PatientStatementEncounterActivity.CptDescription)].ToString().ToUpper(),
+                                                        drActv[iActv][nameof(PatientStatementEncounterActivity.DrgCode)].ToString().ToUpper(),
+                                                        drActv[iActv][nameof(PatientStatementEncounterActivity.RevenueCode)].ToString().ToUpper(),
+                                                        drActv[iActv][nameof(PatientStatementEncounterActivity.RevenueCodeDescription)].ToString().ToUpper(),
+                                                        drActv[iActv][nameof(PatientStatementEncounterActivity.HCPCSCode)].ToString().ToUpper(),
+                                                        drActv[iActv][nameof(PatientStatementEncounterActivity.HPCPSDescription)].ToString().ToUpper(),
+                                                        drActv[iActv][nameof(PatientStatementEncounterActivity.OrderMgmtActivityType)].ToString().ToUpper(),
+                                                        drActv[iActv][nameof(PatientStatementEncounterActivity.ActivityAmountDue)].ToString().ToUpper(),
+                                                        drActv[iActv][nameof(PatientStatementEncounterActivity.ActivityDateOfService)].ToString().ToUpper(),
+                                                        drActv[iActv][nameof(PatientStatementEncounterActivity.ActivityPatientBalance)].ToString().ToUpper(),
+                                                        drActv[iActv][nameof(PatientStatementEncounterActivity.ActivityInsDiscount)].ToString().ToUpper(),
+                                                        drActv[iActv][nameof(PatientStatementEncounterActivity.ActivityTransType)].ToString().ToUpper(),
+                                                        drActv[iActv][nameof(PatientStatementEncounterActivity.ActivityTransSubType)].ToString().ToUpper(),
+                                                        drActv[iActv][nameof(PatientStatementEncounterActivity.ActivityTransAmount)].ToString().ToUpper(),
+                                                        drActv[iActv][nameof(PatientStatementEncounterActivity.ActivityHealthPlanName)].ToString().ToUpper(),
+                                                        drActv[iActv][nameof(PatientStatementEncounterActivity.ActivityInsPending)].ToString().ToUpper(),
+                                                        drActv[iActv][nameof(PatientStatementEncounterActivity.ActivityDrCrFlag)].ToString().ToUpper(),
+                                                        drActv[iActv][nameof(PatientStatementEncounterActivity.ParentActivityId)].ToString().ToUpper()
+
+                                                        ));
+                            */
+                            
+                            sw.WriteLine(line.ToString());
                         }
                     }
                 }
@@ -627,6 +881,8 @@ namespace LabBilling.Core
             sw.Close();
             return strFileName;
         }
+
+        public async Task CompileStatementsAsync(DateTime throughDate) => await Task.Run(() => CompileStatements(throughDate));
 
         public void CompileStatements(DateTime throughDate)
         {

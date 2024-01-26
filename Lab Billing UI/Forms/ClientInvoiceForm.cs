@@ -61,7 +61,6 @@ namespace LabBilling.Forms
                 _thruDate = DateTime.Today;
 
             await RefreshUnbilledGridAsync();
-            //RefreshUnbilledGrid();
 
             InvoicesDGV.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             InvoicesDGV.MultiSelect = false;
@@ -221,7 +220,6 @@ namespace LabBilling.Forms
                 {
                     frm.ShowDialog(this);
                 }
-                //await Task.Run(() => clientInvoices.Compile(_thruDate, unbilledClients, progress));
                 MessageBox.Show("Generating Invoices Completed");
             }
             catch (Exception ex)

@@ -377,7 +377,7 @@ namespace LabBilling.Forms
             demographicsLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
             demographicsLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
             demographicsLayoutPanel.Size = new System.Drawing.Size(1336, 562);
-            demographicsLayoutPanel.TabIndex = 35;
+            demographicsLayoutPanel.TabIndex = 0;
             // 
             // DemoStatusMessagesTextBox
             // 
@@ -398,7 +398,7 @@ namespace LabBilling.Forms
             GuarZipTextBox.Mask = "00000-9999";
             GuarZipTextBox.Name = "GuarZipTextBox";
             GuarZipTextBox.Size = new System.Drawing.Size(125, 23);
-            GuarZipTextBox.TabIndex = 39;
+            GuarZipTextBox.TabIndex = 51;
             // 
             // GuarZipCodeLabel
             // 
@@ -407,7 +407,7 @@ namespace LabBilling.Forms
             GuarZipCodeLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             GuarZipCodeLabel.Name = "GuarZipCodeLabel";
             GuarZipCodeLabel.Size = new System.Drawing.Size(52, 15);
-            GuarZipCodeLabel.TabIndex = 38;
+            GuarZipCodeLabel.TabIndex = 50;
             GuarZipCodeLabel.Text = "ZipCode";
             GuarZipCodeLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
@@ -418,7 +418,7 @@ namespace LabBilling.Forms
             GuarStateLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             GuarStateLabel.Name = "GuarStateLabel";
             GuarStateLabel.Size = new System.Drawing.Size(33, 15);
-            GuarStateLabel.TabIndex = 36;
+            GuarStateLabel.TabIndex = 48;
             GuarStateLabel.Text = "State";
             GuarStateLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
@@ -435,7 +435,7 @@ namespace LabBilling.Forms
             GuarStateComboBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             GuarStateComboBox.Name = "GuarStateComboBox";
             GuarStateComboBox.Size = new System.Drawing.Size(213, 23);
-            GuarStateComboBox.TabIndex = 37;
+            GuarStateComboBox.TabIndex = 49;
             // 
             // GuarCityTextBox
             // 
@@ -443,7 +443,7 @@ namespace LabBilling.Forms
             GuarCityTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             GuarCityTextBox.Name = "GuarCityTextBox";
             GuarCityTextBox.Size = new System.Drawing.Size(346, 23);
-            GuarCityTextBox.TabIndex = 39;
+            GuarCityTextBox.TabIndex = 47;
             // 
             // GuarCityLabel
             // 
@@ -452,7 +452,7 @@ namespace LabBilling.Forms
             GuarCityLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             GuarCityLabel.Name = "GuarCityLabel";
             GuarCityLabel.Size = new System.Drawing.Size(28, 15);
-            GuarCityLabel.TabIndex = 38;
+            GuarCityLabel.TabIndex = 46;
             GuarCityLabel.Text = "City";
             GuarCityLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
@@ -462,7 +462,7 @@ namespace LabBilling.Forms
             GuarantorAddressTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             GuarantorAddressTextBox.Name = "GuarantorAddressTextBox";
             GuarantorAddressTextBox.Size = new System.Drawing.Size(346, 23);
-            GuarantorAddressTextBox.TabIndex = 37;
+            GuarantorAddressTextBox.TabIndex = 45;
             // 
             // GuarAddressLabel
             // 
@@ -471,7 +471,7 @@ namespace LabBilling.Forms
             GuarAddressLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             GuarAddressLabel.Name = "GuarAddressLabel";
             GuarAddressLabel.Size = new System.Drawing.Size(49, 15);
-            GuarAddressLabel.TabIndex = 36;
+            GuarAddressLabel.TabIndex = 44;
             GuarAddressLabel.Text = "Address";
             GuarAddressLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
@@ -481,7 +481,7 @@ namespace LabBilling.Forms
             SaveDemographics.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             SaveDemographics.Name = "SaveDemographics";
             SaveDemographics.Size = new System.Drawing.Size(125, 51);
-            SaveDemographics.TabIndex = 32;
+            SaveDemographics.TabIndex = 54;
             SaveDemographics.Text = "Save Changes";
             SaveDemographics.UseVisualStyleBackColor = true;
             SaveDemographics.Click += SaveDemographics_Click;
@@ -493,7 +493,7 @@ namespace LabBilling.Forms
             DateOfBirthTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             DateOfBirthTextBox.Name = "DateOfBirthTextBox";
             DateOfBirthTextBox.Size = new System.Drawing.Size(206, 23);
-            DateOfBirthTextBox.TabIndex = 34;
+            DateOfBirthTextBox.TabIndex = 23;
             // 
             // PatLastNameLabel
             // 
@@ -524,7 +524,7 @@ namespace LabBilling.Forms
             PatFirstNameLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             PatFirstNameLabel.Name = "PatFirstNameLabel";
             PatFirstNameLabel.Size = new System.Drawing.Size(64, 15);
-            PatFirstNameLabel.TabIndex = 5;
+            PatFirstNameLabel.TabIndex = 3;
             PatFirstNameLabel.Text = "First Name";
             PatFirstNameLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
@@ -536,7 +536,7 @@ namespace LabBilling.Forms
             SocSecNoTextBox.Mask = "000-00-0000";
             SocSecNoTextBox.Name = "SocSecNoTextBox";
             SocSecNoTextBox.Size = new System.Drawing.Size(206, 23);
-            SocSecNoTextBox.TabIndex = 23;
+            SocSecNoTextBox.TabIndex = 29;
             // 
             // FirstNameTextBox
             // 
@@ -546,7 +546,7 @@ namespace LabBilling.Forms
             FirstNameTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             FirstNameTextBox.Name = "FirstNameTextBox";
             FirstNameTextBox.Size = new System.Drawing.Size(322, 23);
-            FirstNameTextBox.TabIndex = 6;
+            FirstNameTextBox.TabIndex = 4;
             // 
             // PatSSNLabel
             // 
@@ -555,7 +555,7 @@ namespace LabBilling.Forms
             PatSSNLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             PatSSNLabel.Name = "PatSSNLabel";
             PatSSNLabel.Size = new System.Drawing.Size(28, 15);
-            PatSSNLabel.TabIndex = 22;
+            PatSSNLabel.TabIndex = 28;
             PatSSNLabel.Text = "SSN";
             PatSSNLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
@@ -566,7 +566,7 @@ namespace LabBilling.Forms
             PatMiddleNameLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             PatMiddleNameLabel.Name = "PatMiddleNameLabel";
             PatMiddleNameLabel.Size = new System.Drawing.Size(79, 15);
-            PatMiddleNameLabel.TabIndex = 7;
+            PatMiddleNameLabel.TabIndex = 5;
             PatMiddleNameLabel.Text = "Middle Name";
             PatMiddleNameLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
@@ -581,7 +581,7 @@ namespace LabBilling.Forms
             MaritalStatusComboBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             MaritalStatusComboBox.Name = "MaritalStatusComboBox";
             MaritalStatusComboBox.Size = new System.Drawing.Size(206, 23);
-            MaritalStatusComboBox.TabIndex = 29;
+            MaritalStatusComboBox.TabIndex = 27;
             // 
             // PatMaritalStatusLabel
             // 
@@ -590,7 +590,7 @@ namespace LabBilling.Forms
             PatMaritalStatusLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             PatMaritalStatusLabel.Name = "PatMaritalStatusLabel";
             PatMaritalStatusLabel.Size = new System.Drawing.Size(79, 15);
-            PatMaritalStatusLabel.TabIndex = 28;
+            PatMaritalStatusLabel.TabIndex = 26;
             PatMaritalStatusLabel.Text = "Marital Status";
             PatMaritalStatusLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
@@ -601,7 +601,7 @@ namespace LabBilling.Forms
             PatDOBLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             PatDOBLabel.Name = "PatDOBLabel";
             PatDOBLabel.Size = new System.Drawing.Size(73, 15);
-            PatDOBLabel.TabIndex = 26;
+            PatDOBLabel.TabIndex = 22;
             PatDOBLabel.Text = "Date of Birth";
             PatDOBLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
@@ -613,7 +613,7 @@ namespace LabBilling.Forms
             MiddleNameTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             MiddleNameTextBox.Name = "MiddleNameTextBox";
             MiddleNameTextBox.Size = new System.Drawing.Size(242, 23);
-            MiddleNameTextBox.TabIndex = 8;
+            MiddleNameTextBox.TabIndex = 6;
             // 
             // PatSexLabel
             // 
@@ -622,7 +622,7 @@ namespace LabBilling.Forms
             PatSexLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             PatSexLabel.Name = "PatSexLabel";
             PatSexLabel.Size = new System.Drawing.Size(25, 15);
-            PatSexLabel.TabIndex = 24;
+            PatSexLabel.TabIndex = 20;
             PatSexLabel.Text = "Sex";
             PatSexLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
@@ -638,7 +638,7 @@ namespace LabBilling.Forms
             SexComboBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             SexComboBox.Name = "SexComboBox";
             SexComboBox.Size = new System.Drawing.Size(206, 23);
-            SexComboBox.TabIndex = 25;
+            SexComboBox.TabIndex = 21;
             // 
             // PatPhoneLabel
             // 
@@ -765,7 +765,7 @@ namespace LabBilling.Forms
             PatSuffixLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             PatSuffixLabel.Name = "PatSuffixLabel";
             PatSuffixLabel.Size = new System.Drawing.Size(37, 15);
-            PatSuffixLabel.TabIndex = 3;
+            PatSuffixLabel.TabIndex = 7;
             PatSuffixLabel.Text = "Suffix";
             PatSuffixLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
@@ -777,7 +777,7 @@ namespace LabBilling.Forms
             SuffixTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             SuffixTextBox.Name = "SuffixTextBox";
             SuffixTextBox.Size = new System.Drawing.Size(61, 23);
-            SuffixTextBox.TabIndex = 4;
+            SuffixTextBox.TabIndex = 8;
             // 
             // PatEmailLabel
             // 
@@ -786,7 +786,7 @@ namespace LabBilling.Forms
             PatEmailLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             PatEmailLabel.Name = "PatEmailLabel";
             PatEmailLabel.Size = new System.Drawing.Size(81, 15);
-            PatEmailLabel.TabIndex = 20;
+            PatEmailLabel.TabIndex = 24;
             PatEmailLabel.Text = "Email Address";
             PatEmailLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
@@ -797,7 +797,7 @@ namespace LabBilling.Forms
             EmailAddressTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             EmailAddressTextBox.Name = "EmailAddressTextBox";
             EmailAddressTextBox.Size = new System.Drawing.Size(322, 23);
-            EmailAddressTextBox.TabIndex = 21;
+            EmailAddressTextBox.TabIndex = 25;
             // 
             // label6
             // 
@@ -806,7 +806,7 @@ namespace LabBilling.Forms
             label6.Location = new System.Drawing.Point(163, 0);
             label6.Name = "label6";
             label6.Size = new System.Drawing.Size(188, 25);
-            label6.TabIndex = 35;
+            label6.TabIndex = 0;
             label6.Text = "Patient Information";
             // 
             // label7
@@ -816,7 +816,7 @@ namespace LabBilling.Forms
             label7.Location = new System.Drawing.Point(723, 0);
             label7.Name = "label7";
             label7.Size = new System.Drawing.Size(218, 25);
-            label7.TabIndex = 36;
+            label7.TabIndex = 33;
             label7.Text = "Guarantor Information";
             // 
             // PatRelationLabel
@@ -826,7 +826,7 @@ namespace LabBilling.Forms
             PatRelationLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             PatRelationLabel.Name = "PatRelationLabel";
             PatRelationLabel.Size = new System.Drawing.Size(104, 15);
-            PatRelationLabel.TabIndex = 37;
+            PatRelationLabel.TabIndex = 34;
             PatRelationLabel.Text = "Relation to Patient";
             PatRelationLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
@@ -840,7 +840,7 @@ namespace LabBilling.Forms
             GuarantorRelationComboBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             GuarantorRelationComboBox.Name = "GuarantorRelationComboBox";
             GuarantorRelationComboBox.Size = new System.Drawing.Size(152, 23);
-            GuarantorRelationComboBox.TabIndex = 36;
+            GuarantorRelationComboBox.TabIndex = 35;
             // 
             // GuarCopyPatientLink
             // 
@@ -849,7 +849,7 @@ namespace LabBilling.Forms
             GuarCopyPatientLink.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             GuarCopyPatientLink.Name = "GuarCopyPatientLink";
             GuarCopyPatientLink.Size = new System.Drawing.Size(99, 15);
-            GuarCopyPatientLink.TabIndex = 37;
+            GuarCopyPatientLink.TabIndex = 32;
             GuarCopyPatientLink.TabStop = true;
             GuarCopyPatientLink.Text = "Copy Patient Info";
             GuarCopyPatientLink.LinkClicked += GuarCopyPatientLink_LinkClicked;
@@ -861,7 +861,7 @@ namespace LabBilling.Forms
             GuarLastNameLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             GuarLastNameLabel.Name = "GuarLastNameLabel";
             GuarLastNameLabel.Size = new System.Drawing.Size(63, 15);
-            GuarLastNameLabel.TabIndex = 38;
+            GuarLastNameLabel.TabIndex = 36;
             GuarLastNameLabel.Text = "Last Name";
             GuarLastNameLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
@@ -871,7 +871,7 @@ namespace LabBilling.Forms
             GuarantorLastNameTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             GuarantorLastNameTextBox.Name = "GuarantorLastNameTextBox";
             GuarantorLastNameTextBox.Size = new System.Drawing.Size(346, 23);
-            GuarantorLastNameTextBox.TabIndex = 39;
+            GuarantorLastNameTextBox.TabIndex = 37;
             // 
             // GuarFirstNameLabel
             // 
@@ -880,7 +880,7 @@ namespace LabBilling.Forms
             GuarFirstNameLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             GuarFirstNameLabel.Name = "GuarFirstNameLabel";
             GuarFirstNameLabel.Size = new System.Drawing.Size(64, 15);
-            GuarFirstNameLabel.TabIndex = 42;
+            GuarFirstNameLabel.TabIndex = 38;
             GuarFirstNameLabel.Text = "First Name";
             GuarFirstNameLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
@@ -890,7 +890,7 @@ namespace LabBilling.Forms
             GuarFirstNameTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             GuarFirstNameTextBox.Name = "GuarFirstNameTextBox";
             GuarFirstNameTextBox.Size = new System.Drawing.Size(346, 23);
-            GuarFirstNameTextBox.TabIndex = 43;
+            GuarFirstNameTextBox.TabIndex = 39;
             // 
             // GuarMiddleNameLabel
             // 
@@ -899,7 +899,7 @@ namespace LabBilling.Forms
             GuarMiddleNameLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             GuarMiddleNameLabel.Name = "GuarMiddleNameLabel";
             GuarMiddleNameLabel.Size = new System.Drawing.Size(79, 15);
-            GuarMiddleNameLabel.TabIndex = 44;
+            GuarMiddleNameLabel.TabIndex = 40;
             GuarMiddleNameLabel.Text = "Middle Name";
             GuarMiddleNameLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
@@ -909,7 +909,7 @@ namespace LabBilling.Forms
             GuarMiddleNameTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             GuarMiddleNameTextBox.Name = "GuarMiddleNameTextBox";
             GuarMiddleNameTextBox.Size = new System.Drawing.Size(279, 23);
-            GuarMiddleNameTextBox.TabIndex = 45;
+            GuarMiddleNameTextBox.TabIndex = 41;
             // 
             // GuarSuffixLabel
             // 
@@ -918,7 +918,7 @@ namespace LabBilling.Forms
             GuarSuffixLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             GuarSuffixLabel.Name = "GuarSuffixLabel";
             GuarSuffixLabel.Size = new System.Drawing.Size(37, 15);
-            GuarSuffixLabel.TabIndex = 40;
+            GuarSuffixLabel.TabIndex = 42;
             GuarSuffixLabel.Text = "Suffix";
             GuarSuffixLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
@@ -928,7 +928,7 @@ namespace LabBilling.Forms
             GuarSuffixTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             GuarSuffixTextBox.Name = "GuarSuffixTextBox";
             GuarSuffixTextBox.Size = new System.Drawing.Size(58, 23);
-            GuarSuffixTextBox.TabIndex = 41;
+            GuarSuffixTextBox.TabIndex = 43;
             // 
             // GuarPhoneLabel
             // 
@@ -937,7 +937,7 @@ namespace LabBilling.Forms
             GuarPhoneLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             GuarPhoneLabel.Name = "GuarPhoneLabel";
             GuarPhoneLabel.Size = new System.Drawing.Size(41, 15);
-            GuarPhoneLabel.TabIndex = 40;
+            GuarPhoneLabel.TabIndex = 52;
             GuarPhoneLabel.Text = "Phone";
             GuarPhoneLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
@@ -947,7 +947,7 @@ namespace LabBilling.Forms
             GuarantorPhoneTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             GuarantorPhoneTextBox.Name = "GuarantorPhoneTextBox";
             GuarantorPhoneTextBox.Size = new System.Drawing.Size(346, 23);
-            GuarantorPhoneTextBox.TabIndex = 41;
+            GuarantorPhoneTextBox.TabIndex = 53;
             // 
             // LastNameTextBox
             // 
@@ -967,7 +967,7 @@ namespace LabBilling.Forms
             orderingPhyTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             orderingPhyTextBox.Name = "orderingPhyTextBox";
             orderingPhyTextBox.Size = new System.Drawing.Size(322, 23);
-            orderingPhyTextBox.TabIndex = 46;
+            orderingPhyTextBox.TabIndex = 31;
             orderingPhyTextBox.KeyUp += orderingPhyTextBox_KeyUp;
             // 
             // tabDiagnosis
@@ -1831,7 +1831,7 @@ namespace LabBilling.Forms
             BannerSexTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
             BannerSexTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 0);
             BannerSexTextBox.ForeColor = System.Drawing.Color.White;
-            BannerSexTextBox.Location = new System.Drawing.Point(498, 15);
+            BannerSexTextBox.Location = new System.Drawing.Point(516, 15);
             BannerSexTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             BannerSexTextBox.Name = "BannerSexTextBox";
             BannerSexTextBox.ReadOnly = true;
@@ -1848,7 +1848,7 @@ namespace LabBilling.Forms
             BannerDobTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             BannerDobTextBox.Name = "BannerDobTextBox";
             BannerDobTextBox.ReadOnly = true;
-            BannerDobTextBox.Size = new System.Drawing.Size(110, 19);
+            BannerDobTextBox.Size = new System.Drawing.Size(103, 19);
             BannerDobTextBox.TabIndex = 23;
             // 
             // BannerNameTextBox

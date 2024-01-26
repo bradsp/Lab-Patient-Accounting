@@ -39,12 +39,11 @@ namespace LabBilling.Forms
             {
                 sendToCollectionsProgressBar.Style = ProgressBarStyle.Continuous;
                 sendToCollectionsProgressBar.Value = 0;
+                sendToCollectionsProgressBar.Minimum = 0;
                 sendToCollectionsProgressBar.Maximum = 100;
                 patientBilling.ProgressIncrementedEvent += PatientBilling_ProgressIncrementedEvent;
 
                 string filename = await patientBilling.SendToCollections();
-
-                //patientBilling.ProgressIncementedEvent -= PatientBilling_ProgressIncementedEvent;
 
                 //send collections file
                 SFTP.UploadSftp(filename, Program.AppEnvironment.ApplicationParameters.CollectionsSftpUploadPath + '/' + Path.GetFileName(filename),
@@ -83,13 +82,13 @@ namespace LabBilling.Forms
                 sendToCollectionsProgressBar.Invoke(new Action(() =>
                 {
                     sendToCollectionsProgressBar.Value = e.PercentComplete;
-                    sendToCollectionsTextbox.Text = e.Status;
+                    sendToCollectionsTextbox.AppendText(Environment.NewLine + e.Status);
                 }));
             }
             else
             {
                 sendToCollectionsProgressBar.Value = e.PercentComplete;
-                sendToCollectionsTextbox.Text = e.Status;
+                sendToCollectionsTextbox.AppendText(Environment.NewLine + e.Status);
             }
         }
 
@@ -134,13 +133,15 @@ namespace LabBilling.Forms
             }
         }
 
-        private void compileStmtsStartButton_Click(object sender, EventArgs e)
+        private async void compileStmtsStartButton_Click(object sender, EventArgs e)
         {
             Log.Instance.Trace("Entering");
             try
             {
                 compileStatementsProgressBar.Style = ProgressBarStyle.Marquee;
-                patientBilling.CompileStatements(DateTimeHelper.GetLastDayOfPrevMonth());
+
+                await patientBilling.CompileStatementsAsync(DateTimeHelper.GetLastDayOfPrevMonth());
+                
                 compileStatementsProgressBar.Style = ProgressBarStyle.Continuous;
                 compileStatementsProgressBar.Value = 100;
                 compileStatementsProgressBar.Maximum = 100;
@@ -217,9 +218,7 @@ namespace LabBilling.Forms
 
         private void PatientCollectionsRunWizard_HelpButtonClicked(object sender, CancelEventArgs e)
         {
-            //string url = parametersRepository.GetByKey("documentation_site_url");
             string url = Program.AppEnvironment.ApplicationParameters.DocumentationSiteUrl;
-            //string topicPath = parametersRepository.GetByKey("patient_statements_url");
             string topicPath = Program.AppEnvironment.ApplicationParameters.PatientStatementsUrl;
 
             if (!string.IsNullOrWhiteSpace(url) && !string.IsNullOrWhiteSpace(topicPath))

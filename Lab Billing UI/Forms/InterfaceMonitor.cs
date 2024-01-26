@@ -5,6 +5,7 @@ using LabBilling.Core.DataAccess;
 using LabBilling.Core.Models;
 using Utilities;
 using LabBilling.Core.BusinessLogic;
+using WinFormsLibrary;
 
 namespace LabBilling.Forms
 {
@@ -36,15 +37,17 @@ namespace LabBilling.Forms
 
             MessagesGrid.SetColumnsVisibility(false);
 
-            MessagesGrid.Columns[nameof(MessageInbound.SystemMsgId)].Visible = true;
-            MessagesGrid.Columns[nameof(MessageInbound.SourceAccount)].Visible = true;
-            MessagesGrid.Columns[nameof(MessageInbound.SourceMsgId)].Visible = true;
-            MessagesGrid.Columns[nameof(MessageInbound.MessageType)].Visible = true;
-            MessagesGrid.Columns[nameof(MessageInbound.MessageDate)].Visible = true;
-            MessagesGrid.Columns[nameof(MessageInbound.ProcessFlag)].Visible = true;
-            MessagesGrid.Columns[nameof(MessageInbound.ProcessStatusMsg)].Visible = true;
-            MessagesGrid.Columns[nameof(MessageInbound.Errors)].Visible = true;
-            MessagesGrid.Columns[nameof(MessageInbound.UpdatedDate)].Visible = true;
+            int i = 0;
+
+            MessagesGrid.Columns[nameof(MessageInbound.SystemMsgId)].SetVisibilityOrder(true, i++);
+            MessagesGrid.Columns[nameof(MessageInbound.SourceAccount)].SetVisibilityOrder(true, i++);
+            MessagesGrid.Columns[nameof(MessageInbound.SourceMsgId)].SetVisibilityOrder(true, i++);
+            MessagesGrid.Columns[nameof(MessageInbound.MessageType)].SetVisibilityOrder(true, i++);
+            MessagesGrid.Columns[nameof(MessageInbound.MessageDate)].SetVisibilityOrder(true, i++);
+            MessagesGrid.Columns[nameof(MessageInbound.ProcessFlag)].SetVisibilityOrder(true, i++);
+            MessagesGrid.Columns[nameof(MessageInbound.ProcessStatusMsg)].SetVisibilityOrder(true, i++);
+            MessagesGrid.Columns[nameof(MessageInbound.Errors)].SetVisibilityOrder(true, i++);
+            MessagesGrid.Columns[nameof(MessageInbound.UpdatedDate)].SetVisibilityOrder(true, i++);
 
             //MessagesGrid.Columns[nameof(MessageInbound.ProcessStatusMsg)].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             MessagesGrid.AutoResizeColumns();

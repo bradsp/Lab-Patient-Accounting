@@ -49,7 +49,6 @@ namespace LabBilling.Forms
             claimBatchDataGrid.Columns[nameof(BillingBatch.X12Text)].Visible = false;
             claimBatchDataGrid.Columns[nameof(BillingBatch.TotalBilled)].DefaultCellStyle.Format = "N2";
             claimBatchDataGrid.Columns[nameof(BillingBatch.TotalBilled)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-            //claimBatchDataGrid.Columns[nameof(BillingBatch.X12Text)].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             claimBatchDataGrid.AutoResizeColumns();
 
         }

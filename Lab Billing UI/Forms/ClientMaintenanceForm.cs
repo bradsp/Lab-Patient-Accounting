@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using System.Drawing;
 using System.Data;
+using WinFormsLibrary;
 
 namespace LabBilling.Forms
 {
@@ -44,18 +45,18 @@ namespace LabBilling.Forms
             _clientTable.DefaultView.RowFilter = $"{nameof(Client.IsDeleted)} = false";
             
             dgvClients.SetColumnsVisibility(false);
-
-            dgvClients.Columns[nameof(Client.ClientMnem)].Visible = true;
-            dgvClients.Columns[nameof(Client.Name)].Visible = true;
-            dgvClients.Columns[nameof(Client.IsDeleted)].Visible = true;
-            dgvClients.Columns[nameof(Client.StreetAddress1)].Visible = true;
-            dgvClients.Columns[nameof(Client.StreetAddress2)].Visible = true;
-            dgvClients.Columns[nameof(Client.City)].Visible = true;
-            dgvClients.Columns[nameof(Client.State)].Visible = true;
-            dgvClients.Columns[nameof(Client.ZipCode)].Visible = true;
-            dgvClients.Columns[nameof(Client.FacilityNo)].Visible = true;
-            dgvClients.Columns[nameof(Client.Type)].Visible = true;
-            dgvClients.Columns[nameof(Client.BillMethod)].Visible = true;
+            int i = 0;
+            dgvClients.Columns[nameof(Client.IsDeleted)].SetVisibilityOrder(true, i++);
+            dgvClients.Columns[nameof(Client.ClientMnem)].SetVisibilityOrder(true, i++);
+            dgvClients.Columns[nameof(Client.Name)].SetVisibilityOrder(true, i++);
+            dgvClients.Columns[nameof(Client.StreetAddress1)].SetVisibilityOrder(true, i++);
+            dgvClients.Columns[nameof(Client.StreetAddress2)].SetVisibilityOrder(true, i++);
+            dgvClients.Columns[nameof(Client.City)].SetVisibilityOrder(true, i++);
+            dgvClients.Columns[nameof(Client.State)].SetVisibilityOrder(true, i++);
+            dgvClients.Columns[nameof(Client.ZipCode)].SetVisibilityOrder(true, i++);
+            dgvClients.Columns[nameof(Client.FacilityNo)].SetVisibilityOrder(true, i++);
+            dgvClients.Columns[nameof(Client.Type)].SetVisibilityOrder(true, i++);
+            dgvClients.Columns[nameof(Client.BillMethod)].SetVisibilityOrder(true, i++);
 
             dgvClients.Columns[nameof(Client.Name)].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             dgvClients.AutoResizeColumns();

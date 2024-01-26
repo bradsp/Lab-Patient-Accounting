@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using LabBilling.Core.DataAccess;
 using LabBilling.Core.Models;
 using LabBilling.Logging;
+using WinFormsLibrary;
 
 namespace LabBilling.Forms
 {
@@ -27,41 +28,24 @@ namespace LabBilling.Forms
         }
 
         private void LoadProviderGrid()
-        {
-            PhysicianDGV.Columns[nameof(Phy.rowguid)].Visible = false;
-            PhysicianDGV.Columns[nameof(Phy.reserved)].Visible = false;
-            PhysicianDGV.Columns[nameof(Phy.UpdatedUser)].Visible = false;
-            PhysicianDGV.Columns[nameof(Phy.UpdatedDate)].Visible = false;
-            PhysicianDGV.Columns[nameof(Phy.UpdatedApp)].Visible = false;
-            PhysicianDGV.Columns[nameof(Phy.UpdatedHost)].Visible = false;
-            PhysicianDGV.Columns[nameof(Phy.Upin)].Visible = false;
-            PhysicianDGV.Columns[nameof(Phy.Ub92Upin)].Visible = false;
-            PhysicianDGV.Columns[nameof(Phy.PathologistCode)].Visible = false;
-            PhysicianDGV.Columns[nameof(Phy.LastName)].Visible = false;
-            PhysicianDGV.Columns[nameof(Phy.FirstName)].Visible = false;
-            PhysicianDGV.Columns[nameof(Phy.MiddleInitial)].Visible = false;
-            PhysicianDGV.Columns[nameof(Phy.uri)].Visible = false;
-            PhysicianDGV.Columns[nameof(Phy.Pathologist)].Visible = false;
-            PhysicianDGV.Columns[nameof(Phy.PathologistCode)].Visible = false;
-            PhysicianDGV.Columns[nameof(Phy.LabelPrintCount)].Visible = false;
-            PhysicianDGV.Columns[nameof(Phy.uri)].Visible = false;
-            PhysicianDGV.Columns[nameof(Phy.OvCode)].Visible = false;
+        {            
+            PhysicianDGV.SetColumnsVisibility(false);
 
             int z = 0;
-            PhysicianDGV.Columns[nameof(Phy.NpiId)].DisplayIndex = z++;
-            PhysicianDGV.Columns[nameof(Phy.BillingNpi)].DisplayIndex = z++;
-            PhysicianDGV.Columns[nameof(Phy.FullName)].DisplayIndex = z++;
-            PhysicianDGV.Columns[nameof(Phy.Credentials)].DisplayIndex = z++;
-            PhysicianDGV.Columns[nameof(Phy.ProviderGroup)].DisplayIndex = z++;
-            PhysicianDGV.Columns[nameof(Phy.Address1)].DisplayIndex = z++;
-            PhysicianDGV.Columns[nameof(Phy.Address2)].DisplayIndex = z++;
-            PhysicianDGV.Columns[nameof(Phy.City)].DisplayIndex = z++;
-            PhysicianDGV.Columns[nameof(Phy.State)].DisplayIndex = z++;
-            PhysicianDGV.Columns[nameof(Phy.ZipCode)].DisplayIndex = z++;
-            PhysicianDGV.Columns[nameof(Phy.Phone)].DisplayIndex = z++;
-            PhysicianDGV.Columns[nameof(Phy.DoctorNumber)].DisplayIndex = z++;
-            PhysicianDGV.Columns[nameof(Phy.ClientMnem)].DisplayIndex = z++;
-            PhysicianDGV.Columns[nameof(Phy.LISMnem)].DisplayIndex = z++;
+            PhysicianDGV.Columns[nameof(Phy.NpiId)].SetVisibilityOrder(true, z++);
+            PhysicianDGV.Columns[nameof(Phy.BillingNpi)].SetVisibilityOrder(true, z++);
+            PhysicianDGV.Columns[nameof(Phy.FullName)].SetVisibilityOrder(true, z++);
+            PhysicianDGV.Columns[nameof(Phy.Credentials)].SetVisibilityOrder(true, z++);
+            PhysicianDGV.Columns[nameof(Phy.ProviderGroup)].SetVisibilityOrder(true, z++);
+            PhysicianDGV.Columns[nameof(Phy.Address1)].SetVisibilityOrder(true, z++);
+            PhysicianDGV.Columns[nameof(Phy.Address2)].SetVisibilityOrder(true, z++);
+            PhysicianDGV.Columns[nameof(Phy.City)].SetVisibilityOrder(true, z++);
+            PhysicianDGV.Columns[nameof(Phy.State)].SetVisibilityOrder(true, z++);
+            PhysicianDGV.Columns[nameof(Phy.ZipCode)].SetVisibilityOrder(true, z++);
+            PhysicianDGV.Columns[nameof(Phy.Phone)].SetVisibilityOrder(true, z++);
+            PhysicianDGV.Columns[nameof(Phy.DoctorNumber)].SetVisibilityOrder(true, z++);
+            PhysicianDGV.Columns[nameof(Phy.ClientMnem)].SetVisibilityOrder(true, z++);
+            PhysicianDGV.Columns[nameof(Phy.LISMnem)].SetVisibilityOrder(true, z++);
 
             PhysicianDGV.AutoResizeColumns();
 

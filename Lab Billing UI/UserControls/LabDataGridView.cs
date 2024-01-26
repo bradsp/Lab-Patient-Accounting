@@ -1,4 +1,9 @@
-﻿using System.Windows.Forms;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
+using System.Windows.Forms;
 
 namespace LabBilling.UserControls
 {
@@ -24,6 +29,13 @@ namespace LabBilling.UserControls
             }
             return base.ProcessDataGridViewKey(e);
         }
+
+        public LabDataGridView()
+        {
+
+        }
+
+
 
     }
 }

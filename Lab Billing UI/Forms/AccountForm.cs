@@ -666,20 +666,21 @@ namespace LabBilling.Forms
             PaymentsDataGrid.DataSource = currentAccount.Payments.ToList();
 
             PaymentsDataGrid.SetColumnsVisibility(false);
+            int z = 0;
 
-            PaymentsDataGrid.Columns[nameof(Chk.PaidAmount)].Visible = true;
-            PaymentsDataGrid.Columns[nameof(Chk.Batch)].Visible = true;
-            PaymentsDataGrid.Columns[nameof(Chk.ChkDate)].Visible = true;
-            PaymentsDataGrid.Columns[nameof(Chk.CheckNo)].Visible = true;
-            PaymentsDataGrid.Columns[nameof(Chk.Comment)].Visible = true;
-            PaymentsDataGrid.Columns[nameof(Chk.ContractualAmount)].Visible = true;
-            PaymentsDataGrid.Columns[nameof(Chk.DateReceived)].Visible = true;
-            PaymentsDataGrid.Columns[nameof(Chk.Invoice)].Visible = true;
-            PaymentsDataGrid.Columns[nameof(Chk.Source)].Visible = true;
-            PaymentsDataGrid.Columns[nameof(Chk.Status)].Visible = true;
-            PaymentsDataGrid.Columns[nameof(Chk.WriteOffAmount)].Visible = true;
-            PaymentsDataGrid.Columns[nameof(Chk.WriteOffCode)].Visible = true;
-            PaymentsDataGrid.Columns[nameof(Chk.WriteOffDate)].Visible = true;
+            PaymentsDataGrid.Columns[nameof(Chk.Batch)].SetVisibilityOrder(true, z++);
+            PaymentsDataGrid.Columns[nameof(Chk.DateReceived)].SetVisibilityOrder(true, z++);
+            PaymentsDataGrid.Columns[nameof(Chk.ChkDate)].SetVisibilityOrder(true, z++);
+            PaymentsDataGrid.Columns[nameof(Chk.CheckNo)].SetVisibilityOrder(true, z++);
+            PaymentsDataGrid.Columns[nameof(Chk.Invoice)].SetVisibilityOrder(true, z++);
+            PaymentsDataGrid.Columns[nameof(Chk.Source)].SetVisibilityOrder(true, z++);
+            PaymentsDataGrid.Columns[nameof(Chk.Status)].SetVisibilityOrder(true, z++);
+            PaymentsDataGrid.Columns[nameof(Chk.PaidAmount)].SetVisibilityOrder(true, z++);
+            PaymentsDataGrid.Columns[nameof(Chk.ContractualAmount)].SetVisibilityOrder(true, z++);
+            PaymentsDataGrid.Columns[nameof(Chk.WriteOffAmount)].SetVisibilityOrder(true, z++);
+            PaymentsDataGrid.Columns[nameof(Chk.WriteOffCode)].SetVisibilityOrder(true, z++);
+            PaymentsDataGrid.Columns[nameof(Chk.WriteOffDate)].SetVisibilityOrder(true, z++);
+            PaymentsDataGrid.Columns[nameof(Chk.Comment)].SetVisibilityOrder(true, z++);
 
             PaymentsDataGrid.Columns[nameof(Chk.PaidAmount)].DefaultCellStyle.Format = "N2";
             PaymentsDataGrid.Columns[nameof(Chk.PaidAmount)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
@@ -1509,9 +1510,6 @@ namespace LabBilling.Forms
             //string phy = providerLookup1.SelectedValue;
         }
 
-
-        #region Guarantor Tab
-
         private void GuarCopyPatientLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             Log.Instance.Trace($"Entering");
@@ -1526,9 +1524,6 @@ namespace LabBilling.Forms
             GuarantorPhoneTextBox.Text = PhoneTextBox.Text;
             GuarantorRelationComboBox.SelectedValue = "01";
         }
-
-        #endregion
-
 
         private async void swapInsurancesToolStripMenuItem_Click(object sender, EventArgs e)
         {

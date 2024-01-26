@@ -18,26 +18,27 @@ namespace LabBilling.Forms
     {
         private string propAppName
         { get { return string.Format("{0} {1}", Application.ProductName, Application.ProductVersion); } }
+
         private PrintDocument m_ViewerPrintDocument;
         private ReportGenerator m_rgReport;
 
-        R_notes m_rNotes = null;
-        R_ins m_rIns = null;
-        R_pat m_rPat = null;
-        R_chk m_rChk = null;
-        CAcc m_CAcc = null;
-        ERR m_Err = null;
-        string m_strServer = null;
-        string m_strDatabase = null;
-        string m_strProductionEnvironment = null;
-        DataTable m_dtAccounts;
-        SqlDataAdapter m_sdaBadDebt;
-        PatRepository patRepository;
-        ChkRepository chkRepository;
-        AccountRepository accountRepository;
-        AccountNoteRepository accountNoteRepository;
-        InsRepository insRepository;
-        Account acc;
+        private R_notes m_rNotes = null;
+        private R_ins m_rIns = null;
+        private R_pat m_rPat = null;
+        private R_chk m_rChk = null;
+        private CAcc m_CAcc = null;
+        private ERR m_Err = null;
+        private string m_strServer = null;
+        private string m_strDatabase = null;
+        private string m_strProductionEnvironment = null;
+        private DataTable m_dtAccounts;
+        private SqlDataAdapter m_sdaBadDebt;
+        private PatRepository patRepository;
+        private ChkRepository chkRepository;
+        private AccountRepository accountRepository;
+        private AccountNoteRepository accountNoteRepository;
+        private InsRepository insRepository;
+        private Account acc;
 
 
         void m_cboxInclude_Click(object sender, EventArgs e)
@@ -105,41 +106,6 @@ namespace LabBilling.Forms
             tspbRecords.Minimum = 0;
             tspbRecords.Maximum = dgvAccounts.Rows.Count;
 
-            #region commented out
-            //using (SqlConnection conn = new SqlConnection(
-            //string.Format("Data Source={0}; Initial Catalog = {1}; Integrated Security = 'SSPI'",
-            //        m_strServer, m_strDatabase)))
-            //{
-            //    SqlTransaction transaction;
-            //    try
-            //    {
-            //        if (!conn.Open)
-            //        {
-            //            conn.Open();
-            //        }
-            //        transaction = conn.BeginTransaction(IsolationLevel.ReadUncommitted);
-            //    }
-            //    catch (InvalidOperationException ioe)
-            //    {
-            //        MessageBox.Show(                                                 
-            //        string.Format("{0}.\r\n{1}.", MethodBase.GetCurrentMethod().Name, ioe.Message)  , propAppName);
-
-            //    }
-            //    catch (SqlException se)
-            //    {
-            //        MessageBox.Show(
-            //        string.Format("{0}.\r\n{1}.", MethodBase.GetCurrentMethod().Name, se.Message), propAppName);
-            //    }
-            //    finally
-            //    {
-            //        conn.Close();
-            //    }
-
-            //}
-            //return;
-
-            #endregion
-
             foreach (DataGridViewRow dr in dgvAccounts.Rows)
             {
                 tspbRecords.PerformStep();
@@ -172,21 +138,22 @@ namespace LabBilling.Forms
                 // write chk record for balance due as write off with bad debt flagged	
                 acc = accountRepository.GetByAccount(strAccount);
 
-                Chk chk = new Chk();
-                chk.AccountNo = strAccount;
-                chk.PaidAmount = 0.00;
-                chk.IsCollectionPmt = true;
-                chk.Comment = "BAD DEBT WRITE OFF";
-                chk.ContractualAmount = 0.00;
-                chk.Source = "BAD_DEBT";
-                chk.Status = "WRITE_OFF";
-                chk.WriteOffAmount = dBal;
-                chk.WriteOffDate = DateTime.Today;
-                chk.InsCode =
+                Chk chk = new()
+                {
+                    AccountNo = strAccount,
+                    PaidAmount = 0.00,
+                    IsCollectionPmt = true,
+                    Comment = "BAD DEBT WRITE OFF",
+                    ContractualAmount = 0.00,
+                    Source = "BAD_DEBT",
+                    Status = "WRITE_OFF",
+                    WriteOffAmount = dBal,
+                    WriteOffDate = DateTime.Today,
+                    InsCode =
                     m_rIns.GetActiveRecords(string.Format("Account = '{0}' and ins_a_b_c = 'A'", strAccount)) == 1 ?
-                    m_rIns.propIns_code.Trim().ToUpper() : "";
-                
-                chk.FinCode = m_CAcc.m_Racc.m_strFinCode;
+                    m_rIns.propIns_code.Trim().ToUpper() : "",
+                    FinCode = m_CAcc.m_Racc.m_strFinCode
+                };
                 chkRepository.Add(chk);
 
                 // update pat
@@ -419,9 +386,7 @@ namespace LabBilling.Forms
             }
             dgvAccounts.DataSource = m_dtAccounts;
 
-
             ssRecords.Text = string.Format("Records {0}", dgvAccounts.Rows.Count);
-
         }
 
         private void dgvAccounts_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
@@ -433,9 +398,7 @@ namespace LabBilling.Forms
             if (e.Button == MouseButtons.Right)
             {
                 if (MessageBox.Show("Do you want to hide this column?", "HIDE COLUMN", MessageBoxButtons.YesNo) != DialogResult.Yes)
-                {
                     return;
-                }
                 dgvAccounts.Columns[e.ColumnIndex].Visible = false;
             }
         }
@@ -496,93 +459,10 @@ namespace LabBilling.Forms
             ((DataGridView)sender).Rows[e.RowIndex].HeaderCell.Value = string.Format("{0}", (e.RowIndex + 1));
         }
 
-        private void GeneratePatientBillsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Log.Instance.Trace($"Entering");
-            Application.DoEvents();
-            PatBillForm pb = new PatBillForm();
-            pb.m_strServer = m_strServer;
-            pb.m_strDatabase = m_strDatabase;
-            pb.ShowDialog();
-            return;
-
-        }
-
-        private void TsmiSelectAccounts_Click(object sender, EventArgs e)
-        {
-            Log.Instance.Trace($"Entering");
-            return;
-            // int nRows = 0;
-            // Exception myException = new Exception("Message Initialized and Upload failed."); 
-
-            //using (SqlConnection conn = new SqlConnection(
-            //string.Format("Data Source={0}; Initial Catalog = {1}; Integrated Security = 'SSPI'; "+
-            // "Connection Timeout = 600",
-            //        m_strServer, m_strDatabase)))
-            // {
-            //    conn.Open();
-            //    SqlCommand command = conn.CreateCommand();
-            //    SqlTransaction transaction =conn.BeginTransaction();
-            //    command.Connection = conn;
-            //    command.Transaction = transaction;
-
-            //    try
-            //    {
-            //        DateTime batchDate = new DateTime(
-            //            DateTime.Today.AddMonths(-1).Year
-            //            , DateTime.Today.AddMonths(-1).Month
-            //            , DateTime.Today.AddDays((DateTime.Today.Day * -1)).Day
-            //            , 23, 59, 59);
-            //        command.CommandText = string.Format("exec dbo.usp_prg_pat_bill_acct "+
-            //            "@batchDate = '{0}', @endDate = '{1}',  " +
-            //            "@batch = '{2}{3}'"
-            //            , DateTime.Today.ToString("d")
-            //            , batchDate
-            //            , batchDate.ToString("yyyy"), batchDate.ToString("MM"));
-
-            //        nRows = command.ExecuteNonQuery();
-
-            //        transaction.Commit();
-            //    }
-            //    catch (SqlException sqe)
-            //    {
-            //        myException = sqe;
-            //        //MessageBox.Show(sqe.Message, sqe.GetType().ToString());
-            //        transaction.Rollback();
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        myException =  ex;
-            //        MessageBox.Show(ex.Message, ex.GetType().ToString());
-            //        transaction.Rollback();
-            //    }
-            //     finally
-            //     {
-
-            //         if (conn.State == ConnectionState.Open)
-            //         {
-            //             conn.Close();
-            //         }
-            //     }
-            // }
-
-            // if (!string.IsNullOrEmpty(myException.GetType().ToString()))
-            // {
-            //   MessageBox.Show(myException.Message, myException.GetType().ToString());
-            // }
-            // else
-            // {
-            //     MessageBox.Show(string.Format("{0) Accounts loaded.",nRows),"FINISHED UPLOAD");
-            // }
-
-
-        }
-
         private void DgvAccounts_SelectionChanged(object sender, EventArgs e)
         {
             Log.Instance.Trace($"Entering");
-            //int x;
-            //x = 9;
+
         }
 
         private void TsbSmallBalWriteOff_Click(object sender, EventArgs e)
@@ -641,110 +521,9 @@ namespace LabBilling.Forms
             MessageBox.Show("Processing small balance write_off is complete.", "SMALL BALANCE");
         }
 
-        private void GenerateCollectionsFileToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Log.Instance.Trace($"Entering");
-            string filename = string.Format(@"c:\temp\MCL{0}{1}{2}.txt", DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day);
-            using (System.IO.StreamWriter file = new System.IO.StreamWriter(filename))
-            {
-                using (SqlConnection conn = new SqlConnection(Program.AppEnvironment.ConnectionString))
-                {
-                    conn.Open();
-                    SqlCommand cmdSelect = new SqlCommand("select * from bad_debt where date_sent IS NULL", conn);
-                    SqlDataReader dr = cmdSelect.ExecuteReader();
-
-                    if (dr.HasRows)
-                    {
-                        while (dr.Read())
-                        {
-                            FixedFileLine ffl = new Utilities.FixedFileLine(19);
-                            ffl.SetField(1, 20, dr["debtor_last_name"] as string);
-                            ffl.SetField(2, 15, dr["debtor_first_name"] as string);
-                            ffl.SetField(3, 25, dr["st_addr_1"] as string);
-                            ffl.SetField(4, 25, dr["st_addr_2"] as string);
-                            ffl.SetField(5, 18, dr["city"] as string);
-                            ffl.SetField(6, 15, dr["state_zip"] as string);
-                            ffl.SetField(7, 15, dr["spouse"] as string);
-                            ffl.SetField(8, 12, dr["phone"] as string);
-                            ffl.SetField(9, 10, dr["soc_security"] as string);
-                            ffl.SetField(10, 20, dr["license_number"] as string);
-                            ffl.SetField(11, 35, dr["employment"] as string);
-                            ffl.SetField(12, 35, dr["remarks"] as string);
-                            ffl.SetField(13, 25, dr["account_no"] as string);
-                            ffl.SetField(14, 20, dr["patient_name"] as string);
-                            ffl.SetField(15, 35, dr["remarks2"] as string);
-                            ffl.SetField(16, 29, dr["misc"] as string);
-                            DateTime svcDate = (DateTime)dr["service_date"];
-                            ffl.SetField(17, 6, svcDate.ToString("MMddyy")); //mmddyy
-                            ffl.SetField(18, 6, ""); //was payment date- removed to prevent file read errors by collection agency
-                            decimal balance = (decimal)dr["balance"];
-                            ffl.SetField(19, 10, balance.ToString()); //balance
-
-                            file.WriteLine(ffl.OutputLine());
-
-
-                            using (SqlConnection conn2 = new SqlConnection(Program.AppEnvironment.ConnectionString))
-                            {
-                                //update the date sent field in the database record
-                                conn2.Open();
-                                string updateCmd = $"update bad_debt set date_sent = @date_sent where rowguid = @rowguid";
-                                SqlCommand cmdUpdate = new SqlCommand(updateCmd, conn2);
-                                cmdUpdate.Parameters.AddWithValue("@date_sent", DateTime.Today);
-                                cmdUpdate.Parameters.AddWithValue("@rowguid", (Guid)dr["rowguid"]);
-
-                                Int32 affected = cmdUpdate.ExecuteNonQuery();
-                                if (affected <= 0)
-                                {
-                                    //error updating row
-
-                                }
-                                conn2.Close();
-                            }
-                        }
-                    }
-                    else
-                    {
-                        MessageBox.Show("No data to send.");
-                    }
-                    dr.Close();
-                    conn.Close();
-                }
-            }
-        }
-
         private void dgvAccounts_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            Log.Instance.Trace($"Entering");
             return;
-
-
-            //if (e.RowIndex == dgvAccounts.NewRowIndex || e.RowIndex < 0)
-            //    return;
-
-            //if (e.ColumnIndex < 0)
-            //    return;
-
-            ////check if click is on specific column
-            //if(e.ColumnIndex == dgvAccounts.Columns["dataGridViewDeleteButton"].Index)
-            //{
-            //    //delete the row from the database and grid
-            //    using (SqlConnection conn = new SqlConnection(Helper.ConnVal))
-            //    {
-            //        if(MessageBox.Show("Are you sure?", "Delete Row",MessageBoxButtons.YesNo) == DialogResult.Yes)
-            //        {
-            //            SqlCommand cmdDelete = new SqlCommand("delete from bad_debt where rowguid = @rowguid", conn);
-            //            cmdDelete.Parameters.Add("@rowguid", SqlDbType.UniqueIdentifier).Value = m_dtAccounts.Columns["rowguid"];
-            //            cmdDelete.Parameters["@rowguid"].SourceColumn = "rowguid";
-
-            //            m_sdaBadDebt.DeleteCommand = cmdDelete;
-
-            //            DataRow dr = m_dtAccounts.Rows[e.RowIndex];
-            //            dr.Delete();
-
-            //            m_sdaBadDebt.Update(m_dtAccounts);
-            //        }
-            //    }
-            //}    
         }
 
         private void dgvAccounts_CellContentClick(object sender, DataGridViewCellEventArgs e)
@@ -785,7 +564,6 @@ namespace LabBilling.Forms
         private void patientStatementsWizardToolStripMenuItem_Click(object sender, EventArgs e)
         {
             PatientCollectionsRunWizard frm = new PatientCollectionsRunWizard();
-
             frm.ShowDialog();
 
         }
