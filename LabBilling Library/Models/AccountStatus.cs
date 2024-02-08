@@ -14,6 +14,7 @@
         public static readonly string Closed = "CLOSED";
         public static readonly string Hold = "HOLD";
         public static readonly string Client = "CLIENT";
+        public static readonly string Collections = "COLL";
 
         public static bool IsValid(string status)
         {
@@ -29,6 +30,7 @@
             if (status == Closed) return true;
             if (status == Hold) return true;
             if (status == Client) return true;
+            if (status == Collections) return true;
 
             return false;
         }

@@ -21,6 +21,7 @@ namespace LabBilling.Core.DataAccess
         protected string _tableName;
         protected IList<string> _fields;
         protected TableInfo _tableInfo;
+        public TableInfo TableInfo { get { return _tableInfo; } }
         protected bool transactionStarted = false;
         /// <summary>
         /// Contains error messages as a result of actions.
@@ -40,8 +41,8 @@ namespace LabBilling.Core.DataAccess
 
             AppEnvironment = environment;
 
-            dbConnection.ExceptionThrown += DbConnection_ExceptionThrown;
-            dbConnection.ConnectionOpened += DbConnection_ConnectionOpened;
+            //dbConnection.ExceptionThrown += DbConnection_ExceptionThrown;
+            //dbConnection.ConnectionOpened += DbConnection_ConnectionOpened;
 
             Initialize();
         }

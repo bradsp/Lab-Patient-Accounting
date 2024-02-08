@@ -9,6 +9,7 @@ using System.Linq;
 using System.Xml.Serialization;
 using System.Data;
 using PetaPoco;
+using Utilities;
 
 namespace LabBilling.Core.BusinessLogic
 {
@@ -18,13 +19,13 @@ namespace LabBilling.Core.BusinessLogic
     public sealed class ClientInvoices : DataAccess.Database
     {
         //private string _connection;
-        private readonly ChkRepository chkdb;
+        //private readonly ChkRepository chkdb;
         private readonly ChrgRepository chrgdb;
         private readonly ClientRepository clientdb;
         private readonly SystemParametersRepository systemdb;
         private readonly AccountRepository accdb;
         private readonly InvoiceHistoryRepository invoiceHistoryRepository;
-        private string fileSavePath = null;
+        //private string fileSavePath = null;
 
         private IAppEnvironment _appEnvironment;
         public event EventHandler<ClientInvoiceGeneratedEventArgs> InvoiceGenerated;
@@ -38,19 +39,18 @@ namespace LabBilling.Core.BusinessLogic
             _appEnvironment = appEnvironment;
 
             chrgdb = new ChrgRepository(_appEnvironment);
-            chkdb = new ChkRepository(_appEnvironment);
+            //chkdb = new ChkRepository(_appEnvironment);
             clientdb = new ClientRepository(_appEnvironment);
             systemdb = new SystemParametersRepository(_appEnvironment);
             accdb = new AccountRepository(_appEnvironment);
             invoiceHistoryRepository = new InvoiceHistoryRepository(_appEnvironment);
 
-            //this.fileSavePath = systemdb.GetByKey("invoice_file_location") ?? string.Empty;
-            this.fileSavePath = appEnvironment.ApplicationParameters.InvoiceFileLocation;
+            //fileSavePath = appEnvironment.ApplicationParameters.InvoiceFileLocation;
 
-            if (string.IsNullOrEmpty(fileSavePath))
-            {
-                throw new InvalidParameterValueException(nameof(ApplicationParameters.InvoiceFileLocation));
-            }
+            //if (string.IsNullOrEmpty(fileSavePath))
+            //{
+            //    throw new InvalidParameterValueException(nameof(ApplicationParameters.InvoiceFileLocation));
+            //}
         }
 
         public void Compile(DateTime thruDate, IList<UnbilledClient> unbilledClients, IProgress<int> progress)
@@ -65,11 +65,11 @@ namespace LabBilling.Core.BusinessLogic
                 {
                     GenerateInvoice(unbilledClient.ClientMnem, thruDate);
                     tempCount++;
-                    progress?.Report((tempCount * 100 / clientCount));
+                    progress?.Report(HelperExtensions.ComputePercentage(tempCount, clientCount));
                     InvoiceGenerated?.Invoke(this, new ClientInvoiceGeneratedEventArgs()
                     {
                         ClientMnem = unbilledClient.ClientMnem,
-                        Progress = tempCount * 100 / clientCount,
+                        Progress = HelperExtensions.ComputePercentage(tempCount, clientCount),
                         InvoiceCount = clientCount,
                         InvoicesGenerated = tempCount
                     });
@@ -81,7 +81,7 @@ namespace LabBilling.Core.BusinessLogic
                 InvoiceRunCompleted?.Invoke(this, new ClientInvoiceGeneratedEventArgs()
                 {
                     ClientMnem = "",
-                    Progress = tempCount * 100 / clientCount,
+                    Progress = HelperExtensions.ComputePercentage(tempCount, clientCount),
                     InvoiceCount = clientCount,
                     InvoicesGenerated = tempCount
                 });
@@ -96,28 +96,30 @@ namespace LabBilling.Core.BusinessLogic
             }
         }
 
-        public string GenerateStatement(string clientMnemonic, DateTime asOfDate)
+        public InvoiceModel GenerateStatement(string clientMnemonic, DateTime asOfDate)
         {
             Log.Instance.Trace($"Entering - client {clientMnemonic}");
 
             if (clientMnemonic == null)
-                throw new ArgumentNullException("clientMnemonic");
+                throw new ArgumentNullException(nameof(clientMnemonic));
             if (asOfDate > DateTime.Today)
-                throw new ArgumentOutOfRangeException("asOfDate");
+                throw new ArgumentOutOfRangeException(nameof(asOfDate));
 
             Account acc = accdb.GetByAccount(clientMnemonic);
             if (acc == null)
                 clientdb.NewClient(clientMnemonic);
 
-            InvoiceModel invoiceModel = new InvoiceModel();
-            invoiceModel.StatementType = InvoiceModel.StatementTypeEnum.Statement;
-            invoiceModel.BillingCompanyName = _appEnvironment.ApplicationParameters.InvoiceCompanyName;
-            invoiceModel.BillingCompanyAddress = _appEnvironment.ApplicationParameters.InvoiceCompanyAddress;
-            invoiceModel.BillingCompanyCity = _appEnvironment.ApplicationParameters.InvoiceCompanyCity;
-            invoiceModel.BillingCompanyState = _appEnvironment.ApplicationParameters.InvoiceCompanyState;
-            invoiceModel.BillingCompanyZipCode = _appEnvironment.ApplicationParameters.InvoiceCompanyZipCode;
-            invoiceModel.BillingCompanyPhone = _appEnvironment.ApplicationParameters.InvoiceCompanyPhone;
-            invoiceModel.ImageFilePath = _appEnvironment.ApplicationParameters.InvoiceLogoImagePath;
+            InvoiceModel invoiceModel = new()
+            {
+                StatementType = InvoiceModel.StatementTypeEnum.Statement,
+                BillingCompanyName = _appEnvironment.ApplicationParameters.InvoiceCompanyName,
+                BillingCompanyAddress = _appEnvironment.ApplicationParameters.InvoiceCompanyAddress,
+                BillingCompanyCity = _appEnvironment.ApplicationParameters.InvoiceCompanyCity,
+                BillingCompanyState = _appEnvironment.ApplicationParameters.InvoiceCompanyState,
+                BillingCompanyZipCode = _appEnvironment.ApplicationParameters.InvoiceCompanyZipCode,
+                BillingCompanyPhone = _appEnvironment.ApplicationParameters.InvoiceCompanyPhone,
+                ImageFilePath = _appEnvironment.ApplicationParameters.InvoiceLogoImagePath
+            };
 
             Client client = clientdb.GetClient(clientMnemonic);
 
@@ -138,43 +140,42 @@ namespace LabBilling.Core.BusinessLogic
 
             invoiceModel.ClientStatementDetails = details;
 
-            InvoicePrintPdfSharp invoicePrint = new InvoicePrintPdfSharp();
+            //InvoicePrintPdfSharp invoicePrint = new InvoicePrintPdfSharp();
 
-            string filename = $"{fileSavePath}\\Statement-{invoiceModel.ClientMnem}-{DateTime.Today.ToString("yyyyMMdd")}.pdf";
-            invoicePrint.CreateStatementPdf(invoiceModel, filename);
+            //string filename = $"{fileSavePath}\\Statement-{invoiceModel.ClientMnem}-{DateTime.Today.ToString("yyyyMMdd")}.pdf";
+            //invoicePrint.CreateStatementPdf(invoiceModel, filename);
 
-            //InvoicePrint.CreatePDF(invoiceModel, $"{fileSavePath}\\Statement-{invoiceModel.ClientMnem}-{DateTime.Today.ToString("yyyyMMdd")}.pdf");
-            return filename;
+            return invoiceModel;
         }
 
-        public string PrintInvoice(string invoiceNo)
-        {
-            InvoiceModel invoiceModel = new InvoiceModel();
+        //public string PrintInvoice(string invoiceNo)
+        //{
+        //    InvoiceModel invoiceModel = new InvoiceModel();
 
-            InvoiceHistory invoiceHistory = invoiceHistoryRepository.GetByInvoice(invoiceNo);
+        //    InvoiceHistory invoiceHistory = invoiceHistoryRepository.GetByInvoice(invoiceNo);
 
 
-            InvoicePrintPdfSharp invoicePrint = new InvoicePrintPdfSharp();
+        //    InvoicePrintPdfSharp invoicePrint = new InvoicePrintPdfSharp();
 
-            string xml = invoiceHistory.InvoiceData;
-            xml = xml.Replace("&#x0;", "");
-            XmlSerializer serializer = new XmlSerializer(typeof(InvoiceModel));
-            StringReader rdr = new StringReader(xml);
+        //    string xml = invoiceHistory.InvoiceData;
+        //    xml = xml.Replace("&#x0;", "");
+        //    XmlSerializer serializer = new XmlSerializer(typeof(InvoiceModel));
+        //    StringReader rdr = new StringReader(xml);
             
-            invoiceModel = (InvoiceModel)serializer.Deserialize(rdr);
+        //    invoiceModel = (InvoiceModel)serializer.Deserialize(rdr);
 
-            invoiceModel.ImageFilePath = _appEnvironment.ApplicationParameters.InvoiceLogoImagePath; //systemdb.GetByKey("invoice_logo_image_path") ?? string.Empty;
+        //    invoiceModel.ImageFilePath = _appEnvironment.ApplicationParameters.InvoiceLogoImagePath; //systemdb.GetByKey("invoice_logo_image_path") ?? string.Empty;
 
-            //only print an invoice if there are invoice lines to print.
-            if(invoiceModel.InvoiceDetails.Count() > 0)
-            {
-                string filename = $"{fileSavePath}\\Invoice-{invoiceModel.ClientMnem}-{invoiceModel.InvoiceNo}.pdf";
-                invoicePrint.CreateInvoicePdf(invoiceModel, filename);
-                return filename;
-            }
+        //    //only print an invoice if there are invoice lines to print.
+        //    if(invoiceModel.InvoiceDetails.Count() > 0)
+        //    {
+        //        string filename = $"{fileSavePath}\\Invoice-{invoiceModel.ClientMnem}-{invoiceModel.InvoiceNo}.pdf";
+        //        invoicePrint.CreateInvoicePdf(invoiceModel, filename);
+        //        return filename;
+        //    }
 
-            return string.Empty;
-        }
+        //    return string.Empty;
+        //}
 
         /// <summary>
         /// Generate an invoice for a single client.
@@ -278,26 +279,26 @@ namespace LabBilling.Core.BusinessLogic
                 invoiceInpTotal += inpTotal;
                 invoiceRetailTotal += retailTotal;
 
-                Chrg accChrg = new Chrg();
-                accChrg.AccountNo = account.AccountNo;
-                accChrg.CDMCode = "CBILL";
-                accChrg.Invoice = invoiceModel.InvoiceNo;
-                accChrg.Quantity = amountTotal < 0 ? 1 : -1;
-                accChrg.HospAmount = inpTotal;
-                accChrg.RetailAmount = retailTotal;
-                accChrg.NetAmount = Math.Abs(amountTotal);
-                accChrg.FinancialType = "C";
-                accChrg.FinCode = account.FinCode;
-                accChrg.ServiceDate = account.TransactionDate;
-                accChrg.Status = "NEW";
-                accChrg.PostingDate = DateTime.Today;
-                accChrg.PerformingSite = "";
-                accChrg.OrderingSite = "";
-                accChrg.IsCredited = false;
-                accChrg.ClientMnem = invoiceModel.ClientMnem;
-                //accChrg.PatFirstName = "";
-                //accChrg.PatLastName = "";
-                //accChrg.PatMiddleName = "";
+                Chrg accChrg = new()
+                {
+                    AccountNo = account.AccountNo,
+                    CDMCode = "CBILL",
+                    Invoice = invoiceModel.InvoiceNo,
+                    Quantity = amountTotal < 0 ? 1 : -1,
+                    HospAmount = inpTotal,
+                    RetailAmount = retailTotal,
+                    NetAmount = Math.Abs(amountTotal),
+                    FinancialType = "C",
+                    FinCode = account.FinCode,
+                    ServiceDate = account.TransactionDate,
+                    Status = "NEW",
+                    PostingDate = DateTime.Today,
+                    PerformingSite = "",
+                    OrderingSite = "",
+                    IsCredited = false,
+                    ClientMnem = invoiceModel.ClientMnem
+                };
+
                 accChrg.ChrgDetails.Add(new ChrgDetail()
                 {
                     Cpt4 = "NONE",
@@ -311,19 +312,21 @@ namespace LabBilling.Core.BusinessLogic
 
             //write client invoice transaction on client account
 
-            Chrg invoiceChrg = new Chrg();
-            invoiceChrg.AccountNo = clientMnemonic;
-            invoiceChrg.CDMCode = "CBILL";
-            invoiceChrg.Invoice = invoiceModel.InvoiceNo;
-            invoiceChrg.Quantity = invoiceAmountTotal < 0 ? -1 : 1;
-            invoiceChrg.HospAmount = invoiceInpTotal;
-            invoiceChrg.RetailAmount = invoiceRetailTotal;
-            invoiceChrg.NetAmount = Math.Abs(invoiceAmountTotal);
-            invoiceChrg.FinancialType = "C";
-            invoiceChrg.FinCode = "CLIENT";
-            invoiceChrg.ServiceDate = DateTime.Today;
-            invoiceChrg.Status = "NEW";
-            invoiceChrg.ClientMnem = invoiceModel.ClientMnem;
+            Chrg invoiceChrg = new()
+            {
+                AccountNo = clientMnemonic,
+                CDMCode = "CBILL",
+                Invoice = invoiceModel.InvoiceNo,
+                Quantity = invoiceAmountTotal < 0 ? -1 : 1,
+                HospAmount = invoiceInpTotal,
+                RetailAmount = invoiceRetailTotal,
+                NetAmount = Math.Abs(invoiceAmountTotal),
+                FinancialType = "C",
+                FinCode = "CLIENT",
+                ServiceDate = DateTime.Today,
+                Status = "NEW",
+                ClientMnem = invoiceModel.ClientMnem
+            };
             invoiceChrg.ChrgDetails.Add(new ChrgDetail()
             {
                 Cpt4 = "NONE",
@@ -335,11 +338,6 @@ namespace LabBilling.Core.BusinessLogic
             invoiceModel.DiscountTotal = discountTotal;
 
             SaveInvoiceHistory(invoiceModel);
-
-            //InvoicePrintPdfSharp invoicePrint = new InvoicePrintPdfSharp();
-
-            //invoicePrint.CreateInvoicePdf(invoiceModel, $"{fileSavePath}\\Invoice-{invoiceModel.ClientMnem}-{invoiceModel.InvoiceNo}.pdf");
-
         }
 
         private void SaveInvoiceHistory(InvoiceModel invoiceModel)
@@ -359,11 +357,6 @@ namespace LabBilling.Core.BusinessLogic
             invoiceHistory.ThroughDate = invoiceModel.ThroughDate;
             invoiceHistory.TotalCharges = invoiceModel.InvoiceTotal;
             invoiceHistory.InvoiceData = textWriter.ToString();
-
-            //invoiceHistory.balance_due = balanceForward + invoiceAmountTotal;
-            //invoiceHistory.bal_forward = balanceForward;
-            //invoiceHistory.payments = payments;
-            //invoiceHistory.true_balance_due = balanceForward + invoiceAmountTotal;
 
             invoiceHistoryRepository.Add(invoiceHistory);
         }

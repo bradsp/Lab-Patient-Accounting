@@ -8,6 +8,8 @@ using LabBilling.Core.DataAccess;
 using LabBilling.Logging;
 using Utilities;
 using System.IO;
+using DocumentFormat.OpenXml.Bibliography;
+using OopFactory.X12.Parsing.Model.Typed;
 
 namespace LabBilling.Forms
 {
@@ -15,10 +17,9 @@ namespace LabBilling.Forms
     {
         private PatientBilling patientBilling = new PatientBilling(Program.AppEnvironment);
         private BadDebtRepository badDebtRepository = new BadDebtRepository(Program.AppEnvironment);
-        private SystemParametersRepository parametersRepository = new SystemParametersRepository(Program.AppEnvironment);
-        private bool errorEncountered = false;
         private DateTime thruDate;
         private string batchNo;
+        private bool errorEncountered = false;
 
         public PatientCollectionsRunWizard()
         {
@@ -43,7 +44,7 @@ namespace LabBilling.Forms
                 sendToCollectionsProgressBar.Maximum = 100;
                 patientBilling.ProgressIncrementedEvent += PatientBilling_ProgressIncrementedEvent;
 
-                string filename = await patientBilling.SendToCollections();
+                string filename = await patientBilling.SendToCollectionsAsync();
 
                 //send collections file
                 SFTP.UploadSftp(filename, Program.AppEnvironment.ApplicationParameters.CollectionsSftpUploadPath + '/' + Path.GetFileName(filename),
@@ -138,10 +139,12 @@ namespace LabBilling.Forms
             Log.Instance.Trace("Entering");
             try
             {
-                compileStatementsProgressBar.Style = ProgressBarStyle.Marquee;
+                compileStatementsProgressBar.Style = ProgressBarStyle.Continuous;
+                compileStatementsProgressBar.Value = 0;
 
-                await patientBilling.CompileStatementsAsync(DateTimeHelper.GetLastDayOfPrevMonth());
-                
+                //await patientBilling.CompileStatementsAsync(DateTimeHelper.GetLastDayOfPrevMonth());
+                await patientBilling.CompileStatementsNewAsync(DateTimeHelper.GetLastDayOfPrevMonth());
+
                 compileStatementsProgressBar.Style = ProgressBarStyle.Continuous;
                 compileStatementsProgressBar.Value = 100;
                 compileStatementsProgressBar.Maximum = 100;
@@ -186,6 +189,7 @@ namespace LabBilling.Forms
 
             sendToCollectionsTextbox.Text = $"{records.Count()} records to send to collections.";
 
+
             thruDate = DateTimeHelper.GetLastDayOfPrevMonth();
 
             batchNo = $"{thruDate.Year}{thruDate.Month:00}";
@@ -209,6 +213,11 @@ namespace LabBilling.Forms
             compileStmtsStartButton.Enabled = true;
             createStmtFileStartButton.Enabled = true;
             nextButton.Enabled = true;
+
+            if (!records.Any())
+            {
+                skipSendCollectionsCheckBox.Checked = true;
+            }
         }
 
         private void PatientCollectionsRunWizard_HelpRequested(object sender, HelpEventArgs hlpevent)
@@ -240,7 +249,12 @@ namespace LabBilling.Forms
 
         private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (tabControl1.SelectedIndex == 0)
+            if (tabControl1.TabPages[tabControl1.SelectedIndex].Name == sendCollectionsTabPage.Name)
+            {
+                sendToCollectionsStartButton.Enabled = !skipSendCollectionsCheckBox.Checked;
+                nextButton.Enabled = skipSendCollectionsCheckBox.Checked;
+            }
+            else if (tabControl1.SelectedIndex == 0)
             {
                 nextButton.Enabled = true;
             }
@@ -248,6 +262,12 @@ namespace LabBilling.Forms
             {
                 nextButton.Enabled = false;
             }
+        }
+
+        private void skipSendCollectionsCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            sendToCollectionsStartButton.Enabled = !skipSendCollectionsCheckBox.Checked;
+            nextButton.Enabled = skipSendCollectionsCheckBox.Checked;
         }
     }
 }

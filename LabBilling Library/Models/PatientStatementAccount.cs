@@ -89,15 +89,15 @@ namespace LabBilling.Core.Models
         [Column("mailer")] 
         public string Mailer { get; set; }
         [Column("first_data_mailer")] 
-        public DateTime FirstDataMailer { get; set; }
+        public DateTime? FirstDataMailer { get; set; }
         [Column("last_data_mailer")] 
-        public DateTime LastDataMailer { get; set; }
+        public DateTime? LastDataMailer { get; set; }
         [Column("mailer_count")] 
         public int MailerCount { get; set; }
         [Column("processed_date")] 
         public DateTime ProcessedDate { get; set; }
         [Column("date_sent")] 
-        public DateTime DateSent { get; set; }
+        public DateTime? DateSent { get; set; }
         [Column("aging_bucket_current")] 
         public double AgingBucketCurrent { get; set; }
         [Column("aging_bucket_30")] 
@@ -110,7 +110,6 @@ namespace LabBilling.Core.Models
         public string BatchId { get; set; }
         [Column("uid")] 
         public int Uid { get; set; }
-
 
         [Ignore]
         public DateTime UpdatedDate { get; set; }

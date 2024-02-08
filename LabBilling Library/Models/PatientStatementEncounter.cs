@@ -127,42 +127,42 @@ namespace LabBilling.Core.Models
         public string PFTEncntrSelfPayBalance { get; set; }
         [Column("attending_physician_name")] 
         public string AttendingPhysicianName { get; set; }
-        [Column("includes_est_pat_liab")] 
-        public int IncludesEstPatLiab { get; set; }
-        [Column("total_charge_amount")] 
-        public int TotalChargeAmount { get; set; }
-        [Column("non_covered_charge_amt")] 
-        public int NonCoveredChargeAmt { get; set; }
-        [Column("ABN_charge_amt")] 
-        public int ABNChargeAmt { get; set; }
-        [Column("est_contract_allowance_amt_ind")] 
-        public int EstContractAllowanceAmtInd { get; set; }
-        [Column("est_contract_allowance_amt")] 
-        public int EstContractAllowanceAmt { get; set; }
-        [Column("encntr_deductible_rem_amt_ind")] 
-        public int EncntrDeductibleRemAmtInd { get; set; }
-        [Column("encntr_deductible_rem_amt")] 
-        public int EncntrDeductibleRemAmt { get; set; }
-        [Column("deductible_applied_amt")] 
-        public int DeductibleAppliedAmt { get; set; }
-        [Column("encntr_copay_amt_ind")] 
-        public int EncntrCopayAmtInd { get; set; }
-        [Column("encntr_copay_amt")] 
-        public int EncntrCopayAmt { get; set; }
-        [Column("encntr_coinsurance_pct_ind")] 
-        public int EncntrCoinsurancePctInd { get; set; }
-        [Column("encntr_coinsurance_pct")] 
-        public int EncntrCoinsurancePct { get; set; }
-        [Column("encntr_coinsurance_amt")] 
-        public int EncntrCoinsuranceAmt { get; set; }
-        [Column("maximum_out_of_pocket_amt_ind")] 
-        public int MaximumOutOfPocketAmtInd { get; set; }
-        [Column("maximum_out_of_pocket_amt")] 
-        public int MaximumOutOfPocketAmt { get; set; }
-        [Column("amt_over_max_out_of_pocket")] 
-        public int AmtOverMaxOutOfPocket { get; set; }
-        [Column("est_patient_liab_amt")] 
-        public int EstPatientLiabAmt { get; set; }
+        [Column("includes_est_pat_liab")]
+        public int IncludesEstPatLiab { get; set; } = 0;
+        [Column("total_charge_amount")]
+        public int TotalChargeAmount { get; set; } = 0;
+        [Column("non_covered_charge_amt")]
+        public int NonCoveredChargeAmt { get; set; } = 0;
+        [Column("ABN_charge_amt")]
+        public int ABNChargeAmt { get; set; } = 0;
+        [Column("est_contract_allowance_amt_ind")]
+        public int EstContractAllowanceAmtInd { get; set; } = 0;
+        [Column("est_contract_allowance_amt")]
+        public int EstContractAllowanceAmt { get; set; } = 0;
+        [Column("encntr_deductible_rem_amt_ind")]
+        public int EncntrDeductibleRemAmtInd { get; set; } = 0;
+        [Column("encntr_deductible_rem_amt")]
+        public int EncntrDeductibleRemAmt { get; set; } = 0;
+        [Column("deductible_applied_amt")]
+        public int DeductibleAppliedAmt { get; set; } = 0;
+        [Column("encntr_copay_amt_ind")]
+        public int EncntrCopayAmtInd { get; set; } = 0;
+        [Column("encntr_copay_amt")]
+        public int EncntrCopayAmt { get; set; } = 0;
+        [Column("encntr_coinsurance_pct_ind")]
+        public int EncntrCoinsurancePctInd { get; set; } = 0;
+        [Column("encntr_coinsurance_pct")]
+        public int EncntrCoinsurancePct { get; set; } = 0;
+        [Column("encntr_coinsurance_amt")]
+        public int EncntrCoinsuranceAmt { get; set; } = 0;
+        [Column("maximum_out_of_pocket_amt_ind")]
+        public int MaximumOutOfPocketAmtInd { get; set; } = 0;
+        [Column("maximum_out_of_pocket_amt")]
+        public int MaximumOutOfPocketAmt { get; set; } = 0;
+        [Column("amt_over_max_out_of_pocket")]
+        public int AmtOverMaxOutOfPocket { get; set; } = 0;
+        [Column("est_patient_liab_amt")]
+        public int EstPatientLiabAmt { get; set; } = 0;
         [Column("batch_id")] 
         public string BatchId { get; set; }
 

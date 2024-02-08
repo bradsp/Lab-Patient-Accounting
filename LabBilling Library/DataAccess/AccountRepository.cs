@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using Microsoft.Data.SqlClient;
 using System.Data;
 using Log = LabBilling.Logging.Log;
+using PetaPoco;
+using NPOI.SS.Formula.Functions;
 
 
 namespace LabBilling.Core.DataAccess
@@ -27,6 +29,7 @@ namespace LabBilling.Core.DataAccess
         private readonly AccountLmrpErrorRepository accountLmrpErrorRepository;
         private readonly CdmRepository cdmRepository;
         private readonly GlobalBillingCdmRepository globalBillingCdmRepository;
+        private readonly PatientStatementAccountRepository patientStatementAccountRepository;
 
         private const string invoicedCdm = "CBILL";
         private const string cbillStatus = "CBILL";
@@ -57,6 +60,7 @@ namespace LabBilling.Core.DataAccess
             finRepository = new FinRepository(appEnvironment);
             cdmRepository = new CdmRepository(appEnvironment);
             globalBillingCdmRepository = new GlobalBillingCdmRepository(appEnvironment);
+            patientStatementAccountRepository = new PatientStatementAccountRepository(appEnvironment);
         }
 
         public async Task<Account> GetByAccountAsync(string account, bool demographicsOnly = false) => await Task.Run(() => GetByAccount(account, demographicsOnly));
@@ -92,13 +96,14 @@ namespace LabBilling.Core.DataAccess
                 record.BillingActivities = billingActivityRepository.GetByAccount(account);
                 record.AccountValidationStatus = accountValidationStatusRepository.GetByAccount(account);
                 record.Fin = finRepository.GetFin(record.FinCode);
-                record.AccountAlert = dbConnection.SingleOrDefault<AccountAlert>($"where {this.GetRealColumn(nameof(AccountAlert.AccountNo))} = @0",
+                record.AccountAlert = dbConnection.SingleOrDefault<AccountAlert>($"where {GetRealColumn(nameof(AccountAlert.AccountNo))} = @0",
                     new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account });
+                record.PatientStatements = patientStatementAccountRepository.GetByAccount(account);
 
                 DateTime outpBillStartDate;
-                DateTime questStartDate = new DateTime(2012, 10, 1);
-                DateTime questEndDate = new DateTime(2020, 5, 31);
-                DateTime arbitraryEndDate = new DateTime(2016, 12, 31);
+                DateTime questStartDate = new(2012, 10, 1);
+                DateTime questEndDate = new(2020, 5, 31);
+                DateTime arbitraryEndDate = new(2016, 12, 31);
 
                 outpBillStartDate = AppEnvironment.ApplicationParameters.OutpatientBillStart;
 
@@ -194,7 +199,59 @@ namespace LabBilling.Core.DataAccess
             return record;
         }
 
-        public async Task<object> AddAsync(Account table) => await Task.Run(() => Add(table));        
+        public double GetBalance(string accountNo)
+        {
+            string chrgTableName = chrgRepository.TableInfo.TableName;
+
+            if (string.IsNullOrEmpty(accountNo))
+                throw new ArgumentNullException(nameof(accountNo));
+            try
+            {
+
+                var sql = Sql.Builder
+                    .Select(new[]
+                    {
+                        $"coalesce(sum({GetRealColumn(typeof(Chrg), nameof(Chrg.Quantity))} * {GetRealColumn(typeof(Chrg), nameof(Chrg.NetAmount))}), 0.00) as 'Total'"
+                    })
+                    .From(chrgRepository.TableInfo.TableName)
+                    .InnerJoin(_tableName).On($"{_tableName}.{GetRealColumn(nameof(Account.AccountNo))} = {chrgTableName}.{GetRealColumn(typeof(Chrg), nameof(Chrg.AccountNo))}")
+                    .Where($"{chrgTableName}.{GetRealColumn(typeof(Chrg), nameof(Chrg.AccountNo))} = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = accountNo })
+                    .Where($"(({_tableName}.{GetRealColumn(nameof(Account.FinCode))} = @0 and {chrgTableName}.{GetRealColumn(typeof(Chrg), nameof(Chrg.Status))} <> @1)",
+                        new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = clientFinCode },
+                        new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = cbillStatus })
+                    .Append($"or ({_tableName}.{GetRealColumn(nameof(Account.FinCode))} <> @0 and {chrgTableName}.{GetRealColumn(typeof(Chrg), nameof(Chrg.Status))} not in (@1, @2, @3)))",
+                        new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = clientFinCode },
+                        new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = cbillStatus },
+                        new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = capStatus },
+                        new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = naStatus })
+                    .GroupBy(chrgTableName + "." + GetRealColumn(typeof(Chrg), nameof(Chrg.AccountNo)));
+
+                double charges = dbConnection.SingleOrDefault<double>(sql);
+
+                sql = Sql.Builder
+                    .Select(new[]
+                    {
+                        $"coalesce(sum({GetRealColumn(typeof(Chk), nameof(Chk.PaidAmount))} + {GetRealColumn(typeof(Chk), nameof(Chk.ContractualAmount))} + {GetRealColumn(typeof(Chk), nameof(Chk.WriteOffAmount))}), 0.00) as 'Total'"
+                    })
+                    .From(chkRepository.TableInfo.TableName)
+                    .Where($"{chkRepository.TableInfo.TableName}.{GetRealColumn(typeof(Chk), nameof(Chk.AccountNo))} = @0", 
+                        new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = accountNo})
+                    .GroupBy(GetRealColumn(typeof(Chk), nameof(Chk.AccountNo)));
+
+                double adj = (double)dbConnection.SingleOrDefault<double>(sql);
+
+                return charges - adj;
+            }
+            catch (Exception ex)
+            {
+                Log.Instance.Error(ex, $"Error in AccountRepository.GetBalance({accountNo}");
+                throw new ApplicationException($"Error in AccountRepository.GetBalance({accountNo}", ex);
+            }
+
+
+        }
+
+        public async Task<object> AddAsync(Account table) => await Task.Run(() => Add(table));
 
         public override object Add(Account table)
         {
@@ -255,7 +312,21 @@ namespace LabBilling.Core.DataAccess
         }
 
         public async Task<IEnumerable<ClaimItem>> GetAccountsForClaimsAsync(ClaimType claimType, int maxClaims = 0) => await Task.Run(() => GetAccountsForClaims(claimType, maxClaims));
-        
+
+        public IEnumerable<string> GetAccountsByStatus(string status)
+        {
+            Log.Instance.Trace("Entering");
+
+            var sql = PetaPoco.Sql.Builder
+                .Select(GetRealColumn(nameof(Account.AccountNo)))
+                .From(_tableName)
+                .Where($"{GetRealColumn(nameof(Account.Status))} = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = status })
+                .OrderBy(GetRealColumn(nameof(Account.AccountNo)));
+
+            var results = dbConnection.Fetch<string>(sql);
+
+            return results;
+        }
 
         public IEnumerable<ClaimItem> GetAccountsForClaims(ClaimType claimType, int maxClaims = 0)
         {
@@ -315,7 +386,7 @@ namespace LabBilling.Core.DataAccess
         }
 
         public async Task<bool> UpdateAsync(Account table) => await Task.Run(() => Update(table));
-        
+
         public override bool Update(Account table)
         {
             Log.Instance.Trace($"Entering - account {table.AccountNo}");
@@ -562,7 +633,7 @@ namespace LabBilling.Core.DataAccess
             return addSuccess;
         }
 
-        public async Task<bool> ChangeFinancialClassAsync(string account, string newFinCode) => await Task.Run(() =>  ChangeFinancialClass(account, newFinCode));
+        public async Task<bool> ChangeFinancialClassAsync(string account, string newFinCode) => await Task.Run(() => ChangeFinancialClass(account, newFinCode));
 
         public bool ChangeFinancialClass(string account, string newFinCode)
         {
@@ -662,7 +733,7 @@ namespace LabBilling.Core.DataAccess
             bool updateSuccess = true;
             string oldClientMnem = table.ClientMnem;
 
-            if(oldClientMnem == null)
+            if (oldClientMnem == null)
             {
                 //account does not have a valid current client defined
 
@@ -798,10 +869,12 @@ namespace LabBilling.Core.DataAccess
             {
                 var chargesToCredit = account.Charges.Where(x => x.IsCredited == false).ToList();
 
-                foreach(var chrg in chargesToCredit)
+                foreach (var chrg in chargesToCredit)
                 {
                     if (chrg.CDMCode == invoicedCdm)  //do not reprocess CBILL charge records
                         continue;
+
+                    // need to determine the correct logic for dealing with client charges
 
                     chrgRepository.CreditCharge(chrg.ChrgId, comment);
 
@@ -929,7 +1002,7 @@ namespace LabBilling.Core.DataAccess
         /// <param name="refNumber"></param>
         /// <param name="miscAmount"></param>
         /// <returns></returns>
-        public async Task<int> AddChargeAsync(string account, string cdm, int qty, DateTime serviceDate, string comment = null, string refNumber = null, double miscAmount = 0.00) 
+        public async Task<int> AddChargeAsync(string account, string cdm, int qty, DateTime serviceDate, string comment = null, string refNumber = null, double miscAmount = 0.00)
             => await Task.Run(() => AddCharge(account, cdm, qty, serviceDate, comment, refNumber, miscAmount));
 
         /// <summary>
@@ -1229,7 +1302,7 @@ namespace LabBilling.Core.DataAccess
 
                 CompleteTransaction();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Log.Instance.Error(ex);
                 AbortTransaction();
@@ -1311,7 +1384,7 @@ namespace LabBilling.Core.DataAccess
 
             try
             {
-                if ((account.Status == AccountStatus.InstSubmitted || account.Status == AccountStatus.ProfSubmitted 
+                if ((account.Status == AccountStatus.InstSubmitted || account.Status == AccountStatus.ProfSubmitted
                     || account.Status == AccountStatus.ClaimSubmitted || account.Status == AccountStatus.Statements
                     || account.Status == AccountStatus.Closed || account.Status == AccountStatus.PaidOut) && !reprint)
                 {
@@ -1329,7 +1402,7 @@ namespace LabBilling.Core.DataAccess
                     {
                         if (account.InsurancePrimary.InsCompany != null)
                         {
-                            if(account.InsurancePrimary.InsCompany.IsMedicareHmo)
+                            if (account.InsurancePrimary.InsCompany.IsMedicareHmo)
                                 UnbundlePanels(account);
                             if (!account.InsurancePrimary.InsCompany.IsMedicareHmo)
                                 BundlePanels(account);
@@ -1374,10 +1447,10 @@ namespace LabBilling.Core.DataAccess
                         account.AccountValidationStatus.ValidationText = "No validation errors.";
                         //update account status if this account has been flagged to bill
                         if (account.Status == AccountStatus.ReadyToBill)
-                        {   
+                        {
                             UpdateStatus(account.AccountNo, account.BillForm);
                             //if this is a self-pay, set the statement flag
-                            if(account.BillForm == AccountStatus.Statements)
+                            if (account.BillForm == AccountStatus.Statements)
                             {
                                 patRepository.SetStatementFlag(account.AccountNo, "Y");
                             }

@@ -206,18 +206,18 @@ namespace LabBillingConsole
         {
             ClientInvoices clientInvoices = new ClientInvoices(_appEnvironment);
 
-            string filename = clientInvoices.PrintInvoice("78630");
+            //string filename = clientInvoices.PrintInvoice("78630");
 
-            System.Diagnostics.Process.Start(filename);
+            //System.Diagnostics.Process.Start(filename);
         }
 
         public void GenerateStatement()
         {
             ClientInvoices clientInvoice = new ClientInvoices(_appEnvironment);
 
-            string filename = clientInvoice.GenerateStatement("HESC", DateTime.Today.AddDays(-120));
+            //string filename = clientInvoice.GenerateStatement("HESC", DateTime.Today.AddDays(-120));
 
-            System.Diagnostics.Process.Start(filename);
+            //System.Diagnostics.Process.Start(filename);
         }
         public void ProcessInterfaceMessages()
         {

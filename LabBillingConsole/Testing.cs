@@ -266,9 +266,9 @@ namespace LabBillingConsole
 
             string filename = @"c:\temp\demo.pdf";
             //InvoicePrint.CreatePDF(invModel, filename);
-            InvoicePrintPdfSharp invoicePrint = new InvoicePrintPdfSharp();
+            //InvoicePrintPdfSharp invoicePrint = new InvoicePrintPdfSharp();
 
-            invoicePrint.CreateInvoicePdf(invModel, filename);
+            //invoicePrint.CreateInvoicePdf(invModel, filename);
 
             System.Diagnostics.Process.Start(filename);
         }

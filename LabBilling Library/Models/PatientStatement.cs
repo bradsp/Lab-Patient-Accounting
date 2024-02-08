@@ -122,7 +122,7 @@ namespace LabBilling.Core.Models
         [Column("guarantor_phone")]
         public string GuarantorPhone { get; set; }
         [Column("statement_submitted_dt_tm")]
-        public DateTime StatementSubmittedDateTime { get; set; }
+        public DateTime? StatementSubmittedDateTime { get; set; }
         [Column("includes_est_pat_lib")]
         public int IncludesEstPatLib { get; set; }
         [Column("total_charge_amount")]
@@ -163,13 +163,11 @@ namespace LabBilling.Core.Models
         public string BatchId { get; set; }
 
         [Ignore]
-        public List<PatientStatementAccount> Accounts { get; set; }
-        [Ignore] 
-        public List<PatientStatementCerner> CernerStatements { get; set; }
-        [Ignore] 
-        public List<PatientStatementEncounter> Encounters { get; set; }
-        [Ignore] 
-        public List<PatientStatementEncounterActivity> EncounterActivity { get; set; }
+        public List<PatientStatementAccount> Accounts { get; set; } = new List<PatientStatementAccount>();
+        [Ignore]
+        public List<PatientStatementEncounter> Encounters { get; set; } = new List<PatientStatementEncounter>();
+        [Ignore]
+        public List<PatientStatementEncounterActivity> EncounterActivity { get; set; } = new List<PatientStatementEncounterActivity>();
 
 
         [Ignore]

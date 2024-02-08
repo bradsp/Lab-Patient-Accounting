@@ -102,6 +102,9 @@ namespace LabBilling.Core.Models
         [Ignore]
         public AccountValidationStatus AccountValidationStatus { get; set; } = new AccountValidationStatus();
         [Ignore]
+        public List<PatientStatementAccount> PatientStatements { get; set; }
+
+        [Ignore]
         public Client Client { get; set; }
         [Ignore]
         public Guid rowguid { get; set; }

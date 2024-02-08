@@ -81,9 +81,9 @@ namespace LabBilling.Core.DataAccess
                     var value = GetParameter(property.Name);
                     if(value == null)
                     {
-                        var category = parameters.GetCategory(nameof(property.Name));
-                        var description = parameters.GetDescription(nameof(property.Name));
-                        var defaultValue = parameters.GetDefaultValue(nameof(property.Name));
+                        var category = parameters.GetCategory(property.Name);
+                        var description = parameters.GetDescription(property.Name);
+                        var defaultValue = parameters.GetDefaultValue(property.Name) ?? "";
 
                         SaveParameter(property.Name, defaultValue, category, description, property.PropertyType.Name);
                     }
@@ -97,10 +97,14 @@ namespace LabBilling.Core.DataAccess
                         v = Convert.ToDouble(value.Value.ToString());
                     else if (property.PropertyType == typeof(int))
                         v = Convert.ToInt32(value.Value.ToString());
+                    else if (property.PropertyType == typeof(Int16))
+                        v = Convert.ToInt16(value.Value.ToString());
+                    else if (property.PropertyType == typeof(Int32))
+                        v = Convert.ToInt32(value.Value.ToString());
                     else if (property.PropertyType == typeof(DateTime))
                     {
                         DateTime temp = DateTime.MinValue;
-                        DateTime.TryParse(value.Value.ToString(), out temp);
+                        bool v1 = DateTime.TryParse(value.Value.ToString(), out temp);
                         v = temp;
                     }
                     else if (property.PropertyType == typeof(bool))

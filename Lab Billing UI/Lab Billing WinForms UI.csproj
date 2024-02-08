@@ -134,7 +134,7 @@
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="12.0.1" />
     <PackageReference Include="HtmlAgilityPack">
-      <Version>1.11.57</Version>
+      <Version>1.11.58</Version>
     </PackageReference>
     <PackageReference Include="LazyCache">
       <Version>2.4.0</Version>
@@ -152,12 +152,12 @@
     <PackageReference Include="NLog.Schema">
       <Version>5.2.8</Version>
     </PackageReference>
-    <PackageReference Include="PetaPoco.Compiled" Version="6.0.617" />
+    <PackageReference Include="PetaPoco.Compiled" Version="6.0.677" />
     <PackageReference Include="RibbonWinForms">
       <Version>5.1.0-beta</Version>
     </PackageReference>
-    <PackageReference Include="ScottPlot" Version="5.0.18" />
-    <PackageReference Include="ScottPlot.WinForms" Version="5.0.18" />
+    <PackageReference Include="ScottPlot" Version="5.0.21" />
+    <PackageReference Include="ScottPlot.WinForms" Version="5.0.21" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
     <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
@@ -167,6 +167,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\DataGridViewGrouper\DataGridViewGrouper\DataGridViewGrouper.csproj" />
     <ProjectReference Include="..\LabBilling Library\LabBilling Core.csproj" />
+    <ProjectReference Include="..\LabBilling Winforms Library\LabBilling Winforms Library.csproj" />
     <ProjectReference Include="..\MCL\MCL.csproj" />
     <ProjectReference Include="..\RFClassLibrary\Utilities.csproj" />
     <ProjectReference Include="..\WinFormsLibrary\WinFormsLibrary.csproj" />

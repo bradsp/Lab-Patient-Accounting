@@ -10,8 +10,8 @@ namespace LabBilling.Core.DataAccess
 {
     public sealed class ChrgRepository : RepositoryBase<Chrg>
     {
-        private CdmRepository cdmRepository;
-        private CdmDetailRepository cdmDetailRepository;
+        //private CdmRepository cdmRepository;
+        //private CdmDetailRepository cdmDetailRepository;
         private CptAmaRepository cptAmaRepository;
         private readonly ChrgDetailRepository chrgDetailRepository;
         private readonly ChrgDiagnosisPointerRepository chrgDiagnosisPointerRepository;
@@ -20,8 +20,8 @@ namespace LabBilling.Core.DataAccess
         public ChrgRepository(IAppEnvironment appEnvironment) : base(appEnvironment)
         {
             chrgDetailRepository = new ChrgDetailRepository(appEnvironment);
-            cdmRepository = new CdmRepository(appEnvironment);
-            cdmDetailRepository = new CdmDetailRepository(appEnvironment);
+            //cdmRepository = new CdmRepository(appEnvironment);
+            //cdmDetailRepository = new CdmDetailRepository(appEnvironment);
             cptAmaRepository = new CptAmaRepository(appEnvironment);
             chrgDiagnosisPointerRepository = new ChrgDiagnosisPointerRepository(appEnvironment);
         }
@@ -154,7 +154,6 @@ namespace LabBilling.Core.DataAccess
             bool setCreditFlag = false;
             bool setOldChrgCreditFlag = false;
 
-
             if (chrgNum <= 0)
                 throw new ArgumentOutOfRangeException(nameof(chrgNum));
             var chrg = GetById(chrgNum) ?? throw new ApplicationException($"Charge number {chrgNum} not found.");
@@ -166,16 +165,8 @@ namespace LabBilling.Core.DataAccess
             }
             if(chrg.FinancialType == "C")
             {
-                if(string.IsNullOrEmpty(chrg.Invoice))
-                {
-                    setCreditFlag = true;
-                    setOldChrgCreditFlag = true;
-                }
-                else
-                {
-                    setCreditFlag = false;
-                    setOldChrgCreditFlag = true;
-                }
+                setCreditFlag = true;
+                setOldChrgCreditFlag = true;
             }
 
             chrg.IsCredited = setCreditFlag;

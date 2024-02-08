@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.IO;
 using System.Reflection;
 using System.Xml.Serialization;
@@ -28,6 +29,8 @@ namespace LabBilling.Core.Models
         public System.String StatementsSftpUsername { get; set; }
         [Category("Collections"), Description("")]
         public System.String StatementsSftpUploadPath { get; set; }
+        [Category("Collections"), Description("Number of statements sent before sending account to collections.")]
+        public Int32 NumberOfStatementsBeforeCollection { get; set; }
 
 
         [Category("Accounting"), Description("Bank account number")] 
@@ -156,7 +159,7 @@ namespace LabBilling.Core.Models
         public System.String BillingEntityStreet { get; set; }
         [Category("Company"), Description("")] 
         public System.String BillingEntityZip { get; set; }
-        [Category("Company"), Description("20090102 wdk Submitter PER requires this number without punctuation of any kind")] 
+        [Category("Company"), Description("")] 
         public System.String BillingPhone { get; set; }
         [Category("Company"), Description("")] 
         public System.String Company2Address { get; set; }
@@ -401,7 +404,7 @@ namespace LabBilling.Core.Models
         {
             var prop = typeof(ApplicationParameters).GetProperty(propertyName);
             var attributeInfo = prop.GetCustomAttribute<DefaultValueAttribute>();
-            var attributeValue = attributeInfo.Value;
+            var attributeValue = attributeInfo?.Value ?? "";
 
             return attributeValue;
         }

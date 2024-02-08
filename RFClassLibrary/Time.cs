@@ -59,7 +59,7 @@ namespace Utilities
         public static string DaysAgo(int iDays)
         {
             DateTime dt = DateTime.Now;
-            TimeSpan days = new TimeSpan(iDays, 0, 0, 0);
+            TimeSpan days = new(iDays, 0, 0, 0);
             dt = dt - days;
             string strRetVal = dt.ToString("MM/dd/yy 00:01");
             return strRetVal;
@@ -107,7 +107,7 @@ namespace Utilities
         {
             //throw new System.NotImplementedException();
             DateTime now = DateTime.Now;
-            string strRetVal = "Time comming soon!";
+            string strRetVal = "Time coming soon!";
             //strRetVal = now.ToString("MM/dd/yy HH:mm:ss:ffff");
             strRetVal = now.ToString("yyyyMMddHHmmss");
             return (strRetVal);

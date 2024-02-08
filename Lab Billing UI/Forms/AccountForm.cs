@@ -28,26 +28,19 @@ namespace LabBilling.Forms
         private const string setHoldMenuText = "Set Claim Hold";
         private const string clearHoldMenuText = "Clear Claim Hold";
 
-        private List<InsCompany> insCompanies = null;
         private List<Phy> providers = null;
         private Account currentAccount = null;
-        private BindingSource insGridSource = null;
         private bool InEditMode = false;
         private List<string> changedControls = new();
         private readonly Dictionary<Control, string> controlColumnMap = new();
         private readonly InsCompanyLookupForm lookupForm = new();
 
-        private readonly InsRepository insRepository = new(Program.AppEnvironment);
         private readonly AccountRepository accountRepository = new(Program.AppEnvironment);
         private readonly PatRepository patRepository = new(Program.AppEnvironment);
         private readonly DictDxRepository dictDxRepository = new(Program.AppEnvironment);
-        private readonly InsCompanyRepository insCompanyRepository = new(Program.AppEnvironment);
         private readonly UserProfileRepository userProfileDB = new(Program.AppEnvironment);
         private readonly ChkRepository chkRepository = new(Program.AppEnvironment);
         private readonly AccountNoteRepository accountNoteRepository = new(Program.AppEnvironment);
-        private readonly BillingActivityRepository billingActivityRepository = new(Program.AppEnvironment);
-        private readonly SystemParametersRepository systemParametersRepository = new(Program.AppEnvironment);
-        private readonly PhyRepository phyRepository = new(Program.AppEnvironment);
         private readonly PatientStatementAccountRepository patientStatementAccountRepository = new(Program.AppEnvironment);
         private bool billingTabLoading = false;
         private const int _timerInterval = 650;
@@ -320,6 +313,7 @@ namespace LabBilling.Forms
         private async Task LoadAccountData()
         {
             Log.Instance.Trace($"Entering");
+
             if (closing)
                 return;
 
@@ -344,6 +338,22 @@ namespace LabBilling.Forms
             insTertiaryMaintenanceUC.CurrentIns = currentAccount.InsuranceTertiary;
 
             RefreshAccountData();
+
+            if (currentAccount.FinCode == "CLIENT")
+            {
+                tabControl1.TabPages.Remove(tabDemographics);
+                tabControl1.TabPages.Remove(tabInsPrimary);
+                tabControl1.TabPages.Remove(tabInsSecondary);
+                tabControl1.TabPages.Remove(tabInsTertiary);
+                tabControl1.TabPages.Remove(tabDiagnosis);
+                tabControl1.TabPages.Remove(tabBillingActivity);
+                changeClientToolStripMenuItem.Visible = false;
+                //changeFinancialClassToolStripMenuItem.Visible = false;
+                swapInsurancesToolStripMenuItem.Visible = false;
+                clearHoldStatusToolStripMenuItem.Visible = false;
+                changeDateOfServiceToolStripMenuItem.Visible = false;
+            }
+
             this.ResumeLayout();
         }
 

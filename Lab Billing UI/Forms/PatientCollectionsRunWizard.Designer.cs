@@ -57,6 +57,7 @@
             nextButton = new System.Windows.Forms.Button();
             finishButton = new System.Windows.Forms.Button();
             bannerLabel = new System.Windows.Forms.Label();
+            skipSendCollectionsCheckBox = new System.Windows.Forms.CheckBox();
             tabControl1.SuspendLayout();
             introTabPage.SuspendLayout();
             sendCollectionsTabPage.SuspendLayout();
@@ -113,6 +114,7 @@
             // sendCollectionsTabPage
             // 
             sendCollectionsTabPage.BackColor = System.Drawing.Color.White;
+            sendCollectionsTabPage.Controls.Add(skipSendCollectionsCheckBox);
             sendCollectionsTabPage.Controls.Add(sendToCollectionsTextbox);
             sendCollectionsTabPage.Controls.Add(sendToCollectionsProgressBar);
             sendCollectionsTabPage.Controls.Add(sendToCollectionsStartButton);
@@ -377,6 +379,17 @@
             bannerLabel.TabIndex = 2;
             bannerLabel.Text = "<bannerText>";
             // 
+            // skipSendCollectionsCheckBox
+            // 
+            skipSendCollectionsCheckBox.AutoSize = true;
+            skipSendCollectionsCheckBox.Location = new System.Drawing.Point(695, 150);
+            skipSendCollectionsCheckBox.Name = "skipSendCollectionsCheckBox";
+            skipSendCollectionsCheckBox.Size = new System.Drawing.Size(156, 19);
+            skipSendCollectionsCheckBox.TabIndex = 4;
+            skipSendCollectionsCheckBox.Text = "Skip Sending Collections";
+            skipSendCollectionsCheckBox.UseVisualStyleBackColor = true;
+            skipSendCollectionsCheckBox.CheckedChanged += skipSendCollectionsCheckBox_CheckedChanged;
+            // 
             // PatientCollectionsRunWizard
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -441,5 +454,6 @@
         private System.Windows.Forms.TabPage introTabPage;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.RichTextBox richTextBox1;
+        private System.Windows.Forms.CheckBox skipSendCollectionsCheckBox;
     }
 }

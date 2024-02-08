@@ -57,7 +57,7 @@ namespace Utilities
             //expect an expression such as "T" for today, "T-1" for yesterday, "T+1" for tomorrow, etc.
 
             string pattern = @"([Tt])([+-]\d+)?";
-            Regex rgx = new Regex(pattern);
+            Regex rgx = new(pattern);
             Match m = rgx.Match(expression);
 
             if (m.Success)

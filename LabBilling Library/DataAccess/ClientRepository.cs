@@ -8,6 +8,9 @@ using System.Collections.Generic;
 using System.Data;
 using System.Text.RegularExpressions;
 using System.Linq;
+using System.Threading.Tasks;
+using Utilities;
+using System.Runtime.CompilerServices;
 
 namespace LabBilling.Core.DataAccess
 {
@@ -41,6 +44,12 @@ namespace LabBilling.Core.DataAccess
                     .Where($"{GetRealColumn(nameof(Client.IsDeleted))} = @0", false);
             }
             var queryResult = dbConnection.Fetch<Client>(sql);
+
+            foreach(var item in queryResult) 
+            {
+                item.ClientType = clientTypeRepository.GetByType(item.Type);    
+            }
+
             Log.Instance.Debug(dbConnection.LastSQL);
 
             return queryResult;
@@ -173,26 +182,27 @@ namespace LabBilling.Core.DataAccess
         public List<ClientStatementDetailModel> GetStatementDetails(string clientMnem, DateTime asOfDate)
         {
 
-            ChkRepository chkRepository = new ChkRepository(AppEnvironment);
-            ChrgRepository chrgRepository = new ChrgRepository(AppEnvironment);
+            ChkRepository chkRepository = new(AppEnvironment);
+            ChrgRepository chrgRepository = new(AppEnvironment);
 
             var charges = chrgRepository.GetByAccount(clientMnem, true, true, asOfDate, false);
 
             var payments = chkRepository.GetByAccount(clientMnem, asOfDate);
 
-            List<ClientStatementDetailModel> statementDetails = new List<ClientStatementDetailModel>();
+            List<ClientStatementDetailModel> statementDetails = new();
 
             foreach(var chrg in charges)
             {
                 if (chrg.NetAmount == 0 && chrg.CDMCode == invoiceCdm)
                     continue;
 
-                var statementDetail = new ClientStatementDetailModel();
-
-                statementDetail.ServiceDate = chrg.ServiceDate == null ? DateTime.MinValue : (DateTime)chrg.ServiceDate;
-                statementDetail.Account = chrg.AccountNo;
-                statementDetail.Invoice = chrg.Invoice;
-                statementDetail.Amount = chrg.NetAmount * chrg.Quantity;
+                var statementDetail = new ClientStatementDetailModel
+                {
+                    ServiceDate = chrg.ServiceDate == null ? DateTime.MinValue : (DateTime)chrg.ServiceDate,
+                    Account = chrg.AccountNo,
+                    Invoice = chrg.Invoice,
+                    Amount = chrg.NetAmount * chrg.Quantity
+                };
                 if (chrg.CDMCode == invoiceCdm)
                 {
                     statementDetail.Description = $"Invoice {chrg.Invoice}";
@@ -202,7 +212,7 @@ namespace LabBilling.Core.DataAccess
                 {
                     //see if account is in comment and extract it for the line description
                     string pattern = "([A-Z_]*)\\[(\\w*)\\]";
-                    Regex rg = new Regex(pattern);
+                    Regex rg = new(pattern);
                     Match match = rg.Match(chrg.Comment);
                     if(match.Success)
                     {
@@ -263,64 +273,111 @@ namespace LabBilling.Core.DataAccess
             if (account == null)
             {
                 //account does not exist - add the account
-                account = new Account();
-                account.AccountNo = clientMnem;
-                account.PatFullName = client.Name;
-                account.MeditechAccount = clientMnem;
-                account.FinCode = clientFinCode;
-                account.TransactionDate = DateTime.Today;
-                account.ClientMnem = clientMnem;
+                account = new Account
+                {
+                    AccountNo = clientMnem,
+                    PatFullName = client.Name,
+                    MeditechAccount = clientMnem,
+                    FinCode = clientFinCode,
+                    TransactionDate = DateTime.Today,
+                    ClientMnem = clientMnem
+                };
 
                 accdb.Add(account);
             }
 
         }
 
-        public List<UnbilledClient> GetUnbilledClients(DateTime thruDate)
+        public async Task<List<UnbilledClient>> GetUnbilledClientsAsync(DateTime thruDate, IProgress<int> progress) => await Task.Run(() => GetUnbilledClients(thruDate, progress));
+
+        public event EventHandler<ProgressEventArgs> ProgressChanged;
+
+        public List<UnbilledClient> GetUnbilledClients(DateTime thruDate, IProgress<int> progress)
         {
-            //var cmd = Sql.Builder
-            //    .Append("select vbs.cl_mnem as 'ClientMnem', client.cli_nme as 'ClientName', dictionary.clienttype.description as 'ClientType', ")
-            //    .Append("sum(dbo.GetAccBalance(vbs.account)) as 'UnbilledAmount' ")
-            //    .Append("from vw_cbill_select vbs join client on vbs.cl_mnem = client.cli_mnem ")
-            //    .Append("join dictionary.clienttype on client.[type] = dictionary.clienttype.[type] ")
-            //    .Append("where trans_date <= @0", new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = thruDate })
-            //    .Append("group by vbs.cl_mnem, client.cli_nme, dictionary.clienttype.description ")
-            //    .Append("order by vbs.cl_mnem ");
+            AccountRepository accdb = new(AppEnvironment);
+            List<UnbilledClient> unbilledClients = new();
 
-            //cmd = Sql.Builder
-            //    .Select("client.cli_mnem, client.cli_nme, ct.description, dbo.GetAccBalance(acc.account) as 'PriorBalance', sum(dbo.GetAccBalance(vbs.account)) as 'UnbilledAmount'")
-            //    .From("client ")
-            //    .InnerJoin("acc").On("client.cli_mnem = acc.account")
-            //    .LeftJoin("vw_cbill_select vbs").On("vbs.cl_mnem = client.cli_mnem")
-            //    .InnerJoin("dictionary.clienttype ct").On("ct.type = client.[type]")
-            //    .Where("client.deleted = 0")
-            //    .GroupBy("client.cli_mnem, client.cli_nme, ct.description, dbo.GetAccBalance(acc.account)")
-            //    .OrderBy("client.cli_mnem");
+            var unbilledAccounts = GetUnbilledAccounts(thruDate, progress);
 
-            var results = dbConnection.FetchProc<UnbilledClient>("dbo.GetClientsToBill",
-                new SqlParameter() { ParameterName = "@thruDate", SqlDbType = SqlDbType.DateTime, Value = thruDate });
+            var clients = GetAll(false);
 
-            return results;
-        }
+            int total = clients.Count;
+            int processed = 0;
 
-        public List<UnbilledAccounts> GetUnbilledAccounts(string clientMnem, DateTime thruDate)
-        {
-            var cmd = Sql.Builder
-                .Select(new[] 
+            foreach (var client in clients)
+            {
+                UnbilledClient unbilledClient = new()
                 {
-                    "vbs.cl_mnem",
-                    "vbs.account",
-                    "vbs.trans_date",
-                    "vbs.pat_name",
-                    "vbs.fin_code",
-                    "dbo.GetAccClientBalance(vbs.account, vbs.cl_mnem) as 'UnbilledAmount'"
-                })
-                .From("vw_cbill_select vbs")
-                .Where("cl_mnem = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = clientMnem })
-                .Where("trans_date <= @0 ", new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = thruDate });
+                    ClientMnem = client.ClientMnem,
+                    ClientName = client.Name,
+                    ClientType = client.ClientType.Description,
+                    PriorBalance = accdb.GetBalance(client.ClientMnem),
+                    UnbilledAccounts = unbilledAccounts.Where(x => x.ClientMnem == client.ClientMnem).ToList()
+                };
 
-            return dbConnection.Fetch<UnbilledAccounts>(cmd);
+                if(unbilledClient.PriorBalance != 0 && unbilledAccounts.Sum(x => x.UnbilledAmount) != 0)
+                    unbilledClients.Add(unbilledClient);
+
+
+                progress?.Report(HelperExtensions.ComputePercentage(++processed, total));
+            }
+
+            return unbilledClients;
         }
 
+        private List<UnbilledAccounts> GetUnbilledAccounts(DateTime thruDate, IProgress<int> progress)
+        {
+            string chrgTableName = GetTableInfo(typeof(Chrg)).TableName;
+            string accTableName = GetTableInfo(typeof(Account)).TableName;
+
+            var cmd = Sql.Builder
+                .Select(new[]
+                {
+                    chrgTableName + "." + GetRealColumn(typeof(Chrg), nameof(Chrg.AccountNo)),
+                    chrgTableName + "." + GetRealColumn(typeof(Chrg), nameof(Chrg.ClientMnem)),
+                    accTableName + "." + GetRealColumn(typeof(Account), nameof(Account.TransactionDate)),
+                    accTableName + "." + GetRealColumn(typeof(Account), nameof(Account.PatFullName)),
+                    chrgTableName + "." + GetRealColumn(typeof(Chrg), nameof(Chrg.FinCode))
+                })
+                .From(chrgTableName)
+                .InnerJoin(accTableName)
+                .On($"{chrgTableName}.{GetRealColumn(typeof(Chrg), nameof(Chrg.AccountNo))} = {accTableName}.{GetRealColumn(typeof(Account), nameof(Account.AccountNo))}")
+                .Where($"{chrgTableName}.{GetRealColumn(typeof(Chrg), nameof(Chrg.Status))} not in ('CBILL','N/A')")
+                .Where($"{chrgTableName}.{GetRealColumn(typeof(Chrg), nameof(Chrg.Invoice))} is null or {chrgTableName}.{GetRealColumn(typeof(Chrg), nameof(Chrg.Invoice))} = ''")
+                .Where($"{chrgTableName}.{GetRealColumn(typeof(Chrg), nameof(Chrg.FinCode))} in ('APC','X','Y','Z')")
+                .Where($"{accTableName}.{GetRealColumn(typeof(Account), nameof(Account.Status))} not like '%HOLD%'")
+                .Where($"{accTableName}.{GetRealColumn(typeof(Account), nameof(Account.TransactionDate))} <= @0 ", 
+                    new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = thruDate })
+                .GroupBy(new[]
+                {
+                    chrgTableName + "." + GetRealColumn(typeof(Chrg), nameof(Chrg.AccountNo)),
+                    chrgTableName + "." + GetRealColumn(typeof(Chrg), nameof(Chrg.ClientMnem)),
+                    accTableName + "." + GetRealColumn(typeof(Account), nameof(Account.TransactionDate)),
+                    accTableName + "." + GetRealColumn(typeof(Account), nameof(Account.PatFullName)),
+                    chrgTableName + "." + GetRealColumn(typeof(Chrg), nameof(Chrg.FinCode))
+                });
+
+            var results = dbConnection.Fetch<UnbilledAccounts>(cmd);
+            int processed = 0;
+            foreach (var result in results)
+            {
+                if (!string.IsNullOrEmpty(result.ClientMnem))
+                {
+                    var unbilledBalance = dbConnection.ExecuteScalar<double>("select dbo.GetAccClientBalance(@0, @1)",
+                        new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = result.Account },
+                        new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = result.ClientMnem });
+
+                    result.UnbilledAmount = unbilledBalance;
+                }
+                else
+                {
+                    result.UnbilledAmount = 0.00;
+                }
+
+                progress?.Report(HelperExtensions.ComputePercentage(++processed, results.Count));
+            }
+
+            return results.Where(x => x.UnbilledAmount != 0.00).ToList();
+        }
     }
 }

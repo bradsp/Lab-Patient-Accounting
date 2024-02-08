@@ -1,35 +1,81 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using LabBilling.Core.DataAccess;
+using System.Xml.Serialization;
 using LabBilling.Core.Models;
 using MathNet.Numerics;
 using MigraDoc.DocumentObjectModel;
 using MigraDoc.DocumentObjectModel.Shapes;
 using MigraDoc.DocumentObjectModel.Tables;
 using MigraDoc.Rendering;
+using PdfSharp.Fonts;
 using PdfSharp.Pdf;
 using PdfSharp.Pdf.IO;
+using TabAlignment = MigraDoc.DocumentObjectModel.TabAlignment;
+using BorderStyle = MigraDoc.DocumentObjectModel.BorderStyle;
+using Color = MigraDoc.DocumentObjectModel.Color;
 
 namespace LabBilling.Core.BusinessLogic
 {
     public class InvoicePrintPdfSharp
     {
-        private Document document = null;
-        private InvoiceModel model = null;
-        private TextFrame addressFrame = null;
-        private TextFrame invoiceFrame = null;
-        private TextFrame clientAddressFrame = null;
-        private TextFrame tableCaptionFrameLeft = null;
-        private TextFrame tableCaptionFrameRight = null;
-        private Table table = null;
-        private Section section = null;
+        private Document document;
+        private InvoiceModel model;
+        private TextFrame addressFrame;
+        private TextFrame invoiceFrame;
+        private TextFrame clientAddressFrame;
+        private TextFrame tableCaptionFrameLeft;
+        private TextFrame tableCaptionFrameRight;
+        private Table table;
+        private Section section;
 
-        public InvoicePrintPdfSharp()
+        private readonly string filePath;
+        private readonly InvoiceHistoryRepository invoiceHistoryRepository;
+        private readonly AppEnvironment _appEnvironment;
+
+        public InvoicePrintPdfSharp(AppEnvironment appEnvironment)
         {
-
+            _appEnvironment = appEnvironment;
+            invoiceHistoryRepository = new(_appEnvironment);
+            filePath = _appEnvironment.ApplicationParameters.InvoiceFileLocation;
+            document = new Document();
+            model = new InvoiceModel();
+            addressFrame = new TextFrame();
+            invoiceFrame = new TextFrame();
+            clientAddressFrame = new TextFrame();
+            tableCaptionFrameLeft = new TextFrame();
+            tableCaptionFrameRight = new TextFrame();
+            table = new Table();
+            section = new Section();
         }
 
-        public string MergeFiles(IEnumerable<string> files, string outputFilename, bool duplex = false)
+        public string PrintInvoice(string invoiceNo)
+        {
+            InvoiceModel? invoiceModel = new();
+
+            InvoiceHistory invoiceHistory = invoiceHistoryRepository.GetByInvoice(invoiceNo);
+
+            string xml = invoiceHistory.InvoiceData;
+            xml = xml.Replace("&#x0;", "");
+            XmlSerializer serializer = new(typeof(InvoiceModel));
+            StringReader rdr = new(xml);
+
+            invoiceModel = serializer.Deserialize(rdr) as InvoiceModel;
+
+            invoiceModel.ImageFilePath = _appEnvironment.ApplicationParameters.InvoiceLogoImagePath;
+
+            string filename = "";
+            //only print an invoice if there are invoice lines to print.
+            if (invoiceModel.InvoiceDetails.Count > 0)
+            {
+                filename = CreateInvoicePdf(invoiceModel);
+            }
+
+            return filename;
+        }
+
+        public static string MergeFiles(IEnumerable<string> files, string outputFilename, bool duplex = false)
         {
             PdfDocument outputDocument = new PdfDocument();
 
@@ -56,7 +102,7 @@ namespace LabBilling.Core.BusinessLogic
             return outputFilename;
         }
 
-        public void CreateInvoicePdf(InvoiceModel model, string outFilePath)
+        public string CreateInvoicePdf(InvoiceModel model)
         {
             if (model.StatementType != InvoiceModel.StatementTypeEnum.Invoice)
                 throw new ArgumentOutOfRangeException("InvoiceModel.StatementType", "Expected an invoice model.");
@@ -74,29 +120,27 @@ namespace LabBilling.Core.BusinessLogic
 
             FillInvoiceContent();
 
-            const bool unicode = false;
-
-            PdfDocumentRenderer pdfRenderer = new PdfDocumentRenderer(unicode);
-
-            pdfRenderer.Document = document;
+            PdfDocumentRenderer pdfRenderer = new()
+            {
+                Document = document
+            };
 
             pdfRenderer.RenderDocument();
+            string filename = $"{filePath}\\Invoice-{model.ClientMnem}-{model.InvoiceNo}.pdf";
+            pdfRenderer.PdfDocument.Save(filename);
 
-            pdfRenderer.PdfDocument.Save(outFilePath);
-
-            return;
+            return filename;
         }
 
-        public void CreateStatementPdf(InvoiceModel model, string outFilePath)
+        public void CreateStatementPdf(InvoiceModel model)
         {
             if (model.StatementType != InvoiceModel.StatementTypeEnum.Statement)
                 throw new ArgumentOutOfRangeException("InvoiceModel.StatementType", "Expected a statement type model.");
 
             this.model = model;
-            this.document = new Document();
-            this.document.Info.Title = "Statement";
-            this.document.Info.Subject = $"Statement for {model.ClientName}";
-            this.document.Info.Author = $"{model.BillingCompanyName}";
+            document.Info.Title = "Statement";
+            document.Info.Subject = $"Statement for {model.ClientName}";
+            document.Info.Author = $"{model.BillingCompanyName}";
 
             DefineStyles();
 
@@ -104,15 +148,14 @@ namespace LabBilling.Core.BusinessLogic
 
             FillStatementContent();
 
-            const bool unicode = false;
-
-            PdfDocumentRenderer pdfRenderer = new PdfDocumentRenderer(unicode);
-
-            pdfRenderer.Document = document;
+            PdfDocumentRenderer pdfRenderer = new()
+            {
+                Document = document
+            };
 
             pdfRenderer.RenderDocument();
-
-            pdfRenderer.PdfDocument.Save(outFilePath);
+            string filename = $"{filePath}\\Statement-{model.ClientMnem}-{DateTime.Today:yyyyMMdd}.pdf";
+            pdfRenderer.PdfDocument.Save(filename);
 
             return;
         }
@@ -120,16 +163,16 @@ namespace LabBilling.Core.BusinessLogic
         private void DefineStyles()
         {
             // Get the predefined style Normal.
-            Style style = this.document.Styles["Normal"];
+            Style style = document.Styles["Normal"];
             // Because all styles are derived from Normal, the next line changes the 
             // font of the whole document. Or, more exactly, it changes the font of
             // all styles and paragraphs that do not redefine the font.
             style.Font.Name = "Calibri";
 
-            style = this.document.Styles[StyleNames.Header];
+            style = document.Styles[StyleNames.Header];
             style.ParagraphFormat.AddTabStop("16cm", TabAlignment.Right);
 
-            style = this.document.Styles[StyleNames.Footer];
+            style = document.Styles[StyleNames.Footer];
             style.ParagraphFormat.AddTabStop("8cm", TabAlignment.Center);
 
             // Create a new style called Table based on style Normal
@@ -138,10 +181,10 @@ namespace LabBilling.Core.BusinessLogic
             style.Font.Size = 9;
 
             // Create a new style called Reference based on style Normal
-            style = this.document.Styles.AddStyle("Reference", "Normal");
+            style = document.Styles.AddStyle("Reference", "Normal");
             style.ParagraphFormat.SpaceBefore = "5mm";
             style.ParagraphFormat.SpaceAfter = "5mm";
-            style.ParagraphFormat.TabStops.AddTabStop("16cm", TabAlignment.Right);
+            style.ParagraphFormat.TabStops.AddTabStop("16cm", MigraDoc.DocumentObjectModel.TabAlignment.Right);
         }
 
         private void CreateHeaderFooter()
@@ -150,7 +193,7 @@ namespace LabBilling.Core.BusinessLogic
             //section.PageSetup.DifferentFirstPageHeaderFooter = true;
 
             // Put a logo in the header
-            Image image = section.Headers.Primary.AddImage(model.ImageFilePath);
+            MigraDoc.DocumentObjectModel.Shapes.Image image = section.Headers.Primary.AddImage(model.ImageFilePath);
             image.Width = "2in";
             image.LockAspectRatio = true;
             image.RelativeVertical = RelativeVertical.Line;
@@ -184,38 +227,38 @@ namespace LabBilling.Core.BusinessLogic
 
 
             // Create the text frame for the client address
-            this.addressFrame = section.Headers.Primary.AddTextFrame();
-            this.addressFrame.Height = "2.0cm";
-            this.addressFrame.Width = "7.0cm";
-            this.addressFrame.Left = ShapePosition.Left;
-            this.addressFrame.RelativeHorizontal = RelativeHorizontal.Margin;
-            this.addressFrame.Top = "5.5cm";
-            this.addressFrame.RelativeVertical = RelativeVertical.Page;
+            addressFrame = section.Headers.Primary.AddTextFrame();
+            addressFrame.Height = "2.0cm";
+            addressFrame.Width = "7.0cm";
+            addressFrame.Left = ShapePosition.Left;
+            addressFrame.RelativeHorizontal = RelativeHorizontal.Margin;
+            addressFrame.Top = "5.5cm";
+            addressFrame.RelativeVertical = RelativeVertical.Page;
 
             //create a text frame for the statement type, date, and page
-            this.tableCaptionFrameLeft = section.Headers.Primary.AddTextFrame();
-            this.tableCaptionFrameLeft.Height = "1.0cm";
-            this.tableCaptionFrameLeft.Width = "6.0cm";
-            this.tableCaptionFrameLeft.Left = ShapePosition.Left;
-            this.tableCaptionFrameLeft.RelativeHorizontal = RelativeHorizontal.Margin;
-            this.tableCaptionFrameLeft.Top = "8cm";
-            this.tableCaptionFrameLeft.RelativeVertical = RelativeVertical.Page;
+            tableCaptionFrameLeft = section.Headers.Primary.AddTextFrame();
+            tableCaptionFrameLeft.Height = "1.0cm";
+            tableCaptionFrameLeft.Width = "6.0cm";
+            tableCaptionFrameLeft.Left = ShapePosition.Left;
+            tableCaptionFrameLeft.RelativeHorizontal = RelativeHorizontal.Margin;
+            tableCaptionFrameLeft.Top = "8cm";
+            tableCaptionFrameLeft.RelativeVertical = RelativeVertical.Page;
 
-            this.tableCaptionFrameRight = section.Headers.Primary.AddTextFrame();
-            this.tableCaptionFrameRight.Height = "1.0cm";
-            this.tableCaptionFrameRight.Width = "6.0cm";
-            this.tableCaptionFrameRight.Left = "10.5cm";
-            this.tableCaptionFrameRight.RelativeHorizontal = RelativeHorizontal.Margin;
-            this.tableCaptionFrameRight.Top = "8cm";
-            this.tableCaptionFrameRight.RelativeVertical = RelativeVertical.Page;
+            tableCaptionFrameRight = section.Headers.Primary.AddTextFrame();
+            tableCaptionFrameRight.Height = "1.0cm";
+            tableCaptionFrameRight.Width = "6.0cm";
+            tableCaptionFrameRight.Left = "10.5cm";
+            tableCaptionFrameRight.RelativeHorizontal = RelativeHorizontal.Margin;
+            tableCaptionFrameRight.Top = "8cm";
+            tableCaptionFrameRight.RelativeVertical = RelativeVertical.Page;
 
             // Add the print date field
-            paragraph = this.tableCaptionFrameLeft.AddParagraph();
+            paragraph = tableCaptionFrameLeft.AddParagraph();
             //paragraph.Format.SpaceBefore = "9cm";
             paragraph.Style = "Reference";
             paragraph.AddFormattedText(model.StatementType == InvoiceModel.StatementTypeEnum.Invoice ? $"INVOICE # {model.InvoiceNo}" : "STATEMENT", TextFormat.Bold);
             //paragraph.AddTab();
-            paragraph = this.tableCaptionFrameRight.AddParagraph();
+            paragraph = tableCaptionFrameRight.AddParagraph();
             paragraph.Style = "Reference";
             paragraph.Format.Alignment = ParagraphAlignment.Right;
             paragraph.AddText("Page ");
@@ -252,7 +295,7 @@ namespace LabBilling.Core.BusinessLogic
             // Create the item table
             this.table = section.AddTable();
             this.table.Style = "Table";
-            this.table.Borders.Color = Color.Parse("Blue");
+            this.table.Borders.Color = MigraDoc.DocumentObjectModel.Color.Parse("Blue");
             this.table.Borders.Width = 0.25;
             this.table.Borders.Left.Width = 0.5;
             this.table.Borders.Right.Width = 0.5;
@@ -592,16 +635,18 @@ namespace LabBilling.Core.BusinessLogic
                  .OpenSubKey("CurrentVersion")
                  .OpenSubKey("App Paths")
                  .OpenSubKey("AcroRd32.exe")
-                 .GetValue(String.Empty).ToString();
+                 .GetValue(string.Empty).ToString();
 
-            ProcessStartInfo info = new ProcessStartInfo();
-            info.Verb = "print";
-            info.FileName = processFilename;
-            info.Arguments = String.Format("/p /h {0}", pdfFileName);
-            info.CreateNoWindow = true;
-            info.WindowStyle = ProcessWindowStyle.Hidden;
-            //(It won't be hidden anyway... thanks Adobe!)
-            info.UseShellExecute = false;
+            ProcessStartInfo info = new()
+            {
+                Verb = "print",
+                FileName = processFilename,
+                Arguments = String.Format("/p /h {0}", pdfFileName),
+                CreateNoWindow = true,
+                WindowStyle = ProcessWindowStyle.Hidden,
+                //(It won't be hidden anyway... thanks Adobe!)
+                UseShellExecute = false
+            };
 
             Process p = Process.Start(info);
             p.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;

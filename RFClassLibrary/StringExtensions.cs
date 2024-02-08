@@ -18,7 +18,7 @@ namespace Utilities
         /// <returns></returns>
         public static string Left(this string str, int numChar)
         {
-            return str.Substring(0, numChar);
+            return str[..numChar];
         }
 
 
@@ -31,16 +31,13 @@ namespace Utilities
         public static string Right(this string str, int numChar)
         {
             int len = str.Length;
-
-
-            return str.Substring(len - numChar);
+            return str[(len - numChar)..];
         }
 
 
 
         /// <summary>
-        /// This is the extension method.
-        /// The first parameter takes the "this" modifier and specifies the type for which the method is defined.
+        /// Reduce multiple whitespace characters to one space and trim string.
         /// </summary>
         /// <param name="str"></param>
         /// <returns></returns>
@@ -75,7 +72,6 @@ namespace Utilities
             return str;
         }
 
-
         /// <summary>
         /// Returns string formatted as an SSN (inserts dashes).
         /// </summary>
@@ -107,8 +103,7 @@ namespace Utilities
 
             if (temp.Length == 10)
             {
-                temp = string.Format("({0}) {1}-{2}",
-                    temp.Substring(0, 3), temp.Substring(3, 3), temp.Substring(6, 4));
+                temp = $"({temp[..3]}) {temp.Substring(3, 3)}-{temp.Substring(6, 4)}";
             }
             return temp;
         }
@@ -240,7 +235,7 @@ namespace Utilities
             {
                 if (strRetVal[i] != '0' || strRetVal[i] == ' ')
                 {
-                    return strRetVal.Substring(i, nLen - i);
+                    return strRetVal[i..nLen];
                 }
             }
             return strRetVal;
@@ -263,10 +258,10 @@ namespace Utilities
                 return strRetVal;
             }
 
-            string strYear = strHL7Date.Substring(0, 4);
+            string strYear = strHL7Date[..4];
             string strMo = strHL7Date.Substring(4, 2);
             string strDay = strHL7Date.Substring(6, 2);
-            strRetVal = string.Format("{0}/{1}/{2}", strMo, strDay, strYear);
+            strRetVal = $"{strMo}/{strDay}/{strYear}";
             return strRetVal;
 
         }
@@ -295,17 +290,17 @@ namespace Utilities
             int iComma = strCityStZip.IndexOf(',');
             if (iComma > 1)
             {
-                strCity = strCityStZip.Substring(0, iComma);
+                strCity = strCityStZip[..iComma];
                 strCity.Trim();
 
-                string strWork = strCityStZip.Substring(iComma + 1);
+                string strWork = strCityStZip[(iComma + 1)..];
                 strWork = strWork.Trim();
                 int iSpace = strWork.IndexOf(' ');
                 if (iSpace > 0)
                 {
-                    strState = strWork.Substring(0, iSpace);
+                    strState = strWork[..iSpace];
                     strState.Trim();
-                    strZip = strWork.Substring(iSpace + 1);
+                    strZip = strWork[(iSpace + 1)..];
                     strZip.Trim();
                 }
                 else
@@ -367,7 +362,7 @@ namespace Utilities
                 iSpace = strWork.IndexOf(' ');
                 if (iSpace > 0)
                 {
-                    strFirstName = strWork.Substring(0, iSpace);
+                    strFirstName = strWork[..iSpace];
                     strMidName = strWork.Substring(iSpace + 1);
                 }
                 else

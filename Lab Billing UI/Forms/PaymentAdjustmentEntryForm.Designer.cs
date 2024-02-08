@@ -28,334 +28,349 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            this.fromTextBox = new System.Windows.Forms.TextBox();
-            this.fromLabel = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
-            this.refundCheckBox = new System.Windows.Forms.CheckBox();
-            this.label7 = new System.Windows.Forms.Label();
-            this.label8 = new System.Windows.Forms.Label();
-            this.writeOffCodeComboBox = new System.Windows.Forms.ComboBox();
-            this.label9 = new System.Windows.Forms.Label();
-            this.commentTextBox = new System.Windows.Forms.TextBox();
-            this.postButton = new System.Windows.Forms.Button();
-            this.cancelButton = new System.Windows.Forms.Button();
-            this.checkNoTextBox = new System.Windows.Forms.TextBox();
-            this.label10 = new System.Windows.Forms.Label();
-            this.insuranceComboBox = new System.Windows.Forms.ComboBox();
-            this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
-            this.writeOffDateTextBox = new LabBilling.UserControls.DateTextBox();
-            this.checkDateTextBox = new LabBilling.UserControls.DateTextBox();
-            this.dateReceivedTextBox = new LabBilling.UserControls.DateTextBox();
-            this.paymentAmtTextBox = new LabBilling.UserControls.CurrencyTextBox();
-            this.writeOffAmtTextBox = new LabBilling.UserControls.CurrencyTextBox();
-            this.contractualAmtTextBox = new LabBilling.UserControls.CurrencyTextBox();
-            this.writeOffCodeTextBox = new System.Windows.Forms.TextBox();
-            ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
-            this.SuspendLayout();
+            components = new System.ComponentModel.Container();
+            fromTextBox = new System.Windows.Forms.TextBox();
+            fromLabel = new System.Windows.Forms.Label();
+            label1 = new System.Windows.Forms.Label();
+            label2 = new System.Windows.Forms.Label();
+            label3 = new System.Windows.Forms.Label();
+            label4 = new System.Windows.Forms.Label();
+            label5 = new System.Windows.Forms.Label();
+            label6 = new System.Windows.Forms.Label();
+            refundCheckBox = new System.Windows.Forms.CheckBox();
+            label7 = new System.Windows.Forms.Label();
+            label8 = new System.Windows.Forms.Label();
+            writeOffCodeComboBox = new System.Windows.Forms.ComboBox();
+            label9 = new System.Windows.Forms.Label();
+            commentTextBox = new System.Windows.Forms.TextBox();
+            postButton = new System.Windows.Forms.Button();
+            cancelButton = new System.Windows.Forms.Button();
+            checkNoTextBox = new System.Windows.Forms.TextBox();
+            label10 = new System.Windows.Forms.Label();
+            insuranceComboBox = new System.Windows.Forms.ComboBox();
+            errorProvider1 = new System.Windows.Forms.ErrorProvider(components);
+            writeOffDateTextBox = new UserControls.DateTextBox();
+            checkDateTextBox = new UserControls.DateTextBox();
+            dateReceivedTextBox = new UserControls.DateTextBox();
+            paymentAmtTextBox = new UserControls.CurrencyTextBox();
+            writeOffAmtTextBox = new UserControls.CurrencyTextBox();
+            contractualAmtTextBox = new UserControls.CurrencyTextBox();
+            writeOffCodeTextBox = new System.Windows.Forms.TextBox();
+            ((System.ComponentModel.ISupportInitialize)errorProvider1).BeginInit();
+            SuspendLayout();
             // 
             // fromTextBox
             // 
-            this.fromTextBox.Location = new System.Drawing.Point(132, 24);
-            this.fromTextBox.Name = "fromTextBox";
-            this.fromTextBox.Size = new System.Drawing.Size(253, 20);
-            this.fromTextBox.TabIndex = 1;
+            fromTextBox.Location = new System.Drawing.Point(154, 28);
+            fromTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            fromTextBox.Name = "fromTextBox";
+            fromTextBox.Size = new System.Drawing.Size(294, 23);
+            fromTextBox.TabIndex = 1;
             // 
             // fromLabel
             // 
-            this.fromLabel.AutoSize = true;
-            this.fromLabel.Location = new System.Drawing.Point(89, 27);
-            this.fromLabel.Name = "fromLabel";
-            this.fromLabel.Size = new System.Drawing.Size(30, 13);
-            this.fromLabel.TabIndex = 0;
-            this.fromLabel.Text = "From";
+            fromLabel.AutoSize = true;
+            fromLabel.Location = new System.Drawing.Point(104, 31);
+            fromLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            fromLabel.Name = "fromLabel";
+            fromLabel.Size = new System.Drawing.Size(35, 15);
+            fromLabel.TabIndex = 0;
+            fromLabel.Text = "From";
             // 
             // label1
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(40, 53);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(79, 13);
-            this.label1.TabIndex = 2;
-            this.label1.Text = "Date Received";
+            label1.AutoSize = true;
+            label1.Location = new System.Drawing.Point(47, 61);
+            label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label1.Name = "label1";
+            label1.Size = new System.Drawing.Size(81, 15);
+            label1.TabIndex = 2;
+            label1.Text = "Date Received";
             // 
             // label2
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(55, 79);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(64, 13);
-            this.label2.TabIndex = 4;
-            this.label2.Text = "Check Date";
+            label2.AutoSize = true;
+            label2.Location = new System.Drawing.Point(64, 91);
+            label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label2.Name = "label2";
+            label2.Size = new System.Drawing.Size(67, 15);
+            label2.TabIndex = 4;
+            label2.Text = "Check Date";
             // 
             // label3
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(65, 130);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(54, 13);
-            this.label3.TabIndex = 8;
-            this.label3.Text = "Insurance";
+            label3.AutoSize = true;
+            label3.Location = new System.Drawing.Point(76, 150);
+            label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label3.Name = "label3";
+            label3.Size = new System.Drawing.Size(58, 15);
+            label3.TabIndex = 8;
+            label3.Text = "Insurance";
             // 
             // label4
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(32, 157);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(87, 13);
-            this.label4.TabIndex = 10;
-            this.label4.Text = "Payment Amount";
+            label4.AutoSize = true;
+            label4.Location = new System.Drawing.Point(37, 181);
+            label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label4.Name = "label4";
+            label4.Size = new System.Drawing.Size(101, 15);
+            label4.TabIndex = 10;
+            label4.Text = "Payment Amount";
             // 
             // label5
             // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(19, 183);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(100, 13);
-            this.label5.TabIndex = 13;
-            this.label5.Text = "Contractual Amount";
+            label5.AutoSize = true;
+            label5.Location = new System.Drawing.Point(22, 211);
+            label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label5.Name = "label5";
+            label5.Size = new System.Drawing.Size(116, 15);
+            label5.TabIndex = 13;
+            label5.Text = "Contractual Amount";
             // 
             // label6
             // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(31, 209);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(88, 13);
-            this.label6.TabIndex = 15;
-            this.label6.Text = "Write Off Amount";
+            label6.AutoSize = true;
+            label6.Location = new System.Drawing.Point(36, 241);
+            label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label6.Name = "label6";
+            label6.Size = new System.Drawing.Size(102, 15);
+            label6.TabIndex = 15;
+            label6.Text = "Write Off Amount";
             // 
             // refundCheckBox
             // 
-            this.refundCheckBox.AutoSize = true;
-            this.refundCheckBox.Location = new System.Drawing.Point(238, 156);
-            this.refundCheckBox.Name = "refundCheckBox";
-            this.refundCheckBox.Size = new System.Drawing.Size(116, 17);
-            this.refundCheckBox.TabIndex = 12;
-            this.refundCheckBox.Text = "Payment Is Refund";
-            this.refundCheckBox.UseVisualStyleBackColor = true;
+            refundCheckBox.AutoSize = true;
+            refundCheckBox.Location = new System.Drawing.Point(278, 180);
+            refundCheckBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            refundCheckBox.Name = "refundCheckBox";
+            refundCheckBox.Size = new System.Drawing.Size(125, 19);
+            refundCheckBox.TabIndex = 12;
+            refundCheckBox.Text = "Payment Is Refund";
+            refundCheckBox.UseVisualStyleBackColor = true;
             // 
             // label7
             // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(44, 235);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(75, 13);
-            this.label7.TabIndex = 17;
-            this.label7.Text = "Write Off Date";
+            label7.AutoSize = true;
+            label7.Location = new System.Drawing.Point(51, 271);
+            label7.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label7.Name = "label7";
+            label7.Size = new System.Drawing.Size(82, 15);
+            label7.TabIndex = 17;
+            label7.Text = "Write Off Date";
             // 
             // label8
             // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(42, 265);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(77, 13);
-            this.label8.TabIndex = 19;
-            this.label8.Text = "Write Off Code";
+            label8.AutoSize = true;
+            label8.Location = new System.Drawing.Point(49, 306);
+            label8.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label8.Name = "label8";
+            label8.Size = new System.Drawing.Size(86, 15);
+            label8.TabIndex = 19;
+            label8.Text = "Write Off Code";
             // 
             // writeOffCodeComboBox
             // 
-            this.writeOffCodeComboBox.FormattingEnabled = true;
-            this.writeOffCodeComboBox.Location = new System.Drawing.Point(43, 290);
-            this.writeOffCodeComboBox.Name = "writeOffCodeComboBox";
-            this.writeOffCodeComboBox.Size = new System.Drawing.Size(342, 21);
-            this.writeOffCodeComboBox.TabIndex = 21;
-            this.writeOffCodeComboBox.SelectedValueChanged += new System.EventHandler(this.writeOffCodeComboBox_SelectedValueChanged);
+            writeOffCodeComboBox.FormattingEnabled = true;
+            writeOffCodeComboBox.Location = new System.Drawing.Point(50, 335);
+            writeOffCodeComboBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            writeOffCodeComboBox.Name = "writeOffCodeComboBox";
+            writeOffCodeComboBox.Size = new System.Drawing.Size(398, 23);
+            writeOffCodeComboBox.TabIndex = 21;
+            writeOffCodeComboBox.SelectedValueChanged += writeOffCodeComboBox_SelectedValueChanged;
             // 
             // label9
             // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(19, 325);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(51, 13);
-            this.label9.TabIndex = 22;
-            this.label9.Text = "Comment";
+            label9.AutoSize = true;
+            label9.Location = new System.Drawing.Point(22, 375);
+            label9.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label9.Name = "label9";
+            label9.Size = new System.Drawing.Size(61, 15);
+            label9.TabIndex = 22;
+            label9.Text = "Comment";
             // 
             // commentTextBox
             // 
-            this.commentTextBox.Location = new System.Drawing.Point(22, 341);
-            this.commentTextBox.MaxLength = 100;
-            this.commentTextBox.Multiline = true;
-            this.commentTextBox.Name = "commentTextBox";
-            this.commentTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.commentTextBox.Size = new System.Drawing.Size(363, 58);
-            this.commentTextBox.TabIndex = 23;
+            commentTextBox.Location = new System.Drawing.Point(26, 393);
+            commentTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            commentTextBox.MaxLength = 100;
+            commentTextBox.Multiline = true;
+            commentTextBox.Name = "commentTextBox";
+            commentTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            commentTextBox.Size = new System.Drawing.Size(423, 66);
+            commentTextBox.TabIndex = 23;
             // 
             // postButton
             // 
-            this.postButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.postButton.Location = new System.Drawing.Point(108, 425);
-            this.postButton.Name = "postButton";
-            this.postButton.Size = new System.Drawing.Size(82, 35);
-            this.postButton.TabIndex = 24;
-            this.postButton.Text = "Post";
-            this.postButton.UseVisualStyleBackColor = true;
-            this.postButton.Click += new System.EventHandler(this.postButton_Click);
+            postButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            postButton.Location = new System.Drawing.Point(126, 490);
+            postButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            postButton.Name = "postButton";
+            postButton.Size = new System.Drawing.Size(96, 40);
+            postButton.TabIndex = 24;
+            postButton.Text = "Post";
+            postButton.UseVisualStyleBackColor = true;
+            postButton.Click += postButton_Click;
             // 
             // cancelButton
             // 
-            this.cancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.cancelButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.cancelButton.Location = new System.Drawing.Point(218, 425);
-            this.cancelButton.Name = "cancelButton";
-            this.cancelButton.Size = new System.Drawing.Size(75, 35);
-            this.cancelButton.TabIndex = 25;
-            this.cancelButton.Text = "Cancel";
-            this.cancelButton.UseVisualStyleBackColor = true;
+            cancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            cancelButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            cancelButton.Location = new System.Drawing.Point(254, 490);
+            cancelButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            cancelButton.Name = "cancelButton";
+            cancelButton.Size = new System.Drawing.Size(88, 40);
+            cancelButton.TabIndex = 25;
+            cancelButton.Text = "Cancel";
+            cancelButton.UseVisualStyleBackColor = true;
             // 
             // checkNoTextBox
             // 
-            this.checkNoTextBox.Location = new System.Drawing.Point(132, 100);
-            this.checkNoTextBox.Name = "checkNoTextBox";
-            this.checkNoTextBox.Size = new System.Drawing.Size(100, 20);
-            this.checkNoTextBox.TabIndex = 7;
+            checkNoTextBox.Location = new System.Drawing.Point(154, 115);
+            checkNoTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            checkNoTextBox.Name = "checkNoTextBox";
+            checkNoTextBox.Size = new System.Drawing.Size(116, 23);
+            checkNoTextBox.TabIndex = 7;
             // 
             // label10
             // 
-            this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(64, 105);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(55, 13);
-            this.label10.TabIndex = 6;
-            this.label10.Text = "Check No";
+            label10.AutoSize = true;
+            label10.Location = new System.Drawing.Point(75, 121);
+            label10.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label10.Name = "label10";
+            label10.Size = new System.Drawing.Size(59, 15);
+            label10.TabIndex = 6;
+            label10.Text = "Check No";
             // 
             // insuranceComboBox
             // 
-            this.insuranceComboBox.BackColor = System.Drawing.SystemColors.Window;
-            this.insuranceComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.insuranceComboBox.FormattingEnabled = true;
-            this.insuranceComboBox.Location = new System.Drawing.Point(132, 126);
-            this.insuranceComboBox.Name = "insuranceComboBox";
-            this.insuranceComboBox.Size = new System.Drawing.Size(253, 21);
-            this.insuranceComboBox.TabIndex = 9;
+            insuranceComboBox.BackColor = System.Drawing.SystemColors.Window;
+            insuranceComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            insuranceComboBox.FormattingEnabled = true;
+            insuranceComboBox.Location = new System.Drawing.Point(154, 145);
+            insuranceComboBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            insuranceComboBox.Name = "insuranceComboBox";
+            insuranceComboBox.Size = new System.Drawing.Size(294, 23);
+            insuranceComboBox.TabIndex = 9;
             // 
             // errorProvider1
             // 
-            this.errorProvider1.ContainerControl = this;
+            errorProvider1.ContainerControl = this;
             // 
             // writeOffDateTextBox
             // 
-            this.writeOffDateTextBox.DateValue = new System.DateTime(((long)(0)));
-            this.writeOffDateTextBox.Location = new System.Drawing.Point(132, 232);
-            this.writeOffDateTextBox.Name = "writeOffDateTextBox";
-            this.writeOffDateTextBox.Size = new System.Drawing.Size(100, 20);
-            this.writeOffDateTextBox.TabIndex = 18;
-            this.writeOffDateTextBox.Validated += new System.EventHandler(this.writeOffDateTextBox_Validated);
+            writeOffDateTextBox.DateValue = new System.DateTime(0L);
+            writeOffDateTextBox.Location = new System.Drawing.Point(154, 268);
+            writeOffDateTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            writeOffDateTextBox.Name = "writeOffDateTextBox";
+            writeOffDateTextBox.Size = new System.Drawing.Size(116, 23);
+            writeOffDateTextBox.TabIndex = 18;
+            writeOffDateTextBox.Validated += writeOffDateTextBox_Validated;
             // 
             // checkDateTextBox
             // 
-            this.checkDateTextBox.DateValue = new System.DateTime(((long)(0)));
-            this.checkDateTextBox.Location = new System.Drawing.Point(132, 76);
-            this.checkDateTextBox.Name = "checkDateTextBox";
-            this.checkDateTextBox.Size = new System.Drawing.Size(100, 20);
-            this.checkDateTextBox.TabIndex = 5;
-            this.checkDateTextBox.Validated += new System.EventHandler(this.checkDateTextBox_Validated);
+            checkDateTextBox.DateValue = new System.DateTime(0L);
+            checkDateTextBox.Location = new System.Drawing.Point(154, 88);
+            checkDateTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            checkDateTextBox.Name = "checkDateTextBox";
+            checkDateTextBox.Size = new System.Drawing.Size(116, 23);
+            checkDateTextBox.TabIndex = 5;
+            checkDateTextBox.Validated += checkDateTextBox_Validated;
             // 
             // dateReceivedTextBox
             // 
-            this.dateReceivedTextBox.DateValue = new System.DateTime(((long)(0)));
-            this.dateReceivedTextBox.Location = new System.Drawing.Point(132, 50);
-            this.dateReceivedTextBox.Name = "dateReceivedTextBox";
-            this.dateReceivedTextBox.Size = new System.Drawing.Size(100, 20);
-            this.dateReceivedTextBox.TabIndex = 3;
-            this.dateReceivedTextBox.Validated += new System.EventHandler(this.dateReceivedTextBox_Validated);
+            dateReceivedTextBox.DateValue = new System.DateTime(0L);
+            dateReceivedTextBox.Location = new System.Drawing.Point(154, 58);
+            dateReceivedTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            dateReceivedTextBox.Name = "dateReceivedTextBox";
+            dateReceivedTextBox.Size = new System.Drawing.Size(116, 23);
+            dateReceivedTextBox.TabIndex = 3;
+            dateReceivedTextBox.Validated += dateReceivedTextBox_Validated;
             // 
             // paymentAmtTextBox
             // 
-            this.paymentAmtTextBox.DollarValue = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
-            this.paymentAmtTextBox.Location = new System.Drawing.Point(132, 153);
-            this.paymentAmtTextBox.Name = "paymentAmtTextBox";
-            this.paymentAmtTextBox.Size = new System.Drawing.Size(100, 20);
-            this.paymentAmtTextBox.TabIndex = 11;
-            this.paymentAmtTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            paymentAmtTextBox.DollarValue = new decimal(new int[] { 0, 0, 0, 0 });
+            paymentAmtTextBox.Location = new System.Drawing.Point(154, 177);
+            paymentAmtTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            paymentAmtTextBox.Name = "paymentAmtTextBox";
+            paymentAmtTextBox.Size = new System.Drawing.Size(116, 23);
+            paymentAmtTextBox.TabIndex = 11;
+            paymentAmtTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // writeOffAmtTextBox
             // 
-            this.writeOffAmtTextBox.DollarValue = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
-            this.writeOffAmtTextBox.Location = new System.Drawing.Point(132, 206);
-            this.writeOffAmtTextBox.Name = "writeOffAmtTextBox";
-            this.writeOffAmtTextBox.Size = new System.Drawing.Size(100, 20);
-            this.writeOffAmtTextBox.TabIndex = 16;
-            this.writeOffAmtTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.writeOffAmtTextBox.Validated += new System.EventHandler(this.writeOffAmtTextBox_Validated);
+            writeOffAmtTextBox.DollarValue = new decimal(new int[] { 0, 0, 0, 0 });
+            writeOffAmtTextBox.Location = new System.Drawing.Point(154, 238);
+            writeOffAmtTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            writeOffAmtTextBox.Name = "writeOffAmtTextBox";
+            writeOffAmtTextBox.Size = new System.Drawing.Size(116, 23);
+            writeOffAmtTextBox.TabIndex = 16;
+            writeOffAmtTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            writeOffAmtTextBox.Validated += writeOffAmtTextBox_Validated;
             // 
             // contractualAmtTextBox
             // 
-            this.contractualAmtTextBox.DollarValue = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
-            this.contractualAmtTextBox.Location = new System.Drawing.Point(132, 180);
-            this.contractualAmtTextBox.Name = "contractualAmtTextBox";
-            this.contractualAmtTextBox.Size = new System.Drawing.Size(100, 20);
-            this.contractualAmtTextBox.TabIndex = 14;
-            this.contractualAmtTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            contractualAmtTextBox.DollarValue = new decimal(new int[] { 0, 0, 0, 0 });
+            contractualAmtTextBox.Location = new System.Drawing.Point(154, 208);
+            contractualAmtTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            contractualAmtTextBox.Name = "contractualAmtTextBox";
+            contractualAmtTextBox.Size = new System.Drawing.Size(116, 23);
+            contractualAmtTextBox.TabIndex = 14;
+            contractualAmtTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // writeOffCodeTextBox
             // 
-            this.writeOffCodeTextBox.Location = new System.Drawing.Point(132, 262);
-            this.writeOffCodeTextBox.Name = "writeOffCodeTextBox";
-            this.writeOffCodeTextBox.Size = new System.Drawing.Size(100, 20);
-            this.writeOffCodeTextBox.TabIndex = 20;
-            this.writeOffCodeTextBox.TextChanged += new System.EventHandler(this.writeOffCodeTextBox_TextChanged);
+            writeOffCodeTextBox.Location = new System.Drawing.Point(154, 302);
+            writeOffCodeTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            writeOffCodeTextBox.Name = "writeOffCodeTextBox";
+            writeOffCodeTextBox.Size = new System.Drawing.Size(116, 23);
+            writeOffCodeTextBox.TabIndex = 20;
+            writeOffCodeTextBox.TextChanged += writeOffCodeTextBox_TextChanged;
             // 
             // PaymentAdjustmentEntryForm
             // 
-            this.AcceptButton = this.postButton;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.White;
-            this.CancelButton = this.cancelButton;
-            this.ClientSize = new System.Drawing.Size(424, 478);
-            this.ControlBox = false;
-            this.Controls.Add(this.writeOffDateTextBox);
-            this.Controls.Add(this.checkDateTextBox);
-            this.Controls.Add(this.dateReceivedTextBox);
-            this.Controls.Add(this.insuranceComboBox);
-            this.Controls.Add(this.paymentAmtTextBox);
-            this.Controls.Add(this.cancelButton);
-            this.Controls.Add(this.postButton);
-            this.Controls.Add(this.commentTextBox);
-            this.Controls.Add(this.writeOffCodeComboBox);
-            this.Controls.Add(this.refundCheckBox);
-            this.Controls.Add(this.writeOffAmtTextBox);
-            this.Controls.Add(this.contractualAmtTextBox);
-            this.Controls.Add(this.label9);
-            this.Controls.Add(this.label8);
-            this.Controls.Add(this.label7);
-            this.Controls.Add(this.label6);
-            this.Controls.Add(this.label10);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.label5);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.label4);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.fromLabel);
-            this.Controls.Add(this.writeOffCodeTextBox);
-            this.Controls.Add(this.checkNoTextBox);
-            this.Controls.Add(this.fromTextBox);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
-            this.Name = "PaymentAdjustmentEntryForm";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Enter Payment/Adjustment";
-            this.Load += new System.EventHandler(this.PaymentAdjustmentEntryForm_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).EndInit();
-            this.ResumeLayout(false);
-            this.PerformLayout();
-
+            AcceptButton = postButton;
+            AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            BackColor = System.Drawing.Color.White;
+            CancelButton = cancelButton;
+            ClientSize = new System.Drawing.Size(495, 552);
+            ControlBox = false;
+            Controls.Add(writeOffDateTextBox);
+            Controls.Add(checkDateTextBox);
+            Controls.Add(dateReceivedTextBox);
+            Controls.Add(insuranceComboBox);
+            Controls.Add(paymentAmtTextBox);
+            Controls.Add(cancelButton);
+            Controls.Add(postButton);
+            Controls.Add(commentTextBox);
+            Controls.Add(writeOffCodeComboBox);
+            Controls.Add(refundCheckBox);
+            Controls.Add(writeOffAmtTextBox);
+            Controls.Add(contractualAmtTextBox);
+            Controls.Add(label9);
+            Controls.Add(label8);
+            Controls.Add(label7);
+            Controls.Add(label6);
+            Controls.Add(label10);
+            Controls.Add(label2);
+            Controls.Add(label5);
+            Controls.Add(label1);
+            Controls.Add(label4);
+            Controls.Add(label3);
+            Controls.Add(fromLabel);
+            Controls.Add(writeOffCodeTextBox);
+            Controls.Add(checkNoTextBox);
+            Controls.Add(fromTextBox);
+            ForeColor = System.Drawing.Color.Black;
+            FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            Name = "PaymentAdjustmentEntryForm";
+            StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            Text = "Enter Payment/Adjustment";
+            Load += PaymentAdjustmentEntryForm_Load;
+            ((System.ComponentModel.ISupportInitialize)errorProvider1).EndInit();
+            ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion

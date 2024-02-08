@@ -71,5 +71,15 @@ namespace Utilities
             }
             return table;
         }
+
+        /// <summary>
+        /// Generates an integer percentage value using two integers. Helpful for sending percentage complete to a progress bar.
+        /// </summary>
+        /// <param name="numerator"></param>
+        /// <param name="denominator"></param>
+        public static int ComputePercentage(int numerator, int denominator)
+        {
+            return (int)((double)numerator / (double)denominator * 100);
+        }
     }
 }
