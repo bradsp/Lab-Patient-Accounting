@@ -345,6 +345,7 @@ namespace LabBilling.Forms
             InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.UpdatedApp)].Visible = false;
             InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.UpdatedHost)].Visible = false;
             InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.rowguid)].Visible = false;
+            InvoiceHistoryDGV.Columns[nameof(InvoiceHistory.InvoiceData)].Visible = false;
         }
 
         private async Task RefreshInvoiceHistoryGridAsync()

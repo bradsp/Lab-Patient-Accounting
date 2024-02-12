@@ -18,7 +18,10 @@ namespace Utilities
         /// <returns></returns>
         public static string Left(this string str, int numChar)
         {
-            return str[..numChar];
+            if (numChar < str.Length)
+                return str[0..numChar];
+            else
+                return str;
         }
 
 
@@ -31,10 +34,13 @@ namespace Utilities
         public static string Right(this string str, int numChar)
         {
             int len = str.Length;
-            return str[(len - numChar)..];
+
+            if (numChar < len)
+                return str[(len - numChar)..];
+            else 
+                return str;
+
         }
-
-
 
         /// <summary>
         /// Reduce multiple whitespace characters to one space and trim string.

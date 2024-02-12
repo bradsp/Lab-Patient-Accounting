@@ -66,7 +66,6 @@
             Name = "WaitForm";
             StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             Text = "WaitForm";
-            TopMost = true;
             ResumeLayout(false);
             PerformLayout();
         }
