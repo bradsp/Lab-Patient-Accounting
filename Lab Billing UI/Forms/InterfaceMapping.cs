@@ -1,32 +1,23 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using LabBilling.Core.DataAccess;
-using LabBilling.Core.Models;
+using LabBilling.Core.Services;
 
 namespace LabBilling.Forms
 {
     public partial class InterfaceMapping : BaseForm
     {
+        private readonly DictionaryService dictionaryService = new(Program.AppEnvironment);
+        private readonly HL7ProcessorService hL7ProcessorService = new(Program.AppEnvironment);
+
         public InterfaceMapping()
         {
             InitializeComponent();
         }
 
-        private readonly MappingRepository mappingRepository = new MappingRepository(Program.AppEnvironment);
-
         private void InterfaceMapping_Load(object sender, EventArgs e)
         {
-
-            CodeSet.DataSource = mappingRepository.GetReturnTypeList();
-            SendingSystem.DataSource = mappingRepository.GetSendingSystemList();
-
+            CodeSet.DataSource = dictionaryService.GetMappingsReturnTypeList();
+            SendingSystem.DataSource = dictionaryService.GetMappingsSendingSystemList();
         }
 
         private void LoadData()
@@ -34,7 +25,7 @@ namespace LabBilling.Forms
             Cursor.Current = Cursors.WaitCursor;
 
 
-            MappingDGV.DataSource = mappingRepository.GetMappings(CodeSet.Text, SendingSystem.Text);
+            MappingDGV.DataSource = dictionaryService.GetMappings(CodeSet.Text, SendingSystem.Text);
             MappingDGV.Columns["mod_date"].Visible = false;
             MappingDGV.Columns["mod_host"].Visible = false;
             MappingDGV.Columns["mod_prg"].Visible = false;

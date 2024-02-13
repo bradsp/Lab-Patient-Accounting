@@ -7,13 +7,14 @@ using System.Text;
 using System.Threading.Tasks;
 using LabBilling.Core.Models;
 using LabBilling.Logging;
+using LabBilling.Core.UnitOfWork;
 
 namespace LabBilling.Core.DataAccess
 {
     public sealed class WriteOffCodeRepository : RepositoryBase<WriteOffCode>
     {
 
-        public WriteOffCodeRepository(IAppEnvironment appEnvironment) : base(appEnvironment)
+        public WriteOffCodeRepository(IAppEnvironment appEnvironment, PetaPoco.IDatabase context) : base(appEnvironment, context)
         {
 
         }
@@ -27,7 +28,7 @@ namespace LabBilling.Core.DataAccess
                 Log.Instance.Error("Null value passed to WriteOffCodeRepository GetByCode.");
                 return new WriteOffCode();
             }
-            var record = dbConnection.SingleOrDefault<WriteOffCode>($"where {GetRealColumn(nameof(WriteOffCode.Code))} = @0", 
+            var record = Context.SingleOrDefault<WriteOffCode>($"where {GetRealColumn(nameof(WriteOffCode.Code))} = @0", 
                 new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = code });
 
             if (record != null)

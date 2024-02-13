@@ -9,6 +9,7 @@ using PetaPoco;
 using System.Linq.Expressions;
 using Utilities;
 using System.ComponentModel;
+using LabBilling.Core.UnitOfWork;
 
 namespace LabBilling.Core.DataAccess
 {
@@ -16,53 +17,22 @@ namespace LabBilling.Core.DataAccess
     /// 
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public abstract class RepositoryBase<TPoco> : Database, IRepositoryBase<TPoco> where TPoco : IBaseEntity
+    public abstract class RepositoryBase<TPoco> : RepositoryCoreBase<TPoco>, IRepositoryBase<TPoco> where TPoco : class, IBaseEntity
     {
-        protected string _tableName;
         protected IList<string> _fields;
-        protected TableInfo _tableInfo;
-        public TableInfo TableInfo { get { return _tableInfo; } }
-        protected bool transactionStarted = false;
+
         /// <summary>
         /// Contains error messages as a result of actions.
         /// </summary>
         public string Errors { get; internal set; }
-        protected IAppEnvironment AppEnvironment { get; set; }
+
+        public RepositoryBase(IAppEnvironment environment, IDatabase context) : base(environment, context)
+        {
+        }
 
         [Category("Action")] public event EventHandler<RepositoryEventArgs<TPoco>> RecordUpdated;
         [Category("Action")] public event EventHandler<RepositoryEventArgs<TPoco>> RecordAdded;
         [Category("Action")] public event EventHandler<RepositoryEventArgs<TPoco>> RecordDeleted;
-
-        public RepositoryBase(IAppEnvironment environment) : base(environment.ConnectionString)
-        {
-            Log.Instance.Trace("Entering");
-            if (!environment.EnvironmentValid)
-                throw new ApplicationException("AppEnvironment not valid.");
-
-            AppEnvironment = environment;
-
-            //dbConnection.ExceptionThrown += DbConnection_ExceptionThrown;
-            //dbConnection.ConnectionOpened += DbConnection_ConnectionOpened;
-
-            Initialize();
-        }
-
-        private void DbConnection_ConnectionOpened(object sender, DbConnectionEventArgs e)
-        {
-            //Log.Instance.Trace($"Connected to Database {e.Connection.Database}");
-        }
-
-        private void DbConnection_ExceptionThrown(object sender, ExceptionEventArgs e)
-        {
-            throw new ApplicationException("Error with database connection", e.Exception);
-        }
-
-        private void Initialize()
-        {
-            Log.Instance.Trace("Entering");
-            _tableInfo = GetTableInfo(typeof(TPoco));
-            _tableName = _tableInfo.TableName;
-        }
 
         public virtual List<TPoco> GetAll()
         {
@@ -71,10 +41,10 @@ namespace LabBilling.Core.DataAccess
             PetaPoco.Sql sql = PetaPoco.Sql.Builder
                 .From(_tableName);
 
-            var queryResult = dbConnection.Fetch<TPoco>(sql);
+            var queryResult = Context.Fetch<TPoco>(sql);
 
-            Log.Instance.Debug(dbConnection.LastSQL);
-            Log.Instance.Debug(dbConnection.LastArgs);
+            Log.Instance.Debug(Context.LastSQL);
+            Log.Instance.Debug(Context.LastArgs);
             return queryResult;
         }
 
@@ -85,12 +55,14 @@ namespace LabBilling.Core.DataAccess
             PetaPoco.Sql sql = Sql.Builder
                 .From(_tableName);
 
-            var queryResult = await dbConnection.FetchAsync<TPoco>(sql);
+            var queryResult = await Context.FetchAsync<TPoco>(sql);
 
-            Log.Instance.Debug(dbConnection.LastSQL);
-            Log.Instance.Debug(dbConnection.LastArgs);
+            Log.Instance.Debug(Context.LastSQL);
+            Log.Instance.Debug(Context.LastArgs);
             return queryResult.ToList<TPoco>();
         }
+
+        public virtual async Task<object> AddAsync(TPoco table) => await Task.Run(() => Add(table));
 
         public virtual object Add(TPoco table)
         {
@@ -103,9 +75,9 @@ namespace LabBilling.Core.DataAccess
             table.rowguid = Guid.NewGuid();
             try
             {
-                object identity = dbConnection.Insert(table);
-                Log.Instance.Debug(dbConnection.LastSQL.ToString());
-                Log.Instance.Debug(dbConnection.LastArgs.ToString());
+                object identity = Context.Insert(table);
+                Log.Instance.Debug(Context.LastSQL.ToString());
+                Log.Instance.Debug(Context.LastArgs.ToString());
                 RecordAdded?.Invoke(this, new RepositoryEventArgs<TPoco>
                 {
                     Record = table,
@@ -130,8 +102,8 @@ namespace LabBilling.Core.DataAccess
             table.UpdatedApp = OS.GetAppName();
             table.UpdatedUser = Environment.UserName.ToString();
 
-            dbConnection.Update(table);
-            Log.Instance.Debug(dbConnection.LastSQL.ToString());
+            Context.Update(table);
+            Log.Instance.Debug(Context.LastSQL.ToString());
             return true;
         }
 
@@ -157,12 +129,12 @@ namespace LabBilling.Core.DataAccess
 
             try
             {
-                dbConnection.Update(table, cColumns);
+                Context.Update(table, cColumns);
             }
             catch (Exception ex)
             {
-                Log.Instance.Debug(dbConnection.LastSQL.ToString());
-                Log.Instance.Debug(dbConnection.LastArgs.ToString());
+                Log.Instance.Debug(Context.LastSQL.ToString());
+                Log.Instance.Debug(Context.LastArgs.ToString());
                 throw new ApplicationException("Error during database update.", ex);
             }
 
@@ -171,8 +143,8 @@ namespace LabBilling.Core.DataAccess
                 Record = table,
                 Action = "update"
             });
-            Log.Instance.Debug(dbConnection.LastSQL.ToString());
-            Log.Instance.Debug(dbConnection.LastArgs.ToString());
+            Log.Instance.Debug(Context.LastSQL.ToString());
+            Log.Instance.Debug(Context.LastArgs.ToString());
             return true;
         }
 
@@ -186,15 +158,15 @@ namespace LabBilling.Core.DataAccess
             table.UpdatedUser = Environment.UserName.ToString();
             try
             {
-                dbConnection.Save(table);
+                Context.Save(table);
             }
             catch (Exception ex)
             {
                 Log.Instance.Error("Error saving account validation record to database.", ex);
                 return false;
             }
-            Log.Instance.Debug(dbConnection.LastSQL.ToString());
-            Log.Instance.Debug(dbConnection.LastCommand.ToString());
+            Log.Instance.Debug(Context.LastSQL.ToString());
+            Log.Instance.Debug(Context.LastCommand.ToString());
 
             return true;
         }
@@ -203,86 +175,37 @@ namespace LabBilling.Core.DataAccess
         {
             Log.Instance.Trace("Entering");
 
-            var count = dbConnection.Delete(table);
+            var count = Context.Delete(table);
             RecordDeleted?.Invoke(this, new RepositoryEventArgs<TPoco>()
             {
                 Record = table,
                 Action = "deleted"
             });
-            Log.Instance.Debug(dbConnection.LastSQL.ToString());
-            Log.Instance.Debug(dbConnection.LastArgs.ToString());
+            Log.Instance.Debug(Context.LastSQL.ToString());
+            Log.Instance.Debug(Context.LastArgs.ToString());
             return count > 0;
         }
 
-        public string GetRealColumn(Type poco, string propertyName)
-        {
-            return this.GetRealColumn(poco.AssemblyQualifiedName, propertyName);
-        }
+        //public virtual void BeginTransaction()
+        //{
+        //    Log.Instance.Debug("Begin Transaction");
+        //    transactionStarted = true;
+        //    Context.BeginTransaction();
+        //}
 
-        public string GetRealColumn(string propertyName)
-        {
-            return GetRealColumn(typeof(TPoco), propertyName);
-        }
+        //public virtual void CompleteTransaction()
+        //{
+        //    Log.Instance.Debug("Complete Transaction");
+        //    Context.CompleteTransaction();
+        //    transactionStarted = false;
+        //}
 
-        public string GetRealColumn(string objectName, string propertyName)
-        {
-            //this can throw if invalid type names are used, or return null of there is no such type
-            Type t = Type.GetType(objectName);
-            if (t == null)
-                return null;
-            //this will only find public instance properties, or return null if no such property is found
-            PropertyInfo pi = t.GetProperty(propertyName);
-            //this returns an array of the applied attributes (will be 0-length if no attributes are applied
-            var attributes = pi.GetCustomAttributes(typeof(ColumnAttribute), false).ToArray();
-
-            if (attributes.Length == 0)
-                return propertyName;
-            else
-            {
-                foreach (ColumnAttribute attribute in attributes)
-                {
-                    if (attribute.GetType() != typeof(ResultColumnAttribute))
-                    {
-                        return attribute.Name;
-                    }
-                }
-            }
-
-            return propertyName;
-        }
-
-        public static TableInfo GetTableInfo(Type t)
-        {
-            TableInfo tableInfo = new();
-            object[] customAttributes = t.GetCustomAttributes(typeof(TableNameAttribute), true);
-            tableInfo.TableName = (customAttributes.Length == 0) ? t.Name : (customAttributes[0] as TableNameAttribute).Value;
-            customAttributes = t.GetCustomAttributes(typeof(PrimaryKeyAttribute), true);
-            tableInfo.PrimaryKey = (customAttributes.Length == 0) ? "ID" : (customAttributes[0] as PrimaryKeyAttribute).Value;
-            tableInfo.SequenceName = (customAttributes.Length == 0) ? null : (customAttributes[0] as PrimaryKeyAttribute).SequenceName;
-            tableInfo.AutoIncrement = customAttributes.Length != 0 && (customAttributes[0] as PrimaryKeyAttribute).AutoIncrement;
-            return tableInfo;
-        }
-
-        public virtual void BeginTransaction()
-        {
-            Log.Instance.Debug("Begin Transaction");
-            transactionStarted = true;
-            dbConnection.BeginTransaction();
-        }
-
-        public virtual void CompleteTransaction()
-        {
-            Log.Instance.Debug("Complete Transaction");
-            dbConnection.CompleteTransaction();
-            transactionStarted = false;
-        }
-
-        public virtual void AbortTransaction()
-        {
-            Log.Instance.Debug("Abort Transaction");
-            dbConnection.AbortTransaction();
-            transactionStarted = false;
-        }
+        //public virtual void AbortTransaction()
+        //{
+        //    Log.Instance.Debug("Abort Transaction");
+        //    Context.AbortTransaction();
+        //    transactionStarted = false;
+        //}
 
         public IEnumerable<TPoco> Find(Expression<Func<TPoco, bool>> predicate)
         {

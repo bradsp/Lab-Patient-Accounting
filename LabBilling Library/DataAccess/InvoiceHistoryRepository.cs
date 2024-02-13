@@ -4,18 +4,19 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using Microsoft.Data.SqlClient;
+using LabBilling.Core.UnitOfWork;
 
 namespace LabBilling.Core.DataAccess
 {
     public sealed class InvoiceHistoryRepository : RepositoryBase<InvoiceHistory>
     {
-        public InvoiceHistoryRepository(IAppEnvironment appEnvironment) : base(appEnvironment)
+        public InvoiceHistoryRepository(IAppEnvironment appEnvironment, PetaPoco.IDatabase context) : base(appEnvironment, context)
         {
         }
 
         public InvoiceHistory GetByInvoice(string invoiceNo)
         {
-            return dbConnection.SingleOrDefault<InvoiceHistory>($"where {GetRealColumn(nameof(InvoiceHistory.InvoiceNo))} = @0",
+            return Context.SingleOrDefault<InvoiceHistory>($"where {GetRealColumn(nameof(InvoiceHistory.InvoiceNo))} = @0",
                 new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = invoiceNo });
         }
 
@@ -46,7 +47,7 @@ namespace LabBilling.Core.DataAccess
             }
             sql.OrderBy($"{_tableName}.mod_date DESC");
             Log.Instance.Debug(sql);
-            return dbConnection.Fetch<InvoiceHistory>(sql);
+            return Context.Fetch<InvoiceHistory>(sql);
         }
         
     }

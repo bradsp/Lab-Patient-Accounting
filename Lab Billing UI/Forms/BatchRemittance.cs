@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using Utilities;
 using System.Data;
 using System.Drawing;
+using LabBilling.Core.Services;
 
 
 namespace LabBilling.Forms
@@ -17,11 +18,8 @@ namespace LabBilling.Forms
         {
             InitializeComponent();
         }
-
-        private readonly ChkBatchRepository chkBatchRepository = new ChkBatchRepository(Program.AppEnvironment);
-        private readonly ChkBatchDetailRepository chkBatchDetailRepository = new ChkBatchDetailRepository(Program.AppEnvironment);
-        private readonly ChkRepository chkRepository = new ChkRepository(Program.AppEnvironment);
-        private readonly AccountRepository accountRepository = new AccountRepository(Program.AppEnvironment);
+        private BatchTransactionService batchTransactionService;
+        private AccountService accountService;
 
         private ChkBatch chkBatch;
         private DataTable chkDetailsDataTable;
@@ -32,8 +30,9 @@ namespace LabBilling.Forms
         private void BatchRemittance_Load(object sender, EventArgs e)
         {
             Log.Instance.Trace($"Entering");
-
-            List<ChkBatchDetail> chkBatchDetails = new List<ChkBatchDetail>();
+            batchTransactionService = new(Program.AppEnvironment);
+            accountService = new(Program.AppEnvironment);
+            List<ChkBatchDetail> chkBatchDetails = new();
             SaveBatchButton.Enabled = false;
             SubmitPaymentsButton.Enabled = false;
             LoadOpenBatches();
@@ -47,38 +46,20 @@ namespace LabBilling.Forms
             chkBatch.BatchDate = DateTime.Today;
             chkBatch.User = Program.LoggedInUser.UserName;
 
-            if(batchNo > 0)
-            {
-                chkBatch.BatchNo = batchNo;
-                if (chkBatchRepository.Update(chkBatch))
-                    return batchNo;
-                else
-                    return -1;
-            }
-            else
-            {
-                int batch = (int)chkBatchRepository.Add(chkBatch);
-                if (batch > 0)
-                {
-                    chkBatch.BatchNo = batch;
-                    chkBatch = chkBatchRepository.GetById(batch);
-                    LoadDetailGrid(chkBatch.ChkBatchDetails);
+            chkBatch = batchTransactionService.SavePaymentBatch(chkBatch);
+            LoadDetailGrid(chkBatch.ChkBatchDetails);
 
-                    return batch;
-                }
-                else
-                {
-                    return -1;
-                }
-            }
+            if (chkBatch.BatchNo > 0)
+                return chkBatch.BatchNo;
+            else
+                return -1;
         }
 
         private void SaveBatchButton_Click(object sender, EventArgs e)
         {
             Log.Instance.Trace($"Entering");
             //saves an open batch for later use
-            int retBatch = -1;
-
+            int retBatch;
             if (OpenBatch.SelectedIndex > 0)
             {
                 retBatch = SaveBatch(Convert.ToInt32(OpenBatch.SelectedValue));
@@ -107,7 +88,7 @@ namespace LabBilling.Forms
             Log.Instance.Trace($"Entering");
 
             #region Setup OpenBatch Combobox
-            List<ChkBatch> chkBatches = chkBatchRepository.GetOpenBatches();
+            List<ChkBatch> chkBatches = batchTransactionService.GetOpenPaymentBatches();
 
             DataTable chkBatchDataTable = new DataTable(typeof(ChkBatch).Name);
             chkBatchDataTable.Columns.Add("BatchNo");
@@ -157,37 +138,8 @@ namespace LabBilling.Forms
                     return;
                 }
 
-                List<Chk> chks = new List<Chk>();
-
-                var chkBatch = chkBatchRepository.GetById(batch);
-
-                chkRepository.BeginTransaction();
-
-                foreach (var detail in chkBatch.ChkBatchDetails)
-                {
-                    Chk chk = new Chk();
-
-                    chk.AccountNo = detail.AccountNo;
-                    chk.Batch = detail.Batch;
-                    chk.PaidAmount = detail.AmtPaid;
-                    chk.ChkDate = detail.CheckDate;
-                    chk.DateReceived = detail.DateReceived;
-                    chk.CheckNo = detail.CheckNo;
-                    chk.Comment = detail.Comment;
-                    chk.ContractualAmount = detail.Contractual;
-                    chk.WriteOffAmount = detail.WriteOffAmount;
-                    chk.WriteOffCode = detail.WriteOffCode;
-                    chk.WriteOffDate = detail.WriteOffDate;
-                    chk.Source = detail.Source;
-
-                    chks.Add(chk);
-                }
-
-                chkRepository.AddBatch(chks);
-
-                chkBatchRepository.UpdatePostedDate(batch, DateTime.Now);
-                chkRepository.CompleteTransaction();
-
+                batchTransactionService.PostBatchPayments(batch);
+                  
                 LoadOpenBatches();
                 //clear entry screen for next batch
                 MessageBox.Show($"Batch {batch} posted.", "Batch Posted");
@@ -197,13 +149,11 @@ namespace LabBilling.Forms
             {
                 Log.Instance.Error($"Error posting payment batch", apex);
                 MessageBox.Show("Error occurred. Batch not posted.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                chkRepository.AbortTransaction();
             }
             catch (Exception ex)
             {
                 Log.Instance.Error($"Error posting payment batch", ex);
                 MessageBox.Show("Error occurred. Batch not posted.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                chkRepository.AbortTransaction();
             }
         }
 
@@ -299,7 +249,7 @@ namespace LabBilling.Forms
                 if (!string.IsNullOrEmpty(strAccount))
                 {
                     strAccount = strAccount.ToUpper();
-                    account = accountRepository.GetByAccount(strAccount);
+                    account = accountService.GetAccount(strAccount);
                 }
                 else
                 {
@@ -341,8 +291,6 @@ namespace LabBilling.Forms
                     skipDgvPaymentsCellValueChanged = false;
                 }
             }
-
-
         }
 
         private void SetCellsReadonly(int rowIndex, bool setReadonly)
@@ -416,55 +364,55 @@ namespace LabBilling.Forms
 
         }
 
-        private void SaveDetails()
-        {
-            Log.Instance.Trace($"Entering");
-            chkDetailsDataTable.AcceptChanges();
-            foreach (DataRow row in chkDetailsDataTable.Rows)
-            {
-                if (string.IsNullOrEmpty(row[nameof(ChkBatchDetail.AccountNo)].ToString()))
-                    continue;
+        //private void SaveDetails()
+        //{
+        //    Log.Instance.Trace($"Entering");
+        //    chkDetailsDataTable.AcceptChanges();
+        //    foreach (DataRow row in chkDetailsDataTable.Rows)
+        //    {
+        //        if (string.IsNullOrEmpty(row[nameof(ChkBatchDetail.AccountNo)].ToString()))
+        //            continue;
 
-                ChkBatchDetail detail = new ChkBatchDetail();
+        //        row[nameof(ChkBatchDetail.AccountNo)] = row[nameof(ChkBatchDetail.AccountNo)].ToString().ToUpper();
 
-                detail.Batch = chkBatch.BatchNo;
-                row[nameof(ChkBatchDetail.AccountNo)] = row[nameof(ChkBatchDetail.AccountNo)].ToString().ToUpper();
-                detail.AccountNo = row[nameof(ChkBatchDetail.AccountNo)].ToString().ToUpper();
-                detail.AmtPaid = Convert.ToDouble(row[nameof(ChkBatchDetail.AmtPaid)]);
-                detail.Contractual = Convert.ToDouble(row[nameof(ChkBatchDetail.Contractual)]);
-                detail.WriteOffAmount = Convert.ToDouble(row[nameof(ChkBatchDetail.WriteOffAmount)]);
+        //        ChkBatchDetail detail = new()
+        //        {
+        //            Batch = chkBatch.BatchNo,
+        //            AccountNo = row[nameof(ChkBatchDetail.AccountNo)].ToString().ToUpper(),
+        //            AmtPaid = Convert.ToDouble(row[nameof(ChkBatchDetail.AmtPaid)]),
+        //            Contractual = Convert.ToDouble(row[nameof(ChkBatchDetail.Contractual)]),
+        //            WriteOffAmount = Convert.ToDouble(row[nameof(ChkBatchDetail.WriteOffAmount)]),
+        //            CheckNo = row[nameof(ChkBatchDetail.CheckNo)].ToString(),
+        //            Comment = row[nameof(ChkBatchDetail.Comment)].ToString(),
+        //            Source = row[nameof(ChkBatchDetail.Source)].ToString(),
+        //            WriteOffCode = row[nameof(ChkBatchDetail.WriteOffCode)].ToString()
+        //        };
 
-                if (DateTime.TryParse(row[nameof(ChkBatchDetail.CheckDate)].ToString(), out DateTime temp))
-                    detail.CheckDate = temp;
+        //        if (DateTime.TryParse(row[nameof(ChkBatchDetail.CheckDate)].ToString(), out DateTime temp))
+        //            detail.CheckDate = temp;
 
-                detail.CheckNo = row[nameof(ChkBatchDetail.CheckNo)].ToString();
-                detail.Comment = row[nameof(ChkBatchDetail.Comment)].ToString();
+        //        if (DateTime.TryParse(row[nameof(ChkBatchDetail.DateReceived)].ToString(), out DateTime temp2))
+        //            detail.DateReceived = temp2;
 
-                if (DateTime.TryParse(row[nameof(ChkBatchDetail.DateReceived)].ToString(), out DateTime temp2))
-                    detail.DateReceived = temp2;
+        //        if (DateTime.TryParse(row[nameof(ChkBatchDetail.WriteOffDate)].ToString(), out DateTime temp3))
+        //            detail.WriteOffDate = temp3;
 
-                detail.Source = row[nameof(ChkBatchDetail.Source)].ToString();
-                detail.WriteOffCode = row[nameof(ChkBatchDetail.WriteOffCode)].ToString();
+        //        if (!string.IsNullOrWhiteSpace(row[nameof(ChkBatchDetail.Id)].ToString()))
+        //            detail.Id = Convert.ToInt32(row[nameof(ChkBatchDetail.Id)].ToString());
 
-                if (DateTime.TryParse(row[nameof(ChkBatchDetail.WriteOffDate)].ToString(), out DateTime temp3))
-                    detail.WriteOffDate = temp3;
+        //        var (successFlag, newId) = batchTransactionService.SavePaymentBatchDetail(detail);
 
-                if (!string.IsNullOrWhiteSpace(row[nameof(ChkBatchDetail.Id)].ToString()))
-                    detail.Id = Convert.ToInt32(row[nameof(ChkBatchDetail.Id)].ToString());
+        //        if (newId > 0)
+        //        {
+        //            row[nameof(ChkBatchDetail.Id)] = newId;
+        //        }
 
-                var (successFlag, newId) = chkBatchDetailRepository.Save(detail);
+        //        TotalPayments();
+        //    }
 
-                if (newId > 0)
-                {
-                    row[nameof(ChkBatchDetail.Id)] = newId;
-                }
+        //    chkBatch.ChkBatchDetails = Helper.ConvertToList<ChkBatchDetail>(chkDetailsDataTable);
 
-                TotalPayments();
-            }
-
-            chkBatch.ChkBatchDetails = Helper.ConvertToList<ChkBatchDetail>(chkDetailsDataTable);
-
-        }
+        //}
 
         private void SaveDetailRow(DataRowView row)
         {
@@ -475,26 +423,25 @@ namespace LabBilling.Forms
 
             try
             {
-                ChkBatchDetail detail = new ChkBatchDetail();
-
-                detail.Batch = chkBatch.BatchNo;
+                ChkBatchDetail detail = new()
+                {
+                    Batch = chkBatch.BatchNo,
+                    AccountNo = row[nameof(ChkBatchDetail.AccountNo)].ToString().ToUpper(),
+                    AmtPaid = Convert.ToDouble(row[nameof(ChkBatchDetail.AmtPaid)]),
+                    Contractual = Convert.ToDouble(row[nameof(ChkBatchDetail.Contractual)]),
+                    WriteOffAmount = Convert.ToDouble(row[nameof(ChkBatchDetail.WriteOffAmount)]),
+                    CheckNo = row[nameof(ChkBatchDetail.CheckNo)].ToString(),
+                    Comment = row[nameof(ChkBatchDetail.Comment)].ToString(),
+                    Source = row[nameof(ChkBatchDetail.Source)].ToString(),
+                    WriteOffCode = row[nameof(ChkBatchDetail.WriteOffCode)].ToString()
+                };
                 row[nameof(ChkBatchDetail.AccountNo)] = row[nameof(ChkBatchDetail.AccountNo)].ToString().ToUpper();
-                detail.AccountNo = row[nameof(ChkBatchDetail.AccountNo)].ToString().ToUpper();
-                detail.AmtPaid = Convert.ToDouble(row[nameof(ChkBatchDetail.AmtPaid)]);
-                detail.Contractual = Convert.ToDouble(row[nameof(ChkBatchDetail.Contractual)]);
-                detail.WriteOffAmount = Convert.ToDouble(row[nameof(ChkBatchDetail.WriteOffAmount)]);
 
                 if (DateTime.TryParse(row[nameof(ChkBatchDetail.CheckDate)].ToString(), out DateTime temp))
                     detail.CheckDate = temp;
 
-                detail.CheckNo = row[nameof(ChkBatchDetail.CheckNo)].ToString();
-                detail.Comment = row[nameof(ChkBatchDetail.Comment)].ToString();
-
                 if (DateTime.TryParse(row[nameof(ChkBatchDetail.DateReceived)].ToString(), out DateTime temp2))
                     detail.DateReceived = temp2;
-
-                detail.Source = row[nameof(ChkBatchDetail.Source)].ToString();
-                detail.WriteOffCode = row[nameof(ChkBatchDetail.WriteOffCode)].ToString();
 
                 if (DateTime.TryParse(row[nameof(ChkBatchDetail.WriteOffDate)].ToString(), out DateTime temp3))
                     detail.WriteOffDate = temp3;
@@ -502,7 +449,7 @@ namespace LabBilling.Forms
                 if (!string.IsNullOrWhiteSpace(row[nameof(ChkBatchDetail.Id)].ToString()))
                     detail.Id = Convert.ToInt32(row[nameof(ChkBatchDetail.Id)].ToString());
 
-                var (successFlag, newId) = chkBatchDetailRepository.Save(detail);
+                var (successFlag, newId) = batchTransactionService.SavePaymentBatchDetail(detail);
 
                 if (newId > 0)
                 {
@@ -548,16 +495,8 @@ namespace LabBilling.Forms
                 {
                     try
                     {
-                        ChkBatch chkBatch = chkBatchRepository.GetById(Convert.ToInt32(OpenBatch.SelectedValue));
-                        if (chkBatch != null)
-                        {
-                            chkBatchRepository.Delete(chkBatch);
-                            Clear();
-                        }
-                        else
-                        {
-                            MessageBox.Show($"Batch {OpenBatch.SelectedValue} not found.", "Batch Not Found", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        }
+                        batchTransactionService.DeletePaymentBatch(Convert.ToInt16(OpenBatch.SelectedValue));
+                        Clear();
                     }
                     catch (Exception ex)
                     {
@@ -644,13 +583,11 @@ namespace LabBilling.Forms
 
                 Clear();
 
-                chkBatch = chkBatchRepository.GetById(number);
+                chkBatch = batchTransactionService.GetPaymentBatchById(number);
                 //load data into data grid view
 
                 LoadDetailGrid(chkBatch.ChkBatchDetails);
-
             }
-
         }
 
         private void dgvPayments_CellEnter(object sender, DataGridViewCellEventArgs e)
@@ -692,12 +629,12 @@ namespace LabBilling.Forms
             if (dgvPayments.Columns[e.ColumnIndex].Name == nameof(ChkBatchDetail.AccountNo))
             {
                 Account account = null;
-                PersonSearchForm frm = new PersonSearchForm();
+                PersonSearchForm frm = new();
                 frm.ShowDialog();
                 if (frm.SelectedAccount != "" && frm.SelectedAccount != null)
                 {
                     string strAccount = frm.SelectedAccount.ToUpper();
-                    account = accountRepository.GetByAccount(strAccount, true);
+                    account = accountService.GetAccount(strAccount, true);
                 }
                 else
                 {
@@ -738,7 +675,6 @@ namespace LabBilling.Forms
 
         private void NewBatchButton_Click(object sender, EventArgs e)
         {
-
             Clear();
 
             chkBatch = new ChkBatch();
@@ -748,7 +684,6 @@ namespace LabBilling.Forms
             //load new batch
             LoadOpenBatches();
             OpenBatch.SelectedValue = newBatch;
-
         }
 
         private void dgvPayments_CellEndEdit(object sender, DataGridViewCellEventArgs e)
@@ -840,9 +775,7 @@ namespace LabBilling.Forms
                     normalStyle.BackColor = Color.White;
                     normalStyle.ForeColor = Color.Black;
                     dgvPayments.Rows[e.RowIndex].Cells[nameof(ChkBatchDetail.WriteOffCode)].Style = normalStyle;
-
                     dgvPayments.Rows[e.RowIndex].Cells[nameof(ChkBatchDetail.WriteOffCode)].ErrorText = "";
-                    //dgvPayments.InvalidateCell(dgvPayments.Rows[e.RowIndex].Cells[nameof(ChkBatchDetail.WriteOffCode)]);
                 }
             }
 
@@ -868,7 +801,7 @@ namespace LabBilling.Forms
                 e.Cancel = true;
                 if (id > 0)
                 {
-                    if (!chkBatchDetailRepository.Delete(id))
+                    if (!batchTransactionService.DeletePaymentBatchDetail(id))
                         MessageBox.Show("Record not deleted.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     e.Cancel = false;
                 }

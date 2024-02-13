@@ -4,12 +4,14 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Data.SqlClient;
 using System.Data;
+using LabBilling.Core.UnitOfWork;
+using PetaPoco;
 
 namespace LabBilling.Core.DataAccess
 {
     public sealed class AccountSearchRepository : RepositoryBase<AccountSearch>
     {
-        public AccountSearchRepository(IAppEnvironment appEnvironment) : base(appEnvironment)
+        public AccountSearchRepository(IAppEnvironment appEnvironment, IDatabase context) : base(appEnvironment, context)
         {
 
         }
@@ -28,8 +30,7 @@ namespace LabBilling.Core.DataAccess
         }
 
         public IList<AccountSearch> GetBySearch((string propertyName, operation oper, string searchText)[] searchValues)
-        {
-            InsRepository insRepository = new(AppEnvironment);
+        {           
             try
             {
                 var command = PetaPoco.Sql.Builder;
@@ -92,7 +93,7 @@ namespace LabBilling.Core.DataAccess
                 }
                 command.OrderBy(GetRealColumn(nameof(AccountSearch.Name)));
                 
-                var results = dbConnection.Fetch<AccountSearch>(command);
+                var results = Context.Fetch<AccountSearch>(command);
 
                 return results;
             }
@@ -136,7 +137,6 @@ namespace LabBilling.Core.DataAccess
 
         public IEnumerable<AccountSearch> GetBySearchAsync((string propertyName, operation oper, string searchText)[] searchValues)
         {
-            InsRepository insRepository = new(AppEnvironment);
             try
             {
                 var command = PetaPoco.Sql.Builder;
@@ -189,14 +189,7 @@ namespace LabBilling.Core.DataAccess
                         new SqlParameter() { SqlDbType = GetType(propType), Value = searchText });
                 }
                 command.OrderBy(GetRealColumn(typeof(AccountSearch), nameof(AccountSearch.Name)));
-                var results = dbConnection.Fetch<AccountSearch>(command);
-
-                foreach (var result in results)
-                {
-                    var ins = insRepository.GetByAccount(result.Account, InsCoverage.Primary);
-                    if (ins != null)
-                        result.PrimaryInsCode = ins.InsCode;
-                }
+                var results = Context.Fetch<AccountSearch>(command);
 
                 return results;
             }
@@ -265,7 +258,7 @@ namespace LabBilling.Core.DataAccess
                     
                 command.OrderBy($"{GetRealColumn(nameof(AccountSearch.ServiceDate))} desc");
 
-                return dbConnection.Fetch<AccountSearch>(command);
+                return Context.Fetch<AccountSearch>(command);
             }
             catch (Exception ex)
             {

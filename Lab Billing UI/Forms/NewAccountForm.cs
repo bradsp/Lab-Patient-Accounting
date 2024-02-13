@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows.Forms;
+using LabBilling.Core.Services;
 
 
 namespace LabBilling.Forms
@@ -14,11 +15,10 @@ namespace LabBilling.Forms
     {
 
         public string CreatedAccount;
-        private readonly NumberRepository numberRepository = new NumberRepository(Program.AppEnvironment);
-        private readonly AccountRepository accountRepository = new AccountRepository(Program.AppEnvironment);
-        private readonly FinRepository finRepository = new FinRepository(Program.AppEnvironment);
         private Timer _timer;
         private int _timerInterval = 650;
+        private AccountService accountService;
+        private DictionaryService dictionaryService;
 
         public NewAccountForm()
         {
@@ -26,6 +26,9 @@ namespace LabBilling.Forms
             InitializeComponent();
             _timer = new Timer() { Enabled = false, Interval = _timerInterval };
             _timer.Tick += new EventHandler(clientTextBox_KeyUpDone);
+
+            accountService = new(Program.AppEnvironment);
+            dictionaryService = new(Program.AppEnvironment);
         }
 
         private void AddAccount_Click(object sender, EventArgs e)
@@ -41,7 +44,7 @@ namespace LabBilling.Forms
             if (accountNoTextBox.Text == "")
             {
                 //get new account number
-                accountNoTextBox.Text = string.Format("D{0}", numberRepository.GetNumber("account"));
+                accountNoTextBox.Text = string.Format("D{0}", accountService.GetNextAccountNumber());
             }
             //MessageBox.Show("Account Number " + AccountNoTextBox.Text + " assigned.");
             if (accountNoTextBox.Text == "D-1")
@@ -56,20 +59,22 @@ namespace LabBilling.Forms
 
                 //create the account
 
-                Account acc = new Account();
-                acc.AccountNo = accountNoTextBox.Text;
-                acc.PatLastName = lastNameTextBox.Text;
-                acc.PatFirstName = firstNameTextBox.Text;
-                acc.PatMiddleName = middleNameTextBox.Text;
-                acc.BirthDate = Convert.ToDateTime(dateOfBirthTextBox.Text);
-                acc.TransactionDate = Convert.ToDateTime(serviceDateTextBox.Text);
+                Account acc = new()
+                {
+                    AccountNo = accountNoTextBox.Text,
+                    PatLastName = lastNameTextBox.Text,
+                    PatFirstName = firstNameTextBox.Text,
+                    PatMiddleName = middleNameTextBox.Text,
+                    BirthDate = Convert.ToDateTime(dateOfBirthTextBox.Text),
+                    TransactionDate = Convert.ToDateTime(serviceDateTextBox.Text)
+                };
                 acc.Pat.AccountNo = accountNoTextBox.Text;
                 acc.Sex = patientSexComboBox.SelectedValue.ToString();
                 acc.FinCode = financialClassComboBox.SelectedValue.ToString();
                 acc.ClientMnem = clientTextBox.Text;
                 acc.Status = "NEW";
 
-                accountRepository.AddAccount(acc);
+                accountService.Add(acc);
 
                 this.DialogResult = DialogResult.OK;
             }
@@ -84,7 +89,7 @@ namespace LabBilling.Forms
             patientSexComboBox.DisplayMember = "Value";
 
             #region Setup Financial Code Combobox
-            List<Fin> fins = DataCache.Instance.GetFins(); // finRepository.GetAll().ToList();
+            List<Fin> fins = DataCache.Instance.GetFins();
 
             financialClassComboBox.DisplayMember = nameof(Fin.Description);
             financialClassComboBox.ValueMember = nameof(Fin.FinCode);
@@ -198,11 +203,12 @@ namespace LabBilling.Forms
             if (!string.IsNullOrEmpty(clientTextBox.Text))
             {
 
-                ClientLookupForm clientLookupForm = new ClientLookupForm();
-                ClientRepository clientRepository = new ClientRepository(Program.AppEnvironment);
-                clientLookupForm.Datasource = DataCache.Instance.GetClients();
+                ClientLookupForm clientLookupForm = new()
+                {
+                    Datasource = DataCache.Instance.GetClients(),
 
-                clientLookupForm.InitialSearchText = clientTextBox.Text;
+                    InitialSearchText = clientTextBox.Text
+                };
 
                 if (clientLookupForm.ShowDialog() == DialogResult.OK)
                 {

@@ -11,6 +11,7 @@ using LabBilling.Core.Models;
 using LabBilling.Core.DataAccess;
 using LabBilling.Library;
 using LabBilling.Logging;
+using LabBilling.Core.Services;
 
 namespace LabBilling.Forms
 {
@@ -20,18 +21,20 @@ namespace LabBilling.Forms
 
         public Chk chk = new Chk();
 
+        private DictionaryService dictionaryService;
+
         public PaymentAdjustmentEntryForm(ref Account account)
         {
             InitializeComponent();
 
             _account = account;
+            dictionaryService = new(Program.AppEnvironment);
         }
 
         private void PaymentAdjustmentEntryForm_Load(object sender, EventArgs e)
         {
             //get write off codes
-            WriteOffCodeRepository writeOffCodeRepository = new WriteOffCodeRepository(Program.AppEnvironment);
-            writeOffCodeComboBox.DataSource = writeOffCodeRepository.GetAll();
+            writeOffCodeComboBox.DataSource = dictionaryService.GetWriteOffCodes();
             writeOffCodeComboBox.DisplayMember = nameof(WriteOffCode.Description);
             writeOffCodeComboBox.ValueMember = nameof(WriteOffCode.Code);
             writeOffCodeComboBox.SelectedIndex = -1;

@@ -10,12 +10,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Log = LabBilling.Logging.Log;
+using LabBilling.Core.UnitOfWork;
 
 namespace LabBilling.Core.DataAccess
 {
     public sealed class GlobalBillingCdmRepository : RepositoryBase<GlobalBillingCdm>
     {
-        public GlobalBillingCdmRepository(IAppEnvironment appEnvironment) : base(appEnvironment)  { }
+        public GlobalBillingCdmRepository(IAppEnvironment appEnvironment, PetaPoco.IDatabase context) : base(appEnvironment, context) { }
 
         public GlobalBillingCdm GetCdm(string cdm)
         {
@@ -25,7 +26,7 @@ namespace LabBilling.Core.DataAccess
                 .Where($"{GetRealColumn(nameof(GlobalBillingCdm.Cdm))} = @0",
                     new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = cdm });
 
-            return dbConnection.SingleOrDefault<GlobalBillingCdm>(sql);
+            return Context.SingleOrDefault<GlobalBillingCdm>(sql);
         }
 
     }

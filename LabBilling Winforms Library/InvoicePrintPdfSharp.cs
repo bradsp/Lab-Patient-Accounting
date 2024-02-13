@@ -15,8 +15,9 @@ using PdfSharp.Pdf.IO;
 using TabAlignment = MigraDoc.DocumentObjectModel.TabAlignment;
 using BorderStyle = MigraDoc.DocumentObjectModel.BorderStyle;
 using Color = MigraDoc.DocumentObjectModel.Color;
+using LabBilling.Core.UnitOfWork;
 
-namespace LabBilling.Core.BusinessLogic
+namespace LabBilling.Core.Services
 {
     public class InvoicePrintPdfSharp
     {
@@ -31,13 +32,12 @@ namespace LabBilling.Core.BusinessLogic
         private Section section;
 
         private readonly string filePath;
-        private readonly InvoiceHistoryRepository invoiceHistoryRepository;
         private readonly AppEnvironment _appEnvironment;
 
         public InvoicePrintPdfSharp(AppEnvironment appEnvironment)
         {
             _appEnvironment = appEnvironment;
-            invoiceHistoryRepository = new(_appEnvironment);
+
             filePath = _appEnvironment.ApplicationParameters.InvoiceFileLocation;
             document = new Document();
             model = new InvoiceModel();
@@ -52,9 +52,10 @@ namespace LabBilling.Core.BusinessLogic
 
         public string PrintInvoice(string invoiceNo)
         {
+            using UnitOfWorkMain unitOfWork = new(_appEnvironment);
             InvoiceModel? invoiceModel = new();
 
-            InvoiceHistory invoiceHistory = invoiceHistoryRepository.GetByInvoice(invoiceNo);
+            InvoiceHistory invoiceHistory = unitOfWork.InvoiceHistoryRepository.GetByInvoice(invoiceNo);
 
             string xml = invoiceHistory.InvoiceData;
             xml = xml.Replace("&#x0;", "");

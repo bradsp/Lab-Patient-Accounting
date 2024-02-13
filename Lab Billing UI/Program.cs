@@ -11,7 +11,7 @@ namespace LabBilling
 {
     static class Program
     {
-        public static Emp LoggedInUser { get; set; }
+        public static UserAccount LoggedInUser { get; set; }
 
         public static AppEnvironment AppEnvironment { get; set; } = new AppEnvironment();
 

@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using LabBilling.Core.DataAccess;
 using LabBilling.Core.Models;
-using LabBilling.Core.BusinessLogic;
+using LabBilling.Core.Services;
 using LabBilling.Core;
 using System.IO;
 using PetaPoco;

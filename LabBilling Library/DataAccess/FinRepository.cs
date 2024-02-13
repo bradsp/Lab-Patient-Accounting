@@ -6,12 +6,13 @@ using Microsoft.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using LabBilling.Core.UnitOfWork;
 
 namespace LabBilling.Core.DataAccess
 {
     public sealed class FinRepository : RepositoryBase<Fin>
     {
-        public FinRepository(IAppEnvironment appEnvironment) : base(appEnvironment)
+        public FinRepository(IAppEnvironment appEnvironment, PetaPoco.IDatabase context) : base(appEnvironment, context)
         {
 
         }
@@ -23,12 +24,12 @@ namespace LabBilling.Core.DataAccess
                 .Where($"{GetRealColumn(nameof(Fin.FinCode))} <> @0", 
                     new SqlParameter() { SqlDbType = SqlDbType.VarChar, SqlValue = "CLIENT" });
 
-            return dbConnection.Fetch<Fin>(sql);
+            return Context.Fetch<Fin>(sql);
         }
 
         public Fin GetFin(string finCode)
         {
-            return dbConnection.SingleOrDefault<Fin>($"where {GetRealColumn(nameof(Fin.FinCode))} = @0", 
+            return Context.SingleOrDefault<Fin>($"where {GetRealColumn(nameof(Fin.FinCode))} = @0", 
                 new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = finCode });
         }
     }

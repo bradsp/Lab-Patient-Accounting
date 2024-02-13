@@ -7,12 +7,13 @@ using System.Linq;
 using Microsoft.Data.SqlClient;
 using System.Data;
 using System.Text.RegularExpressions;
+using LabBilling.Core.UnitOfWork;
 
 namespace LabBilling.Core.DataAccess
 {
     public sealed class InsRepository : RepositoryBase<Ins>
     {
-        public InsRepository(IAppEnvironment appEnvironment) : base(appEnvironment)
+        public InsRepository(IAppEnvironment appEnvironment, PetaPoco.IDatabase context) : base(appEnvironment, context)
         {
 
         }
@@ -21,7 +22,7 @@ namespace LabBilling.Core.DataAccess
         {
             Log.Instance.Debug($"Entering - account {account}");
 
-            var records = dbConnection.Fetch<Ins>("where account = @0 and deleted = 0 order by ins_a_b_c", 
+            var records = Context.Fetch<Ins>("where account = @0 and deleted = 0 order by ins_a_b_c", 
                 new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account });
 
             foreach(Ins ins in records)
@@ -53,7 +54,7 @@ namespace LabBilling.Core.DataAccess
 
                 if (ins.InsCode != null)
                 {
-                    ins.InsCompany = dbConnection.SingleOrDefault<InsCompany>("where code = @0",
+                    ins.InsCompany = Context.SingleOrDefault<InsCompany>("where code = @0",
                         new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = ins.InsCode });
                 }
                 if (ins.InsCompany == null)
@@ -83,14 +84,14 @@ namespace LabBilling.Core.DataAccess
                 throw new ArgumentNullException("coverage");
             }
 
-            var record = dbConnection.SingleOrDefault<Ins>("where account = @0 and ins_a_b_c = @1",
+            var record = Context.SingleOrDefault<Ins>("where account = @0 and ins_a_b_c = @1",
                 new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account },
                 new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = coverage.ToString() });
             if (record != null)
             {
                 if (record.InsCode != null)
                 {
-                    record.InsCompany = dbConnection.SingleOrDefault<InsCompany>("where code = @0",
+                    record.InsCompany = Context.SingleOrDefault<InsCompany>("where code = @0",
                         new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = record.InsCode });
                 }
                 if (record.InsCompany == null)

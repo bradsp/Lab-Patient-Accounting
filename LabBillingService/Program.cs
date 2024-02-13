@@ -1,5 +1,6 @@
 ﻿using System;
 using LabBilling.Core.DataAccess;
+using LabBilling.Core.UnitOfWork;
 using log4net.Config;
 using Topshelf;
 
@@ -29,7 +30,8 @@ namespace LabBillingService
                 AppEnvironment.ServicePassword = Properties.Settings.Default.Password;
                 AppEnvironment.ServiceUsername = Properties.Settings.Default.Username;
 
-                SystemParametersRepository systemParametersRepository = new SystemParametersRepository(AppEnvironment);
+                UnitOfWorkMain unitOfWork = new(AppEnvironment);
+                SystemParametersRepository systemParametersRepository = new SystemParametersRepository(AppEnvironment, unitOfWork);
 
                 AppEnvironment.ApplicationParameters = systemParametersRepository.LoadParameters();
 

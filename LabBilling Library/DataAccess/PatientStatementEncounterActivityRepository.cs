@@ -4,12 +4,13 @@ using PetaPoco;
 using System.Collections.Generic;
 using Microsoft.Data.SqlClient;
 using System;
+using LabBilling.Core.UnitOfWork;
 
 namespace LabBilling.Core.DataAccess
 {
     public sealed class PatientStatementEncounterActivityRepository : RepositoryBase<PatientStatementEncounterActivity>
     {
-        public PatientStatementEncounterActivityRepository(IAppEnvironment appEnvironment) : base(appEnvironment) { }
+        public PatientStatementEncounterActivityRepository(IAppEnvironment appEnvironment, PetaPoco.IDatabase context) : base(appEnvironment, context) { }
 
         public List<PatientStatementEncounterActivity> GetByBatch(string batch)
         {
@@ -24,8 +25,8 @@ namespace LabBilling.Core.DataAccess
                 new SqlParameter() { SqlDbType = System.Data.SqlDbType.VarChar, Value = batch });
 
 
-            var results = dbConnection.Fetch<PatientStatementEncounterActivity>(sql);
-            Log.Instance.Debug(dbConnection.LastSQL);
+            var results = Context.Fetch<PatientStatementEncounterActivity>(sql);
+            Log.Instance.Debug(Context.LastSQL);
             return results;
 
         }
@@ -39,8 +40,8 @@ namespace LabBilling.Core.DataAccess
             sql.Where($"{GetRealColumn(nameof(PatientStatementEncounterActivity.StatementNumber))} = @0",
                 new SqlParameter() { SqlDbType = System.Data.SqlDbType.Int, Value = statementNo });
 
-            var results = dbConnection.Fetch<PatientStatementEncounterActivity>(sql);
-            Log.Instance.Debug(dbConnection.LastSQL);
+            var results = Context.Fetch<PatientStatementEncounterActivity>(sql);
+            Log.Instance.Debug(Context.LastSQL);
             return results;
         }
     }

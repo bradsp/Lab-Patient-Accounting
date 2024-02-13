@@ -6,12 +6,13 @@ using LabBilling.Core.Models;
 using Microsoft.Data.SqlClient;
 using System.Data;
 using PetaPoco;
+using LabBilling.Core.UnitOfWork;
 
 namespace LabBilling.Core.DataAccess
 {
     public class CptAmaRepository : RepositoryBase<CptAma>
     {
-        public CptAmaRepository(IAppEnvironment environment) : base(environment)
+        public CptAmaRepository(IAppEnvironment appEnvironment, PetaPoco.IDatabase context) : base(appEnvironment, context)
         {
 
         }
@@ -24,7 +25,7 @@ namespace LabBilling.Core.DataAccess
             var sql = Sql.Builder
                 .Where($"{GetRealColumn(nameof(CptAma.Cpt))} = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = cpt });
             
-            return dbConnection.SingleOrDefault<CptAma>(sql);
+            return Context.SingleOrDefault<CptAma>(sql);
         }
     }
 }

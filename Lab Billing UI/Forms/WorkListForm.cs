@@ -9,15 +9,16 @@ using LabBilling.Core.Models;
 using LabBilling.Library;
 using System.Data;
 using LabBilling.Core;
-using LabBilling.Core.BusinessLogic;
+using LabBilling.Core.Services;
 using WinFormsLibrary;
 
 namespace LabBilling.Forms
 {
     public partial class WorkListForm : BaseForm
     {
+        private readonly AccountService accountService = new(Program.AppEnvironment);
+        private readonly WorklistService worklist = new(Program.AppEnvironment);
         private string _connectionString;
-        private AccountRepository accountRepository;
         private bool tasksRunning = false;
         private bool requestAbort = false;
         private BindingSource accountBindingSource = new BindingSource();
@@ -27,16 +28,13 @@ namespace LabBilling.Forms
         private const int _timerDelay = 650;
         private string selectedQueue = null;
         private TreeNode currentNode = null;
-        private Worklist worklist = null;
+
 
         public event EventHandler<string> AccountLaunched;
 
         private void WorkListForm_Load(object sender, EventArgs e)
         {
             accountGrid.DoubleBuffered(true);
-
-            worklist = new Worklist(Program.AppEnvironment);
-            accountRepository = new AccountRepository(Program.AppEnvironment);
 
             accountTable = new List<AccountSearch>().ToDataTable();
             accountTable.PrimaryKey = new DataColumn[] { accountTable.Columns[nameof(AccountSearch.Account)] };
@@ -72,7 +70,6 @@ namespace LabBilling.Forms
         {
             if (!string.IsNullOrEmpty(accountNo))
             {
-                //var acct = accounts.FirstOrDefault(x => x.Account == accountNo);
                 var acct = accountTable.Rows.Find(accountNo);
                 try
                 {
@@ -108,7 +105,7 @@ namespace LabBilling.Forms
                         acct[nameof(AccountSearch.Status)] = "ERROR";
                     }
 
-                    accountRepository.UpdateStatus(accountNo, "NEW");
+                    accountService.UpdateStatus(accountNo, "NEW");
                 }
             }
         }
@@ -118,12 +115,12 @@ namespace LabBilling.Forms
             Account account;
             account = await Task<Account>.Run(() =>
             {
-                return accountRepository.GetByAccount(accountNo);
+                return accountService.GetAccount(accountNo);
             });
             try
             {
 
-                if (!accountRepository.Validate(account))
+                if (!accountService.Validate(account))
                 {
                     return (false, account.AccountValidationStatus.ValidationText,
                         account.BillForm ?? "UNDEFINED");
@@ -274,15 +271,15 @@ namespace LabBilling.Forms
 
                 if (result.ReturnCode == DialogResult.OK)
                 {
-                    accountRepository.UpdateStatus(selectedAccount, "HOLD");
-                    accountRepository.AddNote(selectedAccount, result.Text);
+                    accountService.UpdateStatus(selectedAccount, "HOLD");
+                    accountService.AddNote(selectedAccount, result.Text);
                 }
             }
             else
             {
                 accts[nameof(AccountSearch.Status)] = "NEW";
-                accountRepository.UpdateStatus(selectedAccount, "NEW");
-                accountRepository.AddNote(selectedAccount, "Account removed from hold.");
+                accountService.UpdateStatus(selectedAccount, "NEW");
+                accountService.AddNote(selectedAccount, "Account removed from hold.");
             }
         }
 
@@ -353,14 +350,14 @@ namespace LabBilling.Forms
 
             var selectedAccount = accountGrid.SelectedRows[0].Cells[nameof(AccountSearch.Account)].Value.ToString();
             var accts = accountTable.Rows.Find(selectedAccount);
-            var account = await accountRepository.GetByAccountAsync(selectedAccount);
+            var account = await accountService.GetAccountAsync(selectedAccount);
 
             string newFinCode = InputDialogs.SelectFinancialCode(accts[nameof(AccountSearch.FinCode)].ToString());
             if (!string.IsNullOrEmpty(newFinCode))
             {
                 try
                 {
-                    await accountRepository.ChangeFinancialClassAsync(account, newFinCode);
+                    await accountService.ChangeFinancialClassAsync(account, newFinCode);
                     accts.Delete();
                     accountGrid.Refresh();
                 }
@@ -383,7 +380,7 @@ namespace LabBilling.Forms
             Log.Instance.Trace($"Entering");
             var selectedAccount = accountGrid.SelectedRows[0].Cells[nameof(AccountSearch.Account)].Value.ToString();
             var accts = accountTable.Rows.Find(selectedAccount);
-            var account = await accountRepository.GetByAccountAsync(selectedAccount);
+            var account = await accountService.GetAccountAsync(selectedAccount);
 
             ClientLookupForm clientLookupForm = new ClientLookupForm();
             clientLookupForm.Datasource = DataCache.Instance.GetClients();
@@ -394,7 +391,7 @@ namespace LabBilling.Forms
 
                 try
                 {
-                    if (await accountRepository.ChangeClientAsync(account, newClient))
+                    if (await accountService.ChangeClientAsync(account, newClient))
                     {
                         accts[nameof(AccountSearch.ClientMnem)] = newClient;
                         accountGrid.Refresh();
@@ -421,7 +418,7 @@ namespace LabBilling.Forms
 
             var selectedAccount = accountGrid.SelectedRows[0].Cells[nameof(AccountSearch.Account)].Value.ToString();
             var accts = accountTable.Rows.Find(selectedAccount);
-            var account = await accountRepository.GetByAccountAsync(selectedAccount);
+            var account = await accountService.GetAccountAsync(selectedAccount);
 
 
             var result = InputDialogs.SelectDateOfService((DateTime)account.TransactionDate);
@@ -430,7 +427,7 @@ namespace LabBilling.Forms
             {
                 if (result.newDate != DateTime.MinValue)
                 {
-                    await accountRepository.ChangeDateOfServiceAsync(account, result.newDate, result.reason);
+                    await accountService.ChangeDateOfServiceAsync(account, result.newDate, result.reason);
                     accts[nameof(AccountSearch.ServiceDate)] = account.TransactionDate;
                 }
                 else
@@ -572,11 +569,11 @@ namespace LabBilling.Forms
             {
                 var selectedAccount = accountGrid.SelectedRows[0].Cells[nameof(AccountSearch.Account)].Value.ToString();
                 var accts = accountTable.Rows.Find(selectedAccount);
-                var account = accountRepository.GetByAccount(selectedAccount);
+                var account = accountService.GetAccount(selectedAccount);
 
                 if (account.FinCode != "Y")
                 {
-                    accountRepository.ChangeFinancialClass(account, "Y");
+                    accountService.ChangeFinancialClass(account, "Y");
                     accts.Delete();
                     accountGrid.Refresh();
                 }
@@ -633,17 +630,17 @@ namespace LabBilling.Forms
         {
             var selectedAccount = accountGrid.SelectedRows[0].Cells[nameof(AccountSearch.Account)].Value.ToString();
             var accts = accountTable.Rows.Find(selectedAccount);
-            var account = accountRepository.GetByAccount(selectedAccount);
+            var account = accountService.GetAccount(selectedAccount);
 
             if (readyToBillToolStripMenuItem.Checked)
             {
                 if (!account.ReadyToBill)
                 {
-                    accountRepository.Validate(account);
+                    accountService.Validate(account);
                     if (account.AccountValidationStatus.ValidationText == "No validation errors.")
                     {
-                        accountRepository.UpdateStatus(selectedAccount, AccountStatus.ReadyToBill);
-                        accountRepository.AddNote(selectedAccount, "Marked ready to bill.");
+                        accountService.UpdateStatus(selectedAccount, AccountStatus.ReadyToBill);
+                        accountService.AddNote(selectedAccount, "Marked ready to bill.");
                         accts[nameof(AccountSearch.Status)] = AccountStatus.ReadyToBill;
                         _ = Task.Run(() => RunValidationAsync(selectedAccount));
                     }
@@ -654,8 +651,8 @@ namespace LabBilling.Forms
             {
                 if (account.ReadyToBill)
                 {
-                    accountRepository.UpdateStatus(selectedAccount, AccountStatus.New);
-                    accountRepository.AddNote(selectedAccount, "Ready to bill removed.");
+                    accountService.UpdateStatus(selectedAccount, AccountStatus.New);
+                    accountService.AddNote(selectedAccount, "Ready to bill removed.");
                     accts[nameof(AccountSearch.Status)] = AccountStatus.New;
                     accountGrid.Refresh();
                 }

@@ -4,12 +4,13 @@ using System.Data;
 using Microsoft.Data.SqlClient;
 using LabBilling.Core.Models;
 using LabBilling.Logging;
+using LabBilling.Core.UnitOfWork;
 
 namespace LabBilling.Core.DataAccess
 {
     public sealed class AnnouncementRepository : RepositoryBase<Announcement>
     {
-        public AnnouncementRepository(IAppEnvironment appEnvironment) : base(appEnvironment) { }
+        public AnnouncementRepository(IAppEnvironment appEnvironment, PetaPoco.IDatabase context) : base(appEnvironment, context) { }
 
         public List<Announcement> GetActive()
         {
@@ -21,7 +22,7 @@ namespace LabBilling.Core.DataAccess
                 .Where($"({GetRealColumn(nameof(Announcement.EndDate))} >= @0 or {GetRealColumn(nameof(Announcement.EndDate))} is null)",
                     new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = DateTime.Now });
 
-            var results = dbConnection.Fetch<Announcement>(sql);
+            var results = Context.Fetch<Announcement>(sql);
 
             return results;
         }

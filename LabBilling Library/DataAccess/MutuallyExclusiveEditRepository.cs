@@ -6,12 +6,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using LabBilling.Core.Models;
+using LabBilling.Core.UnitOfWork;
 
 namespace LabBilling.Core.DataAccess
 {
     public sealed class MutuallyExclusiveEditRepository : RepositoryBase<MutuallyExclusiveEdit>
     {
-        public MutuallyExclusiveEditRepository(IAppEnvironment appEnvironment) : base(appEnvironment)
+        public MutuallyExclusiveEditRepository(IAppEnvironment appEnvironment, PetaPoco.IDatabase context) : base(appEnvironment, context)
         {
 
         }
@@ -20,7 +21,7 @@ namespace LabBilling.Core.DataAccess
         {
             string cpt1RealName = this.GetRealColumn(typeof(MutuallyExclusiveEdit), nameof(MutuallyExclusiveEdit.Cpt1));
             string cpt2RealName = this.GetRealColumn(typeof(MutuallyExclusiveEdit), nameof(MutuallyExclusiveEdit.Cpt1));
-            return dbConnection.SingleOrDefault<MutuallyExclusiveEdit>($"where {cpt1RealName} = @0 and {cpt2RealName} = @1", 
+            return Context.SingleOrDefault<MutuallyExclusiveEdit>($"where {cpt1RealName} = @0 and {cpt2RealName} = @1", 
                 new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = cpt1 }, 
                 new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = cpt2 });
         }

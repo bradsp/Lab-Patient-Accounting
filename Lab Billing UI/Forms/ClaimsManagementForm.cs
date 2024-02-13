@@ -4,7 +4,7 @@ using System.Data;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using LabBilling.Core.BusinessLogic;
+using LabBilling.Core.Services;
 using LabBilling.Core.Models;
 using LabBilling.Logging;
 using LabBilling.Core.DataAccess;
@@ -17,19 +17,20 @@ namespace LabBilling.Forms
 
         private List<BillingBatch> billingBatches = new List<BillingBatch>();
         private List<BillingActivity> billingActivities = new List<BillingActivity>();
-        private BillingBatchRepository batchRepository;
-        private BillingActivityRepository billingActivityRepository;
+        private AccountService accountService;
+        private ClaimGeneratorService claimGeneratorService;
         private BindingSource billingBatchBindingSource;
         private BindingSource billingActivitiesBindingSource;
         private DataTable billingBatchTable;
         private DataTable billingActivitiesTable;
         public event EventHandler<string> AccountLaunched;
+
         public ClaimsManagementForm()
         {
             InitializeComponent();
 
-            batchRepository = new BillingBatchRepository(Program.AppEnvironment);
-            billingActivityRepository = new BillingActivityRepository(Program.AppEnvironment);
+            accountService = new(Program.AppEnvironment);
+            claimGeneratorService = new(Program.AppEnvironment);
         }
 
         private void ClaimsManagementForm_Load(object sender, EventArgs e)
@@ -55,7 +56,7 @@ namespace LabBilling.Forms
 
         private void LoadData()
         {
-            billingBatches = batchRepository.GetAll();
+            billingBatches = claimGeneratorService.GetBillingBatches();
             billingBatchTable = billingBatches.ToDataTable();
             billingBatchTable.PrimaryKey = new DataColumn[] { billingBatchTable.Columns[nameof(BillingBatch.Batch)] };
             billingBatchTable.DefaultView.Sort = $"{nameof(BillingBatch.Batch)} desc";
@@ -78,14 +79,15 @@ namespace LabBilling.Forms
         {
             cancellationToken = new CancellationTokenSource();
 
-            claimProgress = new ProgressBar();
-            claimProgress.Style = ProgressBarStyle.Continuous;
-            claimProgress.Minimum = 0;
+            claimProgress = new ProgressBar
+            {
+                Style = ProgressBarStyle.Continuous,
+                Minimum = 0
+            };
 
             claimProgressStatusLabel.Text = "Processing...";
 
-            ClaimGenerator claims = new ClaimGenerator(Program.AppEnvironment);
-            Progress<ProgressReportModel> progress = new Progress<ProgressReportModel>();
+            Progress<ProgressReportModel> progress = new();
             progress.ProgressChanged += ReportProgress;
             cancelButton.Enabled = true;
             try
@@ -95,14 +97,14 @@ namespace LabBilling.Forms
                 {
                     claimsProcessed = await Task.Run(() =>
                     {
-                        return claims.CompileBillingBatch(Core.ClaimType.Institutional, progress, cancellationToken.Token);
+                        return claimGeneratorService.CompileBillingBatch(ClaimType.Institutional, progress, cancellationToken.Token);
                     });
                 }
                 else if (billingType == BillingType.Professional)
                 {
                     claimsProcessed = await Task.Run(() =>
                     {
-                        return claims.CompileBillingBatch(Core.ClaimType.Professional, progress, cancellationToken.Token);
+                        return claimGeneratorService.CompileBillingBatch(ClaimType.Professional, progress, cancellationToken.Token);
                     });
                 }
 
@@ -148,7 +150,7 @@ namespace LabBilling.Forms
             {
                 var batch = claimBatchDataGrid.SelectedRows[0].Cells[nameof(BillingBatch.Batch)].Value.ToString();
                 
-                billingActivitiesTable = billingActivityRepository.GetBatch(batch).ToDataTable();
+                billingActivitiesTable = claimGeneratorService.GetBillingBatchActivity(batch).ToDataTable();
                 billingActivitiesBindingSource.DataSource = billingActivitiesTable;
 
                 claimBatchDetailDataGrid.DataSource = billingActivitiesBindingSource;
@@ -185,7 +187,7 @@ namespace LabBilling.Forms
 
             double batchNo = Convert.ToDouble(selectedBatch);
             Cursor.Current = Cursors.WaitCursor;
-            if(batchRepository.ClearBatch(batchNo))
+            if(claimGeneratorService.ClearBatch(batchNo))
             {
                 billingBatchTable.Rows.Find(batchNo).Delete();
             }
@@ -197,7 +199,7 @@ namespace LabBilling.Forms
             var selectedBatch = claimBatchDataGrid.SelectedRows[0].Cells[nameof(BillingBatch.Batch)].Value;
             double batchNo = Convert.ToDouble(selectedBatch);
 
-            ClaimGenerator claims = new ClaimGenerator(Program.AppEnvironment);
+            ClaimGeneratorService claims = new ClaimGeneratorService(Program.AppEnvironment);
 
             Cursor.Current = Cursors.WaitCursor;
 

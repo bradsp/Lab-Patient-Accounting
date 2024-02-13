@@ -3,6 +3,7 @@ using System.Windows.Forms;
 using LabBilling.Core.Models;
 using LabBilling.Core.DataAccess;
 using LabBilling.Logging;
+using LabBilling.Core.Services;
 
 namespace LabBilling.Forms
 {
@@ -11,7 +12,8 @@ namespace LabBilling.Forms
 
         public string SelectedRecord { get; set; }
         private BadDebt badDebt = new BadDebt();
-        private readonly BadDebtRepository badDebtRepository = new BadDebtRepository(Program.AppEnvironment);
+        private AccountService accountService;
+        private PatientBillingService patientBillingService;
 
         public PatientCollectionsEditForm(string selectedGuid)
         {
@@ -19,6 +21,9 @@ namespace LabBilling.Forms
             InitializeComponent();
 
             SelectedRecord = selectedGuid;
+
+            accountService = new(Program.AppEnvironment);
+            patientBillingService = new(Program.AppEnvironment);
         }
         
         private void BadDebtEditForm_Load(object sender, EventArgs e)
@@ -31,7 +36,7 @@ namespace LabBilling.Forms
             }
             else
             {
-                badDebt = badDebtRepository.GetRecord(SelectedRecord);
+                badDebt = patientBillingService.GetCollectionRecord(SelectedRecord);
                 LoadData();
             }
 
@@ -95,7 +100,7 @@ namespace LabBilling.Forms
             Log.Instance.Trace($"Entering");
             ReadData();
 
-            if(badDebtRepository.Update(badDebt))
+            if(patientBillingService.SaveCollectionRecord(badDebt))
             {
                 this.DialogResult = DialogResult.OK;
             }

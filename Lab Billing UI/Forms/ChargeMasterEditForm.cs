@@ -1,16 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using LabBilling.Core.Models;
-using LabBilling.Core.DataAccess;
-//using System.Web.UI.WebControls;
-//using System.Windows.Forms.DataVisualization.Charting;
+using LabBilling.Core.Services;
 
 namespace LabBilling.Forms
 {
@@ -18,13 +11,13 @@ namespace LabBilling.Forms
     {
 
         private bool addMode = false;
-        private CdmRepository cdmRepository;
+        private DictionaryService dictionaryService;
 
         public ChargeMasterEditForm()
         {
             InitializeComponent();
 
-            cdmRepository = new CdmRepository(Program.AppEnvironment);
+            dictionaryService = new(Program.AppEnvironment);
         }
 
         public string SelectedCdm { get; set; }
@@ -39,7 +32,7 @@ namespace LabBilling.Forms
         {
             if (SelectedCdm != null)
             {
-                cdm = cdmRepository.GetCdm(SelectedCdm, true);
+                cdm = dictionaryService.GetCdm(SelectedCdm, true);
                 if(cdm == null)
                 {
                     if(MessageBox.Show($"CDM {SelectedCdm} is not found. Do you want to add?", "Not Found", 
@@ -236,7 +229,7 @@ namespace LabBilling.Forms
             ReadFeeSchedule(cdm.CdmFeeSchedule4, feeSched4Grid, "4");
             ReadFeeSchedule(cdm.CdmFeeSchedule5, feeSched5Grid, "5");
 
-            if(cdmRepository.Save(cdm))
+            if(dictionaryService.SaveCdm(cdm))
             {
                 DialogResult = DialogResult.OK;
             }
@@ -288,7 +281,7 @@ namespace LabBilling.Forms
         {
             if (addMode)
             {
-                var record = cdmRepository.GetCdm(chargeIdTextBox.Text);
+                var record = dictionaryService.GetCdm(chargeIdTextBox.Text);
                 if (record != null)
                 {
                     if (MessageBox.Show($"Cdm {chargeIdTextBox.Text} exists. Load CDM for editing?", "CDM Exists",

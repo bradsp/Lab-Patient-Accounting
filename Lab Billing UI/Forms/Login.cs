@@ -5,11 +5,14 @@ using LabBilling.Core.DataAccess;
 using System.Runtime.InteropServices;
 using LabBilling.Logging;
 using LabBilling.Forms;
+using LabBilling.Core.Services;
 
 namespace LabBilling
 {
     public partial class Login : BaseForm
     {
+        private SystemService systemService;
+
         public Login(bool test = false)
         {
             Log.Instance.Trace($"Entering");
@@ -19,15 +22,14 @@ namespace LabBilling
 
         public bool testEnvironment = false;
         public bool IsLoggedIn { get; set; }
-        public Emp LoggedInUser { get; set; }
-        private EmpRepository db;
+        public UserAccount LoggedInUser { get; set; }
         private string systemUser;
         private string systemDomain;
         private bool skipImpersonateComboSelectionChange = false;
 
         //declare active directory logon method
         [DllImport("advapi32.dll")]
-        public static extern Boolean LogonUser(string name, string domain, string pass, int logType, int logpv, ref IntPtr pht);
+        public static extern bool LogonUser(string name, string domain, string pass, int logType, int logpv, ref IntPtr pht);
 
         private void LoginButton_Click(object sender, EventArgs e)
         {
@@ -53,14 +55,13 @@ namespace LabBilling
 
         public bool ServerLogin()
         {
-            db = new EmpRepository(Program.AppEnvironment);
 
-            bool loginSuccess = db.LoginCheck(username.Text, Helper.Encrypt(password.Text.Trim()));
+            bool loginSuccess = systemService.LoginCheck(username.Text, Helper.Encrypt(password.Text.Trim()));
 
             if (loginSuccess)
             {
                 IsLoggedIn = true;
-                LoggedInUser = db.GetByUsername(username.Text);
+                LoggedInUser = systemService.GetUser(username.Text);
                 Program.LoggedInUser = LoggedInUser;
                 Program.LoggedInUser.Password = "";
                 Log.Instance.Info(string.Format("Login Success - {0}", LoggedInUser.UserName));
@@ -104,9 +105,9 @@ namespace LabBilling
 
             Program.AppEnvironment.IntegratedAuthentication = Properties.Settings.Default.IntegratedSecurity;
 
+            systemService = new(Program.AppEnvironment);
             if (Properties.Settings.Default.IntegratedSecurity)
-            {
-                db = new EmpRepository(Program.AppEnvironment);
+            {                
 
                 string domainUser = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
                 string[] paramsLogin = domainUser.Split('\\');
@@ -126,15 +127,14 @@ namespace LabBilling
                     {
                         impersonateUserLabel.Visible = true;
                         impersonateUserComboBox.Visible = true; 
-                        db = new EmpRepository(Program.AppEnvironment);
 
                         //load impersonateUserComboBox
-                        var emps = db.GetActiveUsers();
+                        var emps = systemService.GetActiveUsers();
 
                         skipImpersonateComboSelectionChange = true;
                         impersonateUserComboBox.DataSource = emps;
-                        impersonateUserComboBox.DisplayMember = nameof(Emp.FullName);
-                        impersonateUserComboBox.ValueMember = nameof(Emp.UserName);
+                        impersonateUserComboBox.DisplayMember = nameof(UserAccount.FullName);
+                        impersonateUserComboBox.ValueMember = nameof(UserAccount.UserName);
 
                         impersonateUserComboBox.SelectedValue = LoggedInUser.UserName;
 
@@ -162,7 +162,7 @@ namespace LabBilling
         {
 
             IsLoggedIn = true;
-            LoggedInUser = db.GetByUsername(username.Text);
+            LoggedInUser = systemService.GetUser(username.Text);
             Program.LoggedInUser = LoggedInUser;
             Program.LoggedInUser.Password = "";
             if (LoggedInUser == null)
@@ -198,7 +198,7 @@ namespace LabBilling
                 if(impersonatedUsername != LoggedInUser.UserName)
                 {
                     //get impersonated user profile
-                    var impersonatedUser = db.GetByUsername(impersonatedUsername);
+                    var impersonatedUser = systemService.GetUser(impersonatedUsername);
                     if(impersonatedUser != null)
                     {
                         //copy impersonated user permissions to loggedinuser
@@ -220,9 +220,6 @@ namespace LabBilling
 
         private void setupImage_Click(object sender, EventArgs e)
         {
-            //DatabaseSettingsForm dbForm = new DatabaseSettingsForm();
-
-            //dbForm.ShowDialog();
         }
 
     }

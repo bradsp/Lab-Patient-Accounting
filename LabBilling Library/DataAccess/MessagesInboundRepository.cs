@@ -4,12 +4,13 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Data.SqlClient;
 using System.Data;
+using LabBilling.Core.UnitOfWork;
 
 namespace LabBilling.Core.DataAccess
 {
     public sealed class MessagesInboundRepository : RepositoryBase<MessageInbound>
     {
-        public MessagesInboundRepository(IAppEnvironment appEnvironment) : base(appEnvironment)
+        public MessagesInboundRepository(IAppEnvironment appEnvironment, PetaPoco.IDatabase context) : base(appEnvironment, context)
         {
 
         }
@@ -23,7 +24,7 @@ namespace LabBilling.Core.DataAccess
             command.Where($"{GetRealColumn(nameof(MessageInbound.ProcessFlag))} = 'N'");
             command.OrderBy($"{GetRealColumn(nameof(MessageInbound.MessageDate))}");
 
-            var records = dbConnection.Fetch<MessageInbound>(command);
+            var records = Context.Fetch<MessageInbound>(command);
 
             return records;
         }
@@ -32,7 +33,7 @@ namespace LabBilling.Core.DataAccess
         {
             Log.Instance.Trace($"Entering {id}");
 
-            return dbConnection.SingleOrDefault<MessageInbound>(id);
+            return Context.SingleOrDefault<MessageInbound>(id);
 
         }
 
@@ -46,7 +47,7 @@ namespace LabBilling.Core.DataAccess
                 new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = fromDate.ToString("yyyy-MM-dd HH:mm:ss") },
                 new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = throughDate.ToString("yyyy-MM-dd HH:mm:ss") });
 
-            var record = dbConnection.Fetch<MessageInbound>(cmd);
+            var record = Context.Fetch<MessageInbound>(cmd);
 
             return (record);
         }
@@ -55,7 +56,7 @@ namespace LabBilling.Core.DataAccess
         {
             Log.Instance.Trace("Entering");
 
-            var record = dbConnection.Fetch<MessageInbound>("where msgType like @0 and msgDate between @1 and @2 order by msgDate DESC",
+            var record = Context.Fetch<MessageInbound>("where msgType like @0 and msgDate between @1 and @2 order by msgDate DESC",
                 new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = type + "%" }, 
                 new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = fromDate.ToString("yyyy-MM-dd HH:mm:ss") }, 
                 new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = throughDate.ToString("yyyy-MM-dd HH:mm:ss") });
@@ -71,7 +72,7 @@ namespace LabBilling.Core.DataAccess
         /// <returns></returns>
         public int ReprocessDFTMessage(int msgID)
         {
-            return dbConnection.ExecuteNonQueryProc("usp_cerner_chrg_reprocess", new { @msgID = msgID });
+            return Context.ExecuteNonQueryProc("usp_cerner_chrg_reprocess", new { @msgID = msgID });
         }
     }
 }

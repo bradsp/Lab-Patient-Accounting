@@ -4,21 +4,22 @@ using System.Windows.Forms;
 using LabBilling.Core.DataAccess;
 using LabBilling.Core.Models;
 using Utilities;
-using LabBilling.Core.BusinessLogic;
+using LabBilling.Core.Services;
 using WinFormsLibrary;
 
 namespace LabBilling.Forms
 {
     public partial class InterfaceMonitor : BaseForm
     {
+        private HL7ProcessorService processorService;
+
         public InterfaceMonitor()
         {
             InitializeComponent();
-            msgs = new MessagesInboundRepository(Program.AppEnvironment);
+            processorService = new(Program.AppEnvironment);
         }
 
-        private readonly MessagesInboundRepository msgs;
-        private BindingSource bindingSource = new BindingSource();
+        private BindingSource bindingSource = new();
         private DataTable messagesTable;
 
         private void InterfaceMonitor_Load(object sender, EventArgs e)
@@ -26,7 +27,7 @@ namespace LabBilling.Forms
             FromDate.Value = DateTimeHelper.Yesterday();
             Cursor.Current = Cursors.WaitCursor;
 
-            messagesTable = msgs.GetByDateRange(FromDate.Value, ThruDate.Value).ToDataTable();
+            messagesTable = processorService.GetMessages(FromDate.Value, ThruDate.Value).ToDataTable();
             messagesTable.PrimaryKey = new DataColumn[] { messagesTable.Columns[nameof(MessageInbound.SystemMsgId)] };
             bindingSource.DataSource = messagesTable;
 
@@ -53,7 +54,7 @@ namespace LabBilling.Forms
             MessagesGrid.AutoResizeColumns();
 
             processFlagFilterCombo.Items.Add("All");
-            foreach(var item in Enum.GetValues(typeof(HL7Processor.Status)))
+            foreach(var item in Enum.GetValues(typeof(HL7ProcessorService.Status)))
             {
                 processFlagFilterCombo.Items.Add(item);
             }
@@ -112,7 +113,7 @@ namespace LabBilling.Forms
 
                 if (okToProcess)
                 {
-                    HL7Processor hL7Processor = new HL7Processor(Program.AppEnvironment);
+                    HL7ProcessorService hL7Processor = new HL7ProcessorService(Program.AppEnvironment);
                     hL7Processor.ProcessMessage(msgID);
 
                     var row = messagesTable.Rows.Find(msgID);
@@ -203,7 +204,7 @@ namespace LabBilling.Forms
                         newFilter += " and ";
                     }
 
-                    newFilter += $"{nameof(MessageInbound.ProcessFlag)} = '{HL7Processor.StatusToString(processFlagFilterCombo.SelectedItem.ToString())}'";
+                    newFilter += $"{nameof(MessageInbound.ProcessFlag)} = '{HL7ProcessorService.StatusToString(processFlagFilterCombo.SelectedItem.ToString())}'";
 
                     messagesTable.DefaultView.RowFilter = newFilter;
                 }
@@ -228,7 +229,7 @@ namespace LabBilling.Forms
         {
             Cursor.Current = Cursors.WaitCursor;
 
-            messagesTable = msgs.GetByDateRange(FromDate.Value, ThruDate.Value).ToDataTable();
+            messagesTable = processorService.GetMessages(FromDate.Value, ThruDate.Value).ToDataTable();
             messagesTable.PrimaryKey = new DataColumn[] { messagesTable.Columns[nameof(MessageInbound.SystemMsgId)] };
 
             bindingSource.DataSource = messagesTable;
@@ -263,9 +264,7 @@ namespace LabBilling.Forms
                 string msgType = MessagesGrid.SelectedRows[0].Cells[nameof(MessageInbound.MessageType)].Value.ToString();
                 string processFlag = MessagesGrid.SelectedRows[0].Cells[nameof(MessageInbound.ProcessFlag)].Value.ToString();
 
-                HL7Processor hl7 = new HL7Processor(Program.AppEnvironment);
-
-                hl7.SetMessageDoNotProcess(msgID, $"Set to do not process by {Program.LoggedInUser.FullName}");
+                processorService.SetMessageDoNotProcess(msgID, $"Set to do not process by {Program.LoggedInUser.FullName}");
 
                 var row = messagesTable.Rows.Find(msgID);
                 row[nameof(MessageInbound.ProcessFlag)] = "DNP";

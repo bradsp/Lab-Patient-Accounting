@@ -5,12 +5,13 @@ using System.Collections.Generic;
 using Microsoft.Data.SqlClient;
 using System.Data;
 using System.Linq;
+using LabBilling.Core.UnitOfWork;
 
 namespace LabBilling.Core.DataAccess
 {
     public sealed class DictDxRepository : RepositoryBase<DictDx>
     {
-        public DictDxRepository(IAppEnvironment appEnvironment) : base(appEnvironment)
+        public DictDxRepository(IAppEnvironment appEnvironment, PetaPoco.IDatabase context) : base(appEnvironment, context)
         {
 
         }
@@ -28,7 +29,7 @@ namespace LabBilling.Core.DataAccess
         {
             Log.Instance.Trace($"Entering");
 
-            var record = dbConnection.SingleOrDefault<DictDx>($"where {GetRealColumn(nameof(DictDx.DxCode))} = @0 and {GetRealColumn(nameof(DictDx.AmaYear))} = @1", 
+            var record = Context.SingleOrDefault<DictDx>($"where {GetRealColumn(nameof(DictDx.DxCode))} = @0 and {GetRealColumn(nameof(DictDx.AmaYear))} = @1", 
                 new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = dxCode },
                 new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = AMA_year });
 
@@ -44,7 +45,7 @@ namespace LabBilling.Core.DataAccess
         {
             Log.Instance.Trace("Entering");
 
-            var records = dbConnection.Exists<DictDx>($"where {GetRealColumn(nameof(DictDx.AmaYear))} = @0",
+            var records = Context.Exists<DictDx>($"where {GetRealColumn(nameof(DictDx.AmaYear))} = @0",
                 new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = year });
 
             return records;
@@ -66,8 +67,8 @@ namespace LabBilling.Core.DataAccess
                 .Append($"OR {GetRealColumn(nameof(DictDx.Description))} like @0)", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = "%" + searchText + "%" })
                 .Append($"AND {GetRealColumn(nameof(DictDx.AmaYear))} = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = FunctionRepository.GetAMAYear(transDate) });
 
-            List<DictDx> records = dbConnection.Fetch<DictDx>(sql);
-            Log.Instance.Debug(dbConnection.LastSQL);
+            List<DictDx> records = Context.Fetch<DictDx>(sql);
+            Log.Instance.Debug(Context.LastSQL);
             return records;
         }
     }

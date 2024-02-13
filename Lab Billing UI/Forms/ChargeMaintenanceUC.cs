@@ -1,14 +1,13 @@
 ﻿using LabBilling.Core;
-using LabBilling.Core.DataAccess;
 using LabBilling.Core.Models;
+using LabBilling.Core.Services;
 using LabBilling.ViewModel;
-using Subro.Controls;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
-using Utilities;
 using WinFormsLibrary;
 
 namespace LabBilling.Forms
@@ -27,16 +26,14 @@ namespace LabBilling.Forms
         }
 
         private DataTable chargesTable;
-        private AccountRepository accountRepository;
-        private ChrgRepository chrgRepository;
-        private ChrgDetailRepository chrgDetailRepository;
         private bool _allowChargeEntry;
         private Subro.Controls.DataGridViewGrouper grouper;
+        private AccountService accountService;
+        private DictionaryService dictionaryService;
 
         public Account CurrentAccount { get; set; }
         public event EventHandler ChargesUpdated;
         public event EventHandler<AppErrorEventArgs> OnError;
-       
 
         public bool AllowChargeEntry 
         { 
@@ -62,9 +59,8 @@ namespace LabBilling.Forms
             if (this.DesignMode)
                 return;
 
-            accountRepository = new AccountRepository(Program.AppEnvironment);
-            chrgRepository = new ChrgRepository(Program.AppEnvironment);
-            chrgDetailRepository = new ChrgDetailRepository(Program.AppEnvironment);
+            accountService = new(Program.AppEnvironment);
+            dictionaryService = new(Program.AppEnvironment);
 
             //build context menu
             foreach (var item in Dictionaries.cptModifiers)
@@ -154,7 +150,6 @@ namespace LabBilling.Forms
             TotalChargesTextBox.Text = CurrentAccount.TotalCharges.ToString("c");
 
             ChargesDataGrid.DataSource = chargesTable;
-            //var grouper = new Subro.Controls.DataGridViewGrouper(ChargesDataGrid);
             grouper.SetGroupOn(nameof(Charge.ChrgId));
 
 
@@ -229,7 +224,7 @@ namespace LabBilling.Forms
                 DataGridViewRow row = ChargesDataGrid.SelectedRows[0];
                 var uri = Convert.ToInt32(row.Cells[nameof(ChrgDetail.uri)].Value.ToString());
 
-                chrgDetailRepository.RemoveModifier(uri);
+                accountService.RemoveChargeModifier(uri);
                 ChargesUpdated?.Invoke(this, EventArgs.Empty);
             }
         }
@@ -245,7 +240,7 @@ namespace LabBilling.Forms
                 DataGridViewRow row = ChargesDataGrid.SelectedRows[0];
                 var uri = Convert.ToInt32(row.Cells[nameof(Charge.uri)].Value.ToString());
 
-                chrgDetailRepository.AddModifier(uri, item.Text);
+                accountService.AddChargeModifier(uri, item.Text);
                 ChargesUpdated?.Invoke(this, EventArgs.Empty);
             }
         }
@@ -257,7 +252,7 @@ namespace LabBilling.Forms
             {
 
                 DataGridViewRow row = ChargesDataGrid.SelectedRows[0];
-                var chrg = chrgRepository.GetById(Convert.ToInt32(row.Cells[nameof(Chrg.ChrgId)].Value.ToString()));
+                var chrg = CurrentAccount.Charges.Where(c => c.ChrgId == Convert.ToInt32(row.Cells[nameof(Chrg.ChrgId)].Value.ToString())).First();
 
                 DisplayPOCOForm<Chrg> frm = new(chrg)
                 {
@@ -319,7 +314,7 @@ namespace LabBilling.Forms
 
                 if (prompt.ReturnCode == DialogResult.OK)
                 {
-                    chrgRepository.CreditCharge(Convert.ToInt32(row.Cells[nameof(Chrg.ChrgId)].Value.ToString()), prompt.Text);
+                    accountService.CreditCharge(Convert.ToInt32(row.Cells[nameof(Chrg.ChrgId)].Value.ToString()), prompt.Text);
                     ChargesUpdated?.Invoke(this, EventArgs.Empty);
                 }
             }
@@ -379,7 +374,7 @@ namespace LabBilling.Forms
                         ErrorMessage = $"Changing credited flag on {chrgId} from {currentFlag} to {!currentFlag}"
                     });
 
-                    chrgRepository.SetCredited(chrgId, !currentFlag);
+                    accountService.SetChargeCreditFlag(chrgId, !currentFlag);
                 }
                 ChargesUpdated?.Invoke(this, EventArgs.Empty);
             }
@@ -407,7 +402,7 @@ namespace LabBilling.Forms
                             ErrorLevel = AppErrorEventArgs.ErrorLevelType.Debug,
                             ErrorMessage = $"Moving charge {chrgId} from {CurrentAccount.AccountNo} to {destAccount}"
                         });
-                        accountRepository.MoveCharge(CurrentAccount.AccountNo, destAccount, chrgId);
+                        accountService.MoveCharge(CurrentAccount.AccountNo, destAccount, chrgId);
                     }
                     ChargesUpdated?.Invoke(this, EventArgs.Empty);
                 }

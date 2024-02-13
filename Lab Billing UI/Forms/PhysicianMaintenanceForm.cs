@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows.Forms;
 using LabBilling.Core.DataAccess;
 using LabBilling.Core.Models;
+using LabBilling.Core.Services;
 using LabBilling.Logging;
 using WinFormsLibrary;
 
@@ -17,14 +18,15 @@ namespace LabBilling.Forms
             InitializeComponent();
         }
 
-        private readonly PhyRepository phydb = new PhyRepository(Program.AppEnvironment);
-        private List<Phy> physicians = new List<Phy>();
-        private BindingList<Phy> bindingList = new BindingList<Phy>();
-        private BindingSource bindingSource = new BindingSource();
+        private List<Phy> physicians = new();
+        private readonly BindingList<Phy> bindingList = new BindingList<Phy>();
+        private readonly BindingSource bindingSource = new BindingSource();
+
+        private readonly DictionaryService dictionaryService = new(Program.AppEnvironment);
 
         private void PhysicianMaintenanceForm_Load(object sender, EventArgs e)
         {
-            Log.Instance.Trace("Entering");
+            Log.Instance.Trace("Entering");            
         }
 
         private void LoadProviderGrid()
@@ -60,13 +62,13 @@ namespace LabBilling.Forms
             {
                 try
                 {
-                    var existing = phydb.GetByNPI(editForm.PhyModel.NpiId);
+                    var existing = dictionaryService.GetProvider(editForm.PhyModel.NpiId);
                     if (existing != null)
                     {
                         if(MessageBox.Show("Provider already exists. Save anyway?", "Existing Provider", MessageBoxButtons.YesNo, 
                             MessageBoxIcon.Question) == DialogResult.Yes)
                         {
-                            phydb.Save(editForm.PhyModel);
+                            dictionaryService.SaveProvider(editForm.PhyModel);
                         }
                         else
                         {
@@ -74,7 +76,7 @@ namespace LabBilling.Forms
                         }
                     }
 
-                    phydb.Save(editForm.PhyModel);
+                    dictionaryService.SaveProvider(editForm.PhyModel);
                 }
                 catch(Exception ex)
                 {
@@ -95,7 +97,7 @@ namespace LabBilling.Forms
                 return;
             }
 
-            physicians = phydb.GetByName(searchText.Text, "").ToList();
+            physicians = dictionaryService.SearchProviderByName(searchText.Text, "").ToList();
             bindingList.AddRange(physicians);
             PhysicianDGV.DataSource = bindingList;
             LoadProviderGrid();
@@ -104,7 +106,7 @@ namespace LabBilling.Forms
         private void PhysicianDGV_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
             PhysicianMaintenanceEditForm editForm = new PhysicianMaintenanceEditForm();
-            var phy = phydb.GetByNPI(PhysicianDGV.Rows[e.RowIndex].Cells[nameof(Phy.NpiId)].Value.ToString());
+            var phy = dictionaryService.GetProvider(PhysicianDGV.Rows[e.RowIndex].Cells[nameof(Phy.NpiId)].Value.ToString());
 
             editForm.PhyModel = phy;
 
@@ -112,7 +114,7 @@ namespace LabBilling.Forms
             {
                 try
                 {
-                    phydb.Save(editForm.PhyModel);
+                    dictionaryService.SaveProvider(editForm.PhyModel);
                     buttonSearch_Click(sender, e);
                 }
                 catch(Exception ex)

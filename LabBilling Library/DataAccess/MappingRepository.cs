@@ -4,12 +4,13 @@ using LabBilling.Logging;
 using LabBilling.Core.Models;
 using Microsoft.Data.SqlClient;
 using System.Data;
+using LabBilling.Core.UnitOfWork;
 
 namespace LabBilling.Core.DataAccess
 {
     public sealed class MappingRepository : RepositoryBase<Mapping>
     {
-        public MappingRepository(IAppEnvironment appEnvironment) : base(appEnvironment)
+        public MappingRepository(IAppEnvironment appEnvironment, PetaPoco.IDatabase context) : base(appEnvironment, context)
         {
                 
         }
@@ -21,7 +22,7 @@ namespace LabBilling.Core.DataAccess
             string sql = null;
             sql = $"select DISTINCT {GetRealColumn(nameof(Mapping.SystemType))} from {_tableName}";
 
-            var queryResult = dbConnection.Fetch<string>(sql);
+            var queryResult = Context.Fetch<string>(sql);
 
             return queryResult;
         }
@@ -33,7 +34,7 @@ namespace LabBilling.Core.DataAccess
             string sql = null;
             sql = $"select DISTINCT {GetRealColumn(nameof(Mapping.InterfaceName))} from {_tableName}";
 
-            var queryResult = dbConnection.Fetch<string>(sql);
+            var queryResult = Context.Fetch<string>(sql);
 
             return queryResult;
 
@@ -49,7 +50,7 @@ namespace LabBilling.Core.DataAccess
                 .Where($"{GetRealColumn(nameof(Mapping.InterfaceName))} = @0", 
                     new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = sendingSystem });
 
-            var records = dbConnection.Fetch<Mapping>(sql);
+            var records = Context.Fetch<Mapping>(sql);
 
             return records;
         }
@@ -64,7 +65,7 @@ namespace LabBilling.Core.DataAccess
                 .Where($"{GetRealColumn(nameof(Mapping.SystemKey))} = @0", 
                     new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = sendingValue });
 
-            var records = dbConnection.Fetch<Mapping>(sql);
+            var records = Context.Fetch<Mapping>(sql);
 
             return records;
         }
@@ -95,7 +96,7 @@ namespace LabBilling.Core.DataAccess
                 .Where($"{GetRealColumn(nameof(Mapping.InterfaceAlias))} = @0", 
                     new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = sendingValue });
 
-            var record = dbConnection.FirstOrDefault<Mapping>(sql);
+            var record = Context.FirstOrDefault<Mapping>(sql);
 
             string retVal = string.Empty;
             if(record != null)

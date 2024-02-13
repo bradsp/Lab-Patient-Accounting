@@ -8,14 +8,18 @@ using System.Windows.Forms.DataVisualization.Charting;
 using System.Net.Http;
 using LabBilling.Logging;
 using ScottPlot;
+using LabBilling.Core.Services;
 
 namespace LabBilling.Forms
 {
     public partial class DashboardForm : BaseForm
     {
+        private DictionaryService dictionaryService;
+
         public DashboardForm()
         {
             InitializeComponent();
+            dictionaryService = new(Program.AppEnvironment);
         }
 
         private void DashboardForm_Load(object sender, EventArgs e)
@@ -26,11 +30,9 @@ namespace LabBilling.Forms
 
         private void LoadAnnouncements()
         {
-            AnnouncementRepository announcementRepository = new AnnouncementRepository(Program.AppEnvironment);
+            var announcements = dictionaryService.GetActiveAnnouncements();
 
-            var announcements = announcementRepository.GetActive();
-
-            System.Windows.Forms.Label hdrlbl = new System.Windows.Forms.Label
+            System.Windows.Forms.Label hdrlbl = new()
             {
                 Text = "Announcements"
             };
@@ -143,7 +145,6 @@ namespace LabBilling.Forms
             htmlDoc.LoadHtml(html);
 
             var content = htmlDoc.DocumentNode.SelectSingleNode("//div[@id='wikitext']");
-
 
             return content.OuterHtml;
         }

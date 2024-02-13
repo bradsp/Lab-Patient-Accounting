@@ -2,6 +2,8 @@
 using System;
 using Microsoft.Data.SqlClient;
 using System.Drawing;
+using LabBilling.Core.UnitOfWork;
+using LabBilling.Core.Services;
 
 namespace LabBilling.Core.DataAccess
 {
@@ -20,8 +22,6 @@ namespace LabBilling.Core.DataAccess
         public string UserName { get; set; }
         public string Password { get; set; }
 
-        public SystemParametersRepository systemParametersRepository;
-
         public bool RunAsService { get; set; } = false;
 
         public Color WindowBackgroundColor { get; set; } = Color.White;
@@ -37,14 +37,7 @@ namespace LabBilling.Core.DataAccess
 
         public AppEnvironment()
         {
-            try
-            {
-                systemParametersRepository = new SystemParametersRepository(this);
-            }
-            catch (ApplicationException apex)
-            {
-                //ok to ignore
-            }
+
         }
 
         public bool EnvironmentValid { 
@@ -177,8 +170,8 @@ namespace LabBilling.Core.DataAccess
                     ApplicationParameters = new ApplicationParameters();
                     if(EnvironmentValid)
                     {
-                        systemParametersRepository ??= new SystemParametersRepository(this);
-                        _appParms = systemParametersRepository.LoadParameters();
+                        SystemService systemService = new(this);
+                        _appParms = systemService.LoadSystemParameters();
                     }    
                 }
                 return _appParms;

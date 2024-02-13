@@ -10,10 +10,10 @@ namespace LabBilling.Core.DataAccess
     {
         string Errors { get; }
 
-        void AbortTransaction();
+        //void AbortTransaction();
         object Add(TPoco table);
-        void BeginTransaction();
-        void CompleteTransaction();
+        //void BeginTransaction();
+        //void CompleteTransaction();
         bool Delete(TPoco table);
         List<TPoco> GetAll();
         Task<IEnumerable<TPoco>> GetAllAsync();

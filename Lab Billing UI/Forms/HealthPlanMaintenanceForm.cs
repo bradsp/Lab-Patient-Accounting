@@ -4,13 +4,14 @@ using System.Drawing;
 using System.Windows.Forms;
 using LabBilling.Core.DataAccess;
 using LabBilling.Core.Models;
+using LabBilling.Core.Services;
 using LabBilling.Logging;
 
 namespace LabBilling.Forms
 {
     public partial class HealthPlanMaintenanceForm : BaseForm
     {
-        private InsCompanyRepository insCompanyRepository = new InsCompanyRepository(Program.AppEnvironment);
+        private DictionaryService dictionaryService;
         private DataTable _insCompanyTable = null;
         private BindingSource insCompanySource = new BindingSource();
         private Timer _timer = null;
@@ -22,13 +23,15 @@ namespace LabBilling.Forms
             InitializeComponent();
             _timer = new Timer() { Enabled = false, Interval = _timerDelay };
             _timer.Tick += new EventHandler(filterTextBox_KeyUpDone);
+
+            dictionaryService = new(Program.AppEnvironment);
         }
 
         private void HealthPlanMaintenanceForm_Load(object sender, EventArgs e)
         {
             includeDeletedCheckBox.ForeColor = Color.Black;
 
-            _insCompanyTable = insCompanyRepository.GetAll(false).ToDataTable();
+            _insCompanyTable = dictionaryService.GetInsCompanies(false).ToDataTable();
 
             _insCompanyTable.PrimaryKey = new DataColumn[] { _insCompanyTable.Columns[nameof(InsCompany.InsuranceCode)] };
 

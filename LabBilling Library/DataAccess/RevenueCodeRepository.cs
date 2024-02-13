@@ -3,12 +3,13 @@ using Microsoft.Data.SqlClient;
 using System.Data;
 using LabBilling.Core.Models;
 using LabBilling.Logging;
+using LabBilling.Core.UnitOfWork;
 
 namespace LabBilling.Core.DataAccess
 {
     public sealed class RevenueCodeRepository : RepositoryBase<RevenueCode>
     {
-        public RevenueCodeRepository(IAppEnvironment appEnvironment) : base(appEnvironment)
+        public RevenueCodeRepository(IAppEnvironment appEnvironment, PetaPoco.IDatabase context) : base(appEnvironment, context)
         {
 
         }
@@ -24,7 +25,7 @@ namespace LabBilling.Core.DataAccess
                 return new RevenueCode();
             }
 
-            return dbConnection.SingleOrDefault<RevenueCode>($"where {colName} = @0",
+            return Context.SingleOrDefault<RevenueCode>($"where {colName} = @0",
                 new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = revenueCode });
         }
 

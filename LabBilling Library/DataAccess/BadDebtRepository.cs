@@ -4,12 +4,13 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using Microsoft.Data.SqlClient;
+using LabBilling.Core.UnitOfWork;
 
 namespace LabBilling.Core.DataAccess
 {
     public sealed class BadDebtRepository : RepositoryBase<BadDebt>
     {
-        public BadDebtRepository(IAppEnvironment appEnvironment) : base(appEnvironment)
+        public BadDebtRepository(IAppEnvironment appEnvironment, PetaPoco.IDatabase context) : base(appEnvironment, context)
         {
 
         }
@@ -20,7 +21,7 @@ namespace LabBilling.Core.DataAccess
 
             _ = Guid.TryParse(rowguid, out Guid gRowGuid);
 
-            badDebt = dbConnection.SingleOrDefault<BadDebt>($"where {GetRealColumn(nameof(BadDebt.rowguid))} = @0", new SqlParameter() { SqlDbType = SqlDbType.UniqueIdentifier, Value = gRowGuid });
+            badDebt = Context.SingleOrDefault<BadDebt>($"where {GetRealColumn(nameof(BadDebt.rowguid))} = @0", new SqlParameter() { SqlDbType = SqlDbType.UniqueIdentifier, Value = gRowGuid });
 
             if (!string.IsNullOrWhiteSpace(badDebt.StateZip) && badDebt.StateZip.Length >= 7)
             {
@@ -52,7 +53,7 @@ namespace LabBilling.Core.DataAccess
             var sql = PetaPoco.Sql.Builder;
             sql.Where($"{GetRealColumn(nameof(BadDebt.DateSent))} is null");
 
-            records = dbConnection.Fetch<BadDebt>(sql);
+            records = Context.Fetch<BadDebt>(sql);
 
             foreach (var record in records)
             {
@@ -75,7 +76,7 @@ namespace LabBilling.Core.DataAccess
                 new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = date.BeginningOfTheDay()},
                 new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = date.EndOfTheDay()});
 
-            records = dbConnection.Fetch<BadDebt>(sql);
+            records = Context.Fetch<BadDebt>(sql);
 
             foreach (var record in records)
             {

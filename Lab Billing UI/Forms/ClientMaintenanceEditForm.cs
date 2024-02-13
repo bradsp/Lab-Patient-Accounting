@@ -5,15 +5,14 @@ using System.Windows.Forms;
 using LabBilling.Core.Models;
 using LabBilling.Core.DataAccess;
 using System.Drawing;
+using LabBilling.Core.Services;
 
 namespace LabBilling.Forms
 {
     public partial class ClientMaintenanceEditForm : BaseForm
     {
         public Client client;
-        private ClientRepository clientRepository;
-        private GLCodeRepository gLCodeRepository;
-        private CdmRepository cdmRepository;
+        public DictionaryService dictionaryService;
         public string SelectedClient { get; set; }
         private BindingSource clientDiscountBindingSource = new BindingSource();
         private DataTable clientDiscountDataTable;
@@ -22,9 +21,7 @@ namespace LabBilling.Forms
         public ClientMaintenanceEditForm()
         {
             InitializeComponent();
-            clientRepository = new ClientRepository(Program.AppEnvironment);
-            gLCodeRepository = new GLCodeRepository(Program.AppEnvironment);
-            cdmRepository = new CdmRepository(Program.AppEnvironment);
+            dictionaryService = new(Program.AppEnvironment);
         }
 
         private void btnSave_Click(object sender, EventArgs e)
@@ -186,14 +183,14 @@ namespace LabBilling.Forms
             cbEmrType.ValueMember = "Key";
             cbEmrType.SelectedIndex = -1;
 
-            cbCostCenter.DataSource = new BindingSource(gLCodeRepository.GetAll(), null);
+            cbCostCenter.DataSource = new BindingSource(dictionaryService.GetGLCodes(), null);
             cbCostCenter.DisplayMember = "level_1";
             cbCostCenter.ValueMember = "level_1";
             cbCostCenter.SelectedIndex = -1;
 
             if(!string.IsNullOrEmpty(SelectedClient))
             {
-                client = clientRepository.GetClient(SelectedClient);
+                client = dictionaryService.GetClient(SelectedClient);
                 LoadClient();
             }
         }
@@ -202,7 +199,7 @@ namespace LabBilling.Forms
         {
             if (!String.IsNullOrEmpty(ClientMnemTextBox.Text) && !ClientMnemTextBox.ReadOnly)
             {
-                var record = clientRepository.GetClient(ClientMnemTextBox.Text);
+                var record = dictionaryService.GetClient(ClientMnemTextBox.Text);
 
                 if (record != null)
                 {
@@ -239,7 +236,7 @@ namespace LabBilling.Forms
             {
                 case nameof(ClientDiscount.Cdm):
                     //look up cdm number and get amount
-                    currentCdm = cdmRepository.GetCdm(clientDiscountDataGrid[e.ColumnIndex, e.RowIndex].Value.ToString());
+                    currentCdm = dictionaryService.GetCdm(clientDiscountDataGrid[e.ColumnIndex, e.RowIndex].Value.ToString());
                     if (currentCdm != null)
                     {
                         clientDiscountDataGrid[nameof(ClientDiscount.CdmDescription), e.RowIndex].Value = currentCdm.Description;
@@ -247,14 +244,16 @@ namespace LabBilling.Forms
                     else
                     {
                         //pop a cdm search dialog
-                        CdmLookupForm cdmLookupForm = new CdmLookupForm();
-                        cdmLookupForm.Datasource = DataCache.Instance.GetCdms();
+                        CdmLookupForm cdmLookupForm = new()
+                        {
+                            Datasource = DataCache.Instance.GetCdms(),
+                            InitialSearchText = clientDiscountDataGrid[e.ColumnIndex, e.RowIndex].Value.ToString()
+                        };
 
-                        cdmLookupForm.InitialSearchText = clientDiscountDataGrid[e.ColumnIndex, e.RowIndex].Value.ToString();
                         if (cdmLookupForm.ShowDialog() == DialogResult.OK)
                         {
                             clientDiscountDataGrid[e.ColumnIndex, e.RowIndex].Value = cdmLookupForm.SelectedValue;
-                            currentCdm = cdmRepository.GetCdm(cdmLookupForm.SelectedValue);
+                            currentCdm = dictionaryService.GetCdm(cdmLookupForm.SelectedValue);
                             if (currentCdm != null)
                             {
                                 clientDiscountDataGrid[nameof(ClientDiscount.CdmDescription), e.RowIndex].Value = currentCdm.Description;
@@ -342,7 +341,7 @@ namespace LabBilling.Forms
 
             if(!string.IsNullOrEmpty(cdm))
             {
-                currentCdm = cdmRepository.GetCdm(cdm);
+                currentCdm = dictionaryService.GetCdm(cdm);
             }
         }
 

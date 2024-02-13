@@ -15,35 +15,31 @@ namespace LabBilling.Library
     {
         public static string SelectFinancialCode(string currentFin = null)
         {
-            AccountRepository accountRepository = new AccountRepository(Program.AppEnvironment);
-            FinRepository finRepository = new FinRepository(Program.AppEnvironment);
-
-            Form frm = new Form()
+            Form frm = new()
             {
                 Text = "Change Financial Code",
                 DialogResult = DialogResult.OK,
                 Width = 400,
                 Height = 200
             };
-            Label lbl1 = new Label()
+            Label lbl1 = new()
             {
                 Text = "Choose new financial class",
                 Width = 150
             };
-            ComboBox newFinCodeComboBox = new ComboBox()
+            ComboBox newFinCodeComboBox = new()
             {
                 Width = 200,
+                DataSource = DataCache.Instance.GetFins(),
+                DisplayMember = nameof(Fin.Description),
+                ValueMember = nameof(Fin.FinCode)
             };
 
-            newFinCodeComboBox.DataSource = DataCache.Instance.GetFins();
-            newFinCodeComboBox.DisplayMember = nameof(Fin.Description); 
-            newFinCodeComboBox.ValueMember = nameof(Fin.FinCode); 
-
-            Button okButton = new Button()
+            Button okButton = new()
             {
                 Text = "OK",
             };
-            Button cancelButton = new Button()
+            Button cancelButton = new()
             {
                 Text = "Cancel",
             };
@@ -96,7 +92,7 @@ namespace LabBilling.Library
 
         public static (DateTime newDate, string reason) SelectDateOfService(DateTime currentDateOfService)
         {
-            Form frm = new Form()
+            Form frm = new()
             {
                 Text = "Change Date of Service",
                 DialogResult = DialogResult.OK,
@@ -186,7 +182,7 @@ namespace LabBilling.Library
 
         public static DateTime? SelectStatementBeginDate(DateTime defaultDate)
         {
-            Form frm = new Form()
+            Form frm = new()
             {
                 Text = "Generate Statement Begin Date",
                 DialogResult = DialogResult.OK,

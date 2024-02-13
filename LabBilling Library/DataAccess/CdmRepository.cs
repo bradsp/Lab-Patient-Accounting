@@ -7,15 +7,14 @@ using Microsoft.Data.SqlClient;
 using System.Data;
 using System.Linq;
 using System.CodeDom.Compiler;
+using LabBilling.Core.UnitOfWork;
 
 namespace LabBilling.Core.DataAccess
 {
     public sealed class CdmRepository : RepositoryBase<Cdm>
     {
-
-        public CdmRepository(IAppEnvironment appEnvironment) : base(appEnvironment)
+        public CdmRepository(IAppEnvironment appEnvironment, PetaPoco.IDatabase context) : base(appEnvironment, context)
         {
-            
         }
 
         public override List<Cdm> GetAll()
@@ -26,8 +25,7 @@ namespace LabBilling.Core.DataAccess
         public List<Cdm> GetAll(bool includeDeleted = false)
         {
             Log.Instance.Debug($"Entering");
-            Sql sql = PetaPoco.Sql.Builder
-                .Select("*")
+            Sql sql = Sql.Builder
                 .From(_tableName);
 
             if (includeDeleted == false)
@@ -36,7 +34,7 @@ namespace LabBilling.Core.DataAccess
 
             sql.Append($"order by {_tableName}.{this.GetRealColumn(nameof(Cdm.Description))}");
 
-            var queryResult = dbConnection.Fetch<Cdm>(sql);
+            var queryResult = Context.Fetch<Cdm>(sql);
 
             return queryResult;
         }
@@ -56,65 +54,11 @@ namespace LabBilling.Core.DataAccess
 
         public override bool Update(Cdm table)
         {
-            //update all fee schedules as well
-            CdmDetailRepository cdmDetailRepository = new CdmDetailRepository(AppEnvironment);
-
-            foreach(var cd in table.CdmFeeSchedule1)
-            {
-                cdmDetailRepository.Save(cd);
-            }
-            foreach (var cd in table.CdmFeeSchedule2)
-            {
-                cdmDetailRepository.Save(cd);
-            }
-            foreach (var cd in table.CdmFeeSchedule3)
-            {
-                cdmDetailRepository.Save(cd);
-            }
-            foreach (var cd in table.CdmFeeSchedule4)
-            {
-                cdmDetailRepository.Save(cd);
-            }
-            foreach (var cd in table.CdmFeeSchedule5)
-            {
-                cdmDetailRepository.Save(cd);
-            }
-
-
             return base.Update(table);
-        }
-
-        public override object Add(Cdm table)
-        {
-            CdmDetailRepository cdmDetailRepository = new CdmDetailRepository(AppEnvironment);
-            //add all fee schedules as well
-            foreach (var cd in table.CdmFeeSchedule1)
-            {
-                cdmDetailRepository.Save(cd);
-            }
-            foreach (var cd in table.CdmFeeSchedule2)
-            {
-                cdmDetailRepository.Save(cd);
-            }
-            foreach (var cd in table.CdmFeeSchedule3)
-            {
-                cdmDetailRepository.Save(cd);
-            }
-            foreach (var cd in table.CdmFeeSchedule4)
-            {
-                cdmDetailRepository.Save(cd);
-            }
-            foreach (var cd in table.CdmFeeSchedule5)
-            {
-                cdmDetailRepository.Save(cd);
-            }
-
-            return base.Add(table);
         }
 
         public Cdm GetCdm(string cdm, bool includeDeleted = false)
         {
-            CdmDetailRepository cdmDetailRepository = new CdmDetailRepository(AppEnvironment);
 
             string cdmRealName = this.GetRealColumn(nameof(Cdm.ChargeId));
             string isDeletedRealName = this.GetRealColumn(nameof(Cdm.IsDeleted));
@@ -125,42 +69,24 @@ namespace LabBilling.Core.DataAccess
             if (!includeDeleted)
                 cmd.Where($"{isDeletedRealName} = 0");
 
-            var result = dbConnection.SingleOrDefault<Cdm>(cmd);
-            if (result != null)
-            {
-                result.CdmFeeSchedule1 = cdmDetailRepository.GetByCdm(cdm, "1");
-                result.CdmFeeSchedule2 = cdmDetailRepository.GetByCdm(cdm, "2");
-                result.CdmFeeSchedule3 = cdmDetailRepository.GetByCdm(cdm, "3");
-                result.CdmFeeSchedule4 = cdmDetailRepository.GetByCdm(cdm, "4");
-                result.CdmFeeSchedule5 = cdmDetailRepository.GetByCdm(cdm, "5");
-            }
-
+            var result = Context.SingleOrDefault<Cdm>(cmd);
             return result;
         }
 
-        public List<Cdm> GetByCpt(string cptId)
+        public List<Cdm> GetCdm(IList<string> cdms)
         {
-            List<CdmDetail> cdmDetails = new List<CdmDetail>();
-
-            CdmDetailRepository cdmDetailRepository = new CdmDetailRepository(AppEnvironment);
-
-            cdmDetails = cdmDetailRepository.GetByCpt(cptId);
-
-            List<string> cdms = new List<string>();
-
-            List<string> distinctCdms = cdmDetails.Select(c => c.ChargeItemId).Distinct().ToList();
-
-            if(distinctCdms.Count > 0)
+            if (cdms.Count > 0)
             {
-                PetaPoco.Sql cmd = PetaPoco.Sql.Builder;
-                cmd.From(_tableName);
-                cmd.Where($"{GetRealColumn(nameof(Cdm.ChargeId))} in (@cdms)", new { cdms = distinctCdms });
-                List<Cdm> results = dbConnection.Fetch<Cdm>(cmd);
+                Sql cmd = Sql.Builder;
+                cmd.Where($"{GetRealColumn(nameof(Cdm.ChargeId))} in (@cdms)", new { cdms = cdms });
+                List<Cdm> results = Context.Fetch<Cdm>(cmd);
 
                 return results;
             }
+
             return new List<Cdm>();
         }
+
 
     }
 }

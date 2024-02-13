@@ -7,16 +7,16 @@ using System.Windows.Forms;
 using System.Drawing;
 using System.Data;
 using WinFormsLibrary;
+using LabBilling.Core.Services;
 
 namespace LabBilling.Forms
 {
     public partial class ClientMaintenanceForm : BaseForm
     {
-        private readonly ClientRepository clientRepository = new ClientRepository(Program.AppEnvironment);
-        private readonly GLCodeRepository gLCodeRepository = new GLCodeRepository(Program.AppEnvironment);
         private System.Windows.Forms.Timer _timer;
         private int timerDelay = 650;
 
+        private DictionaryService dictionaryService;
         private BindingSource clientSource = new BindingSource();
         private List<Client> _clientList = null;
         private DataTable _clientTable = null;
@@ -28,6 +28,7 @@ namespace LabBilling.Forms
             InitializeComponent();
             _timer = new Timer() { Enabled = false, Interval = timerDelay };
             _timer.Tick += new EventHandler(filterTextBox_KeyUpDone);
+            dictionaryService = new(Program.AppEnvironment);
         }
 
         private void Clients_Load(object sender, EventArgs e)
@@ -68,8 +69,10 @@ namespace LabBilling.Forms
         {
             string clientMnem = dgvClients[nameof(Client.ClientMnem), e.RowIndex].Value.ToString();
 
-            ClientMaintenanceEditForm editForm = new ClientMaintenanceEditForm();
-            editForm.SelectedClient = clientMnem;
+            ClientMaintenanceEditForm editForm = new()
+            {
+                SelectedClient = clientMnem
+            };
 
             if (editForm.ShowDialog() == DialogResult.OK)
             {
@@ -77,7 +80,7 @@ namespace LabBilling.Forms
                 var record = _clientTable.Rows.Find(client.ClientMnem);
                 try
                 {
-                    clientRepository.Save(client);
+                    dictionaryService.SaveClient(client);
 
                     record = client.ToDataRow(record);
                 }
@@ -121,7 +124,7 @@ namespace LabBilling.Forms
                 }
                 try
                 {
-                    if(!clientRepository.Save(client))
+                    if(!dictionaryService.SaveClient(client))
                     {
                         MessageBox.Show("Error adding client. Changes not saved.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         Log.Instance.Error($"Error adding client {client.ClientMnem} - {client.Name}. Changes not saved.");

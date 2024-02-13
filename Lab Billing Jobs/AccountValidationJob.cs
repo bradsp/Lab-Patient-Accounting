@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using LabBilling.Core.DataAccess;
+using LabBilling.Core.Services;
 using Quartz;
 
 namespace LabBillingJobs
@@ -30,13 +31,13 @@ namespace LabBillingJobs
 
             }
 
-            public void RunValidation()
+            public static void RunValidation()
             {
-                AccountRepository accountRepository = new AccountRepository(Program.AppEnvironment);
                 Console.WriteLine("In RunValidation() - Starting RunValidation job");
                 log.Info("In RunValidation() - Starting RunValidation job");
+                AccountService accountService = new(Program.AppEnvironment);
 
-                accountRepository.ValidateUnbilledAccounts();
+                accountService.ValidateUnbilledAccounts();
                 
                 Console.WriteLine("In RunValidation() - Finished RunValidation job");
                 log.Info("In RunValidation() - Finished RunValidation job");

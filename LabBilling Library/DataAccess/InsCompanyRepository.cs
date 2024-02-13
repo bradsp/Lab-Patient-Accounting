@@ -6,12 +6,14 @@ using Utilities;
 using Microsoft.Data.SqlClient;
 using System.Data;
 using System.Linq;
+using LabBilling.Core.UnitOfWork;
+using PetaPoco;
 
 namespace LabBilling.Core.DataAccess
 {
     public sealed class InsCompanyRepository : RepositoryBase<InsCompany>
     {
-        public InsCompanyRepository(IAppEnvironment appEnvironment) : base(appEnvironment)
+        public InsCompanyRepository(IAppEnvironment appEnvironment, PetaPoco.IDatabase context) : base(appEnvironment, context)
         {
 
         }
@@ -25,18 +27,11 @@ namespace LabBilling.Core.DataAccess
                 Log.Instance.Error("Null value passed to InsCompanyRepository GetByCode.");
                 return new InsCompany();
             }
-            var record = dbConnection.SingleOrDefault<InsCompany>("where code = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = code });
+            var record = Context.SingleOrDefault<InsCompany>("where code = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = code });
 
             if(record != null)
             {
-                //Str.ParseCityStZip(record.CityStateZip, out string strCity, out string strState, out string strZip);
-                //record.City = strCity;
-                //record.State = strState;
-                //record.Zip = strZip;
-
-                MappingRepository mappingRepository = new MappingRepository(AppEnvironment);
-
-                record.Mappings = mappingRepository.GetMappingsBySendingValue("INS_CODE", record.InsuranceCode).ToList();
+                record.Mappings = unitOfWork.MappingRepository.GetMappingsBySendingValue("INS_CODE", record.InsuranceCode).ToList();
             }
 
             return record;
@@ -51,13 +46,12 @@ namespace LabBilling.Core.DataAccess
         {
             Log.Instance.Debug($"Entering");
 
-            string sql = null;
+            var sql = Sql.Builder;
             if(excludeDeleted)
-                sql = $"SELECT * FROM {_tableName} where deleted = 0";
-            else
-                sql = $"SELECT * FROM {_tableName}";
+                sql.Where($"{GetRealColumn(nameof(InsCompany.IsDeleted))} = @0",
+                    new SqlParameter() { SqlDbType = SqlDbType.Bit, Value = false } );
 
-            var queryResult = dbConnection.Fetch<InsCompany>(sql);
+            var queryResult = Context.Fetch<InsCompany>(sql);
 
             return queryResult;
         }

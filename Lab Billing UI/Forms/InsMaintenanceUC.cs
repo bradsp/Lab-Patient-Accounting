@@ -8,15 +8,14 @@ using LabBilling.Core.Models;
 using LabBilling.Library;
 using LabBilling.Core;
 using NPOI.OpenXmlFormats.Vml;
+using LabBilling.Core.Services;
 
 namespace LabBilling.Forms
 {
     public partial class InsMaintenanceUC : UserControl
     {
-        private InsRepository insRepository;
-        private AccountRepository accountRepository;
-        private PatRepository patRepository;
-        private InsCompanyRepository insCompanyRepository;
+        private AccountService accountService;
+        private DictionaryService dictionaryService;
         private List<InsCompany> insCompanies;
         private InsCompanyLookupForm insCoLookupForm;
         private List<string> changedControls;
@@ -51,12 +50,11 @@ namespace LabBilling.Forms
             if (this.DesignMode)
                 return;
 
+            accountService = new(Program.AppEnvironment);
+            dictionaryService = new(Program.AppEnvironment);
+
             InitializeComponent();
             Coverage = coverage;
-            accountRepository = new(Program.AppEnvironment);
-            patRepository = new(Program.AppEnvironment);
-            insRepository = new(Program.AppEnvironment);
-            insCompanyRepository = new(Program.AppEnvironment);
             changedControls = new();
             insCoLookupForm = new InsCompanyLookupForm();
             _timer = new Timer() { Enabled = false, Interval = timerInterval };
@@ -212,10 +210,7 @@ namespace LabBilling.Forms
             try
             {
                 //call method to update the record in the database
-                if (CurrentIns.rowguid == Guid.Empty)
-                    insRepository.Add(CurrentIns);
-                else
-                    insRepository.Update(CurrentIns);
+                accountService.SaveInsurance(CurrentIns);
 
                 InsuranceChanged?.Invoke(this, EventArgs.Empty);
 
@@ -286,7 +281,7 @@ namespace LabBilling.Forms
             if (code == "")
                 return;
 
-            var record = insCompanyRepository.GetByCode(code);
+            var record = dictionaryService.GetInsCompany(code);
 
             if (record != null)
             {
@@ -350,7 +345,7 @@ namespace LabBilling.Forms
             {
                 try
                 {
-                    if (insRepository.Delete(CurrentIns))
+                    if (accountService.DeleteInsurance(CurrentIns))
                     {
                         InsuranceChanged?.Invoke(this, EventArgs.Empty);
                     }

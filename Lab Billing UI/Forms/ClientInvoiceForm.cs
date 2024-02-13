@@ -4,8 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using LabBilling.Core.DataAccess;
-using LabBilling.Core.BusinessLogic;
+using LabBilling.Core.Services;
 using LabBilling.Core.Models;
 using LabBilling.Library;
 using System.Diagnostics;
@@ -28,9 +27,8 @@ namespace LabBilling.Forms
         }
 
         private DateTime _thruDate;
-        private ClientInvoices clientInvoices;
-        private InvoiceHistoryRepository historyRepository;
-        private ClientRepository clientRepository;
+        private ClientInvoicesService clientInvoicesService;
+        private DictionaryService dictionaryService;
         private List<Client> clientList;
         private List<UnbilledClient> unbilledClients;
         public event EventHandler<string> AccountLaunched;
@@ -43,14 +41,13 @@ namespace LabBilling.Forms
             //are there any old print files that need to be cleaned up?
             CleanTempFiles();
 
-            clientInvoices = new ClientInvoices(Program.AppEnvironment);
-            historyRepository = new InvoiceHistoryRepository(Program.AppEnvironment);
-            clientRepository = new ClientRepository(Program.AppEnvironment);
+            clientInvoicesService = new ClientInvoicesService(Program.AppEnvironment);
+            dictionaryService = new(Program.AppEnvironment);
 
-            clientInvoices.InvoiceGenerated += ClientInvoices_InvoiceGenerated;
-            clientInvoices.InvoiceRunCompleted += ClientInvoices_InvoiceRunCompleted;
+            clientInvoicesService.InvoiceGenerated += ClientInvoices_InvoiceGenerated;
+            clientInvoicesService.InvoiceRunCompleted += ClientInvoices_InvoiceRunCompleted;
 
-            clientList = clientRepository.GetAll().ToList();
+            clientList = dictionaryService.GetAllClients().ToList();
             clientList.Sort((p, q) => p.Name.CompareTo(q.Name));
 
             clientList.Insert(0, new Client
@@ -110,7 +107,7 @@ namespace LabBilling.Forms
 
             toolStripProgressBar1.Style = ProgressBarStyle.Continuous;
 
-            unbilledClients = clientRepository.GetUnbilledClients(_thruDate, progress);
+            unbilledClients = clientInvoicesService.GetUnbilledClients(_thruDate, progress);
 
             InvoicesDGV.DataSource = unbilledClients;
 
@@ -163,7 +160,7 @@ namespace LabBilling.Forms
 
             waitForm.Show(this);
 
-            unbilledClients = await clientRepository.GetUnbilledClientsAsync(_thruDate, progress);
+            unbilledClients = await clientInvoicesService.GetUnbilledClientsAsync(_thruDate, progress);
 
             waitForm.Close();
 
@@ -230,7 +227,7 @@ namespace LabBilling.Forms
 
             try
             {
-                waitForm.Worker = () => { clientInvoices.Compile(_thruDate, clientsToBill, progress); };
+                waitForm.Worker = () => { clientInvoicesService.Compile(_thruDate, clientsToBill, progress); };
                 waitForm.ShowDialog(this);
                 MessageBox.Show("Generating Invoices Completed");
             }
@@ -317,7 +314,7 @@ namespace LabBilling.Forms
             DateTime.TryParse(FromDate.Text, out DateTime fd);
             DateTime.TryParse(ThroughDate.Text, out DateTime td);
 
-            InvoiceHistoryDGV.DataSource = historyRepository.GetWithSort(ClientFilter.SelectedValue?.ToString(), fd, td, invoiceTextBox.Text);
+            InvoiceHistoryDGV.DataSource = clientInvoicesService.GetInvoiceHistory(ClientFilter.SelectedValue?.ToString(), fd, td, invoiceTextBox.Text);
 
             SetupInvoiceHistoryGrid();
 
@@ -355,7 +352,7 @@ namespace LabBilling.Forms
 
             string client = ClientFilter.SelectedValue?.ToString();
 
-            InvoiceHistoryDGV.DataSource = await Task.Run(() => historyRepository.GetWithSort(client, fd, td, invoiceTextBox.Text));
+            InvoiceHistoryDGV.DataSource = await Task.Run(() => clientInvoicesService.GetInvoiceHistory(client, fd, td, invoiceTextBox.Text));
 
             SetupInvoiceHistoryGrid();
 
@@ -411,7 +408,7 @@ namespace LabBilling.Forms
                 var client = row.Cells[nameof(InvoiceHistory.ClientMnem)].Value.ToString();
                 var invoice = row.Cells[nameof(InvoiceHistory.InvoiceNo)].Value.ToString();
 
-                var model = clientInvoices.GenerateStatement(client, DateTime.Today.AddDays(-120));
+                var model = clientInvoicesService.GenerateStatement(client, DateTime.Today.AddDays(-120));
                 models.Add(model);
 
                 string stmtFilename = invoicePrint.PrintInvoice(invoice);
@@ -602,7 +599,7 @@ namespace LabBilling.Forms
             {
                 var statementBeginDate = InputDialogs.SelectStatementBeginDate(DateTime.Today.AddDays(-120));
                 string client = InvoiceHistoryDGV.SelectedRows[0].Cells[nameof(InvoiceHistory.ClientMnem)].Value.ToString();
-                clientInvoices.GenerateStatement(client, (DateTime)statementBeginDate);
+                clientInvoicesService.GenerateStatement(client, (DateTime)statementBeginDate);
             }
 
         }

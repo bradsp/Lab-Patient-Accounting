@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows.Forms;
 using LabBilling.Core.DataAccess;
 using LabBilling.Core.Models;
+using LabBilling.Core.Services;
 
 namespace LabBilling.Forms
 {
@@ -19,12 +20,11 @@ namespace LabBilling.Forms
         private bool skipSelectionChanged = false;
         private System.Windows.Forms.Timer _timer;
 
-        private CdmRepository cdmRepository;
+        private readonly DictionaryService dictionaryService = new(Program.AppEnvironment);
 
         public CdmLookupForm()
         {
             InitializeComponent();
-            cdmRepository = new CdmRepository(Program.AppEnvironment);
 
             _timer = new System.Windows.Forms.Timer() { Enabled = false, Interval = _timerInterval };
             _timer.Tick += new EventHandler(searchTextBox_OnKeyUpDone);
@@ -68,10 +68,10 @@ namespace LabBilling.Forms
 
                     if(cptSearchRadioButton.Checked)
                     {
-                        cdmQuery = cdmRepository.GetByCpt(searchTextBox.Text.ToUpper());
+                        cdmQuery = dictionaryService.GetCdmByCpt(searchTextBox.Text.ToUpper());
                     }
 
-                    if (cdmQuery.Count() > 0)
+                    if (cdmQuery.Any())
                     {
                         resultsDataGrid.DataSource = cdmQuery.ToList();
                         resultsDataGrid.Columns.OfType<DataGridViewColumn>().ToList().ForEach(col => col.Visible = false);

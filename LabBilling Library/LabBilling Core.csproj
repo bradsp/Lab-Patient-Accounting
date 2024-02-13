@@ -23,15 +23,6 @@
     <ProjectReference Include="..\RFClassLibrary\Utilities.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="BusinessLogic\Resources\ADAJ400_Red.gif">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="BusinessLogic\Resources\HCFA1500_Red.gif">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="BusinessLogic\Resources\UB04_Red.gif">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="Specifications\Ansi-133-Specification.xml" />
     <Content Include="Specifications\Ansi-158-Specification.xml" />
   </ItemGroup>

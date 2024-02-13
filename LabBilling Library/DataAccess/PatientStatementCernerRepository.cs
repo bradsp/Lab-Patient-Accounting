@@ -3,12 +3,13 @@ using LabBilling.Logging;
 using PetaPoco;
 using System.Collections.Generic;
 using Microsoft.Data.SqlClient;
+using LabBilling.Core.UnitOfWork;
 
 namespace LabBilling.Core.DataAccess
 {
     public sealed class PatientStatementCernerRepository : RepositoryBase<PatientStatementCerner>
     {
-        public PatientStatementCernerRepository(IAppEnvironment appEnvironment) : base(appEnvironment) { }
+        public PatientStatementCernerRepository(IAppEnvironment appEnvironment, PetaPoco.IDatabase context) : base(appEnvironment, context) { }
 
         public List<PatientStatementCerner> GetByBatch(string batch)
         {
@@ -19,8 +20,8 @@ namespace LabBilling.Core.DataAccess
             sql.Where($"{GetRealColumn(nameof(PatientStatementCerner.BatchId))} = @0",
                 new SqlParameter() { SqlDbType = System.Data.SqlDbType.VarChar, Value = batch });
 
-            var results = dbConnection.Fetch<PatientStatementCerner>(sql);
-            Log.Instance.Debug(dbConnection.LastSQL);
+            var results = Context.Fetch<PatientStatementCerner>(sql);
+            Log.Instance.Debug(Context.LastSQL);
             return results;
         }
 

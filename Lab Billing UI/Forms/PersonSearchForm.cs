@@ -7,6 +7,7 @@ using LabBilling.Core.DataAccess;
 using LabBilling.Logging;
 using LabBilling.Core.Models;
 using WinFormsLibrary;
+using LabBilling.Core.Services;
 
 namespace LabBilling.Forms
 {
@@ -15,8 +16,9 @@ namespace LabBilling.Forms
         List<AccountSearch> searchResults = new List<AccountSearch>();
 
         public string SelectedAccount { get; set; }
-        private readonly AccountRepository accdb = new AccountRepository(Program.AppEnvironment);
-        private readonly AccountSearchRepository accountSearchRepository = new AccountSearchRepository(Program.AppEnvironment);
+
+        private AccountService accountService;
+        private DictionaryService dictionaryService;
 
         public PersonSearchForm()
         {
@@ -24,6 +26,8 @@ namespace LabBilling.Forms
             InitializeComponent();
 
             PersonAccountResults.BackgroundColor = Program.AppEnvironment.WindowBackgroundColor;
+            accountService = new(Program.AppEnvironment);
+            dictionaryService = new(Program.AppEnvironment);
         }
 
         private void SearchButton_Click(object sender, EventArgs e)
@@ -35,7 +39,7 @@ namespace LabBilling.Forms
             if (dobSearchText.MaskFull)
                 dobText = dobSearchText.Text;
 
-            searchResults = accountSearchRepository.GetBySearch(txtLastName.Text, txtFirstName.Text, mrnSearchText.Text, ssnSearchText.Text, dobText,
+            searchResults = accountService.SearchAccounts(txtLastName.Text, txtFirstName.Text, mrnSearchText.Text, ssnSearchText.Text, dobText,
                 cbSexSearch.SelectedIndex < 0 ? "" : cbSexSearch.SelectedValue.ToString(), accountSearchText.Text).ToList();
 
             var searchBindingList = new BindingList<AccountSearch>(searchResults);

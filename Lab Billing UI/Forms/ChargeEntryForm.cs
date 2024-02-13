@@ -4,17 +4,18 @@ using LabBilling.Core;
 using System;
 using System.Windows.Forms;
 using LabBilling.Logging;
+using LabBilling.Core.Services;
 
 
 namespace LabBilling.Forms
 {
     public partial class ChargeEntryForm : BaseForm
     {
-        private Account _currentAccount = new Account();
-        private readonly CdmRepository cdmRepository = new CdmRepository(Program.AppEnvironment);
-        private readonly AccountRepository accountRepository = new AccountRepository(Program.AppEnvironment);
+        private Account _currentAccount = new();
         private Timer _timer;
         private const int _timerInterval = 650;
+        private AccountService accountService;
+        private DictionaryService dictionaryService;
 
         public ChargeEntryForm(Account currentAccount)
         {
@@ -23,6 +24,8 @@ namespace LabBilling.Forms
             InitializeComponent();
             _timer = new Timer() { Enabled = false, Interval = _timerInterval };
             _timer.Tick += new EventHandler(cdmTextBox_KeyUpDone);
+            accountService = new(Program.AppEnvironment);
+            dictionaryService = new(Program.AppEnvironment);
         }
 
         private void ChargeEntryForm_Load(object sender, EventArgs e)
@@ -32,7 +35,6 @@ namespace LabBilling.Forms
             tbBannerName.Text = _currentAccount.PatFullName;
             tbBannerMRN.Text = _currentAccount.MRN;
             tbDateOfService.Text = _currentAccount.TransactionDate.ToShortDateString();
-
         }
 
         private void btnSubmit_Click(object sender, EventArgs e)
@@ -51,7 +53,7 @@ namespace LabBilling.Forms
                     return;
                 }
 
-                accountRepository.AddCharge(_currentAccount.AccountNo,
+                accountService.AddCharge(_currentAccount.AccountNo,
                     cdm,
                     Convert.ToInt32(nQty.Value),
                     _currentAccount.TransactionDate,
@@ -101,13 +103,13 @@ namespace LabBilling.Forms
             _timer.Stop();
             var cdmLookup = new CdmLookupForm();
             cdmLookup.InitialSearchText = cdmTextBox.Text;
-            cdmLookup.Datasource = cdmRepository.GetAll(false);
+            cdmLookup.Datasource = dictionaryService.GetAllCdms(false);
 
             if(cdmLookup.ShowDialog() == DialogResult.OK)
             {
                 //if cdm is a variable type, ask for amount
                 cdmTextBox.Text = cdmLookup.SelectedValue;
-                Cdm cdm = cdmRepository.GetCdm(cdmLookup.SelectedValue);
+                Cdm cdm = dictionaryService.GetCdm(cdmLookup.SelectedValue);
                 if(cdm.Variable)
                 {
                     var result = GetAmount();
@@ -123,7 +125,7 @@ namespace LabBilling.Forms
             }
         }
 
-        private InputBoxResult GetAmount()
+        private static InputBoxResult GetAmount()
         {
             var result = InputBox.Show("Enter amount:");
             if (result.ReturnCode == DialogResult.OK)

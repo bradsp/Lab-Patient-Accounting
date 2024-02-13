@@ -8,7 +8,7 @@ using System.Windows.Forms;
 using LabBilling.ReportByInsuranceCompany;
 using System.Linq;
 using Opulos.Core.UI;
-using LabBilling.Core.BusinessLogic;
+using LabBilling.Core.Services;
 using System.Threading;
 using Application = System.Windows.Forms.Application;
 using NLog.Config;
@@ -34,14 +34,15 @@ namespace LabBilling
 
         private Accordion accordion = null;
         private readonly UserProfileRepository userProfile = null;
-        private readonly AccountRepository accountRepository = null;
-        private readonly SystemParametersRepository systemParametersRepository = null;
         private ProgressBar claimProgress;
         private Label claimProgressStatusLabel;
         private CancellationTokenSource cancellationToken;
         private TableLayoutPanel tlpRecentAccounts;
         private List<UserProfile> recentAccounts;
         private List<Account> recentAccountsByAccount;
+
+        private AccountService accountService;
+        private SystemService systemService;
 
         private const int WM_SETREDRAW = 11;
         [DllImport("user32.dll")]
@@ -58,25 +59,24 @@ namespace LabBilling
 
             ConfigureLogging();
 
+            accountService = new(Program.AppEnvironment);
+            systemService = new(Program.AppEnvironment);
+
             MainFormMenu.BackColor = Program.AppEnvironment.MenuBackgroundColor;
             MainFormMenu.ForeColor = Program.AppEnvironment.MenuTextColor;
 
             panel1.BackColor = Program.AppEnvironment.WindowBackgroundColor;
             mdiTabControl.Parent.BackColor = Program.AppEnvironment.WindowBackgroundColor;
 
-
-            userProfile = new UserProfileRepository(Program.AppEnvironment);
-            accountRepository = new AccountRepository(Program.AppEnvironment);
-            systemParametersRepository = new SystemParametersRepository(Program.AppEnvironment);
             accordion = new Accordion();
 
-            Program.AppEnvironment.ApplicationParameters = systemParametersRepository.LoadParameters();
+            Program.AppEnvironment.ApplicationParameters = systemService.LoadSystemParameters();
 
             recentAccounts = userProfile.GetRecentAccount(Program.LoggedInUser.UserName).ToList();
             recentAccountsByAccount = new();
             foreach (UserProfile up in recentAccounts)
             {
-                recentAccountsByAccount.Add(accountRepository.GetByAccount(up.ParameterData, true));
+                recentAccountsByAccount.Add(accountService.GetAccount(up.ParameterData, true));
             }
 
         }
@@ -173,7 +173,7 @@ namespace LabBilling
         {
             Log.Instance.Trace($"Entering");
 
-            UserSecurity frm = new UserSecurity
+            UserSecurity frm = new()
             {
                 MdiParent = this,
                 WindowState = FormWindowState.Normal,
@@ -186,7 +186,7 @@ namespace LabBilling
         {
             Log.Instance.Trace($"Entering");
 
-            PersonSearchForm frm = new PersonSearchForm();
+            PersonSearchForm frm = new();
             if (frm.ShowDialog() == DialogResult.OK)
             {
 
@@ -217,11 +217,11 @@ namespace LabBilling
 
         public void UpdateRecentAccounts(string newAccount)
         {
-            var ar = accountRepository.GetByAccount(newAccount, true);
+            var ar = accountService.GetAccount(newAccount, true);
             if (ar != null)
             {
                 tlpRecentAccounts.Controls.RemoveAt(0);
-                LinkLabel a1 = new LinkLabel { Text = ar.PatFullName, Tag = newAccount };
+                LinkLabel a1 = new() { Text = ar.PatFullName, Tag = newAccount };
                 a1.LinkClicked += new LinkLabelLinkClickedEventHandler(RecentLabelClicked);
                 tlpRecentAccounts.Controls.Add(a1);
                 a1.Dock = DockStyle.Fill;
@@ -693,7 +693,7 @@ namespace LabBilling
 
         private void remittancePostingToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Remittance835 remittance835 = new Remittance835(Program.AppEnvironment);
+            Remittance835Service remittance835 = new Remittance835Service(Program.AppEnvironment);
             string file = @"\\wthmclbill\shared\Billing\TEST\Posting835Remit\MCL_NC_MCR_1093705428_835_11119267.RMT";
 
             remittance835.Load835(file);

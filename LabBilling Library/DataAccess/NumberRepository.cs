@@ -4,12 +4,13 @@ using PetaPoco;
 using System;
 using Microsoft.Data.SqlClient;
 using System.Data;
+using LabBilling.Core.UnitOfWork;
 
 namespace LabBilling.Core.DataAccess
 {
     public sealed class NumberRepository : RepositoryBase<Number>
     {
-        public NumberRepository(IAppEnvironment appEnvironment) : base(appEnvironment)
+        public NumberRepository(IAppEnvironment appEnvironment, PetaPoco.IDatabase context) : base(appEnvironment, context)
         {
 
         }
@@ -28,7 +29,7 @@ namespace LabBilling.Core.DataAccess
                 new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = key }, 
                 number);
 
-            var result = dbConnection.Execute(s);
+            var result = Context.Execute(s);
 
             int NumberReturn = (int)number.Value;
 

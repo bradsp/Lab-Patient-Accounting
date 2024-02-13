@@ -1,26 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using LabBilling.Core.DataAccess;
 using LabBilling.Core.Models;
+using LabBilling.Core.Services;
+using LabBilling.Core.UnitOfWork;
 using LabBilling.Logging;
 
 namespace LabBilling.Forms
 {
     public partial class AccountChargeEntry : BaseForm
     {
-        private readonly ClientRepository clientRepository = new ClientRepository(Program.AppEnvironment);
-        private readonly CdmRepository cdmRepository = new CdmRepository(Program.AppEnvironment);
-        private readonly AccountRepository accountRepository = new AccountRepository(Program.AppEnvironment);
         private List<BatchCharge> charges;
         private BindingSource chrgBindingSource;
         private Account currentAccount;
+        private AccountService accountService;
 
         public AccountChargeEntry()
         {
@@ -34,9 +27,12 @@ namespace LabBilling.Forms
 
         private void BatchChargeEntry_Load(object sender, EventArgs e)
         {
+            accountService = new(Program.AppEnvironment);
             charges = new List<BatchCharge>();
-            chrgBindingSource = new BindingSource();
-            chrgBindingSource.DataSource = charges;
+            chrgBindingSource = new BindingSource
+            {
+                DataSource = charges
+            };
             dgvBatchEntry.DataSource = chrgBindingSource;
 
             dgvBatchEntry.Columns[nameof(BatchCharge.CDM)].DisplayIndex = 0;
@@ -61,12 +57,13 @@ namespace LabBilling.Forms
 
         private void dgvBatchEntry_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
+            using UnitOfWorkMain unitOfWork = new(Program.AppEnvironment);
             switch (dgvBatchEntry.Columns[e.ColumnIndex].Name)
             {
                 case nameof(BatchCharge.CDM):
                     Cdm cdm = new Cdm();
                     //look up cdm number and get amount
-                    cdm = cdmRepository.GetCdm(dgvBatchEntry[e.ColumnIndex, e.RowIndex].Value.ToString());
+                    cdm = unitOfWork.CdmRepository.GetCdm(dgvBatchEntry[e.ColumnIndex, e.RowIndex].Value.ToString());
                     if (cdm != null)
                     {
                         dgvBatchEntry[nameof(BatchCharge.ChargeDescription), e.RowIndex].Value = cdm.Description;
@@ -83,7 +80,7 @@ namespace LabBilling.Forms
                         if (cdmLookupForm.ShowDialog() == DialogResult.OK)
                         {
                             dgvBatchEntry[e.ColumnIndex, e.RowIndex].Value = cdmLookupForm.SelectedValue;
-                            cdm = cdmRepository.GetCdm(cdmLookupForm.SelectedValue);
+                            cdm = unitOfWork.CdmRepository.GetCdm(cdmLookupForm.SelectedValue);
                             if (cdm != null)
                             {
                                 dgvBatchEntry[nameof(BatchCharge.ChargeDescription), e.RowIndex].Value = cdm.Description;
@@ -113,12 +110,12 @@ namespace LabBilling.Forms
         private void PostCharges_Click(object sender, EventArgs e)
         {
             //loop through rows to write charges
-
-            foreach(var charge in charges)
+            AccountService accountService = new(Program.AppEnvironment);
+            foreach (var charge in charges)
             {
                 try
                 {
-                    accountRepository.AddCharge(charge.AccountNo, charge.CDM, charge.Qty, (DateTime)currentAccount.TransactionDate);
+                    accountService.AddCharge(charge.AccountNo, charge.CDM, charge.Qty, (DateTime)currentAccount.TransactionDate);
                 }
                 catch(Exception ex)
                 {
@@ -149,7 +146,7 @@ namespace LabBilling.Forms
             {
                 var selectedAccount = personSearchForm.SelectedAccount;
 
-                currentAccount = accountRepository.GetByAccount(selectedAccount);
+                currentAccount = accountService.GetAccount(selectedAccount);
 
                 accountNoTextBox.Text = currentAccount.AccountNo;
                 patientNameTextBox.Text = currentAccount.PatFullName;

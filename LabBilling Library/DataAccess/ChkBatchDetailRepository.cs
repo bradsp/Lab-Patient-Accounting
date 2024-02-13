@@ -4,12 +4,14 @@ using System.Data;
 using System.Collections.Generic;
 using LabBilling.Logging;
 using System;
+using LabBilling.Core.UnitOfWork;
 
 namespace LabBilling.Core.DataAccess
 {
     public sealed class ChkBatchDetailRepository : RepositoryBase<ChkBatchDetail>
     {
-        public ChkBatchDetailRepository(IAppEnvironment environment) : base(environment)
+
+        public ChkBatchDetailRepository(IAppEnvironment appEnvironment, PetaPoco.IDatabase context) : base(appEnvironment, context)
         {
         }
 
@@ -17,31 +19,18 @@ namespace LabBilling.Core.DataAccess
         {
             Log.Instance.Trace("Entering");
 
-            return dbConnection.SingleOrDefault<ChkBatchDetail>(id);
+            return Context.SingleOrDefault<ChkBatchDetail>(id);
         }
 
         public List<ChkBatchDetail> GetByBatch(int batch)
         {
             Log.Instance.Trace("Entering");
 
-            AccountRepository accountRepository = new AccountRepository(AppEnvironment);
-
             var sql = PetaPoco.Sql.Builder
                 .Where($"{GetRealColumn(nameof(ChkBatchDetail.Batch))} = @0", new SqlParameter() { SqlDbType = SqlDbType.Int, Value = batch })
                 .OrderBy($"{GetRealColumn(nameof(ChkBatchDetail.Id))}");
 
-            var details = dbConnection.Fetch<ChkBatchDetail>(sql);
-
-            details.ForEach(x =>
-            {
-                if (!string.IsNullOrEmpty(x.AccountNo))
-                {
-                    var acc = accountRepository.GetByAccount(x.AccountNo);
-                    x.PatientName = acc.PatFullName;
-                    x.Balance = acc.Balance;
-                }
-            }
-            );
+            var details = Context.Fetch<ChkBatchDetail>(sql);
 
             return details;
         }
@@ -52,7 +41,7 @@ namespace LabBilling.Core.DataAccess
                 .Where($"{GetRealColumn(nameof(ChkBatchDetail.Batch))} = @0",
                 new SqlParameter() { SqlDbType = SqlDbType.Int, Value = batch });
 
-            return dbConnection.Delete<ChkBatchDetail>(sql);
+            return Context.Delete<ChkBatchDetail>(sql);
         }
 
         public new (bool successFlag, int newId) Save(ChkBatchDetail table)

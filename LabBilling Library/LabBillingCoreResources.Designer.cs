@@ -59,35 +59,7 @@ namespace LabBilling.Core {
                 resourceCulture = value;
             }
         }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap ADAJ400_Red {
-            get {
-                object obj = ResourceManager.GetObject("ADAJ400_Red", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap HCFA1500_Red {
-            get {
-                object obj = ResourceManager.GetObject("HCFA1500_Red", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap UB04_Red {
-            get {
-                object obj = ResourceManager.GetObject("UB04_Red", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
+      
+
     }
 }

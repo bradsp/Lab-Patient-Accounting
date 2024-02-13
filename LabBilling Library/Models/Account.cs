@@ -6,6 +6,7 @@ using PetaPoco;
 
 namespace LabBilling.Core.Models
 {
+
     [TableName("acc")]
     [PrimaryKey("account", AutoIncrement = false)]
     public sealed class Account : IBaseEntity

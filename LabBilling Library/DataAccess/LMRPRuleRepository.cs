@@ -7,12 +7,13 @@ using PetaPoco;
 using LabBilling.Core.Models;
 using Microsoft.Data.SqlClient;
 using System.Data;
+using LabBilling.Core.UnitOfWork;
 
 namespace LabBilling.Core.DataAccess
 {
     public sealed class LMRPRuleRepository : RepositoryBase<LMRPRule>
     {
-        public LMRPRuleRepository(IAppEnvironment appEnvironment) : base(appEnvironment)
+        public LMRPRuleRepository(IAppEnvironment appEnvironment, PetaPoco.IDatabase context) : base(appEnvironment, context)
         {
 
         }
@@ -27,7 +28,7 @@ namespace LabBilling.Core.DataAccess
             string rbDateName = this.GetRealColumn(typeof(LMRPRule), nameof(LMRPRule.RBDate));
             string expireDateName = this.GetRealColumn(typeof(LMRPRule), nameof(LMRPRule.ExpirationDate));
 
-            var result = dbConnection.SingleOrDefault<LMRPRule>($"where {cptRealName} = @0 and @1 between {begDxName} and {endDxName} " + 
+            var result = Context.SingleOrDefault<LMRPRule>($"where {cptRealName} = @0 and @1 between {begDxName} and {endDxName} " + 
                 $"and {amaYearName} = @2 and  {rbDateName} <= @3 and ({expireDateName} >= @4 or {expireDateName} is null)",
                 new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = cpt },
                 new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = dx },
@@ -58,7 +59,7 @@ namespace LabBilling.Core.DataAccess
             string expireDateName = this.GetRealColumn(typeof(LMRPRule), nameof(LMRPRule.ExpirationDate));
             string rbDateName = this.GetRealColumn(typeof(LMRPRule), nameof(LMRPRule.RBDate));
 
-            var result = dbConnection.SingleOrDefault<LMRPRuleDefinition>($"where {cptRealName} = @0 " +
+            var result = Context.SingleOrDefault<LMRPRuleDefinition>($"where {cptRealName} = @0 " +
                 $"and {amaYearName} = @1 and  {rbDateName} <= @2 and ({expireDateName} >= @3 or {expireDateName} is null)",
                 new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = cpt },
                 new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = AmaYear(serviceDate) },
@@ -72,7 +73,7 @@ namespace LabBilling.Core.DataAccess
         {
 
             string amaYearName = this.GetRealColumn(typeof(LMRPRule), nameof(LMRPRule.AmaYear));
-            var result = dbConnection.ExecuteScalar<int>($"select count(*) from {_tableName} where {amaYearName} = @0",
+            var result = Context.ExecuteScalar<int>($"select count(*) from {_tableName} where {amaYearName} = @0",
                 new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = AmaYear(serviceDate) });
 
             return result;
@@ -82,7 +83,7 @@ namespace LabBilling.Core.DataAccess
         {
             string amaYearName = this.GetRealColumn(typeof(LMRPRule), nameof(LMRPRule.AmaYear));
 
-            var result = dbConnection.Fetch<LMRPRule>($"where {amaYearName} = @0",
+            var result = Context.Fetch<LMRPRule>($"where {amaYearName} = @0",
                 new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = AmaYear(serviceDate) });
 
             return result;

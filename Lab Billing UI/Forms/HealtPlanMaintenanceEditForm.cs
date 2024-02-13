@@ -3,17 +3,16 @@ using System.Linq;
 using System.Windows.Forms;
 using LabBilling.Core.DataAccess;
 using LabBilling.Core.Models;
+using LabBilling.Core.Services;
 
 namespace LabBilling.Forms
 {
     public partial class HealthPlanMaintenanceEditForm : BaseForm
     {
-        private InsCompanyRepository insCompanyRepository = new InsCompanyRepository(Program.AppEnvironment);
         public InsCompany insCompany = new InsCompany();
-        private FinRepository finRepository = new FinRepository(Program.AppEnvironment);
         private string selectedInsCode = null;
         private bool addMode = false;
-
+        private DictionaryService dictionaryService;
 
         public HealthPlanMaintenanceEditForm()
         {
@@ -26,7 +25,7 @@ namespace LabBilling.Forms
                 throw new ArgumentNullException();
 
             selectedInsCode = insCode;
-
+            dictionaryService = new(Program.AppEnvironment);
         }
 
         private void HealtPlanMaintenaceEditForm_Load(object sender, EventArgs e)
@@ -40,7 +39,7 @@ namespace LabBilling.Forms
 
             finCodeComboBox.DisplayMember = nameof(Fin.FinCode);
             finCodeComboBox.ValueMember = nameof(Fin.FinCode);
-            finCodeComboBox.DataSource = finRepository.GetAll();
+            finCodeComboBox.DataSource = dictionaryService.GetFinancialCodes();
             finCodeComboBox.SelectedIndex = -1;
 
             if (selectedInsCode == null)
@@ -51,7 +50,7 @@ namespace LabBilling.Forms
             }
             else
             {
-                insCompany = insCompanyRepository.GetByCode(selectedInsCode);
+                insCompany = dictionaryService.GetInsCompany(selectedInsCode);
                 insCodeTextBox.ReadOnly = true;
                 if (insCompany == null)
                 {
@@ -170,18 +169,11 @@ namespace LabBilling.Forms
             insCompany.NThrivePayerNo = nThrivePayerNoTextBox.Text;
             insCompany.Comment = commentsTextBox.Text;
             insCompany.IsDeleted = !IsActiveCheckBox.Checked;
+            insCompany.InsuranceCode = insCodeTextBox.Text;
 
             try
-            {
-                if (selectedInsCode == null)
-                {
-                    insCompany.InsuranceCode = insCodeTextBox.Text;
-                    insCompanyRepository.Add(insCompany);
-                }
-                else
-                {
-                    insCompanyRepository.Update(insCompany);
-                }
+            {                
+                dictionaryService.SaveInsCompany(insCompany);
             }
             catch(Exception ex)
             {
@@ -206,7 +198,7 @@ namespace LabBilling.Forms
             //check for existing insurance code
             if (addMode)
             {
-                var insc = insCompanyRepository.GetByCode(insCodeTextBox.Text);
+                var insc = dictionaryService.GetInsCompany(insCodeTextBox.Text);
                 if (insc != null)
                 {
                     if (MessageBox.Show($"Record for insurance code {insc.InsuranceCode} already exists. \n\nEdit this record instead?",

@@ -4,12 +4,13 @@ using LabBilling.Logging;
 using LabBilling.Core.Models;
 using Microsoft.Data.SqlClient;
 using System.Data;
+using LabBilling.Core.UnitOfWork;
 
 namespace LabBilling.Core.DataAccess
 {
     public sealed class ChkRepository : RepositoryBase<Chk>
     {
-        public ChkRepository(IAppEnvironment appEnvironment) : base(appEnvironment)
+        public ChkRepository(IAppEnvironment appEnvironment, PetaPoco.IDatabase context) : base(appEnvironment, context)
         {
 
         }
@@ -21,7 +22,7 @@ namespace LabBilling.Core.DataAccess
                 .From(_tableName)
                 .Where($"{GetRealColumn(nameof(Chk.PaymentNo))} = @0", new SqlParameter() { SqlDbType = SqlDbType.Decimal, Value = id });
 
-            var result = dbConnection.SingleOrDefault<Chk>(sql);
+            var result = Context.SingleOrDefault<Chk>(sql);
 
             return result;
         }
@@ -34,7 +35,7 @@ namespace LabBilling.Core.DataAccess
                 .From(_tableName)
                 .Where($"{GetRealColumn(nameof(Chk.CheckNo))} = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = checkno });
 
-            var result = dbConnection.Fetch<Chk>(sql);
+            var result = Context.Fetch<Chk>(sql);
 
             return result;
         }
@@ -53,7 +54,7 @@ namespace LabBilling.Core.DataAccess
 
             sql.OrderBy("pay_no");
 
-            var records = dbConnection.Fetch<Chk>(sql);
+            var records = Context.Fetch<Chk>(sql);
 
             return records;
         }
@@ -73,7 +74,7 @@ namespace LabBilling.Core.DataAccess
 
                 sql.OrderBy("pay_no");
 
-                var records = dbConnection.Fetch<Chk>(sql);
+                var records = Context.Fetch<Chk>(sql);
                 return records;
             }
 
@@ -86,33 +87,10 @@ namespace LabBilling.Core.DataAccess
             return base.Add(table);
         }
 
+        [Obsolete("Use ChkBatchUnitOfWork.AddBatch instead")]
         public bool AddBatch(List<Chk> chks)
         {
-
-            Log.Instance.Trace("Entering");
-
-            try
-            {
-                BeginTransaction();
-
-                // Some transactional DB work
-                foreach (Chk chk in chks)
-                {
-                    this.Add(chk);
-                }
-
-                CompleteTransaction();
-            }
-            catch (Exception e)
-            {
-                Log.Instance.Fatal(e, $"Exception adding chk record");
-                AbortTransaction();
-                throw new ApplicationException("Exception encountered posting batch. Records have been rolled back.", e);
-                //return false;
-            }
-
-            return true;
-
+            return false;
         }
 
     }

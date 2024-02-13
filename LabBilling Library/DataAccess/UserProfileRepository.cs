@@ -6,12 +6,13 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using LabBilling.Core.UnitOfWork;
 
 namespace LabBilling.Core.DataAccess
 {
     public sealed class UserProfileRepository : RepositoryBase<UserProfile>
     {
-        public UserProfileRepository(IAppEnvironment appEnvironment) : base(appEnvironment)
+        public UserProfileRepository(IAppEnvironment appEnvironment, PetaPoco.IDatabase context) : base(appEnvironment, context)
         {
             
         }
@@ -20,7 +21,7 @@ namespace LabBilling.Core.DataAccess
         {
             UserProfile userProfile = new UserProfile();
 
-            dbConnection.Delete<UserProfile>($"where {this.GetRealColumn(typeof(UserProfile), nameof(UserProfile.UserName))} = @0 and Parameter = @1 and ParameterData = @2",
+            Context.Delete<UserProfile>($"where {this.GetRealColumn(typeof(UserProfile), nameof(UserProfile.UserName))} = @0 and Parameter = @1 and ParameterData = @2",
                 new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = user },
                 new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = "RecentAccount" },
                 new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account });
@@ -46,7 +47,7 @@ namespace LabBilling.Core.DataAccess
                 .Where("Parameter = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = "RecentAccount" })
                 .OrderBy($"{sortColumn} desc");
 
-            return dbConnection.Fetch<UserProfile>(command);
+            return Context.Fetch<UserProfile>(command);
         }
 
     }

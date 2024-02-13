@@ -4,13 +4,15 @@ using LabBilling.Core.Models;
 using Microsoft.Data.SqlClient;
 using System.Data;
 using System.Reflection;
+using LabBilling.Core.UnitOfWork;
+using LabBilling.Core.Services;
 
 namespace LabBilling.Core.DataAccess
 {
     public sealed class SystemParametersRepository : RepositoryBase<SysParameter>
     {
 
-        public SystemParametersRepository(IAppEnvironment appEnvironment) : base(appEnvironment) { }
+        public SystemParametersRepository(IAppEnvironment appEnvironment, PetaPoco.IDatabase context) : base(appEnvironment, context) { }
         
 
         public string GetProductionEnvironment()
@@ -30,7 +32,7 @@ namespace LabBilling.Core.DataAccess
 
             SysParameter record;
 
-            record = dbConnection.SingleOrDefault<SysParameter>($"where {GetRealColumn(nameof(SysParameter.key_name))} = @0",
+            record = Context.SingleOrDefault<SysParameter>($"where {GetRealColumn(nameof(SysParameter.key_name))} = @0",
                 new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = key });
   
             if(string.IsNullOrEmpty(record.Value))
@@ -45,7 +47,7 @@ namespace LabBilling.Core.DataAccess
 
             SysParameter record;
 
-            record = dbConnection.SingleOrDefault<SysParameter>($"where {GetRealColumn(nameof(SysParameter.KeyName))} = @0",
+            record = Context.SingleOrDefault<SysParameter>($"where {GetRealColumn(nameof(SysParameter.KeyName))} = @0",
                 new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = keyName });
 
             if (record == null)
@@ -63,7 +65,7 @@ namespace LabBilling.Core.DataAccess
 
             SysParameter record;
 
-            record = dbConnection.SingleOrDefault<SysParameter>($"where {GetRealColumn(nameof(SysParameter.KeyName))} = @0",
+            record = Context.SingleOrDefault<SysParameter>($"where {GetRealColumn(nameof(SysParameter.KeyName))} = @0",
                 new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = keyName });
 
             return record;

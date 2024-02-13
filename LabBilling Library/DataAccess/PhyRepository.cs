@@ -2,18 +2,15 @@
 using System.Collections.Generic;
 using Microsoft.Data.SqlClient;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using LabBilling.Core.Models;
 using LabBilling.Logging;
-using NPOI.XWPF.UserModel;
+using LabBilling.Core.UnitOfWork;
 
 namespace LabBilling.Core.DataAccess
 {
     public sealed class PhyRepository : RepositoryBase<Phy>
     {
-        public PhyRepository(IAppEnvironment appEnvironment) : base(appEnvironment)
+        public PhyRepository(IAppEnvironment appEnvironment, PetaPoco.IDatabase context) : base(appEnvironment, context)
         {
                 
         }
@@ -25,13 +22,13 @@ namespace LabBilling.Core.DataAccess
             Pth pth = new();
 
             if (!string.IsNullOrEmpty(npi))
-                phy = dbConnection.SingleOrDefault<Phy>($"where {GetRealColumn(nameof(Phy.NpiId))} = @0",
+                phy = Context.SingleOrDefault<Phy>($"where {GetRealColumn(nameof(Phy.NpiId))} = @0",
                     new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = npi });
             if (phy != null)
             {
                 if (!string.IsNullOrEmpty(phy.PathologistCode))
                 {
-                    pth = dbConnection.SingleOrDefault<Pth>(Convert.ToInt32(phy.PathologistCode));
+                    pth = Context.SingleOrDefault<Pth>(Convert.ToInt32(phy.PathologistCode));
                     phy.Pathologist = pth;
                 }
             }
@@ -55,7 +52,7 @@ namespace LabBilling.Core.DataAccess
                         new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = firstName })
                     .OrderBy($"{this.GetRealColumn(typeof(Phy), nameof(Phy.LastName))}, {this.GetRealColumn(typeof(Phy), nameof(Phy.FirstName))}");
 
-                phy = dbConnection.Fetch<Phy>(command);
+                phy = Context.Fetch<Phy>(command);
 
                 return phy;
             }
@@ -69,9 +66,9 @@ namespace LabBilling.Core.DataAccess
 
             string sql = $"SELECT * FROM {_tableName} where deleted = 0";
 
-            var queryResult = dbConnection.Fetch<Phy>(sql);
+            var queryResult = Context.Fetch<Phy>(sql);
 
-            Log.Instance.Trace(dbConnection.LastSQL);
+            Log.Instance.Trace(Context.LastSQL);
             return queryResult;
         }
 
@@ -81,14 +78,14 @@ namespace LabBilling.Core.DataAccess
             Phy phy = new Phy();
             Pth pth = new Pth();
 
-            phy = dbConnection.SingleOrDefault<Phy>(id);
+            phy = Context.SingleOrDefault<Phy>(id);
             if(phy == null)
             {
                 return null;
             }
             if (!string.IsNullOrEmpty(phy.PathologistCode))
             {
-                pth = dbConnection.SingleOrDefault<Pth>(phy.PathologistCode);
+                pth = Context.SingleOrDefault<Pth>(phy.PathologistCode);
                 phy.Pathologist = pth;
             }
             

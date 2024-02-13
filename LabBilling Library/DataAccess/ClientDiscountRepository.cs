@@ -5,16 +5,16 @@ using Microsoft.Data.SqlClient;
 using System.Linq;
 using LabBilling.Core.Models;
 using LabBilling.Logging;
+using LabBilling.Core.UnitOfWork;
+using LabBilling.Core.Services;
 //using static iText.StyledXmlParser.Jsoup.Select.Evaluator;
 
 namespace LabBilling.Core.DataAccess
 {
     public sealed class ClientDiscountRepository : RepositoryBase<ClientDiscount>
     {
-        public ClientDiscountRepository(IAppEnvironment appEnvironment) : base(appEnvironment)
-        {
 
-        }
+        public ClientDiscountRepository(IAppEnvironment appEnvironment, PetaPoco.IDatabase context) : base(appEnvironment, context) {  }
 
         public List<ClientDiscount> GetByClient(string clientMnem, bool includeDeleted = false)
         {
@@ -22,16 +22,16 @@ namespace LabBilling.Core.DataAccess
             List<ClientDiscount> results = null;
             if (!includeDeleted)
             {
-                results = dbConnection.Fetch<ClientDiscount>($"where {this.GetRealColumn(nameof(ClientDiscount.ClientMnem))} = @0 and {this.GetRealColumn(nameof(ClientDiscount.IsDeleted))} = 0",
+                results = Context.Fetch<ClientDiscount>($"where {this.GetRealColumn(nameof(ClientDiscount.ClientMnem))} = @0 and {this.GetRealColumn(nameof(ClientDiscount.IsDeleted))} = 0",
                     new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = clientMnem });
             }
             else
             {
-                results = dbConnection.Fetch<ClientDiscount>($"where {this.GetRealColumn(nameof(ClientDiscount.ClientMnem))} = @0",
+                results = Context.Fetch<ClientDiscount>($"where {this.GetRealColumn(nameof(ClientDiscount.ClientMnem))} = @0",
                     new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = clientMnem });
             }
 
-            CdmRepository cdmRepository = new CdmRepository(AppEnvironment);
+            CdmRepository cdmRepository = new(AppEnvironment, unitOfWork);
 
             foreach(ClientDiscount clientDiscount in results)
             {
@@ -57,7 +57,7 @@ namespace LabBilling.Core.DataAccess
             command.Where($"{GetRealColumn(nameof(ClientDiscount.Cdm))} = @0",
                 new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = cdm });
 
-            return dbConnection.SingleOrDefault<ClientDiscount>(command);
+            return Context.SingleOrDefault<ClientDiscount>(command);
         }
 
         public override bool Save(ClientDiscount table)
@@ -91,7 +91,7 @@ namespace LabBilling.Core.DataAccess
                 throw new ArgumentNullException("clientMnem");
             }
 
-            dbConnection.Delete<ClientDiscount>($"where {GetRealColumn(nameof(ClientDiscount.ClientMnem))} = @0",
+            Context.Delete<ClientDiscount>($"where {GetRealColumn(nameof(ClientDiscount.ClientMnem))} = @0",
                 new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = clientMnem });
 
 
@@ -111,7 +111,6 @@ namespace LabBilling.Core.DataAccess
             string clientMnem = discounts.First().ClientMnem;
             try
             {
-                BeginTransaction();
                 //delete all discounts and rewrite
                 Delete(clientMnem);
 
@@ -121,14 +120,10 @@ namespace LabBilling.Core.DataAccess
                         dis.EndCdmRange = dis.Cdm;
                     Add(dis);
                 }
-
-
-                CompleteTransaction();
             }
             catch(Exception ex)
             {
                 Log.Instance.Error(ex, "Error adding client discounts");
-                AbortTransaction();
                 return false;
             }
 

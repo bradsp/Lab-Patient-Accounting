@@ -8,22 +8,21 @@ using LabBilling.Core;
 using LabBilling.Logging;
 using LabBilling.Core.Models;
 using LabBilling.Forms;
+using LabBilling.Core.Services;
 
 namespace LabBilling
 {
     public partial class UserSecurity : BaseForm
     {
-        //private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
-        readonly EmpRepository empRepository = new(Program.AppEnvironment);
         private bool IsNewRecord = false;
-        List<Emp> searchResults = new();
+        List<UserAccount> searchResults = new();
+
+        private readonly SystemService systemService = new(Program.AppEnvironment);
 
         public UserSecurity()
         {
             Log.Instance.Trace($"Entering");
             InitializeComponent();
-
-            //empRepository = EmpRepository.Instance;
         }
 
         private void SetPermissions()
@@ -71,10 +70,10 @@ namespace LabBilling
             Password.ReadOnly = false;
         }
 
-        private Emp ReadEditedData()
+        private UserAccount ReadEditedData()
         {
             Log.Instance.Trace($"Entering");
-            Emp editedEmp = new Emp
+            UserAccount editedEmp = new()
             {
                 UserName = UserName.Text,
                 FullName = FullName.Text,
@@ -97,11 +96,11 @@ namespace LabBilling
         private void SaveButton_Click(object sender, EventArgs e)
         {
             Log.Instance.Trace($"Entering");
-            Emp editedEmp = ReadEditedData();
+            UserAccount editedEmp = ReadEditedData();
 
             if (!IsNewRecord)
             { 
-                if(empRepository.Update(editedEmp) == true)
+                if(systemService.UpdateUser(editedEmp) == true)
                 {
                     MessageBox.Show("Record successfully updated.");
                     Clear();
@@ -115,7 +114,7 @@ namespace LabBilling
                 bool userExists = false;
                 foreach(DataGridViewRow row in UserListDGV.Rows)
                 {
-                    if(row.Cells[nameof(Emp.UserName)].Value.ToString().ToLower().Equals(editedEmp.UserName.ToLower()))
+                    if(row.Cells[nameof(UserAccount.UserName)].Value.ToString().ToLower().Equals(editedEmp.UserName.ToLower()))
                     {
                         UserListDGV.FirstDisplayedScrollingRowIndex = row.Index;
                         userExists = true;
@@ -128,7 +127,7 @@ namespace LabBilling
                     //this user already exists
                     if(MessageBox.Show("This username already exists. Do you want to update this user with the new information?","User Exists",MessageBoxButtons.YesNo) == DialogResult.Yes)
                     {
-                        if (empRepository.Update(editedEmp) == true)
+                        if (systemService.UpdateUser(editedEmp) == true)
                         {
                             MessageBox.Show("Record successfully updated.");
                             Clear();
@@ -153,7 +152,7 @@ namespace LabBilling
                     //encrypt new password for saving
                     editedEmp.Password = Helper.Encrypt(Password.Text.Trim());
                     // add user record
-                    if (empRepository.Add(editedEmp) != null)
+                    if (systemService.AddUser(editedEmp) != null)
                     {
                         MessageBox.Show("Record successfully inserted.");
                         Clear();
@@ -193,7 +192,7 @@ namespace LabBilling
         private void RefreshDGV()
         {
             Log.Instance.Trace($"Entering");
-            searchResults = empRepository.GetAll().ToList();
+            searchResults = systemService.GetUsers().ToList();
 
             DataTable dt = Helper.ConvertToDataTable(searchResults);
 
@@ -214,23 +213,23 @@ namespace LabBilling
             {
                 IsNewRecord = false;
                 UserName.ReadOnly = true;
-                UserName.Text = UserListDGV.SelectedRows[0].Cells[nameof(Emp.UserName)].Value.ToString();
-                FullName.Text = UserListDGV.SelectedRows[0].Cells[nameof(Emp.FullName)].Value.ToString();
-                AccessLevelCombo.Text = UserListDGV.SelectedRows[0].Cells[nameof(Emp.Access)].Value.ToString();
+                UserName.Text = UserListDGV.SelectedRows[0].Cells[nameof(UserAccount.UserName)].Value.ToString();
+                FullName.Text = UserListDGV.SelectedRows[0].Cells[nameof(UserAccount.FullName)].Value.ToString();
+                AccessLevelCombo.Text = UserListDGV.SelectedRows[0].Cells[nameof(UserAccount.Access)].Value.ToString();
                 //Password.Text = UserListDGV.SelectedRows[0].Cells[nameof(Emp.Password)].Value == null ? "" : UserListDGV.SelectedRows[0].Cells[nameof(Emp.Password)].Value.ToString();
-                CanAddAccountAdjustments.Checked = Convert.ToBoolean(UserListDGV.SelectedRows[0].Cells[nameof(Emp.CanAddAdjustments)].Value);
-                CanAddCharges.Checked = Convert.ToBoolean(UserListDGV.SelectedRows[0].Cells[nameof(Emp.CanSubmitCharges)].Value);
-                CanAddPayments.Checked = Convert.ToBoolean(UserListDGV.SelectedRows[0].Cells[nameof(Emp.CanAddAdjustments)].Value);
-                CanChangeAccountFinCode.Checked = Convert.ToBoolean(UserListDGV.SelectedRows[0].Cells[nameof(Emp.CanModifyAccountFincode)].Value);
-                CanEditBadDebt.Checked = Convert.ToBoolean(UserListDGV.SelectedRows[0].Cells[nameof(Emp.CanModifyBadDebt)].Value);
-                CanEditDictionaries.Checked = Convert.ToBoolean(UserListDGV.SelectedRows[0].Cells[nameof(Emp.CanEditDictionary)].Value);
-                CanSubmitBilling.Checked = Convert.ToBoolean(UserListDGV.SelectedRows[0].Cells[nameof(Emp.CanSubmitBilling)].Value);
-                IsAdministrator.Checked = Convert.ToBoolean(UserListDGV.SelectedRows[0].Cells[nameof(Emp.IsAdministrator)].Value);
-                canImpersonateUserCheckBox.Checked = Convert.ToBoolean(UserListDGV.SelectedRows[0].Cells[nameof(Emp.CanImpersonate)].Value);
+                CanAddAccountAdjustments.Checked = Convert.ToBoolean(UserListDGV.SelectedRows[0].Cells[nameof(UserAccount.CanAddAdjustments)].Value);
+                CanAddCharges.Checked = Convert.ToBoolean(UserListDGV.SelectedRows[0].Cells[nameof(UserAccount.CanSubmitCharges)].Value);
+                CanAddPayments.Checked = Convert.ToBoolean(UserListDGV.SelectedRows[0].Cells[nameof(UserAccount.CanAddAdjustments)].Value);
+                CanChangeAccountFinCode.Checked = Convert.ToBoolean(UserListDGV.SelectedRows[0].Cells[nameof(UserAccount.CanModifyAccountFincode)].Value);
+                CanEditBadDebt.Checked = Convert.ToBoolean(UserListDGV.SelectedRows[0].Cells[nameof(UserAccount.CanModifyBadDebt)].Value);
+                CanEditDictionaries.Checked = Convert.ToBoolean(UserListDGV.SelectedRows[0].Cells[nameof(UserAccount.CanEditDictionary)].Value);
+                CanSubmitBilling.Checked = Convert.ToBoolean(UserListDGV.SelectedRows[0].Cells[nameof(UserAccount.CanSubmitBilling)].Value);
+                IsAdministrator.Checked = Convert.ToBoolean(UserListDGV.SelectedRows[0].Cells[nameof(UserAccount.IsAdministrator)].Value);
+                canImpersonateUserCheckBox.Checked = Convert.ToBoolean(UserListDGV.SelectedRows[0].Cells[nameof(UserAccount.CanImpersonate)].Value);
 
-                ModDateTime.Text = UserListDGV.SelectedRows[0].Cells[nameof(Emp.LastModifiedDate)].Value.ToString();
-                ModUser.Text = UserListDGV.SelectedRows[0].Cells[nameof(Emp.LastModifiedBy)].Value?.ToString();
-                ModProgram.Text = UserListDGV.SelectedRows[0].Cells[nameof(Emp.LastModifiedWith)].Value?.ToString();
+                ModDateTime.Text = UserListDGV.SelectedRows[0].Cells[nameof(UserAccount.LastModifiedDate)].Value.ToString();
+                ModUser.Text = UserListDGV.SelectedRows[0].Cells[nameof(UserAccount.LastModifiedBy)].Value?.ToString();
+                ModProgram.Text = UserListDGV.SelectedRows[0].Cells[nameof(UserAccount.LastModifiedWith)].Value?.ToString();
 
             }
             catch (Exception ex)
@@ -255,11 +254,11 @@ namespace LabBilling
 
             if(prompt.ReturnCode == DialogResult.OK)
             {
-                Emp emp = ReadEditedData();
+                UserAccount user = ReadEditedData();
 
-                emp.Password = Helper.Encrypt(prompt.Text.Trim());
+                user.Password = Helper.Encrypt(prompt.Text.Trim());
 
-                if (empRepository.Update(emp) == true)
+                if (systemService.UpdateUser(user) == true)
                 {
                     MessageBox.Show("Password updated.");
                     Clear();

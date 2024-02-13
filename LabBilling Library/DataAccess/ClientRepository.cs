@@ -11,20 +11,19 @@ using System.Linq;
 using System.Threading.Tasks;
 using Utilities;
 using System.Runtime.CompilerServices;
+using LabBilling.Core.UnitOfWork;
+using LabBilling.Core.Services;
 
 namespace LabBilling.Core.DataAccess
 {
     public sealed class ClientRepository : RepositoryBase<Client>
     {
-        ClientDiscountRepository clientDiscountRepository;
-        ClientTypeRepository clientTypeRepository;
-        private const string invoiceCdm = "CBILL";
+
         private const string clientFinCode = "CLIENT";
 
-        public ClientRepository(IAppEnvironment appEnvironment) : base(appEnvironment)
+        public ClientRepository(IAppEnvironment appEnvironment, PetaPoco.IDatabase context) : base(appEnvironment, context)
         {
-            clientDiscountRepository = new ClientDiscountRepository(appEnvironment);
-            clientTypeRepository = new ClientTypeRepository(appEnvironment);
+
         }
 
         public List<Client> GetAll(bool includeInactive)
@@ -43,14 +42,14 @@ namespace LabBilling.Core.DataAccess
                     .From(_tableName)
                     .Where($"{GetRealColumn(nameof(Client.IsDeleted))} = @0", false);
             }
-            var queryResult = dbConnection.Fetch<Client>(sql);
+            var queryResult = Context.Fetch<Client>(sql);
 
             foreach(var item in queryResult) 
             {
-                item.ClientType = clientTypeRepository.GetByType(item.Type);    
+                item.ClientType = unitOfWork.ClientTypeRepository.GetByType(item.Type);    
             }
 
-            Log.Instance.Debug(dbConnection.LastSQL);
+            Log.Instance.Debug(Context.LastSQL);
 
             return queryResult;
         }
@@ -58,22 +57,22 @@ namespace LabBilling.Core.DataAccess
         public Client GetClient(string clientMnem)
         {
             Log.Instance.Debug($"Entering - {clientMnem}");
-            MappingRepository mappingRepository = new MappingRepository(AppEnvironment);
+            MappingRepository mappingRepository = new(AppEnvironment, unitOfWork);
 
             if (clientMnem == null)
             {
                 throw new ArgumentNullException(nameof(clientMnem));
             }
 
-            var record = dbConnection.SingleOrDefault<Client>("where cli_mnem = @0", new SqlParameter() { SqlDbType = System.Data.SqlDbType.VarChar, Value = clientMnem });
-            Log.Instance.Debug(dbConnection.LastSQL);
+            var record = Context.SingleOrDefault<Client>("where cli_mnem = @0", new SqlParameter() { SqlDbType = System.Data.SqlDbType.VarChar, Value = clientMnem });
+            Log.Instance.Debug(Context.LastSQL);
             if (record != null)
             {
-                record.Discounts = clientDiscountRepository.GetByClient(clientMnem);
-                record.ClientType = clientTypeRepository.GetByType(record.Type);
+                record.Discounts = unitOfWork.ClientDiscountRepository.GetByClient(clientMnem);
+                record.ClientType = unitOfWork.ClientTypeRepository.GetByType(record.Type);
                 record.Mappings = mappingRepository.GetMappingsBySendingValue("CLIENT", record.ClientMnem).ToList();
             }
-            Log.Instance.Debug(dbConnection.LastSQL);
+            Log.Instance.Debug(Context.LastSQL);
             return record;
         }
 
@@ -84,21 +83,23 @@ namespace LabBilling.Core.DataAccess
 
             if (string.IsNullOrEmpty(table.BillMethod))
                 table.BillMethod = "PER ACCOUNT";
-            AccountRepository accountRepository = new AccountRepository(AppEnvironment);
+            AccountRepository accountRepository = new(AppEnvironment, unitOfWork);
 
             var account = accountRepository.GetByAccount(table.ClientMnem, true);
 
             if(account == null)
             {
                 //add account
-                account = new Account();
-                account.AccountNo = table.ClientMnem;
-                account.PatFullName = table.Name;
-                account.FinCode = clientFinCode;
-                account.TransactionDate = DateTime.Today;
-                account.Status = AccountStatus.New;
-                account.ClientMnem = table.ClientMnem;
-                account.MeditechAccount = table.ClientMnem;
+                account = new Account
+                {
+                    AccountNo = table.ClientMnem,
+                    PatFullName = table.Name,
+                    FinCode = clientFinCode,
+                    TransactionDate = DateTime.Today,
+                    Status = AccountStatus.New,
+                    ClientMnem = table.ClientMnem,
+                    MeditechAccount = table.ClientMnem
+                };
 
                 accountRepository.Add(account);
             }
@@ -121,7 +122,7 @@ namespace LabBilling.Core.DataAccess
             bool success;
             if (record != null)
             {
-                clientDiscountRepository.SaveAll(table.Discounts);
+                unitOfWork.ClientDiscountRepository.SaveAll(table.Discounts);
                 success = this.Update(table);
             }
             else
@@ -130,7 +131,7 @@ namespace LabBilling.Core.DataAccess
                 {
                     this.Add(table);
                     if(table.Discounts != null)
-                        clientDiscountRepository.SaveAll(table.Discounts);
+                        unitOfWork.ClientDiscountRepository.SaveAll(table.Discounts);
                     success = true;
                 }
                 catch (Exception ex)
@@ -139,7 +140,7 @@ namespace LabBilling.Core.DataAccess
                     success = false;
                 }
             }
-            Log.Instance.Debug(dbConnection.LastSQL);
+            Log.Instance.Debug(Context.LastSQL);
             return success;
         }
 
@@ -158,7 +159,7 @@ namespace LabBilling.Core.DataAccess
             if(clientMnem == null)
                 throw new ArgumentNullException(nameof(clientMnem));
 
-             var balanceReturn = dbConnection.ExecuteScalar<double>("select dbo.GetAccBalance(@0)",
+             var balanceReturn = Context.ExecuteScalar<double>("select dbo.GetAccBalance(@0)",
                 new SqlParameter() { SqlDbType = System.Data.SqlDbType.VarChar, Value = clientMnem });
 
             return balanceReturn;
@@ -172,84 +173,14 @@ namespace LabBilling.Core.DataAccess
             if (asOfDate > DateTime.Now)
                 throw new ArgumentOutOfRangeException(nameof(asOfDate));
 
-            var balance = dbConnection.ExecuteScalar<double>("select dbo.GetAccBalByDate(@0, @1)",
+            var balance = Context.ExecuteScalar<double>("select dbo.GetAccBalByDate(@0, @1)",
                 new SqlParameter() { ParameterName = "@account", SqlDbType = System.Data.SqlDbType.VarChar, Value = clientMnem },
                 new SqlParameter() { ParameterName = "@effDate", SqlDbType = System.Data.SqlDbType.DateTime, Value = asOfDate });
 
             return balance;
         }
 
-        public List<ClientStatementDetailModel> GetStatementDetails(string clientMnem, DateTime asOfDate)
-        {
 
-            ChkRepository chkRepository = new(AppEnvironment);
-            ChrgRepository chrgRepository = new(AppEnvironment);
-
-            var charges = chrgRepository.GetByAccount(clientMnem, true, true, asOfDate, false);
-
-            var payments = chkRepository.GetByAccount(clientMnem, asOfDate);
-
-            List<ClientStatementDetailModel> statementDetails = new();
-
-            foreach(var chrg in charges)
-            {
-                if (chrg.NetAmount == 0 && chrg.CDMCode == invoiceCdm)
-                    continue;
-
-                var statementDetail = new ClientStatementDetailModel
-                {
-                    ServiceDate = chrg.ServiceDate == null ? DateTime.MinValue : (DateTime)chrg.ServiceDate,
-                    Account = chrg.AccountNo,
-                    Invoice = chrg.Invoice,
-                    Amount = chrg.NetAmount * chrg.Quantity
-                };
-                if (chrg.CDMCode == invoiceCdm)
-                {
-                    statementDetail.Description = $"Invoice {chrg.Invoice}";
-                    statementDetail.Reference = chrg.Invoice;
-                }
-                else
-                {
-                    //see if account is in comment and extract it for the line description
-                    string pattern = "([A-Z_]*)\\[(\\w*)\\]";
-                    Regex rg = new(pattern);
-                    Match match = rg.Match(chrg.Comment);
-                    if(match.Success)
-                    {
-                        string account = match.Groups[1].Value;
-                        statementDetail.Description = $"Adjustment: {chrg.CdmDescription} on {account}";
-                    }
-                    else
-                    {
-                        statementDetail.Description = $"Adjustment: {chrg.CdmDescription}";
-                    }
-                }
-
-                statementDetails.Add(statementDetail);
-            }
-
-            foreach(var chk in payments)
-            {
-                var statementDetail = new ClientStatementDetailModel();
-
-                if(chk.PaidAmount > 0)
-                {
-                    statementDetail.Description = $"Payment Received - {chk.Comment}";
-                }
-                else if(chk.WriteOffAmount > 0)
-                {
-                    statementDetail.Description = $"Adjustment - {chk.Comment}";
-                }
-                statementDetail.Amount = (chk.PaidAmount + chk.ContractualAmount + chk.WriteOffAmount) * -1;
-                statementDetail.ServiceDate = chk.DateReceived == null ? DateTime.Today : (DateTime)chk.DateReceived;
-                statementDetail.Reference = chk.CheckNo;
-                statementDetails.Add(statementDetail);
-            }
-
-            statementDetails.Sort((x, y) => DateTime.Compare(x.ServiceDate, y.ServiceDate));
-
-            return statementDetails;
-        }
 
         /// <summary>
         /// Adds new client account if it does not exist
@@ -267,7 +198,7 @@ namespace LabBilling.Core.DataAccess
             Account account;
 
             //check to see if client account exists
-            AccountRepository accdb = new AccountRepository(AppEnvironment);
+            AccountRepository accdb = new AccountRepository(AppEnvironment, unitOfWork);
             account = accdb.GetByAccount(clientMnem);
 
             if (account == null)
@@ -294,7 +225,8 @@ namespace LabBilling.Core.DataAccess
 
         public List<UnbilledClient> GetUnbilledClients(DateTime thruDate, IProgress<int> progress)
         {
-            AccountRepository accdb = new(AppEnvironment);
+            AccountService accountService = new(AppEnvironment);
+
             List<UnbilledClient> unbilledClients = new();
 
             var unbilledAccounts = GetUnbilledAccounts(thruDate, progress);
@@ -311,7 +243,7 @@ namespace LabBilling.Core.DataAccess
                     ClientMnem = client.ClientMnem,
                     ClientName = client.Name,
                     ClientType = client.ClientType.Description,
-                    PriorBalance = accdb.GetBalance(client.ClientMnem),
+                    PriorBalance = accountService.GetBalance(client.ClientMnem),
                     UnbilledAccounts = unbilledAccounts.Where(x => x.ClientMnem == client.ClientMnem).ToList()
                 };
 
@@ -357,13 +289,13 @@ namespace LabBilling.Core.DataAccess
                     chrgTableName + "." + GetRealColumn(typeof(Chrg), nameof(Chrg.FinCode))
                 });
 
-            var results = dbConnection.Fetch<UnbilledAccounts>(cmd);
+            var results = Context.Fetch<UnbilledAccounts>(cmd);
             int processed = 0;
             foreach (var result in results)
             {
                 if (!string.IsNullOrEmpty(result.ClientMnem))
                 {
-                    var unbilledBalance = dbConnection.ExecuteScalar<double>("select dbo.GetAccClientBalance(@0, @1)",
+                    var unbilledBalance = Context.ExecuteScalar<double>("select dbo.GetAccClientBalance(@0, @1)",
                         new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = result.Account },
                         new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = result.ClientMnem });
 

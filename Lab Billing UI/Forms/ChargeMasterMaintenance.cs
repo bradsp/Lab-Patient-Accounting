@@ -7,13 +7,14 @@ using System.Linq;
 using System.Windows.Forms;
 using LabBilling.Core.DataAccess;
 using LabBilling.Core.Models;
+using LabBilling.Core.Services;
 using WinFormsLibrary;
 
 namespace LabBilling.Forms
 {
     public partial class ChargeMasterMaintenance : BaseForm
     {
-        private CdmRepository cdmRepository = new CdmRepository(Program.AppEnvironment);
+        private DictionaryService dictionaryService;
         private List<Cdm> cdms = new List<Cdm>();
         private DataTable cdmdt = new DataTable();
         private BindingSource bs = new BindingSource();
@@ -25,6 +26,7 @@ namespace LabBilling.Forms
             InitializeComponent();
             _timer = new System.Windows.Forms.Timer() { Enabled = false, Interval = _timerInterval };
             _timer.Tick += new EventHandler(filterTextBox_KeyUpDone);
+            dictionaryService = new(Program.AppEnvironment);
         }
 
         private void addCdmButton_Click(object sender, EventArgs e)
@@ -44,7 +46,7 @@ namespace LabBilling.Forms
 
         private void ReloadGrid()
         {
-            cdms = cdmRepository.GetAll(includeInactiveCheckBox.Checked).OrderBy(c => c.Description).ToList();
+            cdms = dictionaryService.GetAllCdms(includeInactiveCheckBox.Checked).OrderBy(c => c.Description).ToList();
             cdmdt = Helper.ConvertToDataTable(cdms);
             bs.DataSource = null;
             bs.DataSource = cdmdt;

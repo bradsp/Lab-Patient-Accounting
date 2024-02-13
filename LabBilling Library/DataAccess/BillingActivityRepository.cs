@@ -4,12 +4,13 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Data.SqlClient;
 using System.Data;
+using LabBilling.Core.UnitOfWork;
 
 namespace LabBilling.Core.DataAccess
 {
     public sealed class BillingActivityRepository : RepositoryBase<BillingActivity>
     {
-        public BillingActivityRepository(IAppEnvironment appEnvironment) : base(appEnvironment)
+        public BillingActivityRepository(IAppEnvironment appEnvironment, PetaPoco.IDatabase context) : base(appEnvironment, context)
         {
         }
 
@@ -17,7 +18,7 @@ namespace LabBilling.Core.DataAccess
         {
             Log.Instance.Debug($"Entering");
 
-            var record = dbConnection.Fetch<BillingActivity>($"where {GetRealColumn(nameof(BillingActivity.AccountNo))} = @0", 
+            var record = Context.Fetch<BillingActivity>($"where {GetRealColumn(nameof(BillingActivity.AccountNo))} = @0", 
                 new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account });
 
             return record;
@@ -36,7 +37,7 @@ namespace LabBilling.Core.DataAccess
                 throw new ArgumentException("fromDate must be less than thruDate");
             }
 
-            return dbConnection.Fetch<BillingActivity>($"where {GetRealColumn(nameof(BillingActivity.RunDate))} between @0 and @1",
+            return Context.Fetch<BillingActivity>($"where {GetRealColumn(nameof(BillingActivity.RunDate))} between @0 and @1",
                 new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = fromDate },
                 new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = thruDate });
 
@@ -45,7 +46,7 @@ namespace LabBilling.Core.DataAccess
         public List<BillingActivity> GetBatch(string batch)
         {
             Log.Instance.Debug("Entering");
-            var records = dbConnection.Fetch<BillingActivity>($"where {GetRealColumn(nameof(BillingActivity.Batch))} = @0",
+            var records = Context.Fetch<BillingActivity>($"where {GetRealColumn(nameof(BillingActivity.Batch))} = @0",
                 new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = batch });
 
             return records;
@@ -54,7 +55,7 @@ namespace LabBilling.Core.DataAccess
         public override bool Save(BillingActivity table)
         {
             Log.Instance.Debug($"Entering");
-            var record = dbConnection.SingleOrDefault<BillingActivity>("where account=@0 and run_date = @1", 
+            var record = Context.SingleOrDefault<BillingActivity>("where account=@0 and run_date = @1", 
                 new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = table.AccountNo }, 
                 new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = table.RunDate });
 

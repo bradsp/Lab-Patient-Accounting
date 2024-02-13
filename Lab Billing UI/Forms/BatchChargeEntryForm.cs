@@ -2,24 +2,22 @@
 using LabBilling.Core.Models;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using LabBilling.Logging;
+using LabBilling.Core.Services;
 
 namespace LabBilling.Forms
 {
-    public partial class BatchChargeEntryForm : BaseForm
+    public partial class BatchChargeEntryForm : Form
     {
-        AccountRepository accountRepository;
-        CdmRepository cdmRepository;
-        private DataTable batchChargesTable = new DataTable();
-        private BindingSource batchChargeSource = new BindingSource();
+        private DataTable batchChargesTable = new();
+        private BindingSource batchChargeSource = new();
         private bool skipHandler = false;
+
+        private BatchTransactionService batchChargeService;
+        private AccountService accountService;
+        private DictionaryService dictionaryService;
 
         private class BatchChargeRecord
         {
@@ -33,13 +31,13 @@ namespace LabBilling.Forms
 
         }
 
-        private List<BatchChargeRecord> chargeRecords = new List<BatchChargeRecord>();
+        private List<BatchChargeRecord> chargeRecords = new();
 
         public BatchChargeEntryForm()
         {
-
-            accountRepository = new AccountRepository(Program.AppEnvironment);
-            cdmRepository = new CdmRepository(Program.AppEnvironment);
+            batchChargeService = new(Program.AppEnvironment);
+            accountService = new(Program.AppEnvironment);
+            dictionaryService = new(Program.AppEnvironment);
 
             InitializeComponent();
 
@@ -56,7 +54,7 @@ namespace LabBilling.Forms
         {
             if (chargesDataGridView.Columns[e.ColumnIndex].Name == nameof(BatchChargeRecord.Account))
             {
-                PersonSearchForm frm = new PersonSearchForm();
+                PersonSearchForm frm = new();
                 frm.ShowDialog();
                 if (frm.SelectedAccount != "" && frm.SelectedAccount != null)
                 {
@@ -69,14 +67,15 @@ namespace LabBilling.Forms
 
             if (chargesDataGridView.Columns[e.ColumnIndex].Name == nameof(BatchChargeRecord.Cdm))
             {
-                Cdm cdm = new Cdm();
                 //look up cdm number and get amount
 
                 //pop a cdm search dialog
-                CdmLookupForm cdmLookupForm = new CdmLookupForm();
-                cdmLookupForm.Datasource = DataCache.Instance.GetCdms();
+                CdmLookupForm cdmLookupForm = new()
+                {
+                    Datasource = DataCache.Instance.GetCdms(),
+                    InitialSearchText = chargesDataGridView[e.ColumnIndex, e.RowIndex].Value.ToString()
+                };
 
-                cdmLookupForm.InitialSearchText = chargesDataGridView[e.ColumnIndex, e.RowIndex].Value.ToString();
                 if (cdmLookupForm.ShowDialog() == DialogResult.OK)
                 {
                     chargesDataGridView[e.ColumnIndex, e.RowIndex].Value = cdmLookupForm.SelectedValue;
@@ -93,7 +92,7 @@ namespace LabBilling.Forms
                     return;
                 Account account = null;
 
-                account = accountRepository.GetByAccount(chargesDataGridView[e.ColumnIndex, e.RowIndex].Value.ToString().ToUpper(), true);
+                account = accountService.GetAccount(chargesDataGridView[e.ColumnIndex, e.RowIndex].Value.ToString().ToUpper(), true);
                 skipHandler = true;
                 if (account != null)
                 {
@@ -111,7 +110,7 @@ namespace LabBilling.Forms
                     if (frm.SelectedAccount != "" && frm.SelectedAccount != null)
                     {
                         string strAccount = frm.SelectedAccount.ToUpper();
-                        account = accountRepository.GetByAccount(strAccount, true);
+                        account = accountService.GetAccount(strAccount, true);
                         if (account != null)
                         {
                             chargesDataGridView.EndEdit();
@@ -138,9 +137,9 @@ namespace LabBilling.Forms
                     return;
 
                 skipHandler = true;
-                Cdm cdm = new Cdm();
+                Cdm cdm = new();
                 //look up cdm number and get amount
-                cdm = cdmRepository.GetCdm(chargesDataGridView[e.ColumnIndex, e.RowIndex].Value.ToString());
+                cdm = dictionaryService.GetCdm(chargesDataGridView[e.ColumnIndex, e.RowIndex].Value.ToString());
                 if (cdm != null)
                 {
                     chargesDataGridView[nameof(BatchChargeRecord.Description), e.RowIndex].Value = cdm.Description;
@@ -156,7 +155,7 @@ namespace LabBilling.Forms
                     if (cdmLookupForm.ShowDialog() == DialogResult.OK)
                     {
                         chargesDataGridView[e.ColumnIndex, e.RowIndex].Value = cdmLookupForm.SelectedValue;
-                        cdm = cdmRepository.GetCdm(cdmLookupForm.SelectedValue);
+                        cdm = dictionaryService.GetCdm(cdmLookupForm.SelectedValue);
                         if (cdm != null)
                         {
                             chargesDataGridView[nameof(BatchChargeRecord.Description), e.RowIndex].Value = cdm.Description;
@@ -196,7 +195,7 @@ namespace LabBilling.Forms
             {
                 if (e.KeyCode == Keys.F2)
                 {
-                    
+
                 }
             }
         }
@@ -212,6 +211,11 @@ namespace LabBilling.Forms
                     e.FormattingApplied = true;
                 }
             }
+        }
+
+        private void postChargesButton_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
