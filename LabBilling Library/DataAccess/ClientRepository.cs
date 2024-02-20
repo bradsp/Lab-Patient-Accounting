@@ -3,51 +3,36 @@ using Microsoft.Data.SqlClient;
 using LabBilling.Logging;
 using LabBilling.Core.Models;
 using PetaPoco;
-using NPOI.XWPF.UserModel;
 using System.Collections.Generic;
 using System.Data;
-using System.Text.RegularExpressions;
 using System.Linq;
 using System.Threading.Tasks;
 using Utilities;
-using System.Runtime.CompilerServices;
-using LabBilling.Core.UnitOfWork;
 using LabBilling.Core.Services;
 
 namespace LabBilling.Core.DataAccess
 {
     public sealed class ClientRepository : RepositoryBase<Client>
     {
-
+        private DictionaryService dictionaryService;
         private const string clientFinCode = "CLIENT";
 
         public ClientRepository(IAppEnvironment appEnvironment, PetaPoco.IDatabase context) : base(appEnvironment, context)
         {
-
+            dictionaryService = new(appEnvironment);
         }
 
         public List<Client> GetAll(bool includeInactive)
         {
             Log.Instance.Trace("Entering");
-            PetaPoco.Sql sql;
+            PetaPoco.Sql sql = Sql.Builder;
+            sql.From(_tableName);
 
-            if (includeInactive)
-            {
-                sql = PetaPoco.Sql.Builder
-                    .From(_tableName);
-            }
-            else
-            {
-                sql = PetaPoco.Sql.Builder
-                    .From(_tableName)
-                    .Where($"{GetRealColumn(nameof(Client.IsDeleted))} = @0", false);
-            }
+            if (!includeInactive)
+                sql.Where($"{GetRealColumn(nameof(Client.IsDeleted))} = @0", false);
+
             var queryResult = Context.Fetch<Client>(sql);
-
-            foreach(var item in queryResult) 
-            {
-                item.ClientType = unitOfWork.ClientTypeRepository.GetByType(item.Type);    
-            }
+            queryResult.ForEach(c => c.ClientType = dictionaryService.GetClientType(c.Type));
 
             Log.Instance.Debug(Context.LastSQL);
 
@@ -57,91 +42,33 @@ namespace LabBilling.Core.DataAccess
         public Client GetClient(string clientMnem)
         {
             Log.Instance.Debug($"Entering - {clientMnem}");
-            MappingRepository mappingRepository = new(AppEnvironment, unitOfWork);
 
             if (clientMnem == null)
             {
                 throw new ArgumentNullException(nameof(clientMnem));
             }
 
-            var record = Context.SingleOrDefault<Client>("where cli_mnem = @0", new SqlParameter() { SqlDbType = System.Data.SqlDbType.VarChar, Value = clientMnem });
+            var record = Context.SingleOrDefault<Client>((object)clientMnem);
             Log.Instance.Debug(Context.LastSQL);
             if (record != null)
             {
-                record.Discounts = unitOfWork.ClientDiscountRepository.GetByClient(clientMnem);
-                record.ClientType = unitOfWork.ClientTypeRepository.GetByType(record.Type);
-                record.Mappings = mappingRepository.GetMappingsBySendingValue("CLIENT", record.ClientMnem).ToList();
+                record.Discounts = dictionaryService.GetClientDiscounts(clientMnem).ToList(); ;
+                record.ClientType = dictionaryService.GetClientType(record.Type);
+                record.Mappings = dictionaryService.GetMappingsBySendingValue("CLIENT", record.ClientMnem).ToList();
             }
             Log.Instance.Debug(Context.LastSQL);
             return record;
         }
 
-        public override object Add(Client table)
+        public override Client Add(Client model)
         {
-            if (string.IsNullOrEmpty(table.BillProfCharges))
-                table.BillProfCharges = "NO";
+            if (string.IsNullOrEmpty(model.BillProfCharges))
+                model.BillProfCharges = "NO";
 
-            if (string.IsNullOrEmpty(table.BillMethod))
-                table.BillMethod = "PER ACCOUNT";
-            AccountRepository accountRepository = new(AppEnvironment, unitOfWork);
+            if (string.IsNullOrEmpty(model.BillMethod))
+                model.BillMethod = "PER ACCOUNT";
 
-            var account = accountRepository.GetByAccount(table.ClientMnem, true);
-
-            if(account == null)
-            {
-                //add account
-                account = new Account
-                {
-                    AccountNo = table.ClientMnem,
-                    PatFullName = table.Name,
-                    FinCode = clientFinCode,
-                    TransactionDate = DateTime.Today,
-                    Status = AccountStatus.New,
-                    ClientMnem = table.ClientMnem,
-                    MeditechAccount = table.ClientMnem
-                };
-
-                accountRepository.Add(account);
-            }
-
-            return base.Add(table);
-        }
-
-        public override bool Update(Client table)
-        {
-
-
-
-            return base.Update(table);
-        }
-
-        public override bool Save(Client table)
-        {
-            var record = this.GetClient(table.ClientMnem);
-
-            bool success;
-            if (record != null)
-            {
-                unitOfWork.ClientDiscountRepository.SaveAll(table.Discounts);
-                success = this.Update(table);
-            }
-            else
-            {
-                try
-                {
-                    this.Add(table);
-                    if(table.Discounts != null)
-                        unitOfWork.ClientDiscountRepository.SaveAll(table.Discounts);
-                    success = true;
-                }
-                catch (Exception ex)
-                {
-                    Log.Instance.Error(ex);
-                    success = false;
-                }
-            }
-            Log.Instance.Debug(Context.LastSQL);
-            return success;
+            return base.Add(model);
         }
 
         /// <summary>
@@ -178,45 +105,6 @@ namespace LabBilling.Core.DataAccess
                 new SqlParameter() { ParameterName = "@effDate", SqlDbType = System.Data.SqlDbType.DateTime, Value = asOfDate });
 
             return balance;
-        }
-
-
-
-        /// <summary>
-        /// Adds new client account if it does not exist
-        /// </summary>
-        public void NewClient(string clientMnem)
-        {
-            //check to see if client is valid and client exists
-            Client client = GetClient(clientMnem);
-
-            if (client == null)
-            {
-                throw new ArgumentException("Client mnemonic is not found in client table", "clientMnem");
-            }
-
-            Account account;
-
-            //check to see if client account exists
-            AccountRepository accdb = new AccountRepository(AppEnvironment, unitOfWork);
-            account = accdb.GetByAccount(clientMnem);
-
-            if (account == null)
-            {
-                //account does not exist - add the account
-                account = new Account
-                {
-                    AccountNo = clientMnem,
-                    PatFullName = client.Name,
-                    MeditechAccount = clientMnem,
-                    FinCode = clientFinCode,
-                    TransactionDate = DateTime.Today,
-                    ClientMnem = clientMnem
-                };
-
-                accdb.Add(account);
-            }
-
         }
 
         public async Task<List<UnbilledClient>> GetUnbilledClientsAsync(DateTime thruDate, IProgress<int> progress) => await Task.Run(() => GetUnbilledClients(thruDate, progress));

@@ -449,12 +449,8 @@ namespace LabBilling.Forms
                 if (!string.IsNullOrWhiteSpace(row[nameof(ChkBatchDetail.Id)].ToString()))
                     detail.Id = Convert.ToInt32(row[nameof(ChkBatchDetail.Id)].ToString());
 
-                var (successFlag, newId) = batchTransactionService.SavePaymentBatchDetail(detail);
-
-                if (newId > 0)
-                {
-                    row[nameof(ChkBatchDetail.Id)] = newId;
-                }
+                var chkBatchDetail = batchTransactionService.SavePaymentBatchDetail(detail);
+                row[nameof(ChkBatchDetail.Id)] = chkBatchDetail.Id;
 
                 TotalPayments();
 

@@ -99,13 +99,24 @@ namespace LabBilling
             UserAccount editedEmp = ReadEditedData();
 
             if (!IsNewRecord)
-            { 
-                if(systemService.UpdateUser(editedEmp) == true)
+            {
+                try
                 {
+                    editedEmp = systemService.UpdateUser(editedEmp);
                     MessageBox.Show("Record successfully updated.");
                     Clear();
                     //refresh DGV to pick up updates
                     RefreshDGV();
+                }
+                catch(ApplicationException apex) 
+                { 
+                    MessageBox.Show(apex.Message);
+                    Log.Instance.Error(apex.Message, apex);
+                }
+                catch(Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                    Log.Instance.Error(ex.Message, ex);
                 }
             }
             else
@@ -127,17 +138,24 @@ namespace LabBilling
                     //this user already exists
                     if(MessageBox.Show("This username already exists. Do you want to update this user with the new information?","User Exists",MessageBoxButtons.YesNo) == DialogResult.Yes)
                     {
-                        if (systemService.UpdateUser(editedEmp) == true)
+                        try
                         {
+                            editedEmp = systemService.UpdateUser(editedEmp);
                             MessageBox.Show("Record successfully updated.");
                             Clear();
                             UserName.ReadOnly = true;
                             //refresh DGV to pick up updates
                             RefreshDGV();
                         }
-                        else
+                        catch (ApplicationException apex)
                         {
-                            Log.Instance.Error($"Attempt to update an existing user was not successful. Username {editedEmp}");
+                            MessageBox.Show(apex.Message);
+                            Log.Instance.Error($"Attempt to update an existing user was not successful. Username {editedEmp}", apex);
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show(ex.Message);
+                            Log.Instance.Error($"Attempt to update an existing user was not successful. Username {editedEmp}", ex);
                         }
                     }
                     else
@@ -149,19 +167,26 @@ namespace LabBilling
                 }
                 else
                 {
-                    //encrypt new password for saving
-                    editedEmp.Password = Helper.Encrypt(Password.Text.Trim());
-                    // add user record
-                    if (systemService.AddUser(editedEmp) != null)
+                    try
                     {
+                        //encrypt new password for saving
+                        editedEmp.Password = Helper.Encrypt(Password.Text.Trim());
+                        // add user record
+                        editedEmp = systemService.AddUser(editedEmp);
                         MessageBox.Show("Record successfully inserted.");
                         Clear();
                         RefreshDGV();
                         UserName.ReadOnly = true;
                     }
-                    else
+                    catch (ApplicationException apex)
                     {
-                        Log.Instance.Error($"Attempt to add a user was not successful. Username {editedEmp}");
+                        MessageBox.Show(apex.Message);
+                        Log.Instance.Error($"Attempt to update an existing user was not successful. Username {editedEmp}", apex);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message);
+                        Log.Instance.Error($"Attempt to update an existing user was not successful. Username {editedEmp}", ex);
                     }
                 }
             }
@@ -258,13 +283,25 @@ namespace LabBilling
 
                 user.Password = Helper.Encrypt(prompt.Text.Trim());
 
-                if (systemService.UpdateUser(user) == true)
+                try
                 {
+                    user = systemService.UpdateUser(user);
                     MessageBox.Show("Password updated.");
                     Clear();
                     //refresh DGV to pick up updates
                     RefreshDGV();
                 }
+                catch (ApplicationException apex)
+                {
+                    MessageBox.Show(apex.Message);
+                    Log.Instance.Error($"Attempt to reset password was not successful. Username {user}", apex);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                    Log.Instance.Error($"Attempt to reset password was not successful. Username {user}", ex);
+                }
+
             }
         }
     }

@@ -165,6 +165,8 @@ namespace LabBilling
             LoggedInUser = systemService.GetUser(username.Text);
             Program.LoggedInUser = LoggedInUser;
             Program.LoggedInUser.Password = "";
+            Program.AppEnvironment.User = LoggedInUser.UserName;
+            Program.AppEnvironment.UserAccount = LoggedInUser;
             if (LoggedInUser == null)
             {
                 IsLoggedIn = false;

@@ -17,7 +17,7 @@ namespace LabBilling.Core.DataAccess
 
         public ClientType GetByType(int type)
         {
-            return Context.SingleOrDefault<ClientType>(type);
+            return Context.SingleOrDefault<ClientType>((object)type);
         }
 
     }

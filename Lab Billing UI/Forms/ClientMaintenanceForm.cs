@@ -124,15 +124,11 @@ namespace LabBilling.Forms
                 }
                 try
                 {
-                    if(!dictionaryService.SaveClient(client))
-                    {
-                        MessageBox.Show("Error adding client. Changes not saved.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        Log.Instance.Error($"Error adding client {client.ClientMnem} - {client.Name}. Changes not saved.");
-                    }
+                    client = dictionaryService.SaveClient(client);
                 }
                 catch (Exception ex)
                 {
-                    Log.Instance.Error(ex);
+                    Log.Instance.Error($"Error adding client {client.ClientMnem} - {client.Name}. Changes not saved.", ex);
                     MessageBox.Show("Error adding client. Changes not saved.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
 

@@ -34,6 +34,15 @@ namespace LabBilling.Core.DataAccess
         [Category("Action")] public event EventHandler<RepositoryEventArgs<TPoco>> RecordAdded;
         [Category("Action")] public event EventHandler<RepositoryEventArgs<TPoco>> RecordDeleted;
 
+        public virtual TPoco GetByKey(object key)
+        {
+            Log.Instance.Trace("Entering");
+            var result = Context.SingleOrDefault<TPoco>(key);
+            Log.Instance.Debug(Context.LastSQL);
+            Log.Instance.Debug(Context.LastArgs);
+            return result;
+        }
+
         public virtual List<TPoco> GetAll()
         {
             Log.Instance.Trace("Entering");
@@ -62,9 +71,9 @@ namespace LabBilling.Core.DataAccess
             return queryResult.ToList<TPoco>();
         }
 
-        public virtual async Task<object> AddAsync(TPoco table) => await Task.Run(() => Add(table));
+        public virtual async Task<TPoco> AddAsync(TPoco table) => await Task.Run(() => Add(table));
 
-        public virtual object Add(TPoco table)
+        public virtual TPoco Add(TPoco table)
         {
             Log.Instance.Trace("Entering");
 
@@ -84,7 +93,9 @@ namespace LabBilling.Core.DataAccess
                     Action = "Add"
                 });
 
-                return identity;
+                var added = Context.SingleOrDefault<TPoco>(identity);
+
+                return added;
             }
             catch (Exception ex)
             {
@@ -93,7 +104,7 @@ namespace LabBilling.Core.DataAccess
             }
         }
 
-        public virtual bool Update(TPoco table)
+        public virtual TPoco Update(TPoco table)
         {
             Log.Instance.Trace("Entering");
 
@@ -104,22 +115,22 @@ namespace LabBilling.Core.DataAccess
 
             Context.Update(table);
             Log.Instance.Debug(Context.LastSQL.ToString());
-            return true;
+            return table;
         }
 
-        public virtual bool Update(TPoco table, IEnumerable<string> columns)
+        public virtual TPoco Update(TPoco model, IEnumerable<string> columns)
         {
             Log.Instance.Trace("Entering");
             List<string> cColumns = new();
 
-            table.UpdatedDate = DateTime.Now;
-            cColumns.Add(GetRealColumn(nameof(table.UpdatedDate)));
-            table.UpdatedHost = Environment.MachineName;
-            cColumns.Add(GetRealColumn(nameof(table.UpdatedHost)));
-            table.UpdatedApp = Utilities.OS.GetAppName();
-            cColumns.Add(GetRealColumn(nameof(table.UpdatedApp)));
-            table.UpdatedUser = Environment.UserName.ToString();
-            cColumns.Add(GetRealColumn(nameof(table.UpdatedUser)));
+            model.UpdatedDate = DateTime.Now;
+            cColumns.Add(GetRealColumn(nameof(model.UpdatedDate)));
+            model.UpdatedHost = Environment.MachineName;
+            cColumns.Add(GetRealColumn(nameof(model.UpdatedHost)));
+            model.UpdatedApp = Utilities.OS.GetAppName();
+            cColumns.Add(GetRealColumn(nameof(model.UpdatedApp)));
+            model.UpdatedUser = Environment.UserName.ToString();
+            cColumns.Add(GetRealColumn(nameof(model.UpdatedUser)));
 
             foreach (string column in columns)
             {
@@ -129,7 +140,7 @@ namespace LabBilling.Core.DataAccess
 
             try
             {
-                Context.Update(table, cColumns);
+                Context.Update(model, cColumns);
             }
             catch (Exception ex)
             {
@@ -140,15 +151,15 @@ namespace LabBilling.Core.DataAccess
 
             RecordUpdated?.Invoke(this, new RepositoryEventArgs<TPoco>()
             {
-                Record = table,
+                Record = model,
                 Action = "update"
             });
             Log.Instance.Debug(Context.LastSQL.ToString());
             Log.Instance.Debug(Context.LastArgs.ToString());
-            return true;
+            return model;
         }
 
-        public virtual bool Save(TPoco table)
+        public virtual TPoco Save(TPoco table)
         {
             Log.Instance.Trace("Entering");
 
@@ -163,12 +174,12 @@ namespace LabBilling.Core.DataAccess
             catch (Exception ex)
             {
                 Log.Instance.Error("Error saving account validation record to database.", ex);
-                return false;
+                throw new ApplicationException("Error saving record to database.", ex);
             }
             Log.Instance.Debug(Context.LastSQL.ToString());
             Log.Instance.Debug(Context.LastCommand.ToString());
 
-            return true;
+            return table;
         }
 
         public virtual bool Delete(TPoco table)
@@ -186,30 +197,8 @@ namespace LabBilling.Core.DataAccess
             return count > 0;
         }
 
-        //public virtual void BeginTransaction()
-        //{
-        //    Log.Instance.Debug("Begin Transaction");
-        //    transactionStarted = true;
-        //    Context.BeginTransaction();
-        //}
-
-        //public virtual void CompleteTransaction()
-        //{
-        //    Log.Instance.Debug("Complete Transaction");
-        //    Context.CompleteTransaction();
-        //    transactionStarted = false;
-        //}
-
-        //public virtual void AbortTransaction()
-        //{
-        //    Log.Instance.Debug("Abort Transaction");
-        //    Context.AbortTransaction();
-        //    transactionStarted = false;
-        //}
-
         public IEnumerable<TPoco> Find(Expression<Func<TPoco, bool>> predicate)
         {
-
             return null;
         }
 

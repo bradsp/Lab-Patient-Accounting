@@ -7,15 +7,13 @@ namespace LabBilling.Core.DataAccess
 {
     public interface IAccountRepository
     {
-        object Add(Account table);
-        void AddAccount(Account acc);
-        Task AddAccountAsync(Account acc);
-        Task<object> AddAsync(Account table);
-        Account GetByAccount(string account, bool demographicsOnly = false);
-        Task<Account> GetByAccountAsync(string account, bool demographicsOnly = false);
-        bool Update(Account table);
-        bool Update(Account table, IEnumerable<string> columns);
-        Task<bool> UpdateAsync(Account table);
+        Account Add(Account table);
+        Task<Account> AddAsync(Account table);
+        Account GetByAccount(string account);
+        Task<Account> GetByAccountAsync(string account);
+        Account Update(Account table);        
+        Account Update(Account table, IEnumerable<string> columns);
+        Task<Account> UpdateAsync(Account table);
         int UpdateStatus(string accountNo, string status);
         Task<int> UpdateStatusAsync(string accountNo, string status);
     }

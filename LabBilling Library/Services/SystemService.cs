@@ -1,84 +1,88 @@
 ﻿using LabBilling.Core.DataAccess;
 using LabBilling.Core.Models;
 using LabBilling.Core.UnitOfWork;
-using Microsoft.AspNetCore.CookiePolicy;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace LabBilling.Core.Services
+namespace LabBilling.Core.Services;
+
+public class SystemService
 {
-    public class SystemService
+    private IAppEnvironment appEnvironment;
+
+    public SystemService(IAppEnvironment appEnvironment)
     {
-        private IAppEnvironment appEnvironment;
+        this.appEnvironment = appEnvironment;
+    }
 
-        public SystemService(IAppEnvironment appEnvironment)
-        {
-            this.appEnvironment = appEnvironment;
-        }
+    public ApplicationParameters LoadSystemParameters()
+    {
+        using UnitOfWorkMain uow = new(appEnvironment);
 
-        public ApplicationParameters LoadSystemParameters()
-        {
-            using UnitOfWorkMain uow = new(appEnvironment);
+        return uow.SystemParametersRepository.LoadParameters();
+    }
 
-            return uow.SystemParametersRepository.LoadParameters();
-        }
+    public void SaveSystemParameter(SysParameter systemParameter)
+    {
+        using UnitOfWorkMain uow = new(appEnvironment, true);
 
-        public void SaveSystemParameter(SysParameter systemParameter)
-        {
-            using UnitOfWorkMain uow = new(appEnvironment, true);
+        uow.SystemParametersRepository.Update(systemParameter, new[] { nameof(SysParameter.Value) });
+    }
 
-            uow.SystemParametersRepository.Update(systemParameter, new[] { nameof(SysParameter.Value) });
-        }
+    public UserAccount UpdateUser(UserAccount user)
+    {
+        using UnitOfWorkMain uow = new(appEnvironment);
 
-        public bool UpdateUser(UserAccount user)
-        {
-            using UnitOfWorkMain uow = new(appEnvironment);
+        var userAccount = uow.UserAccountRepository.Update(user);
+        uow.Commit();
+        return userAccount;
+    }
 
-            var retval = uow.UserAccountRepository.Update(user);
-            uow.Commit();
-            return retval;
-        }
+    public UserAccount AddUser(UserAccount user)
+    {
+        using UnitOfWorkMain uow = new(appEnvironment);
 
-        public UserAccount AddUser(UserAccount user)
-        {
-            using UnitOfWorkMain uow = new(appEnvironment);
+        var retval = uow.UserAccountRepository.Add(user);
+        uow.Commit();
 
-            var retval = uow.UserAccountRepository.Add(user);
-            uow.Commit();
+        return user;
+    }
 
-            return user;
-        }
+    public IList<UserAccount> GetUsers()
+    {
+        using UnitOfWorkMain uow = new(appEnvironment);
 
-        public IList<UserAccount> GetUsers()
-        {
-            using UnitOfWorkMain uow = new(appEnvironment);
+        return uow.UserAccountRepository.GetAll();
 
-            return uow.UserAccountRepository.GetAll();
+    }
 
-        }
+    public UserAccount GetUser(string username)
+    {
+        using UnitOfWorkMain uow = new(appEnvironment);
 
-        public UserAccount GetUser(string username)
-        {
-            using UnitOfWorkMain uow = new(appEnvironment);
+        return uow.UserAccountRepository.GetByUsername(username);
+    }
 
-            return uow.UserAccountRepository.GetByUsername(username);
-        }
+    public async Task<IList<UserAccount>> GetActiveUsersAsync() => await Task.Run(() => GetActiveUsers());
+    public IList<UserAccount> GetActiveUsers()
+    {
+        using UnitOfWorkMain uow = new(appEnvironment);
 
-        public IList<UserAccount> GetActiveUsers()
-        {
-            using UnitOfWorkMain uow = new(appEnvironment);
+        return uow.UserAccountRepository.GetActiveUsers();
+    }
 
-            return uow.UserAccountRepository.GetActiveUsers();
-        }
+    public bool LoginCheck(string username, string password) 
+    {
+        using UnitOfWorkMain uow = new(appEnvironment);
 
-        public bool LoginCheck(string username, string password) 
-        {
-            using UnitOfWorkMain uow = new(appEnvironment);
+        return uow.UserAccountRepository.LoginCheck(username, password);
+    }
 
-            return uow.UserAccountRepository.LoginCheck(username, password);
-        }
+    public async Task<IEnumerable<UserProfile>> GetRecentAccountsAsync(string username) => await Task.Run(() => GetRecentAccounts(username));
+    public IEnumerable<UserProfile> GetRecentAccounts(string username)
+    {
+        using UnitOfWorkMain uow = new(appEnvironment);
+
+        return uow.UserProfileRepository.GetRecentAccount(username);
     }
 }

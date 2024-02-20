@@ -36,7 +36,6 @@ namespace LabBilling.Core.DataAccess
 
         public IEnumerable<UserProfile> GetRecentAccount(string user, int numEntries = 10)
         {
-            UserProfile userProfile = new UserProfile();
             string select = "TOP " + numEntries + " *";
             string sortColumn = this.GetRealColumn(typeof(UserProfile), nameof(UserProfile.ModDate));
 

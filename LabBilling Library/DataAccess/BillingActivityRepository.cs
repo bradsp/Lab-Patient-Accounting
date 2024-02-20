@@ -52,7 +52,7 @@ namespace LabBilling.Core.DataAccess
             return records;
         }
 
-        public override bool Save(BillingActivity table)
+        public override BillingActivity Save(BillingActivity table)
         {
             Log.Instance.Debug($"Entering");
             var record = Context.SingleOrDefault<BillingActivity>("where account=@0 and run_date = @1", 
@@ -61,8 +61,7 @@ namespace LabBilling.Core.DataAccess
 
             if (record == null)
             {
-                Add(table);
-                return true;
+                return Add(table);
             }
             else
             {
@@ -73,7 +72,7 @@ namespace LabBilling.Core.DataAccess
             }
         }
 
-        public override object Add(BillingActivity table)
+        public override BillingActivity Add(BillingActivity table)
         {
             Log.Instance.Debug($"Entering");
             if (table.InsComplete == DateTime.MinValue)

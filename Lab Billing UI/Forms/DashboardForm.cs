@@ -164,25 +164,25 @@ namespace LabBilling.Forms
 
         private void LoadArChart()
         {
-            ReportingRepository reportingRepository = new(Program.AppEnvironment.ConnectionString);
-            var data = reportingRepository.GetARByFinCodeList();
+            //ReportingRepository reportingRepository = new(Program.AppEnvironment.ConnectionString);
+            //var data = reportingRepository.GetARByFinCodeList();
 
-            int i = 1;
-            Tick[] ticks = new Tick[data.Count];
-            foreach(var dataItem in data)
-            {
-                formsPlotgl1.Plot.Add.Bar(i, dataItem.Balance);
-                ticks[i - 1] = new Tick(i, dataItem.FinancialClass);
-                i++;
-            }
+            //int i = 1;
+            //Tick[] ticks = new Tick[data.Count];
+            //foreach(var dataItem in data)
+            //{
+            //    formsPlotgl1.Plot.Add.Bar(i, dataItem.Balance);
+            //    ticks[i - 1] = new Tick(i, dataItem.FinancialClass);
+            //    i++;
+            //}
 
-            formsPlotgl1.Plot.Axes.Bottom.TickGenerator = new ScottPlot.TickGenerators.NumericManual(ticks);
-            formsPlotgl1.Plot.Axes.Bottom.MajorTickStyle.Length = 0;
-            formsPlotgl1.Plot.HideGrid();
-            formsPlotgl1.Plot.Axes.Margins(bottom: 0);
-            formsPlotgl1.Plot.Axes.Bottom.Label.Text = "Financial Class";
-            formsPlotgl1.Plot.Style.Background(ScottPlot.Color.FromHex("#ffffff"), ScottPlot.Color.FromHex("#ffffff"));
-            formsPlotgl1.Plot.Title("Accounts Receivable Balance by Financial Class");
+            //formsPlotgl1.Plot.Axes.Bottom.TickGenerator = new ScottPlot.TickGenerators.NumericManual(ticks);
+            //formsPlotgl1.Plot.Axes.Bottom.MajorTickStyle.Length = 0;
+            //formsPlotgl1.Plot.HideGrid();
+            //formsPlotgl1.Plot.Axes.Margins(bottom: 0);
+            //formsPlotgl1.Plot.Axes.Bottom.Label.Text = "Financial Class";
+            //formsPlotgl1.Plot.Style.Background(ScottPlot.Color.FromHex("#ffffff"), ScottPlot.Color.FromHex("#ffffff"));
+            //formsPlotgl1.Plot.Title("Accounts Receivable Balance by Financial Class");
         }
 
 

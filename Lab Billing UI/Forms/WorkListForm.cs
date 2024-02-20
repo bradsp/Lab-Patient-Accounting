@@ -11,6 +11,7 @@ using System.Data;
 using LabBilling.Core;
 using LabBilling.Core.Services;
 using WinFormsLibrary;
+using System.Linq;
 
 namespace LabBilling.Forms
 {
@@ -18,7 +19,6 @@ namespace LabBilling.Forms
     {
         private readonly AccountService accountService = new(Program.AppEnvironment);
         private readonly WorklistService worklist = new(Program.AppEnvironment);
-        private string _connectionString;
         private bool tasksRunning = false;
         private bool requestAbort = false;
         private BindingSource accountBindingSource = new BindingSource();
@@ -58,83 +58,11 @@ namespace LabBilling.Forms
             workqueues.Enabled = true;
         }
 
-        public WorkListForm(string connValue)
+        public WorkListForm()
         {
-            InitializeComponent();
-            _connectionString = connValue;
+            InitializeComponent();            
             _timer = new Timer() { Enabled = false, Interval = _timerDelay };
             _timer.Tick += new EventHandler(filterTextBox_KeyUpDone);
-        }
-
-        private async Task RunValidationAsync(string accountNo)
-        {
-            if (!string.IsNullOrEmpty(accountNo))
-            {
-                var acct = accountTable.Rows.Find(accountNo);
-                try
-                {
-                    var (isValid, validationText, formType) = await ValidateAccountAsync(accountNo);
-
-                    if (!isValid)
-                    {
-                        if (acct != null)
-                        {
-                            acct[nameof(AccountSearch.ValidationStatus)] = validationText;
-                            acct[nameof(AccountSearch.LastValidationDate)] = DateTime.Now;
-                            acct[nameof(AccountSearch.Status)] = "ERROR";
-                        }
-                    }
-                    else
-                    {
-                        if (acct != null)
-                        {
-                            acct[nameof(AccountSearch.Status)] = formType;
-                            acct[nameof(AccountSearch.LastValidationDate)] = DateTime.Now;
-                            acct[nameof(AccountSearch.ValidationStatus)] = "No validation errors";
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Log.Instance.Error($"Error validating account {accountNo} - {ex.Message}");
-
-                    if (acct != null)
-                    {
-                        acct[nameof(AccountSearch.ValidationStatus)] = "Error validating account. Notify support.";
-                        acct[nameof(AccountSearch.LastValidationDate)] = DateTime.Now;
-                        acct[nameof(AccountSearch.Status)] = "ERROR";
-                    }
-
-                    accountService.UpdateStatus(accountNo, "NEW");
-                }
-            }
-        }
-
-        private async Task<(bool isValid, string validationText, string formType)> ValidateAccountAsync(string accountNo)
-        {
-            Account account;
-            account = await Task<Account>.Run(() =>
-            {
-                return accountService.GetAccount(accountNo);
-            });
-            try
-            {
-
-                if (!accountService.Validate(account))
-                {
-                    return (false, account.AccountValidationStatus.ValidationText,
-                        account.BillForm ?? "UNDEFINED");
-                }
-                else
-                {
-                    return (true, string.Empty, account.BillForm ?? "UNDEFINED");
-                }
-            }
-            catch (Exception ex)
-            {
-                return (false, $"Exception in validation - {ex.Message}", String.Empty);
-            }
-
         }
 
         private void WorkListForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -636,13 +564,13 @@ namespace LabBilling.Forms
             {
                 if (!account.ReadyToBill)
                 {
-                    accountService.Validate(account);
+                    account = accountService.Validate(account);
                     if (account.AccountValidationStatus.ValidationText == "No validation errors.")
                     {
                         accountService.UpdateStatus(selectedAccount, AccountStatus.ReadyToBill);
-                        accountService.AddNote(selectedAccount, "Marked ready to bill.");
+                        account.Status = AccountStatus.ReadyToBill;
+                        account.Notes = accountService.AddNote(selectedAccount, "Marked ready to bill.").ToList();
                         accts[nameof(AccountSearch.Status)] = AccountStatus.ReadyToBill;
-                        _ = Task.Run(() => RunValidationAsync(selectedAccount));
                     }
                     accountGrid.Refresh();
                 }
@@ -652,11 +580,13 @@ namespace LabBilling.Forms
                 if (account.ReadyToBill)
                 {
                     accountService.UpdateStatus(selectedAccount, AccountStatus.New);
-                    accountService.AddNote(selectedAccount, "Ready to bill removed.");
+                    account.Status = AccountStatus.New;
+                    account.Notes = accountService.AddNote(selectedAccount, "Ready to bill removed.").ToList();
                     accts[nameof(AccountSearch.Status)] = AccountStatus.New;
                     accountGrid.Refresh();
                 }
             }
+            accountService.ClearAccountLock(account);
         }
 
         private async void WorkListForm_Activated(object sender, EventArgs e) => await LoadWorkList();

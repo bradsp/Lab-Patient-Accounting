@@ -32,16 +32,16 @@ namespace LabBilling.Core.DataAccess
             return badDebt;
         }
 
-        public override bool Update(BadDebt table)
+        public override BadDebt Update(BadDebt table)
         {
-            table.StateZip = string.Format("{0} {1}", table.State, table.Zip);
+            table.StateZip = $"{table.State} {table.Zip}";
 
             return base.Update(table);
         }
 
-        public override bool Update(BadDebt table, IEnumerable<string> columns)
+        public override BadDebt Update(BadDebt table, IEnumerable<string> columns)
         {
-            table.StateZip = string.Format("{0} {1}", table.State, table.Zip);
+            table.StateZip = $"{table.State} {table.Zip}";
 
             return base.Update(table, columns);
         }

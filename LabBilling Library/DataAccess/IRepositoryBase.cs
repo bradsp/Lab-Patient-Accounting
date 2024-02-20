@@ -9,16 +9,12 @@ namespace LabBilling.Core.DataAccess
     public interface IRepositoryBase<TPoco> where TPoco : IBaseEntity
     {
         string Errors { get; }
-
-        //void AbortTransaction();
-        object Add(TPoco table);
-        //void BeginTransaction();
-        //void CompleteTransaction();
+        TPoco Add(TPoco table);
         bool Delete(TPoco table);
         List<TPoco> GetAll();
         Task<IEnumerable<TPoco>> GetAllAsync();
-        bool Update(TPoco table);
-        bool Update(TPoco table, IEnumerable<string> columns);
+        TPoco Update(TPoco table);
+        TPoco Update(TPoco table, IEnumerable<string> columns);
         IEnumerable<TPoco> Find(Expression<Func<TPoco, bool>> predicate);
     }
 }

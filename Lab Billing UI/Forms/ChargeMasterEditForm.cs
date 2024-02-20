@@ -4,6 +4,7 @@ using System.Data;
 using System.Windows.Forms;
 using LabBilling.Core.Models;
 using LabBilling.Core.Services;
+using LabBilling.Logging;
 
 namespace LabBilling.Forms
 {
@@ -229,14 +230,17 @@ namespace LabBilling.Forms
             ReadFeeSchedule(cdm.CdmFeeSchedule4, feeSched4Grid, "4");
             ReadFeeSchedule(cdm.CdmFeeSchedule5, feeSched5Grid, "5");
 
-            if(dictionaryService.SaveCdm(cdm))
+            try
             {
+                cdm = dictionaryService.SaveCdm(cdm);
                 DialogResult = DialogResult.OK;
             }
-            else
+            catch (Exception ex)
             {
                 MessageBox.Show("Error saving cdm.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Log.Instance.Error(ex);
                 DialogResult = DialogResult.Cancel;
+                return;
             }
 
             return;

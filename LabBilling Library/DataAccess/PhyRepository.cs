@@ -28,7 +28,7 @@ namespace LabBilling.Core.DataAccess
             {
                 if (!string.IsNullOrEmpty(phy.PathologistCode))
                 {
-                    pth = Context.SingleOrDefault<Pth>(Convert.ToInt32(phy.PathologistCode));
+                    pth = Context.SingleOrDefault<Pth>((Object)Convert.ToInt32(phy.PathologistCode));
                     phy.Pathologist = pth;
                 }
             }
@@ -78,21 +78,21 @@ namespace LabBilling.Core.DataAccess
             Phy phy = new Phy();
             Pth pth = new Pth();
 
-            phy = Context.SingleOrDefault<Phy>(id);
+            phy = Context.SingleOrDefault<Phy>((object)id);
             if(phy == null)
             {
                 return null;
             }
             if (!string.IsNullOrEmpty(phy.PathologistCode))
             {
-                pth = Context.SingleOrDefault<Pth>(phy.PathologistCode);
+                pth = Context.SingleOrDefault<Pth>((object)phy.PathologistCode);
                 phy.Pathologist = pth;
             }
             
             return phy;
         }
 
-        public override bool Save(Phy table)
+        public override Phy Save(Phy table)
         {
             var existing = GetById(table.uri);
 
@@ -102,10 +102,7 @@ namespace LabBilling.Core.DataAccess
             }
             else
             {
-                if (this.Add(table) != null)
-                    return true;
-                else
-                    return false;
+                return this.Add(table);
             }
         }
 

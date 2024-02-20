@@ -164,7 +164,7 @@ namespace LabBillingConsole
             foreach (var chrg in charges)
             {
                 //credit 5362506
-                unitOfWork.ChrgRepository.CreditCharge(chrg.ChrgId, "correct DAP7 cdm");
+                accountService.CreditCharge(chrg.ChrgId, "correct DAP7 cdm");
                 Console.WriteLine($"Credited {chrg.AccountNo} {chrg.ChrgId} {chrg.Cdm}");
                 //charge 5869007
                 accountService.AddCharge(chrg.AccountNo, "5869007", chrg.Quantity, (DateTime)chrg.ServiceDate, "correct DAP7 cdm");

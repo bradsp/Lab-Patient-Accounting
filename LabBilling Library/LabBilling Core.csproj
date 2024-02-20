@@ -44,7 +44,7 @@
     <PackageReference Include="PetaPoco.Compiled" Version="6.0.677" />
     <PackageReference Include="Portable.BouncyCastle" Version="1.9.0" />
     <PackageReference Include="SharpZipLib" Version="1.4.2" />
-    <PackageReference Include="SixLabors.Fonts" Version="2.0.1" />
+    <PackageReference Include="SixLabors.Fonts" Version="2.0.2" />
     <PackageReference Include="SixLabors.ImageSharp" Version="3.1.2" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
     <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />

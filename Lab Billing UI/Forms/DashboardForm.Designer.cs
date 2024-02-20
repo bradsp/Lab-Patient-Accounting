@@ -31,7 +31,6 @@
             dashboardLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
             pictureBox1 = new System.Windows.Forms.PictureBox();
             announcementLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
-            formsPlotgl1 = new ScottPlot.WinForms.FormsPlotGL();
             dashboardLayoutPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
@@ -44,7 +43,6 @@
             dashboardLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 162F));
             dashboardLayoutPanel.Controls.Add(pictureBox1, 2, 0);
             dashboardLayoutPanel.Controls.Add(announcementLayoutPanel, 0, 1);
-            dashboardLayoutPanel.Controls.Add(formsPlotgl1, 0, 0);
             dashboardLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             dashboardLayoutPanel.Location = new System.Drawing.Point(0, 0);
             dashboardLayoutPanel.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
@@ -79,15 +77,6 @@
             announcementLayoutPanel.Size = new System.Drawing.Size(515, 277);
             announcementLayoutPanel.TabIndex = 4;
             // 
-            // formsPlotgl1
-            // 
-            formsPlotgl1.DisplayScale = 1F;
-            formsPlotgl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            formsPlotgl1.Location = new System.Drawing.Point(3, 3);
-            formsPlotgl1.Name = "formsPlotgl1";
-            formsPlotgl1.Size = new System.Drawing.Size(517, 276);
-            formsPlotgl1.TabIndex = 5;
-            // 
             // DashboardForm
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -111,6 +100,5 @@
         private System.Windows.Forms.TableLayoutPanel dashboardLayoutPanel;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.TableLayoutPanel announcementLayoutPanel;
-        private ScottPlot.WinForms.FormsPlotGL formsPlotgl1;
     }
 }

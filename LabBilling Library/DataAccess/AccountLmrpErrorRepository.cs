@@ -13,20 +13,19 @@ namespace LabBilling.Core.DataAccess
 
         }
 
-        public override bool Save(AccountLmrpError table)
+        public override AccountLmrpError Save(AccountLmrpError model)
         {
             //lookup record by account
-            var record = GetByAccount(table.AccountNo);
+            var record = GetByAccount(model.AccountNo);
 
             if(record == null)
-            {
-                this.Add(table);
-                return true;
+            {                
+                return this.Add(model);
             }
             else
             {
-                table.uri = record.uri;
-                return this.Update(table);
+                model.uri = record.uri;
+                return this.Update(model);
             }
 
         }

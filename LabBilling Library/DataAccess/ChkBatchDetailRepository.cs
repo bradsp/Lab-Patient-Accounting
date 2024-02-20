@@ -19,7 +19,7 @@ namespace LabBilling.Core.DataAccess
         {
             Log.Instance.Trace("Entering");
 
-            return Context.SingleOrDefault<ChkBatchDetail>(id);
+            return Context.SingleOrDefault<ChkBatchDetail>((object)id);
         }
 
         public List<ChkBatchDetail> GetByBatch(int batch)
@@ -44,37 +44,31 @@ namespace LabBilling.Core.DataAccess
             return Context.Delete<ChkBatchDetail>(sql);
         }
 
-        public new (bool successFlag, int newId) Save(ChkBatchDetail table)
+        public override ChkBatchDetail Save(ChkBatchDetail table)
         {
             var existing = GetById(table.Id);
-
-            bool success = false;
-            int newId = -1;
 
             if (string.IsNullOrEmpty(table.AccountNo))
             {
                 Log.Instance.Error($"{nameof(table.AccountNo)} cannot be empty.");
-                success = false;
                 throw new ApplicationException($"{nameof(table.AccountNo)} cannot be empty.");
             }
             try
             {
                 if (existing != null)
                 {
-                    success = base.Update(table);
+                    return base.Update(table);
                 }
                 else
                 {
-                    newId = Convert.ToInt32(base.Add(table));
+                    return base.Add(table);
                 }
             }
             catch(Exception ex)
             {
                 Log.Instance.Error(ex, "Error writing ChkBatchDetail");
                 throw new ApplicationException("Error writing ChkBatchDetail", ex);
-            }
-
-            return (success, newId);            
+            }     
         }
 
         public override bool Delete(ChkBatchDetail table)

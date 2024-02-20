@@ -155,16 +155,24 @@ namespace LabBilling.Forms
                 // update pat
                 acc.Pat.BadDebtListDate = DateTime.Today;
 
-                if (accountService.SetCollectionsDate(acc.Pat))
+                try
                 {
+                    acc.Pat = accountService.SetCollectionsDate(acc.Pat);
                     nUpdated++;
+                }
+                catch (ApplicationException apex)
+                {
+                    Log.Instance.Error(apex.Message, apex);
+                }
+                catch(Exception ex)
+                {
+                    Log.Instance.Error(ex.Message, ex);
                 }
 
                 // update notes for this account
-                accountService.AddNote(strAccount, $"Bad debt set by [{Program.AppEnvironment.UserName}]");
+                acc.Notes = accountService.AddNote(strAccount, $"Bad debt set by [{Program.AppEnvironment.UserName}]").ToList();
             }
             MessageBox.Show(string.Format("{0} Pat Records Updated", nUpdated), "POSTING FINISHED");
-
         }
 
         private void tsbLoad_Click(object sender, EventArgs e)
@@ -505,14 +513,22 @@ namespace LabBilling.Forms
                     };
                     accountService.AddPayment(chk);
 
-                    // update pat
-                    acc.Pat.BadDebtListDate = DateTime.Today;
-                    if(accountService.SetCollectionsDate(acc.Pat))
+                    try
                     {
+                        // update pat
+                        acc.Pat.BadDebtListDate = DateTime.Today;
+                        acc.Pat = accountService.SetCollectionsDate(acc.Pat);
                         nUpdated++;
+                        acc.Notes = accountService.AddNote(strAccount, $"Bad debt set by [{Program.AppEnvironment.UserName}]").ToList();
                     }
-
-                    accountService.AddNote(strAccount, $"Bad debt set by [{Program.AppEnvironment.UserName}]");
+                    catch(ApplicationException apex)
+                    {
+                        Log.Instance.Error(apex.Message, apex);
+                    }
+                    catch(Exception ex)
+                    {
+                        Log.Instance.Error(ex.Message, ex);
+                    }
                 }
             }
             MessageBox.Show("Processing small balance write_off is complete.", "SMALL BALANCE");

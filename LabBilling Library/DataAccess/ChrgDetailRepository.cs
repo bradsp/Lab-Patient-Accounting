@@ -16,22 +16,6 @@ namespace LabBilling.Core.DataAccess
 
         }
 
-        public override object Add(ChrgDetail table)
-        {
-            Log.Instance.Trace("Entering");
-            try
-            {
-                var value = base.Add(table);
-                return value;
-            }
-            catch(Exception ex)
-            {
-                Log.Instance.Error(ex, "Exception encountered in ChrgDetail.Add");
-                throw new ApplicationException("Exception encountered in ChrgDetail.Add", ex);
-            }
-        }
-
-
         public int AddModifier(int uri, string modifier)
         {
             Log.Instance.Trace("Entering");

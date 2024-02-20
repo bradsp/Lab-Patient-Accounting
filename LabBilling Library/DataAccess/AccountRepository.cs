@@ -1,15 +1,12 @@
 ﻿using LabBilling.Core.Models;
 using System;
 using System.Collections.Generic;
-using Utilities;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Data.SqlClient;
 using System.Data;
 using Log = LabBilling.Logging.Log;
 using PetaPoco;
-using NPOI.SS.Formula.Functions;
-using LabBilling.Core.UnitOfWork;
+
 
 
 namespace LabBilling.Core.DataAccess
@@ -21,13 +18,13 @@ namespace LabBilling.Core.DataAccess
 
         }
 
-        public async Task<Account> GetByAccountAsync(string account, bool demographicsOnly = false) => await Task.Run(() => GetByAccount(account, demographicsOnly));
+        public async Task<Account> GetByAccountAsync(string account) => await Task.Run(() => GetByAccount(account));
 
-        public Account GetByAccount(string account, bool demographicsOnly = false)
+        public Account GetByAccount(string account)
         {
-            Logging.Log.Instance.Trace($"Entering - account {account} demographicsOnly {demographicsOnly}");
+            Logging.Log.Instance.Trace($"Entering - account {account}");
 
-            var record = Context.SingleOrDefault<Account>(account);
+            var record = Context.SingleOrDefault<Account>((object)account);
 
             if (record == null)
                 return null;
@@ -35,9 +32,9 @@ namespace LabBilling.Core.DataAccess
             return record;
         }
 
-        public async Task AddAccountAsync(Account acc) => await Task.Run(() => AddAccount(acc));
+        public override async Task<Account> AddAsync(Account acc) => await Task.Run(() => Add(acc));
 
-        public void AddAccount(Account acc)
+        public override Account Add(Account acc)
         {
             Log.Instance.Trace($"Entering - account {acc.AccountNo}");
             if (string.IsNullOrEmpty(acc.Status))
@@ -45,8 +42,9 @@ namespace LabBilling.Core.DataAccess
 
             acc.PatFullName = acc.PatNameDisplay;
 
-            this.Add(acc);
+            return this.Add(acc);
         }
+
 
         public IEnumerable<string> GetByStatus(string status)
         {
@@ -63,9 +61,9 @@ namespace LabBilling.Core.DataAccess
             return results;
         }
 
-        public async Task<bool> UpdateAsync(Account table) => await Task.Run(() => Update(table));
+        public async Task<Account> UpdateAsync(Account table) => await Task.Run(() => Update(table));
 
-        public override bool Update(Account table)
+        public override Account Update(Account table)
         {
             Log.Instance.Trace($"Entering - account {table.AccountNo}");
 
@@ -80,9 +78,9 @@ namespace LabBilling.Core.DataAccess
             return base.Update(table);
         }
 
-        public async Task<bool> UpdateAsync(Account table, IEnumerable<string> columns) => await Task.Run(() => Update(table, columns));
+        public async Task<Account> UpdateAsync(Account table, IEnumerable<string> columns) => await Task.Run(() => Update(table, columns));
 
-        public override bool Update(Account table, IEnumerable<string> columns)
+        public override Account Update(Account table, IEnumerable<string> columns)
         {
             Log.Instance.Trace($"Entering - account {table.AccountNo}");
             //generate full name field from name parts
@@ -95,6 +93,17 @@ namespace LabBilling.Core.DataAccess
         }
 
         public async Task<int> UpdateStatusAsync(string accountNo, string status) => await Task.Run(() => UpdateStatus(accountNo, status));
+        public async Task<Account> UpdateStatusAsync(Account model, string status) => await Task.Run(() => UpdateStatus(model, status));
+
+        public Account UpdateStatus(Account model, string status)
+        {
+            Log.Instance.Trace($"Entering - account{model.AccountNo}, status {status}");
+            if (!AccountStatus.IsValid(status))
+                throw new ArgumentOutOfRangeException(nameof(status), "Invalid status");
+
+            model.Status = status;
+            return Update(model, new[] { nameof(Account.Status) });
+        }
 
         public int UpdateStatus(string accountNo, string status)
         {
@@ -107,7 +116,7 @@ namespace LabBilling.Core.DataAccess
             if (!AccountStatus.IsValid(status))
                 throw new ArgumentOutOfRangeException(nameof(status), "Invalid status");
 
-            return Context.Update<Account>($"set {GetRealColumn(nameof(Account.Status))} = @0, {GetRealColumn(nameof(Account.UpdatedDate))} = @1, " +
+            var result = Context.Update<Account>($"set {GetRealColumn(nameof(Account.Status))} = @0, {GetRealColumn(nameof(Account.UpdatedDate))} = @1, " +
                 $"{GetRealColumn(nameof(Account.UpdatedUser))} = @2, {GetRealColumn(nameof(Account.UpdatedApp))} = @3, {GetRealColumn(nameof(Account.UpdatedHost))} = @4 " +
                 $"where {GetRealColumn(nameof(Account.AccountNo))} = @5",
                 new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = status },
@@ -116,6 +125,9 @@ namespace LabBilling.Core.DataAccess
                 new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = Utilities.OS.GetAppName() },
                 new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = Environment.MachineName },
                 new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = accountNo });
+
+            return result;
+
         }
 
     }

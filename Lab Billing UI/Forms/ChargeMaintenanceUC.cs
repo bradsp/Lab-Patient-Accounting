@@ -149,8 +149,10 @@ namespace LabBilling.Forms
 
             TotalChargesTextBox.Text = CurrentAccount.TotalCharges.ToString("c");
 
+            grouper.RemoveGrouping();
             ChargesDataGrid.DataSource = chargesTable;
-            grouper.SetGroupOn(nameof(Charge.ChrgId));
+            if(!grouper.IsGrouped)
+                grouper.SetGroupOn(nameof(Charge.ChrgId));
 
 
             if (CurrentAccount.FinCode == "CLIENT")

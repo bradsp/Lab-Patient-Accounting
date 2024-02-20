@@ -12,15 +12,15 @@ namespace LabBilling.Core.DataAccess
 
         public ChrgDiagnosisPointer GetById(int id)
         {
-            return Context.SingleOrDefault<ChrgDiagnosisPointer>(id);
+            return Context.SingleOrDefault<ChrgDiagnosisPointer>((object)id);
         }
 
         public ChrgDiagnosisPointer GetById(double id)
         {
-            return Context.SingleOrDefault<ChrgDiagnosisPointer>(id);
+            return Context.SingleOrDefault<ChrgDiagnosisPointer>((object)id);
         }
 
-        public override bool Save(ChrgDiagnosisPointer record)
+        public override ChrgDiagnosisPointer Save(ChrgDiagnosisPointer record)
         {
             if(record == null)
             {
@@ -38,8 +38,7 @@ namespace LabBilling.Core.DataAccess
             }
             else
             {
-                Add(record);
-                return true;
+                return Add(record);
             }
         }
 

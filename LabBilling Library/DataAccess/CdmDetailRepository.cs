@@ -60,17 +60,12 @@ namespace LabBilling.Core.DataAccess
             return cdmDetail;
         }
 
-        public override object Add(CdmDetail table)
+        public override CdmDetail Add(CdmDetail table)
         {
             return base.Add(table);
         }
 
-        public override bool Update(CdmDetail table)
-        {
-            return base.Update(table);
-        }
-
-        public override bool Save(CdmDetail table)
+        public override CdmDetail Save(CdmDetail table)
         {
             var existing = GetByRowguid(table.rowguid);
             if(existing != null)
@@ -79,8 +74,8 @@ namespace LabBilling.Core.DataAccess
             }
             else
             {
-                Add(table);
-                return true;
+                
+                return Add(table);
             }
         }
     }

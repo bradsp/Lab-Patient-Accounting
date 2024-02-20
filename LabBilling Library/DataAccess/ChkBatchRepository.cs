@@ -18,7 +18,7 @@ namespace LabBilling.Core.DataAccess
         public ChkBatch GetById(int id)
         {
             Log.Instance.Trace("Entering");
-            var batch = Context.SingleOrDefault<ChkBatch>(id);
+            var batch = Context.SingleOrDefault<ChkBatch>((object)id);
             return batch;
         }
 

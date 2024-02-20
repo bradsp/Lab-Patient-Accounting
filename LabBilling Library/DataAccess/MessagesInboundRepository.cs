@@ -33,7 +33,7 @@ namespace LabBilling.Core.DataAccess
         {
             Log.Instance.Trace($"Entering {id}");
 
-            return Context.SingleOrDefault<MessageInbound>(id);
+            return Context.SingleOrDefault<MessageInbound>((object)id);
 
         }
 

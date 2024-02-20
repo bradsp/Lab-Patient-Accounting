@@ -39,7 +39,7 @@ namespace LabBilling.Core.DataAccess
             return queryResult;
         }
 
-        public override bool Save(Cdm table)
+        public override Cdm Save(Cdm table)
         {
             var record = GetCdm(table.ChargeId, true);
 
@@ -47,14 +47,8 @@ namespace LabBilling.Core.DataAccess
                 return Update(table);
             else
             {
-                Add(table);
-                return true;
+                return Add(table);
             }
-        }
-
-        public override bool Update(Cdm table)
-        {
-            return base.Update(table);
         }
 
         public Cdm GetCdm(string cdm, bool includeDeleted = false)

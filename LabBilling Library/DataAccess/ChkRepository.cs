@@ -80,18 +80,11 @@ namespace LabBilling.Core.DataAccess
 
         }
 
-        public override object Add(Chk table)
+        public override Chk Add(Chk table)
         {
             table.Status = "NEW";
 
             return base.Add(table);
         }
-
-        [Obsolete("Use ChkBatchUnitOfWork.AddBatch instead")]
-        public bool AddBatch(List<Chk> chks)
-        {
-            return false;
-        }
-
     }
 }

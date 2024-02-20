@@ -169,6 +169,9 @@ namespace LabBilling.Core.Models
         [Column("mod_host")]
         [ResultColumn]
         public string UpdatedHost { get; set; }
+        [Column("id")]
+        [ResultColumn]
+        public int Id { get; set; }
 
         [Ignore]
         public Guid rowguid { get; set; }

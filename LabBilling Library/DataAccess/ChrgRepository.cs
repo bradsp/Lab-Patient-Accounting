@@ -24,7 +24,7 @@ namespace LabBilling.Core.DataAccess
         /// <returns></returns>
         public Chrg GetById(int id)
         {
-            return Context.SingleOrDefault<Chrg>(id);
+            return Context.SingleOrDefault<Chrg>((object)id);
         }
 
         public List<ClaimChargeView> GetClaimCharges(string account)
@@ -82,29 +82,28 @@ namespace LabBilling.Core.DataAccess
 
             sql.OrderBy($"{_tableName}.{GetRealColumn(nameof(Chrg.ChrgId))}");
 
-            var result = Context.Fetch<Chrg, ChrgDetail, Chrg>(new ChrgChrgDetailRelator().MapIt, sql);
+            var result = Context.Fetch<Chrg>(sql);
 
             return result;
         }
 
         /// <summary>
-        /// Use to add a new charge to an account. This will likely be called from the AccountRepository class.
+        /// Use to add a new charge to an account.
         /// </summary>
         /// <param name="chrg"></param>
         /// <returns></returns>
-        public int AddCharge(Chrg chrg)
+        public override Chrg Add(Chrg chrg)
         {
             Log.Instance.Trace($"Entering - {chrg.AccountNo}");
             
             if(chrg == null)
                 throw new ArgumentNullException(nameof(chrg));
 
-            //function will add charge
             try
-            {
-                int chrg_num = Convert.ToInt32(this.Add(chrg));
+            {                
+                chrg = base.Add(chrg);
                 Log.Instance.Debug($"{Context.LastSQL} {Context.GetArgs()}");
-                return chrg_num;
+                return chrg;
             }
             catch (Exception ex)
             {
@@ -145,7 +144,26 @@ namespace LabBilling.Core.DataAccess
 
         }
 
-        public bool SetCredited(int chrgId, bool isCredited = true)
+        public Chrg SetCredited(Chrg chrg, bool isCredited = true)
+        {
+            Log.Instance.Trace($"Entering ChrgId {chrg.ChrgId}");
+
+            if (chrg.ChrgId <= 0)
+                throw new ArgumentOutOfRangeException(nameof(Chrg.ChrgId));
+
+            try
+            {
+                chrg.IsCredited = isCredited;
+                return Update(chrg, new List<string> { nameof(Chrg.IsCredited) });
+            }
+            catch (Exception ex)
+            {
+                Log.Instance.Error($"Error setting credited on charge {chrg.ChrgId}", ex);
+                throw new ApplicationException($"Error setting credited on charge {chrg.ChrgId}", ex);
+            }
+        }
+
+        public Chrg SetCredited(int chrgId, bool isCredited = true)
         {
             Log.Instance.Trace($"Entering ChrgId {chrgId}");
 
@@ -155,17 +173,17 @@ namespace LabBilling.Core.DataAccess
             try
             {
                 var chrg = GetById(chrgId);
-                if (chrg != null)
-                {
-                    chrg.IsCredited = isCredited;
-                    return Update(chrg, new List<string> { nameof(Chrg.IsCredited) });
-                }
-                return false;
+                if(chrg.ChrgId <= 0)
+                    throw new ApplicationException($"Charge not found for chrgId {chrgId}");
+
+                return SetCredited(chrg, isCredited);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
+                Log.Instance.Error($"Error setting credited on charge {chrgId}", ex);
                 throw new ApplicationException($"Error setting credited on charge {chrgId}", ex);
             }
+
         }
 
         /// <summary>

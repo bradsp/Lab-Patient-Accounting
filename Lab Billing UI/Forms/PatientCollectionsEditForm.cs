@@ -99,14 +99,14 @@ namespace LabBilling.Forms
         {
             Log.Instance.Trace($"Entering");
             ReadData();
-
-            if(patientBillingService.SaveCollectionRecord(badDebt))
+            try
             {
-                this.DialogResult = DialogResult.OK;
+                patientBillingService.SaveCollectionRecord(badDebt);
             }
-            else
+            catch(Exception ex)
             {
-                this.DialogResult = DialogResult.Abort;
+                DialogResult = DialogResult.Abort;
+                Log.Instance.Error(ex.ToString(), ex);
             }
 
             return;

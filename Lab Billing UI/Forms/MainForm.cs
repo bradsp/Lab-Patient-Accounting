@@ -1,5 +1,4 @@
-﻿using LabBilling.Core.DataAccess;
-using LabBilling.Core.Models;
+﻿using LabBilling.Core.Models;
 using LabBilling.Forms;
 using LabBilling.Logging;
 using LabBilling.Legacy;
@@ -32,17 +31,16 @@ namespace LabBilling
     public partial class MainForm : BaseForm
     {
 
-        private Accordion accordion = null;
-        private readonly UserProfileRepository userProfile = null;
-        private ProgressBar claimProgress;
-        private Label claimProgressStatusLabel;
-        private CancellationTokenSource cancellationToken;
+        private readonly Accordion accordion = null;
+        private readonly ProgressBar claimProgress;
+        private readonly Label claimProgressStatusLabel;
+        private readonly CancellationTokenSource cancellationToken;
         private TableLayoutPanel tlpRecentAccounts;
         private List<UserProfile> recentAccounts;
         private List<Account> recentAccountsByAccount;
 
-        private AccountService accountService;
-        private SystemService systemService;
+        private readonly AccountService accountService;
+        private readonly SystemService systemService;
 
         private const int WM_SETREDRAW = 11;
         [DllImport("user32.dll")]
@@ -72,12 +70,7 @@ namespace LabBilling
 
             Program.AppEnvironment.ApplicationParameters = systemService.LoadSystemParameters();
 
-            recentAccounts = userProfile.GetRecentAccount(Program.LoggedInUser.UserName).ToList();
-            recentAccountsByAccount = new();
-            foreach (UserProfile up in recentAccounts)
-            {
-                recentAccountsByAccount.Add(accountService.GetAccount(up.ParameterData, true));
-            }
+
 
         }
 
@@ -217,7 +210,7 @@ namespace LabBilling
 
         public void UpdateRecentAccounts(string newAccount)
         {
-            var ar = accountService.GetAccount(newAccount, true);
+            var ar = accountService.GetAccountMinimal(newAccount);
             if (ar != null)
             {
                 tlpRecentAccounts.Controls.RemoveAt(0);
@@ -230,7 +223,7 @@ namespace LabBilling
             }
         }
 
-        private void MainForm_Load(object sender, EventArgs e)
+        private async void MainForm_Load(object sender, EventArgs e)
         {
             this.WindowState = FormWindowState.Minimized;
 
@@ -246,9 +239,18 @@ namespace LabBilling
             }
             #endregion
 
-            LoadSideMenu();
-
             NewForm(new DashboardForm());
+
+            var results = await systemService.GetRecentAccountsAsync(Program.LoggedInUser.UserName);
+            recentAccounts = results.ToList();
+            recentAccountsByAccount = new();
+
+            foreach (UserProfile up in recentAccounts)
+            {
+                recentAccountsByAccount.Add(accountService.GetAccountMinimal(up.ParameterData));
+            }
+
+            LoadSideMenu();
 
             //enable menu items based on permissions
             systemAdministrationToolStripMenuItem.Visible = Program.LoggedInUser.IsAdministrator;
@@ -263,9 +265,12 @@ namespace LabBilling
 
             //recent accounts section
 
-            tlpRecentAccounts = new TableLayoutPanel { Dock = DockStyle.Fill };
-            tlpRecentAccounts.RowCount = recentAccounts.Count;
-            tlpRecentAccounts.ColumnCount = 1;
+            tlpRecentAccounts = new TableLayoutPanel
+            {
+                Dock = DockStyle.Fill,
+                RowCount = recentAccounts.Count,
+                ColumnCount = 1
+            };
 
             toolStripDatabaseLabel.Text = Program.AppEnvironment.DatabaseName;
             toolStripUsernameLabel.Text = Program.LoggedInUser.FullName;
@@ -487,7 +492,7 @@ namespace LabBilling
             if (!IsAlreadyOpen)
             {
                 Cursor.Current = Cursors.WaitCursor;
-                AccountForm accFrm = new AccountForm(account);
+                AccountForm accFrm = new(account);
                 accFrm.AccountOpenedEvent += AccFrm_AccountOpenedEvent;
                 NewForm(accFrm);
                 Cursor.Current = Cursors.Default;
@@ -509,14 +514,14 @@ namespace LabBilling
         {
             Log.Instance.Trace($"Entering");
 
-            if (Application.OpenForms.OfType<WorkListForm>().Count() > 0)
+            if (Application.OpenForms.OfType<WorkListForm>().Any())
             {
                 WorkListForm workListForm = Application.OpenForms.OfType<WorkListForm>().First();
                 workListForm.Focus();
             }
             else
             {
-                WorkListForm worklistForm = new WorkListForm(Helper.ConnVal);
+                WorkListForm worklistForm = new();
                 worklistForm.AccountLaunched += OnAccountLaunched;
                 NewForm(worklistForm);
             }
@@ -543,7 +548,7 @@ namespace LabBilling
         {
             Log.Instance.Trace($"Entering");
 
-            AboutBox about = new AboutBox();
+            AboutBox about = new();
             about.ShowDialog();
         }
 
@@ -569,14 +574,14 @@ namespace LabBilling
 
         private void reportByInsuranceCompanyToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            InsuranceReportForm frm = new InsuranceReportForm(Program.AppEnvironment.GetArgs());
+            InsuranceReportForm frm = new(Program.AppEnvironment.GetArgs());
             frm.AccountLaunched += OnAccountLaunched;
             NewForm(frm);
         }
 
         private void posting835RemitToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Posting835 frm = new Posting835(Program.AppEnvironment.GetArgs());
+            Posting835 frm = new(Program.AppEnvironment.GetArgs());
             frm.AccountLaunched += OnAccountLaunched;
             NewForm(frm);
         }
@@ -595,7 +600,7 @@ namespace LabBilling
 
             var formsList = Application.OpenForms.OfType<ClientMaintenanceForm>();
 
-            if (formsList.Count() > 0)
+            if (formsList.Any())
             {
                 formsList.First().Focus();
             }
@@ -611,7 +616,7 @@ namespace LabBilling
 
             var formsList = Application.OpenForms.OfType<AccountChargeEntry>();
 
-            if (formsList.Count() > 0)
+            if (formsList.Any())
             {
                 formsList.First().Focus();
             }
@@ -674,7 +679,7 @@ namespace LabBilling
             }
             else
             {
-                ClientInvoiceForm form = new ClientInvoiceForm();
+                ClientInvoiceForm form = new();
                 form.AccountLaunched += OnAccountLaunched;
                 NewForm(form);
             }
@@ -693,10 +698,12 @@ namespace LabBilling
 
         private void remittancePostingToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Remittance835Service remittance835 = new Remittance835Service(Program.AppEnvironment);
-            string file = @"\\wthmclbill\shared\Billing\TEST\Posting835Remit\MCL_NC_MCR_1093705428_835_11119267.RMT";
+            return;
 
-            remittance835.Load835(file);
+            //Remittance835Service remittance835 = new Remittance835Service(Program.AppEnvironment);
+            //string file = @"\\wthmclbill\shared\Billing\TEST\Posting835Remit\MCL_NC_MCR_1093705428_835_11119267.RMT";
+
+            //remittance835.Load835(file);
 
         }
 
@@ -810,8 +817,7 @@ namespace LabBilling
                 SuspendLayout();
                 (mdiTabControl.SelectedTab.Tag as Form).SuspendLayout();
                 Form activeMdiChild = this.ActiveMdiChild;
-                if (activeMdiChild != null)
-                    activeMdiChild.SuspendLayout();
+                activeMdiChild?.SuspendLayout();
 
                 // Minimize flicker when switching between tabs, by changing to minimized state first
                 if ((mdiTabControl.SelectedTab.Tag as Form).WindowState != FormWindowState.Maximized)

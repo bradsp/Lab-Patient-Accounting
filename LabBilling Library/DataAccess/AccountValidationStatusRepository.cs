@@ -20,21 +20,17 @@ namespace LabBilling.Core.DataAccess
             return record;
         }
 
-        public override bool Save(AccountValidationStatus table)
+        public override AccountValidationStatus Save(AccountValidationStatus table)
         {
             //TODO: error catching
-            bool retVal = true;
             if(Context.Exists<AccountValidationStatus>((object)table.Account))
             {
-                this.Update(table);
+                return this.Update(table);
             }
             else
             {
-                this.Add(table);
+                return this.Add(table);
             }
-
-            return retVal;
-
         }
 
     }
