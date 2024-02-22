@@ -211,6 +211,7 @@ namespace LabBilling.Forms
             {
                 //call method to update the record in the database
                 CurrentIns = accountService.SaveInsurance(CurrentIns);
+                CurrentIns.InsCompany = dictionaryService.GetInsCompany(CurrentIns.InsCode);
                 int index = CurrentAccount.Insurances.FindIndex(i => i.Coverage == Coverage);
                 if (index != -1)
                     CurrentAccount.Insurances[index] = CurrentIns;

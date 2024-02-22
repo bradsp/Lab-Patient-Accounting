@@ -186,7 +186,6 @@ namespace LabBilling.Core.Models
         public List<PatDiag> Diagnoses { get; set; } = new List<PatDiag>();
         [Ignore]
         public Phy Physician { get; set; } = new Phy();
-        [Ignore]
         public Guid rowguid { get; set; }
 
     }

@@ -146,47 +146,21 @@ public sealed class AccountService
             DateTime questEndDate = new(2020, 5, 31);
             DateTime arbitraryEndDate = new(2016, 12, 31);
 
-            outpBillStartDate = appEnvironment.ApplicationParameters.OutpatientBillStart;
-
-            if (outpBillStartDate == DateTime.MinValue)
-            {
-                //set default date
-                outpBillStartDate = new DateTime(2012, 4, 1);
-            }
-
             if (record.Client != null)
             {
-                if (record.Client.OutpatientBilling)
+                if (record.InsurancePrimary != null)
                 {
                     record.BillingType = "REF LAB";
+                    record.BillForm = record.InsurancePrimary.InsCompany.BillForm;
 
-                    if (record.TransactionDate.IsBetween(outpBillStartDate, arbitraryEndDate)
-                        && record.TransactionDate.IsBetween(questStartDate, questEndDate))
+                    if (string.IsNullOrEmpty(record.BillForm))
                     {
-                        if (record.PrimaryInsuranceCode.In("BC", "UMR", "GOLDEN1", "HP", "AETNA", "AG", "HUM", "SECP", "BCA"))
-                            record.BillForm = "UBOP";
-                        else if (record.FinCode == "D")
-                            record.BillForm = "QUEST";
-                        else
-                            record.BillForm = "UNDEFINED";
+                        record.BillForm = record.Fin.ClaimType;
                     }
                 }
                 else
                 {
-                    if (record.InsurancePrimary != null)
-                    {
-                        record.BillingType = "REF LAB";
-                        record.BillForm = record.InsurancePrimary.InsCompany.BillForm;
-
-                        if (string.IsNullOrEmpty(record.BillForm))
-                        {
-                            record.BillForm = record.Fin.ClaimType;
-                        }
-                    }
-                    else
-                    {
-                        record.BillForm = record.Fin.ClaimType;
-                    }
+                    record.BillForm = record.Fin.ClaimType;
                 }
             }
         }
@@ -293,7 +267,6 @@ public sealed class AccountService
             throw new ApplicationException($"Error in AccountRepository.GetBalance({accountNo}", ex);
         }
     }
-
     public async Task<object> AddAsync(Account table) => await Task.Run(() => Add(table));
 
     public Account Add(Account table)
@@ -350,7 +323,6 @@ public sealed class AccountService
         try
         {
             var queryResult = GetClaimItems(claimType);
-
             return queryResult;
         }
         catch (Exception ex)
@@ -391,7 +363,7 @@ public sealed class AccountService
         };
 
         //TODO: how to do TOP # in the select when done this way.
-        command = PetaPoco.Sql.Builder
+        command = Sql.Builder
             .Select(selectCols)
             .From(accTableName)
             .InnerJoin(insTableName)
@@ -1281,10 +1253,10 @@ public sealed class AccountService
         double ztotal = 0.0;
         double amtTotal = 0.0;
         double retailTotal = 0.0;
-
+        List<ChrgDetail> chrgDetails = new();
         foreach (CdmDetail fee in feeSched)
         {
-            ChrgDetail chrgDetail = new ChrgDetail
+            ChrgDetail chrgDetail = new()
             {
                 DiagnosisPointer = new ChrgDiagnosisPointer(),
                 Cpt4 = fee.Cpt4,
@@ -1333,8 +1305,11 @@ public sealed class AccountService
             chrgDetail.RevenueCode = fee.RevenueCode;
             chrgDetail.OrderCode = fee.BillCode;
             chrgDetail.DiagnosisPointer.DiagnosisPointer = "1:";
+            var cpt = uow.CptAmaRepository.GetCpt(chrgDetail.Cpt4);
+            if (cpt != null)
+                chrgDetail.CptDescription = cpt.ShortDescription;
 
-            chrg.ChrgDetails.Add(chrgDetail);
+            chrgDetails.Add(chrgDetail);
         }
 
         chrg.NetAmount = amtTotal;
@@ -1342,17 +1317,21 @@ public sealed class AccountService
         chrg.RetailAmount = retailTotal;
 
         chrg = uow.ChrgRepository.Add(chrg);
-        chrg.ChrgDetails.ForEach(d =>
+        chrg.Cdm = dictionaryService.GetCdm(chrg.CDMCode);
+        chrgDetails.ForEach(d =>
         {
             d.ChrgNo = chrg.ChrgId;
-            var detUri = uow.ChrgDetailRepository.Add(d);
+            d = uow.ChrgDetailRepository.Add(d);
             if (d.DiagnosisPointer != null)
             {
-                d.DiagnosisPointer.ChrgDetailUri = Convert.ToDouble(detUri);
+                d.DiagnosisPointer.ChrgDetailUri = Convert.ToDouble(d.uri);
                 uow.ChrgDiagnosisPointerRepository.Save(d.DiagnosisPointer);
             }
-        });
+        });        
+        chrg.ChrgDetails = chrgDetails;
+
         accData.Charges.Add(chrg);
+
         uow.Commit();
         Log.Instance.Trace($"Exiting");
         return accData;

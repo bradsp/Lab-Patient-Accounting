@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using LabBilling.Core.Models;
 using LabBilling.Core.Services;
 
 namespace LabBilling.Forms
@@ -24,13 +25,12 @@ namespace LabBilling.Forms
         {
             Cursor.Current = Cursors.WaitCursor;
 
-
             MappingDGV.DataSource = dictionaryService.GetMappings(CodeSet.Text, SendingSystem.Text);
-            MappingDGV.Columns["mod_date"].Visible = false;
-            MappingDGV.Columns["mod_host"].Visible = false;
-            MappingDGV.Columns["mod_prg"].Visible = false;
-            MappingDGV.Columns["mod_user"].Visible = false;
-            MappingDGV.Columns["rowguid"].Visible = false;
+            MappingDGV.Columns[nameof(Mapping.UpdatedDate)].Visible = false;
+            MappingDGV.Columns[nameof(Mapping.UpdatedHost)].Visible = false;
+            MappingDGV.Columns[nameof(Mapping.UpdatedApp)].Visible = false;
+            MappingDGV.Columns[nameof(Mapping.UpdatedUser)].Visible = false;
+            MappingDGV.Columns[nameof(Mapping.rowguid)].Visible = false;
             MappingDGV.AutoResizeColumns();
 
             Cursor.Current = Cursors.Default;

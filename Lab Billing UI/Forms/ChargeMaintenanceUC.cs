@@ -1,12 +1,14 @@
 ﻿using LabBilling.Core;
 using LabBilling.Core.Models;
 using LabBilling.Core.Services;
+using LabBilling.Logging;
 using LabBilling.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.Intrinsics.Arm;
 using System.Windows.Forms;
 using WinFormsLibrary;
 
@@ -50,7 +52,6 @@ namespace LabBilling.Forms
                 chargesContextMenu.Enabled = _allowChargeEntry;
             }
         }
-        
 
         private void ChargeMaintenanceUC_Load(object sender, EventArgs e)
         {
@@ -141,7 +142,6 @@ namespace LabBilling.Forms
 
         public void LoadCharges()
         {
-
             if (CurrentAccount == null)
                 return;
 
@@ -227,6 +227,7 @@ namespace LabBilling.Forms
                 var uri = Convert.ToInt32(row.Cells[nameof(ChrgDetail.uri)].Value.ToString());
 
                 accountService.RemoveChargeModifier(uri);
+                CurrentAccount.Charges = accountService.GetCharges(CurrentAccount.AccountNo).ToList();
                 ChargesUpdated?.Invoke(this, EventArgs.Empty);
             }
         }
@@ -241,8 +242,10 @@ namespace LabBilling.Forms
             {
                 DataGridViewRow row = ChargesDataGrid.SelectedRows[0];
                 var uri = Convert.ToInt32(row.Cells[nameof(Charge.uri)].Value.ToString());
-
+                Cursor.Current = Cursors.WaitCursor;
                 accountService.AddChargeModifier(uri, item.Text);
+                CurrentAccount.Charges = accountService.GetCharges(CurrentAccount.AccountNo).ToList();
+                Cursor.Current = Cursors.Default;
                 ChargesUpdated?.Invoke(this, EventArgs.Empty);
             }
         }
@@ -316,7 +319,10 @@ namespace LabBilling.Forms
 
                 if (prompt.ReturnCode == DialogResult.OK)
                 {
-                    accountService.CreditCharge(Convert.ToInt32(row.Cells[nameof(Chrg.ChrgId)].Value.ToString()), prompt.Text);
+                    Cursor.Current = Cursors.WaitCursor;
+                    var updatedChrg = accountService.CreditCharge(Convert.ToInt32(row.Cells[nameof(Chrg.ChrgId)].Value.ToString()), prompt.Text);
+                    CurrentAccount.Charges = accountService.GetCharges(CurrentAccount.AccountNo).ToList();
+                    Cursor.Current = Cursors.Default;
                     ChargesUpdated?.Invoke(this, EventArgs.Empty);
                 }
             }
@@ -330,7 +336,38 @@ namespace LabBilling.Forms
 
             if (frm.ShowDialog() == DialogResult.OK)
             {
-                ChargesUpdated?.Invoke(this, EventArgs.Empty);
+                try
+                {
+                    CurrentAccount = accountService.AddCharge(CurrentAccount,
+                        frm.SelectedCdm,
+                        Convert.ToInt32(frm.Quantity),
+                        CurrentAccount.TransactionDate,
+                        frm.Comment,
+                        frm.ReferenceNumber,
+                        frm.Amount);
+                    //CurrentAccount.Charges = accountService.GetCharges(CurrentAccount.AccountNo).ToList();
+                    ChargesUpdated?.Invoke(this, EventArgs.Empty);
+                }
+                catch (AccountNotFoundException anfe)
+                {
+                    Log.Instance.Error(anfe);
+                    MessageBox.Show("Error posting Charge.");
+                }
+                catch(CdmNotFoundException cdmnfe)
+                {
+                    Log.Instance.Error(cdmnfe);
+                    MessageBox.Show("Error posting Charge.");
+                }
+                catch(ApplicationException apex)
+                {
+                    Log.Instance.Error(apex);
+                    MessageBox.Show("Error posting Charge.");
+                }
+                catch(Exception ex)
+                {
+                    Log.Instance.Error(ex);
+                    MessageBox.Show("Error posting Charge.");
+                }
             }
         }
 
@@ -370,6 +407,7 @@ namespace LabBilling.Forms
                 if (MessageBox.Show($"Change credited flag on {chrgId}?",
                     "Confirm Change", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                 {
+                    Cursor.Current = Cursors.WaitCursor;
                     OnError?.Invoke(this, new AppErrorEventArgs()
                     {
                         ErrorLevel = AppErrorEventArgs.ErrorLevelType.Debug,
@@ -377,6 +415,8 @@ namespace LabBilling.Forms
                     });
 
                     accountService.SetChargeCreditFlag(chrgId, !currentFlag);
+                    CurrentAccount.Charges = accountService.GetCharges(CurrentAccount.AccountNo).ToList();
+                    Cursor.Current = Cursors.Default;
                 }
                 ChargesUpdated?.Invoke(this, EventArgs.Empty);
             }
@@ -399,12 +439,15 @@ namespace LabBilling.Forms
                     if (MessageBox.Show($"Move charge {chrgId} ({row.Cells[nameof(Chrg.CdmDescription)].Value}) to account {destAccount}?",
                         "Confirm Move", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                     {
+                        Cursor.Current = Cursors.WaitCursor;
                         OnError?.Invoke(this, new AppErrorEventArgs() 
                         { 
                             ErrorLevel = AppErrorEventArgs.ErrorLevelType.Debug,
                             ErrorMessage = $"Moving charge {chrgId} from {CurrentAccount.AccountNo} to {destAccount}"
                         });
                         accountService.MoveCharge(CurrentAccount.AccountNo, destAccount, chrgId);
+                        CurrentAccount.Charges = accountService.GetCharges(CurrentAccount.AccountNo).ToList();
+                        Cursor.Current = Cursors.Default;
                     }
                     ChargesUpdated?.Invoke(this, EventArgs.Empty);
                 }
@@ -413,5 +456,4 @@ namespace LabBilling.Forms
 
         private void filterRadioButton_CheckedChanged(object sender, EventArgs e) => FilterCharges();
     }
-
 }

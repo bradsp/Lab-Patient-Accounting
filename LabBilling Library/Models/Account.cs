@@ -108,7 +108,6 @@ public sealed class Account : IBaseEntity
 
     [Ignore]
     public Client Client { get; set; }
-    [Ignore]
     public Guid rowguid { get; set; }
 
     [Ignore]

@@ -11,11 +11,18 @@ namespace LabBilling.Forms
 {
     public partial class ChargeEntryForm : BaseForm
     {
-        private Account _currentAccount = new();
-        private Timer _timer;
+        private readonly Account _currentAccount = new();
+        private readonly Timer _timer;
         private const int _timerInterval = 650;
-        private AccountService accountService;
-        private DictionaryService dictionaryService;
+        private readonly AccountService accountService;
+        private readonly DictionaryService dictionaryService;
+        
+
+        public string SelectedCdm { get; set; }
+        public decimal Quantity { get; set; }
+        public double Amount { get; set; }
+        public string Comment { get; set; }
+        public string ReferenceNumber { get; set; }
 
         public ChargeEntryForm(Account currentAccount)
         {
@@ -24,7 +31,6 @@ namespace LabBilling.Forms
             InitializeComponent();
             _timer = new Timer() { Enabled = false, Interval = _timerInterval };
             _timer.Tick += new EventHandler(cdmTextBox_KeyUpDone);
-            accountService = new(Program.AppEnvironment);
             dictionaryService = new(Program.AppEnvironment);
         }
 
@@ -41,38 +47,15 @@ namespace LabBilling.Forms
         {
             Log.Instance.Trace($"Entering");
 
-            try
-            {
-                string cdm = "";
+            SelectedCdm = cdmTextBox.Text;
+            Quantity = quantityNumericUpDown.Value;
+            ReferenceNumber = ReferenceNumberTextBox.Text;
+            Comment = commentTextBox.Text;
+            Amount = Convert.ToDouble(string.IsNullOrEmpty(amountTextBox.Text) ? "0.00" : amountTextBox.Text);
 
-                cdm = cdmTextBox.Text;
-
-                if(string.IsNullOrEmpty(cdm))
-                {
-                    MessageBox.Show("Please select a charge item.", "Incomplete request", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                    return;
-                }
-
-                accountService.AddCharge(_currentAccount.AccountNo,
-                    cdm,
-                    Convert.ToInt32(nQty.Value),
-                    _currentAccount.TransactionDate,
-                    tbComment.Text,
-                    ReferenceNumber.Text,
-                    Convert.ToDouble(!string.IsNullOrWhiteSpace(amountTextBox.Text) ? amountTextBox.Text : "0.00"));
-            }
-            catch(CdmNotFoundException)
+            if (string.IsNullOrEmpty(SelectedCdm))
             {
-                // this should not happen
-                MessageBox.Show("CDM number is not valid. Charge entry failed.");
-            }
-            catch(AccountNotFoundException)
-            {
-                MessageBox.Show("Account number is not valid.");
-            }
-            catch(Exception ex)
-            {
-                MessageBox.Show(ex.Message + "\nCharge not written.","Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Please select a charge item.", "Incomplete request", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return;
             }
 
@@ -87,7 +70,7 @@ namespace LabBilling.Forms
             return;
         }
 
-        private void SearchByCheckChanged (object sender, EventArgs e)
+        private void SearchByCheckChanged(object sender, EventArgs e)
         {
 
         }
@@ -101,16 +84,18 @@ namespace LabBilling.Forms
         private void cdmTextBox_KeyUpDone(object sender, EventArgs e)
         {
             _timer.Stop();
-            var cdmLookup = new CdmLookupForm();
-            cdmLookup.InitialSearchText = cdmTextBox.Text;
-            cdmLookup.Datasource = dictionaryService.GetAllCdms(false);
+            var cdmLookup = new CdmLookupForm
+            {
+                InitialSearchText = cdmTextBox.Text,
+                Datasource = dictionaryService.GetAllCdms(false)
+            };
 
-            if(cdmLookup.ShowDialog() == DialogResult.OK)
+            if (cdmLookup.ShowDialog() == DialogResult.OK)
             {
                 //if cdm is a variable type, ask for amount
                 cdmTextBox.Text = cdmLookup.SelectedValue;
                 Cdm cdm = dictionaryService.GetCdm(cdmLookup.SelectedValue);
-                if(cdm.Variable)
+                if (cdm.Variable)
                 {
                     var result = GetAmount();
                     if (result.ReturnCode == DialogResult.OK)

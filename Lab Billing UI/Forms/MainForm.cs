@@ -646,9 +646,16 @@ namespace LabBilling
                 if (this.ActiveMdiChild.Tag == null)
                 {
                     //Add a tabPage to the tabControl with child form caption
-                    TabPage tp = new TabPage(this.ActiveMdiChild.Text);
-                    tp.Tag = this.ActiveMdiChild;
-                    tp.Parent = mdiTabControl;
+                    TabPage tp = new(this.ActiveMdiChild.Text)
+                    {
+                        Tag = this.ActiveMdiChild,
+                    };
+
+                    if (this.ActiveMdiChild is WorkListForm)
+                        mdiTabControl.TabPages.Insert(0, tp);
+                    else
+                        mdiTabControl.TabPages.Add(tp);
+
                     mdiTabControl.SelectedTab = tp;
 
                     this.ActiveMdiChild.Tag = tp;

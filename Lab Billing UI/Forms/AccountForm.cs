@@ -316,7 +316,7 @@ namespace LabBilling.Forms
 
             if (closing)
                 return;
-
+            Cursor.Current = Cursors.WaitCursor;
             this.SuspendLayout();
             try
             {
@@ -362,6 +362,7 @@ namespace LabBilling.Forms
             }
 
             this.ResumeLayout();
+            Cursor.Current = Cursors.Default;
         }
 
         /// <summary>
@@ -616,7 +617,7 @@ namespace LabBilling.Forms
             currentAccount.Pat.ZipCode = ZipcodeTextBox.Text;
             currentAccount.Pat.CityStateZip = $"{CityTextBox.Text}, {StateComboBox.SelectedValue} {ZipcodeTextBox.Text}";
             currentAccount.Pat.PatFullName = $"{LastNameTextBox.Text},{FirstNameTextBox.Text} {MiddleNameTextBox.Text}";
-            currentAccount.Pat.ProviderId = orderingPhyTextBox.Tag.ToString();
+            currentAccount.Pat.ProviderId = orderingPhyTextBox.Tag?.ToString();
 
             currentAccount.Pat.GuarantorFullName = $"{GuarantorLastNameTextBox.Text} {GuarSuffixTextBox.Text},{GuarFirstNameTextBox.Text} {GuarMiddleNameTextBox.Text}";
             currentAccount.Pat.GuarantorLastName = GuarantorLastNameTextBox.Text;
@@ -1451,8 +1452,10 @@ namespace LabBilling.Forms
         {
             try
             {
+                Cursor.Current = Cursors.WaitCursor;
                 currentAccount = await accountService.ValidateAsync(currentAccount);
                 RefreshAccountData();
+                Cursor.Current = Cursors.Default;
             }
             catch (Exception ex)
             {
@@ -1527,7 +1530,6 @@ namespace LabBilling.Forms
         {
             currentAccount = accountService.UpdateStatementFlag(currentAccount, statementFlagComboBox.SelectedItem.ToString());
             RefreshAccountData();
-            //await LoadAccountData();
         }
 
         private async void moveAllChargesToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1542,6 +1544,7 @@ namespace LabBilling.Forms
                 if (MessageBox.Show($"Move all charges to account {destAccount}?",
                     "Confirm Move", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                 {
+                    Cursor.Current = Cursors.WaitCursor;
                     Log.Instance.Debug($"Moving all charges from {currentAccount.AccountNo} to {destAccount}");
                     var (isSuccess, error) = accountService.MoveCharges(currentAccount.AccountNo, destAccount);
                     if (!isSuccess)
@@ -1550,6 +1553,8 @@ namespace LabBilling.Forms
                     }
 
                     await LoadAccountData();
+
+                    Cursor.Current = Cursors.Default;
                 }
             }
         }
@@ -1569,12 +1574,13 @@ namespace LabBilling.Forms
         {
             if (!billingTabLoading)
             {
+                Cursor.Current = Cursors.WaitCursor;
                 currentAccount.ReadyToBill = readyToBillCheckbox.Checked;
                 accountService.UpdateStatus(currentAccount.AccountNo, currentAccount.Status);
-                accountService.AddNote(currentAccount.AccountNo, "Marked ready to bill.");
+                currentAccount.Notes = accountService.AddNote(currentAccount.AccountNo, "Marked ready to bill.").ToList();
                 currentAccount = await accountService.ValidateAsync(currentAccount);
-                //await LoadAccountData();
                 RefreshAccountData();
+                Cursor.Current = Cursors.Default;
             }
         }
 
@@ -1623,7 +1629,6 @@ namespace LabBilling.Forms
             {
                 currentAccount = accountService.ClearClaimStatus(currentAccount);
                 RefreshAccountData();
-                //await LoadAccountData();
             }
         }
 

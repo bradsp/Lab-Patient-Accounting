@@ -47,7 +47,7 @@
             resultsDataGrid.Name = "resultsDataGrid";
             resultsDataGrid.ReadOnly = true;
             resultsDataGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            resultsDataGrid.Size = new System.Drawing.Size(847, 308);
+            resultsDataGrid.Size = new System.Drawing.Size(851, 311);
             resultsDataGrid.TabIndex = 2;
             resultsDataGrid.CellDoubleClick += resultsDataGrid_CellDoubleClick;
             resultsDataGrid.SelectionChanged += resultsDataGrid_SelectionChanged;
@@ -75,7 +75,7 @@
             // 
             selectButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
             selectButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            selectButton.Location = new System.Drawing.Point(14, 388);
+            selectButton.Location = new System.Drawing.Point(14, 391);
             selectButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             selectButton.Name = "selectButton";
             selectButton.Size = new System.Drawing.Size(88, 27);
@@ -89,7 +89,7 @@
             cancelButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
             cancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             cancelButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            cancelButton.Location = new System.Drawing.Point(108, 388);
+            cancelButton.Location = new System.Drawing.Point(108, 391);
             cancelButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             cancelButton.Name = "cancelButton";
             cancelButton.Size = new System.Drawing.Size(88, 27);
@@ -103,7 +103,7 @@
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             BackColor = System.Drawing.Color.White;
             CancelButton = cancelButton;
-            ClientSize = new System.Drawing.Size(875, 431);
+            ClientSize = new System.Drawing.Size(879, 434);
             ControlBox = false;
             Controls.Add(cancelButton);
             Controls.Add(selectButton);
