@@ -33,7 +33,7 @@ namespace LabBilling.Legacy
         private string m_strDatabase;
         public event EventHandler<string> AccountLaunched;
 
-        public MonthlyReportsForm(string[] args)
+        public MonthlyReportsForm(string[] args) : base(Program.AppEnvironment)
         {
             
             InitializeComponent();

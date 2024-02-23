@@ -32,7 +32,7 @@ namespace LabBilling.Legacy
         /// PrintEOB Constructor.
         /// </summary>
         /// <param name="args"></param>
-        public PrintEOBForm(string[] args)
+        public PrintEOBForm(string[] args) : base(Program.AppEnvironment)
         {
             InitializeComponent();
 

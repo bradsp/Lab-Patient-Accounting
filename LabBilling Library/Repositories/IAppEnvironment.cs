@@ -1,5 +1,6 @@
 ﻿using LabBilling.Core.Models;
 using PetaPoco;
+using System.Drawing;
 
 namespace LabBilling.Core.DataAccess
 {
@@ -15,6 +16,13 @@ namespace LabBilling.Core.DataAccess
         string ServerName { get; set; }
         string User { get; set; }
         bool EnvironmentValid { get; }
+        Color WindowBackgroundColor { get; set; }
+        Color WindowTextColor { get; set; }
+        Color MenuBackgroundColor { get; set; }
+        Color MenuTextColor { get; set; }
+        Color ButtonBackgroundColor { get; set; }
+        Color ButtonTextColor { get; set; }
+
         string[] GetArgs();
     }
 }

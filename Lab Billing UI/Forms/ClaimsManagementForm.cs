@@ -7,237 +7,235 @@ using System.Windows.Forms;
 using LabBilling.Core.Services;
 using LabBilling.Core.Models;
 using LabBilling.Logging;
-using LabBilling.Core.DataAccess;
 
-namespace LabBilling.Forms
+namespace LabBilling.Forms;
+
+public partial class ClaimsManagementForm : Utilities.BaseForm
 {
-    public partial class ClaimsManagementForm : BaseForm
+    private CancellationTokenSource cancellationToken;
+
+    private List<BillingBatch> billingBatches = new List<BillingBatch>();
+    private List<BillingActivity> billingActivities = new List<BillingActivity>();
+    private AccountService accountService;
+    private ClaimGeneratorService claimGeneratorService;
+    private BindingSource billingBatchBindingSource;
+    private BindingSource billingActivitiesBindingSource;
+    private DataTable billingBatchTable;
+    private DataTable billingActivitiesTable;
+    public event EventHandler<string> AccountLaunched;
+
+    public ClaimsManagementForm() : base(Program.AppEnvironment)
     {
-        private CancellationTokenSource cancellationToken;
+        InitializeComponent();
 
-        private List<BillingBatch> billingBatches = new List<BillingBatch>();
-        private List<BillingActivity> billingActivities = new List<BillingActivity>();
-        private AccountService accountService;
-        private ClaimGeneratorService claimGeneratorService;
-        private BindingSource billingBatchBindingSource;
-        private BindingSource billingActivitiesBindingSource;
-        private DataTable billingBatchTable;
-        private DataTable billingActivitiesTable;
-        public event EventHandler<string> AccountLaunched;
+        accountService = new(Program.AppEnvironment);
+        claimGeneratorService = new(Program.AppEnvironment);
+    }
 
-        public ClaimsManagementForm()
+    private void ClaimsManagementForm_Load(object sender, EventArgs e)
+    {
+        cancelButton.Enabled = false;
+        claimProgressStatusLabel.Text = "";
+
+        billingBatchBindingSource = new BindingSource();
+
+        LoadData();
+
+        claimBatchDataGrid.Columns[nameof(BillingBatch.UpdatedApp)].Visible = false;
+        claimBatchDataGrid.Columns[nameof(BillingBatch.UpdatedDate)].Visible = false;
+        claimBatchDataGrid.Columns[nameof(BillingBatch.UpdatedHost)].Visible = false;
+        claimBatchDataGrid.Columns[nameof(BillingBatch.UpdatedUser)].Visible = false;
+        claimBatchDataGrid.Columns[nameof(BillingBatch.rowguid)].Visible = false;
+        claimBatchDataGrid.Columns[nameof(BillingBatch.X12Text)].Visible = false;
+        claimBatchDataGrid.Columns[nameof(BillingBatch.TotalBilled)].DefaultCellStyle.Format = "N2";
+        claimBatchDataGrid.Columns[nameof(BillingBatch.TotalBilled)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+        claimBatchDataGrid.AutoResizeColumns();
+
+    }
+
+    private void LoadData()
+    {
+        billingBatches = claimGeneratorService.GetBillingBatches();
+        billingBatchTable = billingBatches.ToDataTable();
+        billingBatchTable.PrimaryKey = new DataColumn[] { billingBatchTable.Columns[nameof(BillingBatch.Batch)] };
+        billingBatchTable.DefaultView.Sort = $"{nameof(BillingBatch.Batch)} desc";
+
+        billingBatchBindingSource.DataSource = billingBatchTable;
+
+        billingActivitiesBindingSource = new BindingSource();
+
+        claimBatchDataGrid.DataSource = billingBatchBindingSource;
+
+    }
+
+    private enum BillingType
+    {
+        Institutional,
+        Professional
+    }
+
+    private async Task RunBillingBatch(BillingType billingType)
+    {
+        cancellationToken = new CancellationTokenSource();
+
+        claimProgress = new ProgressBar
         {
-            InitializeComponent();
+            Style = ProgressBarStyle.Continuous,
+            Minimum = 0
+        };
 
-            accountService = new(Program.AppEnvironment);
-            claimGeneratorService = new(Program.AppEnvironment);
-        }
+        claimProgressStatusLabel.Text = "Processing...";
 
-        private void ClaimsManagementForm_Load(object sender, EventArgs e)
+        Progress<ProgressReportModel> progress = new();
+        progress.ProgressChanged += ReportProgress;
+        cancelButton.Enabled = true;
+        try
         {
-            cancelButton.Enabled = false;
-            claimProgressStatusLabel.Text = "";
-
-            billingBatchBindingSource = new BindingSource();
-
-            LoadData();
-
-            claimBatchDataGrid.Columns[nameof(BillingBatch.UpdatedApp)].Visible = false;
-            claimBatchDataGrid.Columns[nameof(BillingBatch.UpdatedDate)].Visible = false;
-            claimBatchDataGrid.Columns[nameof(BillingBatch.UpdatedHost)].Visible = false;
-            claimBatchDataGrid.Columns[nameof(BillingBatch.UpdatedUser)].Visible = false;
-            claimBatchDataGrid.Columns[nameof(BillingBatch.rowguid)].Visible = false;
-            claimBatchDataGrid.Columns[nameof(BillingBatch.X12Text)].Visible = false;
-            claimBatchDataGrid.Columns[nameof(BillingBatch.TotalBilled)].DefaultCellStyle.Format = "N2";
-            claimBatchDataGrid.Columns[nameof(BillingBatch.TotalBilled)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-            claimBatchDataGrid.AutoResizeColumns();
-
-        }
-
-        private void LoadData()
-        {
-            billingBatches = claimGeneratorService.GetBillingBatches();
-            billingBatchTable = billingBatches.ToDataTable();
-            billingBatchTable.PrimaryKey = new DataColumn[] { billingBatchTable.Columns[nameof(BillingBatch.Batch)] };
-            billingBatchTable.DefaultView.Sort = $"{nameof(BillingBatch.Batch)} desc";
-
-            billingBatchBindingSource.DataSource = billingBatchTable;
-
-            billingActivitiesBindingSource = new BindingSource();
-
-            claimBatchDataGrid.DataSource = billingBatchBindingSource;
-
-        }
-
-        private enum BillingType
-        {
-            Institutional,
-            Professional
-        }
-
-        private async Task RunBillingBatch(BillingType billingType)
-        {
-            cancellationToken = new CancellationTokenSource();
-
-            claimProgress = new ProgressBar
+            int claimsProcessed = 0;
+            if (billingType == BillingType.Institutional)
             {
-                Style = ProgressBarStyle.Continuous,
-                Minimum = 0
-            };
-
-            claimProgressStatusLabel.Text = "Processing...";
-
-            Progress<ProgressReportModel> progress = new();
-            progress.ProgressChanged += ReportProgress;
-            cancelButton.Enabled = true;
-            try
-            {
-                int claimsProcessed = 0;
-                if (billingType == BillingType.Institutional)
+                claimsProcessed = await Task.Run(() =>
                 {
-                    claimsProcessed = await Task.Run(() =>
-                    {
-                        return claimGeneratorService.CompileBillingBatch(ClaimType.Institutional, progress, cancellationToken.Token);
-                    });
-                }
-                else if (billingType == BillingType.Professional)
+                    return claimGeneratorService.CompileBillingBatch(ClaimType.Institutional, progress, cancellationToken.Token);
+                });
+            }
+            else if (billingType == BillingType.Professional)
+            {
+                claimsProcessed = await Task.Run(() =>
                 {
-                    claimsProcessed = await Task.Run(() =>
-                    {
-                        return claimGeneratorService.CompileBillingBatch(ClaimType.Professional, progress, cancellationToken.Token);
-                    });
-                }
-
-                if (claimsProcessed < 0)
-                {
-                    MessageBox.Show(this, "Error processing claims. No file generated.", "Process Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-                else
-                {
-                    MessageBox.Show(this, $"File generated. {claimsProcessed} claims generated.");
-                }
-            }
-            catch (TaskCanceledException tce)
-            {
-                Log.Instance.Error(tce, $"{Enum.GetName(typeof(BillingType), billingType)} Claim Batch cancelled by user", tce);
-                MessageBox.Show(this, "Claim batch cancelled by user. No file was generated and batch has been rolled back.");
-                claimProgressStatusLabel.Text = "Job aborted.";
-                claimProgress.Value = claimProgress.Maximum;
-                claimProgress.SetState(2);
-                cancelButton.Enabled = false;
-            }
-            cancelButton.Enabled = false;
-            LoadData();
-        }
-
-        private void ReportProgress(object sender, ProgressReportModel e)
-        {
-            claimProgress.Maximum = e.TotalRecords;
-            claimProgress.Value = e.RecordsProcessed;
-            claimProgressStatusLabel.Text = $"Processing {e.RecordsProcessed} of {e.TotalRecords}";
-        }
-
-        private void cancelButton_Click(object sender, EventArgs e)
-        {
-            if (MessageBox.Show("This will cancel the claim batch and rollback any changes. Are you sure?", "Cancel Batch?",
-                    MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
-                cancellationToken.Cancel();
-        }
-
-        private void claimBatchDataGrid_SelectionChanged(object sender, EventArgs e)
-        {
-            if (claimBatchDataGrid.SelectedRows.Count > 0)
-            {
-                var batch = claimBatchDataGrid.SelectedRows[0].Cells[nameof(BillingBatch.Batch)].Value.ToString();
-                
-                billingActivitiesTable = claimGeneratorService.GetBillingBatchActivity(batch).ToDataTable();
-                billingActivitiesBindingSource.DataSource = billingActivitiesTable;
-
-                claimBatchDetailDataGrid.DataSource = billingActivitiesBindingSource;
-
-                claimBatchDetailDataGrid.Columns[nameof(BillingActivity.IsPrinted)].Visible = false;
-                claimBatchDetailDataGrid.Columns[nameof(BillingActivity.Text)].Visible = false;
-                claimBatchDetailDataGrid.Columns[nameof(BillingActivity.IsDeleted)].Visible = false;
-                claimBatchDetailDataGrid.Columns[nameof(BillingActivity.UpdatedDate)].Visible = false;
-                claimBatchDetailDataGrid.Columns[nameof(BillingActivity.UpdatedHost)].Visible = false;
-                claimBatchDetailDataGrid.Columns[nameof(BillingActivity.UpdatedApp)].Visible = false;
-                claimBatchDetailDataGrid.Columns[nameof(BillingActivity.UpdatedUser)].Visible = false;
-                claimBatchDetailDataGrid.Columns[nameof(BillingActivity.rowguid)].Visible = false;
-                claimBatchDetailDataGrid.Columns[nameof(BillingActivity.PatientName)].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-                claimBatchDetailDataGrid.Columns[nameof(BillingActivity.ClaimAmount)].DefaultCellStyle.Format = "N2";
-                claimBatchDetailDataGrid.Columns[nameof(BillingActivity.ClaimAmount)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-                claimBatchDetailDataGrid.AutoResizeColumns();
-
-                billingActivitiesTable.DefaultView.Sort = $"{nameof(BillingActivity.PatientName)}";
+                    return claimGeneratorService.CompileBillingBatch(ClaimType.Professional, progress, cancellationToken.Token);
+                });
             }
 
-        }
-
-        private void claimBatchDataGrid_MouseDoubleClick(object sender, MouseEventArgs e)
-        {
-            //show the x12 text in a dialog box.
-
-
-        }
-
-        private void clearBatchToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            //get batch number
-            var selectedBatch = claimBatchDataGrid.SelectedRows[0].Cells[nameof(BillingBatch.Batch)].Value;
-
-            double batchNo = Convert.ToDouble(selectedBatch);
-            Cursor.Current = Cursors.WaitCursor;
-            if(claimGeneratorService.ClearBatch(batchNo))
+            if (claimsProcessed < 0)
             {
-                billingBatchTable.Rows.Find(batchNo).Delete();
-            }
-            Cursor.Current = Cursors.Default;
-        }
-
-        private void regenerateClaimFileToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            var selectedBatch = claimBatchDataGrid.SelectedRows[0].Cells[nameof(BillingBatch.Batch)].Value;
-            double batchNo = Convert.ToDouble(selectedBatch);
-
-            ClaimGeneratorService claims = new ClaimGeneratorService(Program.AppEnvironment);
-
-            Cursor.Current = Cursors.WaitCursor;
-
-            claims.RegenerateBatch(batchNo);
-
-            Cursor.Current = Cursors.Default;
-
-        }
-
-        private void generateClaimsButton_Click(object sender, EventArgs e)
-        {
-            BillingType billingType;
-
-            if(institutionalRadioButton.Checked)
-            {
-                billingType = BillingType.Institutional;
-            }
-            else if(professionalRadioButton.Checked)
-            {
-                billingType = BillingType.Professional;
+                MessageBox.Show(this, "Error processing claims. No file generated.", "Process Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             else
             {
-                return;
+                MessageBox.Show(this, $"File generated. {claimsProcessed} claims generated.");
             }
+        }
+        catch (TaskCanceledException tce)
+        {
+            Log.Instance.Error(tce, $"{Enum.GetName(typeof(BillingType), billingType)} Claim Batch cancelled by user", tce);
+            MessageBox.Show(this, "Claim batch cancelled by user. No file was generated and batch has been rolled back.");
+            claimProgressStatusLabel.Text = "Job aborted.";
+            claimProgress.Value = claimProgress.Maximum;
+            claimProgress.SetState(2);
+            cancelButton.Enabled = false;
+        }
+        cancelButton.Enabled = false;
+        LoadData();
+    }
 
-            _ = RunBillingBatch(billingType);
+    private void ReportProgress(object sender, ProgressReportModel e)
+    {
+        claimProgress.Maximum = e.TotalRecords;
+        claimProgress.Value = e.RecordsProcessed;
+        claimProgressStatusLabel.Text = $"Processing {e.RecordsProcessed} of {e.TotalRecords}";
+    }
 
+    private void cancelButton_Click(object sender, EventArgs e)
+    {
+        if (MessageBox.Show("This will cancel the claim batch and rollback any changes. Are you sure?", "Cancel Batch?",
+                MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            cancellationToken.Cancel();
+    }
+
+    private void claimBatchDataGrid_SelectionChanged(object sender, EventArgs e)
+    {
+        if (claimBatchDataGrid.SelectedRows.Count > 0)
+        {
+            var batch = claimBatchDataGrid.SelectedRows[0].Cells[nameof(BillingBatch.Batch)].Value.ToString();
+            
+            billingActivitiesTable = claimGeneratorService.GetBillingBatchActivity(batch).ToDataTable();
+            billingActivitiesBindingSource.DataSource = billingActivitiesTable;
+
+            claimBatchDetailDataGrid.DataSource = billingActivitiesBindingSource;
+
+            claimBatchDetailDataGrid.Columns[nameof(BillingActivity.IsPrinted)].Visible = false;
+            claimBatchDetailDataGrid.Columns[nameof(BillingActivity.Text)].Visible = false;
+            claimBatchDetailDataGrid.Columns[nameof(BillingActivity.IsDeleted)].Visible = false;
+            claimBatchDetailDataGrid.Columns[nameof(BillingActivity.UpdatedDate)].Visible = false;
+            claimBatchDetailDataGrid.Columns[nameof(BillingActivity.UpdatedHost)].Visible = false;
+            claimBatchDetailDataGrid.Columns[nameof(BillingActivity.UpdatedApp)].Visible = false;
+            claimBatchDetailDataGrid.Columns[nameof(BillingActivity.UpdatedUser)].Visible = false;
+            claimBatchDetailDataGrid.Columns[nameof(BillingActivity.rowguid)].Visible = false;
+            claimBatchDetailDataGrid.Columns[nameof(BillingActivity.PatientName)].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            claimBatchDetailDataGrid.Columns[nameof(BillingActivity.ClaimAmount)].DefaultCellStyle.Format = "N2";
+            claimBatchDetailDataGrid.Columns[nameof(BillingActivity.ClaimAmount)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            claimBatchDetailDataGrid.AutoResizeColumns();
+
+            billingActivitiesTable.DefaultView.Sort = $"{nameof(BillingActivity.PatientName)}";
         }
 
-        private void claimBatchDetailDataGrid_MouseDoubleClick(object sender, MouseEventArgs e)
-        {
-            var selectedAccount = claimBatchDetailDataGrid.SelectedRows[0].Cells[nameof(BillingActivity.AccountNo)].Value.ToString();
+    }
 
-            if(!string.IsNullOrEmpty(selectedAccount))
-            {
-                AccountLaunched?.Invoke(this, selectedAccount);
-            }
+    private void claimBatchDataGrid_MouseDoubleClick(object sender, MouseEventArgs e)
+    {
+        //show the x12 text in a dialog box.
+
+
+    }
+
+    private void clearBatchToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        //get batch number
+        var selectedBatch = claimBatchDataGrid.SelectedRows[0].Cells[nameof(BillingBatch.Batch)].Value;
+
+        double batchNo = Convert.ToDouble(selectedBatch);
+        Cursor.Current = Cursors.WaitCursor;
+        if(claimGeneratorService.ClearBatch(batchNo))
+        {
+            billingBatchTable.Rows.Find(batchNo).Delete();
+        }
+        Cursor.Current = Cursors.Default;
+    }
+
+    private void regenerateClaimFileToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        var selectedBatch = claimBatchDataGrid.SelectedRows[0].Cells[nameof(BillingBatch.Batch)].Value;
+        double batchNo = Convert.ToDouble(selectedBatch);
+
+        ClaimGeneratorService claims = new ClaimGeneratorService(Program.AppEnvironment);
+
+        Cursor.Current = Cursors.WaitCursor;
+
+        claims.RegenerateBatch(batchNo);
+
+        Cursor.Current = Cursors.Default;
+
+    }
+
+    private void generateClaimsButton_Click(object sender, EventArgs e)
+    {
+        BillingType billingType;
+
+        if(institutionalRadioButton.Checked)
+        {
+            billingType = BillingType.Institutional;
+        }
+        else if(professionalRadioButton.Checked)
+        {
+            billingType = BillingType.Professional;
+        }
+        else
+        {
+            return;
+        }
+
+        _ = RunBillingBatch(billingType);
+
+    }
+
+    private void claimBatchDetailDataGrid_MouseDoubleClick(object sender, MouseEventArgs e)
+    {
+        var selectedAccount = claimBatchDetailDataGrid.SelectedRows[0].Cells[nameof(BillingActivity.AccountNo)].Value.ToString();
+
+        if(!string.IsNullOrEmpty(selectedAccount))
+        {
+            AccountLaunched?.Invoke(this, selectedAccount);
         }
     }
 }

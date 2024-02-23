@@ -1,49 +1,47 @@
-﻿using LabBilling.Forms;
-using System;
+﻿using System;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace LabBilling.Library
+namespace LabBilling.Library;
+
+public partial class WaitForm : Utilities.BaseForm
 {
-    public partial class WaitForm : BaseForm
+    public Action Worker { get; set; }
+    public ProgressBarStyle ProgressBarStyle
     {
-        public Action Worker { get; set; }
-        public ProgressBarStyle ProgressBarStyle
+        get
         {
-            get
-            {
-                return progressBar1.Style;
-            }
-            set
-            {
-                progressBar1.Style = value;
-            }
+            return progressBar1.Style;
         }
-
-        public WaitForm()
+        set
         {
-            InitializeComponent();
+            progressBar1.Style = value;
         }
-
-        public WaitForm(Action worker)
-        {
-            InitializeComponent();
-            Worker = worker;
-        }
-
-        protected override void OnLoad(EventArgs e)
-        {
-
-            base.OnLoad(e);
-            if (Worker != null)
-                Task.Factory.StartNew(Worker).ContinueWith(t => { this.Close(); }, TaskScheduler.FromCurrentSynchronizationContext());
-        }
-
-        public void UpdateProgress(int progress, string statusText = "Processing ... ")
-        {
-            progressBar1.Value = progress;
-            statusLabel.Text = statusText;
-        }
-        
     }
+
+    public WaitForm() : base(Program.AppEnvironment)
+    {
+        InitializeComponent();
+    }
+
+    public WaitForm(Action worker) : base(Program.AppEnvironment)
+    {
+        InitializeComponent();
+        Worker = worker;
+    }
+
+    protected override void OnLoad(EventArgs e)
+    {
+
+        base.OnLoad(e);
+        if (Worker != null)
+            Task.Factory.StartNew(Worker).ContinueWith(t => { this.Close(); }, TaskScheduler.FromCurrentSynchronizationContext());
+    }
+
+    public void UpdateProgress(int progress, string statusText = "Processing ... ")
+    {
+        progressBar1.Value = progress;
+        statusLabel.Text = statusText;
+    }
+    
 }

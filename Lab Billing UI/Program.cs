@@ -56,9 +56,7 @@ namespace LabBilling
             if(loginFrm.ShowDialog() == DialogResult.OK)
             {
                 Log.Instance.Info($"Login successful - connection {Helper.ConnVal}");
-                SplashForm.ShowSplashScreen();
-                MainForm mainForm = new MainForm();
-                SplashForm.CloseForm();
+                MainForm mainForm = new();
                 Application.Run(mainForm);
             }
             else

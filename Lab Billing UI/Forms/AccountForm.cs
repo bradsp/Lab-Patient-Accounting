@@ -70,7 +70,7 @@ namespace LabBilling.Forms
                 _selectedAccount = account;
         }
 
-        private AccountForm()
+        private AccountForm() : base(Program.AppEnvironment)
         {
             Log.Instance.Trace("Entering");
             InitializeComponent();

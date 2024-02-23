@@ -87,7 +87,7 @@
             ForeColor = System.Drawing.Color.Black;
             Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             Name = "DashboardForm";
-            Text = "DashboardForm";
+            Text = "Dashboard";
             Load += DashboardForm_Load;
             dashboardLayoutPanel.ResumeLayout(false);
             dashboardLayoutPanel.PerformLayout();

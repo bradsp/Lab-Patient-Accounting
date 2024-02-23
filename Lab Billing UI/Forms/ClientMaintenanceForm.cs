@@ -1,5 +1,4 @@
-﻿using LabBilling.Core.DataAccess;
-using LabBilling.Logging;
+﻿using LabBilling.Logging;
 using LabBilling.Core.Models;
 using System;
 using System.Collections.Generic;
@@ -9,163 +8,162 @@ using System.Data;
 using WinFormsLibrary;
 using LabBilling.Core.Services;
 
-namespace LabBilling.Forms
+namespace LabBilling.Forms;
+
+public partial class ClientMaintenanceForm : Utilities.BaseForm
 {
-    public partial class ClientMaintenanceForm : BaseForm
+    private System.Windows.Forms.Timer _timer;
+    private int timerDelay = 650;
+
+    private DictionaryService dictionaryService;
+    private BindingSource clientSource = new BindingSource();
+    private List<Client> _clientList = null;
+    private DataTable _clientTable = null;
+    //private IEnumerable<Client> clientQuery = null;
+
+    public ClientMaintenanceForm() : base(Program.AppEnvironment)
     {
-        private System.Windows.Forms.Timer _timer;
-        private int timerDelay = 650;
+        Log.Instance.Trace($"Entering");
+        InitializeComponent();
+        _timer = new Timer() { Enabled = false, Interval = timerDelay };
+        _timer.Tick += new EventHandler(filterTextBox_KeyUpDone);
+        dictionaryService = new(Program.AppEnvironment);
+    }
 
-        private DictionaryService dictionaryService;
-        private BindingSource clientSource = new BindingSource();
-        private List<Client> _clientList = null;
-        private DataTable _clientTable = null;
-        //private IEnumerable<Client> clientQuery = null;
+    private void Clients_Load(object sender, EventArgs e)
+    {
+        Log.Instance.Trace($"Entering");
 
-        public ClientMaintenanceForm()
+        _clientList = DataCache.Instance.GetClientsIncludeInactive();
+
+        _clientTable = _clientList.ToDataTable();
+        _clientTable.PrimaryKey = new DataColumn[] { _clientTable.Columns[nameof(Client.ClientMnem)] };
+
+        clientSource.DataSource = _clientTable;
+        dgvClients.DataSource = clientSource;
+        
+        _clientTable.DefaultView.RowFilter = $"{nameof(Client.IsDeleted)} = false";
+        
+        dgvClients.SetColumnsVisibility(false);
+        int i = 0;
+        dgvClients.Columns[nameof(Client.IsDeleted)].SetVisibilityOrder(true, i++);
+        dgvClients.Columns[nameof(Client.ClientMnem)].SetVisibilityOrder(true, i++);
+        dgvClients.Columns[nameof(Client.Name)].SetVisibilityOrder(true, i++);
+        dgvClients.Columns[nameof(Client.StreetAddress1)].SetVisibilityOrder(true, i++);
+        dgvClients.Columns[nameof(Client.StreetAddress2)].SetVisibilityOrder(true, i++);
+        dgvClients.Columns[nameof(Client.City)].SetVisibilityOrder(true, i++);
+        dgvClients.Columns[nameof(Client.State)].SetVisibilityOrder(true, i++);
+        dgvClients.Columns[nameof(Client.ZipCode)].SetVisibilityOrder(true, i++);
+        dgvClients.Columns[nameof(Client.FacilityNo)].SetVisibilityOrder(true, i++);
+        dgvClients.Columns[nameof(Client.Type)].SetVisibilityOrder(true, i++);
+        dgvClients.Columns[nameof(Client.BillMethod)].SetVisibilityOrder(true, i++);
+
+        dgvClients.Columns[nameof(Client.Name)].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+        dgvClients.AutoResizeColumns();
+
+        Log.Instance.Trace($"Exiting");
+    }
+
+    private void dgvClients_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
+    {
+        string clientMnem = dgvClients[nameof(Client.ClientMnem), e.RowIndex].Value.ToString();
+
+        ClientMaintenanceEditForm editForm = new()
         {
-            Log.Instance.Trace($"Entering");
-            InitializeComponent();
-            _timer = new Timer() { Enabled = false, Interval = timerDelay };
-            _timer.Tick += new EventHandler(filterTextBox_KeyUpDone);
-            dictionaryService = new(Program.AppEnvironment);
+            SelectedClient = clientMnem
+        };
+
+        if (editForm.ShowDialog() == DialogResult.OK)
+        {
+            Client client = editForm.client;
+            var record = _clientTable.Rows.Find(client.ClientMnem);
+            try
+            {
+                dictionaryService.SaveClient(client);
+
+                record = client.ToDataRow(record);
+            }
+            catch (Exception ex)
+            {
+                Log.Instance.Error(ex);
+                MessageBox.Show("Error updating client. Changes not saved.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            DataCache.Instance.ClearClientCache();
         }
 
-        private void Clients_Load(object sender, EventArgs e)
+    }
+
+    private void includeDeletedCheckBox_CheckedChanged(object sender, EventArgs e)
+    {
+        if (includeDeletedCheckBox.Checked)
         {
-            Log.Instance.Trace($"Entering");
-
-            _clientList = DataCache.Instance.GetClientsIncludeInactive();
-
-            _clientTable = _clientList.ToDataTable();
-            _clientTable.PrimaryKey = new DataColumn[] { _clientTable.Columns[nameof(Client.ClientMnem)] };
-
-            clientSource.DataSource = _clientTable;
-            dgvClients.DataSource = clientSource;
-            
+            _clientTable.DefaultView.RowFilter = String.Empty;
+        }
+        else
+        {
             _clientTable.DefaultView.RowFilter = $"{nameof(Client.IsDeleted)} = false";
-            
-            dgvClients.SetColumnsVisibility(false);
-            int i = 0;
-            dgvClients.Columns[nameof(Client.IsDeleted)].SetVisibilityOrder(true, i++);
-            dgvClients.Columns[nameof(Client.ClientMnem)].SetVisibilityOrder(true, i++);
-            dgvClients.Columns[nameof(Client.Name)].SetVisibilityOrder(true, i++);
-            dgvClients.Columns[nameof(Client.StreetAddress1)].SetVisibilityOrder(true, i++);
-            dgvClients.Columns[nameof(Client.StreetAddress2)].SetVisibilityOrder(true, i++);
-            dgvClients.Columns[nameof(Client.City)].SetVisibilityOrder(true, i++);
-            dgvClients.Columns[nameof(Client.State)].SetVisibilityOrder(true, i++);
-            dgvClients.Columns[nameof(Client.ZipCode)].SetVisibilityOrder(true, i++);
-            dgvClients.Columns[nameof(Client.FacilityNo)].SetVisibilityOrder(true, i++);
-            dgvClients.Columns[nameof(Client.Type)].SetVisibilityOrder(true, i++);
-            dgvClients.Columns[nameof(Client.BillMethod)].SetVisibilityOrder(true, i++);
-
-            dgvClients.Columns[nameof(Client.Name)].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            dgvClients.AutoResizeColumns();
-
-            Log.Instance.Trace($"Exiting");
         }
+    }
 
-        private void dgvClients_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
+    private void newClientButton_Click(object sender, EventArgs e)
+    {
+        ClientMaintenanceEditForm editForm = new ClientMaintenanceEditForm();
+        if (editForm.ShowDialog() == DialogResult.OK)
         {
-            string clientMnem = dgvClients[nameof(Client.ClientMnem), e.RowIndex].Value.ToString();
-
-            ClientMaintenanceEditForm editForm = new()
+            Client client = editForm.client;
+            var record = _clientTable.Rows.Find(client.ClientMnem);
+            if (record != null)
             {
-                SelectedClient = clientMnem
-            };
-
-            if (editForm.ShowDialog() == DialogResult.OK)
-            {
-                Client client = editForm.client;
-                var record = _clientTable.Rows.Find(client.ClientMnem);
-                try
-                {
-                    dictionaryService.SaveClient(client);
-
-                    record = client.ToDataRow(record);
-                }
-                catch (Exception ex)
-                {
-                    Log.Instance.Error(ex);
-                    MessageBox.Show("Error updating client. Changes not saved.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-                DataCache.Instance.ClearClientCache();
-            }
-
-        }
-
-        private void includeDeletedCheckBox_CheckedChanged(object sender, EventArgs e)
-        {
-            if (includeDeletedCheckBox.Checked)
-            {
-                _clientTable.DefaultView.RowFilter = String.Empty;
+                record = client.ToDataRow(record);
             }
             else
             {
-                _clientTable.DefaultView.RowFilter = $"{nameof(Client.IsDeleted)} = false";
+                record = _clientTable.NewRow();
+                _clientTable.Rows.Add(client.ToDataRow(record));
             }
+            try
+            {
+                client = dictionaryService.SaveClient(client);
+            }
+            catch (Exception ex)
+            {
+                Log.Instance.Error($"Error adding client {client.ClientMnem} - {client.Name}. Changes not saved.", ex);
+                MessageBox.Show("Error adding client. Changes not saved.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+            DataCache.Instance.ClearClientCache();
         }
+    }
 
-        private void newClientButton_Click(object sender, EventArgs e)
+    private void filterTextBox_KeyUpDone(object sender, EventArgs e)
+    {
+
+        if (includeDeletedCheckBox.Checked)
         {
-            ClientMaintenanceEditForm editForm = new ClientMaintenanceEditForm();
-            if (editForm.ShowDialog() == DialogResult.OK)
-            {
-                Client client = editForm.client;
-                var record = _clientTable.Rows.Find(client.ClientMnem);
-                if (record != null)
-                {
-                    record = client.ToDataRow(record);
-                }
-                else
-                {
-                    record = _clientTable.NewRow();
-                    _clientTable.Rows.Add(client.ToDataRow(record));
-                }
-                try
-                {
-                    client = dictionaryService.SaveClient(client);
-                }
-                catch (Exception ex)
-                {
-                    Log.Instance.Error($"Error adding client {client.ClientMnem} - {client.Name}. Changes not saved.", ex);
-                    MessageBox.Show("Error adding client. Changes not saved.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
+            _clientTable.DefaultView.RowFilter = 
+                $"{nameof(Client.Name)} LIKE '%{filterTextBox.Text}%' or {nameof(Client.ClientMnem)} = '{filterTextBox.Text.ToUpper()}'";
 
-                DataCache.Instance.ClearClientCache();
-            }
         }
-
-        private void filterTextBox_KeyUpDone(object sender, EventArgs e)
+        else
         {
-
-            if (includeDeletedCheckBox.Checked)
-            {
-                _clientTable.DefaultView.RowFilter = 
-                    $"{nameof(Client.Name)} LIKE '%{filterTextBox.Text}%' or {nameof(Client.ClientMnem)} = '{filterTextBox.Text.ToUpper()}'";
-
-            }
-            else
-            {
-                _clientTable.DefaultView.RowFilter =
-                    $"({nameof(Client.Name)} LIKE '%{filterTextBox.Text}%' or {nameof(Client.ClientMnem)} = '{filterTextBox.Text.ToUpper()}') and {nameof(Client.IsDeleted)} = false";
-
-            }
+            _clientTable.DefaultView.RowFilter =
+                $"({nameof(Client.Name)} LIKE '%{filterTextBox.Text}%' or {nameof(Client.ClientMnem)} = '{filterTextBox.Text.ToUpper()}') and {nameof(Client.IsDeleted)} = false";
 
         }
 
-        private void filterTextBox_KeyUp(object sender, KeyEventArgs e)
-        {
-            _timer.Stop();
-            _timer.Start();
-        }
+    }
 
-        private void dgvClients_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
+    private void filterTextBox_KeyUp(object sender, KeyEventArgs e)
+    {
+        _timer.Stop();
+        _timer.Start();
+    }
+
+    private void dgvClients_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
+    {
+        if ((bool)dgvClients[nameof(Client.IsDeleted), e.RowIndex].Value == true)
         {
-            if ((bool)dgvClients[nameof(Client.IsDeleted), e.RowIndex].Value == true)
-            {
-                dgvClients.Rows[e.RowIndex].DefaultCellStyle.ForeColor = Color.Gray;
-            }
+            dgvClients.Rows[e.RowIndex].DefaultCellStyle.ForeColor = Color.Gray;
         }
     }
 }

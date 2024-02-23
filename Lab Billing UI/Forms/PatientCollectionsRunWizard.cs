@@ -22,7 +22,7 @@ namespace LabBilling.Forms
         private string batchNo;
         private bool errorEncountered = false;
 
-        public PatientCollectionsRunWizard()
+        public PatientCollectionsRunWizard() : base(Program.AppEnvironment)
         {
             InitializeComponent();
         }

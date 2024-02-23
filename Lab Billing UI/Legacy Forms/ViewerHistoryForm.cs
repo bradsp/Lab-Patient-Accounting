@@ -64,7 +64,7 @@ namespace LabBilling.Legacy
         ///*  arg[3] -- table's field to filter on (should be named ~ xxx_rowguid where xxx is the original table name.
         ///*  arg[4] -- field value to look for in the history //master table rowguid 333-4443kkjf2-kdkjfkj2-kdjflkdj
         ///</param>
-        public frmHistory(string[] args)
+        public frmHistory(string[] args) : base(Program.AppEnvironment)
         {            
             //InitializeComponent();
             InitializeDefaults(args);          

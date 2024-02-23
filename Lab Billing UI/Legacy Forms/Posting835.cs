@@ -391,7 +391,7 @@ public partial class Posting835 : BaseForm
             MessageBox.Show(error, "Account not Launched");
     }
 
-    public Posting835(string[] args)
+    public Posting835(string[] args) : base(Program.AppEnvironment)
     {
         InitializeComponent();
         if (args.Length != 2)

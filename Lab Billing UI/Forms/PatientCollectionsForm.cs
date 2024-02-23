@@ -47,7 +47,7 @@ namespace LabBilling.Forms
             tsbSmallBalWriteOff.Enabled = !tsbSmallBalWriteOff.Enabled;
         }
 
-        public PatientCollectionsForm()
+        public PatientCollectionsForm() : base(Program.AppEnvironment)
         {
             Log.Instance.Trace($"Entering");
             InitializeComponent();

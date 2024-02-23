@@ -13,7 +13,7 @@ namespace LabBilling.Forms
     {
         private HL7ProcessorService processorService;
 
-        public InterfaceMonitor()
+        public InterfaceMonitor() : base(Program.AppEnvironment)
         {
             InitializeComponent();
             processorService = new(Program.AppEnvironment);

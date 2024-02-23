@@ -14,7 +14,7 @@ namespace LabBilling.Forms
 {
     public partial class BatchRemittance : BaseForm
     {
-        public BatchRemittance()
+        public BatchRemittance() : base(Program.AppEnvironment)
         {
             InitializeComponent();
         }

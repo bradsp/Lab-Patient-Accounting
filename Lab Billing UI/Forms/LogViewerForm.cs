@@ -1,18 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using LabBilling.Core.Models;
 using LabBilling.Core.DataAccess;
 
 namespace LabBilling.Forms
 {
-    public partial class LogViewerForm : BaseForm
+    public partial class LogViewerForm : Form
     {
         public LogViewerForm()
         {
