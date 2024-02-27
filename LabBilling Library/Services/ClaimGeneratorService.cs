@@ -236,12 +236,12 @@ public sealed class ClaimGeneratorService
                 return;
         }
 
-        foreach(var account in batch.BillingActivities)
+        batch.BillingActivities.ForEach(account =>
         {
             var claim = GenerateClaim(account.AccountNo, true);
-            if(claim != null)
+            if (claim != null)
                 claims.Add(claim);
-        }
+        });
 
         if (claims.Count > 0)
         {

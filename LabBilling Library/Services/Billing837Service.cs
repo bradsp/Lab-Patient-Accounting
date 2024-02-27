@@ -89,21 +89,12 @@ public sealed class Billing837Service
     {
         List<ClaimData> claims = new List<ClaimData>();
         claims.Add(claim);
-
-        ClaimType claimType;
-
-        switch (claim.ClaimType)
+        var claimType = claim.ClaimType switch
         {
-            case ClaimType.Institutional:
-                claimType = ClaimType.Institutional;
-                break;
-            case ClaimType.Professional:
-                claimType = ClaimType.Professional;
-                break;
-            default:
-                throw new InvalidParameterValueException("ClaimType does not contain a valid value.");
-        }
-
+            ClaimType.Institutional => ClaimType.Institutional,
+            ClaimType.Professional => ClaimType.Professional,
+            _ => throw new InvalidParameterValueException("ClaimType does not contain a valid value."),
+        };
         return Generate837ClaimBatch(claims, claim.InterchangeControlNumber, claim.BatchSubmitterId, fileLocation, claimType);
     }
 

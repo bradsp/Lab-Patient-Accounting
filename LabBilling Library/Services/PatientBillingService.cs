@@ -272,12 +272,12 @@ public sealed class PatientBillingService
 
         var records = uow.PatientStatementRepository.GetByStatement(statements);
 
-        foreach (var record in records)
+        records.ForEach(record =>
         {
             record.Accounts = uow.PatientStatementAccountRepository.GetByStatement(record.StatementNumber);
             record.Encounters = uow.PatientStatementEncounterRepository.GetByStatement(record.StatementNumber);
             record.EncounterActivity = uow.PatientStatementEncounterActivityRepository.GetByStatement(record.StatementNumber);
-        }
+        });
 
         return records;
 
@@ -301,12 +301,12 @@ public sealed class PatientBillingService
 
         var records = uow.PatientStatementRepository.GetByBatch(batch);
 
-        foreach (var record in records)
+        records.ForEach(record =>
         {
             record.Accounts = uow.PatientStatementAccountRepository.GetByStatement(record.StatementNumber);
             record.Encounters = uow.PatientStatementEncounterRepository.GetByStatement(record.StatementNumber);
             record.EncounterActivity = uow.PatientStatementEncounterActivityRepository.GetByStatement(record.StatementNumber);
-        }
+        });
 
         return records;
 

@@ -45,11 +45,13 @@ namespace LabBillingConsole
             menuText.AppendLine("13) Run Claims Batch");
             menuText.AppendLine("X) Exit");
 
-            var panel = new Panel(menuText.ToString());
-            panel.Header = new PanelHeader("Lab Patient Accounting Utility Menu");
-            panel.Border = BoxBorder.Square;
-            panel.Expand = true;
-            panel.Padding = new Padding(2, 2, 2, 2);
+            var panel = new Panel(menuText.ToString())
+            {
+                Header = new PanelHeader("Lab Patient Accounting Utility Menu"),
+                Border = BoxBorder.Square,
+                Expand = true,
+                Padding = new Padding(2, 2, 2, 2)
+            };
 
             AnsiConsole.Write(panel);
 
@@ -197,9 +199,17 @@ namespace LabBillingConsole
         public void ValidateAccountsJob()
         {
             AccountService accountService = new(_appEnvironment);
-            Console.WriteLine("In RunValidation() - Starting RunValidation job");
+            accountService.ValidationAccountUpdated += AccountService_ValidationAccountUpdated;
+            Console.WriteLine("In RunValidation() - Starting RunValidation job...");
+            Console.WriteLine("Wait for process to complete, then press a key...");
             accountService.ValidateUnbilledAccounts();
-            Console.WriteLine("In RunValidation() - Finished RunValidation job");
+            Console.ReadLine();
+            //Console.WriteLine("In RunValidation() - Finished RunValidation job");
+        }
+
+        private void AccountService_ValidationAccountUpdated(object sender, ValidationUpdatedEventArgs e)
+        {
+            Console.WriteLine($"Account {e.AccountNo} {e.UpdateMessage} - {e.TimeStamp}: Procesed {e.Processed} of Total {e.TotalItems}");
         }
 
         public void ReprintInvoice()

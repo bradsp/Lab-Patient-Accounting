@@ -367,7 +367,6 @@ partial class MainForm
         // 
         // mdiTabControl
         // 
-        mdiTabControl.DisplayStyle = System.Windows.Forms.TabStyle.IE8;
         // 
         // 
         // 
@@ -383,6 +382,7 @@ partial class MainForm
         mdiTabControl.DisplayStyleProvider.Overlap = 0;
         mdiTabControl.DisplayStyleProvider.Padding = new System.Drawing.Point(6, 5);
         mdiTabControl.DisplayStyleProvider.Radius = 3;
+        mdiTabControl.DisplayStyleProvider.SelectedTextStyle = System.Drawing.FontStyle.Regular;
         mdiTabControl.DisplayStyleProvider.ShowTabCloser = true;
         mdiTabControl.DisplayStyleProvider.TextColor = System.Drawing.SystemColors.ControlText;
         mdiTabControl.DisplayStyleProvider.TextColorDisabled = System.Drawing.SystemColors.ControlDark;

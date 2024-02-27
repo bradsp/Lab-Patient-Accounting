@@ -121,71 +121,6 @@
     <value>150, 17</value>
   </metadata>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="billingToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>52, 20</value>
-  </data>
-  <data name="billingToolStripMenuItem.Text" xml:space="preserve">
-    <value>&amp;Billing</value>
-  </data>
-  <data name="dictionariesToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>81, 20</value>
-  </data>
-  <data name="dictionariesToolStripMenuItem.Text" xml:space="preserve">
-    <value>&amp;Dictionaries</value>
-  </data>
-  <data name="reportsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>59, 20</value>
-  </data>
-  <data name="reportsToolStripMenuItem.Text" xml:space="preserve">
-    <value>&amp;Reports</value>
-  </data>
-  <data name="systemAdministrationToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>139, 20</value>
-  </data>
-  <data name="systemAdministrationToolStripMenuItem.Text" xml:space="preserve">
-    <value>&amp;System Administration</value>
-  </data>
-  <data name="windowToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>63, 20</value>
-  </data>
-  <data name="windowToolStripMenuItem.Text" xml:space="preserve">
-    <value>Window</value>
-  </data>
-  <data name="helpToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>44, 20</value>
-  </data>
-  <data name="helpToolStripMenuItem.Text" xml:space="preserve">
-    <value>&amp;Help</value>
-  </data>
-  <data name="MainFormMenu.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
-  </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="MainFormMenu.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>7, 2, 0, 2</value>
-  </data>
-  <data name="MainFormMenu.Size" type="System.Drawing.Size, System.Drawing">
-    <value>1024, 24</value>
-  </data>
-  <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="MainFormMenu.TabIndex" type="System.Int32, mscorlib">
-    <value>0</value>
-  </data>
-  <data name="MainFormMenu.Text" xml:space="preserve">
-    <value>menuStrip1</value>
-  </data>
-  <data name="&gt;&gt;MainFormMenu.Name" xml:space="preserve">
-    <value>MainFormMenu</value>
-  </data>
-  <data name="&gt;&gt;MainFormMenu.Type" xml:space="preserve">
-    <value>System.Windows.Forms.MenuStrip, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;MainFormMenu.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;MainFormMenu.ZOrder" xml:space="preserve">
-    <value>3</value>
-  </data>
   <data name="accountToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>217, 22</value>
   </data>
@@ -252,6 +187,12 @@
   <data name="badDebtMaintenanceToolStripMenuItem.Text" xml:space="preserve">
     <value>Patient Collections</value>
   </data>
+  <data name="billingToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>52, 20</value>
+  </data>
+  <data name="billingToolStripMenuItem.Text" xml:space="preserve">
+    <value>&amp;Billing</value>
+  </data>
   <data name="chargeMasterToolStripMenuItem1.Size" type="System.Drawing.Size, System.Drawing">
     <value>156, 22</value>
   </data>
@@ -270,6 +211,7 @@
   <data name="financialClassToolStripMenuItem.Text" xml:space="preserve">
     <value>Financial Class</value>
   </data>
+  <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="financialClassToolStripMenuItem.Visible" type="System.Boolean, mscorlib">
     <value>False</value>
   </data>
@@ -311,6 +253,12 @@
   </data>
   <data name="zipCodesToolStripMenuItem.Visible" type="System.Boolean, mscorlib">
     <value>False</value>
+  </data>
+  <data name="dictionariesToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>81, 20</value>
+  </data>
+  <data name="dictionariesToolStripMenuItem.Text" xml:space="preserve">
+    <value>&amp;Dictionaries</value>
   </data>
   <data name="codingStatsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>234, 22</value>
@@ -366,6 +314,12 @@
   <data name="reportByInsuranceCompanyToolStripMenuItem.Text" xml:space="preserve">
     <value>Report by Insurance Company</value>
   </data>
+  <data name="reportsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>59, 20</value>
+  </data>
+  <data name="reportsToolStripMenuItem.Text" xml:space="preserve">
+    <value>&amp;Reports</value>
+  </data>
   <data name="userSecurityToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>174, 22</value>
   </data>
@@ -396,6 +350,18 @@
   <data name="systemLogViewerToolStripMenuItem.Text" xml:space="preserve">
     <value>System Log Viewer</value>
   </data>
+  <data name="systemAdministrationToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>139, 20</value>
+  </data>
+  <data name="systemAdministrationToolStripMenuItem.Text" xml:space="preserve">
+    <value>&amp;System Administration</value>
+  </data>
+  <data name="windowToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>63, 20</value>
+  </data>
+  <data name="windowToolStripMenuItem.Text" xml:space="preserve">
+    <value>Window</value>
+  </data>
   <data name="documentationToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>157, 22</value>
   </data>
@@ -420,14 +386,60 @@
   <data name="exitToolStripMenuItem.Text" xml:space="preserve">
     <value>E&amp;xit</value>
   </data>
+  <data name="helpToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>44, 20</value>
+  </data>
+  <data name="helpToolStripMenuItem.Text" xml:space="preserve">
+    <value>&amp;Help</value>
+  </data>
+  <data name="MainFormMenu.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="MainFormMenu.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>7, 2, 0, 2</value>
+  </data>
+  <data name="MainFormMenu.Size" type="System.Drawing.Size, System.Drawing">
+    <value>1013, 24</value>
+  </data>
+  <data name="MainFormMenu.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="MainFormMenu.Text" xml:space="preserve">
+    <value>menuStrip1</value>
+  </data>
+  <data name="&gt;&gt;MainFormMenu.Name" xml:space="preserve">
+    <value>MainFormMenu</value>
+  </data>
+  <data name="&gt;&gt;MainFormMenu.Type" xml:space="preserve">
+    <value>System.Windows.Forms.MenuStrip, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;MainFormMenu.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;MainFormMenu.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
   <metadata name="statusStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>290, 17</value>
   </metadata>
+  <data name="toolStripUsernameLabel.Size" type="System.Drawing.Size, System.Drawing">
+    <value>137, 19</value>
+  </data>
+  <data name="toolStripUsernameLabel.Text" xml:space="preserve">
+    <value>toolStripUsernameLabel</value>
+  </data>
+  <data name="toolStripDatabaseLabel.Size" type="System.Drawing.Size, System.Drawing">
+    <value>132, 19</value>
+  </data>
+  <data name="toolStripDatabaseLabel.Text" xml:space="preserve">
+    <value>toolStripDatabaseLabel</value>
+  </data>
   <data name="statusStrip1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 744</value>
+    <value>0, 705</value>
   </data>
   <data name="statusStrip1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>1024, 24</value>
+    <value>1013, 24</value>
   </data>
   <data name="statusStrip1.TabIndex" type="System.Int32, mscorlib">
     <value>7</value>
@@ -447,18 +459,6 @@
   <data name="&gt;&gt;statusStrip1.ZOrder" xml:space="preserve">
     <value>2</value>
   </data>
-  <data name="toolStripUsernameLabel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>137, 19</value>
-  </data>
-  <data name="toolStripUsernameLabel.Text" xml:space="preserve">
-    <value>toolStripUsernameLabel</value>
-  </data>
-  <data name="toolStripDatabaseLabel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>132, 19</value>
-  </data>
-  <data name="toolStripDatabaseLabel.Text" xml:space="preserve">
-    <value>toolStripDatabaseLabel</value>
-  </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="panel1.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Left</value>
@@ -467,7 +467,7 @@
     <value>0, 24</value>
   </data>
   <data name="panel1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>203, 720</value>
+    <value>203, 681</value>
   </data>
   <data name="panel1.TabIndex" type="System.Int32, mscorlib">
     <value>11</value>
@@ -491,13 +491,16 @@
     <value>Top</value>
   </data>
   <data name="mdiTabControl.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Microsoft Sans Serif, 9.75pt</value>
+    <value>Microsoft Sans Serif, 9pt</value>
+  </data>
+  <data name="mdiTabControl.ItemSize" type="System.Drawing.Size, System.Drawing">
+    <value>0, 25</value>
   </data>
   <data name="mdiTabControl.Location" type="System.Drawing.Point, System.Drawing">
     <value>203, 24</value>
   </data>
   <data name="mdiTabControl.Size" type="System.Drawing.Size, System.Drawing">
-    <value>821, 27</value>
+    <value>810, 27</value>
   </data>
   <data name="mdiTabControl.TabIndex" type="System.Int32, mscorlib">
     <value>13</value>
@@ -509,7 +512,7 @@
     <value>mdiTabControl</value>
   </data>
   <data name="&gt;&gt;mdiTabControl.Type" xml:space="preserve">
-    <value>System.Windows.Forms.CustomTabControl, WinFormsLibrary, Culture=neutral, PublicKeyToken=null</value>
+    <value>System.Windows.Forms.CustomTabControl, CustomTabControl, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;mdiTabControl.Parent" xml:space="preserve">
     <value>$this</value>
@@ -527,7 +530,7 @@
     <value>7, 15</value>
   </data>
   <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
-    <value>1024, 768</value>
+    <value>1013, 729</value>
   </data>
   <data name="$this.Font" type="System.Drawing.Font, System.Drawing">
     <value>Microsoft Sans Serif, 9pt</value>

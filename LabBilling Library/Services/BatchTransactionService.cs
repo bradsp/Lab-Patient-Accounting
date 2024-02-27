@@ -102,7 +102,7 @@ public class BatchTransactionService
 
         var chkBatch = GetPaymentBatchById(batchNo);
         List<Chk> chks = new();
-        foreach (var detail in chkBatch.ChkBatchDetails)
+        chkBatch.ChkBatchDetails.ForEach(detail =>
         {
             Chk chk = new()
             {
@@ -121,7 +121,7 @@ public class BatchTransactionService
             };
 
             chks.Add(chk);
-        }
+        });
 
         uow.AddBatch(chks);
 

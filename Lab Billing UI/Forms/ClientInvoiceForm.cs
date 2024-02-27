@@ -14,9 +14,9 @@ using SaveFileDialog = System.Windows.Forms.SaveFileDialog;
 
 namespace LabBilling.Forms;
 
-public partial class ClientInvoiceForm : Utilities.BaseForm
+public partial class ClientInvoiceForm : Form
 {
-    public ClientInvoiceForm() : base(Program.AppEnvironment)
+    public ClientInvoiceForm() 
     {
         InitializeComponent();
 
@@ -379,10 +379,12 @@ public partial class ClientInvoiceForm : Utilities.BaseForm
             InvoicePrintPdfSharp invoicePrint = new(Program.AppEnvironment);
 
             string filename = invoicePrint.PrintInvoice(invoiceNo);
-            var p = new Process();
-            p.StartInfo = new ProcessStartInfo(filename)
+            var p = new Process
             {
-                UseShellExecute = true
+                StartInfo = new ProcessStartInfo(filename)
+                {
+                    UseShellExecute = true
+                }
             };
             p.Start();
         }
@@ -477,14 +479,15 @@ public partial class ClientInvoiceForm : Utilities.BaseForm
                 path = "";
             }
 
-            SaveFileDialog saveFileDialog = new SaveFileDialog();
-
-            saveFileDialog.Title = "Save File";
-            saveFileDialog.DefaultExt = "pdf";
-            saveFileDialog.Filter = "pdf files (*.pdf)|*.pdf|All files (*.*)|*.*";
-            saveFileDialog.FilterIndex = 1;
-            saveFileDialog.InitialDirectory = path;
-            saveFileDialog.FileName = $"InvoicesPrint-{DateTime.Now:MM-dd-yyyy}.pdf";
+            SaveFileDialog saveFileDialog = new()
+            {
+                Title = "Save File",
+                DefaultExt = "pdf",
+                Filter = "pdf files (*.pdf)|*.pdf|All files (*.*)|*.*",
+                FilterIndex = 1,
+                InitialDirectory = path,
+                FileName = $"InvoicesPrint-{DateTime.Now:MM-dd-yyyy}.pdf"
+            };
 
             if (saveFileDialog.ShowDialog() == DialogResult.OK)
             {
@@ -503,14 +506,18 @@ public partial class ClientInvoiceForm : Utilities.BaseForm
     {
         try
         {
-            var process = new Process();
-            process.StartInfo = new ProcessStartInfo();
-            process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+            var process = new Process
+            {
+                StartInfo = new ProcessStartInfo
+                {
+                    WindowStyle = ProcessWindowStyle.Hidden,
 
-            process.StartInfo.FileName = file;
-            process.StartInfo.Verb = "print";
-            process.StartInfo.CreateNoWindow = true;
-            process.StartInfo.UseShellExecute = true;
+                    FileName = file,
+                    Verb = "print",
+                    CreateNoWindow = true,
+                    UseShellExecute = true
+                }
+            };
 
             process.Start();
 

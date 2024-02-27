@@ -1,8 +1,8 @@
 ﻿using LabBilling.Core.Models;
 using System;
 using System.Collections.Generic;
-using Utilities;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Data.SqlClient;
 using System.Data;
@@ -75,7 +75,7 @@ public sealed class AccountService
         else
         {
             // check to see if the lock is this user and machine
-            if(alock.UpdatedUser == appEnvironment.User && alock.UpdatedHost == Environment.MachineName && alock.LockDateTime >= DateTime.Today)
+            if (alock.UpdatedUser == appEnvironment.User && alock.UpdatedHost == Environment.MachineName && alock.LockDateTime >= DateTime.Today)
             {
                 uow.Commit();
                 return (true, alock);
@@ -294,13 +294,13 @@ public sealed class AccountService
         else
             uow.PatRepository.Update(table.Pat);
 
-        foreach (Ins ins in table.Insurances)
+        table.Insurances.ForEach(ins =>
         {
             if (ins.Account != table.AccountNo)
                 ins.Account = table.AccountNo;
 
             uow.InsRepository.Save(ins);
-        }
+        });
 
         uow.Commit();
         return table;
@@ -766,7 +766,7 @@ public sealed class AccountService
             }
             else
             {
-                model.Charges = UpdateChargesFinCode(model.AccountNo, newFinCode).ToList();
+                model.Charges = UpdateChargesFinCode(model.Charges, newFinCode).ToList();
             }
             uow.Commit();
         }
@@ -942,21 +942,47 @@ public sealed class AccountService
 
         List<Chrg> charges = uow.ChrgRepository.GetByAccount(accountNo, showCredited, includeInvoiced, asOfDate, excludeCBill);
 
-        foreach (Chrg chrg in charges)
+        if(charges.Count > 10) //consider parallel processing if number of charges is significant.
         {
-            chrg.Cdm = dictionaryService.GetCdm(chrg.CDMCode, true);
-            chrg.ChrgDetails = uow.ChrgDetailRepository.GetByChrgId(chrg.ChrgId).ToList();
-            foreach (ChrgDetail detail in chrg.ChrgDetails)
-            {
-                detail.RevenueCodeDetail = dictionaryService.GetRevenueCode(detail.RevenueCode);
-                detail.DiagnosisPointer = uow.ChrgDiagnosisPointerRepository.GetById(detail.uri);
-                var cpt = uow.CptAmaRepository.GetCpt(detail.Cpt4);
-                if (cpt != null)
-                    detail.CptDescription = cpt.ShortDescription;
-            }
+            charges.AsParallel().ForAll(chrg => AddRevenueDiagnosisToChrg(chrg));
         }
+        else
+        {
+            charges.ForEach(chrg => AddRevenueDiagnosisToChrg(chrg));
+        }
+        
+        //charges.ForEach(chrg =>
+        //{
+        //    chrg.Cdm = dictionaryService.GetCdm(chrg.CDMCode, true);
+        //    chrg.ChrgDetails = uow.ChrgDetailRepository.GetByChrgId(chrg.ChrgId).ToList();
+        //    foreach (ChrgDetail detail in chrg.ChrgDetails)
+        //    {
+        //        detail.RevenueCodeDetail = dictionaryService.GetRevenueCode(detail.RevenueCode);
+        //        detail.DiagnosisPointer = uow.ChrgDiagnosisPointerRepository.GetById(detail.uri);
+        //        var cpt = uow.CptAmaRepository.GetCpt(detail.Cpt4);
+        //        if (cpt != null)
+        //            detail.CptDescription = cpt.ShortDescription;
+        //    }
+        //});
 
         return charges;
+    }
+
+    internal void AddRevenueDiagnosisToChrg(Chrg chrg)
+    {
+        AccountUnitOfWork uow = new(appEnvironment);
+
+        chrg.Cdm = dictionaryService.GetCdm(chrg.CDMCode, true);
+        chrg.ChrgDetails = uow.ChrgDetailRepository.GetByChrgId(chrg.ChrgId).ToList();
+        chrg.ChrgDetails.ForEach(detail =>
+        {
+            detail.RevenueCodeDetail = dictionaryService.GetRevenueCode(detail.RevenueCode);
+            detail.DiagnosisPointer = uow.ChrgDiagnosisPointerRepository.GetById(detail.uri);
+            var cpt = uow.CptAmaRepository.GetCpt(detail.Cpt4);
+            if (cpt != null)
+                detail.CptDescription = cpt.ShortDescription;
+        });
+
     }
 
     public IList<Chrg> UpdateDxPointers(List<Chrg> chrgs)
@@ -1037,21 +1063,18 @@ public sealed class AccountService
         return ReprocessCharges(acc, comment);
     }
 
-    public async Task<IList<Chrg>> UpdateChargesFinCodeAsync(string account, string finCode) => await Task.Run(() => UpdateChargesFinCode(account, finCode));
+    public async Task<IList<Chrg>> UpdateChargesFinCodeAsync(IList<Chrg> charges, string finCode) => await Task.Run(() => UpdateChargesFinCode(charges, finCode));
 
-    public IList<Chrg> UpdateChargesFinCode(string account, string finCode)
+    public IList<Chrg> UpdateChargesFinCode(IList<Chrg> charges, string finCode)
     {
         Log.Instance.Trace("Entering");
 
         using AccountUnitOfWork uow = new(appEnvironment, true);
 
-        List<Chrg> charges = uow.ChrgRepository.GetByAccount(account);
-
         if (charges == null || charges.Count == 0)
-            throw new ApplicationException($"No charges for account {account}");
+            throw new ApplicationException($"No charges for account {charges.First().AccountNo}");
 
         var fin = uow.FinRepository.GetFin(finCode) ?? throw new ApplicationException($"Fin {finCode} is not valid");
-
 
         var chrgsToUpdate = charges.Where(x => x.IsCredited == false &&
             (x.ClientMnem != appEnvironment.ApplicationParameters.PathologyGroupClientMnem ||
@@ -1065,16 +1088,8 @@ public sealed class AccountService
             c = uow.ChrgRepository.Update(c, new[] { nameof(Chrg.FinancialType), nameof(Chrg.FinCode) });
         });
 
-        foreach (var chrg in chrgsToUpdate)
-        {
-            chrg.FinCode = finCode;
-            chrg.FinancialType = fin.FinClass;
-            uow.ChrgRepository.Update(chrg, new[] { nameof(Chrg.FinancialType), nameof(Chrg.FinCode) });
-        }
-
-        charges = uow.ChrgRepository.GetByAccount(account);
         uow.Commit();
-        return charges;
+        return GetCharges(charges.First().AccountNo).ToList();
     }
 
     /// <summary>
@@ -1097,7 +1112,7 @@ public sealed class AccountService
 
         using AccountUnitOfWork uow = new(appEnvironment, true);
 
-        List<Chrg> charges = uow.ChrgRepository.GetByAccount(account);
+        List<Chrg> charges = GetCharges(account).ToList();
 
         if (charges == null || charges.Count == 0)
             throw new ApplicationException($"No charges for account {account}");
@@ -1327,7 +1342,7 @@ public sealed class AccountService
                 d.DiagnosisPointer.ChrgDetailUri = Convert.ToDouble(d.uri);
                 uow.ChrgDiagnosisPointerRepository.Save(d.DiagnosisPointer);
             }
-        });        
+        });
         chrg.ChrgDetails = chrgDetails;
 
         accData.Charges.Add(chrg);
@@ -1378,11 +1393,6 @@ public sealed class AccountService
         }
     }
 
-    public void BundlePanels(string accountNo)
-    {
-
-    }
-
     public async Task<Account> UnbundlePanelsAsync(Account account) => await Task.Run(() => UnbundlePanels(account));
 
     public Account UnbundlePanels(Account account)
@@ -1425,7 +1435,7 @@ public sealed class AccountService
                 AddCharge(account, "5728190", 1, account.TransactionDate);
             }
 
-            account.Charges = uow.ChrgRepository.GetByAccount(account.AccountNo);
+            account.Charges = GetCharges(account.AccountNo).ToList();
 
             uow.Commit();
             return account;
@@ -1573,11 +1583,12 @@ public sealed class AccountService
                 if (account.LmrpErrors.Count > 0 && account.FinCode == "A")
                 {
                     isAccountValid = false;
-                    foreach (var error in account.LmrpErrors)
+                    account.LmrpErrors.ForEach(error =>
                     {
                         account.AccountValidationStatus.ValidationText += error + Environment.NewLine;
                         lmrperrors += error + "\n";
-                    }
+                    });
+
                     if (!reprint)
                     {
                         account.Status = AccountStatus.New;
@@ -1648,7 +1659,7 @@ public sealed class AccountService
             errorList.Add("Rules not loaded for AMA_Year. DO NOT BILL.");
             return errorList;
         }
-
+       
         foreach (var cpt4 in account.cpt4List.Distinct())
         {
             if (cpt4 == null)
@@ -1679,6 +1690,8 @@ public sealed class AccountService
         return errorList;
     }
 
+    public event EventHandler<ValidationUpdatedEventArgs> ValidationAccountUpdated;
+
     public void ValidateUnbilledAccounts()
     {
         Log.Instance.Trace($"Entering");
@@ -1693,22 +1706,35 @@ public sealed class AccountService
             (nameof(AccountSearch.FinCode), AccountSearchRepository.operation.NotEqual, "E")
         };
 
-
+        ValidationAccountUpdated?.Invoke(this, new ValidationUpdatedEventArgs() { UpdateMessage = "Compiling accounts", TimeStamp = DateTime.Now });
         var accounts = uow.AccountSearchRepository.GetBySearch(parameters).ToList();
+        int p = 0;
+        int t = accounts.Count;
+        ValidationAccountUpdated?.Invoke(this, new ValidationUpdatedEventArgs() { UpdateMessage = "Compiled accounts", TimeStamp = DateTime.Now, Processed = p, TotalItems = t });
 
-        foreach (var account in accounts)
+        accounts.AsParallel().ForAll(account =>
         {
             try
             {
                 var accountRecord = this.GetAccount(account.Account);
                 this.Validate(accountRecord);
                 ClearAccountLock(accountRecord);
+                p++;
+                ValidationAccountUpdated?.Invoke(this, new ValidationUpdatedEventArgs()
+                {
+                    AccountNo = accountRecord.AccountNo,
+                    ValidationStatus = accountRecord.AccountValidationStatus.ValidationText,
+                    TimeStamp = DateTime.Now,
+                    Processed = p,
+                    TotalItems = t,
+                    UpdateMessage = $"Thread {Environment.CurrentManagedThreadId}"
+                });
             }
             catch (Exception e)
             {
                 Log.Instance.Error(e, "Error during account validation job.");
             }
-        }
+        });
     }
 
     public async Task ValidateUnbilledAccountsAsync() => await Task.Run(() => ValidateUnbilledAccounts());
@@ -1736,13 +1762,14 @@ public sealed class AccountService
             return (false, "Either source or destination account was not valid.");
         }
 
-        var charges = source.Charges.Where(c => c.IsCredited == false);
+        var charges = source.Charges.Where(c => c.IsCredited == false).ToList();
 
-        foreach (var charge in charges)
+        charges.ForEach(charge =>
         {
             CreditCharge(charge.ChrgId, $"Move to {destinationAccount}");
             AddCharge(destination, charge.CDMCode, charge.Quantity, (DateTime)destination.TransactionDate, $"Moved from {sourceAccount}", charge.ReferenceReq);
-        }
+        });
+
         uow.Commit();
         ClearAccountLock(source);
         ClearAccountLock(destination);
@@ -1939,4 +1966,15 @@ public sealed class AccountService
 
         return results;
     }
+}
+
+public class ValidationUpdatedEventArgs : EventArgs
+{
+    public string AccountNo { get; set; }
+    public string ValidationStatus { get; set; }
+    public string UpdateMessage { get; set; }
+    public DateTime TimeStamp { get; set; }
+    public int Processed { get; set; }
+    public int TotalItems { get; set; }
+
 }

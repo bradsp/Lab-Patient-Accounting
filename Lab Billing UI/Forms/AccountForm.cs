@@ -19,7 +19,7 @@ using LabBilling.LookupForms;
 
 namespace LabBilling.Forms
 {
-    public partial class AccountForm : BaseForm
+    public partial class AccountForm : Form
     {
         private readonly AccountService accountService;
         private readonly DictionaryService dictionaryService;
@@ -70,7 +70,7 @@ namespace LabBilling.Forms
                 _selectedAccount = account;
         }
 
-        private AccountForm() : base(Program.AppEnvironment)
+        private AccountForm()
         {
             Log.Instance.Trace("Entering");
             InitializeComponent();
@@ -330,7 +330,7 @@ namespace LabBilling.Forms
                 return;
             }
 
-            this.Text = $"{currentAccount.AccountNo} - {currentAccount.PatFullName}";
+            this.Text = $"{currentAccount.AccountNo} - {currentAccount.PatLastName}";
 
             dxBindingList = new BindingList<PatDiag>(currentAccount.Pat.Diagnoses);
 
@@ -1194,6 +1194,11 @@ namespace LabBilling.Forms
             notesDataGridView.Columns[nameof(AccountNote.UpdatedUser)].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
             notesDataGridView.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
             notesDataGridView.AutoResizeRows(DataGridViewAutoSizeRowsMode.AllCells);
+
+            int z = 0;
+            notesDataGridView.Columns[nameof(AccountNote.Comment)].DisplayIndex = z++;
+            notesDataGridView.Columns[nameof(Account.UpdatedDate)].DisplayIndex = z++;
+            notesDataGridView.Columns[nameof(Account.UpdatedUser)].DisplayIndex = z++;
 
             if (currentAccount.AccountAlert != null)
                 noteAlertCheckBox.Checked = currentAccount.AccountAlert.Alert;

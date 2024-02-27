@@ -13,11 +13,8 @@ using Application = System.Windows.Forms.Application;
 using NLog.Config;
 using NLog.Targets;
 using NLog;
-using System.Runtime.InteropServices;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Windows.Controls;
-using TabControl = System.Windows.Forms.TabControl;
 using ProgressBar = System.Windows.Forms.ProgressBar;
 using Label = System.Windows.Forms.Label;
 using Image = System.Drawing.Image;
@@ -152,7 +149,26 @@ public partial class MainForm : Form
 
         childForm.MdiParent = this;
         childForm.TextChanged += ChildForm_TextChanged;
+        childForm.FormClosed += ChildForm_FormClosed;
         childForm.Show();
+    }
+
+    private void ChildForm_FormClosed(object sender, FormClosedEventArgs e)
+    {
+        Form frm = sender as Form;
+
+        int i = mdiTabControl.TabPages.IndexOfKey(frm.Text);
+
+        if (i >= 0)
+        {
+            mdiTabControl.TabPages.Remove(mdiTabControl.TabPages[i]);
+        }
+
+        if (mdiTabControl.TabPages.ContainsKey("Work List"))
+        {
+                int idx = mdiTabControl.TabPages.IndexOfKey("Work List");
+                mdiTabControl.SelectedIndex = idx;
+        }
     }
 
     private void ChildForm_TextChanged(object sender, EventArgs e)
@@ -258,9 +274,7 @@ public partial class MainForm : Form
 
         LoadSideMenu();
 
-        mdiTabControl.TabImageClick += mdiTabControl_TabImageClick;
-        mdiTabControl.TabClosing += mdiTabControl_TabClosing;
-
+        mdiTabControl.TabClosing += mdiTabControl_TabClosing;        
 
         //enable menu items based on permissions
         systemAdministrationToolStripMenuItem.Visible = Program.LoggedInUser.IsAdministrator;
@@ -273,6 +287,12 @@ public partial class MainForm : Form
     {
         Form frm = e.TabPage.Tag as Form;
         frm.Close();
+
+        if (mdiTabControl.TabPages.ContainsKey("Work List"))
+        {
+            int idx = mdiTabControl.TabPages.IndexOfKey("Work List");
+            mdiTabControl.SelectedIndex = idx;
+        }
     }
 
     private void LoadSideMenu()
@@ -665,8 +685,10 @@ public partial class MainForm : Form
                 TabPage tp = new(this.ActiveMdiChild.Text)
                 {
                     Tag = this.ActiveMdiChild,
-                    //ImageIndex = 0
+                    Name = this.ActiveMdiChild.Text,
                 };
+
+                tp.Padding = new Padding(3);
 
                 mdiTabControl.TabPages.Add(tp);
 
@@ -829,27 +851,12 @@ public partial class MainForm : Form
 
     private void mdiTabControl_SelectedIndexChanged(object sender, EventArgs e)
     {
-        //if ((mdiTabControl.SelectedTab != null) &&
-        //    (mdiTabControl.SelectedTab.Tag != null))
-        //{
-        //    if (mdiTabControl.SelectedTab.Text == "Dashboard")
-        //    {
-        //        foreach (TabPage tp in mdiTabControl.TabPages)
-        //        {
-        //            if (tp.Text == "Work List")
-        //            {
-        //                mdiTabControl.SelectedTab = tp;
-        //            }
-        //        }
-        //    }
-        //}
+        if ((mdiTabControl.SelectedTab != null) &&
+            (mdiTabControl.SelectedTab.Tag != null))
+        {
+            Form frm = mdiTabControl.SelectedTab.Tag as Form;
+            frm.Activate();
+        }
     }
 
-    private void mdiTabControl_TabImageClick(object sender, TabControlEventArgs e)
-    {
-        TabControl tc = (TabControl)sender;
-        Form frm = e.TabPage.Tag as Form;
-        frm.Close();
-        tc.TabPages.Remove(e.TabPage);
-    }
 }

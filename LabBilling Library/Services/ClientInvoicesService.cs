@@ -43,7 +43,7 @@ public sealed class ClientInvoicesService
         int clientCount = unbilledClients.Count;
         try
         {
-            int tempCount = 0;
+            int tempCount = 0;            
             foreach (UnbilledClient unbilledClient in unbilledClients)
             {
                 GenerateInvoice(unbilledClient.ClientMnem, thruDate);
@@ -373,11 +373,10 @@ public sealed class ClientInvoicesService
         var payments = unitOfWork.ChkRepository.GetByAccount(clientMnem, asOfDate);
 
         List<ClientStatementDetailModel> statementDetails = new();
-
-        foreach (var chrg in charges)
+        charges.ForEach(chrg =>
         {
             if (chrg.NetAmount == 0 && chrg.CDMCode == invoiceCdm)
-                continue;
+                return;
 
             var statementDetail = new ClientStatementDetailModel
             {
@@ -409,9 +408,10 @@ public sealed class ClientInvoicesService
             }
 
             statementDetails.Add(statementDetail);
-        }
 
-        foreach (var chk in payments)
+        });
+
+        payments.ForEach(chk =>
         {
             var statementDetail = new ClientStatementDetailModel();
 
@@ -427,7 +427,7 @@ public sealed class ClientInvoicesService
             statementDetail.ServiceDate = chk.DateReceived == null ? DateTime.Today : (DateTime)chk.DateReceived;
             statementDetail.Reference = chk.CheckNo;
             statementDetails.Add(statementDetail);
-        }
+        });
 
         statementDetails.Sort((x, y) => DateTime.Compare(x.ServiceDate, y.ServiceDate));
 
