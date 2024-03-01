@@ -321,31 +321,31 @@
     <value>&amp;Reports</value>
   </data>
   <data name="userSecurityToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>174, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="userSecurityToolStripMenuItem.Text" xml:space="preserve">
     <value>User Security</value>
   </data>
   <data name="systemParametersToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>174, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="systemParametersToolStripMenuItem.Text" xml:space="preserve">
     <value>System Parameters</value>
   </data>
   <data name="interfaceMappingToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>174, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="interfaceMappingToolStripMenuItem.Text" xml:space="preserve">
     <value>Interface Mapping</value>
   </data>
   <data name="interfaceMonitorToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>174, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="interfaceMonitorToolStripMenuItem.Text" xml:space="preserve">
     <value>Interface Monitor</value>
   </data>
   <data name="systemLogViewerToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>174, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="systemLogViewerToolStripMenuItem.Text" xml:space="preserve">
     <value>System Log Viewer</value>
@@ -491,7 +491,7 @@
     <value>Top</value>
   </data>
   <data name="mdiTabControl.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Microsoft Sans Serif, 9pt</value>
+    <value>Segoe UI, 9pt</value>
   </data>
   <data name="mdiTabControl.ItemSize" type="System.Drawing.Size, System.Drawing">
     <value>0, 25</value>

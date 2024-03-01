@@ -224,7 +224,7 @@ public sealed class PatRepository : RepositoryBase<Pat>
     {
         try
         {
-            if(model.rowguid != Guid.Empty)
+            if(RecordExists(model.AccountNo))
                 return this.Update(model);
             else
                 return this.Add(model);

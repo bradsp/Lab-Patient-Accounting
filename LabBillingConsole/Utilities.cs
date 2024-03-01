@@ -1,15 +1,11 @@
-﻿using LabBilling.Core;
-using LabBilling.Core.Services;
+﻿using LabBilling.Core.Services;
 using LabBilling.Core.DataAccess;
 using LabBilling.Core.Models;
-using PetaPoco.Providers;
 using PetaPoco;
 using Spectre.Console;
 using System;
-using System.Collections.Generic;
 using Microsoft.Data.SqlClient;
 using System.Data;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
@@ -224,7 +220,7 @@ namespace LabBillingConsole
         }
         public void ProcessInterfaceMessages()
         {
-            HL7ProcessorService hL7Processor = new HL7ProcessorService(_appEnvironment);
+            HL7ProcessorService hL7Processor = new(_appEnvironment);
             hL7Processor.ProcessMessages();
             Console.WriteLine("Messages processed.");
         }

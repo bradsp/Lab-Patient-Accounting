@@ -18,9 +18,8 @@ namespace LabBilling.Core.DataAccess
         public List<MessageInbound> GetUnprocessedMessages()
         {
             Log.Instance.Trace($"Entering");
-
+            
             var command = PetaPoco.Sql.Builder;
-
             command.Where($"{GetRealColumn(nameof(MessageInbound.ProcessFlag))} = 'N'");
             command.OrderBy($"{GetRealColumn(nameof(MessageInbound.MessageDate))}");
 

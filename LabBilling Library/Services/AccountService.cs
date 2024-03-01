@@ -26,6 +26,7 @@ public sealed class AccountService
     private const string clientFinType = "C";
     private const string patientFinType = "M";
     private const string zFinType = "Z";
+    private const string billClientFinCode = "Y";
     private const string invalidFinCode = "K";
     private const string clientFinCode = "CLIENT";
     private const string pthExceptionClient = "HC";
@@ -87,6 +88,8 @@ public sealed class AccountService
 
     public bool ClearAccountLock(Account account)
     {
+        if (account == null)
+            throw new ArgumentNullException(nameof(account));
         return ClearAccountLock(account.AccountLockInfo.id);
     }
 
@@ -114,6 +117,12 @@ public sealed class AccountService
         }
 
         var record = uow.AccountRepository.GetByAccount(account);
+        if (record == null)
+        {
+            ClearAccountLock(alock.id);
+            return null;
+        }
+
         record.AccountLockInfo = alock;
         if (record == null)
             return null;
@@ -301,7 +310,9 @@ public sealed class AccountService
 
             uow.InsRepository.Save(ins);
         });
-
+        var result = GetAccountLock(table.AccountNo);
+        if (result.locksuccessful)
+            table.AccountLockInfo = result.lockInfo;
         uow.Commit();
         return table;
     }
@@ -489,7 +500,7 @@ public sealed class AccountService
     public int UpdateStatus(string accountNo, string status)
     {
         Log.Instance.Trace($"Entering - account {accountNo} status {status}");
-        using AccountUnitOfWork uow = new(appEnvironment, true);
+        using AccountUnitOfWork uow = new(appEnvironment);
 
         if (string.IsNullOrEmpty(accountNo))
             throw new ArgumentNullException(nameof(accountNo));
@@ -499,18 +510,16 @@ public sealed class AccountService
             throw new ArgumentOutOfRangeException(nameof(status), "Invalid status");
 
         var returnval = uow.AccountRepository.UpdateStatus(accountNo, status);
-        uow.Commit();
 
         return returnval;
     }
 
     public Account UpdateStatus(Account model, string status)
     {
-        using AccountUnitOfWork uow = new(appEnvironment, true);
+        using AccountUnitOfWork uow = new(appEnvironment);
         try
         {
             var result = uow.AccountRepository.UpdateStatus(model, status);
-            uow.Commit();
             return result;
         }
         catch (Exception ex)
@@ -950,20 +959,6 @@ public sealed class AccountService
         {
             charges.ForEach(chrg => AddRevenueDiagnosisToChrg(chrg));
         }
-        
-        //charges.ForEach(chrg =>
-        //{
-        //    chrg.Cdm = dictionaryService.GetCdm(chrg.CDMCode, true);
-        //    chrg.ChrgDetails = uow.ChrgDetailRepository.GetByChrgId(chrg.ChrgId).ToList();
-        //    foreach (ChrgDetail detail in chrg.ChrgDetails)
-        //    {
-        //        detail.RevenueCodeDetail = dictionaryService.GetRevenueCode(detail.RevenueCode);
-        //        detail.DiagnosisPointer = uow.ChrgDiagnosisPointerRepository.GetById(detail.uri);
-        //        var cpt = uow.CptAmaRepository.GetCpt(detail.Cpt4);
-        //        if (cpt != null)
-        //            detail.CptDescription = cpt.ShortDescription;
-        //    }
-        //});
 
         return charges;
     }
@@ -1217,11 +1212,11 @@ public sealed class AccountService
         if (appEnvironment.ApplicationParameters.PathologyGroupBillsProfessional)
         {
             //check for global billing cdm - if it is, change client to Pathology Group, fin to Y, and get appropriate prices
-            var gb = uow.GlobalBillingCdmRepository.GetCdm(cdm);
+            var gb = uow.GlobalBillingCdmRepository.GetCdm(cdm, accData.TransactionDate);
             //hard coding exception for Hardin County for now - 05/09/2023 BSP
             if (gb != null && accData.ClientMnem != pthExceptionClient)
             {
-                fin = uow.FinRepository.GetFin("Y") ?? throw new ApplicationException($"Fin code Y not found error {accData.AccountNo}");
+                fin = uow.FinRepository.GetFin(billClientFinCode) ?? throw new ApplicationException($"Fin code {billClientFinCode} not found error {accData.AccountNo}");
                 chargeClient = uow.ClientRepository.GetClient(appEnvironment.ApplicationParameters.PathologyGroupClientMnem);
             }
         }
@@ -1297,7 +1292,7 @@ public sealed class AccountService
                     retailTotal += fee.CClassPrice;
                     ztotal += fee.ZClassPrice;
                     break;
-                case "Z":
+                case zFinType:
                     chrgDetail.Amount = fee.ZClassPrice;
                     retailTotal += fee.ZClassPrice;
                     ztotal += fee.ZClassPrice;
@@ -1961,7 +1956,7 @@ public sealed class AccountService
     public IList<AccountSearch> SearchAccounts(string lastName, string firstName, string mrn, string ssn, string dob,
             string sex, string accountSearch)
     {
-        using AccountUnitOfWork uow = new(appEnvironment, true);
+        using AccountUnitOfWork uow = new(appEnvironment);
         var results = uow.AccountSearchRepository.GetBySearch(lastName, firstName, mrn, ssn, dob, sex, accountSearch).ToList();
 
         return results;

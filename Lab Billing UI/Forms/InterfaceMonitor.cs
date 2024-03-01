@@ -114,12 +114,14 @@ namespace LabBilling.Forms
                 if (okToProcess)
                 {
                     HL7ProcessorService hL7Processor = new HL7ProcessorService(Program.AppEnvironment);
+                    Cursor.Current = Cursors.WaitCursor;
                     hL7Processor.ProcessMessage(msgID);
 
                     var row = messagesTable.Rows.Find(msgID);
                     row[nameof(MessageInbound.ProcessFlag)] = "Reprocessed";
                     row[nameof(MessageInbound.ProcessStatusMsg)] = "Update Date Range to refresh status.";
                     MessagesGrid.Refresh();
+                    Cursor.Current = Cursors.Default;
                 }
             }
             else

@@ -42,7 +42,7 @@ namespace LabBilling.Core.DataAccess
 
             acc.PatFullName = acc.PatNameDisplay;
 
-            return this.Add(acc);
+            return base.Add(acc);
         }
 
 

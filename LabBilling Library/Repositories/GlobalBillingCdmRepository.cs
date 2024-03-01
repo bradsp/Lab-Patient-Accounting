@@ -18,13 +18,15 @@ namespace LabBilling.Core.DataAccess
     {
         public GlobalBillingCdmRepository(IAppEnvironment appEnvironment, PetaPoco.IDatabase context) : base(appEnvironment, context) { }
 
-        public GlobalBillingCdm GetCdm(string cdm)
+        public GlobalBillingCdm GetCdm(string cdm, DateTime serviceDate)
         {
             Log.Instance.Trace("Entering");
 
             var sql = PetaPoco.Sql.Builder
                 .Where($"{GetRealColumn(nameof(GlobalBillingCdm.Cdm))} = @0",
-                    new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = cdm });
+                    new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = cdm })
+                .Where($"{GetRealColumn(nameof(GlobalBillingCdm.ExpirationDate))} > @0 or {GetRealColumn(nameof(GlobalBillingCdm.ExpirationDate))} is null",
+                    new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = serviceDate });
 
             return Context.SingleOrDefault<GlobalBillingCdm>(sql);
         }

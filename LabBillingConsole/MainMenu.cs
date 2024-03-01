@@ -49,11 +49,13 @@ namespace LabBillingConsole
                 menuText.AppendLine("2) Testing Menu");
                 menuText.AppendLine("X) Exit");
 
-                var panel = new Panel(menuText.ToString());
-                panel.Header = new PanelHeader("Lab Patient Accounting Main Menu");
-                panel.Border = BoxBorder.Square;
-                panel.Expand = true;
-                panel.Padding = new Padding(2, 2, 2, 2);
+                var panel = new Panel(menuText.ToString())
+                {
+                    Header = new PanelHeader("Lab Patient Accounting Main Menu"),
+                    Border = BoxBorder.Square,
+                    Expand = true,
+                    Padding = new Padding(2, 2, 2, 2)
+                };
 
                 AnsiConsole.Write(panel);
 

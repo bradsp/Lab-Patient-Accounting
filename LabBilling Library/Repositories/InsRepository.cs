@@ -8,6 +8,7 @@ using Microsoft.Data.SqlClient;
 using System.Data;
 using PetaPoco;
 using LabBilling.Core.Services;
+using NPOI.SS.UserModel;
 
 namespace LabBilling.Core.DataAccess;
 
@@ -200,5 +201,19 @@ public sealed class InsRepository : RepositoryBase<Ins>
             cols.Add(nameof(Ins.HolderFullName));
         }
         return base.Update(table, cols);
+    }
+
+    /// <summary>
+    /// Deletes all insurance records for an account.
+    /// </summary>
+    /// <param name="account"></param>
+    /// <returns>Number of rows deleted.</returns>
+    public int DeleteAccountInsurances(string account)
+    {
+        Log.Instance.Trace($"Entering - account {account}");
+
+        string sql = $"where {GetRealColumn(nameof(Ins.Account))} = @0";
+
+        return Context.Delete<Ins>(sql, new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account });
     }
 }
