@@ -22,17 +22,24 @@ namespace LabBilling.Core.DataAccess
             dictionaryService = new(appEnvironment);
         }
 
-        public List<Client> GetAll(bool includeInactive)
+        public async Task<List<Client>> GetAllAsync(bool includeInactive = false) => await Task.Run(() => GetAllAsync(includeInactive));
+
+        public List<Client> GetAll(bool includeInactive = false)
         {
             Log.Instance.Trace("Entering");
-            PetaPoco.Sql sql = Sql.Builder;
-            sql.From(_tableName);
+
+            string clientTypeTableName = ClientTypeRepository.GetTableInfo(typeof(ClientType)).TableName;            
+
+            PetaPoco.Sql sql = Sql.Builder
+                .Select("*")
+                .From(_tableName)
+                .LeftJoin(clientTypeTableName)
+                .On($"{clientTypeTableName}.{GetRealColumn(typeof(ClientType), nameof(ClientType.Type))} = {_tableName}.{GetRealColumn(nameof(Client.Type))}");
 
             if (!includeInactive)
                 sql.Where($"{GetRealColumn(nameof(Client.IsDeleted))} = @0", false);
 
-            var queryResult = Context.Fetch<Client>(sql);
-            queryResult.ForEach(c => c.ClientType = dictionaryService.GetClientType(c.Type));
+            var queryResult = Context.Fetch<Client, ClientType, Client>((c, ct) => { c.ClientType = ct; return c; }, sql);
 
             Log.Instance.Debug(Context.LastSQL);
 
@@ -124,7 +131,7 @@ namespace LabBilling.Core.DataAccess
             int total = clients.Count;
             int processed = 0;
 
-            foreach (var client in clients)
+            clients.AsParallel().ForAll(client =>
             {
                 UnbilledClient unbilledClient = new()
                 {
@@ -135,12 +142,11 @@ namespace LabBilling.Core.DataAccess
                     UnbilledAccounts = unbilledAccounts.Where(x => x.ClientMnem == client.ClientMnem).ToList()
                 };
 
-                if(unbilledClient.PriorBalance != 0 && unbilledAccounts.Sum(x => x.UnbilledAmount) != 0)
+                if (unbilledClient.PriorBalance != 0 && unbilledAccounts.Sum(x => x.UnbilledAmount) != 0)
                     unbilledClients.Add(unbilledClient);
 
-
                 progress?.Report(HelperExtensions.ComputePercentage(++processed, total));
-            }
+            });
 
             return unbilledClients;
         }
@@ -157,7 +163,8 @@ namespace LabBilling.Core.DataAccess
                     chrgTableName + "." + GetRealColumn(typeof(Chrg), nameof(Chrg.ClientMnem)),
                     accTableName + "." + GetRealColumn(typeof(Account), nameof(Account.TransactionDate)),
                     accTableName + "." + GetRealColumn(typeof(Account), nameof(Account.PatFullName)),
-                    chrgTableName + "." + GetRealColumn(typeof(Chrg), nameof(Chrg.FinCode))
+                    chrgTableName + "." + GetRealColumn(typeof(Chrg), nameof(Chrg.FinCode)),
+                    $"dbo.GetAccClientBalance({chrgTableName}.{GetRealColumn(typeof(Chrg), nameof(Chrg.AccountNo))}, {chrgTableName}.{GetRealColumn(typeof(Chrg), nameof(Chrg.ClientMnem))}) as {GetRealColumn(typeof(UnbilledAccounts), nameof(UnbilledAccounts.UnbilledAmount))}"
                 })
                 .From(chrgTableName)
                 .InnerJoin(accTableName)
@@ -178,24 +185,6 @@ namespace LabBilling.Core.DataAccess
                 });
 
             var results = Context.Fetch<UnbilledAccounts>(cmd);
-            int processed = 0;
-            foreach (var result in results)
-            {
-                if (!string.IsNullOrEmpty(result.ClientMnem))
-                {
-                    var unbilledBalance = Context.ExecuteScalar<double>("select dbo.GetAccClientBalance(@0, @1)",
-                        new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = result.Account },
-                        new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = result.ClientMnem });
-
-                    result.UnbilledAmount = unbilledBalance;
-                }
-                else
-                {
-                    result.UnbilledAmount = 0.00;
-                }
-
-                progress?.Report(HelperExtensions.ComputePercentage(++processed, results.Count));
-            }
 
             return results.Where(x => x.UnbilledAmount != 0.00).ToList();
         }

@@ -29,296 +29,308 @@ namespace LabBilling.Forms
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            this.MessagesGrid = new System.Windows.Forms.DataGridView();
-            this.GridContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.ReprocessMessage = new System.Windows.Forms.ToolStripMenuItem();
-            this.markDoNotProcessToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.MessageTypeFilterComboBox = new System.Windows.Forms.ComboBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.hl7MessageTextBox = new System.Windows.Forms.TextBox();
-            this.FromDate = new System.Windows.Forms.DateTimePicker();
-            this.ThruDate = new System.Windows.Forms.DateTimePicker();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.FilterButton = new System.Windows.Forms.Button();
-            this.accountFilterTextBox = new System.Windows.Forms.TextBox();
-            this.label4 = new System.Windows.Forms.Label();
-            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.splitContainer2 = new System.Windows.Forms.SplitContainer();
-            this.errorsTextBox = new System.Windows.Forms.TextBox();
-            this.label5 = new System.Windows.Forms.Label();
-            this.processFlagFilterCombo = new System.Windows.Forms.ComboBox();
-            this.showMessagesWithErrorsCheckBox = new System.Windows.Forms.CheckBox();
-            ((System.ComponentModel.ISupportInitialize)(this.MessagesGrid)).BeginInit();
-            this.GridContextMenu.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
-            this.splitContainer1.Panel1.SuspendLayout();
-            this.splitContainer1.Panel2.SuspendLayout();
-            this.splitContainer1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
-            this.splitContainer2.Panel1.SuspendLayout();
-            this.splitContainer2.Panel2.SuspendLayout();
-            this.splitContainer2.SuspendLayout();
-            this.SuspendLayout();
+            components = new System.ComponentModel.Container();
+            MessagesGrid = new System.Windows.Forms.DataGridView();
+            GridContextMenu = new System.Windows.Forms.ContextMenuStrip(components);
+            ReprocessMessage = new System.Windows.Forms.ToolStripMenuItem();
+            markDoNotProcessToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            MessageTypeFilterComboBox = new System.Windows.Forms.ComboBox();
+            label1 = new System.Windows.Forms.Label();
+            hl7MessageTextBox = new System.Windows.Forms.TextBox();
+            FromDate = new System.Windows.Forms.DateTimePicker();
+            ThruDate = new System.Windows.Forms.DateTimePicker();
+            label2 = new System.Windows.Forms.Label();
+            label3 = new System.Windows.Forms.Label();
+            FilterButton = new System.Windows.Forms.Button();
+            accountFilterTextBox = new System.Windows.Forms.TextBox();
+            label4 = new System.Windows.Forms.Label();
+            splitContainer1 = new System.Windows.Forms.SplitContainer();
+            splitContainer2 = new System.Windows.Forms.SplitContainer();
+            errorsTextBox = new System.Windows.Forms.TextBox();
+            label5 = new System.Windows.Forms.Label();
+            processFlagFilterCombo = new System.Windows.Forms.ComboBox();
+            showMessagesWithErrorsCheckBox = new System.Windows.Forms.CheckBox();
+            ((System.ComponentModel.ISupportInitialize)MessagesGrid).BeginInit();
+            GridContextMenu.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
+            splitContainer1.Panel1.SuspendLayout();
+            splitContainer1.Panel2.SuspendLayout();
+            splitContainer1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)splitContainer2).BeginInit();
+            splitContainer2.Panel1.SuspendLayout();
+            splitContainer2.Panel2.SuspendLayout();
+            splitContainer2.SuspendLayout();
+            SuspendLayout();
             // 
             // MessagesGrid
             // 
-            this.MessagesGrid.AllowUserToAddRows = false;
-            this.MessagesGrid.AllowUserToDeleteRows = false;
-            this.MessagesGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.MessagesGrid.ContextMenuStrip = this.GridContextMenu;
-            this.MessagesGrid.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.MessagesGrid.Location = new System.Drawing.Point(0, 0);
-            this.MessagesGrid.Name = "MessagesGrid";
-            this.MessagesGrid.ReadOnly = true;
-            this.MessagesGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.MessagesGrid.Size = new System.Drawing.Size(1138, 248);
-            this.MessagesGrid.TabIndex = 0;
-            this.MessagesGrid.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.MessagesGrid_CellClick);
-            this.MessagesGrid.SelectionChanged += new System.EventHandler(this.MessagesGrid_SelectionChanged);
+            MessagesGrid.AllowUserToAddRows = false;
+            MessagesGrid.AllowUserToDeleteRows = false;
+            MessagesGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            MessagesGrid.ContextMenuStrip = GridContextMenu;
+            MessagesGrid.Dock = System.Windows.Forms.DockStyle.Fill;
+            MessagesGrid.Location = new System.Drawing.Point(0, 0);
+            MessagesGrid.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            MessagesGrid.Name = "MessagesGrid";
+            MessagesGrid.ReadOnly = true;
+            MessagesGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            MessagesGrid.Size = new System.Drawing.Size(1328, 285);
+            MessagesGrid.TabIndex = 0;
+            MessagesGrid.CellClick += MessagesGrid_CellClick;
+            MessagesGrid.DataError += MessagesGrid_DataError;
+            MessagesGrid.SelectionChanged += MessagesGrid_SelectionChanged;
             // 
             // GridContextMenu
             // 
-            this.GridContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.ReprocessMessage,
-            this.markDoNotProcessToolStripMenuItem});
-            this.GridContextMenu.Name = "GridContextMenu";
-            this.GridContextMenu.Size = new System.Drawing.Size(186, 48);
+            GridContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { ReprocessMessage, markDoNotProcessToolStripMenuItem });
+            GridContextMenu.Name = "GridContextMenu";
+            GridContextMenu.Size = new System.Drawing.Size(186, 48);
             // 
             // ReprocessMessage
             // 
-            this.ReprocessMessage.Name = "ReprocessMessage";
-            this.ReprocessMessage.Size = new System.Drawing.Size(185, 22);
-            this.ReprocessMessage.Text = "Reprocess Message";
-            this.ReprocessMessage.Click += new System.EventHandler(this.ReprocessMessage_Click);
+            ReprocessMessage.Name = "ReprocessMessage";
+            ReprocessMessage.Size = new System.Drawing.Size(185, 22);
+            ReprocessMessage.Text = "Reprocess Message";
+            ReprocessMessage.Click += ReprocessMessage_Click;
             // 
             // markDoNotProcessToolStripMenuItem
             // 
-            this.markDoNotProcessToolStripMenuItem.Name = "markDoNotProcessToolStripMenuItem";
-            this.markDoNotProcessToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
-            this.markDoNotProcessToolStripMenuItem.Text = "Mark Do Not Process";
-            this.markDoNotProcessToolStripMenuItem.Click += new System.EventHandler(this.markDoNotProcessToolStripMenuItem_Click);
+            markDoNotProcessToolStripMenuItem.Name = "markDoNotProcessToolStripMenuItem";
+            markDoNotProcessToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
+            markDoNotProcessToolStripMenuItem.Text = "Mark Do Not Process";
+            markDoNotProcessToolStripMenuItem.Click += markDoNotProcessToolStripMenuItem_Click;
             // 
             // MessageTypeFilterComboBox
             // 
-            this.MessageTypeFilterComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.MessageTypeFilterComboBox.FormattingEnabled = true;
-            this.MessageTypeFilterComboBox.Items.AddRange(new object[] {
-            "All",
-            "ADT",
-            "DFT",
-            "MFN"});
-            this.MessageTypeFilterComboBox.Location = new System.Drawing.Point(389, 36);
-            this.MessageTypeFilterComboBox.Name = "MessageTypeFilterComboBox";
-            this.MessageTypeFilterComboBox.Size = new System.Drawing.Size(74, 21);
-            this.MessageTypeFilterComboBox.TabIndex = 2;
-            this.MessageTypeFilterComboBox.SelectedIndexChanged += new System.EventHandler(this.MessageTypeSelect_SelectedIndexChanged);
+            MessageTypeFilterComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            MessageTypeFilterComboBox.FormattingEnabled = true;
+            MessageTypeFilterComboBox.Items.AddRange(new object[] { "All", "ADT", "DFT", "MFN" });
+            MessageTypeFilterComboBox.Location = new System.Drawing.Point(454, 42);
+            MessageTypeFilterComboBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            MessageTypeFilterComboBox.Name = "MessageTypeFilterComboBox";
+            MessageTypeFilterComboBox.Size = new System.Drawing.Size(86, 23);
+            MessageTypeFilterComboBox.TabIndex = 2;
+            MessageTypeFilterComboBox.SelectedIndexChanged += MessageTypeSelect_SelectedIndexChanged;
             // 
             // label1
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(386, 20);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(77, 13);
-            this.label1.TabIndex = 3;
-            this.label1.Text = "Message Type";
+            label1.AutoSize = true;
+            label1.Location = new System.Drawing.Point(450, 23);
+            label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label1.Name = "label1";
+            label1.Size = new System.Drawing.Size(80, 15);
+            label1.TabIndex = 3;
+            label1.Text = "Message Type";
             // 
             // hl7MessageTextBox
             // 
-            this.hl7MessageTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.hl7MessageTextBox.Font = new System.Drawing.Font("Courier New", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.hl7MessageTextBox.Location = new System.Drawing.Point(0, 0);
-            this.hl7MessageTextBox.Multiline = true;
-            this.hl7MessageTextBox.Name = "hl7MessageTextBox";
-            this.hl7MessageTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.hl7MessageTextBox.Size = new System.Drawing.Size(1138, 132);
-            this.hl7MessageTextBox.TabIndex = 0;
-            this.hl7MessageTextBox.WordWrap = false;
+            hl7MessageTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            hl7MessageTextBox.Font = new System.Drawing.Font("Courier New", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+            hl7MessageTextBox.Location = new System.Drawing.Point(0, 0);
+            hl7MessageTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            hl7MessageTextBox.Multiline = true;
+            hl7MessageTextBox.Name = "hl7MessageTextBox";
+            hl7MessageTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            hl7MessageTextBox.Size = new System.Drawing.Size(1328, 152);
+            hl7MessageTextBox.TabIndex = 0;
+            hl7MessageTextBox.WordWrap = false;
             // 
             // FromDate
             // 
-            this.FromDate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.FromDate.CustomFormat = "M/d/yy HH:mm";
-            this.FromDate.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.FromDate.Location = new System.Drawing.Point(771, 35);
-            this.FromDate.Name = "FromDate";
-            this.FromDate.Size = new System.Drawing.Size(116, 20);
-            this.FromDate.TabIndex = 5;
+            FromDate.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+            FromDate.CustomFormat = "M/d/yy HH:mm";
+            FromDate.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
+            FromDate.Location = new System.Drawing.Point(899, 40);
+            FromDate.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            FromDate.Name = "FromDate";
+            FromDate.Size = new System.Drawing.Size(135, 23);
+            FromDate.TabIndex = 5;
             // 
             // ThruDate
             // 
-            this.ThruDate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.ThruDate.CustomFormat = "M/d/yy HH:mm";
-            this.ThruDate.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.ThruDate.Location = new System.Drawing.Point(915, 35);
-            this.ThruDate.Name = "ThruDate";
-            this.ThruDate.Size = new System.Drawing.Size(114, 20);
-            this.ThruDate.TabIndex = 5;
+            ThruDate.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+            ThruDate.CustomFormat = "M/d/yy HH:mm";
+            ThruDate.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
+            ThruDate.Location = new System.Drawing.Point(1068, 40);
+            ThruDate.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            ThruDate.Name = "ThruDate";
+            ThruDate.Size = new System.Drawing.Size(132, 23);
+            ThruDate.TabIndex = 5;
             // 
             // label2
             // 
-            this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(768, 19);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(65, 13);
-            this.label2.TabIndex = 6;
-            this.label2.Text = "Date Range";
+            label2.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+            label2.AutoSize = true;
+            label2.Location = new System.Drawing.Point(896, 22);
+            label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label2.Name = "label2";
+            label2.Size = new System.Drawing.Size(67, 15);
+            label2.TabIndex = 6;
+            label2.Text = "Date Range";
             // 
             // label3
             // 
-            this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(893, 39);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(16, 13);
-            this.label3.TabIndex = 7;
-            this.label3.Text = " - ";
+            label3.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+            label3.AutoSize = true;
+            label3.Location = new System.Drawing.Point(1042, 45);
+            label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label3.Name = "label3";
+            label3.Size = new System.Drawing.Size(18, 15);
+            label3.TabIndex = 7;
+            label3.Text = " - ";
             // 
             // FilterButton
             // 
-            this.FilterButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.FilterButton.Location = new System.Drawing.Point(1035, 34);
-            this.FilterButton.Name = "FilterButton";
-            this.FilterButton.Size = new System.Drawing.Size(126, 23);
-            this.FilterButton.TabIndex = 8;
-            this.FilterButton.Text = "Update Date Range";
-            this.FilterButton.UseVisualStyleBackColor = true;
-            this.FilterButton.Click += new System.EventHandler(this.FilterButton_Click);
+            FilterButton.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+            FilterButton.Location = new System.Drawing.Point(1208, 39);
+            FilterButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            FilterButton.Name = "FilterButton";
+            FilterButton.Size = new System.Drawing.Size(147, 27);
+            FilterButton.TabIndex = 8;
+            FilterButton.Text = "Update Date Range";
+            FilterButton.UseVisualStyleBackColor = true;
+            FilterButton.Click += FilterButton_Click;
             // 
             // accountFilterTextBox
             // 
-            this.accountFilterTextBox.Location = new System.Drawing.Point(211, 36);
-            this.accountFilterTextBox.Name = "accountFilterTextBox";
-            this.accountFilterTextBox.Size = new System.Drawing.Size(165, 20);
-            this.accountFilterTextBox.TabIndex = 9;
-            this.accountFilterTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.accountFilterTextBox_KeyDown);
+            accountFilterTextBox.Location = new System.Drawing.Point(246, 42);
+            accountFilterTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            accountFilterTextBox.Name = "accountFilterTextBox";
+            accountFilterTextBox.Size = new System.Drawing.Size(192, 23);
+            accountFilterTextBox.TabIndex = 9;
+            accountFilterTextBox.KeyDown += accountFilterTextBox_KeyDown;
             // 
             // label4
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(208, 20);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(72, 13);
-            this.label4.TabIndex = 10;
-            this.label4.Text = "Filter Account";
+            label4.AutoSize = true;
+            label4.Location = new System.Drawing.Point(243, 23);
+            label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label4.Name = "label4";
+            label4.Size = new System.Drawing.Size(81, 15);
+            label4.TabIndex = 10;
+            label4.Text = "Filter Account";
             // 
             // splitContainer1
             // 
-            this.splitContainer1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.splitContainer1.Location = new System.Drawing.Point(23, 80);
-            this.splitContainer1.Name = "splitContainer1";
-            this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            splitContainer1.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            splitContainer1.Location = new System.Drawing.Point(27, 92);
+            splitContainer1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            splitContainer1.Name = "splitContainer1";
+            splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
             // splitContainer1.Panel1
             // 
-            this.splitContainer1.Panel1.Controls.Add(this.MessagesGrid);
+            splitContainer1.Panel1.Controls.Add(MessagesGrid);
             // 
             // splitContainer1.Panel2
             // 
-            this.splitContainer1.Panel2.Controls.Add(this.splitContainer2);
-            this.splitContainer1.Size = new System.Drawing.Size(1138, 497);
-            this.splitContainer1.SplitterDistance = 248;
-            this.splitContainer1.TabIndex = 11;
+            splitContainer1.Panel2.Controls.Add(splitContainer2);
+            splitContainer1.Size = new System.Drawing.Size(1328, 573);
+            splitContainer1.SplitterDistance = 285;
+            splitContainer1.SplitterWidth = 5;
+            splitContainer1.TabIndex = 11;
             // 
             // splitContainer2
             // 
-            this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer2.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer2.Name = "splitContainer2";
-            this.splitContainer2.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
+            splitContainer2.Location = new System.Drawing.Point(0, 0);
+            splitContainer2.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            splitContainer2.Name = "splitContainer2";
+            splitContainer2.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
             // splitContainer2.Panel1
             // 
-            this.splitContainer2.Panel1.Controls.Add(this.hl7MessageTextBox);
+            splitContainer2.Panel1.Controls.Add(hl7MessageTextBox);
             // 
             // splitContainer2.Panel2
             // 
-            this.splitContainer2.Panel2.Controls.Add(this.errorsTextBox);
-            this.splitContainer2.Size = new System.Drawing.Size(1138, 245);
-            this.splitContainer2.SplitterDistance = 132;
-            this.splitContainer2.TabIndex = 0;
+            splitContainer2.Panel2.Controls.Add(errorsTextBox);
+            splitContainer2.Size = new System.Drawing.Size(1328, 283);
+            splitContainer2.SplitterDistance = 152;
+            splitContainer2.SplitterWidth = 5;
+            splitContainer2.TabIndex = 0;
             // 
             // errorsTextBox
             // 
-            this.errorsTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.errorsTextBox.Location = new System.Drawing.Point(0, 0);
-            this.errorsTextBox.Multiline = true;
-            this.errorsTextBox.Name = "errorsTextBox";
-            this.errorsTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.errorsTextBox.Size = new System.Drawing.Size(1138, 109);
-            this.errorsTextBox.TabIndex = 0;
+            errorsTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            errorsTextBox.Location = new System.Drawing.Point(0, 0);
+            errorsTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            errorsTextBox.Multiline = true;
+            errorsTextBox.Name = "errorsTextBox";
+            errorsTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            errorsTextBox.Size = new System.Drawing.Size(1328, 126);
+            errorsTextBox.TabIndex = 0;
             // 
             // label5
             // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(466, 20);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(68, 13);
-            this.label5.TabIndex = 3;
-            this.label5.Text = "Process Flag";
+            label5.AutoSize = true;
+            label5.Location = new System.Drawing.Point(544, 23);
+            label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label5.Name = "label5";
+            label5.Size = new System.Drawing.Size(72, 15);
+            label5.TabIndex = 3;
+            label5.Text = "Process Flag";
             // 
             // processFlagFilterCombo
             // 
-            this.processFlagFilterCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.processFlagFilterCombo.FormattingEnabled = true;
-            this.processFlagFilterCombo.Location = new System.Drawing.Point(469, 36);
-            this.processFlagFilterCombo.Name = "processFlagFilterCombo";
-            this.processFlagFilterCombo.Size = new System.Drawing.Size(109, 21);
-            this.processFlagFilterCombo.TabIndex = 2;
-            this.processFlagFilterCombo.SelectedIndexChanged += new System.EventHandler(this.processFlagFilterCombo_SelectedIndexChanged);
+            processFlagFilterCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            processFlagFilterCombo.FormattingEnabled = true;
+            processFlagFilterCombo.Location = new System.Drawing.Point(547, 42);
+            processFlagFilterCombo.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            processFlagFilterCombo.Name = "processFlagFilterCombo";
+            processFlagFilterCombo.Size = new System.Drawing.Size(126, 23);
+            processFlagFilterCombo.TabIndex = 2;
+            processFlagFilterCombo.SelectedIndexChanged += processFlagFilterCombo_SelectedIndexChanged;
             // 
             // showMessagesWithErrorsCheckBox
             // 
-            this.showMessagesWithErrorsCheckBox.AutoSize = true;
-            this.showMessagesWithErrorsCheckBox.Location = new System.Drawing.Point(584, 38);
-            this.showMessagesWithErrorsCheckBox.Name = "showMessagesWithErrorsCheckBox";
-            this.showMessagesWithErrorsCheckBox.Size = new System.Drawing.Size(156, 17);
-            this.showMessagesWithErrorsCheckBox.TabIndex = 12;
-            this.showMessagesWithErrorsCheckBox.Text = "Show Messages with Errors";
-            this.showMessagesWithErrorsCheckBox.UseVisualStyleBackColor = true;
-            this.showMessagesWithErrorsCheckBox.CheckedChanged += new System.EventHandler(this.showMessagesWithErrorsCheckBox_CheckedChanged);
+            showMessagesWithErrorsCheckBox.AutoSize = true;
+            showMessagesWithErrorsCheckBox.Location = new System.Drawing.Point(681, 44);
+            showMessagesWithErrorsCheckBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            showMessagesWithErrorsCheckBox.Name = "showMessagesWithErrorsCheckBox";
+            showMessagesWithErrorsCheckBox.Size = new System.Drawing.Size(168, 19);
+            showMessagesWithErrorsCheckBox.TabIndex = 12;
+            showMessagesWithErrorsCheckBox.Text = "Show Messages with Errors";
+            showMessagesWithErrorsCheckBox.UseVisualStyleBackColor = true;
+            showMessagesWithErrorsCheckBox.CheckedChanged += showMessagesWithErrorsCheckBox_CheckedChanged;
             // 
             // InterfaceMonitor
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1184, 600);
-            this.Controls.Add(this.showMessagesWithErrorsCheckBox);
-            this.Controls.Add(this.splitContainer1);
-            this.Controls.Add(this.label4);
-            this.Controls.Add(this.accountFilterTextBox);
-            this.Controls.Add(this.FilterButton);
-            this.Controls.Add(this.ThruDate);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.FromDate);
-            this.Controls.Add(this.processFlagFilterCombo);
-            this.Controls.Add(this.label5);
-            this.Controls.Add(this.MessageTypeFilterComboBox);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.label2);
-            this.MinimumSize = new System.Drawing.Size(950, 600);
-            this.Name = "InterfaceMonitor";
-            this.Text = "InterfaceMonitor";
-            this.Load += new System.EventHandler(this.InterfaceMonitor_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.MessagesGrid)).EndInit();
-            this.GridContextMenu.ResumeLayout(false);
-            this.splitContainer1.Panel1.ResumeLayout(false);
-            this.splitContainer1.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
-            this.splitContainer1.ResumeLayout(false);
-            this.splitContainer2.Panel1.ResumeLayout(false);
-            this.splitContainer2.Panel1.PerformLayout();
-            this.splitContainer2.Panel2.ResumeLayout(false);
-            this.splitContainer2.Panel2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
-            this.splitContainer2.ResumeLayout(false);
-            this.ResumeLayout(false);
-            this.PerformLayout();
-
+            AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            ClientSize = new System.Drawing.Size(1381, 692);
+            Controls.Add(showMessagesWithErrorsCheckBox);
+            Controls.Add(splitContainer1);
+            Controls.Add(label4);
+            Controls.Add(accountFilterTextBox);
+            Controls.Add(FilterButton);
+            Controls.Add(ThruDate);
+            Controls.Add(label3);
+            Controls.Add(FromDate);
+            Controls.Add(processFlagFilterCombo);
+            Controls.Add(label5);
+            Controls.Add(MessageTypeFilterComboBox);
+            Controls.Add(label1);
+            Controls.Add(label2);
+            Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            MinimumSize = new System.Drawing.Size(1106, 686);
+            Name = "InterfaceMonitor";
+            Text = "InterfaceMonitor";
+            Load += InterfaceMonitor_Load;
+            ((System.ComponentModel.ISupportInitialize)MessagesGrid).EndInit();
+            GridContextMenu.ResumeLayout(false);
+            splitContainer1.Panel1.ResumeLayout(false);
+            splitContainer1.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)splitContainer1).EndInit();
+            splitContainer1.ResumeLayout(false);
+            splitContainer2.Panel1.ResumeLayout(false);
+            splitContainer2.Panel1.PerformLayout();
+            splitContainer2.Panel2.ResumeLayout(false);
+            splitContainer2.Panel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)splitContainer2).EndInit();
+            splitContainer2.ResumeLayout(false);
+            ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion

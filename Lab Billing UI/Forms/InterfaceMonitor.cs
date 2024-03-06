@@ -6,14 +6,15 @@ using LabBilling.Core.Models;
 using Utilities;
 using LabBilling.Core.Services;
 using WinFormsLibrary;
+using LabBilling.Logging;
 
 namespace LabBilling.Forms
 {
-    public partial class InterfaceMonitor : BaseForm
+    public partial class InterfaceMonitor : Form
     {
         private HL7ProcessorService processorService;
 
-        public InterfaceMonitor() : base(Program.AppEnvironment)
+        public InterfaceMonitor()
         {
             InitializeComponent();
             processorService = new(Program.AppEnvironment);
@@ -54,7 +55,7 @@ namespace LabBilling.Forms
             MessagesGrid.AutoResizeColumns();
 
             processFlagFilterCombo.Items.Add("All");
-            foreach(var item in Enum.GetValues(typeof(HL7ProcessorService.Status)))
+            foreach (var item in Enum.GetValues(typeof(HL7ProcessorService.Status)))
             {
                 processFlagFilterCombo.Items.Add(item);
             }
@@ -88,19 +89,19 @@ namespace LabBilling.Forms
 
         private void ReprocessMessage_Click(object sender, EventArgs e)
         {
-            if(MessagesGrid.SelectedRows.Count > 0)
+            if (MessagesGrid.SelectedRows.Count > 0)
             {
                 //string msgType = MessagesGrid.SelectedRows[0].Cells[nameof(MessageInbound.MessageType)].Value.ToString();
                 int msgID = Convert.ToInt32(MessagesGrid.SelectedRows[0].Cells[nameof(MessageInbound.SystemMsgId)].Value);
                 string msgType = MessagesGrid.SelectedRows[0].Cells[nameof(MessageInbound.MessageType)].Value.ToString();
                 string processFlag = MessagesGrid.SelectedRows[0].Cells[nameof(MessageInbound.ProcessFlag)].Value.ToString();
 
-                
+
                 bool okToProcess = false;
 
                 if (msgType.StartsWith("DFT") && processFlag == "P")
                 {
-                    if(MessageBox.Show("Reprocessing could result in duplicate charges. Continue anyway?", "Reprocess Charge Message", 
+                    if (MessageBox.Show("Reprocessing could result in duplicate charges. Continue anyway?", "Reprocess Charge Message",
                         MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                     {
                         okToProcess = true;
@@ -173,7 +174,7 @@ namespace LabBilling.Forms
         {
             messagesTable.DefaultView.RowFilter = "";
 
-            if(!string.IsNullOrEmpty(accountFilterTextBox.Text))
+            if (!string.IsNullOrEmpty(accountFilterTextBox.Text))
             {
                 messagesTable.DefaultView.RowFilter = $"{nameof(MessageInbound.SourceAccount)} = '{accountFilterTextBox.Text}'";
             }
@@ -212,11 +213,11 @@ namespace LabBilling.Forms
                 }
             }
 
-            if(showMessagesWithErrorsCheckBox.Checked)
+            if (showMessagesWithErrorsCheckBox.Checked)
             {
                 string newFilter = messagesTable.DefaultView.RowFilter;
 
-                if(!string.IsNullOrEmpty(messagesTable.DefaultView.RowFilter))
+                if (!string.IsNullOrEmpty(messagesTable.DefaultView.RowFilter))
                 {
                     newFilter += " and ";
                 }
@@ -246,7 +247,7 @@ namespace LabBilling.Forms
 
         private void accountFilterTextBox_KeyDown(object sender, KeyEventArgs e)
         {
-            if(e.KeyCode == Keys.Enter)
+            if (e.KeyCode == Keys.Enter)
             {
                 ApplyFilter();
             }
@@ -282,6 +283,11 @@ namespace LabBilling.Forms
         private void showMessagesWithErrorsCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             ApplyFilter();
+        }
+
+        private void MessagesGrid_DataError(object sender, DataGridViewDataErrorEventArgs e)
+        {
+            Log.Instance.Error(e.Exception, e.Exception.Message);
         }
     }
 }

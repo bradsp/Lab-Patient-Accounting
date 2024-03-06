@@ -1,14 +1,12 @@
 ﻿using LabBilling.Core.DataAccess;
 using LabBilling.Logging;
 using LabBilling.Core.Models;
-using PetaPoco.Providers;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml.Serialization;
 using System.Data;
-using PetaPoco;
 using Utilities;
 using LabBilling.Core.UnitOfWork;
 using System.Text.RegularExpressions;
@@ -27,6 +25,8 @@ public sealed class ClientInvoicesService
     private const string invoiceCdm = "CBILL";
     private readonly DictionaryService dictionaryService;
 
+    public event EventHandler<ClientInvoiceProgressEventArgs> ReportProgress;
+
     public ClientInvoicesService(IAppEnvironment appEnvironment)
     {
         if(appEnvironment == null) throw new ArgumentNullException(nameof(appEnvironment));
@@ -36,7 +36,7 @@ public sealed class ClientInvoicesService
         dictionaryService = new(appEnvironment);
     }
 
-    public void Compile(DateTime thruDate, IList<UnbilledClient> unbilledClients, IProgress<int> progress)
+    public async Task CompileAsync(DateTime thruDate, IList<UnbilledClient> unbilledClients)
     {
         Log.Instance.Trace("Begin");
         using UnitOfWorkMain unitOfWork = new(appEnvironment, true);
@@ -46,15 +46,28 @@ public sealed class ClientInvoicesService
             int tempCount = 0;            
             foreach (UnbilledClient unbilledClient in unbilledClients)
             {
-                GenerateInvoice(unbilledClient.ClientMnem, thruDate);
+                ReportProgress?.Invoke(this, new ClientInvoiceProgressEventArgs()
+                {
+                    Client = unbilledClient.ClientName,
+                    ClientsTotal = clientCount,
+                    ClientsProcessed = tempCount,
+                    ReportingClient = true,
+                });
+                await GenerateInvoiceAsync(unbilledClient.ClientMnem, thruDate);
                 tempCount++;
-                progress?.Report(HelperExtensions.ComputePercentage(tempCount, clientCount));
                 InvoiceGenerated?.Invoke(this, new ClientInvoiceGeneratedEventArgs()
                 {
                     ClientMnem = unbilledClient.ClientMnem,
                     Progress = HelperExtensions.ComputePercentage(tempCount, clientCount),
                     InvoiceCount = clientCount,
                     InvoicesGenerated = tempCount
+                });
+                ReportProgress?.Invoke(this, new ClientInvoiceProgressEventArgs()
+                {
+                    Client = unbilledClient.ClientName,
+                    ClientsTotal = clientCount,
+                    ClientsProcessed = tempCount,
+                    ReportingClient = true
                 });
                 Log.Instance.Info($"Invoice for {unbilledClient.ClientMnem} generated.");
             }
@@ -161,6 +174,8 @@ public sealed class ClientInvoicesService
     //    return string.Empty;
     //}
 
+    public async Task GenerateInvoiceAsync(string clientMnemonic, DateTime throughDate) => await Task.Run(() => GenerateInvoice(clientMnemonic, throughDate));
+
     /// <summary>
     /// Generate an invoice for a single client.
     /// </summary>
@@ -218,7 +233,7 @@ public sealed class ClientInvoicesService
         double invoiceRetailTotal = 0.0;
         double invoiceInpTotal = 0.0;
         double discountTotal = 0.0;
-
+        int processed = 0;
         //loop through accounts - write details to POCO
         foreach (InvoiceSelect account in accounts)
         {
@@ -237,7 +252,7 @@ public sealed class ClientInvoicesService
             };
             double accountTotal = 0.0;
 
-            foreach(InvoiceChargeView chrg in charges)
+            foreach (InvoiceChargeView chrg in charges)
             {
                 invoiceDetail.InvoiceDetailLines.Add(new InvoiceDetailLinesModel()
                 {
@@ -283,15 +298,25 @@ public sealed class ClientInvoicesService
                 ClientMnem = invoiceModel.ClientMnem
             };
 
-            accChrg.ChrgDetails.Add(new ChrgDetail()
+            var detail = new ChrgDetail()
             {
                 Cpt4 = "NONE",
                 Type = "NORM",
-                Amount = Math.Abs(amountTotal)
-            });
-            unitOfWork.ChrgRepository.Add(accChrg);
+                Amount = Math.Abs(amountTotal),
+            };
+
+            var rchrg = unitOfWork.ChrgRepository.Add(accChrg);
+            detail.ChrgNo = rchrg.ChrgId;
+
+            unitOfWork.ChrgDetailRepository.Add(detail);
 
             unitOfWork.ChrgRepository.SetChargeInvoiceStatus(account.AccountNo, clientMnemonic, invoiceModel.InvoiceNo);
+            ReportProgress?.Invoke(this, new ClientInvoiceProgressEventArgs()
+            {
+                AccountsTotal = accounts.Count,
+                AccountsProcessed = ++processed,
+                ReportingAccount = true
+            });
         }
 
         //write client invoice transaction on client account
@@ -311,13 +336,16 @@ public sealed class ClientInvoicesService
             Status = "NEW",
             ClientMnem = invoiceModel.ClientMnem
         };
-        invoiceChrg.ChrgDetails.Add(new ChrgDetail()
+        var invdetail = new ChrgDetail()
         {
             Cpt4 = "NONE",
             Type = "NORM",
             Amount = Math.Abs(invoiceAmountTotal)
-        });
-        unitOfWork.ChrgRepository.Add(invoiceChrg);
+        };
+
+        var retinvchrg = unitOfWork.ChrgRepository.Add(invoiceChrg);
+        invdetail.ChrgNo = retinvchrg.ChrgId;
+        unitOfWork.ChrgDetailRepository.Add(invdetail);
         invoiceModel.InvoiceTotal = invoiceAmountTotal;
         invoiceModel.DiscountTotal = discountTotal;
 
@@ -338,8 +366,8 @@ public sealed class ClientInvoicesService
     private void SaveInvoiceHistory(InvoiceModel invoiceModel)
     {
         //store the invoice data as xml for storage in invoice history
-        XmlSerializer x = new XmlSerializer(invoiceModel.GetType());
-        StringWriter textWriter = new StringWriter();
+        XmlSerializer x = new(invoiceModel.GetType());
+        StringWriter textWriter = new();
 
         x.Serialize(textWriter, invoiceModel);
 
@@ -448,10 +476,9 @@ public sealed class ClientInvoicesService
         using UnitOfWorkMain uow = new(appEnvironment);
 
         var retval = await uow.ClientRepository.GetUnbilledClientsAsync(throughDate, progress);
-
+        retval.Sort((x, y) => x.ClientName.CompareTo(y.ClientName));
         return retval;
     }
-
 }
 
 public class ClientInvoiceGeneratedEventArgs : EventArgs
@@ -460,5 +487,4 @@ public class ClientInvoiceGeneratedEventArgs : EventArgs
     public int Progress { get; set; }
     public int InvoicesGenerated { get; set; }
     public int InvoiceCount { get; set; }
-
 }

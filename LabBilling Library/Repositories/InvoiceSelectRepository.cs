@@ -21,7 +21,7 @@ namespace LabBilling.Core.DataAccess
         {
             var sql = Sql.Builder
                 .Where($"{this.GetRealColumn(nameof(InvoiceSelect.ClientMnem))} = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = clientMnem })
-                .Where($"{this.GetRealColumn(typeof(InvoiceSelect), nameof(InvoiceSelect.TransactionDate))} <= @1", new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = throughDate });
+                .Where($"{this.GetRealColumn(nameof(InvoiceSelect.TransactionDate))} <= @0", new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = throughDate });
 
             return Context.Fetch<InvoiceSelect>(sql);
         }

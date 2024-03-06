@@ -752,9 +752,14 @@ public sealed class HL7ProcessorService
                 ? hl7Message.GetValue("PV1.3.4")
                 : unitOfWork.MappingRepository.GetMappedValue("CLIENT", currentMessage.SourceInfce, hl7Message.GetValue("PV1.3.4"));
         }
-        accountRecord.FinCode = string.IsNullOrEmpty(hl7Message.GetValue("PV1.20"))
-            ? hl7Message.GetValue("PV1.20")
-            : unitOfWork.MappingRepository.GetMappedValue("FIN_CODE", currentMessage.SourceInfce, hl7Message.GetValue("PV1.20"));
+
+        string msgFin = hl7Message.GetValue("PV1.20");
+        if (msgFin == "\"\"")
+            msgFin = string.Empty;
+        accountRecord.FinCode = string.IsNullOrEmpty(msgFin)
+            ? string.IsNullOrEmpty(accountRecord.FinCode) ? msgFin : accountRecord.FinCode
+            : unitOfWork.MappingRepository.GetMappedValue("FIN_CODE", currentMessage.SourceInfce, msgFin);
+        
         accountRecord.OriginalFinCode = accountRecord.FinCode;
         accountRecord.TransactionDate = new DateTime().ParseHL7Date(hl7Message.GetValue("PV1.44"));
         if(accountRecord.TransactionDate == DateTime.MinValue)

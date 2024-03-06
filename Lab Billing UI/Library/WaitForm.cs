@@ -4,7 +4,7 @@ using System.Windows.Forms;
 
 namespace LabBilling.Library;
 
-public partial class WaitForm : Utilities.BaseForm
+public partial class WaitForm : Form
 {
     public Action Worker { get; set; }
     public ProgressBarStyle ProgressBarStyle
@@ -19,12 +19,12 @@ public partial class WaitForm : Utilities.BaseForm
         }
     }
 
-    public WaitForm() : base(Program.AppEnvironment)
+    public WaitForm()
     {
         InitializeComponent();
     }
 
-    public WaitForm(Action worker) : base(Program.AppEnvironment)
+    public WaitForm(Action worker)
     {
         InitializeComponent();
         Worker = worker;

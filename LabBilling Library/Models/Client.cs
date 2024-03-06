@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace LabBilling.Core.Models
 {
-    [TableName("client")]
+    [TableName("dictionary.client")]
     [PrimaryKey("cli_mnem",AutoIncrement = false)]
     public sealed class Client : IBaseEntity
     {

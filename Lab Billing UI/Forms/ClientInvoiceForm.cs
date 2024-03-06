@@ -11,6 +11,7 @@ using System.Diagnostics;
 using LabBilling.Logging;
 using System.Threading;
 using SaveFileDialog = System.Windows.Forms.SaveFileDialog;
+using Utilities;
 
 namespace LabBilling.Forms;
 
@@ -28,6 +29,7 @@ public partial class ClientInvoiceForm : Form
     private DictionaryService dictionaryService;
     private List<Client> clientList;
     private List<UnbilledClient> unbilledClients;
+    private InvoiceWaitForm invoiceWaitForm;
     public event EventHandler<string> AccountLaunched;
     private async void ClientInvoiceForm_Load(object sender, EventArgs e)
     {
@@ -37,6 +39,7 @@ public partial class ClientInvoiceForm : Form
 
         //are there any old print files that need to be cleaned up?
         CleanTempFiles();
+        Cursor.Current = Cursors.WaitCursor;
 
         clientInvoicesService = new ClientInvoicesService(Program.AppEnvironment);
         dictionaryService = new(Program.AppEnvironment);
@@ -44,7 +47,7 @@ public partial class ClientInvoiceForm : Form
         clientInvoicesService.InvoiceGenerated += ClientInvoices_InvoiceGenerated;
         clientInvoicesService.InvoiceRunCompleted += ClientInvoices_InvoiceRunCompleted;
 
-        clientList = dictionaryService.GetAllClients().ToList();
+        clientList = DataCache.Instance.GetClients();
         clientList.Sort((p, q) => p.Name.CompareTo(q.Name));
 
         clientList.Insert(0, new Client
@@ -68,6 +71,7 @@ public partial class ClientInvoiceForm : Form
 
         InvoiceHistoryTabControl.Enabled = true;
         GenerateInvoicesTabPage.Enabled = true;
+        Cursor.Current = Cursors.Default;
 
         await RefreshUnbilledGridAsync();
     }
@@ -195,7 +199,7 @@ public partial class ClientInvoiceForm : Form
         UnbilledAccountsDGV.Columns[nameof(UnbilledAccounts.TransactionDate)].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
     }
 
-    private void GenerateInvoicesBtn_Click(object sender, EventArgs e)
+    private async void GenerateInvoicesBtn_Click(object sender, EventArgs e)
     {
         Log.Instance.Trace("Entering");
         List<UnbilledClient> clientsToBill = new();
@@ -213,19 +217,14 @@ public partial class ClientInvoiceForm : Form
 
         toolStripProgressBar1.Value = 0;
         GenerateInvoicesBtn.Enabled = false;
-        using WaitForm waitForm = new();
-
-        var progress = new Progress<int>(percent =>
-        {
-            toolStripProgressBar1.Value = percent;
-            waitForm.ProgressBarStyle = ProgressBarStyle.Continuous;
-            waitForm.UpdateProgress(percent, $"Generating Invoices ... ");
-        });
+        invoiceWaitForm = new();
 
         try
         {
-            waitForm.Worker = () => { clientInvoicesService.Compile(_thruDate, clientsToBill, progress); };
-            waitForm.ShowDialog(this);
+            clientInvoicesService.ReportProgress += ClientInvoicesService_ReportProgress;
+            invoiceWaitForm.Show(this);
+            await clientInvoicesService.CompileAsync(_thruDate, clientsToBill);
+            invoiceWaitForm.Close();
             MessageBox.Show("Generating Invoices Completed");
         }
         catch (Exception ex)
@@ -236,6 +235,19 @@ public partial class ClientInvoiceForm : Form
         toolStripProgressBar1.Value = 100;
 
         GenerateInvoicesBtn.Enabled = true;
+    }
+
+    private void ClientInvoicesService_ReportProgress(object sender, ClientInvoiceProgressEventArgs e)
+    {
+        if(e.ReportingClient)
+        {
+            invoiceWaitForm.UpdateInvoiceProgress(HelperExtensions.ComputePercentage(e.ClientsProcessed, e.ClientsTotal), $"Processing invoice for {e.Client} - {e.ClientsProcessed} of {e.ClientsTotal} processed.");
+        }
+
+        if(e.ReportingAccount)
+        {
+            invoiceWaitForm.UpdateAccountProgress(HelperExtensions.ComputePercentage(e.AccountsProcessed, e.AccountsTotal), $"Processed {e.AccountsProcessed} of {e.AccountsTotal} accounts.");
+        }
     }
 
     private async void ThruDate_CheckedChanged(object sender, EventArgs e)

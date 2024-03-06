@@ -6,6 +6,7 @@ using NPOI.SS.UserModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace LabBilling.Core.Services;
 
@@ -138,6 +139,8 @@ public class DictionaryService
 
     }
 
+    public async Task<List<Client>> GetAllClientsAsync(bool includeDeleted = false) => await Task.Run(() => GetAllClients(includeDeleted));
+
     public List<Client> GetAllClients(bool includeDeleted = false)
     {
         using UnitOfWorkMain uow = new(appEnvironment);
@@ -193,27 +196,16 @@ public class DictionaryService
 
         if (account == null)
         {
-            //add account
-            account = new Account
-            {
-                AccountNo = client.ClientMnem,
-                PatFullName = client.Name,
-                FinCode = clientFinCode,
-                TransactionDate = DateTime.Today,
-                Status = AccountStatus.New,
-                ClientMnem = client.ClientMnem,
-                MeditechAccount = client.ClientMnem
-            };
-
-            uow.AccountRepository.Add(account);
+            AddClientAccount(client.ClientMnem);
         }
+
         uow.Commit();
         return retval;
     }
 
     public object AddClientAccount(string clientMnem)
     {
-        using UnitOfWorkMain uow = new(appEnvironment, true);
+        using UnitOfWorkMain uow = new(appEnvironment);
 
         var client = GetClient(clientMnem);
 
@@ -234,7 +226,6 @@ public class DictionaryService
             };
 
             retval = uow.AccountRepository.Add(account);
-            uow.Commit();
         }
 
         return retval;
