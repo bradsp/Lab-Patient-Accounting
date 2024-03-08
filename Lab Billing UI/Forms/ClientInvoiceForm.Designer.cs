@@ -29,495 +29,504 @@ namespace LabBilling.Forms
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            this.InvoicesDGV = new System.Windows.Forms.DataGridView();
-            this.GenerateInvoicesBtn = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
-            this.PreviousMonth = new System.Windows.Forms.RadioButton();
-            this.CurrentMonth = new System.Windows.Forms.RadioButton();
-            this.label2 = new System.Windows.Forms.Label();
-            this.TotalUnbilledCharges = new System.Windows.Forms.TextBox();
-            this.UnbilledAccountsDGV = new System.Windows.Forms.DataGridView();
-            this.SelectionProfile = new System.Windows.Forms.ComboBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this.InvoiceHistoryTabControl = new System.Windows.Forms.TabControl();
-            this.GenerateInvoicesTabPage = new System.Windows.Forms.TabPage();
-            this.refreshUnbilledInvoices = new System.Windows.Forms.PictureBox();
-            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
-            this.toolStripProgressBar1 = new System.Windows.Forms.ToolStripProgressBar();
-            this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
-            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.InvoiceHistoryTabPage = new System.Windows.Forms.TabPage();
-            this.progressBar1 = new System.Windows.Forms.ProgressBar();
-            this.invoiceTextBox = new System.Windows.Forms.TextBox();
-            this.invoiceLabel = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            this.ThroughDate = new System.Windows.Forms.MaskedTextBox();
-            this.FromDate = new System.Windows.Forms.MaskedTextBox();
-            this.label4 = new System.Windows.Forms.Label();
-            this.ClientFilter = new System.Windows.Forms.ComboBox();
-            this.generateStatementButton = new System.Windows.Forms.Button();
-            this.ViewInvoice = new System.Windows.Forms.Button();
-            this.PrintInvoiceButton = new System.Windows.Forms.Button();
-            this.InvoiceHistoryDGV = new System.Windows.Forms.DataGridView();
-            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.undoInvoiceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.printContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.printToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.printAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.saveToPDFToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.saveAllToPDFToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            ((System.ComponentModel.ISupportInitialize)(this.InvoicesDGV)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.UnbilledAccountsDGV)).BeginInit();
-            this.InvoiceHistoryTabControl.SuspendLayout();
-            this.GenerateInvoicesTabPage.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.refreshUnbilledInvoices)).BeginInit();
-            this.statusStrip1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
-            this.splitContainer1.Panel1.SuspendLayout();
-            this.splitContainer1.Panel2.SuspendLayout();
-            this.splitContainer1.SuspendLayout();
-            this.InvoiceHistoryTabPage.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.InvoiceHistoryDGV)).BeginInit();
-            this.contextMenuStrip1.SuspendLayout();
-            this.printContextMenu.SuspendLayout();
-            this.SuspendLayout();
+            components = new System.ComponentModel.Container();
+            InvoicesDGV = new System.Windows.Forms.DataGridView();
+            GenerateInvoicesBtn = new System.Windows.Forms.Button();
+            label1 = new System.Windows.Forms.Label();
+            PreviousMonth = new System.Windows.Forms.RadioButton();
+            CurrentMonth = new System.Windows.Forms.RadioButton();
+            label2 = new System.Windows.Forms.Label();
+            TotalUnbilledCharges = new System.Windows.Forms.TextBox();
+            UnbilledAccountsDGV = new System.Windows.Forms.DataGridView();
+            SelectionProfile = new System.Windows.Forms.ComboBox();
+            label3 = new System.Windows.Forms.Label();
+            InvoiceHistoryTabControl = new System.Windows.Forms.TabControl();
+            GenerateInvoicesTabPage = new System.Windows.Forms.TabPage();
+            refreshUnbilledInvoices = new System.Windows.Forms.PictureBox();
+            statusStrip1 = new System.Windows.Forms.StatusStrip();
+            toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
+            splitContainer1 = new System.Windows.Forms.SplitContainer();
+            InvoiceHistoryTabPage = new System.Windows.Forms.TabPage();
+            progressBar1 = new System.Windows.Forms.ProgressBar();
+            invoiceTextBox = new System.Windows.Forms.TextBox();
+            invoiceLabel = new System.Windows.Forms.Label();
+            label6 = new System.Windows.Forms.Label();
+            label5 = new System.Windows.Forms.Label();
+            ThroughDate = new System.Windows.Forms.MaskedTextBox();
+            FromDate = new System.Windows.Forms.MaskedTextBox();
+            label4 = new System.Windows.Forms.Label();
+            ClientFilter = new System.Windows.Forms.ComboBox();
+            generateStatementButton = new System.Windows.Forms.Button();
+            ViewInvoice = new System.Windows.Forms.Button();
+            PrintInvoiceButton = new System.Windows.Forms.Button();
+            InvoiceHistoryDGV = new System.Windows.Forms.DataGridView();
+            contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(components);
+            undoInvoiceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            printContextMenu = new System.Windows.Forms.ContextMenuStrip(components);
+            printToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            printAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            saveToPDFToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            saveAllToPDFToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            ((System.ComponentModel.ISupportInitialize)InvoicesDGV).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)UnbilledAccountsDGV).BeginInit();
+            InvoiceHistoryTabControl.SuspendLayout();
+            GenerateInvoicesTabPage.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)refreshUnbilledInvoices).BeginInit();
+            statusStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
+            splitContainer1.Panel1.SuspendLayout();
+            splitContainer1.Panel2.SuspendLayout();
+            splitContainer1.SuspendLayout();
+            InvoiceHistoryTabPage.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)InvoiceHistoryDGV).BeginInit();
+            contextMenuStrip1.SuspendLayout();
+            printContextMenu.SuspendLayout();
+            SuspendLayout();
             // 
             // InvoicesDGV
             // 
-            this.InvoicesDGV.AllowUserToAddRows = false;
-            this.InvoicesDGV.AllowUserToDeleteRows = false;
-            this.InvoicesDGV.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
-            this.InvoicesDGV.BackgroundColor = System.Drawing.SystemColors.ControlLightLight;
-            this.InvoicesDGV.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.InvoicesDGV.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.InvoicesDGV.Location = new System.Drawing.Point(0, 0);
-            this.InvoicesDGV.Name = "InvoicesDGV";
-            this.InvoicesDGV.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.InvoicesDGV.Size = new System.Drawing.Size(976, 281);
-            this.InvoicesDGV.TabIndex = 0;
-            this.InvoicesDGV.SelectionChanged += new System.EventHandler(this.InvoicesDGV_SelectionChanged);
+            InvoicesDGV.AllowUserToAddRows = false;
+            InvoicesDGV.AllowUserToDeleteRows = false;
+            InvoicesDGV.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
+            InvoicesDGV.BackgroundColor = System.Drawing.SystemColors.ControlLightLight;
+            InvoicesDGV.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            InvoicesDGV.Dock = System.Windows.Forms.DockStyle.Fill;
+            InvoicesDGV.Location = new System.Drawing.Point(0, 0);
+            InvoicesDGV.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            InvoicesDGV.Name = "InvoicesDGV";
+            InvoicesDGV.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            InvoicesDGV.Size = new System.Drawing.Size(1139, 324);
+            InvoicesDGV.TabIndex = 0;
+            InvoicesDGV.SelectionChanged += InvoicesDGV_SelectionChanged;
             // 
             // GenerateInvoicesBtn
             // 
-            this.GenerateInvoicesBtn.Location = new System.Drawing.Point(652, 6);
-            this.GenerateInvoicesBtn.Name = "GenerateInvoicesBtn";
-            this.GenerateInvoicesBtn.Size = new System.Drawing.Size(115, 23);
-            this.GenerateInvoicesBtn.TabIndex = 1;
-            this.GenerateInvoicesBtn.Text = "Generate Invoices";
-            this.GenerateInvoicesBtn.UseVisualStyleBackColor = true;
-            this.GenerateInvoicesBtn.Click += new System.EventHandler(this.GenerateInvoicesBtn_Click);
+            GenerateInvoicesBtn.Location = new System.Drawing.Point(761, 7);
+            GenerateInvoicesBtn.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            GenerateInvoicesBtn.Name = "GenerateInvoicesBtn";
+            GenerateInvoicesBtn.Size = new System.Drawing.Size(134, 27);
+            GenerateInvoicesBtn.TabIndex = 1;
+            GenerateInvoicesBtn.Text = "Generate Invoices";
+            GenerateInvoicesBtn.UseVisualStyleBackColor = true;
+            GenerateInvoicesBtn.Click += GenerateInvoicesBtn_Click;
             // 
             // label1
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(10, 10);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(112, 13);
-            this.label1.TabIndex = 6;
-            this.label1.Text = "Show unbilled through";
+            label1.AutoSize = true;
+            label1.Location = new System.Drawing.Point(12, 12);
+            label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label1.Name = "label1";
+            label1.Size = new System.Drawing.Size(128, 15);
+            label1.TabIndex = 6;
+            label1.Text = "Show unbilled through";
             // 
             // PreviousMonth
             // 
-            this.PreviousMonth.AutoSize = true;
-            this.PreviousMonth.Checked = true;
-            this.PreviousMonth.Location = new System.Drawing.Point(128, 8);
-            this.PreviousMonth.Name = "PreviousMonth";
-            this.PreviousMonth.Size = new System.Drawing.Size(99, 17);
-            this.PreviousMonth.TabIndex = 7;
-            this.PreviousMonth.TabStop = true;
-            this.PreviousMonth.Text = "Previous Month";
-            this.PreviousMonth.UseVisualStyleBackColor = true;
-            this.PreviousMonth.CheckedChanged += new System.EventHandler(this.ThruDate_CheckedChanged);
+            PreviousMonth.AutoSize = true;
+            PreviousMonth.Checked = true;
+            PreviousMonth.Location = new System.Drawing.Point(149, 9);
+            PreviousMonth.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            PreviousMonth.Name = "PreviousMonth";
+            PreviousMonth.Size = new System.Drawing.Size(109, 19);
+            PreviousMonth.TabIndex = 7;
+            PreviousMonth.TabStop = true;
+            PreviousMonth.Text = "Previous Month";
+            PreviousMonth.UseVisualStyleBackColor = true;
+            PreviousMonth.CheckedChanged += ThruDate_CheckedChanged;
             // 
             // CurrentMonth
             // 
-            this.CurrentMonth.AutoSize = true;
-            this.CurrentMonth.Location = new System.Drawing.Point(233, 8);
-            this.CurrentMonth.Name = "CurrentMonth";
-            this.CurrentMonth.Size = new System.Drawing.Size(92, 17);
-            this.CurrentMonth.TabIndex = 8;
-            this.CurrentMonth.Text = "Current Month";
-            this.CurrentMonth.UseVisualStyleBackColor = true;
-            this.CurrentMonth.CheckedChanged += new System.EventHandler(this.ThruDate_CheckedChanged);
+            CurrentMonth.AutoSize = true;
+            CurrentMonth.Location = new System.Drawing.Point(272, 9);
+            CurrentMonth.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            CurrentMonth.Name = "CurrentMonth";
+            CurrentMonth.Size = new System.Drawing.Size(104, 19);
+            CurrentMonth.TabIndex = 8;
+            CurrentMonth.Text = "Current Month";
+            CurrentMonth.UseVisualStyleBackColor = true;
+            CurrentMonth.CheckedChanged += ThruDate_CheckedChanged;
             // 
             // label2
             // 
-            this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(773, 6);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(114, 13);
-            this.label2.TabIndex = 9;
-            this.label2.Text = "Total Unbilled Charges";
+            label2.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+            label2.AutoSize = true;
+            label2.Location = new System.Drawing.Point(902, 7);
+            label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label2.Name = "label2";
+            label2.Size = new System.Drawing.Size(125, 15);
+            label2.TabIndex = 9;
+            label2.Text = "Total Unbilled Charges";
             // 
             // TotalUnbilledCharges
             // 
-            this.TotalUnbilledCharges.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.TotalUnbilledCharges.Location = new System.Drawing.Point(893, 7);
-            this.TotalUnbilledCharges.Name = "TotalUnbilledCharges";
-            this.TotalUnbilledCharges.Size = new System.Drawing.Size(96, 20);
-            this.TotalUnbilledCharges.TabIndex = 10;
+            TotalUnbilledCharges.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+            TotalUnbilledCharges.Location = new System.Drawing.Point(1042, 8);
+            TotalUnbilledCharges.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            TotalUnbilledCharges.Name = "TotalUnbilledCharges";
+            TotalUnbilledCharges.Size = new System.Drawing.Size(111, 23);
+            TotalUnbilledCharges.TabIndex = 10;
             // 
             // UnbilledAccountsDGV
             // 
-            this.UnbilledAccountsDGV.AllowUserToAddRows = false;
-            this.UnbilledAccountsDGV.AllowUserToDeleteRows = false;
-            this.UnbilledAccountsDGV.BackgroundColor = System.Drawing.SystemColors.ControlLightLight;
-            this.UnbilledAccountsDGV.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.UnbilledAccountsDGV.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.UnbilledAccountsDGV.Location = new System.Drawing.Point(0, 0);
-            this.UnbilledAccountsDGV.Name = "UnbilledAccountsDGV";
-            this.UnbilledAccountsDGV.ReadOnly = true;
-            this.UnbilledAccountsDGV.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.UnbilledAccountsDGV.Size = new System.Drawing.Size(976, 162);
-            this.UnbilledAccountsDGV.TabIndex = 11;
-            this.UnbilledAccountsDGV.CellMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.UnbilledAccountsDGV_CellMouseDoubleClick);
-            this.UnbilledAccountsDGV.RowHeaderMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.UnbilledAccountsDGV_RowHeaderMouseDoubleClick);
+            UnbilledAccountsDGV.AllowUserToAddRows = false;
+            UnbilledAccountsDGV.AllowUserToDeleteRows = false;
+            UnbilledAccountsDGV.BackgroundColor = System.Drawing.SystemColors.ControlLightLight;
+            UnbilledAccountsDGV.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            UnbilledAccountsDGV.Dock = System.Windows.Forms.DockStyle.Fill;
+            UnbilledAccountsDGV.Location = new System.Drawing.Point(0, 0);
+            UnbilledAccountsDGV.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            UnbilledAccountsDGV.Name = "UnbilledAccountsDGV";
+            UnbilledAccountsDGV.ReadOnly = true;
+            UnbilledAccountsDGV.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            UnbilledAccountsDGV.Size = new System.Drawing.Size(1139, 187);
+            UnbilledAccountsDGV.TabIndex = 11;
+            UnbilledAccountsDGV.CellMouseDoubleClick += UnbilledAccountsDGV_CellMouseDoubleClick;
+            UnbilledAccountsDGV.RowHeaderMouseDoubleClick += UnbilledAccountsDGV_RowHeaderMouseDoubleClick;
             // 
             // SelectionProfile
             // 
-            this.SelectionProfile.FormattingEnabled = true;
-            this.SelectionProfile.Items.AddRange(new object[] {
-            "None",
-            "All Except Nursing Homes",
-            "Nursing Homes"});
-            this.SelectionProfile.Location = new System.Drawing.Point(472, 7);
-            this.SelectionProfile.Name = "SelectionProfile";
-            this.SelectionProfile.Size = new System.Drawing.Size(174, 21);
-            this.SelectionProfile.TabIndex = 12;
-            this.SelectionProfile.SelectedIndexChanged += new System.EventHandler(this.SelectionProfile_SelectedIndexChanged);
+            SelectionProfile.FormattingEnabled = true;
+            SelectionProfile.Items.AddRange(new object[] { "None", "All Except Nursing Homes", "Nursing Homes" });
+            SelectionProfile.Location = new System.Drawing.Point(551, 8);
+            SelectionProfile.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            SelectionProfile.Name = "SelectionProfile";
+            SelectionProfile.Size = new System.Drawing.Size(202, 23);
+            SelectionProfile.TabIndex = 12;
+            SelectionProfile.SelectedIndexChanged += SelectionProfile_SelectedIndexChanged;
             // 
             // label3
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(383, 10);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(83, 13);
-            this.label3.TabIndex = 13;
-            this.label3.Text = "Selection Profile";
+            label3.AutoSize = true;
+            label3.Location = new System.Drawing.Point(447, 12);
+            label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label3.Name = "label3";
+            label3.Size = new System.Drawing.Size(92, 15);
+            label3.TabIndex = 13;
+            label3.Text = "Selection Profile";
             // 
             // InvoiceHistoryTabControl
             // 
-            this.InvoiceHistoryTabControl.Controls.Add(this.GenerateInvoicesTabPage);
-            this.InvoiceHistoryTabControl.Controls.Add(this.InvoiceHistoryTabPage);
-            this.InvoiceHistoryTabControl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.InvoiceHistoryTabControl.Location = new System.Drawing.Point(0, 0);
-            this.InvoiceHistoryTabControl.Name = "InvoiceHistoryTabControl";
-            this.InvoiceHistoryTabControl.SelectedIndex = 0;
-            this.InvoiceHistoryTabControl.Size = new System.Drawing.Size(1009, 555);
-            this.InvoiceHistoryTabControl.TabIndex = 15;
+            InvoiceHistoryTabControl.Controls.Add(GenerateInvoicesTabPage);
+            InvoiceHistoryTabControl.Controls.Add(InvoiceHistoryTabPage);
+            InvoiceHistoryTabControl.Dock = System.Windows.Forms.DockStyle.Fill;
+            InvoiceHistoryTabControl.Location = new System.Drawing.Point(0, 0);
+            InvoiceHistoryTabControl.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            InvoiceHistoryTabControl.Name = "InvoiceHistoryTabControl";
+            InvoiceHistoryTabControl.SelectedIndex = 0;
+            InvoiceHistoryTabControl.Size = new System.Drawing.Size(1177, 640);
+            InvoiceHistoryTabControl.TabIndex = 15;
             // 
             // GenerateInvoicesTabPage
             // 
-            this.GenerateInvoicesTabPage.Controls.Add(this.refreshUnbilledInvoices);
-            this.GenerateInvoicesTabPage.Controls.Add(this.statusStrip1);
-            this.GenerateInvoicesTabPage.Controls.Add(this.splitContainer1);
-            this.GenerateInvoicesTabPage.Controls.Add(this.label3);
-            this.GenerateInvoicesTabPage.Controls.Add(this.SelectionProfile);
-            this.GenerateInvoicesTabPage.Controls.Add(this.CurrentMonth);
-            this.GenerateInvoicesTabPage.Controls.Add(this.PreviousMonth);
-            this.GenerateInvoicesTabPage.Controls.Add(this.label1);
-            this.GenerateInvoicesTabPage.Controls.Add(this.GenerateInvoicesBtn);
-            this.GenerateInvoicesTabPage.Controls.Add(this.TotalUnbilledCharges);
-            this.GenerateInvoicesTabPage.Controls.Add(this.label2);
-            this.GenerateInvoicesTabPage.Location = new System.Drawing.Point(4, 22);
-            this.GenerateInvoicesTabPage.Name = "GenerateInvoicesTabPage";
-            this.GenerateInvoicesTabPage.Padding = new System.Windows.Forms.Padding(3);
-            this.GenerateInvoicesTabPage.Size = new System.Drawing.Size(1001, 529);
-            this.GenerateInvoicesTabPage.TabIndex = 0;
-            this.GenerateInvoicesTabPage.Text = "Generate Invoices";
-            this.GenerateInvoicesTabPage.UseVisualStyleBackColor = true;
+            GenerateInvoicesTabPage.Controls.Add(refreshUnbilledInvoices);
+            GenerateInvoicesTabPage.Controls.Add(statusStrip1);
+            GenerateInvoicesTabPage.Controls.Add(splitContainer1);
+            GenerateInvoicesTabPage.Controls.Add(label3);
+            GenerateInvoicesTabPage.Controls.Add(SelectionProfile);
+            GenerateInvoicesTabPage.Controls.Add(CurrentMonth);
+            GenerateInvoicesTabPage.Controls.Add(PreviousMonth);
+            GenerateInvoicesTabPage.Controls.Add(label1);
+            GenerateInvoicesTabPage.Controls.Add(GenerateInvoicesBtn);
+            GenerateInvoicesTabPage.Controls.Add(TotalUnbilledCharges);
+            GenerateInvoicesTabPage.Controls.Add(label2);
+            GenerateInvoicesTabPage.Location = new System.Drawing.Point(4, 24);
+            GenerateInvoicesTabPage.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            GenerateInvoicesTabPage.Name = "GenerateInvoicesTabPage";
+            GenerateInvoicesTabPage.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            GenerateInvoicesTabPage.Size = new System.Drawing.Size(1169, 612);
+            GenerateInvoicesTabPage.TabIndex = 0;
+            GenerateInvoicesTabPage.Text = "Generate Invoices";
+            GenerateInvoicesTabPage.UseVisualStyleBackColor = true;
             // 
             // refreshUnbilledInvoices
             // 
-            this.refreshUnbilledInvoices.Image = global::LabBilling.Properties.Resources.refresh_icon;
-            this.refreshUnbilledInvoices.Location = new System.Drawing.Point(331, 7);
-            this.refreshUnbilledInvoices.Name = "refreshUnbilledInvoices";
-            this.refreshUnbilledInvoices.Size = new System.Drawing.Size(21, 20);
-            this.refreshUnbilledInvoices.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.refreshUnbilledInvoices.TabIndex = 18;
-            this.refreshUnbilledInvoices.TabStop = false;
-            this.refreshUnbilledInvoices.Click += new System.EventHandler(this.refreshUnbilledInvoices_Click);
+            refreshUnbilledInvoices.Image = Properties.Resources.refresh_icon;
+            refreshUnbilledInvoices.Location = new System.Drawing.Point(386, 8);
+            refreshUnbilledInvoices.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            refreshUnbilledInvoices.Name = "refreshUnbilledInvoices";
+            refreshUnbilledInvoices.Size = new System.Drawing.Size(24, 23);
+            refreshUnbilledInvoices.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            refreshUnbilledInvoices.TabIndex = 18;
+            refreshUnbilledInvoices.TabStop = false;
+            refreshUnbilledInvoices.Click += refreshUnbilledInvoices_Click;
             // 
             // statusStrip1
             // 
-            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripProgressBar1,
-            this.toolStripStatusLabel1});
-            this.statusStrip1.Location = new System.Drawing.Point(3, 504);
-            this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(995, 22);
-            this.statusStrip1.TabIndex = 17;
-            this.statusStrip1.Text = "statusStrip1";
-            // 
-            // toolStripProgressBar1
-            // 
-            this.toolStripProgressBar1.Name = "toolStripProgressBar1";
-            this.toolStripProgressBar1.Size = new System.Drawing.Size(100, 16);
+            statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { toolStripStatusLabel1 });
+            statusStrip1.Location = new System.Drawing.Point(4, 587);
+            statusStrip1.Name = "statusStrip1";
+            statusStrip1.Padding = new System.Windows.Forms.Padding(1, 0, 16, 0);
+            statusStrip1.Size = new System.Drawing.Size(1161, 22);
+            statusStrip1.TabIndex = 17;
+            statusStrip1.Text = "statusStrip1";
             // 
             // toolStripStatusLabel1
             // 
-            this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
-            this.toolStripStatusLabel1.Size = new System.Drawing.Size(16, 17);
-            this.toolStripStatusLabel1.Text = "...";
+            toolStripStatusLabel1.Name = "toolStripStatusLabel1";
+            toolStripStatusLabel1.Size = new System.Drawing.Size(16, 17);
+            toolStripStatusLabel1.Text = "...";
             // 
             // splitContainer1
             // 
-            this.splitContainer1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.splitContainer1.Location = new System.Drawing.Point(13, 44);
-            this.splitContainer1.Name = "splitContainer1";
-            this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            splitContainer1.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            splitContainer1.Location = new System.Drawing.Point(15, 51);
+            splitContainer1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            splitContainer1.Name = "splitContainer1";
+            splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
             // splitContainer1.Panel1
             // 
-            this.splitContainer1.Panel1.Controls.Add(this.InvoicesDGV);
+            splitContainer1.Panel1.Controls.Add(InvoicesDGV);
             // 
             // splitContainer1.Panel2
             // 
-            this.splitContainer1.Panel2.Controls.Add(this.UnbilledAccountsDGV);
-            this.splitContainer1.Size = new System.Drawing.Size(976, 447);
-            this.splitContainer1.SplitterDistance = 281;
-            this.splitContainer1.TabIndex = 16;
+            splitContainer1.Panel2.Controls.Add(UnbilledAccountsDGV);
+            splitContainer1.Size = new System.Drawing.Size(1139, 516);
+            splitContainer1.SplitterDistance = 324;
+            splitContainer1.SplitterWidth = 5;
+            splitContainer1.TabIndex = 16;
             // 
             // InvoiceHistoryTabPage
             // 
-            this.InvoiceHistoryTabPage.Controls.Add(this.progressBar1);
-            this.InvoiceHistoryTabPage.Controls.Add(this.invoiceTextBox);
-            this.InvoiceHistoryTabPage.Controls.Add(this.invoiceLabel);
-            this.InvoiceHistoryTabPage.Controls.Add(this.label6);
-            this.InvoiceHistoryTabPage.Controls.Add(this.label5);
-            this.InvoiceHistoryTabPage.Controls.Add(this.ThroughDate);
-            this.InvoiceHistoryTabPage.Controls.Add(this.FromDate);
-            this.InvoiceHistoryTabPage.Controls.Add(this.label4);
-            this.InvoiceHistoryTabPage.Controls.Add(this.ClientFilter);
-            this.InvoiceHistoryTabPage.Controls.Add(this.generateStatementButton);
-            this.InvoiceHistoryTabPage.Controls.Add(this.ViewInvoice);
-            this.InvoiceHistoryTabPage.Controls.Add(this.PrintInvoiceButton);
-            this.InvoiceHistoryTabPage.Controls.Add(this.InvoiceHistoryDGV);
-            this.InvoiceHistoryTabPage.Location = new System.Drawing.Point(4, 22);
-            this.InvoiceHistoryTabPage.Name = "InvoiceHistoryTabPage";
-            this.InvoiceHistoryTabPage.Padding = new System.Windows.Forms.Padding(3);
-            this.InvoiceHistoryTabPage.Size = new System.Drawing.Size(1001, 529);
-            this.InvoiceHistoryTabPage.TabIndex = 1;
-            this.InvoiceHistoryTabPage.Text = "Invoice History";
-            this.InvoiceHistoryTabPage.UseVisualStyleBackColor = true;
+            InvoiceHistoryTabPage.Controls.Add(progressBar1);
+            InvoiceHistoryTabPage.Controls.Add(invoiceTextBox);
+            InvoiceHistoryTabPage.Controls.Add(invoiceLabel);
+            InvoiceHistoryTabPage.Controls.Add(label6);
+            InvoiceHistoryTabPage.Controls.Add(label5);
+            InvoiceHistoryTabPage.Controls.Add(ThroughDate);
+            InvoiceHistoryTabPage.Controls.Add(FromDate);
+            InvoiceHistoryTabPage.Controls.Add(label4);
+            InvoiceHistoryTabPage.Controls.Add(ClientFilter);
+            InvoiceHistoryTabPage.Controls.Add(generateStatementButton);
+            InvoiceHistoryTabPage.Controls.Add(ViewInvoice);
+            InvoiceHistoryTabPage.Controls.Add(PrintInvoiceButton);
+            InvoiceHistoryTabPage.Controls.Add(InvoiceHistoryDGV);
+            InvoiceHistoryTabPage.Location = new System.Drawing.Point(4, 24);
+            InvoiceHistoryTabPage.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            InvoiceHistoryTabPage.Name = "InvoiceHistoryTabPage";
+            InvoiceHistoryTabPage.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            InvoiceHistoryTabPage.Size = new System.Drawing.Size(1169, 612);
+            InvoiceHistoryTabPage.TabIndex = 1;
+            InvoiceHistoryTabPage.Text = "Invoice History";
+            InvoiceHistoryTabPage.UseVisualStyleBackColor = true;
             // 
             // progressBar1
             // 
-            this.progressBar1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.progressBar1.Location = new System.Drawing.Point(8, 464);
-            this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(892, 23);
-            this.progressBar1.TabIndex = 10;
+            progressBar1.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            progressBar1.Location = new System.Drawing.Point(9, 535);
+            progressBar1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            progressBar1.Name = "progressBar1";
+            progressBar1.Size = new System.Drawing.Size(1041, 27);
+            progressBar1.TabIndex = 10;
             // 
             // invoiceTextBox
             // 
-            this.invoiceTextBox.Location = new System.Drawing.Point(393, 17);
-            this.invoiceTextBox.Name = "invoiceTextBox";
-            this.invoiceTextBox.Size = new System.Drawing.Size(133, 20);
-            this.invoiceTextBox.TabIndex = 9;
-            this.invoiceTextBox.TextChanged += new System.EventHandler(this.invoiceTextBox_TextChanged);
+            invoiceTextBox.Location = new System.Drawing.Point(458, 20);
+            invoiceTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            invoiceTextBox.Name = "invoiceTextBox";
+            invoiceTextBox.Size = new System.Drawing.Size(154, 23);
+            invoiceTextBox.TabIndex = 9;
+            invoiceTextBox.TextChanged += invoiceTextBox_TextChanged;
             // 
             // invoiceLabel
             // 
-            this.invoiceLabel.AutoSize = true;
-            this.invoiceLabel.Location = new System.Drawing.Point(345, 19);
-            this.invoiceLabel.Name = "invoiceLabel";
-            this.invoiceLabel.Size = new System.Drawing.Size(42, 13);
-            this.invoiceLabel.TabIndex = 8;
-            this.invoiceLabel.Text = "Invoice";
+            invoiceLabel.AutoSize = true;
+            invoiceLabel.Location = new System.Drawing.Point(402, 22);
+            invoiceLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            invoiceLabel.Name = "invoiceLabel";
+            invoiceLabel.Size = new System.Drawing.Size(45, 15);
+            invoiceLabel.TabIndex = 8;
+            invoiceLabel.Text = "Invoice";
             // 
             // label6
             // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(751, 20);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(43, 13);
-            this.label6.TabIndex = 7;
-            this.label6.Text = "through";
+            label6.AutoSize = true;
+            label6.Location = new System.Drawing.Point(876, 23);
+            label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label6.Name = "label6";
+            label6.Size = new System.Drawing.Size(50, 15);
+            label6.TabIndex = 7;
+            label6.Text = "through";
             // 
             // label5
             // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(542, 19);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(90, 13);
-            this.label5.TabIndex = 6;
-            this.label5.Text = "From Create Date";
+            label5.AutoSize = true;
+            label5.Location = new System.Drawing.Point(632, 22);
+            label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label5.Name = "label5";
+            label5.Size = new System.Drawing.Size(99, 15);
+            label5.TabIndex = 6;
+            label5.Text = "From Create Date";
             // 
             // ThroughDate
             // 
-            this.ThroughDate.Location = new System.Drawing.Point(800, 17);
-            this.ThroughDate.Mask = "00/00/0000";
-            this.ThroughDate.Name = "ThroughDate";
-            this.ThroughDate.Size = new System.Drawing.Size(100, 20);
-            this.ThroughDate.TabIndex = 5;
-            this.ThroughDate.ValidatingType = typeof(System.DateTime);
-            this.ThroughDate.TextChanged += new System.EventHandler(this.ThroughDate_TextChanged);
+            ThroughDate.Location = new System.Drawing.Point(933, 20);
+            ThroughDate.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            ThroughDate.Mask = "00/00/0000";
+            ThroughDate.Name = "ThroughDate";
+            ThroughDate.Size = new System.Drawing.Size(116, 23);
+            ThroughDate.TabIndex = 5;
+            ThroughDate.ValidatingType = typeof(System.DateTime);
+            ThroughDate.TextChanged += ThroughDate_TextChanged;
             // 
             // FromDate
             // 
-            this.FromDate.Location = new System.Drawing.Point(638, 17);
-            this.FromDate.Mask = "00/00/0000";
-            this.FromDate.Name = "FromDate";
-            this.FromDate.Size = new System.Drawing.Size(100, 20);
-            this.FromDate.TabIndex = 5;
-            this.FromDate.ValidatingType = typeof(System.DateTime);
-            this.FromDate.TextChanged += new System.EventHandler(this.FromDate_TextChanged);
+            FromDate.Location = new System.Drawing.Point(744, 20);
+            FromDate.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            FromDate.Mask = "00/00/0000";
+            FromDate.Name = "FromDate";
+            FromDate.Size = new System.Drawing.Size(116, 23);
+            FromDate.TabIndex = 5;
+            FromDate.ValidatingType = typeof(System.DateTime);
+            FromDate.TextChanged += FromDate_TextChanged;
             // 
             // label4
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(9, 20);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(72, 13);
-            this.label4.TabIndex = 4;
-            this.label4.Text = "Filter by Client";
+            label4.AutoSize = true;
+            label4.Location = new System.Drawing.Point(10, 23);
+            label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label4.Name = "label4";
+            label4.Size = new System.Drawing.Size(83, 15);
+            label4.TabIndex = 4;
+            label4.Text = "Filter by Client";
             // 
             // ClientFilter
             // 
-            this.ClientFilter.FormattingEnabled = true;
-            this.ClientFilter.Location = new System.Drawing.Point(87, 17);
-            this.ClientFilter.Name = "ClientFilter";
-            this.ClientFilter.Size = new System.Drawing.Size(252, 21);
-            this.ClientFilter.TabIndex = 3;
-            this.ClientFilter.SelectedIndexChanged += new System.EventHandler(this.ClientFilter_SelectedIndexChanged);
+            ClientFilter.FormattingEnabled = true;
+            ClientFilter.Location = new System.Drawing.Point(102, 20);
+            ClientFilter.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            ClientFilter.Name = "ClientFilter";
+            ClientFilter.Size = new System.Drawing.Size(293, 23);
+            ClientFilter.TabIndex = 3;
+            ClientFilter.SelectedIndexChanged += ClientFilter_SelectedIndexChanged;
             // 
             // generateStatementButton
             // 
-            this.generateStatementButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.generateStatementButton.Location = new System.Drawing.Point(906, 86);
-            this.generateStatementButton.Name = "generateStatementButton";
-            this.generateStatementButton.Size = new System.Drawing.Size(87, 44);
-            this.generateStatementButton.TabIndex = 2;
-            this.generateStatementButton.Text = "Generate Statement";
-            this.generateStatementButton.UseVisualStyleBackColor = true;
-            this.generateStatementButton.Click += new System.EventHandler(this.generateStatementButton_Click);
+            generateStatementButton.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+            generateStatementButton.Location = new System.Drawing.Point(1057, 99);
+            generateStatementButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            generateStatementButton.Name = "generateStatementButton";
+            generateStatementButton.Size = new System.Drawing.Size(102, 51);
+            generateStatementButton.TabIndex = 2;
+            generateStatementButton.Text = "Generate Statement";
+            generateStatementButton.UseVisualStyleBackColor = true;
+            generateStatementButton.Click += generateStatementButton_Click;
             // 
             // ViewInvoice
             // 
-            this.ViewInvoice.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.ViewInvoice.Location = new System.Drawing.Point(906, 47);
-            this.ViewInvoice.Name = "ViewInvoice";
-            this.ViewInvoice.Size = new System.Drawing.Size(87, 33);
-            this.ViewInvoice.TabIndex = 2;
-            this.ViewInvoice.Text = "View Invoice";
-            this.ViewInvoice.UseVisualStyleBackColor = true;
-            this.ViewInvoice.Click += new System.EventHandler(this.ViewInvoice_Click);
+            ViewInvoice.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+            ViewInvoice.Location = new System.Drawing.Point(1057, 54);
+            ViewInvoice.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            ViewInvoice.Name = "ViewInvoice";
+            ViewInvoice.Size = new System.Drawing.Size(102, 38);
+            ViewInvoice.TabIndex = 2;
+            ViewInvoice.Text = "View Invoice";
+            ViewInvoice.UseVisualStyleBackColor = true;
+            ViewInvoice.Click += ViewInvoice_Click;
             // 
             // PrintInvoiceButton
             // 
-            this.PrintInvoiceButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.PrintInvoiceButton.Location = new System.Drawing.Point(906, 136);
-            this.PrintInvoiceButton.Name = "PrintInvoiceButton";
-            this.PrintInvoiceButton.Size = new System.Drawing.Size(87, 42);
-            this.PrintInvoiceButton.TabIndex = 1;
-            this.PrintInvoiceButton.Text = "Print Invoices";
-            this.PrintInvoiceButton.UseVisualStyleBackColor = true;
-            this.PrintInvoiceButton.Click += new System.EventHandler(this.PrintInvoice_Click_1);
+            PrintInvoiceButton.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+            PrintInvoiceButton.Location = new System.Drawing.Point(1057, 157);
+            PrintInvoiceButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            PrintInvoiceButton.Name = "PrintInvoiceButton";
+            PrintInvoiceButton.Size = new System.Drawing.Size(102, 48);
+            PrintInvoiceButton.TabIndex = 1;
+            PrintInvoiceButton.Text = "Print Invoices";
+            PrintInvoiceButton.UseVisualStyleBackColor = true;
+            PrintInvoiceButton.Click += PrintInvoice_Click_1;
             // 
             // InvoiceHistoryDGV
             // 
-            this.InvoiceHistoryDGV.AllowUserToAddRows = false;
-            this.InvoiceHistoryDGV.AllowUserToDeleteRows = false;
-            this.InvoiceHistoryDGV.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.InvoiceHistoryDGV.BackgroundColor = System.Drawing.SystemColors.ControlLightLight;
-            this.InvoiceHistoryDGV.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.InvoiceHistoryDGV.ContextMenuStrip = this.contextMenuStrip1;
-            this.InvoiceHistoryDGV.Location = new System.Drawing.Point(8, 47);
-            this.InvoiceHistoryDGV.Name = "InvoiceHistoryDGV";
-            this.InvoiceHistoryDGV.ReadOnly = true;
-            this.InvoiceHistoryDGV.Size = new System.Drawing.Size(892, 400);
-            this.InvoiceHistoryDGV.TabIndex = 0;
-            this.InvoiceHistoryDGV.CellMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.InvoiceHistoryDGV_CellMouseDoubleClick);
+            InvoiceHistoryDGV.AllowUserToAddRows = false;
+            InvoiceHistoryDGV.AllowUserToDeleteRows = false;
+            InvoiceHistoryDGV.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            InvoiceHistoryDGV.BackgroundColor = System.Drawing.SystemColors.ControlLightLight;
+            InvoiceHistoryDGV.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            InvoiceHistoryDGV.ContextMenuStrip = contextMenuStrip1;
+            InvoiceHistoryDGV.Location = new System.Drawing.Point(9, 54);
+            InvoiceHistoryDGV.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            InvoiceHistoryDGV.Name = "InvoiceHistoryDGV";
+            InvoiceHistoryDGV.ReadOnly = true;
+            InvoiceHistoryDGV.Size = new System.Drawing.Size(1041, 462);
+            InvoiceHistoryDGV.TabIndex = 0;
+            InvoiceHistoryDGV.CellMouseDoubleClick += InvoiceHistoryDGV_CellMouseDoubleClick;
             // 
             // contextMenuStrip1
             // 
-            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.undoInvoiceToolStripMenuItem});
-            this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(145, 26);
+            contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { undoInvoiceToolStripMenuItem });
+            contextMenuStrip1.Name = "contextMenuStrip1";
+            contextMenuStrip1.Size = new System.Drawing.Size(145, 26);
             // 
             // undoInvoiceToolStripMenuItem
             // 
-            this.undoInvoiceToolStripMenuItem.Name = "undoInvoiceToolStripMenuItem";
-            this.undoInvoiceToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
-            this.undoInvoiceToolStripMenuItem.Text = "Undo Invoice";
-            this.undoInvoiceToolStripMenuItem.Click += new System.EventHandler(this.undoInvoiceToolStripMenuItem_Click);
+            undoInvoiceToolStripMenuItem.Name = "undoInvoiceToolStripMenuItem";
+            undoInvoiceToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
+            undoInvoiceToolStripMenuItem.Text = "Undo Invoice";
+            undoInvoiceToolStripMenuItem.Click += undoInvoiceToolStripMenuItem_Click;
             // 
             // printContextMenu
             // 
-            this.printContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.printToolStripMenuItem,
-            this.printAllToolStripMenuItem,
-            this.saveToPDFToolStripMenuItem,
-            this.saveAllToPDFToolStripMenuItem});
-            this.printContextMenu.Name = "printContextMenu";
-            this.printContextMenu.Size = new System.Drawing.Size(184, 92);
+            printContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { printToolStripMenuItem, printAllToolStripMenuItem, saveToPDFToolStripMenuItem, saveAllToPDFToolStripMenuItem });
+            printContextMenu.Name = "printContextMenu";
+            printContextMenu.Size = new System.Drawing.Size(184, 92);
             // 
             // printToolStripMenuItem
             // 
-            this.printToolStripMenuItem.Name = "printToolStripMenuItem";
-            this.printToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
-            this.printToolStripMenuItem.Text = "Print Selected";
-            this.printToolStripMenuItem.Click += new System.EventHandler(this.PrintInvoice_Click);
+            printToolStripMenuItem.Name = "printToolStripMenuItem";
+            printToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
+            printToolStripMenuItem.Text = "Print Selected";
+            printToolStripMenuItem.Click += PrintInvoice_Click;
             // 
             // printAllToolStripMenuItem
             // 
-            this.printAllToolStripMenuItem.Name = "printAllToolStripMenuItem";
-            this.printAllToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
-            this.printAllToolStripMenuItem.Text = "Print All";
-            this.printAllToolStripMenuItem.Click += new System.EventHandler(this.printAllToolStripMenuItem_Click);
+            printAllToolStripMenuItem.Name = "printAllToolStripMenuItem";
+            printAllToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
+            printAllToolStripMenuItem.Text = "Print All";
+            printAllToolStripMenuItem.Click += printAllToolStripMenuItem_Click;
             // 
             // saveToPDFToolStripMenuItem
             // 
-            this.saveToPDFToolStripMenuItem.Name = "saveToPDFToolStripMenuItem";
-            this.saveToPDFToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
-            this.saveToPDFToolStripMenuItem.Text = "Save Selected to PDF";
-            this.saveToPDFToolStripMenuItem.Click += new System.EventHandler(this.PrintInvoice_Click);
+            saveToPDFToolStripMenuItem.Name = "saveToPDFToolStripMenuItem";
+            saveToPDFToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
+            saveToPDFToolStripMenuItem.Text = "Save Selected to PDF";
+            saveToPDFToolStripMenuItem.Click += PrintInvoice_Click;
             // 
             // saveAllToPDFToolStripMenuItem
             // 
-            this.saveAllToPDFToolStripMenuItem.Name = "saveAllToPDFToolStripMenuItem";
-            this.saveAllToPDFToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
-            this.saveAllToPDFToolStripMenuItem.Text = "Save All to PDF";
-            this.saveAllToPDFToolStripMenuItem.Click += new System.EventHandler(this.saveAllToPDFToolStripMenuItem_Click);
+            saveAllToPDFToolStripMenuItem.Name = "saveAllToPDFToolStripMenuItem";
+            saveAllToPDFToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
+            saveAllToPDFToolStripMenuItem.Text = "Save All to PDF";
+            saveAllToPDFToolStripMenuItem.Click += saveAllToPDFToolStripMenuItem_Click;
             // 
             // ClientInvoiceForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1009, 555);
-            this.Controls.Add(this.InvoiceHistoryTabControl);
-            this.Name = "ClientInvoiceForm";
-            this.Text = "Client Invoicing";
-            this.Load += new System.EventHandler(this.ClientInvoiceForm_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.InvoicesDGV)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.UnbilledAccountsDGV)).EndInit();
-            this.InvoiceHistoryTabControl.ResumeLayout(false);
-            this.GenerateInvoicesTabPage.ResumeLayout(false);
-            this.GenerateInvoicesTabPage.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.refreshUnbilledInvoices)).EndInit();
-            this.statusStrip1.ResumeLayout(false);
-            this.statusStrip1.PerformLayout();
-            this.splitContainer1.Panel1.ResumeLayout(false);
-            this.splitContainer1.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
-            this.splitContainer1.ResumeLayout(false);
-            this.InvoiceHistoryTabPage.ResumeLayout(false);
-            this.InvoiceHistoryTabPage.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.InvoiceHistoryDGV)).EndInit();
-            this.contextMenuStrip1.ResumeLayout(false);
-            this.printContextMenu.ResumeLayout(false);
-            this.ResumeLayout(false);
-
+            AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            ClientSize = new System.Drawing.Size(1177, 640);
+            Controls.Add(InvoiceHistoryTabControl);
+            Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            Name = "ClientInvoiceForm";
+            Text = "Client Invoicing";
+            Load += ClientInvoiceForm_Load;
+            ((System.ComponentModel.ISupportInitialize)InvoicesDGV).EndInit();
+            ((System.ComponentModel.ISupportInitialize)UnbilledAccountsDGV).EndInit();
+            InvoiceHistoryTabControl.ResumeLayout(false);
+            GenerateInvoicesTabPage.ResumeLayout(false);
+            GenerateInvoicesTabPage.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)refreshUnbilledInvoices).EndInit();
+            statusStrip1.ResumeLayout(false);
+            statusStrip1.PerformLayout();
+            splitContainer1.Panel1.ResumeLayout(false);
+            splitContainer1.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)splitContainer1).EndInit();
+            splitContainer1.ResumeLayout(false);
+            InvoiceHistoryTabPage.ResumeLayout(false);
+            InvoiceHistoryTabPage.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)InvoiceHistoryDGV).EndInit();
+            contextMenuStrip1.ResumeLayout(false);
+            printContextMenu.ResumeLayout(false);
+            ResumeLayout(false);
         }
 
         #endregion
@@ -548,7 +557,6 @@ namespace LabBilling.Forms
         private System.Windows.Forms.ToolStripMenuItem undoInvoiceToolStripMenuItem;
         private System.Windows.Forms.Button generateStatementButton;
         private System.Windows.Forms.StatusStrip statusStrip1;
-        private System.Windows.Forms.ToolStripProgressBar toolStripProgressBar1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.PictureBox refreshUnbilledInvoices;

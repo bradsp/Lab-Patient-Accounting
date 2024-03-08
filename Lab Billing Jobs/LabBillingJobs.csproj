@@ -85,7 +85,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Autofac" Version="8.0.0" />
-    <PackageReference Include="Autofac.Extras.Quartz" Version="9.0.0" />
+    <PackageReference Include="Autofac.Extras.Quartz" Version="10.0.0" />
     <PackageReference Include="JetBrains.Annotations" Version="2023.3.0" />
     <PackageReference Include="log4net" Version="2.0.15" />
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />

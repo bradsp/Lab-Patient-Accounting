@@ -1,23 +1,23 @@
-﻿using System;
+﻿using LabBilling.Core.Models;
+using LabBilling.Core.Services;
+using LabBilling.Library;
+using LabBilling.Logging;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using LabBilling.Core.Services;
-using LabBilling.Core.Models;
-using LabBilling.Library;
-using System.Diagnostics;
-using LabBilling.Logging;
-using System.Threading;
-using SaveFileDialog = System.Windows.Forms.SaveFileDialog;
 using Utilities;
+using SaveFileDialog = System.Windows.Forms.SaveFileDialog;
 
 namespace LabBilling.Forms;
 
 public partial class ClientInvoiceForm : Form
 {
-    public ClientInvoiceForm() 
+    public ClientInvoiceForm()
     {
         InitializeComponent();
 
@@ -31,6 +31,7 @@ public partial class ClientInvoiceForm : Form
     private List<UnbilledClient> unbilledClients;
     private InvoiceWaitForm invoiceWaitForm;
     public event EventHandler<string> AccountLaunched;
+    private CancellationTokenSource cts = new();
     private async void ClientInvoiceForm_Load(object sender, EventArgs e)
     {
         progressBar1.Visible = false;
@@ -78,51 +79,21 @@ public partial class ClientInvoiceForm : Form
 
     private void ClientInvoices_InvoiceRunCompleted(object sender, ClientInvoiceGeneratedEventArgs e)
     {
-        
+
     }
 
     private void ClientInvoices_InvoiceGenerated(object sender, ClientInvoiceGeneratedEventArgs e)
     {
-        
+
     }
 
     private void CleanTempFiles()
     {
         string[] dirs = Directory.GetFiles(@"c:\temp\", "invoiceTemp*.pdf");
-        foreach(string dir in dirs)
+        foreach (string dir in dirs)
         {
             File.Delete(dir);
         }
-    }
-
-    private void RefreshUnbilledGrid()
-    {
-        InvoiceHistoryTabControl.Enabled = false;
-        GenerateInvoicesTabPage.Enabled = false;
-
-        toolStripProgressBar1.Style = ProgressBarStyle.Continuous;
-        var progress = new Progress<int>(percent =>
-        {
-            toolStripProgressBar1.Value = percent;
-        });
-
-        toolStripProgressBar1.Style = ProgressBarStyle.Continuous;
-
-        unbilledClients = clientInvoicesService.GetUnbilledClients(_thruDate, progress);
-
-        InvoicesDGV.DataSource = unbilledClients;
-
-        SetupInvoicesDGV();
-
-        double sum = unbilledClients.Sum(x => x.UnbilledAmount);
-
-        TotalUnbilledCharges.Text = sum.ToString("C");
-        TotalUnbilledCharges.TextAlign = HorizontalAlignment.Right;
-
-        toolStripProgressBar1.Style = ProgressBarStyle.Continuous;
-
-        InvoiceHistoryTabControl.Enabled = true;
-        GenerateInvoicesTabPage.Enabled = true;
     }
 
     private void SetupInvoicesDGV()
@@ -147,13 +118,10 @@ public partial class ClientInvoiceForm : Form
         InvoiceHistoryTabControl.Enabled = false;
         GenerateInvoicesTabPage.Enabled = false;
 
-        toolStripProgressBar1.Style = ProgressBarStyle.Continuous;
-
         using WaitForm waitForm = new();
 
         var progress = new Progress<int>(percent =>
         {
-            toolStripProgressBar1.Value = percent;
             waitForm.UpdateProgress(percent, "Loading accounts ... ");
         });
         waitForm.ProgressBarStyle = ProgressBarStyle.Continuous;
@@ -174,16 +142,8 @@ public partial class ClientInvoiceForm : Form
         TotalUnbilledCharges.Text = sum.ToString("C");
         TotalUnbilledCharges.TextAlign = HorizontalAlignment.Right;
 
-        toolStripProgressBar1.Style = ProgressBarStyle.Continuous;
-
         InvoiceHistoryTabControl.Enabled = true;
         GenerateInvoicesTabPage.Enabled = true;
-    }
-
-    private void OnProgressChanged(object sender, ProgressEventArgs e)
-    {
-        toolStripProgressBar1.Value = e.PercentComplete;
-        toolStripStatusLabel1.Text = e.Status.ToString();
     }
 
     private void RefreshUnbilledAccountsGrid(string clientMnem)
@@ -202,6 +162,8 @@ public partial class ClientInvoiceForm : Form
     private async void GenerateInvoicesBtn_Click(object sender, EventArgs e)
     {
         Log.Instance.Trace("Entering");
+        cts.Dispose();
+        cts = new CancellationTokenSource();
         List<UnbilledClient> clientsToBill = new();
 
         Cursor.Current = Cursors.WaitCursor;
@@ -215,36 +177,44 @@ public partial class ClientInvoiceForm : Form
         }
         Cursor.Current = Cursors.Default;
 
-        toolStripProgressBar1.Value = 0;
         GenerateInvoicesBtn.Enabled = false;
         invoiceWaitForm = new();
 
         try
         {
             clientInvoicesService.ReportProgress += ClientInvoicesService_ReportProgress;
+            invoiceWaitForm.CancelRequested += (sender, e) => { cts.Cancel(); };
             invoiceWaitForm.Show(this);
-            await clientInvoicesService.CompileAsync(_thruDate, clientsToBill);
+            await clientInvoicesService.CompileAsync(_thruDate, clientsToBill, cts.Token);
             invoiceWaitForm.Close();
-            MessageBox.Show("Generating Invoices Completed");
+            if (cts.IsCancellationRequested)
+                MessageBox.Show("Invoice processing cancelled.");
+            else
+                MessageBox.Show("Invoice processing complete.");
         }
         catch (Exception ex)
         {
-            MessageBox.Show("Invoice processing failed with error: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            invoiceWaitForm.Close();
+            if (cts.IsCancellationRequested)
+            {
+                MessageBox.Show("Invoice processing cancelled.");
+            }
+            else
+                MessageBox.Show("Invoice processing failed with error: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
             Log.Instance.Error(ex);
         }
-        toolStripProgressBar1.Value = 100;
-
         GenerateInvoicesBtn.Enabled = true;
     }
 
     private void ClientInvoicesService_ReportProgress(object sender, ClientInvoiceProgressEventArgs e)
     {
-        if(e.ReportingClient)
+        if (e.ReportingClient)
         {
             invoiceWaitForm.UpdateInvoiceProgress(HelperExtensions.ComputePercentage(e.ClientsProcessed, e.ClientsTotal), $"Processing invoice for {e.Client} - {e.ClientsProcessed} of {e.ClientsTotal} processed.");
         }
 
-        if(e.ReportingAccount)
+        if (e.ReportingAccount)
         {
             invoiceWaitForm.UpdateAccountProgress(HelperExtensions.ComputePercentage(e.AccountsProcessed, e.AccountsTotal), $"Processed {e.AccountsProcessed} of {e.AccountsTotal} accounts.");
         }
@@ -265,7 +235,7 @@ public partial class ClientInvoiceForm : Form
     {
         if (InvoicesDGV.SelectedRows.Count > 0)
         {
-            if(InvoicesDGV.SelectedRows[0].Cells[nameof(UnbilledClient.ClientMnem)].Value != null)
+            if (InvoicesDGV.SelectedRows[0].Cells[nameof(UnbilledClient.ClientMnem)].Value != null)
                 RefreshUnbilledAccountsGrid(InvoicesDGV.SelectedRows[0].Cells[nameof(UnbilledClient.ClientMnem)].Value.ToString());
         }
     }
@@ -369,7 +339,7 @@ public partial class ClientInvoiceForm : Form
 
     private void ClientFilter_SelectedIndexChanged(object sender, EventArgs e)
     {
-        if(FromDate.MaskCompleted && ThroughDate.MaskCompleted)
+        if (FromDate.MaskCompleted && ThroughDate.MaskCompleted)
             RefreshInvoiceHistoryGrid();
     }
 
@@ -424,7 +394,7 @@ public partial class ClientInvoiceForm : Form
 
             string stmtFilename = invoicePrint.PrintInvoice(invoice);
 
-            if(!string.IsNullOrWhiteSpace(stmtFilename))
+            if (!string.IsNullOrWhiteSpace(stmtFilename))
                 files.Add(stmtFilename);
 
             progressBar1.Increment(1);
@@ -460,7 +430,7 @@ public partial class ClientInvoiceForm : Form
 
         bool duplexPrinting = false;
         string senderName = null;
-        if(sender is ToolStripMenuItem)
+        if (sender is ToolStripMenuItem)
         {
             var menuItem = sender as ToolStripMenuItem;
             senderName = menuItem.Name;
@@ -486,7 +456,7 @@ public partial class ClientInvoiceForm : Form
         else if (senderName == saveToPDFToolStripMenuItem.Name || senderName == saveAllToPDFToolStripMenuItem.Name)
         {
             string path = Program.AppEnvironment.ApplicationParameters.InvoiceFileLocation;
-            if(!Directory.Exists(path))
+            if (!Directory.Exists(path))
             {
                 path = "";
             }
@@ -537,11 +507,11 @@ public partial class ClientInvoiceForm : Form
 
             Thread.Sleep(8000);
 
-            if(!process.CloseMainWindow())
+            if (!process.CloseMainWindow())
             {
                 process.Kill();
             }
-            
+
             return true;
         }
         catch

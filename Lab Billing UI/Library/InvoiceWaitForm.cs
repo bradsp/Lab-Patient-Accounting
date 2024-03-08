@@ -12,6 +12,8 @@ namespace LabBilling.Library;
 
 public partial class InvoiceWaitForm : Form
 {
+    public event EventHandler<EventArgs> CancelRequested;
+
     public InvoiceWaitForm()
     {
         InitializeComponent();
@@ -21,7 +23,7 @@ public partial class InvoiceWaitForm : Form
 
     public void UpdateAccountProgress(int progress, string status)
     {
-        if(accountsProcessedLabel.InvokeRequired)
+        if (accountsProcessedLabel.InvokeRequired)
         {
             SetAccountProgressCallback progressCallback = new SetAccountProgressCallback(SetAccountProgress);
             this.Invoke(progressCallback, [progress, status]);
@@ -35,7 +37,7 @@ public partial class InvoiceWaitForm : Form
 
     public void UpdateInvoiceProgress(int progress, string status)
     {
-        if(invoicesProcessedLabel.InvokeRequired)
+        if (invoicesProcessedLabel.InvokeRequired)
         {
             SetInvoiceProgressCallback progressCallback = new SetInvoiceProgressCallback(SetInvoiceProgress);
             this.Invoke(progressCallback, [progress, status]);
@@ -58,5 +60,13 @@ public partial class InvoiceWaitForm : Form
         invoicesProcessedProgress.Value = progress;
     }
 
+    private void cancelButton_Click(object sender, EventArgs e)
+    {
+        if(MessageBox.Show("Cancelling will remove all invoices created during this run.\nAre you sure you want to cancel creating invoices?", "Confirm Cancel", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+        {
+            // send cancel to process
+            CancelRequested?.Invoke(this, EventArgs.Empty);
+        }
+    }
 }
 

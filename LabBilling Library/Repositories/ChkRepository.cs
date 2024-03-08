@@ -82,7 +82,8 @@ namespace LabBilling.Core.DataAccess
 
         public override Chk Add(Chk table)
         {
-            table.Status = "NEW";
+            if(string.IsNullOrEmpty(table.Status))
+                table.Status = "NEW";
 
             return base.Add(table);
         }

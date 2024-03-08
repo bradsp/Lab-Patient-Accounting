@@ -70,11 +70,10 @@ public class BatchTransactionService
         {
             if (!string.IsNullOrEmpty(x.AccountNo))
             {
-                var acc = accountService.GetAccount(x.AccountNo, true);
-                x.PatientName = acc.PatFullName;
-                x.Balance = acc.Balance;
+                var acc = accountService.GetAccountMinimal(x.AccountNo);
+                x.PatientName = acc?.PatFullName;
+                x.Balance = accountService.GetBalance(x.AccountNo);
             }
-            x.Balance = accountService.GetBalance(x.AccountNo);
         }
 );
         return batch;
@@ -117,7 +116,8 @@ public class BatchTransactionService
                 WriteOffAmount = detail.WriteOffAmount,
                 WriteOffCode = detail.WriteOffCode,
                 WriteOffDate = detail.WriteOffDate,
-                Source = detail.Source
+                Source = detail.Source,
+                Status = detail.Status,
             };
 
             chks.Add(chk);

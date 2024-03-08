@@ -32,6 +32,7 @@
             accountsProcessedProgress = new System.Windows.Forms.ProgressBar();
             invoicesProcessedLabel = new System.Windows.Forms.Label();
             accountsProcessedLabel = new System.Windows.Forms.Label();
+            cancelButton = new System.Windows.Forms.Button();
             SuspendLayout();
             // 
             // invoicesProcessedProgress
@@ -65,12 +66,23 @@
             accountsProcessedLabel.TabIndex = 1;
             accountsProcessedLabel.Text = "Accounts Processed";
             // 
+            // cancelButton
+            // 
+            cancelButton.Location = new System.Drawing.Point(287, 170);
+            cancelButton.Name = "cancelButton";
+            cancelButton.Size = new System.Drawing.Size(75, 23);
+            cancelButton.TabIndex = 2;
+            cancelButton.Text = "Cancel";
+            cancelButton.UseVisualStyleBackColor = true;
+            cancelButton.Click += cancelButton_Click;
+            // 
             // InvoiceWaitForm
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            ClientSize = new System.Drawing.Size(397, 193);
+            ClientSize = new System.Drawing.Size(397, 215);
             ControlBox = false;
+            Controls.Add(cancelButton);
             Controls.Add(accountsProcessedLabel);
             Controls.Add(invoicesProcessedLabel);
             Controls.Add(accountsProcessedProgress);
@@ -92,5 +104,6 @@
         private System.Windows.Forms.ProgressBar accountsProcessedProgress;
         private System.Windows.Forms.Label invoicesProcessedLabel;
         private System.Windows.Forms.Label accountsProcessedLabel;
+        private System.Windows.Forms.Button cancelButton;
     }
 }

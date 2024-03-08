@@ -55,7 +55,11 @@ public sealed class AccountService
     {
         using AccountUnitOfWork uow = new(appEnvironment);
 
-        return uow.AccountRepository.GetByAccount(accountNo);
+        var acc = uow.AccountRepository.GetByAccount(accountNo);
+        if(acc != null)
+            acc.Balance = GetBalance(accountNo);
+
+        return acc;
     }
 
     public async Task<Account> GetAccountAsync(string account, bool demographicsOnly = false) => await Task.Run(() => GetAccount(account, demographicsOnly));
