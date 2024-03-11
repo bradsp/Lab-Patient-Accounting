@@ -541,7 +541,7 @@ public partial class MainForm : Form
 
     private void monthlyReportsToolStripMenuItem_Click(object sender, EventArgs e)
     {
-        MonthlyReportsForm frm = new(Program.AppEnvironment.GetArgs());
+        AuditReportsForm frm = new(Program.AppEnvironment.GetArgs());
         frm.AccountLaunched += OnAccountLaunched;
         NewForm(frm);
     }
