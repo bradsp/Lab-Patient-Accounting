@@ -1,5 +1,6 @@
 ﻿using System;
 using LabBilling.Core.DataAccess;
+using LabBilling.Core.Repositories;
 using PetaPoco;
 
 namespace LabBilling.Core.UnitOfWork
@@ -57,5 +58,6 @@ namespace LabBilling.Core.UnitOfWork
         CptAmaRepository CptAmaRepository { get; }
         ReportingRepository ReportingRepository { get; }
         CdmDetailRepository CdmDetailRepository { get; }
+        AuditReportRepository AuditReportRepository { get; }
     }
 }

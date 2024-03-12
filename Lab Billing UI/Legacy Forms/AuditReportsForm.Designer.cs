@@ -281,7 +281,7 @@
             // 
             tsmiExcelDirectory.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { tsmicbExcelDirectory });
             tsmiExcelDirectory.Name = "tsmiExcelDirectory";
-            tsmiExcelDirectory.Size = new System.Drawing.Size(180, 22);
+            tsmiExcelDirectory.Size = new System.Drawing.Size(165, 22);
             tsmiExcelDirectory.Text = "Directory";
             // 
             // tsmicbExcelDirectory
@@ -294,7 +294,7 @@
             // 
             tsmiExcelFile.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { tstbExcelFileName });
             tsmiExcelFile.Name = "tsmiExcelFile";
-            tsmiExcelFile.Size = new System.Drawing.Size(180, 22);
+            tsmiExcelFile.Size = new System.Drawing.Size(165, 22);
             tsmiExcelFile.Text = "File Name";
             // 
             // tstbExcelFileName
@@ -307,7 +307,7 @@
             // 
             tsmiExcelWorkSheetName.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { tstbExcelWorkSheetName });
             tsmiExcelWorkSheetName.Name = "tsmiExcelWorkSheetName";
-            tsmiExcelWorkSheetName.Size = new System.Drawing.Size(180, 22);
+            tsmiExcelWorkSheetName.Size = new System.Drawing.Size(165, 22);
             tsmiExcelWorkSheetName.Text = "Worksheet Name";
             // 
             // tstbExcelWorkSheetName
@@ -346,7 +346,8 @@
             // tsslReportTitle
             // 
             tsslReportTitle.Name = "tsslReportTitle";
-            tsslReportTitle.Size = new System.Drawing.Size(0, 19);
+            tsslReportTitle.Size = new System.Drawing.Size(22, 19);
+            tsslReportTitle.Text = ".....";
             // 
             // tspbCount
             // 
@@ -379,11 +380,11 @@
             m_dgvReport.RowTemplate.Height = 24;
             m_dgvReport.Size = new System.Drawing.Size(787, 427);
             m_dgvReport.TabIndex = 2;
-            m_dgvReport.CellMouseClick += m_dgvReport_CellMouseClick;
-            m_dgvReport.ColumnHeaderMouseClick += m_dgvReport_ColumnHeaderMouseClick;
+            m_dgvReport.CellMouseClick += dgvReport_CellMouseClick;
+            m_dgvReport.ColumnHeaderMouseClick += dgvReport_ColumnHeaderMouseClick;
             m_dgvReport.DataError += m_dgvReport_DataError;
             m_dgvReport.RowHeaderMouseDoubleClick += m_dgvReport_RowHeaderMouseDoubleClick;
-            m_dgvReport.RowsAdded += m_dgvReport_RowsAdded;
+            m_dgvReport.RowsAdded += dgvReport_RowsAdded;
             // 
             // cmsRecords
             // 

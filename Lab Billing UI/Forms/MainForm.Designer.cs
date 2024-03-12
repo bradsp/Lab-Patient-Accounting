@@ -79,6 +79,7 @@ partial class MainForm
         panel1 = new System.Windows.Forms.Panel();
         helpProvider1 = new System.Windows.Forms.HelpProvider();
         mdiTabControl = new System.Windows.Forms.CustomTabControl();
+        auditReportsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
         MainFormMenu.SuspendLayout();
         statusStrip1.SuspendLayout();
         SuspendLayout();
@@ -166,7 +167,7 @@ partial class MainForm
         // 
         // dictionariesToolStripMenuItem
         // 
-        dictionariesToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { chargeMasterToolStripMenuItem1, clientsToolStripMenuItem, financialClassToolStripMenuItem, iCDDxCodesToolStripMenuItem, insurancePlansToolStripMenuItem, physiciansToolStripMenuItem, pathologistsToolStripMenuItem, zipCodesToolStripMenuItem });
+        dictionariesToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { auditReportsToolStripMenuItem, chargeMasterToolStripMenuItem1, clientsToolStripMenuItem, financialClassToolStripMenuItem, iCDDxCodesToolStripMenuItem, insurancePlansToolStripMenuItem, physiciansToolStripMenuItem, pathologistsToolStripMenuItem, zipCodesToolStripMenuItem });
         dictionariesToolStripMenuItem.Name = "dictionariesToolStripMenuItem";
         resources.ApplyResources(dictionariesToolStripMenuItem, "dictionariesToolStripMenuItem");
         // 
@@ -394,6 +395,12 @@ partial class MainForm
         mdiTabControl.SelectedIndex = 0;
         mdiTabControl.SelectedIndexChanged += mdiTabControl_SelectedIndexChanged;
         // 
+        // auditReportsToolStripMenuItem
+        // 
+        auditReportsToolStripMenuItem.Name = "auditReportsToolStripMenuItem";
+        resources.ApplyResources(auditReportsToolStripMenuItem, "auditReportsToolStripMenuItem");
+        auditReportsToolStripMenuItem.Click += auditReportsToolStripMenuItem_Click;
+        // 
         // MainForm
         // 
         resources.ApplyResources(this, "$this");
@@ -472,4 +479,5 @@ partial class MainForm
     private System.Windows.Forms.ToolStripMenuItem latestUpdatesToolStripMenuItem;
     private System.Windows.Forms.CustomTabControl mdiTabControl;
     private System.Windows.Forms.ToolStripMenuItem windowToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem auditReportsToolStripMenuItem;
 }

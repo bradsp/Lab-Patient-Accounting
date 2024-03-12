@@ -377,4 +377,15 @@ public class DictionaryService
 
     #endregion DictDx
 
+    #region AuditReports
+
+    public IList<AuditReport> GetAuditReports()
+    {
+        using UnitOfWorkMain uow = new(appEnvironment);
+
+        return uow.AuditReportRepository.GetAll();
+    }
+
+    #endregion
+
 }
