@@ -15,19 +15,20 @@ namespace LabBilling.Legacy;
 public partial class AuditReportsForm : Form
 {
 
-    DataTable m_dtRecords = null;
-    Dictionary<string, string> m_dicCode;
-    ToolStripControlHost m_dpFrom;
-    ToolStripControlHost m_dpThru;
-    public StreamWriter errLog;
-    PrintDocument ViewerPrintDocument;         // The PrintDocument to be used for printing.
-    ReportGenerator m_rgReport;         // The class that will do the printing process.
-    private string m_strReportTitle;
-    private string m_strQuery;
-    private DataSet m_dsSource;
-    private string m_strServer;
-    private string m_strDatabase;
+    private DataTable _dtRecords = null;
+    private Dictionary<string, string> _dicCode;
+    private ToolStripControlHost _dpFrom;
+    private ToolStripControlHost _dpThru;
+    private PrintDocument _viewerPrintDocument;         // The PrintDocument to be used for printing.
+    private ReportGenerator _rgReport;         // The class that will do the printing process.
+    private string _strReportTitle;
+    private string _strQuery;
+    private DataSet _dsSource;
+    private readonly string _strServer;
+    private readonly string _strDatabase;
+
     public event EventHandler<string> AccountLaunched;
+    public StreamWriter errLog;
 
     public AuditReportsForm(string[] args)
     {
@@ -39,26 +40,26 @@ public partial class AuditReportsForm : Form
             MessageBox.Show("Incorrect number of arguments passed. \r\nCan not continue.");
             Environment.Exit(13);
         }
-        m_strServer = args[0];
-        m_strDatabase = args[1];
+        _strServer = args[0];
+        _strDatabase = args[1];
         if (args[0].StartsWith("/"))
         {
-            m_strServer = args[0].Remove(0, 1);
+            _strServer = args[0].Remove(0, 1);
         }
         if (args[1].StartsWith("/"))
         {
-            m_strDatabase = args[1].Remove(0, 1);
+            _strDatabase = args[1].Remove(0, 1);
         }
         string environment = null;
-        if (m_strDatabase.ToUpper().Contains("TEST"))
+        if (_strDatabase.ToUpper().Contains("TEST"))
             environment = "TEST";
-        else if (m_strDatabase.ToUpper().Contains("LIVE") || m_strDatabase.ToUpper().Contains("PROD"))
+        else if (_strDatabase.ToUpper().Contains("LIVE") || _strDatabase.ToUpper().Contains("PROD"))
             environment = "LIVE";
 
         string[] argErr = new string[3];
         argErr[0] = "/" + environment;
-        argErr[1] = string.Format("/{0}", m_strServer);
-        argErr[2] = "/" + m_strDatabase;
+        argErr[1] = string.Format("/{0}", _strServer);
+        argErr[2] = "/" + _strDatabase;
 
     }
 
@@ -95,53 +96,53 @@ public partial class AuditReportsForm : Form
 
     private void CreatePrintDocument()
     {
-        ViewerPrintDocument = new PrintDocument(); // create a new print document each time so the .PrintPage handler only gets handled once.
+        _viewerPrintDocument = new PrintDocument(); // create a new print document each time so the .PrintPage handler only gets handled once.
     }
 
     private void CreateDateTimes()
     {
         int nSert = tsMain.Items.Count;
         // create the datetime controls for the From and Thru dates
-        m_dpFrom = new ToolStripControlHost(new DateTimePicker())
+        _dpFrom = new ToolStripControlHost(new DateTimePicker())
         {
             Text = DateTime.Now.Subtract(new TimeSpan((DateTime.Now.Day - 1), 0, 0, 0)).ToString("d")
         };
-        ((DateTimePicker)m_dpFrom.Control).Format = DateTimePickerFormat.Short;
-        m_dpFrom.Control.Width = 95;
-        m_dpFrom.Control.Refresh();
-        m_dpFrom.Invalidate();
+        ((DateTimePicker)_dpFrom.Control).Format = DateTimePickerFormat.Short;
+        _dpFrom.Control.Width = 95;
+        _dpFrom.Control.Refresh();
+        _dpFrom.Invalidate();
         tsMain.Items.Insert(tsMain.Items.Count, new ToolStripSeparator());
         ToolStripLabel tslFrom = new ToolStripLabel("From: ");
         tsMain.Items.Insert(tsMain.Items.Count, tslFrom);
-        tsMain.Items.Insert(tsMain.Items.Count, m_dpFrom);
+        tsMain.Items.Insert(tsMain.Items.Count, _dpFrom);
 
-        m_dpThru = new ToolStripControlHost(new DateTimePicker());
-        m_dpThru.Text = DateTime.Now.AddDays((DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month) - DateTime.Now.Day)).ToString();//because of nursing homes ability to register and order in advance this is set to 5 days in advance.
-        ((DateTimePicker)m_dpThru.Control).Format = DateTimePickerFormat.Short;
-        m_dpThru.Control.Width = 95;
-        m_dpThru.Control.Refresh();
-        m_dpThru.Invalidate();
+        _dpThru = new ToolStripControlHost(new DateTimePicker());
+        _dpThru.Text = DateTime.Now.AddDays((DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month) - DateTime.Now.Day)).ToString();//because of nursing homes ability to register and order in advance this is set to 5 days in advance.
+        ((DateTimePicker)_dpThru.Control).Format = DateTimePickerFormat.Short;
+        _dpThru.Control.Width = 95;
+        _dpThru.Control.Refresh();
+        _dpThru.Invalidate();
 
         ToolStripLabel tslThru = new("Thru: ");
         tsMain.Items.Insert(tsMain.Items.Count, tslThru);
-        tsMain.Items.Insert(tsMain.Items.Count, m_dpThru);
+        tsMain.Items.Insert(tsMain.Items.Count, _dpThru);
         // tsMain.Items.Insert(tsMain.Items.Count, new ToolStripSeparator());
         tsMain.Refresh();
     }
 
     private void tsmi80299_Click(object sender, EventArgs e)
     {
-        m_strReportTitle = string.Format("CPT code beginning with J or 80299 as the cpt code and the date of service is between {0} and {1}", m_dpFrom.Text, m_dpThru.Text);
-        currentReportTitle.Text = m_strReportTitle;
-        tsslReportTitle.Text = m_strReportTitle;
+        _strReportTitle = $"CPT code beginning with J or 80299 as the cpt code and the date of service is between {_dpFrom.Text} and {_dpThru.Text}";
+        currentReportTitle.Text = _strReportTitle;
+        tsslReportTitle.Text = _strReportTitle;
         // set up the query from the argument
-        m_strQuery = string.Format("SELECT     TOP (100) PERCENT acc.fin_code, acc.account, acc.pat_name, amt.cpt4, acc.trans_date, chrg.qty " +
-                                   "FROM       chrg INNER JOIN " +
+        _strQuery = string.Format("SELECT TOP (100) PERCENT acc.fin_code, acc.account, acc.pat_name, amt.cpt4, acc.trans_date, chrg.qty " +
+                                   "FROM chrg INNER JOIN " +
                                    " amt ON chrg.chrg_num = amt.chrg_num INNER JOIN " +
                                    " acc ON chrg.account = acc.account " +
-                                   " WHERE     (amt.cpt4 LIKE 'j%' OR amt.cpt4 = '80299') " +
+                                   " WHERE  (amt.cpt4 LIKE 'j%' OR amt.cpt4 = '80299') " +
                                    " AND (acc.trans_date BETWEEN CONVERT(DATETIME, '{0}', 102) AND CONVERT(DATETIME, '{1}', 102)) " +
-                                   "ORDER BY acc.pat_name", m_dpFrom.Text, m_dpThru.Text);
+                                   "ORDER BY acc.pat_name", _dpFrom.Text, _dpThru.Text);
         LoadGrid();
     }
 
@@ -153,16 +154,16 @@ public partial class AuditReportsForm : Form
         tspbCount.ToolTipText = "Working";
 
         //    m_dsSource = new DataSet("PrintDataSet");
-        m_dtRecords = new DataTable("PrintDataTable");
+        _dtRecords = new DataTable("PrintDataTable");
 
         Log.Instance.Trace("After setting grids Datasource");
 
-        SelectRows(m_strQuery);
+        SelectRows(_strQuery);
 
         try
         {
-            Log.Instance.Debug($"DataTable = [{m_dtRecords.TableName}]");
-            if (m_dtRecords == null)
+            Log.Instance.Debug($"DataTable = [{_dtRecords.TableName}]");
+            if (_dtRecords == null)
             {
                 m_dgvReport.DataSource = null;
                 Log.Instance.Debug("m_dsSource.Tables.Count == 0 so return.");
@@ -180,12 +181,12 @@ public partial class AuditReportsForm : Form
         try
         {
             //m_dgvReport.DataSource = m_dtRecords;
-            bs.DataSource = m_dtRecords;
+            bs.DataSource = _dtRecords;
             m_dgvReport.DataSource = bs;
         }
         catch (Exception)
         {
-            m_dgvReport.DataSource = m_dtRecords;
+            m_dgvReport.DataSource = _dtRecords;
         }
 
         if (m_dgvReport.Rows.Count > 0)
@@ -286,13 +287,13 @@ public partial class AuditReportsForm : Form
         {
             try
             {
-                SqlDataAdapter adapter = new SqlDataAdapter();
+                SqlDataAdapter adapter = new();
                 adapter.SelectCommand = new SqlCommand(m_strQuery, connection);
 
-                int nRec = adapter.Fill(m_dtRecords);
+                int nRec = adapter.Fill(_dtRecords);
 
-                m_dsSource = new DataSet();
-                adapter.Fill(m_dsSource);
+                _dsSource = new DataSet();
+                adapter.Fill(_dsSource);
             }
             catch (SqlException se)
             {
@@ -365,24 +366,24 @@ public partial class AuditReportsForm : Form
         }
         // create our reportgenerator and assign event handlers
         string strWhere = string.Empty;
-        ViewerPrintDocument.DefaultPageSettings.Landscape = bLandscape;
-        m_rgReport = new ReportGenerator(m_dgvReport, ViewerPrintDocument, m_strReportTitle, m_strDatabase);
+        _viewerPrintDocument.DefaultPageSettings.Landscape = bLandscape;
+        _rgReport = new ReportGenerator(m_dgvReport, _viewerPrintDocument, _strReportTitle, _strDatabase);
 
-        ViewerPrintDocument.PrintPage += new System.Drawing.Printing.PrintPageEventHandler(m_rgReport.MyPrintDocument_PrintPage);
-        ViewerPrintDocument.DocumentName = m_strReportTitle;
+        _viewerPrintDocument.PrintPage += new System.Drawing.Printing.PrintPageEventHandler(_rgReport.MyPrintDocument_PrintPage);
+        _viewerPrintDocument.DocumentName = _strReportTitle;
 
-        ViewerPrintDocument.Print();
-        ViewerPrintDocument.PrintPage -= new System.Drawing.Printing.PrintPageEventHandler(m_rgReport.MyPrintDocument_PrintPage);
+        _viewerPrintDocument.Print();
+        _viewerPrintDocument.PrintPage -= new System.Drawing.Printing.PrintPageEventHandler(_rgReport.MyPrintDocument_PrintPage);
     }
 
     private void tsmi59Modis_Click(object sender, EventArgs e)
     {
 
-        m_strReportTitle = string.Format("Accounts with combination of GC (87591) CHL (87491) and Group B (87149) and the date of service is between {0} and {1}", m_dpFrom.Text, m_dpThru.Text);
-        tsslReportTitle.Text = m_strReportTitle;
-        currentReportTitle.Text = m_strReportTitle;
+        _strReportTitle = $"Accounts with combination of GC (87591) CHL (87491) and Group B (87149) and the date of service is between {_dpFrom.Text} and {_dpThru.Text}";
+        tsslReportTitle.Text = _strReportTitle;
+        currentReportTitle.Text = _strReportTitle;
         // set up the query from the argument
-        m_strQuery = string.Format("with cte (account, cdm, cpt4, [count], qty) " +
+        _strQuery = string.Format("with cte (account, cdm, cpt4, [count], qty) " +
                 "as  " +
                 "(  " +
                 "    select  top(1000000)ISNULL(vw_chrgdetail.account, 'GRAND TOTAL') as [ACCOUNT], " +
@@ -405,18 +406,18 @@ public partial class AuditReportsForm : Form
                 "where cpt4 is not null   " +
                 "and cpt4 not in ('80101','83896','86256','86003')  " +
                 "and qty > 1 " +
-                "order by fin_code, trans_date, account", m_dpFrom, m_dpThru);
+                "order by fin_code, trans_date, account", _dpFrom, _dpThru);
         LoadGrid();
     }
 
     private void modifiersMultipleCpt4ToolStripMenuItem_Click(object sender, EventArgs e)
     {
 
-        m_strReportTitle = $"Accounts with Multiple CPT4 combinations of GC (87591) CHL (87491) and Group B (87149) and the date of service is between {m_dpFrom.Text} and {m_dpThru.Text}";
-        tsslReportTitle.Text = m_strReportTitle;
-        currentReportTitle.Text = m_strReportTitle;
+        _strReportTitle = $"Accounts with Multiple CPT4 combinations of GC (87591) CHL (87491) and Group B (87149) and the date of service is between {_dpFrom.Text} and {_dpThru.Text}";
+        tsslReportTitle.Text = _strReportTitle;
+        currentReportTitle.Text = _strReportTitle;
         // set up the query from the argument
-        m_strQuery = "with MultiCpt4(account, cpt4_87149, modi_87149, " +
+        _strQuery = "with MultiCpt4(account, cpt4_87149, modi_87149, " +
             "        cpt4_87591, modi4_87591,  " +
             "	    cpt4_87491, modi4_87491,  " +
             "        service_date, fin_code) as " +
@@ -424,18 +425,18 @@ public partial class AuditReportsForm : Form
             "    select distinct a.account, a.cpt4, a.modi, b.cpt4, b.modi, c.cpt4, c.modi, convert(varchar(10),acc.trans_date,101), acc.fin_code from vw_chrgdetail a " +
             "    inner join vw_chrgdetail b on a.account = b.account and b.cpt4 = '87591' " +
             "    inner join vw_chrgdetail c on c.account = b.account and c.cpt4 = '87491' " +
-            $"    inner join acc on acc.account = a.account and acc.status not in ('paid_out','closed') and acc.trans_date >= '{m_dpFrom}' " +
+            $"    inner join acc on acc.account = a.account and acc.status not in ('paid_out','closed') and acc.trans_date >= '{_dpFrom}' " +
             "    right outer  join client on  acc.cl_mnem = client.cli_mnem and client.type not in (0,6)  " +
             "    where a.cdm not in ('CBILL','') and a.cpt4 not in ('NONE','') and a.cdm is not null and a.cpt4 is not null" +
             "    and  a.cpt4 = '87149' " +
             ") " +
             "select * from MultiCpt4  " +
-            $"where coalesce (modi4_87591, modi4_87491,modi_87149) is null and service_date between CONVERT(DATETIME, '{m_dpFrom}', 102) AND CONVERT(DATETIME, '{m_dpThru}', 102) " +
+            $"where coalesce (modi4_87591, modi4_87491,modi_87149) is null and service_date between CONVERT(DATETIME, '{_dpFrom}', 102) AND CONVERT(DATETIME, '{_dpThru}', 102) " +
             "order by fin_code, service_date, account";
         LoadGrid();
     }
     private int nFilterColumn;
-    private void m_dgvReport_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+    private void dgvReport_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
     {
         if (e.Button == MouseButtons.Right)
         {
@@ -583,11 +584,11 @@ public partial class AuditReportsForm : Form
 
     private void mailerErrorsToolStripMenuItem_Click(object sender, EventArgs e)
     {
-        m_strReportTitle = $"Accounts with Mailer errors and the date of service is between {m_dpFrom.Text} and {m_dpThru.Text}";
-        tsslReportTitle.Text = m_strReportTitle;
-        currentReportTitle.Text = m_strReportTitle;
+        _strReportTitle = $"Accounts with Mailer errors and the date of service is between {_dpFrom.Text} and {_dpThru.Text}";
+        tsslReportTitle.Text = _strReportTitle;
+        currentReportTitle.Text = _strReportTitle;
         // set up the query from the argument
-        m_strQuery = string.Format("with cte " +
+        _strQuery = string.Format("with cte " +
                                     "as " +
                                     "( " +
                                     "select acc.account from acc  " +
@@ -596,35 +597,36 @@ public partial class AuditReportsForm : Form
                                     "and acc.status not in ('closed','paid_out') " +
                                     ") " +
                                     "select * from acc " +
-                                    "inner join cte on cte.account = acc.account", m_dpFrom, m_dpThru);
+                                    "inner join cte on cte.account = acc.account", _dpFrom, _dpThru);
         LoadGrid();
     }
 
     private void accountsWithNoPatientRecordToolStripMenuItem_Click(object sender, EventArgs e)
     {
-        m_strReportTitle = $"Accounts with no Patient Records and the date of service is between {m_dpFrom.Text} and {m_dpThru.Text}";
-        tsslReportTitle.Text = m_strReportTitle;
+        _strReportTitle = $"Accounts with no Patient Records and the date of service is between {_dpFrom.Text} and {_dpThru.Text}";
+        tsslReportTitle.Text = _strReportTitle;
+        currentReportTitle.Text = _strReportTitle;
         // set up the query from the argument
-        m_strQuery = string.Format("select acc.account, acc.pat_name, acc.cl_mnem, acc.fin_code, acc.trans_date from acc " +
+        _strQuery = string.Format("select acc.account, acc.pat_name, acc.cl_mnem, acc.fin_code, acc.trans_date from acc " +
                                     "left outer join pat on pat.account = acc.account " +
                                     "where pat.account is null and acc.fin_code <> 'CLIENT' and acc.status not in ('paid_out','closed') and acc.fin_code not in ('X','Y') " +
                                     "and trans_date between CONVERT(DATETIME, '{0}', 102) AND CONVERT(DATETIME, '{1}', 102) " +
-                                    "order by acc.account", m_dpFrom, m_dpThru);
+                                    "order by acc.account", _dpFrom, _dpThru);
         LoadGrid();
 
     }
 
     private void accountsWithNoInsuranceRecordToolStripMenuItem_Click(object sender, EventArgs e)
     {
-        m_strReportTitle = $"Accounts with no Insurance Records and the date of service is between {m_dpFrom.Text} and {m_dpThru.Text}";
-        tsslReportTitle.Text = m_strReportTitle;
-        currentReportTitle.Text = m_strReportTitle;
+        _strReportTitle = $"Accounts with no Insurance Records and the date of service is between {_dpFrom.Text} and {_dpThru.Text}";
+        tsslReportTitle.Text = _strReportTitle;
+        currentReportTitle.Text = _strReportTitle;
         // set up the query from the argument
-        m_strQuery = string.Format("select acc.account, acc.pat_name, acc.cl_mnem, acc.fin_code, acc.trans_date from acc " +
+        _strQuery = string.Format("select acc.account, acc.pat_name, acc.cl_mnem, acc.fin_code, acc.trans_date from acc " +
                                     "left outer join ins on ins.account = acc.account " +
                                     "where ins.account is null and acc.fin_code <> 'CLIENT' and acc.status not in ('paid_out','closed') and acc.fin_code not in ('X','Y') " +
                                     "and trans_date between CONVERT(DATETIME, '{0}', 102) AND CONVERT(DATETIME, '{1}', 102) " +
-                                    "order by acc.account", m_dpFrom, m_dpThru);
+                                    "order by acc.account", _dpFrom, _dpThru);
         LoadGrid();
     }
 
@@ -637,24 +639,24 @@ public partial class AuditReportsForm : Form
         and trans_date between '01/01/2009 00:00' and '03/31/2009 23:59'
         order by acc.account
         */
-        m_strReportTitle = string.Format("Accounts where Insurance and account fin codes do not match and the date of service is between {0} and {1}", m_dpFrom.Text, m_dpThru.Text);
-        tsslReportTitle.Text = m_strReportTitle;
-        currentReportTitle.Text = m_strReportTitle;
+        _strReportTitle = string.Format("Accounts where Insurance and account fin codes do not match and the date of service is between {0} and {1}", _dpFrom.Text, _dpThru.Text);
+        tsslReportTitle.Text = _strReportTitle;
+        currentReportTitle.Text = _strReportTitle;
         // set up the query from the argument
-        m_strQuery = string.Format("select acc.account, acc.pat_name, acc.cl_mnem, acc.fin_code, ins.fin_code, acc.trans_date from acc " +
+        _strQuery = string.Format("select acc.account, acc.pat_name, acc.cl_mnem, acc.fin_code, ins.fin_code, acc.trans_date from acc " +
                                     "inner join ins on ins.account = acc.account and ins.ins_a_b_c = 'A' and ins.fin_code <> acc.fin_code " +
                                     "where acc.fin_code <> 'CLIENT' and acc.status not in ('paid_out','closed') " +
                                     "and trans_date between CONVERT(DATETIME, '{0}', 102) AND CONVERT(DATETIME, '{1}', 102) " +
-                                    "order by acc.account", m_dpFrom, m_dpThru);
+                                    "order by acc.account", _dpFrom, _dpThru);
         LoadGrid();
     }
 
     private void aBNsReportedToolStripMenuItem_Click(object sender, EventArgs e)
     {
-        m_strReportTitle = string.Format("Accounts with ABN's and the date of service is between {0} and {1}", m_dpFrom.Text, m_dpThru.Text);
-        tsslReportTitle.Text = m_strReportTitle;
-        currentReportTitle.Text = m_strReportTitle;
-        m_strQuery = string.Format("with cte (account, cli_mnem, coll_date, pat_name, rowguid) " +
+        _strReportTitle = string.Format("Accounts with ABN's and the date of service is between {0} and {1}", _dpFrom.Text, _dpThru.Text);
+        tsslReportTitle.Text = _strReportTitle;
+        currentReportTitle.Text = _strReportTitle;
+        _strQuery = string.Format("with cte (account, cli_mnem, coll_date, pat_name, rowguid) " +
                                     "   as " +
                                     "   ( " +
                                     "   select s.account,  w.cli_mnem, w.coll_date, w.pat_lname+', '+w.pat_fname, w.rowguid from wreq w " +
@@ -664,7 +666,7 @@ public partial class AuditReportsForm : Form
                                     "   select c.account, c.cli_mnem, c.coll_date, c.pat_name, w.test_mnem from cte c " +
                                     "   inner join worders w on c.rowguid = w.wreq_rowguid and w.abn = 1 " +
                                     "   and c.coll_date between convert(datetime,'{0} 00:00',102) and convert(datetime,'{1} 23:59', 102) " +
-                                    "   order by c.account", m_dpFrom, m_dpThru);
+                                    "   order by c.account", _dpFrom, _dpThru);
         LoadGrid();
     }
 
@@ -693,10 +695,10 @@ public partial class AuditReportsForm : Form
         */
         string strTag = ((ToolStripMenuItem)sender).Tag.ToString();
         string[] strCpt4s = strTag.Split(new char[] { '|' });
-        m_strReportTitle = $"Accounts containing {strCpt4s[0]} and {strCpt4s[1]} and the date of service is between {m_dpFrom.Text} and {m_dpThru.Text}";
-        tsslReportTitle.Text = m_strReportTitle;
-        currentReportTitle.Text = m_strReportTitle;
-        m_strQuery = string.Format("select  chrg.account " +
+        _strReportTitle = $"Accounts containing {strCpt4s[0]} and {strCpt4s[1]} and the date of service is between {_dpFrom.Text} and {_dpThru.Text}";
+        tsslReportTitle.Text = _strReportTitle;
+        currentReportTitle.Text = _strReportTitle;
+        _strQuery = string.Format("select  chrg.account " +
                                     "from chrg " +
                                     "inner join acc on acc.account = chrg.account and acc.status not in ('closed','paid_out') " +
                                     "inner join amt on chrg.chrg_num = amt.chrg_num " +
@@ -708,7 +710,7 @@ public partial class AuditReportsForm : Form
                                     "inner join acc on acc.account = chrg.account and acc.status not in ('closed','paid_out') " +
                                     "inner join amt on chrg.chrg_num = amt.chrg_num " +
                                     "where cdm <> 'cbill' and chrg.credited = 0  " +
-                                    "and service_date between '{3} 00:00' and '{4} 23:59' and amt.cpt4 in ('{5}')", m_dpFrom, m_dpThru, strCpt4s[1], m_dpFrom, m_dpThru, strCpt4s[0]);
+                                    "and service_date between '{3} 00:00' and '{4} 23:59' and amt.cpt4 in ('{5}')", _dpFrom, _dpThru, strCpt4s[1], _dpFrom, _dpThru, strCpt4s[0]);
         LoadGrid();
     }
 
@@ -716,10 +718,10 @@ public partial class AuditReportsForm : Form
     {
         string strTag = ((ToolStripMenuItem)sender).Tag.ToString();
         string[] strCpt4s = strTag.Split(new char[] { '|' });
-        m_strReportTitle = string.Format("Accounts containing C3 and C4 and the date of service is between {0} and {1}", m_dpFrom.Text, m_dpThru.Text);
-        tsslReportTitle.Text = m_strReportTitle;
-        currentReportTitle.Text = m_strReportTitle;
-        m_strQuery = string.Format("select  chrg.account " +
+        _strReportTitle = string.Format("Accounts containing C3 and C4 and the date of service is between {0} and {1}", _dpFrom.Text, _dpThru.Text);
+        tsslReportTitle.Text = _strReportTitle;
+        currentReportTitle.Text = _strReportTitle;
+        _strQuery = string.Format("select  chrg.account " +
                                     "from chrg " +
                                     "inner join acc on acc.account = chrg.account and acc.status not in ('closed','paid_out') " +
                                     "inner join amt on chrg.chrg_num = amt.chrg_num " +
@@ -731,7 +733,7 @@ public partial class AuditReportsForm : Form
                                     "inner join acc on acc.account = chrg.account and acc.status not in ('closed','paid_out') " +
                                     "inner join amt on chrg.chrg_num = amt.chrg_num " +
                                     "where cdm <> 'cbill' and chrg.credited = 0 and chrg.cdm = '5602376' " +
-                                    "and service_date between '{3} 00:00' and '{4} 23:59' and amt.cpt4 in ('{5}')", m_dpFrom, m_dpThru, strCpt4s[1], m_dpFrom, m_dpThru, strCpt4s[0]);
+                                    "and service_date between '{3} 00:00' and '{4} 23:59' and amt.cpt4 in ('{5}')", _dpFrom, _dpThru, strCpt4s[1], _dpFrom, _dpThru, strCpt4s[0]);
         LoadGrid();
     }
 
@@ -768,6 +770,7 @@ public partial class AuditReportsForm : Form
             }
             splitContainer1.Panel1Collapsed = true;
             AccountsByCpt4(cpt4s);
+            splitContainer1.Panel1.Controls.Remove(tlp);
         };
 
         tlp.Controls.Add(cptLabel, 0, 0);
@@ -797,10 +800,10 @@ public partial class AuditReportsForm : Form
                                         i == (cpt4s.Count - 1) ? "" : "'");
         }
 
-        m_strReportTitle = $"Accounts containing {strFirstCpt4} and {strRemainingCpt4s} and the date of service is between {m_dpFrom.Text} and {m_dpThru.Text}";
-        tsslReportTitle.Text = m_strReportTitle;
-        currentReportTitle.Text = m_strReportTitle;
-        m_strQuery = string.Format("select  chrg.account " +
+        _strReportTitle = $"Accounts containing {strFirstCpt4} and {strRemainingCpt4s} and the date of service is between {_dpFrom.Text} and {_dpThru.Text}";
+        tsslReportTitle.Text = _strReportTitle;
+        currentReportTitle.Text = _strReportTitle;
+        _strQuery = string.Format("select  chrg.account " +
             "from chrg " +
             "inner join acc on acc.account = chrg.account and acc.status not in ('closed','paid_out') " +
             "inner join chrg_details amt on chrg.chrg_num = amt.chrg_num " +
@@ -812,7 +815,7 @@ public partial class AuditReportsForm : Form
             "inner join acc on acc.account = chrg.account and acc.status not in ('closed','paid_out') " +
             "inner join chrg_details amt on chrg.chrg_num = amt.chrg_num " +
             "where cdm <> 'CBILL' and chrg.credited = 0  " +
-            "and service_date between '{3} 00:00' and '{4} 23:59' and amt.cpt4 in ('{5}')", m_dpFrom, m_dpThru, strFirstCpt4, m_dpFrom, m_dpThru, strRemainingCpt4s);
+            "and service_date between '{3} 00:00' and '{4} 23:59' and amt.cpt4 in ('{5}')", _dpFrom, _dpThru, strFirstCpt4, _dpFrom, _dpThru, strRemainingCpt4s);
         LoadGrid();
     }
 
@@ -820,14 +823,14 @@ public partial class AuditReportsForm : Form
     {
         if (cdms.Count < 2)
         {
-            m_strReportTitle = $"Accounts containing {cdms[0]} with date of service between {m_dpFrom.Text} and {m_dpThru.Text}";
-            currentReportTitle.Text = m_strReportTitle;
-            m_strQuery =
+            _strReportTitle = $"Accounts containing {cdms[0]} with date of service between {_dpFrom.Text} and {_dpThru.Text}";
+            currentReportTitle.Text = _strReportTitle;
+            _strQuery =
                 $"with cte (account, cdm)" +
                 "as" +
                 "(" +
                 "	select account, cdm from chrg " +
-                $"  where service_date between '{m_dpFrom} 00:00' and '{m_dpThru} 23:59' " +
+                $"  where service_date between '{_dpFrom} 00:00' and '{_dpThru} 23:59' " +
                 $"	and cdm = {cdms[0]} and credited = 0 " +
                 ")" +
                 "select distinct cte.account, cte.cdm as [FIRST CDM], convert(varchar(10),service_date,101) as [Service Date]" +
@@ -847,30 +850,31 @@ public partial class AuditReportsForm : Form
             }
 
 
-            m_strReportTitle = $"Accounts containing {strFirstCDM} and {strRemainingCdms} with date of service between {m_dpFrom.Text} and {m_dpThru.Text}";
-            currentReportTitle.Text = m_strReportTitle;
-            m_strQuery =
+            _strReportTitle = $"Accounts containing {strFirstCDM} and {strRemainingCdms} with date of service between {_dpFrom.Text} and {_dpThru.Text}";
+            currentReportTitle.Text = _strReportTitle;
+            tsslReportTitle.Text = _strReportTitle;
+            _strQuery =
                 @$"with cte (account, cdm)" +
                 @$"as" +
                 @$"(" +
                 @$"	select account, cdm from chrg " +
-                @$"   where service_date between '{m_dpFrom} 00:00' and '{m_dpThru} 23:59' " +
+                @$"   where service_date between '{_dpFrom} 00:00' and '{_dpThru} 23:59' " +
                 @$"	and cdm = '{strFirstCDM}' and credited = 0 " +
                 @$")" +
                 @$"select distinct cte.account, cte.cdm as [FIRST CDM], chrg.cdm as [SECOND CDM], convert(varchar(10),service_date,101) as [Service Date]" +
                 @$"from cte " +
                 @$"join chrg on chrg.account = cte.account " +
-                @$"where service_date between '{m_dpFrom} 00:00' and '{m_dpThru} 23:59' " +
+                @$"where service_date between '{_dpFrom} 00:00' and '{_dpThru} 23:59' " +
                 @$"and chrg.cdm in ('{strRemainingCdms}') and credited = 0";
         }
-        tsslReportTitle.Text = m_strReportTitle;
+        tsslReportTitle.Text = _strReportTitle;
         LoadGrid();
     }
 
     private void tssbTableReports_ButtonClick(object sender, EventArgs e)
     {
         tableReportsToolStripItem.DropDownItems.Clear();
-        m_dicCode = [];
+        _dicCode = [];
         string strQuery = "select * from dbo.Monthly_Reports order by button, report_title";
 
         SqlDataAdapter sda = new(strQuery, Program.AppEnvironment.ConnectionString);
@@ -898,7 +902,7 @@ public partial class AuditReportsForm : Form
             ToolStripMenuItem tsi = (ToolStripMenuItem)tsiBtn.DropDownItems.Add(dr["mi_name"].ToString());
             tsi.Tag = dr["child_button"].ToString();
 
-            m_dicCode.Add(dr["mi_name"].ToString(), dr["sql_code"].ToString());
+            _dicCode.Add(dr["mi_name"].ToString(), dr["sql_code"].ToString());
             tsi.Click += new EventHandler(tsi_Click);
             tsiBtn.DropDownItems.Add(tsi);
         }
@@ -908,23 +912,24 @@ public partial class AuditReportsForm : Form
     {
         string strButton = ((ToolStripMenuItem)sender).Text;
         string strCode = null;
-        if (!m_dicCode.TryGetValue(strButton, out strCode))
+        if (!_dicCode.TryGetValue(strButton, out strCode))
         {
             MessageBox.Show("Not valid");
         }
 
-        m_strReportTitle = strButton;
-        currentReportTitle.Text = m_strReportTitle;
-        m_strQuery = strCode.Replace("{0}", m_dpFrom.Text).Replace("{1}", m_dpThru.Text);
+        _strReportTitle = strButton;
+        currentReportTitle.Text = _strReportTitle;
+        tsslReportTitle.Text = _strReportTitle;
+        _strQuery = strCode.Replace("{0}", _dpFrom.Text).Replace("{1}", _dpThru.Text);
 
-        Log.Instance.Debug($"Date from = [{m_dpFrom}], Date thru = [{m_dpThru}]");
+        Log.Instance.Debug($"Date from = [{_dpFrom}], Date thru = [{_dpThru}]");
 
-        if (m_strQuery.Contains(" cl_mnem in ({2})") && !string.IsNullOrEmpty(clientsToolStripComboBox.SelectedItem.ToString()))
+        if (_strQuery.Contains(" cl_mnem in ({2})") && !string.IsNullOrEmpty(clientsToolStripComboBox.SelectedItem.ToString()))
         {
             string[] strParts = clientsToolStripComboBox.SelectedItem.ToString().Split(new char[] { '-' });
-            m_strQuery = m_strQuery.Replace("{2}", $"'{strParts[0].Trim()}'");
+            _strQuery = _strQuery.Replace("{2}", $"'{strParts[0].Trim()}'");
         }
-        else if (m_strQuery.Contains("{2}"))
+        else if (_strQuery.Contains("{2}"))
         {
             FormDataCollection f = new();
             if (f.ShowDialog() != DialogResult.OK)
@@ -950,10 +955,10 @@ public partial class AuditReportsForm : Form
                 strCdm += string.Format("'{0}',", str);
             }
             strCdm = strCdm.Remove(strCdm.LastIndexOf(','));
-            m_strQuery = m_strQuery.Replace("{2}", strCdm);
+            _strQuery = _strQuery.Replace("{2}", strCdm);
 
         }
-        Log.Instance.Debug(string.Format("QUERY FILTER = [{0}]", m_strQuery));
+        Log.Instance.Debug(string.Format("QUERY FILTER = [{0}]", _strQuery));
         tableReportsToolStripItem.DropDown.Close(ToolStripDropDownCloseReason.CloseCalled);
         Application.DoEvents();
 
@@ -1006,11 +1011,11 @@ public partial class AuditReportsForm : Form
         catch (Exception ex)
         {
             MessageBox.Show(ex.InnerException.ToString(), "Error creating Excel");
-            Log.Instance.Error($"QUERY FILTER = [{m_strQuery}]", ex);
+            Log.Instance.Error($"QUERY FILTER = [{_strQuery}]", ex);
         }
     }
 
-    private void m_dgvReport_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
+    private void dgvReport_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
     {
         Application.DoEvents();
     }
@@ -1021,7 +1026,7 @@ public partial class AuditReportsForm : Form
         Log.Instance.Debug($"CloseReason = {e.CloseReason}");
     }
 
-    private void m_dgvReport_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+    private void dgvReport_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
     {
         if (e.RowIndex == -1)
         {
@@ -1124,6 +1129,7 @@ public partial class AuditReportsForm : Form
             }
             splitContainer1.Panel1Collapsed = true;
             GetReport(cdms);
+            splitContainer1.Panel1.Controls.Remove(tlp);
         };
 
         tlp.Controls.Add(cdmLabel, 0, 0);

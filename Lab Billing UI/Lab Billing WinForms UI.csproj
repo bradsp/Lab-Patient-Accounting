@@ -153,6 +153,7 @@
       <Version>5.2.8</Version>
     </PackageReference>
     <PackageReference Include="PetaPoco.Compiled" Version="6.0.677" />
+    <PackageReference Include="PoorMansTSqlFormatterRedux" Version="1.0.3" />
     <PackageReference Include="RibbonWinForms">
       <Version>5.1.0-beta</Version>
     </PackageReference>

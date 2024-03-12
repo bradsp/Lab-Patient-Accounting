@@ -377,4 +377,42 @@ public class DictionaryService
 
     #endregion DictDx
 
+    #region AuditReports
+
+    public IList<AuditReport> GetAuditReports()
+    {
+        using UnitOfWorkMain uow = new(appEnvironment);
+
+        return uow.AuditReportRepository.GetAll();
+    }
+
+    public AuditReport SaveAuditReport(AuditReport report)
+    {
+        using UnitOfWorkMain uow = new(appEnvironment);
+
+        if(report.Id > 0)
+        {
+            return uow.AuditReportRepository.Update(report);
+        }
+        else
+        {
+            return uow.AuditReportRepository.Add(report);
+        }        
+    }
+
+    public bool DeleteAuditReport(int id)
+    {
+        using UnitOfWorkMain uow = new(appEnvironment);
+
+        var record = uow.AuditReportRepository.GetByKey(id);
+        if(record != null)
+        {
+            uow.AuditReportRepository.Delete(record);
+            return true;
+        }
+        return false;
+    }
+
+    #endregion
+
 }

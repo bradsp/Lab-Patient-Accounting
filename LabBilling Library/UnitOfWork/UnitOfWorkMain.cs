@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Data;
 using LabBilling.Core.DataAccess;
+using LabBilling.Core.Models;
+using LabBilling.Core.Repositories;
 using PetaPoco;
 using PetaPoco.Providers;
 using Utilities;
@@ -20,6 +22,7 @@ public class UnitOfWorkMain : IUnitOfWork
     public AccountSearchRepository AccountSearchRepository { get; private set; }
     public AccountValidationStatusRepository AccountValidationStatusRepository { get; private set; }
     public AnnouncementRepository AnnouncementRepository { get; private set; }
+    public AuditReportRepository AuditReportRepository { get; private set; }
     public BadDebtRepository BadDebtRepository { get; private set; }
     public BillingActivityRepository BillingActivityRepository { get; private set; }
     public BillingBatchRepository BillingBatchRepository { get; private set; }
@@ -83,6 +86,7 @@ public class UnitOfWorkMain : IUnitOfWork
         AccountSearchRepository = new(appEnvironment, Context);
         AccountValidationStatusRepository = new(appEnvironment, Context);
         AnnouncementRepository = new(appEnvironment, Context);
+        AuditReportRepository = new(appEnvironment, Context);
         BadDebtRepository = new(appEnvironment, Context);
         BillingActivityRepository = new(appEnvironment, Context);
         BillingBatchRepository = new(appEnvironment, Context);

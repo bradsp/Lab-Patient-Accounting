@@ -193,20 +193,26 @@
   <data name="billingToolStripMenuItem.Text" xml:space="preserve">
     <value>&amp;Billing</value>
   </data>
+  <data name="auditReportsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>180, 22</value>
+  </data>
+  <data name="auditReportsToolStripMenuItem.Text" xml:space="preserve">
+    <value>Audit Reports</value>
+  </data>
   <data name="chargeMasterToolStripMenuItem1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>156, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="chargeMasterToolStripMenuItem1.Text" xml:space="preserve">
     <value>Charge Master</value>
   </data>
   <data name="clientsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>156, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="clientsToolStripMenuItem.Text" xml:space="preserve">
     <value>Clients</value>
   </data>
   <data name="financialClassToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>156, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="financialClassToolStripMenuItem.Text" xml:space="preserve">
     <value>Financial Class</value>
@@ -216,7 +222,7 @@
     <value>False</value>
   </data>
   <data name="iCDDxCodesToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>156, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="iCDDxCodesToolStripMenuItem.Text" xml:space="preserve">
     <value>ICD Dx Codes</value>
@@ -225,19 +231,19 @@
     <value>False</value>
   </data>
   <data name="insurancePlansToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>156, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="insurancePlansToolStripMenuItem.Text" xml:space="preserve">
     <value>Insurance Plans</value>
   </data>
   <data name="physiciansToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>156, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="physiciansToolStripMenuItem.Text" xml:space="preserve">
     <value>Providers</value>
   </data>
   <data name="pathologistsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>156, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="pathologistsToolStripMenuItem.Text" xml:space="preserve">
     <value>Pathologists</value>
@@ -246,7 +252,7 @@
     <value>False</value>
   </data>
   <data name="zipCodesToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>156, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="zipCodesToolStripMenuItem.Text" xml:space="preserve">
     <value>Zip Codes</value>
@@ -321,31 +327,31 @@
     <value>&amp;Reports</value>
   </data>
   <data name="userSecurityToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>180, 22</value>
+    <value>174, 22</value>
   </data>
   <data name="userSecurityToolStripMenuItem.Text" xml:space="preserve">
     <value>User Security</value>
   </data>
   <data name="systemParametersToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>180, 22</value>
+    <value>174, 22</value>
   </data>
   <data name="systemParametersToolStripMenuItem.Text" xml:space="preserve">
     <value>System Parameters</value>
   </data>
   <data name="interfaceMappingToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>180, 22</value>
+    <value>174, 22</value>
   </data>
   <data name="interfaceMappingToolStripMenuItem.Text" xml:space="preserve">
     <value>Interface Mapping</value>
   </data>
   <data name="interfaceMonitorToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>180, 22</value>
+    <value>174, 22</value>
   </data>
   <data name="interfaceMonitorToolStripMenuItem.Text" xml:space="preserve">
     <value>Interface Monitor</value>
   </data>
   <data name="systemLogViewerToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>180, 22</value>
+    <value>174, 22</value>
   </data>
   <data name="systemLogViewerToolStripMenuItem.Text" xml:space="preserve">
     <value>System Log Viewer</value>
@@ -3881,6 +3887,12 @@
   </data>
   <data name="&gt;&gt;helpProvider1.Type" xml:space="preserve">
     <value>System.Windows.Forms.HelpProvider, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;auditReportsToolStripMenuItem.Name" xml:space="preserve">
+    <value>auditReportsToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;auditReportsToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
     <value>MainForm</value>

@@ -166,8 +166,8 @@ public partial class MainForm : Form
 
         if (mdiTabControl.TabPages.ContainsKey("Work List"))
         {
-                int idx = mdiTabControl.TabPages.IndexOfKey("Work List");
-                mdiTabControl.SelectedIndex = idx;
+            int idx = mdiTabControl.TabPages.IndexOfKey("Work List");
+            mdiTabControl.SelectedIndex = idx;
         }
     }
 
@@ -274,7 +274,7 @@ public partial class MainForm : Form
 
         LoadSideMenu();
 
-        mdiTabControl.TabClosing += mdiTabControl_TabClosing;        
+        mdiTabControl.TabClosing += mdiTabControl_TabClosing;
 
         //enable menu items based on permissions
         systemAdministrationToolStripMenuItem.Visible = Program.LoggedInUser.IsAdministrator;
@@ -858,5 +858,7 @@ public partial class MainForm : Form
             frm.Activate();
         }
     }
+
+    private void auditReportsToolStripMenuItem_Click(object sender, EventArgs e) => NewForm(new AuditReportMaintenanceForm());
 
 }
