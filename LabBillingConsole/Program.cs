@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using LabBilling.Core.DataAccess;
 using LabBilling.Core.Models;
-using LabBilling.Core.BusinessLogic;
+using LabBilling.Core.Services;
 using LabBilling.Core;
 using System.IO;
 using PetaPoco;
@@ -44,7 +44,6 @@ namespace LabBillingConsole
             dbSelect.AppendLine("Select Database:\n\n");
             dbSelect.AppendLine("1) LabBillingProd");
             dbSelect.AppendLine("2) LabBillingTest (WTMCLBILL)");
-            dbSelect.AppendLine("3) LabBillingTest (WTH014)");
             dbSelect.AppendLine("0) Exit");
 
             var panel1 = new Panel(dbSelect.ToString());
@@ -78,10 +77,6 @@ namespace LabBillingConsole
                 case 2:
                     databaseName = "LabBillingTest";
                     serverName = "WTHMCLBILL";
-                    break;
-                case 3:
-                    databaseName = "LabBillingTest";
-                    serverName = "WTH014";
                     break;
                 default:
                     return true;

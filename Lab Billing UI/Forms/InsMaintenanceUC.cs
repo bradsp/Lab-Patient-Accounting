@@ -6,17 +6,14 @@ using System.Linq;
 using System.Windows.Forms;
 using LabBilling.Core.Models;
 using LabBilling.Library;
-using LabBilling.Core;
-using NPOI.OpenXmlFormats.Vml;
+using LabBilling.Core.Services;
 
 namespace LabBilling.Forms
 {
     public partial class InsMaintenanceUC : UserControl
     {
-        private InsRepository insRepository;
-        private AccountRepository accountRepository;
-        private PatRepository patRepository;
-        private InsCompanyRepository insCompanyRepository;
+        private AccountService accountService;
+        private DictionaryService dictionaryService;
         private List<InsCompany> insCompanies;
         private InsCompanyLookupForm insCoLookupForm;
         private List<string> changedControls;
@@ -26,7 +23,7 @@ namespace LabBilling.Forms
 
         public Account CurrentAccount { get; set; }
         public Ins CurrentIns { get; set; }
-        public event EventHandler<EventArgs> InsuranceChanged;
+        public event EventHandler<InsuranceUpdatedEventArgs> InsuranceChanged;
         public event EventHandler<AppErrorEventArgs> OnError;
         public InsCoverage Coverage { get; set; }
 
@@ -51,12 +48,11 @@ namespace LabBilling.Forms
             if (this.DesignMode)
                 return;
 
+            accountService = new(Program.AppEnvironment);
+            dictionaryService = new(Program.AppEnvironment);
+
             InitializeComponent();
             Coverage = coverage;
-            accountRepository = new(Program.AppEnvironment);
-            patRepository = new(Program.AppEnvironment);
-            insRepository = new(Program.AppEnvironment);
-            insCompanyRepository = new(Program.AppEnvironment);
             changedControls = new();
             insCoLookupForm = new InsCompanyLookupForm();
             _timer = new Timer() { Enabled = false, Interval = timerInterval };
@@ -109,11 +105,13 @@ namespace LabBilling.Forms
             if (this == null)
                 return;
 
-            if (CurrentIns == null)
+            if (CurrentAccount == null)
                 return;
 
-            if (CurrentIns.Coverage != Coverage)
-                throw new ApplicationException($"Insurance coverage does not match form coverage. Insurance {CurrentIns.Coverage}, Form {Coverage}");
+            CurrentIns = CurrentAccount.Insurances.Find(i => i.Coverage == Coverage);
+
+            if (CurrentIns == null)
+                return;
 
             HolderLastNameTextBox.Text = CurrentIns.HolderLastName;
             HolderFirstNameTextBox.Text = CurrentIns.HolderFirstName;
@@ -212,12 +210,12 @@ namespace LabBilling.Forms
             try
             {
                 //call method to update the record in the database
-                if (CurrentIns.rowguid == Guid.Empty)
-                    insRepository.Add(CurrentIns);
-                else
-                    insRepository.Update(CurrentIns);
-
-                InsuranceChanged?.Invoke(this, EventArgs.Empty);
+                CurrentIns = accountService.SaveInsurance(CurrentIns);
+                CurrentIns.InsCompany = dictionaryService.GetInsCompany(CurrentIns.InsCode);
+                int index = CurrentAccount.Insurances.FindIndex(i => i.Coverage == Coverage);
+                if (index != -1)
+                    CurrentAccount.Insurances[index] = CurrentIns;
+                InsuranceChanged?.Invoke(this, new InsuranceUpdatedEventArgs() { UpdatedIns = CurrentIns });
 
             }
             catch(Exception ex)
@@ -225,8 +223,6 @@ namespace LabBilling.Forms
                 OnError?.Invoke(this, new AppErrorEventArgs() { ErrorLevel = AppErrorEventArgs.ErrorLevelType.Error, ErrorMessage = ex.Message });
                 InsTabMessageTextBox.Text = "Error occured during save. Contact your administrator.";
             }
-            //clear entry fields
-            ClearInsEntryFields();
         }
 
         private void ClearInsEntryFields()
@@ -286,7 +282,7 @@ namespace LabBilling.Forms
             if (code == "")
                 return;
 
-            var record = insCompanyRepository.GetByCode(code);
+            var record = dictionaryService.GetInsCompany(code);
 
             if (record != null)
             {
@@ -350,9 +346,14 @@ namespace LabBilling.Forms
             {
                 try
                 {
-                    if (insRepository.Delete(CurrentIns))
+                    if (accountService.DeleteInsurance(CurrentIns))
                     {
-                        InsuranceChanged?.Invoke(this, EventArgs.Empty);
+                        int index = CurrentAccount.Insurances.FindIndex(i => i.Coverage == Coverage);
+                        if (index != -1)
+                        {
+                            CurrentAccount.Insurances.RemoveAt(index);
+                        }
+                        InsuranceChanged?.Invoke(this, new InsuranceUpdatedEventArgs());
                     }
                 }
                 catch(Exception ex)
@@ -392,6 +393,15 @@ namespace LabBilling.Forms
             InsRelationComboBox.SelectedValue = "01";
         }
 
+    }
+
+    public class InsuranceUpdatedEventArgs : EventArgs
+    {
+        public Ins UpdatedIns { get; set; }
+        public InsuranceUpdatedEventArgs()
+        {
+            
+        }
     }
 
 

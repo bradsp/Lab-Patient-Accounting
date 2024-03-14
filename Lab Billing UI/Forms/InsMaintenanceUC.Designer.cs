@@ -55,7 +55,6 @@
             HolderCityTextBox = new System.Windows.Forms.TextBox();
             HolderCityLabel = new System.Windows.Forms.Label();
             InsTabMessageTextBox = new System.Windows.Forms.TextBox();
-            deleteInsButton = new System.Windows.Forms.Button();
             InsPlanLabel = new System.Windows.Forms.Label();
             insurancePlanTextBox = new System.Windows.Forms.TextBox();
             InsPlanNameLabel = new System.Windows.Forms.Label();
@@ -75,6 +74,7 @@
             GroupNameTextBox = new System.Windows.Forms.TextBox();
             InsCertSSNLabel = new System.Windows.Forms.Label();
             CertSSNTextBox = new System.Windows.Forms.TextBox();
+            deleteInsButton = new System.Windows.Forms.Button();
             insTabLayoutPanel.SuspendLayout();
             tableLayoutPanel1.SuspendLayout();
             SuspendLayout();
@@ -125,7 +125,6 @@
             tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 35F));
             tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 30F));
             tableLayoutPanel1.Controls.Add(label1, 0, 2);
-            tableLayoutPanel1.Controls.Add(SaveInsuranceButton, 0, 13);
             tableLayoutPanel1.Controls.Add(InsCopyPatientLink, 1, 1);
             tableLayoutPanel1.Controls.Add(HolderLastNameTextBox, 1, 2);
             tableLayoutPanel1.Controls.Add(HolderFirstNameLabel, 0, 3);
@@ -167,6 +166,7 @@
             tableLayoutPanel1.Controls.Add(InsCertSSNLabel, 2, 11);
             tableLayoutPanel1.Controls.Add(CertSSNTextBox, 3, 11);
             tableLayoutPanel1.Controls.Add(deleteInsButton, 3, 13);
+            tableLayoutPanel1.Controls.Add(SaveInsuranceButton, 2, 13);
             tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
@@ -205,7 +205,7 @@
             // 
             SaveInsuranceButton.BackColor = System.Drawing.Color.SkyBlue;
             SaveInsuranceButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            SaveInsuranceButton.Location = new System.Drawing.Point(4, 308);
+            SaveInsuranceButton.Location = new System.Drawing.Point(404, 308);
             SaveInsuranceButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             SaveInsuranceButton.Name = "SaveInsuranceButton";
             SaveInsuranceButton.Size = new System.Drawing.Size(115, 48);
@@ -449,18 +449,6 @@
             InsTabMessageTextBox.Size = new System.Drawing.Size(640, 27);
             InsTabMessageTextBox.TabIndex = 42;
             // 
-            // deleteInsButton
-            // 
-            deleteInsButton.BackColor = System.Drawing.Color.Red;
-            deleteInsButton.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            deleteInsButton.Location = new System.Drawing.Point(555, 308);
-            deleteInsButton.Name = "deleteInsButton";
-            deleteInsButton.Size = new System.Drawing.Size(100, 48);
-            deleteInsButton.TabIndex = 41;
-            deleteInsButton.Text = "Delete Insurance";
-            deleteInsButton.UseVisualStyleBackColor = false;
-            deleteInsButton.Click += deleteInsButton_Click;
-            // 
             // InsPlanLabel
             // 
             InsPlanLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
@@ -654,6 +642,18 @@
             CertSSNTextBox.Name = "CertSSNTextBox";
             CertSSNTextBox.Size = new System.Drawing.Size(240, 23);
             CertSSNTextBox.TabIndex = 39;
+            // 
+            // deleteInsButton
+            // 
+            deleteInsButton.BackColor = System.Drawing.Color.Red;
+            deleteInsButton.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            deleteInsButton.Location = new System.Drawing.Point(555, 308);
+            deleteInsButton.Name = "deleteInsButton";
+            deleteInsButton.Size = new System.Drawing.Size(100, 48);
+            deleteInsButton.TabIndex = 41;
+            deleteInsButton.Text = "Delete Insurance";
+            deleteInsButton.UseVisualStyleBackColor = false;
+            deleteInsButton.Click += deleteInsButton_Click;
             // 
             // InsMaintenanceUC
             // 

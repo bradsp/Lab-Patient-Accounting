@@ -4,21 +4,23 @@ using System.Windows.Forms;
 using LabBilling.Core.DataAccess;
 using LabBilling.Core.Models;
 using Utilities;
-using LabBilling.Core.BusinessLogic;
+using LabBilling.Core.Services;
 using WinFormsLibrary;
+using LabBilling.Logging;
 
 namespace LabBilling.Forms
 {
-    public partial class InterfaceMonitor : BaseForm
+    public partial class InterfaceMonitor : Form
     {
+        private HL7ProcessorService processorService;
+
         public InterfaceMonitor()
         {
             InitializeComponent();
-            msgs = new MessagesInboundRepository(Program.AppEnvironment);
+            processorService = new(Program.AppEnvironment);
         }
 
-        private readonly MessagesInboundRepository msgs;
-        private BindingSource bindingSource = new BindingSource();
+        private BindingSource bindingSource = new();
         private DataTable messagesTable;
 
         private void InterfaceMonitor_Load(object sender, EventArgs e)
@@ -26,7 +28,7 @@ namespace LabBilling.Forms
             FromDate.Value = DateTimeHelper.Yesterday();
             Cursor.Current = Cursors.WaitCursor;
 
-            messagesTable = msgs.GetByDateRange(FromDate.Value, ThruDate.Value).ToDataTable();
+            messagesTable = processorService.GetMessages(FromDate.Value, ThruDate.Value).ToDataTable();
             messagesTable.PrimaryKey = new DataColumn[] { messagesTable.Columns[nameof(MessageInbound.SystemMsgId)] };
             bindingSource.DataSource = messagesTable;
 
@@ -53,7 +55,7 @@ namespace LabBilling.Forms
             MessagesGrid.AutoResizeColumns();
 
             processFlagFilterCombo.Items.Add("All");
-            foreach(var item in Enum.GetValues(typeof(HL7Processor.Status)))
+            foreach (var item in Enum.GetValues(typeof(HL7ProcessorService.Status)))
             {
                 processFlagFilterCombo.Items.Add(item);
             }
@@ -87,19 +89,19 @@ namespace LabBilling.Forms
 
         private void ReprocessMessage_Click(object sender, EventArgs e)
         {
-            if(MessagesGrid.SelectedRows.Count > 0)
+            if (MessagesGrid.SelectedRows.Count > 0)
             {
                 //string msgType = MessagesGrid.SelectedRows[0].Cells[nameof(MessageInbound.MessageType)].Value.ToString();
                 int msgID = Convert.ToInt32(MessagesGrid.SelectedRows[0].Cells[nameof(MessageInbound.SystemMsgId)].Value);
                 string msgType = MessagesGrid.SelectedRows[0].Cells[nameof(MessageInbound.MessageType)].Value.ToString();
                 string processFlag = MessagesGrid.SelectedRows[0].Cells[nameof(MessageInbound.ProcessFlag)].Value.ToString();
 
-                
+
                 bool okToProcess = false;
 
                 if (msgType.StartsWith("DFT") && processFlag == "P")
                 {
-                    if(MessageBox.Show("Reprocessing could result in duplicate charges. Continue anyway?", "Reprocess Charge Message", 
+                    if (MessageBox.Show("Reprocessing could result in duplicate charges. Continue anyway?", "Reprocess Charge Message",
                         MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                     {
                         okToProcess = true;
@@ -112,13 +114,15 @@ namespace LabBilling.Forms
 
                 if (okToProcess)
                 {
-                    HL7Processor hL7Processor = new HL7Processor(Program.AppEnvironment);
+                    HL7ProcessorService hL7Processor = new HL7ProcessorService(Program.AppEnvironment);
+                    Cursor.Current = Cursors.WaitCursor;
                     hL7Processor.ProcessMessage(msgID);
 
                     var row = messagesTable.Rows.Find(msgID);
                     row[nameof(MessageInbound.ProcessFlag)] = "Reprocessed";
                     row[nameof(MessageInbound.ProcessStatusMsg)] = "Update Date Range to refresh status.";
                     MessagesGrid.Refresh();
+                    Cursor.Current = Cursors.Default;
                 }
             }
             else
@@ -170,7 +174,7 @@ namespace LabBilling.Forms
         {
             messagesTable.DefaultView.RowFilter = "";
 
-            if(!string.IsNullOrEmpty(accountFilterTextBox.Text))
+            if (!string.IsNullOrEmpty(accountFilterTextBox.Text))
             {
                 messagesTable.DefaultView.RowFilter = $"{nameof(MessageInbound.SourceAccount)} = '{accountFilterTextBox.Text}'";
             }
@@ -203,17 +207,17 @@ namespace LabBilling.Forms
                         newFilter += " and ";
                     }
 
-                    newFilter += $"{nameof(MessageInbound.ProcessFlag)} = '{HL7Processor.StatusToString(processFlagFilterCombo.SelectedItem.ToString())}'";
+                    newFilter += $"{nameof(MessageInbound.ProcessFlag)} = '{HL7ProcessorService.StatusToString(processFlagFilterCombo.SelectedItem.ToString())}'";
 
                     messagesTable.DefaultView.RowFilter = newFilter;
                 }
             }
 
-            if(showMessagesWithErrorsCheckBox.Checked)
+            if (showMessagesWithErrorsCheckBox.Checked)
             {
                 string newFilter = messagesTable.DefaultView.RowFilter;
 
-                if(!string.IsNullOrEmpty(messagesTable.DefaultView.RowFilter))
+                if (!string.IsNullOrEmpty(messagesTable.DefaultView.RowFilter))
                 {
                     newFilter += " and ";
                 }
@@ -228,7 +232,7 @@ namespace LabBilling.Forms
         {
             Cursor.Current = Cursors.WaitCursor;
 
-            messagesTable = msgs.GetByDateRange(FromDate.Value, ThruDate.Value).ToDataTable();
+            messagesTable = processorService.GetMessages(FromDate.Value, ThruDate.Value).ToDataTable();
             messagesTable.PrimaryKey = new DataColumn[] { messagesTable.Columns[nameof(MessageInbound.SystemMsgId)] };
 
             bindingSource.DataSource = messagesTable;
@@ -243,7 +247,7 @@ namespace LabBilling.Forms
 
         private void accountFilterTextBox_KeyDown(object sender, KeyEventArgs e)
         {
-            if(e.KeyCode == Keys.Enter)
+            if (e.KeyCode == Keys.Enter)
             {
                 ApplyFilter();
             }
@@ -263,9 +267,7 @@ namespace LabBilling.Forms
                 string msgType = MessagesGrid.SelectedRows[0].Cells[nameof(MessageInbound.MessageType)].Value.ToString();
                 string processFlag = MessagesGrid.SelectedRows[0].Cells[nameof(MessageInbound.ProcessFlag)].Value.ToString();
 
-                HL7Processor hl7 = new HL7Processor(Program.AppEnvironment);
-
-                hl7.SetMessageDoNotProcess(msgID, $"Set to do not process by {Program.LoggedInUser.FullName}");
+                processorService.SetMessageDoNotProcess(msgID, $"Set to do not process by {Program.LoggedInUser.FullName}");
 
                 var row = messagesTable.Rows.Find(msgID);
                 row[nameof(MessageInbound.ProcessFlag)] = "DNP";
@@ -281,6 +283,11 @@ namespace LabBilling.Forms
         private void showMessagesWithErrorsCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             ApplyFilter();
+        }
+
+        private void MessagesGrid_DataError(object sender, DataGridViewDataErrorEventArgs e)
+        {
+            Log.Instance.Error(e.Exception, e.Exception.Message);
         }
     }
 }

@@ -23,7 +23,7 @@ namespace LabBilling.Legacy
 
         private string m_strServer;
         private string m_strDatabase;
-        public DuplicateAccountsForm(string[] strArgs)
+        public DuplicateAccountsForm(string[] strArgs) : base(Program.AppEnvironment)
         {
             if (strArgs.GetUpperBound(0) == 1)
             {

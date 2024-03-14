@@ -100,7 +100,7 @@
             AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             CancelButton = cancelButton;
-            ClientSize = new System.Drawing.Size(875, 450);
+            ClientSize = new System.Drawing.Size(873, 446);
             Controls.Add(cancelButton);
             Controls.Add(selectButton);
             Controls.Add(searchLabel);

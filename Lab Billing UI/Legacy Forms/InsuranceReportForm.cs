@@ -31,7 +31,7 @@ namespace LabBilling.ReportByInsuranceCompany
 
         public event EventHandler<string> AccountLaunched;
 
-        public InsuranceReportForm(string[] args)
+        public InsuranceReportForm(string[] args) : base(Program.AppEnvironment)
         {
             // wdk 20090403 in some applications we are using 
             //string[] strCline = Environment.GetCommandLineArgs(); to get the command line arguments 

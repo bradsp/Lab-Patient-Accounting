@@ -11,7 +11,7 @@ namespace LabBilling
 {
     static class Program
     {
-        public static Emp LoggedInUser { get; set; }
+        public static UserAccount LoggedInUser { get; set; }
 
         public static AppEnvironment AppEnvironment { get; set; } = new AppEnvironment();
 
@@ -56,9 +56,7 @@ namespace LabBilling
             if(loginFrm.ShowDialog() == DialogResult.OK)
             {
                 Log.Instance.Info($"Login successful - connection {Helper.ConnVal}");
-                SplashForm.ShowSplashScreen();
-                MainForm mainForm = new MainForm();
-                SplashForm.CloseForm();
+                MainForm mainForm = new();
                 Application.Run(mainForm);
             }
             else

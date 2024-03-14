@@ -1,20 +1,17 @@
-﻿using LabBilling.Core;
-using LabBilling.Core.BusinessLogic;
+﻿using LabBilling.Core.Services;
 using LabBilling.Core.DataAccess;
 using LabBilling.Core.Models;
-using PetaPoco.Providers;
 using PetaPoco;
 using Spectre.Console;
 using System;
-using System.Collections.Generic;
 using Microsoft.Data.SqlClient;
 using System.Data;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.Threading;
 using LabBilling.Logging;
+using LabBilling.Core.UnitOfWork;
 
 namespace LabBillingConsole
 {
@@ -44,11 +41,13 @@ namespace LabBillingConsole
             menuText.AppendLine("13) Run Claims Batch");
             menuText.AppendLine("X) Exit");
 
-            var panel = new Panel(menuText.ToString());
-            panel.Header = new PanelHeader("Lab Patient Accounting Utility Menu");
-            panel.Border = BoxBorder.Square;
-            panel.Expand = true;
-            panel.Padding = new Padding(2, 2, 2, 2);
+            var panel = new Panel(menuText.ToString())
+            {
+                Header = new PanelHeader("Lab Patient Accounting Utility Menu"),
+                Border = BoxBorder.Square,
+                Expand = true,
+                Padding = new Padding(2, 2, 2, 2)
+            };
 
             AnsiConsole.Write(panel);
 
@@ -116,7 +115,7 @@ namespace LabBillingConsole
 
         public void RegenerateCollectionsFile()
         {
-            PatientBilling patientBilling = new PatientBilling(_appEnvironment);
+            PatientBillingService patientBilling = new PatientBillingService(_appEnvironment);
 
             DateTime tDate;
 
@@ -135,7 +134,7 @@ namespace LabBillingConsole
 
         public void RegenerateClaimBatch()
         {
-            ClaimGenerator claimGenerator = new ClaimGenerator(_appEnvironment);
+            ClaimGeneratorService claimGenerator = new ClaimGeneratorService(_appEnvironment);
 
             var response = AnsiConsole.Ask<int>("Enter batch number: ");
 
@@ -147,10 +146,9 @@ namespace LabBillingConsole
 
         public void FixDrugScreenCharges()
         {
+            using UnitOfWorkMain unitOfWork = new(_appEnvironment, true);
+            AccountService accountService = new(_appEnvironment);
 
-            PetaPoco.Database dbConnection = new PetaPoco.Database(_appEnvironment.ConnectionString, new SqlServerMsDataDatabaseProvider());
-            ChrgRepository chargeRepository = new ChrgRepository(_appEnvironment);
-            AccountRepository accountRepository = new AccountRepository(_appEnvironment);
             //get list of accounts
             var sql = Sql.Builder;
             sql.From("chrg");
@@ -159,25 +157,25 @@ namespace LabBillingConsole
             sql.Where("mod_date >= @0", new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = new DateTime(2023, 3, 1) });
             sql.Where("credited = 0");
 
-            var charges = dbConnection.Fetch<Chrg>(sql);
+            var charges = unitOfWork.Context.Fetch<Chrg>(sql);
             //loop through accounts
             foreach (var chrg in charges)
             {
                 //credit 5362506
-                chargeRepository.CreditCharge(chrg.ChrgId, "correct DAP7 cdm");
+                accountService.CreditCharge(chrg.ChrgId, "correct DAP7 cdm");
                 Console.WriteLine($"Credited {chrg.AccountNo} {chrg.ChrgId} {chrg.Cdm}");
                 //charge 5869007
-                accountRepository.AddCharge(chrg.AccountNo, "5869007", chrg.Quantity, (DateTime)chrg.ServiceDate, "correct DAP7 cdm");
+                accountService.AddCharge(chrg.AccountNo, "5869007", chrg.Quantity, (DateTime)chrg.ServiceDate, "correct DAP7 cdm");
                 Console.WriteLine($"Added {chrg.AccountNo} 5869007");
 
             }
-
+            unitOfWork.Commit();
         }
 
         public void NotesImport()
         {
             Console.WriteLine("Beginning notes import.");
-            NotesImport notesImport = new NotesImport(_appEnvironment);
+            NotesImportService notesImport = new(_appEnvironment);
             try
             {
                 foreach (string filename in Directory.GetFiles(@"\\wthmclbill\shared\Billing\LIVE\claims\Notes", "*.exted"))
@@ -196,32 +194,33 @@ namespace LabBillingConsole
 
         public void ValidateAccountsJob()
         {
-            AccountRepository accountRepository = new(_appEnvironment);
-            Console.WriteLine("In RunValidation() - Starting RunValidation job");
-            accountRepository.ValidateUnbilledAccounts();
-            Console.WriteLine("In RunValidation() - Finished RunValidation job");
+            AccountService accountService = new(_appEnvironment);
+            accountService.ValidationAccountUpdated += AccountService_ValidationAccountUpdated;
+            Console.WriteLine("In RunValidation() - Starting RunValidation job...");
+            Console.WriteLine("Wait for process to complete, then press a key...");
+            accountService.ValidateUnbilledAccounts();
+            Console.ReadLine();
+            //Console.WriteLine("In RunValidation() - Finished RunValidation job");
+        }
+
+        private void AccountService_ValidationAccountUpdated(object sender, ValidationUpdatedEventArgs e)
+        {
+            Console.WriteLine($"Account {e.AccountNo} {e.UpdateMessage} - {e.TimeStamp}: Procesed {e.Processed} of Total {e.TotalItems}");
         }
 
         public void ReprintInvoice()
         {
-            ClientInvoices clientInvoices = new ClientInvoices(_appEnvironment);
 
-            //string filename = clientInvoices.PrintInvoice("78630");
 
-            //System.Diagnostics.Process.Start(filename);
         }
 
         public void GenerateStatement()
         {
-            ClientInvoices clientInvoice = new ClientInvoices(_appEnvironment);
 
-            //string filename = clientInvoice.GenerateStatement("HESC", DateTime.Today.AddDays(-120));
-
-            //System.Diagnostics.Process.Start(filename);
         }
         public void ProcessInterfaceMessages()
         {
-            HL7Processor hL7Processor = new HL7Processor(_appEnvironment);
+            HL7ProcessorService hL7Processor = new(_appEnvironment);
             hL7Processor.ProcessMessages();
             Console.WriteLine("Messages processed.");
         }
@@ -229,59 +228,26 @@ namespace LabBillingConsole
         public void SwapInsurance()
         {
             Console.Clear();
-
-            var accountRepository = new AccountRepository(_appEnvironment);
-
-            var accountNo = AnsiConsole.Ask<string>("Enter account number: ");
-
-            var account = accountRepository.GetByAccount(accountNo);
-
-            if(account == null)
-            {
-                AnsiConsole.Markup($"[red]Account {accountNo} not found.[/]  Enter a valid account. \n");
-
-                var response = AnsiConsole.Ask<char>("Press any key to try again, or X to exit...");
-                if (response == 'X' || response == 'x')
-                    return;
-                else
-                {
-                    SwapInsurance();
-                    return;
-                }
-            }
-
-
-
-            var swaps = AnsiConsole.Prompt(new MultiSelectionPrompt<InsCoverage>()
-                .PageSize(10)
-                .Title("Select insurances to swap: ")
-                .InstructionsText("[grey](Press [blue][/] to toggle an insurance, [green][/] to accept)[/]")
-                .AddChoices<InsCoverage>(new InsCoverage[] { InsCoverage.Primary, InsCoverage.Secondary, InsCoverage.Tertiary }));
-
-            if(swaps.Count > 0)
-            {
-
-            }
-
         }
 
         public void ProviderAddEdit()
         {
-            Phy phy = new Phy();
-
-            phy.LastName = Prompt("Last Name: ");
-            phy.FirstName = Prompt("First Name: ");
-            phy.MiddleInitial = Prompt("Middle Initial: ");
-            phy.Address1 = Prompt("Address 1: ");
-            phy.Address2 = Prompt("Address 2: ");
-            phy.City = Prompt("City: ");
-            phy.State = Prompt("State: ");
-            phy.ZipCode = Prompt("Zip Code: ");
-            phy.Phone = Prompt("Phone: ");
-            phy.Credentials = Prompt("Credentials: ");
-            phy.DoctorNumber = Prompt("Doctor Number: ");
-            phy.NpiId = Prompt("NPI: ");
-            phy.BillingNpi = Prompt("Billing NPI: ");
+            Phy phy = new()
+            {
+                LastName = Prompt("Last Name: "),
+                FirstName = Prompt("First Name: "),
+                MiddleInitial = Prompt("Middle Initial: "),
+                Address1 = Prompt("Address 1: "),
+                Address2 = Prompt("Address 2: "),
+                City = Prompt("City: "),
+                State = Prompt("State: "),
+                ZipCode = Prompt("Zip Code: "),
+                Phone = Prompt("Phone: "),
+                Credentials = Prompt("Credentials: "),
+                DoctorNumber = Prompt("Doctor Number: "),
+                NpiId = Prompt("NPI: "),
+                BillingNpi = Prompt("Billing NPI: ")
+            };
 
         }
 
@@ -298,7 +264,7 @@ namespace LabBillingConsole
 
         public void RunClaimsProcessing()
         {
-            ClaimGenerator claimGenerator = new ClaimGenerator(_appEnvironment);
+            ClaimGeneratorService claimGenerator = new(_appEnvironment);
 
             CancellationToken cancellationToken = new CancellationToken();
             Progress<ProgressReportModel> progressReportModel = new Progress<ProgressReportModel>();
@@ -309,7 +275,7 @@ namespace LabBillingConsole
             try
             {
                 int claimsProcessed = 0;
-                claimsProcessed = claimGenerator.CompileBillingBatch(LabBilling.Core.ClaimType.Institutional, progressReportModel, cancellationToken);
+                claimsProcessed = claimGenerator.CompileBillingBatch(ClaimType.Institutional, progressReportModel, cancellationToken);
 
                 if (claimsProcessed < 0)
                 {
@@ -337,7 +303,7 @@ namespace LabBillingConsole
             {
                 int claimsProcessed = 0;
 
-                claimsProcessed = claimGenerator.CompileBillingBatch(LabBilling.Core.ClaimType.Professional, progressReportModel, cancellationToken);
+                claimsProcessed = claimGenerator.CompileBillingBatch(ClaimType.Professional, progressReportModel, cancellationToken);
 
                 if (claimsProcessed < 0)
                 {

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace LabBilling.Core.Models
 {
-    [TableName("client")]
+    [TableName("dictionary.client")]
     [PrimaryKey("cli_mnem",AutoIncrement = false)]
     public sealed class Client : IBaseEntity
     {
@@ -169,6 +169,9 @@ namespace LabBilling.Core.Models
         [Column("mod_host")]
         [ResultColumn]
         public string UpdatedHost { get; set; }
+        [Column("id")]
+        [ResultColumn]
+        public int Id { get; set; }
 
         [Ignore]
         public Guid rowguid { get; set; }

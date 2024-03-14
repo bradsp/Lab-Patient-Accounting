@@ -1,5 +1,5 @@
 ﻿using System.Timers;
-using LabBilling.Core.BusinessLogic;
+using LabBilling.Core.Services;
 
 
 namespace LabBillingService
@@ -39,7 +39,7 @@ namespace LabBillingService
             _timer.Stop();
             System.Console.WriteLine("Processing messages.");
 
-            HL7Processor hl7Processor = new HL7Processor(Program.AppEnvironment);
+            HL7ProcessorService hl7Processor = new HL7ProcessorService(Program.AppEnvironment);
             hl7Processor.ProcessMessages();
 
             System.Console.WriteLine("Messages processed. Waiting on new messages.");

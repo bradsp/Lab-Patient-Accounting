@@ -114,7 +114,7 @@ namespace LabBilling.Forms
             chargeLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
             chargeLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 80F));
             chargeLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
-            chargeLayoutPanel.Size = new System.Drawing.Size(1295, 523);
+            chargeLayoutPanel.Size = new System.Drawing.Size(925, 400);
             chargeLayoutPanel.TabIndex = 16;
             // 
             // ChargesDataGridLabel
@@ -124,7 +124,7 @@ namespace LabBilling.Forms
             ChargesDataGridLabel.Location = new System.Drawing.Point(4, 18);
             ChargesDataGridLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             ChargesDataGridLabel.Name = "ChargesDataGridLabel";
-            ChargesDataGridLabel.Size = new System.Drawing.Size(1137, 15);
+            ChargesDataGridLabel.Size = new System.Drawing.Size(767, 15);
             ChargesDataGridLabel.TabIndex = 2;
             ChargesDataGridLabel.Text = "Charges";
             // 
@@ -167,7 +167,7 @@ namespace LabBilling.Forms
             ChargesDataGrid.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
             ChargesDataGrid.RowHeadersVisible = false;
             ChargesDataGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            ChargesDataGrid.Size = new System.Drawing.Size(1287, 386);
+            ChargesDataGrid.Size = new System.Drawing.Size(917, 287);
             ChargesDataGrid.TabIndex = 0;
             ChargesDataGrid.CellDoubleClick += DgvCharges_CellDoubleClick;
             ChargesDataGrid.CellFormatting += ChargesDataGrid_CellFormatting;
@@ -215,7 +215,7 @@ namespace LabBilling.Forms
             // AddChargeButton
             // 
             AddChargeButton.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
-            AddChargeButton.Location = new System.Drawing.Point(1191, 3);
+            AddChargeButton.Location = new System.Drawing.Point(821, 3);
             AddChargeButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             AddChargeButton.Name = "AddChargeButton";
             AddChargeButton.Size = new System.Drawing.Size(100, 27);
@@ -228,17 +228,17 @@ namespace LabBilling.Forms
             // 
             chargeLayoutPanel.SetColumnSpan(chargeBalRichTextbox, 2);
             chargeBalRichTextbox.Dock = System.Windows.Forms.DockStyle.Fill;
-            chargeBalRichTextbox.Location = new System.Drawing.Point(4, 428);
+            chargeBalRichTextbox.Location = new System.Drawing.Point(4, 329);
             chargeBalRichTextbox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             chargeBalRichTextbox.Name = "chargeBalRichTextbox";
-            chargeBalRichTextbox.Size = new System.Drawing.Size(1287, 92);
+            chargeBalRichTextbox.Size = new System.Drawing.Size(917, 68);
             chargeBalRichTextbox.TabIndex = 8;
             chargeBalRichTextbox.Text = "";
             // 
             // TotalChargesTextBox
             // 
             TotalChargesTextBox.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
-            TotalChargesTextBox.Location = new System.Drawing.Point(1175, 14);
+            TotalChargesTextBox.Location = new System.Drawing.Point(805, 14);
             TotalChargesTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             TotalChargesTextBox.Name = "TotalChargesTextBox";
             TotalChargesTextBox.ReadOnly = true;
@@ -251,7 +251,7 @@ namespace LabBilling.Forms
             ChargeTotalChargesLabel.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
             ChargeTotalChargesLabel.AutoSize = true;
             ChargeTotalChargesLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 0);
-            ChargeTotalChargesLabel.Location = new System.Drawing.Point(1067, 17);
+            ChargeTotalChargesLabel.Location = new System.Drawing.Point(697, 17);
             ChargeTotalChargesLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             ChargeTotalChargesLabel.Name = "ChargeTotalChargesLabel";
             ChargeTotalChargesLabel.Size = new System.Drawing.Size(86, 13);
@@ -283,7 +283,7 @@ namespace LabBilling.Forms
             Controls.Add(ChargeTotalChargesLabel);
             Controls.Add(ShowCreditedChrgCheckBox);
             Name = "ChargeMaintenanceUC";
-            Size = new System.Drawing.Size(1317, 586);
+            Size = new System.Drawing.Size(947, 463);
             Load += ChargeMaintenanceUC_Load;
             chargeLayoutPanel.ResumeLayout(false);
             chargeLayoutPanel.PerformLayout();

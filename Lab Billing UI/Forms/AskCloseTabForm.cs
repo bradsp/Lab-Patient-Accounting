@@ -3,48 +3,47 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 
 
-namespace LabBilling.Forms
+namespace LabBilling.Forms;
+
+public partial class AskCloseTabForm : Utilities.BaseForm
 {
-    public partial class AskCloseTabForm : BaseForm
+    public List<string> OpenTabs { get; set; }
+    public string SelectedForm { get; set; }
+
+    public AskCloseTabForm(List<string> openTabs) : base(Program.AppEnvironment)
     {
-        public List<string> OpenTabs { get; set; }
-        public string SelectedForm { get; set; }
+        InitializeComponent();
 
-        public AskCloseTabForm(List<string> openTabs)
+        OpenTabs = openTabs;
+        
+    }
+
+    private void OKbutton_Click(object sender, EventArgs e)
+    {
+        if (OpenTabsList.SelectedItems.Count > 0)
         {
-            InitializeComponent();
+            SelectedForm = OpenTabsList.SelectedItem.ToString();
 
-            OpenTabs = openTabs;
-            
+            this.DialogResult = DialogResult.OK;
+        }
+        else
+        {
+            MessageBox.Show("Please select a tab to close.", "Select Tab", MessageBoxButtons.OK, MessageBoxIcon.Hand);
         }
 
-        private void OKbutton_Click(object sender, EventArgs e)
-        {
-            if (OpenTabsList.SelectedItems.Count > 0)
-            {
-                SelectedForm = OpenTabsList.SelectedItem.ToString();
+        return;
+    }
 
-                this.DialogResult = DialogResult.OK;
-            }
-            else
-            {
-                MessageBox.Show("Please select a tab to close.", "Select Tab", MessageBoxButtons.OK, MessageBoxIcon.Hand);
-            }
+    private void CancelButton_Click(object sender, EventArgs e)
+    {
+        this.DialogResult = DialogResult.Cancel;
 
-            return;
-        }
+        return;
+    }
 
-        private void CancelButton_Click(object sender, EventArgs e)
-        {
-            this.DialogResult = DialogResult.Cancel;
+    private void AskCloseTabForm_Load(object sender, EventArgs e)
+    {
+        OpenTabsList.Items.AddRange(OpenTabs.ToArray());
 
-            return;
-        }
-
-        private void AskCloseTabForm_Load(object sender, EventArgs e)
-        {
-            OpenTabsList.Items.AddRange(OpenTabs.ToArray());
-
-        }
     }
 }

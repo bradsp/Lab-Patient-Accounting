@@ -1,4 +1,4 @@
-﻿using LabBilling.Core.BusinessLogic;
+﻿using LabBilling.Core.Services;
 using Quartz;
 using Utilities;
 using System;
@@ -37,7 +37,7 @@ namespace LabBillingJobs
             public void NotesImport()
             {
                 Console.WriteLine("Beginning notes import.");
-                NotesImport notesImport = new NotesImport(Program.AppEnvironment);
+                NotesImportService notesImport = new NotesImportService(Program.AppEnvironment);
 
                 try
                 {

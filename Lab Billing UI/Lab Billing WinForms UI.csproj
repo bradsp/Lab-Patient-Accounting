@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net6.0-windows</TargetFramework>
+    <TargetFramework>net8.0-windows7.0</TargetFramework>
     <OutputType>WinExe</OutputType>
     <RootNamespace>LabBilling</RootNamespace>
     <AssemblyName>LabBilling</AssemblyName>
@@ -132,9 +132,10 @@
     <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="AutoMapper" Version="12.0.1" />
+    <PackageReference Include="AutoMapper" Version="13.0.1" />
+    <PackageReference Include="BasicSQLFormatter" Version="1.0.3" />
     <PackageReference Include="HtmlAgilityPack">
-      <Version>1.11.58</Version>
+      <Version>1.11.59</Version>
     </PackageReference>
     <PackageReference Include="LazyCache">
       <Version>2.4.0</Version>
@@ -153,16 +154,16 @@
       <Version>5.2.8</Version>
     </PackageReference>
     <PackageReference Include="PetaPoco.Compiled" Version="6.0.677" />
+    <PackageReference Include="PoorMansTSqlFormatterRedux" Version="1.0.3" />
     <PackageReference Include="RibbonWinForms">
       <Version>5.1.0-beta</Version>
     </PackageReference>
-    <PackageReference Include="ScottPlot" Version="5.0.21" />
     <PackageReference Include="ScottPlot.WinForms" Version="5.0.21" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
     <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageReference Include="WinForms.DataVisualization" Version="1.9.1" />
+    <PackageReference Include="WinForms.DataVisualization" Version="1.9.2" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\DataGridViewGrouper\DataGridViewGrouper\DataGridViewGrouper.csproj" />
@@ -175,6 +176,11 @@
   <ItemGroup>
     <Compile Remove="Library\TNumEditBox.cs" />
     <Compile Remove="Library\TNumEditDataGridViewElements.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="CustomTabControl">
+      <HintPath>..\..\CustomTabControl2\bin\Release\net6.0-windows\CustomTabControl.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Update="Properties\Resources.resx">

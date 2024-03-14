@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
-using LabBilling.Core.BusinessLogic;
+using LabBilling.Core.Services;
 using LabBilling.Core.DataAccess;
 using LabBilling.Core.Models;
 using LabBilling.Logging;
@@ -34,11 +34,11 @@ namespace LabBillingJobs
                 }
             }
 
-            public void RunClaimsProcessing()
+            public static void RunClaimsProcessing()
             {
-                ClaimGenerator claimGenerator = new ClaimGenerator(Program.AppEnvironment);
+                ClaimGeneratorService claimGenerator = new(Program.AppEnvironment);
 
-                CancellationToken cancellationToken = new CancellationToken();
+                CancellationToken cancellationToken = new();
                 Progress<ProgressReportModel> progressReportModel = new Progress<ProgressReportModel>();
 
                 Console.WriteLine("In RunClaimsProcessing() - Starting ClaimsProcessing job");
@@ -47,7 +47,7 @@ namespace LabBillingJobs
                 try
                 {
                     int claimsProcessed = 0;
-                    claimsProcessed = claimGenerator.CompileBillingBatch(LabBilling.Core.ClaimType.Institutional, progressReportModel, cancellationToken);
+                    claimsProcessed = claimGenerator.CompileBillingBatch(ClaimType.Institutional, progressReportModel, cancellationToken);
 
                     if (claimsProcessed < 0)
                     {
@@ -75,7 +75,7 @@ namespace LabBillingJobs
                 {
                     int claimsProcessed = 0;
 
-                    claimsProcessed = claimGenerator.CompileBillingBatch(LabBilling.Core.ClaimType.Professional, progressReportModel, cancellationToken);
+                    claimsProcessed = claimGenerator.CompileBillingBatch(ClaimType.Professional, progressReportModel, cancellationToken);
 
                     if (claimsProcessed < 0)
                     {

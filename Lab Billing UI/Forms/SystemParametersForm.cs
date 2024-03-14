@@ -1,215 +1,52 @@
-﻿using LabBilling.Core.DataAccess;
-using LabBilling.Logging;
+﻿using LabBilling.Logging;
 using LabBilling.Core.Models;
 using System;
 using System.Windows.Forms;
 using System.Reflection;
+using LabBilling.Core.Services;
 
-namespace LabBilling.Forms
+namespace LabBilling.Forms;
+
+public partial class SystemParametersForm : Utilities.BaseForm
 {
-    public partial class SystemParametersForm : BaseForm
+    private readonly SystemService systemService = new(Program.AppEnvironment);
+
+    public SystemParametersForm() : base(Program.AppEnvironment)
     {
-        public SystemParametersForm()
+        InitializeComponent();
+    }
+
+    private void SystemParametersForm_Load(object sender, EventArgs e)
+    {
+        Log.Instance.Trace($"Entering");
+        propertyGrid.SelectedObject = Program.AppEnvironment.ApplicationParameters;
+    }
+
+    private void propertyGrid_PropertyValueChanged(object s, PropertyValueChangedEventArgs e)
+    {
+        // Update System Parameter when a value changes
+        SysParameter systemParameter = new SysParameter();
+        systemParameter.KeyName = e.ChangedItem.Label;
+        systemParameter.Value = e.ChangedItem.Value.ToString();
+
+        PropertyInfo[] properties = typeof(ApplicationParameters).GetProperties();
+
+        Type propertyType = typeof(ApplicationParameters);
+
+        var pInfo = propertyType.GetProperty(systemParameter.KeyName);
+
+        if(pInfo != null)
         {
-            InitializeComponent();
-        }
+            pInfo.SetValue(Program.AppEnvironment.ApplicationParameters, e.ChangedItem.Value);
 
-        private readonly SystemParametersRepository paramsdb = new SystemParametersRepository(Program.AppEnvironment);
-        //private Parameters parameters = new Parameters();
-        //private ApplicationParameters applicationParameters = new ApplicationParameters();
-
-        private void SystemParametersForm_Load(object sender, EventArgs e)
-        {
-            Log.Instance.Trace($"Entering");
-            propertyGrid.SelectedObject = Program.AppEnvironment.ApplicationParameters;
-        }
-
-
-        //protected object BuildDynamicClass()
-        //{
-        //    Log.Instance.Trace($"Entering");
-        //    // Define the dynamic assembly, module and type
-        //    AssemblyName assemblyName = new AssemblyName("SystemParametersAssembly");
-        //    AssemblyBuilder assemblyBuilder =
-        //        AssemblyBuilder.DefineDynamicAssembly(assemblyName, AssemblyBuilderAccess.Run);
-        //    ModuleBuilder moduleBuilder = assemblyBuilder.DefineDynamicModule("SystemParametersModule");
-        //    TypeBuilder typeBuilder = moduleBuilder.DefineType("ParameterType", TypeAttributes.Public);
-
-        //    DataTable dt = Helper.ConvertToDataTable(paramsdb.GetAll());
-
-        //    // Create dynamic properties corresponding to query results
-        //    foreach (DataRow row in dt.Rows)
-        //    {
-        //        string name = row[nameof(SysParameter.KeyName)]?.ToString();
-        //        string category = row[nameof(SysParameter.Category)]?.ToString();
-        //        string description = row[nameof(SysParameter.Description)]?.ToString();
-        //        string defaultValue = row[nameof(SysParameter.Value)]?.ToString();
-        //        Type dataType = Type.GetType(row[nameof(Core.Models.SysParameter.DataType)]?.ToString());
-
-        //        if (dataType != null)
-        //        {
-        //            this.BuildProperty(typeBuilder, name, category, description, defaultValue, dataType);
-        //        }
-        //        else
-        //        {
-        //            Log.Instance.Error($"System parameter {name} has an invalid type.");
-        //            MessageBox.Show($"System parameter {name} has an invalid type.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-        //        }
-        //    }
-
-        //    // Create and instantiate the dynamic type
-        //    Type type = typeBuilder.CreateType();
-        //    Object parameterType = Activator.CreateInstance(type, new object[] { });
-
-        //    // Set each property's default value
-        //    foreach (DataRow row in dt.Rows)
-        //    {
-        //        string name = row[nameof(SysParameter.KeyName)].ToString();
-        //        Type dataType = Type.GetType(row["dataType"].ToString());
-        //        object value = row[nameof(SysParameter.Value)];
-        //        if (dataType == typeof(bool))
-        //        {
-        //            if (bool.TryParse(value.ToString(), out bool boolValue))
-        //                value = boolValue;
-        //            else
-        //            {
-        //                if (int.TryParse(value.ToString(), out int intValue))
-        //                    value = System.Convert.ChangeType(intValue, dataType);
-        //            }
-
-        //        }
-        //        else
-        //        {
-        //            value = (Convert.IsDBNull(value)) ? null : Convert.ChangeType(value, dataType);
-        //        }
-        //        type.InvokeMember(name,
-        //                            BindingFlags.SetProperty,
-        //                            null,
-        //                            parameterType,
-        //                            new object[] { value });
-        //    }
-
-        //    return parameterType;
-        //}
-
-        //protected void BuildProperty(TypeBuilder typeBuilder,
-        //                                string name,
-        //                                string category,
-        //                                string description,
-        //                                object defaultValue,
-        //                                Type fieldType)
-        //{
-        //    // Generate the private field/public property name pair 
-        //    // (field begins w/LC, property begins w/UC)
-        //    char[] chars = name.ToCharArray();
-
-        //    chars[0] = char.ToLower(chars[0]);
-        //    //string fieldName = new string(chars);
-        //    string fieldName = "_" + name;
-
-        //    //chars[0] = char.ToUpper(chars[0]);
-        //    string propertyName = name;  new string(chars);
-
-        //    // Create the private field
-        //    FieldBuilder fieldBuilder = typeBuilder.DefineField(fieldName,
-        //                                                            fieldType,
-        //                                                            FieldAttributes.Private);
-
-        //    // Create the corresponding public property
-        //    PropertyBuilder propertyBuilder =
-        //        typeBuilder.DefineProperty(propertyName,
-        //                                    System.Reflection.PropertyAttributes.HasDefault,
-        //                                    fieldType,
-        //                                    null);
-
-        //    // Define the required set of property attributes
-        //    MethodAttributes propertyAttributes = MethodAttributes.Public |
-        //                                            MethodAttributes.SpecialName |
-        //                                            MethodAttributes.HideBySig;
-
-        //    // Build the getter
-        //    MethodBuilder getter = typeBuilder.DefineMethod("get_" + propertyName,
-        //                                                        propertyAttributes,
-        //                                                        fieldType,
-        //                                                        Type.EmptyTypes);
-        //    ILGenerator getterIlGen = getter.GetILGenerator();
-        //    getterIlGen.Emit(OpCodes.Ldarg_0);
-        //    getterIlGen.Emit(OpCodes.Ldfld, fieldBuilder);
-        //    getterIlGen.Emit(OpCodes.Ret);
-
-        //    // Build the setter
-        //    MethodBuilder setter = typeBuilder.DefineMethod("set_" + propertyName,
-        //                                                        propertyAttributes,
-        //                                                        null,
-        //                                                        new Type[] { fieldType });
-        //    ILGenerator setterIlGen = setter.GetILGenerator();
-        //    setterIlGen.Emit(OpCodes.Ldarg_0);
-        //    setterIlGen.Emit(OpCodes.Ldarg_1);
-        //    setterIlGen.Emit(OpCodes.Stfld, fieldBuilder);
-        //    setterIlGen.Emit(OpCodes.Ret);
-
-        //    // Bind the getter and setter
-        //    propertyBuilder.SetGetMethod(getter);
-        //    propertyBuilder.SetSetMethod(setter);
-
-        //    // Set the Category and Description attributes
-        //    propertyBuilder.SetCustomAttribute(
-        //        new CustomAttributeBuilder(
-        //            typeof(CategoryAttribute).GetConstructor(
-        //                new Type[] { typeof(string) }), new object[] { category }));
-        //    propertyBuilder.SetCustomAttribute(
-        //        new CustomAttributeBuilder(
-        //            typeof(DescriptionAttribute).GetConstructor(
-        //                new Type[] { typeof(string) }), new object[] { description }));
-
-        //    object defaultVal = defaultValue;
-        //    //if (fieldType == typeof(bool))
-        //    //{
-        //    //    if (bool.TryParse(defaultVal.ToString(), out bool boolValue))
-        //    //        defaultVal = boolValue;
-        //    //    else
-        //    //    {
-        //    //        if (int.TryParse(defaultVal.ToString(), out int intValue))
-        //    //            defaultVal = System.Convert.ChangeType(intValue, fieldType);
-        //    //    }
-        //    //}
-        //    //else
-        //    //{
-        //    //    defaultVal = (Convert.IsDBNull(defaultVal)) ? null : Convert.ChangeType(defaultVal, fieldType);
-        //    //}
-
-        //    propertyBuilder.SetCustomAttribute(
-        //        new CustomAttributeBuilder(
-        //        typeof(DefaultValueAttribute).GetConstructor(new Type[] { typeof(object) }), 
-        //        new object[] { defaultVal }));
-        //}
-
-        private void propertyGrid_PropertyValueChanged(object s, PropertyValueChangedEventArgs e)
-        {
-            // Update System Parameter when a value changes
-            SysParameter systemParameters = new SysParameter();
-            systemParameters.KeyName = e.ChangedItem.Label;
-            systemParameters.Value = e.ChangedItem.Value.ToString();
-
-            PropertyInfo[] properties = typeof(ApplicationParameters).GetProperties();
-
-            Type propertyType = typeof(ApplicationParameters);
-
-            var pInfo = propertyType.GetProperty(systemParameters.KeyName);
-
-            if(pInfo != null)
+            try
             {
-                pInfo.SetValue(Program.AppEnvironment.ApplicationParameters, e.ChangedItem.Value);
-
-                try
-                {
-                    paramsdb.Update(systemParameters, new[] { nameof(SysParameter.Value) });
-                }
-                catch (Exception ex)
-                {
-                    Log.Instance.Error("Error updating system parameter.", ex);
-                    MessageBox.Show("Error during update. Parameter was not updated.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
+                systemService.SaveSystemParameter(systemParameter);
+            }
+            catch (Exception ex)
+            {
+                Log.Instance.Error("Error updating system parameter.", ex);
+                MessageBox.Show("Error during update. Parameter was not updated.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }

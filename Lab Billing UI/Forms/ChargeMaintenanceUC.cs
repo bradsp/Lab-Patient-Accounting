@@ -1,14 +1,14 @@
 ﻿using LabBilling.Core;
-using LabBilling.Core.DataAccess;
 using LabBilling.Core.Models;
+using LabBilling.Core.Services;
+using LabBilling.Logging;
 using LabBilling.ViewModel;
-using Subro.Controls;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
-using Utilities;
 using WinFormsLibrary;
 
 namespace LabBilling.Forms
@@ -27,16 +27,14 @@ namespace LabBilling.Forms
         }
 
         private DataTable chargesTable;
-        private AccountRepository accountRepository;
-        private ChrgRepository chrgRepository;
-        private ChrgDetailRepository chrgDetailRepository;
         private bool _allowChargeEntry;
         private Subro.Controls.DataGridViewGrouper grouper;
+        private AccountService accountService;
+        private DictionaryService dictionaryService;
 
         public Account CurrentAccount { get; set; }
         public event EventHandler ChargesUpdated;
         public event EventHandler<AppErrorEventArgs> OnError;
-       
 
         public bool AllowChargeEntry 
         { 
@@ -53,7 +51,6 @@ namespace LabBilling.Forms
                 chargesContextMenu.Enabled = _allowChargeEntry;
             }
         }
-        
 
         private void ChargeMaintenanceUC_Load(object sender, EventArgs e)
         {
@@ -62,9 +59,8 @@ namespace LabBilling.Forms
             if (this.DesignMode)
                 return;
 
-            accountRepository = new AccountRepository(Program.AppEnvironment);
-            chrgRepository = new ChrgRepository(Program.AppEnvironment);
-            chrgDetailRepository = new ChrgDetailRepository(Program.AppEnvironment);
+            accountService = new(Program.AppEnvironment);
+            dictionaryService = new(Program.AppEnvironment);
 
             //build context menu
             foreach (var item in Dictionaries.cptModifiers)
@@ -145,7 +141,6 @@ namespace LabBilling.Forms
 
         public void LoadCharges()
         {
-
             if (CurrentAccount == null)
                 return;
 
@@ -153,9 +148,10 @@ namespace LabBilling.Forms
 
             TotalChargesTextBox.Text = CurrentAccount.TotalCharges.ToString("c");
 
+            grouper.RemoveGrouping();
             ChargesDataGrid.DataSource = chargesTable;
-            //var grouper = new Subro.Controls.DataGridViewGrouper(ChargesDataGrid);
-            grouper.SetGroupOn(nameof(Charge.ChrgId));
+            if(!grouper.IsGrouped)
+                grouper.SetGroupOn(nameof(Charge.ChrgId));
 
 
             if (CurrentAccount.FinCode == "CLIENT")
@@ -229,7 +225,8 @@ namespace LabBilling.Forms
                 DataGridViewRow row = ChargesDataGrid.SelectedRows[0];
                 var uri = Convert.ToInt32(row.Cells[nameof(ChrgDetail.uri)].Value.ToString());
 
-                chrgDetailRepository.RemoveModifier(uri);
+                accountService.RemoveChargeModifier(uri);
+                CurrentAccount.Charges = accountService.GetCharges(CurrentAccount.AccountNo).ToList();
                 ChargesUpdated?.Invoke(this, EventArgs.Empty);
             }
         }
@@ -244,8 +241,10 @@ namespace LabBilling.Forms
             {
                 DataGridViewRow row = ChargesDataGrid.SelectedRows[0];
                 var uri = Convert.ToInt32(row.Cells[nameof(Charge.uri)].Value.ToString());
-
-                chrgDetailRepository.AddModifier(uri, item.Text);
+                Cursor.Current = Cursors.WaitCursor;
+                accountService.AddChargeModifier(uri, item.Text);
+                CurrentAccount.Charges = accountService.GetCharges(CurrentAccount.AccountNo).ToList();
+                Cursor.Current = Cursors.Default;
                 ChargesUpdated?.Invoke(this, EventArgs.Empty);
             }
         }
@@ -257,7 +256,7 @@ namespace LabBilling.Forms
             {
 
                 DataGridViewRow row = ChargesDataGrid.SelectedRows[0];
-                var chrg = chrgRepository.GetById(Convert.ToInt32(row.Cells[nameof(Chrg.ChrgId)].Value.ToString()));
+                var chrg = CurrentAccount.Charges.Where(c => c.ChrgId == Convert.ToInt32(row.Cells[nameof(Chrg.ChrgId)].Value.ToString())).First();
 
                 DisplayPOCOForm<Chrg> frm = new(chrg)
                 {
@@ -319,7 +318,10 @@ namespace LabBilling.Forms
 
                 if (prompt.ReturnCode == DialogResult.OK)
                 {
-                    chrgRepository.CreditCharge(Convert.ToInt32(row.Cells[nameof(Chrg.ChrgId)].Value.ToString()), prompt.Text);
+                    Cursor.Current = Cursors.WaitCursor;
+                    var updatedChrg = accountService.CreditCharge(Convert.ToInt32(row.Cells[nameof(Chrg.ChrgId)].Value.ToString()), prompt.Text);
+                    CurrentAccount.Charges = accountService.GetCharges(CurrentAccount.AccountNo).ToList();
+                    Cursor.Current = Cursors.Default;
                     ChargesUpdated?.Invoke(this, EventArgs.Empty);
                 }
             }
@@ -333,7 +335,38 @@ namespace LabBilling.Forms
 
             if (frm.ShowDialog() == DialogResult.OK)
             {
-                ChargesUpdated?.Invoke(this, EventArgs.Empty);
+                try
+                {
+                    CurrentAccount = accountService.AddCharge(CurrentAccount,
+                        frm.SelectedCdm,
+                        Convert.ToInt32(frm.Quantity),
+                        CurrentAccount.TransactionDate,
+                        frm.Comment,
+                        frm.ReferenceNumber,
+                        frm.Amount);
+                    //CurrentAccount.Charges = accountService.GetCharges(CurrentAccount.AccountNo).ToList();
+                    ChargesUpdated?.Invoke(this, EventArgs.Empty);
+                }
+                catch (AccountNotFoundException anfe)
+                {
+                    Log.Instance.Error(anfe);
+                    MessageBox.Show("Error posting Charge.");
+                }
+                catch(CdmNotFoundException cdmnfe)
+                {
+                    Log.Instance.Error(cdmnfe);
+                    MessageBox.Show("Error posting Charge.");
+                }
+                catch(ApplicationException apex)
+                {
+                    Log.Instance.Error(apex);
+                    MessageBox.Show("Error posting Charge.");
+                }
+                catch(Exception ex)
+                {
+                    Log.Instance.Error(ex);
+                    MessageBox.Show("Error posting Charge.");
+                }
             }
         }
 
@@ -373,13 +406,16 @@ namespace LabBilling.Forms
                 if (MessageBox.Show($"Change credited flag on {chrgId}?",
                     "Confirm Change", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                 {
+                    Cursor.Current = Cursors.WaitCursor;
                     OnError?.Invoke(this, new AppErrorEventArgs()
                     {
                         ErrorLevel = AppErrorEventArgs.ErrorLevelType.Debug,
                         ErrorMessage = $"Changing credited flag on {chrgId} from {currentFlag} to {!currentFlag}"
                     });
 
-                    chrgRepository.SetCredited(chrgId, !currentFlag);
+                    accountService.SetChargeCreditFlag(chrgId, !currentFlag);
+                    CurrentAccount.Charges = accountService.GetCharges(CurrentAccount.AccountNo).ToList();
+                    Cursor.Current = Cursors.Default;
                 }
                 ChargesUpdated?.Invoke(this, EventArgs.Empty);
             }
@@ -402,12 +438,15 @@ namespace LabBilling.Forms
                     if (MessageBox.Show($"Move charge {chrgId} ({row.Cells[nameof(Chrg.CdmDescription)].Value}) to account {destAccount}?",
                         "Confirm Move", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                     {
+                        Cursor.Current = Cursors.WaitCursor;
                         OnError?.Invoke(this, new AppErrorEventArgs() 
                         { 
                             ErrorLevel = AppErrorEventArgs.ErrorLevelType.Debug,
                             ErrorMessage = $"Moving charge {chrgId} from {CurrentAccount.AccountNo} to {destAccount}"
                         });
-                        accountRepository.MoveCharge(CurrentAccount.AccountNo, destAccount, chrgId);
+                        accountService.MoveCharge(CurrentAccount.AccountNo, destAccount, chrgId);
+                        CurrentAccount.Charges = accountService.GetCharges(CurrentAccount.AccountNo).ToList();
+                        Cursor.Current = Cursors.Default;
                     }
                     ChargesUpdated?.Invoke(this, EventArgs.Empty);
                 }
@@ -416,5 +455,4 @@ namespace LabBilling.Forms
 
         private void filterRadioButton_CheckedChanged(object sender, EventArgs e) => FilterCharges();
     }
-
 }

@@ -1,5 +1,5 @@
 ﻿using LabBilling.Core;
-using LabBilling.Core.BusinessLogic;
+using LabBilling.Core.Services;
 using LabBilling.Core.DataAccess;
 using LabBilling.Core.Models;
 using Spectre.Console;
@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using Utilities;
+using LabBilling.Core.UnitOfWork;
 
 namespace LabBillingConsole
 {
@@ -90,7 +91,7 @@ namespace LabBillingConsole
 
         private void ImportICD10()
         {
-            DictionaryImport dictionaryImport = new DictionaryImport();
+            DictionaryImportService dictionaryImport = new DictionaryImportService();
             dictionaryImport.RecordProcessed += OnRecordProcessed;
             dictionaryImport.ImportICD(@"C:\Users\bpowers\Downloads\icd10cm-CodesDescriptions-2024\icd10cm-order-2024.txt", "2024", _appEnvironment);
 
@@ -103,9 +104,9 @@ namespace LabBillingConsole
 
         private void PopulateClaimDetailAmount()
         {
-            BillingActivityRepository billingActivityRepository = new BillingActivityRepository(_appEnvironment);
+            using UnitOfWorkMain unitOfWork = new(_appEnvironment, true);
 
-            var records = billingActivityRepository.GetByRunDate(new DateTime(2023, 7, 1), new DateTime(2023,8,2));
+            var records = unitOfWork.BillingActivityRepository.GetByRunDate(new DateTime(2023, 7, 1), new DateTime(2023,8,2));
             int cnt = 0;
             foreach(var record in records)
             {
@@ -116,11 +117,11 @@ namespace LabBillingConsole
 
                 record.ClaimAmount = claim.TotalChargeAmount;
 
-                billingActivityRepository.Update(record, new string[] { nameof(BillingActivity.ClaimAmount) });
+                unitOfWork.BillingActivityRepository.Update(record, new string[] { nameof(BillingActivity.ClaimAmount) });
                 Console.WriteLine($"{++cnt} - Account {record.AccountNo} - Claim Amount {record.ClaimAmount}");
 
             }
-
+            unitOfWork.Commit();
             Console.WriteLine($"Completed updating claim amount on {cnt} claims.");
             Console.ReadKey();
         }
@@ -129,7 +130,7 @@ namespace LabBillingConsole
         {
             string file = @"\\wthmclbill\shared\Billing\TEST\Posting835Remit\MCL_NC_MCR_1093705428_835_11119267.RMT";
 
-            Remittance835 remittance835 = new Remittance835(_appEnvironment);
+            Remittance835Service remittance835 = new Remittance835Service(_appEnvironment);
 
             remittance835.Load835(file);
 
@@ -137,7 +138,7 @@ namespace LabBillingConsole
 
         public void TestClientInvoices()
         {
-            ClientInvoices clientInvoices = new ClientInvoices(_appEnvironment);
+            ClientInvoicesService clientInvoices = new(_appEnvironment);
 
             //clientInvoices.GenerateInvoice("WTCC", new DateTime(2022, 10, 31));
 
@@ -279,7 +280,7 @@ namespace LabBillingConsole
 
             //claimGenerator.CompileClaim("L17429213");
 
-            Billing837 billing837 = new Billing837(_appEnvironment.ApplicationParameters.GetProductionEnvironment());
+            Billing837Service billing837 = new Billing837Service(_appEnvironment.ApplicationParameters.GetProductionEnvironment());
 
         }
 

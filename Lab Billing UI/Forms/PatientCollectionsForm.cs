@@ -11,6 +11,7 @@ using LabBilling.Logging;
 using LabBilling.Core.Models;
 using LabBilling.Core.DataAccess;
 using System.Collections.Generic;
+using LabBilling.Core.Services;
 
 namespace LabBilling.Forms
 {
@@ -33,12 +34,11 @@ namespace LabBilling.Forms
         private string m_strProductionEnvironment = null;
         private DataTable m_dtAccounts;
         private SqlDataAdapter m_sdaBadDebt;
-        private PatRepository patRepository;
-        private ChkRepository chkRepository;
-        private AccountRepository accountRepository;
-        private AccountNoteRepository accountNoteRepository;
-        private InsRepository insRepository;
         private Account acc;
+
+        private AccountService accountService;
+        private PatientBillingService patientBillingService;
+        private DictionaryService dictionaryService;
 
 
         void m_cboxInclude_Click(object sender, EventArgs e)
@@ -47,7 +47,7 @@ namespace LabBilling.Forms
             tsbSmallBalWriteOff.Enabled = !tsbSmallBalWriteOff.Enabled;
         }
 
-        public PatientCollectionsForm()
+        public PatientCollectionsForm() : base(Program.AppEnvironment)
         {
             Log.Instance.Trace($"Entering");
             InitializeComponent();
@@ -64,13 +64,9 @@ namespace LabBilling.Forms
             m_rNotes = new R_notes(m_strServer, m_strDatabase, ref m_Err);
             m_rIns = new R_ins(m_strServer, m_strDatabase, ref m_Err);
 
-            //this.Text += string.Format(" {0}", m_strProductionEnvironment);
-            accountRepository = new AccountRepository(Program.AppEnvironment);
-            patRepository = new PatRepository(Program.AppEnvironment);
-            accountNoteRepository = new AccountNoteRepository(Program.AppEnvironment);
-            chkRepository = new ChkRepository(Program.AppEnvironment);
-            insRepository = new InsRepository(Program.AppEnvironment);
-
+            accountService = new(Program.AppEnvironment);
+            patientBillingService = new(Program.AppEnvironment);
+            dictionaryService = new(Program.AppEnvironment);
         }
 
         private void frmBadDebt_Load(object sender, EventArgs e)
@@ -136,7 +132,7 @@ namespace LabBilling.Forms
                 // wdk 20111121 No longer really writing off the balances keeping track in 
                 // aging as BAD_DEBT and COLLECTIONS.
                 // write chk record for balance due as write off with bad debt flagged	
-                acc = accountRepository.GetByAccount(strAccount);
+                acc = accountService.GetAccount(strAccount);
 
                 Chk chk = new()
                 {
@@ -154,21 +150,29 @@ namespace LabBilling.Forms
                     m_rIns.propIns_code.Trim().ToUpper() : "",
                     FinCode = m_CAcc.m_Racc.m_strFinCode
                 };
-                chkRepository.Add(chk);
+                accountService.AddPayment(chk);
 
                 // update pat
                 acc.Pat.BadDebtListDate = DateTime.Today;
 
-                if(patRepository.Update(acc.Pat, new[] { nameof(Pat.BadDebtListDate) }))
+                try
                 {
+                    acc.Pat = accountService.SetCollectionsDate(acc.Pat);
                     nUpdated++;
+                }
+                catch (ApplicationException apex)
+                {
+                    Log.Instance.Error(apex.Message, apex);
+                }
+                catch(Exception ex)
+                {
+                    Log.Instance.Error(ex.Message, ex);
                 }
 
                 // update notes for this account
-                accountRepository.AddNote(strAccount, $"Bad debt set by [{Program.AppEnvironment.UserName}]");
+                acc.Notes = accountService.AddNote(strAccount, $"Bad debt set by [{Program.AppEnvironment.UserName}]").ToList();
             }
             MessageBox.Show(string.Format("{0} Pat Records Updated", nUpdated), "POSTING FINISHED");
-
         }
 
         private void tsbLoad_Click(object sender, EventArgs e)
@@ -271,7 +275,6 @@ namespace LabBilling.Forms
 
             ssRecords.Text = string.Format("Records {0}", dgvAccounts.Rows.Count);
             Application.DoEvents();
-
         }
 
         private void dgvAccounts_RowHeaderMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
@@ -491,31 +494,41 @@ namespace LabBilling.Forms
                 int nRec = m_rChk.GetActiveRecords(
                     string.Format("account = '{0}' and bad_debt <> 0", strAccount));
 
-                acc = accountRepository.GetByAccount(strAccount);
-                List<Chk> chks = chkRepository.GetByAccount(strAccount).Where(x => x.IsCollectionPmt != false).ToList();
+                acc = accountService.GetAccount(strAccount);
+                List<Chk> chks = acc.Payments.Where(x => x.IsCollectionPmt != false).ToList();
 
                 if (chks.Count == 0)
                 {
-                    Chk chk = new Chk();
-                    chk.AccountNo = strAccount;
-                    chk.IsCollectionPmt = true;
-                    chk.Comment = "BAD DEBT WRITE OFF";
-                    chk.Source = "BAD_DEBT";
-                    chk.Status = "WRITE_OFF";
-                    chk.WriteOffAmount = dBal;
-                    chk.WriteOffDate = DateTime.Today;
-                    chk.InsCode = acc.PrimaryInsuranceCode;
-                    chk.FinCode = acc.FinCode;
-                    chkRepository.Add(chk);
-
-                    // update pat
-                    acc.Pat.BadDebtListDate = DateTime.Today;
-                    if(patRepository.Update(acc.Pat, new[] { nameof(Pat.BadDebtListDate) }))
+                    Chk chk = new()
                     {
-                        nUpdated++;
-                    }
+                        AccountNo = strAccount,
+                        IsCollectionPmt = true,
+                        Comment = "BAD DEBT WRITE OFF",
+                        Source = "BAD_DEBT",
+                        Status = "WRITE_OFF",
+                        WriteOffAmount = dBal,
+                        WriteOffDate = DateTime.Today,
+                        InsCode = acc.PrimaryInsuranceCode,
+                        FinCode = acc.FinCode
+                    };
+                    accountService.AddPayment(chk);
 
-                    accountRepository.AddNote(strAccount, $"Bad debt set by [{Program.AppEnvironment.UserName}]");
+                    try
+                    {
+                        // update pat
+                        acc.Pat.BadDebtListDate = DateTime.Today;
+                        acc.Pat = accountService.SetCollectionsDate(acc.Pat);
+                        nUpdated++;
+                        acc.Notes = accountService.AddNote(strAccount, $"Bad debt set by [{Program.AppEnvironment.UserName}]").ToList();
+                    }
+                    catch(ApplicationException apex)
+                    {
+                        Log.Instance.Error(apex.Message, apex);
+                    }
+                    catch(Exception ex)
+                    {
+                        Log.Instance.Error(ex.Message, ex);
+                    }
                 }
             }
             MessageBox.Show("Processing small balance write_off is complete.", "SMALL BALANCE");

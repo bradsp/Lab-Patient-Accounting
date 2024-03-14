@@ -10,18 +10,19 @@ using Utilities;
 using System.IO;
 using DocumentFormat.OpenXml.Bibliography;
 using OopFactory.X12.Parsing.Model.Typed;
+using LabBilling.Core.Services;
+using LabBilling.Core.UnitOfWork;
 
 namespace LabBilling.Forms
 {
     public partial class PatientCollectionsRunWizard : BaseForm
     {
-        private PatientBilling patientBilling = new PatientBilling(Program.AppEnvironment);
-        private BadDebtRepository badDebtRepository = new BadDebtRepository(Program.AppEnvironment);
+        private PatientBillingService patientBilling = new PatientBillingService(Program.AppEnvironment);
         private DateTime thruDate;
         private string batchNo;
         private bool errorEncountered = false;
 
-        public PatientCollectionsRunWizard()
+        public PatientCollectionsRunWizard() : base(Program.AppEnvironment)
         {
             InitializeComponent();
         }
@@ -185,7 +186,8 @@ namespace LabBilling.Forms
 
         private void PatientCollectionsRunWizard_Load(object sender, EventArgs e)
         {
-            var records = badDebtRepository.GetNotSentRecords();
+            using UnitOfWorkMain unitOfWork = new(Program.AppEnvironment);
+            var records = unitOfWork.BadDebtRepository.GetNotSentRecords();
 
             sendToCollectionsTextbox.Text = $"{records.Count()} records to send to collections.";
 

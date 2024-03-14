@@ -15,6 +15,8 @@ namespace LabBilling.Core.Models
         public string CheckNo { get; set; }
         [Column("source")] 
         public string Source { get; set; }
+        [Column("status")]
+        public string Status { get; set; }
         [Column("contractual")] 
         public double Contractual { get; set; }
         [Column("amt_paid")] 
