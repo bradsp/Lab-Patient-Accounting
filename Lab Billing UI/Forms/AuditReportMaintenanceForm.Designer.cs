@@ -250,6 +250,8 @@ partial class AuditReportMaintenanceForm
         Controls.Add(reportNameTextbox);
         Controls.Add(reportNameLabel);
         Controls.Add(reportListDataGrid);
+        Controls.Add(menuStrip1);
+        MainMenuStrip = menuStrip1;
         Name = "AuditReportMaintenanceForm";
         Text = "Audit Report Maintenance";
         Load += AuditReportMaintenanceForm_Load;

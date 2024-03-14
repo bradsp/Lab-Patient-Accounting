@@ -1,11 +1,18 @@
-﻿using LabBilling.Core.Models;
+﻿using BasicSQLFormatter;
+using LabBilling.Core.Models;
 using LabBilling.Core.Services;
 using LabBilling.Logging;
 using PoorMansTSqlFormatterRedux;
 using PoorMansTSqlFormatterRedux.Formatters;
 using PoorMansTSqlFormatterRedux.Interfaces;
 using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace LabBilling.Forms;
@@ -52,7 +59,7 @@ public partial class AuditReportMaintenanceForm : Form
         }
         catch (Exception ex)
         {
-            Log.Instance.Error(ex);
+            Log.Instance.Error(ex);            
         }
 
     }
@@ -67,7 +74,7 @@ public partial class AuditReportMaintenanceForm : Form
 
         var formatter = new TSqlStandardFormatter();
         var formatMgr = new SqlFormattingManager(formatter);
-
+        
         var formattedSql = formatMgr.Format(rawSql);
         reportCodeTextbox.Text = formattedSql;
 
