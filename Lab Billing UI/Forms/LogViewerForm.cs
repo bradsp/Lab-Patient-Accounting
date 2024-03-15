@@ -1,28 +1,27 @@
-﻿using System;
+﻿using LabBilling.Core.DataAccess;
+using System;
 using System.Windows.Forms;
-using LabBilling.Core.DataAccess;
 
-namespace LabBilling.Forms
+namespace LabBilling.Forms;
+
+public partial class LogViewerForm : Form
 {
-    public partial class LogViewerForm : Form
+    public LogViewerForm()
     {
-        public LogViewerForm()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
+    }
 
-        LogRepository logRepository = new LogRepository(Helper.LogConnVal);
-        BindingSource bindingSource = new BindingSource();
+    LogRepository logRepository = new LogRepository(Helper.LogConnVal);
+    BindingSource bindingSource = new BindingSource();
 
-        private void LogViewerForm_Load(object sender, EventArgs e)
-        {
-            DateTime fromDate = DateTime.Now.AddDays(-1);
-            DateTime thruDate = DateTime.Now;
+    private void LogViewerForm_Load(object sender, EventArgs e)
+    {
+        DateTime fromDate = DateTime.Now.AddDays(-1);
+        DateTime thruDate = DateTime.Now;
 
-            bindingSource.DataSource = Helper.ConvertToDataTable(logRepository.GetDateRange(fromDate, thruDate));
+        bindingSource.DataSource = Helper.ConvertToDataTable(logRepository.GetDateRange(fromDate, thruDate));
 
-            logViewDataGrid.DataSource = bindingSource.DataSource;
+        logViewDataGrid.DataSource = bindingSource.DataSource;
 
-        }
     }
 }

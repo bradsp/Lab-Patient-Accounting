@@ -3,19 +3,19 @@ using System.Windows.Forms;
 
 namespace LabBilling.Legacy;
 
-public partial class FormDataCollection : Utilities.BaseForm
+public partial class FormDataCollection : Form
 {
-    DataGridView gridView = new DataGridView();
-    ToolStripControlHost comboBox = new ToolStripControlHost(new ComboBox());
-    ToolStripDropDown dropDown = new ToolStripDropDown();
-    public FormDataCollection() : base(Program.AppEnvironment)
+    DataGridView gridView = new();
+    ToolStripControlHost comboBox = new(new ComboBox());
+    ToolStripDropDown dropDown = new();
+    public FormDataCollection()
     {
         InitializeComponent();
     }
 
     private void FormDataCollection_Load(object sender, EventArgs e)
     {
-        tsMain.Items.Insert(tsMain.Items.Count,comboBox);
+        tsMain.Items.Insert(tsMain.Items.Count, comboBox);
         gridView.BorderStyle = BorderStyle.None;
         gridView.Columns.Add("1", "1");
         gridView.Columns.Add("2", "2");
@@ -29,7 +29,7 @@ public partial class FormDataCollection : Utilities.BaseForm
 
 
         // dropDown.Items.Add((ToolStripItem)gridView);
-       // ((ComboBox)comboBox.Control).dropc.DropDown = dropDown;
-        
+        // ((ComboBox)comboBox.Control).dropc.DropDown = dropDown;
+
     }
 }

@@ -4,9 +4,9 @@ using System.Windows.Forms;
 
 namespace LabBilling.Forms;
 
-public partial class PhysicianMaintenanceEditForm : Utilities.BaseForm
+public partial class PhysicianMaintenanceEditForm : Form
 {
-    public PhysicianMaintenanceEditForm() : base(Program.AppEnvironment)
+    public PhysicianMaintenanceEditForm() 
     {
         InitializeComponent();
 

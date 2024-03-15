@@ -399,17 +399,12 @@ public sealed class PatientBillingService
         DataTable encountersActivityDt = HelperExtensions.ConvertToDataTable(encountersActivity);
         DataTable cernerStatementDt = HelperExtensions.ConvertToDataTable(cernerStatement);
 
-        //todo: get file path from parameters
         string strFileName = $"{appEnvironment.ApplicationParameters.StatementsFileLocation}PatStatement{DateTime.Now:yyyyMMddHHmm}.txt";
 
         StreamWriter sw = new(strFileName)
         {
             AutoFlush = true
         };
-
-        //sw.Write(string.Format("HDR~MCL~~CERNER~MCL~{0}~{1}~T~N~0~0~0\r\n"
-        //    , DateTime.Now.ToString("yyyyMMdd")
-        //    , DateTime.Now.ToString("HHmmss")));
 
         sw.WriteLine(new DelimitedFileLine('~')
         {

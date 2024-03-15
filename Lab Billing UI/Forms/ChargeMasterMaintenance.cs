@@ -1,25 +1,25 @@
-﻿using System;
+﻿using LabBilling.Core.Models;
+using LabBilling.Core.Services;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using LabBilling.Core.Models;
-using LabBilling.Core.Services;
 using WinFormsLibrary;
 
 namespace LabBilling.Forms;
 
-public partial class ChargeMasterMaintenance : Utilities.BaseForm
+public partial class ChargeMasterMaintenance : Form
 {
     private DictionaryService dictionaryService;
-    private List<Cdm> cdms = new List<Cdm>();
-    private DataTable cdmdt = new DataTable();
-    private BindingSource bs = new BindingSource();
+    private List<Cdm> cdms = new();
+    private DataTable cdmdt = new();
+    private BindingSource bs = new();
     private const int _timerInterval = 650;
-    System.Windows.Forms.Timer _timer;
+    private readonly System.Windows.Forms.Timer _timer;
 
-    public ChargeMasterMaintenance() : base(Program.AppEnvironment)
+    public ChargeMasterMaintenance()
     {
         InitializeComponent();
         _timer = new System.Windows.Forms.Timer() { Enabled = false, Interval = _timerInterval };
@@ -77,7 +77,7 @@ public partial class ChargeMasterMaintenance : Utilities.BaseForm
 
         cdmGrid.AutoResizeColumns();
 
-        if(!string.IsNullOrWhiteSpace(filterTextBox.Text))
+        if (!string.IsNullOrWhiteSpace(filterTextBox.Text))
         {
             cdmdt.DefaultView.RowFilter = $"({nameof(Cdm.Description)} like '{filterTextBox.Text.ToUpper()}*') or ({nameof(Cdm.ChargeId)} like '{filterTextBox.Text.ToUpper()}*')";
         }

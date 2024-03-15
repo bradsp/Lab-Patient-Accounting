@@ -7,7 +7,7 @@ using LabBilling.Core.Models;
 
 namespace LabBilling.Forms;
 
-public partial class ClientLookupForm : Utilities.BaseForm
+public partial class ClientLookupForm : Form
 {
     public int CharacterLookupCountMin { get; set; } = 3;
     public List<Client> Datasource { get; set; }
@@ -19,7 +19,7 @@ public partial class ClientLookupForm : Utilities.BaseForm
     private System.Windows.Forms.Timer _timer;
 
 
-    public ClientLookupForm() : base(Program.AppEnvironment)
+    public ClientLookupForm() 
     {
         InitializeComponent();
         _timer = new System.Windows.Forms.Timer() { Enabled = false, Interval = _timerInterval };

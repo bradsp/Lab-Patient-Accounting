@@ -6,7 +6,7 @@ using System.IO;
 
 namespace LabBilling.Forms;
 
-public partial class PatBillForm : Utilities.BaseForm
+public partial class PatBillForm : Form
 {
     private BindingSource masterBindingSource = [];
     private BindingSource detailBindingSourceAcc = [];
@@ -15,7 +15,7 @@ public partial class PatBillForm : Utilities.BaseForm
     public string m_strServer = null;
     public string m_strDatabase = null;
     DataSet m_dsPatBill = new();
-    public PatBillForm() : base(Program.AppEnvironment)
+    public PatBillForm() 
     {
         InitializeComponent();
     }

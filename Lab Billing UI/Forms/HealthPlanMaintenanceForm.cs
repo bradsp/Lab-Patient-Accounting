@@ -8,7 +8,7 @@ using LabBilling.Logging;
 
 namespace LabBilling.Forms;
 
-public partial class HealthPlanMaintenanceForm : Utilities.BaseForm
+public partial class HealthPlanMaintenanceForm : Form
 {
     private DictionaryService dictionaryService;
     private DataTable _insCompanyTable = null;
@@ -17,7 +17,7 @@ public partial class HealthPlanMaintenanceForm : Utilities.BaseForm
     private const int _timerDelay = 650;
     
 
-    public HealthPlanMaintenanceForm() : base(Program.AppEnvironment)
+    public HealthPlanMaintenanceForm() 
     {
         InitializeComponent();
         _timer = new Timer() { Enabled = false, Interval = _timerDelay };

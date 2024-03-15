@@ -5,12 +5,12 @@ using System.Windows.Forms;
 
 namespace LabBilling.Forms;
 
-public partial class ProgressForm : Utilities.BaseForm
+public partial class ProgressForm : Form
 {
     System.Windows.Forms.Timer t = new System.Windows.Forms.Timer();
 
     public Action Worker { get; set; }
-    public ProgressForm(Action worker) : base(Program.AppEnvironment)
+    public ProgressForm(Action worker) 
     {
         InitializeComponent();
         if (worker == null)
@@ -20,7 +20,7 @@ public partial class ProgressForm : Utilities.BaseForm
     }
 
     public MainForm _parentForm;
-    public ProgressForm(MainForm parentForm) : base(Program.AppEnvironment)
+    public ProgressForm(MainForm parentForm) 
     {
         InitializeComponent();
         _parentForm = parentForm;

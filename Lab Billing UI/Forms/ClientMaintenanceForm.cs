@@ -10,7 +10,7 @@ using LabBilling.Core.Services;
 
 namespace LabBilling.Forms;
 
-public partial class ClientMaintenanceForm : Utilities.BaseForm
+public partial class ClientMaintenanceForm : Form
 {
     private System.Windows.Forms.Timer _timer;
     private int timerDelay = 650;
@@ -21,7 +21,7 @@ public partial class ClientMaintenanceForm : Utilities.BaseForm
     private DataTable _clientTable = null;
     //private IEnumerable<Client> clientQuery = null;
 
-    public ClientMaintenanceForm() : base(Program.AppEnvironment)
+    public ClientMaintenanceForm() 
     {
         Log.Instance.Trace($"Entering");
         InitializeComponent();

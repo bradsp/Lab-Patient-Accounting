@@ -8,14 +8,14 @@ using LabBilling.Logging;
 
 namespace LabBilling.Forms;
 
-public partial class AccountChargeEntry : Utilities.BaseForm
+public partial class AccountChargeEntry : Form
 {
     private List<BatchCharge> charges;
     private BindingSource chrgBindingSource;
     private Account currentAccount;
     private AccountService accountService;
 
-    public AccountChargeEntry() : base(Program.AppEnvironment)
+    public AccountChargeEntry() 
     {
         InitializeComponent();
     }

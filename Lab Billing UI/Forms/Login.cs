@@ -7,11 +7,11 @@ using LabBilling.Core.Services;
 
 namespace LabBilling;
 
-public partial class Login : Utilities.BaseForm
+public partial class Login : Form
 {
     private SystemService systemService;
 
-    public Login(bool test = false) : base(Program.AppEnvironment)
+    public Login(bool test = false) 
     {
         Log.Instance.Trace($"Entering");
         testEnvironment = test;

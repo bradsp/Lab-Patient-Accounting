@@ -1,31 +1,30 @@
+using LabBilling.Core.Models;
+using LabBilling.Core.Services;
+using LabBilling.Library;
+using LabBilling.Logging;
+using MCL;
+using Microsoft.Data.SqlClient;
 using System;
+using System.Collections; // for arraylist
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
-using System.Windows.Forms;
-// programmer added
-using System.IO;
-using Utilities;
 using System.Drawing.Printing; // for print document
-using MCL;
-using System.Transactions;
-using Microsoft.Data.SqlClient;
-using System.Collections; // for arraylist
 //using ExtendedMethodsLibrary;
 using System.Globalization;
+// programmer added
+using System.IO;
 using System.Linq;
 // Move these two lines to the header space
 using System.Reflection;
-using LabBilling.Library;
-using LabBilling.Core.Models;
-using LabBilling.Logging;
-using LabBilling.Forms;
-using LabBilling.Core.Services;
+using System.Transactions;
+using System.Windows.Forms;
+using Utilities;
 
 namespace LabBilling.Legacy;
 
-public partial class Posting835 : BaseForm
+public partial class Posting835 : Form
 {
     private DateTime dtFilesImported;     // date the files were imported so we don't do it twice.
     private DirectoryInfo diCurrent = null;         //new DirectoryInfo(string.Format(@"{0}",dr[0]["value"].ToString()));
@@ -391,7 +390,7 @@ public partial class Posting835 : BaseForm
             MessageBox.Show(error, "Account not Launched");
     }
 
-    public Posting835(string[] args) : base(Program.AppEnvironment)
+    public Posting835(string[] args)
     {
         InitializeComponent();
         if (args.Length != 2)

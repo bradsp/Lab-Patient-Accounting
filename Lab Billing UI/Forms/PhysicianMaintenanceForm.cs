@@ -10,9 +10,9 @@ using WinFormsLibrary;
 
 namespace LabBilling.Forms;
 
-public partial class PhysicianMaintenanceForm : Utilities.BaseForm
+public partial class PhysicianMaintenanceForm : Form
 { 
-    public PhysicianMaintenanceForm() : base(Program.AppEnvironment)
+    public PhysicianMaintenanceForm() 
     {
         InitializeComponent();
     }

@@ -6,14 +6,14 @@ using LabBilling.Core.Services;
 
 namespace LabBilling.Forms;
 
-public partial class HealthPlanMaintenanceEditForm : Utilities.BaseForm
+public partial class HealthPlanMaintenanceEditForm : Form
 {
     public InsCompany insCompany = new InsCompany();
     private string selectedInsCode = null;
     private bool addMode = false;
     private DictionaryService dictionaryService;
 
-    public HealthPlanMaintenanceEditForm() : base(Program.AppEnvironment)
+    public HealthPlanMaintenanceEditForm() 
     {
         InitializeComponent();
     }

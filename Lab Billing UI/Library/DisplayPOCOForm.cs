@@ -27,7 +27,7 @@ namespace LabBilling.Core
             Type type = _data.GetType();
             PropertyInfo[] properties = type.GetProperties();
 
-            Form frm = new Form
+            Form frm = new()
             {
                 Text = Title
             };

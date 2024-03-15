@@ -5,12 +5,12 @@ using System.Windows.Forms;
 
 namespace LabBilling.Forms;
 
-public partial class AskCloseTabForm : Utilities.BaseForm
+public partial class AskCloseTabForm : Form
 {
     public List<string> OpenTabs { get; set; }
     public string SelectedForm { get; set; }
 
-    public AskCloseTabForm(List<string> openTabs) : base(Program.AppEnvironment)
+    public AskCloseTabForm(List<string> openTabs) 
     {
         InitializeComponent();
 

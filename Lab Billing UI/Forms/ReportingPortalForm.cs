@@ -4,11 +4,11 @@ using LabBilling.Logging;
 
 namespace LabBilling.Forms;
 
-public partial class ReportingPortalForm : Utilities.BaseForm
+public partial class ReportingPortalForm : Form
 {
     private string url;
 
-    public ReportingPortalForm(string url) : base(Program.AppEnvironment)
+    public ReportingPortalForm(string url) 
     {
         this.url = url;
         InitializeComponent();

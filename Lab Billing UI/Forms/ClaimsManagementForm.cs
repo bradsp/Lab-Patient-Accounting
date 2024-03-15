@@ -1,35 +1,35 @@
-﻿using System;
+﻿using LabBilling.Core.Models;
+using LabBilling.Core.Services;
+using LabBilling.Logging;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using LabBilling.Core.Services;
-using LabBilling.Core.Models;
-using LabBilling.Logging;
 
 namespace LabBilling.Forms;
 
-public partial class ClaimsManagementForm : Utilities.BaseForm
+public partial class ClaimsManagementForm : Form
 {
     private CancellationTokenSource cancellationToken;
 
-    private List<BillingBatch> billingBatches = new List<BillingBatch>();
-    private List<BillingActivity> billingActivities = new List<BillingActivity>();
-    private AccountService accountService;
-    private ClaimGeneratorService claimGeneratorService;
-    private BindingSource billingBatchBindingSource;
-    private BindingSource billingActivitiesBindingSource;
-    private DataTable billingBatchTable;
-    private DataTable billingActivitiesTable;
+    private List<BillingBatch> _billingBatches = new();
+    private List<BillingActivity> _billingActivities = new();
+    private readonly AccountService _accountService;
+    private readonly ClaimGeneratorService _claimGeneratorService;
+    private BindingSource _billingBatchBindingSource;
+    private BindingSource _billingActivitiesBindingSource;
+    private DataTable _billingBatchTable;
+    private DataTable _billingActivitiesTable;
     public event EventHandler<string> AccountLaunched;
 
-    public ClaimsManagementForm() : base(Program.AppEnvironment)
+    public ClaimsManagementForm() 
     {
         InitializeComponent();
 
-        accountService = new(Program.AppEnvironment);
-        claimGeneratorService = new(Program.AppEnvironment);
+        _accountService = new(Program.AppEnvironment);
+        _claimGeneratorService = new(Program.AppEnvironment);
     }
 
     private void ClaimsManagementForm_Load(object sender, EventArgs e)
@@ -37,7 +37,7 @@ public partial class ClaimsManagementForm : Utilities.BaseForm
         cancelButton.Enabled = false;
         claimProgressStatusLabel.Text = "";
 
-        billingBatchBindingSource = new BindingSource();
+        _billingBatchBindingSource = [];
 
         LoadData();
 
@@ -55,16 +55,16 @@ public partial class ClaimsManagementForm : Utilities.BaseForm
 
     private void LoadData()
     {
-        billingBatches = claimGeneratorService.GetBillingBatches();
-        billingBatchTable = billingBatches.ToDataTable();
-        billingBatchTable.PrimaryKey = new DataColumn[] { billingBatchTable.Columns[nameof(BillingBatch.Batch)] };
-        billingBatchTable.DefaultView.Sort = $"{nameof(BillingBatch.Batch)} desc";
+        _billingBatches = _claimGeneratorService.GetBillingBatches();
+        _billingBatchTable = _billingBatches.ToDataTable();
+        _billingBatchTable.PrimaryKey = new DataColumn[] { _billingBatchTable.Columns[nameof(BillingBatch.Batch)] };
+        _billingBatchTable.DefaultView.Sort = $"{nameof(BillingBatch.Batch)} desc";
 
-        billingBatchBindingSource.DataSource = billingBatchTable;
+        _billingBatchBindingSource.DataSource = _billingBatchTable;
 
-        billingActivitiesBindingSource = new BindingSource();
+        _billingActivitiesBindingSource = new BindingSource();
 
-        claimBatchDataGrid.DataSource = billingBatchBindingSource;
+        claimBatchDataGrid.DataSource = _billingBatchBindingSource;
 
     }
 
@@ -96,14 +96,14 @@ public partial class ClaimsManagementForm : Utilities.BaseForm
             {
                 claimsProcessed = await Task.Run(() =>
                 {
-                    return claimGeneratorService.CompileBillingBatch(ClaimType.Institutional, progress, cancellationToken.Token);
+                    return _claimGeneratorService.CompileBillingBatch(ClaimType.Institutional, progress, cancellationToken.Token);
                 });
             }
             else if (billingType == BillingType.Professional)
             {
                 claimsProcessed = await Task.Run(() =>
                 {
-                    return claimGeneratorService.CompileBillingBatch(ClaimType.Professional, progress, cancellationToken.Token);
+                    return _claimGeneratorService.CompileBillingBatch(ClaimType.Professional, progress, cancellationToken.Token);
                 });
             }
 
@@ -148,11 +148,11 @@ public partial class ClaimsManagementForm : Utilities.BaseForm
         if (claimBatchDataGrid.SelectedRows.Count > 0)
         {
             var batch = claimBatchDataGrid.SelectedRows[0].Cells[nameof(BillingBatch.Batch)].Value.ToString();
-            
-            billingActivitiesTable = claimGeneratorService.GetBillingBatchActivity(batch).ToDataTable();
-            billingActivitiesBindingSource.DataSource = billingActivitiesTable;
 
-            claimBatchDetailDataGrid.DataSource = billingActivitiesBindingSource;
+            _billingActivitiesTable = _claimGeneratorService.GetBillingBatchActivity(batch).ToDataTable();
+            _billingActivitiesBindingSource.DataSource = _billingActivitiesTable;
+
+            claimBatchDetailDataGrid.DataSource = _billingActivitiesBindingSource;
 
             claimBatchDetailDataGrid.Columns[nameof(BillingActivity.IsPrinted)].Visible = false;
             claimBatchDetailDataGrid.Columns[nameof(BillingActivity.Text)].Visible = false;
@@ -167,7 +167,7 @@ public partial class ClaimsManagementForm : Utilities.BaseForm
             claimBatchDetailDataGrid.Columns[nameof(BillingActivity.ClaimAmount)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             claimBatchDetailDataGrid.AutoResizeColumns();
 
-            billingActivitiesTable.DefaultView.Sort = $"{nameof(BillingActivity.PatientName)}";
+            _billingActivitiesTable.DefaultView.Sort = $"{nameof(BillingActivity.PatientName)}";
         }
 
     }
@@ -186,9 +186,9 @@ public partial class ClaimsManagementForm : Utilities.BaseForm
 
         double batchNo = Convert.ToDouble(selectedBatch);
         Cursor.Current = Cursors.WaitCursor;
-        if(claimGeneratorService.ClearBatch(batchNo))
+        if (_claimGeneratorService.ClearBatch(batchNo))
         {
-            billingBatchTable.Rows.Find(batchNo).Delete();
+            _billingBatchTable.Rows.Find(batchNo).Delete();
         }
         Cursor.Current = Cursors.Default;
     }
@@ -212,11 +212,11 @@ public partial class ClaimsManagementForm : Utilities.BaseForm
     {
         BillingType billingType;
 
-        if(institutionalRadioButton.Checked)
+        if (institutionalRadioButton.Checked)
         {
             billingType = BillingType.Institutional;
         }
-        else if(professionalRadioButton.Checked)
+        else if (professionalRadioButton.Checked)
         {
             billingType = BillingType.Professional;
         }
@@ -233,7 +233,7 @@ public partial class ClaimsManagementForm : Utilities.BaseForm
     {
         var selectedAccount = claimBatchDetailDataGrid.SelectedRows[0].Cells[nameof(BillingActivity.AccountNo)].Value.ToString();
 
-        if(!string.IsNullOrEmpty(selectedAccount))
+        if (!string.IsNullOrEmpty(selectedAccount))
         {
             AccountLaunched?.Invoke(this, selectedAccount);
         }

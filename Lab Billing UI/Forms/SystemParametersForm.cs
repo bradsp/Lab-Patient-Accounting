@@ -7,11 +7,11 @@ using LabBilling.Core.Services;
 
 namespace LabBilling.Forms;
 
-public partial class SystemParametersForm : Utilities.BaseForm
+public partial class SystemParametersForm : Form
 {
     private readonly SystemService systemService = new(Program.AppEnvironment);
 
-    public SystemParametersForm() : base(Program.AppEnvironment)
+    public SystemParametersForm() 
     {
         InitializeComponent();
     }

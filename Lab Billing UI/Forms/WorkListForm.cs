@@ -14,7 +14,7 @@ using System.Linq;
 
 namespace LabBilling.Forms;
 
-public partial class WorkListForm : Utilities.BaseForm
+public partial class WorkListForm : Form
 {
     private readonly AccountService accountService = new(Program.AppEnvironment);
     private readonly WorklistService worklist = new(Program.AppEnvironment);
@@ -57,7 +57,7 @@ public partial class WorkListForm : Utilities.BaseForm
         workqueues.Enabled = true;
     }
 
-    public WorkListForm() : base(Program.AppEnvironment)
+    public WorkListForm() 
     {
         InitializeComponent();            
         _timer = new Timer() { Enabled = false, Interval = _timerDelay };

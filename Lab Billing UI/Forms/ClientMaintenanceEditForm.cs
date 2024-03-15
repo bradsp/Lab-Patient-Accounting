@@ -7,7 +7,7 @@ using LabBilling.Core.Services;
 
 namespace LabBilling.Forms;
 
-public partial class ClientMaintenanceEditForm : Utilities.BaseForm
+public partial class ClientMaintenanceEditForm : Form
 {
     public Client client;
     public DictionaryService dictionaryService;
@@ -16,7 +16,7 @@ public partial class ClientMaintenanceEditForm : Utilities.BaseForm
     private DataTable clientDiscountDataTable;
     private Cdm currentCdm = null;
 
-    public ClientMaintenanceEditForm() : base(Program.AppEnvironment)
+    public ClientMaintenanceEditForm()
     {
         InitializeComponent();
         dictionaryService = new(Program.AppEnvironment);

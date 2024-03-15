@@ -5,9 +5,9 @@ using Microsoft.SqlServer.Management.Smo;
 
 namespace LabBilling.Forms;
 
-public partial class DatabaseSettingsForm : Utilities.BaseForm
+public partial class DatabaseSettingsForm : Form
 {
-    public DatabaseSettingsForm() : base(Program.AppEnvironment)
+    public DatabaseSettingsForm() 
     {
         InitializeComponent();
     }

@@ -5,12 +5,12 @@ using LabBilling.Core.Services;
 
 namespace LabBilling.Forms;
 
-public partial class InterfaceMapping : Utilities.BaseForm
+public partial class InterfaceMapping : Form
 {
     private readonly DictionaryService dictionaryService = new(Program.AppEnvironment);
     private readonly HL7ProcessorService hL7ProcessorService = new(Program.AppEnvironment);
 
-    public InterfaceMapping() : base(Program.AppEnvironment)
+    public InterfaceMapping() 
     {
         InitializeComponent();
     }

@@ -6,7 +6,7 @@ using LabBilling.Core.Services;
 
 namespace LabBilling.Forms;
 
-public partial class PaymentAdjustmentEntryForm : Utilities.BaseForm
+public partial class PaymentAdjustmentEntryForm : Form
 {
     private Account _account;
 
@@ -14,7 +14,7 @@ public partial class PaymentAdjustmentEntryForm : Utilities.BaseForm
 
     private DictionaryService dictionaryService;
 
-    public PaymentAdjustmentEntryForm(ref Account account) : base(Program.AppEnvironment)
+    public PaymentAdjustmentEntryForm(ref Account account) 
     {
         InitializeComponent();
 

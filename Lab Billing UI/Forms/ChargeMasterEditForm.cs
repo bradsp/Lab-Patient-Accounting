@@ -8,13 +8,13 @@ using LabBilling.Logging;
 
 namespace LabBilling.Forms;
 
-public partial class ChargeMasterEditForm : Utilities.BaseForm
+public partial class ChargeMasterEditForm : Form
 {
 
     private bool addMode = false;
     private DictionaryService dictionaryService;
 
-    public ChargeMasterEditForm() : base(Program.AppEnvironment)
+    public ChargeMasterEditForm() 
     {
         InitializeComponent();
 

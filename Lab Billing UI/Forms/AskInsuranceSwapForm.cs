@@ -6,7 +6,7 @@ using LabBilling.Core.Models;
 
 namespace LabBilling.Forms;
 
-public partial class AskInsuranceSwapForm : Utilities.BaseForm
+public partial class AskInsuranceSwapForm : Form
 {
     private Account _account;
     private DataTable dt;
@@ -14,7 +14,7 @@ public partial class AskInsuranceSwapForm : Utilities.BaseForm
     public string swap1;
     public string swap2;
 
-    public AskInsuranceSwapForm(ref Account account) : base(Program.AppEnvironment)
+    public AskInsuranceSwapForm(ref Account account) 
     {
         _account = account;
 

@@ -10,7 +10,7 @@ using LabBilling.Core.Services;
 
 namespace LabBilling.Forms;
 
-public partial class PersonSearchForm : Utilities.BaseForm
+public partial class PersonSearchForm : Form
 {
     List<AccountSearch> searchResults = new List<AccountSearch>();
 
@@ -19,7 +19,7 @@ public partial class PersonSearchForm : Utilities.BaseForm
     private AccountService accountService;
     private DictionaryService dictionaryService;
 
-    public PersonSearchForm() : base(Program.AppEnvironment)
+    public PersonSearchForm() 
     {
         Log.Instance.Trace($"Entering");
         InitializeComponent();

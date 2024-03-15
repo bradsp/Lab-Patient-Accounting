@@ -29,9 +29,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="BaseForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Update="DMessageForm.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -6,7 +6,7 @@ using LabBilling.Core.Services;
 
 namespace LabBilling.Forms;
 
-public partial class PatientCollectionsEditForm : Utilities.BaseForm
+public partial class PatientCollectionsEditForm : Form
 {
 
     public string SelectedRecord { get; set; }
@@ -14,7 +14,7 @@ public partial class PatientCollectionsEditForm : Utilities.BaseForm
     private AccountService accountService;
     private PatientBillingService patientBillingService;
 
-    public PatientCollectionsEditForm(string selectedGuid) : base(Program.AppEnvironment)
+    public PatientCollectionsEditForm(string selectedGuid) 
     {
         Log.Instance.Trace($"Entering");
         InitializeComponent();

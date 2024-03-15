@@ -9,7 +9,7 @@ using LabBilling.Core.Services;
 
 namespace LabBilling.Forms;
 
-public partial class ChargeEntryForm : Utilities.BaseForm
+public partial class ChargeEntryForm : Form
 {
     private readonly Account _currentAccount = new();
     private readonly Timer _timer;
@@ -24,7 +24,7 @@ public partial class ChargeEntryForm : Utilities.BaseForm
     public string Comment { get; set; }
     public string ReferenceNumber { get; set; }
 
-    public ChargeEntryForm(Account currentAccount) : base(Program.AppEnvironment)
+    public ChargeEntryForm(Account currentAccount)
     {
         Log.Instance.Trace($"Entering");
         _currentAccount = currentAccount;

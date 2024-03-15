@@ -4,9 +4,9 @@ using System.Windows.Forms;
 
 namespace LabBilling.Forms;
 
-partial class AboutBox : Utilities.BaseForm
+partial class AboutBox : Form
 {
-    public AboutBox() : base(Program.AppEnvironment)
+    public AboutBox() 
     {
         InitializeComponent();
         this.Text = String.Format("About {0} ", AssemblyTitle);

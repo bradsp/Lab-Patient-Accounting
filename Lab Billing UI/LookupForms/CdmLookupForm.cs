@@ -8,7 +8,7 @@ using LabBilling.Core.Services;
 
 namespace LabBilling.Forms;
 
-public partial class CdmLookupForm : Utilities.BaseForm
+public partial class CdmLookupForm : Form
 {
     public int CharacterLookupCountMin { get; set; } = 3;
     public List<Cdm> Datasource { get; set; }
@@ -21,7 +21,7 @@ public partial class CdmLookupForm : Utilities.BaseForm
 
     private readonly DictionaryService dictionaryService = new(Program.AppEnvironment);
 
-    public CdmLookupForm() : base(Program.AppEnvironment)
+    public CdmLookupForm() 
     {
         InitializeComponent();
 

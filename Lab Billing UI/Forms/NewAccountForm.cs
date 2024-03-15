@@ -10,7 +10,7 @@ using LabBilling.Core.Services;
 
 namespace LabBilling.Forms;
 
-public partial class NewAccountForm : Utilities.BaseForm
+public partial class NewAccountForm : Form
 {
 
     public string CreatedAccount;
@@ -19,7 +19,7 @@ public partial class NewAccountForm : Utilities.BaseForm
     private AccountService accountService;
     private DictionaryService dictionaryService;
 
-    public NewAccountForm() : base(Program.AppEnvironment)
+    public NewAccountForm() 
     {
         Log.Instance.Trace($"Entering");
         InitializeComponent();

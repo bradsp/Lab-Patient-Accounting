@@ -18,7 +18,7 @@ namespace LabBilling.Core.Models
         [Column("modi")]
         public string Modifier { get; set; }
         [Column("modi2")]
-        public string Modifer2 { get; set; }
+        public string Modifier2 { get; set; }
         [Column("type")]
         public string Type { get; set; }
         [Column("amount")]

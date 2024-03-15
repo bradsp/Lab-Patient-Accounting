@@ -356,33 +356,26 @@ public sealed class AccountService
         PetaPoco.Sql command;
 
         string selMaxRecords = string.Empty;
-
-        if (appEnvironment.ApplicationParameters.MaxClaimsInClaimBatch > 0)
-        {
-            selMaxRecords = $"TOP {appEnvironment.ApplicationParameters.MaxClaimsInClaimBatch}";
-        }
-
         string accTableName = uow.AccountRepository.TableName;
         string insTableName = uow.InsRepository.TableName;
 
         var selectCols = new[]
         {
-            accTableName + "." + uow.ClaimItemRepository.GetRealColumn(nameof(ClaimItem.status)),
-            accTableName + "." + uow.ClaimItemRepository.GetRealColumn(nameof(ClaimItem.account)),
-            accTableName + "." + uow.ClaimItemRepository.GetRealColumn(nameof(ClaimItem.pat_name)),
-            accTableName + "." + uow.ClaimItemRepository.GetRealColumn(nameof(ClaimItem.ssn)),
-            accTableName + "." + uow.ClaimItemRepository.GetRealColumn(nameof(ClaimItem.cl_mnem)),
-            accTableName + "." + uow.ClaimItemRepository.GetRealColumn(nameof(ClaimItem.fin_code)),
-            accTableName + "." + uow.ClaimItemRepository.GetRealColumn(nameof(ClaimItem.trans_date)),
-            insTableName + "." + uow.ClaimItemRepository.GetRealColumn(nameof(ClaimItem.ins_plan_nme))
+            accTableName + "." + uow.ClaimItemRepository.GetRealColumn(nameof(ClaimItem.Status)),
+            accTableName + "." + uow.ClaimItemRepository.GetRealColumn(nameof(ClaimItem.AccountNo)),
+            accTableName + "." + uow.ClaimItemRepository.GetRealColumn(nameof(ClaimItem.PatName)),
+            accTableName + "." + uow.ClaimItemRepository.GetRealColumn(nameof(ClaimItem.SocSecNum)),
+            accTableName + "." + uow.ClaimItemRepository.GetRealColumn(nameof(ClaimItem.ClientMnem)),
+            accTableName + "." + uow.ClaimItemRepository.GetRealColumn(nameof(ClaimItem.FinCode)),
+            accTableName + "." + uow.ClaimItemRepository.GetRealColumn(nameof(ClaimItem.TransactionDate)),
+            insTableName + "." + uow.ClaimItemRepository.GetRealColumn(nameof(ClaimItem.InsPlanName))
         };
 
-        //TODO: how to do TOP # in the select when done this way.
         command = Sql.Builder
             .Select(selectCols)
             .From(accTableName)
             .InnerJoin(insTableName)
-            .On($"{insTableName}.{uow.InsRepository.GetRealColumn(nameof(Ins.Account))} = {accTableName}.{uow.AccountRepository.GetRealColumn(nameof(Account.AccountNo))} and {uow.InsRepository.GetRealColumn(nameof(Ins.Coverage))} = '{InsCoverage.Primary}'");
+            .On($"{insTableName}.{uow.InsRepository.GetRealColumn(nameof(Ins.Account))} = {accTableName}.{uow.AccountRepository.GetRealColumn(nameof(Account.AccountNo))} and {uow.InsRepository.GetRealColumn(nameof(Ins.Coverage))} = '{InsCoverage.Primary}'");            
 
         try
         {
@@ -399,11 +392,14 @@ public sealed class AccountService
                     break;
             }
 
-            command.OrderBy($"{uow.ClaimItemRepository.GetRealColumn(nameof(Account.TransactionDate))}");
+            command.OrderBy($"{uow.ClaimItemRepository.GetRealColumn(nameof(ClaimItem.TransactionDate))}");
 
             var queryResult = uow.ClaimItemRepository.Fetch(command).ToList();
 
-            return queryResult;
+            if (appEnvironment.ApplicationParameters.MaxClaimsInClaimBatch > 0)
+                return queryResult.Take(appEnvironment.ApplicationParameters.MaxClaimsInClaimBatch).ToList();
+            else
+                return queryResult;
         }
         catch (Exception ex)
         {

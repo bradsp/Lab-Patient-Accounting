@@ -11,13 +11,13 @@ namespace LabBilling.Forms;
 /// <summary>
 /// A form to display the errors on an existing record.
 /// </summary>
-public partial class ErrorsForm : Utilities.BaseForm
+public partial class ErrorsForm : Form
 {
     System.Drawing.Printing.PrintDocument pd = null;
     /// <summary>
     /// Form Initiaziation
     /// </summary>
-    public ErrorsForm() : base(Program.AppEnvironment)
+    public ErrorsForm() 
     {
         InitializeComponent();
     }

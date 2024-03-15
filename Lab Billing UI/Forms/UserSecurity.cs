@@ -10,14 +10,14 @@ using LabBilling.Core.Services;
 
 namespace LabBilling;
 
-public partial class UserSecurity : Utilities.BaseForm
+public partial class UserSecurity : Form
 {
     private bool IsNewRecord = false;
     List<UserAccount> searchResults = new();
 
     private readonly SystemService systemService = new(Program.AppEnvironment);
 
-    public UserSecurity() : base(Program.AppEnvironment)
+    public UserSecurity() 
     {
         Log.Instance.Trace($"Entering");
         InitializeComponent();

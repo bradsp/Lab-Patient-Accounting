@@ -1,21 +1,20 @@
-﻿using System;
+﻿using LabBilling.Core.Models;
+using LabBilling.Core.Services;
+using LabBilling.Logging;
+using MCL;
+using Microsoft.Data.SqlClient;
+using System;
+using System.Collections.Generic;
 using System.Data;
+using System.Drawing.Printing;
 using System.Linq;
 using System.Windows.Forms;
-using Microsoft.Data.SqlClient;
 // programmer added
 using Utilities;
-using MCL;
-using System.Drawing.Printing;
-using LabBilling.Logging;
-using LabBilling.Core.Models;
-using LabBilling.Core.DataAccess;
-using System.Collections.Generic;
-using LabBilling.Core.Services;
 
 namespace LabBilling.Forms
 {
-    public partial class PatientCollectionsForm : BaseForm
+    public partial class PatientCollectionsForm : Form
     {
         private string propAppName
         { get { return string.Format("{0} {1}", Application.ProductName, Application.ProductVersion); } }
@@ -47,7 +46,7 @@ namespace LabBilling.Forms
             tsbSmallBalWriteOff.Enabled = !tsbSmallBalWriteOff.Enabled;
         }
 
-        public PatientCollectionsForm() : base(Program.AppEnvironment)
+        public PatientCollectionsForm()
         {
             Log.Instance.Trace($"Entering");
             InitializeComponent();
@@ -164,7 +163,7 @@ namespace LabBilling.Forms
                 {
                     Log.Instance.Error(apex.Message, apex);
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     Log.Instance.Error(ex.Message, ex);
                 }
@@ -330,7 +329,7 @@ namespace LabBilling.Forms
             Log.Instance.Trace($"Entering");
             dgvAccounts.Columns.Clear();
 
-            DateTime dtFrom = DateTime.Today; 
+            DateTime dtFrom = DateTime.Today;
             DateTime dtThru = DateTime.Today.AddHours(23).AddMinutes(59).AddSeconds(59);
 
             m_dtAccounts = new DataTable("BAD_DEBT");
@@ -521,11 +520,11 @@ namespace LabBilling.Forms
                         nUpdated++;
                         acc.Notes = accountService.AddNote(strAccount, $"Bad debt set by [{Program.AppEnvironment.UserName}]").ToList();
                     }
-                    catch(ApplicationException apex)
+                    catch (ApplicationException apex)
                     {
                         Log.Instance.Error(apex.Message, apex);
                     }
-                    catch(Exception ex)
+                    catch (Exception ex)
                     {
                         Log.Instance.Error(ex.Message, ex);
                     }
