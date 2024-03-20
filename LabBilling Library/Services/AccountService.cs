@@ -1,15 +1,14 @@
-﻿using LabBilling.Core.Models;
+﻿using LabBilling.Core.DataAccess;
+using LabBilling.Core.Models;
+using LabBilling.Core.UnitOfWork;
+using Microsoft.Data.SqlClient;
+using PetaPoco;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.Data.SqlClient;
 using System.Data;
+using System.Linq;
+using System.Threading.Tasks;
 using Log = LabBilling.Logging.Log;
-using PetaPoco;
-using LabBilling.Core.UnitOfWork;
-using LabBilling.Core.DataAccess;
 
 namespace LabBilling.Core.Services;
 
@@ -56,7 +55,7 @@ public sealed class AccountService
         using AccountUnitOfWork uow = new(appEnvironment);
 
         var acc = uow.AccountRepository.GetByAccount(accountNo);
-        if(acc != null)
+        if (acc != null)
             acc.Balance = GetBalance(accountNo);
 
         return acc;
@@ -95,7 +94,7 @@ public sealed class AccountService
         UnitOfWorkMain uow = new(appEnvironment);
         if (account == null)
             throw new ArgumentNullException(nameof(account));
-        if(account.AccountLockInfo == null)
+        if (account.AccountLockInfo == null)
         {
             account.AccountLockInfo = uow.AccountLockRepository.GetLock(account.AccountNo);
             if (account.AccountLockInfo == null)
@@ -132,7 +131,7 @@ public sealed class AccountService
         {
             record = uow.AccountRepository.GetByAccount(account);
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             Log.Instance.Error(ex);
         }
@@ -391,7 +390,7 @@ public sealed class AccountService
             .Select(selectCols)
             .From(accTableName)
             .InnerJoin(insTableName)
-            .On($"{insTableName}.{uow.InsRepository.GetRealColumn(nameof(Ins.Account))} = {accTableName}.{uow.AccountRepository.GetRealColumn(nameof(Account.AccountNo))} and {uow.InsRepository.GetRealColumn(nameof(Ins.Coverage))} = '{InsCoverage.Primary}'");            
+            .On($"{insTableName}.{uow.InsRepository.GetRealColumn(nameof(Ins.Account))} = {accTableName}.{uow.AccountRepository.GetRealColumn(nameof(Account.AccountNo))} and {uow.InsRepository.GetRealColumn(nameof(Ins.Coverage))} = '{InsCoverage.Primary}'");
 
         try
         {
@@ -967,7 +966,7 @@ public sealed class AccountService
 
         List<Chrg> charges = uow.ChrgRepository.GetByAccount(accountNo, showCredited, includeInvoiced, asOfDate, excludeCBill);
 
-        if(charges.Count > 10) //consider parallel processing if number of charges is significant.
+        if (charges.Count > 10) //consider parallel processing if number of charges is significant.
         {
             charges.AsParallel().ForAll(chrg => AddRevenueDiagnosisToChrg(chrg));
         }
@@ -1670,7 +1669,7 @@ public sealed class AccountService
             errorList.Add("Rules not loaded for AMA_Year. DO NOT BILL.");
             return errorList;
         }
-       
+
         foreach (var cpt4 in account.cpt4List.Distinct())
         {
             if (cpt4 == null)

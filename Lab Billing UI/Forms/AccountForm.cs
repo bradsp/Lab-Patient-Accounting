@@ -46,6 +46,7 @@ public partial class AccountForm : Form
     private Timer _timer;
 
     public event EventHandler<string> AccountOpenedEvent;
+    public event EventHandler<Account> AccountUpdatedEvent;
 
     private readonly string _selectedAccount;
     public string SelectedAccount
@@ -380,6 +381,7 @@ public partial class AccountForm : Form
         LoadDx();
         LoadNotes();
         LoadBillingActivity();
+        AccountUpdatedEvent?.Invoke(this, _currentAccount);
     }
 
     private void LoadSummaryTab()

@@ -1,16 +1,16 @@
-﻿using System;
+﻿using LabBilling.Core;
+using LabBilling.Core.Models;
+using LabBilling.Core.Services;
+using LabBilling.Library;
+using LabBilling.Logging;
+using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Drawing;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using LabBilling.Logging;
-using LabBilling.Core.Models;
-using LabBilling.Library;
-using System.Data;
-using LabBilling.Core;
-using LabBilling.Core.Services;
 using WinFormsLibrary;
-using System.Linq;
 
 namespace LabBilling.Forms;
 
@@ -18,15 +18,15 @@ public partial class WorkListForm : Form
 {
     private readonly AccountService accountService = new(Program.AppEnvironment);
     private readonly WorklistService worklist = new(Program.AppEnvironment);
-    private bool tasksRunning = false;
-    private bool requestAbort = false;
-    private BindingSource accountBindingSource = new BindingSource();
-    private DataTable accountTable = null;
-    private int worklistPanelWidth = 0;
-    private Timer _timer;
+    private bool _tasksRunning = false;
+    private bool _requestAbort = false;
+    private BindingSource _accountBindingSource = [];
+    private DataTable _accountTable = null;
+    private int _worklistPanelWidth = 0;
+    private readonly Timer _timer;
     private const int _timerDelay = 650;
-    private string selectedQueue = null;
-    private TreeNode currentNode = null;
+    private string _selectedQueue = null;
+    private TreeNode _currentNode = null;
 
 
     public event EventHandler<string> AccountLaunched;
@@ -35,20 +35,18 @@ public partial class WorkListForm : Form
     {
         accountGrid.DoubleBuffered(true);
 
-        accountTable = new List<AccountSearch>().ToDataTable();
-        accountTable.PrimaryKey = new DataColumn[] { accountTable.Columns[nameof(AccountSearch.Account)] };
+        _accountTable = new List<AccountSearch>().ToDataTable();
+        _accountTable.PrimaryKey = [_accountTable.Columns[nameof(AccountSearch.Account)]];
 
-        accountBindingSource.DataSource = accountTable;
-        accountGrid.DataSource = accountBindingSource;
+        _accountBindingSource.DataSource = _accountTable;
+        accountGrid.DataSource = _accountBindingSource;
 
         var worklists = Worklists.ToList();
 
         TreeNode[] worklistsTreeNode = new TreeNode[worklists.Count];
         int i = 0;
-        foreach (string wlist in worklists)
-        {
-            worklistsTreeNode[i++] = new TreeNode(wlist);
-        }
+        
+        worklists.ForEach(w => worklistsTreeNode[i++] = new TreeNode(w));
 
         TreeNode rootNode = new("Worklists", worklistsTreeNode);
         workqueues.Nodes.Add(rootNode);
@@ -57,22 +55,22 @@ public partial class WorkListForm : Form
         workqueues.Enabled = true;
     }
 
-    public WorkListForm() 
+    public WorkListForm()
     {
-        InitializeComponent();            
+        InitializeComponent();
         _timer = new Timer() { Enabled = false, Interval = _timerDelay };
         _timer.Tick += new EventHandler(filterTextBox_KeyUpDone);
     }
 
     private void WorkListForm_FormClosing(object sender, FormClosingEventArgs e)
     {
-        if (tasksRunning)
+        if (_tasksRunning)
         {
             if (MessageBox.Show("Validation process is running. Do you want to abort?", "Abort Validation?", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
                 == DialogResult.Yes)
             {
                 //code to abort process
-                requestAbort = true;
+                _requestAbort = true;
                 e.Cancel = true;
                 return;
             }
@@ -86,13 +84,13 @@ public partial class WorkListForm : Form
 
     private async void workqueues_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
     {
-        if (currentNode != null)
+        if (_currentNode != null)
         {
-            currentNode.BackColor = Color.White;
-            currentNode.ForeColor = Color.Black;
+            _currentNode.BackColor = Color.White;
+            _currentNode.ForeColor = Color.Black;
         }
-        selectedQueue = workqueues.SelectedNode.Text;
-        currentNode = workqueues.SelectedNode;
+        _selectedQueue = workqueues.SelectedNode.Text;
+        _currentNode = workqueues.SelectedNode;
 
         workqueues.SelectedNode.BackColor = Color.Green;
         workqueues.SelectedNode.ForeColor = Color.White;
@@ -105,7 +103,7 @@ public partial class WorkListForm : Form
 
         Cursor.Current = Cursors.WaitCursor;
 
-        if (selectedQueue == null)
+        if (_selectedQueue == null)
         {
             workqueues.Enabled = true;
             return;
@@ -117,14 +115,14 @@ public partial class WorkListForm : Form
         toolStripStatusLabel1.Text = "Loading Accounts ... ";
         toolStripProgressBar1.Style = ProgressBarStyle.Marquee;
 
-        var accounts = await worklist.GetAccountsForWorklistAsync(selectedQueue);
+        var accounts = await worklist.GetAccountsForWorklistAsync(_selectedQueue);
 
-        accountBindingSource.DataSource = null;
-        accountTable = accounts.ToDataTable();
-        accountTable.PrimaryKey = new DataColumn[] { accountTable.Columns[nameof(AccountSearch.Account)] };
-        accountBindingSource.DataSource = accountTable;
+        _accountBindingSource.DataSource = null;
+        _accountTable = accounts.ToDataTable();
+        _accountTable.PrimaryKey = [_accountTable.Columns[nameof(AccountSearch.Account)]];
+        _accountBindingSource.DataSource = _accountTable;
 
-        accountTable.DefaultView.Sort = nameof(AccountSearch.ServiceDate);
+        _accountTable.DefaultView.Sort = nameof(AccountSearch.ServiceDate);
 
         accountGrid.ForeColor = Color.Black;
 
@@ -177,9 +175,9 @@ public partial class WorkListForm : Form
         Cursor.Current = Cursors.Default;
 
         if (!showAccountsWithPmtCheckbox.Checked)
-            accountTable.DefaultView.RowFilter = $"{nameof(AccountSearch.TotalPayments)} = 0";
+            _accountTable.DefaultView.RowFilter = $"{nameof(AccountSearch.TotalPayments)} = 0";
 
-        toolStripStatusLabel1.Text = $"{accountTable.DefaultView.Count} records";
+        toolStripStatusLabel1.Text = $"{_accountTable.DefaultView.Count} records";
 
         workqueues.Enabled = true;
         UpdateFilter();
@@ -188,7 +186,7 @@ public partial class WorkListForm : Form
     private void holdToolStripMenuItem_Click(object sender, EventArgs e)
     {
         var selectedAccount = accountGrid.SelectedRows[0].Cells[nameof(AccountSearch.Account)].Value.ToString();
-        var accts = accountTable.Rows.Find(selectedAccount);
+        var accts = _accountTable.Rows.Find(selectedAccount);
 
         if (accountGrid.SelectedRows[0].Cells[nameof(AccountSearch.Status)].Value.ToString() != "HOLD")
         {
@@ -276,7 +274,7 @@ public partial class WorkListForm : Form
         Log.Instance.Trace($"Entering");
 
         var selectedAccount = accountGrid.SelectedRows[0].Cells[nameof(AccountSearch.Account)].Value.ToString();
-        var accts = accountTable.Rows.Find(selectedAccount);
+        var accts = _accountTable.Rows.Find(selectedAccount);
         var account = await accountService.GetAccountAsync(selectedAccount);
 
         string newFinCode = InputDialogs.SelectFinancialCode(accts[nameof(AccountSearch.FinCode)].ToString());
@@ -306,7 +304,7 @@ public partial class WorkListForm : Form
     {
         Log.Instance.Trace($"Entering");
         var selectedAccount = accountGrid.SelectedRows[0].Cells[nameof(AccountSearch.Account)].Value.ToString();
-        var accts = accountTable.Rows.Find(selectedAccount);
+        var accts = _accountTable.Rows.Find(selectedAccount);
         var account = await accountService.GetAccountAsync(selectedAccount);
 
         ClientLookupForm clientLookupForm = new ClientLookupForm();
@@ -344,7 +342,7 @@ public partial class WorkListForm : Form
         Log.Instance.Trace($"Entering");
 
         var selectedAccount = accountGrid.SelectedRows[0].Cells[nameof(AccountSearch.Account)].Value.ToString();
-        var accts = accountTable.Rows.Find(selectedAccount);
+        var accts = _accountTable.Rows.Find(selectedAccount);
         var account = await accountService.GetAccountAsync(selectedAccount);
 
 
@@ -381,19 +379,19 @@ public partial class WorkListForm : Form
         if (panelExpandCollapseButton.Text == ">")
         {
             //expand
-            panel1.Width = worklistPanelWidth;
+            panel1.Width = _worklistPanelWidth;
             panelExpandCollapseButton.Text = "<";
             accountGrid.Left = panel1.Right + 10;
-            accountGrid.Width -= worklistPanelWidth - 20;
+            accountGrid.Width -= _worklistPanelWidth - 20;
         }
         else
         {
             //collapse
-            worklistPanelWidth = panel1.Width;
+            _worklistPanelWidth = panel1.Width;
             panel1.Width = panelExpandCollapseButton.Width;
             panelExpandCollapseButton.Text = ">";
             accountGrid.Left = panel1.Right + 10;
-            accountGrid.Width += worklistPanelWidth - 20;
+            accountGrid.Width += _worklistPanelWidth - 20;
         }
     }
 
@@ -409,73 +407,73 @@ public partial class WorkListForm : Form
         {
             if (nameFilterRadioBtn.Checked)
             {
-                accountTable.DefaultView.RowFilter = $"{nameof(AccountSearch.Name)} like '{filterTextBox.Text}%'";
+                _accountTable.DefaultView.RowFilter = $"{nameof(AccountSearch.Name)} like '{filterTextBox.Text}%'";
             }
             if (clientFilterRadioBtn.Checked)
             {
-                accountTable.DefaultView.RowFilter = $"{nameof(AccountSearch.ClientMnem)} = '{filterTextBox.Text}'";
+                _accountTable.DefaultView.RowFilter = $"{nameof(AccountSearch.ClientMnem)} = '{filterTextBox.Text}'";
             }
             if (accountFilterRadioBtn.Checked)
             {
-                accountTable.DefaultView.RowFilter = $"{nameof(AccountSearch.Account)} like '{filterTextBox.Text}%'";
+                _accountTable.DefaultView.RowFilter = $"{nameof(AccountSearch.Account)} like '{filterTextBox.Text}%'";
             }
             if (insuranceFilterRadioButton.Checked)
             {
-                accountTable.DefaultView.RowFilter = $"{nameof(AccountSearch.PrimaryInsPlanName)} like '%{filterTextBox.Text}%'";
+                _accountTable.DefaultView.RowFilter = $"{nameof(AccountSearch.PrimaryInsPlanName)} like '%{filterTextBox.Text}%'";
             }
 
             if (!showAccountsWithPmtCheckbox.Checked)
             {
-                accountTable.DefaultView.RowFilter += $" and {nameof(AccountSearch.TotalPayments)} = 0";
+                _accountTable.DefaultView.RowFilter += $" and {nameof(AccountSearch.TotalPayments)} = 0";
             }
 
             if (!showZeroBalanceCheckBox.Checked)
             {
-                accountTable.DefaultView.RowFilter += $" and {nameof(AccountSearch.Balance)} <> 0";
+                _accountTable.DefaultView.RowFilter += $" and {nameof(AccountSearch.Balance)} <> 0";
             }
 
             if (!showReadyToBillCheckbox.Checked)
             {
-                accountTable.DefaultView.RowFilter += $" and {nameof(AccountSearch.Status)} not in ('{AccountStatus.ReadyToBill}','{AccountStatus.Professional}','{AccountStatus.Institutional}')";
+                _accountTable.DefaultView.RowFilter += $" and {nameof(AccountSearch.Status)} not in ('{AccountStatus.ReadyToBill}','{AccountStatus.Professional}','{AccountStatus.Institutional}')";
             }
         }
         else
         {
             if (!showAccountsWithPmtCheckbox.Checked)
             {
-                accountTable.DefaultView.RowFilter = $"{nameof(AccountSearch.TotalPayments)} = 0";
+                _accountTable.DefaultView.RowFilter = $"{nameof(AccountSearch.TotalPayments)} = 0";
             }
             else
             {
-                accountTable.DefaultView.RowFilter = String.Empty;
+                _accountTable.DefaultView.RowFilter = String.Empty;
             }
 
             if (!showZeroBalanceCheckBox.Checked)
             {
-                if (accountTable.DefaultView.RowFilter != string.Empty)
+                if (_accountTable.DefaultView.RowFilter != string.Empty)
                 {
-                    accountTable.DefaultView.RowFilter += $" and {nameof(AccountSearch.Balance)} <> 0";
+                    _accountTable.DefaultView.RowFilter += $" and {nameof(AccountSearch.Balance)} <> 0";
                 }
                 else
                 {
-                    accountTable.DefaultView.RowFilter = $" and {nameof(AccountSearch.Balance)} <> 0";
+                    _accountTable.DefaultView.RowFilter = $" and {nameof(AccountSearch.Balance)} <> 0";
                 }
             }
 
             if (!showReadyToBillCheckbox.Checked)
             {
-                if (accountTable.DefaultView.RowFilter != string.Empty)
+                if (_accountTable.DefaultView.RowFilter != string.Empty)
                 {
-                    accountTable.DefaultView.RowFilter += $" and {nameof(AccountSearch.Status)} not in ('{AccountStatus.ReadyToBill}','{AccountStatus.Professional}','{AccountStatus.Institutional}')";
+                    _accountTable.DefaultView.RowFilter += $" and {nameof(AccountSearch.Status)} not in ('{AccountStatus.ReadyToBill}','{AccountStatus.Professional}','{AccountStatus.Institutional}')";
                 }
                 else
                 {
-                    accountTable.DefaultView.RowFilter = $"{nameof(AccountSearch.Status)} not in ('{AccountStatus.ReadyToBill}','{AccountStatus.Professional}','{AccountStatus.Institutional}')";
+                    _accountTable.DefaultView.RowFilter = $"{nameof(AccountSearch.Status)} not in ('{AccountStatus.ReadyToBill}','{AccountStatus.Professional}','{AccountStatus.Institutional}')";
                 }
             }
         }
 
-        toolStripStatusLabel1.Text = $"{accountTable.DefaultView.Count} records";
+        toolStripStatusLabel1.Text = $"{_accountTable.DefaultView.Count} records";
         accountGrid.Columns[nameof(AccountSearch.TotalPayments)].Visible = showAccountsWithPmtCheckbox.Checked;
     }
 
@@ -495,7 +493,7 @@ public partial class WorkListForm : Form
         try
         {
             var selectedAccount = accountGrid.SelectedRows[0].Cells[nameof(AccountSearch.Account)].Value.ToString();
-            var accts = accountTable.Rows.Find(selectedAccount);
+            var accts = _accountTable.Rows.Find(selectedAccount);
             var account = accountService.GetAccount(selectedAccount);
 
             if (account.FinCode != "Y")
@@ -556,7 +554,7 @@ public partial class WorkListForm : Form
     private void readyToBillToolStripMenuItem_Click(object sender, EventArgs e)
     {
         var selectedAccount = accountGrid.SelectedRows[0].Cells[nameof(AccountSearch.Account)].Value.ToString();
-        var accts = accountTable.Rows.Find(selectedAccount);
+        var accts = _accountTable.Rows.Find(selectedAccount);
         var account = accountService.GetAccount(selectedAccount);
 
         if (readyToBillToolStripMenuItem.Checked)
@@ -588,7 +586,7 @@ public partial class WorkListForm : Form
         accountService.ClearAccountLock(account);
     }
 
-    private async void WorkListForm_Activated(object sender, EventArgs e) => await LoadWorkList();
+    private async void WorkListForm_Activated(object sender, EventArgs e) { } // => await LoadWorkList();
 
     private void showReadyToBillCheckbox_CheckedChanged(object sender, EventArgs e) => UpdateFilter();
 
@@ -596,4 +594,30 @@ public partial class WorkListForm : Form
 
     private void showZeroBalanceCheckBox_CheckedChanged(object sender, EventArgs e) => UpdateFilter();
 
+    public void UpdateAccount(Account account)
+    {
+        if (account == null) return;
+
+        //find this account in the active list
+        var row = _accountTable.Rows.Find(account.AccountNo);
+        if (row == null) return;
+
+        if(!WorklistService.AccountMeetsWorklistCriteria(_selectedQueue, account))
+        {
+            row.Delete();
+            return;
+        }
+
+        row.SetField(nameof(AccountSearch.FinCode), account.FinCode);
+        row.SetField(nameof(AccountSearch.Name), account.PatFullName);
+        row.SetField(nameof(AccountSearch.Balance), account.Balance);
+        row.SetField(nameof(AccountSearch.ClientBalance), account.ClientBalance.Sum(c => c.balance));
+        row.SetField(nameof(AccountSearch.Status), account.Status);
+        row.SetField(nameof(AccountSearch.ClientMnem), account.ClientMnem);
+        row.SetField(nameof(AccountSearch.PrimaryInsCode), account.PrimaryInsuranceCode);
+        row.SetField(nameof(AccountSearch.TotalCharges), account.TotalCharges);
+        row.SetField(nameof(AccountSearch.TotalPayments), account.TotalPayments);
+
+
+    }
 }

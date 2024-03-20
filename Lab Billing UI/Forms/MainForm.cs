@@ -83,7 +83,7 @@ public partial class MainForm : Form
 
         var configuration = new NLog.Config.LoggingConfiguration();
 
-        LogLevel minLevel = NLog.LogLevel.Trace;
+        LogLevel minLevel = NLog.LogLevel.Error;
 
         var fileTarget = new FileTarget("logfile") { FileName = "c:\\temp\\lab-billing-log.txt" };
         //var consoleTarget = new NLog.Targets.ConsoleTarget("logconsole");
@@ -222,8 +222,19 @@ public partial class MainForm : Form
             {
                 AccountForm accFrm = new AccountForm(frm.SelectedAccount);
                 accFrm.AccountOpenedEvent += AccFrm_AccountOpenedEvent;
+                accFrm.AccountUpdatedEvent += AccFrm_AccountUpdatedEvent;
                 NewForm(accFrm);
             }
+        }
+    }
+
+    private void AccFrm_AccountUpdatedEvent(object sender, Account e)
+    {
+        //if there is a worklist form opened - call method to update the account in the worklist
+        if (Application.OpenForms.OfType<WorkListForm>().Any())
+        {
+            WorkListForm workListForm = Application.OpenForms.OfType<WorkListForm>().First();
+            workListForm.UpdateAccount(e);
         }
     }
 
@@ -530,6 +541,7 @@ public partial class MainForm : Form
             Cursor.Current = Cursors.WaitCursor;
             AccountForm accFrm = new(account);
             accFrm.AccountOpenedEvent += AccFrm_AccountOpenedEvent;
+            accFrm.AccountUpdatedEvent += AccFrm_AccountUpdatedEvent;
             NewForm(accFrm);
             Cursor.Current = Cursors.Default;
         }

@@ -19,7 +19,7 @@ public class WorklistService
 
     public async Task<List<AccountSearch>> GetAccountsForWorklistAsync(string selectedQueue)
     {
-        DateTime thruDate = DateTime.Today.AddDays(appEnvironment.ApplicationParameters.BillingInitialHoldDays*-1);
+        DateTime thruDate = DateTime.Today.AddDays(appEnvironment.ApplicationParameters.BillingInitialHoldDays * -1);
         (string propertyName, AccountSearchRepository.operation oper, string searchText)[] parameters =
         {
             (nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "PAID_OUT"),
@@ -131,7 +131,7 @@ public class WorklistService
                 break;
             case Worklists.ManualHold:
                 parameters = parameters.Append((nameof(AccountSearch.ServiceDate), AccountSearchRepository.operation.LessThanOrEqual, thruDate.ToString())).ToArray();
-                parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.Equal, "HOLD")).ToArray();
+                parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.Equal, AccountStatus.Hold)).ToArray();
                 break;
             case Worklists.InitialHold:
                 parameters = parameters.Append((nameof(AccountSearch.ServiceDate), AccountSearchRepository.operation.GreaterThanOrEqual, thruDate.ToString())).ToArray();
@@ -167,40 +167,131 @@ public class WorklistService
 
         return accounts;
     }
-}
 
-public static class Worklists
-{
-
-    public const string MedicareCigna = "Medicare/Cigna";
-    public const string BlueCross = "BlueCross";
-    public const string Champus = "Champus";
-    public const string TenncareBCBS = "Tenncare BC/BS";
-    public const string CommercialInst = "Commercial Institutional";
-    public const string CommercialProf = "Commercial Professional";
-    public const string UHCCommunityPlan = "UHC Community Plan";
-    public const string PathwaysTNCare = "Pathways TNCare";
-    public const string Amerigroup = "Amerigroup";
-    public const string SelfPay = "Self Pay";
-    public const string ManualHold = "Manual Hold";
-    public const string InitialHold = "Initial Hold";
-    public const string ErrorFinCode = "Error Fin Code";
-    public const string ClientBill = "Client Bill";
-    public const string SubmittedInstitutional = "Submitted Institutional";
-    public const string SubmittedProfessional = "Submitted Professional";
-    public const string SubmittedOtherClaim = "Submitted Other";
-    public const string ReceivingStatements = "Receiving Statements";
-
-
-    public static List<string> ToList()
+    public static bool AccountMeetsWorklistCriteria(string selectedQueue, Account account)
     {
-        List<string> values = new();
-        foreach(var prop in typeof(Worklists).GetFields())
+        List<string> accStatuses = new();
+        switch (selectedQueue)
         {
-            values.Add(prop.GetValue(null) as string);
+            case Worklists.MedicareCigna:
+                accStatuses = new()
+                {
+                    AccountStatus.Hold,
+                    AccountStatus.ProfSubmitted,
+                    AccountStatus.InstSubmitted,
+                    AccountStatus.ClaimSubmitted,
+                    AccountStatus.Statements
+                };
+                return account.FinCode == "A" && !accStatuses.Contains(account.Status) && account.ClaimBalance != 0.00;
+            case Worklists.BlueCross:
+                accStatuses = new()
+                {
+                    AccountStatus.Hold,
+                    AccountStatus.ProfSubmitted,
+                    AccountStatus.InstSubmitted,
+                    AccountStatus.ClaimSubmitted,
+                    AccountStatus.Statements
+                };
+                return account.FinCode == "B" && !accStatuses.Contains(account.Status) && account.ClaimBalance != 0.00;
+            case Worklists.Champus:
+                accStatuses = new()
+                {
+                    AccountStatus.Hold,
+                    AccountStatus.ProfSubmitted,
+                    AccountStatus.InstSubmitted,
+                    AccountStatus.ClaimSubmitted,
+                    AccountStatus.Statements
+                };
+                return account.FinCode == "C" && !accStatuses.Contains(account.Status) && account.ClaimBalance != 0.00;
+            case Worklists.TenncareBCBS:
+                accStatuses = new()
+                {
+                    AccountStatus.Hold,
+                    AccountStatus.ProfSubmitted,
+                    AccountStatus.InstSubmitted,
+                    AccountStatus.ClaimSubmitted,
+                    AccountStatus.Statements
+                };
+                return account.FinCode == "D" && !accStatuses.Contains(account.Status) && account.ClaimBalance != 0.00;
+            case Worklists.CommercialInst:
+                accStatuses = new()
+                {
+                    AccountStatus.Hold,
+                    AccountStatus.ProfSubmitted,
+                    AccountStatus.InstSubmitted,
+                    AccountStatus.ClaimSubmitted,
+                    AccountStatus.Statements
+                };
+                return account.FinCode == "H" && !accStatuses.Contains(account.Status) && account.ClaimBalance != 0.00;
+            case Worklists.CommercialProf:
+                accStatuses = new()
+                {
+                    AccountStatus.Hold,
+                    AccountStatus.ProfSubmitted,
+                    AccountStatus.InstSubmitted,
+                    AccountStatus.ClaimSubmitted,
+                    AccountStatus.Statements
+                };
+                return account.FinCode == "L" && !accStatuses.Contains(account.Status) && account.ClaimBalance != 0.00;
+            case Worklists.UHCCommunityPlan:
+                accStatuses = new()
+                {
+                    AccountStatus.Hold,
+                    AccountStatus.ProfSubmitted,
+                    AccountStatus.InstSubmitted,
+                    AccountStatus.ClaimSubmitted,
+                    AccountStatus.Statements
+                };
+                return account.FinCode == "M" && !accStatuses.Contains(account.Status) && account.ClaimBalance != 0.00;
+            case Worklists.PathwaysTNCare:
+                accStatuses = new()
+                {
+                    AccountStatus.Hold,
+                    AccountStatus.ProfSubmitted,
+                    AccountStatus.InstSubmitted,
+                    AccountStatus.ClaimSubmitted,
+                    AccountStatus.Statements
+                };
+                return account.FinCode == "P" && !accStatuses.Contains(account.Status) && account.ClaimBalance != 0.00;
+            case Worklists.Amerigroup:
+                accStatuses = new()
+                {
+                    AccountStatus.Hold,
+                    AccountStatus.ProfSubmitted,
+                    AccountStatus.InstSubmitted,
+                    AccountStatus.ClaimSubmitted,
+                    AccountStatus.Statements
+                };
+                return account.FinCode == "Q" && !accStatuses.Contains(account.Status) && account.ClaimBalance != 0.00;
+            case Worklists.SelfPay:
+                accStatuses = new()
+                {
+                    AccountStatus.Hold,
+                    AccountStatus.ProfSubmitted,
+                    AccountStatus.InstSubmitted,
+                    AccountStatus.ClaimSubmitted,
+                    AccountStatus.Statements
+                };
+                return account.FinCode == "E" && !accStatuses.Contains(account.Status) && account.ClaimBalance != 0.00;
+            case Worklists.ManualHold:
+                return account.Status == AccountStatus.Hold;
+            case Worklists.InitialHold:
+                return account.Fin.FinClass != "C";
+            case Worklists.ErrorFinCode:
+                return account.FinCode == "K";
+            case Worklists.ClientBill:
+                return account.Fin.FinClass == "C";
+            case Worklists.SubmittedInstitutional:
+                return account.Status == AccountStatus.InstSubmitted;
+            case Worklists.SubmittedProfessional:
+                return account.Status == AccountStatus.ProfSubmitted;
+            case Worklists.SubmittedOtherClaim:
+                return account.Status == AccountStatus.ClaimSubmitted;
+            case Worklists.ReceivingStatements:
+                return account.Status == AccountStatus.Statements;
+            default:
+                return false;
         }
-
-        return values;
     }
 
 }
