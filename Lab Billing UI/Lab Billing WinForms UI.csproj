@@ -5,7 +5,7 @@
     <RootNamespace>LabBilling</RootNamespace>
     <AssemblyName>LabBilling</AssemblyName>
     <IsWebBootstrapper>false</IsWebBootstrapper>
-    <AssemblyVersion>2023.1.1.556</AssemblyVersion>
+    <AssemblyVersion>2024.1.1.556</AssemblyVersion>
     <PublishUrl>\\wthmclbill\installations%24\LabBilling\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Unc</InstallFrom>
@@ -26,7 +26,7 @@
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <GenerateAssemblyInfo>True</GenerateAssemblyInfo>
     <UseWindowsForms>true</UseWindowsForms>
     <UseWPF>true</UseWPF>
     <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
@@ -55,6 +55,10 @@
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
+    <Version>$(AssemblyVersion)</Version>
+    <Copyright>2023-2024</Copyright>
+    <RepositoryUrl>https://github.com/bradsp/Lab-Patient-Accounting</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <NoWarn>1701;1702;CA1416</NoWarn>

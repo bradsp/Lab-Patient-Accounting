@@ -92,18 +92,25 @@ public sealed class AccountService
 
     public bool ClearAccountLock(Account account)
     {
+        UnitOfWorkMain uow = new(appEnvironment);
         if (account == null)
             throw new ArgumentNullException(nameof(account));
+        if(account.AccountLockInfo == null)
+        {
+            account.AccountLockInfo = uow.AccountLockRepository.GetLock(account.AccountNo);
+            if (account.AccountLockInfo == null)
+            {
+                Log.Instance.Warn($"Account Lock not found for {account.AccountNo}");
+                return false;
+            }
+        }
         return ClearAccountLock(account.AccountLockInfo.id);
     }
 
     public bool ClearAccountLock(int id)
     {
-        using AccountUnitOfWork uow = new(appEnvironment, true);
-
+        using AccountUnitOfWork uow = new(appEnvironment);
         var retval = uow.AccountLockRepository.Delete(id);
-        uow.Commit();
-
         return retval;
     }
 
@@ -120,7 +127,16 @@ public sealed class AccountService
             throw new AccountLockException(alock);
         }
 
-        var record = uow.AccountRepository.GetByAccount(account);
+        Account record = null;
+        try
+        {
+            record = uow.AccountRepository.GetByAccount(account);
+        }
+        catch(Exception ex)
+        {
+            Log.Instance.Error(ex);
+        }
+
         if (record == null)
         {
             ClearAccountLock(alock.id);

@@ -158,7 +158,6 @@ public partial class Login : Form
 
     private bool GetUserProfile()
     {
-
         IsLoggedIn = true;
         LoggedInUser = systemService.GetUser(username.Text);
         Program.LoggedInUser = LoggedInUser;

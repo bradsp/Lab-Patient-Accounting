@@ -74,7 +74,7 @@ public class AccountLockException : ApplicationException
 
     public AccountLockException() { }
 
-    public AccountLockException(AccountLock lockInfo, string message = "") : base(message)
+    public AccountLockException(AccountLock lockInfo, string message = "Exception acquiring account lock") : base(message)
     {
         this.LockInfo = lockInfo;        
     }

@@ -129,7 +129,7 @@ namespace Utilities
         /// </summary>
         public static string GetAppName()
         {
-            RFCObject rfc = new RFCObject();
+            RFCObject rfc = new();
             return rfc.propAppName;          
         }
 

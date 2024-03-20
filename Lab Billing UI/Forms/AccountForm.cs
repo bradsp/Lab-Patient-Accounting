@@ -21,27 +21,27 @@ namespace LabBilling.Forms;
 
 public partial class AccountForm : Form
 {
-    private readonly AccountService accountService;
-    private readonly DictionaryService dictionaryService;
-    private BindingList<PatDiag> dxBindingList;
-    private readonly DataTable dxPointers = new();
-    private readonly BindingSource dxPointerBindingSource = new();
-    private const string setHoldMenuText = "Set Claim Hold";
-    private const string clearHoldMenuText = "Clear Claim Hold";
+    private readonly AccountService _accountService;
+    private readonly DictionaryService _dictionaryService;
+    private BindingList<PatDiag> _dxBindingList;
+    private readonly DataTable _dxPointers = new();
+    private readonly BindingSource _dxPointerBindingSource = new();
+    private const string _setHoldMenuText = "Set Claim Hold";
+    private const string _clearHoldMenuText = "Clear Claim Hold";
 
-    private List<Phy> providers = null;
-    private Account currentAccount = null;
-    private readonly List<string> changedControls = new();
-    private readonly Dictionary<Control, string> controlColumnMap = new();
+    private List<Phy> _providers = null;
+    private Account _currentAccount = null;
+    private readonly List<string> _changedControls = new();
+    private readonly Dictionary<Control, string> _controlColumnMap = new();
 
-    private bool billingTabLoading = false;
+    private bool _billingTabLoading = false;
     private const int _timerInterval = 650;
-    private const string notesAlertText = "** SEE NOTES **";
-    private bool closing = false;
-    private readonly ChargeMaintenanceUC chargeMaintenance = new();
-    private readonly InsMaintenanceUC insPrimaryMaintenanceUC = new(InsCoverage.Primary);
-    private readonly InsMaintenanceUC insSecondaryMaintenanceUC = new(InsCoverage.Secondary);
-    private readonly InsMaintenanceUC insTertiaryMaintenanceUC = new(InsCoverage.Tertiary);
+    private const string _notesAlertText = "** SEE NOTES **";
+    private bool _closing = false;
+    private readonly ChargeMaintenanceUC _chargeMaintenance = new();
+    private readonly InsMaintenanceUC _insPrimaryMaintenanceUC = new(InsCoverage.Primary);
+    private readonly InsMaintenanceUC _insSecondaryMaintenanceUC = new(InsCoverage.Secondary);
+    private readonly InsMaintenanceUC _insTertiaryMaintenanceUC = new(InsCoverage.Tertiary);
 
     private Timer _timer;
 
@@ -63,8 +63,8 @@ public partial class AccountForm : Form
     public AccountForm(string account) : this()
     {
         Log.Instance.Trace("Entering");
-        dictionaryService = new(Program.AppEnvironment);
-        accountService = new(Program.AppEnvironment);
+        _dictionaryService = new(Program.AppEnvironment);
+        _accountService = new(Program.AppEnvironment);
 
         if (account != null)
             _selectedAccount = account;
@@ -102,7 +102,7 @@ public partial class AccountForm : Form
         {
             Log.Instance.Error(ex, "Error setting control formatting.");
             MessageBox.Show("Unable to load Account. Contact your administrator.", "Error during load", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            closing = true;
+            _closing = true;
             this.Visible = false;
             this.Close();
             return;
@@ -111,25 +111,25 @@ public partial class AccountForm : Form
         providerSearchListBox.Visible = false;
         tabDemographics.Controls.Add(providerSearchListBox);
 
-        tabCharges.Controls.Add(chargeMaintenance);
-        chargeMaintenance.Dock = DockStyle.Fill;
-        chargeMaintenance.ChargesUpdated += DataChanged_EventHandler;
-        chargeMaintenance.OnError += UserControl_OnError;
+        tabCharges.Controls.Add(_chargeMaintenance);
+        _chargeMaintenance.Dock = DockStyle.Fill;
+        _chargeMaintenance.ChargesUpdated += DataChanged_EventHandler;
+        _chargeMaintenance.OnError += UserControl_OnError;
 
-        tabInsPrimary.Controls.Add(insPrimaryMaintenanceUC);
-        insPrimaryMaintenanceUC.Dock = DockStyle.Fill;
-        insPrimaryMaintenanceUC.InsuranceChanged += InsChanged_EventHander;
-        insPrimaryMaintenanceUC.OnError += UserControl_OnError;
+        tabInsPrimary.Controls.Add(_insPrimaryMaintenanceUC);
+        _insPrimaryMaintenanceUC.Dock = DockStyle.Fill;
+        _insPrimaryMaintenanceUC.InsuranceChanged += InsChanged_EventHander;
+        _insPrimaryMaintenanceUC.OnError += UserControl_OnError;
 
-        tabInsSecondary.Controls.Add(insSecondaryMaintenanceUC);
-        insSecondaryMaintenanceUC.Dock = DockStyle.Fill;
-        insSecondaryMaintenanceUC.InsuranceChanged += InsChanged_EventHander;
-        insSecondaryMaintenanceUC.OnError += UserControl_OnError;
+        tabInsSecondary.Controls.Add(_insSecondaryMaintenanceUC);
+        _insSecondaryMaintenanceUC.Dock = DockStyle.Fill;
+        _insSecondaryMaintenanceUC.InsuranceChanged += InsChanged_EventHander;
+        _insSecondaryMaintenanceUC.OnError += UserControl_OnError;
 
-        tabInsTertiary.Controls.Add(insTertiaryMaintenanceUC);
-        insTertiaryMaintenanceUC.Dock = DockStyle.Fill;
-        insTertiaryMaintenanceUC.InsuranceChanged += InsChanged_EventHander;
-        insTertiaryMaintenanceUC.OnError += UserControl_OnError;
+        tabInsTertiary.Controls.Add(_insTertiaryMaintenanceUC);
+        _insTertiaryMaintenanceUC.Dock = DockStyle.Fill;
+        _insTertiaryMaintenanceUC.InsuranceChanged += InsChanged_EventHander;
+        _insTertiaryMaintenanceUC.OnError += UserControl_OnError;
 
         #region Process permissions and enable controls
 
@@ -138,39 +138,39 @@ public partial class AccountForm : Form
         #endregion
 
         #region load controlColumnMap
-        controlColumnMap.Add(SocSecNoTextBox, nameof(Account.SocSecNo));
-        controlColumnMap.Add(DateOfBirthTextBox, nameof(Account.BirthDate));
-        controlColumnMap.Add(SexComboBox, nameof(Account.Sex));
+        _controlColumnMap.Add(SocSecNoTextBox, nameof(Account.SocSecNo));
+        _controlColumnMap.Add(DateOfBirthTextBox, nameof(Account.BirthDate));
+        _controlColumnMap.Add(SexComboBox, nameof(Account.Sex));
 
-        controlColumnMap.Add(ZipcodeTextBox, nameof(Pat.ZipCode));
-        controlColumnMap.Add(MaritalStatusComboBox, nameof(Pat.MaritalStatus));
-        controlColumnMap.Add(EmailAddressTextBox, nameof(Pat.EmailAddress));
-        controlColumnMap.Add(SuffixTextBox, nameof(Pat.PatNameSuffix));
-        controlColumnMap.Add(LastNameTextBox, nameof(Pat.PatNameSuffix));
-        controlColumnMap.Add(MiddleNameTextBox, nameof(Pat.PatMiddleName));
-        controlColumnMap.Add(FirstNameTextBox, nameof(Pat.PatFirstName));
-        controlColumnMap.Add(StateComboBox, nameof(Pat.State));
-        controlColumnMap.Add(PhoneTextBox, nameof(Pat.PrimaryPhone));
-        controlColumnMap.Add(CityTextBox, nameof(Pat.City));
-        controlColumnMap.Add(Address2TextBox, nameof(Pat.Address2));
-        controlColumnMap.Add(Address1TextBox, nameof(Pat.Address1));
-        controlColumnMap.Add(GuarZipTextBox, nameof(Pat.GuarantorZipCode));
-        controlColumnMap.Add(GuarSuffixTextBox, nameof(Pat.GuarantorNameSuffix));
-        controlColumnMap.Add(GuarMiddleNameTextBox, nameof(Pat.GuarantorMiddleName));
-        controlColumnMap.Add(GuarFirstNameTextBox, nameof(Pat.GuarantorFirstName));
-        controlColumnMap.Add(GuarStateComboBox, nameof(Pat.GuarantorState));
-        controlColumnMap.Add(GuarantorRelationComboBox, nameof(Pat.GuarRelationToPatient));
-        controlColumnMap.Add(GuarantorPhoneTextBox, nameof(Pat.GuarantorPrimaryPhone));
-        controlColumnMap.Add(GuarCityTextBox, nameof(Pat.GuarantorCity));
-        controlColumnMap.Add(GuarantorAddressTextBox, nameof(Pat.GuarantorAddress));
-        controlColumnMap.Add(GuarantorLastNameTextBox, nameof(Pat.GuarantorLastName));
-        controlColumnMap.Add(orderingPhyTextBox, nameof(Pat.ProviderId));
+        _controlColumnMap.Add(ZipcodeTextBox, nameof(Pat.ZipCode));
+        _controlColumnMap.Add(MaritalStatusComboBox, nameof(Pat.MaritalStatus));
+        _controlColumnMap.Add(EmailAddressTextBox, nameof(Pat.EmailAddress));
+        _controlColumnMap.Add(SuffixTextBox, nameof(Pat.PatNameSuffix));
+        _controlColumnMap.Add(LastNameTextBox, nameof(Pat.PatNameSuffix));
+        _controlColumnMap.Add(MiddleNameTextBox, nameof(Pat.PatMiddleName));
+        _controlColumnMap.Add(FirstNameTextBox, nameof(Pat.PatFirstName));
+        _controlColumnMap.Add(StateComboBox, nameof(Pat.State));
+        _controlColumnMap.Add(PhoneTextBox, nameof(Pat.PrimaryPhone));
+        _controlColumnMap.Add(CityTextBox, nameof(Pat.City));
+        _controlColumnMap.Add(Address2TextBox, nameof(Pat.Address2));
+        _controlColumnMap.Add(Address1TextBox, nameof(Pat.Address1));
+        _controlColumnMap.Add(GuarZipTextBox, nameof(Pat.GuarantorZipCode));
+        _controlColumnMap.Add(GuarSuffixTextBox, nameof(Pat.GuarantorNameSuffix));
+        _controlColumnMap.Add(GuarMiddleNameTextBox, nameof(Pat.GuarantorMiddleName));
+        _controlColumnMap.Add(GuarFirstNameTextBox, nameof(Pat.GuarantorFirstName));
+        _controlColumnMap.Add(GuarStateComboBox, nameof(Pat.GuarantorState));
+        _controlColumnMap.Add(GuarantorRelationComboBox, nameof(Pat.GuarRelationToPatient));
+        _controlColumnMap.Add(GuarantorPhoneTextBox, nameof(Pat.GuarantorPrimaryPhone));
+        _controlColumnMap.Add(GuarCityTextBox, nameof(Pat.GuarantorCity));
+        _controlColumnMap.Add(GuarantorAddressTextBox, nameof(Pat.GuarantorAddress));
+        _controlColumnMap.Add(GuarantorLastNameTextBox, nameof(Pat.GuarantorLastName));
+        _controlColumnMap.Add(orderingPhyTextBox, nameof(Pat.ProviderId));
 
         #endregion
 
         #region Setup ordering provider combo box
 
-        providers = DataCache.Instance.GetProviders();
+        _providers = DataCache.Instance.GetProviders();
         _timer = new Timer() { Enabled = false, Interval = _timerInterval };
         _timer.Tick += _timer_Tick;
 
@@ -203,7 +203,7 @@ public partial class AccountForm : Form
         if (SelectedAccount != null || SelectedAccount != "")
         {
             Log.Instance.Debug($"Loading account data for {SelectedAccount}");
-            accountService.AddRecentlyAccessedAccount(SelectedAccount, Program.LoggedInUser.UserName);
+            _accountService.AddRecentlyAccessedAccount(SelectedAccount, Program.LoggedInUser.UserName);
             AccountOpenedEvent?.Invoke(this, SelectedAccount);
 
             AddOnChangeHandlerToInputControls(tabDemographics);
@@ -247,7 +247,7 @@ public partial class AccountForm : Form
 
     private void SetFormPermissions()
     {
-        chargeMaintenance.AllowChargeEntry = Program.LoggedInUser.CanSubmitCharges;
+        _chargeMaintenance.AllowChargeEntry = Program.LoggedInUser.CanSubmitCharges;
 
         Helper.SetControlsAccess(tabPayments.Controls, false);
         if (Program.AppEnvironment.ApplicationParameters.AllowPaymentAdjustmentEntry)
@@ -255,7 +255,7 @@ public partial class AccountForm : Form
             Helper.SetControlsAccess(tabPayments.Controls, Program.LoggedInUser.CanAddAdjustments);
         }
 
-        insPrimaryMaintenanceUC.AllowEditing = false;
+        _insPrimaryMaintenanceUC.AllowEditing = false;
         Helper.SetControlsAccess(tabDemographics.Controls, false);
         Helper.SetControlsAccess(tabDiagnosis.Controls, false);
         Helper.SetControlsAccess(demographicsLayoutPanel.Controls, false);
@@ -273,7 +273,7 @@ public partial class AccountForm : Form
         {
             if (Program.LoggedInUser.Access == "ENTER/EDIT")
             {
-                insPrimaryMaintenanceUC.AllowEditing = true;
+                _insPrimaryMaintenanceUC.AllowEditing = true;
                 Helper.SetControlsAccess(tabDemographics.Controls, true);
                 Helper.SetControlsAccess(tabDiagnosis.Controls, true);
                 Helper.SetControlsAccess(demographicsLayoutPanel.Controls, true);
@@ -295,8 +295,8 @@ public partial class AccountForm : Form
     {
         Log.Instance.Trace($"Entering");
 
-        if (currentAccount != null && !string.IsNullOrEmpty(currentAccount.AccountNo))
-            accountService.ClearAccountLock(currentAccount);
+        if (_currentAccount != null && !string.IsNullOrEmpty(_currentAccount.AccountNo))
+            _accountService.ClearAccountLock(_currentAccount);
 
         e.Cancel = false;
     }
@@ -314,13 +314,13 @@ public partial class AccountForm : Form
     {
         Log.Instance.Trace($"Entering");
 
-        if (closing)
+        if (_closing)
             return;
         Cursor.Current = Cursors.WaitCursor;
         this.SuspendLayout();
         try
         {
-            currentAccount = await accountService.GetAccountAsync(SelectedAccount);
+            _currentAccount = await _accountService.GetAccountAsync(SelectedAccount);
         }
         catch (AccountLockException alex)
         {
@@ -330,23 +330,23 @@ public partial class AccountForm : Form
             return;
         }
 
-        this.Text = $"{currentAccount.AccountNo} - {currentAccount.PatLastName}";
+        this.Text = $"{_currentAccount.AccountNo} - {_currentAccount.PatLastName}";
 
-        dxBindingList = new BindingList<PatDiag>(currentAccount.Pat.Diagnoses);
+        _dxBindingList = new BindingList<PatDiag>(_currentAccount.Pat.Diagnoses);
 
-        if (currentAccount.Status == AccountStatus.Hold)
-            clearHoldStatusToolStripMenuItem.Text = clearHoldMenuText;
+        if (_currentAccount.Status == AccountStatus.Hold)
+            clearHoldStatusToolStripMenuItem.Text = _clearHoldMenuText;
         else
-            clearHoldStatusToolStripMenuItem.Text = setHoldMenuText;
+            clearHoldStatusToolStripMenuItem.Text = _setHoldMenuText;
 
-        chargeMaintenance.CurrentAccount = currentAccount;
-        insPrimaryMaintenanceUC.CurrentAccount = currentAccount;
-        insSecondaryMaintenanceUC.CurrentAccount = currentAccount;
-        insTertiaryMaintenanceUC.CurrentAccount = currentAccount;
+        _chargeMaintenance.CurrentAccount = _currentAccount;
+        _insPrimaryMaintenanceUC.CurrentAccount = _currentAccount;
+        _insSecondaryMaintenanceUC.CurrentAccount = _currentAccount;
+        _insTertiaryMaintenanceUC.CurrentAccount = _currentAccount;
 
         RefreshAccountData();
 
-        if (currentAccount.FinCode == "CLIENT")
+        if (_currentAccount.FinCode == "CLIENT")
         {
             tabControl1.TabPages.Remove(tabDemographics);
             tabControl1.TabPages.Remove(tabInsPrimary);
@@ -372,10 +372,10 @@ public partial class AccountForm : Form
     {
         LoadSummaryTab();
         LoadDemographics();
-        chargeMaintenance.LoadCharges();
-        insPrimaryMaintenanceUC.LoadInsuranceData();
-        insSecondaryMaintenanceUC.LoadInsuranceData();
-        insTertiaryMaintenanceUC.LoadInsuranceData();
+        _chargeMaintenance.LoadCharges();
+        _insPrimaryMaintenanceUC.LoadInsuranceData();
+        _insSecondaryMaintenanceUC.LoadInsuranceData();
+        _insTertiaryMaintenanceUC.LoadInsuranceData();
         LoadPayments();
         LoadDx();
         LoadNotes();
@@ -395,46 +395,46 @@ public partial class AccountForm : Form
         //column 1
         sd.Add(new SummaryData("Demographics", "", SummaryData.GroupType.Demographics, row++, col, true));
         sd.Add(new SummaryData("Account", SelectedAccount, SummaryData.GroupType.Demographics, row++, col));
-        sd.Add(new SummaryData("EMR Account", currentAccount.MeditechAccount, SummaryData.GroupType.Demographics, row++, col));
-        sd.Add(new SummaryData("Status", currentAccount.Status, SummaryData.GroupType.Demographics, row++, col));
-        sd.Add(new SummaryData("MRN", currentAccount.MRN, SummaryData.GroupType.Demographics, row++, col));
-        sd.Add(new SummaryData("SSN", currentAccount.SocSecNo.FormatSSN(), SummaryData.GroupType.Demographics, row++, col));
-        sd.Add(new SummaryData("Client", currentAccount.ClientName, SummaryData.GroupType.Demographics, row++, col));
-        sd.Add(new SummaryData("Ordering Provider", currentAccount.Pat.Physician?.FullName ?? currentAccount.Pat.ProviderId, SummaryData.GroupType.Demographics, row++, col));
-        sd.Add(new SummaryData("DOB/Sex", currentAccount.DOBSex, SummaryData.GroupType.Demographics, row++, col));
-        sd.Add(new SummaryData("Address", currentAccount.Pat.AddressLine, SummaryData.GroupType.Demographics, row++, col));
-        sd.Add(new SummaryData("Phone", currentAccount.Pat.PrimaryPhone.FormatPhone(), SummaryData.GroupType.Demographics, row++, col));
-        sd.Add(new SummaryData("Email", currentAccount.Pat.EmailAddress, SummaryData.GroupType.Demographics, row++, col));
+        sd.Add(new SummaryData("EMR Account", _currentAccount.MeditechAccount, SummaryData.GroupType.Demographics, row++, col));
+        sd.Add(new SummaryData("Status", _currentAccount.Status, SummaryData.GroupType.Demographics, row++, col));
+        sd.Add(new SummaryData("MRN", _currentAccount.MRN, SummaryData.GroupType.Demographics, row++, col));
+        sd.Add(new SummaryData("SSN", _currentAccount.SocSecNo.FormatSSN(), SummaryData.GroupType.Demographics, row++, col));
+        sd.Add(new SummaryData("Client", _currentAccount.ClientName, SummaryData.GroupType.Demographics, row++, col));
+        sd.Add(new SummaryData("Ordering Provider", _currentAccount.Pat.Physician?.FullName ?? _currentAccount.Pat.ProviderId, SummaryData.GroupType.Demographics, row++, col));
+        sd.Add(new SummaryData("DOB/Sex", _currentAccount.DOBSex, SummaryData.GroupType.Demographics, row++, col));
+        sd.Add(new SummaryData("Address", _currentAccount.Pat.AddressLine, SummaryData.GroupType.Demographics, row++, col));
+        sd.Add(new SummaryData("Phone", _currentAccount.Pat.PrimaryPhone.FormatPhone(), SummaryData.GroupType.Demographics, row++, col));
+        sd.Add(new SummaryData("Email", _currentAccount.Pat.EmailAddress, SummaryData.GroupType.Demographics, row++, col));
 
 
         sd.Add(new SummaryData("Diagnoses", "", SummaryData.GroupType.Diagnoses, row++, col, true));
-        sd.Add(new SummaryData(currentAccount.Pat.Dx1, currentAccount.Pat.Dx1Desc, SummaryData.GroupType.Diagnoses, row++, col));
-        sd.Add(new SummaryData(currentAccount.Pat.Dx2, currentAccount.Pat.Dx2Desc, SummaryData.GroupType.Diagnoses, row++, col));
-        sd.Add(new SummaryData(currentAccount.Pat.Dx3, currentAccount.Pat.Dx3Desc, SummaryData.GroupType.Diagnoses, row++, col));
-        sd.Add(new SummaryData(currentAccount.Pat.Dx4, currentAccount.Pat.Dx4Desc, SummaryData.GroupType.Diagnoses, row++, col));
-        sd.Add(new SummaryData(currentAccount.Pat.Dx5, currentAccount.Pat.Dx5Desc, SummaryData.GroupType.Diagnoses, row++, col));
-        sd.Add(new SummaryData(currentAccount.Pat.Dx6, currentAccount.Pat.Dx6Desc, SummaryData.GroupType.Diagnoses, row++, col));
-        sd.Add(new SummaryData(currentAccount.Pat.Dx7, currentAccount.Pat.Dx7Desc, SummaryData.GroupType.Diagnoses, row++, col));
-        sd.Add(new SummaryData(currentAccount.Pat.Dx8, currentAccount.Pat.Dx8Desc, SummaryData.GroupType.Diagnoses, row++, col));
-        sd.Add(new SummaryData(currentAccount.Pat.Dx9, currentAccount.Pat.Dx9Desc, SummaryData.GroupType.Diagnoses, row++, col));
+        sd.Add(new SummaryData(_currentAccount.Pat.Dx1, _currentAccount.Pat.Dx1Desc, SummaryData.GroupType.Diagnoses, row++, col));
+        sd.Add(new SummaryData(_currentAccount.Pat.Dx2, _currentAccount.Pat.Dx2Desc, SummaryData.GroupType.Diagnoses, row++, col));
+        sd.Add(new SummaryData(_currentAccount.Pat.Dx3, _currentAccount.Pat.Dx3Desc, SummaryData.GroupType.Diagnoses, row++, col));
+        sd.Add(new SummaryData(_currentAccount.Pat.Dx4, _currentAccount.Pat.Dx4Desc, SummaryData.GroupType.Diagnoses, row++, col));
+        sd.Add(new SummaryData(_currentAccount.Pat.Dx5, _currentAccount.Pat.Dx5Desc, SummaryData.GroupType.Diagnoses, row++, col));
+        sd.Add(new SummaryData(_currentAccount.Pat.Dx6, _currentAccount.Pat.Dx6Desc, SummaryData.GroupType.Diagnoses, row++, col));
+        sd.Add(new SummaryData(_currentAccount.Pat.Dx7, _currentAccount.Pat.Dx7Desc, SummaryData.GroupType.Diagnoses, row++, col));
+        sd.Add(new SummaryData(_currentAccount.Pat.Dx8, _currentAccount.Pat.Dx8Desc, SummaryData.GroupType.Diagnoses, row++, col));
+        sd.Add(new SummaryData(_currentAccount.Pat.Dx9, _currentAccount.Pat.Dx9Desc, SummaryData.GroupType.Diagnoses, row++, col));
 
         //column 2
         col = 2;
         row = 1;
         sd.Add(new SummaryData("Financial", "", SummaryData.GroupType.Financial, row++, col, true));
-        sd.Add(new SummaryData("Financial Class", currentAccount.FinCode, SummaryData.GroupType.Financial, row++, col));
-        sd.Add(new SummaryData("Date of Service", currentAccount.TransactionDate.ToShortDateString(), SummaryData.GroupType.Financial, row++, col));
-        sd.Add(new SummaryData("Total Charges", currentAccount.TotalCharges.ToString("c"), SummaryData.GroupType.Financial, row++, col));
-        sd.Add(new SummaryData("Total Payments", (currentAccount.TotalPayments + currentAccount.TotalContractual + currentAccount.TotalWriteOff).ToString("c"),
+        sd.Add(new SummaryData("Financial Class", _currentAccount.FinCode, SummaryData.GroupType.Financial, row++, col));
+        sd.Add(new SummaryData("Date of Service", _currentAccount.TransactionDate.ToShortDateString(), SummaryData.GroupType.Financial, row++, col));
+        sd.Add(new SummaryData("Total Charges", _currentAccount.TotalCharges.ToString("c"), SummaryData.GroupType.Financial, row++, col));
+        sd.Add(new SummaryData("Total Payments", (_currentAccount.TotalPayments + _currentAccount.TotalContractual + _currentAccount.TotalWriteOff).ToString("c"),
             SummaryData.GroupType.Financial, row++, col));
-        sd.Add(new SummaryData("3rd Party/Patient Balance", currentAccount.ClaimBalance.ToString("c"), SummaryData.GroupType.Financial, row++, col));
-        foreach (var (client, balance) in currentAccount.ClientBalance)
+        sd.Add(new SummaryData("3rd Party/Patient Balance", _currentAccount.ClaimBalance.ToString("c"), SummaryData.GroupType.Financial, row++, col));
+        foreach (var (client, balance) in _currentAccount.ClientBalance)
         {
             sd.Add(new SummaryData($"Client Balance {client}", balance.ToString("c"), SummaryData.GroupType.Financial, row++, col));
         }
-        sd.Add(new SummaryData("Account Balance", currentAccount.Balance.ToString("c"), SummaryData.GroupType.Financial, row++, col));
+        sd.Add(new SummaryData("Account Balance", _currentAccount.Balance.ToString("c"), SummaryData.GroupType.Financial, row++, col));
 
-        foreach (Ins ins in currentAccount.Insurances)
+        foreach (Ins ins in _currentAccount.Insurances)
         {
             if (ins.Coverage == "A")
             {
@@ -503,19 +503,19 @@ public partial class AccountForm : Form
         Log.Instance.Trace("Entering");
         DemoStatusMessagesTextBox.Text = String.Empty;
 
-        BannerNameTextBox.Text = currentAccount.PatFullName;
-        BannerDobTextBox.Text = currentAccount.BirthDate.GetValueOrDefault().ToShortDateString();
-        BannerSexTextBox.Text = currentAccount.Sex;
+        BannerNameTextBox.Text = _currentAccount.PatFullName;
+        BannerDobTextBox.Text = _currentAccount.BirthDate.GetValueOrDefault().ToShortDateString();
+        BannerSexTextBox.Text = _currentAccount.Sex;
         BannerAccountTextBox.Text = SelectedAccount;
-        BannerMRNTextBox.Text = currentAccount.MRN;
-        BannerClientTextBox.Text = currentAccount.ClientName;
-        BannerFinClassTextBox.Text = currentAccount.FinCode;
-        BannerBillStatusTextBox.Text = currentAccount.Status;
-        BannerProviderTextBox.Text = currentAccount.Pat.Physician?.FullName ?? "";
-        bannerDateOfServiceTextBox.Text = currentAccount.TransactionDate.ToShortDateString();
-        if (currentAccount.AccountAlert != null)
+        BannerMRNTextBox.Text = _currentAccount.MRN;
+        BannerClientTextBox.Text = _currentAccount.ClientName;
+        BannerFinClassTextBox.Text = _currentAccount.FinCode;
+        BannerBillStatusTextBox.Text = _currentAccount.Status;
+        BannerProviderTextBox.Text = _currentAccount.Pat.Physician?.FullName ?? "";
+        bannerDateOfServiceTextBox.Text = _currentAccount.TransactionDate.ToShortDateString();
+        if (_currentAccount.AccountAlert != null)
         {
-            bannerAlertLabel.Text = currentAccount.AccountAlert.Alert ? notesAlertText : "";
+            bannerAlertLabel.Text = _currentAccount.AccountAlert.Alert ? _notesAlertText : "";
             bannerAlertLabel.Visible = !string.IsNullOrEmpty(bannerAlertLabel.Text);
         }
         else
@@ -524,7 +524,7 @@ public partial class AccountForm : Form
             bannerAlertLabel.Text = "";
         }
 
-        if (currentAccount.ReadyToBill)
+        if (_currentAccount.ReadyToBill)
         {
             bannerAlertLabel.Visible = true;
             bannerAlertLabel.Text += "  Account is flagged ready to bill, or has been billed. Any changes can affect the claim.";
@@ -532,63 +532,63 @@ public partial class AccountForm : Form
             bannerAlertLabel.ForeColor = Color.White;
         }
 
-        BannerNameTextBox.Text = currentAccount.PatFullName;
+        BannerNameTextBox.Text = _currentAccount.PatFullName;
         BannerAccountTextBox.Text = _selectedAccount;
-        BannerDobTextBox.Text = currentAccount.BirthDate?.ToShortDateString();
-        BannerSexTextBox.Text = currentAccount.Sex;
-        BannerMRNTextBox.Text = currentAccount.MRN;
+        BannerDobTextBox.Text = _currentAccount.BirthDate?.ToShortDateString();
+        BannerSexTextBox.Text = _currentAccount.Sex;
+        BannerMRNTextBox.Text = _currentAccount.MRN;
 
-        TotalChargesLabel.Text = currentAccount.TotalCharges.ToString("c");
-        TotalPmtAdjLabel.Text = (currentAccount.TotalContractual + currentAccount.TotalPayments + currentAccount.TotalWriteOff).ToString("c");
-        BalanceLabel.Text = currentAccount.Balance.ToString("c");
-        ThirdPartyBalLabel.Text = currentAccount.ClaimBalance.ToString("c");
-        ClientBalLabel.Text = currentAccount.ClientBalance.Sum(x => x.balance).ToString("c");
+        TotalChargesLabel.Text = _currentAccount.TotalCharges.ToString("c");
+        TotalPmtAdjLabel.Text = (_currentAccount.TotalContractual + _currentAccount.TotalPayments + _currentAccount.TotalWriteOff).ToString("c");
+        BalanceLabel.Text = _currentAccount.Balance.ToString("c");
+        ThirdPartyBalLabel.Text = _currentAccount.ClaimBalance.ToString("c");
+        ClientBalLabel.Text = _currentAccount.ClientBalance.Sum(x => x.balance).ToString("c");
 
         //PatientFullNameLabel.Text = currentAccount.PatFullName;
-        LastNameTextBox.Text = currentAccount.PatLastName;
+        LastNameTextBox.Text = _currentAccount.PatLastName;
         LastNameTextBox.BackColor = Color.White;
-        FirstNameTextBox.Text = currentAccount.PatFirstName;
+        FirstNameTextBox.Text = _currentAccount.PatFirstName;
         FirstNameTextBox.BackColor = Color.White;
-        MiddleNameTextBox.Text = currentAccount.PatMiddleName;
+        MiddleNameTextBox.Text = _currentAccount.PatMiddleName;
         MiddleNameTextBox.BackColor = Color.White;
-        SuffixTextBox.Text = currentAccount.PatNameSuffix;
+        SuffixTextBox.Text = _currentAccount.PatNameSuffix;
         SuffixTextBox.BackColor = Color.White;
-        Address1TextBox.Text = currentAccount.Pat.Address1;
+        Address1TextBox.Text = _currentAccount.Pat.Address1;
         Address1TextBox.BackColor = Color.White;
-        Address2TextBox.Text = currentAccount.Pat.Address2;
+        Address2TextBox.Text = _currentAccount.Pat.Address2;
         Address2TextBox.BackColor = Color.White;
-        CityTextBox.Text = currentAccount.Pat.City;
+        CityTextBox.Text = _currentAccount.Pat.City;
         CityTextBox.BackColor = Color.White;
-        StateComboBox.SelectedValue = currentAccount.Pat.State ?? "";
+        StateComboBox.SelectedValue = _currentAccount.Pat.State ?? "";
         StateComboBox.BackColor = Color.White;
-        ZipcodeTextBox.Text = currentAccount.Pat.ZipCode;
+        ZipcodeTextBox.Text = _currentAccount.Pat.ZipCode;
         ZipcodeTextBox.BackColor = Color.White;
-        PhoneTextBox.Text = currentAccount.Pat.PrimaryPhone;
+        PhoneTextBox.Text = _currentAccount.Pat.PrimaryPhone;
         PhoneTextBox.BackColor = Color.White;
-        SocSecNoTextBox.Text = currentAccount.SocSecNo;
+        SocSecNoTextBox.Text = _currentAccount.SocSecNo;
         SocSecNoTextBox.BackColor = Color.White;
-        EmailAddressTextBox.Text = currentAccount.Pat.EmailAddress;
+        EmailAddressTextBox.Text = _currentAccount.Pat.EmailAddress;
         EmailAddressTextBox.BackColor = Color.White;
-        DateOfBirthTextBox.Text = currentAccount.BirthDate == null ? string.Empty : currentAccount.BirthDate.Value.ToString("MM/dd/yyyy");
+        DateOfBirthTextBox.Text = _currentAccount.BirthDate == null ? string.Empty : _currentAccount.BirthDate.Value.ToString("MM/dd/yyyy");
         DateOfBirthTextBox.BackColor = Color.White;
-        SexComboBox.SelectedValue = currentAccount.Sex ?? string.Empty;
+        SexComboBox.SelectedValue = _currentAccount.Sex ?? string.Empty;
         SexComboBox.BackColor = Color.White;
-        MaritalStatusComboBox.SelectedValue = !string.IsNullOrEmpty(currentAccount.Pat.MaritalStatus) ? currentAccount.Pat.MaritalStatus : "U";
+        MaritalStatusComboBox.SelectedValue = !string.IsNullOrEmpty(_currentAccount.Pat.MaritalStatus) ? _currentAccount.Pat.MaritalStatus : "U";
         MaritalStatusComboBox.BackColor = Color.White;
 
-        orderingPhyTextBox.Text = currentAccount.Pat.Physician?.ToString();
-        orderingPhyTextBox.Tag = currentAccount.Pat.ProviderId;
+        orderingPhyTextBox.Text = _currentAccount.Pat.Physician?.ToString();
+        orderingPhyTextBox.Tag = _currentAccount.Pat.ProviderId;
 
-        GuarantorLastNameTextBox.Text = currentAccount.Pat.GuarantorLastName;
-        GuarFirstNameTextBox.Text = currentAccount.Pat.GuarantorFirstName;
-        GuarMiddleNameTextBox.Text = currentAccount.Pat.GuarantorMiddleName;
-        GuarSuffixTextBox.Text = currentAccount.Pat.GuarantorNameSuffix;
-        GuarantorAddressTextBox.Text = currentAccount.Pat.GuarantorAddress;
-        GuarCityTextBox.Text = currentAccount.Pat.GuarantorCity;
-        GuarStateComboBox.SelectedValue = currentAccount.Pat.GuarantorState ?? "";
-        GuarZipTextBox.Text = currentAccount.Pat.GuarantorZipCode;
-        GuarantorPhoneTextBox.Text = currentAccount.Pat.GuarantorPrimaryPhone;
-        GuarantorRelationComboBox.SelectedValue = currentAccount.Pat.GuarRelationToPatient ?? "";
+        GuarantorLastNameTextBox.Text = _currentAccount.Pat.GuarantorLastName;
+        GuarFirstNameTextBox.Text = _currentAccount.Pat.GuarantorFirstName;
+        GuarMiddleNameTextBox.Text = _currentAccount.Pat.GuarantorMiddleName;
+        GuarSuffixTextBox.Text = _currentAccount.Pat.GuarantorNameSuffix;
+        GuarantorAddressTextBox.Text = _currentAccount.Pat.GuarantorAddress;
+        GuarCityTextBox.Text = _currentAccount.Pat.GuarantorCity;
+        GuarStateComboBox.SelectedValue = _currentAccount.Pat.GuarantorState ?? "";
+        GuarZipTextBox.Text = _currentAccount.Pat.GuarantorZipCode;
+        GuarantorPhoneTextBox.Text = _currentAccount.Pat.GuarantorPrimaryPhone;
+        GuarantorRelationComboBox.SelectedValue = _currentAccount.Pat.GuarRelationToPatient ?? "";
 
         ResetControls(tabDemographics.Controls.OfType<Control>().ToArray());
         ResetControls(demographicsLayoutPanel.Controls.OfType<Control>().ToArray());
@@ -598,41 +598,41 @@ public partial class AccountForm : Form
     {
         Log.Instance.Trace($"Entering");
 
-        currentAccount.PatFullName = $"{LastNameTextBox.Text} {SuffixTextBox.Text},{FirstNameTextBox.Text} {MiddleNameTextBox.Text}";
-        currentAccount.PatLastName = LastNameTextBox.Text;
-        currentAccount.PatFirstName = FirstNameTextBox.Text;
-        currentAccount.PatMiddleName = MiddleNameTextBox.Text;
-        currentAccount.PatNameSuffix = SuffixTextBox.Text;
-        currentAccount.SocSecNo = SocSecNoTextBox.Text;
-        currentAccount.BirthDate = DateTimeExtension.ValidateDateOrNull(DateOfBirthTextBox.Text);
-        currentAccount.Sex = SexComboBox.SelectedValue.ToString();
+        _currentAccount.PatFullName = $"{LastNameTextBox.Text} {SuffixTextBox.Text},{FirstNameTextBox.Text} {MiddleNameTextBox.Text}";
+        _currentAccount.PatLastName = LastNameTextBox.Text;
+        _currentAccount.PatFirstName = FirstNameTextBox.Text;
+        _currentAccount.PatMiddleName = MiddleNameTextBox.Text;
+        _currentAccount.PatNameSuffix = SuffixTextBox.Text;
+        _currentAccount.SocSecNo = SocSecNoTextBox.Text;
+        _currentAccount.BirthDate = DateTimeExtension.ValidateDateOrNull(DateOfBirthTextBox.Text);
+        _currentAccount.Sex = SexComboBox.SelectedValue.ToString();
 
-        currentAccount.Pat.Address1 = Address1TextBox.Text;
-        currentAccount.Pat.Address2 = Address2TextBox.Text;
-        currentAccount.Pat.EmailAddress = EmailAddressTextBox.Text;
-        currentAccount.Pat.MaritalStatus = MaritalStatusComboBox.SelectedValue.ToString();
-        currentAccount.Pat.PrimaryPhone = PhoneTextBox.Text;
-        currentAccount.Pat.City = CityTextBox.Text;
-        currentAccount.Pat.State = StateComboBox.SelectedValue.ToString();
-        currentAccount.Pat.ZipCode = ZipcodeTextBox.Text;
-        currentAccount.Pat.CityStateZip = $"{CityTextBox.Text}, {StateComboBox.SelectedValue} {ZipcodeTextBox.Text}";
-        currentAccount.Pat.PatFullName = $"{LastNameTextBox.Text},{FirstNameTextBox.Text} {MiddleNameTextBox.Text}";
-        currentAccount.Pat.ProviderId = orderingPhyTextBox.Tag?.ToString();
+        _currentAccount.Pat.Address1 = Address1TextBox.Text;
+        _currentAccount.Pat.Address2 = Address2TextBox.Text;
+        _currentAccount.Pat.EmailAddress = EmailAddressTextBox.Text;
+        _currentAccount.Pat.MaritalStatus = MaritalStatusComboBox.SelectedValue.ToString();
+        _currentAccount.Pat.PrimaryPhone = PhoneTextBox.Text;
+        _currentAccount.Pat.City = CityTextBox.Text;
+        _currentAccount.Pat.State = StateComboBox.SelectedValue.ToString();
+        _currentAccount.Pat.ZipCode = ZipcodeTextBox.Text;
+        _currentAccount.Pat.CityStateZip = $"{CityTextBox.Text}, {StateComboBox.SelectedValue} {ZipcodeTextBox.Text}";
+        _currentAccount.Pat.PatFullName = $"{LastNameTextBox.Text},{FirstNameTextBox.Text} {MiddleNameTextBox.Text}";
+        _currentAccount.Pat.ProviderId = orderingPhyTextBox.Tag?.ToString();
 
-        currentAccount.Pat.GuarantorFullName = $"{GuarantorLastNameTextBox.Text} {GuarSuffixTextBox.Text},{GuarFirstNameTextBox.Text} {GuarMiddleNameTextBox.Text}";
-        currentAccount.Pat.GuarantorLastName = GuarantorLastNameTextBox.Text;
-        currentAccount.Pat.GuarantorFirstName = GuarFirstNameTextBox.Text;
-        currentAccount.Pat.GuarantorMiddleName = GuarMiddleNameTextBox.Text;
-        currentAccount.Pat.GuarantorNameSuffix = GuarSuffixTextBox.Text;
-        currentAccount.Pat.GuarantorAddress = GuarantorAddressTextBox.Text;
-        currentAccount.Pat.GuarantorCity = GuarCityTextBox.Text;
-        currentAccount.Pat.GuarantorPrimaryPhone = GuarantorPhoneTextBox.Text;
-        currentAccount.Pat.GuarantorState = GuarStateComboBox.SelectedValue.ToString();
-        currentAccount.Pat.GuarantorZipCode = GuarZipTextBox.Text;
-        currentAccount.Pat.GuarantorCityState = $"{GuarCityTextBox.Text}, {GuarStateComboBox.SelectedValue} {GuarZipTextBox.Text}";
-        currentAccount.Pat.GuarRelationToPatient = GuarantorRelationComboBox.SelectedValue.ToString();
+        _currentAccount.Pat.GuarantorFullName = $"{GuarantorLastNameTextBox.Text} {GuarSuffixTextBox.Text},{GuarFirstNameTextBox.Text} {GuarMiddleNameTextBox.Text}";
+        _currentAccount.Pat.GuarantorLastName = GuarantorLastNameTextBox.Text;
+        _currentAccount.Pat.GuarantorFirstName = GuarFirstNameTextBox.Text;
+        _currentAccount.Pat.GuarantorMiddleName = GuarMiddleNameTextBox.Text;
+        _currentAccount.Pat.GuarantorNameSuffix = GuarSuffixTextBox.Text;
+        _currentAccount.Pat.GuarantorAddress = GuarantorAddressTextBox.Text;
+        _currentAccount.Pat.GuarantorCity = GuarCityTextBox.Text;
+        _currentAccount.Pat.GuarantorPrimaryPhone = GuarantorPhoneTextBox.Text;
+        _currentAccount.Pat.GuarantorState = GuarStateComboBox.SelectedValue.ToString();
+        _currentAccount.Pat.GuarantorZipCode = GuarZipTextBox.Text;
+        _currentAccount.Pat.GuarantorCityState = $"{GuarCityTextBox.Text}, {GuarStateComboBox.SelectedValue} {GuarZipTextBox.Text}";
+        _currentAccount.Pat.GuarRelationToPatient = GuarantorRelationComboBox.SelectedValue.ToString();
 
-        currentAccount = accountService.UpdateAccountDemographics(currentAccount);
+        _currentAccount = _accountService.UpdateAccountDemographics(_currentAccount);
 
         var controls = tabDemographics.Controls; //tabDemographics.Controls;
 
@@ -655,13 +655,13 @@ public partial class AccountForm : Form
     {
         Log.Instance.Trace("Entering");
 
-        TotalPaymentTextBox.Text = currentAccount.TotalPayments.ToString("c");
-        TotalContractualTextBox.Text = currentAccount.TotalContractual.ToString("c");
-        TotalWriteOffTextBox.Text = currentAccount.TotalWriteOff.ToString("c");
-        TotalPmtAllTextBox.Text = (currentAccount.TotalPayments + currentAccount.TotalContractual + currentAccount.TotalWriteOff).ToString("c");
+        TotalPaymentTextBox.Text = _currentAccount.TotalPayments.ToString("c");
+        TotalContractualTextBox.Text = _currentAccount.TotalContractual.ToString("c");
+        TotalWriteOffTextBox.Text = _currentAccount.TotalWriteOff.ToString("c");
+        TotalPmtAllTextBox.Text = (_currentAccount.TotalPayments + _currentAccount.TotalContractual + _currentAccount.TotalWriteOff).ToString("c");
 
-        if ((currentAccount.Fin.FinClass == "C" && currentAccount.FinCode != "CLIENT") ||
-            currentAccount.Status == AccountStatus.Closed)
+        if ((_currentAccount.Fin.FinClass == "C" && _currentAccount.FinCode != "CLIENT") ||
+            _currentAccount.Status == AccountStatus.Closed)
         {
             AddPaymentButton.Enabled = false;
             Label addPaymentStatusLabel = new()
@@ -675,8 +675,8 @@ public partial class AccountForm : Form
             tabPayments.Controls.Add(addPaymentStatusLabel);
         }
 
-        currentAccount.Payments = currentAccount.Payments.OrderByDescending(x => x.PaymentNo).ToList();
-        PaymentsDataGrid.DataSource = currentAccount.Payments.ToList();
+        _currentAccount.Payments = _currentAccount.Payments.OrderByDescending(x => x.PaymentNo).ToList();
+        PaymentsDataGrid.DataSource = _currentAccount.Payments.ToList();
 
         PaymentsDataGrid.SetColumnsVisibility(false);
         int z = 0;
@@ -715,7 +715,7 @@ public partial class AccountForm : Form
         {
 
             DataGridViewRow row = PaymentsDataGrid.SelectedRows[0];
-            var chk = currentAccount.Payments.Where(p => p.PaymentNo == Convert.ToInt32(row.Cells[nameof(Chk.PaymentNo)].Value.ToString())).First();
+            var chk = _currentAccount.Payments.Where(p => p.PaymentNo == Convert.ToInt32(row.Cells[nameof(Chk.PaymentNo)].Value.ToString())).First();
 
             DisplayPOCOForm<Chk> frm = new(chk)
             {
@@ -727,11 +727,11 @@ public partial class AccountForm : Form
 
     private void AddPaymentButton_Click(object sender, EventArgs e)
     {
-        PaymentAdjustmentEntryForm form = new(ref currentAccount);
+        PaymentAdjustmentEntryForm form = new(ref _currentAccount);
 
-        if (currentAccount.SentToCollections)
+        if (_currentAccount.SentToCollections)
         {
-            if (MessageBox.Show($"Account {currentAccount.AccountNo} has been sent to collections. Follow process to notify collection agency of payment.\n Continue with add payment?",
+            if (MessageBox.Show($"Account {_currentAccount.AccountNo} has been sent to collections. Follow process to notify collection agency of payment.\n Continue with add payment?",
                 "Account Sent to Collections", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) != DialogResult.Yes)
                 return;
         }
@@ -741,17 +741,17 @@ public partial class AccountForm : Form
             //post record to account
             var chk = form.chk;
 
-            if (currentAccount.Status == AccountStatus.PaidOut)
+            if (_currentAccount.Status == AccountStatus.PaidOut)
             {
-                accountService.UpdateStatus(currentAccount.AccountNo, AccountStatus.New);
-                currentAccount.Status = AccountStatus.New;
+                _accountService.UpdateStatus(_currentAccount.AccountNo, AccountStatus.New);
+                _currentAccount.Status = AccountStatus.New;
             }
 
-            chk.AccountNo = currentAccount.AccountNo;
-            chk.FinCode = currentAccount.FinCode;
+            chk.AccountNo = _currentAccount.AccountNo;
+            chk.FinCode = _currentAccount.FinCode;
             try
             {
-                currentAccount.Payments.Add(accountService.AddPayment(chk));
+                _currentAccount.Payments.Add(_accountService.AddPayment(chk));
             }
             catch (Exception ex)
             {
@@ -772,12 +772,12 @@ public partial class AccountForm : Form
     private void LoadDx()
     {
         Log.Instance.Trace("Entering");
-        DiagnosisDataGrid.DataSource = new BindingSource(dxBindingList, null);
+        DiagnosisDataGrid.DataSource = new BindingSource(_dxBindingList, null);
         dxLoadingMode = true;
-        dxPointerBindingSource.DataSource = null;
+        _dxPointerBindingSource.DataSource = null;
         dxPointerGrid2.DataSource = null;
 
-        int cnt = dxBindingList.Count;
+        int cnt = _dxBindingList.Count;
         string[] ptrStrings = new string[cnt + 1];
 
         ptrStrings[0] = "";
@@ -787,24 +787,24 @@ public partial class AccountForm : Form
             ptrStrings[z] = z.ToString();
         }
 
-        dxPointers.Rows.Clear();
-        dxPointers.Columns.Clear();
+        _dxPointers.Rows.Clear();
+        _dxPointers.Columns.Clear();
 
-        dxPointers.Columns.Add(new DataColumn()
+        _dxPointers.Columns.Add(new DataColumn()
         {
             DataType = System.Type.GetType("System.String"),
             Caption = "CDM",
             ColumnName = "CDM",
         });
 
-        dxPointers.Columns.Add(new DataColumn()
+        _dxPointers.Columns.Add(new DataColumn()
         {
             DataType = System.Type.GetType("System.String"),
             Caption = "CPT4",
             ColumnName = "CPT4",
         });
 
-        dxPointers.Columns.Add(new DataColumn()
+        _dxPointers.Columns.Add(new DataColumn()
         {
             DataType = System.Type.GetType("System.String"),
             Caption = "Description",
@@ -841,7 +841,7 @@ public partial class AccountForm : Form
 
         for (int i = 1; i < cnt + 1; i++)
         {
-            dxPointers.Columns.Add(new DataColumn()
+            _dxPointers.Columns.Add(new DataColumn()
             {
                 DataType = System.Type.GetType("System.String"),
                 Caption = "Pointer",
@@ -852,7 +852,7 @@ public partial class AccountForm : Form
             {
                 Name = ptrStrings[i],
                 DataPropertyName = ptrStrings[i],
-                DataSource = dxBindingList,
+                DataSource = _dxBindingList,
                 ValueMember = nameof(PatDiag.Code),
                 DisplayMember = nameof(PatDiag.Code),
                 HeaderText = ptrStrings[i],
@@ -861,18 +861,18 @@ public partial class AccountForm : Form
             });
         }
 
-        dxPointerBindingSource.DataSource = dxPointers;
+        _dxPointerBindingSource.DataSource = _dxPointers;
 
-        dxPointerGrid2.DataSource = dxPointerBindingSource;
+        dxPointerGrid2.DataSource = _dxPointerBindingSource;
 
         //load charges and pointers to grid
-        foreach (var chrg in currentAccount.Charges)
+        foreach (var chrg in _currentAccount.Charges)
         {
             if (!chrg.IsCredited && chrg.Status != "N/A")
             {
                 foreach (var chrgDetail in chrg.ChrgDetails)
                 {
-                    DataRow row = dxPointers.NewRow();
+                    DataRow row = _dxPointers.NewRow();
                     row["CDM"] = chrg.CDMCode;
                     row["CPT4"] = chrgDetail.Cpt4;
                     row["Description"] = chrg.CdmDescription;
@@ -894,12 +894,12 @@ public partial class AccountForm : Form
                                 if (iPtr > cnt)
                                     continue;
 
-                                row[ptrStrings[pi + 1]] = dxBindingList.Where(x => x.No == iPtr).First().Code;
+                                row[ptrStrings[pi + 1]] = _dxBindingList.Where(x => x.No == iPtr).First().Code;
                             }
                         }
                     }
 
-                    dxPointers.Rows.Add(row);
+                    _dxPointers.Rows.Add(row);
                 }
             }
         }
@@ -927,7 +927,7 @@ public partial class AccountForm : Form
         if (!dxLoadingMode)
         {
             //loop through columns
-            int cnt = dxBindingList.Count;
+            int cnt = _dxBindingList.Count;
 
             var dxSelected = new List<string>();
 
@@ -959,7 +959,7 @@ public partial class AccountForm : Form
                     dxPointerGrid2[i, e.RowIndex].Style.BackColor = Color.White;
 
                     var dxValue = dxPointerGrid2[i, e.RowIndex].Value.ToString();
-                    var dxRecord = dxBindingList.Where(x => x.Code == dxValue).FirstOrDefault();
+                    var dxRecord = _dxBindingList.Where(x => x.Code == dxValue).FirstOrDefault();
                     if (dxRecord != null && !string.IsNullOrEmpty(dxValue))
                     {
                         newPointer += $"{dxRecord.No}:";
@@ -968,7 +968,7 @@ public partial class AccountForm : Form
                 //update pointers
                 var cpt = dxPointerGrid2["CPT4", e.RowIndex].Value.ToString();
 
-                var updatedChrg = currentAccount.Charges.Where(c => c.IsCredited == false && c.ChrgDetails.Any(cd => cd.Cpt4 == cpt)).ToList();
+                var updatedChrg = _currentAccount.Charges.Where(c => c.IsCredited == false && c.ChrgDetails.Any(cd => cd.Cpt4 == cpt)).ToList();
                 updatedChrg.ForEach(c => c.ChrgDetails.ForEach((cd) =>
                 {
                     if (cd.DiagnosisPointer == null)
@@ -981,7 +981,7 @@ public partial class AccountForm : Form
                     cd.DiagnosisPointer.DiagnosisPointer = newPointer;
                 }));
 
-                accountService.UpdateDiagnosisPointers(updatedChrg);
+                _accountService.UpdateDiagnosisPointers(updatedChrg);
 
             }
         }
@@ -992,7 +992,7 @@ public partial class AccountForm : Form
         Log.Instance.Trace($"Entering");
         if (!string.IsNullOrEmpty(txtSearchDx.Text))
         {
-            var dictRecords = dictionaryService.GetDiagnosisCodes(txtSearchDx.Text, currentAccount.TransactionDate);
+            var dictRecords = _dictionaryService.GetDiagnosisCodes(txtSearchDx.Text, _currentAccount.TransactionDate);
 
             DxSearchDataGrid.DataSource = dictRecords;
             DxSearchDataGrid.Columns[nameof(DictDx.UpdatedDate)].Visible = false;
@@ -1033,7 +1033,7 @@ public partial class AccountForm : Form
             string selectedCode = DxSearchDataGrid.SelectedRows[0].Cells[nameof(DictDx.DxCode)].Value.ToString();
             string selectedDesc = DxSearchDataGrid.SelectedRows[0].Cells[nameof(DictDx.Description)].Value.ToString();
 
-            if (dxBindingList.FirstOrDefault(n => n.Code == selectedCode) != null)
+            if (_dxBindingList.FirstOrDefault(n => n.Code == selectedCode) != null)
             {
                 //this code already exists in the list
                 MessageBox.Show(this, "Diagnosis already entered for this account", "Record Exists", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
@@ -1041,8 +1041,8 @@ public partial class AccountForm : Form
             }
 
             int maxNo = 0;
-            if (dxBindingList.Count > 0)
-                maxNo = dxBindingList.Max<PatDiag>(n => n.No);
+            if (_dxBindingList.Count > 0)
+                maxNo = _dxBindingList.Max<PatDiag>(n => n.No);
 
             if (maxNo >= 9)
             {
@@ -1050,7 +1050,7 @@ public partial class AccountForm : Form
             }
             else
             {
-                dxBindingList.Add(new PatDiag { No = maxNo + 1, Code = selectedCode, Description = selectedDesc });
+                _dxBindingList.Add(new PatDiag { No = maxNo + 1, Code = selectedCode, Description = selectedDesc });
                 DiagnosisDataGrid.BackgroundColor = Color.Orange;
 
                 SaveDiagnoses();
@@ -1078,7 +1078,7 @@ public partial class AccountForm : Form
             {
                 //check to see if the text entered is a valid DX code - if so, add the code and description to the selected grid
 
-                if (dxBindingList.FirstOrDefault<PatDiag>(n => n.Code == DxQuickAddTextBox.Text) != null)
+                if (_dxBindingList.FirstOrDefault<PatDiag>(n => n.Code == DxQuickAddTextBox.Text) != null)
                 {
                     //this code already exists in the list
                     MessageBox.Show(this, "Diagnosis already entered for this account", "Record Exists", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
@@ -1086,14 +1086,14 @@ public partial class AccountForm : Form
                     return;
                 }
 
-                var record = dictionaryService.GetDiagnosis(DxQuickAddTextBox.Text, currentAccount.TransactionDate);
+                var record = _dictionaryService.GetDiagnosis(DxQuickAddTextBox.Text, _currentAccount.TransactionDate);
 
                 if (record != null)
                 {
                     //this is a valid entry
                     int maxNo = 0;
-                    if (dxBindingList.Count > 0)
-                        maxNo = dxBindingList.Max<PatDiag>(n => n.No);
+                    if (_dxBindingList.Count > 0)
+                        maxNo = _dxBindingList.Max<PatDiag>(n => n.No);
 
                     if (maxNo >= 9)
                     {
@@ -1101,7 +1101,7 @@ public partial class AccountForm : Form
                         DxQuickAddTextBox.Text = "";
                         return;
                     }
-                    dxBindingList.Add(new PatDiag { No = maxNo + 1, Code = record.DxCode, Description = record.Description });
+                    _dxBindingList.Add(new PatDiag { No = maxNo + 1, Code = record.DxCode, Description = record.Description });
                     DiagnosisDataGrid.BackgroundColor = Color.Orange;
                     DxQuickAddTextBox.Text = "";
 
@@ -1127,14 +1127,14 @@ public partial class AccountForm : Form
             string selectedCode = DiagnosisDataGrid.SelectedRows[0].Cells[nameof(PatDiag.Code)].Value.ToString();
             string selectedNo = DiagnosisDataGrid.SelectedRows[0].Cells[nameof(PatDiag.No)].Value.ToString();
 
-            var record = dxBindingList.IndexOf(dxBindingList.First<PatDiag>(n => n.Code == selectedCode));
+            var record = _dxBindingList.IndexOf(_dxBindingList.First<PatDiag>(n => n.Code == selectedCode));
 
-            dxBindingList.RemoveAt(record);
+            _dxBindingList.RemoveAt(record);
             DiagnosisDataGrid.BackgroundColor = Color.Orange;
             //loop through and renumber
-            for (int i = 0; i < dxBindingList.Count; i++)
+            for (int i = 0; i < _dxBindingList.Count; i++)
             {
-                dxBindingList[i].No = i + 1;
+                _dxBindingList[i].No = i + 1;
             }
 
             SaveDiagnoses();
@@ -1159,9 +1159,9 @@ public partial class AccountForm : Form
     {
         Log.Instance.Trace($"Entering");
 
-        currentAccount.Pat.Diagnoses = dxBindingList.ToList<PatDiag>();
+        _currentAccount.Pat.Diagnoses = _dxBindingList.ToList<PatDiag>();
 
-        currentAccount = accountService.UpdateDiagnoses(currentAccount);
+        _currentAccount = _accountService.UpdateDiagnoses(_currentAccount);
         DiagnosisDataGrid.BackgroundColor = Color.White;
         RefreshAccountData();
     }
@@ -1181,7 +1181,7 @@ public partial class AccountForm : Form
         notesDataGridView.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
         notesDataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
         notesDataGridView.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
-        notesDataGridView.DataSource = currentAccount.Notes;
+        notesDataGridView.DataSource = _currentAccount.Notes;
         notesDataGridView.BackgroundColor = Color.AntiqueWhite;
 
         notesDataGridView.SetColumnsVisibility(false);
@@ -1200,8 +1200,8 @@ public partial class AccountForm : Form
         notesDataGridView.Columns[nameof(Account.UpdatedDate)].DisplayIndex = z++;
         notesDataGridView.Columns[nameof(Account.UpdatedUser)].DisplayIndex = z++;
 
-        if (currentAccount.AccountAlert != null)
-            noteAlertCheckBox.Checked = currentAccount.AccountAlert.Alert;
+        if (_currentAccount.AccountAlert != null)
+            noteAlertCheckBox.Checked = _currentAccount.AccountAlert.Alert;
     }
 
     private void AddNoteButton_Click(object sender, EventArgs e)
@@ -1211,9 +1211,9 @@ public partial class AccountForm : Form
 
         if (prompt.ReturnCode == DialogResult.OK)
         {
-            accountService.AddNote(currentAccount.AccountNo, prompt.Text);
+            _accountService.AddNote(_currentAccount.AccountNo, prompt.Text);
             //reload notes to pick up changes
-            currentAccount.Notes = accountService.GetNotes(currentAccount.AccountNo);
+            _currentAccount.Notes = _accountService.GetNotes(_currentAccount.AccountNo);
             LoadNotes();
         }
     }
@@ -1226,9 +1226,9 @@ public partial class AccountForm : Form
     {
         Log.Instance.Trace("Entering");
 
-        billingTabLoading = true;
+        _billingTabLoading = true;
 
-        BillActivityDataGrid.DataSource = currentAccount.BillingActivities.ToList();
+        BillActivityDataGrid.DataSource = _currentAccount.BillingActivities.ToList();
         BillActivityDataGrid.Columns[nameof(BillingActivity.rowguid)].Visible = false;
         BillActivityDataGrid.Columns[nameof(BillingActivity.UpdatedDate)].Visible = false;
         BillActivityDataGrid.Columns[nameof(BillingActivity.UpdatedHost)].Visible = false;
@@ -1238,17 +1238,17 @@ public partial class AccountForm : Form
 
         BillActivityDataGrid.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
 
-        ValidationResultsTextBox.Text = currentAccount.AccountValidationStatus.ValidationText;
-        LastValidatedLabel.Text = currentAccount.AccountValidationStatus.UpdatedDate.ToString("G");
+        ValidationResultsTextBox.Text = _currentAccount.AccountValidationStatus.ValidationText;
+        LastValidatedLabel.Text = _currentAccount.AccountValidationStatus.UpdatedDate.ToString("G");
 
-        statementFlagComboBox.SelectedItem = currentAccount.Pat.StatementFlag;
-        firstStmtDateTextBox.Text = currentAccount.Pat.FirstStatementDate.ToString();
-        lastStmtDateTextBox.Text = currentAccount.Pat.LastStatementDate.ToString();
-        minPmtTextBox.Text = currentAccount.Pat.MinimumPaymentAmount.ToString();
+        statementFlagComboBox.SelectedItem = _currentAccount.Pat.StatementFlag;
+        firstStmtDateTextBox.Text = _currentAccount.Pat.FirstStatementDate.ToString();
+        lastStmtDateTextBox.Text = _currentAccount.Pat.LastStatementDate.ToString();
+        minPmtTextBox.Text = _currentAccount.Pat.MinimumPaymentAmount.ToString();
 
-        readyToBillCheckbox.Checked = currentAccount.ReadyToBill;
+        readyToBillCheckbox.Checked = _currentAccount.ReadyToBill;
 
-        statementHistoryDataGrid.DataSource = accountService.GetPatientStatements(currentAccount.AccountNo);
+        statementHistoryDataGrid.DataSource = _accountService.GetPatientStatements(_currentAccount.AccountNo);
 
         statementHistoryDataGrid.SetColumnsVisibility(false);
 
@@ -1258,7 +1258,7 @@ public partial class AccountForm : Form
         statementHistoryDataGrid.Columns[nameof(PatientStatementAccount.ProcessedDate)].Visible = true;
         statementHistoryDataGrid.Columns[nameof(PatientStatementAccount.StatementNumber)].Visible = true;
 
-        billingTabLoading = false;
+        _billingTabLoading = false;
     }
 
     #endregion
@@ -1266,13 +1266,13 @@ public partial class AccountForm : Form
     private void ChangeDateOfServiceToolStripMenuItem_Click(object sender, EventArgs e)
     {
         Log.Instance.Trace($"Entering");
-        var result = InputDialogs.SelectDateOfService((DateTime)currentAccount.TransactionDate);
+        var result = InputDialogs.SelectDateOfService((DateTime)_currentAccount.TransactionDate);
 
         try
         {
             if (result.newDate != DateTime.MinValue)
             {
-                accountService.ChangeDateOfService(currentAccount, result.newDate, result.reason);
+                _accountService.ChangeDateOfService(_currentAccount, result.newDate, result.reason);
             }
             else
             {
@@ -1299,12 +1299,12 @@ public partial class AccountForm : Form
     {
         Log.Instance.Trace($"Entering");
 
-        string newFinCode = InputDialogs.SelectFinancialCode(currentAccount.FinCode);
+        string newFinCode = InputDialogs.SelectFinancialCode(_currentAccount.FinCode);
         if (!string.IsNullOrEmpty(newFinCode))
         {
             try
             {
-                currentAccount = accountService.ChangeFinancialClass(currentAccount, newFinCode);
+                _currentAccount = _accountService.ChangeFinancialClass(_currentAccount, newFinCode);
             }
             catch (ArgumentException anex)
             {
@@ -1337,7 +1337,7 @@ public partial class AccountForm : Form
 
             try
             {
-                if (accountService.ChangeClient(currentAccount, newClient))
+                if (_accountService.ChangeClient(_currentAccount, newClient))
                 {
                     //await LoadAccountData();
                     RefreshAccountData();
@@ -1396,8 +1396,8 @@ public partial class AccountForm : Form
 
         ctrl.BackColor = Color.Orange;
 
-        if (!changedControls.Contains(ctrl.Name))
-            changedControls.Add(ctrl.Name);
+        if (!_changedControls.Contains(ctrl.Name))
+            _changedControls.Add(ctrl.Name);
 
     }
 
@@ -1405,34 +1405,34 @@ public partial class AccountForm : Form
     {
         Log.Instance.Trace($"Entering");
 
-        if (clearHoldStatusToolStripMenuItem.Text == clearHoldMenuText)
+        if (clearHoldStatusToolStripMenuItem.Text == _clearHoldMenuText)
         {
             InputBoxResult prompt = InputBox.Show("Enter reason for setting status back to New:", "New Note");
 
             if (prompt.ReturnCode == DialogResult.OK)
             {
-                accountService.AddNote(currentAccount.AccountNo, $"Claim hold cleared: {prompt.Text}");
+                _accountService.AddNote(_currentAccount.AccountNo, $"Claim hold cleared: {prompt.Text}");
                 //reload notes to pick up changes
                 LoadNotes();
             }
 
-            accountService.UpdateStatus(currentAccount.AccountNo, AccountStatus.New);
-            currentAccount.Status = AccountStatus.New;
+            _accountService.UpdateStatus(_currentAccount.AccountNo, AccountStatus.New);
+            _currentAccount.Status = AccountStatus.New;
         }
 
-        if (clearHoldStatusToolStripMenuItem.Text == setHoldMenuText)
+        if (clearHoldStatusToolStripMenuItem.Text == _setHoldMenuText)
         {
             InputBoxResult prompt = InputBox.Show("Enter reason for claim hold:", "New Note");
 
             if (prompt.ReturnCode == DialogResult.OK)
             {
-                accountService.AddNote(currentAccount.AccountNo, $"Claim hold set: {prompt.Text}");
+                _accountService.AddNote(_currentAccount.AccountNo, $"Claim hold set: {prompt.Text}");
                 //reload notes to pick up changes
                 LoadNotes();
             }
 
-            accountService.UpdateStatus(currentAccount.AccountNo, AccountStatus.Hold);
-            currentAccount.Status = AccountStatus.Hold;
+            _accountService.UpdateStatus(_currentAccount.AccountNo, AccountStatus.Hold);
+            _currentAccount.Status = AccountStatus.Hold;
         }
 
         //await LoadAccountData();
@@ -1449,7 +1449,7 @@ public partial class AccountForm : Form
             {
                 ctrl.BackColor = Color.White;
             }
-            changedControls.Remove(ctrl.Name);
+            _changedControls.Remove(ctrl.Name);
         }
     }
 
@@ -1458,7 +1458,7 @@ public partial class AccountForm : Form
         try
         {
             Cursor.Current = Cursors.WaitCursor;
-            currentAccount = await accountService.ValidateAsync(currentAccount);
+            _currentAccount = await _accountService.ValidateAsync(_currentAccount);
             RefreshAccountData();
             Cursor.Current = Cursors.Default;
         }
@@ -1472,7 +1472,7 @@ public partial class AccountForm : Form
     {
         ClaimGeneratorService claimGenerator = new(Program.AppEnvironment);
 
-        claimGenerator.CompileClaim(currentAccount.AccountNo);
+        claimGenerator.CompileClaim(_currentAccount.AccountNo);
     }
 
     private void BillActivityDataGrid_MouseDoubleClick(object sender, MouseEventArgs e)
@@ -1504,13 +1504,13 @@ public partial class AccountForm : Form
 
     private void swapInsurancesToolStripMenuItem_Click(object sender, EventArgs e)
     {
-        AskInsuranceSwapForm frm = new(ref currentAccount);
+        AskInsuranceSwapForm frm = new(ref _currentAccount);
 
         if (frm.ShowDialog() == DialogResult.OK)
         {
             try
             {
-                currentAccount = accountService.InsuranceSwap(currentAccount, InsCoverage.Parse(frm.swap1), InsCoverage.Parse(frm.swap2));
+                _currentAccount = _accountService.InsuranceSwap(_currentAccount, InsCoverage.Parse(frm.swap1), InsCoverage.Parse(frm.swap2));
                 //await LoadAccountData();
                 RefreshAccountData();
             }
@@ -1533,7 +1533,7 @@ public partial class AccountForm : Form
 
     private void statementFlagComboBox_SelectionChangeCommitted(object sender, EventArgs e)
     {
-        currentAccount = accountService.UpdateStatementFlag(currentAccount, statementFlagComboBox.SelectedItem.ToString());
+        _currentAccount = _accountService.UpdateStatementFlag(_currentAccount, statementFlagComboBox.SelectedItem.ToString());
         RefreshAccountData();
     }
 
@@ -1550,8 +1550,8 @@ public partial class AccountForm : Form
                 "Confirm Move", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
                 Cursor.Current = Cursors.WaitCursor;
-                Log.Instance.Debug($"Moving all charges from {currentAccount.AccountNo} to {destAccount}");
-                var (isSuccess, error) = accountService.MoveCharges(currentAccount.AccountNo, destAccount);
+                Log.Instance.Debug($"Moving all charges from {_currentAccount.AccountNo} to {destAccount}");
+                var (isSuccess, error) = _accountService.MoveCharges(_currentAccount.AccountNo, destAccount);
                 if (!isSuccess)
                 {
                     MessageBox.Show(error, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -1577,13 +1577,13 @@ public partial class AccountForm : Form
 
     private async void readyToBillCheckbox_CheckedChanged(object sender, EventArgs e)
     {
-        if (!billingTabLoading)
+        if (!_billingTabLoading)
         {
             Cursor.Current = Cursors.WaitCursor;
-            currentAccount.ReadyToBill = readyToBillCheckbox.Checked;
-            accountService.UpdateStatus(currentAccount.AccountNo, currentAccount.Status);
-            currentAccount.Notes = accountService.AddNote(currentAccount.AccountNo, "Marked ready to bill.").ToList();
-            currentAccount = await accountService.ValidateAsync(currentAccount);
+            _currentAccount.ReadyToBill = readyToBillCheckbox.Checked;
+            _accountService.UpdateStatus(_currentAccount.AccountNo, _currentAccount.Status);
+            _currentAccount.Notes = _accountService.AddNote(_currentAccount.AccountNo, "Marked ready to bill.").ToList();
+            _currentAccount = await _accountService.ValidateAsync(_currentAccount);
             RefreshAccountData();
             Cursor.Current = Cursors.Default;
         }
@@ -1619,7 +1619,7 @@ public partial class AccountForm : Form
         List<string> args = new();
         args.AddRange(Helper.GetArgs());
 
-        args.Add(currentAccount.AccountNo);
+        args.Add(_currentAccount.AccountNo);
 
         PrintEOBForm frm = new(args.ToArray());
 
@@ -1632,19 +1632,19 @@ public partial class AccountForm : Form
         if (MessageBox.Show("Clearing the claim status may result in duplicate claim submissions. Ensure the claim has been deleted in the clearing house system.",
             "Potential Duplicate Submission", MessageBoxButtons.OKCancel, MessageBoxIcon.Exclamation) == DialogResult.OK)
         {
-            currentAccount = accountService.ClearClaimStatus(currentAccount);
+            _currentAccount = _accountService.ClearClaimStatus(_currentAccount);
             RefreshAccountData();
         }
     }
 
     private void noteAlertCheckBox_CheckedChanged(object sender, EventArgs e)
     {
-        currentAccount.AccountAlert ??= new AccountAlert();
-        currentAccount.AccountAlert.AccountNo = currentAccount.AccountNo;
-        currentAccount.AccountAlert.Alert = noteAlertCheckBox.Checked;
-        bannerAlertLabel.Text = noteAlertCheckBox.Checked ? notesAlertText : "";
+        _currentAccount.AccountAlert ??= new AccountAlert();
+        _currentAccount.AccountAlert.AccountNo = _currentAccount.AccountNo;
+        _currentAccount.AccountAlert.Alert = noteAlertCheckBox.Checked;
+        bannerAlertLabel.Text = noteAlertCheckBox.Checked ? _notesAlertText : "";
 
-        accountService.SetNoteAlert(currentAccount.AccountNo, noteAlertCheckBox.Checked);
+        _accountService.SetNoteAlert(_currentAccount.AccountNo, noteAlertCheckBox.Checked);
     }
 
     private void BannerAccountTextBox_Click(object sender, EventArgs e) => Clipboard.SetText(BannerAccountTextBox.Text);
@@ -1667,14 +1667,14 @@ public partial class AccountForm : Form
         {
             ProviderLookupForm frm = new()
             {
-                Datasource = providers,
+                Datasource = _providers,
                 InitialSearchText = orderingPhyTextBox.Text
             };
             if (frm.ShowDialog() == DialogResult.OK)
             {
                 orderingPhyTextBox.Text = frm.SelectedPhy.ToString();
                 orderingPhyTextBox.Tag = frm.SelectedPhy.NpiId;
-                currentAccount.Pat.Physician = frm.SelectedPhy;
+                _currentAccount.Pat.Physician = frm.SelectedPhy;
             }
         }
         return;

@@ -98,7 +98,7 @@ namespace Utilities
         {
             get
             {
-                string strApp = Process.GetCurrentProcess().ProcessName + " " + Assembly.GetExecutingAssembly().GetName().Version.ToString();
+                string strApp = Process.GetCurrentProcess().ProcessName + " " + Assembly.GetEntryAssembly().GetName().Version.ToString();
                 if (Process.GetCurrentProcess().ProcessName.Trim() == ".Net SqlClient Data Provider")
                 {
                     strApp = Assembly.GetExecutingAssembly().FullName;

@@ -124,14 +124,27 @@ public sealed class HL7ProcessorService
             Console.WriteLine($"Processing {currentMessage.MessageType} for account {currentMessage.SourceAccount} complete.");
             uow.Commit();
         }
+        catch(AccountLockException alex)
+        {
+            currentMessage.ProcessFlag = StatusToString(Status.NotProcessed);
+            currentMessage.ProcessStatusMsg = "Account locked. Requeing.";
+            currentMessage.Errors = alex.Message + "\n" + alex.StackTrace;
+            Log.Instance.Error(currentMessage.ProcessStatusMsg, alex.Message);
+            Console.WriteLine($"{DateTime.Now:yyyy-MM-ddTHH:mm:ss.fffffffK} - Account locked. Requeing");
+            uow.MessagesInboundRepository.Update(currentMessage, new[]
+{
+                nameof(MessageInbound.ProcessFlag),
+                nameof(MessageInbound.ProcessStatusMsg),
+                nameof(MessageInbound.Errors)
+            });
+            uow.Commit();
+        }
         catch (Exception ex)
         {
-            Log.Instance.Error(ex.Message);
-
             currentMessage.ProcessFlag = StatusToString(Status.Failed);
             currentMessage.ProcessStatusMsg = "Exception encountered during process.";
             currentMessage.Errors = ex.Message + "\n" + ex.StackTrace;
-
+            Log.Instance.Error(currentMessage.ProcessStatusMsg, ex.Message);
             Console.WriteLine($"{DateTime.Now:yyyy-MM-ddTHH:mm:ss.fffffffK} - Exception encountered during process.");
             uow.MessagesInboundRepository.Update(currentMessage, new[]
             {
@@ -139,6 +152,7 @@ public sealed class HL7ProcessorService
                 nameof(MessageInbound.ProcessStatusMsg),
                 nameof(MessageInbound.Errors)
             });
+            uow.Commit();
         }
     }
 
@@ -288,10 +302,8 @@ public sealed class HL7ProcessorService
         ParseGT1();
         ParseIN1IN2();
 
-        UnitOfWorkMain uow = new(appEnvironment);
-
         //perform error checking
-        accountRecord.Client = uow.ClientRepository.GetClient(accountRecord.ClientMnem);
+        accountRecord.Client = dictionaryService.GetClient(accountRecord.ClientMnem);
         if (accountRecord.Client == null)
         {
             //error - invalid client
@@ -306,7 +318,7 @@ public sealed class HL7ProcessorService
 
         foreach (var ins in accountRecord.Insurances)
         {
-            var insc = uow.InsCompanyRepository.GetByCode(ins.InsCode);
+            var insc = dictionaryService.GetInsCompany(ins.InsCode);
             if (insc == null)
             {
                 Log.Instance.Warn($"[WARNING] Insurance code not valid {ins.InsCode}");
@@ -365,7 +377,7 @@ public sealed class HL7ProcessorService
 
         foreach (var dx in accountRecord.Pat.Diagnoses)
         {
-            var dxRecord = uow.DictDxRepository.GetByCode(dx.Code, (DateTime)accountRecord.TransactionDate);
+            var dxRecord = dictionaryService.GetDiagnosis(dx.Code, (DateTime)accountRecord.TransactionDate);
 
             if (dxRecord == null)
             {
@@ -385,7 +397,7 @@ public sealed class HL7ProcessorService
                 bool finCodeChange = false;
                 bool clientChange = false;
 
-                accountRecord.Fin = uow.FinRepository.GetFin(accountRecord.FinCode);
+                accountRecord.Fin = dictionaryService.GetFinCode(accountRecord.FinCode);
 
                 if (existingFinClass != accountRecord.Fin.FinClass && !string.IsNullOrEmpty(existingFinClass))
                 {
@@ -472,6 +484,10 @@ public sealed class HL7ProcessorService
             accountService.ClearAccountLock(accountRecord);
             return (Status.Failed, "Database error", errors);
         }
+        finally
+        {
+            accountService.ClearAccountLock(accountRecord);
+        }
     }
 
     private (Status status, string statusText, StringBuilder errors) ProcessDFTMessage()
@@ -485,6 +501,11 @@ public sealed class HL7ProcessorService
         //make sure account exists - if not, create it from the PID segment
         accountRecord = accountService.GetAccount(accountPrefix + currentMessage.SourceAccount);
         bool accountExists = accountRecord != null;
+
+        if (!accountExists)
+        {
+            accountRecord = new();
+        }
 
         ParsePID();
         ParsePV1();
@@ -580,14 +601,20 @@ public sealed class HL7ProcessorService
                     uow.Commit();
                     return (Status.Failed, $"{accountRecord.AccountNo} - charges not posted.", errors);
                 }
+                finally
+                {
+                    accountService.ClearAccountLock(accountRecord);
+                }
             }
-            accountService.ClearAccountLock(accountRecord);
+            if(accountExists)
+                accountService.ClearAccountLock(accountRecord);
             uow.Commit();
             return (Status.Processed, $"{accountRecord.AccountNo} - charges posted.", errors);
         }
         else
         {
-            accountService.ClearAccountLock(accountRecord);
+            if(accountExists)
+                accountService.ClearAccountLock(accountRecord);
             uow.Commit();
             return (Status.Failed, "Unable to process charges. See errors.", errors);
         }
