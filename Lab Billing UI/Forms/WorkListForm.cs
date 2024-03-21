@@ -456,7 +456,7 @@ public partial class WorkListForm : Form
                 }
                 else
                 {
-                    _accountTable.DefaultView.RowFilter = $" and {nameof(AccountSearch.Balance)} <> 0";
+                    _accountTable.DefaultView.RowFilter = $"{nameof(AccountSearch.Balance)} <> 0";
                 }
             }
 
