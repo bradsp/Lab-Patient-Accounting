@@ -184,7 +184,7 @@ namespace LabBilling.Forms
             toolStripCreditCharge.Name = "toolStripCreditCharge";
             toolStripCreditCharge.Size = new System.Drawing.Size(175, 22);
             toolStripCreditCharge.Text = "Credit Charge";
-            toolStripCreditCharge.Click += ToolStripCreditCharge_Click;
+            toolStripCreditCharge.Click += creditChargeToolStrip_Click;
             // 
             // moveChargeToolStripMenuItem
             // 

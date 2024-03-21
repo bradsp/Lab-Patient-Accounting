@@ -309,10 +309,11 @@ public sealed class HL7ProcessorService
             errors.AppendLine($"[ERROR] Invalid client {accountRecord.ClientMnem}");
             canFile = false;
         }
-        else
-        {
-            accountRecord.ClientName = accountRecord.Client.Name;
-        }
+        //TODO: Remove after validation
+        //else
+        //{
+        //    accountRecord.ClientName = accountRecord.Client.Name;
+        //}
 
         foreach (var ins in accountRecord.Insurances)
         {
@@ -519,10 +520,11 @@ public sealed class HL7ProcessorService
                 errors.AppendLine($"[ERROR] Invalid client {accountRecord.ClientMnem}");
                 canFile = false;
             }
-            else
-            {
-                accountRecord.ClientName = accountRecord.Client.Name;
-            }
+            //TODO: remove after validation
+            //else
+            //{
+            //    accountRecord.ClientName = accountRecord.Client.Name;
+            //}
 
             if (accountRecord.Client != null)
             {

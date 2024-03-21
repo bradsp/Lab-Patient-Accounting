@@ -21,14 +21,14 @@ public partial class ChargeMaintenanceUC : UserControl
         if (!this.DesignMode)
         {
             InitializeComponent();
-            grouper = new(ChargesDataGrid);
+            _grouper = new(ChargesDataGrid);
             _accountService = new(Program.AppEnvironment);
         }
     }
 
-    private DataTable chargesTable;
+    private DataTable _chargesTable;
     private bool _allowChargeEntry;
-    private Subro.Controls.DataGridViewGrouper grouper;
+    private Subro.Controls.DataGridViewGrouper _grouper;
     private readonly AccountService _accountService;
 
     public Account CurrentAccount { get; set; }
@@ -133,7 +133,7 @@ public partial class ChargeMaintenanceUC : UserControl
             }
         }
 
-        chargesTable = charges.ToDataTable();
+        _chargesTable = charges.ToDataTable();
     }
 
     public void LoadCharges()
@@ -146,17 +146,17 @@ public partial class ChargeMaintenanceUC : UserControl
 
         TotalChargesTextBox.Text = CurrentAccount.TotalCharges.ToString("c");
 
-        ChargesDataGrid.DataSource = chargesTable;
-        grouper.SetGroupOn(nameof(Charge.ChrgId));
+        ChargesDataGrid.DataSource = _chargesTable;
+        _grouper.SetGroupOn(nameof(Charge.ChrgId));
 
 
         if (CurrentAccount.FinCode == "CLIENT")
         {
-            chargesTable.DefaultView.Sort = $"{nameof(Chrg.ChrgId)} desc";
+            _chargesTable.DefaultView.Sort = $"{nameof(Chrg.ChrgId)} desc";
         }
         if (!ShowCreditedChrgCheckBox.Checked)
         {
-            chargesTable.DefaultView.RowFilter = $"{nameof(Chrg.IsCredited)} = false";
+            _chargesTable.DefaultView.RowFilter = $"{nameof(Chrg.IsCredited)} = false";
         }
 
         foreach (DataGridViewColumn col in ChargesDataGrid.Columns)
@@ -270,7 +270,7 @@ public partial class ChargeMaintenanceUC : UserControl
 
     private void ChargesDataGrid_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
     {
-        if (grouper.IsGroupRow(e.RowIndex))
+        if (_grouper.IsGroupRow(e.RowIndex))
             return;
 
         if (ChargesDataGrid[nameof(Chrg.IsCredited), e.RowIndex].Value.ToString() == "True")
@@ -298,7 +298,7 @@ public partial class ChargeMaintenanceUC : UserControl
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    private void ToolStripCreditCharge_Click(object sender, EventArgs e)
+    private void creditChargeToolStrip_Click(object sender, EventArgs e)
     {
         int selectedRows = ChargesDataGrid.Rows.GetRowCount(DataGridViewElementStates.Selected);
         if (selectedRows > 0)
@@ -311,7 +311,13 @@ public partial class ChargeMaintenanceUC : UserControl
 
             if (prompt.ReturnCode == DialogResult.OK)
             {
-                _accountService.CreditCharge(Convert.ToInt32(row.Cells[nameof(Chrg.ChrgId)].Value.ToString()), prompt.Text);
+                int chrgNo = Convert.ToInt32(row.Cells[nameof(Chrg.ChrgId)].Value.ToString());
+                var updatedChrg = _accountService.CreditCharge(chrgNo, prompt.Text);
+                //add charge to list
+                CurrentAccount.Charges.Add(updatedChrg);
+                int idx = CurrentAccount.Charges.FindIndex(c => c.ChrgId == chrgNo);
+                var creditedChrg = _accountService.GetCharge(chrgNo);
+                CurrentAccount.Charges[idx] = creditedChrg;
                 ChargesUpdated?.Invoke(this, EventArgs.Empty);
             }
         }
@@ -325,6 +331,7 @@ public partial class ChargeMaintenanceUC : UserControl
 
         if (frm.ShowDialog() == DialogResult.OK)
         {
+            CurrentAccount = _accountService.AddCharge(CurrentAccount, frm.SelectedCdm, (int)frm.Quantity, CurrentAccount.TransactionDate, frm.Comment, frm.ReferenceNumber, frm.Amount);
             ChargesUpdated?.Invoke(this, EventArgs.Empty);
         }
     }
@@ -332,23 +339,23 @@ public partial class ChargeMaintenanceUC : UserControl
     private void FilterCharges()
     {
 
-        chargesTable.DefaultView.RowFilter = string.Empty;
+        _chargesTable.DefaultView.RowFilter = string.Empty;
 
         if (show3rdPartyRadioButton.Checked)
-            chargesTable.DefaultView.RowFilter = $"{nameof(Chrg.FinancialType)} = 'M'";
+            _chargesTable.DefaultView.RowFilter = $"{nameof(Chrg.FinancialType)} = 'M'";
 
         if (showClientRadioButton.Checked)
-            chargesTable.DefaultView.RowFilter = $"{nameof(Chrg.FinancialType)} = 'C'";
+            _chargesTable.DefaultView.RowFilter = $"{nameof(Chrg.FinancialType)} = 'C'";
 
         if (showAllChargeRadioButton.Checked)
-            chargesTable.DefaultView.RowFilter = String.Empty;
+            _chargesTable.DefaultView.RowFilter = String.Empty;
 
         if (!ShowCreditedChrgCheckBox.Checked)
         {
-            if (chargesTable.DefaultView.RowFilter == string.Empty)
-                chargesTable.DefaultView.RowFilter = $"{nameof(Chrg.IsCredited)} = false";
+            if (_chargesTable.DefaultView.RowFilter == string.Empty)
+                _chargesTable.DefaultView.RowFilter = $"{nameof(Chrg.IsCredited)} = false";
             else
-                chargesTable.DefaultView.RowFilter += $"and {nameof(Chrg.IsCredited)} = false";
+                _chargesTable.DefaultView.RowFilter += $"and {nameof(Chrg.IsCredited)} = false";
         }
     }
 

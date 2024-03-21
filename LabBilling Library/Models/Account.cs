@@ -92,7 +92,7 @@ public sealed class Account : IBaseEntity
     [Ignore]
     public List<Chrg> Charges { get; set; } = new List<Chrg>();
     [Ignore]
-    public List<Chrg> BillableCharges { get; set;} = new List<Chrg>();
+    public List<Chrg> BillableCharges { get => this.Charges.Where(x => x.Status != "CBILL" && x.Status != "CAP" && x.Status != "N/A").ToList(); }
     [Ignore]
     public List<ClaimChargeView> ClaimCharges { get; set; } = new List<ClaimChargeView>();
     [Ignore]
@@ -113,28 +113,84 @@ public sealed class Account : IBaseEntity
     [Ignore]
     public double InvoiceBalance { get; set; }
     [Ignore]
-    public double ClaimBalance { get; set; }
+    public double ClaimBalance
+    {
+        get
+        { 
+            if(this.FinCode == "CLIENT")
+            {
+                return 0.00;
+            }
+            else
+            {
+                return this.BillableCharges.Where(x => x.FinancialType == "M").Sum(x => x.Quantity * x.NetAmount)
+                - (this.TotalPayments + this.TotalWriteOff + this.TotalContractual);
+            }
+        }
+    }
     [Ignore]
-    public List<(string client, double balance)> ClientBalance { get; set; }
+    public List<(string client, double balance)> ClientBalance 
+    { 
+        get
+        {
+            if(this.FinCode == "CLIENT")
+            {
+                var balance = this.BillableCharges.Sum(y => y.Quantity * y.NetAmount)
+                 - (this.TotalPayments + this.TotalContractual + this.TotalWriteOff);
+                var list = new List<(string client, double balance)>
+                {
+                    (this.ClientMnem, balance)
+                };
+                return list;
+            }
+            else
+            {
+                var list = new List<(string client, double balance)>();
+                var results = this.BillableCharges
+                    .Where(x => x.FinancialType == "C")
+                    .GroupBy(x => x.ClientMnem, (client, balance) => new { Client = client, Balance = balance.Sum(c => c.Quantity * c.NetAmount) });
+                foreach(var result in results)
+                    list.Add((result.Client, result.Balance));
+                return list;
+            }
+        }
+    }
 
 
     [Ignore]
-    public double Balance { get; set; }
+    public double Balance { get => this.TotalCharges - (this.TotalPayments + this.TotalContractual + this.TotalWriteOff); }
     [Ignore]
-    public double TotalCharges { get; set; }
+    public double TotalCharges
+    {
+        get
+        {
+            if (this.FinCode == "CLIENT")
+            {
+                return this.Charges.Where(x => x.Status != "CBILL").Sum(x => x.Quantity * x.NetAmount);
+            }
+            else
+            {
+                return this.Charges.Where(x => x.Status != "CBILL" && x.Status != "CAP" && x.Status != "N/A")
+                    .Sum(x => x.Quantity * x.NetAmount);
+            }
+        }
+    }
     [Ignore]
-    public double TotalPayments { get; set; }
+    public double TotalPayments { get => this.Payments.Where(x => x.Status != "CBILL").Sum(x => x.PaidAmount); }
     [Ignore]
-    public double TotalContractual { get; set; }
+    public double TotalContractual { get => this.Payments.Where(x => x.Status != "CBILL").Sum(x => x.ContractualAmount); }
     [Ignore]
-    public double TotalWriteOff { get; set; }
+    public double TotalWriteOff { get => this.Payments.Where(x => x.Status != "CBILL").Sum(x => x.WriteOffAmount); }
     [Ignore]
-    public double TotalBadDebt { get; set; }
+    public double TotalBadDebt
+    {
+        get => this.Payments.Where(x => x.IsCollectionPmt).Sum(x => x.WriteOffAmount);
+    }
 
     [Ignore]
     public string FullInfo => $"{AccountNo} {PatFullName} {ClientMnem} {TransactionDate}";
     [Ignore]
-    public string ClientName { get; set; }
+    public string ClientName { get => this.Client.Name; }
     [Ignore]
     public string DOBSex => $"{BirthDate.GetValueOrDefault().ToShortDateString()} - {Sex}";
 
@@ -143,14 +199,14 @@ public sealed class Account : IBaseEntity
     {
         get
         {
-            if (Status == AccountStatus.ReadyToBill || 
-                Status == AccountStatus.Institutional || 
-                Status == AccountStatus.InstSubmitted || 
-                Status == AccountStatus.Professional || 
-                Status == AccountStatus.ProfSubmitted || 
-                Status == AccountStatus.PaidOut || 
-                Status == AccountStatus.Closed || 
-                Status == AccountStatus.ClaimSubmitted || 
+            if (Status == AccountStatus.ReadyToBill ||
+                Status == AccountStatus.Institutional ||
+                Status == AccountStatus.InstSubmitted ||
+                Status == AccountStatus.Professional ||
+                Status == AccountStatus.ProfSubmitted ||
+                Status == AccountStatus.PaidOut ||
+                Status == AccountStatus.Closed ||
+                Status == AccountStatus.ClaimSubmitted ||
                 Status == AccountStatus.Statements)
                 return true;
             else
@@ -276,11 +332,11 @@ public sealed class Account : IBaseEntity
     public AccountAlert AccountAlert { get; set; } = new AccountAlert();
 
     [Ignore]
-    public DateTime LastActivity 
-    { 
+    public DateTime LastActivity
+    {
         get
         {
-            List<DateTime> dates = new List<DateTime>
+            List<DateTime> dates = new()
             {
                 UpdatedDate,
                 Pat.UpdatedDate
@@ -302,7 +358,7 @@ public sealed class Account : IBaseEntity
                 dates.Add(BillingActivities.Max(x => x.UpdatedDate));
 
             return dates.Max();
-        } 
+        }
     }
 
     [Ignore]
