@@ -1,14 +1,17 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace Utilities
 {
     /// <summary>
     /// 
     /// </summary>
-    public class HelperExtensions
+    public static class HelperExtensions
     {
         /// <summary>
         /// 
@@ -80,6 +83,18 @@ namespace Utilities
         public static int ComputePercentage(int numerator, int denominator)
         {
             return (int)((double)numerator / (double)denominator * 100);
+        }
+
+        /// <summary>
+        /// Makes a copy of an object. Object must be serializable.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public static T Clone<T>(this T obj)
+        {
+            var serialized = JsonConvert.SerializeObject(obj);
+            return JsonConvert.DeserializeObject<T>(serialized);
         }
     }
 }

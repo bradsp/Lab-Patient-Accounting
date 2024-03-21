@@ -220,6 +220,7 @@ public partial class BatchRemittance : Form
                 break;
         }
 
+        dgvPayments.Columns[nameof(ChkBatchDetail.Status)].Visible = false;
     }
 
     bool skipDgvPaymentsCellValueChanged = false;

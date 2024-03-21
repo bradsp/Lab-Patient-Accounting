@@ -112,5 +112,6 @@ namespace LabBilling.Core.Models
 
         [Ignore]
         public Cdm Cdm { get; set; } = new Cdm();
+
     }
 }

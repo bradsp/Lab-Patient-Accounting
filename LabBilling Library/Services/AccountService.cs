@@ -9,6 +9,7 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using Log = LabBilling.Logging.Log;
+using Utilities;
 
 namespace LabBilling.Core.Services;
 
@@ -53,11 +54,7 @@ public sealed class AccountService
     public Account GetAccountMinimal(string accountNo)
     {
         using AccountUnitOfWork uow = new(appEnvironment);
-
         var acc = uow.AccountRepository.GetByAccount(accountNo);
-        if (acc != null)
-            acc.Balance = GetBalance(accountNo);
-
         return acc;
     }
 
@@ -151,8 +148,6 @@ public sealed class AccountService
             if (record.ClientMnem != invalidFinCode)
             {
                 record.Client = uow.ClientRepository.GetClient(record.ClientMnem);
-                if (record.Client != null)
-                    record.ClientName = record.Client.Name;
             }
         }
         record.Pat = uow.PatRepository.GetByAccount(record);
@@ -192,52 +187,6 @@ public sealed class AccountService
                 }
             }
         }
-
-        record.TotalBadDebt = record.Payments.Where(x => x.IsCollectionPmt).Sum(x => x.WriteOffAmount);
-
-        record.BillableCharges = record.Charges.Where(x => x.Status != cbillStatus && x.Status != capStatus && x.Status != naStatus).ToList();
-
-        if (record.FinCode == clientFinCode)
-        {
-            record.TotalCharges = record.Charges.Where(x => x.Status != cbillStatus).Sum(x => x.Quantity * x.NetAmount);
-        }
-        else
-        {
-            record.TotalCharges = record.Charges.Where(x => x.Status != cbillStatus && x.Status != capStatus && x.Status != naStatus)
-                .Sum(x => x.Quantity * x.NetAmount);
-        }
-
-        record.TotalWriteOff = record.Payments.Where(x => x.Status != cbillStatus).Sum(x => x.WriteOffAmount);
-        record.TotalPayments = record.Payments.Where(x => x.Status != cbillStatus).Sum(x => x.PaidAmount);
-        record.TotalContractual = record.Payments.Where(x => x.Status != cbillStatus).Sum(x => x.ContractualAmount);
-
-        if (record.FinCode == clientFinCode)
-        {
-            record.ClaimBalance = 0.00;
-
-            record.ClientBalance = new List<(string client, double balance)>();
-
-            var balance = record.BillableCharges.Sum(y => y.Quantity * y.NetAmount)
-                 - (record.TotalPayments + record.TotalContractual + record.TotalWriteOff);
-
-            record.ClientBalance.Add((record.ClientMnem, balance));
-        }
-        else
-        {
-            record.ClaimBalance = record.BillableCharges.Where(x => x.FinancialType == patientFinType).Sum(x => x.Quantity * x.NetAmount)
-                - (record.TotalPayments + record.TotalWriteOff + record.TotalContractual);
-
-            var results = record.BillableCharges.Where(x => x.FinancialType == clientFinType)
-                .GroupBy(x => x.ClientMnem, (client, balance) => new { Client = client, Balance = balance.Sum(c => c.Quantity * c.NetAmount) });
-
-            record.ClientBalance = new List<(string client, double balance)>();
-
-            foreach (var result in results)
-            {
-                record.ClientBalance.Add((result.Client, result.Balance));
-            }
-        }
-        record.Balance = record.TotalCharges - (record.TotalPayments + record.TotalContractual + record.TotalWriteOff);
 
         return record;
     }
@@ -838,7 +787,6 @@ public sealed class AccountService
 
                 model.ClientMnem = newClientMnem;
                 model.Client = newClient;
-                model.ClientName = newClient.Name;
                 try
                 {
                     uow.AccountRepository.Update(model, new[] { nameof(Account.ClientMnem) });
@@ -1179,6 +1127,24 @@ public sealed class AccountService
         return AddCharge(accData, cdm, qty, serviceDate, comment, refNumber, miscAmount);
     }
 
+
+    public Chrg AddCharge(Chrg chrg)
+    {
+        Log.Instance.Trace("Entering");
+        using UnitOfWorkMain uow = new(appEnvironment);
+
+        var newChrg = uow.ChrgRepository.Add(chrg);
+
+        chrg.ChrgDetails.ForEach(cd =>
+        {
+            cd.ChrgNo = newChrg.ChrgId;
+            cd = uow.ChrgDetailRepository.Add(cd);
+            newChrg.ChrgDetails.Add(cd);
+        });
+        newChrg.Cdm = chrg.Cdm;
+
+        return newChrg;
+    }
 
     public async Task<Account> AddChargeAsync(Account accData, string cdm, int qty, DateTime serviceDate, string comment = null, string refNumber = null, double miscAmount = 0.00)
         => await Task.Run(() => AddCharge(accData, cdm, qty, serviceDate, comment, refNumber, miscAmount));
@@ -1921,7 +1887,7 @@ public sealed class AccountService
         if (chrgId <= 0)
             throw new ArgumentOutOfRangeException(nameof(chrgId));
 
-        var chrg = uow.ChrgRepository.GetById(chrgId) ?? throw new ApplicationException($"Charge number {chrgId} not found.");
+        var chrg = GetCharge(chrgId) ?? throw new ApplicationException($"Charge number {chrgId} not found.");
 
         if (chrg.FinancialType == "M")
         {
@@ -1934,20 +1900,23 @@ public sealed class AccountService
             setOldChrgCreditFlag = true;
         }
 
-        chrg.IsCredited = setCreditFlag;
-        chrg.ChrgId = 0;
-        chrg.Quantity *= -1;
-        chrg.Comment = comment;
-        chrg.Invoice = null;
-        chrg.PostingDate = DateTime.Today;
-        chrg.ChrgDetails.ForEach(x => x.ChrgNo = 0);
+        var newChrg = chrg.Clone();
 
-        chrg = uow.ChrgRepository.Add(chrg);
+        newChrg.IsCredited = setCreditFlag;
+        newChrg.ChrgId = 0;
+        newChrg.Quantity *= -1;
+        newChrg.Comment = comment;
+        newChrg.Invoice = null;
+        newChrg.PostingDate = DateTime.Today;
+        newChrg.ChrgDetails.ForEach(x => x.ChrgNo = 0);
+
+        newChrg = AddCharge(newChrg);
+
         if (setOldChrgCreditFlag)
             chrg = uow.ChrgRepository.SetCredited(chrgId);
 
         uow.Commit();
-        return chrg;
+        return newChrg;
     }
 
     public Chrg SetChargeCreditFlag(int chrgId, bool flag)
