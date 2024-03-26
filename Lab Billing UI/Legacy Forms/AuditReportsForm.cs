@@ -874,7 +874,7 @@ public partial class AuditReportsForm : Form
     private void tssbTableReports_ButtonClick(object sender, EventArgs e)
     {
         tableReportsToolStripItem.DropDownItems.Clear();
-        _dicCode = [];
+        _dicCode = new();
         string strQuery = "select * from dbo.Monthly_Reports order by button, report_title";
 
         SqlDataAdapter sda = new(strQuery, Program.AppEnvironment.ConnectionString);

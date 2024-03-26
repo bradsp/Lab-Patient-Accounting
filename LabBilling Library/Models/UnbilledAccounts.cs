@@ -22,6 +22,8 @@ namespace LabBilling.Core.Models
 
         [Column("fin_code")]
         public string FinancialClass { get; set; }
+        [Column("fin_type")]
+        public string FinancialType { get; set; }
 
         [Column("UnbilledAmount")]
         public double UnbilledAmount { get; set; }

@@ -8,13 +8,13 @@ namespace LabBilling.Forms;
 
 public partial class PatBillForm : Form
 {
-    private BindingSource masterBindingSource = [];
-    private BindingSource detailBindingSourceAcc = [];
-    private BindingSource detailBingingSourceEnctr = [];
-    private BindingSource detailBindingSourceActv = [];
+    private BindingSource _masterBindingSource = new();
+    private BindingSource _detailBindingSourceAcc = new();
+    private BindingSource _detailBingingSourceEnctr = new();
+    private BindingSource _detailBindingSourceActv = new();
     public string m_strServer = null;
     public string m_strDatabase = null;
-    DataSet m_dsPatBill = new();
+    DataSet _dsPatBill = new();
     public PatBillForm() 
     {
         InitializeComponent();
@@ -56,12 +56,12 @@ public partial class PatBillForm : Form
             DataTable dtEnctr = new DataTable("ENCTR");
             DataTable dtActv = new DataTable("ACTV");
             DataTable dtAcctMsg = new DataTable("ACCT_MSG");
-            m_dsPatBill.Tables.Add(dtStmt);
-            m_dsPatBill.Tables.Add(dtBMSG);
-            m_dsPatBill.Tables.Add(dtAcct);
-            m_dsPatBill.Tables.Add(dtAcctMsg);
-            m_dsPatBill.Tables.Add(dtEnctr);
-            m_dsPatBill.Tables.Add(dtActv);
+            _dsPatBill.Tables.Add(dtStmt);
+            _dsPatBill.Tables.Add(dtBMSG);
+            _dsPatBill.Tables.Add(dtAcct);
+            _dsPatBill.Tables.Add(dtAcctMsg);
+            _dsPatBill.Tables.Add(dtEnctr);
+            _dsPatBill.Tables.Add(dtActv);
             SqlCommand cmdClear = new SqlCommand();
             DateTime dtBillFor = DateTime.Today.AddDays(DateTime.Today.Day*-1);
             string strBatchId = string.Format("{0}{1}", dtBillFor.Year.ToString("D4"), dtBillFor.Month.ToString("D2"));
@@ -111,8 +111,8 @@ public partial class PatBillForm : Form
             try
             {
                 sda.SelectCommand = cmdSelectStmt;
-                int nRec = sda.Fill(m_dsPatBill.Tables["STMT"]);
-                dgvStatement.DataSource = m_dsPatBill.Tables["STMT"];
+                int nRec = sda.Fill(_dsPatBill.Tables["STMT"]);
+                dgvStatement.DataSource = _dsPatBill.Tables["STMT"];
                 
         
                 //ds.Tables["STMT"].PrimaryKey = 
@@ -120,20 +120,20 @@ public partial class PatBillForm : Form
                 //dgvStatement.DataSource = ds.Tables["STMT"];
 
                 sda.SelectCommand = cmdSelectAcc;
-                nRec = sda.Fill(m_dsPatBill.Tables["ACCT"]);
-                dgvAccount.DataSource = m_dsPatBill.Tables["ACCT"];
+                nRec = sda.Fill(_dsPatBill.Tables["ACCT"]);
+                dgvAccount.DataSource = _dsPatBill.Tables["ACCT"];
 
                 sda.SelectCommand = cmdSelectEnctr;
-                nRec = sda.Fill(m_dsPatBill.Tables["ENCTR"]);
-                dgvEncounter.DataSource = m_dsPatBill.Tables["ENCTR"];
+                nRec = sda.Fill(_dsPatBill.Tables["ENCTR"]);
+                dgvEncounter.DataSource = _dsPatBill.Tables["ENCTR"];
                 
 
                 sda.SelectCommand = cmdSelectEnctrActv;
-                nRec = sda.Fill(m_dsPatBill.Tables["ACTV"]);
-                dgvActivity.DataSource = m_dsPatBill.Tables["ACTV"];
+                nRec = sda.Fill(_dsPatBill.Tables["ACTV"]);
+                dgvActivity.DataSource = _dsPatBill.Tables["ACTV"];
 
                 sda.SelectCommand = cmdSelectNotices;
-                nRec = sda.Fill(m_dsPatBill.Tables["ACCT_MSG"]);
+                nRec = sda.Fill(_dsPatBill.Tables["ACCT_MSG"]);
 
             }
             catch (SqlException se)
@@ -158,11 +158,11 @@ public partial class PatBillForm : Form
             ,DateTime.Now.ToString("yyyyMMdd")
             ,DateTime.Now.ToString("HHmmss")));
 
-        foreach (DataRow dr in m_dsPatBill.Tables["STMT"].Rows)
+        foreach (DataRow dr in _dsPatBill.Tables["STMT"].Rows)
         {
             
             // each statement
-            DataRow[] drAcc = m_dsPatBill.Tables["ACCT"].Select(
+            DataRow[] drAcc = _dsPatBill.Tables["ACCT"].Select(
                 string.Format("statement_number = '{0}'", dr["statement_number"].ToString()));
 
             
@@ -248,9 +248,9 @@ public partial class PatBillForm : Form
             string strSelect = string.Format("statement_type = 'SMSG' and  statement_type_id = '{0}' ",
                 dr["statement_number"].ToString());
 
-            if (m_dsPatBill.Tables["ACCT_MSG"].Rows.Count > 0)
+            if (_dsPatBill.Tables["ACCT_MSG"].Rows.Count > 0)
             {
-                DataRow[] drStmtMsg = m_dsPatBill.Tables["ACCT_MSG"].Select(
+                DataRow[] drStmtMsg = _dsPatBill.Tables["ACCT_MSG"].Select(
                     string.Format("statement_type = 'SMSG' and  statement_type_id = '{0}' ",
                     dr["statement_number"].ToString()));
 
@@ -309,7 +309,7 @@ public partial class PatBillForm : Form
                     ));
 
                 // each encounter
-                DataRow[] drEnct = m_dsPatBill.Tables["ENCTR"].Select(
+                DataRow[] drEnct = _dsPatBill.Tables["ENCTR"].Select(
                 string.Format("statement_number = '{0}' and record_cnt = '{1}'", 
                     dr["statement_number"].ToString().ToUpper(), 
                     drAcc[iAcc]["record_cnt_acct"].ToString().ToUpper()));
@@ -397,9 +397,9 @@ public partial class PatBillForm : Form
 
                     ));
 
-                    if (m_dsPatBill.Tables["ACCT_MSG"].Rows.Count > 0)
+                    if (_dsPatBill.Tables["ACCT_MSG"].Rows.Count > 0)
                     {
-                        DataRow[] drEnctMsg = m_dsPatBill.Tables["ACCT_MSG"].Select(
+                        DataRow[] drEnctMsg = _dsPatBill.Tables["ACCT_MSG"].Select(
                         string.Format("statement_type = 'EMSG' and  statement_type_id = '{0}' and account = '{1}'",
                         dr["statement_number"].ToString(), drEnct[iEnctr]["pft_encntr_id"].ToString().ToUpper()));
 
@@ -412,7 +412,7 @@ public partial class PatBillForm : Form
                                 drEnctMsg[iEmsg]["statement_text"].ToString().ToUpper()));
                         }
                     }
-                    DataRow[] drActv = m_dsPatBill.Tables["ACTV"].Select(
+                    DataRow[] drActv = _dsPatBill.Tables["ACTV"].Select(
                             string.Format("statement_number = '{0}' and parent_activity_id = '{1}'"
                             , dr["statement_number"].ToString().ToUpper()
                             , drEnct[iEnctr]["record_cnt"].ToString().ToUpper()));

@@ -180,7 +180,7 @@ public partial class DashboardForm : Form
         formsPlot1.Plot.HideGrid();
         formsPlot1.Plot.Axes.Margins(bottom: 0);
         formsPlot1.Plot.Axes.Bottom.Label.Text = "Financial Class";
-        formsPlot1.Plot.Style.Background(ScottPlot.Color.FromHex("#ffffff"), ScottPlot.Color.FromHex("#ffffff"));
+        formsPlot1.Plot.FigureBackground.Color = ScottPlot.Color.FromHex("#ffffff");
         formsPlot1.Plot.Title("Accounts Receivable Balance by Financial Class");
     }
 

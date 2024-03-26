@@ -142,7 +142,7 @@ public sealed class ClientRepository : RepositoryBase<Client>
                 UnbilledAccounts = unbilledAccounts.Where(x => x.ClientMnem == client.ClientMnem).ToList()
             };
 
-            if (unbilledClient.PriorBalance != 0 && unbilledAccounts.Sum(x => x.UnbilledAmount) != 0)
+            if (unbilledClient.PriorBalance != 0 || unbilledClient.UnbilledAccounts.Sum(x => x.UnbilledAmount) != 0)
                 unbilledClients.Add(unbilledClient);
 
             progress?.Report(HelperExtensions.ComputePercentage(++processed, total));
@@ -163,7 +163,7 @@ public sealed class ClientRepository : RepositoryBase<Client>
                 chrgTableName + "." + GetRealColumn(typeof(Chrg), nameof(Chrg.ClientMnem)),
                 accTableName + "." + GetRealColumn(typeof(Account), nameof(Account.TransactionDate)),
                 accTableName + "." + GetRealColumn(typeof(Account), nameof(Account.PatFullName)),
-                chrgTableName + "." + GetRealColumn(typeof(Chrg), nameof(Chrg.FinCode)),
+                chrgTableName + "." + GetRealColumn(typeof(Chrg), nameof(Chrg.FinancialType)),
                 $"dbo.GetAccClientBalance({chrgTableName}.{GetRealColumn(typeof(Chrg), nameof(Chrg.AccountNo))}, {chrgTableName}.{GetRealColumn(typeof(Chrg), nameof(Chrg.ClientMnem))}) as {GetRealColumn(typeof(UnbilledAccounts), nameof(UnbilledAccounts.UnbilledAmount))}"
             })
             .From(chrgTableName)
@@ -171,7 +171,7 @@ public sealed class ClientRepository : RepositoryBase<Client>
             .On($"{chrgTableName}.{GetRealColumn(typeof(Chrg), nameof(Chrg.AccountNo))} = {accTableName}.{GetRealColumn(typeof(Account), nameof(Account.AccountNo))}")
             .Where($"{chrgTableName}.{GetRealColumn(typeof(Chrg), nameof(Chrg.Status))} not in ('CBILL','N/A')")
             .Where($"{chrgTableName}.{GetRealColumn(typeof(Chrg), nameof(Chrg.Invoice))} is null or {chrgTableName}.{GetRealColumn(typeof(Chrg), nameof(Chrg.Invoice))} = ''")
-            .Where($"{chrgTableName}.{GetRealColumn(typeof(Chrg), nameof(Chrg.FinCode))} in ('APC','X','Y','Z')")
+            .Where($"{chrgTableName}.{GetRealColumn(typeof(Chrg), nameof(Chrg.FinancialType))} =  'C'")
             .Where($"{accTableName}.{GetRealColumn(typeof(Account), nameof(Account.Status))} not like '%HOLD%'")
             .Where($"{accTableName}.{GetRealColumn(typeof(Account), nameof(Account.TransactionDate))} <= @0 ", 
                 new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = thruDate })
@@ -181,11 +181,11 @@ public sealed class ClientRepository : RepositoryBase<Client>
                 chrgTableName + "." + GetRealColumn(typeof(Chrg), nameof(Chrg.ClientMnem)),
                 accTableName + "." + GetRealColumn(typeof(Account), nameof(Account.TransactionDate)),
                 accTableName + "." + GetRealColumn(typeof(Account), nameof(Account.PatFullName)),
-                chrgTableName + "." + GetRealColumn(typeof(Chrg), nameof(Chrg.FinCode))
+                chrgTableName + "." + GetRealColumn(typeof(Chrg), nameof(Chrg.FinancialType))
             });
 
         var results = Context.Fetch<UnbilledAccounts>(cmd);
 
-        return results.Where(x => x.UnbilledAmount != 0.00).ToList();
+        return results.ToList(); // Where(x => x.UnbilledAmount != 0.00).ToList();
     }
 }

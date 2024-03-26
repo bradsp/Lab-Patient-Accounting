@@ -19,7 +19,8 @@
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <AssemblyVersion>2023.1.1.535</AssemblyVersion>
+    <AssemblyVersion>2024.1.2.598</AssemblyVersion>
+    <Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject />
@@ -43,13 +44,13 @@
     <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
   </PropertyGroup>
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net6.0-windows7.0</TargetFramework>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <AssemblyTitle>LabBillingService</AssemblyTitle>
     <Product>LabBillingService</Product>
-    <Copyright>Copyright ©  2021-2023</Copyright>
-    <FileVersion>2023.1.1.535</FileVersion>
-    <InformationalVersion>2023.1.1.535</InformationalVersion>
+    <Copyright>Copyright ©  2021-2024</Copyright>
+    <FileVersion>2024.1.2.598</FileVersion>
+    <InformationalVersion>2024.1.2.598</InformationalVersion>
   </PropertyGroup>
   <ItemGroup>
     <Compile Update="Properties\Settings.Designer.cs">
@@ -69,10 +70,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\LabBilling Library\LabBilling Core.csproj" />
-    <ProjectReference Include="..\RFClassLibrary\Utilities.csproj" />
-  </ItemGroup>
-  <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.8">
       <Visible>False</Visible>
       <ProductName>Microsoft .NET Framework 4.8 %28x86 and x64%29</ProductName>
@@ -85,7 +82,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="log4net" Version="2.0.16" />
+    <PackageReference Include="log4net" Version="2.0.17" />
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     <PackageReference Include="NLog" Version="5.2.8" />
     <PackageReference Include="NLog.Database" Version="5.2.8" />
@@ -95,5 +92,9 @@
     <PackageReference Include="Topshelf.Log4Net" Version="4.3.1-develop.253" />
     <PackageReference Include="Microsoft.AspNetCore.SystemWebAdapters" Version="1.3.2" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="8.0.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\LabBilling Library\LabBilling Core.csproj" />
+    <ProjectReference Include="..\Utilities\Utilities.csproj" />
   </ItemGroup>
 </Project>

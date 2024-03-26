@@ -9,6 +9,7 @@
     <Copyright>Copyright ©  2013</Copyright>
     <FileVersion>2023.1.4.598</FileVersion>
     <InformationalVersion>2023.1.4.598</InformationalVersion>
+    <Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />

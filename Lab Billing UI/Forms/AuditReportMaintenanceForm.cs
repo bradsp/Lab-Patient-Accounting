@@ -34,7 +34,7 @@ public partial class AuditReportMaintenanceForm : Form
         //load grid
         try
         {
-            _bindingSource = [];
+            _bindingSource = new();
             _auditReports = _dictionaryService.GetAuditReports().ToDataTable();
             _auditReports.PrimaryKey = new DataColumn[] { _auditReports.Columns[nameof(AuditReport.Id)] };
             if (_auditReports.Rows.Count > 0)

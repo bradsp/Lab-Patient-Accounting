@@ -276,7 +276,7 @@ public partial class MainForm : Form
 
         var results = await systemService.GetRecentAccountsAsync(Program.LoggedInUser.UserName);
         recentAccounts = results.ToList();
-        recentAccountsByAccount = [];
+        recentAccountsByAccount = new();
 
         foreach (UserProfile up in recentAccounts)
         {

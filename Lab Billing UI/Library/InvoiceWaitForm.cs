@@ -25,8 +25,8 @@ public partial class InvoiceWaitForm : Form
     {
         if (accountsProcessedLabel.InvokeRequired)
         {
-            SetAccountProgressCallback progressCallback = new SetAccountProgressCallback(SetAccountProgress);
-            this.Invoke(progressCallback, [progress, status]);
+            SetAccountProgressCallback progressCallback = new(SetAccountProgress);
+            this.Invoke(progressCallback, new { progress, status });
         }
         else
         {
@@ -39,8 +39,8 @@ public partial class InvoiceWaitForm : Form
     {
         if (invoicesProcessedLabel.InvokeRequired)
         {
-            SetInvoiceProgressCallback progressCallback = new SetInvoiceProgressCallback(SetInvoiceProgress);
-            this.Invoke(progressCallback, [progress, status]);
+            SetInvoiceProgressCallback progressCallback = new(SetInvoiceProgress);
+            this.Invoke(progressCallback, new { progress, status });
         }
         else
         {

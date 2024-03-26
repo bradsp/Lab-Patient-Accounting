@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using EdiTools;
 using LabBilling.Core.DataAccess;
-using OopFactory.X12.Parsing;
-using OopFactory.X12.Parsing.Model;
+//using OopFactory.X12.Parsing;
+//using OopFactory.X12.Parsing.Model;
 using System.IO;
 using System.Reflection;
 using System.Xml.Xsl;
@@ -1260,8 +1260,13 @@ public sealed class Remittance835Service
 
     }
 
+    /// <summary>
+    /// DO NOT USE!! Not yet developed.
+    /// </summary>
+    /// <param name="filename"></param>
     public void Load835_oop(string filename)
     {
+
         Stream transformStream = null;
 
         Stream inputStream = new FileStream(filename, FileMode.Open, FileAccess.Read);
@@ -1269,10 +1274,10 @@ public sealed class Remittance835Service
 
         transformStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(@"OopFactory.X12.Transformations.X12-835-To-CSV.xslt");
 
-        X12Parser parser = new X12Parser();
-        List<Interchange> interchange = parser.ParseMultiple(inputStream);
-        interchange[0].SerializeToX12(true);
-        string xml = interchange[0].Serialize();
+        //X12Parser parser = new X12Parser();
+        //List<Interchange> interchange = parser.ParseMultiple(inputStream);
+        //interchange[0].SerializeToX12(true);
+        //string xml = interchange[0].Serialize();
 
         var transform = new XslCompiledTransform();
         transform.Load(XmlReader.Create(transformStream));
@@ -1280,7 +1285,7 @@ public sealed class Remittance835Service
         arguments.AddParam("filename", "", new FileInfo(filename).Name);
 
         MemoryStream mstream = new MemoryStream();
-        transform.Transform(XmlReader.Create(new StringReader(xml)), arguments, mstream);
+        //transform.Transform(XmlReader.Create(new StringReader(xml)), arguments, mstream);
         mstream.Flush();
         mstream.Position = 0;
         string content = new StreamReader(mstream).ReadToEnd();

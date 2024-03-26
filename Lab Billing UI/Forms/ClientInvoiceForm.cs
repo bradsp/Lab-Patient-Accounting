@@ -150,6 +150,7 @@ public partial class ClientInvoiceForm : Form
     {
         UnbilledAccountsDGV.DataSource = unbilledClients.Where(x => x.ClientMnem == clientMnem).First().UnbilledAccounts;
 
+        UnbilledAccountsDGV.Columns[nameof(UnbilledAccounts.FinancialClass)].Visible = false;
         UnbilledAccountsDGV.Columns[nameof(UnbilledAccounts.UnbilledAmount)].DefaultCellStyle.Format = "c2";
         UnbilledAccountsDGV.Columns[nameof(UnbilledAccounts.UnbilledAmount)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
         UnbilledAccountsDGV.Columns[nameof(UnbilledAccounts.PatientName)].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;

@@ -37,7 +37,7 @@ public partial class ClaimsManagementForm : Form
         cancelButton.Enabled = false;
         claimProgressStatusLabel.Text = "";
 
-        _billingBatchBindingSource = [];
+        _billingBatchBindingSource = new();
 
         LoadData();
 

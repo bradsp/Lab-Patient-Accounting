@@ -1,26 +1,33 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net6.0-windows7.0</TargetFramework>
     <OutputType>Library</OutputType>
     <RootNamespace>LabBilling.Core</RootNamespace>
     <AssemblyVersion>2023.1.4.598</AssemblyVersion>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <AssemblyTitle>LabBilling Library</AssemblyTitle>
     <Product>LabBilling Library</Product>
-    <Copyright>Copyright ©  2021</Copyright>
+    <Copyright>Copyright ©  2021-2024</Copyright>
     <FileVersion>2023.1.4.598</FileVersion>
     <InformationalVersion>2023.1.4.598</InformationalVersion>
+    <Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <NoWarn>1701;1702;CA1416</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <NoWarn>1701;1702;CA1416</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <NoWarn>1701;1702;CA1416</NoWarn>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <NoWarn>1701;1702;CA1416</NoWarn>
+  </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\j4jayant.HL7.Parser\j4jayant.HL7.Parser.csproj" />
     <ProjectReference Include="..\MCL\MCL.csproj" />
-    <ProjectReference Include="..\RFClassLibrary\Utilities.csproj" />
+    <ProjectReference Include="..\Utilities\Utilities.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Specifications\Ansi-133-Specification.xml" />
@@ -39,8 +46,7 @@
     <PackageReference Include="NLog" Version="5.2.8" />
     <PackageReference Include="NLog.Database" Version="5.2.8" />
     <PackageReference Include="NLog.WindowsEventLog" Version="5.2.8" />
-    <PackageReference Include="NPOI" Version="2.6.2" />
-    <PackageReference Include="OopFactory.X12" Version="3.0.8.1" />
+    <PackageReference Include="NPOI" Version="2.7.0" />
     <PackageReference Include="PetaPoco.Compiled" Version="6.0.677" />
     <PackageReference Include="Portable.BouncyCastle" Version="1.9.0" />
     <PackageReference Include="SharpZipLib" Version="1.4.2" />

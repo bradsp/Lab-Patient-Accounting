@@ -20,7 +20,7 @@ public partial class WorkListForm : Form
     private readonly WorklistService worklist = new(Program.AppEnvironment);
     private bool _tasksRunning = false;
     private bool _requestAbort = false;
-    private BindingSource _accountBindingSource = [];
+    private BindingSource _accountBindingSource = new();
     private DataTable _accountTable = null;
     private int _worklistPanelWidth = 0;
     private readonly Timer _timer;
@@ -36,7 +36,7 @@ public partial class WorkListForm : Form
         accountGrid.DoubleBuffered(true);
 
         _accountTable = new List<AccountSearch>().ToDataTable();
-        _accountTable.PrimaryKey = [_accountTable.Columns[nameof(AccountSearch.Account)]];
+        _accountTable.PrimaryKey = new DataColumn[] { _accountTable.Columns[nameof(AccountSearch.Account)] };
 
         _accountBindingSource.DataSource = _accountTable;
         accountGrid.DataSource = _accountBindingSource;
@@ -119,7 +119,7 @@ public partial class WorkListForm : Form
 
         _accountBindingSource.DataSource = null;
         _accountTable = accounts.ToDataTable();
-        _accountTable.PrimaryKey = [_accountTable.Columns[nameof(AccountSearch.Account)]];
+        _accountTable.PrimaryKey = new DataColumn[] { _accountTable.Columns[nameof(AccountSearch.Account)] };
         _accountBindingSource.DataSource = _accountTable;
 
         _accountTable.DefaultView.Sort = nameof(AccountSearch.ServiceDate);

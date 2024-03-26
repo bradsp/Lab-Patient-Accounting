@@ -81,7 +81,7 @@ namespace LabBilling.Core.Models
         { 
             get
             {
-                if (ChrgDetails != null)
+                if (ChrgDetails != null && ChrgDetails.Count > 0)
                 {
                     string cptList = string.Empty;
                     ChrgDetails.ForEach(x => cptList += x.Cpt4 + ", ");
