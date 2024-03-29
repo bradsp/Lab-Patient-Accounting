@@ -1,10 +1,7 @@
-﻿using System;
-using System.Data;
-using System.Drawing;
-using System.Windows.Forms;
-using LabBilling.Core.Models;
+﻿using LabBilling.Core.Models;
 using LabBilling.Core.Services;
 using LabBilling.Logging;
+using System.Data;
 
 namespace LabBilling.Forms;
 
@@ -13,14 +10,14 @@ public partial class HealthPlanMaintenanceForm : Form
     private DictionaryService dictionaryService;
     private DataTable _insCompanyTable = null;
     private BindingSource insCompanySource = new BindingSource();
-    private Timer _timer = null;
+    private System.Windows.Forms.Timer _timer = null;
     private const int _timerDelay = 650;
-    
 
-    public HealthPlanMaintenanceForm() 
+
+    public HealthPlanMaintenanceForm()
     {
         InitializeComponent();
-        _timer = new Timer() { Enabled = false, Interval = _timerDelay };
+        _timer = new System.Windows.Forms.Timer() { Enabled = false, Interval = _timerDelay };
         _timer.Tick += new EventHandler(filterTextBox_KeyUpDone);
 
         dictionaryService = new(Program.AppEnvironment);
@@ -57,7 +54,7 @@ public partial class HealthPlanMaintenanceForm : Form
         healthPlanGrid.Columns[nameof(InsCompany.rowguid)].Visible = false;
         healthPlanGrid.Columns[nameof(InsCompany.ClaimFilingIndicatorCode)].Visible = false;
         healthPlanGrid.Columns[nameof(InsCompany.ClaimsNetPayerId)].Visible = false;
-        
+
 
         healthPlanGrid.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.DisplayedCells);
         healthPlanGrid.AllowUserToAddRows = false;
@@ -71,7 +68,7 @@ public partial class HealthPlanMaintenanceForm : Form
     private void includeDeletedCheckBox_CheckedChanged(object sender, EventArgs e)
     {
         //LoadHealthPlanGrid();
-        if(includeDeletedCheckBox.Checked)
+        if (includeDeletedCheckBox.Checked)
             _insCompanyTable.DefaultView.RowFilter = String.Empty;
         else
             _insCompanyTable.DefaultView.RowFilter = $"{nameof(InsCompany.IsDeleted)} = false";
@@ -98,7 +95,7 @@ public partial class HealthPlanMaintenanceForm : Form
             string selectedInsCode = healthPlanGrid.SelectedRows[0].Cells[nameof(InsCompany.InsuranceCode)].Value.ToString();
 
             HealthPlanMaintenanceEditForm form = new HealthPlanMaintenanceEditForm(selectedInsCode);
-            if(form.ShowDialog() == DialogResult.OK)
+            if (form.ShowDialog() == DialogResult.OK)
             {
                 var record = _insCompanyTable.Rows.Find(form.insCompany.InsuranceCode);
                 if (record == null)
@@ -137,7 +134,7 @@ public partial class HealthPlanMaintenanceForm : Form
 
         if (!string.IsNullOrEmpty(filterTextBox.Text))
         {
-            if(includeDeletedCheckBox.Checked)
+            if (includeDeletedCheckBox.Checked)
                 _insCompanyTable.DefaultView.RowFilter = $"{nameof(InsCompany.PlanName)} like '%{filterTextBox.Text}%'";
             else
                 _insCompanyTable.DefaultView.RowFilter = $"{nameof(InsCompany.PlanName)} like '%{filterTextBox.Text}%' and {nameof(InsCompany.IsDeleted)} = false";

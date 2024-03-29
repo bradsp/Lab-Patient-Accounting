@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using M = System.Windows.Media;
 
-namespace Opulos.Core.UI {
+namespace Opulos.Core.UI; 
 
 public static partial class FontEx {
 
@@ -13,22 +13,25 @@ public static partial class FontEx {
 		return HasGlyph(font.FontFamily.Name, glyph);
 	}
 
-	public static bool HasGlyph(String fontFamily, String glyph) {
+	public static bool HasGlyph(String fontFamily, String glyph)
+	{
 		var family = new M::FontFamily(fontFamily);
 		return HasGlyph(family, glyph);
 	}
 
-	public static bool HasGlyph(M::FontFamily family, String glyph) {
+	public static bool HasGlyph(M::FontFamily family, String glyph)
+	{
 		var typefaces = family.GetTypefaces();
 		return HasGlyph(typefaces, glyph);
 	}
 
-	public static bool HasGlyph(ICollection<M::Typeface> typefaces, String glyph) {
+	public static bool HasGlyph(ICollection<M::Typeface> typefaces, String glyph)
+	{
 		int unicodeValue = Char.ConvertToUtf32(glyph, 0);
 		return HasGlyph(typefaces, unicodeValue);
 	}
 
-//----------
+	//----------
 
 	// e.g. new Font("Segoe UI Symbol", 10).HasGlyph('\u23F0') == true; // alarm clock
 	public static bool HasGlyph(this Font font, char c) {
@@ -44,21 +47,26 @@ public static partial class FontEx {
 		return HasGlyph(family, c);
 	}
 
-	public static bool HasGlyph(M::FontFamily family, char c) {
+	public static bool HasGlyph(M::FontFamily family, char c)
+	{
 		var typefaces = family.GetTypefaces();
 		return HasGlyph(typefaces, c);
 	}
 
-	public static bool HasGlyph(ICollection<M::Typeface> typefaces, char c) {
+	public static bool HasGlyph(ICollection<M::Typeface> typefaces, char c)
+	{
 		int unicodeValue = Convert.ToUInt16(c);
 		return HasGlyph(typefaces, unicodeValue);
 	}
 
-	public static bool HasGlyph(ICollection<M::Typeface> typefaces, int unicodeValue) {
+	public static bool HasGlyph(ICollection<M::Typeface> typefaces, int unicodeValue)
+	{
 		M::GlyphTypeface glyph;
 		ushort glyphIndex;
-		foreach (var typeface in typefaces) {
-			if (typeface.TryGetGlyphTypeface(out glyph)) {
+		foreach (var typeface in typefaces)
+		{
+			if (typeface.TryGetGlyphTypeface(out glyph))
+			{
 				if (glyph.CharacterToGlyphMap.TryGetValue(unicodeValue, out glyphIndex))
 					return true;
 			}
@@ -94,17 +102,22 @@ public static partial class FontEx {
 		return list2;
 	}
 
-	public static bool HasGlyphs(this M::FontFamily family, String text) {
+	public static bool HasGlyphs(this M::FontFamily family, String text)
+	{
 		bool hasAll = true;
 		//var family = new System.Windows.Media.FontFamily(f.Name);
 		var typefaces = family.GetTypefaces();
-		for (int i = 0; i < text.Length; i++) {
+		for (int i = 0; i < text.Length; i++)
+		{
 			char c = text[i];
 			bool b = false;
-			if (char.IsHighSurrogate(c)) {
-				if (i+1 < text.Length) {
-					char c2 = text[i+1];
-					if (Char.IsLowSurrogate(c2)) {
+			if (char.IsHighSurrogate(c))
+			{
+				if (i + 1 < text.Length)
+				{
+					char c2 = text[i + 1];
+					if (Char.IsLowSurrogate(c2))
+					{
 						int unicode = char.ConvertToUtf32(c, c2);
 						b = FontEx.HasGlyph(typefaces, unicode);
 						if (b)
@@ -112,10 +125,12 @@ public static partial class FontEx {
 					}
 				}
 			}
-			else {
+			else
+			{
 				b = FontEx.HasGlyph(typefaces, c);
 			}
-			if (!b) {
+			if (!b)
+			{
 				hasAll = false;
 				break;
 			}
@@ -124,10 +139,12 @@ public static partial class FontEx {
 	}
 
 
-	public static bool HasGlyph(this M::FontFamily family, int charPoint) {
+	public static bool HasGlyph(this M::FontFamily family, int charPoint)
+	{
 
 		var typefaces = family.GetTypefaces();
-		foreach (var typeface in typefaces) { // e.g. bold, oblique, italic, regular/normal, etc.
+		foreach (var typeface in typefaces)
+		{ // e.g. bold, oblique, italic, regular/normal, etc.
 			M::GlyphTypeface glyph;
 			typeface.TryGetGlyphTypeface(out glyph);
 			IDictionary<int, ushort> characterMap = glyph.CharacterToGlyphMap;
@@ -141,9 +158,11 @@ public static partial class FontEx {
 		return false;
 	}
 
-	// e.g. var families = System.Windows.Media.Fonts.GetFontFamilies(@"C:\WINDOWS\Fonts\seguisym.ttf");
-	public static M::FontFamily HasGlyph(ICollection<M::FontFamily> families, int charPoint) {
-		foreach (var family in families) {
+	//e.g.var families = System.Windows.Media.Fonts.GetFontFamilies(@"C:\WINDOWS\Fonts\seguisym.ttf");
+	public static M::FontFamily HasGlyph(ICollection<M::FontFamily> families, int charPoint)
+	{
+		foreach (var family in families)
+		{
 			if (HasGlyph(family, charPoint))
 				return family;
 		}
@@ -207,5 +226,4 @@ public class FontGlyph {
 	public override String ToString() {
 		return Text;
 	}
-}
 }

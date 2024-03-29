@@ -1543,7 +1543,7 @@ namespace LabBilling.Forms
             statementFlagComboBox.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
             statementFlagComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             statementFlagComboBox.FormattingEnabled = true;
-            statementFlagComboBox.Items.AddRange(new object[] { "N", "Y", "1", "2", "3", "P" });
+            statementFlagComboBox.Items.AddRange(new object[] { "N", "Y", "1", "2", "3", "4", "P" });
             statementFlagComboBox.Location = new System.Drawing.Point(1198, 382);
             statementFlagComboBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             statementFlagComboBox.Name = "statementFlagComboBox";
@@ -1802,13 +1802,13 @@ namespace LabBilling.Forms
             // 
             BannerMRNTextBox.BackColor = System.Drawing.Color.Blue;
             BannerMRNTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            BannerMRNTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 0);
+            BannerMRNTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 0);
             BannerMRNTextBox.ForeColor = System.Drawing.Color.White;
-            BannerMRNTextBox.Location = new System.Drawing.Point(791, 13);
+            BannerMRNTextBox.Location = new System.Drawing.Point(791, 20);
             BannerMRNTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             BannerMRNTextBox.Name = "BannerMRNTextBox";
             BannerMRNTextBox.ReadOnly = true;
-            BannerMRNTextBox.Size = new System.Drawing.Size(110, 22);
+            BannerMRNTextBox.Size = new System.Drawing.Size(110, 15);
             BannerMRNTextBox.TabIndex = 26;
             // 
             // BannerAccountTextBox

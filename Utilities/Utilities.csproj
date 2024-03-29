@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <ProjectType>Local</ProjectType>
@@ -31,7 +31,7 @@
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <ApplicationVersion>2024</ApplicationVersion>
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
@@ -169,6 +169,8 @@
     </None>
   </ItemGroup>
   <PropertyGroup>
-    <AssemblyVersion>1.0.0.1</AssemblyVersion>
+    <AssemblyVersion>2024.1.2.4</AssemblyVersion>
+    <FileVersion>2024.1.2.3</FileVersion>
+    <Copyright>2022-2024</Copyright>
   </PropertyGroup>
 </Project>

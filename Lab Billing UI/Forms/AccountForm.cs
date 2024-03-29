@@ -6,14 +6,8 @@ using LabBilling.Legacy;
 using LabBilling.Library;
 using LabBilling.Logging;
 using LabBilling.LookupForms;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using Utilities;
 using WinFormsLibrary;
 
@@ -43,7 +37,7 @@ public partial class AccountForm : Form
     private readonly InsMaintenanceUC _insSecondaryMaintenanceUC = new(InsCoverage.Secondary);
     private readonly InsMaintenanceUC _insTertiaryMaintenanceUC = new(InsCoverage.Tertiary);
 
-    private Timer _timer;
+    private System.Windows.Forms.Timer _timer;
 
     public event EventHandler<string> AccountOpenedEvent;
     public event EventHandler<Account> AccountUpdatedEvent;
@@ -63,7 +57,7 @@ public partial class AccountForm : Form
     /// <param name="parentForm"></param>
     public AccountForm(string account) : this()
     {
-        Log.Instance.Trace("Entering");
+        Log.Instance.Trace($"Entering - {account}");
         _dictionaryService = new(Program.AppEnvironment);
         _accountService = new(Program.AppEnvironment);
 
@@ -81,7 +75,15 @@ public partial class AccountForm : Form
 
     private void AccountForm_Load(object sender, EventArgs e)
     {
-        Log.Instance.Trace("Entering");
+        if (SelectedAccount != null)
+        {
+            Log.Instance.Trace($"Entering - {SelectedAccount}");
+        }
+        else
+        {
+            Log.Instance.Trace("Entering - no selected account.");
+        }
+
 
         bannerPanel.BackColor = Color.Blue;
 
@@ -172,7 +174,7 @@ public partial class AccountForm : Form
         #region Setup ordering provider combo box
 
         _providers = DataCache.Instance.GetProviders();
-        _timer = new Timer() { Enabled = false, Interval = _timerInterval };
+        _timer = new System.Windows.Forms.Timer() { Enabled = false, Interval = _timerInterval };
         _timer.Tick += _timer_Tick;
 
         #endregion
@@ -248,6 +250,7 @@ public partial class AccountForm : Form
 
     private void SetFormPermissions()
     {
+        Log.Instance.Trace("Entering");
         _chargeMaintenance.AllowChargeEntry = Program.LoggedInUser.CanSubmitCharges;
 
         Helper.SetControlsAccess(tabPayments.Controls, false);
@@ -294,17 +297,17 @@ public partial class AccountForm : Form
 
     private void AccountForm_FormClosing(object sender, FormClosingEventArgs e)
     {
-        Log.Instance.Trace($"Entering");
+        Log.Instance.Trace($"Entering - {SelectedAccount}");
 
         if (_currentAccount != null && !string.IsNullOrEmpty(_currentAccount.AccountNo))
             _accountService.ClearAccountLock(_currentAccount);
-
+        _closing = true;
         e.Cancel = false;
     }
 
     private async void RefreshButton_Click(object sender, EventArgs e)
     {
-        Log.Instance.Trace($"Entering");
+        Log.Instance.Trace($"Entering - {SelectedAccount}");
         await LoadAccountData();
     }
 
@@ -313,10 +316,11 @@ public partial class AccountForm : Form
     /// </summary>
     private async Task LoadAccountData()
     {
-        Log.Instance.Trace($"Entering");
+        Log.Instance.Trace($"Entering - {SelectedAccount}");
 
         if (_closing)
             return;
+
         Cursor.Current = Cursors.WaitCursor;
         this.SuspendLayout();
         try
@@ -386,6 +390,7 @@ public partial class AccountForm : Form
 
     private void LoadSummaryTab()
     {
+        Log.Instance.Trace($"Entering - {SelectedAccount}");
         // note: when adding new items to the summary data list, be sure to enter the items in the order they
         // should appear. In other words, keep the group types together and the individual items in the order
         // they should be displayed.
@@ -399,7 +404,7 @@ public partial class AccountForm : Form
         sd.Add(new SummaryData("Account", SelectedAccount, SummaryData.GroupType.Demographics, row++, col));
         sd.Add(new SummaryData("EMR Account", _currentAccount.MeditechAccount, SummaryData.GroupType.Demographics, row++, col));
         sd.Add(new SummaryData("Status", _currentAccount.Status, SummaryData.GroupType.Demographics, row++, col));
-        sd.Add(new SummaryData("MRN", _currentAccount.MRN, SummaryData.GroupType.Demographics, row++, col));
+        sd.Add(new SummaryData("EMPI/MRN", _currentAccount.EMPINumber, SummaryData.GroupType.Demographics, row++, col));
         sd.Add(new SummaryData("SSN", _currentAccount.SocSecNo.FormatSSN(), SummaryData.GroupType.Demographics, row++, col));
         sd.Add(new SummaryData("Client", _currentAccount.ClientName, SummaryData.GroupType.Demographics, row++, col));
         sd.Add(new SummaryData("Ordering Provider", _currentAccount.Pat.Physician?.FullName ?? _currentAccount.Pat.ProviderId, SummaryData.GroupType.Demographics, row++, col));
@@ -502,14 +507,14 @@ public partial class AccountForm : Form
 
     private void LoadDemographics()
     {
-        Log.Instance.Trace("Entering");
+        Log.Instance.Trace($"Entering - {SelectedAccount}");
         DemoStatusMessagesTextBox.Text = String.Empty;
 
         BannerNameTextBox.Text = _currentAccount.PatFullName;
         BannerDobTextBox.Text = _currentAccount.BirthDate.GetValueOrDefault().ToShortDateString();
         BannerSexTextBox.Text = _currentAccount.Sex;
         BannerAccountTextBox.Text = SelectedAccount;
-        BannerMRNTextBox.Text = _currentAccount.MRN;
+        BannerMRNTextBox.Text = _currentAccount.EMPINumber;
         BannerClientTextBox.Text = _currentAccount.ClientName;
         BannerFinClassTextBox.Text = _currentAccount.FinCode;
         BannerBillStatusTextBox.Text = _currentAccount.Status;
@@ -533,12 +538,6 @@ public partial class AccountForm : Form
             bannerAlertLabel.BackColor = Color.Red;
             bannerAlertLabel.ForeColor = Color.White;
         }
-
-        BannerNameTextBox.Text = _currentAccount.PatFullName;
-        BannerAccountTextBox.Text = _selectedAccount;
-        BannerDobTextBox.Text = _currentAccount.BirthDate?.ToShortDateString();
-        BannerSexTextBox.Text = _currentAccount.Sex;
-        BannerMRNTextBox.Text = _currentAccount.MRN;
 
         TotalChargesLabel.Text = _currentAccount.TotalCharges.ToString("c");
         TotalPmtAdjLabel.Text = (_currentAccount.TotalContractual + _currentAccount.TotalPayments + _currentAccount.TotalWriteOff).ToString("c");
@@ -598,7 +597,7 @@ public partial class AccountForm : Form
 
     private void SaveDemographics_Click(object sender, EventArgs e)
     {
-        Log.Instance.Trace($"Entering");
+        Log.Instance.Trace($"Entering - {SelectedAccount}");
 
         _currentAccount.PatFullName = $"{LastNameTextBox.Text} {SuffixTextBox.Text},{FirstNameTextBox.Text} {MiddleNameTextBox.Text}";
         _currentAccount.PatLastName = LastNameTextBox.Text;
@@ -655,7 +654,7 @@ public partial class AccountForm : Form
 
     private void LoadPayments()
     {
-        Log.Instance.Trace("Entering");
+        Log.Instance.Trace($"Entering - {SelectedAccount}");
 
         TotalPaymentTextBox.Text = _currentAccount.TotalPayments.ToString("c");
         TotalContractualTextBox.Text = _currentAccount.TotalContractual.ToString("c");
@@ -710,7 +709,7 @@ public partial class AccountForm : Form
 
     private void PaymentsDataGrid_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
     {
-        Log.Instance.Trace($"Entering");
+        Log.Instance.Trace($"Entering - {SelectedAccount}");
 
         int selectedRows = PaymentsDataGrid.Rows.GetRowCount(DataGridViewElementStates.Selected);
         if (selectedRows > 0)
@@ -729,6 +728,7 @@ public partial class AccountForm : Form
 
     private void AddPaymentButton_Click(object sender, EventArgs e)
     {
+        Log.Instance.Trace($"Entering - {SelectedAccount}");
         PaymentAdjustmentEntryForm form = new(ref _currentAccount);
 
         if (_currentAccount.SentToCollections)
@@ -760,7 +760,6 @@ public partial class AccountForm : Form
                 Log.Instance.Error(ex);
                 MessageBox.Show($"Error adding payment. See log for details.");
             }
-            //await LoadAccountData();
             RefreshAccountData();
         }
     }
@@ -773,7 +772,7 @@ public partial class AccountForm : Form
 
     private void LoadDx()
     {
-        Log.Instance.Trace("Entering");
+        Log.Instance.Trace($"Entering - {SelectedAccount}");
         DiagnosisDataGrid.DataSource = new BindingSource(_dxBindingList, null);
         dxLoadingMode = true;
         _dxPointerBindingSource.DataSource = null;
@@ -916,6 +915,7 @@ public partial class AccountForm : Form
 
     private void dxPointerGrid2_CellClick(object sender, DataGridViewCellEventArgs e)
     {
+        Log.Instance.Trace($"Entering - {SelectedAccount}");
         //You can check for e.ColumnIndex to limit this to your specific column
         if (e.ColumnIndex > 2)
         {
@@ -926,6 +926,7 @@ public partial class AccountForm : Form
 
     private void dxPointerGrid2_CellValueChanged(object sender, DataGridViewCellEventArgs e)
     {
+        Log.Instance.Trace($"Entering - {SelectedAccount}");
         if (!dxLoadingMode)
         {
             //loop through columns
@@ -991,7 +992,7 @@ public partial class AccountForm : Form
 
     private void DxSearchButton_Click(object sender, EventArgs e)
     {
-        Log.Instance.Trace($"Entering");
+        Log.Instance.Trace($"Entering - {SelectedAccount}");
         if (!string.IsNullOrEmpty(txtSearchDx.Text))
         {
             var dictRecords = _dictionaryService.GetDiagnosisCodes(txtSearchDx.Text, _currentAccount.TransactionDate);
@@ -1011,7 +1012,7 @@ public partial class AccountForm : Form
 
     private void DxSearchDataGrid_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
     {
-        Log.Instance.Trace($"Entering");
+        Log.Instance.Trace($"Entering - {SelectedAccount}");
         DxSearchDataGrid.Columns[nameof(DictDx.Description)].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
         DxSearchDataGrid.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
         DxSearchDataGrid.Columns[1].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
@@ -1019,14 +1020,14 @@ public partial class AccountForm : Form
 
     private void DiagnosisDataGrid_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
     {
-        Log.Instance.Trace($"Entering");
+        Log.Instance.Trace($"Entering - {SelectedAccount}");
         DiagnosisDataGrid.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
         DiagnosisDataGrid.Columns[2].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
     }
 
     private void DxSearchDataGrid_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
     {
-        Log.Instance.Trace($"Entering");
+        Log.Instance.Trace($"Entering - {SelectedAccount}");
         int selectedRows = DxSearchDataGrid.Rows.GetRowCount(DataGridViewElementStates.Selected);
         if (selectedRows > 0)
         {
@@ -1062,7 +1063,7 @@ public partial class AccountForm : Form
 
     private void SearchDxTextBox_KeyPress(object sender, KeyPressEventArgs e)
     {
-        Log.Instance.Trace($"Entering");
+        Log.Instance.Trace($"Entering - {SelectedAccount}");
         if (e.KeyChar == (char)13)
         {
             Log.Instance.Debug("Enter key pressed");
@@ -1072,7 +1073,7 @@ public partial class AccountForm : Form
 
     private void DxQuickAddTextBox_KeyPress(object sender, KeyPressEventArgs e)
     {
-        Log.Instance.Trace($"Entering");
+        Log.Instance.Trace($"Entering - {SelectedAccount}");
         if (e.KeyChar == (char)13)
         {
             Log.Instance.Debug("Enter key pressed");
@@ -1120,7 +1121,7 @@ public partial class AccountForm : Form
 
     private void DxDeleteButton_Click(object sender, EventArgs e)
     {
-        Log.Instance.Trace($"Entering");
+        Log.Instance.Trace($"Entering - {SelectedAccount}");
         int selectedRows = DiagnosisDataGrid.Rows.GetRowCount(DataGridViewElementStates.Selected);
         if (selectedRows > 0)
         {
@@ -1145,21 +1146,21 @@ public partial class AccountForm : Form
 
     private void DiagnosisDataGrid_UserDeletingRow(object sender, DataGridViewRowCancelEventArgs e)
     {
-        Log.Instance.Trace($"Entering");
+        Log.Instance.Trace($"Entering - {SelectedAccount}");
         e.Cancel = true;
         DxDeleteButton_Click(sender, e);
     }
 
     private void SaveDxButton_Click(object sender, EventArgs e)
     {
-        Log.Instance.Trace($"Entering");
+        Log.Instance.Trace($"Entering - {SelectedAccount}");
 
         SaveDiagnoses();
     }
 
     private void SaveDiagnoses()
     {
-        Log.Instance.Trace($"Entering");
+        Log.Instance.Trace($"Entering - {SelectedAccount}");
 
         _currentAccount.Pat.Diagnoses = _dxBindingList.ToList<PatDiag>();
 
@@ -1179,7 +1180,7 @@ public partial class AccountForm : Form
 
     private void LoadNotes()
     {
-        Log.Instance.Trace("Entering");
+        Log.Instance.Trace($"Entering - {SelectedAccount}");
         notesDataGridView.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
         notesDataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
         notesDataGridView.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
@@ -1208,7 +1209,7 @@ public partial class AccountForm : Form
 
     private void AddNoteButton_Click(object sender, EventArgs e)
     {
-        Log.Instance.Trace($"Entering");
+        Log.Instance.Trace($"Entering - {SelectedAccount}");
         InputBoxResult prompt = InputBox.Show("Enter note:", "New Note", true);
 
         if (prompt.ReturnCode == DialogResult.OK)
@@ -1226,7 +1227,7 @@ public partial class AccountForm : Form
 
     private void LoadBillingActivity()
     {
-        Log.Instance.Trace("Entering");
+        Log.Instance.Trace($"Entering - {SelectedAccount}");
 
         _billingTabLoading = true;
 
@@ -1267,7 +1268,7 @@ public partial class AccountForm : Form
 
     private void ChangeDateOfServiceToolStripMenuItem_Click(object sender, EventArgs e)
     {
-        Log.Instance.Trace($"Entering");
+        Log.Instance.Trace($"Entering - {SelectedAccount}");
         var result = InputDialogs.SelectDateOfService((DateTime)_currentAccount.TransactionDate);
 
         try
@@ -1299,7 +1300,7 @@ public partial class AccountForm : Form
 
     private void ChangeFinancialClassToolStripMenuItem_Click(object sender, EventArgs e)
     {
-        Log.Instance.Trace($"Entering");
+        Log.Instance.Trace($"Entering - {SelectedAccount}");
 
         string newFinCode = InputDialogs.SelectFinancialCode(_currentAccount.FinCode);
         if (!string.IsNullOrEmpty(newFinCode))
@@ -1326,7 +1327,7 @@ public partial class AccountForm : Form
 
     private void ChangeClientToolStripMenuItem_Click(object sender, EventArgs e)
     {
-        Log.Instance.Trace($"Entering");
+        Log.Instance.Trace($"Entering - {SelectedAccount}");
 
         ClientLookupForm clientLookupForm = new()
         {
@@ -1360,7 +1361,7 @@ public partial class AccountForm : Form
 
     private void AddOnChangeHandlerToInputControls(Control ctrl)
     {
-        Log.Instance.Trace($"Entering");
+        Log.Instance.Trace($"Entering - {SelectedAccount}");
         foreach (Control subctrl in ctrl.Controls)
         {
             if (subctrl is TextBox box)
@@ -1391,7 +1392,7 @@ public partial class AccountForm : Form
 
     private void InputControls_OnChange(object sender, EventArgs e)
     {
-        Log.Instance.Trace($"Entering");
+        Log.Instance.Trace($"Entering - {SelectedAccount}");
         // Set background of control to orange if it has been changed
 
         var ctrl = sender as Control;
@@ -1405,7 +1406,7 @@ public partial class AccountForm : Form
 
     private void ClearHoldStatusToolStripMenuItem_Click(object sender, EventArgs e)
     {
-        Log.Instance.Trace($"Entering");
+        Log.Instance.Trace($"Entering - {SelectedAccount}");
 
         if (clearHoldStatusToolStripMenuItem.Text == _clearHoldMenuText)
         {
@@ -1444,6 +1445,7 @@ public partial class AccountForm : Form
 
     private void ResetControls(Control[] controls)
     {
+        Log.Instance.Trace($"Entering - {SelectedAccount}");
         //reset changed flag & colors
         foreach (Control ctrl in controls)
         {
@@ -1457,6 +1459,7 @@ public partial class AccountForm : Form
 
     private async void ValidateAccountButton_Click(object sender, EventArgs e)
     {
+        Log.Instance.Trace($"Entering - {SelectedAccount}");
         try
         {
             Cursor.Current = Cursors.WaitCursor;
@@ -1472,6 +1475,7 @@ public partial class AccountForm : Form
 
     private void GenerateClaimButton_Click(object sender, EventArgs e)
     {
+        Log.Instance.Trace($"Entering - {SelectedAccount}");
         ClaimGeneratorService claimGenerator = new(Program.AppEnvironment);
 
         claimGenerator.CompileClaim(_currentAccount.AccountNo);
@@ -1483,6 +1487,7 @@ public partial class AccountForm : Form
 
     private void tabControl1_Selected(object sender, TabControlEventArgs e)
     {
+        Log.Instance.Trace($"Entering - {SelectedAccount}");
         if (e.TabPage.Name == tabDiagnosis.Name)
         {
             DiagnosisDataGrid.BackgroundColor = Color.White;
@@ -1491,7 +1496,7 @@ public partial class AccountForm : Form
 
     private void GuarCopyPatientLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
     {
-        Log.Instance.Trace($"Entering");
+        Log.Instance.Trace($"Entering - {SelectedAccount}");
         GuarantorLastNameTextBox.Text = LastNameTextBox.Text;
         GuarFirstNameTextBox.Text = FirstNameTextBox.Text;
         GuarMiddleNameTextBox.Text = MiddleNameTextBox.Text;
@@ -1506,6 +1511,7 @@ public partial class AccountForm : Form
 
     private void swapInsurancesToolStripMenuItem_Click(object sender, EventArgs e)
     {
+        Log.Instance.Trace($"Entering - {SelectedAccount}");
         AskInsuranceSwapForm frm = new(ref _currentAccount);
 
         if (frm.ShowDialog() == DialogResult.OK)
@@ -1535,13 +1541,14 @@ public partial class AccountForm : Form
 
     private void statementFlagComboBox_SelectionChangeCommitted(object sender, EventArgs e)
     {
+        Log.Instance.Trace($"Entering - {SelectedAccount}");
         _currentAccount = _accountService.UpdateStatementFlag(_currentAccount, statementFlagComboBox.SelectedItem.ToString());
         RefreshAccountData();
     }
 
     private async void moveAllChargesToolStripMenuItem_Click(object sender, EventArgs e)
     {
-        Log.Instance.Trace($"Entering");
+        Log.Instance.Trace($"Entering - {SelectedAccount}");
         PersonSearchForm personSearch = new();
 
         if (personSearch.ShowDialog() == DialogResult.OK)
@@ -1574,11 +1581,13 @@ public partial class AccountForm : Form
 
     private async void AccountForm_Activated(object sender, EventArgs e)
     {
+        Log.Instance.Trace($"Entering - {SelectedAccount}");
         await LoadAccountData();
     }
 
     private async void readyToBillCheckbox_CheckedChanged(object sender, EventArgs e)
     {
+        Log.Instance.Trace($"Entering - {SelectedAccount}");
         if (!_billingTabLoading)
         {
             Cursor.Current = Cursors.WaitCursor;
@@ -1593,6 +1602,7 @@ public partial class AccountForm : Form
 
     private void clearDxPointerToolStripMenuItem_Click(object sender, EventArgs e)
     {
+        Log.Instance.Trace($"Entering - {SelectedAccount}");
         var selectedCell = dxPointerGrid2.CurrentCell;
 
         if (selectedCell.ColumnIndex >= 3)
@@ -1606,6 +1616,9 @@ public partial class AccountForm : Form
     {
         if (e.ColumnIndex != -1 && e.RowIndex != -1 && e.Button == System.Windows.Forms.MouseButtons.Right)
         {
+
+            Log.Instance.Trace($"Entering - {SelectedAccount}");
+
             DataGridViewCell c = (sender as DataGridView)[e.ColumnIndex, e.RowIndex];
             c.DataGridView.ClearSelection();
             c.DataGridView.CurrentCell = c;
@@ -1617,6 +1630,7 @@ public partial class AccountForm : Form
 
     private void printEOBToolStripMenuItem_Click(object sender, EventArgs e)
     {
+        Log.Instance.Trace($"Entering - {SelectedAccount}");
 
         List<string> args = new();
         args.AddRange(Helper.GetArgs());
@@ -1630,7 +1644,7 @@ public partial class AccountForm : Form
 
     private void clearClaimStatusButton_Click(object sender, EventArgs e)
     {
-
+        Log.Instance.Trace($"Entering - {SelectedAccount}");
         if (MessageBox.Show("Clearing the claim status may result in duplicate claim submissions. Ensure the claim has been deleted in the clearing house system.",
             "Potential Duplicate Submission", MessageBoxButtons.OKCancel, MessageBoxIcon.Exclamation) == DialogResult.OK)
         {
@@ -1641,6 +1655,7 @@ public partial class AccountForm : Form
 
     private void noteAlertCheckBox_CheckedChanged(object sender, EventArgs e)
     {
+        Log.Instance.Trace($"Entering - {SelectedAccount}");
         _currentAccount.AccountAlert ??= new AccountAlert();
         _currentAccount.AccountAlert.AccountNo = _currentAccount.AccountNo;
         _currentAccount.AccountAlert.Alert = noteAlertCheckBox.Checked;

@@ -27,25 +27,25 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_4963DB62F2BA4B5F8F8A66C542A0BE00"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_57FB441F6B644B08A330940D847070D9"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_5AF3C81995FC4006B120B970F62716B1"
+        "MsmKey" = "8:_5B4D9BFD2B454944A2AFF3236BE4C290"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_5B4D9BFD2B454944A2AFF3236BE4C290"
+        "MsmKey" = "8:_87155E663B384F63876934616AA122FA"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_9AE7506D157C4F08B9A432D96ACDEF04"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -79,6 +79,14 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+            }
         }
         "Release"
         {
@@ -346,7 +354,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:LabBillingServicesSetup"
         "ProductCode" = "8:{EDD15016-328E-4C8A-9787-728310497EEE}"
-        "PackageCode" = "8:{26C1E6D9-0A17-4A9B-8EAD-401EC6F2C87F}"
+        "PackageCode" = "8:{A0C7049A-7246-4F3D-BFD7-A0B2ADA0C994}"
         "UpgradeCode" = "8:{8204B63B-7B49-4C06-BC49-0660E728009A}"
         "AspNetVersion" = "8:2.0.50727.0"
         "RestartWWWService" = "11:FALSE"
@@ -865,37 +873,9 @@
         }
         "ProjectOutput"
         {
-            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_4963DB62F2BA4B5F8F8A66C542A0BE00"
+            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_87155E663B384F63876934616AA122FA"
             {
-            "SourcePath" = "8:"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_2A7FBD578B904A27B180CC66136446BE"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            "ProjectOutputGroupRegister" = "3:1"
-            "OutputConfiguration" = "8:"
-            "OutputGroupCanonicalName" = "8:PublishItems"
-            "OutputProjectGuid" = "8:{A38E5412-1194-42CE-8CA2-CF509EAE7828}"
-            "ShowKeyOutput" = "11:TRUE"
-                "ExcludeFilters"
-                {
-                }
-            }
-            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_5AF3C81995FC4006B120B970F62716B1"
-            {
-            "SourcePath" = "8:"
+            "SourcePath" = "8:..\\Lab Billing Jobs\\obj\\x64\\Release\\net6.0-windows7.0\\apphost.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_E0E58807D8C6433ABBAA18890616C22E"
@@ -913,9 +893,37 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             "ProjectOutputGroupRegister" = "3:1"
-            "OutputConfiguration" = "8:"
+            "OutputConfiguration" = "8:Release|x64"
             "OutputGroupCanonicalName" = "8:PublishItems"
             "OutputProjectGuid" = "8:{EEE71488-9E0F-46F4-8B35-2ECC84E92513}"
+            "ShowKeyOutput" = "11:TRUE"
+                "ExcludeFilters"
+                {
+                }
+            }
+            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_9AE7506D157C4F08B9A432D96ACDEF04"
+            {
+            "SourcePath" = "8:..\\LabBillingService\\obj\\x64\\Release\\net6.0-windows7.0\\apphost.exe"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_2A7FBD578B904A27B180CC66136446BE"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            "ProjectOutputGroupRegister" = "3:1"
+            "OutputConfiguration" = "8:Release|x64"
+            "OutputGroupCanonicalName" = "8:PublishItems"
+            "OutputProjectGuid" = "8:{A38E5412-1194-42CE-8CA2-CF509EAE7828}"
             "ShowKeyOutput" = "11:TRUE"
                 "ExcludeFilters"
                 {

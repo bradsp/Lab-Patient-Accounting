@@ -1,19 +1,9 @@
-﻿using BasicSQLFormatter;
-using LabBilling.Core.Models;
+﻿using LabBilling.Core.Models;
 using LabBilling.Core.Services;
 using LabBilling.Logging;
 using PoorMansTSqlFormatterRedux;
 using PoorMansTSqlFormatterRedux.Formatters;
-using PoorMansTSqlFormatterRedux.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace LabBilling.Forms;
 public partial class AuditReportMaintenanceForm : Form
@@ -59,7 +49,7 @@ public partial class AuditReportMaintenanceForm : Form
         }
         catch (Exception ex)
         {
-            Log.Instance.Error(ex);            
+            Log.Instance.Error(ex);
         }
 
     }
@@ -74,7 +64,7 @@ public partial class AuditReportMaintenanceForm : Form
 
         var formatter = new TSqlStandardFormatter();
         var formatMgr = new SqlFormattingManager(formatter);
-        
+
         var formattedSql = formatMgr.Format(rawSql);
         reportCodeTextbox.Text = formattedSql;
 
@@ -102,7 +92,7 @@ public partial class AuditReportMaintenanceForm : Form
         _dictionaryService.SaveAuditReport(auditReport);
         bool add = false;
         DataRow row = _auditReports.Rows.Find(Convert.ToInt32(auditReport.Id));
-        if(row == null)
+        if (row == null)
         {
             //add a row
             row = _auditReports.NewRow();
@@ -126,9 +116,9 @@ public partial class AuditReportMaintenanceForm : Form
 
     private void deleteToolStripButton_Click(object sender, EventArgs e)
     {
-        if(MessageBox.Show($"Delete {reportTitleTextbox.Text}?", "Confirm Delete", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+        if (MessageBox.Show($"Delete {reportTitleTextbox.Text}?", "Confirm Delete", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
         {
-            if(_dictionaryService.DeleteAuditReport(Convert.ToInt32(idLabel.Text)))
+            if (_dictionaryService.DeleteAuditReport(Convert.ToInt32(idLabel.Text)))
             {
                 DataRow row = _auditReports.Rows.Find(Convert.ToInt32(idLabel.Text));
                 row.Delete();

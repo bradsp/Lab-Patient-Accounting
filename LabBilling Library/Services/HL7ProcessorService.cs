@@ -678,6 +678,16 @@ public sealed class HL7ProcessorService
         //Segment segPID = hl7Message.DefaultSegment("PID");
         accountRecord.EMPINumber = hl7Message.GetValue("PID.2.1");
 
+        if (hl7Message.HasRepetitions("PID.3"))
+        {
+            List<Field> repList = hl7Message.Segments("PID")[0].Fields(5).Repetitions();
+            accountRecord.MRN = repList[0].Components(1).Value;
+        }
+        else
+        {
+            accountRecord.MRN = hl7Message.GetValue("PID.3.1");
+        }
+
         if (hl7Message.HasRepetitions("PID.5"))
         {
             List<Field> repList = hl7Message.Segments("PID")[0].Fields(5).Repetitions();

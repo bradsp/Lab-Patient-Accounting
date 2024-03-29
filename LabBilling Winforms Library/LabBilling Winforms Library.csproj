@@ -1,23 +1,20 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net6.0-windows7.0</TargetFramework>
     <RootNamespace>LabBilling_Winforms_Library</RootNamespace>
     <Nullable>enable</Nullable>
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
-    <AssemblyVersion>2024.1.1.0</AssemblyVersion>
-    <FileVersion>2024.1.1.0</FileVersion>
+    <AssemblyVersion>2024.1.2.6</AssemblyVersion>
+    <FileVersion>2024.1.2.6</FileVersion>
     <Platforms>AnyCPU;x64</Platforms>
+    <Version>2024.1.2.4</Version>
   </PropertyGroup>
-
   <ItemGroup>
     <PackageReference Include="PDFsharp-GDI" Version="6.0.0" />
     <PackageReference Include="PDFsharp-MigraDoc-GDI" Version="6.0.0" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\LabBilling Library\LabBilling Core.csproj" />
   </ItemGroup>
-
 </Project>

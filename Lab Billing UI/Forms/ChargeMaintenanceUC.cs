@@ -1,6 +1,7 @@
 ﻿using LabBilling.Core;
 using LabBilling.Core.Models;
 using LabBilling.Core.Services;
+using LabBilling.Logging;
 using LabBilling.ViewModel;
 using System;
 using System.Collections.Generic;
@@ -138,8 +139,12 @@ public partial class ChargeMaintenanceUC : UserControl
 
     public void LoadCharges()
     {
+        _grouper.RemoveGrouping();
 
         if (CurrentAccount == null)
+            return;
+
+        if (CurrentAccount.Charges == null)
             return;
 
         LoadViewModel();
@@ -147,7 +152,16 @@ public partial class ChargeMaintenanceUC : UserControl
         TotalChargesTextBox.Text = CurrentAccount.TotalCharges.ToString("c");
 
         ChargesDataGrid.DataSource = _chargesTable;
-        _grouper.SetGroupOn(nameof(Charge.ChrgId));
+
+        try
+        {
+            if(ChargesDataGrid.Columns.Contains(nameof(Charge.ChrgId)))
+                _grouper.SetGroupOn(nameof(Charge.ChrgId));
+        }
+        catch(Exception ex)
+        {
+            Log.Instance.Error(ex);
+        }
 
 
         if (CurrentAccount.FinCode == "CLIENT")
@@ -220,8 +234,14 @@ public partial class ChargeMaintenanceUC : UserControl
         {
             DataGridViewRow row = ChargesDataGrid.SelectedRows[0];
             var uri = Convert.ToInt32(row.Cells[nameof(ChrgDetail.uri)].Value.ToString());
+            var chrg_num = Convert.ToInt32(row.Cells[nameof(Charge.ChrgId)].Value.ToString());
 
             _accountService.RemoveChargeModifier(uri);
+
+            var idx = CurrentAccount.Charges.FindIndex(x => x.ChrgId == chrg_num);
+            var dIdx = CurrentAccount.Charges[idx].ChrgDetails.FindIndex(x => x.uri == uri);
+            CurrentAccount.Charges[idx].ChrgDetails[dIdx].Modifier = "";
+
             ChargesUpdated?.Invoke(this, EventArgs.Empty);
         }
     }
@@ -236,8 +256,14 @@ public partial class ChargeMaintenanceUC : UserControl
         {
             DataGridViewRow row = ChargesDataGrid.SelectedRows[0];
             var uri = Convert.ToInt32(row.Cells[nameof(Charge.uri)].Value.ToString());
+            var chrg_num = Convert.ToInt32(row.Cells[nameof(Charge.ChrgId)].Value.ToString());
 
             _accountService.AddChargeModifier(uri, item.Text);
+
+            var idx = CurrentAccount.Charges.FindIndex(x => x.ChrgId == chrg_num);
+            var dIdx = CurrentAccount.Charges[idx].ChrgDetails.FindIndex(x => x.uri == uri);
+            CurrentAccount.Charges[idx].ChrgDetails[dIdx].Modifier = item.Text;
+
             ChargesUpdated?.Invoke(this, EventArgs.Empty);
         }
     }

@@ -1,14 +1,14 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <OutputType>Library</OutputType>
-    <AssemblyVersion>2023.1.4.598</AssemblyVersion>
+    <AssemblyVersion>2024.1.2.4</AssemblyVersion>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <AssemblyTitle>j4jayant.HL7.Parser</AssemblyTitle>
     <Product>j4jayant.HL7.Parser</Product>
     <Copyright>Copyright ©  2013</Copyright>
     <FileVersion>2023.1.4.598</FileVersion>
-    <InformationalVersion>2023.1.4.598</InformationalVersion>
+    <InformationalVersion>2024.1.2.4</InformationalVersion>
     <Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>
   <ItemGroup>

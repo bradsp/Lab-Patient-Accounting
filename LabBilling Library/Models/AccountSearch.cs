@@ -35,6 +35,9 @@ namespace LabBilling.Core.Models
         [Column("mri")]
         [ResultColumn]
         public string MRN { get; set; }
+        [Column("HNE_NUMBER")]
+        [ResultColumn]
+        public string EMPINumber { get; set; }
         [Column("trans_date")]
         [ResultColumn]
         public DateTime? ServiceDate { get; set; }

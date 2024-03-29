@@ -1,11 +1,7 @@
-﻿using LabBilling.Logging;
-using LabBilling.Core.Models;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Windows.Forms;
+﻿using LabBilling.Core.Models;
 using LabBilling.Core.Services;
+using LabBilling.Logging;
+using System.ComponentModel;
 
 
 namespace LabBilling.Forms;
@@ -14,16 +10,16 @@ public partial class NewAccountForm : Form
 {
 
     public string CreatedAccount;
-    private Timer _timer;
+    private System.Windows.Forms.Timer _timer;
     private int _timerInterval = 650;
     private AccountService accountService;
     private DictionaryService dictionaryService;
 
-    public NewAccountForm() 
+    public NewAccountForm()
     {
         Log.Instance.Trace($"Entering");
         InitializeComponent();
-        _timer = new Timer() { Enabled = false, Interval = _timerInterval };
+        _timer = new System.Windows.Forms.Timer() { Enabled = false, Interval = _timerInterval };
         _timer.Tick += new EventHandler(clientTextBox_KeyUpDone);
 
         accountService = new(Program.AppEnvironment);
@@ -34,7 +30,7 @@ public partial class NewAccountForm : Form
     {
         Log.Instance.Trace($"Entering");
 
-        if(!IsValid())
+        if (!IsValid())
         {
             return;
         }

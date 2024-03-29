@@ -54,7 +54,7 @@ public sealed class AccountService
     public Account GetAccountMinimal(string accountNo)
     {
         using AccountUnitOfWork uow = new(appEnvironment);
-        var acc = uow.AccountRepository.GetByAccount(accountNo);
+        var acc = uow.AccountRepository.GetByAccount(accountNo);        
         return acc;
     }
 
@@ -151,11 +151,11 @@ public sealed class AccountService
             }
         }
         record.Pat = uow.PatRepository.GetByAccount(record);
+        record.Charges = GetCharges(account, true, true, null, false).ToList();
+        record.Payments = uow.ChkRepository.GetByAccount(account);
 
         if (!demographicsOnly)
         {
-            record.Charges = GetCharges(account, true, true, null, false).ToList();
-            record.Payments = uow.ChkRepository.GetByAccount(account);
             record.Insurances = uow.InsRepository.GetByAccount(account);
             record.Notes = uow.AccountNoteRepository.GetByAccount(account);
             record.BillingActivities = uow.BillingActivityRepository.GetByAccount(account);
@@ -164,10 +164,9 @@ public sealed class AccountService
             record.AccountAlert = uow.AccountAlertRepository.GetByAccount(account);
             record.PatientStatements = uow.PatientStatementAccountRepository.GetByAccount(account);
 
-            DateTime outpBillStartDate;
-            DateTime questStartDate = new(2012, 10, 1);
-            DateTime questEndDate = new(2020, 5, 31);
-            DateTime arbitraryEndDate = new(2016, 12, 31);
+            //DateTime questStartDate = new(2012, 10, 1);
+            //DateTime questEndDate = new(2020, 5, 31);
+            //DateTime arbitraryEndDate = new(2016, 12, 31);
 
             if (record.Client != null)
             {
@@ -506,6 +505,11 @@ public sealed class AccountService
                 UpdateStatus(acc.AccountNo, AccountStatus.Statements);
                 acc.Status = AccountStatus.Statements;
             }
+            if(flag == "N")
+            {
+                UpdateStatus(acc.AccountNo, AccountStatus.New);
+                acc.Status = AccountStatus.New;
+            }
             acc.Pat = uow.PatRepository.Update(acc.Pat, new[] { nameof(Pat.StatementFlag) });
             uow.Commit();
         }
@@ -803,7 +807,7 @@ public sealed class AccountService
                 {
                     try
                     {
-                        ReprocessCharges(model.AccountNo, $"Client changed from {oldClientMnem} to {newClientMnem}");
+                        ReprocessCharges(model, $"Client changed from {oldClientMnem} to {newClientMnem}");
                     }
                     catch (Exception ex)
                     {
@@ -818,7 +822,7 @@ public sealed class AccountService
                     {
                         try
                         {
-                            ReprocessCharges(model.AccountNo, $"Client changed from {oldClientMnem} to {newClientMnem}");
+                            ReprocessCharges(model, $"Client changed from {oldClientMnem} to {newClientMnem}");
                         }
                         catch (Exception ex)
                         {
@@ -829,7 +833,7 @@ public sealed class AccountService
                     {
                         try
                         {
-                            ReprocessCharges(model.AccountNo, $"Client changed from {oldClientMnem} to {newClientMnem}");
+                            ReprocessCharges(model, $"Client changed from {oldClientMnem} to {newClientMnem}");
                         }
                         catch (Exception ex)
                         {
@@ -1030,7 +1034,12 @@ public sealed class AccountService
         using AccountUnitOfWork uow = new(appEnvironment, true);
 
         if (charges == null || charges.Count == 0)
-            throw new ApplicationException($"No charges for account {charges.First().AccountNo}");
+        {
+            Log.Instance.Info($"No charges to update.");
+            uow.Commit();
+            return charges;
+        }
+            //throw new ApplicationException($"No charges for account {charges.First().AccountNo}");
 
         var fin = uow.FinRepository.GetFin(finCode) ?? throw new ApplicationException($"Fin {finCode} is not valid");
 

@@ -3,27 +3,21 @@ using LabBilling.Core.Models;
 using LabBilling.Core.Services;
 using LabBilling.Library;
 using LabBilling.Logging;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using WinFormsLibrary;
 
 namespace LabBilling.Forms;
 
 public partial class WorkListForm : Form
 {
-    private readonly AccountService accountService = new(Program.AppEnvironment);
-    private readonly WorklistService worklist = new(Program.AppEnvironment);
+    private readonly AccountService _accountService = new(Program.AppEnvironment);
+    private readonly WorklistService _worklist = new(Program.AppEnvironment);
     private bool _tasksRunning = false;
     private bool _requestAbort = false;
     private BindingSource _accountBindingSource = new();
     private DataTable _accountTable = null;
     private int _worklistPanelWidth = 0;
-    private readonly Timer _timer;
+    private readonly System.Windows.Forms.Timer _timer;
     private const int _timerDelay = 650;
     private string _selectedQueue = null;
     private TreeNode _currentNode = null;
@@ -45,7 +39,7 @@ public partial class WorkListForm : Form
 
         TreeNode[] worklistsTreeNode = new TreeNode[worklists.Count];
         int i = 0;
-        
+
         worklists.ForEach(w => worklistsTreeNode[i++] = new TreeNode(w));
 
         TreeNode rootNode = new("Worklists", worklistsTreeNode);
@@ -58,7 +52,7 @@ public partial class WorkListForm : Form
     public WorkListForm()
     {
         InitializeComponent();
-        _timer = new Timer() { Enabled = false, Interval = _timerDelay };
+        _timer = new System.Windows.Forms.Timer() { Enabled = false, Interval = _timerDelay };
         _timer.Tick += new EventHandler(filterTextBox_KeyUpDone);
     }
 
@@ -115,7 +109,7 @@ public partial class WorkListForm : Form
         toolStripStatusLabel1.Text = "Loading Accounts ... ";
         toolStripProgressBar1.Style = ProgressBarStyle.Marquee;
 
-        var accounts = await worklist.GetAccountsForWorklistAsync(_selectedQueue);
+        var accounts = await _worklist.GetAccountsForWorklistAsync(_selectedQueue);
 
         _accountBindingSource.DataSource = null;
         _accountTable = accounts.ToDataTable();
@@ -146,7 +140,7 @@ public partial class WorkListForm : Form
         accountGrid.Columns[nameof(AccountSearch.SSN)].SetVisibilityOrder(true, x++);
         accountGrid.Columns[nameof(AccountSearch.DateOfBirth)].SetVisibilityOrder(true, x++);
         accountGrid.Columns[nameof(AccountSearch.Sex)].SetVisibilityOrder(true, x++);
-        accountGrid.Columns[nameof(AccountSearch.MRN)].SetVisibilityOrder(true, x++);
+        accountGrid.Columns[nameof(AccountSearch.EMPINumber)].SetVisibilityOrder(true, x++);
         accountGrid.Columns[nameof(AccountSearch.ServiceDate)].SetVisibilityOrder(true, x++);
         accountGrid.Columns[nameof(AccountSearch.Balance)].SetVisibilityOrder(true, x++);
         accountGrid.Columns[nameof(AccountSearch.FinCode)].SetVisibilityOrder(true, x++);
@@ -188,23 +182,23 @@ public partial class WorkListForm : Form
         var selectedAccount = accountGrid.SelectedRows[0].Cells[nameof(AccountSearch.Account)].Value.ToString();
         var accts = _accountTable.Rows.Find(selectedAccount);
 
-        if (accountGrid.SelectedRows[0].Cells[nameof(AccountSearch.Status)].Value.ToString() != "HOLD")
+        if (accountGrid.SelectedRows[0].Cells[nameof(AccountSearch.Status)].Value.ToString() != AccountStatus.Hold)
         {
-            accts[nameof(AccountSearch.Status)] = "HOLD";
+            accts[nameof(AccountSearch.Status)] = AccountStatus.Hold;
             //get user comment
             var result = InputBox.Show("Enter a reason for placing account on hold", true);
 
             if (result.ReturnCode == DialogResult.OK)
             {
-                accountService.UpdateStatus(selectedAccount, "HOLD");
-                accountService.AddNote(selectedAccount, result.Text);
+                _accountService.UpdateStatus(selectedAccount, AccountStatus.Hold);
+                _accountService.AddNote(selectedAccount, result.Text);
             }
         }
         else
         {
-            accts[nameof(AccountSearch.Status)] = "NEW";
-            accountService.UpdateStatus(selectedAccount, "NEW");
-            accountService.AddNote(selectedAccount, "Account removed from hold.");
+            accts[nameof(AccountSearch.Status)] = AccountStatus.New;
+            _accountService.UpdateStatus(selectedAccount, AccountStatus.New);
+            _accountService.AddNote(selectedAccount, "Account removed from hold.");
         }
     }
 
@@ -275,14 +269,14 @@ public partial class WorkListForm : Form
 
         var selectedAccount = accountGrid.SelectedRows[0].Cells[nameof(AccountSearch.Account)].Value.ToString();
         var accts = _accountTable.Rows.Find(selectedAccount);
-        var account = await accountService.GetAccountAsync(selectedAccount);
+        var account = await _accountService.GetAccountAsync(selectedAccount);
 
         string newFinCode = InputDialogs.SelectFinancialCode(accts[nameof(AccountSearch.FinCode)].ToString());
         if (!string.IsNullOrEmpty(newFinCode))
         {
             try
             {
-                await accountService.ChangeFinancialClassAsync(account, newFinCode);
+                await _accountService.ChangeFinancialClassAsync(account, newFinCode);
                 accts.Delete();
                 accountGrid.Refresh();
             }
@@ -305,10 +299,12 @@ public partial class WorkListForm : Form
         Log.Instance.Trace($"Entering");
         var selectedAccount = accountGrid.SelectedRows[0].Cells[nameof(AccountSearch.Account)].Value.ToString();
         var accts = _accountTable.Rows.Find(selectedAccount);
-        var account = await accountService.GetAccountAsync(selectedAccount);
+        var account = await _accountService.GetAccountAsync(selectedAccount);
 
-        ClientLookupForm clientLookupForm = new ClientLookupForm();
-        clientLookupForm.Datasource = DataCache.Instance.GetClients();
+        ClientLookupForm clientLookupForm = new()
+        {
+            Datasource = DataCache.Instance.GetClients()
+        };
 
         if (clientLookupForm.ShowDialog() == DialogResult.OK)
         {
@@ -316,7 +312,7 @@ public partial class WorkListForm : Form
 
             try
             {
-                if (await accountService.ChangeClientAsync(account, newClient))
+                if (await _accountService.ChangeClientAsync(account, newClient))
                 {
                     accts[nameof(AccountSearch.ClientMnem)] = newClient;
                     accountGrid.Refresh();
@@ -343,7 +339,7 @@ public partial class WorkListForm : Form
 
         var selectedAccount = accountGrid.SelectedRows[0].Cells[nameof(AccountSearch.Account)].Value.ToString();
         var accts = _accountTable.Rows.Find(selectedAccount);
-        var account = await accountService.GetAccountAsync(selectedAccount);
+        var account = await _accountService.GetAccountAsync(selectedAccount);
 
 
         var result = InputDialogs.SelectDateOfService((DateTime)account.TransactionDate);
@@ -352,7 +348,7 @@ public partial class WorkListForm : Form
         {
             if (result.newDate != DateTime.MinValue)
             {
-                await accountService.ChangeDateOfServiceAsync(account, result.newDate, result.reason);
+                await _accountService.ChangeDateOfServiceAsync(account, result.newDate, result.reason);
                 accts[nameof(AccountSearch.ServiceDate)] = account.TransactionDate;
             }
             else
@@ -494,11 +490,11 @@ public partial class WorkListForm : Form
         {
             var selectedAccount = accountGrid.SelectedRows[0].Cells[nameof(AccountSearch.Account)].Value.ToString();
             var accts = _accountTable.Rows.Find(selectedAccount);
-            var account = accountService.GetAccount(selectedAccount);
+            var account = _accountService.GetAccount(selectedAccount);
 
             if (account.FinCode != "Y")
             {
-                accountService.ChangeFinancialClass(account, "Y");
+                _accountService.ChangeFinancialClass(account, "Y");
                 accts.Delete();
                 accountGrid.Refresh();
             }
@@ -526,7 +522,7 @@ public partial class WorkListForm : Form
         {
             var selectedAccount = accountGrid.SelectedRows[0].Cells[nameof(AccountSearch.Account)].Value.ToString();
 
-            if (accountGrid.SelectedRows[0].Cells[nameof(AccountSearch.Status)].Value.ToString() == "HOLD")
+            if (accountGrid.SelectedRows[0].Cells[nameof(AccountSearch.Status)].Value.ToString() == AccountStatus.Hold)
                 holdToolStripMenuItem.Text = "Remove from Hold";
             else
                 holdToolStripMenuItem.Text = "Manual Hold";
@@ -543,7 +539,7 @@ public partial class WorkListForm : Form
             }
 
             var status = accountGrid.SelectedRows[0].Cells[nameof(AccountSearch.Status)].Value.ToString();
-            if (status == "RTB" || status == "1500" || status == "UB")
+            if (status == AccountStatus.ReadyToBill || status == AccountStatus.Professional || status == AccountStatus.Institutional)
                 readyToBillToolStripMenuItem.Checked = true;
             else
                 readyToBillToolStripMenuItem.Checked = false;
@@ -555,18 +551,18 @@ public partial class WorkListForm : Form
     {
         var selectedAccount = accountGrid.SelectedRows[0].Cells[nameof(AccountSearch.Account)].Value.ToString();
         var accts = _accountTable.Rows.Find(selectedAccount);
-        var account = accountService.GetAccount(selectedAccount);
+        var account = _accountService.GetAccount(selectedAccount);
 
         if (readyToBillToolStripMenuItem.Checked)
         {
             if (!account.ReadyToBill)
             {
-                account = accountService.Validate(account);
+                account = _accountService.Validate(account);
                 if (account.AccountValidationStatus.ValidationText == "No validation errors.")
                 {
-                    accountService.UpdateStatus(selectedAccount, AccountStatus.ReadyToBill);
+                    _accountService.UpdateStatus(selectedAccount, AccountStatus.ReadyToBill);
                     account.Status = AccountStatus.ReadyToBill;
-                    account.Notes = accountService.AddNote(selectedAccount, "Marked ready to bill.").ToList();
+                    account.Notes = _accountService.AddNote(selectedAccount, "Marked ready to bill.").ToList();
                     accts[nameof(AccountSearch.Status)] = AccountStatus.ReadyToBill;
                 }
                 accountGrid.Refresh();
@@ -576,17 +572,17 @@ public partial class WorkListForm : Form
         {
             if (account.ReadyToBill)
             {
-                accountService.UpdateStatus(selectedAccount, AccountStatus.New);
+                _accountService.UpdateStatus(selectedAccount, AccountStatus.New);
                 account.Status = AccountStatus.New;
-                account.Notes = accountService.AddNote(selectedAccount, "Ready to bill removed.").ToList();
+                account.Notes = _accountService.AddNote(selectedAccount, "Ready to bill removed.").ToList();
                 accts[nameof(AccountSearch.Status)] = AccountStatus.New;
                 accountGrid.Refresh();
             }
         }
-        accountService.ClearAccountLock(account);
+        _accountService.ClearAccountLock(account);
     }
 
-    private async void WorkListForm_Activated(object sender, EventArgs e) { } // => await LoadWorkList();
+    private void WorkListForm_Activated(object sender, EventArgs e) { }
 
     private void showReadyToBillCheckbox_CheckedChanged(object sender, EventArgs e) => UpdateFilter();
 
@@ -602,7 +598,7 @@ public partial class WorkListForm : Form
         var row = _accountTable.Rows.Find(account.AccountNo);
         if (row == null) return;
 
-        if(!WorklistService.AccountMeetsWorklistCriteria(_selectedQueue, account))
+        if (!WorklistService.AccountMeetsWorklistCriteria(_selectedQueue, account))
         {
             row.Delete();
             return;

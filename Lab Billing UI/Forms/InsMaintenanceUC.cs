@@ -1,12 +1,8 @@
 ﻿using LabBilling.Core.DataAccess;
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Windows.Forms;
 using LabBilling.Core.Models;
-using LabBilling.Library;
 using LabBilling.Core.Services;
+using LabBilling.Library;
+using Newtonsoft.Json;
 
 namespace LabBilling.Forms;
 
@@ -18,7 +14,7 @@ public partial class InsMaintenanceUC : UserControl
     private InsCompanyLookupForm insCoLookupForm;
     private List<string> changedControls;
     private bool _allowEditing;
-    private Timer _timer;
+    private System.Windows.Forms.Timer _timer;
     private const int timerInterval = 650;
 
     public Account CurrentAccount { get; set; }
@@ -55,7 +51,7 @@ public partial class InsMaintenanceUC : UserControl
         Coverage = coverage;
         changedControls = new();
         insCoLookupForm = new InsCompanyLookupForm();
-        _timer = new Timer() { Enabled = false, Interval = timerInterval };
+        _timer = new System.Windows.Forms.Timer() { Enabled = false, Interval = timerInterval };
         _timer.Tick += insurancePlanTextBox_KeyUpDone;
         #region Setup Insurance Company Combobox
         insCompanies = DataCache.Instance.GetInsCompanies();
@@ -218,7 +214,14 @@ public partial class InsMaintenanceUC : UserControl
             InsuranceChanged?.Invoke(this, new InsuranceUpdatedEventArgs() { UpdatedIns = CurrentIns });
 
         }
-        catch(Exception ex)
+        catch (NullReferenceException nre)
+        {
+            string result = JsonConvert.SerializeObject(nre.Data, Formatting.Indented);
+
+            OnError?.Invoke(this, new AppErrorEventArgs() { ErrorLevel = AppErrorEventArgs.ErrorLevelType.Error, ErrorMessage = nre.Message + "|" + result });
+            InsTabMessageTextBox.Text = "Error occured during save. Contact your administrator."; ;
+        }
+        catch (Exception ex)
         {
             OnError?.Invoke(this, new AppErrorEventArgs() { ErrorLevel = AppErrorEventArgs.ErrorLevelType.Error, ErrorMessage = ex.Message });
             InsTabMessageTextBox.Text = "Error occured during save. Contact your administrator.";
@@ -356,7 +359,7 @@ public partial class InsMaintenanceUC : UserControl
                     InsuranceChanged?.Invoke(this, new InsuranceUpdatedEventArgs());
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 OnError?.Invoke(this, new AppErrorEventArgs() { ErrorLevel = AppErrorEventArgs.ErrorLevelType.Error, ErrorMessage = ex.Message });
                 InsTabMessageTextBox.Text = "Failed to delete insurance. Contact your administrator.";
@@ -400,6 +403,6 @@ public class InsuranceUpdatedEventArgs : EventArgs
     public Ins UpdatedIns { get; set; }
     public InsuranceUpdatedEventArgs()
     {
-        
+
     }
 }

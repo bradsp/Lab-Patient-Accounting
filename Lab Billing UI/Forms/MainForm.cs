@@ -20,6 +20,7 @@ using Label = System.Windows.Forms.Label;
 using Image = System.Drawing.Image;
 using Button = System.Windows.Forms.Button;
 using LabBilling.Properties;
+using Utilities;
 
 
 /*
@@ -36,22 +37,22 @@ namespace LabBilling;
 public partial class MainForm : Form
 {
 
-    private readonly Accordion accordion = null;
-    private readonly ProgressBar claimProgress;
-    private readonly Label claimProgressStatusLabel;
-    private readonly CancellationTokenSource cancellationToken;
-    private TableLayoutPanel tlpRecentAccounts;
-    private List<UserProfile> recentAccounts;
-    private List<Account> recentAccountsByAccount;
+    private readonly Accordion _accordion = null;
+    private readonly ProgressBar _claimProgress;
+    private readonly Label _claimProgressStatusLabel;
+    private readonly CancellationTokenSource _cancellationToken;
+    private TableLayoutPanel _tlpRecentAccounts;
+    private List<UserProfile> _recentAccounts;
+    private List<Account> _recentAccountsByAccount;
 
-    private readonly AccountService accountService;
-    private readonly SystemService systemService;
+    private readonly AccountService _accountService;
+    private readonly SystemService _systemService;
 
     public ProgressReportModel progressReportModel = new()
     {
         RecordsProcessed = -1
     };
-    private Bitmap CloseImage;
+    private Bitmap _closeImage;
 
     public MainForm()
     {
@@ -59,8 +60,8 @@ public partial class MainForm : Form
 
         ConfigureLogging();
 
-        accountService = new(Program.AppEnvironment);
-        systemService = new(Program.AppEnvironment);
+        _accountService = new(Program.AppEnvironment);
+        _systemService = new(Program.AppEnvironment);
 
         MainFormMenu.BackColor = Program.AppEnvironment.MenuBackgroundColor;
         MainFormMenu.ForeColor = Program.AppEnvironment.MenuTextColor;
@@ -68,9 +69,9 @@ public partial class MainForm : Form
         panel1.BackColor = Program.AppEnvironment.WindowBackgroundColor;
         //mdiTabControl.Parent.BackColor = Program.AppEnvironment.WindowBackgroundColor;
 
-        accordion = new Accordion();
+        _accordion = new Accordion();
 
-        Program.AppEnvironment.ApplicationParameters = systemService.LoadSystemParameters();
+        Program.AppEnvironment.ApplicationParameters = _systemService.LoadSystemParameters();
 
         ImageList il = new();
         il.Images.Add((Image)Resources.hiclipart_com_id_dbhyp);
@@ -84,8 +85,14 @@ public partial class MainForm : Form
         var configuration = new NLog.Config.LoggingConfiguration();
 
         LogLevel minLevel = NLog.LogLevel.Error;
+        GlobalDiagnosticsContext.Set("dbname", Program.AppEnvironment.DatabaseName);
+        GlobalDiagnosticsContext.Set("dbserver", Program.AppEnvironment.ServerName);
 
-        var fileTarget = new FileTarget("logfile") { FileName = "c:\\temp\\lab-billing-log.txt" };
+        var fileTarget = Program.AppEnvironment.ApplicationParameters.DatabaseEnvironment != "Production" ?
+            new FileTarget("logfile") { FileName = $"M:\\TEST\\LOGS\\{OS.GetMachineName()}_{OS.GetUserName()}_{DateTime.Today.Year}-{DateTime.Today.Month}-{DateTime.Today.Day}.log" } :
+            new FileTarget("logfile") { FileName = $"M:\\LIVE\\LOGS\\{OS.GetMachineName()}_{OS.GetUserName()}_{DateTime.Today.Year}-{DateTime.Today.Month}-{DateTime.Today.Day}.log" };
+        fileTarget.Layout = "${longdate}|${level:uppercase=true}|${logger}|${message}|${exception}|${stacktrace}|${hostname}|${environment-user}|${callsite}|${callsite-linenumber}|${assembly-version}|${gdc:item=dbname|${gdc:item=dbserver}";
+
         //var consoleTarget = new NLog.Targets.ConsoleTarget("logconsole");
         string logTable = Program.AppEnvironment.ApplicationParameters.DatabaseEnvironment != "Production" ? "LogsTest" : "Logs";
         var dbTarget = new DatabaseTarget("database")
@@ -94,9 +101,6 @@ public partial class MainForm : Form
             CommandText = $"INSERT INTO {logTable} (CreatedOn,Message,Level,Exception,StackTrace,Logger,HostName,Username,CallingSite,CallingSiteLineNumber,AppVersion,DatabaseName,DatabaseServer) " +
                 "VALUES (@datetime,@msg,@level,@exception,@trace,@logger,@hostname,@user,@callsite,@lineno,@version,@dbname,@dbserver)",
         };
-
-        GlobalDiagnosticsContext.Set("dbname", Program.AppEnvironment.DatabaseName);
-        GlobalDiagnosticsContext.Set("dbserver", Program.AppEnvironment.ServerName);
 
         dbTarget.Parameters.Add(new DatabaseParameterInfo("@datetime", new NLog.Layouts.SimpleLayout("${date}")));
         dbTarget.Parameters.Add(new DatabaseParameterInfo("@msg", new NLog.Layouts.SimpleLayout("${message}")));
@@ -113,8 +117,10 @@ public partial class MainForm : Form
         dbTarget.Parameters.Add(new DatabaseParameterInfo("@dbserver", new NLog.Layouts.SimpleLayout("${gdc:item=dbserver}")));
 
         var dbRule = new LoggingRule("*", minLevel, dbTarget);
+        var fileRule = new LoggingRule("*", LogLevel.Trace, fileTarget);
 
         configuration.AddRule(dbRule);
+        configuration.AddRule(fileRule);
 
         LogManager.Configuration = configuration;
 
@@ -243,16 +249,16 @@ public partial class MainForm : Form
 
     public void UpdateRecentAccounts(string newAccount)
     {
-        var ar = accountService.GetAccountMinimal(newAccount);
+        var ar = _accountService.GetAccountMinimal(newAccount);
         if (ar != null)
         {
-            tlpRecentAccounts.Controls.RemoveAt(0);
+            _tlpRecentAccounts.Controls.RemoveAt(0);
             LinkLabel a1 = new() { Text = ar.PatFullName, Tag = newAccount };
             a1.LinkClicked += new LinkLabelLinkClickedEventHandler(RecentLabelClicked);
-            tlpRecentAccounts.Controls.Add(a1);
+            _tlpRecentAccounts.Controls.Add(a1);
             a1.Dock = DockStyle.Fill;
-            accordion.Refresh();
-            accordion.AutoScroll = true;
+            _accordion.Refresh();
+            _accordion.AutoScroll = true;
         }
     }
 
@@ -274,13 +280,13 @@ public partial class MainForm : Form
 
         NewForm(new DashboardForm());
 
-        var results = await systemService.GetRecentAccountsAsync(Program.LoggedInUser.UserName);
-        recentAccounts = results.ToList();
-        recentAccountsByAccount = new();
+        var results = await _systemService.GetRecentAccountsAsync(Program.LoggedInUser.UserName);
+        _recentAccounts = results.ToList();
+        _recentAccountsByAccount = new();
 
-        foreach (UserProfile up in recentAccounts)
+        foreach (UserProfile up in _recentAccounts)
         {
-            recentAccountsByAccount.Add(accountService.GetAccountMinimal(up.ParameterData));
+            _recentAccountsByAccount.Add(_accountService.GetAccountMinimal(up.ParameterData));
         }
 
         LoadSideMenu();
@@ -312,10 +318,10 @@ public partial class MainForm : Form
 
         //recent accounts section
 
-        tlpRecentAccounts = new TableLayoutPanel
+        _tlpRecentAccounts = new TableLayoutPanel
         {
             Dock = DockStyle.Fill,
-            RowCount = recentAccounts.Count,
+            RowCount = _recentAccounts.Count,
             ColumnCount = 1
         };
 
@@ -334,20 +340,20 @@ public partial class MainForm : Form
         if (!Program.AppEnvironment.ApplicationParameters.AllowPaymentAdjustmentEntry)
             this.Text += " | Pmt/Adj entry disabled";
 
-        foreach (var acc in recentAccountsByAccount)
+        foreach (var acc in _recentAccountsByAccount)
         {
             if (acc != null)
             {
                 LinkLabel a1 = new() { Text = acc.PatFullName, Tag = acc.AccountNo };
                 a1.LinkClicked += new LinkLabelLinkClickedEventHandler(RecentLabelClicked);
-                tlpRecentAccounts.Controls.Add(a1);
+                _tlpRecentAccounts.Controls.Add(a1);
                 a1.Dock = DockStyle.Fill;
             }
         }
 
-        panel1.Controls.Add(accordion);
-        tlpRecentAccounts.AutoSize = true;
-        accordion.Add(tlpRecentAccounts, "Recent Accounts", "Last Opened Accounts", 1, true);
+        panel1.Controls.Add(_accordion);
+        _tlpRecentAccounts.AutoSize = true;
+        _accordion.Add(_tlpRecentAccounts, "Recent Accounts", "Last Opened Accounts", 1, true);
 
         //Billing Menu Section
         TableLayoutPanel tlpBilling = new()
@@ -412,7 +418,7 @@ public partial class MainForm : Form
         tlpBilling.Controls.Add(b6, 0, 5);
         b6.Dock = DockStyle.Fill;
 
-        accordion.Add(tlpBilling, "Billing", "Billing Functions", 1, true);
+        _accordion.Add(tlpBilling, "Billing", "Billing Functions", 1, true);
 
         //Reports Section
         TableLayoutPanel tlpReports = new()
@@ -444,12 +450,12 @@ public partial class MainForm : Form
         tlpReports.Controls.Add(r2, 0, 0);
         r2.Dock = DockStyle.Fill;
 
-        accordion.Add(tlpReports, "Reports", "Report Functions", 1, true);
+        _accordion.Add(tlpReports, "Reports", "Report Functions", 1, true);
 
-        accordion.FillWidth = true;
-        accordion.FillHeight = false;
-        accordion.PerformLayout();
-        accordion.PerformLayout();
+        _accordion.FillWidth = true;
+        _accordion.FillHeight = false;
+        _accordion.PerformLayout();
+        _accordion.PerformLayout();
         #endregion
 
         if (Program.AppEnvironment.ApplicationParameters.AllowPaymentAdjustmentEntry)

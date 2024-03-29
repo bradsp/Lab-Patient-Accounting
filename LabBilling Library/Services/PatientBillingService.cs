@@ -1030,7 +1030,7 @@ public sealed class PatientBillingService
 
                 if (acc != null)
                 {
-                    if (acc.PatientStatements.Count > appEnvironment.ApplicationParameters.NumberOfStatementsBeforeCollection
+                    if (acc.PatientStatements?.Count > appEnvironment.ApplicationParameters.NumberOfStatementsBeforeCollection
                         && acc.Pat.StatementFlag != "P")
                     {
                         //send account to collections
@@ -1108,7 +1108,7 @@ public sealed class PatientBillingService
             AccountPaidSinceLastStatement = 0.00, // get payments since last mailer
             AccountInsDiscount = acc.TotalContractual,
             AccountDateDue = DateTime.Today.AddMonths(1).ToShortDateString(),
-            AccountHealthPlanName = acc.InsurancePrimary.PlanName,
+            AccountHealthPlanName = acc.InsurancePrimary?.PlanName,
             PatientDateOfBirth = acc.BirthDate?.ToString("mm/dd/yyyy"),
             PatientSex = acc.Sex,
             IncludesEstPatLib = 0,
@@ -1130,7 +1130,7 @@ public sealed class PatientBillingService
             AccountMsg = "", //get days since last payment
             FirstDataMailer = acc.Pat.FirstStatementDate,
             LastDataMailer = acc.Pat.LastStatementDate,
-            MailerCount = acc.PatientStatements.Count, //get number of statements generated
+            MailerCount = acc.PatientStatements != null ? acc.PatientStatements.Count : 0, //get number of statements generated
             ProcessedDate = DateTime.Today,
             BatchId = batchId,
             AgingBucket30 = 0,

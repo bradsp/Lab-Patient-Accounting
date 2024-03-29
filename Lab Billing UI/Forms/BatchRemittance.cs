@@ -240,7 +240,7 @@ public partial class BatchRemittance : Form
             if (!string.IsNullOrEmpty(strAccount))
             {
                 strAccount = strAccount.ToUpper();
-                account = _accountService.GetAccountMinimal(strAccount);
+                account = _accountService.GetAccount(strAccount, true);
             }
             else
             {

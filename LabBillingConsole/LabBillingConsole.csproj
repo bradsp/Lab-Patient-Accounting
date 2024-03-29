@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net6.0-windows7.0</TargetFramework>
     <OutputType>Exe</OutputType>
@@ -13,18 +13,18 @@
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <ApplicationVersion>2024</ApplicationVersion>
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <AssemblyVersion>2023.1.1.524</AssemblyVersion>
+    <AssemblyVersion>2024.1.2.4</AssemblyVersion>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <AssemblyTitle>LabBillingConsole</AssemblyTitle>
     <Company>wth.org</Company>
     <Product>LabBillingConsole</Product>
     <Copyright>Copyright © wth.org 2022</Copyright>
     <FileVersion>2023.1.1.524</FileVersion>
-    <InformationalVersion>2023.1.1.524</InformationalVersion>
+    <InformationalVersion>2024.1.2.4</InformationalVersion>
     <Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>
   <ItemGroup>

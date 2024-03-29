@@ -1,10 +1,7 @@
-﻿using LabBilling.Core.DataAccess;
+﻿using LabBilling.Core;
 using LabBilling.Core.Models;
-using LabBilling.Core;
-using System;
-using System.Windows.Forms;
-using LabBilling.Logging;
 using LabBilling.Core.Services;
+using LabBilling.Logging;
 
 
 namespace LabBilling.Forms;
@@ -12,11 +9,11 @@ namespace LabBilling.Forms;
 public partial class ChargeEntryForm : Form
 {
     private readonly Account _currentAccount = new();
-    private readonly Timer _timer;
+    private readonly System.Windows.Forms.Timer _timer;
     private const int _timerInterval = 650;
     private readonly AccountService accountService;
     private readonly DictionaryService dictionaryService;
-    
+
 
     public string SelectedCdm { get; set; }
     public decimal Quantity { get; set; }
@@ -29,7 +26,7 @@ public partial class ChargeEntryForm : Form
         Log.Instance.Trace($"Entering");
         _currentAccount = currentAccount;
         InitializeComponent();
-        _timer = new Timer() { Enabled = false, Interval = _timerInterval };
+        _timer = new System.Windows.Forms.Timer() { Enabled = false, Interval = _timerInterval };
         _timer.Tick += new EventHandler(cdmTextBox_KeyUpDone);
         dictionaryService = new(Program.AppEnvironment);
     }

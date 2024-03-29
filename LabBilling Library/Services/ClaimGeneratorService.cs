@@ -13,6 +13,8 @@ using Microsoft.Data.SqlClient;
 using System.Data;
 using PetaPoco;
 using MCL;
+using Microsoft.Identity.Client.NativeInterop;
+using Account = LabBilling.Core.Models.Account;
 
 namespace LabBilling.Core.Services;
 
@@ -215,9 +217,8 @@ public sealed class ClaimGeneratorService
         catch (Exception ex)
         {
             Log.Instance.Fatal(ex, $"Exception processing {claimType} Claims. Batch has been rolled back. Report error to the Application Administrator.");
-
+            return -1;
         }
-        return -1;
     }
 
     public void RegenerateBatch(double batchNo)
@@ -343,10 +344,18 @@ public sealed class ClaimGeneratorService
 
         accountModel = accountService.Validate(accountModel, reprint);
 
+        if(accountModel.AccountValidationStatus.ValidationText != "No validation errors.")
+        {
+            _accountService.UpdateStatus(accountModel, AccountStatus.New);
+            _accountService.AddNote(accountModel.AccountNo, "Account has validation errors.Reverted to NEW status");
+            Log.Instance.Info($"Account {accountModel.AccountNo} has validation errors. Reverted to NEW status");
+            uow.Commit();
+            return null;
+        }
+
         ClaimData claimData = new()
         {
             claimAccount = accountModel
-
         };
 
         claimData.claimAccount.Payments = claimData.claimAccount.Payments.ToList();
@@ -524,16 +533,18 @@ public sealed class ClaimGeneratorService
                 if (ins.IsDeleted)
                     continue;
 
-                ClaimSubscriber subscriber = new ClaimSubscriber();
-                subscriber.PayerResponsibilitySequenceCode = ins.Coverage switch
+                ClaimSubscriber subscriber = new()
                 {
-                    "A" => "P",
-                    "B" => "S",
-                    "C" => "T",
-                    _ => throw new InvalidParameterValueException($"Invalid Ins Coverage Code {ins.Coverage}", "Ins.Coverage"),
+                    PayerResponsibilitySequenceCode = ins.Coverage switch
+                    {
+                        "A" => "P",
+                        "B" => "S",
+                        "C" => "T",
+                        _ => throw new InvalidParameterValueException($"Invalid Ins Coverage Code {ins.Coverage}", "Ins.Coverage"),
+                    }
                 };
 
-                Dictionary<string, string> relationConversion = new System.Collections.Generic.Dictionary<string, string>()
+                Dictionary<string, string> relationConversion = new()
                 {
                     {"01", "18"},
                     {"02", "01"},
@@ -541,6 +552,11 @@ public sealed class ClaimGeneratorService
                     {"04", "G8"},
                     {"09", "21"}
                 };
+
+                if(string.IsNullOrEmpty(subscriber.PayerResponsibilitySequenceCode))
+                {
+
+                }
 
                 if (subscriber.PayerResponsibilitySequenceCode == "P")
                 {

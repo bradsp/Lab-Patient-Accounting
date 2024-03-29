@@ -16,19 +16,19 @@ namespace LabBilling.Core.Services.Validators
                 .Equal(false)
                 .WithMessage(a => $"Account is using inactive insurance {a.InsCode}");
             RuleFor(a => a.InsCompany.BillForm)
-                .NotEmpty().WithMessage("Insurance company's billing form is not defined.");
+                .NotEmpty().WithMessage(a => $"Insurance company's billing form is not defined. {a.InsCode} {a.PlanName}");
             RuleFor(a => a.HolderLastName)
-                .NotEmpty().WithMessage("Ins Holder Last Name is empty.");
+                .NotEmpty().WithMessage(a => $"Ins Holder Last Name is empty. {a.InsCode} {a.PlanName}");
             RuleFor(a => a.HolderFirstName)
-                .NotEmpty().WithMessage("Ins Holder First Name is empty.");
+                .NotEmpty().WithMessage(a => $"Ins Holder First Name is empty. {a.InsCode} {a.PlanName}");
             RuleFor(a => a.HolderStreetAddress)
-                .NotEmpty().WithMessage("Ins Holder Address is empty.");
+                .NotEmpty().WithMessage(a => $"Ins Holder Address is empty. {a.InsCode} {a.PlanName}");
             RuleFor(a => a.HolderCity)
-                .NotEmpty().WithMessage("Ins Holder City is empty.");
+                .NotEmpty().WithMessage(a => $"Ins Holder City is empty. {a.InsCode} {a.PlanName}");
             RuleFor(a => a.HolderState)
-                .NotEmpty().WithMessage("Ins Holder State is empty.");
+                .NotEmpty().WithMessage(a => $"Ins Holder State is empty. {a.InsCode} {a.PlanName}");
             RuleFor(a => a.HolderZip)
-                .NotEmpty().WithMessage("Ins Holder Zip is empty.");
+                .NotEmpty().WithMessage(a => $"Ins Holder Zip is empty. {a.InsCode} {a.PlanName}");
             RuleFor(a => a)
                 .Must((a) =>
                 {
@@ -36,19 +36,19 @@ namespace LabBilling.Core.Services.Validators
                         return false;
                     else
                         return true;
-                }).WithMessage("Both Policy Number and Group Number are empty.");
+                }).WithMessage(a => $"Both Policy Number and Group Number are empty. {a.InsCode} {a.PlanName}");
 
             //RuleFor(a => a.PolicyNumber)
             //    .Must(BeAValidPolicyNumber).WithMessage("Ins Policy Number is not correct format.")
             //    .When(a => !string.IsNullOrEmpty(a.PolicyNumber));
 
             RuleFor(a => a.GroupNumber)
-                .Must(BeAValidGroupNumber).WithMessage("Ins Group Number is not a valid format.")
+                .Must(BeAValidGroupNumber).WithMessage(a => $"Ins Group Number is not a valid format. {a.InsCode} {a.PlanName}")
                 .When(a => !string.IsNullOrEmpty(a.GroupNumber));
 
             RuleFor(a => a.PlanName)
                 .Cascade(CascadeMode.Stop)
-                .NotEmpty().WithMessage("Ins Plan Name is empty.")
+                .NotEmpty().WithMessage(a => $"Ins Plan Name is empty. {a.Coverage} {a.InsCode} {a.PlanName}")
                 .Must(BeAValidName).WithMessage("Ins Plan Name contains invalid characters.");
 
             RuleFor(a => a.InsCompany)
@@ -58,30 +58,30 @@ namespace LabBilling.Core.Services.Validators
                         return false;
                     else
                         return true;
-                }).WithMessage("Plan must contain an address.")
+                }).WithMessage(a => $"Plan must contain an address. {a.InsCode} {a.PlanName}")
                 .Must((insc) =>
                 {
                     if (string.IsNullOrWhiteSpace(insc.Zip))
                         return false;
                     else
                         return true;
-                }).WithMessage("Plan does not have a zip code.")
+                }).WithMessage(a => $"Plan does not have a zip code. {a.InsCode} {a.PlanName}")
                 .When(a => !a.InsCompany.IsGenericPayor);
 
             RuleFor(a => a.PlanStreetAddress1)
-                .NotEmpty().WithMessage("Plan address is empty.")
+                .NotEmpty().WithMessage(a => $"Plan address is empty. {a.InsCode} {a.PlanName}")
                 .When(a => a.InsCompany.IsGenericPayor);
 
             RuleFor(a => a.PlanCity)
-                .NotEmpty().WithMessage("Plan City is empty.")
+                .NotEmpty().WithMessage(a => $"Plan City is empty. {a.InsCode} {a.PlanName}")
                 .When(a => a.InsCompany.IsGenericPayor);
 
             RuleFor(a => a.PlanZip)
-                .NotEmpty().WithMessage("Plan state is empty.")
+                .NotEmpty().WithMessage(a => $"Plan state is empty. {a.InsCode} {a.PlanName}")
                 .When(a => a.InsCompany.IsGenericPayor);
 
             RuleFor(a => a.InsCompany.NThrivePayerNo)
-                .NotEmpty().WithMessage("NThrive payer code is not defined for this payer.");
+                .NotEmpty().WithMessage(a => $"NThrive payer code is not defined for payer {a.InsCode} {a.PlanName}");
 
             RuleFor(a => a.Coverage)
                 .Must((a) =>
@@ -91,6 +91,9 @@ namespace LabBilling.Core.Services.Validators
                     else
                         return true;
                 }).WithMessage("Insurance coverage code is not valid.");
+
+            RuleFor(a => a.Relation)
+                .NotEmpty().WithMessage(a => $"Relation is not defined for ins {a.Coverage} - {a.PlanName}");                
         }
 
         private bool BeAValidName(string name)

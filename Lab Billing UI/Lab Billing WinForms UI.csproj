@@ -5,7 +5,6 @@
     <RootNamespace>LabBilling</RootNamespace>
     <AssemblyName>LabBilling</AssemblyName>
     <IsWebBootstrapper>false</IsWebBootstrapper>
-    <AssemblyVersion>2024.1.2.556</AssemblyVersion>
     <PublishUrl>\\wthmclbill\installations%24\LabBilling\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Unc</InstallFrom>
@@ -28,7 +27,7 @@
     <BootstrapperEnabled>true</BootstrapperEnabled>
     <GenerateAssemblyInfo>True</GenerateAssemblyInfo>
     <UseWindowsForms>true</UseWindowsForms>
-    <UseWPF>true</UseWPF>
+    <UseWPF>True</UseWPF>
     <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
     <Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>
@@ -59,15 +58,25 @@
     <TargetZone>LocalIntranet</TargetZone>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
-    <Version>$(AssemblyVersion)</Version>
+    <Version></Version>
     <Copyright>2023-2024</Copyright>
     <RepositoryUrl>https://github.com/bradsp/Lab-Patient-Accounting</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <FileVersion>2024.1.3.556</FileVersion>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AssemblyVersion>2024.1.3.3</AssemblyVersion>
+    <FileVersion>2024.1.3.3</FileVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <NoWarn>1701;1702;CA1416</NoWarn>
+    <ShouldCreateLogs>True</ShouldCreateLogs>
+    <AdvancedSettingsExpanded>True</AdvancedSettingsExpanded>
+    <UpdateAssemblyVersion>False</UpdateAssemblyVersion>
+    <UpdateAssemblyFileVersion>False</UpdateAssemblyFileVersion>
+    <UpdateAssemblyInfoVersion>False</UpdateAssemblyInfoVersion>
+    <UpdatePackageVersion>False</UpdatePackageVersion>
+    <AssemblyInfoVersionType>SettingsVersion</AssemblyInfoVersionType>
+    <InheritWinAppVersionFrom>AssemblyVersion</InheritWinAppVersionFrom>
+    <PrimaryVersionType>AssemblyVersionAttribute</PrimaryVersionType>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <NoWarn>1701;1702;CA1416</NoWarn>
@@ -144,11 +153,9 @@
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="AutoMapper" Version="13.0.1" />
-    <PackageReference Include="BasicSQLFormatter" Version="1.0.3" />
+  <ItemGroup Label="Package References">
     <PackageReference Include="HtmlAgilityPack">
-      <Version>1.11.59</Version>
+      <Version>1.11.60</Version>
     </PackageReference>
     <PackageReference Include="LazyCache">
       <Version>2.4.0</Version>
@@ -159,26 +166,20 @@
     <PackageReference Include="Microsoft.VisualBasic" Version="10.3.0" />
     <PackageReference Include="NLog">
       <Version>5.2.8</Version>
+      <TreatAsUsed>true</TreatAsUsed>
     </PackageReference>
     <PackageReference Include="NLog.Database">
       <Version>5.2.8</Version>
+      <TreatAsUsed>true</TreatAsUsed>
     </PackageReference>
     <PackageReference Include="NLog.Schema">
       <Version>5.2.8</Version>
     </PackageReference>
-    <PackageReference Include="PetaPoco.Compiled" Version="6.0.677" />
     <PackageReference Include="PoorMansTSqlFormatterRedux" Version="1.0.3" />
-    <PackageReference Include="RibbonWinForms">
-      <Version>5.1.0-beta</Version>
-    </PackageReference>
     <PackageReference Include="ScottPlot.WinForms" Version="5.0.23" />
-    <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
-    <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageReference Include="WinForms.DataVisualization" Version="1.9.2" />
   </ItemGroup>
-  <ItemGroup>
+  <ItemGroup Label="Project References">
     <ProjectReference Include="..\..\DataGridViewGrouper\DataGridViewGrouper\DataGridViewGrouper.csproj">
       <Private>True</Private>
     </ProjectReference>
@@ -210,5 +211,8 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\PublishProfiles\" />
   </ItemGroup>
 </Project>

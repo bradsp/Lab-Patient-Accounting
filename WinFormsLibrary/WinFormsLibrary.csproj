@@ -1,42 +1,35 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net6.0-windows7.0</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
-    <AssemblyVersion>2024.1.1.0</AssemblyVersion>
-    <FileVersion>2024.1.1.0</FileVersion>
+    <AssemblyVersion>2024.1.2.6</AssemblyVersion>
+    <FileVersion>2024.1.2.6</FileVersion>
     <Platforms>AnyCPU;x64</Platforms>
+    <Version>2024.1.2.4</Version>
   </PropertyGroup>
-
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <NoWarn>1701;1702;1416</NoWarn>
   </PropertyGroup>
-
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <NoWarn>1701;1702;1416</NoWarn>
   </PropertyGroup>
-
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <NoWarn>1701;1702;1416</NoWarn>
   </PropertyGroup>
-
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <NoWarn>1701;1702;1416</NoWarn>
   </PropertyGroup>
-
   <ItemGroup>
     <PackageReference Include="ClosedXML" Version="0.102.2" />
     <PackageReference Include="DocumentFormat.OpenXml" Version="3.0.2" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\LabBilling Library\LabBilling Core.csproj" />
     <ProjectReference Include="..\MCL\MCL.csproj" />
     <ProjectReference Include="..\Utilities\Utilities.csproj" />
   </ItemGroup>
-
   <ItemGroup>
     <Compile Update="DMessageForm.cs">
       <SubType>Form</SubType>
@@ -63,5 +56,4 @@
       <SubType>Form</SubType>
     </Compile>
   </ItemGroup>
-
 </Project>

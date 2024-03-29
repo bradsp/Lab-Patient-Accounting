@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <OutputType>Library</OutputType>
@@ -21,17 +21,17 @@
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <ApplicationVersion>2024</ApplicationVersion>
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <AssemblyVersion>2023.1.1.539</AssemblyVersion>
+    <AssemblyVersion>2024.1.2.4</AssemblyVersion>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <AssemblyTitle>MCL</AssemblyTitle>
     <Product>MCL</Product>
-    <Copyright>Copyright ©  2007</Copyright>
-    <FileVersion>2023.1.1.539</FileVersion>
-    <InformationalVersion>2023.1.1.539</InformationalVersion>
+    <Copyright>Copyright ©  2007-2024</Copyright>
+    <FileVersion>2024.1.2.3</FileVersion>
+    <InformationalVersion>2024.1.2.4</InformationalVersion>
     <Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
