@@ -14,12 +14,9 @@ namespace LabBilling.Core.DataAccess;
 
 public sealed class ClientRepository : RepositoryBase<Client>
 {
-    private DictionaryService dictionaryService;
-    private const string clientFinCode = "CLIENT";
 
     public ClientRepository(IAppEnvironment appEnvironment, PetaPoco.IDatabase context) : base(appEnvironment, context)
     {
-        dictionaryService = new(appEnvironment);
     }
 
     public async Task<List<Client>> GetAllAsync(bool includeInactive = false) => await Task.Run(() => GetAllAsync(includeInactive));
@@ -55,15 +52,10 @@ public sealed class ClientRepository : RepositoryBase<Client>
             throw new ArgumentNullException(nameof(clientMnem));
         }
 
-        var record = Context.SingleOrDefault<Client>((object)clientMnem);
+        var record = Context.SingleOrDefault<Client>($"where {GetRealColumn(nameof(Client.ClientMnem))} = @0", 
+            new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = clientMnem });
         Log.Instance.Debug(Context.LastSQL);
-        if (record != null)
-        {
-            record.Discounts = dictionaryService.GetClientDiscounts(clientMnem).ToList(); ;
-            record.ClientType = dictionaryService.GetClientType(record.Type);
-            record.Mappings = dictionaryService.GetMappingsBySendingValue("CLIENT", record.ClientMnem).ToList();
-        }
-        Log.Instance.Debug(Context.LastSQL);
+
         return record;
     }
 

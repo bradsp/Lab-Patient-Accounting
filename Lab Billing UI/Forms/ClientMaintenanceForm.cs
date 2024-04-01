@@ -12,11 +12,11 @@ namespace LabBilling.Forms;
 
 public partial class ClientMaintenanceForm : Form
 {
-    private System.Windows.Forms.Timer _timer;
-    private int timerDelay = 650;
+    private readonly System.Windows.Forms.Timer _timer;
+    private readonly int _timerDelay = 650;
 
-    private DictionaryService dictionaryService;
-    private BindingSource clientSource = new BindingSource();
+    private readonly DictionaryService _dictionaryService;
+    private readonly BindingSource _clientSource = new();
     private List<Client> _clientList = null;
     private DataTable _clientTable = null;
     //private IEnumerable<Client> clientQuery = null;
@@ -25,9 +25,9 @@ public partial class ClientMaintenanceForm : Form
     {
         Log.Instance.Trace($"Entering");
         InitializeComponent();
-        _timer = new System.Windows.Forms.Timer() { Enabled = false, Interval = timerDelay };
+        _timer = new System.Windows.Forms.Timer() { Enabled = false, Interval = _timerDelay };
         _timer.Tick += new EventHandler(filterTextBox_KeyUpDone);
-        dictionaryService = new(Program.AppEnvironment);
+        _dictionaryService = new(Program.AppEnvironment);
     }
 
     private void Clients_Load(object sender, EventArgs e)
@@ -39,8 +39,8 @@ public partial class ClientMaintenanceForm : Form
         _clientTable = _clientList.ToDataTable();
         _clientTable.PrimaryKey = new DataColumn[] { _clientTable.Columns[nameof(Client.ClientMnem)] };
 
-        clientSource.DataSource = _clientTable;
-        dgvClients.DataSource = clientSource;
+        _clientSource.DataSource = _clientTable;
+        dgvClients.DataSource = _clientSource;
         
         _clientTable.DefaultView.RowFilter = $"{nameof(Client.IsDeleted)} = false";
         
@@ -79,7 +79,7 @@ public partial class ClientMaintenanceForm : Form
             var record = _clientTable.Rows.Find(client.ClientMnem);
             try
             {
-                dictionaryService.SaveClient(client);
+                _dictionaryService.SaveClient(client);
 
                 record = client.ToDataRow(record);
             }
@@ -123,7 +123,7 @@ public partial class ClientMaintenanceForm : Form
             }
             try
             {
-                client = dictionaryService.SaveClient(client);
+                client = _dictionaryService.SaveClient(client);
             }
             catch (Exception ex)
             {

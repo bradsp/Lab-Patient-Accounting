@@ -22,23 +22,24 @@ namespace LabBilling.Forms
         private PrintDocument m_ViewerPrintDocument;
         private ReportGenerator m_rgReport;
 
-        private R_notes m_rNotes = null;
-        private R_ins m_rIns = null;
-        private R_pat m_rPat = null;
-        private R_chk m_rChk = null;
-        private CAcc m_CAcc = null;
-        private ERR m_Err = null;
-        private string m_strServer = null;
-        private string m_strDatabase = null;
-        private string m_strProductionEnvironment = null;
+        private R_notes _rNotes = null;
+        private R_ins _rIns = null;
+        private R_pat _rPat = null;
+        private R_chk _rChk = null;
+        private CAcc _cAcc = null;
+        private ERR _err = null;
+        private string _strServer = null;
+        private string _strDatabase = null;
+        private string _strProductionEnvironment = null;
         private DataTable m_dtAccounts;
-        private SqlDataAdapter m_sdaBadDebt;
-        private Account acc;
+        private SqlDataAdapter _sdaBadDebt;
+        private Account _account;
 
-        private AccountService accountService;
-        private PatientBillingService patientBillingService;
-        private DictionaryService dictionaryService;
+        private AccountService _accountService;
+        private PatientBillingService _patientBillingService;
+        private DictionaryService _dictionaryService;
 
+        public event EventHandler<string> AccountLaunched;
 
         void m_cboxInclude_Click(object sender, EventArgs e)
         {
@@ -51,21 +52,21 @@ namespace LabBilling.Forms
             Log.Instance.Trace($"Entering");
             InitializeComponent();
 
-            m_strServer = Program.AppEnvironment.ServerName;
-            m_strDatabase = Program.AppEnvironment.DatabaseName;
-            m_strProductionEnvironment = m_strDatabase; //.Contains("LIVE")? "LIVE":"TEST";
+            _strServer = Program.AppEnvironment.ServerName;
+            _strDatabase = Program.AppEnvironment.DatabaseName;
+            _strProductionEnvironment = _strDatabase;
 
-            string[] strArgs = new string[] { m_strProductionEnvironment, m_strServer, m_strDatabase };
-            m_Err = new ERR(strArgs);
-            m_rChk = new R_chk(m_strServer, m_strDatabase, ref m_Err);
-            m_rPat = new R_pat(m_strServer, m_strDatabase, ref m_Err);
-            m_CAcc = new CAcc(m_strServer, m_strDatabase, ref m_Err);
-            m_rNotes = new R_notes(m_strServer, m_strDatabase, ref m_Err);
-            m_rIns = new R_ins(m_strServer, m_strDatabase, ref m_Err);
+            string[] strArgs = new string[] { _strProductionEnvironment, _strServer, _strDatabase };
+            _err = new ERR(strArgs);
+            _rChk = new R_chk(_strServer, _strDatabase, ref _err);
+            _rPat = new R_pat(_strServer, _strDatabase, ref _err);
+            _cAcc = new CAcc(_strServer, _strDatabase, ref _err);
+            _rNotes = new R_notes(_strServer, _strDatabase, ref _err);
+            _rIns = new R_ins(_strServer, _strDatabase, ref _err);
 
-            accountService = new(Program.AppEnvironment);
-            patientBillingService = new(Program.AppEnvironment);
-            dictionaryService = new(Program.AppEnvironment);
+            _accountService = new(Program.AppEnvironment);
+            _patientBillingService = new(Program.AppEnvironment);
+            _dictionaryService = new(Program.AppEnvironment);
         }
 
         private void frmBadDebt_Load(object sender, EventArgs e)
@@ -74,7 +75,7 @@ namespace LabBilling.Forms
             //CreateDateTimes();
             m_ViewerPrintDocument = new PrintDocument();
             m_ViewerPrintDocument.DefaultPageSettings.Landscape = false;
-            m_rgReport = new ReportGenerator(dgvAccounts, m_ViewerPrintDocument, "BAD DEBT", m_strDatabase);
+            m_rgReport = new ReportGenerator(dgvAccounts, m_ViewerPrintDocument, "BAD DEBT", _strDatabase);
             m_ViewerPrintDocument.PrintPage += new PrintPageEventHandler(m_rgReport.MyPrintDocument_PrintPage);
 
         }
@@ -117,7 +118,7 @@ namespace LabBilling.Forms
                     continue;
                 }
 
-                m_CAcc.GetBalance(strAccount, out strBal);
+                _cAcc.GetBalance(strAccount, out strBal);
                 if (strBal.Contains("ERR"))
                 {
                     continue;
@@ -131,7 +132,7 @@ namespace LabBilling.Forms
                 // wdk 20111121 No longer really writing off the balances keeping track in 
                 // aging as BAD_DEBT and COLLECTIONS.
                 // write chk record for balance due as write off with bad debt flagged	
-                acc = accountService.GetAccount(strAccount);
+                _account = _accountService.GetAccount(strAccount);
 
                 Chk chk = new()
                 {
@@ -145,18 +146,18 @@ namespace LabBilling.Forms
                     WriteOffAmount = dBal,
                     WriteOffDate = DateTime.Today,
                     InsCode =
-                    m_rIns.GetActiveRecords(string.Format("Account = '{0}' and ins_a_b_c = 'A'", strAccount)) == 1 ?
-                    m_rIns.propIns_code.Trim().ToUpper() : "",
-                    FinCode = m_CAcc.m_Racc.m_strFinCode
+                    _rIns.GetActiveRecords(string.Format("Account = '{0}' and ins_a_b_c = 'A'", strAccount)) == 1 ?
+                    _rIns.propIns_code.Trim().ToUpper() : "",
+                    FinCode = _cAcc.m_Racc.m_strFinCode
                 };
-                accountService.AddPayment(chk);
+                _accountService.AddPayment(chk);
 
                 // update pat
-                acc.Pat.BadDebtListDate = DateTime.Today;
+                _account.Pat.BadDebtListDate = DateTime.Today;
 
                 try
                 {
-                    acc.Pat = accountService.SetCollectionsDate(acc.Pat);
+                    _account.Pat = _accountService.SetCollectionsDate(_account.Pat);
                     nUpdated++;
                 }
                 catch (ApplicationException apex)
@@ -169,7 +170,7 @@ namespace LabBilling.Forms
                 }
 
                 // update notes for this account
-                acc.Notes = accountService.AddNote(strAccount, $"Bad debt set by [{Program.AppEnvironment.UserName}]").ToList();
+                _account.Notes = _accountService.AddNote(strAccount, $"Bad debt set by [{Program.AppEnvironment.UserName}]").ToList();
             }
             MessageBox.Show(string.Format("{0} Pat Records Updated", nUpdated), "POSTING FINISHED");
         }
@@ -200,7 +201,7 @@ namespace LabBilling.Forms
             //dtThru = new DateTime(dtThru.Year, dtThru.Month, dtThru.Day, 23, 59, 59);
 
             m_dtAccounts = new DataTable("BAD_DEBT");
-            m_sdaBadDebt = new SqlDataAdapter();
+            _sdaBadDebt = new SqlDataAdapter();
             using (SqlConnection conn = new(Program.AppEnvironment.ConnectionString))
             {
                 string strSelectBadDebt;
@@ -250,9 +251,9 @@ namespace LabBilling.Forms
                         "WHERE dbo.pat.bd_list_date = '2015-12-07 00:00:00.000' AND dbo.pat.baddebt_date IS NULL order by dbo.pat.pat_full_name";
                 }
 
-                SqlCommand cmdSelect = new SqlCommand(strSelectBadDebt, conn);
-                m_sdaBadDebt.SelectCommand = cmdSelect;
-                m_sdaBadDebt.Fill(m_dtAccounts);
+                SqlCommand cmdSelect = new(strSelectBadDebt, conn);
+                _sdaBadDebt.SelectCommand = cmdSelect;
+                _sdaBadDebt.Fill(m_dtAccounts);
             }
             dgvAccounts.DataSource = m_dtAccounts;
 
@@ -285,7 +286,7 @@ namespace LabBilling.Forms
                 if (dgvAccounts.Columns.Contains("rowguid"))
                 {
                     string selectedGuid = ((DataGridView)sender).Rows[e.RowIndex].Cells["rowguid"].Value.ToString();
-                    PatientCollectionsEditForm bdFrm = new PatientCollectionsEditForm(selectedGuid);
+                    PatientCollectionsEditForm bdFrm = new(selectedGuid);
 
                     if (bdFrm.ShowDialog() == DialogResult.OK)
                     {
@@ -297,13 +298,7 @@ namespace LabBilling.Forms
                 {
                     string strAcc = ((DataGridView)sender).Rows[e.RowIndex].Cells["account"].Value.ToString();
 
-                    AccountForm accFrm = new AccountForm(strAcc)
-                    {
-                        MdiParent = this.ParentForm,
-                        WindowState = FormWindowState.Normal,
-                        AutoScroll = true
-                    };
-                    accFrm.Show();
+                    AccountLaunched?.Invoke(this, strAcc);
                 }
             }
             catch (Exception)
@@ -333,7 +328,7 @@ namespace LabBilling.Forms
             DateTime dtThru = DateTime.Today.AddHours(23).AddMinutes(59).AddSeconds(59);
 
             m_dtAccounts = new DataTable("BAD_DEBT");
-            m_sdaBadDebt = new SqlDataAdapter();
+            _sdaBadDebt = new SqlDataAdapter();
             using (SqlConnection conn = new SqlConnection(Program.AppEnvironment.ConnectionString))
             {
 
@@ -365,18 +360,18 @@ namespace LabBilling.Forms
                 //dtFrom, dtThru);
 
                 SqlCommand cmdSelect = new SqlCommand(strSelectBadDebt, conn);
-                m_sdaBadDebt.SelectCommand = cmdSelect;
-                m_sdaBadDebt.SelectCommand.CommandTimeout = m_sdaBadDebt.SelectCommand.CommandTimeout * 2;
+                _sdaBadDebt.SelectCommand = cmdSelect;
+                _sdaBadDebt.SelectCommand.CommandTimeout = _sdaBadDebt.SelectCommand.CommandTimeout * 2;
                 try
                 {
-                    m_sdaBadDebt.Fill(m_dtAccounts);
+                    _sdaBadDebt.Fill(m_dtAccounts);
                 }
                 catch (SqlException)
                 {
-                    m_sdaBadDebt.SelectCommand.CommandTimeout = m_sdaBadDebt.SelectCommand.CommandTimeout * 2;
+                    _sdaBadDebt.SelectCommand.CommandTimeout = _sdaBadDebt.SelectCommand.CommandTimeout * 2;
                     try
                     {
-                        m_sdaBadDebt.Fill(m_dtAccounts);
+                        _sdaBadDebt.Fill(m_dtAccounts);
                     }
                     catch (SqlException se2)
                     {
@@ -409,9 +404,11 @@ namespace LabBilling.Forms
         {
             Log.Instance.Trace($"Entering");
 
-            OpenFileDialog ofd = new();
-            ofd.InitialDirectory = @"c:\temp\";
-            ofd.Filter = "Text Files|*.txt";
+            OpenFileDialog ofd = new()
+            {
+                InitialDirectory = @"c:\temp\",
+                Filter = "Text Files|*.txt"
+            };
 
             if (ofd.ShowDialog() == DialogResult.Cancel)
             {
@@ -490,11 +487,11 @@ namespace LabBilling.Forms
                     continue;
                 }
                 string strAccount = dr.Cells["account"].Value.ToString();
-                int nRec = m_rChk.GetActiveRecords(
+                int nRec = _rChk.GetActiveRecords(
                     string.Format("account = '{0}' and bad_debt <> 0", strAccount));
 
-                acc = accountService.GetAccount(strAccount);
-                List<Chk> chks = acc.Payments.Where(x => x.IsCollectionPmt != false).ToList();
+                _account = _accountService.GetAccount(strAccount);
+                List<Chk> chks = _account.Payments.Where(x => x.IsCollectionPmt != false).ToList();
 
                 if (chks.Count == 0)
                 {
@@ -507,18 +504,18 @@ namespace LabBilling.Forms
                         Status = "WRITE_OFF",
                         WriteOffAmount = dBal,
                         WriteOffDate = DateTime.Today,
-                        InsCode = acc.PrimaryInsuranceCode,
-                        FinCode = acc.FinCode
+                        InsCode = _account.PrimaryInsuranceCode,
+                        FinCode = _account.FinCode
                     };
-                    accountService.AddPayment(chk);
+                    _accountService.AddPayment(chk);
 
                     try
                     {
                         // update pat
-                        acc.Pat.BadDebtListDate = DateTime.Today;
-                        acc.Pat = accountService.SetCollectionsDate(acc.Pat);
+                        _account.Pat.BadDebtListDate = DateTime.Today;
+                        _account.Pat = _accountService.SetCollectionsDate(_account.Pat);
                         nUpdated++;
-                        acc.Notes = accountService.AddNote(strAccount, $"Bad debt set by [{Program.AppEnvironment.UserName}]").ToList();
+                        _account.Notes = _accountService.AddNote(strAccount, $"Bad debt set by [{Program.AppEnvironment.UserName}]").ToList();
                     }
                     catch (ApplicationException apex)
                     {
@@ -547,23 +544,34 @@ namespace LabBilling.Forms
             {
                 //button clicked
                 //delete the row from the database and grid
-                using (SqlConnection conn = new SqlConnection(Program.AppEnvironment.ConnectionString))
+                using SqlConnection conn = new(Program.AppEnvironment.ConnectionString);
+
+                if (MessageBox.Show("Are you sure?", "Delete Row", MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
-                    if (MessageBox.Show("Are you sure?", "Delete Row", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    try
                     {
                         SqlCommand cmdDelete = new("delete from bad_debt where rowguid = @rowguid", conn);
                         cmdDelete.Parameters.Add("@rowguid", SqlDbType.UniqueIdentifier).Value = m_dtAccounts.Columns["rowguid"];
                         cmdDelete.Parameters["@rowguid"].SourceColumn = "rowguid";
 
-                        m_sdaBadDebt.DeleteCommand = cmdDelete;
+                        _sdaBadDebt.DeleteCommand = cmdDelete;
+                        string accountNo = dgvAccounts["account", e.RowIndex].Value.ToString();
+                        DataRow dr = m_dtAccounts.AsEnumerable().SingleOrDefault(b => b.Field<string>("account") == accountNo);
 
-                        DataRow dr = m_dtAccounts.AsEnumerable().SingleOrDefault(b => b.Field<string>("account") == dgvAccounts["account", e.RowIndex].Value.ToString());
                         dr.Delete();
 
-                        m_sdaBadDebt.Update(m_dtAccounts);
+                        _sdaBadDebt.Update(m_dtAccounts);
+
+                        //remove bd_list_date from pat record
+                        _accountService.ClearCollectionsListDate(accountNo);
+                    }
+                    catch(Exception ex)
+                    {
+                        //TODO: finish
+                        Log.Instance.Error(ex);
+                        MessageBox.Show("Error encountered removing account from Collections list. Try again or report to support.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
-
             }
         }
 

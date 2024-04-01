@@ -1,26 +1,20 @@
 ﻿using LabBilling.Core.Models;
-using LabBilling.Forms;
-using LabBilling.Logging;
-using LabBilling.Legacy;
-using System;
-using System.Windows.Forms;
-using LabBilling.ReportByInsuranceCompany;
-using System.Linq;
-using Opulos.Core.UI;
 using LabBilling.Core.Services;
-using System.Threading;
-using Application = System.Windows.Forms.Application;
+using LabBilling.Forms;
+using LabBilling.Legacy;
+using LabBilling.Logging;
+using LabBilling.Properties;
+using LabBilling.ReportByInsuranceCompany;
+using NLog;
 using NLog.Config;
 using NLog.Targets;
-using NLog;
-using System.Collections.Generic;
-using System.Drawing;
-using ProgressBar = System.Windows.Forms.ProgressBar;
-using Label = System.Windows.Forms.Label;
-using Image = System.Drawing.Image;
-using Button = System.Windows.Forms.Button;
-using LabBilling.Properties;
+using Opulos.Core.UI;
 using Utilities;
+using Application = System.Windows.Forms.Application;
+using Button = System.Windows.Forms.Button;
+using Image = System.Drawing.Image;
+using Label = System.Windows.Forms.Label;
+using ProgressBar = System.Windows.Forms.ProgressBar;
 
 
 /*
@@ -94,27 +88,29 @@ public partial class MainForm : Form
         fileTarget.Layout = "${longdate}|${level:uppercase=true}|${logger}|${message}|${exception}|${stacktrace}|${hostname}|${environment-user}|${callsite}|${callsite-linenumber}|${assembly-version}|${gdc:item=dbname|${gdc:item=dbserver}";
 
         //var consoleTarget = new NLog.Targets.ConsoleTarget("logconsole");
-        string logTable = Program.AppEnvironment.ApplicationParameters.DatabaseEnvironment != "Production" ? "LogsTest" : "Logs";
+        string logProcedure = Program.AppEnvironment.ApplicationParameters.DatabaseEnvironment != "Production" ? "NLog_AddEntry_t" : "NLog_AddEntry_p";
         var dbTarget = new DatabaseTarget("database")
         {
             ConnectionString = Program.AppEnvironment.LogConnectionString,
-            CommandText = $"INSERT INTO {logTable} (CreatedOn,Message,Level,Exception,StackTrace,Logger,HostName,Username,CallingSite,CallingSiteLineNumber,AppVersion,DatabaseName,DatabaseServer) " +
-                "VALUES (@datetime,@msg,@level,@exception,@trace,@logger,@hostname,@user,@callsite,@lineno,@version,@dbname,@dbserver)",
+            CommandType = System.Data.CommandType.StoredProcedure,
+            CommandText = $"[dbo].[{logProcedure}]"
+            //CommandText = $"INSERT INTO {logTable} (CreatedOn,Message,Level,Exception,StackTrace,Logger,HostName,Username,CallingSite,CallingSiteLineNumber,AppVersion,DatabaseName,DatabaseServer) " +
+              //  "VALUES (@datetime,@msg,@level,@exception,@trace,@logger,@hostname,@user,@callsite,@lineno,@version,@dbname,@dbserver)",
         };
 
-        dbTarget.Parameters.Add(new DatabaseParameterInfo("@datetime", new NLog.Layouts.SimpleLayout("${date}")));
-        dbTarget.Parameters.Add(new DatabaseParameterInfo("@msg", new NLog.Layouts.SimpleLayout("${message}")));
+        dbTarget.Parameters.Add(new DatabaseParameterInfo("@createdon", new NLog.Layouts.SimpleLayout("${date}")));
+        dbTarget.Parameters.Add(new DatabaseParameterInfo("@message", new NLog.Layouts.SimpleLayout("${message}")));
         dbTarget.Parameters.Add(new DatabaseParameterInfo("@level", new NLog.Layouts.SimpleLayout("${level}")));
         dbTarget.Parameters.Add(new DatabaseParameterInfo("@exception", new NLog.Layouts.SimpleLayout("${exception}")));
-        dbTarget.Parameters.Add(new DatabaseParameterInfo("@trace", new NLog.Layouts.SimpleLayout("${stacktrace}")));
+        dbTarget.Parameters.Add(new DatabaseParameterInfo("@stacktrace", new NLog.Layouts.SimpleLayout("${stacktrace}")));
         dbTarget.Parameters.Add(new DatabaseParameterInfo("@logger", new NLog.Layouts.SimpleLayout("${logger}")));
         dbTarget.Parameters.Add(new DatabaseParameterInfo("@hostname", new NLog.Layouts.SimpleLayout("${hostname}")));
-        dbTarget.Parameters.Add(new DatabaseParameterInfo("@user", new NLog.Layouts.SimpleLayout("${environment-user}")));
-        dbTarget.Parameters.Add(new DatabaseParameterInfo("@callsite", new NLog.Layouts.SimpleLayout("${callsite}")));
-        dbTarget.Parameters.Add(new DatabaseParameterInfo("@lineno", new NLog.Layouts.SimpleLayout("${callsite-linenumber}")));
-        dbTarget.Parameters.Add(new DatabaseParameterInfo("@version", new NLog.Layouts.SimpleLayout("${assembly-version}")));
-        dbTarget.Parameters.Add(new DatabaseParameterInfo("@dbname", new NLog.Layouts.SimpleLayout("${gdc:item=dbname}")));
-        dbTarget.Parameters.Add(new DatabaseParameterInfo("@dbserver", new NLog.Layouts.SimpleLayout("${gdc:item=dbserver}")));
+        dbTarget.Parameters.Add(new DatabaseParameterInfo("@username", new NLog.Layouts.SimpleLayout("${environment-user}")));
+        dbTarget.Parameters.Add(new DatabaseParameterInfo("@callingsite", new NLog.Layouts.SimpleLayout("${callsite}")));
+        dbTarget.Parameters.Add(new DatabaseParameterInfo("@callingsitelinenumber", new NLog.Layouts.SimpleLayout("${callsite-linenumber}")));
+        dbTarget.Parameters.Add(new DatabaseParameterInfo("@appversion", new NLog.Layouts.SimpleLayout("${assembly-version}")));
+        dbTarget.Parameters.Add(new DatabaseParameterInfo("@databasename", new NLog.Layouts.SimpleLayout("${gdc:item=dbname}")));
+        dbTarget.Parameters.Add(new DatabaseParameterInfo("@databaseserver", new NLog.Layouts.SimpleLayout("${gdc:item=dbserver}")));
 
         var dbRule = new LoggingRule("*", minLevel, dbTarget);
         var fileRule = new LoggingRule("*", LogLevel.Trace, fileTarget);
@@ -618,7 +614,9 @@ public partial class MainForm : Form
         }
         else
         {
-            NewForm(new PatientCollectionsForm());
+            PatientCollectionsForm frm = new();
+            frm.AccountLaunched += OnAccountLaunched;
+            NewForm(frm);
         }
     }
 

@@ -10,16 +10,16 @@ namespace LabBilling.Forms;
 public partial class ClientMaintenanceEditForm : Form
 {
     public Client client;
-    public DictionaryService dictionaryService;
+    private readonly DictionaryService _dictionaryService;
     public string SelectedClient { get; set; }
-    private BindingSource clientDiscountBindingSource = new BindingSource();
-    private DataTable clientDiscountDataTable;
-    private Cdm currentCdm = null;
+    private readonly BindingSource _clientDiscountBindingSource = new();
+    private DataTable _clientDiscountDataTable;
+    private Cdm _currentCdm = null;
 
     public ClientMaintenanceEditForm()
     {
         InitializeComponent();
-        dictionaryService = new(Program.AppEnvironment);
+        _dictionaryService = new(Program.AppEnvironment);
     }
 
     private void btnSave_Click(object sender, EventArgs e)
@@ -68,8 +68,8 @@ public partial class ClientMaintenanceEditForm : Form
         client.PrintCptOnInvoice = chkPrintCPTonBill.Checked;
         client.DefaultDiscount = (double)numDefaultDiscount.Value;
 
-        if(clientDiscountDataTable != null)
-            client.Discounts = Helper.ConvertToList<ClientDiscount>(clientDiscountDataTable);
+        if(_clientDiscountDataTable != null)
+            client.Discounts = Helper.ConvertToList<ClientDiscount>(_clientDiscountDataTable);
 
         DialogResult = DialogResult.OK;
         return;
@@ -118,11 +118,11 @@ public partial class ClientMaintenanceEditForm : Form
         numDefaultDiscount.Value = (decimal)client.DefaultDiscount;
 
 
-        clientDiscountDataTable = client.Discounts.ToDataTable();
-        clientDiscountBindingSource.DataSource = clientDiscountDataTable;
-        clientDiscountDataGrid.DataSource = clientDiscountBindingSource;
+        _clientDiscountDataTable = client.Discounts.ToDataTable();
+        _clientDiscountBindingSource.DataSource = _clientDiscountDataTable;
+        clientDiscountDataGrid.DataSource = _clientDiscountBindingSource;
 
-        clientDiscountDataTable.DefaultView.Sort = $"{nameof(ClientDiscount.Cdm)}";
+        _clientDiscountDataTable.DefaultView.Sort = $"{nameof(ClientDiscount.Cdm)}";
 
         clientDiscountDataGrid.SetColumnsVisibility(false);
 
@@ -181,14 +181,14 @@ public partial class ClientMaintenanceEditForm : Form
         cbEmrType.ValueMember = "Key";
         cbEmrType.SelectedIndex = -1;
 
-        cbCostCenter.DataSource = new BindingSource(dictionaryService.GetGLCodes(), null);
+        cbCostCenter.DataSource = new BindingSource(_dictionaryService.GetGLCodes(), null);
         cbCostCenter.DisplayMember = "level_1";
         cbCostCenter.ValueMember = "level_1";
         cbCostCenter.SelectedIndex = -1;
 
         if(!string.IsNullOrEmpty(SelectedClient))
         {
-            client = dictionaryService.GetClient(SelectedClient);
+            client = _dictionaryService.GetClient(SelectedClient);
             LoadClient();
         }
     }
@@ -197,7 +197,7 @@ public partial class ClientMaintenanceEditForm : Form
     {
         if (!String.IsNullOrEmpty(ClientMnemTextBox.Text) && !ClientMnemTextBox.ReadOnly)
         {
-            var record = dictionaryService.GetClient(ClientMnemTextBox.Text);
+            var record = _dictionaryService.GetClient(ClientMnemTextBox.Text);
 
             if (record != null)
             {
@@ -222,10 +222,6 @@ public partial class ClientMaintenanceEditForm : Form
 
     private void clientDiscountDataGrid_CellValueChanged(object sender, DataGridViewCellEventArgs e)
     {
-
-
-
-
     }
 
     private void clientDiscountDataGrid_CellEndEdit(object sender, DataGridViewCellEventArgs e)
@@ -234,10 +230,10 @@ public partial class ClientMaintenanceEditForm : Form
         {
             case nameof(ClientDiscount.Cdm):
                 //look up cdm number and get amount
-                currentCdm = dictionaryService.GetCdm(clientDiscountDataGrid[e.ColumnIndex, e.RowIndex].Value.ToString());
-                if (currentCdm != null)
+                _currentCdm = _dictionaryService.GetCdm(clientDiscountDataGrid[e.ColumnIndex, e.RowIndex].Value.ToString());
+                if (_currentCdm != null)
                 {
-                    clientDiscountDataGrid[nameof(ClientDiscount.CdmDescription), e.RowIndex].Value = currentCdm.Description;
+                    clientDiscountDataGrid[nameof(ClientDiscount.CdmDescription), e.RowIndex].Value = _currentCdm.Description;
                 }
                 else
                 {
@@ -251,10 +247,10 @@ public partial class ClientMaintenanceEditForm : Form
                     if (cdmLookupForm.ShowDialog() == DialogResult.OK)
                     {
                         clientDiscountDataGrid[e.ColumnIndex, e.RowIndex].Value = cdmLookupForm.SelectedValue;
-                        currentCdm = dictionaryService.GetCdm(cdmLookupForm.SelectedValue);
-                        if (currentCdm != null)
+                        _currentCdm = _dictionaryService.GetCdm(cdmLookupForm.SelectedValue);
+                        if (_currentCdm != null)
                         {
-                            clientDiscountDataGrid[nameof(ClientDiscount.CdmDescription), e.RowIndex].Value = currentCdm.Description;
+                            clientDiscountDataGrid[nameof(ClientDiscount.CdmDescription), e.RowIndex].Value = _currentCdm.Description;
 
                             clientDiscountDataGrid.Focus();
                             clientDiscountDataGrid.CurrentCell = clientDiscountDataGrid[nameof(ClientDiscount.PercentDiscount), 0];
@@ -277,19 +273,19 @@ public partial class ClientMaintenanceEditForm : Form
                 switch (client.FeeSchedule)
                 {
                     case "1":
-                        clientPrice = currentCdm.CdmFeeSchedule1.Sum(p => p.CClassPrice);
+                        clientPrice = _currentCdm.CdmFeeSchedule1.Sum(p => p.CClassPrice);
                         break;
                     case "2":
-                        clientPrice = currentCdm.CdmFeeSchedule2.Sum(p => p.CClassPrice);
+                        clientPrice = _currentCdm.CdmFeeSchedule2.Sum(p => p.CClassPrice);
                         break;
                     case "3":
-                        clientPrice = currentCdm.CdmFeeSchedule3.Sum(p => p.CClassPrice);
+                        clientPrice = _currentCdm.CdmFeeSchedule3.Sum(p => p.CClassPrice);
                         break;
                     case "4":
-                        clientPrice = currentCdm.CdmFeeSchedule4.Sum(p => p.CClassPrice);
+                        clientPrice = _currentCdm.CdmFeeSchedule4.Sum(p => p.CClassPrice);
                         break;
                     case "5":
-                        clientPrice = currentCdm.CdmFeeSchedule5.Sum(p => p.CClassPrice);
+                        clientPrice = _currentCdm.CdmFeeSchedule5.Sum(p => p.CClassPrice);
                         break;
                     default:
                         break;
@@ -304,19 +300,19 @@ public partial class ClientMaintenanceEditForm : Form
                 switch (client.FeeSchedule)
                 {
                     case "1":
-                        clientPrice = currentCdm.CdmFeeSchedule1.Sum(p => p.CClassPrice);
+                        clientPrice = _currentCdm.CdmFeeSchedule1.Sum(p => p.CClassPrice);
                         break;
                     case "2":
-                        clientPrice = currentCdm.CdmFeeSchedule2.Sum(p => p.CClassPrice);
+                        clientPrice = _currentCdm.CdmFeeSchedule2.Sum(p => p.CClassPrice);
                         break;
                     case "3":
-                        clientPrice = currentCdm.CdmFeeSchedule3.Sum(p => p.CClassPrice);
+                        clientPrice = _currentCdm.CdmFeeSchedule3.Sum(p => p.CClassPrice);
                         break;
                     case "4":
-                        clientPrice = currentCdm.CdmFeeSchedule4.Sum(p => p.CClassPrice);
+                        clientPrice = _currentCdm.CdmFeeSchedule4.Sum(p => p.CClassPrice);
                         break;
                     case "5":
-                        clientPrice = currentCdm.CdmFeeSchedule5.Sum(p => p.CClassPrice);
+                        clientPrice = _currentCdm.CdmFeeSchedule5.Sum(p => p.CClassPrice);
                         break;
                     default:
                         break;
@@ -339,7 +335,7 @@ public partial class ClientMaintenanceEditForm : Form
 
         if(!string.IsNullOrEmpty(cdm))
         {
-            currentCdm = dictionaryService.GetCdm(cdm);
+            _currentCdm = _dictionaryService.GetCdm(cdm);
         }
     }
 
@@ -420,7 +416,7 @@ public partial class ClientMaintenanceEditForm : Form
 
     private void billMethodComboBox_Validating(object sender, System.ComponentModel.CancelEventArgs e)
     {
-        if (billMethodComboBox.SelectedValue == null)
+        if (billMethodComboBox.SelectedItem == null)
         {
             e.Cancel = true;
             billMethodComboBox.Focus();

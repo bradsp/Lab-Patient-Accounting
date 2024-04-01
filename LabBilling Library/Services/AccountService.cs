@@ -190,6 +190,16 @@ public sealed class AccountService
         return record;
     }
 
+    public Pat ClearCollectionsListDate(string accountNo)
+    {
+        using AccountUnitOfWork uow = new(appEnvironment);
+
+        var pat = uow.PatRepository.GetByKey(accountNo);
+        pat.BadDebtListDate = null;
+        uow.PatRepository.Update(pat, new List<string>() { nameof(Pat.BadDebtListDate) });
+        return pat;
+    }
+
     public double GetBalance(string accountNo)
     {
         using AccountUnitOfWork uow = new(appEnvironment);

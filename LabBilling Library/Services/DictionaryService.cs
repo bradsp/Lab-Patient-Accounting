@@ -5,6 +5,7 @@ using LabBilling.Logging;
 using NPOI.SS.UserModel;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -183,7 +184,15 @@ public class DictionaryService
     {
         using UnitOfWorkMain uow = new(appEnvironment);
 
-        return uow.ClientRepository.GetClient(clientMnem);
+        var record = uow.ClientRepository.GetClient(clientMnem);
+        if (record != null)
+        {
+            record.Discounts = GetClientDiscounts(clientMnem).ToList();
+            record.Discounts.ForEach(d => d.CdmDescription = GetCdm(d.Cdm).Description);
+            record.ClientType = GetClientType(record.Type);
+            record.Mappings = GetMappingsBySendingValue("CLIENT", record.ClientMnem).ToList();
+        }
+        return record;
     }
 
     public object AddClient(Client client)
