@@ -24,6 +24,7 @@ namespace LabBilling.Core.Models
         public string HolderFullName { get; set; }
         [Column("holder_addr")]
         public string HolderStreetAddress { get; set; }
+
         [Column("holder_city_st_zip")]
         public string HolderCityStZip { get; set; }
         [Ignore]
@@ -36,15 +37,15 @@ namespace LabBilling.Core.Models
                     return "";
                 }
                 else
-                    return ($"{HolderStreetAddress}, {HolderCityStZip}");
+                    return ($"{HolderStreetAddress}, {HolderCity}, {HolderState} {HolderZip}");
             }
         }
 
-        [Ignore]
+        [Column("holder_city")]
         public string HolderCity { get; set; }
-        [Ignore]
+        [Column("holder_state")]
         public string HolderState { get; set; }
-        [Ignore]
+        [Column("holder_zip")]
         public string HolderZip { get; set; }
         
         [Column("holder_sex")]

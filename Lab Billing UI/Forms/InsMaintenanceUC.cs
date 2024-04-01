@@ -115,12 +115,12 @@ public partial class InsMaintenanceUC : UserControl
         HolderAddressTextBox.Text = CurrentIns.HolderStreetAddress ?? "";
 
         HolderCityTextBox.Text = CurrentIns.HolderCity;
-        HolderStateComboBox.SelectedValue = CurrentIns.HolderState;
+        HolderStateComboBox.SelectedItem = CurrentIns.HolderState;
         HolderZipTextBox.Text = CurrentIns.HolderZip;
 
         HolderSexComboBox.SelectedValue = CurrentIns.HolderSex ?? "";
         HolderDOBTextBox.Text = CurrentIns.HolderBirthDate?.ToString("MM/dd/yyyy");
-        InsRelationComboBox.SelectedValue = CurrentIns.Relation ?? "";
+        InsRelationComboBox.SelectedItem = CurrentIns.Relation ?? "";
 
         insurancePlanTextBox.Text = CurrentIns.InsCode ?? "";
 
@@ -211,6 +211,8 @@ public partial class InsMaintenanceUC : UserControl
             int index = CurrentAccount.Insurances.FindIndex(i => i.Coverage == Coverage);
             if (index != -1)
                 CurrentAccount.Insurances[index] = CurrentIns;
+            else
+                CurrentAccount.Insurances.Add(CurrentIns);
             InsuranceChanged?.Invoke(this, new InsuranceUpdatedEventArgs() { UpdatedIns = CurrentIns });
 
         }
