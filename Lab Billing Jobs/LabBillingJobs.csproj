@@ -16,11 +16,11 @@
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
     <ApplicationRevision>2</ApplicationRevision>
-    <ApplicationVersion>2024</ApplicationVersion>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <AssemblyVersion>2024.1.2.4</AssemblyVersion>
+    <AssemblyVersion>1.0.0.%2a</AssemblyVersion>
     <Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>
   <PropertyGroup>
@@ -48,8 +48,9 @@
     <Company>WTH</Company>
     <Product>Lab Billing Jobs</Product>
     <Copyright>Copyright © WTH 2022-2024</Copyright>
-    <FileVersion>2024.1.2.598</FileVersion>
     <InformationalVersion>2024.1.2.4</InformationalVersion>
+    <AssemblyVersion>2024.1.2.4</AssemblyVersion>
+    <FileVersion>2024.1.2.4</FileVersion>
   </PropertyGroup>
   <ItemGroup>
     <Compile Update="Properties\Settings.Designer.cs">
@@ -98,5 +99,8 @@
   <ItemGroup>
     <ProjectReference Include="..\LabBilling Library\LabBilling Core.csproj" />
     <ProjectReference Include="..\Utilities\Utilities.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\PublishProfiles\" />
   </ItemGroup>
 </Project>

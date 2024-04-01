@@ -2,10 +2,8 @@
 using LabBilling.Core.Models;
 using LabBilling.Core.UnitOfWork;
 using LabBilling.Logging;
-using NPOI.SS.UserModel;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.Design;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -13,17 +11,17 @@ namespace LabBilling.Core.Services;
 
 public class DictionaryService
 {
-    private readonly IAppEnvironment appEnvironment;
-    private const string clientFinCode = "CLIENT";
+    private readonly IAppEnvironment _appEnvironment;
+    private const string _clientFinCode = "CLIENT";
 
     public DictionaryService(IAppEnvironment appEnvironment)
     {
-        this.appEnvironment = appEnvironment;
+        this._appEnvironment = appEnvironment;
     }
 
     public Cdm SaveCdm(Cdm cdm)
     {
-        using UnitOfWorkMain uow = new(appEnvironment, true);
+        using UnitOfWorkMain uow = new(_appEnvironment, true);
 
         var updatedCdm = uow.CdmRepository.Save(cdm);
 
@@ -33,7 +31,7 @@ public class DictionaryService
 
     public Cdm GetCdm(string cdm, bool includeDeleted = false)
     {
-        using UnitOfWorkMain uow = new(appEnvironment);
+        using UnitOfWorkMain uow = new(_appEnvironment);
 
         var record = uow.CdmRepository.GetCdm(cdm, includeDeleted);
         if (record != null)
@@ -50,7 +48,7 @@ public class DictionaryService
 
     public IList<Cdm> GetCdmByCpt(string cpt)
     {
-        using UnitOfWorkMain uow = new(appEnvironment);
+        using UnitOfWorkMain uow = new(_appEnvironment);
 
         var cdmDetails = uow.CdmDetailRepository.GetByCpt(cpt);
         List<string> distinctCdms = cdmDetails.Select(c => c.ChargeItemId).Distinct().ToList();
@@ -67,14 +65,14 @@ public class DictionaryService
 
     public List<Cdm> GetAllCdms(bool includeDeleted = false)
     {
-        using UnitOfWorkMain uow = new(appEnvironment);
+        using UnitOfWorkMain uow = new(_appEnvironment);
 
         return uow.CdmRepository.GetAll(includeDeleted);
     }
 
     public Cdm UpdateCdm(Cdm cdm)
     {
-        using UnitOfWorkMain uow = new(appEnvironment, true);
+        using UnitOfWorkMain uow = new(_appEnvironment, true);
         //update all fee schedules as well
 
         cdm.CdmFeeSchedule1.ForEach(cd => uow.CdmDetailRepository.Save(cd));
@@ -91,7 +89,7 @@ public class DictionaryService
 
     public object AddCdm(Cdm cdm)
     {
-        using UnitOfWorkMain uow = new(appEnvironment, true);
+        using UnitOfWorkMain uow = new(_appEnvironment, true);
         //update all fee schedules as well
 
         cdm.CdmFeeSchedule1.ForEach(cd => uow.CdmDetailRepository.Save(cd));
@@ -108,21 +106,21 @@ public class DictionaryService
 
     public InsCompany GetInsCompany(string code)
     {
-        using UnitOfWorkMain uow = new(appEnvironment);
+        using UnitOfWorkMain uow = new(_appEnvironment);
 
         return uow.InsCompanyRepository.GetByCode(code);
     }
 
     public List<InsCompany> GetInsCompanies(bool excludeDeleted = true)
     {
-        using UnitOfWorkMain uow = new(appEnvironment);
+        using UnitOfWorkMain uow = new(_appEnvironment);
 
         return uow.InsCompanyRepository.GetAll(excludeDeleted);
     }
 
     public InsCompany SaveInsCompany(InsCompany insCompany)
     {
-        using UnitOfWorkMain uow = new(appEnvironment, true);
+        using UnitOfWorkMain uow = new(_appEnvironment, true);
 
         var insc = GetInsCompany(insCompany.InsuranceCode);
 
@@ -144,7 +142,7 @@ public class DictionaryService
 
     public List<Client> GetAllClients(bool includeDeleted = false)
     {
-        using UnitOfWorkMain uow = new(appEnvironment);
+        using UnitOfWorkMain uow = new(_appEnvironment);
 
         return uow.ClientRepository.GetAll(includeDeleted);
 
@@ -152,9 +150,9 @@ public class DictionaryService
 
     public Client SaveClient(Client client)
     {
-        using UnitOfWorkMain uow = new(appEnvironment, true);
+        using UnitOfWorkMain uow = new(_appEnvironment, true);
 
-        bool success;
+        //bool success;
 
         if (client.Id > 0) // existing record
         {
@@ -182,7 +180,7 @@ public class DictionaryService
 
     public Client GetClient(string clientMnem)
     {
-        using UnitOfWorkMain uow = new(appEnvironment);
+        using UnitOfWorkMain uow = new(_appEnvironment);
 
         var record = uow.ClientRepository.GetClient(clientMnem);
         if (record != null)
@@ -197,7 +195,7 @@ public class DictionaryService
 
     public object AddClient(Client client)
     {
-        using UnitOfWorkMain uow = new(appEnvironment, true);
+        using UnitOfWorkMain uow = new(_appEnvironment, true);
 
         var retval = uow.ClientRepository.Add(client);
 
@@ -214,7 +212,7 @@ public class DictionaryService
 
     public object AddClientAccount(string clientMnem)
     {
-        using UnitOfWorkMain uow = new(appEnvironment);
+        using UnitOfWorkMain uow = new(_appEnvironment);
 
         var client = GetClient(clientMnem);
 
@@ -227,7 +225,7 @@ public class DictionaryService
             {
                 AccountNo = client.ClientMnem,
                 PatFullName = client.Name,
-                FinCode = clientFinCode,
+                FinCode = _clientFinCode,
                 TransactionDate = DateTime.Today,
                 Status = AccountStatus.New,
                 ClientMnem = client.ClientMnem,
@@ -243,7 +241,7 @@ public class DictionaryService
 
     public List<GLCode> GetGLCodes()
     {
-        using UnitOfWorkMain uow = new(appEnvironment);
+        using UnitOfWorkMain uow = new(_appEnvironment);
 
         return uow.GLCodeRepository.GetAll();
 
@@ -251,14 +249,14 @@ public class DictionaryService
 
     public List<Announcement> GetActiveAnnouncements()
     {
-        using UnitOfWorkMain uow = new(appEnvironment);
+        using UnitOfWorkMain uow = new(_appEnvironment);
 
         return uow.AnnouncementRepository.GetActive();
     }
 
     public IList<Fin> GetFinancialCodes(bool includeDeleted = false)
     {
-        using UnitOfWorkMain uow = new(appEnvironment);
+        using UnitOfWorkMain uow = new(_appEnvironment);
         if (includeDeleted)
             return uow.FinRepository.GetAll();
         else
@@ -267,37 +265,37 @@ public class DictionaryService
 
     public Fin GetFinCode(string finCode)
     {
-        using UnitOfWorkMain uow = new(appEnvironment);
+        using UnitOfWorkMain uow = new(_appEnvironment);
         return uow.FinRepository.GetFin(finCode);
     }
 
 
     #region Mappings
 
-    public IEnumerable<Mapping> GetMappingsBySendingValue(string returnValueType, string sendingValue)        
+    public IEnumerable<Mapping> GetMappingsBySendingValue(string returnValueType, string sendingValue)
     {
-        using UnitOfWorkMain uow = new(appEnvironment);
+        using UnitOfWorkMain uow = new(_appEnvironment);
 
         return uow.MappingRepository.GetMappingsBySendingValue(returnValueType, sendingValue);
     }
 
     public IList<string> GetMappingsReturnTypeList()
     {
-        using UnitOfWorkMain uow = new(appEnvironment);
+        using UnitOfWorkMain uow = new(_appEnvironment);
 
         return uow.MappingRepository.GetReturnTypeList();
     }
 
     public IList<string> GetMappingsSendingSystemList()
     {
-        using UnitOfWorkMain uow = new(appEnvironment);
+        using UnitOfWorkMain uow = new(_appEnvironment);
 
         return uow.MappingRepository.GetSendingSystemList();
     }
 
     public IList<Mapping> GetMappings(string returnType, string sendingSystem)
     {
-        using UnitOfWorkMain uow = new(appEnvironment);
+        using UnitOfWorkMain uow = new(_appEnvironment);
 
         return uow.MappingRepository.GetMappings(returnType, sendingSystem).ToList();
 
@@ -307,7 +305,7 @@ public class DictionaryService
 
     public IList<WriteOffCode> GetWriteOffCodes()
     {
-        using UnitOfWorkMain uow = new(appEnvironment);
+        using UnitOfWorkMain uow = new(_appEnvironment);
 
         return uow.WriteOffCodeRepository.GetAll();
     }
@@ -316,21 +314,21 @@ public class DictionaryService
     #region Provider (Phy)
     public Phy GetProvider(string npi)
     {
-        using UnitOfWorkMain uow = new(appEnvironment);
+        using UnitOfWorkMain uow = new(_appEnvironment);
 
         return uow.PhyRepository.GetByNPI(npi);
     }
 
     public List<Phy> SearchProviderByName(string lastName, string firstName)
     {
-        using UnitOfWorkMain uow = new(appEnvironment);
+        using UnitOfWorkMain uow = new(_appEnvironment);
 
         return uow.PhyRepository.GetByName(lastName, firstName);
     }
 
     public Phy SaveProvider(Phy phy)
     {
-        using UnitOfWorkMain uow = new(appEnvironment);
+        using UnitOfWorkMain uow = new(_appEnvironment);
 
         var retval = uow.PhyRepository.Save(phy);
         uow.Commit();
@@ -342,21 +340,21 @@ public class DictionaryService
 
     public RevenueCode GetRevenueCode(string code)
     {
-        using UnitOfWorkMain uow = new(appEnvironment);
+        using UnitOfWorkMain uow = new(_appEnvironment);
 
         return uow.RevenueCodeRepository.GetByCode(code);
     }
 
     public ClientType GetClientType(int type)
     {
-        using UnitOfWorkMain uow = new(appEnvironment);
+        using UnitOfWorkMain uow = new(_appEnvironment);
 
         return uow.ClientTypeRepository.GetByType(type);
     }
 
     public IList<ClientDiscount> GetClientDiscounts(string clientMnem, bool includeDeleted = false)
     {
-        using UnitOfWorkMain uow = new(appEnvironment);
+        using UnitOfWorkMain uow = new(_appEnvironment);
 
         return uow.ClientDiscountRepository.GetByClient(clientMnem, includeDeleted);
     }
@@ -365,21 +363,21 @@ public class DictionaryService
 
     public DictDx GetDiagnosis(string code, DateTime transactionDate)
     {
-        using UnitOfWorkMain uow = new(appEnvironment);
+        using UnitOfWorkMain uow = new(_appEnvironment);
 
         return uow.DictDxRepository.GetByCode(code, transactionDate);
     }
 
     public DictDx GetDiagnosis(string code, string amaYear)
     {
-        using UnitOfWorkMain uow = new(appEnvironment);
+        using UnitOfWorkMain uow = new(_appEnvironment);
 
         return uow.DictDxRepository.GetByCode(code, amaYear);
     }
 
     public IEnumerable<DictDx> GetDiagnosisCodes(string searchText, DateTime transactionDate)
     {
-        using UnitOfWorkMain uow = new(appEnvironment);
+        using UnitOfWorkMain uow = new(_appEnvironment);
 
         return uow.DictDxRepository.Search(searchText, transactionDate);
     }
@@ -390,31 +388,31 @@ public class DictionaryService
 
     public IList<AuditReport> GetAuditReports()
     {
-        using UnitOfWorkMain uow = new(appEnvironment);
+        using UnitOfWorkMain uow = new(_appEnvironment);
 
         return uow.AuditReportRepository.GetAll();
     }
 
     public AuditReport SaveAuditReport(AuditReport report)
     {
-        using UnitOfWorkMain uow = new(appEnvironment);
+        using UnitOfWorkMain uow = new(_appEnvironment);
 
-        if(report.Id > 0)
+        if (report.Id > 0)
         {
             return uow.AuditReportRepository.Update(report);
         }
         else
         {
             return uow.AuditReportRepository.Add(report);
-        }        
+        }
     }
 
     public bool DeleteAuditReport(int id)
     {
-        using UnitOfWorkMain uow = new(appEnvironment);
+        using UnitOfWorkMain uow = new(_appEnvironment);
 
         var record = uow.AuditReportRepository.GetByKey(id);
-        if(record != null)
+        if (record != null)
         {
             uow.AuditReportRepository.Delete(record);
             return true;

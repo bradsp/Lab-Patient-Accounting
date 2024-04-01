@@ -245,6 +245,15 @@ public partial class AccountForm : Form
 
     private void InsChanged_EventHander(object sender, InsuranceUpdatedEventArgs e)
     {
+        var idx = _currentAccount.Insurances.FindIndex(i => i.Account == e.UpdatedIns.Account && i.Coverage == e.UpdatedIns.Coverage);
+        if (idx >= 0) 
+        {
+            _currentAccount.Insurances[idx] = e.UpdatedIns;
+        }
+        else
+        {
+            _currentAccount.Insurances.Add(e.UpdatedIns);
+        }
         RefreshAccountData();
     }
 

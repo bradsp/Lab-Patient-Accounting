@@ -15,33 +15,33 @@ namespace LabBilling.Core.Services;
 
 public sealed class AccountService
 {
-    private IAppEnvironment appEnvironment;
+    private readonly IAppEnvironment _appEnvironment;
 
-    private const string invoicedCdm = "CBILL";
-    private const string cbillStatus = "CBILL";
-    private const string capStatus = "CAP";
-    private const string naStatus = "N/A";
-    private const string newChrgStatus = "NEW";
+    private const string _invoicedCdm = "CBILL";
+    private const string _cbillStatus = "CBILL";
+    private const string _capStatus = "CAP";
+    private const string _naStatus = "N/A";
+    private const string _newChrgStatus = "NEW";
 
-    private const string clientFinType = "C";
-    private const string patientFinType = "M";
-    private const string zFinType = "Z";
-    private const string billClientFinCode = "Y";
-    private const string invalidFinCode = "K";
-    private const string clientFinCode = "CLIENT";
-    private const string pthExceptionClient = "HC";
+    private const string _clientFinType = "C";
+    private const string _patientFinType = "M";
+    private const string _zFinType = "Z";
+    private const string _billClientFinCode = "Y";
+    private const string _invalidFinCode = "K";
+    private const string _clientFinCode = "CLIENT";
+    private const string _pthExceptionClient = "HC";
 
-    private readonly DictionaryService dictionaryService;
+    private readonly DictionaryService _dictionaryService;
 
     public AccountService(IAppEnvironment appEnvironment)
     {
-        this.appEnvironment = appEnvironment;
-        dictionaryService = new(appEnvironment);
+        this._appEnvironment = appEnvironment;
+        _dictionaryService = new(appEnvironment);
     }
 
     public decimal GetNextAccountNumber()
     {
-        using AccountUnitOfWork uow = new(appEnvironment);
+        using AccountUnitOfWork uow = new(_appEnvironment);
 
         return uow.NumberRepository.GetNumber("account");
     }
@@ -53,7 +53,7 @@ public sealed class AccountService
     /// <returns></returns>
     public Account GetAccountMinimal(string accountNo)
     {
-        using AccountUnitOfWork uow = new(appEnvironment);
+        using AccountUnitOfWork uow = new(_appEnvironment);
         var acc = uow.AccountRepository.GetByAccount(accountNo);        
         return acc;
     }
@@ -62,7 +62,7 @@ public sealed class AccountService
 
     public (bool locksuccessful, AccountLock lockInfo) GetAccountLock(string account)
     {
-        using AccountUnitOfWork uow = new(appEnvironment, true);
+        using AccountUnitOfWork uow = new(_appEnvironment, true);
 
         var alock = uow.AccountLockRepository.GetLock(account);
 
@@ -76,7 +76,7 @@ public sealed class AccountService
         else
         {
             // check to see if the lock is this user and machine
-            if (alock.UpdatedUser == appEnvironment.User && alock.UpdatedHost == Environment.MachineName && alock.LockDateTime >= DateTime.Today)
+            if (alock.UpdatedUser == _appEnvironment.User && alock.UpdatedHost == Environment.MachineName && alock.LockDateTime >= DateTime.Today)
             {
                 uow.Commit();
                 return (true, alock);
@@ -88,7 +88,7 @@ public sealed class AccountService
 
     public bool ClearAccountLock(Account account)
     {
-        UnitOfWorkMain uow = new(appEnvironment);
+        UnitOfWorkMain uow = new(_appEnvironment);
         if (account == null)
             throw new ArgumentNullException(nameof(account));
         if (account.AccountLockInfo == null)
@@ -105,7 +105,7 @@ public sealed class AccountService
 
     public bool ClearAccountLock(int id)
     {
-        using AccountUnitOfWork uow = new(appEnvironment);
+        using AccountUnitOfWork uow = new(_appEnvironment);
         var retval = uow.AccountLockRepository.Delete(id);
         return retval;
     }
@@ -114,7 +114,7 @@ public sealed class AccountService
     {
         Log.Instance.Trace($"Entering - account {account} demographicsOnly {demographicsOnly}");
 
-        using AccountUnitOfWork uow = new(appEnvironment);
+        using AccountUnitOfWork uow = new(_appEnvironment);
 
         //get lock before loading account
         var (locksuccessful, alock) = GetAccountLock(account);
@@ -145,9 +145,9 @@ public sealed class AccountService
 
         if (!string.IsNullOrEmpty(record.ClientMnem))
         {
-            if (record.ClientMnem != invalidFinCode)
+            if (record.ClientMnem != _invalidFinCode)
             {
-                record.Client = uow.ClientRepository.GetClient(record.ClientMnem);
+                record.Client = _dictionaryService.GetClient(record.ClientMnem);
             }
         }
         record.Pat = uow.PatRepository.GetByAccount(record);
@@ -192,7 +192,7 @@ public sealed class AccountService
 
     public Pat ClearCollectionsListDate(string accountNo)
     {
-        using AccountUnitOfWork uow = new(appEnvironment);
+        using AccountUnitOfWork uow = new(_appEnvironment);
 
         var pat = uow.PatRepository.GetByKey(accountNo);
         pat.BadDebtListDate = null;
@@ -202,7 +202,7 @@ public sealed class AccountService
 
     public double GetBalance(string accountNo)
     {
-        using AccountUnitOfWork uow = new(appEnvironment);
+        using AccountUnitOfWork uow = new(_appEnvironment);
 
         string chrgTableName = uow.ChrgRepository.TableInfo.TableName;
         string accTableName = uow.AccountRepository.TableInfo.TableName;
@@ -222,13 +222,13 @@ public sealed class AccountService
                 .On($"{accTableName}.{uow.AccountRepository.GetRealColumn(nameof(Account.AccountNo))} = {chrgTableName}.{uow.ChrgRepository.GetRealColumn(nameof(Chrg.AccountNo))}")
                 .Where($"{chrgTableName}.{uow.ChrgRepository.GetRealColumn(nameof(Chrg.AccountNo))} = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = accountNo })
                 .Where($"(({accTableName}.{uow.AccountRepository.GetRealColumn(nameof(Account.FinCode))} = @0 and {chrgTableName}.{uow.ChrgRepository.GetRealColumn(nameof(Chrg.Status))} <> @1)",
-                    new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = clientFinCode },
-                    new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = cbillStatus })
+                    new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = _clientFinCode },
+                    new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = _cbillStatus })
                 .Append($"or ({accTableName}.{uow.AccountRepository.GetRealColumn(nameof(Account.FinCode))} <> @0 and {chrgTableName}.{uow.ChrgRepository.GetRealColumn(nameof(Chrg.Status))} not in (@1, @2, @3)))",
-                    new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = clientFinCode },
-                    new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = cbillStatus },
-                    new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = capStatus },
-                    new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = naStatus })
+                    new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = _clientFinCode },
+                    new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = _cbillStatus },
+                    new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = _capStatus },
+                    new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = _naStatus })
                 .GroupBy(chrgTableName + "." + uow.ChrgRepository.GetRealColumn(nameof(Chrg.AccountNo)));
 
             double charges = uow.Context.SingleOrDefault<double>(sql);
@@ -259,7 +259,7 @@ public sealed class AccountService
     {
         Log.Instance.Trace($"Entering - account {table.AccountNo}");
 
-        using AccountUnitOfWork uow = new(appEnvironment, true);
+        using AccountUnitOfWork uow = new(_appEnvironment, true);
 
         if (table.FinCode != "CLIENT")
             table.PatFullName = table.PatNameDisplay;
@@ -299,7 +299,7 @@ public sealed class AccountService
     public IEnumerable<InvoiceSelect> GetInvoiceAccounts(string clientMnem, DateTime thruDate)
     {
         Log.Instance.Trace($"Entering - client {clientMnem} thruDate {thruDate}");
-        using AccountUnitOfWork uow = new(appEnvironment);
+        using AccountUnitOfWork uow = new(_appEnvironment);
         return uow.InvoiceSelectRepository.GetByClientAndDate(clientMnem, thruDate);
     }
 
@@ -324,7 +324,7 @@ public sealed class AccountService
 
     public List<ClaimItem> GetClaimItems(ClaimType claimType)
     {
-        using UnitOfWorkMain uow = new(appEnvironment);
+        using UnitOfWorkMain uow = new(_appEnvironment);
 
         PetaPoco.Sql command;
 
@@ -369,8 +369,8 @@ public sealed class AccountService
 
             var queryResult = uow.ClaimItemRepository.Fetch(command).ToList();
 
-            if (appEnvironment.ApplicationParameters.MaxClaimsInClaimBatch > 0)
-                return queryResult.Take(appEnvironment.ApplicationParameters.MaxClaimsInClaimBatch).ToList();
+            if (_appEnvironment.ApplicationParameters.MaxClaimsInClaimBatch > 0)
+                return queryResult.Take(_appEnvironment.ApplicationParameters.MaxClaimsInClaimBatch).ToList();
             else
                 return queryResult;
         }
@@ -384,7 +384,7 @@ public sealed class AccountService
 
     public List<PatientStatementAccount> GetPatientStatements(string accountNo)
     {
-        using AccountUnitOfWork uow = new(appEnvironment);
+        using AccountUnitOfWork uow = new(_appEnvironment);
 
         var statements = uow.PatientStatementAccountRepository.GetByAccount(accountNo);
 
@@ -396,7 +396,7 @@ public sealed class AccountService
     public bool SetNoteAlert(string account, bool showAlert)
     {
         Log.Instance.Trace($"Entering - account {account} showAlert {showAlert}");
-        using AccountUnitOfWork uow = new(appEnvironment, true);
+        using AccountUnitOfWork uow = new(_appEnvironment, true);
         if (string.IsNullOrEmpty(account))
             throw new ArgumentNullException(nameof(account));
 
@@ -434,7 +434,7 @@ public sealed class AccountService
     public Account UpdateAccountDemographics(Account acc)
     {
         Log.Instance.Trace("Entering");
-        using AccountUnitOfWork uow = new(appEnvironment, true);
+        using AccountUnitOfWork uow = new(_appEnvironment, true);
         try
         {
             var accResult = uow.AccountRepository.Update(acc);
@@ -456,7 +456,7 @@ public sealed class AccountService
     public Account UpdateDiagnoses(Account acc)
     {
         Log.Instance.Trace("Entering");
-        using AccountUnitOfWork uow = new(appEnvironment, true);
+        using AccountUnitOfWork uow = new(_appEnvironment, true);
         if (acc == null)
             throw new ArgumentNullException(nameof(acc));
 
@@ -473,7 +473,7 @@ public sealed class AccountService
     public int UpdateStatus(string accountNo, string status)
     {
         Log.Instance.Trace($"Entering - account {accountNo} status {status}");
-        using AccountUnitOfWork uow = new(appEnvironment);
+        using AccountUnitOfWork uow = new(_appEnvironment);
 
         if (string.IsNullOrEmpty(accountNo))
             throw new ArgumentNullException(nameof(accountNo));
@@ -489,7 +489,7 @@ public sealed class AccountService
 
     public Account UpdateStatus(Account model, string status)
     {
-        using AccountUnitOfWork uow = new(appEnvironment);
+        using AccountUnitOfWork uow = new(_appEnvironment);
         try
         {
             var result = uow.AccountRepository.UpdateStatus(model, status);
@@ -504,7 +504,7 @@ public sealed class AccountService
 
     public Account UpdateStatementFlag(Account acc, string flag)
     {
-        using AccountUnitOfWork uow = new(appEnvironment, true);
+        using AccountUnitOfWork uow = new(_appEnvironment, true);
 
         try
         {
@@ -533,7 +533,7 @@ public sealed class AccountService
 
     public Ins SaveInsurance(Ins ins)
     {
-        using AccountUnitOfWork uow = new(appEnvironment, true);
+        using AccountUnitOfWork uow = new(_appEnvironment, true);
         try
         {
             Ins returnIns;
@@ -554,7 +554,7 @@ public sealed class AccountService
 
     public bool DeleteInsurance(Ins ins)
     {
-        using AccountUnitOfWork uow = new(appEnvironment, true);
+        using AccountUnitOfWork uow = new(_appEnvironment, true);
         var retval = uow.InsRepository.Delete(ins);
         uow.Commit();
         return retval;
@@ -569,7 +569,7 @@ public sealed class AccountService
         Ins insA = account.Insurances.Where(x => x.Coverage == swap1).FirstOrDefault();
         Ins insB = account.Insurances.Where(x => x.Coverage == swap2).FirstOrDefault();
 
-        using AccountUnitOfWork uow = new(appEnvironment, true);
+        using AccountUnitOfWork uow = new(_appEnvironment, true);
 
         try
         {
@@ -600,7 +600,7 @@ public sealed class AccountService
     public Account ChangeDateOfService(Account model, DateTime newDate, string reason_comment)
     {
         Log.Instance.Trace($"Entering - account {model.AccountNo} new date {newDate} reason {reason_comment}");
-        using AccountUnitOfWork uow = new(appEnvironment, true);
+        using AccountUnitOfWork uow = new(_appEnvironment, true);
 
         if (model == null)
             throw new ArgumentNullException(nameof(model));
@@ -653,7 +653,7 @@ public sealed class AccountService
         if (string.IsNullOrEmpty(noteText))
             throw new ArgumentNullException(nameof(noteText));
 
-        using AccountUnitOfWork uow = new(appEnvironment, true);
+        using AccountUnitOfWork uow = new(_appEnvironment, true);
 
         AccountNote accountNote = new()
         {
@@ -675,7 +675,7 @@ public sealed class AccountService
 
     public List<AccountNote> GetNotes(string accountNo)
     {
-        using AccountUnitOfWork uow = new(appEnvironment);
+        using AccountUnitOfWork uow = new(_appEnvironment);
         var notes = uow.AccountNoteRepository.GetByAccount(accountNo);
         return notes;
     }
@@ -685,7 +685,7 @@ public sealed class AccountService
     public Account ChangeFinancialClass(string accountNo, string newFinCode)
     {
         Log.Instance.Trace($"Entering - Account {accountNo} New Fin {newFinCode}");
-        using AccountUnitOfWork uow = new(appEnvironment, true);
+        using AccountUnitOfWork uow = new(_appEnvironment, true);
 
         if (string.IsNullOrEmpty(accountNo))
             throw new ArgumentNullException(nameof(accountNo));
@@ -714,7 +714,7 @@ public sealed class AccountService
             throw new ApplicationException($"Chosen fin code is same as current fin code. No change made. Account {model.AccountNo}, Current Fin Code {model.FinCode}, New Fin Code {newFinCode}");
         }
 
-        using AccountUnitOfWork uow = new(appEnvironment, true);
+        using AccountUnitOfWork uow = new(_appEnvironment, true);
 
         string oldFinCode = model.FinCode;
 
@@ -772,7 +772,7 @@ public sealed class AccountService
         else if (newClientMnem == null)
             throw new ArgumentNullException(nameof(newClientMnem));
 
-        using AccountUnitOfWork uow = new(appEnvironment, true);
+        using AccountUnitOfWork uow = new(_appEnvironment, true);
 
         bool updateSuccess = true;
         string oldClientMnem = model.ClientMnem;
@@ -813,7 +813,7 @@ public sealed class AccountService
                 AddNote(model.AccountNo, $"Client updated from {oldClientMnem} to {newClientMnem}.");
 
                 //reprocess charges if fin class is client bill (C) to pick up proper discounts.
-                if (model.Fin.FinClass == clientFinType)
+                if (model.Fin.FinClass == _clientFinType)
                 {
                     try
                     {
@@ -825,7 +825,7 @@ public sealed class AccountService
                     }
                 }
 
-                if (model.Fin.FinClass == patientFinType)
+                if (model.Fin.FinClass == _patientFinType)
                 {
                     //reprocess charges if fee schedule is different to pick up correct charge amounts
                     if (oldClient.FeeSchedule != newClient.FeeSchedule)
@@ -839,7 +839,7 @@ public sealed class AccountService
                             throw new ApplicationException("Error reprocessing charges.", ex);
                         }
                     }
-                    else if (oldClient.ClientMnem == pthExceptionClient || newClient.ClientMnem == pthExceptionClient)
+                    else if (oldClient.ClientMnem == _pthExceptionClient || newClient.ClientMnem == _pthExceptionClient)
                     {
                         try
                         {
@@ -892,7 +892,7 @@ public sealed class AccountService
 
     public Chrg GetCharge(int chrgNo)
     {
-        using AccountUnitOfWork uow = new(appEnvironment);
+        using AccountUnitOfWork uow = new(_appEnvironment);
 
         var charge = uow.ChrgRepository.GetById(chrgNo);
 
@@ -904,7 +904,7 @@ public sealed class AccountService
 
     public IList<ClaimChargeView> GetClaimCharges(string accountNo)
     {
-        using AccountUnitOfWork uow = new(appEnvironment);
+        using AccountUnitOfWork uow = new(_appEnvironment);
 
         var charges = uow.ChrgRepository.GetClaimCharges(accountNo);
 
@@ -921,7 +921,7 @@ public sealed class AccountService
     {
         Log.Instance.Debug($"Entering - account {accountNo}");
 
-        using AccountUnitOfWork uow = new(appEnvironment);
+        using AccountUnitOfWork uow = new(_appEnvironment);
 
         if (string.IsNullOrEmpty(accountNo))
             throw new ArgumentNullException(nameof(accountNo));
@@ -942,13 +942,13 @@ public sealed class AccountService
 
     internal void AddRevenueDiagnosisToChrg(Chrg chrg)
     {
-        AccountUnitOfWork uow = new(appEnvironment);
+        AccountUnitOfWork uow = new(_appEnvironment);
 
-        chrg.Cdm = dictionaryService.GetCdm(chrg.CDMCode, true);
+        chrg.Cdm = _dictionaryService.GetCdm(chrg.CDMCode, true);
         chrg.ChrgDetails = uow.ChrgDetailRepository.GetByChrgId(chrg.ChrgId).ToList();
         chrg.ChrgDetails.ForEach(detail =>
         {
-            detail.RevenueCodeDetail = dictionaryService.GetRevenueCode(detail.RevenueCode);
+            detail.RevenueCodeDetail = _dictionaryService.GetRevenueCode(detail.RevenueCode);
             detail.DiagnosisPointer = uow.ChrgDiagnosisPointerRepository.GetById(detail.uri);
             var cpt = uow.CptAmaRepository.GetCpt(detail.Cpt4);
             if (cpt != null)
@@ -959,7 +959,7 @@ public sealed class AccountService
 
     public IList<Chrg> UpdateDxPointers(List<Chrg> chrgs)
     {
-        using AccountUnitOfWork uow = new(appEnvironment, true);
+        using AccountUnitOfWork uow = new(_appEnvironment, true);
 
         chrgs.ForEach(c => c.ChrgDetails.ForEach(cd =>
         {
@@ -985,10 +985,10 @@ public sealed class AccountService
         if (account == null)
             throw new ArgumentNullException(nameof(account));
 
-        using AccountUnitOfWork uow = new(appEnvironment, true);
+        using AccountUnitOfWork uow = new(_appEnvironment, true);
         try
         {
-            var chargesToCredit = account.Charges.Where(x => x.IsCredited == false && x.CDMCode != invoicedCdm).ToList();
+            var chargesToCredit = account.Charges.Where(x => x.IsCredited == false && x.CDMCode != _invoicedCdm).ToList();
 
             chargesToCredit.ForEach(c =>
             {
@@ -1041,7 +1041,7 @@ public sealed class AccountService
     {
         Log.Instance.Trace("Entering");
 
-        using AccountUnitOfWork uow = new(appEnvironment, true);
+        using AccountUnitOfWork uow = new(_appEnvironment, true);
 
         if (charges == null || charges.Count == 0)
         {
@@ -1054,8 +1054,8 @@ public sealed class AccountService
         var fin = uow.FinRepository.GetFin(finCode) ?? throw new ApplicationException($"Fin {finCode} is not valid");
 
         var chrgsToUpdate = charges.Where(x => x.IsCredited == false &&
-            (x.ClientMnem != appEnvironment.ApplicationParameters.PathologyGroupClientMnem ||
-            string.IsNullOrEmpty(appEnvironment.ApplicationParameters.PathologyGroupClientMnem))
+            (x.ClientMnem != _appEnvironment.ApplicationParameters.PathologyGroupClientMnem ||
+            string.IsNullOrEmpty(_appEnvironment.ApplicationParameters.PathologyGroupClientMnem))
             && x.FinancialType == fin.FinClass).ToList();
 
         chrgsToUpdate.ForEach(c =>
@@ -1087,7 +1087,7 @@ public sealed class AccountService
     {
         Log.Instance.Trace("Entering");
 
-        using AccountUnitOfWork uow = new(appEnvironment, true);
+        using AccountUnitOfWork uow = new(_appEnvironment, true);
 
         List<Chrg> charges = GetCharges(account).ToList();
 
@@ -1150,7 +1150,7 @@ public sealed class AccountService
     public Chrg AddCharge(Chrg chrg)
     {
         Log.Instance.Trace("Entering");
-        using UnitOfWorkMain uow = new(appEnvironment);
+        using UnitOfWorkMain uow = new(_appEnvironment);
 
         var newChrg = uow.ChrgRepository.Add(chrg);
 
@@ -1188,17 +1188,17 @@ public sealed class AccountService
         if (string.IsNullOrEmpty(accData.Client.FeeSchedule))
             throw new ApplicationException($"Fee Schedule not defined on client. Cannot post charge. Client {accData.ClientMnem}");
 
-        Fin fin = dictionaryService.GetFinCode(accData.FinCode) ?? throw new ApplicationException($"No fincode on account {accData.AccountNo}");
+        Fin fin = _dictionaryService.GetFinCode(accData.FinCode) ?? throw new ApplicationException($"No fincode on account {accData.AccountNo}");
 
         //get the cdm number - if cdm number is not found - abort
-        Cdm cdmData = dictionaryService.GetCdm(cdm);
+        Cdm cdmData = _dictionaryService.GetCdm(cdm);
         if (cdmData == null)
         {
             Log.Instance.Error($"CDM {cdm} not found.");
             throw new CdmNotFoundException("CDM not found.", cdm);
         }
 
-        using AccountUnitOfWork uow = new(appEnvironment, true);
+        using AccountUnitOfWork uow = new(_appEnvironment, true);
 
         //check account status, change to NEW if it is paid out.
         if (accData.Status == AccountStatus.PaidOut)
@@ -1209,15 +1209,15 @@ public sealed class AccountService
 
         Client chargeClient = accData.Client;
 
-        if (appEnvironment.ApplicationParameters.PathologyGroupBillsProfessional)
+        if (_appEnvironment.ApplicationParameters.PathologyGroupBillsProfessional)
         {
             //check for global billing cdm - if it is, change client to Pathology Group, fin to Y, and get appropriate prices
             var gb = uow.GlobalBillingCdmRepository.GetCdm(cdm, accData.TransactionDate);
             //hard coding exception for Hardin County for now - 05/09/2023 BSP
-            if (gb != null && accData.ClientMnem != pthExceptionClient)
+            if (gb != null && accData.ClientMnem != _pthExceptionClient)
             {
-                fin = uow.FinRepository.GetFin(billClientFinCode) ?? throw new ApplicationException($"Fin code {billClientFinCode} not found error {accData.AccountNo}");
-                chargeClient = uow.ClientRepository.GetClient(appEnvironment.ApplicationParameters.PathologyGroupClientMnem);
+                fin = uow.FinRepository.GetFin(_billClientFinCode) ?? throw new ApplicationException($"Fin code {_billClientFinCode} not found error {accData.AccountNo}");
+                chargeClient = uow.ClientRepository.GetClient(_appEnvironment.ApplicationParameters.PathologyGroupClientMnem);
             }
         }
 
@@ -1225,10 +1225,10 @@ public sealed class AccountService
         {
             Status = fin.FinClass switch
             {
-                patientFinType => cdmData.MClassType == naStatus ? naStatus : newChrgStatus,
-                clientFinType => cdmData.CClassType == naStatus ? naStatus : newChrgStatus,
-                "Z" => cdmData.ZClassType == naStatus ? naStatus : newChrgStatus,
-                _ => newChrgStatus,
+                _patientFinType => cdmData.MClassType == _naStatus ? _naStatus : _newChrgStatus,
+                _clientFinType => cdmData.CClassType == _naStatus ? _naStatus : _newChrgStatus,
+                "Z" => cdmData.ZClassType == _naStatus ? _naStatus : _newChrgStatus,
+                _ => _newChrgStatus,
             },
 
             //now build the charge & detail records
@@ -1275,12 +1275,12 @@ public sealed class AccountService
 
             switch (fin.FinClass)
             {
-                case patientFinType:
+                case _patientFinType:
                     chrgDetail.Amount = fee.MClassPrice;
                     retailTotal += fee.MClassPrice;
                     ztotal += fee.ZClassPrice;
                     break;
-                case clientFinType:
+                case _clientFinType:
                     //todo: calculate client discount
                     var cliDiscount = chargeClient.Discounts.Find(c => c.Cdm == cdm);
                     double discountPercentage = chargeClient.DefaultDiscount;
@@ -1292,7 +1292,7 @@ public sealed class AccountService
                     retailTotal += fee.CClassPrice;
                     ztotal += fee.ZClassPrice;
                     break;
-                case zFinType:
+                case _zFinType:
                     chrgDetail.Amount = fee.ZClassPrice;
                     retailTotal += fee.ZClassPrice;
                     ztotal += fee.ZClassPrice;
@@ -1327,7 +1327,7 @@ public sealed class AccountService
         chrg.RetailAmount = retailTotal;
 
         chrg = uow.ChrgRepository.Add(chrg);
-        chrg.Cdm = dictionaryService.GetCdm(chrg.CDMCode);
+        chrg.Cdm = _dictionaryService.GetCdm(chrg.CDMCode);
         chrgDetails.ForEach(d =>
         {
             d.ChrgNo = chrg.ChrgId;
@@ -1402,7 +1402,7 @@ public sealed class AccountService
 
         try
         {
-            using AccountUnitOfWork uow = new(appEnvironment, true);
+            using AccountUnitOfWork uow = new(_appEnvironment, true);
 
             foreach (var bundledProfile in bundledProfiles1)
             {
@@ -1475,7 +1475,7 @@ public sealed class AccountService
             }
         };
 
-        using AccountUnitOfWork uow = new(appEnvironment, true);
+        using AccountUnitOfWork uow = new(_appEnvironment, true);
 
         for (int x = 0; x < bundledProfiles.Count; x++)
         {
@@ -1524,7 +1524,7 @@ public sealed class AccountService
 
         try
         {
-            using AccountUnitOfWork uow = new(appEnvironment, true);
+            using AccountUnitOfWork uow = new(_appEnvironment, true);
 
             if ((account.Status == AccountStatus.InstSubmitted || account.Status == AccountStatus.ProfSubmitted
                 || account.Status == AccountStatus.ClaimSubmitted || account.Status == AccountStatus.Statements
@@ -1540,7 +1540,7 @@ public sealed class AccountService
             }
             else
             {
-                if (account.Fin.FinClass == patientFinType && account.InsurancePrimary != null)
+                if (account.Fin.FinClass == _patientFinType && account.InsurancePrimary != null)
                 {
                     if (account.InsurancePrimary.InsCompany != null)
                     {
@@ -1629,7 +1629,7 @@ public sealed class AccountService
         catch (Exception ex)
         {
             Log.Instance.Error(ex);
-            using AccountUnitOfWork uow = new(appEnvironment);
+            using AccountUnitOfWork uow = new(_appEnvironment);
             account.AccountValidationStatus.Account = account.AccountNo;
             account.AccountValidationStatus.UpdatedDate = DateTime.Now;
             account.AccountValidationStatus.ValidationText = "Exception during Validation. Unable to validate.";
@@ -1645,7 +1645,7 @@ public sealed class AccountService
         Log.Instance.Trace($"Entering - account {account}");
         List<string> errorList = new();
 
-        using AccountUnitOfWork uow = new(appEnvironment, true);
+        using AccountUnitOfWork uow = new(_appEnvironment, true);
 
         //determine if there are any rules for ama_year
         if (uow.LmrpRuleRepository.RulesLoaded((DateTime)account.TransactionDate) <= 0)
@@ -1691,13 +1691,13 @@ public sealed class AccountService
     {
         Log.Instance.Trace($"Entering");
 
-        using AccountUnitOfWork uow = new(appEnvironment);
+        using AccountUnitOfWork uow = new(_appEnvironment);
 
         (string propertyName, AccountSearchRepository.operation oper, string searchText)[] parameters = {
-            (nameof(AccountSearch.ServiceDate), AccountSearchRepository.operation.LessThanOrEqual, DateTime.Today.AddDays((appEnvironment.ApplicationParameters.BillingInitialHoldDays)*-1).ToShortDateString()),
+            (nameof(AccountSearch.ServiceDate), AccountSearchRepository.operation.LessThanOrEqual, DateTime.Today.AddDays((_appEnvironment.ApplicationParameters.BillingInitialHoldDays)*-1).ToShortDateString()),
             (nameof(AccountSearch.Status), AccountSearchRepository.operation.Equal, AccountStatus.New),
             (nameof(AccountSearch.FinCode), AccountSearchRepository.operation.NotEqual, "Y"),
-            (nameof(AccountSearch.FinCode), AccountSearchRepository.operation.NotEqual, clientFinCode),
+            (nameof(AccountSearch.FinCode), AccountSearchRepository.operation.NotEqual, _clientFinCode),
             (nameof(AccountSearch.FinCode), AccountSearchRepository.operation.NotEqual, "E")
         };
 
@@ -1747,7 +1747,7 @@ public sealed class AccountService
             throw new ArgumentException("One or both arguments are null or empty.");
         }
 
-        using AccountUnitOfWork uow = new(appEnvironment, true);
+        using AccountUnitOfWork uow = new(_appEnvironment, true);
 
         var source = GetAccount(sourceAccount);
         var destination = GetAccount(destinationAccount);
@@ -1785,7 +1785,7 @@ public sealed class AccountService
         {
             throw new ArgumentException("One or both arguments are null or empty.");
         }
-        using AccountUnitOfWork unitOfWork = new(appEnvironment, true);
+        using AccountUnitOfWork unitOfWork = new(_appEnvironment, true);
         var source = GetAccount(sourceAccount);
         var destination = GetAccount(destinationAccount);
 
@@ -1803,14 +1803,14 @@ public sealed class AccountService
 
     public void AddRecentlyAccessedAccount(string accountNo, string userName)
     {
-        using AccountUnitOfWork uow = new(appEnvironment);
+        using AccountUnitOfWork uow = new(_appEnvironment);
         uow.UserProfileRepository.InsertRecentAccount(accountNo, userName);
     }
 
     public Chk AddPayment(Chk chk)
     {
         Log.Instance.Trace("Entering");
-        using AccountUnitOfWork uow = new(appEnvironment, true);
+        using AccountUnitOfWork uow = new(_appEnvironment, true);
 
         try
         {
@@ -1827,7 +1827,7 @@ public sealed class AccountService
 
     public IList<Chrg> UpdateDiagnosisPointers(IEnumerable<Chrg> chrgs)
     {
-        using AccountUnitOfWork uow = new(appEnvironment, true);
+        using AccountUnitOfWork uow = new(_appEnvironment, true);
 
         var newChrgs = UpdateDxPointers(chrgs.ToList());
         uow.Commit();
@@ -1845,7 +1845,7 @@ public sealed class AccountService
         if (account == null)
             throw new ArgumentNullException(nameof(account));
 
-        using AccountUnitOfWork uow = new(appEnvironment, true);
+        using AccountUnitOfWork uow = new(_appEnvironment, true);
         List<string> columns = new();
         try
         {
@@ -1877,7 +1877,7 @@ public sealed class AccountService
 
     public ChrgDetail RemoveChargeModifier(int chrgDetailId)
     {
-        using AccountUnitOfWork uow = new(appEnvironment, true);
+        using AccountUnitOfWork uow = new(_appEnvironment, true);
         var retval = uow.ChrgDetailRepository.RemoveModifier(chrgDetailId);
         var chrgDetail = uow.ChrgDetailRepository.GetByKey((object)chrgDetailId);
         uow.Commit();
@@ -1886,7 +1886,7 @@ public sealed class AccountService
 
     public ChrgDetail AddChargeModifier(int chrgDetailId, string modifier)
     {
-        using AccountUnitOfWork uow = new(appEnvironment, true);
+        using AccountUnitOfWork uow = new(_appEnvironment, true);
         var retval = uow.ChrgDetailRepository.AddModifier(chrgDetailId, modifier);
         var chrgDetail = uow.ChrgDetailRepository.GetByKey((object)chrgDetailId);
         uow.Commit();
@@ -1896,7 +1896,7 @@ public sealed class AccountService
 
     public Chrg CreditCharge(int chrgId, string comment = "")
     {
-        using AccountUnitOfWork uow = new(appEnvironment);
+        using AccountUnitOfWork uow = new(_appEnvironment);
 
         Log.Instance.Trace($"Entering - chrg number {chrgId} comment {comment}");
 
@@ -1940,7 +1940,7 @@ public sealed class AccountService
 
     public Chrg SetChargeCreditFlag(int chrgId, bool flag)
     {
-        using AccountUnitOfWork uow = new(appEnvironment);
+        using AccountUnitOfWork uow = new(_appEnvironment);
 
         var chrg = uow.ChrgRepository.SetCredited(chrgId, flag);
         return chrg;
@@ -1948,7 +1948,7 @@ public sealed class AccountService
 
     public Pat SetCollectionsDate(Pat pat)
     {
-        using AccountUnitOfWork uow = new(appEnvironment, true);
+        using AccountUnitOfWork uow = new(_appEnvironment, true);
 
         pat = uow.PatRepository.Update(pat, new[] { nameof(Pat.BadDebtListDate) });
         uow.Commit();
@@ -1959,7 +1959,7 @@ public sealed class AccountService
     public IList<AccountSearch> SearchAccounts(string lastName, string firstName, string mrn, string ssn, string dob,
             string sex, string accountSearch)
     {
-        using AccountUnitOfWork uow = new(appEnvironment);
+        using AccountUnitOfWork uow = new(_appEnvironment);
         var results = uow.AccountSearchRepository.GetBySearch(lastName, firstName, mrn, ssn, dob, sex, accountSearch).ToList();
 
         return results;

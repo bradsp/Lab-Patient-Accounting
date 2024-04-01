@@ -20,8 +20,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LabBillingConsole", "LabBillingConsole\LabBillingConsole.csproj", "{710148ED-1BB6-4776-8D8C-737A166A014C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LabBillingJobs", "Lab Billing Jobs\LabBillingJobs.csproj", "{EEE71488-9E0F-46F4-8B35-2ECC84E92513}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "j4jayant.HL7.Parser", "j4jayant.HL7.Parser\j4jayant.HL7.Parser.csproj", "{687F3113-0395-4DBC-A332-C1A329516651}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WinFormsLibrary", "WinFormsLibrary\WinFormsLibrary.csproj", "{9FABCEDD-BF62-4769-A79E-72891CE3EF4A}"
@@ -35,6 +33,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Utilities", "Utilities\Utilities.csproj", "{B8CC4460-D627-4E78-9AFE-ED8C28E8A861}"
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "LabBillingServicesSetup", "LabBillingServicesSetup\LabBillingServicesSetup.vdproj", "{8EF7C4E2-712A-4FB8-BF7B-B5953685E6DC}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LabBillingJobs", "Lab Billing Jobs\LabBillingJobs.csproj", "{4F4425D0-386D-40E2-BB86-FFE1254A0DB3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -106,17 +106,6 @@ Global
 		{710148ED-1BB6-4776-8D8C-737A166A014C}.Release|x64.Build.0 = Release|x64
 		{710148ED-1BB6-4776-8D8C-737A166A014C}.Release|x86.ActiveCfg = Release|Any CPU
 		{710148ED-1BB6-4776-8D8C-737A166A014C}.Release|x86.Build.0 = Release|Any CPU
-		{EEE71488-9E0F-46F4-8B35-2ECC84E92513}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EEE71488-9E0F-46F4-8B35-2ECC84E92513}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EEE71488-9E0F-46F4-8B35-2ECC84E92513}.Debug|x64.ActiveCfg = Debug|x64
-		{EEE71488-9E0F-46F4-8B35-2ECC84E92513}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{EEE71488-9E0F-46F4-8B35-2ECC84E92513}.Debug|x86.Build.0 = Debug|Any CPU
-		{EEE71488-9E0F-46F4-8B35-2ECC84E92513}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EEE71488-9E0F-46F4-8B35-2ECC84E92513}.Release|Any CPU.Build.0 = Release|Any CPU
-		{EEE71488-9E0F-46F4-8B35-2ECC84E92513}.Release|x64.ActiveCfg = Release|x64
-		{EEE71488-9E0F-46F4-8B35-2ECC84E92513}.Release|x64.Build.0 = Release|x64
-		{EEE71488-9E0F-46F4-8B35-2ECC84E92513}.Release|x86.ActiveCfg = Release|Any CPU
-		{EEE71488-9E0F-46F4-8B35-2ECC84E92513}.Release|x86.Build.0 = Release|Any CPU
 		{687F3113-0395-4DBC-A332-C1A329516651}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{687F3113-0395-4DBC-A332-C1A329516651}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{687F3113-0395-4DBC-A332-C1A329516651}.Debug|x64.ActiveCfg = Debug|x64
@@ -195,6 +184,18 @@ Global
 		{8EF7C4E2-712A-4FB8-BF7B-B5953685E6DC}.Release|Any CPU.ActiveCfg = Release
 		{8EF7C4E2-712A-4FB8-BF7B-B5953685E6DC}.Release|x64.ActiveCfg = Release
 		{8EF7C4E2-712A-4FB8-BF7B-B5953685E6DC}.Release|x86.ActiveCfg = Release
+		{4F4425D0-386D-40E2-BB86-FFE1254A0DB3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4F4425D0-386D-40E2-BB86-FFE1254A0DB3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4F4425D0-386D-40E2-BB86-FFE1254A0DB3}.Debug|x64.ActiveCfg = Debug|x64
+		{4F4425D0-386D-40E2-BB86-FFE1254A0DB3}.Debug|x64.Build.0 = Debug|x64
+		{4F4425D0-386D-40E2-BB86-FFE1254A0DB3}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{4F4425D0-386D-40E2-BB86-FFE1254A0DB3}.Debug|x86.Build.0 = Debug|Any CPU
+		{4F4425D0-386D-40E2-BB86-FFE1254A0DB3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4F4425D0-386D-40E2-BB86-FFE1254A0DB3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4F4425D0-386D-40E2-BB86-FFE1254A0DB3}.Release|x64.ActiveCfg = Release|x64
+		{4F4425D0-386D-40E2-BB86-FFE1254A0DB3}.Release|x64.Build.0 = Release|x64
+		{4F4425D0-386D-40E2-BB86-FFE1254A0DB3}.Release|x86.ActiveCfg = Release|Any CPU
+		{4F4425D0-386D-40E2-BB86-FFE1254A0DB3}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

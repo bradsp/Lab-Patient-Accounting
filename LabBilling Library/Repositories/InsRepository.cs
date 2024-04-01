@@ -62,12 +62,12 @@ public sealed class InsRepository : RepositoryBase<Ins>
             }
             ins.InsCompany ??= new InsCompany();
 
-            StringExtensions.ParseCityStZip(ins.HolderCityStZip, out string strCity, out string strState, out string strZip);
-            ins.HolderCity = strCity;
-            ins.HolderState = strState;
-            ins.HolderZip = strZip;
+            //StringExtensions.ParseCityStZip(ins.HolderCityStZip, out string strCity, out string strState, out string strZip);
+            //ins.HolderCity = strCity;
+            //ins.HolderState = strState;
+            //ins.HolderZip = strZip;
 
-            StringExtensions.ParseCityStZip(ins.PlanCityState, out strCity, out strState, out strZip);
+            StringExtensions.ParseCityStZip(ins.PlanCityState, out string strCity, out string strState, out string strZip);
             ins.PlanCity = strCity;
             ins.PlanState = strState;
             ins.PlanZip = strZip;
@@ -99,12 +99,12 @@ public sealed class InsRepository : RepositoryBase<Ins>
             }
             record.InsCompany ??= new InsCompany();
 
-            StringExtensions.ParseCityStZip(record.HolderCityStZip, out string strCity, out string strState, out string strZip);
-            record.HolderCity = strCity;
-            record.HolderState = strState;
-            record.HolderZip = strZip;
+            //StringExtensions.ParseCityStZip(record.HolderCityStZip, out string strCity, out string strState, out string strZip);
+            //record.HolderCity = strCity;
+            //record.HolderState = strState;
+            //record.HolderZip = strZip;
 
-            StringExtensions.ParseCityStZip(record.PlanCityState, out strCity, out strState, out strZip);
+            StringExtensions.ParseCityStZip(record.PlanCityState, out string strCity, out string strState, out string strZip);
             record.PlanCity = strCity;
             record.PlanState = strState;
             record.PlanZip = strZip;
@@ -185,15 +185,6 @@ public sealed class InsRepository : RepositoryBase<Ins>
         Log.Instance.Trace($"Entering - account {table.Account}");
         List<string> cols = columns.ToList();
 
-        if(cols.Contains(nameof(Ins.HolderState)) || 
-            cols.Contains(nameof(Ins.HolderCity)) || 
-            cols.Contains(nameof(Ins.HolderZip)))
-        {
-            cols.Add(nameof(Ins.HolderCityStZip));
-            cols.Remove(nameof(Ins.HolderState));
-            cols.Remove(nameof(Ins.HolderCity));
-            cols.Remove(nameof(Ins.HolderZip));
-        }
         if(cols.Contains(nameof(Ins.HolderLastName)) || 
             cols.Contains(nameof(Ins.HolderFirstName)) || 
             cols.Contains(nameof(Ins.HolderMiddleName)))

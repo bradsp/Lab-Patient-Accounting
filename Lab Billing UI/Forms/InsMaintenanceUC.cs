@@ -8,14 +8,14 @@ namespace LabBilling.Forms;
 
 public partial class InsMaintenanceUC : UserControl
 {
-    private AccountService accountService;
-    private DictionaryService dictionaryService;
-    private List<InsCompany> insCompanies;
-    private InsCompanyLookupForm insCoLookupForm;
-    private List<string> changedControls;
+    private readonly AccountService _accountService;
+    private readonly DictionaryService _dictionaryService;
+    private readonly List<InsCompany> _insCompanies;
+    private readonly InsCompanyLookupForm _insCoLookupForm;
+    private readonly List<string> _changedControls;
     private bool _allowEditing;
-    private System.Windows.Forms.Timer _timer;
-    private const int timerInterval = 650;
+    private readonly System.Windows.Forms.Timer _timer;
+    private const int _timerInterval = 650;
 
     public Account CurrentAccount { get; set; }
     public Ins CurrentIns { get; set; }
@@ -44,17 +44,17 @@ public partial class InsMaintenanceUC : UserControl
         if (this.DesignMode)
             return;
 
-        accountService = new(Program.AppEnvironment);
-        dictionaryService = new(Program.AppEnvironment);
+        _accountService = new(Program.AppEnvironment);
+        _dictionaryService = new(Program.AppEnvironment);
 
         InitializeComponent();
         Coverage = coverage;
-        changedControls = new();
-        insCoLookupForm = new InsCompanyLookupForm();
-        _timer = new System.Windows.Forms.Timer() { Enabled = false, Interval = timerInterval };
+        _changedControls = new();
+        _insCoLookupForm = new InsCompanyLookupForm();
+        _timer = new System.Windows.Forms.Timer() { Enabled = false, Interval = _timerInterval };
         _timer.Tick += insurancePlanTextBox_KeyUpDone;
         #region Setup Insurance Company Combobox
-        insCompanies = DataCache.Instance.GetInsCompanies();
+        _insCompanies = DataCache.Instance.GetInsCompanies();
         #endregion
 
         InsRelationComboBox.DataSource = new BindingSource(Dictionaries.relationSource, null);
@@ -115,12 +115,12 @@ public partial class InsMaintenanceUC : UserControl
         HolderAddressTextBox.Text = CurrentIns.HolderStreetAddress ?? "";
 
         HolderCityTextBox.Text = CurrentIns.HolderCity;
-        HolderStateComboBox.SelectedValue = CurrentIns.HolderState;
+        HolderStateComboBox.SelectedItem = CurrentIns.HolderState;
         HolderZipTextBox.Text = CurrentIns.HolderZip;
 
         HolderSexComboBox.SelectedValue = CurrentIns.HolderSex ?? "";
         HolderDOBTextBox.Text = CurrentIns.HolderBirthDate?.ToString("MM/dd/yyyy");
-        InsRelationComboBox.SelectedValue = CurrentIns.Relation ?? "";
+        InsRelationComboBox.SelectedItem = CurrentIns.Relation ?? "";
 
         insurancePlanTextBox.Text = CurrentIns.InsCode ?? "";
 
@@ -151,7 +151,7 @@ public partial class InsMaintenanceUC : UserControl
             {
                 ctrl.BackColor = Color.White;
             }
-            changedControls.Remove(ctrl.Name);
+            _changedControls.Remove(ctrl.Name);
         }
 
         //enable data entry fields
@@ -172,11 +172,11 @@ public partial class InsMaintenanceUC : UserControl
         CurrentIns.GroupNumber = GroupNumberTextBox.Text;
         CurrentIns.HolderStreetAddress = HolderAddressTextBox.Text;
         CurrentIns.HolderCity = HolderCityTextBox.Text;
-        CurrentIns.HolderState = HolderStateComboBox.SelectedValue.ToString();
+        CurrentIns.HolderState = HolderStateComboBox.SelectedValue?.ToString();
         CurrentIns.HolderZip = HolderZipTextBox.Text;
         CurrentIns.HolderCityStZip = string.Format("{0}, {1} {2}",
             HolderCityTextBox.Text,
-            HolderStateComboBox.SelectedValue == null ? "" : HolderStateComboBox.SelectedValue.ToString(),
+            HolderStateComboBox.SelectedValue?.ToString(),
             HolderZipTextBox.Text);
 
         if (CurrentIns.HolderCityStZip.Trim() == ",")
@@ -206,11 +206,13 @@ public partial class InsMaintenanceUC : UserControl
         try
         {
             //call method to update the record in the database
-            CurrentIns = accountService.SaveInsurance(CurrentIns);
-            CurrentIns.InsCompany = dictionaryService.GetInsCompany(CurrentIns.InsCode);
+            CurrentIns = _accountService.SaveInsurance(CurrentIns);
+            CurrentIns.InsCompany = _dictionaryService.GetInsCompany(CurrentIns.InsCode);
             int index = CurrentAccount.Insurances.FindIndex(i => i.Coverage == Coverage);
             if (index != -1)
                 CurrentAccount.Insurances[index] = CurrentIns;
+            else
+                CurrentAccount.Insurances.Add(CurrentIns);
             InsuranceChanged?.Invoke(this, new InsuranceUpdatedEventArgs() { UpdatedIns = CurrentIns });
 
         }
@@ -285,7 +287,7 @@ public partial class InsMaintenanceUC : UserControl
         if (code == "")
             return;
 
-        var record = dictionaryService.GetInsCompany(code);
+        var record = _dictionaryService.GetInsCompany(code);
 
         if (record != null)
         {
@@ -330,11 +332,11 @@ public partial class InsMaintenanceUC : UserControl
         _timer.Stop();
         if (insurancePlanTextBox.Text.Length > 2)
         {
-            insCoLookupForm.Datasource = insCompanies;
-            insCoLookupForm.InitialSearchText = insurancePlanTextBox.Text;
-            if (insCoLookupForm.ShowDialog() == DialogResult.OK)
+            _insCoLookupForm.Datasource = _insCompanies;
+            _insCoLookupForm.InitialSearchText = insurancePlanTextBox.Text;
+            if (_insCoLookupForm.ShowDialog() == DialogResult.OK)
             {
-                string insCode = insurancePlanTextBox.Text = insCoLookupForm.SelectedValue;
+                string insCode = insurancePlanTextBox.Text = _insCoLookupForm.SelectedValue;
                 LookupInsCode(insCode);
             }
         }
@@ -349,7 +351,7 @@ public partial class InsMaintenanceUC : UserControl
         {
             try
             {
-                if (accountService.DeleteInsurance(CurrentIns))
+                if (_accountService.DeleteInsurance(CurrentIns))
                 {
                     int index = CurrentAccount.Insurances.FindIndex(i => i.Coverage == Coverage);
                     if (index != -1)
@@ -377,7 +379,7 @@ public partial class InsMaintenanceUC : UserControl
             {
                 ctrl.BackColor = Color.White;
             }
-            changedControls.Remove(ctrl.Name);
+            _changedControls.Remove(ctrl.Name);
         }
     }
 

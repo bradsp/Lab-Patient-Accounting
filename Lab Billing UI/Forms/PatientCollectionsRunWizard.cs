@@ -146,6 +146,7 @@ public partial class PatientCollectionsRunWizard : Form
             compileStatementsProgressBar.Value = 100;
             compileStatementsProgressBar.Maximum = 100;
 
+            nextButton.Enabled = true;
             createStmtFileStartButton.Enabled = true;
         }
         catch (ArgumentException argex)
