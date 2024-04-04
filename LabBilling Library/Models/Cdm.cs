@@ -62,15 +62,15 @@ public sealed class Cdm : IBaseEntity
     public List<CdmDetail> CdmDetails { get; set; }
 
     [Ignore]
-    public List<CdmDetail> CdmFeeSchedule1 { get { return CdmDetails.Where(d => d.FeeSchedule == "1").ToList(); } }
+    public List<CdmDetail> CdmFeeSchedule1 { get { return CdmDetails?.Where(d => d.FeeSchedule == "1").ToList(); } }
     [Ignore]
-    public List<CdmDetail> CdmFeeSchedule2 { get { return CdmDetails.Where(d => d.FeeSchedule == "2").ToList(); } }
+    public List<CdmDetail> CdmFeeSchedule2 { get { return CdmDetails?.Where(d => d.FeeSchedule == "2").ToList(); } }
     [Ignore]
-    public List<CdmDetail> CdmFeeSchedule3 { get { return CdmDetails.Where(d => d.FeeSchedule == "3").ToList(); } }
+    public List<CdmDetail> CdmFeeSchedule3 { get { return CdmDetails?.Where(d => d.FeeSchedule == "3").ToList(); } }
     [Ignore]
-    public List<CdmDetail> CdmFeeSchedule4 { get { return CdmDetails.Where(d => d.FeeSchedule == "4").ToList(); } }
+    public List<CdmDetail> CdmFeeSchedule4 { get { return CdmDetails?.Where(d => d.FeeSchedule == "4").ToList(); } }
     [Ignore]
-    public List<CdmDetail> CdmFeeSchedule5 { get { return CdmDetails.Where(d => d.FeeSchedule == "5").ToList(); } }
+    public List<CdmDetail> CdmFeeSchedule5 { get { return CdmDetails?.Where(d => d.FeeSchedule == "5").ToList(); } }
 
     public override string ToString()
     {

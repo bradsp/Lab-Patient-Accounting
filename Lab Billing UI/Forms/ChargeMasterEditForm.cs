@@ -219,11 +219,12 @@ public partial class ChargeMasterEditForm : Form
         cdm.RefLabPayment = Convert.ToDouble(refLabPayment.Text);
         cdm.Mnem = lisOrderCodeTextBox.Text;
 
-        ReadFeeSchedule(cdm.CdmFeeSchedule1, feeSched1Grid, "1");
-        ReadFeeSchedule(cdm.CdmFeeSchedule2, feeSched2Grid, "2");
-        ReadFeeSchedule(cdm.CdmFeeSchedule3, feeSched3Grid, "3");
-        ReadFeeSchedule(cdm.CdmFeeSchedule4, feeSched4Grid, "4");
-        ReadFeeSchedule(cdm.CdmFeeSchedule5, feeSched5Grid, "5");
+        cdm.CdmDetails.Clear();
+        ReadFeeSchedule(cdm.CdmDetails, feeSched1Grid, "1");
+        ReadFeeSchedule(cdm.CdmDetails, feeSched2Grid, "2");
+        ReadFeeSchedule(cdm.CdmDetails, feeSched3Grid, "3");
+        ReadFeeSchedule(cdm.CdmDetails, feeSched4Grid, "4");
+        ReadFeeSchedule(cdm.CdmDetails, feeSched5Grid, "5");
 
         try
         {
@@ -243,7 +244,6 @@ public partial class ChargeMasterEditForm : Form
 
     private void ReadFeeSchedule(List<CdmDetail> cdmDetails, DataGridView dgv, string feeSched)
     {
-        cdmDetails.Clear();
         int linkNo = 1;
         foreach (DataGridViewRow row in dgv.Rows)
         {

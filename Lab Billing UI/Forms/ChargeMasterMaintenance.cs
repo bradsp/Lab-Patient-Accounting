@@ -12,10 +12,10 @@ namespace LabBilling.Forms;
 
 public partial class ChargeMasterMaintenance : Form
 {
-    private DictionaryService dictionaryService;
-    private List<Cdm> cdms = new();
-    private DataTable cdmdt = new();
-    private BindingSource bs = new();
+    private readonly DictionaryService _dictionaryService;
+    private List<Cdm> _cdms = new();
+    private DataTable _cdmdt = new();
+    private readonly BindingSource _bs = new();
     private const int _timerInterval = 650;
     private readonly System.Windows.Forms.Timer _timer;
 
@@ -24,7 +24,7 @@ public partial class ChargeMasterMaintenance : Form
         InitializeComponent();
         _timer = new System.Windows.Forms.Timer() { Enabled = false, Interval = _timerInterval };
         _timer.Tick += new EventHandler(filterTextBox_KeyUpDone);
-        dictionaryService = new(Program.AppEnvironment);
+        _dictionaryService = new(Program.AppEnvironment);
     }
 
     private void addCdmButton_Click(object sender, EventArgs e)
@@ -44,12 +44,12 @@ public partial class ChargeMasterMaintenance : Form
 
     private void ReloadGrid()
     {
-        cdms = dictionaryService.GetAllCdms(includeInactiveCheckBox.Checked).OrderBy(c => c.Description).ToList();
-        cdmdt = Helper.ConvertToDataTable(cdms);
-        bs.DataSource = null;
-        bs.DataSource = cdmdt;
+        _cdms = _dictionaryService.GetAllCdms(includeInactiveCheckBox.Checked).OrderBy(c => c.Description).ToList();
+        _cdmdt = Helper.ConvertToDataTable(_cdms);
+        _bs.DataSource = null;
+        _bs.DataSource = _cdmdt;
         cdmGrid.DataSource = null;
-        cdmGrid.DataSource = bs;
+        cdmGrid.DataSource = _bs;
 
         RefreshGrid();
     }
@@ -79,7 +79,7 @@ public partial class ChargeMasterMaintenance : Form
 
         if (!string.IsNullOrWhiteSpace(filterTextBox.Text))
         {
-            cdmdt.DefaultView.RowFilter = $"({nameof(Cdm.Description)} like '{filterTextBox.Text.ToUpper()}*') or ({nameof(Cdm.ChargeId)} like '{filterTextBox.Text.ToUpper()}*')";
+            _cdmdt.DefaultView.RowFilter = $"({nameof(Cdm.Description)} like '{filterTextBox.Text.ToUpper()}*') or ({nameof(Cdm.ChargeId)} like '{filterTextBox.Text.ToUpper()}*')";
         }
     }
 
@@ -105,7 +105,7 @@ public partial class ChargeMasterMaintenance : Form
     {
         _timer.Stop();
 
-        cdmdt.DefaultView.RowFilter = $"({nameof(Cdm.Description)} like '{filterTextBox.Text.ToUpper()}*') or ({nameof(Cdm.ChargeId)} like '{filterTextBox.Text.ToUpper()}*')";
+        _cdmdt.DefaultView.RowFilter = $"({nameof(Cdm.Description)} like '{filterTextBox.Text.ToUpper()}*') or ({nameof(Cdm.ChargeId)} like '{filterTextBox.Text.ToUpper()}*')";
 
     }
 
