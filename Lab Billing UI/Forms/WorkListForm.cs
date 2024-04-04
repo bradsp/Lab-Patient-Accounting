@@ -563,7 +563,8 @@ public partial class WorkListForm : Form
                     _accountService.UpdateStatus(selectedAccount, AccountStatus.ReadyToBill);
                     account.Status = AccountStatus.ReadyToBill;
                     account.Notes = _accountService.AddNote(selectedAccount, "Marked ready to bill.").ToList();
-                    accts[nameof(AccountSearch.Status)] = AccountStatus.ReadyToBill;
+                    account = _accountService.Validate(account);
+                    accts[nameof(AccountSearch.Status)] = account.Status;
                 }
                 accountGrid.Refresh();
             }

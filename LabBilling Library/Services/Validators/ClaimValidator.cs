@@ -152,22 +152,18 @@ namespace LabBilling.Core.Services.Validators
             foreach (var dx in account.Pat.Diagnoses)
             {
                 bool dxUsed = false;
-                foreach (var chrg in account.Charges.Where(x => x.IsCredited == false && x.FinancialType == "M"))
+                foreach(var ptr in account.ChrgDiagnosisPointers)
                 {
-                    foreach (var chrgDetail in chrg.ChrgDetails)
+                    List<string> dxPtrs = new();
+                    if (!string.IsNullOrEmpty(ptr.DiagnosisPointer))
+                        dxPtrs = ptr.DiagnosisPointer.Split(':').ToList();
+
+                    foreach (var dPtr in dxPtrs)
                     {
-                        List<string> dxPtrs = new List<string>();
-
-                        if (chrgDetail.DiagnosisPointer != null)
-                            dxPtrs = chrgDetail.DiagnosisPointer.DiagnosisPointer.Split(':').ToList();
-
-                        foreach(var ptr in dxPtrs)
+                        if (!string.IsNullOrEmpty(dPtr))
                         {
-                            if (!string.IsNullOrEmpty(ptr))
-                            {
-                                if (dx.No == Convert.ToInt32(ptr))
-                                    dxUsed = true;
-                            }
+                            if (dx.No == Convert.ToInt32(dPtr))
+                                dxUsed = true;
                         }
                     }
                 }

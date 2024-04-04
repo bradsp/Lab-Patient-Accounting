@@ -1,272 +1,270 @@
-﻿using LabBilling.Logging;
-using LabBilling.Core.Models;
+﻿using LabBilling.Core.Models;
+using LabBilling.Logging;
+using Microsoft.Data.SqlClient;
+using PetaPoco;
 using System;
 using System.Collections.Generic;
-using Microsoft.Data.SqlClient;
 using System.Data;
-using LabBilling.Core.UnitOfWork;
-using PetaPoco;
 
-namespace LabBilling.Core.DataAccess
+namespace LabBilling.Core.DataAccess;
+
+public sealed class AccountSearchRepository : RepositoryBase<AccountSearch>
 {
-    public sealed class AccountSearchRepository : RepositoryBase<AccountSearch>
+    public AccountSearchRepository(IAppEnvironment appEnvironment, IDatabase context) : base(appEnvironment, context)
     {
-        public AccountSearchRepository(IAppEnvironment appEnvironment, IDatabase context) : base(appEnvironment, context)
+
+    }
+
+    public enum operation
+    {
+        Equal,
+        Like,
+        GreaterThan,
+        GreaterThanOrEqual,
+        LessThan,
+        LessThanOrEqual,
+        NotEqual,
+        OneOf,
+        NotOneOf
+    }
+
+    public IList<AccountSearch> GetBySearch((string propertyName, operation oper, string searchText)[] searchValues)
+    {
+        try
         {
+            var command = PetaPoco.Sql.Builder;
 
-        }
-
-        public enum operation
-        {
-            Equal,
-            Like,
-            GreaterThan,
-            GreaterThanOrEqual,
-            LessThan,
-            LessThanOrEqual,
-            NotEqual,
-            OneOf,
-            NotOneOf
-        }
-
-        public IList<AccountSearch> GetBySearch((string propertyName, operation oper, string searchText)[] searchValues)
-        {           
-            try
+            foreach (var searchValue in searchValues)
             {
-                var command = PetaPoco.Sql.Builder;
+                Type accounttype = typeof(AccountSearch);
+                var prop = accounttype.GetProperty(searchValue.propertyName);
 
-                foreach (var searchValue in searchValues)
+                string propName = GetRealColumn(typeof(AccountSearch), prop.Name);
+                Type propType = prop.PropertyType;
+
+                string op;
+                string searchText = searchValue.searchText;
+
+                switch (searchValue.oper)
                 {
-                    Type accounttype = typeof(AccountSearch);
-                    var prop = accounttype.GetProperty(searchValue.propertyName);
-
-                    string propName = GetRealColumn(typeof(AccountSearch), prop.Name);
-                    Type propType = prop.PropertyType;
-
-                    string op;
-                    string searchText = searchValue.searchText;
-
-                    switch (searchValue.oper)
-                    {
-                        case operation.Equal:
-                            op = "=";
-                            break;
-                        case operation.Like:
-                            op = "like";
-                            searchText += "%";
-                            break;
-                        case operation.GreaterThanOrEqual:
-                            op = ">=";
-                            break;
-                        case operation.GreaterThan:
-                            op = ">";
-                            break;
-                        case operation.LessThanOrEqual:
-                            op = "<=";
-                            break;
-                        case operation.LessThan:
-                            op = "<";
-                            break;
-                        case operation.NotEqual:
-                            op = "<>";
-                            break;
-                        case operation.OneOf:
-                            op = "in";
-                            break;
-                        case operation.NotOneOf:
-                            op = "not in";
-                            break;
-                        default:
-                            op = "=";
-                            break;
-                    }
-                    if (op == "in")
-                    {
-                        command.Where($"{propName} {op} ({searchText})");
-                        
-                    }
-                    else
-                    {
-                        command.Where($"{propName} {op} @0",
-                            new SqlParameter() { SqlDbType = GetType(propType), Value = searchText });
-                    }
+                    case operation.Equal:
+                        op = "=";
+                        break;
+                    case operation.Like:
+                        op = "like";
+                        searchText += "%";
+                        break;
+                    case operation.GreaterThanOrEqual:
+                        op = ">=";
+                        break;
+                    case operation.GreaterThan:
+                        op = ">";
+                        break;
+                    case operation.LessThanOrEqual:
+                        op = "<=";
+                        break;
+                    case operation.LessThan:
+                        op = "<";
+                        break;
+                    case operation.NotEqual:
+                        op = "<>";
+                        break;
+                    case operation.OneOf:
+                        op = "in";
+                        break;
+                    case operation.NotOneOf:
+                        op = "not in";
+                        break;
+                    default:
+                        op = "=";
+                        break;
                 }
-                command.OrderBy(GetRealColumn(nameof(AccountSearch.Name)));
-                
-                var results = Context.Fetch<AccountSearch>(command);
-
-                return results;
-            }
-            catch (NullReferenceException nre)
-            {
-                Log.Instance.Fatal(nre, $"Exception in");
-            }
-            catch (Exception ex)
-            {
-                Log.Instance.Fatal(ex, $"Exception in");
-            }
-
-            return new List<AccountSearch>();
-        }
-
-        private static SqlDbType GetType(Type propType)
-        {
-            if (propType == typeof(System.String))
-            {
-                return SqlDbType.VarChar;
-            }
-            else if (propType == typeof(System.Int32) || propType == typeof(System.Int16) || propType == typeof(System.Int64))
-            {
-                return SqlDbType.Int;
-            }
-            else if(propType == typeof(System.Double))
-            {
-                return SqlDbType.Decimal;
-            }
-            else if (propType == typeof(DateTime))
-            {
-                return SqlDbType.DateTime;
-            }
-            else if(propType == typeof(System.Nullable<System.DateTime>))
-            {
-                return SqlDbType.DateTime;
-            }
-
-            return SqlDbType.VarChar;
-        }
-
-        public IEnumerable<AccountSearch> GetBySearchAsync((string propertyName, operation oper, string searchText)[] searchValues)
-        {
-            try
-            {
-                var command = PetaPoco.Sql.Builder;
-
-                foreach (var searchValue in searchValues)
+                if (op == "in")
                 {
-                    Type accounttype = typeof(AccountSearch);
-                    var prop = accounttype.GetProperty(searchValue.propertyName);
+                    command.Where($"{propName} {op} ({searchText})");
 
-                    string propName = GetRealColumn(typeof(AccountSearch), prop.Name);
-                    Type propType = prop.PropertyType;
-                    string op;
-                    string searchText = searchValue.searchText;
-
-                    switch (searchValue.oper)
-                    {
-                        case operation.Equal:
-                            op = "=";
-                            break;
-                        case operation.Like:
-                            op = "like";
-                            searchText += "%";
-                            break;
-                        case operation.GreaterThanOrEqual:
-                            op = ">=";
-                            break;
-                        case operation.GreaterThan:
-                            op = ">";
-                            break;
-                        case operation.LessThanOrEqual:
-                            op = "<=";
-                            break;
-                        case operation.LessThan:
-                            op = "<";
-                            break;
-                        case operation.NotEqual:
-                            op = "<>";
-                            break;
-                        case operation.OneOf:
-                            op = "in";
-                            break;
-                        case operation.NotOneOf:
-                            op = "not in";
-                            break;
-                        default:
-                            op = "=";
-                            break;
-                    }
+                }
+                else
+                {
                     command.Where($"{propName} {op} @0",
                         new SqlParameter() { SqlDbType = GetType(propType), Value = searchText });
                 }
-                command.OrderBy(GetRealColumn(typeof(AccountSearch), nameof(AccountSearch.Name)));
-                var results = Context.Fetch<AccountSearch>(command);
+            }
+            command.OrderBy(GetRealColumn(nameof(AccountSearch.Name)));
 
-                return results;
-            }
-            catch (NullReferenceException nre)
-            {
-                Log.Instance.Fatal(nre, $"Exception in");
-            }
-            catch (Exception ex)
-            {
-                Log.Instance.Fatal(ex, $"Exception in");
-            }
+            var results = Context.Fetch<AccountSearch>(command);
 
-            return new List<AccountSearch>();
+            return results;
         }
-
-        public IEnumerable<AccountSearch> GetBySearch(string lastNameSearchText, string firstNameSearchText, string mrnSearchText, string ssnSearchText, string dobSearch, string sexSearch, string accountSearchText)
+        catch (NullReferenceException nre)
         {
-            Log.Instance.Debug($"Entering");
+            Log.Instance.Fatal(nre, $"Exception in");
+        }
+        catch (Exception ex)
+        {
+            Log.Instance.Fatal(ex, $"Exception in");
+        }
 
-            if ((lastNameSearchText == string.Empty) && (firstNameSearchText == string.Empty) && (mrnSearchText == string.Empty)
-                && (ssnSearchText == string.Empty)
-                && (dobSearch == string.Empty) && (sexSearch == string.Empty) && (accountSearchText == string.Empty))
+        return new List<AccountSearch>();
+    }
+
+    private static SqlDbType GetType(Type propType)
+    {
+        if (propType == typeof(System.String))
+        {
+            return SqlDbType.VarChar;
+        }
+        else if (propType == typeof(System.Int32) || propType == typeof(System.Int16) || propType == typeof(System.Int64))
+        {
+            return SqlDbType.Int;
+        }
+        else if (propType == typeof(System.Double))
+        {
+            return SqlDbType.Decimal;
+        }
+        else if (propType == typeof(DateTime))
+        {
+            return SqlDbType.DateTime;
+        }
+        else if (propType == typeof(System.Nullable<System.DateTime>))
+        {
+            return SqlDbType.DateTime;
+        }
+
+        return SqlDbType.VarChar;
+    }
+
+    public IEnumerable<AccountSearch> GetBySearchAsync((string propertyName, operation oper, string searchText)[] searchValues)
+    {
+        try
+        {
+            var command = PetaPoco.Sql.Builder;
+
+            foreach (var searchValue in searchValues)
             {
-                return new List<AccountSearch>();
-            }
+                Type accounttype = typeof(AccountSearch);
+                var prop = accounttype.GetProperty(searchValue.propertyName);
 
-            try
-            {
-                string nameSearch = "";
-                if (!(lastNameSearchText == "" && firstNameSearchText == ""))
-                    nameSearch = string.Format("{0}%,{1}%", lastNameSearchText, firstNameSearchText);
+                string propName = GetRealColumn(typeof(AccountSearch), prop.Name);
+                Type propType = prop.PropertyType;
+                string op;
+                string searchText = searchValue.searchText;
 
-                var command = PetaPoco.Sql.Builder
-                    .Where("deleted = 0 ");
-
-                if (!String.IsNullOrEmpty(lastNameSearchText))
-                    command.Where($"{GetRealColumn(nameof(AccountSearch.LastName))} like @0", 
-                        new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = lastNameSearchText+"%" });
-
-                if(!string.IsNullOrEmpty(firstNameSearchText))
-                    command.Where($"{GetRealColumn(nameof(AccountSearch.FirstName))} like @0", 
-                        new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = firstNameSearchText + "%" });
-
-                if (!string.IsNullOrEmpty(accountSearchText))
-                    command.Where($"{GetRealColumn(nameof(AccountSearch.Account))} = @0", 
-                        new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = accountSearchText });
-
-                if (!string.IsNullOrEmpty(mrnSearchText))
-                    command.Where($"{GetRealColumn(nameof(AccountSearch.MRN))} = @0", 
-                        new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = mrnSearchText });
-
-                if (!string.IsNullOrEmpty(sexSearch))
-                    command.Where($"{GetRealColumn(nameof(AccountSearch.Sex))} = @0", 
-                        new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = sexSearch });
-
-                if (!string.IsNullOrEmpty(ssnSearchText))
-                    command.Where($"{GetRealColumn(nameof(AccountSearch.SSN))} = @0", 
-                        new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = ssnSearchText });
-
-                if (!string.IsNullOrEmpty(dobSearch))
+                switch (searchValue.oper)
                 {
-                    _ = DateTime.TryParse(dobSearch, out DateTime dobDt);
-                    command.Where($"{GetRealColumn(nameof(AccountSearch.DateOfBirth))} = @0", 
-                        new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = dobDt });
+                    case operation.Equal:
+                        op = "=";
+                        break;
+                    case operation.Like:
+                        op = "like";
+                        searchText += "%";
+                        break;
+                    case operation.GreaterThanOrEqual:
+                        op = ">=";
+                        break;
+                    case operation.GreaterThan:
+                        op = ">";
+                        break;
+                    case operation.LessThanOrEqual:
+                        op = "<=";
+                        break;
+                    case operation.LessThan:
+                        op = "<";
+                        break;
+                    case operation.NotEqual:
+                        op = "<>";
+                        break;
+                    case operation.OneOf:
+                        op = "in";
+                        break;
+                    case operation.NotOneOf:
+                        op = "not in";
+                        break;
+                    default:
+                        op = "=";
+                        break;
                 }
-                    
-                command.OrderBy($"{GetRealColumn(nameof(AccountSearch.ServiceDate))} desc");
-
-                return Context.Fetch<AccountSearch>(command);
+                command.Where($"{propName} {op} @0",
+                    new SqlParameter() { SqlDbType = GetType(propType), Value = searchText });
             }
-            catch (Exception ex)
-            {
-                Log.Instance.Fatal(ex, $"Exception in");
-            }
+            command.OrderBy(GetRealColumn(typeof(AccountSearch), nameof(AccountSearch.Name)));
+            var results = Context.Fetch<AccountSearch>(command);
 
+            return results;
+        }
+        catch (NullReferenceException nre)
+        {
+            Log.Instance.Fatal(nre, $"Exception in");
+        }
+        catch (Exception ex)
+        {
+            Log.Instance.Fatal(ex, $"Exception in");
+        }
+
+        return new List<AccountSearch>();
+    }
+
+    public IEnumerable<AccountSearch> GetBySearch(string lastNameSearchText, string firstNameSearchText, string mrnSearchText, string ssnSearchText, string dobSearch, string sexSearch, string accountSearchText)
+    {
+        Log.Instance.Debug($"Entering");
+
+        if ((lastNameSearchText == string.Empty) && (firstNameSearchText == string.Empty) && (mrnSearchText == string.Empty)
+            && (ssnSearchText == string.Empty)
+            && (dobSearch == string.Empty) && (sexSearch == string.Empty) && (accountSearchText == string.Empty))
+        {
             return new List<AccountSearch>();
         }
 
+        try
+        {
+            string nameSearch = "";
+            if (!(lastNameSearchText == "" && firstNameSearchText == ""))
+                nameSearch = string.Format("{0}%,{1}%", lastNameSearchText, firstNameSearchText);
+
+            var command = PetaPoco.Sql.Builder
+                .Where("deleted = 0 ");
+
+            if (!String.IsNullOrEmpty(lastNameSearchText))
+                command.Where($"{GetRealColumn(nameof(AccountSearch.LastName))} like @0",
+                    new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = lastNameSearchText + "%" });
+
+            if (!string.IsNullOrEmpty(firstNameSearchText))
+                command.Where($"{GetRealColumn(nameof(AccountSearch.FirstName))} like @0",
+                    new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = firstNameSearchText + "%" });
+
+            if (!string.IsNullOrEmpty(accountSearchText))
+                command.Where($"{GetRealColumn(nameof(AccountSearch.Account))} = @0",
+                    new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = accountSearchText });
+
+            if (!string.IsNullOrEmpty(mrnSearchText))
+                command.Where($"{GetRealColumn(nameof(AccountSearch.MRN))} = @0",
+                    new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = mrnSearchText });
+
+            if (!string.IsNullOrEmpty(sexSearch))
+                command.Where($"{GetRealColumn(nameof(AccountSearch.Sex))} = @0",
+                    new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = sexSearch });
+
+            if (!string.IsNullOrEmpty(ssnSearchText))
+                command.Where($"{GetRealColumn(nameof(AccountSearch.SSN))} = @0",
+                    new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = ssnSearchText });
+
+            if (!string.IsNullOrEmpty(dobSearch))
+            {
+                _ = DateTime.TryParse(dobSearch, out DateTime dobDt);
+                command.Where($"{GetRealColumn(nameof(AccountSearch.DateOfBirth))} = @0",
+                    new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = dobDt });
+            }
+
+            command.OrderBy($"{GetRealColumn(nameof(AccountSearch.ServiceDate))} desc");
+
+            return Context.Fetch<AccountSearch>(command);
+        }
+        catch (Exception ex)
+        {
+            Log.Instance.Fatal(ex, $"Exception in");
+        }
+
+        return new List<AccountSearch>();
     }
+
 }

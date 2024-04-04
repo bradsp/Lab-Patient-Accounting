@@ -137,6 +137,11 @@ public sealed class ClaimGeneratorService
                     }
                     claims.Add(claim);
                 }
+                catch(AccountLockException alex)
+                {
+                    Log.Instance.Error($"Account locked.", alex);
+                    continue;
+                }
                 catch (ApplicationException apex)
                 {
                     Log.Instance.Error(apex);
@@ -302,19 +307,21 @@ public sealed class ClaimGeneratorService
             return;
         }
 
-        BillingActivity billingActivity = new BillingActivity();
-        billingActivity.PatientName = claim.claimAccount.PatFullName;
-        billingActivity.RunDate = DateTime.Today;
-        billingActivity.AccountNo = claim.claimAccount.AccountNo;
-        billingActivity.Batch = Convert.ToDouble(interchangeControlNumber);
-        billingActivity.FinancialCode = claim.claimAccount.FinCode;
-        billingActivity.InsuranceOrder = claim.claimAccount.Insurances[0].Coverage;
-        billingActivity.InsuranceCode = claim.claimAccount.Insurances[0].InsCode;
-        billingActivity.InsComplete = DateTime.MinValue;
-        billingActivity.TransactionDate = claim.claimAccount.TransactionDate;
-        billingActivity.ClaimAmount = claim.TotalChargeAmount;
-        billingActivity.RunUser = OS.GetUserName();
-        billingActivity.Text = claimx12;
+        BillingActivity billingActivity = new()
+        {
+            PatientName = claim.claimAccount.PatFullName,
+            RunDate = DateTime.Today,
+            AccountNo = claim.claimAccount.AccountNo,
+            Batch = Convert.ToDouble(interchangeControlNumber),
+            FinancialCode = claim.claimAccount.FinCode,
+            InsuranceOrder = claim.claimAccount.Insurances[0].Coverage,
+            InsuranceCode = claim.claimAccount.Insurances[0].InsCode,
+            InsComplete = DateTime.MinValue,
+            TransactionDate = claim.claimAccount.TransactionDate,
+            ClaimAmount = claim.TotalChargeAmount,
+            RunUser = OS.GetUserName(),
+            Text = claimx12
+        };
 
         unitOfWork.BillingActivityRepository.Save(billingActivity);
         unitOfWork.Commit();
@@ -330,10 +337,25 @@ public sealed class ClaimGeneratorService
     public ClaimData GenerateClaim(string account, bool reprint = false)
     {
         AccountService accountService = new(appEnvironment);
-
+        Account accountModel = new();
         using UnitOfWorkMain uow = new(appEnvironment, true);
 
-        Account accountModel = accountService.GetAccount(account);
+        try
+        {
+            accountModel = accountService.GetAccount(account);
+        }
+        catch(AccountLockException alex)
+        {
+            Log.Instance.Warn("Account locked. Skipping claim generation.", alex);
+            uow.Commit();
+            return null;
+        }
+        catch(Exception ex)
+        {
+            Log.Instance.Error($"Error encounter processing {account}", ex);
+            uow.Commit();
+            return null;
+        }
 
         //there is no balance so nothing to send on claim
         if (accountModel.ClaimBalance <= 0.00)
@@ -363,6 +385,7 @@ public sealed class ClaimGeneratorService
         claimData.claimAccount.ClaimCharges = claimData.claimAccount.Charges
             .SelectMany(chrg => chrg.ChrgDetails, (chrg, cd) => new { chrg, cd })
             .Where(x => !x.chrg.IsCredited &&
+                        x.chrg.FinancialType == "M" &&
                         x.chrg.CDMCode != "CBILL" &&
                         x.chrg.Status != "CBILL" &&
                         x.cd.Type != "N/A" ||
@@ -379,7 +402,6 @@ public sealed class ClaimGeneratorService
                     x.cd.Modifier,
                     x.cd.RevenueCode,
                     x.cd.Modifier2,
-                    x.cd.DiagCodePointer,
                     x.chrg.FinancialType
                 })
             .Where(g => g.Sum(x => x.chrg.Quantity) != 0 &&
@@ -398,7 +420,7 @@ public sealed class ClaimGeneratorService
                 Modifier = string.IsNullOrEmpty(g.Key.Modifier) ? null : g.Key.Modifier,
                 RevenueCode = g.Key.RevenueCode,
                 Modifier2 = g.Key.Modifier2,
-                DiagnosisCodePointer = g.Key.DiagCodePointer,
+                DiagnosisCodePointer = claimData.claimAccount.ChrgDiagnosisPointers.Where(d => d.CdmCode == g.Key.CDMCode && d.CptCode == g.Key.Cpt4).Select(d => d.DiagnosisPointer).First().ToString(),
                 Cdm = _dictionaryService.GetCdm(g.Key.CDMCode),
                 RevenueCodeDetail = _dictionaryService.GetRevenueCode(g.Key.RevenueCode)
             }).ToList();

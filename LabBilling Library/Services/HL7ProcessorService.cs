@@ -783,10 +783,12 @@ public sealed class HL7ProcessorService
         string msgFin = hl7Message.GetValue("PV1.20");
         if (msgFin == "\"\"")
             msgFin = string.Empty;
-        accountRecord.FinCode = string.IsNullOrEmpty(msgFin)
-            ? string.IsNullOrEmpty(accountRecord.FinCode) ? msgFin : accountRecord.FinCode
-            : unitOfWork.MappingRepository.GetMappedValue("FIN_CODE", currentMessage.SourceInfce, msgFin);
-
+        if (string.IsNullOrEmpty(accountRecord.FinCode))
+        {
+            accountRecord.FinCode = string.IsNullOrEmpty(msgFin)
+                ? string.IsNullOrEmpty(accountRecord.FinCode) ? msgFin : accountRecord.FinCode
+                : unitOfWork.MappingRepository.GetMappedValue("FIN_CODE", currentMessage.SourceInfce, msgFin);
+        }
         accountRecord.OriginalFinCode = accountRecord.FinCode;
         accountRecord.TransactionDate = new DateTime().ParseHL7Date(hl7Message.GetValue("PV1.44"));
         if (accountRecord.TransactionDate == DateTime.MinValue)

@@ -1,14 +1,14 @@
-﻿using System;
-using Microsoft.Data.SqlClient;
+﻿using LabBilling.Core.Models;
+using LabBilling.Core.Services;
 using LabBilling.Logging;
-using LabBilling.Core.Models;
+using Microsoft.Data.SqlClient;
 using PetaPoco;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using Utilities;
-using LabBilling.Core.Services;
 
 namespace LabBilling.Core.DataAccess;
 
@@ -25,7 +25,7 @@ public sealed class ClientRepository : RepositoryBase<Client>
     {
         Log.Instance.Trace("Entering");
 
-        string clientTypeTableName = ClientTypeRepository.GetTableInfo(typeof(ClientType)).TableName;            
+        string clientTypeTableName = ClientTypeRepository.GetTableInfo(typeof(ClientType)).TableName;
 
         PetaPoco.Sql sql = Sql.Builder
             .Select("*")
@@ -52,7 +52,7 @@ public sealed class ClientRepository : RepositoryBase<Client>
             throw new ArgumentNullException(nameof(clientMnem));
         }
 
-        var record = Context.SingleOrDefault<Client>($"where {GetRealColumn(nameof(Client.ClientMnem))} = @0", 
+        var record = Context.SingleOrDefault<Client>($"where {GetRealColumn(nameof(Client.ClientMnem))} = @0",
             new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = clientMnem });
         Log.Instance.Debug(Context.LastSQL);
 
@@ -82,11 +82,11 @@ public sealed class ClientRepository : RepositoryBase<Client>
     {
         Log.Instance.Debug($"Entering");
 
-        if(clientMnem == null)
+        if (clientMnem == null)
             throw new ArgumentNullException(nameof(clientMnem));
 
-         var balanceReturn = Context.ExecuteScalar<double>("select dbo.GetAccBalance(@0)",
-            new SqlParameter() { SqlDbType = System.Data.SqlDbType.VarChar, Value = clientMnem });
+        var balanceReturn = Context.ExecuteScalar<double>("select dbo.GetAccBalance(@0)",
+           new SqlParameter() { SqlDbType = System.Data.SqlDbType.VarChar, Value = clientMnem });
 
         return balanceReturn;
 
@@ -165,7 +165,7 @@ public sealed class ClientRepository : RepositoryBase<Client>
             .Where($"{chrgTableName}.{GetRealColumn(typeof(Chrg), nameof(Chrg.Invoice))} is null or {chrgTableName}.{GetRealColumn(typeof(Chrg), nameof(Chrg.Invoice))} = ''")
             .Where($"{chrgTableName}.{GetRealColumn(typeof(Chrg), nameof(Chrg.FinancialType))} =  'C'")
             .Where($"{accTableName}.{GetRealColumn(typeof(Account), nameof(Account.Status))} not like '%HOLD%'")
-            .Where($"{accTableName}.{GetRealColumn(typeof(Account), nameof(Account.TransactionDate))} <= @0 ", 
+            .Where($"{accTableName}.{GetRealColumn(typeof(Account), nameof(Account.TransactionDate))} <= @0 ",
                 new SqlParameter() { SqlDbType = SqlDbType.DateTime, Value = thruDate })
             .GroupBy(new[]
             {

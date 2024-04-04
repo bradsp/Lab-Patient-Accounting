@@ -116,7 +116,7 @@ public partial class MainForm : Form
         var fileRule = new LoggingRule("*", LogLevel.Trace, fileTarget);
 
         configuration.AddRule(dbRule);
-        configuration.AddRule(fileRule);
+        //configuration.AddRule(fileRule);
 
         LogManager.Configuration = configuration;
 

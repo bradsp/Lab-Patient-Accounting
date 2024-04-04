@@ -49,12 +49,7 @@ public partial class ChargeMasterEditForm : Form
         {
             cdm = new Cdm
             {
-                ChargeId = SelectedCdm,
-                CdmFeeSchedule1 = new List<CdmDetail>(),
-                CdmFeeSchedule2 = new List<CdmDetail>(),
-                CdmFeeSchedule3 = new List<CdmDetail>(),
-                CdmFeeSchedule4 = new List<CdmDetail>(),
-                CdmFeeSchedule5 = new List<CdmDetail>()
+                ChargeId = SelectedCdm
             };
 
             addMode = true;

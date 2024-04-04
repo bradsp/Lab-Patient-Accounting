@@ -36,11 +36,12 @@ public class DictionaryService
         var record = uow.CdmRepository.GetCdm(cdm, includeDeleted);
         if (record != null)
         {
-            record.CdmFeeSchedule1 = uow.CdmDetailRepository.GetByCdm(cdm, "1");
-            record.CdmFeeSchedule2 = uow.CdmDetailRepository.GetByCdm(cdm, "2");
-            record.CdmFeeSchedule3 = uow.CdmDetailRepository.GetByCdm(cdm, "3");
-            record.CdmFeeSchedule4 = uow.CdmDetailRepository.GetByCdm(cdm, "4");
-            record.CdmFeeSchedule5 = uow.CdmDetailRepository.GetByCdm(cdm, "5");
+            record.CdmDetails = uow.CdmDetailRepository.GetByCdm(cdm);
+            //record.CdmFeeSchedule1 = uow.CdmDetailRepository.GetByCdm(cdm, "1");
+            //record.CdmFeeSchedule2 = uow.CdmDetailRepository.GetByCdm(cdm, "2");
+            //record.CdmFeeSchedule3 = uow.CdmDetailRepository.GetByCdm(cdm, "3");
+            //record.CdmFeeSchedule4 = uow.CdmDetailRepository.GetByCdm(cdm, "4");
+            //record.CdmFeeSchedule5 = uow.CdmDetailRepository.GetByCdm(cdm, "5");
         }
 
         return record;
@@ -54,11 +55,12 @@ public class DictionaryService
         List<string> distinctCdms = cdmDetails.Select(c => c.ChargeItemId).Distinct().ToList();
 
         var results = uow.CdmRepository.GetCdm(distinctCdms);
-        results.ForEach(c => c.CdmFeeSchedule1 = uow.CdmDetailRepository.GetByCdm(c.ChargeId, "1"));
-        results.ForEach(c => c.CdmFeeSchedule2 = uow.CdmDetailRepository.GetByCdm(c.ChargeId, "2"));
-        results.ForEach(c => c.CdmFeeSchedule3 = uow.CdmDetailRepository.GetByCdm(c.ChargeId, "3"));
-        results.ForEach(c => c.CdmFeeSchedule4 = uow.CdmDetailRepository.GetByCdm(c.ChargeId, "4"));
-        results.ForEach(c => c.CdmFeeSchedule5 = uow.CdmDetailRepository.GetByCdm(c.ChargeId, "5"));
+        results.ForEach(c => c.CdmDetails = uow.CdmDetailRepository.GetByCdm(c.ChargeId));
+        //results.ForEach(c => c.CdmFeeSchedule1 = uow.CdmDetailRepository.GetByCdm(c.ChargeId, "1"));
+        //results.ForEach(c => c.CdmFeeSchedule2 = uow.CdmDetailRepository.GetByCdm(c.ChargeId, "2"));
+        //results.ForEach(c => c.CdmFeeSchedule3 = uow.CdmDetailRepository.GetByCdm(c.ChargeId, "3"));
+        //results.ForEach(c => c.CdmFeeSchedule4 = uow.CdmDetailRepository.GetByCdm(c.ChargeId, "4"));
+        //results.ForEach(c => c.CdmFeeSchedule5 = uow.CdmDetailRepository.GetByCdm(c.ChargeId, "5"));
 
         return results;
     }
@@ -186,7 +188,7 @@ public class DictionaryService
         if (record != null)
         {
             record.Discounts = GetClientDiscounts(clientMnem).ToList();
-            record.Discounts.ForEach(d => d.CdmDescription = GetCdm(d.Cdm).Description);
+            record.Discounts?.ForEach(d => d.CdmDescription = GetCdm(d?.Cdm)?.Description);
             record.ClientType = GetClientType(record.Type);
             record.Mappings = GetMappingsBySendingValue("CLIENT", record.ClientMnem).ToList();
         }

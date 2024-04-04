@@ -1,8 +1,8 @@
 ﻿using LabBilling.Core.Models;
-using System;
-using Microsoft.Data.SqlClient;
-using System.Drawing;
 using LabBilling.Core.Services;
+using Microsoft.Data.SqlClient;
+using System;
+using System.Drawing;
 
 namespace LabBilling.Core.DataAccess;
 
@@ -40,8 +40,9 @@ public class AppEnvironment : IAppEnvironment
 
     }
 
-    public bool EnvironmentValid { 
-        get 
+    public bool EnvironmentValid
+    {
+        get
         {
             if (string.IsNullOrEmpty(ServerName))
             {
@@ -53,13 +54,13 @@ public class AppEnvironment : IAppEnvironment
                 return false;
             }
 
-            if(ApplicationParameters == null)
+            if (ApplicationParameters == null)
             {
                 return false;
             }
 
-            return true; 
-        } 
+            return true;
+        }
     }
 
     public string ConnectionString
@@ -78,7 +79,7 @@ public class AppEnvironment : IAppEnvironment
                     throw new ApplicationException("DatabaseName value not set.");
                 }
 
-                if(IntegratedAuthentication)
+                if (IntegratedAuthentication)
                 {
                     SqlConnectionStringBuilder myBuilder = new()
                     {
@@ -131,12 +132,12 @@ public class AppEnvironment : IAppEnvironment
                 throw new ApplicationException("DatabaseName value not set.");
             }
 
-            if(string.IsNullOrEmpty(ServiceUsername))
+            if (string.IsNullOrEmpty(ServiceUsername))
             {
                 throw new ApplicationException("ServiceUserName value not set.");
             }
 
-            if(string.IsNullOrEmpty(ServicePassword))
+            if (string.IsNullOrEmpty(ServicePassword))
             {
                 throw new ApplicationException("ServicePassword value not set.");
             }
@@ -161,18 +162,18 @@ public class AppEnvironment : IAppEnvironment
     public string User { get; set; }
 
     private ApplicationParameters _appParms;
-    public ApplicationParameters ApplicationParameters 
-    { 
+    public ApplicationParameters ApplicationParameters
+    {
         get
         {
             if (_appParms == null)
             {
                 ApplicationParameters = new ApplicationParameters();
-                if(EnvironmentValid)
+                if (EnvironmentValid)
                 {
                     SystemService systemService = new(this);
                     _appParms = systemService.LoadSystemParameters();
-                }    
+                }
             }
             return _appParms;
         }

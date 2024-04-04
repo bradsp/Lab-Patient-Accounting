@@ -10,6 +10,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Log = LabBilling.Logging.Log;
 using Utilities;
+using NPOI.HSSF.Record.Chart;
 
 namespace LabBilling.Core.Services;
 
@@ -76,7 +77,7 @@ public sealed class AccountService
         else
         {
             // check to see if the lock is this user and machine
-            if (alock.UpdatedUser == _appEnvironment.User && alock.UpdatedHost == Environment.MachineName && alock.LockDateTime >= DateTime.Today)
+            if (alock.UpdatedUser == _appEnvironment.User && alock.UpdatedHost == Environment.MachineName)
             {
                 uow.Commit();
                 return (true, alock);
@@ -152,6 +153,13 @@ public sealed class AccountService
         }
         record.Pat = uow.PatRepository.GetByAccount(record);
         record.Charges = GetCharges(account, true, true, null, false).ToList();
+        record.ChrgDiagnosisPointers = uow.ChrgDiagnosisPointerRepository.GetByAccount(account).ToList();
+        record.ChrgDiagnosisPointers.ForEach(d =>
+        {
+            d.CdmDescription = record.Cdms.Where(c => c.ChargeId == d.CdmCode).First().Description;
+            if(!string.IsNullOrEmpty(d.CptCode))
+                d.CptDescription = record.Cdms.Where(c => c.ChargeId == d.CdmCode).First()?.CdmDetails?.Where(cd => cd.Cpt4 == d.CptCode).First()?.Description;
+        });
         record.Payments = uow.ChkRepository.GetByAccount(account);
 
         if (!demographicsOnly)
@@ -949,7 +957,6 @@ public sealed class AccountService
         chrg.ChrgDetails.ForEach(detail =>
         {
             detail.RevenueCodeDetail = _dictionaryService.GetRevenueCode(detail.RevenueCode);
-            detail.DiagnosisPointer = uow.ChrgDiagnosisPointerRepository.GetById(detail.uri);
             var cpt = uow.CptAmaRepository.GetCpt(detail.Cpt4);
             if (cpt != null)
                 detail.CptDescription = cpt.ShortDescription;
@@ -957,18 +964,18 @@ public sealed class AccountService
 
     }
 
-    public IList<Chrg> UpdateDxPointers(List<Chrg> chrgs)
-    {
-        using AccountUnitOfWork uow = new(_appEnvironment, true);
+    //public IList<Chrg> UpdateDxPointers(List<Chrg> chrgs)
+    //{
+    //    //using AccountUnitOfWork uow = new(_appEnvironment, true);
 
-        chrgs.ForEach(c => c.ChrgDetails.ForEach(cd =>
-        {
-            cd.DiagnosisPointer = uow.ChrgDiagnosisPointerRepository.Save(cd.DiagnosisPointer);
-        }));
+    //    //chrgs.ForEach(c => c.ChrgDetails.ForEach(cd =>
+    //    //{
+    //    //    cd.DiagnosisPointer = uow.ChrgDiagnosisPointerRepository.Save(cd.DiagnosisPointer);
+    //    //}));
 
-        uow.Commit();
-        return chrgs;
-    }
+    //    //uow.Commit();
+    //    return chrgs;
+    //}
 
     public async Task<IList<Chrg>> ReprocessChargesAsync(Account account, string comment) => await Task.Run(() => ReprocessCharges(account, comment));
 
@@ -1268,7 +1275,6 @@ public sealed class AccountService
         {
             ChrgDetail chrgDetail = new()
             {
-                DiagnosisPointer = new ChrgDiagnosisPointer(),
                 Cpt4 = fee.Cpt4,
                 Type = fee.Type
             };
@@ -1282,7 +1288,7 @@ public sealed class AccountService
                     break;
                 case _clientFinType:
                     //todo: calculate client discount
-                    var cliDiscount = chargeClient.Discounts.Find(c => c.Cdm == cdm);
+                    var cliDiscount = chargeClient.Discounts?.Find(c => c.Cdm == cdm);
                     double discountPercentage = chargeClient.DefaultDiscount;
                     if (cliDiscount != null)
                     {
@@ -1314,12 +1320,25 @@ public sealed class AccountService
             chrgDetail.Modifier = fee.Modifier;
             chrgDetail.RevenueCode = fee.RevenueCode;
             chrgDetail.OrderCode = fee.BillCode;
-            chrgDetail.DiagnosisPointer.DiagnosisPointer = "1:";
             var cpt = uow.CptAmaRepository.GetCpt(chrgDetail.Cpt4);
             if (cpt != null)
                 chrgDetail.CptDescription = cpt.ShortDescription;
 
             chrgDetails.Add(chrgDetail);
+
+            var diagPtr = accData.ChrgDiagnosisPointers.Find(c => c.CdmCode == chrg.CDMCode && c.CptCode == chrgDetail.Cpt4);
+            if(diagPtr == null)
+            {
+                //add a new diag ptr
+                ChrgDiagnosisPointer ptr = new()
+                {
+                    AccountNo = accData.AccountNo,
+                    CdmCode = chrg.CDMCode,
+                    CptCode = chrgDetail.Cpt4,
+                    DiagnosisPointer = "1:"
+                };
+                accData.ChrgDiagnosisPointers.Add(uow.ChrgDiagnosisPointerRepository.Add(ptr));
+            }
         }
 
         chrg.NetAmount = amtTotal;
@@ -1332,15 +1351,11 @@ public sealed class AccountService
         {
             d.ChrgNo = chrg.ChrgId;
             d = uow.ChrgDetailRepository.Add(d);
-            if (d.DiagnosisPointer != null)
-            {
-                d.DiagnosisPointer.ChrgDetailUri = Convert.ToDouble(d.uri);
-                uow.ChrgDiagnosisPointerRepository.Save(d.DiagnosisPointer);
-            }
         });
         chrg.ChrgDetails = chrgDetails;
 
         accData.Charges.Add(chrg);
+
 
         uow.Commit();
         Log.Instance.Trace($"Exiting");
@@ -1779,7 +1794,10 @@ public sealed class AccountService
     /// <param name="sourceAccount"></param>
     /// <param name="destinationAccount"></param>
     /// <param name="chrgId"></param>
-    public void MoveCharge(string sourceAccount, string destinationAccount, int chrgId)
+    /// <returns>Credited charge record</returns>
+    /// <exception cref="ArgumentException"></exception>
+    /// <exception cref="ApplicationException"></exception>
+    public Chrg MoveCharge(string sourceAccount, string destinationAccount, int chrgId)
     {
         if (string.IsNullOrEmpty(sourceAccount) || string.IsNullOrEmpty(destinationAccount))
         {
@@ -1796,9 +1814,10 @@ public sealed class AccountService
             throw new ApplicationException("Charge is already credited.");
         }
 
-        CreditCharge(charge.ChrgId, $"Move to {destinationAccount}");
+        var creditedCharge = CreditCharge(charge.ChrgId, $"Move to {destinationAccount}");
         AddCharge(destinationAccount, charge.CDMCode, charge.Quantity, destination.TransactionDate, $"Moved from {sourceAccount}", charge.ReferenceReq);
         unitOfWork.Commit();
+        return creditedCharge;
     }
 
     public void AddRecentlyAccessedAccount(string accountNo, string userName)
@@ -1825,13 +1844,18 @@ public sealed class AccountService
         }
     }
 
-    public IList<Chrg> UpdateDiagnosisPointers(IEnumerable<Chrg> chrgs)
+    public ChrgDiagnosisPointer UpdateDiagnosisPointer(ChrgDiagnosisPointer ptr)
     {
         using AccountUnitOfWork uow = new(_appEnvironment, true);
 
-        var newChrgs = UpdateDxPointers(chrgs.ToList());
+        ChrgDiagnosisPointer retPtr;
+        if (ptr.Id < 1)
+            retPtr = uow.ChrgDiagnosisPointerRepository.Add(ptr);
+        else
+            retPtr = uow.ChrgDiagnosisPointerRepository.Update(ptr);
+
         uow.Commit();
-        return newChrgs;
+        return retPtr;
     }
 
     public async Task ClearClaimStatusAsync(Account account) => await Task.Run(() => ClearClaimStatus(account));

@@ -133,6 +133,7 @@ public partial class InsMaintenanceUC : UserControl
         if (CurrentIns.InsCompany.IsGenericPayor)
         {
             PlanNameTextBox.Enabled = true;
+            PlanNameTextBox.ReadOnly = false;
             PlanAddressTextBox.Enabled = true;
             PlanAddress2TextBox.Enabled = true;
             PlanCityStTextBox.Enabled = true;
@@ -298,6 +299,7 @@ public partial class InsMaintenanceUC : UserControl
             if (record.IsGenericPayor)
             {
                 PlanNameTextBox.Enabled = true;
+                PlanNameTextBox.ReadOnly = false;
                 PlanAddress2TextBox.Enabled = true;
                 PlanAddress2TextBox.Enabled = true;
                 PlanCityStTextBox.Enabled = true;
@@ -305,6 +307,7 @@ public partial class InsMaintenanceUC : UserControl
             }
             else
             {
+                PlanNameTextBox.ReadOnly = true;
                 PlanNameTextBox.Text = record.PlanName;
                 PlanAddressTextBox.Text = record.Address1;
                 PlanAddress2TextBox.Text = record.Address2;

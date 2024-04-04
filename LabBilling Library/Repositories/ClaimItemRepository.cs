@@ -1,12 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using LabBilling.Core.Models;
 using PetaPoco;
-using LabBilling.Core.Models;
+using System.Collections.Generic;
 
 namespace LabBilling.Core.DataAccess;
 
 public class ClaimItemRepository : RepositoryCoreBase<ClaimItem>
 {
-    public ClaimItemRepository(IAppEnvironment appEnvironment, PetaPoco.IDatabase context) : base(appEnvironment, context) {  }
+    public ClaimItemRepository(IAppEnvironment appEnvironment, PetaPoco.IDatabase context) : base(appEnvironment, context) { }
 
     public IList<ClaimItem> Fetch(Sql command)
     {

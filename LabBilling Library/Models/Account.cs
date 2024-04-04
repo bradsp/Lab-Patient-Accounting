@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using LabBilling.Core.DataAccess;
+using NPOI.SS.Util;
 using PetaPoco;
 
 namespace LabBilling.Core.Models;
@@ -105,9 +106,27 @@ public sealed class Account : IBaseEntity
     public AccountValidationStatus AccountValidationStatus { get; set; } = new AccountValidationStatus();
     [Ignore]
     public List<PatientStatementAccount> PatientStatements { get; set; }
+    [Ignore]
+    public List<ChrgDiagnosisPointer> ChrgDiagnosisPointers { get; set; }
+
+    [Ignore]
+    public List<Cdm> Cdms 
+    {
+        get
+        {
+            List<Cdm> cdms = new();
+            Charges.ForEach(c => 
+            {
+                if(cdms.Find(d => d.ChargeId == c.CDMCode) == null)
+                    cdms.Add(c.Cdm);
+            });
+            return cdms;
+        }
+    }
 
     [Ignore]
     public Client Client { get; set; }
+
     public Guid rowguid { get; set; }
 
     [Ignore]
@@ -273,11 +292,7 @@ public sealed class Account : IBaseEntity
     {
         get
         {
-            var ins = this.Insurances.Find(x => x.Coverage == InsCoverage.Primary);
-            if (ins != null)
-                return this.Insurances.Find(x => x.Coverage == InsCoverage.Primary).InsCode;
-            else
-                return string.Empty;
+            return InsurancePrimary?.InsCode;
         }
     }
 

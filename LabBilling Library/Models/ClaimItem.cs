@@ -1,6 +1,4 @@
-﻿
-
-using PetaPoco;
+﻿using PetaPoco;
 
 namespace LabBilling.Core.Models;
 

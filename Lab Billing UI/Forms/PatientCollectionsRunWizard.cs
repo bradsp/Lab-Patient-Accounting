@@ -1,22 +1,18 @@
 ﻿using LabBilling.Core.Services;
 using LabBilling.Core.UnitOfWork;
 using LabBilling.Logging;
-using System;
 using System.ComponentModel;
-using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Windows.Forms;
 using Utilities;
 
 namespace LabBilling.Forms;
 
 public partial class PatientCollectionsRunWizard : Form
 {
-    private PatientBillingService patientBilling = new PatientBillingService(Program.AppEnvironment);
-    private DateTime thruDate;
-    private string batchNo;
-    private bool errorEncountered = false;
+    private PatientBillingService _patientBillingService = new(Program.AppEnvironment);
+    private DateTime _thruDate;
+    private string _batchNo;
+    private bool _errorEncountered = false;
 
     public PatientCollectionsRunWizard()
     {
@@ -39,9 +35,9 @@ public partial class PatientCollectionsRunWizard : Form
             sendToCollectionsProgressBar.Value = 0;
             sendToCollectionsProgressBar.Minimum = 0;
             sendToCollectionsProgressBar.Maximum = 100;
-            patientBilling.ProgressIncrementedEvent += PatientBilling_ProgressIncrementedEvent;
+            _patientBillingService.ProgressIncrementedEvent += PatientBilling_ProgressIncrementedEvent;
 
-            string filename = await patientBilling.SendToCollectionsAsync();
+            string filename = await _patientBillingService.SendToCollectionsAsync();
 
             //send collections file
             SFTP.UploadSftp(filename, Program.AppEnvironment.ApplicationParameters.CollectionsSftpUploadPath + '/' + Path.GetFileName(filename),
@@ -59,7 +55,7 @@ public partial class PatientCollectionsRunWizard : Form
         {
             Log.Instance.Error(apex);
             AskError("Error occurred in SendToCollections. Patient Billing will be aborted. Notify your administrator.");
-            errorEncountered = true;
+            _errorEncountered = true;
             DialogResult = DialogResult.Cancel;
             return;
         }
@@ -67,7 +63,7 @@ public partial class PatientCollectionsRunWizard : Form
         {
             Log.Instance.Error(ex);
             AskError("Error occurred in SendToCollections. Patient Billing will be aborted. Notify your administrator.");
-            errorEncountered = true;
+            _errorEncountered = true;
             DialogResult = DialogResult.Cancel;
             return;
         }
@@ -97,7 +93,7 @@ public partial class PatientCollectionsRunWizard : Form
         {
             createStmtFileProgressBar.Style = ProgressBarStyle.Marquee;
             createStmtFileTextBox.Text = "Creating statement file.";
-            var filename = patientBilling.CreateStatementFile(DateTimeHelper.GetLastDayOfPrevMonth());
+            var filename = _patientBillingService.CreateStatementFile(DateTimeHelper.GetLastDayOfPrevMonth());
 
             createStmtFileProgressBar.Style = ProgressBarStyle.Continuous;
             createStmtFileProgressBar.Value = 100;
@@ -117,7 +113,7 @@ public partial class PatientCollectionsRunWizard : Form
         {
             Log.Instance.Error(apex);
             AskError("Error occurred in SendToCollections. Patient Billing will be aborted. Notify your administrator.");
-            errorEncountered = true;
+            _errorEncountered = true;
             DialogResult = DialogResult.Cancel;
             return;
         }
@@ -125,7 +121,7 @@ public partial class PatientCollectionsRunWizard : Form
         {
             Log.Instance.Error(ex);
             AskError("Error occurred in SendToCollections. Patient Billing will be aborted. Notify your administrator.");
-            errorEncountered = true;
+            _errorEncountered = true;
             DialogResult = DialogResult.Cancel;
             return;
         }
@@ -140,7 +136,7 @@ public partial class PatientCollectionsRunWizard : Form
             compileStatementsProgressBar.Value = 0;
 
             //await patientBilling.CompileStatementsAsync(DateTimeHelper.GetLastDayOfPrevMonth());
-            await patientBilling.CompileStatementsNewAsync(DateTimeHelper.GetLastDayOfPrevMonth());
+            await _patientBillingService.CompileStatementsNewAsync(DateTimeHelper.GetLastDayOfPrevMonth());
 
             compileStatementsProgressBar.Style = ProgressBarStyle.Continuous;
             compileStatementsProgressBar.Value = 100;
@@ -153,7 +149,7 @@ public partial class PatientCollectionsRunWizard : Form
         {
             Log.Instance.Error(argex);
             AskError("Error occurred in SendToCollections. Patient Billing will be aborted. Notify your administrator.");
-            errorEncountered = true;
+            _errorEncountered = true;
             DialogResult = DialogResult.Cancel;
             return;
         }
@@ -161,7 +157,7 @@ public partial class PatientCollectionsRunWizard : Form
         {
             Log.Instance.Error(apex);
             AskError("Error occurred in SendToCollections. Patient Billing will be aborted. Notify your administrator.");
-            errorEncountered = true;
+            _errorEncountered = true;
             DialogResult = DialogResult.Cancel;
             return;
         }
@@ -169,7 +165,7 @@ public partial class PatientCollectionsRunWizard : Form
         {
             Log.Instance.Error(ex);
             AskError("Error occurred in SendToCollections. Patient Billing will be aborted. Notify your administrator.");
-            errorEncountered = true;
+            _errorEncountered = true;
             DialogResult = DialogResult.Cancel;
             return;
         }
@@ -189,17 +185,17 @@ public partial class PatientCollectionsRunWizard : Form
         sendToCollectionsTextbox.Text = $"{records.Count()} records to send to collections.";
 
 
-        thruDate = DateTimeHelper.GetLastDayOfPrevMonth();
+        _thruDate = DateTimeHelper.GetLastDayOfPrevMonth();
 
-        batchNo = $"{thruDate.Year}{thruDate.Month:00}";
+        _batchNo = $"{_thruDate.Year}{_thruDate.Month:00}";
 
-        batchNoLabel.Text = batchNo;
-        throughDateLabel.Text = thruDate.ToShortDateString();
+        batchNoLabel.Text = _batchNo;
+        throughDateLabel.Text = _thruDate.ToShortDateString();
 
         //check of patient bills have already been run for this month
-        if (patientBilling.BatchPreviouslyRun(batchNo))
+        if (_patientBillingService.BatchPreviouslyRun(_batchNo))
         {
-            bannerLabel.Text = $"Batch {batchNo} has already been run.";
+            bannerLabel.Text = $"Batch {_batchNo} has already been run.";
             bannerLabel.ForeColor = Color.Red;
             sendToCollectionsStartButton.Enabled = false;
         }

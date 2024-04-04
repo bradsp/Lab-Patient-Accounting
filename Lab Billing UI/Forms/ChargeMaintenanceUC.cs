@@ -125,10 +125,8 @@ public partial class ChargeMaintenanceUC : UserControl
                     OrderCode = detail.OrderCode,
                     PointerSet = detail.PointerSet,
                     RevenueCodeDetail = detail.RevenueCodeDetail,
-                    DiagnosisPointer = detail.DiagnosisPointer,
-                    DiagCodePointer = detail.DiagCodePointer,
                     CptDescription = detail.CptDescription,
-                    uri = detail.uri
+                    uri = detail.Id
                 };
                 charges.Add(charge);
             }
@@ -233,13 +231,13 @@ public partial class ChargeMaintenanceUC : UserControl
         if (selectedRows > 0)
         {
             DataGridViewRow row = ChargesDataGrid.SelectedRows[0];
-            var uri = Convert.ToInt32(row.Cells[nameof(ChrgDetail.uri)].Value.ToString());
+            var uri = Convert.ToInt32(row.Cells[nameof(ChrgDetail.Id)].Value.ToString());
             var chrg_num = Convert.ToInt32(row.Cells[nameof(Charge.ChrgId)].Value.ToString());
 
             _accountService.RemoveChargeModifier(uri);
 
             var idx = CurrentAccount.Charges.FindIndex(x => x.ChrgId == chrg_num);
-            var dIdx = CurrentAccount.Charges[idx].ChrgDetails.FindIndex(x => x.uri == uri);
+            var dIdx = CurrentAccount.Charges[idx].ChrgDetails.FindIndex(x => x.Id == uri);
             CurrentAccount.Charges[idx].ChrgDetails[dIdx].Modifier = "";
 
             ChargesUpdated?.Invoke(this, EventArgs.Empty);
@@ -261,7 +259,7 @@ public partial class ChargeMaintenanceUC : UserControl
             _accountService.AddChargeModifier(uri, item.Text);
 
             var idx = CurrentAccount.Charges.FindIndex(x => x.ChrgId == chrg_num);
-            var dIdx = CurrentAccount.Charges[idx].ChrgDetails.FindIndex(x => x.uri == uri);
+            var dIdx = CurrentAccount.Charges[idx].ChrgDetails.FindIndex(x => x.Id == uri);
             CurrentAccount.Charges[idx].ChrgDetails[dIdx].Modifier = item.Text;
 
             ChargesUpdated?.Invoke(this, EventArgs.Empty);
@@ -435,7 +433,11 @@ public partial class ChargeMaintenanceUC : UserControl
                         ErrorLevel = AppErrorEventArgs.ErrorLevelType.Debug,
                         ErrorMessage = $"Moving charge {chrgId} from {CurrentAccount.AccountNo} to {destAccount}"
                     });
-                    _accountService.MoveCharge(CurrentAccount.AccountNo, destAccount, chrgId);
+                    var credited = _accountService.MoveCharge(CurrentAccount.AccountNo, destAccount, chrgId);
+                    CurrentAccount.Charges.Add(credited);
+                    var idx = CurrentAccount.Charges.FindIndex(c => c.ChrgId == chrgId);
+                    if (idx > -1)
+                        CurrentAccount.Charges[idx].IsCredited = true;
                 }
                 ChargesUpdated?.Invoke(this, EventArgs.Empty);
             }

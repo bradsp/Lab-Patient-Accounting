@@ -821,6 +821,13 @@ public partial class AccountForm : Form
             ColumnName = "Description",
         });
 
+        _dxPointers.Columns.Add(new DataColumn()
+        {
+            DataType = System.Type.GetType("System.String"),
+            Caption = "CPT Description",
+            ColumnName = "CPTDescription",
+        });
+
         dxPointerGrid2.Columns.Clear();
         dxPointerGrid2.Rows.Clear();
 
@@ -845,6 +852,15 @@ public partial class AccountForm : Form
             Name = "Description",
             DataPropertyName = "Description",
             HeaderText = "Description",
+            ReadOnly = true,
+            AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+        });
+
+        dxPointerGrid2.Columns.Add(new DataGridViewTextBoxColumn()
+        {
+            Name = "CPTDescription",
+            DataPropertyName = "CPTDescription",
+            HeaderText = "CPT Description",
             ReadOnly = true,
             AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
         });
@@ -876,42 +892,31 @@ public partial class AccountForm : Form
         dxPointerGrid2.DataSource = _dxPointerBindingSource;
 
         //load charges and pointers to grid
-        foreach (var chrg in _currentAccount.Charges)
+        foreach (var chrg in _currentAccount.ChrgDiagnosisPointers)
         {
-            if (!chrg.IsCredited && chrg.Status != "N/A")
+            DataRow row = _dxPointers.NewRow();
+            row["CDM"] = chrg.CdmCode;
+            row["CPT4"] = chrg.CptCode;
+            row["Description"] = chrg.CdmDescription;
+            row["CPTDescription"] = chrg.CptDescription;
+
+            string[] ptrs = chrg.DiagnosisPointer.Split(':');
+            if (ptrs.Length > cnt)
             {
-                foreach (var chrgDetail in chrg.ChrgDetails)
-                {
-                    DataRow row = _dxPointers.NewRow();
-                    row["CDM"] = chrg.CDMCode;
-                    row["CPT4"] = chrgDetail.Cpt4;
-                    row["Description"] = chrg.CdmDescription;
 
-                    if (chrgDetail.DiagnosisPointer != null)
-                    {
-                        if (chrgDetail.DiagnosisPointer.DiagnosisPointer != null)
-                        {
-                            string[] ptrs = chrgDetail.DiagnosisPointer.DiagnosisPointer.Split(':');
-                            if (ptrs.Length > cnt)
-                            {
-
-                            }
-                            for (int pi = 0; pi < cnt && pi < ptrs.Length; pi++)
-                            {
-                                if (ptrs[pi] == null || ptrs[pi] == "")
-                                    continue;
-                                int iPtr = Convert.ToInt32(ptrs[pi]);
-                                if (iPtr > cnt)
-                                    continue;
-
-                                row[ptrStrings[pi + 1]] = _dxBindingList.Where(x => x.No == iPtr).First().Code;
-                            }
-                        }
-                    }
-
-                    _dxPointers.Rows.Add(row);
-                }
             }
+            for (int pi = 0; pi < cnt && pi < ptrs.Length; pi++)
+            {
+                if (ptrs[pi] == null || ptrs[pi] == "")
+                    continue;
+                int iPtr = Convert.ToInt32(ptrs[pi]);
+                if (iPtr > cnt)
+                    continue;
+
+                row[ptrStrings[pi + 1]] = _dxBindingList.Where(x => x.No == iPtr).First().Code;
+            }
+
+            _dxPointers.Rows.Add(row);
         }
         dxPointerGrid2.AutoResizeColumns();
         dxLoadingMode = false;
@@ -966,7 +971,7 @@ public partial class AccountForm : Form
             {
                 string newPointer = "";
 
-                for (int i = 3; i < cnt + 3; i++)
+                for (int i = 3; i < cnt + 4; i++)
                 {
                     dxPointerGrid2[i, e.RowIndex].Style.BackColor = Color.White;
 
@@ -979,21 +984,35 @@ public partial class AccountForm : Form
                 }
                 //update pointers
                 var cpt = dxPointerGrid2["CPT4", e.RowIndex].Value.ToString();
+                var cdm = dxPointerGrid2["CDM", e.RowIndex].Value.ToString();
 
-                var updatedChrg = _currentAccount.Charges.Where(c => c.IsCredited == false && c.ChrgDetails.Any(cd => cd.Cpt4 == cpt)).ToList();
-                updatedChrg.ForEach(c => c.ChrgDetails.ForEach((cd) =>
+                var ptr = _currentAccount.ChrgDiagnosisPointers.Where(d => d.CdmCode == cdm && d.CptCode == cpt).First();
+                if(ptr == null)
                 {
-                    if (cd.DiagnosisPointer == null)
+                    ptr = new ChrgDiagnosisPointer
                     {
-                        cd.DiagnosisPointer = new ChrgDiagnosisPointer
-                        {
-                            ChrgDetailUri = cd.uri
-                        };
-                    }
-                    cd.DiagnosisPointer.DiagnosisPointer = newPointer;
-                }));
+                        CdmCode = cdm,
+                        CptCode = cpt,
+                        AccountNo = _currentAccount.AccountNo
+                    };
+                }    
 
-                _accountService.UpdateDiagnosisPointers(updatedChrg);
+                ptr.DiagnosisPointer = newPointer;
+
+                //var updatedChrg = _currentAccount.Charges.Where(c => c.IsCredited == false && c.ChrgDetails.Any(cd => cd.Cpt4 == cpt)).ToList();
+                //updatedChrg.ForEach(c => c.ChrgDetails.ForEach((cd) =>
+                //{
+                //    if (cd.DiagnosisPointer == null)
+                //    {
+                //        cd.DiagnosisPointer = new ChrgDiagnosisPointer
+                //        {
+                //            ChrgDetailUri = cd.Id
+                //        };
+                //    }
+                //    cd.DiagnosisPointer.DiagnosisPointer = newPointer;
+                //}));
+
+                _accountService.UpdateDiagnosisPointer(ptr);
 
             }
         }
