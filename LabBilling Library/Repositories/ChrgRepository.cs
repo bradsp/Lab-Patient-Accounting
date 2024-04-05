@@ -86,6 +86,23 @@ public sealed class ChrgRepository : RepositoryBase<Chrg>
         return result;
     }
 
+    public List<Chrg> GetChargeByReferenceAndCdm(string refNumber, string cdm)
+    {
+        Log.Instance.Trace($"Entering refNumber {refNumber}, cdm {cdm}");
+
+        if(string.IsNullOrEmpty(refNumber))
+            throw new ArgumentNullException(nameof(refNumber));
+        if (string.IsNullOrEmpty(cdm))
+            throw new ArgumentNullException(nameof(cdm));
+
+        var sql = PetaPoco.Sql.Builder
+            .Where($"{GetRealColumn(nameof(Chrg.LISReqNo))} = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = refNumber })
+            .Where($"{GetRealColumn(nameof(Chrg.Cdm))} = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = cdm })
+            .Where($"{GetRealColumn(nameof(Chrg.IsCredited))} = @0", new SqlParameter() { SqlDbType = SqlDbType.Bit, Value = false });
+
+        return Context.Fetch<Chrg>(sql);
+    }
+
     /// <summary>
     /// Use to add a new charge to an account.
     /// </summary>

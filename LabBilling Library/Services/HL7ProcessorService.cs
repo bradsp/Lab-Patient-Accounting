@@ -14,25 +14,25 @@ namespace LabBilling.Core.Services;
 
 public sealed class HL7ProcessorService
 {
-    j4jayant.HL7.Parser.Message hl7Message;
-    private MessageInbound currentMessage;
-    private Account accountRecord = new();
-    private Phy phy = new();
-    private string MFNeventCode;
-    private readonly List<MessageInbound> messagesInbound = new();
-    private readonly AccountService accountService;
-    private readonly DictionaryService dictionaryService;
+    j4jayant.HL7.Parser.Message _hl7Message;
+    private MessageInbound _currentMessage;
+    private Account _accountRecord = new();
+    private Phy _phy = new();
+    private string _mFNeventCode;
+    private readonly List<MessageInbound> _messagesInbound = new();
+    private readonly AccountService _accountService;
+    private readonly DictionaryService _dictionaryService;
 
-    private List<ChargeTransaction> chargeTransactions = new();
-    private readonly IAppEnvironment appEnvironment;
+    private List<ChargeTransaction> _chargeTransactions = new();
+    private readonly IAppEnvironment _appEnvironment;
 
-    private const string accountPrefix = "L";
+    private const string _accountPrefix = "L";
 
     public HL7ProcessorService(IAppEnvironment appEnvironment)
     {
-        this.appEnvironment = appEnvironment;
-        accountService = new(appEnvironment);
-        dictionaryService = new(appEnvironment);
+        this._appEnvironment = appEnvironment;
+        _accountService = new(appEnvironment);
+        _dictionaryService = new(appEnvironment);
     }
 
     private class ChargeTransaction
@@ -84,7 +84,7 @@ public sealed class HL7ProcessorService
 
     public List<MessageInbound> GetMessages(DateTime fromDate, DateTime thruDate)
     {
-        using UnitOfWorkMain uow = new(appEnvironment);
+        using UnitOfWorkMain uow = new(_appEnvironment);
 
         return uow.MessagesInboundRepository.GetByDateRange(fromDate, thruDate);
     }
@@ -92,44 +92,43 @@ public sealed class HL7ProcessorService
     public void ProcessMessage(int systemMessageId)
     {
         Log.Instance.Trace($"Entering");
-        using UnitOfWorkMain unitOfWork = new(appEnvironment);
+        using UnitOfWorkMain unitOfWork = new(_appEnvironment);
 
-        currentMessage = unitOfWork.MessagesInboundRepository.GetById(systemMessageId);
-        if (currentMessage != null)
+        _currentMessage = unitOfWork.MessagesInboundRepository.GetById(systemMessageId);
+        if (_currentMessage != null)
             ProcessMessage();
-
     }
 
     private void ProcessMessage()
     {
-        Log.Instance.Debug($"Processing {currentMessage.MessageType} for account {currentMessage.SourceAccount}");
-        Console.WriteLine($"{DateTime.Now:yyyy-MM-ddTHH:mm:ss.fffffffK} - Processing {currentMessage.MessageType} for account {currentMessage.SourceAccount}");
-        UnitOfWorkMain uow = new(appEnvironment, true);
+        Log.Instance.Debug($"Processing {_currentMessage.MessageType} for account {_currentMessage.SourceAccount}");
+        Console.WriteLine($"{DateTime.Now:yyyy-MM-ddTHH:mm:ss.fffffffK} - Processing {_currentMessage.MessageType} for account {_currentMessage.SourceAccount}");
+        UnitOfWorkMain uow = new(_appEnvironment, true);
         try
         {
-            var (status, statusText, errors) = ParseHL7(currentMessage.HL7Message);
+            var (status, statusText, errors) = ParseHL7(_currentMessage.HL7Message);
 
-            currentMessage.ProcessFlag = StatusToString(status);
-            currentMessage.ProcessStatusMsg = statusText;
-            currentMessage.Errors = errors.ToString();
+            _currentMessage.ProcessFlag = StatusToString(status);
+            _currentMessage.ProcessStatusMsg = statusText;
+            _currentMessage.Errors = errors.ToString();
 
-            uow.MessagesInboundRepository.Update(currentMessage, new[]
+            uow.MessagesInboundRepository.Update(_currentMessage, new[]
             {
                 nameof(MessageInbound.ProcessFlag),
                 nameof(MessageInbound.ProcessStatusMsg),
                 nameof(MessageInbound.Errors)
             });
-            Console.WriteLine($"Processing {currentMessage.MessageType} for account {currentMessage.SourceAccount} complete.");
+            Console.WriteLine($"Processing {_currentMessage.MessageType} for account {_currentMessage.SourceAccount} complete.");
             uow.Commit();
         }
         catch (AccountLockException alex)
         {
-            currentMessage.ProcessFlag = StatusToString(Status.NotProcessed);
-            currentMessage.ProcessStatusMsg = "Account locked. Requeing.";
-            currentMessage.Errors = alex.Message + "\n" + alex.StackTrace;
-            Log.Instance.Error(currentMessage.ProcessStatusMsg, alex.Message);
+            _currentMessage.ProcessFlag = StatusToString(Status.NotProcessed);
+            _currentMessage.ProcessStatusMsg = "Account locked. Requeing.";
+            _currentMessage.Errors = alex.Message + "\n" + alex.StackTrace;
+            Log.Instance.Error(_currentMessage.ProcessStatusMsg, alex.Message);
             Console.WriteLine($"{DateTime.Now:yyyy-MM-ddTHH:mm:ss.fffffffK} - Account locked. Requeing");
-            uow.MessagesInboundRepository.Update(currentMessage, new[]
+            uow.MessagesInboundRepository.Update(_currentMessage, new[]
 {
                 nameof(MessageInbound.ProcessFlag),
                 nameof(MessageInbound.ProcessStatusMsg),
@@ -139,12 +138,12 @@ public sealed class HL7ProcessorService
         }
         catch (Exception ex)
         {
-            currentMessage.ProcessFlag = StatusToString(Status.Failed);
-            currentMessage.ProcessStatusMsg = "Exception encountered during process.";
-            currentMessage.Errors = ex.Message + "\n" + ex.StackTrace;
-            Log.Instance.Error(currentMessage.ProcessStatusMsg, ex.Message);
+            _currentMessage.ProcessFlag = StatusToString(Status.Failed);
+            _currentMessage.ProcessStatusMsg = "Exception encountered during process.";
+            _currentMessage.Errors = ex.Message + "\n" + ex.StackTrace;
+            Log.Instance.Error(_currentMessage.ProcessStatusMsg, ex.Message);
             Console.WriteLine($"{DateTime.Now:yyyy-MM-ddTHH:mm:ss.fffffffK} - Exception encountered during process.");
-            uow.MessagesInboundRepository.Update(currentMessage, new[]
+            uow.MessagesInboundRepository.Update(_currentMessage, new[]
             {
                 nameof(MessageInbound.ProcessFlag),
                 nameof(MessageInbound.ProcessStatusMsg),
@@ -157,25 +156,25 @@ public sealed class HL7ProcessorService
     public void ProcessMessages()
     {
         Log.Instance.Trace($"Entering - Querying messages to process");
-        UnitOfWorkMain uow = new(appEnvironment);
+        UnitOfWorkMain uow = new(_appEnvironment);
         var msgsToProcess = uow.MessagesInboundRepository.GetUnprocessedMessages();
 
         foreach (var msg in msgsToProcess)
         {
-            currentMessage = msg;
+            _currentMessage = msg;
 
-            if (!dictionaryService.GetMappingsSendingSystemList().Contains(currentMessage.SourceInfce))
+            if (!_dictionaryService.GetMappingsSendingSystemList().Contains(_currentMessage.SourceInfce))
             {
-                currentMessage.ProcessFlag = StatusToString(Status.Failed);
-                currentMessage.ProcessStatusMsg = $"Interface {currentMessage.SourceInfce} not defined";
+                _currentMessage.ProcessFlag = StatusToString(Status.Failed);
+                _currentMessage.ProcessStatusMsg = $"Interface {_currentMessage.SourceInfce} not defined";
 
-                uow.MessagesInboundRepository.Update(currentMessage, new[]
+                uow.MessagesInboundRepository.Update(_currentMessage, new[]
                 {
                     nameof(MessageInbound.ProcessFlag),
                     nameof(MessageInbound.ProcessStatusMsg),
                     nameof(MessageInbound.Errors)
                 });
-                Console.WriteLine($"Processing {currentMessage.MessageType} for account {currentMessage.SourceAccount} complete.");
+                Console.WriteLine($"Processing {_currentMessage.MessageType} for account {_currentMessage.SourceAccount} complete.");
                 continue;
             }
 
@@ -186,18 +185,18 @@ public sealed class HL7ProcessorService
     private (Status status, string statusText, StringBuilder errors) ParseHL7(string message)
     {
         Log.Instance.Debug($"Parsing message: {message}");
-        hl7Message = new j4jayant.HL7.Parser.Message(message);
+        _hl7Message = new j4jayant.HL7.Parser.Message(message);
         StringBuilder errors = new();
         Status processStatus;
 
         bool isParsed = false;
-        accountRecord = new Account();
+        _accountRecord = new Account();
 
         //check to see if interface is valid        
 
         try
         {
-            isParsed = hl7Message.ParseMessage();
+            isParsed = _hl7Message.ParseMessage();
         }
         catch (Exception)
         {
@@ -208,33 +207,33 @@ public sealed class HL7ProcessorService
         {
             string statusText;
             //process ADT message
-            if (hl7Message.MessageStructure == "ADT_A04" || hl7Message.MessageStructure == "ADT_A08")
+            if (_hl7Message.MessageStructure == "ADT_A04" || _hl7Message.MessageStructure == "ADT_A08")
             {
-                Log.Instance.Trace($"Message type: {hl7Message.MessageStructure} - Control ID: {hl7Message.MessageControlID}");
+                Log.Instance.Trace($"Message type: {_hl7Message.MessageStructure} - Control ID: {_hl7Message.MessageControlID}");
                 var result = ProcessADTMessage();
                 errors = result.errors;
                 statusText = result.statusText;
                 processStatus = result.status;
             }
-            else if (hl7Message.MessageStructure == "ADT_A03")
+            else if (_hl7Message.MessageStructure == "ADT_A03")
             {
-                Log.Instance.Trace($"Message type: {hl7Message.MessageStructure} - Control ID: {hl7Message.MessageControlID}");
+                Log.Instance.Trace($"Message type: {_hl7Message.MessageStructure} - Control ID: {_hl7Message.MessageControlID}");
                 statusText = "Skipping A03";
                 processStatus = Status.DoNotProcess;
             }
             //process Charge message
-            else if (hl7Message.MessageStructure == "DFT_P03")
+            else if (_hl7Message.MessageStructure == "DFT_P03")
             {
-                Log.Instance.Trace($"Message type: {hl7Message.MessageStructure} - Control ID: {hl7Message.MessageControlID}");
+                Log.Instance.Trace($"Message type: {_hl7Message.MessageStructure} - Control ID: {_hl7Message.MessageControlID}");
                 var result = ProcessDFTMessage();
                 errors = result.errors;
                 statusText = result.statusText;
                 processStatus = result.status;
             }
             //process MFN message
-            else if (hl7Message.MessageStructure == "MFN_M02")
+            else if (_hl7Message.MessageStructure == "MFN_M02")
             {
-                Log.Instance.Trace($"Message type: {hl7Message.MessageStructure} - Control ID: {hl7Message.MessageControlID}");
+                Log.Instance.Trace($"Message type: {_hl7Message.MessageStructure} - Control ID: {_hl7Message.MessageControlID}");
                 var result = ProcessMFNMessage();
                 errors = result.errors;
                 statusText = result.statusText;
@@ -243,7 +242,7 @@ public sealed class HL7ProcessorService
             }
             else
             {
-                Log.Instance.Trace($"Message type: {hl7Message.MessageStructure} - Control ID: {hl7Message.MessageControlID}");
+                Log.Instance.Trace($"Message type: {_hl7Message.MessageStructure} - Control ID: {_hl7Message.MessageControlID}");
                 statusText = "Invalid message type. Not processed.";
                 processStatus = Status.DoNotProcess;
             }
@@ -267,7 +266,7 @@ public sealed class HL7ProcessorService
 
         string[] invalidFacilities = new string[] { "001", "005", "007", "008", "009", "010", "080", "800", "850", "900" };
 
-        string facility = hl7Message.GetValue("MSH.4");
+        string facility = _hl7Message.GetValue("MSH.4");
 
         string statusText;
         if (invalidFacilities.Contains(facility))
@@ -280,18 +279,18 @@ public sealed class HL7ProcessorService
         string existingFin = string.Empty;
         string existingFinClass = string.Empty;
         string existingClient = string.Empty;
-        accountRecord = accountService.GetAccount(accountPrefix + currentMessage.SourceAccount);
-        if (accountRecord == null)
+        _accountRecord = _accountService.GetAccount(_accountPrefix + _currentMessage.SourceAccount);
+        if (_accountRecord == null)
         {
-            accountRecord = new();
+            _accountRecord = new();
             newAccount = true;
         }
         else
         {
             newAccount = false;
-            existingClient = accountRecord.ClientMnem;
-            existingFin = accountRecord.FinCode;
-            existingFinClass = accountRecord.Fin.FinClass;
+            existingClient = _accountRecord.ClientMnem;
+            existingFin = _accountRecord.FinCode;
+            existingFinClass = _accountRecord.Fin.FinClass;
         }
 
         ParsePID();
@@ -301,18 +300,18 @@ public sealed class HL7ProcessorService
         ParseIN1IN2();
 
         //perform error checking
-        accountRecord.Client = dictionaryService.GetClient(accountRecord.ClientMnem);
-        if (accountRecord.Client == null)
+        _accountRecord.Client = _dictionaryService.GetClient(_accountRecord.ClientMnem);
+        if (_accountRecord.Client == null)
         {
             //error - invalid client
-            Log.Instance.Error($"[ERROR] Invalid client {accountRecord.ClientMnem}");
-            errors.AppendLine($"[ERROR] Invalid client {accountRecord.ClientMnem}");
+            Log.Instance.Error($"[ERROR] Invalid client {_accountRecord.ClientMnem}");
+            errors.AppendLine($"[ERROR] Invalid client {_accountRecord.ClientMnem}");
             canFile = false;
         }
 
-        foreach (var ins in accountRecord.Insurances)
+        foreach (var ins in _accountRecord.Insurances)
         {
-            var insc = dictionaryService.GetInsCompany(ins.InsCode);
+            var insc = _dictionaryService.GetInsCompany(ins.InsCode);
             if (insc == null)
             {
                 Log.Instance.Warn($"[WARNING] Insurance code not valid {ins.InsCode}");
@@ -324,54 +323,54 @@ public sealed class HL7ProcessorService
                 ins.FinCode = insc.FinancialCode;
             }
         }
-        if (accountRecord.Client != null)
+        if (_accountRecord.Client != null)
         {
-            switch (accountRecord.Client.BillMethod)
+            switch (_accountRecord.Client.BillMethod)
             {
                 case "INVOICE":
-                    accountRecord.FinCode = "Y";
+                    _accountRecord.FinCode = _appEnvironment.ApplicationParameters.BillToClientInvoiceDefaultFinCode;
                     break;
                 case "PATIENT":
-                    if (accountRecord.Insurances.Count > 0)
+                    if (_accountRecord.Insurances.Count > 0)
                     {
-                        if (accountRecord.FinCode != accountRecord.InsurancePrimary.FinCode)
-                            accountRecord.FinCode = accountRecord.InsurancePrimary.FinCode;
+                        if (_accountRecord.FinCode != _accountRecord.InsurancePrimary.FinCode)
+                            _accountRecord.FinCode = _accountRecord.InsurancePrimary.FinCode;
                     }
-                    if (accountRecord.FinCode == "Y")
-                        accountRecord.FinCode = "K";
+                    if (_accountRecord.FinCode == _appEnvironment.ApplicationParameters.BillToClientInvoiceDefaultFinCode)
+                        _accountRecord.FinCode = _appEnvironment.ApplicationParameters.InvalidFinancialCode;
                     break;
                 case "PER ACCOUNT":
-                    if (accountRecord.FinCode != "Y")
+                    if (_accountRecord.FinCode != _appEnvironment.ApplicationParameters.BillToClientInvoiceDefaultFinCode)
                     {
-                        if (accountRecord.Insurances.Count > 0)
+                        if (_accountRecord.Insurances.Count > 0)
                         {
-                            if (accountRecord.FinCode != accountRecord.InsurancePrimary.FinCode)
-                                accountRecord.FinCode = accountRecord.InsurancePrimary.FinCode;
+                            if (_accountRecord.FinCode != _accountRecord.InsurancePrimary.FinCode)
+                                _accountRecord.FinCode = _accountRecord.InsurancePrimary.FinCode;
                         }
                     }
                     break;
                 default:
-                    if (accountRecord.FinCode != "Y")
+                    if (_accountRecord.FinCode != _appEnvironment.ApplicationParameters.BillToClientInvoiceDefaultFinCode)
                     {
-                        if (accountRecord.Insurances.Count > 0)
+                        if (_accountRecord.Insurances.Count > 0)
                         {
-                            if (accountRecord.FinCode != accountRecord.InsurancePrimary.FinCode)
-                                accountRecord.FinCode = accountRecord.InsurancePrimary.FinCode;
+                            if (_accountRecord.FinCode != _accountRecord.InsurancePrimary.FinCode)
+                                _accountRecord.FinCode = _accountRecord.InsurancePrimary.FinCode;
                         }
                     }
                     break;
             }
         }
 
-        if (string.IsNullOrEmpty(accountRecord.FinCode))
+        if (string.IsNullOrEmpty(_accountRecord.FinCode))
         {
             Log.Instance.Error($"[ERROR] No fin code");
-            accountRecord.FinCode = "K";
+            _accountRecord.FinCode = _appEnvironment.ApplicationParameters.InvalidFinancialCode;
         }
 
-        foreach (var dx in accountRecord.Pat.Diagnoses)
+        foreach (var dx in _accountRecord.Pat.Diagnoses)
         {
-            var dxRecord = dictionaryService.GetDiagnosis(dx.Code, (DateTime)accountRecord.TransactionDate);
+            var dxRecord = _dictionaryService.GetDiagnosis(dx.Code, (DateTime)_accountRecord.TransactionDate);
 
             if (dxRecord == null)
             {
@@ -391,13 +390,14 @@ public sealed class HL7ProcessorService
                 bool finCodeChange = false;
                 bool clientChange = false;
 
-                accountRecord.Fin = dictionaryService.GetFinCode(accountRecord.FinCode);
+                _accountRecord.Fin = _dictionaryService.GetFinCode(_accountRecord.FinCode);
 
-                if (existingFinClass != accountRecord.Fin.FinClass && !string.IsNullOrEmpty(existingFinClass))
+                if (existingFinClass != _accountRecord.Fin.FinClass && !string.IsNullOrEmpty(existingFinClass))
                 {
                     finCodeChange = true;
                 }
-                if (accountRecord.Fin.FinClass == "C" && existingClient != accountRecord.ClientMnem && !string.IsNullOrEmpty(existingClient))
+                if (_accountRecord.Fin.FinClass == _appEnvironment.ApplicationParameters.ClientFinancialTypeCode 
+                    && existingClient != _accountRecord.ClientMnem && !string.IsNullOrEmpty(existingClient))
                 {
                     clientChange = true;
                 }
@@ -409,34 +409,34 @@ public sealed class HL7ProcessorService
                     //copy new account info to existing account info
 
                     // add account
-                    var addedRecord = accountService.UpdateAccountDemographics(accountRecord);
+                    var addedRecord = _accountService.UpdateAccountDemographics(_accountRecord);
 
-                    foreach (var ins in accountRecord.Insurances)
+                    foreach (var ins in _accountRecord.Insurances)
                     {
-                        accountService.SaveInsurance(ins);
+                        _accountService.SaveInsurance(ins);
                     }
 
-                    statusText = $"{accountRecord.AccountNo} updated.";
+                    statusText = $"{_accountRecord.AccountNo} updated.";
 
                     if (finCodeChange)
                     {
-                        string newFin = accountRecord.FinCode;
-                        accountRecord.FinCode = existingFin;
-                        accountService.ChangeFinancialClass(accountRecord, newFin);
+                        string newFin = _accountRecord.FinCode;
+                        _accountRecord.FinCode = existingFin;
+                        _accountService.ChangeFinancialClass(_accountRecord, newFin);
                     }
 
                     if (clientChange)
                     {
-                        string newClient = accountRecord.ClientMnem;
-                        accountRecord.ClientMnem = existingClient;
-                        accountService.ChangeClient(accountRecord, newClient);
+                        string newClient = _accountRecord.ClientMnem;
+                        _accountRecord.ClientMnem = existingClient;
+                        _accountService.ChangeClient(_accountRecord, newClient);
                     }
-                    accountService.ClearAccountLock(accountRecord);
+                    _accountService.ClearAccountLock(_accountRecord);
                     return (Status.Processed, statusText, errors);
                 }
                 else
                 {
-                    accountService.ClearAccountLock(accountRecord);
+                    _accountService.ClearAccountLock(_accountRecord);
                     return (Status.Failed, "Required information missing. See errors.", errors);
                 }
             }
@@ -445,14 +445,14 @@ public sealed class HL7ProcessorService
                 if (canFile)
                 {
                     // add account
-                    accountService.Add(accountRecord);
-                    statusText = $"{accountRecord.AccountNo} added.";
-                    accountService.ClearAccountLock(accountRecord);
+                    _accountService.Add(_accountRecord);
+                    statusText = $"{_accountRecord.AccountNo} added.";
+                    _accountService.ClearAccountLock(_accountRecord);
                     return (Status.Processed, statusText, errors);
                 }
                 else
                 {
-                    accountService.ClearAccountLock(accountRecord);
+                    _accountService.ClearAccountLock(_accountRecord);
                     return (Status.Failed, "Required information missing. See errors.", errors);
                 }
             }
@@ -475,12 +475,12 @@ public sealed class HL7ProcessorService
                     errors.Append(ex.Message);
                 }
             }
-            accountService.ClearAccountLock(accountRecord);
+            _accountService.ClearAccountLock(_accountRecord);
             return (Status.Failed, "Database error", errors);
         }
         finally
         {
-            accountService.ClearAccountLock(accountRecord);
+            _accountService.ClearAccountLock(_accountRecord);
         }
     }
 
@@ -489,16 +489,16 @@ public sealed class HL7ProcessorService
         Log.Instance.Trace("Entering");
         bool canFile = true;
         StringBuilder errors = new();
-        chargeTransactions = new List<ChargeTransaction>();
-        UnitOfWorkMain uow = new(appEnvironment, true);
+        _chargeTransactions = new List<ChargeTransaction>();
+        UnitOfWorkMain uow = new(_appEnvironment, true);
 
         //make sure account exists - if not, create it from the PID segment
-        accountRecord = accountService.GetAccount(accountPrefix + currentMessage.SourceAccount);
-        bool accountExists = accountRecord != null;
+        _accountRecord = _accountService.GetAccount(_accountPrefix + _currentMessage.SourceAccount);
+        bool accountExists = _accountRecord != null;
 
         if (!accountExists)
         {
-            accountRecord = new();
+            _accountRecord = new();
         }
 
         ParsePID();
@@ -507,104 +507,122 @@ public sealed class HL7ProcessorService
 
         if (!accountExists)
         {
-            accountRecord.Client = uow.ClientRepository.GetClient(accountRecord.ClientMnem);
-            if (accountRecord.Client == null)
+            _accountRecord.Client = uow.ClientRepository.GetClient(_accountRecord.ClientMnem);
+            if (_accountRecord.Client == null)
             {
                 //error - invalid client
-                Log.Instance.Error($"[ERROR] Invalid client {accountRecord.ClientMnem}");
-                errors.AppendLine($"[ERROR] Invalid client {accountRecord.ClientMnem}");
+                Log.Instance.Error($"[ERROR] Invalid client {_accountRecord.ClientMnem}");
+                errors.AppendLine($"[ERROR] Invalid client {_accountRecord.ClientMnem}");
                 canFile = false;
             }
 
-            if (accountRecord.Client != null)
+            if (_accountRecord.Client != null)
             {
-                switch (accountRecord.Client.BillMethod)
+                switch (_accountRecord.Client.BillMethod)
                 {
                     case "INVOICE":
-                        accountRecord.FinCode = "Y";
+                        _accountRecord.FinCode = _appEnvironment.ApplicationParameters.BillToClientInvoiceDefaultFinCode;
                         break;
                     case "PATIENT":
                         break;
                     case "PER ACCOUNT":
-                        accountRecord.FinCode = accountRecord.FinCode != "Y" ? "K" : accountRecord.FinCode;
+                        _accountRecord.FinCode = _accountRecord.FinCode != _appEnvironment.ApplicationParameters.BillToClientInvoiceDefaultFinCode 
+                            ? _appEnvironment.ApplicationParameters.InvalidFinancialCode : _accountRecord.FinCode;
                         break;
                     default:
-                        accountRecord.FinCode = "K";
+                        _accountRecord.FinCode = _appEnvironment.ApplicationParameters.InvalidFinancialCode;
                         break;
                 }
             }
-            if (string.IsNullOrEmpty(accountRecord.FinCode))
+            if (string.IsNullOrEmpty(_accountRecord.FinCode))
             {
                 Log.Instance.Error($"[ERROR] No fin code");
-                accountRecord.FinCode = "K";
+                _accountRecord.FinCode = _appEnvironment.ApplicationParameters.InvalidFinancialCode;
             }
 
             if (canFile)
             {
-                accountRecord = accountService.Add(accountRecord);
+                _accountRecord = _accountService.Add(_accountRecord);
             }
         }
 
         if (canFile)
         {
-            foreach (var transaction in chargeTransactions)
+            foreach (var transaction in _chargeTransactions)
             {
                 //if the account has no previous charges, make sure the account transaction date matches the charge service date
-                if (accountRecord.Charges.Count == 0)
+                if (_accountRecord.Charges.Count == 0)
                 {
-                    if (accountRecord.TransactionDate != transaction.ServiceDate)
+                    if (_accountRecord.TransactionDate != transaction.ServiceDate)
                     {
-                        Log.Instance.Debug($"Account {accountRecord.AccountNo} transaction date {accountRecord.TransactionDate} does not match charge service date {transaction.ServiceDate}. Account updated.");
-                        accountRecord.TransactionDate = transaction.ServiceDate;
+                        Log.Instance.Debug($"Account {_accountRecord.AccountNo} transaction date {_accountRecord.TransactionDate} does not match charge service date {transaction.ServiceDate}. Account updated.");
+                        _accountRecord.TransactionDate = transaction.ServiceDate;
 
-                        uow.AccountRepository.Update(accountRecord, new string[] { nameof(Account.TransactionDate) });
+                        uow.AccountRepository.Update(_accountRecord, new string[] { nameof(Account.TransactionDate) });
                     }
                 }
 
-                transaction.Account = accountRecord.AccountNo;
-                transaction.Comment = $"MSG ID: {currentMessage.SystemMsgId}";
+                transaction.Account = _accountRecord.AccountNo;
+                transaction.Comment = $"MSG ID: {_currentMessage.SystemMsgId}";
                 Log.Instance.Debug($"Adding charge {transaction.Account},{transaction.Cdm},{transaction.Qty},{transaction.ServiceDate},{transaction.Comment},{transaction.RefNumber}");
                 try
                 {
-                    accountService.AddCharge(accountRecord, transaction.Cdm, transaction.Qty, transaction.ServiceDate, transaction.Comment, transaction.RefNumber);
+                    if(transaction.Qty < 0)
+                    {
+                        // look up existing charge to be credited
+                        var existingChrg = uow.ChrgRepository.GetChargeByReferenceAndCdm(transaction.RefNumber, transaction.Cdm);
+
+                        if(existingChrg.Count > 0)
+                        {
+                            var retValue = _accountService.CreditCharge(existingChrg[0].ChrgId, transaction.Comment);
+                        }
+                        else
+                        {
+                            _accountService.AddCharge(_accountRecord, transaction.Cdm, transaction.Qty, transaction.ServiceDate, transaction.Comment, transaction.RefNumber);
+                        }
+                    }
+                    else
+                    {
+                        _accountService.AddCharge(_accountRecord, transaction.Cdm, transaction.Qty, transaction.ServiceDate, transaction.Comment, transaction.RefNumber);
+                    }
                 }
                 catch (CdmNotFoundException cdmex)
                 {
-                    errors.AppendLine($"[WARN] {cdmex.Message} for {transaction.Cdm} on {accountRecord.AccountNo}. Charge not posted.");
-                    accountService.ClearAccountLock(accountRecord);
+                    errors.AppendLine($"[WARN] {cdmex.Message} for {transaction.Cdm} on {_accountRecord.AccountNo}. Charge not posted.");
+                    _accountService.ClearAccountLock(_accountRecord);
                     uow.Commit();
-                    return (Status.Failed, $"{accountRecord.AccountNo} - charges not posted.", errors);
+                    return (Status.Failed, $"{_accountRecord.AccountNo} - charges not posted.", errors);
                 }
                 catch (InvalidClientException cliex)
                 {
-                    errors.AppendLine($"[ERROR] {cliex.Message} for {accountRecord.ClientMnem} on {accountRecord.AccountNo}. Charge not posted.");
-                    accountService.ClearAccountLock(accountRecord);
+                    errors.AppendLine($"[ERROR] {cliex.Message} for {_accountRecord.ClientMnem} on {_accountRecord.AccountNo}. Charge not posted.");
+                    _accountService.ClearAccountLock(_accountRecord);
                     Log.Instance.Error(cliex);
                     uow.Commit();
-                    return (Status.Failed, $"{accountRecord.AccountNo} - charges not posted.", errors);
+                    return (Status.Failed, $"{_accountRecord.AccountNo} - charges not posted.", errors);
                 }
                 catch (Exception ex)
                 {
-                    errors.AppendLine($"[ERROR] {ex.Message} for {accountRecord.ClientMnem} on {accountRecord.AccountNo}. Charge not posted.");
-                    Log.Instance.Error(ex, $"[ERROR] {ex.Message} for {accountRecord.ClientMnem} on {accountRecord.AccountNo}. Charge not posted.");
-                    accountService.ClearAccountLock(accountRecord);
+                    errors.AppendLine($"[ERROR] {ex.Message} for {_accountRecord.ClientMnem} on {_accountRecord.AccountNo}. Charge not posted.");
+                    Log.Instance.Error(ex, $"[ERROR] {ex.Message} for {_accountRecord.ClientMnem} on {_accountRecord.AccountNo}. Charge not posted.");
+                    _accountService.ClearAccountLock(_accountRecord);
                     uow.Commit();
-                    return (Status.Failed, $"{accountRecord.AccountNo} - charges not posted.", errors);
+                    return (Status.Failed, $"{_accountRecord.AccountNo} - charges not posted.", errors);
                 }
                 finally
                 {
-                    accountService.ClearAccountLock(accountRecord);
+                    _accountService.ClearAccountLock(_accountRecord);
                 }
             }
             if (accountExists)
-                accountService.ClearAccountLock(accountRecord);
+                _accountService.ClearAccountLock(_accountRecord);
             uow.Commit();
-            return (Status.Processed, $"{accountRecord.AccountNo} - charges posted.", errors);
+            return (Status.Processed, $"{_accountRecord.AccountNo} - charges posted.", errors);
         }
         else
         {
             if (accountExists)
-                accountService.ClearAccountLock(accountRecord);
+                _accountService.ClearAccountLock(_accountRecord);
             uow.Commit();
             return (Status.Failed, "Unable to process charges. See errors.", errors);
         }
@@ -617,7 +635,7 @@ public sealed class HL7ProcessorService
         //bool canFile = true;
         StringBuilder errors = new();
         string statusText = string.Empty;
-        UnitOfWorkMain uow = new(appEnvironment);
+        UnitOfWorkMain uow = new(_appEnvironment);
         string eventCode = ParseMFE();
         ParseSTF();
         ParsePRA();
@@ -629,31 +647,31 @@ public sealed class HL7ProcessorService
         //MAC = reactivate
         //MSU = suspend
 
-        Phy existingPhy = dictionaryService.GetProvider(phy.NpiId);
+        Phy existingPhy = _dictionaryService.GetProvider(_phy.NpiId);
 
         if (existingPhy == null)
         {
             Log.Instance.Debug("Provider added");
-            uow.PhyRepository.Add(phy);
+            uow.PhyRepository.Add(_phy);
             uow.Commit();
             return (Status.Processed, $"Provider added.", errors);
         }
         else
         {
-            phy.uri = existingPhy.uri;
-            phy.rowguid = existingPhy.rowguid;
+            _phy.uri = existingPhy.uri;
+            _phy.rowguid = existingPhy.rowguid;
 
             if (eventCode == "MDL" || eventCode == "MDC")
             {
-                phy.IsDeleted = true;
+                _phy.IsDeleted = true;
                 Log.Instance.Debug("Provider deleted");
             }
             else
             {
-                phy.IsDeleted = false;
+                _phy.IsDeleted = false;
                 Log.Instance.Debug("Provider updated");
             }
-            uow.PhyRepository.Update(phy);
+            uow.PhyRepository.Update(_phy);
             uow.Commit();
             return (Status.Processed, $"Provider updated.", errors);
         }
@@ -676,138 +694,138 @@ public sealed class HL7ProcessorService
     private void ParsePID()
     {
         //Segment segPID = hl7Message.DefaultSegment("PID");
-        accountRecord.EMPINumber = hl7Message.GetValue("PID.2.1");
+        _accountRecord.EMPINumber = _hl7Message.GetValue("PID.2.1");
 
-        if (hl7Message.HasRepetitions("PID.3"))
+        if (_hl7Message.HasRepetitions("PID.3"))
         {
-            List<Field> repList = hl7Message.Segments("PID")[0].Fields(5).Repetitions();
-            accountRecord.MRN = repList[0].Components(1).Value;
+            List<Field> repList = _hl7Message.Segments("PID")[0].Fields(5).Repetitions();
+            _accountRecord.MRN = repList[0].Components(1).Value;
         }
         else
         {
-            accountRecord.MRN = hl7Message.GetValue("PID.3.1");
+            _accountRecord.MRN = _hl7Message.GetValue("PID.3.1");
         }
 
-        if (hl7Message.HasRepetitions("PID.5"))
+        if (_hl7Message.HasRepetitions("PID.5"))
         {
-            List<Field> repList = hl7Message.Segments("PID")[0].Fields(5).Repetitions();
+            List<Field> repList = _hl7Message.Segments("PID")[0].Fields(5).Repetitions();
 
-            accountRecord.PatLastName = repList[0].Components(1).Value;
-            accountRecord.PatFirstName = repList[0].Components(2).Value;
-            accountRecord.PatMiddleName = repList[0].Components(3).Value;
-            accountRecord.PatNameSuffix = repList[0].Components(4).Value;
+            _accountRecord.PatLastName = repList[0].Components(1).Value;
+            _accountRecord.PatFirstName = repList[0].Components(2).Value;
+            _accountRecord.PatMiddleName = repList[0].Components(3).Value;
+            _accountRecord.PatNameSuffix = repList[0].Components(4).Value;
         }
         else
         {
-            accountRecord.PatLastName = hl7Message.GetValue("PID.5.1");
-            accountRecord.PatFirstName = hl7Message.GetValue("PID.5.2");
-            accountRecord.PatMiddleName = hl7Message.GetValue("PID.5.3");
-            accountRecord.PatNameSuffix = hl7Message.GetValue("PID.5.4");
+            _accountRecord.PatLastName = _hl7Message.GetValue("PID.5.1");
+            _accountRecord.PatFirstName = _hl7Message.GetValue("PID.5.2");
+            _accountRecord.PatMiddleName = _hl7Message.GetValue("PID.5.3");
+            _accountRecord.PatNameSuffix = _hl7Message.GetValue("PID.5.4");
         }
 
-        accountRecord.BirthDate = new DateTime().ParseHL7Date(hl7Message.GetValue("PID.7").Left(8));
-        accountRecord.Sex = hl7Message.GetValue("PID.8");
-        if (!Dictionaries.sexSource.ContainsKey(accountRecord.Sex))
+        _accountRecord.BirthDate = new DateTime().ParseHL7Date(_hl7Message.GetValue("PID.7").Left(8));
+        _accountRecord.Sex = _hl7Message.GetValue("PID.8");
+        if (!Dictionaries.sexSource.ContainsKey(_accountRecord.Sex))
         {
-            accountRecord.Sex = "U";
+            _accountRecord.Sex = "U";
         }
-        if (hl7Message.HasRepetitions("PID.10"))
+        if (_hl7Message.HasRepetitions("PID.10"))
         {
-            List<Field> repList = hl7Message.Segments("PID")[0].Fields(10).Repetitions();
-            accountRecord.Pat.Race = repList[0].Components(1).Value;
+            List<Field> repList = _hl7Message.Segments("PID")[0].Fields(10).Repetitions();
+            _accountRecord.Pat.Race = repList[0].Components(1).Value;
         }
         else
         {
-            accountRecord.Pat.Race = hl7Message.GetValue("PID.10.1");
+            _accountRecord.Pat.Race = _hl7Message.GetValue("PID.10.1");
         }
-        if (hl7Message.HasRepetitions("PID.11"))
+        if (_hl7Message.HasRepetitions("PID.11"))
         {
-            List<Field> repList = hl7Message.Segments("PID")[0].Fields(11).Repetitions();
+            List<Field> repList = _hl7Message.Segments("PID")[0].Fields(11).Repetitions();
 
-            accountRecord.Pat.Address1 = repList[0].Components(1).Value;
-            accountRecord.Pat.Address2 = repList[0].Components(2).Value;
-            accountRecord.Pat.City = repList[0].Components(3).Value;
-            accountRecord.Pat.State = repList[0].Components(4).Value;
-            accountRecord.Pat.ZipCode = ValidateZipCode(repList[0].Components(5).Value);
+            _accountRecord.Pat.Address1 = repList[0].Components(1).Value;
+            _accountRecord.Pat.Address2 = repList[0].Components(2).Value;
+            _accountRecord.Pat.City = repList[0].Components(3).Value;
+            _accountRecord.Pat.State = repList[0].Components(4).Value;
+            _accountRecord.Pat.ZipCode = ValidateZipCode(repList[0].Components(5).Value);
 
-            accountRecord.Pat.EmailAddress = repList[1].Components(1).Value;
+            _accountRecord.Pat.EmailAddress = repList[1].Components(1).Value;
         }
         else
         {
-            accountRecord.Pat.Address1 = hl7Message.GetValue("PID.11.1");
-            accountRecord.Pat.Address2 = hl7Message.GetValue("PID.11.2");
-            accountRecord.Pat.City = hl7Message.GetValue("PID.11.3");
-            accountRecord.Pat.State = hl7Message.GetValue("PID.11.4");
-            accountRecord.Pat.ZipCode = ValidateZipCode(hl7Message.GetValue("PID.11.5"));
+            _accountRecord.Pat.Address1 = _hl7Message.GetValue("PID.11.1");
+            _accountRecord.Pat.Address2 = _hl7Message.GetValue("PID.11.2");
+            _accountRecord.Pat.City = _hl7Message.GetValue("PID.11.3");
+            _accountRecord.Pat.State = _hl7Message.GetValue("PID.11.4");
+            _accountRecord.Pat.ZipCode = ValidateZipCode(_hl7Message.GetValue("PID.11.5"));
         }
 
-        if (hl7Message.HasRepetitions("PID.13"))
+        if (_hl7Message.HasRepetitions("PID.13"))
         {
-            List<Field> repList = hl7Message.Segments("PID")[0].Fields(13).Repetitions();
-            accountRecord.Pat.PrimaryPhone = repList[0].Components(1).Value;
+            List<Field> repList = _hl7Message.Segments("PID")[0].Fields(13).Repetitions();
+            _accountRecord.Pat.PrimaryPhone = repList[0].Components(1).Value;
         }
-        accountRecord.Pat.MaritalStatus = hl7Message.GetValue("PID.16");
-        if (!Dictionaries.maritalSource.ContainsKey(accountRecord.Pat.MaritalStatus))
+        _accountRecord.Pat.MaritalStatus = _hl7Message.GetValue("PID.16");
+        if (!Dictionaries.maritalSource.ContainsKey(_accountRecord.Pat.MaritalStatus))
         {
-            accountRecord.Pat.MaritalStatus = "U";
+            _accountRecord.Pat.MaritalStatus = "U";
         }
-        accountRecord.AccountNo = accountPrefix + hl7Message.GetValue("PID.18.1");
-        accountRecord.MeditechAccount = accountRecord.AccountNo;
-        accountRecord.Pat.AccountNo = accountRecord.AccountNo;
-        accountRecord.SocSecNo = hl7Message.GetValue("PID.19").Replace("-", string.Empty);
+        _accountRecord.AccountNo = _accountPrefix + _hl7Message.GetValue("PID.18.1");
+        _accountRecord.MeditechAccount = _accountRecord.AccountNo;
+        _accountRecord.Pat.AccountNo = _accountRecord.AccountNo;
+        _accountRecord.SocSecNo = _hl7Message.GetValue("PID.19").Replace("-", string.Empty);
 
     }
 
     private void ParsePV1()
     {
-        UnitOfWorkMain unitOfWork = new(appEnvironment);
+        UnitOfWorkMain unitOfWork = new(_appEnvironment);
 
-        accountRecord.ClientMnem = string.IsNullOrEmpty(hl7Message.GetValue("PV1.3.1"))
-            ? hl7Message.GetValue("PV1.3.1")
-            : unitOfWork.MappingRepository.GetMappedValue("CLIENT", currentMessage.SourceInfce, hl7Message.GetValue("PV1.3.1"));
+        _accountRecord.ClientMnem = string.IsNullOrEmpty(_hl7Message.GetValue("PV1.3.1"))
+            ? _hl7Message.GetValue("PV1.3.1")
+            : unitOfWork.MappingRepository.GetMappedValue("CLIENT", _currentMessage.SourceInfce, _hl7Message.GetValue("PV1.3.1"));
 
-        if (string.IsNullOrEmpty(accountRecord.ClientMnem))
+        if (string.IsNullOrEmpty(_accountRecord.ClientMnem))
         {
-            accountRecord.ClientMnem = string.IsNullOrEmpty(hl7Message.GetValue("PV1.6.1"))
-                ? hl7Message.GetValue("PV1.6.1")
-                : unitOfWork.MappingRepository.GetMappedValue("CLIENT", currentMessage.SourceInfce, hl7Message.GetValue("PV1.6.1"));
+            _accountRecord.ClientMnem = string.IsNullOrEmpty(_hl7Message.GetValue("PV1.6.1"))
+                ? _hl7Message.GetValue("PV1.6.1")
+                : unitOfWork.MappingRepository.GetMappedValue("CLIENT", _currentMessage.SourceInfce, _hl7Message.GetValue("PV1.6.1"));
         }
 
-        if (string.IsNullOrEmpty(accountRecord.ClientMnem))
+        if (string.IsNullOrEmpty(_accountRecord.ClientMnem))
         {
-            accountRecord.ClientMnem = string.IsNullOrEmpty(hl7Message.GetValue("PV1.3.4"))
-                ? hl7Message.GetValue("PV1.3.4")
-                : unitOfWork.MappingRepository.GetMappedValue("CLIENT", currentMessage.SourceInfce, hl7Message.GetValue("PV1.3.4"));
+            _accountRecord.ClientMnem = string.IsNullOrEmpty(_hl7Message.GetValue("PV1.3.4"))
+                ? _hl7Message.GetValue("PV1.3.4")
+                : unitOfWork.MappingRepository.GetMappedValue("CLIENT", _currentMessage.SourceInfce, _hl7Message.GetValue("PV1.3.4"));
         }
 
-        string msgFin = hl7Message.GetValue("PV1.20");
+        string msgFin = _hl7Message.GetValue("PV1.20");
         if (msgFin == "\"\"")
             msgFin = string.Empty;
-        if (string.IsNullOrEmpty(accountRecord.FinCode))
+        if (string.IsNullOrEmpty(_accountRecord.FinCode))
         {
-            accountRecord.FinCode = string.IsNullOrEmpty(msgFin)
-                ? string.IsNullOrEmpty(accountRecord.FinCode) ? msgFin : accountRecord.FinCode
-                : unitOfWork.MappingRepository.GetMappedValue("FIN_CODE", currentMessage.SourceInfce, msgFin);
+            _accountRecord.FinCode = string.IsNullOrEmpty(msgFin)
+                ? string.IsNullOrEmpty(_accountRecord.FinCode) ? msgFin : _accountRecord.FinCode
+                : unitOfWork.MappingRepository.GetMappedValue("FIN_CODE", _currentMessage.SourceInfce, msgFin);
         }
-        accountRecord.OriginalFinCode = accountRecord.FinCode;
-        accountRecord.TransactionDate = new DateTime().ParseHL7Date(hl7Message.GetValue("PV1.44"));
-        if (accountRecord.TransactionDate == DateTime.MinValue)
+        _accountRecord.OriginalFinCode = _accountRecord.FinCode;
+        _accountRecord.TransactionDate = new DateTime().ParseHL7Date(_hl7Message.GetValue("PV1.44"));
+        if (_accountRecord.TransactionDate == DateTime.MinValue)
         {
             //default transaction date to today
-            accountRecord.TransactionDate = DateTime.Today;
+            _accountRecord.TransactionDate = DateTime.Today;
         }
 
-        accountRecord.Pat.ProviderId = string.IsNullOrEmpty(hl7Message.GetValue("PV1.17.1"))
-           ? hl7Message.GetValue("PV1.17.1")
-           : unitOfWork.MappingRepository.GetMappedValue("PHY_ID", currentMessage.SourceInfce, hl7Message.GetValue("PV1.17.1"));
+        _accountRecord.Pat.ProviderId = string.IsNullOrEmpty(_hl7Message.GetValue("PV1.17.1"))
+           ? _hl7Message.GetValue("PV1.17.1")
+           : unitOfWork.MappingRepository.GetMappedValue("PHY_ID", _currentMessage.SourceInfce, _hl7Message.GetValue("PV1.17.1"));
 
-        accountRecord.Pat.Physician = unitOfWork.PhyRepository.GetByNPI(accountRecord.Pat.ProviderId);
+        _accountRecord.Pat.Physician = unitOfWork.PhyRepository.GetByNPI(_accountRecord.Pat.ProviderId);
 
     }
 
     private void ParseDG1()
     {
-        List<Segment> dg1Segments = hl7Message.Segments("DG1");
+        List<Segment> dg1Segments = _hl7Message.Segments("DG1");
 
         foreach (var dx in dg1Segments)
         {
@@ -816,56 +834,56 @@ public sealed class HL7ProcessorService
                 Code = dx.Fields(3).Value.Replace(".", "")
             };
 
-            accountRecord.Pat.Diagnoses.Add(patDiag);
+            _accountRecord.Pat.Diagnoses.Add(patDiag);
         }
     }
 
     private void ParseGT1()
     {
-        UnitOfWorkMain unitOfWork = new(appEnvironment);
-        if (hl7Message.Segments("GT1").Count > 0)
+        UnitOfWorkMain unitOfWork = new(_appEnvironment);
+        if (_hl7Message.Segments("GT1").Count > 0)
         {
-            accountRecord.Pat.GuarantorLastName = hl7Message.GetValue("GT1.3.1");
-            accountRecord.Pat.GuarantorFirstName = hl7Message.GetValue("GT1.3.2");
+            _accountRecord.Pat.GuarantorLastName = _hl7Message.GetValue("GT1.3.1");
+            _accountRecord.Pat.GuarantorFirstName = _hl7Message.GetValue("GT1.3.2");
 
-            if (hl7Message.HasRepetitions("GT1.5"))
+            if (_hl7Message.HasRepetitions("GT1.5"))
             {
-                List<Field> repList = hl7Message.Segments("GT1")[0].Fields(5).Repetitions();
-                accountRecord.Pat.GuarantorAddress = repList[0].Components(1).Value;
-                accountRecord.Pat.GuarantorCity = repList[0].Components(3).Value;
-                accountRecord.Pat.GuarantorState = repList[0].Components(4).Value;
-                accountRecord.Pat.GuarantorZipCode = ValidateZipCode(repList[0].Components(5).Value);
+                List<Field> repList = _hl7Message.Segments("GT1")[0].Fields(5).Repetitions();
+                _accountRecord.Pat.GuarantorAddress = repList[0].Components(1).Value;
+                _accountRecord.Pat.GuarantorCity = repList[0].Components(3).Value;
+                _accountRecord.Pat.GuarantorState = repList[0].Components(4).Value;
+                _accountRecord.Pat.GuarantorZipCode = ValidateZipCode(repList[0].Components(5).Value);
                 //email address is field 6
             }
             else
             {
-                accountRecord.Pat.GuarantorAddress = hl7Message.GetValue("GT1.5.1");
-                accountRecord.Pat.GuarantorCity = hl7Message.GetValue("GT1.5.3");
-                accountRecord.Pat.GuarantorState = hl7Message.GetValue("GT1.5.4");
-                accountRecord.Pat.GuarantorZipCode = ValidateZipCode(hl7Message.GetValue("GT1.5.5"));
+                _accountRecord.Pat.GuarantorAddress = _hl7Message.GetValue("GT1.5.1");
+                _accountRecord.Pat.GuarantorCity = _hl7Message.GetValue("GT1.5.3");
+                _accountRecord.Pat.GuarantorState = _hl7Message.GetValue("GT1.5.4");
+                _accountRecord.Pat.GuarantorZipCode = ValidateZipCode(_hl7Message.GetValue("GT1.5.5"));
             }
 
-            if (hl7Message.HasRepetitions("GT1.6"))
+            if (_hl7Message.HasRepetitions("GT1.6"))
             {
-                List<Field> repList = hl7Message.Segments("GT1")[0].Fields(6).Repetitions();
-                accountRecord.Pat.GuarantorPrimaryPhone = repList[0].Value;
+                List<Field> repList = _hl7Message.Segments("GT1")[0].Fields(6).Repetitions();
+                _accountRecord.Pat.GuarantorPrimaryPhone = repList[0].Value;
             }
             else
             {
-                accountRecord.Pat.GuarantorPrimaryPhone = hl7Message.GetValue("GT1.6");
+                _accountRecord.Pat.GuarantorPrimaryPhone = _hl7Message.GetValue("GT1.6");
             }
-            accountRecord.Pat.GuarRelationToPatient = hl7Message.GetValue("GT1.11") != string.Empty
-                ? unitOfWork.MappingRepository.GetMappedValue("GUAR_REL", currentMessage.SourceInfce, hl7Message.GetValue("GT1.11"))
-                : string.Empty;
+            _accountRecord.Pat.GuarRelationToPatient = _hl7Message.GetValue("GT1.11") != string.Empty
+                ? unitOfWork.MappingRepository.GetMappedValue("GUAR_REL", _currentMessage.SourceInfce, _hl7Message.GetValue("GT1.11"))
+                : "01";
         }
     }
 
     private void ParseIN1IN2()
     {
-        var segIn1 = hl7Message.Segments("IN1");
-        var segIn2 = hl7Message.Segments("IN2");
+        var segIn1 = _hl7Message.Segments("IN1");
+        var segIn2 = _hl7Message.Segments("IN2");
 
-        UnitOfWorkMain unitOfWork = new(appEnvironment);
+        UnitOfWorkMain unitOfWork = new(_appEnvironment);
         for (int i = 0; i < segIn1.Count; i++)
         {
             Segment in1 = segIn1[i];
@@ -881,17 +899,17 @@ public sealed class HL7ProcessorService
 
             if (in1.Fields(1).Value == "1")
             {
-                ins = accountRecord.Insurances.Find(i => i.Account == accountRecord.AccountNo && i.Coverage == InsCoverage.Primary);
+                ins = _accountRecord.Insurances.Find(i => i.Account == _accountRecord.AccountNo && i.Coverage == InsCoverage.Primary);
                 insCoverage = InsCoverage.Primary;
             }
             else if (in1.Fields(1).Value == "2")
             {
-                ins = accountRecord.Insurances.Find(i => i.Account == accountRecord.AccountNo && i.Coverage == InsCoverage.Secondary);
+                ins = _accountRecord.Insurances.Find(i => i.Account == _accountRecord.AccountNo && i.Coverage == InsCoverage.Secondary);
                 insCoverage = InsCoverage.Secondary;
             }
             else if (in1.Fields(1).Value == "3")
             {
-                ins = accountRecord.Insurances.Find(i => i.Account == accountRecord.AccountNo && i.Coverage == InsCoverage.Tertiary);
+                ins = _accountRecord.Insurances.Find(i => i.Account == _accountRecord.AccountNo && i.Coverage == InsCoverage.Tertiary);
                 insCoverage = InsCoverage.Tertiary;
             }
             else
@@ -900,17 +918,17 @@ public sealed class HL7ProcessorService
                 return;
             }
 
-            existingInsIndex = accountRecord.Insurances.IndexOf(ins);
+            existingInsIndex = _accountRecord.Insurances.IndexOf(ins);
             if (ins == null || ins.rowguid == Guid.Empty)
             {
                 ins = new();
-                ins.Account = accountRecord.AccountNo;
+                ins.Account = _accountRecord.AccountNo;
                 ins.Coverage = insCoverage;
             }
 
             ins.InsCode = string.IsNullOrEmpty(in1.Fields(2).Components(1).Value)
                 ? in1.Fields(2).Components(1).Value
-                : unitOfWork.MappingRepository.GetMappedValue("INS_CODE", currentMessage.SourceInfce, in1.Fields(2).Components(1).Value);
+                : unitOfWork.MappingRepository.GetMappedValue("INS_CODE", _currentMessage.SourceInfce, in1.Fields(2).Components(1).Value);
             if (ins.InsCode == String.Empty)
             {
                 ins.InsCode = in1.Fields(2).Components(1).Value;
@@ -932,8 +950,8 @@ public sealed class HL7ProcessorService
                 ins.HolderSex = String.Empty;
 
             ins.Relation = string.IsNullOrEmpty(in1.Fields(17).Value)
-                ? in1.Fields(17).Value
-                : unitOfWork.MappingRepository.GetMappedValue("GUAR_REL", currentMessage.SourceInfce, in1.Fields(17).Value);
+                ? "01"
+                : unitOfWork.MappingRepository.GetMappedValue("GUAR_REL", _currentMessage.SourceInfce, in1.Fields(17).Value);
 
             if (!string.IsNullOrEmpty(in1.Fields(18).Value))
             {
@@ -966,19 +984,19 @@ public sealed class HL7ProcessorService
                 {
                     ins.Relation = string.IsNullOrEmpty(in2.Fields(72).Value)
                         ? in2.Fields(72).Value
-                        : unitOfWork.MappingRepository.GetMappedValue("GUAR_REL", currentMessage.SourceInfce, in2.Fields(72).Value);
+                        : unitOfWork.MappingRepository.GetMappedValue("GUAR_REL", _currentMessage.SourceInfce, in2.Fields(72).Value);
                 }
             }
             if (existingInsIndex < 0)
-                accountRecord.Insurances.Add(ins);
+                _accountRecord.Insurances.Add(ins);
             else
-                accountRecord.Insurances[existingInsIndex] = ins;
+                _accountRecord.Insurances[existingInsIndex] = ins;
         }
     }
 
     private void ParseFT1()
     {
-        var segFT1 = hl7Message.Segments("FT1");
+        var segFT1 = _hl7Message.Segments("FT1");
 
         foreach (var seg in segFT1)
         {
@@ -1005,7 +1023,7 @@ public sealed class HL7ProcessorService
             //string cpt = hl7Message.GetValue("FT1.25.1");
             //string abn = hl7Message.GetValue("FT1.27");
 
-            chargeTransactions.Add(transaction);
+            _chargeTransactions.Add(transaction);
         }
         //parse PR1 here, if needed
     }
@@ -1013,42 +1031,42 @@ public sealed class HL7ProcessorService
 
     private void ParseSTF()
     {
-        MFNeventCode = hl7Message.GetValue("MFE.2");
+        _mFNeventCode = _hl7Message.GetValue("MFE.2");
 
-        phy.LastName = hl7Message.GetValue("STF.3.1");
-        phy.FirstName = hl7Message.GetValue("STF.3.2");
-        phy.MiddleInitial = hl7Message.GetValue("STF.3.3");
-        if (phy.MiddleInitial.Length > 1)
-            phy.MiddleInitial = phy.MiddleInitial.Left(1);
-        phy.Credentials = hl7Message.GetValue("STF.3.4");
+        _phy.LastName = _hl7Message.GetValue("STF.3.1");
+        _phy.FirstName = _hl7Message.GetValue("STF.3.2");
+        _phy.MiddleInitial = _hl7Message.GetValue("STF.3.3");
+        if (_phy.MiddleInitial.Length > 1)
+            _phy.MiddleInitial = _phy.MiddleInitial.Left(1);
+        _phy.Credentials = _hl7Message.GetValue("STF.3.4");
 
         //STF-10 - phone repeating
-        if (hl7Message.HasRepetitions("STF.10"))
+        if (_hl7Message.HasRepetitions("STF.10"))
         {
-            List<Field> repList = hl7Message.Segments("STF")[0].Fields(10).Repetitions();
+            List<Field> repList = _hl7Message.Segments("STF")[0].Fields(10).Repetitions();
 
-            phy.Phone = repList[0].Components(1).Value;
+            _phy.Phone = repList[0].Components(1).Value;
         }
 
-        phy.Address1 = hl7Message.GetValue("STF.11.1");
-        phy.Address2 = hl7Message.GetValue("STF.11.2");
-        phy.City = hl7Message.GetValue("STF.11.3");
-        phy.State = hl7Message.GetValue("STF.11.4");
-        phy.ZipCode = hl7Message.GetValue("STF.11.5");
+        _phy.Address1 = _hl7Message.GetValue("STF.11.1");
+        _phy.Address2 = _hl7Message.GetValue("STF.11.2");
+        _phy.City = _hl7Message.GetValue("STF.11.3");
+        _phy.State = _hl7Message.GetValue("STF.11.4");
+        _phy.ZipCode = _hl7Message.GetValue("STF.11.5");
     }
 
     private void ParsePRA()
     {
-        string drnum = hl7Message.GetValue("PRA.1.1");
-        string group = hl7Message.GetValue("PRA.2");
-        string speciality = hl7Message.GetValue("PRA.5");
+        string drnum = _hl7Message.GetValue("PRA.1.1");
+        string group = _hl7Message.GetValue("PRA.2");
+        string speciality = _hl7Message.GetValue("PRA.5");
 
-        phy.DoctorNumber = drnum;
+        _phy.DoctorNumber = drnum;
 
         //practioner ids - PRA.6 repeating
-        if (hl7Message.HasRepetitions("PRA.6"))
+        if (_hl7Message.HasRepetitions("PRA.6"))
         {
-            List<Field> repList = hl7Message.Segments("PRA")[0].Fields(6).Repetitions();
+            List<Field> repList = _hl7Message.Segments("PRA")[0].Fields(6).Repetitions();
             foreach (var field in repList)
             {
                 string code = field.Components(1).Value;
@@ -1056,12 +1074,12 @@ public sealed class HL7ProcessorService
 
                 if (codeType == "NPI")
                 {
-                    phy.NpiId = code;
-                    phy.BillingNpi = code;
+                    _phy.NpiId = code;
+                    _phy.BillingNpi = code;
                 }
 
                 if (codeType == "UPIN")
-                    phy.Upin = code;
+                    _phy.Upin = code;
             }
         }
     }
@@ -1069,10 +1087,10 @@ public sealed class HL7ProcessorService
     private string ParseMFE()
     {
         //MFE-1
-        string eventCode = hl7Message.GetValue("MFE.1");
+        string eventCode = _hl7Message.GetValue("MFE.1");
 
-        string identifier = hl7Message.GetValue("MFE.4.1");
-        string identifierType = hl7Message.GetValue("MFE.4.3");
+        string identifier = _hl7Message.GetValue("MFE.4.1");
+        string identifierType = _hl7Message.GetValue("MFE.4.3");
 
         return eventCode;
     }
@@ -1080,7 +1098,7 @@ public sealed class HL7ProcessorService
 
     public MessageInbound SetMessageDoNotProcess(int systemMessageId, string statusMessage)
     {
-        UnitOfWorkMain uow = new(appEnvironment);
+        UnitOfWorkMain uow = new(_appEnvironment);
         var message = uow.MessagesInboundRepository.GetById(systemMessageId);
 
         message.ProcessFlag = StatusToString(Status.DoNotProcess);

@@ -1,6 +1,7 @@
 ﻿using LabBilling.Core.DataAccess;
 using LabBilling.Core.Models;
 using LabBilling.Core.UnitOfWork;
+using NPOI.OpenXmlFormats.Dml.Diagram;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,21 +11,21 @@ namespace LabBilling.Core.Services;
 
 public class WorklistService
 {
-    private readonly AppEnvironment appEnvironment;
+    private readonly AppEnvironment _appEnvironment;
 
     public WorklistService(AppEnvironment appEnvironment)
     {
-        this.appEnvironment = appEnvironment;
+        this._appEnvironment = appEnvironment;
     }
 
     public async Task<List<AccountSearch>> GetAccountsForWorklistAsync(string selectedQueue)
     {
-        DateTime thruDate = DateTime.Today.AddDays(appEnvironment.ApplicationParameters.BillingInitialHoldDays * -1);
+        DateTime thruDate = DateTime.Today.AddDays(_appEnvironment.ApplicationParameters.BillingInitialHoldDays * -1);
         (string propertyName, AccountSearchRepository.operation oper, string searchText)[] parameters =
         {
-            (nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "PAID_OUT"),
-            (nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, "CLOSED"),
-            (nameof(AccountSearch.FinCode), AccountSearchRepository.operation.NotEqual, "CLIENT")
+            (nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, AccountStatus.PaidOut),
+            (nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, AccountStatus.Closed),
+            (nameof(AccountSearch.FinCode), AccountSearchRepository.operation.NotEqual, AccountStatus.Client)
         };
 
         switch (selectedQueue)
@@ -121,7 +122,7 @@ public class WorklistService
                 break;
             case Worklists.SelfPay:
                 parameters = parameters.Append((nameof(AccountSearch.ServiceDate), AccountSearchRepository.operation.LessThanOrEqual, thruDate.ToString())).ToArray();
-                parameters = parameters.Append((nameof(AccountSearch.FinCode), AccountSearchRepository.operation.Equal, "E")).ToArray();
+                parameters = parameters.Append((nameof(AccountSearch.FinCode), AccountSearchRepository.operation.Equal, _appEnvironment.ApplicationParameters.SelfPayFinancialCode)).ToArray();
                 parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, AccountStatus.Hold)).ToArray();
                 parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, AccountStatus.ProfSubmitted)).ToArray();
                 parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, AccountStatus.InstSubmitted)).ToArray();
@@ -138,10 +139,10 @@ public class WorklistService
                 parameters = parameters.Append((nameof(AccountSearch.FinType), AccountSearchRepository.operation.NotEqual, "C")).ToArray();
                 break;
             case Worklists.ErrorFinCode:
-                parameters = parameters.Append((nameof(AccountSearch.FinCode), AccountSearchRepository.operation.Equal, "K")).ToArray();
+                parameters = parameters.Append((nameof(AccountSearch.FinCode), AccountSearchRepository.operation.Equal, _appEnvironment.ApplicationParameters.InvalidFinancialCode)).ToArray();
                 break;
             case Worklists.ClientBill:
-                parameters = parameters.Append((nameof(AccountSearch.FinType), AccountSearchRepository.operation.Equal, "C")).ToArray();
+                parameters = parameters.Append((nameof(AccountSearch.FinType), AccountSearchRepository.operation.Equal, _appEnvironment.ApplicationParameters.ClientFinancialTypeCode)).ToArray();
                 break;
             case Worklists.SubmittedInstitutional:
                 parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.Equal, AccountStatus.InstSubmitted)).ToArray();
@@ -158,7 +159,7 @@ public class WorklistService
             default:
                 break;
         }
-        UnitOfWorkMain unitOfWork = new(appEnvironment);
+        UnitOfWorkMain unitOfWork = new(_appEnvironment);
         var accounts = (List<AccountSearch>)await Task.Run(() =>
         {
             return unitOfWork.AccountSearchRepository.GetBySearch(parameters);

@@ -11,26 +11,13 @@ using System.Threading.Tasks;
 using Log = LabBilling.Logging.Log;
 using Utilities;
 using NPOI.HSSF.Record.Chart;
+using NPOI.OpenXmlFormats.Dml;
 
 namespace LabBilling.Core.Services;
 
 public sealed class AccountService
 {
     private readonly IAppEnvironment _appEnvironment;
-
-    private const string _invoicedCdm = "CBILL";
-    private const string _cbillStatus = "CBILL";
-    private const string _capStatus = "CAP";
-    private const string _naStatus = "N/A";
-    private const string _newChrgStatus = "NEW";
-
-    private const string _clientFinType = "C";
-    private const string _patientFinType = "M";
-    private const string _zFinType = "Z";
-    private const string _billClientFinCode = "Y";
-    private const string _invalidFinCode = "K";
-    private const string _clientFinCode = "CLIENT";
-    private const string _pthExceptionClient = "HC";
 
     private readonly DictionaryService _dictionaryService;
 
@@ -146,7 +133,7 @@ public sealed class AccountService
 
         if (!string.IsNullOrEmpty(record.ClientMnem))
         {
-            if (record.ClientMnem != _invalidFinCode)
+            if (record.ClientMnem != _appEnvironment.ApplicationParameters.InvalidFinancialCode)
             {
                 record.Client = _dictionaryService.GetClient(record.ClientMnem);
             }
@@ -230,13 +217,13 @@ public sealed class AccountService
                 .On($"{accTableName}.{uow.AccountRepository.GetRealColumn(nameof(Account.AccountNo))} = {chrgTableName}.{uow.ChrgRepository.GetRealColumn(nameof(Chrg.AccountNo))}")
                 .Where($"{chrgTableName}.{uow.ChrgRepository.GetRealColumn(nameof(Chrg.AccountNo))} = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = accountNo })
                 .Where($"(({accTableName}.{uow.AccountRepository.GetRealColumn(nameof(Account.FinCode))} = @0 and {chrgTableName}.{uow.ChrgRepository.GetRealColumn(nameof(Chrg.Status))} <> @1)",
-                    new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = _clientFinCode },
-                    new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = _cbillStatus })
+                    new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = _appEnvironment.ApplicationParameters.BillToClientInvoiceDefaultFinCode },
+                    new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = _appEnvironment.ApplicationParameters.ChargeInvoiceStatus })
                 .Append($"or ({accTableName}.{uow.AccountRepository.GetRealColumn(nameof(Account.FinCode))} <> @0 and {chrgTableName}.{uow.ChrgRepository.GetRealColumn(nameof(Chrg.Status))} not in (@1, @2, @3)))",
-                    new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = _clientFinCode },
-                    new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = _cbillStatus },
-                    new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = _capStatus },
-                    new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = _naStatus })
+                    new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = _appEnvironment.ApplicationParameters.BillToClientInvoiceDefaultFinCode },
+                    new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = _appEnvironment.ApplicationParameters.ChargeInvoiceStatus },
+                    new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = _appEnvironment.ApplicationParameters.CapitatedChargeStatus },
+                    new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = _appEnvironment.ApplicationParameters.NotApplicableChargeStatus })
                 .GroupBy(chrgTableName + "." + uow.ChrgRepository.GetRealColumn(nameof(Chrg.AccountNo)));
 
             double charges = uow.Context.SingleOrDefault<double>(sql);
@@ -821,7 +808,7 @@ public sealed class AccountService
                 AddNote(model.AccountNo, $"Client updated from {oldClientMnem} to {newClientMnem}.");
 
                 //reprocess charges if fin class is client bill (C) to pick up proper discounts.
-                if (model.Fin.FinClass == _clientFinType)
+                if (model.Fin.FinClass == _appEnvironment.ApplicationParameters.ClientFinancialTypeCode)
                 {
                     try
                     {
@@ -833,7 +820,7 @@ public sealed class AccountService
                     }
                 }
 
-                if (model.Fin.FinClass == _patientFinType)
+                if (model.Fin.FinClass == _appEnvironment.ApplicationParameters.PatientFinancialTypeCode)
                 {
                     //reprocess charges if fee schedule is different to pick up correct charge amounts
                     if (oldClient.FeeSchedule != newClient.FeeSchedule)
@@ -847,7 +834,8 @@ public sealed class AccountService
                             throw new ApplicationException("Error reprocessing charges.", ex);
                         }
                     }
-                    else if (oldClient.ClientMnem == _pthExceptionClient || newClient.ClientMnem == _pthExceptionClient)
+                    else if (oldClient.ClientMnem == _appEnvironment.ApplicationParameters.PathologyBillingClientException 
+                        || newClient.ClientMnem == _appEnvironment.ApplicationParameters.PathologyBillingClientException)
                     {
                         try
                         {
@@ -964,19 +952,6 @@ public sealed class AccountService
 
     }
 
-    //public IList<Chrg> UpdateDxPointers(List<Chrg> chrgs)
-    //{
-    //    //using AccountUnitOfWork uow = new(_appEnvironment, true);
-
-    //    //chrgs.ForEach(c => c.ChrgDetails.ForEach(cd =>
-    //    //{
-    //    //    cd.DiagnosisPointer = uow.ChrgDiagnosisPointerRepository.Save(cd.DiagnosisPointer);
-    //    //}));
-
-    //    //uow.Commit();
-    //    return chrgs;
-    //}
-
     public async Task<IList<Chrg>> ReprocessChargesAsync(Account account, string comment) => await Task.Run(() => ReprocessCharges(account, comment));
 
     /// <summary>
@@ -995,7 +970,7 @@ public sealed class AccountService
         using AccountUnitOfWork uow = new(_appEnvironment, true);
         try
         {
-            var chargesToCredit = account.Charges.Where(x => x.IsCredited == false && x.CDMCode != _invoicedCdm).ToList();
+            var chargesToCredit = account.Charges.Where(x => x.IsCredited == false && x.CDMCode != _appEnvironment.ApplicationParameters.ClientInvoiceCdm).ToList();
 
             chargesToCredit.ForEach(c =>
             {
@@ -1003,7 +978,7 @@ public sealed class AccountService
                 AddCharge(account, c.CDMCode, c.Quantity, account.TransactionDate);
             });
 
-            var updatedChrgList = uow.ChrgRepository.GetByAccount(account.AccountNo);
+            var updatedChrgList = GetCharges(account.AccountNo);
 
             uow.Commit();
             return updatedChrgList;
@@ -1011,7 +986,6 @@ public sealed class AccountService
         catch (Exception ex)
         {
             Log.Instance.Error(ex);
-            //AbortTransaction();
             throw new ApplicationException("Error reprocessing charges", ex);
         }
     }
@@ -1221,23 +1195,16 @@ public sealed class AccountService
             //check for global billing cdm - if it is, change client to Pathology Group, fin to Y, and get appropriate prices
             var gb = uow.GlobalBillingCdmRepository.GetCdm(cdm, accData.TransactionDate);
             //hard coding exception for Hardin County for now - 05/09/2023 BSP
-            if (gb != null && accData.ClientMnem != _pthExceptionClient)
+            if (gb != null && accData.ClientMnem != _appEnvironment.ApplicationParameters.PathologyBillingClientException)
             {
-                fin = uow.FinRepository.GetFin(_billClientFinCode) ?? throw new ApplicationException($"Fin code {_billClientFinCode} not found error {accData.AccountNo}");
+                fin = uow.FinRepository.GetFin(_appEnvironment.ApplicationParameters.BillToClientInvoiceDefaultFinCode) 
+                    ?? throw new ApplicationException($"Fin code {_appEnvironment.ApplicationParameters.BillToClientInvoiceDefaultFinCode} not found error {accData.AccountNo}");
                 chargeClient = uow.ClientRepository.GetClient(_appEnvironment.ApplicationParameters.PathologyGroupClientMnem);
             }
         }
 
         Chrg chrg = new()
         {
-            Status = fin.FinClass switch
-            {
-                _patientFinType => cdmData.MClassType == _naStatus ? _naStatus : _newChrgStatus,
-                _clientFinType => cdmData.CClassType == _naStatus ? _naStatus : _newChrgStatus,
-                "Z" => cdmData.ZClassType == _naStatus ? _naStatus : _newChrgStatus,
-                _ => _newChrgStatus,
-            },
-
             //now build the charge & detail records
             AccountNo = accData.AccountNo,
             BillMethod = fin.ClaimType,
@@ -1253,6 +1220,16 @@ public sealed class AccountService
             Quantity = qty,
             ServiceDate = serviceDate
         };
+
+
+        if (fin.FinClass == _appEnvironment.ApplicationParameters.PatientFinancialTypeCode)
+            chrg.Status = cdmData.MClassType == _appEnvironment.ApplicationParameters.NotApplicableChargeStatus ? _appEnvironment.ApplicationParameters.NotApplicableChargeStatus : _appEnvironment.ApplicationParameters.NewChargeStatus;
+        else if (fin.FinClass == _appEnvironment.ApplicationParameters.ClientFinancialTypeCode)
+            chrg.Status = cdmData.CClassType == _appEnvironment.ApplicationParameters.NotApplicableChargeStatus ? _appEnvironment.ApplicationParameters.NotApplicableChargeStatus : _appEnvironment.ApplicationParameters.NewChargeStatus;
+        else if (fin.FinClass == _appEnvironment.ApplicationParameters.ZFinancialTypecode)
+            chrg.Status = cdmData.ZClassType == _appEnvironment.ApplicationParameters.NotApplicableChargeStatus ? _appEnvironment.ApplicationParameters.NotApplicableChargeStatus : _appEnvironment.ApplicationParameters.NewChargeStatus;
+        else
+            chrg.Status = _appEnvironment.ApplicationParameters.NewChargeStatus;
 
         List<CdmDetail> feeSched = null;
 
@@ -1279,35 +1256,35 @@ public sealed class AccountService
                 Type = fee.Type
             };
 
-            switch (fin.FinClass)
+            if(fin.FinClass == _appEnvironment.ApplicationParameters.PatientFinancialTypeCode)
             {
-                case _patientFinType:
-                    chrgDetail.Amount = fee.MClassPrice;
-                    retailTotal += fee.MClassPrice;
-                    ztotal += fee.ZClassPrice;
-                    break;
-                case _clientFinType:
-                    //todo: calculate client discount
-                    var cliDiscount = chargeClient.Discounts?.Find(c => c.Cdm == cdm);
-                    double discountPercentage = chargeClient.DefaultDiscount;
-                    if (cliDiscount != null)
-                    {
-                        discountPercentage = cliDiscount.PercentDiscount;
-                    }
-                    chrgDetail.Amount = fee.CClassPrice - (fee.CClassPrice * (discountPercentage / 100));
-                    retailTotal += fee.CClassPrice;
-                    ztotal += fee.ZClassPrice;
-                    break;
-                case _zFinType:
-                    chrgDetail.Amount = fee.ZClassPrice;
-                    retailTotal += fee.ZClassPrice;
-                    ztotal += fee.ZClassPrice;
-                    break;
-                default:
-                    chrgDetail.Amount = fee.MClassPrice;
-                    retailTotal += fee.MClassPrice;
-                    ztotal += fee.ZClassPrice;
-                    break;
+                chrgDetail.Amount = fee.MClassPrice;
+                retailTotal += fee.MClassPrice;
+                ztotal += fee.ZClassPrice;
+            }
+            else if (fin.FinClass == _appEnvironment.ApplicationParameters.ClientFinancialTypeCode)
+            {
+                var cliDiscount = chargeClient.Discounts?.Find(c => c.Cdm == cdm);
+                double discountPercentage = chargeClient.DefaultDiscount;
+                if (cliDiscount != null)
+                {
+                    discountPercentage = cliDiscount.PercentDiscount;
+                }
+                chrgDetail.Amount = fee.CClassPrice - (fee.CClassPrice * (discountPercentage / 100));
+                retailTotal += fee.CClassPrice;
+                ztotal += fee.ZClassPrice;
+            }
+            else if (fin.FinClass == _appEnvironment.ApplicationParameters.ZFinancialTypecode)
+            {
+                chrgDetail.Amount = fee.ZClassPrice;
+                retailTotal += fee.ZClassPrice;
+                ztotal += fee.ZClassPrice;
+            }
+            else
+            {
+                chrgDetail.Amount = fee.MClassPrice;
+                retailTotal += fee.MClassPrice;
+                ztotal += fee.ZClassPrice;
             }
 
             if (cdmData.Variable)
@@ -1555,7 +1532,8 @@ public sealed class AccountService
             }
             else
             {
-                if (account.Fin.FinClass == _patientFinType && account.InsurancePrimary != null)
+                if (account.Fin.FinClass == _appEnvironment.ApplicationParameters.PatientFinancialTypeCode
+                    && account.InsurancePrimary != null)
                 {
                     if (account.InsurancePrimary.InsCompany != null)
                     {
@@ -1711,9 +1689,9 @@ public sealed class AccountService
         (string propertyName, AccountSearchRepository.operation oper, string searchText)[] parameters = {
             (nameof(AccountSearch.ServiceDate), AccountSearchRepository.operation.LessThanOrEqual, DateTime.Today.AddDays((_appEnvironment.ApplicationParameters.BillingInitialHoldDays)*-1).ToShortDateString()),
             (nameof(AccountSearch.Status), AccountSearchRepository.operation.Equal, AccountStatus.New),
-            (nameof(AccountSearch.FinCode), AccountSearchRepository.operation.NotEqual, "Y"),
-            (nameof(AccountSearch.FinCode), AccountSearchRepository.operation.NotEqual, _clientFinCode),
-            (nameof(AccountSearch.FinCode), AccountSearchRepository.operation.NotEqual, "E")
+            (nameof(AccountSearch.FinCode), AccountSearchRepository.operation.NotEqual, _appEnvironment.ApplicationParameters.BillToClientInvoiceDefaultFinCode),
+            (nameof(AccountSearch.FinCode), AccountSearchRepository.operation.NotEqual, _appEnvironment.ApplicationParameters.ClientAccountFinCode),
+            (nameof(AccountSearch.FinCode), AccountSearchRepository.operation.NotEqual, _appEnvironment.ApplicationParameters.SelfPayFinancialCode)
         };
 
         ValidationAccountUpdated?.Invoke(this, new ValidationUpdatedEventArgs() { UpdateMessage = "Compiling accounts", TimeStamp = DateTime.Now });
@@ -1745,6 +1723,8 @@ public sealed class AccountService
                 Log.Instance.Error(e, "Error during account validation job.");
             }
         });
+
+
     }
 
     public async Task ValidateUnbilledAccountsAsync() => await Task.Run(() => ValidateUnbilledAccounts());

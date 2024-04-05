@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using LabBilling.Core.DataAccess;
-using NPOI.SS.Util;
+﻿using LabBilling.Core.DataAccess;
 using PetaPoco;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace LabBilling.Core.Models;
 
@@ -110,14 +108,14 @@ public sealed class Account : IBaseEntity
     public List<ChrgDiagnosisPointer> ChrgDiagnosisPointers { get; set; }
 
     [Ignore]
-    public List<Cdm> Cdms 
+    public List<Cdm> Cdms
     {
         get
         {
             List<Cdm> cdms = new();
-            Charges.ForEach(c => 
+            Charges.ForEach(c =>
             {
-                if(cdms.Find(d => d.ChargeId == c.CDMCode) == null)
+                if (cdms.Find(d => d.ChargeId == c.CDMCode) == null)
                     cdms.Add(c.Cdm);
             });
             return cdms;
@@ -135,8 +133,8 @@ public sealed class Account : IBaseEntity
     public double ClaimBalance
     {
         get
-        { 
-            if(this.FinCode == "CLIENT")
+        {
+            if (this.FinCode == "CLIENT")
             {
                 return 0.00;
             }
@@ -148,11 +146,11 @@ public sealed class Account : IBaseEntity
         }
     }
     [Ignore]
-    public List<(string client, double balance)> ClientBalance 
-    { 
+    public List<(string client, double balance)> ClientBalance
+    {
         get
         {
-            if(this.FinCode == "CLIENT")
+            if (this.FinCode == "CLIENT")
             {
                 var balance = this.BillableCharges.Sum(y => y.Quantity * y.NetAmount)
                  - (this.TotalPayments + this.TotalContractual + this.TotalWriteOff);
@@ -168,7 +166,7 @@ public sealed class Account : IBaseEntity
                 var results = this.BillableCharges
                     .Where(x => x.FinancialType == "C")
                     .GroupBy(x => x.ClientMnem, (client, balance) => new { Client = client, Balance = balance.Sum(c => c.Quantity * c.NetAmount) });
-                foreach(var result in results)
+                foreach (var result in results)
                     list.Add((result.Client, result.Balance));
                 return list;
             }

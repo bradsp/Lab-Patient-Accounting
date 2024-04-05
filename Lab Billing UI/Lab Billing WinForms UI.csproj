@@ -63,8 +63,8 @@
     <RepositoryUrl>https://github.com/bradsp/Lab-Patient-Accounting</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <ImplicitUsings>enable</ImplicitUsings>
-    <AssemblyVersion>2024.1.3.3</AssemblyVersion>
-    <FileVersion>2024.1.3.3</FileVersion>
+    <AssemblyVersion>2024.1.3.6</AssemblyVersion>
+    <FileVersion>2024.1.3.6</FileVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <NoWarn>1701;1702;CA1416</NoWarn>

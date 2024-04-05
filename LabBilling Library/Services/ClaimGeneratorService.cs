@@ -1,19 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using LabBilling.Core.DataAccess;
 using LabBilling.Core.Models;
-using LabBilling.Core.DataAccess;
 using LabBilling.Core.UnitOfWork;
 using LabBilling.Logging;
+using System;
 using System.Collections;
-using Utilities;
-using System.Threading;
-using Microsoft.Data.SqlClient;
+using System.Collections.Generic;
 using System.Data;
-using PetaPoco;
-using MCL;
-using Microsoft.Identity.Client.NativeInterop;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using Utilities;
 using Account = LabBilling.Core.Models.Account;
 
 namespace LabBilling.Core.Services;
@@ -24,15 +20,15 @@ public sealed class ClaimGeneratorService
     readonly ArrayList NameSuffixList = new() { "JR", "SR", "I", "II", "III", "IV", "V", "VI", "VII" };
 
     public string PropProductionEnvironment { get; set; }
-    private readonly IAppEnvironment appEnvironment;
-    private List<ClaimData> claims;
-    private Billing837Service billing837;
-    private AccountService _accountService;
-    private DictionaryService _dictionaryService;
+    private readonly IAppEnvironment _appEnvironment;
+    private List<ClaimData> _claims;
+    private Billing837Service _billing837;
+    private readonly AccountService _accountService;
+    private readonly DictionaryService _dictionaryService;
 
     public ClaimGeneratorService(IAppEnvironment appEnvironment)
     {
-        this.appEnvironment = appEnvironment;
+        this._appEnvironment = appEnvironment;
         if (appEnvironment == null)
         {
             throw new ArgumentNullException(nameof(appEnvironment));
@@ -44,7 +40,7 @@ public sealed class ClaimGeneratorService
 
         PropProductionEnvironment = appEnvironment.ApplicationParameters.GetProductionEnvironment();
 
-        claims = new List<ClaimData>();
+        _claims = new List<ClaimData>();
 
         _accountService = new(appEnvironment);
         _dictionaryService = new(appEnvironment);
@@ -53,14 +49,14 @@ public sealed class ClaimGeneratorService
 
     public int CompileBillingBatch(ClaimType claimType, IProgress<ProgressReportModel> progress, CancellationToken cancellationToken)
     {
-        using UnitOfWorkMain unitOfWork = new(appEnvironment, true);
+        using UnitOfWorkMain unitOfWork = new(_appEnvironment, true);
 
-        claims = new List<ClaimData>();
+        _claims = new List<ClaimData>();
 
         ProgressReportModel report = new();
         //compile list of accounts to have claims generated
-        billing837 = new Billing837Service(PropProductionEnvironment);
-        string batchSubmitterID = appEnvironment.ApplicationParameters.FederalTaxId;
+        _billing837 = new Billing837Service(PropProductionEnvironment);
+        string batchSubmitterID = _appEnvironment.ApplicationParameters.FederalTaxId;
 
         BillingBatch billingBatch = new()
         {
@@ -98,14 +94,14 @@ public sealed class ClaimGeneratorService
                 billClaimType = ClaimType.Institutional;
                 processedStatus = AccountStatus.InstSubmitted;
                 batchType = AccountStatus.Institutional;
-                fileLocation = appEnvironment.ApplicationParameters.InstitutionalClaimFileLocation;
+                fileLocation = _appEnvironment.ApplicationParameters.InstitutionalClaimFileLocation;
                 break;
             case ClaimType.Professional:
                 claimList = _accountService.GetClaimItems(ClaimType.Professional).ToList();
                 billClaimType = ClaimType.Professional;
                 processedStatus = AccountStatus.ProfSubmitted;
                 batchType = AccountStatus.Professional;
-                fileLocation = appEnvironment.ApplicationParameters.ProfessionalClaimFileLocation;
+                fileLocation = _appEnvironment.ApplicationParameters.ProfessionalClaimFileLocation;
                 break;
             default:
                 throw new ArgumentOutOfRangeException("ClaimType is not defined.");
@@ -135,9 +131,9 @@ public sealed class ClaimGeneratorService
                         progress.Report(report);
                         continue;
                     }
-                    claims.Add(claim);
+                    _claims.Add(claim);
                 }
-                catch(AccountLockException alex)
+                catch (AccountLockException alex)
                 {
                     Log.Instance.Error($"Account locked.", alex);
                     continue;
@@ -196,23 +192,23 @@ public sealed class ClaimGeneratorService
             }
 
             string x12Text = string.Empty;
-            if (claims.Count > 0)
+            if (_claims.Count > 0)
             {
 
-                x12Text = billing837.Generate837ClaimBatch(claims, interchangeControlNumber,
+                x12Text = _billing837.Generate837ClaimBatch(_claims, interchangeControlNumber,
                     batchSubmitterID, fileLocation, billClaimType);
             }
 
             billingBatch = unitOfWork.BillingBatchRepository.GetBatch(strNum);
             billingBatch.X12Text = x12Text;
-            billingBatch.ClaimCount = claims.Count;
-            billingBatch.TotalBilled = claims.Sum(x => x.TotalChargeAmount);
+            billingBatch.ClaimCount = _claims.Count;
+            billingBatch.TotalBilled = _claims.Sum(x => x.TotalChargeAmount);
             billingBatch.BatchType = batchType;
             unitOfWork.BillingBatchRepository.Update(billingBatch);
 
             unitOfWork.Commit();
 
-            return claims.Count;
+            return _claims.Count;
         }
         catch (TaskCanceledException tcex)
         {
@@ -228,27 +224,27 @@ public sealed class ClaimGeneratorService
 
     public void RegenerateBatch(double batchNo)
     {
-        using UnitOfWorkMain unitOfWork = new(appEnvironment, true);
+        using UnitOfWorkMain unitOfWork = new(_appEnvironment, true);
 
-        billing837 = new Billing837Service(PropProductionEnvironment);
+        _billing837 = new Billing837Service(PropProductionEnvironment);
         var batch = unitOfWork.BillingBatchRepository.GetBatch(batchNo);
-        string batchSubmitterID = appEnvironment.ApplicationParameters.FederalTaxId;
+        string batchSubmitterID = _appEnvironment.ApplicationParameters.FederalTaxId;
         string interchangeControlNumber = string.Format("{0:D9}", int.Parse(string.Format("{0}", batch.Batch)));
 
         ClaimType claimType;
 
         string fileLocation;
 
-        claims.Clear();
+        _claims.Clear();
         switch (batch.BatchType)
         {
             case "UB":
                 claimType = ClaimType.Institutional;
-                fileLocation = appEnvironment.ApplicationParameters.InstitutionalClaimFileLocation;
+                fileLocation = _appEnvironment.ApplicationParameters.InstitutionalClaimFileLocation;
                 break;
             case "1500":
                 claimType = ClaimType.Professional;
-                fileLocation = appEnvironment.ApplicationParameters.ProfessionalClaimFileLocation;
+                fileLocation = _appEnvironment.ApplicationParameters.ProfessionalClaimFileLocation;
                 break;
             default:
                 //not a valid batch
@@ -259,16 +255,16 @@ public sealed class ClaimGeneratorService
         {
             var claim = GenerateClaim(account.AccountNo, true);
             if (claim != null)
-                claims.Add(claim);
+                _claims.Add(claim);
         });
 
-        if (claims.Count > 0)
+        if (_claims.Count > 0)
         {
-            batch.X12Text = billing837.Generate837ClaimBatch(claims, interchangeControlNumber,
+            batch.X12Text = _billing837.Generate837ClaimBatch(_claims, interchangeControlNumber,
                 batchSubmitterID, fileLocation, claimType);
 
             batch.RunDate = DateTime.Now.Date;
-            batch.TotalBilled = claims.Sum(x => x.TotalChargeAmount);
+            batch.TotalBilled = _claims.Sum(x => x.TotalChargeAmount);
 
             unitOfWork.BillingBatchRepository.Update(batch);
         }
@@ -284,9 +280,9 @@ public sealed class ClaimGeneratorService
         ClaimData claim;
         string claimx12;
 
-        using UnitOfWorkMain unitOfWork = new(appEnvironment, true);
+        using UnitOfWorkMain unitOfWork = new(_appEnvironment, true);
 
-        string batchSubmitterID = appEnvironment.ApplicationParameters.FederalTaxId;
+        string batchSubmitterID = _appEnvironment.ApplicationParameters.FederalTaxId;
         decimal strNum = unitOfWork.NumberRepository.GetNumber("ssi_batch");
         string interchangeControlNumber = string.Format("{0:D9}", int.Parse(string.Format("{0}{1}", DateTime.Now.Year, strNum)));
 
@@ -336,21 +332,21 @@ public sealed class ClaimGeneratorService
     /// <exception cref="InvalidParameterValueException"></exception>
     public ClaimData GenerateClaim(string account, bool reprint = false)
     {
-        AccountService accountService = new(appEnvironment);
+        AccountService accountService = new(_appEnvironment);
         Account accountModel = new();
-        using UnitOfWorkMain uow = new(appEnvironment, true);
+        using UnitOfWorkMain uow = new(_appEnvironment, true);
 
         try
         {
             accountModel = accountService.GetAccount(account);
         }
-        catch(AccountLockException alex)
+        catch (AccountLockException alex)
         {
             Log.Instance.Warn("Account locked. Skipping claim generation.", alex);
             uow.Commit();
             return null;
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             Log.Instance.Error($"Error encounter processing {account}", ex);
             uow.Commit();
@@ -366,7 +362,7 @@ public sealed class ClaimGeneratorService
 
         accountModel = accountService.Validate(accountModel, reprint);
 
-        if(accountModel.AccountValidationStatus.ValidationText != "No validation errors.")
+        if (accountModel.AccountValidationStatus.ValidationText != "No validation errors.")
         {
             _accountService.UpdateStatus(accountModel, AccountStatus.New);
             _accountService.AddNote(accountModel.AccountNo, "Account has validation errors.Reverted to NEW status");
@@ -449,40 +445,40 @@ public sealed class ClaimGeneratorService
             claimData.CreatedDate = DateTime.Now;
             claimData.TransactionTypeCode = "CH";
             claimData.TransactionSetPurpose = "00";  // 00 = original, 18 - reissue
-            claimData.SubmitterId = appEnvironment.ApplicationParameters.FederalTaxId;
-            claimData.SubmitterName = appEnvironment.ApplicationParameters.BillingEntityName;
-            claimData.SubmitterContactName = appEnvironment.ApplicationParameters.BillingContact;
-            claimData.SubmitterContactEmail = appEnvironment.ApplicationParameters.BillingPhone;
-            claimData.SubmitterContactPhone = appEnvironment.ApplicationParameters.BillingEmail;
+            claimData.SubmitterId = _appEnvironment.ApplicationParameters.FederalTaxId;
+            claimData.SubmitterName = _appEnvironment.ApplicationParameters.BillingEntityName;
+            claimData.SubmitterContactName = _appEnvironment.ApplicationParameters.BillingContact;
+            claimData.SubmitterContactEmail = _appEnvironment.ApplicationParameters.BillingPhone;
+            claimData.SubmitterContactPhone = _appEnvironment.ApplicationParameters.BillingEmail;
 
-            claimData.ReceiverOrgName = appEnvironment.ApplicationParameters.BillingReceiverName;
-            claimData.ReceiverId = appEnvironment.ApplicationParameters.BillingReceiverId;
-            claimData.ProviderTaxonomyCode = "282N00000X";
+            claimData.ReceiverOrgName = _appEnvironment.ApplicationParameters.BillingReceiverName;
+            claimData.ReceiverId = _appEnvironment.ApplicationParameters.BillingReceiverId;
+            claimData.ProviderTaxonomyCode = _appEnvironment.ApplicationParameters.ProviderTaxonomyCode; // "282N00000X";
 
-            claimData.BillingProviderName = appEnvironment.ApplicationParameters.BillingEntityName;
-            claimData.BillingProviderAddress = appEnvironment.ApplicationParameters.BillingEntityStreet;
-            claimData.BillingProviderCity = appEnvironment.ApplicationParameters.BillingEntityCity;
-            claimData.BillingProviderState = appEnvironment.ApplicationParameters.BillingEntityState;
-            claimData.BillingProviderZipCode = appEnvironment.ApplicationParameters.BillingEntityZip;
-            claimData.BillingProviderCountry = appEnvironment.ApplicationParameters.BillingEntityCounty;
-            claimData.BillingProviderTaxId = appEnvironment.ApplicationParameters.FederalTaxId;
+            claimData.BillingProviderName = _appEnvironment.ApplicationParameters.BillingEntityName;
+            claimData.BillingProviderAddress = _appEnvironment.ApplicationParameters.BillingEntityStreet;
+            claimData.BillingProviderCity = _appEnvironment.ApplicationParameters.BillingEntityCity;
+            claimData.BillingProviderState = _appEnvironment.ApplicationParameters.BillingEntityState;
+            claimData.BillingProviderZipCode = _appEnvironment.ApplicationParameters.BillingEntityZip;
+            claimData.BillingProviderCountry = _appEnvironment.ApplicationParameters.BillingEntityCounty;
+            claimData.BillingProviderTaxId = _appEnvironment.ApplicationParameters.FederalTaxId;
             claimData.BillingProviderUPIN = String.Empty;
-            claimData.BillingProviderNPI = appEnvironment.ApplicationParameters.NPINumber;
-            claimData.BillingProviderContactName = appEnvironment.ApplicationParameters.BillingContact;
-            claimData.BillingProviderContactPhone = appEnvironment.ApplicationParameters.BillingPhone;
-            claimData.BillingProviderContactEmail = appEnvironment.ApplicationParameters.BillingEmail;
+            claimData.BillingProviderNPI = _appEnvironment.ApplicationParameters.NPINumber;
+            claimData.BillingProviderContactName = _appEnvironment.ApplicationParameters.BillingContact;
+            claimData.BillingProviderContactPhone = _appEnvironment.ApplicationParameters.BillingPhone;
+            claimData.BillingProviderContactEmail = _appEnvironment.ApplicationParameters.BillingEmail;
 
             if (claimData.claimAccount.InsurancePrimary.InsCompany.BillAsJmcgh)
             {
-                claimData.BillingProviderName = appEnvironment.ApplicationParameters.Company2Name;
-                claimData.BillingProviderNPI = appEnvironment.ApplicationParameters.WTHNPI;
+                claimData.BillingProviderName = _appEnvironment.ApplicationParameters.Company2Name;
+                claimData.BillingProviderNPI = _appEnvironment.ApplicationParameters.WTHNPI;
             }
 
-            claimData.PayToAddress = appEnvironment.ApplicationParameters.RemitToAddress;
-            claimData.PayToCity = appEnvironment.ApplicationParameters.RemitToCity;
-            claimData.PayToState = appEnvironment.ApplicationParameters.RemitToState;
-            claimData.PayToZipCode = appEnvironment.ApplicationParameters.RemitToZip;
-            claimData.PayToCountry = appEnvironment.ApplicationParameters.RemitToCountry;
+            claimData.PayToAddress = _appEnvironment.ApplicationParameters.RemitToAddress;
+            claimData.PayToCity = _appEnvironment.ApplicationParameters.RemitToCity;
+            claimData.PayToState = _appEnvironment.ApplicationParameters.RemitToState;
+            claimData.PayToZipCode = _appEnvironment.ApplicationParameters.RemitToZip;
+            claimData.PayToCountry = _appEnvironment.ApplicationParameters.RemitToCountry;
 
             //not needed currently
             //2010AC — PAY-TO PLAN NAME Loop Repeat: 1
@@ -536,7 +532,7 @@ public sealed class ClaimGeneratorService
             claimData.StatementThruDate = claimData.claimAccount.TransactionDate;
 
             claimData.PatientAmountPaid = claimData.claimAccount.TotalPayments;
-            claimData.CliaNumber = appEnvironment.ApplicationParameters.PrimaryCliaNo;
+            claimData.CliaNumber = _appEnvironment.ApplicationParameters.PrimaryCliaNo;
 
             claimData.AttendingProviderFirstName = claimData.claimAccount.Pat.Physician.FirstName;
             claimData.AttendingProviderLastName = claimData.claimAccount.Pat.Physician.LastName;
@@ -575,7 +571,7 @@ public sealed class ClaimGeneratorService
                     {"09", "21"}
                 };
 
-                if(string.IsNullOrEmpty(subscriber.PayerResponsibilitySequenceCode))
+                if (string.IsNullOrEmpty(subscriber.PayerResponsibilitySequenceCode))
                 {
 
                 }
@@ -716,8 +712,8 @@ public sealed class ClaimGeneratorService
 
     public bool ClearBatch(double batch)
     {
-        AccountService accountService = new(appEnvironment);
-        using UnitOfWorkMain uow = new(appEnvironment, true);
+        AccountService accountService = new(_appEnvironment);
+        using UnitOfWorkMain uow = new(_appEnvironment, true);
 
         var data = uow.BillingBatchRepository.GetBatch(batch);
 
@@ -750,13 +746,13 @@ public sealed class ClaimGeneratorService
 
     public List<BillingBatch> GetBillingBatches()
     {
-        UnitOfWorkMain uow = new(appEnvironment);
+        UnitOfWorkMain uow = new(_appEnvironment);
         return uow.BillingBatchRepository.GetAll();
     }
 
     public List<BillingActivity> GetBillingBatchActivity(string batch)
     {
-        UnitOfWorkMain uow = new(appEnvironment);
+        UnitOfWorkMain uow = new(_appEnvironment);
 
         return uow.BillingActivityRepository.GetBatch(batch);
     }

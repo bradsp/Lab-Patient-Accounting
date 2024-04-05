@@ -1348,7 +1348,6 @@ public partial class AccountForm : Form
                 MessageBox.Show(this, $"Error changing financial class. Financial code was not changed.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
-            //await LoadAccountData();
             RefreshAccountData();
         }
     }

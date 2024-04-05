@@ -12,7 +12,6 @@ namespace LabBilling.Core.Services;
 public class DictionaryService
 {
     private readonly IAppEnvironment _appEnvironment;
-    private const string _clientFinCode = "CLIENT";
 
     public DictionaryService(IAppEnvironment appEnvironment)
     {
@@ -213,7 +212,7 @@ public class DictionaryService
             {
                 AccountNo = client.ClientMnem,
                 PatFullName = client.Name,
-                FinCode = _clientFinCode,
+                FinCode = _appEnvironment.ApplicationParameters.ClientAccountFinCode,
                 TransactionDate = DateTime.Today,
                 Status = AccountStatus.New,
                 ClientMnem = client.ClientMnem,

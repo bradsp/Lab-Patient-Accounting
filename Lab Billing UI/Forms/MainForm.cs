@@ -78,7 +78,7 @@ public partial class MainForm : Form
 
         var configuration = new NLog.Config.LoggingConfiguration();
 
-        LogLevel minLevel = NLog.LogLevel.Error;
+        LogLevel minLevel = NLog.LogLevel.Warn;
         GlobalDiagnosticsContext.Set("dbname", Program.AppEnvironment.DatabaseName);
         GlobalDiagnosticsContext.Set("dbserver", Program.AppEnvironment.ServerName);
 
@@ -94,8 +94,6 @@ public partial class MainForm : Form
             ConnectionString = Program.AppEnvironment.LogConnectionString,
             CommandType = System.Data.CommandType.StoredProcedure,
             CommandText = $"[dbo].[{logProcedure}]"
-            //CommandText = $"INSERT INTO {logTable} (CreatedOn,Message,Level,Exception,StackTrace,Logger,HostName,Username,CallingSite,CallingSiteLineNumber,AppVersion,DatabaseName,DatabaseServer) " +
-              //  "VALUES (@datetime,@msg,@level,@exception,@trace,@logger,@hostname,@user,@callsite,@lineno,@version,@dbname,@dbserver)",
         };
 
         dbTarget.Parameters.Add(new DatabaseParameterInfo("@createdon", new NLog.Layouts.SimpleLayout("${date}")));
@@ -113,10 +111,10 @@ public partial class MainForm : Form
         dbTarget.Parameters.Add(new DatabaseParameterInfo("@databaseserver", new NLog.Layouts.SimpleLayout("${gdc:item=dbserver}")));
 
         var dbRule = new LoggingRule("*", minLevel, dbTarget);
-        var fileRule = new LoggingRule("*", LogLevel.Trace, fileTarget);
+        var fileRule = new LoggingRule("*", LogLevel.Debug, fileTarget);
 
         configuration.AddRule(dbRule);
-        //configuration.AddRule(fileRule);
+        configuration.AddRule(fileRule);
 
         LogManager.Configuration = configuration;
 

@@ -2,6 +2,7 @@
 using LabBilling.Core.Models;
 using LabBilling.Core.UnitOfWork;
 using LabBilling.Logging;
+using NPOI.OpenXmlFormats.Dml.Diagram;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -20,11 +21,10 @@ namespace LabBilling.Core.Services;
 /// </summary>
 public sealed class ClientInvoicesService
 {
-    private IAppEnvironment appEnvironment;
+    private readonly IAppEnvironment _appEnvironment;
     public event EventHandler<ClientInvoiceGeneratedEventArgs> InvoiceGenerated;
     public event EventHandler<ClientInvoiceGeneratedEventArgs> InvoiceRunCompleted;
-    private const string invoiceCdm = "CBILL";
-    private readonly DictionaryService dictionaryService;
+    private readonly DictionaryService _dictionaryService;
 
     public event EventHandler<ClientInvoiceProgressEventArgs> ReportProgress;
 
@@ -33,14 +33,14 @@ public sealed class ClientInvoicesService
         if (appEnvironment == null) throw new ArgumentNullException(nameof(appEnvironment));
         if (!appEnvironment.EnvironmentValid) throw new ArgumentException("App Environment is not valid.");
 
-        this.appEnvironment = appEnvironment;
-        dictionaryService = new(appEnvironment);
+        this._appEnvironment = appEnvironment;
+        _dictionaryService = new(appEnvironment);
     }
 
     public async Task CompileAsync(DateTime thruDate, IList<UnbilledClient> unbilledClients, CancellationToken token)
     {
         Log.Instance.Trace("Begin");
-        using UnitOfWorkMain unitOfWork = new(appEnvironment, true);
+        using UnitOfWorkMain unitOfWork = new(_appEnvironment, true);
         int clientCount = unbilledClients.Count;
         try
         {
@@ -100,7 +100,7 @@ public sealed class ClientInvoicesService
     public InvoiceModel GenerateStatement(string clientMnemonic, DateTime asOfDate)
     {
         Log.Instance.Trace($"Entering - client {clientMnemonic}");
-        using UnitOfWorkMain unitOfWork = new(appEnvironment, true);
+        using UnitOfWorkMain unitOfWork = new(_appEnvironment, true);
 
         if (clientMnemonic == null)
             throw new ArgumentNullException(nameof(clientMnemonic));
@@ -111,18 +111,18 @@ public sealed class ClientInvoicesService
         Account acc = unitOfWork.AccountRepository.GetByAccount(clientMnemonic);
 
         if (acc == null)
-            dictionaryService.AddClientAccount(clientMnemonic);
+            _dictionaryService.AddClientAccount(clientMnemonic);
 
         InvoiceModel invoiceModel = new()
         {
             StatementType = InvoiceModel.StatementTypeEnum.Statement,
-            BillingCompanyName = appEnvironment.ApplicationParameters.InvoiceCompanyName,
-            BillingCompanyAddress = appEnvironment.ApplicationParameters.InvoiceCompanyAddress,
-            BillingCompanyCity = appEnvironment.ApplicationParameters.InvoiceCompanyCity,
-            BillingCompanyState = appEnvironment.ApplicationParameters.InvoiceCompanyState,
-            BillingCompanyZipCode = appEnvironment.ApplicationParameters.InvoiceCompanyZipCode,
-            BillingCompanyPhone = appEnvironment.ApplicationParameters.InvoiceCompanyPhone,
-            ImageFilePath = appEnvironment.ApplicationParameters.InvoiceLogoImagePath
+            BillingCompanyName = _appEnvironment.ApplicationParameters.InvoiceCompanyName,
+            BillingCompanyAddress = _appEnvironment.ApplicationParameters.InvoiceCompanyAddress,
+            BillingCompanyCity = _appEnvironment.ApplicationParameters.InvoiceCompanyCity,
+            BillingCompanyState = _appEnvironment.ApplicationParameters.InvoiceCompanyState,
+            BillingCompanyZipCode = _appEnvironment.ApplicationParameters.InvoiceCompanyZipCode,
+            BillingCompanyPhone = _appEnvironment.ApplicationParameters.InvoiceCompanyPhone,
+            ImageFilePath = _appEnvironment.ApplicationParameters.InvoiceLogoImagePath
         };
 
         Client client = unitOfWork.ClientRepository.GetClient(clientMnemonic);
@@ -159,26 +159,26 @@ public sealed class ClientInvoicesService
         Log.Instance.Trace($"Entering - client {clientMnemonic} thrudate {throughDate}");
         if (clientMnemonic == null)
             throw new ArgumentNullException(nameof(clientMnemonic));
-        AccountService accountService = new(appEnvironment);
-        using UnitOfWorkMain unitOfWork = new(appEnvironment, true);
+        AccountService accountService = new(_appEnvironment);
+        using UnitOfWorkMain unitOfWork = new(_appEnvironment, true);
         try
         {
             Account acc = unitOfWork.AccountRepository.GetByAccount(clientMnemonic);
             if (acc == null)
-                dictionaryService.AddClientAccount(clientMnemonic);
+                _dictionaryService.AddClientAccount(clientMnemonic);
 
             InvoiceModel invoiceModel = new()
             {
                 StatementType = InvoiceModel.StatementTypeEnum.Invoice,
                 ThroughDate = throughDate,
 
-                BillingCompanyName = appEnvironment.ApplicationParameters.InvoiceCompanyName,
-                BillingCompanyAddress = appEnvironment.ApplicationParameters.InvoiceCompanyAddress,
-                BillingCompanyCity = appEnvironment.ApplicationParameters.InvoiceCompanyCity,
-                BillingCompanyState = appEnvironment.ApplicationParameters.InvoiceCompanyCity,
-                BillingCompanyZipCode = appEnvironment.ApplicationParameters.InvoiceCompanyZipCode,
-                BillingCompanyPhone = appEnvironment.ApplicationParameters.InvoiceCompanyPhone,
-                ImageFilePath = appEnvironment.ApplicationParameters.InvoiceLogoImagePath
+                BillingCompanyName = _appEnvironment.ApplicationParameters.InvoiceCompanyName,
+                BillingCompanyAddress = _appEnvironment.ApplicationParameters.InvoiceCompanyAddress,
+                BillingCompanyCity = _appEnvironment.ApplicationParameters.InvoiceCompanyCity,
+                BillingCompanyState = _appEnvironment.ApplicationParameters.InvoiceCompanyCity,
+                BillingCompanyZipCode = _appEnvironment.ApplicationParameters.InvoiceCompanyZipCode,
+                BillingCompanyPhone = _appEnvironment.ApplicationParameters.InvoiceCompanyPhone,
+                ImageFilePath = _appEnvironment.ApplicationParameters.InvoiceLogoImagePath
             };
 
             Client client = unitOfWork.ClientRepository.GetClient(clientMnemonic);
@@ -261,16 +261,16 @@ public sealed class ClientInvoicesService
                 Chrg accChrg = new()
                 {
                     AccountNo = account.AccountNo,
-                    CDMCode = "CBILL",
+                    CDMCode = _appEnvironment.ApplicationParameters.ClientInvoiceCdm,
                     Invoice = invoiceModel.InvoiceNo,
                     Quantity = amountTotal < 0 ? 1 : -1,
                     HospAmount = inpTotal,
                     RetailAmount = retailTotal,
                     NetAmount = Math.Abs(amountTotal),
-                    FinancialType = "C",
+                    FinancialType = _appEnvironment.ApplicationParameters.ClientFinancialTypeCode,
                     FinCode = account.FinCode,
                     ServiceDate = account.TransactionDate,
-                    Status = "NEW",
+                    Status = _appEnvironment.ApplicationParameters.NewChargeStatus,
                     PostingDate = DateTime.Today,
                     PerformingSite = "",
                     OrderingSite = "",
@@ -304,16 +304,16 @@ public sealed class ClientInvoicesService
             Chrg invoiceChrg = new()
             {
                 AccountNo = clientMnemonic,
-                CDMCode = "CBILL",
+                CDMCode = _appEnvironment.ApplicationParameters.ClientInvoiceCdm,
                 Invoice = invoiceModel.InvoiceNo,
                 Quantity = invoiceAmountTotal < 0 ? -1 : 1,
                 HospAmount = invoiceInpTotal,
                 RetailAmount = invoiceRetailTotal,
                 NetAmount = Math.Abs(invoiceAmountTotal),
-                FinancialType = "C",
-                FinCode = "CLIENT",
+                FinancialType = _appEnvironment.ApplicationParameters.ClientFinancialTypeCode,
+                FinCode = _appEnvironment.ApplicationParameters.ClientAccountFinCode,
                 ServiceDate = DateTime.Today,
-                Status = "NEW",
+                Status = _appEnvironment.ApplicationParameters.NewChargeStatus,
                 ClientMnem = invoiceModel.ClientMnem
             };
             var invdetail = new ChrgDetail()
@@ -342,7 +342,7 @@ public sealed class ClientInvoicesService
 
     public List<InvoiceHistory> GetInvoiceHistory(string clientMnem = null, DateTime? fromDate = null, DateTime? thruDate = null, string invoice = null)
     {
-        using UnitOfWorkMain uow = new(appEnvironment);
+        using UnitOfWorkMain uow = new(_appEnvironment);
 
         var retval = uow.InvoiceHistoryRepository.GetWithSort(clientMnem, fromDate, thruDate, invoice);
 
@@ -357,7 +357,7 @@ public sealed class ClientInvoicesService
 
         x.Serialize(textWriter, invoiceModel);
 
-        using UnitOfWorkMain unitOfWork = new(appEnvironment, true);
+        using UnitOfWorkMain unitOfWork = new(_appEnvironment, true);
         //write client invoice history record
         InvoiceHistory invoiceHistory = new()
         {
@@ -380,7 +380,7 @@ public sealed class ClientInvoicesService
 
     public List<ClientStatementDetailModel> GetStatementDetails(string clientMnem, DateTime asOfDate)
     {
-        using UnitOfWorkMain unitOfWork = new(appEnvironment, true);
+        using UnitOfWorkMain unitOfWork = new(_appEnvironment, true);
 
         var charges = unitOfWork.ChrgRepository.GetByAccount(clientMnem, true, true, asOfDate, false);
 
@@ -389,7 +389,7 @@ public sealed class ClientInvoicesService
         List<ClientStatementDetailModel> statementDetails = new();
         charges.ForEach(chrg =>
         {
-            if (chrg.NetAmount == 0 && chrg.CDMCode == invoiceCdm)
+            if (chrg.NetAmount == 0 && chrg.CDMCode == _appEnvironment.ApplicationParameters.ClientInvoiceCdm)
                 return;
 
             var statementDetail = new ClientStatementDetailModel
@@ -399,7 +399,7 @@ public sealed class ClientInvoicesService
                 Invoice = chrg.Invoice,
                 Amount = chrg.NetAmount * chrg.Quantity
             };
-            if (chrg.CDMCode == invoiceCdm)
+            if (chrg.CDMCode == _appEnvironment.ApplicationParameters.ClientInvoiceCdm)
             {
                 statementDetail.Description = $"Invoice {chrg.Invoice}";
                 statementDetail.Reference = chrg.Invoice;
@@ -450,7 +450,7 @@ public sealed class ClientInvoicesService
 
     public List<UnbilledClient> GetUnbilledClients(DateTime throughDate, IProgress<int> progress)
     {
-        using UnitOfWorkMain uow = new(appEnvironment);
+        using UnitOfWorkMain uow = new(_appEnvironment);
 
         var retval = uow.ClientRepository.GetUnbilledClients(throughDate, progress);
 
@@ -459,7 +459,7 @@ public sealed class ClientInvoicesService
 
     public async Task<List<UnbilledClient>> GetUnbilledClientsAsync(DateTime throughDate, IProgress<int> progress)
     {
-        using UnitOfWorkMain uow = new(appEnvironment);
+        using UnitOfWorkMain uow = new(_appEnvironment);
 
         var retval = await uow.ClientRepository.GetUnbilledClientsAsync(throughDate, progress);
         retval.Sort((x, y) => x.ClientName.CompareTo(y.ClientName));

@@ -17,7 +17,6 @@ namespace LabBilling.Core.DataAccess
 
         public string GetProductionEnvironment()
         {
-            //string env = GetByKey("dbenvironment");
             string env = AppEnvironment.Environment;
             if (env == "Production")
                 return "P";
@@ -28,7 +27,7 @@ namespace LabBilling.Core.DataAccess
         [Obsolete]
         public string GetByKey(string key)
         {
-            Log.Instance.Debug($"Entering");
+            Log.Instance.Trace($"Entering");
 
             SysParameter record;
 
@@ -43,7 +42,7 @@ namespace LabBilling.Core.DataAccess
 
         public string GetByKeyName(string keyName)
         {
-            Log.Instance.Debug($"Entering");
+            Log.Instance.Trace($"Entering");
 
             SysParameter record;
 
@@ -61,7 +60,7 @@ namespace LabBilling.Core.DataAccess
 
         public SysParameter GetParameter(string keyName)
         {
-            Log.Instance.Debug($"Entering");
+            Log.Instance.Trace($"Entering");
 
             SysParameter record;
 
@@ -73,6 +72,7 @@ namespace LabBilling.Core.DataAccess
 
         public ApplicationParameters LoadParameters()
         {
+            Log.Instance.Trace("Entering");
             var parameters = new ApplicationParameters();
 
             PropertyInfo[] properties = typeof(ApplicationParameters).GetProperties();
@@ -94,24 +94,24 @@ namespace LabBilling.Core.DataAccess
                     //need to do data type conversion
 
                     if (property.PropertyType == typeof(string))
-                        v = value.Value ?? null;
+                        v = value?.Value ?? null;
                     else if(property.PropertyType == typeof(double))
-                        v = Convert.ToDouble(value.Value.ToString());
+                        v = Convert.ToDouble(value?.Value.ToString());
                     else if (property.PropertyType == typeof(int))
-                        v = Convert.ToInt32(value.Value.ToString());
+                        v = Convert.ToInt32(value?.Value.ToString());
                     else if (property.PropertyType == typeof(Int16))
-                        v = Convert.ToInt16(value.Value.ToString());
+                        v = Convert.ToInt16(value?.Value.ToString());
                     else if (property.PropertyType == typeof(Int32))
-                        v = Convert.ToInt32(value.Value.ToString());
+                        v = Convert.ToInt32(value?.Value.ToString());
                     else if (property.PropertyType == typeof(DateTime))
                     {
                         DateTime temp = DateTime.MinValue;
-                        bool v1 = DateTime.TryParse(value.Value.ToString(), out temp);
+                        bool v1 = DateTime.TryParse(value?.Value.ToString(), out temp);
                         v = temp;
                     }
                     else if (property.PropertyType == typeof(bool))
-                        v = Convert.ToBoolean(value.Value);
-                    else v = value.Value;
+                        v = Convert.ToBoolean(value?.Value);
+                    else v = value?.Value;
 
 
 
@@ -128,6 +128,7 @@ namespace LabBilling.Core.DataAccess
 
         public void SaveParameter(string keyName, object value, string category, string description, string dataType)
         {
+            Log.Instance.Trace("Entering");
             try
             {
                 SysParameter parm = GetParameter(keyName);
@@ -165,6 +166,7 @@ namespace LabBilling.Core.DataAccess
 
         public void SaveParameters(ApplicationParameters parameters)
         {
+            Log.Instance.Trace("Entering");
             PropertyInfo[] properties = typeof(ApplicationParameters).GetProperties();
             foreach (PropertyInfo property in properties)
             {

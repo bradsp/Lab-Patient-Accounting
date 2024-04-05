@@ -10,13 +10,13 @@ namespace LabBilling.Core.Services;
 
 public class BatchTransactionService
 {
-    private IAppEnvironment appEnvironment;
-    private AccountService accountService;
+    private readonly IAppEnvironment _appEnvironment;
+    private readonly AccountService _accountService;
 
     public BatchTransactionService(IAppEnvironment appEnvironment)
     {
-        this.appEnvironment = appEnvironment;
-        accountService = new(appEnvironment);
+        this._appEnvironment = appEnvironment;
+        _accountService = new(appEnvironment);
     }
 
     /// <summary>
@@ -27,7 +27,7 @@ public class BatchTransactionService
     public ChkBatch SavePaymentBatch(ChkBatch chkBatch)
     {
         Log.Instance.Trace("Entering");
-        using UnitOfWorkMain uow = new(appEnvironment, true);
+        using UnitOfWorkMain uow = new(_appEnvironment, true);
 
         if (chkBatch.BatchNo > 0)
         {
@@ -53,7 +53,7 @@ public class BatchTransactionService
 
     public List<ChkBatch> GetOpenPaymentBatches()
     {
-        using UnitOfWorkMain unitOfWork = new(appEnvironment);
+        using UnitOfWorkMain unitOfWork = new(_appEnvironment);
         List<ChkBatch> chkBatches = unitOfWork.ChkBatchRepository.GetOpenBatches();
 
         return chkBatches;
@@ -61,7 +61,7 @@ public class BatchTransactionService
 
     public ChkBatch GetPaymentBatchById(int batchNo)
     {
-        using UnitOfWorkMain uow = new(appEnvironment);
+        using UnitOfWorkMain uow = new(_appEnvironment);
 
         var batch = uow.ChkBatchRepository.GetById(batchNo);
         batch.ChkBatchDetails = uow.ChkBatchDetailRepository.GetByBatch(batchNo);
@@ -70,9 +70,9 @@ public class BatchTransactionService
         {
             if (!string.IsNullOrEmpty(x.AccountNo))
             {
-                var acc = accountService.GetAccountMinimal(x.AccountNo);
+                var acc = _accountService.GetAccountMinimal(x.AccountNo);
                 x.PatientName = acc?.PatFullName;
-                x.Balance = accountService.GetBalance(x.AccountNo);
+                x.Balance = _accountService.GetBalance(x.AccountNo);
             }
         }
 );
@@ -81,7 +81,7 @@ public class BatchTransactionService
 
     public bool DeletePaymentBatch(int batchNo)
     {
-        using UnitOfWorkMain uow = new(appEnvironment, true);
+        using UnitOfWorkMain uow = new(_appEnvironment, true);
         var chkBatch = GetPaymentBatchById(batchNo);
 
         if (chkBatch != null || chkBatch.BatchNo <= 0)
@@ -97,7 +97,7 @@ public class BatchTransactionService
 
     public void PostBatchPayments(int batchNo)
     {
-        using ChkBatchUnitOfWork uow = new(appEnvironment, true);
+        using ChkBatchUnitOfWork uow = new(_appEnvironment, true);
 
         var chkBatch = GetPaymentBatchById(batchNo);
         List<Chk> chks = new();
@@ -132,7 +132,7 @@ public class BatchTransactionService
 
     public void PostBatchPayments(IList<Chk> chks)
     {
-        using ChkBatchUnitOfWork uow = new(appEnvironment, true);
+        using ChkBatchUnitOfWork uow = new(_appEnvironment, true);
         try
         {
             uow.AddBatch(chks.ToList());
@@ -147,7 +147,7 @@ public class BatchTransactionService
 
     public ChkBatchDetail SavePaymentBatchDetail(ChkBatchDetail detail)
     {
-        using ChkBatchUnitOfWork uow = new(appEnvironment, true);
+        using ChkBatchUnitOfWork uow = new(_appEnvironment, true);
         var result = uow.ChkBatchDetailRepository.Save(detail);
         uow.Commit();
         return result;
@@ -155,7 +155,7 @@ public class BatchTransactionService
 
     public bool DeletePaymentBatchDetail(int detailId)
     {
-        using ChkBatchUnitOfWork uow = new(appEnvironment, true);
+        using ChkBatchUnitOfWork uow = new(_appEnvironment, true);
 
         if (uow.ChkBatchDetailRepository.Delete(detailId))
         {
@@ -168,7 +168,7 @@ public class BatchTransactionService
 
     public decimal GetNextBatchNumber()
     {
-        using ChkBatchUnitOfWork uow = new(appEnvironment);
+        using ChkBatchUnitOfWork uow = new(_appEnvironment);
 
         return uow.NumberRepository.GetNumber("batch");
     }

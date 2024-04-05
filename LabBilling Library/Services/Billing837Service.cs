@@ -24,11 +24,11 @@ public sealed class Billing837Service
     {
         get
         {
-            if (claimType == null)
+            if (_claimType == null)
                 throw new NullReferenceException("ClaimType has not been initialized.");
-            if (claimType == ClaimType.Institutional)
+            if (_claimType == ClaimType.Institutional)
                 return VersionReleaseSpecifierCodeInstitutional;
-            if (claimType == ClaimType.Professional)
+            if (_claimType == ClaimType.Professional)
                 return VersionReleaseSpecifierCodeProfessional;
             return string.Empty;
         }
@@ -48,8 +48,8 @@ public sealed class Billing837Service
 
     public const string transactionSetIdentifierCode = "837";
 
-    private ClaimType? claimType;
-    private ClaimData claim; //used to track current claim being processed
+    private ClaimType? _claimType;
+    private ClaimData _claim; //used to track current claim being processed
     private List<char> specialChars 
     { 
         get
@@ -113,7 +113,7 @@ public sealed class Billing837Service
         string file_location,
         ClaimType claimType)
     {
-        this.claimType = claimType;
+        this._claimType = claimType;
 
         ediDocument = new EdiDocument();
 
@@ -157,7 +157,7 @@ public sealed class Billing837Service
         int transactionSets = 0;
         foreach (ClaimData claim in claims)
         {
-            this.claim = claim;
+            this._claim = claim;
             Build837Claim();
             transactionSets++;
         }
@@ -192,7 +192,7 @@ public sealed class Billing837Service
     private string Build837Claim()
     {
 
-        this.claimType = claim.ClaimType switch
+        this._claimType = _claim.ClaimType switch
         {
             ClaimType.Institutional => (ClaimType?)ClaimType.Institutional,
             ClaimType.Professional => (ClaimType?)ClaimType.Professional,
@@ -205,7 +205,7 @@ public sealed class Billing837Service
         ediDocument.Segments.Add(new EdiSegment("ST")
         {
             [01] = transactionSetIdentifierCode,
-            [02] = claim.claimAccount.AccountNo, // transaction set control number - must match SE02
+            [02] = _claim.claimAccount.AccountNo, // transaction set control number - must match SE02
             [03] = this.VersionReleaseSpecifierCode //implementation convention reference
         });
         segmentCount++;
@@ -214,11 +214,11 @@ public sealed class Billing837Service
         ediDocument.Segments.Add(new EdiSegment("BHT")
         {
             [01] = "0019", //hierarchical structure code
-            [02] = claim.TransactionSetPurpose, //transaction set purpose 00 - original; 18 - reissue
-            [03] = claim.claimAccount.AccountNo, //reference identification
+            [02] = _claim.TransactionSetPurpose, //transaction set purpose 00 - original; 18 - reissue
+            [03] = _claim.claimAccount.AccountNo, //reference identification
             [04] = EdiValue.Date(8, DateTime.Today), // date claim file is create - should be today
             [05] = EdiValue.Time(4, DateTime.Now), //time transaction set is created
-            [06] = claim.TransactionTypeCode //transaction type code - CH = chargable
+            [06] = _claim.TransactionTypeCode //transaction type code - CH = chargable
         });
         segmentCount++;
 
@@ -244,7 +244,7 @@ public sealed class Billing837Service
         ediDocument.Segments.Add(new EdiSegment("SE")
         {
             [01] = segmentCount.ToString(),
-            [02] = claim.claimAccount.AccountNo
+            [02] = _claim.claimAccount.AccountNo
         });
 
         return ediDocument.ToString();
@@ -259,9 +259,9 @@ public sealed class Billing837Service
         {
             [01] = "41", //41 = submitter
             [02] = "2", // 2 = non-person entity
-            [03] = claim.SubmitterName, //submitter last name / organzation name
+            [03] = _claim.SubmitterName, //submitter last name / organzation name
             [08] = "46", //identification qualification code
-            [09] = claim.SubmitterId //identification code (our tax id)
+            [09] = _claim.SubmitterId //identification code (our tax id)
         });
         segmentCount++;
 
@@ -269,11 +269,11 @@ public sealed class Billing837Service
         ediDocument.Segments.Add(new EdiSegment("PER")
         {
             [01] = "IC",
-            [02] = claim.SubmitterContactName, //free form name
+            [02] = _claim.SubmitterContactName, //free form name
             [03] = "TE", //contact type (TE - telephone, EM - email, FX - fax)
-            [04] = claim.SubmitterContactPhone, //contact phone
+            [04] = _claim.SubmitterContactPhone, //contact phone
             [05] = "EM", //2nd contact type
-            [06] = claim.SubmitterContactEmail //contact email
+            [06] = _claim.SubmitterContactEmail //contact email
         });
         segmentCount++;
 
@@ -287,9 +287,9 @@ public sealed class Billing837Service
         {
             [01] = "40",
             [02] = "2",
-            [03] = claim.ReceiverOrgName, //organization name
+            [03] = _claim.ReceiverOrgName, //organization name
             [08] = "46", //identification code qualifier - 46 = ETIN
-            [09] = claim.ReceiverId //identification code (tax-id) 
+            [09] = _claim.ReceiverId //identification code (tax-id) 
         });
         segmentCount++;
 
@@ -312,7 +312,7 @@ public sealed class Billing837Service
         {
             [01] = "BI",
             [02] = "PXC",
-            [03] = claim.ProviderTaxonomyCode //provider taxonomy code
+            [03] = _claim.ProviderTaxonomyCode //provider taxonomy code
         });
         segmentCount++;
         // CUR - Foreign Currency Information
@@ -333,34 +333,34 @@ public sealed class Billing837Service
         {
             [01] = "85",
             [02] = "2",
-            [03] = claim.BillingProviderName,
+            [03] = _claim.BillingProviderName,
             [08] = "XX",
-            [09] = claim.BillingProviderNPI, // is this the correct code?
+            [09] = _claim.BillingProviderNPI, // is this the correct code?
         });
         segmentCount++;
         // --N3 - Billing Provider Address
-        if (!string.IsNullOrEmpty(claim.BillingProviderAddress))
+        if (!string.IsNullOrEmpty(_claim.BillingProviderAddress))
         {
             ediDocument.Segments.Add(new EdiSegment("N3")
             {
-                [01] = claim.BillingProviderAddress
+                [01] = _claim.BillingProviderAddress
             });
             segmentCount++;
         }
         // --N4 - Billing Provider City St Zip
         ediDocument.Segments.Add(new EdiSegment("N4")
         {
-            [01] = claim.BillingProviderCity,
-            [02] = claim.BillingProviderState,
-            [03] = claim.BillingProviderZipCode,
-            [04] = claim.BillingProviderCountry
+            [01] = _claim.BillingProviderCity,
+            [02] = _claim.BillingProviderState,
+            [03] = _claim.BillingProviderZipCode,
+            [04] = _claim.BillingProviderCountry
         });
         segmentCount++;
         // --REF - Billing Provider Tax Identification
         ediDocument.Segments.Add(new EdiSegment("REF")
         {
             [01] = "EI",
-            [02] = claim.SubmitterId
+            [02] = _claim.SubmitterId
         });
         segmentCount++;
         // --REF - Billing Provider UPIN/License Information
@@ -376,11 +376,11 @@ public sealed class Billing837Service
         ediDocument.Segments.Add(new EdiSegment("PER")
         {
             [01] = "IC",
-            [02] = claim.BillingProviderContactName,
+            [02] = _claim.BillingProviderContactName,
             [03] = "TE",
-            [04] = claim.BillingProviderContactPhone,
+            [04] = _claim.BillingProviderContactPhone,
             [05] = "EM",
-            [06] = claim.BillingProviderContactEmail
+            [06] = _claim.BillingProviderContactEmail
         });
         segmentCount++;
         return segmentCount;
@@ -398,21 +398,21 @@ public sealed class Billing837Service
         segmentCount++;
 
         // --N3 - Pay to Address ADDRESS
-        if (!string.IsNullOrEmpty(claim.PayToAddress))
+        if (!string.IsNullOrEmpty(_claim.PayToAddress))
         {
             ediDocument.Segments.Add(new EdiSegment("N3")
             {
-                [01] = claim.PayToAddress
+                [01] = _claim.PayToAddress
             });
             segmentCount++;
         }
         // --N4 - Pay to Address City State Zip
         ediDocument.Segments.Add(new EdiSegment("N4")
         {
-            [01] = claim.PayToCity,
-            [02] = claim.PayToState,
-            [03] = claim.PayToZipCode,
-            [04] = claim.PayToCountry
+            [01] = _claim.PayToCity,
+            [02] = _claim.PayToState,
+            [03] = _claim.PayToZipCode,
+            [04] = _claim.PayToCountry
         });
         segmentCount++;
         return segmentCount;
@@ -426,48 +426,48 @@ public sealed class Billing837Service
 
         int segmentCount = 0;
 
-        if (claim.PayToPlanName != null && claim.PayToPlanName != String.Empty && claim.TransactionTypeCode == "31")
+        if (_claim.PayToPlanName != null && _claim.PayToPlanName != String.Empty && _claim.TransactionTypeCode == "31")
         {
             // - NM1 - Pay to Plan Name
             ediDocument.Segments.Add(new EdiSegment("NM1")
             {
                 [01] = "PE",
                 [02] = "2",
-                [03] = claim.PayToPlanName,
+                [03] = _claim.PayToPlanName,
                 [08] = "PI",
-                [09] = claim.PayToPlanPrimaryIdentifier
+                [09] = _claim.PayToPlanPrimaryIdentifier
             });
             segmentCount++;
             // - N3 - Pay to Plan address
-            if (!string.IsNullOrEmpty(claim.PayToPlanAddress))
+            if (!string.IsNullOrEmpty(_claim.PayToPlanAddress))
             {
                 ediDocument.Segments.Add(new EdiSegment("N3")
                 {
-                    [01] = claim.PayToPlanAddress
+                    [01] = _claim.PayToPlanAddress
                 });
                 segmentCount++;
             }
             // - N4 - Pay to Plan City State Zip
             ediDocument.Segments.Add(new EdiSegment("N4")
             {
-                [01] = claim.PayToPlanCity,
-                [02] = claim.PaytoPlanState,
-                [03] = claim.PaytoPlanZipCode,
-                [04] = claim.PayToPlanCountry
+                [01] = _claim.PayToPlanCity,
+                [02] = _claim.PaytoPlanState,
+                [03] = _claim.PaytoPlanZipCode,
+                [04] = _claim.PayToPlanCountry
             });
             segmentCount++;
             // - REF - Pay to Plan Secondary Information 
             ediDocument.Segments.Add(new EdiSegment("REF")
             {
                 [01] = "2U",
-                [02] = claim.PayToPlanSecondaryIdentifier
+                [02] = _claim.PayToPlanSecondaryIdentifier
             });
             segmentCount++;
             // - REF - Pay to Plan Tax Identification Number
             ediDocument.Segments.Add(new EdiSegment("REF")
             {
                 [01] = "EI",
-                [02] = claim.PayToPlanTaxId
+                [02] = _claim.PayToPlanTaxId
             });
             segmentCount++;
         }
@@ -480,9 +480,9 @@ public sealed class Billing837Service
         int segmentCount = 0;
 
         //Primary Payer
-        if (claim.Subscribers.Count > 0)
+        if (_claim.Subscribers.Count > 0)
         {
-            ClaimSubscriber subscriber = claim.Subscribers[0];
+            ClaimSubscriber subscriber = _claim.Subscribers[0];
 
             // --HL - Subscriber Hierarchical Level
             ediDocument.Segments.Add(new EdiSegment("HL")
@@ -666,7 +666,7 @@ public sealed class Billing837Service
     private int Loop2000C(ref int hlCount)
     {
         int segmentCount = 0;
-        if (claim.claimAccount.InsurancePrimary.Relation != "01")
+        if (_claim.claimAccount.InsurancePrimary.Relation != "01")
         {
             //HL segment
             ediDocument.Segments.Add(new EdiSegment("HL")
@@ -679,7 +679,7 @@ public sealed class Billing837Service
             segmentCount++;
             // - PAT - Patient Information
             string indRelationCode;
-            switch (claim.claimAccount.InsurancePrimary.Relation)
+            switch (_claim.claimAccount.InsurancePrimary.Relation)
             {
                 case "01":
                     indRelationCode = "18";
@@ -712,38 +712,38 @@ public sealed class Billing837Service
             {
                 [01] = "QC",
                 [02] = "1",
-                [03] = claim.claimAccount.PatLastName,
-                [04] = claim.claimAccount.PatFirstName,
-                [05] = claim.claimAccount.PatMiddleName,
-                [07] = claim.claimAccount.PatNameSuffix
+                [03] = _claim.claimAccount.PatLastName,
+                [04] = _claim.claimAccount.PatFirstName,
+                [05] = _claim.claimAccount.PatMiddleName,
+                [07] = _claim.claimAccount.PatNameSuffix
 
             });
             segmentCount++;
 
             ediDocument.Segments.Add(new EdiSegment("N3")
             {
-                [01] = claim.claimAccount.Pat.Address1,
-                [02] = claim.claimAccount.Pat.Address2
+                [01] = _claim.claimAccount.Pat.Address1,
+                [02] = _claim.claimAccount.Pat.Address2
             });
             segmentCount++;
 
             ediDocument.Segments.Add(new EdiSegment("N4")
             {
-                [01] = claim.claimAccount.Pat.City,
-                [02] = claim.claimAccount.Pat.State,
-                [03] = claim.claimAccount.Pat.ZipCode
+                [01] = _claim.claimAccount.Pat.City,
+                [02] = _claim.claimAccount.Pat.State,
+                [03] = _claim.claimAccount.Pat.ZipCode
             });
             segmentCount++;
             string patDob;
-            if (claim.claimAccount.BirthDate != null)
-                patDob = EdiValue.Date(8, (DateTime)claim.claimAccount.BirthDate);
+            if (_claim.claimAccount.BirthDate != null)
+                patDob = EdiValue.Date(8, (DateTime)_claim.claimAccount.BirthDate);
             else
                 patDob = "";
             ediDocument.Segments.Add(new EdiSegment("DMG")
             {
                 [01] = "D8",
                 [02] = patDob,
-                [03] = claim.claimAccount.Sex
+                [03] = _claim.claimAccount.Sex
             });
             segmentCount++;
 
@@ -759,35 +759,35 @@ public sealed class Billing837Service
 
         // --CLM - Claim Information
         var clm = new EdiSegment("CLM");
-        clm.Element(1, new EdiElement(claim.ClaimIdentifier));
-        clm.Element(2, new EdiElement(claim.TotalChargeAmount.ToString("F2")));
+        clm.Element(1, new EdiElement(_claim.ClaimIdentifier));
+        clm.Element(2, new EdiElement(_claim.TotalChargeAmount.ToString("F2")));
         var clm05 = new EdiElement();
-        clm05[01] = claim.FacilityCode;
-        clm05[02] = claim.FacilityCodeQualifier;
-        clm05[03] = claim.ClaimFrequency;
+        clm05[01] = _claim.FacilityCode;
+        clm05[02] = _claim.FacilityCodeQualifier;
+        clm05[03] = _claim.ClaimFrequency;
         clm.Element(5, clm05);
 
-        clm.Element(6, new EdiElement(claim.ProviderSignatureIndicator));
-        clm.Element(7, new EdiElement(claim.ProviderAcceptAssignmentCode));
-        clm.Element(8, new EdiElement(claim.BenefitAssignmentCertificationIndicator));
-        clm.Element(9, new EdiElement(claim.ReleaseOfInformationCode));
-        clm.Element(10, new EdiElement(claim.PatientSignatureSourceCode));
+        clm.Element(6, new EdiElement(_claim.ProviderSignatureIndicator));
+        clm.Element(7, new EdiElement(_claim.ProviderAcceptAssignmentCode));
+        clm.Element(8, new EdiElement(_claim.BenefitAssignmentCertificationIndicator));
+        clm.Element(9, new EdiElement(_claim.ReleaseOfInformationCode));
+        clm.Element(10, new EdiElement(_claim.PatientSignatureSourceCode));
 
         var clm11 = new EdiElement();
-        clm11[1] = claim.RelatedCausesCode1;
-        clm11[2] = claim.RelatedCausesCode2;
-        clm11[3] = claim.RelatedCausesCode3;
-        clm11[4] = claim.RelatedCausesStateCode;
-        clm11[5] = claim.RelatedCausesCountryCode;
+        clm11[1] = _claim.RelatedCausesCode1;
+        clm11[2] = _claim.RelatedCausesCode2;
+        clm11[3] = _claim.RelatedCausesCode3;
+        clm11[4] = _claim.RelatedCausesStateCode;
+        clm11[5] = _claim.RelatedCausesCountryCode;
         clm.Element(11, clm11);
 
-        clm.Element(12, new EdiElement(claim.SpecialProgramIndicator));
-        clm.Element(20, new EdiElement(claim.DelayReasonCode));
+        clm.Element(12, new EdiElement(_claim.SpecialProgramIndicator));
+        clm.Element(20, new EdiElement(_claim.DelayReasonCode));
 
         ediDocument.Segments.Add(clm);
         segmentCount++;
         
-        if (claimType == ClaimType.Professional)
+        if (_claimType == ClaimType.Professional)
         {
             // --DTP - Date - Onset of Current Symptoms--professional claim
 
@@ -803,37 +803,37 @@ public sealed class Billing837Service
             //    segmentCount++;
             //}
             // --DTP - Date - Initial Treatment Date
-            if (claim.InitialTreatmentDate != null)
+            if (_claim.InitialTreatmentDate != null)
             {
                 ediDocument.Segments.Add(new EdiSegment("DTP")
                 {
                     [01] = "454",
                     [02] = "D8",
-                    [03] = EdiValue.Date(8, claim.InitialTreatmentDate ?? DateTime.MinValue)
+                    [03] = EdiValue.Date(8, _claim.InitialTreatmentDate ?? DateTime.MinValue)
                 });
                 segmentCount++;
             }
             // --DTP - Date - Last Seen Date
             // --DTP - Date - Acute Manifestation
             // --DTP - Date - Accident
-            if (claim.DateOfAccident != null)
+            if (_claim.DateOfAccident != null)
             {
                 ediDocument.Segments.Add(new EdiSegment("DTP")
                 {
                     [01] = "439",
                     [02] = "D8",
-                    [03] = EdiValue.Date(8, claim.DateOfAccident ?? DateTime.MinValue)
+                    [03] = EdiValue.Date(8, _claim.DateOfAccident ?? DateTime.MinValue)
                 });
                 segmentCount++;
             }
         }
 
-        if (claimType == ClaimType.Institutional)
+        if (_claimType == ClaimType.Institutional)
         {
             //DTP - Discharge Hour - req'd for inpatient claims
             //DTP - Statement Dates
-            string statementFromDate = EdiValue.Date(8, claim.StatementFromDate ?? DateTime.MinValue);
-            string statementThruDate = EdiValue.Date(8, claim.StatementThruDate ?? DateTime.MinValue);
+            string statementFromDate = EdiValue.Date(8, _claim.StatementFromDate ?? DateTime.MinValue);
+            string statementThruDate = EdiValue.Date(8, _claim.StatementThruDate ?? DateTime.MinValue);
             ediDocument.Segments.Add(new EdiSegment("DTP")
             {
                 [01] = "434",
@@ -847,7 +847,7 @@ public sealed class Billing837Service
             ediDocument.Segments.Add(new EdiSegment("CL1")
             {
                 [01] = "", //admission type code
-                [02] = claim.AdmissionSourceCode, //admission source code
+                [02] = _claim.AdmissionSourceCode, //admission source code
                 [03] = "01", //patient status code - core source 239 - hardcoding to 01 for now
             });
             segmentCount++;
@@ -866,25 +866,25 @@ public sealed class Billing837Service
         //    segmentCount++;
         //}
         // --REF - several REF segments as needed
-        if (claimType == ClaimType.Professional)
+        if (_claimType == ClaimType.Professional)
         {
             //CLIA number
             ediDocument.Segments.Add(new EdiSegment("REF")
             {
                 [01] = "X4",
-                [02] = claim.CliaNumber
+                [02] = _claim.CliaNumber
             });
             segmentCount++;
         }
-        if (claimType == ClaimType.Institutional)
+        if (_claimType == ClaimType.Institutional)
         {
             // medical record number
-            if (!string.IsNullOrEmpty(claim.claimAccount.MRN))
+            if (!string.IsNullOrEmpty(_claim.claimAccount.MRN))
             {
                 ediDocument.Segments.Add(new EdiSegment("REF")
                 {
                     [01] = "EA",
-                    [02] = claim.claimAccount.MRN.Trim()
+                    [02] = _claim.claimAccount.MRN.Trim()
                 });
                 segmentCount++;
             }
@@ -898,10 +898,10 @@ public sealed class Billing837Service
         // --HI - Healthcare diagnosis code
         var hi = new EdiSegment("HI");
         int dxCnt = 1;
-        if (claimType == ClaimType.Institutional)
+        if (_claimType == ClaimType.Institutional)
         {
             //per spec - one HI segment per dx code. Primary diagnosis will have "ABK", secondary dx use "ABF"
-            foreach (PatDiag diag in claim.claimAccount.Pat.Diagnoses)
+            foreach (PatDiag diag in _claim.claimAccount.Pat.Diagnoses)
             {
                 if (string.IsNullOrEmpty(diag.Code.Trim()))
                     continue;
@@ -930,9 +930,9 @@ public sealed class Billing837Service
             ediDocument.Segments.Add(hi);
             segmentCount++;
         }
-        if (claimType == ClaimType.Professional)
+        if (_claimType == ClaimType.Professional)
         {
-            foreach (PatDiag diag in claim.claimAccount.Pat.Diagnoses)
+            foreach (PatDiag diag in _claim.claimAccount.Pat.Diagnoses)
             {
                 var hiElement = new EdiElement();
                 if (dxCnt == 1)
@@ -958,35 +958,35 @@ public sealed class Billing837Service
         // --HCP - healthcare repricing information
 
         // Loop 2310A - Referring Provider Name or AttendingProvider Name
-        if (claimType == ClaimType.Institutional)
+        if (_claimType == ClaimType.Institutional)
         {
             ediDocument.Segments.Add(new EdiSegment("NM1")
             {
                 [01] = "71",
                 [02] = "1",
-                [03] = claim.AttendingProviderLastName,
-                [04] = claim.AttendingProviderFirstName,
-                [05] = claim.AttendingProviderMiddleName,
-                [06] = claim.AttendingProviderSuffix,
+                [03] = _claim.AttendingProviderLastName,
+                [04] = _claim.AttendingProviderFirstName,
+                [05] = _claim.AttendingProviderMiddleName,
+                [06] = _claim.AttendingProviderSuffix,
                 [08] = "XX",
-                [09] = claim.AttendingProviderNPI
+                [09] = _claim.AttendingProviderNPI
             });
             segmentCount++;
         }
         // Loop 2310A - Referring Provider Name or AttendingProvider Name
         // - NM1 - Referring provider name
-        if (claimType == ClaimType.Professional)
+        if (_claimType == ClaimType.Professional)
         {
             ediDocument.Segments.Add(new EdiSegment("NM1")
             {
                 [01] = "DN",
                 [02] = "1",
-                [03] = claim.ReferringProviderLastName,
-                [04] = claim.ReferringProviderFirstName,
-                [05] = claim.ReferringProviderMiddleName,
-                [06] = claim.ReferringProviderSuffix,
+                [03] = _claim.ReferringProviderLastName,
+                [04] = _claim.ReferringProviderFirstName,
+                [05] = _claim.ReferringProviderMiddleName,
+                [06] = _claim.ReferringProviderSuffix,
                 [08] = "XX",
-                [09] = claim.ReferringProviderNPI
+                [09] = _claim.ReferringProviderNPI
 
             });
             segmentCount++;
@@ -1009,7 +1009,7 @@ public sealed class Billing837Service
 
         //Loop 2320 - Other Subscriber information
         //SBR - Other Subscriber information
-        foreach (ClaimSubscriber subscriber in claim.Subscribers)
+        foreach (ClaimSubscriber subscriber in _claim.Subscribers)
         {
             if (subscriber.PayerResponsibilitySequenceCode == "P")
                 continue;
@@ -1088,7 +1088,7 @@ public sealed class Billing837Service
         int segmentCount = 0;
         // Loop 2400 - Service line number
         int lineCnt = 1;
-        foreach (ClaimLine line in claim.ClaimLines)
+        foreach (ClaimLine line in _claim.ClaimLines)
         {
             // - LX - service line number
             ediDocument.Segments.Add(new EdiSegment("LX")
@@ -1097,7 +1097,7 @@ public sealed class Billing837Service
             });
             segmentCount++;
 
-            switch (claimType)
+            switch (_claimType)
             {
                 case ClaimType.Institutional:
                     var sv2 = new EdiSegment("SV2");
