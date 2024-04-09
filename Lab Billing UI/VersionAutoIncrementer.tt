@@ -1,0 +1,28 @@
+﻿// https://makolyte.com/auto-increment-build-numbers-in-visual-studio/
+
+<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs" #>
+
+using System.Reflection;
+
+[assembly: System.Reflection.AssemblyCompanyAttribute("Lab Patient Accounting")]
+[assembly: System.Reflection.AssemblyCopyrightAttribute("Copyright 2020-2024")]
+[assembly: System.Reflection.AssemblyDescriptionAttribute("...")]
+[assembly: System.Reflection.AssemblyFileVersionAttribute("<#= this.Major #>.<#= this.Minor #>.<#= this.Build #>.<#= this.Revision #>")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("<#= this.Major #>.<#= this.Minor #>.<#= this.Build #>.<#= this.Revision #>")]
+[assembly: System.Reflection.AssemblyProductAttribute("...")]
+[assembly: System.Reflection.AssemblyTitleAttribute("Lab Patient Accounting")]
+[assembly: AssemblyVersion("<#= this.Major #>.<#= this.Minor #>.<#= this.Build #>.<#= this.Revision #>")]
+
+<#+
+
+ int Major = DateTime.Today.Year;
+ int Minor = DateTime.Today.Month;
+ int Build = DateTime.Today.Day;
+ int Revision = (int)DateTime.Now.TimeOfDay.TotalMinutes;
+
+#>

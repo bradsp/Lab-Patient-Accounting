@@ -141,12 +141,34 @@ public sealed class AccountService
         record.Pat = uow.PatRepository.GetByAccount(record);
         record.Charges = GetCharges(account, true, true, null, false).ToList();
         record.ChrgDiagnosisPointers = uow.ChrgDiagnosisPointerRepository.GetByAccount(account).ToList();
+
+        record.Charges.ForEach(chrg =>
+        {
+            chrg.ChrgDetails.ForEach(cd =>
+            {
+                var diagPtr = record.ChrgDiagnosisPointers.Find(c => c.CdmCode == chrg.CDMCode && c.CptCode == cd.Cpt4);
+                if (diagPtr == null)
+                {
+                    //add a new diag ptr
+                    ChrgDiagnosisPointer ptr = new()
+                    {
+                        AccountNo = record.AccountNo,
+                        CdmCode = chrg.CDMCode,
+                        CptCode = cd.Cpt4,
+                        DiagnosisPointer = "1:"
+                    };
+                    record.ChrgDiagnosisPointers.Add(uow.ChrgDiagnosisPointerRepository.Add(ptr));
+                }
+            });
+        });
+
         record.ChrgDiagnosisPointers.ForEach(d =>
         {
             d.CdmDescription = record.Cdms.Where(c => c.ChargeId == d.CdmCode).First().Description;
             if(!string.IsNullOrEmpty(d.CptCode))
                 d.CptDescription = record.Cdms.Where(c => c.ChargeId == d.CdmCode).First()?.CdmDetails?.Where(cd => cd.Cpt4 == d.CptCode).First()?.Description;
         });
+
         record.Payments = uow.ChkRepository.GetByAccount(account);
 
         if (!demographicsOnly)
@@ -158,10 +180,6 @@ public sealed class AccountService
             record.Fin = uow.FinRepository.GetFin(record.FinCode);
             record.AccountAlert = uow.AccountAlertRepository.GetByAccount(account);
             record.PatientStatements = uow.PatientStatementAccountRepository.GetByAccount(account);
-
-            //DateTime questStartDate = new(2012, 10, 1);
-            //DateTime questEndDate = new(2020, 5, 31);
-            //DateTime arbitraryEndDate = new(2016, 12, 31);
 
             if (record.Client != null)
             {

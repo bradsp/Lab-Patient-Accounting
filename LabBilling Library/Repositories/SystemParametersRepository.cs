@@ -83,9 +83,9 @@ namespace LabBilling.Core.DataAccess
                     var value = GetParameter(property.Name);
                     if(value == null)
                     {
-                        var category = parameters.GetCategory(property.Name);
-                        var description = parameters.GetDescription(property.Name);
-                        var defaultValue = parameters.GetDefaultValue(property.Name) ?? "";
+                        var category = ApplicationParameters.GetCategory(property.Name);
+                        var description = ApplicationParameters.GetDescription(property.Name);
+                        var defaultValue = ApplicationParameters.GetDefaultValue(property.Name) ?? "";
 
                         SaveParameter(property.Name, defaultValue, category, description, property.PropertyType.Name);
                     }

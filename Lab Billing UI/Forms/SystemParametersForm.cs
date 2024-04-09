@@ -1,17 +1,15 @@
-﻿using LabBilling.Logging;
-using LabBilling.Core.Models;
-using System;
-using System.Windows.Forms;
-using System.Reflection;
+﻿using LabBilling.Core.Models;
 using LabBilling.Core.Services;
+using LabBilling.Logging;
+using System.Reflection;
 
 namespace LabBilling.Forms;
 
 public partial class SystemParametersForm : Form
 {
-    private readonly SystemService systemService = new(Program.AppEnvironment);
+    private readonly SystemService _systemService = new(Program.AppEnvironment);
 
-    public SystemParametersForm() 
+    public SystemParametersForm()
     {
         InitializeComponent();
     }
@@ -35,13 +33,13 @@ public partial class SystemParametersForm : Form
 
         var pInfo = propertyType.GetProperty(systemParameter.KeyName);
 
-        if(pInfo != null)
+        if (pInfo != null)
         {
             pInfo.SetValue(Program.AppEnvironment.ApplicationParameters, e.ChangedItem.Value);
 
             try
             {
-                systemService.SaveSystemParameter(systemParameter);
+                _systemService.SaveSystemParameter(systemParameter);
             }
             catch (Exception ex)
             {

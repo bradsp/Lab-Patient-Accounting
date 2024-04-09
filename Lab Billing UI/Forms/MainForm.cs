@@ -30,7 +30,6 @@ namespace LabBilling;
 
 public partial class MainForm : Form
 {
-
     private readonly Accordion _accordion = null;
     private readonly ProgressBar _claimProgress;
     private readonly Label _claimProgressStatusLabel;
@@ -75,17 +74,41 @@ public partial class MainForm : Form
     private static void ConfigureLogging()
     {
         #region Configure NLog
+        LogLevel minLevel = NLog.LogLevel.Warn;
 
         var configuration = new NLog.Config.LoggingConfiguration();
+        switch(Program.AppEnvironment.ApplicationParameters.LogLevel)
+        {
+            case "Trace":
+                minLevel = LogLevel.Trace;
+                break;
+            case "Debug":
+                minLevel = LogLevel.Debug;
+                break;
+            case "Info":
+                minLevel = LogLevel.Info;
+                break;
+            case "Warn":
+                minLevel = LogLevel.Warn;
+                break;
+            case "Error":
+                minLevel = LogLevel.Error;
+                break;
+            case "Fatal":
+                minLevel = LogLevel.Fatal;
+                break;
+            default:
+                break;
+        }
 
-        LogLevel minLevel = NLog.LogLevel.Warn;
         GlobalDiagnosticsContext.Set("dbname", Program.AppEnvironment.DatabaseName);
         GlobalDiagnosticsContext.Set("dbserver", Program.AppEnvironment.ServerName);
 
-        var fileTarget = Program.AppEnvironment.ApplicationParameters.DatabaseEnvironment != "Production" ?
-            new FileTarget("logfile") { FileName = $"M:\\TEST\\LOGS\\{OS.GetMachineName()}_{OS.GetUserName()}_{DateTime.Today.Year}-{DateTime.Today.Month}-{DateTime.Today.Day}.log" } :
-            new FileTarget("logfile") { FileName = $"M:\\LIVE\\LOGS\\{OS.GetMachineName()}_{OS.GetUserName()}_{DateTime.Today.Year}-{DateTime.Today.Month}-{DateTime.Today.Day}.log" };
-        fileTarget.Layout = "${longdate}|${level:uppercase=true}|${logger}|${message}|${exception}|${stacktrace}|${hostname}|${environment-user}|${callsite}|${callsite-linenumber}|${assembly-version}|${gdc:item=dbname|${gdc:item=dbserver}";
+        var fileTarget = new FileTarget("logfile")
+        {
+            FileName = $"{Program.AppEnvironment.ApplicationParameters.LogFilePath}\\{OS.GetMachineName()}_{OS.GetUserName()}_{DateTime.Today.Year}-{DateTime.Today.Month}-{DateTime.Today.Day}.log",
+            Layout = "${longdate}|${level:uppercase=true}|${logger}|${message}|${exception}|${stacktrace}|${hostname}|${environment-user}|${callsite}|${callsite-linenumber}|${assembly-version}|${gdc:item=dbname|${gdc:item=dbserver}"
+        };
 
         //var consoleTarget = new NLog.Targets.ConsoleTarget("logconsole");
         string logProcedure = Program.AppEnvironment.ApplicationParameters.DatabaseEnvironment != "Production" ? "NLog_AddEntry_t" : "NLog_AddEntry_p";
@@ -110,11 +133,19 @@ public partial class MainForm : Form
         dbTarget.Parameters.Add(new DatabaseParameterInfo("@databasename", new NLog.Layouts.SimpleLayout("${gdc:item=dbname}")));
         dbTarget.Parameters.Add(new DatabaseParameterInfo("@databaseserver", new NLog.Layouts.SimpleLayout("${gdc:item=dbserver}")));
 
-        var dbRule = new LoggingRule("*", minLevel, dbTarget);
-        var fileRule = new LoggingRule("*", LogLevel.Debug, fileTarget);
+        LoggingRule logRule = new();
+        switch(Program.AppEnvironment.ApplicationParameters.LogLocation)
+        {
+            case "Database":
+                logRule = new LoggingRule("*", minLevel, dbTarget);
+                break;
+            case "FilePath":
+                logRule = new LoggingRule("*", minLevel, fileTarget);
+                break;
 
-        configuration.AddRule(dbRule);
-        configuration.AddRule(fileRule);
+        }
+
+        configuration.AddRule(logRule);
 
         LogManager.Configuration = configuration;
 

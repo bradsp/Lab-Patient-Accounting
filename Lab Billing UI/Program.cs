@@ -69,9 +69,8 @@ static class Program
         if (exc.InnerException != null)
         {
             Log.Instance.Fatal(exc.InnerException, "Unhandled Exception");
-            if (exc.InnerException is SqlException)
+            if (exc.InnerException is SqlException sqlException)
             {
-                SqlException sqlException = (SqlException)exc.InnerException;
                 if (sqlException.Message.Contains("Execution Timeout Expired"))
                 {
                     Log.Instance.Fatal(sqlException, "SQL Database error.");

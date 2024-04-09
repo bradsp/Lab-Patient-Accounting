@@ -24,7 +24,7 @@ public class SystemService
 
     public void SaveSystemParameter(SysParameter systemParameter)
     {
-        using UnitOfWorkMain uow = new(appEnvironment, true);
+        using UnitOfWorkMain uow = new(appEnvironment);
 
         uow.SystemParametersRepository.Update(systemParameter, new[] { nameof(SysParameter.Value) });
     }

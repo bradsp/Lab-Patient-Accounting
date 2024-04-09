@@ -1707,6 +1707,8 @@ public partial class AccountForm : Form
     private void _timer_Tick(object sender, EventArgs e)
     {
         _timer.Stop();
+        if (orderingPhyTextBox == null)
+            return;
         if (orderingPhyTextBox.Text.Length >= 3)
         {
             ProviderLookupForm frm = new()
