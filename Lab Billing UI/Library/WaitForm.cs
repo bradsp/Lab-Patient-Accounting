@@ -1,29 +1,47 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace LabBilling.Library
+namespace LabBilling.Library;
+
+public partial class WaitForm : Form
 {
-    public partial class WaitForm : Form
+    public Action Worker { get; set; }
+    public ProgressBarStyle ProgressBarStyle
     {
-        public Action Worker { get; set; }
-
-        public WaitForm(Action worker)
+        get
         {
-            InitializeComponent();
-            Worker = worker ?? throw new ArgumentNullException();
+            return progressBar1.Style;
         }
-
-        protected override void OnLoad(EventArgs e)
+        set
         {
-            base.OnLoad(e);
-            Task.Factory.StartNew(Worker).ContinueWith(t => { this.Close(); }, TaskScheduler.FromCurrentSynchronizationContext());
+            progressBar1.Style = value;
         }
     }
+
+    public WaitForm()
+    {
+        InitializeComponent();
+    }
+
+    public WaitForm(Action worker)
+    {
+        InitializeComponent();
+        Worker = worker;
+    }
+
+    protected override void OnLoad(EventArgs e)
+    {
+
+        base.OnLoad(e);
+        if (Worker != null)
+            Task.Factory.StartNew(Worker).ContinueWith(t => { this.Close(); }, TaskScheduler.FromCurrentSynchronizationContext());
+    }
+
+    public void UpdateProgress(int progress, string statusText = "Processing ... ")
+    {
+        progressBar1.Value = progress;
+        statusLabel.Text = statusText;
+    }
+    
 }

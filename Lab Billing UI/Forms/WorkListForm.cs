@@ -1,630 +1,284 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using LabBilling.Core.DataAccess;
-using LabBilling.Logging;
+﻿using LabBilling.Core;
 using LabBilling.Core.Models;
+using LabBilling.Core.Services;
 using LabBilling.Library;
+using LabBilling.Logging;
 using System.Data;
-//using System.CodeDom;
-using LabBilling.Core;
-using LabBilling.Core.BusinessLogic;
-using Opulos.Core.UI;
+using WinFormsLibrary;
 
-namespace LabBilling.Forms
+namespace LabBilling.Forms;
+
+public partial class WorkListForm : Form
 {
+    private readonly AccountService _accountService = new(Program.AppEnvironment);
+    private readonly WorklistService _worklist = new(Program.AppEnvironment);
+    private bool _tasksRunning = false;
+    private bool _requestAbort = false;
+    private BindingSource _accountBindingSource = new();
+    private DataTable _accountTable = null;
+    private int _worklistPanelWidth = 0;
+    private readonly System.Windows.Forms.Timer _timer;
+    private const int _timerDelay = 650;
+    private string _selectedQueue = null;
+    private TreeNode _currentNode = null;
 
-    public partial class WorkListForm : Form
+
+    public event EventHandler<string> AccountLaunched;
+
+    private void WorkListForm_Load(object sender, EventArgs e)
     {
-        private string _connectionString;
-        private AccountRepository accountRepository;
-        private bool tasksRunning = false;
-        private bool requestAbort = false;
-        private BindingSource accountBindingSource = new BindingSource();
-        private DataTable accountTable = null;
-        private int worklistPanelWidth = 0;
-        private System.Windows.Forms.Timer _timer;
-        private const int _timerDelay = 650;
-        private string selectedQueue = null;
-        private TreeNode currentNode = null;
-        private Worklist worklist = null;
+        accountGrid.DoubleBuffered(true);
 
-        private void WorkListForm_Load(object sender, EventArgs e)
+        _accountTable = new List<AccountSearch>().ToDataTable();
+        _accountTable.PrimaryKey = new DataColumn[] { _accountTable.Columns[nameof(AccountSearch.Account)] };
+
+        _accountBindingSource.DataSource = _accountTable;
+        accountGrid.DataSource = _accountBindingSource;
+
+        var worklists = Worklists.ToList();
+
+        TreeNode[] worklistsTreeNode = new TreeNode[worklists.Count];
+        int i = 0;
+
+        worklists.ForEach(w => worklistsTreeNode[i++] = new TreeNode(w));
+
+        TreeNode rootNode = new("Worklists", worklistsTreeNode);
+        workqueues.Nodes.Add(rootNode);
+        workqueues.ExpandAll();
+
+        workqueues.Enabled = true;
+    }
+
+    public WorkListForm()
+    {
+        InitializeComponent();
+        _timer = new System.Windows.Forms.Timer() { Enabled = false, Interval = _timerDelay };
+        _timer.Tick += new EventHandler(filterTextBox_KeyUpDone);
+    }
+
+    private void WorkListForm_FormClosing(object sender, FormClosingEventArgs e)
+    {
+        if (_tasksRunning)
         {
-            worklist = new Worklist(Program.AppEnvironment);
-            accountRepository = new AccountRepository(Program.AppEnvironment);
-
-            accountTable = new List<AccountSearch>().ToDataTable();
-            accountTable.PrimaryKey = new DataColumn[] { accountTable.Columns[nameof(AccountSearch.Account)] };
-
-            accountBindingSource.DataSource = accountTable;
-            accountGrid.DataSource = accountBindingSource;
-
-            var worklists = Worklists.ToList();
-
-            TreeNode[] worklistsTreeNode = new TreeNode[worklists.Count];
-            int i = 0;
-            foreach(string wlist in worklists)
+            if (MessageBox.Show("Validation process is running. Do you want to abort?", "Abort Validation?", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
+                == DialogResult.Yes)
             {
-                worklistsTreeNode[i++] = new TreeNode(wlist);
+                //code to abort process
+                _requestAbort = true;
+                e.Cancel = true;
+                return;
             }
+            else
+            {
+                e.Cancel = true;
+                return;
+            }
+        }
+    }
 
-            TreeNode rootNode = new TreeNode("Worklists", worklistsTreeNode);
-            workqueues.Nodes.Add(rootNode);
-            workqueues.ExpandAll();
+    private async void workqueues_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
+    {
+        if (_currentNode != null)
+        {
+            _currentNode.BackColor = Color.White;
+            _currentNode.ForeColor = Color.Black;
+        }
+        _selectedQueue = workqueues.SelectedNode.Text;
+        _currentNode = workqueues.SelectedNode;
 
+        workqueues.SelectedNode.BackColor = Color.Green;
+        workqueues.SelectedNode.ForeColor = Color.White;
+        await LoadWorkList();
+    }
+
+    private async Task LoadWorkList()
+    {
+        workqueues.Enabled = false;
+
+        Cursor.Current = Cursors.WaitCursor;
+
+        if (_selectedQueue == null)
+        {
             workqueues.Enabled = true;
+            return;
         }
 
-        private void AccFrm_AccountOpenedEvent(object sender, string e)
+        accountGrid.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.DisableResizing;
+        accountGrid.RowHeadersVisible = false;
+
+        toolStripStatusLabel1.Text = "Loading Accounts ... ";
+        toolStripProgressBar1.Style = ProgressBarStyle.Marquee;
+
+        var accounts = await _worklist.GetAccountsForWorklistAsync(_selectedQueue);
+
+        _accountBindingSource.DataSource = null;
+        _accountTable = accounts.ToDataTable();
+        _accountTable.PrimaryKey = new DataColumn[] { _accountTable.Columns[nameof(AccountSearch.Account)] };
+        _accountBindingSource.DataSource = _accountTable;
+
+        _accountTable.DefaultView.Sort = nameof(AccountSearch.ServiceDate);
+
+        accountGrid.ForeColor = Color.Black;
+
+        accountGrid.SetColumnsVisibility(false);
+
+        accountGrid.Columns[nameof(AccountSearch.Balance)].DefaultCellStyle.Format = "N2";
+        accountGrid.Columns[nameof(AccountSearch.Balance)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+        accountGrid.Columns[nameof(AccountSearch.TotalCharges)].DefaultCellStyle.Format = "N2";
+        accountGrid.Columns[nameof(AccountSearch.TotalCharges)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+        accountGrid.Columns[nameof(AccountSearch.TotalPayments)].DefaultCellStyle.Format = "N2";
+        accountGrid.Columns[nameof(AccountSearch.TotalPayments)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+        accountGrid.Columns[nameof(AccountSearch.ThirdPartyBalance)].DefaultCellStyle.Format = "N2";
+        accountGrid.Columns[nameof(AccountSearch.ThirdPartyBalance)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+        accountGrid.Columns[nameof(AccountSearch.ClientBalance)].DefaultCellStyle.Format = "N2";
+        accountGrid.Columns[nameof(AccountSearch.ClientBalance)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+
+        //column order
+        int x = 0;
+        accountGrid.Columns[nameof(AccountSearch.Account)].SetVisibilityOrder(true, x++);
+        accountGrid.Columns[nameof(AccountSearch.Name)].SetVisibilityOrder(true, x++);
+        accountGrid.Columns[nameof(AccountSearch.SSN)].SetVisibilityOrder(true, x++);
+        accountGrid.Columns[nameof(AccountSearch.DateOfBirth)].SetVisibilityOrder(true, x++);
+        accountGrid.Columns[nameof(AccountSearch.Sex)].SetVisibilityOrder(true, x++);
+        accountGrid.Columns[nameof(AccountSearch.EMPINumber)].SetVisibilityOrder(true, x++);
+        accountGrid.Columns[nameof(AccountSearch.ServiceDate)].SetVisibilityOrder(true, x++);
+        accountGrid.Columns[nameof(AccountSearch.Balance)].SetVisibilityOrder(true, x++);
+        accountGrid.Columns[nameof(AccountSearch.FinCode)].SetVisibilityOrder(true, x++);
+        accountGrid.Columns[nameof(AccountSearch.PrimaryInsCode)].SetVisibilityOrder(true, x++);
+        accountGrid.Columns[nameof(AccountSearch.PrimaryInsPlanName)].SetVisibilityOrder(true, x++);
+        accountGrid.Columns[nameof(AccountSearch.Status)].SetVisibilityOrder(true, x++);
+        accountGrid.Columns[nameof(AccountSearch.ClientMnem)].SetVisibilityOrder(true, x++);
+        accountGrid.Columns[nameof(AccountSearch.ValidationStatus)].SetVisibilityOrder(true, x++);
+        accountGrid.Columns[nameof(AccountSearch.LastValidationDate)].SetVisibilityOrder(true, x++);
+        accountGrid.Columns[nameof(AccountSearch.ThirdPartyBalance)].SetVisibilityOrder(true, x++);
+        accountGrid.Columns[nameof(AccountSearch.ClientBalance)].SetVisibilityOrder(true, x++);
+        accountGrid.Columns[nameof(AccountSearch.FinType)].SetVisibilityOrder(true, x++);
+        accountGrid.Columns[nameof(AccountSearch.TotalPayments)].SetVisibilityOrder(showAccountsWithPmtCheckbox.Checked, x++);
+
+        accountGrid.Columns[nameof(AccountSearch.ValidationStatus)].MinimumWidth = 200;
+        accountGrid.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.DisplayedCells);
+        accountGrid.Columns[nameof(AccountSearch.ValidationStatus)].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+
+        accountGrid.Refresh();
+        accountGrid.RowHeadersVisible = true;
+
+        Cursor.Current = Cursors.Default;
+
+        toolStripProgressBar1.Style = ProgressBarStyle.Continuous;
+
+        Cursor.Current = Cursors.Default;
+
+        if (!showAccountsWithPmtCheckbox.Checked)
+            _accountTable.DefaultView.RowFilter = $"{nameof(AccountSearch.TotalPayments)} = 0";
+
+        toolStripStatusLabel1.Text = $"{_accountTable.DefaultView.Count} records";
+
+        workqueues.Enabled = true;
+        UpdateFilter();
+    }
+
+    private void holdToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        var selectedAccount = accountGrid.SelectedRows[0].Cells[nameof(AccountSearch.Account)].Value.ToString();
+        var accts = _accountTable.Rows.Find(selectedAccount);
+
+        if (accountGrid.SelectedRows[0].Cells[nameof(AccountSearch.Status)].Value.ToString() != AccountStatus.Hold)
         {
-            if(this.ParentForm is MainForm)
+            accts[nameof(AccountSearch.Status)] = AccountStatus.Hold;
+            //get user comment
+            var result = InputBox.Show("Enter a reason for placing account on hold", true);
+
+            if (result.ReturnCode == DialogResult.OK)
             {
-                MainForm mainfrm = (MainForm)this.ParentForm;
-                mainfrm.UpdateRecentAccounts(e);
+                _accountService.UpdateStatus(selectedAccount, AccountStatus.Hold);
+                _accountService.AddNote(selectedAccount, result.Text);
             }
         }
-
-        public WorkListForm(string connValue)
+        else
         {
-            InitializeComponent();
-            _connectionString = connValue;
-            _timer = new Timer() { Enabled = false, Interval = _timerDelay };
-            _timer.Tick += new EventHandler(filterTextBox_KeyUpDone);
+            accts[nameof(AccountSearch.Status)] = AccountStatus.New;
+            _accountService.UpdateStatus(selectedAccount, AccountStatus.New);
+            _accountService.AddNote(selectedAccount, "Account removed from hold.");
         }
+    }
 
-        private async Task RunValidationAsync(string accountNo)
+    private void accountGrid_MouseDown(object sender, MouseEventArgs e)
+    {
+        // If the user pressed something else than mouse right click, return
+        if (e.Button != System.Windows.Forms.MouseButtons.Right) { return; }
+
+        DataGridView dgv = (DataGridView)sender;
+
+        // Use HitTest to resolve the row under the cursor
+        int rowIndex = dgv.HitTest(e.X, e.Y).RowIndex;
+
+        // If there was no DataGridViewRow under the cursor, return
+        if (rowIndex == -1) { return; }
+
+        // Clear all other selections before making a new selection
+        dgv.ClearSelection();
+
+        // Select the found DataGridViewRow
+        dgv.Rows[rowIndex].Selected = true;
+    }
+
+    private void accountGrid_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+    {
+        if (accountGrid.Columns[e.ColumnIndex].Name == nameof(AccountSearch.Status))
         {
-            if (!string.IsNullOrEmpty(accountNo))
+            if (accountGrid[e.ColumnIndex, e.RowIndex].Value == null)
+                return;
+
+            if (accountGrid[e.ColumnIndex, e.RowIndex].Value.ToString() == "ERROR")
             {
-                //var acct = accounts.FirstOrDefault(x => x.Account == accountNo);
-                var acct = accountTable.Rows.Find(accountNo);
-                try
-                {
-                    var (isValid, validationText, formType) = await ValidateAccountAsync(accountNo);
-
-                    if (!isValid)
-                    {
-                        if (acct != null)
-                        {
-                            acct[nameof(AccountSearch.ValidationStatus)] = validationText;
-                            acct[nameof(AccountSearch.LastValidationDate)] = DateTime.Now;
-                            acct[nameof(AccountSearch.Status)] = "ERROR";
-                        }
-                    }
-                    else
-                    {
-                        if(acct != null)
-                        {
-                            acct[nameof(AccountSearch.Status)] = formType;
-                            acct[nameof(AccountSearch.LastValidationDate)] = DateTime.Now;
-                            acct[nameof(AccountSearch.ValidationStatus)] = "No validation errors";
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Log.Instance.Error($"Error validating account {accountNo} - {ex.Message}");
-
-                    if(acct != null)
-                    {
-                        acct[nameof(AccountSearch.ValidationStatus)] = "Error validating account. Notify support.";
-                        acct[nameof(AccountSearch.LastValidationDate)] = DateTime.Now;
-                        acct[nameof(AccountSearch.Status)] = "ERROR";
-                    }
-
-                    accountRepository.UpdateStatus(accountNo, "NEW");
-                }
+                accountGrid[e.ColumnIndex, e.RowIndex].Style.BackColor = Color.Red;
+                accountGrid[e.ColumnIndex, e.RowIndex].Style.ForeColor = Color.White;
+                accountGrid[nameof(AccountSearch.ValidationStatus), e.RowIndex].Style.BackColor = Color.LightPink;
+            }
+            else if (accountGrid[e.ColumnIndex, e.RowIndex].Value.ToString() == AccountStatus.Institutional ||
+                accountGrid[e.ColumnIndex, e.RowIndex].Value.ToString() == AccountStatus.Professional ||
+                accountGrid[e.ColumnIndex, e.RowIndex].Value.ToString() == AccountStatus.ReadyToBill)
+            {
+                accountGrid[e.ColumnIndex, e.RowIndex].Style.BackColor = Color.LightGreen;
+                accountGrid[nameof(AccountSearch.ValidationStatus), e.RowIndex].Style.BackColor = Color.LightGreen;
             }
         }
+    }
 
-        private async Task<(bool isValid, string validationText, string formType)> ValidateAccountAsync(string accountNo)
+    private void accountGrid_MouseDoubleClick(object sender, MouseEventArgs e)
+    {
+        Log.Instance.Trace($"Entering");
+
+        int selectedRows = accountGrid.Rows.GetRowCount(DataGridViewElementStates.Selected);
+        if (selectedRows > 0)
         {
-            Account account;
-            account = await Task<Account>.Run(() =>
-            {
-                return accountRepository.GetByAccount(accountNo);
-            });
+            var selectedAccount = accountGrid.SelectedRows[0].Cells[nameof(AccountSearch.Account)].Value.ToString();
+            AccountLaunched?.Invoke(this, selectedAccount);
+            return;
+        }
+        else
+        {
+            MessageBox.Show("No account selected.");
+            return;
+        }
+    }
+
+    private async void changeFinancialClassToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        Log.Instance.Trace($"Entering");
+
+        var selectedAccount = accountGrid.SelectedRows[0].Cells[nameof(AccountSearch.Account)].Value.ToString();
+        var accts = _accountTable.Rows.Find(selectedAccount);
+        var account = await _accountService.GetAccountAsync(selectedAccount);
+
+        string newFinCode = InputDialogs.SelectFinancialCode(accts[nameof(AccountSearch.FinCode)].ToString());
+        if (!string.IsNullOrEmpty(newFinCode))
+        {
             try
             {
-
-                if (!accountRepository.Validate(account))
-                {
-                    return (false, account.AccountValidationStatus.validation_text,
-                        account.BillForm ?? "UNDEFINED");
-                }
-                else
-                {
-                    return (true, string.Empty, account.BillForm ?? "UNDEFINED");
-                }
-            }
-            catch (Exception ex)
-            {
-                return (false, $"Exception in validation - {ex.Message}", String.Empty);
-            }
-
-        }
-
-        private void WorkListForm_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            if (tasksRunning)
-            {
-                if (MessageBox.Show("Validation process is running. Do you want to abort?", "Abort Validation?", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
-                    == DialogResult.Yes)
-                {
-                    //code to abort process
-                    requestAbort = true;
-                    e.Cancel = true;
-                    return;
-                }
-                else
-                {
-                    e.Cancel = true;
-                    return;
-                }
-            }
-        }
-
-        private async void workqueues_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
-        {
-            if(currentNode != null)
-            {
-                currentNode.BackColor = Color.White;
-                currentNode.ForeColor = Color.Black;
-            }
-            selectedQueue = workqueues.SelectedNode.Text;
-            currentNode = workqueues.SelectedNode;
-
-            workqueues.SelectedNode.BackColor = Color.Green;
-            workqueues.SelectedNode.ForeColor = Color.White;
-            await LoadWorkList();
-        }
-
-        private async Task LoadWorkList()
-        {
-            workqueues.Enabled = false;
-
-            Cursor.Current = Cursors.WaitCursor;
-
-            if (selectedQueue == null)
-            {
-                workqueues.Enabled = true;
-                return;
-            }
-
-            accountGrid.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.DisableResizing;
-            accountGrid.RowHeadersVisible = false;
-
-            toolStripStatusLabel1.Text = "Loading Accounts ... ";
-            toolStripProgressBar1.Style = ProgressBarStyle.Marquee;
-
-            var accounts = await worklist.GetAccountsForWorklistAsync(selectedQueue);
-
-            accountBindingSource.DataSource = null;
-            accountTable = accounts.ToDataTable();
-            accountTable.PrimaryKey = new DataColumn[] { accountTable.Columns[nameof(AccountSearch.Account)] };
-            accountBindingSource.DataSource = accountTable;
-
-            accountTable.DefaultView.Sort = nameof(AccountSearch.ServiceDate);
-
-            accountGrid.ForeColor = Color.Black;
-            accountGrid.Columns[nameof(AccountSearch.FirstName)].Visible = false;
-            accountGrid.Columns[nameof(AccountSearch.LastName)].Visible = false;
-            accountGrid.Columns[nameof(AccountSearch.MiddleName)].Visible = false;
-            accountGrid.Columns[nameof(AccountSearch.mod_date)].Visible = false;
-            accountGrid.Columns[nameof(AccountSearch.mod_host)].Visible = false;
-            accountGrid.Columns[nameof(AccountSearch.mod_prg)].Visible = false;
-            accountGrid.Columns[nameof(AccountSearch.mod_user)].Visible = false;
-            accountGrid.Columns[nameof(AccountSearch.rowguid)].Visible = false;
-            accountGrid.Columns[nameof(AccountSearch.Balance)].Visible = true;
-            accountGrid.Columns[nameof(AccountSearch.TotalPayments)].Visible = showAccountsWithPmtCheckbox.Checked;
-            accountGrid.Columns[nameof(AccountSearch.TotalCharges)].Visible = false;
-            accountGrid.Columns[nameof(AccountSearch.Balance)].DefaultCellStyle.Format = "N2";
-            accountGrid.Columns[nameof(AccountSearch.Balance)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            accountGrid.Columns[nameof(AccountSearch.TotalCharges)].DefaultCellStyle.Format = "N2";
-            accountGrid.Columns[nameof(AccountSearch.TotalCharges)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            accountGrid.Columns[nameof(AccountSearch.TotalPayments)].DefaultCellStyle.Format = "N2";
-            accountGrid.Columns[nameof(AccountSearch.TotalPayments)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            accountGrid.Columns[nameof(AccountSearch.ThirdPartyBalance)].DefaultCellStyle.Format = "N2";
-            accountGrid.Columns[nameof(AccountSearch.ThirdPartyBalance)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            accountGrid.Columns[nameof(AccountSearch.ClientBalance)].DefaultCellStyle.Format = "N2";
-            accountGrid.Columns[nameof(AccountSearch.ClientBalance)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-
-            //column order
-            int x = 0;
-            accountGrid.Columns[nameof(AccountSearch.Account)].DisplayIndex = x++;
-            accountGrid.Columns[nameof(AccountSearch.Name)].DisplayIndex = x++;
-            accountGrid.Columns[nameof(AccountSearch.SSN)].DisplayIndex = x++;
-            accountGrid.Columns[nameof(AccountSearch.DateOfBirth)].DisplayIndex = x++;
-            accountGrid.Columns[nameof(AccountSearch.Sex)].DisplayIndex = x++;
-            accountGrid.Columns[nameof(AccountSearch.MRN)].DisplayIndex = x++;
-            accountGrid.Columns[nameof(AccountSearch.ServiceDate)].DisplayIndex = x++;
-            accountGrid.Columns[nameof(AccountSearch.Balance)].DisplayIndex = x++;
-            accountGrid.Columns[nameof(AccountSearch.FinCode)].DisplayIndex = x++;
-            accountGrid.Columns[nameof(AccountSearch.PrimaryInsCode)].DisplayIndex = x++;
-            accountGrid.Columns[nameof(AccountSearch.PrimaryInsPlanName)].DisplayIndex = x++;
-            accountGrid.Columns[nameof(AccountSearch.Status)].DisplayIndex = x++;
-            accountGrid.Columns[nameof(AccountSearch.ClientMnem)].DisplayIndex = x++;
-            accountGrid.Columns[nameof(AccountSearch.ValidationStatus)].DisplayIndex = x++;
-            accountGrid.Columns[nameof(AccountSearch.LastValidationDate)].DisplayIndex = x++;
-            accountGrid.Columns[nameof(AccountSearch.ThirdPartyBalance)].DisplayIndex = x++;
-            accountGrid.Columns[nameof(AccountSearch.ClientBalance)].DisplayIndex = x++;
-            accountGrid.Columns[nameof(AccountSearch.FinType)].DisplayIndex = x++;
-
-            accountGrid.Columns[nameof(AccountSearch.ValidationStatus)].MinimumWidth = 200;
-            accountGrid.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.DisplayedCells);
-            accountGrid.Columns[nameof(AccountSearch.ValidationStatus)].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-
-            accountGrid.Refresh();
-            accountGrid.RowHeadersVisible = true;
-
-            Cursor.Current = Cursors.Default;
-
-            toolStripProgressBar1.Style = ProgressBarStyle.Continuous;
-
-            Cursor.Current = Cursors.Default;
-
-            if (!showAccountsWithPmtCheckbox.Checked)
-                accountTable.DefaultView.RowFilter = $"{nameof(AccountSearch.TotalPayments)} = 0";
-
-            toolStripStatusLabel1.Text = $"{accountTable.DefaultView.Count} records";
-
-            workqueues.Enabled = true;
-            UpdateFilter();
-
-        }
-
-        private void holdToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            var selectedAccount = accountGrid.SelectedRows[0].Cells[nameof(AccountSearch.Account)].Value.ToString();
-            var accts = accountTable.Rows.Find(selectedAccount);
-
-            if (accountGrid.SelectedRows[0].Cells[nameof(AccountSearch.Status)].Value.ToString() != "HOLD")
-            {
-                accts[nameof(AccountSearch.Status)] = "HOLD";
-                //get user comment
-                var result = InputBox.Show("Enter a reason for placing account on hold", true);
-
-                if (result.ReturnCode == DialogResult.OK)
-                {
-                    accountRepository.UpdateStatus(selectedAccount, "HOLD");
-                    accountRepository.AddNote(selectedAccount, result.Text);
-                }
-            }
-            else
-            {
-                accts[nameof(AccountSearch.Status)] = "NEW";
-                accountRepository.UpdateStatus(selectedAccount, "NEW");
-                accountRepository.AddNote(selectedAccount, "Account removed from hold.");
-            }
-        }
-
-        private void accountGrid_MouseDown(object sender, MouseEventArgs e)
-        {
-            // If the user pressed something else than mouse right click, return
-            if (e.Button != System.Windows.Forms.MouseButtons.Right) { return; }
-
-            DataGridView dgv = (DataGridView)sender;
-
-            // Use HitTest to resolve the row under the cursor
-            int rowIndex = dgv.HitTest(e.X, e.Y).RowIndex;
-
-            // If there was no DataGridViewRow under the cursor, return
-            if (rowIndex == -1) { return; }
-
-            // Clear all other selections before making a new selection
-            dgv.ClearSelection();
-
-            // Select the found DataGridViewRow
-            dgv.Rows[rowIndex].Selected = true;
-        }
-
-        private void accountGrid_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
-        {
-            if (accountGrid.Columns[e.ColumnIndex].Name == nameof(AccountSearch.Status))
-            {
-                if (accountGrid[e.ColumnIndex, e.RowIndex].Value == null)
-                    return;
-
-                if (accountGrid[e.ColumnIndex, e.RowIndex].Value.ToString() == "ERROR")
-                {
-                    accountGrid[e.ColumnIndex, e.RowIndex].Style.BackColor = Color.Red;
-                    accountGrid[e.ColumnIndex, e.RowIndex].Style.ForeColor = Color.White;
-                    accountGrid[nameof(AccountSearch.ValidationStatus), e.RowIndex].Style.BackColor = Color.LightPink;
-                }
-                else if (accountGrid[e.ColumnIndex, e.RowIndex].Value.ToString() == AccountStatus.Institutional ||
-                    accountGrid[e.ColumnIndex, e.RowIndex].Value.ToString() == AccountStatus.Professional ||
-                    accountGrid[e.ColumnIndex, e.RowIndex].Value.ToString() == AccountStatus.ReadyToBill)
-                {
-                    accountGrid[e.ColumnIndex, e.RowIndex].Style.BackColor = Color.LightGreen;
-                    accountGrid[nameof(AccountSearch.ValidationStatus), e.RowIndex].Style.BackColor = Color.LightGreen;
-                }
-            }
-        }
-
-        private void accountGrid_MouseDoubleClick(object sender, MouseEventArgs e)
-        {
-            Log.Instance.Trace($"Entering");
-            Cursor.Current = Cursors.WaitCursor;
-            int selectedRows = accountGrid.Rows.GetRowCount(DataGridViewElementStates.Selected);
-            if (selectedRows > 0)
-            {
-                var selectedAccount = accountGrid.SelectedRows[0].Cells[nameof(AccountSearch.Account)].Value.ToString();
-                // TODO: make sure there is not another tab already open for this account
-                var formsList = Application.OpenForms.OfType<AccountForm>();
-                bool formFound = false;
-                foreach(var form in formsList)
-                {
-                    if(form.SelectedAccount == selectedAccount)
-                    {
-                        //form is already open, activate this one
-                        form.Focus();
-                        formFound = true;
-                        break;
-                    }
-                }
-
-                if (!formFound)
-                {
-                    AccountForm frm = new AccountForm(selectedAccount, this.ParentForm);
-                    frm.AccountOpenedEvent += AccFrm_AccountOpenedEvent;
-                    frm.Show();
-                }
-                return;
-            }
-            else
-            {
-                MessageBox.Show("No account selected.");
-                return;
-            }
-        }
-
-        private async void changeFinancialClassToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Log.Instance.Trace($"Entering");
-
-            var selectedAccount = accountGrid.SelectedRows[0].Cells[nameof(AccountSearch.Account)].Value.ToString();
-            var accts = accountTable.Rows.Find(selectedAccount);
-            var account = await accountRepository.GetByAccountAsync(selectedAccount);
-
-            string newFinCode = InputDialogs.SelectFinancialCode(accts[nameof(AccountSearch.FinCode)].ToString());
-            if (!string.IsNullOrEmpty(newFinCode))
-            {
-                try
-                {
-                    await accountRepository.ChangeFinancialClassAsync(account, newFinCode);
-                    accts.Delete();
-                    accountGrid.Refresh();
-                }
-                catch (ArgumentException anex)
-                {
-                    Log.Instance.Error(anex, $"Financial code {anex.ParamName} is not valid.");
-                    MessageBox.Show(this, $"{anex.ParamName} is not a valid financial code. Financial code was not changed.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-                catch (Exception ex)
-                {
-                    Log.Instance.Error(ex, $"Error changing financial class.");
-                    MessageBox.Show(this, $"Error changing financial class. Financial code was not changed.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            }
-            Log.Instance.Trace($"Exiting");
-        }
-
-        private async void changeClientToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Log.Instance.Trace($"Entering");
-            var selectedAccount = accountGrid.SelectedRows[0].Cells[nameof(AccountSearch.Account)].Value.ToString();
-            var accts = accountTable.Rows.Find(selectedAccount);
-            var account = await accountRepository.GetByAccountAsync(selectedAccount);
-
-            ClientLookupForm clientLookupForm = new ClientLookupForm();
-            ClientRepository clientRepository = new ClientRepository(Program.AppEnvironment);
-            clientLookupForm.Datasource = DataCache.Instance.GetClients();
-
-            if (clientLookupForm.ShowDialog() == DialogResult.OK)
-            {
-                string newClient = clientLookupForm.SelectedValue;
-
-                try
-                {
-                    if (await accountRepository.ChangeClientAsync(account, newClient))
-                    {
-                        accts[nameof(AccountSearch.ClientMnem)] = newClient;
-                        accountGrid.Refresh();
-                    }
-                    else
-                    {
-                        MessageBox.Show("Error during update.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Error updating client. Client not updated.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    Log.Instance.Error(ex);
-                    return;
-                }
-            }
-
-            Log.Instance.Trace("Exiting");
-        }
-
-        private async void changeDateOfServiceToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Log.Instance.Trace($"Entering");
-
-            var selectedAccount = accountGrid.SelectedRows[0].Cells[nameof(AccountSearch.Account)].Value.ToString();
-            var accts = accountTable.Rows.Find(selectedAccount);
-            var account = await accountRepository.GetByAccountAsync(selectedAccount);
-
-
-            var result = InputDialogs.SelectDateOfService((DateTime)account.TransactionDate);
-
-            try
-            {
-                if (result.newDate != DateTime.MinValue)
-                {
-                    await accountRepository.ChangeDateOfServiceAsync(account, result.newDate, result.reason);
-                    accts[nameof(AccountSearch.ServiceDate)] = account.TransactionDate;
-                }
-                else
-                {
-                    MessageBox.Show("Date selected is not valid. Date has not been changed.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            }
-            catch (ArgumentNullException anex)
-            {
-                Log.Instance.Error(anex, $"Change date of service parameter {anex.ParamName} must contain a value.");
-                MessageBox.Show(this, $"{anex.ParamName} must contain a value. Date of service was not changed.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            catch (Exception ex)
-            {
-                Log.Instance.Error(ex, $"Error changing date of service.");
-                MessageBox.Show(this, $"Error changing date of service. Date of service was not changed.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-
-            Log.Instance.Trace($"Exiting");
-        }
-
-        private void panelExpandCollapseButton_Click(object sender, EventArgs e)
-        {
-            if (panelExpandCollapseButton.Text == ">")
-            {
-                //expand
-                panel1.Width = worklistPanelWidth;
-                panelExpandCollapseButton.Text = "<";
-                accountGrid.Left = panel1.Right + 10;
-                accountGrid.Width -= worklistPanelWidth - 20;
-            }
-            else
-            {
-                //collapse
-                worklistPanelWidth = panel1.Width;
-                panel1.Width = panelExpandCollapseButton.Width;
-                panelExpandCollapseButton.Text = ">";
-                accountGrid.Left = panel1.Right + 10;
-                accountGrid.Width += worklistPanelWidth - 20;  
-            }
-        }
-
-        private void filterTextBox_KeyUp(object sender, KeyEventArgs e)
-        {
-            _timer.Stop();
-            _timer.Start();
-        }
-
-        private void UpdateFilter()
-        {
-            if (!string.IsNullOrEmpty(filterTextBox.Text))
-            {
-                if (nameFilterRadioBtn.Checked)
-                {
-                    accountTable.DefaultView.RowFilter = $"{nameof(AccountSearch.Name)} like '{filterTextBox.Text}%'";
-                }
-                if (clientFilterRadioBtn.Checked)
-                {
-                    accountTable.DefaultView.RowFilter = $"{nameof(AccountSearch.ClientMnem)} = '{filterTextBox.Text}'";
-                }
-                if (accountFilterRadioBtn.Checked)
-                {
-                    accountTable.DefaultView.RowFilter = $"{nameof(AccountSearch.Account)} like '{filterTextBox.Text}%'";
-                }
-                if (insuranceFilterRadioButton.Checked)
-                {
-                    accountTable.DefaultView.RowFilter = $"{nameof(AccountSearch.PrimaryInsPlanName)} like '%{filterTextBox.Text}%'";
-                }
-
-                if (!showAccountsWithPmtCheckbox.Checked)
-                {
-                    accountTable.DefaultView.RowFilter += $" and {nameof(AccountSearch.TotalPayments)} = 0";
-                }
-
-                if (!showZeroBalanceCheckBox.Checked)
-                {
-                    accountTable.DefaultView.RowFilter += $" and {nameof(AccountSearch.Balance)} <> 0";
-                }
-
-                if (!showReadyToBillCheckbox.Checked)
-                {
-                    accountTable.DefaultView.RowFilter += $" and {nameof(AccountSearch.Status)} not in ('{AccountStatus.ReadyToBill}','{AccountStatus.Professional}','{AccountStatus.Institutional}')";
-                }
-            }
-            else
-            {
-                if (!showAccountsWithPmtCheckbox.Checked)
-                {
-                    accountTable.DefaultView.RowFilter = $"{nameof(AccountSearch.TotalPayments)} = 0";
-                }
-                else
-                {
-                    accountTable.DefaultView.RowFilter = String.Empty;
-                }
-
-                if (!showZeroBalanceCheckBox.Checked)
-                {
-                    if (accountTable.DefaultView.RowFilter != string.Empty)
-                    {
-                        accountTable.DefaultView.RowFilter += $" and {nameof(AccountSearch.Balance)} <> 0";
-                    }
-                    else
-                    {
-                        accountTable.DefaultView.RowFilter = $" and {nameof(AccountSearch.Balance)} <> 0";
-                    }
-                }
-
-                if(!showReadyToBillCheckbox.Checked)
-                {
-                    if(accountTable.DefaultView.RowFilter != string.Empty)
-                    {
-                        accountTable.DefaultView.RowFilter += $" and {nameof(AccountSearch.Status)} not in ('{AccountStatus.ReadyToBill}','{AccountStatus.Professional}','{AccountStatus.Institutional}')";
-                    }
-                    else
-                    {
-                        accountTable.DefaultView.RowFilter = $"{nameof(AccountSearch.Status)} not in ('{AccountStatus.ReadyToBill}','{AccountStatus.Professional}','{AccountStatus.Institutional}')";
-                    }
-                }
-            }
-
-            toolStripStatusLabel1.Text = $"{accountTable.DefaultView.Count} records";
-            accountGrid.Columns[nameof(AccountSearch.TotalPayments)].Visible = showAccountsWithPmtCheckbox.Checked;
-        }
-
-        private void filterTextBox_KeyUpDone(object sender, EventArgs e)
-        {
-            _timer.Stop();
-            UpdateFilter();
-        }
-
-        private void accountGridContextMenu_VisibleChanged(object sender, EventArgs e)
-        {
-        }
-
-        private void showAccountsWithPmtCheckbox_CheckedChanged(object sender, EventArgs e)
-        {
-            UpdateFilter();
-        }
-
-        private void changeToYFinancialClassToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
-            try
-            {
-                var selectedAccount = accountGrid.SelectedRows[0].Cells[nameof(AccountSearch.Account)].Value.ToString();
-                var accts = accountTable.Rows.Find(selectedAccount);
-                var account = accountRepository.GetByAccount(selectedAccount);
-
-                if (account.FinCode != "Y")
-                {
-                    accountRepository.ChangeFinancialClass(account, "Y");
-                    accts.Delete();
-                    accountGrid.Refresh();
-                }
-                else
-                {
-                    MessageBox.Show("Account is already a Y financial code.");
-                }
+                await _accountService.ChangeFinancialClassAsync(account, newFinCode);
+                accts.Delete();
+                accountGrid.Refresh();
             }
             catch (ArgumentException anex)
             {
@@ -636,91 +290,331 @@ namespace LabBilling.Forms
                 Log.Instance.Error(ex, $"Error changing financial class.");
                 MessageBox.Show(this, $"Error changing financial class. Financial code was not changed.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-
         }
+        Log.Instance.Trace($"Exiting");
+    }
 
-        private void accountGridContextMenu_Opened(object sender, EventArgs e)
+    private async void changeClientToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        Log.Instance.Trace($"Entering");
+        var selectedAccount = accountGrid.SelectedRows[0].Cells[nameof(AccountSearch.Account)].Value.ToString();
+        var accts = _accountTable.Rows.Find(selectedAccount);
+        var account = await _accountService.GetAccountAsync(selectedAccount);
+
+        ClientLookupForm clientLookupForm = new()
         {
-            if (accountGridContextMenu.Visible)
-            {
-                var selectedAccount = accountGrid.SelectedRows[0].Cells[nameof(AccountSearch.Account)].Value.ToString();
+            Datasource = DataCache.Instance.GetClients()
+        };
 
-                if (accountGrid.SelectedRows[0].Cells[nameof(AccountSearch.Status)].Value.ToString() == "HOLD")
-                    holdToolStripMenuItem.Text = "Remove from Hold";
-                else
-                    holdToolStripMenuItem.Text = "Manual Hold";
-
-                if (accountGrid.SelectedRows[0].Cells[nameof(AccountSearch.FinCode)].Value.ToString() != "Y")
-                {
-                    changeToYFinancialClassToolStripMenuItem.Visible = true;
-                    changeToYFinancialClassToolStripMenuItem.Enabled = true;
-                }
-                else
-                {
-                    changeToYFinancialClassToolStripMenuItem.Visible = false;
-                    changeToYFinancialClassToolStripMenuItem.Enabled = false;
-                }
-
-                var status = accountGrid.SelectedRows[0].Cells[nameof(AccountSearch.Status)].Value.ToString();
-                if (status == "RTB" || status == "1500" || status == "UB")
-                    readyToBillToolStripMenuItem.Checked = true;
-                else
-                    readyToBillToolStripMenuItem.Checked = false;
-            }
-
-        }
-
-        private void readyToBillToolStripMenuItem_Click(object sender, EventArgs e)
+        if (clientLookupForm.ShowDialog() == DialogResult.OK)
         {
-            var selectedAccount = accountGrid.SelectedRows[0].Cells[nameof(AccountSearch.Account)].Value.ToString();
-            var accts = accountTable.Rows.Find(selectedAccount);
-            var account = accountRepository.GetByAccount(selectedAccount);
+            string newClient = clientLookupForm.SelectedValue;
 
-            if(readyToBillToolStripMenuItem.Checked)
+            try
             {
-                if (!account.ReadyToBill)
+                if (await _accountService.ChangeClientAsync(account, newClient))
                 {
-                    accountRepository.Validate(account);
-                    if (account.AccountValidationStatus.validation_text == "No validation errors.")
-                    {
-                        accountRepository.UpdateStatus(selectedAccount, AccountStatus.ReadyToBill);
-                        accountRepository.AddNote(selectedAccount, "Marked ready to bill.");
-                        accts[nameof(AccountSearch.Status)] = AccountStatus.ReadyToBill;
-                        _ = Task.Run(() => RunValidationAsync(selectedAccount));
-                    }                    
+                    accts[nameof(AccountSearch.ClientMnem)] = newClient;
                     accountGrid.Refresh();
                 }
+                else
+                {
+                    MessageBox.Show("Error during update.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error updating client. Client not updated.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Log.Instance.Error(ex);
+                return;
+            }
+        }
+
+        Log.Instance.Trace("Exiting");
+    }
+
+    private async void changeDateOfServiceToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        Log.Instance.Trace($"Entering");
+
+        var selectedAccount = accountGrid.SelectedRows[0].Cells[nameof(AccountSearch.Account)].Value.ToString();
+        var accts = _accountTable.Rows.Find(selectedAccount);
+        var account = await _accountService.GetAccountAsync(selectedAccount);
+
+
+        var result = InputDialogs.SelectDateOfService((DateTime)account.TransactionDate);
+
+        try
+        {
+            if (result.newDate != DateTime.MinValue)
+            {
+                await _accountService.ChangeDateOfServiceAsync(account, result.newDate, result.reason);
+                accts[nameof(AccountSearch.ServiceDate)] = account.TransactionDate;
             }
             else
             {
-                if(account.ReadyToBill)
+                MessageBox.Show("Date selected is not valid. Date has not been changed.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+        catch (ArgumentNullException anex)
+        {
+            Log.Instance.Error(anex, $"Change date of service parameter {anex.ParamName} must contain a value.");
+            MessageBox.Show(this, $"{anex.ParamName} must contain a value. Date of service was not changed.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+        catch (Exception ex)
+        {
+            Log.Instance.Error(ex, $"Error changing date of service.");
+            MessageBox.Show(this, $"Error changing date of service. Date of service was not changed.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+
+        Log.Instance.Trace($"Exiting");
+    }
+
+    private void panelExpandCollapseButton_Click(object sender, EventArgs e)
+    {
+        if (panelExpandCollapseButton.Text == ">")
+        {
+            //expand
+            panel1.Width = _worklistPanelWidth;
+            panelExpandCollapseButton.Text = "<";
+            accountGrid.Left = panel1.Right + 10;
+            accountGrid.Width -= _worklistPanelWidth - 20;
+        }
+        else
+        {
+            //collapse
+            _worklistPanelWidth = panel1.Width;
+            panel1.Width = panelExpandCollapseButton.Width;
+            panelExpandCollapseButton.Text = ">";
+            accountGrid.Left = panel1.Right + 10;
+            accountGrid.Width += _worklistPanelWidth - 20;
+        }
+    }
+
+    private void filterTextBox_KeyUp(object sender, KeyEventArgs e)
+    {
+        _timer.Stop();
+        _timer.Start();
+    }
+
+    private void UpdateFilter()
+    {
+        if (!string.IsNullOrEmpty(filterTextBox.Text))
+        {
+            if (nameFilterRadioBtn.Checked)
+            {
+                _accountTable.DefaultView.RowFilter = $"{nameof(AccountSearch.Name)} like '{filterTextBox.Text}%'";
+            }
+            if (clientFilterRadioBtn.Checked)
+            {
+                _accountTable.DefaultView.RowFilter = $"{nameof(AccountSearch.ClientMnem)} = '{filterTextBox.Text}'";
+            }
+            if (accountFilterRadioBtn.Checked)
+            {
+                _accountTable.DefaultView.RowFilter = $"{nameof(AccountSearch.Account)} like '{filterTextBox.Text}%'";
+            }
+            if (insuranceFilterRadioButton.Checked)
+            {
+                _accountTable.DefaultView.RowFilter = $"{nameof(AccountSearch.PrimaryInsPlanName)} like '%{filterTextBox.Text}%'";
+            }
+
+            if (!showAccountsWithPmtCheckbox.Checked)
+            {
+                _accountTable.DefaultView.RowFilter += $" and {nameof(AccountSearch.TotalPayments)} = 0";
+            }
+
+            if (!showZeroBalanceCheckBox.Checked)
+            {
+                _accountTable.DefaultView.RowFilter += $" and {nameof(AccountSearch.Balance)} <> 0";
+            }
+
+            if (!showReadyToBillCheckbox.Checked)
+            {
+                _accountTable.DefaultView.RowFilter += $" and {nameof(AccountSearch.Status)} not in ('{AccountStatus.ReadyToBill}','{AccountStatus.Professional}','{AccountStatus.Institutional}')";
+            }
+        }
+        else
+        {
+            if (!showAccountsWithPmtCheckbox.Checked)
+            {
+                _accountTable.DefaultView.RowFilter = $"{nameof(AccountSearch.TotalPayments)} = 0";
+            }
+            else
+            {
+                _accountTable.DefaultView.RowFilter = String.Empty;
+            }
+
+            if (!showZeroBalanceCheckBox.Checked)
+            {
+                if (_accountTable.DefaultView.RowFilter != string.Empty)
                 {
-                    accountRepository.UpdateStatus(selectedAccount, AccountStatus.New);
-                    accountRepository.AddNote(selectedAccount, "Ready to bill removed.");
-                    accts[nameof(AccountSearch.Status)] = AccountStatus.New;
-                    accountGrid.Refresh();
+                    _accountTable.DefaultView.RowFilter += $" and {nameof(AccountSearch.Balance)} <> 0";
+                }
+                else
+                {
+                    _accountTable.DefaultView.RowFilter = $"{nameof(AccountSearch.Balance)} <> 0";
+                }
+            }
+
+            if (!showReadyToBillCheckbox.Checked)
+            {
+                if (_accountTable.DefaultView.RowFilter != string.Empty)
+                {
+                    _accountTable.DefaultView.RowFilter += $" and {nameof(AccountSearch.Status)} not in ('{AccountStatus.ReadyToBill}','{AccountStatus.Professional}','{AccountStatus.Institutional}')";
+                }
+                else
+                {
+                    _accountTable.DefaultView.RowFilter = $"{nameof(AccountSearch.Status)} not in ('{AccountStatus.ReadyToBill}','{AccountStatus.Professional}','{AccountStatus.Institutional}')";
                 }
             }
         }
 
-        private async void WorkListForm_Activated(object sender, EventArgs e)
+        toolStripStatusLabel1.Text = $"{_accountTable.DefaultView.Count} records";
+        accountGrid.Columns[nameof(AccountSearch.TotalPayments)].Visible = showAccountsWithPmtCheckbox.Checked;
+    }
+
+    private void filterTextBox_KeyUpDone(object sender, EventArgs e)
+    {
+        _timer.Stop();
+        UpdateFilter();
+    }
+
+    private void accountGridContextMenu_VisibleChanged(object sender, EventArgs e) { }
+
+    private void showAccountsWithPmtCheckbox_CheckedChanged(object sender, EventArgs e) => UpdateFilter();
+
+    private void changeToYFinancialClassToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+
+        try
         {
-            await LoadWorkList();
+            var selectedAccount = accountGrid.SelectedRows[0].Cells[nameof(AccountSearch.Account)].Value.ToString();
+            var accts = _accountTable.Rows.Find(selectedAccount);
+            var account = _accountService.GetAccount(selectedAccount);
+
+            if (account.FinCode != "Y")
+            {
+                _accountService.ChangeFinancialClass(account, "Y");
+                accts.Delete();
+                accountGrid.Refresh();
+            }
+            else
+            {
+                MessageBox.Show("Account is already a Y financial code.");
+            }
+        }
+        catch (ArgumentException anex)
+        {
+            Log.Instance.Error(anex, $"Financial code {anex.ParamName} is not valid.");
+            MessageBox.Show(this, $"{anex.ParamName} is not a valid financial code. Financial code was not changed.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+        catch (Exception ex)
+        {
+            Log.Instance.Error(ex, $"Error changing financial class.");
+            MessageBox.Show(this, $"Error changing financial class. Financial code was not changed.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
-        private void showReadyToBillCheckbox_CheckedChanged(object sender, EventArgs e)
+    }
+
+    private void accountGridContextMenu_Opened(object sender, EventArgs e)
+    {
+        if (accountGridContextMenu.Visible)
         {
-            UpdateFilter();
+            var selectedAccount = accountGrid.SelectedRows[0].Cells[nameof(AccountSearch.Account)].Value.ToString();
+
+            if (accountGrid.SelectedRows[0].Cells[nameof(AccountSearch.Status)].Value.ToString() == AccountStatus.Hold)
+                holdToolStripMenuItem.Text = "Remove from Hold";
+            else
+                holdToolStripMenuItem.Text = "Manual Hold";
+
+            if (accountGrid.SelectedRows[0].Cells[nameof(AccountSearch.FinCode)].Value.ToString() != "Y")
+            {
+                changeToYFinancialClassToolStripMenuItem.Visible = true;
+                changeToYFinancialClassToolStripMenuItem.Enabled = true;
+            }
+            else
+            {
+                changeToYFinancialClassToolStripMenuItem.Visible = false;
+                changeToYFinancialClassToolStripMenuItem.Enabled = false;
+            }
+
+            var status = accountGrid.SelectedRows[0].Cells[nameof(AccountSearch.Status)].Value.ToString();
+            if (status == AccountStatus.ReadyToBill || status == AccountStatus.Professional || status == AccountStatus.Institutional)
+                readyToBillToolStripMenuItem.Checked = true;
+            else
+                readyToBillToolStripMenuItem.Checked = false;
         }
 
-        private void WorkListForm_Enter(object sender, EventArgs e)
-        {
+    }
 
+    private void readyToBillToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        var selectedAccount = accountGrid.SelectedRows[0].Cells[nameof(AccountSearch.Account)].Value.ToString();
+        var accts = _accountTable.Rows.Find(selectedAccount);
+        var account = _accountService.GetAccount(selectedAccount);
+
+        if (readyToBillToolStripMenuItem.Checked)
+        {
+            if (!account.ReadyToBill)
+            {
+                account = _accountService.Validate(account);
+                if (account.AccountValidationStatus.ValidationText == "No validation errors.")
+                {
+                    _accountService.UpdateStatus(selectedAccount, AccountStatus.ReadyToBill);
+                    account.Status = AccountStatus.ReadyToBill;
+                    account.Notes = _accountService.AddNote(selectedAccount, "Marked ready to bill.").ToList();
+                    account = _accountService.Validate(account);
+                    accts[nameof(AccountSearch.Status)] = account.Status;
+                }
+                accountGrid.Refresh();
+            }
+        }
+        else
+        {
+            if (account.ReadyToBill)
+            {
+                _accountService.UpdateStatus(selectedAccount, AccountStatus.New);
+                account.Status = AccountStatus.New;
+                account.Notes = _accountService.AddNote(selectedAccount, "Ready to bill removed.").ToList();
+                accts[nameof(AccountSearch.Status)] = AccountStatus.New;
+                accountGrid.Refresh();
+            }
+        }
+        _accountService.ClearAccountLock(account);
+    }
+
+    private void WorkListForm_Activated(object sender, EventArgs e) { }
+
+    private void showReadyToBillCheckbox_CheckedChanged(object sender, EventArgs e) => UpdateFilter();
+
+    private void WorkListForm_Enter(object sender, EventArgs e) { }
+
+    private void showZeroBalanceCheckBox_CheckedChanged(object sender, EventArgs e) => UpdateFilter();
+
+    public void UpdateAccount(Account account)
+    {
+        if (account == null) return;
+
+        //find this account in the active list
+        var row = _accountTable.Rows.Find(account.AccountNo);
+        if (row == null) return;
+
+        if (!WorklistService.AccountMeetsWorklistCriteria(_selectedQueue, account))
+        {
+            row.Delete();
+            return;
         }
 
-        private void showZeroBalanceCheckBox_CheckedChanged(object sender, EventArgs e)
-        {
-            UpdateFilter();
-        }
+        row.SetField(nameof(AccountSearch.FinCode), account.FinCode);
+        row.SetField(nameof(AccountSearch.Name), account.PatFullName);
+        row.SetField(nameof(AccountSearch.Balance), account.Balance);
+        row.SetField(nameof(AccountSearch.ClientBalance), account.ClientBalance.Sum(c => c.balance));
+        row.SetField(nameof(AccountSearch.Status), account.Status);
+        row.SetField(nameof(AccountSearch.ClientMnem), account.ClientMnem);
+        row.SetField(nameof(AccountSearch.PrimaryInsCode), account.PrimaryInsuranceCode);
+        row.SetField(nameof(AccountSearch.TotalCharges), account.TotalCharges);
+        row.SetField(nameof(AccountSearch.TotalPayments), account.TotalPayments);
+
+
     }
 }

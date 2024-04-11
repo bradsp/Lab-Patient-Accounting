@@ -1,454 +1,66 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\packages\SixLabors.ImageSharp.3.0.1\build\SixLabors.ImageSharp.props" Condition="Exists('..\packages\SixLabors.ImageSharp.3.0.1\build\SixLabors.ImageSharp.props')" />
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{0890D249-B319-46BE-8B8A-354687C334E8}</ProjectGuid>
+    <TargetFramework>net6.0-windows7.0</TargetFramework>
     <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>LabBilling.Core</RootNamespace>
-    <AssemblyName>LabBilling Core</AssemblyName>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <Deterministic>true</Deterministic>
-    <TargetFrameworkProfile />
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
-    <AssemblyVersion>2023.1.4.598</AssemblyVersion>
+    <AssemblyVersion>2024.1.2.4</AssemblyVersion>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <AssemblyTitle>LabBilling Library</AssemblyTitle>
+    <Product>LabBilling Library</Product>
+    <Copyright>Copyright ©  2021-2024</Copyright>
+    <FileVersion>2023.1.4.598</FileVersion>
+    <InformationalVersion>2024.1.2.4</InformationalVersion>
+    <Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <NoWarn>1701;1702;CA1416</NoWarn>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <NoWarn>1701;1702;CA1416</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <NoWarn>1701;1702;CA1416</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <NoWarn>1701;1702;CA1416</NoWarn>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="BouncyCastle.Crypto, Version=1.9.0.0, Culture=neutral, PublicKeyToken=0e99375e54769942, processorArchitecture=MSIL">
-      <HintPath>..\packages\Portable.BouncyCastle.1.9.0\lib\net40\BouncyCastle.Crypto.dll</HintPath>
-    </Reference>
-    <Reference Include="Common.Logging, Version=3.4.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
-      <HintPath>..\packages\Common.Logging.3.4.1\lib\net40\Common.Logging.dll</HintPath>
-    </Reference>
-    <Reference Include="Common.Logging.Core, Version=3.4.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
-      <HintPath>..\packages\Common.Logging.Core.3.4.1\lib\net40\Common.Logging.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="EdiTools, Version=1.0.6.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\EdiTools.1.0.6\lib\netstandard2.0\EdiTools.dll</HintPath>
-    </Reference>
-    <Reference Include="Enums.NET, Version=4.0.0.0, Culture=neutral, PublicKeyToken=7ea1c1650d506225, processorArchitecture=MSIL">
-      <HintPath>..\packages\Enums.NET.4.0.1\lib\net45\Enums.NET.dll</HintPath>
-    </Reference>
-    <Reference Include="FastExpressionCompiler, Version=3.3.4.0, Culture=neutral, PublicKeyToken=dfbf2bd50fcf7768, processorArchitecture=MSIL">
-      <HintPath>..\packages\FastExpressionCompiler.3.3.4\lib\net45\FastExpressionCompiler.dll</HintPath>
-    </Reference>
-    <Reference Include="FluentValidation, Version=11.0.0.0, Culture=neutral, PublicKeyToken=7de548da2fbae0f0, processorArchitecture=MSIL">
-      <HintPath>..\packages\FluentValidation.11.6.0\lib\netstandard2.0\FluentValidation.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Fonet, Version=1.0.0.0, Culture=neutral, PublicKeyToken=52effa152c4a9dc6, processorArchitecture=MSIL">
-      <HintPath>..\packages\Fonet.1.0\lib\net20\Fonet.dll</HintPath>
-    </Reference>
-    <Reference Include="ICSharpCode.SharpZipLib, Version=1.4.2.13, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
-      <HintPath>..\packages\SharpZipLib.1.4.2\lib\netstandard2.0\ICSharpCode.SharpZipLib.dll</HintPath>
-    </Reference>
-    <Reference Include="MathNet.Numerics, Version=5.0.0.0, Culture=neutral, PublicKeyToken=cd8b63ad3d691a37, processorArchitecture=MSIL">
-      <HintPath>..\packages\MathNet.Numerics.Signed.5.0.0\lib\net48\MathNet.Numerics.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=7.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.7.0.0\lib\net462\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Extensions.Caching.Abstractions, Version=7.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Extensions.Caching.Abstractions.7.0.0\lib\net462\Microsoft.Extensions.Caching.Abstractions.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Extensions.Caching.Memory, Version=7.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Extensions.Caching.Memory.7.0.0\lib\net462\Microsoft.Extensions.Caching.Memory.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Extensions.DependencyInjection, Version=7.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Extensions.DependencyInjection.7.0.0\lib\net462\Microsoft.Extensions.DependencyInjection.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions, Version=7.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Extensions.DependencyInjection.Abstractions.7.0.0\lib\net462\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Extensions.Logging.Abstractions, Version=7.0.0.1, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Extensions.Logging.Abstractions.7.0.1\lib\net462\Microsoft.Extensions.Logging.Abstractions.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Extensions.Options, Version=7.0.0.1, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Extensions.Options.7.0.1\lib\net462\Microsoft.Extensions.Options.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Extensions.Primitives, Version=7.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Extensions.Primitives.7.0.0\lib\net462\Microsoft.Extensions.Primitives.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.IO.RecyclableMemoryStream, Version=2.3.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.IO.RecyclableMemoryStream.2.3.2\lib\net462\Microsoft.IO.RecyclableMemoryStream.dll</HintPath>
-    </Reference>
-    <Reference Include="MigraDoc.DocumentObjectModel, Version=1.51.5186.0, Culture=neutral, PublicKeyToken=f94615aa0424f9eb, processorArchitecture=MSIL">
-      <HintPath>..\packages\PDFsharp-MigraDoc.1.51.5186-beta\lib\net20\MigraDoc.DocumentObjectModel.dll</HintPath>
-    </Reference>
-    <Reference Include="MigraDoc.Rendering, Version=1.51.5186.0, Culture=neutral, PublicKeyToken=f94615aa0424f9eb, processorArchitecture=MSIL">
-      <HintPath>..\packages\PDFsharp-MigraDoc.1.51.5186-beta\lib\net20\MigraDoc.Rendering.dll</HintPath>
-    </Reference>
-    <Reference Include="MigraDoc.RtfRendering, Version=1.51.5186.0, Culture=neutral, PublicKeyToken=f94615aa0424f9eb, processorArchitecture=MSIL">
-      <HintPath>..\packages\PDFsharp-MigraDoc.1.51.5186-beta\lib\net20\MigraDoc.RtfRendering.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="NLog, Version=5.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
-      <HintPath>..\packages\NLog.5.2.2\lib\net46\NLog.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="NLog.Database, Version=5.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
-      <HintPath>..\packages\NLog.Database.5.2.2\lib\net46\NLog.Database.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="NLog.WindowsEventLog, Version=5.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
-      <HintPath>..\packages\NLog.WindowsEventLog.5.2.2\lib\netstandard2.0\NLog.WindowsEventLog.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="NPOI, Version=2.6.0.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
-      <HintPath>..\packages\NPOI.2.6.0\lib\net472\NPOI.dll</HintPath>
-    </Reference>
-    <Reference Include="NPOI.OOXML, Version=2.6.0.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
-      <HintPath>..\packages\NPOI.2.6.0\lib\net472\NPOI.OOXML.dll</HintPath>
-    </Reference>
-    <Reference Include="NPOI.OpenXml4Net, Version=2.6.0.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
-      <HintPath>..\packages\NPOI.2.6.0\lib\net472\NPOI.OpenXml4Net.dll</HintPath>
-    </Reference>
-    <Reference Include="NPOI.OpenXmlFormats, Version=2.6.0.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
-      <HintPath>..\packages\NPOI.2.6.0\lib\net472\NPOI.OpenXmlFormats.dll</HintPath>
-    </Reference>
-    <Reference Include="OopFactory.X12, Version=3.0.8.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\OopFactory.X12.3.0.8.1\lib\net40\OopFactory.X12.dll</HintPath>
-    </Reference>
-    <Reference Include="PdfSharp, Version=1.51.5185.0, Culture=neutral, PublicKeyToken=f94615aa0424f9eb, processorArchitecture=MSIL">
-      <HintPath>..\packages\PDFsharp-MigraDoc.1.51.5186-beta\lib\net20\PdfSharp.dll</HintPath>
-    </Reference>
-    <Reference Include="PdfSharp.Charting, Version=1.51.5185.0, Culture=neutral, PublicKeyToken=f94615aa0424f9eb, processorArchitecture=MSIL">
-      <HintPath>..\packages\PDFsharp-MigraDoc.1.51.5186-beta\lib\net20\PdfSharp.Charting.dll</HintPath>
-    </Reference>
-    <Reference Include="PetaPoco, Version=6.0.566.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\PetaPoco.Compiled.6.0.566\lib\net45\PetaPoco.dll</HintPath>
-    </Reference>
-    <Reference Include="SixLabors.Fonts, Version=1.0.0.0, Culture=neutral, PublicKeyToken=d998eea7b14cab13, processorArchitecture=MSIL">
-      <HintPath>..\packages\SixLabors.Fonts.1.0.0-beta19\lib\netstandard2.0\SixLabors.Fonts.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
-    </Reference>
-    <Reference Include="System.ComponentModel.DataAnnotations" />
-    <Reference Include="System.Configuration" />
-    <Reference Include="System.Configuration.ConfigurationManager, Version=7.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Configuration.ConfigurationManager.7.0.0\lib\net462\System.Configuration.ConfigurationManager.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Core" />
-    <Reference Include="System.Data.OracleClient" />
-    <Reference Include="System.Diagnostics.DiagnosticSource, Version=7.0.0.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Diagnostics.DiagnosticSource.7.0.2\lib\net462\System.Diagnostics.DiagnosticSource.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Diagnostics.EventLog, Version=7.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Diagnostics.EventLog.7.0.0\lib\net462\System.Diagnostics.EventLog.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.IO.Compression, Version=4.1.2.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.IO.Compression.4.3.0\lib\net46\System.IO.Compression.dll</HintPath>
-      <Private>True</Private>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.IO.FileSystem.Primitives, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.IO.FileSystem.Primitives.4.3.0\lib\net46\System.IO.FileSystem.Primitives.dll</HintPath>
-      <Private>True</Private>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.IO.UnmanagedMemoryStream, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.IO.UnmanagedMemoryStream.4.3.0\lib\net46\System.IO.UnmanagedMemoryStream.dll</HintPath>
-      <Private>True</Private>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Linq, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Linq.4.3.0\lib\net463\System.Linq.dll</HintPath>
-      <Private>True</Private>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Linq.Dynamic.Core, Version=1.3.2.0, Culture=neutral, PublicKeyToken=0f07ec44de6ac832, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Linq.Dynamic.Core.1.3.3\lib\net46\System.Linq.Dynamic.Core.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Linq.Expressions, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Linq.Expressions.4.3.0\lib\net463\System.Linq.Expressions.dll</HintPath>
-      <Private>True</Private>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Memory, Version=4.0.1.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Memory.4.5.5\lib\net461\System.Memory.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Net" />
-    <Reference Include="System.Numerics" />
-    <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.6.0.0\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.Security" />
-    <Reference Include="System.Security.AccessControl, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Security.AccessControl.6.0.2-mauipre.1.22102.15\lib\net461\System.Security.AccessControl.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Security.Permissions, Version=7.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Security.Permissions.7.0.0\lib\net462\System.Security.Permissions.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Security.Principal.Windows, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Security.Principal.Windows.6.0.0-preview.5.21301.5\lib\net461\System.Security.Principal.Windows.dll</HintPath>
-    </Reference>
-    <Reference Include="System.ServiceModel" />
-    <Reference Include="System.ServiceProcess" />
-    <Reference Include="System.Text.Encoding.CodePages, Version=7.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Text.Encoding.CodePages.7.0.0\lib\net462\System.Text.Encoding.CodePages.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Text.Encodings.Web, Version=7.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Text.Encodings.Web.7.0.0\lib\net462\System.Text.Encodings.Web.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Text.Json, Version=7.0.0.3, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Text.Json.7.0.3\lib\net462\System.Text.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Threading.Tasks.Extensions.4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Transactions" />
-    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net47\System.ValueTuple.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
-    <Reference Include="WindowsBase" />
+    <ProjectReference Include="..\j4jayant.HL7.Parser\j4jayant.HL7.Parser.csproj" />
+    <ProjectReference Include="..\MCL\MCL.csproj" />
+    <ProjectReference Include="..\Utilities\Utilities.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BusinessLogic\Billing837.cs" />
-    <Compile Include="BusinessLogic\ClaimData.cs" />
-    <Compile Include="BusinessLogic\ClaimGenerator.cs" />
-    <Compile Include="BusinessLogic\ClaimRulesEngine.cs" />
-    <Compile Include="BusinessLogic\DictionaryImport.cs" />
-    <Compile Include="BusinessLogic\HL7Processor.cs" />
-    <Compile Include="BusinessLogic\InvoicePrintPdfSharp.cs" />
-    <Compile Include="BusinessLogic\NotesImport.cs" />
-    <Compile Include="BusinessLogic\PrintClaimForm.cs" />
-    <Compile Include="BusinessLogic\Remittance835.cs" />
-    <Compile Include="BusinessLogic\Validators\ChargeValidator.cs" />
-    <Compile Include="BusinessLogic\Validators\ClaimValidator.cs" />
-    <Compile Include="BusinessLogic\ClientInvoices.cs" />
-    <Compile Include="BusinessLogic\Exceptions.cs" />
-    <Compile Include="BusinessLogic\InvoicePrint.cs" />
-    <Compile Include="BusinessLogic\MicroRuleEngine.cs" />
-    <Compile Include="BusinessLogic\PatientBilling.cs" />
-    <Compile Include="BusinessLogic\PrepareClaimRules.cs" />
-    <Compile Include="BusinessLogic\Validators\DemographicsValidator.cs" />
-    <Compile Include="BusinessLogic\Validators\InsuranceValidator.cs" />
-    <Compile Include="BusinessLogic\Validators\InterfaceMessageValidator.cs" />
-    <Compile Include="BusinessLogic\Validators\PhysicianValidator.cs" />
-    <Compile Include="BusinessLogic\Worklist.cs" />
-    <Compile Include="DataAccess\AccountLmrpErrorRepository.cs" />
-    <Compile Include="DataAccess\AccountRepository.cs" />
-    <Compile Include="DataAccess\AccountSearchRepository.cs" />
-    <Compile Include="DataAccess\AccountValidationCriteriaRepository.cs" />
-    <Compile Include="DataAccess\AccountValidationRuleRepository.cs" />
-    <Compile Include="DataAccess\AccountValidationStatusRepository.cs" />
-    <Compile Include="DataAccess\AnnouncementRepository.cs" />
-    <Compile Include="DataAccess\AppEnvironment.cs" />
-    <Compile Include="DataAccess\CdmDetailRepository.cs" />
-    <Compile Include="DataAccess\ChkBatchDetailRepository.cs" />
-    <Compile Include="DataAccess\ChrgDetailRepository.cs" />
-    <Compile Include="DataAccess\BadDebtRepository.cs" />
-    <Compile Include="DataAccess\BillingActivityRepository.cs" />
-    <Compile Include="DataAccess\BillingBatchRepository.cs" />
-    <Compile Include="DataAccess\CdmRepository.cs" />
-    <Compile Include="DataAccess\ChkBatchRepository.cs" />
-    <Compile Include="DataAccess\ChkRepository.cs" />
-    <Compile Include="DataAccess\ChrgRepository.cs" />
-    <Compile Include="DataAccess\ClaimValidationRuleRepository.cs" />
-    <Compile Include="DataAccess\ClientDiscountRepository.cs" />
-    <Compile Include="DataAccess\ClientRepository.cs" />
-    <Compile Include="DataAccess\ClientTypeRepository.cs" />
-    <Compile Include="DataAccess\CustomSqlDatabaseProvider.cs" />
-    <Compile Include="DataAccess\Database.cs" />
-    <Compile Include="DataAccess\DictDxRepository.cs" />
-    <Compile Include="DataAccess\EmpRepository.cs" />
-    <Compile Include="DataAccess\FinRepository.cs" />
-    <Compile Include="DataAccess\GLCodeRepository.cs" />
-    <Compile Include="DataAccess\GlobalBillingCdmRepository.cs" />
-    <Compile Include="DataAccess\IAccountRepository.cs" />
-    <Compile Include="DataAccess\IAppEnvironment.cs" />
-    <Compile Include="DataAccess\InsCompanyRepository.cs" />
-    <Compile Include="DataAccess\InsRepository.cs" />
-    <Compile Include="DataAccess\IRepositoryBase.cs" />
-    <Compile Include="DataAccess\IUnitOfWork.cs" />
-    <Compile Include="DataAccess\IUnitOfWorkProvider.cs" />
-    <Compile Include="DataAccess\LMRPRuleRepository.cs" />
-    <Compile Include="DataAccess\LogRepository.cs" />
-    <Compile Include="DataAccess\MessagesInboundRepository.cs" />
-    <Compile Include="DataAccess\InvoiceHistoryRepository.cs" />
-    <Compile Include="DataAccess\MappingRepository.cs" />
-    <Compile Include="DataAccess\AccountNoteRepository.cs" />
-    <Compile Include="DataAccess\MutuallyExclusiveEditRepository.cs" />
-    <Compile Include="DataAccess\MyMapper.cs" />
-    <Compile Include="DataAccess\NumberRepository.cs" />
-    <Compile Include="DataAccess\PatDxRepository.cs" />
-    <Compile Include="DataAccess\PatientStatementAccountRepository.cs" />
-    <Compile Include="DataAccess\PatientStatementCernerRepository.cs" />
-    <Compile Include="DataAccess\PatientStatementEncounterActivityRepository.cs" />
-    <Compile Include="DataAccess\PatientStatementEncounterRepository.cs" />
-    <Compile Include="DataAccess\PatientStatementRepository.cs" />
-    <Compile Include="DataAccess\PatRepository.cs" />
-    <Compile Include="DataAccess\PhyRepository.cs" />
-    <Compile Include="DataAccess\ReportingRepository.cs" />
-    <Compile Include="DataAccess\RepositoryBase.cs" />
-    <Compile Include="DataAccess\RevenueCodeRepository.cs" />
-    <Compile Include="DataAccess\SystemParametersRepository.cs" />
-    <Compile Include="DataAccess\UserProfileRepository.cs" />
-    <Compile Include="DataAccess\WriteOffCodeRepository.cs" />
-    <Compile Include="Extensions.cs" />
-    <Compile Include="FunctionRepository.cs" />
-    <Compile Include="LabBillingCoreResources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>LabBillingCoreResources.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Logging.cs" />
-    <Compile Include="Models\Account.cs" />
-    <Compile Include="Models\AccountAlert.cs" />
-    <Compile Include="Models\AccountLmrpError.cs" />
-    <Compile Include="Models\AccountSearch.cs" />
-    <Compile Include="Models\AccountStatus.cs" />
-    <Compile Include="Models\AccountValidationRule.cs" />
-    <Compile Include="Models\AccountValidationStatus.cs" />
-    <Compile Include="Models\Announcement.cs" />
-    <Compile Include="Models\ApplicationParameters.cs" />
-    <Compile Include="Models\BillingBatch.cs" />
-    <Compile Include="Models\ChkBatchDetail.cs" />
-    <Compile Include="Models\ChrgChrgDetailRelator.cs" />
-    <Compile Include="Models\ChrgDiagnosisPointer.cs" />
-    <Compile Include="Models\ChrgDetail.cs" />
-    <Compile Include="Models\BadDebt.cs" />
-    <Compile Include="Models\BatchCharge.cs" />
-    <Compile Include="Models\BillingActivity.cs" />
-    <Compile Include="Models\Cdm.cs" />
-    <Compile Include="Models\CdmDetail.cs" />
-    <Compile Include="Models\Chk.cs" />
-    <Compile Include="Models\ChkBatch.cs" />
-    <Compile Include="Models\Chrg.cs" />
-    <Compile Include="Models\ClaimChargeView.cs" />
-    <Compile Include="Models\ClaimItem.cs" />
-    <Compile Include="Models\ClaimValidationRule.cs" />
-    <Compile Include="Models\Client.cs" />
-    <Compile Include="Models\ClientDiscount.cs" />
-    <Compile Include="Models\ClientStatementDetailModel.cs" />
-    <Compile Include="Models\ClientType.cs" />
-    <Compile Include="Models\DictAccValidation.cs" />
-    <Compile Include="Models\DictDx.cs" />
-    <Compile Include="Models\Dictionaries.cs" />
-    <Compile Include="Models\Emp.cs" />
-    <Compile Include="Models\Fin.cs" />
-    <Compile Include="Models\GLCode.cs" />
-    <Compile Include="Models\GlobalBillingCdm.cs" />
-    <Compile Include="Models\IBaseEntity.cs" />
-    <Compile Include="Models\Ins.cs" />
-    <Compile Include="Models\InsCompany.cs" />
-    <Compile Include="Models\InvoiceChargeView.cs" />
-    <Compile Include="Models\InvoiceDetailLinesModel.cs" />
-    <Compile Include="Models\InvoiceDetailModel.cs" />
-    <Compile Include="Models\PatientDemographic.cs" />
-    <Compile Include="Models\InvoiceHistory.cs" />
-    <Compile Include="Models\InvoiceModel.cs" />
-    <Compile Include="Models\InvoiceSelect.cs" />
-    <Compile Include="Models\LMRPRule.cs" />
-    <Compile Include="Models\Logs.cs" />
-    <Compile Include="Models\Mapping.cs" />
-    <Compile Include="Models\AccountNote.cs" />
-    <Compile Include="Models\MessageInbound.cs" />
-    <Compile Include="Models\MessageInboundWebconnect.cs" />
-    <Compile Include="Models\MessageOutbound.cs" />
-    <Compile Include="Models\MessageInboundAdt.cs" />
-    <Compile Include="Models\MutuallyExclusiveEdit.cs" />
-    <Compile Include="Models\Number.cs" />
-    <Compile Include="Models\Parameters.cs" />
-    <Compile Include="Models\Pat.cs" />
-    <Compile Include="Models\PatDx.cs" />
-    <Compile Include="Models\PatientStatement.cs" />
-    <Compile Include="Models\PatientStatementAccount.cs" />
-    <Compile Include="Models\PatientStatementCerner.cs" />
-    <Compile Include="Models\PatientStatementEncounter.cs" />
-    <Compile Include="Models\PatientStatementEncounterActivity.cs" />
-    <Compile Include="Models\Phy.cs" />
-    <Compile Include="Models\ProgressReportModel.cs" />
-    <Compile Include="Models\Pth.cs" />
-    <Compile Include="Models\RevenueCode.cs" />
-    <Compile Include="Models\StatementChargeView.cs" />
-    <Compile Include="Models\SysParameter.cs" />
-    <Compile Include="Models\UnbilledAccounts.cs" />
-    <Compile Include="Models\UnbilledClient.cs" />
-    <Compile Include="Models\UserProfile.cs" />
-    <Compile Include="Models\WriteOffCode.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\j4jayant.HL7.Parser\j4jayant.HL7.Parser.csproj">
-      <Project>{687f3113-0395-4dbc-a332-c1a329516651}</Project>
-      <Name>j4jayant.HL7.Parser</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\MCL\MCL.csproj">
-      <Project>{f54e006c-aa33-48f2-9e2f-46cfb5d7ee47}</Project>
-      <Name>MCL</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\RFClassLibrary\RFClassLibrary.csproj">
-      <Project>{b15474ed-9185-437e-bac5-a19779cbe721}</Project>
-      <Name>RFClassLibrary</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="app.config" />
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="BusinessLogic\Resources\ADAJ400_Red.gif">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="BusinessLogic\Resources\HCFA1500_Red.gif">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="BusinessLogic\Resources\UB04_Red.gif">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="Specifications\Ansi-133-Specification.xml" />
     <Content Include="Specifications\Ansi-158-Specification.xml" />
-    <EmbeddedResource Include="LabBillingCoreResources.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>LabBillingCoreResources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\packages\Microsoft.NETFramework.ReferenceAssemblies.net48.1.0.3\build\Microsoft.NETFramework.ReferenceAssemblies.net48.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.NETFramework.ReferenceAssemblies.net48.1.0.3\build\Microsoft.NETFramework.ReferenceAssemblies.net48.targets'))" />
-    <Error Condition="!Exists('..\packages\SixLabors.ImageSharp.3.0.1\build\SixLabors.ImageSharp.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\SixLabors.ImageSharp.3.0.1\build\SixLabors.ImageSharp.props'))" />
-  </Target>
-  <Import Project="..\packages\Microsoft.NETFramework.ReferenceAssemblies.net48.1.0.3\build\Microsoft.NETFramework.ReferenceAssemblies.net48.targets" Condition="Exists('..\packages\Microsoft.NETFramework.ReferenceAssemblies.net48.1.0.3\build\Microsoft.NETFramework.ReferenceAssemblies.net48.targets')" />
+  <ItemGroup>
+    <PackageReference Include="Common.Logging" Version="3.4.1" />
+    <PackageReference Include="Common.Logging.Core" Version="3.4.1" />
+    <PackageReference Include="EdiTools" Version="1.0.6" />
+    <PackageReference Include="Enums.NET" Version="4.0.2" />
+    <PackageReference Include="FastExpressionCompiler" Version="4.1.0" />
+    <PackageReference Include="FluentValidation" Version="11.9.0" />
+    <PackageReference Include="Fonet.Standard" Version="1.0.5" />
+    <PackageReference Include="MathNet.Numerics.Signed" Version="5.0.0" />
+    <PackageReference Include="Microsoft.IO.RecyclableMemoryStream" Version="3.0.0" />
+    <PackageReference Include="NLog" Version="5.2.8" />
+    <PackageReference Include="NLog.Database" Version="5.2.8" />
+    <PackageReference Include="NLog.WindowsEventLog" Version="5.2.8" />
+    <PackageReference Include="NPOI" Version="2.7.0" />
+    <PackageReference Include="PetaPoco.Compiled" Version="6.0.677" />
+    <PackageReference Include="Portable.BouncyCastle" Version="1.9.0" />
+    <PackageReference Include="SharpZipLib" Version="1.4.2" />
+    <PackageReference Include="SixLabors.Fonts" Version="2.0.3" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="3.1.3" />
+    <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
+    <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
+    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.3.10" />
+    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="System.Resources.Extensions" Version="8.0.0" />
+    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="System.Reflection.Emit" Version="4.7.0" />
+  </ItemGroup>
 </Project>

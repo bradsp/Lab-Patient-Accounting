@@ -28,327 +28,405 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.sendCollectionsTabPage = new System.Windows.Forms.TabPage();
-            this.sendToCollectionsTextbox = new System.Windows.Forms.TextBox();
-            this.sendToCollectionsProgressBar = new System.Windows.Forms.ProgressBar();
-            this.sendToCollectionsStartButton = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
-            this.compileStatementsTabPage = new System.Windows.Forms.TabPage();
-            this.batchNoLabel = new System.Windows.Forms.Label();
-            this.throughDateLabel = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.compileStmtsStartButton = new System.Windows.Forms.Button();
-            this.compileStatementsTextBox = new System.Windows.Forms.TextBox();
-            this.compileStatementsProgressBar = new System.Windows.Forms.ProgressBar();
-            this.label2 = new System.Windows.Forms.Label();
-            this.createStmtFileTabPage = new System.Windows.Forms.TabPage();
-            this.createStmtFileStartButton = new System.Windows.Forms.Button();
-            this.createStmtFileTextBox = new System.Windows.Forms.TextBox();
-            this.createStmtFileProgressBar = new System.Windows.Forms.ProgressBar();
-            this.label3 = new System.Windows.Forms.Label();
-            this.cancelButton = new System.Windows.Forms.Button();
-            this.backButton = new System.Windows.Forms.Button();
-            this.nextButton = new System.Windows.Forms.Button();
-            this.finishButton = new System.Windows.Forms.Button();
-            this.bannerLabel = new System.Windows.Forms.Label();
-            this.tabControl1.SuspendLayout();
-            this.sendCollectionsTabPage.SuspendLayout();
-            this.compileStatementsTabPage.SuspendLayout();
-            this.createStmtFileTabPage.SuspendLayout();
-            this.SuspendLayout();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PatientCollectionsRunWizard));
+            tabControl1 = new UserControls.WizardPages();
+            introTabPage = new System.Windows.Forms.TabPage();
+            label6 = new System.Windows.Forms.Label();
+            richTextBox1 = new System.Windows.Forms.RichTextBox();
+            sendCollectionsTabPage = new System.Windows.Forms.TabPage();
+            sendToCollectionsTextbox = new System.Windows.Forms.TextBox();
+            sendToCollectionsProgressBar = new System.Windows.Forms.ProgressBar();
+            sendToCollectionsStartButton = new System.Windows.Forms.Button();
+            label1 = new System.Windows.Forms.Label();
+            compileStatementsTabPage = new System.Windows.Forms.TabPage();
+            batchNoLabel = new System.Windows.Forms.Label();
+            throughDateLabel = new System.Windows.Forms.Label();
+            label5 = new System.Windows.Forms.Label();
+            label4 = new System.Windows.Forms.Label();
+            compileStmtsStartButton = new System.Windows.Forms.Button();
+            compileStatementsTextBox = new System.Windows.Forms.TextBox();
+            compileStatementsProgressBar = new System.Windows.Forms.ProgressBar();
+            label2 = new System.Windows.Forms.Label();
+            createStmtFileTabPage = new System.Windows.Forms.TabPage();
+            createStmtFileStartButton = new System.Windows.Forms.Button();
+            createStmtFileTextBox = new System.Windows.Forms.TextBox();
+            createStmtFileProgressBar = new System.Windows.Forms.ProgressBar();
+            label3 = new System.Windows.Forms.Label();
+            cancelButton = new System.Windows.Forms.Button();
+            backButton = new System.Windows.Forms.Button();
+            nextButton = new System.Windows.Forms.Button();
+            finishButton = new System.Windows.Forms.Button();
+            bannerLabel = new System.Windows.Forms.Label();
+            skipSendCollectionsCheckBox = new System.Windows.Forms.CheckBox();
+            tabControl1.SuspendLayout();
+            introTabPage.SuspendLayout();
+            sendCollectionsTabPage.SuspendLayout();
+            compileStatementsTabPage.SuspendLayout();
+            createStmtFileTabPage.SuspendLayout();
+            SuspendLayout();
             // 
             // tabControl1
             // 
-            this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.tabControl1.Controls.Add(this.sendCollectionsTabPage);
-            this.tabControl1.Controls.Add(this.compileStatementsTabPage);
-            this.tabControl1.Controls.Add(this.createStmtFileTabPage);
-            this.tabControl1.Location = new System.Drawing.Point(12, 32);
-            this.tabControl1.Name = "tabControl1";
-            this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(776, 376);
-            this.tabControl1.TabIndex = 0;
+            tabControl1.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            tabControl1.Appearance = System.Windows.Forms.TabAppearance.FlatButtons;
+            tabControl1.Controls.Add(introTabPage);
+            tabControl1.Controls.Add(sendCollectionsTabPage);
+            tabControl1.Controls.Add(compileStatementsTabPage);
+            tabControl1.Controls.Add(createStmtFileTabPage);
+            tabControl1.Location = new System.Drawing.Point(14, 37);
+            tabControl1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            tabControl1.Name = "tabControl1";
+            tabControl1.SelectedIndex = 0;
+            tabControl1.Size = new System.Drawing.Size(905, 434);
+            tabControl1.TabIndex = 0;
+            tabControl1.SelectedIndexChanged += tabControl1_SelectedIndexChanged;
+            // 
+            // introTabPage
+            // 
+            introTabPage.BackColor = System.Drawing.Color.White;
+            introTabPage.Controls.Add(label6);
+            introTabPage.Controls.Add(richTextBox1);
+            introTabPage.Location = new System.Drawing.Point(4, 27);
+            introTabPage.Name = "introTabPage";
+            introTabPage.Padding = new System.Windows.Forms.Padding(3);
+            introTabPage.Size = new System.Drawing.Size(897, 403);
+            introTabPage.TabIndex = 3;
+            introTabPage.Text = "Intro";
+            // 
+            // label6
+            // 
+            label6.AutoSize = true;
+            label6.Location = new System.Drawing.Point(28, 27);
+            label6.Name = "label6";
+            label6.Size = new System.Drawing.Size(477, 15);
+            label6.TabIndex = 1;
+            label6.Text = "This process will generate patient statements and send qualifying accounts to collections.";
+            // 
+            // richTextBox1
+            // 
+            richTextBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            richTextBox1.Location = new System.Drawing.Point(28, 106);
+            richTextBox1.Name = "richTextBox1";
+            richTextBox1.Size = new System.Drawing.Size(840, 250);
+            richTextBox1.TabIndex = 0;
+            richTextBox1.Text = resources.GetString("richTextBox1.Text");
             // 
             // sendCollectionsTabPage
             // 
-            this.sendCollectionsTabPage.Controls.Add(this.sendToCollectionsTextbox);
-            this.sendCollectionsTabPage.Controls.Add(this.sendToCollectionsProgressBar);
-            this.sendCollectionsTabPage.Controls.Add(this.sendToCollectionsStartButton);
-            this.sendCollectionsTabPage.Controls.Add(this.label1);
-            this.sendCollectionsTabPage.Location = new System.Drawing.Point(4, 22);
-            this.sendCollectionsTabPage.Name = "sendCollectionsTabPage";
-            this.sendCollectionsTabPage.Padding = new System.Windows.Forms.Padding(3);
-            this.sendCollectionsTabPage.Size = new System.Drawing.Size(768, 350);
-            this.sendCollectionsTabPage.TabIndex = 0;
-            this.sendCollectionsTabPage.Text = "Send to Collections";
-            this.sendCollectionsTabPage.UseVisualStyleBackColor = true;
+            sendCollectionsTabPage.BackColor = System.Drawing.Color.White;
+            sendCollectionsTabPage.Controls.Add(skipSendCollectionsCheckBox);
+            sendCollectionsTabPage.Controls.Add(sendToCollectionsTextbox);
+            sendCollectionsTabPage.Controls.Add(sendToCollectionsProgressBar);
+            sendCollectionsTabPage.Controls.Add(sendToCollectionsStartButton);
+            sendCollectionsTabPage.Controls.Add(label1);
+            sendCollectionsTabPage.Location = new System.Drawing.Point(4, 27);
+            sendCollectionsTabPage.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            sendCollectionsTabPage.Name = "sendCollectionsTabPage";
+            sendCollectionsTabPage.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            sendCollectionsTabPage.Size = new System.Drawing.Size(897, 403);
+            sendCollectionsTabPage.TabIndex = 0;
+            sendCollectionsTabPage.Text = "Send to Collections";
             // 
             // sendToCollectionsTextbox
             // 
-            this.sendToCollectionsTextbox.Location = new System.Drawing.Point(39, 121);
-            this.sendToCollectionsTextbox.Multiline = true;
-            this.sendToCollectionsTextbox.Name = "sendToCollectionsTextbox";
-            this.sendToCollectionsTextbox.Size = new System.Drawing.Size(530, 189);
-            this.sendToCollectionsTextbox.TabIndex = 3;
+            sendToCollectionsTextbox.BackColor = System.Drawing.Color.White;
+            sendToCollectionsTextbox.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            sendToCollectionsTextbox.Location = new System.Drawing.Point(46, 140);
+            sendToCollectionsTextbox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            sendToCollectionsTextbox.Multiline = true;
+            sendToCollectionsTextbox.Name = "sendToCollectionsTextbox";
+            sendToCollectionsTextbox.ReadOnly = true;
+            sendToCollectionsTextbox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            sendToCollectionsTextbox.Size = new System.Drawing.Size(618, 217);
+            sendToCollectionsTextbox.TabIndex = 3;
             // 
             // sendToCollectionsProgressBar
             // 
-            this.sendToCollectionsProgressBar.Location = new System.Drawing.Point(39, 92);
-            this.sendToCollectionsProgressBar.Name = "sendToCollectionsProgressBar";
-            this.sendToCollectionsProgressBar.Size = new System.Drawing.Size(530, 23);
-            this.sendToCollectionsProgressBar.TabIndex = 2;
+            sendToCollectionsProgressBar.Location = new System.Drawing.Point(46, 106);
+            sendToCollectionsProgressBar.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            sendToCollectionsProgressBar.Name = "sendToCollectionsProgressBar";
+            sendToCollectionsProgressBar.Size = new System.Drawing.Size(618, 27);
+            sendToCollectionsProgressBar.TabIndex = 2;
             // 
             // sendToCollectionsStartButton
             // 
-            this.sendToCollectionsStartButton.Location = new System.Drawing.Point(592, 92);
-            this.sendToCollectionsStartButton.Name = "sendToCollectionsStartButton";
-            this.sendToCollectionsStartButton.Size = new System.Drawing.Size(75, 23);
-            this.sendToCollectionsStartButton.TabIndex = 1;
-            this.sendToCollectionsStartButton.Text = "Start";
-            this.sendToCollectionsStartButton.UseVisualStyleBackColor = true;
-            this.sendToCollectionsStartButton.Click += new System.EventHandler(this.sendToCollectionsStartButton_Click);
+            sendToCollectionsStartButton.Location = new System.Drawing.Point(691, 106);
+            sendToCollectionsStartButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            sendToCollectionsStartButton.Name = "sendToCollectionsStartButton";
+            sendToCollectionsStartButton.Size = new System.Drawing.Size(88, 27);
+            sendToCollectionsStartButton.TabIndex = 1;
+            sendToCollectionsStartButton.Text = "Start";
+            sendToCollectionsStartButton.UseVisualStyleBackColor = true;
+            sendToCollectionsStartButton.Click += sendToCollectionsStartButton_Click;
             // 
             // label1
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(41, 41);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(533, 13);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "This step will generate the collections file to send to MSCB, and write off those" +
-    " accounts. Click Start to proceed.";
+            label1.AutoSize = true;
+            label1.Location = new System.Drawing.Point(48, 47);
+            label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label1.Name = "label1";
+            label1.Size = new System.Drawing.Size(591, 15);
+            label1.TabIndex = 0;
+            label1.Text = "This step will generate the collections file to send to MSCB, and write off those accounts. Click Start to proceed.";
             // 
             // compileStatementsTabPage
             // 
-            this.compileStatementsTabPage.Controls.Add(this.batchNoLabel);
-            this.compileStatementsTabPage.Controls.Add(this.throughDateLabel);
-            this.compileStatementsTabPage.Controls.Add(this.label5);
-            this.compileStatementsTabPage.Controls.Add(this.label4);
-            this.compileStatementsTabPage.Controls.Add(this.compileStmtsStartButton);
-            this.compileStatementsTabPage.Controls.Add(this.compileStatementsTextBox);
-            this.compileStatementsTabPage.Controls.Add(this.compileStatementsProgressBar);
-            this.compileStatementsTabPage.Controls.Add(this.label2);
-            this.compileStatementsTabPage.Location = new System.Drawing.Point(4, 22);
-            this.compileStatementsTabPage.Name = "compileStatementsTabPage";
-            this.compileStatementsTabPage.Padding = new System.Windows.Forms.Padding(3);
-            this.compileStatementsTabPage.Size = new System.Drawing.Size(768, 350);
-            this.compileStatementsTabPage.TabIndex = 1;
-            this.compileStatementsTabPage.Text = "Compile Statements";
-            this.compileStatementsTabPage.UseVisualStyleBackColor = true;
+            compileStatementsTabPage.BackColor = System.Drawing.Color.White;
+            compileStatementsTabPage.Controls.Add(batchNoLabel);
+            compileStatementsTabPage.Controls.Add(throughDateLabel);
+            compileStatementsTabPage.Controls.Add(label5);
+            compileStatementsTabPage.Controls.Add(label4);
+            compileStatementsTabPage.Controls.Add(compileStmtsStartButton);
+            compileStatementsTabPage.Controls.Add(compileStatementsTextBox);
+            compileStatementsTabPage.Controls.Add(compileStatementsProgressBar);
+            compileStatementsTabPage.Controls.Add(label2);
+            compileStatementsTabPage.Location = new System.Drawing.Point(4, 27);
+            compileStatementsTabPage.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            compileStatementsTabPage.Name = "compileStatementsTabPage";
+            compileStatementsTabPage.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            compileStatementsTabPage.Size = new System.Drawing.Size(897, 403);
+            compileStatementsTabPage.TabIndex = 1;
+            compileStatementsTabPage.Text = "Compile Statements";
             // 
             // batchNoLabel
             // 
-            this.batchNoLabel.AutoSize = true;
-            this.batchNoLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.batchNoLabel.Location = new System.Drawing.Point(144, 68);
-            this.batchNoLabel.Name = "batchNoLabel";
-            this.batchNoLabel.Size = new System.Drawing.Size(91, 18);
-            this.batchNoLabel.TabIndex = 5;
-            this.batchNoLabel.Text = "<batchNo>";
+            batchNoLabel.AutoSize = true;
+            batchNoLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 0);
+            batchNoLabel.Location = new System.Drawing.Point(168, 78);
+            batchNoLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            batchNoLabel.Name = "batchNoLabel";
+            batchNoLabel.Size = new System.Drawing.Size(91, 18);
+            batchNoLabel.TabIndex = 5;
+            batchNoLabel.Text = "<batchNo>";
             // 
             // throughDateLabel
             // 
-            this.throughDateLabel.AutoSize = true;
-            this.throughDateLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.throughDateLabel.Location = new System.Drawing.Point(144, 39);
-            this.throughDateLabel.Name = "throughDateLabel";
-            this.throughDateLabel.Size = new System.Drawing.Size(122, 18);
-            this.throughDateLabel.TabIndex = 5;
-            this.throughDateLabel.Text = "<through date>";
+            throughDateLabel.AutoSize = true;
+            throughDateLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 0);
+            throughDateLabel.Location = new System.Drawing.Point(168, 45);
+            throughDateLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            throughDateLabel.Name = "throughDateLabel";
+            throughDateLabel.Size = new System.Drawing.Size(122, 18);
+            throughDateLabel.TabIndex = 5;
+            throughDateLabel.Text = "<through date>";
             // 
             // label5
             // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(62, 72);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(55, 13);
-            this.label5.TabIndex = 4;
-            this.label5.Text = "Batch No:";
+            label5.AutoSize = true;
+            label5.Location = new System.Drawing.Point(72, 83);
+            label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label5.Name = "label5";
+            label5.Size = new System.Drawing.Size(59, 15);
+            label5.TabIndex = 4;
+            label5.Text = "Batch No:";
             // 
             // label4
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(62, 43);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(76, 13);
-            this.label4.TabIndex = 4;
-            this.label4.Text = "Through Date:";
+            label4.AutoSize = true;
+            label4.Location = new System.Drawing.Point(72, 50);
+            label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label4.Name = "label4";
+            label4.Size = new System.Drawing.Size(82, 15);
+            label4.TabIndex = 4;
+            label4.Text = "Through Date:";
             // 
             // compileStmtsStartButton
             // 
-            this.compileStmtsStartButton.Location = new System.Drawing.Point(465, 109);
-            this.compileStmtsStartButton.Name = "compileStmtsStartButton";
-            this.compileStmtsStartButton.Size = new System.Drawing.Size(75, 23);
-            this.compileStmtsStartButton.TabIndex = 3;
-            this.compileStmtsStartButton.Text = "Start";
-            this.compileStmtsStartButton.UseVisualStyleBackColor = true;
-            this.compileStmtsStartButton.Click += new System.EventHandler(this.compileStmtsStartButton_Click);
+            compileStmtsStartButton.Location = new System.Drawing.Point(542, 126);
+            compileStmtsStartButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            compileStmtsStartButton.Name = "compileStmtsStartButton";
+            compileStmtsStartButton.Size = new System.Drawing.Size(88, 27);
+            compileStmtsStartButton.TabIndex = 3;
+            compileStmtsStartButton.Text = "Start";
+            compileStmtsStartButton.UseVisualStyleBackColor = true;
+            compileStmtsStartButton.Click += compileStmtsStartButton_Click;
             // 
             // compileStatementsTextBox
             // 
-            this.compileStatementsTextBox.Location = new System.Drawing.Point(65, 150);
-            this.compileStatementsTextBox.Multiline = true;
-            this.compileStatementsTextBox.Name = "compileStatementsTextBox";
-            this.compileStatementsTextBox.Size = new System.Drawing.Size(374, 176);
-            this.compileStatementsTextBox.TabIndex = 2;
+            compileStatementsTextBox.Location = new System.Drawing.Point(76, 173);
+            compileStatementsTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            compileStatementsTextBox.Multiline = true;
+            compileStatementsTextBox.Name = "compileStatementsTextBox";
+            compileStatementsTextBox.Size = new System.Drawing.Size(436, 202);
+            compileStatementsTextBox.TabIndex = 2;
             // 
             // compileStatementsProgressBar
             // 
-            this.compileStatementsProgressBar.Location = new System.Drawing.Point(65, 109);
-            this.compileStatementsProgressBar.Name = "compileStatementsProgressBar";
-            this.compileStatementsProgressBar.Size = new System.Drawing.Size(374, 23);
-            this.compileStatementsProgressBar.TabIndex = 1;
+            compileStatementsProgressBar.Location = new System.Drawing.Point(76, 126);
+            compileStatementsProgressBar.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            compileStatementsProgressBar.Name = "compileStatementsProgressBar";
+            compileStatementsProgressBar.Size = new System.Drawing.Size(436, 27);
+            compileStatementsProgressBar.TabIndex = 1;
             // 
             // label2
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(62, 17);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(377, 13);
-            this.label2.TabIndex = 0;
-            this.label2.Text = "This step will compile the records to receive statements. Click Start to proceed." +
-    "";
+            label2.AutoSize = true;
+            label2.Location = new System.Drawing.Point(72, 20);
+            label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label2.Name = "label2";
+            label2.Size = new System.Drawing.Size(419, 15);
+            label2.TabIndex = 0;
+            label2.Text = "This step will compile the records to receive statements. Click Start to proceed.";
             // 
             // createStmtFileTabPage
             // 
-            this.createStmtFileTabPage.Controls.Add(this.createStmtFileStartButton);
-            this.createStmtFileTabPage.Controls.Add(this.createStmtFileTextBox);
-            this.createStmtFileTabPage.Controls.Add(this.createStmtFileProgressBar);
-            this.createStmtFileTabPage.Controls.Add(this.label3);
-            this.createStmtFileTabPage.Location = new System.Drawing.Point(4, 22);
-            this.createStmtFileTabPage.Name = "createStmtFileTabPage";
-            this.createStmtFileTabPage.Size = new System.Drawing.Size(768, 350);
-            this.createStmtFileTabPage.TabIndex = 2;
-            this.createStmtFileTabPage.Text = "Create Statement File";
-            this.createStmtFileTabPage.UseVisualStyleBackColor = true;
+            createStmtFileTabPage.BackColor = System.Drawing.Color.White;
+            createStmtFileTabPage.Controls.Add(createStmtFileStartButton);
+            createStmtFileTabPage.Controls.Add(createStmtFileTextBox);
+            createStmtFileTabPage.Controls.Add(createStmtFileProgressBar);
+            createStmtFileTabPage.Controls.Add(label3);
+            createStmtFileTabPage.Location = new System.Drawing.Point(4, 27);
+            createStmtFileTabPage.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            createStmtFileTabPage.Name = "createStmtFileTabPage";
+            createStmtFileTabPage.Size = new System.Drawing.Size(897, 403);
+            createStmtFileTabPage.TabIndex = 2;
+            createStmtFileTabPage.Text = "Create Statement File";
             // 
             // createStmtFileStartButton
             // 
-            this.createStmtFileStartButton.Location = new System.Drawing.Point(481, 71);
-            this.createStmtFileStartButton.Name = "createStmtFileStartButton";
-            this.createStmtFileStartButton.Size = new System.Drawing.Size(75, 23);
-            this.createStmtFileStartButton.TabIndex = 3;
-            this.createStmtFileStartButton.Text = "Start";
-            this.createStmtFileStartButton.UseVisualStyleBackColor = true;
-            this.createStmtFileStartButton.Click += new System.EventHandler(this.createStmtFileStartButton_Click);
+            createStmtFileStartButton.Location = new System.Drawing.Point(561, 82);
+            createStmtFileStartButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            createStmtFileStartButton.Name = "createStmtFileStartButton";
+            createStmtFileStartButton.Size = new System.Drawing.Size(88, 27);
+            createStmtFileStartButton.TabIndex = 3;
+            createStmtFileStartButton.Text = "Start";
+            createStmtFileStartButton.UseVisualStyleBackColor = true;
+            createStmtFileStartButton.Click += createStmtFileStartButton_Click;
             // 
             // createStmtFileTextBox
             // 
-            this.createStmtFileTextBox.Location = new System.Drawing.Point(69, 100);
-            this.createStmtFileTextBox.Multiline = true;
-            this.createStmtFileTextBox.Name = "createStmtFileTextBox";
-            this.createStmtFileTextBox.Size = new System.Drawing.Size(379, 153);
-            this.createStmtFileTextBox.TabIndex = 2;
+            createStmtFileTextBox.Location = new System.Drawing.Point(80, 115);
+            createStmtFileTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            createStmtFileTextBox.Multiline = true;
+            createStmtFileTextBox.Name = "createStmtFileTextBox";
+            createStmtFileTextBox.Size = new System.Drawing.Size(442, 245);
+            createStmtFileTextBox.TabIndex = 2;
             // 
             // createStmtFileProgressBar
             // 
-            this.createStmtFileProgressBar.Location = new System.Drawing.Point(69, 71);
-            this.createStmtFileProgressBar.Name = "createStmtFileProgressBar";
-            this.createStmtFileProgressBar.Size = new System.Drawing.Size(379, 23);
-            this.createStmtFileProgressBar.TabIndex = 1;
+            createStmtFileProgressBar.Location = new System.Drawing.Point(80, 82);
+            createStmtFileProgressBar.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            createStmtFileProgressBar.Name = "createStmtFileProgressBar";
+            createStmtFileProgressBar.Size = new System.Drawing.Size(442, 27);
+            createStmtFileProgressBar.TabIndex = 1;
             // 
             // label3
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(58, 42);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(390, 13);
-            this.label3.TabIndex = 0;
-            this.label3.Text = "This step will generate the statement file to be sent to DNI. Click Start to proc" +
-    "eed.";
+            label3.AutoSize = true;
+            label3.Location = new System.Drawing.Point(68, 48);
+            label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label3.Name = "label3";
+            label3.Size = new System.Drawing.Size(432, 15);
+            label3.TabIndex = 0;
+            label3.Text = "This step will generate the statement file to be sent to DNI. Click Start to proceed.";
             // 
             // cancelButton
             // 
-            this.cancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.cancelButton.Location = new System.Drawing.Point(709, 415);
-            this.cancelButton.Name = "cancelButton";
-            this.cancelButton.Size = new System.Drawing.Size(75, 23);
-            this.cancelButton.TabIndex = 1;
-            this.cancelButton.Text = "Close";
-            this.cancelButton.UseVisualStyleBackColor = true;
-            this.cancelButton.Click += new System.EventHandler(this.cancelButton_Click);
+            cancelButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right;
+            cancelButton.Location = new System.Drawing.Point(827, 479);
+            cancelButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            cancelButton.Name = "cancelButton";
+            cancelButton.Size = new System.Drawing.Size(88, 27);
+            cancelButton.TabIndex = 1;
+            cancelButton.Text = "Close";
+            cancelButton.UseVisualStyleBackColor = true;
+            cancelButton.Click += cancelButton_Click;
             // 
             // backButton
             // 
-            this.backButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.backButton.Location = new System.Drawing.Point(466, 415);
-            this.backButton.Name = "backButton";
-            this.backButton.Size = new System.Drawing.Size(75, 23);
-            this.backButton.TabIndex = 1;
-            this.backButton.Text = "< Back";
-            this.backButton.UseVisualStyleBackColor = true;
-            this.backButton.Visible = false;
+            backButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right;
+            backButton.Location = new System.Drawing.Point(544, 479);
+            backButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            backButton.Name = "backButton";
+            backButton.Size = new System.Drawing.Size(88, 27);
+            backButton.TabIndex = 1;
+            backButton.Text = "< Back";
+            backButton.UseVisualStyleBackColor = true;
+            backButton.Visible = false;
             // 
             // nextButton
             // 
-            this.nextButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.nextButton.Location = new System.Drawing.Point(547, 415);
-            this.nextButton.Name = "nextButton";
-            this.nextButton.Size = new System.Drawing.Size(75, 23);
-            this.nextButton.TabIndex = 1;
-            this.nextButton.Text = "Next >";
-            this.nextButton.UseVisualStyleBackColor = true;
-            this.nextButton.Visible = false;
+            nextButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right;
+            nextButton.Location = new System.Drawing.Point(638, 479);
+            nextButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            nextButton.Name = "nextButton";
+            nextButton.Size = new System.Drawing.Size(88, 27);
+            nextButton.TabIndex = 1;
+            nextButton.Text = "Next >";
+            nextButton.UseVisualStyleBackColor = true;
+            nextButton.Click += nextButton_Click;
             // 
             // finishButton
             // 
-            this.finishButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.finishButton.Location = new System.Drawing.Point(628, 415);
-            this.finishButton.Name = "finishButton";
-            this.finishButton.Size = new System.Drawing.Size(75, 23);
-            this.finishButton.TabIndex = 1;
-            this.finishButton.Text = "Finish";
-            this.finishButton.UseVisualStyleBackColor = true;
-            this.finishButton.Visible = false;
+            finishButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right;
+            finishButton.Location = new System.Drawing.Point(733, 479);
+            finishButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            finishButton.Name = "finishButton";
+            finishButton.Size = new System.Drawing.Size(88, 27);
+            finishButton.TabIndex = 1;
+            finishButton.Text = "Finish";
+            finishButton.UseVisualStyleBackColor = true;
+            finishButton.Visible = false;
             // 
             // bannerLabel
             // 
-            this.bannerLabel.AutoSize = true;
-            this.bannerLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.bannerLabel.Location = new System.Drawing.Point(13, 9);
-            this.bannerLabel.Name = "bannerLabel";
-            this.bannerLabel.Size = new System.Drawing.Size(119, 20);
-            this.bannerLabel.TabIndex = 2;
-            this.bannerLabel.Text = "<bannerText>";
+            bannerLabel.AutoSize = true;
+            bannerLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 0);
+            bannerLabel.Location = new System.Drawing.Point(15, 10);
+            bannerLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            bannerLabel.Name = "bannerLabel";
+            bannerLabel.Size = new System.Drawing.Size(119, 20);
+            bannerLabel.TabIndex = 2;
+            bannerLabel.Text = "<bannerText>";
+            // 
+            // skipSendCollectionsCheckBox
+            // 
+            skipSendCollectionsCheckBox.AutoSize = true;
+            skipSendCollectionsCheckBox.Location = new System.Drawing.Point(695, 150);
+            skipSendCollectionsCheckBox.Name = "skipSendCollectionsCheckBox";
+            skipSendCollectionsCheckBox.Size = new System.Drawing.Size(156, 19);
+            skipSendCollectionsCheckBox.TabIndex = 4;
+            skipSendCollectionsCheckBox.Text = "Skip Sending Collections";
+            skipSendCollectionsCheckBox.UseVisualStyleBackColor = true;
+            skipSendCollectionsCheckBox.CheckedChanged += skipSendCollectionsCheckBox_CheckedChanged;
             // 
             // PatientCollectionsRunWizard
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Controls.Add(this.bannerLabel);
-            this.Controls.Add(this.finishButton);
-            this.Controls.Add(this.nextButton);
-            this.Controls.Add(this.backButton);
-            this.Controls.Add(this.cancelButton);
-            this.Controls.Add(this.tabControl1);
-            this.HelpButton = true;
-            this.MaximizeBox = false;
-            this.MinimizeBox = false;
-            this.Name = "PatientCollectionsRunWizard";
-            this.Text = "Patient Collections Run";
-            this.HelpButtonClicked += new System.ComponentModel.CancelEventHandler(this.PatientCollectionsRunWizard_HelpButtonClicked);
-            this.Load += new System.EventHandler(this.PatientCollectionsRunWizard_Load);
-            this.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.PatientCollectionsRunWizard_HelpRequested);
-            this.tabControl1.ResumeLayout(false);
-            this.sendCollectionsTabPage.ResumeLayout(false);
-            this.sendCollectionsTabPage.PerformLayout();
-            this.compileStatementsTabPage.ResumeLayout(false);
-            this.compileStatementsTabPage.PerformLayout();
-            this.createStmtFileTabPage.ResumeLayout(false);
-            this.createStmtFileTabPage.PerformLayout();
-            this.ResumeLayout(false);
-            this.PerformLayout();
-
+            AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            ClientSize = new System.Drawing.Size(933, 519);
+            Controls.Add(bannerLabel);
+            Controls.Add(finishButton);
+            Controls.Add(nextButton);
+            Controls.Add(backButton);
+            Controls.Add(cancelButton);
+            Controls.Add(tabControl1);
+            ForeColor = System.Drawing.Color.Black;
+            HelpButton = true;
+            Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            MaximizeBox = false;
+            MinimizeBox = false;
+            Name = "PatientCollectionsRunWizard";
+            Text = "Patient Collections Run";
+            HelpButtonClicked += PatientCollectionsRunWizard_HelpButtonClicked;
+            Load += PatientCollectionsRunWizard_Load;
+            HelpRequested += PatientCollectionsRunWizard_HelpRequested;
+            tabControl1.ResumeLayout(false);
+            introTabPage.ResumeLayout(false);
+            introTabPage.PerformLayout();
+            sendCollectionsTabPage.ResumeLayout(false);
+            sendCollectionsTabPage.PerformLayout();
+            compileStatementsTabPage.ResumeLayout(false);
+            compileStatementsTabPage.PerformLayout();
+            createStmtFileTabPage.ResumeLayout(false);
+            createStmtFileTabPage.PerformLayout();
+            ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
 
-        private System.Windows.Forms.TabControl tabControl1;
+        private LabBilling.UserControls.WizardPages tabControl1;
         private System.Windows.Forms.TabPage sendCollectionsTabPage;
         private System.Windows.Forms.TabPage compileStatementsTabPage;
         private System.Windows.Forms.Button cancelButton;
@@ -373,5 +451,9 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label bannerLabel;
+        private System.Windows.Forms.TabPage introTabPage;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.RichTextBox richTextBox1;
+        private System.Windows.Forms.CheckBox skipSendCollectionsCheckBox;
     }
 }

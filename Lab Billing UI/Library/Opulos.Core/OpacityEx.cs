@@ -14,7 +14,7 @@ public static class OpacityEx {
 	private static Hashtable ht = new Hashtable();
 	private class Data {
 		PictureBox pbox = new PictureBox { BorderStyle = BorderStyle.None };
-		Timer fadeTimer = new Timer();
+		System.Windows.Forms.Timer fadeTimer = new System.Windows.Forms.Timer();
 		Control control;
 		Bitmap bmpBack, bmpFore;
 		float blend = 1;

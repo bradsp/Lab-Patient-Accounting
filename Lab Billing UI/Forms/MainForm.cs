@@ -1,926 +1,909 @@
-﻿using LabBilling.Core.DataAccess;
-using LabBilling.Core.Models;
+﻿using LabBilling.Core.Models;
+using LabBilling.Core.Services;
 using LabBilling.Forms;
-using LabBilling.Logging;
 using LabBilling.Legacy;
-using System;
-using System.Windows.Forms;
+using LabBilling.Logging;
+using LabBilling.Properties;
 using LabBilling.ReportByInsuranceCompany;
-using System.Linq;
-using Opulos.Core.UI;
-using System.Collections.Generic;
-using LabBilling.Core.BusinessLogic;
-using MetroFramework.Forms;
-using MetroFramework.Controls;
-using MetroFramework;
-using System.Threading.Tasks;
-using System.Threading;
-
-using Application = System.Windows.Forms.Application;
+using NLog;
 using NLog.Config;
 using NLog.Targets;
-using RFClassLibrary;
-using NLog;
+using Opulos.Core.UI;
+using Utilities;
+using Application = System.Windows.Forms.Application;
+using Button = System.Windows.Forms.Button;
+using Image = System.Drawing.Image;
+using Label = System.Windows.Forms.Label;
+using ProgressBar = System.Windows.Forms.ProgressBar;
 
-namespace LabBilling
+
+/*
+ * Tabbed MDI logic 
+ * https://www.codeproject.com/Articles/17640/Tabbed-MDI-Child-Forms
+ * 
+ * 
+ * 
+ */
+
+
+namespace LabBilling;
+
+public partial class MainForm : Form
 {
-    public partial class MainForm : MetroForm
+    private readonly Accordion _accordion = null;
+    private readonly ProgressBar _claimProgress;
+    private readonly Label _claimProgressStatusLabel;
+    private readonly CancellationTokenSource _cancellationToken;
+    private TableLayoutPanel _tlpRecentAccounts;
+    private List<UserProfile> _recentAccounts;
+    private List<Account> _recentAccountsByAccount;
+
+    private readonly AccountService _accountService;
+    private readonly SystemService _systemService;
+
+    public ProgressReportModel progressReportModel = new()
     {
+        RecordsProcessed = -1
+    };
+    private Bitmap _closeImage;
 
-        private Accordion accordion = null;
-        private readonly UserProfileRepository userProfile = null;
-        private readonly AccountRepository accountRepository = null;
-        private readonly SystemParametersRepository systemParametersRepository = null;
-        private ProgressBar claimProgress;
-        private Label claimProgressStatusLabel;
-        private CancellationTokenSource cancellationToken;
-        private TableLayoutPanel tlpRecentAccounts;
+    public MainForm()
+    {
+        InitializeComponent();
 
-        public ProgressReportModel progressReportModel = new ProgressReportModel()
+        ConfigureLogging();
+
+        _accountService = new(Program.AppEnvironment);
+        _systemService = new(Program.AppEnvironment);
+
+        MainFormMenu.BackColor = Program.AppEnvironment.MenuBackgroundColor;
+        MainFormMenu.ForeColor = Program.AppEnvironment.MenuTextColor;
+
+        panel1.BackColor = Program.AppEnvironment.WindowBackgroundColor;
+        //mdiTabControl.Parent.BackColor = Program.AppEnvironment.WindowBackgroundColor;
+
+        _accordion = new Accordion();
+
+        Program.AppEnvironment.ApplicationParameters = _systemService.LoadSystemParameters();
+
+        ImageList il = new();
+        il.Images.Add((Image)Resources.hiclipart_com_id_dbhyp);
+        mdiTabControl.ImageList = il;
+    }
+
+    private static void ConfigureLogging()
+    {
+        #region Configure NLog
+        LogLevel minLevel = NLog.LogLevel.Warn;
+
+        var configuration = new NLog.Config.LoggingConfiguration();
+        switch(Program.AppEnvironment.ApplicationParameters.LogLevel)
         {
-            RecordsProcessed = -1
+            case "Trace":
+                minLevel = LogLevel.Trace;
+                break;
+            case "Debug":
+                minLevel = LogLevel.Debug;
+                break;
+            case "Info":
+                minLevel = LogLevel.Info;
+                break;
+            case "Warn":
+                minLevel = LogLevel.Warn;
+                break;
+            case "Error":
+                minLevel = LogLevel.Error;
+                break;
+            case "Fatal":
+                minLevel = LogLevel.Fatal;
+                break;
+            default:
+                break;
+        }
+
+        GlobalDiagnosticsContext.Set("dbname", Program.AppEnvironment.DatabaseName);
+        GlobalDiagnosticsContext.Set("dbserver", Program.AppEnvironment.ServerName);
+
+        var fileTarget = new FileTarget("logfile")
+        {
+            FileName = $"{Program.AppEnvironment.ApplicationParameters.LogFilePath}\\{OS.GetMachineName()}_{OS.GetUserName()}_{DateTime.Today.Year}-{DateTime.Today.Month}-{DateTime.Today.Day}.log",
+            Layout = "${longdate}|${level:uppercase=true}|${logger}|${message}|${exception}|${stacktrace}|${hostname}|${environment-user}|${callsite}|${callsite-linenumber}|${assembly-version}|${gdc:item=dbname|${gdc:item=dbserver}"
         };
 
-        public MainForm()
+        //var consoleTarget = new NLog.Targets.ConsoleTarget("logconsole");
+        string logProcedure = Program.AppEnvironment.ApplicationParameters.DatabaseEnvironment != "Production" ? "NLog_AddEntry_t" : "NLog_AddEntry_p";
+        var dbTarget = new DatabaseTarget("database")
         {
-            InitializeComponent();
+            ConnectionString = Program.AppEnvironment.LogConnectionString,
+            CommandType = System.Data.CommandType.StoredProcedure,
+            CommandText = $"[dbo].[{logProcedure}]"
+        };
 
-            #region Configure NLog
+        dbTarget.Parameters.Add(new DatabaseParameterInfo("@createdon", new NLog.Layouts.SimpleLayout("${date}")));
+        dbTarget.Parameters.Add(new DatabaseParameterInfo("@message", new NLog.Layouts.SimpleLayout("${message}")));
+        dbTarget.Parameters.Add(new DatabaseParameterInfo("@level", new NLog.Layouts.SimpleLayout("${level}")));
+        dbTarget.Parameters.Add(new DatabaseParameterInfo("@exception", new NLog.Layouts.SimpleLayout("${exception}")));
+        dbTarget.Parameters.Add(new DatabaseParameterInfo("@stacktrace", new NLog.Layouts.SimpleLayout("${stacktrace}")));
+        dbTarget.Parameters.Add(new DatabaseParameterInfo("@logger", new NLog.Layouts.SimpleLayout("${logger}")));
+        dbTarget.Parameters.Add(new DatabaseParameterInfo("@hostname", new NLog.Layouts.SimpleLayout("${hostname}")));
+        dbTarget.Parameters.Add(new DatabaseParameterInfo("@username", new NLog.Layouts.SimpleLayout("${environment-user}")));
+        dbTarget.Parameters.Add(new DatabaseParameterInfo("@callingsite", new NLog.Layouts.SimpleLayout("${callsite}")));
+        dbTarget.Parameters.Add(new DatabaseParameterInfo("@callingsitelinenumber", new NLog.Layouts.SimpleLayout("${callsite-linenumber}")));
+        dbTarget.Parameters.Add(new DatabaseParameterInfo("@appversion", new NLog.Layouts.SimpleLayout("${assembly-version}")));
+        dbTarget.Parameters.Add(new DatabaseParameterInfo("@databasename", new NLog.Layouts.SimpleLayout("${gdc:item=dbname}")));
+        dbTarget.Parameters.Add(new DatabaseParameterInfo("@databaseserver", new NLog.Layouts.SimpleLayout("${gdc:item=dbserver}")));
 
-            var configuration = new NLog.Config.LoggingConfiguration();
+        LoggingRule logRule = new();
+        switch(Program.AppEnvironment.ApplicationParameters.LogLocation)
+        {
+            case "Database":
+                logRule = new LoggingRule("*", minLevel, dbTarget);
+                break;
+            case "FilePath":
+                logRule = new LoggingRule("*", minLevel, fileTarget);
+                break;
 
-            LogLevel minLevel = NLog.LogLevel.Info;
-
-            var fileTarget = new NLog.Targets.FileTarget("logfile") { FileName = "c:\\temp\\lab-billing-log.txt" };
-            var consoleTarget = new NLog.Targets.ConsoleTarget("logconsole");
-            var dbTarget = new NLog.Targets.DatabaseTarget("database")
-            {
-                ConnectionString = Program.AppEnvironment.LogConnectionString,
-                CommandText = @"INSERT INTO Logs(CreatedOn,Message,Level,Exception,StackTrace,Logger,HostName,Username,CallingSite,CallingSiteLineNumber,AppVersion,DatabaseName,DatabaseServer) " +
-                    "VALUES (@datetime,@msg,@level,@exception,@trace,@logger,@hostname,@user,@callsite,@lineno,@version,@dbname,@dbserver)",
-            };
-
-            GlobalDiagnosticsContext.Set("dbname", Program.AppEnvironment.DatabaseName);
-            GlobalDiagnosticsContext.Set("dbserver", Program.AppEnvironment.ServerName);
-
-            dbTarget.Parameters.Add(new DatabaseParameterInfo("@datetime", new NLog.Layouts.SimpleLayout("${date}")));
-            dbTarget.Parameters.Add(new DatabaseParameterInfo("@msg", new NLog.Layouts.SimpleLayout("${message}")));
-            dbTarget.Parameters.Add(new DatabaseParameterInfo("@level", new NLog.Layouts.SimpleLayout("${level}")));
-            dbTarget.Parameters.Add(new DatabaseParameterInfo("@exception", new NLog.Layouts.SimpleLayout("${exception}")));
-            dbTarget.Parameters.Add(new DatabaseParameterInfo("@trace", new NLog.Layouts.SimpleLayout("${stacktrace}")));
-            dbTarget.Parameters.Add(new DatabaseParameterInfo("@logger", new NLog.Layouts.SimpleLayout("${logger}")));
-            dbTarget.Parameters.Add(new DatabaseParameterInfo("@hostname", new NLog.Layouts.SimpleLayout("${hostname}")));
-            dbTarget.Parameters.Add(new DatabaseParameterInfo("@user", new NLog.Layouts.SimpleLayout("${environment-user}")));
-            dbTarget.Parameters.Add(new DatabaseParameterInfo("@callsite", new NLog.Layouts.SimpleLayout("${callsite}")));
-            dbTarget.Parameters.Add(new DatabaseParameterInfo("@lineno", new NLog.Layouts.SimpleLayout("${callsite-linenumber}")));
-            dbTarget.Parameters.Add(new DatabaseParameterInfo("@version", new NLog.Layouts.SimpleLayout("${assembly-version}")));
-            dbTarget.Parameters.Add(new DatabaseParameterInfo("@dbname", new NLog.Layouts.SimpleLayout("${gdc:item=dbname}")));
-            dbTarget.Parameters.Add(new DatabaseParameterInfo("@dbserver", new NLog.Layouts.SimpleLayout("${gdc:item=dbserver}")));
-
-            var dbRule = new LoggingRule("*", minLevel, dbTarget);
-
-            configuration.AddRule(dbRule);
-
-            NLog.LogManager.Configuration = configuration;
-
-            #endregion
-
-
-            userProfile = new UserProfileRepository(Program.AppEnvironment);
-            accountRepository = new AccountRepository(Program.AppEnvironment);
-            systemParametersRepository = new SystemParametersRepository(Program.AppEnvironment);
-            accordion = new Accordion();
         }
 
-        private void userSecurityToolStripMenuItem_Click(object sender, EventArgs e)
+        configuration.AddRule(logRule);
+
+        LogManager.Configuration = configuration;
+
+        #endregion
+
+    }
+
+    private void NewForm(Form childForm)
+    {
+        if (MdiChildren.Length >= Program.AppEnvironment.ApplicationParameters.TabsOpenLimit)
         {
-            Log.Instance.Trace($"Entering");
-
-            UserSecurity frm = new UserSecurity
+            AskCloseTabForm askCloseTab = new(MdiChildren.Select(x => x.Text).ToList());
+            if (askCloseTab.ShowDialog() == DialogResult.OK)
             {
-                MdiParent = this,
-                WindowState = FormWindowState.Normal,
-                AutoScroll = true
-            };
-            frm.Show();
-        }
-
-        private void accountToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Log.Instance.Trace($"Entering");
-
-            PersonSearchForm frm = new PersonSearchForm();
-            if (frm.ShowDialog() == DialogResult.OK)
-            {
-
-                var formsList = System.Windows.Forms.Application.OpenForms.OfType<AccountForm>();
-                bool formFound = false;
-                foreach (var form in formsList)
+                var result = askCloseTab.SelectedForm;
+                try
                 {
-                    if (form.SelectedAccount == frm.SelectedAccount)
-                    {
-                        //form is already open, activate this one
-                        form.Focus();
-                        formFound = true;
-                        break;
-                    }
+                    MdiChildren.Where(x => x.Text == result).First().Close();
                 }
-
-                if (!formFound)
+                catch (Exception ex)
                 {
-                    AccountForm accFrm = new AccountForm(frm.SelectedAccount);
-                    accFrm.AccountOpenedEvent += AccFrm_AccountOpenedEvent;
-                    accFrm.MdiParent = this;
-                    accFrm.WindowState = FormWindowState.Normal;
-                    accFrm.AutoScroll = true;
-                    accFrm.Show();
+                    Log.Instance.Error(ex, "Error closing tab.");
+                    MessageBox.Show("Error closing tab. Contact your administrator.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
                 }
-            }
-        }
-
-        private void AccFrm_AccountOpenedEvent(object sender, string e)
-        {
-            UpdateRecentAccounts(e);
-        }
-
-        public void UpdateRecentAccounts(string newAccount)
-        {
-            var ar = accountRepository.GetByAccount(newAccount, true);
-            if (ar != null)
-            {
-                tlpRecentAccounts.Controls.RemoveAt(0);
-                LinkLabel a1 = new LinkLabel { Text = ar.PatFullName, Tag = newAccount };
-                a1.LinkClicked += new LinkLabelLinkClickedEventHandler(RecentLabelClicked);
-                tlpRecentAccounts.Controls.Add(a1);
-                a1.Dock = DockStyle.Fill;
-                accordion.Refresh();
-                accordion.AutoScroll = true;
-            }
-        }
-
-        private async void MainForm_Load(object sender, EventArgs e)
-        {
-            Log.Instance.Info($"Launching MainForm");
-
-            //set shadowtype to none to resolve access after dispose error
-            this.ShadowType = MetroFormShadowType.None;
-
-            #region user authentication
-
-            if (Program.LoggedInUser == null)
-            {
-                Log.Instance.Fatal("There is not a valid user object.");
-                MetroMessageBox.Show(this, "Application error with user object. Aborting.", "Fatal Error", MessageBoxButtons.OK, MessageBoxIcon.Stop);
-                System.Windows.Forms.Application.Exit();
-            }
-            #endregion
-
-            #region load accordion menu
-
-            Program.AppEnvironment.ApplicationParameters = systemParametersRepository.LoadParameters();
-
-            //recent accounts section
-            var recentAccounts = userProfile.GetRecentAccount(Program.LoggedInUser.UserName).ToList();
-
-            tlpRecentAccounts = new TableLayoutPanel { Dock = DockStyle.Fill };
-            tlpRecentAccounts.RowCount = recentAccounts.Count;
-            tlpRecentAccounts.ColumnCount = 1;
-
-            toolStripDatabaseLabel.Text = Program.AppEnvironment.DatabaseName;
-            toolStripUsernameLabel.Text = Program.LoggedInUser.FullName;
-            this.Text += " " + Program.AppEnvironment.DatabaseName;
-            if (!string.IsNullOrEmpty(Program.LoggedInUser.ImpersonatingUser))
-            {
-                this.Text += $"  *** IMPERSONATING {Program.LoggedInUser.ImpersonatingUser} ***";
-            }
-
-            if (!Program.AppEnvironment.ApplicationParameters.AllowEditing)
-                this.Text += " | READ ONLY MODE";
-            if (!Program.AppEnvironment.ApplicationParameters.AllowChargeEntry)
-                this.Text += " | Charge entry disabled";
-            if (!Program.AppEnvironment.ApplicationParameters.AllowPaymentAdjustmentEntry)
-                this.Text += " | Pmt/Adj entry disabled";
-
-            foreach (UserProfile up in recentAccounts)
-            {
-                var ar = await accountRepository.GetByAccountAsync(up.ParameterData, true);
-                if (ar != null)
-                {
-                    LinkLabel a1 = new LinkLabel { Text = ar.PatFullName, Tag = up.ParameterData };
-                    a1.LinkClicked += new LinkLabelLinkClickedEventHandler(RecentLabelClicked);
-                    tlpRecentAccounts.Controls.Add(a1);
-                    a1.Dock = DockStyle.Fill;
-                }
-            }
-
-            panel1.Controls.Add(accordion);
-            tlpRecentAccounts.AutoSize = true;
-            accordion.Add(tlpRecentAccounts, "Recent Accounts", "Last Opened Accounts", 1, true);
-
-            //Billing Menu Section
-            TableLayoutPanel tlpBilling = new TableLayoutPanel { Dock = DockStyle.Fill };
-            tlpBilling.ColumnCount = 1;
-            tlpBilling.RowCount = 3;
-
-            MetroButton b1 = new MetroButton { Text = "Worklist", Name = "btnWorkList" };
-            b1.Click += new EventHandler(worklistToolStripMenuItem_Click);
-            tlpBilling.Controls.Add(b1, 0, 0);
-            b1.Dock = DockStyle.Fill;
-            /*
-            MetroButton b3 = new MetroButton { Text = "Workqueue", Name = "btnWorkQueue" };
-            b3.Click += new EventHandler(workqueuesToolStripMenuItem_Click);
-            tlpBilling.Controls.Add(b3, 0, 1);
-            b3.Dock = DockStyle.Fill;
-            */
-            MetroButton b2 = new MetroButton { Text = "Account", Name = "btnAccount" };
-            b2.Click += new EventHandler(accountToolStripMenuItem_Click);
-            tlpBilling.Controls.Add(b2, 0, 2);
-            b2.Dock = DockStyle.Fill;
-
-            //Button b3 = new Button { Text = "Demographics", Name = "btnDemographics" };
-            //b3.Click += new EventHandler(PatientDemographics_Click);
-            //tlpBilling.Controls.Add(b3, 0, 2);
-            //b3.Dock = DockStyle.Fill;
-
-            MetroButton b4 = new MetroButton { Text = "Account Charge Entry", Name = "btnAccountChargeEntry" };
-            b4.Click += new EventHandler(accountChargeEntryToolStripMenuItem_Click);
-            tlpBilling.Controls.Add(b4, 0, 3);
-            b4.Dock = DockStyle.Fill;
-
-            MetroButton b5 = new MetroButton { Text = "Batch Remittance", Name = "btnBatchRemittance" };
-            b5.Click += new EventHandler(batchRemittanceToolStripMenuItem_Click);
-            tlpBilling.Controls.Add(b5, 0, 4);
-            b5.Dock = DockStyle.Fill;
-
-            MetroButton b6 = new MetroButton { Text = "Claims Batch Management", Name = "ClaimBatchManagementButton" };
-            b6.Click += new EventHandler(claimBatchManagementToolStripMenuItem_Click);
-            tlpBilling.Controls.Add(b6, 0, 5);
-            b6.Dock = DockStyle.Fill;
-
-            accordion.Add(tlpBilling, "Billing", "Billing Functions", 1, true);
-
-            //Reports Section
-            TableLayoutPanel tlpReports = new TableLayoutPanel { Dock = DockStyle.Fill };
-            tlpReports.ColumnCount = 1;
-            tlpReports.RowCount = 1;
-
-            MetroButton r1 = new MetroButton { Text = "Monthly Reports", Name = "btnMonthlyReports" };
-            r1.Click += new EventHandler(monthlyReportsToolStripMenuItem_Click);
-            tlpReports.Controls.Add(r1, 0, 0);
-            r1.Dock = DockStyle.Fill;
-
-            MetroButton r2 = new MetroButton { Text = "Reporting Portal", Name = "btnReportingPortal" };
-            r2.Click += new EventHandler(reportingPortalToolStripMenuItem_Click);
-            tlpReports.Controls.Add(r2, 0, 0);
-            r2.Dock = DockStyle.Fill;
-
-            accordion.Add(tlpReports, "Reports", "Report Functions", 1, true);
-
-            accordion.FillWidth = true;
-            accordion.FillHeight = false;
-            accordion.PerformLayout();
-            accordion.PerformLayout();
-            #endregion
-
-            DashboardForm frm = new DashboardForm();
-            frm.MdiParent = this;
-            frm.WindowState = FormWindowState.Normal;
-            frm.AutoScroll = true;
-            frm.Show();
-
-            //enable menu items based on permissions
-            systemAdministrationToolStripMenuItem.Visible = Program.LoggedInUser.IsAdministrator;
-
-            if(Program.AppEnvironment.ApplicationParameters.AllowPaymentAdjustmentEntry)
-            {
-                batchRemittanceToolStripMenuItem.Visible = Program.LoggedInUser.CanAddPayments;
-                remittancePostingToolStripMenuItem.Visible = Program.LoggedInUser.CanAddPayments;
-                posting835RemitToolStripMenuItem.Visible = Program.LoggedInUser.CanAddPayments;
-                b5.Visible = Program.LoggedInUser.CanAddPayments;
             }
             else
             {
-                batchRemittanceToolStripMenuItem.Visible = false;
-                remittancePostingToolStripMenuItem.Visible = false;
-                posting835RemitToolStripMenuItem.Visible = false;
-                b5.Visible = false;
-            }
-
-            if (Program.AppEnvironment.ApplicationParameters.AllowChargeEntry)
-            {
-                accountChargeEntryToolStripMenuItem.Visible = Program.LoggedInUser.CanSubmitCharges;
-                batchChargeEntryToolStripMenuItem.Visible = Program.LoggedInUser.CanSubmitCharges;
-                b4.Visible = Program.LoggedInUser.CanSubmitCharges;
-            }
-            else
-            {
-                accountChargeEntryToolStripMenuItem.Visible = false;
-                batchChargeEntryToolStripMenuItem.Visible = false;
-                b4.Visible = false;
-            }
-
-            if(!Program.AppEnvironment.ApplicationParameters.AllowEditing)
-            {                
-                MetroMessageBox.Show(this, "System is in read-only mode.", "Read Only Mode", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-            UpdateMenuAccess();
-
-        }
-
-        private void UpdateMenuAccess()
-        {
-            //during testing only - remove once batch charge entry is in production
-            batchChargeEntryToolStripMenuItem.Visible = Program.LoggedInUser.IsAdministrator;
-
-            generateClaimsToolStripMenuItem.Visible = false; // Program.LoggedInUser.CanSubmitBilling;
-            batchRemittanceToolStripMenuItem.Visible = Program.LoggedInUser.CanAddPayments;
-            badDebtMaintenanceToolStripMenuItem.Visible = Program.LoggedInUser.CanModifyBadDebt;
-            posting835RemitToolStripMenuItem.Visible = Program.LoggedInUser.CanAddPayments;
-            accountChargeEntryToolStripMenuItem.Visible = Program.LoggedInUser.CanSubmitCharges;
-
-            //administrator only menu items
-            systemAdministrationToolStripMenuItem.Visible = Program.LoggedInUser.IsAdministrator;
-
-            if (Program.LoggedInUser.Access == "VIEW")
-            {
-                duplicateAccountsToolStripMenuItem.Visible = false;
-                clientBillsNewToolStripMenuItem.Visible = false;
-                batchChargeEntryToolStripMenuItem.Visible = false;
-                accountChargeEntryToolStripMenuItem.Visible = false;
-            }
-
-        }
-
-        private void RecentLabelClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            Log.Instance.Trace($"Entering");
-
-            var linkLabel = (LinkLabel)sender;
-
-            bool IsAlreadyOpen = false;
-            if (Application.OpenForms.OfType<AccountForm>().Count() > 0)
-            {
-                foreach (AccountForm frm in System.Windows.Forms.Application.OpenForms.OfType<AccountForm>())
-                {
-                    if (frm.SelectedAccount == linkLabel.Tag.ToString())
-                    {
-                        IsAlreadyOpen = true;
-                        frm.Focus();
-                    }
-                }
-            }
-
-            if (!IsAlreadyOpen)
-            {
-                AccountForm frm = new AccountForm(linkLabel.Tag.ToString())
-                {
-                    MdiParent = this
-                };
-                Cursor.Current = Cursors.WaitCursor;
-                frm.Show();
-                Cursor.Current = Cursors.Default;
-            }
-
-        }
-
-        private void systemParametersToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Log.Instance.Trace($"Entering");
-
-            SystemParametersForm frm = new SystemParametersForm();
-            frm.ShowDialog();
-        }
-
-        private void monthlyReportsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Log.Instance.Trace($"Entering");
-
-            frmReports frm = new frmReports(Helper.GetArgs());
-            frm.MdiParent = this;
-            frm.WindowState = FormWindowState.Normal;
-            frm.AutoScroll = true;
-            frm.Show();
-        }
-
-        private void worklistToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Log.Instance.Trace($"Entering");
-
-            if (System.Windows.Forms.Application.OpenForms.OfType<WorkListForm>().Count() > 0)
-            {
-                WorkListForm workListForm = System.Windows.Forms.Application.OpenForms.OfType<WorkListForm>().First();
-                workListForm.Focus();
-            }
-            else
-            {
-                WorkListForm worklistForm = new WorkListForm(Helper.ConnVal);
-                worklistForm.MdiParent = this;
-                worklistForm.AutoScroll = true;
-                worklistForm.WindowState = FormWindowState.Normal;
-                worklistForm.Show();
+                return;
             }
         }
 
-        private void reportingPortalToolStripMenuItem_Click(object sender, EventArgs e)
+        childForm.MdiParent = this;
+        childForm.TextChanged += ChildForm_TextChanged;
+        childForm.FormClosed += ChildForm_FormClosed;
+        childForm.Show();
+    }
+
+    private void ChildForm_FormClosed(object sender, FormClosedEventArgs e)
+    {
+        Form frm = sender as Form;
+
+        int i = mdiTabControl.TabPages.IndexOfKey(frm.Text);
+
+        if (i >= 0)
         {
-            Log.Instance.Trace($"Entering");
-
-            //string url = systemParametersRepository.GetByKey("report_portal_url");
-            string url = Program.AppEnvironment.ApplicationParameters.ReportingPortalUrl;
-            ReportingPortalForm frm = new ReportingPortalForm(url);
-
-            if(url != "")
-            {
-                System.Diagnostics.Process.Start(url);
-            }
-            else
-            {
-                MessageBox.Show("Reporting Portal System Parameter not set or not valid. Please contact your administrator","Application Error");
-            }
+            mdiTabControl.TabPages.Remove(mdiTabControl.TabPages[i]);
         }
 
-        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        if (mdiTabControl.TabPages.ContainsKey("Work List"))
         {
-            Log.Instance.Trace($"Entering");
-
-            AboutBox about = new AboutBox();
-            about.ShowDialog();
-        }
-
-        private void badDebtMaintenanceToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Log.Instance.Trace($"Entering");
-
-            var formsList = Application.OpenForms.OfType<PatientCollectionsForm>();
-
-            if (formsList.Count() > 0)
-            {
-                formsList.First().Focus();
-            }
-            else
-            {
-
-                PatientCollectionsForm frm = new PatientCollectionsForm
-                {
-                    MdiParent = this,
-                    AutoScroll = true,
-                    WindowState = FormWindowState.Normal
-                };
-                frm.Show();
-            }
-        }
-
-
-        private void duplicateAccountsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Log.Instance.Trace($"Entering");
-
-            FrmDupAcc frm = new FrmDupAcc(Helper.GetArgs());
-            frm.MdiParent = this;
-            frm.AutoScroll = true;
-            frm.WindowState = FormWindowState.Normal;
-            frm.Show();
-        }
-
-        private void reportByInsuranceCompanyToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Log.Instance.Trace($"Entering");
-
-            frmReport frm = new frmReport(Helper.GetArgs()) { MdiParent = this, AutoScroll = true, WindowState = FormWindowState.Normal };
-            frm.Show();
-        }
-
-        private void posting835RemitToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Log.Instance.Trace($"Entering");
-
-            Legacy.Posting835 frm = new Legacy.Posting835(Helper.GetArgs())
-            {
-                MdiParent = this,
-                AutoScroll = true,
-                WindowState = FormWindowState.Normal
-            };
-
-            frm.Show();
-        }
-
-        private void Dashboard_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            Log.Instance.Trace($"Entering");
-            Properties.Settings.Default.Save();
-            //if this form is closing, close all other open forms
-            System.Windows.Forms.Application.Exit();
-        }
-
-        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Log.Instance.Trace($"Entering");
-            this.Close();
-            //Application.Exit();
-        }
-
-        private void clientsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Log.Instance.Trace($"Entering");
-
-            var formsList = Application.OpenForms.OfType<ClientMaintenanceForm>();
-
-            if (formsList.Count() > 0)
-            {
-                formsList.First().Focus();
-            }
-            else
-            {
-                ClientMaintenanceForm frm = new ClientMaintenanceForm
-                {
-                    MdiParent = this,
-                    WindowState = FormWindowState.Normal,
-                    AutoScroll = true
-                };
-                frm.Show();
-            }
-        }
-
-        private void accountChargeEntryToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Log.Instance.Trace($"Entering");
-
-            var formsList = Application.OpenForms.OfType<AccountChargeEntry>();
-
-            if (formsList.Count() > 0)
-            {
-                formsList.First().Focus();
-            }
-            else
-            {
-                AccountChargeEntry frm = new AccountChargeEntry
-                {
-                    MdiParent = this
-                };
-                frm.Show();
-            }
-
-        }
-
-        private void batchRemittanceToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Log.Instance.Trace($"Entering");
-
-            BatchRemittance frm = new BatchRemittance();
-            frm.MdiParent = this;
-            frm.Show();
-        }
-
-        private void physiciansToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Log.Instance.Trace("Entering");
-
-            PhysicianMaintenanceForm frm = new PhysicianMaintenanceForm
-            {
-                MdiParent = this,
-                WindowState = FormWindowState.Normal,
-                AutoScroll = true
-            };
-            frm.Show();
-        }
-
-        private void interfaceMappingToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Log.Instance.Trace("Entering");
-
-            InterfaceMapping frm = new InterfaceMapping { MdiParent = this, WindowState = FormWindowState.Normal, AutoScroll = true };
-            frm.Show();
-
-        }
-
-        private void Dashboard_MdiChildActivate(object sender, EventArgs e)
-        {
-            if(this.MdiChildren.Count() > Program.AppEnvironment.ApplicationParameters.TabsOpenLimit)
-            {
-
-                List<string> openForms = new List<string>();
-
-                foreach (Form child in this.MdiChildren)
-                {
-                    openForms.Add(child.Text);
-                }
-
-                AskCloseTabForm frm = new AskCloseTabForm(openForms);
-
-                if (frm.ShowDialog(this) == DialogResult.OK)
-                {
-                    string selectedForm = frm.SelectedForm;
-
-                    this.MdiChildren.First(x => x.Text == selectedForm).Close();
-                }
-
-            }
-        }
-
-        private void clientBillsNewToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Log.Instance.Trace("Entering");
-
-            var formsList = Application.OpenForms.OfType<ClientInvoiceForm>();
-
-            if (formsList.Count() > 0)
-            {
-                formsList.First().Focus();
-            }
-            else
-            {
-                ClientInvoiceForm frm = new ClientInvoiceForm { MdiParent = this, WindowState = FormWindowState.Normal, AutoScroll = true };
-                frm.Show();
-            }
-        }
-
-        private void interfaceMonitorToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Log.Instance.Trace("Entering");
-            InterfaceMonitor frm = new InterfaceMonitor { MdiParent = this, WindowState = FormWindowState.Normal, AutoScroll = true };
-            frm.Show();
-
-        }
-
-        private void pathologistsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            throw new NotImplementedException();
-        }
-
-        private void claimValidationRulesToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Log.Instance.Trace("Entering");
-            ClaimRuleEditorForm frm = new ClaimRuleEditorForm();
-
-            frm.ShowDialog();
-        }
-
-        private bool CheckForDuplicate(Form newForm)
-        {
-            bool bValue = false;
-            foreach (Form fm in this.MdiChildren)
-            {
-                if (fm.GetType() == newForm.GetType())
-                {
-                    fm.Activate();
-                    fm.WindowState = FormWindowState.Maximized;
-                    bValue = true;
-                }
-            }
-            return bValue;
-        }
-
-        private void professionalToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
-            _ = RunBillingBatch(BillingType.Professional);
-        }
-
-        private enum BillingType
-        {
-            Institutional,
-            Professional
-        }
-
-        private async Task RunBillingBatch(BillingType billingType)
-        {
-            cancellationToken = new CancellationTokenSource();
-
-            TableLayoutPanel tlpClaimBatch = new TableLayoutPanel
-            {
-                Dock = DockStyle.Fill,
-                ColumnCount = 1,
-                RowCount = 1
-            };
-
-            Label claimProcessTitleLabel = new Label();
-            switch (billingType)
-            {
-                case BillingType.Institutional:
-                    claimProcessTitleLabel.Text = "Institutional Claims";
-                    break;
-                case BillingType.Professional:
-                    claimProcessTitleLabel.Text = "Professional Claims";
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(billingType));
-            }
-            tlpClaimBatch.Controls.Add(claimProcessTitleLabel, 0, 0);
-            claimProcessTitleLabel.Dock = DockStyle.Fill;
-
-            claimProgress = new ProgressBar();
-            claimProgress.Style = ProgressBarStyle.Continuous;
-            claimProgress.Minimum = 0;
-            tlpClaimBatch.Controls.Add(claimProgress, 0, 1);
-            claimProgress.Dock = DockStyle.Fill;
-
-            claimProgressStatusLabel = new Label();
-            tlpClaimBatch.Controls.Add(claimProgressStatusLabel, 0, 2);
-            claimProgressStatusLabel.Text = "Processing...";
-            claimProgressStatusLabel.Dock = DockStyle.Fill;
-
-            MetroButton cancelButton = new MetroButton { Text = "Cancel", Name = "cancelButton" };
-            cancelButton.Click += new EventHandler(cancelButton_Click);
-            tlpClaimBatch.Controls.Add(cancelButton, 0, 3);
-            cancelButton.Dock = DockStyle.Fill;
-
-            accordion.Add(tlpClaimBatch, "Claim Batch", "Claim Batch", 1, true);
-            accordion.PerformLayout();
-
-            ClaimGenerator claims = new ClaimGenerator(Program.AppEnvironment);
-            Progress<ProgressReportModel> progress = new Progress<ProgressReportModel>();
-            progress.ProgressChanged += ReportProgress;
-            try
-            {
-                int claimsProcessed = 0;
-                if (billingType == BillingType.Institutional)
-                {
-                    claimsProcessed = await Task.Run(() =>
-                    {
-                        return claims.CompileBillingBatch(Core.ClaimType.Institutional, progress, cancellationToken.Token);
-                    });
-                }
-                else if (billingType == BillingType.Professional)
-                {
-                    claimsProcessed = await Task.Run(() =>
-                    {
-                        return claims.CompileBillingBatch(Core.ClaimType.Professional, progress, cancellationToken.Token);
-                    });
-                }
-
-                if (claimsProcessed < 0)
-                {
-                    MetroMessageBox.Show(this, "Error processing claims. No file generated.", "Process Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-                else
-                {
-                    MetroMessageBox.Show(this, $"File generated. {claimsProcessed} claims generated.");
-                }
-            }
-            catch (TaskCanceledException tce)
-            {
-                Log.Instance.Error(tce, $"{Enum.GetName(typeof(BillingType), billingType)} Claim Batch cancelled by user", tce);
-                MetroMessageBox.Show(this, "Claim batch cancelled by user. No file was generated and batch has been rolled back.");
-                claimProgressStatusLabel.Text = "Job aborted.";
-                claimProgress.Value = claimProgress.Maximum;
-                claimProgress.SetState(2);
-                cancelButton.Enabled = false;
-            }
-        }
-
-        private void institutionalToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            _ = RunBillingBatch(BillingType.Institutional);
-        }
-
-        private void cancelButton_Click(object sender, EventArgs e)
-        {
-            if (MessageBox.Show("This will cancel the claim batch and rollback any changes. Are you sure?", "Cancel Batch?",
-                MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
-                cancellationToken.Cancel();
-        }
-
-        private void ReportProgress(object sender, ProgressReportModel e)
-        {
-            claimProgress.Maximum = e.TotalRecords;
-            claimProgress.Value = e.RecordsProcessed;
-            claimProgressStatusLabel.Text = $"Processing {e.RecordsProcessed} of {e.TotalRecords}";
-        }
-
-        private void insurancePlansToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Log.Instance.Trace("Entering");
-            HealthPlanMaintenanceForm frm = new HealthPlanMaintenanceForm { MdiParent = this, WindowState = FormWindowState.Normal, AutoScroll = true };
-            frm.Show();
-        }
-
-        private void remittancePostingToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Remittance835 remittance835 = new Remittance835(Program.AppEnvironment);
-            string file = @"\\wthmclbill\shared\Billing\TEST\Posting835Remit\MCL_NC_MCR_1093705428_835_11119267.RMT";
-
-            remittance835.Load835(file);
-
-        }
-
-        private void chargeMasterToolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-            Log.Instance.Trace("Entering");
-
-            var formsList = Application.OpenForms.OfType<ChargeMasterMaintenance>();
-
-            if (formsList.Count() > 0)
-            {
-                formsList.First().Focus();
-            }
-            else
-            {
-                ChargeMasterMaintenance frm = new ChargeMasterMaintenance { MdiParent = this, WindowState = FormWindowState.Normal, AutoScroll = true };
-                frm.Show();
-            }
-        }
-
-        private void systemLogViewerToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Log.Instance.Trace("Entering");
-
-            LogViewerForm frm = new LogViewerForm { MdiParent = this, WindowState = FormWindowState.Normal, AutoScroll = true };
-            frm.Show();
-        }
-
-        private void claimBatchManagementToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Log.Instance.Trace("Entering");
-
-            ClaimsManagementForm frm = new ClaimsManagementForm();
-            frm.MdiParent = this;
-            frm.WindowState = FormWindowState.Normal;
-            frm.AutoScroll = true;
-            frm.Show();
-
-        }
-
-        private void batchChargeEntryToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Log.Instance.Trace("Entering");
-
-            BatchChargeEntryForm frm = new BatchChargeEntryForm();
-            frm.MdiParent = this;
-            frm.WindowState = FormWindowState.Normal;
-            frm.AutoScroll = true;
-            frm.Show();
-        }
-
-        private void documentationToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Form activForm;
-            activForm = Form.ActiveForm.ActiveMdiChild;
-
-            string url = Program.AppEnvironment.ApplicationParameters.DocumentationSiteUrl;
-            string topicPath = null;
-            switch (activForm.Name)
-            {
-                case nameof(WorkListForm):
-                    topicPath = Program.AppEnvironment.ApplicationParameters.WorklistUrl;
-                    break;
-                case nameof(AccountForm):
-                    topicPath = Program.AppEnvironment.ApplicationParameters.AccountManagementUrl;
-                    break;
-                case nameof(ChargeMasterMaintenance):
-                case nameof(ChargeMasterEditForm):
-                    topicPath = Program.AppEnvironment.ApplicationParameters.ChargeMasterMaintenanceUrl;
-                    break;
-                case nameof(HealthPlanMaintenanceEditForm):
-                case nameof(HealthPlanMaintenanceForm):
-                    topicPath = Program.AppEnvironment.ApplicationParameters.InsurancePlanMaintenanceUrl;
-                    break;
-                case nameof(PhysicianMaintenanceForm):
-                    topicPath = Program.AppEnvironment.ApplicationParameters.PhysicianMaintenanceUrl;
-                    break;
-                case nameof(ClientMaintenanceForm):
-                case nameof(ClientMaintenanceEditForm):
-                    topicPath = Program.AppEnvironment.ApplicationParameters.ClientMaintenanceUrl;
-                    break;
-                case nameof(BatchRemittance):
-                    topicPath = Program.AppEnvironment.ApplicationParameters.BatchRemittanceUrl;
-                    break;
-                case nameof(ClaimsManagementForm):
-                    topicPath = Program.AppEnvironment.ApplicationParameters.ClaimsManagementUrl;
-                    break;
-                case nameof(AccountChargeEntry):
-                    topicPath = Program.AppEnvironment.ApplicationParameters.AccountChargeEntryUrl;
-                    break;
-                case nameof(ClientInvoiceForm):
-                    topicPath = Program.AppEnvironment.ApplicationParameters.ClientInvoicingUrl;
-                    break;
-                case nameof(PatientCollectionsForm):
-                case nameof(PatientCollectionsEditForm):
-                    topicPath = Program.AppEnvironment.ApplicationParameters.PatientCollectionsUrl;
-                    break;
-                default:
-                    break;
-            }
-            if (!string.IsNullOrWhiteSpace(topicPath))
-                url += "/" + topicPath;
-            System.Diagnostics.Process.Start(url);
-        }
-
-        private void MainForm_KeyDown(object sender, KeyEventArgs e)
-        {
-            if(e.KeyData == Keys.F1)
-            {
-                documentationToolStripMenuItem_Click(sender, e);
-            }
-        }
-
-        private void latestUpdatesToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            string url = Program.AppEnvironment.ApplicationParameters.DocumentationSiteUrl;
-            string topicPath = null;
-            topicPath = Program.AppEnvironment.ApplicationParameters.LatestUpdatesUrl;
-            if (!string.IsNullOrWhiteSpace(topicPath))
-                url += "/" + topicPath;
-            System.Diagnostics.Process.Start(url);
+            int idx = mdiTabControl.TabPages.IndexOfKey("Work List");
+            mdiTabControl.SelectedIndex = idx;
         }
     }
+
+    private void ChildForm_TextChanged(object sender, EventArgs e)
+    {
+        Form form = (Form)sender;
+        if (form != null)
+        {
+            if (form.Tag != null)
+            {
+                TabPage tp = (TabPage)form.Tag;
+                tp.Text = form.Text;
+            }
+        }
+    }
+
+    private void userSecurityToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        Log.Instance.Trace($"Entering");
+
+        UserSecurity frm = new()
+        {
+            MdiParent = this,
+            WindowState = FormWindowState.Normal,
+            AutoScroll = true
+        };
+        frm.Show();
+    }
+
+    private void accountToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        Log.Instance.Trace($"Entering");
+
+        PersonSearchForm frm = new();
+        if (frm.ShowDialog() == DialogResult.OK)
+        {
+
+            var formsList = Application.OpenForms.OfType<AccountForm>();
+            bool formFound = false;
+            foreach (var form in formsList)
+            {
+                if (form.SelectedAccount == frm.SelectedAccount)
+                {
+                    //form is already open, activate this one
+                    form.Focus();
+                    formFound = true;
+                    break;
+                }
+            }
+
+            if (!formFound)
+            {
+                AccountForm accFrm = new AccountForm(frm.SelectedAccount);
+                accFrm.AccountOpenedEvent += AccFrm_AccountOpenedEvent;
+                accFrm.AccountUpdatedEvent += AccFrm_AccountUpdatedEvent;
+                NewForm(accFrm);
+            }
+        }
+    }
+
+    private void AccFrm_AccountUpdatedEvent(object sender, Account e)
+    {
+        //if there is a worklist form opened - call method to update the account in the worklist
+        if (Application.OpenForms.OfType<WorkListForm>().Any())
+        {
+            WorkListForm workListForm = Application.OpenForms.OfType<WorkListForm>().First();
+            workListForm.UpdateAccount(e);
+        }
+    }
+
+    private void AccFrm_AccountOpenedEvent(object sender, string e)
+        => UpdateRecentAccounts(e);
+
+    public void UpdateRecentAccounts(string newAccount)
+    {
+        var ar = _accountService.GetAccountMinimal(newAccount);
+        if (ar != null)
+        {
+            _tlpRecentAccounts.Controls.RemoveAt(0);
+            LinkLabel a1 = new() { Text = ar.PatFullName, Tag = newAccount };
+            a1.LinkClicked += new LinkLabelLinkClickedEventHandler(RecentLabelClicked);
+            _tlpRecentAccounts.Controls.Add(a1);
+            a1.Dock = DockStyle.Fill;
+            _accordion.Refresh();
+            _accordion.AutoScroll = true;
+        }
+    }
+
+    private async void MainForm_Load(object sender, EventArgs e)
+    {
+        this.WindowState = FormWindowState.Maximized;
+
+        Log.Instance.Info($"Launching MainForm");
+
+        #region user authentication
+
+        if (Program.LoggedInUser == null)
+        {
+            Log.Instance.Fatal("There is not a valid user object.");
+            MessageBox.Show(this, "Application error with user object. Aborting.", "Fatal Error", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+            Application.Exit();
+        }
+        #endregion
+
+        NewForm(new DashboardForm());
+
+        var results = await _systemService.GetRecentAccountsAsync(Program.LoggedInUser.UserName);
+        _recentAccounts = results.ToList();
+        _recentAccountsByAccount = new();
+
+        foreach (UserProfile up in _recentAccounts)
+        {
+            _recentAccountsByAccount.Add(_accountService.GetAccountMinimal(up.ParameterData));
+        }
+
+        LoadSideMenu();
+
+        mdiTabControl.TabClosing += mdiTabControl_TabClosing;
+
+        //enable menu items based on permissions
+        systemAdministrationToolStripMenuItem.Visible = Program.LoggedInUser.IsAdministrator;
+        UpdateMenuAccess();
+        this.WindowState = FormWindowState.Maximized;
+        this.Focus();
+    }
+
+    private void mdiTabControl_TabClosing(object sender, TabControlCancelEventArgs e)
+    {
+        Form frm = e.TabPage.Tag as Form;
+        frm.Close();
+
+        if (mdiTabControl.TabPages.ContainsKey("Work List"))
+        {
+            int idx = mdiTabControl.TabPages.IndexOfKey("Work List");
+            mdiTabControl.SelectedIndex = idx;
+        }
+    }
+
+    private void LoadSideMenu()
+    {
+        #region load accordion menu
+
+        //recent accounts section
+
+        _tlpRecentAccounts = new TableLayoutPanel
+        {
+            Dock = DockStyle.Fill,
+            RowCount = _recentAccounts.Count,
+            ColumnCount = 1
+        };
+
+        toolStripDatabaseLabel.Text = Program.AppEnvironment.DatabaseName;
+        toolStripUsernameLabel.Text = Program.LoggedInUser.FullName;
+        this.Text += " " + Program.AppEnvironment.DatabaseName;
+        if (!string.IsNullOrEmpty(Program.LoggedInUser.ImpersonatingUser))
+        {
+            this.Text += $"  *** IMPERSONATING {Program.LoggedInUser.ImpersonatingUser} ***";
+        }
+
+        if (!Program.AppEnvironment.ApplicationParameters.AllowEditing)
+            this.Text += " | READ ONLY MODE";
+        if (!Program.AppEnvironment.ApplicationParameters.AllowChargeEntry)
+            this.Text += " | Charge entry disabled";
+        if (!Program.AppEnvironment.ApplicationParameters.AllowPaymentAdjustmentEntry)
+            this.Text += " | Pmt/Adj entry disabled";
+
+        foreach (var acc in _recentAccountsByAccount)
+        {
+            if (acc != null)
+            {
+                LinkLabel a1 = new() { Text = acc.PatFullName, Tag = acc.AccountNo };
+                a1.LinkClicked += new LinkLabelLinkClickedEventHandler(RecentLabelClicked);
+                _tlpRecentAccounts.Controls.Add(a1);
+                a1.Dock = DockStyle.Fill;
+            }
+        }
+
+        panel1.Controls.Add(_accordion);
+        _tlpRecentAccounts.AutoSize = true;
+        _accordion.Add(_tlpRecentAccounts, "Recent Accounts", "Last Opened Accounts", 1, true);
+
+        //Billing Menu Section
+        TableLayoutPanel tlpBilling = new()
+        {
+            Dock = DockStyle.Fill,
+            ColumnCount = 1,
+            RowCount = 3
+        };
+
+        Button b1 = new()
+        {
+            Text = "Worklist",
+            Name = "btnWorkList",
+            BackColor = Program.AppEnvironment.ButtonBackgroundColor,
+            ForeColor = Program.AppEnvironment.ButtonTextColor
+        };
+        b1.Click += new EventHandler(worklistToolStripMenuItem_Click);
+        tlpBilling.Controls.Add(b1, 0, 0);
+        b1.Dock = DockStyle.Fill;
+
+        Button b2 = new()
+        {
+            Text = "Account",
+            Name = "btnAccount",
+            BackColor = Program.AppEnvironment.ButtonBackgroundColor,
+            ForeColor = Program.AppEnvironment.ButtonTextColor
+        };
+        b2.Click += new EventHandler(accountToolStripMenuItem_Click);
+        tlpBilling.Controls.Add(b2, 0, 2);
+        b2.Dock = DockStyle.Fill;
+
+        Button b4 = new()
+        {
+            Text = "Account Charge Entry",
+            Name = "btnAccountChargeEntry",
+            BackColor = Program.AppEnvironment.ButtonBackgroundColor,
+            ForeColor = Program.AppEnvironment.ButtonTextColor
+        };
+        b4.Click += new EventHandler(accountChargeEntryToolStripMenuItem_Click);
+        tlpBilling.Controls.Add(b4, 0, 3);
+        b4.Dock = DockStyle.Fill;
+
+        Button b5 = new()
+        {
+            Text = "Batch Remittance",
+            Name = "btnBatchRemittance",
+            BackColor = Program.AppEnvironment.ButtonBackgroundColor,
+            ForeColor = Program.AppEnvironment.ButtonTextColor
+        };
+        b5.Click += new EventHandler(batchRemittanceToolStripMenuItem_Click);
+        tlpBilling.Controls.Add(b5, 0, 4);
+        b5.Dock = DockStyle.Fill;
+
+        Button b6 = new()
+        {
+            Text = "Claims Batch Management",
+            Name = "ClaimBatchManagementButton",
+            BackColor = Program.AppEnvironment.ButtonBackgroundColor,
+            ForeColor = Program.AppEnvironment.ButtonTextColor
+        };
+        b6.Click += new EventHandler(claimBatchManagementToolStripMenuItem_Click);
+        tlpBilling.Controls.Add(b6, 0, 5);
+        b6.Dock = DockStyle.Fill;
+
+        _accordion.Add(tlpBilling, "Billing", "Billing Functions", 1, true);
+
+        //Reports Section
+        TableLayoutPanel tlpReports = new()
+        {
+            Dock = DockStyle.Fill,
+            ColumnCount = 1,
+            RowCount = 1
+        };
+
+        Button r1 = new()
+        {
+            Text = "Monthly Reports",
+            Name = "btnMonthlyReports",
+            BackColor = Program.AppEnvironment.ButtonBackgroundColor,
+            ForeColor = Program.AppEnvironment.ButtonTextColor
+        };
+        r1.Click += new EventHandler(monthlyReportsToolStripMenuItem_Click);
+        tlpReports.Controls.Add(r1, 0, 0);
+        r1.Dock = DockStyle.Fill;
+
+        Button r2 = new()
+        {
+            Text = "Reporting Portal",
+            Name = "btnReportingPortal",
+            BackColor = Program.AppEnvironment.ButtonBackgroundColor,
+            ForeColor = Program.AppEnvironment.ButtonTextColor
+        };
+        r2.Click += new EventHandler(reportingPortalToolStripMenuItem_Click);
+        tlpReports.Controls.Add(r2, 0, 0);
+        r2.Dock = DockStyle.Fill;
+
+        _accordion.Add(tlpReports, "Reports", "Report Functions", 1, true);
+
+        _accordion.FillWidth = true;
+        _accordion.FillHeight = false;
+        _accordion.PerformLayout();
+        _accordion.PerformLayout();
+        #endregion
+
+        if (Program.AppEnvironment.ApplicationParameters.AllowPaymentAdjustmentEntry)
+        {
+            batchRemittanceToolStripMenuItem.Visible = Program.LoggedInUser.CanAddPayments;
+            remittancePostingToolStripMenuItem.Visible = Program.LoggedInUser.CanAddPayments;
+            posting835RemitToolStripMenuItem.Visible = Program.LoggedInUser.CanAddPayments;
+            b5.Visible = Program.LoggedInUser.CanAddPayments;
+        }
+        else
+        {
+            batchRemittanceToolStripMenuItem.Visible = false;
+            remittancePostingToolStripMenuItem.Visible = false;
+            posting835RemitToolStripMenuItem.Visible = false;
+            b5.Visible = false;
+        }
+
+        if (Program.AppEnvironment.ApplicationParameters.AllowChargeEntry)
+        {
+            accountChargeEntryToolStripMenuItem.Visible = Program.LoggedInUser.CanSubmitCharges;
+            batchChargeEntryToolStripMenuItem.Visible = Program.LoggedInUser.CanSubmitCharges;
+            b4.Visible = Program.LoggedInUser.CanSubmitCharges;
+        }
+        else
+        {
+            accountChargeEntryToolStripMenuItem.Visible = false;
+            batchChargeEntryToolStripMenuItem.Visible = false;
+            b4.Visible = false;
+        }
+
+        if (!Program.AppEnvironment.ApplicationParameters.AllowEditing)
+        {
+            MessageBox.Show(this, "System is in read-only mode.", "Read Only Mode", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+    }
+
+    private void UpdateMenuAccess()
+    {
+        //during testing only - remove once batch charge entry is in production
+        batchChargeEntryToolStripMenuItem.Visible = Program.LoggedInUser.IsAdministrator;
+
+        batchRemittanceToolStripMenuItem.Visible = Program.LoggedInUser.CanAddPayments;
+        badDebtMaintenanceToolStripMenuItem.Visible = Program.LoggedInUser.CanModifyBadDebt;
+        posting835RemitToolStripMenuItem.Visible = Program.LoggedInUser.CanAddPayments;
+        accountChargeEntryToolStripMenuItem.Visible = Program.LoggedInUser.CanSubmitCharges;
+
+        //administrator only menu items
+        systemAdministrationToolStripMenuItem.Visible = Program.LoggedInUser.IsAdministrator;
+
+        if (Program.LoggedInUser.Access == "VIEW")
+        {
+            duplicateAccountsToolStripMenuItem.Visible = false;
+            clientBillsNewToolStripMenuItem.Visible = false;
+            batchChargeEntryToolStripMenuItem.Visible = false;
+            accountChargeEntryToolStripMenuItem.Visible = false;
+        }
+
+    }
+
+    private void RecentLabelClicked(object sender, LinkLabelLinkClickedEventArgs e)
+    {
+        Log.Instance.Trace($"Entering");
+
+        var linkLabel = (LinkLabel)sender;
+
+        LaunchAccount(linkLabel.Tag.ToString());
+    }
+
+    private void LaunchAccount(string account)
+    {
+        Log.Instance.Trace("Entering");
+        SuspendLayout();
+        bool IsAlreadyOpen = false;
+        if (Application.OpenForms.OfType<AccountForm>().Any())
+        {
+            foreach (AccountForm frm in Application.OpenForms.OfType<AccountForm>())
+            {
+                if (frm.SelectedAccount == account)
+                {
+                    IsAlreadyOpen = true;
+                    frm.Focus();
+                }
+            }
+        }
+
+        if (!IsAlreadyOpen)
+        {
+            Cursor.Current = Cursors.WaitCursor;
+            AccountForm accFrm = new(account);
+            accFrm.AccountOpenedEvent += AccFrm_AccountOpenedEvent;
+            accFrm.AccountUpdatedEvent += AccFrm_AccountUpdatedEvent;
+            NewForm(accFrm);
+            Cursor.Current = Cursors.Default;
+        }
+        ResumeLayout();
+    }
+
+    private void systemParametersToolStripMenuItem_Click(object sender, EventArgs e)
+        => new SystemParametersForm().ShowDialog();
+
+    private void monthlyReportsToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        AuditReportsForm frm = new(Program.AppEnvironment.GetArgs());
+        frm.AccountLaunched += OnAccountLaunched;
+        NewForm(frm);
+    }
+
+    private void worklistToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        Log.Instance.Trace($"Entering");
+
+        if (Application.OpenForms.OfType<WorkListForm>().Any())
+        {
+            WorkListForm workListForm = Application.OpenForms.OfType<WorkListForm>().First();
+            workListForm.Focus();
+        }
+        else
+        {
+            WorkListForm worklistForm = new();
+            worklistForm.AccountLaunched += OnAccountLaunched;
+            NewForm(worklistForm);
+        }
+    }
+
+    private void OnAccountLaunched(object sender, string e) => LaunchAccount(e);
+
+    private void reportingPortalToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        Log.Instance.Trace($"Entering");
+        string url = Program.AppEnvironment.ApplicationParameters.ReportingPortalUrl;
+        //ReportingPortalForm frm = new ReportingPortalForm(url);
+        if (url != "")
+        {
+            OS.OpenBrowser(url);
+        }
+        else
+        {
+            MessageBox.Show("Reporting Portal System Parameter not set or not valid. Please contact your administrator", "Application Error");
+        }
+    }
+
+    private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        Log.Instance.Trace($"Entering");
+
+        AboutBox about = new();
+        about.ShowDialog();
+    }
+
+    private void badDebtMaintenanceToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        Log.Instance.Trace($"Entering");
+
+        var formsList = Application.OpenForms.OfType<PatientCollectionsForm>();
+
+        if (formsList.Any())
+        {
+            formsList.First().Focus();
+        }
+        else
+        {
+            PatientCollectionsForm frm = new();
+            frm.AccountLaunched += OnAccountLaunched;
+            NewForm(frm);
+        }
+    }
+
+
+    private void duplicateAccountsToolStripMenuItem_Click(object sender, EventArgs e)
+        => NewForm(new DuplicateAccountsForm(Helper.GetArgs()));
+
+    private void reportByInsuranceCompanyToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        InsuranceReportForm frm = new(Program.AppEnvironment.GetArgs());
+        frm.AccountLaunched += OnAccountLaunched;
+        NewForm(frm);
+    }
+
+    private void posting835RemitToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        Posting835 frm = new(Program.AppEnvironment.GetArgs());
+        frm.AccountLaunched += OnAccountLaunched;
+        NewForm(frm);
+    }
+
+    private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+    {
+        Log.Instance.Trace($"Entering");
+        Properties.Settings.Default.Save();
+    }
+
+    private void exitToolStripMenuItem_Click(object sender, EventArgs e) => this.Close();
+
+    private void clientsToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        Log.Instance.Trace($"Entering");
+
+        var formsList = Application.OpenForms.OfType<ClientMaintenanceForm>();
+
+        if (formsList.Any())
+        {
+            formsList.First().Focus();
+        }
+        else
+        {
+            NewForm(new ClientMaintenanceForm());
+        }
+    }
+
+    private void accountChargeEntryToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        Log.Instance.Trace($"Entering");
+
+        var formsList = Application.OpenForms.OfType<AccountChargeEntry>();
+
+        if (formsList.Any())
+        {
+            formsList.First().Focus();
+        }
+        else
+        {
+            NewForm(new AccountChargeEntry());
+        }
+
+    }
+
+    private void batchRemittanceToolStripMenuItem_Click(object sender, EventArgs e)
+        => NewForm(new BatchRemittance());
+
+    private void physiciansToolStripMenuItem_Click(object sender, EventArgs e)
+        => NewForm(new PhysicianMaintenanceForm());
+
+    private void interfaceMappingToolStripMenuItem_Click(object sender, EventArgs e)
+        => NewForm(new InterfaceMapping());
+
+    private void MainForm_MdiChildActivate(object sender, EventArgs e)
+    {
+        if (this.ActiveMdiChild == null)
+            mdiTabControl.Visible = false;
+        else
+        {
+            this.ActiveMdiChild.WindowState = FormWindowState.Maximized;
+            if (this.ActiveMdiChild.Tag == null)
+            {
+                //Add a tabPage to the tabControl with child form caption
+                TabPage tp = new(this.ActiveMdiChild.Text)
+                {
+                    Tag = this.ActiveMdiChild,
+                    Name = this.ActiveMdiChild.Text,
+                };
+
+                tp.Padding = new Padding(3);
+
+                mdiTabControl.TabPages.Add(tp);
+
+                mdiTabControl.SelectedTab = tp;
+
+                this.ActiveMdiChild.Tag = tp;
+                this.ActiveMdiChild.FormClosed += new FormClosedEventHandler(ActiveMdiChild_FormClosed);
+            }
+            else
+            {
+                if (this.ActiveMdiChild.Tag is TabPage tp)
+                    mdiTabControl.SelectedTab = tp;
+            }
+
+            if (!mdiTabControl.Visible) mdiTabControl.Visible = true;
+        }
+    }
+
+    private void ActiveMdiChild_FormClosed(object sender, FormClosedEventArgs e)
+        => ((sender as Form).Tag as TabPage).Dispose();
+
+    private void clientBillsNewToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        Log.Instance.Trace("Entering");
+
+        var formsList = Application.OpenForms.OfType<ClientInvoiceForm>();
+
+        if (formsList.Any())
+        {
+            formsList.First().Focus();
+        }
+        else
+        {
+            ClientInvoiceForm form = new();
+            form.AccountLaunched += OnAccountLaunched;
+            NewForm(form);
+        }
+    }
+
+    private void interfaceMonitorToolStripMenuItem_Click(object sender, EventArgs e)
+        => NewForm(new InterfaceMonitor());
+
+    private void pathologistsToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        throw new NotImplementedException();
+    }
+
+    private void insurancePlansToolStripMenuItem_Click(object sender, EventArgs e)
+        => NewForm(new HealthPlanMaintenanceForm());
+
+    private void remittancePostingToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        return;
+
+        //Remittance835Service remittance835 = new Remittance835Service(Program.AppEnvironment);
+        //string file = @"\\wthmclbill\shared\Billing\TEST\Posting835Remit\MCL_NC_MCR_1093705428_835_11119267.RMT";
+
+        //remittance835.Load835(file);
+
+    }
+
+    private void chargeMasterToolStripMenuItem1_Click(object sender, EventArgs e)
+    {
+        Log.Instance.Trace("Entering");
+
+        var formsList = Application.OpenForms.OfType<ChargeMasterMaintenance>();
+
+        if (formsList.Any())
+        {
+            formsList.First().Focus();
+        }
+        else
+        {
+            NewForm(new ChargeMasterMaintenance());
+        }
+    }
+
+    private void systemLogViewerToolStripMenuItem_Click(object sender, EventArgs e)
+        => NewForm(new LogViewerForm());
+
+    private void claimBatchManagementToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        ClaimsManagementForm form = new();
+        form.AccountLaunched += OnAccountLaunched;
+        NewForm(form);
+    }
+
+    private void batchChargeEntryToolStripMenuItem_Click(object sender, EventArgs e)
+        => NewForm(new BatchChargeEntryForm());
+
+    private void documentationToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        Form activForm;
+        activForm = Form.ActiveForm.ActiveMdiChild;
+
+        string url = Program.AppEnvironment.ApplicationParameters.DocumentationSiteUrl;
+        string topicPath = null;
+        switch (activForm.Name)
+        {
+            case nameof(WorkListForm):
+                topicPath = Program.AppEnvironment.ApplicationParameters.WorklistUrl;
+                break;
+            case nameof(AccountForm):
+                topicPath = Program.AppEnvironment.ApplicationParameters.AccountManagementUrl;
+                break;
+            case nameof(ChargeMasterMaintenance):
+            case nameof(ChargeMasterEditForm):
+                topicPath = Program.AppEnvironment.ApplicationParameters.ChargeMasterMaintenanceUrl;
+                break;
+            case nameof(HealthPlanMaintenanceEditForm):
+            case nameof(HealthPlanMaintenanceForm):
+                topicPath = Program.AppEnvironment.ApplicationParameters.InsurancePlanMaintenanceUrl;
+                break;
+            case nameof(PhysicianMaintenanceForm):
+                topicPath = Program.AppEnvironment.ApplicationParameters.PhysicianMaintenanceUrl;
+                break;
+            case nameof(ClientMaintenanceForm):
+            case nameof(ClientMaintenanceEditForm):
+                topicPath = Program.AppEnvironment.ApplicationParameters.ClientMaintenanceUrl;
+                break;
+            case nameof(BatchRemittance):
+                topicPath = Program.AppEnvironment.ApplicationParameters.BatchRemittanceUrl;
+                break;
+            case nameof(ClaimsManagementForm):
+                topicPath = Program.AppEnvironment.ApplicationParameters.ClaimsManagementUrl;
+                break;
+            case nameof(AccountChargeEntry):
+                topicPath = Program.AppEnvironment.ApplicationParameters.AccountChargeEntryUrl;
+                break;
+            case nameof(ClientInvoiceForm):
+                topicPath = Program.AppEnvironment.ApplicationParameters.ClientInvoicingUrl;
+                break;
+            case nameof(PatientCollectionsForm):
+            case nameof(PatientCollectionsEditForm):
+                topicPath = Program.AppEnvironment.ApplicationParameters.PatientCollectionsUrl;
+                break;
+            default:
+                break;
+        }
+        if (!string.IsNullOrWhiteSpace(topicPath))
+            url += "/" + topicPath;
+        System.Diagnostics.Process.Start(url);
+    }
+
+    private void MainForm_KeyDown(object sender, KeyEventArgs e)
+    {
+        if (e.KeyData == Keys.F1)
+            documentationToolStripMenuItem_Click(sender, e);
+    }
+
+    private void latestUpdatesToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        string url = Program.AppEnvironment.ApplicationParameters.DocumentationSiteUrl;
+        string topicPath = null;
+        topicPath = Program.AppEnvironment.ApplicationParameters.LatestUpdatesUrl;
+        if (!string.IsNullOrWhiteSpace(topicPath))
+            url += "/" + topicPath;
+        System.Diagnostics.Process.Start(url);
+    }
+
+    private void mdiTabControl_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        if ((mdiTabControl.SelectedTab != null) &&
+            (mdiTabControl.SelectedTab.Tag != null))
+        {
+            Form frm = mdiTabControl.SelectedTab.Tag as Form;
+            frm.Activate();
+        }
+    }
+
+    private void auditReportsToolStripMenuItem_Click(object sender, EventArgs e) => NewForm(new AuditReportMaintenanceForm());
+
 }

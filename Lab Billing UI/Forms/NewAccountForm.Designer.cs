@@ -35,20 +35,20 @@ namespace LabBilling.Forms
             this.firstNameTextBox = new System.Windows.Forms.TextBox();
             this.middleNameTextBox = new System.Windows.Forms.TextBox();
             this.patientSexComboBox = new System.Windows.Forms.ComboBox();
-            this.label1 = new MetroFramework.Controls.MetroLabel();
-            this.label2 = new MetroFramework.Controls.MetroLabel();
-            this.label3 = new MetroFramework.Controls.MetroLabel();
-            this.label4 = new MetroFramework.Controls.MetroLabel();
-            this.label5 = new MetroFramework.Controls.MetroLabel();
-            this.label6 = new MetroFramework.Controls.MetroLabel();
+            this.label1 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
             this.AddAccount = new System.Windows.Forms.Button();
             this.Cancel = new System.Windows.Forms.Button();
-            this.label7 = new MetroFramework.Controls.MetroLabel();
-            this.label8 = new MetroFramework.Controls.MetroLabel();
+            this.label7 = new System.Windows.Forms.Label();
+            this.label8 = new System.Windows.Forms.Label();
             this.financialClassComboBox = new System.Windows.Forms.ComboBox();
-            this.label9 = new MetroFramework.Controls.MetroLabel();
+            this.label9 = new System.Windows.Forms.Label();
             this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
-            this.clientLabel = new MetroFramework.Controls.MetroLabel();
+            this.clientLabel = new System.Windows.Forms.Label();
             this.clientTextBox = new System.Windows.Forms.TextBox();
             this.serviceDateTextBox = new LabBilling.UserControls.DateTextBox();
             this.dateOfBirthTextBox = new LabBilling.UserControls.DateTextBox();
@@ -290,16 +290,16 @@ namespace LabBilling.Forms
         }
 
         #endregion
-        private MetroFramework.Controls.MetroLabel label1;
-        private MetroFramework.Controls.MetroLabel label2;
-        private MetroFramework.Controls.MetroLabel label3;
-        private MetroFramework.Controls.MetroLabel label4;
-        private MetroFramework.Controls.MetroLabel label5;
-        private MetroFramework.Controls.MetroLabel label6;
-        private MetroFramework.Controls.MetroLabel label7;
-        private MetroFramework.Controls.MetroLabel label8;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label label8;
         private System.Windows.Forms.ComboBox financialClassComboBox;
-        private MetroFramework.Controls.MetroLabel label9;
+        private System.Windows.Forms.Label label9;
         private System.Windows.Forms.ErrorProvider errorProvider1;
         private System.Windows.Forms.TextBox accountNoTextBox;
         private System.Windows.Forms.TextBox lastNameTextBox;
@@ -309,7 +309,7 @@ namespace LabBilling.Forms
         private System.Windows.Forms.Button AddAccount;
         private System.Windows.Forms.Button Cancel;
         private System.Windows.Forms.TextBox clientTextBox;
-        private MetroFramework.Controls.MetroLabel clientLabel;
+        private System.Windows.Forms.Label clientLabel;
         private UserControls.DateTextBox dateOfBirthTextBox;
         private UserControls.DateTextBox serviceDateTextBox;
     }

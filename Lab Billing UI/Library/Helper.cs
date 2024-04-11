@@ -1,8 +1,8 @@
-﻿using System;
+﻿using LabBilling.Core.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.Data.SqlClient;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -10,7 +10,6 @@ using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
 using System.Windows.Forms;
-using MetroFramework.Controls;
 
 namespace LabBilling
 {
@@ -148,26 +147,16 @@ namespace LabBilling
             {
                 if (c is TextBox)
                     (c as TextBox).ReadOnly = !allowAccess;
-                if (c is MetroTextBox)
-                    (c as MetroTextBox).ReadOnly = !allowAccess;
                 if (c is CheckBox)
                     ((CheckBox)c).Enabled = allowAccess;
-                if (c is MetroCheckBox)
-                    ((MetroCheckBox)c).Enabled = allowAccess;
                 if (c is ComboBox)
                     ((ComboBox)c).Enabled = allowAccess;
-                if (c is MetroComboBox)
-                    ((MetroComboBox)c).Enabled = allowAccess;
                 if (c is MaskedTextBox)
                     ((MaskedTextBox)c).ReadOnly = !allowAccess;
                 if (c is Button)
                     ((Button)c).Enabled = allowAccess;
-                if (c is MetroButton)
-                    ((MetroButton)c).Enabled = allowAccess;
                 if (c is DataGridView)
                     ((DataGridView)c).ReadOnly = !allowAccess;
-                if (c is MetroGrid)
-                    ((MetroGrid)c).ReadOnly = !allowAccess;
             }
         }
 
@@ -287,5 +276,46 @@ namespace LabBilling
             }
         }
 
+        public static void SetColumnVisibility(this DataGridView dgv, string propertyName, bool visible)
+        {
+            //get column name from property
+            dgv.Columns[propertyName].Visible = visible;
+        }
+
+        public static void SetColumnVisibility(this DataGridView dgv, Type property, bool visible)
+        {
+            string propertyName = property.Name;
+
+            // Check if the DataGridView contains a column with the given property name
+            DataGridViewColumn column = dgv.Columns.Cast<DataGridViewColumn>()
+                .FirstOrDefault(c => c.Name == propertyName);
+
+            if (column != null)
+            {
+                // Set the visibility of the column
+                column.Visible = visible;
+            }
+            else
+            {
+                // Handle the case when the column with the given property name is not found
+                throw new ArgumentException($"Column with property name '{propertyName}' not found in DataGridView.", nameof(property));
+            }
+        }
+
+        /// <summary>
+        /// Adds all the data to a binding list
+        /// </summary>
+        public static void AddRange<T>(this BindingList<T> list, IEnumerable<T> data)
+        {
+            if (list == null || data == null)
+            {
+                return;
+            }
+
+            foreach (T t in data)
+            {
+                list.Add(t);
+            }
+        }
     }
 }

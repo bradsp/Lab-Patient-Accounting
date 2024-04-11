@@ -1,539 +1,483 @@
-﻿namespace LabBilling
+﻿namespace LabBilling;
+
+partial class MainForm
 {
-    partial class MainForm
+    /// <summary>
+    /// Required designer variable.
+    /// </summary>
+    private System.ComponentModel.IContainer components = null;
+
+    /// <summary>
+    /// Clean up any resources being used.
+    /// </summary>
+    /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+    protected override void Dispose(bool disposing)
     {
-        /// <summary>
-        /// Required designer variable.
-        /// </summary>
-        private System.ComponentModel.IContainer components = null;
-
-        /// <summary>
-        /// Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-        protected override void Dispose(bool disposing)
+        if (disposing && (components != null))
         {
-            if (disposing && (components != null))
-            {
-                components.Dispose();
-            }
-            base.Dispose(disposing);
+            components.Dispose();
         }
-
-        #region Windows Form Designer generated code
-
-        /// <summary>
-        /// Required method for Designer support - do not modify
-        /// the contents of this method with the code editor.
-        /// </summary>
-        private void InitializeComponent()
-        {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-            this.MainFormMenu = new System.Windows.Forms.MenuStrip();
-            this.billingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.accountToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.worklistToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.duplicateAccountsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.accountChargeEntryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.batchChargeEntryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.batchRemittanceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.claimBatchManagementToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.clientBillsNewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.posting835RemitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.remittancePostingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.badDebtMaintenanceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.generateClaimsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.institutionalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.professionalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.dictionariesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.chargeMasterToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.clientsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.financialClassToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.iCDDxCodesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.insurancePlansToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.physiciansToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.pathologistsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.zipCodesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.reportsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.codingStatsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.monthlyReportsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.paymentsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.randomDrugScreenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.addressRequisitionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.accountingReportsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.aBNReportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.reportingPortalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.reportByInsuranceCompanyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.systemAdministrationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.userSecurityToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.systemParametersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.interfaceMappingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.interfaceMonitorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.systemLogViewerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.documentationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.latestUpdatesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.windowManagerPanel1 = new MDIWindowManager.WindowManagerPanel();
-            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
-            this.toolStripUsernameLabel = new System.Windows.Forms.ToolStripStatusLabel();
-            this.toolStripDatabaseLabel = new System.Windows.Forms.ToolStripStatusLabel();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.helpProvider1 = new System.Windows.Forms.HelpProvider();
-            this.MainFormMenu.SuspendLayout();
-            this.statusStrip1.SuspendLayout();
-            this.SuspendLayout();
-            // 
-            // MainFormMenu
-            // 
-            this.MainFormMenu.BackColor = System.Drawing.Color.Transparent;
-            this.MainFormMenu.ImageScalingSize = new System.Drawing.Size(20, 20);
-            this.MainFormMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.billingToolStripMenuItem,
-            this.dictionariesToolStripMenuItem,
-            this.reportsToolStripMenuItem,
-            this.systemAdministrationToolStripMenuItem,
-            this.helpToolStripMenuItem});
-            resources.ApplyResources(this.MainFormMenu, "MainFormMenu");
-            this.MainFormMenu.Name = "MainFormMenu";
-            // 
-            // billingToolStripMenuItem
-            // 
-            this.billingToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.accountToolStripMenuItem,
-            this.worklistToolStripMenuItem,
-            this.duplicateAccountsToolStripMenuItem,
-            this.accountChargeEntryToolStripMenuItem,
-            this.batchChargeEntryToolStripMenuItem,
-            this.batchRemittanceToolStripMenuItem,
-            this.claimBatchManagementToolStripMenuItem,
-            this.clientBillsNewToolStripMenuItem,
-            this.posting835RemitToolStripMenuItem,
-            this.remittancePostingToolStripMenuItem,
-            this.badDebtMaintenanceToolStripMenuItem,
-            this.generateClaimsToolStripMenuItem});
-            this.billingToolStripMenuItem.Name = "billingToolStripMenuItem";
-            resources.ApplyResources(this.billingToolStripMenuItem, "billingToolStripMenuItem");
-            // 
-            // accountToolStripMenuItem
-            // 
-            this.accountToolStripMenuItem.Name = "accountToolStripMenuItem";
-            resources.ApplyResources(this.accountToolStripMenuItem, "accountToolStripMenuItem");
-            this.accountToolStripMenuItem.Click += new System.EventHandler(this.accountToolStripMenuItem_Click);
-            // 
-            // worklistToolStripMenuItem
-            // 
-            this.worklistToolStripMenuItem.Name = "worklistToolStripMenuItem";
-            resources.ApplyResources(this.worklistToolStripMenuItem, "worklistToolStripMenuItem");
-            this.worklistToolStripMenuItem.Click += new System.EventHandler(this.worklistToolStripMenuItem_Click);
-            // 
-            // duplicateAccountsToolStripMenuItem
-            // 
-            this.duplicateAccountsToolStripMenuItem.Name = "duplicateAccountsToolStripMenuItem";
-            resources.ApplyResources(this.duplicateAccountsToolStripMenuItem, "duplicateAccountsToolStripMenuItem");
-            this.duplicateAccountsToolStripMenuItem.Click += new System.EventHandler(this.duplicateAccountsToolStripMenuItem_Click);
-            // 
-            // accountChargeEntryToolStripMenuItem
-            // 
-            this.accountChargeEntryToolStripMenuItem.Name = "accountChargeEntryToolStripMenuItem";
-            resources.ApplyResources(this.accountChargeEntryToolStripMenuItem, "accountChargeEntryToolStripMenuItem");
-            this.accountChargeEntryToolStripMenuItem.Click += new System.EventHandler(this.accountChargeEntryToolStripMenuItem_Click);
-            // 
-            // batchChargeEntryToolStripMenuItem
-            // 
-            this.batchChargeEntryToolStripMenuItem.Name = "batchChargeEntryToolStripMenuItem";
-            resources.ApplyResources(this.batchChargeEntryToolStripMenuItem, "batchChargeEntryToolStripMenuItem");
-            this.batchChargeEntryToolStripMenuItem.Click += new System.EventHandler(this.batchChargeEntryToolStripMenuItem_Click);
-            // 
-            // batchRemittanceToolStripMenuItem
-            // 
-            this.batchRemittanceToolStripMenuItem.Name = "batchRemittanceToolStripMenuItem";
-            resources.ApplyResources(this.batchRemittanceToolStripMenuItem, "batchRemittanceToolStripMenuItem");
-            this.batchRemittanceToolStripMenuItem.Click += new System.EventHandler(this.batchRemittanceToolStripMenuItem_Click);
-            // 
-            // claimBatchManagementToolStripMenuItem
-            // 
-            this.claimBatchManagementToolStripMenuItem.Name = "claimBatchManagementToolStripMenuItem";
-            resources.ApplyResources(this.claimBatchManagementToolStripMenuItem, "claimBatchManagementToolStripMenuItem");
-            this.claimBatchManagementToolStripMenuItem.Click += new System.EventHandler(this.claimBatchManagementToolStripMenuItem_Click);
-            // 
-            // clientBillsNewToolStripMenuItem
-            // 
-            this.clientBillsNewToolStripMenuItem.Name = "clientBillsNewToolStripMenuItem";
-            resources.ApplyResources(this.clientBillsNewToolStripMenuItem, "clientBillsNewToolStripMenuItem");
-            this.clientBillsNewToolStripMenuItem.Click += new System.EventHandler(this.clientBillsNewToolStripMenuItem_Click);
-            // 
-            // posting835RemitToolStripMenuItem
-            // 
-            this.posting835RemitToolStripMenuItem.Name = "posting835RemitToolStripMenuItem";
-            resources.ApplyResources(this.posting835RemitToolStripMenuItem, "posting835RemitToolStripMenuItem");
-            this.posting835RemitToolStripMenuItem.Click += new System.EventHandler(this.posting835RemitToolStripMenuItem_Click);
-            // 
-            // remittancePostingToolStripMenuItem
-            // 
-            this.remittancePostingToolStripMenuItem.Name = "remittancePostingToolStripMenuItem";
-            resources.ApplyResources(this.remittancePostingToolStripMenuItem, "remittancePostingToolStripMenuItem");
-            this.remittancePostingToolStripMenuItem.Click += new System.EventHandler(this.remittancePostingToolStripMenuItem_Click);
-            // 
-            // badDebtMaintenanceToolStripMenuItem
-            // 
-            this.badDebtMaintenanceToolStripMenuItem.Name = "badDebtMaintenanceToolStripMenuItem";
-            resources.ApplyResources(this.badDebtMaintenanceToolStripMenuItem, "badDebtMaintenanceToolStripMenuItem");
-            this.badDebtMaintenanceToolStripMenuItem.Click += new System.EventHandler(this.badDebtMaintenanceToolStripMenuItem_Click);
-            // 
-            // generateClaimsToolStripMenuItem
-            // 
-            this.generateClaimsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.institutionalToolStripMenuItem,
-            this.professionalToolStripMenuItem});
-            this.generateClaimsToolStripMenuItem.Name = "generateClaimsToolStripMenuItem";
-            resources.ApplyResources(this.generateClaimsToolStripMenuItem, "generateClaimsToolStripMenuItem");
-            // 
-            // institutionalToolStripMenuItem
-            // 
-            this.institutionalToolStripMenuItem.Name = "institutionalToolStripMenuItem";
-            resources.ApplyResources(this.institutionalToolStripMenuItem, "institutionalToolStripMenuItem");
-            this.institutionalToolStripMenuItem.Click += new System.EventHandler(this.institutionalToolStripMenuItem_Click);
-            // 
-            // professionalToolStripMenuItem
-            // 
-            this.professionalToolStripMenuItem.Name = "professionalToolStripMenuItem";
-            resources.ApplyResources(this.professionalToolStripMenuItem, "professionalToolStripMenuItem");
-            this.professionalToolStripMenuItem.Click += new System.EventHandler(this.professionalToolStripMenuItem_Click);
-            // 
-            // dictionariesToolStripMenuItem
-            // 
-            this.dictionariesToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.chargeMasterToolStripMenuItem1,
-            this.clientsToolStripMenuItem,
-            this.financialClassToolStripMenuItem,
-            this.iCDDxCodesToolStripMenuItem,
-            this.insurancePlansToolStripMenuItem,
-            this.physiciansToolStripMenuItem,
-            this.pathologistsToolStripMenuItem,
-            this.zipCodesToolStripMenuItem});
-            this.dictionariesToolStripMenuItem.Name = "dictionariesToolStripMenuItem";
-            resources.ApplyResources(this.dictionariesToolStripMenuItem, "dictionariesToolStripMenuItem");
-            // 
-            // chargeMasterToolStripMenuItem1
-            // 
-            this.chargeMasterToolStripMenuItem1.Name = "chargeMasterToolStripMenuItem1";
-            resources.ApplyResources(this.chargeMasterToolStripMenuItem1, "chargeMasterToolStripMenuItem1");
-            this.chargeMasterToolStripMenuItem1.Click += new System.EventHandler(this.chargeMasterToolStripMenuItem1_Click);
-            // 
-            // clientsToolStripMenuItem
-            // 
-            this.clientsToolStripMenuItem.Name = "clientsToolStripMenuItem";
-            resources.ApplyResources(this.clientsToolStripMenuItem, "clientsToolStripMenuItem");
-            this.clientsToolStripMenuItem.Click += new System.EventHandler(this.clientsToolStripMenuItem_Click);
-            // 
-            // financialClassToolStripMenuItem
-            // 
-            this.financialClassToolStripMenuItem.Name = "financialClassToolStripMenuItem";
-            resources.ApplyResources(this.financialClassToolStripMenuItem, "financialClassToolStripMenuItem");
-            // 
-            // iCDDxCodesToolStripMenuItem
-            // 
-            this.iCDDxCodesToolStripMenuItem.Name = "iCDDxCodesToolStripMenuItem";
-            resources.ApplyResources(this.iCDDxCodesToolStripMenuItem, "iCDDxCodesToolStripMenuItem");
-            // 
-            // insurancePlansToolStripMenuItem
-            // 
-            this.insurancePlansToolStripMenuItem.Name = "insurancePlansToolStripMenuItem";
-            resources.ApplyResources(this.insurancePlansToolStripMenuItem, "insurancePlansToolStripMenuItem");
-            this.insurancePlansToolStripMenuItem.Click += new System.EventHandler(this.insurancePlansToolStripMenuItem_Click);
-            // 
-            // physiciansToolStripMenuItem
-            // 
-            this.physiciansToolStripMenuItem.Name = "physiciansToolStripMenuItem";
-            resources.ApplyResources(this.physiciansToolStripMenuItem, "physiciansToolStripMenuItem");
-            this.physiciansToolStripMenuItem.Click += new System.EventHandler(this.physiciansToolStripMenuItem_Click);
-            // 
-            // pathologistsToolStripMenuItem
-            // 
-            this.pathologistsToolStripMenuItem.Name = "pathologistsToolStripMenuItem";
-            resources.ApplyResources(this.pathologistsToolStripMenuItem, "pathologistsToolStripMenuItem");
-            this.pathologistsToolStripMenuItem.Click += new System.EventHandler(this.pathologistsToolStripMenuItem_Click);
-            // 
-            // zipCodesToolStripMenuItem
-            // 
-            this.zipCodesToolStripMenuItem.Name = "zipCodesToolStripMenuItem";
-            resources.ApplyResources(this.zipCodesToolStripMenuItem, "zipCodesToolStripMenuItem");
-            // 
-            // reportsToolStripMenuItem
-            // 
-            this.reportsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.codingStatsToolStripMenuItem,
-            this.monthlyReportsToolStripMenuItem,
-            this.paymentsToolStripMenuItem,
-            this.randomDrugScreenToolStripMenuItem,
-            this.addressRequisitionsToolStripMenuItem,
-            this.accountingReportsToolStripMenuItem,
-            this.aBNReportToolStripMenuItem,
-            this.reportingPortalToolStripMenuItem,
-            this.reportByInsuranceCompanyToolStripMenuItem});
-            this.reportsToolStripMenuItem.Name = "reportsToolStripMenuItem";
-            resources.ApplyResources(this.reportsToolStripMenuItem, "reportsToolStripMenuItem");
-            // 
-            // codingStatsToolStripMenuItem
-            // 
-            this.codingStatsToolStripMenuItem.Name = "codingStatsToolStripMenuItem";
-            resources.ApplyResources(this.codingStatsToolStripMenuItem, "codingStatsToolStripMenuItem");
-            // 
-            // monthlyReportsToolStripMenuItem
-            // 
-            this.monthlyReportsToolStripMenuItem.Name = "monthlyReportsToolStripMenuItem";
-            resources.ApplyResources(this.monthlyReportsToolStripMenuItem, "monthlyReportsToolStripMenuItem");
-            this.monthlyReportsToolStripMenuItem.Click += new System.EventHandler(this.monthlyReportsToolStripMenuItem_Click);
-            // 
-            // paymentsToolStripMenuItem
-            // 
-            this.paymentsToolStripMenuItem.Name = "paymentsToolStripMenuItem";
-            resources.ApplyResources(this.paymentsToolStripMenuItem, "paymentsToolStripMenuItem");
-            // 
-            // randomDrugScreenToolStripMenuItem
-            // 
-            this.randomDrugScreenToolStripMenuItem.Name = "randomDrugScreenToolStripMenuItem";
-            resources.ApplyResources(this.randomDrugScreenToolStripMenuItem, "randomDrugScreenToolStripMenuItem");
-            // 
-            // addressRequisitionsToolStripMenuItem
-            // 
-            this.addressRequisitionsToolStripMenuItem.Name = "addressRequisitionsToolStripMenuItem";
-            resources.ApplyResources(this.addressRequisitionsToolStripMenuItem, "addressRequisitionsToolStripMenuItem");
-            // 
-            // accountingReportsToolStripMenuItem
-            // 
-            this.accountingReportsToolStripMenuItem.Name = "accountingReportsToolStripMenuItem";
-            resources.ApplyResources(this.accountingReportsToolStripMenuItem, "accountingReportsToolStripMenuItem");
-            // 
-            // aBNReportToolStripMenuItem
-            // 
-            this.aBNReportToolStripMenuItem.Name = "aBNReportToolStripMenuItem";
-            resources.ApplyResources(this.aBNReportToolStripMenuItem, "aBNReportToolStripMenuItem");
-            // 
-            // reportingPortalToolStripMenuItem
-            // 
-            this.reportingPortalToolStripMenuItem.Name = "reportingPortalToolStripMenuItem";
-            resources.ApplyResources(this.reportingPortalToolStripMenuItem, "reportingPortalToolStripMenuItem");
-            this.reportingPortalToolStripMenuItem.Click += new System.EventHandler(this.reportingPortalToolStripMenuItem_Click);
-            // 
-            // reportByInsuranceCompanyToolStripMenuItem
-            // 
-            this.reportByInsuranceCompanyToolStripMenuItem.Name = "reportByInsuranceCompanyToolStripMenuItem";
-            resources.ApplyResources(this.reportByInsuranceCompanyToolStripMenuItem, "reportByInsuranceCompanyToolStripMenuItem");
-            this.reportByInsuranceCompanyToolStripMenuItem.Click += new System.EventHandler(this.reportByInsuranceCompanyToolStripMenuItem_Click);
-            // 
-            // systemAdministrationToolStripMenuItem
-            // 
-            this.systemAdministrationToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.userSecurityToolStripMenuItem,
-            this.systemParametersToolStripMenuItem,
-            this.interfaceMappingToolStripMenuItem,
-            this.interfaceMonitorToolStripMenuItem,
-            this.systemLogViewerToolStripMenuItem});
-            this.systemAdministrationToolStripMenuItem.Name = "systemAdministrationToolStripMenuItem";
-            resources.ApplyResources(this.systemAdministrationToolStripMenuItem, "systemAdministrationToolStripMenuItem");
-            // 
-            // userSecurityToolStripMenuItem
-            // 
-            this.userSecurityToolStripMenuItem.Name = "userSecurityToolStripMenuItem";
-            resources.ApplyResources(this.userSecurityToolStripMenuItem, "userSecurityToolStripMenuItem");
-            this.userSecurityToolStripMenuItem.Click += new System.EventHandler(this.userSecurityToolStripMenuItem_Click);
-            // 
-            // systemParametersToolStripMenuItem
-            // 
-            this.systemParametersToolStripMenuItem.Name = "systemParametersToolStripMenuItem";
-            resources.ApplyResources(this.systemParametersToolStripMenuItem, "systemParametersToolStripMenuItem");
-            this.systemParametersToolStripMenuItem.Click += new System.EventHandler(this.systemParametersToolStripMenuItem_Click);
-            // 
-            // interfaceMappingToolStripMenuItem
-            // 
-            this.interfaceMappingToolStripMenuItem.Name = "interfaceMappingToolStripMenuItem";
-            resources.ApplyResources(this.interfaceMappingToolStripMenuItem, "interfaceMappingToolStripMenuItem");
-            this.interfaceMappingToolStripMenuItem.Click += new System.EventHandler(this.interfaceMappingToolStripMenuItem_Click);
-            // 
-            // interfaceMonitorToolStripMenuItem
-            // 
-            this.interfaceMonitorToolStripMenuItem.Name = "interfaceMonitorToolStripMenuItem";
-            resources.ApplyResources(this.interfaceMonitorToolStripMenuItem, "interfaceMonitorToolStripMenuItem");
-            this.interfaceMonitorToolStripMenuItem.Click += new System.EventHandler(this.interfaceMonitorToolStripMenuItem_Click);
-            // 
-            // systemLogViewerToolStripMenuItem
-            // 
-            this.systemLogViewerToolStripMenuItem.Name = "systemLogViewerToolStripMenuItem";
-            resources.ApplyResources(this.systemLogViewerToolStripMenuItem, "systemLogViewerToolStripMenuItem");
-            this.systemLogViewerToolStripMenuItem.Click += new System.EventHandler(this.systemLogViewerToolStripMenuItem_Click);
-            // 
-            // helpToolStripMenuItem
-            // 
-            this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.documentationToolStripMenuItem,
-            this.latestUpdatesToolStripMenuItem,
-            this.aboutToolStripMenuItem,
-            this.exitToolStripMenuItem});
-            this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            resources.ApplyResources(this.helpToolStripMenuItem, "helpToolStripMenuItem");
-            // 
-            // documentationToolStripMenuItem
-            // 
-            this.documentationToolStripMenuItem.Name = "documentationToolStripMenuItem";
-            resources.ApplyResources(this.documentationToolStripMenuItem, "documentationToolStripMenuItem");
-            this.documentationToolStripMenuItem.Click += new System.EventHandler(this.documentationToolStripMenuItem_Click);
-            // 
-            // latestUpdatesToolStripMenuItem
-            // 
-            this.latestUpdatesToolStripMenuItem.Name = "latestUpdatesToolStripMenuItem";
-            resources.ApplyResources(this.latestUpdatesToolStripMenuItem, "latestUpdatesToolStripMenuItem");
-            this.latestUpdatesToolStripMenuItem.Click += new System.EventHandler(this.latestUpdatesToolStripMenuItem_Click);
-            // 
-            // aboutToolStripMenuItem
-            // 
-            this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            resources.ApplyResources(this.aboutToolStripMenuItem, "aboutToolStripMenuItem");
-            this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
-            // 
-            // exitToolStripMenuItem
-            // 
-            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            resources.ApplyResources(this.exitToolStripMenuItem, "exitToolStripMenuItem");
-            this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
-            // 
-            // windowManagerPanel1
-            // 
-            this.windowManagerPanel1.AllowUserVerticalRepositioning = false;
-            this.windowManagerPanel1.AutoDetectMdiChildWindows = true;
-            this.windowManagerPanel1.AutoHide = false;
-            resources.ApplyResources(this.windowManagerPanel1, "windowManagerPanel1");
-            this.windowManagerPanel1.ButtonRenderMode = MDIWindowManager.ButtonRenderMode.Standard;
-            this.windowManagerPanel1.DisableCloseAction = false;
-            this.windowManagerPanel1.DisableHTileAction = false;
-            this.windowManagerPanel1.DisablePopoutAction = false;
-            this.windowManagerPanel1.DisableTileAction = false;
-            this.windowManagerPanel1.EnableTabPaintEvent = false;
-            this.windowManagerPanel1.MinMode = false;
-            this.windowManagerPanel1.Name = "windowManagerPanel1";
-            this.windowManagerPanel1.Orientation = MDIWindowManager.WindowManagerOrientation.Top;
-            this.windowManagerPanel1.ShowCloseButton = true;
-            this.windowManagerPanel1.ShowIcons = false;
-            this.windowManagerPanel1.ShowLayoutButtons = true;
-            this.windowManagerPanel1.ShowTitle = false;
-            this.windowManagerPanel1.Style = MDIWindowManager.TabStyle.FlatHiliteTabs;
-            this.windowManagerPanel1.TabRenderMode = MDIWindowManager.TabsProvider.Standard;
-            this.windowManagerPanel1.TitleBackColor = System.Drawing.SystemColors.ControlDark;
-            this.windowManagerPanel1.TitleForeColor = System.Drawing.SystemColors.ControlLightLight;
-            // 
-            // statusStrip1
-            // 
-            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripUsernameLabel,
-            this.toolStripDatabaseLabel});
-            resources.ApplyResources(this.statusStrip1, "statusStrip1");
-            this.statusStrip1.Name = "statusStrip1";
-            // 
-            // toolStripUsernameLabel
-            // 
-            this.toolStripUsernameLabel.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
-            this.toolStripUsernameLabel.BorderStyle = System.Windows.Forms.Border3DStyle.Sunken;
-            this.toolStripUsernameLabel.Name = "toolStripUsernameLabel";
-            resources.ApplyResources(this.toolStripUsernameLabel, "toolStripUsernameLabel");
-            // 
-            // toolStripDatabaseLabel
-            // 
-            this.toolStripDatabaseLabel.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
-            this.toolStripDatabaseLabel.BorderStyle = System.Windows.Forms.Border3DStyle.Sunken;
-            this.toolStripDatabaseLabel.Name = "toolStripDatabaseLabel";
-            resources.ApplyResources(this.toolStripDatabaseLabel, "toolStripDatabaseLabel");
-            // 
-            // panel1
-            // 
-            resources.ApplyResources(this.panel1, "panel1");
-            this.panel1.Name = "panel1";
-            // 
-            // MainForm
-            // 
-            resources.ApplyResources(this, "$this");
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.panel1);
-            this.Controls.Add(this.statusStrip1);
-            this.Controls.Add(this.windowManagerPanel1);
-            this.Controls.Add(this.MainFormMenu);
-            this.IsMdiContainer = true;
-            this.KeyPreview = true;
-            this.MainMenuStrip = this.MainFormMenu;
-            this.Name = "MainForm";
-            this.TransparencyKey = System.Drawing.Color.Empty;
-            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Dashboard_FormClosing);
-            this.Load += new System.EventHandler(this.MainForm_Load);
-            this.MdiChildActivate += new System.EventHandler(this.Dashboard_MdiChildActivate);
-            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MainForm_KeyDown);
-            this.MainFormMenu.ResumeLayout(false);
-            this.MainFormMenu.PerformLayout();
-            this.statusStrip1.ResumeLayout(false);
-            this.statusStrip1.PerformLayout();
-            this.ResumeLayout(false);
-            this.PerformLayout();
-
-        }
-
-        #endregion
-
-        private System.Windows.Forms.MenuStrip MainFormMenu;
-        private System.Windows.Forms.ToolStripMenuItem billingToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem accountToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem accountChargeEntryToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem batchRemittanceToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem dictionariesToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem clientsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem financialClassToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem iCDDxCodesToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem insurancePlansToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem physiciansToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem pathologistsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem zipCodesToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem reportsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem codingStatsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem monthlyReportsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem paymentsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem randomDrugScreenToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem addressRequisitionsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem accountingReportsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem aBNReportToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem reportingPortalToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem systemAdministrationToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem userSecurityToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem systemParametersToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem badDebtMaintenanceToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem duplicateAccountsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem reportByInsuranceCompanyToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem posting835RemitToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
-        private MDIWindowManager.WindowManagerPanel windowManagerPanel1;
-        private System.Windows.Forms.ToolStripMenuItem interfaceMappingToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem clientBillsNewToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem interfaceMonitorToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem worklistToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem generateClaimsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem institutionalToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem professionalToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem remittancePostingToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem chargeMasterToolStripMenuItem1;
-        private System.Windows.Forms.StatusStrip statusStrip1;
-        private System.Windows.Forms.ToolStripStatusLabel toolStripUsernameLabel;
-        private System.Windows.Forms.ToolStripStatusLabel toolStripDatabaseLabel;
-        private System.Windows.Forms.ToolStripMenuItem systemLogViewerToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem claimBatchManagementToolStripMenuItem;
-        private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.ToolStripMenuItem batchChargeEntryToolStripMenuItem;
-        private System.Windows.Forms.HelpProvider helpProvider1;
-        private System.Windows.Forms.ToolStripMenuItem documentationToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem latestUpdatesToolStripMenuItem;
+        base.Dispose(disposing);
     }
+
+    #region Windows Form Designer generated code
+
+    /// <summary>
+    /// Required method for Designer support - do not modify
+    /// the contents of this method with the code editor.
+    /// </summary>
+    private void InitializeComponent()
+    {
+        System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
+        MainFormMenu = new MenuStrip();
+        billingToolStripMenuItem = new ToolStripMenuItem();
+        accountToolStripMenuItem = new ToolStripMenuItem();
+        worklistToolStripMenuItem = new ToolStripMenuItem();
+        duplicateAccountsToolStripMenuItem = new ToolStripMenuItem();
+        accountChargeEntryToolStripMenuItem = new ToolStripMenuItem();
+        batchChargeEntryToolStripMenuItem = new ToolStripMenuItem();
+        batchRemittanceToolStripMenuItem = new ToolStripMenuItem();
+        claimBatchManagementToolStripMenuItem = new ToolStripMenuItem();
+        clientBillsNewToolStripMenuItem = new ToolStripMenuItem();
+        posting835RemitToolStripMenuItem = new ToolStripMenuItem();
+        remittancePostingToolStripMenuItem = new ToolStripMenuItem();
+        badDebtMaintenanceToolStripMenuItem = new ToolStripMenuItem();
+        dictionariesToolStripMenuItem = new ToolStripMenuItem();
+        auditReportsToolStripMenuItem = new ToolStripMenuItem();
+        chargeMasterToolStripMenuItem1 = new ToolStripMenuItem();
+        clientsToolStripMenuItem = new ToolStripMenuItem();
+        financialClassToolStripMenuItem = new ToolStripMenuItem();
+        iCDDxCodesToolStripMenuItem = new ToolStripMenuItem();
+        insurancePlansToolStripMenuItem = new ToolStripMenuItem();
+        physiciansToolStripMenuItem = new ToolStripMenuItem();
+        pathologistsToolStripMenuItem = new ToolStripMenuItem();
+        zipCodesToolStripMenuItem = new ToolStripMenuItem();
+        reportsToolStripMenuItem = new ToolStripMenuItem();
+        codingStatsToolStripMenuItem = new ToolStripMenuItem();
+        monthlyReportsToolStripMenuItem = new ToolStripMenuItem();
+        paymentsToolStripMenuItem = new ToolStripMenuItem();
+        randomDrugScreenToolStripMenuItem = new ToolStripMenuItem();
+        addressRequisitionsToolStripMenuItem = new ToolStripMenuItem();
+        accountingReportsToolStripMenuItem = new ToolStripMenuItem();
+        aBNReportToolStripMenuItem = new ToolStripMenuItem();
+        reportingPortalToolStripMenuItem = new ToolStripMenuItem();
+        reportByInsuranceCompanyToolStripMenuItem = new ToolStripMenuItem();
+        systemAdministrationToolStripMenuItem = new ToolStripMenuItem();
+        userSecurityToolStripMenuItem = new ToolStripMenuItem();
+        systemParametersToolStripMenuItem = new ToolStripMenuItem();
+        interfaceMappingToolStripMenuItem = new ToolStripMenuItem();
+        interfaceMonitorToolStripMenuItem = new ToolStripMenuItem();
+        systemLogViewerToolStripMenuItem = new ToolStripMenuItem();
+        windowToolStripMenuItem = new ToolStripMenuItem();
+        helpToolStripMenuItem = new ToolStripMenuItem();
+        documentationToolStripMenuItem = new ToolStripMenuItem();
+        latestUpdatesToolStripMenuItem = new ToolStripMenuItem();
+        aboutToolStripMenuItem = new ToolStripMenuItem();
+        exitToolStripMenuItem = new ToolStripMenuItem();
+        statusStrip1 = new StatusStrip();
+        toolStripUsernameLabel = new ToolStripStatusLabel();
+        toolStripDatabaseLabel = new ToolStripStatusLabel();
+        panel1 = new Panel();
+        helpProvider1 = new HelpProvider();
+        mdiTabControl = new CustomTabControl();
+        MainFormMenu.SuspendLayout();
+        statusStrip1.SuspendLayout();
+        SuspendLayout();
+        // 
+        // MainFormMenu
+        // 
+        MainFormMenu.BackColor = Color.White;
+        MainFormMenu.ImageScalingSize = new Size(20, 20);
+        MainFormMenu.Items.AddRange(new ToolStripItem[] { billingToolStripMenuItem, dictionariesToolStripMenuItem, reportsToolStripMenuItem, systemAdministrationToolStripMenuItem, windowToolStripMenuItem, helpToolStripMenuItem });
+        resources.ApplyResources(MainFormMenu, "MainFormMenu");
+        MainFormMenu.MdiWindowListItem = windowToolStripMenuItem;
+        MainFormMenu.Name = "MainFormMenu";
+        // 
+        // billingToolStripMenuItem
+        // 
+        billingToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { accountToolStripMenuItem, worklistToolStripMenuItem, duplicateAccountsToolStripMenuItem, accountChargeEntryToolStripMenuItem, batchChargeEntryToolStripMenuItem, batchRemittanceToolStripMenuItem, claimBatchManagementToolStripMenuItem, clientBillsNewToolStripMenuItem, posting835RemitToolStripMenuItem, remittancePostingToolStripMenuItem, badDebtMaintenanceToolStripMenuItem });
+        billingToolStripMenuItem.Name = "billingToolStripMenuItem";
+        resources.ApplyResources(billingToolStripMenuItem, "billingToolStripMenuItem");
+        // 
+        // accountToolStripMenuItem
+        // 
+        accountToolStripMenuItem.Name = "accountToolStripMenuItem";
+        resources.ApplyResources(accountToolStripMenuItem, "accountToolStripMenuItem");
+        accountToolStripMenuItem.Click += accountToolStripMenuItem_Click;
+        // 
+        // worklistToolStripMenuItem
+        // 
+        worklistToolStripMenuItem.Name = "worklistToolStripMenuItem";
+        resources.ApplyResources(worklistToolStripMenuItem, "worklistToolStripMenuItem");
+        worklistToolStripMenuItem.Click += worklistToolStripMenuItem_Click;
+        // 
+        // duplicateAccountsToolStripMenuItem
+        // 
+        duplicateAccountsToolStripMenuItem.Name = "duplicateAccountsToolStripMenuItem";
+        resources.ApplyResources(duplicateAccountsToolStripMenuItem, "duplicateAccountsToolStripMenuItem");
+        duplicateAccountsToolStripMenuItem.Click += duplicateAccountsToolStripMenuItem_Click;
+        // 
+        // accountChargeEntryToolStripMenuItem
+        // 
+        accountChargeEntryToolStripMenuItem.Name = "accountChargeEntryToolStripMenuItem";
+        resources.ApplyResources(accountChargeEntryToolStripMenuItem, "accountChargeEntryToolStripMenuItem");
+        accountChargeEntryToolStripMenuItem.Click += accountChargeEntryToolStripMenuItem_Click;
+        // 
+        // batchChargeEntryToolStripMenuItem
+        // 
+        batchChargeEntryToolStripMenuItem.Name = "batchChargeEntryToolStripMenuItem";
+        resources.ApplyResources(batchChargeEntryToolStripMenuItem, "batchChargeEntryToolStripMenuItem");
+        batchChargeEntryToolStripMenuItem.Click += batchChargeEntryToolStripMenuItem_Click;
+        // 
+        // batchRemittanceToolStripMenuItem
+        // 
+        batchRemittanceToolStripMenuItem.Name = "batchRemittanceToolStripMenuItem";
+        resources.ApplyResources(batchRemittanceToolStripMenuItem, "batchRemittanceToolStripMenuItem");
+        batchRemittanceToolStripMenuItem.Click += batchRemittanceToolStripMenuItem_Click;
+        // 
+        // claimBatchManagementToolStripMenuItem
+        // 
+        claimBatchManagementToolStripMenuItem.Name = "claimBatchManagementToolStripMenuItem";
+        resources.ApplyResources(claimBatchManagementToolStripMenuItem, "claimBatchManagementToolStripMenuItem");
+        claimBatchManagementToolStripMenuItem.Click += claimBatchManagementToolStripMenuItem_Click;
+        // 
+        // clientBillsNewToolStripMenuItem
+        // 
+        clientBillsNewToolStripMenuItem.Name = "clientBillsNewToolStripMenuItem";
+        resources.ApplyResources(clientBillsNewToolStripMenuItem, "clientBillsNewToolStripMenuItem");
+        clientBillsNewToolStripMenuItem.Click += clientBillsNewToolStripMenuItem_Click;
+        // 
+        // posting835RemitToolStripMenuItem
+        // 
+        posting835RemitToolStripMenuItem.Name = "posting835RemitToolStripMenuItem";
+        resources.ApplyResources(posting835RemitToolStripMenuItem, "posting835RemitToolStripMenuItem");
+        posting835RemitToolStripMenuItem.Click += posting835RemitToolStripMenuItem_Click;
+        // 
+        // remittancePostingToolStripMenuItem
+        // 
+        remittancePostingToolStripMenuItem.Name = "remittancePostingToolStripMenuItem";
+        resources.ApplyResources(remittancePostingToolStripMenuItem, "remittancePostingToolStripMenuItem");
+        remittancePostingToolStripMenuItem.Click += remittancePostingToolStripMenuItem_Click;
+        // 
+        // badDebtMaintenanceToolStripMenuItem
+        // 
+        badDebtMaintenanceToolStripMenuItem.Name = "badDebtMaintenanceToolStripMenuItem";
+        resources.ApplyResources(badDebtMaintenanceToolStripMenuItem, "badDebtMaintenanceToolStripMenuItem");
+        badDebtMaintenanceToolStripMenuItem.Click += badDebtMaintenanceToolStripMenuItem_Click;
+        // 
+        // dictionariesToolStripMenuItem
+        // 
+        dictionariesToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { auditReportsToolStripMenuItem, chargeMasterToolStripMenuItem1, clientsToolStripMenuItem, financialClassToolStripMenuItem, iCDDxCodesToolStripMenuItem, insurancePlansToolStripMenuItem, physiciansToolStripMenuItem, pathologistsToolStripMenuItem, zipCodesToolStripMenuItem });
+        dictionariesToolStripMenuItem.Name = "dictionariesToolStripMenuItem";
+        resources.ApplyResources(dictionariesToolStripMenuItem, "dictionariesToolStripMenuItem");
+        // 
+        // auditReportsToolStripMenuItem
+        // 
+        auditReportsToolStripMenuItem.Name = "auditReportsToolStripMenuItem";
+        resources.ApplyResources(auditReportsToolStripMenuItem, "auditReportsToolStripMenuItem");
+        auditReportsToolStripMenuItem.Click += auditReportsToolStripMenuItem_Click;
+        // 
+        // chargeMasterToolStripMenuItem1
+        // 
+        chargeMasterToolStripMenuItem1.Name = "chargeMasterToolStripMenuItem1";
+        resources.ApplyResources(chargeMasterToolStripMenuItem1, "chargeMasterToolStripMenuItem1");
+        chargeMasterToolStripMenuItem1.Click += chargeMasterToolStripMenuItem1_Click;
+        // 
+        // clientsToolStripMenuItem
+        // 
+        clientsToolStripMenuItem.Name = "clientsToolStripMenuItem";
+        resources.ApplyResources(clientsToolStripMenuItem, "clientsToolStripMenuItem");
+        clientsToolStripMenuItem.Click += clientsToolStripMenuItem_Click;
+        // 
+        // financialClassToolStripMenuItem
+        // 
+        financialClassToolStripMenuItem.Name = "financialClassToolStripMenuItem";
+        resources.ApplyResources(financialClassToolStripMenuItem, "financialClassToolStripMenuItem");
+        // 
+        // iCDDxCodesToolStripMenuItem
+        // 
+        iCDDxCodesToolStripMenuItem.Name = "iCDDxCodesToolStripMenuItem";
+        resources.ApplyResources(iCDDxCodesToolStripMenuItem, "iCDDxCodesToolStripMenuItem");
+        // 
+        // insurancePlansToolStripMenuItem
+        // 
+        insurancePlansToolStripMenuItem.Name = "insurancePlansToolStripMenuItem";
+        resources.ApplyResources(insurancePlansToolStripMenuItem, "insurancePlansToolStripMenuItem");
+        insurancePlansToolStripMenuItem.Click += insurancePlansToolStripMenuItem_Click;
+        // 
+        // physiciansToolStripMenuItem
+        // 
+        physiciansToolStripMenuItem.Name = "physiciansToolStripMenuItem";
+        resources.ApplyResources(physiciansToolStripMenuItem, "physiciansToolStripMenuItem");
+        physiciansToolStripMenuItem.Click += physiciansToolStripMenuItem_Click;
+        // 
+        // pathologistsToolStripMenuItem
+        // 
+        pathologistsToolStripMenuItem.Name = "pathologistsToolStripMenuItem";
+        resources.ApplyResources(pathologistsToolStripMenuItem, "pathologistsToolStripMenuItem");
+        pathologistsToolStripMenuItem.Click += pathologistsToolStripMenuItem_Click;
+        // 
+        // zipCodesToolStripMenuItem
+        // 
+        zipCodesToolStripMenuItem.Name = "zipCodesToolStripMenuItem";
+        resources.ApplyResources(zipCodesToolStripMenuItem, "zipCodesToolStripMenuItem");
+        // 
+        // reportsToolStripMenuItem
+        // 
+        reportsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { codingStatsToolStripMenuItem, monthlyReportsToolStripMenuItem, paymentsToolStripMenuItem, randomDrugScreenToolStripMenuItem, addressRequisitionsToolStripMenuItem, accountingReportsToolStripMenuItem, aBNReportToolStripMenuItem, reportingPortalToolStripMenuItem, reportByInsuranceCompanyToolStripMenuItem });
+        reportsToolStripMenuItem.Name = "reportsToolStripMenuItem";
+        resources.ApplyResources(reportsToolStripMenuItem, "reportsToolStripMenuItem");
+        // 
+        // codingStatsToolStripMenuItem
+        // 
+        codingStatsToolStripMenuItem.Name = "codingStatsToolStripMenuItem";
+        resources.ApplyResources(codingStatsToolStripMenuItem, "codingStatsToolStripMenuItem");
+        // 
+        // monthlyReportsToolStripMenuItem
+        // 
+        monthlyReportsToolStripMenuItem.Name = "monthlyReportsToolStripMenuItem";
+        resources.ApplyResources(monthlyReportsToolStripMenuItem, "monthlyReportsToolStripMenuItem");
+        monthlyReportsToolStripMenuItem.Click += monthlyReportsToolStripMenuItem_Click;
+        // 
+        // paymentsToolStripMenuItem
+        // 
+        paymentsToolStripMenuItem.Name = "paymentsToolStripMenuItem";
+        resources.ApplyResources(paymentsToolStripMenuItem, "paymentsToolStripMenuItem");
+        // 
+        // randomDrugScreenToolStripMenuItem
+        // 
+        randomDrugScreenToolStripMenuItem.Name = "randomDrugScreenToolStripMenuItem";
+        resources.ApplyResources(randomDrugScreenToolStripMenuItem, "randomDrugScreenToolStripMenuItem");
+        // 
+        // addressRequisitionsToolStripMenuItem
+        // 
+        addressRequisitionsToolStripMenuItem.Name = "addressRequisitionsToolStripMenuItem";
+        resources.ApplyResources(addressRequisitionsToolStripMenuItem, "addressRequisitionsToolStripMenuItem");
+        // 
+        // accountingReportsToolStripMenuItem
+        // 
+        accountingReportsToolStripMenuItem.Name = "accountingReportsToolStripMenuItem";
+        resources.ApplyResources(accountingReportsToolStripMenuItem, "accountingReportsToolStripMenuItem");
+        // 
+        // aBNReportToolStripMenuItem
+        // 
+        aBNReportToolStripMenuItem.Name = "aBNReportToolStripMenuItem";
+        resources.ApplyResources(aBNReportToolStripMenuItem, "aBNReportToolStripMenuItem");
+        // 
+        // reportingPortalToolStripMenuItem
+        // 
+        reportingPortalToolStripMenuItem.Name = "reportingPortalToolStripMenuItem";
+        resources.ApplyResources(reportingPortalToolStripMenuItem, "reportingPortalToolStripMenuItem");
+        reportingPortalToolStripMenuItem.Click += reportingPortalToolStripMenuItem_Click;
+        // 
+        // reportByInsuranceCompanyToolStripMenuItem
+        // 
+        reportByInsuranceCompanyToolStripMenuItem.Name = "reportByInsuranceCompanyToolStripMenuItem";
+        resources.ApplyResources(reportByInsuranceCompanyToolStripMenuItem, "reportByInsuranceCompanyToolStripMenuItem");
+        reportByInsuranceCompanyToolStripMenuItem.Click += reportByInsuranceCompanyToolStripMenuItem_Click;
+        // 
+        // systemAdministrationToolStripMenuItem
+        // 
+        systemAdministrationToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { userSecurityToolStripMenuItem, systemParametersToolStripMenuItem, interfaceMappingToolStripMenuItem, interfaceMonitorToolStripMenuItem, systemLogViewerToolStripMenuItem });
+        systemAdministrationToolStripMenuItem.Name = "systemAdministrationToolStripMenuItem";
+        resources.ApplyResources(systemAdministrationToolStripMenuItem, "systemAdministrationToolStripMenuItem");
+        // 
+        // userSecurityToolStripMenuItem
+        // 
+        userSecurityToolStripMenuItem.Name = "userSecurityToolStripMenuItem";
+        resources.ApplyResources(userSecurityToolStripMenuItem, "userSecurityToolStripMenuItem");
+        userSecurityToolStripMenuItem.Click += userSecurityToolStripMenuItem_Click;
+        // 
+        // systemParametersToolStripMenuItem
+        // 
+        systemParametersToolStripMenuItem.Name = "systemParametersToolStripMenuItem";
+        resources.ApplyResources(systemParametersToolStripMenuItem, "systemParametersToolStripMenuItem");
+        systemParametersToolStripMenuItem.Click += systemParametersToolStripMenuItem_Click;
+        // 
+        // interfaceMappingToolStripMenuItem
+        // 
+        interfaceMappingToolStripMenuItem.Name = "interfaceMappingToolStripMenuItem";
+        resources.ApplyResources(interfaceMappingToolStripMenuItem, "interfaceMappingToolStripMenuItem");
+        interfaceMappingToolStripMenuItem.Click += interfaceMappingToolStripMenuItem_Click;
+        // 
+        // interfaceMonitorToolStripMenuItem
+        // 
+        interfaceMonitorToolStripMenuItem.Name = "interfaceMonitorToolStripMenuItem";
+        resources.ApplyResources(interfaceMonitorToolStripMenuItem, "interfaceMonitorToolStripMenuItem");
+        interfaceMonitorToolStripMenuItem.Click += interfaceMonitorToolStripMenuItem_Click;
+        // 
+        // systemLogViewerToolStripMenuItem
+        // 
+        systemLogViewerToolStripMenuItem.Name = "systemLogViewerToolStripMenuItem";
+        resources.ApplyResources(systemLogViewerToolStripMenuItem, "systemLogViewerToolStripMenuItem");
+        systemLogViewerToolStripMenuItem.Click += systemLogViewerToolStripMenuItem_Click;
+        // 
+        // windowToolStripMenuItem
+        // 
+        windowToolStripMenuItem.Name = "windowToolStripMenuItem";
+        resources.ApplyResources(windowToolStripMenuItem, "windowToolStripMenuItem");
+        // 
+        // helpToolStripMenuItem
+        // 
+        helpToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { documentationToolStripMenuItem, latestUpdatesToolStripMenuItem, aboutToolStripMenuItem, exitToolStripMenuItem });
+        helpToolStripMenuItem.Name = "helpToolStripMenuItem";
+        resources.ApplyResources(helpToolStripMenuItem, "helpToolStripMenuItem");
+        // 
+        // documentationToolStripMenuItem
+        // 
+        documentationToolStripMenuItem.Name = "documentationToolStripMenuItem";
+        resources.ApplyResources(documentationToolStripMenuItem, "documentationToolStripMenuItem");
+        documentationToolStripMenuItem.Click += documentationToolStripMenuItem_Click;
+        // 
+        // latestUpdatesToolStripMenuItem
+        // 
+        latestUpdatesToolStripMenuItem.Name = "latestUpdatesToolStripMenuItem";
+        resources.ApplyResources(latestUpdatesToolStripMenuItem, "latestUpdatesToolStripMenuItem");
+        latestUpdatesToolStripMenuItem.Click += latestUpdatesToolStripMenuItem_Click;
+        // 
+        // aboutToolStripMenuItem
+        // 
+        aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
+        resources.ApplyResources(aboutToolStripMenuItem, "aboutToolStripMenuItem");
+        aboutToolStripMenuItem.Click += aboutToolStripMenuItem_Click;
+        // 
+        // exitToolStripMenuItem
+        // 
+        exitToolStripMenuItem.Name = "exitToolStripMenuItem";
+        resources.ApplyResources(exitToolStripMenuItem, "exitToolStripMenuItem");
+        exitToolStripMenuItem.Click += exitToolStripMenuItem_Click;
+        // 
+        // statusStrip1
+        // 
+        statusStrip1.Items.AddRange(new ToolStripItem[] { toolStripUsernameLabel, toolStripDatabaseLabel });
+        resources.ApplyResources(statusStrip1, "statusStrip1");
+        statusStrip1.Name = "statusStrip1";
+        // 
+        // toolStripUsernameLabel
+        // 
+        toolStripUsernameLabel.BorderSides = ToolStripStatusLabelBorderSides.Left | ToolStripStatusLabelBorderSides.Top | ToolStripStatusLabelBorderSides.Right | ToolStripStatusLabelBorderSides.Bottom;
+        toolStripUsernameLabel.BorderStyle = Border3DStyle.Sunken;
+        toolStripUsernameLabel.Name = "toolStripUsernameLabel";
+        resources.ApplyResources(toolStripUsernameLabel, "toolStripUsernameLabel");
+        // 
+        // toolStripDatabaseLabel
+        // 
+        toolStripDatabaseLabel.BorderSides = ToolStripStatusLabelBorderSides.Left | ToolStripStatusLabelBorderSides.Top | ToolStripStatusLabelBorderSides.Right | ToolStripStatusLabelBorderSides.Bottom;
+        toolStripDatabaseLabel.BorderStyle = Border3DStyle.Sunken;
+        toolStripDatabaseLabel.Name = "toolStripDatabaseLabel";
+        resources.ApplyResources(toolStripDatabaseLabel, "toolStripDatabaseLabel");
+        // 
+        // panel1
+        // 
+        resources.ApplyResources(panel1, "panel1");
+        panel1.Name = "panel1";
+        // 
+        // mdiTabControl
+        // 
+        // 
+        // 
+        // 
+        mdiTabControl.DisplayStyleProvider.BorderColor = SystemColors.ControlDark;
+        mdiTabControl.DisplayStyleProvider.BorderColorHot = SystemColors.ControlDark;
+        mdiTabControl.DisplayStyleProvider.BorderColorSelected = Color.FromArgb(127, 157, 185);
+        mdiTabControl.DisplayStyleProvider.CloserColor = Color.DarkGray;
+        mdiTabControl.DisplayStyleProvider.CloserColorActive = Color.Red;
+        mdiTabControl.DisplayStyleProvider.FocusTrack = false;
+        mdiTabControl.DisplayStyleProvider.HotTrack = true;
+        mdiTabControl.DisplayStyleProvider.ImageAlign = ContentAlignment.MiddleLeft;
+        mdiTabControl.DisplayStyleProvider.Opacity = 1F;
+        mdiTabControl.DisplayStyleProvider.Overlap = 0;
+        mdiTabControl.DisplayStyleProvider.Padding = new Point(6, 5);
+        mdiTabControl.DisplayStyleProvider.Radius = 3;
+        mdiTabControl.DisplayStyleProvider.SelectedTextStyle = FontStyle.Regular;
+        mdiTabControl.DisplayStyleProvider.ShowTabCloser = true;
+        mdiTabControl.DisplayStyleProvider.TextColor = SystemColors.ControlText;
+        mdiTabControl.DisplayStyleProvider.TextColorDisabled = SystemColors.ControlDark;
+        mdiTabControl.DisplayStyleProvider.TextColorSelected = SystemColors.ControlText;
+        resources.ApplyResources(mdiTabControl, "mdiTabControl");
+        mdiTabControl.HotTrack = true;
+        mdiTabControl.Multiline = true;
+        mdiTabControl.Name = "mdiTabControl";
+        mdiTabControl.SelectedIndex = 0;
+        mdiTabControl.SelectedIndexChanged += mdiTabControl_SelectedIndexChanged;
+        // 
+        // MainForm
+        // 
+        resources.ApplyResources(this, "$this");
+        AutoScaleMode = AutoScaleMode.Font;
+        BackColor = Color.White;
+        Controls.Add(mdiTabControl);
+        Controls.Add(panel1);
+        Controls.Add(statusStrip1);
+        Controls.Add(MainFormMenu);
+        IsMdiContainer = true;
+        KeyPreview = true;
+        MainMenuStrip = MainFormMenu;
+        Name = "MainForm";
+        WindowState = FormWindowState.Maximized;
+        FormClosing += MainForm_FormClosing;
+        Load += MainForm_Load;
+        MdiChildActivate += MainForm_MdiChildActivate;
+        KeyDown += MainForm_KeyDown;
+        MainFormMenu.ResumeLayout(false);
+        MainFormMenu.PerformLayout();
+        statusStrip1.ResumeLayout(false);
+        statusStrip1.PerformLayout();
+        ResumeLayout(false);
+        PerformLayout();
+    }
+
+    #endregion
+
+    private System.Windows.Forms.MenuStrip MainFormMenu;
+    private System.Windows.Forms.ToolStripMenuItem billingToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem accountToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem accountChargeEntryToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem batchRemittanceToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem dictionariesToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem clientsToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem financialClassToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem iCDDxCodesToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem insurancePlansToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem physiciansToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem pathologistsToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem zipCodesToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem reportsToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem codingStatsToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem monthlyReportsToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem paymentsToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem randomDrugScreenToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem addressRequisitionsToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem accountingReportsToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem aBNReportToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem reportingPortalToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem systemAdministrationToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem userSecurityToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem systemParametersToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem badDebtMaintenanceToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem duplicateAccountsToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem reportByInsuranceCompanyToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem posting835RemitToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem interfaceMappingToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem clientBillsNewToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem interfaceMonitorToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem worklistToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem remittancePostingToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem chargeMasterToolStripMenuItem1;
+    private System.Windows.Forms.StatusStrip statusStrip1;
+    private System.Windows.Forms.ToolStripStatusLabel toolStripUsernameLabel;
+    private System.Windows.Forms.ToolStripStatusLabel toolStripDatabaseLabel;
+    private System.Windows.Forms.ToolStripMenuItem systemLogViewerToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem claimBatchManagementToolStripMenuItem;
+    private System.Windows.Forms.Panel panel1;
+    private System.Windows.Forms.ToolStripMenuItem batchChargeEntryToolStripMenuItem;
+    private System.Windows.Forms.HelpProvider helpProvider1;
+    private System.Windows.Forms.ToolStripMenuItem documentationToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem latestUpdatesToolStripMenuItem;
+    private System.Windows.Forms.CustomTabControl mdiTabControl;
+    private System.Windows.Forms.ToolStripMenuItem windowToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem auditReportsToolStripMenuItem;
 }

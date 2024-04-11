@@ -35,6 +35,9 @@ namespace LabBilling.Core.Models
         [Column("mri")]
         [ResultColumn]
         public string MRN { get; set; }
+        [Column("HNE_NUMBER")]
+        [ResultColumn]
+        public string EMPINumber { get; set; }
         [Column("trans_date")]
         [ResultColumn]
         public DateTime? ServiceDate { get; set; }
@@ -83,13 +86,13 @@ namespace LabBilling.Core.Models
         public double TotalPayments { get; set; }
         
         [Ignore]
-        public DateTime mod_date { get; set; }
+        public DateTime UpdatedDate { get; set; }
         [Ignore]
-        public string mod_user { get; set; }
+        public string UpdatedUser { get; set; }
         [Ignore]
-        public string mod_prg { get; set; }
+        public string UpdatedApp { get; set; }
         [Ignore]
-        public string mod_host { get; set; }
+        public string UpdatedHost { get; set; }
         [Ignore]
         public Guid rowguid { get; set; }
 

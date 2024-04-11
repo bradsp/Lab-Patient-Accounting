@@ -30,7 +30,7 @@ namespace LabBilling.Forms
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
+            components = new System.ComponentModel.Container();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
@@ -46,3015 +46,2173 @@ namespace LabBilling.Forms
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle13 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle14 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle15 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle16 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle17 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle18 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle19 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle20 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle21 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle22 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle23 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle24 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AccountForm));
-            this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.summaryTab = new System.Windows.Forms.TabPage();
-            this.summaryTable = new System.Windows.Forms.TableLayoutPanel();
-            this.tabDemographics = new System.Windows.Forms.TabPage();
-            this.DemoStatusMessagesTextBox = new System.Windows.Forms.TextBox();
-            this.SuffixTextBox = new System.Windows.Forms.TextBox();
-            this.SaveDemographics = new System.Windows.Forms.Button();
-            this.PatSuffixLabel = new System.Windows.Forms.Label();
-            this.orderingProviderLabel = new System.Windows.Forms.Label();
-            this.PatDOBLabel = new System.Windows.Forms.Label();
-            this.SocSecNoTextBox = new System.Windows.Forms.MaskedTextBox();
-            this.PatSSNLabel = new System.Windows.Forms.Label();
-            this.PatMaritalStatusLabel = new System.Windows.Forms.Label();
-            this.PatSexLabel = new System.Windows.Forms.Label();
-            this.EmailAddressTextBox = new System.Windows.Forms.TextBox();
-            this.PatEmailLabel = new System.Windows.Forms.Label();
-            this.PhoneTextBox = new System.Windows.Forms.TextBox();
-            this.PatPhoneLabel = new System.Windows.Forms.Label();
-            this.ZipcodeTextBox = new System.Windows.Forms.MaskedTextBox();
-            this.PatZipLabel = new System.Windows.Forms.Label();
-            this.PatStateLabel = new System.Windows.Forms.Label();
-            this.CityTextBox = new System.Windows.Forms.TextBox();
-            this.PatCityLabel = new System.Windows.Forms.Label();
-            this.Address1TextBox = new System.Windows.Forms.TextBox();
-            this.Address2TextBox = new System.Windows.Forms.TextBox();
-            this.PatAddressLabel = new System.Windows.Forms.Label();
-            this.LastNameTextBox = new System.Windows.Forms.TextBox();
-            this.PatientFullNameLabel = new System.Windows.Forms.Label();
-            this.MiddleNameTextBox = new System.Windows.Forms.TextBox();
-            this.PatMiddleNameLabel = new System.Windows.Forms.Label();
-            this.FirstNameTextBox = new System.Windows.Forms.TextBox();
-            this.PatFirstNameLabel = new System.Windows.Forms.Label();
-            this.PatLastNameLabel = new System.Windows.Forms.Label();
-            this.tabGuarantor = new System.Windows.Forms.TabPage();
-            this.GuarantorSaveButton = new System.Windows.Forms.Button();
-            this.PatRelationLabel = new System.Windows.Forms.Label();
-            this.GuarFirstNameLabel = new System.Windows.Forms.Label();
-            this.GuarFirstNameTextBox = new System.Windows.Forms.TextBox();
-            this.GuarSuffixLabel = new System.Windows.Forms.Label();
-            this.GuarSuffixTextBox = new System.Windows.Forms.TextBox();
-            this.GuarLastNameLabel = new System.Windows.Forms.Label();
-            this.GuarantorLastNameTextBox = new System.Windows.Forms.TextBox();
-            this.GuarCopyPatientLink = new System.Windows.Forms.LinkLabel();
-            this.GuarMiddleNameLabel = new System.Windows.Forms.Label();
-            this.GuarMiddleNameTextBox = new System.Windows.Forms.TextBox();
-            this.GuarAddressLabel = new System.Windows.Forms.Label();
-            this.GuarantorAddressTextBox = new System.Windows.Forms.TextBox();
-            this.GuarCityLabel = new System.Windows.Forms.Label();
-            this.GuarCityTextBox = new System.Windows.Forms.TextBox();
-            this.GuarStateLabel = new System.Windows.Forms.Label();
-            this.GuarZipCodeLabel = new System.Windows.Forms.Label();
-            this.GuarZipTextBox = new System.Windows.Forms.MaskedTextBox();
-            this.GuarPhoneLabel = new System.Windows.Forms.Label();
-            this.GuarantorPhoneTextBox = new System.Windows.Forms.TextBox();
-            this.tabInsurance = new System.Windows.Forms.TabPage();
-            this.insTabLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
-            this.HolderLastNameLabel = new System.Windows.Forms.Label();
-            this.InsuranceDataGrid = new System.Windows.Forms.DataGridView();
-            this.SaveInsuranceButton = new System.Windows.Forms.Button();
-            this.InsCopyPatientLink = new System.Windows.Forms.LinkLabel();
-            this.InsPlanFinCodeLabel = new System.Windows.Forms.Label();
-            this.CertSSNTextBox = new System.Windows.Forms.TextBox();
-            this.HolderLastNameTextBox = new System.Windows.Forms.TextBox();
-            this.InsCertSSNLabel = new System.Windows.Forms.Label();
-            this.GroupNameTextBox = new System.Windows.Forms.TextBox();
-            this.InsGroupNameLabel = new System.Windows.Forms.Label();
-            this.HolderFirstNameLabel = new System.Windows.Forms.Label();
-            this.HolderZipTextBox = new System.Windows.Forms.TextBox();
-            this.GroupNumberTextBox = new System.Windows.Forms.TextBox();
-            this.HolderZipCodeLabel = new System.Windows.Forms.Label();
-            this.InsGroupNumberLabel = new System.Windows.Forms.Label();
-            this.PlanAddress2TextBox = new System.Windows.Forms.TextBox();
-            this.HolderRelationLabel = new System.Windows.Forms.Label();
-            this.PolicyNumberTextBox = new System.Windows.Forms.TextBox();
-            this.HolderStateLabel = new System.Windows.Forms.Label();
-            this.HolderDOBTextBox = new System.Windows.Forms.MaskedTextBox();
-            this.InsPolicyNumberLabel = new System.Windows.Forms.Label();
-            this.HolderDOBLabel = new System.Windows.Forms.Label();
-            this.HolderFirstNameTextBox = new System.Windows.Forms.TextBox();
-            this.InsPlanLabel = new System.Windows.Forms.Label();
-            this.InsuranceOrderLabel = new System.Windows.Forms.Label();
-            this.HolderMiddleNameLabel = new System.Windows.Forms.Label();
-            this.HolderSexLabel = new System.Windows.Forms.Label();
-            this.HolderMiddleNameTextBox = new System.Windows.Forms.TextBox();
-            this.InsPlanNameLabel = new System.Windows.Forms.Label();
-            this.PlanNameTextBox = new System.Windows.Forms.TextBox();
-            this.HolderAddressLabel = new System.Windows.Forms.Label();
-            this.HolderAddressTextBox = new System.Windows.Forms.TextBox();
-            this.PlanCityStTextBox = new System.Windows.Forms.TextBox();
-            this.InsPlanAddressLabel = new System.Windows.Forms.Label();
-            this.InsPlanCityStateZipLabel = new System.Windows.Forms.Label();
-            this.PlanAddressTextBox = new System.Windows.Forms.TextBox();
-            this.HolderCityTextBox = new System.Windows.Forms.TextBox();
-            this.HolderCityLabel = new System.Windows.Forms.Label();
-            this.InsUserInstructionsLabel = new System.Windows.Forms.Label();
-            this.AddInsuranceButton = new System.Windows.Forms.Button();
-            this.InsTabMessageTextBox = new System.Windows.Forms.TextBox();
-            this.insurancePlanTextBox = new System.Windows.Forms.TextBox();
-            this.tabDiagnosis = new System.Windows.Forms.TabPage();
-            this.dxPointerGrid2 = new System.Windows.Forms.DataGridView();
-            this.DxDeleteButton = new System.Windows.Forms.PictureBox();
-            this.SaveDxButton = new System.Windows.Forms.Button();
-            this.QuickAddLabel = new System.Windows.Forms.Label();
-            this.DxQuickAddTextBox = new System.Windows.Forms.TextBox();
-            this.txtSearchDx = new System.Windows.Forms.TextBox();
-            this.label4 = new System.Windows.Forms.Label();
-            this.DxSearchLabel = new System.Windows.Forms.Label();
-            this.DxSearchDataGrid = new System.Windows.Forms.DataGridView();
-            this.SelectedDxLabel = new System.Windows.Forms.Label();
-            this.DiagnosisDataGrid = new System.Windows.Forms.DataGridView();
-            this.DxSearchButton = new System.Windows.Forms.PictureBox();
-            this.tabCharges = new System.Windows.Forms.TabPage();
-            this.showAllChargeRadioButton = new System.Windows.Forms.RadioButton();
-            this.showClientRadioButton = new System.Windows.Forms.RadioButton();
-            this.show3rdPartyRadioButton = new System.Windows.Forms.RadioButton();
-            this.chargeLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
-            this.ChargesDataGridLabel = new System.Windows.Forms.Label();
-            this.ChargesDataGrid = new System.Windows.Forms.DataGridView();
-            this.menuCharges = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.toolStripCreditCharge = new System.Windows.Forms.ToolStripMenuItem();
-            this.moveChargeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.changeCreditFlagToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.ChargeDetailGridLabel = new System.Windows.Forms.Label();
-            this.ChrgDetailDataGrid = new System.Windows.Forms.DataGridView();
-            this.chargeDetailsContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.addModifierToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.removeModifierToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.AddChargeButton = new System.Windows.Forms.Button();
-            this.chargeBalRichTextbox = new System.Windows.Forms.RichTextBox();
-            this.TotalChargesTextBox = new System.Windows.Forms.TextBox();
-            this.ChargeTotalChargesLabel = new System.Windows.Forms.Label();
-            this.ShowCreditedChrgCheckBox = new System.Windows.Forms.CheckBox();
-            this.tabPayments = new System.Windows.Forms.TabPage();
-            this.AddPaymentButton = new System.Windows.Forms.Button();
-            this.PmtTotalPmtAdjLabel = new System.Windows.Forms.Label();
-            this.TotalPmtAllTextBox = new System.Windows.Forms.TextBox();
-            this.PmtTotalWriteOffLabel = new System.Windows.Forms.Label();
-            this.TotalWriteOffTextBox = new System.Windows.Forms.TextBox();
-            this.PmtTotalContractualLabel = new System.Windows.Forms.Label();
-            this.TotalContractualTextBox = new System.Windows.Forms.TextBox();
-            this.PmtTotalPaymentLabel = new System.Windows.Forms.Label();
-            this.TotalPaymentTextBox = new System.Windows.Forms.TextBox();
-            this.PaymentsDataGrid = new System.Windows.Forms.DataGridView();
-            this.tabNotes = new System.Windows.Forms.TabPage();
-            this.noteAlertCheckBox = new System.Windows.Forms.CheckBox();
-            this.AddNoteButton = new System.Windows.Forms.Button();
-            this.NotesDisplayTextBox = new System.Windows.Forms.RichTextBox();
-            this.noteTextContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.copyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.tabBillingActivity = new System.Windows.Forms.TabPage();
-            this.label5 = new System.Windows.Forms.Label();
-            this.statementHistoryDataGrid = new System.Windows.Forms.DataGridView();
-            this.clearClaimStatusButton = new MetroFramework.Controls.MetroButton();
-            this.readyToBillCheckbox = new System.Windows.Forms.CheckBox();
-            this.statementFlagComboBox = new System.Windows.Forms.ComboBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
-            this.lastStmtDateTextBox = new System.Windows.Forms.TextBox();
-            this.firstStmtDateTextBox = new System.Windows.Forms.TextBox();
-            this.statementFlagLabel = new System.Windows.Forms.Label();
-            this.GenerateClaimButton = new MetroFramework.Controls.MetroButton();
-            this.LastValidatedLabel = new MetroFramework.Controls.MetroLabel();
-            this.BillingLastValidatedLabel = new MetroFramework.Controls.MetroLabel();
-            this.ValidationResultsTextBox = new MetroFramework.Controls.MetroTextBox();
-            this.ValidateAccountButton = new MetroFramework.Controls.MetroButton();
-            this.BillActivityDataGrid = new System.Windows.Forms.DataGridView();
-            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
-            this.accountToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.changeDateOfServiceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.changeFinancialClassToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.changeClientToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.viewAuditInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.clearHoldStatusToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.swapInsurancesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.moveAllChargesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.generateClientStatementToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.printEOBToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.personSearchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.BannerMRNTextBox = new System.Windows.Forms.TextBox();
-            this.BannerAccountTextBox = new System.Windows.Forms.TextBox();
-            this.BannerSexTextBox = new System.Windows.Forms.TextBox();
-            this.BannerDobTextBox = new System.Windows.Forms.TextBox();
-            this.BannerNameTextBox = new System.Windows.Forms.TextBox();
-            this.BannerDOBSexLabel = new System.Windows.Forms.Label();
-            this.BannerAccountMrnLabel = new System.Windows.Forms.Label();
-            this.BannerClientTextBox = new System.Windows.Forms.TextBox();
-            this.BannerFinClassTextBox = new System.Windows.Forms.TextBox();
-            this.BannerFinClassLabel = new System.Windows.Forms.Label();
-            this.BannerTotalPmtLabel = new System.Windows.Forms.Label();
-            this.BannerTotalChargesLabel = new System.Windows.Forms.Label();
-            this.BannerAccBalanceLabel = new System.Windows.Forms.Label();
-            this.TotalPmtAdjLabel = new System.Windows.Forms.Label();
-            this.BalanceLabel = new System.Windows.Forms.Label();
-            this.TotalChargesLabel = new System.Windows.Forms.Label();
-            this.BannerBillStatusLabel = new System.Windows.Forms.Label();
-            this.BannerBillStatusTextBox = new System.Windows.Forms.TextBox();
-            this.BannerProviderTextBox = new System.Windows.Forms.TextBox();
-            this.RefreshButton = new System.Windows.Forms.PictureBox();
-            this.bannerDateOfServiceTextBox = new System.Windows.Forms.TextBox();
-            this.bannerDateOfServiceLabel = new System.Windows.Forms.Label();
-            this.dxPointerMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.clearDxPointerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.bannerAlertLabel = new System.Windows.Forms.Label();
-            this.BannerThirdPartyBalLabel = new System.Windows.Forms.Label();
-            this.ThirdPartyBalLabel = new System.Windows.Forms.Label();
-            this.BannerClientBalLabel = new System.Windows.Forms.Label();
-            this.ClientBalLabel = new System.Windows.Forms.Label();
-            this.DateOfBirthTextBox = new LabBilling.UserControls.DateTextBox();
-            this.providerLookup1 = new LabBilling.Library.ProviderLookup();
-            this.MaritalStatusComboBox = new LabBilling.Library.FlatCombo();
-            this.SexComboBox = new LabBilling.Library.FlatCombo();
-            this.StateComboBox = new LabBilling.Library.FlatCombo();
-            this.GuarantorRelationComboBox = new LabBilling.Library.FlatCombo();
-            this.GuarStateComboBox = new LabBilling.Library.FlatCombo();
-            this.PlanFinCodeComboBox = new LabBilling.Library.FlatCombo();
-            this.InsRelationComboBox = new LabBilling.Library.FlatCombo();
-            this.HolderStateComboBox = new LabBilling.Library.FlatCombo();
-            this.InsOrderComboBox = new LabBilling.Library.FlatCombo();
-            this.HolderSexComboBox = new LabBilling.Library.FlatCombo();
-            this.minPmtTextBox = new LabBilling.UserControls.CurrencyTextBox();
-            this.tabControl1.SuspendLayout();
-            this.summaryTab.SuspendLayout();
-            this.tabDemographics.SuspendLayout();
-            this.tabGuarantor.SuspendLayout();
-            this.tabInsurance.SuspendLayout();
-            this.insTabLayoutPanel.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.InsuranceDataGrid)).BeginInit();
-            this.tabDiagnosis.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dxPointerGrid2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.DxDeleteButton)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.DxSearchDataGrid)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.DiagnosisDataGrid)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.DxSearchButton)).BeginInit();
-            this.tabCharges.SuspendLayout();
-            this.chargeLayoutPanel.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.ChargesDataGrid)).BeginInit();
-            this.menuCharges.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.ChrgDetailDataGrid)).BeginInit();
-            this.chargeDetailsContextMenu.SuspendLayout();
-            this.tabPayments.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.PaymentsDataGrid)).BeginInit();
-            this.tabNotes.SuspendLayout();
-            this.noteTextContextMenu.SuspendLayout();
-            this.tabBillingActivity.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.statementHistoryDataGrid)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.BillActivityDataGrid)).BeginInit();
-            this.menuStrip1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.RefreshButton)).BeginInit();
-            this.dxPointerMenuStrip.SuspendLayout();
-            this.SuspendLayout();
+            tabControl1 = new System.Windows.Forms.TabControl();
+            summaryTab = new System.Windows.Forms.TabPage();
+            summaryTable = new System.Windows.Forms.TableLayoutPanel();
+            tabDemographics = new System.Windows.Forms.TabPage();
+            demographicsLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
+            DemoStatusMessagesTextBox = new System.Windows.Forms.TextBox();
+            GuarZipTextBox = new System.Windows.Forms.MaskedTextBox();
+            GuarZipCodeLabel = new System.Windows.Forms.Label();
+            GuarStateLabel = new System.Windows.Forms.Label();
+            GuarStateComboBox = new Library.FlatCombo();
+            GuarCityTextBox = new System.Windows.Forms.TextBox();
+            GuarCityLabel = new System.Windows.Forms.Label();
+            GuarantorAddressTextBox = new System.Windows.Forms.TextBox();
+            GuarAddressLabel = new System.Windows.Forms.Label();
+            SaveDemographics = new System.Windows.Forms.Button();
+            DateOfBirthTextBox = new UserControls.DateTextBox();
+            PatLastNameLabel = new System.Windows.Forms.Label();
+            orderingProviderLabel = new System.Windows.Forms.Label();
+            PatFirstNameLabel = new System.Windows.Forms.Label();
+            SocSecNoTextBox = new System.Windows.Forms.MaskedTextBox();
+            FirstNameTextBox = new System.Windows.Forms.TextBox();
+            PatSSNLabel = new System.Windows.Forms.Label();
+            PatMiddleNameLabel = new System.Windows.Forms.Label();
+            MaritalStatusComboBox = new Library.FlatCombo();
+            PatMaritalStatusLabel = new System.Windows.Forms.Label();
+            PatDOBLabel = new System.Windows.Forms.Label();
+            MiddleNameTextBox = new System.Windows.Forms.TextBox();
+            PatSexLabel = new System.Windows.Forms.Label();
+            SexComboBox = new Library.FlatCombo();
+            PatPhoneLabel = new System.Windows.Forms.Label();
+            PhoneTextBox = new System.Windows.Forms.TextBox();
+            PatZipLabel = new System.Windows.Forms.Label();
+            ZipcodeTextBox = new System.Windows.Forms.MaskedTextBox();
+            PatStateLabel = new System.Windows.Forms.Label();
+            StateComboBox = new Library.FlatCombo();
+            PatCityLabel = new System.Windows.Forms.Label();
+            CityTextBox = new System.Windows.Forms.TextBox();
+            Address2TextBox = new System.Windows.Forms.TextBox();
+            Address1TextBox = new System.Windows.Forms.TextBox();
+            PatAddressLabel = new System.Windows.Forms.Label();
+            PatSuffixLabel = new System.Windows.Forms.Label();
+            SuffixTextBox = new System.Windows.Forms.TextBox();
+            PatEmailLabel = new System.Windows.Forms.Label();
+            EmailAddressTextBox = new System.Windows.Forms.TextBox();
+            label6 = new System.Windows.Forms.Label();
+            label7 = new System.Windows.Forms.Label();
+            PatRelationLabel = new System.Windows.Forms.Label();
+            GuarantorRelationComboBox = new Library.FlatCombo();
+            GuarCopyPatientLink = new System.Windows.Forms.LinkLabel();
+            GuarLastNameLabel = new System.Windows.Forms.Label();
+            GuarantorLastNameTextBox = new System.Windows.Forms.TextBox();
+            GuarFirstNameLabel = new System.Windows.Forms.Label();
+            GuarFirstNameTextBox = new System.Windows.Forms.TextBox();
+            GuarMiddleNameLabel = new System.Windows.Forms.Label();
+            GuarMiddleNameTextBox = new System.Windows.Forms.TextBox();
+            GuarSuffixLabel = new System.Windows.Forms.Label();
+            GuarSuffixTextBox = new System.Windows.Forms.TextBox();
+            GuarPhoneLabel = new System.Windows.Forms.Label();
+            GuarantorPhoneTextBox = new System.Windows.Forms.TextBox();
+            LastNameTextBox = new System.Windows.Forms.TextBox();
+            orderingPhyTextBox = new System.Windows.Forms.TextBox();
+            tabDiagnosis = new System.Windows.Forms.TabPage();
+            dxPointerGrid2 = new System.Windows.Forms.DataGridView();
+            DxDeleteButton = new System.Windows.Forms.PictureBox();
+            SaveDxButton = new System.Windows.Forms.Button();
+            QuickAddLabel = new System.Windows.Forms.Label();
+            DxQuickAddTextBox = new System.Windows.Forms.TextBox();
+            txtSearchDx = new System.Windows.Forms.TextBox();
+            label4 = new System.Windows.Forms.Label();
+            DxSearchLabel = new System.Windows.Forms.Label();
+            DxSearchDataGrid = new System.Windows.Forms.DataGridView();
+            SelectedDxLabel = new System.Windows.Forms.Label();
+            DiagnosisDataGrid = new System.Windows.Forms.DataGridView();
+            DxSearchButton = new System.Windows.Forms.PictureBox();
+            tabInsPrimary = new System.Windows.Forms.TabPage();
+            tabInsSecondary = new System.Windows.Forms.TabPage();
+            tabInsTertiary = new System.Windows.Forms.TabPage();
+            tabCharges = new System.Windows.Forms.TabPage();
+            tabPayments = new System.Windows.Forms.TabPage();
+            AddPaymentButton = new System.Windows.Forms.Button();
+            PmtTotalPmtAdjLabel = new System.Windows.Forms.Label();
+            TotalPmtAllTextBox = new System.Windows.Forms.TextBox();
+            PmtTotalWriteOffLabel = new System.Windows.Forms.Label();
+            TotalWriteOffTextBox = new System.Windows.Forms.TextBox();
+            PmtTotalContractualLabel = new System.Windows.Forms.Label();
+            TotalContractualTextBox = new System.Windows.Forms.TextBox();
+            PmtTotalPaymentLabel = new System.Windows.Forms.Label();
+            TotalPaymentTextBox = new System.Windows.Forms.TextBox();
+            PaymentsDataGrid = new System.Windows.Forms.DataGridView();
+            tabNotes = new System.Windows.Forms.TabPage();
+            notesDataGridView = new UserControls.LabDataGridView();
+            noteAlertCheckBox = new System.Windows.Forms.CheckBox();
+            AddNoteButton = new System.Windows.Forms.Button();
+            tabBillingActivity = new System.Windows.Forms.TabPage();
+            label5 = new System.Windows.Forms.Label();
+            statementHistoryDataGrid = new System.Windows.Forms.DataGridView();
+            clearClaimStatusButton = new System.Windows.Forms.Button();
+            readyToBillCheckbox = new System.Windows.Forms.CheckBox();
+            statementFlagComboBox = new System.Windows.Forms.ComboBox();
+            label3 = new System.Windows.Forms.Label();
+            label2 = new System.Windows.Forms.Label();
+            label1 = new System.Windows.Forms.Label();
+            lastStmtDateTextBox = new System.Windows.Forms.TextBox();
+            firstStmtDateTextBox = new System.Windows.Forms.TextBox();
+            statementFlagLabel = new System.Windows.Forms.Label();
+            GenerateClaimButton = new System.Windows.Forms.Button();
+            LastValidatedLabel = new System.Windows.Forms.Label();
+            BillingLastValidatedLabel = new System.Windows.Forms.Label();
+            ValidationResultsTextBox = new System.Windows.Forms.TextBox();
+            ValidateAccountButton = new System.Windows.Forms.Button();
+            BillActivityDataGrid = new System.Windows.Forms.DataGridView();
+            minPmtTextBox = new UserControls.CurrencyTextBox();
+            noteTextContextMenu = new System.Windows.Forms.ContextMenuStrip(components);
+            copyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            menuStrip1 = new System.Windows.Forms.MenuStrip();
+            accountToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            changeDateOfServiceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            changeFinancialClassToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            changeClientToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            viewAuditInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            clearHoldStatusToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            swapInsurancesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            moveAllChargesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            printEOBToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            BannerMRNTextBox = new System.Windows.Forms.TextBox();
+            BannerAccountTextBox = new System.Windows.Forms.TextBox();
+            BannerSexTextBox = new System.Windows.Forms.TextBox();
+            BannerDobTextBox = new System.Windows.Forms.TextBox();
+            BannerNameTextBox = new System.Windows.Forms.TextBox();
+            BannerDOBSexLabel = new System.Windows.Forms.Label();
+            BannerAccountMrnLabel = new System.Windows.Forms.Label();
+            BannerClientTextBox = new System.Windows.Forms.TextBox();
+            BannerFinClassTextBox = new System.Windows.Forms.TextBox();
+            BannerFinClassLabel = new System.Windows.Forms.Label();
+            BannerTotalPmtLabel = new System.Windows.Forms.Label();
+            BannerTotalChargesLabel = new System.Windows.Forms.Label();
+            BannerAccBalanceLabel = new System.Windows.Forms.Label();
+            TotalPmtAdjLabel = new System.Windows.Forms.Label();
+            BalanceLabel = new System.Windows.Forms.Label();
+            TotalChargesLabel = new System.Windows.Forms.Label();
+            BannerBillStatusLabel = new System.Windows.Forms.Label();
+            BannerBillStatusTextBox = new System.Windows.Forms.TextBox();
+            BannerProviderTextBox = new System.Windows.Forms.TextBox();
+            RefreshButton = new System.Windows.Forms.PictureBox();
+            bannerDateOfServiceTextBox = new System.Windows.Forms.TextBox();
+            bannerDateOfServiceLabel = new System.Windows.Forms.Label();
+            dxPointerMenuStrip = new System.Windows.Forms.ContextMenuStrip(components);
+            clearDxPointerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            bannerAlertLabel = new System.Windows.Forms.Label();
+            BannerThirdPartyBalLabel = new System.Windows.Forms.Label();
+            ThirdPartyBalLabel = new System.Windows.Forms.Label();
+            BannerClientBalLabel = new System.Windows.Forms.Label();
+            ClientBalLabel = new System.Windows.Forms.Label();
+            bannerPanel = new System.Windows.Forms.Panel();
+            tabControl1.SuspendLayout();
+            summaryTab.SuspendLayout();
+            tabDemographics.SuspendLayout();
+            demographicsLayoutPanel.SuspendLayout();
+            tabDiagnosis.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)dxPointerGrid2).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)DxDeleteButton).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)DxSearchDataGrid).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)DiagnosisDataGrid).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)DxSearchButton).BeginInit();
+            tabPayments.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)PaymentsDataGrid).BeginInit();
+            tabNotes.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)notesDataGridView).BeginInit();
+            tabBillingActivity.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)statementHistoryDataGrid).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)BillActivityDataGrid).BeginInit();
+            noteTextContextMenu.SuspendLayout();
+            menuStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)RefreshButton).BeginInit();
+            dxPointerMenuStrip.SuspendLayout();
+            bannerPanel.SuspendLayout();
+            SuspendLayout();
             // 
             // tabControl1
             // 
-            this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.tabControl1.Controls.Add(this.summaryTab);
-            this.tabControl1.Controls.Add(this.tabDemographics);
-            this.tabControl1.Controls.Add(this.tabGuarantor);
-            this.tabControl1.Controls.Add(this.tabInsurance);
-            this.tabControl1.Controls.Add(this.tabDiagnosis);
-            this.tabControl1.Controls.Add(this.tabCharges);
-            this.tabControl1.Controls.Add(this.tabPayments);
-            this.tabControl1.Controls.Add(this.tabNotes);
-            this.tabControl1.Controls.Add(this.tabBillingActivity);
-            this.tabControl1.Location = new System.Drawing.Point(0, 100);
-            this.tabControl1.Name = "tabControl1";
-            this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(1159, 518);
-            this.tabControl1.TabIndex = 2;
-            this.tabControl1.Selected += new System.Windows.Forms.TabControlEventHandler(this.tabControl1_Selected);
+            tabControl1.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            tabControl1.Controls.Add(summaryTab);
+            tabControl1.Controls.Add(tabDemographics);
+            tabControl1.Controls.Add(tabDiagnosis);
+            tabControl1.Controls.Add(tabInsPrimary);
+            tabControl1.Controls.Add(tabInsSecondary);
+            tabControl1.Controls.Add(tabInsTertiary);
+            tabControl1.Controls.Add(tabCharges);
+            tabControl1.Controls.Add(tabPayments);
+            tabControl1.Controls.Add(tabNotes);
+            tabControl1.Controls.Add(tabBillingActivity);
+            tabControl1.HotTrack = true;
+            tabControl1.Location = new System.Drawing.Point(0, 130);
+            tabControl1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            tabControl1.Name = "tabControl1";
+            tabControl1.SelectedIndex = 0;
+            tabControl1.Size = new System.Drawing.Size(1352, 596);
+            tabControl1.TabIndex = 2;
+            tabControl1.Selected += tabControl1_Selected;
             // 
             // summaryTab
             // 
-            this.summaryTab.BackColor = System.Drawing.Color.White;
-            this.summaryTab.Controls.Add(this.summaryTable);
-            this.summaryTab.Location = new System.Drawing.Point(4, 22);
-            this.summaryTab.Name = "summaryTab";
-            this.summaryTab.Padding = new System.Windows.Forms.Padding(3);
-            this.summaryTab.Size = new System.Drawing.Size(1151, 492);
-            this.summaryTab.TabIndex = 0;
-            this.summaryTab.Text = "Summary";
+            summaryTab.BackColor = System.Drawing.Color.White;
+            summaryTab.Controls.Add(summaryTable);
+            summaryTab.Location = new System.Drawing.Point(4, 24);
+            summaryTab.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            summaryTab.Name = "summaryTab";
+            summaryTab.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            summaryTab.Size = new System.Drawing.Size(1344, 568);
+            summaryTab.TabIndex = 0;
+            summaryTab.Text = "Summary";
             // 
             // summaryTable
             // 
-            this.summaryTable.ColumnCount = 4;
-            this.summaryTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.summaryTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.summaryTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.summaryTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.summaryTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.summaryTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.summaryTable.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.summaryTable.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.summaryTable.Location = new System.Drawing.Point(3, 3);
-            this.summaryTable.Name = "summaryTable";
-            this.summaryTable.RowCount = 1;
-            this.summaryTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.summaryTable.Size = new System.Drawing.Size(1145, 486);
-            this.summaryTable.TabIndex = 0;
+            summaryTable.ColumnCount = 4;
+            summaryTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            summaryTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            summaryTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            summaryTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            summaryTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 23F));
+            summaryTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 23F));
+            summaryTable.Dock = System.Windows.Forms.DockStyle.Fill;
+            summaryTable.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+            summaryTable.Location = new System.Drawing.Point(4, 3);
+            summaryTable.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            summaryTable.Name = "summaryTable";
+            summaryTable.RowCount = 1;
+            summaryTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            summaryTable.Size = new System.Drawing.Size(1336, 562);
+            summaryTable.TabIndex = 0;
             // 
             // tabDemographics
             // 
-            this.tabDemographics.AutoScroll = true;
-            this.tabDemographics.BackColor = System.Drawing.Color.White;
-            this.tabDemographics.Controls.Add(this.DateOfBirthTextBox);
-            this.tabDemographics.Controls.Add(this.providerLookup1);
-            this.tabDemographics.Controls.Add(this.DemoStatusMessagesTextBox);
-            this.tabDemographics.Controls.Add(this.SuffixTextBox);
-            this.tabDemographics.Controls.Add(this.SaveDemographics);
-            this.tabDemographics.Controls.Add(this.PatSuffixLabel);
-            this.tabDemographics.Controls.Add(this.orderingProviderLabel);
-            this.tabDemographics.Controls.Add(this.PatDOBLabel);
-            this.tabDemographics.Controls.Add(this.SocSecNoTextBox);
-            this.tabDemographics.Controls.Add(this.PatSSNLabel);
-            this.tabDemographics.Controls.Add(this.PatMaritalStatusLabel);
-            this.tabDemographics.Controls.Add(this.PatSexLabel);
-            this.tabDemographics.Controls.Add(this.EmailAddressTextBox);
-            this.tabDemographics.Controls.Add(this.PatEmailLabel);
-            this.tabDemographics.Controls.Add(this.PhoneTextBox);
-            this.tabDemographics.Controls.Add(this.PatPhoneLabel);
-            this.tabDemographics.Controls.Add(this.ZipcodeTextBox);
-            this.tabDemographics.Controls.Add(this.PatZipLabel);
-            this.tabDemographics.Controls.Add(this.PatStateLabel);
-            this.tabDemographics.Controls.Add(this.CityTextBox);
-            this.tabDemographics.Controls.Add(this.PatCityLabel);
-            this.tabDemographics.Controls.Add(this.Address1TextBox);
-            this.tabDemographics.Controls.Add(this.Address2TextBox);
-            this.tabDemographics.Controls.Add(this.PatAddressLabel);
-            this.tabDemographics.Controls.Add(this.LastNameTextBox);
-            this.tabDemographics.Controls.Add(this.PatientFullNameLabel);
-            this.tabDemographics.Controls.Add(this.MiddleNameTextBox);
-            this.tabDemographics.Controls.Add(this.PatMiddleNameLabel);
-            this.tabDemographics.Controls.Add(this.FirstNameTextBox);
-            this.tabDemographics.Controls.Add(this.PatFirstNameLabel);
-            this.tabDemographics.Controls.Add(this.PatLastNameLabel);
-            this.tabDemographics.Controls.Add(this.MaritalStatusComboBox);
-            this.tabDemographics.Controls.Add(this.SexComboBox);
-            this.tabDemographics.Controls.Add(this.StateComboBox);
-            this.tabDemographics.Location = new System.Drawing.Point(4, 22);
-            this.tabDemographics.Name = "tabDemographics";
-            this.tabDemographics.Padding = new System.Windows.Forms.Padding(3);
-            this.tabDemographics.Size = new System.Drawing.Size(1151, 492);
-            this.tabDemographics.TabIndex = 9;
-            this.tabDemographics.Text = "Demographics";
+            tabDemographics.AutoScroll = true;
+            tabDemographics.BackColor = System.Drawing.Color.White;
+            tabDemographics.Controls.Add(demographicsLayoutPanel);
+            tabDemographics.Location = new System.Drawing.Point(4, 24);
+            tabDemographics.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            tabDemographics.Name = "tabDemographics";
+            tabDemographics.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            tabDemographics.Size = new System.Drawing.Size(1344, 568);
+            tabDemographics.TabIndex = 9;
+            tabDemographics.Text = "Demographics";
+            // 
+            // demographicsLayoutPanel
+            // 
+            demographicsLayoutPanel.ColumnCount = 4;
+            demographicsLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 12F));
+            demographicsLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 30F));
+            demographicsLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 12F));
+            demographicsLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 46F));
+            demographicsLayoutPanel.Controls.Add(DemoStatusMessagesTextBox, 3, 17);
+            demographicsLayoutPanel.Controls.Add(GuarZipTextBox, 3, 9);
+            demographicsLayoutPanel.Controls.Add(GuarZipCodeLabel, 2, 9);
+            demographicsLayoutPanel.Controls.Add(GuarStateLabel, 2, 8);
+            demographicsLayoutPanel.Controls.Add(GuarStateComboBox, 3, 8);
+            demographicsLayoutPanel.Controls.Add(GuarCityTextBox, 3, 7);
+            demographicsLayoutPanel.Controls.Add(GuarCityLabel, 2, 7);
+            demographicsLayoutPanel.Controls.Add(GuarantorAddressTextBox, 3, 6);
+            demographicsLayoutPanel.Controls.Add(GuarAddressLabel, 2, 6);
+            demographicsLayoutPanel.Controls.Add(SaveDemographics, 0, 17);
+            demographicsLayoutPanel.Controls.Add(DateOfBirthTextBox, 1, 12);
+            demographicsLayoutPanel.Controls.Add(PatLastNameLabel, 0, 1);
+            demographicsLayoutPanel.Controls.Add(orderingProviderLabel, 0, 16);
+            demographicsLayoutPanel.Controls.Add(PatFirstNameLabel, 0, 2);
+            demographicsLayoutPanel.Controls.Add(SocSecNoTextBox, 1, 15);
+            demographicsLayoutPanel.Controls.Add(FirstNameTextBox, 1, 2);
+            demographicsLayoutPanel.Controls.Add(PatSSNLabel, 0, 15);
+            demographicsLayoutPanel.Controls.Add(PatMiddleNameLabel, 0, 3);
+            demographicsLayoutPanel.Controls.Add(MaritalStatusComboBox, 1, 14);
+            demographicsLayoutPanel.Controls.Add(PatMaritalStatusLabel, 0, 14);
+            demographicsLayoutPanel.Controls.Add(PatDOBLabel, 0, 12);
+            demographicsLayoutPanel.Controls.Add(MiddleNameTextBox, 1, 3);
+            demographicsLayoutPanel.Controls.Add(PatSexLabel, 0, 11);
+            demographicsLayoutPanel.Controls.Add(SexComboBox, 1, 11);
+            demographicsLayoutPanel.Controls.Add(PatPhoneLabel, 0, 10);
+            demographicsLayoutPanel.Controls.Add(PhoneTextBox, 1, 10);
+            demographicsLayoutPanel.Controls.Add(PatZipLabel, 0, 9);
+            demographicsLayoutPanel.Controls.Add(ZipcodeTextBox, 1, 9);
+            demographicsLayoutPanel.Controls.Add(PatStateLabel, 0, 8);
+            demographicsLayoutPanel.Controls.Add(StateComboBox, 1, 8);
+            demographicsLayoutPanel.Controls.Add(PatCityLabel, 0, 7);
+            demographicsLayoutPanel.Controls.Add(CityTextBox, 1, 7);
+            demographicsLayoutPanel.Controls.Add(Address2TextBox, 1, 6);
+            demographicsLayoutPanel.Controls.Add(Address1TextBox, 1, 5);
+            demographicsLayoutPanel.Controls.Add(PatAddressLabel, 0, 5);
+            demographicsLayoutPanel.Controls.Add(PatSuffixLabel, 0, 4);
+            demographicsLayoutPanel.Controls.Add(SuffixTextBox, 1, 4);
+            demographicsLayoutPanel.Controls.Add(PatEmailLabel, 0, 13);
+            demographicsLayoutPanel.Controls.Add(EmailAddressTextBox, 1, 13);
+            demographicsLayoutPanel.Controls.Add(label6, 1, 0);
+            demographicsLayoutPanel.Controls.Add(label7, 3, 0);
+            demographicsLayoutPanel.Controls.Add(PatRelationLabel, 2, 1);
+            demographicsLayoutPanel.Controls.Add(GuarantorRelationComboBox, 3, 1);
+            demographicsLayoutPanel.Controls.Add(GuarCopyPatientLink, 2, 0);
+            demographicsLayoutPanel.Controls.Add(GuarLastNameLabel, 2, 2);
+            demographicsLayoutPanel.Controls.Add(GuarantorLastNameTextBox, 3, 2);
+            demographicsLayoutPanel.Controls.Add(GuarFirstNameLabel, 2, 3);
+            demographicsLayoutPanel.Controls.Add(GuarFirstNameTextBox, 3, 3);
+            demographicsLayoutPanel.Controls.Add(GuarMiddleNameLabel, 2, 4);
+            demographicsLayoutPanel.Controls.Add(GuarMiddleNameTextBox, 3, 4);
+            demographicsLayoutPanel.Controls.Add(GuarSuffixLabel, 2, 5);
+            demographicsLayoutPanel.Controls.Add(GuarSuffixTextBox, 3, 5);
+            demographicsLayoutPanel.Controls.Add(GuarPhoneLabel, 2, 10);
+            demographicsLayoutPanel.Controls.Add(GuarantorPhoneTextBox, 3, 10);
+            demographicsLayoutPanel.Controls.Add(LastNameTextBox, 1, 1);
+            demographicsLayoutPanel.Controls.Add(orderingPhyTextBox, 1, 16);
+            demographicsLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            demographicsLayoutPanel.Location = new System.Drawing.Point(4, 3);
+            demographicsLayoutPanel.Name = "demographicsLayoutPanel";
+            demographicsLayoutPanel.RowCount = 18;
+            demographicsLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
+            demographicsLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            demographicsLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            demographicsLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            demographicsLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            demographicsLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            demographicsLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            demographicsLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            demographicsLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            demographicsLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            demographicsLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            demographicsLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            demographicsLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            demographicsLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            demographicsLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            demographicsLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            demographicsLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            demographicsLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            demographicsLayoutPanel.Size = new System.Drawing.Size(1336, 562);
+            demographicsLayoutPanel.TabIndex = 0;
             // 
             // DemoStatusMessagesTextBox
             // 
-            this.DemoStatusMessagesTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.DemoStatusMessagesTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.DemoStatusMessagesTextBox.Location = new System.Drawing.Point(139, 361);
-            this.DemoStatusMessagesTextBox.Multiline = true;
-            this.DemoStatusMessagesTextBox.Name = "DemoStatusMessagesTextBox";
-            this.DemoStatusMessagesTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.DemoStatusMessagesTextBox.Size = new System.Drawing.Size(1009, 59);
-            this.DemoStatusMessagesTextBox.TabIndex = 33;
-            // 
-            // SuffixTextBox
-            // 
-            this.SuffixTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.SuffixTextBox.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
-            this.SuffixTextBox.Location = new System.Drawing.Point(293, 58);
-            this.SuffixTextBox.Name = "SuffixTextBox";
-            this.SuffixTextBox.Size = new System.Drawing.Size(53, 20);
-            this.SuffixTextBox.TabIndex = 4;
-            // 
-            // SaveDemographics
-            // 
-            this.SaveDemographics.Location = new System.Drawing.Point(13, 361);
-            this.SaveDemographics.Name = "SaveDemographics";
-            this.SaveDemographics.Size = new System.Drawing.Size(107, 44);
-            this.SaveDemographics.TabIndex = 32;
-            this.SaveDemographics.Text = "Save Changes";
-            this.SaveDemographics.UseVisualStyleBackColor = true;
-            this.SaveDemographics.Click += new System.EventHandler(this.SaveDemographics_Click);
-            // 
-            // PatSuffixLabel
-            // 
-            this.PatSuffixLabel.AutoSize = true;
-            this.PatSuffixLabel.Location = new System.Drawing.Point(290, 42);
-            this.PatSuffixLabel.Name = "PatSuffixLabel";
-            this.PatSuffixLabel.Size = new System.Drawing.Size(33, 13);
-            this.PatSuffixLabel.TabIndex = 3;
-            this.PatSuffixLabel.Text = "Suffix";
-            this.PatSuffixLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // orderingProviderLabel
-            // 
-            this.orderingProviderLabel.AutoSize = true;
-            this.orderingProviderLabel.Location = new System.Drawing.Point(502, 202);
-            this.orderingProviderLabel.Name = "orderingProviderLabel";
-            this.orderingProviderLabel.Size = new System.Drawing.Size(89, 13);
-            this.orderingProviderLabel.TabIndex = 30;
-            this.orderingProviderLabel.Text = "Ordering Provider";
-            this.orderingProviderLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // PatDOBLabel
-            // 
-            this.PatDOBLabel.AutoSize = true;
-            this.PatDOBLabel.Location = new System.Drawing.Point(293, 242);
-            this.PatDOBLabel.Name = "PatDOBLabel";
-            this.PatDOBLabel.Size = new System.Drawing.Size(66, 13);
-            this.PatDOBLabel.TabIndex = 26;
-            this.PatDOBLabel.Text = "Date of Birth";
-            this.PatDOBLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // SocSecNoTextBox
-            // 
-            this.SocSecNoTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.SocSecNoTextBox.Location = new System.Drawing.Point(13, 299);
-            this.SocSecNoTextBox.Mask = "000-00-0000";
-            this.SocSecNoTextBox.Name = "SocSecNoTextBox";
-            this.SocSecNoTextBox.Size = new System.Drawing.Size(177, 20);
-            this.SocSecNoTextBox.TabIndex = 23;
-            // 
-            // PatSSNLabel
-            // 
-            this.PatSSNLabel.AutoSize = true;
-            this.PatSSNLabel.Location = new System.Drawing.Point(10, 283);
-            this.PatSSNLabel.Name = "PatSSNLabel";
-            this.PatSSNLabel.Size = new System.Drawing.Size(29, 13);
-            this.PatSSNLabel.TabIndex = 22;
-            this.PatSSNLabel.Text = "SSN";
-            this.PatSSNLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // PatMaritalStatusLabel
-            // 
-            this.PatMaritalStatusLabel.AutoSize = true;
-            this.PatMaritalStatusLabel.Location = new System.Drawing.Point(293, 282);
-            this.PatMaritalStatusLabel.Name = "PatMaritalStatusLabel";
-            this.PatMaritalStatusLabel.Size = new System.Drawing.Size(71, 13);
-            this.PatMaritalStatusLabel.TabIndex = 28;
-            this.PatMaritalStatusLabel.Text = "Marital Status";
-            this.PatMaritalStatusLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // PatSexLabel
-            // 
-            this.PatSexLabel.AutoSize = true;
-            this.PatSexLabel.Location = new System.Drawing.Point(293, 202);
-            this.PatSexLabel.Name = "PatSexLabel";
-            this.PatSexLabel.Size = new System.Drawing.Size(25, 13);
-            this.PatSexLabel.TabIndex = 24;
-            this.PatSexLabel.Text = "Sex";
-            this.PatSexLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // EmailAddressTextBox
-            // 
-            this.EmailAddressTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.EmailAddressTextBox.Location = new System.Drawing.Point(10, 259);
-            this.EmailAddressTextBox.Name = "EmailAddressTextBox";
-            this.EmailAddressTextBox.Size = new System.Drawing.Size(276, 20);
-            this.EmailAddressTextBox.TabIndex = 21;
-            // 
-            // PatEmailLabel
-            // 
-            this.PatEmailLabel.AutoSize = true;
-            this.PatEmailLabel.Location = new System.Drawing.Point(10, 243);
-            this.PatEmailLabel.Name = "PatEmailLabel";
-            this.PatEmailLabel.Size = new System.Drawing.Size(73, 13);
-            this.PatEmailLabel.TabIndex = 20;
-            this.PatEmailLabel.Text = "Email Address";
-            this.PatEmailLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // PhoneTextBox
-            // 
-            this.PhoneTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.PhoneTextBox.Location = new System.Drawing.Point(11, 219);
-            this.PhoneTextBox.Name = "PhoneTextBox";
-            this.PhoneTextBox.Size = new System.Drawing.Size(276, 20);
-            this.PhoneTextBox.TabIndex = 19;
-            // 
-            // PatPhoneLabel
-            // 
-            this.PatPhoneLabel.AutoSize = true;
-            this.PatPhoneLabel.Location = new System.Drawing.Point(8, 203);
-            this.PatPhoneLabel.Name = "PatPhoneLabel";
-            this.PatPhoneLabel.Size = new System.Drawing.Size(38, 13);
-            this.PatPhoneLabel.TabIndex = 18;
-            this.PatPhoneLabel.Text = "Phone";
-            this.PatPhoneLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // ZipcodeTextBox
-            // 
-            this.ZipcodeTextBox.Location = new System.Drawing.Point(499, 171);
-            this.ZipcodeTextBox.Mask = "00000-9999";
-            this.ZipcodeTextBox.Name = "ZipcodeTextBox";
-            this.ZipcodeTextBox.Size = new System.Drawing.Size(103, 20);
-            this.ZipcodeTextBox.TabIndex = 17;
-            // 
-            // PatZipLabel
-            // 
-            this.PatZipLabel.AutoSize = true;
-            this.PatZipLabel.Location = new System.Drawing.Point(496, 155);
-            this.PatZipLabel.Name = "PatZipLabel";
-            this.PatZipLabel.Size = new System.Drawing.Size(50, 13);
-            this.PatZipLabel.TabIndex = 16;
-            this.PatZipLabel.Text = "Zip Code";
-            this.PatZipLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // PatStateLabel
-            // 
-            this.PatStateLabel.AutoSize = true;
-            this.PatStateLabel.Location = new System.Drawing.Point(293, 155);
-            this.PatStateLabel.Name = "PatStateLabel";
-            this.PatStateLabel.Size = new System.Drawing.Size(32, 13);
-            this.PatStateLabel.TabIndex = 14;
-            this.PatStateLabel.Text = "State";
-            this.PatStateLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // CityTextBox
-            // 
-            this.CityTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.CityTextBox.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
-            this.CityTextBox.Location = new System.Drawing.Point(11, 171);
-            this.CityTextBox.Name = "CityTextBox";
-            this.CityTextBox.Size = new System.Drawing.Size(276, 20);
-            this.CityTextBox.TabIndex = 13;
-            // 
-            // PatCityLabel
-            // 
-            this.PatCityLabel.AutoSize = true;
-            this.PatCityLabel.Location = new System.Drawing.Point(8, 155);
-            this.PatCityLabel.Name = "PatCityLabel";
-            this.PatCityLabel.Size = new System.Drawing.Size(24, 13);
-            this.PatCityLabel.TabIndex = 12;
-            this.PatCityLabel.Text = "City";
-            this.PatCityLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // Address1TextBox
-            // 
-            this.Address1TextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.Address1TextBox.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
-            this.Address1TextBox.Location = new System.Drawing.Point(11, 106);
-            this.Address1TextBox.Name = "Address1TextBox";
-            this.Address1TextBox.Size = new System.Drawing.Size(276, 20);
-            this.Address1TextBox.TabIndex = 10;
-            // 
-            // Address2TextBox
-            // 
-            this.Address2TextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.Address2TextBox.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
-            this.Address2TextBox.Location = new System.Drawing.Point(11, 132);
-            this.Address2TextBox.Name = "Address2TextBox";
-            this.Address2TextBox.Size = new System.Drawing.Size(276, 20);
-            this.Address2TextBox.TabIndex = 11;
-            // 
-            // PatAddressLabel
-            // 
-            this.PatAddressLabel.AutoSize = true;
-            this.PatAddressLabel.Location = new System.Drawing.Point(8, 90);
-            this.PatAddressLabel.Name = "PatAddressLabel";
-            this.PatAddressLabel.Size = new System.Drawing.Size(45, 13);
-            this.PatAddressLabel.TabIndex = 9;
-            this.PatAddressLabel.Text = "Address";
-            this.PatAddressLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // LastNameTextBox
-            // 
-            this.LastNameTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.LastNameTextBox.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
-            this.LastNameTextBox.Location = new System.Drawing.Point(8, 58);
-            this.LastNameTextBox.Name = "LastNameTextBox";
-            this.LastNameTextBox.Size = new System.Drawing.Size(276, 20);
-            this.LastNameTextBox.TabIndex = 2;
-            // 
-            // PatientFullNameLabel
-            // 
-            this.PatientFullNameLabel.AutoSize = true;
-            this.PatientFullNameLabel.Location = new System.Drawing.Point(8, 12);
-            this.PatientFullNameLabel.Name = "PatientFullNameLabel";
-            this.PatientFullNameLabel.Size = new System.Drawing.Size(90, 13);
-            this.PatientFullNameLabel.TabIndex = 0;
-            this.PatientFullNameLabel.Text = "Patient Full Name";
-            // 
-            // MiddleNameTextBox
-            // 
-            this.MiddleNameTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.MiddleNameTextBox.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
-            this.MiddleNameTextBox.Location = new System.Drawing.Point(641, 58);
-            this.MiddleNameTextBox.Name = "MiddleNameTextBox";
-            this.MiddleNameTextBox.Size = new System.Drawing.Size(208, 20);
-            this.MiddleNameTextBox.TabIndex = 8;
-            // 
-            // PatMiddleNameLabel
-            // 
-            this.PatMiddleNameLabel.AutoSize = true;
-            this.PatMiddleNameLabel.Location = new System.Drawing.Point(638, 42);
-            this.PatMiddleNameLabel.Name = "PatMiddleNameLabel";
-            this.PatMiddleNameLabel.Size = new System.Drawing.Size(69, 13);
-            this.PatMiddleNameLabel.TabIndex = 7;
-            this.PatMiddleNameLabel.Text = "Middle Name";
-            this.PatMiddleNameLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // FirstNameTextBox
-            // 
-            this.FirstNameTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.FirstNameTextBox.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
-            this.FirstNameTextBox.Location = new System.Drawing.Point(353, 58);
-            this.FirstNameTextBox.Name = "FirstNameTextBox";
-            this.FirstNameTextBox.Size = new System.Drawing.Size(276, 20);
-            this.FirstNameTextBox.TabIndex = 6;
-            // 
-            // PatFirstNameLabel
-            // 
-            this.PatFirstNameLabel.AutoSize = true;
-            this.PatFirstNameLabel.Location = new System.Drawing.Point(350, 42);
-            this.PatFirstNameLabel.Name = "PatFirstNameLabel";
-            this.PatFirstNameLabel.Size = new System.Drawing.Size(57, 13);
-            this.PatFirstNameLabel.TabIndex = 5;
-            this.PatFirstNameLabel.Text = "First Name";
-            this.PatFirstNameLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // PatLastNameLabel
-            // 
-            this.PatLastNameLabel.AutoSize = true;
-            this.PatLastNameLabel.Location = new System.Drawing.Point(5, 42);
-            this.PatLastNameLabel.Name = "PatLastNameLabel";
-            this.PatLastNameLabel.Size = new System.Drawing.Size(58, 13);
-            this.PatLastNameLabel.TabIndex = 1;
-            this.PatLastNameLabel.Text = "Last Name";
-            this.PatLastNameLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // tabGuarantor
-            // 
-            this.tabGuarantor.AutoScroll = true;
-            this.tabGuarantor.BackColor = System.Drawing.Color.White;
-            this.tabGuarantor.Controls.Add(this.GuarantorSaveButton);
-            this.tabGuarantor.Controls.Add(this.PatRelationLabel);
-            this.tabGuarantor.Controls.Add(this.GuarFirstNameLabel);
-            this.tabGuarantor.Controls.Add(this.GuarFirstNameTextBox);
-            this.tabGuarantor.Controls.Add(this.GuarSuffixLabel);
-            this.tabGuarantor.Controls.Add(this.GuarSuffixTextBox);
-            this.tabGuarantor.Controls.Add(this.GuarLastNameLabel);
-            this.tabGuarantor.Controls.Add(this.GuarantorLastNameTextBox);
-            this.tabGuarantor.Controls.Add(this.GuarCopyPatientLink);
-            this.tabGuarantor.Controls.Add(this.GuarMiddleNameLabel);
-            this.tabGuarantor.Controls.Add(this.GuarMiddleNameTextBox);
-            this.tabGuarantor.Controls.Add(this.GuarAddressLabel);
-            this.tabGuarantor.Controls.Add(this.GuarantorAddressTextBox);
-            this.tabGuarantor.Controls.Add(this.GuarCityLabel);
-            this.tabGuarantor.Controls.Add(this.GuarCityTextBox);
-            this.tabGuarantor.Controls.Add(this.GuarStateLabel);
-            this.tabGuarantor.Controls.Add(this.GuarZipCodeLabel);
-            this.tabGuarantor.Controls.Add(this.GuarZipTextBox);
-            this.tabGuarantor.Controls.Add(this.GuarPhoneLabel);
-            this.tabGuarantor.Controls.Add(this.GuarantorPhoneTextBox);
-            this.tabGuarantor.Controls.Add(this.GuarantorRelationComboBox);
-            this.tabGuarantor.Controls.Add(this.GuarStateComboBox);
-            this.tabGuarantor.Location = new System.Drawing.Point(4, 22);
-            this.tabGuarantor.Name = "tabGuarantor";
-            this.tabGuarantor.Size = new System.Drawing.Size(1151, 492);
-            this.tabGuarantor.TabIndex = 13;
-            this.tabGuarantor.Text = "Guarantor";
-            // 
-            // GuarantorSaveButton
-            // 
-            this.GuarantorSaveButton.BackColor = System.Drawing.Color.DeepSkyBlue;
-            this.GuarantorSaveButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.GuarantorSaveButton.Location = new System.Drawing.Point(13, 304);
-            this.GuarantorSaveButton.Name = "GuarantorSaveButton";
-            this.GuarantorSaveButton.Size = new System.Drawing.Size(91, 44);
-            this.GuarantorSaveButton.TabIndex = 22;
-            this.GuarantorSaveButton.Text = "Save";
-            this.GuarantorSaveButton.UseVisualStyleBackColor = false;
-            this.GuarantorSaveButton.Click += new System.EventHandler(this.GuarantorSaveButton_Click);
-            // 
-            // PatRelationLabel
-            // 
-            this.PatRelationLabel.AutoSize = true;
-            this.PatRelationLabel.Location = new System.Drawing.Point(10, 58);
-            this.PatRelationLabel.Name = "PatRelationLabel";
-            this.PatRelationLabel.Size = new System.Drawing.Size(94, 13);
-            this.PatRelationLabel.TabIndex = 1;
-            this.PatRelationLabel.Text = "Relation to Patient";
-            this.PatRelationLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // GuarFirstNameLabel
-            // 
-            this.GuarFirstNameLabel.AutoSize = true;
-            this.GuarFirstNameLabel.Location = new System.Drawing.Point(373, 108);
-            this.GuarFirstNameLabel.Name = "GuarFirstNameLabel";
-            this.GuarFirstNameLabel.Size = new System.Drawing.Size(57, 13);
-            this.GuarFirstNameLabel.TabIndex = 8;
-            this.GuarFirstNameLabel.Text = "First Name";
-            this.GuarFirstNameLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // GuarFirstNameTextBox
-            // 
-            this.GuarFirstNameTextBox.Location = new System.Drawing.Point(375, 124);
-            this.GuarFirstNameTextBox.Name = "GuarFirstNameTextBox";
-            this.GuarFirstNameTextBox.Size = new System.Drawing.Size(297, 20);
-            this.GuarFirstNameTextBox.TabIndex = 9;
-            // 
-            // GuarSuffixLabel
-            // 
-            this.GuarSuffixLabel.AutoSize = true;
-            this.GuarSuffixLabel.Location = new System.Drawing.Point(316, 108);
-            this.GuarSuffixLabel.Name = "GuarSuffixLabel";
-            this.GuarSuffixLabel.Size = new System.Drawing.Size(33, 13);
-            this.GuarSuffixLabel.TabIndex = 6;
-            this.GuarSuffixLabel.Text = "Suffix";
-            this.GuarSuffixLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // GuarSuffixTextBox
-            // 
-            this.GuarSuffixTextBox.Location = new System.Drawing.Point(316, 124);
-            this.GuarSuffixTextBox.Name = "GuarSuffixTextBox";
-            this.GuarSuffixTextBox.Size = new System.Drawing.Size(50, 20);
-            this.GuarSuffixTextBox.TabIndex = 7;
-            // 
-            // GuarLastNameLabel
-            // 
-            this.GuarLastNameLabel.AutoSize = true;
-            this.GuarLastNameLabel.Location = new System.Drawing.Point(10, 108);
-            this.GuarLastNameLabel.Name = "GuarLastNameLabel";
-            this.GuarLastNameLabel.Size = new System.Drawing.Size(58, 13);
-            this.GuarLastNameLabel.TabIndex = 4;
-            this.GuarLastNameLabel.Text = "Last Name";
-            this.GuarLastNameLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // GuarantorLastNameTextBox
-            // 
-            this.GuarantorLastNameTextBox.Location = new System.Drawing.Point(13, 124);
-            this.GuarantorLastNameTextBox.Name = "GuarantorLastNameTextBox";
-            this.GuarantorLastNameTextBox.Size = new System.Drawing.Size(297, 20);
-            this.GuarantorLastNameTextBox.TabIndex = 5;
-            // 
-            // GuarCopyPatientLink
-            // 
-            this.GuarCopyPatientLink.AutoSize = true;
-            this.GuarCopyPatientLink.Location = new System.Drawing.Point(247, 58);
-            this.GuarCopyPatientLink.Name = "GuarCopyPatientLink";
-            this.GuarCopyPatientLink.Size = new System.Drawing.Size(88, 13);
-            this.GuarCopyPatientLink.TabIndex = 3;
-            this.GuarCopyPatientLink.TabStop = true;
-            this.GuarCopyPatientLink.Text = "Copy Patient Info";
-            this.GuarCopyPatientLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.GuarCopyPatientLink_LinkClicked);
-            // 
-            // GuarMiddleNameLabel
-            // 
-            this.GuarMiddleNameLabel.AutoSize = true;
-            this.GuarMiddleNameLabel.Location = new System.Drawing.Point(679, 108);
-            this.GuarMiddleNameLabel.Name = "GuarMiddleNameLabel";
-            this.GuarMiddleNameLabel.Size = new System.Drawing.Size(69, 13);
-            this.GuarMiddleNameLabel.TabIndex = 10;
-            this.GuarMiddleNameLabel.Text = "Middle Name";
-            this.GuarMiddleNameLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // GuarMiddleNameTextBox
-            // 
-            this.GuarMiddleNameTextBox.Location = new System.Drawing.Point(682, 124);
-            this.GuarMiddleNameTextBox.Name = "GuarMiddleNameTextBox";
-            this.GuarMiddleNameTextBox.Size = new System.Drawing.Size(240, 20);
-            this.GuarMiddleNameTextBox.TabIndex = 11;
-            // 
-            // GuarAddressLabel
-            // 
-            this.GuarAddressLabel.AutoSize = true;
-            this.GuarAddressLabel.Location = new System.Drawing.Point(10, 156);
-            this.GuarAddressLabel.Name = "GuarAddressLabel";
-            this.GuarAddressLabel.Size = new System.Drawing.Size(45, 13);
-            this.GuarAddressLabel.TabIndex = 12;
-            this.GuarAddressLabel.Text = "Address";
-            this.GuarAddressLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // GuarantorAddressTextBox
-            // 
-            this.GuarantorAddressTextBox.Location = new System.Drawing.Point(13, 172);
-            this.GuarantorAddressTextBox.Name = "GuarantorAddressTextBox";
-            this.GuarantorAddressTextBox.Size = new System.Drawing.Size(297, 20);
-            this.GuarantorAddressTextBox.TabIndex = 13;
-            // 
-            // GuarCityLabel
-            // 
-            this.GuarCityLabel.AutoSize = true;
-            this.GuarCityLabel.Location = new System.Drawing.Point(10, 197);
-            this.GuarCityLabel.Name = "GuarCityLabel";
-            this.GuarCityLabel.Size = new System.Drawing.Size(24, 13);
-            this.GuarCityLabel.TabIndex = 14;
-            this.GuarCityLabel.Text = "City";
-            this.GuarCityLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // GuarCityTextBox
-            // 
-            this.GuarCityTextBox.Location = new System.Drawing.Point(13, 212);
-            this.GuarCityTextBox.Name = "GuarCityTextBox";
-            this.GuarCityTextBox.Size = new System.Drawing.Size(297, 20);
-            this.GuarCityTextBox.TabIndex = 15;
-            // 
-            // GuarStateLabel
-            // 
-            this.GuarStateLabel.AutoSize = true;
-            this.GuarStateLabel.Location = new System.Drawing.Point(313, 195);
-            this.GuarStateLabel.Name = "GuarStateLabel";
-            this.GuarStateLabel.Size = new System.Drawing.Size(32, 13);
-            this.GuarStateLabel.TabIndex = 16;
-            this.GuarStateLabel.Text = "State";
-            this.GuarStateLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // GuarZipCodeLabel
-            // 
-            this.GuarZipCodeLabel.AutoSize = true;
-            this.GuarZipCodeLabel.Location = new System.Drawing.Point(505, 195);
-            this.GuarZipCodeLabel.Name = "GuarZipCodeLabel";
-            this.GuarZipCodeLabel.Size = new System.Drawing.Size(47, 13);
-            this.GuarZipCodeLabel.TabIndex = 18;
-            this.GuarZipCodeLabel.Text = "ZipCode";
-            this.GuarZipCodeLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            DemoStatusMessagesTextBox.Anchor = System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            DemoStatusMessagesTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            DemoStatusMessagesTextBox.Location = new System.Drawing.Point(724, 509);
+            DemoStatusMessagesTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            DemoStatusMessagesTextBox.Multiline = true;
+            DemoStatusMessagesTextBox.Name = "DemoStatusMessagesTextBox";
+            DemoStatusMessagesTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            DemoStatusMessagesTextBox.Size = new System.Drawing.Size(608, 37);
+            DemoStatusMessagesTextBox.TabIndex = 33;
             // 
             // GuarZipTextBox
             // 
-            this.GuarZipTextBox.Location = new System.Drawing.Point(505, 211);
-            this.GuarZipTextBox.Mask = "00000-9999";
-            this.GuarZipTextBox.Name = "GuarZipTextBox";
-            this.GuarZipTextBox.Size = new System.Drawing.Size(108, 20);
-            this.GuarZipTextBox.TabIndex = 19;
+            GuarZipTextBox.Location = new System.Drawing.Point(724, 265);
+            GuarZipTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            GuarZipTextBox.Mask = "00000-9999";
+            GuarZipTextBox.Name = "GuarZipTextBox";
+            GuarZipTextBox.Size = new System.Drawing.Size(125, 23);
+            GuarZipTextBox.TabIndex = 51;
+            // 
+            // GuarZipCodeLabel
+            // 
+            GuarZipCodeLabel.AutoSize = true;
+            GuarZipCodeLabel.Location = new System.Drawing.Point(564, 262);
+            GuarZipCodeLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            GuarZipCodeLabel.Name = "GuarZipCodeLabel";
+            GuarZipCodeLabel.Size = new System.Drawing.Size(52, 15);
+            GuarZipCodeLabel.TabIndex = 50;
+            GuarZipCodeLabel.Text = "ZipCode";
+            GuarZipCodeLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // GuarStateLabel
+            // 
+            GuarStateLabel.AutoSize = true;
+            GuarStateLabel.Location = new System.Drawing.Point(564, 233);
+            GuarStateLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            GuarStateLabel.Name = "GuarStateLabel";
+            GuarStateLabel.Size = new System.Drawing.Size(33, 15);
+            GuarStateLabel.TabIndex = 48;
+            GuarStateLabel.Text = "State";
+            GuarStateLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // GuarStateComboBox
+            // 
+            GuarStateComboBox.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
+            GuarStateComboBox.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            GuarStateComboBox.BackColor = System.Drawing.Color.White;
+            GuarStateComboBox.BorderColor = System.Drawing.Color.Blue;
+            GuarStateComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            GuarStateComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            GuarStateComboBox.FormattingEnabled = true;
+            GuarStateComboBox.Location = new System.Drawing.Point(724, 236);
+            GuarStateComboBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            GuarStateComboBox.Name = "GuarStateComboBox";
+            GuarStateComboBox.Size = new System.Drawing.Size(213, 23);
+            GuarStateComboBox.TabIndex = 49;
+            // 
+            // GuarCityTextBox
+            // 
+            GuarCityTextBox.Location = new System.Drawing.Point(724, 207);
+            GuarCityTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            GuarCityTextBox.Name = "GuarCityTextBox";
+            GuarCityTextBox.Size = new System.Drawing.Size(346, 23);
+            GuarCityTextBox.TabIndex = 47;
+            // 
+            // GuarCityLabel
+            // 
+            GuarCityLabel.AutoSize = true;
+            GuarCityLabel.Location = new System.Drawing.Point(564, 204);
+            GuarCityLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            GuarCityLabel.Name = "GuarCityLabel";
+            GuarCityLabel.Size = new System.Drawing.Size(28, 15);
+            GuarCityLabel.TabIndex = 46;
+            GuarCityLabel.Text = "City";
+            GuarCityLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // GuarantorAddressTextBox
+            // 
+            GuarantorAddressTextBox.Location = new System.Drawing.Point(724, 178);
+            GuarantorAddressTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            GuarantorAddressTextBox.Name = "GuarantorAddressTextBox";
+            GuarantorAddressTextBox.Size = new System.Drawing.Size(346, 23);
+            GuarantorAddressTextBox.TabIndex = 45;
+            // 
+            // GuarAddressLabel
+            // 
+            GuarAddressLabel.AutoSize = true;
+            GuarAddressLabel.Location = new System.Drawing.Point(564, 175);
+            GuarAddressLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            GuarAddressLabel.Name = "GuarAddressLabel";
+            GuarAddressLabel.Size = new System.Drawing.Size(49, 15);
+            GuarAddressLabel.TabIndex = 44;
+            GuarAddressLabel.Text = "Address";
+            GuarAddressLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // SaveDemographics
+            // 
+            SaveDemographics.Location = new System.Drawing.Point(4, 497);
+            SaveDemographics.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            SaveDemographics.Name = "SaveDemographics";
+            SaveDemographics.Size = new System.Drawing.Size(125, 51);
+            SaveDemographics.TabIndex = 54;
+            SaveDemographics.Text = "Save Changes";
+            SaveDemographics.UseVisualStyleBackColor = true;
+            SaveDemographics.Click += SaveDemographics_Click;
+            // 
+            // DateOfBirthTextBox
+            // 
+            DateOfBirthTextBox.DateValue = new System.DateTime(0L);
+            DateOfBirthTextBox.Location = new System.Drawing.Point(164, 352);
+            DateOfBirthTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            DateOfBirthTextBox.Name = "DateOfBirthTextBox";
+            DateOfBirthTextBox.Size = new System.Drawing.Size(206, 23);
+            DateOfBirthTextBox.TabIndex = 23;
+            // 
+            // PatLastNameLabel
+            // 
+            PatLastNameLabel.AutoSize = true;
+            PatLastNameLabel.Location = new System.Drawing.Point(4, 30);
+            PatLastNameLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            PatLastNameLabel.Name = "PatLastNameLabel";
+            PatLastNameLabel.Size = new System.Drawing.Size(63, 15);
+            PatLastNameLabel.TabIndex = 1;
+            PatLastNameLabel.Text = "Last Name";
+            PatLastNameLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // orderingProviderLabel
+            // 
+            orderingProviderLabel.AutoSize = true;
+            orderingProviderLabel.Location = new System.Drawing.Point(4, 465);
+            orderingProviderLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            orderingProviderLabel.Name = "orderingProviderLabel";
+            orderingProviderLabel.Size = new System.Drawing.Size(101, 15);
+            orderingProviderLabel.TabIndex = 30;
+            orderingProviderLabel.Text = "Ordering Provider";
+            orderingProviderLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // PatFirstNameLabel
+            // 
+            PatFirstNameLabel.AutoSize = true;
+            PatFirstNameLabel.Location = new System.Drawing.Point(4, 59);
+            PatFirstNameLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            PatFirstNameLabel.Name = "PatFirstNameLabel";
+            PatFirstNameLabel.Size = new System.Drawing.Size(64, 15);
+            PatFirstNameLabel.TabIndex = 3;
+            PatFirstNameLabel.Text = "First Name";
+            PatFirstNameLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // SocSecNoTextBox
+            // 
+            SocSecNoTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            SocSecNoTextBox.Location = new System.Drawing.Point(164, 439);
+            SocSecNoTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            SocSecNoTextBox.Mask = "000-00-0000";
+            SocSecNoTextBox.Name = "SocSecNoTextBox";
+            SocSecNoTextBox.Size = new System.Drawing.Size(206, 23);
+            SocSecNoTextBox.TabIndex = 29;
+            // 
+            // FirstNameTextBox
+            // 
+            FirstNameTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            FirstNameTextBox.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
+            FirstNameTextBox.Location = new System.Drawing.Point(164, 62);
+            FirstNameTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            FirstNameTextBox.Name = "FirstNameTextBox";
+            FirstNameTextBox.Size = new System.Drawing.Size(322, 23);
+            FirstNameTextBox.TabIndex = 4;
+            // 
+            // PatSSNLabel
+            // 
+            PatSSNLabel.AutoSize = true;
+            PatSSNLabel.Location = new System.Drawing.Point(4, 436);
+            PatSSNLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            PatSSNLabel.Name = "PatSSNLabel";
+            PatSSNLabel.Size = new System.Drawing.Size(28, 15);
+            PatSSNLabel.TabIndex = 28;
+            PatSSNLabel.Text = "SSN";
+            PatSSNLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // PatMiddleNameLabel
+            // 
+            PatMiddleNameLabel.AutoSize = true;
+            PatMiddleNameLabel.Location = new System.Drawing.Point(4, 88);
+            PatMiddleNameLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            PatMiddleNameLabel.Name = "PatMiddleNameLabel";
+            PatMiddleNameLabel.Size = new System.Drawing.Size(79, 15);
+            PatMiddleNameLabel.TabIndex = 5;
+            PatMiddleNameLabel.Text = "Middle Name";
+            PatMiddleNameLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // MaritalStatusComboBox
+            // 
+            MaritalStatusComboBox.BackColor = System.Drawing.Color.White;
+            MaritalStatusComboBox.BorderColor = System.Drawing.Color.Blue;
+            MaritalStatusComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            MaritalStatusComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            MaritalStatusComboBox.FormattingEnabled = true;
+            MaritalStatusComboBox.Location = new System.Drawing.Point(164, 410);
+            MaritalStatusComboBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            MaritalStatusComboBox.Name = "MaritalStatusComboBox";
+            MaritalStatusComboBox.Size = new System.Drawing.Size(206, 23);
+            MaritalStatusComboBox.TabIndex = 27;
+            // 
+            // PatMaritalStatusLabel
+            // 
+            PatMaritalStatusLabel.AutoSize = true;
+            PatMaritalStatusLabel.Location = new System.Drawing.Point(4, 407);
+            PatMaritalStatusLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            PatMaritalStatusLabel.Name = "PatMaritalStatusLabel";
+            PatMaritalStatusLabel.Size = new System.Drawing.Size(79, 15);
+            PatMaritalStatusLabel.TabIndex = 26;
+            PatMaritalStatusLabel.Text = "Marital Status";
+            PatMaritalStatusLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // PatDOBLabel
+            // 
+            PatDOBLabel.AutoSize = true;
+            PatDOBLabel.Location = new System.Drawing.Point(4, 349);
+            PatDOBLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            PatDOBLabel.Name = "PatDOBLabel";
+            PatDOBLabel.Size = new System.Drawing.Size(73, 15);
+            PatDOBLabel.TabIndex = 22;
+            PatDOBLabel.Text = "Date of Birth";
+            PatDOBLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // MiddleNameTextBox
+            // 
+            MiddleNameTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            MiddleNameTextBox.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
+            MiddleNameTextBox.Location = new System.Drawing.Point(164, 91);
+            MiddleNameTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            MiddleNameTextBox.Name = "MiddleNameTextBox";
+            MiddleNameTextBox.Size = new System.Drawing.Size(242, 23);
+            MiddleNameTextBox.TabIndex = 6;
+            // 
+            // PatSexLabel
+            // 
+            PatSexLabel.AutoSize = true;
+            PatSexLabel.Location = new System.Drawing.Point(4, 320);
+            PatSexLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            PatSexLabel.Name = "PatSexLabel";
+            PatSexLabel.Size = new System.Drawing.Size(25, 15);
+            PatSexLabel.TabIndex = 20;
+            PatSexLabel.Text = "Sex";
+            PatSexLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // SexComboBox
+            // 
+            SexComboBox.BackColor = System.Drawing.Color.White;
+            SexComboBox.BorderColor = System.Drawing.Color.Blue;
+            SexComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            SexComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            SexComboBox.FormattingEnabled = true;
+            SexComboBox.Items.AddRange(new object[] { "Male", "Female", "Unknown" });
+            SexComboBox.Location = new System.Drawing.Point(164, 323);
+            SexComboBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            SexComboBox.Name = "SexComboBox";
+            SexComboBox.Size = new System.Drawing.Size(206, 23);
+            SexComboBox.TabIndex = 21;
+            // 
+            // PatPhoneLabel
+            // 
+            PatPhoneLabel.AutoSize = true;
+            PatPhoneLabel.Location = new System.Drawing.Point(4, 291);
+            PatPhoneLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            PatPhoneLabel.Name = "PatPhoneLabel";
+            PatPhoneLabel.Size = new System.Drawing.Size(41, 15);
+            PatPhoneLabel.TabIndex = 18;
+            PatPhoneLabel.Text = "Phone";
+            PatPhoneLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // PhoneTextBox
+            // 
+            PhoneTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            PhoneTextBox.Location = new System.Drawing.Point(164, 294);
+            PhoneTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            PhoneTextBox.Name = "PhoneTextBox";
+            PhoneTextBox.Size = new System.Drawing.Size(322, 23);
+            PhoneTextBox.TabIndex = 19;
+            // 
+            // PatZipLabel
+            // 
+            PatZipLabel.AutoSize = true;
+            PatZipLabel.Location = new System.Drawing.Point(4, 262);
+            PatZipLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            PatZipLabel.Name = "PatZipLabel";
+            PatZipLabel.Size = new System.Drawing.Size(55, 15);
+            PatZipLabel.TabIndex = 16;
+            PatZipLabel.Text = "Zip Code";
+            PatZipLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // ZipcodeTextBox
+            // 
+            ZipcodeTextBox.Location = new System.Drawing.Point(164, 265);
+            ZipcodeTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            ZipcodeTextBox.Mask = "00000-9999";
+            ZipcodeTextBox.Name = "ZipcodeTextBox";
+            ZipcodeTextBox.Size = new System.Drawing.Size(119, 23);
+            ZipcodeTextBox.TabIndex = 17;
+            // 
+            // PatStateLabel
+            // 
+            PatStateLabel.AutoSize = true;
+            PatStateLabel.Location = new System.Drawing.Point(4, 233);
+            PatStateLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            PatStateLabel.Name = "PatStateLabel";
+            PatStateLabel.Size = new System.Drawing.Size(33, 15);
+            PatStateLabel.TabIndex = 14;
+            PatStateLabel.Text = "State";
+            PatStateLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // StateComboBox
+            // 
+            StateComboBox.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
+            StateComboBox.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            StateComboBox.BackColor = System.Drawing.Color.White;
+            StateComboBox.BorderColor = System.Drawing.Color.Blue;
+            StateComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            StateComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            StateComboBox.FormattingEnabled = true;
+            StateComboBox.Location = new System.Drawing.Point(164, 236);
+            StateComboBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            StateComboBox.Name = "StateComboBox";
+            StateComboBox.Size = new System.Drawing.Size(206, 23);
+            StateComboBox.TabIndex = 15;
+            // 
+            // PatCityLabel
+            // 
+            PatCityLabel.AutoSize = true;
+            PatCityLabel.Location = new System.Drawing.Point(4, 204);
+            PatCityLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            PatCityLabel.Name = "PatCityLabel";
+            PatCityLabel.Size = new System.Drawing.Size(28, 15);
+            PatCityLabel.TabIndex = 12;
+            PatCityLabel.Text = "City";
+            PatCityLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // CityTextBox
+            // 
+            CityTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            CityTextBox.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
+            CityTextBox.Location = new System.Drawing.Point(164, 207);
+            CityTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            CityTextBox.Name = "CityTextBox";
+            CityTextBox.Size = new System.Drawing.Size(322, 23);
+            CityTextBox.TabIndex = 13;
+            // 
+            // Address2TextBox
+            // 
+            Address2TextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            Address2TextBox.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
+            Address2TextBox.Location = new System.Drawing.Point(164, 178);
+            Address2TextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            Address2TextBox.Name = "Address2TextBox";
+            Address2TextBox.Size = new System.Drawing.Size(322, 23);
+            Address2TextBox.TabIndex = 11;
+            // 
+            // Address1TextBox
+            // 
+            Address1TextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            Address1TextBox.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
+            Address1TextBox.Location = new System.Drawing.Point(164, 149);
+            Address1TextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            Address1TextBox.Name = "Address1TextBox";
+            Address1TextBox.Size = new System.Drawing.Size(322, 23);
+            Address1TextBox.TabIndex = 10;
+            // 
+            // PatAddressLabel
+            // 
+            PatAddressLabel.AutoSize = true;
+            PatAddressLabel.Location = new System.Drawing.Point(4, 146);
+            PatAddressLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            PatAddressLabel.Name = "PatAddressLabel";
+            PatAddressLabel.Size = new System.Drawing.Size(49, 15);
+            PatAddressLabel.TabIndex = 9;
+            PatAddressLabel.Text = "Address";
+            PatAddressLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // PatSuffixLabel
+            // 
+            PatSuffixLabel.AutoSize = true;
+            PatSuffixLabel.Location = new System.Drawing.Point(4, 117);
+            PatSuffixLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            PatSuffixLabel.Name = "PatSuffixLabel";
+            PatSuffixLabel.Size = new System.Drawing.Size(37, 15);
+            PatSuffixLabel.TabIndex = 7;
+            PatSuffixLabel.Text = "Suffix";
+            PatSuffixLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // SuffixTextBox
+            // 
+            SuffixTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            SuffixTextBox.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
+            SuffixTextBox.Location = new System.Drawing.Point(164, 120);
+            SuffixTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            SuffixTextBox.Name = "SuffixTextBox";
+            SuffixTextBox.Size = new System.Drawing.Size(61, 23);
+            SuffixTextBox.TabIndex = 8;
+            // 
+            // PatEmailLabel
+            // 
+            PatEmailLabel.AutoSize = true;
+            PatEmailLabel.Location = new System.Drawing.Point(4, 378);
+            PatEmailLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            PatEmailLabel.Name = "PatEmailLabel";
+            PatEmailLabel.Size = new System.Drawing.Size(81, 15);
+            PatEmailLabel.TabIndex = 24;
+            PatEmailLabel.Text = "Email Address";
+            PatEmailLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // EmailAddressTextBox
+            // 
+            EmailAddressTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            EmailAddressTextBox.Location = new System.Drawing.Point(164, 381);
+            EmailAddressTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            EmailAddressTextBox.Name = "EmailAddressTextBox";
+            EmailAddressTextBox.Size = new System.Drawing.Size(322, 23);
+            EmailAddressTextBox.TabIndex = 25;
+            // 
+            // label6
+            // 
+            label6.AutoSize = true;
+            label6.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold);
+            label6.Location = new System.Drawing.Point(163, 0);
+            label6.Name = "label6";
+            label6.Size = new System.Drawing.Size(188, 25);
+            label6.TabIndex = 0;
+            label6.Text = "Patient Information";
+            // 
+            // label7
+            // 
+            label7.AutoSize = true;
+            label7.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold);
+            label7.Location = new System.Drawing.Point(723, 0);
+            label7.Name = "label7";
+            label7.Size = new System.Drawing.Size(218, 25);
+            label7.TabIndex = 33;
+            label7.Text = "Guarantor Information";
+            // 
+            // PatRelationLabel
+            // 
+            PatRelationLabel.AutoSize = true;
+            PatRelationLabel.Location = new System.Drawing.Point(564, 30);
+            PatRelationLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            PatRelationLabel.Name = "PatRelationLabel";
+            PatRelationLabel.Size = new System.Drawing.Size(104, 15);
+            PatRelationLabel.TabIndex = 34;
+            PatRelationLabel.Text = "Relation to Patient";
+            PatRelationLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // GuarantorRelationComboBox
+            // 
+            GuarantorRelationComboBox.BorderColor = System.Drawing.Color.Blue;
+            GuarantorRelationComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            GuarantorRelationComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            GuarantorRelationComboBox.FormattingEnabled = true;
+            GuarantorRelationComboBox.Location = new System.Drawing.Point(724, 33);
+            GuarantorRelationComboBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            GuarantorRelationComboBox.Name = "GuarantorRelationComboBox";
+            GuarantorRelationComboBox.Size = new System.Drawing.Size(152, 23);
+            GuarantorRelationComboBox.TabIndex = 35;
+            // 
+            // GuarCopyPatientLink
+            // 
+            GuarCopyPatientLink.AutoSize = true;
+            GuarCopyPatientLink.Location = new System.Drawing.Point(564, 0);
+            GuarCopyPatientLink.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            GuarCopyPatientLink.Name = "GuarCopyPatientLink";
+            GuarCopyPatientLink.Size = new System.Drawing.Size(99, 15);
+            GuarCopyPatientLink.TabIndex = 32;
+            GuarCopyPatientLink.TabStop = true;
+            GuarCopyPatientLink.Text = "Copy Patient Info";
+            GuarCopyPatientLink.LinkClicked += GuarCopyPatientLink_LinkClicked;
+            // 
+            // GuarLastNameLabel
+            // 
+            GuarLastNameLabel.AutoSize = true;
+            GuarLastNameLabel.Location = new System.Drawing.Point(564, 59);
+            GuarLastNameLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            GuarLastNameLabel.Name = "GuarLastNameLabel";
+            GuarLastNameLabel.Size = new System.Drawing.Size(63, 15);
+            GuarLastNameLabel.TabIndex = 36;
+            GuarLastNameLabel.Text = "Last Name";
+            GuarLastNameLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // GuarantorLastNameTextBox
+            // 
+            GuarantorLastNameTextBox.Location = new System.Drawing.Point(724, 62);
+            GuarantorLastNameTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            GuarantorLastNameTextBox.Name = "GuarantorLastNameTextBox";
+            GuarantorLastNameTextBox.Size = new System.Drawing.Size(346, 23);
+            GuarantorLastNameTextBox.TabIndex = 37;
+            // 
+            // GuarFirstNameLabel
+            // 
+            GuarFirstNameLabel.AutoSize = true;
+            GuarFirstNameLabel.Location = new System.Drawing.Point(564, 88);
+            GuarFirstNameLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            GuarFirstNameLabel.Name = "GuarFirstNameLabel";
+            GuarFirstNameLabel.Size = new System.Drawing.Size(64, 15);
+            GuarFirstNameLabel.TabIndex = 38;
+            GuarFirstNameLabel.Text = "First Name";
+            GuarFirstNameLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // GuarFirstNameTextBox
+            // 
+            GuarFirstNameTextBox.Location = new System.Drawing.Point(724, 91);
+            GuarFirstNameTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            GuarFirstNameTextBox.Name = "GuarFirstNameTextBox";
+            GuarFirstNameTextBox.Size = new System.Drawing.Size(346, 23);
+            GuarFirstNameTextBox.TabIndex = 39;
+            // 
+            // GuarMiddleNameLabel
+            // 
+            GuarMiddleNameLabel.AutoSize = true;
+            GuarMiddleNameLabel.Location = new System.Drawing.Point(564, 117);
+            GuarMiddleNameLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            GuarMiddleNameLabel.Name = "GuarMiddleNameLabel";
+            GuarMiddleNameLabel.Size = new System.Drawing.Size(79, 15);
+            GuarMiddleNameLabel.TabIndex = 40;
+            GuarMiddleNameLabel.Text = "Middle Name";
+            GuarMiddleNameLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // GuarMiddleNameTextBox
+            // 
+            GuarMiddleNameTextBox.Location = new System.Drawing.Point(724, 120);
+            GuarMiddleNameTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            GuarMiddleNameTextBox.Name = "GuarMiddleNameTextBox";
+            GuarMiddleNameTextBox.Size = new System.Drawing.Size(279, 23);
+            GuarMiddleNameTextBox.TabIndex = 41;
+            // 
+            // GuarSuffixLabel
+            // 
+            GuarSuffixLabel.AutoSize = true;
+            GuarSuffixLabel.Location = new System.Drawing.Point(564, 146);
+            GuarSuffixLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            GuarSuffixLabel.Name = "GuarSuffixLabel";
+            GuarSuffixLabel.Size = new System.Drawing.Size(37, 15);
+            GuarSuffixLabel.TabIndex = 42;
+            GuarSuffixLabel.Text = "Suffix";
+            GuarSuffixLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // GuarSuffixTextBox
+            // 
+            GuarSuffixTextBox.Location = new System.Drawing.Point(724, 149);
+            GuarSuffixTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            GuarSuffixTextBox.Name = "GuarSuffixTextBox";
+            GuarSuffixTextBox.Size = new System.Drawing.Size(58, 23);
+            GuarSuffixTextBox.TabIndex = 43;
             // 
             // GuarPhoneLabel
             // 
-            this.GuarPhoneLabel.AutoSize = true;
-            this.GuarPhoneLabel.Location = new System.Drawing.Point(10, 238);
-            this.GuarPhoneLabel.Name = "GuarPhoneLabel";
-            this.GuarPhoneLabel.Size = new System.Drawing.Size(38, 13);
-            this.GuarPhoneLabel.TabIndex = 20;
-            this.GuarPhoneLabel.Text = "Phone";
-            this.GuarPhoneLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            GuarPhoneLabel.AutoSize = true;
+            GuarPhoneLabel.Location = new System.Drawing.Point(564, 291);
+            GuarPhoneLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            GuarPhoneLabel.Name = "GuarPhoneLabel";
+            GuarPhoneLabel.Size = new System.Drawing.Size(41, 15);
+            GuarPhoneLabel.TabIndex = 52;
+            GuarPhoneLabel.Text = "Phone";
+            GuarPhoneLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // GuarantorPhoneTextBox
             // 
-            this.GuarantorPhoneTextBox.Location = new System.Drawing.Point(13, 254);
-            this.GuarantorPhoneTextBox.Name = "GuarantorPhoneTextBox";
-            this.GuarantorPhoneTextBox.Size = new System.Drawing.Size(297, 20);
-            this.GuarantorPhoneTextBox.TabIndex = 21;
+            GuarantorPhoneTextBox.Location = new System.Drawing.Point(724, 294);
+            GuarantorPhoneTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            GuarantorPhoneTextBox.Name = "GuarantorPhoneTextBox";
+            GuarantorPhoneTextBox.Size = new System.Drawing.Size(346, 23);
+            GuarantorPhoneTextBox.TabIndex = 53;
             // 
-            // tabInsurance
+            // LastNameTextBox
             // 
-            this.tabInsurance.AutoScroll = true;
-            this.tabInsurance.BackColor = System.Drawing.Color.White;
-            this.tabInsurance.Controls.Add(this.insTabLayoutPanel);
-            this.tabInsurance.Location = new System.Drawing.Point(4, 22);
-            this.tabInsurance.Name = "tabInsurance";
-            this.tabInsurance.Padding = new System.Windows.Forms.Padding(3);
-            this.tabInsurance.Size = new System.Drawing.Size(1151, 492);
-            this.tabInsurance.TabIndex = 11;
-            this.tabInsurance.Text = "Insurance";
+            LastNameTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            LastNameTextBox.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
+            LastNameTextBox.Location = new System.Drawing.Point(164, 33);
+            LastNameTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            LastNameTextBox.Name = "LastNameTextBox";
+            LastNameTextBox.Size = new System.Drawing.Size(322, 23);
+            LastNameTextBox.TabIndex = 2;
             // 
-            // insTabLayoutPanel
+            // orderingPhyTextBox
             // 
-            this.insTabLayoutPanel.AutoScroll = true;
-            this.insTabLayoutPanel.ColumnCount = 5;
-            this.insTabLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 130F));
-            this.insTabLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.insTabLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 130F));
-            this.insTabLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.insTabLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.insTabLayoutPanel.Controls.Add(this.HolderLastNameLabel, 0, 2);
-            this.insTabLayoutPanel.Controls.Add(this.InsuranceDataGrid, 0, 0);
-            this.insTabLayoutPanel.Controls.Add(this.SaveInsuranceButton, 0, 13);
-            this.insTabLayoutPanel.Controls.Add(this.InsCopyPatientLink, 1, 1);
-            this.insTabLayoutPanel.Controls.Add(this.PlanFinCodeComboBox, 3, 8);
-            this.insTabLayoutPanel.Controls.Add(this.InsPlanFinCodeLabel, 2, 8);
-            this.insTabLayoutPanel.Controls.Add(this.CertSSNTextBox, 3, 12);
-            this.insTabLayoutPanel.Controls.Add(this.HolderLastNameTextBox, 1, 2);
-            this.insTabLayoutPanel.Controls.Add(this.InsCertSSNLabel, 2, 12);
-            this.insTabLayoutPanel.Controls.Add(this.GroupNameTextBox, 3, 11);
-            this.insTabLayoutPanel.Controls.Add(this.InsGroupNameLabel, 2, 11);
-            this.insTabLayoutPanel.Controls.Add(this.HolderFirstNameLabel, 0, 3);
-            this.insTabLayoutPanel.Controls.Add(this.HolderZipTextBox, 1, 8);
-            this.insTabLayoutPanel.Controls.Add(this.GroupNumberTextBox, 3, 10);
-            this.insTabLayoutPanel.Controls.Add(this.HolderZipCodeLabel, 0, 8);
-            this.insTabLayoutPanel.Controls.Add(this.InsGroupNumberLabel, 2, 10);
-            this.insTabLayoutPanel.Controls.Add(this.PlanAddress2TextBox, 3, 6);
-            this.insTabLayoutPanel.Controls.Add(this.InsRelationComboBox, 1, 11);
-            this.insTabLayoutPanel.Controls.Add(this.HolderRelationLabel, 0, 11);
-            this.insTabLayoutPanel.Controls.Add(this.PolicyNumberTextBox, 3, 9);
-            this.insTabLayoutPanel.Controls.Add(this.HolderStateLabel, 0, 7);
-            this.insTabLayoutPanel.Controls.Add(this.HolderDOBTextBox, 1, 10);
-            this.insTabLayoutPanel.Controls.Add(this.InsPolicyNumberLabel, 2, 9);
-            this.insTabLayoutPanel.Controls.Add(this.HolderDOBLabel, 0, 10);
-            this.insTabLayoutPanel.Controls.Add(this.HolderStateComboBox, 1, 7);
-            this.insTabLayoutPanel.Controls.Add(this.HolderFirstNameTextBox, 1, 3);
-            this.insTabLayoutPanel.Controls.Add(this.InsPlanLabel, 2, 3);
-            this.insTabLayoutPanel.Controls.Add(this.InsuranceOrderLabel, 2, 2);
-            this.insTabLayoutPanel.Controls.Add(this.InsOrderComboBox, 3, 2);
-            this.insTabLayoutPanel.Controls.Add(this.HolderSexComboBox, 1, 9);
-            this.insTabLayoutPanel.Controls.Add(this.HolderMiddleNameLabel, 0, 4);
-            this.insTabLayoutPanel.Controls.Add(this.HolderSexLabel, 0, 9);
-            this.insTabLayoutPanel.Controls.Add(this.HolderMiddleNameTextBox, 1, 4);
-            this.insTabLayoutPanel.Controls.Add(this.InsPlanNameLabel, 2, 4);
-            this.insTabLayoutPanel.Controls.Add(this.PlanNameTextBox, 3, 4);
-            this.insTabLayoutPanel.Controls.Add(this.HolderAddressLabel, 0, 5);
-            this.insTabLayoutPanel.Controls.Add(this.HolderAddressTextBox, 1, 5);
-            this.insTabLayoutPanel.Controls.Add(this.PlanCityStTextBox, 3, 7);
-            this.insTabLayoutPanel.Controls.Add(this.InsPlanAddressLabel, 2, 5);
-            this.insTabLayoutPanel.Controls.Add(this.InsPlanCityStateZipLabel, 2, 7);
-            this.insTabLayoutPanel.Controls.Add(this.PlanAddressTextBox, 3, 5);
-            this.insTabLayoutPanel.Controls.Add(this.HolderCityTextBox, 1, 6);
-            this.insTabLayoutPanel.Controls.Add(this.HolderCityLabel, 0, 6);
-            this.insTabLayoutPanel.Controls.Add(this.InsUserInstructionsLabel, 3, 1);
-            this.insTabLayoutPanel.Controls.Add(this.AddInsuranceButton, 2, 1);
-            this.insTabLayoutPanel.Controls.Add(this.InsTabMessageTextBox, 1, 14);
-            this.insTabLayoutPanel.Controls.Add(this.insurancePlanTextBox, 3, 3);
-            this.insTabLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.insTabLayoutPanel.Location = new System.Drawing.Point(3, 3);
-            this.insTabLayoutPanel.Name = "insTabLayoutPanel";
-            this.insTabLayoutPanel.RowCount = 15;
-            this.insTabLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.insTabLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.insTabLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.insTabLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.insTabLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.insTabLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.insTabLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.insTabLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.insTabLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.insTabLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.insTabLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.insTabLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.insTabLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.insTabLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.insTabLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
-            this.insTabLayoutPanel.Size = new System.Drawing.Size(1145, 486);
-            this.insTabLayoutPanel.TabIndex = 2;
+            orderingPhyTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            orderingPhyTextBox.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
+            orderingPhyTextBox.Location = new System.Drawing.Point(164, 468);
+            orderingPhyTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            orderingPhyTextBox.Name = "orderingPhyTextBox";
+            orderingPhyTextBox.Size = new System.Drawing.Size(322, 23);
+            orderingPhyTextBox.TabIndex = 31;
+            orderingPhyTextBox.KeyUp += orderingPhyTextBox_KeyUp;
             // 
-            // HolderLastNameLabel
+            // tabDiagnosis
             // 
-            this.HolderLastNameLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.HolderLastNameLabel.AutoSize = true;
-            this.HolderLastNameLabel.Location = new System.Drawing.Point(3, 144);
-            this.HolderLastNameLabel.Name = "HolderLastNameLabel";
-            this.HolderLastNameLabel.Size = new System.Drawing.Size(92, 13);
-            this.HolderLastNameLabel.TabIndex = 1;
-            this.HolderLastNameLabel.Text = "Holder Last Name";
+            tabDiagnosis.AutoScroll = true;
+            tabDiagnosis.BackColor = System.Drawing.Color.White;
+            tabDiagnosis.Controls.Add(dxPointerGrid2);
+            tabDiagnosis.Controls.Add(DxDeleteButton);
+            tabDiagnosis.Controls.Add(SaveDxButton);
+            tabDiagnosis.Controls.Add(QuickAddLabel);
+            tabDiagnosis.Controls.Add(DxQuickAddTextBox);
+            tabDiagnosis.Controls.Add(txtSearchDx);
+            tabDiagnosis.Controls.Add(label4);
+            tabDiagnosis.Controls.Add(DxSearchLabel);
+            tabDiagnosis.Controls.Add(DxSearchDataGrid);
+            tabDiagnosis.Controls.Add(SelectedDxLabel);
+            tabDiagnosis.Controls.Add(DiagnosisDataGrid);
+            tabDiagnosis.Controls.Add(DxSearchButton);
+            tabDiagnosis.Location = new System.Drawing.Point(4, 24);
+            tabDiagnosis.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            tabDiagnosis.Name = "tabDiagnosis";
+            tabDiagnosis.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            tabDiagnosis.Size = new System.Drawing.Size(1344, 568);
+            tabDiagnosis.TabIndex = 8;
+            tabDiagnosis.Text = "Diagnosis";
             // 
-            // InsuranceDataGrid
+            // dxPointerGrid2
             // 
-            this.InsuranceDataGrid.AllowUserToAddRows = false;
-            this.InsuranceDataGrid.AllowUserToDeleteRows = false;
-            this.InsuranceDataGrid.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            dxPointerGrid2.AllowUserToAddRows = false;
+            dxPointerGrid2.AllowUserToDeleteRows = false;
+            dxPointerGrid2.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            dxPointerGrid2.BackgroundColor = System.Drawing.Color.White;
             dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
             dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
             dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
             dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.InsuranceDataGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
-            this.InsuranceDataGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.insTabLayoutPanel.SetColumnSpan(this.InsuranceDataGrid, 5);
+            dxPointerGrid2.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dxPointerGrid2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+            dataGridViewCellStyle2.ForeColor = System.Drawing.Color.Black;
             dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
             dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.InsuranceDataGrid.DefaultCellStyle = dataGridViewCellStyle2;
-            this.InsuranceDataGrid.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
-            this.InsuranceDataGrid.Location = new System.Drawing.Point(3, 3);
-            this.InsuranceDataGrid.MultiSelect = false;
-            this.InsuranceDataGrid.Name = "InsuranceDataGrid";
-            this.InsuranceDataGrid.ReadOnly = true;
+            dxPointerGrid2.DefaultCellStyle = dataGridViewCellStyle2;
+            dxPointerGrid2.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter;
+            dxPointerGrid2.Location = new System.Drawing.Point(22, 278);
+            dxPointerGrid2.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            dxPointerGrid2.MultiSelect = false;
+            dxPointerGrid2.Name = "dxPointerGrid2";
             dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
             dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
             dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
             dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.InsuranceDataGrid.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
-            this.InsuranceDataGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.InsuranceDataGrid.Size = new System.Drawing.Size(1139, 104);
-            this.InsuranceDataGrid.TabIndex = 0;
-            this.InsuranceDataGrid.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.InsuranceDataGrid_CellClick);
-            // 
-            // SaveInsuranceButton
-            // 
-            this.SaveInsuranceButton.BackColor = System.Drawing.Color.SkyBlue;
-            this.SaveInsuranceButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.SaveInsuranceButton.Location = new System.Drawing.Point(3, 431);
-            this.SaveInsuranceButton.Name = "SaveInsuranceButton";
-            this.SaveInsuranceButton.Size = new System.Drawing.Size(99, 52);
-            this.SaveInsuranceButton.TabIndex = 25;
-            this.SaveInsuranceButton.Text = "Save Insurance";
-            this.SaveInsuranceButton.UseVisualStyleBackColor = false;
-            this.SaveInsuranceButton.Click += new System.EventHandler(this.SaveInsuranceButton_Click);
-            // 
-            // InsCopyPatientLink
-            // 
-            this.InsCopyPatientLink.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.InsCopyPatientLink.AutoSize = true;
-            this.InsCopyPatientLink.Location = new System.Drawing.Point(133, 117);
-            this.InsCopyPatientLink.Name = "InsCopyPatientLink";
-            this.InsCopyPatientLink.Size = new System.Drawing.Size(88, 13);
-            this.InsCopyPatientLink.TabIndex = 0;
-            this.InsCopyPatientLink.TabStop = true;
-            this.InsCopyPatientLink.Text = "Copy Patient Info";
-            this.InsCopyPatientLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.InsCopyPatientLink_LinkClicked_1);
-            // 
-            // InsPlanFinCodeLabel
-            // 
-            this.InsPlanFinCodeLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.InsPlanFinCodeLabel.AutoSize = true;
-            this.InsPlanFinCodeLabel.Location = new System.Drawing.Point(428, 302);
-            this.InsPlanFinCodeLabel.Name = "InsPlanFinCodeLabel";
-            this.InsPlanFinCodeLabel.Size = new System.Drawing.Size(101, 13);
-            this.InsPlanFinCodeLabel.TabIndex = 32;
-            this.InsPlanFinCodeLabel.Text = "Plan Financial Code";
-            // 
-            // CertSSNTextBox
-            // 
-            this.CertSSNTextBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.CertSSNTextBox.Location = new System.Drawing.Point(558, 405);
-            this.CertSSNTextBox.Name = "CertSSNTextBox";
-            this.CertSSNTextBox.Size = new System.Drawing.Size(230, 20);
-            this.CertSSNTextBox.TabIndex = 24;
-            // 
-            // HolderLastNameTextBox
-            // 
-            this.HolderLastNameTextBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.HolderLastNameTextBox.Location = new System.Drawing.Point(133, 140);
-            this.HolderLastNameTextBox.Name = "HolderLastNameTextBox";
-            this.HolderLastNameTextBox.Size = new System.Drawing.Size(230, 20);
-            this.HolderLastNameTextBox.TabIndex = 1;
-            // 
-            // InsCertSSNLabel
-            // 
-            this.InsCertSSNLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.InsCertSSNLabel.AutoSize = true;
-            this.InsCertSSNLabel.Location = new System.Drawing.Point(428, 408);
-            this.InsCertSSNLabel.Name = "InsCertSSNLabel";
-            this.InsCertSSNLabel.Size = new System.Drawing.Size(53, 13);
-            this.InsCertSSNLabel.TabIndex = 40;
-            this.InsCertSSNLabel.Text = "Cert/SSN";
-            // 
-            // GroupNameTextBox
-            // 
-            this.GroupNameTextBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.GroupNameTextBox.Location = new System.Drawing.Point(558, 378);
-            this.GroupNameTextBox.Name = "GroupNameTextBox";
-            this.GroupNameTextBox.Size = new System.Drawing.Size(230, 20);
-            this.GroupNameTextBox.TabIndex = 23;
-            // 
-            // InsGroupNameLabel
-            // 
-            this.InsGroupNameLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.InsGroupNameLabel.AutoSize = true;
-            this.InsGroupNameLabel.Location = new System.Drawing.Point(428, 382);
-            this.InsGroupNameLabel.Name = "InsGroupNameLabel";
-            this.InsGroupNameLabel.Size = new System.Drawing.Size(67, 13);
-            this.InsGroupNameLabel.TabIndex = 38;
-            this.InsGroupNameLabel.Text = "Group Name";
-            // 
-            // HolderFirstNameLabel
-            // 
-            this.HolderFirstNameLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.HolderFirstNameLabel.AutoSize = true;
-            this.HolderFirstNameLabel.Location = new System.Drawing.Point(3, 170);
-            this.HolderFirstNameLabel.Name = "HolderFirstNameLabel";
-            this.HolderFirstNameLabel.Size = new System.Drawing.Size(91, 13);
-            this.HolderFirstNameLabel.TabIndex = 3;
-            this.HolderFirstNameLabel.Text = "Holder First Name";
-            // 
-            // HolderZipTextBox
-            // 
-            this.HolderZipTextBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.HolderZipTextBox.Location = new System.Drawing.Point(133, 298);
-            this.HolderZipTextBox.Name = "HolderZipTextBox";
-            this.HolderZipTextBox.Size = new System.Drawing.Size(153, 20);
-            this.HolderZipTextBox.TabIndex = 7;
-            // 
-            // GroupNumberTextBox
-            // 
-            this.GroupNumberTextBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.GroupNumberTextBox.Location = new System.Drawing.Point(558, 352);
-            this.GroupNumberTextBox.Name = "GroupNumberTextBox";
-            this.GroupNumberTextBox.Size = new System.Drawing.Size(230, 20);
-            this.GroupNumberTextBox.TabIndex = 22;
-            // 
-            // HolderZipCodeLabel
-            // 
-            this.HolderZipCodeLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.HolderZipCodeLabel.AutoSize = true;
-            this.HolderZipCodeLabel.Location = new System.Drawing.Point(3, 302);
-            this.HolderZipCodeLabel.Name = "HolderZipCodeLabel";
-            this.HolderZipCodeLabel.Size = new System.Drawing.Size(46, 13);
-            this.HolderZipCodeLabel.TabIndex = 13;
-            this.HolderZipCodeLabel.Text = "Zipcode";
-            // 
-            // InsGroupNumberLabel
-            // 
-            this.InsGroupNumberLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.InsGroupNumberLabel.AutoSize = true;
-            this.InsGroupNumberLabel.Location = new System.Drawing.Point(428, 355);
-            this.InsGroupNumberLabel.Name = "InsGroupNumberLabel";
-            this.InsGroupNumberLabel.Size = new System.Drawing.Size(76, 13);
-            this.InsGroupNumberLabel.TabIndex = 36;
-            this.InsGroupNumberLabel.Text = "Group Number";
-            // 
-            // PlanAddress2TextBox
-            // 
-            this.PlanAddress2TextBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.PlanAddress2TextBox.Location = new System.Drawing.Point(558, 245);
-            this.PlanAddress2TextBox.Name = "PlanAddress2TextBox";
-            this.PlanAddress2TextBox.Size = new System.Drawing.Size(230, 20);
-            this.PlanAddress2TextBox.TabIndex = 18;
-            // 
-            // HolderRelationLabel
-            // 
-            this.HolderRelationLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.HolderRelationLabel.AutoSize = true;
-            this.HolderRelationLabel.Location = new System.Drawing.Point(3, 382);
-            this.HolderRelationLabel.Name = "HolderRelationLabel";
-            this.HolderRelationLabel.Size = new System.Drawing.Size(94, 13);
-            this.HolderRelationLabel.TabIndex = 19;
-            this.HolderRelationLabel.Text = "Relation to Patient";
-            // 
-            // PolicyNumberTextBox
-            // 
-            this.PolicyNumberTextBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.PolicyNumberTextBox.Location = new System.Drawing.Point(558, 325);
-            this.PolicyNumberTextBox.Name = "PolicyNumberTextBox";
-            this.PolicyNumberTextBox.Size = new System.Drawing.Size(230, 20);
-            this.PolicyNumberTextBox.TabIndex = 21;
-            // 
-            // HolderStateLabel
-            // 
-            this.HolderStateLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.HolderStateLabel.AutoSize = true;
-            this.HolderStateLabel.Location = new System.Drawing.Point(3, 275);
-            this.HolderStateLabel.Name = "HolderStateLabel";
-            this.HolderStateLabel.Size = new System.Drawing.Size(32, 13);
-            this.HolderStateLabel.TabIndex = 11;
-            this.HolderStateLabel.Text = "State";
-            // 
-            // HolderDOBTextBox
-            // 
-            this.HolderDOBTextBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.HolderDOBTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.HolderDOBTextBox.Location = new System.Drawing.Point(133, 352);
-            this.HolderDOBTextBox.Mask = "00/00/0000";
-            this.HolderDOBTextBox.Name = "HolderDOBTextBox";
-            this.HolderDOBTextBox.Size = new System.Drawing.Size(230, 20);
-            this.HolderDOBTextBox.TabIndex = 9;
-            this.HolderDOBTextBox.ValidatingType = typeof(System.DateTime);
-            // 
-            // InsPolicyNumberLabel
-            // 
-            this.InsPolicyNumberLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.InsPolicyNumberLabel.AutoSize = true;
-            this.InsPolicyNumberLabel.Location = new System.Drawing.Point(428, 329);
-            this.InsPolicyNumberLabel.Name = "InsPolicyNumberLabel";
-            this.InsPolicyNumberLabel.Size = new System.Drawing.Size(75, 13);
-            this.InsPolicyNumberLabel.TabIndex = 34;
-            this.InsPolicyNumberLabel.Text = "Policy Number";
-            // 
-            // HolderDOBLabel
-            // 
-            this.HolderDOBLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.HolderDOBLabel.AutoSize = true;
-            this.HolderDOBLabel.Location = new System.Drawing.Point(3, 355);
-            this.HolderDOBLabel.Name = "HolderDOBLabel";
-            this.HolderDOBLabel.Size = new System.Drawing.Size(66, 13);
-            this.HolderDOBLabel.TabIndex = 17;
-            this.HolderDOBLabel.Text = "Date of Birth";
-            // 
-            // HolderFirstNameTextBox
-            // 
-            this.HolderFirstNameTextBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.HolderFirstNameTextBox.Location = new System.Drawing.Point(133, 167);
-            this.HolderFirstNameTextBox.Name = "HolderFirstNameTextBox";
-            this.HolderFirstNameTextBox.Size = new System.Drawing.Size(230, 20);
-            this.HolderFirstNameTextBox.TabIndex = 2;
-            // 
-            // InsPlanLabel
-            // 
-            this.InsPlanLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.InsPlanLabel.AutoSize = true;
-            this.InsPlanLabel.Location = new System.Drawing.Point(428, 170);
-            this.InsPlanLabel.Name = "InsPlanLabel";
-            this.InsPlanLabel.Size = new System.Drawing.Size(78, 13);
-            this.InsPlanLabel.TabIndex = 23;
-            this.InsPlanLabel.Text = "Insurance Plan";
-            // 
-            // InsuranceOrderLabel
-            // 
-            this.InsuranceOrderLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.InsuranceOrderLabel.AutoSize = true;
-            this.InsuranceOrderLabel.Location = new System.Drawing.Point(428, 144);
-            this.InsuranceOrderLabel.Name = "InsuranceOrderLabel";
-            this.InsuranceOrderLabel.Size = new System.Drawing.Size(83, 13);
-            this.InsuranceOrderLabel.TabIndex = 21;
-            this.InsuranceOrderLabel.Text = "Insurance Order";
-            // 
-            // HolderMiddleNameLabel
-            // 
-            this.HolderMiddleNameLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.HolderMiddleNameLabel.AutoSize = true;
-            this.HolderMiddleNameLabel.Location = new System.Drawing.Point(3, 196);
-            this.HolderMiddleNameLabel.Name = "HolderMiddleNameLabel";
-            this.HolderMiddleNameLabel.Size = new System.Drawing.Size(103, 13);
-            this.HolderMiddleNameLabel.TabIndex = 5;
-            this.HolderMiddleNameLabel.Text = "Holder Middle Name";
-            // 
-            // HolderSexLabel
-            // 
-            this.HolderSexLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.HolderSexLabel.AutoSize = true;
-            this.HolderSexLabel.Location = new System.Drawing.Point(3, 329);
-            this.HolderSexLabel.Name = "HolderSexLabel";
-            this.HolderSexLabel.Size = new System.Drawing.Size(25, 13);
-            this.HolderSexLabel.TabIndex = 15;
-            this.HolderSexLabel.Text = "Sex";
-            // 
-            // HolderMiddleNameTextBox
-            // 
-            this.HolderMiddleNameTextBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.HolderMiddleNameTextBox.Location = new System.Drawing.Point(133, 193);
-            this.HolderMiddleNameTextBox.Name = "HolderMiddleNameTextBox";
-            this.HolderMiddleNameTextBox.Size = new System.Drawing.Size(230, 20);
-            this.HolderMiddleNameTextBox.TabIndex = 3;
-            // 
-            // InsPlanNameLabel
-            // 
-            this.InsPlanNameLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.InsPlanNameLabel.AutoSize = true;
-            this.InsPlanNameLabel.Location = new System.Drawing.Point(428, 196);
-            this.InsPlanNameLabel.Name = "InsPlanNameLabel";
-            this.InsPlanNameLabel.Size = new System.Drawing.Size(59, 13);
-            this.InsPlanNameLabel.TabIndex = 25;
-            this.InsPlanNameLabel.Text = "Plan Name";
-            // 
-            // PlanNameTextBox
-            // 
-            this.PlanNameTextBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.PlanNameTextBox.Location = new System.Drawing.Point(558, 193);
-            this.PlanNameTextBox.Name = "PlanNameTextBox";
-            this.PlanNameTextBox.ReadOnly = true;
-            this.PlanNameTextBox.Size = new System.Drawing.Size(230, 20);
-            this.PlanNameTextBox.TabIndex = 16;
-            // 
-            // HolderAddressLabel
-            // 
-            this.HolderAddressLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.HolderAddressLabel.AutoSize = true;
-            this.HolderAddressLabel.Location = new System.Drawing.Point(3, 222);
-            this.HolderAddressLabel.Name = "HolderAddressLabel";
-            this.HolderAddressLabel.Size = new System.Drawing.Size(45, 13);
-            this.HolderAddressLabel.TabIndex = 7;
-            this.HolderAddressLabel.Text = "Address";
-            // 
-            // HolderAddressTextBox
-            // 
-            this.HolderAddressTextBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.HolderAddressTextBox.Location = new System.Drawing.Point(133, 219);
-            this.HolderAddressTextBox.Name = "HolderAddressTextBox";
-            this.HolderAddressTextBox.Size = new System.Drawing.Size(230, 20);
-            this.HolderAddressTextBox.TabIndex = 4;
-            // 
-            // PlanCityStTextBox
-            // 
-            this.PlanCityStTextBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.PlanCityStTextBox.Location = new System.Drawing.Point(558, 271);
-            this.PlanCityStTextBox.Name = "PlanCityStTextBox";
-            this.PlanCityStTextBox.Size = new System.Drawing.Size(230, 20);
-            this.PlanCityStTextBox.TabIndex = 19;
-            // 
-            // InsPlanAddressLabel
-            // 
-            this.InsPlanAddressLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.InsPlanAddressLabel.AutoSize = true;
-            this.InsPlanAddressLabel.Location = new System.Drawing.Point(428, 222);
-            this.InsPlanAddressLabel.Name = "InsPlanAddressLabel";
-            this.InsPlanAddressLabel.Size = new System.Drawing.Size(69, 13);
-            this.InsPlanAddressLabel.TabIndex = 27;
-            this.InsPlanAddressLabel.Text = "Plan Address";
-            // 
-            // InsPlanCityStateZipLabel
-            // 
-            this.InsPlanCityStateZipLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.InsPlanCityStateZipLabel.AutoSize = true;
-            this.InsPlanCityStateZipLabel.Location = new System.Drawing.Point(428, 275);
-            this.InsPlanCityStateZipLabel.Name = "InsPlanCityStateZipLabel";
-            this.InsPlanCityStateZipLabel.Size = new System.Drawing.Size(79, 13);
-            this.InsPlanCityStateZipLabel.TabIndex = 30;
-            this.InsPlanCityStateZipLabel.Text = "Plan City St Zip";
-            // 
-            // PlanAddressTextBox
-            // 
-            this.PlanAddressTextBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.PlanAddressTextBox.Location = new System.Drawing.Point(558, 219);
-            this.PlanAddressTextBox.Name = "PlanAddressTextBox";
-            this.PlanAddressTextBox.Size = new System.Drawing.Size(230, 20);
-            this.PlanAddressTextBox.TabIndex = 17;
-            // 
-            // HolderCityTextBox
-            // 
-            this.HolderCityTextBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.HolderCityTextBox.Location = new System.Drawing.Point(133, 245);
-            this.HolderCityTextBox.Name = "HolderCityTextBox";
-            this.HolderCityTextBox.Size = new System.Drawing.Size(230, 20);
-            this.HolderCityTextBox.TabIndex = 5;
-            // 
-            // HolderCityLabel
-            // 
-            this.HolderCityLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.HolderCityLabel.AutoSize = true;
-            this.HolderCityLabel.Location = new System.Drawing.Point(3, 248);
-            this.HolderCityLabel.Name = "HolderCityLabel";
-            this.HolderCityLabel.Size = new System.Drawing.Size(24, 13);
-            this.HolderCityLabel.TabIndex = 9;
-            this.HolderCityLabel.Text = "City";
-            // 
-            // InsUserInstructionsLabel
-            // 
-            this.InsUserInstructionsLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.InsUserInstructionsLabel.AutoSize = true;
-            this.InsUserInstructionsLabel.Location = new System.Drawing.Point(558, 117);
-            this.InsUserInstructionsLabel.Name = "InsUserInstructionsLabel";
-            this.InsUserInstructionsLabel.Size = new System.Drawing.Size(136, 13);
-            this.InsUserInstructionsLabel.TabIndex = 12;
-            this.InsUserInstructionsLabel.Text = "Select an insurance to edit.";
-            // 
-            // AddInsuranceButton
-            // 
-            this.AddInsuranceButton.Location = new System.Drawing.Point(428, 113);
-            this.AddInsuranceButton.Name = "AddInsuranceButton";
-            this.AddInsuranceButton.Size = new System.Drawing.Size(75, 21);
-            this.AddInsuranceButton.TabIndex = 11;
-            this.AddInsuranceButton.Text = "Add Insurance";
-            this.AddInsuranceButton.UseVisualStyleBackColor = true;
-            this.AddInsuranceButton.Click += new System.EventHandler(this.AddInsuranceButton_Click);
-            // 
-            // InsTabMessageTextBox
-            // 
-            this.insTabLayoutPanel.SetColumnSpan(this.InsTabMessageTextBox, 3);
-            this.InsTabMessageTextBox.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.InsTabMessageTextBox.Location = new System.Drawing.Point(133, 489);
-            this.InsTabMessageTextBox.Multiline = true;
-            this.InsTabMessageTextBox.Name = "InsTabMessageTextBox";
-            this.InsTabMessageTextBox.ReadOnly = true;
-            this.InsTabMessageTextBox.Size = new System.Drawing.Size(714, 24);
-            this.InsTabMessageTextBox.TabIndex = 44;
-            // 
-            // insurancePlanTextBox
-            // 
-            this.insurancePlanTextBox.Location = new System.Drawing.Point(558, 167);
-            this.insurancePlanTextBox.Name = "insurancePlanTextBox";
-            this.insurancePlanTextBox.Size = new System.Drawing.Size(230, 20);
-            this.insurancePlanTextBox.TabIndex = 14;
-            this.insurancePlanTextBox.KeyUp += new System.Windows.Forms.KeyEventHandler(this.insurancePlanTextBox_KeyUp);
-            // 
-            // tabDiagnosis
-            // 
-            this.tabDiagnosis.AutoScroll = true;
-            this.tabDiagnosis.BackColor = System.Drawing.Color.White;
-            this.tabDiagnosis.Controls.Add(this.dxPointerGrid2);
-            this.tabDiagnosis.Controls.Add(this.DxDeleteButton);
-            this.tabDiagnosis.Controls.Add(this.SaveDxButton);
-            this.tabDiagnosis.Controls.Add(this.QuickAddLabel);
-            this.tabDiagnosis.Controls.Add(this.DxQuickAddTextBox);
-            this.tabDiagnosis.Controls.Add(this.txtSearchDx);
-            this.tabDiagnosis.Controls.Add(this.label4);
-            this.tabDiagnosis.Controls.Add(this.DxSearchLabel);
-            this.tabDiagnosis.Controls.Add(this.DxSearchDataGrid);
-            this.tabDiagnosis.Controls.Add(this.SelectedDxLabel);
-            this.tabDiagnosis.Controls.Add(this.DiagnosisDataGrid);
-            this.tabDiagnosis.Controls.Add(this.DxSearchButton);
-            this.tabDiagnosis.Location = new System.Drawing.Point(4, 22);
-            this.tabDiagnosis.Name = "tabDiagnosis";
-            this.tabDiagnosis.Padding = new System.Windows.Forms.Padding(3);
-            this.tabDiagnosis.Size = new System.Drawing.Size(1151, 492);
-            this.tabDiagnosis.TabIndex = 8;
-            this.tabDiagnosis.Text = "Diagnosis";
-            // 
-            // dxPointerGrid2
-            // 
-            this.dxPointerGrid2.AllowUserToAddRows = false;
-            this.dxPointerGrid2.AllowUserToDeleteRows = false;
-            this.dxPointerGrid2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.dxPointerGrid2.BackgroundColor = System.Drawing.Color.White;
+            dxPointerGrid2.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
+            dxPointerGrid2.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            dxPointerGrid2.Size = new System.Drawing.Size(922, 283);
+            dxPointerGrid2.TabIndex = 10;
+            dxPointerGrid2.CellClick += dxPointerGrid2_CellClick;
+            dxPointerGrid2.CellMouseDown += dxPointerGrid2_CellMouseDown;
+            dxPointerGrid2.CellValueChanged += dxPointerGrid2_CellValueChanged;
+            dxPointerGrid2.DataError += dxPointerGrid2_DataError;
+            dxPointerGrid2.EditingControlShowing += dxPointerGrid2_EditingControlShowing;
+            // 
+            // DxDeleteButton
+            // 
+            DxDeleteButton.Image = Properties.Resources.hiclipart_com_id_dbhyp;
+            DxDeleteButton.Location = new System.Drawing.Point(951, 53);
+            DxDeleteButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            DxDeleteButton.Name = "DxDeleteButton";
+            DxDeleteButton.Size = new System.Drawing.Size(23, 28);
+            DxDeleteButton.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            DxDeleteButton.TabIndex = 9;
+            DxDeleteButton.TabStop = false;
+            DxDeleteButton.Click += DxDeleteButton_Click;
+            // 
+            // SaveDxButton
+            // 
+            SaveDxButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 0);
+            SaveDxButton.Location = new System.Drawing.Point(957, 7);
+            SaveDxButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            SaveDxButton.Name = "SaveDxButton";
+            SaveDxButton.Size = new System.Drawing.Size(88, 32);
+            SaveDxButton.TabIndex = 8;
+            SaveDxButton.Text = "Save Diagnoses";
+            SaveDxButton.UseVisualStyleBackColor = true;
+            SaveDxButton.Visible = false;
+            SaveDxButton.Click += SaveDxButton_Click;
+            // 
+            // QuickAddLabel
+            // 
+            QuickAddLabel.AutoSize = true;
+            QuickAddLabel.Location = new System.Drawing.Point(754, 20);
+            QuickAddLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            QuickAddLabel.Name = "QuickAddLabel";
+            QuickAddLabel.Size = new System.Drawing.Size(63, 15);
+            QuickAddLabel.TabIndex = 7;
+            QuickAddLabel.Text = "Quick Add";
+            // 
+            // DxQuickAddTextBox
+            // 
+            DxQuickAddTextBox.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
+            DxQuickAddTextBox.Location = new System.Drawing.Point(827, 16);
+            DxQuickAddTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            DxQuickAddTextBox.Name = "DxQuickAddTextBox";
+            DxQuickAddTextBox.Size = new System.Drawing.Size(116, 23);
+            DxQuickAddTextBox.TabIndex = 6;
+            DxQuickAddTextBox.KeyPress += DxQuickAddTextBox_KeyPress;
+            // 
+            // txtSearchDx
+            // 
+            txtSearchDx.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
+            txtSearchDx.Location = new System.Drawing.Point(133, 21);
+            txtSearchDx.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            txtSearchDx.Name = "txtSearchDx";
+            txtSearchDx.Size = new System.Drawing.Size(254, 23);
+            txtSearchDx.TabIndex = 4;
+            txtSearchDx.KeyPress += SearchDxTextBox_KeyPress;
+            // 
+            // label4
+            // 
+            label4.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
+            label4.AutoSize = true;
+            label4.Location = new System.Drawing.Point(19, 260);
+            label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label4.Name = "label4";
+            label4.Size = new System.Drawing.Size(104, 15);
+            label4.TabIndex = 3;
+            label4.Text = "Diagnosis Pointers";
+            // 
+            // DxSearchLabel
+            // 
+            DxSearchLabel.AutoSize = true;
+            DxSearchLabel.Location = new System.Drawing.Point(18, 24);
+            DxSearchLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            DxSearchLabel.Name = "DxSearchLabel";
+            DxSearchLabel.Size = new System.Drawing.Size(96, 15);
+            DxSearchLabel.TabIndex = 3;
+            DxSearchLabel.Text = "Diagnosis Search";
+            // 
+            // DxSearchDataGrid
+            // 
+            DxSearchDataGrid.AllowUserToAddRows = false;
+            DxSearchDataGrid.AllowUserToDeleteRows = false;
+            DxSearchDataGrid.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
+            DxSearchDataGrid.BackgroundColor = System.Drawing.Color.White;
             dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
             dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText;
             dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
             dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dxPointerGrid2.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle4;
-            this.dxPointerGrid2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            DxSearchDataGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle4;
+            DxSearchDataGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+            dataGridViewCellStyle5.ForeColor = System.Drawing.Color.Black;
             dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
             dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dxPointerGrid2.DefaultCellStyle = dataGridViewCellStyle5;
-            this.dxPointerGrid2.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter;
-            this.dxPointerGrid2.Location = new System.Drawing.Point(19, 241);
-            this.dxPointerGrid2.MultiSelect = false;
-            this.dxPointerGrid2.Name = "dxPointerGrid2";
+            DxSearchDataGrid.DefaultCellStyle = dataGridViewCellStyle5;
+            DxSearchDataGrid.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
+            DxSearchDataGrid.Location = new System.Drawing.Point(21, 53);
+            DxSearchDataGrid.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            DxSearchDataGrid.Name = "DxSearchDataGrid";
             dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
             dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.WindowText;
             dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
             dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dxPointerGrid2.RowHeadersDefaultCellStyle = dataGridViewCellStyle6;
-            this.dxPointerGrid2.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dxPointerGrid2.Size = new System.Drawing.Size(790, 245);
-            this.dxPointerGrid2.TabIndex = 10;
-            this.dxPointerGrid2.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dxPointerGrid2_CellClick);
-            this.dxPointerGrid2.CellMouseDown += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dxPointerGrid2_CellMouseDown);
-            this.dxPointerGrid2.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dxPointerGrid2_CellValueChanged);
-            this.dxPointerGrid2.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.dxPointerGrid2_DataError);
-            this.dxPointerGrid2.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.dxPointerGrid2_EditingControlShowing);
+            DxSearchDataGrid.RowHeadersDefaultCellStyle = dataGridViewCellStyle6;
+            DxSearchDataGrid.RowHeadersVisible = false;
+            DxSearchDataGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            DxSearchDataGrid.Size = new System.Drawing.Size(481, 203);
+            DxSearchDataGrid.TabIndex = 2;
+            DxSearchDataGrid.CellMouseDoubleClick += DxSearchDataGrid_CellMouseDoubleClick;
+            DxSearchDataGrid.DataBindingComplete += DxSearchDataGrid_DataBindingComplete;
             // 
-            // DxDeleteButton
+            // SelectedDxLabel
             // 
-            this.DxDeleteButton.Image = global::LabBilling.Properties.Resources.hiclipart_com_id_dbhyp;
-            this.DxDeleteButton.Location = new System.Drawing.Point(815, 46);
-            this.DxDeleteButton.Name = "DxDeleteButton";
-            this.DxDeleteButton.Size = new System.Drawing.Size(20, 24);
-            this.DxDeleteButton.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.DxDeleteButton.TabIndex = 9;
-            this.DxDeleteButton.TabStop = false;
-            this.DxDeleteButton.Click += new System.EventHandler(this.DxDeleteButton_Click);
+            SelectedDxLabel.AutoSize = true;
+            SelectedDxLabel.Location = new System.Drawing.Point(525, 35);
+            SelectedDxLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            SelectedDxLabel.Name = "SelectedDxLabel";
+            SelectedDxLabel.Size = new System.Drawing.Size(108, 15);
+            SelectedDxLabel.TabIndex = 1;
+            SelectedDxLabel.Text = "Selected Diagnoses";
             // 
-            // SaveDxButton
+            // DiagnosisDataGrid
             // 
-            this.SaveDxButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.SaveDxButton.Location = new System.Drawing.Point(820, 6);
-            this.SaveDxButton.Name = "SaveDxButton";
-            this.SaveDxButton.Size = new System.Drawing.Size(75, 28);
-            this.SaveDxButton.TabIndex = 8;
-            this.SaveDxButton.Text = "Save Diagnoses";
-            this.SaveDxButton.UseVisualStyleBackColor = true;
-            this.SaveDxButton.Visible = false;
-            this.SaveDxButton.Click += new System.EventHandler(this.SaveDxButton_Click);
-            // 
-            // QuickAddLabel
-            // 
-            this.QuickAddLabel.AutoSize = true;
-            this.QuickAddLabel.Location = new System.Drawing.Point(646, 17);
-            this.QuickAddLabel.Name = "QuickAddLabel";
-            this.QuickAddLabel.Size = new System.Drawing.Size(57, 13);
-            this.QuickAddLabel.TabIndex = 7;
-            this.QuickAddLabel.Text = "Quick Add";
-            // 
-            // DxQuickAddTextBox
-            // 
-            this.DxQuickAddTextBox.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
-            this.DxQuickAddTextBox.Location = new System.Drawing.Point(709, 14);
-            this.DxQuickAddTextBox.Name = "DxQuickAddTextBox";
-            this.DxQuickAddTextBox.Size = new System.Drawing.Size(100, 20);
-            this.DxQuickAddTextBox.TabIndex = 6;
-            this.DxQuickAddTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.DxQuickAddTextBox_KeyPress);
-            // 
-            // txtSearchDx
-            // 
-            this.txtSearchDx.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
-            this.txtSearchDx.Location = new System.Drawing.Point(114, 18);
-            this.txtSearchDx.Name = "txtSearchDx";
-            this.txtSearchDx.Size = new System.Drawing.Size(218, 20);
-            this.txtSearchDx.TabIndex = 4;
-            this.txtSearchDx.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.SearchDxTextBox_KeyPress);
-            // 
-            // label4
-            // 
-            this.label4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(16, 225);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(94, 13);
-            this.label4.TabIndex = 3;
-            this.label4.Text = "Diagnosis Pointers";
-            // 
-            // DxSearchLabel
-            // 
-            this.DxSearchLabel.AutoSize = true;
-            this.DxSearchLabel.Location = new System.Drawing.Point(15, 21);
-            this.DxSearchLabel.Name = "DxSearchLabel";
-            this.DxSearchLabel.Size = new System.Drawing.Size(90, 13);
-            this.DxSearchLabel.TabIndex = 3;
-            this.DxSearchLabel.Text = "Diagnosis Search";
-            // 
-            // DxSearchDataGrid
-            // 
-            this.DxSearchDataGrid.AllowUserToAddRows = false;
-            this.DxSearchDataGrid.AllowUserToDeleteRows = false;
-            this.DxSearchDataGrid.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
-            this.DxSearchDataGrid.BackgroundColor = System.Drawing.Color.White;
+            DiagnosisDataGrid.AllowUserToAddRows = false;
+            DiagnosisDataGrid.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
+            DiagnosisDataGrid.BackgroundColor = System.Drawing.Color.White;
             dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle7.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle7.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle7.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
             dataGridViewCellStyle7.ForeColor = System.Drawing.SystemColors.WindowText;
             dataGridViewCellStyle7.SelectionBackColor = System.Drawing.SystemColors.Highlight;
             dataGridViewCellStyle7.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             dataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.DxSearchDataGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle7;
-            this.DxSearchDataGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            DiagnosisDataGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle7;
+            DiagnosisDataGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle8.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle8.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle8.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+            dataGridViewCellStyle8.ForeColor = System.Drawing.Color.Black;
             dataGridViewCellStyle8.SelectionBackColor = System.Drawing.SystemColors.Highlight;
             dataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             dataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.DxSearchDataGrid.DefaultCellStyle = dataGridViewCellStyle8;
-            this.DxSearchDataGrid.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
-            this.DxSearchDataGrid.Location = new System.Drawing.Point(18, 46);
-            this.DxSearchDataGrid.Name = "DxSearchDataGrid";
+            DiagnosisDataGrid.DefaultCellStyle = dataGridViewCellStyle8;
+            DiagnosisDataGrid.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
+            DiagnosisDataGrid.Location = new System.Drawing.Point(526, 53);
+            DiagnosisDataGrid.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            DiagnosisDataGrid.Name = "DiagnosisDataGrid";
             dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle9.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle9.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle9.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
             dataGridViewCellStyle9.ForeColor = System.Drawing.SystemColors.WindowText;
             dataGridViewCellStyle9.SelectionBackColor = System.Drawing.SystemColors.Highlight;
             dataGridViewCellStyle9.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             dataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.DxSearchDataGrid.RowHeadersDefaultCellStyle = dataGridViewCellStyle9;
-            this.DxSearchDataGrid.RowHeadersVisible = false;
-            this.DxSearchDataGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.DxSearchDataGrid.Size = new System.Drawing.Size(412, 176);
-            this.DxSearchDataGrid.TabIndex = 2;
-            this.DxSearchDataGrid.CellMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.DxSearchDataGrid_CellMouseDoubleClick);
-            this.DxSearchDataGrid.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.DxSearchDataGrid_DataBindingComplete);
+            DiagnosisDataGrid.RowHeadersDefaultCellStyle = dataGridViewCellStyle9;
+            DiagnosisDataGrid.RowHeadersVisible = false;
+            DiagnosisDataGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            DiagnosisDataGrid.Size = new System.Drawing.Size(418, 203);
+            DiagnosisDataGrid.TabIndex = 0;
+            DiagnosisDataGrid.CellMouseDoubleClick += DiagnosisDataGrid_CellMouseDoubleClick;
+            DiagnosisDataGrid.DataBindingComplete += DiagnosisDataGrid_DataBindingComplete;
+            DiagnosisDataGrid.RowsAdded += DiagnosisDataGrid_RowsAdded;
+            DiagnosisDataGrid.RowsRemoved += DiagnosisDataGrid_RowsRemoved;
+            DiagnosisDataGrid.UserDeletingRow += DiagnosisDataGrid_UserDeletingRow;
             // 
-            // SelectedDxLabel
+            // DxSearchButton
             // 
-            this.SelectedDxLabel.AutoSize = true;
-            this.SelectedDxLabel.Location = new System.Drawing.Point(450, 30);
-            this.SelectedDxLabel.Name = "SelectedDxLabel";
-            this.SelectedDxLabel.Size = new System.Drawing.Size(102, 13);
-            this.SelectedDxLabel.TabIndex = 1;
-            this.SelectedDxLabel.Text = "Selected Diagnoses";
+            DxSearchButton.Image = Properties.Resources.lookup_icon_png_and_vector_for_free_download_pngtree_lookup_png_512_512;
+            DxSearchButton.Location = new System.Drawing.Point(393, 17);
+            DxSearchButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            DxSearchButton.Name = "DxSearchButton";
+            DxSearchButton.Size = new System.Drawing.Size(30, 28);
+            DxSearchButton.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            DxSearchButton.TabIndex = 5;
+            DxSearchButton.TabStop = false;
+            DxSearchButton.Click += DxSearchButton_Click;
             // 
-            // DiagnosisDataGrid
+            // tabInsPrimary
             // 
-            this.DiagnosisDataGrid.AllowUserToAddRows = false;
-            this.DiagnosisDataGrid.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
-            this.DiagnosisDataGrid.BackgroundColor = System.Drawing.Color.White;
+            tabInsPrimary.Location = new System.Drawing.Point(4, 24);
+            tabInsPrimary.Name = "tabInsPrimary";
+            tabInsPrimary.Padding = new System.Windows.Forms.Padding(3);
+            tabInsPrimary.Size = new System.Drawing.Size(1344, 568);
+            tabInsPrimary.TabIndex = 15;
+            tabInsPrimary.Text = "Primary Insurance";
+            tabInsPrimary.UseVisualStyleBackColor = true;
+            // 
+            // tabInsSecondary
+            // 
+            tabInsSecondary.Location = new System.Drawing.Point(4, 24);
+            tabInsSecondary.Name = "tabInsSecondary";
+            tabInsSecondary.Size = new System.Drawing.Size(1344, 568);
+            tabInsSecondary.TabIndex = 16;
+            tabInsSecondary.Text = "Secondary Insurance";
+            tabInsSecondary.UseVisualStyleBackColor = true;
+            // 
+            // tabInsTertiary
+            // 
+            tabInsTertiary.Location = new System.Drawing.Point(4, 24);
+            tabInsTertiary.Name = "tabInsTertiary";
+            tabInsTertiary.Size = new System.Drawing.Size(1344, 568);
+            tabInsTertiary.TabIndex = 17;
+            tabInsTertiary.Text = "Tertiary Insurance";
+            tabInsTertiary.UseVisualStyleBackColor = true;
+            // 
+            // tabCharges
+            // 
+            tabCharges.Location = new System.Drawing.Point(4, 24);
+            tabCharges.Name = "tabCharges";
+            tabCharges.Padding = new System.Windows.Forms.Padding(3);
+            tabCharges.Size = new System.Drawing.Size(1344, 568);
+            tabCharges.TabIndex = 14;
+            tabCharges.Text = "Charges";
+            tabCharges.UseVisualStyleBackColor = true;
+            // 
+            // tabPayments
+            // 
+            tabPayments.AutoScroll = true;
+            tabPayments.BackColor = System.Drawing.Color.White;
+            tabPayments.Controls.Add(AddPaymentButton);
+            tabPayments.Controls.Add(PmtTotalPmtAdjLabel);
+            tabPayments.Controls.Add(TotalPmtAllTextBox);
+            tabPayments.Controls.Add(PmtTotalWriteOffLabel);
+            tabPayments.Controls.Add(TotalWriteOffTextBox);
+            tabPayments.Controls.Add(PmtTotalContractualLabel);
+            tabPayments.Controls.Add(TotalContractualTextBox);
+            tabPayments.Controls.Add(PmtTotalPaymentLabel);
+            tabPayments.Controls.Add(TotalPaymentTextBox);
+            tabPayments.Controls.Add(PaymentsDataGrid);
+            tabPayments.Location = new System.Drawing.Point(4, 24);
+            tabPayments.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            tabPayments.Name = "tabPayments";
+            tabPayments.Size = new System.Drawing.Size(1344, 568);
+            tabPayments.TabIndex = 7;
+            tabPayments.Text = "Payments / Adjustments";
+            // 
+            // AddPaymentButton
+            // 
+            AddPaymentButton.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+            AddPaymentButton.Location = new System.Drawing.Point(1116, 17);
+            AddPaymentButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            AddPaymentButton.Name = "AddPaymentButton";
+            AddPaymentButton.Size = new System.Drawing.Size(202, 27);
+            AddPaymentButton.TabIndex = 9;
+            AddPaymentButton.Text = "Add Payment/Adjustment";
+            AddPaymentButton.UseVisualStyleBackColor = true;
+            AddPaymentButton.Click += AddPaymentButton_Click;
+            // 
+            // PmtTotalPmtAdjLabel
+            // 
+            PmtTotalPmtAdjLabel.AutoSize = true;
+            PmtTotalPmtAdjLabel.Location = new System.Drawing.Point(259, 29);
+            PmtTotalPmtAdjLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            PmtTotalPmtAdjLabel.Name = "PmtTotalPmtAdjLabel";
+            PmtTotalPmtAdjLabel.Size = new System.Drawing.Size(140, 15);
+            PmtTotalPmtAdjLabel.TabIndex = 8;
+            PmtTotalPmtAdjLabel.Text = "Total Pmt && Adjustments";
+            // 
+            // TotalPmtAllTextBox
+            // 
+            TotalPmtAllTextBox.Location = new System.Drawing.Point(405, 25);
+            TotalPmtAllTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            TotalPmtAllTextBox.Name = "TotalPmtAllTextBox";
+            TotalPmtAllTextBox.ReadOnly = true;
+            TotalPmtAllTextBox.Size = new System.Drawing.Size(116, 23);
+            TotalPmtAllTextBox.TabIndex = 7;
+            TotalPmtAllTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // PmtTotalWriteOffLabel
+            // 
+            PmtTotalWriteOffLabel.AutoSize = true;
+            PmtTotalWriteOffLabel.Location = new System.Drawing.Point(28, 89);
+            PmtTotalWriteOffLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            PmtTotalWriteOffLabel.Name = "PmtTotalWriteOffLabel";
+            PmtTotalWriteOffLabel.Size = new System.Drawing.Size(83, 15);
+            PmtTotalWriteOffLabel.TabIndex = 6;
+            PmtTotalWriteOffLabel.Text = "Total Write Off";
+            // 
+            // TotalWriteOffTextBox
+            // 
+            TotalWriteOffTextBox.Location = new System.Drawing.Point(124, 85);
+            TotalWriteOffTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            TotalWriteOffTextBox.Name = "TotalWriteOffTextBox";
+            TotalWriteOffTextBox.ReadOnly = true;
+            TotalWriteOffTextBox.Size = new System.Drawing.Size(116, 23);
+            TotalWriteOffTextBox.TabIndex = 5;
+            TotalWriteOffTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // PmtTotalContractualLabel
+            // 
+            PmtTotalContractualLabel.AutoSize = true;
+            PmtTotalContractualLabel.Location = new System.Drawing.Point(14, 59);
+            PmtTotalContractualLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            PmtTotalContractualLabel.Name = "PmtTotalContractualLabel";
+            PmtTotalContractualLabel.Size = new System.Drawing.Size(97, 15);
+            PmtTotalContractualLabel.TabIndex = 4;
+            PmtTotalContractualLabel.Text = "Total Contractual";
+            // 
+            // TotalContractualTextBox
+            // 
+            TotalContractualTextBox.Location = new System.Drawing.Point(124, 55);
+            TotalContractualTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            TotalContractualTextBox.Name = "TotalContractualTextBox";
+            TotalContractualTextBox.ReadOnly = true;
+            TotalContractualTextBox.Size = new System.Drawing.Size(116, 23);
+            TotalContractualTextBox.TabIndex = 3;
+            TotalContractualTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // PmtTotalPaymentLabel
+            // 
+            PmtTotalPaymentLabel.AutoSize = true;
+            PmtTotalPaymentLabel.Location = new System.Drawing.Point(29, 29);
+            PmtTotalPaymentLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            PmtTotalPaymentLabel.Name = "PmtTotalPaymentLabel";
+            PmtTotalPaymentLabel.Size = new System.Drawing.Size(82, 15);
+            PmtTotalPaymentLabel.TabIndex = 2;
+            PmtTotalPaymentLabel.Text = "Total Payment";
+            // 
+            // TotalPaymentTextBox
+            // 
+            TotalPaymentTextBox.Location = new System.Drawing.Point(124, 25);
+            TotalPaymentTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            TotalPaymentTextBox.Name = "TotalPaymentTextBox";
+            TotalPaymentTextBox.ReadOnly = true;
+            TotalPaymentTextBox.Size = new System.Drawing.Size(116, 23);
+            TotalPaymentTextBox.TabIndex = 1;
+            TotalPaymentTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // PaymentsDataGrid
+            // 
+            PaymentsDataGrid.AllowUserToAddRows = false;
+            PaymentsDataGrid.AllowUserToDeleteRows = false;
+            PaymentsDataGrid.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
             dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle10.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle10.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle10.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
             dataGridViewCellStyle10.ForeColor = System.Drawing.SystemColors.WindowText;
             dataGridViewCellStyle10.SelectionBackColor = System.Drawing.SystemColors.Highlight;
             dataGridViewCellStyle10.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             dataGridViewCellStyle10.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.DiagnosisDataGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle10;
-            this.DiagnosisDataGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            PaymentsDataGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle10;
+            PaymentsDataGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle11.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle11.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle11.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle11.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+            dataGridViewCellStyle11.ForeColor = System.Drawing.Color.Black;
             dataGridViewCellStyle11.SelectionBackColor = System.Drawing.SystemColors.Highlight;
             dataGridViewCellStyle11.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             dataGridViewCellStyle11.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.DiagnosisDataGrid.DefaultCellStyle = dataGridViewCellStyle11;
-            this.DiagnosisDataGrid.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
-            this.DiagnosisDataGrid.Location = new System.Drawing.Point(451, 46);
-            this.DiagnosisDataGrid.Name = "DiagnosisDataGrid";
+            PaymentsDataGrid.DefaultCellStyle = dataGridViewCellStyle11;
+            PaymentsDataGrid.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
+            PaymentsDataGrid.Location = new System.Drawing.Point(4, 133);
+            PaymentsDataGrid.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            PaymentsDataGrid.Name = "PaymentsDataGrid";
+            PaymentsDataGrid.ReadOnly = true;
             dataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle12.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle12.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle12.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
             dataGridViewCellStyle12.ForeColor = System.Drawing.SystemColors.WindowText;
             dataGridViewCellStyle12.SelectionBackColor = System.Drawing.SystemColors.Highlight;
             dataGridViewCellStyle12.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             dataGridViewCellStyle12.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.DiagnosisDataGrid.RowHeadersDefaultCellStyle = dataGridViewCellStyle12;
-            this.DiagnosisDataGrid.RowHeadersVisible = false;
-            this.DiagnosisDataGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.DiagnosisDataGrid.Size = new System.Drawing.Size(358, 176);
-            this.DiagnosisDataGrid.TabIndex = 0;
-            this.DiagnosisDataGrid.CellMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.DiagnosisDataGrid_CellMouseDoubleClick);
-            this.DiagnosisDataGrid.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.DiagnosisDataGrid_DataBindingComplete);
-            this.DiagnosisDataGrid.RowsAdded += new System.Windows.Forms.DataGridViewRowsAddedEventHandler(this.DiagnosisDataGrid_RowsAdded);
-            this.DiagnosisDataGrid.RowsRemoved += new System.Windows.Forms.DataGridViewRowsRemovedEventHandler(this.DiagnosisDataGrid_RowsRemoved);
-            this.DiagnosisDataGrid.UserDeletingRow += new System.Windows.Forms.DataGridViewRowCancelEventHandler(this.DiagnosisDataGrid_UserDeletingRow);
+            PaymentsDataGrid.RowHeadersDefaultCellStyle = dataGridViewCellStyle12;
+            PaymentsDataGrid.RowHeadersVisible = false;
+            PaymentsDataGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            PaymentsDataGrid.Size = new System.Drawing.Size(1336, 363);
+            PaymentsDataGrid.TabIndex = 0;
+            PaymentsDataGrid.CellDoubleClick += PaymentsDataGrid_CellDoubleClick;
             // 
-            // DxSearchButton
+            // tabNotes
             // 
-            this.DxSearchButton.Image = global::LabBilling.Properties.Resources.lookup_icon_png_and_vector_for_free_download_pngtree_lookup_png_512_512;
-            this.DxSearchButton.Location = new System.Drawing.Point(337, 15);
-            this.DxSearchButton.Name = "DxSearchButton";
-            this.DxSearchButton.Size = new System.Drawing.Size(26, 24);
-            this.DxSearchButton.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.DxSearchButton.TabIndex = 5;
-            this.DxSearchButton.TabStop = false;
-            this.DxSearchButton.Click += new System.EventHandler(this.DxSearchButton_Click);
+            tabNotes.AutoScroll = true;
+            tabNotes.BackColor = System.Drawing.Color.White;
+            tabNotes.Controls.Add(notesDataGridView);
+            tabNotes.Controls.Add(noteAlertCheckBox);
+            tabNotes.Controls.Add(AddNoteButton);
+            tabNotes.Location = new System.Drawing.Point(4, 24);
+            tabNotes.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            tabNotes.Name = "tabNotes";
+            tabNotes.Size = new System.Drawing.Size(1344, 568);
+            tabNotes.TabIndex = 5;
+            tabNotes.Text = "Notes";
             // 
-            // tabCharges
+            // notesDataGridView
             // 
-            this.tabCharges.AutoScroll = true;
-            this.tabCharges.BackColor = System.Drawing.Color.White;
-            this.tabCharges.Controls.Add(this.showAllChargeRadioButton);
-            this.tabCharges.Controls.Add(this.showClientRadioButton);
-            this.tabCharges.Controls.Add(this.show3rdPartyRadioButton);
-            this.tabCharges.Controls.Add(this.chargeLayoutPanel);
-            this.tabCharges.Controls.Add(this.TotalChargesTextBox);
-            this.tabCharges.Controls.Add(this.ChargeTotalChargesLabel);
-            this.tabCharges.Controls.Add(this.ShowCreditedChrgCheckBox);
-            this.tabCharges.Location = new System.Drawing.Point(4, 22);
-            this.tabCharges.Name = "tabCharges";
-            this.tabCharges.Padding = new System.Windows.Forms.Padding(3);
-            this.tabCharges.Size = new System.Drawing.Size(1151, 492);
-            this.tabCharges.TabIndex = 6;
-            this.tabCharges.Text = "Charges";
+            notesDataGridView.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            notesDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            notesDataGridView.Location = new System.Drawing.Point(3, 46);
+            notesDataGridView.Name = "notesDataGridView";
+            notesDataGridView.RowTemplate.Height = 25;
+            notesDataGridView.Size = new System.Drawing.Size(1332, 515);
+            notesDataGridView.TabIndex = 3;
             // 
-            // showAllChargeRadioButton
+            // noteAlertCheckBox
             // 
-            this.showAllChargeRadioButton.AutoSize = true;
-            this.showAllChargeRadioButton.Checked = true;
-            this.showAllChargeRadioButton.Location = new System.Drawing.Point(383, 10);
-            this.showAllChargeRadioButton.Name = "showAllChargeRadioButton";
-            this.showAllChargeRadioButton.Size = new System.Drawing.Size(66, 17);
-            this.showAllChargeRadioButton.TabIndex = 12;
-            this.showAllChargeRadioButton.TabStop = true;
-            this.showAllChargeRadioButton.Text = "Show All";
-            this.showAllChargeRadioButton.UseVisualStyleBackColor = true;
-            this.showAllChargeRadioButton.CheckedChanged += new System.EventHandler(this.show3rdPartyRadioButton_CheckedChanged);
+            noteAlertCheckBox.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+            noteAlertCheckBox.AutoSize = true;
+            noteAlertCheckBox.Location = new System.Drawing.Point(1138, 8);
+            noteAlertCheckBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            noteAlertCheckBox.Name = "noteAlertCheckBox";
+            noteAlertCheckBox.Size = new System.Drawing.Size(80, 19);
+            noteAlertCheckBox.TabIndex = 2;
+            noteAlertCheckBox.Text = "Note Alert";
+            noteAlertCheckBox.UseVisualStyleBackColor = true;
+            noteAlertCheckBox.CheckedChanged += noteAlertCheckBox_CheckedChanged;
             // 
-            // showClientRadioButton
+            // AddNoteButton
             // 
-            this.showClientRadioButton.AutoSize = true;
-            this.showClientRadioButton.BackColor = System.Drawing.Color.PaleGreen;
-            this.showClientRadioButton.Location = new System.Drawing.Point(252, 10);
-            this.showClientRadioButton.Name = "showClientRadioButton";
-            this.showClientRadioButton.Size = new System.Drawing.Size(125, 17);
-            this.showClientRadioButton.TabIndex = 12;
-            this.showClientRadioButton.Text = "Show Client Invoiced";
-            this.showClientRadioButton.UseVisualStyleBackColor = false;
-            this.showClientRadioButton.CheckedChanged += new System.EventHandler(this.show3rdPartyRadioButton_CheckedChanged);
+            AddNoteButton.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+            AddNoteButton.Location = new System.Drawing.Point(1247, 3);
+            AddNoteButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            AddNoteButton.Name = "AddNoteButton";
+            AddNoteButton.Size = new System.Drawing.Size(88, 27);
+            AddNoteButton.TabIndex = 1;
+            AddNoteButton.Text = "Add Note";
+            AddNoteButton.UseVisualStyleBackColor = true;
+            AddNoteButton.Click += AddNoteButton_Click;
             // 
-            // show3rdPartyRadioButton
+            // tabBillingActivity
             // 
-            this.show3rdPartyRadioButton.AutoSize = true;
-            this.show3rdPartyRadioButton.BackColor = System.Drawing.Color.Cyan;
-            this.show3rdPartyRadioButton.Location = new System.Drawing.Point(111, 10);
-            this.show3rdPartyRadioButton.Name = "show3rdPartyRadioButton";
-            this.show3rdPartyRadioButton.Size = new System.Drawing.Size(135, 17);
-            this.show3rdPartyRadioButton.TabIndex = 12;
-            this.show3rdPartyRadioButton.Text = "Show 3rd Party/Patient";
-            this.show3rdPartyRadioButton.UseVisualStyleBackColor = false;
-            this.show3rdPartyRadioButton.CheckedChanged += new System.EventHandler(this.show3rdPartyRadioButton_CheckedChanged);
+            tabBillingActivity.AutoScroll = true;
+            tabBillingActivity.BackColor = System.Drawing.Color.White;
+            tabBillingActivity.Controls.Add(label5);
+            tabBillingActivity.Controls.Add(statementHistoryDataGrid);
+            tabBillingActivity.Controls.Add(clearClaimStatusButton);
+            tabBillingActivity.Controls.Add(readyToBillCheckbox);
+            tabBillingActivity.Controls.Add(statementFlagComboBox);
+            tabBillingActivity.Controls.Add(label3);
+            tabBillingActivity.Controls.Add(label2);
+            tabBillingActivity.Controls.Add(label1);
+            tabBillingActivity.Controls.Add(lastStmtDateTextBox);
+            tabBillingActivity.Controls.Add(firstStmtDateTextBox);
+            tabBillingActivity.Controls.Add(statementFlagLabel);
+            tabBillingActivity.Controls.Add(GenerateClaimButton);
+            tabBillingActivity.Controls.Add(LastValidatedLabel);
+            tabBillingActivity.Controls.Add(BillingLastValidatedLabel);
+            tabBillingActivity.Controls.Add(ValidationResultsTextBox);
+            tabBillingActivity.Controls.Add(ValidateAccountButton);
+            tabBillingActivity.Controls.Add(BillActivityDataGrid);
+            tabBillingActivity.Controls.Add(minPmtTextBox);
+            tabBillingActivity.Location = new System.Drawing.Point(4, 24);
+            tabBillingActivity.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            tabBillingActivity.Name = "tabBillingActivity";
+            tabBillingActivity.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            tabBillingActivity.Size = new System.Drawing.Size(1344, 568);
+            tabBillingActivity.TabIndex = 12;
+            tabBillingActivity.Text = "Billing Activity";
             // 
-            // chargeLayoutPanel
+            // label5
             // 
-            this.chargeLayoutPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.chargeLayoutPanel.ColumnCount = 2;
-            this.chargeLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.chargeLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 162F));
-            this.chargeLayoutPanel.Controls.Add(this.ChargesDataGridLabel, 0, 0);
-            this.chargeLayoutPanel.Controls.Add(this.ChargesDataGrid, 0, 1);
-            this.chargeLayoutPanel.Controls.Add(this.ChargeDetailGridLabel, 0, 2);
-            this.chargeLayoutPanel.Controls.Add(this.ChrgDetailDataGrid, 0, 3);
-            this.chargeLayoutPanel.Controls.Add(this.AddChargeButton, 1, 0);
-            this.chargeLayoutPanel.Controls.Add(this.chargeBalRichTextbox, 1, 1);
-            this.chargeLayoutPanel.Location = new System.Drawing.Point(8, 33);
-            this.chargeLayoutPanel.Name = "chargeLayoutPanel";
-            this.chargeLayoutPanel.RowCount = 4;
-            this.chargeLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.chargeLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 60F));
-            this.chargeLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.chargeLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 40F));
-            this.chargeLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.chargeLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.chargeLayoutPanel.Size = new System.Drawing.Size(1135, 453);
-            this.chargeLayoutPanel.TabIndex = 11;
+            label5.AutoSize = true;
+            label5.Location = new System.Drawing.Point(10, 357);
+            label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label5.Name = "label5";
+            label5.Size = new System.Drawing.Size(102, 15);
+            label5.TabIndex = 15;
+            label5.Text = "Statement History";
             // 
-            // ChargesDataGridLabel
+            // statementHistoryDataGrid
             // 
-            this.ChargesDataGridLabel.AutoSize = true;
-            this.ChargesDataGridLabel.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.ChargesDataGridLabel.Location = new System.Drawing.Point(3, 16);
-            this.ChargesDataGridLabel.Name = "ChargesDataGridLabel";
-            this.ChargesDataGridLabel.Size = new System.Drawing.Size(967, 13);
-            this.ChargesDataGridLabel.TabIndex = 2;
-            this.ChargesDataGridLabel.Text = "Charges";
+            statementHistoryDataGrid.BackgroundColor = System.Drawing.Color.White;
+            statementHistoryDataGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            statementHistoryDataGrid.Location = new System.Drawing.Point(9, 378);
+            statementHistoryDataGrid.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            statementHistoryDataGrid.Name = "statementHistoryDataGrid";
+            statementHistoryDataGrid.Size = new System.Drawing.Size(1069, 130);
+            statementHistoryDataGrid.TabIndex = 14;
             // 
-            // ChargesDataGrid
+            // clearClaimStatusButton
             // 
-            this.ChargesDataGrid.AllowUserToAddRows = false;
-            this.ChargesDataGrid.AllowUserToDeleteRows = false;
-            this.ChargesDataGrid.BackgroundColor = System.Drawing.SystemColors.ControlLightLight;
+            clearClaimStatusButton.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+            clearClaimStatusButton.Location = new System.Drawing.Point(1198, 107);
+            clearClaimStatusButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            clearClaimStatusButton.Name = "clearClaimStatusButton";
+            clearClaimStatusButton.Size = new System.Drawing.Size(135, 27);
+            clearClaimStatusButton.TabIndex = 13;
+            clearClaimStatusButton.Text = "Clear Claim Status";
+            clearClaimStatusButton.Click += clearClaimStatusButton_Click;
+            // 
+            // readyToBillCheckbox
+            // 
+            readyToBillCheckbox.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+            readyToBillCheckbox.AutoSize = true;
+            readyToBillCheckbox.Location = new System.Drawing.Point(1206, 12);
+            readyToBillCheckbox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            readyToBillCheckbox.Name = "readyToBillCheckbox";
+            readyToBillCheckbox.Size = new System.Drawing.Size(91, 19);
+            readyToBillCheckbox.TabIndex = 12;
+            readyToBillCheckbox.Text = "Ready to Bill";
+            readyToBillCheckbox.UseVisualStyleBackColor = true;
+            readyToBillCheckbox.CheckedChanged += readyToBillCheckbox_CheckedChanged;
+            // 
+            // statementFlagComboBox
+            // 
+            statementFlagComboBox.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+            statementFlagComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            statementFlagComboBox.FormattingEnabled = true;
+            statementFlagComboBox.Items.AddRange(new object[] { "N", "Y", "1", "2", "3", "4", "P" });
+            statementFlagComboBox.Location = new System.Drawing.Point(1198, 382);
+            statementFlagComboBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            statementFlagComboBox.Name = "statementFlagComboBox";
+            statementFlagComboBox.Size = new System.Drawing.Size(116, 23);
+            statementFlagComboBox.TabIndex = 11;
+            statementFlagComboBox.SelectionChangeCommitted += statementFlagComboBox_SelectionChangeCommitted;
+            // 
+            // label3
+            // 
+            label3.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+            label3.AutoSize = true;
+            label3.Location = new System.Drawing.Point(1085, 477);
+            label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label3.Name = "label3";
+            label3.Size = new System.Drawing.Size(110, 15);
+            label3.TabIndex = 10;
+            label3.Text = "Minimum Payment";
+            // 
+            // label2
+            // 
+            label2.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+            label2.AutoSize = true;
+            label2.Location = new System.Drawing.Point(1101, 447);
+            label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label2.Name = "label2";
+            label2.Size = new System.Drawing.Size(85, 15);
+            label2.TabIndex = 8;
+            label2.Text = "Last Statement";
+            // 
+            // label1
+            // 
+            label1.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+            label1.AutoSize = true;
+            label1.Location = new System.Drawing.Point(1101, 417);
+            label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label1.Name = "label1";
+            label1.Size = new System.Drawing.Size(86, 15);
+            label1.TabIndex = 8;
+            label1.Text = "First Statement";
+            // 
+            // lastStmtDateTextBox
+            // 
+            lastStmtDateTextBox.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+            lastStmtDateTextBox.Location = new System.Drawing.Point(1198, 443);
+            lastStmtDateTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            lastStmtDateTextBox.Name = "lastStmtDateTextBox";
+            lastStmtDateTextBox.ReadOnly = true;
+            lastStmtDateTextBox.Size = new System.Drawing.Size(116, 23);
+            lastStmtDateTextBox.TabIndex = 7;
+            // 
+            // firstStmtDateTextBox
+            // 
+            firstStmtDateTextBox.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+            firstStmtDateTextBox.Location = new System.Drawing.Point(1198, 413);
+            firstStmtDateTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            firstStmtDateTextBox.Name = "firstStmtDateTextBox";
+            firstStmtDateTextBox.ReadOnly = true;
+            firstStmtDateTextBox.Size = new System.Drawing.Size(116, 23);
+            firstStmtDateTextBox.TabIndex = 7;
+            // 
+            // statementFlagLabel
+            // 
+            statementFlagLabel.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+            statementFlagLabel.AutoSize = true;
+            statementFlagLabel.Location = new System.Drawing.Point(1100, 387);
+            statementFlagLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            statementFlagLabel.Name = "statementFlagLabel";
+            statementFlagLabel.Size = new System.Drawing.Size(86, 15);
+            statementFlagLabel.TabIndex = 6;
+            statementFlagLabel.Text = "Statement Flag";
+            // 
+            // GenerateClaimButton
+            // 
+            GenerateClaimButton.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+            GenerateClaimButton.Location = new System.Drawing.Point(1198, 40);
+            GenerateClaimButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            GenerateClaimButton.Name = "GenerateClaimButton";
+            GenerateClaimButton.Size = new System.Drawing.Size(135, 27);
+            GenerateClaimButton.TabIndex = 4;
+            GenerateClaimButton.Text = "GenerateClaim";
+            GenerateClaimButton.Click += GenerateClaimButton_Click;
+            // 
+            // LastValidatedLabel
+            // 
+            LastValidatedLabel.AutoSize = true;
+            LastValidatedLabel.Location = new System.Drawing.Point(122, 15);
+            LastValidatedLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            LastValidatedLabel.Name = "LastValidatedLabel";
+            LastValidatedLabel.Size = new System.Drawing.Size(22, 15);
+            LastValidatedLabel.TabIndex = 3;
+            LastValidatedLabel.Text = ".....";
+            // 
+            // BillingLastValidatedLabel
+            // 
+            BillingLastValidatedLabel.AutoSize = true;
+            BillingLastValidatedLabel.Location = new System.Drawing.Point(9, 12);
+            BillingLastValidatedLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            BillingLastValidatedLabel.Name = "BillingLastValidatedLabel";
+            BillingLastValidatedLabel.Size = new System.Drawing.Size(82, 15);
+            BillingLastValidatedLabel.TabIndex = 3;
+            BillingLastValidatedLabel.Text = "Last Validated:";
+            // 
+            // ValidationResultsTextBox
+            // 
+            ValidationResultsTextBox.Location = new System.Drawing.Point(9, 192);
+            ValidationResultsTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            ValidationResultsTextBox.Multiline = true;
+            ValidationResultsTextBox.Name = "ValidationResultsTextBox";
+            ValidationResultsTextBox.Size = new System.Drawing.Size(1069, 145);
+            ValidationResultsTextBox.TabIndex = 2;
+            // 
+            // ValidateAccountButton
+            // 
+            ValidateAccountButton.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+            ValidateAccountButton.Location = new System.Drawing.Point(1198, 74);
+            ValidateAccountButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            ValidateAccountButton.Name = "ValidateAccountButton";
+            ValidateAccountButton.Size = new System.Drawing.Size(135, 27);
+            ValidateAccountButton.TabIndex = 1;
+            ValidateAccountButton.Text = "Validate Account";
+            ValidateAccountButton.Click += ValidateAccountButton_Click;
+            // 
+            // BillActivityDataGrid
+            // 
+            BillActivityDataGrid.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            BillActivityDataGrid.BackgroundColor = System.Drawing.Color.WhiteSmoke;
             dataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle13.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle13.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle13.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
             dataGridViewCellStyle13.ForeColor = System.Drawing.SystemColors.WindowText;
             dataGridViewCellStyle13.SelectionBackColor = System.Drawing.SystemColors.Highlight;
             dataGridViewCellStyle13.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             dataGridViewCellStyle13.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.ChargesDataGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle13;
-            this.ChargesDataGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.ChargesDataGrid.ContextMenuStrip = this.menuCharges;
+            BillActivityDataGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle13;
+            BillActivityDataGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle14.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle14.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle14.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle14.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+            dataGridViewCellStyle14.ForeColor = System.Drawing.Color.Black;
             dataGridViewCellStyle14.SelectionBackColor = System.Drawing.SystemColors.Highlight;
             dataGridViewCellStyle14.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             dataGridViewCellStyle14.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.ChargesDataGrid.DefaultCellStyle = dataGridViewCellStyle14;
-            this.ChargesDataGrid.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ChargesDataGrid.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
-            this.ChargesDataGrid.Location = new System.Drawing.Point(3, 32);
-            this.ChargesDataGrid.Name = "ChargesDataGrid";
+            BillActivityDataGrid.DefaultCellStyle = dataGridViewCellStyle14;
+            BillActivityDataGrid.Location = new System.Drawing.Point(9, 40);
+            BillActivityDataGrid.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            BillActivityDataGrid.Name = "BillActivityDataGrid";
             dataGridViewCellStyle15.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle15.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle15.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle15.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
             dataGridViewCellStyle15.ForeColor = System.Drawing.SystemColors.WindowText;
             dataGridViewCellStyle15.SelectionBackColor = System.Drawing.SystemColors.Highlight;
             dataGridViewCellStyle15.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             dataGridViewCellStyle15.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.ChargesDataGrid.RowHeadersDefaultCellStyle = dataGridViewCellStyle15;
-            this.ChargesDataGrid.RowHeadersVisible = false;
-            this.ChargesDataGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.ChargesDataGrid.Size = new System.Drawing.Size(967, 240);
-            this.ChargesDataGrid.TabIndex = 0;
-            this.ChargesDataGrid.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DgvCharges_CellDoubleClick);
-            this.ChargesDataGrid.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.ChargesDataGrid_CellFormatting);
-            this.ChargesDataGrid.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.ChargesDataGrid_CellMouseClick);
-            // 
-            // menuCharges
-            // 
-            this.menuCharges.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripCreditCharge,
-            this.moveChargeToolStripMenuItem,
-            this.changeCreditFlagToolStripMenuItem});
-            this.menuCharges.Name = "menuCharges";
-            this.menuCharges.Size = new System.Drawing.Size(176, 70);
-            // 
-            // toolStripCreditCharge
-            // 
-            this.toolStripCreditCharge.Name = "toolStripCreditCharge";
-            this.toolStripCreditCharge.Size = new System.Drawing.Size(175, 22);
-            this.toolStripCreditCharge.Text = "Credit Charge";
-            this.toolStripCreditCharge.Click += new System.EventHandler(this.ToolStripCreditCharge_Click);
-            // 
-            // moveChargeToolStripMenuItem
-            // 
-            this.moveChargeToolStripMenuItem.Name = "moveChargeToolStripMenuItem";
-            this.moveChargeToolStripMenuItem.Size = new System.Drawing.Size(175, 22);
-            this.moveChargeToolStripMenuItem.Text = "Move Charge";
-            this.moveChargeToolStripMenuItem.Click += new System.EventHandler(this.moveChargeToolStripMenuItem_Click);
-            // 
-            // changeCreditFlagToolStripMenuItem
-            // 
-            this.changeCreditFlagToolStripMenuItem.Name = "changeCreditFlagToolStripMenuItem";
-            this.changeCreditFlagToolStripMenuItem.Size = new System.Drawing.Size(175, 22);
-            this.changeCreditFlagToolStripMenuItem.Text = "Change Credit Flag";
-            this.changeCreditFlagToolStripMenuItem.Click += new System.EventHandler(this.changeCreditFlagToolStripMenuItem_Click);
-            // 
-            // ChargeDetailGridLabel
-            // 
-            this.ChargeDetailGridLabel.AutoSize = true;
-            this.ChargeDetailGridLabel.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.ChargeDetailGridLabel.Location = new System.Drawing.Point(3, 275);
-            this.ChargeDetailGridLabel.Name = "ChargeDetailGridLabel";
-            this.ChargeDetailGridLabel.Size = new System.Drawing.Size(967, 13);
-            this.ChargeDetailGridLabel.TabIndex = 3;
-            this.ChargeDetailGridLabel.Text = "Charge Details";
-            // 
-            // ChrgDetailDataGrid
-            // 
-            this.ChrgDetailDataGrid.AllowUserToAddRows = false;
-            this.ChrgDetailDataGrid.AllowUserToDeleteRows = false;
-            this.ChrgDetailDataGrid.BackgroundColor = System.Drawing.SystemColors.ControlLightLight;
-            dataGridViewCellStyle16.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle16.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle16.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle16.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle16.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle16.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle16.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.ChrgDetailDataGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle16;
-            this.ChrgDetailDataGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.ChrgDetailDataGrid.ContextMenuStrip = this.chargeDetailsContextMenu;
-            dataGridViewCellStyle17.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle17.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle17.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle17.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle17.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle17.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle17.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.ChrgDetailDataGrid.DefaultCellStyle = dataGridViewCellStyle17;
-            this.ChrgDetailDataGrid.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ChrgDetailDataGrid.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
-            this.ChrgDetailDataGrid.Location = new System.Drawing.Point(3, 291);
-            this.ChrgDetailDataGrid.Name = "ChrgDetailDataGrid";
-            this.ChrgDetailDataGrid.ReadOnly = true;
-            dataGridViewCellStyle18.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle18.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle18.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle18.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle18.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle18.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle18.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.ChrgDetailDataGrid.RowHeadersDefaultCellStyle = dataGridViewCellStyle18;
-            this.ChrgDetailDataGrid.RowHeadersVisible = false;
-            this.ChrgDetailDataGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.ChrgDetailDataGrid.Size = new System.Drawing.Size(967, 159);
-            this.ChrgDetailDataGrid.TabIndex = 1;
-            // 
-            // chargeDetailsContextMenu
-            // 
-            this.chargeDetailsContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.addModifierToolStripMenuItem,
-            this.removeModifierToolStripMenuItem});
-            this.chargeDetailsContextMenu.Name = "chargeDetailsContextMenu";
-            this.chargeDetailsContextMenu.Size = new System.Drawing.Size(166, 48);
-            this.chargeDetailsContextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.chargeDetailsContextMenu_Opening);
-            // 
-            // addModifierToolStripMenuItem
-            // 
-            this.addModifierToolStripMenuItem.Name = "addModifierToolStripMenuItem";
-            this.addModifierToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
-            this.addModifierToolStripMenuItem.Text = "Add Modifier";
-            // 
-            // removeModifierToolStripMenuItem
-            // 
-            this.removeModifierToolStripMenuItem.Name = "removeModifierToolStripMenuItem";
-            this.removeModifierToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
-            this.removeModifierToolStripMenuItem.Text = "Remove Modifier";
-            // 
-            // AddChargeButton
-            // 
-            this.AddChargeButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.AddChargeButton.Location = new System.Drawing.Point(1046, 3);
-            this.AddChargeButton.Name = "AddChargeButton";
-            this.AddChargeButton.Size = new System.Drawing.Size(86, 23);
-            this.AddChargeButton.TabIndex = 7;
-            this.AddChargeButton.Text = "Add Charge";
-            this.AddChargeButton.UseVisualStyleBackColor = true;
-            this.AddChargeButton.Click += new System.EventHandler(this.AddChargeButton_Click);
-            // 
-            // chargeBalRichTextbox
-            // 
-            this.chargeBalRichTextbox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.chargeBalRichTextbox.Location = new System.Drawing.Point(976, 32);
-            this.chargeBalRichTextbox.Name = "chargeBalRichTextbox";
-            this.chargeBalRichTextbox.Size = new System.Drawing.Size(156, 240);
-            this.chargeBalRichTextbox.TabIndex = 8;
-            this.chargeBalRichTextbox.Text = "";
-            // 
-            // TotalChargesTextBox
-            // 
-            this.TotalChargesTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.TotalChargesTextBox.Location = new System.Drawing.Point(1036, 6);
-            this.TotalChargesTextBox.Name = "TotalChargesTextBox";
-            this.TotalChargesTextBox.ReadOnly = true;
-            this.TotalChargesTextBox.Size = new System.Drawing.Size(107, 20);
-            this.TotalChargesTextBox.TabIndex = 6;
-            this.TotalChargesTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            // 
-            // ChargeTotalChargesLabel
-            // 
-            this.ChargeTotalChargesLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.ChargeTotalChargesLabel.AutoSize = true;
-            this.ChargeTotalChargesLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ChargeTotalChargesLabel.Location = new System.Drawing.Point(944, 9);
-            this.ChargeTotalChargesLabel.Name = "ChargeTotalChargesLabel";
-            this.ChargeTotalChargesLabel.Size = new System.Drawing.Size(86, 13);
-            this.ChargeTotalChargesLabel.TabIndex = 5;
-            this.ChargeTotalChargesLabel.Text = "Total Charges";
-            // 
-            // ShowCreditedChrgCheckBox
-            // 
-            this.ShowCreditedChrgCheckBox.AutoSize = true;
-            this.ShowCreditedChrgCheckBox.ForeColor = System.Drawing.Color.Red;
-            this.ShowCreditedChrgCheckBox.Location = new System.Drawing.Point(8, 10);
-            this.ShowCreditedChrgCheckBox.Name = "ShowCreditedChrgCheckBox";
-            this.ShowCreditedChrgCheckBox.Size = new System.Drawing.Size(88, 17);
-            this.ShowCreditedChrgCheckBox.TabIndex = 4;
-            this.ShowCreditedChrgCheckBox.Text = "Show Credits";
-            this.ShowCreditedChrgCheckBox.UseVisualStyleBackColor = true;
-            this.ShowCreditedChrgCheckBox.CheckedChanged += new System.EventHandler(this.ShowCreditedChrgCheckBox_CheckedChanged);
-            // 
-            // tabPayments
-            // 
-            this.tabPayments.AutoScroll = true;
-            this.tabPayments.BackColor = System.Drawing.Color.White;
-            this.tabPayments.Controls.Add(this.AddPaymentButton);
-            this.tabPayments.Controls.Add(this.PmtTotalPmtAdjLabel);
-            this.tabPayments.Controls.Add(this.TotalPmtAllTextBox);
-            this.tabPayments.Controls.Add(this.PmtTotalWriteOffLabel);
-            this.tabPayments.Controls.Add(this.TotalWriteOffTextBox);
-            this.tabPayments.Controls.Add(this.PmtTotalContractualLabel);
-            this.tabPayments.Controls.Add(this.TotalContractualTextBox);
-            this.tabPayments.Controls.Add(this.PmtTotalPaymentLabel);
-            this.tabPayments.Controls.Add(this.TotalPaymentTextBox);
-            this.tabPayments.Controls.Add(this.PaymentsDataGrid);
-            this.tabPayments.Location = new System.Drawing.Point(4, 22);
-            this.tabPayments.Name = "tabPayments";
-            this.tabPayments.Size = new System.Drawing.Size(1151, 492);
-            this.tabPayments.TabIndex = 7;
-            this.tabPayments.Text = "Payments / Adjustments";
-            // 
-            // AddPaymentButton
-            // 
-            this.AddPaymentButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.AddPaymentButton.Location = new System.Drawing.Point(957, 15);
-            this.AddPaymentButton.Name = "AddPaymentButton";
-            this.AddPaymentButton.Size = new System.Drawing.Size(173, 23);
-            this.AddPaymentButton.TabIndex = 9;
-            this.AddPaymentButton.Text = "Add Payment/Adjustment";
-            this.AddPaymentButton.UseVisualStyleBackColor = true;
-            this.AddPaymentButton.Click += new System.EventHandler(this.AddPaymentButton_Click);
-            // 
-            // PmtTotalPmtAdjLabel
-            // 
-            this.PmtTotalPmtAdjLabel.AutoSize = true;
-            this.PmtTotalPmtAdjLabel.Location = new System.Drawing.Point(222, 25);
-            this.PmtTotalPmtAdjLabel.Name = "PmtTotalPmtAdjLabel";
-            this.PmtTotalPmtAdjLabel.Size = new System.Drawing.Size(121, 13);
-            this.PmtTotalPmtAdjLabel.TabIndex = 8;
-            this.PmtTotalPmtAdjLabel.Text = "Total Pmt && Adjustments";
-            // 
-            // TotalPmtAllTextBox
-            // 
-            this.TotalPmtAllTextBox.Location = new System.Drawing.Point(347, 22);
-            this.TotalPmtAllTextBox.Name = "TotalPmtAllTextBox";
-            this.TotalPmtAllTextBox.ReadOnly = true;
-            this.TotalPmtAllTextBox.Size = new System.Drawing.Size(100, 20);
-            this.TotalPmtAllTextBox.TabIndex = 7;
-            this.TotalPmtAllTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            // 
-            // PmtTotalWriteOffLabel
-            // 
-            this.PmtTotalWriteOffLabel.AutoSize = true;
-            this.PmtTotalWriteOffLabel.Location = new System.Drawing.Point(24, 77);
-            this.PmtTotalWriteOffLabel.Name = "PmtTotalWriteOffLabel";
-            this.PmtTotalWriteOffLabel.Size = new System.Drawing.Size(76, 13);
-            this.PmtTotalWriteOffLabel.TabIndex = 6;
-            this.PmtTotalWriteOffLabel.Text = "Total Write Off";
-            // 
-            // TotalWriteOffTextBox
-            // 
-            this.TotalWriteOffTextBox.Location = new System.Drawing.Point(106, 74);
-            this.TotalWriteOffTextBox.Name = "TotalWriteOffTextBox";
-            this.TotalWriteOffTextBox.ReadOnly = true;
-            this.TotalWriteOffTextBox.Size = new System.Drawing.Size(100, 20);
-            this.TotalWriteOffTextBox.TabIndex = 5;
-            this.TotalWriteOffTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            // 
-            // PmtTotalContractualLabel
-            // 
-            this.PmtTotalContractualLabel.AutoSize = true;
-            this.PmtTotalContractualLabel.Location = new System.Drawing.Point(12, 51);
-            this.PmtTotalContractualLabel.Name = "PmtTotalContractualLabel";
-            this.PmtTotalContractualLabel.Size = new System.Drawing.Size(88, 13);
-            this.PmtTotalContractualLabel.TabIndex = 4;
-            this.PmtTotalContractualLabel.Text = "Total Contractual";
-            // 
-            // TotalContractualTextBox
-            // 
-            this.TotalContractualTextBox.Location = new System.Drawing.Point(106, 48);
-            this.TotalContractualTextBox.Name = "TotalContractualTextBox";
-            this.TotalContractualTextBox.ReadOnly = true;
-            this.TotalContractualTextBox.Size = new System.Drawing.Size(100, 20);
-            this.TotalContractualTextBox.TabIndex = 3;
-            this.TotalContractualTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            // 
-            // PmtTotalPaymentLabel
-            // 
-            this.PmtTotalPaymentLabel.AutoSize = true;
-            this.PmtTotalPaymentLabel.Location = new System.Drawing.Point(25, 25);
-            this.PmtTotalPaymentLabel.Name = "PmtTotalPaymentLabel";
-            this.PmtTotalPaymentLabel.Size = new System.Drawing.Size(75, 13);
-            this.PmtTotalPaymentLabel.TabIndex = 2;
-            this.PmtTotalPaymentLabel.Text = "Total Payment";
-            // 
-            // TotalPaymentTextBox
-            // 
-            this.TotalPaymentTextBox.Location = new System.Drawing.Point(106, 22);
-            this.TotalPaymentTextBox.Name = "TotalPaymentTextBox";
-            this.TotalPaymentTextBox.ReadOnly = true;
-            this.TotalPaymentTextBox.Size = new System.Drawing.Size(100, 20);
-            this.TotalPaymentTextBox.TabIndex = 1;
-            this.TotalPaymentTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            // 
-            // PaymentsDataGrid
-            // 
-            this.PaymentsDataGrid.AllowUserToAddRows = false;
-            this.PaymentsDataGrid.AllowUserToDeleteRows = false;
-            this.PaymentsDataGrid.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            dataGridViewCellStyle19.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle19.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle19.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle19.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle19.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle19.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle19.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.PaymentsDataGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle19;
-            this.PaymentsDataGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle20.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle20.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle20.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle20.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle20.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle20.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle20.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.PaymentsDataGrid.DefaultCellStyle = dataGridViewCellStyle20;
-            this.PaymentsDataGrid.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
-            this.PaymentsDataGrid.Location = new System.Drawing.Point(3, 115);
-            this.PaymentsDataGrid.Name = "PaymentsDataGrid";
-            this.PaymentsDataGrid.ReadOnly = true;
-            dataGridViewCellStyle21.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle21.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle21.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle21.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle21.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle21.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle21.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.PaymentsDataGrid.RowHeadersDefaultCellStyle = dataGridViewCellStyle21;
-            this.PaymentsDataGrid.RowHeadersVisible = false;
-            this.PaymentsDataGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.PaymentsDataGrid.Size = new System.Drawing.Size(1145, 315);
-            this.PaymentsDataGrid.TabIndex = 0;
-            this.PaymentsDataGrid.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.PaymentsDataGrid_CellDoubleClick);
-            // 
-            // tabNotes
-            // 
-            this.tabNotes.AutoScroll = true;
-            this.tabNotes.BackColor = System.Drawing.Color.White;
-            this.tabNotes.Controls.Add(this.noteAlertCheckBox);
-            this.tabNotes.Controls.Add(this.AddNoteButton);
-            this.tabNotes.Controls.Add(this.NotesDisplayTextBox);
-            this.tabNotes.Location = new System.Drawing.Point(4, 22);
-            this.tabNotes.Name = "tabNotes";
-            this.tabNotes.Size = new System.Drawing.Size(1151, 492);
-            this.tabNotes.TabIndex = 5;
-            this.tabNotes.Text = "Notes";
-            // 
-            // noteAlertCheckBox
-            // 
-            this.noteAlertCheckBox.AutoSize = true;
-            this.noteAlertCheckBox.Location = new System.Drawing.Point(606, 32);
-            this.noteAlertCheckBox.Name = "noteAlertCheckBox";
-            this.noteAlertCheckBox.Size = new System.Drawing.Size(73, 17);
-            this.noteAlertCheckBox.TabIndex = 2;
-            this.noteAlertCheckBox.Text = "Note Alert";
-            this.noteAlertCheckBox.UseVisualStyleBackColor = true;
-            this.noteAlertCheckBox.CheckedChanged += new System.EventHandler(this.noteAlertCheckBox_CheckedChanged);
-            // 
-            // AddNoteButton
-            // 
-            this.AddNoteButton.Location = new System.Drawing.Point(604, 3);
-            this.AddNoteButton.Name = "AddNoteButton";
-            this.AddNoteButton.Size = new System.Drawing.Size(75, 23);
-            this.AddNoteButton.TabIndex = 1;
-            this.AddNoteButton.Text = "Add Note";
-            this.AddNoteButton.UseVisualStyleBackColor = true;
-            this.AddNoteButton.Click += new System.EventHandler(this.AddNoteButton_Click);
-            // 
-            // NotesDisplayTextBox
-            // 
-            this.NotesDisplayTextBox.ContextMenuStrip = this.noteTextContextMenu;
-            this.NotesDisplayTextBox.Dock = System.Windows.Forms.DockStyle.Left;
-            this.NotesDisplayTextBox.Location = new System.Drawing.Point(0, 0);
-            this.NotesDisplayTextBox.Name = "NotesDisplayTextBox";
-            this.NotesDisplayTextBox.ReadOnly = true;
-            this.NotesDisplayTextBox.Size = new System.Drawing.Size(598, 492);
-            this.NotesDisplayTextBox.TabIndex = 0;
-            this.NotesDisplayTextBox.Text = "";
-            this.NotesDisplayTextBox.ZoomFactor = 1.2F;
-            // 
-            // noteTextContextMenu
-            // 
-            this.noteTextContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.copyToolStripMenuItem});
-            this.noteTextContextMenu.Name = "noteTextContextMenu";
-            this.noteTextContextMenu.Size = new System.Drawing.Size(103, 26);
-            // 
-            // copyToolStripMenuItem
-            // 
-            this.copyToolStripMenuItem.Name = "copyToolStripMenuItem";
-            this.copyToolStripMenuItem.Size = new System.Drawing.Size(102, 22);
-            this.copyToolStripMenuItem.Text = "Copy";
-            this.copyToolStripMenuItem.Click += new System.EventHandler(this.copyToolStripMenuItem_Click);
-            // 
-            // tabBillingActivity
-            // 
-            this.tabBillingActivity.AutoScroll = true;
-            this.tabBillingActivity.BackColor = System.Drawing.Color.White;
-            this.tabBillingActivity.Controls.Add(this.label5);
-            this.tabBillingActivity.Controls.Add(this.statementHistoryDataGrid);
-            this.tabBillingActivity.Controls.Add(this.clearClaimStatusButton);
-            this.tabBillingActivity.Controls.Add(this.readyToBillCheckbox);
-            this.tabBillingActivity.Controls.Add(this.statementFlagComboBox);
-            this.tabBillingActivity.Controls.Add(this.label3);
-            this.tabBillingActivity.Controls.Add(this.label2);
-            this.tabBillingActivity.Controls.Add(this.label1);
-            this.tabBillingActivity.Controls.Add(this.lastStmtDateTextBox);
-            this.tabBillingActivity.Controls.Add(this.firstStmtDateTextBox);
-            this.tabBillingActivity.Controls.Add(this.statementFlagLabel);
-            this.tabBillingActivity.Controls.Add(this.GenerateClaimButton);
-            this.tabBillingActivity.Controls.Add(this.LastValidatedLabel);
-            this.tabBillingActivity.Controls.Add(this.BillingLastValidatedLabel);
-            this.tabBillingActivity.Controls.Add(this.ValidationResultsTextBox);
-            this.tabBillingActivity.Controls.Add(this.ValidateAccountButton);
-            this.tabBillingActivity.Controls.Add(this.BillActivityDataGrid);
-            this.tabBillingActivity.Controls.Add(this.minPmtTextBox);
-            this.tabBillingActivity.Location = new System.Drawing.Point(4, 22);
-            this.tabBillingActivity.Name = "tabBillingActivity";
-            this.tabBillingActivity.Padding = new System.Windows.Forms.Padding(3);
-            this.tabBillingActivity.Size = new System.Drawing.Size(1151, 492);
-            this.tabBillingActivity.TabIndex = 12;
-            this.tabBillingActivity.Text = "Billing Activity";
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(9, 309);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(90, 13);
-            this.label5.TabIndex = 15;
-            this.label5.Text = "Statement History";
-            // 
-            // statementHistoryDataGrid
-            // 
-            this.statementHistoryDataGrid.BackgroundColor = System.Drawing.Color.White;
-            this.statementHistoryDataGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.statementHistoryDataGrid.Location = new System.Drawing.Point(8, 328);
-            this.statementHistoryDataGrid.Name = "statementHistoryDataGrid";
-            this.statementHistoryDataGrid.Size = new System.Drawing.Size(916, 113);
-            this.statementHistoryDataGrid.TabIndex = 14;
-            // 
-            // clearClaimStatusButton
-            // 
-            this.clearClaimStatusButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.clearClaimStatusButton.Location = new System.Drawing.Point(1027, 93);
-            this.clearClaimStatusButton.Name = "clearClaimStatusButton";
-            this.clearClaimStatusButton.Size = new System.Drawing.Size(116, 23);
-            this.clearClaimStatusButton.TabIndex = 13;
-            this.clearClaimStatusButton.Text = "Clear Claim Status";
-            this.clearClaimStatusButton.UseSelectable = true;
-            this.clearClaimStatusButton.Click += new System.EventHandler(this.clearClaimStatusButton_Click);
-            // 
-            // readyToBillCheckbox
-            // 
-            this.readyToBillCheckbox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.readyToBillCheckbox.AutoSize = true;
-            this.readyToBillCheckbox.Location = new System.Drawing.Point(1027, 10);
-            this.readyToBillCheckbox.Name = "readyToBillCheckbox";
-            this.readyToBillCheckbox.Size = new System.Drawing.Size(85, 17);
-            this.readyToBillCheckbox.TabIndex = 12;
-            this.readyToBillCheckbox.Text = "Ready to Bill";
-            this.readyToBillCheckbox.UseVisualStyleBackColor = true;
-            this.readyToBillCheckbox.CheckedChanged += new System.EventHandler(this.readyToBillCheckbox_CheckedChanged);
-            // 
-            // statementFlagComboBox
-            // 
-            this.statementFlagComboBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.statementFlagComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.statementFlagComboBox.FormattingEnabled = true;
-            this.statementFlagComboBox.Items.AddRange(new object[] {
-            "N",
-            "Y",
-            "1",
-            "2",
-            "3",
-            "P"});
-            this.statementFlagComboBox.Location = new System.Drawing.Point(1027, 331);
-            this.statementFlagComboBox.Name = "statementFlagComboBox";
-            this.statementFlagComboBox.Size = new System.Drawing.Size(100, 21);
-            this.statementFlagComboBox.TabIndex = 11;
-            this.statementFlagComboBox.SelectionChangeCommitted += new System.EventHandler(this.statementFlagComboBox_SelectionChangeCommitted);
-            // 
-            // label3
-            // 
-            this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(930, 413);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(92, 13);
-            this.label3.TabIndex = 10;
-            this.label3.Text = "Minimum Payment";
-            // 
-            // label2
-            // 
-            this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(944, 387);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(78, 13);
-            this.label2.TabIndex = 8;
-            this.label2.Text = "Last Statement";
-            // 
-            // label1
-            // 
-            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(944, 361);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(77, 13);
-            this.label1.TabIndex = 8;
-            this.label1.Text = "First Statement";
-            // 
-            // lastStmtDateTextBox
-            // 
-            this.lastStmtDateTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.lastStmtDateTextBox.Location = new System.Drawing.Point(1027, 384);
-            this.lastStmtDateTextBox.Name = "lastStmtDateTextBox";
-            this.lastStmtDateTextBox.ReadOnly = true;
-            this.lastStmtDateTextBox.Size = new System.Drawing.Size(100, 20);
-            this.lastStmtDateTextBox.TabIndex = 7;
-            // 
-            // firstStmtDateTextBox
-            // 
-            this.firstStmtDateTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.firstStmtDateTextBox.Location = new System.Drawing.Point(1027, 358);
-            this.firstStmtDateTextBox.Name = "firstStmtDateTextBox";
-            this.firstStmtDateTextBox.ReadOnly = true;
-            this.firstStmtDateTextBox.Size = new System.Drawing.Size(100, 20);
-            this.firstStmtDateTextBox.TabIndex = 7;
-            // 
-            // statementFlagLabel
-            // 
-            this.statementFlagLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.statementFlagLabel.AutoSize = true;
-            this.statementFlagLabel.Location = new System.Drawing.Point(943, 335);
-            this.statementFlagLabel.Name = "statementFlagLabel";
-            this.statementFlagLabel.Size = new System.Drawing.Size(78, 13);
-            this.statementFlagLabel.TabIndex = 6;
-            this.statementFlagLabel.Text = "Statement Flag";
-            // 
-            // GenerateClaimButton
-            // 
-            this.GenerateClaimButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.GenerateClaimButton.Location = new System.Drawing.Point(1027, 35);
-            this.GenerateClaimButton.Name = "GenerateClaimButton";
-            this.GenerateClaimButton.Size = new System.Drawing.Size(116, 23);
-            this.GenerateClaimButton.TabIndex = 4;
-            this.GenerateClaimButton.Text = "GenerateClaim";
-            this.GenerateClaimButton.UseSelectable = true;
-            this.GenerateClaimButton.Click += new System.EventHandler(this.GenerateClaimButton_Click);
-            // 
-            // LastValidatedLabel
-            // 
-            this.LastValidatedLabel.AutoSize = true;
-            this.LastValidatedLabel.Location = new System.Drawing.Point(105, 13);
-            this.LastValidatedLabel.Name = "LastValidatedLabel";
-            this.LastValidatedLabel.Size = new System.Drawing.Size(24, 19);
-            this.LastValidatedLabel.TabIndex = 3;
-            this.LastValidatedLabel.Text = ".....";
-            // 
-            // BillingLastValidatedLabel
-            // 
-            this.BillingLastValidatedLabel.AutoSize = true;
-            this.BillingLastValidatedLabel.Location = new System.Drawing.Point(8, 10);
-            this.BillingLastValidatedLabel.Name = "BillingLastValidatedLabel";
-            this.BillingLastValidatedLabel.Size = new System.Drawing.Size(91, 19);
-            this.BillingLastValidatedLabel.TabIndex = 3;
-            this.BillingLastValidatedLabel.Text = "Last Validated:";
-            // 
-            // ValidationResultsTextBox
-            // 
-            // 
-            // 
-            // 
-            this.ValidationResultsTextBox.CustomButton.Image = null;
-            this.ValidationResultsTextBox.CustomButton.Location = new System.Drawing.Point(792, 2);
-            this.ValidationResultsTextBox.CustomButton.Name = "";
-            this.ValidationResultsTextBox.CustomButton.Size = new System.Drawing.Size(121, 121);
-            this.ValidationResultsTextBox.CustomButton.Style = MetroFramework.MetroColorStyle.Blue;
-            this.ValidationResultsTextBox.CustomButton.TabIndex = 1;
-            this.ValidationResultsTextBox.CustomButton.Theme = MetroFramework.MetroThemeStyle.Light;
-            this.ValidationResultsTextBox.CustomButton.UseSelectable = true;
-            this.ValidationResultsTextBox.CustomButton.Visible = false;
-            this.ValidationResultsTextBox.Lines = new string[] {
-        "metroTextBox1"};
-            this.ValidationResultsTextBox.Location = new System.Drawing.Point(8, 166);
-            this.ValidationResultsTextBox.MaxLength = 32767;
-            this.ValidationResultsTextBox.Multiline = true;
-            this.ValidationResultsTextBox.Name = "ValidationResultsTextBox";
-            this.ValidationResultsTextBox.PasswordChar = '\0';
-            this.ValidationResultsTextBox.ScrollBars = System.Windows.Forms.ScrollBars.None;
-            this.ValidationResultsTextBox.SelectedText = "";
-            this.ValidationResultsTextBox.SelectionLength = 0;
-            this.ValidationResultsTextBox.SelectionStart = 0;
-            this.ValidationResultsTextBox.ShortcutsEnabled = true;
-            this.ValidationResultsTextBox.Size = new System.Drawing.Size(916, 126);
-            this.ValidationResultsTextBox.TabIndex = 2;
-            this.ValidationResultsTextBox.Text = "metroTextBox1";
-            this.ValidationResultsTextBox.UseSelectable = true;
-            this.ValidationResultsTextBox.WaterMarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
-            this.ValidationResultsTextBox.WaterMarkFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Pixel);
-            // 
-            // ValidateAccountButton
-            // 
-            this.ValidateAccountButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.ValidateAccountButton.Location = new System.Drawing.Point(1027, 64);
-            this.ValidateAccountButton.Name = "ValidateAccountButton";
-            this.ValidateAccountButton.Size = new System.Drawing.Size(116, 23);
-            this.ValidateAccountButton.TabIndex = 1;
-            this.ValidateAccountButton.Text = "Validate Account";
-            this.ValidateAccountButton.UseSelectable = true;
-            this.ValidateAccountButton.Click += new System.EventHandler(this.ValidateAccountButton_Click);
-            // 
-            // BillActivityDataGrid
-            // 
-            this.BillActivityDataGrid.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.BillActivityDataGrid.BackgroundColor = System.Drawing.Color.WhiteSmoke;
-            dataGridViewCellStyle22.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle22.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle22.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle22.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle22.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle22.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle22.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.BillActivityDataGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle22;
-            this.BillActivityDataGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle23.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle23.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle23.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle23.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle23.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle23.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle23.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.BillActivityDataGrid.DefaultCellStyle = dataGridViewCellStyle23;
-            this.BillActivityDataGrid.Location = new System.Drawing.Point(8, 35);
-            this.BillActivityDataGrid.Name = "BillActivityDataGrid";
-            dataGridViewCellStyle24.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle24.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle24.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle24.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle24.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle24.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle24.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.BillActivityDataGrid.RowHeadersDefaultCellStyle = dataGridViewCellStyle24;
-            this.BillActivityDataGrid.Size = new System.Drawing.Size(916, 125);
-            this.BillActivityDataGrid.TabIndex = 0;
-            this.BillActivityDataGrid.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.BillActivityDataGrid_MouseDoubleClick);
-            // 
-            // menuStrip1
-            // 
-            this.menuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
-            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.accountToolStripMenuItem,
-            this.personSearchToolStripMenuItem});
-            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
-            this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1159, 24);
-            this.menuStrip1.TabIndex = 8;
-            this.menuStrip1.Text = "menuStrip1";
-            // 
-            // accountToolStripMenuItem
-            // 
-            this.accountToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.changeDateOfServiceToolStripMenuItem,
-            this.changeFinancialClassToolStripMenuItem,
-            this.changeClientToolStripMenuItem,
-            this.viewAuditInfoToolStripMenuItem,
-            this.clearHoldStatusToolStripMenuItem,
-            this.swapInsurancesToolStripMenuItem,
-            this.moveAllChargesToolStripMenuItem,
-            this.generateClientStatementToolStripMenuItem,
-            this.printEOBToolStripMenuItem});
-            this.accountToolStripMenuItem.Name = "accountToolStripMenuItem";
-            this.accountToolStripMenuItem.Size = new System.Drawing.Size(64, 20);
-            this.accountToolStripMenuItem.Text = "Account";
-            // 
-            // changeDateOfServiceToolStripMenuItem
-            // 
-            this.changeDateOfServiceToolStripMenuItem.Name = "changeDateOfServiceToolStripMenuItem";
-            this.changeDateOfServiceToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
-            this.changeDateOfServiceToolStripMenuItem.Text = "Change Date of Service";
-            this.changeDateOfServiceToolStripMenuItem.Click += new System.EventHandler(this.ChangeDateOfServiceToolStripMenuItem_Click);
-            // 
-            // changeFinancialClassToolStripMenuItem
-            // 
-            this.changeFinancialClassToolStripMenuItem.Name = "changeFinancialClassToolStripMenuItem";
-            this.changeFinancialClassToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
-            this.changeFinancialClassToolStripMenuItem.Text = "Change Financial Class";
-            this.changeFinancialClassToolStripMenuItem.Click += new System.EventHandler(this.ChangeFinancialClassToolStripMenuItem_Click);
-            // 
-            // changeClientToolStripMenuItem
-            // 
-            this.changeClientToolStripMenuItem.Name = "changeClientToolStripMenuItem";
-            this.changeClientToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
-            this.changeClientToolStripMenuItem.Text = "Change Client";
-            this.changeClientToolStripMenuItem.Click += new System.EventHandler(this.ChangeClientToolStripMenuItem_Click);
-            // 
-            // viewAuditInfoToolStripMenuItem
-            // 
-            this.viewAuditInfoToolStripMenuItem.Name = "viewAuditInfoToolStripMenuItem";
-            this.viewAuditInfoToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
-            this.viewAuditInfoToolStripMenuItem.Text = "View Audit Info";
-            // 
-            // clearHoldStatusToolStripMenuItem
-            // 
-            this.clearHoldStatusToolStripMenuItem.Name = "clearHoldStatusToolStripMenuItem";
-            this.clearHoldStatusToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
-            this.clearHoldStatusToolStripMenuItem.Text = "Clear Hold Status";
-            this.clearHoldStatusToolStripMenuItem.Click += new System.EventHandler(this.ClearHoldStatusToolStripMenuItem_Click);
-            // 
-            // swapInsurancesToolStripMenuItem
-            // 
-            this.swapInsurancesToolStripMenuItem.Name = "swapInsurancesToolStripMenuItem";
-            this.swapInsurancesToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
-            this.swapInsurancesToolStripMenuItem.Text = "Swap Insurances";
-            this.swapInsurancesToolStripMenuItem.Click += new System.EventHandler(this.swapInsurancesToolStripMenuItem_Click);
-            // 
-            // moveAllChargesToolStripMenuItem
-            // 
-            this.moveAllChargesToolStripMenuItem.Name = "moveAllChargesToolStripMenuItem";
-            this.moveAllChargesToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
-            this.moveAllChargesToolStripMenuItem.Text = "Move All Charges";
-            this.moveAllChargesToolStripMenuItem.Click += new System.EventHandler(this.moveAllChargesToolStripMenuItem_Click);
-            // 
-            // generateClientStatementToolStripMenuItem
-            // 
-            this.generateClientStatementToolStripMenuItem.Name = "generateClientStatementToolStripMenuItem";
-            this.generateClientStatementToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
-            this.generateClientStatementToolStripMenuItem.Text = "Generate Client Statement";
-            this.generateClientStatementToolStripMenuItem.Click += new System.EventHandler(this.generateClientStatementToolStripMenuItem_Click);
-            // 
-            // printEOBToolStripMenuItem
-            // 
-            this.printEOBToolStripMenuItem.Name = "printEOBToolStripMenuItem";
-            this.printEOBToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
-            this.printEOBToolStripMenuItem.Text = "Print EOB";
-            this.printEOBToolStripMenuItem.Click += new System.EventHandler(this.printEOBToolStripMenuItem_Click);
-            // 
-            // personSearchToolStripMenuItem
-            // 
-            this.personSearchToolStripMenuItem.Name = "personSearchToolStripMenuItem";
-            this.personSearchToolStripMenuItem.Size = new System.Drawing.Size(93, 20);
-            this.personSearchToolStripMenuItem.Text = "Person Search";
-            this.personSearchToolStripMenuItem.Click += new System.EventHandler(this.PersonSearchToolStripMenuItem_Click);
-            // 
-            // BannerMRNTextBox
-            // 
-            this.BannerMRNTextBox.BackColor = System.Drawing.Color.Blue;
-            this.BannerMRNTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.BannerMRNTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BannerMRNTextBox.ForeColor = System.Drawing.Color.White;
-            this.BannerMRNTextBox.Location = new System.Drawing.Point(686, 32);
-            this.BannerMRNTextBox.Name = "BannerMRNTextBox";
-            this.BannerMRNTextBox.ReadOnly = true;
-            this.BannerMRNTextBox.Size = new System.Drawing.Size(94, 22);
-            this.BannerMRNTextBox.TabIndex = 26;
-            // 
-            // BannerAccountTextBox
-            // 
-            this.BannerAccountTextBox.BackColor = System.Drawing.Color.Blue;
-            this.BannerAccountTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.BannerAccountTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BannerAccountTextBox.ForeColor = System.Drawing.Color.White;
-            this.BannerAccountTextBox.Location = new System.Drawing.Point(586, 32);
-            this.BannerAccountTextBox.Name = "BannerAccountTextBox";
-            this.BannerAccountTextBox.ReadOnly = true;
-            this.BannerAccountTextBox.Size = new System.Drawing.Size(94, 22);
-            this.BannerAccountTextBox.TabIndex = 25;
-            this.BannerAccountTextBox.Click += new System.EventHandler(this.BannerAccountTextBox_Click);
-            // 
-            // BannerSexTextBox
-            // 
-            this.BannerSexTextBox.BackColor = System.Drawing.Color.Blue;
-            this.BannerSexTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.BannerSexTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BannerSexTextBox.ForeColor = System.Drawing.Color.White;
-            this.BannerSexTextBox.Location = new System.Drawing.Point(435, 34);
-            this.BannerSexTextBox.Name = "BannerSexTextBox";
-            this.BannerSexTextBox.ReadOnly = true;
-            this.BannerSexTextBox.Size = new System.Drawing.Size(43, 19);
-            this.BannerSexTextBox.TabIndex = 24;
-            // 
-            // BannerDobTextBox
-            // 
-            this.BannerDobTextBox.BackColor = System.Drawing.Color.Blue;
-            this.BannerDobTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.BannerDobTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BannerDobTextBox.ForeColor = System.Drawing.Color.White;
-            this.BannerDobTextBox.Location = new System.Drawing.Point(355, 34);
-            this.BannerDobTextBox.Name = "BannerDobTextBox";
-            this.BannerDobTextBox.ReadOnly = true;
-            this.BannerDobTextBox.Size = new System.Drawing.Size(94, 19);
-            this.BannerDobTextBox.TabIndex = 23;
-            // 
-            // BannerNameTextBox
-            // 
-            this.BannerNameTextBox.BackColor = System.Drawing.Color.Blue;
-            this.BannerNameTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.BannerNameTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BannerNameTextBox.ForeColor = System.Drawing.Color.White;
-            this.BannerNameTextBox.Location = new System.Drawing.Point(12, 34);
-            this.BannerNameTextBox.Name = "BannerNameTextBox";
-            this.BannerNameTextBox.ReadOnly = true;
-            this.BannerNameTextBox.Size = new System.Drawing.Size(251, 19);
-            this.BannerNameTextBox.TabIndex = 22;
-            // 
-            // BannerDOBSexLabel
-            // 
-            this.BannerDOBSexLabel.AutoSize = true;
-            this.BannerDOBSexLabel.ForeColor = System.Drawing.Color.White;
-            this.BannerDOBSexLabel.Location = new System.Drawing.Point(269, 37);
-            this.BannerDOBSexLabel.Name = "BannerDOBSexLabel";
-            this.BannerDOBSexLabel.Size = new System.Drawing.Size(56, 13);
-            this.BannerDOBSexLabel.TabIndex = 21;
-            this.BannerDOBSexLabel.Text = "DOB/Sex:";
-            // 
-            // BannerAccountMrnLabel
-            // 
-            this.BannerAccountMrnLabel.AutoSize = true;
-            this.BannerAccountMrnLabel.ForeColor = System.Drawing.Color.White;
-            this.BannerAccountMrnLabel.Location = new System.Drawing.Point(500, 37);
-            this.BannerAccountMrnLabel.Name = "BannerAccountMrnLabel";
-            this.BannerAccountMrnLabel.Size = new System.Drawing.Size(80, 13);
-            this.BannerAccountMrnLabel.TabIndex = 20;
-            this.BannerAccountMrnLabel.Text = "Account/MRN:";
-            // 
-            // BannerClientTextBox
-            // 
-            this.BannerClientTextBox.BackColor = System.Drawing.Color.Blue;
-            this.BannerClientTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.BannerClientTextBox.ForeColor = System.Drawing.Color.White;
-            this.BannerClientTextBox.Location = new System.Drawing.Point(12, 60);
-            this.BannerClientTextBox.Name = "BannerClientTextBox";
-            this.BannerClientTextBox.Size = new System.Drawing.Size(251, 13);
-            this.BannerClientTextBox.TabIndex = 29;
-            // 
-            // BannerFinClassTextBox
-            // 
-            this.BannerFinClassTextBox.BackColor = System.Drawing.Color.Blue;
-            this.BannerFinClassTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.BannerFinClassTextBox.ForeColor = System.Drawing.Color.White;
-            this.BannerFinClassTextBox.Location = new System.Drawing.Point(353, 57);
-            this.BannerFinClassTextBox.Name = "BannerFinClassTextBox";
-            this.BannerFinClassTextBox.Size = new System.Drawing.Size(100, 13);
-            this.BannerFinClassTextBox.TabIndex = 30;
-            // 
-            // BannerFinClassLabel
-            // 
-            this.BannerFinClassLabel.AutoSize = true;
-            this.BannerFinClassLabel.ForeColor = System.Drawing.Color.White;
-            this.BannerFinClassLabel.Location = new System.Drawing.Point(269, 57);
-            this.BannerFinClassLabel.Name = "BannerFinClassLabel";
-            this.BannerFinClassLabel.Size = new System.Drawing.Size(80, 13);
-            this.BannerFinClassLabel.TabIndex = 31;
-            this.BannerFinClassLabel.Text = "Financial Class:";
-            // 
-            // BannerTotalPmtLabel
-            // 
-            this.BannerTotalPmtLabel.AutoSize = true;
-            this.BannerTotalPmtLabel.ForeColor = System.Drawing.Color.White;
-            this.BannerTotalPmtLabel.Location = new System.Drawing.Point(792, 48);
-            this.BannerTotalPmtLabel.Name = "BannerTotalPmtLabel";
-            this.BannerTotalPmtLabel.Size = new System.Drawing.Size(75, 13);
-            this.BannerTotalPmtLabel.TabIndex = 20;
-            this.BannerTotalPmtLabel.Text = "Total Pmt/Adj:";
-            // 
-            // BannerTotalChargesLabel
-            // 
-            this.BannerTotalChargesLabel.AutoSize = true;
-            this.BannerTotalChargesLabel.ForeColor = System.Drawing.Color.White;
-            this.BannerTotalChargesLabel.Location = new System.Drawing.Point(792, 32);
-            this.BannerTotalChargesLabel.Name = "BannerTotalChargesLabel";
-            this.BannerTotalChargesLabel.Size = new System.Drawing.Size(76, 13);
-            this.BannerTotalChargesLabel.TabIndex = 20;
-            this.BannerTotalChargesLabel.Text = "Total Charges:";
-            // 
-            // BannerAccBalanceLabel
-            // 
-            this.BannerAccBalanceLabel.AutoSize = true;
-            this.BannerAccBalanceLabel.ForeColor = System.Drawing.Color.White;
-            this.BannerAccBalanceLabel.Location = new System.Drawing.Point(792, 64);
-            this.BannerAccBalanceLabel.Name = "BannerAccBalanceLabel";
-            this.BannerAccBalanceLabel.Size = new System.Drawing.Size(92, 13);
-            this.BannerAccBalanceLabel.TabIndex = 20;
-            this.BannerAccBalanceLabel.Text = "Account Balance:";
-            // 
-            // TotalPmtAdjLabel
-            // 
-            this.TotalPmtAdjLabel.ForeColor = System.Drawing.Color.White;
-            this.TotalPmtAdjLabel.Location = new System.Drawing.Point(891, 48);
-            this.TotalPmtAdjLabel.Name = "TotalPmtAdjLabel";
-            this.TotalPmtAdjLabel.Size = new System.Drawing.Size(70, 13);
-            this.TotalPmtAdjLabel.TabIndex = 20;
-            this.TotalPmtAdjLabel.Text = "0.00";
-            this.TotalPmtAdjLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // BalanceLabel
-            // 
-            this.BalanceLabel.ForeColor = System.Drawing.Color.White;
-            this.BalanceLabel.Location = new System.Drawing.Point(891, 64);
-            this.BalanceLabel.Name = "BalanceLabel";
-            this.BalanceLabel.Size = new System.Drawing.Size(70, 13);
-            this.BalanceLabel.TabIndex = 20;
-            this.BalanceLabel.Text = "0.00";
-            this.BalanceLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // TotalChargesLabel
-            // 
-            this.TotalChargesLabel.ForeColor = System.Drawing.Color.White;
-            this.TotalChargesLabel.Location = new System.Drawing.Point(891, 32);
-            this.TotalChargesLabel.Name = "TotalChargesLabel";
-            this.TotalChargesLabel.Size = new System.Drawing.Size(70, 13);
-            this.TotalChargesLabel.TabIndex = 20;
-            this.TotalChargesLabel.Text = "0.00";
-            this.TotalChargesLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // BannerBillStatusLabel
-            // 
-            this.BannerBillStatusLabel.AutoSize = true;
-            this.BannerBillStatusLabel.ForeColor = System.Drawing.Color.White;
-            this.BannerBillStatusLabel.Location = new System.Drawing.Point(500, 57);
-            this.BannerBillStatusLabel.Name = "BannerBillStatusLabel";
-            this.BannerBillStatusLabel.Size = new System.Drawing.Size(70, 13);
-            this.BannerBillStatusLabel.TabIndex = 32;
-            this.BannerBillStatusLabel.Text = "Billing Status:";
-            // 
-            // BannerBillStatusTextBox
-            // 
-            this.BannerBillStatusTextBox.BackColor = System.Drawing.Color.Blue;
-            this.BannerBillStatusTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.BannerBillStatusTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BannerBillStatusTextBox.ForeColor = System.Drawing.Color.White;
-            this.BannerBillStatusTextBox.Location = new System.Drawing.Point(586, 55);
-            this.BannerBillStatusTextBox.Name = "BannerBillStatusTextBox";
-            this.BannerBillStatusTextBox.ReadOnly = true;
-            this.BannerBillStatusTextBox.Size = new System.Drawing.Size(94, 16);
-            this.BannerBillStatusTextBox.TabIndex = 25;
-            // 
-            // BannerProviderTextBox
-            // 
-            this.BannerProviderTextBox.BackColor = System.Drawing.Color.Blue;
-            this.BannerProviderTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.BannerProviderTextBox.ForeColor = System.Drawing.Color.White;
-            this.BannerProviderTextBox.Location = new System.Drawing.Point(12, 81);
-            this.BannerProviderTextBox.Name = "BannerProviderTextBox";
-            this.BannerProviderTextBox.Size = new System.Drawing.Size(251, 13);
-            this.BannerProviderTextBox.TabIndex = 29;
-            // 
-            // RefreshButton
-            // 
-            this.RefreshButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.RefreshButton.BackColor = System.Drawing.Color.LightSteelBlue;
-            this.RefreshButton.Image = global::LabBilling.Properties.Resources.refresh_icon;
-            this.RefreshButton.Location = new System.Drawing.Point(1135, 31);
-            this.RefreshButton.Name = "RefreshButton";
-            this.RefreshButton.Size = new System.Drawing.Size(20, 22);
-            this.RefreshButton.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.RefreshButton.TabIndex = 28;
-            this.RefreshButton.TabStop = false;
-            this.RefreshButton.Click += new System.EventHandler(this.RefreshButton_Click);
-            // 
-            // bannerDateOfServiceTextBox
-            // 
-            this.bannerDateOfServiceTextBox.BackColor = System.Drawing.Color.Blue;
-            this.bannerDateOfServiceTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.bannerDateOfServiceTextBox.ForeColor = System.Drawing.Color.White;
-            this.bannerDateOfServiceTextBox.Location = new System.Drawing.Point(353, 76);
-            this.bannerDateOfServiceTextBox.Name = "bannerDateOfServiceTextBox";
-            this.bannerDateOfServiceTextBox.Size = new System.Drawing.Size(100, 13);
-            this.bannerDateOfServiceTextBox.TabIndex = 30;
-            // 
-            // bannerDateOfServiceLabel
-            // 
-            this.bannerDateOfServiceLabel.AutoSize = true;
-            this.bannerDateOfServiceLabel.ForeColor = System.Drawing.Color.White;
-            this.bannerDateOfServiceLabel.Location = new System.Drawing.Point(269, 76);
-            this.bannerDateOfServiceLabel.Name = "bannerDateOfServiceLabel";
-            this.bannerDateOfServiceLabel.Size = new System.Drawing.Size(84, 13);
-            this.bannerDateOfServiceLabel.TabIndex = 31;
-            this.bannerDateOfServiceLabel.Text = "Date of Service:";
-            // 
-            // dxPointerMenuStrip
-            // 
-            this.dxPointerMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.clearDxPointerToolStripMenuItem});
-            this.dxPointerMenuStrip.Name = "dxPointerMenuStrip";
-            this.dxPointerMenuStrip.Size = new System.Drawing.Size(160, 26);
-            // 
-            // clearDxPointerToolStripMenuItem
-            // 
-            this.clearDxPointerToolStripMenuItem.Name = "clearDxPointerToolStripMenuItem";
-            this.clearDxPointerToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
-            this.clearDxPointerToolStripMenuItem.Text = "Clear Dx Pointer";
-            this.clearDxPointerToolStripMenuItem.Click += new System.EventHandler(this.clearDxPointerToolStripMenuItem_Click);
-            // 
-            // bannerAlertLabel
-            // 
-            this.bannerAlertLabel.AutoSize = true;
-            this.bannerAlertLabel.BackColor = System.Drawing.Color.White;
-            this.bannerAlertLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.bannerAlertLabel.ForeColor = System.Drawing.Color.Red;
-            this.bannerAlertLabel.Location = new System.Drawing.Point(503, 78);
-            this.bannerAlertLabel.Name = "bannerAlertLabel";
-            this.bannerAlertLabel.Size = new System.Drawing.Size(13, 17);
-            this.bannerAlertLabel.TabIndex = 33;
-            this.bannerAlertLabel.Text = ".";
-            // 
-            // BannerThirdPartyBalLabel
-            // 
-            this.BannerThirdPartyBalLabel.AutoSize = true;
-            this.BannerThirdPartyBalLabel.ForeColor = System.Drawing.Color.White;
-            this.BannerThirdPartyBalLabel.Location = new System.Drawing.Point(963, 32);
-            this.BannerThirdPartyBalLabel.Name = "BannerThirdPartyBalLabel";
-            this.BannerThirdPartyBalLabel.Size = new System.Drawing.Size(70, 13);
-            this.BannerThirdPartyBalLabel.TabIndex = 20;
-            this.BannerThirdPartyBalLabel.Text = "3rd Party Bal:";
-            // 
-            // ThirdPartyBalLabel
-            // 
-            this.ThirdPartyBalLabel.ForeColor = System.Drawing.Color.White;
-            this.ThirdPartyBalLabel.Location = new System.Drawing.Point(1057, 32);
-            this.ThirdPartyBalLabel.Name = "ThirdPartyBalLabel";
-            this.ThirdPartyBalLabel.Size = new System.Drawing.Size(60, 13);
-            this.ThirdPartyBalLabel.TabIndex = 20;
-            this.ThirdPartyBalLabel.Text = "0.00";
-            this.ThirdPartyBalLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // BannerClientBalLabel
-            // 
-            this.BannerClientBalLabel.AutoSize = true;
-            this.BannerClientBalLabel.ForeColor = System.Drawing.Color.White;
-            this.BannerClientBalLabel.Location = new System.Drawing.Point(963, 48);
-            this.BannerClientBalLabel.Name = "BannerClientBalLabel";
-            this.BannerClientBalLabel.Size = new System.Drawing.Size(78, 13);
-            this.BannerClientBalLabel.TabIndex = 20;
-            this.BannerClientBalLabel.Text = "Client Balance:";
-            // 
-            // ClientBalLabel
-            // 
-            this.ClientBalLabel.ForeColor = System.Drawing.Color.White;
-            this.ClientBalLabel.Location = new System.Drawing.Point(1057, 48);
-            this.ClientBalLabel.Name = "ClientBalLabel";
-            this.ClientBalLabel.Size = new System.Drawing.Size(60, 13);
-            this.ClientBalLabel.TabIndex = 20;
-            this.ClientBalLabel.Text = "0.00";
-            this.ClientBalLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // DateOfBirthTextBox
-            // 
-            this.DateOfBirthTextBox.DateValue = new System.DateTime(((long)(0)));
-            this.DateOfBirthTextBox.Location = new System.Drawing.Point(296, 258);
-            this.DateOfBirthTextBox.Name = "DateOfBirthTextBox";
-            this.DateOfBirthTextBox.Size = new System.Drawing.Size(177, 20);
-            this.DateOfBirthTextBox.TabIndex = 34;
-            // 
-            // providerLookup1
-            // 
-            this.providerLookup1.CharacterLookupCountMin = 2;
-            this.providerLookup1.Datasource = null;
-            this.providerLookup1.DisplayValue = null;
-            this.providerLookup1.Location = new System.Drawing.Point(499, 218);
-            this.providerLookup1.Name = "providerLookup1";
-            this.providerLookup1.ResultBoxHeight = 100;
-            this.providerLookup1.SelectedValue = null;
-            this.providerLookup1.Size = new System.Drawing.Size(288, 134);
-            this.providerLookup1.TabIndex = 31;
-            this.providerLookup1.SelectedValueChanged += new LabBilling.Library.ProviderLookup.SelectedValueChangedEventHandler(this.providerLookup1_SelectedValueChanged);
-            // 
-            // MaritalStatusComboBox
-            // 
-            this.MaritalStatusComboBox.BackColor = System.Drawing.Color.White;
-            this.MaritalStatusComboBox.BorderColor = System.Drawing.Color.Blue;
-            this.MaritalStatusComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.MaritalStatusComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.MaritalStatusComboBox.FormattingEnabled = true;
-            this.MaritalStatusComboBox.Location = new System.Drawing.Point(296, 298);
-            this.MaritalStatusComboBox.Name = "MaritalStatusComboBox";
-            this.MaritalStatusComboBox.Size = new System.Drawing.Size(177, 21);
-            this.MaritalStatusComboBox.TabIndex = 29;
-            // 
-            // SexComboBox
-            // 
-            this.SexComboBox.BackColor = System.Drawing.Color.White;
-            this.SexComboBox.BorderColor = System.Drawing.Color.Blue;
-            this.SexComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.SexComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.SexComboBox.FormattingEnabled = true;
-            this.SexComboBox.Items.AddRange(new object[] {
-            "Male",
-            "Female",
-            "Unknown"});
-            this.SexComboBox.Location = new System.Drawing.Point(296, 218);
-            this.SexComboBox.Name = "SexComboBox";
-            this.SexComboBox.Size = new System.Drawing.Size(177, 21);
-            this.SexComboBox.TabIndex = 25;
-            // 
-            // StateComboBox
-            // 
-            this.StateComboBox.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
-            this.StateComboBox.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
-            this.StateComboBox.BackColor = System.Drawing.Color.White;
-            this.StateComboBox.BorderColor = System.Drawing.Color.Blue;
-            this.StateComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.StateComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.StateComboBox.FormattingEnabled = true;
-            this.StateComboBox.Location = new System.Drawing.Point(296, 170);
-            this.StateComboBox.Name = "StateComboBox";
-            this.StateComboBox.Size = new System.Drawing.Size(177, 21);
-            this.StateComboBox.TabIndex = 15;
-            // 
-            // GuarantorRelationComboBox
-            // 
-            this.GuarantorRelationComboBox.BorderColor = System.Drawing.Color.Blue;
-            this.GuarantorRelationComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.GuarantorRelationComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.GuarantorRelationComboBox.FormattingEnabled = true;
-            this.GuarantorRelationComboBox.Location = new System.Drawing.Point(110, 55);
-            this.GuarantorRelationComboBox.Name = "GuarantorRelationComboBox";
-            this.GuarantorRelationComboBox.Size = new System.Drawing.Size(131, 21);
-            this.GuarantorRelationComboBox.TabIndex = 2;
-            // 
-            // GuarStateComboBox
-            // 
-            this.GuarStateComboBox.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
-            this.GuarStateComboBox.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
-            this.GuarStateComboBox.BackColor = System.Drawing.Color.White;
-            this.GuarStateComboBox.BorderColor = System.Drawing.Color.Blue;
-            this.GuarStateComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.GuarStateComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.GuarStateComboBox.FormattingEnabled = true;
-            this.GuarStateComboBox.Location = new System.Drawing.Point(316, 211);
-            this.GuarStateComboBox.Name = "GuarStateComboBox";
-            this.GuarStateComboBox.Size = new System.Drawing.Size(183, 21);
-            this.GuarStateComboBox.TabIndex = 17;
-            // 
-            // PlanFinCodeComboBox
-            // 
-            this.PlanFinCodeComboBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.PlanFinCodeComboBox.BorderColor = System.Drawing.Color.Blue;
-            this.PlanFinCodeComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.PlanFinCodeComboBox.FormattingEnabled = true;
-            this.PlanFinCodeComboBox.Location = new System.Drawing.Point(558, 298);
-            this.PlanFinCodeComboBox.Name = "PlanFinCodeComboBox";
-            this.PlanFinCodeComboBox.Size = new System.Drawing.Size(230, 21);
-            this.PlanFinCodeComboBox.TabIndex = 20;
-            // 
-            // InsRelationComboBox
-            // 
-            this.InsRelationComboBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.InsRelationComboBox.BackColor = System.Drawing.Color.MintCream;
-            this.InsRelationComboBox.BorderColor = System.Drawing.Color.Blue;
-            this.InsRelationComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.InsRelationComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.InsRelationComboBox.FormattingEnabled = true;
-            this.InsRelationComboBox.Location = new System.Drawing.Point(133, 378);
-            this.InsRelationComboBox.Name = "InsRelationComboBox";
-            this.InsRelationComboBox.Size = new System.Drawing.Size(230, 21);
-            this.InsRelationComboBox.TabIndex = 10;
-            // 
-            // HolderStateComboBox
-            // 
-            this.HolderStateComboBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.HolderStateComboBox.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
-            this.HolderStateComboBox.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
-            this.HolderStateComboBox.BackColor = System.Drawing.Color.MintCream;
-            this.HolderStateComboBox.BorderColor = System.Drawing.Color.Blue;
-            this.HolderStateComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.HolderStateComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.HolderStateComboBox.FormattingEnabled = true;
-            this.HolderStateComboBox.Location = new System.Drawing.Point(133, 271);
-            this.HolderStateComboBox.Name = "HolderStateComboBox";
-            this.HolderStateComboBox.Size = new System.Drawing.Size(230, 21);
-            this.HolderStateComboBox.TabIndex = 6;
-            // 
-            // InsOrderComboBox
-            // 
-            this.InsOrderComboBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.InsOrderComboBox.BorderColor = System.Drawing.Color.Blue;
-            this.InsOrderComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.InsOrderComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.InsOrderComboBox.FormattingEnabled = true;
-            this.InsOrderComboBox.Location = new System.Drawing.Point(558, 140);
-            this.InsOrderComboBox.Name = "InsOrderComboBox";
-            this.InsOrderComboBox.Size = new System.Drawing.Size(230, 21);
-            this.InsOrderComboBox.TabIndex = 13;
-            // 
-            // HolderSexComboBox
-            // 
-            this.HolderSexComboBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.HolderSexComboBox.BackColor = System.Drawing.Color.MintCream;
-            this.HolderSexComboBox.BorderColor = System.Drawing.Color.Blue;
-            this.HolderSexComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.HolderSexComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.HolderSexComboBox.FormattingEnabled = true;
-            this.HolderSexComboBox.Items.AddRange(new object[] {
-            "Male",
-            "Female",
-            "Unknown"});
-            this.HolderSexComboBox.Location = new System.Drawing.Point(133, 325);
-            this.HolderSexComboBox.Name = "HolderSexComboBox";
-            this.HolderSexComboBox.Size = new System.Drawing.Size(230, 21);
-            this.HolderSexComboBox.TabIndex = 8;
+            BillActivityDataGrid.RowHeadersDefaultCellStyle = dataGridViewCellStyle15;
+            BillActivityDataGrid.Size = new System.Drawing.Size(1069, 144);
+            BillActivityDataGrid.TabIndex = 0;
+            BillActivityDataGrid.MouseDoubleClick += BillActivityDataGrid_MouseDoubleClick;
             // 
             // minPmtTextBox
             // 
-            this.minPmtTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.minPmtTextBox.DollarValue = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
-            this.minPmtTextBox.Location = new System.Drawing.Point(1027, 410);
-            this.minPmtTextBox.Name = "minPmtTextBox";
-            this.minPmtTextBox.Size = new System.Drawing.Size(100, 20);
-            this.minPmtTextBox.TabIndex = 9;
+            minPmtTextBox.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+            minPmtTextBox.DollarValue = new decimal(new int[] { 0, 0, 0, 0 });
+            minPmtTextBox.Location = new System.Drawing.Point(1198, 473);
+            minPmtTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            minPmtTextBox.Name = "minPmtTextBox";
+            minPmtTextBox.Size = new System.Drawing.Size(116, 23);
+            minPmtTextBox.TabIndex = 9;
+            // 
+            // noteTextContextMenu
+            // 
+            noteTextContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { copyToolStripMenuItem });
+            noteTextContextMenu.Name = "noteTextContextMenu";
+            noteTextContextMenu.Size = new System.Drawing.Size(103, 26);
+            // 
+            // copyToolStripMenuItem
+            // 
+            copyToolStripMenuItem.Name = "copyToolStripMenuItem";
+            copyToolStripMenuItem.Size = new System.Drawing.Size(102, 22);
+            copyToolStripMenuItem.Text = "Copy";
+            copyToolStripMenuItem.Click += copyToolStripMenuItem_Click;
+            // 
+            // menuStrip1
+            // 
+            menuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
+            menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { accountToolStripMenuItem });
+            menuStrip1.Location = new System.Drawing.Point(0, 0);
+            menuStrip1.Name = "menuStrip1";
+            menuStrip1.Padding = new System.Windows.Forms.Padding(7, 2, 0, 2);
+            menuStrip1.Size = new System.Drawing.Size(1352, 24);
+            menuStrip1.TabIndex = 8;
+            menuStrip1.Text = "mainMenuStrip";
+            // 
+            // accountToolStripMenuItem
+            // 
+            accountToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { changeDateOfServiceToolStripMenuItem, changeFinancialClassToolStripMenuItem, changeClientToolStripMenuItem, viewAuditInfoToolStripMenuItem, clearHoldStatusToolStripMenuItem, swapInsurancesToolStripMenuItem, moveAllChargesToolStripMenuItem, printEOBToolStripMenuItem });
+            accountToolStripMenuItem.Name = "accountToolStripMenuItem";
+            accountToolStripMenuItem.Size = new System.Drawing.Size(64, 20);
+            accountToolStripMenuItem.Text = "Account";
+            // 
+            // changeDateOfServiceToolStripMenuItem
+            // 
+            changeDateOfServiceToolStripMenuItem.Name = "changeDateOfServiceToolStripMenuItem";
+            changeDateOfServiceToolStripMenuItem.Size = new System.Drawing.Size(196, 22);
+            changeDateOfServiceToolStripMenuItem.Text = "Change Date of Service";
+            changeDateOfServiceToolStripMenuItem.Click += ChangeDateOfServiceToolStripMenuItem_Click;
+            // 
+            // changeFinancialClassToolStripMenuItem
+            // 
+            changeFinancialClassToolStripMenuItem.Name = "changeFinancialClassToolStripMenuItem";
+            changeFinancialClassToolStripMenuItem.Size = new System.Drawing.Size(196, 22);
+            changeFinancialClassToolStripMenuItem.Text = "Change Financial Class";
+            changeFinancialClassToolStripMenuItem.Click += ChangeFinancialClassToolStripMenuItem_Click;
+            // 
+            // changeClientToolStripMenuItem
+            // 
+            changeClientToolStripMenuItem.Name = "changeClientToolStripMenuItem";
+            changeClientToolStripMenuItem.Size = new System.Drawing.Size(196, 22);
+            changeClientToolStripMenuItem.Text = "Change Client";
+            changeClientToolStripMenuItem.Click += ChangeClientToolStripMenuItem_Click;
+            // 
+            // viewAuditInfoToolStripMenuItem
+            // 
+            viewAuditInfoToolStripMenuItem.Name = "viewAuditInfoToolStripMenuItem";
+            viewAuditInfoToolStripMenuItem.Size = new System.Drawing.Size(196, 22);
+            viewAuditInfoToolStripMenuItem.Text = "View Audit Info";
+            // 
+            // clearHoldStatusToolStripMenuItem
+            // 
+            clearHoldStatusToolStripMenuItem.Name = "clearHoldStatusToolStripMenuItem";
+            clearHoldStatusToolStripMenuItem.Size = new System.Drawing.Size(196, 22);
+            clearHoldStatusToolStripMenuItem.Text = "Clear Hold Status";
+            clearHoldStatusToolStripMenuItem.Click += ClearHoldStatusToolStripMenuItem_Click;
+            // 
+            // swapInsurancesToolStripMenuItem
+            // 
+            swapInsurancesToolStripMenuItem.Name = "swapInsurancesToolStripMenuItem";
+            swapInsurancesToolStripMenuItem.Size = new System.Drawing.Size(196, 22);
+            swapInsurancesToolStripMenuItem.Text = "Swap Insurances";
+            swapInsurancesToolStripMenuItem.Click += swapInsurancesToolStripMenuItem_Click;
+            // 
+            // moveAllChargesToolStripMenuItem
+            // 
+            moveAllChargesToolStripMenuItem.Name = "moveAllChargesToolStripMenuItem";
+            moveAllChargesToolStripMenuItem.Size = new System.Drawing.Size(196, 22);
+            moveAllChargesToolStripMenuItem.Text = "Move All Charges";
+            moveAllChargesToolStripMenuItem.Click += moveAllChargesToolStripMenuItem_Click;
+            // 
+            // printEOBToolStripMenuItem
+            // 
+            printEOBToolStripMenuItem.Name = "printEOBToolStripMenuItem";
+            printEOBToolStripMenuItem.Size = new System.Drawing.Size(196, 22);
+            printEOBToolStripMenuItem.Text = "Print EOB";
+            printEOBToolStripMenuItem.Click += printEOBToolStripMenuItem_Click;
+            // 
+            // BannerMRNTextBox
+            // 
+            BannerMRNTextBox.BackColor = System.Drawing.Color.Blue;
+            BannerMRNTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            BannerMRNTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 0);
+            BannerMRNTextBox.ForeColor = System.Drawing.Color.White;
+            BannerMRNTextBox.Location = new System.Drawing.Point(791, 20);
+            BannerMRNTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            BannerMRNTextBox.Name = "BannerMRNTextBox";
+            BannerMRNTextBox.ReadOnly = true;
+            BannerMRNTextBox.Size = new System.Drawing.Size(110, 15);
+            BannerMRNTextBox.TabIndex = 26;
+            // 
+            // BannerAccountTextBox
+            // 
+            BannerAccountTextBox.BackColor = System.Drawing.Color.Blue;
+            BannerAccountTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            BannerAccountTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 0);
+            BannerAccountTextBox.ForeColor = System.Drawing.Color.White;
+            BannerAccountTextBox.Location = new System.Drawing.Point(675, 13);
+            BannerAccountTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            BannerAccountTextBox.Name = "BannerAccountTextBox";
+            BannerAccountTextBox.ReadOnly = true;
+            BannerAccountTextBox.Size = new System.Drawing.Size(110, 22);
+            BannerAccountTextBox.TabIndex = 25;
+            BannerAccountTextBox.Click += BannerAccountTextBox_Click;
+            // 
+            // BannerSexTextBox
+            // 
+            BannerSexTextBox.BackColor = System.Drawing.Color.Blue;
+            BannerSexTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            BannerSexTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 0);
+            BannerSexTextBox.ForeColor = System.Drawing.Color.White;
+            BannerSexTextBox.Location = new System.Drawing.Point(516, 15);
+            BannerSexTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            BannerSexTextBox.Name = "BannerSexTextBox";
+            BannerSexTextBox.ReadOnly = true;
+            BannerSexTextBox.Size = new System.Drawing.Size(50, 19);
+            BannerSexTextBox.TabIndex = 24;
+            // 
+            // BannerDobTextBox
+            // 
+            BannerDobTextBox.BackColor = System.Drawing.Color.Blue;
+            BannerDobTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            BannerDobTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 0);
+            BannerDobTextBox.ForeColor = System.Drawing.Color.White;
+            BannerDobTextBox.Location = new System.Drawing.Point(405, 15);
+            BannerDobTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            BannerDobTextBox.Name = "BannerDobTextBox";
+            BannerDobTextBox.ReadOnly = true;
+            BannerDobTextBox.Size = new System.Drawing.Size(103, 19);
+            BannerDobTextBox.TabIndex = 23;
+            // 
+            // BannerNameTextBox
+            // 
+            BannerNameTextBox.BackColor = System.Drawing.Color.Blue;
+            BannerNameTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            BannerNameTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 0);
+            BannerNameTextBox.ForeColor = System.Drawing.Color.White;
+            BannerNameTextBox.Location = new System.Drawing.Point(5, 15);
+            BannerNameTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            BannerNameTextBox.Name = "BannerNameTextBox";
+            BannerNameTextBox.ReadOnly = true;
+            BannerNameTextBox.Size = new System.Drawing.Size(293, 19);
+            BannerNameTextBox.TabIndex = 22;
+            // 
+            // BannerDOBSexLabel
+            // 
+            BannerDOBSexLabel.AutoSize = true;
+            BannerDOBSexLabel.ForeColor = System.Drawing.Color.White;
+            BannerDOBSexLabel.Location = new System.Drawing.Point(305, 19);
+            BannerDOBSexLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            BannerDOBSexLabel.Name = "BannerDOBSexLabel";
+            BannerDOBSexLabel.Size = new System.Drawing.Size(57, 15);
+            BannerDOBSexLabel.TabIndex = 21;
+            BannerDOBSexLabel.Text = "DOB/Sex:";
+            // 
+            // BannerAccountMrnLabel
+            // 
+            BannerAccountMrnLabel.AutoSize = true;
+            BannerAccountMrnLabel.ForeColor = System.Drawing.Color.White;
+            BannerAccountMrnLabel.Location = new System.Drawing.Point(574, 19);
+            BannerAccountMrnLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            BannerAccountMrnLabel.Name = "BannerAccountMrnLabel";
+            BannerAccountMrnLabel.Size = new System.Drawing.Size(87, 15);
+            BannerAccountMrnLabel.TabIndex = 20;
+            BannerAccountMrnLabel.Text = "Account/MRN:";
+            // 
+            // BannerClientTextBox
+            // 
+            BannerClientTextBox.BackColor = System.Drawing.Color.Blue;
+            BannerClientTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            BannerClientTextBox.ForeColor = System.Drawing.Color.White;
+            BannerClientTextBox.Location = new System.Drawing.Point(5, 45);
+            BannerClientTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            BannerClientTextBox.Name = "BannerClientTextBox";
+            BannerClientTextBox.Size = new System.Drawing.Size(293, 16);
+            BannerClientTextBox.TabIndex = 29;
+            // 
+            // BannerFinClassTextBox
+            // 
+            BannerFinClassTextBox.BackColor = System.Drawing.Color.Blue;
+            BannerFinClassTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            BannerFinClassTextBox.ForeColor = System.Drawing.Color.White;
+            BannerFinClassTextBox.Location = new System.Drawing.Point(403, 42);
+            BannerFinClassTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            BannerFinClassTextBox.Name = "BannerFinClassTextBox";
+            BannerFinClassTextBox.Size = new System.Drawing.Size(117, 16);
+            BannerFinClassTextBox.TabIndex = 30;
+            // 
+            // BannerFinClassLabel
+            // 
+            BannerFinClassLabel.AutoSize = true;
+            BannerFinClassLabel.ForeColor = System.Drawing.Color.White;
+            BannerFinClassLabel.Location = new System.Drawing.Point(305, 42);
+            BannerFinClassLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            BannerFinClassLabel.Name = "BannerFinClassLabel";
+            BannerFinClassLabel.Size = new System.Drawing.Size(87, 15);
+            BannerFinClassLabel.TabIndex = 31;
+            BannerFinClassLabel.Text = "Financial Class:";
+            // 
+            // BannerTotalPmtLabel
+            // 
+            BannerTotalPmtLabel.AutoSize = true;
+            BannerTotalPmtLabel.ForeColor = System.Drawing.Color.White;
+            BannerTotalPmtLabel.Location = new System.Drawing.Point(915, 31);
+            BannerTotalPmtLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            BannerTotalPmtLabel.Name = "BannerTotalPmtLabel";
+            BannerTotalPmtLabel.Size = new System.Drawing.Size(83, 15);
+            BannerTotalPmtLabel.TabIndex = 20;
+            BannerTotalPmtLabel.Text = "Total Pmt/Adj:";
+            // 
+            // BannerTotalChargesLabel
+            // 
+            BannerTotalChargesLabel.AutoSize = true;
+            BannerTotalChargesLabel.ForeColor = System.Drawing.Color.White;
+            BannerTotalChargesLabel.Location = new System.Drawing.Point(915, 13);
+            BannerTotalChargesLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            BannerTotalChargesLabel.Name = "BannerTotalChargesLabel";
+            BannerTotalChargesLabel.Size = new System.Drawing.Size(81, 15);
+            BannerTotalChargesLabel.TabIndex = 20;
+            BannerTotalChargesLabel.Text = "Total Charges:";
+            // 
+            // BannerAccBalanceLabel
+            // 
+            BannerAccBalanceLabel.AutoSize = true;
+            BannerAccBalanceLabel.ForeColor = System.Drawing.Color.White;
+            BannerAccBalanceLabel.Location = new System.Drawing.Point(915, 50);
+            BannerAccBalanceLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            BannerAccBalanceLabel.Name = "BannerAccBalanceLabel";
+            BannerAccBalanceLabel.Size = new System.Drawing.Size(99, 15);
+            BannerAccBalanceLabel.TabIndex = 20;
+            BannerAccBalanceLabel.Text = "Account Balance:";
+            // 
+            // TotalPmtAdjLabel
+            // 
+            TotalPmtAdjLabel.ForeColor = System.Drawing.Color.White;
+            TotalPmtAdjLabel.Location = new System.Drawing.Point(1031, 31);
+            TotalPmtAdjLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            TotalPmtAdjLabel.Name = "TotalPmtAdjLabel";
+            TotalPmtAdjLabel.Size = new System.Drawing.Size(82, 15);
+            TotalPmtAdjLabel.TabIndex = 20;
+            TotalPmtAdjLabel.Text = "0.00";
+            TotalPmtAdjLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // BalanceLabel
+            // 
+            BalanceLabel.ForeColor = System.Drawing.Color.White;
+            BalanceLabel.Location = new System.Drawing.Point(1031, 50);
+            BalanceLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            BalanceLabel.Name = "BalanceLabel";
+            BalanceLabel.Size = new System.Drawing.Size(82, 15);
+            BalanceLabel.TabIndex = 20;
+            BalanceLabel.Text = "0.00";
+            BalanceLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // TotalChargesLabel
+            // 
+            TotalChargesLabel.ForeColor = System.Drawing.Color.White;
+            TotalChargesLabel.Location = new System.Drawing.Point(1031, 13);
+            TotalChargesLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            TotalChargesLabel.Name = "TotalChargesLabel";
+            TotalChargesLabel.Size = new System.Drawing.Size(82, 15);
+            TotalChargesLabel.TabIndex = 20;
+            TotalChargesLabel.Text = "0.00";
+            TotalChargesLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // BannerBillStatusLabel
+            // 
+            BannerBillStatusLabel.AutoSize = true;
+            BannerBillStatusLabel.ForeColor = System.Drawing.Color.White;
+            BannerBillStatusLabel.Location = new System.Drawing.Point(574, 42);
+            BannerBillStatusLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            BannerBillStatusLabel.Name = "BannerBillStatusLabel";
+            BannerBillStatusLabel.Size = new System.Drawing.Size(78, 15);
+            BannerBillStatusLabel.TabIndex = 32;
+            BannerBillStatusLabel.Text = "Billing Status:";
+            // 
+            // BannerBillStatusTextBox
+            // 
+            BannerBillStatusTextBox.BackColor = System.Drawing.Color.Blue;
+            BannerBillStatusTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            BannerBillStatusTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+            BannerBillStatusTextBox.ForeColor = System.Drawing.Color.White;
+            BannerBillStatusTextBox.Location = new System.Drawing.Point(675, 39);
+            BannerBillStatusTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            BannerBillStatusTextBox.Name = "BannerBillStatusTextBox";
+            BannerBillStatusTextBox.ReadOnly = true;
+            BannerBillStatusTextBox.Size = new System.Drawing.Size(110, 16);
+            BannerBillStatusTextBox.TabIndex = 25;
+            // 
+            // BannerProviderTextBox
+            // 
+            BannerProviderTextBox.BackColor = System.Drawing.Color.Blue;
+            BannerProviderTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            BannerProviderTextBox.ForeColor = System.Drawing.Color.White;
+            BannerProviderTextBox.Location = new System.Drawing.Point(5, 69);
+            BannerProviderTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            BannerProviderTextBox.Name = "BannerProviderTextBox";
+            BannerProviderTextBox.Size = new System.Drawing.Size(293, 16);
+            BannerProviderTextBox.TabIndex = 29;
+            // 
+            // RefreshButton
+            // 
+            RefreshButton.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+            RefreshButton.BackColor = System.Drawing.Color.LightSteelBlue;
+            RefreshButton.Image = Properties.Resources.refresh_icon;
+            RefreshButton.Location = new System.Drawing.Point(1316, 10);
+            RefreshButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            RefreshButton.Name = "RefreshButton";
+            RefreshButton.Size = new System.Drawing.Size(23, 25);
+            RefreshButton.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            RefreshButton.TabIndex = 28;
+            RefreshButton.TabStop = false;
+            RefreshButton.Click += RefreshButton_Click;
+            // 
+            // bannerDateOfServiceTextBox
+            // 
+            bannerDateOfServiceTextBox.BackColor = System.Drawing.Color.Blue;
+            bannerDateOfServiceTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            bannerDateOfServiceTextBox.ForeColor = System.Drawing.Color.White;
+            bannerDateOfServiceTextBox.Location = new System.Drawing.Point(403, 64);
+            bannerDateOfServiceTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            bannerDateOfServiceTextBox.Name = "bannerDateOfServiceTextBox";
+            bannerDateOfServiceTextBox.Size = new System.Drawing.Size(117, 16);
+            bannerDateOfServiceTextBox.TabIndex = 30;
+            // 
+            // bannerDateOfServiceLabel
+            // 
+            bannerDateOfServiceLabel.AutoSize = true;
+            bannerDateOfServiceLabel.ForeColor = System.Drawing.Color.White;
+            bannerDateOfServiceLabel.Location = new System.Drawing.Point(305, 64);
+            bannerDateOfServiceLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            bannerDateOfServiceLabel.Name = "bannerDateOfServiceLabel";
+            bannerDateOfServiceLabel.Size = new System.Drawing.Size(88, 15);
+            bannerDateOfServiceLabel.TabIndex = 31;
+            bannerDateOfServiceLabel.Text = "Date of Service:";
+            // 
+            // dxPointerMenuStrip
+            // 
+            dxPointerMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { clearDxPointerToolStripMenuItem });
+            dxPointerMenuStrip.Name = "dxPointerMenuStrip";
+            dxPointerMenuStrip.Size = new System.Drawing.Size(160, 26);
+            // 
+            // clearDxPointerToolStripMenuItem
+            // 
+            clearDxPointerToolStripMenuItem.Name = "clearDxPointerToolStripMenuItem";
+            clearDxPointerToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
+            clearDxPointerToolStripMenuItem.Text = "Clear Dx Pointer";
+            clearDxPointerToolStripMenuItem.Click += clearDxPointerToolStripMenuItem_Click;
+            // 
+            // bannerAlertLabel
+            // 
+            bannerAlertLabel.AutoSize = true;
+            bannerAlertLabel.BackColor = System.Drawing.Color.White;
+            bannerAlertLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 0);
+            bannerAlertLabel.ForeColor = System.Drawing.Color.Red;
+            bannerAlertLabel.Location = new System.Drawing.Point(578, 66);
+            bannerAlertLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            bannerAlertLabel.Name = "bannerAlertLabel";
+            bannerAlertLabel.Size = new System.Drawing.Size(13, 17);
+            bannerAlertLabel.TabIndex = 33;
+            bannerAlertLabel.Text = ".";
+            bannerAlertLabel.Visible = false;
+            // 
+            // BannerThirdPartyBalLabel
+            // 
+            BannerThirdPartyBalLabel.AutoSize = true;
+            BannerThirdPartyBalLabel.ForeColor = System.Drawing.Color.White;
+            BannerThirdPartyBalLabel.Location = new System.Drawing.Point(1115, 13);
+            BannerThirdPartyBalLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            BannerThirdPartyBalLabel.Name = "BannerThirdPartyBalLabel";
+            BannerThirdPartyBalLabel.Size = new System.Drawing.Size(76, 15);
+            BannerThirdPartyBalLabel.TabIndex = 20;
+            BannerThirdPartyBalLabel.Text = "3rd Party Bal:";
+            // 
+            // ThirdPartyBalLabel
+            // 
+            ThirdPartyBalLabel.ForeColor = System.Drawing.Color.White;
+            ThirdPartyBalLabel.Location = new System.Drawing.Point(1224, 13);
+            ThirdPartyBalLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            ThirdPartyBalLabel.Name = "ThirdPartyBalLabel";
+            ThirdPartyBalLabel.Size = new System.Drawing.Size(70, 15);
+            ThirdPartyBalLabel.TabIndex = 20;
+            ThirdPartyBalLabel.Text = "0.00";
+            ThirdPartyBalLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // BannerClientBalLabel
+            // 
+            BannerClientBalLabel.AutoSize = true;
+            BannerClientBalLabel.ForeColor = System.Drawing.Color.White;
+            BannerClientBalLabel.Location = new System.Drawing.Point(1115, 31);
+            BannerClientBalLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            BannerClientBalLabel.Name = "BannerClientBalLabel";
+            BannerClientBalLabel.Size = new System.Drawing.Size(85, 15);
+            BannerClientBalLabel.TabIndex = 20;
+            BannerClientBalLabel.Text = "Client Balance:";
+            // 
+            // ClientBalLabel
+            // 
+            ClientBalLabel.ForeColor = System.Drawing.Color.White;
+            ClientBalLabel.Location = new System.Drawing.Point(1224, 31);
+            ClientBalLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            ClientBalLabel.Name = "ClientBalLabel";
+            ClientBalLabel.Size = new System.Drawing.Size(70, 15);
+            ClientBalLabel.TabIndex = 20;
+            ClientBalLabel.Text = "0.00";
+            ClientBalLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // bannerPanel
+            // 
+            bannerPanel.BackColor = System.Drawing.Color.Blue;
+            bannerPanel.Controls.Add(BannerFinClassTextBox);
+            bannerPanel.Controls.Add(BannerAccountMrnLabel);
+            bannerPanel.Controls.Add(BannerTotalPmtLabel);
+            bannerPanel.Controls.Add(BannerAccBalanceLabel);
+            bannerPanel.Controls.Add(TotalPmtAdjLabel);
+            bannerPanel.Controls.Add(bannerAlertLabel);
+            bannerPanel.Controls.Add(BannerThirdPartyBalLabel);
+            bannerPanel.Controls.Add(BannerBillStatusLabel);
+            bannerPanel.Controls.Add(BalanceLabel);
+            bannerPanel.Controls.Add(bannerDateOfServiceLabel);
+            bannerPanel.Controls.Add(BannerClientBalLabel);
+            bannerPanel.Controls.Add(BannerFinClassLabel);
+            bannerPanel.Controls.Add(ThirdPartyBalLabel);
+            bannerPanel.Controls.Add(bannerDateOfServiceTextBox);
+            bannerPanel.Controls.Add(ClientBalLabel);
+            bannerPanel.Controls.Add(BannerTotalChargesLabel);
+            bannerPanel.Controls.Add(BannerProviderTextBox);
+            bannerPanel.Controls.Add(TotalChargesLabel);
+            bannerPanel.Controls.Add(BannerClientTextBox);
+            bannerPanel.Controls.Add(BannerDOBSexLabel);
+            bannerPanel.Controls.Add(RefreshButton);
+            bannerPanel.Controls.Add(BannerNameTextBox);
+            bannerPanel.Controls.Add(BannerMRNTextBox);
+            bannerPanel.Controls.Add(BannerDobTextBox);
+            bannerPanel.Controls.Add(BannerBillStatusTextBox);
+            bannerPanel.Controls.Add(BannerSexTextBox);
+            bannerPanel.Controls.Add(BannerAccountTextBox);
+            bannerPanel.Dock = System.Windows.Forms.DockStyle.Top;
+            bannerPanel.Location = new System.Drawing.Point(0, 24);
+            bannerPanel.Name = "bannerPanel";
+            bannerPanel.Size = new System.Drawing.Size(1352, 100);
+            bannerPanel.TabIndex = 34;
             // 
             // AccountForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.Blue;
-            this.ClientSize = new System.Drawing.Size(1159, 630);
-            this.Controls.Add(this.bannerAlertLabel);
-            this.Controls.Add(this.BannerBillStatusLabel);
-            this.Controls.Add(this.bannerDateOfServiceLabel);
-            this.Controls.Add(this.BannerFinClassLabel);
-            this.Controls.Add(this.bannerDateOfServiceTextBox);
-            this.Controls.Add(this.BannerFinClassTextBox);
-            this.Controls.Add(this.BannerProviderTextBox);
-            this.Controls.Add(this.BannerClientTextBox);
-            this.Controls.Add(this.RefreshButton);
-            this.Controls.Add(this.BannerMRNTextBox);
-            this.Controls.Add(this.BannerBillStatusTextBox);
-            this.Controls.Add(this.BannerAccountTextBox);
-            this.Controls.Add(this.BannerSexTextBox);
-            this.Controls.Add(this.BannerDobTextBox);
-            this.Controls.Add(this.BannerNameTextBox);
-            this.Controls.Add(this.BannerDOBSexLabel);
-            this.Controls.Add(this.TotalChargesLabel);
-            this.Controls.Add(this.BannerTotalChargesLabel);
-            this.Controls.Add(this.ClientBalLabel);
-            this.Controls.Add(this.ThirdPartyBalLabel);
-            this.Controls.Add(this.BannerClientBalLabel);
-            this.Controls.Add(this.BalanceLabel);
-            this.Controls.Add(this.BannerThirdPartyBalLabel);
-            this.Controls.Add(this.TotalPmtAdjLabel);
-            this.Controls.Add(this.BannerAccBalanceLabel);
-            this.Controls.Add(this.BannerTotalPmtLabel);
-            this.Controls.Add(this.BannerAccountMrnLabel);
-            this.Controls.Add(this.tabControl1);
-            this.Controls.Add(this.menuStrip1);
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.MainMenuStrip = this.menuStrip1;
-            this.Name = "AccountForm";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Account";
-            this.Activated += new System.EventHandler(this.AccountForm_Activated);
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.AccountForm_FormClosing);
-            this.Load += new System.EventHandler(this.AccountForm_Load);
-            this.tabControl1.ResumeLayout(false);
-            this.summaryTab.ResumeLayout(false);
-            this.tabDemographics.ResumeLayout(false);
-            this.tabDemographics.PerformLayout();
-            this.tabGuarantor.ResumeLayout(false);
-            this.tabGuarantor.PerformLayout();
-            this.tabInsurance.ResumeLayout(false);
-            this.insTabLayoutPanel.ResumeLayout(false);
-            this.insTabLayoutPanel.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.InsuranceDataGrid)).EndInit();
-            this.tabDiagnosis.ResumeLayout(false);
-            this.tabDiagnosis.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dxPointerGrid2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.DxDeleteButton)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.DxSearchDataGrid)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.DiagnosisDataGrid)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.DxSearchButton)).EndInit();
-            this.tabCharges.ResumeLayout(false);
-            this.tabCharges.PerformLayout();
-            this.chargeLayoutPanel.ResumeLayout(false);
-            this.chargeLayoutPanel.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.ChargesDataGrid)).EndInit();
-            this.menuCharges.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.ChrgDetailDataGrid)).EndInit();
-            this.chargeDetailsContextMenu.ResumeLayout(false);
-            this.tabPayments.ResumeLayout(false);
-            this.tabPayments.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.PaymentsDataGrid)).EndInit();
-            this.tabNotes.ResumeLayout(false);
-            this.tabNotes.PerformLayout();
-            this.noteTextContextMenu.ResumeLayout(false);
-            this.tabBillingActivity.ResumeLayout(false);
-            this.tabBillingActivity.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.statementHistoryDataGrid)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.BillActivityDataGrid)).EndInit();
-            this.menuStrip1.ResumeLayout(false);
-            this.menuStrip1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.RefreshButton)).EndInit();
-            this.dxPointerMenuStrip.ResumeLayout(false);
-            this.ResumeLayout(false);
-            this.PerformLayout();
-
+            AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            BackColor = System.Drawing.Color.White;
+            ClientSize = new System.Drawing.Size(1352, 727);
+            Controls.Add(bannerPanel);
+            Controls.Add(tabControl1);
+            Controls.Add(menuStrip1);
+            ForeColor = System.Drawing.Color.Black;
+            Icon = (System.Drawing.Icon)resources.GetObject("$this.Icon");
+            MainMenuStrip = menuStrip1;
+            Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            Name = "AccountForm";
+            StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            Text = "Account";
+            Activated += AccountForm_Activated;
+            FormClosing += AccountForm_FormClosing;
+            Load += AccountForm_Load;
+            tabControl1.ResumeLayout(false);
+            summaryTab.ResumeLayout(false);
+            tabDemographics.ResumeLayout(false);
+            demographicsLayoutPanel.ResumeLayout(false);
+            demographicsLayoutPanel.PerformLayout();
+            tabDiagnosis.ResumeLayout(false);
+            tabDiagnosis.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)dxPointerGrid2).EndInit();
+            ((System.ComponentModel.ISupportInitialize)DxDeleteButton).EndInit();
+            ((System.ComponentModel.ISupportInitialize)DxSearchDataGrid).EndInit();
+            ((System.ComponentModel.ISupportInitialize)DiagnosisDataGrid).EndInit();
+            ((System.ComponentModel.ISupportInitialize)DxSearchButton).EndInit();
+            tabPayments.ResumeLayout(false);
+            tabPayments.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)PaymentsDataGrid).EndInit();
+            tabNotes.ResumeLayout(false);
+            tabNotes.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)notesDataGridView).EndInit();
+            tabBillingActivity.ResumeLayout(false);
+            tabBillingActivity.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)statementHistoryDataGrid).EndInit();
+            ((System.ComponentModel.ISupportInitialize)BillActivityDataGrid).EndInit();
+            noteTextContextMenu.ResumeLayout(false);
+            menuStrip1.ResumeLayout(false);
+            menuStrip1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)RefreshButton).EndInit();
+            dxPointerMenuStrip.ResumeLayout(false);
+            bannerPanel.ResumeLayout(false);
+            bannerPanel.PerformLayout();
+            ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
@@ -3071,8 +2229,6 @@ namespace LabBilling.Forms
         private System.Windows.Forms.TextBox BannerNameTextBox;
         private System.Windows.Forms.Label BannerDOBSexLabel;
         private System.Windows.Forms.Label BannerAccountMrnLabel;
-        private System.Windows.Forms.ToolStripMenuItem personSearchToolStripMenuItem;
-        private System.Windows.Forms.DataGridView ChargesDataGrid;
         private System.Windows.Forms.DataGridView PaymentsDataGrid;
         private System.Windows.Forms.DataGridView DiagnosisDataGrid;
         private System.Windows.Forms.PictureBox DxSearchButton;
@@ -3085,14 +2241,6 @@ namespace LabBilling.Forms
         private System.Windows.Forms.Button SaveDxButton;
         private System.Windows.Forms.PictureBox DxDeleteButton;
         private System.Windows.Forms.PictureBox RefreshButton;
-        private System.Windows.Forms.DataGridView ChrgDetailDataGrid;
-        private System.Windows.Forms.Label ChargeDetailGridLabel;
-        private System.Windows.Forms.Label ChargesDataGridLabel;
-        private System.Windows.Forms.ContextMenuStrip menuCharges;
-        private System.Windows.Forms.ToolStripMenuItem toolStripCreditCharge;
-        private System.Windows.Forms.CheckBox ShowCreditedChrgCheckBox;
-        private System.Windows.Forms.TextBox TotalChargesTextBox;
-        private System.Windows.Forms.Label ChargeTotalChargesLabel;
         private System.Windows.Forms.TextBox TotalPaymentTextBox;
         private System.Windows.Forms.Label PmtTotalWriteOffLabel;
         private System.Windows.Forms.TextBox TotalWriteOffTextBox;
@@ -3102,7 +2250,6 @@ namespace LabBilling.Forms
         private System.Windows.Forms.Label PmtTotalPmtAdjLabel;
         private System.Windows.Forms.TextBox TotalPmtAllTextBox;
         private System.Windows.Forms.Button AddChargeButton;
-        private System.Windows.Forms.RichTextBox NotesDisplayTextBox;
         private System.Windows.Forms.Button AddNoteButton;
         private System.Windows.Forms.MaskedTextBox ZipcodeTextBox;
         private LabBilling.Library.FlatCombo MaritalStatusComboBox;
@@ -3132,51 +2279,6 @@ namespace LabBilling.Forms
         private System.Windows.Forms.Label PatLastNameLabel;
         private System.Windows.Forms.TextBox Address1TextBox;
         private System.Windows.Forms.TextBox LastNameTextBox;
-        private System.Windows.Forms.TableLayoutPanel insTabLayoutPanel;
-        private System.Windows.Forms.Label HolderLastNameLabel;
-        private System.Windows.Forms.DataGridView InsuranceDataGrid;
-        private System.Windows.Forms.Button SaveInsuranceButton;
-        private System.Windows.Forms.LinkLabel InsCopyPatientLink;
-        private LabBilling.Library.FlatCombo PlanFinCodeComboBox;
-        private System.Windows.Forms.Label InsPlanFinCodeLabel;
-        private System.Windows.Forms.TextBox CertSSNTextBox;
-        private System.Windows.Forms.TextBox HolderLastNameTextBox;
-        private System.Windows.Forms.Label InsCertSSNLabel;
-        private System.Windows.Forms.TextBox GroupNameTextBox;
-        private System.Windows.Forms.Label InsGroupNameLabel;
-        private System.Windows.Forms.Label HolderFirstNameLabel;
-        private System.Windows.Forms.TextBox HolderZipTextBox;
-        private System.Windows.Forms.TextBox GroupNumberTextBox;
-        private System.Windows.Forms.Label HolderZipCodeLabel;
-        private System.Windows.Forms.Label InsGroupNumberLabel;
-        private System.Windows.Forms.TextBox PlanAddress2TextBox;
-        private LabBilling.Library.FlatCombo InsRelationComboBox;
-        private System.Windows.Forms.Label HolderRelationLabel;
-        private System.Windows.Forms.TextBox PolicyNumberTextBox;
-        private System.Windows.Forms.Label HolderStateLabel;
-        private System.Windows.Forms.MaskedTextBox HolderDOBTextBox;
-        private System.Windows.Forms.Label InsPolicyNumberLabel;
-        private System.Windows.Forms.Label HolderDOBLabel;
-        private LabBilling.Library.FlatCombo HolderStateComboBox;
-        private System.Windows.Forms.TextBox HolderFirstNameTextBox;
-        private System.Windows.Forms.Label InsPlanLabel;
-        private System.Windows.Forms.Label InsuranceOrderLabel;
-        private LabBilling.Library.FlatCombo InsOrderComboBox;
-        private LabBilling.Library.FlatCombo HolderSexComboBox;
-        private System.Windows.Forms.Label HolderMiddleNameLabel;
-        private System.Windows.Forms.Label HolderSexLabel;
-        private System.Windows.Forms.TextBox HolderMiddleNameTextBox;
-        private System.Windows.Forms.Label InsPlanNameLabel;
-        private System.Windows.Forms.TextBox PlanNameTextBox;
-        private System.Windows.Forms.Label HolderAddressLabel;
-        private System.Windows.Forms.TextBox HolderAddressTextBox;
-        private System.Windows.Forms.TextBox PlanCityStTextBox;
-        private System.Windows.Forms.Label InsPlanAddressLabel;
-        private System.Windows.Forms.Label InsPlanCityStateZipLabel;
-        private System.Windows.Forms.TextBox PlanAddressTextBox;
-        private System.Windows.Forms.TextBox HolderCityTextBox;
-        private System.Windows.Forms.Label HolderCityLabel;
-        private System.Windows.Forms.Label InsUserInstructionsLabel;
         private System.Windows.Forms.Button SaveDemographics;
         private System.Windows.Forms.ToolStripMenuItem viewAuditInfoToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem clearHoldStatusToolStripMenuItem;
@@ -3186,9 +2288,6 @@ namespace LabBilling.Forms
         private System.Windows.Forms.DataGridView BillActivityDataGrid;
         private System.Windows.Forms.Button AddPaymentButton;
         private System.Windows.Forms.TextBox DemoStatusMessagesTextBox;
-        private System.Windows.Forms.Button AddInsuranceButton;
-        private System.Windows.Forms.Label PatientFullNameLabel;
-        private System.Windows.Forms.TextBox InsTabMessageTextBox;
         private System.Windows.Forms.Label BannerTotalPmtLabel;
         private System.Windows.Forms.Label BannerTotalChargesLabel;
         private System.Windows.Forms.Label BannerAccBalanceLabel;
@@ -3202,42 +2301,16 @@ namespace LabBilling.Forms
         private System.Windows.Forms.TabPage tabPayments;
         private System.Windows.Forms.TabPage tabDiagnosis;
         private System.Windows.Forms.TabPage tabDemographics;
-        private System.Windows.Forms.TabPage tabInsurance;
         private System.Windows.Forms.TabPage tabBillingActivity;
-        private MetroFramework.Controls.MetroTextBox ValidationResultsTextBox;
-        private MetroFramework.Controls.MetroButton ValidateAccountButton;
-        private MetroFramework.Controls.MetroLabel LastValidatedLabel;
-        private MetroFramework.Controls.MetroLabel BillingLastValidatedLabel;
+        private System.Windows.Forms.TextBox ValidationResultsTextBox;
+        private System.Windows.Forms.Button ValidateAccountButton;
+        private System.Windows.Forms.Label LastValidatedLabel;
+        private System.Windows.Forms.Label BillingLastValidatedLabel;
         private System.Windows.Forms.Label BannerBillStatusLabel;
         private System.Windows.Forms.TextBox BannerBillStatusTextBox;
-        private MetroFramework.Controls.MetroButton GenerateClaimButton;
+        private System.Windows.Forms.Button GenerateClaimButton;
         private System.Windows.Forms.TextBox BannerProviderTextBox;
         private System.Windows.Forms.Label orderingProviderLabel;
-        private System.Windows.Forms.TabPage tabGuarantor;
-        private System.Windows.Forms.Button GuarantorSaveButton;
-        private System.Windows.Forms.Label PatRelationLabel;
-        private LabBilling.Library.FlatCombo GuarantorRelationComboBox;
-        private System.Windows.Forms.Label GuarFirstNameLabel;
-        private System.Windows.Forms.TextBox GuarFirstNameTextBox;
-        private System.Windows.Forms.Label GuarSuffixLabel;
-        private System.Windows.Forms.TextBox GuarSuffixTextBox;
-        private System.Windows.Forms.Label GuarLastNameLabel;
-        private System.Windows.Forms.TextBox GuarantorLastNameTextBox;
-        private System.Windows.Forms.LinkLabel GuarCopyPatientLink;
-        private System.Windows.Forms.Label GuarMiddleNameLabel;
-        private System.Windows.Forms.TextBox GuarMiddleNameTextBox;
-        private System.Windows.Forms.Label GuarAddressLabel;
-        private System.Windows.Forms.TextBox GuarantorAddressTextBox;
-        private System.Windows.Forms.Label GuarCityLabel;
-        private System.Windows.Forms.TextBox GuarCityTextBox;
-        private System.Windows.Forms.Label GuarStateLabel;
-        private LabBilling.Library.FlatCombo GuarStateComboBox;
-        private System.Windows.Forms.Label GuarZipCodeLabel;
-        private System.Windows.Forms.MaskedTextBox GuarZipTextBox;
-        private System.Windows.Forms.Label GuarPhoneLabel;
-        private System.Windows.Forms.TextBox GuarantorPhoneTextBox;
-        private Library.ProviderLookup providerLookup1;
-        private System.Windows.Forms.TextBox insurancePlanTextBox;
         private System.Windows.Forms.Label statementFlagLabel;
         private System.Windows.Forms.TextBox firstStmtDateTextBox;
         private System.Windows.Forms.Label label2;
@@ -3248,25 +2321,18 @@ namespace LabBilling.Forms
         private System.Windows.Forms.ToolStripMenuItem swapInsurancesToolStripMenuItem;
         private UserControls.DateTextBox DateOfBirthTextBox;
         private System.Windows.Forms.ComboBox statementFlagComboBox;
-        private System.Windows.Forms.ToolStripMenuItem moveChargeToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem moveAllChargesToolStripMenuItem;
         private System.Windows.Forms.TextBox bannerDateOfServiceTextBox;
         private System.Windows.Forms.Label bannerDateOfServiceLabel;
-        private System.Windows.Forms.TableLayoutPanel chargeLayoutPanel;
-        private System.Windows.Forms.ToolStripMenuItem generateClientStatementToolStripMenuItem;
         private System.Windows.Forms.DataGridView dxPointerGrid2;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.CheckBox readyToBillCheckbox;
         private System.Windows.Forms.ContextMenuStrip dxPointerMenuStrip;
         private System.Windows.Forms.ToolStripMenuItem clearDxPointerToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem printEOBToolStripMenuItem;
-        private MetroFramework.Controls.MetroButton clearClaimStatusButton;
-        private System.Windows.Forms.ContextMenuStrip chargeDetailsContextMenu;
-        private System.Windows.Forms.ToolStripMenuItem addModifierToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem removeModifierToolStripMenuItem;
+        private System.Windows.Forms.Button clearClaimStatusButton;
         private System.Windows.Forms.CheckBox noteAlertCheckBox;
         private System.Windows.Forms.Label bannerAlertLabel;
-        private System.Windows.Forms.RichTextBox chargeBalRichTextbox;
         private System.Windows.Forms.Label BannerThirdPartyBalLabel;
         private System.Windows.Forms.Label ThirdPartyBalLabel;
         private System.Windows.Forms.Label BannerClientBalLabel;
@@ -3276,9 +2342,38 @@ namespace LabBilling.Forms
         private System.Windows.Forms.RadioButton show3rdPartyRadioButton;
         private System.Windows.Forms.DataGridView statementHistoryDataGrid;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.ToolStripMenuItem changeCreditFlagToolStripMenuItem;
         private System.Windows.Forms.ContextMenuStrip noteTextContextMenu;
         private System.Windows.Forms.ToolStripMenuItem copyToolStripMenuItem;
+        private System.Windows.Forms.Panel bannerPanel;
+        private UserControls.LabDataGridView notesDataGridView;
+        private System.Windows.Forms.TabPage tabInsPrimary;
+        private System.Windows.Forms.TabPage tabInsSecondary;
+        private System.Windows.Forms.TabPage tabInsTertiary;
+        private System.Windows.Forms.TableLayoutPanel demographicsLayoutPanel;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label PatRelationLabel;
+        private Library.FlatCombo GuarantorRelationComboBox;
+        private System.Windows.Forms.LinkLabel GuarCopyPatientLink;
+        private System.Windows.Forms.Label GuarLastNameLabel;
+        private System.Windows.Forms.TextBox GuarantorLastNameTextBox;
+        private System.Windows.Forms.Label GuarFirstNameLabel;
+        private System.Windows.Forms.TextBox GuarFirstNameTextBox;
+        private System.Windows.Forms.Label GuarMiddleNameLabel;
+        private System.Windows.Forms.TextBox GuarMiddleNameTextBox;
+        private System.Windows.Forms.Label GuarSuffixLabel;
+        private System.Windows.Forms.TextBox GuarSuffixTextBox;
+        private System.Windows.Forms.MaskedTextBox GuarZipTextBox;
+        private System.Windows.Forms.Label GuarZipCodeLabel;
+        private System.Windows.Forms.Label GuarStateLabel;
+        private Library.FlatCombo GuarStateComboBox;
+        private System.Windows.Forms.TextBox GuarCityTextBox;
+        private System.Windows.Forms.Label GuarCityLabel;
+        private System.Windows.Forms.TextBox GuarantorAddressTextBox;
+        private System.Windows.Forms.Label GuarAddressLabel;
+        private System.Windows.Forms.Label GuarPhoneLabel;
+        private System.Windows.Forms.TextBox GuarantorPhoneTextBox;
+        private System.Windows.Forms.TextBox orderingPhyTextBox;
     }
 }
 

@@ -28,87 +28,89 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.dashboardLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
-            this.arChart = new System.Windows.Forms.DataVisualization.Charting.Chart();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.announcementLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
-            this.dashboardLayoutPanel.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.arChart)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            this.SuspendLayout();
+            dashboardLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
+            pictureBox1 = new System.Windows.Forms.PictureBox();
+            announcementLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
+            formsPlot1 = new ScottPlot.WinForms.FormsPlot();
+            dashboardLayoutPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
+            SuspendLayout();
             // 
             // dashboardLayoutPanel
             // 
-            this.dashboardLayoutPanel.ColumnCount = 3;
-            this.dashboardLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 52.331F));
-            this.dashboardLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 47.669F));
-            this.dashboardLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 139F));
-            this.dashboardLayoutPanel.Controls.Add(this.arChart, 0, 0);
-            this.dashboardLayoutPanel.Controls.Add(this.pictureBox1, 2, 0);
-            this.dashboardLayoutPanel.Controls.Add(this.announcementLayoutPanel, 0, 1);
-            this.dashboardLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dashboardLayoutPanel.Location = new System.Drawing.Point(0, 0);
-            this.dashboardLayoutPanel.Name = "dashboardLayoutPanel";
-            this.dashboardLayoutPanel.RowCount = 2;
-            this.dashboardLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.dashboardLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.dashboardLayoutPanel.Size = new System.Drawing.Size(997, 490);
-            this.dashboardLayoutPanel.TabIndex = 0;
-            // 
-            // arChart
-            // 
-            this.arChart.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.arChart.Location = new System.Drawing.Point(3, 3);
-            this.arChart.Name = "arChart";
-            this.arChart.Size = new System.Drawing.Size(443, 239);
-            this.arChart.TabIndex = 1;
-            this.arChart.Text = "chart1";
+            dashboardLayoutPanel.ColumnCount = 3;
+            dashboardLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 52.331F));
+            dashboardLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 47.669F));
+            dashboardLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 162F));
+            dashboardLayoutPanel.Controls.Add(pictureBox1, 2, 0);
+            dashboardLayoutPanel.Controls.Add(announcementLayoutPanel, 0, 1);
+            dashboardLayoutPanel.Controls.Add(formsPlot1, 0, 0);
+            dashboardLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            dashboardLayoutPanel.Location = new System.Drawing.Point(0, 0);
+            dashboardLayoutPanel.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            dashboardLayoutPanel.Name = "dashboardLayoutPanel";
+            dashboardLayoutPanel.RowCount = 2;
+            dashboardLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            dashboardLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            dashboardLayoutPanel.Size = new System.Drawing.Size(1163, 565);
+            dashboardLayoutPanel.TabIndex = 0;
             // 
             // pictureBox1
             // 
-            this.pictureBox1.Image = global::LabBilling.Properties.Resources.logoicon2;
-            this.pictureBox1.Location = new System.Drawing.Point(861, 3);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(128, 128);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            this.pictureBox1.TabIndex = 0;
-            this.pictureBox1.TabStop = false;
+            pictureBox1.Image = Properties.Resources.logoicon2;
+            pictureBox1.Location = new System.Drawing.Point(1004, 3);
+            pictureBox1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            pictureBox1.Name = "pictureBox1";
+            pictureBox1.Size = new System.Drawing.Size(128, 128);
+            pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            pictureBox1.TabIndex = 0;
+            pictureBox1.TabStop = false;
             // 
             // announcementLayoutPanel
             // 
-            this.announcementLayoutPanel.ColumnCount = 1;
-            this.announcementLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.announcementLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.announcementLayoutPanel.Location = new System.Drawing.Point(3, 248);
-            this.announcementLayoutPanel.Name = "announcementLayoutPanel";
-            this.announcementLayoutPanel.RowCount = 1;
-            this.announcementLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.announcementLayoutPanel.Size = new System.Drawing.Size(443, 239);
-            this.announcementLayoutPanel.TabIndex = 4;
+            announcementLayoutPanel.ColumnCount = 1;
+            announcementLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            announcementLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            announcementLayoutPanel.Location = new System.Drawing.Point(4, 285);
+            announcementLayoutPanel.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            announcementLayoutPanel.Name = "announcementLayoutPanel";
+            announcementLayoutPanel.RowCount = 1;
+            announcementLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            announcementLayoutPanel.Size = new System.Drawing.Size(515, 277);
+            announcementLayoutPanel.TabIndex = 4;
+            // 
+            // formsPlot1
+            // 
+            formsPlot1.DisplayScale = 1F;
+            formsPlot1.Dock = System.Windows.Forms.DockStyle.Fill;
+            formsPlot1.Location = new System.Drawing.Point(3, 3);
+            formsPlot1.Name = "formsPlot1";
+            formsPlot1.Size = new System.Drawing.Size(517, 276);
+            formsPlot1.TabIndex = 5;
             // 
             // DashboardForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.ClientSize = new System.Drawing.Size(997, 490);
-            this.Controls.Add(this.dashboardLayoutPanel);
-            this.Name = "DashboardForm";
-            this.Text = "DashboardForm";
-            this.Load += new System.EventHandler(this.DashboardForm_Load);
-            this.dashboardLayoutPanel.ResumeLayout(false);
-            this.dashboardLayoutPanel.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.arChart)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            this.ResumeLayout(false);
-
+            AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            BackColor = System.Drawing.SystemColors.ControlLightLight;
+            ClientSize = new System.Drawing.Size(1163, 565);
+            Controls.Add(dashboardLayoutPanel);
+            ForeColor = System.Drawing.Color.Black;
+            Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            Name = "DashboardForm";
+            Text = "Dashboard";
+            Load += DashboardForm_Load;
+            dashboardLayoutPanel.ResumeLayout(false);
+            dashboardLayoutPanel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
+            ResumeLayout(false);
         }
 
         #endregion
 
         private System.Windows.Forms.TableLayoutPanel dashboardLayoutPanel;
         private System.Windows.Forms.PictureBox pictureBox1;
-        private System.Windows.Forms.DataVisualization.Charting.Chart arChart;
         private System.Windows.Forms.TableLayoutPanel announcementLayoutPanel;
+        private ScottPlot.WinForms.FormsPlot formsPlot1;
     }
 }

@@ -11,43 +11,32 @@ namespace LabBilling.Library
 {
     public sealed class FormExtensions
     {
-        /// <summary>
-        /// Event Handler for the data grid views click event, launches the account program for the selected account.
-        /// 08/23/2007 rgc/wdk
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        static public void LaunchAcc_EventHandler(object sender, DataGridViewCellMouseEventArgs e)
+        public static (string account, string error) GetDGVAccount(DataGridView dgv, int rowIndex)
         {
-            DataGridView dgvGrid = (DataGridView)sender;
-            if (e.RowIndex < 0)
-            {
-                MessageBox.Show("You did not selected a current row.");
-                return;
+            if (rowIndex < 0)
+            {                
+                return ("", "Row not selected");
             }
-            string strAcc = "";
+            string strAcc;
             try
             {
-                strAcc = dgvGrid["ACCOUNT", e.RowIndex].Value.ToString();
+                strAcc = dgv["ACCOUNT", rowIndex].Value.ToString();
             }
             catch (ArgumentException ae)
             {
-                MessageBox.Show(ae.Message);
-                return;
+                return ("", ae.Message);
             }
             if (strAcc.Length < 2)
             {
-                MessageBox.Show("Account not long enough"); // don't expect this to happen.
-                return;
+                //MessageBox.Show("Account not long enough"); // don't expect this to happen.
+                return ("", "Account not long enough");
             }
             if (strAcc[1] == '0' || strAcc[1] == 'A') // if the seconds character is 0 or A remove 
             {
                 strAcc = strAcc.Remove(1, 1);
             }
 
-            AccountForm frm = new AccountForm(strAcc, Application.OpenForms[0]);
-            frm.Show();
-
+            return (strAcc, "");
         }
 
     }

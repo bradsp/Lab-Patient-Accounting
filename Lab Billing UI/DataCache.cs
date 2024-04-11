@@ -1,37 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IdentityModel.Protocols.WSTrust;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using LabBilling.Core.DataAccess;
 using LabBilling.Core.Models;
+using LabBilling.Core.UnitOfWork;
 using LazyCache;
-using LazyCache.Providers;
-using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Identity.Client;
-using PetaPoco;
 
 namespace LabBilling
 {
     public sealed class DataCache
     {
         IAppCache cache = new CachingService();
-        private static FinRepository _finRepository;
-        private static InsCompanyRepository _insCompanyRepository;
-        private static PhyRepository _phyRepository;
-        private static ClientRepository _clientRepository;
-        private static CdmRepository _cdmRepository;
-        private static RevenueCodeRepository _revenueCodeRepository;
+        private static readonly UnitOfWorkMain unitOfWork = new(Program.AppEnvironment);
 
         private DataCache() 
         {
-            _finRepository = new FinRepository(Program.AppEnvironment);
-            _insCompanyRepository = new InsCompanyRepository(Program.AppEnvironment);
-            _phyRepository = new PhyRepository(Program.AppEnvironment);
-            _clientRepository = new ClientRepository(Program.AppEnvironment);
-            _cdmRepository = new CdmRepository(Program.AppEnvironment);
-            _revenueCodeRepository = new RevenueCodeRepository(Program.AppEnvironment);
+            
         }
 
         private static DataCache instance = null;
@@ -48,7 +32,7 @@ namespace LabBilling
             }
         }
 
-        Func<IEnumerable<Fin>> finGetter = () => _finRepository.GetActive();
+        readonly Func<IEnumerable<Fin>> finGetter = () => unitOfWork.FinRepository.GetActive();
         
         public List<Fin> GetFins()
         {
@@ -62,7 +46,7 @@ namespace LabBilling
             cache.Remove("fin");
         }
 
-        Func<IEnumerable<InsCompany>> inscGetter = () => _insCompanyRepository.GetAll();
+        readonly Func<IEnumerable<InsCompany>> inscGetter = () => unitOfWork.InsCompanyRepository.GetAll();
 
         public List<InsCompany> GetInsCompanies()
         {
@@ -76,7 +60,7 @@ namespace LabBilling
             cache.Remove("insc");
         }
 
-        Func<IEnumerable<Phy>> phyGetter = () => _phyRepository.GetActive();
+        readonly Func<IEnumerable<Phy>> phyGetter = () => unitOfWork.PhyRepository.GetActive();
 
         public List<Phy> GetProviders()
         {
@@ -90,7 +74,7 @@ namespace LabBilling
             cache.Remove("phy");
         }
 
-        Func<IEnumerable<Client>> clientGetter = () => _clientRepository.GetAll(false);
+        readonly Func<IEnumerable<Client>> clientGetter = () => unitOfWork.ClientRepository.GetAll(false);
 
         public List<Client> GetClients()
         {
@@ -99,7 +83,7 @@ namespace LabBilling
             return clients.ToList();
         }
 
-        Func<IEnumerable<Client>> clientAllGetter = () => _clientRepository.GetAll(true);
+        readonly Func<IEnumerable<Client>> clientAllGetter = () => unitOfWork.ClientRepository.GetAll(true);
 
         public List<Client> GetClientsIncludeInactive()
         {
@@ -112,7 +96,7 @@ namespace LabBilling
             cache.Remove("client");
         }
 
-        Func<IEnumerable<Cdm>> cdmGetter = () => _cdmRepository.GetAll(false);
+        readonly Func<IEnumerable<Cdm>> cdmGetter = () => unitOfWork.CdmRepository.GetAll(false);
 
         public List<Cdm> GetCdms()
         {
@@ -126,7 +110,7 @@ namespace LabBilling
             cache.Remove("cdm");
         }
 
-        Func<IEnumerable<RevenueCode>> revenueCodeGetter = () => _revenueCodeRepository.GetAll();
+        readonly Func<IEnumerable<RevenueCode>> revenueCodeGetter = () => unitOfWork.RevenueCodeRepository.GetAll();
 
         public List<RevenueCode> GetRevenueCodes()
         {

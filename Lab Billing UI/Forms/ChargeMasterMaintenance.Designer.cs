@@ -32,7 +32,7 @@ namespace LabBilling.Forms
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            this.cdmGrid = new MetroFramework.Controls.MetroGrid();
+            this.cdmGrid = new System.Windows.Forms.DataGridView();
             this.includeInactiveCheckBox = new System.Windows.Forms.CheckBox();
             this.addCdmButton = new System.Windows.Forms.Button();
             this.filterTextBox = new System.Windows.Forms.TextBox();
@@ -153,7 +153,7 @@ namespace LabBilling.Forms
 
         #endregion
 
-        private MetroFramework.Controls.MetroGrid cdmGrid;
+        private System.Windows.Forms.DataGridView cdmGrid;
         private System.Windows.Forms.CheckBox includeInactiveCheckBox;
         private System.Windows.Forms.Button addCdmButton;
         private System.Windows.Forms.TextBox filterTextBox;

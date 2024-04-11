@@ -1,54 +1,45 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-//using LabBilling.Core.DataAccess;
 using LabBilling.Logging;
 
-namespace LabBilling.Forms
+namespace LabBilling.Forms;
+
+public partial class ReportingPortalForm : Form
 {
-    public partial class ReportingPortalForm : Form
+    private string url;
+
+    public ReportingPortalForm(string url) 
     {
-        private string url;
+        this.url = url;
+        InitializeComponent();
+    }
 
-        public ReportingPortalForm(string url)
+    private void ReportingPortalForm_Load(object sender, EventArgs e)
+    {
+        Log.Instance.Trace($"Entering");
+
+        //SystemParametersRepository systemParametersRepository = new SystemParametersRepository(this.connection);
+
+        //string url = systemParametersRepository.GetByKey("report_portal_url");
+
+        try
         {
-            this.url = url;
-            InitializeComponent();
+            webBrowser1.Navigate(new Uri(url));
         }
-
-        private void ReportingPortalForm_Load(object sender, EventArgs e)
+        catch(System.UriFormatException ex)
         {
-            Log.Instance.Trace($"Entering");
-
-            //SystemParametersRepository systemParametersRepository = new SystemParametersRepository(this.connection);
-
-            //string url = systemParametersRepository.GetByKey("report_portal_url");
-
-            try
-            {
-                webBrowser1.Navigate(new Uri(url));
-            }
-            catch(System.UriFormatException ex)
-            {
-                Log.Instance.Error("report_portal_url is not formatted correctly.", ex);
-                MessageBox.Show("Address is not formatted correctly.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            Log.Instance.Error("report_portal_url is not formatted correctly.", ex);
+            MessageBox.Show("Address is not formatted correctly.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
+    }
 
-        private void ReportingPortalForm_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            webBrowser1.Dispose();
-        }
+    private void ReportingPortalForm_FormClosed(object sender, FormClosedEventArgs e)
+    {
+        webBrowser1.Dispose();
+    }
 
-        private void homeToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            MessageBox.Show("I clicked home!");
-        }
+    private void homeToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        MessageBox.Show("I clicked home!");
     }
 }

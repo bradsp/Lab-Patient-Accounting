@@ -1,28 +1,27 @@
 ﻿using PetaPoco;
 using System;
 
-namespace LabBilling.Core.Models
-{
-    [TableName("dictionary.clienttype")]
-    [PrimaryKey("type", AutoIncrement = false)]
-    public sealed class ClientType : IBaseEntity
-    {
-        [Column("type")]
-        public int Type { get; set; }
-        [Column("description")]
-        public string Description { get; set; }
-        [Column("admission_source_cd")]
-        public string AdmissionSourceCode { get; set; }
+namespace LabBilling.Core.Models;
 
-        [Ignore]
-        public DateTime mod_date { get; set; }
-        [Ignore]
-        public string mod_user { get; set; }
-        [Ignore] 
-        public string mod_prg { get; set; }
-        [Ignore] 
-        public string mod_host { get; set; }
-        [Ignore] 
-        public Guid rowguid { get; set; }
-    }
+[TableName("dictionary.clienttype")]
+[PrimaryKey("type", AutoIncrement = false)]
+public sealed class ClientType : IBaseEntity
+{
+    [Column("type")]
+    public int Type { get; set; }
+    [Column("description")]
+    public string Description { get; set; }
+    [Column("admission_source_cd")]
+    public string AdmissionSourceCode { get; set; }
+
+    [Ignore]
+    public DateTime UpdatedDate { get; set; }
+    [Ignore]
+    public string UpdatedUser { get; set; }
+    [Ignore] 
+    public string UpdatedApp { get; set; }
+    [Ignore] 
+    public string UpdatedHost { get; set; }
+    [Ignore] 
+    public Guid rowguid { get; set; }
 }
