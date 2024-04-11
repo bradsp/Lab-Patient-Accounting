@@ -615,7 +615,7 @@ public partial class MainForm : Form
         //ReportingPortalForm frm = new ReportingPortalForm(url);
         if (url != "")
         {
-            System.Diagnostics.Process.Start(url);
+            OS.OpenBrowser(url);
         }
         else
         {

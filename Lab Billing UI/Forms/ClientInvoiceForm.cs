@@ -2,14 +2,8 @@
 using LabBilling.Core.Services;
 using LabBilling.Library;
 using LabBilling.Logging;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using Utilities;
 using SaveFileDialog = System.Windows.Forms.SaveFileDialog;
 

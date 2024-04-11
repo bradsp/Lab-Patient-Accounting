@@ -325,7 +325,7 @@ namespace MCL
             }
             catch (Exception excpt)
             {
-                m_strErrMsg = string.Format("CALLING METHOD: {0}\r\n\nSOURCE: {1}\r\n\nEXCPT INSTANCE: {2}\r\n\nSTACK: {3}", OS.getCallingMedthodName(),excpt.Source, excpt.InnerException, excpt.StackTrace);
+                m_strErrMsg = string.Format("CALLING METHOD: {0}\r\n\nSOURCE: {1}\r\n\nEXCPT INSTANCE: {2}\r\n\nSTACK: {3}", OS.GetCallingMedthodName(),excpt.Source, excpt.InnerException, excpt.StackTrace);
             }
 
             return bRetVal;
@@ -414,7 +414,7 @@ namespace MCL
             }
             catch (Exception excpt)
             {
-                m_strErrMsg = string.Format("CALLING METHOD: {0}\r\n\nSOURCE: {1}\r\n\nEXCPT INSTANCE: {2}\r\n\nSTACK: {3}", OS.getCallingMedthodName(), excpt.Source, excpt.InnerException, excpt.StackTrace);
+                m_strErrMsg = string.Format("CALLING METHOD: {0}\r\n\nSOURCE: {1}\r\n\nEXCPT INSTANCE: {2}\r\n\nSTACK: {3}", OS.GetCallingMedthodName(), excpt.Source, excpt.InnerException, excpt.StackTrace);
             }
 
             return bRetVal;

@@ -102,7 +102,7 @@ namespace Utilities
                 MessageBox.Show(strDatabase, strAcc);
             }
 
-            osb.Shell("acc.exe", @"C:\Program Files\Medical Center Laboratory\MCL Billing", string.Format("{0}{1} {2}{3}",
+            OS.Shell("acc.exe", @"C:\Program Files\Medical Center Laboratory\MCL Billing", string.Format("{0}{1} {2}{3}",
                                         strDatabase[0] == '/' ? "" : @"/",
                                             strDatabase,
                                                 strAcc[0] == '/' ? "" : @"/",
@@ -170,7 +170,7 @@ namespace Utilities
             //MessageBox.Show(strMsg);
             //#endregion Debug code
 
-            osb.Shell("acc.exe", @"C:\Program Files\Medical Center Laboratory\MCL Billing", string.Format("{0}{1} {2}{3}",
+            OS.Shell("acc.exe", @"C:\Program Files\Medical Center Laboratory\MCL Billing", string.Format("{0}{1} {2}{3}",
                                         strSDatabase[0] == '/' ? "" : @"/",
                                             strSDatabase,
                                                 strAcc[0] == '/' ? "" : @"/",
@@ -197,7 +197,7 @@ namespace Utilities
                 strAccount = strAccount.Remove(1, 1);
             }
             OS osb = new OS();
-            osb.Shell("acc.exe", @"C:\Program Files\Medical Center Laboratory\MCL Billing", string.Format("{0}{1} {2}{3}",
+            OS.Shell("acc.exe", @"C:\Program Files\Medical Center Laboratory\MCL Billing", string.Format("{0}{1} {2}{3}",
                                         m_strDatabase[0] == '/' ? "" : @"/",
                                             m_strDatabase.Trim(),
                                                 strAccount[0] == '/' ? "" : @"/",

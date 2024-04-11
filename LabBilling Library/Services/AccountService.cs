@@ -8,10 +8,8 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
-using Log = LabBilling.Logging.Log;
 using Utilities;
-using NPOI.HSSF.Record.Chart;
-using NPOI.OpenXmlFormats.Dml;
+using Log = LabBilling.Logging.Log;
 
 namespace LabBilling.Core.Services;
 
@@ -42,7 +40,7 @@ public sealed class AccountService
     public Account GetAccountMinimal(string accountNo)
     {
         using AccountUnitOfWork uow = new(_appEnvironment);
-        var acc = uow.AccountRepository.GetByAccount(accountNo);        
+        var acc = uow.AccountRepository.GetByAccount(accountNo);
         return acc;
     }
 
@@ -142,7 +140,7 @@ public sealed class AccountService
         record.Charges = GetCharges(account, true, true, null, false).ToList();
         record.ChrgDiagnosisPointers = uow.ChrgDiagnosisPointerRepository.GetByAccount(account).ToList();
 
-        record.Charges.ForEach(chrg =>
+        record.Charges.Where(c => c.CDMCode != _appEnvironment.ApplicationParameters.ClientInvoiceCdm).ToList().ForEach(chrg =>
         {
             chrg.ChrgDetails.ForEach(cd =>
             {
@@ -165,7 +163,7 @@ public sealed class AccountService
         record.ChrgDiagnosisPointers.ForEach(d =>
         {
             d.CdmDescription = record.Cdms.Where(c => c.ChargeId == d.CdmCode).First().Description;
-            if(!string.IsNullOrEmpty(d.CptCode))
+            if (!string.IsNullOrEmpty(d.CptCode))
                 d.CptDescription = record.Cdms.Where(c => c.ChargeId == d.CdmCode).First()?.CdmDetails?.Where(cd => cd.Cpt4 == d.CptCode).First()?.Description;
         });
 
@@ -528,7 +526,7 @@ public sealed class AccountService
                 UpdateStatus(acc.AccountNo, AccountStatus.Statements);
                 acc.Status = AccountStatus.Statements;
             }
-            if(flag == "N")
+            if (flag == "N")
             {
                 UpdateStatus(acc.AccountNo, AccountStatus.New);
                 acc.Status = AccountStatus.New;
@@ -852,7 +850,7 @@ public sealed class AccountService
                             throw new ApplicationException("Error reprocessing charges.", ex);
                         }
                     }
-                    else if (oldClient.ClientMnem == _appEnvironment.ApplicationParameters.PathologyBillingClientException 
+                    else if (oldClient.ClientMnem == _appEnvironment.ApplicationParameters.PathologyBillingClientException
                         || newClient.ClientMnem == _appEnvironment.ApplicationParameters.PathologyBillingClientException)
                     {
                         try
@@ -1048,7 +1046,7 @@ public sealed class AccountService
             uow.Commit();
             return charges;
         }
-            //throw new ApplicationException($"No charges for account {charges.First().AccountNo}");
+        //throw new ApplicationException($"No charges for account {charges.First().AccountNo}");
 
         var fin = uow.FinRepository.GetFin(finCode) ?? throw new ApplicationException($"Fin {finCode} is not valid");
 
@@ -1215,7 +1213,7 @@ public sealed class AccountService
             //hard coding exception for Hardin County for now - 05/09/2023 BSP
             if (gb != null && accData.ClientMnem != _appEnvironment.ApplicationParameters.PathologyBillingClientException)
             {
-                fin = uow.FinRepository.GetFin(_appEnvironment.ApplicationParameters.BillToClientInvoiceDefaultFinCode) 
+                fin = uow.FinRepository.GetFin(_appEnvironment.ApplicationParameters.BillToClientInvoiceDefaultFinCode)
                     ?? throw new ApplicationException($"Fin code {_appEnvironment.ApplicationParameters.BillToClientInvoiceDefaultFinCode} not found error {accData.AccountNo}");
                 chargeClient = uow.ClientRepository.GetClient(_appEnvironment.ApplicationParameters.PathologyGroupClientMnem);
             }
@@ -1274,7 +1272,7 @@ public sealed class AccountService
                 Type = fee.Type
             };
 
-            if(fin.FinClass == _appEnvironment.ApplicationParameters.PatientFinancialTypeCode)
+            if (fin.FinClass == _appEnvironment.ApplicationParameters.PatientFinancialTypeCode)
             {
                 chrgDetail.Amount = fee.MClassPrice;
                 retailTotal += fee.MClassPrice;
@@ -1322,7 +1320,7 @@ public sealed class AccountService
             chrgDetails.Add(chrgDetail);
 
             var diagPtr = accData.ChrgDiagnosisPointers.Find(c => c.CdmCode == chrg.CDMCode && c.CptCode == chrgDetail.Cpt4);
-            if(diagPtr == null)
+            if (diagPtr == null)
             {
                 //add a new diag ptr
                 ChrgDiagnosisPointer ptr = new()
