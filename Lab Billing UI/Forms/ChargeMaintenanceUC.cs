@@ -153,23 +153,27 @@ public partial class ChargeMaintenanceUC : UserControl
 
         try
         {
-            if(ChargesDataGrid.Columns.Contains(nameof(Charge.ChrgId)))
-                _grouper.SetGroupOn(nameof(Charge.ChrgId));
+            if (ChargesDataGrid.Columns.Contains(nameof(Charge.ChrgId)))
+            {
+                _grouper.SetGroupOn(ChargesDataGrid.Columns[nameof(Charge.ChrgId)]);
+            }
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             Log.Instance.Error(ex);
         }
 
-
-        if (CurrentAccount.FinCode == "CLIENT")
+        if (CurrentAccount.FinCode == Program.AppEnvironment.ApplicationParameters.ClientAccountFinCode)
         {
             _chargesTable.DefaultView.Sort = $"{nameof(Chrg.ChrgId)} desc";
+            _grouper.GroupSortOrder = SortOrder.Descending;
         }
         if (!ShowCreditedChrgCheckBox.Checked)
         {
             _chargesTable.DefaultView.RowFilter = $"{nameof(Chrg.IsCredited)} = false";
         }
+
+
 
         foreach (DataGridViewColumn col in ChargesDataGrid.Columns)
         {
@@ -204,6 +208,7 @@ public partial class ChargeMaintenanceUC : UserControl
         ChargesDataGrid.Columns[nameof(Charge.CdmDescription)].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
         ChargesDataGrid.Columns[nameof(Charge.CptDescription)].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
         ChargesDataGrid.Columns[nameof(Charge.Comment)].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+        ChargesDataGrid.Columns[nameof(Charge.ChrgId)].SortMode = DataGridViewColumnSortMode.NotSortable;
         ChargesDataGrid.BackgroundColor = Color.AntiqueWhite;
 
         chargeBalRichTextbox.Text = "";
@@ -220,6 +225,7 @@ public partial class ChargeMaintenanceUC : UserControl
         }
 
         ChargesDataGrid.ClearSelection();
+
 
     }
 
@@ -404,7 +410,7 @@ public partial class ChargeMaintenanceUC : UserControl
 
                 var chrg = _accountService.SetChargeCreditFlag(chrgId, !currentFlag);
                 int idx = CurrentAccount.Charges.IndexOf(chrg);
-                if(idx > -1)
+                if (idx > -1)
                     CurrentAccount.Charges[idx] = chrg;
             }
             ChargesUpdated?.Invoke(this, EventArgs.Empty);
@@ -445,4 +451,9 @@ public partial class ChargeMaintenanceUC : UserControl
     }
 
     private void filterRadioButton_CheckedChanged(object sender, EventArgs e) => FilterCharges();
+
+    private void ChargesDataGrid_ColumnSortModeChanged(object sender, DataGridViewColumnEventArgs e)
+    {
+
+    }
 }

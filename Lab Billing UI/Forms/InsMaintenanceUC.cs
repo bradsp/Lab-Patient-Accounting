@@ -115,12 +115,12 @@ public partial class InsMaintenanceUC : UserControl
         HolderAddressTextBox.Text = CurrentIns.HolderStreetAddress ?? "";
 
         HolderCityTextBox.Text = CurrentIns.HolderCity;
-        HolderStateComboBox.SelectedItem = CurrentIns.HolderState;
+        HolderStateComboBox.SelectedValue = CurrentIns.HolderState ?? "";
         HolderZipTextBox.Text = CurrentIns.HolderZip;
 
         HolderSexComboBox.SelectedValue = CurrentIns.HolderSex ?? "";
         HolderDOBTextBox.Text = CurrentIns.HolderBirthDate?.ToString("MM/dd/yyyy");
-        InsRelationComboBox.SelectedItem = CurrentIns.Relation ?? "";
+        InsRelationComboBox.SelectedValue = CurrentIns.Relation ?? "";
 
         insurancePlanTextBox.Text = CurrentIns.InsCode ?? "";
 
@@ -394,10 +394,10 @@ public partial class InsMaintenanceUC : UserControl
         HolderMiddleNameTextBox.Text = CurrentAccount.PatMiddleName;
         HolderAddressTextBox.Text = CurrentAccount.Pat.Address1;
         HolderCityTextBox.Text = CurrentAccount.Pat.City;
-        HolderStateComboBox.SelectedValue = CurrentAccount.Pat.State;
+        HolderStateComboBox.SelectedValue = CurrentAccount.Pat.State ?? "";
         HolderZipTextBox.Text = CurrentAccount.Pat.ZipCode;
         HolderDOBTextBox.Text = CurrentAccount.BirthDate?.ToString("MM/dd/yyyy");
-        HolderSexComboBox.SelectedValue = CurrentAccount.Sex;
+        HolderSexComboBox.SelectedValue = CurrentAccount.Sex ?? "";
         InsRelationComboBox.SelectedValue = "01";
     }
 

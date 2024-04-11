@@ -81,7 +81,7 @@ namespace MCL
             {
                 if (value.ToString().Length != 0)
                 {
-                    m_strErrMsg = string.Format("INVALID CBILL DATE. IN FUNCTION {0}", OS.getCallingMedthodName());
+                    m_strErrMsg = string.Format("INVALID CBILL DATE. IN FUNCTION {0}", OS.GetCallingMedthodName());
                     DateTime.Parse(value.ToString());
                     m_strErrMsg = "";
                 }

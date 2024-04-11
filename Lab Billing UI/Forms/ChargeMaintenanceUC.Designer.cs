@@ -32,26 +32,26 @@ namespace LabBilling.Forms
         private void InitializeComponent()
         {
             components = new Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            showAllChargeRadioButton = new System.Windows.Forms.RadioButton();
-            showClientRadioButton = new System.Windows.Forms.RadioButton();
-            show3rdPartyRadioButton = new System.Windows.Forms.RadioButton();
-            chargeLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
-            ChargesDataGridLabel = new System.Windows.Forms.Label();
-            ChargesDataGrid = new System.Windows.Forms.DataGridView();
-            chargesContextMenu = new System.Windows.Forms.ContextMenuStrip(components);
-            toolStripCreditCharge = new System.Windows.Forms.ToolStripMenuItem();
-            moveChargeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            changeCreditFlagToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            addModifierToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            removeModifierToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            AddChargeButton = new System.Windows.Forms.Button();
-            chargeBalRichTextbox = new System.Windows.Forms.RichTextBox();
-            TotalChargesTextBox = new System.Windows.Forms.TextBox();
-            ChargeTotalChargesLabel = new System.Windows.Forms.Label();
-            ShowCreditedChrgCheckBox = new System.Windows.Forms.CheckBox();
+            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
+            showAllChargeRadioButton = new RadioButton();
+            showClientRadioButton = new RadioButton();
+            show3rdPartyRadioButton = new RadioButton();
+            chargeLayoutPanel = new TableLayoutPanel();
+            ChargesDataGridLabel = new Label();
+            ChargesDataGrid = new DataGridView();
+            chargesContextMenu = new ContextMenuStrip(components);
+            toolStripCreditCharge = new ToolStripMenuItem();
+            moveChargeToolStripMenuItem = new ToolStripMenuItem();
+            changeCreditFlagToolStripMenuItem = new ToolStripMenuItem();
+            addModifierToolStripMenuItem1 = new ToolStripMenuItem();
+            removeModifierToolStripMenuItem1 = new ToolStripMenuItem();
+            AddChargeButton = new Button();
+            chargeBalRichTextbox = new RichTextBox();
+            TotalChargesTextBox = new TextBox();
+            ChargeTotalChargesLabel = new Label();
+            ShowCreditedChrgCheckBox = new CheckBox();
             chargeLayoutPanel.SuspendLayout();
             ((ISupportInitialize)ChargesDataGrid).BeginInit();
             chargesContextMenu.SuspendLayout();
@@ -61,10 +61,10 @@ namespace LabBilling.Forms
             // 
             showAllChargeRadioButton.AutoSize = true;
             showAllChargeRadioButton.Checked = true;
-            showAllChargeRadioButton.Location = new System.Drawing.Point(446, 14);
-            showAllChargeRadioButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            showAllChargeRadioButton.Location = new Point(446, 14);
+            showAllChargeRadioButton.Margin = new Padding(4, 3, 4, 3);
             showAllChargeRadioButton.Name = "showAllChargeRadioButton";
-            showAllChargeRadioButton.Size = new System.Drawing.Size(71, 19);
+            showAllChargeRadioButton.Size = new Size(71, 19);
             showAllChargeRadioButton.TabIndex = 17;
             showAllChargeRadioButton.TabStop = true;
             showAllChargeRadioButton.Text = "Show All";
@@ -74,11 +74,11 @@ namespace LabBilling.Forms
             // showClientRadioButton
             // 
             showClientRadioButton.AutoSize = true;
-            showClientRadioButton.BackColor = System.Drawing.Color.PaleGreen;
-            showClientRadioButton.Location = new System.Drawing.Point(293, 14);
-            showClientRadioButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            showClientRadioButton.BackColor = Color.PaleGreen;
+            showClientRadioButton.Location = new Point(293, 14);
+            showClientRadioButton.Margin = new Padding(4, 3, 4, 3);
             showClientRadioButton.Name = "showClientRadioButton";
-            showClientRadioButton.Size = new System.Drawing.Size(136, 19);
+            showClientRadioButton.Size = new Size(136, 19);
             showClientRadioButton.TabIndex = 18;
             showClientRadioButton.Text = "Show Client Invoiced";
             showClientRadioButton.UseVisualStyleBackColor = false;
@@ -87,11 +87,11 @@ namespace LabBilling.Forms
             // show3rdPartyRadioButton
             // 
             show3rdPartyRadioButton.AutoSize = true;
-            show3rdPartyRadioButton.BackColor = System.Drawing.Color.Cyan;
-            show3rdPartyRadioButton.Location = new System.Drawing.Point(129, 14);
-            show3rdPartyRadioButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            show3rdPartyRadioButton.BackColor = Color.Cyan;
+            show3rdPartyRadioButton.Location = new Point(129, 14);
+            show3rdPartyRadioButton.Margin = new Padding(4, 3, 4, 3);
             show3rdPartyRadioButton.Name = "show3rdPartyRadioButton";
-            show3rdPartyRadioButton.Size = new System.Drawing.Size(146, 19);
+            show3rdPartyRadioButton.Size = new Size(146, 19);
             show3rdPartyRadioButton.TabIndex = 19;
             show3rdPartyRadioButton.Text = "Show 3rd Party/Patient";
             show3rdPartyRadioButton.UseVisualStyleBackColor = false;
@@ -99,32 +99,32 @@ namespace LabBilling.Forms
             // 
             // chargeLayoutPanel
             // 
-            chargeLayoutPanel.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            chargeLayoutPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             chargeLayoutPanel.ColumnCount = 2;
-            chargeLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            chargeLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 150F));
+            chargeLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            chargeLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 150F));
             chargeLayoutPanel.Controls.Add(ChargesDataGridLabel, 0, 0);
             chargeLayoutPanel.Controls.Add(ChargesDataGrid, 0, 1);
             chargeLayoutPanel.Controls.Add(AddChargeButton, 1, 0);
             chargeLayoutPanel.Controls.Add(chargeBalRichTextbox, 0, 2);
-            chargeLayoutPanel.Location = new System.Drawing.Point(8, 50);
-            chargeLayoutPanel.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            chargeLayoutPanel.Location = new Point(8, 50);
+            chargeLayoutPanel.Margin = new Padding(4, 3, 4, 3);
             chargeLayoutPanel.Name = "chargeLayoutPanel";
             chargeLayoutPanel.RowCount = 3;
-            chargeLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            chargeLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 80F));
-            chargeLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
-            chargeLayoutPanel.Size = new System.Drawing.Size(925, 400);
+            chargeLayoutPanel.RowStyles.Add(new RowStyle());
+            chargeLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 80F));
+            chargeLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 20F));
+            chargeLayoutPanel.Size = new Size(925, 400);
             chargeLayoutPanel.TabIndex = 16;
             // 
             // ChargesDataGridLabel
             // 
             ChargesDataGridLabel.AutoSize = true;
-            ChargesDataGridLabel.Dock = System.Windows.Forms.DockStyle.Bottom;
-            ChargesDataGridLabel.Location = new System.Drawing.Point(4, 18);
-            ChargesDataGridLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            ChargesDataGridLabel.Dock = DockStyle.Bottom;
+            ChargesDataGridLabel.Location = new Point(4, 18);
+            ChargesDataGridLabel.Margin = new Padding(4, 0, 4, 0);
             ChargesDataGridLabel.Name = "ChargesDataGridLabel";
-            ChargesDataGridLabel.Size = new System.Drawing.Size(767, 15);
+            ChargesDataGridLabel.Size = new Size(767, 15);
             ChargesDataGridLabel.TabIndex = 2;
             ChargesDataGridLabel.Text = "Charges";
             // 
@@ -132,93 +132,95 @@ namespace LabBilling.Forms
             // 
             ChargesDataGrid.AllowUserToAddRows = false;
             ChargesDataGrid.AllowUserToDeleteRows = false;
-            ChargesDataGrid.BackgroundColor = System.Drawing.SystemColors.ControlLightLight;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            ChargesDataGrid.BackgroundColor = SystemColors.ControlLightLight;
+            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = SystemColors.Control;
+            dataGridViewCellStyle1.Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            dataGridViewCellStyle1.ForeColor = SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = DataGridViewTriState.True;
             ChargesDataGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
-            ChargesDataGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            ChargesDataGrid.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             chargeLayoutPanel.SetColumnSpan(ChargesDataGrid, 2);
             ChargesDataGrid.ContextMenuStrip = chargesContextMenu;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
-            dataGridViewCellStyle2.ForeColor = System.Drawing.Color.Black;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = SystemColors.Window;
+            dataGridViewCellStyle2.Font = new Font("Microsoft Sans Serif", 8F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            dataGridViewCellStyle2.ForeColor = Color.Black;
+            dataGridViewCellStyle2.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.False;
             ChargesDataGrid.DefaultCellStyle = dataGridViewCellStyle2;
-            ChargesDataGrid.Dock = System.Windows.Forms.DockStyle.Fill;
-            ChargesDataGrid.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
-            ChargesDataGrid.Location = new System.Drawing.Point(4, 36);
-            ChargesDataGrid.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            ChargesDataGrid.Dock = DockStyle.Fill;
+            ChargesDataGrid.EditMode = DataGridViewEditMode.EditProgrammatically;
+            ChargesDataGrid.Location = new Point(4, 36);
+            ChargesDataGrid.Margin = new Padding(4, 3, 4, 3);
             ChargesDataGrid.Name = "ChargesDataGrid";
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
-            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            ChargesDataGrid.ReadOnly = true;
+            dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = SystemColors.Control;
+            dataGridViewCellStyle3.Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            dataGridViewCellStyle3.ForeColor = SystemColors.WindowText;
+            dataGridViewCellStyle3.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle3.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle3.WrapMode = DataGridViewTriState.True;
             ChargesDataGrid.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
             ChargesDataGrid.RowHeadersVisible = false;
-            ChargesDataGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            ChargesDataGrid.Size = new System.Drawing.Size(917, 287);
+            ChargesDataGrid.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            ChargesDataGrid.Size = new Size(917, 287);
             ChargesDataGrid.TabIndex = 0;
             ChargesDataGrid.CellDoubleClick += DgvCharges_CellDoubleClick;
             ChargesDataGrid.CellFormatting += ChargesDataGrid_CellFormatting;
             ChargesDataGrid.CellMouseClick += ChargesDataGrid_CellMouseClick;
+            ChargesDataGrid.ColumnSortModeChanged += ChargesDataGrid_ColumnSortModeChanged;
             // 
             // chargesContextMenu
             // 
-            chargesContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { toolStripCreditCharge, moveChargeToolStripMenuItem, changeCreditFlagToolStripMenuItem, addModifierToolStripMenuItem1, removeModifierToolStripMenuItem1 });
+            chargesContextMenu.Items.AddRange(new ToolStripItem[] { toolStripCreditCharge, moveChargeToolStripMenuItem, changeCreditFlagToolStripMenuItem, addModifierToolStripMenuItem1, removeModifierToolStripMenuItem1 });
             chargesContextMenu.Name = "menuCharges";
-            chargesContextMenu.Size = new System.Drawing.Size(176, 114);
+            chargesContextMenu.Size = new Size(176, 114);
             // 
             // toolStripCreditCharge
             // 
             toolStripCreditCharge.Name = "toolStripCreditCharge";
-            toolStripCreditCharge.Size = new System.Drawing.Size(175, 22);
+            toolStripCreditCharge.Size = new Size(175, 22);
             toolStripCreditCharge.Text = "Credit Charge";
             toolStripCreditCharge.Click += creditChargeToolStrip_Click;
             // 
             // moveChargeToolStripMenuItem
             // 
             moveChargeToolStripMenuItem.Name = "moveChargeToolStripMenuItem";
-            moveChargeToolStripMenuItem.Size = new System.Drawing.Size(175, 22);
+            moveChargeToolStripMenuItem.Size = new Size(175, 22);
             moveChargeToolStripMenuItem.Text = "Move Charge";
             moveChargeToolStripMenuItem.Click += moveChargeToolStripMenuItem_Click;
             // 
             // changeCreditFlagToolStripMenuItem
             // 
             changeCreditFlagToolStripMenuItem.Name = "changeCreditFlagToolStripMenuItem";
-            changeCreditFlagToolStripMenuItem.Size = new System.Drawing.Size(175, 22);
+            changeCreditFlagToolStripMenuItem.Size = new Size(175, 22);
             changeCreditFlagToolStripMenuItem.Text = "Change Credit Flag";
             changeCreditFlagToolStripMenuItem.Click += changeCreditFlagToolStripMenuItem_Click;
             // 
             // addModifierToolStripMenuItem1
             // 
             addModifierToolStripMenuItem1.Name = "addModifierToolStripMenuItem1";
-            addModifierToolStripMenuItem1.Size = new System.Drawing.Size(175, 22);
+            addModifierToolStripMenuItem1.Size = new Size(175, 22);
             addModifierToolStripMenuItem1.Text = "Add Modifier";
             // 
             // removeModifierToolStripMenuItem1
             // 
             removeModifierToolStripMenuItem1.Name = "removeModifierToolStripMenuItem1";
-            removeModifierToolStripMenuItem1.Size = new System.Drawing.Size(175, 22);
+            removeModifierToolStripMenuItem1.Size = new Size(175, 22);
             removeModifierToolStripMenuItem1.Text = "Remove Modifier";
             // 
             // AddChargeButton
             // 
-            AddChargeButton.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
-            AddChargeButton.Location = new System.Drawing.Point(821, 3);
-            AddChargeButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            AddChargeButton.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            AddChargeButton.Location = new Point(821, 3);
+            AddChargeButton.Margin = new Padding(4, 3, 4, 3);
             AddChargeButton.Name = "AddChargeButton";
-            AddChargeButton.Size = new System.Drawing.Size(100, 27);
+            AddChargeButton.Size = new Size(100, 27);
             AddChargeButton.TabIndex = 7;
             AddChargeButton.Text = "Add Charge";
             AddChargeButton.UseVisualStyleBackColor = true;
@@ -227,45 +229,45 @@ namespace LabBilling.Forms
             // chargeBalRichTextbox
             // 
             chargeLayoutPanel.SetColumnSpan(chargeBalRichTextbox, 2);
-            chargeBalRichTextbox.Dock = System.Windows.Forms.DockStyle.Fill;
-            chargeBalRichTextbox.Location = new System.Drawing.Point(4, 329);
-            chargeBalRichTextbox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            chargeBalRichTextbox.Dock = DockStyle.Fill;
+            chargeBalRichTextbox.Location = new Point(4, 329);
+            chargeBalRichTextbox.Margin = new Padding(4, 3, 4, 3);
             chargeBalRichTextbox.Name = "chargeBalRichTextbox";
-            chargeBalRichTextbox.Size = new System.Drawing.Size(917, 68);
+            chargeBalRichTextbox.Size = new Size(917, 68);
             chargeBalRichTextbox.TabIndex = 8;
             chargeBalRichTextbox.Text = "";
             // 
             // TotalChargesTextBox
             // 
-            TotalChargesTextBox.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
-            TotalChargesTextBox.Location = new System.Drawing.Point(805, 14);
-            TotalChargesTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            TotalChargesTextBox.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            TotalChargesTextBox.Location = new Point(805, 14);
+            TotalChargesTextBox.Margin = new Padding(4, 3, 4, 3);
             TotalChargesTextBox.Name = "TotalChargesTextBox";
             TotalChargesTextBox.ReadOnly = true;
-            TotalChargesTextBox.Size = new System.Drawing.Size(124, 23);
+            TotalChargesTextBox.Size = new Size(124, 23);
             TotalChargesTextBox.TabIndex = 15;
-            TotalChargesTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            TotalChargesTextBox.TextAlign = HorizontalAlignment.Right;
             // 
             // ChargeTotalChargesLabel
             // 
-            ChargeTotalChargesLabel.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+            ChargeTotalChargesLabel.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             ChargeTotalChargesLabel.AutoSize = true;
-            ChargeTotalChargesLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 0);
-            ChargeTotalChargesLabel.Location = new System.Drawing.Point(697, 17);
-            ChargeTotalChargesLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            ChargeTotalChargesLabel.Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            ChargeTotalChargesLabel.Location = new Point(697, 17);
+            ChargeTotalChargesLabel.Margin = new Padding(4, 0, 4, 0);
             ChargeTotalChargesLabel.Name = "ChargeTotalChargesLabel";
-            ChargeTotalChargesLabel.Size = new System.Drawing.Size(86, 13);
+            ChargeTotalChargesLabel.Size = new Size(86, 13);
             ChargeTotalChargesLabel.TabIndex = 14;
             ChargeTotalChargesLabel.Text = "Total Charges";
             // 
             // ShowCreditedChrgCheckBox
             // 
             ShowCreditedChrgCheckBox.AutoSize = true;
-            ShowCreditedChrgCheckBox.ForeColor = System.Drawing.Color.Red;
-            ShowCreditedChrgCheckBox.Location = new System.Drawing.Point(8, 14);
-            ShowCreditedChrgCheckBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            ShowCreditedChrgCheckBox.ForeColor = Color.Red;
+            ShowCreditedChrgCheckBox.Location = new Point(8, 14);
+            ShowCreditedChrgCheckBox.Margin = new Padding(4, 3, 4, 3);
             ShowCreditedChrgCheckBox.Name = "ShowCreditedChrgCheckBox";
-            ShowCreditedChrgCheckBox.Size = new System.Drawing.Size(95, 19);
+            ShowCreditedChrgCheckBox.Size = new Size(95, 19);
             ShowCreditedChrgCheckBox.TabIndex = 13;
             ShowCreditedChrgCheckBox.Text = "Show Credits";
             ShowCreditedChrgCheckBox.UseVisualStyleBackColor = true;
@@ -273,8 +275,8 @@ namespace LabBilling.Forms
             // 
             // ChargeMaintenanceUC
             // 
-            AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleMode = AutoScaleMode.Font;
             Controls.Add(showAllChargeRadioButton);
             Controls.Add(showClientRadioButton);
             Controls.Add(show3rdPartyRadioButton);
@@ -283,7 +285,7 @@ namespace LabBilling.Forms
             Controls.Add(ChargeTotalChargesLabel);
             Controls.Add(ShowCreditedChrgCheckBox);
             Name = "ChargeMaintenanceUC";
-            Size = new System.Drawing.Size(947, 463);
+            Size = new Size(947, 463);
             Load += ChargeMaintenanceUC_Load;
             chargeLayoutPanel.ResumeLayout(false);
             chargeLayoutPanel.PerformLayout();
