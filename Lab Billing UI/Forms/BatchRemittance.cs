@@ -1,11 +1,7 @@
 ﻿using LabBilling.Core.Models;
 using LabBilling.Core.Services;
 using LabBilling.Logging;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Drawing;
-using System.Windows.Forms;
 using Utilities;
 
 
@@ -240,7 +236,7 @@ public partial class BatchRemittance : Form
             if (!string.IsNullOrEmpty(strAccount))
             {
                 strAccount = strAccount.ToUpper();
-                account = _accountService.GetAccount(strAccount, true);
+                account = _accountService.GetAccount(strAccount, true, false);
             }
             else
             {
@@ -595,7 +591,7 @@ public partial class BatchRemittance : Form
             if (frm.SelectedAccount != "" && frm.SelectedAccount != null)
             {
                 string strAccount = frm.SelectedAccount.ToUpper();
-                account = _accountService.GetAccount(strAccount, true);
+                account = _accountService.GetAccount(strAccount, true, false);
             }
             else
             {

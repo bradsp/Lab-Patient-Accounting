@@ -103,13 +103,16 @@ public partial class MainForm : Form
 
         GlobalDiagnosticsContext.Set("dbname", Program.AppEnvironment.DatabaseName);
         GlobalDiagnosticsContext.Set("dbserver", Program.AppEnvironment.ServerName);
-
-        var fileTarget = new FileTarget("logfile")
+        FileTarget fileTarget = new FileTarget();
+        if (string.IsNullOrEmpty(Program.AppEnvironment.ApplicationParameters.LogFilePath))
+        {
+            throw new ArgumentNullException(nameof(ApplicationParameters.LogFilePath));
+        }
+        fileTarget = new FileTarget("logfile")
         {
             FileName = $"{Program.AppEnvironment.ApplicationParameters.LogFilePath}\\{OS.GetMachineName()}_{OS.GetUserName()}_{DateTime.Today.Year}-{DateTime.Today.Month}-{DateTime.Today.Day}.log",
             Layout = "${longdate}|${level:uppercase=true}|${logger}|${message}|${exception}|${stacktrace}|${hostname}|${environment-user}|${callsite}|${callsite-linenumber}|${assembly-version}|${gdc:item=dbname|${gdc:item=dbserver}"
         };
-
         //var consoleTarget = new NLog.Targets.ConsoleTarget("logconsole");
         string logProcedure = Program.AppEnvironment.ApplicationParameters.DatabaseEnvironment != "Production" ? "NLog_AddEntry_t" : "NLog_AddEntry_p";
         var dbTarget = new DatabaseTarget("database")
@@ -140,14 +143,19 @@ public partial class MainForm : Form
                 logRule = new LoggingRule("*", minLevel, dbTarget);
                 break;
             case "FilePath":
+                if (fileTarget == null)
+                    break;
                 logRule = new LoggingRule("*", minLevel, fileTarget);
                 break;
 
         }
 
         configuration.AddRule(logRule);
+        configuration.AddRule(new LoggingRule("*", minLevel, fileTarget));
 
         LogManager.Configuration = configuration;
+
+        Log.Instance.Warn($"Log configuration -  MinimumLevel: {minLevel}, LogLocation: {Program.AppEnvironment.ApplicationParameters.LogLocation}");
 
         #endregion
 

@@ -96,17 +96,22 @@ public sealed class AccountService
         return retval;
     }
 
-    public Account GetAccount(string account, bool demographicsOnly = false)
+    public Account GetAccount(string account, bool demographicsOnly = false, bool secureLock = true)
     {
         Log.Instance.Trace($"Entering - account {account} demographicsOnly {demographicsOnly}");
 
         using AccountUnitOfWork uow = new(_appEnvironment);
+        bool locksuccessful = false;
+        AccountLock alock = null;
 
-        //get lock before loading account
-        var (locksuccessful, alock) = GetAccountLock(account);
-        if (!locksuccessful)
+        if (secureLock)
         {
-            throw new AccountLockException(alock);
+            //get lock before loading account
+            (locksuccessful, alock) = GetAccountLock(account);
+            if (!locksuccessful)
+            {
+                throw new AccountLockException(alock);
+            }
         }
 
         Account record = null;
