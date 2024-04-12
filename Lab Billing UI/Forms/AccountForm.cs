@@ -686,8 +686,9 @@ public partial class AccountForm : Form
         }
 
         _currentAccount.Payments = _currentAccount.Payments.OrderByDescending(x => x.PaymentNo).ToList();
+        PaymentsDataGrid.AutoGenerateColumns = true;
         PaymentsDataGrid.DataSource = _currentAccount.Payments.ToList();
-
+        PaymentsDataGrid.AutoGenerateColumns = false;
         PaymentsDataGrid.SetColumnsVisibility(false);
         int z = 0;
 
@@ -711,7 +712,7 @@ public partial class AccountForm : Form
         PaymentsDataGrid.Columns[nameof(Chk.ContractualAmount)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
         PaymentsDataGrid.Columns[nameof(Chk.WriteOffAmount)].DefaultCellStyle.Format = "N2";
         PaymentsDataGrid.Columns[nameof(Chk.WriteOffAmount)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-
+        PaymentsDataGrid.Columns[nameof(Chk.Comment)].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
         PaymentsDataGrid.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
         PaymentsDataGrid.BackgroundColor = Color.AntiqueWhite;
     }

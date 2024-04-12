@@ -140,17 +140,16 @@ public partial class MainForm : Form
         switch(Program.AppEnvironment.ApplicationParameters.LogLocation)
         {
             case "Database":
-                logRule = new LoggingRule("*", minLevel, dbTarget);
+                configuration.AddRule(new LoggingRule("*", minLevel, dbTarget));
                 break;
             case "FilePath":
                 if (fileTarget == null)
                     break;
-                logRule = new LoggingRule("*", minLevel, fileTarget);
+                configuration.AddRule(new LoggingRule("*", minLevel, fileTarget));
                 break;
 
         }
 
-        configuration.AddRule(logRule);
         configuration.AddRule(new LoggingRule("*", minLevel, fileTarget));
 
         LogManager.Configuration = configuration;
