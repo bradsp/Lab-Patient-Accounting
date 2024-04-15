@@ -1,48 +1,45 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Windows.Forms;
-using LabBilling.Core.Models;
+﻿using LabBilling.Core.Models;
 using LabBilling.Core.Services;
 using LabBilling.Logging;
+using System.Data;
 
 namespace LabBilling.Forms;
 
 public partial class ChargeMasterEditForm : Form
 {
 
-    private bool addMode = false;
-    private DictionaryService dictionaryService;
+    private bool _addMode = false;
+    private readonly DictionaryService _dictionaryService;
 
-    public ChargeMasterEditForm() 
+    public ChargeMasterEditForm()
     {
         InitializeComponent();
 
-        dictionaryService = new(Program.AppEnvironment);
+        _dictionaryService = new(Program.AppEnvironment);
     }
 
     public string SelectedCdm { get; set; }
     public Cdm cdm;
-    private BindingSource feeSched1BindingSource = new BindingSource();
-    private BindingSource feeSched2BindingSource = new BindingSource();
-    private BindingSource feeSched3BindingSource = new BindingSource();
-    private BindingSource feeSched4BindingSource = new BindingSource();
-    private BindingSource feeSched5BindingSource = new BindingSource();
+    private readonly BindingSource _feeSched1BindingSource = new BindingSource();
+    private readonly BindingSource _feeSched2BindingSource = new BindingSource();
+    private readonly BindingSource _feeSched3BindingSource = new BindingSource();
+    private readonly BindingSource _feeSched4BindingSource = new BindingSource();
+    private readonly BindingSource _feeSched5BindingSource = new BindingSource();
 
     private void ChargeMasterEditForm_Load(object sender, EventArgs e)
     {
         if (SelectedCdm != null)
         {
-            cdm = dictionaryService.GetCdm(SelectedCdm, true);
-            if(cdm == null)
+            cdm = _dictionaryService.GetCdm(SelectedCdm, true);
+            if (cdm == null)
             {
-                if(MessageBox.Show($"CDM {SelectedCdm} is not found. Do you want to add?", "Not Found", 
+                if (MessageBox.Show($"CDM {SelectedCdm} is not found. Do you want to add?", "Not Found",
                     MessageBoxButtons.YesNo, MessageBoxIcon.Error) == DialogResult.No)
                 {
                     DialogResult = DialogResult.Cancel;
                     return;
                 }
-                addMode = true;
+                _addMode = true;
             }
         }
         else
@@ -52,7 +49,7 @@ public partial class ChargeMasterEditForm : Form
                 ChargeId = SelectedCdm
             };
 
-            addMode = true;
+            _addMode = true;
         }
 
         LoadData();
@@ -82,17 +79,17 @@ public partial class ChargeMasterEditForm : Form
         cProfTextBox.Text = cdm.CClassPaAmount.ToString();
         zProfTextBox.Text = cdm.ZClassPaAmount.ToString();
 
-        feeSched1BindingSource.DataSource = cdm.CdmFeeSchedule1.ToDataTable();
-        feeSched2BindingSource.DataSource = cdm.CdmFeeSchedule2.ToDataTable();
-        feeSched3BindingSource.DataSource = cdm.CdmFeeSchedule3.ToDataTable();
-        feeSched4BindingSource.DataSource = cdm.CdmFeeSchedule4.ToDataTable();
-        feeSched5BindingSource.DataSource = cdm.CdmFeeSchedule5.ToDataTable();
+        _feeSched1BindingSource.DataSource = cdm.CdmFeeSchedule1.ToDataTable();
+        _feeSched2BindingSource.DataSource = cdm.CdmFeeSchedule2.ToDataTable();
+        _feeSched3BindingSource.DataSource = cdm.CdmFeeSchedule3.ToDataTable();
+        _feeSched4BindingSource.DataSource = cdm.CdmFeeSchedule4.ToDataTable();
+        _feeSched5BindingSource.DataSource = cdm.CdmFeeSchedule5.ToDataTable();
 
-        feeSched1Grid.DataSource = feeSched1BindingSource;
-        feeSched2Grid.DataSource = feeSched2BindingSource;
-        feeSched3Grid.DataSource = feeSched3BindingSource;
-        feeSched4Grid.DataSource = feeSched4BindingSource;
-        feeSched5Grid.DataSource = feeSched5BindingSource;
+        feeSched1Grid.DataSource = _feeSched1BindingSource;
+        feeSched2Grid.DataSource = _feeSched2BindingSource;
+        feeSched3Grid.DataSource = _feeSched3BindingSource;
+        feeSched4Grid.DataSource = _feeSched4BindingSource;
+        feeSched5Grid.DataSource = _feeSched5BindingSource;
 
         List<DataGridViewComboBoxColumn> comboboxColumns = new List<DataGridViewComboBoxColumn>();
         for (int i = 0; i < 5; i++)
@@ -168,10 +165,10 @@ public partial class ChargeMasterEditForm : Form
         {
             if (MessageBox.Show("Do you want to copy rows from fee schedule 1?", "Copy from Fee Schedule 1?", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
-                foreach (DataRow row in ((DataTable)feeSched1BindingSource.DataSource).Rows)
+                foreach (DataRow row in ((DataTable)_feeSched1BindingSource.DataSource).Rows)
                 {
                     ((DataTable)bs.DataSource).ImportRow(row);
-                    foreach(DataRow r in ((DataTable)bs.DataSource).Rows)
+                    foreach (DataRow r in ((DataTable)bs.DataSource).Rows)
                     {
                         r.BeginEdit();
                         r[nameof(CdmDetail.FeeSchedule)] = feeSched;
@@ -189,13 +186,13 @@ public partial class ChargeMasterEditForm : Form
         if (cptTabControl.SelectedTab.Name == feeSched1tab.Name)
             FormatGrid(feeSched1Grid);
         else if (cptTabControl.SelectedTab.Name == feeSched2tab.Name)
-            RefreshGrid(feeSched2Grid, feeSched2BindingSource, "2");
+            RefreshGrid(feeSched2Grid, _feeSched2BindingSource, "2");
         else if (cptTabControl.SelectedTab.Name == feeSched3tab.Name)
-            RefreshGrid(feeSched3Grid, feeSched3BindingSource, "3");
+            RefreshGrid(feeSched3Grid, _feeSched3BindingSource, "3");
         else if (cptTabControl.SelectedTab.Name == feeSched4tab.Name)
-            RefreshGrid(feeSched4Grid, feeSched4BindingSource, "4");
+            RefreshGrid(feeSched4Grid, _feeSched4BindingSource, "4");
         else if (cptTabControl.SelectedTab.Name == feeSched5tab.Name)
-            RefreshGrid(feeSched5Grid, feeSched5BindingSource, "5");
+            RefreshGrid(feeSched5Grid, _feeSched5BindingSource, "5");
     }
 
     private void saveButton_Click(object sender, EventArgs e)
@@ -228,7 +225,7 @@ public partial class ChargeMasterEditForm : Form
 
         try
         {
-            cdm = dictionaryService.SaveCdm(cdm);
+            cdm = _dictionaryService.SaveCdm(cdm);
             DialogResult = DialogResult.OK;
         }
         catch (Exception ex)
@@ -247,12 +244,12 @@ public partial class ChargeMasterEditForm : Form
         int linkNo = 1;
         foreach (DataGridViewRow row in dgv.Rows)
         {
-            if(row.IsNewRow)
+            if (row.IsNewRow)
                 continue;
 
             string rg = row.Cells[nameof(CdmDetail.rowguid)].Value.ToString();
             Guid lRowguid = Guid.Empty;
-            if(!string.IsNullOrEmpty(rg))
+            if (!string.IsNullOrEmpty(rg))
                 lRowguid = Guid.Parse(rg);
 
             cdmDetails.Add(new CdmDetail()
@@ -278,9 +275,9 @@ public partial class ChargeMasterEditForm : Form
 
     private void chargeIdTextBox_Leave(object sender, EventArgs e)
     {
-        if (addMode)
+        if (_addMode)
         {
-            var record = dictionaryService.GetCdm(chargeIdTextBox.Text);
+            var record = _dictionaryService.GetCdm(chargeIdTextBox.Text);
             if (record != null)
             {
                 if (MessageBox.Show($"Cdm {chargeIdTextBox.Text} exists. Load CDM for editing?", "CDM Exists",
@@ -289,7 +286,7 @@ public partial class ChargeMasterEditForm : Form
                     SelectedCdm = record.ChargeId;
                     cdm = record;
                     LoadData();
-                    addMode = false;
+                    _addMode = false;
                 }
                 else
                 {

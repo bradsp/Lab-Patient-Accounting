@@ -23,7 +23,7 @@ public class DictionaryService
         using UnitOfWorkMain uow = new(_appEnvironment, true);
         Cdm returnCdm;
 
-        if (uow.CdmRepository.GetCdm(cdm.ChargeId) != null)
+        if (uow.CdmRepository.GetCdm(cdm.ChargeId, true) != null)
         {
             returnCdm = UpdateCdm(cdm);
         }

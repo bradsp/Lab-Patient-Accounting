@@ -103,7 +103,7 @@ public partial class MainForm : Form
 
         GlobalDiagnosticsContext.Set("dbname", Program.AppEnvironment.DatabaseName);
         GlobalDiagnosticsContext.Set("dbserver", Program.AppEnvironment.ServerName);
-        FileTarget fileTarget = new FileTarget();
+        FileTarget fileTarget;
         if (string.IsNullOrEmpty(Program.AppEnvironment.ApplicationParameters.LogFilePath))
         {
             throw new ArgumentNullException(nameof(ApplicationParameters.LogFilePath));

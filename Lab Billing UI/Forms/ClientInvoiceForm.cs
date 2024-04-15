@@ -2,6 +2,7 @@
 using LabBilling.Core.Services;
 using LabBilling.Library;
 using LabBilling.Logging;
+using NPOI.HPSF;
 using System.Diagnostics;
 using System.IO;
 using Utilities;
@@ -445,7 +446,12 @@ public partial class ClientInvoiceForm : Form
 
             CompileInvoicesToPdf(outfile, duplexPrinting);
 
-            Process.Start(outfile);
+            using Process fileopener = new();
+
+            fileopener.StartInfo.FileName = "explorer";
+            fileopener.StartInfo.Arguments = "\"" + outfile + "\"";
+
+            fileopener.Start();
 
         }
         else if (senderName == saveToPDFToolStripMenuItem.Name || senderName == saveAllToPDFToolStripMenuItem.Name)
@@ -471,7 +477,13 @@ public partial class ClientInvoiceForm : Form
                 string filename = saveFileDialog.FileName;
 
                 CompileInvoicesToPdf(filename);
-                System.Diagnostics.Process.Start(filename);
+
+                using Process fileopener = new();
+
+                fileopener.StartInfo.FileName = "explorer";
+                fileopener.StartInfo.Arguments = "\"" + filename + "\"";
+
+                fileopener.Start();
             }
         }
 
@@ -528,8 +540,8 @@ public partial class ClientInvoiceForm : Form
         if (!FromDate.MaskFull)
             return;
 
-        DateTime.TryParse(FromDate.Text, out DateTime fd);
-        DateTime.TryParse(ThroughDate.Text, out DateTime td);
+        _ = DateTime.TryParse(FromDate.Text, out DateTime fd);
+        _ = DateTime.TryParse(ThroughDate.Text, out DateTime td);
 
         if (fd > td)
         {
@@ -549,8 +561,8 @@ public partial class ClientInvoiceForm : Form
         if (ThroughDate.Text == "" || ThroughDate.Text == null)
             return;
 
-        DateTime.TryParse(FromDate.Text, out DateTime fd);
-        DateTime.TryParse(ThroughDate.Text, out DateTime td);
+        _ = DateTime.TryParse(FromDate.Text, out DateTime fd);
+        _ = DateTime.TryParse(ThroughDate.Text, out DateTime td);
         if (fd > td)
         {
             return;
