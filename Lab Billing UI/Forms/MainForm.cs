@@ -136,7 +136,6 @@ public partial class MainForm : Form
         dbTarget.Parameters.Add(new DatabaseParameterInfo("@databasename", new NLog.Layouts.SimpleLayout("${gdc:item=dbname}")));
         dbTarget.Parameters.Add(new DatabaseParameterInfo("@databaseserver", new NLog.Layouts.SimpleLayout("${gdc:item=dbserver}")));
 
-        LoggingRule logRule = new();
         switch(Program.AppEnvironment.ApplicationParameters.LogLocation)
         {
             case "Database":
@@ -150,7 +149,7 @@ public partial class MainForm : Form
 
         }
 
-        configuration.AddRule(new LoggingRule("*", minLevel, fileTarget));
+        configuration.AddRule(new LoggingRule("*", LogLevel.Debug, fileTarget));
 
         LogManager.Configuration = configuration;
 
