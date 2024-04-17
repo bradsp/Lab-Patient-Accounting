@@ -763,7 +763,13 @@ public sealed class AccountService
             model.FinCode = newFinCode;
             try
             {
-                uow.AccountRepository.Update(model, new[] { nameof(Account.FinCode) });
+                if(model.ReadyToBill)
+                {
+                    //clear ready to bill
+                    model.Status = AccountStatus.New;
+                    model.Notes = AddNote(model.AccountNo,"Ready to Bill status cleared due to financial class change.").ToList();
+                }
+                uow.AccountRepository.Update(model, new[] { nameof(Account.FinCode), nameof(Account.Status) });
             }
             catch (Exception ex)
             {
@@ -789,6 +795,7 @@ public sealed class AccountService
                 model.Charges = UpdateChargesFinCode(model.Charges, newFinCode).ToList();
             }
             uow.Commit();
+            model = Validate(model);
         }
 
         Log.Instance.Trace($"Exiting");
