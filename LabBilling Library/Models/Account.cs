@@ -1,4 +1,5 @@
 ﻿using LabBilling.Core.DataAccess;
+using LabBilling.Logging;
 using PetaPoco;
 using System;
 using System.Collections.Generic;
@@ -113,10 +114,21 @@ public sealed class Account : IBaseEntity
         get
         {
             List<Cdm> cdms = new();
-            Charges.ForEach(c =>
+            Log.Instance.Debug($"Compiling distinct list of CDMs on account {this.AccountNo}");
+            Charges.Where(x => x.IsCredited == false).ToList().ForEach(c =>
             {
-                if (cdms.Find(d => d.ChargeId == c.CDMCode) == null)
+                Log.Instance.Debug($"CDM {c.CDMCode}, iteration {cdms.Count}");
+                if (cdms.Count > 0)
+                {
+                    if (!cdms.Any(d => d.ChargeId == c.CDMCode) && c.Cdm != null)
+                    {
+                        cdms.Add(c.Cdm);
+                    }
+                }
+                else
+                {
                     cdms.Add(c.Cdm);
+                }
             });
             return cdms;
         }

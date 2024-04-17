@@ -45,7 +45,7 @@ public partial class MainForm : Form
     {
         RecordsProcessed = -1
     };
-    private Bitmap _closeImage;
+    private readonly Bitmap _closeImage;
 
     public MainForm()
     {
@@ -676,7 +676,23 @@ public partial class MainForm : Form
     private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
     {
         Log.Instance.Trace($"Entering");
-        Properties.Settings.Default.Save();
+        //clear all locks opened by this user & host
+        try
+        {
+            _accountService.ClearAccountLocks(Program.AppEnvironment.User, OS.GetMachineName());
+        }
+        catch(Exception ex)
+        {
+            Log.Instance.Fatal("Error removing account locks.", ex);
+        }
+        try
+        {
+            Properties.Settings.Default.Save();
+        }
+        catch(Exception exc)
+        {
+            Log.Instance.Fatal("Exception during close.", exc);
+        }
     }
 
     private void exitToolStripMenuItem_Click(object sender, EventArgs e) => this.Close();

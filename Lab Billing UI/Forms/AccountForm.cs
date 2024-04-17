@@ -6,6 +6,7 @@ using LabBilling.Legacy;
 using LabBilling.Library;
 using LabBilling.Logging;
 using LabBilling.LookupForms;
+using NPOI.OpenXmlFormats.Dml.Diagram;
 using System.ComponentModel;
 using System.Data;
 using Utilities;
@@ -181,23 +182,23 @@ public partial class AccountForm : Form
 
         #region populate combo boxes
 
-        StateComboBox.DataSource = new BindingSource(Dictionaries.stateSource, null);
+        StateComboBox.DataSource = new BindingSource(Dictionaries.StateSource, null);
         StateComboBox.DisplayMember = "Value";
         StateComboBox.ValueMember = "Key";
 
-        SexComboBox.DataSource = new BindingSource(Dictionaries.sexSource, null);
+        SexComboBox.DataSource = new BindingSource(Dictionaries.SexSource, null);
         SexComboBox.DisplayMember = "Value";
         SexComboBox.ValueMember = "Key";
 
-        MaritalStatusComboBox.DataSource = new BindingSource(Dictionaries.maritalSource, null);
+        MaritalStatusComboBox.DataSource = new BindingSource(Dictionaries.MaritalSource, null);
         MaritalStatusComboBox.DisplayMember = "Value";
         MaritalStatusComboBox.ValueMember = "Key";
 
-        GuarStateComboBox.DataSource = new BindingSource(Dictionaries.stateSource, null);
+        GuarStateComboBox.DataSource = new BindingSource(Dictionaries.StateSource, null);
         GuarStateComboBox.DisplayMember = "Value";
         GuarStateComboBox.ValueMember = "Key";
 
-        GuarantorRelationComboBox.DataSource = new BindingSource(Dictionaries.relationSource, null);
+        GuarantorRelationComboBox.DataSource = new BindingSource(Dictionaries.RelationSource, null);
         GuarantorRelationComboBox.DisplayMember = "Value";
         GuarantorRelationComboBox.ValueMember = "Key";
 
@@ -246,7 +247,7 @@ public partial class AccountForm : Form
     private void InsChanged_EventHander(object sender, InsuranceUpdatedEventArgs e)
     {
         var idx = _currentAccount.Insurances.FindIndex(i => i.Account == e.UpdatedIns.Account && i.Coverage == e.UpdatedIns.Coverage);
-        if (idx >= 0) 
+        if (idx >= 0)
         {
             _currentAccount.Insurances[idx] = e.UpdatedIns;
         }
@@ -306,10 +307,20 @@ public partial class AccountForm : Form
 
     private void AccountForm_FormClosing(object sender, FormClosingEventArgs e)
     {
-        Log.Instance.Trace($"Entering - {SelectedAccount}");
+        Log.Instance.Debug($"Exiting - {SelectedAccount}");
 
         if (_currentAccount != null && !string.IsNullOrEmpty(_currentAccount.AccountNo))
-            _accountService.ClearAccountLock(_currentAccount);
+        {
+            try
+            {
+                Log.Instance.Debug($"Clearing lock on {_currentAccount}");
+                _accountService.ClearAccountLock(_currentAccount);
+            }
+            catch (Exception ex)
+            {
+                Log.Instance.Fatal(ex);
+            }
+        }
         _closing = true;
         e.Cancel = false;
     }
@@ -344,7 +355,29 @@ public partial class AccountForm : Form
             return;
         }
 
-        this.Text = $"{_currentAccount.AccountNo} - {_currentAccount.PatLastName}";
+        if (_currentAccount.FinCode == Program.AppEnvironment.ApplicationParameters.ClientAccountFinCode)
+        {
+            tabControl1.TabPages.Remove(tabDemographics);
+            tabControl1.TabPages.Remove(tabInsPrimary);
+            tabControl1.TabPages.Remove(tabInsSecondary);
+            tabControl1.TabPages.Remove(tabInsTertiary);
+            tabControl1.TabPages.Remove(tabDiagnosis);
+            tabControl1.TabPages.Remove(tabBillingActivity);
+            changeClientToolStripMenuItem.Visible = false;
+            //changeFinancialClassToolStripMenuItem.Visible = false;
+            swapInsurancesToolStripMenuItem.Visible = false;
+            clearHoldStatusToolStripMenuItem.Visible = false;
+            changeDateOfServiceToolStripMenuItem.Visible = false;
+        }
+
+        if (_currentAccount.FinCode == Program.AppEnvironment.ApplicationParameters.ClientAccountFinCode)
+        {
+            this.Text = $"{_currentAccount.AccountNo} - {_currentAccount.PatFullName}";
+        }
+        else
+        {
+            this.Text = $"{_currentAccount.AccountNo} - {_currentAccount.PatLastName}";
+        }
 
         _dxBindingList = new BindingList<PatDiag>(_currentAccount.Pat.Diagnoses);
 
@@ -360,20 +393,6 @@ public partial class AccountForm : Form
 
         RefreshAccountData();
 
-        if (_currentAccount.FinCode == "CLIENT")
-        {
-            tabControl1.TabPages.Remove(tabDemographics);
-            tabControl1.TabPages.Remove(tabInsPrimary);
-            tabControl1.TabPages.Remove(tabInsSecondary);
-            tabControl1.TabPages.Remove(tabInsTertiary);
-            tabControl1.TabPages.Remove(tabDiagnosis);
-            tabControl1.TabPages.Remove(tabBillingActivity);
-            changeClientToolStripMenuItem.Visible = false;
-            //changeFinancialClassToolStripMenuItem.Visible = false;
-            swapInsurancesToolStripMenuItem.Visible = false;
-            clearHoldStatusToolStripMenuItem.Visible = false;
-            changeDateOfServiceToolStripMenuItem.Visible = false;
-        }
 
         this.ResumeLayout();
         Cursor.Current = Cursors.Default;
@@ -384,16 +403,21 @@ public partial class AccountForm : Form
     /// </summary>
     private void RefreshAccountData()
     {
+        LoadBanner();
         LoadSummaryTab();
-        LoadDemographics();
         _chargeMaintenance.LoadCharges();
-        _insPrimaryMaintenanceUC.LoadInsuranceData();
-        _insSecondaryMaintenanceUC.LoadInsuranceData();
-        _insTertiaryMaintenanceUC.LoadInsuranceData();
         LoadPayments();
-        LoadDx();
         LoadNotes();
-        LoadBillingActivity();
+
+        if(_currentAccount.FinCode != Program.AppEnvironment.ApplicationParameters.ClientAccountFinCode)
+        {
+            LoadDemographics();
+            _insPrimaryMaintenanceUC.LoadInsuranceData();
+            _insSecondaryMaintenanceUC.LoadInsuranceData();
+            _insTertiaryMaintenanceUC.LoadInsuranceData();
+            LoadDx();
+            LoadBillingActivity();
+        }
         AccountUpdatedEvent?.Invoke(this, _currentAccount);
     }
 
@@ -416,24 +440,26 @@ public partial class AccountForm : Form
         sd.Add(new SummaryData("EMPI/MRN", _currentAccount.EMPINumber, SummaryData.GroupType.Demographics, row++, col));
         sd.Add(new SummaryData("SSN", _currentAccount.SocSecNo.FormatSSN(), SummaryData.GroupType.Demographics, row++, col));
         sd.Add(new SummaryData("Client", _currentAccount.ClientName, SummaryData.GroupType.Demographics, row++, col));
-        sd.Add(new SummaryData("Ordering Provider", _currentAccount.Pat.Physician?.FullName ?? _currentAccount.Pat.ProviderId, SummaryData.GroupType.Demographics, row++, col));
-        sd.Add(new SummaryData("DOB/Sex", _currentAccount.DOBSex, SummaryData.GroupType.Demographics, row++, col));
-        sd.Add(new SummaryData("Address", _currentAccount.Pat.AddressLine, SummaryData.GroupType.Demographics, row++, col));
-        sd.Add(new SummaryData("Phone", _currentAccount.Pat.PrimaryPhone.FormatPhone(), SummaryData.GroupType.Demographics, row++, col));
-        sd.Add(new SummaryData("Email", _currentAccount.Pat.EmailAddress, SummaryData.GroupType.Demographics, row++, col));
+        if (_currentAccount.FinCode != Program.AppEnvironment.ApplicationParameters.ClientAccountFinCode)
+        {
+            sd.Add(new SummaryData("Ordering Provider", _currentAccount.Pat.Physician?.FullName ?? _currentAccount.Pat.ProviderId, SummaryData.GroupType.Demographics, row++, col));
+            sd.Add(new SummaryData("DOB/Sex", _currentAccount.DOBSex, SummaryData.GroupType.Demographics, row++, col));
+            sd.Add(new SummaryData("Address", _currentAccount.Pat.AddressLine, SummaryData.GroupType.Demographics, row++, col));
+            sd.Add(new SummaryData("Phone", _currentAccount.Pat.PrimaryPhone.FormatPhone(), SummaryData.GroupType.Demographics, row++, col));
+            sd.Add(new SummaryData("Email", _currentAccount.Pat.EmailAddress, SummaryData.GroupType.Demographics, row++, col));
 
 
-        sd.Add(new SummaryData("Diagnoses", "", SummaryData.GroupType.Diagnoses, row++, col, true));
-        sd.Add(new SummaryData(_currentAccount.Pat.Dx1, _currentAccount.Pat.Dx1Desc, SummaryData.GroupType.Diagnoses, row++, col));
-        sd.Add(new SummaryData(_currentAccount.Pat.Dx2, _currentAccount.Pat.Dx2Desc, SummaryData.GroupType.Diagnoses, row++, col));
-        sd.Add(new SummaryData(_currentAccount.Pat.Dx3, _currentAccount.Pat.Dx3Desc, SummaryData.GroupType.Diagnoses, row++, col));
-        sd.Add(new SummaryData(_currentAccount.Pat.Dx4, _currentAccount.Pat.Dx4Desc, SummaryData.GroupType.Diagnoses, row++, col));
-        sd.Add(new SummaryData(_currentAccount.Pat.Dx5, _currentAccount.Pat.Dx5Desc, SummaryData.GroupType.Diagnoses, row++, col));
-        sd.Add(new SummaryData(_currentAccount.Pat.Dx6, _currentAccount.Pat.Dx6Desc, SummaryData.GroupType.Diagnoses, row++, col));
-        sd.Add(new SummaryData(_currentAccount.Pat.Dx7, _currentAccount.Pat.Dx7Desc, SummaryData.GroupType.Diagnoses, row++, col));
-        sd.Add(new SummaryData(_currentAccount.Pat.Dx8, _currentAccount.Pat.Dx8Desc, SummaryData.GroupType.Diagnoses, row++, col));
-        sd.Add(new SummaryData(_currentAccount.Pat.Dx9, _currentAccount.Pat.Dx9Desc, SummaryData.GroupType.Diagnoses, row++, col));
-
+            sd.Add(new SummaryData("Diagnoses", "", SummaryData.GroupType.Diagnoses, row++, col, true));
+            sd.Add(new SummaryData(_currentAccount.Pat.Dx1, _currentAccount.Pat.Dx1Desc, SummaryData.GroupType.Diagnoses, row++, col));
+            sd.Add(new SummaryData(_currentAccount.Pat.Dx2, _currentAccount.Pat.Dx2Desc, SummaryData.GroupType.Diagnoses, row++, col));
+            sd.Add(new SummaryData(_currentAccount.Pat.Dx3, _currentAccount.Pat.Dx3Desc, SummaryData.GroupType.Diagnoses, row++, col));
+            sd.Add(new SummaryData(_currentAccount.Pat.Dx4, _currentAccount.Pat.Dx4Desc, SummaryData.GroupType.Diagnoses, row++, col));
+            sd.Add(new SummaryData(_currentAccount.Pat.Dx5, _currentAccount.Pat.Dx5Desc, SummaryData.GroupType.Diagnoses, row++, col));
+            sd.Add(new SummaryData(_currentAccount.Pat.Dx6, _currentAccount.Pat.Dx6Desc, SummaryData.GroupType.Diagnoses, row++, col));
+            sd.Add(new SummaryData(_currentAccount.Pat.Dx7, _currentAccount.Pat.Dx7Desc, SummaryData.GroupType.Diagnoses, row++, col));
+            sd.Add(new SummaryData(_currentAccount.Pat.Dx8, _currentAccount.Pat.Dx8Desc, SummaryData.GroupType.Diagnoses, row++, col));
+            sd.Add(new SummaryData(_currentAccount.Pat.Dx9, _currentAccount.Pat.Dx9Desc, SummaryData.GroupType.Diagnoses, row++, col));
+        }
         //column 2
         col = 2;
         row = 1;
@@ -450,34 +476,37 @@ public partial class AccountForm : Form
         }
         sd.Add(new SummaryData("Account Balance", _currentAccount.Balance.ToString("c"), SummaryData.GroupType.Financial, row++, col));
 
-        foreach (Ins ins in _currentAccount.Insurances)
+        if (_currentAccount.FinCode != Program.AppEnvironment.ApplicationParameters.ClientAccountFinCode)
         {
-            if (ins.Coverage == "A")
+            foreach (Ins ins in _currentAccount.Insurances)
             {
-                sd.Add(new SummaryData("Primary Insurance", "", SummaryData.GroupType.Insurance, row++, col, true));
-                sd.Add(new SummaryData("Holder", ins.HolderFullName, SummaryData.GroupType.Insurance, row++, col));
-                sd.Add(new SummaryData("Insurance", ins.PlanName, SummaryData.GroupType.Insurance, row++, col));
-                sd.Add(new SummaryData("Policy", ins.PolicyNumber, SummaryData.GroupType.Insurance, row++, col));
-                sd.Add(new SummaryData("Group #", ins.GroupNumber, SummaryData.GroupType.Insurance, row++, col));
-                sd.Add(new SummaryData("Group", ins.GroupName, SummaryData.GroupType.Insurance, row++, col));
-            }
-            if (ins.Coverage == "B")
-            {
-                sd.Add(new SummaryData("Secondary Insurance", "", SummaryData.GroupType.Insurance, row++, col, true));
-                sd.Add(new SummaryData("Holder", ins.HolderFullName, SummaryData.GroupType.Insurance, row++, col));
-                sd.Add(new SummaryData("Insurance", ins.PlanName, SummaryData.GroupType.Insurance, row++, col));
-                sd.Add(new SummaryData("Policy", ins.PolicyNumber, SummaryData.GroupType.Insurance, row++, col));
-                sd.Add(new SummaryData("Group #", ins.GroupNumber, SummaryData.GroupType.Insurance, row++, col));
-                sd.Add(new SummaryData("Group", ins.GroupName, SummaryData.GroupType.Insurance, row++, col));
-            }
-            if (ins.Coverage == "C")
-            {
-                sd.Add(new SummaryData("Tertiary Insurance", "", SummaryData.GroupType.Insurance, row++, col, true));
-                sd.Add(new SummaryData("Holder", ins.HolderFullName, SummaryData.GroupType.Insurance, row++, col));
-                sd.Add(new SummaryData("Insurance", ins.PlanName, SummaryData.GroupType.Insurance, row++, col));
-                sd.Add(new SummaryData("Policy", ins.PolicyNumber, SummaryData.GroupType.Insurance, row++, col));
-                sd.Add(new SummaryData("Group #", ins.GroupNumber, SummaryData.GroupType.Insurance, row++, col));
-                sd.Add(new SummaryData("Group", ins.GroupName, SummaryData.GroupType.Insurance, row++, col));
+                if (ins.Coverage == "A")
+                {
+                    sd.Add(new SummaryData("Primary Insurance", "", SummaryData.GroupType.Insurance, row++, col, true));
+                    sd.Add(new SummaryData("Holder", ins.HolderFullName, SummaryData.GroupType.Insurance, row++, col));
+                    sd.Add(new SummaryData("Insurance", ins.PlanName, SummaryData.GroupType.Insurance, row++, col));
+                    sd.Add(new SummaryData("Policy", ins.PolicyNumber, SummaryData.GroupType.Insurance, row++, col));
+                    sd.Add(new SummaryData("Group #", ins.GroupNumber, SummaryData.GroupType.Insurance, row++, col));
+                    sd.Add(new SummaryData("Group", ins.GroupName, SummaryData.GroupType.Insurance, row++, col));
+                }
+                if (ins.Coverage == "B")
+                {
+                    sd.Add(new SummaryData("Secondary Insurance", "", SummaryData.GroupType.Insurance, row++, col, true));
+                    sd.Add(new SummaryData("Holder", ins.HolderFullName, SummaryData.GroupType.Insurance, row++, col));
+                    sd.Add(new SummaryData("Insurance", ins.PlanName, SummaryData.GroupType.Insurance, row++, col));
+                    sd.Add(new SummaryData("Policy", ins.PolicyNumber, SummaryData.GroupType.Insurance, row++, col));
+                    sd.Add(new SummaryData("Group #", ins.GroupNumber, SummaryData.GroupType.Insurance, row++, col));
+                    sd.Add(new SummaryData("Group", ins.GroupName, SummaryData.GroupType.Insurance, row++, col));
+                }
+                if (ins.Coverage == "C")
+                {
+                    sd.Add(new SummaryData("Tertiary Insurance", "", SummaryData.GroupType.Insurance, row++, col, true));
+                    sd.Add(new SummaryData("Holder", ins.HolderFullName, SummaryData.GroupType.Insurance, row++, col));
+                    sd.Add(new SummaryData("Insurance", ins.PlanName, SummaryData.GroupType.Insurance, row++, col));
+                    sd.Add(new SummaryData("Policy", ins.PolicyNumber, SummaryData.GroupType.Insurance, row++, col));
+                    sd.Add(new SummaryData("Group #", ins.GroupNumber, SummaryData.GroupType.Insurance, row++, col));
+                    sd.Add(new SummaryData("Group", ins.GroupName, SummaryData.GroupType.Insurance, row++, col));
+                }
             }
         }
 
@@ -514,10 +543,9 @@ public partial class AccountForm : Form
 
     #region DemographicTab
 
-    private void LoadDemographics()
+    private void LoadBanner()
     {
         Log.Instance.Trace($"Entering - {SelectedAccount}");
-        DemoStatusMessagesTextBox.Text = String.Empty;
 
         BannerNameTextBox.Text = _currentAccount.PatFullName;
         BannerDobTextBox.Text = _currentAccount.BirthDate.GetValueOrDefault().ToShortDateString();
@@ -553,6 +581,12 @@ public partial class AccountForm : Form
         BalanceLabel.Text = _currentAccount.Balance.ToString("c");
         ThirdPartyBalLabel.Text = _currentAccount.ClaimBalance.ToString("c");
         ClientBalLabel.Text = _currentAccount.ClientBalance.Sum(x => x.balance).ToString("c");
+    }
+
+    private void LoadDemographics()
+    {
+        Log.Instance.Trace($"Entering - {SelectedAccount}");
+        DemoStatusMessagesTextBox.Text = String.Empty;
 
         //PatientFullNameLabel.Text = currentAccount.PatFullName;
         LastNameTextBox.Text = _currentAccount.PatLastName;
@@ -988,7 +1022,7 @@ public partial class AccountForm : Form
                 var cdm = dxPointerGrid2["CDM", e.RowIndex].Value.ToString();
 
                 var ptr = _currentAccount.ChrgDiagnosisPointers.Where(d => d.CdmCode == cdm && d.CptCode == cpt).First();
-                if(ptr == null)
+                if (ptr == null)
                 {
                     ptr = new ChrgDiagnosisPointer
                     {
@@ -996,7 +1030,7 @@ public partial class AccountForm : Form
                         CptCode = cpt,
                         AccountNo = _currentAccount.AccountNo
                     };
-                }    
+                }
 
                 ptr.DiagnosisPointer = newPointer;
 
@@ -1610,6 +1644,10 @@ public partial class AccountForm : Form
     private async void AccountForm_Activated(object sender, EventArgs e)
     {
         Log.Instance.Trace($"Entering - {SelectedAccount}");
+        if (this.Disposing)
+            return;
+        if (_closing)
+            return;
         await LoadAccountData();
     }
 
@@ -1725,5 +1763,10 @@ public partial class AccountForm : Form
             }
         }
         return;
+    }
+
+    private void AccountForm_FormClosed(object sender, FormClosedEventArgs e)
+    {
+        _closing = true;
     }
 }

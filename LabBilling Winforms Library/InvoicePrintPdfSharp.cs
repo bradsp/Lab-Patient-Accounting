@@ -133,7 +133,7 @@ namespace LabBilling.Core.Services
             return filename;
         }
 
-        public void CreateStatementPdf(InvoiceModel model)
+        public string CreateStatementPdf(InvoiceModel model)
         {
             if (model.StatementType != InvoiceModel.StatementTypeEnum.Statement)
                 throw new ArgumentOutOfRangeException("InvoiceModel.StatementType", "Expected a statement type model.");
@@ -158,7 +158,7 @@ namespace LabBilling.Core.Services
             string filename = $"{filePath}\\Statement-{model.ClientMnem}-{DateTime.Today:yyyyMMdd}.pdf";
             pdfRenderer.PdfDocument.Save(filename);
 
-            return;
+            return filename;
         }
 
         private void DefineStyles()

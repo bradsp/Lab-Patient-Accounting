@@ -151,32 +151,32 @@ public partial class ClientMaintenanceEditForm : Form
 
     private void ClientMaintenanceEditForm_Load(object sender, EventArgs e)
     {
-        cbState.DataSource = new BindingSource(Dictionaries.stateSource, null);
+        cbState.DataSource = new BindingSource(Dictionaries.StateSource, null);
         cbState.DisplayMember = "Value";
         cbState.ValueMember = "Key";
         cbState.SelectedIndex = -1;
 
-        cbClientType.DataSource = new BindingSource(Dictionaries.clientType, null);
+        cbClientType.DataSource = new BindingSource(Dictionaries.ClientType, null);
         cbClientType.DisplayMember = "Value";
         cbClientType.ValueMember = "Key";
         cbClientType.SelectedIndex = -1;
 
-        cbCounty.DataSource = new BindingSource(Dictionaries.counties, null);
+        cbCounty.DataSource = new BindingSource(Dictionaries.Counties, null);
         cbCounty.DisplayMember = "Value";
         cbCounty.ValueMember = "Key";
         cbCounty.SelectedIndex = -1;
 
-        cbFeeSched.DataSource = new BindingSource(Dictionaries.feeSchedule, null);
+        cbFeeSched.DataSource = new BindingSource(Dictionaries.FeeSchedule, null);
         cbFeeSched.DisplayMember = "Value";
         cbFeeSched.ValueMember = "Key";
         cbFeeSched.SelectedIndex = -1;
 
-        cbMROState.DataSource = new BindingSource(Dictionaries.stateSource, null);
+        cbMROState.DataSource = new BindingSource(Dictionaries.StateSource, null);
         cbMROState.DisplayMember = "Value";
         cbMROState.ValueMember = "Key";
         cbMROState.SelectedIndex = -1;
 
-        cbEmrType.DataSource = new BindingSource(Dictionaries.emrType, null);
+        cbEmrType.DataSource = new BindingSource(Dictionaries.EmrType, null);
         cbEmrType.DisplayMember = "Value";
         cbEmrType.ValueMember = "Key";
         cbEmrType.SelectedIndex = -1;

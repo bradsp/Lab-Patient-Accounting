@@ -79,7 +79,7 @@ public partial class NewAccountForm : Form
     private void NewAccountForm_Load(object sender, EventArgs e)
     {
         Log.Instance.Trace($"Entering");
-        patientSexComboBox.DataSource = Dictionaries.sexSource.ToList();
+        patientSexComboBox.DataSource = Dictionaries.SexSource.ToList();
         patientSexComboBox.ValueMember = "Key";
         patientSexComboBox.DisplayMember = "Value";
 

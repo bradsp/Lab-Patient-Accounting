@@ -61,9 +61,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="LabBillingJobs_TemporaryKey.pfx" />
-    <Content Include="NLog.config">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <None Update="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

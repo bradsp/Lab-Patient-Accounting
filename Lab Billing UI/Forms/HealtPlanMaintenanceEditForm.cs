@@ -31,7 +31,7 @@ public partial class HealthPlanMaintenanceEditForm : Form
     {
         //load combo boxes
         claimTypeComboBox.DropDownStyle = ComboBoxStyle.DropDown;
-        claimTypeComboBox.DataSource = Dictionaries.claimFilingIndicatorCode.ToList();
+        claimTypeComboBox.DataSource = Dictionaries.ClaimFilingIndicatorCode.ToList();
         claimTypeComboBox.ValueMember = "Key";
         claimTypeComboBox.DisplayMember = "Value";
         claimTypeComboBox.SelectedIndex = 0;

@@ -725,7 +725,7 @@ public sealed class HL7ProcessorService
 
         _accountRecord.BirthDate = new DateTime().ParseHL7Date(_hl7Message.GetValue("PID.7").Left(8));
         _accountRecord.Sex = _hl7Message.GetValue("PID.8");
-        if (!Dictionaries.sexSource.ContainsKey(_accountRecord.Sex))
+        if (!Dictionaries.SexSource.ContainsKey(_accountRecord.Sex))
         {
             _accountRecord.Sex = "U";
         }
@@ -765,7 +765,7 @@ public sealed class HL7ProcessorService
             _accountRecord.Pat.PrimaryPhone = repList[0].Components(1).Value;
         }
         _accountRecord.Pat.MaritalStatus = _hl7Message.GetValue("PID.16");
-        if (!Dictionaries.maritalSource.ContainsKey(_accountRecord.Pat.MaritalStatus))
+        if (!Dictionaries.MaritalSource.ContainsKey(_accountRecord.Pat.MaritalStatus))
         {
             _accountRecord.Pat.MaritalStatus = "U";
         }

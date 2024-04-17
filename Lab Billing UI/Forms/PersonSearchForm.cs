@@ -65,7 +65,7 @@ public partial class PersonSearchForm : Form
     private void PersonSearchForm_Load(object sender, EventArgs e)
     {
         Log.Instance.Trace($"Entering");
-        cbSexSearch.DataSource = new BindingSource(Dictionaries.sexSource, null);
+        cbSexSearch.DataSource = new BindingSource(Dictionaries.SexSource, null);
         cbSexSearch.ValueMember = "Key";
         cbSexSearch.DisplayMember = "Value";
 

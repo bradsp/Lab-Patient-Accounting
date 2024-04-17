@@ -108,7 +108,6 @@ public sealed class ClientInvoicesService
         if (asOfDate > DateTime.Today)
             throw new ArgumentOutOfRangeException(nameof(asOfDate));
 
-
         Account acc = uow.AccountRepository.GetByAccount(clientMnemonic);
 
         if (acc == null)

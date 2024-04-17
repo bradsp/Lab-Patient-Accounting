@@ -322,8 +322,8 @@ public partial class ClientInvoiceForm : Form
 
     private async Task RefreshInvoiceHistoryGridAsync()
     {
-        DateTime.TryParse(FromDate.Text, out DateTime fd);
-        DateTime.TryParse(ThroughDate.Text, out DateTime td);
+        _ = DateTime.TryParse(FromDate.Text, out DateTime fd);
+        _ = DateTime.TryParse(ThroughDate.Text, out DateTime td);
 
         string client = ClientFilter.SelectedValue?.ToString();
 
@@ -357,14 +357,7 @@ public partial class ClientInvoiceForm : Form
             InvoicePrintPdfSharp invoicePrint = new(Program.AppEnvironment);
 
             string filename = invoicePrint.PrintInvoice(invoiceNo);
-            var p = new Process
-            {
-                StartInfo = new ProcessStartInfo(filename)
-                {
-                    UseShellExecute = true
-                }
-            };
-            p.Start();
+            LaunchPDF(filename);
         }
     }
 
@@ -387,12 +380,13 @@ public partial class ClientInvoiceForm : Form
 
             var model = _clientInvoicesService.GenerateStatement(client, DateTime.Today.AddDays(-120));
             models.Add(model);
-
-            string stmtFilename = invoicePrint.PrintInvoice(invoice);
+            string stmtFilename = invoicePrint.CreateStatementPdf(model);
+            string invFilename = invoicePrint.PrintInvoice(invoice);
 
             if (!string.IsNullOrWhiteSpace(stmtFilename))
                 files.Add(stmtFilename);
 
+            files.Add(invFilename);
             progressBar1.Increment(1);
         }
 
@@ -438,21 +432,14 @@ public partial class ClientInvoiceForm : Form
 
         if (senderName == printToolStripMenuItem.Name || senderName == printAllToolStripMenuItem.Name)
         {
-            PrintDialog printDialog = new PrintDialog();
+            PrintDialog printDialog = new();
 
             Cursor.Current = Cursors.WaitCursor;
 
             string outfile = $"c:\\temp\\invoiceTemp-{Guid.NewGuid()}.pdf";
 
             CompileInvoicesToPdf(outfile, duplexPrinting);
-
-            using Process fileopener = new();
-
-            fileopener.StartInfo.FileName = "explorer";
-            fileopener.StartInfo.Arguments = "\"" + outfile + "\"";
-
-            fileopener.Start();
-
+            LaunchPDF(outfile);
         }
         else if (senderName == saveToPDFToolStripMenuItem.Name || senderName == saveAllToPDFToolStripMenuItem.Name)
         {
@@ -478,17 +465,22 @@ public partial class ClientInvoiceForm : Form
 
                 CompileInvoicesToPdf(filename);
 
-                using Process fileopener = new();
-
-                fileopener.StartInfo.FileName = "explorer";
-                fileopener.StartInfo.Arguments = "\"" + filename + "\"";
-
-                fileopener.Start();
+                LaunchPDF(filename);
             }
         }
 
         Cursor.Current = Cursors.Default;
         progressBar1.Visible = false;
+    }
+
+    private static void LaunchPDF(string filename)
+    {
+        using Process fileopener = new();
+
+        fileopener.StartInfo.FileName = "explorer";
+        fileopener.StartInfo.Arguments = "\"" + filename + "\"";
+
+        fileopener.Start();
     }
 
     private bool PrintPDF(string file, string printer)
@@ -583,6 +575,8 @@ public partial class ClientInvoiceForm : Form
 
     private void generateStatementButton_Click(object sender, EventArgs e)
     {
+        InvoicePrintPdfSharp invoicePrint = new(Program.AppEnvironment);
+
         if (InvoiceHistoryDGV.SelectedRows[0].Cells[nameof(InvoiceHistory.ClientMnem)].Value == null)
         {
             MessageBox.Show("Invoice image not stored in history record.");
@@ -592,7 +586,9 @@ public partial class ClientInvoiceForm : Form
         {
             var statementBeginDate = InputDialogs.SelectStatementBeginDate(DateTime.Today.AddDays(-120));
             string client = InvoiceHistoryDGV.SelectedRows[0].Cells[nameof(InvoiceHistory.ClientMnem)].Value.ToString();
-            _clientInvoicesService.GenerateStatement(client, (DateTime)statementBeginDate);
+            var model = _clientInvoicesService.GenerateStatement(client, (DateTime)statementBeginDate);
+            string filename = invoicePrint.CreateStatementPdf(model);
+            LaunchPDF(filename);
         }
 
     }

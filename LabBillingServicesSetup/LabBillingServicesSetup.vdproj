@@ -15,43 +15,19 @@
     {
         "Entry"
         {
-        "MsmKey" = "8:_1D8446CFADB348A6AFDCE3D751266014"
+        "MsmKey" = "8:_7D7DA33898CA4BFBBFE32E99B0858A9D"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_3C8C48E8A95C491289FB6E5243E6AE2A"
+        "MsmKey" = "8:_C52F9566C5D243CE9228EAF0ED66E74B"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_57FB441F6B644B08A330940D847070D9"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_5B4D9BFD2B454944A2AFF3236BE4C290"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_9AE7506D157C4F08B9A432D96ACDEF04"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_B23B931E54D447A9B169A58E10FF4E2E"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_E5833D9EF1614CEFB7FBB906FBCEA7BD"
+        "MsmKey" = "8:_CC2A57E63F604B1EB47311B449EB84B6"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -157,92 +133,12 @@
         }
         "File"
         {
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_1D8446CFADB348A6AFDCE3D751266014"
-            {
-            "SourcePath" = "8:..\\Lab Billing Jobs\\App.config"
-            "TargetName" = "8:App.config"
-            "Tag" = "8:"
-            "Folder" = "8:_E0E58807D8C6433ABBAA18890616C22E"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_3C8C48E8A95C491289FB6E5243E6AE2A"
-            {
-            "SourcePath" = "8:..\\Lab Billing Jobs\\NLog.config"
-            "TargetName" = "8:NLog.config"
-            "Tag" = "8:"
-            "Folder" = "8:_E0E58807D8C6433ABBAA18890616C22E"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_57FB441F6B644B08A330940D847070D9"
-            {
-            "SourcePath" = "8:..\\LabBillingService\\App.config"
-            "TargetName" = "8:App.config"
-            "Tag" = "8:"
-            "Folder" = "8:_2A7FBD578B904A27B180CC66136446BE"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_5B4D9BFD2B454944A2AFF3236BE4C290"
-            {
-            "SourcePath" = "8:..\\LabBillingService\\NLog.config"
-            "TargetName" = "8:NLog.config"
-            "Tag" = "8:"
-            "Folder" = "8:_2A7FBD578B904A27B180CC66136446BE"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_B23B931E54D447A9B169A58E10FF4E2E"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_7D7DA33898CA4BFBBFE32E99B0858A9D"
             {
             "SourcePath" = "8:..\\LabBillingService\\log4net.config"
             "TargetName" = "8:log4net.config"
             "Tag" = "8:"
-            "Folder" = "8:_2A7FBD578B904A27B180CC66136446BE"
+            "Folder" = "8:_8A3B0305AFBF4F19841080EAF32451DC"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -257,12 +153,32 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_E5833D9EF1614CEFB7FBB906FBCEA7BD"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_C52F9566C5D243CE9228EAF0ED66E74B"
             {
-            "SourcePath" = "8:..\\Lab Billing Jobs\\log4net.config"
-            "TargetName" = "8:log4net.config"
+            "SourcePath" = "8:..\\LabBillingService\\App.config"
+            "TargetName" = "8:App.config"
             "Tag" = "8:"
-            "Folder" = "8:_E0E58807D8C6433ABBAA18890616C22E"
+            "Folder" = "8:_8A3B0305AFBF4F19841080EAF32451DC"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_CC2A57E63F604B1EB47311B449EB84B6"
+            {
+            "SourcePath" = "8:..\\LabBillingService\\NLog.config"
+            "TargetName" = "8:NLog.config"
+            "Tag" = "8:"
+            "Folder" = "8:_8A3B0305AFBF4F19841080EAF32451DC"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -304,28 +220,6 @@
             "Property" = "8:TARGETDIR"
                 "Folders"
                 {
-                    "{9EF0B969-E518-4E46-987F-47570745A589}:_2A7FBD578B904A27B180CC66136446BE"
-                    {
-                    "Name" = "8:InterfaceService"
-                    "AlwaysCreate" = "11:FALSE"
-                    "Condition" = "8:"
-                    "Transitive" = "11:FALSE"
-                    "Property" = "8:_EA749A869AEC4CB2AD901F11556CA917"
-                        "Folders"
-                        {
-                        }
-                    }
-                    "{9EF0B969-E518-4E46-987F-47570745A589}:_E0E58807D8C6433ABBAA18890616C22E"
-                    {
-                    "Name" = "8:JobsService"
-                    "AlwaysCreate" = "11:FALSE"
-                    "Condition" = "8:"
-                    "Transitive" = "11:FALSE"
-                    "Property" = "8:_9379F12D6B2B4AABA8B251AA8A31D83C"
-                        "Folders"
-                        {
-                        }
-                    }
                 }
             }
             "{1525181F-901A-416C-8A58-119130FE478E}:_AADC9E64DC9D422BB6E057AF184CDC32"
@@ -875,12 +769,12 @@
         }
         "ProjectOutput"
         {
-            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_9AE7506D157C4F08B9A432D96ACDEF04"
+            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_9E494CE71D1F4402B5360599379EDFD2"
             {
-            "SourcePath" = "8:..\\LabBillingService\\obj\\x64\\Release\\net6.0-windows7.0\\apphost.exe"
+            "SourcePath" = "8:"
             "TargetName" = "8:"
             "Tag" = "8:"
-            "Folder" = "8:_2A7FBD578B904A27B180CC66136446BE"
+            "Folder" = "8:_8A3B0305AFBF4F19841080EAF32451DC"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -898,6 +792,34 @@
             "OutputConfiguration" = "8:Release|x64"
             "OutputGroupCanonicalName" = "8:PublishItems"
             "OutputProjectGuid" = "8:{A38E5412-1194-42CE-8CA2-CF509EAE7828}"
+            "ShowKeyOutput" = "11:TRUE"
+                "ExcludeFilters"
+                {
+                }
+            }
+            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_E49FCB2ED62740FD8E5BF45280C677D4"
+            {
+            "SourcePath" = "8:"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_8A3B0305AFBF4F19841080EAF32451DC"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            "ProjectOutputGroupRegister" = "3:1"
+            "OutputConfiguration" = "8:Release|x64"
+            "OutputGroupCanonicalName" = "8:PublishItems"
+            "OutputProjectGuid" = "8:{4F4425D0-386D-40E2-BB86-FFE1254A0DB3}"
             "ShowKeyOutput" = "11:TRUE"
                 "ExcludeFilters"
                 {
