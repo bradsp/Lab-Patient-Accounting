@@ -1,23 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Windows.Forms;
-using LabBilling.Core;
-using LabBilling.Logging;
+﻿using LabBilling.Core;
 using LabBilling.Core.Models;
 using LabBilling.Core.Services;
+using LabBilling.Logging;
+using System.Data;
 
 namespace LabBilling;
 
 public partial class UserSecurity : Form
 {
-    private bool IsNewRecord = false;
-    List<UserAccount> searchResults = new();
+    private bool _isNewRecord = false;
+    private List<UserAccount> _searchResults = new();
 
-    private readonly SystemService systemService = new(Program.AppEnvironment);
+    private readonly SystemService _systemService = new(Program.AppEnvironment);
 
-    public UserSecurity() 
+    public UserSecurity()
     {
         Log.Instance.Trace($"Entering");
         InitializeComponent();
@@ -25,7 +21,7 @@ public partial class UserSecurity : Form
 
     private void SetPermissions()
     {
-        if(!Program.LoggedInUser.IsAdministrator)
+        if (!Program.LoggedInUser.IsAdministrator)
         {
             AddUserButton.Visible = false;
             SaveButton.Visible = false;
@@ -96,22 +92,22 @@ public partial class UserSecurity : Form
         Log.Instance.Trace($"Entering");
         UserAccount editedEmp = ReadEditedData();
 
-        if (!IsNewRecord)
+        if (!_isNewRecord)
         {
             try
             {
-                editedEmp = systemService.UpdateUser(editedEmp);
+                editedEmp = _systemService.UpdateUser(editedEmp);
                 MessageBox.Show("Record successfully updated.");
                 Clear();
                 //refresh DGV to pick up updates
                 RefreshDGV();
             }
-            catch(ApplicationException apex) 
-            { 
+            catch (ApplicationException apex)
+            {
                 MessageBox.Show(apex.Message);
                 Log.Instance.Error(apex.Message, apex);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
                 Log.Instance.Error(ex.Message, ex);
@@ -121,9 +117,9 @@ public partial class UserSecurity : Form
         {
             //verify this username does not already exist
             bool userExists = false;
-            foreach(DataGridViewRow row in UserListDGV.Rows)
+            foreach (DataGridViewRow row in UserListDGV.Rows)
             {
-                if(row.Cells[nameof(UserAccount.UserName)].Value.ToString().ToLower().Equals(editedEmp.UserName.ToLower()))
+                if (row.Cells[nameof(UserAccount.UserName)].Value.ToString().ToLower().Equals(editedEmp.UserName.ToLower()))
                 {
                     UserListDGV.FirstDisplayedScrollingRowIndex = row.Index;
                     userExists = true;
@@ -131,14 +127,14 @@ public partial class UserSecurity : Form
                 }
             }
 
-            if(userExists)
+            if (userExists)
             {
                 //this user already exists
-                if(MessageBox.Show("This username already exists. Do you want to update this user with the new information?","User Exists",MessageBoxButtons.YesNo) == DialogResult.Yes)
+                if (MessageBox.Show("This username already exists. Do you want to update this user with the new information?", "User Exists", MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
                     try
                     {
-                        editedEmp = systemService.UpdateUser(editedEmp);
+                        editedEmp = _systemService.UpdateUser(editedEmp);
                         MessageBox.Show("Record successfully updated.");
                         Clear();
                         UserName.ReadOnly = true;
@@ -170,7 +166,7 @@ public partial class UserSecurity : Form
                     //encrypt new password for saving
                     editedEmp.Password = Helper.Encrypt(Password.Text.Trim());
                     // add user record
-                    editedEmp = systemService.AddUser(editedEmp);
+                    editedEmp = _systemService.AddUser(editedEmp);
                     MessageBox.Show("Record successfully inserted.");
                     Clear();
                     RefreshDGV();
@@ -195,7 +191,7 @@ public partial class UserSecurity : Form
         Log.Instance.Trace($"Entering");
         UserName.Text = "";
         FullName.Text = "";
-        AccessLevelCombo.SelectedIndex= -1;
+        AccessLevelCombo.SelectedIndex = -1;
         Password.Text = "";
         CanAddAccountAdjustments.Checked = false;
         CanAddCharges.Checked = false;
@@ -209,21 +205,21 @@ public partial class UserSecurity : Form
         ModDateTime.Text = "";
         ModUser.Text = "";
         ModProgram.Text = "";
-        IsNewRecord = true;
+        _isNewRecord = true;
     }
 
     private void RefreshDGV()
     {
         Log.Instance.Trace($"Entering");
-        searchResults = systemService.GetUsers().ToList();
+        _searchResults = _systemService.GetUsers().ToList();
 
-        DataTable dt = Helper.ConvertToDataTable(searchResults);
+        DataTable dt = Helper.ConvertToDataTable(_searchResults);
 
         UserListDGV.DataSource = dt;
         UserListDGV.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
 
         //filter out inactives
-        if(ShowInactive.Checked == false)
+        if (ShowInactive.Checked == false)
         {
             dt.DefaultView.RowFilter = "Access <> 'NONE'";
         }
@@ -234,7 +230,7 @@ public partial class UserSecurity : Form
         Log.Instance.Trace($"Entering");
         try
         {
-            IsNewRecord = false;
+            _isNewRecord = false;
             UserName.ReadOnly = true;
             UserName.Text = UserListDGV.SelectedRows[0].Cells[nameof(UserAccount.UserName)].Value.ToString();
             FullName.Text = UserListDGV.SelectedRows[0].Cells[nameof(UserAccount.FullName)].Value.ToString();
@@ -275,7 +271,7 @@ public partial class UserSecurity : Form
         // ask for new password
         InputBoxResult prompt = InputBox.ShowPassword("Enter new password:", "New Password");
 
-        if(prompt.ReturnCode == DialogResult.OK)
+        if (prompt.ReturnCode == DialogResult.OK)
         {
             UserAccount user = ReadEditedData();
 
@@ -283,7 +279,7 @@ public partial class UserSecurity : Form
 
             try
             {
-                user = systemService.UpdateUser(user);
+                user = _systemService.UpdateUser(user);
                 MessageBox.Show("Password updated.");
                 Clear();
                 //refresh DGV to pick up updates

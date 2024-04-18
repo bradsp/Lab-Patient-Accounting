@@ -80,6 +80,7 @@ partial class MainForm
         panel1 = new Panel();
         helpProvider1 = new HelpProvider();
         mdiTabControl = new CustomTabControl();
+        viewLocksToolStripMenuItem = new ToolStripMenuItem();
         MainFormMenu.SuspendLayout();
         statusStrip1.SuspendLayout();
         SuspendLayout();
@@ -278,7 +279,7 @@ partial class MainForm
         // 
         // systemAdministrationToolStripMenuItem
         // 
-        systemAdministrationToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { userSecurityToolStripMenuItem, systemParametersToolStripMenuItem, interfaceMappingToolStripMenuItem, interfaceMonitorToolStripMenuItem, systemLogViewerToolStripMenuItem });
+        systemAdministrationToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { userSecurityToolStripMenuItem, systemParametersToolStripMenuItem, interfaceMappingToolStripMenuItem, interfaceMonitorToolStripMenuItem, systemLogViewerToolStripMenuItem, viewLocksToolStripMenuItem });
         systemAdministrationToolStripMenuItem.Name = "systemAdministrationToolStripMenuItem";
         resources.ApplyResources(systemAdministrationToolStripMenuItem, "systemAdministrationToolStripMenuItem");
         // 
@@ -401,6 +402,12 @@ partial class MainForm
         mdiTabControl.SelectedIndex = 0;
         mdiTabControl.SelectedIndexChanged += mdiTabControl_SelectedIndexChanged;
         // 
+        // viewLocksToolStripMenuItem
+        // 
+        viewLocksToolStripMenuItem.Name = "viewLocksToolStripMenuItem";
+        resources.ApplyResources(viewLocksToolStripMenuItem, "viewLocksToolStripMenuItem");
+        viewLocksToolStripMenuItem.Click += viewLocksToolStripMenuItem_Click;
+        // 
         // MainForm
         // 
         resources.ApplyResources(this, "$this");
@@ -480,4 +487,5 @@ partial class MainForm
     private System.Windows.Forms.CustomTabControl mdiTabControl;
     private System.Windows.Forms.ToolStripMenuItem windowToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem auditReportsToolStripMenuItem;
+    private ToolStripMenuItem viewLocksToolStripMenuItem;
 }

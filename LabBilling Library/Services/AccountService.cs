@@ -72,6 +72,13 @@ public sealed class AccountService
         return (false, alock);
     }
 
+    public List<AccountLock> GetAccountLocks()
+    {
+        UnitOfWorkMain uow = new(_appEnvironment);
+
+        return uow.AccountLockRepository.GetAll();
+    }
+
     public bool ClearAccountLock(Account account)
     {
         UnitOfWorkMain uow = new(_appEnvironment);

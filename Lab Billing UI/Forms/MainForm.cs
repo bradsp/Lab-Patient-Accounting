@@ -77,7 +77,7 @@ public partial class MainForm : Form
         LogLevel minLevel = NLog.LogLevel.Warn;
 
         var configuration = new NLog.Config.LoggingConfiguration();
-        switch(Program.AppEnvironment.ApplicationParameters.LogLevel)
+        switch (Program.AppEnvironment.ApplicationParameters.LogLevel)
         {
             case "Trace":
                 minLevel = LogLevel.Trace;
@@ -136,7 +136,7 @@ public partial class MainForm : Form
         dbTarget.Parameters.Add(new DatabaseParameterInfo("@databasename", new NLog.Layouts.SimpleLayout("${gdc:item=dbname}")));
         dbTarget.Parameters.Add(new DatabaseParameterInfo("@databaseserver", new NLog.Layouts.SimpleLayout("${gdc:item=dbserver}")));
 
-        switch(Program.AppEnvironment.ApplicationParameters.LogLocation)
+        switch (Program.AppEnvironment.ApplicationParameters.LogLocation)
         {
             case "Database":
                 configuration.AddRule(new LoggingRule("*", minLevel, dbTarget));
@@ -681,7 +681,7 @@ public partial class MainForm : Form
         {
             _accountService.ClearAccountLocks(Program.AppEnvironment.User, OS.GetMachineName());
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             Log.Instance.Fatal("Error removing account locks.", ex);
         }
@@ -689,7 +689,7 @@ public partial class MainForm : Form
         {
             Properties.Settings.Default.Save();
         }
-        catch(Exception exc)
+        catch (Exception exc)
         {
             Log.Instance.Fatal("Exception during close.", exc);
         }
@@ -928,4 +928,10 @@ public partial class MainForm : Form
 
     private void auditReportsToolStripMenuItem_Click(object sender, EventArgs e) => NewForm(new AuditReportMaintenanceForm());
 
+    private void viewLocksToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        AccountLocksForm frm = new();
+
+        frm.ShowDialog();
+    }
 }
