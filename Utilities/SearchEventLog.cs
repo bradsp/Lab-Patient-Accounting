@@ -84,101 +84,99 @@ public enum EventLogFilterType
     EventID
 }
 
-namespace Utilities
+namespace Utilities;
+
+/// <summary>
+/// Class allows searching of the event entry logs. It has two static methods that can be called.
+/// 1. FilterEventLog (EventLogFilterType FilterType,IEnumerable Entries, object Criteria1, object Criteria2)
+///     which uses the TimeGenerated enum to cast the Criteria1, and Criteria2 into Datetimes for searching by datetime range
+/// 2.  FilterEventLog(EventLogFilterType FilterType, IEnumerable Entries, object Criteria)
+///     which uses the enum to filter the log by the type passed in.
+/// </summary>
+public sealed class SearchEventLog
 {
+    // Prevent this class from being instantiated.
+    private SearchEventLog() { }
     /// <summary>
-    /// Class allows searching of the event entry logs. It has two static methods that can be called.
-    /// 1. FilterEventLog (EventLogFilterType FilterType,IEnumerable Entries, object Criteria1, object Criteria2)
-    ///     which uses the TimeGenerated enum to cast the Criteria1, and Criteria2 into Datetimes for searching by datetime range
-    /// 2.  FilterEventLog(EventLogFilterType FilterType, IEnumerable Entries, object Criteria)
-    ///     which uses the enum to filter the log by the type passed in.
+    /// 
     /// </summary>
-    public sealed class SearchEventLog
+    /// <param name="FilterType"></param>
+    /// <param name="Entries"></param>
+    /// <param name="Criteria1"></param>
+    /// <param name="Criteria2"></param>
+    /// <returns></returns>
+    public static EventLogEntry[]
+
+       FilterEventLog(EventLogFilterType FilterType,
+                      IEnumerable Entries, object Criteria1,
+                      object Criteria2)
     {
-        // Prevent this class from being instantiated.
-        private SearchEventLog() { }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="FilterType"></param>
-        /// <param name="Entries"></param>
-        /// <param name="Criteria1"></param>
-        /// <param name="Criteria2"></param>
-        /// <returns></returns>
-        public static EventLogEntry[]
-
-           FilterEventLog(EventLogFilterType FilterType,
-                          IEnumerable Entries, object Criteria1,
-                          object Criteria2)
+        ArrayList FilteredEntries = new ArrayList();
+        foreach (EventLogEntry Entry in Entries)
         {
-            ArrayList FilteredEntries = new ArrayList();
-            foreach (EventLogEntry Entry in Entries)
+            switch (FilterType)
             {
-                switch (FilterType)
-                {
-                    case EventLogFilterType.TimeGenerated:
-                        if (Entry.TimeGenerated >= (DateTime)Criteria1 &&
-                            Entry.TimeGenerated <= (DateTime)Criteria2)
-                            FilteredEntries.Add(Entry);
-                        break;
-                }
+                case EventLogFilterType.TimeGenerated:
+                    if (Entry.TimeGenerated >= (DateTime)Criteria1 &&
+                        Entry.TimeGenerated <= (DateTime)Criteria2)
+                        FilteredEntries.Add(Entry);
+                    break;
             }
-            EventLogEntry[] EntriesArray =
-               new EventLogEntry[FilteredEntries.Count];
-            FilteredEntries.CopyTo(EntriesArray);
-            return (EntriesArray);
         }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="FilterType"></param>
-        /// <param name="Entries"></param>
-        /// <param name="Criteria"></param>
-        /// <returns></returns>
-        public static EventLogEntry[]
-           FilterEventLog(EventLogFilterType FilterType,
-                          IEnumerable Entries, object Criteria)
-        {
-            ArrayList FilteredEntries = new ArrayList();
-            foreach (EventLogEntry Entry in Entries)
-            {
-                switch (FilterType)
-                {
-                    case EventLogFilterType.Category:
-                        if (Entry.Category == (string)Criteria)
-                            FilteredEntries.Add(Entry);
-                        break;
-                    case EventLogFilterType.EntryType:
-                        if (Entry.EntryType == (EventLogEntryType)Criteria)
-                            FilteredEntries.Add(Entry);
-                        break;
-                    case EventLogFilterType.EventID:
-                        if (Entry.InstanceId == (int)Criteria)
-                            FilteredEntries.Add(Entry);
-                        break;
-                    case EventLogFilterType.MachineName:
-                        if (Entry.MachineName == (string)Criteria)
-                            FilteredEntries.Add(Entry);
-                        break;
-                    case EventLogFilterType.Message:
-                        if (Entry.Message == (string)Criteria)
-                            FilteredEntries.Add(Entry);
-                        break;
-                    case EventLogFilterType.Source:
-                        if (Entry.Source == (string)Criteria)
-                            FilteredEntries.Add(Entry);
-                        break;
-                    case EventLogFilterType.UserName:
-                        if (Entry.UserName == (string)Criteria)
-                            FilteredEntries.Add(Entry);
-                        break;
-                }
-            }
-            EventLogEntry[] EntriesArray =
-               new EventLogEntry[FilteredEntries.Count];
-            FilteredEntries.CopyTo(EntriesArray);
-            return (EntriesArray);
-        }
+        EventLogEntry[] EntriesArray =
+           new EventLogEntry[FilteredEntries.Count];
+        FilteredEntries.CopyTo(EntriesArray);
+        return (EntriesArray);
     }
-
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="FilterType"></param>
+    /// <param name="Entries"></param>
+    /// <param name="Criteria"></param>
+    /// <returns></returns>
+    public static EventLogEntry[]
+       FilterEventLog(EventLogFilterType FilterType,
+                      IEnumerable Entries, object Criteria)
+    {
+        ArrayList FilteredEntries = new ArrayList();
+        foreach (EventLogEntry Entry in Entries)
+        {
+            switch (FilterType)
+            {
+                case EventLogFilterType.Category:
+                    if (Entry.Category == (string)Criteria)
+                        FilteredEntries.Add(Entry);
+                    break;
+                case EventLogFilterType.EntryType:
+                    if (Entry.EntryType == (EventLogEntryType)Criteria)
+                        FilteredEntries.Add(Entry);
+                    break;
+                case EventLogFilterType.EventID:
+                    if (Entry.InstanceId == (int)Criteria)
+                        FilteredEntries.Add(Entry);
+                    break;
+                case EventLogFilterType.MachineName:
+                    if (Entry.MachineName == (string)Criteria)
+                        FilteredEntries.Add(Entry);
+                    break;
+                case EventLogFilterType.Message:
+                    if (Entry.Message == (string)Criteria)
+                        FilteredEntries.Add(Entry);
+                    break;
+                case EventLogFilterType.Source:
+                    if (Entry.Source == (string)Criteria)
+                        FilteredEntries.Add(Entry);
+                    break;
+                case EventLogFilterType.UserName:
+                    if (Entry.UserName == (string)Criteria)
+                        FilteredEntries.Add(Entry);
+                    break;
+            }
+        }
+        EventLogEntry[] EntriesArray =
+           new EventLogEntry[FilteredEntries.Count];
+        FilteredEntries.CopyTo(EntriesArray);
+        return (EntriesArray);
+    }
 }

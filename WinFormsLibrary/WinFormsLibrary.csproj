@@ -40,9 +40,6 @@
     <Compile Update="FormResponse.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="ListViewPrinter.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Update="RFCPrintPreview.cs">
       <SubType>Form</SubType>
     </Compile>

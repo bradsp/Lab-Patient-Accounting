@@ -3593,60 +3593,60 @@ public partial class Posting835 : Form
         {
             tspbRecords.PerformStep();
             Application.DoEvents();
-            m_rEob.m_Reob.ClearMemberVariables();
+            m_rEob.Reob.ClearMemberVariables();
 
-            m_rEob.m_Reob.m_strAccount = dr[(int)Col835EOB.Account].ToString();
+            m_rEob.Reob.m_strAccount = dr[(int)Col835EOB.Account].ToString();
 
-            m_rEob.m_Reob.m_strSubscriberID = dr[(int)Col835EOB.eHIC].ToString();
-            m_rEob.m_Reob.m_strSubscriberName = RFCObject.staticSqlClean(dr[(int)Col835EOB.eSubscriberName].ToString()); //06/20/2008 wdk name [Carol'Kay] received
-            m_rEob.m_Reob.m_strDateOfService = dr[(int)Col835EOB.eDOS].ToString();
-            m_rEob.m_Reob.m_strICN = dr[(int)Col835EOB.eICN].ToString();
-            m_rEob.m_Reob.m_strPatStat = dr[(int)Col835EOB.ePatStat].ToString();
-            m_rEob.m_Reob.m_strClaimStatus = dr[(int)Col835EOB.eClaimSt].ToString();
-            m_rEob.m_Reob.m_strClaimType = dr[(int)Col835EOB.eType].ToString();
+            m_rEob.Reob.m_strSubscriberID = dr[(int)Col835EOB.eHIC].ToString();
+            m_rEob.Reob.m_strSubscriberName = RFCObject.staticSqlClean(dr[(int)Col835EOB.eSubscriberName].ToString()); //06/20/2008 wdk name [Carol'Kay] received
+            m_rEob.Reob.m_strDateOfService = dr[(int)Col835EOB.eDOS].ToString();
+            m_rEob.Reob.m_strICN = dr[(int)Col835EOB.eICN].ToString();
+            m_rEob.Reob.m_strPatStat = dr[(int)Col835EOB.ePatStat].ToString();
+            m_rEob.Reob.m_strClaimStatus = dr[(int)Col835EOB.eClaimSt].ToString();
+            m_rEob.Reob.m_strClaimType = dr[(int)Col835EOB.eType].ToString();
 
             // charge section
-            m_rEob.m_Reob.m_strChargesReported =
+            m_rEob.Reob.m_strChargesReported =
                     decimal.Parse(dr[(int)Col835EOB.eChargesReported].ToString(),
                      System.Globalization.NumberStyles.Currency).ToString();// string.Format("{0:F2}", dr.Cells[(int)col835EOB.eChargesReported].FormattedValue);
-            m_rEob.m_Reob.m_strChargesDenied =
+            m_rEob.Reob.m_strChargesDenied =
                     decimal.Parse(dr[(int)Col835EOB.eChargesDenied].ToString(),
                      System.Globalization.NumberStyles.Currency).ToString();
-            m_rEob.m_Reob.m_strChargesNoncovered =
+            m_rEob.Reob.m_strChargesNoncovered =
                     decimal.Parse(dr[(int)Col835EOB.eChargesNCovd].ToString(),
                      System.Globalization.NumberStyles.Currency).ToString();
             // patient libility section
-            m_rEob.m_Reob.m_strPatLibCoinsurance =
+            m_rEob.Reob.m_strPatLibCoinsurance =
                     decimal.Parse(dr[(int)Col835EOB.ePatientLibCoinsurance].ToString(),
                      System.Globalization.NumberStyles.Currency).ToString();
-            m_rEob.m_Reob.m_strPatLibNoncovered =
+            m_rEob.Reob.m_strPatLibNoncovered =
                     decimal.Parse(dr[(int)Col835EOB.ePatientLibNCovdCharges].ToString(),
                      System.Globalization.NumberStyles.Currency).ToString();
             // Payment data section
-            m_rEob.m_Reob.m_strPayDataReimbRate = dr[(int)Col835EOB.ePaymentDataReimbRate].ToString();
-            m_rEob.m_Reob.m_strPayDataMSPPrimPay =
+            m_rEob.Reob.m_strPayDataReimbRate = dr[(int)Col835EOB.ePaymentDataReimbRate].ToString();
+            m_rEob.Reob.m_strPayDataMSPPrimPay =
                     decimal.Parse(dr[(int)Col835EOB.ePaymentDataMSPPrimPay].ToString(),
                      System.Globalization.NumberStyles.Currency).ToString();
-            m_rEob.m_Reob.m_strPayDataHcpcsAmt =
+            m_rEob.Reob.m_strPayDataHcpcsAmt =
                     decimal.Parse(dr[(int)Col835EOB.ePaymentDataHCPCSAmt].ToString(),
                      System.Globalization.NumberStyles.Currency).ToString();
-            m_rEob.m_Reob.m_strPayDataContAdjAmt =
+            m_rEob.Reob.m_strPayDataContAdjAmt =
                     decimal.Parse(dr[(int)Col835EOB.ePaymentDataContAdjAmt].ToString(),
                      System.Globalization.NumberStyles.Currency).ToString();
-            m_rEob.m_Reob.m_strPayDataPatRefund =
+            m_rEob.Reob.m_strPayDataPatRefund =
                     decimal.Parse(dr[(int)Col835EOB.ePaymentDataPatRefund].ToString(),
                      System.Globalization.NumberStyles.Currency).ToString();
-            m_rEob.m_Reob.m_strPayDataPerDiemRate = dr[(int)Col835EOB.ePaymentDataPerDiemRate].ToString();
-            m_rEob.m_Reob.m_strPayDataNetReimbAmt =
+            m_rEob.Reob.m_strPayDataPerDiemRate = dr[(int)Col835EOB.ePaymentDataPerDiemRate].ToString();
+            m_rEob.Reob.m_strPayDataNetReimbAmt =
                     decimal.Parse(dr[(int)Col835EOB.ePaymentDataNetReimbAmt].ToString(),
                          System.Globalization.NumberStyles.Currency).ToString();
             // 06/03/2008 claim forwarded to can contain apostrophies which require sqlclean to triple them up. Thanks Rick
-            m_rEob.m_Reob.m_strClaimForwardedTo = RFCObject.staticSqlClean(dr[(int)Col835EOB.eClaimForwarded].ToString());
-            m_rEob.m_Reob.m_strClaimForwardedId = dr[(int)Col835EOB.eClaimForwardedID].ToString();
-            m_rEob.m_Reob.m_strEftFile = tbFileName.Tag.ToString();
-            m_rEob.m_Reob.m_strEftNumber = tbFileNumber.Tag.ToString();
-            m_rEob.m_Reob.m_strEftDate = tbFileDate.Tag.ToString();
-            m_rEob.m_Reob.m_strBillCycleDate = tbCheckDate.Tag.ToString();
+            m_rEob.Reob.m_strClaimForwardedTo = RFCObject.staticSqlClean(dr[(int)Col835EOB.eClaimForwarded].ToString());
+            m_rEob.Reob.m_strClaimForwardedId = dr[(int)Col835EOB.eClaimForwardedID].ToString();
+            m_rEob.Reob.m_strEftFile = tbFileName.Tag.ToString();
+            m_rEob.Reob.m_strEftNumber = tbFileNumber.Tag.ToString();
+            m_rEob.Reob.m_strEftDate = tbFileDate.Tag.ToString();
+            m_rEob.Reob.m_strBillCycleDate = tbCheckDate.Tag.ToString();
             //lEob.m_Reob.m_strPrintDate is left null until it is printed from Acc 
 
             DataGridView dgv = null;
@@ -3654,7 +3654,7 @@ public partial class Posting835 : Form
             {
 
                 dgv = GetSelectedTabsDataGrid(i);
-                string strSelect = $"Account = '{m_rEob.m_Reob.m_strAccount.Replace("A", "")}' AND eClaimStatus = '{m_rEob.m_Reob.m_strClaimStatus}'";
+                string strSelect = $"Account = '{m_rEob.Reob.m_strAccount.Replace("A", "")}' AND eClaimStatus = '{m_rEob.Reob.m_strClaimStatus}'";
                 DataRow[] dgvArrRows = m_dsRecords.Tables[dgv.Name].Select(strSelect);
                 //  m_ERR.m_Logfile.WriteLogFile(string.Format("   [{0}] {1}", dgvArrRows.GetUpperBound(0), strSelect));
                 for (int k = 0; k <= dgvArrRows.GetUpperBound(0); k++)
@@ -3662,101 +3662,101 @@ public partial class Posting835 : Form
                     Application.DoEvents();
                     DataRow dgRow = dgvArrRows[k];
 
-                    m_rEob.m_ReobDetail.ClearMemberVariables();
-                    m_rEob.m_ReobDetail.m_strRowguid = m_rEob.m_Reob.m_strRowguid;
-                    m_rEob.m_ReobDetail.m_strAccount = m_rEob.m_Reob.m_strAccount;
-                    m_rEob.m_ReobDetail.m_strClaimStatus = m_rEob.m_Reob.m_strClaimStatus;
+                    m_rEob.ReobDetail.ClearMemberVariables();
+                    m_rEob.ReobDetail.m_strRowguid = m_rEob.Reob.m_strRowguid;
+                    m_rEob.ReobDetail.m_strAccount = m_rEob.Reob.m_strAccount;
+                    m_rEob.ReobDetail.m_strClaimStatus = m_rEob.Reob.m_strClaimStatus;
 
                     // set the check number into both the eob and the eob detail as part of the link to prevent duplicate file postings
-                    m_rEob.m_Reob.m_strCheckNo = dgRow[(int)Col835Grids.eCheckNo].ToString();
-                    m_rEob.m_ReobDetail.m_strCheckNo = m_rEob.m_Reob.m_strCheckNo;
+                    m_rEob.Reob.m_strCheckNo = dgRow[(int)Col835Grids.eCheckNo].ToString();
+                    m_rEob.ReobDetail.m_strCheckNo = m_rEob.Reob.m_strCheckNo;
                     // set the billing cycle from the eob.
-                    m_rEob.m_ReobDetail.m_strBillCycleDate = m_rEob.m_Reob.m_strBillCycleDate;
+                    m_rEob.ReobDetail.m_strBillCycleDate = m_rEob.Reob.m_strBillCycleDate;
 
-                    m_rEob.m_ReobDetail.m_strContractualAdjAmt =
+                    m_rEob.ReobDetail.m_strContractualAdjAmt =
                         decimal.Parse(dgRow[(int)Col835Grids.eContractualAdjAmt].ToString(),
                         System.Globalization.NumberStyles.Currency).ToString();
-                    m_rEob.m_ReobDetail.m_strOtherAdjAmt =
+                    m_rEob.ReobDetail.m_strOtherAdjAmt =
                          decimal.Parse(dgRow[(int)Col835Grids.eOtherAdjAmt].ToString(),
                             System.Globalization.NumberStyles.Currency).ToString();
 
-                    m_rEob.m_ReobDetail.m_strAllowedAmt =
+                    m_rEob.ReobDetail.m_strAllowedAmt =
                         decimal.Parse(dgRow[(int)Col835Grids.eAllowed].ToString(),
                         System.Globalization.NumberStyles.Currency).ToString();
-                    m_rEob.m_ReobDetail.m_strApcNr =
+                    m_rEob.ReobDetail.m_strApcNr =
                         dgRow[(int)Col835Grids.eAPC].ToString();
-                    m_rEob.m_ReobDetail.m_strChargeAmt =
+                    m_rEob.ReobDetail.m_strChargeAmt =
                         decimal.Parse(dgRow[(int)Col835Grids.eCharges].ToString(),
                         System.Globalization.NumberStyles.Currency).ToString();
-                    m_rEob.m_ReobDetail.m_strDateOfService =
+                    m_rEob.ReobDetail.m_strDateOfService =
                         dgRow[(int)Col835Grids.eDateOfService].ToString();
-                    m_rEob.m_ReobDetail.m_strPaidAmt =
+                    m_rEob.ReobDetail.m_strPaidAmt =
                         decimal.Parse(dgRow[(int)Col835Grids.ePaid].ToString(),
                         System.Globalization.NumberStyles.Currency).ToString();
                     if (dgRow[(int)Col835Grids.eReason].ToString().IndexOf('/') > -1)
                     {
                         string[] strSplitReason = dgRow[(int)Col835Grids.eReason].ToString().Split(new char[] { '/' });
-                        m_rEob.m_ReobDetail.m_strReasonType = strSplitReason[0];
-                        m_rEob.m_ReobDetail.m_strReasonCode = strSplitReason[1];
+                        m_rEob.ReobDetail.m_strReasonType = strSplitReason[0];
+                        m_rEob.ReobDetail.m_strReasonCode = strSplitReason[1];
                     }
-                    m_rEob.m_ReobDetail.m_strRevCode = dgRow[(int)Col835Grids.eRevCode].ToString();
-                    m_rEob.m_ReobDetail.m_strServiceCode = dgRow[(int)Col835Grids.eCPT4Code].ToString();
-                    m_rEob.m_ReobDetail.m_strStat = dgRow[(int)Col835Grids.eStat].ToString();
-                    m_rEob.m_ReobDetail.m_strUnits = dgRow[(int)Col835Grids.eUnits].ToString();
-                    m_rEob.m_ReobDetail.m_strWght = dgRow[(int)Col835Grids.eWeight].ToString();
+                    m_rEob.ReobDetail.m_strRevCode = dgRow[(int)Col835Grids.eRevCode].ToString();
+                    m_rEob.ReobDetail.m_strServiceCode = dgRow[(int)Col835Grids.eCPT4Code].ToString();
+                    m_rEob.ReobDetail.m_strStat = dgRow[(int)Col835Grids.eStat].ToString();
+                    m_rEob.ReobDetail.m_strUnits = dgRow[(int)Col835Grids.eUnits].ToString();
+                    m_rEob.ReobDetail.m_strWght = dgRow[(int)Col835Grids.eWeight].ToString();
 
                     // is this eob in the table already?
-                    strWhere = $"check_no = '{m_rEob.m_Reob.m_strCheckNo}' and bill_cycle_date = '{m_rEob.m_Reob.m_strBillCycleDate}' AND " +
-                        $"account = '{m_rEob.m_Reob.m_strAccount}' and claim_status = '{m_rEob.m_Reob.m_strClaimStatus}'";
+                    strWhere = $"check_no = '{m_rEob.Reob.m_strCheckNo}' and bill_cycle_date = '{m_rEob.Reob.m_strBillCycleDate}' AND " +
+                        $"account = '{m_rEob.Reob.m_strAccount}' and claim_status = '{m_rEob.Reob.m_strClaimStatus}'";
 
-                    if (m_rEob.m_Reob.GetActiveRecords(strWhere) > 0)
+                    if (m_rEob.Reob.GetActiveRecords(strWhere) > 0)
                     {
-                        m_ERR.m_Logfile.WriteLogFile(string.Format(@"Account {0} already in EOB table.\r\n \tWHERE Clause: {1}", m_rEob.m_Reob.m_strAccount, strWhere));
+                        m_ERR.m_Logfile.WriteLogFile(string.Format(@"Account {0} already in EOB table.\r\n \tWHERE Clause: {1}", m_rEob.Reob.m_strAccount, strWhere));
                         break;
                     }
 
-                    if (m_rEob.m_ReobDetail.AddCommittableRecord() == -1)
+                    if (m_rEob.ReobDetail.AddCommittableRecord() == -1)
                     {
-                        m_rEob.m_ReobDetail.propCommittableTransDetail.Rollback();
+                        m_rEob.ReobDetail.propCommittableTransDetail.Rollback();
                         break;
                     }
                 }
             }
 
-            if (m_rEob.m_Reob.GetActiveRecords(strWhere) > 0)
+            if (m_rEob.Reob.GetActiveRecords(strWhere) > 0)
             {
                 continue;
             }
             if (m_rEob.AddComittableRecord() == -1)
             {
-                m_rEob.m_ReobDetail.propCommittableTransDetail.Rollback();
-                m_rEob.propCommittableTrans.Rollback();
+                m_rEob.ReobDetail.propCommittableTransDetail.Rollback();
+                m_rEob.PropCommittableTrans.Rollback();
                 break;
             }
         }
         this.Cursor = Cursors.Default;
 
-        if (m_rEob.propCommittableTrans.TransactionInformation.Status == TransactionStatus.Active)
+        if (m_rEob.PropCommittableTrans.TransactionInformation.Status == TransactionStatus.Active)
         {
             try
             {
-                m_rEob.m_ReobDetail.propCommittableTransDetail.Commit();
-                m_rEob.propCommittableTrans.Commit();
+                m_rEob.ReobDetail.propCommittableTransDetail.Commit();
+                m_rEob.PropCommittableTrans.Commit();
             }
             catch (Exception ex)
             {
-                m_rEob.m_ReobDetail.propCommittableTransDetail.Rollback();
-                m_rEob.propCommittableTrans.Rollback();
+                m_rEob.ReobDetail.propCommittableTransDetail.Rollback();
+                m_rEob.PropCommittableTrans.Rollback();
                 MessageBox.Show(ex.Message);
             }
         }
-        if (m_rEob.m_Reob.propErrMsg.Length != 0)
+        if (m_rEob.Reob.propErrMsg.Length != 0)
         {
             MessageBox.Show("Posting EOB's completed");
         }
         else
         {
-            MessageBox.Show(m_rEob.m_Reob.propErrMsg);
+            MessageBox.Show(m_rEob.Reob.propErrMsg);
         }
     }
 
@@ -3869,10 +3869,10 @@ public partial class Posting835 : Form
             }
             if (strBal != "0")
             {
-                m_rEob.m_Reob.m_strFilter = $"Account = '{strEOBAccount}'AND claim_status = '{m_dsRecords.Tables[dgvEOB.Name].Rows[i][(int)Col835EOB.eClaimSt]}' and eft_number = '{tbFileNumber.Tag}'";
-                if (m_rEob.m_Reob.GetActiveRecords(m_rEob.m_Reob.m_strFilter) > 0)
+                m_rEob.Reob.m_strFilter = $"Account = '{strEOBAccount}'AND claim_status = '{m_dsRecords.Tables[dgvEOB.Name].Rows[i][(int)Col835EOB.eClaimSt]}' and eft_number = '{tbFileNumber.Tag}'";
+                if (m_rEob.Reob.GetActiveRecords(m_rEob.Reob.m_strFilter) > 0)
                 {
-                    m_rEob.m_Reob.LoadMemberVariablesFromDataSet();
+                    m_rEob.Reob.LoadMemberVariablesFromDataSet();
                     m_rEob.PrintEOB();
                 }
             }
