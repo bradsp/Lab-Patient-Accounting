@@ -4,76 +4,66 @@ using LabBilling.Library;
 using LabBilling.Logging;
 using MCL;
 using Microsoft.Data.SqlClient;
-using System;
 using System.Collections; // for arraylist
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.Drawing;
 using System.Drawing.Printing; // for print document
-//using ExtendedMethodsLibrary;
 using System.Globalization;
-// programmer added
 using System.IO;
-using System.Linq;
-// Move these two lines to the header space
 using System.Reflection;
 using System.Transactions;
-using System.Windows.Forms;
 using Utilities;
 
 namespace LabBilling.Legacy;
 
 public partial class Posting835 : Form
 {
-    private DateTime dtFilesImported;     // date the files were imported so we don't do it twice.
-    private DirectoryInfo diCurrent = null;         //new DirectoryInfo(string.Format(@"{0}",dr[0]["value"].ToString()));
-    private DirectoryInfo diInvalid = null;         //new DirectoryInfo(string.Format(@"{0}\invalid", dr[0]["value"].ToString()));
-    private DirectoryInfo diSaved = null;           // new DirectoryInfo(string.Format(@"{0}\saved", dr[0]["value"].ToString()));
-    private DirectoryInfo diFrom = null;            //new DirectoryInfo(string.Format(@"{0}", dr[0]["value"].ToString()));
-    private DirectoryInfo[] diDirectories = null;   //diFrom.GetDirectories(DateTime.Now.Year.ToString());
-    private FileInfo[] fiCurrent = null;
-    private FileInfo[] fiSaved = null;
-    private FileInfo[] fiInvalid = null;
-    private FileInfo[] fiFrom = null;
-    private string m_strFileType = null;
-    private readonly Dictionary<string, decimal> m_dicSTAmts = new();
-    private DataTable m_dtNotes = new();
-    private string propAppName
+    private DateTime _dtFilesImported;     // date the files were imported so we don't do it twice.
+    private DirectoryInfo _diCurrent = null;         //new DirectoryInfo(string.Format(@"{0}",dr[0]["value"].ToString()));
+    private DirectoryInfo _diInvalid = null;         //new DirectoryInfo(string.Format(@"{0}\invalid", dr[0]["value"].ToString()));
+    private DirectoryInfo _diSaved = null;           // new DirectoryInfo(string.Format(@"{0}\saved", dr[0]["value"].ToString()));
+    private DirectoryInfo _diFrom = null;            //new DirectoryInfo(string.Format(@"{0}", dr[0]["value"].ToString()));
+    private DirectoryInfo[] _diDirectories = null;   //diFrom.GetDirectories(DateTime.Now.Year.ToString());
+    private FileInfo[] _fiCurrent = null;
+    private FileInfo[] _fiSaved = null;
+    private FileInfo[] _fiInvalid = null;
+    private FileInfo[] _fiFrom = null;
+    private string _strFileType = null;
+    private readonly Dictionary<string, decimal> _dicSTAmts = new();
+    private DataTable _dtNotes = new();
+    private string PropAppName
     { get { return string.Format("{0} {1}", Application.ProductName, Application.ProductVersion); } }
 
     private readonly Dictionary<string, string> m_dicPayer = new();
     // rgc/wdk 20120425 added for sql spid reduction
-    private string m_strFinCode = null;
-    private string m_strInsCode = null;
-    private CAcc m_rAcc = null;
-    private CEob m_rEob = null;
-    //private R_chk m_rChk = null;
-    private CAcc m_cAccStatus = null;
-    //private R_number m_rNum = null;
-    private CAcc m_cAcc = null;
+    private string _strFinCode = null;
+    private string _strInsCode = null;
+    private readonly CAcc _rAcc = null;
+    private readonly CEob _rEob = null;
+    private readonly CAcc _cAccStatus = null;
+    private readonly CAcc _cAcc = null;
 
-    private readonly AccountService accountService = new(Program.AppEnvironment);
-    private readonly DictionaryService dictionaryService = new(Program.AppEnvironment);
-    private readonly BatchTransactionService batchTransactionService = new(Program.AppEnvironment);
+    private readonly AccountService _accountService = new(Program.AppEnvironment);
+    private readonly DictionaryService _dictionaryService = new(Program.AppEnvironment);
+    private readonly BatchTransactionService _batchTransactionService = new(Program.AppEnvironment);
 
     public event EventHandler<string> AccountLaunched;
 
     // end of 20120425
-    static DataGridViewCell m_celHidden;
-    static DataGridViewCell m_celMoney;
-    static Dictionary<string, DataGridViewCell> m_dicColGridsEOB;
-    static Dictionary<string, DataGridViewCell> m_dicColGrids;
+    static DataGridViewCell _celHidden;
+    static DataGridViewCell _celMoney;
+    static Dictionary<string, DataGridViewCell> _dicColGridsEOB;
+    static Dictionary<string, DataGridViewCell> _dicColGrids;
     /// <summary>
     /// The ISA's last field is the subfield designated seperator for this file. 
     /// MEDICARE uses '>' and TLC uses '^' when checking the SVC*HC? this is important
     /// </summary>
-    string m_strComponentSeperator = "";
+    string _strComponentSeperator = "";
 
     /// <summary>
     /// Path to the Account Log file used for StreamReader and StreamWriter
     /// </summary>
-    private string m_strAccountLogPath;
+    private string _strAccountLogPath;
     /// <summary>
     /// Path to the log file used for StreamReader and StreamWriter
     /// </summary>
@@ -81,11 +71,11 @@ public partial class Posting835 : Form
     /// <summary>
     /// Steam for writing Account log
     /// </summary>
-    private StreamWriter m_swAccount;
+    private StreamWriter _swAccount;
     /// <summary>
     /// Stream for reading Account log
     /// </summary>
-    private StreamReader m_srAccount;
+    private StreamReader _srAccount;
     /// <summary>
     /// Stream for writing the Error log
     /// </summary>
@@ -96,31 +86,31 @@ public partial class Posting835 : Form
     //private StreamReader m_srErrorLog;
 
     // static private List<Thread> m_ThreadList = null;// a list of thread objects (strongly typed for performance) created for the print preview dialogs.
-    private readonly string m_strServer = "";
-    private readonly string m_strDatabase = "";
-    private ERR m_ERR;
+    private readonly string _strServer = "";
+    private readonly string _strDatabase = "";
+    private ERR _eRR;
 
     /// <summary>
     /// Used for displaying the datagridview for EOBs 100 records at a time.
     /// </summary>
-    private int m_nCurrentDisplayed = 0;
-    private decimal[] m_d_dgvEOB_Totals;
-    private string m_strFileName;
+    private int _nCurrentDisplayed = 0;
+    private decimal[] _d_dgvEOB_Totals;
+    private string _strFileName;
 
     /// <summary>
     /// 06/05/2008 wdk
     /// This is used to post both the eob and checks. It is much faster than using the DataGridView
     /// which slows enormiouly after 100 records are loaded.
     /// </summary>
-    private DataSet m_dsRecords = new DataSet();
+    private DataSet _dsRecords = new DataSet();
 
     /// <summary>
     /// Dictionarys containing Grids bands
     /// </summary>
-    private Dictionary<string, DataGridViewBand> m_dicBandProcessed;
-    private Dictionary<string, DataGridViewBand> m_dicBandNotProcessed;
-    private Dictionary<string, DataGridViewBand> m_dicBandDenieds;
-    private Dictionary<string, DataGridViewBand> m_dicBandEOB;
+    private Dictionary<string, DataGridViewBand> _dicBandProcessed;
+    private Dictionary<string, DataGridViewBand> _dicBandNotProcessed;
+    private Dictionary<string, DataGridViewBand> _dicBandDenieds;
+    private Dictionary<string, DataGridViewBand> _dicBandEOB;
 
     /// <summary>
     /// CAS*PI*94 
@@ -128,53 +118,53 @@ public partial class Posting835 : Form
     /// 94 - Processed in Excess of charges.
     /// rgc/wdk 20120517 added
     /// </summary>
-    decimal m_dPayorInitiatedReductions = 0.00m;
+    decimal _dPayorInitiatedReductions = 0.00m;
 
     /// <summary>
     /// CAS CO 50 with cpt4 modifier of GZ will be added to other adj amt???
     /// </summary>
-    decimal m_dChargesWriteOffGZ = 0.00m;
+    decimal _dChargesWriteOffGZ = 0.00m;
     /// <summary>
     /// CLP 04 without the CLP* (not positive needs verification) 
     /// </summary>
-    decimal m_dEOBChargesDenied = 0.00m;
+    decimal _dEOBChargesDenied = 0.00m;
     /// <summary>
     /// CAS C0/96's totals for the EOB header grid
     /// </summary>
-    decimal m_dEOBChargesNCovd = 0.00m;
+    decimal _dEOBChargesNCovd = 0.00m;
 
     // EOB's Patient Liability
     /// <summary>
     /// CAS PR/45 totals Patient Libility Non Covered
     /// </summary>
-    decimal m_dEOBPatLibNCovdCharges = 0.00m;
+    decimal _dEOBPatLibNCovdCharges = 0.00m;
     /// <summary>
     /// CAS PR/2 Patient Libility CoInsurance Amounts check file date 02/07/2008 to verify
     /// </summary>
-    decimal m_dEOBPatLibCoInsurance = 0.00m;
+    decimal _dEOBPatLibCoInsurance = 0.00m;
 
     // EOB's Payment Data
     /// <summary>
     /// Calculated from the processed tab's paid amount field ???
     /// </summary>
-    decimal m_dEOBPayDataHCPCSAmt = 0.00m;
+    decimal _dEOBPayDataHCPCSAmt = 0.00m;
     /// <summary>
     ///  Total of the co/45 from the CAS. This amount is posted in the contractual of the check record.
     /// </summary>
-    decimal m_dEOBPayDataContAdjAmt = 0.00m;
+    decimal _dEOBPayDataContAdjAmt = 0.00m;
     /// <summary>
     /// Have not seen yet should be a PC in the CAS 04/16/2008
     /// </summary>
-    decimal m_dEOBPayDataPatRefund = 0.00m;
+    decimal _dEOBPayDataPatRefund = 0.00m;
     /// <summary>
     /// Calculated from the OA/23 s of the details
     /// </summary>
-    decimal m_dEOBPayDataMSPPrimPay = 0.00m;
+    decimal _dEOBPayDataMSPPrimPay = 0.00m;
 
     // ReportGenerator m_rgReport = null;
-    private PrintDocument MyPrintDocument = null;
-    private Dictionary<string, string> m_dicProviders;
-    private Dictionary<string, decimal> m_dicBalances;
+    private PrintDocument _myPrintDocument = null;
+    private readonly Dictionary<string, string> _dicProviders;
+    private Dictionary<string, decimal> _dicBalances;
 
     /// <summary>
     /// This string arrary is for the insertion of records into datagrids dgvProcessed, dgvDenieds, dgvNotProcessed
@@ -183,7 +173,7 @@ public partial class Posting835 : Form
     public string[] m_strarrRecordsInsert;
     //public string[] m_strarrRecordsWriteOff;
     //DataGridViewRow[] m_dgvRecordsWriteOff;
-    private DataTable m_dtRecordWriteOff;
+    private DataTable _dtRecordWriteOff;
 
     /// <summary>
     /// This string arrary is for the insertion of records into datagrids dgvProcessed, dgvDenieds, dgvNotProcessed
@@ -275,17 +265,23 @@ public partial class Posting835 : Form
     }
     private void TsmiFileOpen_Click(object sender, EventArgs e)
     {
-        if (((ToolStripMenuItem)sender).Tag == null)
+        openFileDialog.Filter = "835 Files (*.835)|*.835|XML Files (*.X12)|*.X12|ALL Files (*.*)|*.*";
+        openFileDialog.FilterIndex = 1;
+        openFileDialog.Tag = (string)"MEDICARE";
+        openFileDialog.InitialDirectory = Program.AppEnvironment.ApplicationParameters.RemitProcessingDirectory;
+        if(openFileDialog.ShowDialog() == DialogResult.OK)
         {
-            return;
+            ClearForm();
+
+            _strFileName = openFileDialog.FileName;
+            _d_dgvEOB_Totals = new decimal[Enum.GetNames(typeof(Col835EOB)).Length]; // 06/05/2008 wdk dgvEOB.Columns.Count];
+            _d_dgvEOB_Totals.Initialize();
+            _strFileType = "MEDICARE";
+            ProcessFile(_strFileName, _strFileType);
+            Application.DoEvents();
         }
-        openFileDialog.Filter = "835 Files (*.835)|*.835 " +
-                                "|XML Files (*.X12)|*.X12 " +
-                                "|ALL Files (*.*)| *.*";
-        openFileDialog.FileName = $"{Program.AppEnvironment.ApplicationParameters.RemitImportDirectory}\\*.835";
-        openFileDialog.DefaultExt = "*.835";
-        openFileDialog.InitialDirectory = Program.AppEnvironment.ApplicationParameters.RemitImportDirectory;
-        openFileDialog.ShowDialog();
+
+
     }
 
     /// <summary>
@@ -319,19 +315,19 @@ public partial class Posting835 : Form
         CreateEOBDictionaryColumnGrid();
         CreateGridControlsHeaders();
         CreatePayorDictionary();
-        MyPrintDocument = new PrintDocument(); // create the blank document to print on.
+        _myPrintDocument = new PrintDocument(); // create the blank document to print on.
         tc835.SelectedIndex = 0;
         InitializeStringArrays();
-        tbDatabase.Text = string.Format("{0} / {1}", m_strServer, m_strDatabase); // display on screen the server and database
+        tbDatabase.Text = string.Format("{0} / {1}", _strServer, _strDatabase); // display on screen the server and database
 
     }
 
     private void GetSystemParameters()
     {
         // our directories
-        diCurrent = new DirectoryInfo($"{Program.AppEnvironment.ApplicationParameters.RemitImportDirectory}");
-        diInvalid = new DirectoryInfo($"{Program.AppEnvironment.ApplicationParameters.RemitImportDirectory}\\invalid");
-        diSaved = new DirectoryInfo($"{Program.AppEnvironment.ApplicationParameters.RemitImportDirectory}\\saved");
+        _diCurrent = new DirectoryInfo($"{Program.AppEnvironment.ApplicationParameters.RemitImportDirectory}");
+        _diInvalid = new DirectoryInfo($"{Program.AppEnvironment.ApplicationParameters.RemitImportDirectory}\\invalid");
+        _diSaved = new DirectoryInfo($"{Program.AppEnvironment.ApplicationParameters.RemitImportDirectory}\\saved");
     }
 
     private void CreatePayorDictionary()
@@ -401,21 +397,21 @@ public partial class Posting835 : Form
 
         if (args[0].StartsWith("/"))
         {
-            m_strServer = args[0].Remove(0, 1); // 08/08/2008 wdk changed to accomidate the ERR class
+            _strServer = args[0].Remove(0, 1); // 08/08/2008 wdk changed to accomidate the ERR class
                                                 // m_strServer = args[0].Remove(0, 1);
         }
         else
         {
-            m_strServer = args[0];
+            _strServer = args[0];
         }
 
         if (args[1].StartsWith("/"))
         {
-            m_strDatabase = args[1].Remove(0, 1); // 08/08/2008 wdk changed to accomidate the ERR class
+            _strDatabase = args[1].Remove(0, 1); // 08/08/2008 wdk changed to accomidate the ERR class
         }
         else
         {
-            m_strDatabase = args[1];
+            _strDatabase = args[1];
         }
 
 
@@ -424,14 +420,12 @@ public partial class Posting835 : Form
         dgvNotProcessed.RowHeaderMouseDoubleClick += DGV_RowHeaderClicked;
         dgvDenieds.RowHeaderMouseDoubleClick += DGV_RowHeaderClicked;
 
-        m_ERR = new ERR(new string[] { Program.AppEnvironment.ApplicationParameters.DatabaseEnvironment != "Production" ? "/TEST" : "/LIVE", m_strServer, m_strDatabase }); // ERR class needs /LIVE or /TEST to be the first argument in the command line.
+        _eRR = new ERR(new string[] { Program.AppEnvironment.ApplicationParameters.DatabaseEnvironment != "Production" ? "/TEST" : "/LIVE", _strServer, _strDatabase }); // ERR class needs /LIVE or /TEST to be the first argument in the command line.
         // rgc/wdk 20120425 moved to remove the spid overload in sql.
-        //m_rNum = new R_number(m_strServer, m_strDatabase, ref m_ERR);
-        m_cAcc = new CAcc(m_strServer, m_strDatabase, ref m_ERR);
-        m_cAccStatus = new CAcc(m_strServer, m_strDatabase, ref m_ERR);
-        //m_rChk = new R_chk(m_strServer, m_strDatabase, ref m_ERR);
-        m_rAcc = new CAcc(m_strServer, m_strDatabase, ref m_ERR);
-        m_rEob = new CEob(m_strServer, m_strDatabase, ref m_ERR);
+        _cAcc = new CAcc(_strServer, _strDatabase, ref _eRR);
+        _cAccStatus = new CAcc(_strServer, _strDatabase, ref _eRR);
+        _rAcc = new CAcc(_strServer, _strDatabase, ref _eRR);
+        _rEob = new CEob(_strServer, _strDatabase, ref _eRR);
 
     }
 
@@ -443,25 +437,12 @@ public partial class Posting835 : Form
     private void tsmi835_Click(object sender, EventArgs e)
     {
         openFileDialog.Filter = "All Files (*.*)|*.*";
-        openFileDialog.InitialDirectory = string.Format(@"{0}", diCurrent);
+        openFileDialog.InitialDirectory = string.Format(@"{0}", _diCurrent);
 
         openFileDialog.Tag = (string)"MEDICARE";
         openFileDialog.ShowDialog();
-        m_strFileType = "MEDICARE";
+        _strFileType = "MEDICARE";
 
-    }
-    /// <summary>
-    /// started 07/12/2012
-    /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
-    private void tsmiBCBSTEdi_Click(object sender, EventArgs e)
-    {
-        return; // must update the directory
-    }
-    private void tsmiUHC_Click(object sender, EventArgs e)
-    {
-        return; // must update the directory
     }
 
     /// <summary>
@@ -479,43 +460,43 @@ public partial class Posting835 : Form
 
     private void CreateDataTableNotes()
     {
-        m_dtNotes = new DataTable();
-        m_dtNotes.Columns.Add("Account");
-        m_dtNotes.Columns.Add("cpt4");
-        m_dtNotes.Columns.Add("status");
-        m_dtNotes.Columns.Add("reason");
+        _dtNotes = new DataTable();
+        _dtNotes.Columns.Add("Account");
+        _dtNotes.Columns.Add("cpt4");
+        _dtNotes.Columns.Add("status");
+        _dtNotes.Columns.Add("reason");
     }
 
     private void CreateDataGridViewDenieds()
     {
-        m_dsRecords.Tables.Add("dgvDenieds");
-        m_dicBandDenieds = new Dictionary<string, DataGridViewBand>();
+        _dsRecords.Tables.Add("dgvDenieds");
+        _dicBandDenieds = new Dictionary<string, DataGridViewBand>();
         foreach (string strCol in Enum.GetNames(typeof(Col835Grids)))
         {
             Application.DoEvents();
             try
             {
-                m_dsRecords.Tables["dgvDenieds"].Columns.Add(strCol);
-                m_dsRecords.Tables["dgvDenieds"].Columns[strCol].ExtendedProperties.Add("VISIBLE", true);
-                m_dsRecords.Tables["dgvDenieds"].Columns[strCol].ExtendedProperties.Add("ALIGNMENT", "Left");
-                m_dsRecords.Tables["dgvDenieds"].Columns[strCol].ExtendedProperties.Add("CURRENCY", false);
+                _dsRecords.Tables["dgvDenieds"].Columns.Add(strCol);
+                _dsRecords.Tables["dgvDenieds"].Columns[strCol].ExtendedProperties.Add("VISIBLE", true);
+                _dsRecords.Tables["dgvDenieds"].Columns[strCol].ExtendedProperties.Add("ALIGNMENT", "Left");
+                _dsRecords.Tables["dgvDenieds"].Columns[strCol].ExtendedProperties.Add("CURRENCY", false);
 
                 dgvDenieds.Columns.Add(strCol, strCol);
                 DataGridViewCell cellType;
-                m_dicColGrids.TryGetValue(strCol, out cellType);
+                _dicColGrids.TryGetValue(strCol, out cellType);
                 if (cellType != null)
                 {
                     dgvDenieds.Columns[strCol].CellTemplate = cellType;
-                    if (cellType == m_celHidden)
+                    if (cellType == _celHidden)
                     {
-                        m_dicBandDenieds.Add(strCol, dgvDenieds.Columns[strCol]);
+                        _dicBandDenieds.Add(strCol, dgvDenieds.Columns[strCol]);
                         dgvDenieds.Columns[strCol].Visible = false;
-                        m_dsRecords.Tables["dgvDenieds"].Columns[strCol].ExtendedProperties["VISIBLE"] = false;
+                        _dsRecords.Tables["dgvDenieds"].Columns[strCol].ExtendedProperties["VISIBLE"] = false;
                     }
-                    if (cellType == m_celMoney)
+                    if (cellType == _celMoney)
                     {
-                        m_dsRecords.Tables["dgvDenieds"].Columns[strCol].ExtendedProperties["ALIGNMENT"] = "Right";
-                        m_dsRecords.Tables["dgvDenieds"].Columns[strCol].ExtendedProperties["CURRENCY"] = true;
+                        _dsRecords.Tables["dgvDenieds"].Columns[strCol].ExtendedProperties["ALIGNMENT"] = "Right";
+                        _dsRecords.Tables["dgvDenieds"].Columns[strCol].ExtendedProperties["CURRENCY"] = true;
                     }
                 }
             }
@@ -539,23 +520,23 @@ public partial class Posting835 : Form
     /// </summary>
     private static void CreateDictionaryColGrids()
     {
-        m_dicColGrids = new Dictionary<string, DataGridViewCell>
+        _dicColGrids = new Dictionary<string, DataGridViewCell>
         {
             // MONEY FIELDS
-            { Col835Grids.ePaid.ToString(), m_celMoney },
-            { Col835Grids.eContractualAdjAmt.ToString(), m_celMoney },
-            { Col835Grids.eCharges.ToString(), m_celMoney },
-            { Col835Grids.eAllowed.ToString(), m_celMoney },
-            { Col835Grids.eOtherAdjAmt.ToString(), m_celMoney },
-            { Col835Grids.eWriteOffAmt.ToString(), m_celMoney }, // wdk 20130731 added
+            { Col835Grids.ePaid.ToString(), _celMoney },
+            { Col835Grids.eContractualAdjAmt.ToString(), _celMoney },
+            { Col835Grids.eCharges.ToString(), _celMoney },
+            { Col835Grids.eAllowed.ToString(), _celMoney },
+            { Col835Grids.eOtherAdjAmt.ToString(), _celMoney },
+            { Col835Grids.eWriteOffAmt.ToString(), _celMoney }, // wdk 20130731 added
 
             // HIDDEN FIELDS (initially not visible) can toggle them to be visible with F12 
-            { Col835Grids.eCPT4Code.ToString(), m_celHidden },
-            { Col835Grids.eRevCode.ToString(), m_celHidden },
-            { Col835Grids.eUnits.ToString(), m_celHidden },
-            { Col835Grids.eStat.ToString(), m_celHidden },
-            { Col835Grids.eWeight.ToString(), m_celHidden },
-            { Col835Grids.eAPC.ToString(), m_celHidden }
+            { Col835Grids.eCPT4Code.ToString(), _celHidden },
+            { Col835Grids.eRevCode.ToString(), _celHidden },
+            { Col835Grids.eUnits.ToString(), _celHidden },
+            { Col835Grids.eStat.ToString(), _celHidden },
+            { Col835Grids.eWeight.ToString(), _celHidden },
+            { Col835Grids.eAPC.ToString(), _celHidden }
         };
 
     }
@@ -570,44 +551,44 @@ public partial class Posting835 : Form
     /// </summary>
     private static void CreateSpecialDataGridViewCells()
     {
-        m_celHidden = new DataGridViewTextBoxCell();
-        m_celHidden.Style.BackColor = Color.LightCoral;
+        _celHidden = new DataGridViewTextBoxCell();
+        _celHidden.Style.BackColor = Color.LightCoral;
 
-        m_celMoney = new DataGridViewTextBoxCell();
-        m_celMoney.Style.Format = "C";
-        m_celMoney.Style.BackColor = Color.Gold;
-        m_celMoney.Style.Alignment = DataGridViewContentAlignment.MiddleRight;
+        _celMoney = new DataGridViewTextBoxCell();
+        _celMoney.Style.Format = "C";
+        _celMoney.Style.BackColor = Color.Gold;
+        _celMoney.Style.Alignment = DataGridViewContentAlignment.MiddleRight;
     }
 
     private void CreateDataGridViewNotProcessed()
     {
-        m_dsRecords.Tables.Add("dgvNotProcessed");
-        m_dicBandNotProcessed = new Dictionary<string, DataGridViewBand>();
+        _dsRecords.Tables.Add("dgvNotProcessed");
+        _dicBandNotProcessed = new Dictionary<string, DataGridViewBand>();
         foreach (string strCol in Enum.GetNames(typeof(Col835Grids)))
         {
             Application.DoEvents();
             try
             {
-                m_dsRecords.Tables["dgvNotProcessed"].Columns.Add(strCol);
-                m_dsRecords.Tables["dgvNotProcessed"].Columns[strCol].ExtendedProperties.Add("VISIBLE", true);
-                m_dsRecords.Tables["dgvNotProcessed"].Columns[strCol].ExtendedProperties.Add("ALIGNMENT", "Left");
-                m_dsRecords.Tables["dgvNotProcessed"].Columns[strCol].ExtendedProperties.Add("CURRENCY", false);
+                _dsRecords.Tables["dgvNotProcessed"].Columns.Add(strCol);
+                _dsRecords.Tables["dgvNotProcessed"].Columns[strCol].ExtendedProperties.Add("VISIBLE", true);
+                _dsRecords.Tables["dgvNotProcessed"].Columns[strCol].ExtendedProperties.Add("ALIGNMENT", "Left");
+                _dsRecords.Tables["dgvNotProcessed"].Columns[strCol].ExtendedProperties.Add("CURRENCY", false);
 
                 dgvNotProcessed.Columns.Add(strCol, strCol);
-                m_dicColGrids.TryGetValue(strCol, out DataGridViewCell cellType);
+                _dicColGrids.TryGetValue(strCol, out DataGridViewCell cellType);
                 if (cellType != null)
                 {
                     dgvNotProcessed.Columns[strCol].CellTemplate = cellType;
-                    if (cellType == m_celHidden)
+                    if (cellType == _celHidden)
                     {
-                        m_dicBandNotProcessed.Add(strCol, dgvNotProcessed.Columns[strCol]);
+                        _dicBandNotProcessed.Add(strCol, dgvNotProcessed.Columns[strCol]);
                         dgvNotProcessed.Columns[strCol].Visible = false;
-                        m_dsRecords.Tables["dgvNotProcessed"].Columns[strCol].ExtendedProperties["VISIBLE"] = false;
+                        _dsRecords.Tables["dgvNotProcessed"].Columns[strCol].ExtendedProperties["VISIBLE"] = false;
                     }
-                    if (cellType == m_celMoney)
+                    if (cellType == _celMoney)
                     {
-                        m_dsRecords.Tables["dgvNotProcessed"].Columns[strCol].ExtendedProperties["ALIGNMENT"] = "Right";
-                        m_dsRecords.Tables["dgvNotProcessed"].Columns[strCol].ExtendedProperties["CURRENCY"] = true;
+                        _dsRecords.Tables["dgvNotProcessed"].Columns[strCol].ExtendedProperties["ALIGNMENT"] = "Right";
+                        _dsRecords.Tables["dgvNotProcessed"].Columns[strCol].ExtendedProperties["CURRENCY"] = true;
                     }
                 }
             }
@@ -627,34 +608,34 @@ public partial class Posting835 : Form
 
     private void CreateDataGridViewEOB()
     {
-        m_dsRecords.Tables.Add("dgvEOB");
-        m_dicBandEOB = new Dictionary<string, DataGridViewBand>();
+        _dsRecords.Tables.Add("dgvEOB");
+        _dicBandEOB = new Dictionary<string, DataGridViewBand>();
 
         foreach (string strCol in Enum.GetNames(typeof(Col835EOB)))
         {
             Application.DoEvents();
             try
             {
-                m_dsRecords.Tables["dgvEOB"].Columns.Add(strCol);
-                m_dsRecords.Tables["dgvEOB"].Columns[strCol].ExtendedProperties.Add("VISIBLE", true);
-                m_dsRecords.Tables["dgvEOB"].Columns[strCol].ExtendedProperties.Add("ALIGNMENT", "Left");
-                m_dsRecords.Tables["dgvEOB"].Columns[strCol].ExtendedProperties.Add("CURRENCY", false);
+                _dsRecords.Tables["dgvEOB"].Columns.Add(strCol);
+                _dsRecords.Tables["dgvEOB"].Columns[strCol].ExtendedProperties.Add("VISIBLE", true);
+                _dsRecords.Tables["dgvEOB"].Columns[strCol].ExtendedProperties.Add("ALIGNMENT", "Left");
+                _dsRecords.Tables["dgvEOB"].Columns[strCol].ExtendedProperties.Add("CURRENCY", false);
 
                 dgvEOB.Columns.Add(strCol, strCol);
-                m_dicColGridsEOB.TryGetValue(strCol, out DataGridViewCell cellType);
+                _dicColGridsEOB.TryGetValue(strCol, out DataGridViewCell cellType);
                 if (cellType != null)
                 {
                     dgvEOB.Columns[strCol].CellTemplate = cellType;
-                    if (cellType == m_celHidden)
+                    if (cellType == _celHidden)
                     {
-                        m_dicBandEOB.Add(strCol, dgvEOB.Columns[strCol]);
+                        _dicBandEOB.Add(strCol, dgvEOB.Columns[strCol]);
                         dgvEOB.Columns[strCol].Visible = false;
-                        m_dsRecords.Tables["dgvEOB"].Columns[strCol].ExtendedProperties["VISIBLE"] = false;
+                        _dsRecords.Tables["dgvEOB"].Columns[strCol].ExtendedProperties["VISIBLE"] = false;
                     }
-                    if (cellType == m_celMoney)
+                    if (cellType == _celMoney)
                     {
-                        m_dsRecords.Tables["dgvEOB"].Columns[strCol].ExtendedProperties["ALIGNMENT"] = "Right";
-                        m_dsRecords.Tables["dgvEOB"].Columns[strCol].ExtendedProperties["CURRENCY"] = true;
+                        _dsRecords.Tables["dgvEOB"].Columns[strCol].ExtendedProperties["ALIGNMENT"] = "Right";
+                        _dsRecords.Tables["dgvEOB"].Columns[strCol].ExtendedProperties["CURRENCY"] = true;
                     }
 
                 }
@@ -679,30 +660,30 @@ public partial class Posting835 : Form
     /// </summary>
     private static void CreateEOBDictionaryColumnGrid()
     {
-        m_dicColGridsEOB = new Dictionary<string, DataGridViewCell>
+        _dicColGridsEOB = new Dictionary<string, DataGridViewCell>
         {
             // money fields
-            { Col835EOB.ePaymentDataMSPPrimPay.ToString(), m_celMoney },
-            { Col835EOB.ePaymentDataHCPCSAmt.ToString(), m_celMoney },
-            { Col835EOB.ePaymentDataContAdjAmt.ToString(), m_celMoney },
-            { Col835EOB.ePaymentDataPatRefund.ToString(), m_celMoney },
-            { Col835EOB.eChargesReported.ToString(), m_celMoney },
-            { Col835EOB.eChargesNCovd.ToString(), m_celMoney },
-            { Col835EOB.eChargesDenied.ToString(), m_celMoney },
-            { Col835EOB.ePatientLibCoinsurance.ToString(), m_celMoney },
-            { Col835EOB.ePatientLibNCovdCharges.ToString(), m_celMoney },
-            { Col835EOB.ePaymentDataNetReimbAmt.ToString(), m_celMoney },
-            { Col835EOB.eOtherAdjAmt.ToString(), m_celMoney },
+            { Col835EOB.ePaymentDataMSPPrimPay.ToString(), _celMoney },
+            { Col835EOB.ePaymentDataHCPCSAmt.ToString(), _celMoney },
+            { Col835EOB.ePaymentDataContAdjAmt.ToString(), _celMoney },
+            { Col835EOB.ePaymentDataPatRefund.ToString(), _celMoney },
+            { Col835EOB.eChargesReported.ToString(), _celMoney },
+            { Col835EOB.eChargesNCovd.ToString(), _celMoney },
+            { Col835EOB.eChargesDenied.ToString(), _celMoney },
+            { Col835EOB.ePatientLibCoinsurance.ToString(), _celMoney },
+            { Col835EOB.ePatientLibNCovdCharges.ToString(), _celMoney },
+            { Col835EOB.ePaymentDataNetReimbAmt.ToString(), _celMoney },
+            { Col835EOB.eOtherAdjAmt.ToString(), _celMoney },
 
             // initially hidden fields can toggle them to be visible with f12 
-            { Col835EOB.ePaymentDataPerDiemRate.ToString(), m_celHidden },
-            { Col835EOB.ePaymentDataReimbRate.ToString(), m_celHidden },
-            { Col835EOB.eICN.ToString(), m_celHidden },
-            { Col835EOB.ePatStat.ToString(), m_celHidden },
-            { Col835EOB.eClaimSt.ToString(), m_celHidden },
-            { Col835EOB.eType.ToString(), m_celHidden },
-            { Col835EOB.eClaimForwarded.ToString(), m_celHidden },
-            { Col835EOB.eClaimForwardedID.ToString(), m_celHidden }
+            { Col835EOB.ePaymentDataPerDiemRate.ToString(), _celHidden },
+            { Col835EOB.ePaymentDataReimbRate.ToString(), _celHidden },
+            { Col835EOB.eICN.ToString(), _celHidden },
+            { Col835EOB.ePatStat.ToString(), _celHidden },
+            { Col835EOB.eClaimSt.ToString(), _celHidden },
+            { Col835EOB.eType.ToString(), _celHidden },
+            { Col835EOB.eClaimForwarded.ToString(), _celHidden },
+            { Col835EOB.eClaimForwardedID.ToString(), _celHidden }
         };
     }
 
@@ -711,37 +692,37 @@ public partial class Posting835 : Form
     /// </summary>
     private void CreateDataGridViewProcessed()
     {
-        m_dsRecords.Tables.Add("dgvProcessed");
+        _dsRecords.Tables.Add("dgvProcessed");
 
         // Set the band for the columns to the type in the cell
-        m_dicBandProcessed = new Dictionary<string, DataGridViewBand>();
+        _dicBandProcessed = new Dictionary<string, DataGridViewBand>();
         foreach (string strCol in Enum.GetNames(typeof(Col835Grids)))
         {
             Application.DoEvents();
-            m_dsRecords.Tables["dgvProcessed"].Columns.Add(strCol);
-            m_dsRecords.Tables["dgvProcessed"].Columns[strCol].ExtendedProperties.Add("VISIBLE", true);
-            m_dsRecords.Tables["dgvProcessed"].Columns[strCol].ExtendedProperties.Add("ALIGNMENT", "Left");
-            m_dsRecords.Tables["dgvProcessed"].Columns[strCol].ExtendedProperties.Add("CURRENCY", false);
+            _dsRecords.Tables["dgvProcessed"].Columns.Add(strCol);
+            _dsRecords.Tables["dgvProcessed"].Columns[strCol].ExtendedProperties.Add("VISIBLE", true);
+            _dsRecords.Tables["dgvProcessed"].Columns[strCol].ExtendedProperties.Add("ALIGNMENT", "Left");
+            _dsRecords.Tables["dgvProcessed"].Columns[strCol].ExtendedProperties.Add("CURRENCY", false);
 
 
             dgvProcessed.Columns.Add(strCol, strCol);
             DataGridViewCell cellType;
-            m_dicColGrids.TryGetValue(strCol, out cellType);
+            _dicColGrids.TryGetValue(strCol, out cellType);
             try
             {
                 if (cellType != null)
                 {
                     dgvProcessed.Columns[strCol].CellTemplate = cellType;
-                    if (cellType == m_celHidden)
+                    if (cellType == _celHidden)
                     {
-                        m_dicBandProcessed.Add(strCol, dgvProcessed.Columns[strCol]);
+                        _dicBandProcessed.Add(strCol, dgvProcessed.Columns[strCol]);
                         dgvProcessed.Columns[strCol].Visible = false;
-                        m_dsRecords.Tables["dgvProcessed"].Columns[strCol].ExtendedProperties["VISIBLE"] = false;
+                        _dsRecords.Tables["dgvProcessed"].Columns[strCol].ExtendedProperties["VISIBLE"] = false;
                     }
-                    if (cellType == m_celMoney)
+                    if (cellType == _celMoney)
                     {
-                        m_dsRecords.Tables["dgvProcessed"].Columns[strCol].ExtendedProperties["ALIGNMENT"] = "Right";
-                        m_dsRecords.Tables["dgvProcessed"].Columns[strCol].ExtendedProperties["CURRENCY"] = true;
+                        _dsRecords.Tables["dgvProcessed"].Columns[strCol].ExtendedProperties["ALIGNMENT"] = "Right";
+                        _dsRecords.Tables["dgvProcessed"].Columns[strCol].ExtendedProperties["CURRENCY"] = true;
                     }
                 }
             }
@@ -772,12 +753,12 @@ public partial class Posting835 : Form
         // wdk 20130816 added
         //m_strarrRecordsWriteOff = new string[Enum.GetNames(typeof(col835Grids)).Length];// wdk 20130725         
         //m_dgvRecordsWriteOff = new DataGridViewRow[99];
-        m_dtRecordWriteOff = new DataTable("WRITE OFF");
+        _dtRecordWriteOff = new DataTable("WRITE OFF");
 
         foreach (string str in Enum.GetNames(typeof(Col835Grids)))
         {
             Application.DoEvents();
-            m_dtRecordWriteOff.Columns.Add(str, System.Type.GetType("System.String"));
+            _dtRecordWriteOff.Columns.Add(str, System.Type.GetType("System.String"));
         }
     }
 
@@ -817,27 +798,27 @@ public partial class Posting835 : Form
 
     }
 
-    private void openFileDialog_FileOk(object sender, CancelEventArgs e)
-    {
-        if (e.Cancel)
-        {
-            return;
-        }
+    //private void openFileDialog_FileOk(object sender, CancelEventArgs e)
+    //{
+    //    if (e.Cancel)
+    //    {
+    //        return;
+    //    }
 
-        ClearForm();
-        if (!m_ERR.m_Logfile.WriteLogFile(openFileDialog.FileName))
-        {
-            //  MessageBox.Show("DIDN'T WRITE");
-        }
+    //    ClearForm();
+    //    if (!_eRR.m_Logfile.WriteLogFile(openFileDialog.FileName))
+    //    {
+    //        //  MessageBox.Show("DIDN'T WRITE");
+    //    }
 
-        m_strFileName = openFileDialog.FileName;
-        m_d_dgvEOB_Totals = new decimal[Enum.GetNames(typeof(Col835EOB)).Length]; // 06/05/2008 wdk dgvEOB.Columns.Count];
-        m_d_dgvEOB_Totals.Initialize();
-        m_strFileType = openFileDialog.Tag.ToString();
-        ProcessFile(m_strFileName, m_strFileType);
-        Application.DoEvents();
+    //    _strFileName = openFileDialog.FileName;
+    //    _d_dgvEOB_Totals = new decimal[Enum.GetNames(typeof(Col835EOB)).Length]; // 06/05/2008 wdk dgvEOB.Columns.Count];
+    //    _d_dgvEOB_Totals.Initialize();
+    //    _strFileType = openFileDialog.Tag.ToString();
+    //    ProcessFile(_strFileName, _strFileType);
+    //    Application.DoEvents();
 
-    }
+    //}
 
     /// <summary>
     /// This begins the process of reading the file selected in the open file dialog.
@@ -845,8 +826,8 @@ public partial class Posting835 : Form
     /// <param name="strFileName"></param>
     private void ProcessFile(string strFileName, string strType)
     {
-        m_strFinCode = "";
-        m_strInsCode = "";
+        _strFinCode = "";
+        _strInsCode = "";
         #region MEDICARE
         if (strType == "MEDICARE")
         {
@@ -859,23 +840,23 @@ public partial class Posting835 : Form
                 // wdk 20160526 we are now purging the files before we get here for invalid files so don't ask again
                 try
                 {
-                    File.Move(strFileName, $"{diInvalid}\\{strFileName.Substring(strFileName.LastIndexOf('\\'))}");
+                    File.Move(strFileName, $"{_diInvalid}\\{strFileName.Substring(strFileName.LastIndexOf('\\'))}");
                 }
                 catch (IOException)
                 {
                     string strMoveFileName = strFileName.Replace(".835", string.Format(@"{0}.835", DateTime.Now.ToFileTimeUtc().ToString()));
-                    File.Move(strFileName, string.Format(@"{0}\{1}", diInvalid, strMoveFileName));
+                    File.Move(strFileName, string.Format(@"{0}\{1}", _diInvalid, strMoveFileName));
                 }
-                m_ERR.m_Logfile.WriteLogFile("Returned from parsing with a false value after parsing completed.");
+                _eRR.m_Logfile.WriteLogFile("Returned from parsing with a false value after parsing completed.");
             }
             else
             {
                 // Fills out the totals in the header of the form.
                 SetTableLayOutTotals();
-                tsslDenieds.Text = string.Format("Denieds: {0}", m_dsRecords.Tables[dgvDenieds.Name].Rows.Count);
-                tsslNotProcessed.Text = string.Format("Not Processed: {0}", m_dsRecords.Tables[dgvNotProcessed.Name].Rows.Count);
-                tsslProcessed.Text = string.Format("Processed: {0}", m_dsRecords.Tables[dgvProcessed.Name].Rows.Count);
-                tsslEOB.Text = string.Format("EOBs: {0}", m_dsRecords.Tables[dgvEOB.Name].Rows.Count);
+                tsslDenieds.Text = string.Format("Denieds: {0}", _dsRecords.Tables[dgvDenieds.Name].Rows.Count);
+                tsslNotProcessed.Text = string.Format("Not Processed: {0}", _dsRecords.Tables[dgvNotProcessed.Name].Rows.Count);
+                tsslProcessed.Text = string.Format("Processed: {0}", _dsRecords.Tables[dgvProcessed.Name].Rows.Count);
+                tsslEOB.Text = string.Format("EOBs: {0}", _dsRecords.Tables[dgvEOB.Name].Rows.Count);
                 tsmiFirst20_Click(dgvProcessed, null);
                 tsmiFirst20_Click(dgvDenieds, null);
                 tsmiFirst20_Click(dgvNotProcessed, null);
@@ -899,12 +880,12 @@ public partial class Posting835 : Form
                 {
                     try
                     {
-                        File.Move(strFileName, $"{diInvalid}\\{strFileName.Substring(strFileName.LastIndexOf('\\'))}");
+                        File.Move(strFileName, $"{_diInvalid}\\{strFileName.Substring(strFileName.LastIndexOf('\\'))}");
                     }
                     catch (IOException)
                     {
                         string strMoveFileName = strFileName.Replace(".835", "_dk.835");
-                        File.Move(strFileName, $"{diInvalid}\\{strMoveFileName.Substring(strMoveFileName.LastIndexOf('\\'))}");
+                        File.Move(strFileName, $"{_diInvalid}\\{strMoveFileName.Substring(strMoveFileName.LastIndexOf('\\'))}");
                     }
                 }
             }
@@ -912,10 +893,10 @@ public partial class Posting835 : Form
             {
                 // Fills out the totals in the header of the form.
                 SetTableLayOutTotals();
-                tsslDenieds.Text = string.Format("Denieds: {0}", m_dsRecords.Tables[dgvDenieds.Name].Rows.Count);
-                tsslNotProcessed.Text = string.Format("Not Processed: {0}", m_dsRecords.Tables[dgvNotProcessed.Name].Rows.Count);
-                tsslProcessed.Text = string.Format("Processed: {0}", m_dsRecords.Tables[dgvProcessed.Name].Rows.Count);
-                tsslEOB.Text = string.Format("EOBs: {0}", m_dsRecords.Tables[dgvEOB.Name].Rows.Count);
+                tsslDenieds.Text = string.Format("Denieds: {0}", _dsRecords.Tables[dgvDenieds.Name].Rows.Count);
+                tsslNotProcessed.Text = string.Format("Not Processed: {0}", _dsRecords.Tables[dgvNotProcessed.Name].Rows.Count);
+                tsslProcessed.Text = string.Format("Processed: {0}", _dsRecords.Tables[dgvProcessed.Name].Rows.Count);
+                tsslEOB.Text = string.Format("EOBs: {0}", _dsRecords.Tables[dgvEOB.Name].Rows.Count);
                 tsmiFirst20_Click(dgvProcessed, null);
                 tsmiFirst20_Click(dgvDenieds, null);
                 tsmiFirst20_Click(dgvNotProcessed, null);
@@ -936,12 +917,12 @@ public partial class Posting835 : Form
                 {
                     try
                     {
-                        File.Move(strFileName, $"{diInvalid}\\{strFileName.Substring(strFileName.LastIndexOf('\\'))}");
+                        File.Move(strFileName, $"{_diInvalid}\\{strFileName.Substring(strFileName.LastIndexOf('\\'))}");
                     }
                     catch (IOException)
                     {
                         string strMoveFileName = strFileName.Replace(".835", "_dk.835");
-                        File.Move(strFileName, $"{diInvalid}\\{strMoveFileName.Substring(strMoveFileName.LastIndexOf('\\'))}");
+                        File.Move(strFileName, $"{_diInvalid}\\{strMoveFileName.Substring(strMoveFileName.LastIndexOf('\\'))}");
 
                     }
                 }
@@ -950,10 +931,10 @@ public partial class Posting835 : Form
             {
                 // Fills out the totals in the header of the form.
                 SetTableLayOutTotals();
-                tsslDenieds.Text = string.Format("Denieds: {0}", m_dsRecords.Tables[dgvDenieds.Name].Rows.Count);
-                tsslNotProcessed.Text = string.Format("Not Processed: {0}", m_dsRecords.Tables[dgvNotProcessed.Name].Rows.Count);
-                tsslProcessed.Text = string.Format("Processed: {0}", m_dsRecords.Tables[dgvProcessed.Name].Rows.Count);
-                tsslEOB.Text = string.Format("EOBs: {0}", m_dsRecords.Tables[dgvEOB.Name].Rows.Count);
+                tsslDenieds.Text = string.Format("Denieds: {0}", _dsRecords.Tables[dgvDenieds.Name].Rows.Count);
+                tsslNotProcessed.Text = string.Format("Not Processed: {0}", _dsRecords.Tables[dgvNotProcessed.Name].Rows.Count);
+                tsslProcessed.Text = string.Format("Processed: {0}", _dsRecords.Tables[dgvProcessed.Name].Rows.Count);
+                tsslEOB.Text = string.Format("EOBs: {0}", _dsRecords.Tables[dgvEOB.Name].Rows.Count);
                 tsmiFirst20_Click(dgvProcessed, null);
                 tsmiFirst20_Click(dgvDenieds, null);
                 tsmiFirst20_Click(dgvNotProcessed, null);
@@ -1006,7 +987,7 @@ public partial class Posting835 : Form
 
         tbBillCycle.Text = string.Format("Bill Cycle: {0}", strISAElements[9]);
         tbBillCycle.Tag = strISAElements[9];
-        m_strComponentSeperator = strISAElements[16];
+        _strComponentSeperator = strISAElements[16];
 
         // our GS[1] and above should be real GS segments without the GS*
         for (int i = 1; i <= strGS.GetUpperBound(0); i++)
@@ -1058,7 +1039,7 @@ public partial class Posting835 : Form
                 string[] strISAElements = strHeaderSegment.Split(new char[] { '*' });
                 tbBillCycle.Text = string.Format("Bill Cycle: {0}", strISAElements[9]);
                 tbBillCycle.Tag = strISAElements[9];
-                m_strComponentSeperator = strISAElements[16];
+                _strComponentSeperator = strISAElements[16];
                 continue;
             }
             if (strHeaderSegment.StartsWith("GS*"))
@@ -1121,8 +1102,8 @@ public partial class Posting835 : Form
                     strPayer == "UNITEDHEALTHCARE INSURANCE COMPANY AND ITS AFFILIATES" ||
                     strPayer.StartsWith("UNITEDHEALTHCARE SERVICES COMPANY O"))
                 {
-                    m_strFinCode = "L";
-                    m_strInsCode = "UHC";
+                    _strFinCode = "L";
+                    _strInsCode = "UHC";
                     rtbCheckSource.Tag = (string)"UHC REMITTANCE";
                 }
                 else
@@ -1320,7 +1301,7 @@ public partial class Posting835 : Form
 
         tbBillCycle.Text = $"Bill Cycle: {strISAElements[9]}";
         tbBillCycle.Tag = strISAElements[9];
-        m_strComponentSeperator = strISAElements[16];
+        _strComponentSeperator = strISAElements[16];
 
         // our GS[1] and above should be real GS segments without the GS*
         for (int i = 1; i <= strGS.GetUpperBound(0); i++)
@@ -1529,8 +1510,8 @@ public partial class Posting835 : Form
                     if (strPayer == "VSHP TENNCARE SELECT" ||
                         strPayer == "VSHP BLUECARE RISK EAST/WEST")
                     {
-                        m_strFinCode = "D";
-                        m_strInsCode = "TNBC";
+                        _strFinCode = "D";
+                        _strInsCode = "TNBC";
                         rtbCheckSource.Tag = (string)"TNBC REMITTANCE";
                         continue;
 
@@ -1541,8 +1522,8 @@ public partial class Posting835 : Form
                         strPayer == "BCBST BLUEADVANTAGE" ||
                         strPayer == "BLUE CROSS AND BLUE SHIELD OF TENNESSEE")
                     {
-                        m_strFinCode = "B";
-                        m_strInsCode = "BC";
+                        _strFinCode = "B";
+                        _strInsCode = "BC";
                         rtbCheckSource.Tag = (string)"BC REMITTANCE";
                         continue;
 
@@ -1551,21 +1532,21 @@ public partial class Posting835 : Form
                         strPayer == "CAHABA GBA, LLC (TN)" ||
                         strPayer == "JJ MAC TN - PALMETTO GBA #10311")
                     {
-                        m_strFinCode = "A";
-                        m_strInsCode = "MC";
+                        _strFinCode = "A";
+                        _strInsCode = "MC";
                         rtbCheckSource.Tag = (string)"SSI REMITTANCE";
                         continue;
                     }
                     if (strPayer == "UNITEDHEALTHCARE SERVICES INC AND ITS AFFILIATES")
                     {
-                        m_strFinCode = "L";
-                        m_strInsCode = "UHC";
+                        _strFinCode = "L";
+                        _strInsCode = "UHC";
                         rtbCheckSource.Tag = (string)"UHC REMITTANCE";
                     }
                     if (strPayer == "AETNA")
                     {
-                        m_strFinCode = "L";
-                        m_strInsCode = "AETNA";
+                        _strFinCode = "L";
+                        _strInsCode = "AETNA";
                         rtbCheckSource.Tag = (string)"AETNA REMITTANCE";
                     }
 
@@ -1640,7 +1621,7 @@ public partial class Posting835 : Form
             {
                 if (strCLPElement.IndexOf("Medical Center Laboratory") > -1)
                 {
-                    m_ERR.m_Logfile.WriteLogFile(string.Format("No account in source file. \r\n{0}", strCLPElement));
+                    _eRR.m_Logfile.WriteLogFile(string.Format("No account in source file. \r\n{0}", strCLPElement));
                 }
                 continue;
             }
@@ -1659,25 +1640,25 @@ public partial class Posting835 : Form
             }
             catch (IndexOutOfRangeException)
             {
-                m_ERR.m_Logfile.WriteLogFile(strCLPElement);
+                _eRR.m_Logfile.WriteLogFile(strCLPElement);
                 continue;
             }
             if (strCLPElements[0].Length > nAccLength) // no account number in CLP in source file.
             {
                 if (strCLPElement.IndexOf("Medical Center Laboratory") > -1)
                 {
-                    m_ERR.m_Logfile.WriteLogFile($"Account [{strCLPElements[0]} is to long.. \r\n{strCLPElement}");
+                    _eRR.m_Logfile.WriteLogFile($"Account [{strCLPElements[0]} is to long.. \r\n{strCLPElement}");
                 }
                 continue;
             }
             // end of 09/05/2008 wdk
             if (strCLPElement[0].ToString().ToUpper() == "L" || strCLPElement[0].ToString().ToUpper() == "C" || strCLPElement[0].ToString().ToUpper() == "D")
             {
-                if (m_cAcc.AccountIsValid(strCLPElements[0].Replace("A", "")))
+                if (_cAcc.AccountIsValid(strCLPElements[0].Replace("A", "")))
                 {
                     ParseSVC(strCLPElement);
                     m_strarrEOBInsert.SetValue("", (int)Col835EOB.ePatStat); // 06/03/2008 not used so set blank
-                    m_dsRecords.Tables[dgvEOB.Name].Rows.Add(m_strarrEOBInsert);
+                    _dsRecords.Tables[dgvEOB.Name].Rows.Add(m_strarrEOBInsert);
                     AddTotalsToArray(m_strarrEOBInsert);
                     bRetVal = true;
                 }
@@ -1772,8 +1753,8 @@ public partial class Posting835 : Form
         {
             rtbCheckSource.Text = strValue.Replace("N1*PR*", "");
             string strPayer = rtbCheckSource.Text;
-            m_strFinCode = "B";
-            m_strInsCode = "BC";
+            _strFinCode = "B";
+            _strInsCode = "BC";
             rtbCheckSource.Tag = (string)"BC REMITTANCE";
         }
 
@@ -1789,7 +1770,7 @@ public partial class Posting835 : Form
 
             ParseBlueCrossSVC(strCLPElement);
             m_strarrEOBInsert.SetValue("", (int)Col835EOB.ePatStat); // 06/03/2008 not used so set blank
-            m_dsRecords.Tables[dgvEOB.Name].Rows.Add(m_strarrEOBInsert);
+            _dsRecords.Tables[dgvEOB.Name].Rows.Add(m_strarrEOBInsert);
             AddTotalsToArray(m_strarrEOBInsert);
             bRetVal = true;
         }
@@ -1834,15 +1815,15 @@ public partial class Posting835 : Form
     private void AddTotalsToArray(string[] strarrEOBInsert)
     {
         decimal dTemp = 0.00m;
-        m_d_dgvEOB_Totals[(int)Col835EOB.eChargesReported] +=
+        _d_dgvEOB_Totals[(int)Col835EOB.eChargesReported] +=
             decimal.TryParse(strarrEOBInsert[(int)Col835EOB.eChargesReported], out dTemp) ? dTemp : 0.00m;
-        m_d_dgvEOB_Totals[(int)Col835EOB.ePaymentDataNetReimbAmt] +=
+        _d_dgvEOB_Totals[(int)Col835EOB.ePaymentDataNetReimbAmt] +=
             decimal.TryParse(strarrEOBInsert[(int)Col835EOB.ePaymentDataNetReimbAmt], out dTemp) ? dTemp : 0.00m;
-        m_d_dgvEOB_Totals[(int)Col835EOB.ePaymentDataContAdjAmt] +=
+        _d_dgvEOB_Totals[(int)Col835EOB.ePaymentDataContAdjAmt] +=
             decimal.TryParse(strarrEOBInsert[(int)Col835EOB.ePaymentDataContAdjAmt], out dTemp) ? dTemp : 0.00m;
-        m_d_dgvEOB_Totals[(int)Col835EOB.eChargesDenied] +=
+        _d_dgvEOB_Totals[(int)Col835EOB.eChargesDenied] +=
             decimal.TryParse(strarrEOBInsert[(int)Col835EOB.eChargesDenied], out dTemp) ? dTemp : 0.00m;
-        m_d_dgvEOB_Totals[(int)Col835EOB.eOtherAdjAmt] +=
+        _d_dgvEOB_Totals[(int)Col835EOB.eOtherAdjAmt] +=
             decimal.TryParse(strarrEOBInsert[(int)Col835EOB.eOtherAdjAmt], out dTemp) ? dTemp : 0.00m;
     }
 
@@ -1876,18 +1857,18 @@ public partial class Posting835 : Form
         // set the eob totals before adding to the eob grid
         // charges
         // charges reported is added to the grid via the SVC parsing.
-        m_strarrEOBInsert.SetValue($"{m_dEOBChargesDenied:F2}", (int)Col835EOB.eChargesDenied);
-        m_strarrEOBInsert.SetValue($"{m_dEOBChargesNCovd:F2}", (int)Col835EOB.eChargesNCovd);
+        m_strarrEOBInsert.SetValue($"{_dEOBChargesDenied:F2}", (int)Col835EOB.eChargesDenied);
+        m_strarrEOBInsert.SetValue($"{_dEOBChargesNCovd:F2}", (int)Col835EOB.eChargesNCovd);
 
         // Patient Libality
-        m_strarrEOBInsert.SetValue($"{m_dEOBPatLibNCovdCharges:F2}", (int)Col835EOB.ePatientLibNCovdCharges);
-        m_strarrEOBInsert.SetValue($"{m_dEOBPatLibCoInsurance:F2}", (int)Col835EOB.ePatientLibCoinsurance);
+        m_strarrEOBInsert.SetValue($"{_dEOBPatLibNCovdCharges:F2}", (int)Col835EOB.ePatientLibNCovdCharges);
+        m_strarrEOBInsert.SetValue($"{_dEOBPatLibCoInsurance:F2}", (int)Col835EOB.ePatientLibCoinsurance);
 
         // Payment data
-        m_strarrEOBInsert.SetValue($"{m_dEOBPayDataMSPPrimPay:F2}", (int)Col835EOB.ePaymentDataMSPPrimPay);
-        m_strarrEOBInsert.SetValue($"{m_dEOBPayDataHCPCSAmt:F2}", (int)Col835EOB.ePaymentDataHCPCSAmt);
-        m_strarrEOBInsert.SetValue($"{m_dEOBPayDataContAdjAmt:F2}", (int)Col835EOB.ePaymentDataContAdjAmt);
-        m_strarrEOBInsert.SetValue($"{m_dEOBPayDataPatRefund:F2}", (int)Col835EOB.ePaymentDataPatRefund);
+        m_strarrEOBInsert.SetValue($"{_dEOBPayDataMSPPrimPay:F2}", (int)Col835EOB.ePaymentDataMSPPrimPay);
+        m_strarrEOBInsert.SetValue($"{_dEOBPayDataHCPCSAmt:F2}", (int)Col835EOB.ePaymentDataHCPCSAmt);
+        m_strarrEOBInsert.SetValue($"{_dEOBPayDataContAdjAmt:F2}", (int)Col835EOB.ePaymentDataContAdjAmt);
+        m_strarrEOBInsert.SetValue($"{_dEOBPayDataPatRefund:F2}", (int)Col835EOB.ePaymentDataPatRefund);
 
         #endregion SET EOB TOTALS to m_strarrEOBInsert    
 
@@ -1927,18 +1908,18 @@ public partial class Posting835 : Form
         // set the eob totals before adding to the eob grid
         // charges
         // charges reported is added to the grid via the SVC parsing.
-        m_strarrEOBInsert.SetValue($"{m_dEOBChargesDenied:F2}", (int)Col835EOB.eChargesDenied);
-        m_strarrEOBInsert.SetValue($"{m_dEOBChargesNCovd:F2}", (int)Col835EOB.eChargesNCovd);
+        m_strarrEOBInsert.SetValue($"{_dEOBChargesDenied:F2}", (int)Col835EOB.eChargesDenied);
+        m_strarrEOBInsert.SetValue($"{_dEOBChargesNCovd:F2}", (int)Col835EOB.eChargesNCovd);
 
         // Patient Libality
-        m_strarrEOBInsert.SetValue($"{m_dEOBPatLibNCovdCharges:F2}", (int)Col835EOB.ePatientLibNCovdCharges);
-        m_strarrEOBInsert.SetValue($"{m_dEOBPatLibCoInsurance:F2}", (int)Col835EOB.ePatientLibCoinsurance);
+        m_strarrEOBInsert.SetValue($"{_dEOBPatLibNCovdCharges:F2}", (int)Col835EOB.ePatientLibNCovdCharges);
+        m_strarrEOBInsert.SetValue($"{_dEOBPatLibCoInsurance:F2}", (int)Col835EOB.ePatientLibCoinsurance);
 
         // Payment data
-        m_strarrEOBInsert.SetValue($"{m_dEOBPayDataMSPPrimPay:F2}", (int)Col835EOB.ePaymentDataMSPPrimPay);
-        m_strarrEOBInsert.SetValue($"{m_dEOBPayDataHCPCSAmt:F2}", (int)Col835EOB.ePaymentDataHCPCSAmt);
-        m_strarrEOBInsert.SetValue($"{m_dEOBPayDataContAdjAmt:F2}", (int)Col835EOB.ePaymentDataContAdjAmt);
-        m_strarrEOBInsert.SetValue($"{m_dEOBPayDataPatRefund:F2}", (int)Col835EOB.ePaymentDataPatRefund);
+        m_strarrEOBInsert.SetValue($"{_dEOBPayDataMSPPrimPay:F2}", (int)Col835EOB.ePaymentDataMSPPrimPay);
+        m_strarrEOBInsert.SetValue($"{_dEOBPayDataHCPCSAmt:F2}", (int)Col835EOB.ePaymentDataHCPCSAmt);
+        m_strarrEOBInsert.SetValue($"{_dEOBPayDataContAdjAmt:F2}", (int)Col835EOB.ePaymentDataContAdjAmt);
+        m_strarrEOBInsert.SetValue($"{_dEOBPayDataPatRefund:F2}", (int)Col835EOB.ePaymentDataPatRefund);
 
         #endregion SET EOB TOTALS to m_strarrEOBInsert
 
@@ -2019,7 +2000,7 @@ public partial class Posting835 : Form
                     m_strarrRecordsInsert.SetValue(strSVCElements[2], (int)Col835Grids.eAllowed);
                     m_strarrRecordsInsert.SetValue(strSVCElements[2], (int)Col835Grids.ePaid);
                     dTempAmtPaid = decimal.Parse(strSVCElements[2]); // set this variable into dgvEOB(colEOB.ePayDataHCPCSAmt) after all the svc's  are processed
-                    m_dEOBPayDataHCPCSAmt += dTempAmtPaid;
+                    _dEOBPayDataHCPCSAmt += dTempAmtPaid;
                     // Rev Code
                     m_strarrRecordsInsert.SetValue(strSVCElements[3], (int)Col835Grids.eRevCode);
                     // Units
@@ -2084,7 +2065,7 @@ public partial class Posting835 : Form
                                 /* wdk 20130724 added  223 Adjustment code for mandated federal, state or local law/regulation that is not already covered by another code and is mandated before a new code can be created.*/
                                 case "253": // wdk 20140121 Sequestration - reduction in federal spending 
                                 {
-                                    m_dEOBPayDataContAdjAmt += dTempAmtContractual;
+                                    _dEOBPayDataContAdjAmt += dTempAmtContractual;
                                     m_strarrRecordsInsert.SetValue(dTempAmtContractual.ToString(), (int)Col835Grids.eContractualAdjAmt);
                                     break;
 
@@ -2092,7 +2073,7 @@ public partial class Posting835 : Form
                                 case "223":
                                 {
                                     dTempAmtContractual = Decimal.Negate(dTempAmtContractual);
-                                    m_dEOBPayDataContAdjAmt += dTempAmtContractual;
+                                    _dEOBPayDataContAdjAmt += dTempAmtContractual;
                                     m_strarrRecordsInsert.SetValue(dTempAmtContractual.ToString(), (int)Col835Grids.eContractualAdjAmt);
                                     break;
 
@@ -2100,13 +2081,13 @@ public partial class Posting835 : Form
                                 case "26": // 04/25/2008 wdk TLC Expenses incurred prior to coverage.??
                                 {
                                     dTempAmtContractual = Decimal.Negate(dTempAmtContractual);
-                                    m_dEOBPayDataContAdjAmt += dTempAmtContractual;
+                                    _dEOBPayDataContAdjAmt += dTempAmtContractual;
                                     m_strarrRecordsInsert.SetValue(dTempAmtContractual.ToString(), (int)Col835Grids.eContractualAdjAmt);
                                     break;
                                 }
                                 case "45": // contractual obligation amount
                                 {
-                                    m_dEOBPayDataContAdjAmt += dTempAmtContractual;
+                                    _dEOBPayDataContAdjAmt += dTempAmtContractual;
                                     m_strarrRecordsInsert.SetValue(dTempAmtContractual.ToString(), (int)Col835Grids.eContractualAdjAmt);
                                     break;
                                 }
@@ -2114,14 +2095,14 @@ public partial class Posting835 : Form
                                 {
                                     if (m_strarrRecordsInsert.GetValue((int)Col835Grids.eCPT4Code).ToString().Contains("GZ"))
                                     {
-                                        m_dChargesWriteOffGZ += dTempAmtContractual;
+                                        _dChargesWriteOffGZ += dTempAmtContractual;
                                         m_strarrRecordsInsert.SetValue(dTempAmtContractual.ToString(), (int)Col835Grids.eWriteOffAmt);
                                         m_strarrRecordsInsert.SetValue("200", (int)Col835Grids.eWriteOffCode);
                                         m_strarrRecordsInsert.SetValue(DateTime.Now.ToShortDateString(), (int)Col835Grids.eWriteOffDate);
                                     }
                                     else
                                     {
-                                        m_dEOBPayDataContAdjAmt += dTempAmtContractual;
+                                        _dEOBPayDataContAdjAmt += dTempAmtContractual;
                                         m_strarrRecordsInsert.SetValue(dTempAmtContractual.ToString(), (int)Col835Grids.eContractualAdjAmt);
                                     }
                                     break;
@@ -2130,7 +2111,7 @@ public partial class Posting835 : Form
                                 {
                                     if (m_strarrRecordsInsert.GetValue((int)Col835Grids.eCPT4Code).ToString().Contains("GZ"))
                                     {
-                                        m_dChargesWriteOffGZ += dTempAmtContractual;
+                                        _dChargesWriteOffGZ += dTempAmtContractual;
                                         m_strarrRecordsInsert.SetValue(dTempAmtContractual.ToString(), (int)Col835Grids.eWriteOffAmt);
                                         m_strarrRecordsInsert.SetValue("200", (int)Col835Grids.eWriteOffCode);
                                         m_strarrRecordsInsert.SetValue(DateTime.Now.ToShortDateString(), (int)Col835Grids.eWriteOffDate);
@@ -2151,21 +2132,21 @@ public partial class Posting835 : Form
                                 case "96":  //96 can be on both the CO and the OA in the CAS which means NONCOVERED in both places.
                                 {
                                     // eob's charges : non covered charges // don't add to contractual add to non covered
-                                    m_dEOBChargesNCovd += dTempAmtContractual;
+                                    _dEOBChargesNCovd += dTempAmtContractual;
                                     m_strarrRecordsInsert.SetValue(dTempAmtContractual.ToString(), (int)Col835Grids.eContractualAdjAmt);
                                     break;
                                 }
                                 case "147": // 04/25/2008 wdk TLC Provider contracted/negotiated rate expired or not on file.??
                                 {
                                     dTempAmtContractual = Decimal.Negate(dTempAmtContractual);
-                                    m_dEOBPayDataContAdjAmt += dTempAmtContractual;
+                                    _dEOBPayDataContAdjAmt += dTempAmtContractual;
                                     m_strarrRecordsInsert.SetValue(dTempAmtContractual.ToString(), (int)Col835Grids.eContractualAdjAmt);
                                     break;
                                 }
                                 case "A2": // for TLC CAS*CO*A2's seem to be negative amounts ie -17.49 All we saw with a partial search of file 626010402_20080324_09235.835
                                 {
                                     dTempAmtContractual = Decimal.Negate(dTempAmtContractual);
-                                    m_dEOBPayDataContAdjAmt += dTempAmtContractual;
+                                    _dEOBPayDataContAdjAmt += dTempAmtContractual;
                                     m_strarrRecordsInsert.SetValue(dTempAmtContractual.ToString(), (int)Col835Grids.eContractualAdjAmt);
                                     break;
                                 }
@@ -2178,7 +2159,7 @@ public partial class Posting835 : Form
                                 case "B9": //Services not covered because the patient is enrolled in a Hospice. This change to be effective 4/1/2008: Patient is enrolled in a Hospice.
                                 case "B15": // 06/30/2008 wdk added here per Darlene
                                 {
-                                    m_dEOBChargesDenied += dTempAmtContractual;
+                                    _dEOBChargesDenied += dTempAmtContractual;
                                     m_strarrRecordsInsert.SetValue(dTempAmtContractual.ToString(), (int)Col835Grids.eContractualAdjAmt); // 07/29/2008 wdk should this be here???
                                     break;
                                 }
@@ -2202,7 +2183,7 @@ public partial class Posting835 : Form
                                 case "223":
                                 {
                                     dTempAmtContractual = decimal.Parse(strNoFail[6]);
-                                    m_dEOBPayDataContAdjAmt += dTempAmtContractual;
+                                    _dEOBPayDataContAdjAmt += dTempAmtContractual;
                                     m_strarrRecordsInsertAddContractual.SetValue(dTempAmtContractual.ToString(), (int)Col835Grids.eContractualAdjAmt);
                                     break;
 
@@ -2210,7 +2191,7 @@ public partial class Posting835 : Form
                                 case "26": // 04/25/2008 wdk TLC Expenses incurred prior to coverage.??
                                 {
                                     dTempAmtContractual = decimal.Parse(strNoFail[6]);
-                                    m_dEOBPayDataContAdjAmt += dTempAmtContractual;
+                                    _dEOBPayDataContAdjAmt += dTempAmtContractual;
                                     m_strarrRecordsInsertAddContractual.SetValue(dTempAmtContractual.ToString(), (int)Col835Grids.eContractualAdjAmt);
                                     break;
                                 }
@@ -2218,7 +2199,7 @@ public partial class Posting835 : Form
                                 case "45": // contractual obligation amount
                                 {
                                     dTempAmtContractual = decimal.Parse(strNoFail[6]);
-                                    m_dEOBPayDataContAdjAmt += dTempAmtContractual;
+                                    _dEOBPayDataContAdjAmt += dTempAmtContractual;
                                     m_strarrRecordsInsertAddContractual.SetValue(dTempAmtContractual.ToString(), (int)Col835Grids.eContractualAdjAmt);
                                     break;
                                 }
@@ -2227,21 +2208,21 @@ public partial class Posting835 : Form
                                 {
                                     // eob's charges : non covered charges // don't add to contractual add to non covered
                                     dTempAmtContractual = decimal.Parse(strNoFail[6]);
-                                    m_dEOBChargesNCovd += dTempAmtContractual;
+                                    _dEOBChargesNCovd += dTempAmtContractual;
                                     m_strarrRecordsInsertAddContractual.SetValue(dTempAmtContractual.ToString(), (int)Col835Grids.eContractualAdjAmt);
                                     break;
                                 }
                                 case "147": // 04/25/2008 wdk TLC Provider contracted/negotiated rate expired or not on file.??
                                 {
                                     dTempAmtContractual = decimal.Parse(strNoFail[6]);
-                                    m_dEOBPayDataContAdjAmt += dTempAmtContractual;
+                                    _dEOBPayDataContAdjAmt += dTempAmtContractual;
                                     m_strarrRecordsInsertAddContractual.SetValue(dTempAmtContractual.ToString(), (int)Col835Grids.eContractualAdjAmt);
                                     break;
                                 }
                                 case "A2": // for TLC CAS*CO*A2's seem to be negative amounts ie -17.49 All we saw with a partial search of file 626010402_20080324_09235.835
                                 {
                                     dTempAmtContractual = decimal.Parse(strNoFail[6]);
-                                    m_dEOBPayDataContAdjAmt += dTempAmtContractual;
+                                    _dEOBPayDataContAdjAmt += dTempAmtContractual;
                                     m_strarrRecordsInsertAddContractual.SetValue(dTempAmtContractual.ToString(), (int)Col835Grids.eContractualAdjAmt);
                                     break;
                                 }
@@ -2255,7 +2236,7 @@ public partial class Posting835 : Form
                                 case "B15": // 06/30/2008 wdk added here per Darlene
                                 {
                                     dTempAmtContractual = decimal.Parse(strNoFail[6]);
-                                    m_dEOBChargesDenied += dTempAmtContractual;
+                                    _dEOBChargesDenied += dTempAmtContractual;
                                     m_strarrRecordsInsertAddContractual.SetValue(dTempAmtContractual.ToString(), (int)Col835Grids.eContractualAdjAmt); // 07/29/2008 wdk should this be here???
                                     break;
                                 }
@@ -2285,29 +2266,29 @@ public partial class Posting835 : Form
                             {
                                 case "22":
                                 {
-                                    m_dEOBChargesDenied += dTempAmtPaid;
+                                    _dEOBChargesDenied += dTempAmtPaid;
                                     break;
                                 }
                                 case "45": //file 080409MF.835 has negative contractuals for C2463470
                                 {
                                     m_strarrRecordsInsert.SetValue(dTempAmtPaid.ToString(), (int)Col835Grids.eContractualAdjAmt);
-                                    m_dEOBPayDataContAdjAmt += dTempAmtPaid; // 06/09/2008 wdk added see "CA2491257" in file #1717 on bill cycle 03/31/20089
+                                    _dEOBPayDataContAdjAmt += dTempAmtPaid; // 06/09/2008 wdk added see "CA2491257" in file #1717 on bill cycle 03/31/20089
                                     break;
                                 }
                                 case "119": // 04/21/2008 wdk for take back from Medicare Previously denied refiled then paid plus this Credit
                                 {
-                                    m_dEOBChargesDenied += dTempAmtPaid;
+                                    _dEOBChargesDenied += dTempAmtPaid;
                                     break;
                                 }
                                 case "2": // 04/21/2008 wdk for refunds from Medicare
                                 {
                                     decimal dTempEOBAmt = decimal.Parse(strSVCElements[6]);
-                                    m_dEOBPayDataContAdjAmt += dTempEOBAmt;
+                                    _dEOBPayDataContAdjAmt += dTempEOBAmt;
                                     break;
                                 }
                                 default:
                                 {
-                                    m_ERR.m_Logfile.WriteLogFile(string.Format("CR Default handler for {0} not completed.\r\nAccount:{1}\r\nFile: {2}",
+                                    _eRR.m_Logfile.WriteLogFile(string.Format("CR Default handler for {0} not completed.\r\nAccount:{1}\r\nFile: {2}",
                                            strSVCElements[2], m_strarrEOBInsert.GetValue((int)Col835EOB.Account), tbFileName.Tag.ToString()));
                                     break;
                                 }
@@ -2315,7 +2296,7 @@ public partial class Posting835 : Form
 
                             if (rtbCheckSource.Text.IndexOf("TLC") > -1) // 04/08/2008 rgc/wdk needs to be tested.
                             {
-                                m_dEOBPayDataContAdjAmt = Decimal.Negate(m_dEOBPayDataContAdjAmt);
+                                _dEOBPayDataContAdjAmt = Decimal.Negate(_dEOBPayDataContAdjAmt);
                             }
                             break;
                         }
@@ -2336,13 +2317,13 @@ public partial class Posting835 : Form
                             {
                                 case "23":  // TLC other insurance 04/16/2008 wdk //04/21/2008 wdk Medicare has it also. // 05/27/2008 rgc/wdk MSP Prim Pay() from file #1727 account ca2480693
                                 {
-                                    m_dEOBPayDataMSPPrimPay += dTempAmtContractual;
+                                    _dEOBPayDataMSPPrimPay += dTempAmtContractual;
                                     break;
                                 }
                                 case "96":
                                 {
                                     // put on eob non covered 
-                                    m_dEOBChargesNCovd += dTempAmtContractual;
+                                    _dEOBChargesNCovd += dTempAmtContractual;
                                     break;
                                 }
                             }
@@ -2378,7 +2359,7 @@ public partial class Posting835 : Form
                                 {
                                     case "1": // patient liability coinsurance added 05/01/2008 wdk
                                     {
-                                        m_dEOBPatLibCoInsurance += dTempPRAmt;
+                                        _dEOBPatLibCoInsurance += dTempPRAmt;
                                         break;
                                     }
                                     case "2":  // patient liability coinsurance 05/21/2008 rgc/wdk
@@ -2386,52 +2367,52 @@ public partial class Posting835 : Form
                                         // Because the pat's responsibility is both in the allowed added to the CO's amount
                                         // and the adjust amount add it to both for PR/2's. If required to be added together
                                         // put that code in R_Eob printPageEvent Handler in MCL to add the two together.
-                                        m_dEOBPatLibCoInsurance += dTempPRAmt;
-                                        m_dtRecordWriteOff.Rows.Add(m_strarrRecordsInsert);
+                                        _dEOBPatLibCoInsurance += dTempPRAmt;
+                                        _dtRecordWriteOff.Rows.Add(m_strarrRecordsInsert);
                                         break;
                                     }
                                     case "26": // 07/10/2008 wdk does not have medicare
                                     {
-                                        m_dEOBPatLibNCovdCharges += dTempPRAmt;
+                                        _dEOBPatLibNCovdCharges += dTempPRAmt;
                                         break;
                                     }
                                     case "31":    // Denied Not identified as the payor's client
                                     {
-                                        m_dEOBChargesDenied += dTempPRAmt;
+                                        _dEOBChargesDenied += dTempPRAmt;
                                         break;
                                     }
                                     case "45": // patient libiality noncovered charges put on eob non covered patient responsibility 
                                     {
-                                        m_dEOBPatLibNCovdCharges += dTempPRAmt;
+                                        _dEOBPatLibNCovdCharges += dTempPRAmt;
                                         break;
                                     }
 
                                     case "96": // 06/09/2008 wdk Patient non covered per Darlene see file 1749 05/23/2008 account D608890
                                     {
                                         // wdk 20130129 add to m_dEOBPatLibNCovdCharges also per Carol
-                                        m_dEOBPatLibNCovdCharges += dTempPRAmt;
-                                        m_dEOBChargesNCovd += dTempPRAmt;
+                                        _dEOBPatLibNCovdCharges += dTempPRAmt;
+                                        _dEOBChargesNCovd += dTempPRAmt;
                                         break;
                                     }
                                     case "119": // 07/10/2008 wdk Patient non covered per Darlene see account D609295 in 080627MF.835
                                     {
-                                        m_dEOBPatLibNCovdCharges += dTempPRAmt;
+                                        _dEOBPatLibNCovdCharges += dTempPRAmt;
                                         break;
                                     }
 
                                     case "B9": // 06/09/2008 wdk Denied per Darlene see file #1717 account CA2466273 
                                     {
-                                        m_dEOBChargesDenied += dTempPRAmt; // Hospise???
+                                        _dEOBChargesDenied += dTempPRAmt; // Hospise???
                                         break;
                                     }
                                     case "A7":
                                     {
-                                        m_dEOBPatLibNCovdCharges += dTempPRAmt;
+                                        _dEOBPatLibNCovdCharges += dTempPRAmt;
                                         break;
                                     }
                                     default:
                                     {
-                                        m_dEOBPatLibNCovdCharges += dTempPRAmt;
+                                        _dEOBPatLibNCovdCharges += dTempPRAmt;
                                         break;
                                     }
                                 }
@@ -2453,7 +2434,7 @@ public partial class Posting835 : Form
                                 {
                                     case "1": // patient liability coinsurance added 05/01/2008 wdk
                                     {
-                                        m_dEOBPatLibCoInsurance += dTempPRAmt;
+                                        _dEOBPatLibCoInsurance += dTempPRAmt;
                                         break;
                                     }
                                     case "2":  // patient liability coinsurance 05/21/2008 rgc/wdk
@@ -2461,47 +2442,47 @@ public partial class Posting835 : Form
                                         // Because the pat's responsibility is both in the allowed added to the CO's amount
                                         // and the adjust amount add it to both for PR/2's. If required to be added together
                                         // put that code in R_Eob printPageEvent Handler in MCL to add the two together.
-                                        m_dEOBPatLibCoInsurance += dTempPRAmt;
-                                        m_dtRecordWriteOff.Rows.Add(m_strarrRecordsInsert);
+                                        _dEOBPatLibCoInsurance += dTempPRAmt;
+                                        _dtRecordWriteOff.Rows.Add(m_strarrRecordsInsert);
                                         break;
                                     }
                                     case "26": // 07/10/2008 wdk does not have medicare
                                     {
-                                        m_dEOBPatLibNCovdCharges += dTempPRAmt;
+                                        _dEOBPatLibNCovdCharges += dTempPRAmt;
                                         break;
                                     }
                                     case "31":    // Denied Not identified as the payor's client
                                     {
-                                        m_dEOBChargesDenied += dTempPRAmt;
+                                        _dEOBChargesDenied += dTempPRAmt;
                                         break;
                                     }
                                     case "45": // patient libiality noncovered charges put on eob non covered patient responsibility 
                                     {
-                                        m_dEOBPatLibNCovdCharges += dTempPRAmt;
+                                        _dEOBPatLibNCovdCharges += dTempPRAmt;
                                         break;
                                     }
 
                                     case "96": // 06/09/2008 wdk Patient non covered per Darlene see file 1749 05/23/2008 account D608890
                                     {
                                         // wdk 20130129 add to m_dEOBPatLibNCovdCharges also per Carol
-                                        m_dEOBPatLibNCovdCharges += dTempPRAmt;
-                                        m_dEOBChargesNCovd += dTempPRAmt;
+                                        _dEOBPatLibNCovdCharges += dTempPRAmt;
+                                        _dEOBChargesNCovd += dTempPRAmt;
                                         break;
                                     }
                                     case "119": // 07/10/2008 wdk Patient non covered per Darlene see account D609295 in 080627MF.835
                                     {
-                                        m_dEOBPatLibNCovdCharges += dTempPRAmt;
+                                        _dEOBPatLibNCovdCharges += dTempPRAmt;
                                         break;
                                     }
 
                                     case "B9": // 06/09/2008 wdk Denied per Darlene see file #1717 account CA2466273 
                                     {
-                                        m_dEOBChargesDenied += dTempPRAmt; // Hospise???
+                                        _dEOBChargesDenied += dTempPRAmt; // Hospise???
                                         break;
                                     }
                                     default:
                                     {
-                                        m_dEOBPatLibNCovdCharges += dTempPRAmt;
+                                        _dEOBPatLibNCovdCharges += dTempPRAmt;
                                         break;
                                     }
                                 }
@@ -2519,12 +2500,12 @@ public partial class Posting835 : Form
                             {
                                 case "0": // wdk 20130129 patient libiality noncovered charges put on eob non covered patient responsibility 
                                 {
-                                    m_dEOBPatLibNCovdCharges += dTempPRAmt;
+                                    _dEOBPatLibNCovdCharges += dTempPRAmt;
                                     break;
                                 }
                                 case "1": // patient liability coinsurance added 05/01/2008 wdk
                                 {
-                                    m_dEOBPatLibCoInsurance += dTempPRAmt;
+                                    _dEOBPatLibCoInsurance += dTempPRAmt;
                                     break;
                                 }
                                 case "2":  // patient liability coinsurance 05/21/2008 rgc/wdk
@@ -2537,39 +2518,39 @@ public partial class Posting835 : Form
                                 }
                                 case "26": // 07/10/2008 wdk does not have medicare
                                 {
-                                    m_dEOBPatLibNCovdCharges += dTempPRAmt;
+                                    _dEOBPatLibNCovdCharges += dTempPRAmt;
                                     break;
                                 }
                                 case "31":    // Denied Not identified as the payor's client
                                 {
-                                    m_dEOBChargesDenied += dTempPRAmt;
+                                    _dEOBChargesDenied += dTempPRAmt;
                                     break;
                                 }
                                 case "45": // patient libiality noncovered charges put on eob non covered patient responsibility 
                                 {
-                                    m_dEOBPatLibNCovdCharges += dTempPRAmt;
+                                    _dEOBPatLibNCovdCharges += dTempPRAmt;
                                     break;
                                 }
                                 case "96": // 06/09/2008 wdk Patient non covered per Darlene see file 1749 05/23/2008 account D608890
                                 {
                                     //m_dEOBChargesNCovd += dTempPRAmt; // wdk 20140528 removed per Carols request
-                                    m_dEOBPatLibNCovdCharges += dTempPRAmt; // wdk 20140528 added per Carols request
+                                    _dEOBPatLibNCovdCharges += dTempPRAmt; // wdk 20140528 added per Carols request
                                     break;
                                 }
                                 case "119": // 07/10/2008 wdk Patient non covered per Darlene see account D609295 in 080627MF.835
                                 {
-                                    m_dEOBPatLibNCovdCharges += dTempPRAmt;
+                                    _dEOBPatLibNCovdCharges += dTempPRAmt;
                                     break;
                                 }
 
                                 case "B9": // 06/09/2008 wdk Denied per Darlene see file #1717 account CA2466273 
                                 {
-                                    m_dEOBChargesDenied += dTempPRAmt; // Hospise???
+                                    _dEOBChargesDenied += dTempPRAmt; // Hospise???
                                     break;
                                 }
                                 default:
                                 {
-                                    m_dEOBPatLibNCovdCharges += dTempPRAmt;
+                                    _dEOBPatLibNCovdCharges += dTempPRAmt;
                                     break;
                                 }
                             }
@@ -2582,7 +2563,7 @@ public partial class Posting835 : Form
                         case "PC": // may be patient credit
                         {
                             // payment data: pat Refund
-                            m_dEOBPayDataPatRefund += dTempAmtPaid;
+                            _dEOBPayDataPatRefund += dTempAmtPaid;
                             break;
                         }
                         #endregion PC
@@ -2590,7 +2571,7 @@ public partial class Posting835 : Form
                         #region PI Payor Initiated Reductions
                         case "PI":
                         {
-                            m_dPayorInitiatedReductions += decimal.Parse(strSVCElements[3]);
+                            _dPayorInitiatedReductions += decimal.Parse(strSVCElements[3]);
                             /////
 
                             decimal dTempPIAmt = decimal.Parse(strSVCElements[3]);
@@ -2618,7 +2599,7 @@ public partial class Posting835 : Form
                 {
                     if (strSVCElements[1] == "NE") // from a TLC file
                     {
-                        m_dEOBChargesDenied += Decimal.Parse(strSVCElements[2]);
+                        _dEOBChargesDenied += Decimal.Parse(strSVCElements[2]);
                     }
                     break;
                 }
@@ -2662,7 +2643,7 @@ public partial class Posting835 : Form
             m_strarrRecordsInsert.SetValue(strSVCElements[2], (int)Col835Grids.eAllowed);
             m_strarrRecordsInsert.SetValue(strSVCElements[2], (int)Col835Grids.ePaid);
             dTempAmtPaid = decimal.Parse(strSVCElements[2]); // set this variable into dgvEOB(colEOB.ePayDataHCPCSAmt) after all the svc's  are processed
-            m_dEOBPayDataHCPCSAmt += dTempAmtPaid;
+            _dEOBPayDataHCPCSAmt += dTempAmtPaid;
             // Rev Code
             m_strarrRecordsInsert.SetValue(strSVCElements[3], (int)Col835Grids.eRevCode);
             // Units
@@ -2745,7 +2726,7 @@ public partial class Posting835 : Form
                 {
                     if (strSVCElements[1] == "NE") // from a TLC file
                     {
-                        m_dEOBChargesDenied += Decimal.Parse(strSVCElements[2]);
+                        _dEOBChargesDenied += Decimal.Parse(strSVCElements[2]);
                     }
                     break;
                 }
@@ -2778,18 +2759,18 @@ public partial class Posting835 : Form
     private void InitializeEOBVariables()
     {
         // EOB's Charges
-        m_dEOBChargesNCovd = 0.00m; // CAS C0/96's totals for the EOB header grid
-        m_dEOBChargesDenied = 0.00m; // CLP 04 without the CLP* (not positive needs verification)
+        _dEOBChargesNCovd = 0.00m; // CAS C0/96's totals for the EOB header grid
+        _dEOBChargesDenied = 0.00m; // CLP 04 without the CLP* (not positive needs verification)
 
         // EOB's Patient Liability
-        m_dEOBPatLibNCovdCharges = 0.00m; // CAS PR/45 totals 
-        m_dEOBPatLibCoInsurance = 0.00m; // have not seen yet
+        _dEOBPatLibNCovdCharges = 0.00m; // CAS PR/45 totals 
+        _dEOBPatLibCoInsurance = 0.00m; // have not seen yet
 
         // EOB's Payment Data
-        m_dEOBPayDataMSPPrimPay = 0.00m; // other insurance 
-        m_dEOBPayDataHCPCSAmt = 0.00m; // try to calculate from the processed tab's paid amount field
-        m_dEOBPayDataContAdjAmt = 0.00m; // total of the co/45 from the CAS
-        m_dEOBPayDataPatRefund = 0.00m; // Have not seen yet should be a PC in the CAS
+        _dEOBPayDataMSPPrimPay = 0.00m; // other insurance 
+        _dEOBPayDataHCPCSAmt = 0.00m; // try to calculate from the processed tab's paid amount field
+        _dEOBPayDataContAdjAmt = 0.00m; // total of the co/45 from the CAS
+        _dEOBPayDataPatRefund = 0.00m; // Have not seen yet should be a PC in the CAS
     }
 
     /// <summary>
@@ -2800,7 +2781,7 @@ public partial class Posting835 : Form
     private void AddRecordToDataGrid()
     {
         double dWriteOff = 0.00f;
-        foreach (DataRow dr in m_dtRecordWriteOff.Rows)
+        foreach (DataRow dr in _dtRecordWriteOff.Rows)
         {
             Application.DoEvents();
             double dParse = 0.00f;
@@ -2831,7 +2812,7 @@ public partial class Posting835 : Form
             {
                 if (m_strarrRecordsInsert.GetValue((int)Col835Grids.eReason).ToString().StartsWith("PR"))
                 {
-                    m_dsRecords.Tables[dgvNotProcessed.Name].Rows.Add(m_strarrRecordsInsert);
+                    _dsRecords.Tables[dgvNotProcessed.Name].Rows.Add(m_strarrRecordsInsert);
                     tc835.SelectedIndex = 2;
                     break;
                 }
@@ -2848,25 +2829,25 @@ public partial class Posting835 : Form
                                 //m_strarrRecordsInsert.GetValue((int)col835Grids.eReason).ToString().Contains("PR/2") ||
                                 m_strarrRecordsInsert.GetValue((int)Col835Grids.eReason).ToString().Contains("CO/50"))
                             {
-                                m_dsRecords.Tables[dgvProcessed.Name].Rows.Add(m_strarrRecordsInsert);
+                                _dsRecords.Tables[dgvProcessed.Name].Rows.Add(m_strarrRecordsInsert);
                                 tc835.SelectedIndex = 0;
                             }
                             else
                             {
-                                m_dsRecords.Tables[dgvNotProcessed.Name].Rows.Add(m_strarrRecordsInsert);
+                                _dsRecords.Tables[dgvNotProcessed.Name].Rows.Add(m_strarrRecordsInsert);
                                 tc835.SelectedIndex = 0;
                             }
                         }
                         else
                         {
-                            m_dsRecords.Tables[dgvProcessed.Name].Rows.Add(m_strarrRecordsInsert);
+                            _dsRecords.Tables[dgvProcessed.Name].Rows.Add(m_strarrRecordsInsert);
                             tc835.SelectedIndex = 0;
 
                         }
                     }
                     else
                     {
-                        m_dsRecords.Tables[dgvNotProcessed.Name].Rows.Add(m_strarrRecordsInsert);
+                        _dsRecords.Tables[dgvNotProcessed.Name].Rows.Add(m_strarrRecordsInsert);
                         tc835.SelectedIndex = 2;
                     }
                     // WDK 20130725 added 
@@ -2876,7 +2857,7 @@ public partial class Posting835 : Form
                         {
                             if (!string.IsNullOrEmpty(m_strarrRecordsInsertAddContractual.GetValue((int)Col835Grids.Account).ToString()))
                             {
-                                m_dsRecords.Tables[dgvProcessed.Name].Rows.Add(m_strarrRecordsInsertAddContractual);
+                                _dsRecords.Tables[dgvProcessed.Name].Rows.Add(m_strarrRecordsInsertAddContractual);
                                 m_strarrRecordsInsertAddContractual = new string[Enum.GetNames(typeof(Col835Grids)).Length];// wdk 20130725         
                                 m_strarrRecordsInsertAddContractual.Initialize();
                             }
@@ -2893,8 +2874,8 @@ public partial class Posting835 : Form
             }
             case 4: // denieds (Modifier)
             {
-                m_dsRecords.Tables[dgvDenieds.Name].Rows.Add(m_strarrRecordsInsert);
-                m_dtNotes.Rows.Add(new object[] { m_strarrRecordsInsert[(int)Col835Grids.Account],
+                _dsRecords.Tables[dgvDenieds.Name].Rows.Add(m_strarrRecordsInsert);
+                _dtNotes.Rows.Add(new object[] { m_strarrRecordsInsert[(int)Col835Grids.Account],
                         m_strarrRecordsInsert[(int)Col835Grids.eCPT4Code],
                         m_strarrRecordsInsert[(int)Col835Grids.eClaimStatus],
                         m_strarrRecordsInsert[(int)Col835Grids.eReason] });
@@ -2904,8 +2885,8 @@ public partial class Posting835 : Form
             }
             default: // 23 payment adj impact of a prior payer
             {
-                m_dsRecords.Tables[dgvNotProcessed.Name].Rows.Add(m_strarrRecordsInsert);
-                m_dtNotes.Rows.Add(new object[] { m_strarrRecordsInsert[(int)Col835Grids.Account],
+                _dsRecords.Tables[dgvNotProcessed.Name].Rows.Add(m_strarrRecordsInsert);
+                _dtNotes.Rows.Add(new object[] { m_strarrRecordsInsert[(int)Col835Grids.Account],
                         m_strarrRecordsInsert[(int)Col835Grids.eCPT4Code],
                         m_strarrRecordsInsert[(int)Col835Grids.eClaimStatus],
                         m_strarrRecordsInsert[(int)Col835Grids.eReason] });
@@ -2937,7 +2918,7 @@ public partial class Posting835 : Form
                                                                                                                        //WDK 20130816 added clear this for each new patient.
                                                                                                                        //m_strarrRecordsWriteOff =  new string[Enum.GetNames(typeof(col835Grids)).Length];// wdk 20130725         
                                                                                                                        //m_dgvRecordsWriteOff = new DataGridView();
-        m_dtRecordWriteOff.Clear();
+        _dtRecordWriteOff.Clear();
         //m_dgvRecordsWriteOff[m_dgvRecordsWriteOff.GetUpperBound(0)].CreateCells( = ((DataGridViewRow)m_strarrRecordsInsert);
         // Claim status
         m_strarrEOBInsert.SetValue(strSVCHeaderElements[1].ToString(), (int)Col835EOB.eClaimSt);
@@ -3049,7 +3030,7 @@ public partial class Posting835 : Form
     /// </summary>
     private void ClearForm()
     {
-        m_dsRecords.Clear(); // removes all rows in all tables.
+        _dsRecords.Clear(); // removes all rows in all tables.
 
         // clear the grids
         dgvProcessed.Rows.Clear();
@@ -3072,7 +3053,7 @@ public partial class Posting835 : Form
         tbBatchNo.Tag = "";
         lbChecks.Items.Clear();
         tsmiPostCheckRecords.Enabled = true;
-        m_dicSTAmts.Clear();
+        _dicSTAmts.Clear();
     }
 
 
@@ -3081,26 +3062,26 @@ public partial class Posting835 : Form
     /// </summary>
     private void SetTableLayOutTotals()
     {
-        tbEOBChargeAmt.Text = m_d_dgvEOB_Totals[(int)Col835EOB.eChargesReported].ToString("c");
-        tbEOBPaidAmt.Text = m_d_dgvEOB_Totals[(int)Col835EOB.ePaymentDataNetReimbAmt].ToString("c");
-        tbEOBContractualAmt.Text = m_d_dgvEOB_Totals[(int)Col835EOB.ePaymentDataContAdjAmt].ToString("c");
-        tbEOBDeniedAmt.Text = m_d_dgvEOB_Totals[(int)Col835EOB.eChargesDenied].ToString("c");
-        tbEOBOtherAmt.Text = m_d_dgvEOB_Totals[(int)Col835EOB.eOtherAdjAmt].ToString("c");
+        tbEOBChargeAmt.Text = _d_dgvEOB_Totals[(int)Col835EOB.eChargesReported].ToString("c");
+        tbEOBPaidAmt.Text = _d_dgvEOB_Totals[(int)Col835EOB.ePaymentDataNetReimbAmt].ToString("c");
+        tbEOBContractualAmt.Text = _d_dgvEOB_Totals[(int)Col835EOB.ePaymentDataContAdjAmt].ToString("c");
+        tbEOBDeniedAmt.Text = _d_dgvEOB_Totals[(int)Col835EOB.eChargesDenied].ToString("c");
+        tbEOBOtherAmt.Text = _d_dgvEOB_Totals[(int)Col835EOB.eOtherAdjAmt].ToString("c");
     }
 
 
     private void tsmiPrint_Click(object sender, EventArgs e)
     {
         DataGridView l_dgvCurrent = GetSelectedTabsDataGrid(tc835.SelectedIndex);
-        MyPrintDocument.DefaultPageSettings.Landscape = true;
-        MyPrintDocument.DocumentName = tc835.SelectedTab.Text;
-        MyPrintDocument.PrintController = null;
-        DataSetPrinter dp = new DataSetPrinter(m_dsRecords, l_dgvCurrent.Name, MyPrintDocument, tc835.SelectedTab.Text.ToUpper(), ref m_ERR);
+        _myPrintDocument.DefaultPageSettings.Landscape = true;
+        _myPrintDocument.DocumentName = tc835.SelectedTab.Text;
+        _myPrintDocument.PrintController = null;
+        DataSetPrinter dp = new DataSetPrinter(_dsRecords, l_dgvCurrent.Name, _myPrintDocument, tc835.SelectedTab.Text.ToUpper(), ref _eRR);
         dp.propFooterText = string.Format("Check No: {0}, Dated: {1}, Total: {2}, from File: {3}",
                                     tbCheckNo.Tag.ToString(), tbCheckDate.Tag.ToString(), tbCheckAmt.Tag.ToString(), tbFileName.Text);
-        this.MyPrintDocument.PrintPage += new System.Drawing.Printing.PrintPageEventHandler(dp.MyPrintDocument_PrintPage);
-        MyPrintDocument.Print();
-        this.MyPrintDocument.PrintPage -= new System.Drawing.Printing.PrintPageEventHandler(dp.MyPrintDocument_PrintPage);
+        this._myPrintDocument.PrintPage += new System.Drawing.Printing.PrintPageEventHandler(dp.MyPrintDocument_PrintPage);
+        _myPrintDocument.Print();
+        this._myPrintDocument.PrintPage -= new System.Drawing.Printing.PrintPageEventHandler(dp.MyPrintDocument_PrintPage);
 
     }
 
@@ -3128,21 +3109,21 @@ public partial class Posting835 : Form
         int nRecordsAdded = 0;
         int nErrorRecords = 0;
         // holder for accounts to check the balances from 
-        m_dicBalances = new Dictionary<string, decimal>();
+        _dicBalances = new Dictionary<string, decimal>();
         try
         {
             // if this had of used the app.config values.
-            m_strAccountLogPath = $"{Program.AppEnvironment.ApplicationParameters.DefaultSpoolFilePath}AccBalances{tbFileName.Text.Substring(tbFileName.Text.LastIndexOf('\\') + 1)}.txt";
-            m_swAccount = new StreamWriter(m_strAccountLogPath);
+            _strAccountLogPath = $"{Program.AppEnvironment.ApplicationParameters.DefaultSpoolFilePath}AccBalances{tbFileName.Text.Substring(tbFileName.Text.LastIndexOf('\\') + 1)}.txt";
+            _swAccount = new StreamWriter(_strAccountLogPath);
         }
         catch (IOException ioe)
         {
-            m_ERR.m_Email.Send("PostCheckRecords@Viewer835.ioe", "bradley.powers@wth.org", "FILE ERROR", ioe.Message);
+            _eRR.m_Email.Send("PostCheckRecords@Viewer835.ioe", "bradley.powers@wth.org", "FILE ERROR", ioe.Message);
         }
         catch (NullReferenceException nre)
         {
             //Checks have been posted once and the stream has not been reopened. 
-            m_ERR.m_Email.Send("Viewer835.tsmiPostCheckRecords_click", "bradley.powers@wth.org", "FILE ERROR", nre.Message);
+            _eRR.m_Email.Send("Viewer835.tsmiPostCheckRecords_click", "bradley.powers@wth.org", "FILE ERROR", nre.Message);
         }
         catch (Exception exc)
         {
@@ -3153,7 +3134,7 @@ public partial class Posting835 : Form
         //and batch number variables to be inserted into this record.
         DateTime sdtReceived = DateTime.Now;
         DateTime sdtMod = DateTime.Parse(DateTime.Now.ToString());
-        string strBatchNo = batchTransactionService.GetNextBatchNumber().ToString();
+        string strBatchNo = _batchTransactionService.GetNextBatchNumber().ToString();
 
         tbBatchNo.Text = $"Batch No: {strBatchNo}";
         this.Invalidate();
@@ -3165,12 +3146,12 @@ public partial class Posting835 : Form
         //tspbRecords.Step = 1;
 
         // put the batch number, check number and date at the top of the log
-        m_ERR.m_Logfile.WriteLogFile($"Check number {tbCheckNo.Tag} was posted on batch number {strBatchNo} on {DateTime.Now:G}");
+        _eRR.m_Logfile.WriteLogFile($"Check number {tbCheckNo.Tag} was posted on batch number {strBatchNo} on {DateTime.Now:G}");
 
         // now process the checks.
         List<Chk> chks = new();
 
-        foreach (DataRow dr in m_dsRecords.Tables[dgvProcessed.Name].Rows)
+        foreach (DataRow dr in _dsRecords.Tables[dgvProcessed.Name].Rows)
         {
             Application.DoEvents();
             tspbRecords.PerformStep();
@@ -3185,7 +3166,7 @@ public partial class Posting835 : Form
             // the try catch will give distinct account numbers for later querying
             try
             {
-                m_dicBalances.Add(dr[(int)Col835Grids.Account].ToString().ToUpper().Replace("A", ""), decimal.Parse("0.00"));
+                _dicBalances.Add(dr[(int)Col835Grids.Account].ToString().ToUpper().Replace("A", ""), decimal.Parse("0.00"));
             }
             catch (ArgumentException) { } // key already exists so keep on trucking
 
@@ -3221,7 +3202,7 @@ public partial class Posting835 : Form
             }
             if (dTotal == 0 && !bHasAmt)
             {
-                m_ERR.m_Logfile.WriteLogFile(string.Format("---CHECK PAYMENT BALANCE EQUALS ZERO (0) - ACCOUNT {0}",
+                _eRR.m_Logfile.WriteLogFile(string.Format("---CHECK PAYMENT BALANCE EQUALS ZERO (0) - ACCOUNT {0}",
                         dr[(int)Col835Grids.Account].ToString().ToUpper()));
                 nErrorRecords++;
                 continue;
@@ -3259,8 +3240,8 @@ public partial class Posting835 : Form
                         : dr[(int)Col835Grids.eWriteOffCode].ToString(),
                     EftDate = DateTime.Parse(tbFileDate.Tag.ToString()),
                     EftNumber = tbFileNumber.Tag.ToString(),
-                    FinCode = m_strFinCode,
-                    InsCode = m_strInsCode,
+                    FinCode = _strFinCode,
+                    InsCode = _strInsCode,
                     ClaimAdjCode = dr[(int)Col835Grids.eReason].ToString()
                 };
 
@@ -3297,7 +3278,7 @@ public partial class Posting835 : Form
         }
         try
         {
-            batchTransactionService.PostBatchPayments(chks);
+            _batchTransactionService.PostBatchPayments(chks);
         }
         catch (Exception ex)
         {
@@ -3309,18 +3290,18 @@ public partial class Posting835 : Form
         #region Get Account Balances and write them to the account balance file
 
         //wdk 20150507 if m_swAccount is null make the file in c:\Temp
-        m_swAccount.WriteLine("          ACCOUNT BALANCES for checks posted on {0}\r\n", DateTime.Now.ToString("D"));
-        m_swAccount.WriteLine($"{"ACCOUNT",-15}{"BALANCE",-15}{"STATUS\r\n"}\r\n");
+        _swAccount.WriteLine("          ACCOUNT BALANCES for checks posted on {0}\r\n", DateTime.Now.ToString("D"));
+        _swAccount.WriteLine($"{"ACCOUNT",-15}{"BALANCE",-15}{"STATUS\r\n"}\r\n");
         tspbRecords.Minimum = 0;
-        tspbRecords.Maximum = m_dicBalances.Count;
-        foreach (string strAccount in m_dicBalances.Keys)
+        tspbRecords.Maximum = _dicBalances.Count;
+        foreach (string strAccount in _dicBalances.Keys)
         {
 
             Application.DoEvents();
             tspbRecords.PerformStep();
 
-            m_cAccStatus.GetBalance(strAccount, out string strBal);
-            m_cAccStatus.GetStatus(strAccount, out string strStatus);
+            _cAccStatus.GetBalance(strAccount, out string strBal);
+            _cAccStatus.GetStatus(strAccount, out string strStatus);
             if (string.IsNullOrEmpty(strBal))
             {
                 continue;
@@ -3341,12 +3322,12 @@ public partial class Posting835 : Form
             double dBal = double.Parse(strBal);
             if (dBal != 0.00 && strStatus == AccountStatus.PaidOut)
             {
-                accountService.UpdateStatus(strAccount, AccountStatus.New);
+                _accountService.UpdateStatus(strAccount, AccountStatus.New);
             }
-            m_swAccount.WriteLine($"{strAccount.PadRight(16)}{dBal.ToString("C2", CultureInfo.CurrentCulture),-15}{strStatus.PadLeft(15 - strBal.Length)}");
+            _swAccount.WriteLine($"{strAccount.PadRight(16)}{dBal.ToString("C2", CultureInfo.CurrentCulture),-15}{strStatus.PadLeft(15 - strBal.Length)}");
         }
 
-        m_swAccount.Flush();
+        _swAccount.Flush();
 
 
         #endregion Get Account Balances and write them to the account balance file
@@ -3354,12 +3335,12 @@ public partial class Posting835 : Form
         #region Print Account Balance file
         try
         {
-            if (!string.IsNullOrEmpty(m_strAccountLogPath))
+            if (!string.IsNullOrEmpty(_strAccountLogPath))
             {
-                m_swAccount.Close();
-                m_srAccount = new StreamReader(m_strAccountLogPath);
+                _swAccount.Close();
+                _srAccount = new StreamReader(_strAccountLogPath);
 
-                ThreadProcRFCPrintPreview(m_srAccount, "ACCOUNT BALANCES");
+                ThreadProcRFCPrintPreview(_srAccount, "ACCOUNT BALANCES");
             }
         }
         catch (Exception ex)
@@ -3380,27 +3361,27 @@ public partial class Posting835 : Form
     private void MoveFileToSavedDirectory()
     {
         string strFileName = tbFileName.Tag.ToString();
-        string strMoveFile = $@"{diSaved}{strFileName.Substring(strFileName.LastIndexOf('\\'))}";
-        string strMoveName = $@"{diSaved}\Saved_DUP\{strFileName.Substring(strFileName.LastIndexOf('\\'))}";
+        string strMoveFile = $@"{_diSaved}{strFileName.Substring(strFileName.LastIndexOf('\\'))}";
+        string strMoveName = $@"{_diSaved}\Saved_DUP\{strFileName.Substring(strFileName.LastIndexOf('\\'))}";
         try
         {
             if (File.Exists(string.Format(@"{0}", strMoveFile)))
             {
 
-                File.Move(tbFileName.Tag.ToString(), $@"{diSaved}\Saved_DUP\{strFileName.Substring(strFileName.LastIndexOf('\\'))}");
+                File.Move(tbFileName.Tag.ToString(), $@"{_diSaved}\Saved_DUP\{strFileName.Substring(strFileName.LastIndexOf('\\'))}");
                 return;
             }
-            File.Move(tbFileName.Tag.ToString(), $@"{diSaved}\{strFileName.Substring(strFileName.LastIndexOf('\\'))}");
+            File.Move(tbFileName.Tag.ToString(), $@"{_diSaved}\{strFileName.Substring(strFileName.LastIndexOf('\\'))}");
         }
         catch (IOException ioe)
         {
             //  MessageBox.Show(ioe.Message, ioe.Source);
-            m_ERR.m_Logfile.WriteLogFile(ioe.Message);
+            _eRR.m_Logfile.WriteLogFile(ioe.Message);
         }
         catch (Exception ex)
         {
             //  MessageBox.Show("Could not move the File.", "MOVE FILE ERROR");
-            m_ERR.m_Logfile.WriteLogFile(ex.Message);
+            _eRR.m_Logfile.WriteLogFile(ex.Message);
         }
     }
 
@@ -3536,7 +3517,7 @@ public partial class Posting835 : Form
             case 1:
             case 2:
             {
-                foreach (DataRow dr in m_dsRecords.Tables[dgv.Name].Rows)
+                foreach (DataRow dr in _dsRecords.Tables[dgv.Name].Rows)
                 {
                     Application.DoEvents();
                     tstbFindSubscriber.AutoCompleteCustomSource.Add(dr[(int)Col835Grids.eSubscriberName].ToString());
@@ -3546,7 +3527,7 @@ public partial class Posting835 : Form
             }
             case 3:
             {
-                foreach (DataRow dr in m_dsRecords.Tables[dgv.Name].Rows)
+                foreach (DataRow dr in _dsRecords.Tables[dgv.Name].Rows)
                 {
                     Application.DoEvents();
                     tstbFindSubscriber.AutoCompleteCustomSource.Add(dr[(int)Col835EOB.eSubscriberName].ToString());
@@ -3567,11 +3548,11 @@ public partial class Posting835 : Form
     /// <param name="e"></param>
     private void tsmiEOB_Click(object sender, EventArgs e)
     {
-        m_ERR.m_Logfile.WriteLogFile("PostEobFromDataSet");
+        _eRR.m_Logfile.WriteLogFile("PostEobFromDataSet");
 
         tspbRecords.Value = 0;
         tspbRecords.Minimum = 0;
-        tspbRecords.Maximum = m_dsRecords.Tables[dgvEOB.Name].Rows.Count;// .tdgvEOB.Rows.Count;
+        tspbRecords.Maximum = _dsRecords.Tables[dgvEOB.Name].Rows.Count;// .tdgvEOB.Rows.Count;
         tspbRecords.Step = 1;
         tspbRecords.ToolTipText = "Posting EOB's";
 
@@ -3579,7 +3560,7 @@ public partial class Posting835 : Form
 
         string strWhere = "";
         // wdk 20160419 have to recreate this here in order to process several files in a row.
-        CEob m_rEob = new CEob(m_strServer, m_strDatabase, ref m_ERR);
+        CEob m_rEob = new CEob(_strServer, _strDatabase, ref _eRR);
         m_rEob.CreateCommittableTransaction();
 
         // create the EOB record set it's rowguid then use the rowguid for the detail records
@@ -3589,7 +3570,7 @@ public partial class Posting835 : Form
         // create the loop through the records to add
         //foreach (DataGridViewRow dr in dgvEOB.Rows)
 
-        foreach (DataRow dr in m_dsRecords.Tables[dgvEOB.Name].Rows)
+        foreach (DataRow dr in _dsRecords.Tables[dgvEOB.Name].Rows)
         {
             tspbRecords.PerformStep();
             Application.DoEvents();
@@ -3655,7 +3636,7 @@ public partial class Posting835 : Form
 
                 dgv = GetSelectedTabsDataGrid(i);
                 string strSelect = $"Account = '{m_rEob.Reob.m_strAccount.Replace("A", "")}' AND eClaimStatus = '{m_rEob.Reob.m_strClaimStatus}'";
-                DataRow[] dgvArrRows = m_dsRecords.Tables[dgv.Name].Select(strSelect);
+                DataRow[] dgvArrRows = _dsRecords.Tables[dgv.Name].Select(strSelect);
                 //  m_ERR.m_Logfile.WriteLogFile(string.Format("   [{0}] {1}", dgvArrRows.GetUpperBound(0), strSelect));
                 for (int k = 0; k <= dgvArrRows.GetUpperBound(0); k++)
                 {
@@ -3711,7 +3692,7 @@ public partial class Posting835 : Form
 
                     if (m_rEob.Reob.GetActiveRecords(strWhere) > 0)
                     {
-                        m_ERR.m_Logfile.WriteLogFile(string.Format(@"Account {0} already in EOB table.\r\n \tWHERE Clause: {1}", m_rEob.Reob.m_strAccount, strWhere));
+                        _eRR.m_Logfile.WriteLogFile(string.Format(@"Account {0} already in EOB table.\r\n \tWHERE Clause: {1}", m_rEob.Reob.m_strAccount, strWhere));
                         break;
                     }
 
@@ -3762,9 +3743,9 @@ public partial class Posting835 : Form
 
     private void tsmiFirst20_Click(object sender, EventArgs e)
     {
-        m_dsRecords.Tables["dgvProcessed"].Select(string.Format("{0} is not null", Col835Grids.eSubscriberName.ToString()), Col835Grids.eSubscriberName.ToString());
+        _dsRecords.Tables["dgvProcessed"].Select(string.Format("{0} is not null", Col835Grids.eSubscriberName.ToString()), Col835Grids.eSubscriberName.ToString());
 
-        m_nCurrentDisplayed = 0;
+        _nCurrentDisplayed = 0;
         DataGridView dgv = null;
         if (e == null)
         {
@@ -3779,7 +3760,7 @@ public partial class Posting835 : Form
         {
             try
             {
-                dgv.Rows.Add(m_dsRecords.Tables[dgv.Name].Rows[m_nCurrentDisplayed++].ItemArray);
+                dgv.Rows.Add(_dsRecords.Tables[dgv.Name].Rows[_nCurrentDisplayed++].ItemArray);
             }
             catch (IndexOutOfRangeException)
             {
@@ -3796,7 +3777,7 @@ public partial class Posting835 : Form
         {
             try
             {
-                dgv.Rows.Add(m_dsRecords.Tables[dgv.Name].Rows[m_nCurrentDisplayed++].ItemArray);
+                dgv.Rows.Add(_dsRecords.Tables[dgv.Name].Rows[_nCurrentDisplayed++].ItemArray);
             }
             catch (IndexOutOfRangeException)
             {
@@ -3809,16 +3790,16 @@ public partial class Posting835 : Form
     {
         DataGridView dgv = GetSelectedTabsDataGrid(tc835.SelectedIndex);
         dgv.Rows.Clear();
-        if (m_nCurrentDisplayed > m_dsRecords.Tables[dgv.Name].Rows.Count)
+        if (_nCurrentDisplayed > _dsRecords.Tables[dgv.Name].Rows.Count)
         {
-            m_nCurrentDisplayed = m_dsRecords.Tables[dgv.Name].Rows.Count;
+            _nCurrentDisplayed = _dsRecords.Tables[dgv.Name].Rows.Count;
         }
-        m_nCurrentDisplayed = m_dsRecords.Tables[dgv.Name].Rows.Count - 20;
+        _nCurrentDisplayed = _dsRecords.Tables[dgv.Name].Rows.Count - 20;
         while (dgv.Rows.Count < 20)
         {
             try
             {
-                dgv.Rows.Add(m_dsRecords.Tables[dgv.Name].Rows[(m_nCurrentDisplayed++)].ItemArray);
+                dgv.Rows.Add(_dsRecords.Tables[dgv.Name].Rows[(_nCurrentDisplayed++)].ItemArray);
             }
             catch (IndexOutOfRangeException)
             {
@@ -3831,17 +3812,17 @@ public partial class Posting835 : Form
     {
         DataGridView dgv = GetSelectedTabsDataGrid(tc835.SelectedIndex);
         dgv.Rows.Clear();
-        m_nCurrentDisplayed -= 40;
-        if (m_nCurrentDisplayed < 0)
+        _nCurrentDisplayed -= 40;
+        if (_nCurrentDisplayed < 0)
         {
-            m_nCurrentDisplayed = 0; // don't scroll before the beginning of the data set.
+            _nCurrentDisplayed = 0; // don't scroll before the beginning of the data set.
         }
 
         while (dgv.Rows.Count < 20)
         {
             try
             {
-                dgv.Rows.Add(m_dsRecords.Tables[dgv.Name].Rows[(m_nCurrentDisplayed++)].ItemArray);
+                dgv.Rows.Add(_dsRecords.Tables[dgv.Name].Rows[(_nCurrentDisplayed++)].ItemArray);
             }
             catch (IndexOutOfRangeException)
             {
@@ -3853,27 +3834,27 @@ public partial class Posting835 : Form
     private void tsbPrintEOB_Click(object sender, EventArgs e)
     {
         tspbRecords.Value = 0;
-        tspbRecords.Maximum = m_dsRecords.Tables[dgvEOB.Name].Rows.Count;
+        tspbRecords.Maximum = _dsRecords.Tables[dgvEOB.Name].Rows.Count;
         tspbRecords.Style = ProgressBarStyle.Blocks;
 
-        for (int i = 0; i < m_dsRecords.Tables[dgvEOB.Name].Rows.Count; i++)
+        for (int i = 0; i < _dsRecords.Tables[dgvEOB.Name].Rows.Count; i++)
         {
             tspbRecords.PerformStep();
             Application.DoEvents();
-            string strAccount = m_dsRecords.Tables[dgvEOB.Name].Rows[i][(int)Col835EOB.Account].ToString().Replace("A", "");
-            string strEOBAccount = m_dsRecords.Tables[dgvEOB.Name].Rows[i][(int)Col835EOB.Account].ToString();
-            m_rAcc.GetBalance(strAccount, out string strBal);
+            string strAccount = _dsRecords.Tables[dgvEOB.Name].Rows[i][(int)Col835EOB.Account].ToString().Replace("A", "");
+            string strEOBAccount = _dsRecords.Tables[dgvEOB.Name].Rows[i][(int)Col835EOB.Account].ToString();
+            _rAcc.GetBalance(strAccount, out string strBal);
             if (strBal == "ERR")
             {
                 continue;
             }
             if (strBal != "0")
             {
-                m_rEob.Reob.m_strFilter = $"Account = '{strEOBAccount}'AND claim_status = '{m_dsRecords.Tables[dgvEOB.Name].Rows[i][(int)Col835EOB.eClaimSt]}' and eft_number = '{tbFileNumber.Tag}'";
-                if (m_rEob.Reob.GetActiveRecords(m_rEob.Reob.m_strFilter) > 0)
+                _rEob.Reob.m_strFilter = $"Account = '{strEOBAccount}'AND claim_status = '{_dsRecords.Tables[dgvEOB.Name].Rows[i][(int)Col835EOB.eClaimSt]}' and eft_number = '{tbFileNumber.Tag}'";
+                if (_rEob.Reob.GetActiveRecords(_rEob.Reob.m_strFilter) > 0)
                 {
-                    m_rEob.Reob.LoadMemberVariablesFromDataSet();
-                    m_rEob.PrintEOB();
+                    _rEob.Reob.LoadMemberVariablesFromDataSet();
+                    _rEob.PrintEOB();
                 }
             }
         }
@@ -3891,55 +3872,55 @@ public partial class Posting835 : Form
     private void ImportMedicareFilesFromWTH(object sender, EventArgs e)
     {
         // Directory Work
-        diFrom = new DirectoryInfo(Program.AppEnvironment.ApplicationParameters.RemitImportDirectory);
+        _diFrom = new DirectoryInfo(Program.AppEnvironment.ApplicationParameters.RemitImportDirectory);
 
-        diDirectories = diFrom.GetDirectories(DateTime.Now.Year.ToString());
-        if (diDirectories.GetUpperBound(0) == -1)
+        _diDirectories = _diFrom.GetDirectories(DateTime.Now.Year.ToString());
+        if (_diDirectories.GetUpperBound(0) == -1)
         {
-            Directory.CreateDirectory($@"{diFrom}\{DateTime.Now.Year.ToString()}");
+            Directory.CreateDirectory($@"{_diFrom}\{DateTime.Now.Year}");
         }
 
         //file work
-        fiCurrent = diCurrent.GetFiles();
-        fiSaved = diSaved.GetFiles();
-        fiInvalid = diInvalid.GetFiles();
-        fiFrom = diFrom.GetFiles();
+        _fiCurrent = _diCurrent.GetFiles();
+        _fiSaved = _diSaved.GetFiles();
+        _fiInvalid = _diInvalid.GetFiles();
+        _fiFrom = _diFrom.GetFiles();
 
-        foreach (FileInfo fCurr in fiCurrent)
+        foreach (FileInfo fCurr in _fiCurrent)
         {
             Application.DoEvents();
             try
             {
-                fCurr.MoveTo($@"{diSaved.FullName}\{fCurr.Name}");
+                fCurr.MoveTo($@"{_diSaved.FullName}\{fCurr.Name}");
             }
             catch (Exception ex)
             {
                 string strReplaceFile = fCurr.Name;
                 strReplaceFile = strReplaceFile.Insert(strReplaceFile.LastIndexOf('.'), DateTime.Now.ToFileTimeUtc().ToString());
 
-                fCurr.MoveTo($@"{diInvalid.FullName}\{strReplaceFile}");
+                fCurr.MoveTo($@"{_diInvalid.FullName}\{strReplaceFile}");
 
-                MessageBox.Show($"{MethodBase.GetCurrentMethod().Name}.\r\n{ex.Message}.", propAppName);
+                MessageBox.Show($"{MethodBase.GetCurrentMethod().Name}.\r\n{ex.Message}.", PropAppName);
             }
         }
         // move the new files to our directory
-        foreach (FileInfo fFrom in fiFrom)
+        foreach (FileInfo fFrom in _fiFrom)
         {
             Application.DoEvents();
             try
             {
-                fFrom.CopyTo($@"{diCurrent.FullName}\{fFrom.Name}");
+                fFrom.CopyTo($@"{_diCurrent.FullName}\{fFrom.Name}");
 
-                fFrom.MoveTo($@"{diFrom.FullName}\{DateTime.Now.Year.ToString()}\{fFrom.Name}");
+                fFrom.MoveTo($@"{_diFrom.FullName}\{DateTime.Now.Year}\{fFrom.Name}");
             }
             catch (Exception ex)
             {
                 string strReplaceFile = fFrom.Name;
                 strReplaceFile = strReplaceFile.Insert(strReplaceFile.LastIndexOf('.'), DateTime.Now.ToFileTimeUtc().ToString());
 
-                fFrom.MoveTo($@"{diFrom.FullName}\{DateTime.Now.Year.ToString()}\{strReplaceFile}");
+                fFrom.MoveTo($@"{_diFrom.FullName}\{DateTime.Now.Year.ToString()}\{strReplaceFile}");
 
-                MessageBox.Show($"{MethodBase.GetCurrentMethod().Name}.\r\n{ex.Message}.", propAppName);
+                MessageBox.Show($"{MethodBase.GetCurrentMethod().Name}.\r\n{ex.Message}.", PropAppName);
             }
         }
 
@@ -3952,10 +3933,9 @@ public partial class Posting835 : Form
         //DirectoryInfo diInvalid = 
         //    new DirectoryInfo(string.Format(@"{0}\invalid", diInvalid));
         //// 02/29/2008 wdk get the date of the newest file from the saved directory.
-        DirectoryInfo diLocal =
-            new DirectoryInfo(string.Format(@"{0}", diCurrent));
+        DirectoryInfo diLocal = new(string.Format(@"{0}", _diCurrent));
         FileInfo[] fiLocal = diLocal.GetFiles();
-        FileInfo[] fiInvalid = diInvalid.GetFiles();
+        FileInfo[] fiInvalid = _diInvalid.GetFiles();
 
         if (fiLocal.GetUpperBound(0) == -1)
         {
@@ -3978,18 +3958,18 @@ public partial class Posting835 : Form
             {
                 try
                 {
-                    f1.MoveTo(diInvalid.FullName + "\\" + f1.Name);
+                    f1.MoveTo(_diInvalid.FullName + "\\" + f1.Name);
                 }
                 catch (IOException ioe)
                 {
                     string strReplaceFile = f1.Name;
                     strReplaceFile = strReplaceFile.Insert(strReplaceFile.LastIndexOf('.'), DateTime.Now.ToFileTimeUtc().ToString());
 
-                    f1.MoveTo($@"{diInvalid.FullName}\{strReplaceFile}");
+                    f1.MoveTo($@"{_diInvalid.FullName}\{strReplaceFile}");
                 }
             }
         }
-        MessageBox.Show("PURGE COMPLETE", propAppName);
+        MessageBox.Show("PURGE COMPLETE", PropAppName);
     }
 
     private void FindAccountInFilesToolStripMenuItem_Click(object sender, EventArgs e)
