@@ -102,17 +102,4 @@ public class ReportGenerator
         }
     }
 
-    /// <summary>
-    /// Event Hanlder for the data grid views click event, launches the account program for the selected account.
-    /// 08/23/2007 rgc/wdk
-    /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
-    public void LaunchAcc_EventHandler(object sender, DataGridViewCellMouseEventArgs e)
-    {
-
-        this.m_dgvGrid.RowHeaderMouseDoubleClick +=
-            new System.Windows.Forms.DataGridViewCellMouseEventHandler(LaunchAcc.LaunchAcc_EventHandler);
-    }
-
 } // don't type below this line

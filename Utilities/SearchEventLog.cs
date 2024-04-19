@@ -44,6 +44,10 @@ using System;
 // programmer added
 using System.Collections;
 using System.Diagnostics;
+
+
+namespace Utilities;
+
 /// <summary>
 /// List of possible fields that can be used to filter the event log entries
 /// wdk 20090211
@@ -84,7 +88,7 @@ public enum EventLogFilterType
     EventID
 }
 
-namespace Utilities;
+
 
 /// <summary>
 /// Class allows searching of the event entry logs. It has two static methods that can be called.

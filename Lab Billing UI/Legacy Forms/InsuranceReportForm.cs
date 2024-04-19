@@ -252,8 +252,10 @@ public partial class InsuranceReportForm : Form
         MyPrintDocument.DefaultPageSettings.Landscape = true;
         // create the insurance report and set its properties.
         m_rgIns = new ReportGenerator(dgvReportInsurance, MyPrintDocument, "Insurance Report by Plan Name", m_strDBase);
+
         m_rgIns.m_dgvpReport.propFooterText = m_strWhere;
-        this.dgvReportInsurance.RowHeaderMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(m_rgIns.LaunchAcc_EventHandler);
+        
+        //this.dgvReportInsurance.RowHeaderMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(m_rgIns.LaunchAcc_EventHandler);
         // now that we have a report generator PrintPage event handler created assign it to the print document we created earlier.
         this.MyPrintDocument.PrintPage += new System.Drawing.Printing.PrintPageEventHandler(m_rgIns.MyPrintDocument_PrintPage);
 
