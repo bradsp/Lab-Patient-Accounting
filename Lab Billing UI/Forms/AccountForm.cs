@@ -6,7 +6,6 @@ using LabBilling.Legacy;
 using LabBilling.Library;
 using LabBilling.Logging;
 using LabBilling.LookupForms;
-using NPOI.OpenXmlFormats.Dml.Diagram;
 using System.ComponentModel;
 using System.Data;
 using Utilities;
@@ -409,7 +408,7 @@ public partial class AccountForm : Form
         LoadPayments();
         LoadNotes();
 
-        if(_currentAccount.FinCode != Program.AppEnvironment.ApplicationParameters.ClientAccountFinCode)
+        if (_currentAccount.FinCode != Program.AppEnvironment.ApplicationParameters.ClientAccountFinCode)
         {
             LoadDemographics();
             _insPrimaryMaintenanceUC.LoadInsuranceData();

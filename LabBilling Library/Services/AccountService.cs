@@ -188,13 +188,22 @@ public sealed class AccountService
                     }
                 });
             });
-
+            List<ChrgDiagnosisPointer> temp = new List<ChrgDiagnosisPointer>();
             record.ChrgDiagnosisPointers.ForEach(d =>
             {
                 d.CdmDescription = record.Cdms.Where(c => c.ChargeId == d.CdmCode).FirstOrDefault()?.Description;
                 if (!string.IsNullOrEmpty(d.CptCode))
+                {
                     d.CptDescription = record.Cdms.Where(c => c.ChargeId == d.CdmCode).FirstOrDefault()?.CdmDetails?.Where(cd => cd.Cpt4 == d.CptCode).FirstOrDefault()?.Description;
+                }
+                if(string.IsNullOrEmpty(d.CdmDescription) || string.IsNullOrEmpty(d.CptDescription))
+                {
+                    uow.ChrgDiagnosisPointerRepository.Delete(d);
+                    temp.Add(d);
+                }
             });
+
+            temp.ForEach(d => record.ChrgDiagnosisPointers.Remove(d));
         }
         record.Payments = uow.ChkRepository.GetByAccount(account);
 
