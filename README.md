@@ -31,7 +31,6 @@ Lab Patient Accounting is a medical patient accounting and billing application c
 * FluentValidation
 * log4net
 * MDIWindowManager
-* MetroModernUI
 * Newtonsoft.Json
 * NLog
 * PDFsharp
