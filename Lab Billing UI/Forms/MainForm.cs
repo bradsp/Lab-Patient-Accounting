@@ -45,7 +45,7 @@ public partial class MainForm : Form
     {
         RecordsProcessed = -1
     };
-    private Bitmap _closeImage;
+    private readonly Bitmap _closeImage;
 
     public MainForm()
     {
@@ -77,7 +77,7 @@ public partial class MainForm : Form
         LogLevel minLevel = NLog.LogLevel.Warn;
 
         var configuration = new NLog.Config.LoggingConfiguration();
-        switch(Program.AppEnvironment.ApplicationParameters.LogLevel)
+        switch (Program.AppEnvironment.ApplicationParameters.LogLevel)
         {
             case "Trace":
                 minLevel = LogLevel.Trace;
@@ -103,13 +103,16 @@ public partial class MainForm : Form
 
         GlobalDiagnosticsContext.Set("dbname", Program.AppEnvironment.DatabaseName);
         GlobalDiagnosticsContext.Set("dbserver", Program.AppEnvironment.ServerName);
-
-        var fileTarget = new FileTarget("logfile")
+        FileTarget fileTarget;
+        if (string.IsNullOrEmpty(Program.AppEnvironment.ApplicationParameters.LogFilePath))
+        {
+            throw new ArgumentNullException(nameof(ApplicationParameters.LogFilePath));
+        }
+        fileTarget = new FileTarget("logfile")
         {
             FileName = $"{Program.AppEnvironment.ApplicationParameters.LogFilePath}\\{OS.GetMachineName()}_{OS.GetUserName()}_{DateTime.Today.Year}-{DateTime.Today.Month}-{DateTime.Today.Day}.log",
             Layout = "${longdate}|${level:uppercase=true}|${logger}|${message}|${exception}|${stacktrace}|${hostname}|${environment-user}|${callsite}|${callsite-linenumber}|${assembly-version}|${gdc:item=dbname|${gdc:item=dbserver}"
         };
-
         //var consoleTarget = new NLog.Targets.ConsoleTarget("logconsole");
         string logProcedure = Program.AppEnvironment.ApplicationParameters.DatabaseEnvironment != "Production" ? "NLog_AddEntry_t" : "NLog_AddEntry_p";
         var dbTarget = new DatabaseTarget("database")
@@ -133,21 +136,24 @@ public partial class MainForm : Form
         dbTarget.Parameters.Add(new DatabaseParameterInfo("@databasename", new NLog.Layouts.SimpleLayout("${gdc:item=dbname}")));
         dbTarget.Parameters.Add(new DatabaseParameterInfo("@databaseserver", new NLog.Layouts.SimpleLayout("${gdc:item=dbserver}")));
 
-        LoggingRule logRule = new();
-        switch(Program.AppEnvironment.ApplicationParameters.LogLocation)
+        switch (Program.AppEnvironment.ApplicationParameters.LogLocation)
         {
             case "Database":
-                logRule = new LoggingRule("*", minLevel, dbTarget);
+                configuration.AddRule(new LoggingRule("*", minLevel, dbTarget));
                 break;
             case "FilePath":
-                logRule = new LoggingRule("*", minLevel, fileTarget);
+                if (fileTarget == null)
+                    break;
+                configuration.AddRule(new LoggingRule("*", minLevel, fileTarget));
                 break;
 
         }
 
-        configuration.AddRule(logRule);
+        configuration.AddRule(new LoggingRule("*", LogLevel.Debug, fileTarget));
 
         LogManager.Configuration = configuration;
+
+        Log.Instance.Warn($"Log configuration -  MinimumLevel: {minLevel}, LogLocation: {Program.AppEnvironment.ApplicationParameters.LogLocation}");
 
         #endregion
 
@@ -393,7 +399,9 @@ public partial class MainForm : Form
             Text = "Worklist",
             Name = "btnWorkList",
             BackColor = Program.AppEnvironment.ButtonBackgroundColor,
-            ForeColor = Program.AppEnvironment.ButtonTextColor
+            ForeColor = Program.AppEnvironment.ButtonTextColor,
+            FlatStyle = FlatStyle.Flat,
+            Height = 50
         };
         b1.Click += new EventHandler(worklistToolStripMenuItem_Click);
         tlpBilling.Controls.Add(b1, 0, 0);
@@ -404,7 +412,9 @@ public partial class MainForm : Form
             Text = "Account",
             Name = "btnAccount",
             BackColor = Program.AppEnvironment.ButtonBackgroundColor,
-            ForeColor = Program.AppEnvironment.ButtonTextColor
+            ForeColor = Program.AppEnvironment.ButtonTextColor,
+            FlatStyle = FlatStyle.Flat,
+            Height = 50
         };
         b2.Click += new EventHandler(accountToolStripMenuItem_Click);
         tlpBilling.Controls.Add(b2, 0, 2);
@@ -415,7 +425,9 @@ public partial class MainForm : Form
             Text = "Account Charge Entry",
             Name = "btnAccountChargeEntry",
             BackColor = Program.AppEnvironment.ButtonBackgroundColor,
-            ForeColor = Program.AppEnvironment.ButtonTextColor
+            ForeColor = Program.AppEnvironment.ButtonTextColor,
+            FlatStyle = FlatStyle.Flat,
+            Height = 50
         };
         b4.Click += new EventHandler(accountChargeEntryToolStripMenuItem_Click);
         tlpBilling.Controls.Add(b4, 0, 3);
@@ -426,7 +438,9 @@ public partial class MainForm : Form
             Text = "Batch Remittance",
             Name = "btnBatchRemittance",
             BackColor = Program.AppEnvironment.ButtonBackgroundColor,
-            ForeColor = Program.AppEnvironment.ButtonTextColor
+            ForeColor = Program.AppEnvironment.ButtonTextColor,
+            FlatStyle = FlatStyle.Flat,
+            Height = 50
         };
         b5.Click += new EventHandler(batchRemittanceToolStripMenuItem_Click);
         tlpBilling.Controls.Add(b5, 0, 4);
@@ -437,7 +451,9 @@ public partial class MainForm : Form
             Text = "Claims Batch Management",
             Name = "ClaimBatchManagementButton",
             BackColor = Program.AppEnvironment.ButtonBackgroundColor,
-            ForeColor = Program.AppEnvironment.ButtonTextColor
+            ForeColor = Program.AppEnvironment.ButtonTextColor,
+            FlatStyle = FlatStyle.Flat,
+            Height = 50
         };
         b6.Click += new EventHandler(claimBatchManagementToolStripMenuItem_Click);
         tlpBilling.Controls.Add(b6, 0, 5);
@@ -458,7 +474,9 @@ public partial class MainForm : Form
             Text = "Monthly Reports",
             Name = "btnMonthlyReports",
             BackColor = Program.AppEnvironment.ButtonBackgroundColor,
-            ForeColor = Program.AppEnvironment.ButtonTextColor
+            ForeColor = Program.AppEnvironment.ButtonTextColor,
+            FlatStyle = FlatStyle.Flat,
+            Height = 50
         };
         r1.Click += new EventHandler(monthlyReportsToolStripMenuItem_Click);
         tlpReports.Controls.Add(r1, 0, 0);
@@ -469,7 +487,9 @@ public partial class MainForm : Form
             Text = "Reporting Portal",
             Name = "btnReportingPortal",
             BackColor = Program.AppEnvironment.ButtonBackgroundColor,
-            ForeColor = Program.AppEnvironment.ButtonTextColor
+            ForeColor = Program.AppEnvironment.ButtonTextColor,
+            FlatStyle = FlatStyle.Flat,
+            Height = 50
         };
         r2.Click += new EventHandler(reportingPortalToolStripMenuItem_Click);
         tlpReports.Controls.Add(r2, 0, 0);
@@ -670,7 +690,23 @@ public partial class MainForm : Form
     private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
     {
         Log.Instance.Trace($"Entering");
-        Properties.Settings.Default.Save();
+        //clear all locks opened by this user & host
+        try
+        {
+            _accountService.ClearAccountLocks(Program.AppEnvironment.User, OS.GetMachineName());
+        }
+        catch (Exception ex)
+        {
+            Log.Instance.Fatal("Error removing account locks.", ex);
+        }
+        try
+        {
+            Properties.Settings.Default.Save();
+        }
+        catch (Exception exc)
+        {
+            Log.Instance.Fatal("Exception during close.", exc);
+        }
     }
 
     private void exitToolStripMenuItem_Click(object sender, EventArgs e) => this.Close();
@@ -906,4 +942,10 @@ public partial class MainForm : Form
 
     private void auditReportsToolStripMenuItem_Click(object sender, EventArgs e) => NewForm(new AuditReportMaintenanceForm());
 
+    private void viewLocksToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        AccountLocksForm frm = new();
+
+        frm.ShowDialog();
+    }
 }

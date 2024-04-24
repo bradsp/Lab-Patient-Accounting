@@ -1,4 +1,5 @@
-﻿using LabBilling.Core.DataAccess;
+﻿using Lab_Patient_Accounting_Job_Scheduler;
+using LabBilling.Core.DataAccess;
 using log4net.Config;
 using System;
 using Topshelf;
@@ -13,12 +14,12 @@ internal class Program
     static void Main(string[] args)
     {
 
-        AppEnvironment.DatabaseName = Properties.Settings.Default.DbName;
-        AppEnvironment.ServerName = Properties.Settings.Default.DbServer;
-        AppEnvironment.LogDatabaseName = Properties.Settings.Default.LogDbName;
+        AppEnvironment.DatabaseName = Settings.Default.DbName;
+        AppEnvironment.ServerName = Settings.Default.DbServer;
+        AppEnvironment.LogDatabaseName = Settings.Default.LogDbName;
         AppEnvironment.RunAsService = true;
-        AppEnvironment.ServiceUsername = Properties.Settings.Default.Username;
-        AppEnvironment.ServicePassword = Properties.Settings.Default.Password;
+        AppEnvironment.ServiceUsername = Settings.Default.Username;
+        AppEnvironment.ServicePassword = Settings.Default.Password;
 
         string path = System.Reflection.Assembly.GetExecutingAssembly().Location;
         var directory = System.IO.Path.GetDirectoryName(path);

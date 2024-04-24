@@ -6,7 +6,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <AssemblyVersion>2024.1.2.6</AssemblyVersion>
     <FileVersion>2024.1.2.6</FileVersion>
-    <Platforms>AnyCPU;x64</Platforms>
+    <Platforms>x64</Platforms>
     <Version>2024.1.2.4</Version>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -39,9 +39,6 @@
     </Compile>
     <Compile Update="FormResponse.cs">
       <SubType>Form</SubType>
-    </Compile>
-    <Compile Update="ListViewPrinter.cs">
-      <SubType>Component</SubType>
     </Compile>
     <Compile Update="RFCPrintPreview.cs">
       <SubType>Form</SubType>

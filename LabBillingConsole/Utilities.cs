@@ -266,8 +266,12 @@ public sealed class Utilities : MenuBase
     {
         ClaimGeneratorService claimGenerator = new(_appEnvironment);
 
-        CancellationToken cancellationToken = new CancellationToken();
-        Progress<ProgressReportModel> progressReportModel = new Progress<ProgressReportModel>();
+        CancellationToken cancellationToken = new();
+        Progress<ProgressReportModel> progressReportModel = new();
+        progressReportModel.ProgressChanged += (s, e) =>
+        {
+            Console.WriteLine($"Claims processed: {e.RecordsProcessed} of {e.TotalRecords} ({e.PercentageComplete}) | {e.StatusMessage}");
+        };
 
         Console.WriteLine("In RunClaimsProcessing() - Starting ClaimsProcessing job");
         Log.Instance.Info("In RunClaimsProcessing() - Starting ClaimsProcessing job");

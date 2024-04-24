@@ -61,7 +61,7 @@ public partial class ChargeMaintenanceUC : UserControl
             return;
 
         //build context menu
-        foreach (var item in Dictionaries.cptModifiers)
+        foreach (var item in Dictionaries.CptModifiers)
         {
             ToolStripMenuItem tsItem = new(item.Key)
             {

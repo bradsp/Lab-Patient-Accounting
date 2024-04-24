@@ -57,11 +57,11 @@ public partial class InsMaintenanceUC : UserControl
         _insCompanies = DataCache.Instance.GetInsCompanies();
         #endregion
 
-        InsRelationComboBox.DataSource = new BindingSource(Dictionaries.relationSource, null);
+        InsRelationComboBox.DataSource = new BindingSource(Dictionaries.RelationSource, null);
         InsRelationComboBox.DisplayMember = "Value";
         InsRelationComboBox.ValueMember = "Key";
 
-        HolderSexComboBox.DataSource = new BindingSource(Dictionaries.sexSource, null);
+        HolderSexComboBox.DataSource = new BindingSource(Dictionaries.SexSource, null);
         HolderSexComboBox.DisplayMember = "Value";
         HolderSexComboBox.ValueMember = "Key";
 
@@ -70,7 +70,7 @@ public partial class InsMaintenanceUC : UserControl
         PlanFinCodeComboBox.ValueMember = nameof(Fin.FinCode);
         PlanFinCodeComboBox.SelectedIndex = -1;
 
-        HolderStateComboBox.DataSource = new BindingSource(Dictionaries.stateSource, null);
+        HolderStateComboBox.DataSource = new BindingSource(Dictionaries.StateSource, null);
         HolderStateComboBox.DisplayMember = "Value";
         HolderStateComboBox.ValueMember = "Key";
 

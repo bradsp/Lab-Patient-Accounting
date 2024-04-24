@@ -11,8 +11,7 @@ public partial class ChargeEntryForm : Form
     private readonly Account _currentAccount = new();
     private readonly System.Windows.Forms.Timer _timer;
     private const int _timerInterval = 650;
-    private readonly AccountService accountService;
-    private readonly DictionaryService dictionaryService;
+    private readonly DictionaryService _dictionaryService;
 
 
     public string SelectedCdm { get; set; }
@@ -28,7 +27,7 @@ public partial class ChargeEntryForm : Form
         InitializeComponent();
         _timer = new System.Windows.Forms.Timer() { Enabled = false, Interval = _timerInterval };
         _timer.Tick += new EventHandler(cdmTextBox_KeyUpDone);
-        dictionaryService = new(Program.AppEnvironment);
+        _dictionaryService = new(Program.AppEnvironment);
     }
 
     private void ChargeEntryForm_Load(object sender, EventArgs e)
@@ -84,14 +83,14 @@ public partial class ChargeEntryForm : Form
         var cdmLookup = new CdmLookupForm
         {
             InitialSearchText = cdmTextBox.Text,
-            Datasource = dictionaryService.GetAllCdms(false)
+            Datasource = _dictionaryService.GetAllCdms(false)
         };
 
         if (cdmLookup.ShowDialog() == DialogResult.OK)
         {
             //if cdm is a variable type, ask for amount
             cdmTextBox.Text = cdmLookup.SelectedValue;
-            Cdm cdm = dictionaryService.GetCdm(cdmLookup.SelectedValue);
+            Cdm cdm = _dictionaryService.GetCdm(cdmLookup.SelectedValue);
             if (cdm.Variable)
             {
                 var result = GetAmount();

@@ -2,7 +2,6 @@
 using LabBilling.Core.Models;
 using LabBilling.Core.UnitOfWork;
 using LabBilling.Logging;
-using NPOI.OpenXmlFormats.Dml.Diagram;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -25,6 +24,7 @@ public sealed class ClientInvoicesService
     public event EventHandler<ClientInvoiceGeneratedEventArgs> InvoiceGenerated;
     public event EventHandler<ClientInvoiceGeneratedEventArgs> InvoiceRunCompleted;
     private readonly DictionaryService _dictionaryService;
+    private readonly AccountService _accountService;
 
     public event EventHandler<ClientInvoiceProgressEventArgs> ReportProgress;
 
@@ -35,6 +35,7 @@ public sealed class ClientInvoicesService
 
         this._appEnvironment = appEnvironment;
         _dictionaryService = new(appEnvironment);
+        _accountService = new(appEnvironment);
     }
 
     public async Task CompileAsync(DateTime thruDate, IList<UnbilledClient> unbilledClients, CancellationToken token)
@@ -107,7 +108,6 @@ public sealed class ClientInvoicesService
         if (asOfDate > DateTime.Today)
             throw new ArgumentOutOfRangeException(nameof(asOfDate));
 
-
         Account acc = uow.AccountRepository.GetByAccount(clientMnemonic);
 
         if (acc == null)
@@ -159,7 +159,6 @@ public sealed class ClientInvoicesService
         Log.Instance.Trace($"Entering - client {clientMnemonic} thrudate {throughDate}");
         if (clientMnemonic == null)
             throw new ArgumentNullException(nameof(clientMnemonic));
-        AccountService accountService = new(_appEnvironment);
         using UnitOfWorkMain uow = new(_appEnvironment, true);
         try
         {
@@ -196,7 +195,7 @@ public sealed class ClientInvoicesService
 
             invoiceModel.ShowCpt = client.PrintCptOnInvoice;
 
-            List<InvoiceSelect> accounts = accountService.GetInvoiceAccounts(clientMnemonic, throughDate).ToList();
+            List<InvoiceSelect> accounts = _accountService.GetInvoiceAccounts(clientMnemonic, throughDate).ToList();
 
             if (client.PrintInvoiceInDateOrder)
                 accounts = accounts.OrderBy(x => x.TransactionDate).ThenBy(y => y.AccountNo).ToList();

@@ -53,4 +53,21 @@ public class AccountLockRepository : RepositoryBase<AccountLock>
         return false;
     }
 
+    public bool DeleteByUserHost(string username, string hostname)
+    {
+        var sql = Sql.Builder
+            .Where($"{GetRealColumn(nameof(AccountLock.UpdatedUser))} = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = username })
+            .Where($"{GetRealColumn(nameof(AccountLock.UpdatedHost))} = @0", new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = hostname });
+        try
+        {
+            var retval = Context.Delete<AccountLock>(sql);
+            return retval >= 0;
+        }
+        catch (Exception ex)
+        {
+            Log.Instance.Fatal(ex);
+            return false;
+        }
+    }
+
 }

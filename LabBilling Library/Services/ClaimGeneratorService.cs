@@ -280,10 +280,10 @@ public sealed class ClaimGeneratorService
         ClaimData claim;
         string claimx12;
 
-        using UnitOfWorkMain unitOfWork = new(_appEnvironment, true);
+        using UnitOfWorkMain uow = new(_appEnvironment, true);
 
         string batchSubmitterID = _appEnvironment.ApplicationParameters.FederalTaxId;
-        decimal strNum = unitOfWork.NumberRepository.GetNumber("ssi_batch");
+        decimal strNum = uow.NumberRepository.GetNumber("ssi_batch");
         string interchangeControlNumber = string.Format("{0:D9}", int.Parse(string.Format("{0}{1}", DateTime.Now.Year, strNum)));
 
         try
@@ -319,8 +319,8 @@ public sealed class ClaimGeneratorService
             Text = claimx12
         };
 
-        unitOfWork.BillingActivityRepository.Save(billingActivity);
-        unitOfWork.Commit();
+        uow.BillingActivityRepository.Save(billingActivity);
+        uow.Commit();
 
     }
 
@@ -332,13 +332,12 @@ public sealed class ClaimGeneratorService
     /// <exception cref="InvalidParameterValueException"></exception>
     public ClaimData GenerateClaim(string account, bool reprint = false)
     {
-        AccountService accountService = new(_appEnvironment);
         Account accountModel = new();
         using UnitOfWorkMain uow = new(_appEnvironment, true);
 
         try
         {
-            accountModel = accountService.GetAccount(account);
+            accountModel = _accountService.GetAccount(account);
         }
         catch (AccountLockException alex)
         {
@@ -349,6 +348,7 @@ public sealed class ClaimGeneratorService
         catch (Exception ex)
         {
             Log.Instance.Error($"Error encounter processing {account}", ex);
+            _accountService.ClearAccountLock(accountModel);
             uow.Commit();
             return null;
         }
@@ -357,10 +357,11 @@ public sealed class ClaimGeneratorService
         if (accountModel.ClaimBalance <= 0.00)
         {
             uow.Commit();
+            _accountService.ClearAccountLock(accountModel);
             return null;
         }
 
-        accountModel = accountService.Validate(accountModel, reprint);
+        accountModel = _accountService.Validate(accountModel, reprint);
 
         if (accountModel.AccountValidationStatus.ValidationText != "No validation errors.")
         {
@@ -368,6 +369,7 @@ public sealed class ClaimGeneratorService
             _accountService.AddNote(accountModel.AccountNo, "Account has validation errors.Reverted to NEW status");
             Log.Instance.Info($"Account {accountModel.AccountNo} has validation errors. Reverted to NEW status");
             uow.Commit();
+            _accountService.ClearAccountLock(accountModel);
             return null;
         }
 
@@ -693,17 +695,19 @@ public sealed class ClaimGeneratorService
                 claimData.ClaimLines.Add(claimLine);
             }
 
-            accountService.ClearAccountLock(accountModel);
+            _accountService.ClearAccountLock(accountModel);
             uow.Commit();
         }
         catch (InvalidParameterValueException ipve)
         {
             Log.Instance.Fatal(ipve, $"{account}");
+            _accountService.ClearAccountLock(accountModel);
             throw new InvalidParameterValueException($"Parameter value not found - account {account}", ipve);
         }
         catch (Exception exc)
         {
             Log.Instance.Fatal(exc, $"{account}");
+            _accountService.ClearAccountLock(accountModel);
             throw new ApplicationException($"Exception creating claim for {account}", exc);
         }
 
@@ -712,7 +716,6 @@ public sealed class ClaimGeneratorService
 
     public bool ClearBatch(double batch)
     {
-        AccountService accountService = new(_appEnvironment);
         using UnitOfWorkMain uow = new(_appEnvironment, true);
 
         var data = uow.BillingBatchRepository.GetBatch(batch);
@@ -725,7 +728,7 @@ public sealed class ClaimGeneratorService
                 if (account != null)
                 {
 
-                    accountService.ClearClaimStatus(account);
+                    _accountService.ClearClaimStatus(account);
                 }
                 // dbh - delete history record
                 uow.BillingActivityRepository.Delete(detail);

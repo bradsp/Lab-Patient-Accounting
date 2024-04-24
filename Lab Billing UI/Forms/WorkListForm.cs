@@ -12,9 +12,9 @@ public partial class WorkListForm : Form
 {
     private readonly AccountService _accountService = new(Program.AppEnvironment);
     private readonly WorklistService _worklist = new(Program.AppEnvironment);
-    private bool _tasksRunning = false;
+    private readonly bool _tasksRunning = false;
     private bool _requestAbort = false;
-    private BindingSource _accountBindingSource = new();
+    private readonly BindingSource _accountBindingSource = new();
     private DataTable _accountTable = null;
     private int _worklistPanelWidth = 0;
     private readonly System.Windows.Forms.Timer _timer;
@@ -492,15 +492,15 @@ public partial class WorkListForm : Form
             var accts = _accountTable.Rows.Find(selectedAccount);
             var account = _accountService.GetAccount(selectedAccount);
 
-            if (account.FinCode != "Y")
+            if (account.FinCode != Program.AppEnvironment.ApplicationParameters.BillToClientInvoiceDefaultFinCode)
             {
-                _accountService.ChangeFinancialClass(account, "Y");
+                _accountService.ChangeFinancialClass(account, Program.AppEnvironment.ApplicationParameters.BillToClientInvoiceDefaultFinCode);
                 accts.Delete();
                 accountGrid.Refresh();
             }
             else
             {
-                MessageBox.Show("Account is already a Y financial code.");
+                MessageBox.Show($"Account is already a {Program.AppEnvironment.ApplicationParameters.BillToClientInvoiceDefaultFinCode} financial code.");
             }
         }
         catch (ArgumentException anex)
@@ -527,8 +527,9 @@ public partial class WorkListForm : Form
             else
                 holdToolStripMenuItem.Text = "Manual Hold";
 
-            if (accountGrid.SelectedRows[0].Cells[nameof(AccountSearch.FinCode)].Value.ToString() != "Y")
+            if (accountGrid.SelectedRows[0].Cells[nameof(AccountSearch.FinCode)].Value.ToString() != Program.AppEnvironment.ApplicationParameters.BillToClientInvoiceDefaultFinCode)
             {
+                changeToYFinancialClassToolStripMenuItem.Text = $"Change to {Program.AppEnvironment.ApplicationParameters.BillToClientInvoiceDefaultFinCode} Financial Code";
                 changeToYFinancialClassToolStripMenuItem.Visible = true;
                 changeToYFinancialClassToolStripMenuItem.Enabled = true;
             }
@@ -614,6 +615,8 @@ public partial class WorkListForm : Form
         row.SetField(nameof(AccountSearch.PrimaryInsCode), account.PrimaryInsuranceCode);
         row.SetField(nameof(AccountSearch.TotalCharges), account.TotalCharges);
         row.SetField(nameof(AccountSearch.TotalPayments), account.TotalPayments);
+        row.SetField(nameof(AccountSearch.ValidationStatus), account.AccountValidationStatus.ValidationText);
+        row.SetField(nameof(AccountSearch.LastValidationDate), account.AccountValidationStatus.UpdatedDate);
 
 
     }

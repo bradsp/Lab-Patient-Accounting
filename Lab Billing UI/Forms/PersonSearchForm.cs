@@ -1,32 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Windows.Forms;
-using LabBilling.Logging;
-using LabBilling.Core.Models;
-using WinFormsLibrary;
+﻿using LabBilling.Core.Models;
 using LabBilling.Core.Services;
+using LabBilling.Logging;
+using System.ComponentModel;
+using WinFormsLibrary;
 
 namespace LabBilling.Forms;
 
 public partial class PersonSearchForm : Form
 {
-    List<AccountSearch> searchResults = new List<AccountSearch>();
+    List<AccountSearch> _searchResults = new();
 
     public string SelectedAccount { get; set; }
 
-    private AccountService accountService;
-    private DictionaryService dictionaryService;
+    private readonly AccountService _accountService;
+    private readonly DictionaryService _dictionaryService;
 
-    public PersonSearchForm() 
+    public PersonSearchForm()
     {
         Log.Instance.Trace($"Entering");
         InitializeComponent();
 
         PersonAccountResults.BackgroundColor = Program.AppEnvironment.WindowBackgroundColor;
-        accountService = new(Program.AppEnvironment);
-        dictionaryService = new(Program.AppEnvironment);
+        _accountService = new(Program.AppEnvironment);
+        _dictionaryService = new(Program.AppEnvironment);
     }
 
     private void SearchButton_Click(object sender, EventArgs e)
@@ -38,10 +34,10 @@ public partial class PersonSearchForm : Form
         if (dobSearchText.MaskFull)
             dobText = dobSearchText.Text;
 
-        searchResults = accountService.SearchAccounts(txtLastName.Text, txtFirstName.Text, mrnSearchText.Text, ssnSearchText.Text, dobText,
+        _searchResults = _accountService.SearchAccounts(txtLastName.Text, txtFirstName.Text, mrnSearchText.Text, ssnSearchText.Text, dobText,
             cbSexSearch.SelectedIndex < 0 ? "" : cbSexSearch.SelectedValue.ToString(), accountSearchText.Text).ToList();
 
-        var searchBindingList = new BindingList<AccountSearch>(searchResults);
+        var searchBindingList = new BindingList<AccountSearch>(_searchResults);
         var source = new BindingSource(searchBindingList, null);
 
         PersonAccountResults.DataSource = source;
@@ -60,12 +56,13 @@ public partial class PersonSearchForm : Form
 
         PersonAccountResults.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
         PersonAccountResults.Columns[nameof(AccountSearch.Name)].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+
     }
 
     private void PersonSearchForm_Load(object sender, EventArgs e)
     {
         Log.Instance.Trace($"Entering");
-        cbSexSearch.DataSource = new BindingSource(Dictionaries.sexSource, null);
+        cbSexSearch.DataSource = new BindingSource(Dictionaries.SexSource, null);
         cbSexSearch.ValueMember = "Key";
         cbSexSearch.DisplayMember = "Value";
 
@@ -99,7 +96,7 @@ public partial class PersonSearchForm : Form
     private void AddAccount_Click(object sender, EventArgs e)
     {
         Log.Instance.Trace($"Entering");
-        NewAccountForm naf = new NewAccountForm();
+        NewAccountForm naf = new();
 
         if (naf.ShowDialog() == DialogResult.OK)
         {

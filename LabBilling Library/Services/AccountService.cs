@@ -72,6 +72,13 @@ public sealed class AccountService
         return (false, alock);
     }
 
+    public List<AccountLock> GetAccountLocks()
+    {
+        UnitOfWorkMain uow = new(_appEnvironment);
+
+        return uow.AccountLockRepository.GetAll();
+    }
+
     public bool ClearAccountLock(Account account)
     {
         UnitOfWorkMain uow = new(_appEnvironment);
@@ -96,17 +103,36 @@ public sealed class AccountService
         return retval;
     }
 
-    public Account GetAccount(string account, bool demographicsOnly = false)
+    public bool ClearAccountLocks(string username, string hostname)
+    {
+        using AccountUnitOfWork uow = new(_appEnvironment);
+        try
+        {
+            return uow.AccountLockRepository.DeleteByUserHost(username, hostname);
+        }
+        catch(Exception ex)
+        {
+            Log.Instance.Fatal(ex);
+            return false;
+        }
+    }
+
+    public Account GetAccount(string account, bool demographicsOnly = false, bool secureLock = true)
     {
         Log.Instance.Trace($"Entering - account {account} demographicsOnly {demographicsOnly}");
 
         using AccountUnitOfWork uow = new(_appEnvironment);
+        bool locksuccessful = false;
+        AccountLock alock = null;
 
-        //get lock before loading account
-        var (locksuccessful, alock) = GetAccountLock(account);
-        if (!locksuccessful)
+        if (secureLock)
         {
-            throw new AccountLockException(alock);
+            //get lock before loading account
+            (locksuccessful, alock) = GetAccountLock(account);
+            if (!locksuccessful)
+            {
+                throw new AccountLockException(alock);
+            }
         }
 
         Account record = null;
@@ -138,35 +164,47 @@ public sealed class AccountService
         }
         record.Pat = uow.PatRepository.GetByAccount(record);
         record.Charges = GetCharges(account, true, true, null, false).ToList();
-        record.ChrgDiagnosisPointers = uow.ChrgDiagnosisPointerRepository.GetByAccount(account).ToList();
 
-        record.Charges.Where(c => c.CDMCode != _appEnvironment.ApplicationParameters.ClientInvoiceCdm).ToList().ForEach(chrg =>
+        if (record.FinCode != _appEnvironment.ApplicationParameters.ClientAccountFinCode)
         {
-            chrg.ChrgDetails.ForEach(cd =>
+            record.ChrgDiagnosisPointers = uow.ChrgDiagnosisPointerRepository.GetByAccount(account).ToList();
+
+            record.Charges.Where(c => c.CDMCode != _appEnvironment.ApplicationParameters.ClientInvoiceCdm).ToList().ForEach(chrg =>
             {
-                var diagPtr = record.ChrgDiagnosisPointers.Find(c => c.CdmCode == chrg.CDMCode && c.CptCode == cd.Cpt4);
-                if (diagPtr == null)
+                chrg.ChrgDetails.ForEach(cd =>
                 {
-                    //add a new diag ptr
-                    ChrgDiagnosisPointer ptr = new()
+                    var diagPtr = record.ChrgDiagnosisPointers.Find(c => c.CdmCode == chrg.CDMCode && c.CptCode == cd.Cpt4);
+                    if (diagPtr == null)
                     {
-                        AccountNo = record.AccountNo,
-                        CdmCode = chrg.CDMCode,
-                        CptCode = cd.Cpt4,
-                        DiagnosisPointer = "1:"
-                    };
-                    record.ChrgDiagnosisPointers.Add(uow.ChrgDiagnosisPointerRepository.Add(ptr));
+                        //add a new diag ptr
+                        ChrgDiagnosisPointer ptr = new()
+                        {
+                            AccountNo = record.AccountNo,
+                            CdmCode = chrg.CDMCode,
+                            CptCode = cd.Cpt4,
+                            DiagnosisPointer = "1:"
+                        };
+                        record.ChrgDiagnosisPointers.Add(uow.ChrgDiagnosisPointerRepository.Add(ptr));
+                    }
+                });
+            });
+            List<ChrgDiagnosisPointer> temp = new List<ChrgDiagnosisPointer>();
+            record.ChrgDiagnosisPointers.ForEach(d =>
+            {
+                d.CdmDescription = record.Cdms.Where(c => c.ChargeId == d.CdmCode).FirstOrDefault()?.Description;
+                if (!string.IsNullOrEmpty(d.CptCode))
+                {
+                    d.CptDescription = record.Cdms.Where(c => c.ChargeId == d.CdmCode).FirstOrDefault()?.CdmDetails?.Where(cd => cd.Cpt4 == d.CptCode).FirstOrDefault()?.Description;
+                }
+                if(string.IsNullOrEmpty(d.CdmDescription) || string.IsNullOrEmpty(d.CptDescription))
+                {
+                    uow.ChrgDiagnosisPointerRepository.Delete(d);
+                    temp.Add(d);
                 }
             });
-        });
 
-        record.ChrgDiagnosisPointers.ForEach(d =>
-        {
-            d.CdmDescription = record.Cdms.Where(c => c.ChargeId == d.CdmCode).First().Description;
-            if (!string.IsNullOrEmpty(d.CptCode))
-                d.CptDescription = record.Cdms.Where(c => c.ChargeId == d.CdmCode).First()?.CdmDetails?.Where(cd => cd.Cpt4 == d.CptCode).First()?.Description;
-        });
-
+            temp.ForEach(d => record.ChrgDiagnosisPointers.Remove(d));
+        }
         record.Payments = uow.ChkRepository.GetByAccount(account);
 
         if (!demographicsOnly)
@@ -741,7 +779,13 @@ public sealed class AccountService
             model.FinCode = newFinCode;
             try
             {
-                uow.AccountRepository.Update(model, new[] { nameof(Account.FinCode) });
+                if(model.ReadyToBill)
+                {
+                    //clear ready to bill
+                    model.Status = AccountStatus.New;
+                    model.Notes = AddNote(model.AccountNo,"Ready to Bill status cleared due to financial class change.").ToList();
+                }
+                uow.AccountRepository.Update(model, new[] { nameof(Account.FinCode), nameof(Account.Status) });
             }
             catch (Exception ex)
             {
@@ -767,6 +811,7 @@ public sealed class AccountService
                 model.Charges = UpdateChargesFinCode(model.Charges, newFinCode).ToList();
             }
             uow.Commit();
+            model = Validate(model);
         }
 
         Log.Instance.Trace($"Exiting");
@@ -942,13 +987,20 @@ public sealed class AccountService
 
         if (charges.Count > 10) //consider parallel processing if number of charges is significant.
         {
-            charges.AsParallel().ForAll(chrg => AddRevenueDiagnosisToChrg(chrg));
+            charges.AsParallel().ForAll(chrg =>
+            {
+                chrg.Cdm = _dictionaryService.GetCdm(chrg.CDMCode, true);
+                AddRevenueDiagnosisToChrg(chrg);
+            });
         }
         else
         {
-            charges.ForEach(chrg => AddRevenueDiagnosisToChrg(chrg));
+            charges.ForEach(chrg =>
+            {
+                chrg.Cdm = _dictionaryService.GetCdm(chrg.CDMCode, true);
+                AddRevenueDiagnosisToChrg(chrg);
+            });
         }
-
         return charges;
     }
 

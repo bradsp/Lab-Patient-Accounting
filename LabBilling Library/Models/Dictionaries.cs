@@ -4,7 +4,7 @@ namespace LabBilling.Core.Models;
 
 public static class Dictionaries
 {
-    public static Dictionary<string, string> stateSource = new Dictionary<string, string>
+    public static readonly Dictionary<string, string> StateSource = new()
     {
         { "", "--Select--" },
         { "AL", "Alabama" },
@@ -66,7 +66,7 @@ public static class Dictionaries
         { "WY", "Wyoming" }
     };
 
-    public static Dictionary<string, string> sexSource = new Dictionary<string, string>
+    public static readonly Dictionary<string, string> SexSource = new()
     {
         { "", "--Select--" },
         { "M", "Male" },
@@ -74,7 +74,7 @@ public static class Dictionaries
         { "U", "Unknown" }
     };
 
-    public static Dictionary<string, string> WriteOffCodes = new Dictionary<string, string>
+    public static readonly Dictionary<string, string> WriteOffCodes = new()
     {
         { "", "--Select--" },
         { "0100", "Overlapping hospital charges" },
@@ -94,7 +94,7 @@ public static class Dictionaries
         { "1500", "Other reason not listed above / will need to add detail explanation in comment." }
     };
 
-    public static Dictionary<string, string> maritalSource = new Dictionary<string, string>
+    public static readonly Dictionary<string, string> MaritalSource = new()
     {
         { "", "--Select--" },
         { "U", "Unknown" },
@@ -105,7 +105,7 @@ public static class Dictionaries
         { "D", "Divorced" },
     };
 
-    public static Dictionary<string, string> relationSource = new Dictionary<string, string>
+    public static readonly Dictionary<string, string> RelationSource = new()
     {
         //01 - Self;02 - Spouse;03 - Child;09 - Unknown;
         { "", "--Select--" },
@@ -116,7 +116,7 @@ public static class Dictionaries
         { "09", "Unknown" }
     };
 
-    public static Dictionary<string, string> payorOrderSource = new Dictionary<string, string>
+    public static readonly Dictionary<string, string> PayorOrderSource = new()
     {
         { "", "--Select--" },
         { "A", "Primary" },
@@ -124,7 +124,7 @@ public static class Dictionaries
         { "C", "Tertiary" }
     };
 
-    public static Dictionary<string, string> clientType = new Dictionary<string, string>
+    public static readonly Dictionary<string, string> ClientType = new()
     {
         { "0", "Affiliate Hospital" },
         { "1", "Alliance Hospital" },
@@ -139,7 +139,7 @@ public static class Dictionaries
         { "10", "Veterinary Clinic" }
     };
 
-    public static Dictionary<string, string> emrType = new Dictionary<string, string>
+    public static readonly Dictionary<string, string> EmrType = new()
     {
         { "EHS", "EHS/Greenway" },
         { "INTERFACE", "Interfaced Clinic" },
@@ -148,13 +148,13 @@ public static class Dictionaries
         { "NONE", "No Integrated EMR" }
     };
 
-    public static Dictionary<string, string> feeSchedule = new Dictionary<string, string>
+    public static readonly Dictionary<string, string> FeeSchedule = new()
     {
         { "1", "1" },
         { "3", "3" }
     };
 
-    public static Dictionary<string, string> counties = new Dictionary<string, string>
+    public static readonly Dictionary<string, string> Counties = new()
     {
         {"","--Select--" },
         {"Anderson","Anderson"},
@@ -254,7 +254,7 @@ public static class Dictionaries
         {"Wilson","Wilson"}
     };
 
-    public static Dictionary<string, string> claimFilingIndicatorCode = new Dictionary<string, string>
+    public static readonly Dictionary<string, string> ClaimFilingIndicatorCode = new()
     {
         {"","--Select--" },
         {"AM", "Automobile Medical"},
@@ -282,8 +282,9 @@ public static class Dictionaries
         {"WC", "Workers’ Compensation Health Claim"},
     };
 
-    public static Dictionary<string, string> cptModifiers = new Dictionary<string, string>
+    public static readonly Dictionary<string, string> CptModifiers = new()
     {
+        {"TC", "Technical Component" },
         {"59", "Distinct Procedural Service" },
         {"90", "Reference (Outside) Laboratory" },
         {"91", "Repeat Test" },

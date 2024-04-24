@@ -10,8 +10,6 @@ namespace LabBilling.Core.DataAccess;
 
 public sealed class ChrgRepository : RepositoryBase<Chrg>
 {
-    private const string invoiceCode = "CBILL";
-
     public ChrgRepository(IAppEnvironment appEnvironment, PetaPoco.IDatabase context) : base(appEnvironment, context)
     {
     }
@@ -77,7 +75,7 @@ public sealed class ChrgRepository : RepositoryBase<Chrg>
 
         if (excludeCBill)
             sql.Where($"{GetRealColumn(nameof(Chrg.CDMCode))} <> @0",
-                new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = invoiceCode });
+                new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = AppEnvironment.ApplicationParameters.ClientInvoiceCdm });
 
         sql.OrderBy($"{_tableName}.{GetRealColumn(nameof(Chrg.ChrgId))}");
 
@@ -148,7 +146,7 @@ public sealed class ChrgRepository : RepositoryBase<Chrg>
             .Where($"{GetRealColumn(typeof(InvoiceChargeView), nameof(InvoiceChargeView.AccountNo))} = @0",
                 new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = account })
             .Where($"{GetRealColumn(typeof(InvoiceChargeView), nameof(InvoiceChargeView.ChargeItemId))} <> @0",
-                new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = invoiceCode })
+                new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = AppEnvironment.ApplicationParameters.ClientInvoiceCdm })
             .Where($"{GetRealColumn(typeof(InvoiceChargeView), nameof(InvoiceChargeView.ClientMnem))} = @0",
                 new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = clientMnem })
             .Where($"{GetRealColumn(typeof(InvoiceChargeView), nameof(InvoiceChargeView.FinancialType))} = @0",
@@ -225,7 +223,7 @@ public sealed class ChrgRepository : RepositoryBase<Chrg>
 
         foreach (Chrg chrg in chrgs.Where(x => x.ClientMnem == clientMnem && x.FinancialType == "C"))
         {
-            if (chrg.CDMCode != invoiceCode && (chrg.Invoice == "" || chrg.Invoice == null))
+            if (chrg.CDMCode != AppEnvironment.ApplicationParameters.ClientInvoiceCdm && (chrg.Invoice == "" || chrg.Invoice == null))
             {
                 chrg.Invoice = invoiceNo;
 

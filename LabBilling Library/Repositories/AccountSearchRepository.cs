@@ -217,9 +217,9 @@ public sealed class AccountSearchRepository : RepositoryBase<AccountSearch>
 
         try
         {
-            string nameSearch = "";
-            if (!(lastNameSearchText == "" && firstNameSearchText == ""))
-                nameSearch = string.Format("{0}%,{1}%", lastNameSearchText, firstNameSearchText);
+            //string nameSearch = "";
+            //if (!(lastNameSearchText == "" && firstNameSearchText == ""))
+            //    nameSearch = string.Format("{0}%,{1}%", lastNameSearchText, firstNameSearchText);
 
             var command = PetaPoco.Sql.Builder
                 .Where("deleted = 0 ");

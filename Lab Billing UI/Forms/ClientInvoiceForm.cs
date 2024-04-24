@@ -2,6 +2,7 @@
 using LabBilling.Core.Services;
 using LabBilling.Library;
 using LabBilling.Logging;
+using NPOI.HPSF;
 using System.Diagnostics;
 using System.IO;
 using Utilities;
@@ -19,13 +20,13 @@ public partial class ClientInvoiceForm : Form
     }
 
     private DateTime _thruDate;
-    private ClientInvoicesService clientInvoicesService;
-    private DictionaryService dictionaryService;
-    private List<Client> clientList;
-    private List<UnbilledClient> unbilledClients;
-    private InvoiceWaitForm invoiceWaitForm;
+    private ClientInvoicesService _clientInvoicesService;
+    private DictionaryService _dictionaryService;
+    private List<Client> _clientList;
+    private List<UnbilledClient> _unbilledClients;
+    private InvoiceWaitForm _invoiceWaitForm;
     public event EventHandler<string> AccountLaunched;
-    private CancellationTokenSource cts = new();
+    private CancellationTokenSource _cts = new();
     private async void ClientInvoiceForm_Load(object sender, EventArgs e)
     {
         progressBar1.Visible = false;
@@ -36,16 +37,16 @@ public partial class ClientInvoiceForm : Form
         CleanTempFiles();
         Cursor.Current = Cursors.WaitCursor;
 
-        clientInvoicesService = new ClientInvoicesService(Program.AppEnvironment);
-        dictionaryService = new(Program.AppEnvironment);
+        _clientInvoicesService = new ClientInvoicesService(Program.AppEnvironment);
+        _dictionaryService = new(Program.AppEnvironment);
 
-        clientInvoicesService.InvoiceGenerated += ClientInvoices_InvoiceGenerated;
-        clientInvoicesService.InvoiceRunCompleted += ClientInvoices_InvoiceRunCompleted;
+        _clientInvoicesService.InvoiceGenerated += ClientInvoices_InvoiceGenerated;
+        _clientInvoicesService.InvoiceRunCompleted += ClientInvoices_InvoiceRunCompleted;
 
-        clientList = DataCache.Instance.GetClients();
-        clientList.Sort((p, q) => p.Name.CompareTo(q.Name));
+        _clientList = DataCache.Instance.GetClients();
+        _clientList.Sort((p, q) => p.Name.CompareTo(q.Name));
 
-        clientList.Insert(0, new Client
+        _clientList.Insert(0, new Client
         {
             ClientMnem = null,
             Name = "--All Clients--"
@@ -60,7 +61,7 @@ public partial class ClientInvoiceForm : Form
         InvoicesDGV.MultiSelect = false;
         SelectionProfile.SelectedIndex = 0;
 
-        ClientFilter.DataSource = clientList;
+        ClientFilter.DataSource = _clientList;
         ClientFilter.DisplayMember = nameof(Client.Name);
         ClientFilter.ValueMember = nameof(Client.ClientMnem);
 
@@ -123,15 +124,15 @@ public partial class ClientInvoiceForm : Form
 
         waitForm.Show(this);
 
-        unbilledClients = await clientInvoicesService.GetUnbilledClientsAsync(_thruDate, progress);
+        _unbilledClients = await _clientInvoicesService.GetUnbilledClientsAsync(_thruDate, progress);
 
         waitForm.Close();
 
-        InvoicesDGV.DataSource = unbilledClients;
+        InvoicesDGV.DataSource = _unbilledClients;
 
         SetupInvoicesDGV();
 
-        double sum = unbilledClients.Sum(x => x.UnbilledAmount);
+        double sum = _unbilledClients.Sum(x => x.UnbilledAmount);
 
         TotalUnbilledCharges.Text = sum.ToString("C");
         TotalUnbilledCharges.TextAlign = HorizontalAlignment.Right;
@@ -142,7 +143,7 @@ public partial class ClientInvoiceForm : Form
 
     private void RefreshUnbilledAccountsGrid(string clientMnem)
     {
-        UnbilledAccountsDGV.DataSource = unbilledClients.Where(x => x.ClientMnem == clientMnem).First().UnbilledAccounts;
+        UnbilledAccountsDGV.DataSource = _unbilledClients.Where(x => x.ClientMnem == clientMnem).First().UnbilledAccounts;
 
         UnbilledAccountsDGV.Columns[nameof(UnbilledAccounts.FinancialClass)].Visible = false;
         UnbilledAccountsDGV.Columns[nameof(UnbilledAccounts.UnbilledAmount)].DefaultCellStyle.Format = "c2";
@@ -157,8 +158,8 @@ public partial class ClientInvoiceForm : Form
     private async void GenerateInvoicesBtn_Click(object sender, EventArgs e)
     {
         Log.Instance.Trace("Entering");
-        cts.Dispose();
-        cts = new CancellationTokenSource();
+        _cts.Dispose();
+        _cts = new CancellationTokenSource();
         List<UnbilledClient> clientsToBill = new();
 
         Cursor.Current = Cursors.WaitCursor;
@@ -167,30 +168,30 @@ public partial class ClientInvoiceForm : Form
         {
             if ((bool)row.Cells["SelectForInvoice"].Value == true)
             {
-                clientsToBill.Add(unbilledClients.First(x => x.ClientMnem == row.Cells[nameof(UnbilledClient.ClientMnem)].Value.ToString()));
+                clientsToBill.Add(_unbilledClients.First(x => x.ClientMnem == row.Cells[nameof(UnbilledClient.ClientMnem)].Value.ToString()));
             }
         }
         Cursor.Current = Cursors.Default;
 
         GenerateInvoicesBtn.Enabled = false;
-        invoiceWaitForm = new();
+        _invoiceWaitForm = new();
 
         try
         {
-            clientInvoicesService.ReportProgress += ClientInvoicesService_ReportProgress;
-            invoiceWaitForm.CancelRequested += (sender, e) => { cts.Cancel(); };
-            invoiceWaitForm.Show(this);
-            await clientInvoicesService.CompileAsync(_thruDate, clientsToBill, cts.Token);
-            invoiceWaitForm.Close();
-            if (cts.IsCancellationRequested)
+            _clientInvoicesService.ReportProgress += ClientInvoicesService_ReportProgress;
+            _invoiceWaitForm.CancelRequested += (sender, e) => { _cts.Cancel(); };
+            _invoiceWaitForm.Show(this);
+            await _clientInvoicesService.CompileAsync(_thruDate, clientsToBill, _cts.Token);
+            _invoiceWaitForm.Close();
+            if (_cts.IsCancellationRequested)
                 MessageBox.Show("Invoice processing cancelled.");
             else
                 MessageBox.Show("Invoice processing complete.");
         }
         catch (Exception ex)
         {
-            invoiceWaitForm.Close();
-            if (cts.IsCancellationRequested)
+            _invoiceWaitForm.Close();
+            if (_cts.IsCancellationRequested)
             {
                 MessageBox.Show("Invoice processing cancelled.");
             }
@@ -206,12 +207,12 @@ public partial class ClientInvoiceForm : Form
     {
         if (e.ReportingClient)
         {
-            invoiceWaitForm.UpdateInvoiceProgress(HelperExtensions.ComputePercentage(e.ClientsProcessed, e.ClientsTotal), $"Processing invoice for {e.Client} - {e.ClientsProcessed} of {e.ClientsTotal} processed.");
+            _invoiceWaitForm.UpdateInvoiceProgress(HelperExtensions.ComputePercentage(e.ClientsProcessed, e.ClientsTotal), $"Processing invoice for {e.Client} - {e.ClientsProcessed} of {e.ClientsTotal} processed.");
         }
 
         if (e.ReportingAccount)
         {
-            invoiceWaitForm.UpdateAccountProgress(HelperExtensions.ComputePercentage(e.AccountsProcessed, e.AccountsTotal), $"Processed {e.AccountsProcessed} of {e.AccountsTotal} accounts.");
+            _invoiceWaitForm.UpdateAccountProgress(HelperExtensions.ComputePercentage(e.AccountsProcessed, e.AccountsTotal), $"Processed {e.AccountsProcessed} of {e.AccountsTotal} accounts.");
         }
     }
 
@@ -288,7 +289,7 @@ public partial class ClientInvoiceForm : Form
         DateTime.TryParse(FromDate.Text, out DateTime fd);
         DateTime.TryParse(ThroughDate.Text, out DateTime td);
 
-        InvoiceHistoryDGV.DataSource = clientInvoicesService.GetInvoiceHistory(ClientFilter.SelectedValue?.ToString(), fd, td, invoiceTextBox.Text);
+        InvoiceHistoryDGV.DataSource = _clientInvoicesService.GetInvoiceHistory(ClientFilter.SelectedValue?.ToString(), fd, td, invoiceTextBox.Text);
 
         SetupInvoiceHistoryGrid();
 
@@ -321,12 +322,12 @@ public partial class ClientInvoiceForm : Form
 
     private async Task RefreshInvoiceHistoryGridAsync()
     {
-        DateTime.TryParse(FromDate.Text, out DateTime fd);
-        DateTime.TryParse(ThroughDate.Text, out DateTime td);
+        _ = DateTime.TryParse(FromDate.Text, out DateTime fd);
+        _ = DateTime.TryParse(ThroughDate.Text, out DateTime td);
 
         string client = ClientFilter.SelectedValue?.ToString();
 
-        InvoiceHistoryDGV.DataSource = await Task.Run(() => clientInvoicesService.GetInvoiceHistory(client, fd, td, invoiceTextBox.Text));
+        InvoiceHistoryDGV.DataSource = await Task.Run(() => _clientInvoicesService.GetInvoiceHistory(client, fd, td, invoiceTextBox.Text));
 
         SetupInvoiceHistoryGrid();
 
@@ -356,14 +357,7 @@ public partial class ClientInvoiceForm : Form
             InvoicePrintPdfSharp invoicePrint = new(Program.AppEnvironment);
 
             string filename = invoicePrint.PrintInvoice(invoiceNo);
-            var p = new Process
-            {
-                StartInfo = new ProcessStartInfo(filename)
-                {
-                    UseShellExecute = true
-                }
-            };
-            p.Start();
+            LaunchPDF(filename);
         }
     }
 
@@ -384,14 +378,15 @@ public partial class ClientInvoiceForm : Form
             var client = row.Cells[nameof(InvoiceHistory.ClientMnem)].Value.ToString();
             var invoice = row.Cells[nameof(InvoiceHistory.InvoiceNo)].Value.ToString();
 
-            var model = clientInvoicesService.GenerateStatement(client, DateTime.Today.AddDays(-120));
+            var model = _clientInvoicesService.GenerateStatement(client, DateTime.Today.AddDays(-120));
             models.Add(model);
-
-            string stmtFilename = invoicePrint.PrintInvoice(invoice);
+            string stmtFilename = invoicePrint.CreateStatementPdf(model);
+            string invFilename = invoicePrint.PrintInvoice(invoice);
 
             if (!string.IsNullOrWhiteSpace(stmtFilename))
                 files.Add(stmtFilename);
 
+            files.Add(invFilename);
             progressBar1.Increment(1);
         }
 
@@ -437,16 +432,14 @@ public partial class ClientInvoiceForm : Form
 
         if (senderName == printToolStripMenuItem.Name || senderName == printAllToolStripMenuItem.Name)
         {
-            PrintDialog printDialog = new PrintDialog();
+            PrintDialog printDialog = new();
 
             Cursor.Current = Cursors.WaitCursor;
 
             string outfile = $"c:\\temp\\invoiceTemp-{Guid.NewGuid()}.pdf";
 
             CompileInvoicesToPdf(outfile, duplexPrinting);
-
-            Process.Start(outfile);
-
+            LaunchPDF(outfile);
         }
         else if (senderName == saveToPDFToolStripMenuItem.Name || senderName == saveAllToPDFToolStripMenuItem.Name)
         {
@@ -471,12 +464,23 @@ public partial class ClientInvoiceForm : Form
                 string filename = saveFileDialog.FileName;
 
                 CompileInvoicesToPdf(filename);
-                System.Diagnostics.Process.Start(filename);
+
+                LaunchPDF(filename);
             }
         }
 
         Cursor.Current = Cursors.Default;
         progressBar1.Visible = false;
+    }
+
+    private static void LaunchPDF(string filename)
+    {
+        using Process fileopener = new();
+
+        fileopener.StartInfo.FileName = "explorer";
+        fileopener.StartInfo.Arguments = "\"" + filename + "\"";
+
+        fileopener.Start();
     }
 
     private bool PrintPDF(string file, string printer)
@@ -528,8 +532,8 @@ public partial class ClientInvoiceForm : Form
         if (!FromDate.MaskFull)
             return;
 
-        DateTime.TryParse(FromDate.Text, out DateTime fd);
-        DateTime.TryParse(ThroughDate.Text, out DateTime td);
+        _ = DateTime.TryParse(FromDate.Text, out DateTime fd);
+        _ = DateTime.TryParse(ThroughDate.Text, out DateTime td);
 
         if (fd > td)
         {
@@ -549,8 +553,8 @@ public partial class ClientInvoiceForm : Form
         if (ThroughDate.Text == "" || ThroughDate.Text == null)
             return;
 
-        DateTime.TryParse(FromDate.Text, out DateTime fd);
-        DateTime.TryParse(ThroughDate.Text, out DateTime td);
+        _ = DateTime.TryParse(FromDate.Text, out DateTime fd);
+        _ = DateTime.TryParse(ThroughDate.Text, out DateTime td);
         if (fd > td)
         {
             return;
@@ -571,6 +575,8 @@ public partial class ClientInvoiceForm : Form
 
     private void generateStatementButton_Click(object sender, EventArgs e)
     {
+        InvoicePrintPdfSharp invoicePrint = new(Program.AppEnvironment);
+
         if (InvoiceHistoryDGV.SelectedRows[0].Cells[nameof(InvoiceHistory.ClientMnem)].Value == null)
         {
             MessageBox.Show("Invoice image not stored in history record.");
@@ -580,7 +586,9 @@ public partial class ClientInvoiceForm : Form
         {
             var statementBeginDate = InputDialogs.SelectStatementBeginDate(DateTime.Today.AddDays(-120));
             string client = InvoiceHistoryDGV.SelectedRows[0].Cells[nameof(InvoiceHistory.ClientMnem)].Value.ToString();
-            clientInvoicesService.GenerateStatement(client, (DateTime)statementBeginDate);
+            var model = _clientInvoicesService.GenerateStatement(client, (DateTime)statementBeginDate);
+            string filename = invoicePrint.CreateStatementPdf(model);
+            LaunchPDF(filename);
         }
 
     }

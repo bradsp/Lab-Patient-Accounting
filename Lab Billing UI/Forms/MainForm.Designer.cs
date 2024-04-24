@@ -68,6 +68,7 @@ partial class MainForm
         interfaceMappingToolStripMenuItem = new ToolStripMenuItem();
         interfaceMonitorToolStripMenuItem = new ToolStripMenuItem();
         systemLogViewerToolStripMenuItem = new ToolStripMenuItem();
+        viewLocksToolStripMenuItem = new ToolStripMenuItem();
         windowToolStripMenuItem = new ToolStripMenuItem();
         helpToolStripMenuItem = new ToolStripMenuItem();
         documentationToolStripMenuItem = new ToolStripMenuItem();
@@ -278,7 +279,7 @@ partial class MainForm
         // 
         // systemAdministrationToolStripMenuItem
         // 
-        systemAdministrationToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { userSecurityToolStripMenuItem, systemParametersToolStripMenuItem, interfaceMappingToolStripMenuItem, interfaceMonitorToolStripMenuItem, systemLogViewerToolStripMenuItem });
+        systemAdministrationToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { userSecurityToolStripMenuItem, systemParametersToolStripMenuItem, interfaceMappingToolStripMenuItem, interfaceMonitorToolStripMenuItem, systemLogViewerToolStripMenuItem, viewLocksToolStripMenuItem });
         systemAdministrationToolStripMenuItem.Name = "systemAdministrationToolStripMenuItem";
         resources.ApplyResources(systemAdministrationToolStripMenuItem, "systemAdministrationToolStripMenuItem");
         // 
@@ -311,6 +312,12 @@ partial class MainForm
         systemLogViewerToolStripMenuItem.Name = "systemLogViewerToolStripMenuItem";
         resources.ApplyResources(systemLogViewerToolStripMenuItem, "systemLogViewerToolStripMenuItem");
         systemLogViewerToolStripMenuItem.Click += systemLogViewerToolStripMenuItem_Click;
+        // 
+        // viewLocksToolStripMenuItem
+        // 
+        viewLocksToolStripMenuItem.Name = "viewLocksToolStripMenuItem";
+        resources.ApplyResources(viewLocksToolStripMenuItem, "viewLocksToolStripMenuItem");
+        viewLocksToolStripMenuItem.Click += viewLocksToolStripMenuItem_Click;
         // 
         // windowToolStripMenuItem
         // 
@@ -480,4 +487,5 @@ partial class MainForm
     private System.Windows.Forms.CustomTabControl mdiTabControl;
     private System.Windows.Forms.ToolStripMenuItem windowToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem auditReportsToolStripMenuItem;
+    private ToolStripMenuItem viewLocksToolStripMenuItem;
 }

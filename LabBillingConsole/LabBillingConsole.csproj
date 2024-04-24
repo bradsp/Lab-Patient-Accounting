@@ -25,7 +25,7 @@
     <Copyright>Copyright © wth.org 2022</Copyright>
     <FileVersion>2023.1.1.524</FileVersion>
     <InformationalVersion>2024.1.2.4</InformationalVersion>
-    <Platforms>AnyCPU;x64</Platforms>
+    <Platforms>x64</Platforms>
   </PropertyGroup>
   <ItemGroup>
     <Content Include="NLog.config">
