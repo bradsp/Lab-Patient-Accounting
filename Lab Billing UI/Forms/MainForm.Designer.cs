@@ -68,6 +68,7 @@ partial class MainForm
         interfaceMappingToolStripMenuItem = new ToolStripMenuItem();
         interfaceMonitorToolStripMenuItem = new ToolStripMenuItem();
         systemLogViewerToolStripMenuItem = new ToolStripMenuItem();
+        viewLocksToolStripMenuItem = new ToolStripMenuItem();
         windowToolStripMenuItem = new ToolStripMenuItem();
         helpToolStripMenuItem = new ToolStripMenuItem();
         documentationToolStripMenuItem = new ToolStripMenuItem();
@@ -80,7 +81,6 @@ partial class MainForm
         panel1 = new Panel();
         helpProvider1 = new HelpProvider();
         mdiTabControl = new CustomTabControl();
-        viewLocksToolStripMenuItem = new ToolStripMenuItem();
         MainFormMenu.SuspendLayout();
         statusStrip1.SuspendLayout();
         SuspendLayout();
@@ -313,6 +313,12 @@ partial class MainForm
         resources.ApplyResources(systemLogViewerToolStripMenuItem, "systemLogViewerToolStripMenuItem");
         systemLogViewerToolStripMenuItem.Click += systemLogViewerToolStripMenuItem_Click;
         // 
+        // viewLocksToolStripMenuItem
+        // 
+        viewLocksToolStripMenuItem.Name = "viewLocksToolStripMenuItem";
+        resources.ApplyResources(viewLocksToolStripMenuItem, "viewLocksToolStripMenuItem");
+        viewLocksToolStripMenuItem.Click += viewLocksToolStripMenuItem_Click;
+        // 
         // windowToolStripMenuItem
         // 
         windowToolStripMenuItem.Name = "windowToolStripMenuItem";
@@ -401,12 +407,6 @@ partial class MainForm
         mdiTabControl.Name = "mdiTabControl";
         mdiTabControl.SelectedIndex = 0;
         mdiTabControl.SelectedIndexChanged += mdiTabControl_SelectedIndexChanged;
-        // 
-        // viewLocksToolStripMenuItem
-        // 
-        viewLocksToolStripMenuItem.Name = "viewLocksToolStripMenuItem";
-        resources.ApplyResources(viewLocksToolStripMenuItem, "viewLocksToolStripMenuItem");
-        viewLocksToolStripMenuItem.Click += viewLocksToolStripMenuItem_Click;
         // 
         // MainForm
         // 

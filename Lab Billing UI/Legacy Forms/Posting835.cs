@@ -31,7 +31,7 @@ public partial class Posting835 : Form
     private string _strFileType = null;
     private readonly Dictionary<string, decimal> _dicSTAmts = new();
     private DataTable _dtNotes = new();
-    private string PropAppName
+    private static string PropAppName
     { get { return string.Format("{0} {1}", Application.ProductName, Application.ProductVersion); } }
 
     private readonly Dictionary<string, string> m_dicPayer = new();
@@ -102,7 +102,7 @@ public partial class Posting835 : Form
     /// This is used to post both the eob and checks. It is much faster than using the DataGridView
     /// which slows enormiouly after 100 records are loaded.
     /// </summary>
-    private DataSet _dsRecords = new DataSet();
+    private DataSet _dsRecords = new();
 
     /// <summary>
     /// Dictionarys containing Grids bands
@@ -263,7 +263,7 @@ public partial class Posting835 : Form
         eClaimForwardedID // if any items are added after this enum change the CreateDataGridViewEOB() funtion
 
     }
-    private void TsmiFileOpen_Click(object sender, EventArgs e)
+    private void fileOpenToolStripItem_Click(object sender, EventArgs e)
     {
         openFileDialog.Filter = "835 Files (*.835)|*.835|XML Files (*.X12)|*.X12|ALL Files (*.*)|*.*";
         openFileDialog.FilterIndex = 1;
@@ -280,8 +280,6 @@ public partial class Posting835 : Form
             ProcessFile(_strFileName, _strFileType);
             Application.DoEvents();
         }
-
-
     }
 
     /// <summary>
@@ -318,7 +316,7 @@ public partial class Posting835 : Form
         _myPrintDocument = new PrintDocument(); // create the blank document to print on.
         tc835.SelectedIndex = 0;
         InitializeStringArrays();
-        tbDatabase.Text = string.Format("{0} / {1}", _strServer, _strDatabase); // display on screen the server and database
+        databaseTextBox.Text = string.Format("{0} / {1}", _strServer, _strDatabase); // display on screen the server and database
 
     }
 
@@ -430,22 +428,6 @@ public partial class Posting835 : Form
     }
 
     /// <summary>
-    /// this is on the toolstrip above the menu strip. It only imports files from the WTH server.
-    /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
-    private void tsmi835_Click(object sender, EventArgs e)
-    {
-        openFileDialog.Filter = "All Files (*.*)|*.*";
-        openFileDialog.InitialDirectory = string.Format(@"{0}", _diCurrent);
-
-        openFileDialog.Tag = (string)"MEDICARE";
-        openFileDialog.ShowDialog();
-        _strFileType = "MEDICARE";
-
-    }
-
-    /// <summary>
     /// Create all the grid control headers here. Make sure to all all columns and set the ones you are 
     /// not using to visible = false. This way the DataGridViewRow insert will be in sync.
     /// </summary>
@@ -469,21 +451,20 @@ public partial class Posting835 : Form
 
     private void CreateDataGridViewDenieds()
     {
-        _dsRecords.Tables.Add("dgvDenieds");
+        _dsRecords.Tables.Add(nameof(dgvDenieds));
         _dicBandDenieds = new Dictionary<string, DataGridViewBand>();
         foreach (string strCol in Enum.GetNames(typeof(Col835Grids)))
         {
             Application.DoEvents();
             try
             {
-                _dsRecords.Tables["dgvDenieds"].Columns.Add(strCol);
-                _dsRecords.Tables["dgvDenieds"].Columns[strCol].ExtendedProperties.Add("VISIBLE", true);
-                _dsRecords.Tables["dgvDenieds"].Columns[strCol].ExtendedProperties.Add("ALIGNMENT", "Left");
-                _dsRecords.Tables["dgvDenieds"].Columns[strCol].ExtendedProperties.Add("CURRENCY", false);
+                _dsRecords.Tables[nameof(dgvDenieds)].Columns.Add(strCol);
+                _dsRecords.Tables[nameof(dgvDenieds)].Columns[strCol].ExtendedProperties.Add("VISIBLE", true);
+                _dsRecords.Tables[nameof(dgvDenieds)].Columns[strCol].ExtendedProperties.Add("ALIGNMENT", "Left");
+                _dsRecords.Tables[nameof(dgvDenieds)].Columns[strCol].ExtendedProperties.Add("CURRENCY", false);
 
                 dgvDenieds.Columns.Add(strCol, strCol);
-                DataGridViewCell cellType;
-                _dicColGrids.TryGetValue(strCol, out cellType);
+                _dicColGrids.TryGetValue(strCol, out DataGridViewCell cellType);
                 if (cellType != null)
                 {
                     dgvDenieds.Columns[strCol].CellTemplate = cellType;
@@ -491,12 +472,12 @@ public partial class Posting835 : Form
                     {
                         _dicBandDenieds.Add(strCol, dgvDenieds.Columns[strCol]);
                         dgvDenieds.Columns[strCol].Visible = false;
-                        _dsRecords.Tables["dgvDenieds"].Columns[strCol].ExtendedProperties["VISIBLE"] = false;
+                        _dsRecords.Tables[nameof(dgvDenieds)].Columns[strCol].ExtendedProperties["VISIBLE"] = false;
                     }
                     if (cellType == _celMoney)
                     {
-                        _dsRecords.Tables["dgvDenieds"].Columns[strCol].ExtendedProperties["ALIGNMENT"] = "Right";
-                        _dsRecords.Tables["dgvDenieds"].Columns[strCol].ExtendedProperties["CURRENCY"] = true;
+                        _dsRecords.Tables[nameof(dgvDenieds)].Columns[strCol].ExtendedProperties["ALIGNMENT"] = "Right";
+                        _dsRecords.Tables[nameof(dgvDenieds)].Columns[strCol].ExtendedProperties["CURRENCY"] = true;
                     }
                 }
             }
@@ -569,10 +550,10 @@ public partial class Posting835 : Form
             Application.DoEvents();
             try
             {
-                _dsRecords.Tables["dgvNotProcessed"].Columns.Add(strCol);
-                _dsRecords.Tables["dgvNotProcessed"].Columns[strCol].ExtendedProperties.Add("VISIBLE", true);
-                _dsRecords.Tables["dgvNotProcessed"].Columns[strCol].ExtendedProperties.Add("ALIGNMENT", "Left");
-                _dsRecords.Tables["dgvNotProcessed"].Columns[strCol].ExtendedProperties.Add("CURRENCY", false);
+                _dsRecords.Tables[nameof(dgvNotProcessed)].Columns.Add(strCol);
+                _dsRecords.Tables[nameof(dgvNotProcessed)].Columns[strCol].ExtendedProperties.Add("VISIBLE", true);
+                _dsRecords.Tables[nameof(dgvNotProcessed)].Columns[strCol].ExtendedProperties.Add("ALIGNMENT", "Left");
+                _dsRecords.Tables[nameof(dgvNotProcessed)].Columns[strCol].ExtendedProperties.Add("CURRENCY", false);
 
                 dgvNotProcessed.Columns.Add(strCol, strCol);
                 _dicColGrids.TryGetValue(strCol, out DataGridViewCell cellType);
@@ -583,12 +564,12 @@ public partial class Posting835 : Form
                     {
                         _dicBandNotProcessed.Add(strCol, dgvNotProcessed.Columns[strCol]);
                         dgvNotProcessed.Columns[strCol].Visible = false;
-                        _dsRecords.Tables["dgvNotProcessed"].Columns[strCol].ExtendedProperties["VISIBLE"] = false;
+                        _dsRecords.Tables[nameof(dgvNotProcessed)].Columns[strCol].ExtendedProperties["VISIBLE"] = false;
                     }
                     if (cellType == _celMoney)
                     {
-                        _dsRecords.Tables["dgvNotProcessed"].Columns[strCol].ExtendedProperties["ALIGNMENT"] = "Right";
-                        _dsRecords.Tables["dgvNotProcessed"].Columns[strCol].ExtendedProperties["CURRENCY"] = true;
+                        _dsRecords.Tables[nameof(dgvNotProcessed)].Columns[strCol].ExtendedProperties["ALIGNMENT"] = "Right";
+                        _dsRecords.Tables[nameof(dgvNotProcessed)].Columns[strCol].ExtendedProperties["CURRENCY"] = true;
                     }
                 }
             }
@@ -616,10 +597,10 @@ public partial class Posting835 : Form
             Application.DoEvents();
             try
             {
-                _dsRecords.Tables["dgvEOB"].Columns.Add(strCol);
-                _dsRecords.Tables["dgvEOB"].Columns[strCol].ExtendedProperties.Add("VISIBLE", true);
-                _dsRecords.Tables["dgvEOB"].Columns[strCol].ExtendedProperties.Add("ALIGNMENT", "Left");
-                _dsRecords.Tables["dgvEOB"].Columns[strCol].ExtendedProperties.Add("CURRENCY", false);
+                _dsRecords.Tables[nameof(dgvEOB)].Columns.Add(strCol);
+                _dsRecords.Tables[nameof(dgvEOB)].Columns[strCol].ExtendedProperties.Add("VISIBLE", true);
+                _dsRecords.Tables[nameof(dgvEOB)].Columns[strCol].ExtendedProperties.Add("ALIGNMENT", "Left");
+                _dsRecords.Tables[nameof(dgvEOB)].Columns[strCol].ExtendedProperties.Add("CURRENCY", false);
 
                 dgvEOB.Columns.Add(strCol, strCol);
                 _dicColGridsEOB.TryGetValue(strCol, out DataGridViewCell cellType);
@@ -630,12 +611,12 @@ public partial class Posting835 : Form
                     {
                         _dicBandEOB.Add(strCol, dgvEOB.Columns[strCol]);
                         dgvEOB.Columns[strCol].Visible = false;
-                        _dsRecords.Tables["dgvEOB"].Columns[strCol].ExtendedProperties["VISIBLE"] = false;
+                        _dsRecords.Tables[nameof(dgvEOB)].Columns[strCol].ExtendedProperties["VISIBLE"] = false;
                     }
                     if (cellType == _celMoney)
                     {
-                        _dsRecords.Tables["dgvEOB"].Columns[strCol].ExtendedProperties["ALIGNMENT"] = "Right";
-                        _dsRecords.Tables["dgvEOB"].Columns[strCol].ExtendedProperties["CURRENCY"] = true;
+                        _dsRecords.Tables[nameof(dgvEOB)].Columns[strCol].ExtendedProperties["ALIGNMENT"] = "Right";
+                        _dsRecords.Tables[nameof(dgvEOB)].Columns[strCol].ExtendedProperties["CURRENCY"] = true;
                     }
 
                 }
@@ -692,17 +673,17 @@ public partial class Posting835 : Form
     /// </summary>
     private void CreateDataGridViewProcessed()
     {
-        _dsRecords.Tables.Add("dgvProcessed");
+        _dsRecords.Tables.Add(nameof(dgvProcessed));
 
         // Set the band for the columns to the type in the cell
         _dicBandProcessed = new Dictionary<string, DataGridViewBand>();
         foreach (string strCol in Enum.GetNames(typeof(Col835Grids)))
         {
             Application.DoEvents();
-            _dsRecords.Tables["dgvProcessed"].Columns.Add(strCol);
-            _dsRecords.Tables["dgvProcessed"].Columns[strCol].ExtendedProperties.Add("VISIBLE", true);
-            _dsRecords.Tables["dgvProcessed"].Columns[strCol].ExtendedProperties.Add("ALIGNMENT", "Left");
-            _dsRecords.Tables["dgvProcessed"].Columns[strCol].ExtendedProperties.Add("CURRENCY", false);
+            _dsRecords.Tables[nameof(dgvProcessed)].Columns.Add(strCol);
+            _dsRecords.Tables[nameof(dgvProcessed)].Columns[strCol].ExtendedProperties.Add("VISIBLE", true);
+            _dsRecords.Tables[nameof(dgvProcessed)].Columns[strCol].ExtendedProperties.Add("ALIGNMENT", "Left");
+            _dsRecords.Tables[nameof(dgvProcessed)].Columns[strCol].ExtendedProperties.Add("CURRENCY", false);
 
 
             dgvProcessed.Columns.Add(strCol, strCol);
@@ -717,12 +698,12 @@ public partial class Posting835 : Form
                     {
                         _dicBandProcessed.Add(strCol, dgvProcessed.Columns[strCol]);
                         dgvProcessed.Columns[strCol].Visible = false;
-                        _dsRecords.Tables["dgvProcessed"].Columns[strCol].ExtendedProperties["VISIBLE"] = false;
+                        _dsRecords.Tables[nameof(dgvProcessed)].Columns[strCol].ExtendedProperties["VISIBLE"] = false;
                     }
                     if (cellType == _celMoney)
                     {
-                        _dsRecords.Tables["dgvProcessed"].Columns[strCol].ExtendedProperties["ALIGNMENT"] = "Right";
-                        _dsRecords.Tables["dgvProcessed"].Columns[strCol].ExtendedProperties["CURRENCY"] = true;
+                        _dsRecords.Tables[nameof(dgvProcessed)].Columns[strCol].ExtendedProperties["ALIGNMENT"] = "Right";
+                        _dsRecords.Tables[nameof(dgvProcessed)].Columns[strCol].ExtendedProperties["CURRENCY"] = true;
                     }
                 }
             }
@@ -831,9 +812,9 @@ public partial class Posting835 : Form
         #region MEDICARE
         if (strType == "MEDICARE")
         {
-            lbChecks.Visible = false;
-            tbCheckAmt.Visible = true;
-            tbCheckNo.Visible = true;
+            checksLabel.Visible = false;
+            checkAmountTextBox.Visible = true;
+            checkNoTextBox.Visible = true;
             if (!ProcessMedicare835File(strFileName)) // bulk of the process is started here
             {
                 // if we don't find any MCL RECORDS move the file to SAVED\INVALID directory.
@@ -857,10 +838,10 @@ public partial class Posting835 : Form
                 tsslNotProcessed.Text = string.Format("Not Processed: {0}", _dsRecords.Tables[dgvNotProcessed.Name].Rows.Count);
                 tsslProcessed.Text = string.Format("Processed: {0}", _dsRecords.Tables[dgvProcessed.Name].Rows.Count);
                 tsslEOB.Text = string.Format("EOBs: {0}", _dsRecords.Tables[dgvEOB.Name].Rows.Count);
-                tsmiFirst20_Click(dgvProcessed, null);
-                tsmiFirst20_Click(dgvDenieds, null);
-                tsmiFirst20_Click(dgvNotProcessed, null);
-                tsmiFirst20_Click(dgvEOB, null);
+                loadFirstToolStripItem_Click(dgvProcessed, null);
+                loadFirstToolStripItem_Click(dgvDenieds, null);
+                loadFirstToolStripItem_Click(dgvNotProcessed, null);
+                loadFirstToolStripItem_Click(dgvEOB, null);
 
             }
             return;
@@ -870,9 +851,9 @@ public partial class Posting835 : Form
         #region BLUECROSS
         if (strType == "BLUECROSS")
         {
-            lbChecks.Visible = true;
-            tbCheckAmt.Visible = false;
-            tbCheckNo.Visible = false;
+            checksLabel.Visible = true;
+            checkAmountTextBox.Visible = false;
+            checkNoTextBox.Visible = false;
             if (!ProcessBluecross835File(strFileName)) // bulk of the process is started here
             {
                 // if we don't find any MCL RECORDS move the file to SAVED\INVALID directory.
@@ -897,10 +878,10 @@ public partial class Posting835 : Form
                 tsslNotProcessed.Text = string.Format("Not Processed: {0}", _dsRecords.Tables[dgvNotProcessed.Name].Rows.Count);
                 tsslProcessed.Text = string.Format("Processed: {0}", _dsRecords.Tables[dgvProcessed.Name].Rows.Count);
                 tsslEOB.Text = string.Format("EOBs: {0}", _dsRecords.Tables[dgvEOB.Name].Rows.Count);
-                tsmiFirst20_Click(dgvProcessed, null);
-                tsmiFirst20_Click(dgvDenieds, null);
-                tsmiFirst20_Click(dgvNotProcessed, null);
-                tsmiFirst20_Click(dgvEOB, null);
+                loadFirstToolStripItem_Click(dgvProcessed, null);
+                loadFirstToolStripItem_Click(dgvDenieds, null);
+                loadFirstToolStripItem_Click(dgvNotProcessed, null);
+                loadFirstToolStripItem_Click(dgvEOB, null);
 
             }
             return;
@@ -935,10 +916,10 @@ public partial class Posting835 : Form
                 tsslNotProcessed.Text = string.Format("Not Processed: {0}", _dsRecords.Tables[dgvNotProcessed.Name].Rows.Count);
                 tsslProcessed.Text = string.Format("Processed: {0}", _dsRecords.Tables[dgvProcessed.Name].Rows.Count);
                 tsslEOB.Text = string.Format("EOBs: {0}", _dsRecords.Tables[dgvEOB.Name].Rows.Count);
-                tsmiFirst20_Click(dgvProcessed, null);
-                tsmiFirst20_Click(dgvDenieds, null);
-                tsmiFirst20_Click(dgvNotProcessed, null);
-                tsmiFirst20_Click(dgvEOB, null);
+                loadFirstToolStripItem_Click(dgvProcessed, null);
+                loadFirstToolStripItem_Click(dgvDenieds, null);
+                loadFirstToolStripItem_Click(dgvNotProcessed, null);
+                loadFirstToolStripItem_Click(dgvEOB, null);
 
             }
             return;
@@ -963,8 +944,8 @@ public partial class Posting835 : Form
     {
 
         bool bRetVal = false;
-        tbFileName.Text = string.Format("File Name: {0}", strFileName);
-        tbFileName.Tag = strFileName;
+        fileNameTextBox.Text = string.Format("File Name: {0}", strFileName);
+        fileNameTextBox.Tag = strFileName;
         // read the file into a string.
         string strLine = RFCObject.GetFileContents(strFileName).Replace(Environment.NewLine, "");
         strLine = strLine.Replace("\n", "");
@@ -985,8 +966,8 @@ public partial class Posting835 : Form
         string[] strGS = strLine.Split(new string[] { "~GS*" }, StringSplitOptions.RemoveEmptyEntries);
         string[] strISAElements = strGS[0].Split(new char[] { '*' });
 
-        tbBillCycle.Text = string.Format("Bill Cycle: {0}", strISAElements[9]);
-        tbBillCycle.Tag = strISAElements[9];
+        billCycleTextBox.Text = string.Format("Bill Cycle: {0}", strISAElements[9]);
+        billCycleTextBox.Tag = strISAElements[9];
         _strComponentSeperator = strISAElements[16];
 
         // our GS[1] and above should be real GS segments without the GS*
@@ -1012,8 +993,8 @@ public partial class Posting835 : Form
     private bool ProcessUHC835File(string strFileName)
     {
         bool bRetVal = true;
-        tbFileName.Text = string.Format("File Name: {0}", strFileName);
-        tbFileName.Tag = strFileName;
+        fileNameTextBox.Text = string.Format("File Name: {0}", strFileName);
+        fileNameTextBox.Tag = strFileName;
         // read the file into a string.
         string strLine = RFCObject.GetFileContents(strFileName).Replace(Environment.NewLine, "");
         strLine = strLine.Replace("\n", "");
@@ -1037,8 +1018,8 @@ public partial class Posting835 : Form
             if (strHeaderSegment.StartsWith("ISA*"))
             {
                 string[] strISAElements = strHeaderSegment.Split(new char[] { '*' });
-                tbBillCycle.Text = string.Format("Bill Cycle: {0}", strISAElements[9]);
-                tbBillCycle.Tag = strISAElements[9];
+                billCycleTextBox.Text = string.Format("Bill Cycle: {0}", strISAElements[9]);
+                billCycleTextBox.Tag = strISAElements[9];
                 _strComponentSeperator = strISAElements[16];
                 continue;
             }
@@ -1048,11 +1029,11 @@ public partial class Posting835 : Form
                 string[] strGSHeaderElements = strHeaderSegment.Split(new char[] { '*' });
                 // Eft Date
                 Time.StringToHL7Time(strGSHeaderElements[4], out DateTime dtEftDate);
-                tbFileDate.Text = $"EFT Date: {dtEftDate.ToString("d")}";
-                tbFileDate.Tag = dtEftDate.ToString("d");
+                fileDateTextBox.Text = $"EFT Date: {dtEftDate.ToString("d")}";
+                fileDateTextBox.Tag = dtEftDate.ToString("d");
                 // File Number
-                tbFileNumber.Text = $"File # {strGSHeaderElements[6]}";
-                tbFileNumber.Tag = strGSHeaderElements[6];
+                fileNumberTextBox.Text = $"File # {strGSHeaderElements[6]}";
+                fileNumberTextBox.Tag = strGSHeaderElements[6];
                 continue;
             }
 
@@ -1063,19 +1044,19 @@ public partial class Posting835 : Form
                 string[] strTRNElements = strHeaderSegment.Split(new char[] { '*' });
 
                 int nRec = ThereArePreviouslyPostedChecks(strTRNElements[2]);
-                tbCheckNo.Text = $"Chk No: {strTRNElements[2]}";
-                tbCheckNo.Tag = strTRNElements[2];
+                checkNoTextBox.Text = $"Chk No: {strTRNElements[2]}";
+                checkNoTextBox.Tag = strTRNElements[2];
                 if (nRec > 0)
                 {
-                    if (MessageBox.Show($"{tbFileName.Text} already posted {nRec} chk records.\r\r\n Select YES to move to the saved directory.", "FILE POSTING ERROR", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    if (MessageBox.Show($"{fileNameTextBox.Text} already posted {nRec} chk records.\r\r\n Select YES to move to the saved directory.", "FILE POSTING ERROR", MessageBoxButtons.YesNo) == DialogResult.Yes)
                     {
                         MoveFileToSavedDirectory(); // handles the exceptions thrown
                         bRetVal = false;
                     }
                     else
                     {
-                        tsmiPostCheckRecords.Enabled = false;
-                        tsmiPostCheckRecords.ToolTipText = "This file has been previously posted to the chk table.";
+                        postCheckRecordsToolStripItem.Enabled = false;
+                        postCheckRecordsToolStripItem.ToolTipText = "This file has been previously posted to the chk table.";
                     }
                 }
                 m_strarrRecordsInsert.SetValue(strTRNElements[2], (int)Col835Grids.eCheckNo);
@@ -1090,8 +1071,8 @@ public partial class Posting835 : Form
                 string[] strDTMElements = strHeaderSegment.Split(new char[] { '*' });
                 DateTime dtCheckDate;
                 Utilities.Time.StringToHL7Time(strDTMElements[2], out dtCheckDate);
-                tbCheckDate.Text = $"Chk Date: {dtCheckDate.ToString("d")}";
-                tbCheckDate.Tag = dtCheckDate.ToString("d");
+                checkDateTextBox.Text = $"Chk Date: {dtCheckDate.ToString("d")}";
+                checkDateTextBox.Tag = dtCheckDate.ToString("d");
                 continue;
             }
             if (strHeaderSegment.StartsWith("N1*PR*")) // be sure to keep this one before the skip region below.
@@ -1246,8 +1227,8 @@ public partial class Posting835 : Form
     private bool ProcessBluecross835File(string strFileName)
     {
         bool bRetVal = false;
-        tbFileName.Text = string.Format("File Name: {0}", strFileName);
-        tbFileName.Tag = strFileName;
+        fileNameTextBox.Text = string.Format("File Name: {0}", strFileName);
+        fileNameTextBox.Tag = strFileName;
         // read the file into a string.
         string strLine = RFCObject.GetFileContents(strFileName).Replace(Environment.NewLine, "");
         strLine = strLine.Replace("\n", "");
@@ -1292,15 +1273,15 @@ public partial class Posting835 : Form
                 }
                 lbString += string.Format(" - PLB {0}", dReCoups);
             }
-            lbChecks.Items.Add(lbString);
+            checksLabel.Items.Add(lbString);
         }
 
         // split the file on the GS's the zero element should be the ISA
         string[] strGS = strLine.Split(new string[] { "~GS*" }, StringSplitOptions.RemoveEmptyEntries);
         string[] strISAElements = strGS[0].Split(new char[] { '*' });
 
-        tbBillCycle.Text = $"Bill Cycle: {strISAElements[9]}";
-        tbBillCycle.Tag = strISAElements[9];
+        billCycleTextBox.Text = $"Bill Cycle: {strISAElements[9]}";
+        billCycleTextBox.Tag = strISAElements[9];
         _strComponentSeperator = strISAElements[16];
 
         // our GS[1] and above should be real GS segments without the GS*
@@ -1340,11 +1321,11 @@ public partial class Posting835 : Form
         // Eft Date
         DateTime dtEftDate;
         Utilities.Time.StringToHL7Time(strGSHeaderElements[3], out dtEftDate);
-        tbFileDate.Text = string.Format("EFT Date: {0}", dtEftDate.ToString("d"));
-        tbFileDate.Tag = dtEftDate.ToString("d");
+        fileDateTextBox.Text = string.Format("EFT Date: {0}", dtEftDate.ToString("d"));
+        fileDateTextBox.Tag = dtEftDate.ToString("d");
         // File Number
-        tbFileNumber.Text = string.Format("File # {0}", strGSHeaderElements[5]);
-        tbFileNumber.Tag = strGSHeaderElements[5];
+        fileNumberTextBox.Text = string.Format("File # {0}", strGSHeaderElements[5]);
+        fileNumberTextBox.Tag = strGSHeaderElements[5];
 
         foreach (string strSTElement in strST)
         {
@@ -1385,11 +1366,11 @@ public partial class Posting835 : Form
         // Eft Date
         DateTime dtEftDate;
         Time.StringToHL7Time(strGSHeaderElements[3], out dtEftDate);
-        tbFileDate.Text = $"EFT Date: {dtEftDate.ToString("d")}";
-        tbFileDate.Tag = dtEftDate.ToString("d");
+        fileDateTextBox.Text = $"EFT Date: {dtEftDate:d}";
+        fileDateTextBox.Tag = dtEftDate.ToString("d");
         // File Number
-        tbFileNumber.Text = $"File # {strGSHeaderElements[5]}";
-        tbFileNumber.Tag = strGSHeaderElements[5];
+        fileNumberTextBox.Text = $"File # {strGSHeaderElements[5]}";
+        fileNumberTextBox.Tag = strGSHeaderElements[5];
 
         foreach (string strSTElement in strST)
         {
@@ -1424,8 +1405,8 @@ public partial class Posting835 : Form
         InitializeStringArrays(); // clears all the string arrays the first time through
         bool bRetVal = false;
 
-        tbProviderID.Text = "NO PROVIDER ID";
-        tbProviderID.Tag = (string)"NO PROVIDER ID";
+        providerIdTextBox.Text = "NO PROVIDER ID";
+        providerIdTextBox.Tag = (string)"NO PROVIDER ID";
         //string[] strCLP = strST.Split(new string[] { "~CLP*" }, StringSplitOptions.RemoveEmptyEntries);
         //09/22/2008 wdk file format now has a new line between '~' and 'CLP*'
         string[] strCLP = strST.Split(new string[] { "CLP*" }, StringSplitOptions.RemoveEmptyEntries);
@@ -1459,8 +1440,8 @@ public partial class Posting835 : Form
                 if (strSTHeader[i].IndexOf("BPR", 0, 3) > -1)
                 {
                     string[] strBPRElements = strSTHeader[i].ToString().Split(new char[] { '*' });
-                    tbCheckAmt.Text = string.Format("Chk Amt: {0}", strBPRElements[2]);
-                    tbCheckAmt.Tag = strBPRElements[2];
+                    checkAmountTextBox.Text = string.Format("Chk Amt: {0}", strBPRElements[2]);
+                    checkAmountTextBox.Tag = strBPRElements[2];
                     continue;
                 }
                 if (strSTHeader[i].IndexOf("TRN", 0, 3) > -1)
@@ -1473,11 +1454,11 @@ public partial class Posting835 : Form
                     {
                         nRec = ThereArePreviouslyPostedChecks(strTRNElements[2].Replace("0EPRA0", "").Replace("0EZPS0", ""));
                     }
-                    tbCheckNo.Text = string.Format("Chk No: {0}", strTRNElements[2]);
-                    tbCheckNo.Tag = strTRNElements[2];
+                    checkNoTextBox.Text = string.Format("Chk No: {0}", strTRNElements[2]);
+                    checkNoTextBox.Tag = strTRNElements[2];
                     if (nRec > 0)
                     {
-                        if (MessageBox.Show($"{tbFileName.Text} already posted {nRec} chk records.\r\r\n Select YES to move to the saved directory.", "FILE POSTING ERROR", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                        if (MessageBox.Show($"{fileNameTextBox.Text} already posted {nRec} chk records.\r\r\n Select YES to move to the saved directory.", "FILE POSTING ERROR", MessageBoxButtons.YesNo) == DialogResult.Yes)
                         {
                             MoveFileToSavedDirectory();
                             return false;
@@ -1485,7 +1466,7 @@ public partial class Posting835 : Form
                         else
                         {
                             // tsmiPostCheckRecords.Enabled = false;
-                            tsmiPostCheckRecords.ToolTipText = "This file has been previously posted to the chk table.";
+                            postCheckRecordsToolStripItem.ToolTipText = "This file has been previously posted to the chk table.";
                         }
                     }
                     m_strarrRecordsInsert.SetValue(strTRNElements[2], (int)Col835Grids.eCheckNo);
@@ -1499,8 +1480,8 @@ public partial class Posting835 : Form
                     string[] strDTMElements = strSTHeader[i].Split(new char[] { '*' });
                     DateTime dtCheckDate;
                     Utilities.Time.StringToHL7Time(strDTMElements[2], out dtCheckDate);
-                    tbCheckDate.Text = $"Chk Date: {dtCheckDate.ToString("d")}";
-                    tbCheckDate.Tag = dtCheckDate.ToString("d");
+                    checkDateTextBox.Text = $"Chk Date: {dtCheckDate:d}";
+                    checkDateTextBox.Tag = dtCheckDate.ToString("d");
                     continue;
                 }
                 if (strSTHeader[i].IndexOf("N1*PR", 0, 5) > -1)
@@ -1559,8 +1540,8 @@ public partial class Posting835 : Form
                 if (strSTHeader[i].StartsWith("N1*PE*MED CTR/LAB*"))
                 {
                     string[] strN1Elements = strSTHeader[i].Split(new char[] { '*' });
-                    tbProviderID.Text = $"Provider ID: {strN1Elements[4]}";
-                    tbProviderID.Tag = (string)strN1Elements[4];
+                    providerIdTextBox.Text = $"Provider ID: {strN1Elements[4]}";
+                    providerIdTextBox.Tag = (string)strN1Elements[4];
                     rtbCheckSource.Text = "TLC";
                     continue;
                 }
@@ -1568,8 +1549,8 @@ public partial class Posting835 : Form
                 if (strSTHeader[i].StartsWith("N1*PE*JACKSON-MADISON CO GEN HOSP*") || strSTHeader[i].StartsWith("N1*PE*JACKSON-MADISON COUNTY GENERAL*"))
                 {
                     string[] strN1Elements = strSTHeader[i].Split(new char[] { '*' });
-                    tbProviderID.Text = $"Provider ID: {strN1Elements[4]}";
-                    tbProviderID.Tag = (string)strN1Elements[4];
+                    providerIdTextBox.Text = $"Provider ID: {strN1Elements[4]}";
+                    providerIdTextBox.Tag = (string)strN1Elements[4];
                     rtbCheckSource.Text = "MC";
                     continue;
                 }
@@ -1577,8 +1558,8 @@ public partial class Posting835 : Form
                 if (strSTHeader[i].StartsWith("N1*PE*JACKSON-MADISON COUNTY GENERAL*XX*1093705428")) //rgc/wdk 20090904 the hospital also has provider id 1225029390 we think our checks are in 1093705428 provider id
                 {
                     string[] strN1Elements = strSTHeader[i].Split(new char[] { '*' });
-                    tbProviderID.Text = $"Provider ID: {strN1Elements[4]}";
-                    tbProviderID.Tag = (string)strN1Elements[4];
+                    providerIdTextBox.Text = $"Provider ID: {strN1Elements[4]}";
+                    providerIdTextBox.Tag = (string)strN1Elements[4];
                     rtbCheckSource.Text = "MC";
                     continue;
                 }
@@ -1586,16 +1567,16 @@ public partial class Posting835 : Form
                 if (strSTHeader[i].StartsWith("N1*PE*JACKSON MADISON COUNTY GENERAL*XX*1093705428")) //rgc/wdk 20090904 the hospital also has provider id 1225029390 we think our checks are in 1093705428 provider id
                 {
                     string[] strN1Elements = strSTHeader[i].Split(new char[] { '*' });
-                    tbProviderID.Text = $"Provider ID: {strN1Elements[4]}";
-                    tbProviderID.Tag = (string)strN1Elements[4];
+                    providerIdTextBox.Text = $"Provider ID: {strN1Elements[4]}";
+                    providerIdTextBox.Tag = (string)strN1Elements[4];
                     rtbCheckSource.Text = "MC";
                     continue;
                 }
                 if (strSTHeader[i].StartsWith("N1*PR*BLUE"))
                 {
                     string[] strN1Elements = strSTHeader[i].Split(new char[] { '*' });
-                    tbProviderID.Text = $"Provider ID: {"1000427"}";
-                    tbProviderID.Tag = "1000427";
+                    providerIdTextBox.Text = $"Provider ID: {"1000427"}";
+                    providerIdTextBox.Tag = "1000427";
                     rtbCheckSource.Text = "BLUE CROSS";
                     continue;
                 }
@@ -1681,8 +1662,8 @@ public partial class Posting835 : Form
         InitializeStringArrays(); // clears all the string arrays the first time through
         bool bRetVal = false;
 
-        tbProviderID.Text = "NO PROVIDER ID";
-        tbProviderID.Tag = (string)"NO PROVIDER ID";
+        providerIdTextBox.Text = "NO PROVIDER ID";
+        providerIdTextBox.Tag = (string)"NO PROVIDER ID";
         //string[] strCLP = strST.Split(new string[] { "~CLP*" }, StringSplitOptions.RemoveEmptyEntries);
         //09/22/2008 wdk file format now has a new line between '~' and 'CLP*'
         string[] strCLP = strST.Split(new string[] { "CLP*" }, StringSplitOptions.RemoveEmptyEntries);
@@ -1713,11 +1694,11 @@ public partial class Posting835 : Form
             {
                 nRec = ThereArePreviouslyPostedChecks(strTRNElements[2].Replace("0EPRA0", "").Replace("0EZPS0", ""));
             }
-            tbCheckNo.Text = string.Format("Chk No: {0}", strTRNElements[2]);
-            tbCheckNo.Tag = strTRNElements[2];
+            checkNoTextBox.Text = string.Format("Chk No: {0}", strTRNElements[2]);
+            checkNoTextBox.Tag = strTRNElements[2];
             if (nRec > 0)
             {
-                if (MessageBox.Show(string.Format("{0} already posted {1} chk records.\r\r\n Select YES to move to the saved directory.", tbFileName.Text, nRec), "FILE POSTING ERROR", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                if (MessageBox.Show(string.Format("{0} already posted {1} chk records.\r\r\n Select YES to move to the saved directory.", fileNameTextBox.Text, nRec), "FILE POSTING ERROR", MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
                     MoveFileToSavedDirectory();
                     return false;
@@ -1725,7 +1706,7 @@ public partial class Posting835 : Form
                 else
                 {
                     // tsmiPostCheckRecords.Enabled = false;
-                    tsmiPostCheckRecords.ToolTipText = "This file has been previously posted to the chk table.";
+                    postCheckRecordsToolStripItem.ToolTipText = "This file has been previously posted to the chk table.";
                 }
             }
             m_strarrRecordsInsert.SetValue(strTRNElements[2], (int)Col835Grids.eCheckNo);
@@ -1735,8 +1716,8 @@ public partial class Posting835 : Form
         {
             string[] strBPRElements = strValue.Split(new char[] { '*' });
             //strSTHeader[i].ToString().Split(new char[] { '*' });
-            tbCheckAmt.Text = string.Format("Chk Amt: {0}", strBPRElements[2]);
-            tbCheckAmt.Tag = strBPRElements[2];
+            checkAmountTextBox.Text = string.Format("Chk Amt: {0}", strBPRElements[2]);
+            checkAmountTextBox.Tag = strBPRElements[2];
             //continue;
         }
         strValue = QueryArrayList(alSTHeader, "DTM*405*");
@@ -1745,8 +1726,8 @@ public partial class Posting835 : Form
             string[] strDTMElements = strValue.Split(new char[] { '*' });
             DateTime dtCheckDate;
             Time.StringToHL7Time(strDTMElements[2], out dtCheckDate);
-            tbCheckDate.Text = string.Format("Chk Date: {0}", dtCheckDate.ToString("d"));
-            tbCheckDate.Tag = dtCheckDate.ToString("d");
+            checkDateTextBox.Text = string.Format("Chk Date: {0}", dtCheckDate.ToString("d"));
+            checkDateTextBox.Tag = dtCheckDate.ToString("d");
         }
         strValue = QueryArrayList(alSTHeader, "N1*PR");
         if (!string.IsNullOrEmpty(strValue))
@@ -2289,7 +2270,7 @@ public partial class Posting835 : Form
                                 default:
                                 {
                                     _eRR.m_Logfile.WriteLogFile(string.Format("CR Default handler for {0} not completed.\r\nAccount:{1}\r\nFile: {2}",
-                                           strSVCElements[2], m_strarrEOBInsert.GetValue((int)Col835EOB.Account), tbFileName.Tag.ToString()));
+                                           strSVCElements[2], m_strarrEOBInsert.GetValue((int)Col835EOB.Account), fileNameTextBox.Tag.ToString()));
                                     break;
                                 }
                             }
@@ -2784,15 +2765,14 @@ public partial class Posting835 : Form
         foreach (DataRow dr in _dtRecordWriteOff.Rows)
         {
             Application.DoEvents();
-            double dParse = 0.00f;
-            if (double.TryParse(dr[(int)Col835Grids.eWriteOffAmt].ToString(), out dParse))
+            if (double.TryParse(dr[(int)Col835Grids.eWriteOffAmt].ToString(), out double dParse))
             {
                 dWriteOff += double.Parse(dParse.ToString("F2"));
             }
         }
 
         int nStatus = -1;
-        int.TryParse(m_strarrRecordsInsert.GetValue((int)Col835Grids.eClaimStatus).ToString(), out nStatus);
+        _ = int.TryParse(m_strarrRecordsInsert.GetValue((int)Col835Grids.eClaimStatus).ToString(), out nStatus);
         // nStatus 
         // 1 = Process for check posting
         // 2 = Not Processed unless the amount paid is not 0.00 then processed
@@ -2818,10 +2798,9 @@ public partial class Posting835 : Form
                 }
                 try  // if the amount paid is not zero add it to the processed otherwise to not processed
                 {
-                    decimal dTryParse = 0.00m;
                     //decimal dTotalPaid = 0.00m;
 
-                    if (decimal.TryParse(m_strarrRecordsInsert.GetValue((int)Col835Grids.ePaid).ToString(), out dTryParse))
+                    if (decimal.TryParse(m_strarrRecordsInsert.GetValue((int)Col835Grids.ePaid).ToString(), out decimal dTryParse))
                     {
                         if (dTryParse == 0.00m)
                         {
@@ -3016,7 +2995,7 @@ public partial class Posting835 : Form
             #endregion Medicare note
             if (strSVCHeaderElements[0].ToString() == "DTM" && strSVCHeaderElements[1] == "232")
             {
-                DateTime dtService = new DateTime();
+                DateTime dtService = new();
                 // Split the DTM for the date of service only
                 Utilities.Time.StringToHL7Time(strSVCHeaderElements[2], out dtService);
                 m_strarrEOBInsert.SetValue(dtService.ToString("d"), (int)Col835EOB.eDOS);
@@ -3039,20 +3018,20 @@ public partial class Posting835 : Form
         dgvEOB.Rows.Clear();
 
         // clear the label for the file being parsed
-        tbFileName.Text = "File: ";
-        tbFileName.Tag = "";
-        tbProviderID.Text = "Provider ID: ";
-        tbProviderID.Tag = "";
-        tbCheckDate.Text = "Chk Date: ";
-        tbCheckDate.Tag = "";
-        tbCheckNo.Text = "Chk No: ";
-        tbCheckNo.Tag = "";
-        tbCheckAmt.Text = "Chk Amt: ";
-        tbCheckAmt.Tag = "";
-        tbBatchNo.Text = "Batch No:";
-        tbBatchNo.Tag = "";
-        lbChecks.Items.Clear();
-        tsmiPostCheckRecords.Enabled = true;
+        fileNameTextBox.Text = "File: ";
+        fileNameTextBox.Tag = "";
+        providerIdTextBox.Text = "Provider ID: ";
+        providerIdTextBox.Tag = "";
+        checkDateTextBox.Text = "Chk Date: ";
+        checkDateTextBox.Tag = "";
+        checkNoTextBox.Text = "Chk No: ";
+        checkNoTextBox.Tag = "";
+        checkAmountTextBox.Text = "Chk Amt: ";
+        checkAmountTextBox.Tag = "";
+        batchNoTextBox.Text = "Batch No:";
+        batchNoTextBox.Tag = "";
+        checksLabel.Items.Clear();
+        postCheckRecordsToolStripItem.Enabled = true;
         _dicSTAmts.Clear();
     }
 
@@ -3062,23 +3041,23 @@ public partial class Posting835 : Form
     /// </summary>
     private void SetTableLayOutTotals()
     {
-        tbEOBChargeAmt.Text = _d_dgvEOB_Totals[(int)Col835EOB.eChargesReported].ToString("c");
-        tbEOBPaidAmt.Text = _d_dgvEOB_Totals[(int)Col835EOB.ePaymentDataNetReimbAmt].ToString("c");
-        tbEOBContractualAmt.Text = _d_dgvEOB_Totals[(int)Col835EOB.ePaymentDataContAdjAmt].ToString("c");
-        tbEOBDeniedAmt.Text = _d_dgvEOB_Totals[(int)Col835EOB.eChargesDenied].ToString("c");
-        tbEOBOtherAmt.Text = _d_dgvEOB_Totals[(int)Col835EOB.eOtherAdjAmt].ToString("c");
+        eobChargeAmountTextBox.Text = _d_dgvEOB_Totals[(int)Col835EOB.eChargesReported].ToString("c");
+        eobPaidAmountTextBox.Text = _d_dgvEOB_Totals[(int)Col835EOB.ePaymentDataNetReimbAmt].ToString("c");
+        eobContractualAmountTextBox.Text = _d_dgvEOB_Totals[(int)Col835EOB.ePaymentDataContAdjAmt].ToString("c");
+        eobDeniedAmountTextBox.Text = _d_dgvEOB_Totals[(int)Col835EOB.eChargesDenied].ToString("c");
+        eobOtherAmountTextBox.Text = _d_dgvEOB_Totals[(int)Col835EOB.eOtherAdjAmt].ToString("c");
     }
 
 
-    private void tsmiPrint_Click(object sender, EventArgs e)
+    private void printToolStripMenuItem_Click(object sender, EventArgs e)
     {
         DataGridView l_dgvCurrent = GetSelectedTabsDataGrid(tc835.SelectedIndex);
         _myPrintDocument.DefaultPageSettings.Landscape = true;
         _myPrintDocument.DocumentName = tc835.SelectedTab.Text;
         _myPrintDocument.PrintController = null;
-        DataSetPrinter dp = new DataSetPrinter(_dsRecords, l_dgvCurrent.Name, _myPrintDocument, tc835.SelectedTab.Text.ToUpper(), ref _eRR);
+        DataSetPrinter dp = new(_dsRecords, l_dgvCurrent.Name, _myPrintDocument, tc835.SelectedTab.Text.ToUpper(), ref _eRR);
         dp.propFooterText = string.Format("Check No: {0}, Dated: {1}, Total: {2}, from File: {3}",
-                                    tbCheckNo.Tag.ToString(), tbCheckDate.Tag.ToString(), tbCheckAmt.Tag.ToString(), tbFileName.Text);
+                                    checkNoTextBox.Tag.ToString(), checkDateTextBox.Tag.ToString(), checkAmountTextBox.Tag.ToString(), fileNameTextBox.Text);
         this._myPrintDocument.PrintPage += new System.Drawing.Printing.PrintPageEventHandler(dp.MyPrintDocument_PrintPage);
         _myPrintDocument.Print();
         this._myPrintDocument.PrintPage -= new System.Drawing.Printing.PrintPageEventHandler(dp.MyPrintDocument_PrintPage);
@@ -3100,11 +3079,11 @@ public partial class Posting835 : Form
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    private void tsmiPostCheckRecords_Click(object sender, EventArgs e)
+    private void postCheckRecordsToolStripItem_Click(object sender, EventArgs e)
     {
         //MoveFileToSavedDirectory();
         //return;
-        tsmiPostCheckRecords.Enabled = false;
+        postCheckRecordsToolStripItem.Enabled = false;
         // when posting medicare checks make sure the source is "MEDICARE" and the comment is "SSI REMITTANCE"
         int nRecordsAdded = 0;
         int nErrorRecords = 0;
@@ -3113,7 +3092,7 @@ public partial class Posting835 : Form
         try
         {
             // if this had of used the app.config values.
-            _strAccountLogPath = $"{Program.AppEnvironment.ApplicationParameters.DefaultSpoolFilePath}AccBalances{tbFileName.Text.Substring(tbFileName.Text.LastIndexOf('\\') + 1)}.txt";
+            _strAccountLogPath = $"{Program.AppEnvironment.ApplicationParameters.DefaultSpoolFilePath}AccBalances{fileNameTextBox.Text.Substring(fileNameTextBox.Text.LastIndexOf('\\') + 1)}.txt";
             _swAccount = new StreamWriter(_strAccountLogPath);
         }
         catch (IOException ioe)
@@ -3136,7 +3115,7 @@ public partial class Posting835 : Form
         DateTime sdtMod = DateTime.Parse(DateTime.Now.ToString());
         string strBatchNo = _batchTransactionService.GetNextBatchNumber().ToString();
 
-        tbBatchNo.Text = $"Batch No: {strBatchNo}";
+        batchNoTextBox.Text = $"Batch No: {strBatchNo}";
         this.Invalidate();
 
         // create the loop through the records to add
@@ -3146,7 +3125,7 @@ public partial class Posting835 : Form
         //tspbRecords.Step = 1;
 
         // put the batch number, check number and date at the top of the log
-        _eRR.m_Logfile.WriteLogFile($"Check number {tbCheckNo.Tag} was posted on batch number {strBatchNo} on {DateTime.Now:G}");
+        _eRR.m_Logfile.WriteLogFile($"Check number {checkNoTextBox.Tag} was posted on batch number {strBatchNo} on {DateTime.Now:G}");
 
         // now process the checks.
         List<Chk> chks = new();
@@ -3217,7 +3196,7 @@ public partial class Posting835 : Form
                 {
                     IsDeleted = false,
                     AccountNo = dr[(int)Col835Grids.Account].ToString().ToUpper(),
-                    ChkDate = DateTime.Parse(tbCheckDate.Tag.ToString()),
+                    ChkDate = DateTime.Parse(checkDateTextBox.Tag.ToString()),
                     DateReceived = sdtReceived,
                     CheckNo = dr[(int)Col835Grids.eCheckNo].ToString(),
                     PaidAmount = double.Parse(dr[(int)Col835Grids.ePaid].ToString(), System.Globalization.NumberStyles.Currency),
@@ -3235,11 +3214,11 @@ public partial class Posting835 : Form
                     UpdatedHost = Environment.MachineName,
                     mod_date_audit = sdtMod,
                     Cpt4Code = dr[(int)Col835Grids.eCPT4Code].ToString(),
-                    PostingFile = tbFileName.Tag.ToString(),
+                    PostingFile = fileNameTextBox.Tag.ToString(),
                     WriteOffCode = string.IsNullOrEmpty(dr[(int)Col835Grids.eWriteOffCode].ToString()) ? string.Empty
                         : dr[(int)Col835Grids.eWriteOffCode].ToString(),
-                    EftDate = DateTime.Parse(tbFileDate.Tag.ToString()),
-                    EftNumber = tbFileNumber.Tag.ToString(),
+                    EftDate = DateTime.Parse(fileDateTextBox.Tag.ToString()),
+                    EftNumber = fileNumberTextBox.Tag.ToString(),
                     FinCode = _strFinCode,
                     InsCode = _strInsCode,
                     ClaimAdjCode = dr[(int)Col835Grids.eReason].ToString()
@@ -3350,7 +3329,7 @@ public partial class Posting835 : Form
         #endregion Print Account Balance file
 
         tspbRecords.Value = 0; // reset the progress bar
-        tsmiPostCheckRecords.Enabled = false;
+        postCheckRecordsToolStripItem.Enabled = false;
         MoveFileToSavedDirectory();
     }
 
@@ -3360,7 +3339,7 @@ public partial class Posting835 : Form
     /// </summary>
     private void MoveFileToSavedDirectory()
     {
-        string strFileName = tbFileName.Tag.ToString();
+        string strFileName = fileNameTextBox.Tag.ToString();
         string strMoveFile = $@"{_diSaved}{strFileName.Substring(strFileName.LastIndexOf('\\'))}";
         string strMoveName = $@"{_diSaved}\Saved_DUP\{strFileName.Substring(strFileName.LastIndexOf('\\'))}";
         try
@@ -3368,10 +3347,10 @@ public partial class Posting835 : Form
             if (File.Exists(string.Format(@"{0}", strMoveFile)))
             {
 
-                File.Move(tbFileName.Tag.ToString(), $@"{_diSaved}\Saved_DUP\{strFileName.Substring(strFileName.LastIndexOf('\\'))}");
+                File.Move(fileNameTextBox.Tag.ToString(), $@"{_diSaved}\Saved_DUP\{strFileName.Substring(strFileName.LastIndexOf('\\'))}");
                 return;
             }
-            File.Move(tbFileName.Tag.ToString(), $@"{_diSaved}\{strFileName.Substring(strFileName.LastIndexOf('\\'))}");
+            File.Move(fileNameTextBox.Tag.ToString(), $@"{_diSaved}\{strFileName.Substring(strFileName.LastIndexOf('\\'))}");
         }
         catch (IOException ioe)
         {
@@ -3422,7 +3401,7 @@ public partial class Posting835 : Form
     /// </summary>
     public int ThereArePreviouslyPostedChecks(string strCheckNo)
     {
-        string strFileName = tbFileName.Tag.ToString();
+        string strFileName = fileNameTextBox.Tag.ToString();
         int nRec = 0;
 
         using SqlConnection conn = new(Program.AppEnvironment.ConnectionString);
@@ -3431,8 +3410,8 @@ public partial class Posting835 : Form
         string strSelect =
             string.Format("select account from chk where " +
                             " eft_date = '{0}' AND eft_number = '{1}' AND chk_no = '{2}'",
-                            tbFileDate.Tag.ToString(),
-                            tbFileNumber.Tag.ToString(),
+                            fileDateTextBox.Tag.ToString(),
+                            fileNumberTextBox.Tag.ToString(),
                             strCheckNo);
         sda.SelectCommand = new SqlCommand(strSelect, conn);
         DataTable dtCheck = new();
@@ -3464,7 +3443,7 @@ public partial class Posting835 : Form
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    private void tsbPrintView_Click(object sender, EventArgs e)
+    private void printViewToolStripItem_Click(object sender, EventArgs e)
     {
         Bitmap[] bmps = dkPrint.Capture(dkPrint.CaptureType.Form);
         try
@@ -3485,13 +3464,12 @@ public partial class Posting835 : Form
             MessageBox.Show(exc.Message);
             Utilities.dkPrint.propStreamToPrint.Close();
         }
-        PrintDocument printDoc = new PrintDocument();
+        PrintDocument printDoc = new();
 
         printDoc.DefaultPageSettings.Landscape = true;
         printDoc.PrintPage += new PrintPageEventHandler
             (Utilities.dkPrint.PrintGraphic_PrintPage);
 
-        // printDoc.PrinterSettings.PrinterName = @"\\MCL01\MCLP5";
         printDoc.Print();
 
         printDoc.PrintPage -= new PrintPageEventHandler
@@ -3546,7 +3524,7 @@ public partial class Posting835 : Form
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    private void tsmiEOB_Click(object sender, EventArgs e)
+    private void eobToolStripMenuItem_Click(object sender, EventArgs e)
     {
         _eRR.m_Logfile.WriteLogFile("PostEobFromDataSet");
 
@@ -3560,7 +3538,7 @@ public partial class Posting835 : Form
 
         string strWhere = "";
         // wdk 20160419 have to recreate this here in order to process several files in a row.
-        CEob m_rEob = new CEob(_strServer, _strDatabase, ref _eRR);
+        CEob m_rEob = new(_strServer, _strDatabase, ref _eRR);
         m_rEob.CreateCommittableTransaction();
 
         // create the EOB record set it's rowguid then use the rowguid for the detail records
@@ -3624,10 +3602,10 @@ public partial class Posting835 : Form
             // 06/03/2008 claim forwarded to can contain apostrophies which require sqlclean to triple them up. Thanks Rick
             m_rEob.Reob.m_strClaimForwardedTo = RFCObject.staticSqlClean(dr[(int)Col835EOB.eClaimForwarded].ToString());
             m_rEob.Reob.m_strClaimForwardedId = dr[(int)Col835EOB.eClaimForwardedID].ToString();
-            m_rEob.Reob.m_strEftFile = tbFileName.Tag.ToString();
-            m_rEob.Reob.m_strEftNumber = tbFileNumber.Tag.ToString();
-            m_rEob.Reob.m_strEftDate = tbFileDate.Tag.ToString();
-            m_rEob.Reob.m_strBillCycleDate = tbCheckDate.Tag.ToString();
+            m_rEob.Reob.m_strEftFile = fileNameTextBox.Tag.ToString();
+            m_rEob.Reob.m_strEftNumber = fileNumberTextBox.Tag.ToString();
+            m_rEob.Reob.m_strEftDate = fileDateTextBox.Tag.ToString();
+            m_rEob.Reob.m_strBillCycleDate = checkDateTextBox.Tag.ToString();
             //lEob.m_Reob.m_strPrintDate is left null until it is printed from Acc 
 
             DataGridView dgv = null;
@@ -3741,9 +3719,9 @@ public partial class Posting835 : Form
         }
     }
 
-    private void tsmiFirst20_Click(object sender, EventArgs e)
+    private void loadFirstToolStripItem_Click(object sender, EventArgs e)
     {
-        _dsRecords.Tables["dgvProcessed"].Select(string.Format("{0} is not null", Col835Grids.eSubscriberName.ToString()), Col835Grids.eSubscriberName.ToString());
+        _dsRecords.Tables[nameof(dgvProcessed)].Select(string.Format("{0} is not null", Col835Grids.eSubscriberName.ToString()), Col835Grids.eSubscriberName.ToString());
 
         _nCurrentDisplayed = 0;
         DataGridView dgv = null;
@@ -3769,7 +3747,7 @@ public partial class Posting835 : Form
         }
     }
 
-    private void tsmiNext20_Click(object sender, EventArgs e)
+    private void loadNextToolStripItem_Click(object sender, EventArgs e)
     {
         DataGridView dgv = GetSelectedTabsDataGrid(tc835.SelectedIndex);
         dgv.Rows.Clear();
@@ -3786,7 +3764,7 @@ public partial class Posting835 : Form
         }
     }
 
-    private void tsmiLast20_Click(object sender, EventArgs e)
+    private void loadLastToolStripItem_Click(object sender, EventArgs e)
     {
         DataGridView dgv = GetSelectedTabsDataGrid(tc835.SelectedIndex);
         dgv.Rows.Clear();
@@ -3808,7 +3786,7 @@ public partial class Posting835 : Form
         }
     }
 
-    private void tsmiPrevious20_Click(object sender, EventArgs e)
+    private void loadPreviousToolStripItem_Click(object sender, EventArgs e)
     {
         DataGridView dgv = GetSelectedTabsDataGrid(tc835.SelectedIndex);
         dgv.Rows.Clear();
@@ -3831,7 +3809,7 @@ public partial class Posting835 : Form
         }
     }
 
-    private void tsbPrintEOB_Click(object sender, EventArgs e)
+    private void printEOBToolStripItem_Click(object sender, EventArgs e)
     {
         tspbRecords.Value = 0;
         tspbRecords.Maximum = _dsRecords.Tables[dgvEOB.Name].Rows.Count;
@@ -3850,7 +3828,7 @@ public partial class Posting835 : Form
             }
             if (strBal != "0")
             {
-                _rEob.Reob.m_strFilter = $"Account = '{strEOBAccount}'AND claim_status = '{_dsRecords.Tables[dgvEOB.Name].Rows[i][(int)Col835EOB.eClaimSt]}' and eft_number = '{tbFileNumber.Tag}'";
+                _rEob.Reob.m_strFilter = $"Account = '{strEOBAccount}'AND claim_status = '{_dsRecords.Tables[dgvEOB.Name].Rows[i][(int)Col835EOB.eClaimSt]}' and eft_number = '{fileNumberTextBox.Tag}'";
                 if (_rEob.Reob.GetActiveRecords(_rEob.Reob.m_strFilter) > 0)
                 {
                     _rEob.Reob.LoadMemberVariablesFromDataSet();
@@ -4001,7 +3979,7 @@ public partial class Posting835 : Form
 
     void tKeyDown(object sender, KeyEventArgs e)
     {
-        throw new NotImplementedException("inside t_KeyDown notify David");
+        throw new NotImplementedException("inside t_KeyDown notify System Administrator");
     }
 
 } // don't go below this line.

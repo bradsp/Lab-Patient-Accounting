@@ -63,47 +63,47 @@ namespace LabBilling.Legacy
             tpEOB = new TabPage();
             dgvEOB = new DataGridView();
             tlpTotals = new TableLayoutPanel();
-            tbProviderID = new TextBox();
-            tbCheckDate = new TextBox();
-            tbFileDate = new TextBox();
-            tbFileName = new TextBox();
-            tbCheckNo = new TextBox();
-            tbBatchNo = new TextBox();
-            tbBillCycle = new TextBox();
-            tbFileNumber = new TextBox();
-            tbDatabase = new TextBox();
-            tbChargeAmt = new TextBox();
-            tbEOBChargeAmt = new TextBox();
-            tbPaidAmt = new TextBox();
-            tbEOBPaidAmt = new TextBox();
-            tbContractualAmt = new TextBox();
-            tbEOBContractualAmt = new TextBox();
-            textBox1 = new TextBox();
-            tbEOBOtherAmt = new TextBox();
-            tbDeniedAmt = new TextBox();
-            tbEOBDeniedAmt = new TextBox();
+            providerIdTextBox = new TextBox();
+            checkDateTextBox = new TextBox();
+            fileDateTextBox = new TextBox();
+            fileNameTextBox = new TextBox();
+            checkNoTextBox = new TextBox();
+            batchNoTextBox = new TextBox();
+            billCycleTextBox = new TextBox();
+            fileNumberTextBox = new TextBox();
+            databaseTextBox = new TextBox();
+            chargeAmountTextBox = new TextBox();
+            eobChargeAmountTextBox = new TextBox();
+            paidAmountTextBox = new TextBox();
+            eobPaidAmountTextBox = new TextBox();
+            contractualAmountTextBox = new TextBox();
+            eobContractualAmountTextBox = new TextBox();
+            otherAmountTextBox = new TextBox();
+            eobOtherAmountTextBox = new TextBox();
+            deniedAmountTextBox = new TextBox();
+            eobDeniedAmountTextBox = new TextBox();
             rtbCheckSource = new RichTextBox();
-            tbCheckAmt = new TextBox();
-            lbChecks = new ListBox();
-            msMain = new MenuStrip();
+            checkAmountTextBox = new TextBox();
+            checksLabel = new ListBox();
+            mainToolStripMenu = new MenuStrip();
             tsddbImport = new ToolStripDropDownButton();
             cmsMedicare835Files = new ContextMenuStrip(components);
             tsmiImport = new ToolStripMenuItem();
             purgeInvalidFilesToolStripMenuItem = new ToolStripMenuItem();
             findAccountInFilesToolStripMenuItem = new ToolStripMenuItem();
-            tsmiFileOpen = new ToolStripMenuItem();
-            tsmiPostCheckRecords = new ToolStripMenuItem();
-            tspPrintView = new ToolStripButton();
-            tsmiPrint = new ToolStripMenuItem();
-            tsmiEOBMenu = new ToolStripMenuItem();
+            openFileToolStripItem = new ToolStripMenuItem();
+            postCheckRecordsToolStripItem = new ToolStripMenuItem();
+            printViewToolStripItem = new ToolStripButton();
+            printGridToolStripItem = new ToolStripMenuItem();
+            eobToolStripMenu = new ToolStripMenuItem();
             postEOBsToolStripMenuItem = new ToolStripMenuItem();
             printEOBsToolStripMenuItem = new ToolStripMenuItem();
-            tsmiDisplayRecords = new ToolStripMenuItem();
-            tsmiFirst20 = new ToolStripMenuItem();
-            tsmiNext100 = new ToolStripMenuItem();
-            tsmiPrevious100 = new ToolStripMenuItem();
-            tsmiLast100 = new ToolStripMenuItem();
-            tsmiFindAccount = new ToolStripMenuItem();
+            loadGridToolStripMenu = new ToolStripMenuItem();
+            loadFirstToolStripItem = new ToolStripMenuItem();
+            loadNextToolStripItem = new ToolStripMenuItem();
+            loadPreviousToolStripItem = new ToolStripMenuItem();
+            loadLastToolStripItem = new ToolStripMenuItem();
+            findAccountToolStripItem = new ToolStripMenuItem();
             tstbFindAccount = new ToolStripTextBox();
             tsmiFindSubscriber = new ToolStripMenuItem();
             tstbFindSubscriber = new ToolStripTextBox();
@@ -124,7 +124,7 @@ namespace LabBilling.Legacy
             tpEOB.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvEOB).BeginInit();
             tlpTotals.SuspendLayout();
-            msMain.SuspendLayout();
+            mainToolStripMenu.SuspendLayout();
             cmsMedicare835Files.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)chkBindingSource).BeginInit();
             ((System.ComponentModel.ISupportInitialize)scMain).BeginInit();
@@ -438,28 +438,28 @@ namespace LabBilling.Legacy
             tlpTotals.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 146F));
             tlpTotals.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 146F));
             tlpTotals.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 292F));
-            tlpTotals.Controls.Add(tbProviderID, 5, 1);
-            tlpTotals.Controls.Add(tbCheckDate, 5, 2);
-            tlpTotals.Controls.Add(tbFileDate, 5, 0);
-            tlpTotals.Controls.Add(tbFileName, 6, 0);
-            tlpTotals.Controls.Add(tbCheckNo, 6, 2);
-            tlpTotals.Controls.Add(tbBatchNo, 5, 3);
-            tlpTotals.Controls.Add(tbBillCycle, 6, 3);
-            tlpTotals.Controls.Add(tbFileNumber, 4, 0);
-            tlpTotals.Controls.Add(tbDatabase, 0, 0);
-            tlpTotals.Controls.Add(tbChargeAmt, 0, 1);
-            tlpTotals.Controls.Add(tbEOBChargeAmt, 0, 2);
-            tlpTotals.Controls.Add(tbPaidAmt, 1, 1);
-            tlpTotals.Controls.Add(tbEOBPaidAmt, 1, 2);
-            tlpTotals.Controls.Add(tbContractualAmt, 2, 1);
-            tlpTotals.Controls.Add(tbEOBContractualAmt, 2, 2);
-            tlpTotals.Controls.Add(textBox1, 3, 1);
-            tlpTotals.Controls.Add(tbEOBOtherAmt, 3, 2);
-            tlpTotals.Controls.Add(tbDeniedAmt, 4, 1);
-            tlpTotals.Controls.Add(tbEOBDeniedAmt, 4, 2);
+            tlpTotals.Controls.Add(providerIdTextBox, 5, 1);
+            tlpTotals.Controls.Add(checkDateTextBox, 5, 2);
+            tlpTotals.Controls.Add(fileDateTextBox, 5, 0);
+            tlpTotals.Controls.Add(fileNameTextBox, 6, 0);
+            tlpTotals.Controls.Add(checkNoTextBox, 6, 2);
+            tlpTotals.Controls.Add(batchNoTextBox, 5, 3);
+            tlpTotals.Controls.Add(billCycleTextBox, 6, 3);
+            tlpTotals.Controls.Add(fileNumberTextBox, 4, 0);
+            tlpTotals.Controls.Add(databaseTextBox, 0, 0);
+            tlpTotals.Controls.Add(chargeAmountTextBox, 0, 1);
+            tlpTotals.Controls.Add(eobChargeAmountTextBox, 0, 2);
+            tlpTotals.Controls.Add(paidAmountTextBox, 1, 1);
+            tlpTotals.Controls.Add(eobPaidAmountTextBox, 1, 2);
+            tlpTotals.Controls.Add(contractualAmountTextBox, 2, 1);
+            tlpTotals.Controls.Add(eobContractualAmountTextBox, 2, 2);
+            tlpTotals.Controls.Add(otherAmountTextBox, 3, 1);
+            tlpTotals.Controls.Add(eobOtherAmountTextBox, 3, 2);
+            tlpTotals.Controls.Add(deniedAmountTextBox, 4, 1);
+            tlpTotals.Controls.Add(eobDeniedAmountTextBox, 4, 2);
             tlpTotals.Controls.Add(rtbCheckSource, 0, 3);
-            tlpTotals.Controls.Add(tbCheckAmt, 6, 1);
-            tlpTotals.Controls.Add(lbChecks, 7, 1);
+            tlpTotals.Controls.Add(checkAmountTextBox, 6, 1);
+            tlpTotals.Controls.Add(checksLabel, 7, 1);
             tlpTotals.Dock = DockStyle.Fill;
             tlpTotals.Location = new Point(0, 0);
             tlpTotals.Margin = new Padding(4, 3, 4, 3);
@@ -474,219 +474,219 @@ namespace LabBilling.Legacy
             tlpTotals.Size = new Size(1223, 150);
             tlpTotals.TabIndex = 2;
             // 
-            // tbProviderID
+            // providerIdTextBox
             // 
-            tbProviderID.BackColor = Color.WhiteSmoke;
-            tbProviderID.Dock = DockStyle.Fill;
-            tbProviderID.Location = new Point(517, 38);
-            tbProviderID.Margin = new Padding(4, 3, 4, 3);
-            tbProviderID.Name = "tbProviderID";
-            tbProviderID.Size = new Size(138, 23);
-            tbProviderID.TabIndex = 24;
-            tbProviderID.Text = "Provider ID:";
+            providerIdTextBox.BackColor = Color.WhiteSmoke;
+            providerIdTextBox.Dock = DockStyle.Fill;
+            providerIdTextBox.Location = new Point(517, 38);
+            providerIdTextBox.Margin = new Padding(4, 3, 4, 3);
+            providerIdTextBox.Name = "providerIdTextBox";
+            providerIdTextBox.Size = new Size(138, 23);
+            providerIdTextBox.TabIndex = 24;
+            providerIdTextBox.Text = "Provider ID:";
             // 
-            // tbCheckDate
+            // checkDateTextBox
             // 
-            tbCheckDate.BackColor = Color.WhiteSmoke;
-            tbCheckDate.Dock = DockStyle.Fill;
-            tbCheckDate.Location = new Point(517, 68);
-            tbCheckDate.Margin = new Padding(4, 3, 4, 3);
-            tbCheckDate.Name = "tbCheckDate";
-            tbCheckDate.Size = new Size(138, 23);
-            tbCheckDate.TabIndex = 4;
-            tbCheckDate.Text = "Check Date: ";
+            checkDateTextBox.BackColor = Color.WhiteSmoke;
+            checkDateTextBox.Dock = DockStyle.Fill;
+            checkDateTextBox.Location = new Point(517, 68);
+            checkDateTextBox.Margin = new Padding(4, 3, 4, 3);
+            checkDateTextBox.Name = "checkDateTextBox";
+            checkDateTextBox.Size = new Size(138, 23);
+            checkDateTextBox.TabIndex = 4;
+            checkDateTextBox.Text = "Check Date: ";
             // 
-            // tbFileDate
+            // fileDateTextBox
             // 
-            tbFileDate.BackColor = Color.WhiteSmoke;
-            tbFileDate.Dock = DockStyle.Fill;
-            tbFileDate.Location = new Point(517, 3);
-            tbFileDate.Margin = new Padding(4, 3, 4, 3);
-            tbFileDate.Name = "tbFileDate";
-            tbFileDate.Size = new Size(138, 23);
-            tbFileDate.TabIndex = 30;
-            tbFileDate.Text = "File Date:";
+            fileDateTextBox.BackColor = Color.WhiteSmoke;
+            fileDateTextBox.Dock = DockStyle.Fill;
+            fileDateTextBox.Location = new Point(517, 3);
+            fileDateTextBox.Margin = new Padding(4, 3, 4, 3);
+            fileDateTextBox.Name = "fileDateTextBox";
+            fileDateTextBox.Size = new Size(138, 23);
+            fileDateTextBox.TabIndex = 30;
+            fileDateTextBox.Text = "File Date:";
             // 
-            // tbFileName
+            // fileNameTextBox
             // 
-            tbFileName.BackColor = Color.WhiteSmoke;
-            tlpTotals.SetColumnSpan(tbFileName, 2);
-            tbFileName.Dock = DockStyle.Fill;
-            tbFileName.Location = new Point(663, 3);
-            tbFileName.Margin = new Padding(4, 3, 4, 3);
-            tbFileName.Name = "tbFileName";
-            tbFileName.Size = new Size(556, 23);
-            tbFileName.TabIndex = 3;
-            tbFileName.Text = "File Name:";
+            fileNameTextBox.BackColor = Color.WhiteSmoke;
+            tlpTotals.SetColumnSpan(fileNameTextBox, 2);
+            fileNameTextBox.Dock = DockStyle.Fill;
+            fileNameTextBox.Location = new Point(663, 3);
+            fileNameTextBox.Margin = new Padding(4, 3, 4, 3);
+            fileNameTextBox.Name = "fileNameTextBox";
+            fileNameTextBox.Size = new Size(556, 23);
+            fileNameTextBox.TabIndex = 3;
+            fileNameTextBox.Text = "File Name:";
             // 
-            // tbCheckNo
+            // checkNoTextBox
             // 
-            tbCheckNo.BackColor = Color.WhiteSmoke;
-            tbCheckNo.Dock = DockStyle.Fill;
-            tbCheckNo.Location = new Point(663, 68);
-            tbCheckNo.Margin = new Padding(4, 3, 4, 3);
-            tbCheckNo.Name = "tbCheckNo";
-            tbCheckNo.Size = new Size(138, 23);
-            tbCheckNo.TabIndex = 1;
-            tbCheckNo.Text = "Ck No: ";
+            checkNoTextBox.BackColor = Color.WhiteSmoke;
+            checkNoTextBox.Dock = DockStyle.Fill;
+            checkNoTextBox.Location = new Point(663, 68);
+            checkNoTextBox.Margin = new Padding(4, 3, 4, 3);
+            checkNoTextBox.Name = "checkNoTextBox";
+            checkNoTextBox.Size = new Size(138, 23);
+            checkNoTextBox.TabIndex = 1;
+            checkNoTextBox.Text = "Ck No: ";
             // 
-            // tbBatchNo
+            // batchNoTextBox
             // 
-            tbBatchNo.BackColor = Color.WhiteSmoke;
-            tbBatchNo.Dock = DockStyle.Fill;
-            tbBatchNo.Location = new Point(517, 98);
-            tbBatchNo.Margin = new Padding(4, 3, 4, 3);
-            tbBatchNo.Name = "tbBatchNo";
-            tbBatchNo.Size = new Size(138, 23);
-            tbBatchNo.TabIndex = 26;
-            tbBatchNo.Text = "Batch No:";
+            batchNoTextBox.BackColor = Color.WhiteSmoke;
+            batchNoTextBox.Dock = DockStyle.Fill;
+            batchNoTextBox.Location = new Point(517, 98);
+            batchNoTextBox.Margin = new Padding(4, 3, 4, 3);
+            batchNoTextBox.Name = "batchNoTextBox";
+            batchNoTextBox.Size = new Size(138, 23);
+            batchNoTextBox.TabIndex = 26;
+            batchNoTextBox.Text = "Batch No:";
             // 
-            // tbBillCycle
+            // billCycleTextBox
             // 
-            tbBillCycle.BackColor = Color.WhiteSmoke;
-            tbBillCycle.Dock = DockStyle.Fill;
-            tbBillCycle.Location = new Point(663, 98);
-            tbBillCycle.Margin = new Padding(4, 3, 4, 3);
-            tbBillCycle.Name = "tbBillCycle";
-            tbBillCycle.Size = new Size(138, 23);
-            tbBillCycle.TabIndex = 28;
-            tbBillCycle.Text = "Bill Cycle";
+            billCycleTextBox.BackColor = Color.WhiteSmoke;
+            billCycleTextBox.Dock = DockStyle.Fill;
+            billCycleTextBox.Location = new Point(663, 98);
+            billCycleTextBox.Margin = new Padding(4, 3, 4, 3);
+            billCycleTextBox.Name = "billCycleTextBox";
+            billCycleTextBox.Size = new Size(138, 23);
+            billCycleTextBox.TabIndex = 28;
+            billCycleTextBox.Text = "Bill Cycle";
             // 
-            // tbFileNumber
+            // fileNumberTextBox
             // 
-            tbFileNumber.BackColor = SystemColors.Control;
-            tbFileNumber.Dock = DockStyle.Fill;
-            tbFileNumber.Location = new Point(400, 3);
-            tbFileNumber.Margin = new Padding(4, 3, 4, 3);
-            tbFileNumber.Name = "tbFileNumber";
-            tbFileNumber.Size = new Size(109, 23);
-            tbFileNumber.TabIndex = 29;
-            tbFileNumber.Text = "File Number";
+            fileNumberTextBox.BackColor = SystemColors.Control;
+            fileNumberTextBox.Dock = DockStyle.Fill;
+            fileNumberTextBox.Location = new Point(400, 3);
+            fileNumberTextBox.Margin = new Padding(4, 3, 4, 3);
+            fileNumberTextBox.Name = "fileNumberTextBox";
+            fileNumberTextBox.Size = new Size(109, 23);
+            fileNumberTextBox.TabIndex = 29;
+            fileNumberTextBox.Text = "File Number";
             // 
-            // tbDatabase
+            // databaseTextBox
             // 
-            tbDatabase.BackColor = Color.FromArgb(255, 255, 192);
-            tbDatabase.CharacterCasing = CharacterCasing.Upper;
-            tlpTotals.SetColumnSpan(tbDatabase, 3);
-            tbDatabase.Dock = DockStyle.Fill;
-            tbDatabase.Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            tbDatabase.ForeColor = Color.FromArgb(0, 192, 0);
-            tbDatabase.Location = new Point(4, 3);
-            tbDatabase.Margin = new Padding(4, 3, 4, 3);
-            tbDatabase.Name = "tbDatabase";
-            tbDatabase.ReadOnly = true;
-            tbDatabase.Size = new Size(289, 20);
-            tbDatabase.TabIndex = 31;
+            databaseTextBox.BackColor = Color.FromArgb(255, 255, 192);
+            databaseTextBox.CharacterCasing = CharacterCasing.Upper;
+            tlpTotals.SetColumnSpan(databaseTextBox, 3);
+            databaseTextBox.Dock = DockStyle.Fill;
+            databaseTextBox.Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            databaseTextBox.ForeColor = Color.FromArgb(0, 192, 0);
+            databaseTextBox.Location = new Point(4, 3);
+            databaseTextBox.Margin = new Padding(4, 3, 4, 3);
+            databaseTextBox.Name = "databaseTextBox";
+            databaseTextBox.ReadOnly = true;
+            databaseTextBox.Size = new Size(289, 20);
+            databaseTextBox.TabIndex = 31;
             // 
-            // tbChargeAmt
+            // chargeAmountTextBox
             // 
-            tbChargeAmt.Dock = DockStyle.Fill;
-            tbChargeAmt.Location = new Point(4, 38);
-            tbChargeAmt.Margin = new Padding(4, 3, 4, 3);
-            tbChargeAmt.Name = "tbChargeAmt";
-            tbChargeAmt.ReadOnly = true;
-            tbChargeAmt.Size = new Size(91, 23);
-            tbChargeAmt.TabIndex = 8;
-            tbChargeAmt.Text = "Charge Amt";
+            chargeAmountTextBox.Dock = DockStyle.Fill;
+            chargeAmountTextBox.Location = new Point(4, 38);
+            chargeAmountTextBox.Margin = new Padding(4, 3, 4, 3);
+            chargeAmountTextBox.Name = "chargeAmountTextBox";
+            chargeAmountTextBox.ReadOnly = true;
+            chargeAmountTextBox.Size = new Size(91, 23);
+            chargeAmountTextBox.TabIndex = 8;
+            chargeAmountTextBox.Text = "Charge Amt";
             // 
-            // tbEOBChargeAmt
+            // eobChargeAmountTextBox
             // 
-            tbEOBChargeAmt.Dock = DockStyle.Fill;
-            tbEOBChargeAmt.Location = new Point(4, 68);
-            tbEOBChargeAmt.Margin = new Padding(4, 3, 4, 3);
-            tbEOBChargeAmt.Name = "tbEOBChargeAmt";
-            tbEOBChargeAmt.ReadOnly = true;
-            tbEOBChargeAmt.Size = new Size(91, 23);
-            tbEOBChargeAmt.TabIndex = 12;
-            tbEOBChargeAmt.TextAlign = HorizontalAlignment.Right;
+            eobChargeAmountTextBox.Dock = DockStyle.Fill;
+            eobChargeAmountTextBox.Location = new Point(4, 68);
+            eobChargeAmountTextBox.Margin = new Padding(4, 3, 4, 3);
+            eobChargeAmountTextBox.Name = "eobChargeAmountTextBox";
+            eobChargeAmountTextBox.ReadOnly = true;
+            eobChargeAmountTextBox.Size = new Size(91, 23);
+            eobChargeAmountTextBox.TabIndex = 12;
+            eobChargeAmountTextBox.TextAlign = HorizontalAlignment.Right;
             // 
-            // tbPaidAmt
+            // paidAmountTextBox
             // 
-            tbPaidAmt.Dock = DockStyle.Fill;
-            tbPaidAmt.Location = new Point(103, 38);
-            tbPaidAmt.Margin = new Padding(4, 3, 4, 3);
-            tbPaidAmt.Name = "tbPaidAmt";
-            tbPaidAmt.ReadOnly = true;
-            tbPaidAmt.Size = new Size(91, 23);
-            tbPaidAmt.TabIndex = 9;
-            tbPaidAmt.Text = "Paid Amt";
+            paidAmountTextBox.Dock = DockStyle.Fill;
+            paidAmountTextBox.Location = new Point(103, 38);
+            paidAmountTextBox.Margin = new Padding(4, 3, 4, 3);
+            paidAmountTextBox.Name = "paidAmountTextBox";
+            paidAmountTextBox.ReadOnly = true;
+            paidAmountTextBox.Size = new Size(91, 23);
+            paidAmountTextBox.TabIndex = 9;
+            paidAmountTextBox.Text = "Paid Amt";
             // 
-            // tbEOBPaidAmt
+            // eobPaidAmountTextBox
             // 
-            tbEOBPaidAmt.Dock = DockStyle.Fill;
-            tbEOBPaidAmt.Location = new Point(103, 68);
-            tbEOBPaidAmt.Margin = new Padding(4, 3, 4, 3);
-            tbEOBPaidAmt.Name = "tbEOBPaidAmt";
-            tbEOBPaidAmt.ReadOnly = true;
-            tbEOBPaidAmt.Size = new Size(91, 23);
-            tbEOBPaidAmt.TabIndex = 15;
-            tbEOBPaidAmt.TextAlign = HorizontalAlignment.Right;
+            eobPaidAmountTextBox.Dock = DockStyle.Fill;
+            eobPaidAmountTextBox.Location = new Point(103, 68);
+            eobPaidAmountTextBox.Margin = new Padding(4, 3, 4, 3);
+            eobPaidAmountTextBox.Name = "eobPaidAmountTextBox";
+            eobPaidAmountTextBox.ReadOnly = true;
+            eobPaidAmountTextBox.Size = new Size(91, 23);
+            eobPaidAmountTextBox.TabIndex = 15;
+            eobPaidAmountTextBox.TextAlign = HorizontalAlignment.Right;
             // 
-            // tbContractualAmt
+            // contractualAmountTextBox
             // 
-            tbContractualAmt.Dock = DockStyle.Fill;
-            tbContractualAmt.Location = new Point(202, 38);
-            tbContractualAmt.Margin = new Padding(4, 3, 4, 3);
-            tbContractualAmt.Name = "tbContractualAmt";
-            tbContractualAmt.ReadOnly = true;
-            tbContractualAmt.Size = new Size(91, 23);
-            tbContractualAmt.TabIndex = 10;
-            tbContractualAmt.Text = "Contractual Amt";
+            contractualAmountTextBox.Dock = DockStyle.Fill;
+            contractualAmountTextBox.Location = new Point(202, 38);
+            contractualAmountTextBox.Margin = new Padding(4, 3, 4, 3);
+            contractualAmountTextBox.Name = "contractualAmountTextBox";
+            contractualAmountTextBox.ReadOnly = true;
+            contractualAmountTextBox.Size = new Size(91, 23);
+            contractualAmountTextBox.TabIndex = 10;
+            contractualAmountTextBox.Text = "Contractual Amt";
             // 
-            // tbEOBContractualAmt
+            // eobContractualAmountTextBox
             // 
-            tbEOBContractualAmt.Dock = DockStyle.Fill;
-            tbEOBContractualAmt.Location = new Point(202, 68);
-            tbEOBContractualAmt.Margin = new Padding(4, 3, 4, 3);
-            tbEOBContractualAmt.Name = "tbEOBContractualAmt";
-            tbEOBContractualAmt.ReadOnly = true;
-            tbEOBContractualAmt.Size = new Size(91, 23);
-            tbEOBContractualAmt.TabIndex = 18;
-            tbEOBContractualAmt.TextAlign = HorizontalAlignment.Right;
+            eobContractualAmountTextBox.Dock = DockStyle.Fill;
+            eobContractualAmountTextBox.Location = new Point(202, 68);
+            eobContractualAmountTextBox.Margin = new Padding(4, 3, 4, 3);
+            eobContractualAmountTextBox.Name = "eobContractualAmountTextBox";
+            eobContractualAmountTextBox.ReadOnly = true;
+            eobContractualAmountTextBox.Size = new Size(91, 23);
+            eobContractualAmountTextBox.TabIndex = 18;
+            eobContractualAmountTextBox.TextAlign = HorizontalAlignment.Right;
             // 
-            // textBox1
+            // otherAmountTextBox
             // 
-            textBox1.BackColor = SystemColors.Control;
-            textBox1.Dock = DockStyle.Fill;
-            textBox1.Location = new Point(301, 38);
-            textBox1.Margin = new Padding(4, 3, 4, 3);
-            textBox1.Name = "textBox1";
-            textBox1.Size = new Size(91, 23);
-            textBox1.TabIndex = 32;
-            textBox1.Text = "Other Amt";
+            otherAmountTextBox.BackColor = SystemColors.Control;
+            otherAmountTextBox.Dock = DockStyle.Fill;
+            otherAmountTextBox.Location = new Point(301, 38);
+            otherAmountTextBox.Margin = new Padding(4, 3, 4, 3);
+            otherAmountTextBox.Name = "otherAmountTextBox";
+            otherAmountTextBox.Size = new Size(91, 23);
+            otherAmountTextBox.TabIndex = 32;
+            otherAmountTextBox.Text = "Other Amt";
             // 
-            // tbEOBOtherAmt
+            // eobOtherAmountTextBox
             // 
-            tbEOBOtherAmt.BackColor = SystemColors.Control;
-            tbEOBOtherAmt.Dock = DockStyle.Fill;
-            tbEOBOtherAmt.Location = new Point(301, 68);
-            tbEOBOtherAmt.Margin = new Padding(4, 3, 4, 3);
-            tbEOBOtherAmt.Name = "tbEOBOtherAmt";
-            tbEOBOtherAmt.Size = new Size(91, 23);
-            tbEOBOtherAmt.TabIndex = 33;
-            tbEOBOtherAmt.TextAlign = HorizontalAlignment.Right;
+            eobOtherAmountTextBox.BackColor = SystemColors.Control;
+            eobOtherAmountTextBox.Dock = DockStyle.Fill;
+            eobOtherAmountTextBox.Location = new Point(301, 68);
+            eobOtherAmountTextBox.Margin = new Padding(4, 3, 4, 3);
+            eobOtherAmountTextBox.Name = "eobOtherAmountTextBox";
+            eobOtherAmountTextBox.Size = new Size(91, 23);
+            eobOtherAmountTextBox.TabIndex = 33;
+            eobOtherAmountTextBox.TextAlign = HorizontalAlignment.Right;
             // 
-            // tbDeniedAmt
+            // deniedAmountTextBox
             // 
-            tbDeniedAmt.Dock = DockStyle.Fill;
-            tbDeniedAmt.Location = new Point(400, 38);
-            tbDeniedAmt.Margin = new Padding(4, 3, 4, 3);
-            tbDeniedAmt.Name = "tbDeniedAmt";
-            tbDeniedAmt.ReadOnly = true;
-            tbDeniedAmt.Size = new Size(109, 23);
-            tbDeniedAmt.TabIndex = 11;
-            tbDeniedAmt.Text = "Denied Amt";
+            deniedAmountTextBox.Dock = DockStyle.Fill;
+            deniedAmountTextBox.Location = new Point(400, 38);
+            deniedAmountTextBox.Margin = new Padding(4, 3, 4, 3);
+            deniedAmountTextBox.Name = "deniedAmountTextBox";
+            deniedAmountTextBox.ReadOnly = true;
+            deniedAmountTextBox.Size = new Size(109, 23);
+            deniedAmountTextBox.TabIndex = 11;
+            deniedAmountTextBox.Text = "Denied Amt";
             // 
-            // tbEOBDeniedAmt
+            // eobDeniedAmountTextBox
             // 
-            tbEOBDeniedAmt.Dock = DockStyle.Fill;
-            tbEOBDeniedAmt.Location = new Point(400, 68);
-            tbEOBDeniedAmt.Margin = new Padding(4, 3, 4, 3);
-            tbEOBDeniedAmt.Name = "tbEOBDeniedAmt";
-            tbEOBDeniedAmt.ReadOnly = true;
-            tbEOBDeniedAmt.Size = new Size(109, 23);
-            tbEOBDeniedAmt.TabIndex = 21;
-            tbEOBDeniedAmt.TextAlign = HorizontalAlignment.Right;
+            eobDeniedAmountTextBox.Dock = DockStyle.Fill;
+            eobDeniedAmountTextBox.Location = new Point(400, 68);
+            eobDeniedAmountTextBox.Margin = new Padding(4, 3, 4, 3);
+            eobDeniedAmountTextBox.Name = "eobDeniedAmountTextBox";
+            eobDeniedAmountTextBox.ReadOnly = true;
+            eobDeniedAmountTextBox.Size = new Size(109, 23);
+            eobDeniedAmountTextBox.TabIndex = 21;
+            eobDeniedAmountTextBox.TextAlign = HorizontalAlignment.Right;
             // 
             // rtbCheckSource
             // 
@@ -702,40 +702,40 @@ namespace LabBilling.Legacy
             rtbCheckSource.TabIndex = 25;
             rtbCheckSource.Text = "";
             // 
-            // tbCheckAmt
+            // checkAmountTextBox
             // 
-            tbCheckAmt.BackColor = Color.WhiteSmoke;
-            tbCheckAmt.Dock = DockStyle.Fill;
-            tbCheckAmt.Location = new Point(663, 38);
-            tbCheckAmt.Margin = new Padding(4, 3, 4, 3);
-            tbCheckAmt.Name = "tbCheckAmt";
-            tbCheckAmt.Size = new Size(138, 23);
-            tbCheckAmt.TabIndex = 0;
-            tbCheckAmt.Text = "Ck Amt: ";
+            checkAmountTextBox.BackColor = Color.WhiteSmoke;
+            checkAmountTextBox.Dock = DockStyle.Fill;
+            checkAmountTextBox.Location = new Point(663, 38);
+            checkAmountTextBox.Margin = new Padding(4, 3, 4, 3);
+            checkAmountTextBox.Name = "checkAmountTextBox";
+            checkAmountTextBox.Size = new Size(138, 23);
+            checkAmountTextBox.TabIndex = 0;
+            checkAmountTextBox.Text = "Ck Amt: ";
             // 
-            // lbChecks
+            // checksLabel
             // 
-            lbChecks.Dock = DockStyle.Fill;
-            lbChecks.Font = new Font("Microsoft Sans Serif", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            lbChecks.FormattingEnabled = true;
-            lbChecks.ItemHeight = 12;
-            lbChecks.Location = new Point(809, 38);
-            lbChecks.Margin = new Padding(4, 3, 4, 3);
-            lbChecks.Name = "lbChecks";
-            tlpTotals.SetRowSpan(lbChecks, 4);
-            lbChecks.Size = new Size(410, 109);
-            lbChecks.TabIndex = 34;
+            checksLabel.Dock = DockStyle.Fill;
+            checksLabel.Font = new Font("Microsoft Sans Serif", 6.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            checksLabel.FormattingEnabled = true;
+            checksLabel.ItemHeight = 12;
+            checksLabel.Location = new Point(809, 38);
+            checksLabel.Margin = new Padding(4, 3, 4, 3);
+            checksLabel.Name = "checksLabel";
+            tlpTotals.SetRowSpan(checksLabel, 4);
+            checksLabel.Size = new Size(410, 109);
+            checksLabel.TabIndex = 34;
             // 
-            // msMain
+            // mainToolStripMenu
             // 
-            msMain.ImageScalingSize = new Size(20, 20);
-            msMain.Items.AddRange(new ToolStripItem[] { tsddbImport, tsmiFileOpen, tsmiPostCheckRecords, tspPrintView, tsmiPrint, tsmiEOBMenu, tsmiDisplayRecords });
-            msMain.Location = new Point(0, 0);
-            msMain.Name = "msMain";
-            msMain.Padding = new Padding(7, 2, 0, 2);
-            msMain.Size = new Size(1223, 26);
-            msMain.TabIndex = 5;
-            msMain.Text = "menuStrip";
+            mainToolStripMenu.ImageScalingSize = new Size(20, 20);
+            mainToolStripMenu.Items.AddRange(new ToolStripItem[] { tsddbImport, openFileToolStripItem, postCheckRecordsToolStripItem, printViewToolStripItem, printGridToolStripItem, eobToolStripMenu, loadGridToolStripMenu });
+            mainToolStripMenu.Location = new Point(0, 0);
+            mainToolStripMenu.Name = "mainToolStripMenu";
+            mainToolStripMenu.Padding = new Padding(7, 2, 0, 2);
+            mainToolStripMenu.Size = new Size(1223, 26);
+            mainToolStripMenu.TabIndex = 5;
+            mainToolStripMenu.Text = "menuStrip";
             // 
             // tsddbImport
             // 
@@ -783,44 +783,44 @@ namespace LabBilling.Legacy
             findAccountInFilesToolStripMenuItem.Visible = false;
             findAccountInFilesToolStripMenuItem.Click += FindAccountInFilesToolStripMenuItem_Click;
             // 
-            // tsmiFileOpen
+            // openFileToolStripItem
             // 
-            tsmiFileOpen.Name = "tsmiFileOpen";
-            tsmiFileOpen.Size = new Size(69, 22);
-            tsmiFileOpen.Text = "Open File";
-            tsmiFileOpen.Click += TsmiFileOpen_Click;
+            openFileToolStripItem.Name = "openFileToolStripItem";
+            openFileToolStripItem.Size = new Size(69, 22);
+            openFileToolStripItem.Text = "Open File";
+            openFileToolStripItem.Click += fileOpenToolStripItem_Click;
             // 
-            // tsmiPostCheckRecords
+            // postCheckRecordsToolStripItem
             // 
-            tsmiPostCheckRecords.Name = "tsmiPostCheckRecords";
-            tsmiPostCheckRecords.Size = new Size(123, 22);
-            tsmiPostCheckRecords.Text = "Post Check Records";
-            tsmiPostCheckRecords.Click += tsmiPostCheckRecords_Click;
+            postCheckRecordsToolStripItem.Name = "postCheckRecordsToolStripItem";
+            postCheckRecordsToolStripItem.Size = new Size(123, 22);
+            postCheckRecordsToolStripItem.Text = "Post Check Records";
+            postCheckRecordsToolStripItem.Click += postCheckRecordsToolStripItem_Click;
             // 
-            // tspPrintView
+            // printViewToolStripItem
             // 
-            tspPrintView.DisplayStyle = ToolStripItemDisplayStyle.Text;
-            tspPrintView.Image = (Image)resources.GetObject("tspPrintView.Image");
-            tspPrintView.ImageTransparentColor = Color.Magenta;
-            tspPrintView.Name = "tspPrintView";
-            tspPrintView.Size = new Size(64, 19);
-            tspPrintView.Text = "Print View";
-            tspPrintView.ToolTipText = "Prints this View as a bitmap";
-            tspPrintView.Click += tsbPrintView_Click;
+            printViewToolStripItem.DisplayStyle = ToolStripItemDisplayStyle.Text;
+            printViewToolStripItem.Image = (Image)resources.GetObject("printViewToolStripItem.Image");
+            printViewToolStripItem.ImageTransparentColor = Color.Magenta;
+            printViewToolStripItem.Name = "printViewToolStripItem";
+            printViewToolStripItem.Size = new Size(64, 19);
+            printViewToolStripItem.Text = "Print View";
+            printViewToolStripItem.ToolTipText = "Prints this View as a bitmap";
+            printViewToolStripItem.Click += printViewToolStripItem_Click;
             // 
-            // tsmiPrint
+            // printGridToolStripItem
             // 
-            tsmiPrint.Name = "tsmiPrint";
-            tsmiPrint.Size = new Size(116, 22);
-            tsmiPrint.Text = "Print Selected Grid";
-            tsmiPrint.Click += tsmiPrint_Click;
+            printGridToolStripItem.Name = "printGridToolStripItem";
+            printGridToolStripItem.Size = new Size(116, 22);
+            printGridToolStripItem.Text = "Print Selected Grid";
+            printGridToolStripItem.Click += printToolStripMenuItem_Click;
             // 
-            // tsmiEOBMenu
+            // eobToolStripMenu
             // 
-            tsmiEOBMenu.DropDownItems.AddRange(new ToolStripItem[] { postEOBsToolStripMenuItem, printEOBsToolStripMenuItem });
-            tsmiEOBMenu.Name = "tsmiEOBMenu";
-            tsmiEOBMenu.Size = new Size(49, 22);
-            tsmiEOBMenu.Text = "EOB's";
+            eobToolStripMenu.DropDownItems.AddRange(new ToolStripItem[] { postEOBsToolStripMenuItem, printEOBsToolStripMenuItem });
+            eobToolStripMenu.Name = "eobToolStripMenu";
+            eobToolStripMenu.Size = new Size(49, 22);
+            eobToolStripMenu.Text = "EOB's";
             // 
             // postEOBsToolStripMenuItem
             // 
@@ -828,7 +828,7 @@ namespace LabBilling.Legacy
             postEOBsToolStripMenuItem.Name = "postEOBsToolStripMenuItem";
             postEOBsToolStripMenuItem.Size = new Size(132, 22);
             postEOBsToolStripMenuItem.Text = "Post EOB's";
-            postEOBsToolStripMenuItem.Click += tsmiEOB_Click;
+            postEOBsToolStripMenuItem.Click += eobToolStripMenuItem_Click;
             // 
             // printEOBsToolStripMenuItem
             // 
@@ -836,50 +836,50 @@ namespace LabBilling.Legacy
             printEOBsToolStripMenuItem.Name = "printEOBsToolStripMenuItem";
             printEOBsToolStripMenuItem.Size = new Size(132, 22);
             printEOBsToolStripMenuItem.Text = "Print EOB's";
-            printEOBsToolStripMenuItem.Click += tsbPrintEOB_Click;
+            printEOBsToolStripMenuItem.Click += printEOBToolStripItem_Click;
             // 
-            // tsmiDisplayRecords
+            // loadGridToolStripMenu
             // 
-            tsmiDisplayRecords.DropDownItems.AddRange(new ToolStripItem[] { tsmiFirst20, tsmiNext100, tsmiPrevious100, tsmiLast100, tsmiFindAccount, tsmiFindSubscriber });
-            tsmiDisplayRecords.Name = "tsmiDisplayRecords";
-            tsmiDisplayRecords.Size = new Size(117, 22);
-            tsmiDisplayRecords.Text = "Load Selected Grid";
+            loadGridToolStripMenu.DropDownItems.AddRange(new ToolStripItem[] { loadFirstToolStripItem, loadNextToolStripItem, loadPreviousToolStripItem, loadLastToolStripItem, findAccountToolStripItem, tsmiFindSubscriber });
+            loadGridToolStripMenu.Name = "loadGridToolStripMenu";
+            loadGridToolStripMenu.Size = new Size(117, 22);
+            loadGridToolStripMenu.Text = "Load Selected Grid";
             // 
-            // tsmiFirst20
+            // loadFirstToolStripItem
             // 
-            tsmiFirst20.Name = "tsmiFirst20";
-            tsmiFirst20.Size = new Size(180, 22);
-            tsmiFirst20.Text = "First 20";
-            tsmiFirst20.Click += tsmiFirst20_Click;
+            loadFirstToolStripItem.Name = "loadFirstToolStripItem";
+            loadFirstToolStripItem.Size = new Size(155, 22);
+            loadFirstToolStripItem.Text = "First 20";
+            loadFirstToolStripItem.Click += loadFirstToolStripItem_Click;
             // 
-            // tsmiNext100
+            // loadNextToolStripItem
             // 
-            tsmiNext100.Name = "tsmiNext100";
-            tsmiNext100.Size = new Size(180, 22);
-            tsmiNext100.Text = "Next 20";
-            tsmiNext100.Click += tsmiNext20_Click;
+            loadNextToolStripItem.Name = "loadNextToolStripItem";
+            loadNextToolStripItem.Size = new Size(155, 22);
+            loadNextToolStripItem.Text = "Next 20";
+            loadNextToolStripItem.Click += loadNextToolStripItem_Click;
             // 
-            // tsmiPrevious100
+            // loadPreviousToolStripItem
             // 
-            tsmiPrevious100.Name = "tsmiPrevious100";
-            tsmiPrevious100.Size = new Size(180, 22);
-            tsmiPrevious100.Text = "Previous 20";
-            tsmiPrevious100.Click += tsmiPrevious20_Click;
+            loadPreviousToolStripItem.Name = "loadPreviousToolStripItem";
+            loadPreviousToolStripItem.Size = new Size(155, 22);
+            loadPreviousToolStripItem.Text = "Previous 20";
+            loadPreviousToolStripItem.Click += loadPreviousToolStripItem_Click;
             // 
-            // tsmiLast100
+            // loadLastToolStripItem
             // 
-            tsmiLast100.Name = "tsmiLast100";
-            tsmiLast100.Size = new Size(180, 22);
-            tsmiLast100.Text = "Last 20";
-            tsmiLast100.Click += tsmiLast20_Click;
+            loadLastToolStripItem.Name = "loadLastToolStripItem";
+            loadLastToolStripItem.Size = new Size(155, 22);
+            loadLastToolStripItem.Text = "Last 20";
+            loadLastToolStripItem.Click += loadLastToolStripItem_Click;
             // 
-            // tsmiFindAccount
+            // findAccountToolStripItem
             // 
-            tsmiFindAccount.DropDownItems.AddRange(new ToolStripItem[] { tstbFindAccount });
-            tsmiFindAccount.Name = "tsmiFindAccount";
-            tsmiFindAccount.Size = new Size(180, 22);
-            tsmiFindAccount.Text = "Find Account";
-            tsmiFindAccount.Click += FindAccountInFilesToolStripMenuItem_Click;
+            findAccountToolStripItem.DropDownItems.AddRange(new ToolStripItem[] { tstbFindAccount });
+            findAccountToolStripItem.Name = "findAccountToolStripItem";
+            findAccountToolStripItem.Size = new Size(155, 22);
+            findAccountToolStripItem.Text = "Find Account";
+            findAccountToolStripItem.Click += FindAccountInFilesToolStripMenuItem_Click;
             // 
             // tstbFindAccount
             // 
@@ -895,7 +895,7 @@ namespace LabBilling.Legacy
             tsmiFindSubscriber.DropDownItems.AddRange(new ToolStripItem[] { tstbFindSubscriber });
             tsmiFindSubscriber.Enabled = false;
             tsmiFindSubscriber.Name = "tsmiFindSubscriber";
-            tsmiFindSubscriber.Size = new Size(180, 22);
+            tsmiFindSubscriber.Size = new Size(155, 22);
             tsmiFindSubscriber.Text = "Find Subscriber";
             // 
             // tstbFindSubscriber
@@ -956,7 +956,7 @@ namespace LabBilling.Legacy
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1223, 584);
             Controls.Add(scMain);
-            Controls.Add(msMain);
+            Controls.Add(mainToolStripMenu);
             Controls.Add(ssMain);
             ForeColor = Color.Black;
             Icon = (Icon)resources.GetObject("$this.Icon");
@@ -978,8 +978,8 @@ namespace LabBilling.Legacy
             ((System.ComponentModel.ISupportInitialize)dgvEOB).EndInit();
             tlpTotals.ResumeLayout(false);
             tlpTotals.PerformLayout();
-            msMain.ResumeLayout(false);
-            msMain.PerformLayout();
+            mainToolStripMenu.ResumeLayout(false);
+            mainToolStripMenu.PerformLayout();
             cmsMedicare835Files.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)chkBindingSource).EndInit();
             scMain.Panel1.ResumeLayout(false);
@@ -993,10 +993,10 @@ namespace LabBilling.Legacy
         #endregion
 
         private System.Windows.Forms.StatusStrip ssMain;
-        private System.Windows.Forms.MenuStrip msMain;
-        private System.Windows.Forms.ToolStripMenuItem tsmiFileOpen;
-        private System.Windows.Forms.ToolStripMenuItem tsmiPrint;
-        private System.Windows.Forms.ToolStripMenuItem tsmiPostCheckRecords;
+        private System.Windows.Forms.MenuStrip mainToolStripMenu;
+        private System.Windows.Forms.ToolStripMenuItem openFileToolStripItem;
+        private System.Windows.Forms.ToolStripMenuItem printGridToolStripItem;
+        private System.Windows.Forms.ToolStripMenuItem postCheckRecordsToolStripItem;
         private System.Windows.Forms.TabControl tc835;
         private System.Windows.Forms.TabPage tpProcessed;
         private System.Windows.Forms.DataGridView dgvProcessed;
@@ -1007,38 +1007,38 @@ namespace LabBilling.Legacy
         private System.Windows.Forms.TabPage tpEOB;
         private System.Windows.Forms.DataGridView dgvEOB;
         private System.Windows.Forms.TableLayoutPanel tlpTotals;
-        private System.Windows.Forms.TextBox tbCheckAmt;
-        private System.Windows.Forms.TextBox tbCheckDate;
-        private System.Windows.Forms.TextBox tbCheckNo;
-        private System.Windows.Forms.TextBox tbChargeAmt;
-        private System.Windows.Forms.TextBox tbPaidAmt;
-        private System.Windows.Forms.TextBox tbContractualAmt;
-        private System.Windows.Forms.TextBox tbDeniedAmt;
-        private System.Windows.Forms.TextBox tbEOBChargeAmt;
-        private System.Windows.Forms.TextBox tbEOBPaidAmt;
-        private System.Windows.Forms.TextBox tbEOBContractualAmt;
-        private System.Windows.Forms.TextBox tbEOBDeniedAmt;
-        private System.Windows.Forms.TextBox tbFileName;
-        private System.Windows.Forms.TextBox tbProviderID;
+        private System.Windows.Forms.TextBox checkAmountTextBox;
+        private System.Windows.Forms.TextBox checkDateTextBox;
+        private System.Windows.Forms.TextBox checkNoTextBox;
+        private System.Windows.Forms.TextBox chargeAmountTextBox;
+        private System.Windows.Forms.TextBox paidAmountTextBox;
+        private System.Windows.Forms.TextBox contractualAmountTextBox;
+        private System.Windows.Forms.TextBox deniedAmountTextBox;
+        private System.Windows.Forms.TextBox eobChargeAmountTextBox;
+        private System.Windows.Forms.TextBox eobPaidAmountTextBox;
+        private System.Windows.Forms.TextBox eobContractualAmountTextBox;
+        private System.Windows.Forms.TextBox eobDeniedAmountTextBox;
+        private System.Windows.Forms.TextBox fileNameTextBox;
+        private System.Windows.Forms.TextBox providerIdTextBox;
         private System.Windows.Forms.RichTextBox rtbCheckSource;
-        private System.Windows.Forms.TextBox tbBatchNo;
-        private System.Windows.Forms.TextBox tbBillCycle;
-        private System.Windows.Forms.TextBox tbFileNumber;
+        private System.Windows.Forms.TextBox batchNoTextBox;
+        private System.Windows.Forms.TextBox billCycleTextBox;
+        private System.Windows.Forms.TextBox fileNumberTextBox;
         private System.Windows.Forms.ToolStripDropDownButton tsddbImport;
-        private System.Windows.Forms.ToolStripButton tspPrintView;
+        private System.Windows.Forms.ToolStripButton printViewToolStripItem;
         private System.Windows.Forms.OpenFileDialog openFileDialog;
         private System.Windows.Forms.BindingSource chkBindingSource;
         private System.Windows.Forms.ContextMenuStrip cmsMedicare835Files;
         private System.Windows.Forms.ToolStripMenuItem tsmiImport;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
         private System.Windows.Forms.ToolStripProgressBar tspbRecords;
-        private System.Windows.Forms.TextBox tbFileDate;
+        private System.Windows.Forms.TextBox fileDateTextBox;
         private System.Windows.Forms.SplitContainer scMain;
         private System.Windows.Forms.NotifyIcon niMain;
-        private System.Windows.Forms.TextBox tbDatabase;
+        private System.Windows.Forms.TextBox databaseTextBox;
         private System.Windows.Forms.ToolStripStatusLabel tsslProgress;
-        private System.Windows.Forms.ToolStripMenuItem tsmiDisplayRecords;
-        private System.Windows.Forms.ToolStripMenuItem tsmiFindAccount;
+        private System.Windows.Forms.ToolStripMenuItem loadGridToolStripMenu;
+        private System.Windows.Forms.ToolStripMenuItem findAccountToolStripItem;
         private System.Windows.Forms.ToolStripTextBox tstbFindAccount;
         private System.Windows.Forms.ToolStripStatusLabel tsslProcessed;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel2;
@@ -1047,22 +1047,22 @@ namespace LabBilling.Legacy
         private System.Windows.Forms.ToolStripStatusLabel tsslNotProcessed;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel4;
         private System.Windows.Forms.ToolStripStatusLabel tsslEOB;
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.TextBox tbEOBOtherAmt;
+        private System.Windows.Forms.TextBox otherAmountTextBox;
+        private System.Windows.Forms.TextBox eobOtherAmountTextBox;
         private System.Windows.Forms.ToolStripMenuItem tsmiFindSubscriber;
         private System.Windows.Forms.ToolStripTextBox tstbFindSubscriber;
-        private System.Windows.Forms.ToolStripMenuItem tsmiFirst20;
-        private System.Windows.Forms.ToolStripMenuItem tsmiNext100;
-        private System.Windows.Forms.ToolStripMenuItem tsmiPrevious100;
-        private System.Windows.Forms.ToolStripMenuItem tsmiLast100;
-        private System.Windows.Forms.ToolStripMenuItem tsmiEOBMenu;
+        private System.Windows.Forms.ToolStripMenuItem loadFirstToolStripItem;
+        private System.Windows.Forms.ToolStripMenuItem loadNextToolStripItem;
+        private System.Windows.Forms.ToolStripMenuItem loadPreviousToolStripItem;
+        private System.Windows.Forms.ToolStripMenuItem loadLastToolStripItem;
+        private System.Windows.Forms.ToolStripMenuItem eobToolStripMenu;
         private System.Windows.Forms.ToolStripTextBox tstbFileSearch;
         private System.Windows.Forms.ToolStripTextBox tsmiExtension;
         private System.Windows.Forms.ToolStripMenuItem postEOBsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem printEOBsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem purgeInvalidFilesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem findAccountInFilesToolStripMenuItem;
-        private System.Windows.Forms.ListBox lbChecks;
+        private System.Windows.Forms.ListBox checksLabel;
     }
 }
 

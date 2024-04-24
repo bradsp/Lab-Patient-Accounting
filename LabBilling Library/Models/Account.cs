@@ -388,4 +388,9 @@ public sealed class Account : IBaseEntity
 
     [Ignore]
     public AccountLock AccountLockInfo { get; set; }
+
+    public override string ToString()
+    {
+        return FullInfo;
+    }
 }

@@ -399,7 +399,9 @@ public partial class MainForm : Form
             Text = "Worklist",
             Name = "btnWorkList",
             BackColor = Program.AppEnvironment.ButtonBackgroundColor,
-            ForeColor = Program.AppEnvironment.ButtonTextColor
+            ForeColor = Program.AppEnvironment.ButtonTextColor,
+            FlatStyle = FlatStyle.Flat,
+            Height = 50
         };
         b1.Click += new EventHandler(worklistToolStripMenuItem_Click);
         tlpBilling.Controls.Add(b1, 0, 0);
@@ -410,7 +412,9 @@ public partial class MainForm : Form
             Text = "Account",
             Name = "btnAccount",
             BackColor = Program.AppEnvironment.ButtonBackgroundColor,
-            ForeColor = Program.AppEnvironment.ButtonTextColor
+            ForeColor = Program.AppEnvironment.ButtonTextColor,
+            FlatStyle = FlatStyle.Flat,
+            Height = 50
         };
         b2.Click += new EventHandler(accountToolStripMenuItem_Click);
         tlpBilling.Controls.Add(b2, 0, 2);
@@ -421,7 +425,9 @@ public partial class MainForm : Form
             Text = "Account Charge Entry",
             Name = "btnAccountChargeEntry",
             BackColor = Program.AppEnvironment.ButtonBackgroundColor,
-            ForeColor = Program.AppEnvironment.ButtonTextColor
+            ForeColor = Program.AppEnvironment.ButtonTextColor,
+            FlatStyle = FlatStyle.Flat,
+            Height = 50
         };
         b4.Click += new EventHandler(accountChargeEntryToolStripMenuItem_Click);
         tlpBilling.Controls.Add(b4, 0, 3);
@@ -432,7 +438,9 @@ public partial class MainForm : Form
             Text = "Batch Remittance",
             Name = "btnBatchRemittance",
             BackColor = Program.AppEnvironment.ButtonBackgroundColor,
-            ForeColor = Program.AppEnvironment.ButtonTextColor
+            ForeColor = Program.AppEnvironment.ButtonTextColor,
+            FlatStyle = FlatStyle.Flat,
+            Height = 50
         };
         b5.Click += new EventHandler(batchRemittanceToolStripMenuItem_Click);
         tlpBilling.Controls.Add(b5, 0, 4);
@@ -443,7 +451,9 @@ public partial class MainForm : Form
             Text = "Claims Batch Management",
             Name = "ClaimBatchManagementButton",
             BackColor = Program.AppEnvironment.ButtonBackgroundColor,
-            ForeColor = Program.AppEnvironment.ButtonTextColor
+            ForeColor = Program.AppEnvironment.ButtonTextColor,
+            FlatStyle = FlatStyle.Flat,
+            Height = 50
         };
         b6.Click += new EventHandler(claimBatchManagementToolStripMenuItem_Click);
         tlpBilling.Controls.Add(b6, 0, 5);
@@ -464,7 +474,9 @@ public partial class MainForm : Form
             Text = "Monthly Reports",
             Name = "btnMonthlyReports",
             BackColor = Program.AppEnvironment.ButtonBackgroundColor,
-            ForeColor = Program.AppEnvironment.ButtonTextColor
+            ForeColor = Program.AppEnvironment.ButtonTextColor,
+            FlatStyle = FlatStyle.Flat,
+            Height = 50
         };
         r1.Click += new EventHandler(monthlyReportsToolStripMenuItem_Click);
         tlpReports.Controls.Add(r1, 0, 0);
@@ -475,7 +487,9 @@ public partial class MainForm : Form
             Text = "Reporting Portal",
             Name = "btnReportingPortal",
             BackColor = Program.AppEnvironment.ButtonBackgroundColor,
-            ForeColor = Program.AppEnvironment.ButtonTextColor
+            ForeColor = Program.AppEnvironment.ButtonTextColor,
+            FlatStyle = FlatStyle.Flat,
+            Height = 50
         };
         r2.Click += new EventHandler(reportingPortalToolStripMenuItem_Click);
         tlpReports.Controls.Add(r2, 0, 0);
