@@ -1,4 +1,7 @@
-﻿using LabBilling.Core.Models;
+﻿using Krypton.Navigator;
+using Krypton.Ribbon;
+using Krypton.Toolkit;
+using LabBilling.Core.Models;
 using LabBilling.Core.Services;
 using LabBilling.Forms;
 using LabBilling.Legacy;
@@ -16,19 +19,15 @@ using Image = System.Drawing.Image;
 using Label = System.Windows.Forms.Label;
 using ProgressBar = System.Windows.Forms.ProgressBar;
 
-
 /*
  * Tabbed MDI logic 
  * https://www.codeproject.com/Articles/17640/Tabbed-MDI-Child-Forms
  * 
- * 
- * 
  */
-
 
 namespace LabBilling;
 
-public partial class MainForm : Form
+public partial class MainForm : KryptonForm
 {
     private readonly Accordion _accordion = null;
     private readonly ProgressBar _claimProgress;
@@ -56,11 +55,8 @@ public partial class MainForm : Form
         _accountService = new(Program.AppEnvironment);
         _systemService = new(Program.AppEnvironment);
 
-        MainFormMenu.BackColor = Program.AppEnvironment.MenuBackgroundColor;
-        MainFormMenu.ForeColor = Program.AppEnvironment.MenuTextColor;
-
-        panel1.BackColor = Program.AppEnvironment.WindowBackgroundColor;
-        //mdiTabControl.Parent.BackColor = Program.AppEnvironment.WindowBackgroundColor;
+        //MainFormMenu.BackColor = Program.AppEnvironment.MenuBackgroundColor;
+        //MainFormMenu.ForeColor = Program.AppEnvironment.MenuTextColor;
 
         _accordion = new Accordion();
 
@@ -68,7 +64,7 @@ public partial class MainForm : Form
 
         ImageList il = new();
         il.Images.Add((Image)Resources.hiclipart_com_id_dbhyp);
-        mdiTabControl.ImageList = il;
+        //mdiTabControl.ImageList = il;
     }
 
     private static void ConfigureLogging()
@@ -184,7 +180,19 @@ public partial class MainForm : Form
             }
         }
 
-        childForm.MdiParent = this;
+        childForm.TopLevel = false;
+        childForm.Visible = true;
+        childForm.FormBorderStyle = FormBorderStyle.None;
+        childForm.Dock = DockStyle.Fill;
+
+        KryptonPage page = new();
+        page.Text = childForm.Text;
+        page.Controls.Add(childForm);
+        childForm.Tag = page;
+
+        kryptonNavigator1.Pages.Add(page);
+        kryptonNavigator1.SelectedPage = page;
+        //childForm.MdiParent = this;
         childForm.TextChanged += ChildForm_TextChanged;
         childForm.FormClosed += ChildForm_FormClosed;
         childForm.Show();
@@ -192,20 +200,20 @@ public partial class MainForm : Form
 
     private void ChildForm_FormClosed(object sender, FormClosedEventArgs e)
     {
-        Form frm = sender as Form;
+        //Form frm = sender as Form;
 
-        int i = mdiTabControl.TabPages.IndexOfKey(frm.Text);
+        //int i = mdiTabControl.TabPages.IndexOfKey(frm.Text);
 
-        if (i >= 0)
-        {
-            mdiTabControl.TabPages.Remove(mdiTabControl.TabPages[i]);
-        }
+        //if (i >= 0)
+        //{
+        //    mdiTabControl.TabPages.Remove(mdiTabControl.TabPages[i]);
+        //}
 
-        if (mdiTabControl.TabPages.ContainsKey("Work List"))
-        {
-            int idx = mdiTabControl.TabPages.IndexOfKey("Work List");
-            mdiTabControl.SelectedIndex = idx;
-        }
+        //if (mdiTabControl.TabPages.ContainsKey("Work List"))
+        //{
+        //    int idx = mdiTabControl.TabPages.IndexOfKey("Work List");
+        //    mdiTabControl.SelectedIndex = idx;
+        //}
     }
 
     private void ChildForm_TextChanged(object sender, EventArgs e)
@@ -215,7 +223,7 @@ public partial class MainForm : Form
         {
             if (form.Tag != null)
             {
-                TabPage tp = (TabPage)form.Tag;
+                KryptonPage tp = (KryptonPage)form.Tag;
                 tp.Text = form.Text;
             }
         }
@@ -257,7 +265,7 @@ public partial class MainForm : Form
 
             if (!formFound)
             {
-                AccountForm accFrm = new AccountForm(frm.SelectedAccount);
+                AccountForm accFrm = new(frm.SelectedAccount);
                 accFrm.AccountOpenedEvent += AccFrm_AccountOpenedEvent;
                 accFrm.AccountUpdatedEvent += AccFrm_AccountUpdatedEvent;
                 NewForm(accFrm);
@@ -321,8 +329,8 @@ public partial class MainForm : Form
         }
 
         LoadSideMenu();
-
-        mdiTabControl.TabClosing += mdiTabControl_TabClosing;
+        //LoadRibbon();
+        //mdiTabControl.TabClosing += mdiTabControl_TabClosing;
 
         //enable menu items based on permissions
         systemAdministrationToolStripMenuItem.Visible = Program.LoggedInUser.IsAdministrator;
@@ -331,17 +339,55 @@ public partial class MainForm : Form
         this.Focus();
     }
 
-    private void mdiTabControl_TabClosing(object sender, TabControlCancelEventArgs e)
-    {
-        Form frm = e.TabPage.Tag as Form;
-        frm.Close();
+    //private void mdiTabControl_TabClosing(object sender, TabControlCancelEventArgs e)
+    //{
+    //    Form frm = e.TabPage.Tag as Form;
+    //    frm.Close();
 
-        if (mdiTabControl.TabPages.ContainsKey("Work List"))
-        {
-            int idx = mdiTabControl.TabPages.IndexOfKey("Work List");
-            mdiTabControl.SelectedIndex = idx;
-        }
-    }
+    //    if (mdiTabControl.TabPages.ContainsKey("Work List"))
+    //    {
+    //        int idx = mdiTabControl.TabPages.IndexOfKey("Work List");
+    //        mdiTabControl.SelectedIndex = idx;
+    //    }
+    //}
+
+    //private void LoadRibbon()
+    //{
+    //    KryptonRibbonGroupButton accountButton = new();
+    //    KryptonRibbonGroupButton worklistButton = new();
+    //    KryptonRibbonGroupButton patientCollectionsButton = new();
+    //    KryptonRibbonTab billingTab = new();
+    //    KryptonRibbonTab dictionaryTab = new();
+    //    KryptonRibbonGroup billingGroup = new();
+    //    KryptonRibbonGroupTriple billingGroupTriple1 = new();
+
+    //    kryptonRibbon1.RibbonFileAppButton.IgnoreDoubleClickClose = true;
+    //    kryptonRibbon1.RibbonFileAppTab.FileAppTabText = "Home";
+    //    kryptonRibbon1.RibbonTabs.AddRange(new KryptonRibbonTab[] { billingTab, dictionaryTab});
+    //    kryptonRibbon1.SelectedTab = billingTab;
+
+    //    billingGroup.Items.AddRange(new KryptonRibbonGroupContainer[]
+    //    {
+    //        billingGroupTriple1
+    //    });
+
+    //    billingGroup.TextLine1 = "Billing";
+
+    //    billingGroupTriple1.Items.AddRange(new KryptonRibbonGroupItem[]
+    //    {
+    //        accountButton, worklistButton, patientCollectionsButton
+    //    });
+
+    //    accountButton.TextLine1 = "Account";
+    //    worklistButton.TextLine1 = "Worklist";
+    //    patientCollectionsButton.TextLine1 = "Patient Collections";
+
+
+    //    billingTab.Text = "Billing";
+    //    billingTab.Groups.Add(billingGroup);
+
+
+    //}
 
     private void LoadSideMenu()
     {
@@ -382,7 +428,7 @@ public partial class MainForm : Form
             }
         }
 
-        panel1.Controls.Add(_accordion);
+        kryptonPanel1.Controls.Add(_accordion);
         _tlpRecentAccounts.AutoSize = true;
         _accordion.Add(_tlpRecentAccounts, "Recent Accounts", "Last Opened Accounts", 1, true);
 
@@ -394,65 +440,65 @@ public partial class MainForm : Form
             RowCount = 3
         };
 
-        Button b1 = new()
+        KryptonButton b1 = new()
         {
             Text = "Worklist",
             Name = "btnWorkList",
             BackColor = Program.AppEnvironment.ButtonBackgroundColor,
             ForeColor = Program.AppEnvironment.ButtonTextColor,
-            FlatStyle = FlatStyle.Flat,
+            //FlatStyle = FlatStyle.Flat,
             Height = 50
         };
         b1.Click += new EventHandler(worklistToolStripMenuItem_Click);
         tlpBilling.Controls.Add(b1, 0, 0);
         b1.Dock = DockStyle.Fill;
 
-        Button b2 = new()
+        KryptonButton b2 = new()
         {
             Text = "Account",
             Name = "btnAccount",
             BackColor = Program.AppEnvironment.ButtonBackgroundColor,
             ForeColor = Program.AppEnvironment.ButtonTextColor,
-            FlatStyle = FlatStyle.Flat,
+            //FlatStyle = FlatStyle.Flat,
             Height = 50
         };
         b2.Click += new EventHandler(accountToolStripMenuItem_Click);
         tlpBilling.Controls.Add(b2, 0, 2);
         b2.Dock = DockStyle.Fill;
 
-        Button b4 = new()
+        KryptonButton b4 = new()
         {
             Text = "Account Charge Entry",
             Name = "btnAccountChargeEntry",
             BackColor = Program.AppEnvironment.ButtonBackgroundColor,
             ForeColor = Program.AppEnvironment.ButtonTextColor,
-            FlatStyle = FlatStyle.Flat,
+            //FlatStyle = FlatStyle.Flat,
             Height = 50
         };
         b4.Click += new EventHandler(accountChargeEntryToolStripMenuItem_Click);
         tlpBilling.Controls.Add(b4, 0, 3);
         b4.Dock = DockStyle.Fill;
 
-        Button b5 = new()
+        KryptonButton b5 = new()
         {
             Text = "Batch Remittance",
             Name = "btnBatchRemittance",
             BackColor = Program.AppEnvironment.ButtonBackgroundColor,
             ForeColor = Program.AppEnvironment.ButtonTextColor,
-            FlatStyle = FlatStyle.Flat,
+            // = FlatStyle.Flat,
             Height = 50
         };
         b5.Click += new EventHandler(batchRemittanceToolStripMenuItem_Click);
         tlpBilling.Controls.Add(b5, 0, 4);
         b5.Dock = DockStyle.Fill;
 
-        Button b6 = new()
+        KryptonButton b6 = new()
         {
             Text = "Claims Batch Management",
             Name = "ClaimBatchManagementButton",
             BackColor = Program.AppEnvironment.ButtonBackgroundColor,
             ForeColor = Program.AppEnvironment.ButtonTextColor,
-            FlatStyle = FlatStyle.Flat,
+            //FlatStyle = FlatStyle.Flat,
             Height = 50
         };
         b6.Click += new EventHandler(claimBatchManagementToolStripMenuItem_Click);
@@ -469,26 +515,26 @@ public partial class MainForm : Form
             RowCount = 1
         };
 
-        Button r1 = new()
+        KryptonButton r1 = new()
         {
             Text = "Monthly Reports",
             Name = "btnMonthlyReports",
             BackColor = Program.AppEnvironment.ButtonBackgroundColor,
             ForeColor = Program.AppEnvironment.ButtonTextColor,
-            FlatStyle = FlatStyle.Flat,
+            //FlatStyle = FlatStyle.Flat,
             Height = 50
         };
         r1.Click += new EventHandler(monthlyReportsToolStripMenuItem_Click);
         tlpReports.Controls.Add(r1, 0, 0);
         r1.Dock = DockStyle.Fill;
 
-        Button r2 = new()
+        KryptonButton r2 = new()
         {
             Text = "Reporting Portal",
             Name = "btnReportingPortal",
             BackColor = Program.AppEnvironment.ButtonBackgroundColor,
             ForeColor = Program.AppEnvironment.ButtonTextColor,
-            FlatStyle = FlatStyle.Flat,
+            //FlatStyle = FlatStyle.Flat,
             Height = 50
         };
         r2.Click += new EventHandler(reportingPortalToolStripMenuItem_Click);
@@ -632,15 +678,20 @@ public partial class MainForm : Form
     {
         Log.Instance.Trace($"Entering");
         string url = Program.AppEnvironment.ApplicationParameters.ReportingPortalUrl;
-        //ReportingPortalForm frm = new ReportingPortalForm(url);
-        if (url != "")
-        {
-            OS.OpenBrowser(url);
-        }
-        else
-        {
-            MessageBox.Show("Reporting Portal System Parameter not set or not valid. Please contact your administrator", "Application Error");
-        }
+        ReportingPortalForm frm = new ReportingPortalForm(url);
+
+        NewForm(frm);
+
+        //if (url != "")
+        //{
+        //    OS.OpenBrowser(url);
+        //}
+        //else
+        //{
+        //    MessageBox.Show("Reporting Portal System Parameter not set or not valid. Please contact your administrator", "Application Error");
+        //}
+
+
     }
 
     private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
@@ -755,37 +806,37 @@ public partial class MainForm : Form
 
     private void MainForm_MdiChildActivate(object sender, EventArgs e)
     {
-        if (this.ActiveMdiChild == null)
-            mdiTabControl.Visible = false;
-        else
-        {
-            this.ActiveMdiChild.WindowState = FormWindowState.Maximized;
-            if (this.ActiveMdiChild.Tag == null)
-            {
-                //Add a tabPage to the tabControl with child form caption
-                TabPage tp = new(this.ActiveMdiChild.Text)
-                {
-                    Tag = this.ActiveMdiChild,
-                    Name = this.ActiveMdiChild.Text,
-                };
+        //if (this.ActiveMdiChild == null)
+        //    mdiTabControl.Visible = false;
+        //else
+        //{
+        //    this.ActiveMdiChild.WindowState = FormWindowState.Maximized;
+        //    if (this.ActiveMdiChild.Tag == null)
+        //    {
+        //        //Add a tabPage to the tabControl with child form caption
+        //        TabPage tp = new(this.ActiveMdiChild.Text)
+        //        {
+        //            Tag = this.ActiveMdiChild,
+        //            Name = this.ActiveMdiChild.Text,
+        //        };
 
-                tp.Padding = new Padding(3);
+        //        tp.Padding = new Padding(3);
 
-                mdiTabControl.TabPages.Add(tp);
+        //        mdiTabControl.TabPages.Add(tp);
 
-                mdiTabControl.SelectedTab = tp;
+        //        mdiTabControl.SelectedTab = tp;
 
-                this.ActiveMdiChild.Tag = tp;
-                this.ActiveMdiChild.FormClosed += new FormClosedEventHandler(ActiveMdiChild_FormClosed);
-            }
-            else
-            {
-                if (this.ActiveMdiChild.Tag is TabPage tp)
-                    mdiTabControl.SelectedTab = tp;
-            }
+        //        this.ActiveMdiChild.Tag = tp;
+        //        this.ActiveMdiChild.FormClosed += new FormClosedEventHandler(ActiveMdiChild_FormClosed);
+        //    }
+        //    else
+        //    {
+        //        if (this.ActiveMdiChild.Tag is TabPage tp)
+        //            mdiTabControl.SelectedTab = tp;
+        //    }
 
-            if (!mdiTabControl.Visible) mdiTabControl.Visible = true;
-        }
+        //    if (!mdiTabControl.Visible) mdiTabControl.Visible = true;
+        //}
     }
 
     private void ActiveMdiChild_FormClosed(object sender, FormClosedEventArgs e)
@@ -930,15 +981,15 @@ public partial class MainForm : Form
         System.Diagnostics.Process.Start(url);
     }
 
-    private void mdiTabControl_SelectedIndexChanged(object sender, EventArgs e)
-    {
-        if ((mdiTabControl.SelectedTab != null) &&
-            (mdiTabControl.SelectedTab.Tag != null))
-        {
-            Form frm = mdiTabControl.SelectedTab.Tag as Form;
-            frm.Activate();
-        }
-    }
+    //private void mdiTabControl_SelectedIndexChanged(object sender, EventArgs e)
+    //{
+    //    if ((mdiTabControl.SelectedTab != null) &&
+    //        (mdiTabControl.SelectedTab.Tag != null))
+    //    {
+    //        Form frm = mdiTabControl.SelectedTab.Tag as Form;
+    //        frm.Activate();
+    //    }
+    //}
 
     private void auditReportsToolStripMenuItem_Click(object sender, EventArgs e) => NewForm(new AuditReportMaintenanceForm());
 

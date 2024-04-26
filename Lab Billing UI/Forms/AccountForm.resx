@@ -117,6 +117,17 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="summaryTable.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAYAAABw4pVUAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADxSURBVHhe7dExDQAwEAOx8scc6UvjBg9G4Lft6BASIyRG
+        SIyQGCExQmKExAiJERIjJEZIjJAYITFCYoTECIkREiMkRkiMkBghMUJihMQIiRESIyRGSIyQGCExQmKE
+        xAiJERIjJEZIjJAYITFCYoTECIkREiMkRkiMkBghMUJihMQIiRESIyRGSIyQGCExQmKExAiJERIjJEZI
+        jJAYITFCYoTECIkREiMkRkiMkBghMUJihMQIiRESIyRGSIyQGCExQmKExAiJERIjJEZIjJAYITFCYoTE
+        CIkREiMkRkiMkBghMUJihMQIiRESIyRGSMruA36ITTdphXZeAAAAAElFTkSuQmCC
+</value>
+  </data>
   <metadata name="noteTextContextMenu.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>36, 15</value>
   </metadata>
@@ -126,10 +137,19 @@
   <metadata name="dxPointerMenuStrip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>1301, 17</value>
   </metadata>
+  <data name="kryptonTableLayoutPanel1.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAYAAABw4pVUAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAD0SURBVHhe7dExAQAgDMAw/FvCAzJmY9jI0SMKcu6bjaMQ
+        TCGYQjCFYArBFIIpBFMIphBMIZhCMIVgCsEUgikEUwimEEwhmEIwhWAKwRSCKQRTCKYQTCGYQjCFYArB
+        FIIpBFMIphBMIZhCMIVgCsEUgikEUwimEEwhmEIwhWAKwRSCKQRTCKYQTCGYQjCFYArBFIIpBFMIphBM
+        IZhCMIVgCsEUgikEUwimEEwhmEIwhWAKwRSCKQRTCKYQTCGYQjCFYArBFIIpBFMIphBMIZhCMIVgCsEU
+        gikEUwimEEwhmEIwhWAKwRSCKQRTCKYQTCGYQiizHyFwALulC/O9AAAAAElFTkSuQmCC
+</value>
+  </data>
   <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>32</value>
+    <value>104</value>
   </metadata>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         AAABAAkAEBAAAAEAIABoBAAAlgAAABgYAAABACAAiAkAAP4EAAAgIAAAAQAgAKgQAACGDgAAMDAAAAEA

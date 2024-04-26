@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net6.0-windows7.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <OutputType>Library</OutputType>
     <RootNamespace>LabBilling.Core</RootNamespace>
     <AssemblyVersion>2024.1.2.4</AssemblyVersion>
@@ -39,7 +39,7 @@
     <PackageReference Include="EdiTools" Version="1.0.6" />
     <PackageReference Include="Enums.NET" Version="4.0.2" />
     <PackageReference Include="FastExpressionCompiler" Version="4.1.0" />
-    <PackageReference Include="FluentValidation" Version="11.9.0" />
+    <PackageReference Include="FluentValidation" Version="11.9.1" />
     <PackageReference Include="Fonet.Standard" Version="1.0.5" />
     <PackageReference Include="MathNet.Numerics.Signed" Version="5.0.0" />
     <PackageReference Include="Microsoft.IO.RecyclableMemoryStream" Version="3.0.0" />

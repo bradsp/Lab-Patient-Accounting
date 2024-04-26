@@ -1,4 +1,5 @@
-﻿using LabBilling.Core;
+﻿using Krypton.Toolkit;
+using LabBilling.Core;
 using LabBilling.Core.Models;
 using LabBilling.Core.Services;
 using LabBilling.Logging;
@@ -6,7 +7,7 @@ using LabBilling.Logging;
 
 namespace LabBilling.Forms;
 
-public partial class ChargeEntryForm : Form
+public partial class ChargeEntryForm : KryptonForm
 {
     private readonly Account _currentAccount = new();
     private readonly System.Windows.Forms.Timer _timer;

@@ -6,7 +6,7 @@ using WinFormsLibrary;
 
 namespace LabBilling.Forms;
 
-public partial class PersonSearchForm : Form
+public partial class PersonSearchForm : Krypton.Toolkit.KryptonForm
 {
     List<AccountSearch> _searchResults = new();
 

@@ -1,16 +1,12 @@
-﻿using LabBilling.Logging;
-using LabBilling.Core.Models;
-using System;
-using System.Collections.Generic;
-using System.Windows.Forms;
-using System.Drawing;
+﻿using LabBilling.Core.Models;
+using LabBilling.Core.Services;
+using LabBilling.Logging;
 using System.Data;
 using WinFormsLibrary;
-using LabBilling.Core.Services;
 
 namespace LabBilling.Forms;
 
-public partial class ClientMaintenanceForm : Form
+public partial class ClientMaintenanceForm : Krypton.Toolkit.KryptonForm
 {
     private readonly System.Windows.Forms.Timer _timer;
     private readonly int _timerDelay = 650;
@@ -21,7 +17,7 @@ public partial class ClientMaintenanceForm : Form
     private DataTable _clientTable = null;
     //private IEnumerable<Client> clientQuery = null;
 
-    public ClientMaintenanceForm() 
+    public ClientMaintenanceForm()
     {
         Log.Instance.Trace($"Entering");
         InitializeComponent();
@@ -41,9 +37,9 @@ public partial class ClientMaintenanceForm : Form
 
         _clientSource.DataSource = _clientTable;
         dgvClients.DataSource = _clientSource;
-        
+
         _clientTable.DefaultView.RowFilter = $"{nameof(Client.IsDeleted)} = false";
-        
+
         dgvClients.SetColumnsVisibility(false);
         int i = 0;
         dgvClients.Columns[nameof(Client.IsDeleted)].SetVisibilityOrder(true, i++);
@@ -140,7 +136,7 @@ public partial class ClientMaintenanceForm : Form
 
         if (includeDeletedCheckBox.Checked)
         {
-            _clientTable.DefaultView.RowFilter = 
+            _clientTable.DefaultView.RowFilter =
                 $"{nameof(Client.Name)} LIKE '%{filterTextBox.Text}%' or {nameof(Client.ClientMnem)} = '{filterTextBox.Text.ToUpper()}'";
 
         }

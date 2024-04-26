@@ -66,7 +66,7 @@
             PersonAccountResults.ReadOnly = true;
             PersonAccountResults.RowHeadersVisible = false;
             PersonAccountResults.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            PersonAccountResults.Size = new Size(1007, 483);
+            PersonAccountResults.Size = new Size(855, 476);
             PersonAccountResults.TabIndex = 16;
             PersonAccountResults.DoubleClick += PersonAccountResults_DoubleClick;
             // 
@@ -185,7 +185,7 @@
             // 
             // SearchButton
             // 
-            SearchButton.Location = new Point(13, 426);
+            SearchButton.Location = new Point(13, 419);
             SearchButton.Margin = new Padding(4, 3, 4, 3);
             SearchButton.Name = "SearchButton";
             SearchButton.Size = new Size(206, 42);
@@ -196,7 +196,7 @@
             // 
             // ClearButton
             // 
-            ClearButton.Location = new Point(14, 480);
+            ClearButton.Location = new Point(14, 473);
             ClearButton.Margin = new Padding(4, 3, 4, 3);
             ClearButton.Name = "ClearButton";
             ClearButton.Size = new Size(206, 42);
@@ -217,8 +217,9 @@
             // 
             // SelectButton
             // 
+            SelectButton.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             SelectButton.DialogResult = DialogResult.OK;
-            SelectButton.Location = new Point(989, 529);
+            SelectButton.Location = new Point(839, 529);
             SelectButton.Margin = new Padding(4, 3, 4, 3);
             SelectButton.Name = "SelectButton";
             SelectButton.Size = new Size(110, 39);
@@ -229,8 +230,9 @@
             // 
             // CancelBtn
             // 
+            CancelBtn.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             CancelBtn.DialogResult = DialogResult.Cancel;
-            CancelBtn.Location = new Point(1123, 529);
+            CancelBtn.Location = new Point(973, 529);
             CancelBtn.Margin = new Padding(4, 3, 4, 3);
             CancelBtn.Name = "CancelBtn";
             CancelBtn.Size = new Size(110, 39);
@@ -259,7 +261,8 @@
             // 
             // AddAccount
             // 
-            AddAccount.Location = new Point(855, 529);
+            AddAccount.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            AddAccount.Location = new Point(705, 529);
             AddAccount.Margin = new Padding(4, 3, 4, 3);
             AddAccount.Name = "AddAccount";
             AddAccount.Size = new Size(110, 39);
@@ -273,7 +276,7 @@
             AcceptButton = SearchButton;
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1247, 583);
+            ClientSize = new Size(1095, 576);
             Controls.Add(AddAccount);
             Controls.Add(txtFirstName);
             Controls.Add(label1);
@@ -295,9 +298,11 @@
             Controls.Add(label3);
             Controls.Add(label2);
             Controls.Add(PersonAccountResults);
+            FormTitleAlign = Krypton.Toolkit.PaletteRelativeAlign.Center;
             Margin = new Padding(4, 3, 4, 3);
             Name = "PersonSearchForm";
             Text = "Person Search";
+            TitleStyle = Krypton.Toolkit.KryptonFormTitleStyle.Modern;
             Load += PersonSearchForm_Load;
             ((System.ComponentModel.ISupportInitialize)PersonAccountResults).EndInit();
             ResumeLayout(false);

@@ -121,6 +121,9 @@
     <value>150, 17</value>
   </metadata>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="MainFormMenu.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Segoe UI, 9pt</value>
+  </data>
   <data name="accountToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>217, 22</value>
   </data>
@@ -412,7 +415,7 @@
     <value>7, 2, 0, 2</value>
   </data>
   <data name="MainFormMenu.Size" type="System.Drawing.Size, System.Drawing">
-    <value>1024, 24</value>
+    <value>1010, 24</value>
   </data>
   <data name="MainFormMenu.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -448,10 +451,10 @@
     <value>toolStripDatabaseLabel</value>
   </data>
   <data name="statusStrip1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 744</value>
+    <value>0, 705</value>
   </data>
   <data name="statusStrip1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>1024, 24</value>
+    <value>1010, 24</value>
   </data>
   <data name="statusStrip1.TabIndex" type="System.Int32, mscorlib">
     <value>7</value>
@@ -471,65 +474,90 @@
   <data name="&gt;&gt;statusStrip1.ZOrder" xml:space="preserve">
     <value>2</value>
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="panel1.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Left</value>
-  </data>
-  <data name="panel1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 24</value>
-  </data>
-  <data name="panel1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>203, 720</value>
-  </data>
-  <data name="panel1.TabIndex" type="System.Int32, mscorlib">
-    <value>11</value>
-  </data>
-  <data name="&gt;&gt;panel1.Name" xml:space="preserve">
-    <value>panel1</value>
-  </data>
-  <data name="&gt;&gt;panel1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Panel, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;panel1.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;panel1.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
   <metadata name="helpProvider1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>405, 17</value>
   </metadata>
-  <data name="mdiTabControl.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Top</value>
+  <assembly alias="Krypton.Navigator" name="Krypton.Navigator, Culture=neutral, PublicKeyToken=a87e673e9ecb6e8e" />
+  <data name="kryptonNavigator1.Bar.BarMapImage" type="Krypton.Navigator.MapKryptonPageImage, Krypton.Navigator">
+    <value>Small</value>
   </data>
-  <data name="mdiTabControl.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Segoe UI, 9pt</value>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="kryptonNavigator1.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
   </data>
-  <data name="mdiTabControl.ItemSize" type="System.Drawing.Size, System.Drawing">
-    <value>0, 25</value>
+  <data name="kryptonNavigator1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
   </data>
-  <data name="mdiTabControl.Location" type="System.Drawing.Point, System.Drawing">
-    <value>203, 24</value>
+  <data name="kryptonNavigator1.ShowHelp" type="System.Boolean, mscorlib">
+    <value>True</value>
   </data>
-  <data name="mdiTabControl.Size" type="System.Drawing.Size, System.Drawing">
-    <value>821, 27</value>
+  <data name="kryptonNavigator1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>832, 681</value>
   </data>
-  <data name="mdiTabControl.TabIndex" type="System.Int32, mscorlib">
-    <value>13</value>
+  <data name="kryptonNavigator1.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
   </data>
-  <data name="mdiTabControl.Visible" type="System.Boolean, mscorlib">
-    <value>False</value>
+  <data name="kryptonNavigator1.Text" xml:space="preserve">
+    <value>kryptonNavigator1</value>
   </data>
-  <data name="&gt;&gt;mdiTabControl.Name" xml:space="preserve">
-    <value>mdiTabControl</value>
+  <data name="&gt;&gt;kryptonNavigator1.Name" xml:space="preserve">
+    <value>kryptonNavigator1</value>
   </data>
-  <data name="&gt;&gt;mdiTabControl.Type" xml:space="preserve">
-    <value>System.Windows.Forms.CustomTabControl, CustomTabControl, Culture=neutral, PublicKeyToken=null</value>
+  <data name="&gt;&gt;kryptonNavigator1.Type" xml:space="preserve">
+    <value>Krypton.Navigator.KryptonNavigator, Krypton.Navigator, Culture=neutral, PublicKeyToken=a87e673e9ecb6e8e</value>
   </data>
-  <data name="&gt;&gt;mdiTabControl.Parent" xml:space="preserve">
+  <data name="&gt;&gt;kryptonNavigator1.Parent" xml:space="preserve">
+    <value>kryptonPanel2</value>
+  </data>
+  <data name="&gt;&gt;kryptonNavigator1.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="kryptonPanel1.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Left</value>
+  </data>
+  <data name="kryptonPanel1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 24</value>
+  </data>
+  <data name="kryptonPanel1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>178, 681</value>
+  </data>
+  <data name="kryptonPanel1.TabIndex" type="System.Int32, mscorlib">
+    <value>17</value>
+  </data>
+  <data name="&gt;&gt;kryptonPanel1.Name" xml:space="preserve">
+    <value>kryptonPanel1</value>
+  </data>
+  <data name="&gt;&gt;kryptonPanel1.Type" xml:space="preserve">
+    <value>Krypton.Toolkit.KryptonPanel, Krypton.Toolkit, Culture=neutral, PublicKeyToken=a87e673e9ecb6e8e</value>
+  </data>
+  <data name="&gt;&gt;kryptonPanel1.Parent" xml:space="preserve">
     <value>$this</value>
   </data>
-  <data name="&gt;&gt;mdiTabControl.ZOrder" xml:space="preserve">
+  <data name="&gt;&gt;kryptonPanel1.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="kryptonPanel2.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="kryptonPanel2.Location" type="System.Drawing.Point, System.Drawing">
+    <value>178, 24</value>
+  </data>
+  <data name="kryptonPanel2.Size" type="System.Drawing.Size, System.Drawing">
+    <value>832, 681</value>
+  </data>
+  <data name="kryptonPanel2.TabIndex" type="System.Int32, mscorlib">
+    <value>19</value>
+  </data>
+  <data name="&gt;&gt;kryptonPanel2.Name" xml:space="preserve">
+    <value>kryptonPanel2</value>
+  </data>
+  <data name="&gt;&gt;kryptonPanel2.Type" xml:space="preserve">
+    <value>Krypton.Toolkit.KryptonPanel, Krypton.Toolkit, Culture=neutral, PublicKeyToken=a87e673e9ecb6e8e</value>
+  </data>
+  <data name="&gt;&gt;kryptonPanel2.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;kryptonPanel2.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -542,7 +570,7 @@
     <value>7, 15</value>
   </data>
   <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
-    <value>1024, 768</value>
+    <value>1010, 729</value>
   </data>
   <data name="$this.Font" type="System.Drawing.Font, System.Drawing">
     <value>Microsoft Sans Serif, 9pt</value>
@@ -3910,6 +3938,6 @@
     <value>MainForm</value>
   </data>
   <data name="&gt;&gt;$this.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Form, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>Krypton.Toolkit.KryptonForm, Krypton.Toolkit, Culture=neutral, PublicKeyToken=a87e673e9ecb6e8e</value>
   </data>
 </root>

@@ -13,7 +13,7 @@ using WinFormsLibrary;
 
 namespace LabBilling.Forms;
 
-public partial class AccountForm : Form
+public partial class AccountForm : Krypton.Toolkit.KryptonForm
 {
     private readonly AccountService _accountService;
     private readonly DictionaryService _dictionaryService;
@@ -84,8 +84,8 @@ public partial class AccountForm : Form
             Log.Instance.Trace("Entering - no selected account.");
         }
 
-
-        bannerPanel.BackColor = Color.Blue;
+        bannerPanel.DoubleBuffered(true);
+        summaryTable.DoubleBuffered(true);
 
         try
         {
@@ -427,6 +427,7 @@ public partial class AccountForm : Form
         // should appear. In other words, keep the group types together and the individual items in the order
         // they should be displayed.
         #region PopulateSummaryTab
+        summaryTable.SuspendLayout();
         List<SummaryData> sd = new();
 
         int col = 1;
@@ -535,9 +536,10 @@ public partial class AccountForm : Form
             }
 
         }
+        summaryTable.ResumeLayout();
         #endregion
     }
-
+    
     #endregion
 
     #region DemographicTab
@@ -545,41 +547,69 @@ public partial class AccountForm : Form
     private void LoadBanner()
     {
         Log.Instance.Trace($"Entering - {SelectedAccount}");
+        bannerPanel.SuspendLayout();
 
         BannerNameTextBox.Text = _currentAccount.PatFullName;
-        BannerDobTextBox.Text = _currentAccount.BirthDate.GetValueOrDefault().ToShortDateString();
-        BannerSexTextBox.Text = _currentAccount.Sex;
+        BannerNameTextBox.LabelStyle = Krypton.Toolkit.LabelStyle.TitleControl;
+
+        BannerDobSexTextBox.Text = $"{_currentAccount.BirthDate.GetValueOrDefault().ToShortDateString()} - {_currentAccount.Sex}";
+        BannerDobSexTextBox.LabelStyle = Krypton.Toolkit.LabelStyle.BoldControl;
+
         BannerAccountTextBox.Text = SelectedAccount;
+        BannerAccountTextBox.LabelStyle = Krypton.Toolkit.LabelStyle.TitleControl;
+
         BannerMRNTextBox.Text = _currentAccount.EMPINumber;
+        BannerMRNTextBox.LabelStyle = Krypton.Toolkit.LabelStyle.BoldControl;
+
         BannerClientTextBox.Text = _currentAccount.ClientName;
+        BannerClientTextBox.LabelStyle = Krypton.Toolkit.LabelStyle.BoldControl;
+        
         BannerFinClassTextBox.Text = _currentAccount.FinCode;
+        BannerFinClassTextBox.LabelStyle = Krypton.Toolkit.LabelStyle.BoldControl;
+        
         BannerBillStatusTextBox.Text = _currentAccount.Status;
+        BannerBillStatusTextBox.LabelStyle = Krypton.Toolkit.LabelStyle.BoldControl;
+        
         BannerProviderTextBox.Text = _currentAccount.Pat.Physician?.FullName ?? "";
+        BannerProviderTextBox.LabelStyle = Krypton.Toolkit.LabelStyle.ItalicControl;
+        
         bannerDateOfServiceTextBox.Text = _currentAccount.TransactionDate.ToShortDateString();
+        bannerDateOfServiceLabel.LabelStyle = Krypton.Toolkit.LabelStyle.BoldControl;
+        
         if (_currentAccount.AccountAlert != null)
         {
-            bannerAlertLabel.Text = _currentAccount.AccountAlert.Alert ? _notesAlertText : "";
-            bannerAlertLabel.Visible = !string.IsNullOrEmpty(bannerAlertLabel.Text);
+            alertTextBox.Text = _currentAccount.AccountAlert.Alert ? _notesAlertText : "";
+            alertTextBox.Visible = !string.IsNullOrEmpty(alertTextBox.Text);
         }
         else
         {
-            bannerAlertLabel.Visible = false;
-            bannerAlertLabel.Text = "";
+            alertTextBox.Visible = false;
+            alertTextBox.Text = "";
         }
 
         if (_currentAccount.ReadyToBill)
         {
-            bannerAlertLabel.Visible = true;
-            bannerAlertLabel.Text += "  Account is flagged ready to bill, or has been billed. Any changes can affect the claim.";
-            bannerAlertLabel.BackColor = Color.Red;
-            bannerAlertLabel.ForeColor = Color.White;
+            alertTextBox.Visible = true;
+            alertTextBox.Text += "  Account is flagged ready to bill, or has been billed. Any changes can affect the claim.";
+            alertTextBox.BackColor = Color.Red;
+            alertTextBox.ForeColor = Color.White;
         }
 
         TotalChargesLabel.Text = _currentAccount.TotalCharges.ToString("c");
+        TotalChargesLabel.LabelStyle = Krypton.Toolkit.LabelStyle.BoldControl;
+        
         TotalPmtAdjLabel.Text = (_currentAccount.TotalContractual + _currentAccount.TotalPayments + _currentAccount.TotalWriteOff).ToString("c");
+        TotalPmtAdjLabel.LabelStyle = Krypton.Toolkit.LabelStyle.BoldControl;
+        
         BalanceLabel.Text = _currentAccount.Balance.ToString("c");
+        BalanceLabel.LabelStyle = Krypton.Toolkit.LabelStyle.BoldControl;
+        
         ThirdPartyBalLabel.Text = _currentAccount.ClaimBalance.ToString("c");
+        ThirdPartyBalLabel.LabelStyle = Krypton.Toolkit.LabelStyle.BoldControl;
+        
         ClientBalLabel.Text = _currentAccount.ClientBalance.Sum(x => x.balance).ToString("c");
+        ClientBalLabel.LabelStyle = Krypton.Toolkit.LabelStyle.BoldControl;
+        bannerPanel.ResumeLayout();
     }
 
     private void LoadDemographics()
@@ -587,7 +617,6 @@ public partial class AccountForm : Form
         Log.Instance.Trace($"Entering - {SelectedAccount}");
         DemoStatusMessagesTextBox.Text = String.Empty;
 
-        //PatientFullNameLabel.Text = currentAccount.PatFullName;
         LastNameTextBox.Text = _currentAccount.PatLastName;
         LastNameTextBox.BackColor = Color.White;
         FirstNameTextBox.Text = _currentAccount.PatFirstName;
@@ -641,6 +670,8 @@ public partial class AccountForm : Form
     {
         Log.Instance.Trace($"Entering - {SelectedAccount}");
 
+        demographicsLayoutPanel.SuspendLayout();
+
         _currentAccount.PatFullName = $"{LastNameTextBox.Text} {SuffixTextBox.Text},{FirstNameTextBox.Text} {MiddleNameTextBox.Text}";
         _currentAccount.PatLastName = LastNameTextBox.Text;
         _currentAccount.PatFirstName = FirstNameTextBox.Text;
@@ -685,6 +716,7 @@ public partial class AccountForm : Form
             control.BackColor = Color.White;
         }
 
+        demographicsLayoutPanel.ResumeLayout();
         //await this.LoadAccountData();
         RefreshAccountData();
 
@@ -697,7 +729,7 @@ public partial class AccountForm : Form
     private void LoadPayments()
     {
         Log.Instance.Trace($"Entering - {SelectedAccount}");
-
+        tabPayments.SuspendLayout();
         TotalPaymentTextBox.Text = _currentAccount.TotalPayments.ToString("c");
         TotalContractualTextBox.Text = _currentAccount.TotalContractual.ToString("c");
         TotalWriteOffTextBox.Text = _currentAccount.TotalWriteOff.ToString("c");
@@ -748,6 +780,7 @@ public partial class AccountForm : Form
         PaymentsDataGrid.Columns[nameof(Chk.Comment)].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
         PaymentsDataGrid.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
         PaymentsDataGrid.BackgroundColor = Color.AntiqueWhite;
+        tabPayments.ResumeLayout();
     }
 
     private void PaymentsDataGrid_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
@@ -1724,7 +1757,7 @@ public partial class AccountForm : Form
         _currentAccount.AccountAlert ??= new AccountAlert();
         _currentAccount.AccountAlert.AccountNo = _currentAccount.AccountNo;
         _currentAccount.AccountAlert.Alert = noteAlertCheckBox.Checked;
-        bannerAlertLabel.Text = noteAlertCheckBox.Checked ? _notesAlertText : "";
+        alertTextBox.Text = noteAlertCheckBox.Checked ? _notesAlertText : "";
 
         _accountService.SetNoteAlert(_currentAccount.AccountNo, noteAlertCheckBox.Checked);
     }
@@ -1767,5 +1800,15 @@ public partial class AccountForm : Form
     private void AccountForm_FormClosed(object sender, FormClosedEventArgs e)
     {
         _closing = true;
+    }
+
+    private async void AccountForm_Shown(object sender, EventArgs e)
+    {
+        Log.Instance.Trace($"Entering - {SelectedAccount}");
+        if (this.Disposing)
+            return;
+        if (_closing)
+            return;
+        await LoadAccountData();
     }
 }

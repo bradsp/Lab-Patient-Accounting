@@ -7,7 +7,7 @@ using Utilities;
 
 namespace LabBilling.Forms;
 
-public partial class BatchRemittance : Form
+public partial class BatchRemittance : Krypton.Toolkit.KryptonForm
 {
     public BatchRemittance()
     {
@@ -27,9 +27,9 @@ public partial class BatchRemittance : Form
         Log.Instance.Trace($"Entering");
         _batchTransactionService = new(Program.AppEnvironment);
         _accountService = new(Program.AppEnvironment);
-        List<ChkBatchDetail> chkBatchDetails = new();
-        SaveBatchButton.Enabled = false;
-        SubmitPaymentsButton.Enabled = false;
+        _ = new List<ChkBatchDetail>();
+        saveBatchToolStripButton.Enabled = false;
+        submitPaymentsToolStripButton.Enabled = false;
         LoadOpenBatches();
         dgvPayments.Enabled = false;
     }
@@ -48,34 +48,6 @@ public partial class BatchRemittance : Form
             return _chkBatch.BatchNo;
         else
             return -1;
-    }
-
-    private void SaveBatchButton_Click(object sender, EventArgs e)
-    {
-        Log.Instance.Trace($"Entering");
-        //saves an open batch for later use
-        int retBatch;
-        if (OpenBatch.SelectedIndex > 0)
-        {
-            retBatch = SaveBatch(Convert.ToInt32(OpenBatch.SelectedValue));
-        }
-        else
-        {
-            // add new batch
-            retBatch = SaveBatch();
-        }
-
-        if (retBatch > 0)
-        {
-            MessageBox.Show("Batch saved.");
-            Clear();
-            //reload OpenBatch list
-            LoadOpenBatches();
-        }
-        else
-        {
-            MessageBox.Show("Error saving batch.");
-        }
     }
 
     private void LoadOpenBatches()
@@ -144,10 +116,10 @@ public partial class BatchRemittance : Form
         AmountTotal.Text = "0.00";
         ContractualTotal.Text = "0.00";
         WriteoffTotal.Text = "0.00";
-        EntryMode.Enabled = true;
+        entryModeToolStripComboBox.Enabled = false;
         _isGridLoaded = false;
-        SaveBatchButton.Enabled = false;
-        SubmitPaymentsButton.Enabled = false;
+        saveBatchToolStripButton.Enabled = false;
+        submitPaymentsToolStripButton.Enabled = false;
         dgvPayments.Enabled = false;
     }
 
@@ -156,7 +128,7 @@ public partial class BatchRemittance : Form
         Log.Instance.Trace($"Entering");
         // changes which entry columns are active for quicker data entry
 
-        switch (EntryMode.Text)
+        switch (entryModeToolStripComboBox.Text)        
         {
             case "Standard":   // amt paid, contractual, & write off enabled.
                 dgvPayments.Columns[nameof(ChkBatchDetail.AmtPaid)].Visible = true;
@@ -323,7 +295,7 @@ public partial class BatchRemittance : Form
         //disable the ability to change the entry mode once a row has been added.
         //This will protect against invalid data being written to the database if columns containing data are hidden.
         if (dgvPayments.Rows.Count > 0 && !dgvPayments.Rows[0].IsNewRow)
-            EntryMode.Enabled = false;
+            entryModeToolStripComboBox.Enabled = false;
 
         //make all the cells readonly until a valid account has been entered
         SetCellsReadonly(e.RowIndex, true);
@@ -375,7 +347,7 @@ public partial class BatchRemittance : Form
 
             row[nameof(ChkBatchDetail.AccountNo)] = row[nameof(ChkBatchDetail.AccountNo)].ToString().ToUpper();
 
-            if (EntryMode.SelectedItem.ToString() == "Refunds")
+            if (entryModeToolStripComboBox.SelectedItem.ToString() == "Refunds")
                 detail.Status = "REFUND";
             else
                 detail.Status = "NEW";
@@ -425,31 +397,10 @@ public partial class BatchRemittance : Form
         SaveDetailRow((DataRowView)dgvPayments.Rows[e.RowIndex].DataBoundItem);
     }
 
-    private void DeleteBatch_Click(object sender, EventArgs e)
-    {
-        if (OpenBatch.SelectedIndex > 0)
-        {
-            if (MessageBox.Show($"Batch {OpenBatch.SelectedValue} will be permanently deleted. This cannot be undone. Delete?", "Confirm Batch Delete",
-                MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
-            {
-                try
-                {
-                    _batchTransactionService.DeletePaymentBatch(Convert.ToInt32(OpenBatch.SelectedValue));
-                    Clear();
-                }
-                catch (Exception ex)
-                {
-                    Log.Instance.Error($"Error deleting payment batch {OpenBatch.SelectedValue}", ex);
-                    MessageBox.Show("Error occurred. Batch not deleted.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-                LoadOpenBatches();
-            }
-        }
-    }
-
     private void LoadDetailGrid(List<ChkBatchDetail> details)
     {
         dgvPayments.Enabled = true;
+        entryModeToolStripComboBox.Enabled = true;
 
         _chkDetailsBindingSource = new();
         _chkDetailsDataTable = details.ToDataTable();
@@ -507,10 +458,10 @@ public partial class BatchRemittance : Form
         }
 
         _isGridLoaded = true;
-        EntryMode.SelectedIndex = 0;
+        entryModeToolStripComboBox.SelectedIndex = 0;
 
-        SaveBatchButton.Enabled = true;
-        SubmitPaymentsButton.Enabled = true;
+        saveBatchToolStripButton.Enabled = true;
+        submitPaymentsToolStripButton.Enabled = true;
     }
 
     private void OpenBatch_SelectionChangeCommitted(object sender, EventArgs e)
@@ -566,7 +517,7 @@ public partial class BatchRemittance : Form
 
         if (senderGrid.Columns[e.ColumnIndex].Name == nameof(ChkBatchDetail.Source))
         {
-            if (EntryMode.SelectedItem.ToString() == "Refunds")
+            if (entryModeToolStripComboBox.SelectedItem.ToString() == "Refunds")
             {
                 senderGrid[e.ColumnIndex, e.RowIndex].Value = "REFUND";
             }
@@ -574,7 +525,7 @@ public partial class BatchRemittance : Form
 
         if (senderGrid.Columns[e.ColumnIndex].Name == nameof(ChkBatchDetail.CheckNo))
         {
-            if (EntryMode.SelectedItem.ToString() == "Refunds")
+            if (entryModeToolStripComboBox.SelectedItem.ToString() == "Refunds")
             {
                 senderGrid[e.ColumnIndex, e.RowIndex].Value = "REFUND";
             }
@@ -794,6 +745,82 @@ public partial class BatchRemittance : Form
             {
                 if (txt != null)
                     txt.CharacterCasing = CharacterCasing.Upper;
+            }
+        }
+    }
+
+    private void saveBatchToolStripButton_Click(object sender, EventArgs e)
+    {
+        Log.Instance.Trace($"Entering");
+        //saves an open batch for later use
+        int retBatch;
+        if (OpenBatch.SelectedIndex > 0)
+        {
+            retBatch = SaveBatch(Convert.ToInt32(OpenBatch.SelectedValue));
+        }
+        else
+        {
+            // add new batch
+            retBatch = SaveBatch();
+        }
+
+        if (retBatch > 0)
+        {
+            MessageBox.Show("Batch saved.");
+            Clear();
+            //reload OpenBatch list
+            LoadOpenBatches();
+        }
+        else
+        {
+            MessageBox.Show("Error saving batch.");
+        }
+    }
+
+    private void submitPaymentsToolStripButton_Click(object sender, EventArgs e)
+    {
+        Log.Instance.Trace($"Entering");
+        int batch = -1;
+        try
+        {
+            batch = Convert.ToInt32(OpenBatch.SelectedValue.ToString());
+            _batchTransactionService.PostBatchPayments(batch);
+
+            LoadOpenBatches();
+            //clear entry screen for next batch
+            MessageBox.Show($"Batch {batch} posted.", "Batch Posted");
+            Clear();
+        }
+        catch (ApplicationException apex)
+        {
+            Log.Instance.Error($"Error posting payment batch", apex);
+            MessageBox.Show("Error occurred. Batch not posted.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+        catch (Exception ex)
+        {
+            Log.Instance.Error($"Error posting payment batch", ex);
+            MessageBox.Show("Error occurred. Batch not posted.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+    }
+
+    private void deleteBatchToolStripButton_Click(object sender, EventArgs e)
+    {
+        if (OpenBatch.SelectedIndex > 0)
+        {
+            if (MessageBox.Show($"Batch {OpenBatch.SelectedValue} will be permanently deleted. This cannot be undone. Delete?", "Confirm Batch Delete",
+                MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            {
+                try
+                {
+                    _batchTransactionService.DeletePaymentBatch(Convert.ToInt32(OpenBatch.SelectedValue));
+                    Clear();
+                }
+                catch (Exception ex)
+                {
+                    Log.Instance.Error($"Error deleting payment batch {OpenBatch.SelectedValue}", ex);
+                    MessageBox.Show("Error occurred. Batch not deleted.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                LoadOpenBatches();
             }
         }
     }

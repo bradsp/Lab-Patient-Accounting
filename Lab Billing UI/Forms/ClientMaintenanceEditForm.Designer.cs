@@ -28,887 +28,903 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            this.label5 = new System.Windows.Forms.Label();
-            this.tbContact = new System.Windows.Forms.TextBox();
-            this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.tabClientPreferences = new System.Windows.Forms.TabPage();
-            this.chkCOCForms = new System.Windows.Forms.CheckBox();
-            this.label18 = new System.Windows.Forms.Label();
-            this.cbFeeSched = new System.Windows.Forms.ComboBox();
-            this.numDefaultDiscount = new System.Windows.Forms.NumericUpDown();
-            this.label17 = new System.Windows.Forms.Label();
-            this.chkPrintCPTonBill = new System.Windows.Forms.CheckBox();
-            this.chkDoNotBill = new System.Windows.Forms.CheckBox();
-            this.chkBillAtDiscount = new System.Windows.Forms.CheckBox();
-            this.chkCCReport = new System.Windows.Forms.CheckBox();
-            this.chkDateOrder = new System.Windows.Forms.CheckBox();
-            this.tabClientMRO = new System.Windows.Forms.TabPage();
-            this.tbMROZipcode = new System.Windows.Forms.MaskedTextBox();
-            this.label19 = new System.Windows.Forms.Label();
-            this.cbMROState = new System.Windows.Forms.ComboBox();
-            this.label20 = new System.Windows.Forms.Label();
-            this.tbMROCity = new System.Windows.Forms.TextBox();
-            this.label21 = new System.Windows.Forms.Label();
-            this.MROAddress2TextBox = new System.Windows.Forms.TextBox();
-            this.tbMROAddress = new System.Windows.Forms.TextBox();
-            this.label22 = new System.Windows.Forms.Label();
-            this.tbMROName = new System.Windows.Forms.TextBox();
-            this.label23 = new System.Windows.Forms.Label();
-            this.tabComment = new System.Windows.Forms.TabPage();
-            this.tbComment = new System.Windows.Forms.TextBox();
-            this.DiscountsTab = new System.Windows.Forms.TabPage();
-            this.clientDiscountDataGrid = new System.Windows.Forms.DataGridView();
-            this.tabInterface = new System.Windows.Forms.TabPage();
-            this.interfaceMappingDataGrid = new System.Windows.Forms.DataGridView();
-            this.tbZipcode = new System.Windows.Forms.MaskedTextBox();
-            this.cbCostCenter = new System.Windows.Forms.ComboBox();
-            this.label15 = new System.Windows.Forms.Label();
-            this.cbEmrType = new System.Windows.Forms.ComboBox();
-            this.label14 = new System.Windows.Forms.Label();
-            this.cbClientType = new System.Windows.Forms.ComboBox();
-            this.label13 = new System.Windows.Forms.Label();
-            this.tbEmail = new System.Windows.Forms.TextBox();
-            this.label12 = new System.Windows.Forms.Label();
-            this.tbFax = new System.Windows.Forms.TextBox();
-            this.label11 = new System.Windows.Forms.Label();
-            this.cbCounty = new System.Windows.Forms.ComboBox();
-            this.label10 = new System.Windows.Forms.Label();
-            this.tbPhone = new System.Windows.Forms.TextBox();
-            this.label9 = new System.Windows.Forms.Label();
-            this.label8 = new System.Windows.Forms.Label();
-            this.cbState = new System.Windows.Forms.ComboBox();
-            this.label7 = new System.Windows.Forms.Label();
-            this.tbCity = new System.Windows.Forms.TextBox();
-            this.label6 = new System.Windows.Forms.Label();
-            this.tbAddress2 = new System.Windows.Forms.TextBox();
-            this.tbAddress1 = new System.Windows.Forms.TextBox();
-            this.label4 = new System.Windows.Forms.Label();
-            this.tbClientCode = new System.Windows.Forms.TextBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this.ClientMnemTextBox = new System.Windows.Forms.TextBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.ClientNameTextBox = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.CancelButton = new System.Windows.Forms.Button();
-            this.SaveButton = new System.Windows.Forms.Button();
-            this.label16 = new System.Windows.Forms.Label();
-            this.billMethodComboBox = new System.Windows.Forms.ComboBox();
-            this.activeCheckBox = new System.Windows.Forms.CheckBox();
-            this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
-            this.tabControl1.SuspendLayout();
-            this.tabClientPreferences.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numDefaultDiscount)).BeginInit();
-            this.tabClientMRO.SuspendLayout();
-            this.tabComment.SuspendLayout();
-            this.DiscountsTab.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.clientDiscountDataGrid)).BeginInit();
-            this.tabInterface.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.interfaceMappingDataGrid)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
-            this.SuspendLayout();
+            components = new System.ComponentModel.Container();
+            label5 = new Krypton.Toolkit.KryptonLabel();
+            tbContact = new Krypton.Toolkit.KryptonTextBox();
+            tabControl1 = new TabControl();
+            tabClientPreferences = new TabPage();
+            chkCOCForms = new Krypton.Toolkit.KryptonCheckBox();
+            label18 = new Krypton.Toolkit.KryptonLabel();
+            cbFeeSched = new Krypton.Toolkit.KryptonComboBox();
+            numDefaultDiscount = new NumericUpDown();
+            label17 = new Krypton.Toolkit.KryptonLabel();
+            chkPrintCPTonBill = new Krypton.Toolkit.KryptonCheckBox();
+            chkDoNotBill = new Krypton.Toolkit.KryptonCheckBox();
+            chkBillAtDiscount = new Krypton.Toolkit.KryptonCheckBox();
+            chkCCReport = new Krypton.Toolkit.KryptonCheckBox();
+            chkDateOrder = new Krypton.Toolkit.KryptonCheckBox();
+            tabClientMRO = new TabPage();
+            tbMROZipcode = new Krypton.Toolkit.KryptonMaskedTextBox();
+            label19 = new Krypton.Toolkit.KryptonLabel();
+            cbMROState = new Krypton.Toolkit.KryptonComboBox();
+            label20 = new Krypton.Toolkit.KryptonLabel();
+            tbMROCity = new Krypton.Toolkit.KryptonTextBox();
+            label21 = new Krypton.Toolkit.KryptonLabel();
+            MROAddress2TextBox = new Krypton.Toolkit.KryptonTextBox();
+            tbMROAddress = new Krypton.Toolkit.KryptonTextBox();
+            label22 = new Krypton.Toolkit.KryptonLabel();
+            tbMROName = new Krypton.Toolkit.KryptonTextBox();
+            label23 = new Krypton.Toolkit.KryptonLabel();
+            tabComment = new TabPage();
+            tbComment = new Krypton.Toolkit.KryptonTextBox();
+            DiscountsTab = new TabPage();
+            clientDiscountDataGrid = new DataGridView();
+            tabInterface = new TabPage();
+            interfaceMappingDataGrid = new DataGridView();
+            tbZipcode = new Krypton.Toolkit.KryptonMaskedTextBox();
+            cbCostCenter = new Krypton.Toolkit.KryptonComboBox();
+            label15 = new Krypton.Toolkit.KryptonLabel();
+            cbEmrType = new Krypton.Toolkit.KryptonComboBox();
+            label14 = new Krypton.Toolkit.KryptonLabel();
+            cbClientType = new Krypton.Toolkit.KryptonComboBox();
+            label13 = new Krypton.Toolkit.KryptonLabel();
+            tbEmail = new Krypton.Toolkit.KryptonTextBox();
+            label12 = new Krypton.Toolkit.KryptonLabel();
+            tbFax = new Krypton.Toolkit.KryptonTextBox();
+            label11 = new Krypton.Toolkit.KryptonLabel();
+            cbCounty = new Krypton.Toolkit.KryptonComboBox();
+            label10 = new Krypton.Toolkit.KryptonLabel();
+            tbPhone = new Krypton.Toolkit.KryptonTextBox();
+            label9 = new Krypton.Toolkit.KryptonLabel();
+            label8 = new Krypton.Toolkit.KryptonLabel();
+            cbState = new Krypton.Toolkit.KryptonComboBox();
+            label7 = new Krypton.Toolkit.KryptonLabel();
+            tbCity = new Krypton.Toolkit.KryptonTextBox();
+            label6 = new Krypton.Toolkit.KryptonLabel();
+            tbAddress2 = new Krypton.Toolkit.KryptonTextBox();
+            tbAddress1 = new Krypton.Toolkit.KryptonTextBox();
+            label4 = new Krypton.Toolkit.KryptonLabel();
+            tbClientCode = new Krypton.Toolkit.KryptonTextBox();
+            label3 = new Krypton.Toolkit.KryptonLabel();
+            ClientMnemTextBox = new Krypton.Toolkit.KryptonTextBox();
+            label2 = new Krypton.Toolkit.KryptonLabel();
+            ClientNameTextBox = new Krypton.Toolkit.KryptonTextBox();
+            label1 = new Krypton.Toolkit.KryptonLabel();
+            CancelButton = new Krypton.Toolkit.KryptonButton();
+            SaveButton = new Krypton.Toolkit.KryptonButton();
+            label16 = new Krypton.Toolkit.KryptonLabel();
+            billMethodComboBox = new Krypton.Toolkit.KryptonComboBox();
+            activeCheckBox = new Krypton.Toolkit.KryptonCheckBox();
+            errorProvider1 = new ErrorProvider(components);
+            tabControl1.SuspendLayout();
+            tabClientPreferences.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)cbFeeSched).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)numDefaultDiscount).BeginInit();
+            tabClientMRO.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)cbMROState).BeginInit();
+            tabComment.SuspendLayout();
+            DiscountsTab.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)clientDiscountDataGrid).BeginInit();
+            tabInterface.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)interfaceMappingDataGrid).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)cbCostCenter).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)cbEmrType).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)cbClientType).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)cbCounty).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)cbState).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)billMethodComboBox).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)errorProvider1).BeginInit();
+            SuspendLayout();
             // 
             // label5
             // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(37, 263);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(44, 13);
-            this.label5.TabIndex = 31;
-            this.label5.Text = "Contact";
+            label5.Location = new Point(43, 299);
+            label5.Margin = new Padding(4, 0, 4, 0);
+            label5.Name = "label5";
+            label5.Size = new Size(53, 20);
+            label5.TabIndex = 31;
+            label5.Values.Text = "Contact";
             // 
             // tbContact
             // 
-            this.tbContact.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.tbContact.Location = new System.Drawing.Point(37, 278);
-            this.tbContact.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.tbContact.Multiline = true;
-            this.tbContact.Name = "tbContact";
-            this.tbContact.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.tbContact.Size = new System.Drawing.Size(577, 152);
-            this.tbContact.TabIndex = 32;
+            tbContact.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            tbContact.Location = new Point(43, 321);
+            tbContact.Margin = new Padding(4, 2, 4, 2);
+            tbContact.Multiline = true;
+            tbContact.Name = "tbContact";
+            tbContact.ScrollBars = ScrollBars.Vertical;
+            tbContact.Size = new Size(672, 175);
+            tbContact.TabIndex = 32;
             // 
             // tabControl1
             // 
-            this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.tabControl1.Controls.Add(this.tabClientPreferences);
-            this.tabControl1.Controls.Add(this.tabClientMRO);
-            this.tabControl1.Controls.Add(this.tabComment);
-            this.tabControl1.Controls.Add(this.DiscountsTab);
-            this.tabControl1.Controls.Add(this.tabInterface);
-            this.tabControl1.Location = new System.Drawing.Point(36, 434);
-            this.tabControl1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.tabControl1.Name = "tabControl1";
-            this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(578, 175);
-            this.tabControl1.TabIndex = 33;
+            tabControl1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            tabControl1.Controls.Add(tabClientPreferences);
+            tabControl1.Controls.Add(tabClientMRO);
+            tabControl1.Controls.Add(tabComment);
+            tabControl1.Controls.Add(DiscountsTab);
+            tabControl1.Controls.Add(tabInterface);
+            tabControl1.Location = new Point(42, 501);
+            tabControl1.Margin = new Padding(4, 2, 4, 2);
+            tabControl1.Name = "tabControl1";
+            tabControl1.SelectedIndex = 0;
+            tabControl1.Size = new Size(674, 202);
+            tabControl1.TabIndex = 33;
             // 
             // tabClientPreferences
             // 
-            this.tabClientPreferences.Controls.Add(this.chkCOCForms);
-            this.tabClientPreferences.Controls.Add(this.label18);
-            this.tabClientPreferences.Controls.Add(this.cbFeeSched);
-            this.tabClientPreferences.Controls.Add(this.numDefaultDiscount);
-            this.tabClientPreferences.Controls.Add(this.label17);
-            this.tabClientPreferences.Controls.Add(this.chkPrintCPTonBill);
-            this.tabClientPreferences.Controls.Add(this.chkDoNotBill);
-            this.tabClientPreferences.Controls.Add(this.chkBillAtDiscount);
-            this.tabClientPreferences.Controls.Add(this.chkCCReport);
-            this.tabClientPreferences.Controls.Add(this.chkDateOrder);
-            this.tabClientPreferences.Location = new System.Drawing.Point(4, 22);
-            this.tabClientPreferences.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.tabClientPreferences.Name = "tabClientPreferences";
-            this.tabClientPreferences.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.tabClientPreferences.Size = new System.Drawing.Size(570, 149);
-            this.tabClientPreferences.TabIndex = 0;
-            this.tabClientPreferences.Text = "Preferences";
-            this.tabClientPreferences.UseVisualStyleBackColor = true;
+            tabClientPreferences.Controls.Add(chkCOCForms);
+            tabClientPreferences.Controls.Add(label18);
+            tabClientPreferences.Controls.Add(cbFeeSched);
+            tabClientPreferences.Controls.Add(numDefaultDiscount);
+            tabClientPreferences.Controls.Add(label17);
+            tabClientPreferences.Controls.Add(chkPrintCPTonBill);
+            tabClientPreferences.Controls.Add(chkDoNotBill);
+            tabClientPreferences.Controls.Add(chkBillAtDiscount);
+            tabClientPreferences.Controls.Add(chkCCReport);
+            tabClientPreferences.Controls.Add(chkDateOrder);
+            tabClientPreferences.Location = new Point(4, 24);
+            tabClientPreferences.Margin = new Padding(4, 2, 4, 2);
+            tabClientPreferences.Name = "tabClientPreferences";
+            tabClientPreferences.Padding = new Padding(4, 2, 4, 2);
+            tabClientPreferences.Size = new Size(666, 174);
+            tabClientPreferences.TabIndex = 0;
+            tabClientPreferences.Text = "Preferences";
+            tabClientPreferences.UseVisualStyleBackColor = true;
             // 
             // chkCOCForms
             // 
-            this.chkCOCForms.AutoSize = true;
-            this.chkCOCForms.Location = new System.Drawing.Point(19, 121);
-            this.chkCOCForms.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.chkCOCForms.Name = "chkCOCForms";
-            this.chkCOCForms.Size = new System.Drawing.Size(260, 17);
-            this.chkCOCForms.TabIndex = 5;
-            this.chkCOCForms.Text = "Include Collection Site on Chain of Custody Forms";
-            this.chkCOCForms.UseVisualStyleBackColor = true;
+            chkCOCForms.Location = new Point(22, 140);
+            chkCOCForms.Margin = new Padding(4, 2, 4, 2);
+            chkCOCForms.Name = "chkCOCForms";
+            chkCOCForms.Size = new Size(296, 20);
+            chkCOCForms.TabIndex = 5;
+            chkCOCForms.Values.Text = "Include Collection Site on Chain of Custody Forms";
             // 
             // label18
             // 
-            this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(233, 40);
-            this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(73, 13);
-            this.label18.TabIndex = 8;
-            this.label18.Text = "Fee Schedule";
+            label18.Location = new Point(272, 46);
+            label18.Margin = new Padding(4, 0, 4, 0);
+            label18.Name = "label18";
+            label18.Size = new Size(82, 20);
+            label18.TabIndex = 8;
+            label18.Values.Text = "Fee Schedule";
             // 
             // cbFeeSched
             // 
-            this.cbFeeSched.FormattingEnabled = true;
-            this.cbFeeSched.Location = new System.Drawing.Point(309, 35);
-            this.cbFeeSched.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.cbFeeSched.Name = "cbFeeSched";
-            this.cbFeeSched.Size = new System.Drawing.Size(54, 21);
-            this.cbFeeSched.TabIndex = 9;
-            this.cbFeeSched.SelectedIndexChanged += new System.EventHandler(this.cbFeeSched_SelectedIndexChanged);
-            this.cbFeeSched.Validating += new System.ComponentModel.CancelEventHandler(this.cbFeeSched_Validating);
+            cbFeeSched.DropDownWidth = 62;
+            cbFeeSched.FormattingEnabled = true;
+            cbFeeSched.IntegralHeight = false;
+            cbFeeSched.Location = new Point(360, 40);
+            cbFeeSched.Margin = new Padding(4, 2, 4, 2);
+            cbFeeSched.Name = "cbFeeSched";
+            cbFeeSched.Size = new Size(62, 21);
+            cbFeeSched.TabIndex = 9;
+            cbFeeSched.SelectedIndexChanged += cbFeeSched_SelectedIndexChanged;
+            cbFeeSched.Validating += cbFeeSched_Validating;
             // 
             // numDefaultDiscount
             // 
-            this.numDefaultDiscount.Location = new System.Drawing.Point(309, 14);
-            this.numDefaultDiscount.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.numDefaultDiscount.Name = "numDefaultDiscount";
-            this.numDefaultDiscount.Size = new System.Drawing.Size(53, 20);
-            this.numDefaultDiscount.TabIndex = 7;
+            numDefaultDiscount.Location = new Point(360, 16);
+            numDefaultDiscount.Margin = new Padding(4, 2, 4, 2);
+            numDefaultDiscount.Name = "numDefaultDiscount";
+            numDefaultDiscount.Size = new Size(62, 23);
+            numDefaultDiscount.TabIndex = 7;
             // 
             // label17
             // 
-            this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(210, 18);
-            this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(97, 13);
-            this.label17.TabIndex = 6;
-            this.label17.Text = "Default Discount %";
+            label17.Location = new Point(245, 21);
+            label17.Margin = new Padding(4, 0, 4, 0);
+            label17.Name = "label17";
+            label17.Size = new Size(115, 20);
+            label17.TabIndex = 6;
+            label17.Values.Text = "Default Discount %";
             // 
             // chkPrintCPTonBill
             // 
-            this.chkPrintCPTonBill.AutoSize = true;
-            this.chkPrintCPTonBill.Location = new System.Drawing.Point(19, 100);
-            this.chkPrintCPTonBill.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.chkPrintCPTonBill.Name = "chkPrintCPTonBill";
-            this.chkPrintCPTonBill.Size = new System.Drawing.Size(124, 17);
-            this.chkPrintCPTonBill.TabIndex = 4;
-            this.chkPrintCPTonBill.Text = "Print CPT on Invoice";
-            this.chkPrintCPTonBill.UseVisualStyleBackColor = true;
+            chkPrintCPTonBill.Location = new Point(22, 115);
+            chkPrintCPTonBill.Margin = new Padding(4, 2, 4, 2);
+            chkPrintCPTonBill.Name = "chkPrintCPTonBill";
+            chkPrintCPTonBill.Size = new Size(133, 20);
+            chkPrintCPTonBill.TabIndex = 4;
+            chkPrintCPTonBill.Values.Text = "Print CPT on Invoice";
             // 
             // chkDoNotBill
             // 
-            this.chkDoNotBill.AutoSize = true;
-            this.chkDoNotBill.Location = new System.Drawing.Point(19, 79);
-            this.chkDoNotBill.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.chkDoNotBill.Name = "chkDoNotBill";
-            this.chkDoNotBill.Size = new System.Drawing.Size(130, 17);
-            this.chkDoNotBill.TabIndex = 3;
-            this.chkDoNotBill.Text = "Do NOT Bill this Client";
-            this.chkDoNotBill.UseVisualStyleBackColor = true;
+            chkDoNotBill.Location = new Point(22, 91);
+            chkDoNotBill.Margin = new Padding(4, 2, 4, 2);
+            chkDoNotBill.Name = "chkDoNotBill";
+            chkDoNotBill.Size = new Size(145, 20);
+            chkDoNotBill.TabIndex = 3;
+            chkDoNotBill.Values.Text = "Do NOT Bill this Client";
             // 
             // chkBillAtDiscount
             // 
-            this.chkBillAtDiscount.AutoSize = true;
-            this.chkBillAtDiscount.Location = new System.Drawing.Point(19, 58);
-            this.chkBillAtDiscount.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.chkBillAtDiscount.Name = "chkBillAtDiscount";
-            this.chkBillAtDiscount.Size = new System.Drawing.Size(96, 17);
-            this.chkBillAtDiscount.TabIndex = 2;
-            this.chkBillAtDiscount.Text = "Bill at Discount";
-            this.chkBillAtDiscount.UseVisualStyleBackColor = true;
+            chkBillAtDiscount.Location = new Point(22, 67);
+            chkBillAtDiscount.Margin = new Padding(4, 2, 4, 2);
+            chkBillAtDiscount.Name = "chkBillAtDiscount";
+            chkBillAtDiscount.Size = new Size(105, 20);
+            chkBillAtDiscount.TabIndex = 2;
+            chkBillAtDiscount.Values.Text = "Bill at Discount";
             // 
             // chkCCReport
             // 
-            this.chkCCReport.AutoSize = true;
-            this.chkCCReport.Location = new System.Drawing.Point(19, 37);
-            this.chkCCReport.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.chkCCReport.Name = "chkCCReport";
-            this.chkCCReport.Size = new System.Drawing.Size(176, 17);
-            this.chkCCReport.TabIndex = 1;
-            this.chkCCReport.Text = "Include on Charge Code Report";
-            this.chkCCReport.UseVisualStyleBackColor = true;
+            chkCCReport.Location = new Point(22, 43);
+            chkCCReport.Margin = new Padding(4, 2, 4, 2);
+            chkCCReport.Name = "chkCCReport";
+            chkCCReport.Size = new Size(195, 20);
+            chkCCReport.TabIndex = 1;
+            chkCCReport.Values.Text = "Include on Charge Code Report";
             // 
             // chkDateOrder
             // 
-            this.chkDateOrder.AutoSize = true;
-            this.chkDateOrder.Location = new System.Drawing.Point(19, 15);
-            this.chkDateOrder.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.chkDateOrder.Name = "chkDateOrder";
-            this.chkDateOrder.Size = new System.Drawing.Size(134, 17);
-            this.chkDateOrder.TabIndex = 0;
-            this.chkDateOrder.Text = "Print Bills in Date Order";
-            this.chkDateOrder.UseVisualStyleBackColor = true;
+            chkDateOrder.Location = new Point(22, 17);
+            chkDateOrder.Margin = new Padding(4, 2, 4, 2);
+            chkDateOrder.Name = "chkDateOrder";
+            chkDateOrder.Size = new Size(151, 20);
+            chkDateOrder.TabIndex = 0;
+            chkDateOrder.Values.Text = "Print Bills in Date Order";
             // 
             // tabClientMRO
             // 
-            this.tabClientMRO.Controls.Add(this.tbMROZipcode);
-            this.tabClientMRO.Controls.Add(this.label19);
-            this.tabClientMRO.Controls.Add(this.cbMROState);
-            this.tabClientMRO.Controls.Add(this.label20);
-            this.tabClientMRO.Controls.Add(this.tbMROCity);
-            this.tabClientMRO.Controls.Add(this.label21);
-            this.tabClientMRO.Controls.Add(this.MROAddress2TextBox);
-            this.tabClientMRO.Controls.Add(this.tbMROAddress);
-            this.tabClientMRO.Controls.Add(this.label22);
-            this.tabClientMRO.Controls.Add(this.tbMROName);
-            this.tabClientMRO.Controls.Add(this.label23);
-            this.tabClientMRO.Location = new System.Drawing.Point(4, 22);
-            this.tabClientMRO.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.tabClientMRO.Name = "tabClientMRO";
-            this.tabClientMRO.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.tabClientMRO.Size = new System.Drawing.Size(577, 149);
-            this.tabClientMRO.TabIndex = 1;
-            this.tabClientMRO.Text = "Medical Review Officer";
-            this.tabClientMRO.UseVisualStyleBackColor = true;
+            tabClientMRO.Controls.Add(tbMROZipcode);
+            tabClientMRO.Controls.Add(label19);
+            tabClientMRO.Controls.Add(cbMROState);
+            tabClientMRO.Controls.Add(label20);
+            tabClientMRO.Controls.Add(tbMROCity);
+            tabClientMRO.Controls.Add(label21);
+            tabClientMRO.Controls.Add(MROAddress2TextBox);
+            tabClientMRO.Controls.Add(tbMROAddress);
+            tabClientMRO.Controls.Add(label22);
+            tabClientMRO.Controls.Add(tbMROName);
+            tabClientMRO.Controls.Add(label23);
+            tabClientMRO.Location = new Point(4, 24);
+            tabClientMRO.Margin = new Padding(4, 2, 4, 2);
+            tabClientMRO.Name = "tabClientMRO";
+            tabClientMRO.Padding = new Padding(4, 2, 4, 2);
+            tabClientMRO.Size = new Size(666, 174);
+            tabClientMRO.TabIndex = 1;
+            tabClientMRO.Text = "Medical Review Officer";
+            tabClientMRO.UseVisualStyleBackColor = true;
             // 
             // tbMROZipcode
             // 
-            this.tbMROZipcode.Location = new System.Drawing.Point(267, 116);
-            this.tbMROZipcode.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.tbMROZipcode.Name = "tbMROZipcode";
-            this.tbMROZipcode.Size = new System.Drawing.Size(86, 20);
-            this.tbMROZipcode.TabIndex = 10;
+            tbMROZipcode.Location = new Point(312, 134);
+            tbMROZipcode.Margin = new Padding(4, 2, 4, 2);
+            tbMROZipcode.Name = "tbMROZipcode";
+            tbMROZipcode.Size = new Size(100, 23);
+            tbMROZipcode.TabIndex = 10;
             // 
             // label19
             // 
-            this.label19.AutoSize = true;
-            this.label19.Location = new System.Drawing.Point(215, 119);
-            this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(46, 13);
-            this.label19.TabIndex = 9;
-            this.label19.Text = "Zipcode";
+            label19.Location = new Point(251, 137);
+            label19.Margin = new Padding(4, 0, 4, 0);
+            label19.Name = "label19";
+            label19.Size = new Size(54, 20);
+            label19.TabIndex = 9;
+            label19.Values.Text = "Zipcode";
             // 
             // cbMROState
             // 
-            this.cbMROState.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbMROState.FormattingEnabled = true;
-            this.cbMROState.Location = new System.Drawing.Point(85, 114);
-            this.cbMROState.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.cbMROState.Name = "cbMROState";
-            this.cbMROState.Size = new System.Drawing.Size(124, 21);
-            this.cbMROState.TabIndex = 8;
+            cbMROState.DropDownStyle = ComboBoxStyle.DropDownList;
+            cbMROState.DropDownWidth = 144;
+            cbMROState.FormattingEnabled = true;
+            cbMROState.IntegralHeight = false;
+            cbMROState.Location = new Point(99, 132);
+            cbMROState.Margin = new Padding(4, 2, 4, 2);
+            cbMROState.Name = "cbMROState";
+            cbMROState.Size = new Size(144, 21);
+            cbMROState.TabIndex = 8;
             // 
             // label20
             // 
-            this.label20.AutoSize = true;
-            this.label20.Location = new System.Drawing.Point(48, 119);
-            this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(32, 13);
-            this.label20.TabIndex = 7;
-            this.label20.Text = "State";
+            label20.Location = new Point(56, 137);
+            label20.Margin = new Padding(4, 0, 4, 0);
+            label20.Name = "label20";
+            label20.Size = new Size(38, 20);
+            label20.TabIndex = 7;
+            label20.Values.Text = "State";
             // 
             // tbMROCity
             // 
-            this.tbMROCity.Location = new System.Drawing.Point(85, 91);
-            this.tbMROCity.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.tbMROCity.Name = "tbMROCity";
-            this.tbMROCity.Size = new System.Drawing.Size(268, 20);
-            this.tbMROCity.TabIndex = 6;
+            tbMROCity.Location = new Point(99, 105);
+            tbMROCity.Margin = new Padding(4, 2, 4, 2);
+            tbMROCity.Name = "tbMROCity";
+            tbMROCity.Size = new Size(312, 23);
+            tbMROCity.TabIndex = 6;
             // 
             // label21
             // 
-            this.label21.AutoSize = true;
-            this.label21.Location = new System.Drawing.Point(56, 93);
-            this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(24, 13);
-            this.label21.TabIndex = 5;
-            this.label21.Text = "City";
+            label21.Location = new Point(65, 107);
+            label21.Margin = new Padding(4, 0, 4, 0);
+            label21.Name = "label21";
+            label21.Size = new Size(31, 20);
+            label21.TabIndex = 5;
+            label21.Values.Text = "City";
             // 
             // MROAddress2TextBox
             // 
-            this.MROAddress2TextBox.Location = new System.Drawing.Point(85, 67);
-            this.MROAddress2TextBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.MROAddress2TextBox.Name = "MROAddress2TextBox";
-            this.MROAddress2TextBox.Size = new System.Drawing.Size(268, 20);
-            this.MROAddress2TextBox.TabIndex = 4;
+            MROAddress2TextBox.Location = new Point(99, 77);
+            MROAddress2TextBox.Margin = new Padding(4, 2, 4, 2);
+            MROAddress2TextBox.Name = "MROAddress2TextBox";
+            MROAddress2TextBox.Size = new Size(312, 23);
+            MROAddress2TextBox.TabIndex = 4;
             // 
             // tbMROAddress
             // 
-            this.tbMROAddress.Location = new System.Drawing.Point(85, 44);
-            this.tbMROAddress.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.tbMROAddress.Name = "tbMROAddress";
-            this.tbMROAddress.Size = new System.Drawing.Size(268, 20);
-            this.tbMROAddress.TabIndex = 3;
+            tbMROAddress.Location = new Point(99, 51);
+            tbMROAddress.Margin = new Padding(4, 2, 4, 2);
+            tbMROAddress.Name = "tbMROAddress";
+            tbMROAddress.Size = new Size(312, 23);
+            tbMROAddress.TabIndex = 3;
             // 
             // label22
             // 
-            this.label22.AutoSize = true;
-            this.label22.Location = new System.Drawing.Point(35, 46);
-            this.label22.Name = "label22";
-            this.label22.Size = new System.Drawing.Size(45, 13);
-            this.label22.TabIndex = 2;
-            this.label22.Text = "Address";
+            label22.Location = new Point(41, 53);
+            label22.Margin = new Padding(4, 0, 4, 0);
+            label22.Name = "label22";
+            label22.Size = new Size(54, 20);
+            label22.TabIndex = 2;
+            label22.Values.Text = "Address";
             // 
             // tbMROName
             // 
-            this.tbMROName.Location = new System.Drawing.Point(85, 22);
-            this.tbMROName.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.tbMROName.Name = "tbMROName";
-            this.tbMROName.Size = new System.Drawing.Size(268, 20);
-            this.tbMROName.TabIndex = 1;
+            tbMROName.Location = new Point(99, 25);
+            tbMROName.Margin = new Padding(4, 2, 4, 2);
+            tbMROName.Name = "tbMROName";
+            tbMROName.Size = new Size(312, 23);
+            tbMROName.TabIndex = 1;
             // 
             // label23
             // 
-            this.label23.AutoSize = true;
-            this.label23.Location = new System.Drawing.Point(45, 24);
-            this.label23.Name = "label23";
-            this.label23.Size = new System.Drawing.Size(35, 13);
-            this.label23.TabIndex = 0;
-            this.label23.Text = "Name";
+            label23.Location = new Point(52, 28);
+            label23.Margin = new Padding(4, 0, 4, 0);
+            label23.Name = "label23";
+            label23.Size = new Size(43, 20);
+            label23.TabIndex = 0;
+            label23.Values.Text = "Name";
             // 
             // tabComment
             // 
-            this.tabComment.Controls.Add(this.tbComment);
-            this.tabComment.Location = new System.Drawing.Point(4, 22);
-            this.tabComment.Name = "tabComment";
-            this.tabComment.Padding = new System.Windows.Forms.Padding(3);
-            this.tabComment.Size = new System.Drawing.Size(577, 149);
-            this.tabComment.TabIndex = 2;
-            this.tabComment.Text = "Comments";
-            this.tabComment.UseVisualStyleBackColor = true;
+            tabComment.Controls.Add(tbComment);
+            tabComment.Location = new Point(4, 24);
+            tabComment.Margin = new Padding(4, 3, 4, 3);
+            tabComment.Name = "tabComment";
+            tabComment.Padding = new Padding(4, 3, 4, 3);
+            tabComment.Size = new Size(666, 174);
+            tabComment.TabIndex = 2;
+            tabComment.Text = "Comments";
+            tabComment.UseVisualStyleBackColor = true;
             // 
             // tbComment
             // 
-            this.tbComment.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tbComment.Location = new System.Drawing.Point(3, 3);
-            this.tbComment.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.tbComment.Multiline = true;
-            this.tbComment.Name = "tbComment";
-            this.tbComment.Size = new System.Drawing.Size(571, 143);
-            this.tbComment.TabIndex = 37;
+            tbComment.Dock = DockStyle.Fill;
+            tbComment.Location = new Point(4, 3);
+            tbComment.Margin = new Padding(4, 2, 4, 2);
+            tbComment.Multiline = true;
+            tbComment.Name = "tbComment";
+            tbComment.Size = new Size(658, 168);
+            tbComment.TabIndex = 37;
             // 
             // DiscountsTab
             // 
-            this.DiscountsTab.Controls.Add(this.clientDiscountDataGrid);
-            this.DiscountsTab.Location = new System.Drawing.Point(4, 22);
-            this.DiscountsTab.Name = "DiscountsTab";
-            this.DiscountsTab.Padding = new System.Windows.Forms.Padding(3);
-            this.DiscountsTab.Size = new System.Drawing.Size(577, 149);
-            this.DiscountsTab.TabIndex = 3;
-            this.DiscountsTab.Text = "Discounts";
-            this.DiscountsTab.UseVisualStyleBackColor = true;
+            DiscountsTab.Controls.Add(clientDiscountDataGrid);
+            DiscountsTab.Location = new Point(4, 24);
+            DiscountsTab.Margin = new Padding(4, 3, 4, 3);
+            DiscountsTab.Name = "DiscountsTab";
+            DiscountsTab.Padding = new Padding(4, 3, 4, 3);
+            DiscountsTab.Size = new Size(666, 174);
+            DiscountsTab.TabIndex = 3;
+            DiscountsTab.Text = "Discounts";
+            DiscountsTab.UseVisualStyleBackColor = true;
             // 
             // clientDiscountDataGrid
             // 
-            this.clientDiscountDataGrid.BackgroundColor = System.Drawing.Color.White;
-            this.clientDiscountDataGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.clientDiscountDataGrid.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.clientDiscountDataGrid.Location = new System.Drawing.Point(3, 3);
-            this.clientDiscountDataGrid.Name = "clientDiscountDataGrid";
-            this.clientDiscountDataGrid.Size = new System.Drawing.Size(571, 143);
-            this.clientDiscountDataGrid.TabIndex = 0;
-            this.clientDiscountDataGrid.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.clientDiscountDataGrid_CellEndEdit);
-            this.clientDiscountDataGrid.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.clientDiscountDataGrid_CellValueChanged);
-            this.clientDiscountDataGrid.RowEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.clientDiscountDataGrid_RowEnter);
-            this.clientDiscountDataGrid.RowLeave += new System.Windows.Forms.DataGridViewCellEventHandler(this.clientDiscountDataGrid_RowLeave);
+            clientDiscountDataGrid.BackgroundColor = Color.White;
+            clientDiscountDataGrid.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            clientDiscountDataGrid.Dock = DockStyle.Fill;
+            clientDiscountDataGrid.Location = new Point(4, 3);
+            clientDiscountDataGrid.Margin = new Padding(4, 3, 4, 3);
+            clientDiscountDataGrid.Name = "clientDiscountDataGrid";
+            clientDiscountDataGrid.Size = new Size(658, 168);
+            clientDiscountDataGrid.TabIndex = 0;
+            clientDiscountDataGrid.CellEndEdit += clientDiscountDataGrid_CellEndEdit;
+            clientDiscountDataGrid.CellValueChanged += clientDiscountDataGrid_CellValueChanged;
+            clientDiscountDataGrid.RowEnter += clientDiscountDataGrid_RowEnter;
+            clientDiscountDataGrid.RowLeave += clientDiscountDataGrid_RowLeave;
             // 
             // tabInterface
             // 
-            this.tabInterface.Controls.Add(this.interfaceMappingDataGrid);
-            this.tabInterface.Location = new System.Drawing.Point(4, 22);
-            this.tabInterface.Name = "tabInterface";
-            this.tabInterface.Padding = new System.Windows.Forms.Padding(3);
-            this.tabInterface.Size = new System.Drawing.Size(577, 149);
-            this.tabInterface.TabIndex = 4;
-            this.tabInterface.Text = "Interface";
-            this.tabInterface.UseVisualStyleBackColor = true;
+            tabInterface.Controls.Add(interfaceMappingDataGrid);
+            tabInterface.Location = new Point(4, 24);
+            tabInterface.Margin = new Padding(4, 3, 4, 3);
+            tabInterface.Name = "tabInterface";
+            tabInterface.Padding = new Padding(4, 3, 4, 3);
+            tabInterface.Size = new Size(666, 174);
+            tabInterface.TabIndex = 4;
+            tabInterface.Text = "Interface";
+            tabInterface.UseVisualStyleBackColor = true;
             // 
             // interfaceMappingDataGrid
             // 
-            this.interfaceMappingDataGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.interfaceMappingDataGrid.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.interfaceMappingDataGrid.Location = new System.Drawing.Point(3, 3);
-            this.interfaceMappingDataGrid.Name = "interfaceMappingDataGrid";
-            this.interfaceMappingDataGrid.Size = new System.Drawing.Size(571, 143);
-            this.interfaceMappingDataGrid.TabIndex = 0;
+            interfaceMappingDataGrid.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            interfaceMappingDataGrid.Dock = DockStyle.Fill;
+            interfaceMappingDataGrid.Location = new Point(4, 3);
+            interfaceMappingDataGrid.Margin = new Padding(4, 3, 4, 3);
+            interfaceMappingDataGrid.Name = "interfaceMappingDataGrid";
+            interfaceMappingDataGrid.Size = new Size(658, 168);
+            interfaceMappingDataGrid.TabIndex = 0;
             // 
             // tbZipcode
             // 
-            this.tbZipcode.Location = new System.Drawing.Point(284, 143);
-            this.tbZipcode.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.tbZipcode.Name = "tbZipcode";
-            this.tbZipcode.Size = new System.Drawing.Size(86, 20);
-            this.tbZipcode.TabIndex = 14;
+            tbZipcode.Location = new Point(331, 165);
+            tbZipcode.Margin = new Padding(4, 2, 4, 2);
+            tbZipcode.Name = "tbZipcode";
+            tbZipcode.Size = new Size(100, 23);
+            tbZipcode.TabIndex = 14;
             // 
             // cbCostCenter
             // 
-            this.cbCostCenter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbCostCenter.FormattingEnabled = true;
-            this.cbCostCenter.Location = new System.Drawing.Point(476, 79);
-            this.cbCostCenter.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.cbCostCenter.Name = "cbCostCenter";
-            this.cbCostCenter.Size = new System.Drawing.Size(124, 21);
-            this.cbCostCenter.TabIndex = 28;
-            this.cbCostCenter.Validating += new System.ComponentModel.CancelEventHandler(this.cbCostCenter_Validating);
+            cbCostCenter.DropDownStyle = ComboBoxStyle.DropDownList;
+            cbCostCenter.DropDownWidth = 144;
+            cbCostCenter.FormattingEnabled = true;
+            cbCostCenter.IntegralHeight = false;
+            cbCostCenter.Location = new Point(555, 91);
+            cbCostCenter.Margin = new Padding(4, 2, 4, 2);
+            cbCostCenter.Name = "cbCostCenter";
+            cbCostCenter.Size = new Size(144, 21);
+            cbCostCenter.TabIndex = 28;
+            cbCostCenter.Validating += cbCostCenter_Validating;
             // 
             // label15
             // 
-            this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(404, 82);
-            this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(62, 13);
-            this.label15.TabIndex = 27;
-            this.label15.Text = "Cost Center";
+            label15.Location = new Point(471, 95);
+            label15.Margin = new Padding(4, 0, 4, 0);
+            label15.Name = "label15";
+            label15.Size = new Size(74, 20);
+            label15.TabIndex = 27;
+            label15.Values.Text = "Cost Center";
             // 
             // cbEmrType
             // 
-            this.cbEmrType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbEmrType.FormattingEnabled = true;
-            this.cbEmrType.Location = new System.Drawing.Point(476, 55);
-            this.cbEmrType.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.cbEmrType.Name = "cbEmrType";
-            this.cbEmrType.Size = new System.Drawing.Size(124, 21);
-            this.cbEmrType.TabIndex = 26;
+            cbEmrType.DropDownStyle = ComboBoxStyle.DropDownList;
+            cbEmrType.DropDownWidth = 144;
+            cbEmrType.FormattingEnabled = true;
+            cbEmrType.IntegralHeight = false;
+            cbEmrType.Location = new Point(555, 63);
+            cbEmrType.Margin = new Padding(4, 2, 4, 2);
+            cbEmrType.Name = "cbEmrType";
+            cbEmrType.Size = new Size(144, 21);
+            cbEmrType.TabIndex = 26;
             // 
             // label14
             // 
-            this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(408, 60);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(58, 13);
-            this.label14.TabIndex = 25;
-            this.label14.Text = "EMR Type";
+            label14.Location = new Point(476, 69);
+            label14.Margin = new Padding(4, 0, 4, 0);
+            label14.Name = "label14";
+            label14.Size = new Size(65, 20);
+            label14.TabIndex = 25;
+            label14.Values.Text = "EMR Type";
             // 
             // cbClientType
             // 
-            this.cbClientType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbClientType.FormattingEnabled = true;
-            this.cbClientType.Location = new System.Drawing.Point(476, 31);
-            this.cbClientType.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.cbClientType.Name = "cbClientType";
-            this.cbClientType.Size = new System.Drawing.Size(124, 21);
-            this.cbClientType.TabIndex = 24;
-            this.cbClientType.Validating += new System.ComponentModel.CancelEventHandler(this.cbClientType_Validating);
+            cbClientType.DropDownStyle = ComboBoxStyle.DropDownList;
+            cbClientType.DropDownWidth = 144;
+            cbClientType.FormattingEnabled = true;
+            cbClientType.IntegralHeight = false;
+            cbClientType.Location = new Point(555, 36);
+            cbClientType.Margin = new Padding(4, 2, 4, 2);
+            cbClientType.Name = "cbClientType";
+            cbClientType.Size = new Size(144, 21);
+            cbClientType.TabIndex = 24;
+            cbClientType.Validating += cbClientType_Validating;
             // 
             // label13
             // 
-            this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(406, 35);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(60, 13);
-            this.label13.TabIndex = 23;
-            this.label13.Text = "Client Type";
+            label13.Location = new Point(474, 40);
+            label13.Margin = new Padding(4, 0, 4, 0);
+            label13.Name = "label13";
+            label13.Size = new Size(71, 20);
+            label13.TabIndex = 23;
+            label13.Values.Text = "Client Type";
             // 
             // tbEmail
             // 
-            this.tbEmail.Location = new System.Drawing.Point(102, 237);
-            this.tbEmail.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.tbEmail.Name = "tbEmail";
-            this.tbEmail.Size = new System.Drawing.Size(231, 20);
-            this.tbEmail.TabIndex = 22;
+            tbEmail.Location = new Point(119, 273);
+            tbEmail.Margin = new Padding(4, 2, 4, 2);
+            tbEmail.Name = "tbEmail";
+            tbEmail.Size = new Size(269, 23);
+            tbEmail.TabIndex = 22;
             // 
             // label12
             // 
-            this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(66, 239);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(32, 13);
-            this.label12.TabIndex = 21;
-            this.label12.Text = "Email";
+            label12.Location = new Point(77, 276);
+            label12.Margin = new Padding(4, 0, 4, 0);
+            label12.Name = "label12";
+            label12.Size = new Size(40, 20);
+            label12.TabIndex = 21;
+            label12.Values.Text = "Email";
             // 
             // tbFax
             // 
-            this.tbFax.Location = new System.Drawing.Point(102, 215);
-            this.tbFax.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.tbFax.Name = "tbFax";
-            this.tbFax.Size = new System.Drawing.Size(231, 20);
-            this.tbFax.TabIndex = 20;
+            tbFax.Location = new Point(119, 248);
+            tbFax.Margin = new Padding(4, 2, 4, 2);
+            tbFax.Name = "tbFax";
+            tbFax.Size = new Size(269, 23);
+            tbFax.TabIndex = 20;
             // 
             // label11
             // 
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(74, 217);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(24, 13);
-            this.label11.TabIndex = 19;
-            this.label11.Text = "Fax";
+            label11.Location = new Point(86, 250);
+            label11.Margin = new Padding(4, 0, 4, 0);
+            label11.Name = "label11";
+            label11.Size = new Size(28, 20);
+            label11.TabIndex = 19;
+            label11.Values.Text = "Fax";
             // 
             // cbCounty
             // 
-            this.cbCounty.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbCounty.FormattingEnabled = true;
-            this.cbCounty.Location = new System.Drawing.Point(102, 168);
-            this.cbCounty.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.cbCounty.Name = "cbCounty";
-            this.cbCounty.Size = new System.Drawing.Size(124, 21);
-            this.cbCounty.TabIndex = 16;
+            cbCounty.DropDownStyle = ComboBoxStyle.DropDownList;
+            cbCounty.DropDownWidth = 144;
+            cbCounty.FormattingEnabled = true;
+            cbCounty.IntegralHeight = false;
+            cbCounty.Location = new Point(119, 194);
+            cbCounty.Margin = new Padding(4, 2, 4, 2);
+            cbCounty.Name = "cbCounty";
+            cbCounty.Size = new Size(144, 21);
+            cbCounty.TabIndex = 16;
             // 
             // label10
             // 
-            this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(58, 171);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(40, 13);
-            this.label10.TabIndex = 15;
-            this.label10.Text = "County";
+            label10.Location = new Point(68, 197);
+            label10.Margin = new Padding(4, 0, 4, 0);
+            label10.Name = "label10";
+            label10.Size = new Size(50, 20);
+            label10.TabIndex = 15;
+            label10.Values.Text = "County";
             // 
             // tbPhone
             // 
-            this.tbPhone.Location = new System.Drawing.Point(102, 193);
-            this.tbPhone.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.tbPhone.Name = "tbPhone";
-            this.tbPhone.Size = new System.Drawing.Size(231, 20);
-            this.tbPhone.TabIndex = 18;
+            tbPhone.Location = new Point(119, 223);
+            tbPhone.Margin = new Padding(4, 2, 4, 2);
+            tbPhone.Name = "tbPhone";
+            tbPhone.Size = new Size(269, 23);
+            tbPhone.TabIndex = 18;
             // 
             // label9
             // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(60, 195);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(38, 13);
-            this.label9.TabIndex = 17;
-            this.label9.Text = "Phone";
+            label9.Location = new Point(70, 225);
+            label9.Margin = new Padding(4, 0, 4, 0);
+            label9.Name = "label9";
+            label9.Size = new Size(45, 20);
+            label9.TabIndex = 17;
+            label9.Values.Text = "Phone";
             // 
             // label8
             // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(232, 146);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(46, 13);
-            this.label8.TabIndex = 13;
-            this.label8.Text = "Zipcode";
+            label8.Location = new Point(271, 168);
+            label8.Margin = new Padding(4, 0, 4, 0);
+            label8.Name = "label8";
+            label8.Size = new Size(54, 20);
+            label8.TabIndex = 13;
+            label8.Values.Text = "Zipcode";
             // 
             // cbState
             // 
-            this.cbState.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbState.FormattingEnabled = true;
-            this.cbState.Location = new System.Drawing.Point(102, 144);
-            this.cbState.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.cbState.Name = "cbState";
-            this.cbState.Size = new System.Drawing.Size(124, 21);
-            this.cbState.TabIndex = 12;
+            cbState.DropDownStyle = ComboBoxStyle.DropDownList;
+            cbState.DropDownWidth = 144;
+            cbState.FormattingEnabled = true;
+            cbState.IntegralHeight = false;
+            cbState.Location = new Point(119, 166);
+            cbState.Margin = new Padding(4, 2, 4, 2);
+            cbState.Name = "cbState";
+            cbState.Size = new Size(144, 21);
+            cbState.TabIndex = 12;
             // 
             // label7
             // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(66, 145);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(32, 13);
-            this.label7.TabIndex = 11;
-            this.label7.Text = "State";
+            label7.Location = new Point(77, 167);
+            label7.Margin = new Padding(4, 0, 4, 0);
+            label7.Name = "label7";
+            label7.Size = new Size(38, 20);
+            label7.TabIndex = 11;
+            label7.Values.Text = "State";
             // 
             // tbCity
             // 
-            this.tbCity.Location = new System.Drawing.Point(102, 121);
-            this.tbCity.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.tbCity.Name = "tbCity";
-            this.tbCity.Size = new System.Drawing.Size(268, 20);
-            this.tbCity.TabIndex = 10;
+            tbCity.Location = new Point(119, 140);
+            tbCity.Margin = new Padding(4, 2, 4, 2);
+            tbCity.Name = "tbCity";
+            tbCity.Size = new Size(312, 23);
+            tbCity.TabIndex = 10;
             // 
             // label6
             // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(74, 124);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(24, 13);
-            this.label6.TabIndex = 9;
-            this.label6.Text = "City";
+            label6.Location = new Point(86, 143);
+            label6.Margin = new Padding(4, 0, 4, 0);
+            label6.Name = "label6";
+            label6.Size = new Size(31, 20);
+            label6.TabIndex = 9;
+            label6.Values.Text = "City";
             // 
             // tbAddress2
             // 
-            this.tbAddress2.Location = new System.Drawing.Point(102, 99);
-            this.tbAddress2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.tbAddress2.Name = "tbAddress2";
-            this.tbAddress2.Size = new System.Drawing.Size(268, 20);
-            this.tbAddress2.TabIndex = 8;
+            tbAddress2.Location = new Point(119, 114);
+            tbAddress2.Margin = new Padding(4, 2, 4, 2);
+            tbAddress2.Name = "tbAddress2";
+            tbAddress2.Size = new Size(312, 23);
+            tbAddress2.TabIndex = 8;
             // 
             // tbAddress1
             // 
-            this.tbAddress1.Location = new System.Drawing.Point(102, 77);
-            this.tbAddress1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.tbAddress1.Name = "tbAddress1";
-            this.tbAddress1.Size = new System.Drawing.Size(268, 20);
-            this.tbAddress1.TabIndex = 7;
+            tbAddress1.Location = new Point(119, 89);
+            tbAddress1.Margin = new Padding(4, 2, 4, 2);
+            tbAddress1.Name = "tbAddress1";
+            tbAddress1.Size = new Size(312, 23);
+            tbAddress1.TabIndex = 7;
             // 
             // label4
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(53, 80);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(45, 13);
-            this.label4.TabIndex = 6;
-            this.label4.Text = "Address";
+            label4.Location = new Point(62, 92);
+            label4.Margin = new Padding(4, 0, 4, 0);
+            label4.Name = "label4";
+            label4.Size = new Size(54, 20);
+            label4.TabIndex = 6;
+            label4.Values.Text = "Address";
             // 
             // tbClientCode
             // 
-            this.tbClientCode.Location = new System.Drawing.Point(296, 32);
-            this.tbClientCode.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.tbClientCode.Name = "tbClientCode";
-            this.tbClientCode.Size = new System.Drawing.Size(74, 20);
-            this.tbClientCode.TabIndex = 3;
+            tbClientCode.Location = new Point(345, 37);
+            tbClientCode.Margin = new Padding(4, 2, 4, 2);
+            tbClientCode.Name = "tbClientCode";
+            tbClientCode.Size = new Size(86, 23);
+            tbClientCode.TabIndex = 3;
             // 
             // label3
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(227, 35);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(61, 13);
-            this.label3.TabIndex = 2;
-            this.label3.Text = "Client Code";
+            label3.Location = new Point(265, 40);
+            label3.Margin = new Padding(4, 0, 4, 0);
+            label3.Name = "label3";
+            label3.Size = new Size(74, 20);
+            label3.TabIndex = 2;
+            label3.Values.Text = "Client Code";
             // 
             // ClientMnemTextBox
             // 
-            this.ClientMnemTextBox.Location = new System.Drawing.Point(102, 31);
-            this.ClientMnemTextBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.ClientMnemTextBox.Name = "ClientMnemTextBox";
-            this.ClientMnemTextBox.Size = new System.Drawing.Size(119, 20);
-            this.ClientMnemTextBox.TabIndex = 1;
-            this.ClientMnemTextBox.Leave += new System.EventHandler(this.tbClientMnem_Leave);
-            this.ClientMnemTextBox.Validating += new System.ComponentModel.CancelEventHandler(this.ClientMnemTextBox_Validating);
+            ClientMnemTextBox.Location = new Point(119, 36);
+            ClientMnemTextBox.Margin = new Padding(4, 2, 4, 2);
+            ClientMnemTextBox.Name = "ClientMnemTextBox";
+            ClientMnemTextBox.Size = new Size(138, 23);
+            ClientMnemTextBox.TabIndex = 1;
+            ClientMnemTextBox.Leave += tbClientMnem_Leave;
+            ClientMnemTextBox.Validating += ClientMnemTextBox_Validating;
             // 
             // label2
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(33, 35);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(65, 13);
-            this.label2.TabIndex = 0;
-            this.label2.Text = "Client Mnem";
+            label2.Location = new Point(38, 40);
+            label2.Margin = new Padding(4, 0, 4, 0);
+            label2.Name = "label2";
+            label2.Size = new Size(80, 20);
+            label2.TabIndex = 0;
+            label2.Values.Text = "Client Mnem";
             // 
             // ClientNameTextBox
             // 
-            this.ClientNameTextBox.Location = new System.Drawing.Point(102, 55);
-            this.ClientNameTextBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.ClientNameTextBox.Name = "ClientNameTextBox";
-            this.ClientNameTextBox.Size = new System.Drawing.Size(268, 20);
-            this.ClientNameTextBox.TabIndex = 5;
+            ClientNameTextBox.Location = new Point(119, 63);
+            ClientNameTextBox.Margin = new Padding(4, 2, 4, 2);
+            ClientNameTextBox.Name = "ClientNameTextBox";
+            ClientNameTextBox.Size = new Size(312, 23);
+            ClientNameTextBox.TabIndex = 5;
             // 
             // label1
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(34, 58);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(64, 13);
-            this.label1.TabIndex = 4;
-            this.label1.Text = "Client Name";
+            label1.Location = new Point(40, 67);
+            label1.Margin = new Padding(4, 0, 4, 0);
+            label1.Name = "label1";
+            label1.Size = new Size(78, 20);
+            label1.TabIndex = 4;
+            label1.Values.Text = "Client Name";
             // 
             // CancelButton
             // 
-            this.CancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.CancelButton.CausesValidation = false;
-            this.CancelButton.Location = new System.Drawing.Point(138, 637);
-            this.CancelButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.CancelButton.Name = "CancelButton";
-            this.CancelButton.Size = new System.Drawing.Size(83, 30);
-            this.CancelButton.TabIndex = 33;
-            this.CancelButton.Text = "Cancel";
-            this.CancelButton.UseVisualStyleBackColor = true;
-            this.CancelButton.Click += new System.EventHandler(this.btnCancel_Click);
+            CancelButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            CancelButton.CausesValidation = false;
+            CancelButton.Location = new Point(161, 735);
+            CancelButton.Margin = new Padding(4, 2, 4, 2);
+            CancelButton.Name = "CancelButton";
+            CancelButton.Size = new Size(97, 35);
+            CancelButton.TabIndex = 33;
+            CancelButton.Values.Text = "Cancel";
+            CancelButton.Click += btnCancel_Click;
             // 
             // SaveButton
             // 
-            this.SaveButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.SaveButton.BackColor = System.Drawing.Color.PaleGreen;
-            this.SaveButton.Location = new System.Drawing.Point(37, 636);
-            this.SaveButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.SaveButton.Name = "SaveButton";
-            this.SaveButton.Size = new System.Drawing.Size(83, 31);
-            this.SaveButton.TabIndex = 32;
-            this.SaveButton.Text = "Save";
-            this.SaveButton.UseVisualStyleBackColor = false;
-            this.SaveButton.Click += new System.EventHandler(this.btnSave_Click);
+            SaveButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            SaveButton.BackColor = Color.PaleGreen;
+            SaveButton.Location = new Point(43, 734);
+            SaveButton.Margin = new Padding(4, 2, 4, 2);
+            SaveButton.Name = "SaveButton";
+            SaveButton.Size = new Size(97, 36);
+            SaveButton.TabIndex = 32;
+            SaveButton.Values.Text = "Save";
+            SaveButton.Click += btnSave_Click;
             // 
             // label16
             // 
-            this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(407, 107);
-            this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(59, 13);
-            this.label16.TabIndex = 29;
-            this.label16.Text = "Bill Method";
+            label16.Location = new Point(475, 123);
+            label16.Margin = new Padding(4, 0, 4, 0);
+            label16.Name = "label16";
+            label16.Size = new Size(73, 20);
+            label16.TabIndex = 29;
+            label16.Values.Text = "Bill Method";
             // 
             // billMethodComboBox
             // 
-            this.billMethodComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.billMethodComboBox.FormattingEnabled = true;
-            this.billMethodComboBox.Items.AddRange(new object[] {
-            "INVOICE",
-            "PATIENT",
-            "PER ACCOUNT"});
-            this.billMethodComboBox.Location = new System.Drawing.Point(476, 104);
-            this.billMethodComboBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.billMethodComboBox.Name = "billMethodComboBox";
-            this.billMethodComboBox.Size = new System.Drawing.Size(124, 21);
-            this.billMethodComboBox.TabIndex = 30;
-            this.billMethodComboBox.Validating += new System.ComponentModel.CancelEventHandler(this.billMethodComboBox_Validating);
+            billMethodComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
+            billMethodComboBox.DropDownWidth = 144;
+            billMethodComboBox.FormattingEnabled = true;
+            billMethodComboBox.IntegralHeight = false;
+            billMethodComboBox.Items.AddRange(new object[] { "INVOICE", "PATIENT", "PER ACCOUNT" });
+            billMethodComboBox.Location = new Point(555, 120);
+            billMethodComboBox.Margin = new Padding(4, 2, 4, 2);
+            billMethodComboBox.Name = "billMethodComboBox";
+            billMethodComboBox.Size = new Size(144, 21);
+            billMethodComboBox.TabIndex = 30;
+            billMethodComboBox.Validating += billMethodComboBox_Validating;
             // 
             // activeCheckBox
             // 
-            this.activeCheckBox.AutoSize = true;
-            this.activeCheckBox.Checked = true;
-            this.activeCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.activeCheckBox.Location = new System.Drawing.Point(102, 12);
-            this.activeCheckBox.Name = "activeCheckBox";
-            this.activeCheckBox.Size = new System.Drawing.Size(56, 17);
-            this.activeCheckBox.TabIndex = 34;
-            this.activeCheckBox.Text = "Active";
-            this.activeCheckBox.UseVisualStyleBackColor = true;
+            activeCheckBox.Checked = true;
+            activeCheckBox.CheckState = CheckState.Checked;
+            activeCheckBox.Location = new Point(119, 14);
+            activeCheckBox.Margin = new Padding(4, 3, 4, 3);
+            activeCheckBox.Name = "activeCheckBox";
+            activeCheckBox.Size = new Size(57, 20);
+            activeCheckBox.TabIndex = 34;
+            activeCheckBox.Values.Text = "Active";
             // 
             // errorProvider1
             // 
-            this.errorProvider1.ContainerControl = this;
+            errorProvider1.ContainerControl = this;
             // 
             // ClientMaintenanceEditForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.ClientSize = new System.Drawing.Size(633, 690);
-            this.Controls.Add(this.activeCheckBox);
-            this.Controls.Add(this.CancelButton);
-            this.Controls.Add(this.SaveButton);
-            this.Controls.Add(this.label5);
-            this.Controls.Add(this.tbContact);
-            this.Controls.Add(this.tabControl1);
-            this.Controls.Add(this.tbZipcode);
-            this.Controls.Add(this.billMethodComboBox);
-            this.Controls.Add(this.label16);
-            this.Controls.Add(this.cbCostCenter);
-            this.Controls.Add(this.label15);
-            this.Controls.Add(this.cbEmrType);
-            this.Controls.Add(this.label14);
-            this.Controls.Add(this.cbClientType);
-            this.Controls.Add(this.label13);
-            this.Controls.Add(this.tbEmail);
-            this.Controls.Add(this.label12);
-            this.Controls.Add(this.tbFax);
-            this.Controls.Add(this.label11);
-            this.Controls.Add(this.cbCounty);
-            this.Controls.Add(this.label10);
-            this.Controls.Add(this.tbPhone);
-            this.Controls.Add(this.label9);
-            this.Controls.Add(this.label8);
-            this.Controls.Add(this.cbState);
-            this.Controls.Add(this.label7);
-            this.Controls.Add(this.tbCity);
-            this.Controls.Add(this.label6);
-            this.Controls.Add(this.tbAddress2);
-            this.Controls.Add(this.tbAddress1);
-            this.Controls.Add(this.label4);
-            this.Controls.Add(this.tbClientCode);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.ClientMnemTextBox);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.ClientNameTextBox);
-            this.Controls.Add(this.label1);
-            this.Name = "ClientMaintenanceEditForm";
-            this.Text = "Client Maintenance";
-            this.Load += new System.EventHandler(this.ClientMaintenanceEditForm_Load);
-            this.tabControl1.ResumeLayout(false);
-            this.tabClientPreferences.ResumeLayout(false);
-            this.tabClientPreferences.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numDefaultDiscount)).EndInit();
-            this.tabClientMRO.ResumeLayout(false);
-            this.tabClientMRO.PerformLayout();
-            this.tabComment.ResumeLayout(false);
-            this.tabComment.PerformLayout();
-            this.DiscountsTab.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.clientDiscountDataGrid)).EndInit();
-            this.tabInterface.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.interfaceMappingDataGrid)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).EndInit();
-            this.ResumeLayout(false);
-            this.PerformLayout();
-
+            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleMode = AutoScaleMode.Font;
+            BackColor = Color.WhiteSmoke;
+            ClientSize = new Size(738, 796);
+            Controls.Add(activeCheckBox);
+            Controls.Add(CancelButton);
+            Controls.Add(SaveButton);
+            Controls.Add(label5);
+            Controls.Add(tbContact);
+            Controls.Add(tabControl1);
+            Controls.Add(tbZipcode);
+            Controls.Add(billMethodComboBox);
+            Controls.Add(label16);
+            Controls.Add(cbCostCenter);
+            Controls.Add(label15);
+            Controls.Add(cbEmrType);
+            Controls.Add(label14);
+            Controls.Add(cbClientType);
+            Controls.Add(label13);
+            Controls.Add(tbEmail);
+            Controls.Add(label12);
+            Controls.Add(tbFax);
+            Controls.Add(label11);
+            Controls.Add(cbCounty);
+            Controls.Add(label10);
+            Controls.Add(tbPhone);
+            Controls.Add(label9);
+            Controls.Add(label8);
+            Controls.Add(cbState);
+            Controls.Add(label7);
+            Controls.Add(tbCity);
+            Controls.Add(label6);
+            Controls.Add(tbAddress2);
+            Controls.Add(tbAddress1);
+            Controls.Add(label4);
+            Controls.Add(tbClientCode);
+            Controls.Add(label3);
+            Controls.Add(ClientMnemTextBox);
+            Controls.Add(label2);
+            Controls.Add(ClientNameTextBox);
+            Controls.Add(label1);
+            Margin = new Padding(4, 3, 4, 3);
+            Name = "ClientMaintenanceEditForm";
+            Text = "Client Maintenance";
+            Load += ClientMaintenanceEditForm_Load;
+            tabControl1.ResumeLayout(false);
+            tabClientPreferences.ResumeLayout(false);
+            tabClientPreferences.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)cbFeeSched).EndInit();
+            ((System.ComponentModel.ISupportInitialize)numDefaultDiscount).EndInit();
+            tabClientMRO.ResumeLayout(false);
+            tabClientMRO.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)cbMROState).EndInit();
+            tabComment.ResumeLayout(false);
+            tabComment.PerformLayout();
+            DiscountsTab.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)clientDiscountDataGrid).EndInit();
+            tabInterface.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)interfaceMappingDataGrid).EndInit();
+            ((System.ComponentModel.ISupportInitialize)cbCostCenter).EndInit();
+            ((System.ComponentModel.ISupportInitialize)cbEmrType).EndInit();
+            ((System.ComponentModel.ISupportInitialize)cbClientType).EndInit();
+            ((System.ComponentModel.ISupportInitialize)cbCounty).EndInit();
+            ((System.ComponentModel.ISupportInitialize)cbState).EndInit();
+            ((System.ComponentModel.ISupportInitialize)billMethodComboBox).EndInit();
+            ((System.ComponentModel.ISupportInitialize)errorProvider1).EndInit();
+            ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
 
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.TextBox tbContact;
+        private Krypton.Toolkit.KryptonLabel label5;
+        private Krypton.Toolkit.KryptonTextBox tbContact;
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tabClientPreferences;
-        private System.Windows.Forms.CheckBox chkCOCForms;
-        private System.Windows.Forms.Label label18;
-        private System.Windows.Forms.ComboBox cbFeeSched;
+        private Krypton.Toolkit.KryptonCheckBox chkCOCForms;
+        private Krypton.Toolkit.KryptonLabel label18;
+        private Krypton.Toolkit.KryptonComboBox cbFeeSched;
         private System.Windows.Forms.NumericUpDown numDefaultDiscount;
-        private System.Windows.Forms.Label label17;
-        private System.Windows.Forms.CheckBox chkPrintCPTonBill;
-        private System.Windows.Forms.CheckBox chkDoNotBill;
-        private System.Windows.Forms.CheckBox chkBillAtDiscount;
-        private System.Windows.Forms.CheckBox chkCCReport;
-        private System.Windows.Forms.CheckBox chkDateOrder;
+        private Krypton.Toolkit.KryptonLabel label17;
+        private Krypton.Toolkit.KryptonCheckBox chkPrintCPTonBill;
+        private Krypton.Toolkit.KryptonCheckBox chkDoNotBill;
+        private Krypton.Toolkit.KryptonCheckBox chkBillAtDiscount;
+        private Krypton.Toolkit.KryptonCheckBox chkCCReport;
+        private Krypton.Toolkit.KryptonCheckBox chkDateOrder;
         private System.Windows.Forms.TabPage tabClientMRO;
-        private System.Windows.Forms.MaskedTextBox tbMROZipcode;
-        private System.Windows.Forms.Label label19;
-        private System.Windows.Forms.ComboBox cbMROState;
-        private System.Windows.Forms.Label label20;
-        private System.Windows.Forms.TextBox tbMROCity;
-        private System.Windows.Forms.Label label21;
-        private System.Windows.Forms.TextBox tbMROAddress;
-        private System.Windows.Forms.Label label22;
-        private System.Windows.Forms.TextBox tbMROName;
-        private System.Windows.Forms.Label label23;
+        private Krypton.Toolkit.KryptonMaskedTextBox tbMROZipcode;
+        private Krypton.Toolkit.KryptonLabel label19;
+        private Krypton.Toolkit.KryptonComboBox cbMROState;
+        private Krypton.Toolkit.KryptonLabel label20;
+        private Krypton.Toolkit.KryptonTextBox tbMROCity;
+        private Krypton.Toolkit.KryptonLabel label21;
+        private Krypton.Toolkit.KryptonTextBox tbMROAddress;
+        private Krypton.Toolkit.KryptonLabel label22;
+        private Krypton.Toolkit.KryptonTextBox tbMROName;
+        private Krypton.Toolkit.KryptonLabel label23;
         private System.Windows.Forms.TabPage tabComment;
-        private System.Windows.Forms.TextBox tbComment;
-        private System.Windows.Forms.MaskedTextBox tbZipcode;
-        private System.Windows.Forms.ComboBox cbCostCenter;
-        private System.Windows.Forms.Label label15;
-        private System.Windows.Forms.ComboBox cbEmrType;
-        private System.Windows.Forms.Label label14;
-        private System.Windows.Forms.ComboBox cbClientType;
-        private System.Windows.Forms.Label label13;
-        private System.Windows.Forms.TextBox tbEmail;
-        private System.Windows.Forms.Label label12;
-        private System.Windows.Forms.TextBox tbFax;
-        private System.Windows.Forms.Label label11;
-        private System.Windows.Forms.ComboBox cbCounty;
-        private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.TextBox tbPhone;
-        private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.ComboBox cbState;
-        private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.TextBox tbCity;
-        private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.TextBox tbAddress2;
-        private System.Windows.Forms.TextBox tbAddress1;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.TextBox tbClientCode;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.TextBox ClientMnemTextBox;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox ClientNameTextBox;
-        private System.Windows.Forms.Label label1;
-        private new System.Windows.Forms.Button CancelButton;
-        private System.Windows.Forms.Button SaveButton;
-        private System.Windows.Forms.TextBox MROAddress2TextBox;
+        private Krypton.Toolkit.KryptonTextBox tbComment;
+        private Krypton.Toolkit.KryptonMaskedTextBox tbZipcode;
+        private Krypton.Toolkit.KryptonComboBox cbCostCenter;
+        private Krypton.Toolkit.KryptonLabel label15;
+        private Krypton.Toolkit.KryptonComboBox cbEmrType;
+        private Krypton.Toolkit.KryptonLabel label14;
+        private Krypton.Toolkit.KryptonComboBox cbClientType;
+        private Krypton.Toolkit.KryptonLabel label13;
+        private Krypton.Toolkit.KryptonTextBox tbEmail;
+        private Krypton.Toolkit.KryptonLabel label12;
+        private Krypton.Toolkit.KryptonTextBox tbFax;
+        private Krypton.Toolkit.KryptonLabel label11;
+        private Krypton.Toolkit.KryptonComboBox cbCounty;
+        private Krypton.Toolkit.KryptonLabel label10;
+        private Krypton.Toolkit.KryptonTextBox tbPhone;
+        private Krypton.Toolkit.KryptonLabel label9;
+        private Krypton.Toolkit.KryptonLabel label8;
+        private Krypton.Toolkit.KryptonComboBox cbState;
+        private Krypton.Toolkit.KryptonLabel label7;
+        private Krypton.Toolkit.KryptonTextBox tbCity;
+        private Krypton.Toolkit.KryptonLabel label6;
+        private Krypton.Toolkit.KryptonTextBox tbAddress2;
+        private Krypton.Toolkit.KryptonTextBox tbAddress1;
+        private Krypton.Toolkit.KryptonLabel label4;
+        private Krypton.Toolkit.KryptonTextBox tbClientCode;
+        private Krypton.Toolkit.KryptonLabel label3;
+        private Krypton.Toolkit.KryptonTextBox ClientMnemTextBox;
+        private Krypton.Toolkit.KryptonLabel label2;
+        private Krypton.Toolkit.KryptonTextBox ClientNameTextBox;
+        private Krypton.Toolkit.KryptonLabel label1;
+        private new Krypton.Toolkit.KryptonButton CancelButton;
+        private Krypton.Toolkit.KryptonButton SaveButton;
+        private Krypton.Toolkit.KryptonTextBox MROAddress2TextBox;
         private System.Windows.Forms.TabPage DiscountsTab;
         private System.Windows.Forms.DataGridView clientDiscountDataGrid;
-        private System.Windows.Forms.Label label16;
-        private System.Windows.Forms.ComboBox billMethodComboBox;
-        private System.Windows.Forms.CheckBox activeCheckBox;
+        private Krypton.Toolkit.KryptonLabel label16;
+        private Krypton.Toolkit.KryptonComboBox billMethodComboBox;
+        private Krypton.Toolkit.KryptonCheckBox activeCheckBox;
         private System.Windows.Forms.TabPage tabInterface;
         private System.Windows.Forms.DataGridView interfaceMappingDataGrid;
         private System.Windows.Forms.ErrorProvider errorProvider1;

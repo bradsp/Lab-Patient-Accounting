@@ -4,7 +4,7 @@ using System.Windows.Forms;
 
 namespace LabBilling.Forms;
 
-partial class AboutBox : Form
+partial class AboutBox : Krypton.Toolkit.KryptonForm
 {
     public AboutBox() 
     {

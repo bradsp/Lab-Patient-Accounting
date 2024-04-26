@@ -29,10 +29,10 @@
         private void InitializeComponent()
         {
             this.dgvClients = new System.Windows.Forms.DataGridView();
-            this.filterTextBox = new System.Windows.Forms.TextBox();
-            this.filterLabel = new System.Windows.Forms.Label();
-            this.includeDeletedCheckBox = new System.Windows.Forms.CheckBox();
-            this.newClientButton = new System.Windows.Forms.Button();
+            this.filterTextBox = new Krypton.Toolkit.KryptonTextBox();
+            this.filterLabel = new Krypton.Toolkit.KryptonLabel();
+            this.includeDeletedCheckBox = new Krypton.Toolkit.KryptonCheckBox();
+            this.newClientButton = new Krypton.Toolkit.KryptonButton();
             this.helpProvider1 = new System.Windows.Forms.HelpProvider();
             ((System.ComponentModel.ISupportInitialize)(this.dgvClients)).BeginInit();
             this.SuspendLayout();
@@ -85,19 +85,16 @@
             this.includeDeletedCheckBox.Size = new System.Drawing.Size(101, 17);
             this.includeDeletedCheckBox.TabIndex = 3;
             this.includeDeletedCheckBox.Text = "Include Deleted";
-            this.includeDeletedCheckBox.UseVisualStyleBackColor = true;
             this.includeDeletedCheckBox.CheckedChanged += new System.EventHandler(this.includeDeletedCheckBox_CheckedChanged);
             // 
             // newClientButton
             // 
             this.newClientButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.newClientButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.newClientButton.Location = new System.Drawing.Point(803, 6);
             this.newClientButton.Name = "newClientButton";
             this.newClientButton.Size = new System.Drawing.Size(75, 23);
             this.newClientButton.TabIndex = 4;
             this.newClientButton.Text = "New Client";
-            this.newClientButton.UseVisualStyleBackColor = true;
             this.newClientButton.Click += new System.EventHandler(this.newClientButton_Click);
             // 
             // ClientMaintenanceForm
@@ -124,10 +121,10 @@
         #endregion
 
         private System.Windows.Forms.DataGridView dgvClients;
-        private System.Windows.Forms.TextBox filterTextBox;
-        private System.Windows.Forms.Label filterLabel;
-        private System.Windows.Forms.CheckBox includeDeletedCheckBox;
-        private System.Windows.Forms.Button newClientButton;
+        private Krypton.Toolkit.KryptonTextBox filterTextBox;
+        private Krypton.Toolkit.KryptonLabel filterLabel;
+        private Krypton.Toolkit.KryptonCheckBox includeDeletedCheckBox;
+        private Krypton.Toolkit.KryptonButton newClientButton;
         private System.Windows.Forms.HelpProvider helpProvider1;
     }
 }

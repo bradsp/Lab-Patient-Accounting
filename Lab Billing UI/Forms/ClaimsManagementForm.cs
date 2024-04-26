@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 namespace LabBilling.Forms;
 
-public partial class ClaimsManagementForm : Form
+public partial class ClaimsManagementForm : Krypton.Toolkit.KryptonForm
 {
     private CancellationTokenSource cancellationToken;
 
@@ -24,7 +24,7 @@ public partial class ClaimsManagementForm : Form
     private DataTable _billingActivitiesTable;
     public event EventHandler<string> AccountLaunched;
 
-    public ClaimsManagementForm() 
+    public ClaimsManagementForm()
     {
         InitializeComponent();
 
@@ -161,6 +161,7 @@ public partial class ClaimsManagementForm : Form
             claimBatchDetailDataGrid.Columns[nameof(BillingActivity.UpdatedHost)].Visible = false;
             claimBatchDetailDataGrid.Columns[nameof(BillingActivity.UpdatedApp)].Visible = false;
             claimBatchDetailDataGrid.Columns[nameof(BillingActivity.UpdatedUser)].Visible = false;
+            claimBatchDetailDataGrid.Columns[nameof(BillingActivity.RunUser)].Visible = false;
             claimBatchDetailDataGrid.Columns[nameof(BillingActivity.rowguid)].Visible = false;
             claimBatchDetailDataGrid.Columns[nameof(BillingActivity.PatientName)].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             claimBatchDetailDataGrid.Columns[nameof(BillingActivity.ClaimAmount)].DefaultCellStyle.Format = "N2";

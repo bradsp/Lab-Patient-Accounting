@@ -31,34 +31,34 @@ namespace LabBilling.Forms
         {
             components = new System.ComponentModel.Container();
             InvoicesDGV = new System.Windows.Forms.DataGridView();
-            GenerateInvoicesBtn = new System.Windows.Forms.Button();
-            label1 = new System.Windows.Forms.Label();
-            PreviousMonth = new System.Windows.Forms.RadioButton();
-            CurrentMonth = new System.Windows.Forms.RadioButton();
-            label2 = new System.Windows.Forms.Label();
-            TotalUnbilledCharges = new System.Windows.Forms.TextBox();
-            UnbilledAccountsDGV = new System.Windows.Forms.DataGridView();
-            SelectionProfile = new System.Windows.Forms.ComboBox();
-            label3 = new System.Windows.Forms.Label();
+            GenerateInvoicesBtn = new Krypton.Toolkit.KryptonButton();
+            label1 = new Krypton.Toolkit.KryptonLabel();
+            PreviousMonth = new Krypton.Toolkit.KryptonRadioButton();
+            CurrentMonth = new Krypton.Toolkit.KryptonRadioButton();
+            label2 = new Krypton.Toolkit.KryptonLabel();
+            TotalUnbilledCharges = new Krypton.Toolkit.KryptonTextBox();
+            UnbilledAccountsDGV = new Krypton.Toolkit.KryptonDataGridView();
+            SelectionProfile = new Krypton.Toolkit.KryptonComboBox();
+            label3 = new Krypton.Toolkit.KryptonLabel();
             InvoiceHistoryTabControl = new System.Windows.Forms.TabControl();
             GenerateInvoicesTabPage = new System.Windows.Forms.TabPage();
-            refreshUnbilledInvoices = new System.Windows.Forms.PictureBox();
-            statusStrip1 = new System.Windows.Forms.StatusStrip();
+            refreshUnbilledInvoices = new Krypton.Toolkit.KryptonPictureBox();
+            statusStrip1 = new Krypton.Toolkit.KryptonStatusStrip();
             toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
-            splitContainer1 = new System.Windows.Forms.SplitContainer();
+            splitContainer1 = new Krypton.Toolkit.KryptonSplitContainer();
             InvoiceHistoryTabPage = new System.Windows.Forms.TabPage();
-            progressBar1 = new System.Windows.Forms.ProgressBar();
-            invoiceTextBox = new System.Windows.Forms.TextBox();
-            invoiceLabel = new System.Windows.Forms.Label();
-            label6 = new System.Windows.Forms.Label();
-            label5 = new System.Windows.Forms.Label();
-            ThroughDate = new System.Windows.Forms.MaskedTextBox();
-            FromDate = new System.Windows.Forms.MaskedTextBox();
-            label4 = new System.Windows.Forms.Label();
-            ClientFilter = new System.Windows.Forms.ComboBox();
-            generateStatementButton = new System.Windows.Forms.Button();
-            ViewInvoice = new System.Windows.Forms.Button();
-            PrintInvoiceButton = new System.Windows.Forms.Button();
+            progressBar1 = new Krypton.Toolkit.KryptonProgressBar();
+            invoiceTextBox = new Krypton.Toolkit.KryptonTextBox();
+            invoiceLabel = new Krypton.Toolkit.KryptonLabel();
+            label6 = new Krypton.Toolkit.KryptonLabel();
+            label5 = new Krypton.Toolkit.KryptonLabel();
+            ThroughDate = new Krypton.Toolkit.KryptonMaskedTextBox();
+            FromDate = new Krypton.Toolkit.KryptonMaskedTextBox();
+            label4 = new Krypton.Toolkit.KryptonLabel();
+            ClientFilter = new Krypton.Toolkit.KryptonComboBox();
+            generateStatementButton = new Krypton.Toolkit.KryptonButton();
+            ViewInvoice = new Krypton.Toolkit.KryptonButton();
+            PrintInvoiceButton = new Krypton.Toolkit.KryptonButton();
             InvoiceHistoryDGV = new System.Windows.Forms.DataGridView();
             contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(components);
             undoInvoiceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -107,7 +107,6 @@ namespace LabBilling.Forms
             GenerateInvoicesBtn.Size = new System.Drawing.Size(134, 27);
             GenerateInvoicesBtn.TabIndex = 1;
             GenerateInvoicesBtn.Text = "Generate Invoices";
-            GenerateInvoicesBtn.UseVisualStyleBackColor = true;
             GenerateInvoicesBtn.Click += GenerateInvoicesBtn_Click;
             // 
             // label1
@@ -131,7 +130,6 @@ namespace LabBilling.Forms
             PreviousMonth.TabIndex = 7;
             PreviousMonth.TabStop = true;
             PreviousMonth.Text = "Previous Month";
-            PreviousMonth.UseVisualStyleBackColor = true;
             PreviousMonth.CheckedChanged += ThruDate_CheckedChanged;
             // 
             // CurrentMonth
@@ -143,7 +141,6 @@ namespace LabBilling.Forms
             CurrentMonth.Size = new System.Drawing.Size(104, 19);
             CurrentMonth.TabIndex = 8;
             CurrentMonth.Text = "Current Month";
-            CurrentMonth.UseVisualStyleBackColor = true;
             CurrentMonth.CheckedChanged += ThruDate_CheckedChanged;
             // 
             // label2
@@ -409,7 +406,6 @@ namespace LabBilling.Forms
             generateStatementButton.Size = new System.Drawing.Size(102, 51);
             generateStatementButton.TabIndex = 2;
             generateStatementButton.Text = "Generate Statement";
-            generateStatementButton.UseVisualStyleBackColor = true;
             generateStatementButton.Click += generateStatementButton_Click;
             // 
             // ViewInvoice
@@ -421,7 +417,6 @@ namespace LabBilling.Forms
             ViewInvoice.Size = new System.Drawing.Size(102, 38);
             ViewInvoice.TabIndex = 2;
             ViewInvoice.Text = "View Invoice";
-            ViewInvoice.UseVisualStyleBackColor = true;
             ViewInvoice.Click += ViewInvoice_Click;
             // 
             // PrintInvoiceButton
@@ -433,7 +428,6 @@ namespace LabBilling.Forms
             PrintInvoiceButton.Size = new System.Drawing.Size(102, 48);
             PrintInvoiceButton.TabIndex = 1;
             PrintInvoiceButton.Text = "Print Invoices";
-            PrintInvoiceButton.UseVisualStyleBackColor = true;
             PrintInvoiceButton.Click += PrintInvoice_Click_1;
             // 
             // InvoiceHistoryDGV
@@ -532,41 +526,41 @@ namespace LabBilling.Forms
         #endregion
 
         private System.Windows.Forms.DataGridView InvoicesDGV;
-        private System.Windows.Forms.Button GenerateInvoicesBtn;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.RadioButton PreviousMonth;
-        private System.Windows.Forms.RadioButton CurrentMonth;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox TotalUnbilledCharges;
-        private System.Windows.Forms.DataGridView UnbilledAccountsDGV;
-        private System.Windows.Forms.ComboBox SelectionProfile;
-        private System.Windows.Forms.Label label3;
+        private Krypton.Toolkit.KryptonButton GenerateInvoicesBtn;
+        private Krypton.Toolkit.KryptonLabel label1;
+        private Krypton.Toolkit.KryptonRadioButton PreviousMonth;
+        private Krypton.Toolkit.KryptonRadioButton CurrentMonth;
+        private Krypton.Toolkit.KryptonLabel label2;
+        private Krypton.Toolkit.KryptonTextBox TotalUnbilledCharges;
+        private Krypton.Toolkit.KryptonDataGridView UnbilledAccountsDGV;
+        private Krypton.Toolkit.KryptonComboBox SelectionProfile;
+        private Krypton.Toolkit.KryptonLabel label3;
         private System.Windows.Forms.TabControl InvoiceHistoryTabControl;
         private System.Windows.Forms.TabPage GenerateInvoicesTabPage;
         private System.Windows.Forms.TabPage InvoiceHistoryTabPage;
         private System.Windows.Forms.DataGridView InvoiceHistoryDGV;
-        private System.Windows.Forms.Button ViewInvoice;
-        private System.Windows.Forms.Button PrintInvoiceButton;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.ComboBox ClientFilter;
-        private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.MaskedTextBox ThroughDate;
-        private System.Windows.Forms.MaskedTextBox FromDate;
+        private Krypton.Toolkit.KryptonButton ViewInvoice;
+        private Krypton.Toolkit.KryptonButton PrintInvoiceButton;
+        private Krypton.Toolkit.KryptonLabel label4;
+        private Krypton.Toolkit.KryptonComboBox ClientFilter;
+        private Krypton.Toolkit.KryptonLabel label6;
+        private Krypton.Toolkit.KryptonLabel label5;
+        private Krypton.Toolkit.KryptonMaskedTextBox ThroughDate;
+        private Krypton.Toolkit.KryptonMaskedTextBox FromDate;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem undoInvoiceToolStripMenuItem;
-        private System.Windows.Forms.Button generateStatementButton;
-        private System.Windows.Forms.StatusStrip statusStrip1;
+        private Krypton.Toolkit.KryptonButton generateStatementButton;
+        private Krypton.Toolkit.KryptonStatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
-        private System.Windows.Forms.SplitContainer splitContainer1;
-        private System.Windows.Forms.PictureBox refreshUnbilledInvoices;
+        private Krypton.Toolkit.KryptonSplitContainer splitContainer1;
+        private Krypton.Toolkit.KryptonPictureBox refreshUnbilledInvoices;
         private System.Windows.Forms.ContextMenuStrip printContextMenu;
         private System.Windows.Forms.ToolStripMenuItem printToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveToPDFToolStripMenuItem;
-        private System.Windows.Forms.TextBox invoiceTextBox;
-        private System.Windows.Forms.Label invoiceLabel;
+        private Krypton.Toolkit.KryptonTextBox invoiceTextBox;
+        private Krypton.Toolkit.KryptonLabel invoiceLabel;
         private System.Windows.Forms.ToolStripMenuItem saveAllToPDFToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem printAllToolStripMenuItem;
-        private System.Windows.Forms.ProgressBar progressBar1;
+        private Krypton.Toolkit.KryptonProgressBar progressBar1;
     }
 }

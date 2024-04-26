@@ -8,10 +8,12 @@ using LabBilling.Logging;
 using LabBilling.Core.Services;
 using ScottPlot;
 using LabBilling.Core.DataAccess;
+using Krypton.Toolkit;
+using Microsoft.Web.WebView2.WinForms;
 
 namespace LabBilling.Forms;
 
-public partial class DashboardForm : Form
+public partial class DashboardForm : KryptonForm
 {
     private DictionaryService dictionaryService;
 
@@ -73,7 +75,7 @@ public partial class DashboardForm : Form
 
     }
 
-    private void LoadAnnouncementsWeb()
+    private async void LoadAnnouncementsWeb()
     {
         string url = Program.AppEnvironment.ApplicationParameters.DocumentationSiteUrl + "/" +
             Program.AppEnvironment.ApplicationParameters.LatestUpdatesUrl;
@@ -93,16 +95,21 @@ public partial class DashboardForm : Form
 
         var response = CallUrl(url).Result;
 
-        WebBrowser tb = new()
-        {
-            DocumentText = ParseHtml(response),
-            Dock = DockStyle.Fill
-        };
+        //WebBrowser tb = new()
+        //{
+        //    Dock = DockStyle.Fill
+        //};
+        //tb.DocumentText = response;
+
+        WebView2 wv = new WebView2();
+        wv.Dock = DockStyle.Fill;
+        await wv.EnsureCoreWebView2Async();
+        wv.NavigateToString(response);
 
         announcementLayoutPanel.RowCount++;
         announcementLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 80));                
 
-        announcementLayoutPanel.Controls.Add(tb, 0, 1);
+        announcementLayoutPanel.Controls.Add(wv, 0, 1);
 
         dashboardLayoutPanel.SetColumnSpan(announcementLayoutPanel, 2);
     }

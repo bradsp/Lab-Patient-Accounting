@@ -78,19 +78,24 @@ partial class MainForm
         statusStrip1 = new StatusStrip();
         toolStripUsernameLabel = new ToolStripStatusLabel();
         toolStripDatabaseLabel = new ToolStripStatusLabel();
-        panel1 = new Panel();
         helpProvider1 = new HelpProvider();
-        mdiTabControl = new CustomTabControl();
+        kryptonNavigator1 = new Krypton.Navigator.KryptonNavigator();
+        kryptonPanel1 = new Krypton.Toolkit.KryptonPanel();
+        kryptonPanel2 = new Krypton.Toolkit.KryptonPanel();
         MainFormMenu.SuspendLayout();
         statusStrip1.SuspendLayout();
+        ((System.ComponentModel.ISupportInitialize)kryptonNavigator1).BeginInit();
+        ((System.ComponentModel.ISupportInitialize)kryptonPanel1).BeginInit();
+        ((System.ComponentModel.ISupportInitialize)kryptonPanel2).BeginInit();
+        kryptonPanel2.SuspendLayout();
         SuspendLayout();
         // 
         // MainFormMenu
         // 
         MainFormMenu.BackColor = Color.White;
+        resources.ApplyResources(MainFormMenu, "MainFormMenu");
         MainFormMenu.ImageScalingSize = new Size(20, 20);
         MainFormMenu.Items.AddRange(new ToolStripItem[] { billingToolStripMenuItem, dictionariesToolStripMenuItem, reportsToolStripMenuItem, systemAdministrationToolStripMenuItem, windowToolStripMenuItem, helpToolStripMenuItem });
-        resources.ApplyResources(MainFormMenu, "MainFormMenu");
         MainFormMenu.MdiWindowListItem = windowToolStripMenuItem;
         MainFormMenu.Name = "MainFormMenu";
         // 
@@ -374,53 +379,56 @@ partial class MainForm
         toolStripDatabaseLabel.Name = "toolStripDatabaseLabel";
         resources.ApplyResources(toolStripDatabaseLabel, "toolStripDatabaseLabel");
         // 
-        // panel1
+        // kryptonNavigator1
         // 
-        resources.ApplyResources(panel1, "panel1");
-        panel1.Name = "panel1";
+        kryptonNavigator1.Bar.BarMapExtraText = Krypton.Navigator.MapKryptonPageText.None;
+        kryptonNavigator1.Bar.BarMapImage = (Krypton.Navigator.MapKryptonPageImage)resources.GetObject("kryptonNavigator1.Bar.BarMapImage");
+        kryptonNavigator1.Bar.BarMapText = Krypton.Navigator.MapKryptonPageText.TextTitle;
+        kryptonNavigator1.Bar.BarMultiline = Krypton.Navigator.BarMultiline.Singleline;
+        kryptonNavigator1.Bar.BarOrientation = Krypton.Toolkit.VisualOrientation.Top;
+        kryptonNavigator1.Bar.CheckButtonStyle = Krypton.Toolkit.ButtonStyle.FormClose;
+        kryptonNavigator1.Bar.ItemAlignment = Krypton.Toolkit.RelativePositionAlign.Near;
+        kryptonNavigator1.Bar.ItemMaximumSize = new Size(200, 200);
+        kryptonNavigator1.Bar.ItemMinimumSize = new Size(20, 20);
+        kryptonNavigator1.Bar.ItemOrientation = Krypton.Toolkit.ButtonOrientation.Auto;
+        kryptonNavigator1.Bar.ItemSizing = Krypton.Navigator.BarItemSizing.SameHeight;
+        kryptonNavigator1.Bar.TabBorderStyle = Krypton.Toolkit.TabBorderStyle.RoundedOutsizeMedium;
+        kryptonNavigator1.Bar.TabStyle = Krypton.Toolkit.TabStyle.HighProfile;
+        kryptonNavigator1.ControlKryptonFormFeatures = false;
+        resources.ApplyResources(kryptonNavigator1, "kryptonNavigator1");
+        kryptonNavigator1.Name = "kryptonNavigator1";
+        kryptonNavigator1.NavigatorMode = Krypton.Navigator.NavigatorMode.BarTabGroup;
+        kryptonNavigator1.Owner = null;
+        kryptonNavigator1.PageBackStyle = Krypton.Toolkit.PaletteBackStyle.ControlClient;
+        helpProvider1.SetShowHelp(kryptonNavigator1, (bool)resources.GetObject("kryptonNavigator1.ShowHelp"));
         // 
-        // mdiTabControl
+        // kryptonPanel1
         // 
+        resources.ApplyResources(kryptonPanel1, "kryptonPanel1");
+        kryptonPanel1.Name = "kryptonPanel1";
         // 
+        // kryptonPanel2
         // 
-        // 
-        mdiTabControl.DisplayStyleProvider.BorderColor = SystemColors.ControlDark;
-        mdiTabControl.DisplayStyleProvider.BorderColorHot = SystemColors.ControlDark;
-        mdiTabControl.DisplayStyleProvider.BorderColorSelected = Color.FromArgb(127, 157, 185);
-        mdiTabControl.DisplayStyleProvider.CloserColor = Color.DarkGray;
-        mdiTabControl.DisplayStyleProvider.CloserColorActive = Color.Red;
-        mdiTabControl.DisplayStyleProvider.FocusTrack = false;
-        mdiTabControl.DisplayStyleProvider.HotTrack = true;
-        mdiTabControl.DisplayStyleProvider.ImageAlign = ContentAlignment.MiddleLeft;
-        mdiTabControl.DisplayStyleProvider.Opacity = 1F;
-        mdiTabControl.DisplayStyleProvider.Overlap = 0;
-        mdiTabControl.DisplayStyleProvider.Padding = new Point(6, 5);
-        mdiTabControl.DisplayStyleProvider.Radius = 3;
-        mdiTabControl.DisplayStyleProvider.SelectedTextStyle = FontStyle.Regular;
-        mdiTabControl.DisplayStyleProvider.ShowTabCloser = true;
-        mdiTabControl.DisplayStyleProvider.TextColor = SystemColors.ControlText;
-        mdiTabControl.DisplayStyleProvider.TextColorDisabled = SystemColors.ControlDark;
-        mdiTabControl.DisplayStyleProvider.TextColorSelected = SystemColors.ControlText;
-        resources.ApplyResources(mdiTabControl, "mdiTabControl");
-        mdiTabControl.HotTrack = true;
-        mdiTabControl.Multiline = true;
-        mdiTabControl.Name = "mdiTabControl";
-        mdiTabControl.SelectedIndex = 0;
-        mdiTabControl.SelectedIndexChanged += mdiTabControl_SelectedIndexChanged;
+        kryptonPanel2.Controls.Add(kryptonNavigator1);
+        resources.ApplyResources(kryptonPanel2, "kryptonPanel2");
+        kryptonPanel2.Name = "kryptonPanel2";
         // 
         // MainForm
         // 
         resources.ApplyResources(this, "$this");
         AutoScaleMode = AutoScaleMode.Font;
         BackColor = Color.White;
-        Controls.Add(mdiTabControl);
-        Controls.Add(panel1);
+        Controls.Add(kryptonPanel2);
+        Controls.Add(kryptonPanel1);
         Controls.Add(statusStrip1);
         Controls.Add(MainFormMenu);
+        FormTitleAlign = Krypton.Toolkit.PaletteRelativeAlign.Center;
+        HeaderStyle = Krypton.Toolkit.HeaderStyle.Primary;
         IsMdiContainer = true;
         KeyPreview = true;
         MainMenuStrip = MainFormMenu;
         Name = "MainForm";
+        TitleStyle = Krypton.Toolkit.KryptonFormTitleStyle.Modern;
         WindowState = FormWindowState.Maximized;
         FormClosing += MainForm_FormClosing;
         Load += MainForm_Load;
@@ -430,6 +438,10 @@ partial class MainForm
         MainFormMenu.PerformLayout();
         statusStrip1.ResumeLayout(false);
         statusStrip1.PerformLayout();
+        ((System.ComponentModel.ISupportInitialize)kryptonNavigator1).EndInit();
+        ((System.ComponentModel.ISupportInitialize)kryptonPanel1).EndInit();
+        ((System.ComponentModel.ISupportInitialize)kryptonPanel2).EndInit();
+        kryptonPanel2.ResumeLayout(false);
         ResumeLayout(false);
         PerformLayout();
     }
@@ -479,13 +491,14 @@ partial class MainForm
     private System.Windows.Forms.ToolStripStatusLabel toolStripDatabaseLabel;
     private System.Windows.Forms.ToolStripMenuItem systemLogViewerToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem claimBatchManagementToolStripMenuItem;
-    private System.Windows.Forms.Panel panel1;
     private System.Windows.Forms.ToolStripMenuItem batchChargeEntryToolStripMenuItem;
     private System.Windows.Forms.HelpProvider helpProvider1;
     private System.Windows.Forms.ToolStripMenuItem documentationToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem latestUpdatesToolStripMenuItem;
-    private System.Windows.Forms.CustomTabControl mdiTabControl;
     private System.Windows.Forms.ToolStripMenuItem windowToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem auditReportsToolStripMenuItem;
     private ToolStripMenuItem viewLocksToolStripMenuItem;
+    private Krypton.Toolkit.KryptonPanel kryptonPanel1;
+    private Krypton.Toolkit.KryptonPanel kryptonPanel2;
+    private Krypton.Navigator.KryptonNavigator kryptonNavigator1;
 }

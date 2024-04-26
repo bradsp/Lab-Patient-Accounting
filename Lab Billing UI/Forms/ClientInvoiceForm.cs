@@ -2,7 +2,6 @@
 using LabBilling.Core.Services;
 using LabBilling.Library;
 using LabBilling.Logging;
-using NPOI.HPSF;
 using System.Diagnostics;
 using System.IO;
 using Utilities;
@@ -10,7 +9,7 @@ using SaveFileDialog = System.Windows.Forms.SaveFileDialog;
 
 namespace LabBilling.Forms;
 
-public partial class ClientInvoiceForm : Form
+public partial class ClientInvoiceForm : Krypton.Toolkit.KryptonForm
 {
     public ClientInvoiceForm()
     {

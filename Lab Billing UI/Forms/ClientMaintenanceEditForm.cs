@@ -7,7 +7,7 @@ using LabBilling.Core.Services;
 
 namespace LabBilling.Forms;
 
-public partial class ClientMaintenanceEditForm : Form
+public partial class ClientMaintenanceEditForm : Krypton.Toolkit.KryptonForm
 {
     public Client client;
     private readonly DictionaryService _dictionaryService;

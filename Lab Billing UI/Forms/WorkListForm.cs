@@ -1,4 +1,5 @@
-﻿using LabBilling.Core;
+﻿using Krypton.Toolkit;
+using LabBilling.Core;
 using LabBilling.Core.Models;
 using LabBilling.Core.Services;
 using LabBilling.Library;
@@ -8,7 +9,7 @@ using WinFormsLibrary;
 
 namespace LabBilling.Forms;
 
-public partial class WorkListForm : Form
+public partial class WorkListForm : KryptonForm
 {
     private readonly AccountService _accountService = new(Program.AppEnvironment);
     private readonly WorklistService _worklist = new(Program.AppEnvironment);

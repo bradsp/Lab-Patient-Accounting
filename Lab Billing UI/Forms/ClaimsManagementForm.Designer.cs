@@ -1,4 +1,5 @@
-﻿namespace LabBilling.Forms
+﻿
+namespace LabBilling.Forms
 {
     partial class ClaimsManagementForm
     {
@@ -28,236 +29,313 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
-            this.claimBatchDataGrid = new System.Windows.Forms.DataGridView();
-            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.clearBatchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.regenerateClaimFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.claimBatchDetailDataGrid = new System.Windows.Forms.DataGridView();
-            this.generateClaimsButton = new System.Windows.Forms.Button();
-            this.institutionalRadioButton = new System.Windows.Forms.RadioButton();
-            this.professionalRadioButton = new System.Windows.Forms.RadioButton();
-            this.claimProgress = new System.Windows.Forms.ProgressBar();
-            this.claimProgressStatusLabel = new System.Windows.Forms.Label();
-            this.cancelButton = new System.Windows.Forms.Button();
-            ((System.ComponentModel.ISupportInitialize)(this.claimBatchDataGrid)).BeginInit();
-            this.contextMenuStrip1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.claimBatchDetailDataGrid)).BeginInit();
-            this.SuspendLayout();
+            components = new System.ComponentModel.Container();
+            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle5 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle6 = new DataGridViewCellStyle();
+            claimBatchDataGrid = new DataGridView();
+            contextMenuStrip1 = new ContextMenuStrip(components);
+            clearBatchToolStripMenuItem = new ToolStripMenuItem();
+            regenerateClaimFileToolStripMenuItem = new ToolStripMenuItem();
+            claimBatchDetailDataGrid = new DataGridView();
+            generateClaimsButton = new Krypton.Toolkit.KryptonButton();
+            institutionalRadioButton = new Krypton.Toolkit.KryptonRadioButton();
+            professionalRadioButton = new Krypton.Toolkit.KryptonRadioButton();
+            claimProgress = new ProgressBar();
+            claimProgressStatusLabel = new Label();
+            cancelButton = new Krypton.Toolkit.KryptonButton();
+            groupBox1 = new GroupBox();
+            kryptonPanel1 = new Krypton.Toolkit.KryptonPanel();
+            splitContainer1 = new SplitContainer();
+            kryptonLabel1 = new Krypton.Toolkit.KryptonLabel();
+            kryptonLabel2 = new Krypton.Toolkit.KryptonLabel();
+            ((System.ComponentModel.ISupportInitialize)claimBatchDataGrid).BeginInit();
+            contextMenuStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)claimBatchDetailDataGrid).BeginInit();
+            groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)kryptonPanel1).BeginInit();
+            kryptonPanel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
+            splitContainer1.Panel1.SuspendLayout();
+            splitContainer1.Panel2.SuspendLayout();
+            splitContainer1.SuspendLayout();
+            SuspendLayout();
             // 
             // claimBatchDataGrid
             // 
-            this.claimBatchDataGrid.AllowUserToAddRows = false;
-            this.claimBatchDataGrid.AllowUserToDeleteRows = false;
-            this.claimBatchDataGrid.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.claimBatchDataGrid.BackgroundColor = System.Drawing.Color.White;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.claimBatchDataGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
-            this.claimBatchDataGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.claimBatchDataGrid.ContextMenuStrip = this.contextMenuStrip1;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.claimBatchDataGrid.DefaultCellStyle = dataGridViewCellStyle2;
-            this.claimBatchDataGrid.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
-            this.claimBatchDataGrid.Location = new System.Drawing.Point(12, 8);
-            this.claimBatchDataGrid.MultiSelect = false;
-            this.claimBatchDataGrid.Name = "claimBatchDataGrid";
-            this.claimBatchDataGrid.ReadOnly = true;
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.claimBatchDataGrid.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
-            this.claimBatchDataGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.claimBatchDataGrid.Size = new System.Drawing.Size(356, 118);
-            this.claimBatchDataGrid.TabIndex = 0;
-            this.claimBatchDataGrid.SelectionChanged += new System.EventHandler(this.claimBatchDataGrid_SelectionChanged);
-            this.claimBatchDataGrid.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.claimBatchDataGrid_MouseDoubleClick);
+            claimBatchDataGrid.AllowUserToAddRows = false;
+            claimBatchDataGrid.AllowUserToDeleteRows = false;
+            claimBatchDataGrid.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            claimBatchDataGrid.BackgroundColor = Color.White;
+            claimBatchDataGrid.BorderStyle = BorderStyle.None;
+            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = SystemColors.Control;
+            dataGridViewCellStyle1.Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            dataGridViewCellStyle1.ForeColor = SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = DataGridViewTriState.True;
+            claimBatchDataGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            claimBatchDataGrid.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            claimBatchDataGrid.ContextMenuStrip = contextMenuStrip1;
+            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = SystemColors.Window;
+            dataGridViewCellStyle2.Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            dataGridViewCellStyle2.ForeColor = SystemColors.ControlText;
+            dataGridViewCellStyle2.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.False;
+            claimBatchDataGrid.DefaultCellStyle = dataGridViewCellStyle2;
+            claimBatchDataGrid.EditMode = DataGridViewEditMode.EditProgrammatically;
+            claimBatchDataGrid.Location = new Point(13, 40);
+            claimBatchDataGrid.Margin = new Padding(4, 3, 4, 3);
+            claimBatchDataGrid.MultiSelect = false;
+            claimBatchDataGrid.Name = "claimBatchDataGrid";
+            claimBatchDataGrid.ReadOnly = true;
+            dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = SystemColors.Control;
+            dataGridViewCellStyle3.Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            dataGridViewCellStyle3.ForeColor = SystemColors.WindowText;
+            dataGridViewCellStyle3.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle3.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle3.WrapMode = DataGridViewTriState.True;
+            claimBatchDataGrid.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
+            claimBatchDataGrid.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            claimBatchDataGrid.Size = new Size(283, 328);
+            claimBatchDataGrid.TabIndex = 0;
+            claimBatchDataGrid.SelectionChanged += claimBatchDataGrid_SelectionChanged;
+            claimBatchDataGrid.MouseDoubleClick += claimBatchDataGrid_MouseDoubleClick;
             // 
             // contextMenuStrip1
             // 
-            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.clearBatchToolStripMenuItem,
-            this.regenerateClaimFileToolStripMenuItem});
-            this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(189, 70);
+            contextMenuStrip1.Font = new Font("Segoe UI", 9F);
+            contextMenuStrip1.Items.AddRange(new ToolStripItem[] { clearBatchToolStripMenuItem, regenerateClaimFileToolStripMenuItem });
+            contextMenuStrip1.Name = "contextMenuStrip1";
+            contextMenuStrip1.Size = new Size(189, 48);
             // 
             // clearBatchToolStripMenuItem
             // 
-            this.clearBatchToolStripMenuItem.Name = "clearBatchToolStripMenuItem";
-            this.clearBatchToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
-            this.clearBatchToolStripMenuItem.Text = "Clear Batch";
-            this.clearBatchToolStripMenuItem.Click += new System.EventHandler(this.clearBatchToolStripMenuItem_Click);
+            clearBatchToolStripMenuItem.Name = "clearBatchToolStripMenuItem";
+            clearBatchToolStripMenuItem.Size = new Size(188, 22);
+            clearBatchToolStripMenuItem.Text = "Clear Batch";
+            clearBatchToolStripMenuItem.Click += clearBatchToolStripMenuItem_Click;
             // 
             // regenerateClaimFileToolStripMenuItem
             // 
-            this.regenerateClaimFileToolStripMenuItem.Name = "regenerateClaimFileToolStripMenuItem";
-            this.regenerateClaimFileToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
-            this.regenerateClaimFileToolStripMenuItem.Text = "Regenerate Claim File";
-            this.regenerateClaimFileToolStripMenuItem.Click += new System.EventHandler(this.regenerateClaimFileToolStripMenuItem_Click);
+            regenerateClaimFileToolStripMenuItem.Name = "regenerateClaimFileToolStripMenuItem";
+            regenerateClaimFileToolStripMenuItem.Size = new Size(188, 22);
+            regenerateClaimFileToolStripMenuItem.Text = "Regenerate Claim File";
+            regenerateClaimFileToolStripMenuItem.Click += regenerateClaimFileToolStripMenuItem_Click;
             // 
             // claimBatchDetailDataGrid
             // 
-            this.claimBatchDetailDataGrid.AllowUserToAddRows = false;
-            this.claimBatchDetailDataGrid.AllowUserToDeleteRows = false;
-            this.claimBatchDetailDataGrid.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.claimBatchDetailDataGrid.BackgroundColor = System.Drawing.Color.White;
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.claimBatchDetailDataGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle4;
-            this.claimBatchDetailDataGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.claimBatchDetailDataGrid.DefaultCellStyle = dataGridViewCellStyle5;
-            this.claimBatchDetailDataGrid.Location = new System.Drawing.Point(12, 146);
-            this.claimBatchDetailDataGrid.Name = "claimBatchDetailDataGrid";
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.claimBatchDetailDataGrid.RowHeadersDefaultCellStyle = dataGridViewCellStyle6;
-            this.claimBatchDetailDataGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.claimBatchDetailDataGrid.Size = new System.Drawing.Size(1075, 276);
-            this.claimBatchDetailDataGrid.TabIndex = 1;
-            this.claimBatchDetailDataGrid.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.claimBatchDetailDataGrid_MouseDoubleClick);
+            claimBatchDetailDataGrid.AllowUserToAddRows = false;
+            claimBatchDetailDataGrid.AllowUserToDeleteRows = false;
+            claimBatchDetailDataGrid.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            claimBatchDetailDataGrid.BackgroundColor = Color.White;
+            claimBatchDetailDataGrid.BorderStyle = BorderStyle.None;
+            dataGridViewCellStyle4.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.BackColor = SystemColors.Control;
+            dataGridViewCellStyle4.Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            dataGridViewCellStyle4.ForeColor = SystemColors.WindowText;
+            dataGridViewCellStyle4.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle4.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle4.WrapMode = DataGridViewTriState.True;
+            claimBatchDetailDataGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle4;
+            claimBatchDetailDataGrid.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridViewCellStyle5.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle5.BackColor = SystemColors.Window;
+            dataGridViewCellStyle5.Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            dataGridViewCellStyle5.ForeColor = SystemColors.ControlText;
+            dataGridViewCellStyle5.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle5.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle5.WrapMode = DataGridViewTriState.False;
+            claimBatchDetailDataGrid.DefaultCellStyle = dataGridViewCellStyle5;
+            claimBatchDetailDataGrid.Location = new Point(4, 40);
+            claimBatchDetailDataGrid.Margin = new Padding(4, 3, 4, 3);
+            claimBatchDetailDataGrid.Name = "claimBatchDetailDataGrid";
+            dataGridViewCellStyle6.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle6.BackColor = SystemColors.Control;
+            dataGridViewCellStyle6.Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            dataGridViewCellStyle6.ForeColor = SystemColors.WindowText;
+            dataGridViewCellStyle6.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle6.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle6.WrapMode = DataGridViewTriState.True;
+            claimBatchDetailDataGrid.RowHeadersDefaultCellStyle = dataGridViewCellStyle6;
+            claimBatchDetailDataGrid.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            claimBatchDetailDataGrid.Size = new Size(648, 328);
+            claimBatchDetailDataGrid.TabIndex = 1;
+            claimBatchDetailDataGrid.MouseDoubleClick += claimBatchDetailDataGrid_MouseDoubleClick;
             // 
             // generateClaimsButton
             // 
-            this.generateClaimsButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.generateClaimsButton.Location = new System.Drawing.Point(790, 8);
-            this.generateClaimsButton.Name = "generateClaimsButton";
-            this.generateClaimsButton.Size = new System.Drawing.Size(116, 23);
-            this.generateClaimsButton.TabIndex = 2;
-            this.generateClaimsButton.Text = "Generate Claims";
-            this.generateClaimsButton.UseVisualStyleBackColor = true;
-            this.generateClaimsButton.Click += new System.EventHandler(this.generateClaimsButton_Click);
+            generateClaimsButton.Location = new Point(230, 25);
+            generateClaimsButton.Margin = new Padding(4, 3, 4, 3);
+            generateClaimsButton.Name = "generateClaimsButton";
+            generateClaimsButton.Size = new Size(106, 27);
+            generateClaimsButton.TabIndex = 2;
+            generateClaimsButton.Values.Text = "Generate Claims";
+            generateClaimsButton.Click += generateClaimsButton_Click;
             // 
             // institutionalRadioButton
             // 
-            this.institutionalRadioButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.institutionalRadioButton.AutoSize = true;
-            this.institutionalRadioButton.Location = new System.Drawing.Point(870, 37);
-            this.institutionalRadioButton.Name = "institutionalRadioButton";
-            this.institutionalRadioButton.Size = new System.Drawing.Size(78, 17);
-            this.institutionalRadioButton.TabIndex = 3;
-            this.institutionalRadioButton.TabStop = true;
-            this.institutionalRadioButton.Text = "Institutional";
-            this.institutionalRadioButton.UseVisualStyleBackColor = true;
+            institutionalRadioButton.Location = new Point(20, 29);
+            institutionalRadioButton.Margin = new Padding(4, 3, 4, 3);
+            institutionalRadioButton.Name = "institutionalRadioButton";
+            institutionalRadioButton.Size = new Size(87, 20);
+            institutionalRadioButton.TabIndex = 3;
+            institutionalRadioButton.Values.Text = "Institutional";
             // 
             // professionalRadioButton
             // 
-            this.professionalRadioButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.professionalRadioButton.AutoSize = true;
-            this.professionalRadioButton.Location = new System.Drawing.Point(961, 37);
-            this.professionalRadioButton.Name = "professionalRadioButton";
-            this.professionalRadioButton.Size = new System.Drawing.Size(82, 17);
-            this.professionalRadioButton.TabIndex = 3;
-            this.professionalRadioButton.TabStop = true;
-            this.professionalRadioButton.Text = "Professional";
-            this.professionalRadioButton.UseVisualStyleBackColor = true;
+            professionalRadioButton.Location = new Point(133, 29);
+            professionalRadioButton.Margin = new Padding(4, 3, 4, 3);
+            professionalRadioButton.Name = "professionalRadioButton";
+            professionalRadioButton.Size = new Size(88, 20);
+            professionalRadioButton.TabIndex = 3;
+            professionalRadioButton.Values.Text = "Professional";
             // 
             // claimProgress
             // 
-            this.claimProgress.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.claimProgress.Location = new System.Drawing.Point(871, 60);
-            this.claimProgress.Name = "claimProgress";
-            this.claimProgress.Size = new System.Drawing.Size(216, 23);
-            this.claimProgress.TabIndex = 5;
+            claimProgress.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            claimProgress.Location = new Point(440, 25);
+            claimProgress.Margin = new Padding(4, 3, 4, 3);
+            claimProgress.Name = "claimProgress";
+            claimProgress.Size = new Size(497, 27);
+            claimProgress.TabIndex = 5;
             // 
             // claimProgressStatusLabel
             // 
-            this.claimProgressStatusLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.claimProgressStatusLabel.AutoSize = true;
-            this.claimProgressStatusLabel.Location = new System.Drawing.Point(868, 86);
-            this.claimProgressStatusLabel.Name = "claimProgressStatusLabel";
-            this.claimProgressStatusLabel.Size = new System.Drawing.Size(35, 13);
-            this.claimProgressStatusLabel.TabIndex = 6;
-            this.claimProgressStatusLabel.Text = "label1";
+            claimProgressStatusLabel.AutoSize = true;
+            claimProgressStatusLabel.Location = new Point(230, 55);
+            claimProgressStatusLabel.Margin = new Padding(4, 0, 4, 0);
+            claimProgressStatusLabel.Name = "claimProgressStatusLabel";
+            claimProgressStatusLabel.Size = new Size(38, 15);
+            claimProgressStatusLabel.TabIndex = 6;
+            claimProgressStatusLabel.Text = "label1";
             // 
             // cancelButton
             // 
-            this.cancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.cancelButton.Location = new System.Drawing.Point(790, 60);
-            this.cancelButton.Name = "cancelButton";
-            this.cancelButton.Size = new System.Drawing.Size(75, 23);
-            this.cancelButton.TabIndex = 7;
-            this.cancelButton.Text = "Cancel";
-            this.cancelButton.UseVisualStyleBackColor = true;
-            this.cancelButton.Click += new System.EventHandler(this.cancelButton_Click);
+            cancelButton.Location = new Point(344, 25);
+            cancelButton.Margin = new Padding(4, 3, 4, 3);
+            cancelButton.Name = "cancelButton";
+            cancelButton.Size = new Size(88, 27);
+            cancelButton.TabIndex = 7;
+            cancelButton.Values.Text = "Cancel";
+            cancelButton.Click += cancelButton_Click;
+            // 
+            // groupBox1
+            // 
+            groupBox1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            groupBox1.BackColor = Color.Transparent;
+            groupBox1.Controls.Add(cancelButton);
+            groupBox1.Controls.Add(generateClaimsButton);
+            groupBox1.Controls.Add(institutionalRadioButton);
+            groupBox1.Controls.Add(claimProgressStatusLabel);
+            groupBox1.Controls.Add(professionalRadioButton);
+            groupBox1.Controls.Add(claimProgress);
+            groupBox1.Location = new Point(15, 12);
+            groupBox1.Name = "groupBox1";
+            groupBox1.Size = new Size(953, 84);
+            groupBox1.TabIndex = 8;
+            groupBox1.TabStop = false;
+            groupBox1.Text = "Generate Claims";
+            // 
+            // kryptonPanel1
+            // 
+            kryptonPanel1.Controls.Add(groupBox1);
+            kryptonPanel1.Dock = DockStyle.Top;
+            kryptonPanel1.Location = new Point(0, 0);
+            kryptonPanel1.Name = "kryptonPanel1";
+            kryptonPanel1.PanelBackStyle = Krypton.Toolkit.PaletteBackStyle.HeaderForm;
+            kryptonPanel1.Size = new Size(980, 109);
+            kryptonPanel1.TabIndex = 9;
+            // 
+            // splitContainer1
+            // 
+            splitContainer1.Dock = DockStyle.Fill;
+            splitContainer1.Location = new Point(0, 109);
+            splitContainer1.Name = "splitContainer1";
+            // 
+            // splitContainer1.Panel1
+            // 
+            splitContainer1.Panel1.Controls.Add(kryptonLabel1);
+            splitContainer1.Panel1.Controls.Add(claimBatchDataGrid);
+            // 
+            // splitContainer1.Panel2
+            // 
+            splitContainer1.Panel2.Controls.Add(kryptonLabel2);
+            splitContainer1.Panel2.Controls.Add(claimBatchDetailDataGrid);
+            splitContainer1.Size = new Size(980, 410);
+            splitContainer1.SplitterDistance = 311;
+            splitContainer1.TabIndex = 10;
+            // 
+            // kryptonLabel1
+            // 
+            kryptonLabel1.LabelStyle = Krypton.Toolkit.LabelStyle.BoldPanel;
+            kryptonLabel1.Location = new Point(4, 6);
+            kryptonLabel1.Name = "kryptonLabel1";
+            kryptonLabel1.Size = new Size(91, 20);
+            kryptonLabel1.TabIndex = 1;
+            kryptonLabel1.Values.Text = "Claim Batches";
+            // 
+            // kryptonLabel2
+            // 
+            kryptonLabel2.LabelStyle = Krypton.Toolkit.LabelStyle.BoldControl;
+            kryptonLabel2.Location = new Point(3, 6);
+            kryptonLabel2.Name = "kryptonLabel2";
+            kryptonLabel2.Size = new Size(81, 20);
+            kryptonLabel2.TabIndex = 2;
+            kryptonLabel2.Values.Text = "Batch Detail";
             // 
             // ClaimsManagementForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(1099, 450);
-            this.Controls.Add(this.cancelButton);
-            this.Controls.Add(this.claimProgressStatusLabel);
-            this.Controls.Add(this.claimProgress);
-            this.Controls.Add(this.professionalRadioButton);
-            this.Controls.Add(this.institutionalRadioButton);
-            this.Controls.Add(this.generateClaimsButton);
-            this.Controls.Add(this.claimBatchDetailDataGrid);
-            this.Controls.Add(this.claimBatchDataGrid);
-            this.Name = "ClaimsManagementForm";
-            this.Text = "Claim Batch Management";
-            this.Load += new System.EventHandler(this.ClaimsManagementForm_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.claimBatchDataGrid)).EndInit();
-            this.contextMenuStrip1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.claimBatchDetailDataGrid)).EndInit();
-            this.ResumeLayout(false);
-            this.PerformLayout();
-
+            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleMode = AutoScaleMode.Font;
+            BackColor = Color.White;
+            ClientSize = new Size(980, 519);
+            Controls.Add(splitContainer1);
+            Controls.Add(kryptonPanel1);
+            Margin = new Padding(4, 3, 4, 3);
+            Name = "ClaimsManagementForm";
+            Text = "Claim Batch Management";
+            Load += ClaimsManagementForm_Load;
+            ((System.ComponentModel.ISupportInitialize)claimBatchDataGrid).EndInit();
+            contextMenuStrip1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)claimBatchDetailDataGrid).EndInit();
+            groupBox1.ResumeLayout(false);
+            groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)kryptonPanel1).EndInit();
+            kryptonPanel1.ResumeLayout(false);
+            splitContainer1.Panel1.ResumeLayout(false);
+            splitContainer1.Panel1.PerformLayout();
+            splitContainer1.Panel2.ResumeLayout(false);
+            splitContainer1.Panel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)splitContainer1).EndInit();
+            splitContainer1.ResumeLayout(false);
+            ResumeLayout(false);
         }
 
         #endregion
 
         private System.Windows.Forms.DataGridView claimBatchDataGrid;
         private System.Windows.Forms.DataGridView claimBatchDetailDataGrid;
-        private System.Windows.Forms.Button generateClaimsButton;
-        private System.Windows.Forms.RadioButton institutionalRadioButton;
-        private System.Windows.Forms.RadioButton professionalRadioButton;
+        private Krypton.Toolkit.KryptonButton generateClaimsButton;
+        private Krypton.Toolkit.KryptonRadioButton institutionalRadioButton;
+        private Krypton.Toolkit.KryptonRadioButton professionalRadioButton;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem clearBatchToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem regenerateClaimFileToolStripMenuItem;
         private System.Windows.Forms.ProgressBar claimProgress;
         private System.Windows.Forms.Label claimProgressStatusLabel;
-        private System.Windows.Forms.Button cancelButton;
+        private Krypton.Toolkit.KryptonButton cancelButton;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private Krypton.Toolkit.KryptonPanel kryptonPanel1;
+        private SplitContainer splitContainer1;
+        private Krypton.Toolkit.KryptonLabel kryptonLabel1;
+        private Krypton.Toolkit.KryptonLabel kryptonLabel2;
     }
 }
