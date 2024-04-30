@@ -515,7 +515,6 @@ public sealed class PatientBillingService
                         (iSmsg + 1).ToString().ToUpper(),
                         drStmtMsg[iSmsg][nameof(PatientStatementCerner.StatementText)].ToString().ToUpper()));
                 }
-
             }
             // each account
             for (int iAcc = 0; iAcc <= drAcc.GetUpperBound(0); iAcc++)

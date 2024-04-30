@@ -3,10 +3,9 @@ using System;
 
 namespace LabBilling.Core.Models;
 
-[TableName("dbo.pat_statements")]
+[TableName("dbo.pat_statements_cerner")]
 public sealed class PatientStatementCerner : IBaseEntity
 {
-    public int StatementId { get; set; }
     [Column("account")]
     public string Account { get; set; }
     [Column("batch_id")]
@@ -18,9 +17,13 @@ public sealed class PatientStatementCerner : IBaseEntity
     [Column("statement_text")]
     public string StatementText { get; set; }
 
+    [Ignore]
     public DateTime UpdatedDate { get; set; }
+    [Ignore]
     public string UpdatedUser { get; set; }
+    [Ignore]
     public string UpdatedApp { get; set; }
+    [Ignore]
     public string UpdatedHost { get; set; }
     [Ignore]
     public Guid rowguid { get; set; }

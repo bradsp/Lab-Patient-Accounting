@@ -197,7 +197,7 @@ public partial class PatientCollectionsRunWizard : Form
         {
             bannerLabel.Text = $"Batch {_batchNo} has already been run.";
             bannerLabel.ForeColor = Color.Red;
-            sendToCollectionsStartButton.Enabled = false;
+            //sendToCollectionsStartButton.Enabled = false;
         }
         else
         {
@@ -205,9 +205,9 @@ public partial class PatientCollectionsRunWizard : Form
             sendToCollectionsStartButton.Enabled = true;
         }
 
-        compileStmtsStartButton.Enabled = true;
-        createStmtFileStartButton.Enabled = true;
-        nextButton.Enabled = true;
+        //compileStmtsStartButton.Enabled = true;
+        //createStmtFileStartButton.Enabled = true;
+        //nextButton.Enabled = true;
 
         if (!records.Any())
         {
@@ -247,21 +247,23 @@ public partial class PatientCollectionsRunWizard : Form
         if (tabControl1.TabPages[tabControl1.SelectedIndex].Name == sendCollectionsTabPage.Name)
         {
             sendToCollectionsStartButton.Enabled = !skipSendCollectionsCheckBox.Checked;
-            nextButton.Enabled = skipSendCollectionsCheckBox.Checked;
+            //nextButton.Enabled = skipSendCollectionsCheckBox.Checked;
         }
         else if (tabControl1.SelectedIndex == 0)
         {
-            nextButton.Enabled = true;
+            //nextButton.Enabled = true;
         }
         else
         {
-            nextButton.Enabled = false;
+            //nextButton.Enabled = false;
         }
+
+        //nextButton.Enabled = true;
     }
 
     private void skipSendCollectionsCheckBox_CheckedChanged(object sender, EventArgs e)
     {
         sendToCollectionsStartButton.Enabled = !skipSendCollectionsCheckBox.Checked;
-        nextButton.Enabled = skipSendCollectionsCheckBox.Checked;
+        //nextButton.Enabled = skipSendCollectionsCheckBox.Checked;
     }
 }

@@ -1791,8 +1791,6 @@ public sealed class AccountService
                 Log.Instance.Error(e, "Error during account validation job.");
             }
         });
-
-
     }
 
     public async Task ValidateUnbilledAccountsAsync() => await Task.Run(() => ValidateUnbilledAccounts());

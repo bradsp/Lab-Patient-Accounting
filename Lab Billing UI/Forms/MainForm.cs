@@ -348,7 +348,6 @@ public partial class MainForm : Form
         #region load accordion menu
 
         //recent accounts section
-
         _tlpRecentAccounts = new TableLayoutPanel
         {
             Dock = DockStyle.Fill,
