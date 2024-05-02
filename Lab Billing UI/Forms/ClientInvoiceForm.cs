@@ -385,8 +385,9 @@ public partial class ClientInvoiceForm : Form
 
             if (!string.IsNullOrWhiteSpace(stmtFilename))
                 files.Add(stmtFilename);
+            if(!string.IsNullOrWhiteSpace(invFilename))
+                files.Add(invFilename);
 
-            files.Add(invFilename);
             progressBar1.Increment(1);
         }
 
