@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Security.Policy;
 using System.Threading.Tasks;
 using Utilities;
 using Log = LabBilling.Logging.Log;
@@ -18,6 +19,11 @@ public sealed class AccountService
     private readonly IAppEnvironment _appEnvironment;
 
     private readonly DictionaryService _dictionaryService;
+
+    public event EventHandler<ValidationUpdatedEventArgs> ValidationAccountUpdated;
+    public event EventHandler<AccountEventArgs> AccountValidated;
+    public event EventHandler<AccountEventArgs> AccountLocked;
+    public event EventHandler<AccountEventArgs> AccountLockCleared;
 
     public AccountService(IAppEnvironment appEnvironment)
     {
@@ -100,6 +106,7 @@ public sealed class AccountService
     {
         using AccountUnitOfWork uow = new(_appEnvironment);
         var retval = uow.AccountLockRepository.Delete(id);
+        AccountLockCleared?.Invoke(this, new AccountEventArgs() { UpdateMessage = $"Lock id {id} cleared." });
         return retval;
     }
 
@@ -340,6 +347,7 @@ public sealed class AccountService
         if (result.locksuccessful)
             table.AccountLockInfo = result.lockInfo;
         uow.Commit();
+        
         return table;
     }
 
@@ -430,7 +438,6 @@ public sealed class AccountService
         }
     }
 
-
     public List<PatientStatementAccount> GetPatientStatements(string accountNo)
     {
         using AccountUnitOfWork uow = new(_appEnvironment);
@@ -478,7 +485,6 @@ public sealed class AccountService
         uow.Commit();
         return true;
     }
-
 
     public Account UpdateAccountDemographics(Account acc)
     {
@@ -1746,8 +1752,6 @@ public sealed class AccountService
         return errorList;
     }
 
-    public event EventHandler<ValidationUpdatedEventArgs> ValidationAccountUpdated;
-
     public void ValidateUnbilledAccounts()
     {
         Log.Instance.Trace($"Entering");
@@ -2045,4 +2049,11 @@ public class ValidationUpdatedEventArgs : EventArgs
     public int Processed { get; set; }
     public int TotalItems { get; set; }
 
+}
+
+public class AccountEventArgs : EventArgs
+{
+    public string AccountNo { get; set; }
+    public string UpdateMessage { get; set; }
+    public Account Account { get; set; }
 }

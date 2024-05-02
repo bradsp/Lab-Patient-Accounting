@@ -1,15 +1,13 @@
 ﻿using LabBilling.Core.Models;
 using LabBilling.Core.Services;
 using Quartz;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 
 
 namespace LabBillingJobs;
 
 public partial class JobProcessor
 {
+    [DisallowConcurrentExecution]
     public class ClaimsProcessingJob : IJob
     {
         public async Task Execute(IJobExecutionContext context)
