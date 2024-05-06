@@ -1,7 +1,6 @@
 ﻿using LabBilling.Core.DataAccess;
 using LabBilling.Core.Models;
 using LabBilling.Core.UnitOfWork;
-using NPOI.OpenXmlFormats.Dml.Diagram;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace LabBilling.Core.Services;
 
-public class WorklistService
+public class WorklistService : IWorklistService
 {
     private readonly AppEnvironment _appEnvironment;
 

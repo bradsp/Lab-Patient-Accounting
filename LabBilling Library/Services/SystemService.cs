@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace LabBilling.Core.Services;
 
-public class SystemService
+public class SystemService : ISystemService
 {
     private IAppEnvironment appEnvironment;
 
@@ -71,7 +71,7 @@ public class SystemService
         return uow.UserAccountRepository.GetActiveUsers();
     }
 
-    public bool LoginCheck(string username, string password) 
+    public bool LoginCheck(string username, string password)
     {
         using UnitOfWorkMain uow = new(appEnvironment);
 

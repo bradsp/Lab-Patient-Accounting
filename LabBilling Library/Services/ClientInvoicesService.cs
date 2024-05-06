@@ -18,7 +18,7 @@ namespace LabBilling.Core.Services;
 /// <summary>
 /// 
 /// </summary>
-public sealed class ClientInvoicesService
+public sealed class ClientInvoicesService : IClientInvoicesService
 {
     private readonly IAppEnvironment _appEnvironment;
     public event EventHandler<ClientInvoiceGeneratedEventArgs> InvoiceGenerated;

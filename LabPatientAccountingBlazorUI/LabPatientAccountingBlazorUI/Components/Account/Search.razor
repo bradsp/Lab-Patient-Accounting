@@ -1,0 +1,80 @@
+﻿@page "/Account/Search"
+@inject IAppEnvironment appEnvironment;
+
+@attribute [StreamRendering(true)]
+
+<h3>Search</h3>
+
+<EditForm @Model="SearchParameters">
+    <label for="@nameof(SearchParameters.AccountNo)" class="form-label">Account No</label>
+    <InputText id="@nameof(SearchParameters.AccountNo)" class="form-control"/>
+    <Button onclick="StartSearch" Class="btn btn-primary" role="button">Search</Button>
+</EditForm>
+
+
+<table class="table table-striped table-bordered table-hover mt-3">
+    <thead class="table-dark">
+        <th>Account</th>
+        <th>Name</th>
+        <th>Date of Birth</th>
+        <th>Sex</th>
+        <th>Service Date</th>
+        <th>Balance</th>
+        <th>Fin Code</th>
+        <th>Client Mnem</th>
+        <th>Status</th>
+    </thead>
+    if(accounts != null)
+    {
+        @foreach(var account in accounts)
+        {
+            <tr>
+                <td>@account.Account</td>
+                <td>@account.Name</td>
+                <td>@account.DateOfBirth</td>
+                <td>@account.Sex</td>
+                <td>@account.ServiceDate</td>
+                <td>@account.Balance</td>
+                <td>@account.FinCode</td>
+                <td>@account.ClientMnem</td>
+                <td>@account.Status</td>
+            </tr>
+        }
+    }
+
+</table>
+
+
+
+@code {
+
+    private List<AccountSearch>? accounts;
+    private AccountService? _accountService;
+
+
+    protected override Task OnInitializedAsync()
+    {
+        _accountService = new(appEnvironment);
+
+        return base.OnInitializedAsync();
+    }
+
+    public void StartSearch(SearchParameters parameters)
+    {
+        accounts = _accountService.SearchAccounts(parameters.LastName, parameters.FirstName, parameters.MRN, parameters.SSN, parameters.DateOfService.ToString(), parameters.Sex, parameters.AccountNo).ToList();
+        return;
+    }
+
+    public class SearchParameters
+    {
+        public string? AccountNo { get; set; }
+        public string? LastName { get; set; }
+        public string? FirstName { get; set; }
+        public string? MRN { get; set; }
+        public string? SSN { get; set; }
+        public string? Sex { get; set; }
+        public DateTime? DateOfService { get; set; }
+
+    }
+
+}

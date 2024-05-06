@@ -14,7 +14,7 @@ using Account = LabBilling.Core.Models.Account;
 
 namespace LabBilling.Core.Services;
 
-public sealed class ClaimGeneratorService
+public sealed class ClaimGeneratorService : IClaimGeneratorService
 {
 
     readonly ArrayList NameSuffixList = new() { "JR", "SR", "I", "II", "III", "IV", "V", "VI", "VII" };

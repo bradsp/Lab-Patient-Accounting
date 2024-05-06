@@ -40,9 +40,9 @@ Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "LabBillingJobsSetup", "LabB
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lab Patient Accounting Job Scheduler", "Lab Patient Accounting Job Scheduler\Lab Patient Accounting Job Scheduler.csproj", "{9972A908-021A-45C8-86F0-18B1507AACA3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lab Patient Accounting Blazor UI", "Lab Patient Accounting Blazor UI\Lab Patient Accounting Blazor UI\Lab Patient Accounting Blazor UI.csproj", "{4A62D04C-C883-494E-92A1-2C1AB89D1D8C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LabPatientAccountingBlazorUI", "LabPatientAccountingBlazorUI\LabPatientAccountingBlazorUI\LabPatientAccountingBlazorUI.csproj", "{27F667CA-6D2A-40E7-A9CB-ADC6180144A3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lab Patient Accounting Blazor UI.Client", "Lab Patient Accounting Blazor UI\Lab Patient Accounting Blazor UI.Client\Lab Patient Accounting Blazor UI.Client.csproj", "{C25FBF96-3A78-4379-BB14-BFE11F3BAA57}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LabPatientAccountingBlazorUI.Client", "LabPatientAccountingBlazorUI\LabPatientAccountingBlazorUI.Client\LabPatientAccountingBlazorUI.Client.csproj", "{AF05E328-6E1C-4617-A3EE-1EF43788B5EB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -160,22 +160,22 @@ Global
 		{9972A908-021A-45C8-86F0-18B1507AACA3}.Release|Any CPU.Build.0 = Release|x64
 		{9972A908-021A-45C8-86F0-18B1507AACA3}.Release|x64.ActiveCfg = Release|x64
 		{9972A908-021A-45C8-86F0-18B1507AACA3}.Release|x64.Build.0 = Release|x64
-		{4A62D04C-C883-494E-92A1-2C1AB89D1D8C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4A62D04C-C883-494E-92A1-2C1AB89D1D8C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4A62D04C-C883-494E-92A1-2C1AB89D1D8C}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{4A62D04C-C883-494E-92A1-2C1AB89D1D8C}.Debug|x64.Build.0 = Debug|Any CPU
-		{4A62D04C-C883-494E-92A1-2C1AB89D1D8C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4A62D04C-C883-494E-92A1-2C1AB89D1D8C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4A62D04C-C883-494E-92A1-2C1AB89D1D8C}.Release|x64.ActiveCfg = Release|Any CPU
-		{4A62D04C-C883-494E-92A1-2C1AB89D1D8C}.Release|x64.Build.0 = Release|Any CPU
-		{C25FBF96-3A78-4379-BB14-BFE11F3BAA57}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C25FBF96-3A78-4379-BB14-BFE11F3BAA57}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C25FBF96-3A78-4379-BB14-BFE11F3BAA57}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{C25FBF96-3A78-4379-BB14-BFE11F3BAA57}.Debug|x64.Build.0 = Debug|Any CPU
-		{C25FBF96-3A78-4379-BB14-BFE11F3BAA57}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C25FBF96-3A78-4379-BB14-BFE11F3BAA57}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C25FBF96-3A78-4379-BB14-BFE11F3BAA57}.Release|x64.ActiveCfg = Release|Any CPU
-		{C25FBF96-3A78-4379-BB14-BFE11F3BAA57}.Release|x64.Build.0 = Release|Any CPU
+		{27F667CA-6D2A-40E7-A9CB-ADC6180144A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{27F667CA-6D2A-40E7-A9CB-ADC6180144A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{27F667CA-6D2A-40E7-A9CB-ADC6180144A3}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{27F667CA-6D2A-40E7-A9CB-ADC6180144A3}.Debug|x64.Build.0 = Debug|Any CPU
+		{27F667CA-6D2A-40E7-A9CB-ADC6180144A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{27F667CA-6D2A-40E7-A9CB-ADC6180144A3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{27F667CA-6D2A-40E7-A9CB-ADC6180144A3}.Release|x64.ActiveCfg = Release|Any CPU
+		{27F667CA-6D2A-40E7-A9CB-ADC6180144A3}.Release|x64.Build.0 = Release|Any CPU
+		{AF05E328-6E1C-4617-A3EE-1EF43788B5EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AF05E328-6E1C-4617-A3EE-1EF43788B5EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AF05E328-6E1C-4617-A3EE-1EF43788B5EB}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{AF05E328-6E1C-4617-A3EE-1EF43788B5EB}.Debug|x64.Build.0 = Debug|Any CPU
+		{AF05E328-6E1C-4617-A3EE-1EF43788B5EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AF05E328-6E1C-4617-A3EE-1EF43788B5EB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AF05E328-6E1C-4617-A3EE-1EF43788B5EB}.Release|x64.ActiveCfg = Release|Any CPU
+		{AF05E328-6E1C-4617-A3EE-1EF43788B5EB}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,0 +1,21 @@
+﻿@page "/account/detail/"
+@inject AppEnvironment appEnvironment;
+
+<h3>Detail</h3>
+
+
+
+@code {
+
+    private AccountService? _accountService;
+    private Account account;
+
+    protected override Task OnInitializedAsync()
+    {
+        _accountService = new(appEnvironment);
+
+        return base.OnInitializedAsync();
+    }
+
+
+}

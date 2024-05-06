@@ -27,7 +27,7 @@ public class ProgressEventArgs : EventArgs
     }
 }
 
-public sealed class PatientBillingService
+public sealed class PatientBillingService : IPatientBillingService
 {
     private string batchNo;
     private DateTime endDate = DateTime.MinValue;

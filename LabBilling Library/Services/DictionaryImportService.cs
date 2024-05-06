@@ -13,7 +13,7 @@ public class RecordProcessedArgs : EventArgs
     public string IcdCode { get; set; }
 }
 
-public class DictionaryImportService
+public class DictionaryImportService : IDictionaryImportService
 {
     public delegate void RecordProcessedHandler(object source, RecordProcessedArgs args);
     public event RecordProcessedHandler RecordProcessed;
@@ -24,7 +24,7 @@ public class DictionaryImportService
 
         List<IcdLines> icdLines = new List<IcdLines>();
 
-        if(unitOfWork.DictDxRepository.AMAYearExists(year))
+        if (unitOfWork.DictDxRepository.AMAYearExists(year))
         {
             return;
         }
@@ -59,7 +59,7 @@ public class DictionaryImportService
 
                     //add icd to database
                     unitOfWork.DictDxRepository.Add(icd2);
-                    
+
                     RecordProcessed?.Invoke(this, new RecordProcessedArgs() { RecordsProcessed = processed++, IcdCode = icd2.DxCode });
                 }
             }

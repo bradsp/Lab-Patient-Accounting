@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace LabBilling.Core.Services;
 
-public class BatchTransactionService
+public class BatchTransactionService : IBatchTransactionService
 {
     private readonly IAppEnvironment _appEnvironment;
     private readonly AccountService _accountService;
@@ -138,7 +138,7 @@ public class BatchTransactionService
             uow.AddBatch(chks.ToList());
             uow.Commit();
         }
-        catch(Exception ex) 
+        catch (Exception ex)
         {
             Log.Instance.Error(ex);
             throw new ApplicationException("Error adding payment records. Records have been rolled back.", ex);

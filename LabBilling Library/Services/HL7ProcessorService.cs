@@ -12,7 +12,7 @@ using Utilities;
 
 namespace LabBilling.Core.Services;
 
-public sealed class HL7ProcessorService
+public sealed class HL7ProcessorService : IHL7ProcessorService
 {
     j4jayant.HL7.Parser.Message _hl7Message;
     private MessageInbound _currentMessage;
@@ -396,7 +396,7 @@ public sealed class HL7ProcessorService
                 {
                     finCodeChange = true;
                 }
-                if (_accountRecord.Fin.FinClass == _appEnvironment.ApplicationParameters.ClientFinancialTypeCode 
+                if (_accountRecord.Fin.FinClass == _appEnvironment.ApplicationParameters.ClientFinancialTypeCode
                     && existingClient != _accountRecord.ClientMnem && !string.IsNullOrEmpty(existingClient))
                 {
                     clientChange = true;
@@ -526,7 +526,7 @@ public sealed class HL7ProcessorService
                     case "PATIENT":
                         break;
                     case "PER ACCOUNT":
-                        _accountRecord.FinCode = _accountRecord.FinCode != _appEnvironment.ApplicationParameters.BillToClientInvoiceDefaultFinCode 
+                        _accountRecord.FinCode = _accountRecord.FinCode != _appEnvironment.ApplicationParameters.BillToClientInvoiceDefaultFinCode
                             ? _appEnvironment.ApplicationParameters.InvalidFinancialCode : _accountRecord.FinCode;
                         break;
                     default:
@@ -567,12 +567,12 @@ public sealed class HL7ProcessorService
                 Log.Instance.Debug($"Adding charge {transaction.Account},{transaction.Cdm},{transaction.Qty},{transaction.ServiceDate},{transaction.Comment},{transaction.RefNumber}");
                 try
                 {
-                    if(transaction.Qty < 0)
+                    if (transaction.Qty < 0)
                     {
                         // look up existing charge to be credited
                         var existingChrg = uow.ChrgRepository.GetChargeByReferenceAndCdm(transaction.RefNumber, transaction.Cdm);
 
-                        if(existingChrg.Count > 0)
+                        if (existingChrg.Count > 0)
                         {
                             var retValue = _accountService.CreditCharge(existingChrg[0].ChrgId, transaction.Comment);
                         }

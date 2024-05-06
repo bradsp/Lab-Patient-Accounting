@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace LabBilling.Core.Services;
 
-public class DictionaryService
+public class DictionaryService : IDictionaryService
 {
     private readonly IAppEnvironment _appEnvironment;
 
@@ -29,7 +29,7 @@ public class DictionaryService
         }
         else
         {
-            returnCdm = AddCdm(cdm); 
+            returnCdm = AddCdm(cdm);
         }
 
         uow.Commit();

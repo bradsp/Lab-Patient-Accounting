@@ -1,9 +1,7 @@
 ﻿using LabBilling.Core.Models;
-using System;
-using System.Windows.Forms;
-using System.Runtime.InteropServices;
-using LabBilling.Logging;
 using LabBilling.Core.Services;
+using LabBilling.Logging;
+using System.Runtime.InteropServices;
 
 namespace LabBilling;
 
@@ -11,7 +9,7 @@ public partial class Login : Form
 {
     private SystemService systemService;
 
-    public Login(bool test = false) 
+    public Login(bool test = false)
     {
         Log.Instance.Trace($"Entering");
         testEnvironment = test;
@@ -105,7 +103,7 @@ public partial class Login : Form
 
         systemService = new(Program.AppEnvironment);
         if (Properties.Settings.Default.IntegratedSecurity)
-        {                
+        {
 
             string domainUser = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
             string[] paramsLogin = domainUser.Split('\\');
@@ -124,7 +122,7 @@ public partial class Login : Form
                 if (LoggedInUser.CanImpersonate)
                 {
                     impersonateUserLabel.Visible = true;
-                    impersonateUserComboBox.Visible = true; 
+                    impersonateUserComboBox.Visible = true;
 
                     //load impersonateUserComboBox
                     var emps = systemService.GetActiveUsers();
@@ -174,7 +172,7 @@ public partial class Login : Form
 
     private void IntegratedAuthentication_CheckedChanged(object sender, EventArgs e)
     {
-        if(IntegratedAuthentication.Checked)
+        if (IntegratedAuthentication.Checked)
         {
             username.Enabled = false;
             password.Enabled = false;
@@ -191,14 +189,14 @@ public partial class Login : Form
 
     private void impersonateUserComboBox_SelectedValueChanged(object sender, EventArgs e)
     {
-        if(!skipImpersonateComboSelectionChange)
+        if (!skipImpersonateComboSelectionChange)
         {
             string impersonatedUsername = impersonateUserComboBox.SelectedValue.ToString();
-            if(impersonatedUsername != LoggedInUser.UserName)
+            if (impersonatedUsername != LoggedInUser.UserName)
             {
                 //get impersonated user profile
                 var impersonatedUser = systemService.GetUser(impersonatedUsername);
-                if(impersonatedUser != null)
+                if (impersonatedUser != null)
                 {
                     //copy impersonated user permissions to loggedinuser
                     LoggedInUser.CanEditDictionary = impersonatedUser.CanEditDictionary;
@@ -208,7 +206,7 @@ public partial class Login : Form
                     LoggedInUser.CanModifyBadDebt = impersonatedUser.CanModifyBadDebt;
                     LoggedInUser.CanSubmitBilling = impersonatedUser.CanSubmitBilling;
                     LoggedInUser.CanSubmitCharges = impersonatedUser.CanSubmitCharges;
-                    if(LoggedInUser.IsAdministrator)
+                    if (LoggedInUser.IsAdministrator)
                         LoggedInUser.IsAdministrator = impersonatedUser.IsAdministrator;
                     LoggedInUser.Access = impersonatedUser.Access;
                     LoggedInUser.ImpersonatingUser = impersonatedUser.UserName;

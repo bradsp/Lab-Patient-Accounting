@@ -8,7 +8,7 @@ using LabBilling.Core.UnitOfWork;
 
 namespace LabBilling.Core.Services;
 
-public sealed class NotesImportService
+public sealed class NotesImportService : INotesImportService
 {
     private IAppEnvironment appEnvironment;
     public NotesImportService(IAppEnvironment appEnvironment)
@@ -46,7 +46,7 @@ public sealed class NotesImportService
                 }
                 unitOfWork.Commit();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Log.Instance.Error(ex, "Exception encountered importing notes.");
                 throw new ApplicationException("Error during notes import.", ex);

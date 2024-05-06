@@ -14,7 +14,7 @@ using Log = LabBilling.Logging.Log;
 
 namespace LabBilling.Core.Services;
 
-public sealed class AccountService
+public sealed class AccountService : IAccountService
 {
     private readonly IAppEnvironment _appEnvironment;
 
@@ -117,7 +117,7 @@ public sealed class AccountService
         {
             return uow.AccountLockRepository.DeleteByUserHost(username, hostname);
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             Log.Instance.Fatal(ex);
             return false;
@@ -203,7 +203,7 @@ public sealed class AccountService
                 {
                     d.CptDescription = record.Cdms.Where(c => c.ChargeId == d.CdmCode).FirstOrDefault()?.CdmDetails?.Where(cd => cd.Cpt4 == d.CptCode).FirstOrDefault()?.Description;
                 }
-                if(string.IsNullOrEmpty(d.CdmDescription) || string.IsNullOrEmpty(d.CptDescription))
+                if (string.IsNullOrEmpty(d.CdmDescription) || string.IsNullOrEmpty(d.CptDescription))
                 {
                     uow.ChrgDiagnosisPointerRepository.Delete(d);
                     temp.Add(d);
@@ -347,7 +347,7 @@ public sealed class AccountService
         if (result.locksuccessful)
             table.AccountLockInfo = result.lockInfo;
         uow.Commit();
-        
+
         return table;
     }
 
@@ -785,11 +785,11 @@ public sealed class AccountService
             model.FinCode = newFinCode;
             try
             {
-                if(model.ReadyToBill)
+                if (model.ReadyToBill)
                 {
                     //clear ready to bill
                     model.Status = AccountStatus.New;
-                    model.Notes = AddNote(model.AccountNo,"Ready to Bill status cleared due to financial class change.").ToList();
+                    model.Notes = AddNote(model.AccountNo, "Ready to Bill status cleared due to financial class change.").ToList();
                 }
                 uow.AccountRepository.Update(model, new[] { nameof(Account.FinCode), nameof(Account.Status) });
             }

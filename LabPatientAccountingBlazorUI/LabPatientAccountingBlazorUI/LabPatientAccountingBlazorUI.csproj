@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>aspnet-LabPatientAccountingBlazorUI-5d8b8af7-9eb7-4f35-b96a-6c64cb2b286a</UserSecretsId>
+    <AssemblyVersion>2024.0.0.0</AssemblyVersion>
+    <FileVersion>2024.0.0.0</FileVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\LabBilling Library\LabBilling Core.csproj" />
+    <ProjectReference Include="..\LabPatientAccountingBlazorUI.Client\LabPatientAccountingBlazorUI.Client.csproj" />
+    <PackageReference Include="Blazor.Bootstrap" Version="2.2.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.3" />
+    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="8.0.3" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.3" />
+  </ItemGroup>
+
+</Project>
