@@ -1438,6 +1438,8 @@ namespace LabBilling.Forms
             notesDataGridView.RowTemplate.Height = 25;
             notesDataGridView.Size = new Size(1332, 515);
             notesDataGridView.TabIndex = 3;
+            notesDataGridView.CellValueChanged += notesDataGridView_CellValueChanged;
+            notesDataGridView.RowHeightChanged += notesDataGridView_RowHeightChanged;
             // 
             // noteAlertCheckBox
             // 

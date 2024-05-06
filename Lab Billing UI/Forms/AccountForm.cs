@@ -211,6 +211,9 @@ public partial class AccountForm : Form
 
             AddOnChangeHandlerToInputControls(tabDemographics);
         }
+
+        notesDataGridView.DoubleBuffered(true);
+
     }
 
     private void UserControl_OnError(object sender, AppErrorEventArgs e)
@@ -1243,6 +1246,7 @@ public partial class AccountForm : Form
     private void LoadNotes()
     {
         Log.Instance.Trace($"Entering - {SelectedAccount}");
+        notesDataGridView.SuspendLayout();
         notesDataGridView.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
         notesDataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
         notesDataGridView.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
@@ -1267,6 +1271,8 @@ public partial class AccountForm : Form
 
         if (_currentAccount.AccountAlert != null)
             noteAlertCheckBox.Checked = _currentAccount.AccountAlert.Alert;
+
+        notesDataGridView.ResumeLayout();
     }
 
     private void AddNoteButton_Click(object sender, EventArgs e)
@@ -1767,5 +1773,18 @@ public partial class AccountForm : Form
     private void AccountForm_FormClosed(object sender, FormClosedEventArgs e)
     {
         _closing = true;
+    }
+
+    private void notesDataGridView_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+    {
+        if(e.RowIndex != -1)
+        {
+            notesDataGridView.Rows[e.RowIndex].MinimumHeight = 2;
+        }        
+    }
+
+    private void notesDataGridView_RowHeightChanged(object sender, DataGridViewRowEventArgs e)
+    {
+        e.Row.MinimumHeight = e.Row.Height;
     }
 }
