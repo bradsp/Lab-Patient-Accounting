@@ -1409,13 +1409,18 @@ public partial class AccountForm : Form
             {
                 if (_accountService.ChangeClient(_currentAccount, newClient))
                 {
-                    //await LoadAccountData();
                     RefreshAccountData();
                 }
                 else
                 {
                     MessageBox.Show("Error during update.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
+            }
+            catch (ApplicationException apex)
+            {
+                MessageBox.Show(apex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Log.Instance.Error(apex);
+                return;
             }
             catch (Exception ex)
             {
@@ -1505,7 +1510,6 @@ public partial class AccountForm : Form
             _currentAccount.Status = AccountStatus.Hold;
         }
 
-        //await LoadAccountData();
         RefreshAccountData();
 
     }

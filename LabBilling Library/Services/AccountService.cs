@@ -117,7 +117,7 @@ public sealed class AccountService
         {
             return uow.AccountLockRepository.DeleteByUserHost(username, hostname);
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             Log.Instance.Fatal(ex);
             return false;
@@ -203,7 +203,7 @@ public sealed class AccountService
                 {
                     d.CptDescription = record.Cdms.Where(c => c.ChargeId == d.CdmCode).FirstOrDefault()?.CdmDetails?.Where(cd => cd.Cpt4 == d.CptCode).FirstOrDefault()?.Description;
                 }
-                if(string.IsNullOrEmpty(d.CdmDescription) || string.IsNullOrEmpty(d.CptDescription))
+                if (string.IsNullOrEmpty(d.CdmDescription) || string.IsNullOrEmpty(d.CptDescription))
                 {
                     uow.ChrgDiagnosisPointerRepository.Delete(d);
                     temp.Add(d);
@@ -347,7 +347,7 @@ public sealed class AccountService
         if (result.locksuccessful)
             table.AccountLockInfo = result.lockInfo;
         uow.Commit();
-        
+
         return table;
     }
 
@@ -785,11 +785,11 @@ public sealed class AccountService
             model.FinCode = newFinCode;
             try
             {
-                if(model.ReadyToBill)
+                if (model.ReadyToBill)
                 {
                     //clear ready to bill
                     model.Status = AccountStatus.New;
-                    model.Notes = AddNote(model.AccountNo,"Ready to Bill status cleared due to financial class change.").ToList();
+                    model.Notes = AddNote(model.AccountNo, "Ready to Bill status cleared due to financial class change.").ToList();
                 }
                 uow.AccountRepository.Update(model, new[] { nameof(Account.FinCode), nameof(Account.Status) });
             }
@@ -845,19 +845,29 @@ public sealed class AccountService
 
         }
 
+        Client oldClient = uow.ClientRepository.GetClient(oldClientMnem);
+        Client newClient = uow.ClientRepository.GetClient(newClientMnem);
+
+        if (oldClient == null)
+        {
+            uow.Commit();
+            throw new ApplicationException($"Client mnem {oldClientMnem} is not valid.");
+        }
+
+        if (newClient == null)
+        {
+            uow.Commit();
+            throw new ArgumentException($"Client mnem {newClientMnem} is not valid.", nameof(newClientMnem));
+        }
+
+        if (string.IsNullOrEmpty(newClient.FeeSchedule) || newClient.FeeSchedule == "0")
+        {
+            uow.Commit();
+            throw new ApplicationException($"Fee schedule not defined on client {newClientMnem}. Client change aborted.");
+        }
+
         try
         {
-            Client oldClient = uow.ClientRepository.GetClient(oldClientMnem);
-            Client newClient = uow.ClientRepository.GetClient(newClientMnem);
-
-            //Context.BeginTransaction();
-
-            if (oldClient == null)
-                throw new ApplicationException($"Client mnem {oldClientMnem} is not valid.");
-
-            if (newClient == null)
-                throw new ArgumentException($"Client mnem {newClientMnem} is not valid.", nameof(newClientMnem));
-
             if (oldClientMnem != newClientMnem)
             {
 
@@ -937,7 +947,6 @@ public sealed class AccountService
         catch (Exception ex)
         {
             Log.Instance.Error("Error during Change Client", ex);
-            //AbortTransaction();
             updateSuccess = false;
         }
         Log.Instance.Trace($"Exiting");
