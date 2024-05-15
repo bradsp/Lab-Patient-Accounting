@@ -889,7 +889,7 @@ public sealed class AccountService
                 {
                     try
                     {
-                        ReprocessCharges(model, $"Client changed from {oldClientMnem} to {newClientMnem}");
+                        model.Charges = ReprocessCharges(model, $"Client changed from {oldClientMnem} to {newClientMnem}").ToList();
                     }
                     catch (Exception ex)
                     {
@@ -904,7 +904,7 @@ public sealed class AccountService
                     {
                         try
                         {
-                            ReprocessCharges(model, $"Client changed from {oldClientMnem} to {newClientMnem}");
+                            model.Charges = ReprocessCharges(model, $"Client changed from {oldClientMnem} to {newClientMnem}").ToList();
                         }
                         catch (Exception ex)
                         {
@@ -916,7 +916,7 @@ public sealed class AccountService
                     {
                         try
                         {
-                            ReprocessCharges(model, $"Client changed from {oldClientMnem} to {newClientMnem}");
+                            model.Charges = ReprocessCharges(model, $"Client changed from {oldClientMnem} to {newClientMnem}").ToList();
                         }
                         catch (Exception ex)
                         {
@@ -927,7 +927,7 @@ public sealed class AccountService
                     {
                         try
                         {
-                            UpdateChargesClient(model.AccountNo, newClientMnem);
+                            model.Charges = UpdateChargesClient(model.AccountNo, newClientMnem).ToList();
                         }
                         catch (Exception ex)
                         {
