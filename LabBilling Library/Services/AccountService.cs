@@ -1892,6 +1892,9 @@ public sealed class AccountService
 
         try
         {
+            if (chk.IsRefund)
+                chk.Status = "REFUND";
+
             var newChk = uow.ChkRepository.Add(chk);
             uow.Commit();
             return newChk;

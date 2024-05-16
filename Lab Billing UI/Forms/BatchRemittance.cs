@@ -27,7 +27,7 @@ public partial class BatchRemittance : Form
         Log.Instance.Trace($"Entering");
         _batchTransactionService = new(Program.AppEnvironment);
         _accountService = new(Program.AppEnvironment);
-        List<ChkBatchDetail> chkBatchDetails = new();
+        //List<ChkBatchDetail> chkBatchDetails = new();
         SaveBatchButton.Enabled = false;
         SubmitPaymentsButton.Enabled = false;
         LoadOpenBatches();
@@ -271,6 +271,11 @@ public partial class BatchRemittance : Form
                 dgvPayments[nameof(ChkBatchDetail.PatientName), e.RowIndex].Value = account.PatFullName;
                 dgvPayments[nameof(ChkBatchDetail.Balance), e.RowIndex].Value = account.Balance;
                 dgvPayments.CurrentCell = dgvPayments[nameof(ChkBatchDetail.CheckNo), e.RowIndex];
+
+                if(EntryMode.SelectedItem.ToString() == "Refunds")
+                {
+                    dgvPayments[nameof(ChkBatchDetail.Status), e.RowIndex].Value = "REFUND";
+                }    
 
                 //clear the readonly flag on the cells
                 SetCellsReadonly(e.RowIndex, false);

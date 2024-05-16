@@ -80,6 +80,9 @@ public sealed class Chk : IBaseEntity
     [ResultColumn]
     public DateTime? mod_date_audit { get; set; }
 
+    [Ignore]
+    public bool IsRefund { get; set; } = false;
+
     public Guid rowguid { get; set; }
     public Guid chrg_rowguid { get; set; }
 }
