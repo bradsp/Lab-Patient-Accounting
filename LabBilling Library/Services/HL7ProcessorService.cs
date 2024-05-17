@@ -3,6 +3,8 @@ using LabBilling.Core.DataAccess;
 using LabBilling.Core.Models;
 using LabBilling.Core.UnitOfWork;
 using LabBilling.Logging;
+using NPOI.SS.UserModel;
+using PetaPoco;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -51,6 +53,12 @@ public sealed class HL7ProcessorService
         Processed,
         Failed,
         DoNotProcess
+    }
+
+    public List<MessageQueueCount> GetQueueCounts()
+    {
+        using UnitOfWorkMain uow = new(_appEnvironment);
+        return uow.MessagesInboundRepository.GetQueueCounts();
     }
 
     public static string StatusToString(Status status)

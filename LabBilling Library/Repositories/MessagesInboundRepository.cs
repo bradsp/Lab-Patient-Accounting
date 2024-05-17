@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using Microsoft.Data.SqlClient;
 using System.Data;
 using LabBilling.Core.UnitOfWork;
+using PetaPoco;
+using System.Linq;
 
 namespace LabBilling.Core.DataAccess
 {
@@ -13,6 +15,20 @@ namespace LabBilling.Core.DataAccess
         public MessagesInboundRepository(IAppEnvironment appEnvironment, PetaPoco.IDatabase context) : base(appEnvironment, context)
         {
 
+        }
+
+        public List<MessageQueueCount> GetQueueCounts()
+        {
+            var sql = Sql.Builder
+                .Select($"left({GetRealColumn(nameof(MessageInbound.MessageType))}, 3) as 'MessageType', count(*) as 'QueueCount'")
+                .From(_tableName)
+                .Where($"{GetRealColumn(nameof(MessageInbound.ProcessFlag))} = 'N'")
+                .GroupBy($"left({GetRealColumn(nameof(MessageInbound.MessageType))}, 3)")
+                .OrderBy($"left({GetRealColumn(nameof(MessageInbound.MessageType))}, 3)");
+
+            var results = Context.Query<MessageQueueCount>(sql).ToList();
+
+            return results;
         }
 
         public List<MessageInbound> GetUnprocessedMessages()
