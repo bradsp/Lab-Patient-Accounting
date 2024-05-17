@@ -224,23 +224,23 @@ public sealed class AccountService
             record.AccountAlert = uow.AccountAlertRepository.GetByAccount(account);
             record.PatientStatements = uow.PatientStatementAccountRepository.GetByAccount(account);
 
-            if (record.Client != null)
-            {
-                if (record.InsurancePrimary != null)
-                {
-                    record.BillingType = "REF LAB";
-                    record.BillForm = record.InsurancePrimary.InsCompany.BillForm;
+            //if (record.Client != null)
+            //{
+            //    if (record.InsurancePrimary != null)
+            //    {
+            //        record.BillingType = "REF LAB";
+            //        record.BillForm = record.InsurancePrimary.InsCompany.BillForm;
 
-                    if (string.IsNullOrEmpty(record.BillForm))
-                    {
-                        record.BillForm = record.Fin.ClaimType;
-                    }
-                }
-                else
-                {
-                    record.BillForm = record.Fin.ClaimType;
-                }
-            }
+            //        if (string.IsNullOrEmpty(record.BillForm))
+            //        {
+            //            record.BillForm = record.Fin.ClaimType;
+            //        }
+            //    }
+            //    else
+            //    {
+            //        record.BillForm = record.Fin.ClaimType;
+            //    }
+            //}
         }
 
         return record;
@@ -792,6 +792,8 @@ public sealed class AccountService
                     model.Notes = AddNote(model.AccountNo, "Ready to Bill status cleared due to financial class change.").ToList();
                 }
                 uow.AccountRepository.Update(model, new[] { nameof(Account.FinCode), nameof(Account.Status) });
+                model.FinCode = newFin.FinCode;
+                model.Fin = newFin;
             }
             catch (Exception ex)
             {
