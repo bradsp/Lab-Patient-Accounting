@@ -50,7 +50,10 @@ public sealed class AccountService
         return acc;
     }
 
+    public async Task<Account> GetAccountAsync(string account) => await Task.Run(() => GetAccount(account));
     public async Task<Account> GetAccountAsync(string account, bool demographicsOnly = false) => await Task.Run(() => GetAccount(account, demographicsOnly));
+    public async Task<Account> GetAccountAsync(string account, bool demographicsOnly = false, bool secureLock = true) => await Task.Run(() => GetAccount(account, demographicsOnly, secureLock));
+
 
     public (bool locksuccessful, AccountLock lockInfo) GetAccountLock(string account)
     {

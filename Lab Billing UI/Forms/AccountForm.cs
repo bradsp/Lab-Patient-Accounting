@@ -8,6 +8,7 @@ using LabBilling.Logging;
 using LabBilling.LookupForms;
 using System.ComponentModel;
 using System.Data;
+using System.Printing;
 using Utilities;
 using WinFormsLibrary;
 
@@ -32,6 +33,7 @@ public partial class AccountForm : Form
     private const int _timerInterval = 650;
     private const string _notesAlertText = "** SEE NOTES **";
     private bool _closing = false;
+    private bool _readOnly = false;
     private readonly ChargeMaintenanceUC _chargeMaintenance = new();
     private readonly InsMaintenanceUC _insPrimaryMaintenanceUC = new(InsCoverage.Primary);
     private readonly InsMaintenanceUC _insSecondaryMaintenanceUC = new(InsCoverage.Secondary);
@@ -263,12 +265,12 @@ public partial class AccountForm : Form
     private void SetFormPermissions()
     {
         Log.Instance.Trace("Entering");
-        _chargeMaintenance.AllowChargeEntry = Program.LoggedInUser.CanSubmitCharges;
+        _chargeMaintenance.AllowChargeEntry = !_readOnly && Program.LoggedInUser.CanSubmitCharges;
 
         Helper.SetControlsAccess(tabPayments.Controls, false);
         if (Program.AppEnvironment.ApplicationParameters.AllowPaymentAdjustmentEntry)
         {
-            Helper.SetControlsAccess(tabPayments.Controls, Program.LoggedInUser.CanAddAdjustments);
+            Helper.SetControlsAccess(tabPayments.Controls, !_readOnly && Program.LoggedInUser.CanAddAdjustments);
         }
 
         _insPrimaryMaintenanceUC.AllowEditing = false;
@@ -287,7 +289,7 @@ public partial class AccountForm : Form
         GenerateClaimButton.Visible = false;
         if (Program.AppEnvironment.ApplicationParameters.AllowEditing)
         {
-            if (Program.LoggedInUser.Access == "ENTER/EDIT")
+            if (Program.LoggedInUser.Access == "ENTER/EDIT" && !_readOnly)
             {
                 _insPrimaryMaintenanceUC.AllowEditing = true;
                 Helper.SetControlsAccess(tabDemographics.Controls, true);
@@ -351,10 +353,18 @@ public partial class AccountForm : Form
         }
         catch (AccountLockException alex)
         {
-            string message = $"Account is locked by {alex.LockInfo.UpdatedUser} at {alex.LockInfo.LockDateTime} on {alex.LockInfo.UpdatedHost}.";
-            MessageBox.Show(message, "Account Locked", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-            Close();
-            return;
+            string message = $"Account is locked by {alex.LockInfo.UpdatedUser} at {alex.LockInfo.LockDateTime} on {alex.LockInfo.UpdatedHost}. Open as read only?";
+            if (MessageBox.Show(message, "Account Locked", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            {
+                _currentAccount = await _accountService.GetAccountAsync(SelectedAccount, false, false);
+                _readOnly = true;
+                SetFormPermissions();
+            }
+            else
+            {
+                Close();
+                return;
+            }
         }
 
         if (_currentAccount.FinCode == Program.AppEnvironment.ApplicationParameters.ClientAccountFinCode)

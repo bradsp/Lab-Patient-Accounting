@@ -65,18 +65,15 @@ public sealed class Chk : IBaseEntity
     [Column("claim_no")]
     public string ClaimNo { get; set; }
 
-    [ResultColumn]
     [Column("mod_date")]
     public DateTime UpdatedDate { get; set; }
     [Column("mod_user")]
-    [ResultColumn]
     public string UpdatedUser { get; set; }
     [Column("mod_prg")]
-    [ResultColumn]
     public string UpdatedApp { get; set; }
     [Column("mod_host")]
-    [ResultColumn]
     public string UpdatedHost { get; set; }
+    [Column("mod_date_audit")]
     [ResultColumn]
     public DateTime? mod_date_audit { get; set; }
 
