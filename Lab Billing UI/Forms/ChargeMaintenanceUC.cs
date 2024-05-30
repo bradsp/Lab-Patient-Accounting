@@ -262,7 +262,17 @@ public partial class ChargeMaintenanceUC : UserControl
             var uri = Convert.ToInt32(row.Cells[nameof(Charge.uri)].Value.ToString());
             var chrg_num = Convert.ToInt32(row.Cells[nameof(Charge.ChrgId)].Value.ToString());
 
-            _accountService.AddChargeModifier(uri, item.Text);
+            try
+            {
+                _accountService.AddChargeModifier(uri, item.Text);
+            }
+            catch(ApplicationException apex)
+            {
+                string message = apex.Message;
+                if(apex.InnerException != null) { message += Environment.NewLine + apex.InnerException.Message; }
+                MessageBox.Show(message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
 
             var idx = CurrentAccount.Charges.FindIndex(x => x.ChrgId == chrg_num);
             var dIdx = CurrentAccount.Charges[idx].ChrgDetails.FindIndex(x => x.Id == uri);

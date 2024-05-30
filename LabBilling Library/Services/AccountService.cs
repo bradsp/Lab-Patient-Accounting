@@ -1978,11 +1978,19 @@ public sealed class AccountService
     public ChrgDetail AddChargeModifier(int chrgDetailId, string modifier)
     {
         using AccountUnitOfWork uow = new(_appEnvironment, true);
-        var retval = uow.ChrgDetailRepository.AddModifier(chrgDetailId, modifier);
-        var chrgDetail = uow.ChrgDetailRepository.GetByKey((object)chrgDetailId);
-        uow.Commit();
+        try
+        {
+            var retval = uow.ChrgDetailRepository.AddModifier(chrgDetailId, modifier);
+            var chrgDetail = uow.ChrgDetailRepository.GetByKey((object)chrgDetailId);
+            uow.Commit();
 
-        return chrgDetail;
+            return chrgDetail;
+        }
+        catch(ApplicationException apex)
+        {
+            Log.Instance.Error(apex.Message);
+            throw new ApplicationException("Error adding modifier.", apex);
+        }
     }
 
     public Chrg CreditCharge(int chrgId, string comment = "")

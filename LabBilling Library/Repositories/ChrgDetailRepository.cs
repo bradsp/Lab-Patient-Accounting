@@ -1,6 +1,7 @@
 ﻿using LabBilling.Core.Models;
 using LabBilling.Logging;
 using Microsoft.Data.SqlClient;
+using System;
 using System.Collections.Generic;
 using System.Data;
 
@@ -25,7 +26,12 @@ public sealed class ChrgDetailRepository : RepositoryBase<ChrgDetail>
 
         if (result != null)
         {
-            result.Modifier = modifier;
+            if (string.IsNullOrEmpty(result.Modifier))
+                result.Modifier = modifier;
+            else if (string.IsNullOrEmpty(result.Modifier2))
+                result.Modifier2 = modifier;
+            else
+                throw new ApplicationException("Cannot add modifier. Both modifier's are already populated.");
 
             return Context.Update(result);
         }
