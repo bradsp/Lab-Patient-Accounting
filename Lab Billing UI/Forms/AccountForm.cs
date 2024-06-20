@@ -146,14 +146,15 @@ public partial class AccountForm : Form
         _controlColumnMap.Add(SocSecNoTextBox, nameof(Account.SocSecNo));
         _controlColumnMap.Add(DateOfBirthTextBox, nameof(Account.BirthDate));
         _controlColumnMap.Add(SexComboBox, nameof(Account.Sex));
+        _controlColumnMap.Add(SuffixTextBox, nameof(Account.PatNameSuffix));
+        _controlColumnMap.Add(LastNameTextBox, nameof(Account.PatNameSuffix));
+        _controlColumnMap.Add(MiddleNameTextBox, nameof(Account.PatMiddleName));
+        _controlColumnMap.Add(FirstNameTextBox, nameof(Account.PatFirstName));
 
         _controlColumnMap.Add(ZipcodeTextBox, nameof(Pat.ZipCode));
         _controlColumnMap.Add(MaritalStatusComboBox, nameof(Pat.MaritalStatus));
         _controlColumnMap.Add(EmailAddressTextBox, nameof(Pat.EmailAddress));
-        _controlColumnMap.Add(SuffixTextBox, nameof(Pat.PatNameSuffix));
-        _controlColumnMap.Add(LastNameTextBox, nameof(Pat.PatNameSuffix));
-        _controlColumnMap.Add(MiddleNameTextBox, nameof(Pat.PatMiddleName));
-        _controlColumnMap.Add(FirstNameTextBox, nameof(Pat.PatFirstName));
+
         _controlColumnMap.Add(StateComboBox, nameof(Pat.State));
         _controlColumnMap.Add(PhoneTextBox, nameof(Pat.PrimaryPhone));
         _controlColumnMap.Add(CityTextBox, nameof(Pat.City));
@@ -560,6 +561,13 @@ public partial class AccountForm : Form
         Log.Instance.Trace($"Entering - {SelectedAccount}");
 
         BannerNameTextBox.Text = _currentAccount.PatFullName;
+
+        if(_currentAccount.FinCode == Program.AppEnvironment.ApplicationParameters.ClientAccountFinCode)
+        {
+            BannerDOBSexLabel.Visible = false;
+            BannerDobTextBox.Visible = false;
+            BannerSexTextBox.Visible = false;
+        }
         BannerDobTextBox.Text = _currentAccount.BirthDate.GetValueOrDefault().ToShortDateString();
         BannerSexTextBox.Text = _currentAccount.Sex;
         BannerAccountTextBox.Text = SelectedAccount;
@@ -672,7 +680,6 @@ public partial class AccountForm : Form
         _currentAccount.Pat.State = StateComboBox.SelectedValue.ToString();
         _currentAccount.Pat.ZipCode = ZipcodeTextBox.Text;
         _currentAccount.Pat.CityStateZip = $"{CityTextBox.Text}, {StateComboBox.SelectedValue} {ZipcodeTextBox.Text}";
-        _currentAccount.Pat.PatFullName = $"{LastNameTextBox.Text},{FirstNameTextBox.Text} {MiddleNameTextBox.Text}";
         _currentAccount.Pat.ProviderId = orderingPhyTextBox.Tag?.ToString();
 
         _currentAccount.Pat.GuarantorFullName = $"{GuarantorLastNameTextBox.Text} {GuarSuffixTextBox.Text},{GuarFirstNameTextBox.Text} {GuarMiddleNameTextBox.Text}";

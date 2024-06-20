@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Xml.Linq;
-using EdiTools;
+﻿using EdiTools;
 using LabBilling.Core.Models;
-using NPOI.HSSF.Record;
+using System;
+using System.Collections.Generic;
 using Utilities;
 
 namespace LabBilling.Core.Services;
@@ -50,8 +48,8 @@ public sealed class Billing837Service
 
     private ClaimType? _claimType;
     private ClaimData _claim; //used to track current claim being processed
-    private List<char> specialChars 
-    { 
+    private List<char> specialChars
+    {
         get
         {
             var tmp = new List<char>
@@ -700,7 +698,7 @@ public sealed class Billing837Service
                     indRelationCode = "18";
                     break;
             }
-            
+
             ediDocument.Segments.Add(new EdiSegment("PAT")
             {
                 [01] = indRelationCode
@@ -786,7 +784,7 @@ public sealed class Billing837Service
 
         ediDocument.Segments.Add(clm);
         segmentCount++;
-        
+
         if (_claimType == ClaimType.Professional)
         {
             // --DTP - Date - Onset of Current Symptoms--professional claim
@@ -907,8 +905,8 @@ public sealed class Billing837Service
                     continue;
                 //per spec "ABK" is code for ICD-10, but does not pass validation
                 var hiElement = new EdiElement();
-                if(dxCnt == 1)
-                {                                        
+                if (dxCnt == 1)
+                {
                     hiElement[1] = "ABK";
                     hiElement[2] = diag.Code.Trim();
                     hi.Element(dxCnt, hiElement);
@@ -923,7 +921,7 @@ public sealed class Billing837Service
                     }
                     hiElement[1] = "ABF";
                     hiElement[2] = diag.Code.Trim();
-                    hi.Element(dxCnt-1, hiElement);
+                    hi.Element(dxCnt - 1, hiElement);
                 }
                 dxCnt++;
             }

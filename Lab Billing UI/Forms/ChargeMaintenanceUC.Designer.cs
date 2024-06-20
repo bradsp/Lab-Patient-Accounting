@@ -179,39 +179,40 @@ namespace LabBilling.Forms
             // 
             chargesContextMenu.Items.AddRange(new ToolStripItem[] { toolStripCreditCharge, moveChargeToolStripMenuItem, changeCreditFlagToolStripMenuItem, addModifierToolStripMenuItem1, removeModifierToolStripMenuItem1 });
             chargesContextMenu.Name = "menuCharges";
-            chargesContextMenu.Size = new Size(176, 114);
+            chargesContextMenu.Size = new Size(181, 136);
+            chargesContextMenu.Opening += chargesContextMenu_Opening;
             // 
             // toolStripCreditCharge
             // 
             toolStripCreditCharge.Name = "toolStripCreditCharge";
-            toolStripCreditCharge.Size = new Size(175, 22);
+            toolStripCreditCharge.Size = new Size(180, 22);
             toolStripCreditCharge.Text = "Credit Charge";
             toolStripCreditCharge.Click += creditChargeToolStrip_Click;
             // 
             // moveChargeToolStripMenuItem
             // 
             moveChargeToolStripMenuItem.Name = "moveChargeToolStripMenuItem";
-            moveChargeToolStripMenuItem.Size = new Size(175, 22);
+            moveChargeToolStripMenuItem.Size = new Size(180, 22);
             moveChargeToolStripMenuItem.Text = "Move Charge";
             moveChargeToolStripMenuItem.Click += moveChargeToolStripMenuItem_Click;
             // 
             // changeCreditFlagToolStripMenuItem
             // 
             changeCreditFlagToolStripMenuItem.Name = "changeCreditFlagToolStripMenuItem";
-            changeCreditFlagToolStripMenuItem.Size = new Size(175, 22);
+            changeCreditFlagToolStripMenuItem.Size = new Size(180, 22);
             changeCreditFlagToolStripMenuItem.Text = "Change Credit Flag";
             changeCreditFlagToolStripMenuItem.Click += changeCreditFlagToolStripMenuItem_Click;
             // 
             // addModifierToolStripMenuItem1
             // 
             addModifierToolStripMenuItem1.Name = "addModifierToolStripMenuItem1";
-            addModifierToolStripMenuItem1.Size = new Size(175, 22);
+            addModifierToolStripMenuItem1.Size = new Size(180, 22);
             addModifierToolStripMenuItem1.Text = "Add Modifier";
             // 
             // removeModifierToolStripMenuItem1
             // 
             removeModifierToolStripMenuItem1.Name = "removeModifierToolStripMenuItem1";
-            removeModifierToolStripMenuItem1.Size = new Size(175, 22);
+            removeModifierToolStripMenuItem1.Size = new Size(180, 22);
             removeModifierToolStripMenuItem1.Text = "Remove Modifier";
             // 
             // AddChargeButton

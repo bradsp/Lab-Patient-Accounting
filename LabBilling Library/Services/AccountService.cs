@@ -7,7 +7,6 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Security.Policy;
 using System.Threading.Tasks;
 using Utilities;
 using Log = LabBilling.Logging.Log;
@@ -1390,8 +1389,9 @@ public sealed class AccountService
                 chrgDetail.CptDescription = cpt.ShortDescription;
 
             chrgDetails.Add(chrgDetail);
-
-            var diagPtr = accData.ChrgDiagnosisPointers.Find(c => c.CdmCode == chrg.CDMCode && c.CptCode == chrgDetail.Cpt4);
+            if (accData.ChrgDiagnosisPointers == null)
+                accData.ChrgDiagnosisPointers = new();
+            var diagPtr = accData.ChrgDiagnosisPointers?.Find(c => c.CdmCode == chrg.CDMCode && c.CptCode == chrgDetail.Cpt4);
             if (diagPtr == null)
             {
                 //add a new diag ptr
@@ -1986,7 +1986,7 @@ public sealed class AccountService
 
             return chrgDetail;
         }
-        catch(ApplicationException apex)
+        catch (ApplicationException apex)
         {
             Log.Instance.Error(apex.Message);
             throw new ApplicationException("Error adding modifier.", apex);

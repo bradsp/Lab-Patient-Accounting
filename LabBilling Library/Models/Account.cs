@@ -187,7 +187,7 @@ public sealed class Account : IBaseEntity
 
 
     [Ignore]
-    public double Balance { get => this.TotalCharges - (this.TotalPayments + this.TotalContractual + this.TotalWriteOff); }
+    public double Balance { get => this.BillableCharges.Sum(x => x.Quantity * x.NetAmount) - (this.TotalPayments + this.TotalContractual + this.TotalWriteOff); }
     [Ignore]
     public double TotalCharges
     {

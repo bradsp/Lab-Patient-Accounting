@@ -421,6 +421,11 @@ public sealed class HL7ProcessorService
 
                     foreach (var ins in _accountRecord.Insurances)
                     {
+                        if(ins.GroupNumber.Length > 30)
+                        {
+                            errors.Append($"Group Number is not a valid value: {ins.GroupNumber}");
+                            ins.GroupNumber = string.Empty;
+                        }
                         _accountService.SaveInsurance(ins);
                     }
 

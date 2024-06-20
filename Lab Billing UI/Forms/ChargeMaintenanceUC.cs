@@ -3,12 +3,7 @@ using LabBilling.Core.Models;
 using LabBilling.Core.Services;
 using LabBilling.Logging;
 using LabBilling.ViewModel;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Windows.Forms;
 using WinFormsLibrary;
 
 namespace LabBilling.Forms;
@@ -151,6 +146,24 @@ public partial class ChargeMaintenanceUC : UserControl
 
         ChargesDataGrid.DataSource = _chargesTable;
 
+        //add modifier combobox columns
+        DataGridViewComboBoxColumn modifier1 = new ();
+        DataGridViewComboBoxColumn modifier2 = new ();
+
+        foreach(var item in Dictionaries.CptModifiers)
+        {
+            modifier1.Items.Add(item);
+            modifier2.Items.Add(item);
+        }
+
+        modifier1.ValueMember = "Key";
+        modifier1.DisplayMember = "Value";
+
+        modifier2.ValueMember = "Key";
+        modifier2.DisplayMember = "Value";
+
+        //load modifiers into combobox
+
         try
         {
             if (ChargesDataGrid.Columns.Contains(nameof(Charge.ChrgId)))
@@ -173,14 +186,12 @@ public partial class ChargeMaintenanceUC : UserControl
             _chargesTable.DefaultView.RowFilter = $"{nameof(Chrg.IsCredited)} = false";
         }
 
-
-
         foreach (DataGridViewColumn col in ChargesDataGrid.Columns)
         {
             col.Visible = false;
+            col.ReadOnly = true;
         }
         int z = 1;
-
         ChargesDataGrid.Columns[nameof(Charge.ChrgId)].SetVisibilityOrder(true, z++);
         ChargesDataGrid.Columns[nameof(Charge.IsCredited)].SetVisibilityOrder(true, z++);
         ChargesDataGrid.Columns[nameof(Charge.CDMCode)].SetVisibilityOrder(true, z++);
@@ -199,6 +210,9 @@ public partial class ChargeMaintenanceUC : UserControl
         ChargesDataGrid.Columns[nameof(Charge.Type)].SetVisibilityOrder(true, z++);
         ChargesDataGrid.Columns[nameof(Charge.Amount)].SetVisibilityOrder(true, z++);
         ChargesDataGrid.Columns[nameof(Charge.Comment)].SetVisibilityOrder(true, z++);
+
+        ChargesDataGrid.Columns[nameof(Charge.Modifier)].ReadOnly = false;
+        ChargesDataGrid.Columns[nameof(Charge.Modifer2)].ReadOnly = false;
 
         ChargesDataGrid.Columns[nameof(Charge.Amount)].DefaultCellStyle.Format = "N2";
         ChargesDataGrid.Columns[nameof(Charge.Amount)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
@@ -266,10 +280,10 @@ public partial class ChargeMaintenanceUC : UserControl
             {
                 _accountService.AddChargeModifier(uri, item.Text);
             }
-            catch(ApplicationException apex)
+            catch (ApplicationException apex)
             {
                 string message = apex.Message;
-                if(apex.InnerException != null) { message += Environment.NewLine + apex.InnerException.Message; }
+                if (apex.InnerException != null) { message += Environment.NewLine + apex.InnerException.Message; }
                 MessageBox.Show(message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
@@ -465,5 +479,28 @@ public partial class ChargeMaintenanceUC : UserControl
     private void ChargesDataGrid_ColumnSortModeChanged(object sender, DataGridViewColumnEventArgs e)
     {
 
+    }
+
+    private void chargesContextMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+    {
+        int selectedRows = ChargesDataGrid.Rows.GetRowCount(DataGridViewElementStates.Selected);
+        if (selectedRows > 0)
+        {
+            DataGridViewRow row = ChargesDataGrid.SelectedRows[0];
+
+            string mod1 = row.Cells[nameof(ChrgDetail.Modifier)].Value.ToString();
+            string mod2 = row.Cells[nameof(ChrgDetail.Modifier2)].Value.ToString();
+
+            if(string.IsNullOrWhiteSpace(mod1) && string.IsNullOrWhiteSpace(mod2))
+            {
+                addModifierToolStripMenuItem1.Enabled = true;
+                removeModifierToolStripMenuItem1.Enabled = false;
+            }
+            else
+            {
+                addModifierToolStripMenuItem1.Enabled = false;
+                removeModifierToolStripMenuItem1.Enabled = true;
+            }
+        }
     }
 }
