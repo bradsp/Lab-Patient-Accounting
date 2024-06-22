@@ -60,6 +60,7 @@ public class UnitOfWorkMain : IUnitOfWork
     public PhyRepository PhyRepository { get; private set; }
     public ReportingRepository ReportingRepository { get; private set; }
     public RevenueCodeRepository RevenueCodeRepository { get; private set; }
+    public SanctionedProviderRepository SanctionedProviderRepository { get; private set; }
     public SystemParametersRepository SystemParametersRepository { get; private set; }
     public UserAccountRepository UserAccountRepository { get; private set; }
     public UserProfileRepository UserProfileRepository { get; private set; }
@@ -123,6 +124,7 @@ public class UnitOfWorkMain : IUnitOfWork
         PatRepository = new(appEnvironment, Context);
         PhyRepository = new(appEnvironment, Context);
         RevenueCodeRepository = new(appEnvironment, Context);
+        SanctionedProviderRepository = new(appEnvironment, Context);
         SystemParametersRepository = new(appEnvironment, Context);
         UserAccountRepository = new(appEnvironment, Context);
         UserProfileRepository = new(appEnvironment, Context);

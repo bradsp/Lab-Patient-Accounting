@@ -45,8 +45,6 @@ namespace LabBilling.Forms
             toolStripCreditCharge = new ToolStripMenuItem();
             moveChargeToolStripMenuItem = new ToolStripMenuItem();
             changeCreditFlagToolStripMenuItem = new ToolStripMenuItem();
-            addModifierToolStripMenuItem1 = new ToolStripMenuItem();
-            removeModifierToolStripMenuItem1 = new ToolStripMenuItem();
             AddChargeButton = new Button();
             chargeBalRichTextbox = new RichTextBox();
             TotalChargesTextBox = new TextBox();
@@ -141,7 +139,6 @@ namespace LabBilling.Forms
             dataGridViewCellStyle1.SelectionForeColor = SystemColors.HighlightText;
             dataGridViewCellStyle1.WrapMode = DataGridViewTriState.True;
             ChargesDataGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
-            ChargesDataGrid.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             chargeLayoutPanel.SetColumnSpan(ChargesDataGrid, 2);
             ChargesDataGrid.ContextMenuStrip = chargesContextMenu;
             dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
@@ -153,11 +150,9 @@ namespace LabBilling.Forms
             dataGridViewCellStyle2.WrapMode = DataGridViewTriState.False;
             ChargesDataGrid.DefaultCellStyle = dataGridViewCellStyle2;
             ChargesDataGrid.Dock = DockStyle.Fill;
-            ChargesDataGrid.EditMode = DataGridViewEditMode.EditProgrammatically;
             ChargesDataGrid.Location = new Point(4, 36);
             ChargesDataGrid.Margin = new Padding(4, 3, 4, 3);
             ChargesDataGrid.Name = "ChargesDataGrid";
-            ChargesDataGrid.ReadOnly = true;
             dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle3.BackColor = SystemColors.Control;
             dataGridViewCellStyle3.Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
@@ -171,49 +166,40 @@ namespace LabBilling.Forms
             ChargesDataGrid.Size = new Size(917, 287);
             ChargesDataGrid.TabIndex = 0;
             ChargesDataGrid.CellDoubleClick += DgvCharges_CellDoubleClick;
+            ChargesDataGrid.CellEndEdit += ChargesDataGrid_CellEndEdit;
             ChargesDataGrid.CellFormatting += ChargesDataGrid_CellFormatting;
             ChargesDataGrid.CellMouseClick += ChargesDataGrid_CellMouseClick;
+            ChargesDataGrid.CellMouseDown += ChargesDataGrid_CellMouseDown;
+            ChargesDataGrid.CellValueChanged += ChargesDataGrid_CellValueChanged;
             ChargesDataGrid.ColumnSortModeChanged += ChargesDataGrid_ColumnSortModeChanged;
+            ChargesDataGrid.CurrentCellDirtyStateChanged += ChargesDataGrid_CurrentCellDirtyStateChanged;
             // 
             // chargesContextMenu
             // 
-            chargesContextMenu.Items.AddRange(new ToolStripItem[] { toolStripCreditCharge, moveChargeToolStripMenuItem, changeCreditFlagToolStripMenuItem, addModifierToolStripMenuItem1, removeModifierToolStripMenuItem1 });
+            chargesContextMenu.Items.AddRange(new ToolStripItem[] { toolStripCreditCharge, moveChargeToolStripMenuItem, changeCreditFlagToolStripMenuItem });
             chargesContextMenu.Name = "menuCharges";
-            chargesContextMenu.Size = new Size(181, 136);
-            chargesContextMenu.Opening += chargesContextMenu_Opening;
+            chargesContextMenu.Size = new Size(176, 70);
             // 
             // toolStripCreditCharge
             // 
             toolStripCreditCharge.Name = "toolStripCreditCharge";
-            toolStripCreditCharge.Size = new Size(180, 22);
+            toolStripCreditCharge.Size = new Size(175, 22);
             toolStripCreditCharge.Text = "Credit Charge";
             toolStripCreditCharge.Click += creditChargeToolStrip_Click;
             // 
             // moveChargeToolStripMenuItem
             // 
             moveChargeToolStripMenuItem.Name = "moveChargeToolStripMenuItem";
-            moveChargeToolStripMenuItem.Size = new Size(180, 22);
+            moveChargeToolStripMenuItem.Size = new Size(175, 22);
             moveChargeToolStripMenuItem.Text = "Move Charge";
             moveChargeToolStripMenuItem.Click += moveChargeToolStripMenuItem_Click;
             // 
             // changeCreditFlagToolStripMenuItem
             // 
             changeCreditFlagToolStripMenuItem.Name = "changeCreditFlagToolStripMenuItem";
-            changeCreditFlagToolStripMenuItem.Size = new Size(180, 22);
+            changeCreditFlagToolStripMenuItem.Size = new Size(175, 22);
             changeCreditFlagToolStripMenuItem.Text = "Change Credit Flag";
             changeCreditFlagToolStripMenuItem.Click += changeCreditFlagToolStripMenuItem_Click;
-            // 
-            // addModifierToolStripMenuItem1
-            // 
-            addModifierToolStripMenuItem1.Name = "addModifierToolStripMenuItem1";
-            addModifierToolStripMenuItem1.Size = new Size(180, 22);
-            addModifierToolStripMenuItem1.Text = "Add Modifier";
-            // 
-            // removeModifierToolStripMenuItem1
-            // 
-            removeModifierToolStripMenuItem1.Name = "removeModifierToolStripMenuItem1";
-            removeModifierToolStripMenuItem1.Size = new Size(180, 22);
-            removeModifierToolStripMenuItem1.Text = "Remove Modifier";
             // 
             // AddChargeButton
             // 
@@ -312,7 +298,5 @@ namespace LabBilling.Forms
         private System.Windows.Forms.TextBox TotalChargesTextBox;
         private System.Windows.Forms.Label ChargeTotalChargesLabel;
         private System.Windows.Forms.CheckBox ShowCreditedChrgCheckBox;
-        private System.Windows.Forms.ToolStripMenuItem addModifierToolStripMenuItem1;
-        private System.Windows.Forms.ToolStripMenuItem removeModifierToolStripMenuItem1;
     }
 }

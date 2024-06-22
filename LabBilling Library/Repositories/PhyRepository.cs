@@ -75,8 +75,8 @@ namespace LabBilling.Core.DataAccess
         public Phy GetById(double id)
         {
             Log.Instance.Trace($"Entering - id {id}");
-            Phy phy = new Phy();
-            Pth pth = new Pth();
+            Phy phy = new();
+            Pth pth = new();
 
             phy = Context.SingleOrDefault<Phy>((object)id);
             if(phy == null)

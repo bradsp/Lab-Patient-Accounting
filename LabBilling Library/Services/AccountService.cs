@@ -225,24 +225,6 @@ public sealed class AccountService
             record.Fin = uow.FinRepository.GetFin(record.FinCode);
             record.AccountAlert = uow.AccountAlertRepository.GetByAccount(account);
             record.PatientStatements = uow.PatientStatementAccountRepository.GetByAccount(account);
-
-            //if (record.Client != null)
-            //{
-            //    if (record.InsurancePrimary != null)
-            //    {
-            //        record.BillingType = "REF LAB";
-            //        record.BillForm = record.InsurancePrimary.InsCompany.BillForm;
-
-            //        if (string.IsNullOrEmpty(record.BillForm))
-            //        {
-            //            record.BillForm = record.Fin.ClaimType;
-            //        }
-            //    }
-            //    else
-            //    {
-            //        record.BillForm = record.Fin.ClaimType;
-            //    }
-            //}
         }
 
         return record;
@@ -1980,7 +1962,7 @@ public sealed class AccountService
         using AccountUnitOfWork uow = new(_appEnvironment, true);
         try
         {
-            var retval = uow.ChrgDetailRepository.AddModifier(chrgDetailId, modifier);
+            var retval = uow.ChrgDetailRepository.UpdateModifier(chrgDetailId, modifier);
             var chrgDetail = uow.ChrgDetailRepository.GetByKey((object)chrgDetailId);
             uow.Commit();
 

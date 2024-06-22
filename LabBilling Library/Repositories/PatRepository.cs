@@ -58,6 +58,8 @@ public sealed class PatRepository : RepositoryBase<Pat>
         }
 
         record.Physician = dictionaryService.GetProvider(record.ProviderId);
+        if(record.Physician != null)
+            record.Physician.SanctionedProvider = dictionaryService.GetSanctionedProvider(record.Physician?.NpiId);
 
         if (!StringExtensions.ParseName(record.GuarantorFullName, out string strGuarLastName, out string strGuarFirstName, out string strGuarMidName, out string strGuarSuffix))
         {

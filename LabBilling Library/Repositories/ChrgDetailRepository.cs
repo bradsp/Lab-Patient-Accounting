@@ -14,7 +14,7 @@ public sealed class ChrgDetailRepository : RepositoryBase<ChrgDetail>
 
     }
 
-    public int AddModifier(int uri, string modifier)
+    public int UpdateModifier(int uri, string modifier)
     {
         Log.Instance.Trace("Entering");
 
@@ -26,22 +26,15 @@ public sealed class ChrgDetailRepository : RepositoryBase<ChrgDetail>
 
         if (result != null)
         {
-            if (string.IsNullOrEmpty(result.Modifier))
-                result.Modifier = modifier;
-            else if (string.IsNullOrEmpty(result.Modifier2))
-                result.Modifier2 = modifier;
-            else
-                throw new ApplicationException("Cannot add modifier. Both modifier's are already populated.");
-
+            result.Modifier = modifier;
             return Context.Update(result);
         }
-
         return 0;
     }
 
     public int RemoveModifier(int uri)
     {
-        return AddModifier(uri, string.Empty);
+        return UpdateModifier(uri, string.Empty);
     }
 
     public IList<ChrgDetail> GetByChrgId(int chrgId)
