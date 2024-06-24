@@ -15,17 +15,6 @@ public sealed class Pat : IBaseEntity
     [Column("hne_epi_number")]
     public string EMPIId { get; set; }
 
-    [Column("pat_full_name")]
-    public string PatFullName { get; set; }
-    [Ignore]
-    public string PatFirstName { get; set; }
-    [Ignore]
-    public string PatMiddleName { get; set; }
-    [Ignore]
-    public string PatLastName { get; set; }
-    [Ignore]
-    public string PatNameSuffix { get; set; }
-
     [Column("pat_marital")]
     public string MaritalStatus { get; set; }
 

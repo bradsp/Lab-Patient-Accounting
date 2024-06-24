@@ -110,7 +110,7 @@ public class WorklistService
                 parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, AccountStatus.Statements)).ToArray();
                 parameters = parameters.Append((nameof(AccountSearch.ThirdPartyBalance), AccountSearchRepository.operation.NotEqual, "0.00")).ToArray();
                 break;
-            case Worklists.Amerigroup:
+            case Worklists.Wellpoint:
                 parameters = parameters.Append((nameof(AccountSearch.ServiceDate), AccountSearchRepository.operation.LessThanOrEqual, thruDate.ToString())).ToArray();
                 parameters = parameters.Append((nameof(AccountSearch.FinCode), AccountSearchRepository.operation.Equal, "Q")).ToArray();
                 parameters = parameters.Append((nameof(AccountSearch.Status), AccountSearchRepository.operation.NotEqual, AccountStatus.Hold)).ToArray();
@@ -254,7 +254,7 @@ public class WorklistService
                     AccountStatus.Statements
                 };
                 return account.FinCode == "P" && !accStatuses.Contains(account.Status) && account.ClaimBalance != 0.00;
-            case Worklists.Amerigroup:
+            case Worklists.Wellpoint:
                 accStatuses = new()
                 {
                     AccountStatus.Hold,

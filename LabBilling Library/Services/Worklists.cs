@@ -13,7 +13,7 @@ public static class Worklists
     public const string CommercialProf = "Commercial Professional";
     public const string UHCCommunityPlan = "UHC Community Plan";
     public const string PathwaysTNCare = "Pathways TNCare";
-    public const string Amerigroup = "Amerigroup";
+    public const string Wellpoint = "Wellpoint";
     public const string SelfPay = "Self Pay";
     public const string ManualHold = "Manual Hold";
     public const string InitialHold = "Initial Hold";

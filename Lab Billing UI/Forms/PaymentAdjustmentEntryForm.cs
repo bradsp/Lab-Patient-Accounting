@@ -8,24 +8,24 @@ namespace LabBilling.Forms;
 
 public partial class PaymentAdjustmentEntryForm : Form
 {
-    private Account _account;
+    private readonly Account _account;
 
-    public Chk chk = new Chk();
+    public Chk chk = new();
 
-    private DictionaryService dictionaryService;
+    private readonly DictionaryService _dictionaryService;
 
     public PaymentAdjustmentEntryForm(ref Account account) 
     {
         InitializeComponent();
 
         _account = account;
-        dictionaryService = new(Program.AppEnvironment);
+        _dictionaryService = new(Program.AppEnvironment);
     }
 
     private void PaymentAdjustmentEntryForm_Load(object sender, EventArgs e)
     {
         //get write off codes
-        writeOffCodeComboBox.DataSource = dictionaryService.GetWriteOffCodes();
+        writeOffCodeComboBox.DataSource = _dictionaryService.GetWriteOffCodes();
         writeOffCodeComboBox.DisplayMember = nameof(WriteOffCode.Description);
         writeOffCodeComboBox.ValueMember = nameof(WriteOffCode.Code);
         writeOffCodeComboBox.SelectedIndex = -1;
@@ -77,6 +77,7 @@ public partial class PaymentAdjustmentEntryForm : Form
             chk.Source = fromTextBox.Text;
 
             chk.PaidAmount = Convert.ToDouble(paymentAmtTextBox.DollarValue);
+            chk.IsRefund = refundCheckBox.Checked;
             if (refundCheckBox.Checked)
             {
                 if (chk.PaidAmount > 0)

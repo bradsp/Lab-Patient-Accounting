@@ -40,6 +40,7 @@ public partial class WorkListForm : Form
         TreeNode[] worklistsTreeNode = new TreeNode[worklists.Count];
         int i = 0;
 
+        //load worklist selector
         worklists.ForEach(w => worklistsTreeNode[i++] = new TreeNode(w));
 
         TreeNode rootNode = new("Worklists", worklistsTreeNode);

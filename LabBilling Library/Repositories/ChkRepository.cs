@@ -84,6 +84,11 @@ public sealed class ChkRepository : RepositoryBase<Chk>
         if (string.IsNullOrEmpty(table.Status))
             table.Status = "NEW";
 
+        if(table.mod_date_audit == null)
+        {
+            table.mod_date_audit = DateTime.Now;
+        }
+
         return base.Add(table);
     }
 }

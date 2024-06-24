@@ -3,12 +3,7 @@ using LabBilling.Core.Models;
 using LabBilling.Core.Services;
 using LabBilling.Logging;
 using LabBilling.ViewModel;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Windows.Forms;
 using WinFormsLibrary;
 
 namespace LabBilling.Forms;
@@ -60,20 +55,6 @@ public partial class ChargeMaintenanceUC : UserControl
         if (this.DesignMode)
             return;
 
-        //build context menu
-        foreach (var item in Dictionaries.CptModifiers)
-        {
-            ToolStripMenuItem tsItem = new(item.Key)
-            {
-                Tag = item.Value
-            };
-            tsItem.Click += new EventHandler(AddModifier_Click);
-
-            addModifierToolStripMenuItem1.DropDownItems.Add(tsItem);
-        }
-
-        removeModifierToolStripMenuItem1.Click += new EventHandler(RemoveModifier_Click);
-
         LoadCharges();
     }
 
@@ -118,7 +99,7 @@ public partial class ChargeMaintenanceUC : UserControl
                     CdmDescription = chrg.CdmDescription,
                     RevenueCode = detail.RevenueCode,
                     Cpt4 = detail.Cpt4,
-                    Modifer2 = detail.Modifier2,
+                    Modifier2 = detail.Modifier2,
                     Modifier = detail.Modifier,
                     Type = detail.Type,
                     Amount = detail.Amount,
@@ -138,6 +119,9 @@ public partial class ChargeMaintenanceUC : UserControl
     public void LoadCharges()
     {
         _grouper.RemoveGrouping();
+        ChargesDataGrid.DataSource = null;
+        ChargesDataGrid.Rows.Clear();
+        ChargesDataGrid.Columns.Clear();
 
         if (CurrentAccount == null)
             return;
@@ -148,6 +132,34 @@ public partial class ChargeMaintenanceUC : UserControl
         LoadViewModel();
 
         TotalChargesTextBox.Text = CurrentAccount.TotalCharges.ToString("c");
+
+
+
+        //add modifier combobox columns
+        DataGridViewComboBoxColumn modifier1 = new();
+        DataGridViewComboBoxColumn modifier2 = new();
+
+        modifier1.Name = nameof(Charge.Modifier);
+        modifier1.HeaderText = nameof(Charge.Modifier);
+        modifier1.DataPropertyName = nameof(Charge.Modifier);
+        modifier1.FlatStyle = FlatStyle.Flat;
+
+        modifier2.Name = nameof(Charge.Modifier2);
+        modifier2.HeaderText = nameof(Charge.Modifier2);
+        modifier2.DataPropertyName = nameof(Charge.Modifier2);
+        modifier2.FlatStyle = FlatStyle.Flat;
+
+        modifier1.DataSource = new BindingSource(Dictionaries.CptModifiers, null);
+        modifier2.DataSource = new BindingSource(Dictionaries.CptModifiers, null);
+
+        modifier1.ValueMember = "Key";
+        modifier1.DisplayMember = "Key";
+
+        modifier2.ValueMember = "Key";
+        modifier2.DisplayMember = "Key";
+
+        ChargesDataGrid.Columns.Add(modifier1);
+        ChargesDataGrid.Columns.Add(modifier2);
 
         ChargesDataGrid.DataSource = _chargesTable;
 
@@ -173,14 +185,12 @@ public partial class ChargeMaintenanceUC : UserControl
             _chargesTable.DefaultView.RowFilter = $"{nameof(Chrg.IsCredited)} = false";
         }
 
-
-
         foreach (DataGridViewColumn col in ChargesDataGrid.Columns)
         {
             col.Visible = false;
+            col.ReadOnly = true;
         }
         int z = 1;
-
         ChargesDataGrid.Columns[nameof(Charge.ChrgId)].SetVisibilityOrder(true, z++);
         ChargesDataGrid.Columns[nameof(Charge.IsCredited)].SetVisibilityOrder(true, z++);
         ChargesDataGrid.Columns[nameof(Charge.CDMCode)].SetVisibilityOrder(true, z++);
@@ -195,10 +205,12 @@ public partial class ChargeMaintenanceUC : UserControl
         ChargesDataGrid.Columns[nameof(Charge.RevenueCode)].SetVisibilityOrder(true, z++);
         ChargesDataGrid.Columns[nameof(Charge.Cpt4)].SetVisibilityOrder(true, z++);
         ChargesDataGrid.Columns[nameof(Charge.Modifier)].SetVisibilityOrder(true, z++);
-        ChargesDataGrid.Columns[nameof(Charge.Modifer2)].SetVisibilityOrder(true, z++);
         ChargesDataGrid.Columns[nameof(Charge.Type)].SetVisibilityOrder(true, z++);
         ChargesDataGrid.Columns[nameof(Charge.Amount)].SetVisibilityOrder(true, z++);
         ChargesDataGrid.Columns[nameof(Charge.Comment)].SetVisibilityOrder(true, z++);
+
+        ChargesDataGrid.Columns[nameof(Charge.Modifier)].ReadOnly = false;
+        ChargesDataGrid.Columns[nameof(Charge.Modifier2)].ReadOnly = false;
 
         ChargesDataGrid.Columns[nameof(Charge.Amount)].DefaultCellStyle.Format = "N2";
         ChargesDataGrid.Columns[nameof(Charge.Amount)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
@@ -229,47 +241,36 @@ public partial class ChargeMaintenanceUC : UserControl
 
     }
 
-    private void RemoveModifier_Click(object sender, EventArgs e)
+    private void RemoveModifier(int uri, int chrg_num)
     {
+        _accountService.RemoveChargeModifier(uri);
 
-        // get selected charge detail uri
-        int selectedRows = ChargesDataGrid.Rows.GetRowCount(DataGridViewElementStates.Selected);
-        if (selectedRows > 0)
-        {
-            DataGridViewRow row = ChargesDataGrid.SelectedRows[0];
-            var uri = Convert.ToInt32(row.Cells[nameof(ChrgDetail.Id)].Value.ToString());
-            var chrg_num = Convert.ToInt32(row.Cells[nameof(Charge.ChrgId)].Value.ToString());
+        var idx = CurrentAccount.Charges.FindIndex(x => x.ChrgId == chrg_num);
+        var dIdx = CurrentAccount.Charges[idx].ChrgDetails.FindIndex(x => x.Id == uri);
+        CurrentAccount.Charges[idx].ChrgDetails[dIdx].Modifier = "";
 
-            _accountService.RemoveChargeModifier(uri);
-
-            var idx = CurrentAccount.Charges.FindIndex(x => x.ChrgId == chrg_num);
-            var dIdx = CurrentAccount.Charges[idx].ChrgDetails.FindIndex(x => x.Id == uri);
-            CurrentAccount.Charges[idx].ChrgDetails[dIdx].Modifier = "";
-
-            ChargesUpdated?.Invoke(this, EventArgs.Empty);
-        }
+        ChargesUpdated?.Invoke(this, EventArgs.Empty);
     }
 
-    private void AddModifier_Click(object sender, EventArgs e)
+    private void AddModifier(int uri, int chrg_num, string modifier)
     {
-        ToolStripMenuItem item = sender as ToolStripMenuItem;
-
-        // get selected charge detail uri
-        int selectedRows = ChargesDataGrid.Rows.GetRowCount(DataGridViewElementStates.Selected);
-        if (selectedRows > 0)
+        try
         {
-            DataGridViewRow row = ChargesDataGrid.SelectedRows[0];
-            var uri = Convert.ToInt32(row.Cells[nameof(Charge.uri)].Value.ToString());
-            var chrg_num = Convert.ToInt32(row.Cells[nameof(Charge.ChrgId)].Value.ToString());
-
-            _accountService.AddChargeModifier(uri, item.Text);
-
-            var idx = CurrentAccount.Charges.FindIndex(x => x.ChrgId == chrg_num);
-            var dIdx = CurrentAccount.Charges[idx].ChrgDetails.FindIndex(x => x.Id == uri);
-            CurrentAccount.Charges[idx].ChrgDetails[dIdx].Modifier = item.Text;
-
-            ChargesUpdated?.Invoke(this, EventArgs.Empty);
+            _accountService.AddChargeModifier(uri, modifier);
         }
+        catch (ApplicationException apex)
+        {
+            string message = apex.Message;
+            if (apex.InnerException != null) { message += Environment.NewLine + apex.InnerException.Message; }
+            MessageBox.Show(message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            return;
+        }
+
+        var idx = CurrentAccount.Charges.FindIndex(x => x.ChrgId == chrg_num);
+        var dIdx = CurrentAccount.Charges[idx].ChrgDetails.FindIndex(x => x.Id == uri);
+        CurrentAccount.Charges[idx].ChrgDetails[dIdx].Modifier = modifier;
+
+        ChargesUpdated?.Invoke(this, EventArgs.Empty);
     }
 
     private void DgvCharges_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
@@ -455,5 +456,44 @@ public partial class ChargeMaintenanceUC : UserControl
     private void ChargesDataGrid_ColumnSortModeChanged(object sender, DataGridViewColumnEventArgs e)
     {
 
+    }
+
+    private void ChargesDataGrid_CellEndEdit(object sender, DataGridViewCellEventArgs e)
+    {
+    }
+
+    private void ChargesDataGrid_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+    {
+        if (ChargesDataGrid.Columns[e.ColumnIndex].Name == nameof(Charge.Modifier))
+        {
+            DataGridViewComboBoxCell cb = (DataGridViewComboBoxCell)ChargesDataGrid.CurrentCell;
+            var uri = Convert.ToInt32(ChargesDataGrid.Rows[e.RowIndex].Cells[nameof(Charge.uri)].Value.ToString());
+            int chrgId = Convert.ToInt32(ChargesDataGrid.Rows[e.RowIndex].Cells[nameof(Chrg.ChrgId)].Value);
+
+            var mod = ChargesDataGrid.Rows[e.RowIndex].Cells[nameof(Charge.Modifier)].Value.ToString();
+            if (mod == "<none>")
+                mod = string.Empty;
+            AddModifier(uri, chrgId, mod);
+        }
+
+    }
+
+    private void ChargesDataGrid_CurrentCellDirtyStateChanged(object sender, EventArgs e)
+    {
+        if (ChargesDataGrid.IsCurrentCellDirty)
+        {
+            ChargesDataGrid.CommitEdit(DataGridViewDataErrorContexts.Commit);
+            ChargesDataGrid.EndEdit();
+        }
+    }
+
+    private void ChargesDataGrid_CellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
+    {
+        if (ChargesDataGrid.Rows[e.RowIndex].Cells[e.ColumnIndex] is DataGridViewComboBoxCell)
+        {
+            ChargesDataGrid.CurrentCell = ChargesDataGrid.Rows[e.RowIndex].Cells[e.ColumnIndex];
+            ChargesDataGrid.BeginEdit(true);
+            ((ComboBox)ChargesDataGrid.EditingControl).DroppedDown = true;
+        }
     }
 }

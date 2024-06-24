@@ -187,7 +187,7 @@ public sealed class Account : IBaseEntity
 
 
     [Ignore]
-    public double Balance { get => this.TotalCharges - (this.TotalPayments + this.TotalContractual + this.TotalWriteOff); }
+    public double Balance { get => this.BillableCharges.Sum(x => x.Quantity * x.NetAmount) - (this.TotalPayments + this.TotalContractual + this.TotalWriteOff); }
     [Ignore]
     public double TotalCharges
     {
@@ -338,7 +338,30 @@ public sealed class Account : IBaseEntity
     public Fin Fin { get; set; } = new Fin();
 
     [Ignore]
-    public string BillForm { get; set; }
+    public string BillForm
+    {
+        get
+        {
+            if (this.InsurancePrimary != null)
+            {
+                this.BillingType = "REF LAB";
+
+                if (string.IsNullOrEmpty(this.InsurancePrimary?.InsCompany?.BillForm))
+                {
+                    return this.Fin?.ClaimType;
+                }
+                else
+                {
+                    return this.InsurancePrimary?.InsCompany?.BillForm;
+                }
+            }
+            else
+            {
+                return this.Fin?.ClaimType;
+            }
+        }
+    }
+
     [Ignore]
     public string BillingType { get; set; }
     [Ignore]

@@ -1,6 +1,7 @@
 ﻿using LabBilling.Core.Models;
 using LabBilling.Logging;
 using Microsoft.Data.SqlClient;
+using System;
 using System.Collections.Generic;
 using System.Data;
 
@@ -13,7 +14,7 @@ public sealed class ChrgDetailRepository : RepositoryBase<ChrgDetail>
 
     }
 
-    public int AddModifier(int uri, string modifier)
+    public int UpdateModifier(int uri, string modifier)
     {
         Log.Instance.Trace("Entering");
 
@@ -26,16 +27,14 @@ public sealed class ChrgDetailRepository : RepositoryBase<ChrgDetail>
         if (result != null)
         {
             result.Modifier = modifier;
-
             return Context.Update(result);
         }
-
         return 0;
     }
 
     public int RemoveModifier(int uri)
     {
-        return AddModifier(uri, string.Empty);
+        return UpdateModifier(uri, string.Empty);
     }
 
     public IList<ChrgDetail> GetByChrgId(int chrgId)

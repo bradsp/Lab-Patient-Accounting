@@ -19,6 +19,11 @@ public sealed class AccountService
 
     private readonly DictionaryService _dictionaryService;
 
+    public event EventHandler<ValidationUpdatedEventArgs> ValidationAccountUpdated;
+    public event EventHandler<AccountEventArgs> AccountValidated;
+    public event EventHandler<AccountEventArgs> AccountLocked;
+    public event EventHandler<AccountEventArgs> AccountLockCleared;
+
     public AccountService(IAppEnvironment appEnvironment)
     {
         this._appEnvironment = appEnvironment;
@@ -44,7 +49,10 @@ public sealed class AccountService
         return acc;
     }
 
+    public async Task<Account> GetAccountAsync(string account) => await Task.Run(() => GetAccount(account));
     public async Task<Account> GetAccountAsync(string account, bool demographicsOnly = false) => await Task.Run(() => GetAccount(account, demographicsOnly));
+    public async Task<Account> GetAccountAsync(string account, bool demographicsOnly = false, bool secureLock = true) => await Task.Run(() => GetAccount(account, demographicsOnly, secureLock));
+
 
     public (bool locksuccessful, AccountLock lockInfo) GetAccountLock(string account)
     {
@@ -100,6 +108,7 @@ public sealed class AccountService
     {
         using AccountUnitOfWork uow = new(_appEnvironment);
         var retval = uow.AccountLockRepository.Delete(id);
+        AccountLockCleared?.Invoke(this, new AccountEventArgs() { UpdateMessage = $"Lock id {id} cleared." });
         return retval;
     }
 
@@ -110,7 +119,7 @@ public sealed class AccountService
         {
             return uow.AccountLockRepository.DeleteByUserHost(username, hostname);
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             Log.Instance.Fatal(ex);
             return false;
@@ -196,7 +205,7 @@ public sealed class AccountService
                 {
                     d.CptDescription = record.Cdms.Where(c => c.ChargeId == d.CdmCode).FirstOrDefault()?.CdmDetails?.Where(cd => cd.Cpt4 == d.CptCode).FirstOrDefault()?.Description;
                 }
-                if(string.IsNullOrEmpty(d.CdmDescription) || string.IsNullOrEmpty(d.CptDescription))
+                if (string.IsNullOrEmpty(d.CdmDescription) || string.IsNullOrEmpty(d.CptDescription))
                 {
                     uow.ChrgDiagnosisPointerRepository.Delete(d);
                     temp.Add(d);
@@ -216,24 +225,6 @@ public sealed class AccountService
             record.Fin = uow.FinRepository.GetFin(record.FinCode);
             record.AccountAlert = uow.AccountAlertRepository.GetByAccount(account);
             record.PatientStatements = uow.PatientStatementAccountRepository.GetByAccount(account);
-
-            if (record.Client != null)
-            {
-                if (record.InsurancePrimary != null)
-                {
-                    record.BillingType = "REF LAB";
-                    record.BillForm = record.InsurancePrimary.InsCompany.BillForm;
-
-                    if (string.IsNullOrEmpty(record.BillForm))
-                    {
-                        record.BillForm = record.Fin.ClaimType;
-                    }
-                }
-                else
-                {
-                    record.BillForm = record.Fin.ClaimType;
-                }
-            }
         }
 
         return record;
@@ -340,6 +331,7 @@ public sealed class AccountService
         if (result.locksuccessful)
             table.AccountLockInfo = result.lockInfo;
         uow.Commit();
+
         return table;
     }
 
@@ -430,7 +422,6 @@ public sealed class AccountService
         }
     }
 
-
     public List<PatientStatementAccount> GetPatientStatements(string accountNo)
     {
         using AccountUnitOfWork uow = new(_appEnvironment);
@@ -478,7 +469,6 @@ public sealed class AccountService
         uow.Commit();
         return true;
     }
-
 
     public Account UpdateAccountDemographics(Account acc)
     {
@@ -779,13 +769,15 @@ public sealed class AccountService
             model.FinCode = newFinCode;
             try
             {
-                if(model.ReadyToBill)
+                if (model.ReadyToBill)
                 {
                     //clear ready to bill
                     model.Status = AccountStatus.New;
-                    model.Notes = AddNote(model.AccountNo,"Ready to Bill status cleared due to financial class change.").ToList();
+                    model.Notes = AddNote(model.AccountNo, "Ready to Bill status cleared due to financial class change.").ToList();
                 }
                 uow.AccountRepository.Update(model, new[] { nameof(Account.FinCode), nameof(Account.Status) });
+                model.FinCode = newFin.FinCode;
+                model.Fin = newFin;
             }
             catch (Exception ex)
             {
@@ -839,19 +831,29 @@ public sealed class AccountService
 
         }
 
+        Client oldClient = uow.ClientRepository.GetClient(oldClientMnem);
+        Client newClient = uow.ClientRepository.GetClient(newClientMnem);
+
+        if (oldClient == null)
+        {
+            uow.Commit();
+            throw new ApplicationException($"Client mnem {oldClientMnem} is not valid.");
+        }
+
+        if (newClient == null)
+        {
+            uow.Commit();
+            throw new ArgumentException($"Client mnem {newClientMnem} is not valid.", nameof(newClientMnem));
+        }
+
+        if (string.IsNullOrEmpty(newClient.FeeSchedule) || newClient.FeeSchedule == "0")
+        {
+            uow.Commit();
+            throw new ApplicationException($"Fee schedule not defined on client {newClientMnem}. Client change aborted.");
+        }
+
         try
         {
-            Client oldClient = uow.ClientRepository.GetClient(oldClientMnem);
-            Client newClient = uow.ClientRepository.GetClient(newClientMnem);
-
-            //Context.BeginTransaction();
-
-            if (oldClient == null)
-                throw new ApplicationException($"Client mnem {oldClientMnem} is not valid.");
-
-            if (newClient == null)
-                throw new ArgumentException($"Client mnem {newClientMnem} is not valid.", nameof(newClientMnem));
-
             if (oldClientMnem != newClientMnem)
             {
 
@@ -873,7 +875,7 @@ public sealed class AccountService
                 {
                     try
                     {
-                        ReprocessCharges(model, $"Client changed from {oldClientMnem} to {newClientMnem}");
+                        model.Charges = ReprocessCharges(model, $"Client changed from {oldClientMnem} to {newClientMnem}").ToList();
                     }
                     catch (Exception ex)
                     {
@@ -888,7 +890,7 @@ public sealed class AccountService
                     {
                         try
                         {
-                            ReprocessCharges(model, $"Client changed from {oldClientMnem} to {newClientMnem}");
+                            model.Charges = ReprocessCharges(model, $"Client changed from {oldClientMnem} to {newClientMnem}").ToList();
                         }
                         catch (Exception ex)
                         {
@@ -900,7 +902,7 @@ public sealed class AccountService
                     {
                         try
                         {
-                            ReprocessCharges(model, $"Client changed from {oldClientMnem} to {newClientMnem}");
+                            model.Charges = ReprocessCharges(model, $"Client changed from {oldClientMnem} to {newClientMnem}").ToList();
                         }
                         catch (Exception ex)
                         {
@@ -911,7 +913,7 @@ public sealed class AccountService
                     {
                         try
                         {
-                            UpdateChargesClient(model.AccountNo, newClientMnem);
+                            model.Charges = UpdateChargesClient(model.AccountNo, newClientMnem).ToList();
                         }
                         catch (Exception ex)
                         {
@@ -931,7 +933,6 @@ public sealed class AccountService
         catch (Exception ex)
         {
             Log.Instance.Error("Error during Change Client", ex);
-            //AbortTransaction();
             updateSuccess = false;
         }
         Log.Instance.Trace($"Exiting");
@@ -1370,8 +1371,9 @@ public sealed class AccountService
                 chrgDetail.CptDescription = cpt.ShortDescription;
 
             chrgDetails.Add(chrgDetail);
-
-            var diagPtr = accData.ChrgDiagnosisPointers.Find(c => c.CdmCode == chrg.CDMCode && c.CptCode == chrgDetail.Cpt4);
+            if (accData.ChrgDiagnosisPointers == null)
+                accData.ChrgDiagnosisPointers = new();
+            var diagPtr = accData.ChrgDiagnosisPointers?.Find(c => c.CdmCode == chrg.CDMCode && c.CptCode == chrgDetail.Cpt4);
             if (diagPtr == null)
             {
                 //add a new diag ptr
@@ -1746,8 +1748,6 @@ public sealed class AccountService
         return errorList;
     }
 
-    public event EventHandler<ValidationUpdatedEventArgs> ValidationAccountUpdated;
-
     public void ValidateUnbilledAccounts()
     {
         Log.Instance.Trace($"Entering");
@@ -1791,8 +1791,6 @@ public sealed class AccountService
                 Log.Instance.Error(e, "Error during account validation job.");
             }
         });
-
-
     }
 
     public async Task ValidateUnbilledAccountsAsync() => await Task.Run(() => ValidateUnbilledAccounts());
@@ -1881,6 +1879,9 @@ public sealed class AccountService
 
         try
         {
+            if (chk.IsRefund)
+                chk.Status = "REFUND";
+
             var newChk = uow.ChkRepository.Add(chk);
             uow.Commit();
             return newChk;
@@ -1959,11 +1960,19 @@ public sealed class AccountService
     public ChrgDetail AddChargeModifier(int chrgDetailId, string modifier)
     {
         using AccountUnitOfWork uow = new(_appEnvironment, true);
-        var retval = uow.ChrgDetailRepository.AddModifier(chrgDetailId, modifier);
-        var chrgDetail = uow.ChrgDetailRepository.GetByKey((object)chrgDetailId);
-        uow.Commit();
+        try
+        {
+            var retval = uow.ChrgDetailRepository.UpdateModifier(chrgDetailId, modifier);
+            var chrgDetail = uow.ChrgDetailRepository.GetByKey((object)chrgDetailId);
+            uow.Commit();
 
-        return chrgDetail;
+            return chrgDetail;
+        }
+        catch (ApplicationException apex)
+        {
+            Log.Instance.Error(apex.Message);
+            throw new ApplicationException("Error adding modifier.", apex);
+        }
     }
 
     public Chrg CreditCharge(int chrgId, string comment = "")
@@ -2047,4 +2056,11 @@ public class ValidationUpdatedEventArgs : EventArgs
     public int Processed { get; set; }
     public int TotalItems { get; set; }
 
+}
+
+public class AccountEventArgs : EventArgs
+{
+    public string AccountNo { get; set; }
+    public string UpdateMessage { get; set; }
+    public Account Account { get; set; }
 }

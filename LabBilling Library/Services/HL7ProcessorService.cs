@@ -3,6 +3,8 @@ using LabBilling.Core.DataAccess;
 using LabBilling.Core.Models;
 using LabBilling.Core.UnitOfWork;
 using LabBilling.Logging;
+using NPOI.SS.UserModel;
+using PetaPoco;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -51,6 +53,12 @@ public sealed class HL7ProcessorService
         Processed,
         Failed,
         DoNotProcess
+    }
+
+    public List<MessageQueueCount> GetQueueCounts()
+    {
+        using UnitOfWorkMain uow = new(_appEnvironment);
+        return uow.MessagesInboundRepository.GetQueueCounts();
     }
 
     public static string StatusToString(Status status)
@@ -413,6 +421,11 @@ public sealed class HL7ProcessorService
 
                     foreach (var ins in _accountRecord.Insurances)
                     {
+                        if(ins.GroupNumber.Length > 30)
+                        {
+                            errors.Append($"Group Number is not a valid value: {ins.GroupNumber}");
+                            ins.GroupNumber = string.Empty;
+                        }
                         _accountService.SaveInsurance(ins);
                     }
 
@@ -586,6 +599,13 @@ public sealed class HL7ProcessorService
                         _accountService.AddCharge(_accountRecord, transaction.Cdm, transaction.Qty, transaction.ServiceDate, transaction.Comment, transaction.RefNumber);
                     }
                 }
+                catch (ArgumentOutOfRangeException argex)
+                {
+                    errors.AppendLine($"[ERROR] {argex.ParamName} is not a valid value. CDM {transaction.Cdm}, Client {_accountRecord.ClientMnem}");
+                    _accountService.ClearAccountLock(_accountRecord);
+                    uow.Commit();
+                    return (Status.Failed, $"{_accountRecord.AccountNo} - charges not posted.", errors);
+                }
                 catch (CdmNotFoundException cdmex)
                 {
                     errors.AppendLine($"[WARN] {cdmex.Message} for {transaction.Cdm} on {_accountRecord.AccountNo}. Charge not posted.");
@@ -598,6 +618,14 @@ public sealed class HL7ProcessorService
                     errors.AppendLine($"[ERROR] {cliex.Message} for {_accountRecord.ClientMnem} on {_accountRecord.AccountNo}. Charge not posted.");
                     _accountService.ClearAccountLock(_accountRecord);
                     Log.Instance.Error(cliex);
+                    uow.Commit();
+                    return (Status.Failed, $"{_accountRecord.AccountNo} - charges not posted.", errors);
+                }
+                catch (ApplicationException apex)
+                {
+                    errors.AppendLine($"[ERROR] {apex.Message} for {_accountRecord.ClientMnem} on {_accountRecord.AccountNo}. Charge not posted.");
+                    _accountService.ClearAccountLock(_accountRecord);
+                    Log.Instance.Error(apex);
                     uow.Commit();
                     return (Status.Failed, $"{_accountRecord.AccountNo} - charges not posted.", errors);
                 }

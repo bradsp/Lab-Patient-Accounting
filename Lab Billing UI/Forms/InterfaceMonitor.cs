@@ -6,17 +6,20 @@ using System.Data;
 using System.Windows.Forms;
 using Utilities;
 using WinFormsLibrary;
+using Timer = System.Windows.Forms.Timer;
 
 namespace LabBilling.Forms;
 
 public partial class InterfaceMonitor : Form
 {
-    private HL7ProcessorService processorService;
+    private HL7ProcessorService _processorService;
+    private Timer _timer;
 
     public InterfaceMonitor()
     {
         InitializeComponent();
-        processorService = new(Program.AppEnvironment);
+        _processorService = new(Program.AppEnvironment);
+        _timer = new Timer();
     }
 
     private BindingSource bindingSource = new();
@@ -24,10 +27,15 @@ public partial class InterfaceMonitor : Form
 
     private void InterfaceMonitor_Load(object sender, EventArgs e)
     {
+
+        _timer.Interval = 5000;
+        _timer.Tick += _timer_Tick;
+        _timer.Enabled = true;
+
         FromDate.Value = DateTimeHelper.Yesterday();
         Cursor.Current = Cursors.WaitCursor;
 
-        messagesTable = processorService.GetMessages(FromDate.Value, ThruDate.Value).ToDataTable();
+        messagesTable = _processorService.GetMessages(FromDate.Value, ThruDate.Value).ToDataTable();
         messagesTable.PrimaryKey = new DataColumn[] { messagesTable.Columns[nameof(MessageInbound.SystemMsgId)] };
         bindingSource.DataSource = messagesTable;
 
@@ -63,8 +71,23 @@ public partial class InterfaceMonitor : Form
         MessageTypeFilterComboBox.SelectedItem = "All";
 
         ApplyFilter();
-
+        RefreshQueueMonitor();
         Cursor.Current = Cursors.Default;
+    }
+
+    private void _timer_Tick(object sender, EventArgs e)
+    {
+        RefreshQueueMonitor();
+    }
+
+    private void RefreshQueueMonitor()
+    {
+        var results = _processorService.GetQueueCounts();
+        messageQueueTextBox.Text = "";
+        foreach(var result in results)
+        {
+            messageQueueTextBox.Text += $"{result.MessageType}\t{result.QueueCount}{Environment.NewLine}";
+        }
     }
 
     private void MessagesGrid_CellClick(object sender, DataGridViewCellEventArgs e)
@@ -231,7 +254,7 @@ public partial class InterfaceMonitor : Form
     {
         Cursor.Current = Cursors.WaitCursor;
 
-        messagesTable = processorService.GetMessages(FromDate.Value, ThruDate.Value).ToDataTable();
+        messagesTable = _processorService.GetMessages(FromDate.Value, ThruDate.Value).ToDataTable();
         messagesTable.PrimaryKey = new DataColumn[] { messagesTable.Columns[nameof(MessageInbound.SystemMsgId)] };
 
         bindingSource.DataSource = messagesTable;
@@ -266,7 +289,7 @@ public partial class InterfaceMonitor : Form
             string msgType = MessagesGrid.SelectedRows[0].Cells[nameof(MessageInbound.MessageType)].Value.ToString();
             string processFlag = MessagesGrid.SelectedRows[0].Cells[nameof(MessageInbound.ProcessFlag)].Value.ToString();
 
-            processorService.SetMessageDoNotProcess(msgID, $"Set to do not process by {Program.LoggedInUser.FullName}");
+            _processorService.SetMessageDoNotProcess(msgID, $"Set to do not process by {Program.LoggedInUser.FullName}");
 
             var row = messagesTable.Rows.Find(msgID);
             row[nameof(MessageInbound.ProcessFlag)] = "DNP";

@@ -1,4 +1,5 @@
-﻿using PetaPoco;
+﻿using LabBilling.Core.Models;
+using PetaPoco;
 using System;
 
 namespace LabBilling.Core.Models;
@@ -68,6 +69,8 @@ public sealed class Phy : IBaseEntity
 
     [Ignore]
     public Pth Pathologist { get; set; } = new Pth();
+    [Ignore]
+    public SanctionedProvider SanctionedProvider { get; set; }
 
     [Ignore]
     public string FullName

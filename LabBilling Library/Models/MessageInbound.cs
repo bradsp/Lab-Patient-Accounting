@@ -73,3 +73,9 @@ public sealed class MessageInbound : IBaseEntity
     public Guid rowguid { get; set; }
 }
 
+public sealed class MessageQueueCount
+{
+    public string MessageType { get; set; }
+    public int QueueCount { get; set; }
+}
+

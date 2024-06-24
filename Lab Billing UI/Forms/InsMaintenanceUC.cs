@@ -187,6 +187,8 @@ public partial class InsMaintenanceUC : UserControl
 
         if (HolderDOBTextBox.MaskCompleted)
             CurrentIns.HolderBirthDate = DateTime.Parse(HolderDOBTextBox.Text);
+        else
+            CurrentIns.HolderBirthDate = null;
 
         CurrentIns.HolderFirstName = HolderFirstNameTextBox.Text;
         CurrentIns.HolderLastName = HolderLastNameTextBox.Text;

@@ -346,6 +346,12 @@ public class DictionaryService
         return uow.ClientDiscountRepository.GetByClient(clientMnem, includeDeleted);
     }
 
+    public SanctionedProvider GetSanctionedProvider(string npi)
+    {
+        using UnitOfWorkMain uow = new(_appEnvironment);
+        return uow.SanctionedProviderRepository.GetByNPI(npi);
+    }
+
     #region DictDx
 
     public DictDx GetDiagnosis(string code, DateTime transactionDate)

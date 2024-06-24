@@ -18,33 +18,33 @@ namespace LabBilling.Core.Services;
 
 public class InvoicePrintPdfSharp
 {
-    private Document document;
-    private InvoiceModel model;
-    private TextFrame addressFrame;
-    private TextFrame invoiceFrame;
-    private TextFrame clientAddressFrame;
-    private TextFrame tableCaptionFrameLeft;
-    private TextFrame tableCaptionFrameRight;
-    private Table table;
-    private Section section;
+    private Document _document;
+    private InvoiceModel _model;
+    private TextFrame _addressFrame;
+    private TextFrame _invoiceFrame;
+    private TextFrame _clientAddressFrame;
+    private TextFrame _tableCaptionFrameLeft;
+    private TextFrame _tableCaptionFrameRight;
+    private Table _table;
+    private Section _section;
 
-    private readonly string filePath;
+    private readonly string _filePath;
     private readonly AppEnvironment _appEnvironment;
 
     public InvoicePrintPdfSharp(AppEnvironment appEnvironment)
     {
         _appEnvironment = appEnvironment;
 
-        filePath = _appEnvironment.ApplicationParameters.InvoiceFileLocation;
-        document = new Document();
-        model = new InvoiceModel();
-        addressFrame = new TextFrame();
-        invoiceFrame = new TextFrame();
-        clientAddressFrame = new TextFrame();
-        tableCaptionFrameLeft = new TextFrame();
-        tableCaptionFrameRight = new TextFrame();
-        table = new Table();
-        section = new Section();
+        _filePath = _appEnvironment.ApplicationParameters.InvoiceFileLocation;
+        _document = new Document();
+        _model = new InvoiceModel();
+        _addressFrame = new TextFrame();
+        _invoiceFrame = new TextFrame();
+        _clientAddressFrame = new TextFrame();
+        _tableCaptionFrameLeft = new TextFrame();
+        _tableCaptionFrameRight = new TextFrame();
+        _table = new Table();
+        _section = new Section();
     }
 
     public string PrintInvoice(string invoiceNo)
@@ -105,12 +105,12 @@ public class InvoicePrintPdfSharp
         if (model.StatementType != InvoiceModel.StatementTypeEnum.Invoice)
             throw new ArgumentOutOfRangeException("InvoiceModel.StatementType", "Expected an invoice model.");
 
-        this.model = model;
+        this._model = model;
 
-        this.document = new Document();
-        this.document.Info.Title = "Invoice";
-        this.document.Info.Subject = $"Invoice for {model.ClientName}";
-        this.document.Info.Author = $"{model.BillingCompanyName}";
+        this._document = new Document();
+        this._document.Info.Title = "Invoice";
+        this._document.Info.Subject = $"Invoice for {model.ClientName}";
+        this._document.Info.Author = $"{model.BillingCompanyName}";
 
         DefineStyles();
 
@@ -120,11 +120,11 @@ public class InvoicePrintPdfSharp
 
         PdfDocumentRenderer pdfRenderer = new()
         {
-            Document = document
+            Document = _document
         };
 
         pdfRenderer.RenderDocument();
-        string filename = $"{filePath}\\Invoice-{model.ClientMnem}-{model.InvoiceNo}.pdf";
+        string filename = $"{_filePath}\\Invoice-{model.ClientMnem}-{model.InvoiceNo}.pdf";
         pdfRenderer.PdfDocument.Save(filename);
 
         return filename;
@@ -135,10 +135,12 @@ public class InvoicePrintPdfSharp
         if (model.StatementType != InvoiceModel.StatementTypeEnum.Statement)
             throw new ArgumentOutOfRangeException("InvoiceModel.StatementType", "Expected a statement type model.");
 
-        this.model = model;
-        document.Info.Title = "Statement";
-        document.Info.Subject = $"Statement for {model.ClientName}";
-        document.Info.Author = $"{model.BillingCompanyName}";
+        this._model = model;
+
+        _document = new Document();
+        _document.Info.Title = "Statement";
+        _document.Info.Subject = $"Statement for {model.ClientName}";
+        _document.Info.Author = $"{model.BillingCompanyName}";
 
         DefineStyles();
 
@@ -148,11 +150,11 @@ public class InvoicePrintPdfSharp
 
         PdfDocumentRenderer pdfRenderer = new()
         {
-            Document = document
+            Document = _document
         };
 
         pdfRenderer.RenderDocument();
-        string filename = $"{filePath}\\Statement-{model.ClientMnem}-{DateTime.Today:yyyyMMdd}.pdf";
+        string filename = $"{_filePath}\\Statement-{model.ClientMnem}-{DateTime.Today:yyyyMMdd}.pdf";
         pdfRenderer.PdfDocument.Save(filename);
 
         return filename;
@@ -161,25 +163,25 @@ public class InvoicePrintPdfSharp
     private void DefineStyles()
     {
         // Get the predefined style Normal.
-        Style style = document.Styles["Normal"];
+        Style style = _document.Styles["Normal"];
         // Because all styles are derived from Normal, the next line changes the 
         // font of the whole document. Or, more exactly, it changes the font of
         // all styles and paragraphs that do not redefine the font.
         style.Font.Name = "Calibri";
 
-        style = document.Styles[StyleNames.Header];
+        style = _document.Styles[StyleNames.Header];
         style.ParagraphFormat.AddTabStop("16cm", TabAlignment.Right);
 
-        style = document.Styles[StyleNames.Footer];
+        style = _document.Styles[StyleNames.Footer];
         style.ParagraphFormat.AddTabStop("8cm", TabAlignment.Center);
 
         // Create a new style called Table based on style Normal
-        style = this.document.Styles.AddStyle("Table", "Normal");
+        style = this._document.Styles.AddStyle("Table", "Normal");
         style.Font.Name = "Calibri";
         style.Font.Size = 9;
 
         // Create a new style called Reference based on style Normal
-        style = document.Styles.AddStyle("Reference", "Normal");
+        style = _document.Styles.AddStyle("Reference", "Normal");
         style.ParagraphFormat.SpaceBefore = "5mm";
         style.ParagraphFormat.SpaceAfter = "5mm";
         style.ParagraphFormat.TabStops.AddTabStop("16cm", MigraDoc.DocumentObjectModel.TabAlignment.Right);
@@ -191,7 +193,7 @@ public class InvoicePrintPdfSharp
         //section.PageSetup.DifferentFirstPageHeaderFooter = true;
 
         // Put a logo in the header
-        MigraDoc.DocumentObjectModel.Shapes.Image image = section.Headers.Primary.AddImage(model.ImageFilePath);
+        MigraDoc.DocumentObjectModel.Shapes.Image image = _section.Headers.Primary.AddImage(_model.ImageFilePath);
         image.Width = "2in";
         image.LockAspectRatio = true;
         image.RelativeVertical = RelativeVertical.Line;
@@ -201,23 +203,23 @@ public class InvoicePrintPdfSharp
         image.WrapFormat.Style = WrapStyle.TopBottom;
 
         //Create the text frame for the company address
-        clientAddressFrame = section.Headers.Primary.AddTextFrame();
-        clientAddressFrame.Width = "7.0cm";
-        clientAddressFrame.Height = "3.0cm";
-        clientAddressFrame.Left = "5.5in";
-        clientAddressFrame.RelativeHorizontal = RelativeHorizontal.Margin;
-        clientAddressFrame.RelativeVertical = RelativeVertical.Page;
-        clientAddressFrame.Top = "1.0cm";
+        _clientAddressFrame = _section.Headers.Primary.AddTextFrame();
+        _clientAddressFrame.Width = "7.0cm";
+        _clientAddressFrame.Height = "3.0cm";
+        _clientAddressFrame.Left = "5.5in";
+        _clientAddressFrame.RelativeHorizontal = RelativeHorizontal.Margin;
+        _clientAddressFrame.RelativeVertical = RelativeVertical.Page;
+        _clientAddressFrame.Top = "1.0cm";
 
         // Put sender in address frame
-        Paragraph paragraph = clientAddressFrame.AddParagraph();
-        paragraph.AddText(model.BillingCompanyName);
+        Paragraph paragraph = _clientAddressFrame.AddParagraph();
+        paragraph.AddText(_model.BillingCompanyName);
         paragraph.AddLineBreak();
-        paragraph.AddText(model.BillingCompanyAddress);
+        paragraph.AddText(_model.BillingCompanyAddress);
         paragraph.AddLineBreak();
-        paragraph.AddText($"{model.BillingCompanyCity}, {model.BillingCompanyState} {model.BillingCompanyZipCode}");
+        paragraph.AddText($"{_model.BillingCompanyCity}, {_model.BillingCompanyState} {_model.BillingCompanyZipCode}");
         paragraph.AddLineBreak();
-        paragraph.AddText(model.BillingCompanyPhone);
+        paragraph.AddText(_model.BillingCompanyPhone);
 
         paragraph.Format.Font.Name = "Calibri";
         paragraph.Format.Font.Size = 7;
@@ -225,38 +227,38 @@ public class InvoicePrintPdfSharp
 
 
         // Create the text frame for the client address
-        addressFrame = section.Headers.Primary.AddTextFrame();
-        addressFrame.Height = "2.0cm";
-        addressFrame.Width = "7.0cm";
-        addressFrame.Left = ShapePosition.Left;
-        addressFrame.RelativeHorizontal = RelativeHorizontal.Margin;
-        addressFrame.Top = "5.5cm";
-        addressFrame.RelativeVertical = RelativeVertical.Page;
+        _addressFrame = _section.Headers.Primary.AddTextFrame();
+        _addressFrame.Height = "2.0cm";
+        _addressFrame.Width = "7.0cm";
+        _addressFrame.Left = ShapePosition.Left;
+        _addressFrame.RelativeHorizontal = RelativeHorizontal.Margin;
+        _addressFrame.Top = "5.5cm";
+        _addressFrame.RelativeVertical = RelativeVertical.Page;
 
         //create a text frame for the statement type, date, and page
-        tableCaptionFrameLeft = section.Headers.Primary.AddTextFrame();
-        tableCaptionFrameLeft.Height = "1.0cm";
-        tableCaptionFrameLeft.Width = "6.0cm";
-        tableCaptionFrameLeft.Left = ShapePosition.Left;
-        tableCaptionFrameLeft.RelativeHorizontal = RelativeHorizontal.Margin;
-        tableCaptionFrameLeft.Top = "8cm";
-        tableCaptionFrameLeft.RelativeVertical = RelativeVertical.Page;
+        _tableCaptionFrameLeft = _section.Headers.Primary.AddTextFrame();
+        _tableCaptionFrameLeft.Height = "1.0cm";
+        _tableCaptionFrameLeft.Width = "6.0cm";
+        _tableCaptionFrameLeft.Left = ShapePosition.Left;
+        _tableCaptionFrameLeft.RelativeHorizontal = RelativeHorizontal.Margin;
+        _tableCaptionFrameLeft.Top = "8cm";
+        _tableCaptionFrameLeft.RelativeVertical = RelativeVertical.Page;
 
-        tableCaptionFrameRight = section.Headers.Primary.AddTextFrame();
-        tableCaptionFrameRight.Height = "1.0cm";
-        tableCaptionFrameRight.Width = "6.0cm";
-        tableCaptionFrameRight.Left = "10.5cm";
-        tableCaptionFrameRight.RelativeHorizontal = RelativeHorizontal.Margin;
-        tableCaptionFrameRight.Top = "8cm";
-        tableCaptionFrameRight.RelativeVertical = RelativeVertical.Page;
+        _tableCaptionFrameRight = _section.Headers.Primary.AddTextFrame();
+        _tableCaptionFrameRight.Height = "1.0cm";
+        _tableCaptionFrameRight.Width = "6.0cm";
+        _tableCaptionFrameRight.Left = "10.5cm";
+        _tableCaptionFrameRight.RelativeHorizontal = RelativeHorizontal.Margin;
+        _tableCaptionFrameRight.Top = "8cm";
+        _tableCaptionFrameRight.RelativeVertical = RelativeVertical.Page;
 
         // Add the print date field
-        paragraph = tableCaptionFrameLeft.AddParagraph();
+        paragraph = _tableCaptionFrameLeft.AddParagraph();
         //paragraph.Format.SpaceBefore = "9cm";
         paragraph.Style = "Reference";
-        paragraph.AddFormattedText(model.StatementType == InvoiceModel.StatementTypeEnum.Invoice ? $"INVOICE # {model.InvoiceNo}" : "STATEMENT", TextFormat.Bold);
+        paragraph.AddFormattedText(_model.StatementType == InvoiceModel.StatementTypeEnum.Invoice ? $"INVOICE # {_model.InvoiceNo}" : "STATEMENT", TextFormat.Bold);
         //paragraph.AddTab();
-        paragraph = tableCaptionFrameRight.AddParagraph();
+        paragraph = _tableCaptionFrameRight.AddParagraph();
         paragraph.Style = "Reference";
         paragraph.Format.Alignment = ParagraphAlignment.Right;
         paragraph.AddText("Page ");
@@ -265,67 +267,67 @@ public class InvoicePrintPdfSharp
         paragraph.AddNumPagesField();
 
         // Create footer
-        paragraph = section.Footers.Primary.AddParagraph();
-        paragraph.AddText($"{model.BillingCompanyName} · {model.BillingCompanyAddress} · {model.BillingCompanyCity} · {model.BillingCompanyState} {model.BillingCompanyZipCode} · {model.BillingCompanyPhone}");
+        paragraph = _section.Footers.Primary.AddParagraph();
+        paragraph.AddText($"{_model.BillingCompanyName} · {_model.BillingCompanyAddress} · {_model.BillingCompanyCity} · {_model.BillingCompanyState} {_model.BillingCompanyZipCode} · {_model.BillingCompanyPhone}");
         paragraph.Format.Font.Size = 9;
         paragraph.Format.Alignment = ParagraphAlignment.Center;
 
-        section.Footers.FirstPage = section.Footers.Primary.Clone();
+        _section.Footers.FirstPage = _section.Footers.Primary.Clone();
     }
 
     private void CreateInvoicePage()
     {
         // Each MigraDoc document needs at least one section.
-        section = this.document.AddSection();
-        section.PageSetup.TopMargin = Unit.FromInch(3.75);
+        _section = this._document.AddSection();
+        _section.PageSetup.TopMargin = Unit.FromInch(3.75);
 
         CreateHeaderFooter();
 
         // create text frame for invoice information
-        this.invoiceFrame = section.AddTextFrame();
-        this.invoiceFrame.Height = "3.0cm";
-        this.invoiceFrame.Width = "2.5in";
-        this.invoiceFrame.Left = "4.0in";
-        this.invoiceFrame.RelativeHorizontal = RelativeHorizontal.Margin;
-        this.invoiceFrame.Top = "3.1cm";
-        this.invoiceFrame.RelativeVertical = RelativeVertical.Page;
+        this._invoiceFrame = _section.AddTextFrame();
+        this._invoiceFrame.Height = "3.0cm";
+        this._invoiceFrame.Width = "2.5in";
+        this._invoiceFrame.Left = "4.0in";
+        this._invoiceFrame.RelativeHorizontal = RelativeHorizontal.Margin;
+        this._invoiceFrame.Top = "3.1cm";
+        this._invoiceFrame.RelativeVertical = RelativeVertical.Page;
 
         // Create the item table
-        this.table = section.AddTable();
-        this.table.Style = "Table";
-        this.table.Borders.Color = MigraDoc.DocumentObjectModel.Color.Parse("Blue");
-        this.table.Borders.Width = 0.25;
-        this.table.Borders.Left.Width = 0.5;
-        this.table.Borders.Right.Width = 0.5;
-        this.table.Rows.LeftIndent = 0;
+        this._table = _section.AddTable();
+        this._table.Style = "Table";
+        this._table.Borders.Color = MigraDoc.DocumentObjectModel.Color.Parse("Blue");
+        this._table.Borders.Width = 0.25;
+        this._table.Borders.Left.Width = 0.5;
+        this._table.Borders.Right.Width = 0.5;
+        this._table.Rows.LeftIndent = 0;
 
         // Before you can add a row, you must define the columns
         //account
-        Column column = this.table.AddColumn("2cm");
+        Column column = this._table.AddColumn("2cm");
         column.Format.Alignment = ParagraphAlignment.Left;
 
         //quantity
-        column = this.table.AddColumn("2cm");
+        column = this._table.AddColumn("2cm");
         column.Format.Alignment = ParagraphAlignment.Center;
 
         //cdm
-        column = this.table.AddColumn("2cm");
+        column = this._table.AddColumn("2cm");
         column.Format.Alignment = ParagraphAlignment.Left;
 
         //description
-        column = this.table.AddColumn("6cm");
+        column = this._table.AddColumn("6cm");
         column.Format.Alignment = ParagraphAlignment.Left;
 
         //item amount
-        column = this.table.AddColumn("2cm");
+        column = this._table.AddColumn("2cm");
         column.Format.Alignment = ParagraphAlignment.Right;
 
         //account total amount
-        column = this.table.AddColumn("3cm");
+        column = this._table.AddColumn("3cm");
         column.Format.Alignment = ParagraphAlignment.Right;
 
         // Create the header of the table
-        Row row = table.AddRow();
+        Row row = _table.AddRow();
         row.HeadingFormat = true;
         row.Format.Alignment = ParagraphAlignment.Center;
         row.Format.Font.Bold = true;
@@ -351,7 +353,7 @@ public class InvoicePrintPdfSharp
         row.Cells[5].VerticalAlignment = VerticalAlignment.Bottom;
         row.Cells[5].MergeDown = 1;
 
-        row = table.AddRow();
+        row = _table.AddRow();
         row.HeadingFormat = true;
         row.Format.Alignment = ParagraphAlignment.Center;
         row.Format.Font.Bold = true;
@@ -378,34 +380,34 @@ public class InvoicePrintPdfSharp
         row.Cells[4].Format.Alignment = ParagraphAlignment.Left;
         row.Cells[4].VerticalAlignment = VerticalAlignment.Bottom;
 
-        this.table.SetEdge(0, 0, 6, 2, Edge.Box, BorderStyle.Single, 0.75, Color.Empty);
+        this._table.SetEdge(0, 0, 6, 2, Edge.Box, BorderStyle.Single, 0.75, Color.Empty);
     }
 
     private void FillInvoiceContent()
     {
         // Fill address in address text frame
 
-        Paragraph paragraph = this.addressFrame.AddParagraph();
-        paragraph.AddText(model.ClientName);
+        Paragraph paragraph = this._addressFrame.AddParagraph();
+        paragraph.AddText(_model.ClientName);
         paragraph.AddLineBreak();
-        paragraph.AddText(model.Address1 ?? string.Empty);
+        paragraph.AddText(_model.Address1 ?? string.Empty);
         paragraph.AddLineBreak();
-        paragraph.AddText($"{model.City}, {model.State} {model.ZipCode}");
+        paragraph.AddText($"{_model.City}, {_model.State} {_model.ZipCode}");
 
-        paragraph = this.invoiceFrame.AddParagraph();
+        paragraph = this._invoiceFrame.AddParagraph();
         paragraph.Format.Alignment = ParagraphAlignment.Right;
         paragraph.AddText("Invoice:  ");
-        paragraph.AddFormattedText(model.InvoiceNo, TextFormat.Bold);
+        paragraph.AddFormattedText(_model.InvoiceNo, TextFormat.Bold);
         paragraph.AddLineBreak();
         paragraph.AddText("Invoice Date:  ");
-        paragraph.AddFormattedText(model.InvoiceDate.ToShortDateString(), TextFormat.Bold);
+        paragraph.AddFormattedText(_model.InvoiceDate.ToShortDateString(), TextFormat.Bold);
         paragraph.AddLineBreak();
         paragraph.AddText("Invoice Total: ");
-        paragraph.AddFormattedText(model.InvoiceTotal.ToString("0.00"), TextFormat.Bold);
+        paragraph.AddFormattedText(_model.InvoiceTotal.ToString("0.00"), TextFormat.Bold);
 
         // Iterate the invoice items
 
-        foreach (var detail in model.InvoiceDetails)
+        foreach (var detail in _model.InvoiceDetails)
         {
             if (detail.AccountTotal == 0)
                 continue;
@@ -414,7 +416,7 @@ public class InvoicePrintPdfSharp
 
 
             // Each item fills two rows
-            Row row1 = this.table.AddRow();
+            Row row1 = this._table.AddRow();
             row1.TopPadding = 1.5;
             //account no
             row1.Cells[0].Shading.Color = Color.Parse("LightGray");
@@ -442,7 +444,7 @@ public class InvoicePrintPdfSharp
 
             foreach (var detailLine in detail.InvoiceDetailLines)
             {
-                Row newRow = this.table.AddRow();
+                Row newRow = this._table.AddRow();
 
                 newRow.Cells[1].AddParagraph(detailLine.Qty.ToString());
                 newRow.Cells[2].AddParagraph(detailLine.CDM.ToString());
@@ -450,7 +452,7 @@ public class InvoicePrintPdfSharp
 
                 paragraph = newRow.Cells[3].AddParagraph();
                 paragraph.AddText(detailLine.Description);
-                if (model.ShowCpt)
+                if (_model.ShowCpt)
                     paragraph.AddText($" ({detailLine.CPT})");
 
                 newRow.Cells[4].AddParagraph(detailLine.Amount.ToString("0.00"));
@@ -460,24 +462,24 @@ public class InvoicePrintPdfSharp
 
             row1.Cells[5].VerticalAlignment = VerticalAlignment.Top;
 
-            this.table.SetEdge(0, this.table.Rows.Count - 2, 6, 2, Edge.Box, BorderStyle.Single, 0.75);
+            this._table.SetEdge(0, this._table.Rows.Count - 2, 6, 2, Edge.Box, BorderStyle.Single, 0.75);
         }
 
         // Add an invisible row as a space line to the table
-        Row row = this.table.AddRow();
+        Row row = this._table.AddRow();
         row.Borders.Visible = false;
 
         // Add the total due row
-        row = this.table.AddRow();
+        row = this._table.AddRow();
         row.Cells[0].AddParagraph("Total Due");
         row.Cells[0].Borders.Visible = false;
         row.Cells[0].Format.Font.Bold = true;
         row.Cells[0].Format.Alignment = ParagraphAlignment.Right;
         row.Cells[0].MergeRight = 4;
-        row.Cells[5].AddParagraph(model.InvoiceTotal.ToString("0.00"));
+        row.Cells[5].AddParagraph(_model.InvoiceTotal.ToString("0.00"));
 
         // Set the borders of the specified cell range
-        this.table.SetEdge(5, this.table.Rows.Count - 4, 1, 4, Edge.Box, BorderStyle.Single, 0.75);
+        this._table.SetEdge(5, this._table.Rows.Count - 4, 1, 4, Edge.Box, BorderStyle.Single, 0.75);
 
         // Add the notes paragraph
         //paragraph = this.document.LastSection.AddParagraph();
@@ -491,40 +493,40 @@ public class InvoicePrintPdfSharp
 
     private void CreateStatementPage()
     {
-        section = this.document.AddSection();
-        section.PageSetup.TopMargin = Unit.FromInch(3.75);
+        _section = this._document.AddSection();
+        _section.PageSetup.TopMargin = Unit.FromInch(3.75);
 
         CreateHeaderFooter();
 
         // Create the item table
-        this.table = section.AddTable();
-        this.table.Style = "Table";
-        this.table.Borders.Color = Color.Parse("Blue");
-        this.table.Borders.Width = 0.25;
-        this.table.Borders.Left.Width = 0.5;
-        this.table.Borders.Right.Width = 0.5;
-        this.table.Rows.LeftIndent = 0;
+        this._table = _section.AddTable();
+        this._table.Style = "Table";
+        this._table.Borders.Color = Color.Parse("Blue");
+        this._table.Borders.Width = 0.25;
+        this._table.Borders.Left.Width = 0.5;
+        this._table.Borders.Right.Width = 0.5;
+        this._table.Rows.LeftIndent = 0;
 
         // Before you can add a row, you must define the columns
 
         //service date
-        Column column = this.table.AddColumn("1in");
+        Column column = this._table.AddColumn("1in");
         column.Format.Alignment = ParagraphAlignment.Left;
 
         //reference
-        column = this.table.AddColumn("1in");
+        column = this._table.AddColumn("1in");
         column.Format.Alignment = ParagraphAlignment.Left;
 
         //description
-        column = this.table.AddColumn("3in");
+        column = this._table.AddColumn("3in");
         column.Format.Alignment = ParagraphAlignment.Left;
 
         //amount
-        column = this.table.AddColumn("1in");
+        column = this._table.AddColumn("1in");
         column.Format.Alignment = ParagraphAlignment.Right;
 
         // Create the header of the table
-        Row row = table.AddRow();
+        Row row = _table.AddRow();
         row.HeadingFormat = true;
         row.Format.Alignment = ParagraphAlignment.Center;
         row.Format.Font.Bold = true;
@@ -547,33 +549,33 @@ public class InvoicePrintPdfSharp
         row.Cells[3].Format.Alignment = ParagraphAlignment.Right;
         row.Cells[3].VerticalAlignment = VerticalAlignment.Bottom;
 
-        this.table.SetEdge(0, 0, this.table.Columns.Count, 1, Edge.Box, BorderStyle.Single, 0.75, Color.Empty);
+        this._table.SetEdge(0, 0, this._table.Columns.Count, 1, Edge.Box, BorderStyle.Single, 0.75, Color.Empty);
     }
 
     private void FillStatementContent()
     {
         // Fill address in address text frame
 
-        Paragraph paragraph = this.addressFrame.AddParagraph();
-        paragraph.AddText(model.ClientName);
+        Paragraph paragraph = this._addressFrame.AddParagraph();
+        paragraph.AddText(_model.ClientName);
         paragraph.AddLineBreak();
-        paragraph.AddText(model.Address1 ?? string.Empty);
+        paragraph.AddText(_model.Address1 ?? string.Empty);
         paragraph.AddLineBreak();
-        paragraph.AddText($"{model.City}, {model.State} {model.ZipCode}");
+        paragraph.AddText($"{_model.City}, {_model.State} {_model.ZipCode}");
 
         // add a balance forward line
-        Row row = this.table.AddRow();
+        Row row = this._table.AddRow();
         row.TopPadding = 1.5;
         row.Cells[0].Format.Alignment = ParagraphAlignment.Left;
-        row.Cells[0].AddParagraph(model.BalanceForwardDate.ToShortDateString());
+        row.Cells[0].AddParagraph(_model.BalanceForwardDate.ToShortDateString());
         row.Cells[2].AddParagraph("Balance Forward");
         row.Cells[3].Format.Alignment = ParagraphAlignment.Right;
-        row.Cells[3].AddParagraph(model.BalanceForward.ToString("0.00"));
+        row.Cells[3].AddParagraph(_model.BalanceForward.ToString("0.00"));
 
         // Iterate the invoice items
-        foreach (var detail in model.ClientStatementDetails)
+        foreach (var detail in _model.ClientStatementDetails)
         {
-            Row row1 = this.table.AddRow();
+            Row row1 = this._table.AddRow();
             row1.TopPadding = 1.5;
             //date
             row1.Cells[0].Format.Alignment = ParagraphAlignment.Left;
@@ -595,24 +597,24 @@ public class InvoicePrintPdfSharp
                 row1.Cells[3].Format.Font.Color = Color.Parse("Red");
             row1.Cells[3].AddParagraph(detail.Amount.ToString("0.00"));
 
-            this.table.SetEdge(0, this.table.Rows.Count - 1, table.Columns.Count, 1, Edge.Box, BorderStyle.Single, 0.75);
+            this._table.SetEdge(0, this._table.Rows.Count - 1, _table.Columns.Count, 1, Edge.Box, BorderStyle.Single, 0.75);
         }
 
         // Add an invisible row as a space line to the table
-        row = this.table.AddRow();
+        row = this._table.AddRow();
         row.Borders.Visible = false;
 
         // Add the total due row
-        row = this.table.AddRow();
+        row = this._table.AddRow();
         row.Cells[0].AddParagraph("Total Due");
         row.Cells[0].Borders.Visible = false;
         row.Cells[0].Format.Font.Bold = true;
         row.Cells[0].Format.Alignment = ParagraphAlignment.Right;
         row.Cells[0].MergeRight = 2;
-        row.Cells[3].AddParagraph(model.BalanceDue.ToString("0.00"));
+        row.Cells[3].AddParagraph(_model.BalanceDue.ToString("0.00"));
 
         // Set the borders of the specified cell range
-        this.table.SetEdge(3, this.table.Rows.Count - 4, 1, 2, Edge.Box, BorderStyle.Single, 0.75);
+        this._table.SetEdge(3, this._table.Rows.Count - 4, 1, 2, Edge.Box, BorderStyle.Single, 0.75);
 
         // Add the notes paragraph
         //paragraph = this.document.LastSection.AddParagraph();

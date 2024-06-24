@@ -58,18 +58,8 @@ public sealed class PatRepository : RepositoryBase<Pat>
         }
 
         record.Physician = dictionaryService.GetProvider(record.ProviderId);
-
-        if (!StringExtensions.ParseName(record.PatFullName, out string strLastName, out string strFirstName, out string strMidName, out string strSuffix))
-        {
-            this.Errors = $"Patient name could not be parsed. {record.PatFullName} {record.AccountNo}";
-        }
-        else
-        {
-            record.PatLastName = strLastName;
-            record.PatFirstName = strFirstName;
-            record.PatMiddleName = strMidName;
-            record.PatNameSuffix = strSuffix;
-        }
+        if(record.Physician != null)
+            record.Physician.SanctionedProvider = dictionaryService.GetSanctionedProvider(record.Physician?.NpiId);
 
         if (!StringExtensions.ParseName(record.GuarantorFullName, out string strGuarLastName, out string strGuarFirstName, out string strGuarMidName, out string strGuarSuffix))
         {
@@ -258,14 +248,6 @@ public sealed class PatRepository : RepositoryBase<Pat>
     public override Pat Update(Pat table)
     {
         Log.Instance.Trace($"Entering - account {table.AccountNo}");
-        //generate full name from name parts
-        table.PatFullName =
-            String.Format("{0},{1} {2} {3}",
-            table.PatLastName,
-            table.PatFirstName,
-            table.PatMiddleName,
-            table.PatNameSuffix);
-        table.PatFullName = table.PatFullName.Trim();
 
         table.GuarantorFullName =
             String.Format("{0},{1} {2} {3}",
@@ -284,15 +266,6 @@ public sealed class PatRepository : RepositoryBase<Pat>
     public override Pat Update(Pat table, IEnumerable<string> columns)
     {
         Log.Instance.Trace($"Entering - account {table.AccountNo}");
-        //generate full name from name parts
-        table.PatFullName =
-            String.Format("{0},{1} {2} {3}",
-            table.PatLastName,
-            table.PatFirstName,
-            table.PatMiddleName,
-            table.PatNameSuffix);
-        table.PatFullName = table.PatFullName.Trim();
-
         table.GuarantorFullName =
             String.Format("{0},{1} {2} {3}",
             table.GuarantorLastName,

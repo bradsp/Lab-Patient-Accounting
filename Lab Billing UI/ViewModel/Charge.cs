@@ -48,7 +48,7 @@ namespace LabBilling.ViewModel
         public string RevenueCode { get; set; }
         public string Cpt4 { get; set; }
         public string Modifier { get; set; }
-        public string Modifer2 { get; set; }
+        public string Modifier2 { get; set; }
         public string Type { get; set; }
         public double Amount { get; set; }
         public string OrderCode { get; set; }

@@ -8,6 +8,7 @@ using LabBilling.Logging;
 using LabBilling.LookupForms;
 using System.ComponentModel;
 using System.Data;
+using System.Printing;
 using Utilities;
 using WinFormsLibrary;
 
@@ -32,6 +33,7 @@ public partial class AccountForm : Form
     private const int _timerInterval = 650;
     private const string _notesAlertText = "** SEE NOTES **";
     private bool _closing = false;
+    private bool _readOnly = false;
     private readonly ChargeMaintenanceUC _chargeMaintenance = new();
     private readonly InsMaintenanceUC _insPrimaryMaintenanceUC = new(InsCoverage.Primary);
     private readonly InsMaintenanceUC _insSecondaryMaintenanceUC = new(InsCoverage.Secondary);
@@ -144,14 +146,15 @@ public partial class AccountForm : Form
         _controlColumnMap.Add(SocSecNoTextBox, nameof(Account.SocSecNo));
         _controlColumnMap.Add(DateOfBirthTextBox, nameof(Account.BirthDate));
         _controlColumnMap.Add(SexComboBox, nameof(Account.Sex));
+        _controlColumnMap.Add(SuffixTextBox, nameof(Account.PatNameSuffix));
+        _controlColumnMap.Add(LastNameTextBox, nameof(Account.PatNameSuffix));
+        _controlColumnMap.Add(MiddleNameTextBox, nameof(Account.PatMiddleName));
+        _controlColumnMap.Add(FirstNameTextBox, nameof(Account.PatFirstName));
 
         _controlColumnMap.Add(ZipcodeTextBox, nameof(Pat.ZipCode));
         _controlColumnMap.Add(MaritalStatusComboBox, nameof(Pat.MaritalStatus));
         _controlColumnMap.Add(EmailAddressTextBox, nameof(Pat.EmailAddress));
-        _controlColumnMap.Add(SuffixTextBox, nameof(Pat.PatNameSuffix));
-        _controlColumnMap.Add(LastNameTextBox, nameof(Pat.PatNameSuffix));
-        _controlColumnMap.Add(MiddleNameTextBox, nameof(Pat.PatMiddleName));
-        _controlColumnMap.Add(FirstNameTextBox, nameof(Pat.PatFirstName));
+
         _controlColumnMap.Add(StateComboBox, nameof(Pat.State));
         _controlColumnMap.Add(PhoneTextBox, nameof(Pat.PrimaryPhone));
         _controlColumnMap.Add(CityTextBox, nameof(Pat.City));
@@ -211,6 +214,9 @@ public partial class AccountForm : Form
 
             AddOnChangeHandlerToInputControls(tabDemographics);
         }
+
+        notesDataGridView.DoubleBuffered(true);
+
     }
 
     private void UserControl_OnError(object sender, AppErrorEventArgs e)
@@ -260,12 +266,12 @@ public partial class AccountForm : Form
     private void SetFormPermissions()
     {
         Log.Instance.Trace("Entering");
-        _chargeMaintenance.AllowChargeEntry = Program.LoggedInUser.CanSubmitCharges;
+        _chargeMaintenance.AllowChargeEntry = !_readOnly && Program.LoggedInUser.CanSubmitCharges;
 
         Helper.SetControlsAccess(tabPayments.Controls, false);
         if (Program.AppEnvironment.ApplicationParameters.AllowPaymentAdjustmentEntry)
         {
-            Helper.SetControlsAccess(tabPayments.Controls, Program.LoggedInUser.CanAddAdjustments);
+            Helper.SetControlsAccess(tabPayments.Controls, !_readOnly && Program.LoggedInUser.CanAddAdjustments);
         }
 
         _insPrimaryMaintenanceUC.AllowEditing = false;
@@ -284,7 +290,7 @@ public partial class AccountForm : Form
         GenerateClaimButton.Visible = false;
         if (Program.AppEnvironment.ApplicationParameters.AllowEditing)
         {
-            if (Program.LoggedInUser.Access == "ENTER/EDIT")
+            if (Program.LoggedInUser.Access == "ENTER/EDIT" && !_readOnly)
             {
                 _insPrimaryMaintenanceUC.AllowEditing = true;
                 Helper.SetControlsAccess(tabDemographics.Controls, true);
@@ -348,10 +354,18 @@ public partial class AccountForm : Form
         }
         catch (AccountLockException alex)
         {
-            string message = $"Account is locked by {alex.LockInfo.UpdatedUser} at {alex.LockInfo.LockDateTime} on {alex.LockInfo.UpdatedHost}.";
-            MessageBox.Show(message, "Account Locked", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-            Close();
-            return;
+            string message = $"Account is locked by {alex.LockInfo.UpdatedUser} at {alex.LockInfo.LockDateTime} on {alex.LockInfo.UpdatedHost}. Open as read only?";
+            if (MessageBox.Show(message, "Account Locked", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            {
+                _currentAccount = await _accountService.GetAccountAsync(SelectedAccount, false, false);
+                _readOnly = true;
+                SetFormPermissions();
+            }
+            else
+            {
+                Close();
+                return;
+            }
         }
 
         if (_currentAccount.FinCode == Program.AppEnvironment.ApplicationParameters.ClientAccountFinCode)
@@ -547,6 +561,13 @@ public partial class AccountForm : Form
         Log.Instance.Trace($"Entering - {SelectedAccount}");
 
         BannerNameTextBox.Text = _currentAccount.PatFullName;
+
+        if(_currentAccount.FinCode == Program.AppEnvironment.ApplicationParameters.ClientAccountFinCode)
+        {
+            BannerDOBSexLabel.Visible = false;
+            BannerDobTextBox.Visible = false;
+            BannerSexTextBox.Visible = false;
+        }
         BannerDobTextBox.Text = _currentAccount.BirthDate.GetValueOrDefault().ToShortDateString();
         BannerSexTextBox.Text = _currentAccount.Sex;
         BannerAccountTextBox.Text = SelectedAccount;
@@ -659,7 +680,6 @@ public partial class AccountForm : Form
         _currentAccount.Pat.State = StateComboBox.SelectedValue.ToString();
         _currentAccount.Pat.ZipCode = ZipcodeTextBox.Text;
         _currentAccount.Pat.CityStateZip = $"{CityTextBox.Text}, {StateComboBox.SelectedValue} {ZipcodeTextBox.Text}";
-        _currentAccount.Pat.PatFullName = $"{LastNameTextBox.Text},{FirstNameTextBox.Text} {MiddleNameTextBox.Text}";
         _currentAccount.Pat.ProviderId = orderingPhyTextBox.Tag?.ToString();
 
         _currentAccount.Pat.GuarantorFullName = $"{GuarantorLastNameTextBox.Text} {GuarSuffixTextBox.Text},{GuarFirstNameTextBox.Text} {GuarMiddleNameTextBox.Text}";
@@ -1243,6 +1263,7 @@ public partial class AccountForm : Form
     private void LoadNotes()
     {
         Log.Instance.Trace($"Entering - {SelectedAccount}");
+        notesDataGridView.SuspendLayout();
         notesDataGridView.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
         notesDataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
         notesDataGridView.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
@@ -1267,6 +1288,8 @@ public partial class AccountForm : Form
 
         if (_currentAccount.AccountAlert != null)
             noteAlertCheckBox.Checked = _currentAccount.AccountAlert.Alert;
+
+        notesDataGridView.ResumeLayout();
     }
 
     private void AddNoteButton_Click(object sender, EventArgs e)
@@ -1403,13 +1426,18 @@ public partial class AccountForm : Form
             {
                 if (_accountService.ChangeClient(_currentAccount, newClient))
                 {
-                    //await LoadAccountData();
                     RefreshAccountData();
                 }
                 else
                 {
                     MessageBox.Show("Error during update.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
+            }
+            catch (ApplicationException apex)
+            {
+                MessageBox.Show(apex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Log.Instance.Error(apex);
+                return;
             }
             catch (Exception ex)
             {
@@ -1499,7 +1527,6 @@ public partial class AccountForm : Form
             _currentAccount.Status = AccountStatus.Hold;
         }
 
-        //await LoadAccountData();
         RefreshAccountData();
 
     }
@@ -1767,5 +1794,18 @@ public partial class AccountForm : Form
     private void AccountForm_FormClosed(object sender, FormClosedEventArgs e)
     {
         _closing = true;
+    }
+
+    private void notesDataGridView_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+    {
+        if(e.RowIndex != -1)
+        {
+            notesDataGridView.Rows[e.RowIndex].MinimumHeight = 2;
+        }        
+    }
+
+    private void notesDataGridView_RowHeightChanged(object sender, DataGridViewRowEventArgs e)
+    {
+        e.Row.MinimumHeight = e.Row.Height;
     }
 }
