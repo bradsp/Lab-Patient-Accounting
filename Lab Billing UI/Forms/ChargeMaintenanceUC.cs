@@ -237,8 +237,6 @@ public partial class ChargeMaintenanceUC : UserControl
         }
 
         ChargesDataGrid.ClearSelection();
-
-
     }
 
     private void RemoveModifier(int uri, int chrg_num)
