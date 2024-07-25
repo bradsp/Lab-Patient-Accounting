@@ -133,8 +133,6 @@ public partial class ChargeMaintenanceUC : UserControl
 
         TotalChargesTextBox.Text = CurrentAccount.TotalCharges.ToString("c");
 
-
-
         //add modifier combobox columns
         DataGridViewComboBoxColumn modifier1 = new();
         DataGridViewComboBoxColumn modifier2 = new();
@@ -237,17 +235,6 @@ public partial class ChargeMaintenanceUC : UserControl
         }
 
         ChargesDataGrid.ClearSelection();
-    }
-
-    private void RemoveModifier(int uri, int chrg_num)
-    {
-        _accountService.RemoveChargeModifier(uri);
-
-        var idx = CurrentAccount.Charges.FindIndex(x => x.ChrgId == chrg_num);
-        var dIdx = CurrentAccount.Charges[idx].ChrgDetails.FindIndex(x => x.Id == uri);
-        CurrentAccount.Charges[idx].ChrgDetails[dIdx].Modifier = "";
-
-        ChargesUpdated?.Invoke(this, EventArgs.Empty);
     }
 
     private void AddModifier(int uri, int chrg_num, string modifier)

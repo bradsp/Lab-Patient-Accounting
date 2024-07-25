@@ -16,6 +16,7 @@ public partial class HealthPlanMaintenanceEditForm : Form
     public HealthPlanMaintenanceEditForm() 
     {
         InitializeComponent();
+        dictionaryService = new(Program.AppEnvironment);
     }
 
     public HealthPlanMaintenanceEditForm(string insCode) : this()
@@ -24,7 +25,6 @@ public partial class HealthPlanMaintenanceEditForm : Form
             throw new ArgumentNullException();
 
         selectedInsCode = insCode;
-        dictionaryService = new(Program.AppEnvironment);
     }
 
     private void HealtPlanMaintenaceEditForm_Load(object sender, EventArgs e)
