@@ -19,13 +19,7 @@ public partial class HealthPlanMaintenanceEditForm : Form
         dictionaryService = new(Program.AppEnvironment);
     }
 
-    public HealthPlanMaintenanceEditForm(string insCode) : this()
-    {
-        if (insCode == null)
-            throw new ArgumentNullException();
-
-        selectedInsCode = insCode;
-    }
+    public HealthPlanMaintenanceEditForm(string insCode) : this() => selectedInsCode = insCode ?? throw new ArgumentNullException();
 
     private void HealtPlanMaintenaceEditForm_Load(object sender, EventArgs e)
     {
