@@ -16,16 +16,10 @@ public partial class HealthPlanMaintenanceEditForm : Form
     public HealthPlanMaintenanceEditForm() 
     {
         InitializeComponent();
-    }
-
-    public HealthPlanMaintenanceEditForm(string insCode) : this()
-    {
-        if (insCode == null)
-            throw new ArgumentNullException();
-
-        selectedInsCode = insCode;
         dictionaryService = new(Program.AppEnvironment);
     }
+
+    public HealthPlanMaintenanceEditForm(string insCode) : this() => selectedInsCode = insCode ?? throw new ArgumentNullException();
 
     private void HealtPlanMaintenaceEditForm_Load(object sender, EventArgs e)
     {

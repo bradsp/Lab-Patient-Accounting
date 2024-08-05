@@ -286,6 +286,7 @@ public static class Dictionaries
     {
         {"<none>", "No Modifier" },
         {"TC", "Technical Component" },
+        {"26", "Professional Component" },
         {"59", "Distinct Procedural Service" },
         {"90", "Reference (Outside) Laboratory" },
         {"91", "Repeat Test" },
