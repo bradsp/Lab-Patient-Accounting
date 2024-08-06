@@ -1726,7 +1726,7 @@ public sealed class AccountService
             if (ruleDef == null)
                 continue;
 
-            bool dxIsValid = ruleDef.DxIsValid == 0 ? false : true;
+            bool dxIsValid = ruleDef.DxIsValid != 0;
             bool dxSupported = false;
 
             foreach (var dx in account.Pat.Diagnoses)
@@ -1741,7 +1741,11 @@ public sealed class AccountService
 
             if (!dxSupported)
             {
-                errorList.Add($"LMRP Violation - No dx codes support medical necessity for cpt {cpt4}.");
+                //check if charge has a GZ modifier
+                if (!account.BillableCharges.Any(x => x.ChrgDetails.Where(y => y.Cpt4 == cpt4).Any(z => z.Modifier == "GZ" || z.Modifier2 == "GZ")))
+                {
+                    errorList.Add($"LMRP Violation - No dx codes support medical necessity for cpt {cpt4}.");
+                }                
             }
         }
         uow.Commit();
