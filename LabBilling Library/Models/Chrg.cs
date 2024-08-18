@@ -6,7 +6,7 @@ namespace LabBilling.Core.Models;
 
 [TableName("chrg")]
 [PrimaryKey("chrg_num", AutoIncrement = true)]
-public sealed class Chrg : IBaseEntity
+public sealed class Chrg : PetaPocoModel<Chrg>, IBaseEntity
 {
     [Column("credited")]
     public bool IsCredited { get; set; }

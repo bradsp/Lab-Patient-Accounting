@@ -48,23 +48,21 @@ namespace LabBilling.Core.DataAccess
                     group by fin_code
                     order by fin_code";
 
-            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using SqlConnection conn = new(_connectionString);
+            SqlCommand cmd = new(sql, conn);
+            SqlDataAdapter da = new();
+            da.SelectCommand = cmd;
+            conn.Open();
+            DataTable dt = new();
+            da.Fill(dt);
+
+            List<(string, double)> list = new();
+            foreach (DataRow dr in dt.Rows)
             {
-                SqlCommand cmd = new SqlCommand(sql, conn);
-                SqlDataAdapter da = new SqlDataAdapter();
-                da.SelectCommand = cmd;
-                conn.Open();
-                DataTable dt = new DataTable();
-                da.Fill(dt);
-
-                List<(string, double)> list = new List<(string, double)>();
-                foreach(DataRow dr in dt.Rows)
-                {
-                    list.Add((dr["Financial Class"].ToString(), Convert.ToDouble(dr["Balance"].ToString())));
-                }
-
-                return list;
+                list.Add((dr["Financial Class"].ToString(), Convert.ToDouble(dr["Balance"].ToString())));
             }
+
+            return list;
         }
 
     }

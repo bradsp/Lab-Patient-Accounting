@@ -382,7 +382,6 @@ public sealed class ClientInvoicesService
         using UnitOfWorkMain uow = new(_appEnvironment, true);
 
         var charges = uow.ChrgRepository.GetByAccount(clientMnem, true, true, asOfDate, false);
-
         var payments = uow.ChkRepository.GetByAccount(clientMnem, asOfDate);
 
         List<ClientStatementDetailModel> statementDetails = new();

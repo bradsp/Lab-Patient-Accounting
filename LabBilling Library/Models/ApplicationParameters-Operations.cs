@@ -5,7 +5,7 @@ public partial class ApplicationParameters
 {
     #region Operations Category
     [Category(_operationsCategory)]
-    [Description("use to move the day back in an hourly query")]
+    [Description("Use to move the day back in an hourly query")]
     public System.String DemoDays { get; set; }
     [Category(_operationsCategory)]
     [Description("Number of days to keep ADT messages received from an interface.")]

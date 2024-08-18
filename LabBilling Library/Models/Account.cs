@@ -10,7 +10,7 @@ namespace LabBilling.Core.Models;
 
 [TableName("acc")]
 [PrimaryKey("account", AutoIncrement = false)]
-public sealed class Account : IBaseEntity
+public sealed class Account : PetaPocoModel<Account>, IBaseEntity
 {
     [Column("deleted")]
     public bool IsDeleted { get; set; }

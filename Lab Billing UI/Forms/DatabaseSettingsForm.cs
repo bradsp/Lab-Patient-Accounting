@@ -17,8 +17,8 @@ public partial class DatabaseSettingsForm : Form
         serverComboBox.DropDownStyle = ComboBoxStyle.DropDown;
         databaseComboBox.DropDownStyle = ComboBoxStyle.DropDown;
 
-        serverComboBox.Text = Properties.Settings.Default.DbServer;
-        databaseComboBox.Text = Properties.Settings.Default.DbName;
+        serverComboBox.Text = Properties.Settings.Default.ProdDbServer;
+        databaseComboBox.Text = Properties.Settings.Default.ProdDbName;
 
     }
 

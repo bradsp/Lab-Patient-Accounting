@@ -357,7 +357,15 @@ public partial class ClientInvoiceForm : Form
             InvoicePrintPdfSharp invoicePrint = new(Program.AppEnvironment);
 
             string filename = invoicePrint.PrintInvoice(invoiceNo);
-            LaunchPDF(filename);
+            if(!string.IsNullOrWhiteSpace(filename))
+            {
+                LaunchPDF(filename);
+            }
+            else
+            {
+                MessageBox.Show("No invoice to print.");
+                return;
+            }
         }
     }
 
