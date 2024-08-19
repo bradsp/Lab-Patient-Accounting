@@ -1,13 +1,11 @@
 ﻿using LabBilling.Forms;
 using MCL;
-using System;
 using System.Collections;
-using System.Drawing;
 using System.Drawing.Printing;
 using System.Reflection;
-using System.Windows.Forms;
 // programmer added
 using Utilities;
+using WinFormsLibrary;
 
 namespace LabBilling.Legacy;
 

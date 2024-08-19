@@ -15,7 +15,7 @@ public sealed class Remittance835Service
 {
     private IAppEnvironment _appEnvironment;
 
-    public Dictionary<string, string> claimAdjustmentReasonCodes = new Dictionary<string, string>()
+    public Dictionary<string, string> claimAdjustmentReasonCodes = new()
     {
         {"1","Deductible Amount"},
         {"2","Coinsurance Amount"},
@@ -313,7 +313,7 @@ public sealed class Remittance835Service
         {"P9","No available or correlating CPT/HCPCS code to describe this service. To be used for Property and Casualty only."}
     };
 
-    public Dictionary<string, string> claimStatusCodes = new Dictionary<string, string>()
+    public Dictionary<string, string> claimStatusCodes = new()
     {
         {"0","Cannot provide further status electronically."},
         {"1","For more detailed information, see remittance advice."},
@@ -999,7 +999,7 @@ public sealed class Remittance835Service
         {"799","Resubmit a replacement claim, not a new claim."}
     };
 
-    public Dictionary<string, string> payerDictionary = new Dictionary<string, string>
+    public Dictionary<string, string> payerDictionary = new()
     {
         { "046000", "" },
         { "06J4812", "UHC" },
@@ -1033,7 +1033,7 @@ public sealed class Remittance835Service
         { "8K5167", "" }
     };
 
-    EdiDocument ediDocument = null;
+    EdiDocument _ediDocument = null;
     public Remittance835Service(IAppEnvironment appEnvironment)
     {
         _appEnvironment = appEnvironment;
@@ -1041,7 +1041,7 @@ public sealed class Remittance835Service
 
     public void Load835(string fileName)
     {
-        ediDocument = EdiDocument.Load(fileName);
+        _ediDocument = EdiDocument.Load(fileName);
 
         RemittanceData remittance = new();
         Loop2000 loop2000 = null;
@@ -1052,7 +1052,7 @@ public sealed class Remittance835Service
         string currentLoop = null;
         string currN1type = null;
 
-        foreach (var segment in ediDocument.Segments)
+        foreach (var segment in _ediDocument.Segments)
         {
             switch (segment.Id)
             {
@@ -1250,7 +1250,7 @@ public sealed class Remittance835Service
 
         //var json = Newtonsoft.Json.JsonConvert.SerializeObject(remittance);
 
-        var json = Newtonsoft.Json.JsonConvert.SerializeObject(ediDocument);
+        var json = Newtonsoft.Json.JsonConvert.SerializeObject(_ediDocument);
         System.IO.File.WriteAllText(@"C:\temp\remit.json", json);
 
     }

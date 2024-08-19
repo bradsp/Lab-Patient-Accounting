@@ -4,9 +4,9 @@ using Microsoft.Data.SqlClient;// for SqlDataSourceEnumerator
 using System.Collections.Specialized;// for StringCollection (new mapping type best I can tell wdk.)
 using System.Data;
 using System.Drawing.Printing;
-using WinFormsLibrary;
+using Utilities;
 
-namespace Utilities;
+namespace WinFormsLibrary;
 
 /// <summary>
 /// This viewer allows manipulation of a basic sql viewer. It contains a tab control which
@@ -532,7 +532,7 @@ public partial class ViewerBase : Form
             strWhere = strWhere.Replace(Environment.NewLine, " ");
         }
         m_rgReport = new ReportGenerator(((DataGridView)m_arrSC[m_tcSelect.SelectedIndex].Panel2.Controls[0]), m_PrintDocument, string.Format("{0}", m_strReportTitle), tscbDatabase.SelectedItem.ToString());
-        m_rgReport.m_dgvpReport.propFooterText = strWhere;
+        m_rgReport.reportDataGridView.propFooterText = strWhere;
         this.m_PrintDocument.PrintPage += new System.Drawing.Printing.PrintPageEventHandler(m_rgReport.MyPrintDocument_PrintPage);
 
 

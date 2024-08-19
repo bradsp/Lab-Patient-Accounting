@@ -1,8 +1,9 @@
 ﻿// programmer added
 using System.Data;
 using System.Drawing.Printing;
+using Utilities;
 
-namespace Utilities;
+namespace WinFormsLibrary;
 
 /// <summary>
 /// Class designed to print from a DataSet
@@ -139,16 +140,16 @@ public sealed class DataSetPrinter
         {
             // 06/1/2008 wdk our printers cannot print the full 850 the below line returns, so the margins must total more than or equal to 50.
             _pageWidth =
-              (ThePrintDocument.DefaultPageSettings.PaperSize.Width);// - (LeftMargin+RightMargin));
+              ThePrintDocument.DefaultPageSettings.PaperSize.Width;// - (LeftMargin+RightMargin));
             _pageHeight =
-              (ThePrintDocument.DefaultPageSettings.PaperSize.Height);// - (TopMargin+BottomMargin));
+              ThePrintDocument.DefaultPageSettings.PaperSize.Height;// - (TopMargin+BottomMargin));
         }
         else
         {
             _pageHeight =
-              (ThePrintDocument.DefaultPageSettings.PaperSize.Width);// - (TopMargin+BottomMargin));
+              ThePrintDocument.DefaultPageSettings.PaperSize.Width;// - (TopMargin+BottomMargin));
             _pageWidth =
-              (ThePrintDocument.DefaultPageSettings.PaperSize.Height);// - (LeftMargin+RightMargin));
+              ThePrintDocument.DefaultPageSettings.PaperSize.Height;// - (LeftMargin+RightMargin));
         }
 
         // First, the current row to be printed is the first row in the DataSet
@@ -263,8 +264,8 @@ public sealed class DataSetPrinter
             #endregion hide 
 
             float mTempWidth = _theDataSetWidth;
-            float mTempPrintArea = (float)_pageWidth - (float)_leftMargin -
-                (float)_rightMargin;
+            float mTempPrintArea = _pageWidth - (float)_leftMargin -
+                _rightMargin;
 
             // We only care about handling where the total dataset width is bigger than the print area
             if (_theDataSetWidth > mTempPrintArea)
@@ -312,7 +313,7 @@ public sealed class DataSetPrinter
     // The funtion that print the title, page number, and the header row
     private void DrawHeader(Graphics g)
     {
-        _currentY = (float)_topMargin;
+        _currentY = _topMargin;
 
         // Printing the page number (if isWithPaging is set to true)
         if (_isWithPaging)
@@ -342,8 +343,8 @@ public sealed class DataSetPrinter
                 GraphicsUnit.Point);
 
             RectangleF PageStringRectangle =
-               new RectangleF((float)_leftMargin, _currentY,
-               (float)_pageWidth - (float)_rightMargin - (float)_leftMargin,
+               new RectangleF(_leftMargin, _currentY,
+               _pageWidth - (float)_rightMargin - _leftMargin,
                g.MeasureString(PageString, PageStringFont).Height);
 
             //
@@ -372,8 +373,8 @@ public sealed class DataSetPrinter
                 TitleFormat.Alignment = StringAlignment.Near;
 
             RectangleF TitleRectangle =
-                new RectangleF((float)_leftMargin, _currentY,
-                (float)_pageWidth - (float)_rightMargin - (float)_leftMargin,
+                new RectangleF(_leftMargin, _currentY,
+                _pageWidth - (float)_rightMargin - _leftMargin,
                 g.MeasureString(_theTitleText, _theTitleFont).Height);
 
             g.DrawString(_theTitleText, _theTitleFont,
@@ -385,10 +386,10 @@ public sealed class DataSetPrinter
 
         // Calculating the starting x coordinate
         // that the printing process will start from
-        float CurrentX = (float)_leftMargin;
+        float CurrentX = _leftMargin;
         if (_isCenterOnPage)
-            CurrentX += (((float)_pageWidth - (float)_rightMargin -
-              (float)_leftMargin) - _mColumnPointsWidth[_mColumnPoint]) / 2.0F;
+            CurrentX += (_pageWidth - (float)_rightMargin -
+              _leftMargin - _mColumnPointsWidth[_mColumnPoint]) / 2.0F;
 
         // Setting the HeaderFore style
         Color HeaderForeColor = Color.White;
@@ -547,10 +548,10 @@ public sealed class DataSetPrinter
                 // Calculating the starting x coordinate
                 // that the printing process will
                 // start from
-                CurrentX = (float)_leftMargin;
+                CurrentX = _leftMargin;
                 if (_isCenterOnPage)
-                    CurrentX += (((float)_pageWidth - (float)_rightMargin -
-                        (float)_leftMargin) -
+                    CurrentX += (_pageWidth - (float)_rightMargin -
+                        _leftMargin -
                         _mColumnPointsWidth[_mColumnPoint]) / 2.0F;
 
                 // Calculating the entire CurrentRow bounds                
@@ -642,7 +643,7 @@ public sealed class DataSetPrinter
                 // Checking if the CurrentY is exceeds the page boundries
                 // If so then exit the function and returning true meaning another
                 // PagePrint action is required
-                if ((int)_currentY > (_pageHeight - _topMargin - _bottomMargin))
+                if ((int)_currentY > _pageHeight - _topMargin - _bottomMargin)
                 {
                     _currentRow++;
                     return true;
@@ -675,7 +676,7 @@ public sealed class DataSetPrinter
     /// <param name="g"></param>
     private void DrawFooter(Graphics g)
     {
-        float FooterY = ((float)_pageHeight - (float)_bottomMargin - 10);
+        float FooterY = _pageHeight - (float)_bottomMargin - 10;
 
         string PageString = string.Format("Run Date: {0} for {1}", DateTime.Now.ToString("d"), m_strFooterText);
 
@@ -689,8 +690,8 @@ public sealed class DataSetPrinter
             GraphicsUnit.Point);
 
         RectangleF PageStringRectangle =
-           new RectangleF((float)_leftMargin, FooterY,
-           (float)_pageWidth - (float)_rightMargin - (float)_leftMargin,
+           new RectangleF(_leftMargin, FooterY,
+           _pageWidth - (float)_rightMargin - _leftMargin,
            g.MeasureString(PageString, PageStringFont).Height);
 
         SizeF sfPageStringWidth = g.MeasureString(PageString, PageStringFont);
@@ -706,11 +707,11 @@ public sealed class DataSetPrinter
             FooterY -= g.MeasureString(PageString, PageStringFont).Height;
             // reset the rectangle after FooterY is changed.
             PageStringRectangle =
-           new RectangleF((float)_leftMargin, FooterY,
-           (float)_pageWidth - (float)_rightMargin - (float)_leftMargin,
+           new RectangleF(_leftMargin, FooterY,
+           _pageWidth - (float)_rightMargin - _leftMargin,
            g.MeasureString(PageString, PageStringFont).Height);
 
-            int nPageMid = (PageString.Length) / 2;
+            int nPageMid = PageString.Length / 2;
             string hPageString = PageString.Substring(nPageMid);
             PageString = PageString.Substring(0, nPageMid);
             g.DrawString(PageString, PageStringFont,
@@ -720,8 +721,8 @@ public sealed class DataSetPrinter
             FooterY += g.MeasureString(PageString, PageStringFont).Height + 3; // advance the line
             // reset the rectangle after FooterY is changed.
             PageStringRectangle =
-           new RectangleF((float)_leftMargin, FooterY,
-           (float)_pageWidth - (float)_rightMargin - (float)_leftMargin,
+           new RectangleF(_leftMargin, FooterY,
+           _pageWidth - (float)_rightMargin - _leftMargin,
            g.MeasureString(PageString, PageStringFont).Height);
 
             g.DrawString(hPageString, PageStringFont,
@@ -773,7 +774,7 @@ public sealed class DataSetPrinter
     /// <param name="sender"></param>
     /// <param name="e"></param>
     public void MyPrintDocument_PrintPage(object sender,
-        System.Drawing.Printing.PrintPageEventArgs e)
+        PrintPageEventArgs e)
     {
         bool more = DrawDataSet(e.Graphics);
 

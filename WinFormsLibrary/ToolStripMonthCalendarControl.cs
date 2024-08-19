@@ -1,5 +1,5 @@
 // programmer added
-namespace Utilities;
+namespace WinFormsLibrary;
 
 ///Declare a class that inherits from ToolStripControlHost.
 public class ToolStripMonthCalendar : ToolStripControlHost

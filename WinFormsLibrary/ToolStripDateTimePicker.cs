@@ -1,5 +1,5 @@
 // programmer added
-namespace Utilities;
+namespace WinFormsLibrary;
 
 /// <summary>
 /// wdk 07/23/2007
