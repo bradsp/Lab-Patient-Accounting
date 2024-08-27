@@ -3,6 +3,7 @@ using LabBilling.Core.Services;
 using Microsoft.Data.SqlClient;
 using System;
 using System.Drawing;
+using System.IO;
 
 namespace LabBilling.Core.DataAccess;
 
@@ -32,8 +33,10 @@ public class AppEnvironment : IAppEnvironment
     public Color ButtonBackgroundColor { get; set; } = Color.LightCyan;
     public Color ButtonTextColor { get; set; } = Color.Black;
 
-    private const bool dbEncrypt = false;
-    private const bool dbTrustServerCert = true;
+    public string TempFilePath { get { return Path.GetTempPath() + @"LABPA\";  } }
+
+    private const bool _dbEncrypt = false;
+    private const bool _dbTrustServerCert = true;
 
     public AppEnvironment()
     {
@@ -87,8 +90,8 @@ public class AppEnvironment : IAppEnvironment
                         DataSource = ServerName,
                         IntegratedSecurity = true,
                         ApplicationName = Utilities.OS.GetAppName(),
-                        Encrypt = dbEncrypt,
-                        TrustServerCertificate = dbTrustServerCert,
+                        Encrypt = _dbEncrypt,
+                        TrustServerCertificate = _dbTrustServerCert,
                         ConnectTimeout = 30
                     };
 
@@ -104,8 +107,8 @@ public class AppEnvironment : IAppEnvironment
                         UserID = UserName,
                         Password = Password,
                         ConnectTimeout = 30,
-                        Encrypt = dbEncrypt,
-                        TrustServerCertificate = dbTrustServerCert,
+                        Encrypt = _dbEncrypt,
+                        TrustServerCertificate = _dbTrustServerCert,
                         ApplicationName = Utilities.OS.GetAppName()
                     };
                     return myBuilder.ConnectionString;
@@ -142,7 +145,7 @@ public class AppEnvironment : IAppEnvironment
                 throw new ApplicationException("ServicePassword value not set.");
             }
 
-            SqlConnectionStringBuilder myBuilder = new SqlConnectionStringBuilder
+            SqlConnectionStringBuilder myBuilder = new()
             {
                 InitialCatalog = DatabaseName,
                 DataSource = ServerName,
@@ -151,8 +154,8 @@ public class AppEnvironment : IAppEnvironment
                 Password = ServicePassword,
                 ApplicationName = Utilities.OS.GetAppName(),
                 ConnectTimeout = 30,
-                Encrypt = dbEncrypt,
-                TrustServerCertificate = dbTrustServerCert
+                Encrypt = _dbEncrypt,
+                TrustServerCertificate = _dbTrustServerCert
             };
 
             return myBuilder.ConnectionString;
@@ -196,8 +199,8 @@ public class AppEnvironment : IAppEnvironment
                     IntegratedSecurity = true,
                     ApplicationName = Utilities.OS.GetAppName(),
                     ConnectTimeout = 30,
-                    Encrypt = dbEncrypt,
-                    TrustServerCertificate = dbTrustServerCert,
+                    Encrypt = _dbEncrypt,
+                    TrustServerCertificate = _dbTrustServerCert,
                 };
 
                 return myBuilder.ConnectionString;
@@ -213,8 +216,8 @@ public class AppEnvironment : IAppEnvironment
                     Password = Password,
                     ApplicationName = Utilities.OS.GetAppName(),
                     ConnectTimeout = 30,
-                    Encrypt = dbEncrypt,
-                    TrustServerCertificate = dbTrustServerCert
+                    Encrypt = _dbEncrypt,
+                    TrustServerCertificate = _dbTrustServerCert
                 };
 
                 return myBuilder.ConnectionString;

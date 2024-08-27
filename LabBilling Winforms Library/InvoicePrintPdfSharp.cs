@@ -35,7 +35,7 @@ public class InvoicePrintPdfSharp
     {
         _appEnvironment = appEnvironment;
 
-        _filePath = _appEnvironment.ApplicationParameters.InvoiceFileLocation;
+        _filePath = _appEnvironment.TempFilePath;
         _document = new Document();
         _model = new InvoiceModel();
         _addressFrame = new TextFrame();
@@ -47,6 +47,11 @@ public class InvoicePrintPdfSharp
         _section = new Section();
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="invoiceNo"></param>
+    /// <returns>Filename of generated invoice. If empty string is returned, invoice was not found.</returns>
     public string PrintInvoice(string invoiceNo)
     {
         using UnitOfWorkMain unitOfWork = new(_appEnvironment);
@@ -60,6 +65,11 @@ public class InvoicePrintPdfSharp
         StringReader rdr = new(xml);
 
         invoiceModel = serializer.Deserialize(rdr) as InvoiceModel;
+
+        if (invoiceModel == null)
+        {
+            return "";
+        }
 
         invoiceModel.ImageFilePath = _appEnvironment.ApplicationParameters.InvoiceLogoImagePath;
 
@@ -124,7 +134,7 @@ public class InvoicePrintPdfSharp
         };
 
         pdfRenderer.RenderDocument();
-        string filename = $"{_filePath}\\Invoice-{model.ClientMnem}-{model.InvoiceNo}.pdf";
+        string filename = $"{_filePath}Invoice-{model.ClientMnem}-{model.InvoiceNo}.pdf";
         pdfRenderer.PdfDocument.Save(filename);
 
         return filename;
