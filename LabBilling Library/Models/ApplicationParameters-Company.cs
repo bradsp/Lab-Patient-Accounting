@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using Utilities;
 
 namespace LabBilling.Core.Models;
 public partial class ApplicationParameters
@@ -102,8 +103,14 @@ public partial class ApplicationParameters
     public System.String InvoiceCompanyState { get; set; }
     [Category(_companyCategory), Description("")]
     public System.String InvoiceCompanyZipCode { get; set; }
+
+    private System.String _invoiceLogoImagePath;
     [Category(_companyCategory), Description("")]
-    public System.String InvoiceLogoImagePath { get; set; }
+    public System.String InvoiceLogoImagePath 
+    { 
+        get => _invoiceLogoImagePath.ToGenericFilePath(); 
+        set => _invoiceLogoImagePath = value; 
+    }
     [Category(_companyCategory), Description("")]
     public System.String NPINumber { get; set; }
     [Category(_companyCategory), Description("")]

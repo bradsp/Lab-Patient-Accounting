@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "LabBillingService": {
+      "commandName": "Project"
+    },
+    "Container (Dockerfile)": {
+      "commandName": "Docker"
+    }
+  }
+}

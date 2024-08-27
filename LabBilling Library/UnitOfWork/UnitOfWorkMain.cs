@@ -1,11 +1,9 @@
-﻿using System;
-using System.Data;
-using LabBilling.Core.DataAccess;
-using LabBilling.Core.Models;
+﻿using LabBilling.Core.DataAccess;
 using LabBilling.Core.Repositories;
 using PetaPoco;
 using PetaPoco.Providers;
-using Utilities;
+using System;
+using System.Data;
 
 namespace LabBilling.Core.UnitOfWork;
 

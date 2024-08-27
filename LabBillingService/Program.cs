@@ -1,71 +1,81 @@
-﻿using System;
-using LabBilling.Core.DataAccess;
+﻿using LabBilling.Core.DataAccess;
 using LabBilling.Core.Services;
-using LabBilling.Core.UnitOfWork;
 using log4net.Config;
+using System;
 using Topshelf;
+using Microsoft.Extensions.Configuration;
+using System.IO;
 
-namespace LabBillingService
+namespace LabBillingService;
+
+static class Program
 {
-    static class Program
+
+    public static AppEnvironment AppEnvironment { get; set; }
+
+    /// <summary>
+    /// The main entry point for the application.
+    /// </summary>
+    static void Main()
     {
-        //public static string ConnectionString { get; set; }
-        //public static string Server { get; set; }
-        //public static string Database { get; set; }
-        //public static string LogDatabase { get; set; }
-
-        public static AppEnvironment AppEnvironment { get; set; }
-
-        /// <summary>
-        /// The main entry point for the application.
-        /// </summary>
-        static void Main()
+        try
         {
-            try
+
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                .AddEnvironmentVariables("LABPA_");
+
+            IConfiguration config = builder.Build();
+
+            string envDatabase = config.GetValue<string>("LABPA_DATABASE");
+            string envDbServer = config.GetValue<string>("LABPA_DB_SERVER");
+            string envDbUser = config.GetValue<string>("LABPA_DB_USER");
+            string envDbPass = config.GetValue<string>("LABPA_DB_PASS");
+            string envLogDb = config.GetValue<string>("LABPA_LOG_DB");
+
+            AppEnvironment = new AppEnvironment
             {
-                AppEnvironment = new AppEnvironment();
-                AppEnvironment.DatabaseName = Properties.Settings.Default.DbName;
-                AppEnvironment.ServerName = Properties.Settings.Default.DbServer;
-                AppEnvironment.LogDatabaseName = Properties.Settings.Default.LogDbName;
-                AppEnvironment.RunAsService = true;
-                AppEnvironment.ServicePassword = Properties.Settings.Default.Password;
-                AppEnvironment.ServiceUsername = Properties.Settings.Default.Username;
+                DatabaseName = envDatabase ?? config.GetValue<string>("Connection:DatabaseName"),
+                ServerName = envDbServer ?? config.GetValue<string>("Connection:DatabaseServer"),
+                LogDatabaseName = envLogDb ?? config.GetValue<string>("Connection:LogDatabaseName"),
+                RunAsService = true,
+                ServicePassword = envDbPass ?? config.GetValue<string>("ServiceAccount:ServiceUserName"),
+                ServiceUsername = envDbUser ?? config.GetValue<string>("ServiceAccount:ServicePassword")
+            };
 
-                SystemService systemService = new SystemService(AppEnvironment);
+            SystemService systemService = new(AppEnvironment);
 
-                AppEnvironment.ApplicationParameters = systemService.LoadSystemParameters();
+            AppEnvironment.ApplicationParameters = systemService.LoadSystemParameters();
 
-                string path = System.Reflection.Assembly.GetExecutingAssembly().Location;
-                var directory = System.IO.Path.GetDirectoryName(path);
+            string path = System.Reflection.Assembly.GetExecutingAssembly().Location;
+            var directory = System.IO.Path.GetDirectoryName(path);
 
-                XmlConfigurator.Configure(new System.IO.FileInfo($"{directory}\\log4net.config"));
+            XmlConfigurator.Configure(new System.IO.FileInfo($"{directory}/log4net.config"));
 
-                var exitcode = HostFactory.Run(x =>
+            var exitcode = HostFactory.Run(x =>
+            {
+                x.RunAsLocalSystem();
+                x.UseLog4Net();
+                x.SetServiceName("LabBillingInterfaceService");
+                x.SetDisplayName("Lab Patient Accounting Interface");
+
+                x.Service<InterfaceProcessor>(s =>
                 {
-
-                    x.RunAsLocalSystem();
-                    x.UseLog4Net();
-                    x.SetServiceName("LabBillingInterfaceService");
-                    x.SetDisplayName("Lab Patient Accounting Interface");
-
-                    x.Service<InterfaceProcessor>(s =>
-                    {
-                        s.ConstructUsing(hostSettings => new InterfaceProcessor());
-                        s.WhenStarted(service => service.Start());
-                        s.WhenStopped(service => service.Stop());
-                        s.WhenContinued(service => service.Continue());
-                        s.WhenPaused(service => service.Paused());
-                    });
-
+                    s.ConstructUsing(hostSettings => new InterfaceProcessor());
+                    s.WhenStarted(service => service.Start());
+                    s.WhenStopped(service => service.Stop());
+                    s.WhenContinued(service => service.Continue());
+                    s.WhenPaused(service => service.Paused());
                 });
+            });
 
-                int exitCodeValue = (int)Convert.ChangeType(exitcode, exitcode.GetTypeCode());
-                Environment.ExitCode = exitCodeValue;
-            }
-            catch (Exception ex)
-            {
-                
-            }
+            int exitCodeValue = (int)Convert.ChangeType(exitcode, exitcode.GetTypeCode());
+            Environment.ExitCode = exitCodeValue;
+        }
+        catch (Exception ex)
+        {
+
         }
     }
 }

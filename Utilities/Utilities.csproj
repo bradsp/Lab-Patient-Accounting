@@ -109,14 +109,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <COMReference Include="VBIDE">
+    <!--<COMReference Include="VBIDE">
       <Guid>{0002E157-0000-0000-C000-000000000046}</Guid>
       <VersionMajor>5</VersionMajor>
       <VersionMinor>3</VersionMinor>
       <Lcid>0</Lcid>
       <WrapperTool>primary</WrapperTool>
       <Isolated>False</Isolated>
-    </COMReference>
+    </COMReference>-->
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">

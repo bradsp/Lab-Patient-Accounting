@@ -3,8 +3,6 @@ using LabBilling.Core.DataAccess;
 using LabBilling.Core.Models;
 using LabBilling.Core.UnitOfWork;
 using LabBilling.Logging;
-using NPOI.SS.UserModel;
-using PetaPoco;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -404,7 +402,7 @@ public sealed class HL7ProcessorService
                 {
                     finCodeChange = true;
                 }
-                if (_accountRecord.Fin.FinClass == _appEnvironment.ApplicationParameters.ClientFinancialTypeCode 
+                if (_accountRecord.Fin.FinClass == _appEnvironment.ApplicationParameters.ClientFinancialTypeCode
                     && existingClient != _accountRecord.ClientMnem && !string.IsNullOrEmpty(existingClient))
                 {
                     clientChange = true;
@@ -421,7 +419,7 @@ public sealed class HL7ProcessorService
 
                     foreach (var ins in _accountRecord.Insurances)
                     {
-                        if(ins.GroupNumber.Length > 30)
+                        if (ins.GroupNumber.Length > 30)
                         {
                             errors.Append($"Group Number is not a valid value: {ins.GroupNumber}");
                             ins.GroupNumber = string.Empty;
@@ -539,7 +537,7 @@ public sealed class HL7ProcessorService
                     case "PATIENT":
                         break;
                     case "PER ACCOUNT":
-                        _accountRecord.FinCode = _accountRecord.FinCode != _appEnvironment.ApplicationParameters.BillToClientInvoiceDefaultFinCode 
+                        _accountRecord.FinCode = _accountRecord.FinCode != _appEnvironment.ApplicationParameters.BillToClientInvoiceDefaultFinCode
                             ? _appEnvironment.ApplicationParameters.InvalidFinancialCode : _accountRecord.FinCode;
                         break;
                     default:
@@ -580,12 +578,12 @@ public sealed class HL7ProcessorService
                 Log.Instance.Debug($"Adding charge {transaction.Account},{transaction.Cdm},{transaction.Qty},{transaction.ServiceDate},{transaction.Comment},{transaction.RefNumber}");
                 try
                 {
-                    if(transaction.Qty < 0)
+                    if (transaction.Qty < 0)
                     {
                         // look up existing charge to be credited
                         var existingChrg = uow.ChrgRepository.GetChargeByReferenceAndCdm(transaction.RefNumber, transaction.Cdm);
 
-                        if(existingChrg.Count > 0)
+                        if (existingChrg.Count > 0)
                         {
                             var retValue = _accountService.CreditCharge(existingChrg[0].ChrgId, transaction.Comment);
                         }

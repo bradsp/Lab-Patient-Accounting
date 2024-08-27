@@ -1,4 +1,6 @@
 ﻿using System.ComponentModel;
+using System.IO;
+using Utilities;
 
 namespace LabBilling.Core.Models;
 public partial class ApplicationParameters
@@ -82,9 +84,14 @@ public partial class ApplicationParameters
     [Description("")]
     public System.DateTime GlobalBillingStartDate { get; set; }
 
+    private System.String _institutionalClaimFileLocation;
     [Category(_billingCategory)]
     [Description("Location to place generated 837i files")]
-    public System.String InstitutionalClaimFileLocation { get; set; }
+    public System.String InstitutionalClaimFileLocation 
+    { 
+        get => _institutionalClaimFileLocation.ToGenericFilePath();
+        set => _institutionalClaimFileLocation = value;
+    }
 
     [Category(_billingCategory)]
     [Description("Max number of claims in a claim batch. Set to 0 for unlimited.")]
@@ -123,9 +130,14 @@ public partial class ApplicationParameters
     [Description("Added for use if outpatient becomes valid.")]
     public System.DateTime OutpatientBillStart { get; set; }
 
+    private System.String _professionalClaimFileLocation;
     [Category(_billingCategory)]
     [Description("Location to place 837p claim files.")]
-    public System.String ProfessionalClaimFileLocation { get; set; }
+    public System.String ProfessionalClaimFileLocation 
+    { 
+        get => _professionalClaimFileLocation.ToGenericFilePath();
+        set => _professionalClaimFileLocation = value; 
+    }
 
     [Category(_billingCategory)]
     [Description("new form to be used")]
@@ -135,17 +147,28 @@ public partial class ApplicationParameters
     [Description(""), DefaultValue("282N00000X")]
     public System.String ProviderTaxonomyCode { get; set; }
 
+
+    private System.String _remitImportDirectory;
     [Category(_billingCategory)]
     [Description("location of hospitals remittance files")]
-    public System.String RemitImportDirectory { get; set; }
+    public System.String RemitImportDirectory 
+    {
+        get => _remitImportDirectory.ToGenericFilePath();
+        set => _remitImportDirectory = value;
+    }
 
     [Category(_billingCategory)]
     [Description("date files last imported")]
     public System.DateTime RemitPostingDate { get; set; }
 
+    private System.String _remitProcessingDirectory;
     [Category(_billingCategory)]
     [Description("location of local remittance files")]
-    public System.String RemitProcessingDirectory { get; set; }
+    public System.String RemitProcessingDirectory 
+    {
+        get => _remitImportDirectory.ToGenericFilePath(); 
+        set => _remitImportDirectory = value;
+    }
 
     [Category(_billingCategory)]
     [Description("Discontinue the swapping of insurance's and allow secondary billing via applications")]

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 
@@ -465,5 +466,21 @@ public static class StringExtensions
     {
         System.Text.ASCIIEncoding encoding = new System.Text.ASCIIEncoding();
         return encoding.GetString(byteArray);
+    }
+
+    /// <summary>
+    /// removes windows specific path delimiters and drive identifiers from a file path
+    /// </summary>
+    /// <param name="path"></param>
+    /// <returns></returns>
+    public static string ToGenericFilePath(this string path)
+    {
+        var cleanPath = path.Replace('\\', Path.DirectorySeparatorChar);
+        if (cleanPath[1] == ':')
+        {
+            cleanPath = cleanPath.Substring(2);
+        }
+
+        return cleanPath;
     }
 }
