@@ -1,7 +1,6 @@
 using LabBilling.Core.Models;
 using LabBilling.Core.Services;
 using LabBilling.Logging;
-using MCL;
 using Microsoft.Data.SqlClient;
 using System.Collections; // for arraylist
 using System.Data;
@@ -1187,12 +1186,12 @@ public partial class Posting835 : Form
                         nQty = int.Parse(strCPT4[4]);
                         continue;
                     }
-                    if (strLinePart.StartsWith("CAS*PR*"))
+                    if (strLinePart.StartsWith("CAS*PR*")) // CAS.3
                     {
                         dPatResp = double.Parse(double.Parse(strLinePart.Split(new char[] { '*' })[3]).ToString("F2").ToString());
                         continue;
                     }
-                    if (strLinePart.StartsWith("CAS*PI*"))
+                    if (strLinePart.StartsWith("CAS*PI*")) //CAS 3
                     {
                         dPatResp = double.Parse(double.Parse(strLinePart.Split(new char[] { '*' })[3]).ToString("F2").ToString());
                         continue;
