@@ -1,0 +1,97 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<mapping>
+  <isa/>
+  <gs>
+    <gs04 type="dt"/>
+  </gs>
+  <st/>
+  <bpr>
+    <bpr16 type="dt"/>
+  </bpr>
+  <trn/>
+  <cur/>
+  <ref/>
+  <dtm/>
+  <n1loop>
+    <n1/>
+    <n3/>
+    <n4/>
+    <refloop>
+      <ref/>
+    </refloop>
+    <perloop>
+      <per/>
+    </perloop>
+  </n1loop>
+  <n1loop>
+    <n1/>
+    <n3/>
+    <n4/>
+    <refloop>
+      <ref/>
+    </refloop>
+  </n1loop>
+  <lx/>
+  <ts3>
+    <ts303 typ="dt"/>
+  </ts3>
+  <clploop>
+    <clp/>
+    <casloop></casloop>
+    <nm1loop>
+      <nm1/>
+    </nm1loop>
+    <moa/>
+    <dtmloop>
+      <dtm>
+        <dtm01 restrict="true">
+          <option>232</option>
+        </dtm01>
+        <dtm02 type="dt"/>
+      </dtm>
+      <dtm>
+        <dtm01 restrict="true">
+          <option>233</option>
+        </dtm01>
+        <dtm02 type="dt"/>
+      </dtm>
+    </dtmloop>
+    <dtm>
+      <dtm01 restrict="true">
+        <option>050</option>
+      </dtm01>
+      <dtm02 type="dt"/>
+    </dtm>
+    <amtloop>
+      <amt/>
+    </amtloop>
+    <svcloop>
+      <svc/>
+      <dtmloop>
+        <dtm>
+          <dtm01/>
+          <dtm02 type="dt"/>
+        </dtm>
+      </dtmloop>
+      <casloop>
+        <cas/>
+      </casloop>
+      <refloop>
+        <ref/>
+      </refloop>
+      <amtloop>
+        <amt/>
+      </amtloop>
+      <qtyloop>
+        <qty/>
+      </qtyloop>
+      <lqloop>
+        <lq/>
+      </lqloop>
+    </svcloop>
+  </clploop>
+  <plb/>
+  <se/>
+  <ge/>
+  <iea/>
+</mapping>

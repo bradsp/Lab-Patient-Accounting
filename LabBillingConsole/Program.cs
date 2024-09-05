@@ -24,7 +24,7 @@ internal class Program
         StringBuilder dbSelect = new();
         dbSelect.AppendLine("Select Database:\n\n");
         dbSelect.AppendLine("1) LabBillingProd");
-        dbSelect.AppendLine("2) LabBillingTest (WTMCLBILL)");
+        dbSelect.AppendLine("2) LabPA_TST (localhost)");
         dbSelect.AppendLine("0) Exit");
 
         var panel1 = new Panel(dbSelect.ToString());
@@ -56,8 +56,8 @@ internal class Program
                 serverName = "WTHMCLBILL";
                 break;
             case 2:
-                databaseName = "LabBillingTest";
-                serverName = "WTHMCLBILL";
+                databaseName = "LabPA_TST";
+                serverName = "localhost";
                 break;
             default:
                 return true;

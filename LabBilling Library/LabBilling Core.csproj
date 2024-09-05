@@ -25,6 +25,9 @@
     <NoWarn>1701;1702;CA1416</NoWarn>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Specifications\x12-835-map.xml" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\j4jayant.HL7.Parser\j4jayant.HL7.Parser.csproj" />
     <ProjectReference Include="..\MCL\MCL.csproj" />
     <ProjectReference Include="..\Utilities\Utilities.csproj" />
@@ -32,6 +35,9 @@
   <ItemGroup>
     <Content Include="Specifications\Ansi-133-Specification.xml" />
     <Content Include="Specifications\Ansi-158-Specification.xml" />
+    <EmbeddedResource Include="Specifications\x12-835-map.xml">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Common.Logging" Version="3.4.1" />

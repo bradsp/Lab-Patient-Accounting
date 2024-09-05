@@ -127,11 +127,11 @@ public sealed class Testing : MenuBase
 
     public void RemittanceTest()
     {
-        string file = @"\\wthmclbill\shared\Billing\TEST\Posting835Remit\MCL_NC_MCR_1093705428_835_11119267.RMT";
+        string file = @"\\wthmclbill\shared\Billing\TEST\claims\835\MCL_MCR_20230522_835_09466449.835";
 
-        Remittance835Service remittance835 = new Remittance835Service(_appEnvironment);
+        Remittance835Service remittance835 = new(_appEnvironment);
 
-        remittance835.Load835(file);
+        remittance835.ProcessFile(file);
 
     }
 
@@ -143,7 +143,7 @@ public sealed class Testing : MenuBase
 
         //clientInvoices.ReprintInvoice("12345");
 
-        InvoiceModel invModel = new InvoiceModel
+        _ = new InvoiceModel
         {
             StatementType = InvoiceModel.StatementTypeEnum.Invoice,
             ClientName = "WTTC",

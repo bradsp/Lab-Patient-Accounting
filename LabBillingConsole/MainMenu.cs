@@ -8,8 +8,8 @@ namespace LabBillingConsole;
 public class MainMenu
 {
     private AppEnvironment _appEnvironment;
-    private Utilities utilities;
-    private Testing testing;
+    private Utilities _utilities;
+    private Testing _testing;
 
     public MainMenu(string servername, string databasename)
     {
@@ -18,11 +18,12 @@ public class MainMenu
         if (string.IsNullOrEmpty(databasename))
             throw new ArgumentNullException(nameof(databasename));
 
-        _appEnvironment = new AppEnvironment();
-
-        _appEnvironment.ServerName = servername;
-        _appEnvironment.DatabaseName = databasename;
-        _appEnvironment.LogDatabaseName = "Log";
+        _appEnvironment = new AppEnvironment
+        {
+            ServerName = servername,
+            DatabaseName = databasename,
+            LogDatabaseName = "Log"
+        };
     }
 
     public bool MainMenuPanel()
@@ -30,8 +31,8 @@ public class MainMenu
         _appEnvironment.UserName = Environment.UserName;
         _appEnvironment.IntegratedAuthentication = true;
 
-        testing = new Testing(_appEnvironment);
-        utilities = new Utilities(_appEnvironment);
+        _testing = new Testing(_appEnvironment);
+        _utilities = new Utilities(_appEnvironment);
 
         bool showMenu = true;
 
@@ -39,7 +40,7 @@ public class MainMenu
         {
             Console.Clear();
 
-            StringBuilder menuText = new StringBuilder();
+            StringBuilder menuText = new();
             menuText.AppendLine($"Database: {_appEnvironment.DatabaseName}\n\n");
             menuText.AppendLine("Choose an option:");
             menuText.AppendLine("1) Utility Menu");
@@ -70,11 +71,11 @@ public class MainMenu
         {
             case "1":
                 Console.Clear();
-                utilities.LaunchMenu();
+                _utilities.LaunchMenu();
                 return true;
             case "2":
                 Console.Clear();
-                testing.LaunchMenu();
+                _testing.LaunchMenu();
                 return true;
             case "X":
                 return false;
