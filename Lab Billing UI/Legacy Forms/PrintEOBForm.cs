@@ -1,14 +1,10 @@
 // programmer added
-using MCL; // for eob recordset
 using Microsoft.Data.SqlClient; // for listobject
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Data;
-using System.Drawing;
 using System.Drawing.Printing;
-using System.Windows.Forms;
 using Utilities;
+using WinFormsLibrary;
 
 namespace LabBilling.Legacy;
 
@@ -17,16 +13,16 @@ namespace LabBilling.Legacy;
 /// </summary>
 public partial class PrintEOBForm : Form
 {
-    SqlConnection m_sqlConnection;
-    Dictionary<string, string> m_dicReason = new Dictionary<string, string>();
-    private Font printFontBold;
-    private Font printFontRegular;
-    ArrayList m_alPrint = new ArrayList();
-    private CEob m_eob;
-    private ERR m_ERR;
-    private string m_strDatabase = "";
-    private string m_strServer = "";
-    private string m_strAccount = "";
+    private SqlConnection _sqlConnection;
+    private Dictionary<string, string> _dicReason = new();
+    private Font _printFontBold;
+    private Font _printFontRegular;
+    private readonly ArrayList _alPrint = new();
+    private CEob _eob;
+    private ERR _eRR;
+    private readonly string _strDatabase = "";
+    private readonly string _strServer = "";
+    private readonly string _strAccount = "";
     /// <summary>
     /// PrintEOB Constructor.
     /// </summary>
@@ -41,25 +37,24 @@ public partial class PrintEOBForm : Form
             return;
         }
 
-        m_strServer = args[0];
-        m_strDatabase = args[1];
+        _strServer = args[0];
+        _strDatabase = args[1];
 
-        m_strAccount = args[2];
+        _strAccount = args[2];
 
-        m_sqlConnection = new SqlConnection(string.Format("Data Source={0}; Initial Catalog = {1};"
-            + "Integrated Security = 'SSPI'", m_strServer, m_strDatabase));
+        _sqlConnection = new SqlConnection($"Data Source={_strServer}; Initial Catalog = {_strDatabase}; Integrated Security = 'SSPI'");
     }
 
     private void Form1_Load(object sender, EventArgs e)
     {
-        string[] strErrLogArray = new string[] { string.Format("{0}", m_strServer.IndexOf("LIVE") > -1 ? "LIVE" : "TEST"), m_strServer, m_strDatabase };
-        m_ERR = new ERR(strErrLogArray);
+        string[] strErrLogArray = new string[] { _strServer.IndexOf("LIVE") > -1 ? "LIVE" : "TEST", _strServer, _strDatabase };
+        _eRR = new ERR(strErrLogArray);
 
         // create the eob recordset
-        m_eob = new CEob(m_strServer, m_strDatabase, ref m_ERR);
+        _eob = new CEob(_strServer, _strDatabase, ref _eRR);
 
         LoadDataGrid();// set the forms title text with the account number and text.
-        this.Text += string.Format(" Account {0} - {1}", m_eob.Reob.m_strAccount, m_eob.Reob.m_strSubscriberName);
+        this.Text += string.Format(" Account {0} - {1}", _eob.Reob.m_strAccount, _eob.Reob.m_strSubscriberName);
 
         tsbPrint.Enabled = false;
 
@@ -69,7 +64,7 @@ public partial class PrintEOBForm : Form
 
     private void LoadClaimsAdjustmentCodes()
     {
-        using (SqlConnection conn = new SqlConnection(m_sqlConnection.ConnectionString))
+        using (SqlConnection conn = new SqlConnection(_sqlConnection.ConnectionString))
         {
             SqlCommand cmdSelect = new SqlCommand("select * from dict_claim_adjustment_codes", conn);
             SqlDataAdapter sda = new SqlDataAdapter(cmdSelect);
@@ -84,9 +79,8 @@ public partial class PrintEOBForm : Form
             //((RichTextBox)m_txtMsg.Control).DataBindings.Add("text", dtInfo, "description");
             foreach (DataRow dr in dtInfo.Rows)
             {
-                m_dicReason.Add(dr["code"].ToString(), dr["description"].ToString());
+                _dicReason.Add(dr["code"].ToString(), dr["description"].ToString());
             }
-
         }
     }
 
@@ -96,15 +90,14 @@ public partial class PrintEOBForm : Form
     private void LoadDataGrid()
     {
         // get the records in the table
-        int nRecCount = m_eob.Reob.GetActiveRecords(string.Format("account = '{0}'", m_strAccount));
+        int nRecCount = _eob.Reob.GetActiveRecords(string.Format("account = '{0}'", _strAccount));
         if (nRecCount < 1)
         {
-            if (m_strAccount[1].Equals('A')) //09/25/2008 wdk/rgc modified to account for second character to be "A" or not to be "A"
+            if (_strAccount[1].Equals('A')) //09/25/2008 wdk/rgc modified to account for second character to be "A" or not to be "A"
             {
-                nRecCount = m_eob.Reob.GetActiveRecords(string.Format("account = '{0}'", m_strAccount.Replace("A", "")));
+                nRecCount = _eob.Reob.GetActiveRecords(string.Format("account = '{0}'", _strAccount.Replace("A", "")));
                 if (nRecCount < 1)
                 {
-
                     MessageBox.Show("This account is not listed in the EOB tables.");
                     Environment.Exit(13);
                 }
@@ -114,8 +107,8 @@ public partial class PrintEOBForm : Form
 
         for (int i = 0; i < nRecCount; i++)
         {
-            dgvSelection.Rows.Add(m_eob.Reob.m_strClaimStatus, m_eob.Reob.m_strEftDate, m_eob.Reob.m_strEftNumber, m_eob.Reob.m_strEftFile);
-            m_eob.Reob.GetNext();
+            dgvSelection.Rows.Add(_eob.Reob.m_strClaimStatus, _eob.Reob.m_strEftDate, _eob.Reob.m_strEftNumber, _eob.Reob.m_strEftFile);
+            _eob.Reob.GetNext();
         }
         dgvSelection.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.DisplayedCells;
         dgvSelection.Columns.GetLastColumn(DataGridViewElementStates.Visible, DataGridViewElementStates.None).AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
@@ -136,7 +129,7 @@ public partial class PrintEOBForm : Form
     /// <param name="e"></param>
     private void tsbPrint_Click(object sender, EventArgs e)
     {
-        m_eob.PrintEOB();
+        _eob.PrintEOB();
         tsbPrint.Enabled = false;
     }
 
@@ -147,58 +140,58 @@ public partial class PrintEOBForm : Form
             return;
         }
         string strSelect = string.Format("account = '{0}' AND claim_status = '{1}' and eft_number = '{2}' ",
-                           m_strAccount,
+                           _strAccount,
                                dgvSelection.Rows[e.RowIndex].Cells[0].FormattedValue.ToString(),
                                     dgvSelection.Rows[e.RowIndex].Cells[2].FormattedValue.ToString());
-        if (m_eob.Reob.GetActiveRecords(strSelect) != -1)
+        if (_eob.Reob.GetActiveRecords(strSelect) != -1)
         {
             tsbPrint.Enabled = true;
         }
         else
         {
-            MessageBox.Show(m_eob.propErrMsg);
+            MessageBox.Show(_eob.propErrMsg);
         }
 
     }
 
-    PrintDocument m_pd = new PrintDocument();
+    private readonly PrintDocument _pd = new();
     private void tsbViewEOB_Click(object sender, EventArgs e)
     {
-        printFontBold = new Font("Courier New", 10, FontStyle.Bold);
-        printFontRegular = new Font("Courier New", 10, FontStyle.Regular);
+        _printFontBold = new Font("Courier New", 10, FontStyle.Bold);
+        _printFontRegular = new Font("Courier New", 10, FontStyle.Regular);
 
         CreatePrintDocument();
 
-        m_pd.DefaultPageSettings.Landscape = true;
-        m_pd.PrintPage += new PrintPageEventHandler(pd_PrintPage);
+        _pd.DefaultPageSettings.Landscape = true;
+        _pd.PrintPage += new PrintPageEventHandler(pd_PrintPage);
         PrintPreviewDialog ppd = new PrintPreviewDialog();
-        ppd.Document = m_pd;
+        ppd.Document = _pd;
         if (ppd.ShowDialog() == DialogResult.OK)
         {
-            m_pd.Print();
+            _pd.Print();
         }
-        m_pd.PrintPage -= new PrintPageEventHandler(pd_PrintPage);
+        _pd.PrintPage -= new PrintPageEventHandler(pd_PrintPage);
 
     }
 
     private void CreatePrintDocument()
     {
         string strDetail;
-        m_alPrint.Add(string.Format("Account: {0}\r\n", m_eob.Reob.m_strAccount));
-        m_alPrint.Add(string.Format("Service Code Rev  Units APC# Allowed  Stat Wght    Date    Charges    Paid Reason  Adj Amt",
+        _alPrint.Add(string.Format("Account: {0}\r\n", _eob.Reob.m_strAccount));
+        _alPrint.Add(string.Format("Service Code Rev  Units APC# Allowed  Stat Wght    Date    Charges    Paid Reason  Adj Amt",
                                              Environment.NewLine));
-        int nRec = m_eob.ReobDetail.GetRecords(string.Format("rowguid = '{0}' order by ServiceCode, UID", m_eob.Reob.m_strRowguid));
-        ArrayList alReasons = new ArrayList();
+        int nRec = _eob.ReobDetail.GetRecords(string.Format("rowguid = '{0}' order by ServiceCode, UID", _eob.Reob.m_strRowguid));
+        ArrayList alReasons = new();
         while (nRec > 0)
         //while (m_eob.m_ReobDetail.propErrMsg != "EOF")
         {
             nRec--;
             // PR 2's are Patient Responsibility and 2 means the adjustment code is split between two lines this is the second so only the amount are to be printed.
-            if (m_eob.ReobDetail.m_strReasonType == "PR" && m_eob.ReobDetail.m_strReasonCode == "2")
+            if (_eob.ReobDetail.m_strReasonType == "PR" && _eob.ReobDetail.m_strReasonCode == "2")
             {
                 string strBlank = "";
                 strDetail = string.Format("{0}{1}{2} {3}{4}{5}{6}{7}{8}{9} {10}{11}",
-                               m_eob.ReobDetail.m_strServiceCode.PadRight(13), //strBlank.PadRight(13),//wdk 20131114 for visual acuity
+                               _eob.ReobDetail.m_strServiceCode.PadRight(13), //strBlank.PadRight(13),//wdk 20131114 for visual acuity
                                    strBlank.PadRight(5),//m_eobDetails.m_strRevCode.PadRight(5),
                                        strBlank.PadLeft(4),//m_eobDetails.m_strUnits.PadLeft(4),
                                            strBlank.PadLeft(5),//m_eobDetails.m_strApcNr.PadLeft(5),
@@ -208,46 +201,46 @@ public partial class PrintEOBForm : Form
                                                            strBlank.PadRight(10),//m_eobDetails.m_strDateOfService.PadRight(10),
                                                                strBlank.PadLeft(8),//m_eobDetails.m_strChargeAmt.PadLeft(8),
                                                                    strBlank.PadLeft(8),//m_eobDetails.m_strPaidAmt.PadLeft(8),
-                                                                       ((string)m_eob.ReobDetail.m_strReasonType + "/" + m_eob.ReobDetail.m_strReasonCode).PadRight(6),
-                                                                           m_eob.ReobDetail.m_strOtherAdjAmt.Trim().PadLeft(8));// wdk 20131114 changed from 10
-                m_alPrint.Add(strDetail);
+                                                                       ((string)_eob.ReobDetail.m_strReasonType + "/" + _eob.ReobDetail.m_strReasonCode).PadRight(6),
+                                                                           _eob.ReobDetail.m_strOtherAdjAmt.Trim().PadLeft(8));// wdk 20131114 changed from 10
+                _alPrint.Add(strDetail);
 
             }
             else
             {
                 strDetail = string.Format("{0}{1}{2} {3}{4}{5}{6}{7}{8}{9} {10}{11}",
-                m_eob.ReobDetail.m_strServiceCode.PadRight(13),
-                    m_eob.ReobDetail.m_strRevCode.PadRight(5),
-                        m_eob.ReobDetail.m_strUnits.PadLeft(4),
-                            m_eob.ReobDetail.m_strApcNr.PadLeft(5),
-                                m_eob.ReobDetail.m_strAllowedAmt.PadLeft(9),
-                                    m_eob.ReobDetail.m_strStat.PadRight(5),
-                                        m_eob.ReobDetail.m_strWght.PadLeft(6),
-                                            m_eob.ReobDetail.m_strDateOfService.PadRight(10),
-                                                m_eob.ReobDetail.m_strChargeAmt.PadLeft(8),
-                                                    m_eob.ReobDetail.m_strPaidAmt.PadLeft(8),
-                                                        ((string)m_eob.ReobDetail.m_strReasonType + "/" + m_eob.ReobDetail.m_strReasonCode).PadRight(6),
-                                                        m_eob.ReobDetail.m_strContractualAdjAmt == "0.00" ? m_eob.ReobDetail.m_strOtherAdjAmt.PadLeft(8) : m_eob.ReobDetail.m_strContractualAdjAmt.PadLeft(8));//,
-                m_alPrint.Add(strDetail);
-                if (!alReasons.Contains(m_eob.ReobDetail.m_strReasonCode))
+                _eob.ReobDetail.m_strServiceCode.PadRight(13),
+                    _eob.ReobDetail.m_strRevCode.PadRight(5),
+                        _eob.ReobDetail.m_strUnits.PadLeft(4),
+                            _eob.ReobDetail.m_strApcNr.PadLeft(5),
+                                _eob.ReobDetail.m_strAllowedAmt.PadLeft(9),
+                                    _eob.ReobDetail.m_strStat.PadRight(5),
+                                        _eob.ReobDetail.m_strWght.PadLeft(6),
+                                            _eob.ReobDetail.m_strDateOfService.PadRight(10),
+                                                _eob.ReobDetail.m_strChargeAmt.PadLeft(8),
+                                                    _eob.ReobDetail.m_strPaidAmt.PadLeft(8),
+                                                        ((string)_eob.ReobDetail.m_strReasonType + "/" + _eob.ReobDetail.m_strReasonCode).PadRight(6),
+                                                        _eob.ReobDetail.m_strContractualAdjAmt == "0.00" ? _eob.ReobDetail.m_strOtherAdjAmt.PadLeft(8) : _eob.ReobDetail.m_strContractualAdjAmt.PadLeft(8));//,
+                _alPrint.Add(strDetail);
+                if (!alReasons.Contains(_eob.ReobDetail.m_strReasonCode))
                 {
-                    alReasons.Add(m_eob.ReobDetail.m_strReasonCode);
+                    alReasons.Add(_eob.ReobDetail.m_strReasonCode);
                 }
             }
-            m_eob.ReobDetail.GetNext();
+            _eob.ReobDetail.GetNext();
         }
-        m_alPrint.Add("\t\tEND...");
+        _alPrint.Add("\t\tEND...");
         if (alReasons.Count > 0)
         {
-            m_alPrint.Add("");
-            m_alPrint.Add("REASONS:");
+            _alPrint.Add("");
+            _alPrint.Add("REASONS:");
             foreach (string strReason in alReasons)
             {
                 string strText;
-                m_dicReason.TryGetValue(strReason, out strText);
+                _dicReason.TryGetValue(strReason, out strText);
                 if (strText.Length <= 70)
                 {
-                    m_alPrint.Add(string.Format("{0}:\t{1}", strReason, strText));
+                    _alPrint.Add(string.Format("{0}:\t{1}", strReason, strText));
                 }
                 else
                 {
@@ -265,8 +258,8 @@ public partial class PrintEOBForm : Form
                                 nLen = nPos;
                             }
                         }
-                        string strInsert = strText.Substring(0, nLen);
-                        m_alPrint.Add(string.Format("{0}{1}",
+                        string strInsert = strText[..nLen];
+                        _alPrint.Add(string.Format("{0}{1}",
                             nLenOrig == strText.Length ? string.Format("{0}:\t", strReason.Trim()) : "\t\t"
                             , strText.Substring(0, nLen)));
                         strText = strText.Replace(strInsert, "");
@@ -275,8 +268,6 @@ public partial class PrintEOBForm : Form
                 }
             }
         }
-
-
     }
 
 
@@ -285,8 +276,10 @@ public partial class PrintEOBForm : Form
 
         // set the format for tab stops           
         float[] tabStops = new float[] { 30.0f, 30.0f, 30.0f, 30.0f, 30.0f, 30.0f, 30.0f, 30.0f, 30.0f, 30.0f, 30.0f };
-        StringFormat strLineFmt = new StringFormat();
-        strLineFmt.FormatFlags = StringFormatFlags.NoClip;
+        StringFormat strLineFmt = new()
+        {
+            FormatFlags = StringFormatFlags.NoClip
+        };
         strLineFmt.SetTabStops(30.0f, tabStops);
 
         float linesPerPage = 0;
@@ -298,25 +291,25 @@ public partial class PrintEOBForm : Form
 
         // Calculate the number of lines per page.
         linesPerPage = ev.MarginBounds.Height /
-           printFontRegular.GetHeight(ev.Graphics);
+           _printFontRegular.GetHeight(ev.Graphics);
 
         try
         {
             while (count < linesPerPage &&
-                ((line = m_alPrint[count].ToString()) != null))
+                ((line = _alPrint[count].ToString()) != null))
             {
                 yPos = topMargin + (count *
-                   printFontRegular.GetHeight(ev.Graphics));
+                   _printFontRegular.GetHeight(ev.Graphics));
 
                 if (count < 2)
                 {
-                    ev.Graphics.DrawString(line, printFontBold, Brushes.Black,
+                    ev.Graphics.DrawString(line, _printFontBold, Brushes.Black,
                         leftMargin, yPos, strLineFmt);
 
                 }
                 else
                 {
-                    ev.Graphics.DrawString(line, printFontRegular, Brushes.Black,
+                    ev.Graphics.DrawString(line, _printFontRegular, Brushes.Black,
                         leftMargin, yPos, strLineFmt);
                 }
                 count++;
@@ -332,9 +325,5 @@ public partial class PrintEOBForm : Form
             ev.HasMorePages = false;
         else
             ev.HasMorePages = true;
-
-
     }
-
-
 }

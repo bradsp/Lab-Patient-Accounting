@@ -8,6 +8,7 @@ using System.Drawing.Printing; // for printing the gridview
 // wdk 20090330 programmer added
 using System.IO;
 using System.Windows.Forms;
+using WinFormsLibrary;
 using Utilities;
 
 namespace LabBilling.Legacy;

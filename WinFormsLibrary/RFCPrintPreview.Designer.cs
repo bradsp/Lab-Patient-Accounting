@@ -1,4 +1,4 @@
-namespace Utilities
+namespace WinFormsLibrary
 {
 	partial class RFCPrintPreview
 	{

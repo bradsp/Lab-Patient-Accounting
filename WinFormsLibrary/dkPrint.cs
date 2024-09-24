@@ -1,8 +1,8 @@
 // programmer added
 using System.Drawing.Imaging; // for pixelformat
-using System.Drawing.Printing; // for PrintPageEventArgs
+using System.Drawing.Printing;
 
-namespace Utilities;
+namespace WinFormsLibrary;
 
 /// <summary>
 /// Print class used for
@@ -162,7 +162,7 @@ public static class dkPrint
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    public static void PrintGraphic_PrintPage(object sender, System.Drawing.Printing.PrintPageEventArgs e)
+    public static void PrintGraphic_PrintPage(object sender, PrintPageEventArgs e)
     {
         if (m_memoryImage != null)
         {
@@ -208,10 +208,10 @@ public static class dkPrint
 
         // Print each line of the file.
         while (count < linesPerPage &&
-           ((line = streamToPrint.ReadLine()) != null))
+           (line = streamToPrint.ReadLine()) != null)
         {
-            yPos = topMargin + (count *
-               printFont.GetHeight(ev.Graphics));
+            yPos = topMargin + count *
+               printFont.GetHeight(ev.Graphics);
             ev.Graphics.DrawString(line, printFont, Brushes.Black,
                leftMargin, yPos, new StringFormat());
             count++;

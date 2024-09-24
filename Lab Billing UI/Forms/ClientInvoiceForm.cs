@@ -2,7 +2,6 @@
 using LabBilling.Core.Services;
 using LabBilling.Library;
 using LabBilling.Logging;
-using NPOI.HPSF;
 using System.Diagnostics;
 using System.IO;
 using Utilities;
@@ -21,7 +20,7 @@ public partial class ClientInvoiceForm : Form
 
     private DateTime _thruDate;
     private ClientInvoicesService _clientInvoicesService;
-    private DictionaryService _dictionaryService;
+    //private DictionaryService _dictionaryService;
     private List<Client> _clientList;
     private List<UnbilledClient> _unbilledClients;
     private InvoiceWaitForm _invoiceWaitForm;
@@ -38,7 +37,7 @@ public partial class ClientInvoiceForm : Form
         Cursor.Current = Cursors.WaitCursor;
 
         _clientInvoicesService = new ClientInvoicesService(Program.AppEnvironment);
-        _dictionaryService = new(Program.AppEnvironment);
+        //_dictionaryService = new(Program.AppEnvironment);
 
         _clientInvoicesService.InvoiceGenerated += ClientInvoices_InvoiceGenerated;
         _clientInvoicesService.InvoiceRunCompleted += ClientInvoices_InvoiceRunCompleted;
@@ -82,13 +81,13 @@ public partial class ClientInvoiceForm : Form
 
     }
 
-    private void CleanTempFiles()
+    private static void CleanTempFiles()
     {
-        string[] dirs = Directory.GetFiles(@"c:\temp\", "invoiceTemp*.pdf");
-        foreach (string dir in dirs)
-        {
-            File.Delete(dir);
-        }
+        //string[] dirs = Directory.GetFiles(@"c:\temp\", "invoiceTemp*.pdf");        
+        //foreach (string dir in dirs) { File.Delete(dir); }
+
+        string[] tempFiles = Directory.GetFiles(Program.AppEnvironment.TempFilePath);
+        foreach(string dir in tempFiles)  { File.Delete(dir); }
     }
 
     private void SetupInvoicesDGV()
@@ -353,11 +352,18 @@ public partial class ClientInvoiceForm : Form
         {
             string invoiceNo = InvoiceHistoryDGV.SelectedRows[0].Cells[nameof(InvoiceHistory.InvoiceNo)].Value.ToString();
 
-            //ClientInvoices clientInvoices = new(Program.AppEnvironment);
             InvoicePrintPdfSharp invoicePrint = new(Program.AppEnvironment);
 
             string filename = invoicePrint.PrintInvoice(invoiceNo);
-            LaunchPDF(filename);
+            if (!string.IsNullOrWhiteSpace(filename))
+            {
+                LaunchPDF(filename);
+            }
+            else
+            {
+                MessageBox.Show("No invoice to print.");
+                return;
+            }
         }
     }
 
@@ -385,7 +391,7 @@ public partial class ClientInvoiceForm : Form
 
             if (!string.IsNullOrWhiteSpace(stmtFilename))
                 files.Add(stmtFilename);
-            if(!string.IsNullOrWhiteSpace(invFilename))
+            if (!string.IsNullOrWhiteSpace(invFilename))
                 files.Add(invFilename);
 
             progressBar1.Increment(1);
@@ -420,7 +426,7 @@ public partial class ClientInvoiceForm : Form
         }
 
         bool duplexPrinting = false;
-        string senderName = null;
+        string senderName;
         if (sender is ToolStripMenuItem)
         {
             var menuItem = sender as ToolStripMenuItem;
@@ -433,18 +439,18 @@ public partial class ClientInvoiceForm : Form
 
         if (senderName == printToolStripMenuItem.Name || senderName == printAllToolStripMenuItem.Name)
         {
-            PrintDialog printDialog = new();
+            //PrintDialog printDialog = new();
 
             Cursor.Current = Cursors.WaitCursor;
 
-            string outfile = $"c:\\temp\\invoiceTemp-{Guid.NewGuid()}.pdf";
+            string outfile = $"{Program.AppEnvironment.TempFilePath}invoiceTemp-{Guid.NewGuid()}.pdf";
 
             CompileInvoicesToPdf(outfile, duplexPrinting);
             LaunchPDF(outfile);
         }
         else if (senderName == saveToPDFToolStripMenuItem.Name || senderName == saveAllToPDFToolStripMenuItem.Name)
         {
-            string path = Program.AppEnvironment.ApplicationParameters.InvoiceFileLocation;
+            string path = Program.AppEnvironment.TempFilePath;
             if (!Directory.Exists(path))
             {
                 path = "";
@@ -484,7 +490,7 @@ public partial class ClientInvoiceForm : Form
         fileopener.Start();
     }
 
-    private bool PrintPDF(string file, string printer)
+    private static bool PrintPDF(string file, string printer)
     {
         try
         {
@@ -607,7 +613,7 @@ public partial class ClientInvoiceForm : Form
 
     private void PrintInvoice_Click_1(object sender, EventArgs e)
     {
-        var pos = System.Windows.Forms.Cursor.Position;
+        var pos = Cursor.Position;
 
         int top = pos.X - printContextMenu.Width;
         int left = pos.Y;

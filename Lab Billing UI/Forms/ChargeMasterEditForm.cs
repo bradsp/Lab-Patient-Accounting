@@ -46,7 +46,9 @@ public partial class ChargeMasterEditForm : Form
         {
             cdm = new Cdm
             {
-                ChargeId = SelectedCdm
+                ChargeId = SelectedCdm,
+                CdmDetails = new List<CdmDetail>()
+
             };
 
             _addMode = true;

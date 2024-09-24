@@ -290,6 +290,7 @@ public static class Dictionaries
         {"59", "Distinct Procedural Service" },
         {"90", "Reference (Outside) Laboratory" },
         {"91", "Repeat Test" },
+        {"GZ", "No ABN obtained" },
         {"QW", "CLIA Waived Test" }
     };
 }

@@ -10,4 +10,5 @@ public interface IBaseEntity
     string UpdatedApp { get; set; }
     string UpdatedHost { get; set; }
     Guid rowguid { get; set; }
+
 }

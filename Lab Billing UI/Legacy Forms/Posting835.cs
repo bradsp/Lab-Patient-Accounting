@@ -1,11 +1,8 @@
 using LabBilling.Core.Models;
 using LabBilling.Core.Services;
-using LabBilling.Library;
 using LabBilling.Logging;
-using MCL;
 using Microsoft.Data.SqlClient;
 using System.Collections; // for arraylist
-using System.ComponentModel;
 using System.Data;
 using System.Drawing.Printing; // for print document
 using System.Globalization;
@@ -13,6 +10,7 @@ using System.IO;
 using System.Reflection;
 using System.Transactions;
 using Utilities;
+using WinFormsLibrary;
 
 namespace LabBilling.Legacy;
 
@@ -34,14 +32,10 @@ public partial class Posting835 : Form
     private static string PropAppName
     { get { return string.Format("{0} {1}", Application.ProductName, Application.ProductVersion); } }
 
-    private readonly Dictionary<string, string> m_dicPayer = new();
-    // rgc/wdk 20120425 added for sql spid reduction
+    private readonly Dictionary<string, string> _dicPayer = new();
     private string _strFinCode = null;
     private string _strInsCode = null;
-    private readonly CAcc _rAcc = null;
     private readonly CEob _rEob = null;
-    private readonly CAcc _cAccStatus = null;
-    private readonly CAcc _cAcc = null;
 
     private readonly AccountService _accountService = new(Program.AppEnvironment);
     private readonly DictionaryService _dictionaryService = new(Program.AppEnvironment);
@@ -50,15 +44,15 @@ public partial class Posting835 : Form
     public event EventHandler<string> AccountLaunched;
 
     // end of 20120425
-    static DataGridViewCell _celHidden;
-    static DataGridViewCell _celMoney;
-    static Dictionary<string, DataGridViewCell> _dicColGridsEOB;
-    static Dictionary<string, DataGridViewCell> _dicColGrids;
+    private static DataGridViewCell _celHidden;
+    private static DataGridViewCell _celMoney;
+    private static Dictionary<string, DataGridViewCell> _dicColGridsEOB;
+    private static Dictionary<string, DataGridViewCell> _dicColGrids;
     /// <summary>
     /// The ISA's last field is the subfield designated seperator for this file. 
     /// MEDICARE uses '>' and TLC uses '^' when checking the SVC*HC? this is important
     /// </summary>
-    string _strComponentSeperator = "";
+    private string _strComponentSeperator = "";
 
     /// <summary>
     /// Path to the Account Log file used for StreamReader and StreamWriter
@@ -118,48 +112,48 @@ public partial class Posting835 : Form
     /// 94 - Processed in Excess of charges.
     /// rgc/wdk 20120517 added
     /// </summary>
-    decimal _dPayorInitiatedReductions = 0.00m;
+    private decimal _dPayorInitiatedReductions = 0.00m;
 
     /// <summary>
     /// CAS CO 50 with cpt4 modifier of GZ will be added to other adj amt???
     /// </summary>
-    decimal _dChargesWriteOffGZ = 0.00m;
+    private decimal _dChargesWriteOffGZ = 0.00m;
     /// <summary>
     /// CLP 04 without the CLP* (not positive needs verification) 
     /// </summary>
-    decimal _dEOBChargesDenied = 0.00m;
+    private decimal _dEOBChargesDenied = 0.00m;
     /// <summary>
     /// CAS C0/96's totals for the EOB header grid
     /// </summary>
-    decimal _dEOBChargesNCovd = 0.00m;
+    private decimal _dEOBChargesNCovd = 0.00m;
 
     // EOB's Patient Liability
     /// <summary>
     /// CAS PR/45 totals Patient Libility Non Covered
     /// </summary>
-    decimal _dEOBPatLibNCovdCharges = 0.00m;
+    private decimal _dEOBPatLibNCovdCharges = 0.00m;
     /// <summary>
     /// CAS PR/2 Patient Libility CoInsurance Amounts check file date 02/07/2008 to verify
     /// </summary>
-    decimal _dEOBPatLibCoInsurance = 0.00m;
+    private decimal _dEOBPatLibCoInsurance = 0.00m;
 
     // EOB's Payment Data
     /// <summary>
     /// Calculated from the processed tab's paid amount field ???
     /// </summary>
-    decimal _dEOBPayDataHCPCSAmt = 0.00m;
+    private decimal _dEOBPayDataHCPCSAmt = 0.00m;
     /// <summary>
     ///  Total of the co/45 from the CAS. This amount is posted in the contractual of the check record.
     /// </summary>
-    decimal _dEOBPayDataContAdjAmt = 0.00m;
+    private decimal _dEOBPayDataContAdjAmt = 0.00m;
     /// <summary>
     /// Have not seen yet should be a PC in the CAS 04/16/2008
     /// </summary>
-    decimal _dEOBPayDataPatRefund = 0.00m;
+    private decimal _dEOBPayDataPatRefund = 0.00m;
     /// <summary>
     /// Calculated from the OA/23 s of the details
     /// </summary>
-    decimal _dEOBPayDataMSPPrimPay = 0.00m;
+    private decimal _dEOBPayDataMSPPrimPay = 0.00m;
 
     // ReportGenerator m_rgReport = null;
     private PrintDocument _myPrintDocument = null;
@@ -265,11 +259,11 @@ public partial class Posting835 : Form
     }
     private void fileOpenToolStripItem_Click(object sender, EventArgs e)
     {
-        openFileDialog.Filter = "835 Files (*.835)|*.835|XML Files (*.X12)|*.X12|ALL Files (*.*)|*.*";
+        openFileDialog.Filter = "Medicare 835 Files (MCL_MCR*.835)|MCL_MCR*.835|All 835 Files (*.835)|*.835|XML Files (*.X12)|*.X12|ALL Files (*.*)|*.*";
         openFileDialog.FilterIndex = 1;
         openFileDialog.Tag = (string)"MEDICARE";
         openFileDialog.InitialDirectory = Program.AppEnvironment.ApplicationParameters.RemitProcessingDirectory;
-        if(openFileDialog.ShowDialog() == DialogResult.OK)
+        if (openFileDialog.ShowDialog() == DialogResult.OK)
         {
             ClearForm();
 
@@ -331,45 +325,45 @@ public partial class Posting835 : Form
     private void CreatePayorDictionary()
     {
 
-        m_dicPayer.Add("046000", "");
-        m_dicPayer.Add("06J4812", "UHC");
+        _dicPayer.Add("046000", "");
+        _dicPayer.Add("06J4812", "UHC");
 
-        m_dicPayer.Add("12350", "ALCATEL-LUCENT FRR UNION");
-        m_dicPayer.Add("126927", "");
-        m_dicPayer.Add("12700", "BOILERMAKERS NATIONAL H&W FUND");
+        _dicPayer.Add("12350", "ALCATEL-LUCENT FRR UNION");
+        _dicPayer.Add("126927", "");
+        _dicPayer.Add("12700", "BOILERMAKERS NATIONAL H&W FUND");
 
-        m_dicPayer.Add("199947", "OPT/PPO");
+        _dicPayer.Add("199947", "OPT/PPO");
 
-        m_dicPayer.Add("304000", "");
-        m_dicPayer.Add("3P1104", "");
+        _dicPayer.Add("304000", "");
+        _dicPayer.Add("3P1104", "");
 
-        m_dicPayer.Add("4G3135", "");
-        m_dicPayer.Add("4P0327", "");
+        _dicPayer.Add("4G3135", "");
+        _dicPayer.Add("4P0327", "");
 
-        m_dicPayer.Add("525617", "");
-        m_dicPayer.Add("", "");
+        _dicPayer.Add("525617", "");
+        _dicPayer.Add("", "");
 
-        m_dicPayer.Add("6J4812", "UHC");
+        _dicPayer.Add("6J4812", "UHC");
 
-        m_dicPayer.Add("701669", "");
-        m_dicPayer.Add("704389", "");
-        m_dicPayer.Add("703981", "");
-        m_dicPayer.Add("704534", "");
-        m_dicPayer.Add("704630", "");
-        m_dicPayer.Add("704966", "");
-        m_dicPayer.Add("706717", "");
-        m_dicPayer.Add("708501", "");
-        m_dicPayer.Add("708547", "");
-        m_dicPayer.Add("709779", "");
-        m_dicPayer.Add("710755", "");
-        m_dicPayer.Add("714946", "");
-        m_dicPayer.Add("730781", "");
-        m_dicPayer.Add("742681", "");
-        m_dicPayer.Add("742904", "");
-        m_dicPayer.Add("743213", "");
+        _dicPayer.Add("701669", "");
+        _dicPayer.Add("704389", "");
+        _dicPayer.Add("703981", "");
+        _dicPayer.Add("704534", "");
+        _dicPayer.Add("704630", "");
+        _dicPayer.Add("704966", "");
+        _dicPayer.Add("706717", "");
+        _dicPayer.Add("708501", "");
+        _dicPayer.Add("708547", "");
+        _dicPayer.Add("709779", "");
+        _dicPayer.Add("710755", "");
+        _dicPayer.Add("714946", "");
+        _dicPayer.Add("730781", "");
+        _dicPayer.Add("742681", "");
+        _dicPayer.Add("742904", "");
+        _dicPayer.Add("743213", "");
 
-        m_dicPayer.Add("80003", "AARP MEDICARECOMPLETE PLUS");
-        m_dicPayer.Add("8K5167", "");
+        _dicPayer.Add("80003", "AARP MEDICARECOMPLETE PLUS");
+        _dicPayer.Add("8K5167", "");
 
     }
 
@@ -377,7 +371,7 @@ public partial class Posting835 : Form
     {
         DataGridView dgv = sender as DataGridView;
 
-        var (account, error) = FormExtensions.GetDGVAccount(dgv, e.RowIndex);
+        var (account, error) = LabBilling.Library.FormExtensions.GetDGVAccount(dgv, e.RowIndex);
         if (!string.IsNullOrEmpty(account))
             AccountLaunched?.Invoke(this, account);
         else
@@ -396,7 +390,7 @@ public partial class Posting835 : Form
         if (args[0].StartsWith("/"))
         {
             _strServer = args[0].Remove(0, 1); // 08/08/2008 wdk changed to accomidate the ERR class
-                                                // m_strServer = args[0].Remove(0, 1);
+                                               // m_strServer = args[0].Remove(0, 1);
         }
         else
         {
@@ -419,10 +413,6 @@ public partial class Posting835 : Form
         dgvDenieds.RowHeaderMouseDoubleClick += DGV_RowHeaderClicked;
 
         _eRR = new ERR(new string[] { Program.AppEnvironment.ApplicationParameters.DatabaseEnvironment != "Production" ? "/TEST" : "/LIVE", _strServer, _strDatabase }); // ERR class needs /LIVE or /TEST to be the first argument in the command line.
-        // rgc/wdk 20120425 moved to remove the spid overload in sql.
-        _cAcc = new CAcc(_strServer, _strDatabase, ref _eRR);
-        _cAccStatus = new CAcc(_strServer, _strDatabase, ref _eRR);
-        _rAcc = new CAcc(_strServer, _strDatabase, ref _eRR);
         _rEob = new CEob(_strServer, _strDatabase, ref _eRR);
 
     }
@@ -821,7 +811,8 @@ public partial class Posting835 : Form
                 // wdk 20160526 we are now purging the files before we get here for invalid files so don't ask again
                 try
                 {
-                    File.Move(strFileName, $"{_diInvalid}\\{strFileName.Substring(strFileName.LastIndexOf('\\'))}");
+                    if(File.Exists(strFileName))
+                        File.Move(strFileName, $"{_diInvalid}\\{strFileName[strFileName.LastIndexOf('\\')..]}");
                 }
                 catch (IOException)
                 {
@@ -861,12 +852,12 @@ public partial class Posting835 : Form
                 {
                     try
                     {
-                        File.Move(strFileName, $"{_diInvalid}\\{strFileName.Substring(strFileName.LastIndexOf('\\'))}");
+                        File.Move(strFileName, $"{_diInvalid}\\{strFileName[strFileName.LastIndexOf('\\')..]}");
                     }
                     catch (IOException)
                     {
                         string strMoveFileName = strFileName.Replace(".835", "_dk.835");
-                        File.Move(strFileName, $"{_diInvalid}\\{strMoveFileName.Substring(strMoveFileName.LastIndexOf('\\'))}");
+                        File.Move(strFileName, $"{_diInvalid}\\{strMoveFileName[strMoveFileName.LastIndexOf('\\')..]}");
                     }
                 }
             }
@@ -898,7 +889,7 @@ public partial class Posting835 : Form
                 {
                     try
                     {
-                        File.Move(strFileName, $"{_diInvalid}\\{strFileName.Substring(strFileName.LastIndexOf('\\'))}");
+                        File.Move(strFileName, $"{_diInvalid}\\{strFileName[strFileName.LastIndexOf('\\')..]}");
                     }
                     catch (IOException)
                     {
@@ -1069,9 +1060,8 @@ public partial class Posting835 : Form
             if (strHeaderSegment.StartsWith("DTM*405*"))
             {
                 string[] strDTMElements = strHeaderSegment.Split(new char[] { '*' });
-                DateTime dtCheckDate;
-                Utilities.Time.StringToHL7Time(strDTMElements[2], out dtCheckDate);
-                checkDateTextBox.Text = $"Chk Date: {dtCheckDate.ToString("d")}";
+                Utilities.Time.StringToHL7Time(strDTMElements[2], out DateTime dtCheckDate);
+                checkDateTextBox.Text = $"Chk Date: {dtCheckDate:d}";
                 checkDateTextBox.Tag = dtCheckDate.ToString("d");
                 continue;
             }
@@ -1197,12 +1187,12 @@ public partial class Posting835 : Form
                         nQty = int.Parse(strCPT4[4]);
                         continue;
                     }
-                    if (strLinePart.StartsWith("CAS*PR*"))
+                    if (strLinePart.StartsWith("CAS*PR*")) // CAS.3
                     {
                         dPatResp = double.Parse(double.Parse(strLinePart.Split(new char[] { '*' })[3]).ToString("F2").ToString());
                         continue;
                     }
-                    if (strLinePart.StartsWith("CAS*PI*"))
+                    if (strLinePart.StartsWith("CAS*PI*")) //CAS 3
                     {
                         dPatResp = double.Parse(double.Parse(strLinePart.Split(new char[] { '*' })[3]).ToString("F2").ToString());
                         continue;
@@ -1247,9 +1237,9 @@ public partial class Posting835 : Form
             }
 
             string lbString = "CHECK ";
-            ArrayList alTRN = new ArrayList(str.Split(new string[] { "TRN*1*" }, StringSplitOptions.RemoveEmptyEntries));
+            ArrayList alTRN = new(str.Split(new string[] { "TRN*1*" }, StringSplitOptions.RemoveEmptyEntries));
             lbString += alTRN[1].ToString().Substring(0, alTRN[1].ToString().IndexOf('*'));
-            ArrayList alBPR = new ArrayList(str.Split(new string[] { "BPR*I*", "BPR*H*" }, StringSplitOptions.RemoveEmptyEntries));
+            ArrayList alBPR = new(str.Split(new string[] { "BPR*I*", "BPR*H*" }, StringSplitOptions.RemoveEmptyEntries));
             lbString += string.Format(" amount {0}", alBPR[1].ToString().Substring(0, alBPR[1].ToString().IndexOf('*')));
             ArrayList alParts = new(alBPR[1].ToString().Split(new string[] { "~" }, StringSplitOptions.RemoveEmptyEntries));
             var queryPLB = from string strPLBParts in alParts
@@ -1319,8 +1309,7 @@ public partial class Posting835 : Form
         string[] strST = strGS.Split(new string[] { "ST*835" }, StringSplitOptions.RemoveEmptyEntries);// zero element has ST, TRN, BPR, DTM*405 elements we are looking for
         string[] strGSHeaderElements = strST[0].Split(new char[] { '*' });
         // Eft Date
-        DateTime dtEftDate;
-        Utilities.Time.StringToHL7Time(strGSHeaderElements[3], out dtEftDate);
+        Utilities.Time.StringToHL7Time(strGSHeaderElements[3], out DateTime dtEftDate);
         fileDateTextBox.Text = string.Format("EFT Date: {0}", dtEftDate.ToString("d"));
         fileDateTextBox.Tag = dtEftDate.ToString("d");
         // File Number
@@ -1635,13 +1624,25 @@ public partial class Posting835 : Form
             // end of 09/05/2008 wdk
             if (strCLPElement[0].ToString().ToUpper() == "L" || strCLPElement[0].ToString().ToUpper() == "C" || strCLPElement[0].ToString().ToUpper() == "D")
             {
-                if (_cAcc.AccountIsValid(strCLPElements[0].Replace("A", "")))
+                string accountNo = strCLPElements[0].Replace("A", "");
+                try
                 {
-                    ParseSVC(strCLPElement);
-                    m_strarrEOBInsert.SetValue("", (int)Col835EOB.ePatStat); // 06/03/2008 not used so set blank
-                    _dsRecords.Tables[dgvEOB.Name].Rows.Add(m_strarrEOBInsert);
-                    AddTotalsToArray(m_strarrEOBInsert);
-                    bRetVal = true;
+
+                    var account = _accountService.GetAccount(accountNo, false, false);
+
+                    if (account != null)
+                    {
+                        ParseSVC(strCLPElement);
+                        m_strarrEOBInsert.SetValue("", (int)Col835EOB.ePatStat); // 06/03/2008 not used so set blank
+                        _dsRecords.Tables[dgvEOB.Name].Rows.Add(m_strarrEOBInsert);
+                        AddTotalsToArray(m_strarrEOBInsert);
+                        bRetVal = true;
+                    }
+                }
+                catch(Exception ex)
+                {
+                    _eRR.m_Logfile.WriteLogFile(ex.Message + "\n" + ex.StackTrace);
+                    continue;
                 }
             }
             else
@@ -3278,32 +3279,17 @@ public partial class Posting835 : Form
 
             Application.DoEvents();
             tspbRecords.PerformStep();
+            var account = _accountService.GetAccount(strAccount);
 
-            _cAccStatus.GetBalance(strAccount, out string strBal);
-            _cAccStatus.GetStatus(strAccount, out string strStatus);
-            if (string.IsNullOrEmpty(strBal))
+            if (account.Balance == 0)
             {
                 continue;
             }
-            if (strBal == "0" || strBal == "ERR")
-            {
-                continue;
-            }
-            if (strBal.Contains('.'))
-            {
-                int nEnd = strBal.Length - strBal.IndexOf(".");
-                if (nEnd > 3)
-                {
-                    nEnd = 3;
-                }
-                strBal = strBal.Substring(0, strBal.IndexOf('.') + nEnd);
-            }
-            double dBal = double.Parse(strBal);
-            if (dBal != 0.00 && strStatus == AccountStatus.PaidOut)
+            if (account.Balance != 0.00 && account.Status == AccountStatus.PaidOut)
             {
                 _accountService.UpdateStatus(strAccount, AccountStatus.New);
             }
-            _swAccount.WriteLine($"{strAccount.PadRight(16)}{dBal.ToString("C2", CultureInfo.CurrentCulture),-15}{strStatus.PadLeft(15 - strBal.Length)}");
+            _swAccount.WriteLine($"{strAccount,-16}{account.Balance.ToString("C2", CultureInfo.CurrentCulture),-15}{account.Status.PadLeft(15 - account.Balance.ToString().Length)}");
         }
 
         _swAccount.Flush();
@@ -3341,16 +3327,16 @@ public partial class Posting835 : Form
     {
         string strFileName = fileNameTextBox.Tag.ToString();
         string strMoveFile = $@"{_diSaved}{strFileName.Substring(strFileName.LastIndexOf('\\'))}";
-        string strMoveName = $@"{_diSaved}\Saved_DUP\{strFileName.Substring(strFileName.LastIndexOf('\\'))}";
+        string strMoveDup = $@"{_diSaved}\Saved_DUP\{strFileName.Substring(strFileName.LastIndexOf('\\'))}";
         try
         {
             if (File.Exists(string.Format(@"{0}", strMoveFile)))
             {
 
-                File.Move(fileNameTextBox.Tag.ToString(), $@"{_diSaved}\Saved_DUP\{strFileName.Substring(strFileName.LastIndexOf('\\'))}");
+                File.Move(fileNameTextBox.Tag.ToString(), strMoveDup);
                 return;
             }
-            File.Move(fileNameTextBox.Tag.ToString(), $@"{_diSaved}\{strFileName.Substring(strFileName.LastIndexOf('\\'))}");
+            File.Move(fileNameTextBox.Tag.ToString(), strMoveFile);
         }
         catch (IOException ioe)
         {
@@ -3462,20 +3448,20 @@ public partial class Posting835 : Form
         catch (Exception exc)
         {
             MessageBox.Show(exc.Message);
-            Utilities.dkPrint.propStreamToPrint.Close();
+            dkPrint.propStreamToPrint.Close();
         }
         PrintDocument printDoc = new();
 
         printDoc.DefaultPageSettings.Landscape = true;
         printDoc.PrintPage += new PrintPageEventHandler
-            (Utilities.dkPrint.PrintGraphic_PrintPage);
+            (dkPrint.PrintGraphic_PrintPage);
 
         printDoc.Print();
 
         printDoc.PrintPage -= new PrintPageEventHandler
-            (Utilities.dkPrint.PrintGraphic_PrintPage);
+            (dkPrint.PrintGraphic_PrintPage);
 
-        Utilities.dkPrint.propStreamToPrint.Close();
+        dkPrint.propStreamToPrint.Close();
 
     }
 
@@ -3821,12 +3807,10 @@ public partial class Posting835 : Form
             Application.DoEvents();
             string strAccount = _dsRecords.Tables[dgvEOB.Name].Rows[i][(int)Col835EOB.Account].ToString().Replace("A", "");
             string strEOBAccount = _dsRecords.Tables[dgvEOB.Name].Rows[i][(int)Col835EOB.Account].ToString();
-            _rAcc.GetBalance(strAccount, out string strBal);
-            if (strBal == "ERR")
-            {
-                continue;
-            }
-            if (strBal != "0")
+            var bal = _accountService.GetBalance(strAccount);
+            //_rAcc.GetBalance(strAccount, out string strBal);
+
+            if (bal != 0.00)
             {
                 _rEob.Reob.m_strFilter = $"Account = '{strEOBAccount}'AND claim_status = '{_dsRecords.Tables[dgvEOB.Name].Rows[i][(int)Col835EOB.eClaimSt]}' and eft_number = '{fileNumberTextBox.Tag}'";
                 if (_rEob.Reob.GetActiveRecords(_rEob.Reob.m_strFilter) > 0)

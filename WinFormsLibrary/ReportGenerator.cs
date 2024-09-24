@@ -1,7 +1,8 @@
 // added for DataGridViewPrinter
 using System.Data;
 using System.Drawing.Printing;
-namespace Utilities;
+
+namespace WinFormsLibrary;
 
 /// <summary>
 /// Creates a ReportGenerator with a DataGridViewPrinter object for setting up the printing for various reports.
@@ -13,26 +14,26 @@ public class ReportGenerator
     /// <summary>
     /// Added to print a data set 06/12/2008 rgc/wdk
     /// </summary>
-    public DataSet m_dsReport;
+    public DataSet reportDataSet;
     /// <summary>
     /// This objects copy of the DataGridViewPrinter
     /// </summary>
-    public DataGridViewPrinter m_dgvpReport;
-    private DataGridView m_dgvGrid;
+    public DataGridViewPrinter reportDataGridView;
+    private readonly DataGridView _dgvGrid;
     /// <summary>
     /// 
     /// </summary>
-    public string m_strFooter;
-    private string m_strTitle;
+    public string footer;
+    private string _strTitle;
     /// <summary>
     /// Gets or sets the title for the report after the creation of the report.
     /// </summary>
-    public string propTitle
+    public string Title
     {
-        get { return m_strTitle; }
-        set { m_strTitle = value; }
+        get { return _strTitle; }
+        set { _strTitle = value; }
     }
-    private string m_strDBase;
+    private readonly string _strDBase;
 
     /// <summary>
     /// ReportGenerator constructor
@@ -46,11 +47,11 @@ public class ReportGenerator
         string aTitleText,
         string strDBase) // 08/23/2007 wdk/rgc added for shell to ACC program.
     {
-        m_strTitle = aTitleText;
-        m_dgvGrid = aDataGridView;
+        _strTitle = aTitleText;
+        _dgvGrid = aDataGridView;
 
-        m_strDBase = strDBase;
-        m_dgvpReport = new DataGridViewPrinter(aDataGridView, aPrintDocument, aTitleText);
+        _strDBase = strDBase;
+        reportDataGridView = new DataGridViewPrinter(aDataGridView, aPrintDocument, aTitleText);
     }
 
 
@@ -81,7 +82,7 @@ public class ReportGenerator
         {
             return false;
         }
-        MyPrintDocument = m_dgvpReport.ThePrintDocument;
+        MyPrintDocument = reportDataGridView.ThePrintDocument;
         return true;
 
     }
@@ -94,7 +95,7 @@ public class ReportGenerator
     public void MyPrintDocument_PrintPage(object sender,
         System.Drawing.Printing.PrintPageEventArgs e)
     {
-        bool more = m_dgvpReport.DrawDataGridView(e.Graphics);
+        bool more = reportDataGridView.DrawDataGridView(e.Graphics);
 
         if (more == true)
         {

@@ -1,17 +1,15 @@
 ﻿using LabBilling.Core.Models;
-using System;
-using System.Windows.Forms;
-using System.Runtime.InteropServices;
-using LabBilling.Logging;
 using LabBilling.Core.Services;
+using LabBilling.Logging;
+using System.Runtime.InteropServices;
 
 namespace LabBilling;
 
 public partial class Login : Form
 {
-    private SystemService systemService;
+    private SystemService _systemService;
 
-    public Login(bool test = false) 
+    public Login(bool test = false)
     {
         Log.Instance.Trace($"Entering");
         testEnvironment = test;
@@ -21,9 +19,9 @@ public partial class Login : Form
     public bool testEnvironment = false;
     public bool IsLoggedIn { get; set; }
     public UserAccount LoggedInUser { get; set; }
-    private string systemUser;
-    private string systemDomain;
-    private bool skipImpersonateComboSelectionChange = false;
+    private string _systemUser;
+    private string _systemDomain;
+    private bool _skipImpersonateComboSelectionChange = false;
 
     //declare active directory logon method
     [DllImport("advapi32.dll")]
@@ -54,12 +52,12 @@ public partial class Login : Form
     public bool ServerLogin()
     {
 
-        bool loginSuccess = systemService.LoginCheck(username.Text, Helper.Encrypt(password.Text.Trim()));
+        bool loginSuccess = _systemService.LoginCheck(username.Text, Helper.Encrypt(password.Text.Trim()));
 
         if (loginSuccess)
         {
             IsLoggedIn = true;
-            LoggedInUser = systemService.GetUser(username.Text);
+            LoggedInUser = _systemService.GetUser(username.Text);
             Program.LoggedInUser = LoggedInUser;
             Program.LoggedInUser.Password = "";
             Log.Instance.Info(string.Format("Login Success - {0}", LoggedInUser.UserName));
@@ -92,26 +90,26 @@ public partial class Login : Form
         {
             Program.AppEnvironment.DatabaseName = Properties.Settings.Default.TestDbName;
             Program.AppEnvironment.ServerName = Properties.Settings.Default.TestDbServer;
-            Program.AppEnvironment.LogDatabaseName = Properties.Settings.Default.LogDbName;
+            Program.AppEnvironment.LogDatabaseName = Properties.Settings.Default.TestLogDbName;
+            Program.AppEnvironment.IntegratedAuthentication = Properties.Settings.Default.TestIntegratedSecurity;
         }
         else
         {
-            Program.AppEnvironment.DatabaseName = Properties.Settings.Default.DbName;
-            Program.AppEnvironment.ServerName = Properties.Settings.Default.DbServer;
-            Program.AppEnvironment.LogDatabaseName = Properties.Settings.Default.LogDbName;
+            Program.AppEnvironment.DatabaseName = Properties.Settings.Default.ProdDbName;
+            Program.AppEnvironment.ServerName = Properties.Settings.Default.ProdDbServer;
+            Program.AppEnvironment.LogDatabaseName = Properties.Settings.Default.ProdLogDbName;
+            Program.AppEnvironment.IntegratedAuthentication = Properties.Settings.Default.ProdIntegratedSecurity;
         }
 
-        Program.AppEnvironment.IntegratedAuthentication = Properties.Settings.Default.IntegratedSecurity;
-
-        systemService = new(Program.AppEnvironment);
-        if (Properties.Settings.Default.IntegratedSecurity)
-        {                
+        _systemService = new(Program.AppEnvironment);
+        if (Program.AppEnvironment.IntegratedAuthentication)
+        {
 
             string domainUser = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
             string[] paramsLogin = domainUser.Split('\\');
 
-            username.Text = systemUser = paramsLogin[1].ToString();
-            domain.Text = systemDomain = paramsLogin[0].ToString();
+            username.Text = _systemUser = paramsLogin[1].ToString();
+            domain.Text = _systemDomain = paramsLogin[0].ToString();
 
             IntegratedAuthentication.Checked = true;
             IntegratedAuthentication_CheckedChanged(sender, e);
@@ -124,19 +122,19 @@ public partial class Login : Form
                 if (LoggedInUser.CanImpersonate)
                 {
                     impersonateUserLabel.Visible = true;
-                    impersonateUserComboBox.Visible = true; 
+                    impersonateUserComboBox.Visible = true;
 
                     //load impersonateUserComboBox
-                    var emps = systemService.GetActiveUsers();
+                    var emps = _systemService.GetActiveUsers();
 
-                    skipImpersonateComboSelectionChange = true;
+                    _skipImpersonateComboSelectionChange = true;
                     impersonateUserComboBox.DataSource = emps;
                     impersonateUserComboBox.DisplayMember = nameof(UserAccount.FullName);
                     impersonateUserComboBox.ValueMember = nameof(UserAccount.UserName);
 
                     impersonateUserComboBox.SelectedValue = LoggedInUser.UserName;
 
-                    skipImpersonateComboSelectionChange = false;
+                    _skipImpersonateComboSelectionChange = false;
                 }
                 else
                 {
@@ -152,14 +150,12 @@ public partial class Login : Form
 
             IntegratedAuthentication.Enabled = false;
         }
-
-
     }
 
     private bool GetUserProfile()
     {
         IsLoggedIn = true;
-        LoggedInUser = systemService.GetUser(username.Text);
+        LoggedInUser = _systemService.GetUser(username.Text);
         Program.LoggedInUser = LoggedInUser;
         Program.LoggedInUser.Password = "";
         Program.AppEnvironment.User = LoggedInUser.UserName;
@@ -174,12 +170,12 @@ public partial class Login : Form
 
     private void IntegratedAuthentication_CheckedChanged(object sender, EventArgs e)
     {
-        if(IntegratedAuthentication.Checked)
+        if (IntegratedAuthentication.Checked)
         {
             username.Enabled = false;
             password.Enabled = false;
             domain.Enabled = false;
-            username.Text = systemUser;
+            username.Text = _systemUser;
         }
         else
         {
@@ -191,14 +187,14 @@ public partial class Login : Form
 
     private void impersonateUserComboBox_SelectedValueChanged(object sender, EventArgs e)
     {
-        if(!skipImpersonateComboSelectionChange)
+        if (!_skipImpersonateComboSelectionChange)
         {
             string impersonatedUsername = impersonateUserComboBox.SelectedValue.ToString();
-            if(impersonatedUsername != LoggedInUser.UserName)
+            if (impersonatedUsername != LoggedInUser.UserName)
             {
                 //get impersonated user profile
-                var impersonatedUser = systemService.GetUser(impersonatedUsername);
-                if(impersonatedUser != null)
+                var impersonatedUser = _systemService.GetUser(impersonatedUsername);
+                if (impersonatedUser != null)
                 {
                     //copy impersonated user permissions to loggedinuser
                     LoggedInUser.CanEditDictionary = impersonatedUser.CanEditDictionary;
@@ -208,7 +204,7 @@ public partial class Login : Form
                     LoggedInUser.CanModifyBadDebt = impersonatedUser.CanModifyBadDebt;
                     LoggedInUser.CanSubmitBilling = impersonatedUser.CanSubmitBilling;
                     LoggedInUser.CanSubmitCharges = impersonatedUser.CanSubmitCharges;
-                    if(LoggedInUser.IsAdministrator)
+                    if (LoggedInUser.IsAdministrator)
                         LoggedInUser.IsAdministrator = impersonatedUser.IsAdministrator;
                     LoggedInUser.Access = impersonatedUser.Access;
                     LoggedInUser.ImpersonatingUser = impersonatedUser.UserName;

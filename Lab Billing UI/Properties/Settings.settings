@@ -2,23 +2,29 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="LabBilling.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="DbServer" Type="System.String" Scope="Application">
+    <Setting Name="ProdDbServer" Type="System.String" Scope="Application">
       <Value Profile="(Default)">WTHMCLBILL</Value>
     </Setting>
-    <Setting Name="DbName" Type="System.String" Scope="Application">
+    <Setting Name="ProdDbName" Type="System.String" Scope="Application">
       <Value Profile="(Default)">LabBillingProd</Value>
     </Setting>
-    <Setting Name="LogDbName" Type="System.String" Scope="Application">
+    <Setting Name="ProdLogDbName" Type="System.String" Scope="Application">
       <Value Profile="(Default)">NLog</Value>
     </Setting>
     <Setting Name="TestDbName" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">LabBillingTest</Value>
+      <Value Profile="(Default)">LabPA_TST</Value>
     </Setting>
     <Setting Name="TestDbServer" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">WTHMCLBILL</Value>
+      <Value Profile="(Default)">localhost</Value>
     </Setting>
-    <Setting Name="IntegratedSecurity" Type="System.Boolean" Scope="Application">
+    <Setting Name="TestIntegratedSecurity" Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="ProdIntegratedSecurity" Type="System.Boolean" Scope="Application">
       <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="TestLogDbName" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">NLog</Value>
     </Setting>
   </Settings>
 </SettingsFile>

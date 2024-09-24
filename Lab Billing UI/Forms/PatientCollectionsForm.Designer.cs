@@ -29,25 +29,25 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PatientCollectionsForm));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            tsMain = new System.Windows.Forms.ToolStrip();
-            worklistsToolStripDropDown = new System.Windows.Forms.ToolStripDropDownButton();
-            readyForCollectionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            paymentPlanToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            sentToCollectionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            importCollectionsFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
-            tsbWriteOff = new System.Windows.Forms.ToolStripButton();
-            tsbPrintGrid = new System.Windows.Forms.ToolStripButton();
-            toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
-            tsbSmallBalWriteOff = new System.Windows.Forms.ToolStripButton();
-            runStatementsToolStripButton1 = new System.Windows.Forms.ToolStripButton();
-            ssMain = new System.Windows.Forms.StatusStrip();
-            tspbRecords = new System.Windows.Forms.ToolStripProgressBar();
-            ssRecords = new System.Windows.Forms.ToolStripStatusLabel();
-            dgvAccounts = new System.Windows.Forms.DataGridView();
+            DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle5 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle6 = new DataGridViewCellStyle();
+            tsMain = new ToolStrip();
+            worklistsToolStripDropDown = new ToolStripDropDownButton();
+            readyForCollectionsToolStripMenuItem = new ToolStripMenuItem();
+            paymentPlanToolStripMenuItem = new ToolStripMenuItem();
+            sentToCollectionsToolStripMenuItem = new ToolStripMenuItem();
+            importCollectionsFileToolStripMenuItem = new ToolStripMenuItem();
+            toolStripSeparator5 = new ToolStripSeparator();
+            writeOffToolStripButton = new ToolStripButton();
+            printGridToolStripButton = new ToolStripButton();
+            toolStripSeparator6 = new ToolStripSeparator();
+            smallBalanceWriteoffToolStripButton = new ToolStripButton();
+            runStatementsToolStripButton1 = new ToolStripButton();
+            ssMain = new StatusStrip();
+            tspbRecords = new ToolStripProgressBar();
+            ssRecords = new ToolStripStatusLabel();
+            dgvAccounts = new DataGridView();
             tsMain.SuspendLayout();
             ssMain.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvAccounts).BeginInit();
@@ -55,170 +55,170 @@
             // 
             // tsMain
             // 
-            tsMain.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
-            tsMain.ImageScalingSize = new System.Drawing.Size(20, 20);
-            tsMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { worklistsToolStripDropDown, toolStripSeparator5, tsbWriteOff, tsbPrintGrid, toolStripSeparator6, tsbSmallBalWriteOff, runStatementsToolStripButton1 });
-            tsMain.Location = new System.Drawing.Point(0, 0);
+            tsMain.GripStyle = ToolStripGripStyle.Hidden;
+            tsMain.ImageScalingSize = new Size(20, 20);
+            tsMain.Items.AddRange(new ToolStripItem[] { worklistsToolStripDropDown, toolStripSeparator5, writeOffToolStripButton, printGridToolStripButton, toolStripSeparator6, smallBalanceWriteoffToolStripButton, runStatementsToolStripButton1 });
+            tsMain.Location = new Point(0, 0);
             tsMain.Name = "tsMain";
-            tsMain.Size = new System.Drawing.Size(1178, 25);
+            tsMain.Size = new Size(1178, 25);
             tsMain.TabIndex = 0;
             tsMain.Text = "toolStrip1";
             // 
             // worklistsToolStripDropDown
             // 
-            worklistsToolStripDropDown.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            worklistsToolStripDropDown.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { readyForCollectionsToolStripMenuItem, paymentPlanToolStripMenuItem, sentToCollectionsToolStripMenuItem, importCollectionsFileToolStripMenuItem });
-            worklistsToolStripDropDown.Image = (System.Drawing.Image)resources.GetObject("worklistsToolStripDropDown.Image");
-            worklistsToolStripDropDown.ImageTransparentColor = System.Drawing.Color.Magenta;
+            worklistsToolStripDropDown.DisplayStyle = ToolStripItemDisplayStyle.Text;
+            worklistsToolStripDropDown.DropDownItems.AddRange(new ToolStripItem[] { readyForCollectionsToolStripMenuItem, paymentPlanToolStripMenuItem, sentToCollectionsToolStripMenuItem, importCollectionsFileToolStripMenuItem });
+            worklistsToolStripDropDown.Image = (Image)resources.GetObject("worklistsToolStripDropDown.Image");
+            worklistsToolStripDropDown.ImageTransparentColor = Color.Magenta;
             worklistsToolStripDropDown.Name = "worklistsToolStripDropDown";
-            worklistsToolStripDropDown.Size = new System.Drawing.Size(68, 22);
+            worklistsToolStripDropDown.Size = new Size(68, 22);
             worklistsToolStripDropDown.Text = "Worklists";
             // 
             // readyForCollectionsToolStripMenuItem
             // 
             readyForCollectionsToolStripMenuItem.Name = "readyForCollectionsToolStripMenuItem";
-            readyForCollectionsToolStripMenuItem.Size = new System.Drawing.Size(193, 22);
+            readyForCollectionsToolStripMenuItem.Size = new Size(193, 22);
             readyForCollectionsToolStripMenuItem.Text = "Ready for Collections";
             readyForCollectionsToolStripMenuItem.Click += tsbLoad_Click;
             // 
             // paymentPlanToolStripMenuItem
             // 
             paymentPlanToolStripMenuItem.Name = "paymentPlanToolStripMenuItem";
-            paymentPlanToolStripMenuItem.Size = new System.Drawing.Size(193, 22);
+            paymentPlanToolStripMenuItem.Size = new Size(193, 22);
             paymentPlanToolStripMenuItem.Text = "Payment Plan";
             paymentPlanToolStripMenuItem.Click += tsbLoadMailerP_Click;
             // 
             // sentToCollectionsToolStripMenuItem
             // 
             sentToCollectionsToolStripMenuItem.Name = "sentToCollectionsToolStripMenuItem";
-            sentToCollectionsToolStripMenuItem.Size = new System.Drawing.Size(193, 22);
+            sentToCollectionsToolStripMenuItem.Size = new Size(193, 22);
             sentToCollectionsToolStripMenuItem.Text = "Sent to Collections";
             sentToCollectionsToolStripMenuItem.Click += tsbLoad_Click;
             // 
             // importCollectionsFileToolStripMenuItem
             // 
             importCollectionsFileToolStripMenuItem.Name = "importCollectionsFileToolStripMenuItem";
-            importCollectionsFileToolStripMenuItem.Size = new System.Drawing.Size(193, 22);
+            importCollectionsFileToolStripMenuItem.Size = new Size(193, 22);
             importCollectionsFileToolStripMenuItem.Text = "Import Collections File";
             importCollectionsFileToolStripMenuItem.Click += tsbReadMCLFile_Click;
             // 
             // toolStripSeparator5
             // 
             toolStripSeparator5.Name = "toolStripSeparator5";
-            toolStripSeparator5.Size = new System.Drawing.Size(6, 25);
+            toolStripSeparator5.Size = new Size(6, 25);
             // 
-            // tsbWriteOff
+            // writeOffToolStripButton
             // 
-            tsbWriteOff.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            tsbWriteOff.Image = (System.Drawing.Image)resources.GetObject("tsbWriteOff.Image");
-            tsbWriteOff.ImageTransparentColor = System.Drawing.Color.Magenta;
-            tsbWriteOff.Name = "tsbWriteOff";
-            tsbWriteOff.Size = new System.Drawing.Size(59, 22);
-            tsbWriteOff.Text = "Write Off";
-            tsbWriteOff.Visible = false;
-            tsbWriteOff.Click += tsbWriteOff_Click;
+            writeOffToolStripButton.DisplayStyle = ToolStripItemDisplayStyle.Text;
+            writeOffToolStripButton.Image = (Image)resources.GetObject("writeOffToolStripButton.Image");
+            writeOffToolStripButton.ImageTransparentColor = Color.Magenta;
+            writeOffToolStripButton.Name = "writeOffToolStripButton";
+            writeOffToolStripButton.Size = new Size(59, 22);
+            writeOffToolStripButton.Text = "Write Off";
+            writeOffToolStripButton.Visible = false;
+            writeOffToolStripButton.Click += SmallBalanceWriteOffToolStripButton_Click;
             // 
-            // tsbPrintGrid
+            // printGridToolStripButton
             // 
-            tsbPrintGrid.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            tsbPrintGrid.Image = (System.Drawing.Image)resources.GetObject("tsbPrintGrid.Image");
-            tsbPrintGrid.ImageTransparentColor = System.Drawing.Color.Magenta;
-            tsbPrintGrid.Name = "tsbPrintGrid";
-            tsbPrintGrid.Size = new System.Drawing.Size(61, 22);
-            tsbPrintGrid.Text = "Print Grid";
-            tsbPrintGrid.Click += tsbPrintGrid_Click;
+            printGridToolStripButton.DisplayStyle = ToolStripItemDisplayStyle.Text;
+            printGridToolStripButton.Image = (Image)resources.GetObject("printGridToolStripButton.Image");
+            printGridToolStripButton.ImageTransparentColor = Color.Magenta;
+            printGridToolStripButton.Name = "printGridToolStripButton";
+            printGridToolStripButton.Size = new Size(61, 22);
+            printGridToolStripButton.Text = "Print Grid";
+            printGridToolStripButton.Click += tsbPrintGrid_Click;
             // 
             // toolStripSeparator6
             // 
             toolStripSeparator6.Name = "toolStripSeparator6";
-            toolStripSeparator6.Size = new System.Drawing.Size(6, 25);
+            toolStripSeparator6.Size = new Size(6, 25);
             // 
-            // tsbSmallBalWriteOff
+            // smallBalanceWriteoffToolStripButton
             // 
-            tsbSmallBalWriteOff.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            tsbSmallBalWriteOff.Enabled = false;
-            tsbSmallBalWriteOff.Image = (System.Drawing.Image)resources.GetObject("tsbSmallBalWriteOff.Image");
-            tsbSmallBalWriteOff.ImageTransparentColor = System.Drawing.Color.Magenta;
-            tsbSmallBalWriteOff.Name = "tsbSmallBalWriteOff";
-            tsbSmallBalWriteOff.Size = new System.Drawing.Size(135, 22);
-            tsbSmallBalWriteOff.Text = "Small Balance Write Off";
-            tsbSmallBalWriteOff.ToolTipText = "Small Balance Write Off $10.00 and less";
-            tsbSmallBalWriteOff.Visible = false;
-            tsbSmallBalWriteOff.Click += TsbSmallBalWriteOff_Click;
+            smallBalanceWriteoffToolStripButton.DisplayStyle = ToolStripItemDisplayStyle.Text;
+            smallBalanceWriteoffToolStripButton.Enabled = false;
+            smallBalanceWriteoffToolStripButton.Image = (Image)resources.GetObject("smallBalanceWriteoffToolStripButton.Image");
+            smallBalanceWriteoffToolStripButton.ImageTransparentColor = Color.Magenta;
+            smallBalanceWriteoffToolStripButton.Name = "smallBalanceWriteoffToolStripButton";
+            smallBalanceWriteoffToolStripButton.Size = new Size(135, 22);
+            smallBalanceWriteoffToolStripButton.Text = "Small Balance Write Off";
+            smallBalanceWriteoffToolStripButton.ToolTipText = "Small Balance Write Off $10.00 and less";
+            smallBalanceWriteoffToolStripButton.Visible = false;
+            smallBalanceWriteoffToolStripButton.Click += TsbSmallBalWriteOff_Click;
             // 
             // runStatementsToolStripButton1
             // 
-            runStatementsToolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            runStatementsToolStripButton1.Image = (System.Drawing.Image)resources.GetObject("runStatementsToolStripButton1.Image");
-            runStatementsToolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
+            runStatementsToolStripButton1.DisplayStyle = ToolStripItemDisplayStyle.Text;
+            runStatementsToolStripButton1.Image = (Image)resources.GetObject("runStatementsToolStripButton1.Image");
+            runStatementsToolStripButton1.ImageTransparentColor = Color.Magenta;
             runStatementsToolStripButton1.Name = "runStatementsToolStripButton1";
-            runStatementsToolStripButton1.Size = new System.Drawing.Size(158, 22);
+            runStatementsToolStripButton1.Size = new Size(158, 22);
             runStatementsToolStripButton1.Text = "Run Statements/Collections";
-            runStatementsToolStripButton1.TextImageRelation = System.Windows.Forms.TextImageRelation.TextBeforeImage;
+            runStatementsToolStripButton1.TextImageRelation = TextImageRelation.TextBeforeImage;
             runStatementsToolStripButton1.Click += patientStatementsWizardToolStripMenuItem_Click;
             // 
             // ssMain
             // 
-            ssMain.ImageScalingSize = new System.Drawing.Size(20, 20);
-            ssMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { tspbRecords, ssRecords });
-            ssMain.Location = new System.Drawing.Point(0, 728);
+            ssMain.ImageScalingSize = new Size(20, 20);
+            ssMain.Items.AddRange(new ToolStripItem[] { tspbRecords, ssRecords });
+            ssMain.Location = new Point(0, 728);
             ssMain.Name = "ssMain";
-            ssMain.Padding = new System.Windows.Forms.Padding(1, 0, 16, 0);
-            ssMain.Size = new System.Drawing.Size(1178, 24);
+            ssMain.Padding = new Padding(1, 0, 16, 0);
+            ssMain.Size = new Size(1178, 24);
             ssMain.TabIndex = 1;
             ssMain.Text = "statusStrip1";
             // 
             // tspbRecords
             // 
             tspbRecords.Name = "tspbRecords";
-            tspbRecords.Size = new System.Drawing.Size(233, 18);
+            tspbRecords.Size = new Size(233, 18);
             tspbRecords.Step = 1;
             // 
             // ssRecords
             // 
             ssRecords.Name = "ssRecords";
-            ssRecords.Size = new System.Drawing.Size(52, 19);
+            ssRecords.Size = new Size(52, 19);
             ssRecords.Text = "Records:";
             // 
             // dgvAccounts
             // 
             dgvAccounts.AllowUserToAddRows = false;
             dgvAccounts.AllowUserToDeleteRows = false;
-            dgvAccounts.BackgroundColor = System.Drawing.SystemColors.ControlLightLight;
-            dgvAccounts.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.EnableAlwaysIncludeHeaderText;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            dgvAccounts.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
-            dgvAccounts.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
-            dataGridViewCellStyle2.ForeColor = System.Drawing.Color.Black;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            dgvAccounts.DefaultCellStyle = dataGridViewCellStyle2;
-            dgvAccounts.Dock = System.Windows.Forms.DockStyle.Fill;
-            dgvAccounts.Location = new System.Drawing.Point(0, 25);
-            dgvAccounts.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            dgvAccounts.BackgroundColor = SystemColors.ControlLightLight;
+            dgvAccounts.ClipboardCopyMode = DataGridViewClipboardCopyMode.EnableAlwaysIncludeHeaderText;
+            dataGridViewCellStyle4.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.BackColor = SystemColors.Control;
+            dataGridViewCellStyle4.Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            dataGridViewCellStyle4.ForeColor = SystemColors.WindowText;
+            dataGridViewCellStyle4.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle4.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle4.WrapMode = DataGridViewTriState.True;
+            dgvAccounts.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle4;
+            dgvAccounts.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridViewCellStyle5.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle5.BackColor = SystemColors.Window;
+            dataGridViewCellStyle5.Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            dataGridViewCellStyle5.ForeColor = Color.Black;
+            dataGridViewCellStyle5.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle5.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle5.WrapMode = DataGridViewTriState.False;
+            dgvAccounts.DefaultCellStyle = dataGridViewCellStyle5;
+            dgvAccounts.Dock = DockStyle.Fill;
+            dgvAccounts.Location = new Point(0, 25);
+            dgvAccounts.Margin = new Padding(4, 3, 4, 3);
             dgvAccounts.MultiSelect = false;
             dgvAccounts.Name = "dgvAccounts";
             dgvAccounts.ReadOnly = true;
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
-            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            dgvAccounts.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
-            dgvAccounts.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            dgvAccounts.Size = new System.Drawing.Size(1178, 703);
+            dataGridViewCellStyle6.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle6.BackColor = SystemColors.Control;
+            dataGridViewCellStyle6.Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            dataGridViewCellStyle6.ForeColor = SystemColors.WindowText;
+            dataGridViewCellStyle6.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle6.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle6.WrapMode = DataGridViewTriState.True;
+            dgvAccounts.RowHeadersDefaultCellStyle = dataGridViewCellStyle6;
+            dgvAccounts.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dgvAccounts.Size = new Size(1178, 703);
             dgvAccounts.TabIndex = 2;
             dgvAccounts.CellClick += dgvAccounts_CellClick;
             dgvAccounts.CellContentClick += dgvAccounts_CellContentClick;
@@ -233,15 +233,15 @@
             // 
             // PatientCollectionsForm
             // 
-            AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            ClientSize = new System.Drawing.Size(1178, 752);
+            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(1178, 752);
             Controls.Add(dgvAccounts);
             Controls.Add(ssMain);
             Controls.Add(tsMain);
-            ForeColor = System.Drawing.Color.Black;
-            Icon = (System.Drawing.Icon)resources.GetObject("$this.Icon");
-            Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            ForeColor = Color.Black;
+            Icon = (Icon)resources.GetObject("$this.Icon");
+            Margin = new Padding(4, 3, 4, 3);
             Name = "PatientCollectionsForm";
             Text = "Patient Collections";
             Load += frmBadDebt_Load;
@@ -259,13 +259,13 @@
         private System.Windows.Forms.ToolStrip tsMain;
         private System.Windows.Forms.StatusStrip ssMain;
         private System.Windows.Forms.DataGridView dgvAccounts;
-        private System.Windows.Forms.ToolStripButton tsbWriteOff;
+        private System.Windows.Forms.ToolStripButton writeOffToolStripButton;
         private System.Windows.Forms.ToolStripStatusLabel ssRecords;
-        private System.Windows.Forms.ToolStripButton tsbPrintGrid;
+        private System.Windows.Forms.ToolStripButton printGridToolStripButton;
         private System.Windows.Forms.ToolStripProgressBar tspbRecords;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
-        private System.Windows.Forms.ToolStripButton tsbSmallBalWriteOff;
+        private System.Windows.Forms.ToolStripButton smallBalanceWriteoffToolStripButton;
         private System.Windows.Forms.ToolStripDropDownButton worklistsToolStripDropDown;
         private System.Windows.Forms.ToolStripMenuItem readyForCollectionsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem paymentPlanToolStripMenuItem;

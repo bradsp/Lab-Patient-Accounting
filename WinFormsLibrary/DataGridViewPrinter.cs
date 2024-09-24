@@ -12,9 +12,9 @@
  */
 // added for DataGridViewPrinter
 using System.Drawing.Printing;
+using Utilities;
 
-
-namespace Utilities;
+namespace WinFormsLibrary;
 
 /// <summary>
 /// 05/31/2007 wdk 

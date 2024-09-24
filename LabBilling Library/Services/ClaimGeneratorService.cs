@@ -17,7 +17,7 @@ namespace LabBilling.Core.Services;
 public sealed class ClaimGeneratorService
 {
 
-    readonly ArrayList NameSuffixList = new() { "JR", "SR", "I", "II", "III", "IV", "V", "VI", "VII" };
+    private readonly ArrayList _nameSuffixList = new() { "JR", "SR", "I", "II", "III", "IV", "V", "VI", "VII" };
 
     public string PropProductionEnvironment { get; set; }
     private readonly IAppEnvironment _appEnvironment;
@@ -81,7 +81,6 @@ public sealed class ClaimGeneratorService
         string interchangeControlNumber = Convert.ToInt32(strNum).ToString("D9");
         string batchType;
         string fileLocation;
-        //int maxClaims = appEnvironment.ApplicationParameters.MaxClaimsInClaimBatch;
 
         List<ClaimItem> claimList;
         ClaimType billClaimType;

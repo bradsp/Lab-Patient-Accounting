@@ -24,6 +24,7 @@ using System.Drawing;
 using System.Drawing.Printing; // for printing the gridview
 using System.Windows.Forms;
 using Utilities;
+using WinFormsLibrary;
 
 namespace LabBilling.Legacy;
 

@@ -3,8 +3,9 @@ using System.Data;
 using System.Drawing.Printing;
 using System.Transactions;
 using Utilities;
+using MCL;
 
-namespace MCL;
+namespace WinFormsLibrary;
 
 /// <summary>
 /// 
@@ -148,8 +149,10 @@ public class CEob : RFCObject
         {
             try
             {
-                TransactionOptions to = new TransactionOptions();
-                to.IsolationLevel = System.Transactions.IsolationLevel.ReadCommitted; // 05/21/2008 rgc/wdk so other processes can read the committed transactions without locking up the table.
+                TransactionOptions to = new()
+                {
+                    IsolationLevel = System.Transactions.IsolationLevel.ReadCommitted // 05/21/2008 rgc/wdk so other processes can read the committed transactions without locking up the table.
+                };
                 PropCommittableTrans = new CommittableTransaction(to);
                 Reob.propDBConnection.EnlistTransaction(PropCommittableTrans);
                 _err.m_Logfile.WriteLogFile("CEOB::CreateCommittableTransaction() CREATED");
@@ -190,7 +193,7 @@ public class CEob : RFCObject
             CreateCommittableTransaction();
         }
 
-        SqlCommand eobCommand = new SqlCommand();
+        SqlCommand eobCommand = new();
 
         if (Reob.propDBConnection.State.Equals(ConnectionState.Closed))
         {
@@ -472,7 +475,7 @@ public class CEob : RFCObject
     {
         // set the tab stops for the File Header
         float[] tabStops = { 75.0f, 250.0f, 200.0f };
-        List<string> strEOB = new List<string>();
+        List<string> strEOB = new();
 
         strEOB.Add(string.Format("Name: {0}\tService From {1} thru {2}{3}",
                                 Reob.m_strSubscriberName,

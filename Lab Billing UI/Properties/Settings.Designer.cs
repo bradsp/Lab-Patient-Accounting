@@ -12,7 +12,7 @@ namespace LabBilling.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.7.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.11.0.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -26,33 +26,33 @@ namespace LabBilling.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("WTHMCLBILL")]
-        public string DbServer {
+        public string ProdDbServer {
             get {
-                return ((string)(this["DbServer"]));
+                return ((string)(this["ProdDbServer"]));
             }
         }
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("LabBillingProd")]
-        public string DbName {
+        public string ProdDbName {
             get {
-                return ((string)(this["DbName"]));
+                return ((string)(this["ProdDbName"]));
             }
         }
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("NLog")]
-        public string LogDbName {
+        public string ProdLogDbName {
             get {
-                return ((string)(this["LogDbName"]));
+                return ((string)(this["ProdLogDbName"]));
             }
         }
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("LabBillingTest")]
+        [global::System.Configuration.DefaultSettingValueAttribute("LabPA_TST")]
         public string TestDbName {
             get {
                 return ((string)(this["TestDbName"]));
@@ -61,7 +61,7 @@ namespace LabBilling.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("WTHMCLBILL")]
+        [global::System.Configuration.DefaultSettingValueAttribute("localhost")]
         public string TestDbServer {
             get {
                 return ((string)(this["TestDbServer"]));
@@ -70,10 +70,28 @@ namespace LabBilling.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool IntegratedSecurity {
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool TestIntegratedSecurity {
             get {
-                return ((bool)(this["IntegratedSecurity"]));
+                return ((bool)(this["TestIntegratedSecurity"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool ProdIntegratedSecurity {
+            get {
+                return ((bool)(this["ProdIntegratedSecurity"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("NLog")]
+        public string TestLogDbName {
+            get {
+                return ((string)(this["TestLogDbName"]));
             }
         }
     }
