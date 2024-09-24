@@ -8,88 +8,53 @@
   <bpr>
     <bpr16 type="dt"/>
   </bpr>
+  <nte/>
   <trn/>
   <cur/>
   <ref/>
   <dtm/>
-  <n1loop>
+  <l1000loop>
     <n1/>
+    <n2/>
     <n3/>
     <n4/>
-    <refloop>
-      <ref/>
-    </refloop>
-    <perloop>
-      <per/>
-    </perloop>
-  </n1loop>
-  <n1loop>
-    <n1/>
-    <n3/>
-    <n4/>
-    <refloop>
-      <ref/>
-    </refloop>
-  </n1loop>
-  <lx/>
-  <ts3>
-    <ts303 typ="dt"/>
-  </ts3>
-  <clploop>
-    <clp/>
-    <casloop></casloop>
-    <nm1loop>
+    <ref/>
+    <per/>
+    <rdm/>
+    <dtm/>
+  </l1000loop>
+  <l2000loop>
+    <lx/>
+    <ts3>
+      <ts303 typ="dt"/>
+    </ts3>
+    <ts2/>
+    <l2100loop>
+      <clp/>
+      <cas/>
       <nm1/>
-    </nm1loop>
-    <moa/>
-    <dtmloop>
+      <mia/>
+      <moa/>
+      <ref/>
       <dtm>
-        <dtm01 restrict="true">
-          <option>232</option>
-        </dtm01>
         <dtm02 type="dt"/>
       </dtm>
-      <dtm>
-        <dtm01 restrict="true">
-          <option>233</option>
-        </dtm01>
-        <dtm02 type="dt"/>
-      </dtm>
-    </dtmloop>
-    <dtm>
-      <dtm01 restrict="true">
-        <option>050</option>
-      </dtm01>
-      <dtm02 type="dt"/>
-    </dtm>
-    <amtloop>
+      <per/>
       <amt/>
-    </amtloop>
-    <svcloop>
-      <svc/>
-      <dtmloop>
+      <l2110loop>
+        <svc/>
         <dtm>
           <dtm01/>
           <dtm02 type="dt"/>
         </dtm>
-      </dtmloop>
-      <casloop>
         <cas/>
-      </casloop>
-      <refloop>
         <ref/>
-      </refloop>
-      <amtloop>
         <amt/>
-      </amtloop>
-      <qtyloop>
         <qty/>
-      </qtyloop>
-      <lqloop>
         <lq/>
-      </lqloop>
-    </svcloop>
-  </clploop>
+      </l2110loop>
+    </l2100loop>
+  </l2000loop>
   <plb/>
   <se/>
   <ge/>
