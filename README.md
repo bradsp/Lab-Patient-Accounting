@@ -61,6 +61,7 @@ Lab Patient Accounting is a medical patient accounting and billing application c
 
 
 ## Roadmap
+* Docker Support
 * .Net Blazor UI
 * Reporting with something other than SQL Reporting Services
 * Multiple database support (Postgres, MSSql)
