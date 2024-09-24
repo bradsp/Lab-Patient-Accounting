@@ -259,7 +259,7 @@ public partial class Posting835 : Form
     }
     private void fileOpenToolStripItem_Click(object sender, EventArgs e)
     {
-        openFileDialog.Filter = "835 Files (*.835)|*.835|XML Files (*.X12)|*.X12|ALL Files (*.*)|*.*";
+        openFileDialog.Filter = "Medicare 835 Files (MCL_MCR*.835)|MCL_MCR*.835|All 835 Files (*.835)|*.835|XML Files (*.X12)|*.X12|ALL Files (*.*)|*.*";
         openFileDialog.FilterIndex = 1;
         openFileDialog.Tag = (string)"MEDICARE";
         openFileDialog.InitialDirectory = Program.AppEnvironment.ApplicationParameters.RemitProcessingDirectory;
@@ -811,7 +811,8 @@ public partial class Posting835 : Form
                 // wdk 20160526 we are now purging the files before we get here for invalid files so don't ask again
                 try
                 {
-                    File.Move(strFileName, $"{_diInvalid}\\{strFileName[strFileName.LastIndexOf('\\')..]}");
+                    if(File.Exists(strFileName))
+                        File.Move(strFileName, $"{_diInvalid}\\{strFileName[strFileName.LastIndexOf('\\')..]}");
                 }
                 catch (IOException)
                 {
@@ -1308,8 +1309,7 @@ public partial class Posting835 : Form
         string[] strST = strGS.Split(new string[] { "ST*835" }, StringSplitOptions.RemoveEmptyEntries);// zero element has ST, TRN, BPR, DTM*405 elements we are looking for
         string[] strGSHeaderElements = strST[0].Split(new char[] { '*' });
         // Eft Date
-        DateTime dtEftDate;
-        Utilities.Time.StringToHL7Time(strGSHeaderElements[3], out dtEftDate);
+        Utilities.Time.StringToHL7Time(strGSHeaderElements[3], out DateTime dtEftDate);
         fileDateTextBox.Text = string.Format("EFT Date: {0}", dtEftDate.ToString("d"));
         fileDateTextBox.Tag = dtEftDate.ToString("d");
         // File Number
@@ -1625,15 +1625,24 @@ public partial class Posting835 : Form
             if (strCLPElement[0].ToString().ToUpper() == "L" || strCLPElement[0].ToString().ToUpper() == "C" || strCLPElement[0].ToString().ToUpper() == "D")
             {
                 string accountNo = strCLPElements[0].Replace("A", "");
-                var account = _accountService.GetAccount(accountNo);
-
-                if (account != null)
+                try
                 {
-                    ParseSVC(strCLPElement);
-                    m_strarrEOBInsert.SetValue("", (int)Col835EOB.ePatStat); // 06/03/2008 not used so set blank
-                    _dsRecords.Tables[dgvEOB.Name].Rows.Add(m_strarrEOBInsert);
-                    AddTotalsToArray(m_strarrEOBInsert);
-                    bRetVal = true;
+
+                    var account = _accountService.GetAccount(accountNo, false, false);
+
+                    if (account != null)
+                    {
+                        ParseSVC(strCLPElement);
+                        m_strarrEOBInsert.SetValue("", (int)Col835EOB.ePatStat); // 06/03/2008 not used so set blank
+                        _dsRecords.Tables[dgvEOB.Name].Rows.Add(m_strarrEOBInsert);
+                        AddTotalsToArray(m_strarrEOBInsert);
+                        bRetVal = true;
+                    }
+                }
+                catch(Exception ex)
+                {
+                    _eRR.m_Logfile.WriteLogFile(ex.Message + "\n" + ex.StackTrace);
+                    continue;
                 }
             }
             else
@@ -3318,16 +3327,16 @@ public partial class Posting835 : Form
     {
         string strFileName = fileNameTextBox.Tag.ToString();
         string strMoveFile = $@"{_diSaved}{strFileName.Substring(strFileName.LastIndexOf('\\'))}";
-        string strMoveName = $@"{_diSaved}\Saved_DUP\{strFileName.Substring(strFileName.LastIndexOf('\\'))}";
+        string strMoveDup = $@"{_diSaved}\Saved_DUP\{strFileName.Substring(strFileName.LastIndexOf('\\'))}";
         try
         {
             if (File.Exists(string.Format(@"{0}", strMoveFile)))
             {
 
-                File.Move(fileNameTextBox.Tag.ToString(), $@"{_diSaved}\Saved_DUP\{strFileName.Substring(strFileName.LastIndexOf('\\'))}");
+                File.Move(fileNameTextBox.Tag.ToString(), strMoveDup);
                 return;
             }
-            File.Move(fileNameTextBox.Tag.ToString(), $@"{_diSaved}\{strFileName.Substring(strFileName.LastIndexOf('\\'))}");
+            File.Move(fileNameTextBox.Tag.ToString(), strMoveFile);
         }
         catch (IOException ioe)
         {
