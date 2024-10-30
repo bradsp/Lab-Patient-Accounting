@@ -72,6 +72,8 @@ public class DictionaryService
     {
         using UnitOfWorkMain uow = new(_appEnvironment, true);
         //update all fee schedules as well
+        uow.CdmDetailRepository.Delete(cdm.ChargeId);
+
         cdm.CdmDetails.ForEach(cd => uow.CdmDetailRepository.Save(cd));
 
         var retval = uow.CdmRepository.Update(cdm);

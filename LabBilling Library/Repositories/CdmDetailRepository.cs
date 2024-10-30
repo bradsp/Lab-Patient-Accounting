@@ -28,7 +28,7 @@ public sealed class CdmDetailRepository : RepositoryBase<CdmDetail>
     public List<CdmDetail> GetByCdm(string cdm, string feeSched)
     {
         Log.Instance.Trace("Entering");
-        List<CdmDetail> cdmDetails = new List<CdmDetail>();
+        List<CdmDetail> cdmDetails;
 
         cdmDetails = Context.Fetch<CdmDetail>($"where {GetRealColumn(nameof(CdmDetail.ChargeItemId))} = @0 and {GetRealColumn(nameof(CdmDetail.FeeSchedule))} = @1",
             new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = cdm },
@@ -40,7 +40,7 @@ public sealed class CdmDetailRepository : RepositoryBase<CdmDetail>
     public List<CdmDetail> GetByCpt(string cpt)
     {
         Log.Instance.Trace("Entering");
-        List<CdmDetail> cdmDetails = new List<CdmDetail>();
+        List<CdmDetail> cdmDetails;
 
         cdmDetails = Context.Fetch<CdmDetail>($"where {GetRealColumn(nameof(CdmDetail.Cpt4))} = @0",
             new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = cpt });
@@ -63,6 +63,21 @@ public sealed class CdmDetailRepository : RepositoryBase<CdmDetail>
     public override CdmDetail Add(CdmDetail table)
     {
         return base.Add(table);
+    }
+
+    public int Delete(string cdm)
+    {
+        try
+        {
+            var result = Context.Delete<CdmDetail>($"where {GetRealColumn(nameof(CdmDetail.ChargeItemId))} = @0",
+                new SqlParameter() { SqlDbType = SqlDbType.VarChar, Value = cdm });
+
+            return result;
+        }
+        catch (Exception ex)
+        {
+            return -1;
+        }
     }
 
     public override CdmDetail Save(CdmDetail table)
