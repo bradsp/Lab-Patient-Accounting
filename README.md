@@ -54,7 +54,7 @@ Lab Patient Accounting is a medical patient accounting and billing application c
 
 ### Installation
 
-
+See the [Installation](https://github.com/bradsp/Lab-Patient-Accounting/wiki/Installation) wiki page.
 
 
 ## Usage
