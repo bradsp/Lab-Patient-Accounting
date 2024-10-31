@@ -9,6 +9,7 @@ using NLog;
 using NLog.Config;
 using NLog.Targets;
 using Opulos.Core.UI;
+using System.Diagnostics;
 using Utilities;
 using Application = System.Windows.Forms.Application;
 using Button = System.Windows.Forms.Button;
@@ -910,7 +911,7 @@ public partial class MainForm : Form
         }
         if (!string.IsNullOrWhiteSpace(topicPath))
             url += "/" + topicPath;
-        System.Diagnostics.Process.Start(url);
+        Process.Start(new ProcessStartInfo { FileName = url, UseShellExecute = true });
     }
 
     private void MainForm_KeyDown(object sender, KeyEventArgs e)
