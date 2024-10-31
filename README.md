@@ -16,7 +16,6 @@ Lab Patient Accounting is a medical patient accounting and billing application c
 * X12 837 5010 for electronic claims
 * 
 
-
 ### Built With
 
 * Visual Studio 2022
@@ -51,7 +50,7 @@ Lab Patient Accounting is a medical patient accounting and billing application c
 
 * Microsoft SQL Server 2014 or greater
 * Microsoft Windows PC for client application
-* 
+* Windows Server (for interface service)
 
 ### Installation
 
@@ -62,7 +61,11 @@ Lab Patient Accounting is a medical patient accounting and billing application c
 
 
 ## Roadmap
-
+* Docker Support
+* .Net Blazor UI
+* Reporting with something other than SQL Reporting Services
+* Multiple database support (Postgres, MSSql)
+* Platform Agnostic (Windows & Linux)
 
 ## Contributing
 
@@ -88,7 +91,7 @@ Distributed under the GNU Affero General Public License v3.0. See `LICENSE` for 
 <!-- CONTACT -->
 ## Contact
 
-Bradley Powers - [@bradleyspowers](https://twitter.com/bradleyspowers) - [LinkedIn](https://www.linkedin.com/in/bradley-powers/) - bradspowers@outlook.com
+Bradley Powers - [@bradleyspowers](https://twitter.com/bradleyspowers) - [LinkedIn](https://www.linkedin.com/in/bradley-powers/) - [Github](https://github.com/bradsp) - bradspowers@outlook.com
 
 Project Link: [https://github.com/bradsp/Lab-Patient-Accounting](https://github.com/bradsp/Lab-Patient-Accounting)
 
