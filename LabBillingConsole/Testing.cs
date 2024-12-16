@@ -127,11 +127,27 @@ public sealed class Testing : MenuBase
 
     public void RemittanceTest()
     {
-        string file = @"\\wthmclbill\shared\Billing\TEST\Posting835Remit\MCL_NC_MCR_1093705428_835_11119267.RMT";
+        string file = @"\\wthmclbill\shared\Billing\LIVE\claims\835\MCL_MCR_10937.IMTN1.283257.20241126.092201844.ERA.835";
 
-        Remittance835Service remittance835 = new Remittance835Service(_appEnvironment);
+        Remittance835Service remittance835 = new(_appEnvironment);
 
-        remittance835.Load835(file);
+        var result = remittance835.Load835(file);
+
+        if (result == null)
+        {
+            Console.WriteLine("Error loading 835 file");
+            return;
+        }
+
+        Console.WriteLine($"Loaded 835 file.\nPress any key to continue...");
+        Console.ReadKey();
+
+        //write RemittanceData to JSON file
+        string jsonFile = @"c:\temp\remittance.json";
+        string json = Newtonsoft.Json.JsonConvert.SerializeObject(result, Newtonsoft.Json.Formatting.Indented);
+        File.WriteAllText(jsonFile, json);
+        Console.WriteLine("Remittance data written to JSON file.\nPress any key to exit...");
+        Console.ReadKey();
 
     }
 

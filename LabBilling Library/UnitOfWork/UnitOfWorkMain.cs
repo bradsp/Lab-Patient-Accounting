@@ -58,6 +58,10 @@ public class UnitOfWorkMain : IUnitOfWork
     public PatientStatementRepository PatientStatementRepository { get; private set; }
     public PatRepository PatRepository { get; private set; }
     public PhyRepository PhyRepository { get; private set; }
+    public RemittanceRepository RemittanceRepository { get; private set; }
+    public RemittanceClaimRepository RemittanceClaimRepository { get; private set; }
+    public RemittanceClaimDetailRepository RemittanceClaimDetailRepository { get; private set; }
+    public RemittanceClaimAdjustmentRepository RemittanceClaimAdjustmentRepository { get; private set; }
     public ReportingRepository ReportingRepository { get; private set; }
     public RevenueCodeRepository RevenueCodeRepository { get; private set; }
     public SanctionedProviderRepository SanctionedProviderRepository { get; private set; }
@@ -123,6 +127,10 @@ public class UnitOfWorkMain : IUnitOfWork
         PatientStatementRepository = new(appEnvironment, Context);
         PatRepository = new(appEnvironment, Context);
         PhyRepository = new(appEnvironment, Context);
+        RemittanceRepository = new(appEnvironment, Context);
+        RemittanceClaimRepository = new(appEnvironment, Context);
+        RemittanceClaimDetailRepository = new(appEnvironment, Context);
+        RemittanceClaimAdjustmentRepository = new(appEnvironment, Context);
         RevenueCodeRepository = new(appEnvironment, Context);
         SanctionedProviderRepository = new(appEnvironment, Context);
         SystemParametersRepository = new(appEnvironment, Context);
@@ -186,8 +194,5 @@ public class UnitOfWorkMain : IUnitOfWork
         if (doThrowTransactionException)
             throw new DataException("Transaction was aborted");
     }
-
-
-
 
 }
