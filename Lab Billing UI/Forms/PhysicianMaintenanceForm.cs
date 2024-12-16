@@ -18,8 +18,8 @@ public partial class PhysicianMaintenanceForm : Form
     }
 
     private List<Phy> physicians = new();
-    private readonly BindingList<Phy> bindingList = new BindingList<Phy>();
-    private readonly BindingSource bindingSource = new BindingSource();
+    private readonly BindingList<Phy> bindingList = new();
+    private readonly BindingSource bindingSource = new();
 
     private readonly DictionaryService dictionaryService = new(Program.AppEnvironment);
 
@@ -104,7 +104,7 @@ public partial class PhysicianMaintenanceForm : Form
 
     private void PhysicianDGV_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
     {
-        PhysicianMaintenanceEditForm editForm = new PhysicianMaintenanceEditForm();
+        PhysicianMaintenanceEditForm editForm = new();
         var phy = dictionaryService.GetProvider(PhysicianDGV.Rows[e.RowIndex].Cells[nameof(Phy.NpiId)].Value.ToString());
 
         editForm.PhyModel = phy;

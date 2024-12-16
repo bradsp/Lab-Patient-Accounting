@@ -20,7 +20,8 @@ public class RemittanceClaimDetail : IBaseEntity
     public string UpdatedUser { get; set; }
     public string UpdatedApp { get; set; }
     public string UpdatedHost { get; set; }
-    public List<ClaimAdjustment> Adjustments { get; set; } = new List<ClaimAdjustment>();
+    [Ignore]
+    public List<RemittanceClaimAdjustment> Adjustments { get; set; } = new List<RemittanceClaimAdjustment>();
     [Ignore]
     public Guid rowguid { get; set; }
 }

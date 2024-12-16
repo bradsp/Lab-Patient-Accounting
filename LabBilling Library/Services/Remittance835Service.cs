@@ -6,6 +6,7 @@ using System.IO;
 using LabBilling.Core.Models;
 using LabBilling.Core.Repositories;
 using LabBilling.Core.UnitOfWork;
+using System.Linq;
 
 namespace LabBilling.Core.Services;
 
@@ -55,16 +56,29 @@ public sealed class Remittance835Service
     public Remittance835Service(IAppEnvironment appEnvironment)
     {
         _appEnvironment = appEnvironment;
-
-
     }
 
     public RemittanceData Load835(string fileName)
     {
         EdiDocument ediDocument;
+        string logfile = "c:\\temp\\edi.log";
+
         try
         {
-            ediDocument = EdiDocument.Load(fileName);
+            // Determine the delimiter by reading the first line of the file
+            string firstLine = File.ReadLines(fileName).First();
+            char delimiter = firstLine.Contains('|') ? '|' : '*';
+            // Configure EdiOptions with the appropriate delimiter
+            EdiOptions options = new()
+            {
+                SegmentTerminator = '~',
+                ElementSeparator = delimiter,
+                ComponentSeparator = ':',
+                RepetitionSeparator = '^',
+            };
+
+            ediDocument = EdiDocument.Load(fileName, options);
+            File.WriteAllText(logfile, $"Loaded EDI document {fileName}\n");
         }
         catch (Exception ex)
         {
@@ -86,24 +100,39 @@ public sealed class Remittance835Service
         {
             try
             {
+                File.AppendAllText(logfile, $"{segment}\n");
                 switch (segment.Id)
                 {
+                    case "ISA":
+                        File.AppendAllText(logfile, $"Processing ISA segment\n");
+                        remittance.InterchangeControlNumber = segment[13];                       
+                        break;
+                    case "GS":
+                        File.AppendAllText(logfile, $"Processing GS segment\n");
+                        remittance.GroupControlNumber = segment[6];
+                        break;
                     case "ST":
+                        File.AppendAllText(logfile, $"Starting new transaction {segment[1]}\n");
+                        remittance.TransactionSetControlNumber = segment[2];
                         break;
                     case "BPR":
+                        File.AppendAllText(logfile, $"Processed BPR segment\n");
                         remittance.TransactionHandlingCode = segment[1];
                         remittance.TotalPremiumPaymentAmount = segment[2];
                         remittance.CreditorDebitFlagCode = segment[3];
+                        remittance.PaymentDate = DateTime.ParseExact(segment[16], "yyyyMMdd", null);
                         break;
                     case "N1":
                         if (segment[1] == "PR")
                         {
+                            File.AppendAllText(logfile, $"Processing PR segment\n");
                             currentLoop = "1000A";
                             currN1type = segment[1];
                             remittance.PayerName = segment[2];
                         }
                         if (segment[1] == "PE")
                         {
+                            File.AppendAllText(logfile, $"Processing PE segment\n");
                             currentLoop = "1000B";
                             currN1type = segment[1];
                             remittance.PayeeName = segment[2];
@@ -113,23 +142,27 @@ public sealed class Remittance835Service
                     case "N3":
                         if (currN1type == "PR")
                         {
+                            File.AppendAllText(logfile, $"Processing PR segment\n");
                             remittance.PayerAddress = segment[1];
                             remittance.PayerAddress2 = segment[2];
                         }
                         if (currN1type == "PE")
                         {
+                            File.AppendAllText(logfile, $"Processing PE segment\n");
                             remittance.PayeeAddress = segment[1];
                         }
                         break;
                     case "N4":
                         if (currN1type == "PR")
                         {
+                            File.AppendAllText(logfile, $"Processing PR segment\n");
                             remittance.PayerCity = segment[1];
                             remittance.PayerState = segment[2];
                             remittance.PayerZip = segment[3];
                         }
                         if (currN1type == "PE")
                         {
+                            File.AppendAllText(logfile, $"Processing PE segment\n");
                             remittance.PayeeCity = segment[1];
                             remittance.PayeeState = segment[2];
                             remittance.PayeeZip = segment[3];
@@ -140,17 +173,23 @@ public sealed class Remittance835Service
                         if (loop2000 != null)
                             remittance.Loop2000s.Add(loop2000);
                         loop2000 = new Loop2000();
+                        File.AppendAllText(logfile, $"Processing LX segment loop2000\n");
                         break;
                     case "TS3":
                         loop2000.TotalClaimCount = segment[4];
                         loop2000.TotalClaimChargeAmount = segment[5];
                         loop2000.TotalHCPCSReportedChargeAmount = segment[17];
                         loop2000.TotalHCPCSPayableAmount = segment[18];
+                        File.AppendAllText(logfile, $"Processing TS3 segment\n");
                         break;
                     case "CLP":
+                        File.AppendAllText(logfile, $"Processing CLP segment loop2100\n");
+                        File.AppendAllText(logfile, $"AccountNo: {segment[1]}\n");
+
                         if (loop2100 != null)
                         {
                             loop2000.Loop2100s.Add(loop2100);
+                            File.AppendAllText(logfile, $"Adding loop2100 to loop2000\n");
                         }
 
                         loop2100 = new Loop2100();
@@ -176,6 +215,7 @@ public sealed class Remittance835Service
                             {
                                 loop2100.AllowedAmount = segment[2];
                             }
+                            File.AppendAllText(logfile, currentLoop + " " + segment[1] + " " + segment[2] + "\n");
                         }
                         else if (currentLoop == "2110")
                         {
@@ -187,6 +227,7 @@ public sealed class Remittance835Service
                             {
                                 loop2110.AllowedAmount = segment[2];
                             }
+                            File.AppendAllText(logfile, currentLoop + " " + segment[1] + " " + segment[2] + "\n");
                         }
                         break;
                     case "SVC":
@@ -201,6 +242,7 @@ public sealed class Remittance835Service
                             MonetaryAmount = segment[3],
                             RevenueCode = segment[4]
                         };
+                        File.AppendAllText(logfile, $"Processing SVC segment loop2110\n");
                         break;
                     case "CAS":
                         loop2110Adj = new Loop2110Adj
@@ -262,13 +304,16 @@ public sealed class Remittance835Service
                             };
                             loop2110.Adjustments.Add(loop2110Adj);
                         }
+                        File.AppendAllText(logfile, $"Processing CAS segment loop2110\n");
                         break;
                     case "SE":
                         remittance.Loop2000s.Add(loop2000);
+                        File.AppendAllText(logfile, $"Processing SE segment\n");
                         break;
                     default:
                         // Handle unknown segment
                         _errors.Add($"Unknown segment ID: {segment.Id}");
+                        File.AppendAllText(logfile, $"Unknown segment ID: {segment.Id}\n");
                         break;
                 }
             }
@@ -278,15 +323,26 @@ public sealed class Remittance835Service
                 _errors.Add($"Error processing segment {segment.Id}: {ex.Message}");
             }
         }
-        StoreRemittanceData(remittance);
+
+        // Add the last loop2100 to loop2000 and the last loop2000 to remittance
+        if (loop2100 != null)
+        {
+            loop2000.Loop2100s.Add(loop2100);
+        }
+        if (loop2000 != null)
+        {
+            remittance.Loop2000s.Add(loop2000);
+        }
+
+        StoreRemittanceData(remittance, fileName);
         return remittance;
     }
 
-    public void StoreRemittanceData(RemittanceData remittanceData)
+    public void StoreRemittanceData(RemittanceData remittanceData, string fileName)
     {
         var remittanceFile = new RemittanceFile
         {
-            FileName = "exampleFileName", // Set appropriate file name
+            FileName = fileName, // Set appropriate file name
             ProcessedDate = DateTime.Now,
             Claims = new List<RemittanceClaim>()
         };
@@ -299,15 +355,15 @@ public sealed class Remittance835Service
                 {
                     AccountNo = loop2100.AccountNo,
                     ClaimStatusCode = loop2100.ClaimStatusCode,
-                    ClaimChargeAmount = decimal.Parse(loop2100.ClaimChargeAmount),
-                    ClaimPaymentAmount = decimal.Parse(loop2100.ClaimPaymentAmount),
-                    PatientResponsibilityAmount = decimal.Parse(loop2100.PatientResponsibilityAmount),
+                    ClaimChargeAmount = decimal.Parse(loop2100.ClaimChargeAmount ?? "0"),
+                    ClaimPaymentAmount = decimal.Parse(loop2100.ClaimPaymentAmount ?? "0"),
+                    PatientResponsibilityAmount = decimal.Parse(loop2100.PatientResponsibilityAmount ?? "0"),
                     ClaimFilingIndicatorCode = loop2100.ClaimFilingIndicatorCode,
                     PayerClaimControlNumber = loop2100.PayerClaimControlNumber,
                     FacilityTypeCode = loop2100.FacilityTypeCode,
                     ClaimFrequencyCode = loop2100.ClaimFrequencyCode,
-                    PaidAmount = decimal.Parse(loop2100.PaidAmount),
-                    AllowedAmount = decimal.Parse(loop2100.AllowedAmount),
+                    PaidAmount = decimal.Parse(loop2100.PaidAmount ?? "0"),
+                    AllowedAmount = decimal.Parse(loop2100.AllowedAmount ?? "0"),
                     ClaimDetails = new List<RemittanceClaimDetail>()
                 };
 
@@ -316,22 +372,22 @@ public sealed class Remittance835Service
                     var remittanceClaimDetail = new RemittanceClaimDetail
                     {
                         ProcedureCode = loop2110.ProcedureCode,
-                        LineItemChargeAmount = decimal.Parse(loop2110.LineItemChargeAmount),
-                        MonetaryAmount = decimal.Parse(loop2110.MonetaryAmount),
+                        LineItemChargeAmount = decimal.Parse(loop2110.LineItemChargeAmount ?? "0"),
+                        MonetaryAmount = decimal.Parse(loop2110.MonetaryAmount ?? "0"),
                         RevenueCode = loop2110.RevenueCode,
-                        PaidAmount = decimal.Parse(loop2110.PaidAmount),
-                        AllowedAmount = decimal.Parse(loop2110.AllowedAmount),
-                        Adjustments = new List<ClaimAdjustment>()
+                        PaidAmount = decimal.Parse(loop2110.PaidAmount ?? "0"),
+                        AllowedAmount = decimal.Parse(loop2110.AllowedAmount ?? "0"),
+                        Adjustments = new List<RemittanceClaimAdjustment>()
                     };
 
                     foreach (var adjustment in loop2110.Adjustments)
                     {
-                        var claimAdjustment = new ClaimAdjustment
+                        var claimAdjustment = new RemittanceClaimAdjustment
                         {
                             ClaimAdjustmentGroupCode = adjustment.ClaimAdjustmentGroupCode,
                             AdjustmentReasonCode = adjustment.AdjustmentReasonCode,
-                            AdjustmentAmount = decimal.Parse(adjustment.AdjustmentAmount),
-                            AdjustmentQuantity = int.Parse(adjustment.AdjustmentQuantity)
+                            AdjustmentAmount = decimal.Parse(adjustment.AdjustmentAmount ?? "0"),
+                            AdjustmentQuantity = int.Parse(adjustment.AdjustmentQuantity ?? "0")
                         };
 
                         remittanceClaimDetail.Adjustments.Add(claimAdjustment);
@@ -345,20 +401,52 @@ public sealed class Remittance835Service
         }
 
         //Save the remittance file and related data
-        using UnitOfWorkMain uow = new(_appEnvironment, true);
-        uow.RemittanceRepository.Save(remittanceFile);
+        using UnitOfWorkMain uow = new(_appEnvironment);
+
+        var remit = uow.RemittanceRepository.Add(remittanceFile);
+
         foreach (var claim in remittanceFile.Claims)
         {
-            uow.RemittanceClaimRepository.Save(claim);
+            claim.RemittanceId = remit.RemittanceId;
+            var newclaim = uow.RemittanceClaimRepository.Add(claim);
             foreach (var detail in claim.ClaimDetails)
             {
-                uow.RemittanceClaimDetailRepository.Save(detail);
+                detail.RemittanceClaimId = newclaim.ClaimId;
+                var newdetail = uow.RemittanceClaimDetailRepository.Add(detail);
                 foreach (var adjustment in detail.Adjustments)
                 {
-                    uow.RemittanceClaimAdjustmentRepository.Save(adjustment);
+                    adjustment.RemittanceClaimDetailId = newdetail.Id;
+                    uow.RemittanceClaimAdjustmentRepository.Add(adjustment);
                 }
             }
         }
         uow.Commit();
+    }
+
+    public List<RemittanceFile> GetAllRemittances()
+    {
+        using UnitOfWorkMain uow = new(_appEnvironment);
+        return uow.RemittanceRepository.GetAll().ToList();
+    }
+
+    public RemittanceFile GetRemittance(int remittanceId)
+    {
+        using UnitOfWorkMain uow = new(_appEnvironment);
+        var remit = uow.RemittanceRepository.GetByKey(remittanceId);
+        if (remit == null)
+            return null;
+
+        remit.Claims = uow.RemittanceClaimRepository.GetByRemitId(remittanceId).ToList();
+
+        foreach (var claim in remit.Claims)
+        {
+            claim.ClaimDetails = uow.RemittanceClaimDetailRepository.GetByClaimId(claim.ClaimId).ToList();
+            foreach (var detail in claim.ClaimDetails)
+            {
+                detail.Adjustments = uow.RemittanceClaimAdjustmentRepository.GetByClaimDetailId(detail.Id).ToList();
+            }
+        }
+
+        return remit;
     }
 }

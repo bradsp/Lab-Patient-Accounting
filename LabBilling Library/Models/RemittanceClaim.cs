@@ -5,11 +5,11 @@ using PetaPoco;
 namespace LabBilling.Core.Models;
 
 [TableName("remittance_claim")]
-[PrimaryKey("Id", AutoIncrement = true)]
+[PrimaryKey("ClaimId", AutoIncrement = true)]
 public class RemittanceClaim : IBaseEntity
 {
-    public int Id { get; set; }
-    public int RemittanceFileId { get; set; }
+    public int RemittanceId { get; set; }
+    public int ClaimId { get; set; }
     public string AccountNo { get; set; }
     public string ClaimStatusCode { get; set; }
     public decimal ClaimChargeAmount { get; set; }
@@ -25,6 +25,7 @@ public class RemittanceClaim : IBaseEntity
     public string UpdatedUser { get; set; }
     public string UpdatedApp { get; set; }
     public string UpdatedHost { get; set; }
+    [Ignore]
     public List<RemittanceClaimDetail> ClaimDetails { get; set; } = new List<RemittanceClaimDetail>();
 
     [Ignore]

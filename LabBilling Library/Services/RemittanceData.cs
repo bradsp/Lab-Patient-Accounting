@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace LabBilling.Core.Services;
 
@@ -23,4 +24,9 @@ public class RemittanceData
     public string PayeeZip { get; set; }
     public string PaidAmount { get; set; }
     public string AllowedAmount { get; set; }
+    public string InterchangeControlNumber { get; set; }
+    public string GroupControlNumber { get; set; }
+    public string TransactionSetControlNumber { get; set; }
+    public DateTime? PaymentDate { get; set; }
+
 }

@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using LabBilling.Core.DataAccess;
 using LabBilling.Core.Models;
 using PetaPoco;
+using NLog;
+using LabBilling.Logging;
 
 namespace LabBilling.Core.Repositories;
 
@@ -23,6 +25,17 @@ public sealed class RemittanceClaimRepository : RepositoryBase<RemittanceClaim>
     {
     }
 
+    public List<RemittanceClaim> GetByRemitId(int remitId)
+    {
+        Log.Instance.Trace("Entering");
+        PetaPoco.Sql sql = PetaPoco.Sql.Builder
+            .Where($"{GetRealColumn(nameof(RemittanceClaim.RemittanceId))} = @0", remitId);
+        var queryResult = Context.Fetch<RemittanceClaim>(sql);
+        Log.Instance.Debug(Context.LastSQL);
+        Log.Instance.Debug(Context.LastArgs);
+        return queryResult;
+    }
+
 }
 
 public sealed class RemittanceClaimDetailRepository : RepositoryBase<RemittanceClaimDetail>
@@ -30,11 +43,33 @@ public sealed class RemittanceClaimDetailRepository : RepositoryBase<RemittanceC
     public RemittanceClaimDetailRepository(IAppEnvironment environment, IDatabase context) : base(environment, context)
     {
     }
+
+    public List<RemittanceClaimDetail> GetByClaimId(int claimId)
+    {
+        Log.Instance.Trace("Entering");
+        PetaPoco.Sql sql = PetaPoco.Sql.Builder
+            .Where($"{GetRealColumn(nameof(RemittanceClaimDetail.RemittanceClaimId))} = @0", claimId);
+        var queryResult = Context.Fetch<RemittanceClaimDetail>(sql);
+        Log.Instance.Debug(Context.LastSQL);
+        Log.Instance.Debug(Context.LastArgs);
+        return queryResult;
+    }
 }
 
-public sealed class RemittanceClaimAdjustmentRepository : RepositoryBase<ClaimAdjustment>
+public sealed class RemittanceClaimAdjustmentRepository : RepositoryBase<RemittanceClaimAdjustment>
 {
     public RemittanceClaimAdjustmentRepository(IAppEnvironment environment, IDatabase context) : base(environment, context)
     {
+    }
+
+    public List<RemittanceClaimAdjustment> GetByClaimDetailId(int claimDetailId)
+    {
+        Log.Instance.Trace("Entering");
+        PetaPoco.Sql sql = PetaPoco.Sql.Builder
+            .Where($"{GetRealColumn(nameof(RemittanceClaimAdjustment.RemittanceClaimDetailId))} = @0", claimDetailId);
+        var queryResult = Context.Fetch<RemittanceClaimAdjustment>(sql);
+        Log.Instance.Debug(Context.LastSQL);
+        Log.Instance.Debug(Context.LastArgs);
+        return queryResult;
     }
 }

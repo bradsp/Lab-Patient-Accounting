@@ -822,13 +822,10 @@ public partial class MainForm : Form
 
     private void remittancePostingToolStripMenuItem_Click(object sender, EventArgs e)
     {
-        return;
 
-        //Remittance835Service remittance835 = new Remittance835Service(Program.AppEnvironment);
-        //string file = @"\\wthmclbill\shared\Billing\TEST\Posting835Remit\MCL_NC_MCR_1093705428_835_11119267.RMT";
-
-        //remittance835.Load835(file);
-
+        PostRemittanceForm frm = new();
+        //frm.AccountLaunched += OnAccountLaunched;
+        NewForm(frm);
     }
 
     private void chargeMasterToolStripMenuItem1_Click(object sender, EventArgs e)

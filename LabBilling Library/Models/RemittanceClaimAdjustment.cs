@@ -5,7 +5,7 @@ namespace LabBilling.Core.Models;
 
 [TableName("remittance_claim_adjustment")]
 [PrimaryKey("Id", AutoIncrement = true)]
-public class ClaimAdjustment : IBaseEntity
+public class RemittanceClaimAdjustment : IBaseEntity
 {
     public int Id { get; set; }
     public int RemittanceClaimDetailId { get; set; }
