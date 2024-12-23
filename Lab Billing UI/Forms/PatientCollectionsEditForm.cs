@@ -89,8 +89,23 @@ public partial class PatientCollectionsEditForm : Form
         badDebt.AccountNo = AccountNo.Text;
         badDebt.PatientName = PatientName.Text;
         badDebt.Misc = Misc.Text;
-        badDebt.ServiceDate = Convert.ToDateTime(ServiceDate.Text);
-        badDebt.PaymentDate = Convert.ToDateTime(PaymentDate.Text);
+
+        if(!DateTime.TryParse(ServiceDate.Text, out DateTime serviceDate))
+        {
+            badDebt.ServiceDate = null;
+        }
+        else
+        {
+            badDebt.ServiceDate = serviceDate;
+        }
+        if(!DateTime.TryParse(PaymentDate.Text, out DateTime paymentDate))
+        {
+            badDebt.PaymentDate = null;
+        }
+        else
+        {
+            badDebt.PaymentDate = paymentDate;
+        }
         badDebt.Balance = Convert.ToDouble(Balance.Text);
     }
 
