@@ -96,7 +96,7 @@ public sealed class Remittance835Service
         string currentLoop = null;
         string currN1type = null;
 
-        foreach (var segment in _ediDocument.Segments)
+        foreach (var segment in ediDocument.Segments)
         {
             try
             {

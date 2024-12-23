@@ -28,6 +28,8 @@ public class RemittanceClaim : IBaseEntity
     [Ignore]
     public List<RemittanceClaimDetail> ClaimDetails { get; set; } = new List<RemittanceClaimDetail>();
 
+
+
     [Ignore]
     public Guid rowguid { get; set; }
 }

@@ -29,6 +29,7 @@ partial class PostRemittanceForm
     private void InitializeComponent()
     {
         remittancesDataGridView = new DataGridView();
+        tableLayoutPanel1 = new TableLayoutPanel();
         ((System.ComponentModel.ISupportInitialize)remittancesDataGridView).BeginInit();
         SuspendLayout();
         // 
@@ -45,11 +46,27 @@ partial class PostRemittanceForm
         remittancesDataGridView.TabIndex = 0;
         remittancesDataGridView.SelectionChanged += remittancesDataGridView_SelectionChanged;
         // 
+        // tableLayoutPanel1
+        // 
+        tableLayoutPanel1.ColumnCount = 4;
+        tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
+        tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
+        tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
+        tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
+        tableLayoutPanel1.Location = new Point(12, 181);
+        tableLayoutPanel1.Name = "tableLayoutPanel1";
+        tableLayoutPanel1.RowCount = 2;
+        tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 48.1481476F));
+        tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 51.8518524F));
+        tableLayoutPanel1.Size = new Size(646, 54);
+        tableLayoutPanel1.TabIndex = 1;
+        // 
         // PostRemittanceForm
         // 
         AutoScaleDimensions = new SizeF(7F, 15F);
         AutoScaleMode = AutoScaleMode.Font;
         ClientSize = new Size(1336, 566);
+        Controls.Add(tableLayoutPanel1);
         Controls.Add(remittancesDataGridView);
         Name = "PostRemittanceForm";
         Text = "PostRemittanceForm";
@@ -61,4 +78,5 @@ partial class PostRemittanceForm
     #endregion
 
     private DataGridView remittancesDataGridView;
+    private TableLayoutPanel tableLayoutPanel1;
 }
