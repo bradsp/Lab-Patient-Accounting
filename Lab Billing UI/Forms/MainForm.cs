@@ -542,10 +542,11 @@ public partial class MainForm : Form
     {
         //during testing only - remove once batch charge entry is in production
         batchChargeEntryToolStripMenuItem.Visible = Program.LoggedInUser.IsAdministrator;
+        posting835RemitToolStripMenuItem.Visible = Program.LoggedInUser.IsAdministrator;
 
         batchRemittanceToolStripMenuItem.Visible = Program.LoggedInUser.CanAddPayments;
         badDebtMaintenanceToolStripMenuItem.Visible = Program.LoggedInUser.CanModifyBadDebt;
-        posting835RemitToolStripMenuItem.Visible = Program.LoggedInUser.CanAddPayments;
+        remittancePostingToolStripMenuItem.Visible = Program.LoggedInUser.CanAddPayments;
         accountChargeEntryToolStripMenuItem.Visible = Program.LoggedInUser.CanSubmitCharges;
 
         //administrator only menu items
@@ -557,6 +558,7 @@ public partial class MainForm : Form
             clientBillsNewToolStripMenuItem.Visible = false;
             batchChargeEntryToolStripMenuItem.Visible = false;
             accountChargeEntryToolStripMenuItem.Visible = false;
+            remittancePostingToolStripMenuItem.Visible = false;
         }
 
     }

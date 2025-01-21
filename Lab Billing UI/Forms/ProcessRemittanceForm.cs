@@ -1,15 +1,7 @@
 ﻿using LabBilling.Core.Models;
 using LabBilling.Core.Services;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using WinFormsLibrary;
 
 namespace LabBilling.Forms;
@@ -85,6 +77,8 @@ public partial class ProcessRemittanceForm : Form
 
     private void ProcessRemittanceForm_Load(object sender, EventArgs e)
     {
+        importRemittancesToolStripMenuItem_Click(sender, e);
+
         remittanceBindingList.Clear();
         remittancesDataGridView.DataSource = null;
 

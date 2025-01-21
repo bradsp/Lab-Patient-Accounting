@@ -1,18 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿using LabBilling.Core.Models;
 using LabBilling.Core.Services;
-using LabBilling.Core.Models;
-using WinFormsLibrary;
-using Newtonsoft.Json;
-using Org.BouncyCastle.Asn1.BC;
 using LabBilling.Logging;
+using Newtonsoft.Json;
+using WinFormsLibrary;
 
 namespace LabBilling.Forms;
 public partial class PostRemittanceForm : Form
@@ -85,7 +75,7 @@ public partial class PostRemittanceForm : Form
             remittanceInfoWebBrowser.DocumentText = remittanceService.ConvertRemittanceHeaderToHtml(remittanceData);
             remittanceInfoRichTextBox.Rtf = remittanceService.ConvertRemittanceHeaderToRtf(remittanceData);
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             Log.Instance.Error(ex, "Error loading remittance data.");
             MessageBox.Show("Error loading remittance data.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
