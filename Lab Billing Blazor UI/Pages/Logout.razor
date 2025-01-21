@@ -1,0 +1,13 @@
+﻿@page "/logout"
+@inject NavigationManager Navigation
+@inject CustomAuthenticationStateProvider AuthenticationStateProvider
+
+@code {
+    protected override void OnInitialized()
+    {
+        AuthenticationStateProvider.MarkUserAsLoggedOut();
+        Navigation.NavigateTo("/");
+    }
+}
+
+

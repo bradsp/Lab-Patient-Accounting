@@ -12,7 +12,4 @@ namespace LabBilling.Core.Services
         public List<Loop2100> Loop2100s { get; set; } = new List<Loop2100>();
     }
 
-
-
-
 }

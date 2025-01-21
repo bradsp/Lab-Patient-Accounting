@@ -7,6 +7,12 @@ using LabBilling.Core.Models;
 using LabBilling.Core.Repositories;
 using LabBilling.Core.UnitOfWork;
 using System.Linq;
+using System.Threading.Tasks;
+using LabBilling.Logging;
+using System.Text;
+using Newtonsoft.Json;
+using NPOI.HPSF;
+using System.Runtime.Versioning;
 
 namespace LabBilling.Core.Services;
 
@@ -58,6 +64,20 @@ public sealed class Remittance835Service
         _appEnvironment = appEnvironment;
     }
 
+    public void UpdateRemittance(RemittanceFile remittanceFile)
+    {
+        using UnitOfWorkMain uow = new(_appEnvironment);
+        try
+        {
+            uow.RemittanceRepository.Update(remittanceFile);
+            uow.Commit();
+        }
+        catch (Exception ex)
+        {
+            _errors.Add($"Error updating remittance: {ex.Message}");
+        }
+    }
+
     public RemittanceData Load835(string fileName)
     {
         EdiDocument ediDocument;
@@ -105,7 +125,7 @@ public sealed class Remittance835Service
                 {
                     case "ISA":
                         File.AppendAllText(logfile, $"Processing ISA segment\n");
-                        remittance.InterchangeControlNumber = segment[13];                       
+                        remittance.InterchangeControlNumber = segment[13];
                         break;
                     case "GS":
                         File.AppendAllText(logfile, $"Processing GS segment\n");
@@ -121,6 +141,10 @@ public sealed class Remittance835Service
                         remittance.TotalPremiumPaymentAmount = segment[2];
                         remittance.CreditorDebitFlagCode = segment[3];
                         remittance.PaymentDate = DateTime.ParseExact(segment[16], "yyyyMMdd", null);
+                        break;
+                    case "TRN":
+                        File.AppendAllText(logfile, $"Processing TRN segment\n");
+                        remittance.CurrentTransactionTraceNumber = segment[2];
                         break;
                     case "N1":
                         if (segment[1] == "PR")
@@ -204,6 +228,32 @@ public sealed class Remittance835Service
                         loop2100.FacilityTypeCode = segment[8];
                         loop2100.ClaimFrequencyCode = segment[9];
                         break;
+                    case "NM1":
+                        if (currentLoop == "2100" && segment[1] == "QC")
+                        {
+                            loop2100.PatientLastName = segment[3];
+                            loop2100.PatientFirstName = segment[4];
+                            loop2100.PatientMiddleName = segment[5];
+                        }
+                        if (currentLoop == "1000A" && segment[1] == "PR")
+                        {
+                            remittance.PayerContactName = segment[3];
+                        }
+                        break;
+                    case "DMG":
+                        if (currentLoop == "2100")
+                        {
+                            loop2100.PatientDateOfBirth = DateTime.ParseExact(segment[2], "yyyyMMdd", null);
+                            loop2100.PatientGender = segment[3];
+                        }
+                        break;
+                    case "PER":
+                        if (currentLoop == "1000A")
+                        {
+                            remittance.PayerContactPhone = segment[4];
+                            remittance.PayerContactEmail = segment[6];
+                        }
+                        break;
                     case "AMT":
                         if (currentLoop == "2100")
                         {
@@ -235,9 +285,9 @@ public sealed class Remittance835Service
                             loop2100.Loop2110s.Add(loop2110);
 
                         currentLoop = "2110";
-                        loop2110 = new ()
+                        loop2110 = new()
                         {
-                            ProcedureCode = segment[1],
+                            ProcedureCode = segment.Element(1).Component(2).ToString(),
                             LineItemChargeAmount = segment[2],
                             MonetaryAmount = segment[3],
                             RevenueCode = segment[4]
@@ -307,7 +357,16 @@ public sealed class Remittance835Service
                         File.AppendAllText(logfile, $"Processing CAS segment loop2110\n");
                         break;
                     case "SE":
-                        remittance.Loop2000s.Add(loop2000);
+                        if (loop2100 != null)
+                        {
+                            loop2000.Loop2100s.Add(loop2100);
+                            loop2100 = null;
+                        }
+                        if (loop2000 != null)
+                        {
+                            remittance.Loop2000s.Add(loop2000);
+                            loop2000 = null;
+                        }
                         File.AppendAllText(logfile, $"Processing SE segment\n");
                         break;
                     default:
@@ -338,12 +397,336 @@ public sealed class Remittance835Service
         return remittance;
     }
 
-    public void StoreRemittanceData(RemittanceData remittanceData, string fileName)
+
+    public string ConvertRemittanceHeaderToHtml(RemittanceData remittanceData)
+    {
+        var html = new StringBuilder();
+
+        html.Append("<html><head><style>");
+        html.Append("body { font-family: Arial, sans-serif; }");
+        html.Append("table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }");
+        html.Append("th, td { padding: 8px; text-align: left; }");
+        html.Append("th { background-color: #f2f2f2; font-weight: bold; }");
+        html.Append("tr:nth-child(even) { background-color: #f9f9f9; }");
+        html.Append(".label { font-size: smaller; color: gray; }");
+        html.Append(".smalltext { font-size: smaller; color: black; }");
+        html.Append(".section { border: 1px solid #ccc; display: flex; margin-bottom: 20px; }");
+        html.Append(".section-header { writing-mode: vertical-rl; text-orientation: mixed; background-color: #e0e0e0; padding: 10px; font-weight: bold; display: flex; align-items: center; justify-content: center; }");
+        html.Append(".section-content { padding: 10px; flex-grow: 1; }");
+        html.Append("</style></head><body>");
+
+        html.Append("<div class='section'>");
+        html.Append("<div class='section-header'>Payer Information</div>");
+        html.Append("<div class='section-content'>");
+        html.Append("<table>");
+        html.Append("<tr>");
+        html.Append($"<td>{remittanceData.PayerName}<br><span class='label'>Payer Name</span></td>");
+        html.Append($"<td>{remittanceData.PayerAddress} {remittanceData.PayerAddress2}<br><span class='label'>Payer Address</span></td>");
+        html.Append($"<td>{remittanceData.PayerCity}<br><span class='label'>Payer City</span></td>");
+        html.Append($"<td>{remittanceData.PayerState}<br><span class='label'>Payer State</span></td>");
+        html.Append($"<td>{remittanceData.PayerZip}<br><span class='label'>Payer Zip</span></td>");
+        html.Append("</tr>");
+        html.Append("<tr>");
+        html.Append($"<td>{remittanceData.PayerContactName}<br><span class='label'>Payer Contact Name</span></td>");
+        html.Append($"<td>{remittanceData.PayerContactPhone}<br><span class='label'>Payer Contact Phone</span></td>");
+        html.Append($"<td>{remittanceData.PayerContactEmail}<br><span class='label'>Payer Contact Email</span></td>");
+        html.Append("</tr>");
+        html.Append("</table>");
+        html.Append("</div>");
+        html.Append("</div>");
+
+        html.Append("<div class='section'>");
+        html.Append("<div class='section-header'>Payee Information</div>");
+        html.Append("<div class='section-content'>");
+        html.Append("<table>");
+        html.Append("<tr>");
+        html.Append($"<td>{remittanceData.PayeeName}<br><span class='label'>Payee Name</span></td>");
+        html.Append($"<td>{remittanceData.PayeeAddress}<br><span class='label'>Payee Address</span></td>");
+        html.Append($"<td>{remittanceData.PayeeCity}<br><span class='label'>Payee City</span></td>");
+        html.Append($"<td>{remittanceData.PayeeState}<br><span class='label'>Payee State</span></td>");
+        html.Append($"<td>{remittanceData.PayeeZip}<br><span class='label'>Payee Zip</span></td>");
+        html.Append("</tr>");
+        html.Append("</table>");
+        html.Append("</div>");
+        html.Append("</div>");
+
+        html.Append("<div class='section'>");
+        html.Append("<div class='section-header'>Transaction Information</div>");
+        html.Append("<div class='section-content'>");
+        html.Append("<table>");
+        html.Append("<tr>");
+        html.Append($"<td>{remittanceData.TransactionHandlingCode}<br><span class='label'>Transaction Handling Code</span></td>");
+        html.Append($"<td>{decimal.Parse(remittanceData.TotalPremiumPaymentAmount ?? "0"):F2}<br><span class='label'>Total Premium Payment Amount</span></td>");
+        html.Append($"<td>{remittanceData.CreditorDebitFlagCode}<br><span class='label'>Creditor Debit Flag Code</span></td>");
+        html.Append($"<td>{remittanceData.PaymentDate?.ToString("yyyy-MM-dd")}<br><span class='label'>Payment Date</span></td>");
+        html.Append("</tr>");
+        html.Append("<tr>");
+        html.Append($"<td>{remittanceData.InterchangeControlNumber}<br><span class='label'>Interchange Control Number</span></td>");
+        html.Append($"<td>{remittanceData.GroupControlNumber}<br><span class='label'>Group Control Number</span></td>");
+        html.Append($"<td>{remittanceData.TransactionSetControlNumber}<br><span class='label'>Transaction Set Control Number</span></td>");
+        html.Append($"<td>{remittanceData.CurrentTransactionTraceNumber}<br><span class='label'>Current Transaction Trace Number</span></td>");
+        html.Append("</tr>");
+        html.Append("</table>");
+        html.Append("</div>");
+        html.Append("</div>");
+
+        html.Append("</body></html>");
+
+        return html.ToString();
+    }
+
+    public string ConvertRemittanceHeaderToRtf(RemittanceData remittanceData)
+    {
+        var rtf = new StringBuilder();
+
+        rtf.Append(@"{\rtf1\ansi\deff0{\fonttbl{\f0 Arial;}}");
+        rtf.Append(@"\viewkind4\uc1\pard\lang1033\f0\fs20");
+
+        // Payer Information Section
+        rtf.Append(@"\b Payer Information\b0\par");
+        rtf.Append(@"\trowd\trgaph108\trleft-108");
+        rtf.Append(@"\cellx3000\cellx6000");
+        rtf.Append(@"\intbl Payer Name:\cell\b ");
+        rtf.Append($@"{remittanceData.PayerName}\b0\cell\row");
+        rtf.Append(@"\intbl Payer Address:\cell\b ");
+        rtf.Append($@"{remittanceData.PayerAddress} {remittanceData.PayerAddress2}\b0\cell\row");
+        rtf.Append(@"\intbl Payer City:\cell\b ");
+        rtf.Append($@"{remittanceData.PayerCity}\b0\cell\row");
+        rtf.Append(@"\intbl Payer State:\cell\b ");
+        rtf.Append($@"{remittanceData.PayerState}\b0\cell\row");
+        rtf.Append(@"\intbl Payer Zip:\cell\b ");
+        rtf.Append($@"{remittanceData.PayerZip}\b0\cell\row");
+        rtf.Append(@"\intbl Payer Contact Name:\cell\b ");
+        rtf.Append($@"{remittanceData.PayerContactName}\b0\cell\row");
+        rtf.Append(@"\intbl Payer Contact Phone:\cell\b ");
+        rtf.Append($@"{remittanceData.PayerContactPhone}\b0\cell\row");
+        rtf.Append(@"\intbl Payer Contact Email:\cell\b ");
+        rtf.Append($@"{remittanceData.PayerContactEmail}\b0\cell\row");
+        rtf.Append(@"\pard\par");
+
+        // Transaction Information Section
+        rtf.Append(@"\b Transaction Information\b0\par");
+        rtf.Append(@"\trowd\trgaph108\trleft-108");
+        rtf.Append(@"\cellx3000\cellx6000");
+        rtf.Append(@"\intbl Transaction Handling Code:\cell\b ");
+        rtf.Append($@"{remittanceData.TransactionHandlingCode}\b0\cell\row");
+        rtf.Append(@"\intbl Total Premium Payment Amount:\cell\b ");
+        rtf.Append($@"{decimal.Parse(remittanceData.TotalPremiumPaymentAmount ?? "0"):F2}\b0\cell\row");
+        rtf.Append(@"\intbl Creditor Debit Flag Code:\cell\b ");
+        rtf.Append($@"{remittanceData.CreditorDebitFlagCode}\b0\cell\row");
+        rtf.Append(@"\intbl Payment Date:\cell\b ");
+        rtf.Append($@"{remittanceData.PaymentDate?.ToString("yyyy-MM-dd")}\b0\cell\row");
+        rtf.Append(@"\intbl Interchange Control Number:\cell\b ");
+        rtf.Append($@"{remittanceData.InterchangeControlNumber}\b0\cell\row");
+        rtf.Append(@"\intbl Group Control Number:\cell\b ");
+        rtf.Append($@"{remittanceData.GroupControlNumber}\b0\cell\row");
+        rtf.Append(@"\intbl Transaction Set Control Number:\cell\b ");
+        rtf.Append($@"{remittanceData.TransactionSetControlNumber}\b0\cell\row");
+        rtf.Append(@"\intbl Current Transaction Trace Number:\cell\b ");
+        rtf.Append($@"{remittanceData.CurrentTransactionTraceNumber}\b0\cell\row");
+        rtf.Append(@"\pard\par");
+
+        // Payee Information Section
+        rtf.Append(@"\b Payee Information\b0\par");
+        rtf.Append(@"\trowd\trgaph108\trleft-108");
+        rtf.Append(@"\cellx3000\cellx6000");
+        rtf.Append(@"\intbl Payee Name:\cell\b ");
+        rtf.Append($@"{remittanceData.PayeeName}\b0\cell\row");
+        rtf.Append(@"\intbl Payee Address:\cell\b ");
+        rtf.Append($@"{remittanceData.PayeeAddress}\b0\cell\row");
+        rtf.Append(@"\intbl Payee City:\cell\b ");
+        rtf.Append($@"{remittanceData.PayeeCity}\b0\cell\row");
+        rtf.Append(@"\intbl Payee State:\cell\b ");
+        rtf.Append($@"{remittanceData.PayeeState}\b0\cell\row");
+        rtf.Append(@"\intbl Payee Zip:\cell\b ");
+        rtf.Append($@"{remittanceData.PayeeZip}\b0\cell\row");
+        rtf.Append(@"\pard\par");
+
+        rtf.Append(@"}");
+
+        return rtf.ToString();
+    }
+
+
+    public string ConvertRemittanceDataToHtml(RemittanceData remittanceData)
+    {
+        DictionaryService dictService = new(_appEnvironment);
+        var html = new StringBuilder();
+
+        html.Append("<html><head><style>");
+        html.Append("body { font-family: Arial, sans-serif; }");
+        html.Append("table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }");
+        html.Append("th, td { padding: 8px; text-align: left; }");
+        html.Append("th { background-color: #f2f2f2; font-weight: bold; }");
+        html.Append("tr:nth-child(even) { background-color: #f9f9f9; }");
+        html.Append(".label { font-size: smaller; color: gray; }");
+        html.Append(".smalltext { font-size: smaller; color: black; }");
+        html.Append(".section-header { background-color: #e0e0e0; padding: 10px; margin-top: 20px; font-weight: bold; }");
+        html.Append(".section-sub-header {background-color: #f0f0f0; padding: 10px; margin-top: 10px; font-weight: bold; }");
+        html.Append(".claim-separator { margin-top: 20px; }");
+        html.Append(".indent { padding-left: 20px; }");
+        html.Append(".indent-2 { padding-left: 40px; }");
+        html.Append(".indent-3 { padding-left: 60px; }");
+        html.Append("</style></head><body>");
+
+        html.Append("<h1>Remittance Data</h1>");
+
+        html.Append("<div class='section-header'>Payer Information</div>");
+        html.Append("<table>");
+        html.Append("<tr>");
+        html.Append($"<td>{remittanceData.PayerName}<br><span class='label'>Payer Name</span></td>");
+        html.Append($"<td>{remittanceData.PayerAddress} {remittanceData.PayerAddress2}<br><span class='label'>Payer Address</span></td>");
+        html.Append($"<td>{remittanceData.PayerCity}<br><span class='label'>Payer City</span></td>");
+        html.Append($"<td>{remittanceData.PayerState}<br><span class='label'>Payer State</span></td>");
+        html.Append($"<td>{remittanceData.PayerZip}<br><span class='label'>Payer Zip</span></td>");
+        html.Append("</tr>");
+        html.Append("<tr>");
+        html.Append($"<td>{remittanceData.PayerContactName}<br><span class='label'>Payer Contact Name</span></td>");
+        html.Append($"<td>{remittanceData.PayerContactPhone}<br><span class='label'>Payer Contact Phone</span></td>");
+        html.Append($"<td>{remittanceData.PayerContactEmail}<br><span class='label'>Payer Contact Email</span></td>");
+        html.Append("</tr>");
+        html.Append("</table>");
+
+        html.Append("<div class='section-header'>Payee Information</div>");
+        html.Append("<table>");
+        html.Append("<tr>");
+        html.Append($"<td>{remittanceData.PayeeName}<br><span class='label'>Payee Name</span></td>");
+        html.Append($"<td>{remittanceData.PayeeAddress}<br><span class='label'>Payee Address</span></td>");
+        html.Append($"<td>{remittanceData.PayeeCity}<br><span class='label'>Payee City</span></td>");
+        html.Append($"<td>{remittanceData.PayeeState}<br><span class='label'>Payee State</span></td>");
+        html.Append($"<td>{remittanceData.PayeeZip}<br><span class='label'>Payee Zip</span></td>");
+        html.Append("</tr>");
+        html.Append("</table>");
+
+        html.Append("<div class='section-header'>Transaction Information</div>");
+        html.Append("<table>");
+        html.Append("<tr>");
+        html.Append($"<td>{remittanceData.TransactionHandlingCode}<br><span class='label'>Transaction Handling Code</span></td>");
+        html.Append($"<td>{decimal.Parse(remittanceData.TotalPremiumPaymentAmount ?? "0"):F2}<br><span class='label'>Total Premium Payment Amount</span></td>");
+        html.Append($"<td>{remittanceData.CreditorDebitFlagCode}<br><span class='label'>Creditor Debit Flag Code</span></td>");
+        html.Append($"<td>{remittanceData.PaymentDate?.ToString("yyyy-MM-dd")}<br><span class='label'>Payment Date</span></td>");
+        html.Append("</tr>");
+        html.Append("<tr>");
+        html.Append($"<td>{remittanceData.InterchangeControlNumber}<br><span class='label'>Interchange Control Number</span></td>");
+        html.Append($"<td>{remittanceData.GroupControlNumber}<br><span class='label'>Group Control Number</span></td>");
+        html.Append($"<td>{remittanceData.TransactionSetControlNumber}<br><span class='label'>Transaction Set Control Number</span></td>");
+        html.Append($"<td>{remittanceData.CurrentTransactionTraceNumber}<br><span class='label'>Current Transaction Trace Number</span></td>");
+        html.Append("</tr>");
+        html.Append("</table>");
+
+        foreach (var loop2000 in remittanceData.Loop2000s)
+        {
+            html.Append("<div class='section-header'>Claim Information</div>");
+            html.Append("<table>");
+            html.Append("<tr>");
+            html.Append($"<td>{loop2000.TotalClaimCount}<br><span class='label'>Total Claim Count</span></td>");
+            html.Append($"<td>{decimal.Parse(loop2000.TotalClaimChargeAmount ?? "0"):F2}<br><span class='label'>Total Claim Charge Amount</span></td>");
+            html.Append("</tr>");
+            html.Append("</table>");
+
+            foreach (var loop2100 in loop2000.Loop2100s)
+            {
+                html.Append("<div class='claim-separator'><hr /></div>");
+                html.Append("<div class='section-header'>Claim</div>");
+                html.Append("<table>");
+                html.Append("<tr>");
+                html.Append($"<td>{loop2100.AccountNo}<br><span class='label'>Account No</span></td>");
+                html.Append($"<td>{loop2100.ClaimStatusCode}<br><span class='label'>Claim Status Code</span></td>");
+                html.Append($"<td>{decimal.Parse(loop2100.ClaimChargeAmount ?? "0"):F2}<br><span class='label'>Claim Charge Amount</span></td>");
+                html.Append($"<td>{decimal.Parse(loop2100.ClaimPaymentAmount ?? "0"):F2}<br><span class='label'>Claim Payment Amount</span></td>");
+                html.Append("</tr>");
+                html.Append("<tr>");
+                html.Append($"<td>{decimal.Parse(loop2100.PatientResponsibilityAmount ?? "0"):F2}<br><span class='label'>Patient Responsibility Amount</span></td>");
+                html.Append($"<td>{loop2100.ClaimFilingIndicatorCode}<br><span class='label'>Claim Filing Indicator Code</span></td>");
+                html.Append($"<td>{loop2100.PayerClaimControlNumber}<br><span class='label'>Payer Claim Control Number</span></td>");
+                html.Append($"<td>{loop2100.FacilityTypeCode}<br><span class='label'>Facility Type Code</span></td>");
+                html.Append("</tr>");
+                html.Append("<tr>");
+                html.Append($"<td>{loop2100.ClaimFrequencyCode}<br><span class='label'>Claim Frequency Code</span></td>");
+                html.Append($"<td>{decimal.Parse(loop2100.PaidAmount ?? "0"):F2}<br><span class='label'>Paid Amount</span></td>");
+                html.Append($"<td>{decimal.Parse(loop2100.AllowedAmount ?? "0"):F2}<br><span class='label'>Allowed Amount</span></td>");
+                html.Append("</tr>");
+                html.Append("<tr>");
+                html.Append($"<td>{loop2100.PatientLastName}<br><span class='label'>Patient Last Name</span></td>");
+                html.Append($"<td>{loop2100.PatientFirstName}<br><span class='label'>Patient First Name</span></td>");
+                html.Append($"<td>{loop2100.PatientMiddleName}<br><span class='label'>Patient Middle Name</span></td>");
+                html.Append($"<td>{loop2100.PatientGender}<br><span class='label'>Patient Gender</span></td>");
+                html.Append($"<td>{loop2100.PatientDateOfBirth?.ToString("yyyy-MM-dd")}<br><span class='label'>Patient Date of Birth</span></td>");
+                html.Append("</tr>");
+                html.Append("</table>");
+
+
+                foreach (var loop2110 in loop2100.Loop2110s)
+                {
+                    html.Append("<div class='indent'>");
+                    html.Append("<div class='section-header'>Service Line Details</div>");
+                    html.Append("<table>");
+                    html.Append("<tr>");
+                    html.Append($"<td>{loop2110.ProcedureCode}<br><span class='label'>Procedure Code</span></td>");
+                    html.Append($"<td>{dictService.GetCptAmaDescription(loop2110.ProcedureCode)}<br><span class='label'>Procedure Description</span></td>");
+                    html.Append($"<td>{decimal.Parse(loop2110.LineItemChargeAmount ?? "0"):F2}<br><span class='label'>Line Item Charge Amount</span></td>");
+                    html.Append($"<td>{decimal.Parse(loop2110.MonetaryAmount ?? "0"):F2}<br><span class='label'>Monetary Amount</span></td>");
+                    html.Append($"<td>{loop2110.RevenueCode}<br><span class='label'>Revenue Code</span></td>");
+                    html.Append($"<td>{decimal.Parse(loop2110.PaidAmount ?? "0"):F2}<br><span class='label'>Paid Amount</span></td>");
+                    html.Append($"<td>{decimal.Parse(loop2110.AllowedAmount ?? "0"):F2}<br><span class='label'>Allowed Amount</span></td>");
+                    html.Append("</tr>");
+                    html.Append("</table>");
+                    html.Append("</div>");
+
+                    html.Append("<div class='indent-2 smalltext'>");
+                    html.Append("<div class='section-sub-header smalltext'>Adjustments</div>");
+                    html.Append("<table class='smalltext'>");
+                    html.Append("<tr><th>Claim Adjustment Group Code</th><th>Adjustment Reason Code</th><th>Adjustment Amount</th><th>Adjustment Quantity</th></tr>");
+                    foreach (var adjustment in loop2110.Adjustments)
+                    {
+                        html.Append("<tr>");
+                        html.Append($"<td>{adjustment.ClaimAdjustmentGroupCode}</td>");
+                        html.Append($"<td>{adjustment.AdjustmentReasonCode}</td>");
+                        html.Append($"<td>{decimal.Parse(adjustment.AdjustmentAmount ?? "0"):F2}</td>");
+                        html.Append($"<td>{adjustment.AdjustmentQuantity}</td>");
+                        html.Append("</tr>");
+                    }
+                    html.Append("</table>");
+                    html.Append("</div>");
+                }
+                html.Append("</div>");
+            }
+        }
+
+        html.Append("</body></html>");
+
+        return html.ToString();
+    }
+
+
+    public bool IsRemittancePosted(int remittanceId)
+    {
+        using UnitOfWorkMain uow = new(_appEnvironment);
+
+        var remittance = uow.RemittanceRepository.GetByKey(remittanceId);
+        //if there are Chk entries with the same check number, remittance has been posted.
+        var payments = uow.ChkRepository.GetByCheckNo(remittance.TransactionTraceNumber);
+        if (payments.Count > 0)
+            return true;
+        else
+            return false;
+
+    }
+
+    private void StoreRemittanceData(RemittanceData remittanceData, string fileName)
     {
         var remittanceFile = new RemittanceFile
         {
-            FileName = fileName, // Set appropriate file name
+            FileName = Path.GetFileName(fileName), // Set appropriate file name
             ProcessedDate = DateTime.Now,
+            Payer = remittanceData.PayerName,
+            TransactionTraceNumber = remittanceData.CurrentTransactionTraceNumber,
+            TotalPaymentAmount = decimal.Parse(remittanceData.TotalPremiumPaymentAmount ?? "0"),
+            ClaimCount = remittanceData.Loop2000s.Sum(x => Convert.ToInt16(x.TotalClaimCount)),
+            TotalAllowedAmount = remittanceData.Loop2000s.Sum(l => l.Loop2100s.Sum(c => decimal.Parse(c.AllowedAmount ?? "0"))),
+            TotalChargeAmount = remittanceData.Loop2000s.Sum(l => Convert.ToDecimal(l.TotalClaimChargeAmount)),
+            TotalPaidAmount = decimal.Parse(remittanceData.PaidAmount ?? "0"),
+            RemittanceData = JsonConvert.SerializeObject(remittanceData),
             Claims = new List<RemittanceClaim>()
         };
 
@@ -423,10 +806,23 @@ public sealed class Remittance835Service
         uow.Commit();
     }
 
-    public List<RemittanceFile> GetAllRemittances()
+    //add GetAllRemittancesAsync method that is a Task wrapper for GetAllRemittances
+    public async Task<List<RemittanceFile>> GetAllRemittancesAsync()
+    {
+        return await Task.Run(() => GetAllRemittances());
+    }
+
+    public List<RemittanceFile> GetAllRemittances(bool includePosted = false)
     {
         using UnitOfWorkMain uow = new(_appEnvironment);
-        return uow.RemittanceRepository.GetAll().ToList();
+
+        return uow.RemittanceRepository.GetRemittances(includePosted);
+    }
+
+    //add GetRemittanceAsync method that is a Task wrapper for GetRemittance
+    public async Task<RemittanceFile> GetRemittanceAsync(int remittanceId)
+    {
+        return await Task.Run(() => GetRemittance(remittanceId));
     }
 
     public RemittanceFile GetRemittance(int remittanceId)
@@ -441,6 +837,7 @@ public sealed class Remittance835Service
         foreach (var claim in remit.Claims)
         {
             claim.ClaimDetails = uow.RemittanceClaimDetailRepository.GetByClaimId(claim.ClaimId).ToList();
+            claim.PatientName = uow.AccountRepository.GetByAccount(claim.AccountNo)?.PatFullName;
             foreach (var detail in claim.ClaimDetails)
             {
                 detail.Adjustments = uow.RemittanceClaimAdjustmentRepository.GetByClaimDetailId(detail.Id).ToList();
@@ -448,5 +845,92 @@ public sealed class Remittance835Service
         }
 
         return remit;
+    }
+
+    public async Task PostRemittanceAsync(int remittanceId, IProgress<ProgressReportModel> progress)
+    {
+        Log.Instance.Trace("PostRemittanceAsync called");
+        AccountService accountService = new(_appEnvironment);
+        var remittance = this.GetRemittance(remittanceId);
+        if (remittance == null)
+            return;
+
+        int totalClaims = remittance.Claims.Count;
+        int processedClaims = 0;
+        try
+        {
+            //loop through the claims and details and write checks to the database
+            using UnitOfWorkMain uow = new(_appEnvironment, true);
+
+            //make sure this remittance has not already been posted
+            if (IsRemittancePosted(remittanceId))
+            {
+                Log.Instance.Error($"Remittance {remittanceId} has already been posted");
+                throw new ApplicationException($"Remittance {remittanceId} has already been posted");
+            }
+            double total_paid = 0;
+            double total_contractual = 0;
+            double total_patient_responsibility = 0;
+
+            foreach (var claim in remittance.Claims)
+            {
+                foreach (var detail in claim.ClaimDetails)
+                {
+                    if (claim.ProcessStatus != ClaimProcessStatus.Process)
+                        break;
+                    //write checks to the database
+                    Chk chk = new()
+                    {
+                        ChkDate = DateTime.Today,
+                        PaidAmount = Convert.ToDouble(detail.MonetaryAmount),
+                        Source = remittance.Payer,
+                        Comment = $"Check for claim {claim.AccountNo} {detail.ProcedureCode}",
+                        CheckNo = remittance.TransactionTraceNumber,
+                        AccountNo = claim.AccountNo,
+                        Batch = remittance.RemittanceId,
+                        Cpt4Code = detail.ProcedureCode,
+                        ContractualAmount = Convert.ToDouble(detail.Adjustments.Where(x => x.ClaimAdjustmentGroupCode == "CO" && x.AdjustmentReasonCode == "45").Sum(y => y.AdjustmentAmount)),
+                        ClaimAdjCode = detail.Adjustments.FirstOrDefault()?.AdjustmentReasonCode,
+                        ClaimAdjGroupCode = detail.Adjustments.FirstOrDefault()?.ClaimAdjustmentGroupCode,
+                        PostingFile = Path.GetFileName(remittance.FileName),
+                        EftNumber = remittance.TransactionTraceNumber,
+                        ClaimNo = claim.PayerClaimControlNumber,
+                        EftDate = remittance.ProcessedDate,
+                        Status = "NEW"
+                    };
+                    total_paid += Convert.ToDouble(detail.MonetaryAmount);
+                    total_contractual += Convert.ToDouble(detail.Adjustments.Where(x => x.ClaimAdjustmentGroupCode == "CO" && x.AdjustmentReasonCode == "45").Sum(y => y.AdjustmentAmount));
+                    total_patient_responsibility += Convert.ToDouble(detail.Adjustments.Where(x => x.ClaimAdjustmentGroupCode == "PR").Sum(y => y.AdjustmentAmount));
+
+                    await uow.ChkRepository.AddAsync(chk);
+                }
+                //write note to account with total_paid, total_contractual, and total_patient_responsibility
+                accountService.AddNote(claim.AccountNo, $"Remittance {remittanceId} posted for claim {claim.AccountNo} with total paid amount of {total_paid}, total contractual amount of {total_contractual}, and total patient responsibility of {total_patient_responsibility}");
+                total_paid = 0;
+                total_contractual = 0;
+                total_patient_responsibility = 0;
+
+                processedClaims++;
+                progress?.Report(new ProgressReportModel
+                {
+                    PercentageComplete = (processedClaims * 100 / totalClaims),
+                    RecordsProcessed = processedClaims,
+                    TotalRecords = totalClaims,
+                    StatusMessage = $"Processed {processedClaims} of {totalClaims} claims"
+                });
+            }
+            //update the remittance status to posted
+            remittance.PostedDate = DateTime.Now;
+            remittance.PostingUser = _appEnvironment.UserName;
+            remittance.PostingHost = Utilities.OS.GetMachineName();
+            uow.RemittanceRepository.Update(remittance);
+
+            uow.Commit();
+        }
+        catch (Exception ex)
+        {
+            Log.Instance.Error(ex.Message);
+            throw;
+        }
     }
 }

@@ -33,14 +33,13 @@ public class AppEnvironment : IAppEnvironment
     public Color ButtonBackgroundColor { get; set; } = Color.LightCyan;
     public Color ButtonTextColor { get; set; } = Color.Black;
 
-    public string TempFilePath { get { return Path.GetTempPath() + @"LABPA\";  } }
+    public string TempFilePath { get { return Path.GetTempPath() + @"LABPA\"; } }
 
     private const bool _dbEncrypt = false;
     private const bool _dbTrustServerCert = true;
 
     public AppEnvironment()
     {
-
     }
 
     public bool EnvironmentValid
@@ -70,61 +69,6 @@ public class AppEnvironment : IAppEnvironment
     {
         get
         {
-            if (!RunAsService)
-            {
-                if (string.IsNullOrEmpty(ServerName))
-                {
-                    throw new ApplicationException("ServerName value not set.");
-                }
-
-                if (string.IsNullOrEmpty(DatabaseName))
-                {
-                    throw new ApplicationException("DatabaseName value not set.");
-                }
-
-                if (IntegratedAuthentication)
-                {
-                    SqlConnectionStringBuilder myBuilder = new()
-                    {
-                        InitialCatalog = DatabaseName,
-                        DataSource = ServerName,
-                        IntegratedSecurity = true,
-                        ApplicationName = Utilities.OS.GetAppName(),
-                        Encrypt = _dbEncrypt,
-                        TrustServerCertificate = _dbTrustServerCert,
-                        ConnectTimeout = 30
-                    };
-
-                    return myBuilder.ConnectionString;
-                }
-                else
-                {
-                    SqlConnectionStringBuilder myBuilder = new SqlConnectionStringBuilder
-                    {
-                        InitialCatalog = DatabaseName,
-                        DataSource = ServerName,
-                        IntegratedSecurity = false,
-                        UserID = UserName,
-                        Password = Password,
-                        ConnectTimeout = 30,
-                        Encrypt = _dbEncrypt,
-                        TrustServerCertificate = _dbTrustServerCert,
-                        ApplicationName = Utilities.OS.GetAppName()
-                    };
-                    return myBuilder.ConnectionString;
-                }
-            }
-            else
-            {
-                return ConnectionStringService;
-            }
-        }
-    }
-
-    public string ConnectionStringService
-    {
-        get
-        {
             if (string.IsNullOrEmpty(ServerName))
             {
                 throw new ApplicationException("ServerName value not set.");
@@ -135,30 +79,32 @@ public class AppEnvironment : IAppEnvironment
                 throw new ApplicationException("DatabaseName value not set.");
             }
 
-            if (string.IsNullOrEmpty(ServiceUsername))
-            {
-                throw new ApplicationException("ServiceUserName value not set.");
-            }
-
-            if (string.IsNullOrEmpty(ServicePassword))
-            {
-                throw new ApplicationException("ServicePassword value not set.");
-            }
-
             SqlConnectionStringBuilder myBuilder = new()
             {
                 InitialCatalog = DatabaseName,
                 DataSource = ServerName,
-                IntegratedSecurity = false,
-                UserID = ServiceUsername,
-                Password = ServicePassword,
+                IntegratedSecurity = IntegratedAuthentication,
                 ApplicationName = Utilities.OS.GetAppName(),
-                ConnectTimeout = 30,
                 Encrypt = _dbEncrypt,
-                TrustServerCertificate = _dbTrustServerCert
+                TrustServerCertificate = _dbTrustServerCert,
+                ConnectTimeout = 30
             };
 
+            if (!IntegratedAuthentication)
+            {
+                myBuilder.UserID = UserName;
+                myBuilder.Password = Password;
+            }
+
             return myBuilder.ConnectionString;
+        }
+    }
+
+    public string ConnectionStringService
+    {
+        get
+        {
+            return ConnectionString;
         }
     }
 
@@ -171,7 +117,7 @@ public class AppEnvironment : IAppEnvironment
         {
             if (_appParms == null)
             {
-                ApplicationParameters = new ApplicationParameters();
+                ApplicationParameters = new();
                 if (EnvironmentValid)
                 {
                     SystemService systemService = new(this);
@@ -190,38 +136,24 @@ public class AppEnvironment : IAppEnvironment
     {
         get
         {
-            if (IntegratedAuthentication)
+            SqlConnectionStringBuilder myBuilder = new()
             {
-                SqlConnectionStringBuilder myBuilder = new SqlConnectionStringBuilder
-                {
-                    InitialCatalog = LogDatabaseName,
-                    DataSource = ServerName,
-                    IntegratedSecurity = true,
-                    ApplicationName = Utilities.OS.GetAppName(),
-                    ConnectTimeout = 30,
-                    Encrypt = _dbEncrypt,
-                    TrustServerCertificate = _dbTrustServerCert,
-                };
+                InitialCatalog = LogDatabaseName,
+                DataSource = ServerName,
+                IntegratedSecurity = IntegratedAuthentication,
+                ApplicationName = Utilities.OS.GetAppName(),
+                ConnectTimeout = 30,
+                Encrypt = _dbEncrypt,
+                TrustServerCertificate = _dbTrustServerCert,
+            };
 
-                return myBuilder.ConnectionString;
-            }
-            else
+            if (!IntegratedAuthentication)
             {
-                SqlConnectionStringBuilder myBuilder = new SqlConnectionStringBuilder
-                {
-                    InitialCatalog = LogDatabaseName,
-                    DataSource = ServerName,
-                    IntegratedSecurity = false,
-                    UserID = UserName,
-                    Password = Password,
-                    ApplicationName = Utilities.OS.GetAppName(),
-                    ConnectTimeout = 30,
-                    Encrypt = _dbEncrypt,
-                    TrustServerCertificate = _dbTrustServerCert
-                };
-
-                return myBuilder.ConnectionString;
+                myBuilder.UserID = UserName;
+                myBuilder.Password = Password;
             }
+
+            return myBuilder.ConnectionString;
         }
     }
 

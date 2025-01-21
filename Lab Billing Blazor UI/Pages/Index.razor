@@ -1,0 +1,68 @@
+﻿@page "/"
+
+@inject IAppEnvironment AppEnvironment
+
+<PageTitle>Lab Patient Accounting</PageTitle>
+
+<h1>Lab Patient Accounting</h1>
+
+Welcome to your new app.
+<AuthorizeView>
+    <h3>App Environment Details</h3>
+    <ul>
+        <li><strong>Username:</strong> @AppEnvironment.UserName</li>
+        <li><strong>Integrated Authentication:</strong> @AppEnvironment.IntegratedAuthentication</li>
+        <li><strong>Database Name:</strong> @AppEnvironment.DatabaseName</li>
+        <li><strong>Server Name:</strong> @AppEnvironment.ServerName</li>
+        <li><strong>Log Database Name:</strong> @AppEnvironment.LogDatabaseName</li>
+        <li><strong>Environment:</strong> @AppEnvironment.Environment</li>
+        <li><strong>Window Background Color:</strong> @AppEnvironment.WindowBackgroundColor</li>
+        <li><strong>Window Text Color:</strong> @AppEnvironment.WindowTextColor</li>
+        <li><strong>Menu Background Color:</strong> @AppEnvironment.MenuBackgroundColor</li>
+        <li><strong>Menu Text Color:</strong> @AppEnvironment.MenuTextColor</li>
+        <li><strong>Button Background Color:</strong> @AppEnvironment.ButtonBackgroundColor</li>
+        <li><strong>Button Text Color:</strong> @AppEnvironment.ButtonTextColor</li>
+        <li><strong>Temp File Path:</strong> @AppEnvironment.TempFilePath</li>
+        <li><strong>Environment Valid:</strong> @AppEnvironment.EnvironmentValid</li>
+        <li><strong>Connection String:</strong> @AppEnvironment.ConnectionString</li>
+        <li><strong>Connection String Service:</strong> @AppEnvironment.ConnectionStringService</li>
+        <li><strong>User:</strong> @AppEnvironment.User</li>
+        <li><strong>Application Parameters:</strong> @AppEnvironment.ApplicationParameters</li>
+        <li><strong>Log Connection String:</strong> @AppEnvironment.LogConnectionString</li>
+        <li>
+            <strong>User Account:</strong>
+            <ul>
+                <li><strong>Account ID:</strong> @AppEnvironment.UserAccount?.UserName</li>
+                <li><strong>Account Name:</strong> @AppEnvironment.UserAccount?.Access</li>
+                <li><strong>Email:</strong> @AppEnvironment.UserAccount?.CanAddAdjustments</li>
+                <li><strong>Account ID:</strong> @AppEnvironment.UserAccount?.UserName</li>
+                <li><strong>Full Name:</strong> @AppEnvironment.UserAccount?.FullName</li>
+                <li><strong>Access:</strong> @AppEnvironment.UserAccount?.Access</li>
+                <li><strong>Can Edit Dictionary:</strong> @AppEnvironment.UserAccount?.CanEditDictionary</li>
+                <li><strong>Can Modify Bad Debt:</strong> @AppEnvironment.UserAccount?.CanModifyBadDebt</li>
+                <li><strong>Can Submit Billing:</strong> @AppEnvironment.UserAccount?.CanSubmitBilling</li>
+                <li><strong>Can Modify Account Fincode:</strong> @AppEnvironment.UserAccount?.CanModifyAccountFincode</li>
+                <li><strong>Can Submit Charges:</strong> @AppEnvironment.UserAccount?.CanSubmitCharges</li>
+                <li><strong>Can Add Adjustments:</strong> @AppEnvironment.UserAccount?.CanAddAdjustments</li>
+                <li><strong>Can Add Payments:</strong> @AppEnvironment.UserAccount?.CanAddPayments</li>
+                <li><strong>Is Administrator:</strong> @AppEnvironment.UserAccount?.IsAdministrator</li>
+                <li><strong>Can Impersonate:</strong> @AppEnvironment.UserAccount?.CanImpersonate</li>
+                <li><strong>Reserve5:</strong> @AppEnvironment.UserAccount?.reserve5</li>
+                <li><strong>Reserve6:</strong> @AppEnvironment.UserAccount?.reserve6</li>
+                <li><strong>Last Modified By:</strong> @AppEnvironment.UserAccount?.LastModifiedBy</li>
+                <li><strong>Last Modified With:</strong> @AppEnvironment.UserAccount?.LastModifiedWith</li>
+                <li><strong>Last Modified Date:</strong> @AppEnvironment.UserAccount?.LastModifiedDate</li>
+                <li><strong>Password:</strong> @AppEnvironment.UserAccount?.Password</li>
+                <li><strong>Updated Date:</strong> @AppEnvironment.UserAccount?.UpdatedDate</li>
+                <li><strong>Updated User:</strong> @AppEnvironment.UserAccount?.UpdatedUser</li>
+                <li><strong>Updated App:</strong> @AppEnvironment.UserAccount?.UpdatedApp</li>
+                <li><strong>Updated Host:</strong> @AppEnvironment.UserAccount?.UpdatedHost</li>
+                <li><strong>Row GUID:</strong> @AppEnvironment.UserAccount?.rowguid</li>
+                <li><strong>Impersonating User:</strong> @AppEnvironment.UserAccount?.ImpersonatingUser</li>
+            </ul>
+        </li>
+        <li><strong>Application Parameters:</strong> @AppEnvironment.ApplicationParameters</li>
+    </ul>
+</AuthorizeView>
+
+

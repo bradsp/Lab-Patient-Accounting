@@ -17,6 +17,23 @@ public sealed class RemittanceRepository : RepositoryBase<RemittanceFile>
     {
     }
 
+    public List<RemittanceFile> GetRemittances(bool includePosted = false)
+    {
+        Log.Instance.Trace("Entering");
+        PetaPoco.Sql sql = PetaPoco.Sql.Builder;
+
+        if (includePosted)
+        {
+            return this.GetAll();
+        }
+        else
+        {
+            sql.Where($"{GetRealColumn(nameof(RemittanceFile.PostedDate))} IS NULL");
+            var queryResult = Context.Fetch<RemittanceFile>(sql);
+            return queryResult.ToList();
+        }
+    }
+
 }
 
 public sealed class RemittanceClaimRepository : RepositoryBase<RemittanceClaim>

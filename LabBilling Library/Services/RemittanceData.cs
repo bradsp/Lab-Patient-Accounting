@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace LabBilling.Core.Services;
 
@@ -22,11 +23,29 @@ public class RemittanceData
     public string PayeeCity { get; set; }
     public string PayeeState { get; set; }
     public string PayeeZip { get; set; }
-    public string PaidAmount { get; set; }
-    public string AllowedAmount { get; set; }
+    public string PaidAmount
+    {
+        get
+        {
+            return Loop2000s.Sum(x => x.Loop2100s.Sum(y => Convert.ToDouble(y.PaidAmount))).ToString();
+        }
+    }
+    public string AllowedAmount
+    {
+        get
+        {
+            return Loop2000s.Sum(x => x.Loop2100s.Sum(y => Convert.ToDouble(y.AllowedAmount))).ToString();
+        }
+    }
     public string InterchangeControlNumber { get; set; }
     public string GroupControlNumber { get; set; }
     public string TransactionSetControlNumber { get; set; }
+    public string CurrentTransactionTraceNumber { get; set; }
     public DateTime? PaymentDate { get; set; }
+
+
+    public string PayerContactName { get; set; }
+    public string PayerContactPhone { get; set; }
+    public string PayerContactEmail { get; set; }
 
 }

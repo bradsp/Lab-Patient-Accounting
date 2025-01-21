@@ -18,6 +18,14 @@ public class DictionaryService
         this._appEnvironment = appEnvironment;
     }
 
+    public string GetCptAmaDescription(string cptCode)
+    {
+        using UnitOfWorkMain uow = new(_appEnvironment);
+        var cpt = uow.CptAmaRepository.GetCpt(cptCode);
+
+        return cpt?.ShortDescription;
+    }
+
     public Cdm SaveCdm(Cdm cdm)
     {
         using UnitOfWorkMain uow = new(_appEnvironment, true);

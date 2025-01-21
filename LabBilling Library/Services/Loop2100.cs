@@ -1,10 +1,16 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace LabBilling.Core.Services
 {
     public class Loop2100
     {
         public string AccountNo { get; set; }
+        public string PatientFirstName { get; set; }
+        public string PatientLastName { get; set; }
+        public string PatientMiddleName { get; set; }
+        public string PatientGender { get; set; }
+        public DateTime? PatientDateOfBirth { get; set; }
         public string ClaimStatusCode { get; set; }
         public string ClaimChargeAmount { get; set; }
         public string ClaimPaymentAmount { get; set; }

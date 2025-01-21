@@ -823,8 +823,15 @@ public partial class MainForm : Form
     private void remittancePostingToolStripMenuItem_Click(object sender, EventArgs e)
     {
 
-        PostRemittanceForm frm = new();
-        //frm.AccountLaunched += OnAccountLaunched;
+        ProcessRemittanceForm frm = new();
+        frm.RemittanceFileSelected += OnRemittanceSelected;
+        NewForm(frm);
+    }
+
+    private void OnRemittanceSelected(object sender, int e)
+    {
+        PostRemittanceForm frm = new(e);
+        frm.AccountLaunched += OnAccountLaunched;
         NewForm(frm);
     }
 
