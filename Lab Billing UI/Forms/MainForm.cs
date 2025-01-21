@@ -542,10 +542,11 @@ public partial class MainForm : Form
     {
         //during testing only - remove once batch charge entry is in production
         batchChargeEntryToolStripMenuItem.Visible = Program.LoggedInUser.IsAdministrator;
+        posting835RemitToolStripMenuItem.Visible = Program.LoggedInUser.IsAdministrator;
 
         batchRemittanceToolStripMenuItem.Visible = Program.LoggedInUser.CanAddPayments;
         badDebtMaintenanceToolStripMenuItem.Visible = Program.LoggedInUser.CanModifyBadDebt;
-        posting835RemitToolStripMenuItem.Visible = Program.LoggedInUser.CanAddPayments;
+        remittancePostingToolStripMenuItem.Visible = Program.LoggedInUser.CanAddPayments;
         accountChargeEntryToolStripMenuItem.Visible = Program.LoggedInUser.CanSubmitCharges;
 
         //administrator only menu items
@@ -557,6 +558,7 @@ public partial class MainForm : Form
             clientBillsNewToolStripMenuItem.Visible = false;
             batchChargeEntryToolStripMenuItem.Visible = false;
             accountChargeEntryToolStripMenuItem.Visible = false;
+            remittancePostingToolStripMenuItem.Visible = false;
         }
 
     }
@@ -822,13 +824,17 @@ public partial class MainForm : Form
 
     private void remittancePostingToolStripMenuItem_Click(object sender, EventArgs e)
     {
-        return;
 
-        //Remittance835Service remittance835 = new Remittance835Service(Program.AppEnvironment);
-        //string file = @"\\wthmclbill\shared\Billing\TEST\Posting835Remit\MCL_NC_MCR_1093705428_835_11119267.RMT";
+        ProcessRemittanceForm frm = new();
+        frm.RemittanceFileSelected += OnRemittanceSelected;
+        NewForm(frm);
+    }
 
-        //remittance835.Load835(file);
-
+    private void OnRemittanceSelected(object sender, int e)
+    {
+        PostRemittanceForm frm = new(e);
+        frm.AccountLaunched += OnAccountLaunched;
+        NewForm(frm);
     }
 
     private void chargeMasterToolStripMenuItem1_Click(object sender, EventArgs e)

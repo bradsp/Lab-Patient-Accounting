@@ -23,6 +23,12 @@ public interface IAppEnvironment
     Color ButtonBackgroundColor { get; set; }
     Color ButtonTextColor { get; set; }
     string TempFilePath { get; }
+    string UserName { get; set; }
+    string Password { get; set; }
+    bool IntegratedAuthentication { get; set; }
+    UserAccount UserAccount { get; set; }
+    string ServiceUsername { get; set; }
+    string ServicePassword { get; set; }
 
     string[] GetArgs();
 }

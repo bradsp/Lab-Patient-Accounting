@@ -1,7 +1,8 @@
 {
   "profiles": {
     "Lab Billing WinForms UI": {
-      "commandName": "Project"
+      "commandName": "Project",
+      "commandLineArgs": "/TEST"
     }
   }
 }
