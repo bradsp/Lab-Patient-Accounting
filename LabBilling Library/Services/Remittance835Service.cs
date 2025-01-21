@@ -292,6 +292,12 @@ public sealed class Remittance835Service
                         File.AppendAllText(logfile, $"Processing SVC segment loop2110\n");
                         break;
                     case "CAS":
+                        if(loop2110 == null)
+                        {
+                            loop2110 = new Loop2110();
+                            loop2100.Loop2110s.Add(loop2110);
+                        }
+
                         loop2110Adj = new Loop2110Adj
                         {
                             ClaimAdjustmentGroupCode = segment[1],
@@ -299,6 +305,7 @@ public sealed class Remittance835Service
                             AdjustmentAmount = segment[3],
                             AdjustmentQuantity = segment[4]
                         };
+
                         loop2110.Adjustments.Add(loop2110Adj);
 
                         if (segment[5] != null)

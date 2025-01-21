@@ -3,7 +3,7 @@
     <TargetFramework>net6.0-windows7.0</TargetFramework>
     <OutputType>WinExe</OutputType>
     <RootNamespace>LabBilling</RootNamespace>
-    <AssemblyName>Lab Patient Accounting</AssemblyName>
+    <AssemblyName>LabBilling</AssemblyName>
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <PublishUrl>\\wthmclbill\installations%24\LabBilling\</PublishUrl>
     <Install>true</Install>
@@ -176,7 +176,9 @@
     <ProjectReference Include="..\..\DataGridViewGrouper\DataGridViewGrouper\DataGridViewGrouper.csproj">
       <Private>True</Private>
     </ProjectReference>
-    <ProjectReference Include="..\LabBilling Library\LabBilling Core.csproj" />
+    <ProjectReference Include="..\LabBilling Library\LabBilling Core.csproj">
+      <Private>True</Private>
+    </ProjectReference>
     <ProjectReference Include="..\LabBilling Winforms Library\LabBilling Winforms Library.csproj">
       <Private>True</Private>
     </ProjectReference>

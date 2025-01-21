@@ -1,5 +1,6 @@
 ﻿using LabBilling.Core.Models;
 using LabBilling.Core.Services;
+using LabBilling.Logging;
 using System.ComponentModel;
 using System.IO;
 using WinFormsLibrary;
@@ -38,7 +39,7 @@ public partial class ProcessRemittanceForm : Form
         statusStrip1.Items.Add(new ToolStripControlHost(progressLabel));
     }
 
-    private async void importRemittancesToolStripMenuItem_Click(object sender, EventArgs e)
+    private async Task importRemittances()
     {
         var remitImportDirectory = Program.AppEnvironment.ApplicationParameters.RemitImportDirectory;
         var archiveDirectory = Path.Combine(remitImportDirectory, "archive");
@@ -65,7 +66,8 @@ public partial class ProcessRemittanceForm : Form
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Failed to import file {remittanceFile}: {ex.Message}", "Import Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Log.Instance.Error($"Failed to import file {remittanceFile}: {ex.Message}");
+                MessageBox.Show($"Failed to import file {Path.GetFileName(remittanceFile)}. \n\nNotify the administrator. \n\nYou may continue processing imported remittances.", "Import Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 
@@ -77,7 +79,7 @@ public partial class ProcessRemittanceForm : Form
 
     private void ProcessRemittanceForm_Load(object sender, EventArgs e)
     {
-        importRemittancesToolStripMenuItem_Click(sender, e);
+        importRemittances();
 
         remittanceBindingList.Clear();
         remittancesDataGridView.DataSource = null;
