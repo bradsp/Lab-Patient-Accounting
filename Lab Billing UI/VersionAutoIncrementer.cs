@@ -6,9 +6,9 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Lab Patient Accounting")]
 [assembly: System.Reflection.AssemblyCopyrightAttribute("Copyright 2020-2024")]
 [assembly: System.Reflection.AssemblyDescriptionAttribute("...")]
-[assembly: System.Reflection.AssemblyFileVersionAttribute("2025.1.20.1176")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("2025.1.20.1176")]
+[assembly: System.Reflection.AssemblyFileVersionAttribute("2025.1.20.1188")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("2025.1.20.1188")]
 [assembly: System.Reflection.AssemblyProductAttribute("...")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Lab Patient Accounting")]
-[assembly: AssemblyVersion("2025.1.20.1176")]
+[assembly: AssemblyVersion("2025.1.20.1188")]
 
