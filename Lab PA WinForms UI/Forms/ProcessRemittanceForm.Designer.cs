@@ -111,7 +111,7 @@ partial class ProcessRemittanceForm
         // importRemittancesToolstripButton
         // 
         importRemittancesToolstripButton.DisplayStyle = ToolStripItemDisplayStyle.Text;
-        importRemittancesToolstripButton.Font = new Font("Segoe UI", 12F);
+        importRemittancesToolstripButton.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
         importRemittancesToolstripButton.Image = (Image)resources.GetObject("importRemittancesToolstripButton.Image");
         importRemittancesToolstripButton.ImageTransparentColor = Color.Magenta;
         importRemittancesToolstripButton.Name = "importRemittancesToolstripButton";
@@ -128,7 +128,7 @@ partial class ProcessRemittanceForm
         Controls.Add(remittancesDataGridView);
         Controls.Add(statusStrip1);
         Name = "ProcessRemittanceForm";
-        Text = "ProcessRemittanceForm";
+        Text = "Process Remittances";
         Load += ProcessRemittanceForm_Load;
         ((System.ComponentModel.ISupportInitialize)remittancesDataGridView).EndInit();
         contextMenuStrip1.ResumeLayout(false);

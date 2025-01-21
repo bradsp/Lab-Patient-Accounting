@@ -24,6 +24,7 @@
   <ItemGroup>
     <PackageReference Include="ClosedXML" Version="0.104.2" />
     <PackageReference Include="DocumentFormat.OpenXml" Version="3.2.0" />
+    <PackageReference Include="System.Drawing.Common" Version="6.0.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\LabBilling Library\LabBilling Core.csproj" />
@@ -31,9 +32,6 @@
     <ProjectReference Include="..\Utilities\Utilities.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Update="DMessageForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Update="FilterListBox.cs">
       <SubType>Component</SubType>
     </Compile>

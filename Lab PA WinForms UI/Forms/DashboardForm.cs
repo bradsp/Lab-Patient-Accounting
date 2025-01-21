@@ -6,7 +6,6 @@ using LabBilling.Core.Models;
 using System.Net.Http;
 using LabBilling.Logging;
 using LabBilling.Core.Services;
-using ScottPlot;
 using LabBilling.Core.DataAccess;
 
 namespace LabBilling.Forms;
@@ -14,16 +13,22 @@ namespace LabBilling.Forms;
 public partial class DashboardForm : Form
 {
     private DictionaryService dictionaryService;
+    private TableLayoutPanel announcementLayoutPanel;
 
     public DashboardForm()
     {
         InitializeComponent();
         dictionaryService = new(Program.AppEnvironment);
+        announcementLayoutPanel = new TableLayoutPanel
+        {
+            Dock = DockStyle.Fill,
+            AutoScroll = true
+        };
     }
 
     private void DashboardForm_Load(object sender, EventArgs e)
     {
-        LoadArChart();
+        //LoadArChart();
         LoadAnnouncementsWeb();
     }
 
@@ -77,34 +82,45 @@ public partial class DashboardForm : Form
     {
         string url = Program.AppEnvironment.ApplicationParameters.DocumentationSiteUrl + "/" +
             Program.AppEnvironment.ApplicationParameters.LatestUpdatesUrl;
-
-        LinkLabel hdrlbl = new()
+        try
         {
-            Text = "Updates"
-        };
-        hdrlbl.Font = new Font(hdrlbl.Font.FontFamily, 16, System.Drawing.FontStyle.Bold);
-        hdrlbl.LinkArea = new LinkArea(0, 22);
-        hdrlbl.LinkClicked += new LinkLabelLinkClickedEventHandler(Hdrlbl_LinkClicked);
+            dashboardLayoutPanel.Controls.Add(announcementLayoutPanel, 0, 0);
+            dashboardLayoutPanel.SetRowSpan(announcementLayoutPanel, 2);
 
-        announcementLayoutPanel.Controls.Add(hdrlbl, 0, 0);
-        announcementLayoutPanel.RowStyles[0].SizeType = SizeType.Absolute;
-        announcementLayoutPanel.RowStyles[0].Height = 40;
-        hdrlbl.Dock = DockStyle.Fill;
+            LinkLabel hdrlbl = new()
+            {
+                Text = "Updates"
+            };
+            hdrlbl.Font = new Font(hdrlbl.Font.FontFamily, 16, System.Drawing.FontStyle.Bold);
+            hdrlbl.LinkArea = new LinkArea(0, 22);
+            hdrlbl.LinkClicked += new LinkLabelLinkClickedEventHandler(Hdrlbl_LinkClicked);
 
-        var response = CallUrl(url).Result;
+            // Add rows and columns to announcementLayoutPanel
+            announcementLayoutPanel.ColumnCount = 1;
+            announcementLayoutPanel.RowCount = 2;
+            announcementLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 40));
+            announcementLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 80));
 
-        WebBrowser tb = new()
+            announcementLayoutPanel.Controls.Add(hdrlbl, 0, 0);
+            hdrlbl.Dock = DockStyle.Fill;
+
+            var response = CallUrl(url).Result;
+
+            WebBrowser tb = new()
+            {
+                DocumentText = ParseHtml(response),
+                Dock = DockStyle.Fill
+            };
+
+            announcementLayoutPanel.Controls.Add(tb, 0, 1);
+
+            dashboardLayoutPanel.SetColumnSpan(announcementLayoutPanel, 2);
+        }
+        catch (Exception ex)
         {
-            DocumentText = ParseHtml(response),
-            Dock = DockStyle.Fill
-        };
-
-        announcementLayoutPanel.RowCount++;
-        announcementLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 80));                
-
-        announcementLayoutPanel.Controls.Add(tb, 0, 1);
-
-        dashboardLayoutPanel.SetColumnSpan(announcementLayoutPanel, 2);
+            Log.Instance.Error(ex);
+            MessageBox.Show(ex.Message);
+        }
     }
 
     private void Hdrlbl_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -161,35 +177,35 @@ public partial class DashboardForm : Form
         richTextBox.Width += richTextBox.Margin.Horizontal + SystemInformation.HorizontalResizeBorderThickness;
     }
 
-    private void LoadArChart()
-    {
-        try
-        {
-            ReportingRepository reportingRepository = new(Program.AppEnvironment.ConnectionString);
-            var data = reportingRepository.GetARByFinCodeList();
+    //private void LoadArChart()
+    //{
+    //    try
+    //    {
+    //        ReportingRepository reportingRepository = new(Program.AppEnvironment.ConnectionString);
+    //        var data = reportingRepository.GetARByFinCodeList();
 
-            int i = 1;
-            Tick[] ticks = new Tick[data.Count];
-            foreach (var dataItem in data)
-            {
-                formsPlot1.Plot.Add.Bar(i, dataItem.Balance);
-                ticks[i - 1] = new Tick(i, dataItem.FinancialClass);
-                i++;
-            }
+    //        int i = 1;
+    //        Tick[] ticks = new Tick[data.Count];
+    //        foreach (var dataItem in data)
+    //        {
+    //            formsPlot1.Plot.Add.Bar(i, dataItem.Balance);
+    //            ticks[i - 1] = new Tick(i, dataItem.FinancialClass);
+    //            i++;
+    //        }
 
-            formsPlot1.Plot.Axes.Bottom.TickGenerator = new ScottPlot.TickGenerators.NumericManual(ticks);
-            formsPlot1.Plot.Axes.Bottom.MajorTickStyle.Length = 0;
-            formsPlot1.Plot.HideGrid();
-            formsPlot1.Plot.Axes.Margins(bottom: 0);
-            formsPlot1.Plot.Axes.Bottom.Label.Text = "Financial Class";
-            formsPlot1.Plot.FigureBackground.Color = ScottPlot.Color.FromHex("#ffffff");
-            formsPlot1.Plot.Title("Accounts Receivable Balance by Financial Class");
-        }
-        catch(Exception ex)
-        {
-            Log.Instance.Error(ex);            
-        }
-    }
+    //        formsPlot1.Plot.Axes.Bottom.TickGenerator = new ScottPlot.TickGenerators.NumericManual(ticks);
+    //        formsPlot1.Plot.Axes.Bottom.MajorTickStyle.Length = 0;
+    //        formsPlot1.Plot.HideGrid();
+    //        formsPlot1.Plot.Axes.Margins(bottom: 0);
+    //        formsPlot1.Plot.Axes.Bottom.Label.Text = "Financial Class";
+    //        formsPlot1.Plot.FigureBackground.Color = ScottPlot.Color.FromHex("#ffffff");
+    //        formsPlot1.Plot.Title("Accounts Receivable Balance by Financial Class");
+    //    }
+    //    catch(Exception ex)
+    //    {
+    //        Log.Instance.Error(ex);            
+    //    }
+    //}
 
 
     private void LoadChart()

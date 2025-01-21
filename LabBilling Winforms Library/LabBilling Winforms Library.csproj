@@ -13,6 +13,7 @@
   <ItemGroup>
     <PackageReference Include="PDFsharp-GDI" Version="6.1.1" />
     <PackageReference Include="PDFsharp-MigraDoc-GDI" Version="6.1.1" />
+    <PackageReference Include="System.Drawing.Common" Version="6.0.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\LabBilling Library\LabBilling Core.csproj" />

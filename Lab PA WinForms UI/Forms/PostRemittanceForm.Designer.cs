@@ -72,7 +72,7 @@ partial class PostRemittanceForm
         // postRemittanceToolButton
         // 
         postRemittanceToolButton.DisplayStyle = ToolStripItemDisplayStyle.Text;
-        postRemittanceToolButton.Font = new Font("Segoe UI", 12F);
+        postRemittanceToolButton.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
         postRemittanceToolButton.Image = (Image)resources.GetObject("postRemittanceToolButton.Image");
         postRemittanceToolButton.ImageTransparentColor = Color.Magenta;
         postRemittanceToolButton.Name = "postRemittanceToolButton";
@@ -85,7 +85,7 @@ partial class PostRemittanceForm
         // printRemittanceToolStripButton
         // 
         printRemittanceToolStripButton.DisplayStyle = ToolStripItemDisplayStyle.Text;
-        printRemittanceToolStripButton.Font = new Font("Segoe UI", 12F);
+        printRemittanceToolStripButton.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
         printRemittanceToolStripButton.Image = (Image)resources.GetObject("printRemittanceToolStripButton.Image");
         printRemittanceToolStripButton.ImageTransparentColor = Color.Magenta;
         printRemittanceToolStripButton.Name = "printRemittanceToolStripButton";
@@ -124,7 +124,7 @@ partial class PostRemittanceForm
         Controls.Add(statusStrip1);
         Controls.Add(toolStrip1);
         Name = "PostRemittanceForm";
-        Text = "PostRemittanceForm";
+        Text = "Post Remittance";
         Load += PostRemittanceForm_Load;
         ((System.ComponentModel.ISupportInitialize)claimDataGridView).EndInit();
         toolStrip1.ResumeLayout(false);

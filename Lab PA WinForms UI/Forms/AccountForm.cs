@@ -8,7 +8,6 @@ using LabBilling.Logging;
 using LabBilling.LookupForms;
 using System.ComponentModel;
 using System.Data;
-using System.Printing;
 using Utilities;
 using WinFormsLibrary;
 

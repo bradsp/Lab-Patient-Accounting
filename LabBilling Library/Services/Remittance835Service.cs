@@ -1,18 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using EdiTools;
+﻿using EdiTools;
 using LabBilling.Core.DataAccess;
-using System.IO;
 using LabBilling.Core.Models;
-using LabBilling.Core.Repositories;
 using LabBilling.Core.UnitOfWork;
-using System.Linq;
-using System.Threading.Tasks;
 using LabBilling.Logging;
-using System.Text;
 using Newtonsoft.Json;
-using NPOI.HPSF;
-using System.Runtime.Versioning;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace LabBilling.Core.Services;
 
