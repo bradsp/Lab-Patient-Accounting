@@ -2,7 +2,9 @@
 using LabBilling.Core.Services;
 using LabBilling.Logging;
 using System.ComponentModel;
+using System.Data;
 using System.IO;
+using System.Windows.Forms;
 using WinFormsLibrary;
 
 namespace LabBilling.Forms;
@@ -81,11 +83,15 @@ public partial class ProcessRemittanceForm : Form
     {
         importRemittances();
 
-        remittanceBindingList.Clear();
-        remittancesDataGridView.DataSource = null;
+        DataTable remittancesDt = remittanceService.GetAllRemittances(true).ToDataTable();
 
-        remittanceBindingList.AddRange(remittanceService.GetAllRemittances(true));
-        remittancesDataGridView.DataSource = remittanceBindingList;
+        remittanceBindingSource.DataSource = remittancesDt;
+        remittancesDataGridView.DataSource = remittanceBindingSource;
+
+        foreach (DataGridViewColumn column in remittancesDataGridView.Columns)
+        {
+            column.SortMode = DataGridViewColumnSortMode.Automatic;
+        }
 
         remittancesDataGridView.SetColumnsVisibility(false);
         int z = 0;
@@ -113,6 +119,9 @@ public partial class ProcessRemittanceForm : Form
         remittancesDataGridView.Columns[nameof(RemittanceFile.Payer)].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
 
         remittancesDataGridView.AutoResizeColumns();
+
+        // Set default sort order by ProcessedDate descending
+        remittanceBindingSource.Sort = $"{nameof(RemittanceFile.ProcessedDate)} DESC";
     }
 
     private void remittancesDataGridView_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
