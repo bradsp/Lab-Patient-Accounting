@@ -99,6 +99,12 @@ namespace LabBilling.Core.DataAccess
             }
             catch (Exception ex)
             {
+                if (ex.Message.Contains("String or binary data would be truncated."))
+                {
+                    var fields = CheckDBFieldLengths(table);
+                    var fieldList = string.Join(", ", fields);
+                    throw new ApplicationException("Error during database update. Fields too long: " + fieldList, ex);
+                }
                 Log.Instance.Error(ex, "Exception encountered in RepositoryBase.Add");
                 throw new ApplicationException("Exception encountered in RepositoryBase.Add", ex);
             }
@@ -113,9 +119,23 @@ namespace LabBilling.Core.DataAccess
             table.UpdatedApp = OS.GetAppName();
             table.UpdatedUser = Environment.UserName.ToString();
 
-            Context.Update(table);
-            Log.Instance.Debug(Context.LastSQL.ToString());
-            return table;
+            try
+            {
+                Context.Update(table);
+                Log.Instance.Debug(Context.LastSQL.ToString());
+                return table;
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains("String or binary data would be truncated."))
+                {
+                    var fields = CheckDBFieldLengths(table);
+                    var fieldList = string.Join(", ", fields);
+                    throw new ApplicationException("Error during database update. Fields too long: " + fieldList, ex);
+                }
+                Log.Instance.Error(ex, "Exception encountered in RepositoryBase.Update");
+                throw new ApplicationException("Exception encountered in RepositoryBase.Update", ex);
+            }
         }
 
         public virtual TPoco Update(TPoco model, IEnumerable<string> columns)
@@ -144,6 +164,12 @@ namespace LabBilling.Core.DataAccess
             }
             catch (Exception ex)
             {
+                if(ex.Message.Contains("String or binary data would be truncated."))
+                {
+                    var fields = CheckDBFieldLengths(model);
+                    var fieldList = string.Join(", ", fields);
+                    throw new ApplicationException("Error during database update. Fields too long: " + fieldList, ex);
+                }
                 Log.Instance.Debug(Context.LastSQL.ToString());
                 Log.Instance.Debug(Context.LastArgs.ToString());
                 throw new ApplicationException("Error during database update.", ex);
@@ -202,6 +228,38 @@ namespace LabBilling.Core.DataAccess
             return null;
         }
 
+        /// <summary>
+        /// Check the length of the fields in the database against the length of the fields in the object.
+        /// </summary>
+        /// <param name="table"></param>
+        /// <returns>List of fields that are too long.</returns>
+        /// <exception cref="ArgumentException"></exception>
+        public List<string> CheckDBFieldLengths(TPoco table)
+        {
+            Log.Instance.Trace("Entering");
+
+
+            // Query the database to get the field lengths
+            var maxLengths = Context.Fetch<ColumnInfo>($"SELECT COLUMN_NAME, CHARACTER_MAXIMUM_LENGTH FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '{_tableName}'")
+                                    .ToDictionary(x => x.COLUMN_NAME, x => x.CHARACTER_MAXIMUM_LENGTH);
+
+            List<string> longFields = new();
+            foreach (var property in table.GetType().GetProperties())
+            {
+                if (maxLengths.ContainsKey(property.Name))
+                {
+                    var value = property.GetValue(table) as string;
+                    if (value != null && value.Length > maxLengths[property.Name])
+                    {
+                        longFields.Add(property.Name);
+                    }
+                }
+            }
+
+            Log.Instance.Trace("Exiting");
+            return longFields;
+        }
+
     }
 
     public class RepositoryEventArgs<T> : EventArgs
@@ -210,4 +268,10 @@ namespace LabBilling.Core.DataAccess
         public T Record { get; set; }
     }
 
+}
+
+public class ColumnInfo
+{
+    public string COLUMN_NAME { get; set; }
+    public int? CHARACTER_MAXIMUM_LENGTH { get; set; }
 }

@@ -99,23 +99,37 @@ public partial class PostRemittanceForm : Form
         // Make the patient name column fill the remaining space
         claimDataGridView.Columns[nameof(RemittanceClaim.PatientName)].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
         claimDataGridView.AutoResizeColumns();
+
+        // disable the posting button if the remittance has already been posted
+        postRemittanceToolButton.Enabled = _selectedRemittance.PostedDate == null;
     }
 
     private async void postRemittanceToolButton_Click(object sender, EventArgs e)
     {
-        progressBar.Visible = true;
-        progressLabel.Visible = true;
-
-        var progress = new Progress<ProgressReportModel>(report =>
+        try
         {
-            progressBar.Value = report.PercentageComplete;
-            progressLabel.Text = report.StatusMessage;
-        });
+            progressBar.Visible = true;
+            progressLabel.Visible = true;
 
-        await remittanceService.PostRemittanceAsync(_selectedRemittance.RemittanceId, progress);
+            var progress = new Progress<ProgressReportModel>(report =>
+            {
+                progressBar.Value = report.PercentageComplete;
+                progressLabel.Text = report.StatusMessage;
+            });
 
-        progressBar.Visible = false;
-        progressLabel.Visible = false;
+            await remittanceService.PostRemittanceAsync(_selectedRemittance.RemittanceId, progress);
+
+            progressBar.Visible = false;
+            progressLabel.Visible = false;
+
+            MessageBox.Show($"Remittance posted successfully.\n\n", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            postRemittanceToolButton.Enabled = false;
+        }
+        catch (Exception ex)
+        {
+            Log.Instance.Error(ex, "Error posting remittance.");
+            MessageBox.Show("Error posting remittance.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
     }
 
     private void claimDataGridView_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)

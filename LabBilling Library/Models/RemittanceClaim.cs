@@ -52,14 +52,14 @@ public class RemittanceClaim : IBaseEntity
                 case "1":
                 case "19":
                     return ClaimProcessStatus.Process;
-                case "2":
                 case "3":
                     return ClaimProcessStatus.NotProcessed;
                 case "4":
                     return ClaimProcessStatus.Denied;
+                case "2":
                 case "22":
                 case "23":
-                    if (PaidAmount != Convert.ToDecimal(0.00))
+                    if (ClaimPaymentAmount != Convert.ToDecimal(0.00))
                         return ClaimProcessStatus.Process;
                     else
                         return ClaimProcessStatus.NotProcessed;

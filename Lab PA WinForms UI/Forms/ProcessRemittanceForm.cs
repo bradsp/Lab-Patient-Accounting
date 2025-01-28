@@ -84,7 +84,7 @@ public partial class ProcessRemittanceForm : Form
         remittanceBindingList.Clear();
         remittancesDataGridView.DataSource = null;
 
-        remittanceBindingList.AddRange(remittanceService.GetAllRemittances());
+        remittanceBindingList.AddRange(remittanceService.GetAllRemittances(true));
         remittancesDataGridView.DataSource = remittanceBindingList;
 
         remittancesDataGridView.SetColumnsVisibility(false);
@@ -142,7 +142,25 @@ public partial class ProcessRemittanceForm : Form
 
     private void reimportRemittanceToolStripMenuItem_Click(object sender, EventArgs e)
     {
+        // Get the selected remittance and reimport the remittance file
+        // This will delete the existing claims and claim details and reload them from the remittance file
 
+        if (remittancesDataGridView.SelectedRows.Count > 0)
+        {
+            var remittanceId = (int)remittancesDataGridView.SelectedRows[0].Cells[nameof(RemittanceFile.RemittanceId)].Value;
+            if (remittanceService.ReimportRemittance(remittanceId) == null)
+            {
+                MessageBox.Show("Failed to reimport remittance. Notify the administrator.", "Reimport Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            else
+            {
+                remittanceBindingList.Clear();
+                remittanceBindingList.AddRange(remittanceService.GetAllRemittances(true));
+                remittancesDataGridView.DataSource = null;
+                remittancesDataGridView.DataSource = remittanceBindingList;
+                remittanceBindingList.ResetBindings();
+            }
+        }
     }
 
     private void reversePostingToolStripMenuItem_Click(object sender, EventArgs e)

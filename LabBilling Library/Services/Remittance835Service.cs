@@ -75,6 +75,61 @@ public sealed class Remittance835Service
         }
     }
 
+    public bool DeleteRemittance(RemittanceFile remittance)
+    {
+        using UnitOfWorkMain uow = new(_appEnvironment);
+        try
+        {
+            foreach (var claim in remittance.Claims)
+            {
+                foreach (var detail in claim.ClaimDetails)
+                {
+                    foreach (var adj in detail.Adjustments)
+                    {
+                        uow.RemittanceClaimAdjustmentRepository.Delete(adj);
+                    }
+                    uow.RemittanceClaimDetailRepository.Delete(detail);
+                }
+                uow.RemittanceClaimRepository.Delete(claim);
+            }
+            uow.RemittanceRepository.Delete(remittance);
+            return true;
+        }
+        catch (Exception ex)
+        {
+            _errors.Add($"Error deleting remittance: {ex.Message}");
+            return false;
+        }
+    }
+
+    public RemittanceFile GetRemittanceByFileName(string filename)
+    {
+        using UnitOfWorkMain uow = new(_appEnvironment);
+        return uow.RemittanceRepository.GetByFilename(filename);
+    }
+
+    public RemittanceData ReimportRemittance(int remittanceId)
+    {
+        //delete existing RemittanceFile records
+        using UnitOfWorkMain uow = new(_appEnvironment, true);
+        try
+        {
+            var remit = GetRemittance(remittanceId);
+            var filename = Path.Combine(_appEnvironment.ApplicationParameters.RemitImportDirectory, "archive", remit.FileName);
+            this.DeleteRemittance(remit);
+
+            RemittanceData remittance = Load835(filename);
+
+            uow.Commit();
+            return remittance;
+        }
+        catch (Exception ex)
+        {
+            _errors.Add($"Error deleting existing remittance records: {ex.Message}");
+            return null;
+        }
+    }
+
     public RemittanceData Load835(string fileName)
     {
         EdiDocument ediDocument;
@@ -209,6 +264,7 @@ public sealed class Remittance835Service
 
                         if (loop2100 != null)
                         {
+                            loop2100.Loop2110s.Add(loop2110);
                             loop2000.Loop2100s.Add(loop2100);
                             File.AppendAllText(logfile, $"Adding loop2100 to loop2000\n");
                         }
@@ -224,6 +280,7 @@ public sealed class Remittance835Service
                         loop2100.PayerClaimControlNumber = segment[7];
                         loop2100.FacilityTypeCode = segment[8];
                         loop2100.ClaimFrequencyCode = segment[9];
+                        loop2110 = null; // Reset loop2110 to ensure it doesn't carry over to the new loop2100
                         break;
                     case "NM1":
                         if (currentLoop == "2100" && segment[1] == "QC")
@@ -245,6 +302,7 @@ public sealed class Remittance835Service
                         }
                         break;
                     case "PER":
+                        //need to specify contact function code for payer info
                         if (currentLoop == "1000A")
                         {
                             remittance.PayerContactPhone = segment[4];
@@ -292,7 +350,7 @@ public sealed class Remittance835Service
                         File.AppendAllText(logfile, $"Processing SVC segment loop2110\n");
                         break;
                     case "CAS":
-                        if(loop2110 == null)
+                        if (loop2110 == null)
                         {
                             loop2110 = new Loop2110();
                             loop2100.Loop2110s.Add(loop2110);
@@ -361,6 +419,11 @@ public sealed class Remittance835Service
                         File.AppendAllText(logfile, $"Processing CAS segment loop2110\n");
                         break;
                     case "SE":
+                        if (loop2110 != null)
+                        {
+                            loop2100.Loop2110s.Add(loop2110);
+                            loop2110 = null;
+                        }
                         if (loop2100 != null)
                         {
                             loop2000.Loop2100s.Add(loop2100);
@@ -387,7 +450,11 @@ public sealed class Remittance835Service
             }
         }
 
-        // Add the last loop2100 to loop2000 and the last loop2000 to remittance
+        // Add the last loop2110 to loop2100 and the last loop2100 to loop2000
+        if (loop2110 != null)
+        {
+            loop2100.Loop2110s.Add(loop2110);
+        }
         if (loop2100 != null)
         {
             loop2000.Loop2100s.Add(loop2100);
@@ -719,95 +786,103 @@ public sealed class Remittance835Service
 
     private void StoreRemittanceData(RemittanceData remittanceData, string fileName)
     {
-        var remittanceFile = new RemittanceFile
+        try
         {
-            FileName = Path.GetFileName(fileName), // Set appropriate file name
-            ProcessedDate = DateTime.Now,
-            Payer = remittanceData.PayerName,
-            TransactionTraceNumber = remittanceData.CurrentTransactionTraceNumber,
-            TotalPaymentAmount = decimal.Parse(remittanceData.TotalPremiumPaymentAmount ?? "0"),
-            ClaimCount = remittanceData.Loop2000s.Sum(x => Convert.ToInt16(x.TotalClaimCount)),
-            TotalAllowedAmount = remittanceData.Loop2000s.Sum(l => l.Loop2100s.Sum(c => decimal.Parse(c.AllowedAmount ?? "0"))),
-            TotalChargeAmount = remittanceData.Loop2000s.Sum(l => Convert.ToDecimal(l.TotalClaimChargeAmount)),
-            TotalPaidAmount = decimal.Parse(remittanceData.PaidAmount ?? "0"),
-            RemittanceData = JsonConvert.SerializeObject(remittanceData),
-            Claims = new List<RemittanceClaim>()
-        };
-
-        foreach (var loop2000 in remittanceData.Loop2000s)
-        {
-            foreach (var loop2100 in loop2000.Loop2100s)
+            var remittanceFile = new RemittanceFile
             {
-                var remittanceClaim = new RemittanceClaim
-                {
-                    AccountNo = loop2100.AccountNo,
-                    ClaimStatusCode = loop2100.ClaimStatusCode,
-                    ClaimChargeAmount = decimal.Parse(loop2100.ClaimChargeAmount ?? "0"),
-                    ClaimPaymentAmount = decimal.Parse(loop2100.ClaimPaymentAmount ?? "0"),
-                    PatientResponsibilityAmount = decimal.Parse(loop2100.PatientResponsibilityAmount ?? "0"),
-                    ClaimFilingIndicatorCode = loop2100.ClaimFilingIndicatorCode,
-                    PayerClaimControlNumber = loop2100.PayerClaimControlNumber,
-                    FacilityTypeCode = loop2100.FacilityTypeCode,
-                    ClaimFrequencyCode = loop2100.ClaimFrequencyCode,
-                    PaidAmount = decimal.Parse(loop2100.PaidAmount ?? "0"),
-                    AllowedAmount = decimal.Parse(loop2100.AllowedAmount ?? "0"),
-                    ClaimDetails = new List<RemittanceClaimDetail>()
-                };
+                FileName = Path.GetFileName(fileName), // Set appropriate file name
+                ProcessedDate = DateTime.Now,
+                Payer = remittanceData.PayerName,
+                TransactionTraceNumber = remittanceData.CurrentTransactionTraceNumber,
+                TotalPaymentAmount = decimal.Parse(remittanceData.TotalPremiumPaymentAmount ?? "0"),
+                ClaimCount = remittanceData.Loop2000s.Sum(x => Convert.ToInt16(x.TotalClaimCount)),
+                TotalAllowedAmount = remittanceData.Loop2000s.Sum(l => l.Loop2100s.Sum(c => decimal.Parse(c.AllowedAmount ?? "0"))),
+                TotalChargeAmount = remittanceData.Loop2000s.Sum(l => Convert.ToDecimal(l.TotalClaimChargeAmount)),
+                TotalPaidAmount = decimal.Parse(remittanceData.PaidAmount ?? "0"),
+                RemittanceData = JsonConvert.SerializeObject(remittanceData),
+                Claims = new List<RemittanceClaim>()
+            };
 
-                foreach (var loop2110 in loop2100.Loop2110s)
+            foreach (var loop2000 in remittanceData.Loop2000s)
+            {
+                foreach (var loop2100 in loop2000.Loop2100s)
                 {
-                    var remittanceClaimDetail = new RemittanceClaimDetail
+                    var remittanceClaim = new RemittanceClaim
                     {
-                        ProcedureCode = loop2110.ProcedureCode,
-                        LineItemChargeAmount = decimal.Parse(loop2110.LineItemChargeAmount ?? "0"),
-                        MonetaryAmount = decimal.Parse(loop2110.MonetaryAmount ?? "0"),
-                        RevenueCode = loop2110.RevenueCode,
-                        PaidAmount = decimal.Parse(loop2110.PaidAmount ?? "0"),
-                        AllowedAmount = decimal.Parse(loop2110.AllowedAmount ?? "0"),
-                        Adjustments = new List<RemittanceClaimAdjustment>()
+                        AccountNo = loop2100.AccountNo,
+                        ClaimStatusCode = loop2100.ClaimStatusCode,
+                        ClaimChargeAmount = decimal.Parse(loop2100.ClaimChargeAmount ?? "0"),
+                        ClaimPaymentAmount = decimal.Parse(loop2100.ClaimPaymentAmount ?? "0"),
+                        PatientResponsibilityAmount = decimal.Parse(loop2100.PatientResponsibilityAmount ?? "0"),
+                        ClaimFilingIndicatorCode = loop2100.ClaimFilingIndicatorCode,
+                        PayerClaimControlNumber = loop2100.PayerClaimControlNumber,
+                        FacilityTypeCode = loop2100.FacilityTypeCode,
+                        ClaimFrequencyCode = loop2100.ClaimFrequencyCode,
+                        PaidAmount = decimal.Parse(loop2100.PaidAmount ?? "0"),
+                        AllowedAmount = decimal.Parse(loop2100.AllowedAmount ?? "0"),
+                        ClaimDetails = new List<RemittanceClaimDetail>()
                     };
 
-                    foreach (var adjustment in loop2110.Adjustments)
+                    foreach (var loop2110 in loop2100.Loop2110s)
                     {
-                        var claimAdjustment = new RemittanceClaimAdjustment
+                        var remittanceClaimDetail = new RemittanceClaimDetail
                         {
-                            ClaimAdjustmentGroupCode = adjustment.ClaimAdjustmentGroupCode,
-                            AdjustmentReasonCode = adjustment.AdjustmentReasonCode,
-                            AdjustmentAmount = decimal.Parse(adjustment.AdjustmentAmount ?? "0"),
-                            AdjustmentQuantity = int.Parse(adjustment.AdjustmentQuantity ?? "0")
+                            ProcedureCode = loop2110.ProcedureCode,
+                            LineItemChargeAmount = decimal.Parse(loop2110.LineItemChargeAmount ?? "0"),
+                            MonetaryAmount = decimal.Parse(loop2110.MonetaryAmount ?? "0"),
+                            RevenueCode = loop2110.RevenueCode,
+                            PaidAmount = decimal.Parse(loop2110.PaidAmount ?? "0"),
+                            AllowedAmount = decimal.Parse(loop2110.AllowedAmount ?? "0"),
+                            Adjustments = new List<RemittanceClaimAdjustment>()
                         };
 
-                        remittanceClaimDetail.Adjustments.Add(claimAdjustment);
+                        foreach (var adjustment in loop2110.Adjustments)
+                        {
+                            var claimAdjustment = new RemittanceClaimAdjustment
+                            {
+                                ClaimAdjustmentGroupCode = adjustment.ClaimAdjustmentGroupCode,
+                                AdjustmentReasonCode = adjustment.AdjustmentReasonCode,
+                                AdjustmentAmount = decimal.Parse(adjustment.AdjustmentAmount ?? "0"),
+                                AdjustmentQuantity = int.Parse(adjustment.AdjustmentQuantity ?? "0")
+                            };
+
+                            remittanceClaimDetail.Adjustments.Add(claimAdjustment);
+                        }
+
+                        remittanceClaim.ClaimDetails.Add(remittanceClaimDetail);
                     }
 
-                    remittanceClaim.ClaimDetails.Add(remittanceClaimDetail);
+                    remittanceFile.Claims.Add(remittanceClaim);
                 }
-
-                remittanceFile.Claims.Add(remittanceClaim);
             }
-        }
 
-        //Save the remittance file and related data
-        using UnitOfWorkMain uow = new(_appEnvironment);
+            //Save the remittance file and related data
+            using UnitOfWorkMain uow = new(_appEnvironment);
 
-        var remit = uow.RemittanceRepository.Add(remittanceFile);
+            var remit = uow.RemittanceRepository.Add(remittanceFile);
 
-        foreach (var claim in remittanceFile.Claims)
-        {
-            claim.RemittanceId = remit.RemittanceId;
-            var newclaim = uow.RemittanceClaimRepository.Add(claim);
-            foreach (var detail in claim.ClaimDetails)
+            foreach (var claim in remittanceFile.Claims)
             {
-                detail.RemittanceClaimId = newclaim.ClaimId;
-                var newdetail = uow.RemittanceClaimDetailRepository.Add(detail);
-                foreach (var adjustment in detail.Adjustments)
+                claim.RemittanceId = remit.RemittanceId;
+                var newclaim = uow.RemittanceClaimRepository.Add(claim);
+                foreach (var detail in claim.ClaimDetails)
                 {
-                    adjustment.RemittanceClaimDetailId = newdetail.Id;
-                    uow.RemittanceClaimAdjustmentRepository.Add(adjustment);
+                    detail.RemittanceClaimId = newclaim.ClaimId;
+                    var newdetail = uow.RemittanceClaimDetailRepository.Add(detail);
+                    foreach (var adjustment in detail.Adjustments)
+                    {
+                        adjustment.RemittanceClaimDetailId = newdetail.Id;
+                        uow.RemittanceClaimAdjustmentRepository.Add(adjustment);
+                    }
                 }
             }
+            uow.Commit();
         }
-        uow.Commit();
+        catch(Exception ex)
+        {
+            Log.Instance.Error($"Error storing remittance data: {ex.Message}");
+            throw;
+        }
     }
 
     //add GetAllRemittancesAsync method that is a Task wrapper for GetAllRemittances
@@ -878,35 +953,64 @@ public sealed class Remittance835Service
 
             foreach (var claim in remittance.Claims)
             {
-                foreach (var detail in claim.ClaimDetails)
+                if (!claim.ClaimDetails.Any())
                 {
-                    if (claim.ProcessStatus != ClaimProcessStatus.Process)
-                        break;
-                    //write checks to the database
+                    // Post a single payment record with the claim total if there are no detail records
                     Chk chk = new()
                     {
                         ChkDate = DateTime.Today,
-                        PaidAmount = Convert.ToDouble(detail.MonetaryAmount),
+                        PaidAmount = Convert.ToDouble(claim.ClaimPaymentAmount),
                         Source = remittance.Payer,
-                        Comment = $"Check for claim {claim.AccountNo} {detail.ProcedureCode}",
+                        Comment = $"Check for claim {claim.AccountNo}",
                         CheckNo = remittance.TransactionTraceNumber,
                         AccountNo = claim.AccountNo,
                         Batch = remittance.RemittanceId,
-                        Cpt4Code = detail.ProcedureCode,
-                        ContractualAmount = Convert.ToDouble(detail.Adjustments.Where(x => x.ClaimAdjustmentGroupCode == "CO" && x.AdjustmentReasonCode == "45").Sum(y => y.AdjustmentAmount)),
-                        ClaimAdjCode = detail.Adjustments.FirstOrDefault()?.AdjustmentReasonCode,
-                        ClaimAdjGroupCode = detail.Adjustments.FirstOrDefault()?.ClaimAdjustmentGroupCode,
+                        ContractualAmount = 0.00,
+                        ClaimAdjCode = claim.ClaimStatusCode,
                         PostingFile = Path.GetFileName(remittance.FileName),
                         EftNumber = remittance.TransactionTraceNumber,
                         ClaimNo = claim.PayerClaimControlNumber,
                         EftDate = remittance.ProcessedDate,
                         Status = "NEW"
                     };
-                    total_paid += Convert.ToDouble(detail.MonetaryAmount);
-                    total_contractual += Convert.ToDouble(detail.Adjustments.Where(x => x.ClaimAdjustmentGroupCode == "CO" && x.AdjustmentReasonCode == "45").Sum(y => y.AdjustmentAmount));
-                    total_patient_responsibility += Convert.ToDouble(detail.Adjustments.Where(x => x.ClaimAdjustmentGroupCode == "PR").Sum(y => y.AdjustmentAmount));
+                    total_paid += Convert.ToDouble(claim.ClaimPaymentAmount);
+                    total_contractual += Convert.ToDouble(claim.ClaimChargeAmount) - Convert.ToDouble(claim.ClaimPaymentAmount);
+                    total_patient_responsibility += Convert.ToDouble(claim.PatientResponsibilityAmount);
 
                     await uow.ChkRepository.AddAsync(chk);
+                }
+                else
+                {
+                    foreach (var detail in claim.ClaimDetails)
+                    {
+                        if (claim.ProcessStatus != ClaimProcessStatus.Process)
+                            break;
+                        //write checks to the database
+                        Chk chk = new()
+                        {
+                            ChkDate = DateTime.Today,
+                            PaidAmount = Convert.ToDouble(detail.MonetaryAmount),
+                            Source = remittance.Payer,
+                            Comment = $"Check for claim {claim.AccountNo} {detail.ProcedureCode}",
+                            CheckNo = remittance.TransactionTraceNumber,
+                            AccountNo = claim.AccountNo,
+                            Batch = remittance.RemittanceId,
+                            Cpt4Code = detail.ProcedureCode,
+                            ContractualAmount = Convert.ToDouble(detail.Adjustments.Where(x => x.ClaimAdjustmentGroupCode == "CO" && x.AdjustmentReasonCode == "45").Sum(y => y.AdjustmentAmount)),
+                            ClaimAdjCode = detail.Adjustments.FirstOrDefault()?.AdjustmentReasonCode,
+                            ClaimAdjGroupCode = detail.Adjustments.FirstOrDefault()?.ClaimAdjustmentGroupCode,
+                            PostingFile = Path.GetFileName(remittance.FileName),
+                            EftNumber = remittance.TransactionTraceNumber,
+                            ClaimNo = claim.PayerClaimControlNumber,
+                            EftDate = remittance.ProcessedDate,
+                            Status = "NEW"
+                        };
+                        total_paid += Convert.ToDouble(detail.MonetaryAmount);
+                        total_contractual += Convert.ToDouble(detail.Adjustments.Where(x => x.ClaimAdjustmentGroupCode == "CO" && x.AdjustmentReasonCode == "45").Sum(y => y.AdjustmentAmount));
+                        total_patient_responsibility += Convert.ToDouble(detail.Adjustments.Where(x => x.ClaimAdjustmentGroupCode == "PR").Sum(y => y.AdjustmentAmount));
+
+                        await uow.ChkRepository.AddAsync(chk);
+                    }
                 }
                 //write note to account with total_paid, total_contractual, and total_patient_responsibility
                 accountService.AddNote(claim.AccountNo, $"Remittance {remittanceId} posted for claim {claim.AccountNo} with total paid amount of {total_paid}, total contractual amount of {total_contractual}, and total patient responsibility of {total_patient_responsibility}");

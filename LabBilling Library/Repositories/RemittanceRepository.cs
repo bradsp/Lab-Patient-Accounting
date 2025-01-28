@@ -34,6 +34,14 @@ public sealed class RemittanceRepository : RepositoryBase<RemittanceFile>
         }
     }
 
+    public RemittanceFile GetByFilename(string filename)
+    {
+        Log.Instance.Trace("Entering");
+        PetaPoco.Sql sql = PetaPoco.Sql.Builder
+            .Where($"{GetRealColumn(nameof(RemittanceFile.FileName))} = @0", filename);
+        var queryResult = Context.FirstOrDefault<RemittanceFile>(sql);
+        return queryResult;
+    }
 }
 
 public sealed class RemittanceClaimRepository : RepositoryBase<RemittanceClaim>
