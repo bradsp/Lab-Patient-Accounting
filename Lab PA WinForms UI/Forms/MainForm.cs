@@ -834,7 +834,17 @@ public partial class MainForm : Form
     {
         PostRemittanceForm frm = new(e);
         frm.AccountLaunched += OnAccountLaunched;
+        frm.FormClosed += PostRemittance_FormClosed;
         NewForm(frm);
+    }
+
+    private void PostRemittance_FormClosed(object sender, FormClosedEventArgs e)
+    {
+        //when the PostRemittanceForm closes, maked the ProcessRemittancesForm visible if it exists
+        if (Application.OpenForms.OfType<ProcessRemittanceForm>().Any())
+        {
+            Application.OpenForms.OfType<ProcessRemittanceForm>().First().Activate();
+        }
     }
 
     private void chargeMasterToolStripMenuItem1_Click(object sender, EventArgs e)

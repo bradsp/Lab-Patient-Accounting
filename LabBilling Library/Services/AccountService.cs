@@ -1897,6 +1897,53 @@ public sealed class AccountService
         }
     }
 
+    public Chk ReversePayment(Chk chk, string comment)
+    {
+        Log.Instance.Trace("Entering");
+        using AccountUnitOfWork uow = new(_appEnvironment, true);
+        try
+        {
+            Chk newChk = new()
+            {
+                IsDeleted = chk.IsDeleted,
+                AccountNo = chk.AccountNo,
+                ChkDate = chk.ChkDate,
+                CheckNo = chk.CheckNo,
+                DateReceived = chk.DateReceived,
+                PaidAmount = chk.PaidAmount * -1,
+                ContractualAmount = chk.ContractualAmount * -1,
+                WriteOffAmount = chk.WriteOffAmount * -1,
+                IsRefund = !chk.IsRefund,
+                PostingDate = DateTime.Today,
+                Status = chk.Status,
+                Source = chk.Source,
+                FinCode = chk.FinCode,
+                WriteOffDate = chk.WriteOffDate == null ? null : DateTime.Today,
+                Invoice = chk.Invoice,
+                Comment = comment,
+                IsCollectionPmt = chk.IsCollectionPmt,
+                Cpt4Code = chk.Cpt4Code,
+                WriteOffCode = chk.WriteOffCode,
+                EftDate = chk.EftDate,
+                EftNumber = chk.EftNumber,
+                InsCode = chk.InsCode,
+                ClaimAdjCode = chk.ClaimAdjCode,
+                ClaimAdjGroupCode = chk.ClaimAdjGroupCode,
+                FacilityCode = chk.FacilityCode,
+                ClaimNo = chk.ClaimNo
+            };
+
+            newChk = uow.ChkRepository.Add(newChk);
+            uow.Commit();
+            return newChk;
+        }
+        catch (Exception ex)
+        {
+            Log.Instance.Error(ex);
+            throw new ApplicationException("Error occurred in Reverse Payment", ex);
+        }
+    }
+
     public ChrgDiagnosisPointer UpdateDiagnosisPointer(ChrgDiagnosisPointer ptr)
     {
         using AccountUnitOfWork uow = new(_appEnvironment, true);

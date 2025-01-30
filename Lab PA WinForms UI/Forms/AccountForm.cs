@@ -37,6 +37,7 @@ public partial class AccountForm : Form
     private readonly InsMaintenanceUC _insPrimaryMaintenanceUC = new(InsCoverage.Primary);
     private readonly InsMaintenanceUC _insSecondaryMaintenanceUC = new(InsCoverage.Secondary);
     private readonly InsMaintenanceUC _insTertiaryMaintenanceUC = new(InsCoverage.Tertiary);
+    private ContextMenuStrip _chkTabContextMenu = new();
 
     private System.Windows.Forms.Timer _timer;
 
@@ -216,6 +217,7 @@ public partial class AccountForm : Form
 
         notesDataGridView.DoubleBuffered(true);
 
+        SetupPaymentTabContextMenu();
     }
 
     private void UserControl_OnError(object sender, AppErrorEventArgs e)
@@ -716,6 +718,7 @@ public partial class AccountForm : Form
     private void LoadPayments()
     {
         Log.Instance.Trace($"Entering - {SelectedAccount}");
+        PaymentsDataGrid.ContextMenuStrip = _chkTabContextMenu;
 
         TotalPaymentTextBox.Text = _currentAccount.TotalPayments.ToString("c");
         TotalContractualTextBox.Text = _currentAccount.TotalContractual.ToString("c");
@@ -823,6 +826,44 @@ public partial class AccountForm : Form
                 MessageBox.Show($"Error adding payment. See log for details.");
             }
             RefreshAccountData();
+        }
+    }
+
+    private void SetupPaymentTabContextMenu()
+    {
+        _chkTabContextMenu = new ContextMenuStrip();
+        var reversePaymentMenuItem = new ToolStripMenuItem("Reverse Payment/Adj");
+        reversePaymentMenuItem.Click += ReversePaymentMenuItem_Click;
+        _chkTabContextMenu.Items.Add(reversePaymentMenuItem);
+    }
+
+    private void ReversePaymentMenuItem_Click(object sender, EventArgs e)
+    {
+        if (PaymentsDataGrid.SelectedRows.Count > 0)
+        {
+            var result = InputBox.Show("Reason for reversal", "Reverse Payment/Adjustment", true);
+            if(result.ReturnCode == DialogResult.Cancel)
+            {
+                return;
+            }
+
+            var selectedRow = PaymentsDataGrid.SelectedRows[0];
+            var paymentNo = Convert.ToInt32(selectedRow.Cells[nameof(Chk.PaymentNo)].Value);
+            var payment = _currentAccount.Payments.FirstOrDefault(p => p.PaymentNo == paymentNo);
+            if (payment != null)
+            {
+                try
+                {
+                    var updatedPmt = _accountService.ReversePayment(payment, result.Text);
+                    _currentAccount.Payments.Add(updatedPmt);
+                    RefreshAccountData();
+                }
+                catch (Exception ex)
+                {
+                    Log.Instance.Error(ex, "Error reversing payment.");
+                    MessageBox.Show("Unable to reverse payment. Contact your administrator.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
         }
     }
 
@@ -1807,4 +1848,6 @@ public partial class AccountForm : Form
     {
         e.Row.MinimumHeight = e.Row.Height;
     }
+
+
 }
