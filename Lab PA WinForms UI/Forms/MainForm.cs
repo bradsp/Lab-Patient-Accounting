@@ -507,14 +507,12 @@ public partial class MainForm : Form
         {
             batchRemittanceToolStripMenuItem.Visible = Program.LoggedInUser.CanAddPayments;
             remittancePostingToolStripMenuItem.Visible = Program.LoggedInUser.CanAddPayments;
-            posting835RemitToolStripMenuItem.Visible = Program.LoggedInUser.CanAddPayments;
             b5.Visible = Program.LoggedInUser.CanAddPayments;
         }
         else
         {
             batchRemittanceToolStripMenuItem.Visible = false;
             remittancePostingToolStripMenuItem.Visible = false;
-            posting835RemitToolStripMenuItem.Visible = false;
             b5.Visible = false;
         }
 
@@ -542,7 +540,6 @@ public partial class MainForm : Form
     {
         //during testing only - remove once batch charge entry is in production
         batchChargeEntryToolStripMenuItem.Visible = Program.LoggedInUser.IsAdministrator;
-        posting835RemitToolStripMenuItem.Visible = Program.LoggedInUser.IsAdministrator;
 
         batchRemittanceToolStripMenuItem.Visible = Program.LoggedInUser.CanAddPayments;
         badDebtMaintenanceToolStripMenuItem.Visible = Program.LoggedInUser.CanModifyBadDebt;
@@ -682,13 +679,6 @@ public partial class MainForm : Form
         NewForm(frm);
     }
 
-    private void posting835RemitToolStripMenuItem_Click(object sender, EventArgs e)
-    {
-        Posting835 frm = new(Program.AppEnvironment.GetArgs());
-        frm.AccountLaunched += OnAccountLaunched;
-        NewForm(frm);
-    }
-
     private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
     {
         Log.Instance.Trace($"Entering");
@@ -824,7 +814,6 @@ public partial class MainForm : Form
 
     private void remittancePostingToolStripMenuItem_Click(object sender, EventArgs e)
     {
-
         ProcessRemittanceForm frm = new();
         frm.RemittanceFileSelected += OnRemittanceSelected;
         NewForm(frm);

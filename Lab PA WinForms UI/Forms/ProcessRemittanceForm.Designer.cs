@@ -64,7 +64,6 @@ partial class ProcessRemittanceForm
         remittancesDataGridView.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
         remittancesDataGridView.Size = new Size(800, 428);
         remittancesDataGridView.TabIndex = 2;
-        remittancesDataGridView.CellMouseDoubleClick += remittancesDataGridView_CellMouseDoubleClick;
         // 
         // contextMenuStrip1
         // 

@@ -32,6 +32,8 @@ public partial class ProcessRemittanceForm : Form
         remittancesDataGridView.DataBindingComplete += RemittancesDataGridView_DataBindingComplete;
         remittancesDataGridView.RowPrePaint += RemittancesDataGridView_RowPrePaint;
         remittanceBindingSource.ListChanged += RemittanceBindingSource_ListChanged;
+        remittancesDataGridView.CellMouseDoubleClick += remittancesDataGridView_CellMouseDoubleClick;
+        remittancesDataGridView.MouseDown += RemittancesDataGridView_MouseDown;
         remittancesDataGridView.DoubleBuffered(true); // Enable double buffering
         DefineColumns();
 
@@ -52,6 +54,19 @@ public partial class ProcessRemittanceForm : Form
         // Add progressBar and progressLabel to statusStrip1
         statusStrip1.Items.Add(new ToolStripControlHost(progressBar));
         statusStrip1.Items.Add(new ToolStripControlHost(progressLabel));
+    }
+
+    private void RemittancesDataGridView_MouseDown(object sender, MouseEventArgs e)
+    {
+        if (e.Button == MouseButtons.Right)
+        {
+            var hitTestInfo = remittancesDataGridView.HitTest(e.X, e.Y);
+            if (hitTestInfo.RowIndex >= 0)
+            {
+                remittancesDataGridView.ClearSelection();
+                remittancesDataGridView.Rows[hitTestInfo.RowIndex].Selected = true;
+            }
+        }
     }
 
     private void RemittancesDataGridView_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
