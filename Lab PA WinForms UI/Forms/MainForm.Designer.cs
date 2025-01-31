@@ -39,7 +39,6 @@ partial class MainForm
         batchRemittanceToolStripMenuItem = new ToolStripMenuItem();
         claimBatchManagementToolStripMenuItem = new ToolStripMenuItem();
         clientBillsNewToolStripMenuItem = new ToolStripMenuItem();
-        posting835RemitToolStripMenuItem = new ToolStripMenuItem();
         remittancePostingToolStripMenuItem = new ToolStripMenuItem();
         badDebtMaintenanceToolStripMenuItem = new ToolStripMenuItem();
         dictionariesToolStripMenuItem = new ToolStripMenuItem();
@@ -96,7 +95,7 @@ partial class MainForm
         // 
         // billingToolStripMenuItem
         // 
-        billingToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { accountToolStripMenuItem, worklistToolStripMenuItem, duplicateAccountsToolStripMenuItem, accountChargeEntryToolStripMenuItem, batchChargeEntryToolStripMenuItem, batchRemittanceToolStripMenuItem, claimBatchManagementToolStripMenuItem, clientBillsNewToolStripMenuItem, posting835RemitToolStripMenuItem, remittancePostingToolStripMenuItem, badDebtMaintenanceToolStripMenuItem });
+        billingToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { accountToolStripMenuItem, worklistToolStripMenuItem, duplicateAccountsToolStripMenuItem, accountChargeEntryToolStripMenuItem, batchChargeEntryToolStripMenuItem, batchRemittanceToolStripMenuItem, claimBatchManagementToolStripMenuItem, clientBillsNewToolStripMenuItem, remittancePostingToolStripMenuItem, badDebtMaintenanceToolStripMenuItem });
         billingToolStripMenuItem.Name = "billingToolStripMenuItem";
         resources.ApplyResources(billingToolStripMenuItem, "billingToolStripMenuItem");
         // 
@@ -147,12 +146,6 @@ partial class MainForm
         clientBillsNewToolStripMenuItem.Name = "clientBillsNewToolStripMenuItem";
         resources.ApplyResources(clientBillsNewToolStripMenuItem, "clientBillsNewToolStripMenuItem");
         clientBillsNewToolStripMenuItem.Click += clientBillsNewToolStripMenuItem_Click;
-        // 
-        // posting835RemitToolStripMenuItem
-        // 
-        posting835RemitToolStripMenuItem.Name = "posting835RemitToolStripMenuItem";
-        resources.ApplyResources(posting835RemitToolStripMenuItem, "posting835RemitToolStripMenuItem");
-        posting835RemitToolStripMenuItem.Click += posting835RemitToolStripMenuItem_Click;
         // 
         // remittancePostingToolStripMenuItem
         // 
@@ -466,7 +459,6 @@ partial class MainForm
     private System.Windows.Forms.ToolStripMenuItem badDebtMaintenanceToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem duplicateAccountsToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem reportByInsuranceCompanyToolStripMenuItem;
-    private System.Windows.Forms.ToolStripMenuItem posting835RemitToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem interfaceMappingToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem clientBillsNewToolStripMenuItem;

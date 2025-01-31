@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!--
-    Microsoft ResX Schema 
+    Microsoft ResX Schema
 
     Version 2.0
 
@@ -48,7 +48,7 @@
     value   : The object must be serialized with
             : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
             : and then encoded with base64 encoding.
-    
+
     mimetype: application/x-microsoft.net.object.soap.base64
     value   : The object must be serialized with
             : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
@@ -122,67 +122,61 @@
   </metadata>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="accountToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>217, 22</value>
+    <value>212, 22</value>
   </data>
   <data name="accountToolStripMenuItem.Text" xml:space="preserve">
     <value>Account</value>
   </data>
   <data name="worklistToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>217, 22</value>
+    <value>212, 22</value>
   </data>
   <data name="worklistToolStripMenuItem.Text" xml:space="preserve">
     <value>Worklist</value>
   </data>
   <data name="duplicateAccountsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>217, 22</value>
+    <value>212, 22</value>
   </data>
   <data name="duplicateAccountsToolStripMenuItem.Text" xml:space="preserve">
     <value>Duplicate Accounts</value>
   </data>
   <data name="accountChargeEntryToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>217, 22</value>
+    <value>212, 22</value>
   </data>
   <data name="accountChargeEntryToolStripMenuItem.Text" xml:space="preserve">
     <value>Account Charge Entry</value>
   </data>
   <data name="batchChargeEntryToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>217, 22</value>
+    <value>212, 22</value>
   </data>
   <data name="batchChargeEntryToolStripMenuItem.Text" xml:space="preserve">
     <value>Batch Charge Entry</value>
   </data>
   <data name="batchRemittanceToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>217, 22</value>
+    <value>212, 22</value>
   </data>
   <data name="batchRemittanceToolStripMenuItem.Text" xml:space="preserve">
     <value>Batch Remittance</value>
   </data>
   <data name="claimBatchManagementToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>217, 22</value>
+    <value>212, 22</value>
   </data>
   <data name="claimBatchManagementToolStripMenuItem.Text" xml:space="preserve">
     <value>Claim Batch Management</value>
   </data>
   <data name="clientBillsNewToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>217, 22</value>
+    <value>212, 22</value>
   </data>
   <data name="clientBillsNewToolStripMenuItem.Text" xml:space="preserve">
     <value>Client Invoicing</value>
   </data>
-  <data name="posting835RemitToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>217, 22</value>
-  </data>
-  <data name="posting835RemitToolStripMenuItem.Text" xml:space="preserve">
-    <value>Posting 835 Remit (Legacy)</value>
-  </data>
   <data name="remittancePostingToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>217, 22</value>
+    <value>212, 22</value>
   </data>
   <data name="remittancePostingToolStripMenuItem.Text" xml:space="preserve">
     <value>Remittance Posting</value>
   </data>
   <data name="badDebtMaintenanceToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>217, 22</value>
+    <value>212, 22</value>
   </data>
   <data name="badDebtMaintenanceToolStripMenuItem.Text" xml:space="preserve">
     <value>Patient Collections</value>
@@ -3670,12 +3664,6 @@
     <value>clientBillsNewToolStripMenuItem</value>
   </data>
   <data name="&gt;&gt;clientBillsNewToolStripMenuItem.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;posting835RemitToolStripMenuItem.Name" xml:space="preserve">
-    <value>posting835RemitToolStripMenuItem</value>
-  </data>
-  <data name="&gt;&gt;posting835RemitToolStripMenuItem.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;remittancePostingToolStripMenuItem.Name" xml:space="preserve">
