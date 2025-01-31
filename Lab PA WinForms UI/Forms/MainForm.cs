@@ -21,9 +21,6 @@ using ProgressBar = System.Windows.Forms.ProgressBar;
 /*
  * Tabbed MDI logic 
  * https://www.codeproject.com/Articles/17640/Tabbed-MDI-Child-Forms
- * 
- * 
- * 
  */
 
 
@@ -61,7 +58,6 @@ public partial class MainForm : Form
         MainFormMenu.ForeColor = Program.AppEnvironment.MenuTextColor;
 
         panel1.BackColor = Program.AppEnvironment.WindowBackgroundColor;
-        //mdiTabControl.Parent.BackColor = Program.AppEnvironment.WindowBackgroundColor;
 
         _accordion = new Accordion();
 
