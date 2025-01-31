@@ -791,7 +791,7 @@ public sealed class Remittance835Service
             var remittanceFile = new RemittanceFile
             {
                 FileName = Path.GetFileName(fileName), // Set appropriate file name
-                ProcessedDate = DateTime.Now,
+                ProcessedDate = remittanceData.PaymentDate ?? DateTime.Now,
                 Payer = remittanceData.PayerName,
                 TransactionTraceNumber = remittanceData.CurrentTransactionTraceNumber,
                 TotalPaymentAmount = decimal.Parse(remittanceData.TotalPremiumPaymentAmount ?? "0"),
@@ -891,7 +891,7 @@ public sealed class Remittance835Service
         return await Task.Run(() => GetAllRemittances());
     }
 
-    public List<RemittanceFile> GetAllRemittances(bool includePosted = false)
+    public List<RemittanceFile> GetAllRemittances(bool includePosted = true)
     {
         using UnitOfWorkMain uow = new(_appEnvironment);
 
@@ -925,6 +925,110 @@ public sealed class Remittance835Service
 
         return remit;
     }
+
+    public async Task UnPostRemittanceAsync(int remittanceId, IProgress<ProgressReportModel> progress)
+    {
+        // Unpost remittance by adding offsetting check records to the database
+        Log.Instance.Trace($"UnPostRemittanceAsync called with remittanceId {remittanceId}");
+        using UnitOfWorkMain uow = new(_appEnvironment, true);
+        var remittance = this.GetRemittance(remittanceId);
+        if (remittance == null)
+        {
+            Log.Instance.Error($"Remittance {remittanceId} not found.");
+            return;
+        }
+
+        // Check if the remittance was previously posted
+        if (!remittance.PostedDate.HasValue)
+        {
+            Log.Instance.Error($"Remittance {remittanceId} has not been posted.");
+            return;
+        }
+
+        int totalClaims = remittance.Claims.Count;
+        int processedClaims = 0;
+
+        try
+        {
+            foreach (var claim in remittance.Claims)
+            {
+                if (!claim.ClaimDetails.Any())
+                {
+                    // Unpost a single payment record with the claim total if there are no detail records
+                    Chk chk = new()
+                    {
+                        ChkDate = DateTime.Today,
+                        PaidAmount = -Convert.ToDouble(claim.ClaimPaymentAmount),
+                        Source = remittance.Payer,
+                        Comment = $"Offsetting check for claim {claim.AccountNo}",
+                        CheckNo = remittance.TransactionTraceNumber,
+                        AccountNo = claim.AccountNo,
+                        Batch = remittance.RemittanceId,
+                        ContractualAmount = 0.00,
+                        ClaimAdjCode = claim.ClaimStatusCode,
+                        PostingFile = Path.GetFileName(remittance.FileName),
+                        EftNumber = remittance.TransactionTraceNumber,
+                        ClaimNo = claim.PayerClaimControlNumber,
+                        EftDate = remittance.ProcessedDate,
+                        Status = "NEW"
+                    };
+
+                    await uow.ChkRepository.AddAsync(chk);
+                }
+                else
+                {
+                    foreach (var detail in claim.ClaimDetails)
+                    {
+                        // Write offsetting checks to the database
+                        Chk chk = new()
+                        {
+                            ChkDate = DateTime.Today,
+                            PaidAmount = -Convert.ToDouble(detail.MonetaryAmount),
+                            Source = remittance.Payer,
+                            Comment = $"Offsetting check for claim {claim.AccountNo} {detail.ProcedureCode}",
+                            CheckNo = remittance.TransactionTraceNumber,
+                            AccountNo = claim.AccountNo,
+                            Batch = remittance.RemittanceId,
+                            Cpt4Code = detail.ProcedureCode,
+                            ContractualAmount = -Convert.ToDouble(detail.Adjustments.Where(x => x.ClaimAdjustmentGroupCode == "CO" && x.AdjustmentReasonCode == "45").Sum(y => y.AdjustmentAmount)),
+                            ClaimAdjCode = detail.Adjustments.FirstOrDefault()?.AdjustmentReasonCode,
+                            ClaimAdjGroupCode = detail.Adjustments.FirstOrDefault()?.ClaimAdjustmentGroupCode,
+                            PostingFile = Path.GetFileName(remittance.FileName),
+                            EftNumber = remittance.TransactionTraceNumber,
+                            ClaimNo = claim.PayerClaimControlNumber,
+                            EftDate = remittance.ProcessedDate,
+                            Status = "NEW"
+                        };
+
+                        await uow.ChkRepository.AddAsync(chk);
+                    }
+                }
+
+                processedClaims++;
+                progress?.Report(new ProgressReportModel
+                {
+                    PercentageComplete = (processedClaims * 100 / totalClaims),
+                    RecordsProcessed = processedClaims,
+                    TotalRecords = totalClaims,
+                    StatusMessage = $"Processed {processedClaims} of {totalClaims} claims"
+                });
+            }
+
+            // Update the remittance status to unposted
+            remittance.PostedDate = null;
+            remittance.PostingUser = null;
+            remittance.PostingHost = null;
+            uow.RemittanceRepository.Update(remittance);
+
+            uow.Commit();
+        }
+        catch (Exception ex)
+        {
+            Log.Instance.Error(ex.Message);
+            throw;
+        }
+    }
+
 
     public async Task PostRemittanceAsync(int remittanceId, IProgress<ProgressReportModel> progress)
     {

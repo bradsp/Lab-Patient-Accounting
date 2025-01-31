@@ -34,7 +34,7 @@ partial class ProcessRemittanceForm
         contextMenuStrip1 = new ContextMenuStrip(components);
         markRemittancePostedToolStripMenuItem = new ToolStripMenuItem();
         reimportRemittanceToolStripMenuItem = new ToolStripMenuItem();
-        reversePostingToolStripMenuItem = new ToolStripMenuItem();
+        viewSourceDataToolStripMenuItem = new ToolStripMenuItem();
         ((System.ComponentModel.ISupportInitialize)remittancesDataGridView).BeginInit();
         contextMenuStrip1.SuspendLayout();
         SuspendLayout();
@@ -68,7 +68,7 @@ partial class ProcessRemittanceForm
         // 
         // contextMenuStrip1
         // 
-        contextMenuStrip1.Items.AddRange(new ToolStripItem[] { markRemittancePostedToolStripMenuItem, reimportRemittanceToolStripMenuItem, reversePostingToolStripMenuItem });
+        contextMenuStrip1.Items.AddRange(new ToolStripItem[] { markRemittancePostedToolStripMenuItem, reimportRemittanceToolStripMenuItem, viewSourceDataToolStripMenuItem });
         contextMenuStrip1.Name = "contextMenuStrip1";
         contextMenuStrip1.Size = new Size(204, 70);
         // 
@@ -86,12 +86,12 @@ partial class ProcessRemittanceForm
         reimportRemittanceToolStripMenuItem.Text = "Reimport Remittance";
         reimportRemittanceToolStripMenuItem.Click += reimportRemittanceToolStripMenuItem_Click;
         // 
-        // reversePostingToolStripMenuItem
+        // viewSourceDataToolStripMenuItem
         // 
-        reversePostingToolStripMenuItem.Name = "reversePostingToolStripMenuItem";
-        reversePostingToolStripMenuItem.Size = new Size(203, 22);
-        reversePostingToolStripMenuItem.Text = "Reverse Posting";
-        reversePostingToolStripMenuItem.Click += reversePostingToolStripMenuItem_Click;
+        viewSourceDataToolStripMenuItem.Name = "viewSourceDataToolStripMenuItem";
+        viewSourceDataToolStripMenuItem.Size = new Size(203, 22);
+        viewSourceDataToolStripMenuItem.Text = "View Source Data";
+        viewSourceDataToolStripMenuItem.Click += viewSourceDataToolStripMenuItem_Click;
         // 
         // ProcessRemittanceForm
         // 
@@ -115,5 +115,5 @@ partial class ProcessRemittanceForm
     private ContextMenuStrip contextMenuStrip1;
     private ToolStripMenuItem markRemittancePostedToolStripMenuItem;
     private ToolStripMenuItem reimportRemittanceToolStripMenuItem;
-    private ToolStripMenuItem reversePostingToolStripMenuItem;
+    private ToolStripMenuItem viewSourceDataToolStripMenuItem;
 }

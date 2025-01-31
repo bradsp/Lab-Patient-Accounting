@@ -17,6 +17,8 @@ public partial class PostRemittanceForm : Form
 
     private int _remittanceId;
     private RemittanceFile _selectedRemittance;
+    private const string _postRemittanceText = "Post Remittance";
+    private const string _unpostRemittanceText = "Unpost Remittance";
 
     public PostRemittanceForm(int remittanceId)
     {
@@ -73,7 +75,7 @@ public partial class PostRemittanceForm : Form
         try
         {
             remittanceInfoWebBrowser.DocumentText = remittanceService.ConvertRemittanceHeaderToHtml(remittanceData);
-            remittanceInfoRichTextBox.Rtf = remittanceService.ConvertRemittanceHeaderToRtf(remittanceData);
+            //remittanceInfoRichTextBox.Rtf = remittanceService.ConvertRemittanceHeaderToRtf(remittanceData);
         }
         catch (Exception ex)
         {
@@ -100,8 +102,14 @@ public partial class PostRemittanceForm : Form
         claimDataGridView.Columns[nameof(RemittanceClaim.PatientName)].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
         claimDataGridView.AutoResizeColumns();
 
-        // disable the posting button if the remittance has already been posted
-        postRemittanceToolButton.Enabled = _selectedRemittance.PostedDate == null;
+        if (_selectedRemittance.PostedDate != null)
+        {
+            postRemittanceToolButton.Text = _unpostRemittanceText;
+        }
+        else
+        {
+            postRemittanceToolButton.Text = _postRemittanceText;
+        }
     }
 
     private async void postRemittanceToolButton_Click(object sender, EventArgs e)
@@ -117,13 +125,21 @@ public partial class PostRemittanceForm : Form
                 progressLabel.Text = report.StatusMessage;
             });
 
-            await remittanceService.PostRemittanceAsync(_selectedRemittance.RemittanceId, progress);
+            if(postRemittanceToolButton.Text == _postRemittanceText)
+            {
+                await remittanceService.PostRemittanceAsync(_selectedRemittance.RemittanceId, progress);
+            }
+            else
+            {
+                await remittanceService.UnPostRemittanceAsync(_selectedRemittance.RemittanceId, progress);
+            }
 
             progressBar.Visible = false;
             progressLabel.Visible = false;
 
             MessageBox.Show($"Remittance posted successfully.\n\n", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            postRemittanceToolButton.Enabled = false;
+
+            LoadRemittance();
         }
         catch (Exception ex)
         {
@@ -135,12 +151,12 @@ public partial class PostRemittanceForm : Form
     private void claimDataGridView_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
     {
         //invoke AccountLaunched for the account number in the selected row
-        if (claimDataGridView.SelectedRows.Count > 0)
+        if (e.RowIndex >= 0)
         {
-            var selectedRow = claimDataGridView.SelectedRows[0];
-            var selectedClaim = (RemittanceClaim)selectedRow.DataBoundItem;
-            AccountLaunched?.Invoke(this, selectedClaim.AccountNo);
+            var accountNo = claimDataGridView.Rows[e.RowIndex].Cells[nameof(RemittanceClaim.AccountNo)].Value.ToString();
+            AccountLaunched?.Invoke(this, accountNo);
         }
+
     }
 
     private void printRemittanceToolStripButton_Click(object sender, EventArgs e)

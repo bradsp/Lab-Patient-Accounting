@@ -94,4 +94,23 @@ public static class HelperExtensions
         var serialized = JsonConvert.SerializeObject(obj);
         return JsonConvert.DeserializeObject<T>(serialized);
     }
+    /// <summary>
+    /// Converts a DataRow to an instance of a generic class.
+    /// </summary>
+    /// <typeparam name="T">The type of the class.</typeparam>
+    /// <param name="row">The DataRow to convert.</param>
+    /// <returns>An instance of the class populated with the DataRow values.</returns>
+    public static T ConvertDataRowToObject<T>(this DataRow row) where T : new()
+    {
+        T obj = new T();
+        foreach (var prop in typeof(T).GetProperties())
+        {
+            if (row.Table.Columns.Contains(prop.Name) && row[prop.Name] != DBNull.Value)
+            {
+                prop.SetValue(obj, row[prop.Name]);
+            }
+        }
+        return obj;
+    }
+
 }
