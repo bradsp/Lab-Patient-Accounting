@@ -5,6 +5,7 @@ using LabBilling.Logging;
 using System.ComponentModel;
 using System.Data;
 using System.IO;
+using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 using Utilities;
 using WinFormsLibrary;
@@ -19,6 +20,7 @@ public partial class ProcessRemittanceForm : Form
     private DataTable _remittancesDt;
     private string lastSortedColumn;
     private ListSortDirection lastSortDirection;
+    private Dictionary<string, int> columnWidths = new();
 
     public event EventHandler<int> RemittanceFileSelected;
 
@@ -34,6 +36,7 @@ public partial class ProcessRemittanceForm : Form
         remittanceBindingSource.ListChanged += RemittanceBindingSource_ListChanged;
         remittancesDataGridView.CellMouseDoubleClick += remittancesDataGridView_CellMouseDoubleClick;
         remittancesDataGridView.MouseDown += RemittancesDataGridView_MouseDown;
+        remittancesDataGridView.ColumnWidthChanged += RemittancesDataGridView_ColumnWidthChanged;
         remittancesDataGridView.DoubleBuffered(true); // Enable double buffering
         DefineColumns();
 
@@ -54,6 +57,11 @@ public partial class ProcessRemittanceForm : Form
         // Add progressBar and progressLabel to statusStrip1
         statusStrip1.Items.Add(new ToolStripControlHost(progressBar));
         statusStrip1.Items.Add(new ToolStripControlHost(progressLabel));
+    }
+
+    private void RemittancesDataGridView_ColumnWidthChanged(object sender, DataGridViewColumnEventArgs e)
+    {
+        columnWidths[e.Column.Name] = e.Column.Width;
     }
 
     private void RemittancesDataGridView_MouseDown(object sender, MouseEventArgs e)
@@ -96,11 +104,6 @@ public partial class ProcessRemittanceForm : Form
                 row.DefaultCellStyle.BackColor = Color.White;
             }
         }
-    }
-
-    private void RemittancesDataGridView_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
-    {
-        
     }
 
     private void RemittancesDataGridView_CellValuePushed(object sender, DataGridViewCellValueEventArgs e)
@@ -158,7 +161,7 @@ public partial class ProcessRemittanceForm : Form
                 MessageBox.Show($"Failed to import file {Path.GetFileName(remittanceFile)}. \n\nNotify the administrator. \n\nYou may continue processing imported remittances.", "Import Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
-        
+
         progressLabel.Text = "Import completed.";
     }
 
@@ -172,6 +175,17 @@ public partial class ProcessRemittanceForm : Form
 
         remittanceBindingSource.DataSource = _remittancesDt;
         remittancesDataGridView.RowCount = _remittancesDt.Rows.Count;
+        remittancesDataGridView.AllowUserToResizeColumns = true;
+
+        //restore column widths
+        foreach (DataGridViewColumn column in remittancesDataGridView.Columns)
+        {
+            if (columnWidths.ContainsKey(column.Name))
+            {
+                column.Width = columnWidths[column.Name];
+            }
+        }
+
 
         //set default sort to ProcessedDate Descending
         DataView dataView = _remittancesDt.DefaultView;
@@ -204,7 +218,7 @@ public partial class ProcessRemittanceForm : Form
 
             // Find the corresponding row in the DataTable
             var remittanceRow = _remittancesDt.Rows.Find(remittanceId);
-            
+
             var selectedRemittance = remittanceRow.ConvertDataRowToObject<RemittanceFile>();
 
             // Check if the remittance is already posted
@@ -237,6 +251,52 @@ public partial class ProcessRemittanceForm : Form
         }
     }
 
+    private void RefreshRemittancesData(int? selectedRemittanceId = null)
+    {
+        // Clear and reload the DataTable
+        _remittancesDt.Clear();
+        _remittancesDt = remittanceService.GetAllRemittances(true).ToDataTable();
+
+        // Set the primary key
+        _remittancesDt.PrimaryKey = new[] { _remittancesDt.Columns[nameof(RemittanceFile.RemittanceId)] };
+
+        // Reapply the previous sort if available
+        if (!string.IsNullOrEmpty(lastSortedColumn))
+        {
+            string sortDirection = lastSortDirection == ListSortDirection.Ascending ? "ASC" : "DESC";
+            _remittancesDt.DefaultView.Sort = $"{lastSortedColumn} {sortDirection}";
+            _remittancesDt = _remittancesDt.DefaultView.ToTable();
+            _remittancesDt.PrimaryKey = new[] { _remittancesDt.Columns[nameof(RemittanceFile.RemittanceId)] };
+
+            // Update the sort glyph
+            remittancesDataGridView.Columns[lastSortedColumn].HeaderCell.SortGlyphDirection =
+                lastSortDirection == ListSortDirection.Ascending ? SortOrder.Ascending : SortOrder.Descending;
+        }
+
+        // Update the DataSource
+        remittanceBindingSource.DataSource = _remittancesDt;
+        remittancesDataGridView.RowCount = _remittancesDt.Rows.Count;
+
+        // Reposition to the selected row if provided
+        if (selectedRemittanceId.HasValue)
+        {
+            int rowIndex = -1;
+            DataRow selectedRow = _remittancesDt.Rows.Find(selectedRemittanceId.Value);
+            if (selectedRow != null)
+            {
+                rowIndex = _remittancesDt.Rows.IndexOf(selectedRow);
+            }
+
+            if (rowIndex >= 0)
+            {
+                remittancesDataGridView.CurrentCell = remittancesDataGridView.Rows[rowIndex].Cells[0];
+            }
+        }
+
+        // Refresh the DataGridView
+        remittancesDataGridView.Refresh();
+    }
+
     private void reimportRemittanceToolStripMenuItem_Click(object sender, EventArgs e)
     {
         // Get the selected remittance and reimport the remittance file
@@ -250,6 +310,9 @@ public partial class ProcessRemittanceForm : Form
             {
                 return;
             }
+            // Save the RemittanceId of the selected row
+            var selectedRemittanceId = (int)remittancesDataGridView.SelectedRows[0].Cells[nameof(RemittanceFile.RemittanceId)].Value;
+
             var remittanceId = (int)remittancesDataGridView.SelectedRows[0].Cells[nameof(RemittanceFile.RemittanceId)].Value;
             if (remittanceService.ReimportRemittance(remittanceId) == null)
             {
@@ -257,11 +320,7 @@ public partial class ProcessRemittanceForm : Form
             }
             else
             {
-                _remittancesDt.Clear();
-                _remittancesDt = remittanceService.GetAllRemittances(true).ToDataTable();
-                remittanceBindingSource.DataSource = _remittancesDt;
-                remittancesDataGridView.DataSource = remittanceBindingSource;
-                remittanceBindingSource.ResetBindings(false);
+                RefreshRemittancesData(selectedRemittanceId);
             }
         }
     }
@@ -312,112 +371,51 @@ public partial class ProcessRemittanceForm : Form
         }
     }
 
+    private DataGridViewTextBoxColumn CreateTextBoxColumn(string dataPropertyName, string headerText, int width, DataGridViewCellStyle cellStyle = null)
+    {
+        return new DataGridViewTextBoxColumn
+        {
+            DataPropertyName = dataPropertyName,
+            HeaderText = headerText,
+            Name = dataPropertyName,
+            Width = width,
+            DefaultCellStyle = cellStyle
+        };
+    }
+
+    private DataGridViewDateColumn CreateDateColumn(string dataPropertyName, string headerText, int width)
+    {
+        return new DataGridViewDateColumn
+        {
+            DataPropertyName = dataPropertyName,
+            HeaderText = headerText,
+            Name = dataPropertyName,
+            Width = width
+        };
+    }
+
     private void DefineColumns()
     {
         remittancesDataGridView.Columns.Clear();
-        var column1 = new DataGridViewTextBoxColumn
-        {
-            DataPropertyName = nameof(RemittanceFile.FileName),
-            HeaderText = "File Name",
-            Name = nameof(RemittanceFile.FileName),
-            AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells
-        };
-        remittancesDataGridView.Columns.Add(column1);
 
-        var column2 = new DataGridViewTextBoxColumn
+        // Create cell style for numeric columns
+        var numericCellStyle = new DataGridViewCellStyle
         {
-            DataPropertyName = nameof(RemittanceFile.Payer),
-            HeaderText = "Payer",
-            Name = nameof(RemittanceFile.Payer),
-            AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells
+            Format = "N2",
+            Alignment = DataGridViewContentAlignment.MiddleRight
         };
-        remittancesDataGridView.Columns.Add(column2);
 
-        var column3 = new DataGridViewDateColumn
-        {
-            DataPropertyName = nameof(RemittanceFile.ProcessedDate),
-            HeaderText = "Processed Date",
-            Name = nameof(RemittanceFile.ProcessedDate),
-            AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells
-        };
-        remittancesDataGridView.Columns.Add(column3);
-
-        var column4 = new DataGridViewDateColumn
-        {
-            DataPropertyName = nameof(RemittanceFile.PostedDate),
-            HeaderText = "Posted Date",
-            Name = nameof(RemittanceFile.PostedDate),
-            AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells
-        };
-        remittancesDataGridView.Columns.Add(column4);
-
-        var column5 = new DataGridViewTextBoxColumn
-        {
-            DataPropertyName = nameof(RemittanceFile.TotalChargeAmount),
-            HeaderText = "Total Charge Amount",
-            Name = nameof(RemittanceFile.TotalChargeAmount),
-            DefaultCellStyle = new DataGridViewCellStyle { Format = "N2", Alignment = DataGridViewContentAlignment.MiddleRight },
-            AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells
-        };
-        remittancesDataGridView.Columns.Add(column5);
-
-        var column6 = new DataGridViewTextBoxColumn
-        {
-            DataPropertyName = nameof(RemittanceFile.TotalPaymentAmount),
-            HeaderText = "Total Payment Amount",
-            Name = nameof(RemittanceFile.TotalPaymentAmount),
-            DefaultCellStyle = new DataGridViewCellStyle { Format = "N2", Alignment = DataGridViewContentAlignment.MiddleRight },
-            AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells
-        };
-        remittancesDataGridView.Columns.Add(column6);
-
-        var column7 = new DataGridViewTextBoxColumn
-        {
-            DataPropertyName = nameof(RemittanceFile.TotalPatientResponsibilityAmount),
-            HeaderText = "Total Patient Responsibility Amount",
-            Name = nameof(RemittanceFile.TotalPatientResponsibilityAmount),
-            DefaultCellStyle = new DataGridViewCellStyle { Format = "N2", Alignment = DataGridViewContentAlignment.MiddleRight },
-            AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells
-        };
-        remittancesDataGridView.Columns.Add(column7);
-
-        var column8 = new DataGridViewTextBoxColumn
-        {
-            DataPropertyName = nameof(RemittanceFile.TotalPaidAmount),
-            HeaderText = "Total Paid Amount",
-            Name = nameof(RemittanceFile.TotalPaidAmount),
-            DefaultCellStyle = new DataGridViewCellStyle { Format = "N2", Alignment = DataGridViewContentAlignment.MiddleRight },
-            AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells
-        };
-        remittancesDataGridView.Columns.Add(column8);
-
-        var column9 = new DataGridViewTextBoxColumn
-        {
-            DataPropertyName = nameof(RemittanceFile.TotalAllowedAmount),
-            HeaderText = "Total Allowed Amount",
-            Name = nameof(RemittanceFile.TotalAllowedAmount),
-            DefaultCellStyle = new DataGridViewCellStyle { Format = "N2", Alignment = DataGridViewContentAlignment.MiddleRight },
-            AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells
-        };
-        remittancesDataGridView.Columns.Add(column9);
-
-        var column10 = new DataGridViewTextBoxColumn
-        {
-            DataPropertyName = nameof(RemittanceFile.ClaimCount),
-            HeaderText = "Claim Count",
-            Name = nameof(RemittanceFile.ClaimCount),
-            AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells
-        };
-        remittancesDataGridView.Columns.Add(column10);
-
-        var column11 = new DataGridViewDateColumn
-        {
-            DataPropertyName = nameof(RemittanceFile.UpdatedDate),
-            HeaderText = "Updated Date",
-            Name = nameof(RemittanceFile.UpdatedDate),
-            AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells
-        };
-        remittancesDataGridView.Columns.Add(column11);
+        remittancesDataGridView.Columns.Add(CreateTextBoxColumn(nameof(RemittanceFile.FileName), "File Name", 400));
+        remittancesDataGridView.Columns.Add(CreateTextBoxColumn(nameof(RemittanceFile.Payer), "Payer", 400));
+        remittancesDataGridView.Columns.Add(CreateDateColumn(nameof(RemittanceFile.ProcessedDate), "Processed Date", 100));
+        remittancesDataGridView.Columns.Add(CreateDateColumn(nameof(RemittanceFile.PostedDate), "Posted Date", 100));
+        remittancesDataGridView.Columns.Add(CreateTextBoxColumn(nameof(RemittanceFile.TotalChargeAmount), "Total Charge Amount", 100, numericCellStyle));
+        remittancesDataGridView.Columns.Add(CreateTextBoxColumn(nameof(RemittanceFile.TotalPaymentAmount), "Total Payment Amount", 100, numericCellStyle));
+        remittancesDataGridView.Columns.Add(CreateTextBoxColumn(nameof(RemittanceFile.TotalPatientResponsibilityAmount), "Total Patient Responsibility Amount", 100, numericCellStyle));
+        remittancesDataGridView.Columns.Add(CreateTextBoxColumn(nameof(RemittanceFile.TotalPaidAmount), "Total Paid Amount", 100, numericCellStyle));
+        remittancesDataGridView.Columns.Add(CreateTextBoxColumn(nameof(RemittanceFile.TotalAllowedAmount), "Total Allowed Amount", 100, numericCellStyle));
+        remittancesDataGridView.Columns.Add(CreateTextBoxColumn(nameof(RemittanceFile.ClaimCount), "Claim Count", 100));
+        remittancesDataGridView.Columns.Add(CreateDateColumn(nameof(RemittanceFile.UpdatedDate), "Updated Date", 100));
 
         remittancesDataGridView.Columns.Add(new DataGridViewTextBoxColumn
         {
@@ -485,5 +483,37 @@ public partial class ProcessRemittanceForm : Form
             // Sorting has begun
             this.Cursor = Cursors.Default;
         }
+    }
+
+    private async void reimportUnpostedRemittancesToolStripButton_Click(object sender, EventArgs e)
+    {
+        var progress = new Progress<ProgressReportModel>();
+        progress.ProgressChanged += (s, report) =>
+        {
+            progressBar.Maximum = report.TotalRecords;
+            progressBar.Value = report.RecordsProcessed;
+            progressLabel.Text = report.StatusMessage;
+        };
+
+        // Disable UI elements during the operation
+        this.Enabled = false;
+        progressBar.Visible = true;
+        progressLabel.Visible = true;
+
+        var results = await remittanceService.ReimportUnpostedRemittancesAsync(progress);
+
+        // Re-enable UI elements after completion
+        this.Enabled = true;
+        progressBar.Visible = false;
+        progressLabel.Visible = false;
+
+        // Refresh the data grid
+        RefreshRemittancesData();
+
+        // Show summary of the operation
+        int successCount = results.Count(r => r.Success);
+        int failureCount = results.Count(r => !r.Success);
+        MessageBox.Show($"Reimport completed.\n\nSuccessful: {successCount}\nFailed: {failureCount}", "Reimport All Unposted Remittances", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
     }
 }

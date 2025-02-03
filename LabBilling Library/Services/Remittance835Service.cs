@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -46,6 +47,7 @@ AdjustmentReasonCode
     This adjustment amount cannot equal the total service or claim charge amount and must not duplicate provider adjustment amounts 
     (payments and contractual reductions) that have resulted from prior payer(s) adjudication. This code is used to indicate that 
     the billed amount is higher than the allowed amount according to the payer's fee schedule or contracted rate.
+*   253 (Sequestration - reduction in federal spending): This code is used to indicate that the payment was reduced due to sequestration.
  
  */
 public sealed class Remittance835Service
@@ -370,6 +372,7 @@ public sealed class Remittance835Service
                         {
                             loop2110Adj = new Loop2110Adj
                             {
+                                ClaimAdjustmentGroupCode = segment[1],
                                 AdjustmentReasonCode = segment[5],
                                 AdjustmentAmount = segment[6],
                                 AdjustmentQuantity = segment[7]
@@ -380,6 +383,7 @@ public sealed class Remittance835Service
                         {
                             loop2110Adj = new Loop2110Adj
                             {
+                                ClaimAdjustmentGroupCode = segment[1],
                                 AdjustmentReasonCode = segment[8],
                                 AdjustmentAmount = segment[9],
                                 AdjustmentQuantity = segment[10]
@@ -390,6 +394,7 @@ public sealed class Remittance835Service
                         {
                             loop2110Adj = new Loop2110Adj
                             {
+                                ClaimAdjustmentGroupCode = segment[1],
                                 AdjustmentReasonCode = segment[11],
                                 AdjustmentAmount = segment[12],
                                 AdjustmentQuantity = segment[13]
@@ -400,6 +405,7 @@ public sealed class Remittance835Service
                         {
                             loop2110Adj = new Loop2110Adj
                             {
+                                ClaimAdjustmentGroupCode = segment[1],
                                 AdjustmentReasonCode = segment[14],
                                 AdjustmentAmount = segment[15],
                                 AdjustmentQuantity = segment[16]
@@ -410,6 +416,7 @@ public sealed class Remittance835Service
                         {
                             loop2110Adj = new Loop2110Adj
                             {
+                                ClaimAdjustmentGroupCode = segment[1],
                                 AdjustmentReasonCode = segment[17],
                                 AdjustmentAmount = segment[18],
                                 AdjustmentQuantity = segment[19]
@@ -622,6 +629,41 @@ public sealed class Remittance835Service
     public string ConvertRemittanceDataToHtml(RemittanceData remittanceData)
     {
         DictionaryService dictService = new(_appEnvironment);
+        Dictionary<string, string> COadjustmentCodes = new();
+        Dictionary<string, string> PRadjustmentCodes = new();
+
+        COadjustmentCodes.Add("109", "Not medically necessary - The service was deemed unnecessary for the patient's condition.");
+        COadjustmentCodes.Add("11", "Procedures not covered - The procedure performed is not covered under the policy.");
+        COadjustmentCodes.Add("115", "Duplicate claim/service - The claim was denied because it is a duplicate of a previously processed claim.");
+        COadjustmentCodes.Add("119", "Not a covered service - The service provided is not included in the benefits of the plan.");
+        COadjustmentCodes.Add("131", "Patient not eligible - The patient was not eligible for coverage at the time of service.");
+        COadjustmentCodes.Add("151", "Service not covered by the plan - Indicates that the specific service is not covered by the insurance plan.");
+        COadjustmentCodes.Add("16", "Claim/service lacks information - The claim is missing necessary information for processing.");
+        COadjustmentCodes.Add("167", "Service not authorized - The service required prior authorization, which was not obtained.");
+        COadjustmentCodes.Add("18", "Duplicate service - The service is considered a duplicate of another service billed.");
+        COadjustmentCodes.Add("190", "Non-covered charges - Charges related to the service are not covered by the insurance.");
+        COadjustmentCodes.Add("204", "Service not covered - The service rendered is not included in the coverage terms.");
+        COadjustmentCodes.Add("226", "Exceeds maximum allowable - The billed amount exceeds the maximum allowable amount for the service.");
+        COadjustmentCodes.Add("231", "Service not performed - Indicates that the service billed was not actually performed.");
+        COadjustmentCodes.Add("234", "Not a valid procedure code - The procedure code used on the claim is invalid.");
+        COadjustmentCodes.Add("236", "Service not provided as billed - The service billed does not match what was provided.");
+        COadjustmentCodes.Add("252", "Payment adjusted due to contractual agreement - Payment was adjusted based on the terms of the contract.");
+        COadjustmentCodes.Add("253", "Adjustment for contractual obligation - Indicates an adjustment based on contractual obligations.");
+        COadjustmentCodes.Add("273", "Adjustment for non-compliance - Indicates an adjustment due to non-compliance with policy guidelines.");
+        COadjustmentCodes.Add("288", "No prior authorization - Indicates that prior authorization was not obtained for the service.");
+        COadjustmentCodes.Add("29", "Coverage terminated - Coverage for the patient was terminated before the service date.");
+        COadjustmentCodes.Add("4", "Service not covered under the plan - Indicates that the service is not covered by the insurance plan.");
+        COadjustmentCodes.Add("45", "Charge exceeds fee schedule/maximum allowable or contracted/legislated fee arrangement");
+        COadjustmentCodes.Add("50", "Service not provided - Indicates that the service was not provided as billed.");
+        COadjustmentCodes.Add("94", "Non-covered service - The service is not covered under the policy.");
+        COadjustmentCodes.Add("96", "Non-covered charges - Charges related to the service are not covered by the insurance.");
+        COadjustmentCodes.Add("97", "Adjustment for non-compliance - Indicates an adjustment due to non-compliance with policy guidelines.");
+        COadjustmentCodes.Add("B11", "Service not authorized - The service required prior authorization, which was not obtained.");
+        COadjustmentCodes.Add("B13", "Service not covered - The service rendered is not included in the coverage terms.");
+        COadjustmentCodes.Add("B15", "Not a valid procedure code - The procedure code used on the claim is invalid.");
+        
+
+
         var html = new StringBuilder();
 
         html.Append("<html><head><style>");
@@ -747,12 +789,27 @@ public sealed class Remittance835Service
                     html.Append("<div class='indent-2 smalltext'>");
                     html.Append("<div class='section-sub-header smalltext'>Adjustments</div>");
                     html.Append("<table class='smalltext'>");
-                    html.Append("<tr><th>Claim Adjustment Group Code</th><th>Adjustment Reason Code</th><th>Adjustment Amount</th><th>Adjustment Quantity</th></tr>");
+                    html.Append("<tr><th>Claim Adjustment Group Code</th><th>Adjustment Reason Code</th><th>Explanation</th><th>Adjustment Amount</th><th>Adjustment Quantity</th></tr>");
                     foreach (var adjustment in loop2110.Adjustments)
                     {
+                        string adjustmentDescription;
+                        switch(adjustment.ClaimAdjustmentGroupCode)
+                        {
+                            case "CO":
+                                COadjustmentCodes.TryGetValue(adjustment.AdjustmentReasonCode, out adjustmentDescription);
+                                break;
+                            case "PR":
+                                PRadjustmentCodes.TryGetValue(adjustment.AdjustmentReasonCode, out adjustmentDescription);
+                                break;
+                            default:
+                                adjustmentDescription = string.Empty;
+                                break;
+                        }
+
                         html.Append("<tr>");
                         html.Append($"<td>{adjustment.ClaimAdjustmentGroupCode}</td>");
                         html.Append($"<td>{adjustment.AdjustmentReasonCode}</td>");
+                        html.Append($"<td>{adjustmentDescription}</td>");
                         html.Append($"<td>{decimal.Parse(adjustment.AdjustmentAmount ?? "0"):F2}</td>");
                         html.Append($"<td>{adjustment.AdjustmentQuantity}</td>");
                         html.Append("</tr>");
@@ -878,7 +935,7 @@ public sealed class Remittance835Service
             }
             uow.Commit();
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             Log.Instance.Error($"Error storing remittance data: {ex.Message}");
             throw;
@@ -926,131 +983,41 @@ public sealed class Remittance835Service
         return remit;
     }
 
-    public async Task UnPostRemittanceAsync(int remittanceId, IProgress<ProgressReportModel> progress)
+    public class OperationResult
     {
-        // Unpost remittance by adding offsetting check records to the database
-        Log.Instance.Trace($"UnPostRemittanceAsync called with remittanceId {remittanceId}");
-        using UnitOfWorkMain uow = new(_appEnvironment, true);
-        var remittance = this.GetRemittance(remittanceId);
-        if (remittance == null)
-        {
-            Log.Instance.Error($"Remittance {remittanceId} not found.");
-            return;
-        }
-
-        // Check if the remittance was previously posted
-        if (!remittance.PostedDate.HasValue)
-        {
-            Log.Instance.Error($"Remittance {remittanceId} has not been posted.");
-            return;
-        }
-
-        int totalClaims = remittance.Claims.Count;
-        int processedClaims = 0;
-
-        try
-        {
-            foreach (var claim in remittance.Claims)
-            {
-                if (!claim.ClaimDetails.Any())
-                {
-                    // Unpost a single payment record with the claim total if there are no detail records
-                    Chk chk = new()
-                    {
-                        ChkDate = DateTime.Today,
-                        PaidAmount = -Convert.ToDouble(claim.ClaimPaymentAmount),
-                        Source = remittance.Payer,
-                        Comment = $"Offsetting check for claim {claim.AccountNo}",
-                        CheckNo = remittance.TransactionTraceNumber,
-                        AccountNo = claim.AccountNo,
-                        Batch = remittance.RemittanceId,
-                        ContractualAmount = 0.00,
-                        ClaimAdjCode = claim.ClaimStatusCode,
-                        PostingFile = Path.GetFileName(remittance.FileName),
-                        EftNumber = remittance.TransactionTraceNumber,
-                        ClaimNo = claim.PayerClaimControlNumber,
-                        EftDate = remittance.ProcessedDate,
-                        Status = "NEW"
-                    };
-
-                    await uow.ChkRepository.AddAsync(chk);
-                }
-                else
-                {
-                    foreach (var detail in claim.ClaimDetails)
-                    {
-                        // Write offsetting checks to the database
-                        Chk chk = new()
-                        {
-                            ChkDate = DateTime.Today,
-                            PaidAmount = -Convert.ToDouble(detail.MonetaryAmount),
-                            Source = remittance.Payer,
-                            Comment = $"Offsetting check for claim {claim.AccountNo} {detail.ProcedureCode}",
-                            CheckNo = remittance.TransactionTraceNumber,
-                            AccountNo = claim.AccountNo,
-                            Batch = remittance.RemittanceId,
-                            Cpt4Code = detail.ProcedureCode,
-                            ContractualAmount = -Convert.ToDouble(detail.Adjustments.Where(x => x.ClaimAdjustmentGroupCode == "CO" && x.AdjustmentReasonCode == "45").Sum(y => y.AdjustmentAmount)),
-                            ClaimAdjCode = detail.Adjustments.FirstOrDefault()?.AdjustmentReasonCode,
-                            ClaimAdjGroupCode = detail.Adjustments.FirstOrDefault()?.ClaimAdjustmentGroupCode,
-                            PostingFile = Path.GetFileName(remittance.FileName),
-                            EftNumber = remittance.TransactionTraceNumber,
-                            ClaimNo = claim.PayerClaimControlNumber,
-                            EftDate = remittance.ProcessedDate,
-                            Status = "NEW"
-                        };
-
-                        await uow.ChkRepository.AddAsync(chk);
-                    }
-                }
-
-                processedClaims++;
-                progress?.Report(new ProgressReportModel
-                {
-                    PercentageComplete = (processedClaims * 100 / totalClaims),
-                    RecordsProcessed = processedClaims,
-                    TotalRecords = totalClaims,
-                    StatusMessage = $"Processed {processedClaims} of {totalClaims} claims"
-                });
-            }
-
-            // Update the remittance status to unposted
-            remittance.PostedDate = null;
-            remittance.PostingUser = null;
-            remittance.PostingHost = null;
-            uow.RemittanceRepository.Update(remittance);
-
-            uow.Commit();
-        }
-        catch (Exception ex)
-        {
-            Log.Instance.Error(ex.Message);
-            throw;
-        }
+        public int RemittanceId { get; set; }
+        public bool Success { get; set; }
+        public string ErrorMessage { get; set; }
     }
 
-
-    public async Task PostRemittanceAsync(int remittanceId, IProgress<ProgressReportModel> progress)
+    public async Task<OperationResult> HandleRemittanceAsync(int remittanceId, bool isPosting, IProgress<ProgressReportModel> progress)
     {
-        Log.Instance.Trace("PostRemittanceAsync called");
+        Log.Instance.Trace($"{(isPosting ? "Post" : "Unpost")}RemittanceAsync called with remittanceId {remittanceId}");
         AccountService accountService = new(_appEnvironment);
         var remittance = this.GetRemittance(remittanceId);
         if (remittance == null)
-            return;
+        {
+            return new OperationResult { Success = false, ErrorMessage = $"Remittance {remittanceId} not found" };
+        }
+
+        if (isPosting && IsRemittancePosted(remittanceId))
+        {
+            Log.Instance.Error($"Remittance {remittanceId} has already been posted");
+            return new OperationResult { Success = false, ErrorMessage = $"Remittance {remittanceId} has already been posted" };
+        }
+
+        if (!isPosting && !remittance.PostedDate.HasValue)
+        {
+            Log.Instance.Error($"Remittance {remittanceId} has not been posted.");
+            return new OperationResult { Success = false, ErrorMessage = $"Remittance {remittanceId} has not been posted" };
+        }
 
         int totalClaims = remittance.Claims.Count;
         int processedClaims = 0;
+
         try
         {
-            //loop through the claims and details and write checks to the database
             using UnitOfWorkMain uow = new(_appEnvironment, true);
-
-            //make sure this remittance has not already been posted
-            if (IsRemittancePosted(remittanceId))
-            {
-                Log.Instance.Error($"Remittance {remittanceId} has already been posted");
-                throw new ApplicationException($"Remittance {remittanceId} has already been posted");
-            }
             double total_paid = 0;
             double total_contractual = 0;
             double total_patient_responsibility = 0;
@@ -1059,17 +1026,15 @@ public sealed class Remittance835Service
             {
                 if (!claim.ClaimDetails.Any())
                 {
-                    // Post a single payment record with the claim total if there are no detail records
                     Chk chk = new()
                     {
                         ChkDate = DateTime.Today,
-                        PaidAmount = Convert.ToDouble(claim.ClaimPaymentAmount),
+                        PaidAmount = isPosting ? Convert.ToDouble(claim.ClaimPaymentAmount) : -Convert.ToDouble(claim.ClaimPaymentAmount),
                         Source = remittance.Payer,
-                        Comment = $"Check for claim {claim.AccountNo}",
+                        Comment = $"{(isPosting ? "Check" : "Offsetting check")} for claim {claim.AccountNo}",
                         CheckNo = remittance.TransactionTraceNumber,
                         AccountNo = claim.AccountNo,
                         Batch = remittance.RemittanceId,
-                        ContractualAmount = 0.00,
                         ClaimAdjCode = claim.ClaimStatusCode,
                         PostingFile = Path.GetFileName(remittance.FileName),
                         EftNumber = remittance.TransactionTraceNumber,
@@ -1077,9 +1042,9 @@ public sealed class Remittance835Service
                         EftDate = remittance.ProcessedDate,
                         Status = "NEW"
                     };
-                    total_paid += Convert.ToDouble(claim.ClaimPaymentAmount);
-                    total_contractual += Convert.ToDouble(claim.ClaimChargeAmount) - Convert.ToDouble(claim.ClaimPaymentAmount);
-                    total_patient_responsibility += Convert.ToDouble(claim.PatientResponsibilityAmount);
+                    total_paid += isPosting ? Convert.ToDouble(claim.ClaimPaymentAmount) : -Convert.ToDouble(claim.ClaimPaymentAmount);
+                    total_contractual += isPosting ? Convert.ToDouble(claim.ClaimChargeAmount) - Convert.ToDouble(claim.ClaimPaymentAmount) : -(Convert.ToDouble(claim.ClaimChargeAmount) - Convert.ToDouble(claim.ClaimPaymentAmount));
+                    total_patient_responsibility += isPosting ? Convert.ToDouble(claim.PatientResponsibilityAmount) : -Convert.ToDouble(claim.PatientResponsibilityAmount);
 
                     await uow.ChkRepository.AddAsync(chk);
                 }
@@ -1089,35 +1054,87 @@ public sealed class Remittance835Service
                     {
                         if (claim.ProcessStatus != ClaimProcessStatus.Process)
                             break;
-                        //write checks to the database
+
                         Chk chk = new()
                         {
                             ChkDate = DateTime.Today,
-                            PaidAmount = Convert.ToDouble(detail.MonetaryAmount),
+                            PaidAmount = isPosting ? Convert.ToDouble(detail.MonetaryAmount) : -Convert.ToDouble(detail.MonetaryAmount),
                             Source = remittance.Payer,
-                            Comment = $"Check for claim {claim.AccountNo} {detail.ProcedureCode}",
+                            Comment = $"{(isPosting ? "Check" : "Offsetting check")} for claim {claim.AccountNo} {detail.ProcedureCode}",
                             CheckNo = remittance.TransactionTraceNumber,
                             AccountNo = claim.AccountNo,
                             Batch = remittance.RemittanceId,
                             Cpt4Code = detail.ProcedureCode,
-                            ContractualAmount = Convert.ToDouble(detail.Adjustments.Where(x => x.ClaimAdjustmentGroupCode == "CO" && x.AdjustmentReasonCode == "45").Sum(y => y.AdjustmentAmount)),
-                            ClaimAdjCode = detail.Adjustments.FirstOrDefault()?.AdjustmentReasonCode,
-                            ClaimAdjGroupCode = detail.Adjustments.FirstOrDefault()?.ClaimAdjustmentGroupCode,
                             PostingFile = Path.GetFileName(remittance.FileName),
                             EftNumber = remittance.TransactionTraceNumber,
                             ClaimNo = claim.PayerClaimControlNumber,
                             EftDate = remittance.ProcessedDate,
                             Status = "NEW"
                         };
-                        total_paid += Convert.ToDouble(detail.MonetaryAmount);
-                        total_contractual += Convert.ToDouble(detail.Adjustments.Where(x => x.ClaimAdjustmentGroupCode == "CO" && x.AdjustmentReasonCode == "45").Sum(y => y.AdjustmentAmount));
-                        total_patient_responsibility += Convert.ToDouble(detail.Adjustments.Where(x => x.ClaimAdjustmentGroupCode == "PR").Sum(y => y.AdjustmentAmount));
-
                         await uow.ChkRepository.AddAsync(chk);
+
+                        foreach (var adj in detail.Adjustments)
+                        {
+                            if (adj.AdjustmentAmount == 0)
+                                continue;
+
+                            if (adj.ClaimAdjustmentGroupCode != "CO")
+                                continue;
+
+                            if (adj.AdjustmentReasonCode != "45" && adj.AdjustmentReasonCode != "253")
+                                continue;
+
+                            string comment;
+
+                            switch (adj.AdjustmentReasonCode)
+                            {
+                                case "45":
+                                    comment = $"{(isPosting ? "Contractual adjustment" : "Offsetting contractual adjustment")} for claim {claim.AccountNo} {detail.ProcedureCode}";
+                                    break;
+                                case "253":
+                                    comment = $"{(isPosting ? "Sequestration - reduction in federal spending" : "Offsetting sequestration - reduction in federal spending")} for {claim.AccountNo} {detail.ProcedureCode}";
+                                    break;
+                                default:
+                                    comment = $"{(isPosting ? "Adjustment" : "Offsetting adjustment")} for claim {claim.AccountNo} {detail.ProcedureCode}";
+                                    break;
+                            }
+
+                            Chk adjchk = new()
+                            {
+                                ChkDate = DateTime.Today,
+                                Source = remittance.Payer,
+                                Comment = comment,
+                                CheckNo = remittance.TransactionTraceNumber,
+                                AccountNo = claim.AccountNo,
+                                Batch = remittance.RemittanceId,
+                                Cpt4Code = detail.ProcedureCode,
+                                ContractualAmount = isPosting ? Convert.ToDouble(adj.AdjustmentAmount) : -Convert.ToDouble(adj.AdjustmentAmount),
+                                ClaimAdjCode = adj.AdjustmentReasonCode,
+                                ClaimAdjGroupCode = adj.ClaimAdjustmentGroupCode,
+                                PostingFile = Path.GetFileName(remittance.FileName),
+                                EftNumber = remittance.TransactionTraceNumber,
+                                ClaimNo = claim.PayerClaimControlNumber,
+                                EftDate = remittance.ProcessedDate,
+                                Status = "NEW"
+                            };
+                            await uow.ChkRepository.AddAsync(adjchk);
+                        }
+
+                        total_paid += isPosting ? Convert.ToDouble(detail.MonetaryAmount) : -Convert.ToDouble(detail.MonetaryAmount);
+                        total_contractual += isPosting ? Convert.ToDouble(detail.Adjustments.Where(x => x.ClaimAdjustmentGroupCode == "CO" && x.AdjustmentReasonCode == "45").Sum(y => y.AdjustmentAmount)) : -Convert.ToDouble(detail.Adjustments.Where(x => x.ClaimAdjustmentGroupCode == "CO" && x.AdjustmentReasonCode == "45").Sum(y => y.AdjustmentAmount));
+                        total_patient_responsibility += isPosting ? Convert.ToDouble(detail.Adjustments.Where(x => x.ClaimAdjustmentGroupCode == "PR").Sum(y => y.AdjustmentAmount)) : -Convert.ToDouble(detail.Adjustments.Where(x => x.ClaimAdjustmentGroupCode == "PR").Sum(y => y.AdjustmentAmount));
                     }
                 }
-                //write note to account with total_paid, total_contractual, and total_patient_responsibility
-                accountService.AddNote(claim.AccountNo, $"Remittance {remittanceId} posted for claim {claim.AccountNo} with total paid amount of {total_paid}, total contractual amount of {total_contractual}, and total patient responsibility of {total_patient_responsibility}");
+
+                if (isPosting)
+                {
+                    accountService.AddNote(claim.AccountNo, $"Remittance {remittanceId} posted for claim {claim.AccountNo} with total paid amount of {total_paid}, total contractual amount of {total_contractual}, and total patient responsibility of {total_patient_responsibility}");
+                }
+                else
+                {
+                    accountService.AddNote(claim.AccountNo, $"Remittance {remittanceId} unposted for claim {claim.AccountNo} with total paid amount of {total_paid}, total contractual amount of {total_contractual}, and total patient responsibility of {total_patient_responsibility}");
+                }
+
                 total_paid = 0;
                 total_contractual = 0;
                 total_patient_responsibility = 0;
@@ -1131,18 +1148,66 @@ public sealed class Remittance835Service
                     StatusMessage = $"Processed {processedClaims} of {totalClaims} claims"
                 });
             }
-            //update the remittance status to posted
-            remittance.PostedDate = DateTime.Now;
-            remittance.PostingUser = _appEnvironment.UserName;
-            remittance.PostingHost = Utilities.OS.GetMachineName();
-            uow.RemittanceRepository.Update(remittance);
 
+            if (isPosting)
+            {
+                remittance.PostedDate = DateTime.Now;
+                remittance.PostingUser = _appEnvironment.UserName;
+                remittance.PostingHost = Utilities.OS.GetMachineName();
+            }
+            else
+            {
+                remittance.PostedDate = null;
+                remittance.PostingUser = null;
+                remittance.PostingHost = null;
+            }
+
+            uow.RemittanceRepository.Update(remittance);
             uow.Commit();
+
+            return new OperationResult { Success = true };
         }
         catch (Exception ex)
         {
             Log.Instance.Error(ex.Message);
-            throw;
+            return new OperationResult { Success = false, ErrorMessage = ex.Message };
         }
     }
+
+    // New method to reimport all unposted remittances
+    public async Task<List<OperationResult>> ReimportUnpostedRemittancesAsync(IProgress<ProgressReportModel> progress = null)
+    {
+        var unpostedRemittances = GetAllRemittances(includePosted: false);
+        var results = new List<OperationResult>();
+        int total = unpostedRemittances.Count;
+        int count = 0;
+
+        foreach (var remittance in unpostedRemittances)
+        {
+            try
+            {
+                await Task.Run(() => ReimportRemittance(remittance.RemittanceId));
+                results.Add(new OperationResult { Success = true });
+
+                Log.Instance.Info($"Successfully reimported remittance {remittance.RemittanceId}");
+            }
+            catch (Exception ex)
+            {
+                Log.Instance.Error($"Error reimporting remittance {remittance.RemittanceId}: {ex.Message}");
+                results.Add(new OperationResult { Success = false, ErrorMessage = ex.Message });
+            }
+
+            count++;
+            progress?.Report(new ProgressReportModel
+            {
+                TotalRecords = total,
+                RecordsProcessed = count,
+                PercentageComplete = (int)((double)count / total * 100),
+                StatusMessage = $"Reimported {count} of {total} remittances"
+            });
+        }
+
+        return results;
+    }
+
 }
