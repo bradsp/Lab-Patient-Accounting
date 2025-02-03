@@ -127,17 +127,31 @@ public partial class PostRemittanceForm : Form
 
             if(postRemittanceToolButton.Text == _postRemittanceText)
             {
-                await remittanceService.PostRemittanceAsync(_selectedRemittance.RemittanceId, progress);
+                var result = await remittanceService.HandleRemittanceAsync(_selectedRemittance.RemittanceId, true, progress);
+                if(!result.Success)
+                {
+                    MessageBox.Show($"Error posting remittance.\n\n{result.ErrorMessage}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else
+                {
+                    MessageBox.Show($"Remittance posted successfully.\n\n", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
             }
             else
             {
-                await remittanceService.UnPostRemittanceAsync(_selectedRemittance.RemittanceId, progress);
+                var result = await remittanceService.HandleRemittanceAsync(_selectedRemittance.RemittanceId, false, progress);
+                if (!result.Success)
+                {
+                    MessageBox.Show($"Error unposting remittance.\n\n{result.ErrorMessage}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else
+                {
+                    MessageBox.Show($"Remittance unposted successfully.\n\n", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
             }
 
             progressBar.Visible = false;
             progressLabel.Visible = false;
-
-            MessageBox.Show($"Remittance posted successfully.\n\n", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
             LoadRemittance();
         }
