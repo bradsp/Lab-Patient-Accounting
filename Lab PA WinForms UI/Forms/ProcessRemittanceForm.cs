@@ -167,6 +167,8 @@ public partial class ProcessRemittanceForm : Form
 
     private async void ProcessRemittanceForm_Load(object sender, EventArgs e)
     {
+        reimportUnpostedRemittancesToolStripButton.Visible = Program.AppEnvironment.UserAccount.IsAdministrator;
+
         await importRemittances();
 
         _remittancesDt = remittanceService.GetAllRemittances().ToDataTable();
