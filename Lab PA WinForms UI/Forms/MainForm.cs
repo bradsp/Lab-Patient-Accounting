@@ -9,7 +9,6 @@ using MenuBar;
 using NLog;
 using NLog.Config;
 using NLog.Targets;
-using Opulos.Core.UI;
 using System.Diagnostics;
 using Utilities;
 using Application = System.Windows.Forms.Application;
