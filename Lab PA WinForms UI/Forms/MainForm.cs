@@ -5,6 +5,7 @@ using LabBilling.Legacy;
 using LabBilling.Logging;
 using LabBilling.Properties;
 using LabBilling.ReportByInsuranceCompany;
+using MenuBar;
 using NLog;
 using NLog.Config;
 using NLog.Targets;
@@ -28,13 +29,13 @@ namespace LabBilling;
 
 public partial class MainForm : Form
 {
-    private readonly Accordion _accordion = null;
+    private TableLayoutPanel _menuTable;
     private readonly ProgressBar _claimProgress;
     private readonly Label _claimProgressStatusLabel;
     private readonly CancellationTokenSource _cancellationToken;
-    private TableLayoutPanel _tlpRecentAccounts;
     private List<UserProfile> _recentAccounts;
     private List<Account> _recentAccountsByAccount;
+    private int _recentAccountsStartRow;
 
     private readonly AccountService _accountService;
     private readonly SystemService _systemService;
@@ -59,10 +60,8 @@ public partial class MainForm : Form
 
         panel1.BackColor = Program.AppEnvironment.WindowBackgroundColor;
 
-        _accordion = new Accordion();
-
         Program.AppEnvironment.ApplicationParameters = _systemService.LoadSystemParameters();
-
+        this.Text += $" - {Program.AppEnvironment.DatabaseName}";
         ImageList il = new();
         il.Images.Add((Image)Resources.hiclipart_com_id_dbhyp);
         mdiTabControl.ImageList = il;
@@ -222,13 +221,20 @@ public partial class MainForm : Form
     {
         Log.Instance.Trace($"Entering");
 
-        UserSecurity frm = new()
+        if (Program.LoggedInUser.IsAdministrator)
         {
-            MdiParent = this,
-            WindowState = FormWindowState.Normal,
-            AutoScroll = true
-        };
-        frm.Show();
+            UserSecurity frm = new()
+            {
+                MdiParent = this,
+                WindowState = FormWindowState.Normal,
+                AutoScroll = true
+            };
+            frm.Show();
+        }
+        else
+        {
+            MessageBox.Show("You do not have permission to access this feature.", "Access Denied", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+        }
     }
 
     private void accountToolStripMenuItem_Click(object sender, EventArgs e)
@@ -275,25 +281,51 @@ public partial class MainForm : Form
     private void AccFrm_AccountOpenedEvent(object sender, string e)
         => UpdateRecentAccounts(e);
 
+
+    private void LoadRecentAccounts()
+    {
+        //remove any existing recent accounts
+        recentAccountsToolStripMenuItem.DropDownItems.Clear();
+
+        // Add recent accounts to toolstripmenu
+        foreach (var acc in _recentAccountsByAccount)
+        {
+            if (acc != null)
+            {
+                ToolStripMenuItem accountLink = new()
+                {
+                    Name = $"recentAccountToolStripMenuItem_{acc.AccountNo}",
+                    Text = acc.PatFullName,
+                    Tag = acc.AccountNo,
+                };
+                accountLink.Click += RecentLabelClicked;
+                recentAccountsToolStripMenuItem.DropDownItems.Add(accountLink);
+            }
+
+        }
+    }
+
     public void UpdateRecentAccounts(string newAccount)
     {
         var ar = _accountService.GetAccountMinimal(newAccount);
         if (ar != null)
         {
-            _tlpRecentAccounts.Controls.RemoveAt(0);
-            LinkLabel a1 = new() { Text = ar.PatFullName, Tag = newAccount };
-            a1.LinkClicked += new LinkLabelLinkClickedEventHandler(RecentLabelClicked);
-            _tlpRecentAccounts.Controls.Add(a1);
-            a1.Dock = DockStyle.Fill;
-            _accordion.Refresh();
-            _accordion.AutoScroll = true;
+            // Update the recent accounts list
+            _recentAccountsByAccount.Insert(0, ar);
+
+            // Limit the number of recent accounts to 5
+            if (_recentAccountsByAccount.Count > 5)
+            {
+                _recentAccountsByAccount.RemoveAt(5);
+            }
+
+            LoadRecentAccounts();
         }
+
     }
 
     private async void MainForm_Load(object sender, EventArgs e)
     {
-        this.WindowState = FormWindowState.Maximized;
-
         Log.Instance.Info($"Launching MainForm");
 
         #region user authentication
@@ -317,13 +349,12 @@ public partial class MainForm : Form
             _recentAccountsByAccount.Add(_accountService.GetAccountMinimal(up.ParameterData));
         }
 
-        LoadSideMenu();
-
         mdiTabControl.TabClosing += mdiTabControl_TabClosing;
 
         //enable menu items based on permissions
         systemAdministrationToolStripMenuItem.Visible = Program.LoggedInUser.IsAdministrator;
-        UpdateMenuAccess();
+        LoadSideMenu();
+        LoadRecentAccounts();
         this.WindowState = FormWindowState.Maximized;
         this.Focus();
     }
@@ -342,225 +373,214 @@ public partial class MainForm : Form
 
     private void LoadSideMenu()
     {
-        #region load accordion menu
+        // Update menu access
+        UpdateMenuAccess();
 
-        //recent accounts section
-        _tlpRecentAccounts = new TableLayoutPanel
-        {
-            Dock = DockStyle.Fill,
-            RowCount = _recentAccounts.Count,
-            ColumnCount = 1
-        };
+        // Clear panel1
+        panel1.Controls.Clear();
 
-        toolStripDatabaseLabel.Text = Program.AppEnvironment.DatabaseName;
-        toolStripUsernameLabel.Text = Program.LoggedInUser.FullName;
-        this.Text += " " + Program.AppEnvironment.DatabaseName;
-        if (!string.IsNullOrEmpty(Program.LoggedInUser.ImpersonatingUser))
-        {
-            this.Text += $"  *** IMPERSONATING {Program.LoggedInUser.ImpersonatingUser} ***";
-        }
-
-        if (!Program.AppEnvironment.ApplicationParameters.AllowEditing)
-            this.Text += " | READ ONLY MODE";
-        if (!Program.AppEnvironment.ApplicationParameters.AllowChargeEntry)
-            this.Text += " | Charge entry disabled";
-        if (!Program.AppEnvironment.ApplicationParameters.AllowPaymentAdjustmentEntry)
-            this.Text += " | Pmt/Adj entry disabled";
-
-        foreach (var acc in _recentAccountsByAccount)
-        {
-            if (acc != null)
-            {
-                LinkLabel a1 = new() { Text = acc.PatFullName, Tag = acc.AccountNo };
-                a1.LinkClicked += new LinkLabelLinkClickedEventHandler(RecentLabelClicked);
-                _tlpRecentAccounts.Controls.Add(a1);
-                a1.Dock = DockStyle.Fill;
-            }
-        }
-
-        panel1.Controls.Add(_accordion);
-        _tlpRecentAccounts.AutoSize = true;
-        _accordion.Add(_tlpRecentAccounts, "Recent Accounts", "Last Opened Accounts", 1, true);
-
-        //Billing Menu Section
-        TableLayoutPanel tlpBilling = new()
+        // Create a TableLayoutPanel to hold the menu
+        _menuTable = new TableLayoutPanel
         {
             Dock = DockStyle.Fill,
             ColumnCount = 1,
-            RowCount = 3
+            AutoScroll = true,
+            AutoSize = false, // Set to false to prevent expansion
+            GrowStyle = TableLayoutPanelGrowStyle.AddRows,
+            Margin = new Padding(0),
+            Padding = new Padding(0),
+            Location = new Point(0, 0)
         };
 
-        Button b1 = new()
+        panel1.Controls.Add(_menuTable);
+
+        int currentRow = 0;
+        // Define the button height
+        int buttonHeight = 50;
+        int labelHeight = 30;
+        // Clear any existing RowStyles
+        _menuTable.RowStyles.Clear();
+        _menuTable.ColumnStyles.Clear();
+
+        // Add ColumnStyle
+        _menuTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
+
+        // ************************  Add Account Management Section ***************************
+        var accountLabel = CreateMenuLabel("Account Management");
+        _menuTable.RowStyles.Add(new RowStyle(SizeType.Absolute, labelHeight)); // Set label height
+        _menuTable.Controls.Add(accountLabel, 0, currentRow++);
+
+
+        var btnWorkList = CreateMenuButton("Worklist", "WorklistButton", worklistToolStripMenuItem_Click);
+        _menuTable.RowStyles.Add(new RowStyle(SizeType.Absolute, buttonHeight)); // Set row height
+        _menuTable.Controls.Add(btnWorkList, 0, currentRow++);
+
+        var btnAccount = CreateMenuButton("Account", "AccountButton", accountToolStripMenuItem_Click);
+        _menuTable.RowStyles.Add(new RowStyle(SizeType.Absolute, buttonHeight)); // Set row height
+        _menuTable.Controls.Add(btnAccount, 0, currentRow++);
+
+        if (Program.AppEnvironment.ApplicationParameters.AllowChargeEntry && Program.LoggedInUser.CanSubmitCharges)
         {
-            Text = "Worklist",
-            Name = "btnWorkList",
+            var btnAccountChargeEntry = CreateMenuButton("Account Charge Entry", "AccountChargeEntryButton", accountChargeEntryToolStripMenuItem_Click);
+            _menuTable.RowStyles.Add(new RowStyle(SizeType.Absolute, buttonHeight)); // Set row height
+            _menuTable.Controls.Add(btnAccountChargeEntry, 0, currentRow++);
+        }
+
+        // Add spacing between sections
+        _menuTable.RowStyles.Add(new RowStyle(SizeType.Absolute, 10));
+        currentRow++;
+
+        // ******************** Add Billing section ********************
+        var billingLabel = CreateMenuLabel("Billing");
+        _menuTable.RowStyles.Add(new RowStyle(SizeType.Absolute, labelHeight)); // Set label height
+        _menuTable.Controls.Add(billingLabel, 0, currentRow++);
+
+
+        if (Program.LoggedInUser.CanSubmitBilling || Program.LoggedInUser.IsAdministrator)
+        {
+            var btnClaimBatchManagement = CreateMenuButton("Claims Batch Management", "ClaimBatchManagementButton", claimBatchManagementToolStripMenuItem_Click);
+            _menuTable.RowStyles.Add(new RowStyle(SizeType.Absolute, buttonHeight)); // Set row height
+            _menuTable.Controls.Add(btnClaimBatchManagement, 0, currentRow++);
+        }
+
+        if (Program.AppEnvironment.ApplicationParameters.ClientBillFilter.Split('|').Contains(Program.LoggedInUser.UserName) || Program.LoggedInUser.IsAdministrator)
+        {
+            var btnClientBills = CreateMenuButton("Client Bills", "ClientBillsButton", clientBillsNewToolStripMenuItem_Click);
+            _menuTable.RowStyles.Add(new RowStyle(SizeType.Absolute, buttonHeight)); // Set row height
+            _menuTable.Controls.Add(btnClientBills, 0, currentRow++);
+        }
+
+        if (Program.LoggedInUser.CanModifyBadDebt || Program.LoggedInUser.IsAdministrator)
+        {
+            var btnBadDebtMaintenance = CreateMenuButton("Patient Collections", "PatientCollectionsButton", badDebtMaintenanceToolStripMenuItem_Click);
+            _menuTable.RowStyles.Add(new RowStyle(SizeType.Absolute, buttonHeight)); // Set row height
+            _menuTable.Controls.Add(btnBadDebtMaintenance, 0, currentRow++);
+        }
+
+        // Add spacing between sections
+        _menuTable.RowStyles.Add(new RowStyle(SizeType.Absolute, 10));
+        currentRow++;
+
+        if ((Program.LoggedInUser.CanAddPayments && Program.AppEnvironment.ApplicationParameters.AllowPaymentAdjustmentEntry) || Program.LoggedInUser.IsAdministrator)
+        {
+            // ******************** Add Payment Posting section ********************
+            var paymentPostingLabel = CreateMenuLabel("Payment/Adjustment Posting");
+            _menuTable.RowStyles.Add(new RowStyle(SizeType.Absolute, labelHeight)); // Set label height
+            _menuTable.Controls.Add(paymentPostingLabel, 0, currentRow++);
+
+
+            var btnBatchRemittance = CreateMenuButton("Batch Remittance", "BathRemittanceButton", batchRemittanceToolStripMenuItem_Click);
+            _menuTable.RowStyles.Add(new RowStyle(SizeType.Absolute, buttonHeight)); // Set row height
+            _menuTable.Controls.Add(btnBatchRemittance, 0, currentRow++);
+
+            var btnRemittancePosting = CreateMenuButton("Remittance Posting", "RemittancePostingButton", remittancePostingToolStripMenuItem_Click);
+            _menuTable.RowStyles.Add(new RowStyle(SizeType.Absolute, buttonHeight)); // Set row height
+            _menuTable.Controls.Add(btnRemittancePosting, 0, currentRow++);
+
+            // Add spacing between sections
+            _menuTable.RowStyles.Add(new RowStyle(SizeType.Absolute, 10));
+            currentRow++;
+        }
+
+        // ********************** Add Reports section **********************
+        var reportsLabel = CreateMenuLabel("Reports");
+        _menuTable.RowStyles.Add(new RowStyle(SizeType.Absolute, labelHeight)); // Set label height
+        _menuTable.Controls.Add(reportsLabel, 0, currentRow++);
+
+        // Add Reports buttons
+        var btnMonthlyReports = CreateMenuButton("Monthly Reports", "MonthlyReportsButton", monthlyReportsToolStripMenuItem_Click);
+        _menuTable.RowStyles.Add(new RowStyle(SizeType.Absolute, buttonHeight)); // Set row height
+        _menuTable.Controls.Add(btnMonthlyReports, 0, currentRow++);
+
+        var btnReportingPortal = CreateMenuButton("Reporting Portal", "ReportingPortalButton", reportingPortalToolStripMenuItem_Click);
+        _menuTable.RowStyles.Add(new RowStyle(SizeType.Absolute, buttonHeight)); // Set row height
+        _menuTable.Controls.Add(btnReportingPortal, 0, currentRow++);
+
+        _menuTable.RowCount = currentRow;
+
+        // Optional: Set the TableLayoutPanel to not grow beyond its content size
+        _menuTable.MaximumSize = new Size(panel1.Width, _menuTable.PreferredSize.Height);
+    }
+
+    private static Button CreateMenuButton(string text, string name, EventHandler eventHandler)
+    {
+        var button = new MenuButton
+        {
+            Text = text,
+            Name = name,
             BackColor = Program.AppEnvironment.ButtonBackgroundColor,
             ForeColor = Program.AppEnvironment.ButtonTextColor,
             FlatStyle = FlatStyle.Flat,
-            Height = 50
-        };
-        b1.Click += new EventHandler(worklistToolStripMenuItem_Click);
-        tlpBilling.Controls.Add(b1, 0, 0);
-        b1.Dock = DockStyle.Fill;
-
-        Button b2 = new()
-        {
-            Text = "Account",
-            Name = "btnAccount",
-            BackColor = Program.AppEnvironment.ButtonBackgroundColor,
-            ForeColor = Program.AppEnvironment.ButtonTextColor,
-            FlatStyle = FlatStyle.Flat,
-            Height = 50
-        };
-        b2.Click += new EventHandler(accountToolStripMenuItem_Click);
-        tlpBilling.Controls.Add(b2, 0, 2);
-        b2.Dock = DockStyle.Fill;
-
-        Button b4 = new()
-        {
-            Text = "Account Charge Entry",
-            Name = "btnAccountChargeEntry",
-            BackColor = Program.AppEnvironment.ButtonBackgroundColor,
-            ForeColor = Program.AppEnvironment.ButtonTextColor,
-            FlatStyle = FlatStyle.Flat,
-            Height = 50
-        };
-        b4.Click += new EventHandler(accountChargeEntryToolStripMenuItem_Click);
-        tlpBilling.Controls.Add(b4, 0, 3);
-        b4.Dock = DockStyle.Fill;
-
-        Button b5 = new()
-        {
-            Text = "Batch Remittance",
-            Name = "btnBatchRemittance",
-            BackColor = Program.AppEnvironment.ButtonBackgroundColor,
-            ForeColor = Program.AppEnvironment.ButtonTextColor,
-            FlatStyle = FlatStyle.Flat,
-            Height = 50
-        };
-        b5.Click += new EventHandler(batchRemittanceToolStripMenuItem_Click);
-        tlpBilling.Controls.Add(b5, 0, 4);
-        b5.Dock = DockStyle.Fill;
-
-        Button b6 = new()
-        {
-            Text = "Claims Batch Management",
-            Name = "ClaimBatchManagementButton",
-            BackColor = Program.AppEnvironment.ButtonBackgroundColor,
-            ForeColor = Program.AppEnvironment.ButtonTextColor,
-            FlatStyle = FlatStyle.Flat,
-            Height = 50
-        };
-        b6.Click += new EventHandler(claimBatchManagementToolStripMenuItem_Click);
-        tlpBilling.Controls.Add(b6, 0, 5);
-        b6.Dock = DockStyle.Fill;
-
-        _accordion.Add(tlpBilling, "Billing", "Billing Functions", 1, true);
-
-        //Reports Section
-        TableLayoutPanel tlpReports = new()
-        {
             Dock = DockStyle.Fill,
-            ColumnCount = 1,
-            RowCount = 1
+            Margin = new Padding(5, 0, 5, 0),
+            TextAlign = ContentAlignment.MiddleCenter,
+            BorderRadius = 10,
+            BorderSize = 0,
+            BorderColor = Color.Transparent,
+            AutoSize = false
         };
+        button.Click += eventHandler;
+        return button;
+    }
 
-        Button r1 = new()
+    private Label CreateMenuLabel(string text)
+    {
+        return new Label
         {
-            Text = "Monthly Reports",
-            Name = "btnMonthlyReports",
-            BackColor = Program.AppEnvironment.ButtonBackgroundColor,
-            ForeColor = Program.AppEnvironment.ButtonTextColor,
-            FlatStyle = FlatStyle.Flat,
-            Height = 50
+            Text = text,
+            AutoSize = false,
+            Font = new Font("Arial", 12, FontStyle.Bold),
+            Dock = DockStyle.Fill,
+            TextAlign = ContentAlignment.MiddleLeft,
+            Padding = new Padding(5),
+            Margin = new Padding(0),
+            AutoEllipsis = false,
+            MaximumSize = new Size(panel1.Width - 10, 0), // Adjust width as needed
         };
-        r1.Click += new EventHandler(monthlyReportsToolStripMenuItem_Click);
-        tlpReports.Controls.Add(r1, 0, 0);
-        r1.Dock = DockStyle.Fill;
-
-        Button r2 = new()
-        {
-            Text = "Reporting Portal",
-            Name = "btnReportingPortal",
-            BackColor = Program.AppEnvironment.ButtonBackgroundColor,
-            ForeColor = Program.AppEnvironment.ButtonTextColor,
-            FlatStyle = FlatStyle.Flat,
-            Height = 50
-        };
-        r2.Click += new EventHandler(reportingPortalToolStripMenuItem_Click);
-        tlpReports.Controls.Add(r2, 0, 0);
-        r2.Dock = DockStyle.Fill;
-
-        _accordion.Add(tlpReports, "Reports", "Report Functions", 1, true);
-
-        _accordion.FillWidth = true;
-        _accordion.FillHeight = false;
-        _accordion.PerformLayout();
-        _accordion.PerformLayout();
-        #endregion
-
-        if (Program.AppEnvironment.ApplicationParameters.AllowPaymentAdjustmentEntry)
-        {
-            batchRemittanceToolStripMenuItem.Visible = Program.LoggedInUser.CanAddPayments;
-            remittancePostingToolStripMenuItem.Visible = Program.LoggedInUser.CanAddPayments;
-            b5.Visible = Program.LoggedInUser.CanAddPayments;
-        }
-        else
-        {
-            batchRemittanceToolStripMenuItem.Visible = false;
-            remittancePostingToolStripMenuItem.Visible = false;
-            b5.Visible = false;
-        }
-
-        if (Program.AppEnvironment.ApplicationParameters.AllowChargeEntry)
-        {
-            accountChargeEntryToolStripMenuItem.Visible = Program.LoggedInUser.CanSubmitCharges;
-            batchChargeEntryToolStripMenuItem.Visible = Program.LoggedInUser.CanSubmitCharges;
-            b4.Visible = Program.LoggedInUser.CanSubmitCharges;
-        }
-        else
-        {
-            accountChargeEntryToolStripMenuItem.Visible = false;
-            batchChargeEntryToolStripMenuItem.Visible = false;
-            b4.Visible = false;
-        }
-
-        if (!Program.AppEnvironment.ApplicationParameters.AllowEditing)
-        {
-            MessageBox.Show(this, "System is in read-only mode.", "Read Only Mode", MessageBoxButtons.OK, MessageBoxIcon.Information);
-        }
-
     }
 
     private void UpdateMenuAccess()
     {
+        bool viewOnly = Program.LoggedInUser.Access == "VIEW";
+        // Update visibility of menu items based on permissions
+
+        // Debugging output to verify conditions
+        Debug.WriteLine($"AllowPaymentAdjustmentEntry: {Program.AppEnvironment.ApplicationParameters.AllowPaymentAdjustmentEntry}");
+        Debug.WriteLine($"CanAddPayments: {Program.LoggedInUser.CanAddPayments}");
+        Debug.WriteLine($"viewOnly: {viewOnly}");
+
+        batchRemittanceToolStripMenuItem.Visible = (Program.AppEnvironment.ApplicationParameters.AllowPaymentAdjustmentEntry && Program.LoggedInUser.CanAddPayments) && !viewOnly;
+        remittancePostingToolStripMenuItem.Visible = (Program.AppEnvironment.ApplicationParameters.AllowPaymentAdjustmentEntry && Program.LoggedInUser.CanAddPayments) && !viewOnly;
+
+        accountChargeEntryToolStripMenuItem.Visible = (Program.AppEnvironment.ApplicationParameters.AllowChargeEntry && Program.LoggedInUser.CanSubmitCharges) && !viewOnly;
+
         //during testing only - remove once batch charge entry is in production
         batchChargeEntryToolStripMenuItem.Visible = Program.LoggedInUser.IsAdministrator;
-
-        batchRemittanceToolStripMenuItem.Visible = Program.LoggedInUser.CanAddPayments;
-        badDebtMaintenanceToolStripMenuItem.Visible = Program.LoggedInUser.CanModifyBadDebt;
-        remittancePostingToolStripMenuItem.Visible = Program.LoggedInUser.CanAddPayments;
-        accountChargeEntryToolStripMenuItem.Visible = Program.LoggedInUser.CanSubmitCharges;
+        badDebtMaintenanceToolStripMenuItem.Visible = Program.LoggedInUser.CanModifyBadDebt && !viewOnly;
 
         //administrator only menu items
         systemAdministrationToolStripMenuItem.Visible = Program.LoggedInUser.IsAdministrator;
 
-        if (Program.LoggedInUser.Access == "VIEW")
-        {
-            duplicateAccountsToolStripMenuItem.Visible = false;
-            clientBillsNewToolStripMenuItem.Visible = false;
-            batchChargeEntryToolStripMenuItem.Visible = false;
-            accountChargeEntryToolStripMenuItem.Visible = false;
-            remittancePostingToolStripMenuItem.Visible = false;
-        }
+        duplicateAccountsToolStripMenuItem.Visible = !viewOnly;
+        clientBillsNewToolStripMenuItem.Visible = !viewOnly;
+
+        // Debugging output to verify visibility settings
+        Debug.WriteLine($"batchRemittanceToolStripMenuItem.Visible: {batchRemittanceToolStripMenuItem.Visible}");
+        Debug.WriteLine($"remittancePostingToolStripMenuItem.Visible: {remittancePostingToolStripMenuItem.Visible}");
+        Debug.WriteLine($"accountChargeEntryToolStripMenuItem.Visible: {accountChargeEntryToolStripMenuItem.Visible}");
+        Debug.WriteLine($"batchChargeEntryToolStripMenuItem.Visible: {batchChargeEntryToolStripMenuItem.Visible}");
+        Debug.WriteLine($"badDebtMaintenanceToolStripMenuItem.Visible: {badDebtMaintenanceToolStripMenuItem.Visible}");
+        Debug.WriteLine($"systemAdministrationToolStripMenuItem.Visible: {systemAdministrationToolStripMenuItem.Visible}");
+        Debug.WriteLine($"duplicateAccountsToolStripMenuItem.Visible: {duplicateAccountsToolStripMenuItem.Visible}");
+        Debug.WriteLine($"clientBillsNewToolStripMenuItem.Visible: {clientBillsNewToolStripMenuItem.Visible}");
 
     }
 
-    private void RecentLabelClicked(object sender, LinkLabelLinkClickedEventArgs e)
+    private void RecentLabelClicked(object sender, EventArgs e)
     {
         Log.Instance.Trace($"Entering");
 
-        var linkLabel = (LinkLabel)sender;
+        var linkLabel = (ToolStripMenuItem)sender;
 
         LaunchAccount(linkLabel.Tag.ToString());
     }
@@ -588,6 +608,11 @@ public partial class MainForm : Form
             AccountForm accFrm = new(account);
             accFrm.AccountOpenedEvent += AccFrm_AccountOpenedEvent;
             accFrm.AccountUpdatedEvent += AccFrm_AccountUpdatedEvent;
+            accFrm.FormClosed += (s, args) =>
+            {
+                accFrm.AccountOpenedEvent -= AccFrm_AccountOpenedEvent;
+                accFrm.AccountUpdatedEvent -= AccFrm_AccountUpdatedEvent;
+            };
             NewForm(accFrm);
             Cursor.Current = Cursors.Default;
         }
@@ -865,6 +890,8 @@ public partial class MainForm : Form
     {
         Form activForm;
         activForm = Form.ActiveForm.ActiveMdiChild;
+        if (activForm == null)
+            return;
 
         string url = Program.AppEnvironment.ApplicationParameters.DocumentationSiteUrl;
         string topicPath = null;

@@ -187,6 +187,12 @@
   <data name="billingToolStripMenuItem.Text" xml:space="preserve">
     <value>&amp;Billing</value>
   </data>
+  <data name="recentAccountsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>108, 20</value>
+  </data>
+  <data name="recentAccountsToolStripMenuItem.Text" xml:space="preserve">
+    <value>Recent Accounts</value>
+  </data>
   <data name="auditReportsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>156, 22</value>
   </data>
@@ -3874,6 +3880,12 @@
     <value>exitToolStripMenuItem</value>
   </data>
   <data name="&gt;&gt;exitToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;recentAccountsToolStripMenuItem.Name" xml:space="preserve">
+    <value>recentAccountsToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;recentAccountsToolStripMenuItem.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;toolStripUsernameLabel.Name" xml:space="preserve">
