@@ -74,6 +74,7 @@ partial class MainForm
         latestUpdatesToolStripMenuItem = new ToolStripMenuItem();
         aboutToolStripMenuItem = new ToolStripMenuItem();
         exitToolStripMenuItem = new ToolStripMenuItem();
+        recentAccountsToolStripMenuItem = new ToolStripMenuItem();
         statusStrip1 = new StatusStrip();
         toolStripUsernameLabel = new ToolStripStatusLabel();
         toolStripDatabaseLabel = new ToolStripStatusLabel();
@@ -88,7 +89,7 @@ partial class MainForm
         // 
         MainFormMenu.BackColor = Color.White;
         MainFormMenu.ImageScalingSize = new Size(20, 20);
-        MainFormMenu.Items.AddRange(new ToolStripItem[] { billingToolStripMenuItem, dictionariesToolStripMenuItem, reportsToolStripMenuItem, systemAdministrationToolStripMenuItem, windowToolStripMenuItem, helpToolStripMenuItem });
+        MainFormMenu.Items.AddRange(new ToolStripItem[] { billingToolStripMenuItem, recentAccountsToolStripMenuItem, dictionariesToolStripMenuItem, reportsToolStripMenuItem, systemAdministrationToolStripMenuItem, windowToolStripMenuItem, helpToolStripMenuItem });
         resources.ApplyResources(MainFormMenu, "MainFormMenu");
         MainFormMenu.MdiWindowListItem = windowToolStripMenuItem;
         MainFormMenu.Name = "MainFormMenu";
@@ -347,6 +348,11 @@ partial class MainForm
         resources.ApplyResources(exitToolStripMenuItem, "exitToolStripMenuItem");
         exitToolStripMenuItem.Click += exitToolStripMenuItem_Click;
         // 
+        // recentAccountsToolStripMenuItem
+        // 
+        recentAccountsToolStripMenuItem.Name = "recentAccountsToolStripMenuItem";
+        resources.ApplyResources(recentAccountsToolStripMenuItem, "recentAccountsToolStripMenuItem");
+        // 
         // statusStrip1
         // 
         statusStrip1.Items.AddRange(new ToolStripItem[] { toolStripUsernameLabel, toolStripDatabaseLabel });
@@ -480,4 +486,5 @@ partial class MainForm
     private System.Windows.Forms.ToolStripMenuItem windowToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem auditReportsToolStripMenuItem;
     private ToolStripMenuItem viewLocksToolStripMenuItem;
+    private ToolStripMenuItem recentAccountsToolStripMenuItem;
 }
